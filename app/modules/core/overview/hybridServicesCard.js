@@ -23,6 +23,7 @@
         function init() {
           $q.all({
             hasHDSFeatureToggle: FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity),
+            hasContactCenterContextFeatureToggle: FeatureToggleService.supports(FeatureToggleService.features.contactCenterContext),
             hasGoogleCalendarFeatureToggle: FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar),
           }).then(function (featureToggles) {
             return $q.all({
@@ -45,6 +46,9 @@
             }
             if (response.featureToggles.hasHDSFeatureToggle && Authinfo.isEntitled(Config.entitlements.hds)) {
               card.serviceList.push(FusionClusterService.getStatusForService('spark-hybrid-datasecurity', response.clusterList));
+            }
+            if (response.featureToggles.hasContactCenterContextFeatureToggle && Authinfo.isEntitled(Config.entitlements.context)) {
+              card.serviceList.push(FusionClusterService.getStatusForService('contact-center-context', response.clusterList));
             }
             card.enabled = _.some(card.serviceList, function (service) {
               return service.setup;

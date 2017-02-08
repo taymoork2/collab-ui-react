@@ -47,6 +47,10 @@
     var errCallerInputNoInputValuesEnteredMsg = 'autoAttendant.callerInputMenuErrorNoInputValuesEntered';
     var errPhoneMenuNoInputValuesEnteredMsg = 'autoAttendant.phoneMenuMenuErrorNoInputValuesEntered';
     var errSubMenuNoInputValuesEnteredMsg = 'autoAttendant.subMenuErrorNoInputValuesEntered';
+    var errMissingIfVariableMsg = 'autoAttendant.conditionalIfEntryVariableMissing';
+    var errMissingThenVariableMsg = 'autoAttendant.conditionalThenTargetMissing';
+
+
     var service = {
       isNameValidationSuccess: isNameValidationSuccess,
       isValidCES: isValidCES
@@ -203,6 +207,33 @@
       });
 
       return outErrors;
+
+    }
+
+    function checkForValidConditional(conditionalMenu, conditionalMenus, fromLane, translatedLabel) {
+      var action = conditionalMenu.actions[0];
+      var validAction = true;
+
+      if (_.get(action, 'name', '') !== 'conditional') {
+        return true;
+      }
+
+      if (_.isEmpty(action.if.rightCondition)) {
+        validAction = false;
+        AANotificationService.error(errMissingIfVariableMsg, {
+          schedule: translatedLabel,
+          at: _.indexOf(conditionalMenus, conditionalMenu) + 1
+        });
+      }
+      if (!action.then || _.isEmpty(action.then.value)) {
+        validAction = false;
+        AANotificationService.error(errMissingThenVariableMsg, {
+          schedule: translatedLabel,
+          at: _.indexOf(conditionalMenus, conditionalMenu) + 1
+        });
+      }
+
+      return validAction;
 
     }
 
@@ -378,6 +409,9 @@
       var callerInputsOnly = _.filter(uiCombinedMenu.entries, function (menu) {
         return _.includes([AACommonService.DIGITS_RAW, AACommonService.DIGITS_CHOICE], _.get(menu, 'actions[0].inputType', ""));
       });
+      var conditionalsOnly = _.filter(uiCombinedMenu.entries, function (menu) {
+        return _.get(menu, 'actions[0].name', "") === 'conditional';
+      });
 
       _.forEach(uiCombinedMenu.entries, function (optionMenu) {
 
@@ -392,6 +426,9 @@
 
           /* else must be welcome menu - process routeCalls */
           if (!checkForValidRouteCall(optionMenu, routeTosOnly, fromLane, scheduleLabel)) {
+            isValid = false;
+          }
+          if (!checkForValidConditional(optionMenu, conditionalsOnly, fromLane, scheduleLabel)) {
             isValid = false;
           }
         }

@@ -31,7 +31,7 @@ class FeatureListCtrl implements ng.IComponentController {
   public $onInit() {
     this.$scope.$watchCollection(
       () => this.features,
-      (features) => this.determineHasActionAvailable(features)
+      (features) => this.determineHasActionAvailable(features),
     );
   }
 

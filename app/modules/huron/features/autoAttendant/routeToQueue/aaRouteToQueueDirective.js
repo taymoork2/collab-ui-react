@@ -14,7 +14,8 @@
         index: '=aaIndex',
         keyIndex: '@aaKeyIndex',
         fromRouteCall: '@aaFromRouteCall',
-        queues: "@aaQueues"
+        fromDecision: '@aaFromDecision',
+        queues: '@aaQueues'
       },
       controller: 'AARouteToQueueCtrl',
       controllerAs: 'aaRouteToQueue',

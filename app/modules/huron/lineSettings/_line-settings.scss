@@ -1,4 +1,5 @@
 @import 'styles/toolkit/colors';
+@import 'styles/toolkit/spacing';
 
 .esn-number-field {
   &.steeringDigitOverlap,
@@ -19,4 +20,33 @@
 // TODO: (jlowery) remove when new user/place components are done.
 .top-padding-section-title {
   padding-top: 20px;
+}
+
+#auto-answer-sp {
+  .side-panel-section {
+    margin-top: 20px;
+
+    .cs-form {
+      margin-bottom: 0;
+    }
+
+    .cs-form__section {
+      .section__title {
+        font-size: 1.25rem;
+      }
+      padding-bottom: 0;
+      border: transparent;
+    }
+  }
+}
+
+.huron-settings-main-container {
+  .cos-style {
+    .title-margin-bottom {
+      @include vr-spacing(mb, 1);
+    }
+    .switch-bottom-margin {
+      @include vr-spacing(mb, 2.5);
+    }
+  }
 }

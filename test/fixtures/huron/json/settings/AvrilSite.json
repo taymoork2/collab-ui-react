@@ -10,6 +10,7 @@
   "cpeCloudPilotNumber": "+0019987865437",
   "features": {
     "VM2E": false,
+    "VM2E_PT": true,
     "VM2T": true,
     "VM2S": true
   }

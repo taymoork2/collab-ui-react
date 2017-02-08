@@ -32,6 +32,8 @@ var AutoAttendantPage = function () {
   this.periodicSec = element(by.linkText('45'));
   this.periodicSecOption = element(by.id('periodicSecId')).all(by.tagName('li'));
 
+  this.routeToSipEndpoint = element.all(by.name('destinationSelect')).first();
+
   this.searchBox = element(by.id('searchFilter'));
   this.aaTitle = element(by.tagName('aa-builder-name-edit'));
   this.autoAttendantDevLink = element(by.css('a[href*="#/hurondetails/features"]'));
@@ -130,6 +132,15 @@ var AutoAttendantPage = function () {
 
   this.phoneMenuActionTargetFirstMessageOptions = this.phoneMenuActionTargets.first().element(by.css('select[name="messageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).last();
 
+  this.decisionFirst = element.all(by.css('div.aa-panel-body[name="Decision"]')).all(by.cssContainingText("h3", "If")).first();
+  this.decisionIf = element(by.css('div.aa-panel-body[name="Decision"]')).element(by.css('select[name="ifDecision"] + div a.select-toggle'));
+  this.decisionIfDropDownOptions = element(by.css('div.aa-panel-body[name="Decision"]')).element(by.css('select[name="ifDecision"] + div div.dropdown-menu')).all(by.tagName('li')).get(1);
+  this.decisionCallerNumberTextArea = element.all(by.name('callerNumberCalled')).first();
+
+  this.decisionThen = element(by.css('div.aa-panel-body[name="Decision"]')).element(by.css('select[name="thenDecision"] + div a.select-toggle'));
+  this.decisionThenDropDownOptions = element(by.css('div.aa-panel-body[name="Decision"]')).element(by.css('select[name="thenDecision"] + div div.dropdown-menu')).all(by.tagName('li')).get(2);
+  this.decisionPhoneNumber = element(by.css('div.aa-panel-body[name="Decision"]')).element(by.name('phoneinput'));
+
   this.callerInputFirst = element.all(by.css('div.aa-panel-body[name="Caller Input"]')).all(by.cssContainingText("h3", "Caller Input")).first();
   this.callerInputGetDigits = element(by.cssContainingText('cs-checkbox', 'Convert digit input to text string value'));
   this.callerInputTextFirst = element.all(by.name('callerInput')).first();
@@ -204,7 +215,7 @@ var AutoAttendantPage = function () {
     .all(by.css("div.aa-flex-row"))
     .last()
     .all(by.tagName('li'))
-    .get(4);
+    .get(5);
 
   // third item in newStep dropdown: Phone Menu
   this.newStepSelectPhoneMenu = element.all(by.css('div.aa-panel[name="newStepForm"]'))
@@ -215,7 +226,7 @@ var AutoAttendantPage = function () {
     .all(by.css("div.aa-flex-row"))
     .last()
     .all(by.tagName('li'))
-    .get(2);
+    .get(3);
 
   // second item in newStep dropdown: Dial By Extension
   this.newStepSelectDialByExt = element.all(by.css('div.aa-panel[name="newStepForm"]'))
@@ -226,7 +237,7 @@ var AutoAttendantPage = function () {
     .all(by.css("div.aa-flex-row"))
     .last()
     .all(by.tagName('li'))
-    .get(1);
+    .get(2);
 
   // fourth item in newStep dropdown: Route Call
   this.newStepSelectRouteCall = element.all(by.css('div.aa-panel[name="newStepForm"]'))
@@ -237,7 +248,18 @@ var AutoAttendantPage = function () {
     .all(by.css("div.aa-flex-row"))
     .last()
     .all(by.tagName('li'))
-    .get(3);
+    .get(4);
+
+  // second item is caller input
+  this.newStepDecision = element.all(by.css('div.aa-panel[name="newStepForm"]'))
+      .filter(function (el) {
+        return el.isDisplayed();
+      })
+      .first()
+      .all(by.css("div.aa-flex-row"))
+      .last()
+      .all(by.tagName('li'))
+      .get(1)
 
   // first item is caller input
   this.newStepCallerInput = element.all(by.css('div.aa-panel[name="newStepForm"]'))

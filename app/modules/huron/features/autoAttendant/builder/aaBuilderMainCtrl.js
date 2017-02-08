@@ -625,8 +625,13 @@
       FeatureToggleService.supports(FeatureToggleService.features.huronAACallerInput).then(function (result) {
         AACommonService.setCallerInputToggle(result);
       });
+      FeatureToggleService.supports(FeatureToggleService.features.huronAADecision).then(function (result) {
+        AACommonService.setDecisionToggle(result);
+      });
+
       AACommonService.setClioToggle(featureToggleDefault);
       AACommonService.setRouteQueueToggle(featureToggleDefault);
+      AACommonService.setRouteSIPAddressToggle(featureToggleDefault);
       return function () {
         FeatureToggleService.supports(FeatureToggleService.features.huronAAMediaUpload).then(function (result) {
           AACommonService.setMediaUploadToggle(result);
@@ -636,6 +641,9 @@
         });
         FeatureToggleService.supports(FeatureToggleService.features.huronAAClioMedia).then(function (result) {
           AACommonService.setClioToggle(result);
+        });
+        FeatureToggleService.supports(FeatureToggleService.features.huronAARouteRoom).then(function (result) {
+          AACommonService.setRouteSIPAddressToggle(result);
         });
       }();
     }

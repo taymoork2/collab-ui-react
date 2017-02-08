@@ -2,9 +2,29 @@
 
 set -e
 
+if [ -z "${WX2_ADMIN_WEB_CLIENT_HOME}" ]; then
+    >&2 echo "Error: WX2_ADMIN_WEB_CLIENT_HOME is not set, please export this environment variable first."
+    exit 1
+fi
+
+source "${WX2_ADMIN_WEB_CLIENT_HOME}/bin/include/env-var-helpers"
+
+if ! is_ci; then
+    echo "Warning: using limited-privilege Sauce creds."
+    inj_build_env_vars_for "dev"
+fi
+
+# notes:
+# - sauce connect proxy expects env var names 'SAUCE_USERNAME' and 'SAUCE_ACCESS_KEY'
+# - so assign them using env vars injected from jenkins
+# shellcheck disable=SC2153
+export SAUCE_USERNAME="${SAUCE__USERNAME}"
+# shellcheck disable=SC2153
+export SAUCE_ACCESS_KEY="${SAUCE__ACCESS_KEY}"
+
 PLATFORM=$(uname)
-SC_VERSION="4.3.7"
-WORK_DIR="$(pwd)/.sauce"
+SC_VERSION="4.4.3"
+WORK_DIR="${WX2_ADMIN_WEB_CLIENT_HOME}/.sauce"
 
 SC_DIR="${WORK_DIR}/sc"
 READY_FILE="${WORK_DIR}/sc.ready"
@@ -19,21 +39,27 @@ fi
 SC_URL="https://saucelabs.com/downloads/${SC_PACKAGE}"
 SC_PACKAGE_PATH="${WORK_DIR}/${SC_PACKAGE}"
 
-mkdir -p $WORK_DIR
+# 'SAUCE__RM_WORK_DIR' => jenkins job config env var
+# - see: https://sqbu-jenkins.cisco.com:8443/job/team/job/atlas/job/atlas-web/configure
+if [ "$SAUCE__RM_WORK_DIR" = "true" ]; then
+  rm -rf "$WORK_DIR"
+fi
 
-if [ ! -d $SC_DIR ]; then
-  echo 'Downloading Sauce Connect binary'
-  curl -o $SC_PACKAGE_PATH $SC_URL
+mkdir -p "$WORK_DIR"
+
+if [ ! -d "$SC_DIR" ]; then
+  echo "Downloading Sauce Connect binary (v${SC_VERSION})"
+  curl -o "$SC_PACKAGE_PATH" "$SC_URL"
   if [[ $PLATFORM == 'Darwin' ]]; then
-    unzip $SC_PACKAGE_PATH -d $WORK_DIR
-    mv "${WORK_DIR}/sc-${SC_VERSION}-osx" $SC_DIR
+    unzip "$SC_PACKAGE_PATH" -d "$WORK_DIR"
+    mv "${WORK_DIR}/sc-${SC_VERSION}-osx" "$SC_DIR"
   else
-    tar -xf $SC_PACKAGE_PATH -C $WORK_DIR
-    mv "${WORK_DIR}/sc-${SC_VERSION}-linux" $SC_DIR
+    tar -xf "$SC_PACKAGE_PATH" -C "$WORK_DIR"
+    mv "${WORK_DIR}/sc-${SC_VERSION}-linux" "$SC_DIR"
   fi
 fi
 
-cd $SC_DIR
+cd "$SC_DIR"
 rm -f sauce_connect.log
 touch sauce_connect.log
 
@@ -42,32 +68,31 @@ while [ "$i" -lt 3 ]; do
   echo "Sauce Connect startup attempt ${i}"
   i=$((i+1))
   bin/sc \
-    --direct-domains *.wbx2.com,*.webex.com,*.sc-tx2.huron-dev.com,*.huron-int.com \
-    --no-ssl-bump-domains *.atlasad.koalabait.com \
+    --direct-domains "*.wbx2.com,*.webex.com,*.sc-tx2.huron-dev.com,*.huron-int.com" \
+    --no-ssl-bump-domains "*.atlasad.koalabait.com" \
     -vv \
-    -l sauce_connect.log \
-    --logfile sauce_connect.log \
-    --pidfile $PID_FILE \
-    --readyfile $READY_FILE \
-    --tunnel-identifier $SC_TUNNEL_IDENTIFIER \
+    --logfile "sauce_connect.log" \
+    --pidfile "$PID_FILE" \
+    --readyfile "$READY_FILE" \
+    --tunnel-identifier "$SC_TUNNEL_IDENTIFIER" \
     > /dev/null 2>&1 \
     &
 
   echo 'Connecting to Sauce Labs - waiting a maximum 120s for ready file . . .'
   x=0
-  while [ "$x" -lt 120 -a ! -e $READY_FILE ]; do
+  while [ "$x" -lt 120 -a ! -e "$READY_FILE" ]; do
     x=$((x+1))
     sleep 1
   done
 
-  if [ -e $READY_FILE ]; then
+  if [ -e "$READY_FILE" ]; then
     echo 'Done'
     exit 0
   fi
 
   echo 'No ready file, killing sc process and trying again . . .'
-  if [ -e $PID_FILE ]; then
-    cat $PID_FILE | xargs kill -9
+  if [ -e "$PID_FILE" ]; then
+    xargs kill -9 < "$PID_FILE"
   fi
 done
 

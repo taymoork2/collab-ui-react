@@ -5,7 +5,7 @@
     .module('Mediafusion')
     .controller('MediaReportsController', MediaReportsController);
   /* @ngInject */
-  function MediaReportsController($q, $scope, $translate, $interval, MediaClusterServiceV2, UtilizationResourceGraphService, MediaReportsService, Notification, MediaReportsDummyGraphService, MediaSneekPeekResourceService, CallVolumeResourceGraphService, AvailabilityResourceGraphService) {
+  function MediaReportsController($q, $scope, $translate, $interval, MediaClusterServiceV2, UtilizationResourceGraphService, ParticipantDistributionResourceGraphService, MediaReportsService, Notification, MediaReportsDummyGraphService, MediaSneekPeekResourceService, CallVolumeResourceGraphService, AvailabilityResourceGraphService) {
     var vm = this;
     var interval = null;
     var deferred = $q.defer();
@@ -17,6 +17,7 @@
 
     vm.utilizationStatus = vm.REFRESH;
     vm.callVolumeStatus = vm.REFRESH;
+    vm.participantDistributionStatus = vm.REFRESH;
     vm.availabilityStatus = vm.REFRESH;
 
     vm.clusterFilter = null;
@@ -35,14 +36,24 @@
     vm.total_calls_heading = $translate.instant('mediaFusion.metrics.total_calls');
     vm.on_prem_calls_heading = $translate.instant('mediaFusion.metrics.onpremcalls');
     vm.hosted_calls_heading = $translate.instant('mediaFusion.metrics.hostedcalls');
-    vm.cloud_calls_heading = $translate.instant('mediaFusion.metrics.cloudcalls');
+    vm.total_participants_heading = $translate.instant('mediaFusion.metrics.total_participants');
+    vm.on_prem_participants_heading = $translate.instant('mediaFusion.metrics.onprem_participants');
+    vm.cloud_participants_heading = $translate.instant('mediaFusion.metrics.cloud_participants');
+    vm.cloud_calls_heading = $translate.instant('mediaFusion.metrics.cloud_calls');
     vm.redirected_calls_heading = $translate.instant('mediaFusion.metrics.redirectedcalls');
-    vm.cluster_availability_heading = $translate.instant('mediaFusion.metrics.clusteravailability');
+    vm.cluster_availability_heading = $translate.instant('mediaFusion.metrics.overAllAvailability');
+    vm.customPlaceholder = $translate.instant('mediaFusion.report.custom');
 
     vm.hosted_heading = vm.on_prem_calls_heading;
     vm.redirected_heading = vm.cloud_calls_heading;
+    vm.hosted_participants_heading = vm.on_prem_participants_heading;
 
     vm.Map = {};
+    vm.cloudparticipants = {
+      isShow: '',
+      value: '',
+      footerDesc: vm.cloud_participants_heading
+    };
 
     vm.displayAdoption = false;
     vm.displayResources = true;
@@ -88,9 +99,9 @@
       deferred.promise.then(function () {
         setTotalCallsData();
         setAvailabilityData();
-        setSneekPeekData();
         setClusterAvailability();
         setUtilizationData();
+        setParticipantDistributionData();
         setCallVolumeData();
       });
     }
@@ -103,12 +114,14 @@
     function clusterUpdate() {
       if (vm.clusterSelected !== vm.allClusters) {
         vm.clusterId = vm.Map[vm.clusterSelected];
-        vm.hosted_heading = vm.hosted_calls_heading;
+        vm.hosted_heading = vm.on_prem_calls_heading;
         vm.redirected_heading = vm.redirected_calls_heading;
+        vm.hosted_participants_heading = vm.on_prem_participants_heading;
       } else {
         vm.clusterId = vm.allClusters;
         vm.hosted_heading = vm.on_prem_calls_heading;
         vm.redirected_heading = vm.cloud_calls_heading;
+        vm.hosted_participants_heading = vm.on_prem_participants_heading;
       }
       loadResourceDatas();
     }
@@ -125,7 +138,12 @@
         startTime: data.data.startTime,
         endTime: data.data.endTime
       };
+      vm.timeSelected.label = vm.customPlaceholder;
       timeUpdate();
+    });
+
+    $scope.$on('$destroy', function () {
+      $interval.cancel(interval);
     });
 
     function timeUpdate() {
@@ -175,11 +193,15 @@
             vm.onprem = vm.noData;
             vm.cloud = vm.noData;
             vm.total = vm.noData;
-          } else if (_.isUndefined(response.data.callsOnPremise) && !_.isUndefined(response.data.callsOverflow)) {
+          } else if (_.isUndefined(response.data.callsOnPremise) && !_.isUndefined(response.data.cloudCalls)) {
             vm.onprem = vm.noData;
             vm.cloud = response.data.callsOverflow;
+            vm.cloudcalls = response.data.cloudCalls;
+            vm.cloudparticipants.isShow = true;
+            vm.cloudparticipants.value = vm.cloudcalls;
             vm.total = vm.cloud;
-          } else if (!_.isUndefined(response.data.callsOnPremise) && _.isUndefined(response.data.callsOverflow)) {
+            vm.totalcloudcalls = vm.cloudcalls;
+          } else if (!_.isUndefined(response.data.callsOnPremise) && _.isUndefined(response.data.cloudCalls)) {
             vm.onprem = response.data.callsOnPremise;
             vm.cloud = vm.noData;
             vm.total = vm.onprem;
@@ -190,7 +212,11 @@
           } else {
             vm.onprem = response.data.callsOnPremise;
             vm.cloud = response.data.callsOverflow;
+            vm.cloudcalls = response.data.cloudCalls;
             vm.total = vm.onprem + vm.cloud;
+            vm.totalcloudcalls = vm.onprem + vm.cloudcalls;
+            vm.cloudparticipants.isShow = true;
+            vm.cloudparticipants.value = vm.cloudcalls;
           }
 
         } else {
@@ -230,6 +256,7 @@
           vm.clusterAvailability = vm.noData;
         } else {
           vm.clusterAvailability = response.data.availabilityPercent + vm.percentage;
+          setSneekPeekData();
         }
       });
     }
@@ -242,16 +269,10 @@
       }, function () {
         Notification.error('mediaFusion.genericError');
       });
-
-      MediaReportsService.getHostedOnPremisesTooltip(vm.timeSelected).then(function (response) {
-        vm.onPremisesTooltipOptions = MediaSneekPeekResourceService.getHostedOnPremisesSneekPeekValues(response, vm.onprem, vm.clusterId, vm.clusterOptions);
-      }, function () {
-        Notification.error('mediaFusion.genericError');
-      });
     }
 
     function setUtilizationData() {
-      MediaReportsService.getUtilizationData(vm.timeSelected, vm.allClusters).then(function (response) {
+      MediaReportsService.getUtilizationData(vm.timeSelected, vm.clusterId).then(function (response) {
         if (_.isUndefined(response.graphData) || _.isUndefined(response.graphs) || response.graphData.length === 0 || response.graphs.length === 0) {
           setDummyUtilization();
         } else {
@@ -269,6 +290,28 @@
         }
       }, function () {
         setDummyUtilization();
+      });
+    }
+
+    function setParticipantDistributionData() {
+      MediaReportsService.getParticipantDistributionData(vm.timeSelected, vm.clusterId).then(function (response) {
+        if (_.isUndefined(response.graphData) || _.isUndefined(response.graphs) || response.graphData.length === 0 || response.graphs.length === 0) {
+          setDummyParticipantDistribution();
+        } else {
+          deferred.promise.then(function () {
+            //set the participant distribution graphs here
+            if (_.isUndefined(setParticipantDistributionGraph(response))) {
+              setDummyParticipantDistribution();
+            } else {
+              vm.participantDistributionStatus = vm.SET;
+            }
+          }, function () {
+            //map is nor formed so we shoud show dummy graphs
+            setDummyParticipantDistribution();
+          });
+        }
+      }, function () {
+        setDummyParticipantDistribution();
       });
     }
 
@@ -309,6 +352,11 @@
       return vm.utilizationChart;
     }
 
+    function setParticipantDistributionGraph(response) {
+      vm.participantDistributionChart = ParticipantDistributionResourceGraphService.setParticipantDistributionGraph(response, vm.participantDistributionChart, vm.clusterSelected, vm.clusterId, vm.timeSelected, vm.Map);
+      return vm.participantDistributionChart;
+    }
+
     function setCallVolumeGraph(response) {
       vm.callVolumeChart = CallVolumeResourceGraphService.setCallVolumeGraph(response.graphData, vm.callVolumeChart, vm.clusterSelected, vm.timeSelected);
     }
@@ -324,6 +372,15 @@
         graphs: MediaReportsDummyGraphService.dummyUtilizationGraph()
       };
       setUtilizationGraph(response);
+    }
+
+    function setDummyParticipantDistribution() {
+      vm.participantDistributionStatus = vm.EMPTY;
+      var response = {
+        graphData: MediaReportsDummyGraphService.dummyParticipantDistributionData(vm.timeSelected),
+        graphs: MediaReportsDummyGraphService.dummyParticipantDistributionGraph()
+      };
+      setParticipantDistributionGraph(response);
     }
 
     function setDummyCallVolume() {
@@ -371,11 +428,7 @@
     function clusterUpdateFromTooltip() {
       vm.selectedClusterSneakPeek = vm.availabilityTooltipOptions['tooltipModel'];
       var selectedCluster = vm.selectedClusterSneakPeek;
-      selectedCluster = selectedCluster.split('.').join('');
       selectedCluster = selectedCluster.substring(0, selectedCluster.lastIndexOf('  '));
-      _.forEach(vm.clusterOptions, function (val) {
-        selectedCluster = _.includes(val, selectedCluster) ? val : selectedCluster;
-      });
       vm.selectedClusterSneakPeek = vm.availabilityTooltipOptions.values[0];
       vm.clusterSelected = selectedCluster;
       clusterUpdate();

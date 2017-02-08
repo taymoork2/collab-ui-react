@@ -25,8 +25,6 @@ describe('Controller: PlacesCtrl', function () {
   function initSpies() {
     spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.resolve({}));
     spyOn(Userservice, 'getUser');
-    spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.resolve());
-    spyOn(FeatureToggleService, 'csdmPstnGetStatus').and.returnValue($q.resolve());
     spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.resolve());
     spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.resolve());
   }
@@ -77,7 +75,7 @@ describe('Controller: PlacesCtrl', function () {
         cisUuid: adminCisUuid,
         organizationId: adminOrgId
       };
-      spyOn(controller, 'isEntitledToHuron').and.returnValue(isEntitledToHuron);
+      spyOn(controller, 'isOrgEntitledToHuron').and.returnValue(isEntitledToHuron);
       spyOn(Authinfo, 'isDeviceMgmt').and.returnValue(isEntitledToRoomSystem);
       spyOn(Authinfo, 'getUserId').and.returnValue(userCisUuid);
       spyOn(Authinfo, 'getPrimaryEmail').and.returnValue(email);

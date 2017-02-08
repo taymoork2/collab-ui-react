@@ -1,6 +1,10 @@
 .management-service-list-state,
 .call-service-list-state,
-.calendar-service-list-state {
+.calendar-service-list-state,
+.context-resources-state,
+.context-settings-state,
+.context-fields-state,
+.context-fieldsets-state, {
   @extend %page-background-white;
 }
 $user-statuses-bar-height: 7.25rem;
@@ -291,14 +295,13 @@ Special stuff currently used for out own mail input field...
   }
 }
 
+.export-user-statuses-progress-info {
+  padding-bottom: 0.5rem;
+}
+
 .hercules-capitalize {
   text-transform: capitalize;
 }
-
-.hercules-upgrade-section {
-  margin-bottom: 20px;
-}
-
 
 .hercules-upload-key-modal {
 
@@ -359,5 +362,3 @@ Special stuff currently used for out own mail input field...
   }
 
 }
-
-

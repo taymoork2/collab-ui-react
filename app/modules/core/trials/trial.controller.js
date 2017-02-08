@@ -5,7 +5,7 @@
     .controller('TrialCtrl', TrialCtrl);
 
   /* @ngInject */
-  function TrialCtrl($q, $state, $scope, $stateParams, $translate, $window, Analytics, Authinfo, Config, EmailService, HuronCustomer, FeatureToggleService, Notification, Orgservice, TrialContextService, TrialDeviceService, TrialPstnService, TrialService, ValidationService) {
+  function TrialCtrl($q, $state, $scope, $stateParams, $translate, $window, Analytics, Authinfo, Config, HuronCountryService, HuronCustomer, FeatureToggleService, Notification, Orgservice, TrialContextService, TrialDeviceService, TrialPstnService, TrialService, ValidationService) {
     var vm = this;
 
     var _careDefaultQuantity = 15;
@@ -41,7 +41,6 @@
     vm.showRoomSystems = false;
     vm.showContextServiceTrial = false;
     vm.showCare = false;
-    vm.isCallBackEnabled = false;
     vm.paidServicesForDisplay = null;
 
     vm.messageTrial = vm.trialData.trials.messageTrial;
@@ -199,10 +198,10 @@
       },
       expressionProperties: {
         'templateOptions.required': function () {
-          return (vm.messageTrial.enabled && (!vm.isCallBackEnabled || vm.callTrial.enabled)); // Since, it depends on Message and Call Offer
+          return (vm.messageTrial.enabled && vm.callTrial.enabled); // Since, it depends on Message and Call Offer
         },
         'templateOptions.disabled': function () {
-          return messageOfferDisabledExpression() || (vm.isCallBackEnabled && callOfferDisabledExpression()) || vm.preset.care;
+          return messageOfferDisabledExpression() || callOfferDisabledExpression() || vm.preset.care;
         },
         'data.paid': function () {
           return vm.careTrial.paid;
@@ -565,6 +564,7 @@
     vm.devicesModal = _.find(vm.trialStates, {
       name: 'trial.call'
     });
+    vm.setDefaultCountry = setDefaultCountry;
 
     init();
 
@@ -575,13 +575,11 @@
       var overrideTestOrg = false;
       vm.hasCallEntitlement = Authinfo.isSquaredUC() || vm.isNewTrial();
       var promises = {
-        atlasCareCallbackTrials: FeatureToggleService.atlasCareCallbackTrialsGetStatus(),
         atlasDarling: FeatureToggleService.atlasDarlingGetStatus(),
         ftCareTrials: FeatureToggleService.atlasCareTrialsGetStatus(),
         ftShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus(),  //TODO add true for shipping testing.
         adminOrg: Orgservice.getAdminOrgAsPromise().catch(function () { return false; }),
-        placesEnabled: FeatureToggleService.supports(FeatureToggleService.features.csdmPstn),
-        atlasCreateTrialBackendEmail: FeatureToggleService.atlasCreateTrialBackendEmailGetStatus()
+        huronCountryList: getCountryList(),
       };
       if (!vm.isNewTrial()) {
         promises.tcHasService = TrialContextService.trialHasService(vm.currentTrial.customerOrgId);
@@ -592,20 +590,16 @@
           vm.showContextServiceTrial = true;
           vm.showCare = results.ftCareTrials;
           vm.sbTrial = results.atlasDarling;
-          vm.isCallBackEnabled = results.atlasCareCallbackTrials;
           vm.atlasTrialsShipDevicesEnabled = results.ftShipDevices;
           vm.pstnTrial.enabled = vm.hasCallEntitlement;
           overrideTestOrg = results.ftShipDevices;
           isTestOrg = _.get(results.adminOrg, 'data.isTestOrg', false);
           vm.canSeeDevicePage = !isTestOrg || overrideTestOrg;
           vm.devicesModal.enabled = vm.canSeeDevicePage;
+          vm.defaultCountryList = results.huronCountryList;
 
           var initResults = (vm.isExistingOrg()) ? getExistingOrgInitResults(results, vm.hasCallEntitlement, vm.preset, vm.paidServices) : getNewOrgInitResults(results, vm.hasCallEntitlement, vm.stateDefaults);
           _.merge(vm, initResults);
-          if (vm.isNewTrial()) {
-            vm.atlasCreateTrialBackendEmailEnabled = results.atlasCreateTrialBackendEmail;
-            vm.placesEnabled = results.placesEnabled;
-          }
           updateTrialService(_messageTemplateOptionId);
           vm.paidServicesForDisplay = getPaidServicesForDisplay(Authinfo.getOrgId(), Authinfo.getOrgName());
         })
@@ -626,6 +620,20 @@
           }
 
           toggleTrial();
+        });
+    }
+
+    function getCountryList() {
+      return FeatureToggleService.huronFederatedSparkCallGetStatus()
+        .then(function (supported) {
+          if (supported) {
+            return HuronCountryService.getCountryList()
+              .catch(function () {
+                return [];
+              });
+          } else {
+            return [];
+          }
         });
     }
 
@@ -666,23 +674,7 @@
     }
 
     function toggleTrial() {
-      /* ALINA PR NOTE: Refactoring logic here.  Previously:
-        FOR TrialAdd:
-          if (!vm.callTrial.enabled && !(vm.roomSystemTrial.enabled && vm.placesEnabled)) {
-            vm.pstnTrial.enabled = false;
-          }
-          if ((vm.callTrial.enabled || (vm.roomSystemTrial.enabled && vm.placesEnabled)) && vm.hasCallEntitlement && !vm.pstnTrial.skipped) {
-            vm.pstnTrial.enabled = true;
-          }
-        FOR  TrialEdit:
-          if (!vm.callTrial.enabled) {
-            vm.pstnTrial.enabled = false;
-          }
-          if (vm.callTrial.enabled && vm.hasCallEntitlement && !vm.pstnTrial.skipped) {
-            vm.pstnTrial.enabled = true;
-          }
-      */
-      var newTrialPstnAdditonalTest = (vm.roomSystemTrial.enabled && vm.placesEnabled);
+      var newTrialPstnAdditonalTest = (vm.roomSystemTrial.enabled && vm.isNewTrial());
       if (vm.isEditTrial()) {
         newTrialPstnAdditonalTest = true;
       }
@@ -871,20 +863,6 @@
             customerName: vm.details.customerName
           });
           return $q.reject(response);
-        }).then(function (response) {
-          // suppress email if webex trial is enabled (more appropriately
-          // handled by the backend process once provisioning is complete)
-          if (!vm.webexTrial.enabled && !vm.atlasCreateTrialBackendEmailEnabled) {
-            return EmailService.emailNotifyTrialCustomer(vm.details.customerEmail,
-              vm.details.licenseDuration, Authinfo.getOrgId())
-              .catch(function (response) {
-                Notification.errorResponse(response, 'didManageModal.emailFailText');
-              })
-              .then(function () {
-                return response;
-              });
-          }
-          return response;
         }).then(function (response) {
           vm.customerOrgId = response.data.customerOrgId;
           return saveTrialPstn(vm.customerOrgId, response.data.customerName, response.data.customerEmail);
@@ -1318,6 +1296,10 @@
             return TrialPstnService.createPstnEntity(customerOrgId, customerName);
           }
         });
+    }
+
+    function setDefaultCountry(country) {
+      vm.details.country = country;
     }
   }
 })();

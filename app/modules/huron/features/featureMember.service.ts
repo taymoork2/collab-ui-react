@@ -5,15 +5,19 @@ export interface IFeatureMemberPicture {
   thumbnailSrc: string | undefined;
 }
 
-export class FeatureMemberService {
+export class MemberTypeConst {
+  public static PLACE: string = 'PROFILE_PLACE';
+  public static USER: string  = 'PROFILE_REAL_USER';
+}
 
+export class FeatureMemberService {
   /* @ngInject */
   constructor(
     private UrlConfig,
     private HuronConfig,
     private Authinfo,
     private $http: ng.IHttpService,
-    private MemberService: MemberService
+    private MemberService: MemberService,
   ) {}
 
   public getMemberPicture(memberId: string): ng.IPromise<IFeatureMemberPicture> {
@@ -99,14 +103,14 @@ export class FeatureMemberService {
     }
     let name = '';
 
-    if (member.type === USER_REAL_USER) {
+    if (member.type === USER_REAL_USER || member.type === MemberTypeConst.USER) {
       let firstLastName = this.getFirstLastName(member);
       if (firstLastName !== '') {
         name = (firstLastName + ' (' + this.getUserName(member) + ')');
       } else {
         name = this.getUserName(member);
       }
-    } else if (member.type === USER_PLACE && member.displayName) {
+    } else if ((member.type === USER_PLACE || member.type === MemberTypeConst.PLACE) && member.displayName) {
       name = member.displayName;
     }
     return name;
@@ -120,15 +124,14 @@ export class FeatureMemberService {
     if (!member) {
       return '';
     }
-
     let name = '';
-    if (member.type === USER_REAL_USER) {
+    if (member.type === USER_REAL_USER || member.type === MemberTypeConst.USER ) {
       if (this.getFirstLastName(member) !== '') {
         name = (this.getFirstLastName(member));
       } else {
         name = (member.displayName) ? member.displayName : '';
       }
-    } else if (member.type === USER_PLACE && member.displayName) {
+    } else if ((member.type === USER_PLACE || member.type === MemberTypeConst.PLACE) && member.displayName) {
       name = member.displayName;
     }
     return name;
@@ -139,10 +142,19 @@ export class FeatureMemberService {
       return '';
     }
 
-    return (member.type === USER_REAL_USER) ? 'user' : 'place';
+    return (member.type === USER_REAL_USER || member.type === MemberTypeConst.USER ) ? 'user' : 'place';
   }
 
   public getMemberSuggestions(hint: string): ng.IPromise<Member[]> {
     return this.MemberService.getMemberList(hint, false);
   }
+
+  public getMachineAcct(uuid: string): ng.IPromise<any> {
+    let domainMgmtUrl = this.UrlConfig.getDomainManagementUrl(this.Authinfo.getOrgId()) + 'Machines/' + uuid;
+
+    return this.$http.get(domainMgmtUrl, {}).then((response) => {
+      return _.get(response, 'data');
+    });
+  }
+
 }

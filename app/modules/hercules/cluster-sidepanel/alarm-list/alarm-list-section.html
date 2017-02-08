@@ -1,0 +1,17 @@
+<cs-sp-section>
+  <div class="section-title-row section-name" translate="hercules.alarms.alarms"></div>
+  <div class="feature-list" ng-if="$ctrl.alarms.length > 0">
+    <ul>
+      <li class="feature"
+          ng-repeat="alarm in $ctrl.alarms"
+          ng-class="{'list-item': !$first}">
+        <a ng-click="$ctrl.goToAlarm(alarm)">
+          <i ng-class="$ctrl.getSeverityIcon(alarm.severity)"></i>
+          <span class="feature-name">{{alarm.title}}</span>
+          <i class="feature-arrow"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <p ng-if="$ctrl.alarms.length === 0" translate="hercules.alarms.noAlarms"></p>
+</cs-sp-section>

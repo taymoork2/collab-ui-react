@@ -7,7 +7,7 @@ describe('Service: MemberService', () => {
       '$httpBackend',
       'Authinfo',
       'HuronConfig',
-      'MemberService'
+      'MemberService',
     );
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
 

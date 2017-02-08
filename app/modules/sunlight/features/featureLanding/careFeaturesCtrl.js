@@ -6,7 +6,8 @@
       .controller('CareFeaturesCtrl', CareFeaturesCtrl);
 
   /* @ngInject */
-  function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, Authinfo, CardUtils, CareFeatureList, CTService, Log, Notification, FeatureToggleService) {
+  function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, Authinfo, CardUtils,
+                            CareFeatureList, CTService, Log, Notification, FeatureToggleService) {
     var vm = this;
     vm.init = init;
     var pageStates = {
@@ -15,14 +16,12 @@
       loading: 'Loading',
       error: 'Error'
     };
-    var listOfChatFeature = [];
-    var listOfCallbackFeature = [];
     var listOfAllFeatures = [];
     var featureToBeDeleted = {};
     vm.searchData = searchData;
     vm.deleteCareFeature = deleteCareFeature;
     vm.openEmbedCodeModal = openEmbedCodeModal;
-    vm.listOfFeatures = [];
+    vm.filteredListOfFeatures = [];
     vm.pageState = pageStates.loading;
     vm.cardColor = {};
     vm.placeholder = {
@@ -41,46 +40,58 @@
      *  4. Define the formatter
      * */
     vm.features = [{
-      order: 0,
       name: 'Ch',
       getFeature: CareFeatureList.getChatTemplates,
-      formatter: CareFeatureList.formatChatTemplates,
+      formatter: CareFeatureList.formatTemplates,
       i18n: 'careChatTpl.chatTemplate',
       isEmpty: false,
-      color: 'primary'
+      color: 'primary',
+      icons: ['icon-message'],
+      data: []
     }, {
-      order: 1,
       name: 'Ca',
       getFeature: CareFeatureList.getCallbackTemplates,
-      formatter: CareFeatureList.formatCallbackTemplates,
+      formatter: CareFeatureList.formatTemplates,
       i18n: 'careChatTpl.chatTemplate',
       isEmpty: false,
-      color: 'alerts'
+      color: 'alerts',
+      icons: ['icon-phone'],
+      data: []
     }];
-    vm.filters = [];
-    FeatureToggleService.atlasCareCallbackTrialsGetStatus().then(function (result) {
-      if (result) {
-        vm.filters = [{
-          name: $translate.instant('common.all'),
-          filterValue: 'all'
-        }, {
-          name: $translate.instant('sunlightDetails.chatMediaType'),
-          filterValue: 'chat'
-        }, {
-          name: $translate.instant('sunlightDetails.callbackMediaType'),
-          filterValue: 'callback'
-        }];
+
+    vm.filters = [{
+      name: $translate.instant('common.all'),
+      filterValue: 'all'
+    }, {
+      name: $translate.instant('sunlightDetails.chatMediaType'),
+      filterValue: 'chat'
+    }, {
+      name: $translate.instant('sunlightDetails.callbackMediaType'),
+      filterValue: 'callback'
+    }];
+
+    FeatureToggleService.atlasCareChatPlusCallbackTrialsGetStatus().then(function (enabled) {
+      if (enabled) {
+        vm.features.push({
+          name: 'ChCa',
+          getFeature: CareFeatureList.getChatPlusCallbackTemplates,
+          formatter: CareFeatureList.formatTemplates,
+          i18n: 'careChatTpl.chatTemplate',
+          isEmpty: false,
+          color: 'cta',
+          icons: ['icon-message', 'icon-phone'],
+          data: []
+        });
+        vm.filters.push({
+          name: $translate.instant('sunlightDetails.chatPlusCallbackMediaType'),
+          filterValue: 'chatPlusCallback'
+        });
       }
+      init();
     });
-    init();
 
     function init() {
       vm.pageState = pageStates.loading;
-
-      _.forEach(vm.features, function (feature) {
-        vm.cardColor[feature.name] = feature.color;
-      });
-
       var featuresPromises = getListOfFeatures();
 
       handleFeaturePromises(featuresPromises);
@@ -88,9 +99,12 @@
       $q.all(featuresPromises).then(function () {
         showNewFeaturePageIfNeeded();
       }).finally(function () {
-        var flatList = _.filter(_.flatten(listOfAllFeatures));
-        if (flatList.length > 0) {
-          vm.listOfFeatures = vm.listOfFeatures.concat(flatList);
+        for (var i = 0; i < vm.features.length; i++) {
+          listOfAllFeatures = listOfAllFeatures.concat(vm.features[i].data);
+        }
+        //by default "all" filter is the selected
+        vm.filteredListOfFeatures = _.clone(listOfAllFeatures);
+        if (listOfAllFeatures.length > 0) {
           vm.pageState = pageStates.showFeatures;
         }
       });
@@ -107,16 +121,11 @@
     }
 
     function handleFeatureData(data, feature) {
-      var list = feature.formatter(data);
+      var list = feature.formatter(data, feature);
       if (list.length > 0) {
+        feature.data = list;
         feature.isEmpty = false;
-        if (feature.order === 0) {
-          listOfChatFeature = list;
-        } else {
-          listOfCallbackFeature = list;
-        }
-        listOfAllFeatures = listOfChatFeature.concat(listOfCallbackFeature);
-      } else if (list.length === 0) {
+      } else {
         feature.isEmpty = true;
         showReloadPageIfNeeded();
       }
@@ -147,7 +156,7 @@
     }
 
     function showNewFeaturePageIfNeeded() {
-      if (vm.pageState !== pageStates.showFeatures && areFeaturesEmpty() && vm.listOfFeatures.length === 0) {
+      if (vm.pageState !== pageStates.showFeatures && areFeaturesEmpty()) {
         vm.pageState = pageStates.newFeature;
       }
     }
@@ -157,21 +166,21 @@
     }
 
     function showReloadPageIfNeeded() {
-      if (vm.pageState === pageStates.loading && areFeaturesEmpty() && vm.listOfFeatures.length === 0) {
+      if (vm.pageState === pageStates.loading && areFeaturesEmpty()) {
         vm.pageState = pageStates.error;
       }
     }
 
     //Switches Data that populates the Features tab
     function setFilter(filterValue) {
-      vm.listOfFeatures = CareFeatureList.filterCards(listOfAllFeatures, filterValue, vm.filterText);
+      vm.filteredListOfFeatures = CareFeatureList.filterCards(listOfAllFeatures, filterValue, vm.filterText);
       reInstantiateMasonry();
     }
 
     /* This function does an in-page search for the string typed in search box*/
     function searchData(searchStr) {
       vm.filterText = searchStr;
-      vm.listOfFeatures = CareFeatureList.filterCards(listOfAllFeatures, 'all', vm.filterText);
+      vm.filteredListOfFeatures = CareFeatureList.filterCards(listOfAllFeatures, 'all', vm.filterText);
       reInstantiateMasonry();
     }
 
@@ -209,7 +218,7 @@
     //list is updated by deleting a feature
     $scope.$on('CARE_FEATURE_DELETED', function () {
       listOfAllFeatures.splice(listOfAllFeatures.indexOf(featureToBeDeleted), 1);
-      vm.listOfFeatures = listOfAllFeatures;
+      vm.filteredListOfFeatures = listOfAllFeatures;
       featureToBeDeleted = {};
       if (listOfAllFeatures.length === 0) {
         vm.pageState = pageStates.newFeature;

@@ -1,12 +1,12 @@
 'use strict';
 
 describe('Controller: MySubscriptionCtrl', function () {
-  let $httpBackend, rootScope, $scope, $controller, $q, controller, Orgservice, ServiceDescriptor, Authinfo, FeatureToggleService;
+  let $httpBackend, rootScope, $scope, $controller, $q, controller, DigitalRiverService, OnlineUpgradeService, Orgservice, ServiceDescriptor, Authinfo, FeatureToggleService;
   let data = getJSONFixture('core/json/myCompany/subscriptionData.json');
-  let trialUrl = 'https://atlas-integration.wbx2.com/admin/api/v1/commerce/online/subID';
+  let trialUrl = 'https://atlas-integration.wbx2.com/admin/api/v1/commerce/online/intSubID';
   let trialUrlResponse = 'trialUrlResponse';
-  let productInstance = 'https://atlas-integration.wbx2.com/admin/api/v1/commerce/productinstances?ciUUID=ciUUID';
   let productInstanceResponse = 'productInstanceResponse';
+  let drUrlResponse = 'drUrlResponse';
 
   data.licensesFormatted.forEach(function (item){
     item.subscriptions[0].siteUrl = undefined;
@@ -20,28 +20,35 @@ describe('Controller: MySubscriptionCtrl', function () {
   data.subscriptionsFormatted[0].licenses[8].siteUrl = undefined;
   data.subscriptionsFormatted[0].upgradeTrialUrl = undefined;
   data.subscriptionsFormatted[0].productInstanceId = undefined;
+  data.subscriptionsFormatted[0].changeplanOverride = undefined;
   data.trialSubscriptionData[0].licenses[0].siteUrl = undefined;
   data.trialSubscriptionData[0].upgradeTrialUrl = undefined;
   data.trialSubscriptionData[0].productInstanceId = undefined;
+  data.trialSubscriptionData[0].changeplanOverride = undefined;
 
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _Orgservice_, _ServiceDescriptor_, _Authinfo_, _FeatureToggleService_, _$httpBackend_) {
+  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _DigitalRiverService_, _OnlineUpgradeService_, _Orgservice_, _ServiceDescriptor_, _Authinfo_, _FeatureToggleService_, _$httpBackend_) {
     $httpBackend = _$httpBackend_;
     rootScope = _$rootScope_;
     $scope = rootScope.$new();
     $controller = _$controller_;
+    DigitalRiverService = _DigitalRiverService_;
+    OnlineUpgradeService = _OnlineUpgradeService_;
     Orgservice = _Orgservice_;
     ServiceDescriptor = _ServiceDescriptor_;
     Authinfo = _Authinfo_;
     FeatureToggleService = _FeatureToggleService_;
     $q = _$q_;
 
-    spyOn(ServiceDescriptor, 'servicesInOrg').and.returnValue($q.when(data.servicesResponse));
-    spyOn(FeatureToggleService, 'atlasSMPGetStatus').and.returnValue($q.when(false));
-    spyOn(FeatureToggleService, 'atlasSmpReportsGetStatus').and.returnValue($q.when(false));
+    spyOn(ServiceDescriptor, 'getServices').and.returnValue($q.when(data.servicesResponse));
+    spyOn(FeatureToggleService, 'atlasSharedMeetingsGetStatus').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'atlasSharedMeetingsReportsGetStatus').and.returnValue($q.when(false));
+    spyOn(OnlineUpgradeService, 'getProductInstanceId').and.returnValue($q.when(productInstanceResponse));
+    spyOn(Authinfo, 'getUserId').and.returnValue('12345');
+    spyOn(DigitalRiverService, 'getSubscriptionsUrl').and.returnValue($q.when(drUrlResponse));
     spyOn(rootScope, '$broadcast').and.callThrough();
   }));
 
@@ -60,42 +67,6 @@ describe('Controller: MySubscriptionCtrl', function () {
     });
   };
 
-  describe('Digital River iframe for online orgs', () => {
-    beforeEach(function () {
-      this.injectDependencies(
-        '$q',
-        'Authinfo',
-        'DigitalRiverService',
-        'Notification'
-      );
-      this.getDigitalRiverSubscriptionsUrlDefer = this.$q.defer();
-      spyOn(this.Authinfo, 'isOnline').and.returnValue(true);
-      spyOn(this.DigitalRiverService, 'getSubscriptionsUrl').and.returnValue(this.getDigitalRiverSubscriptionsUrlDefer.promise);
-      spyOn(this.Notification, 'errorWithTrackingId');
-      spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.when(data.subscriptionsResponse));
-    });
-    it('should get digital river order history url to load iframe', function () {
-      this.getDigitalRiverSubscriptionsUrlDefer.resolve('https://some.url.com');
-      startController();
-      $scope.$apply();
-
-      expect(this.DigitalRiverService.getSubscriptionsUrl).toHaveBeenCalled();
-      expect(controller.digitalRiverSubscriptionsUrl).toEqual('https://some.url.com');
-    });
-
-    it('should notify error if unable to get digital river url', function () {
-      this.getDigitalRiverSubscriptionsUrlDefer.reject({
-        data: undefined,
-        status: 500,
-      });
-      startController();
-      $scope.$apply();
-
-      expect(controller.digitalRiverSubscriptionsUrl).toBeUndefined();
-      expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(jasmine.any(Object), 'subscriptions.loadError');
-    });
-  });
-
   it('should initialize with expected data for ccw orgs', function () {
     spyOn(Authinfo, 'isOnline').and.returnValue(false);
     spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.when(data.subscriptionsResponse));
@@ -112,9 +83,12 @@ describe('Controller: MySubscriptionCtrl', function () {
     expect(rootScope.$broadcast).toHaveBeenCalled();
   });
 
-  xit('should initialize with expected data for online orgs', function () {
+  it('should initialize with expected data for online orgs', function () {
     spyOn(Authinfo, 'isOnline').and.returnValue(true);
     spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.when(data.subscriptionsResponse));
+    data.subscriptionsFormatted[0].isOnline = true;
+    data.subscriptionsFormatted[0].productInstanceId = productInstanceResponse;
+    data.subscriptionsFormatted[0].changeplanOverride = drUrlResponse;
     startController();
     $scope.$apply();
 
@@ -140,13 +114,13 @@ describe('Controller: MySubscriptionCtrl', function () {
     expect(rootScope.$broadcast).toHaveBeenCalled();
   });
 
-  xit('should initialize with expected data for online trial orgs', function () {
+  it('should initialize with expected data for online trial orgs', function () {
     $httpBackend.whenGET(trialUrl).respond($q.when(trialUrlResponse));
-    $httpBackend.whenGET(productInstance).respond($q.when(productInstanceResponse));
     spyOn(Authinfo, 'isOnline').and.returnValue(true);
     spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.when(data.subscriptionsTrialResponse));
+    data.trialSubscriptionData[0].isOnline = true;
     data.trialSubscriptionData[0].upgradeTrialUrl = trialUrlResponse;
-    data.trialSubscriptionData[0].productInstance = productInstanceResponse;
+    data.trialSubscriptionData[0].productInstanceId = productInstanceResponse;
 
     startController();
     $scope.$apply();
@@ -159,4 +133,31 @@ describe('Controller: MySubscriptionCtrl', function () {
     expect(controller.isOnline).toBeTruthy();
     expect(rootScope.$broadcast).toHaveBeenCalled();
   });
+
+  describe('Tests for Named User Licenses : ', function () {
+    let dataWithNamedUserLicense = { offers: [{ licenseModel: 'hosts' }] };
+
+    it('The isSharedMeetingsLicense() function should return false for a service that does not have shared Licenses ', function () {
+      expect(controller.isSharedMeetingsLicense(dataWithNamedUserLicense)).toEqual(false);
+    });
+
+    it('The determineLicenseType() function should return licenseType Named User License string', function () {
+      let result = controller.determineLicenseType(dataWithNamedUserLicense);
+      expect(result).toEqual('firstTimeWizard.namedLicenses');
+    });
+  });
+
+  describe('Tests for Shared Meeting Licenses : ', function () {
+    let dataWithSharedMeetingsLicense = { offers: [{ licenseModel: 'Cloud Shared Meeting' }] };
+
+    it('The isSharedMeetingsLicense() function should return true for a service that has shared licenses', function () {
+      expect(controller.isSharedMeetingsLicense(dataWithSharedMeetingsLicense)).toEqual(true);
+    });
+
+    it('The determineLicenseType() function should return licenseType Shared Meeting License string', function () {
+      let result = controller.determineLicenseType(dataWithSharedMeetingsLicense);
+      expect(result).toEqual('firstTimeWizard.sharedLicenses');
+    });
+  });
+
 });

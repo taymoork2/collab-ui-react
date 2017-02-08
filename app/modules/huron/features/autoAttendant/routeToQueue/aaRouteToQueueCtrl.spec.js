@@ -82,6 +82,55 @@ describe('Controller: AARouteToQueueCtrl', function () {
 
   }));
 
+  describe('fromDecision', function () {
+    beforeEach(function () {
+      AutoAttendantCeMenuModelService.clearCeMenuMap();
+      aaUiModel[schedule] = AutoAttendantCeMenuModelService.newCeMenu();
+      aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
+      var action = AutoAttendantCeMenuModelService.newCeActionEntry('conditional', '');
+      action.queueSettings = {};
+      aaUiModel[schedule].entries[index].actions[0] = action;
+      $scope.fromDecision = true;
+    });
+
+    it('should create a condition then action', function () {
+
+      var controller = $controller('AARouteToQueueCtrl', {
+        $scope: $scope
+      });
+
+      expect(controller.menuEntry.actions[0].description).toEqual('');
+      expect(controller.menuEntry.actions[0].then).toBeDefined();
+      expect(controller.menuEntry.actions[0].then.name).toEqual('routeToQueue');
+    });
+    it('should create a condition action with then clause', function () {
+
+      aaUiModel[schedule].entries[0].actions[0] = undefined;
+
+      var controller = $controller('AARouteToQueueCtrl', {
+        $scope: $scope
+      });
+
+      expect(controller.menuEntry.actions[0].name).toEqual('conditional');
+      expect(controller.menuEntry.actions[0].then).toBeDefined();
+      expect(controller.menuEntry.actions[0].then.name).toEqual('routeToQueue');
+
+    });
+    it('should change an action from route to routeToQueue ', function () {
+
+      aaUiModel[schedule].entries[index].actions[0].then = AutoAttendantCeMenuModelService.newCeActionEntry('route', '');
+
+      var controller = $controller('AARouteToQueueCtrl', {
+        $scope: $scope
+      });
+
+      expect(controller.menuEntry.actions[0].name).toEqual('conditional');
+      expect(controller.menuEntry.actions[0].then).toBeDefined();
+      expect(controller.menuEntry.actions[0].then.name).toEqual('routeToQueue');
+
+    });
+  });
+
   describe('openQueueTreatmentModal', function () {
     var saved = {};
     var controller;

@@ -1,11 +1,11 @@
 <div class="ct-name ">
   <input class="h3 ct-input ct-input-no-border"
-         placeholder={{careSetupAssistant.getLocalisedText('careChatTpl.namePlaceholder')}}
+         placeholder="{{:: 'careChatTpl.namePlaceholder' | translate}}"
          ng-model="careSetupAssistant.template.name"
          ng-change="careSetupAssistant.isNamePageValid() && careSetupAssistant.isTemplateNameValid()"
          focus-on>
   <p ng-class="careSetupAssistant.validateNameLength() && careSetupAssistant.isTemplateNameValid() ? 'ct-input-hint ct-input-valid-border' : 'ct-input-hint ct-input-invalid-border'">
-    {{careSetupAssistant.getLocalisedText('careChatTpl.nameHint')}}
+    {{:: 'careChatTpl.nameHint' | translate}}
   </p>
   <div class="ct-input-error-wrapper">
     <div class="small ct-input-error"

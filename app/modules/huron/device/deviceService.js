@@ -15,7 +15,9 @@
       updateDevice: updateDevice,
       deleteDevice: deleteDevice,
       getCurrentDevice: getCurrentDevice,
-      setCurrentDevice: setCurrentDevice
+      setCurrentDevice: setCurrentDevice,
+      getTags: getTags,
+      decodeHuronTags: decodeHuronTags
     };
 
     return service;

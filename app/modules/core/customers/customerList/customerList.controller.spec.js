@@ -70,7 +70,6 @@ describe('Controller: CustomerListCtrl', function () {
     spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
       $q.resolve(false)
     );
-    spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.resolve(false));
     spyOn(Orgservice, 'getAdminOrg').and.callFake(function (callback) {
       callback(adminJSONFixture.getAdminOrg, 200);
     });
@@ -203,7 +202,7 @@ describe('Controller: CustomerListCtrl', function () {
     beforeEach(initController);
 
     it('not Terminus customer and has e164 numbers, should route to DID add', function () {
-      $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + testOrg.customerOrgId).respond(404);
+      $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + testOrg.customerOrgId).respond(404);
       $httpBackend.expectGET(HuronConfig.getCmiV2Url() + '/customers/' + testOrg.customerOrgId + '/numbers?type=external').respond(numberResponse);
       controller.addNumbers(testOrg);
       $httpBackend.flush();
@@ -213,7 +212,7 @@ describe('Controller: CustomerListCtrl', function () {
     });
 
     it('not Terminus customer and has no e164 numbers, should route to PSTN setup', function () {
-      $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + testOrg.customerOrgId).respond(404);
+      $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + testOrg.customerOrgId).respond(404);
       $httpBackend.expectGET(HuronConfig.getCmiV2Url() + '/customers/' + testOrg.customerOrgId + '/numbers?type=external').respond(noNumberResponse);
       controller.addNumbers(testOrg);
       $httpBackend.flush();
@@ -221,19 +220,21 @@ describe('Controller: CustomerListCtrl', function () {
         customerId: testOrg.customerOrgId,
         customerName: testOrg.customerName,
         customerEmail: testOrg.customerEmail,
-        customerCommunicationLicenseIsTrial: testOrg.communications.isTrial
+        customerCommunicationLicenseIsTrial: testOrg.communications.isTrial,
+        customerRoomSystemsLicenseIsTrial: true
       });
     });
 
     it('exists as Terminus customer, should route to PSTN setup', function () {
-      $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + testOrg.customerOrgId).respond(200);
+      $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + testOrg.customerOrgId).respond(200);
       controller.addNumbers(testOrg);
       $httpBackend.flush();
       expect($state.go).toHaveBeenCalledWith('pstnSetup', {
         customerId: testOrg.customerOrgId,
         customerName: testOrg.customerName,
         customerEmail: testOrg.customerEmail,
-        customerCommunicationLicenseIsTrial: testOrg.communications.isTrial
+        customerCommunicationLicenseIsTrial: testOrg.communications.isTrial,
+        customerRoomSystemsLicenseIsTrial: true
       });
     });
   });
@@ -254,9 +255,9 @@ describe('Controller: CustomerListCtrl', function () {
 
   describe('filterColumns', function () {
     beforeEach(initController);
-    it('return 8 items in the filter list without sparkBoard or Care with care and spark board FT turned off', function () {
-      expect(controller.filter.options.length).toBe(8);
-      expect(controller.filter.options).not.toContain(jasmine.objectContaining({
+    it('return 9 items in the filter list without Care with care FT turned off', function () {
+      expect(controller.filter.options.length).toBe(9);
+      expect(controller.filter.options).toContain(jasmine.objectContaining({
         value: 'sparkBoard'
       }));
       expect(controller.filter.options).not.toContain(jasmine.objectContaining({
@@ -268,25 +269,12 @@ describe('Controller: CustomerListCtrl', function () {
       FeatureToggleService.atlasCareTrialsGetStatus.and.returnValue($q.resolve(true));
       initController();
       $scope.$apply();
-      expect(controller.filter.options.length).toBe(9);
+      expect(controller.filter.options.length).toBe(10);
       expect(controller.filter.options).toContain(jasmine.objectContaining({
         value: 'care'
       }));
-      expect(controller.filter.options).not.toContain(jasmine.objectContaining({
-        value: 'sparkBoard'
-      }));
-    });
-
-    it('show sparkBoard in the filter list with spark FT on', function () {
-      FeatureToggleService.atlasDarlingGetStatus.and.returnValue($q.resolve(true));
-      initController();
-      $scope.$apply();
-      expect(controller.filter.options.length).toBe(9);
       expect(controller.filter.options).toContain(jasmine.objectContaining({
         value: 'sparkBoard'
-      }));
-      expect(controller.filter.options).not.toContain(jasmine.objectContaining({
-        value: 'care'
       }));
     });
   });
@@ -405,14 +393,15 @@ describe('Controller: CustomerListCtrl', function () {
           isTrial: true
         }
       };
-      $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + org.customerOrgId).respond(200);
+      $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + org.customerOrgId).respond(200);
       controller.addNumbers(org);
       $httpBackend.flush();
       expect($state.go).toHaveBeenCalledWith('pstnSetup', {
         customerId: org.customerOrgId,
         customerName: org.customerName,
         customerEmail: org.customerEmail,
-        customerCommunicationLicenseIsTrial: true
+        customerCommunicationLicenseIsTrial: true,
+        customerRoomSystemsLicenseIsTrial: true
       });
     });
 
@@ -425,14 +414,15 @@ describe('Controller: CustomerListCtrl', function () {
           isTrial: false
         }
       };
-      $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + org.customerOrgId).respond(200);
+      $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + org.customerOrgId).respond(200);
       controller.addNumbers(org);
       $httpBackend.flush();
       expect($state.go).toHaveBeenCalledWith('pstnSetup', {
         customerId: org.customerOrgId,
         customerName: org.customerName,
         customerEmail: org.customerEmail,
-        customerCommunicationLicenseIsTrial: false
+        customerCommunicationLicenseIsTrial: false,
+        customerRoomSystemsLicenseIsTrial: true
       });
     });
 
@@ -442,14 +432,15 @@ describe('Controller: CustomerListCtrl', function () {
         customerName: 'ControllerTestOrg',
         customerEmail: 'customer@cisco.com'
       };
-      $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + org.customerOrgId).respond(200);
+      $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + org.customerOrgId).respond(200);
       controller.addNumbers(org);
       $httpBackend.flush();
       expect($state.go).toHaveBeenCalledWith('pstnSetup', {
         customerId: org.customerOrgId,
         customerName: org.customerName,
         customerEmail: org.customerEmail,
-        customerCommunicationLicenseIsTrial: true
+        customerCommunicationLicenseIsTrial: true,
+        customerRoomSystemsLicenseIsTrial: true
       });
     });
 
@@ -463,14 +454,15 @@ describe('Controller: CustomerListCtrl', function () {
           isTrial: true
         }
       };
-      $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + org.customerOrgId).respond(200);
+      $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + org.customerOrgId).respond(200);
       controller.addNumbers(org);
       $httpBackend.flush();
       expect($state.go).toHaveBeenCalledWith('pstnSetup', {
         customerId: org.customerOrgId,
         customerName: org.customerName,
         customerEmail: org.customerEmail,
-        customerCommunicationLicenseIsTrial: false
+        customerCommunicationLicenseIsTrial: false,
+        customerRoomSystemsLicenseIsTrial: false
       });
     });
   });

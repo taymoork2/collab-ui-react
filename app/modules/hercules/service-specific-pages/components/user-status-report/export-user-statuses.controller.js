@@ -6,13 +6,13 @@
     .controller('ExportUserStatusesController', ExportUserStatusesController);
 
   /* @ngInject */
-  function ExportUserStatusesController($scope, $q, $translate, $modalInstance, userStatusSummary, Authinfo, UserDetails, USSService, ClusterService, ExcelService) {
+  function ExportUserStatusesController($scope, $q, $translate, $modalInstance, userStatusSummary, Authinfo, UserDetails, USSService, ClusterService, ExcelService, ResourceGroupService) {
     var vm = this;
     var numberOfUsersPrCiRequest = 50; // can probably go higher, depending on the CI backend...
-    var numberOfUsersPrUssRequest = 500;
 
     vm.exportingUserStatusReport = false;
-    vm.exportCanceled = false;
+    vm.includeResourceGroupColumn = false;
+    vm.progress = { total: 0, current: 0, message: $translate.instant('hercules.export.readingUserStatuses'), exportCanceled: false };
 
     vm.statusTypes = getStatusTypes();
     vm.nothingToExport = nothingToExport;
@@ -20,7 +20,7 @@
     vm.exportCSV = exportCSV;
 
     $scope.$on('$destroy', function () {
-      vm.exportCanceled = true;
+      cancelExport();
     });
 
     function exportCSV() {
@@ -33,23 +33,27 @@
         .map(function (item) {
           return {
             service: item.id,
-            type: item.stateType
+            type: item.stateType,
+            count: item.count,
           };
         })
         .value();
 
+      vm.progress.total = _.sum(_.map(selectedTuples, 'count'));
+
       return getAllUserStatuses(selectedTuples)
         .then(_.flatten)
         .then(addConnectorsDetails)
+        .then(addResourceGroupNames)
         .then(replaceWithDetails)
         .then(function (statuses) {
-          if (vm.exportCanceled) {
+          if (vm.progress.exportCanceled) {
             return $q.reject('User Status Report download canceled');
           }
           return statuses;
         })
         .then(function (statuses) {
-          return ExcelService.createFile(UserDetails.getCSVColumnHeaders(), statuses);
+          return ExcelService.createFile(UserDetails.getCSVColumnHeaders(vm.includeResourceGroupColumn), statuses);
         })
         .then(function (data) {
           var filename = 'user_statuses.csv';
@@ -62,22 +66,26 @@
     }
 
     function cancelExport() {
-      vm.exportCanceled = true;
+      vm.progress.exportCanceled = true;
     }
 
     function replaceWithDetails(statuses) {
       // This idea of replacing statuses by value to please the CSV export
       // inside UserDetails.getUsers is a bad idea, but it is legacy.
       // The code should be cleaned up, one commit after another
+      vm.progress.message = $translate.instant('hercules.export.prepareFile');
       return getUsersDetails(statuses, 0, numberOfUsersPrCiRequest);
     }
 
     function getUsersDetails(statuses, offset, limit) {
+      if (vm.progress.exportCanceled) {
+        return $q.resolve(statuses);
+      }
       var orgId = Authinfo.getOrgId();
       var statusesList = statuses.slice(offset, offset + limit);
       var total = statuses.length;
 
-      return UserDetails.getUsers(orgId, statusesList)
+      return UserDetails.getUsers(orgId, statusesList, vm.progress, vm.includeResourceGroupColumn)
         .then(function (response) {
           if (offset + limit < total) {
             return getUsersDetails(statuses, offset + limit, limit)
@@ -91,6 +99,7 @@
     }
 
     function addConnectorsDetails(statuses) {
+      vm.progress.message = $translate.instant('hercules.export.readingConnectors');
       var connectorIds = _.reduce(statuses, function (result, userStatus) {
         if (userStatus.connectorId && !_.includes(result, userStatus.connectorId)) {
           result.push(userStatus.connectorId);
@@ -128,24 +137,28 @@
         });
     }
 
-    function getUserStatuses(service, type, offset, limit) {
-      return USSService.getStatuses(service, type, offset, limit)
-        .then(function (response) {
-          if (offset + limit < response.paging.count) {
-            return getUserStatuses(service, type, offset + limit, limit)
-              .then(function (statuses) {
-                return response.userStatuses.concat(statuses);
-              });
-          } else {
-            return response.userStatuses;
-          }
-        });
+    function addResourceGroupNames(statuses) {
+      return ResourceGroupService.getAll().then(function (resourceGroups) {
+        if (_.size(resourceGroups) > 0) {
+          vm.includeResourceGroupColumn = true;
+          return _.map(statuses, function (status) {
+            if (status.resourceGroupId) {
+              status.resourceGroup = _.find(resourceGroups, { id: status.resourceGroupId });
+            }
+            return status;
+          });
+        }
+        return statuses;
+      });
     }
 
     function getAllUserStatuses(tuples) {
       var requestList = _.chain(tuples)
         .map(function (tuple) {
-          return getUserStatuses(tuple.service, tuple.type, 0, numberOfUsersPrUssRequest);
+          return USSService.getAllStatuses(tuple.service, tuple.type)
+            .then(function (userStatuses) {
+              return userStatuses;
+            });
         })
         .flatten()
         .value();

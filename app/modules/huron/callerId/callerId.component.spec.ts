@@ -41,7 +41,7 @@ describe('component: callerId', () => {
     expect(this.$scope.onChangeFn).toHaveBeenCalledWith(
       this.$scope.callerIdOptions[0],
       undefined,
-      undefined
+      undefined,
     );
     this.$timeout.flush(); // for cs-select
     expect(this.view.find(CALLERIDNAME_INPUT)).toExist();
@@ -49,13 +49,13 @@ describe('component: callerId', () => {
     expect(this.$scope.onChangeFn).toHaveBeenCalledWith(
       this.$scope.callerIdOptions[0],
       'Field',
-      undefined
+      undefined,
     );
     this.view.find(CALLERIDNUMBER_INPUT).val('8179325799').change().blur();
     expect(this.$scope.onChangeFn).toHaveBeenCalledWith(
       this.$scope.callerIdOptions[0],
       'Field',
-      '8179325799'
+      '8179325799',
     );
   });
 

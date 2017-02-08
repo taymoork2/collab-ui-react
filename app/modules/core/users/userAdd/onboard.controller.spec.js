@@ -58,6 +58,7 @@ describe('OnboardCtrl: Ctrl', function () {
     this.mock.allLicensesData = getJSONFixture('core/json/organizations/allLicenses.json');
     this.mock.getCareServices = getJSONFixture('core/json/authInfo/careServices.json');
     this.mock.getCareServicesWithoutCareLicense = getJSONFixture('core/json/authInfo/careServicesWithoutCareLicense.json');
+    this.mock.getConferenceServices = getJSONFixture('core/json/authInfo/confServices.json');
     this.mock.getLicensesUsage = getJSONFixture('core/json/organizations/usage.json');
 
     spyOn(this.CsvDownloadService, 'getCsv').and.callFake(function (type) {
@@ -90,7 +91,7 @@ describe('OnboardCtrl: Ctrl', function () {
 
     spyOn(this.FeatureToggleService, 'getFeaturesForUser').and.returnValue(this.mock.getMyFeatureToggles);
     spyOn(this.FeatureToggleService, 'supportsDirSync').and.returnValue(this.$q.when(false));
-    spyOn(this.FeatureToggleService, 'atlasCareCallbackTrialsGetStatus').and.returnValue(this.$q.when(true));
+    spyOn(this.FeatureToggleService, 'atlasSharedMeetingsGetStatus').and.returnValue(this.$q.when(false));
     spyOn(this.TelephonyInfoService, 'getPrimarySiteInfo').and.returnValue(this.$q.when(this.mock.sites));
     spyOn(this.ServiceSetup, 'listSites').and.returnValue(this.$q.when(this.mock.sites));
 
@@ -372,7 +373,7 @@ describe('OnboardCtrl: Ctrl', function () {
         expect(this.$scope.messageFeatures[1].licenses[0].model).toEqual(true);
         expect(this.$scope.radioStates.msgRadio).toEqual(true);
         expect(this.$scope.radioStates.careRadio).toEqual(false);
-        expect(this.$scope.enableCareService).toEqual(false);
+        expect(this.$scope.enableCareService).toEqual(true);
       });
     });
   });
@@ -810,17 +811,20 @@ describe('OnboardCtrl: Ctrl', function () {
         expect(this.$scope.radioStates.careRadio).toBe(false);
         expect(this.$scope.enableCareService).toBe(true);
       });
-      it('should disable care, when message or call is unchecked', function () {
+      it('should disable care, when message is unchecked', function () {
         this.$scope.radioStates.msgRadio = false;
         this.$scope.radioStates.commRadio = true;
         this.$scope.controlCare();
         expect(this.$scope.radioStates.careRadio).toBe(false);
         expect(this.$scope.enableCareService).toBe(false);
+
+        //call is optional. Care should be enabled when message is enabled
         this.$scope.radioStates.msgRadio = true;
         this.$scope.radioStates.commRadio = false;
         this.$scope.controlCare();
         expect(this.$scope.radioStates.careRadio).toBe(false);
-        expect(this.$scope.enableCareService).toBe(false);
+        expect(this.$scope.enableCareService).toBe(true);
+
         this.$scope.radioStates.msgRadio = true;
         this.$scope.radioStates.commRadio = true;
         this.$scope.controlCare();
@@ -863,7 +867,6 @@ describe('OnboardCtrl: Ctrl', function () {
 
 
       it('should call getAccountLicenses correctly', function () {
-        this.$httpBackend.flush();
         this.$scope.radioStates.initialCareRadioState = false;
         this.$scope.getAccountLicenses();
         expect(this.$scope.radioStates.careRadio).toEqual(false);
@@ -1004,6 +1007,127 @@ describe('OnboardCtrl: Ctrl', function () {
         this.$scope.telephonyInfo = undefined;
         expect(this.$scope.checkDnOverlapsSteeringDigit(userObj)).toBe(false);
       });
+    });
+  });
+
+  describe('Tests Named User License: ', function () {
+    beforeEach(function () {
+      spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
+      spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
+      spyOn(this.Authinfo, 'getConferenceServices').and.returnValue(this.mock.getConferenceServices);
+    });
+    beforeEach(initController);
+    var dataWithNamedUserLicense = { confLic: [{ licenseModel: 'hosts' }] };
+
+    it('The isSharedMeetingsLicense() function should return false for a service that does not have shared Licenses ', function () {
+      expect(this.$scope.isSharedMeetingsLicense(dataWithNamedUserLicense)).toEqual(false);
+    });
+
+    it('The determineLicenseType() function should return licenseType Named User License string', function () {
+      var result = this.$scope.determineLicenseType(dataWithNamedUserLicense);
+      expect(result).toEqual('firstTimeWizard.namedLicense');
+    });
+
+    it('The generateLicenseTooltip() function should return Named User License tooltip string', function () {
+      var result = this.$scope.generateLicenseTooltip(dataWithNamedUserLicense);
+      expect(result).toContain('firstTimeWizard.namedLicenseTooltip');
+    });
+  });
+
+  describe('Tests Shared Meeting License: ', function () {
+    beforeEach(function () {
+      spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
+      spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
+      spyOn(this.Authinfo, 'getConferenceServices').and.returnValue(this.mock.getConferenceServices);
+    });
+    beforeEach(initController);
+    var dataWithSharedMeetingsLicense = { confLic: [{ licenseModel: 'Cloud Shared Meeting' }] };
+
+    it('The isSharedMeetingsLicense() function should return true for a service that has shared licenses', function () {
+      expect(this.$scope.isSharedMeetingsLicense(dataWithSharedMeetingsLicense)).toEqual(true);
+    });
+
+    it('The determineLicenseType() function should return licenseType Shared Meeting License string', function () {
+      var result = this.$scope.determineLicenseType(dataWithSharedMeetingsLicense);
+      expect(result).toEqual('firstTimeWizard.sharedLicense');
+    });
+
+    it('The generateLicenseTooltip() function should return Shared Meeting License tooltip string', function () {
+      var result = this.$scope.generateLicenseTooltip(dataWithSharedMeetingsLicense);
+      expect(result).toContain('firstTimeWizard.sharedLicenseTooltip');
+    });
+  });
+
+  describe('Tests for hasBasicLicenses and hasAdvancedLicenses functions: ', function () {
+    beforeEach(function () {
+      spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
+      spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
+      spyOn(this.Authinfo, 'getConferenceServices').and.returnValue(this.mock.getConferenceServices);
+    });
+    beforeEach(initController);
+
+    it('The hasBasicLicenses() should return true for Conference Services data that have basic licenses', function () {
+      var result = this.$scope.hasBasicLicenses;
+      expect(result).toEqual(true);
+    });
+
+    it('The hasAdvancedLicenses() should return true for Conference Services data that have advanced licenses', function () {
+      var result = this.$scope.hasAdvancedLicenses;
+      expect(result).toEqual(true);
+    });
+  });
+
+  describe('selectedSubscriptionHasBasicLicenses function ', function () {
+    beforeEach(function () {
+      spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
+      spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
+      spyOn(this.Authinfo, 'getConferenceServices').and.returnValue(this.mock.getConferenceServices);
+    });
+    beforeEach(initController);
+
+    it('should return false for a subscription that does not have basic licenses', function () {
+      var billingServiceId = 'Sub20161222115';
+      var result = this.$scope.selectedSubscriptionHasBasicLicenses(billingServiceId);
+      expect(result).toEqual(false);
+    });
+
+    it('should return true for a subscription that has basic licenses', function () {
+      var billingServiceId = 'SubCt31test20161222111';
+      var result = this.$scope.selectedSubscriptionHasBasicLicenses(billingServiceId);
+      expect(result).toEqual(true);
+    });
+  });
+
+  describe('selectedSubscriptionHasAdvancedLicenses function ', function () {
+    beforeEach(function () {
+      spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
+      spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
+      spyOn(this.Authinfo, 'getConferenceServices').and.returnValue(this.mock.getConferenceServices);
+    });
+    beforeEach(initController);
+
+    it('should return false for a subscription that does not have advanced licenses', function () {
+      var billingServiceId = 'Sub20161222111';
+      var result = this.$scope.selectedSubscriptionHasAdvancedLicenses(billingServiceId);
+      expect(result).toEqual(false);
+    });
+
+    it('should return true for a subscriptions that have advanced licenses', function () {
+      var billingServiceId = 'SubCt31test20161222111';
+      var result = this.$scope.selectedSubscriptionHasAdvancedLicenses(billingServiceId);
+      expect(result).toEqual(true);
+    });
+  });
+
+  describe('opening convert users in the manage users model', function () {
+    it('should go to users.manage when gotToManageUsers() is called', function () {
+      this.$stateParams.manageUsers = true;
+      initController.apply(this);
+      this.$scope.$apply();
+
+      expect(this.$scope.manageUsers).toBeTruthy();
+      this.$scope.goToManageUsers();
+      expect(this.$state.go).toHaveBeenCalledWith('users.manage.picker');
     });
   });
 

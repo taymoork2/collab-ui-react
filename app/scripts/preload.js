@@ -3,5 +3,5 @@
 
   /* global Image */
   var preload = new Image();
-  preload.src = require('images/bg_3515.jpg');
+  preload.src = require('images/spaceballs-bg-80.jpg');
 })();

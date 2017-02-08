@@ -91,25 +91,16 @@
     FeatureToggleService.calsvcShowPreferredSiteNameGetStatus().then(function (toggle) {
       $scope.extension.hasShowPreferredWebExSiteNameFeatureToggle = toggle;
       if (toggle) {
-        // If user preference...
-        if (!_.isEmpty($scope.currentUser.userPreferences)) {
-          var name = _.find($scope.currentUser.userPreferences, function (userPreference) {
-            return userPreference.indexOf("calSvcPreferredWebexSite") > 0;
-          });
-          if (_.isString(name)) {
-            name = name.substring(name.indexOf(":") + 1).replace(/"/g, '');
-            $scope.extension.preferredWebExSiteName = name;
-            return;
-          }
+        $scope.extension.preferredWebExSiteName = Userservice.getPreferredWebExSiteForCalendaring($scope.currentUser);
+        if (!$scope.extension.preferredWebExSiteName) {
+          // Read org settings preference...
+          Orgservice.getOrg(_.noop, Authinfo.getOrgId(), true)
+            .then(function (response) {
+              if (_.get(response, 'data.orgSettings.calSvcpreferredWebExSite')) {
+                $scope.extension.preferredWebExSiteName = response.data.orgSettings.calSvcDefaultWebExSite;
+              }
+            });
         }
-
-        // If org settings preference...
-        Orgservice.getOrg(_.noop, Authinfo.getOrgId(), true)
-          .then(function (response) {
-            if (_.get(response, 'data.orgSettings.calSvcpreferredWebExSite')) {
-              $scope.extension.preferredWebExSiteName = response.data.orgSettings.calSvcDefaultWebExSite;
-            }
-          });
       }
     });
 
@@ -155,6 +146,9 @@
     };
 
     var refreshUserInUss = function () {
+      if ($scope.isInvitePending) {
+        return;
+      }
       USSService.refreshEntitlementsForUser($scope.currentUser.id).catch(function (response) {
         Notification.errorWithTrackingId(response, 'hercules.userSidepanel.refreshUserFailed');
       }).finally(function () {
@@ -176,9 +170,9 @@
     };
 
     var readResourceGroups = function () {
-      FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups)
+      FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup)
         .then(function (supported) {
-          $scope.atlasF237ResourceGroupsFeatureToggle = supported;
+          $scope.resourceGroupsFeatureToggle = supported;
           if (supported) {
             ResourceGroupService.getAllAsOptions().then(function (options) {
               if (options.length > 0) {
@@ -331,7 +325,7 @@
 
     $scope.selectedCalendarTypeChanged = function (type) {
       $scope.extension.id = type;
-      if ($scope.atlasF237ResourceGroupsFeatureToggle) {
+      if ($scope.resourceGroupsFeatureToggle) {
         $scope.resourceGroup.updateShow();
       }
       $scope.calendarType.init();

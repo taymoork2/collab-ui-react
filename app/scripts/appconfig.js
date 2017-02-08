@@ -48,7 +48,12 @@
         //Add blob to the default angular whitelist
         $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|tel|file|blob):/);
 
-        $urlRouterProvider.otherwise('login');
+        $urlRouterProvider.otherwise(function ($injector) {
+          // inspired by https://github.com/angular-ui/ui-router/issues/600
+          // unit tests $digest not settling due to $location url changes
+          var $state = $injector.get('$state');
+          $state.go('login');
+        });
         $stateProvider
           .state('modal', {
             abstract: true,
@@ -393,6 +398,19 @@
               wizard: null
             }
           })
+          .state('addDeviceFlow.confirmRoomDeviceOnly', {
+            parent: 'modalDialog',
+            views: {
+              'modal@': {
+                controller: 'ConfirmRoomDeviceOnlyCtrl',
+                controllerAs: 'confirmRoomDeviceOnly',
+                templateUrl: 'modules/squared/devices/addDeviceNew/ConfirmRoomDeviceOnlyTemplate.tpl.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
           .state('addDeviceFlow.chooseDeviceType', {
             parent: 'modal',
             views: {
@@ -474,8 +492,6 @@
           .state('addDeviceFlow.showActivationCode', {
             parent: 'modal',
             params: {
-              currentUser: {},
-              activationCode: {},
               wizard: null
             },
             views: {
@@ -718,11 +734,6 @@
                 controllerAs: 'mcpSubscription',
                 controller: 'MySubscriptionCtrl',
                 templateUrl: 'modules/core/myCompany/mySubscriptions/mySubscription.tpl.html'
-              },
-              'headerRight': {
-                controllerAs: 'subscriptionHeader',
-                controller: 'SubscriptionHeaderCtrl',
-                templateUrl: 'modules/core/myCompany/mySubscriptions/subscriptionHeader.tpl.html'
               }
             }
           })
@@ -866,7 +877,11 @@
           })
 
           ///////////////////////////
+          .state('users.manage.picker', {
+            controller: 'UserManageModalPickerController'
+          })
           .state('users.manage', {
+            abstract: true,
             parent: 'modal',
             views: {
               'modal@': {
@@ -874,9 +889,6 @@
                 controllerAs: 'ummc',
                 template: '<div ui-view></div>'
               }
-            },
-            params: {
-              isOverExportThreshold: {}
             }
           })
           .state('users.manage.org', {
@@ -949,6 +961,9 @@
                   }
                 }
               }
+            },
+            params: {
+              manageUsers: false
             }
           })
           .state('users.convert.services', {
@@ -1409,6 +1424,16 @@
               }
             }
           })
+          .state('reports.mediaservice', {
+            url: '/reports/mediaservice',
+            views: {
+              'tabContent': {
+                controllerAs: 'nav',
+                controller: 'MediaReportsController',
+                templateUrl: 'modules/mediafusion/reports/media-reports-phase-two.html'
+              }
+            }
+          })
           .state('reports.care', {
             url: '/reports/care',
             views: {
@@ -1425,16 +1450,20 @@
               'tabContent': {
                 controllerAs: 'deviceUsage',
                 controller: 'DeviceUsageCtrl',
-                templateUrl: 'modules/core/customerReports/deviceUsage/total.tpl.html',
-                resolve: {
-                  deviceUsageFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                    return FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceUsageReport);
-                  }
-                }
+                templateUrl: 'modules/core/customerReports/deviceUsage/total.tpl.html'
               }
             }
           })
-
+          .state('reports.device-usage-v2', {
+            url: '/reports/device/usagev2',
+            views: {
+              'tabContent': {
+                controllerAs: 'deviceUsage',
+                controller: 'DeviceUsageCtrl',
+                templateUrl: 'modules/core/customerReports/deviceUsage/total.tpl.html',
+              }
+            }
+          })
           .state('reports.webex', {
             url: '/reports/webex',
             views: {
@@ -2352,7 +2381,8 @@
               customerId: {},
               customerName: {},
               customerEmail: {},
-              customerCommunicationLicenseIsTrial: {}
+              customerCommunicationLicenseIsTrial: {},
+              customerRoomSystemsLicenseIsTrial: {}
             },
             views: {
               'modal@': {
@@ -2498,12 +2528,27 @@
           })
           .state('huronCallPickup', {
             url: '/callPickup',
-            parent: 'main',
+            parent: 'hurondetails',
             template: '<call-pickup-setup-assistant></call-pickup-setup-assistant>',
             resolve: {
               lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
                 return $q(function resolveLogin(resolve) {
-                  require(['modules/huron/features/callPickup'], loadModuleAndResolve($ocLazyLoad, resolve));
+                  require(['modules/huron/features/callPickup/callPickupSetupAssistant'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
+            }
+          })
+          .state('callpickupedit', {
+            url: '/features/pi/edit',
+            parent: 'main',
+            template: '<call-pickup-setup-assistant></call-pickup-setup-assistant>',
+            params: {
+              feature: null
+            },
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/huron/features/callPickup/callPickupSetupAssistant'], loadModuleAndResolve($ocLazyLoad, resolve));
                 });
               }
             }
@@ -2599,23 +2644,86 @@
             controllerAs: 'resourceList',
             parent: 'main',
             resolve: {
-              hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
+              hasResourceGroupFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
               },
             }
           })
-          // Cluster settings
-          .state('expressway-settings', {
-            url: '/services/cluster/expressway/:id/settings',
-            templateUrl: 'modules/hercules/fusion-pages/expressway-settings.html',
-            controller: 'ExpresswayClusterSettingsController',
-            controllerAs: 'clusterSettings',
+          // hybrid context
+          .state('context', {
+            templateUrl: 'modules/context/container/hybrid-context-container.html',
+            controller: 'HybridContextContainerController',
+            controllerAs: 'vm',
             parent: 'main',
             resolve: {
-              hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
-              },
+              hasContactCenterContextFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.contactCenterContext);
+              }
             }
+          })
+          .state('context-resources', {
+            url: '/services/context',
+            parent: 'context',
+            views: {
+              'contextServiceView': {
+                templateUrl: 'modules/context/resources/hybrid-context-resources.html'
+              }
+            },
+            resolve: {
+              hasContactCenterContextFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.contactCenterContext);
+              }
+            }
+          })
+          .state('context-fields', {
+            url: '/services/context/fields',
+            parent: 'context',
+            views: {
+              'contextServiceView': {
+                templateUrl: 'modules/context/fields/hybrid-context-fields.html',
+                controller: 'HybridContextFieldsController',
+                controllerAs: 'contextFields',
+              }
+            }
+          })
+          .state('context-fieldsets', {
+            url: '/services/context/fieldsets',
+            parent: 'context',
+            views: {
+              'contextServiceView': {
+                templateUrl: 'modules/context/fieldsets/hybrid-context-fieldsets.html',
+                controller: 'HybridContextFieldsetsController',
+                controllerAs: 'contextFieldsets',
+              }
+            }
+          })
+          // Cluster settings and nodes
+          .state('expressway-cluster', {
+            abstract: true,
+            url: '/services/cluster/expressway/:id',
+            parent: 'main',
+            template: '<hybrid-services-cluster-page cluster-id="$resolve.id" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></hybrid-services-cluster-page>',
+            resolve: {
+              id: /* @ngInject */ function ($stateParams) {
+                return $stateParams.id;
+              },
+              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
+              },
+            },
+          })
+          .state('expressway-cluster.nodes', {
+            url: '/nodes',
+            template: '<hybrid-services-nodes-page cluster-id="$resolve.id"></hybrid-services-nodes-page>',
+          })
+          .state('expressway-cluster.settings', {
+            url: '/settings',
+            template: '<expressway-cluster-settings-page cluster-id="$resolve.id" has-resource-group-feature-toggle="$resolve.hasResourceGroupFeatureToggle"></expressway-cluster-settings-page>',
+            resolve: {
+              hasResourceGroupFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
+              },
+            },
           })
           .state('hds', {
             templateUrl: 'modules/hds/resources/hybrid-data-security-container.html',
@@ -2632,13 +2740,19 @@
             url: '/hds/resources',
             views: {
               'fullPane': {
-                templateUrl: 'modules/hds/resources/cluster-list.html'
+                template: '<hybrid-service-cluster-list service-id="\'spark-hybrid-datasecurity\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>'
               }
+            },
+            params: {
+              clusterId: null,
             },
             resolve: {
               hasHDSFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity);
-              }
+              },
+              clusterId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.clusterId;
+              },
             }
           })
           .state('hds.settings', {
@@ -2660,30 +2774,46 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                controllerAs: 'hdsSidepanelClusterController',
-                controller: 'HDSSidepanelClusterController',
-                templateUrl: 'modules/hds/cluster-sidepanel/cluster-details.html'
+                template: '<cluster-sidepanel-overview cluster-type="\'hds_app\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType"></cluster-sidepanel-overview>',
               },
               'header@hds-cluster-details': {
-                templateUrl: 'modules/hds/cluster-sidepanel/cluster-header.html'
-              }
+                templateUrl: 'modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html',
+              },
             },
             data: {
               displayName: 'Overview'
             },
             params: {
-              clusterId: null
+              clusterId: null,
+              connectorType: null,
             },
             resolve: {
-              hasHDSFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity);
+              id: /* @ngInject */ function ($stateParams) {
+                return $stateParams.clusterId;
+              },
+              connectorType: /* @ngInject */ function ($stateParams) {
+                return $stateParams.connectorType;
               },
             }
           })
+          .state('hds-cluster-details.host-details', {
+            templateUrl: 'modules/hercules/cluster-sidepanel/host-details/host-details.html',
+            controller: 'ExpresswayHostDetailsController',
+            controllerAs: 'hostDetailsCtrl',
+            data: {
+              displayName: 'Node'
+            },
+            params: {
+              host: null,
+              hostSerial: null,
+              clusterId: null,
+              connectorType: null
+            }
+          })
           .state('hds-cluster-details.alarm-details', {
-            templateUrl: 'modules/hds/cluster-sidepanel/alarm-details.html',
-            controller: 'HDSAlarmController',
-            controllerAs: 'hdsAlarmController',
+            templateUrl: 'modules/hercules/cluster-sidepanel/alarm-details/alarm-details.html',
+            controller: 'ExpresswayAlarmController',
+            controllerAs: 'alarmCtrl',
             data: {
               displayName: 'Alarm Details'
             },
@@ -2692,21 +2822,55 @@
               host: null
             }
           })
-          .state('hds-cluster-settings', {
-            url: '/services/cluster/hds/:id/settings',
-            template: '<hybrid-data-security-cluster-settings></hybrid-data-security-cluster-settings>',
+          .state('hds-cluster', {
+            abstract: true,
+            url: '/services/cluster/hds/:id',
             parent: 'main',
+            template: '<hybrid-services-cluster-page cluster-id="$resolve.id" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></hybrid-services-cluster-page>',
+            resolve: {
+              id: /* @ngInject */ function ($stateParams) {
+                return $stateParams.id;
+              },
+              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
+              },
+            }
           })
-          .state('mediafusion-settings', {
-            url: '/services/cluster/mediafusion/:id/settings',
+          .state('hds-cluster.nodes', {
+            url: '/nodes',
+            template: '<hybrid-services-nodes-page cluster-id="$resolve.id"></hybrid-services-nodes-page>',
+          })
+          .state('hds-cluster.settings', {
+            url: '/settings',
+            template: '<hybrid-data-security-cluster-settings cluster-id="$resolve.id"></hybrid-data-security-cluster-settings>',
+          })
+          .state('mediafusion-cluster', {
+            abstract: true,
+            url: '/services/cluster/mediafusion/:id',
+            parent: 'main',
+            template: '<hybrid-services-cluster-page cluster-id="$resolve.id" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></hybrid-services-cluster-page>',
+            resolve: {
+              id: /* @ngInject */ function ($stateParams) {
+                return $stateParams.id;
+              },
+              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
+              },
+            }
+          })
+          .state('mediafusion-cluster.nodes', {
+            url: '/nodes',
+            template: '<hybrid-services-nodes-page cluster-id="$resolve.id"></hybrid-services-nodes-page>',
+          })
+          .state('mediafusion-cluster.settings', {
+            url: '/settings',
             templateUrl: 'modules/hercules/fusion-pages/mediafusion-settings.html',
             controller: 'MediafusionClusterSettingsController',
             controllerAs: 'clusterSettings',
-            parent: 'main',
             resolve: {
               hasMFFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServicePhaseTwo);
-              }
+              },
             }
           })
           // Add Resource modal
@@ -2924,12 +3088,10 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                controllerAs: 'clusterDetailsCtrl',
-                controller: 'ExpresswayServiceClusterController',
-                templateUrl: 'modules/hercules/cluster-sidepanel/cluster-details.html'
+                template: '<cluster-sidepanel-overview cluster-type="\'c_mgmt\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType" has-resource-group-feature-toggle="$resolve.hasResourceGroupFeatureToggle"></cluster-sidepanel-overview>'
               },
               'header@cluster-details': {
-                templateUrl: 'modules/hercules/cluster-sidepanel/cluster-header.html'
+                templateUrl: 'modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html'
               }
             },
             data: {
@@ -2940,8 +3102,14 @@
               connectorType: null
             },
             resolve: {
-              hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
+              id: /* @ngInject */ function ($stateParams) {
+                return $stateParams.clusterId;
+              },
+              connectorType: /* @ngInject */ function ($stateParams) {
+                return $stateParams.connectorType;
+              },
+              hasResourceGroupFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
               },
             }
           })
@@ -2949,7 +3117,7 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                templateUrl: 'modules/hercules/cluster-sidepanel/management-connector-details.html',
+                templateUrl: 'modules/hercules/cluster-sidepanel/host-details/management-connector-details.html',
                 controller: 'ExpresswayHostDetailsController',
                 controllerAs: 'hostDetailsCtrl'
               }
@@ -2964,8 +3132,20 @@
               connectorType: 'c_mgmt'
             }
           })
+          .state('management-connector-details.alarm-details', {
+            templateUrl: 'modules/hercules/cluster-sidepanel/alarm-details/alarm-details.html',
+            controller: 'ExpresswayAlarmController',
+            controllerAs: 'alarmCtrl',
+            data: {
+              displayName: 'Alarm Details'
+            },
+            params: {
+              alarm: null,
+              host: null
+            }
+          })
           .state('cluster-details.alarm-details', {
-            templateUrl: 'modules/hercules/cluster-sidepanel/alarm-details.html',
+            templateUrl: 'modules/hercules/cluster-sidepanel/alarm-details/alarm-details.html',
             controller: 'ExpresswayAlarmController',
             controllerAs: 'alarmCtrl',
             data: {
@@ -2977,7 +3157,7 @@
             }
           })
           .state('cluster-details.host-details', {
-            templateUrl: 'modules/hercules/cluster-sidepanel/host-details.html',
+            templateUrl: 'modules/hercules/cluster-sidepanel/host-details/host-details.html',
             controller: 'ExpresswayHostDetailsController',
             controllerAs: 'hostDetailsCtrl',
             data: {
@@ -2997,8 +3177,8 @@
             controllerAs: 'rgsCtrl',
             parent: 'main',
             resolve: {
-              hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
+              hasResourceGroupFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
               }
             }
           });
@@ -3006,7 +3186,7 @@
         $stateProvider
         //V2 API changes
           .state('media-service-v2', {
-            templateUrl: 'modules/mediafusion/media-service-v2/overview.html',
+            templateUrl: 'modules/mediafusion/media-service-v2/media-service-overview.html',
             controller: 'MediaServiceControllerV2',
             controllerAs: 'med',
             parent: 'main'
@@ -3015,8 +3195,16 @@
             url: '/mediaserviceV2',
             views: {
               'fullPane': {
-                templateUrl: 'modules/mediafusion/media-service-v2/resources/cluster-list.html'
+                template: '<hybrid-service-cluster-list service-id="\'squared-fusion-media\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>'
               }
+            },
+            params: {
+              clusterId: null,
+            },
+            resolve: {
+              clusterId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.clusterId;
+              },
             }
           })
           .state('media-service-v2.settings', {
@@ -3045,9 +3233,8 @@
               displayName: 'Overview'
             },
             params: {
-              clusterName: {},
-              nodes: {},
-              cluster: {}
+              clusterId: {},
+              connectorType: {},
             }
           })
           .state('connector-details-v2.alarm-details', {
@@ -3143,7 +3330,7 @@
             templateUrl: 'modules/sunlight/details/details.tpl.html'
           })
           .state('care.Details', {
-            url: '/careDetails',
+            url: '/services/careDetails',
             parent: 'care.DetailsBase',
             views: {
               'header': {

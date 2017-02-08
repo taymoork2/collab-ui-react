@@ -1,9 +1,10 @@
-import { UCCService } from 'modules/hercules/services/ucc-service.ts';
+import { UCCService } from 'modules/hercules/services/ucc-service';
 
 class HybridVoicemailUserSectionCtrl implements ng.IComponentController {
 
   public isFeatureToggled: boolean = false;
   public callServiceConnectEnabledForUser: boolean;
+  public voicemailEnabledForUser: boolean;
   public pilotNumber: number;
   private isEnabledOrgWide: boolean;
   private userId: string;
@@ -25,11 +26,8 @@ class HybridVoicemailUserSectionCtrl implements ng.IComponentController {
       });
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
-    const { callServiceConnectEnabledForUser } = changes;
-    if (callServiceConnectEnabledForUser && callServiceConnectEnabledForUser.currentValue) {
-      this.checkEnabledOrgWide();
-    }
+  public $onChanges(): void {
+    this.checkEnabledOrgWide();
   }
 
   public checkEnabledOrgWide(): void {
@@ -43,6 +41,7 @@ class HybridVoicemailUserSectionCtrl implements ng.IComponentController {
             .then((data) => {
               this.pilotNumber = data.vmInfo.voicemailPilot;
             });
+          this.voicemailEnabledForUser = this.callServiceConnectEnabledForUser;
         }
       });
   }

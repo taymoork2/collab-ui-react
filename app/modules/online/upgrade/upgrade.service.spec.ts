@@ -12,11 +12,12 @@ describe('Service: OnlineUpgradeService', () => {
       '$modal',
       'Authinfo',
       'OnlineUpgradeService',
-      'UrlConfig'
+      'UrlConfig',
     );
 
     spyOn(this.Authinfo, 'isOnline');
     spyOn(this.Authinfo, 'getSubscriptions').and.returnValue([]);
+    spyOn(this.Authinfo, 'getOrgId').and.returnValue('123');
     spyOn(this.$modal, 'open').and.callThrough();
   });
 
@@ -180,7 +181,9 @@ describe('Service: OnlineUpgradeService', () => {
 
   describe('Upgrade Modal', () => {
     beforeEach(function () {
+      this.$httpBackend.expectGET(this.UrlConfig.getAdminServiceUrl() + 'commerce/productinstances?ciUUID=null').respond(200, '12345');
       this.OnlineUpgradeService.openUpgradeModal();
+      this.$httpBackend.flush();
     });
 
     it('openUpgradeModal() should open static modal', function () {

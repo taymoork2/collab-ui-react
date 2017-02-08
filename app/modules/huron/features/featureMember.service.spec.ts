@@ -36,6 +36,16 @@ describe('Service: FeatureService', () => {
     thumbnailSrc: 'https://09876/zyxwuv',
   };
 
+  let getMachineAcctResponse = {
+    id: 'fake-userid',
+    schemas: [],
+    name: '',
+    entitlements: [],
+    displayName: '',
+    machineType: 'lyra_space',
+    meta: {},
+  };
+
   beforeEach(function () {
     this.initModules('huron.feature-member-service');
     this.injectDependencies(
@@ -45,7 +55,7 @@ describe('Service: FeatureService', () => {
       'FeatureMemberService',
       'Authinfo',
       'UrlConfig',
-      'MemberService'
+      'MemberService',
     );
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
     this.getMemberListDefer = this.$q.defer();
@@ -90,6 +100,16 @@ describe('Service: FeatureService', () => {
     this.$httpBackend.whenGET(expectedUrl).respond(200, placeResponse);
     this.FeatureMemberService.getPlace(fakePlaceId).then(response => {
       expect(response).toEqual(placeResponse);
+    });
+    this.$httpBackend.flush();
+  });
+
+  it('get MachineType for a UUID', function () {
+    let fakeUserId = 'fake-userid';
+    let expectedUrl = 'https://identity.webex.com/organization/12345/v1/Machines/fake-userid';
+    this.$httpBackend.whenGET(expectedUrl).respond(200, getMachineAcctResponse);
+    this.FeatureMemberService.getMachineAcct(fakeUserId).then(function (response) {
+      expect(response).toEqual(getMachineAcctResponse);
     });
     this.$httpBackend.flush();
   });

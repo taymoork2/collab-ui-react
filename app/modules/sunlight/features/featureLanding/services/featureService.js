@@ -11,9 +11,9 @@
     var service = {
       getChatTemplates: getChatTemplates,
       getCallbackTemplates: getCallbackTemplates,
+      getChatPlusCallbackTemplates: getChatPlusCallbackTemplates,
       getTemplate: getTemplate,
-      formatChatTemplates: formatChatTemplates,
-      formatCallbackTemplates: formatCallbackTemplates,
+      formatTemplates: formatTemplates,
       deleteTemplate: deleteTemplate,
       filterCards: filterCards
     };
@@ -31,6 +31,13 @@
       return ConfigTemplateService.query({
         orgId: Authinfo.getOrgId(),
         mediaType: 'callback'
+      }).$promise;
+    }
+
+    function getChatPlusCallbackTemplates() {
+      return ConfigTemplateService.query({
+        orgId: Authinfo.getOrgId(),
+        mediaType: 'chatPlusCallback'
       }).$promise;
     }
 
@@ -74,24 +81,15 @@
       return filteredList;
     }
 
-    function formatChatTemplates(list) {
+    function formatTemplates(list, feature) {
       var formattedList = _.map(list, function (tpl) {
-        tpl.featureType = 'Ch';
-        tpl.color = 'attention';
-
+        tpl.featureType = feature.name;
+        tpl.color = feature.color;
+        tpl.icons = feature.icons;
         return tpl;
       });
       return orderByCardName(formattedList);
-    }
 
-    function formatCallbackTemplates(list) {
-      var formattedList = _.map(list, function (tpl) {
-        tpl.featureType = 'Ca';
-        tpl.color = 'alerts';
-
-        return tpl;
-      });
-      return orderByCardName(formattedList);
     }
 
   }

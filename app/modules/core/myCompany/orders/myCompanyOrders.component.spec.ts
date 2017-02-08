@@ -7,7 +7,7 @@ describe('Component: myCompanyOrders', () => {
       '$q',
       'DigitalRiverService',
       'MyCompanyOrdersService',
-      'Notification'
+      'Notification',
     );
 
     let purchaseOrdersList: IOrderDetail[] = [{
@@ -43,40 +43,19 @@ describe('Component: myCompanyOrders', () => {
     spyOn(this.controller, 'downloadPdf');
   });
 
-  describe('Digital River iframe', () => {
-    it('should get digital river order history url to load iframe', function () {
-      this.getDigitalRiverOrderHistoryUrlDefer.resolve('https://some.url.com');
-      this.$scope.$apply();
-
-      expect(this.DigitalRiverService.getOrderHistoryUrl).toHaveBeenCalled();
-      expect(this.controller.digitalRiverOrderHistoryUrl).toEqual('https://some.url.com');
-    });
-
-    it('should notify error if unable to get digital river url', function () {
-      this.getDigitalRiverOrderHistoryUrlDefer.reject({
-        data: undefined,
-        status: 500,
-      });
-      this.$scope.$apply();
-
-      expect(this.controller.loading).toBe(false);
-      expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(jasmine.any(Object), 'myCompanyOrders.loadError');
-    });
-  });
-
-  xit('should render ui-grid from gridOptions', function () {
+  it('should render ui-grid from gridOptions', function () {
     expect(this.controller.gridOptions).toBeDefined();
     expect(this.view).toContainElement('.ui-grid-header');
   });
 
-  xdescribe('before data loaded', () => {
+  describe('before data loaded', () => {
     it('should have loading icon with no data', function () {
       expect(this.view).not.toContainElement('.ui-grid-row');
       expect(this.view).toContainElement('.grid-refresh .icon-spinner');
     });
   });
 
-  xdescribe('if errors while loading data', () => {
+  describe('if errors while loading data', () => {
     beforeEach(function () {
       this.getOrderDetailsDefer.reject({
         data: undefined,
@@ -93,7 +72,7 @@ describe('Component: myCompanyOrders', () => {
     });
   });
 
-  xdescribe('after data loaded', () => {
+  describe('after data loaded', () => {
     beforeEach(function () {
       this.getOrderDetailsDefer.resolve(this.purchaseOrdersList);
       this.$scope.$apply();
@@ -109,12 +88,12 @@ describe('Component: myCompanyOrders', () => {
       expect(this.view).not.toContainElement('.grid-refresh .icon-spinner');
     });
 
-    it('should concat descriptions into single column', function () {
+    // TODO investigate more on unit testing ui-grid sorting
+    xit('should concat descriptions into single column', function () {
       expect(this.view.find('.ui-grid-row: first .ui-grid-cell-contents: nth(1)')).toHaveText('first description');
       expect(this.view.find('.ui-grid-row: last .ui-grid-cell-contents: nth(1)')).toHaveText('fourth description, fifth description');
     });
 
-    // TODO investigate more on unit testing ui-grid sorting
     xit('should sort on order number', function () {
       expect(this.view.find('.ui-grid-row').first()).toContainText('123');
       expect(this.view.find('.ui-grid-row').last()).toContainText('456');

@@ -1,0 +1,27 @@
+<div ui-view="header"></div>
+
+<cs-sp-container class="hercules-fix-paragraphs">
+
+  <alarm-list-section alarms="$ctrl.cluster.aggregates.alarms"
+                      connector-type="$ctrl.connectorType"
+                      ng-if="$ctrl.hasConnectors()"></alarm-list-section>
+
+  <schedule-info-section cluster="$ctrl.cluster"
+                         cluster-type="$ctrl.clusterType"
+                         has-resource-group-feature-toggle="$ctrl.hasResourceGroupFeatureToggle"
+                         ng-if="!($ctrl.isExpresswayCluster() && !$ctrl.hasConnectors())"></schedule-info-section>
+
+  <expressway-upgrade-section cluster-id="$ctrl.cluster.id"
+                              connector-type="$ctrl.connectorType"
+                              ng-if="$ctrl.isExpresswayCluster() && $ctrl.hasConnectors()"></expressway-upgrade-section>
+
+  <hybrid-services-node-list cluster="$ctrl.cluster"
+                             connector-type="$ctrl.connectorType"
+                             ng-if="!($ctrl.isExpresswayCluster() && !$ctrl.hasConnectors())"></hybrid-services-node-list>
+
+  <complete-registration-or-remove-expressway
+                         cluster="$ctrl.cluster"
+                         connector-type="$ctrl.connectorType"
+                         ng-if="$ctrl.isExpresswayCluster() && !$ctrl.hasConnectors()"></complete-registration-or-remove-expressway>
+
+</cs-sp-container>

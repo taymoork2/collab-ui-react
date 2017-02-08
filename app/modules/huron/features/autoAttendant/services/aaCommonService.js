@@ -10,6 +10,7 @@
     var aaSayMessageForm = false;
     var aaPhoneMenuOptions = false;
     var aaCallerInputStatus = false;
+    var aaDecisionStatus = false;
     var aaActionStatus = false;
     var aaDialByExtensionStatus = false;
     var aaCENumberStatus = false;
@@ -18,7 +19,9 @@
     var routeQueueToggle = false;
     var mediaUploadToggle = false;
     var callerInputToggle = false;
+    var decisionToggle = false;
     var clioToggle = false;
+    var routeSIPAddressToggle = false;
     var uniqueId = 0;
 
     var invalidList = {};
@@ -27,19 +30,24 @@
       setSayMessageStatus: setSayMessageStatus,
       setPhoneMenuStatus: setPhoneMenuStatus,
       setCallerInputStatus: setCallerInputStatus,
+      setDecisionStatus: setDecisionStatus,
       setActionStatus: setActionStatus,
       setDialByExtensionStatus: setDialByExtensionStatus,
       setCENumberStatus: setCENumberStatus,
       setMediaUploadStatus: setMediaUploadStatus,
+      setDecisionToggle: setDecisionToggle,
       setQueueSettingsStatus: setQueueSettingsStatus,
       setMediaUploadToggle: setMediaUploadToggle,
       setCallerInputToggle: setCallerInputToggle,
       setRouteQueueToggle: setRouteQueueToggle,
+      setRouteSIPAddressToggle: setRouteSIPAddressToggle,
       setClioToggle: setClioToggle,
       isRouteQueueToggle: isRouteQueueToggle,
       isCallerInputToggle: isCallerInputToggle,
+      isDecisionToggle: isDecisionToggle,
       isMediaUploadToggle: isMediaUploadToggle,
       isClioToggle: isClioToggle,
+      isRouteSIPAddressToggle: isRouteSIPAddressToggle,
       isValid: isValid,
       setIsValid: setIsValid,
       getInvalid: getInvalid,
@@ -59,11 +67,11 @@
     /////////////////////
 
     function isFormDirty() {
-      return aaQueueSettingsStatus || aaMediaUploadStatus || aaSayMessageForm || aaPhoneMenuOptions || aaCallerInputStatus || aaActionStatus || aaDialByExtensionStatus || aaCENumberStatus;
+      return aaQueueSettingsStatus || aaMediaUploadStatus || aaSayMessageForm || aaPhoneMenuOptions || aaCallerInputStatus || aaActionStatus || aaDialByExtensionStatus || aaCENumberStatus || aaDecisionStatus;
     }
 
     function isValid() {
-      return !_.size(invalidList);
+      return (!_.size(invalidList));
     }
 
     function getInvalid(which) {
@@ -91,10 +99,12 @@
     function setMediaUploadStatus(status) {
       aaMediaUploadStatus = status;
     }
+
     function resetFormStatus() {
       aaSayMessageForm = false;
       aaPhoneMenuOptions = false;
       aaCallerInputStatus = false;
+      aaDecisionStatus = false;
       aaActionStatus = false;
       aaDialByExtensionStatus = false;
       aaMediaUploadStatus = false;
@@ -113,7 +123,9 @@
     function setCallerInputStatus(status) {
       aaCallerInputStatus = status;
     }
-
+    function setDecisionStatus(status) {
+      aaDecisionStatus = status;
+    }
     function setActionStatus(status) {
       aaActionStatus = status;
     }
@@ -130,7 +142,6 @@
       routeQueueToggle = status;
     }
 
-
     function setQueueSettingsStatus(status) {
       aaQueueSettingsStatus = status;
     }
@@ -145,6 +156,13 @@
 
     function setCallerInputToggle(status) {
       callerInputToggle = status;
+    }
+    function setDecisionToggle(status) {
+      decisionToggle = status;
+    }
+
+    function setRouteSIPAddressToggle(status) {
+      routeSIPAddressToggle = status;
     }
 
     /**
@@ -167,6 +185,13 @@
 
     function isCallerInputToggle() {
       return callerInputToggle;
+    }
+    function isDecisionToggle() {
+      return decisionToggle;
+    }
+
+    function isRouteSIPAddressToggle() {
+      return routeSIPAddressToggle;
     }
 
     function saveUiModel(ui, aaRecord) {

@@ -9,6 +9,7 @@
   function AARouteToUserCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, $q, Authinfo, Userservice, UserListService, UserServiceVoice, AACommonService, LineResource) {
 
     var vm = this;
+    var conditional = 'conditional';
 
     vm.userSelected = {
       description: '',
@@ -43,17 +44,27 @@
     var routeToUser = 'routeToUser';
 
     var fromRouteCall = false;
+    var fromDecision = false;
+
 
     /////////////////////
 
     function populateUiModel() {
-      var entry;
-      if (fromRouteCall) {
+      var entry, action;
+
+      if (fromRouteCall || fromDecision) {
         entry = _.get(vm.menuEntry, 'actions[0].queueSettings.fallback', vm.menuEntry);
       } else {
         entry = _.get(vm.menuKeyEntry, 'actions[0].queueSettings.fallback', vm.menuKeyEntry);
       }
-      vm.userSelected.id = entry.actions[0].getValue();
+
+      action = _.get(entry, 'actions[0]');
+
+      if (action && _.get(action, 'name') === conditional) {
+        action = _.get(action.then, 'queueSettings.fallback.actions[0]', action.then);
+      }
+
+      vm.userSelected.id = action.getValue();
 
       if (vm.userSelected.id) {
         getFormattedUserAndExtension(vm.userSelected.id).then(function (userName) {
@@ -65,16 +76,18 @@
     function saveUiModel() {
       AACommonService.setPhoneMenuStatus(true);
 
-      var entry;
+      var entry, action;
 
-      if (fromRouteCall) {
+      if (fromRouteCall || fromDecision) {
         entry = vm.menuEntry;
       } else {
         entry = vm.menuKeyEntry;
       }
-      var action = _.get(entry, 'actions[0].queueSettings.fallback.actions[0]', entry.actions[0]);
+      action = _.get(entry, 'actions[0].queueSettings.fallback.actions[0]', entry.actions[0]);
+      if (_.get(action, 'name') === conditional) {
+        action = _.get(action.then, 'queueSettings.fallback.actions[0]', action.then);
+      }
       action.setValue(vm.userSelected.id);
-
     }
 
     // format name with extension
@@ -254,49 +267,76 @@
       return defer.promise;
 
     }
+    function checkForRouteToVU(action, routeToName) {
+
+      // make sure action is V or U not External Number, User, etc
+      if (!(action.getName() === routeToName)) {
+        action.setName(routeToName);
+        action.setValue('');
+        delete action.queueSettings;
+      }
+    }
 
     function activate() {
 
       var routeToUserOrVM = !_.isUndefined($scope.voicemail) ? routeToVoiceMail : routeToUser;
 
-      if ($scope.fromRouteCall) {
-        var ui = AAUiModelService.getUiModel();
+      var ui = AAUiModelService.getUiModel();
+      if ($scope.fromDecision) {
+
+        var conditionalAction;
+        fromDecision = true;
+
         vm.uiMenu = ui[$scope.schedule];
         vm.menuEntry = vm.uiMenu.entries[$scope.index];
-        fromRouteCall = true;
-
+        conditionalAction = _.get(vm.menuEntry, 'actions[0]', '');
+        if (!conditionalAction || conditionalAction.getName() !== conditional) {
+          conditionalAction = AutoAttendantCeMenuModelService.newCeActionEntry(conditional, '');
+          vm.menuEntry.actions[0] = conditionalAction;
+        }
         if (!$scope.fromFallback) {
-          if (vm.menuEntry.actions.length === 0) {
-            action = AutoAttendantCeMenuModelService.newCeActionEntry(routeToUserOrVM, '');
-            vm.menuEntry.addAction(action);
+          if (!conditionalAction.then) {
+            conditionalAction.then = {};
+            conditionalAction.then = AutoAttendantCeMenuModelService.newCeActionEntry(routeToUserOrVM, '');
           } else {
-            // make sure action is User||VoiceMail not AA, HG, extNum, etc
-            if (!(vm.menuEntry.actions[0].getName() === routeToUserOrVM)) {
-              vm.menuEntry.actions[0].setName(routeToUserOrVM);
-              vm.menuEntry.actions[0].setValue('');
-              delete vm.menuEntry.actions[0].queueSettings;
-            }
+            checkForRouteToVU(conditionalAction.then, routeToUserOrVM);
           }
         }
       } else {
-        vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
-        if ($scope.keyIndex < vm.menuEntry.entries.length) {
-          vm.menuKeyEntry = vm.menuEntry.entries[$scope.keyIndex];
+        if ($scope.fromRouteCall) {
+          vm.uiMenu = ui[$scope.schedule];
+          vm.menuEntry = vm.uiMenu.entries[$scope.index];
+          fromRouteCall = true;
+
+          if (!$scope.fromFallback) {
+            if (vm.menuEntry.actions.length === 0) {
+              action = AutoAttendantCeMenuModelService.newCeActionEntry(routeToUserOrVM, '');
+              vm.menuEntry.addAction(action);
+            } else {
+              checkForRouteToVU(vm.menuEntry.actions[0], routeToUserOrVM);
+            }
+          }
         } else {
-          vm.menuKeyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-          var action = AutoAttendantCeMenuModelService.newCeActionEntry(routeToUserOrVM, '');
-          vm.menuKeyEntry.addAction(action);
+          vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
+          if ($scope.keyIndex < vm.menuEntry.entries.length) {
+            vm.menuKeyEntry = vm.menuEntry.entries[$scope.keyIndex];
+          } else {
+            vm.menuKeyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+            var action = AutoAttendantCeMenuModelService.newCeActionEntry(routeToUserOrVM, '');
+            vm.menuKeyEntry.addAction(action);
+          }
         }
       }
+
       if ($scope.fromFallback) {
         var entry;
-        if (_.has(vm.menuKeyEntry, 'actions[0]')) {
-          entry = vm.menuKeyEntry;
-        } else {
-          entry = vm.menuEntry;
+        entry = _.get(vm.menuKeyEntry, 'actions[0]', vm.menuEntry.actions[0]);
+
+        if (_.get(entry, 'name') === conditional) {
+          entry = entry.then;
         }
 
-        var fallbackAction = _.get(entry, 'actions[0].queueSettings.fallback.actions[0]');
+        var fallbackAction = _.get(entry, 'queueSettings.fallback.actions[0]');
         if (fallbackAction && (fallbackAction.getName() !== routeToUserOrVM)) {
           fallbackAction.setName(routeToUserOrVM);
           fallbackAction.setValue('');

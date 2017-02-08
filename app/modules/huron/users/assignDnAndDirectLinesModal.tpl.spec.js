@@ -26,8 +26,7 @@ describe('Template: assignDnAndDirectLinesModal', function () {
     }.bind(this));
 
     spyOn(this.FeatureToggleService, 'supportsDirSync').and.returnValue(this.$q.when(false));
-    spyOn(this.FeatureToggleService, 'atlasCareCallbackTrialsGetStatus').and.returnValue(this.$q.when(true));
-    spyOn(this.FeatureToggleService, 'atlasSMPGetStatus').and.returnValue(this.$q.when(false));
+    spyOn(this.FeatureToggleService, 'atlasSharedMeetingsGetStatus').and.returnValue(this.$q.when(false));
     spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.when(true));
     spyOn(this.Orgservice, 'getHybridServiceAcknowledged').and.returnValue(this.$q.when(this.mock.fusionServices));
     spyOn(this.Orgservice, 'getUnlicensedUsers');

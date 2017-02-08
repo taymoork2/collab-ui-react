@@ -9,52 +9,19 @@ require('modules/core/reports/amcharts-export.scss');
     .controller('DeviceUsageCtrl', DeviceUsageCtrl);
 
   /* @ngInject */
-  function DeviceUsageCtrl($log, $q, $translate, $scope, DeviceUsageTotalService, DeviceUsageGraphService, DeviceUsageDateService, DeviceUsageExportService, Notification, DeviceUsageSplunkMetricsService, ReportConstants, deviceUsageFeatureToggle, $state, $modal) {
+  function DeviceUsageCtrl($state, $log, $translate, $scope,
+    DeviceUsageService, DeviceUsageTotalService, DeviceUsageGraphService,
+    DeviceUsageDateService, DeviceUsageExportService, Notification,
+    DeviceUsageSplunkMetricsService, ReportConstants, $modal, DeviceUsageModelService) {
     var vm = this;
     var amChart;
     var apiToUse = 'backend';
-    var missingDays;
     var dateRange;
-
-    if (!deviceUsageFeatureToggle) {
-      // simulate a 404
-      $log.warn("State not allowed.");
-      $state.go('login');
-    }
 
     // Models Selection
     vm.modelsSelected = [];
     vm.modelOptions = [];
-    // Will have format ala this.
-    /*
-    vm.modelOptions = [
-      {
-        'value': 'Cisco TelePresence SX10',
-        'label': 'Cisco TelePresence SX10',
-        isSelected: false
-      },
-      {
-        'value': 'Cisco TelePresence MX200 G2',
-        'label': 'Cisco TelePresence MX200 G2',
-        isSelected: false
-      },
-      {
-        'value': 'Cisco Spark Board 55',
-        'label': 'Cisco Spark Board 55',
-        isSelected: false
-      },
-      {
-        'value': 'Cisco TelePresence DX70',
-        'label': 'Cisco TelePresence DX70',
-        isSelected: false
-      },
-      {
-        'value': 'Cisco TelePresence DX80',
-        'label': 'Cisco TelePresence DX80',
-        isSelected: false
-      }
-    ];
-    */
+
     vm.selectModelsPlaceholder = 'Select models to filter on';
 
     vm.leastUsedDevices = [];
@@ -71,6 +38,16 @@ require('modules/core/reports/amcharts-export.scss');
     vm.init = init;
     vm.timeUpdate = timeUpdate;
 
+    // Preliminary beta functionality
+    vm.v1 = true;
+    if ($state.current.name === 'reports.device-usage-v2') {
+      apiToUse = 'local';
+      vm.v1 = false;
+      DeviceUsageTotalService = DeviceUsageService;
+    } else {
+      vm.v1 = true;
+    }
+
     vm.tabs = [
       {
         title: $translate.instant('reportsPage.usageReports.all'),
@@ -84,6 +61,8 @@ require('modules/core/reports/amcharts-export.scss');
     function timeUpdate() {
       vm.modelsSelected = [];
       vm.modelOptions = [];
+      vm.selectModelsPlaceholder = 'Select models to filter on';
+      vm.showModels = false;
       DeviceUsageSplunkMetricsService.reportOperation(DeviceUsageSplunkMetricsService.eventTypes.timeRangeSelected, vm.timeSelected);
       vm.deviceFilter = vm.deviceOptions[0];
       switch (vm.timeSelected.value) {
@@ -155,7 +134,7 @@ require('modules/core/reports/amcharts-export.scss');
         }
         return result;
       }, {}).map(function (value, key) {
-        value.totalDuration = (value.totalDuration / 3600).toFixed(2);
+        value.totalDurationY = (value.totalDuration / 3600).toFixed(2);
         value.time = key;
         return value;
       }).value();
@@ -226,26 +205,33 @@ require('modules/core/reports/amcharts-export.scss');
       Notification.notify(errors, 'error');
     }
 
-    function loadChartData(data, title) {
-      if (data.length === 0) {
+    function loadChartData(data, title, models) {
+      var missingDays = data.missingDays;
+      var reportItems = data.reportItems;
+      if (reportItems.length === 0) {
         vm.noDataForRange = true;
         var warning = 'No report data available for : \n' + dateRange.start + ' to ' + dateRange.end;
         Notification.notify([warning], 'warning');
       } else {
         vm.noDataForRange = false;
       }
-      vm.reportData = data;
-      amChart.dataProvider = data;
+      vm.reportData = reportItems;
+      var max = _.maxBy(reportItems, 'totalDuration').totalDuration;
+      amChart.valueAxes[0].maximum = (max / 3600) * 1.1;
+      amChart.dataProvider = reportItems;
+
       if (title) {
-        amChart.categoryAxis.title = title;
-        if (missingDays) {
-          amChart.categoryAxis.title += missingDays;
+        if (missingDays.count > 0) {
+          var missingDaysWarning = $translate.instant('reportsPage.usageReports.missingDays', { nbrOfMissingDays: missingDays.count });
+          amChart.categoryAxis.title = title + missingDaysWarning;
+        } else {
+          amChart.categoryAxis.title = title;
         }
       }
       amChart.validateData();
       amChart.animateAgain();
       vm.showDevices = false;
-      fillInStats(data);
+      fillInStats(reportItems, dateRange.start, dateRange.end, models);
     }
 
     function loadChartDataForDeviceType(data) {
@@ -253,42 +239,40 @@ require('modules/core/reports/amcharts-export.scss');
       amChart.validateData();
     }
 
-    function loadLastWeek(dates) {
-      missingDays = null;
-      var missingDaysDeferred = $q.defer();
-      missingDaysDeferred.promise.then(handleMissingDays);
+    function loadLastWeek(dates, models) {
       vm.loading = true;
-      DeviceUsageTotalService.getDataForRange(dates.start, dates.end, 'day', ['ce', 'sparkboard'], apiToUse, missingDaysDeferred).then(function (data) {
-        loadChartData(data, $translate.instant('reportsPage.usageReports.last7Days'));
+      DeviceUsageTotalService.getDataForRange(dates.start, dates.end, 'day', ['ce', 'SparkBoard'], models, apiToUse).then(function (data) {
+        loadChartData(data, $translate.instant('reportsPage.usageReports.last7Days'), models);
+        if ($state.current.name === 'reports.device-usage-v2') {
+          if (!models) {
+            getModelsForRange(dates.start, dates.end).then(modelsForRange);
+          }
+        }
       }, handleReject);
     }
 
-    function loadLastMonth(dates) {
-      missingDays = null;
-      var missingDaysDeferred = $q.defer();
-      missingDaysDeferred.promise.then(handleMissingDays);
+    function loadLastMonth(dates, models) {
       vm.loading = true;
-      DeviceUsageTotalService.getDataForRange(dates.start, dates.end, 'week', ['ce', 'sparkboard'], apiToUse, missingDaysDeferred).then(function (data) {
-        loadChartData(data, $translate.instant('reportsPage.usageReports.last4Weeks'));
+      DeviceUsageTotalService.getDataForRange(dates.start, dates.end, 'week', ['ce', 'SparkBoard'], models, apiToUse).then(function (data) {
+        loadChartData(data, $translate.instant('reportsPage.usageReports.last4Weeks'), models);
+        if ($state.current.name === 'reports.device-usage-v2') {
+          if (!models) {
+            getModelsForRange(dates.start, dates.end).then(modelsForRange);
+          }
+        }
       }, handleReject);
     }
 
-    function loadLast3Months(dates) {
-      missingDays = null;
-      var missingDaysDeferred = $q.defer();
-      missingDaysDeferred.promise.then(handleMissingDays);
+    function loadLast3Months(dates, models) {
       vm.loading = true;
-      DeviceUsageTotalService.getDataForRange(dates.start, dates.end, 'month', ['ce', 'sparkboard'], apiToUse, missingDaysDeferred).then(function (data) {
-        loadChartData(data, $translate.instant('reportsPage.usageReports.last3Months'));
+      DeviceUsageTotalService.getDataForRange(dates.start, dates.end, 'month', ['ce', 'SparkBoard'], models, apiToUse).then(function (data) {
+        loadChartData(data, $translate.instant('reportsPage.usageReports.last3Months'), models);
+        if ($state.current.name === 'reports.device-usage-v2') {
+          if (!models) {
+            getModelsForRange(dates.start, dates.end).then(modelsForRange);
+          }
+        }
       }, handleReject);
-    }
-
-    function handleMissingDays(info) {
-      //$log.info('missingDays', info);
-      var nbrOfMissingDays = info.missingDays.length;
-      var warning = $translate.instant('reportsPage.usageReports.missingDays', { nbrOfMissingDays: nbrOfMissingDays }); //' (Data missing for ' + nbrOfMissingDays + ' days)';
-      missingDays = warning;
-      //Notification.notify([warning], 'warning');
     }
 
     function rollOverGraphItem(event) {
@@ -302,17 +286,17 @@ require('modules/core/reports/amcharts-export.scss');
       $scope.$apply();
     }
 
-    function fillInStats(data) {
-      var stats = DeviceUsageTotalService.extractStats(data);
-      vm.totalDuration = secondsTohhmmss(stats.totalDuration);
-      vm.noOfCalls = stats.noOfCalls;
-      vm.noOfDevices = stats.noOfDevices;
+    function fillInStats(data, start, end, models) {
+      DeviceUsageTotalService.extractStats(data, start, end, models).then(function (stats) {
+        vm.totalDuration = secondsTohhmmss(stats.totalDuration);
+        vm.noOfCalls = stats.noOfCalls;
+        vm.noOfDevices = stats.noOfDevices;
 
-      vm.mostUsedDevices = [];
-      vm.leastUsedDevices = [];
-
-      resolveDeviceData(stats.most, vm.mostUsedDevices)
-        .then(resolveDeviceData(stats.least, vm.leastUsedDevices));
+        vm.mostUsedDevices = [];
+        vm.leastUsedDevices = [];
+        resolveDeviceData(stats.most, vm.mostUsedDevices)
+          .then(resolveDeviceData(stats.least, vm.leastUsedDevices));
+      });
     }
 
     function resolveDeviceData(stats, target) {
@@ -321,6 +305,7 @@ require('modules/core/reports/amcharts-export.scss');
           _.each(stats, function (device, index) {
             target.push({ "name": deviceInfo[index].displayName, "duration": secondsTohhmmss(device.totalDuration), "calls": device.callCount });
           });
+          vm.showModels = true;
         });
     }
 
@@ -337,6 +322,7 @@ require('modules/core/reports/amcharts-export.scss');
         return result;
       }
       result += minutes > 0 ? minutes + 'm ' : '';
+
       result += hours < 10 ? seconds + 's' : '';
       return result;
     }
@@ -391,6 +377,48 @@ require('modules/core/reports/amcharts-export.scss');
         vm.exporting = false;
         var warn = $translate.instant('reportsPage.usageReports.export.deviceUsageExportFailedOrCancelled');
         Notification.warning(warn);
+      }
+    };
+
+    function getModelsForRange(start, end) {
+      return DeviceUsageModelService.getModelsForRange(start, end, 'day', ['ce', 'SparkBoard'], 'local');
+    }
+
+    function modelsForRange(items) {
+      _.each(DeviceUsageModelService.mapModelsIn(items), function (item) {
+        if (item.model !== '*') {
+          vm.modelOptions.push({
+            value: item.model,
+            label: item.model,
+            isSelected: false
+          });
+        }
+      });
+    }
+
+    vm.modelsChanged = function () {
+      $log.info('modelsChanged', vm.modelsSelected);
+      var models = _.map(DeviceUsageModelService.mapModelsOut(vm.modelsSelected), function (model) {
+        return model.value;
+      });
+      //$log.info('models', models);
+      switch (vm.timeSelected.value) {
+        case 0:
+          dateRange = DeviceUsageDateService.getDateRangeForLastNTimeUnits(7, 'day');
+          loadLastWeek(dateRange, models);
+          break;
+        case 1:
+          dateRange = DeviceUsageDateService.getDateRangeForLastNTimeUnits(4, 'week');
+          loadLastMonth(dateRange, models);
+          break;
+        case 2:
+          dateRange = DeviceUsageDateService.getDateRangeForLastNTimeUnits(3, 'month');
+          loadLast3Months(dateRange, models);
+          break;
+        default:
+          $log.warn("Unknown time period selected");
+          dateRange = DeviceUsageDateService.getDateRangeForLastNTimeUnits(7, 'day');
+          loadLastWeek(dateRange, models);
       }
     };
 

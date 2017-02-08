@@ -1,0 +1,24 @@
+<cs-card id='participant-distribution-card' class="full media-metrics-report-card">
+  <article class="media-service-card">
+    <graphheader>
+              <h4 class='report-section-header' translate='mediaFusion.metrics.participantDistributionTitle'>
+              </h4>
+    </graphheader>
+    <section>
+      <div class="participant-distribution-reports">
+        <div id="participantDistributiondiv" class="barchart" ng-class="{'participant-distribution-chart': !$ctrl.parentcntrl.isEmpty($ctrl.parentcntrl.participantDistributionStatus) && !$ctrl.parentcntrl.isRefresh($ctrl.parentcntrl.participantDistributionStatus)}"></div>
+        <div class="spinner-position" ng-if="$ctrl.parentcntrl.isRefresh($ctrl.parentcntrl.participantDistributionStatus)">
+          <i class='icon icon-spinner icon-2x'></i>
+        </div>
+        <div class="no-data-center" ng-if="$ctrl.parentcntrl.isEmpty($ctrl.parentcntrl.participantDistributionStatus)">
+          <p>
+            <h3 class="no-data"> 
+            <i class='icon icon-warning no-data-warning'></i>
+            <span translate='mediaFusion.metrics.nodata'></span>
+          </h3>
+            <p>
+        </div>
+      </div>
+    </section>
+  </article>
+</cs-card>

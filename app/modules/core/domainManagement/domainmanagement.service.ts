@@ -3,7 +3,7 @@ class DomainManagementService {
   private _domainList: Array<{
     text: string,
     token: string,
-    status: string
+    status: string,
   }> = [];
 
   private _domainListLoaded: boolean = false;
@@ -21,6 +21,7 @@ class DomainManagementService {
   private _invokeUnverifyDomainUrl;
   private _invokeVerifyDomainUrl;
   private _claimDomainUrl;
+  private _sunlightConfigUrl;
 
   /* @ngInject */
   constructor(
@@ -51,6 +52,7 @@ class DomainManagementService {
     //Claim: http://wikicentral.cisco.com/display/IDENTITY/Domain+management+API+-+Add+Domain
     //DELETE https://<server name>/organization/<orgId>/v1/Domains/<domainValue>
     this._claimDomainUrl = this.UrlConfig.getDomainManagementUrl(orgId) + 'Domains';
+    this._sunlightConfigUrl = this.UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + orgId + '/chat';
 
   }
 
@@ -65,7 +67,7 @@ class DomainManagementService {
   public get domainList(): Array<{
     text: string,
     token: string,
-    status: string
+    status: string,
   }> {
     return this._domainList;
   }
@@ -106,6 +108,9 @@ class DomainManagementService {
         //last domain was deleted. CI will set the _enforceUsersInVerifiedAndClaimedDomains flag to false on server side. We will do it now in our browser cache:
         this._enforceUsersInVerifiedAndClaimedDomains = false;
      }
+      if (this.Authinfo.isCare()) {
+        this.syncDomainsWithCare();
+      }
     }, err => {
       this.Log.error('Failed to unverify domain: ' + domain, err);
       return this.$q.reject(this.getErrorMessage(err));
@@ -127,6 +132,9 @@ class DomainManagementService {
         let domainInList = _.find(this._domainList, { text: domain, status: this.states.pending });
         if (domainInList) {
           domainInList.status = this.states.verified;
+        }
+        if (this.Authinfo.isCare()) {
+          this.syncDomainsWithCare();
         }
       }, err => {
         this.Log.error('Failed to verify domain: ' + domain, err);
@@ -242,6 +250,17 @@ class DomainManagementService {
         });
       }
     });
+  }
+
+  public syncDomainsWithCare() {
+      this.getVerifiedDomains().then(response => {
+        let verifiedDomains = _.chain(response)
+          .filter({ status : this.states.verified })
+          .map('text')
+          .value();
+        verifiedDomains = verifiedDomains.length > 0 ? verifiedDomains : ['.*'];
+        this.$http.put(this._sunlightConfigUrl, { allowedOrigins : verifiedDomains });
+      });
   }
 }
 angular.module('Core')

@@ -5,13 +5,33 @@
     .module('Mediafusion')
     .service('MediaReportsService', MediaReportsService);
 
-  function MediaReportsService($http, $translate, Authinfo, Notification, Log, MediaConfigServiceV2, chartColors) {
+  function MediaReportsService($http, $translate, Authinfo, Notification, MediaConfigServiceV2, chartColors) {
     var vm = this;
 
     vm.urlBase = MediaConfigServiceV2.getAthenaUrl() + '/organizations/' + Authinfo.getOrgId();
     vm.allClusters = $translate.instant('mediaFusion.metrics.allclusters');
 
     function adjustUtilizationData(activeData, returnData, startTime, endTime, graphs) {
+      var returnDataArray = [];
+      var startDate = {
+        time: startTime
+      };
+      activeData.unshift(startDate);
+      for (var i = 0; i < activeData.length; i++) {
+        var tmpItem = {};
+        tmpItem = activeData[i];
+        returnDataArray.push(tmpItem);
+      }
+      var endDate = {
+        time: endTime
+      };
+      returnDataArray.push(endDate);
+      returnData.graphData = returnDataArray;
+      returnData.graphs = graphs;
+      return returnData;
+    }
+
+    function adjustParticipantDistributionData(activeData, returnData, startTime, endTime, graphs) {
       var returnDataArray = [];
       var startDate = {
         time: startTime
@@ -115,7 +135,7 @@
           return returnData;
         }
       }, function (error) {
-        return returnErrorCheck(error, 'Utilization data not returned for customer.', $translate.instant('mediaFusion.metrics.overallUtilizationGraphError'), returnData);
+        return returnErrorCheck(error, $translate.instant('mediaFusion.metrics.overallUtilizationGraphError'), returnData);
       });
     }
 
@@ -132,8 +152,27 @@
         } else {
           return returnData;
         }
-      }, function (response) {
-        return returnErrorCheck(response, 'Total Number of Calls data not returned for customer.', $translate.instant('mediaFusion.metrics.overallCallVolumeGraphError'), returnData);
+      }, function (error) {
+        return returnErrorCheck(error, $translate.instant('mediaFusion.metrics.overallCallVolumeGraphError'), returnData);
+      });
+    }
+
+    function getParticipantDistributionData(time, cluster) {
+      vm.callDistributionUrl = '/clusters_call_volume';
+
+      var returnData = {
+        graphData: [],
+        graphs: []
+      };
+      return $http.get(vm.urlBase + getQuerys(vm.callDistributionUrl, cluster, time)).then(function (response) {
+        if (!_.isUndefined(response) && !_.isUndefined(response.data) && !_.isUndefined(response.data.chartData) && _.isArray(response.data.chartData) && !_.isUndefined(response.data)) {
+          returnData.graphData.push(response.data.chartData);
+          return adjustParticipantDistributionData(response.data.chartData, returnData, response.data.startTime, response.data.endTime, response.data.graphs);
+        } else {
+          return returnData;
+        }
+      }, function (error) {
+        return returnErrorCheck(error, $translate.instant('mediaFusion.metrics.overallParticipantDistributionGraphError'), returnData);
       });
     }
 
@@ -147,8 +186,8 @@
         } else {
           return returnData;
         }
-      }, function (response) {
-        return returnErrorCheck(response, 'Availability data not returned for customer.', $translate.instant('mediaFusion.metrics.overallAvailabilityGraphError'), returnData);
+      }, function (error) {
+        return returnErrorCheck(error, $translate.instant('mediaFusion.metrics.overallAvailabilityGraphError'), returnData);
       });
     }
 
@@ -163,7 +202,7 @@
           return returnData;
         }
       }, function (error) {
-        return returnErrorCheck(error, 'Aggeregated Cluster Availability data not returned for customer.', $translate.instant('mediaFusion.metrics.overallClusterAvailabilityGraphError'), returnData);
+        return returnErrorCheck(error, $translate.instant('mediaFusion.metrics.overallClusterAvailabilityGraphError'), returnData);
       });
     }
 
@@ -182,26 +221,16 @@
           return returnData;
         }
       }, function (error) {
-        return returnErrorCheck(error, 'Total Number of Calls not returned for customer.', $translate.instant('mediaFusion.metrics.overallTotalNumberOfCallsError'), returnData);
+        return returnErrorCheck(error, $translate.instant('mediaFusion.metrics.overallTotalNumberOfCallsError'), returnData);
       });
     }
 
-    function returnErrorCheck(error, debugMessage, message, returnItem) {
+    function returnErrorCheck(error, message, returnItem) {
       if (error.status === 401 || error.status === 403) {
-        Log.debug('User not authorized to access reports.  Status: ' + error.status);
         Notification.error('reportsPage.unauthorizedError');
         return returnItem;
       } else if ((error.status !== 0) || (error.config.timeout.$$state.status === 0)) {
-        if (error.status !== 0) {
-          Log.debug(debugMessage + '  Status: ' + error.status + ' Response: ' + error.message);
-        } else {
-          Log.debug(debugMessage + '  Status: ' + error.status);
-        }
-        if (!_.isUndefined(error.data) && !_.isUndefined(error.data.trackingId) && (error.data.trackingId !== null)) {
-          Notification.notify([message + '<br>' + $translate.instant('reportsPage.trackingId') + error.data.trackingId], 'error');
-        } else {
-          Notification.notify([message], 'error');
-        }
+        Notification.errorWithTrackingId(error, message);
         return returnItem;
       }
     }
@@ -209,6 +238,7 @@
     return {
       getUtilizationData: getUtilizationData,
       getCallVolumeData: getCallVolumeData,
+      getParticipantDistributionData: getParticipantDistributionData,
       getAvailabilityData: getAvailabilityData,
       getClusterAvailabilityData: getClusterAvailabilityData,
       getTotalCallsData: getTotalCallsData,

@@ -16,10 +16,12 @@
     var timeoutInMillis = 20000;
     var intervalType = 'day'; // Used as long as week and month is not implemented
 
-    function getDataForRange(start, end, granularity, deviceCategories, api, missingDaysDeferred) {
+    function getDataForRange(start, end, granularity, deviceCategories, models, api) {
       var startDate = moment(start);
       var endDate = moment(end);
       var now = moment();
+
+      models = 'na'; // just here for compatibility with V2
 
       if (startDate.isValid() && endDate.isValid() && startDate.isBefore(endDate) && endDate.isBefore(now)) {
         if (api === 'mock') {
@@ -31,22 +33,24 @@
           url = url + 'intervalType=' + intervalType; // As long week and month is not implemented
           url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
           url = url + '&deviceCategories=' + deviceCategories.join();
+          url = url + '&models=' + models;
           url = url + '&accounts=__';
           url = url + '&sendMockData=false';
-          return doRequest(url, granularity, start, end, missingDaysDeferred);
+          return doRequest(url, granularity, start, end);
         } else {
           url = urlBase + '/' + Authinfo.getOrgId() + '/reports/device/call?';
           url = url + 'intervalType=' + intervalType; // As long week and month is not implemented
           url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
           url = url + '&deviceCategories=' + deviceCategories.join();
+          url = url + '&models=' + models;
           url = url + '&accounts=__';
-          return doRequest(url, granularity, start, end, missingDaysDeferred);
+          return doRequest(url, granularity, start, end);
         }
       }
 
     }
 
-    function doRequest(url, granularity, start, end, missingDaysDeferred) {
+    function doRequest(url, granularity, start, end) {
       var deferred = $q.defer();
       var timeout = {
         timeout: deferred.promise
@@ -62,12 +66,13 @@
           response.data.items = [];
         }
         if (response.data.items.length > 0) {
-          missingDays = checkIfMissingDays(response.data.items, start, end, missingDaysDeferred);
+          missingDays = checkIfMissingDays(response.data.items, start, end);
         }
-        if (missingDays) {
+        if (missingDays.missingDays) {
           fillEmptyDays(response.data.items, start, end);
         }
-        return reduceAllData(response.data.items, granularity);
+        var reduced = reduceAllData(response.data.items, granularity);
+        return { reportItems: reduced, missingDays: missingDays };
       }, function (reject) {
         return $q.reject(analyseReject(reject));
       });
@@ -103,7 +108,7 @@
       });
     }
 
-    function checkIfMissingDays(items, start, end, missingDaysDeferred) {
+    function checkIfMissingDays(items, start, end) {
       //var first = moment(start);
       var last = moment(end);
       var current = moment(start);
@@ -129,14 +134,10 @@
         return value.toString();
       }).value();
       var diff = _.differenceWith(correctDays, reducedDays, _.isEqual);
-      //$log.info('diff', diff);
       if (diff.length > 0) {
-        missingDaysDeferred.resolve({
-          missingDays: diff
-        });
-        return true;
+        return { missingDays: true, count: diff.length };
       } else {
-        return false;
+        return { missingDays: false, count: 0 };
       }
     }
 
@@ -203,7 +204,7 @@
         }
         return result;
       }, {}).map(function (value, key) {
-        value.totalDuration = (value.totalDuration / 3600).toFixed(2);
+        value.totalDurationY = (value.totalDuration / 3600).toFixed(2);
         var timeFormatted = key.substr(0, 4) + '-' + key.substr(4, 2) + '-' + key.substr(6, 2);
         value.time = timeFormatted;
         return value;
@@ -244,9 +245,9 @@
       return sequence;
     }
 
-    function extractStats(reduced, count) {
+    function extractStats(reduced) {
       var accounts = extractAndSortAccounts(reduced);
-      var n = count || 50;
+      var n = 20;
       var stats = {
         most: _.take(accounts, n),
         least: _.takeRight(accounts, n).reverse(),
@@ -255,7 +256,7 @@
         totalDuration: calculateTotal(accounts).totalDuration
       };
       //$log.info('Extracted stats:', stats);
-      return stats;
+      return $q.resolve(stats);
     }
 
     function calculateTotal(accounts) {

@@ -227,6 +227,14 @@
       setAvailableKeys();
     }
 
+    function addRouteToSipEndPoint() {
+      vm.keyActions.push({
+        label: $translate.instant('autoAttendant.phoneMenuRouteToSipEndpoint'),
+        name: 'phoneMenuRouteToSipEndpoint',
+        action: 'routeToSipEndpoint'
+      });
+    }
+
     function setPhonemenuFormDirty() {
       AACommonService.setPhoneMenuStatus(true);
     }
@@ -258,7 +266,11 @@
       vm.menuId = vm.menuEntry.id;
 
       toggleRouteToQueueFeature();
-      vm.keyActions.sort(AACommonService.sortByProperty('name'));
+
+      if (AACommonService.isRouteSIPAddressToggle()) {
+        addRouteToSipEndPoint();
+      }
+      vm.keyActions.sort(AACommonService.sortByProperty('label'));
 
       if (vm.menuEntry.type === 'MENU_OPTION') {
         if (_.has(vm.menuEntry, 'headers.length') && vm.menuEntry.headers.length === 0 &&

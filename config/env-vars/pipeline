@@ -1,0 +1,6 @@
+PROJ__BUILD_ENV=pipeline
+
+# env vars for use with 'e2e.sh'
+SAUCE__MAX_INSTANCES=20
+SAUCE__USERNAME=
+SAUCE__ACCESS_KEY=

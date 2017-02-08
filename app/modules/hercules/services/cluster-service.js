@@ -6,11 +6,12 @@
     .service('ClusterService', ClusterService);
 
   /* @ngInject */
-  function ClusterService($http, CsdmPoller, CsdmCacheUpdater, CsdmHubFactory, UrlConfig, Authinfo) {
+  function ClusterService($http, CsdmPoller, CsdmCacheUpdater, CsdmHubFactory, UrlConfig, Authinfo, FusionClusterStatesService) {
     var clusterCache = {
       c_mgmt: {},
       c_ucmc: {},
       c_cal: {},
+      mf_mgmt: {},
       hds_app: {}
     };
     var hub = CsdmHubFactory.create();
@@ -22,7 +23,6 @@
       getCluster: getCluster,
       getClustersByConnectorType: getClustersByConnectorType,
       getConnector: getConnector,
-      getRunningStateSeverity: getRunningStateSeverity,
       subscribe: hub.on,
       upgradeSoftware: upgradeSoftware,
       mergeRunningState: mergeRunningState,
@@ -41,65 +41,20 @@
 
     function overrideStateIfAlarms(connector) {
       if (connector.alarms.length > 0) {
-        connector.state = 'has_alarms';
+        connector.state = _.some(connector.alarms, function (alarm) {
+          return alarm.severity === 'critical' || alarm.severity === 'error';
+        }) ? 'has_error_alarms' : 'has_warning_alarms';
       }
       return connector;
     }
 
-    function getRunningStateSeverity(state) {
-      // we give a severity and a weight to all possible states
-      // this has to be synced with the server generating the API consumed
-      // by the general overview page (state of Call connectors, etc.)
-      var label, value, cssClass;
-      switch (state) {
-        case 'running':
-          label = 'ok';
-          value = 0;
-          cssClass = 'success';
-          break;
-        case 'not_installed':
-        case 'not_registered':
-          label = 'neutral';
-          value = 1;
-          cssClass = 'disabled';
-          break;
-        case 'disabled':
-        case 'downloading':
-        case 'installing':
-        case 'not_configured':
-        case 'uninstalling':
-        case 'registered':
-        case 'initializing':
-          label = 'warning';
-          value = 2;
-          cssClass = 'warning';
-          break;
-        case 'has_alarms':
-        case 'offline':
-        case 'stopped':
-        case 'not_operational':
-        case 'unknown':
-        case 'registrationTimeout':
-        default:
-          label = 'error';
-          value = 3;
-          cssClass = 'danger';
-      }
-
-      return {
-        label: label,
-        value: value,
-        cssClass: cssClass,
-      };
-    }
-
     function getMostSevereRunningState(previous, connector) {
-      var stateSeverity = getRunningStateSeverity(connector.state);
-      if (stateSeverity.value > previous.stateSeverityValue) {
+      var severity = FusionClusterStatesService.getSeverity(connector);
+      if (severity.severity > previous.stateSeverityValue) {
         return {
           state: connector.state,
-          stateSeverity: stateSeverity.label,
-          stateSeverityValue: stateSeverity.value
+          stateSeverity: severity.label,
+          stateSeverityValue: severity.severity
         };
       } else {
         return previous;
@@ -140,7 +95,14 @@
       return allAreUpgraded ? 'upgraded' : 'upgrading';
     }
 
-    function mergeRunningState(connectors) {
+    function mergeRunningState(connectors, type) {
+      if (_.size(connectors) === 0 && (type === 'hds_app' || type === 'mf_mgmt')) {
+        return {
+          state: 'no_nodes_registered',
+          stateSeverity: 'neutral',
+          stateSeverityValue: 1
+        };
+      }
       if (_.size(connectors) === 0) {
         return {
           state: 'not_registered',
@@ -162,13 +124,19 @@
       var upgradeAvailable = provisioning && _.some(cluster.connectors, function (connector) {
         return provisioning.availableVersion && connector.runningVersion !== provisioning.availableVersion;
       });
+      var state;
+      if (type === 'hds_app' || type === 'mf_mgmt') {
+        state = mergeRunningState(connectors, type).state;
+      } else {
+        state = mergeRunningState(connectors).state;
+      }
       var hosts = _.chain(connectors)
         .map('hostname')
         .uniq()
         .value();
       return {
         alarms: mergeAllAlarms(connectors),
-        state: mergeRunningState(connectors).state,
+        state: state,
         upgradeState: getUpgradeState(connectors),
         provisioning: provisioning,
         upgradeAvailable: upgradeAvailable,
@@ -223,6 +191,7 @@
             c_mgmt: clusterType('c_mgmt', clusters),
             c_ucmc: clusterType('c_ucmc', clusters),
             c_cal: clusterType('c_cal', clusters),
+            mf_mgmt: clusterType('mf_mgmt', clusters),
             hds_app: clusterType('hds_app', clusters)
           };
         })
@@ -231,6 +200,7 @@
             c_mgmt: addAggregatedData('c_mgmt', clusters.c_mgmt),
             c_ucmc: addAggregatedData('c_ucmc', clusters.c_ucmc),
             c_cal: addAggregatedData('c_cal', clusters.c_cal),
+            mf_mgmt: addAggregatedData('mf_mgmt', clusters.mf_mgmt),
             hds_app: addAggregatedData('hds_app', clusters.hds_app)
           };
           return result;
@@ -240,6 +210,7 @@
             c_mgmt: _.keyBy(clusters.c_mgmt, 'id'),
             c_ucmc: _.keyBy(clusters.c_ucmc, 'id'),
             c_cal: _.keyBy(clusters.c_cal, 'id'),
+            mf_mgmt: _.keyBy(clusters.mf_mgmt, 'id'),
             hds_app: _.keyBy(clusters.hds_app, 'id')
           };
           return result;
@@ -248,6 +219,7 @@
           CsdmCacheUpdater.update(clusterCache.c_mgmt, clusters.c_mgmt);
           CsdmCacheUpdater.update(clusterCache.c_ucmc, clusters.c_ucmc);
           CsdmCacheUpdater.update(clusterCache.c_cal, clusters.c_cal);
+          CsdmCacheUpdater.update(clusterCache.mf_mgmt, clusters.mf_mgmt);
           CsdmCacheUpdater.update(clusterCache.hds_app, clusters.hds_app);
           return clusterCache;
         });

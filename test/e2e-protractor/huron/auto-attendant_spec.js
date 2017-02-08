@@ -227,6 +227,7 @@ describe('Huron Auto Attendant', function () {
       utils.sendKeys(autoattendant.phoneMenuActionTargets.last().element(by.tagName('textarea')), "This is a phone menu say");
 
     });
+
     it('should delete one Phone Menu Repeat from the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
       //Delete one repeatMenu
@@ -281,6 +282,36 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsDisabled(autoattendant.saveButton);
 
     }, 120000);
+
+    it('should add route to SIP endpoint to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+
+      utils.click(autoattendant.repeatPlus);
+      //Add Route to SIP Number
+      utils.click(autoattendant.phoneMenuKeys.last());
+      utils.click(autoattendant.phoneMenuKeyOptions.last().all(by.tagName('li')).last());
+      utils.click(autoattendant.phoneMenuAction.last());
+      utils.click(autoattendant.phoneMenuActionOptions.last().element(by.linkText('Route to SIP Endpoint')));
+      utils.click(autoattendant.phoneMenuActionTargets.last().element(by.css('input.aa-sip-input')));
+
+      // a bad external number should not allow save
+      utils.sendKeys(autoattendant.phoneMenuActionTargets.last().element(by.css('input.aa-sip-input')), "12341234");
+
+      utils.expectIsDisabled(autoattendant.saveButton);
+
+      // but a good phone number should be able to be saved
+      utils.clear(autoattendant.phoneMenuActionTargets.last().element(by.css('input.aa-sip-input')));
+      utils.sendKeys(autoattendant.phoneMenuActionTargets.last().element(by.css('input.aa-sip-input')), "sip:test123@ciscospark.com");
+
+      // save and assert successful update message
+
+      utils.expectIsEnabled(autoattendant.saveButton);
+
+      utils.click(autoattendant.saveButton);
+
+      //autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
+      //utils.expectIsDisabled(autoattendant.saveButton);
+
+    }, 150000);
 
     it('should add a 2nd Say Message via Add New Step to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
       // Bit of a kludge. We currently have 2 Say messages & will add a third.
@@ -467,6 +498,37 @@ describe('Huron Auto Attendant', function () {
 
     }, 60000);
 
+    it('should add Decision Conditional via New Step action selection to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+      autoattendant.scrollIntoView(autoattendant.addStepLast);
+      utils.click(autoattendant.addStepLast);
+      utils.expectIsDisplayed(autoattendant.newStep);
+      utils.click(autoattendant.newStepMenu);
+
+      // 2nd menu option is Decision 
+      utils.click(autoattendant.newStepDecision);
+      utils.wait(autoattendant.decisionFirst, 12000);
+      autoattendant.scrollIntoView(autoattendant.decisionFirst);
+
+      utils.click(autoattendant.decisionIf);
+
+      utils.wait(autoattendant.decisionIf, 12000);
+ 
+      utils.click(autoattendant.decisionIfDropDownOptions);
+
+      utils.wait(autoattendant.decisionCallerNumberTextArea, 12000);
+
+      utils.sendKeys(autoattendant.decisionCallerNumberTextArea, "Hello World");
+
+      utils.click(autoattendant.decisionThen);
+
+      utils.wait(autoattendant.decisionThen, 12000);
+ 
+      utils.click(autoattendant.decisionThenDropDownOptions);
+
+      utils.wait(autoattendant.decisionPhoneNumber, 12000);
+      utils.sendKeys(autoattendant.decisionPhoneNumber, "2065551234");
+ 
+    });
 
     it('should add Caller Input via New Step action selection to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
       autoattendant.scrollIntoView(autoattendant.addStepLast);
@@ -474,7 +536,7 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsDisplayed(autoattendant.newStep);
       utils.click(autoattendant.newStepMenu);
 
-      // 4th/last menu option is Route Call
+      // 4th/last menu option is Caller Input 
       utils.click(autoattendant.newStepCallerInput);
       utils.wait(autoattendant.callerInputFirst, 12000);
       autoattendant.scrollIntoView(autoattendant.callerInputFirst);

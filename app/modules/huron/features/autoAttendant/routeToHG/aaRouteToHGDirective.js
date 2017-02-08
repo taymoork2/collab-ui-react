@@ -14,6 +14,7 @@
         index: '=aaIndex',
         keyIndex: '@aaKeyIndex',
         fromRouteCall: '@aaFromRouteCall',
+        fromDecision: '@aaFromDecision',
         fromFallback: '@aaFromFallback'
       },
       controller: 'AARouteToHGCtrl',

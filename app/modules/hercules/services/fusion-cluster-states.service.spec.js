@@ -25,14 +25,30 @@ describe('Service: FusionClusterStatesService', function () {
       expect(severity).toBe(0);
     });
 
-    it('should return 3 for the \'has_alarms\' state', function () {
+    it('should return 2 for the \'has_warning_alarms\' state', function () {
       var connector = {
-        alarms: [{}],
+        alarms: [{ severity: 'warning' }, { severity: 'alert' }],
+        state: 'running'
+      };
+      var severity = FusionClusterStatesService.getStateSeverity(connector);
+      expect(severity).toBe(2);
+    });
+
+    it('should return 3 for the \'has_error_alarms\' state', function () {
+      var connector = {
+        alarms: [{ severity: 'critical' }, { severity: 'error' }],
         state: 'running'
       };
       var severity = FusionClusterStatesService.getStateSeverity(connector);
       expect(severity).toBe(3);
     });
+
+    it('should return 1 for the \'no_nodes_registered\' state', function () {
+      var aggregatedState = 'no_nodes_registered';
+      var severity = FusionClusterStatesService.getStateSeverity(aggregatedState);
+      expect(severity).toBe(1);
+    });
+
   });
 
   describe('getSeverityLabel()', function () {

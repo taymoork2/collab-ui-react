@@ -9,9 +9,10 @@ describe('Component: pgNumber setup', () => {
     this.initModules('huron.paging-group.number');
     this.injectDependencies(
       '$httpBackend',
+      'Notification',
       'Authinfo',
       'HuronConfig',
-      'PagingNumberService'
+      'PagingNumberService',
     );
     this.compileComponent('pgNumber', {
       pagingGroupNumber: 'pagingGroupNumber',
@@ -33,17 +34,24 @@ describe('Component: pgNumber setup', () => {
   it('fetch number success', function () {
     this.$httpBackend.whenGET(this.HuronConfig.getCmiUrl() + '/voice/customers/' + this.Authinfo.getOrgId() + '/internalnumberpools?directorynumber=&order=pattern&pattern=%25222%25').respond(200, successResponse);
     this.controller.pagingGroupNumber = '222';
-    this.controller.fetchNumbers();
+
+    this.controller.fetchNumbers().then(
+      (data) => {
+        expect(data).toEqual([ '2222' ]);
+      }, (response) => {
+        expect(this.Notification.errorResponse).toHaveBeenCalledWith(response, 'pagingGroup.numberFetchFailure');
+      });
     this.$httpBackend.flush();
-    expect(this.controller.availableNumbers.length).toEqual(1);
   });
 
   it('fetch number failure', function () {
     this.$httpBackend.whenGET(this.HuronConfig.getCmiUrl() + '/voice/customers/' + this.Authinfo.getOrgId() + '/internalnumberpools?directorynumber=&order=pattern&pattern=%25222%25').respond(500);
     this.controller.pagingGroupNumber = '222';
-    this.controller.fetchNumbers();
+    this.controller.fetchNumbers().then(
+      (data) => {
+        expect(data).toEqual([]);
+      });
     this.$httpBackend.flush();
-    expect(this.controller.availableNumbers.length).toEqual(0);
   });
 
 });

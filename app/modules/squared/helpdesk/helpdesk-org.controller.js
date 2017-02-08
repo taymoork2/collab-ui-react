@@ -6,7 +6,7 @@
     .controller('HelpdeskOrgController', HelpdeskOrgController);
 
   /* @ngInject */
-  function HelpdeskOrgController($anchorScroll, $location, $modal, $scope, $state, $stateParams, $translate, $window, Authinfo, Config, HelpdeskService, HelpdeskCardsOrgService, FeatureToggleService, FusionClusterService, LicenseService, Notification, UrlConfig) {
+  function HelpdeskOrgController($anchorScroll, $location, $modal, $q, $scope, $state, $stateParams, $translate, $window, Authinfo, Config, HelpdeskService, HelpdeskCardsOrgService, FeatureToggleService, FusionClusterService, LicenseService, Notification, Orgservice, UrlConfig) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.org) {
@@ -45,6 +45,42 @@
     vm.openHybridServicesModal = openHybridServicesModal;
     vm._helpers = {
       notifyError: notifyError
+    };
+
+    vm.editOrgValidationMessages = {
+      required: $translate.instant('common.required'),
+      duplicate: $translate.instant('helpdesk.org.duplicateName'),
+      failure: $translate.instant('helpdesk.org.validationFailure'),
+    };
+    vm.editOrgValidationDefer = $q.defer();
+    vm.editOrgAsyncValidators = {
+      failure: function () {
+        vm.editOrgValidationDefer = $q.defer();
+        return vm.editOrgValidationDefer.promise;
+      },
+      duplicate: function (value) {
+        return Orgservice.validateDisplayName(vm.orgId, value)
+          .catch(function () {
+            vm.editOrgValidationDefer.reject();
+            return true;
+          })
+          .then(function (isValid) {
+            vm.editOrgValidationDefer.resolve();
+            if (!isValid) {
+              return $q.reject();
+            }
+          });
+      },
+    };
+    vm.updateDisplayName = function (newValue) {
+      return Orgservice.updateDisplayName(vm.orgId, newValue)
+        .catch(function (response) {
+          Notification.errorResponse(response, 'helpdesk.org.editNameFailure');
+          return $q.reject(response);
+        })
+        .then(function () {
+          Notification.success('helpdesk.org.editNameSuccess');
+        });
     };
 
     HelpdeskService.getOrg(vm.orgId).then(function (result) {
@@ -159,14 +195,19 @@
       HelpdeskService.getServiceOrders(orgId).then(function (orders) {
         var orderingSystemTypes = {
           APP_DIRECT: 'Partner Marketplace',
+          IBM: 'Partner Marketplace',
           ATLAS_TRIALS: 'Partner-Led Trial',
           CCW: 'Cisco Commerce',
+          CCW_CSB: 'Cisco Commerce',
           CISCO_ONLINE_OPC: 'Cisco Online Trial',
           DIGITAL_RIVER: 'Cisco Online Marketplace'
         };
         vm.orderSystems = [];
         _.forEach(orders, function (order) {
-          vm.orderSystems.push(orderingSystemTypes[order.orderingTool] || order.orderingTool);
+          if (order.orderingTool) {
+            vm.orderingTool = order.orderingTool.toUpperCase();
+          }
+          vm.orderSystems.push(orderingSystemTypes[vm.orderingTool] || order.orderingTool);
         });
       }, vm._helpers.notifyError);
     }

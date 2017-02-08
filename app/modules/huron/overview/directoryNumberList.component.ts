@@ -11,7 +11,7 @@ class DirectoryNumberListCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
-    private $translate: ng.translate.ITranslateService
+    private $translate: ng.translate.ITranslateService,
   ) {
     this.primaryLabel = this.$translate.instant('helpdesk.primary');
     this.primarySharedLabel = this.$translate.instant('helpdesk.primaryShared');

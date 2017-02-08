@@ -17,7 +17,8 @@
     }
 
     function renderBalloon(graphDataItem) {
-      var totalDuration = secondsTohhmmss(parseFloat(graphDataItem.dataContext.totalDuration) * 3600);
+      //var totalDuration = secondsTohhmmss(parseFloat(graphDataItem.dataContext.totalDuration) * 3600);
+      var totalDuration = secondsTohhmmss(parseFloat(graphDataItem.dataContext.totalDuration));
       var text = '<div><h5>' + $translate.instant('reportsPage.usageReports.callDuration') + ' : ' + totalDuration + '</h5>';
       text = text + $translate.instant('reportsPage.usageReports.callCount') + ' : ' + graphDataItem.dataContext.callCount + ' <br/> ';
       return text;
@@ -41,7 +42,8 @@
     }
 
     function getLabel(item) {
-      return secondsTohhmmss(parseFloat(item.dataContext.totalDuration) * 3600);
+      //return secondsTohhmmss(parseFloat(item.dataContext.totalDuration) * 3600);
+      return secondsTohhmmss(parseFloat(item.dataContext.totalDuration));
     }
 
     function getLineChart() {
@@ -54,7 +56,7 @@
           'minPeriod': 'DD',
           'parseDates': true,
           'autoGridCount': true,
-          'title': 'Last 7 Days',
+          //'title': 'Last 7 Days',
           'centerLabels': true,
           'equalSpacing': true
         },
@@ -79,7 +81,7 @@
             'labelPosition': 'top',
             'id': 'video',
             'title': $translate.instant('reportsPage.usageReports.callDuration'),
-            'valueField': 'totalDuration',
+            'valueField': 'totalDurationY',
             'lineThickness': 2,
             'fillAlphas': 0.6,
             'lineAlpha': 0.0,
@@ -87,8 +89,7 @@
             'bulletColor': '#ffffff',
             'bulletBorderAlpha': 1,
             'useLineColorForBulletBorder': true,
-            'labelFunction': getLabel,
-            'labelOffset': -2
+            'labelFunction': getLabel
           }
         ],
         'guides': [

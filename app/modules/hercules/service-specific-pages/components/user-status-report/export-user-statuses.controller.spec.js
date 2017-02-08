@@ -4,7 +4,7 @@ describe('ExportUserStatusesController', function () {
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Hercules'));
 
-  var vm, Authinfo, scope, $httpBackend, $q, $rootScope, UserDetails, USSService, ClusterService, ExcelService;
+  var vm, Authinfo, scope, $httpBackend, $q, $rootScope, UserDetails, USSService, ClusterService, ExcelService, ResourceGroupService;
 
   beforeEach(function () {
     angular.mock.module(function ($provide) {
@@ -21,10 +21,11 @@ describe('ExportUserStatusesController', function () {
     });
   });
 
-  beforeEach(inject(function ($controller, _$rootScope_, _$httpBackend_, _$q_, _UserDetails_) {
+  beforeEach(inject(function ($controller, _$rootScope_, _$httpBackend_, _$q_, _UserDetails_, _ResourceGroupService_) {
     $q = _$q_;
     $httpBackend = _$httpBackend_;
     UserDetails = _UserDetails_;
+    ResourceGroupService = _ResourceGroupService_;
     $httpBackend
       .when('GET', '/connectors/')
       .respond({});
@@ -48,10 +49,9 @@ describe('ExportUserStatusesController', function () {
     }];
 
     USSService = {
-      getStatuses: function () {
-        return $q.resolve({
-          // 51 to be over numberOfUsersPrCiRequest (which should be 50)
-          userStatuses: _.range(51).map(function (item, i) {
+      getAllStatuses: function () {
+        return $q.resolve(
+          _.range(51).map(function (item, i) {
             return {
               userId: 'DEADBEEF' + i,
               orgId: '0FF1CE',
@@ -60,14 +60,11 @@ describe('ExportUserStatusesController', function () {
               entitled: true,
               state: 'notActivated'
             };
-          }),
-          paging: {
-            pages: 1
-          }
-        });
+          })
+        );
       }
     };
-    sinon.spy(USSService, 'getStatuses');
+    sinon.spy(USSService, 'getAllStatuses');
 
     ClusterService = {
       getConnector: function (id) {
@@ -92,6 +89,13 @@ describe('ExportUserStatusesController', function () {
       }
     };
     sinon.spy(UserDetails, 'getUsers');
+    sinon.spy(ResourceGroupService, 'getAll');
+
+    ResourceGroupService = {
+      getAll: function () {
+        return $q.resolve([]);
+      }
+    };
 
     var $modalInstance = {
       close: sinon.stub()
@@ -106,7 +110,8 @@ describe('ExportUserStatusesController', function () {
       USSService: USSService,
       UserDetails: UserDetails,
       ExcelService: ExcelService,
-      ClusterService: ClusterService
+      ClusterService: ClusterService,
+      ResourceGroupService: ResourceGroupService
     });
     vm.statusTypes = [{
       stateType: 'notActivated',
@@ -118,20 +123,22 @@ describe('ExportUserStatusesController', function () {
   it('should have sane default on init', function () {
     vm.selectedServiceId = 'squared-fusion-cal';
     expect(vm.exportingUserStatusReport).toBe(false);
-    expect(vm.exportCanceled).toBe(false);
+    expect(vm.progress.total).toBe(0);
+    expect(vm.progress.current).toBe(0);
+    expect(vm.progress.exportCanceled).toBe(false);
   });
 
   it('should cancel exporting when calling cancelExport()', function () {
     vm.selectedServiceId = 'squared-fusion-cal';
     vm.cancelExport();
-    expect(vm.exportCanceled).toBe(true);
+    expect(vm.progress.exportCanceled).toBe(true);
   });
 
   describe('exportCSV', function () {
     it('should call USSService.getStatuses', function () {
       vm.exportCSV();
       $rootScope.$apply();
-      expect(USSService.getStatuses.called).toBe(true);
+      expect(USSService.getAllStatuses.called).toBe(true);
     });
     it('should call ClusterService.getConnector if there at least one connectorId', function () {
       vm.exportCSV();

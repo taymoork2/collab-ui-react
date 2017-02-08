@@ -72,7 +72,7 @@ function cleanupOldE2E() {
 function sauceStart() {
   if (args.sauce) {
     console.log('Starting sauce connect tunnel...');
-    cp.spawnSync('./sauce/start.sh');
+    cp.spawnSync('./sauce/start.sh', [], { stdio: 'inherit' });
     console.log('Sauce connect tunnel complete');
   }
 }
@@ -87,9 +87,6 @@ function sauceStop() {
 
 function setEnv() {
   if (args.sauce) {
-    dotenv.config({
-      path: './test/env/sauce.properties'
-    });
     process.env.SC_TUNNEL_IDENTIFIER = tunnelUuid || (tunnelUuid = uuid.v4());
   }
   if (args.prod) {

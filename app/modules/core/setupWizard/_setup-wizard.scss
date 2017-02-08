@@ -53,6 +53,10 @@
     }
 
     &.service-setup-extension {
+      .cs-input-deprecated {
+        width: 9rem;
+      }
+
       .formly-field-group {
         margin-bottom: 10px;
       }
@@ -140,6 +144,14 @@
 
     .icon-warning {
       margin-right: 0.25rem;
+    }
+  }
+  .cos-style {
+    .title-margin-bottom {
+      @include vr-spacing(mb, 1);
+    }
+    .switch-bottom-margin {
+      @include vr-spacing(mb, 2);
     }
   }
 }

@@ -704,6 +704,58 @@ describe('Controller: AARouteToUserCtrl', function () {
       });
 
     });
+    describe('fromDecision', function () {
+      beforeEach(function () {
+        $scope.fromDecision = true;
+
+        aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
+
+        aaUiModel[schedule].entries[0].actions = [];
+
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('conditional', '');
+        aaUiModel[schedule].entries[0].actions[0] = action;
+
+      });
+
+      it('should create a Voice Mail conditional action with then clause', function () {
+
+        var controller = $controller('AARouteToUserCtrl', {
+          $scope: $scope
+        });
+
+        expect(controller.menuEntry.actions[0].then).toBeDefined();
+        expect(controller.menuEntry.actions[0].then.name).toEqual('routeToUser');
+
+      });
+
+      it('should create a condition action with then clause', function () {
+
+        aaUiModel[schedule].entries[0].actions[0] = undefined;
+
+        var controller = $controller('AARouteToUserCtrl', {
+          $scope: $scope
+        });
+
+        expect(controller.menuEntry.actions[0].name).toEqual('conditional');
+        expect(controller.menuEntry.actions[0].then).toBeDefined();
+        expect(controller.menuEntry.actions[0].then.name).toEqual('routeToUser');
+      });
+
+      it('should change an action from routetoQueue to routeToUser', function () {
+
+        aaUiModel[schedule].entries[index].actions[0].then = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', '');
+
+        var controller = $controller('AARouteToUserCtrl', {
+          $scope: $scope
+        });
+
+        expect(controller.menuEntry.actions[0].name).toEqual('conditional');
+        expect(controller.menuEntry.actions[0].then).toBeDefined();
+        expect(controller.menuEntry.actions[0].then.name).toEqual('routeToUser');
+      });
+
+    });
+
     describe('fromRouteCall overwrite', function () {
       beforeEach(function () {
 

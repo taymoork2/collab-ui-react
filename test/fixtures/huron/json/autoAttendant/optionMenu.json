@@ -60,18 +60,6 @@
               "repeatActionsOnInput": {}
             }]
           }, {
-            "description": "Call dialed number",
-            "input": "4",
-            "actions": [{
-              "routeToDialed": {}
-            }]
-          }, {
-            "description": "Call dialed mailbox",
-            "input": "5",
-            "actions": [{
-              "routeToDialedMailbox": {}
-            }]
-          }, {
             "description": "Dial by extension",
             "input": "6",
             "actions": [{
@@ -173,18 +161,6 @@
               }
             }]
           }, {
-            "description": "Call dialed number",
-            "input": "4",
-            "actions": [{
-              "routeToDialed": {}
-            }]
-          }, {
-            "description": "Call dialed mailbox",
-            "input": "5",
-            "actions": [{
-              "routeToDialedMailbox": {}
-            }]
-          }, {
             "description": "Dial by extension",
             "input": "6",
             "actions": [{
@@ -269,12 +245,6 @@
               }
             }]
           }, {
-            "description": "Call dialed number",
-            "input": "4",
-            "actions": [{
-              "routeToDialed": {}
-            }]
-          }, {
             "description": "Operator",
             "input": "1",
             "actions": [{
@@ -307,12 +277,6 @@
                 }],
                 "repeats": 2
               }
-            }]
-          }, {
-            "description": "Call dialed mailbox",
-            "input": "5",
-            "actions": [{
-              "routeToDialedMailbox": {}
             }]
           }, {
             "description": "Leave voicemail",
@@ -430,38 +394,6 @@
         "description": "",
         "voice": "",
         "level": 0
-      }],
-      "timeout": "",
-      "username": "",
-      "password": "",
-      "url": "",
-      "language": "",
-      "voice": ""
-    }, {
-      "description": "Call dialed number",
-      "type": "MENU_OPTION",
-      "key": "4",
-      "actions": [{
-        "name": "routeToDialed",
-        "value": "",
-        "description": "",
-        "voice": ""
-      }],
-      "timeout": "",
-      "username": "",
-      "password": "",
-      "url": "",
-      "language": "",
-      "voice": ""
-    }, {
-      "description": "Call dialed mailbox",
-      "type": "MENU_OPTION",
-      "key": "5",
-      "actions": [{
-        "name": "routeToDialedMailbox",
-        "value": "",
-        "description": "",
-        "voice": ""
       }],
       "timeout": "",
       "username": "",

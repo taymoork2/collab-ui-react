@@ -34,7 +34,7 @@ describe('ServiceOverviewCtrl', () => {
       expect(_.filter(ctrl.getCloudCards(), { name: 'servicesOverview.cards.care.title' }).length).toBe(1);
     });
 
-    it('should create 6 hybrid cards', () => {
+    it('should create 7 hybrid cards', () => {
       initController();
       expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.clusterList.title' }).length).toBe(1);
       // 2 Hybrid Calendar cards (sharing the same title) but never displayed at the same time
@@ -42,6 +42,7 @@ describe('ServiceOverviewCtrl', () => {
       expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.hybridCall.title' }).length).toBe(1);
       expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.hybridMedia.title' }).length).toBe(1);
       expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.hybridDataSecurity.title' }).length).toBe(1);
+      expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.hybridContext.title' }).length).toBe(1);
     });
   });
 });

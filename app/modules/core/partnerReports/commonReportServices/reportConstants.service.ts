@@ -63,7 +63,7 @@ export class ReportConstants {
 
   /* @ngInject */
   constructor(
-    private $translate: ng.translate.ITranslateService
+    private $translate: ng.translate.ITranslateService,
   ) {}
 
   get WEEK_FILTER(): ITimespan {

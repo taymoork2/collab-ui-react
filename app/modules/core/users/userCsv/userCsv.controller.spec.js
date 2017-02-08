@@ -230,14 +230,18 @@ describe('userCsv.controller', function () {
 
   describe('Bulk Users CSV', function () {
 
-    var oneColumnValidUser = 'User ID/Email (Required),\njohndoe@example.com,';
-    var oneColumnInvalidUser = 'First Name,\nJohn,';
-    var twoValidUsers = generateUsersCsv(2);
-    var twoInvalidUsers = 'First Name,Last Name,Display Name,User ID/Email (Required),Directory Number,Direct Line,Calendar Service,Meeting 25 Party,Spark Call,Spark Message\nJohn,Doe,John Doe,johndoe@example.com,5001,,TREU,true,true,true,true,true\nJane,Doe,Jane Doe,janedoe@example.com,5002,,FASLE,false,false,false';
-    var twoValidUsersWithSpaces = 'First Name,Last Name,Display Name,User ID/Email (Required),Directory Number,Direct Line,Calendar Service,Meeting 25 Party,Spark Call,Spark Message\n , , ,johndoe@example.com, , ,true,true,true,true\n , , ,janedoe@example.com, ,  ,f,f,f,f';
-    var threeUsersOneDuplicateEmail = 'First Name,Last Name,Display Name,User ID/Email (Required),Directory Number,Direct Line,Calendar Service,Meeting 25 Party,Spark Call,Spark Message\nFirst0,Last0,First0 Last0,firstlast0@example.com,5001,,true,true,true,true\nFirst1,Last1,First1 Last1,firstlast1@example.com,5002,,true,true,true,true\nFirst2,Last2,First2 Last2,firstlast0@example.com,5002,,true,true,true,true';
-
     beforeEach(function () {
+      this.mockCsvData = {
+        oneColumnValidUser: 'User ID/Email (Required),\njohndoe@example.com,',
+        oneColumnInvalidUser: 'First Name,\nJohn,',
+        twoValidUsers: generateUsersCsv(2),
+        twoInvalidUsers: 'First Name,Last Name,Display Name,User ID/Email (Required),Directory Number,Direct Line,Calendar Service,Meeting 25 Party,Spark Call,Spark Message\nJohn,Doe,John Doe,johndoe@example.com,5001,,TREU,true,true,true,true,true\nJane,Doe,Jane Doe,janedoe@example.com,5002,,FASLE,false,false,false',
+        twoValidUsersWithSpaces: 'First Name,Last Name,Display Name,User ID/Email (Required),Directory Number,Direct Line,Calendar Service,Meeting 25 Party,Spark Call,Spark Message\n , , ,johndoe@example.com, , ,true,true,true,true\n , , ,janedoe@example.com, ,  ,f,f,f,f',
+        threeUsersOneDuplicateEmail: 'First Name,Last Name,Display Name,User ID/Email (Required),Directory Number,Direct Line,Calendar Service,Meeting 25 Party,Spark Call,Spark Message\nFirst0,Last0,First0 Last0,firstlast0@example.com,5001,,true,true,true,true\nFirst1,Last1,First1 Last1,firstlast1@example.com,5002,,true,true,true,true\nFirst2,Last2,First2 Last2,firstlast0@example.com,5002,,true,true,true,true',
+        invalidHeaders: 'John,Doe,John Doe,johndoe@example.com,5001,12223335001,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE\nJane,Doe,Jane Doe,janedoe@example.com,,,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE',
+        badCsvFormat: 'fa;lskdhgqiwoep;klnandf',
+        invalidCsvData: {},
+      };
       installPromiseMatchers.apply(this);
       initController.apply(this);
     });
@@ -256,7 +260,7 @@ describe('userCsv.controller', function () {
       });
       describe('with file content', function () {
         beforeEach(function () {
-          this.controller.model.file = twoValidUsers;
+          this.controller.model.file = this.mockCsvData.twoValidUsers;
           this.$scope.$apply();
           this.$timeout.flush();
         });
@@ -288,9 +292,31 @@ describe('userCsv.controller', function () {
         this.$scope.$apply();
         expect(this.Notification.error).toHaveBeenCalledWith('firstTimeWizard.csvFileTypeError');
       });
+
+      it('should notify error missing required header', function () {
+        this.controller.model.file = this.mockCsvData.invalidHeaders;
+        this.$scope.$apply();
+        this.$timeout.flush();
+        expect(this.Notification.error).toHaveBeenCalledWith('firstTimeWizard.uploadCsvBadHeaders');
+      });
+
+      it('should notify error if bad CSV format', function () {
+        this.controller.model.file = this.mockCsvData.badCsvFormat;
+        this.$scope.$apply();
+        this.$timeout.flush();
+        expect(this.Notification.error).toHaveBeenCalledWith('firstTimeWizard.uploadCsvBadFormat');
+      });
+
+      it('should notify error if error parsing CSV data', function () {
+        this.controller.model.file = this.mockCsvData.invalidCsvData;
+        this.$scope.$apply();
+        this.$timeout.flush();
+        expect(this.Notification.error).toHaveBeenCalledWith('firstTimeWizard.uploadCsvBadFormat');
+      });
+
       describe('valid one column file content', function () {
         beforeEach(function () {
-          this.controller.model.file = oneColumnValidUser;
+          this.controller.model.file = this.mockCsvData.oneColumnValidUser;
           this.$scope.$apply();
           this.$timeout.flush();
         });
@@ -305,7 +331,7 @@ describe('userCsv.controller', function () {
       });
       describe('invalid file content that does not have the required column', function () {
         beforeEach(function () {
-          this.controller.model.file = oneColumnInvalidUser;
+          this.controller.model.file = this.mockCsvData.oneColumnInvalidUser;
           this.$scope.$apply();
           this.$timeout.flush();
         });
@@ -319,6 +345,7 @@ describe('userCsv.controller', function () {
           expect(this.Notification.error).toHaveBeenCalledWith('firstTimeWizard.uploadCsvEmpty');
         });
       });
+
       describe('licenseUnavailable is set to true', function () {
         it('should invoke modal to have been called', function () {
           this.controller.licenseBulkErrorModal();
@@ -399,7 +426,7 @@ describe('userCsv.controller', function () {
       });
 
       it('should report error users when invalid CSV', function () {
-        this.controller.model.file = twoInvalidUsers;
+        this.controller.model.file = this.mockCsvData.twoInvalidUsers;
         this.$scope.$apply();
         this.$timeout.flush();
 
@@ -416,7 +443,7 @@ describe('userCsv.controller', function () {
       });
 
       it('should report error for duplicate emails', function () {
-        this.controller.model.file = threeUsersOneDuplicateEmail;
+        this.controller.model.file = this.mockCsvData.threeUsersOneDuplicateEmail;
         this.$scope.$apply();
         this.$timeout.flush();
 
@@ -491,7 +518,7 @@ describe('userCsv.controller', function () {
       });
 
       it('should provide correct data in error array', function () {
-        this.controller.model.file = twoValidUsers;
+        this.controller.model.file = this.mockCsvData.twoValidUsers;
         var csvData = $.csv.toObjects(this.controller.model.file);
 
         this.$scope.$apply();
@@ -517,7 +544,7 @@ describe('userCsv.controller', function () {
 
     describe('Process CSV with spaces and Save Users', function () {
       beforeEach(function () {
-        this.controller.model.file = twoValidUsersWithSpaces;
+        this.controller.model.file = this.mockCsvData.twoValidUsersWithSpaces;
         this.$scope.$apply();
         this.$timeout.flush();
       });
@@ -537,7 +564,7 @@ describe('userCsv.controller', function () {
 
     describe('Process CSV with difference email cases and Save Users', function () {
       beforeEach(function () {
-        this.controller.model.file = twoValidUsersWithSpaces;
+        this.controller.model.file = this.mockCsvData.twoValidUsersWithSpaces;
         this.$scope.$apply();
         this.$timeout.flush();
       });
@@ -698,7 +725,7 @@ describe('userCsv.controller', function () {
       this.controller.startUpload();
       this.$scope.$apply();
       this.$timeout.flush();
-      expect(this.controller.isAtlasF237ResourceGroupsEnabled).toBeTruthy();
+      expect(this.controller.hasResourceGroupFeatureToggle).toBeTruthy();
       expect(this.controller.handleHybridServicesResourceGroups).toBeTruthy();
       expect(this.controller.model.numTotalUsers).toEqual(1);
       expect(this.controller.model.userErrorArray.length).toEqual(0);

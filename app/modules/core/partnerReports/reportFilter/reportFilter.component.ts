@@ -9,7 +9,7 @@ class ReportFilterCtrl {
   /* @ngInject */
   constructor(
     // cannot access breakpoint when rootscope is typed with ng.IRootScopeService
-    private $rootScope
+    private $rootScope,
   ) {}
 
   public getBreakpoint(): boolean {

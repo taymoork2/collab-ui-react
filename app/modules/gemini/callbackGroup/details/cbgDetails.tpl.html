@@ -22,13 +22,15 @@
   </cs-sp-header>
 
   <cs-sp-container class="gemini-side-panel">
+    <cs-alert-banner ng-if="$ctrl.isShowCancelSubmission" type="warning">{{::'gemini.cbgs.cancelSubmissionMsg' | translate}} <a ng-click="$ctrl.onCancelSubmission()">{{::'gemini.cbgs.cancelSubmissionLink' | translate}}</a></cs-alert-banner>
+    <cs-alert-banner ng-if="$ctrl.isShowReject" type="danger">{{::'gemini.cbgs.rejectSubmissionMsg' | translate}}</a></cs-alert-banner>
     <cs-sp-section>
       <div class="row">
         <div class="pull-left medium-9">
           <span class="feature-name">{{::'gemini.cbgs.field.alias' | translate}}: {{$ctrl.model.customerAttribute}}</span>
         </div>
         <div class="columns medium-3">
-          <span class="feature-status pull-right" ng-if="$ctrl.model.status">
+          <span class="pull-right" ng-if="$ctrl.model.status">
             <i class="icon icon-circle status-indicator" ng-class="{'success': $ctrl.model.status === 'A' || $ctrl.model.status === 'P', 'danger': $ctrl.model.status === 'R' || $ctrl.model.status === 'L', 'warning': $ctrl.model.status === 'S', 'disabled': $ctrl.model.status === 'C'}"></i>
             {{$ctrl.model.status_}}
           </span>
@@ -52,6 +54,16 @@
     </cs-sp-section>
 
     <cs-sp-section class="side-panel-country">
+      <div class="section-title-row">
+        <span class="section-name" translate="gemini.cbgs.remedyTicket"></span>
+      </div>
+      <div ng-if="!$ctrl.remedyTicketLoading">
+        <p>{{::'gemini.cbgs.remedyTicket' | translate}}: <a ng-click="$ctrl.onOpenRemedyTicket()">{{$ctrl.remedyTicket.remedyTicketId}}</a></p>
+        <p><small>{{::'gemini.cbgs.openedOn' | translate}} {{$ctrl.remedyTicket.createTime}} - {{$ctrl.remedyTicket.status}}</small></p>
+      </div>
+      <div ng-if="$ctrl.remedyTicketLoading">
+        <i class="icon icon-spinner"></i>
+      </div>
       <div class="section-title-row">
         <span class="section-name" translate="gemini.cbgs.request.labelCountries"></span>
         <span class="pull-right" ng-if="$ctrl.model.isEdit"><a ui-sref="gemCbgDetails.editCountry({obj: {info: $ctrl.model, customerId: $ctrl.customerId}})" translate="common.edit" class="color-primary-base"></a></span>
@@ -78,30 +90,21 @@
       </div>
     </cs-sp-section>
 
-    <cs-sp-section>
-      <div class="section-title-row">
-        <span class="section-name" translate="gemini.cbgs.remedyTicket"></span>
-      </div>
-      <div ng-if="!$ctrl.remedyTicketLoading">
-        <p>{{::'gemini.cbgs.remedyTicket' | translate}}: <a ng-click="$ctrl.onOpenRemedyTicket()">{{$ctrl.remedyTicket.remedyTicketId}}</a></p>
-        <p><small>{{::'gemini.cbgs.openedOn' | translate}} {{$ctrl.remedyTicket.createTime}} - {{$ctrl.remedyTicket.status}}</small></p>
-      </div>
-      <div ng-if="$ctrl.remedyTicketLoading">
-        <i class="icon icon-spinner"></i>
-      </div>
-    </cs-sp-section>
-
     <cs-sp-section class="side-panel-history">
       <div class="section-title-row">
         <div class="section-name" translate="gemini.cbgs.logs.history"></div>
       </div>
-      <ul class="history-ul">
+      <ul class="history-ul" ng-if="!$ctrl.hisLoading">
         <li ng-repeat="log in $ctrl.histories">
           <h6>{{log.action}}</h6>
-          <h6>{{log.objectName}}</h6>
-          <small>{{log.createdDate}} {{log.actionTime}} {{::'gemini.cbgs.by' | translate}} {{log.userName}} {{!log.email ? '' : '(' + log.email + ')'}}</small>
+          <h6 ng-if="log.objectName">{{log.objectName}}</h6>
+          <p><small>{{log.createdDate}} {{log.actionTime}} {{::'gemini.cbgs.by' | translate}} {{log.userName}} {{!log.email ? '' : '(' + log.email + ')'}}</small></p>
+          <p><small ng-if="log.moveSiteMsg">{{log.moveSiteMsg}}</small></p>
         </li>
       </ul>
+      <div ng-if="$ctrl.hisLoading">
+        <i class="icon icon-spinner"></i>
+      </div>
       <p ng-if="$ctrl.isShowAllHistories" class="show-more">
         <a class="primary-color" href ng-click="$ctrl.onShowAllHistories()" translate="gemini.cbgs.showMore"></a>
       </p>

@@ -252,7 +252,7 @@ var Navigation = function () {
     utils.click(this.userInfoButton);
     utils.click(this.logoutButton);
     this.expectDriverCurrentUrl('/login', 'idbroker.webex.com');
-
+    browser.get('data:,');
   };
 
   this.sendFeedback = function () {

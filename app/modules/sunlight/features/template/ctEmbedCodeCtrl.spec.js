@@ -53,26 +53,24 @@ describe('Chat template embed code control', function () {
     expect(mockEvent.preventDefault).toHaveBeenCalled();
   });
 
-  it('should return null data when the org has no verified domains', function (done) {
+  it('should return null data when the org has no verified domains', function () {
     spyOn(SunlightConfigService, 'getChatConfig').and.callFake(function () {
       var data = {
         "allowedOrigins": [
           ".*"
         ]
       };
-      var deferred = q.defer();
-      deferred.resolve(data);
-      return deferred.promise;
+      return q.resolve({ data: data });
     });
-    done();
     controller = createController();
+    $scope.$apply();
     var result = controller.domainInfo;
     expect(result.data).toBe(null);
     expect(result.error).toBe(false);
     expect(result.warn).toBe(true);
   });
 
-  it('should return data when the org has verified domains', function (done) {
+  it('should return data when the org has verified domains', function () {
     spyOn(SunlightConfigService, 'getChatConfig').and.callFake(function () {
       var data = {
         "allowedOrigins": [
@@ -80,26 +78,22 @@ describe('Chat template embed code control', function () {
           "cisco.com"
         ]
       };
-      var deferred = q.defer();
-      deferred.resolve(data);
-      return deferred.promise;
+      return q.resolve({ data: data });
     });
-    done();
     controller = createController();
+    $scope.$apply();
     var result = controller.domainInfo;
     expect(result.data.length).toBe(2);
     expect(result.error).toBe(false);
     expect(result.warn).toBe(false);
   });
 
-  it('should return error when config service gives a error response', function (done) {
+  it('should return error when config service gives a error response', function () {
     spyOn(SunlightConfigService, 'getChatConfig').and.callFake(function () {
-      var deferred = q.defer();
-      deferred.reject({});
-      return deferred.promise;
+      return q.reject({});
     });
-    done();
     controller = createController();
+    $scope.$apply();
     var result = controller.domainInfo;
     expect(result.data).toBe(null);
     expect(result.error).toBe(true);

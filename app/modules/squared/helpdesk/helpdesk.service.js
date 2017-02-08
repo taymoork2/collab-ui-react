@@ -289,7 +289,7 @@
       if (useMock()) {
         return deferredResolve(filterRelevantServices(HelpdeskMockData.hybridServices));
       }
-      return ServiceDescriptor.servicesInOrg(orgId, true).then(filterRelevantServices);
+      return ServiceDescriptor.servicesInOrg(orgId).then(filterRelevantServices);
     }
 
     var filterRelevantServices = function (services) {
@@ -545,28 +545,60 @@
         .then(extractItems);
     }
 
+    function hasSuppressionDetails(suppressionType, email) {
+      if (!suppressionType) {
+        return $q.reject('No suppression type provided.');
+      }
+      if (!email) {
+        return $q.reject('No email provided.');
+      }
+
+      return $http.get(urlBase + 'email/' + suppressionType + '?email=' + encodeURIComponent(email))
+        .then(function (data) {
+          // notes:
+          // - usually the response SHOULD be 404, indicating the email address is not on the list
+          // - in certain cases, we get a 200 response, with an empty JSON object => `{}`
+          // - so we additionally check for the expected 'address' property in the response, and
+          //   reject if not present
+          if (!_.get(data, 'data.address')) {
+            return $q.reject('No email address in response payload.');
+          }
+          return data;
+        });
+    }
+
+    function clearSuppressionDetails(suppressionType, email) {
+      if (!suppressionType) {
+        return $q.reject('No suppression type provided.');
+      }
+      if (!email) {
+        return $q.reject('No email provided.');
+      }
+      return $http.delete(urlBase + 'email/' + suppressionType + '?email=' + encodeURIComponent(email));
+    }
+
     function hasBounceDetails(email) {
-      return $http.get(urlBase + 'email/bounces?email=' + encodeURIComponent(email));
+      return hasSuppressionDetails('bounces', email);
     }
 
     function clearBounceDetails(email) {
-      return $http.delete(urlBase + 'email/bounces?email=' + encodeURIComponent(email));
+      return clearSuppressionDetails('bounces', email);
     }
 
     function hasComplaintDetails(email) {
-      return $http.get(urlBase + 'email/complaints?email=' + encodeURIComponent(email));
+      return hasSuppressionDetails('complaints', email);
     }
 
     function clearComplaintDetails(email) {
-      return $http.delete(urlBase + 'email/complaints?email=' + encodeURIComponent(email));
+      return clearSuppressionDetails('complaints', email);
     }
 
     function hasUnsubscribeDetails(email) {
-      return $http.get(urlBase + 'email/unsubscribes?email=' + encodeURIComponent(email));
+      return hasSuppressionDetails('unsubscribes', email);
     }
 
     function clearUnsubscribeDetails(email) {
-      return $http.delete(urlBase + 'email/unsubscribes?email=' + encodeURIComponent(email));
+      return clearSuppressionDetails('unsubscribes', email);
     }
 
     // Convert Date from seconds to UTC format

@@ -6,7 +6,7 @@
     .controller('HDSServiceController', HDSServiceController);
 
   /* @ngInject */
-  function HDSServiceController($modal, $scope, $state, $stateParams, $translate, ClusterService, FusionClusterService, FeatureToggleService) {
+  function HDSServiceController($modal, $scope, $state, $stateParams, $translate, ClusterService, FusionClusterService, FeatureToggleService, FusionClusterStatesService) {
 
 
     ClusterService.subscribe('data', clustersUpdated, {
@@ -29,7 +29,7 @@
       }
     ];
     vm.clusters = ClusterService.getClustersByConnectorType('hds_app');
-    vm.getSeverity = ClusterService.getRunningStateSeverity;
+    vm.getSeverity = FusionClusterStatesService.getSeverity;
     vm.sortByProperty = sortByProperty;
     vm.clusterList = [];
     vm.showClusterSidepanel = showClusterSidepanel;

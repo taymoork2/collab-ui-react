@@ -17,7 +17,7 @@ describe('ExtractTarService', () => {
 
   function initDependencySpies() {
     let tgz = base64.toByteArray(
-      `H4sIAG3vgFgAA+3RQQrCMBCF4a49xVxAeWnT9DwiDQiCYEbQ2xttEdwUXBQR/m/zEjKLN8TH4tt8PI07v3mzDkkpRnvmkPpXqp3us95Cp6iQhi7JFOqxbUwr9flwLb6/1CqH4uf7wlwdy3nhfVrE3vknvP7/5tclAAAAAAAAAAAAAAAAAABfewA2RQ3eACgAAA==`
+      `H4sIAG3vgFgAA+3RQQrCMBCF4a49xVxAeWnT9DwiDQiCYEbQ2xttEdwUXBQR/m/zEjKLN8TH4tt8PI07v3mzDkkpRnvmkPpXqp3us95Cp6iQhi7JFOqxbUwr9flwLb6/1CqH4uf7wlwdy3nhfVrE3vknvP7/5tclAAAAAAAAAAAAAAAAAABfewA2RQ3eACgAAA==`,
     );
     this.tarData = pako.inflate(tgz);
     this.tgzBlob = new Blob([tgz], { type: 'application/x-gzip' });

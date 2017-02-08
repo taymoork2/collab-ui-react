@@ -33,7 +33,6 @@
               cs-input-help-text="{{::'userManage.org.bulkDetails'|translate: {maxUsersInCSV: umoc.maxUsersInCSV} }}">
             <p class="csv-export-link">
               <cr-user-csv-export
-                is-over-export-threshold="ummc.isOverExportThreshold"
                 as-link="{{::'userManage.bulk.exportUserList'|translate}}"
                 use-csv-download-directive="true">
               </cr-user-csv-export>
@@ -47,6 +46,22 @@
               ng-value="'advanced'"
               cs-input-label="{{::'userManage.org.advancedLabel'|translate}}"
               cs-input-help-text="{{::'userManage.org.advancedDetails'|translate}}">
+          </li>
+          <li>
+            <input cs-input ng-if="umoc.convertableUsers"
+              type="radio"
+              ng-model="umoc.manageType"
+              id="org-convert"
+              ng-value="'convert'"
+              cs-input-label="{{::'userManage.org.convertLabel'|translate}}"
+              cs-input-help-text="{{::'userManage.org.convertDetails'|translate}}">
+            <input cs-input ng-if="!umoc.convertableUsers" disabled
+              type="radio"
+              ng-model="umoc.manageType"
+              id="org-convert"
+              ng-value="'convert'"
+              cs-input-label="{{::'userManage.org.convertLabel'|translate}}"
+              cs-input-help-text="{{::'userManage.org.convertUnavailable'|translate}}">
           </li>
         </ul>
       </div>

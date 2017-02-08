@@ -16,7 +16,7 @@
 
     // undocumented parameters provided by BMMP widget team
     var bmmpParams = {
-      orgId: Authinfo.getOrgId(),
+      userId: Authinfo.getUserId(),
       locale: $translate.use(),
       appName: 'atlas',
       apiBaseUrl: UrlConfig.getBmmpUrl()
@@ -38,7 +38,7 @@
       /* eslint-disable no-undef */
       bmmp.init(null,
           null,
-          bmmpParams.orgId,
+          bmmpParams.userId,
           bmmpParams.appName,
           bmmpParams.locale,
           null,

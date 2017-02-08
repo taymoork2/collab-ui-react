@@ -92,40 +92,36 @@ require('./_overview.scss');
           Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
         }
       });
-      FeatureToggleService.atlasDarlingGetStatus().then(function (toggle) {
-        if (toggle) {
-          Orgservice.getAdminOrgUsage()
-            .then(function (response) {
-              var sharedDevicesUsage = -1;
-              var seaGullsUsage = -1;
-              _.each(response.data, function (subscription) {
-                _.each(subscription, function (licenses) {
-                  _.each(licenses, function (license) {
-                    if (license.status === Config.licenseStatus.ACTIVE) {
-                      if (license.offerName === Config.offerCodes.SD) {
-                        sharedDevicesUsage = license.usage;
-                      } else if (license.offerName === Config.offerCodes.SB) {
-                        seaGullsUsage = license.usage;
-                      }
-                    }
-                  });
-                });
-              });
-              if (sharedDevicesUsage === 0 || seaGullsUsage === 0) {
-                setRoomSystemEnabledDevice(true);
-                if (sharedDevicesUsage === 0 && seaGullsUsage === 0) {
-                  vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpDevices'));
-                } else if (seaGullsUsage === 0) {
-                  vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSparkBoardDevices'));
-                } else {
-                  vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSharedDevices'));
+      Orgservice.getAdminOrgUsage()
+        .then(function (response) {
+          var sharedDevicesUsage = -1;
+          var seaGullsUsage = -1;
+          _.each(response.data, function (subscription) {
+            _.each(subscription, function (licenses) {
+              _.each(licenses, function (license) {
+                if (license.status === Config.licenseStatus.ACTIVE) {
+                  if (license.offerName === Config.offerCodes.SD) {
+                    sharedDevicesUsage = license.usage;
+                  } else if (license.offerName === Config.offerCodes.SB) {
+                    seaGullsUsage = license.usage;
+                  }
                 }
-              } else {
-                setRoomSystemEnabledDevice(false);
-              }
+              });
             });
-        }
-      });
+          });
+          if (sharedDevicesUsage === 0 || seaGullsUsage === 0) {
+            setRoomSystemEnabledDevice(true);
+            if (sharedDevicesUsage === 0 && seaGullsUsage === 0) {
+              vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpDevices'));
+            } else if (seaGullsUsage === 0) {
+              vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSparkBoardDevices'));
+            } else {
+              vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSharedDevices'));
+            }
+          } else {
+            setRoomSystemEnabledDevice(false);
+          }
+        });
 
       FeatureToggleService.atlasPMRonM2GetStatus().then(function (toggle) {
         if (toggle) {
@@ -208,10 +204,7 @@ require('./_overview.scss');
       });
     }
 
-    FeatureToggleService.supports(FeatureToggleService.features.csdmPstn).then(function (pstnEnabled) {
-      forwardEvent('licenseEventHandler', Authinfo.getLicenses(), pstnEnabled);
-    });
-
+    forwardEvent('licenseEventHandler', Authinfo.getLicenses());
 
     vm.statusPageUrl = UrlConfig.getStatusPageUrl();
 

@@ -7,40 +7,54 @@
 
   /* @ngInject */
   function FusionClusterStatesService() {
-    var service = {
-      getStateSeverity: getStateSeverity,
-      getSeverityLabel: getSeverityLabel,
-      getMergedUpgradeState: getMergedUpgradeState,
+    return {
+      getAlarmSeverityCssClass: getAlarmSeverityCssClass,
       getMergedStateSeverity: getMergedStateSeverity,
+      getMergedUpgradeState: getMergedUpgradeState,
+      getSeverity: getSeverity,
+      getSeverityLabel: getSeverityLabel,
+      getStateSeverity: getStateSeverity,
       getStatusIndicatorCSSClass: getStatusIndicatorCSSClass,
     };
-
-    return service;
 
     ////////////////
 
     function connectorHasAlarms(connector) {
-      return connector.alarms.length > 0;
+      return connector.alarms && connector.alarms.length > 0;
     }
 
-    function mapStateToSeverity(state) {
+    function getStateSeverity(data) {
+      // Also note that this function accepts both a connector or just a string
+      var state = data;
+      if (data && _.isString(data.state)) {
+        if (connectorHasAlarms(data)) {
+          state = _.some(data.alarms, function (alarm) {
+            return alarm.severity === 'critical' || alarm.severity === 'error';
+          }) ? 'has_error_alarms' : 'has_warning_alarms';
+        } else {
+          state = data.state;
+        }
+      }
+
       var value = 0;
       switch (state) {
         case 'running':
           break;
         case 'not_installed':
+        case 'not_configured':
+        case 'no_nodes_registered':
           value = 1;
           break;
         case 'disabled':
         case 'downloading':
         case 'installing':
-        case 'not_configured':
         case 'uninstalling':
         case 'registered':
+        case 'has_warning_alarms':
           value = 2;
           break;
         case 'not_operational':
-        case 'has_alarms':
+        case 'has_error_alarms':
         case 'offline':
         case 'stopped':
         case 'unknown':
@@ -48,26 +62,6 @@
           value = 3;
       }
       return value;
-    }
-
-    function getStateSeverity(data) {
-      // We give a severity and a weight to all possible states.
-      // This has to be synced with the the API consumed
-      // by Atlas' general overview page (in the Hybrid Services card)
-
-      // Also note that this function accepts both a connector or just a string
-      var state = data;
-      if (_.isString(data.state)) {
-        // Duck typing, if it has a state it must be a connector!
-        // Override the state with 'has_alarms' if necessary
-        if (connectorHasAlarms(data)) {
-          state = 'has_alarms';
-        } else {
-          state = data.state;
-        }
-      }
-
-      return mapStateToSeverity(state);
     }
 
     function getSeverityLabel(value) {
@@ -108,6 +102,13 @@
       return cssClass;
     }
 
+    function getAlarmSeverityCssClass(alarmSeverity) {
+      if (alarmSeverity === 'critical' || alarmSeverity === 'error') {
+        return 'danger';
+      }
+      return 'warning';
+    }
+
     function getMergedUpgradeState(connectors) {
       var allAreUpgraded = _.every(connectors, { upgradeState: 'upgraded' });
       return allAreUpgraded ? 'upgraded' : 'upgrading';
@@ -132,9 +133,13 @@
         })
         .last()
         .value();
-      stateSeverity = getStateSeverity(mostSevereConnector);
+      return getSeverity(mostSevereConnector);
+    }
+
+    function getSeverity(connectorOrState) {
+      var stateSeverity = getStateSeverity(connectorOrState);
       return {
-        name: connectorHasAlarms(mostSevereConnector) && mapStateToSeverity(mostSevereConnector.state) < 3 ? 'has_alarms' : mostSevereConnector.state,
+        name: connectorOrState ? (connectorOrState.state || connectorOrState) : '',
         severity: stateSeverity,
         label: getSeverityLabel(stateSeverity),
         cssClass: getSeverityCssClass(stateSeverity),

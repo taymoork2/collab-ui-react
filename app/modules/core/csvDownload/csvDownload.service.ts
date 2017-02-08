@@ -182,23 +182,31 @@ export class CsvDownloadService {
         this.lastProgressMessage = _.get(response, 'data.message', '');
         this.Log.info('getUserReport: ', this.lastProgressMessage);
 
-        if (response.status === 200 && _.isEqual(_.get(response, 'data.processStatus'), 'COMPLETE')) {
-          // Received the complete signal, so the file is ready to download
-          return this.downloadReport(_.get<IReportDownloadReference>(response, 'data.context'))
-            .then((result) => {
-              // delete the file on the server if it is small
-              if (_.get(response, 'data.context.length', 0) < CsvDownloadService.MIN_CSV_SIZE_TO_KEEP) {
-                this.$http.delete(url);
-              }
-              return result;
-            });
+        if (response.status === 200) {
+          if (_.isEqual(_.get(response, 'data.processStatus'), 'COMPLETE')) {
+            // Received the complete signal, so the file is ready to download
+            return this.downloadReport(_.get<IReportDownloadReference>(response, 'data.context'))
+              .then((result) => {
+                // delete the file on the server if it is small
+                if (_.get(response, 'data.context.length', 0) < CsvDownloadService.MIN_CSV_SIZE_TO_KEEP) {
+                  this.$http.delete(url);
+                }
+                return result;
+              });
+          } else if (_.isEqual(_.get(response, 'data.processStatus'), 'RUNNING')) {
+            // Set 3 second delay to limit the amount of times
+            // we continually hit the user reports REST api.
+            this.timeoutCanceler = this.$timeout(() => {
+              return this.getUserReport(url);
+            }, 3000);
+            return this.timeoutCanceler;
+          } else {
+            // Unknown processStatus (probably a FAILED)
+            return this.$q.reject(response.data);
+          }
         } else {
-          // Set 3 second delay to limit the amount of times
-          // we continually hit the user reports REST api.
-          this.timeoutCanceler = this.$timeout(() => {
-            return this.getUserReport(url);
-          }, 3000);
-          return this.timeoutCanceler;
+          // response status is an error of some sort
+          return this.$q.reject(response);
         }
       });
   }
@@ -232,7 +240,7 @@ export class CsvDownloadService {
   }
 
   private exportUserCsv(fileName: string, newUserExportToggle: boolean): ng.IPromise<any> {
-    if (newUserExportToggle) {
+    if (newUserExportToggle || this.Authinfo.isCisco()) {
       // new Export API
       return this.newExportUserCsv(fileName);
     } else {

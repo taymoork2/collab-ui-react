@@ -282,14 +282,16 @@ describe('ClusterService', function () {
       }));
     });
 
-    it('should merge all alarms and override the state if there are alarms', function () {
+    it('should merge all alarms and override the state with "has_warning_alarms" if there are warning alarms', function () {
       var response = org([
         cluster([
           connector('c_mgmt', {
-            alarms: 2
+            alarms: 2,
+            alarmsSeverity: 'alert'
           }),
           connector('c_mgmt', {
             alarms: 1,
+            alarmsSeverity: 'warning',
             hostname: 'host2.example.com'
           })
         ])
@@ -306,7 +308,36 @@ describe('ClusterService', function () {
       var originalCluster = response.clusters[0];
       var managementCluster = clusterCache.c_mgmt[originalCluster.id];
       expect(managementCluster.aggregates.alarms.length).toBe(3);
-      expect(managementCluster.aggregates.state).toBe('has_alarms');
+      expect(managementCluster.aggregates.state).toBe('has_warning_alarms');
+    });
+
+    it('should merge all alarms and override the state with "has_warning_alarms" if there are warning alarms', function () {
+      var response = org([
+        cluster([
+          connector('c_mgmt', {
+            alarms: 2,
+            alarmsSeverity: 'error'
+          }),
+          connector('c_mgmt', {
+            alarms: 1,
+            alarmsSeverity: 'critical',
+            hostname: 'host2.example.com'
+          })
+        ])
+      ]);
+      $httpBackend
+        .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
+        .respond(response);
+
+      var callback = sinon.stub();
+      ClusterService.fetch().then(callback);
+      $httpBackend.flush();
+
+      var clusterCache = callback.getCall(0).args[0];
+      var originalCluster = response.clusters[0];
+      var managementCluster = clusterCache.c_mgmt[originalCluster.id];
+      expect(managementCluster.aggregates.alarms.length).toBe(3);
+      expect(managementCluster.aggregates.state).toBe('has_error_alarms');
     });
 
     it('should merge running states', function () {
@@ -558,22 +589,6 @@ describe('ClusterService', function () {
     });
   });
 
-  describe('.getRunningStateSeverity', function () {
-    it('should have an idea of which state is more critical than another', function () {
-      var severity = ClusterService.getRunningStateSeverity('not_installed');
-      expect(severity.label).toBeDefined();
-      expect(severity.value).toBeDefined();
-      expect(severity.label).toBe('neutral');
-      expect(severity.value).toBe(1);
-    });
-
-    it('should default to error when the state is no known', function () {
-      var severity = ClusterService.getRunningStateSeverity('platypus');
-      expect(severity.label).toBe('error');
-      expect(severity.value).toBe(3);
-    });
-  });
-
   describe('.upgradeSoftware', function () {
     it('should upgrade software using the correct backend', function () {
       $httpBackend
@@ -683,6 +698,88 @@ describe('ClusterService', function () {
     });
   });
 
+  describe('.mergeRunningState', function () {
+    var nonEmpty_mf_clusterList, nonEmpty_hds_connectorList, nonEmpty_exp_connectorList, empty_connector_list;
+
+    beforeEach(function () {
+      nonEmpty_mf_clusterList = [
+        {
+          id: 'mf_mgmt@070EC9D0',
+          connectorType: 'mf_app',
+          hostname: 'mf.example.org',
+          hostSerial: '070EC9D0',
+          state: 'not_installed',
+          alarms: [],
+        }
+      ];
+      nonEmpty_hds_connectorList = [
+        {
+          id: 'hds_app@070EC9D0',
+          connectorType: 'hds_app',
+          hostname: 'hds.example.org',
+          hostSerial: '070EC9D0',
+          state: 'disabled',
+          alarms: [],
+        }
+      ];
+      nonEmpty_exp_connectorList = [
+        {
+          id: 'c_mgmt@070EC9D0',
+          connectorType: 'c_mgmt',
+          hostname: 'expressway.example.org',
+          hostSerial: '070EC9D0',
+          state: 'registered',
+          alarms: [],
+        }
+      ];
+      empty_connector_list = [];
+    });
+
+    afterEach(function () {
+      nonEmpty_mf_clusterList = [];
+      nonEmpty_hds_connectorList = [];
+      nonEmpty_exp_connectorList = [];
+      empty_connector_list = [];
+    });
+
+    it('should keep the state for non-empty media clusters', function () {
+      var mergedState = ClusterService.mergeRunningState(nonEmpty_mf_clusterList, 'mf_mgmt');
+      expect(mergedState.state).toBe('not_installed');
+    });
+
+    it('should keep the state for non-empty hds clusters', function () {
+      var mergedState = ClusterService.mergeRunningState(nonEmpty_hds_connectorList, 'hds_app');
+      expect(mergedState.state).toBe('disabled');
+    });
+
+    it('should keep the state for non-empty expressway clusters', function () {
+      var mergedState = ClusterService.mergeRunningState(nonEmpty_exp_connectorList, 'c_mgmt');
+      expect(mergedState.state).toBe('registered');
+    });
+
+    it('should flip to no_nodes_registered for empty media clusters', function () {
+      var mergedState = ClusterService.mergeRunningState(empty_connector_list, 'mf_mgmt');
+      expect(mergedState.state).toBe('no_nodes_registered');
+    });
+
+    it('should flip to no_nodes_registered for empty hds clusters', function () {
+      var mergedState = ClusterService.mergeRunningState(empty_connector_list, 'hds_app');
+      expect(mergedState.state).toBe('no_nodes_registered');
+    });
+
+    it('should flip to not_registered for empty expressway clusters', function () {
+      var mergedState = ClusterService.mergeRunningState(empty_connector_list, 'c_mgmt');
+      expect(mergedState.state).toBe('not_registered');
+    });
+
+    it('should default to expressway if no second argument is provided', function () {
+      var mergedState = ClusterService.mergeRunningState(empty_connector_list);
+      expect(mergedState.state).toBe('not_registered');
+    });
+
+
+  });
+
   function org(clusters) {
     return {
       id: _.uniqueId('org_'),
@@ -716,7 +813,8 @@ describe('ClusterService', function () {
     options = options || {};
     var alarms = _.map(_.range(options.alarms || 0), function () {
       return {
-        title: _.uniqueId('alarm_')
+        title: _.uniqueId('alarm_'),
+        severity: options.alarmsSeverity ? options.alarmsSeverity : 'critical',
       };
     });
     return {

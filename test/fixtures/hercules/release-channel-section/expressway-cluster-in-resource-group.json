@@ -1,0 +1,74 @@
+{
+  "id": "25f78b5c-bbd4-11e6-a095-005056b17078",
+  "name": "Cisco Bøler 🙄",
+  "connectors": [
+    {
+      "id": "c_ucmc@0BA28333",
+      "connectorType": "c_ucmc",
+      "upgradeState": "upgraded",
+      "state": "not_configured",
+      "hostname": "achronos-expressway.rd.cisco.com",
+      "hostSerial": "0BA28333",
+      "alarms": [],
+      "runningVersion": "8.7-1.3320",
+      "registered": true,
+      "connectorStatus": {
+        "operational": true,
+        "services": {
+          "cloud": [],
+          "onprem": []
+        }
+      }
+    },
+    {
+      "id": "c_mgmt@0BA28333",
+      "connectorType": "c_mgmt",
+      "upgradeState": "upgraded",
+      "state": "running",
+      "hostname": "achronos-expressway.rd.cisco.com",
+      "hostSerial": "0BA28333",
+      "alarms": [],
+      "runningVersion": "8.8-1.0.321220",
+      "registered": true,
+      "connectorStatus": {
+        "operational": true,
+        "initialized": true,
+        "services": {
+          "cloud": [],
+          "onprem": []
+        }
+      }
+    }
+  ],
+  "releaseChannel": "stable",
+  "provisioning": [
+    {
+      "connectorType": "c_ucmc",
+      "provisionedVersion": "8.7-1.3320",
+      "availableVersion": "8.7-1.3320",
+      "availablePackageIsUrgent": false
+    },
+    {
+      "connectorType": "c_mgmt",
+      "provisionedVersion": "8.8-1.0.321220",
+      "availableVersion": "8.8-1.0.321223",
+      "availablePackageIsUrgent": false
+    }
+  ],
+  "registered": true,
+  "targetType": "c_mgmt",
+  "upgradeSchedule": {
+    "scheduleDays": [
+      "wednesday"
+    ],
+    "scheduleTime": "03:00",
+    "scheduleTimeZone": "Europe/Dublin",
+    "urgentScheduleTime": "03:00",
+    "moratoria": [],
+    "nextUpgradeWindow": {
+      "startTime": "2017-02-01T03:00:33.797Z",
+      "endTime": "2017-02-01T04:00:33.797Z"
+    }
+  },
+  "resourceGroupId": "c942b4dc-f2b1-4932-bb78-1a9533391cce"
+}

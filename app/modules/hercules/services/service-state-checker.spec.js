@@ -43,10 +43,6 @@ xdescribe('ServiceStateChecker', function () {
 
     ClusterService = {
       getClustersByConnectorType: sinon.stub(),
-      getRunningStateSeverity: sinon.stub().returns({
-        label: 'ok',
-        value: 0,
-      }),
     };
 
     DomainManagementService = {
@@ -57,7 +53,7 @@ xdescribe('ServiceStateChecker', function () {
     FeatureToggleService = {
       features: {
         atlasSipUriDomainEnterprise: '',
-        atlasF237ResourceGroups: '',
+        atlasF237ResourceGroup: '',
       },
       supports: jasmine.createSpy(),
     };

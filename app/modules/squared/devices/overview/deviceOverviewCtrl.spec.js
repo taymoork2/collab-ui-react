@@ -3,7 +3,7 @@
 describe('Controller: DeviceOverviewCtrl', function () {
   var $scope, $controller, $state, controller, $httpBackend;
   var $q, CsdmConfigService, CsdmDeviceService, Authinfo, Notification;
-  var RemoteSupportModal, HuronConfig, FeatureToggleService, Userservice;
+  var RemoteSupportModal, HuronConfig, FeatureToggleService, Userservice, CsdmHuronDeviceService;
 
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module('Squared'));
@@ -42,7 +42,15 @@ describe('Controller: DeviceOverviewCtrl', function () {
       name: "Texas",
       abbreviation: "TX"
     }]);
+    $httpBackend.whenGET('https://cmi.huron-int.com/api/v1/voice/customers/sites').respond([]);
+    spyOn(CsdmHuronDeviceService, 'getLinesForDevice').and.returnValue($q.resolve([]));
+    spyOn(CsdmHuronDeviceService, 'getDeviceInfo').and.returnValue($q.resolve({}));
   }
+
+  CsdmHuronDeviceService = {
+    getLinesForDevice: {},
+    getDeviceInfo: {}
+  };
 
   var $stateParams = {
     currentDevice: {
@@ -52,7 +60,8 @@ describe('Controller: DeviceOverviewCtrl', function () {
       cisUuid: 2,
       huronId: 3,
       kem: []
-    }
+    },
+    huronDeviceService: CsdmHuronDeviceService
   };
 
   function initController() {

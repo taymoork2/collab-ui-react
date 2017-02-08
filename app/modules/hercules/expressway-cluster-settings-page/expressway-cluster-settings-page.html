@@ -1,0 +1,59 @@
+<div class="cs-form">
+  <setting-section setting="$ctrl.upgradeSchedule">
+    <div class="sub-section">
+      <h5 class="sub-section__label" translate="hercules.settings.scheduleUpgrade.title"></h5>
+      <p class="sub-section__description" translate="hercules.settings.scheduleUpgrade.description"></p>
+      <upgrade-schedule-configuration cluster-id="$ctrl.cluster.id"></upgrade-schedule-configuration>
+      <div class="emergency-upgrade-section">
+        <h5 class="sub-section__label" translate="hercules.settings.emergencyUpgrade.expressway.title"></h5>
+        <p class="sub-section__description" translate="hercules.settings.emergencyUpgrade.expressway.description"></p>
+        <emergency-upgrade-configuration cluster-id="$ctrl.cluster.id"></emergency-upgrade-configuration>
+      </div>
+    </div>
+  </setting-section>
+
+  <div ng-if="$ctrl.hasResourceGroupFeatureToggle">
+    <setting-section setting="$ctrl.resourceGroup" class="needs-border-top">
+      <h5 class="sub-section__label" translate="hercules.expresswayClusterSettings.resourceGroupsSubHeader" id="RG-section-test"></h5>
+      <p class="sub-section__description" translate="hercules.expresswayClusterSettings.resourcegroupsParagraph"></p>
+      <div class="medium-8">
+        <cs-select
+          ng-model="$ctrl.selectedResourceGroup"
+          options="$ctrl.resourceGroupOptions"
+          on-change-fn="$ctrl.showResourceGroupModal()"
+        >
+        </cs-select>
+      </div>
+    </setting-section>
+
+    <release-channel-section cluster="$ctrl.cluster"></release-channel-section>
+  </div>
+
+  <setting-section setting="$ctrl.deactivateServices" class="needs-border-top">
+    <div ng-if="$ctrl.enabledServices.length > 1">
+      <div class="sub-section" ng-repeat="service in $ctrl.enabledServices | filter: $ctrl.filterServices | orderBy: service ">
+          <h5 class="sub-section__label"
+              translate="hercules.expresswayClusterSettings.deactivateServicesSubHeader"
+              translate-values="{service: $ctrl.getLocalizedServiceName(service)}"></h5>
+          <p class="sub-section__description"
+              translate="hercules.expresswayClusterSettings.deactivateServicesParagraph"
+              translate-values="{ ServiceName: $ctrl.getLocalizedServiceName(service) }"></p>
+          <button type="button"
+                  class="btn"
+                  id="deactivateCalendar"
+                  ng-click="$ctrl.deactivateService(service, $ctrl.cluster);"
+                  translate="hercules.settings.deactivate"></button>
+      </div>
+    </div>
+    <div ng-if="$ctrl.enabledServices.length < 2">
+      <p class="sub-section__description" translate="hercules.expresswayClusterSettings.noHybridServicesProvisioned"></p>
+    </div>
+  </setting-section>
+
+  <rename-and-deregister-cluster-section
+    service-id="'squared-fusion-cal'"
+    cluster="$ctrl.cluster"
+    show-rename-section="true"
+    on-name-update="$ctrl.nameUpdated(name)">
+  </rename-and-deregister-cluster-section>
+</div>

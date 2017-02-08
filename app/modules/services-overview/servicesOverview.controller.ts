@@ -9,6 +9,7 @@ import { ServicesOverviewHybridCalendarCard } from './hybridCalendarCard';
 import { ServicesOverviewHybridCallCard } from './hybridCallCard';
 import { ServicesOverviewHybridMediaCard } from './hybridMediaCard';
 import { ServicesOverviewHybridDataSecurityCard } from './hybridDataSecurityCard';
+import { ServicesOverviewHybridContextCard } from './hybridContextCard';
 
 export class ServicesOverviewCtrl {
 
@@ -38,6 +39,7 @@ export class ServicesOverviewCtrl {
       new ServicesOverviewHybridCallCard(this.Authinfo, this.FusionClusterStatesService),
       new ServicesOverviewHybridMediaCard(this.Authinfo, this.Config, this.FusionClusterStatesService),
       new ServicesOverviewHybridDataSecurityCard(this.FusionClusterStatesService),
+      new ServicesOverviewHybridContextCard(this.FusionClusterStatesService),
     ];
 
     this.loadWebexSiteList();
@@ -54,6 +56,13 @@ export class ServicesOverviewCtrl {
     this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridDataSecurity)
       .then(supports => {
         this.forwardEvent('hybridDataSecurityToggleEventHandler', supports);
+      });
+
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.contactCenterContext)
+      .then(supports => {
+        // Invoke the event handler passing in true if feature toggle is enabled AND the user is Entitled to view this card.
+        // When this feature flag is removed, move the entitlement check to hybridContextCard's constructor
+        this.forwardEvent('hybridContextToggleEventHandler', supports && Authinfo.isContactCenterContext());
       });
 
     this.FeatureToggleService.supports(FeatureToggleService.features.csdmPstn)
@@ -96,6 +105,7 @@ export class ServicesOverviewCtrl {
           this.FusionClusterService.getStatusForService('squared-fusion-uc', clusterList),
           this.FusionClusterService.getStatusForService('squared-fusion-media', clusterList),
           this.FusionClusterService.getStatusForService('spark-hybrid-datasecurity', clusterList),
+          this.FusionClusterService.getStatusForService('contact-center-context', clusterList),
         ];
         this.forwardEvent('hybridStatusEventHandler', servicesStatuses);
         this.forwardEvent('hybridClustersEventHandler', clusterList);

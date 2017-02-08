@@ -6,7 +6,7 @@
     .controller('HDSSidepanelClusterController', HDSSidepanelClusterController);
 
   /* @ngInject */
-  function HDSSidepanelClusterController($modal, $scope, $state, $stateParams, $translate, ClusterService, FusionUtils, FusionClusterService, Notification, hasHDSFeatureToggle) {
+  function HDSSidepanelClusterController($modal, $scope, $state, $stateParams, $translate, ClusterService, FusionUtils, FusionClusterService, Notification, hasHDSFeatureToggle, FusionClusterStatesService) {
     var vm = this;
     vm.state = $state;
     vm.clusterId = $stateParams.clusterId;
@@ -16,7 +16,7 @@
     vm.connectorName = $translate.instant('hercules.connectorNameFromConnectorType.' + vm.connectorType);
     vm.localizedCCCName = $translate.instant('common.ciscoCollaborationCloud');
     vm.upgradeInProgress = false;
-    vm.getSeverity = ClusterService.getRunningStateSeverity;
+    vm.getSeverity = FusionClusterStatesService.getSeverity;
     vm.hasConnectorAlarm = hasConnectorAlarm;
     vm.hasHDSFeatureToggle = hasHDSFeatureToggle;
     vm.showUpgradeDialog = showUpgradeDialog;

@@ -1,0 +1,41 @@
+@import 'styles/toolkit/colors';
+
+user-status-messages {
+  .icon {
+    position: absolute;
+    top: 3px;
+  }
+
+  .icon-error {
+    color: $color-alerts-base;
+  }
+
+  .icon-warning {
+    color: $color-attention-base;
+  }
+
+  .icon-info {
+    color: $color-primary-base;
+  }
+
+  .row {
+    padding-top: 0.5rem;
+  }
+
+  .row:last-of-type {
+    padding-bottom: 0.5rem;
+  }
+
+  .icon-column {
+    width: 1.75rem;
+    position: relative;
+  }
+
+  .message-column {
+    padding-left: 1.75rem;
+  }
+
+  .message-title {
+    font-family: $brand-font-light;
+  }
+}
