@@ -42,6 +42,13 @@ describe('Service: FusionClusterStatesService', function () {
       var severity = FusionClusterStatesService.getStateSeverity(connector);
       expect(severity).toBe(3);
     });
+
+    it('should return 1 for the \'no_nodes_registered\' state', function () {
+      var aggregatedState = 'no_nodes_registered';
+      var severity = FusionClusterStatesService.getStateSeverity(aggregatedState);
+      expect(severity).toBe(1);
+    });
+
   });
 
   describe('getSeverityLabel()', function () {
