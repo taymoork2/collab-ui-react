@@ -8,7 +8,7 @@
     .factory('Config', Config)
     .name;
 
-  function Config($location, Storage) {
+  function Config($location, $window, Storage) {
     var TEST_ENV_CONFIG = 'TEST_ENV_CONFIG';
 
     var getCurrentHostname = function () {
@@ -335,6 +335,10 @@
 
     config.isE2E = function () {
       return _.includes(Storage.get(TEST_ENV_CONFIG), 'e2e');
+    };
+
+    config.isUserAgent = function (userAgentString) {
+      return $window.navigator.userAgent.indexOf(userAgentString) > -1;
     };
 
     config.forceProdForE2E = function () {
