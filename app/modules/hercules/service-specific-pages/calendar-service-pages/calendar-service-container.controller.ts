@@ -1,10 +1,6 @@
 import { ExpresswayContainerController } from '../common-expressway-based/expressway-common-container.controller';
 import { Notification } from 'modules/core/notifications';
 
-interface IClusterIdStateParam extends ng.ui.IStateParamsService {
-  clusterId: any;
-}
-
 export class CalendarServiceContainerController extends ExpresswayContainerController {
 
   public tabs: any = [{
@@ -32,7 +28,7 @@ export class CalendarServiceContainerController extends ExpresswayContainerContr
   /* @ngInject */
   constructor($modal,
               $state: ng.ui.IStateService,
-              private $stateParams: IClusterIdStateParam,
+              private $stateParams: ng.ui.IStateParamsService,
               ClusterService,
               Notification: Notification,
               private $translate: ng.translate.ITranslateService,
@@ -40,7 +36,7 @@ export class CalendarServiceContainerController extends ExpresswayContainerContr
               ServiceStateChecker,
               USSService ) {
     super($modal, $state, ClusterService, Notification, ServiceDescriptor, ServiceStateChecker, USSService, ['squared-fusion-cal'], 'c_cal');
-    this.clusterId = this.$stateParams.clusterId;
+    this.clusterId = this.$stateParams['clusterId'];
   }
 
 }
