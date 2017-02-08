@@ -16,10 +16,8 @@
 
           <header class="customerHeader ct-selectable-container"
                   selectable ng-click="careSetupAssistant.setActiveItem('welcomeHeader')">
-            <label title="{{careSetupAssistant.getAttributeParam('value', 'header', 'welcomeHeader')}}"
-                   class="welcomeText textOverflow">{{careSetupAssistant.getAttributeParam('value', 'header', 'welcomeHeader')}}</label>
-            <label title="{{careSetupAssistant.orgName}}"
-                   class="orgText textOverflow">{{careSetupAssistant.getCustomerInformationFormFields().welcomeHeader.attributes[1].value}}</label>
+            <label class="welcomeText textOverflow">{{careSetupAssistant.getAttributeParam('value', 'header', 'welcomeHeader')}}</label>
+            <label class="orgText textOverflow">{{careSetupAssistant.getCustomerInformationFormFields().welcomeHeader.attributes[1].value}}</label>
           </header>
 
           <section>

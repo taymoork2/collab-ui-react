@@ -498,6 +498,37 @@ describe('Huron Auto Attendant', function () {
 
     }, 60000);
 
+    it('should add Decision Conditional via New Step action selection to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+      autoattendant.scrollIntoView(autoattendant.addStepLast);
+      utils.click(autoattendant.addStepLast);
+      utils.expectIsDisplayed(autoattendant.newStep);
+      utils.click(autoattendant.newStepMenu);
+
+      // 2nd menu option is Decision 
+      utils.click(autoattendant.newStepDecision);
+      utils.wait(autoattendant.decisionFirst, 12000);
+      autoattendant.scrollIntoView(autoattendant.decisionFirst);
+
+      utils.click(autoattendant.decisionIf);
+
+      utils.wait(autoattendant.decisionIf, 12000);
+ 
+      utils.click(autoattendant.decisionIfDropDownOptions);
+
+      utils.wait(autoattendant.decisionCallerNumberTextArea, 12000);
+
+      utils.sendKeys(autoattendant.decisionCallerNumberTextArea, "Hello World");
+
+      utils.click(autoattendant.decisionThen);
+
+      utils.wait(autoattendant.decisionThen, 12000);
+ 
+      utils.click(autoattendant.decisionThenDropDownOptions);
+
+      utils.wait(autoattendant.decisionPhoneNumber, 12000);
+      utils.sendKeys(autoattendant.decisionPhoneNumber, "2065551234");
+ 
+    });
 
     it('should add Caller Input via New Step action selection to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
       autoattendant.scrollIntoView(autoattendant.addStepLast);
@@ -505,7 +536,7 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsDisplayed(autoattendant.newStep);
       utils.click(autoattendant.newStepMenu);
 
-      // 4th/last menu option is Route Call
+      // 4th/last menu option is Caller Input 
       utils.click(autoattendant.newStepCallerInput);
       utils.wait(autoattendant.callerInputFirst, 12000);
       autoattendant.scrollIntoView(autoattendant.callerInputFirst);

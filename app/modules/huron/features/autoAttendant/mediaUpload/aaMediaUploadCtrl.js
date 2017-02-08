@@ -7,6 +7,7 @@
   /* @ngInject */
   function AAMediaUploadCtrl($scope, $translate, Upload, ModalService, AANotificationService, AACommonService, AAMediaUploadService, AAUiModelService, AutoAttendantCeMenuModelService, Analytics, CryptoJS, Authinfo, AAMetricNameService) {
     var vm = this;
+    var conditional = 'conditional';
 
     vm.uploadFile = '';
     vm.uploadDate = '';
@@ -379,7 +380,12 @@
         var ui = AAUiModelService.getUiModel();
         var uiMenu = ui[$scope.schedule];
         vm.menuEntry = uiMenu.entries[$scope.index];
-        queueAction = vm.menuEntry.actions[0];
+        queueAction = _.get(vm.menuEntry, 'actions[0]');
+
+        if (_.get(queueAction, 'name') === conditional) {
+          queueAction = queueAction.then;
+        }
+
         sourceMenu = queueAction.queueSettings[$scope.type];
         vm.actionEntry = getAction(sourceMenu);
       }

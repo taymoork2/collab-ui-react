@@ -78,6 +78,13 @@
     <div ng-if="squaredUcSetup.showTimezoneAndVoicemail">
       <formly-form model="squaredUcSetup.model" fields="squaredUcSetup.ftswVoicemailPrefixSelection" form="squaredUcSetup.form"></formly-form>
     </div>
+    <div cr-feature-toggle feature-show="huron-customer-cos">
+      <uc-cos-form
+        env="ftsw"
+        input-model="squaredUcSetup.model.cosRestrictions"
+        on-change-fn="squaredUcSetup.setCustomerCosRestrictions(restrictions)">
+      </uc-cos-form>
+    </div>
     <formly-form model="squaredUcSetup.model" fields="squaredUcSetup.ftswSteeringDigitSelection" form="squaredUcSetup.form"></formly-form>
     <p class="row full columns warning terminus-warning indent-area-code" ng-if="!squaredUcSetup.isTerminusCustomer"><i class="icon icon-warning"></i>{{::'serviceSetupModal.warning.outboundDialing' | translate}}</p>
     <div ng-if="squaredUcSetup.showTimezoneAndVoicemail">
