@@ -228,7 +228,12 @@
         return authData.orgName;
       },
       getOrgId: function () {
+        // The orgId of the managed org (can be a different org than the logged in user when delegated admin)
         return authData.orgId;
+      },
+      getUserOrgId: function () {
+        // The orgId of the org the user is homed (can be a different org than the org being managed in getOrgId)
+        return authData.userOrgId;
       },
       getCustomerId: function () {
         return authData.customerId;
