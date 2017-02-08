@@ -39,9 +39,13 @@ require('modules/core/reports/amcharts-export.scss');
     vm.timeUpdate = timeUpdate;
 
     // Preliminary beta functionality
+    vm.v1 = true;
     if ($state.current.name === 'reports.device-usage-v2') {
       apiToUse = 'local';
+      vm.v1 = false;
       DeviceUsageTotalService = DeviceUsageService;
+    } else {
+      vm.v1 = true;
     }
 
     vm.tabs = [
