@@ -15,14 +15,13 @@
   </cs-sp-section>
   <uc-preferred-language
     cr-feature-toggle feature-show="huron-l10n-user-locale-2"
-    places-id="$ctrl.currentPlace.cisUuid"
+    pl-is-loaded="$ctrl.plIsLoaded"
     has-spark-call="$ctrl.hasSparkCall"
     on-pref-language-change="$ctrl.onPrefLanguageChange"
     pref-language-save-in-process="$ctrl.prefLanguageSaveInProcess"
-    places-preferred-language="$crtl.placesPreferredLanguage"
-    default-preferred-lanugage="$ctrl.defaultPreferredLanugage"
     preferred-language="$ctrl.preferredLanguage"
-    preferred-language-options="$crtrl.preferredLanguageOptions">
+    preferred-language-options="$ctrl.preferredLanguageOptions"
+    on-change-fn="$ctrl.setPreferredLanguage(preferredLanguage)">
   </uc-preferred-language>
   <cs-sp-section ng-if="$ctrl.hasSparkCall">
     <section-title

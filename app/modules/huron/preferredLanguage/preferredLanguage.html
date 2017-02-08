@@ -12,12 +12,12 @@
     <div ng-if="$ctrl.hasSparkCall" ng-show="$ctrl.plIsLoaded">
         <cs-select
             name="languageSelect"
-            ng-model="$ctrl.preferredLanguage"
-            options="$ctrl.preferredLanguageOptions"
+            ng-model="$ctrl.optionSelected"
+            options="$ctrl.options"
             labelfield="label"
             valuefield="value"
             filter="false"
-            on-change-fn="$ctrl.onPrefLanguageChange=true"
+            on-change-fn="$ctrl.onChangePreferredLanugage()"
         ></cs-select>
     </div>
 </cs-sp-section>

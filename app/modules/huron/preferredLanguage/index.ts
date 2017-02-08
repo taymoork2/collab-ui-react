@@ -1,4 +1,3 @@
-import { PreferredLanguageService } from './preferredLanguage.service';
 import { PreferredLanguageComponent } from './preferredLanguage.component';
 
 export default angular
@@ -9,5 +8,4 @@ export default angular
     require('modules/core/config/config'),
   ])
   .component('ucPreferredLanguage', new PreferredLanguageComponent())
-  .service('PreferredLanguageService', PreferredLanguageService)
   .name;

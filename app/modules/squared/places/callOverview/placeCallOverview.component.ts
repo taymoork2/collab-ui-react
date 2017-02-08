@@ -4,7 +4,7 @@ import { LineService, LineConsumerType, Line, LINE_CHANGE } from 'modules/huron/
 import { IActionItem } from 'modules/core/components/sectionTitle/sectionTitle.component';
 import { IFeature } from 'modules/core/components/featureList/featureList.component';
 import { Notification } from 'modules/core/notifications';
-import { PreferredLanguageService } from 'modules/huron/preferredLanguage/preferredLanguage.service';
+import { PlaceCallOverviewService, PlaceCallOverviewData } from './placeCallOverview.service';
 
 class PlaceCallOverview implements ng.IComponentController {
 
@@ -16,11 +16,11 @@ class PlaceCallOverview implements ng.IComponentController {
   public directoryNumbers: Line[];
   public preferredLanguageOptions: any[];
   public preferredLanguage: any;
-  public placesPreferredLanguage: string;
-  public defaultPreferredLanugage: string;
   public plIsLoaded: boolean = false;
   public prefLanguageSaveInProcess: boolean = false;
   public onPrefLanguageChange: boolean = false;
+  // Data from services
+  public placeCallOverviewData: PlaceCallOverviewData;
 
   /* @ngInject */
   constructor(
@@ -32,7 +32,7 @@ class PlaceCallOverview implements ng.IComponentController {
     private LineService: LineService,
     private DialingService: DialingService,
     private Notification: Notification,
-    private PreferredLanguageService: PreferredLanguageService
+    private PlaceCallOverviewService: PlaceCallOverviewService
   ) {
 
     this.displayPlace($stateParams.currentPlace);
@@ -71,6 +71,7 @@ class PlaceCallOverview implements ng.IComponentController {
         this.initFeatures();
       });
       this.initNumbers();
+      this.initPlaceCallOverviewData();
     }
   }
 
@@ -129,33 +130,56 @@ class PlaceCallOverview implements ng.IComponentController {
       .then(lines => this.directoryNumbers = lines);
   }
 
+  private initPlaceCallOverviewData(): void {
+    this.PlaceCallOverviewService.getPlaceCallOverviewData(this.currentPlace.cisUuid)
+        .then( placeCallOverviewData => {
+          this.placeCallOverviewData = placeCallOverviewData;
+          this.preferredLanguage = placeCallOverviewData.preferredLanguage;
+          this.preferredLanguageOptions = placeCallOverviewData.preferredLanguageOptions;
+          this.plIsLoaded = true;
+        });
+  }
+
+  public setPreferredLanguage(preferredLanguage: any): void {
+    this.preferredLanguage = preferredLanguage;
+    this.checkForChanges();
+  }
+
+  private checkForChanges(): void {
+    if (_.isEqual(this.preferredLanguage, this.placeCallOverviewData.preferredLanguage)) {
+        this.resetPreferredLanguageFlags();
+    }
+  }
+
+  private resetPreferredLanguageFlags(): void {
+    this.prefLanguageSaveInProcess = false;
+    this.onPrefLanguageChange = false;
+  }
+
   public savePreferredLanguage(): void {
     this.prefLanguageSaveInProcess = true;
-    if (!_.isEqual(this.preferredLanguage.value, this.placesPreferredLanguage)) {
+    if (!_.isEqual(this.preferredLanguage, this.placeCallOverviewData.preferredLanguage)) {
       let prefLang = this.preferredLanguage.value ? this.preferredLanguage.value : null;
-      this.PreferredLanguageService.updateCmiPlaceInfo(this.currentPlace.cisUuid, prefLang)
+      this.PlaceCallOverviewService.updateCmiPlacePreferredLanguage(this.currentPlace.cisUuid, prefLang)
         .then(() => {
-          this.placesPreferredLanguage = prefLang;
+          this.placeCallOverviewData.placesPreferredLanguage = prefLang;
+          this.placeCallOverviewData.preferredLanguage = this.preferredLanguage;
           this.Notification.success('preferredLanguage.placesCallOverviewSaveSuccess');
         })
         .catch(error => {
           this.Notification.errorResponse(error, 'preferredLanguage.failedToSaveChanges');
-      }).finally(() => {
-        this.prefLanguageSaveInProcess = false;
-        this.onPrefLanguageChange = false;
-      });
+        }).finally(() => {
+          this.resetPreferredLanguageFlags();
+          this.plIsLoaded = true;
+        });
     }
   }
 
   public onCancelPreferredLanguage(): void {
-    if (!_.isEqual(this.preferredLanguage.value, this.placesPreferredLanguage)) {
-      alert('this.preferredLanguage.value= ' + this.preferredLanguage.value + '  this.placesPreferredLanguage= ' + this.placesPreferredLanguage);
-      this.preferredLanguage = this.placesPreferredLanguage ?
-                                this.PreferredLanguageService.getPreferredLanguage(this.preferredLanguageOptions, this.placesPreferredLanguage) :
-                                this.defaultPreferredLanugage;
+    if (!_.isEqual(this.preferredLanguage, this.placeCallOverviewData.preferredLanguage)) {
+      this.preferredLanguage = this.placeCallOverviewData.preferredLanguage;
     }
-    alert('this.preferredLanguage.value= ' + this.preferredLanguage.value + '  this.placesPreferredLanguage= ' + this.placesPreferredLanguage + '  this.preferredLanguageOptions= ' + this.preferredLanguageOptions.length);
-    this.onPrefLanguageChange = false;
+    this.resetPreferredLanguageFlags();
   }
 
   private hasEntitlement(entitlement: string): boolean {

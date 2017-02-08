@@ -1,70 +1,57 @@
-import { PreferredLanguageService } from './preferredLanguage.service';
-import { Notification } from 'modules/core/notifications';
+interface IPreferredLanugageOption {
+  featureToggle: string | null;
+  value: string | '';
+  label: string;
+}
 
 class PreferredLanguage implements ng.IComponentController {
-    private placesId: string;
-    private hasSparkCall: boolean;
-    public preferredLanguageOptions: any[];
-    public preferredLanguage: any;
-    public placesPreferredLanguage: string;
-    public defaultPreferredLanugage: string;
+    public hasSparkCall: boolean;
     public plIsLoaded: boolean = false;
     public prefLanguageSaveInProcess: boolean = false;
+    public preferredLanguage: any;
+    public preferredLanguageOptions: any[];
     public onPrefLanguageChange: boolean = false;
+    public onChangeFn: Function;
+    public nonePlaceholder: string;
+
+    private options: IPreferredLanugageOption[] = [];
+    private optionSelected: IPreferredLanugageOption;
+    private noneOption: IPreferredLanugageOption;
 
     /* @ngInject */
     constructor(
-        private $translate: ng.translate.ITranslateService,
-        private Notification: Notification,
-        private PreferredLanguageService: PreferredLanguageService,
-    ) { }
+        private $translate: ng.translate.ITranslateService
+    ) {
+        this.nonePlaceholder = this.$translate.instant('directoryNumberPanel.none');
+        this.noneOption = {
+            featureToggle: null,
+            value: '',
+            label: this.nonePlaceholder,
+        };
+    }
 
-    public $onInit(): void {
-        if (this.hasSparkCall) {
-            this.initPreferredLanguageData();
+    public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+        let preferredLanguageOptionsChange = changes['preferredLanguageOptions'];
+        if (preferredLanguageOptionsChange) {
+            if (preferredLanguageOptionsChange.currentValue && _.isArray(preferredLanguageOptionsChange.currentValue)) {
+                this.options = <IPreferredLanugageOption[]> preferredLanguageOptionsChange.currentValue;
+            }
+        }
+        let preferredLanguageChange = changes['preferredLanguage'];
+        if (preferredLanguageChange) {
+            if (preferredLanguageChange.currentValue) {
+                this.optionSelected = <IPreferredLanugageOption> preferredLanguageChange.currentValue;
+            } else {
+                this.optionSelected = this.noneOption;
+            }
         }
     }
 
-    private initPreferredLanguageData(): void {
-        this.PreferredLanguageService.getSiteLevelLanguage().then(result => {
-            this.initPlacesPreferredLanguage(result);
-        })
-        .catch((error) => {
-            this.Notification.errorResponse(error, 'preferredLanguage.failedToFetchSiteLevelLanguage');
+    public onChangePreferredLanugage(): void {
+        this.onChangeFn({
+            preferredLanguage: this.optionSelected,
         });
-    }
-
-    private initPlacesPreferredLanguage(sitePreferredLanguage): void {
-        this.preferredLanguageOptions = [];
-        this.PreferredLanguageService.getSiteLanguages().then(languages => {
-        this.PreferredLanguageService.getCmiPlaceInfo(this.placesId).then(result => {
-            let organizationLanguage = this.PreferredLanguageService.getPreferredLanguage(languages, sitePreferredLanguage);
-            this.defaultPreferredLanugage = this.defaultPreferredLanguage(organizationLanguage['label']);
-            this.preferredLanguageOptions.push(this.defaultPreferredLanugage);
-            this.preferredLanguageOptions = this.preferredLanguageOptions.concat(languages);
-            this.placesPreferredLanguage = result['preferredLanguage'];
-            this.preferredLanguage = this.placesPreferredLanguage ? this.PreferredLanguageService.getPreferredLanguage(languages, this.placesPreferredLanguage) : this.defaultPreferredLanugage;
-            this.plIsLoaded = true;
-        })
-        .catch((error) => {
-            this.Notification.errorResponse(error, 'preferredLanguage.failedToFetchCmiPlacesInfo');
-        });
-        })
-        .catch((error) => {
-        this.Notification.errorResponse(error, 'preferredLanguage.failedToFetchSiteLanguages');
-        });
-    }
-
-    private defaultPreferredLanguage(organizationLevelLanguage): any {
-        let defaultPrefix: string = this.$translate.instant('preferredLanguage.organizationSettingLabel');
-        let translatedLanguageLabel: string = organizationLevelLanguage ?
-                                            this.$translate.instant(organizationLevelLanguage) :
-                                            'languages.englishAmerican';
-        let defaultLanguage = {
-        label: defaultPrefix + translatedLanguageLabel,
-        value: '',
-        };
-        return defaultLanguage;
+        this.onPrefLanguageChange = true;
     }
 }
 
@@ -72,13 +59,12 @@ export class PreferredLanguageComponent implements ng.IComponentOptions {
     public controller = PreferredLanguage;
     public templateUrl = 'modules/huron/preferredLanguage/preferredLanguage.html';
     public bindings = {
-        placesId: '<',
+        plIsLoaded: '=',
         hasSparkCall: '<',
         onPrefLanguageChange: '=',
         prefLanguageSaveInProcess: '=',
-        placesPreferredLanguage: '=',
-        defaultPreferredLanugage: '=',
-        preferredLanguage: '=',
-        preferredLanguageOptions: '=',
+        preferredLanguage: '<',
+        preferredLanguageOptions: '<',
+        onChangeFn: '&',
     };
 }
