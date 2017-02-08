@@ -167,14 +167,15 @@
       var stats = {
         most: [],
         least: [],
-        noOfDevices: "???",
+        noOfDevices: 0,
         noOfCalls: calculateTotalNoOfCalls(reduced),
         totalDuration: calculateTotalDuration(reduced)
       };
       var limit = 20;
-      $q.all([getLeast(start, end, models, limit), getMost(start, end, models, limit)]).then(function (leastMost) {
-        stats.least = leastMost[0];
-        stats.most = leastMost[1];
+      $q.all([getLeast(start, end, models, limit), getMost(start, end, models, limit), getTotalNoOfUsedDevices(start, end, models)]).then(function (results) {
+        stats.least = results[0];
+        stats.most = results[1];
+        stats.noOfDevices = results[2];
 
         // Preliminary compatibility with V1
         _.each(stats.least, function (item) {
@@ -190,6 +191,18 @@
       });
 
       return deferredAll.promise;
+    }
+
+    function getTotalNoOfUsedDevices(start, end, models) {
+      if (_.isEmpty(models)) {
+        models = 'aggregate';
+      } else {
+        models = models.join();
+      }
+      var url = getBaseOrgUrl() + "reports/device/usage/count?interval=day&from=" + start + "&to=" + end + "&models=" + models + "&excludeUnused=true";
+      return $http.get(url).then(function (response) {
+        return response.data.items[0].count;
+      });
     }
 
     function calculateTotalNoOfCalls(data) {
@@ -231,14 +244,6 @@
         return response.data.items;
       });
     }
-
-    // function getDevicesCount(start, end) {
-    //   var url = getBaseOrgUrl() + "reports/device/usage/count?interval=day&from=" + start + "&to=" + end + "&excludeUnused=true";
-    //   return $http.get(url).then(function (response) {
-    //     $log.warn("Response from count:", response);
-    //     return response.data.items;
-    //   });
-    // }
 
     function pickDateBucket(item, granularity) {
       //var day = item.date.toString();

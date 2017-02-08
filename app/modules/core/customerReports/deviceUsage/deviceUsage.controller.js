@@ -201,7 +201,7 @@ require('modules/core/reports/amcharts-export.scss');
       Notification.notify(errors, 'error');
     }
 
-    function loadChartData(data, title) {
+    function loadChartData(data, title, models) {
       var missingDays = data.missingDays;
       var reportItems = data.reportItems;
       if (reportItems.length === 0) {
@@ -227,7 +227,7 @@ require('modules/core/reports/amcharts-export.scss');
       amChart.validateData();
       amChart.animateAgain();
       vm.showDevices = false;
-      fillInStats(reportItems, dateRange.start, dateRange.end);
+      fillInStats(reportItems, dateRange.start, dateRange.end, models);
     }
 
     function loadChartDataForDeviceType(data) {
@@ -238,7 +238,7 @@ require('modules/core/reports/amcharts-export.scss');
     function loadLastWeek(dates, models) {
       vm.loading = true;
       DeviceUsageTotalService.getDataForRange(dates.start, dates.end, 'day', ['ce', 'SparkBoard'], models, apiToUse).then(function (data) {
-        loadChartData(data, $translate.instant('reportsPage.usageReports.last7Days'));
+        loadChartData(data, $translate.instant('reportsPage.usageReports.last7Days'), models);
         if ($state.current.name === 'reports.device-usage-v2') {
           if (!models) {
             getModelsForRange(dates.start, dates.end).then(modelsForRange);
@@ -250,7 +250,7 @@ require('modules/core/reports/amcharts-export.scss');
     function loadLastMonth(dates, models) {
       vm.loading = true;
       DeviceUsageTotalService.getDataForRange(dates.start, dates.end, 'week', ['ce', 'SparkBoard'], models, apiToUse).then(function (data) {
-        loadChartData(data, $translate.instant('reportsPage.usageReports.last4Weeks'));
+        loadChartData(data, $translate.instant('reportsPage.usageReports.last4Weeks'), models);
         if ($state.current.name === 'reports.device-usage-v2') {
           if (!models) {
             getModelsForRange(dates.start, dates.end).then(modelsForRange);
@@ -262,7 +262,7 @@ require('modules/core/reports/amcharts-export.scss');
     function loadLast3Months(dates, models) {
       vm.loading = true;
       DeviceUsageTotalService.getDataForRange(dates.start, dates.end, 'month', ['ce', 'SparkBoard'], models, apiToUse).then(function (data) {
-        loadChartData(data, $translate.instant('reportsPage.usageReports.last3Months'));
+        loadChartData(data, $translate.instant('reportsPage.usageReports.last3Months'), models);
         if ($state.current.name === 'reports.device-usage-v2') {
           if (!models) {
             getModelsForRange(dates.start, dates.end).then(modelsForRange);
@@ -282,8 +282,8 @@ require('modules/core/reports/amcharts-export.scss');
       $scope.$apply();
     }
 
-    function fillInStats(data, start, end) {
-      DeviceUsageTotalService.extractStats(data, start, end).then(function (stats) {
+    function fillInStats(data, start, end, models) {
+      DeviceUsageTotalService.extractStats(data, start, end, models).then(function (stats) {
         vm.totalDuration = secondsTohhmmss(stats.totalDuration);
         vm.noOfCalls = stats.noOfCalls;
         vm.noOfDevices = stats.noOfDevices;
