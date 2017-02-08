@@ -882,7 +882,11 @@
           })
 
           ///////////////////////////
+          .state('users.manage.picker', {
+            controller: 'UserManageModalPickerController'
+          })
           .state('users.manage', {
+            abstract: true,
             parent: 'modal',
             views: {
               'modal@': {
@@ -890,9 +894,6 @@
                 controllerAs: 'ummc',
                 template: '<div ui-view></div>'
               }
-            },
-            params: {
-              isOverExportThreshold: {}
             }
           })
           .state('users.manage.org', {

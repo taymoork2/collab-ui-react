@@ -1127,7 +1127,7 @@ describe('OnboardCtrl: Ctrl', function () {
 
       expect(this.$scope.manageUsers).toBeTruthy();
       this.$scope.goToManageUsers();
-      expect(this.$state.go).toHaveBeenCalledWith('users.manage', {});
+      expect(this.$state.go).toHaveBeenCalledWith('users.manage.picker');
     });
   });
 

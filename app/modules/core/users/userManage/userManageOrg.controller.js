@@ -7,7 +7,7 @@ require('./_user-manage.scss');
     .controller('UserManageOrgController', UserManageOrgController);
 
   /* @ngInject */
-  function UserManageOrgController($state, $stateParams, Analytics, UserCsvService, OnboardService, Orgservice) {
+  function UserManageOrgController($state, Analytics, UserCsvService, OnboardService, Orgservice) {
     var vm = this;
 
     vm.onInit = onInit;
@@ -16,7 +16,6 @@ require('./_user-manage.scss');
     vm.maxUsersInManual = OnboardService.maxUsersInManual;
     vm.onNext = onNext;
     vm.cancelModal = cancelModal;
-    vm.isOverExportThreshold = !!$stateParams.isOverExportThreshold;
     vm.convertableUsers = false;
 
     vm.onInit();
