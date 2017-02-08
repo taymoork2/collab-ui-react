@@ -172,7 +172,9 @@ describe('Controller: SpeedDialsCtrl', function () {
       var length = controller.speedDialList.length;
       controller.add();
       controller.newLabel = 'Test';
-      controller.callDest.phoneNumber = '0000';
+      controller.callDest = {
+        phoneNumber: '0000'
+      };
       expect(controller.speedDialList.length).toEqual(length + 1);
       controller.save();
       expect(controller.speedDialList.length).toEqual(length + 1);
