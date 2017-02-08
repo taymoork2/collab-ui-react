@@ -19,9 +19,20 @@
     };
     vm.menuKeyEntry = {};
 
+<<<<<<< HEAD
     vm.saveUiModel = saveUiModel;
     vm.isSipValid = isSipValid;
     vm.routeToSipPlaceHolder = $translate.instant('autoAttendant.routeToSipPlaceHolder');
+=======
+    vm.updateUiModel = updateUiModel;
+    vm.routeToSipPlaceHolder = $translate.instant('autoAttendant.routeToSipPlaceHolder');
+    vm.errorMessages = {
+      required: $translate.instant('common.invalidRequired'),
+      minlength: $translate.instant('autoAttendant.routeToSipInputShort'),
+      maxlength: $translate.instant('autoAttendant.routeToSipInputLong'),
+      pattern: $translate.instant('autoAttendant.routeToSipInputInvalid'),
+    };
+>>>>>>> 0c53ec9b911517d0c515db9a0e938fe7ea19445e
 
     // the CE action verb is 'routeToSipEndpoint'
     var routeToSipEndpoint = 'routeToSipEndpoint';
@@ -31,6 +42,7 @@
 
     /////////////////////
 
+<<<<<<< HEAD
     function isSipValid() {
       var pattern = new RegExp(/^([a-zA-Z0-9:.]+)@([a-zA-Z0-9.]+)\.([a-z]{3,7})$/g);
       var result = pattern.test(vm.model.sipInput);
@@ -45,6 +57,8 @@
 
     }
 
+=======
+>>>>>>> 0c53ec9b911517d0c515db9a0e938fe7ea19445e
     function populateUiModel() {
       var entry;
       if (fromRouteCall) {
@@ -60,10 +74,25 @@
       }
     }
 
+<<<<<<< HEAD
     function saveUiModel() {
       AACommonService.setPhoneMenuStatus(true);
       var entry;
 
+=======
+    function setValidStatus() {
+      AACommonService.setIsValid(vm.uniqueCtrlIdentifer, vm.aaRouteToSipForm.$valid);
+      AACommonService.setPhoneMenuStatus(true);
+    }
+
+    function updateUiModel() {
+      setValidStatus();
+      saveUiModel();
+    }
+
+    function saveUiModel() {
+      var entry;
+>>>>>>> 0c53ec9b911517d0c515db9a0e938fe7ea19445e
       if (fromRouteCall) {
         entry = _.get(vm.menuEntry, 'actions[0].queueSettings.fallback', vm.menuEntry);
       } else {

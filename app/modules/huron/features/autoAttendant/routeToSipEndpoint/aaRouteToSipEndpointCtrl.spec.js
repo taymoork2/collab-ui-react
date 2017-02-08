@@ -103,30 +103,52 @@ describe('Controller: AARouteToSipEndpointCtrl', function () {
       });
     });
 
+<<<<<<< HEAD
     describe('saveUiModel', function () {
+=======
+    describe('updateUiModel', function () {
+>>>>>>> 0c53ec9b911517d0c515db9a0e938fe7ea19445e
       var sipInput, controller;
       beforeEach(function () {
         sipInput = 'sip:shwegupt@go.webex.com';
         controller = $controller('AARouteToSipEndpointCtrl', {
           $scope: $scope
         });
+<<<<<<< HEAD
 
+=======
+        controller.aaRouteToSipForm = {
+          $valid: true
+        };
+>>>>>>> 0c53ec9b911517d0c515db9a0e938fe7ea19445e
         controller.model.sipInput = sipInput;
       });
 
       it('should write UI entry back into UI model', function () {
+<<<<<<< HEAD
         controller.saveUiModel();
+=======
+        controller.updateUiModel();
+>>>>>>> 0c53ec9b911517d0c515db9a0e938fe7ea19445e
         $scope.$apply();
         expect(controller.menuKeyEntry.actions[0].value).toEqual(sipInput);
       });
 
       it('should write UI entry back into UI model when SIP number changes', function () {
+<<<<<<< HEAD
         controller.saveUiModel();
+=======
+        controller.updateUiModel();
+>>>>>>> 0c53ec9b911517d0c515db9a0e938fe7ea19445e
         $scope.$apply();
 
         var sipInputChanged = 'sip:shwegupt_changed@go.webex.com';
         controller.model.sipInput = sipInputChanged;
+<<<<<<< HEAD
         controller.saveUiModel();
+=======
+        controller.updateUiModel();
+>>>>>>> 0c53ec9b911517d0c515db9a0e938fe7ea19445e
         $scope.$apply();
 
         expect(controller.menuKeyEntry.actions[0].value).toEqual('sip:shwegupt_changed@go.webex.com');
@@ -146,14 +168,24 @@ describe('Controller: AARouteToSipEndpointCtrl', function () {
         var controller = $controller('AARouteToSipEndpointCtrl', {
           $scope: $scope
         });
+<<<<<<< HEAD
 
+=======
+        controller.aaRouteToSipForm = {
+          $valid: true
+        };
+>>>>>>> 0c53ec9b911517d0c515db9a0e938fe7ea19445e
         controller.model.sipInput = sipInput;
 
         controller.menuEntry.actions = [];
         var action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToSipEndpoint', 'fobar');
         controller.menuEntry.actions = [];
         controller.menuEntry.actions[0] = action;
+<<<<<<< HEAD
         controller.saveUiModel();
+=======
+        controller.updateUiModel();
+>>>>>>> 0c53ec9b911517d0c515db9a0e938fe7ea19445e
         $scope.$apply();
 
         expect(controller.menuEntry.actions[0].value).toEqual("sip:shwegupt@go.webex.com");

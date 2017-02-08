@@ -33,11 +33,13 @@ module.exports = csp({
     ],
     connectSrc: [
       '\'self\'',
+      'wss://mercury-connection-a.wbx2.com',
       'https://*.cisco.com',
       'https://*.ciscoccservice.com',
       'https://*.ciscospark.com',
       'https://*.huron-dev.com',
       'https://*.huron-int.com',
+      'https://*.sparkc-eu.com',
       'https://*.huron.uno',
       'https://*.statuspage.io',
       'https://*.wbx2.com',

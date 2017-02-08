@@ -416,20 +416,23 @@
       if (response.groups.length === 0) {
         return response;
       }
-      var promises = _.map(response.groups, function (group) {
-        return USSService.getUserCountFromResourceGroup(group.id)
-          .catch(function () {
-            // recover from failure, we won't know the number for this group
-            return {
-              numberOfUsers: '?'
-            };
-          });
-      });
-      return $q.all(promises)
-        .then(function (userCounts) {
+      return USSService.getUserPropsSummary()
+        .then(function (summary) {
           return {
-            groups: _.map(response.groups, function (group, i) {
-              group.numberOfUsers = userCounts[i].numberOfUsers;
+            groups: _.map(response.groups, function (group) {
+              var countForGroup = _.find(summary.userCountByResourceGroup, function (count) {
+                return count.resourceGroupId === group.id;
+              });
+              group.numberOfUsers = countForGroup ? countForGroup.numberOfUsers : 0;
+              return group;
+            }),
+            unassigned: response.unassigned,
+            clusters: response.clusters
+          };
+        }).catch(function () {
+          return {
+            groups: _.map(response.groups, function (group) {
+              group.numberOfUsers = '?';
               return group;
             }),
             unassigned: response.unassigned,
