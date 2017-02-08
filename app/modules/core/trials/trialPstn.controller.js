@@ -6,7 +6,7 @@
     .controller('TrialPstnCtrl', TrialPstnCtrl);
 
   /* @ngInject */
-  function TrialPstnCtrl($scope, $timeout, $translate, Analytics, Authinfo, Notification, PstnSetupService, TelephoneNumberService, TerminusStateService, TrialPstnService) {
+  function TrialPstnCtrl($scope, $timeout, $translate, Analytics, Authinfo, Notification, PstnSetupService, TelephoneNumberService, PstnSetupStatesService, TrialPstnService) {
     var vm = this;
 
     var NXX = 'nxx';
@@ -143,7 +143,7 @@
     function init() {
       _setupResellers();
 
-      TerminusStateService.query().$promise.then(function (states) {
+      PstnSetupStatesService.getStateProvinces().then(function (states) {
         vm.pstn.stateOptions = states;
       });
 

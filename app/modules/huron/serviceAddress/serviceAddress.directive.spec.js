@@ -27,10 +27,7 @@ describe('Directive: hrServiceAddress', function () {
       zip: '75082'
     };
 
-    $httpBackend.whenGET('modules/huron/pstnSetup/states.json').respond([{
-      name: "Texas",
-      abbreviation: "TX"
-    }]);
+    $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200, {});
   }));
 
   it('should show the address form inputs', function () {
