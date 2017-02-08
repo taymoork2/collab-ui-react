@@ -2744,7 +2744,7 @@
             url: '/hds/resources',
             views: {
               'fullPane': {
-                template: '<hybrid-service-cluster-list service-id="\'spark-hybrid-datasecurity\'"></hybrid-service-cluster-list>'
+                template: '<hybrid-service-cluster-list service-id="\'spark-hybrid-datasecurity\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>'
               }
             },
             params: {
@@ -2753,7 +2753,10 @@
             resolve: {
               hasHDSFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity);
-              }
+              },
+              clusterId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.clusterId;
+              },
             }
           })
           .state('hds.settings', {
@@ -3187,7 +3190,7 @@
         $stateProvider
         //V2 API changes
           .state('media-service-v2', {
-            templateUrl: 'modules/mediafusion/media-service-v2/overview.html',
+            templateUrl: 'modules/mediafusion/media-service-v2/media-service-overview.html',
             controller: 'MediaServiceControllerV2',
             controllerAs: 'med',
             parent: 'main'
@@ -3196,8 +3199,16 @@
             url: '/mediaserviceV2',
             views: {
               'fullPane': {
-                templateUrl: 'modules/mediafusion/media-service-v2/resources/cluster-list.html'
+                template: '<hybrid-service-cluster-list service-id="\'squared-fusion-media\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>'
               }
+            },
+            params: {
+              clusterId: null,
+            },
+            resolve: {
+              clusterId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.clusterId;
+              },
             }
           })
           .state('media-service-v2.settings', {
@@ -3226,9 +3237,8 @@
               displayName: 'Overview'
             },
             params: {
-              clusterName: {},
-              nodes: {},
-              cluster: {}
+              clusterId: {},
+              connectorType: {},
             }
           })
           .state('connector-details-v2.alarm-details', {

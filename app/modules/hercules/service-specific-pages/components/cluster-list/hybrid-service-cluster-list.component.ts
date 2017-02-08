@@ -1,7 +1,3 @@
-export interface IClusterIdStateParam extends ng.ui.IStateParamsService {
-  clusterId?: any;
-}
-
 export interface IGridApiScope extends ng.IScope {
   gridApi?: any;
 }
@@ -12,16 +8,16 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
   public clusterListGridOptions = {};
   public getSeverity = this.FusionClusterStatesService.getSeverity;
 
-  protected serviceId: string;
-  protected connectorType: string;
+  private serviceId: string;
+  private connectorType: string;
+  private clusterId: string;
 
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
     private $scope: IGridApiScope,
     private $state: ng.ui.IStateService,
-    private $stateParams: IClusterIdStateParam,
-    protected ClusterService,
+    private ClusterService,
     private FusionClusterService,
     private FusionClusterStatesService,
     private FusionUtils,
@@ -56,8 +52,8 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
         gridApi.selection.on.rowSelectionChanged(this.$scope, (row) => {
           this.goToSidepanel(row.entity.id);
         });
-        if (!_.isUndefined(this.$stateParams.clusterId) && this.$stateParams.clusterId !== null) {
-          this.goToSidepanel(this.$stateParams.clusterId);
+        if (!_.isUndefined(this.clusterId) && this.clusterId !== null) {
+          this.goToSidepanel(this.clusterId);
         }
       },
     };
@@ -75,17 +71,17 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
         .catch(() => {
           this.clusterList = this.ClusterService.getClustersByConnectorType(this.connectorType);
         });
-    } else if (this.serviceId === 'spark-hybrid-datasecurity') {
-      this.clusterList = this.ClusterService.getClustersByConnectorType('hds_app');
-      this.clusterList.sort(this.sortByProperty('name'));
+    } else if (this.serviceId === 'spark-hybrid-datasecurity' || this.serviceId === 'squared-fusion-media') {
+      this.clusterList = this.ClusterService.getClustersByConnectorType(this.connectorType);
     }
-
+    this.clusterList.sort(this.sortByProperty('name'));
   }
 
   private goToSidepanel(clusterId: string) {
     let routeMap = {
       'squared-fusion-cal': 'cluster-details',
       'squared-fusion-uc': 'cluster-details',
+      'squared-fusion-media': 'connector-details-v2',
       'spark-hybrid-datasecurity': 'hds-cluster-details',
     };
 
@@ -109,6 +105,7 @@ export class HybridServiceClusterListComponent implements ng.IComponentOptions {
   public templateUrl = 'modules/hercules/service-specific-pages/components/cluster-list/hybrid-service-cluster-list.html';
   public bindings = {
     serviceId: '<',
+    clusterId: '<',
   };
 }
 
