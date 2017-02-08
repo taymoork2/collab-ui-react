@@ -1,16 +1,20 @@
 import testModule from './index';
-import { CsvDownloadTypes } from '../../csvDownload/csvDownload.service';
+import { CsvDownloadTypes, CsvDownloadService } from 'modules/core/csvDownload';
 
 describe('crUserCsvExport Component', () => {
 
   const DATA_URL = 'file_url.csv';
   const TRANSLATED_STRING = 'translated-string';
+  const MIN_USER_COUNT = 5;
 
   ///////////////////
 
   function init() {
     this.initModules(testModule, 'Core', 'Huron', 'Sunlight');
-    this.injectDependencies('$componentController', '$modal', '$q', '$scope', '$rootScope', '$timeout', '$translate', 'Analytics', 'CsvDownloadService', 'Notification');
+    this.injectDependencies(
+      '$componentController', '$modal', '$q', '$scope', '$rootScope', '$timeout',
+      '$translate', '$httpBackend', 'Analytics', 'CsvDownloadService', 'Notification',
+      'UserListService', 'UrlConfig', 'Authinfo', 'FeatureToggleService');
 
     initMocks.apply(this);
     initDependencySpies.apply(this);
@@ -43,6 +47,14 @@ describe('crUserCsvExport Component', () => {
     spyOn(this.$translate, 'instant').and.returnValue(TRANSLATED_STRING);
     spyOn(this.$rootScope, '$emit');
     spyOn(this.Analytics, 'trackAddUsers').and.returnValue(this.$q.resolve({}));
+
+    let meUrl = _.replace((this.UrlConfig.getScimUrl(null) + '/me'), 'scim//', 'scim/');
+    this.getUserMe = getJSONFixture('core/json/users/me.json');
+    this.$httpBackend.whenGET(meUrl).respond(200, this.getUserMe);
+
+    this.getUserCountSpy = spyOn(this.UserListService, 'getUserCount').and.returnValue(this.$q.resolve(MIN_USER_COUNT));
+    this.isCiscoSpy = spyOn(this.Authinfo, 'isCisco').and.returnValue(false);
+    this.atlasNewUserExportGetStatusSpy = spyOn(this.FeatureToggleService, 'atlasNewUserExportGetStatus').and.returnValue(this.$q.resolve(false));
   }
 
   function initUtils() {
@@ -85,17 +97,11 @@ describe('crUserCsvExport Component', () => {
   describe('Component', () => {
 
     beforeEach(function () {
-      this.$scope.testIsOverExportThreshold = false;
       this.$scope.onTestExportDownloadStatus = jasmine.createSpy('onTestExportDownloadStatus');
-
-      let bindings = {
-        isOverExportThreshold: 'testIsOverExportThreshold',
-        onStatusChange: 'onTestExportDownloadStatus(isExporting, dataUrl)',
-      };
-      initComponent.apply(this, [bindings]);
     });
 
     it('should have required HTML', function () {
+      initComponent.apply(this, [{ onStatusChange: 'onTestExportDownloadStatus(isExporting, dataUrl)' }]);
 
       // before downloading starts
       expect(this.controller.asLink).toBeFalsy();
@@ -121,6 +127,8 @@ describe('crUserCsvExport Component', () => {
     });
 
     it('should download template when button pressed', function () {
+      initComponent.apply(this, [{ onStatusChange: 'onTestExportDownloadStatus(isExporting, dataUrl)' }]);
+
       // press the download template button
       this.clickElement('[ng-click="$ctrl.downloadTemplate()"]');
       expect(this.$rootScope.$emit).toHaveBeenCalledWith('csv-download-request',
@@ -135,6 +143,8 @@ describe('crUserCsvExport Component', () => {
     });
 
     it('should download csv when button pressed and download accepted', function () {
+      initComponent.apply(this, [{ onStatusChange: 'onTestExportDownloadStatus(isExporting, dataUrl)' }]);
+
       // press the download CSV button
       this.clickElement('[ng-click="$ctrl.exportCsv()"]');
 
@@ -153,6 +163,8 @@ describe('crUserCsvExport Component', () => {
     });
 
     it('should not download csv when button pressed and download canceled', function () {
+      initComponent.apply(this, [{ onStatusChange: 'onTestExportDownloadStatus(isExporting, dataUrl)' }]);
+
       // press the download CSV button
       this.clickElement('[ng-click="$ctrl.exportCsv()"]');
       this.fakeModal.result.cancelCallback = jasmine.createSpy('cancelCallback').and.callThrough();
@@ -165,8 +177,32 @@ describe('crUserCsvExport Component', () => {
       expect(this.fakeModal.result.cancelCallback).toHaveBeenCalled();
     });
 
-    it('should display warning if download exceeds maxUserThreshold', function () {
-      this.$scope.testIsOverExportThreshold = true;
+    it('should not display warning if download under USER_EXPORT_THRESHOLD', function () {
+
+      this.getUserCountSpy.and.returnValue(this.$q.resolve(CsvDownloadService.USER_EXPORT_THRESHOLD - 1));
+      initComponent.apply(this, [{ onStatusChange: 'onTestExportDownloadStatus(isExporting, dataUrl)' }]);
+
+      // press the download CSV button
+      this.clickElement('[ng-click="$ctrl.exportCsv()"]');
+
+      // close the first export confirm dialog
+      this.fakeModal.close();
+
+      expect(this.$modal.open).toHaveBeenCalledTimes(1);
+
+      expect(this.$rootScope.$emit).toHaveBeenCalledWith('csv-download-request',
+        jasmine.objectContaining({
+          csvType: CsvDownloadTypes.TYPE_USER,
+          tooManyUsers: false,
+          suppressWarning: true,
+          filename: this.controller.exportFilename,
+        }));
+    });
+
+    it('should display warning if download exceeds USER_EXPORT_THRESHOLD', function () {
+
+      this.getUserCountSpy.and.returnValue(this.$q.resolve(CsvDownloadService.USER_EXPORT_THRESHOLD + 1));
+      initComponent.apply(this, [{ onStatusChange: 'onTestExportDownloadStatus(isExporting, dataUrl)' }]);
 
       // press the download CSV button
       this.clickElement('[ng-click="$ctrl.exportCsv()"]');
@@ -188,17 +224,61 @@ describe('crUserCsvExport Component', () => {
         }));
     });
 
+    it('should not display warning if download exceeds USER_EXPORT_THRESHOLD but isCisco org', function () {
+
+      this.isCiscoSpy.and.returnValue(true);
+      this.getUserCountSpy.and.returnValue(this.$q.resolve(CsvDownloadService.USER_EXPORT_THRESHOLD + 1));
+      initComponent.apply(this, [{ onStatusChange: 'onTestExportDownloadStatus(isExporting, dataUrl)' }]);
+
+      // press the download CSV button
+      this.clickElement('[ng-click="$ctrl.exportCsv()"]');
+
+      // close the first export confirm dialog
+      this.fakeModal.close();
+
+      expect(this.$modal.open).toHaveBeenCalledTimes(1);
+
+      expect(this.$rootScope.$emit).toHaveBeenCalledWith('csv-download-request',
+        jasmine.objectContaining({
+          csvType: CsvDownloadTypes.TYPE_USER,
+          tooManyUsers: false,
+          suppressWarning: true,
+          filename: this.controller.exportFilename,
+        }));
+    });
+
+    it('should not display warning if download exceeds USER_EXPORT_THRESHOLD but using new export feature', function () {
+
+      this.atlasNewUserExportGetStatusSpy.and.returnValue(this.$q.resolve(true));
+      this.getUserCountSpy.and.returnValue(this.$q.resolve(CsvDownloadService.USER_EXPORT_THRESHOLD + 1));
+      initComponent.apply(this, [{ onStatusChange: 'onTestExportDownloadStatus(isExporting, dataUrl)' }]);
+
+      // press the download CSV button
+      this.clickElement('[ng-click="$ctrl.exportCsv()"]');
+
+      // close the first export confirm dialog
+      this.fakeModal.close();
+
+      expect(this.$modal.open).toHaveBeenCalledTimes(1);
+
+      expect(this.$rootScope.$emit).toHaveBeenCalledWith('csv-download-request',
+        jasmine.objectContaining({
+          csvType: CsvDownloadTypes.TYPE_USER,
+          tooManyUsers: false,
+          suppressWarning: true,
+          filename: this.controller.exportFilename,
+        }));
+    });
+
   });
 
   describe('Component as a link', () => {
 
     beforeEach(function () {
-      this.$scope.testIsOverExportThreshold = false;
       this.$scope.onTestExportDownloadStatus = jasmine.createSpy('onTestExportDownloadStatus');
 
       let bindings = {
         asLink: 'true',
-        isOverExportThreshold: 'testIsOverExportThreshold',
         onStatusChange: 'onTestExportDownloadStatus(isExporting, dataUrl)',
       };
 

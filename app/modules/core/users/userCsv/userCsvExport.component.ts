@@ -7,7 +7,6 @@ export class UserCsvExportComponent {
   public templateUrl = 'modules/core/users/userCsv/userCsvExport.component.html';
   public bindings = {
     onStatusChange: '&',
-    isOverExportThreshold: '<',
     asLink: '@',
   };
 }
@@ -17,7 +16,6 @@ export class UserCsvExportComponent {
 class UserCsvExportController implements ng.IComponentController {
   // bindings
   public onStatusChange: Function;
-  public isOverExportThreshold: boolean;
   public asLink: string;
 
   public displayAsLink: boolean;
@@ -25,6 +23,7 @@ class UserCsvExportController implements ng.IComponentController {
 
   private exportFilename: string;
   private eventListeners: any = [];
+  private isOverExportThreshold: boolean;
 
   constructor(
     private $rootScope: ng.IRootScopeService,
@@ -33,12 +32,30 @@ class UserCsvExportController implements ng.IComponentController {
     private Analytics,
     private CsvDownloadService,
     private Notification,
+    private Authinfo,
+    private UserListService,
+    private FeatureToggleService,
   ) {
   }
 
   public $onInit(): void {
     this.isDownloading = this.CsvDownloadService.downloadInProgress;
-    this.isOverExportThreshold = !!(this.isOverExportThreshold);
+
+    this.isOverExportThreshold = false;
+    if (!this.Authinfo.isCisco()) {
+      this.FeatureToggleService.atlasNewUserExportGetStatus()
+        .then((enabled) => {
+          if (!enabled) {
+            // using old export method, so determine if we have too many users to export everything
+            this.UserListService.getUserCount()
+              .then((count) => {
+                //count = CsvDownloadService.USER_EXPORT_THRESHOLD * 2; // todo FOR TESTING! REMOVE THIS!
+                this.isOverExportThreshold = (count > CsvDownloadService.USER_EXPORT_THRESHOLD);
+              });
+          }
+        });
+    }
+
     this.displayAsLink = !_.isEmpty(this.asLink);
 
     this.exportFilename = this.$translate.instant('usersPage.csvFilename');

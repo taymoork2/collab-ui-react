@@ -1,21 +1,30 @@
 import { OnlineUpgradeService } from './upgrade.service';
 import { Notification } from 'modules/core/notifications';
+import { IBmmpAttr } from 'modules/online/upgrade/upgrade.service';
 
 class OnlineUpgrade {
   public subscriptionId: string;
   public cancelLoading: boolean = false;
   public showCancelButton: boolean = true;
+  public bmmpAttr: IBmmpAttr;
 
   /* @ngInject */
   constructor(
     private $state: ng.ui.IStateService,
     private Auth,
+    private Authinfo,
     private Notification: Notification,
     private OnlineUpgradeService: OnlineUpgradeService,
   ) {}
 
   public $onInit(): void {
-    this.subscriptionId = this.OnlineUpgradeService.getSubscriptionId();
+    this.OnlineUpgradeService.getProductInstanceId(this.Authinfo.getUserId()).then((prodResponse) => {
+      this.bmmpAttr = {
+        subscriptionId: this.OnlineUpgradeService.getSubscriptionId(),
+        productInstanceId: prodResponse,
+        changeplanOverride: '',
+      };
+    });
     this.showCancelButton = !this.OnlineUpgradeService.hasCancelledSubscriptions();
   }
 

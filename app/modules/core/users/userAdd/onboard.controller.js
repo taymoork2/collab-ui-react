@@ -160,7 +160,7 @@ require('./_user-add.scss');
     };
 
     $scope.goToManageUsers = function () {
-      $state.go('users.manage', {});
+      $state.go('users.manage.picker');
     };
 
     /****************************** License Enforcement END *******************************/

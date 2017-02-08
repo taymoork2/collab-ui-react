@@ -77,6 +77,7 @@
       huronAAMediaUpload: 'huron-aa-mediaupload',
       huronAACallerInput: 'huron-aa-callerinput',
       huronAAClioMedia: 'huron-aa-cliomedia',
+      huronAADecision: 'huron-aa-decision',
       huronAARouteRoom: 'huron-aa-routeroom',
       huronClassOfService: 'COS',
       huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
@@ -174,6 +175,7 @@
       autoAnswer: 'huron-auto-answer',
       huronFederatedSparkCall: 'huron-federated-spark-call',
       sparkCallTenDigitExt: 'i751-10d-ext',
+      huronCustomerCos: 'huron-customer-cos',
     };
 
     var toggles = {};

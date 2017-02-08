@@ -136,7 +136,8 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
       aa_menu_id: menuId,
       aa_index: index,
       aa_key_index: keyIndex,
-      aa_from_route_call: false
+      aa_from_route_call: false,
+      aa_from_decision: false
     });
   }));
 
@@ -159,7 +160,7 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
       it('length of periodic minutes and seconds', function () {
         expect(controller).toBeDefined();
         expect(controller.periodicMinutes.length).toEqual(6);
-        expect(controller.periodicSeconds.length).toEqual(12);
+        expect(controller.periodicSeconds.length).toEqual(11);
       });
 
       it('changedPeriodicMinValue funtion call with periodicMinute as 0', function () {
@@ -177,6 +178,18 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
         controller.periodicMinute = 5;
         controller.changedPeriodicMinValue();
         expect(controller.isDisabled()).toBe(true);
+      });
+
+      it('start up periodicMinValue should not allow 0 minutes 0 seconds', function () {
+        expect(controller.periodicSeconds).not.toContain(0);
+        expect(controller.periodicSeconds[0]).toEqual(5);
+      });
+
+      it('changed periodicMinValue should adjust changes', function () {
+        controller.periodicMinute = 1;
+        controller.changedPeriodicMinValue();
+        expect(controller.periodicSeconds[0]).toEqual(0);
+        expect(controller.periodicSeconds.length).toEqual(12);
       });
     });
 
@@ -197,10 +210,21 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
         var fallbackActionDescription = fallbackAction.getDescription();
         expect(fallbackActionDescription).toEqual('');
       });
-      it(' value of maxTime shoulb be 15', function () {
+      it('value of maxTime should be 15', function () {
         controller.ok();
         var maxWaitTime = controller.menuEntry.actions[0].queueSettings.maxWaitTime;
         expect(maxWaitTime).toEqual(15);
+      });
+
+      it('should verify the disconnect action is applied after an update', function () {
+        expect(controller.menuEntry.actions[0].queueSettings.fallback.actions[0].name).toEqual('disconnect');
+        controller.destination.action = 'goto';
+        controller.menuEntry.actions[0].queueSettings.fallback.actions[0] = AutoAttendantCeMenuModelService.newCeActionEntry('goto', '');
+        controller.ok();
+        expect(controller.menuEntry.actions[0].queueSettings.fallback.actions[0].name).not.toBe('disconnect');
+        controller.destination.action = 'disconnect';
+        controller.ok();
+        expect(controller.menuEntry.actions[0].queueSettings.fallback.actions[0].name).toEqual('disconnect');
       });
     });
 
@@ -248,7 +272,8 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
         aa_menu_id: menuId,
         aa_index: index,
         aa_key_index: keyIndex,
-        aa_from_route_call: false
+        aa_from_route_call: false,
+        aa_from_decision: false
       });
 
       $scope.$apply();
@@ -267,7 +292,8 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
         aa_menu_id: menuId,
         aa_index: index,
         aa_key_index: keyIndex,
-        aa_from_route_call: true
+        aa_from_route_call: true,
+        aa_from_decision: false
       });
 
       $scope.$apply();
@@ -286,7 +312,8 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
         aa_menu_id: menuId,
         aa_index: index,
         aa_key_index: keyIndex,
-        aa_from_route_call: true
+        aa_from_route_call: true,
+        aa_from_decision: false
       });
 
       controller.languageOption.value = 'de_DE';
@@ -310,7 +337,8 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
         aa_menu_id: menuId,
         aa_index: index,
         aa_key_index: keyIndex,
-        aa_from_route_call: false
+        aa_from_route_call: false,
+        aa_from_decision: false
       });
 
 

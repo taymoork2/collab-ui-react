@@ -419,6 +419,25 @@
         action.setDescription(task.description);
       }
     }
+    function makeRouteToQueue(inAction) {
+      var action;
+      action = new Action('routeToQueue', inAction.routeToQueue.id);
+      setDescription(action, inAction.routeToQueue);
+      try {
+        action.description = JSON.parse(action.description);
+      } catch (exception) {
+        return;
+      }
+      cesLanguageVoice(action, inAction.routeToQueue);
+      cesMaxWaitTime(action, inAction.routeToQueue);
+      cesMoh(action, inAction.routeToQueue);
+      cesIa(action, inAction.routeToQueue);
+      cesPa(action, inAction.routeToQueue);
+      cesFallback(action, inAction.routeToQueue);
+
+      return action;
+
+    }
 
     function parseAction(menuEntry, inAction) {
       //read from db
@@ -469,14 +488,6 @@
           action.level = 0;
         }
         menuEntry.addAction(action);
-      } else if (!_.isUndefined(inAction.routeToCollectedNumber)) {
-        action = new Action('routeToCollectedNumber', '');
-        setDescription(action, inAction.routeToCollectedNumber);
-        menuEntry.addAction(action);
-      } else if (!_.isUndefined(inAction.routeToDialedMailbox)) {
-        action = new Action('routeToDialedMailbox', '');
-        setDescription(action, inAction.routeToDialedMailbox);
-        menuEntry.addAction(action);
       } else if (!_.isUndefined(inAction.disconnect)) {
         action = new Action('disconnect', '');
         if (!_.isUndefined(inAction.disconnect.treatment)) {
@@ -487,10 +498,6 @@
         if (!_.isUndefined(inAction.disconnect.description)) {
           action.setDescription(inAction.disconnect.description);
         }
-        menuEntry.addAction(action);
-      } else if (!_.isUndefined(inAction.routeToDialed)) {
-        action = new Action('routeToDialed', '');
-        setDescription(action, inAction.routeToDialed);
         menuEntry.addAction(action);
       } else if (_.has(inAction, 'runActionsOnInput')) {
         action = new Action('runActionsOnInput', '');
@@ -547,20 +554,45 @@
         menuEntry.addAction(action);
       } else if (!_.isUndefined(inAction.routeToQueue)) {
         //this occurs on the way in from the db
-        action = new Action('routeToQueue', inAction.routeToQueue.id);
-        setDescription(action, inAction.routeToQueue);
-        try {
-          action.description = JSON.parse(action.description);
-        } catch (exception) {
+        action = makeRouteToQueue(inAction);
+        if (!action) {
           return;
         }
-        cesLanguageVoice(action, inAction.routeToQueue);
-        cesMaxWaitTime(action, inAction.routeToQueue);
-        cesMoh(action, inAction.routeToQueue);
-        cesIa(action, inAction.routeToQueue);
-        cesPa(action, inAction.routeToQueue);
-        cesFallback(action, inAction.routeToQueue);
         menuEntry.addAction(action);
+      } else if (inAction.conditional) {
+        var exp;
+
+        action = new Action('conditional');
+        action.if = {};
+        exp = parseLeftRightExpression(inAction.conditional.expression);
+
+        action.if.leftCondition = exp[0];
+        action.if.rightCondition = exp[1];
+
+        if (inAction.conditional.true[0].route) {
+          action.then = new Action("route", inAction.conditional.true[0].route.destination);
+        }
+        if (inAction.conditional.true[0].routeToHuntGroup) {
+          action.then = new Action("routeToHuntGroup", inAction.conditional.true[0].routeToHuntGroup.id);
+        }
+        if (inAction.conditional.true[0].goto) {
+          action.then = new Action("goto", inAction.conditional.true[0].goto.ceid);
+        }
+        if (inAction.conditional.true[0].routeToUser) {
+          action.then = new Action("routeToUser", inAction.conditional.true[0].routeToUser.id);
+        }
+        if (inAction.conditional.true[0].routeToVoiceMail) {
+          action.then = new Action("routeToVoiceMail", inAction.conditional.true[0].routeToVoiceMail.id);
+        }
+        if (inAction.conditional.true[0].routeToQueue) {
+          action.then = makeRouteToQueue(inAction.conditional.true[0]);
+          if (!action.then) {
+            return;
+          }
+        }
+
+        menuEntry.addAction(action);
+
       } else {
         // insert an empty action
         action = new Action('', '');
@@ -570,6 +602,38 @@
         menuEntry.addAction(action);
       }
     }
+    function parseLeftRightExpression(expression) {
+      /* expression looks like: var func=function() {if(this['Original-Caller-Number'] === 'Seattle Phone2' || this['Original-Caller-Number'] === 'Seattle Phone1') {return true;} return false;};"
+       *
+       * grab the stuff btw the brackets
+       */
+
+      var inBrackets = expression.match(/\[([^\]]+)\]/g);
+
+      var pieces = [];
+
+      /* remove brackets and single quotes Only save one bracketed item*/
+      pieces[0] = inBrackets[0].replace(/[[\]']/g, '');
+
+      var btwQuotes = expression.match(/'[^']+'/g);
+
+      if (btwQuotes.length < 2) {
+        return pieces;
+      }
+      pieces[1] = '';
+
+      for (var i = 1; i < btwQuotes.length - 1; i += 2) {
+        pieces[1] += btwQuotes[1] + ",";
+      }
+
+      pieces[1] += btwQuotes[btwQuotes.length - 1];
+
+      pieces[1] = pieces[1].replace(/[[\]']/g, '');
+
+      return pieces;
+
+    }
+
 
     function cesLanguageVoice(action, inAction) {
       if (action) {
@@ -591,21 +655,18 @@
     }
 
     /*
-    *write Moh  to db
+    * construct ces definition of Moh from db
     */
-    function cesMoh(action, inAction) {
-      if (action) {
-        try {
-          inAction.description = JSON.parse(inAction.description);
-          if (_.isUndefined(action.queueSettings)) {
-            action.queueSettings = {};
-          }
-          action.queueSettings.musicOnHold = constructCesMoh(inAction);
-        } catch (exception) {
-          action.queueSettings = {};
-        }
-      }
+    function constructCesMoh(parsedDescription) {
+      var musicOnHold = parsedDescription;
+      var playAction = new Action('play', musicOnHold.queueMoH);
+      playAction.setDescription(musicOnHold.description.musicOnHoldDescription);
+
+      musicOnHold = new CeMenuEntry();
+      musicOnHold.addAction(playAction);
+      return musicOnHold;
     }
+
 
     /*
     * write initial announcement to db
@@ -657,17 +718,21 @@
         }
       }
     }
-
     /*
-    * construct ces definition of Moh from db
+    *write Moh  to db
     */
-    function constructCesMoh(parsedDescription) {
-      var musicOnHold = parsedDescription;
-      var playAction = new Action('play', musicOnHold.queueMoH);
-      playAction.setDescription(musicOnHold.description.musicOnHoldDescription);
-      musicOnHold = new CeMenuEntry();
-      musicOnHold.addAction(playAction);
-      return musicOnHold;
+    function cesMoh(action, inAction) {
+      if (action) {
+        try {
+          inAction.description = JSON.parse(inAction.description);
+          if (_.isUndefined(action.queueSettings)) {
+            action.queueSettings = {};
+          }
+          action.queueSettings.musicOnHold = constructCesMoh(inAction);
+        } catch (exception) {
+          action.queueSettings = {};
+        }
+      }
     }
 
     /*
@@ -1153,11 +1218,97 @@
                 newActionArray[i][actionName].voice = menuEntry.actions[0].voice;
                 newActionArray[i][actionName].language = menuEntry.actions[0].language;
               }
+            } else if (actionName === 'conditional') {
+              newActionArray[i][actionName] = createConditional(menuEntry.actions[0]);
             }
           }
         }
       }
       return newActionArray;
+    }
+    function createInListObj(action) {
+      var out;
+      var list;
+
+      // right condition looks like: 'Seattle Phone2, Seattle Phone1'
+
+      var pieces = action.if.rightCondition.split(",");
+
+      if (pieces.length === 0) {
+        return {};
+      }
+
+      pieces = _.compact(pieces);
+
+      // leftCondition looks like: 'Original-Caller-Number'
+
+      list = "this['" + action.if.leftCondition + "'] === '" + pieces[0].trim() + "'";
+
+      if (pieces.length > 1) {
+        for (var i = 1; i < pieces.length - 1; i++) {
+          list = list + " || this['" + action.if.leftCondition + "'] === '" + pieces[i].trim() + "'";
+        }
+        list = list + " || this['" + action.if.leftCondition + "'] === '" + pieces[pieces.length - 1].trim() + "'";
+      }
+
+      out = "var func=function() {if(" + list + ") {return true;} return false;};";
+      // out will look like: var func=function() {if(this['Original-Caller-Number'] === 'Seattle Phone2' || this['Original-Caller-Number'] === ' Seattle Phone1') {return true;} return false;};
+
+      return out;
+
+    }
+    function createObj(tag, action) {
+      var out = {};
+      var destObj = {};
+      /* special case routeToQueue */
+      if (_.get(action.then, 'name') === 'routeToQueue') {
+        destObj = populateRouteToQueue(action.then);
+      } else {
+        destObj[tag] = action.then.value;
+      }
+      out[action.then.name] = destObj;
+
+      return out;
+
+    }
+
+    function createFalseObj() {
+      var out = {};
+      out.say = {};
+      out.say.value = '';
+      return out;
+    }
+
+    function createConditional(action) {
+
+      var out = {};
+      var tag;
+
+      /* as of now, all are InList type expressions. callerReturned is not
+         implemented yet.
+      */
+
+      out.expression = createInListObj(action);
+
+      out.true = [];
+      out.false = [];
+
+      switch (action.then.name) {
+        case 'route':
+          tag = 'destination';
+          break;
+        case 'goto':
+          tag = 'ceid';
+          break;
+        default:
+          tag = 'id';
+      }
+
+      out.true.push(createObj(tag, action));
+      out.false.push(createFalseObj());
+
+      return out;
+
     }
 
     function updateWelcomeMenu(ceRecord, actionSetName, aaMenu) {
