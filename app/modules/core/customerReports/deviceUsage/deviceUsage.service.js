@@ -7,63 +7,48 @@
 
   /* @ngInject */
   function DeviceUsageService($log, $q, $timeout, $http, UrlConfig, Authinfo) {
-    var localUrlBase = 'http://berserk.rd.cisco.com:8080/atlas-server/admin/api/v1/organization';
-    var urlBase = UrlConfig.getAdminServiceUrl() + 'organization';
+
+    // TODO: Swap when V2 backend is ready
+    //var urlBase = UrlConfig.getAdminServiceUrl() + 'organization';
+    var urlBase = 'http://berserk.rd.cisco.com:8080/atlas-server/admin/api/v1/organization';
 
     var csdmUrlBase = UrlConfig.getCsdmServiceUrl() + '/organization';
     var csdmUrl = csdmUrlBase + '/' + Authinfo.getOrgId() + '/places/';
 
     var timeoutInMillis = 20000;
 
-    function getDataForRange(start, end, granularity, deviceCategories, api) {
-
+    function getDataForRange(start, end, granularity, deviceCategories, models) {
       var startDate = moment(start);
       var endDate = moment(end);
-      var now = moment();
 
-      if (startDate.isValid() && endDate.isValid() && startDate.isBefore(endDate) && endDate.isBefore(now)) {
-        if (api === 'local') {
-          var url = localUrlBase + '/' + Authinfo.getOrgId() + '/reports/device/usage?';
-          url = url + 'interval=day'; // As long week and month is not implemented
-          url = url + '&from=' + start + '&to=' + end;
-          url = url + '&categories=' + deviceCategories.join();
-          //url = url + '&accounts=aggregate';
-          url = url + '&models=__';
-          return getUsageData(url, granularity)
-            .then(function (res) {
-              return addMissingDaysInfo(res, start, end);
-            })
-            .then(function (res) {
-              res.reportItems = reduceAllData(res.reportItems, granularity);
-              return res;
-            });
-        } else {
-          url = urlBase + '/' + Authinfo.getOrgId() + '/reports/device/usage?';
-          url = url + 'interval=day'; // As long week and month is not implemented
-          url = url + '&from=' + start + '&to=' + end;
-          url = url + '&categories=' + deviceCategories.join();
-          //url = url + '&accounts=aggregate';
-          url = url + '&models=__';
-          return getUsageData(url, granularity)
-            .then(function (res) {
-              return addMissingDaysInfo(res, start, end);
-            })
-            .then(function (res) {
-              res.reportItems = reduceAllData(res.reportItems, granularity);
-              return res;
-            });
-        }
+      if (_.isEmpty(models)) {
+        models = 'aggregate';
+      } else {
+        models = models.join();
+      }
+      if (startDate.isValid() && endDate.isValid() && startDate.isBefore(endDate) /*&& endDate.isBefore(now)*/) {
+        var url = urlBase + '/' + Authinfo.getOrgId() + '/reports/device/usage?';
+        url = url + 'interval=day'; // As long week and month is not implemented
+        url = url + '&from=' + start + '&to=' + end;
+        url = url + '&categories=' + deviceCategories.join();
+        //url = url + '&accounts=aggregate';
+        url = url + '&models=' + models;
+        return getUsageData(url, granularity)
+          .then(function (res) {
+            return addMissingDaysInfo(res, start, end);
+          })
+          .then(function (res) {
+            res.reportItems = reduceAllData(res.reportItems, granularity);
+            return res;
+          });
+      } else {
+        return $q.reject("Date problems").promise;
       }
 
     }
 
-    // Preliminary support both local and "prod" urls
-    function getBaseOrgUrl(api) {
-      if (_.isUndefined(api)) {
-        return localUrlBase + '/' + Authinfo.getOrgId() + "/";
-      } else {
-        return urlBase + '/' + Authinfo.getOrgId() + "/";
-      }
+    function getBaseOrgUrl() {
+      return urlBase + '/' + Authinfo.getOrgId() + "/";
     }
 
     function getUsageData(url) {
@@ -93,14 +78,20 @@
           var day = current.format('YYYY-MM-DD');
           if (isDayMissing(missingDays, day)) {
             //$log.warn("Adding missing day", day);
-            usageData.push({
-              time: day,
-              totalDuration: 0,
-              callCount: 0
-            });
+            var missingDayData = {
+              date: day,
+              callDuration: 0,
+              callCount: 0,
+              inserted: true
+            };
+            usageData.push(missingDayData);
           }
           current.add(1, 'days');
         }
+        usageData.sort(function (a, b) {
+          return moment(a.date).isBefore(moment(b.date));
+        });
+
         if (missingDays.length > 0) {
           return { reportItems: usageData, missingDays: { missingDays: true, count: missingDays.length } };
         } else {
@@ -125,6 +116,8 @@
           return (item.available === false);
         }));
         return missingDays;
+      }).catch(function (ex) {
+        $log.warn("Problems getting usage data availability: ", ex);
       });
     }
 
@@ -153,7 +146,7 @@
         }
 
         if (_.isNil(item.callDuration) || _.isNaN(item.callDuration)) {
-          $log.warn('Missing total duration for', item);
+          $log.warn('Missing call duration for', item);
           item.callDuration = 0;
         }
 
@@ -169,7 +162,7 @@
       return reduced;
     }
 
-    function extractStats(reduced, start, end) {
+    function extractStats(reduced, start, end, models) {
       var deferredAll = $q.defer();
       var stats = {
         most: [],
@@ -179,7 +172,7 @@
         totalDuration: calculateTotalDuration(reduced)
       };
       var limit = 20;
-      $q.all([getLeast(start, end, limit), getMost(start, end, limit)]).then(function (leastMost) {
+      $q.all([getLeast(start, end, models, limit), getMost(start, end, models, limit)]).then(function (leastMost) {
         stats.least = leastMost[0];
         stats.most = leastMost[1];
 
@@ -211,19 +204,41 @@
       });
     }
 
-    function getLeast(start, end, limit) {
-      var url = getBaseOrgUrl() + "reports/device/usage/aggregate?interval=day&from=" + start + "&to=" + end + "&accounts=__&orderBy=callDuration&sortAsc=true&excludeUnused=true&limit=" + limit;
+    function getLeast(start, end, models, limit) {
+      if (_.isEmpty(models)) {
+        models = '__';
+      } else {
+        models = models.join();
+      }
+
+      //TODO: Include model when backend supports it
+
+      var url = getBaseOrgUrl() + "reports/device/usage/aggregate?interval=day&from=" + start + "&to=" + end + "&accounts=__&orderBy=callDuration&descending=false&excludeUnused=true&limit=" + limit;
       return $http.get(url).then(function (response) {
         return response.data.items;
       });
     }
 
-    function getMost(start, end, limit) {
-      var url = getBaseOrgUrl() + "reports/device/usage/aggregate?interval=day&from=" + start + "&to=" + end + "&accounts=__&orderBy=callDuration&sortAsc=false&limit=" + limit;
+    function getMost(start, end, models, limit) {
+      if (_.isEmpty(models)) {
+        models = '__';
+      } else {
+        models = models.join();
+      }
+
+      var url = getBaseOrgUrl() + "reports/device/usage/aggregate?interval=day&from=" + start + "&to=" + end + "&accounts=__&categories=__&models=" + models + "&orderBy=callDuration&descending=true&limit=" + limit;
       return $http.get(url).then(function (response) {
         return response.data.items;
       });
     }
+
+    // function getDevicesCount(start, end) {
+    //   var url = getBaseOrgUrl() + "reports/device/usage/count?interval=day&from=" + start + "&to=" + end + "&excludeUnused=true";
+    //   return $http.get(url).then(function (response) {
+    //     $log.warn("Response from count:", response);
+    //     return response.data.items;
+    //   });
+    // }
 
     function pickDateBucket(item, granularity) {
       //var day = item.date.toString();
