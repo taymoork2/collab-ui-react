@@ -205,8 +205,6 @@
           return selectedDay;
         });
       }
-      vm.overlayTitle = config.mediaType && config.mediaType === vm.mediaTypes.chat ?
-          $translate.instant('careChatTpl.editTitle') : $translate.instant('careChatTpl.editCallbackTitle');
     }
     setDayPreview();
 
@@ -801,6 +799,41 @@
     //Use the existing template fields when editing the template
     if ($stateParams.isEditFeature) {
       vm.template = $stateParams.template;
+      // This will become dead once all the existing templates are saved with field4.
+      populateCustomerInformationField4();
+    }
+
+    function populateCustomerInformationField4() {
+      var field4Default = {
+        attributes: [{
+          name: 'required',
+          value: 'optional'
+        }, {
+          name: 'category',
+          value: vm.getCategoryTypeObject('requestInfo')
+        }, {
+          name: 'label',
+          value: $translate.instant('careChatTpl.additionalDetails')
+        }, {
+          name: 'hintText',
+          value: $translate.instant('careChatTpl.additionalDetailsAbtIssue')
+        }, {
+          name: 'type',
+          value: vm.getTypeObject('reason'),
+          categoryOptions: ''
+        }]
+      };
+      if (vm.selectedMediaType === vm.mediaTypes.chat &&
+        vm.template.configuration.pages.customerInformation.fields.field4 === undefined) {
+        vm.template.configuration.pages.customerInformation.fields.field4 = field4Default;
+      } else if (vm.selectedMediaType === vm.mediaTypes.chatPlusCallback) {
+        if (vm.template.configuration.pages.customerInformationChat.fields.field4 === undefined) {
+          Object.assign(vm.template.configuration.pages.customerInformationChat.fields.field4, field4Default);
+        }
+        if (vm.template.configuration.pages.customerInformationCallback.fields.field4 === undefined) {
+          Object.assign(vm.template.configuration.pages.customerInformationCallback.fields.field4, field4Default);
+        }
+      }
     }
 
     function cancelModal() {
