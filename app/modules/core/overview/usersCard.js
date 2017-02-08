@@ -77,7 +77,7 @@
 
         card.manageUsers = function () {
           $state.go('users.list').then(function () {
-            $state.go('users.manage', {});
+            $state.go('users.manage.picker');
           });
         };
 

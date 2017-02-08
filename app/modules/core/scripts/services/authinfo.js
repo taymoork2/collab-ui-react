@@ -45,7 +45,8 @@
       hasAccount: false,
       emails: null,
       customerType: null,
-      commerceRelation: null
+      commerceRelation: null,
+      customerAccounts: [],
     };
 
     var isEntitled = function (entitlement) {
@@ -65,6 +66,7 @@
       initialize: function (data) {
         authData.isInDelegatedAdministrationOrg = data.isInDelegatedAdministrationOrg;
         authData.username = data.name;
+        authData.userId = data.uuid;
         authData.orgName = data.orgName;
         authData.orgId = data.orgId;
         authData.userOrgId = data.userOrgId;
@@ -129,20 +131,20 @@
           var careLicenses = [];
           var confLicensesWithoutSiteUrl = [];
           var confLicensesLinkedSiteUrl = [];
-          var customerAccounts = data.customers || [];
+          authData.customerAccounts = data.customers || [];
 
-          if (customerAccounts.length > 0) {
+          if (authData.customerAccounts.length > 0) {
             authData.hasAccount = true;
           }
 
-          authData.customerType = _.get(customerAccounts, '[0].customerType', '');
-          authData.customerId = _.get(customerAccounts, '[0].customerId');
-          authData.commerceRelation = _.get(customerAccounts, '[0].commerceRelation', '');
-          authData.subscriptions = _.get(customerAccounts, '[0].subscriptions', []);
+          authData.customerType = _.get(authData.customerAccounts, '[0].customerType', '');
+          authData.customerId = _.get(authData.customerAccounts, '[0].customerId');
+          authData.commerceRelation = _.get(authData.customerAccounts, '[0].commerceRelation', '');
+          authData.subscriptions = _.get(authData.customerAccounts, '[0].subscriptions', []);
 
-          for (var x = 0; x < customerAccounts.length; x++) {
+          for (var x = 0; x < authData.customerAccounts.length; x++) {
 
-            var customerAccount = customerAccounts[x];
+            var customerAccount = authData.customerAccounts[x];
             var customerAccountLicenses = [];
 
             //If org has subscriptions get the license information from subscriptions, else from licences
@@ -237,6 +239,9 @@
       },
       getCustomerId: function () {
         return authData.customerId;
+      },
+      getCustomerAccounts: function () {
+        return authData.customerAccounts;
       },
       // FIXME: ATLAS-1402
       // IMPORTANT: 'username' can possibly reflect a user's display name, use 'getPrimaryEmail()'

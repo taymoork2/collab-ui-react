@@ -1,6 +1,12 @@
 import { Notification } from 'modules/core/notifications';
 import { IToolkitModalService, IToolkitModalServiceInstance } from 'modules/core/modal';
 
+export interface IBmmpAttr {
+  subscriptionId: string;
+  productInstanceId: string;
+  changeplanOverride: string;
+}
+
 interface ISubscriptionResource extends ng.resource.IResourceClass<ng.resource.IResource<any>> {
   patch: ng.resource.IResourceMethod<any>;
 }
@@ -14,6 +20,7 @@ export class OnlineUpgradeService {
 
   /* @ngInject */
   constructor(
+    private $http: ng.IHttpService,
     private $modal: IToolkitModalService,
     private $resource: ng.resource.IResourceService,
     private $q: ng.IQService,
@@ -62,6 +69,16 @@ export class OnlineUpgradeService {
 
   public getSubscriptionId(): string {
     return _.get<string>(this.Authinfo.getSubscriptions(), '[0].subscriptionId');
+  }
+
+  public getProductInstanceId(userId): ng.IPromise<string> {
+    return this.$http.get<any>(this.UrlConfig.getAdminServiceUrl() + 'commerce/productinstances?ciUUID=' + userId).then((response) => {
+      return _.get<string>(response, 'data.productGroups[0].productInstance[0].productInstanceId', '');
+    });
+  }
+
+  public getSubscription(subId): ng.IPromise<any> {
+    return this.$http.get<any>(this.UrlConfig.getAdminServiceUrl() + 'subscriptions/' + subId);
   }
 
   public shouldForceUpgrade(): boolean {

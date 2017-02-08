@@ -3,7 +3,6 @@ import { PagingNumberService } from 'modules/huron/features/pagingGroup/pgNumber
 class PagingNumberCtrl implements ng.IComponentController {
   public pagingGroupNumber: string;
   public errorNumberInput: boolean = false;
-  public availableNumbers: string[] = [];
   private onUpdate: Function;
 
   /* @ngInject */
@@ -22,23 +21,19 @@ class PagingNumberCtrl implements ng.IComponentController {
     }
   }
 
-  public fetchNumbers(): void {
-    if (this.pagingGroupNumber && this.pagingGroupNumber.length >= 3) {
-      let promise = this.PagingNumberService.getNumberSuggestions(this.pagingGroupNumber);
-      if (promise) {
-        promise.then(
-          (data: string[]) => {
-            this.availableNumbers = data;
-            this.errorNumberInput = (this.availableNumbers && this.availableNumbers.length === 0);
-            this.onUpdate({
-              number: this.pagingGroupNumber,
-              isValid: false,
-            });
-          }, (response) => {
-            this.Notification.errorResponse(response, 'pagingGroup.numberFetchFailure');
-          });
-      }
-    }
+  public fetchNumbers(): ng.IPromise<String []> {
+    return this.PagingNumberService.getNumberSuggestions(this.pagingGroupNumber).then(
+      numberList => {
+        this.errorNumberInput = (numberList && numberList.length === 0);
+        this.onUpdate({
+             number: this.pagingGroupNumber,
+             isValid: false,
+        });
+        return numberList;
+      }, (response) => {
+        this.Notification.errorResponse(response, 'pagingGroup.numberFetchFailure');
+        return [];
+      });
   }
 }
 
