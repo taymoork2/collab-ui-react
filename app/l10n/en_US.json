@@ -4427,7 +4427,11 @@
       "availabilityStatus": "Availability Status",
       "clusterTitle": "Cluster",
       "lowAvailableClusters": "Low availability clusters",
-      "clusterTakingMoreCalls": "Clusters hosting more no of calls"
+      "clusterTakingMoreCalls": "Clusters hosting more no of calls",
+      "totalMeetings": "Total number of meetings",
+      "meetOnPrem": "Number of Meets on Premises",
+      "clientTypes": "Client Types",
+      "noOfMeet": "Number of Meetings"
     },
     "serviceStatus": {
       "unknown": "Status unknown",
