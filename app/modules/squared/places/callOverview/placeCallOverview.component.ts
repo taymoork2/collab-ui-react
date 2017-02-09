@@ -146,8 +146,7 @@ class PlaceCallOverview implements ng.IComponentController {
   }
 
   private checkForChanges(): void {
-    if (this.PlaceCallOverviewService.checkForChanges(this.preferredLanguage,
-                    this.placeCallOverviewData.preferredLanguage)) {
+    if (this.PlaceCallOverviewService.checkForPreferredLanguageChanges(this.preferredLanguage)) {
         this.resetPreferredLanguageFlags();
     }
   }
@@ -159,8 +158,7 @@ class PlaceCallOverview implements ng.IComponentController {
 
   public savePreferredLanguage(): void {
     this.prefLanguageSaveInProcess = true;
-    if (!this.PlaceCallOverviewService.checkForChanges(this.preferredLanguage,
-                    this.placeCallOverviewData.preferredLanguage)) {
+    if (!this.PlaceCallOverviewService.checkForPreferredLanguageChanges(this.preferredLanguage)) {
       let prefLang = this.preferredLanguage.value ? this.preferredLanguage.value : null;
       this.PlaceCallOverviewService.updateCmiPlacePreferredLanguage(this.currentPlace.cisUuid, prefLang)
         .then(() => {
@@ -178,8 +176,7 @@ class PlaceCallOverview implements ng.IComponentController {
   }
 
   public onCancelPreferredLanguage(): void {
-    if (!this.PlaceCallOverviewService.checkForChanges(this.preferredLanguage,
-                    this.placeCallOverviewData.preferredLanguage)) {
+    if (!this.PlaceCallOverviewService.checkForPreferredLanguageChanges(this.preferredLanguage)) {
       this.preferredLanguage = this.placeCallOverviewData.preferredLanguage;
     }
     this.resetPreferredLanguageFlags();

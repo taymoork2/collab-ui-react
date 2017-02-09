@@ -116,8 +116,9 @@ export class PlaceCallOverviewService {
         return _.cloneDeep(placeCallOverviewData);
     }
 
-    public checkForChanges(currentValue, baseValue): boolean {
-        return _.isEqual(currentValue, baseValue);
+    public checkForPreferredLanguageChanges(preferredLanguage): boolean {
+        return _.isEqual(preferredLanguage, this.placeCallOverviewDataCopy.preferredLanguage);
+
     }
 
 }
