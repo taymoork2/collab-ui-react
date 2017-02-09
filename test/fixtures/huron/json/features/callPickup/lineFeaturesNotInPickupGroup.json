@@ -1,0 +1,11 @@
+{
+    "directoryNumber": {
+        "url": "https://cmi.huron-int.com/api/v1/voice/customers/226d7977-ff3a-42dc-88ff-f866170a06c8/directorynumbers/cfbc980c-e2da-4cb2-9b7a-92b49109cb25",
+        "uuid": "cfbc980c-e2da-4cb2-9b7a-92b49109cb25"
+    },
+    "features": [],
+    "number": "2064",
+    "type": "internal",
+    "url": "https://cmi.huron-int.com/api/v2/customers/226d7977-ff3a-42dc-88ff-f866170a06c8/numbers/b9c3e94b-3399-4ab4-8e39-7367f77c12fb",
+    "uuid": "b9c3e94b-3399-4ab4-8e39-7367f77c12fb"
+}
