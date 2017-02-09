@@ -6,10 +6,7 @@ describe('component: emergencyServices', () => {
     this.initModules('Huron');
     this.injectDependencies('$q', 'EmergencyServicesService', '$httpBackend');
 
-    this.$httpBackend.whenGET('modules/huron/pstnSetup/states.json').respond([{
-      name: 'Texas',
-      abbreviation: 'TX',
-    }]);
+    this.$httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200, {});
 
     spyOn(this.EmergencyServicesService, 'getOptions').and
     .returnValue(this.$q.when(['1', '2']));

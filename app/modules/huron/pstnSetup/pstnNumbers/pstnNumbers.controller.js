@@ -15,7 +15,7 @@
 
   /* @ngInject */
   function PstnNumbersCtrl($q, $scope, $state, $timeout, $translate, DidService, Notification,
-      PstnSetup, PstnSetupService, TelephoneNumberService, TerminusStateService, ValidationService) {
+      PstnSetup, PstnSetupService, TelephoneNumberService, PstnSetupStatesService, ValidationService) {
     var vm = this;
 
     vm.provider = PstnSetup.getProvider();
@@ -117,7 +117,7 @@
     init();
 
     function init() {
-      TerminusStateService.query().$promise.then(function (states) {
+      PstnSetupStatesService.getStateProvinces().then(function (states) {
         vm.model.pstn.quantity = null;
         vm.model.pstn.states = states;
         if (_.get(PstnSetup.getServiceAddress(), 'state')) {

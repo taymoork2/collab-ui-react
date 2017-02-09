@@ -65,7 +65,9 @@
         speedDials.editing = true;
         sd.edit = true;
         speedDials.newLabel = sd.label;
-        speedDials.callDest = TelephoneNumberService.getDestinationObject(sd.number);
+        if (sd.number) {
+          speedDials.callDest = TelephoneNumberService.getDestinationObject(sd.number);
+        }
       }
     };
 

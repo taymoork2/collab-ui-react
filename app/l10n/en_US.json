@@ -466,7 +466,7 @@
     "customerOrgName": "Company / Partner Name",
     "customerAdminEmail": "Administrator Email",
     "partnerAdminEmail": "Partner Admin Email",
-    "collab": "Standard Team Rooms + 25 Party Meetings",
+    "collab": "Standard Team Spaces + 25 Party Meetings",
     "squaredUC": "Advanced Spark Call",
     "duration": "Trial Duration (days)",
     "ninetyDays": "90",
@@ -2393,10 +2393,17 @@
     "resources": {
       "settings": {
         "servicestatusTitle": "Service Status",
+        "servicePreTrialModeTitle": "Start Trial",
+        "serviceNodeDesc": "There are currently <strong>{{nodes}} nodes</strong> registered for your Hybrid Data Security Service.<br/>The minimum suggested number of nodes is 3 for every 100 people in your orginization.<br/>Use the <a ng-click=\"{{onclick}}\">Add Resource</a> flow to add more nodes.",
+        "serviceDomainDesc": "Trial Domain: {{trial}}<br/>Production Domain: {{prod}}",
+        "serviceUserDesc": "There are currently <strong>{{users}} users</strong> in your trial of Hybrid Data Security Service.<br/><a ng-click=\"{{onclick}}\">Add Users</a> to your trial or <a ng-click=\"{{onclick1}}\">view and edit</a> your trial users.",
+        "serviceUser0Desc": "There are currently <strong>{{users}} users</strong> in your trial of Hybrid Data Security Service.<br/><a ng-click=\"{{onclick}}\">Add Users</a> to your trial.",
+        "serviceProdMoveDesc": "Once your Hybrid Data Security Service is moved to production it is not possible to revert back to Trial Mode.",
         "serviceTrialModeTitle": "Trial Mode",
         "serviceTrialModeDesc": "Trial Started Month DD, YYYY at HH:MM PM",
         "serviceProductionModeTitle": "Production Mode",
         "serviceProductionModeDesc": "In this mode all users in your org will use this service",
+        "moveToProduction": "Move to Production",
         "addTrialUsers": "Add Trial Users",
         "editTrialUsers": "Edit Users in Trial"
       },
@@ -2739,7 +2746,7 @@
     "messengerSetupDesc": "Webex Messenger (Jabber) users are able to send messages to Spark users in your organization.",
     "messengerSetupLabel": "Enable Webex Messenger Integration",
     "dataRetentionTitle": "Data Retention (after deletion of org)",
-    "dataRetentionDesc": "Upon deleting a user (or trial) from the system, how long should the system retain the user's team rooms?",
+    "dataRetentionDesc": "Upon deleting a user (or trial) from the system, how long should the system retain the user's team spaces?",
     "dataShareTitle": "Usage Data Sent to Cisco Partner",
     "dataShareLabel": "Share quality of service and engagement data with your Cisco Partner to enable higher level partner support.",
     "appSecurity": "App Security",
@@ -3795,7 +3802,7 @@
     "errorInvalidName": "Entered name contains invalid characters."
   },
   "trials": {
-    "collab": "Standard Team Rooms + 25 Party Meetings",
+    "collab": "Standard Team Spaces + 25 Party Meetings",
     "squaredUC": "Advanced Spark Call",
     "licenses": "Licenses",
     "licenseQuantity": "Licenses Quantity",
@@ -4991,14 +4998,14 @@
     "licenseUsage": "License Usage",
     "lastSynced": "Last Synced:",
     "messagingTitle": "Message",
-    "messagingSubtitle": "Standard Team Rooms",
-    "messagingDesc": "Team Rooms with content storage allow you to easily collaborate from any device to any user inside or outside your organization.",
+    "messagingSubtitle": "Standard Team Spaces",
+    "messagingDesc": "Team Spaces with content storage allow you to easily collaborate from any device to any user inside or outside your organization.",
     "communicationTitle": "Call",
     "communicationSubtitle": "Advanced Spark Call",
     "communicationDesc": "Basic external calling and call routing features enabled for your organization.",
     "conferencingTitle": "Meeting",
     "conferencingSubtitle": "Meeting Center",
-    "conferencingDesc": "Join up to 25 colleagues in a Team Room Sync-up or many more in a WebEx Meeting Center.",
+    "conferencingDesc": "Join up to 25 colleagues in a Team Space Sync-up or many more in a WebEx Meeting Center.",
     "shared_devicesTitle": "Room Devices",
     "shared_devicesSubtitle": "Shared Devices",
     "MS": "Message",
@@ -5900,13 +5907,13 @@
       },
       "message": {
         "title": "Message",
-        "notEnabledText": " Use Team Rooms with content storage to easily collaborate from any device to any user inside or outside your organization.",
-        "currentTitle": "New rooms this week",
+        "notEnabledText": " Use Team Spaces with content storage to easily collaborate from any device to any user inside or outside your organization.",
+        "currentTitle": "New spaces this week",
         "previousTitle": "Last week:"
       },
       "meeting": {
         "title": "Meeting",
-        "notEnabledText": "Join up to 25 colleagues in a Team Room Sync-up or many more in a WebEx Meeting Center."
+        "notEnabledText": "Join up to 25 colleagues in a Team Space Sync-up or many more in a WebEx Meeting Center."
       },
       "call": {
         "title": "Call",
@@ -6032,7 +6039,7 @@
     "onlineProductInstanceError": "Unable to retrieve product instance for trial {{trialId}}.  To purchase a paid subscription, contact your partner via email or use the purchase button on the trial banner to have one sent for you.",
     "loadError": "An error occurred while loading subscriptions.",
     "licenseTypes": {
-      "MS": "Standard Team Rooms",
+      "MS": "Standard Team Spaces",
       "CF": "Meeting 25 Party",
       "MC": "WebEx Meeting Center",
       "SC": "WebEx Support Center",
@@ -6159,7 +6166,7 @@
       "webex-squared": "Free Spark Messaging",
       "squared-syncup.paid": "25 Party Meetings",
       "squared-syncup.free": "Free 3 Party Spark Meetings",
-      "squared-room-moderation.paid": "Standard Team Rooms",
+      "squared-room-moderation.paid": "Standard Team Spaces",
       "squared-room-moderation.free": "Free Spark Messaging",
       "ciscouc.paid": "Advanced Spark Call",
       "ciscouc.free": "Free 1:1 Spark Call",
@@ -6195,7 +6202,7 @@
     "licenseDisplayNames": {
       "MC": "Meeting Center {{capacity}}",
       "TC": "Training Center {{capacity}}",
-      "MS": "Standard Team Rooms",
+      "MS": "Standard Team Spaces",
       "CF": "25 Party Meetings",
       "EE": "Enterprise Edition {{capacity}}",
       "SC": "Support Center {{capacity}}",
