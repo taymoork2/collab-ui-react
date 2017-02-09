@@ -555,9 +555,6 @@
     }, {
       update: {
         method: 'PUT'
-      },
-      get: {
-        method: 'GET'
       }
     });
   }
