@@ -20,7 +20,7 @@ class PreferredLanguage implements ng.IComponentController {
 
     /* @ngInject */
     constructor(
-        private $translate: ng.translate.ITranslateService
+        private $translate: ng.translate.ITranslateService,
     ) {
         this.nonePlaceholder = this.$translate.instant('directoryNumberPanel.none');
         this.noneOption = {
