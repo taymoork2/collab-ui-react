@@ -37,7 +37,7 @@
     }
 
     function getArgonautServiceUrl(emailAddress, encryptionKeyUrl, startDate, endDate) {
-      var url = 'https://argonaut-a.wbx2.com/argonaut/api/v1/compliance/report/size';
+      var url = UrlConfig.getArgonautReportSizeUrl();
       return $http
         .post(url, {
           emailAddress: emailAddress,
@@ -102,6 +102,38 @@
           }
         })
         .then(extractData);
+    }
+
+    //new report generation api using argonaut notes:
+    // caller must pass an options object with the following properties:
+    // - 'emailAddresses' => a list of email addresses as ...
+    // - 'query' => ...
+    // - 'roomIds' => ...
+    // - 'encryptionKeyUrl' => ...
+    // - 'responseUrl' => ...
+    // - 'startDate' => ...
+    // - 'endDate' => ...
+    function generateReport(postParams) {
+      var url = UrlConfig.getArgonautReportUrl();
+      var emailAddresses = _.get(postParams, 'emailAddresses');
+      var query = _.get(postParams, 'query');
+      var roomIds = _.get(postParams, 'roomIds');
+      var encryptionKeyUrl = _.get(postParams, 'encryptionKeyUrl');
+      var responseUrl = _.get(postParams, 'responseUrl');
+      var sd = _.get(postParams, 'startDate');
+      var ed = _.get(postParams, 'endDate');
+      postParams.startDate = (sd && moment.utc(sd).toISOString()) || null;
+      postParams.endDate = (ed && moment.utc(ed).add(1, 'days').toISOString()) || null;
+      return $http
+        .post(url, {
+          emailAddresses: emailAddresses,
+          query: query,
+          roomIds: roomIds,
+          encryptionKeyUrl: encryptionKeyUrl,
+          responseUri: responseUrl,
+          startDate: sd,
+          endDate: ed
+        });
     }
 
     function runReport(runUrl, roomId, responseUrl, startDate, endDate) {
@@ -175,6 +207,7 @@
       getReports: getReports,
       deleteReports: deleteReports,
       createReport: createReport,
+      generateReport: generateReport,
       runReport: runReport,
       patchReport: patchReport,
       deleteReport: deleteReport,

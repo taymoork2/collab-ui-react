@@ -140,6 +140,10 @@ class CsvDownloadCtrl implements ng.IComponentController {
       });
       this.eventListeners.push(listener);
     }
+
+    // see if there is a current active download, and set out flag
+    this.downloading = this.CsvDownloadService.downloadInProgress;
+    this.eventListeners.push(this.$rootScope.$on('csv-download-request-completed', (): void => { this.downloading = this.CsvDownloadService.downloadInProgress; }));
   }
 
   public $onDestroy() {

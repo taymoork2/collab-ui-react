@@ -561,7 +561,7 @@
     }
 
     function isInvitePending(user) {
-      return _.includes(user.accountStatus, 'pending');
+      return user.pendingStatus;
     }
 
     function resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {

@@ -4,7 +4,7 @@ describe('Controller: GroupDetailsControllerV2', function () {
 
   beforeEach(angular.mock.module('Mediafusion'));
 
-  var $modal, controller, $rootScope, httpBackend, MediaClusterServiceV2;
+  var $modal, controller, $rootScope, httpBackend, ClusterServiceMock;
   var actualOptions;
   var fakeModal = {
     result: {
@@ -33,33 +33,52 @@ describe('Controller: GroupDetailsControllerV2', function () {
         }
       })
     };
-    $stateParams = {
-      cluster: {
-        releaseChannel: "mockedChannel",
-        upgradeSchedule: {
-          scheduleDays: [
-            "sunday",
-            "saturday",
-            "tuesday",
-            "friday",
-            "thursday",
-            "wednesday",
-            "monday"
-          ],
-          scheduleTime: "22:00",
-          scheduleTimeZone: "America/Los_Angeles",
-          moratoria: [],
-          nextUpgradeWindow: {
-            "startTime": "2016-12-06T06:00:50.325Z",
-            "endTime": "2016-12-06T07:00:50.325Z"
-          },
-          url: "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/2c3c9f9e-73d9-4460-a668-047162ff1bac/clusters/fa8ea85d-6f7a-43ea-833d-297f62dc3e84/upgradeSchedule"
-        }
+    var cluster = {
+      releaseChannel: "mockedChannel",
+      upgradeSchedule: {
+        scheduleDays: [
+          "sunday",
+          "saturday",
+          "tuesday",
+          "friday",
+          "thursday",
+          "wednesday",
+          "monday"
+        ],
+        scheduleTime: "22:00",
+        scheduleTimeZone: "America/Los_Angeles",
+        moratoria: [],
+        nextUpgradeWindow: {
+          "startTime": "2016-12-06T06:00:50.325Z",
+          "endTime": "2016-12-06T07:00:50.325Z"
+        },
+        url: "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/2c3c9f9e-73d9-4460-a668-047162ff1bac/clusters/fa8ea85d-6f7a-43ea-833d-297f62dc3e84/upgradeSchedule"
+      },
+      aggregates: {
+        alarms: [],
+        state: "running",
+        upgradeState: "upgrading",
+        provisioning: {
+          url: "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/2c3c9f9…2ff1bac/clusters/8909455b-3018-44c6-adfd-2840978bb5c1/provisioning/mf_mgmt",
+          connectorType: "mf_mgmt",
+          provisionedVersion: "2016.09.09.268",
+          availableVersion: "2016.09.09.268",
+          packageUrl: "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/2c3c9f9e-73d9-4460-a668-047162ff1bac/channels/stable/packages/mf_mgmt"
+        },
+        upgradeAvailable: false,
+        upgradePossible: false,
+        upgradeWarning: false,
+        hosts: [{
+          alarms: [],
+          hostname: "10.196.5.205",
+          state: "running",
+          upgradeState: "upgrading"
+        }]
       }
     };
-    MediaClusterServiceV2 = {
 
-      getCluster: sinon.stub()
+    ClusterServiceMock = {
+      getCluster: jasmine.createSpy('getCluster').and.returnValue(cluster),
     };
     httpBackend = $httpBackend;
 
@@ -70,7 +89,7 @@ describe('Controller: GroupDetailsControllerV2', function () {
       $modal: $modal,
       //$state: $state,
       $stateParams: $stateParams,
-      MediaClusterServiceV2: MediaClusterServiceV2,
+      ClusterService: ClusterServiceMock,
     });
   }));
 
@@ -145,79 +164,6 @@ describe('Controller: GroupDetailsControllerV2', function () {
     //    expect(aggregatedAlarms[2].hosts.length).toBe(1);
   });
   it('It should call the $watch and assign the subsequent variables for upgrade now', function () {
-    spyOn(MediaClusterServiceV2, 'getCluster').and.returnValue(
-      {
-        url: "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/2c3c9f9e-73d9-4460-a668-047162ff1bac/clusters/8909455b-3018-44c6-adfd-2840978bb5c1",
-        id: "8909455b-3018-44c6-adfd-2840978bb5c1",
-        name: "HealthCheck_Monitor",
-        connectors: [{
-          url: "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/2c3c9f9…-adfd-2840978bb5c1/connectors/mf_mgmt@3bad8392-351d-493b-bad8-6b8e02649e1f",
-          id: "mf_mgmt@3bad8392-351d-493b-bad8-6b8e02649e1f",
-          connectorType: "mf_mgmt",
-          upgradeState: "upgrading",
-          state: "running",
-          hostname: "10.196.5.205",
-          hostSerial: "3bad8392-351d-493b-bad8-6b8e02649e1f",
-          alarms: [],
-          runningVersion: "2016.09.09.268",
-          packageUrl: "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/2c3c9f9e-73d9-4460-a668-047162ff1bac/channels/stable/packages/mf_mgmt",
-          registered: true
-        }],
-        releaseChannel: "stable",
-        provisioning: [{
-          url: "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/2c3c9f9…2ff1bac/clusters/8909455b-3018-44c6-adfd-2840978bb5c1/provisioning/mf_mgmt",
-          connectorType: "mf_mgmt",
-          provisionedVersion: "2016.09.09.268",
-          availableVersion: "2016.09.09.268",
-          packageUrl: "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/2c3c9f9e-73d9-4460-a668-047162ff1bac/channels/stable/packages/mf_mgmt"
-        }],
-        registered: true,
-        targetType: "mf_mgmt",
-        upgradeScheduleUrl: "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/2c3c9f9…047162ff1bac/clusters/8909455b-3018-44c6-adfd-2840978bb5c1/upgradeSchedule",
-        upgradeSchedule: {
-          scheduleDays: [
-            "sunday",
-            "saturday",
-            "tuesday",
-            "friday",
-            "thursday",
-            "wednesday",
-            "monday"
-          ],
-          scheduleTime: "22:00",
-          scheduleTimeZone: "America/Los_Angeles",
-          moratoria: [],
-          nextUpgradeWindow: {
-            "startTime": "2016-12-06T06:00:50.325Z",
-            "endTime": "2016-12-06T07:00:50.325Z"
-          },
-          url: "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/2c3c9f9e-73d9-4460-a668-047162ff1bac/clusters/fa8ea85d-6f7a-43ea-833d-297f62dc3e84/upgradeSchedule"
-        },
-        aggregates: {
-          alarms: [],
-          state: "running",
-          upgradeState: "upgrading",
-          provisioning: {
-            url: "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/2c3c9f9…2ff1bac/clusters/8909455b-3018-44c6-adfd-2840978bb5c1/provisioning/mf_mgmt",
-            connectorType: "mf_mgmt",
-            provisionedVersion: "2016.09.09.268",
-            availableVersion: "2016.09.09.268",
-            packageUrl: "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/2c3c9f9e-73d9-4460-a668-047162ff1bac/channels/stable/packages/mf_mgmt"
-          },
-          upgradeAvailable: false,
-          upgradePossible: false,
-          upgradeWarning: false,
-          hosts: [{
-            alarms: [],
-            hostname: "10.196.5.205",
-            state: "running",
-            upgradeState: "upgrading"
-          }]
-        }
-      });
-    controller.clusterDetail = {
-      id: "8909455b-3018-44c6-adfd-2840978bb5c1"
-    };
     $rootScope.$digest();
     expect(controller.softwareUpgrade.availableVersion).toMatch("2016.09.09.268");
     expect(controller.softwareUpgrade.showUpgradeWarning).toBeTruthy();
@@ -229,11 +175,11 @@ describe('Controller: GroupDetailsControllerV2', function () {
       actualOptions = options;
       return fakeModal;
     });
-    controller.clusterDetail = {
+    controller.cluster.id = {
       id: "8909455b-3018-7576"
     };
     controller.showUpgradeNowDialog();
     expect($modal.open).toHaveBeenCalled();
-    expect(actualOptions.resolve.clusterId()).toEqual(controller.clusterDetail.id);
+    expect(actualOptions.resolve.clusterId()).toEqual(controller.cluster.id);
   });
 });

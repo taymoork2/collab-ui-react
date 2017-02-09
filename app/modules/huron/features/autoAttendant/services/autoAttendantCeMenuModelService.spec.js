@@ -7,12 +7,13 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
   var ceInfos = getJSONFixture('huron/json/autoAttendant/rawCeInfos.json');
 
   // Welcome menu
-  var wmenu = getJSONFixture('huron/json/autoAttendant/welcomeMenu.json');
-  var ceWelcome = wmenu.ceWelcome;
-  var ceWelcomeNoDescription = wmenu.ceWelcomeNoDescription;
-  var ceWelcomeNoDescriptionTemp = wmenu.ceWelcomeNoDescriptionTemp;
-  var welcomeMenu = wmenu.welcomeMenu;
-  var ceMenuFull = wmenu.ceMenuFull;
+  var wmenu;
+
+  var ceWelcome;
+  var ceWelcomeNoDescription;
+  var ceWelcomeNoDescriptionTemp;
+  var welcomeMenu;
+  var ceMenuFull;
 
   var ceWelcome2 = {
     "callExperienceName": "AA Welcome",
@@ -61,6 +62,12 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
   beforeEach(inject(function (_AutoAttendantCeMenuModelService_) {
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
     AutoAttendantCeMenuModelService.clearCeMenuMap();
+    wmenu = getJSONFixture('huron/json/autoAttendant/welcomeMenu.json');
+    ceWelcome = wmenu.ceWelcome;
+    ceWelcomeNoDescription = wmenu.ceWelcomeNoDescription;
+    ceWelcomeNoDescriptionTemp = wmenu.ceWelcomeNoDescriptionTemp;
+    welcomeMenu = wmenu.welcomeMenu;
+    ceMenuFull = wmenu.ceMenuFull;
   }));
 
   afterEach(function () {
@@ -182,6 +189,8 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       _ceRecord.scheduleEventTypeMap = {
         open: "openHours"
       };
+      ceWelcome = wmenu.ceWelcome;
+
       _ceRecord.callExperienceName = 'AA Custom';
       var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcome, 'openHours');
 

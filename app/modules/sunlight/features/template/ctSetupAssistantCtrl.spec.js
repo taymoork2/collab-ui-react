@@ -780,8 +780,8 @@ describe('Care Setup Assistant Ctrl', function () {
 
     it('the overview page should have expected cards', function () {
       expect(controller.overviewCards).toEqual([
-        'customerInformation',
-        'offHours'
+        { name: 'customerInformation', mediaIcons: [] },
+        { name: 'offHours', mediaIcons: [] }
       ]);
     });
 
@@ -823,11 +823,11 @@ describe('Care Setup Assistant Ctrl', function () {
 
     it('the overview page should have expected cards', function () {
       expect(controller.overviewCards).toEqual([
-        'customerInformationChat',
-        'agentUnavailable',
-        'feedback',
-        'customerInformationCallback',
-        'offHours'
+        { name: 'customerInformationChat', mediaIcons: ['icon-message'] },
+        { name: 'agentUnavailable', mediaIcons: ['icon-message'] },
+        { name: 'feedback', mediaIcons: ['icon-message'] },
+        { name: 'customerInformationCallback', mediaIcons: ['icon-phone'] },
+        { name: 'offHours', mediaIcons: ['icon-message', 'icon-phone'] }
       ]);
     });
 

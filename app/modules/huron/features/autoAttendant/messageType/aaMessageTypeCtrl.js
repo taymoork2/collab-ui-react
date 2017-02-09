@@ -8,6 +8,7 @@
   function AAMessageTypeCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService) {
 
     var vm = this;
+    var conditional = 'conditional';
 
     var properties = {
       NAME: ["play", "say", "runActionsOnInput"],
@@ -56,6 +57,8 @@
     vm.messageType = messageType.ACTION;
     vm.saveUiModel = saveUiModel;
     vm.setMessageOptions = setMessageOptions;
+
+    vm.MAX_FILE_SIZE_IN_BYTES = 5 * 1024 * 1024;
 
     //////////////////////////////////////////////////////
 
@@ -205,7 +208,12 @@
             uiMenu = ui[$scope.schedule];
             vm.menuEntry = uiMenu.entries[$scope.index];
             if ($scope.type) {
-              queueAction = vm.menuEntry.actions[0];
+              queueAction = _.get(vm.menuEntry, 'actions[0]');
+
+              if (_.get(queueAction, 'name') === conditional) {
+                queueAction = queueAction.then;
+              }
+
               sourceMenu = queueAction.queueSettings[$scope.type];
               vm.actionEntry = getAction(sourceMenu);
             } else {

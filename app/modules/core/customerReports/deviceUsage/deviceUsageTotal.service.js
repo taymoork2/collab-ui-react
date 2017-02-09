@@ -16,10 +16,12 @@
     var timeoutInMillis = 20000;
     var intervalType = 'day'; // Used as long as week and month is not implemented
 
-    function getDataForRange(start, end, granularity, deviceCategories, api) {
+    function getDataForRange(start, end, granularity, deviceCategories, models, api) {
       var startDate = moment(start);
       var endDate = moment(end);
       var now = moment();
+
+      models = 'na'; // just here for compatibility with V2
 
       if (startDate.isValid() && endDate.isValid() && startDate.isBefore(endDate) && endDate.isBefore(now)) {
         if (api === 'mock') {
@@ -31,6 +33,7 @@
           url = url + 'intervalType=' + intervalType; // As long week and month is not implemented
           url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
           url = url + '&deviceCategories=' + deviceCategories.join();
+          url = url + '&models=' + models;
           url = url + '&accounts=__';
           url = url + '&sendMockData=false';
           return doRequest(url, granularity, start, end);
@@ -39,6 +42,7 @@
           url = url + 'intervalType=' + intervalType; // As long week and month is not implemented
           url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
           url = url + '&deviceCategories=' + deviceCategories.join();
+          url = url + '&models=' + models;
           url = url + '&accounts=__';
           return doRequest(url, granularity, start, end);
         }

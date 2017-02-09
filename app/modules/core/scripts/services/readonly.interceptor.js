@@ -62,7 +62,7 @@
 
     function isUpdatingSelfInCI(url) {
       var Authinfo = $injector.get('Authinfo');
-      return _.includes(url, 'identity/scim/' + Authinfo.getOrgId() + '/v1/Users/' + Authinfo.getUserId());
+      return _.includes(url, 'identity/scim/' + Authinfo.getUserOrgId() + '/v1/Users/' + Authinfo.getUserId());
     }
   }
 

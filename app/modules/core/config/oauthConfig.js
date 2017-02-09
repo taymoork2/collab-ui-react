@@ -31,7 +31,8 @@
       'spark-admin:customers_write',
       'spark-admin:organizations_read',
       'spark-admin:licenses_read',
-      'spark-admin:logs_read'
+      'spark-admin:logs_read',
+      'spark:kms'
     ];
 
     var oauth2Scope = encodeURIComponent(scopes.join(' '));

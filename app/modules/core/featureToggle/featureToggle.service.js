@@ -77,10 +77,12 @@
       huronAAMediaUpload: 'huron-aa-mediaupload',
       huronAACallerInput: 'huron-aa-callerinput',
       huronAAClioMedia: 'huron-aa-cliomedia',
+      huronAADecision: 'huron-aa-decision',
       huronAARouteRoom: 'huron-aa-routeroom',
       huronClassOfService: 'COS',
       huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
       huronPagingGroup: 'huronPagingGroup',
+      huronSupportForThinktel: 'huron-support-for-thinktel',
       huronNetworkLocale: 'huron-l10n-network-locale',
       huronUserLocale: 'huron-l10n-user-locale',
       huronUserLocale2: 'huron-l10n-user-locale-2',
@@ -174,6 +176,7 @@
       autoAnswer: 'huron-auto-answer',
       huronFederatedSparkCall: 'huron-federated-spark-call',
       sparkCallTenDigitExt: 'i751-10d-ext',
+      huronCustomerCos: 'huron-customer-cos',
     };
 
     var toggles = {};

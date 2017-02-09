@@ -12,6 +12,22 @@
     var urlBase = UrlConfig.getAdminServiceUrl() + 'organization';
     var timeoutInMillis = 20000;
 
+    var modelsToValueMap = {
+      out: {
+        'MX200': ['MX200 G2'],
+        'MX300': ['MX300 G2'],
+        'MX700': ['MX700', 'MX700ST'],
+        'MX800': ['MX800', 'MX800D', 'MX800ST']
+      },
+      in: {
+        'MX200 G2': 'MX200',
+        'MX300 G2': 'MX300',
+        'MX700ST': 'MX700',
+        'MX800ST': 'MX800',
+        'MX800D': 'MX800'
+      }
+    };
+
     function getModelsForRange(start, end, granularity, deviceCategories, api) {
       var startDate = moment(start);
       var endDate = moment(end);
@@ -62,8 +78,41 @@
       return reject;
     }
 
+    function mapModelsIn(items) {
+      var mapped = _.chain(items).map(function (item) {
+        if (modelsToValueMap.in[item.model]) {
+          item.model = modelsToValueMap.in[item.model];
+        }
+        return item;
+      }).uniqBy('model').value();
+      //$log.info('mapModelsIn', mapped);
+      return mapped;
+    }
+
+    function mapModelsOut(items) {
+      //$log.info('mapModelsOut: items', items);
+      var mapped = [];
+      _.each(items, function (item) {
+        if (modelsToValueMap.out[item.value]) {
+          _.each(modelsToValueMap.out[item.value], function (value) {
+            mapped.push({
+              label: value,
+              value: value,
+              isSelected: item.isSelected
+            });
+          });
+        } else {
+          mapped.push(item);
+        }
+      });
+      //$log.info('mapModelsOut', mapped);
+      return mapped;
+    }
+
     return {
-      getModelsForRange: getModelsForRange
+      getModelsForRange: getModelsForRange,
+      mapModelsOut: mapModelsOut,
+      mapModelsIn: mapModelsIn
     };
   }
 }());
