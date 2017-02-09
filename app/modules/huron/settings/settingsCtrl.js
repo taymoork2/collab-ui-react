@@ -1217,6 +1217,14 @@
         siteData.preferredLanguage = vm.model.site.preferredLanguage.value;
       }
 
+      if (vm.model.site.timeFormat.value != savedModel.site.timeFormat.value) {
+        siteData.timeFormat = vm.model.site.timeFormat.value;
+      }
+
+      if (vm.model.site.dateFormat.value != savedModel.site.dateFormat.value) {
+        siteData.dateFormat = vm.model.site.dateFormat.value;
+      }
+
       if (vm.model.site.defaultCountry.value !== savedModel.site.defaultCountry.value) {
         siteData.country = vm.model.site.defaultCountry.value;
       }
@@ -1369,6 +1377,12 @@
               vm.model.site.extensionLength = vm.model.previousLength = site.extensionLength;
               vm.model.site.timeZone = _.find(vm.timeZoneOptions, function (timezone) {
                 return timezone.id === site.timeZone;
+              });
+              vm.model.site.dateFormat = _.find(vm.dateFormatOptions, function (dateformat) {
+                return dateformat.value === site.dateFormat;
+              });
+              vm.model.site.timeFormat = _.find(vm.timeFormatOptions, function (timeformat) {
+                return timeformat.value === site.timeFormat;
               });
               if (site.preferredLanguage) {
                 vm.model.site.preferredLanguage = _.find(vm.preferredLanguageOptions, function (language) {
@@ -2108,6 +2122,8 @@
       vm.model.site.siteSteeringDigit = savedModel.site.siteSteeringDigit;
       vm.model.site.siteCode = savedModel.site.siteCode;
       vm.model.site.timeZone = savedModel.site.timeZone;
+      vm.model.site.timeFormat = savedModel.site.timeFormat;
+      vm.model.site.dateFormat = savedModel.site.dateFormat;
       vm.model.site.preferredLanguage = savedModel.site.preferredLanguage;
       vm.model.site.defaultCountry = savedModel.site.defaultCountry;
       vm.model.site.voicemailPilotNumber = savedModel.site.voicemailPilotNumber;

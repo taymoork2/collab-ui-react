@@ -319,6 +319,32 @@ describe('Controller: HuronSettingsCtrl', function () {
       expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
     });
 
+    it('should update the timeFormat when changed', function () {
+      controller.model.site.timeFormat = {
+        label: '12 hour',
+        value: '12-hour'
+      };
+
+      controller.save();
+      $scope.$apply();
+
+      expect(ServiceSetup.updateSite).toHaveBeenCalled();
+      expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
+    });
+
+    it('should update the DateFormat when changed', function () {
+      controller.model.site.dateFormat = {
+        label: 'MM-DD-YY',
+        value: 'M-D-Y'
+      };
+
+      controller.save();
+      $scope.$apply();
+
+      expect(ServiceSetup.updateSite).toHaveBeenCalled();
+      expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
+    });
+
     it('should update the company pilot number and voicemail site timezone', function () {
       controller.unassignedExternalNumbers = [{
         uuid: '1234',
