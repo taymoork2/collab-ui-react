@@ -2808,7 +2808,7 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                template: '<cluster-sidepanel-overview cluster-type="\'hds_app\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType"></cluster-sidepanel-overview>',
+                template: '<cluster-sidepanel-overview cluster-type="\'hds_app\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType" has-resource-group-feature-toggle="$resolve.hasResourceGroupFeatureToggle" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></cluster-sidepanel-overview>',
               },
               'header@hds-cluster-details': {
                 templateUrl: 'modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html',
@@ -2827,6 +2827,12 @@
               },
               connectorType: /* @ngInject */ function ($stateParams) {
                 return $stateParams.connectorType;
+              },
+              hasResourceGroupFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
+              },
+              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
               },
             }
           })
@@ -3123,7 +3129,7 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                template: '<cluster-sidepanel-overview cluster-type="\'c_mgmt\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType" has-resource-group-feature-toggle="$resolve.hasResourceGroupFeatureToggle"></cluster-sidepanel-overview>'
+                template: '<cluster-sidepanel-overview cluster-type="\'c_mgmt\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType" has-resource-group-feature-toggle="$resolve.hasResourceGroupFeatureToggle" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></cluster-sidepanel-overview>'
               },
               'header@cluster-details': {
                 templateUrl: 'modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html'
@@ -3145,6 +3151,9 @@
               },
               hasResourceGroupFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
+              },
+              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
               },
             }
           })
