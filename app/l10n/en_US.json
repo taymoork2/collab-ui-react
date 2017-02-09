@@ -3360,8 +3360,8 @@
   "autoAnswerPanel": {
     "title": "Auto Answer",
     "description": "Enable to choose which devices to automatically answer this line when a call comes in.",
-    "userSharedLineDescription": "This line is shared, setting auto answer for this {{ownerType}} will turn it off for the {{type}}, {{name}}",
-    "multiDeviceLineDescription": "If auto answer is set, the call will be answered by the selected phone. Other phones will not ring.",
+    "userSharedLineDescription": "This line is shared. Setting auto answer on for this {{ownerType}} will turn it off for the {{type}}, {{name}}",
+    "multiDeviceLineDescription": "The call will be answered by the selected phone.",
     "speaker": "Speaker",
     "headset": "Headset",
     "noSupportedDevices": "No supported devices"
