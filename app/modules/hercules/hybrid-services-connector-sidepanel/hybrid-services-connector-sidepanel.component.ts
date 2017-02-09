@@ -1,6 +1,6 @@
 import { IConnector } from 'modules/hercules/herculesInterfaces';
 
-class ExpresswayConnectorSidepanelCtrl implements ng.IComponentController {
+class HybridServicesConnectorSidepanelCtrl implements ng.IComponentController {
   public connector: IConnector;
   public titleKey: string;
 
@@ -12,15 +12,15 @@ class ExpresswayConnectorSidepanelCtrl implements ng.IComponentController {
   ) {}
 
   public $onInit() {
-    this.$state.current.data.displayName = this.$translate.instant('hercules.expresswayConnectorSidepanel.overview');
+    this.$state.current.data.displayName = this.$translate.instant('hercules.hybridServicesConnectorSidepanel.overview');
     this.$rootScope.$broadcast('displayNameUpdated');
     this.titleKey = `hercules.connectorNameFromConnectorType.${this.connector.connectorType}`;
   }
 }
 
-export class ExpresswayConnectorSidepanelComponent implements ng.IComponentOptions {
-  public controller = ExpresswayConnectorSidepanelCtrl;
-  public templateUrl = 'modules/hercules/expressway-connector-sidepanel/expressway-connector-sidepanel.html';
+export class HybridServicesConnectorSidepanelComponent implements ng.IComponentOptions {
+  public controller = HybridServicesConnectorSidepanelCtrl;
+  public templateUrl = 'modules/hercules/hybrid-services-connector-sidepanel/hybrid-services-connector-sidepanel.html';
   public bindings = {
     connector: '<',
   };

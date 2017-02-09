@@ -16,7 +16,7 @@ export class AlarmDetailsSidepanelCtrl implements ng.IComponentController {
   ) {}
 
   public $onInit() {
-    this.$state.current.data.displayName = this.$translate.instant('hercules.expresswayConnectorSidepanel.alarmDetails');
+    this.$state.current.data.displayName = this.$translate.instant('hercules.hybridServicesConnectorSidepanel.alarmDetails');
     this.$rootScope.$broadcast('displayNameUpdated');
   }
 

@@ -2725,14 +2725,14 @@
               },
             },
           })
-          .state('expressway-connector-sidepanel', {
+          .state('hybrid-services-connector-sidepanel', {
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                template: '<expressway-connector-sidepanel connector="$resolve.connector"></expressway-connector-sidepanel>',
+                template: '<hybrid-services-connector-sidepanel connector="$resolve.connector"></hybrid-services-connector-sidepanel>',
               },
-              'header@expressway-connector-sidepanel': {
-                templateUrl: 'modules/hercules/expressway-connector-sidepanel/expressway-connector-sidepanel-header.html'
+              'header@hybrid-services-connector-sidepanel': {
+                templateUrl: 'modules/hercules/hybrid-services-connector-sidepanel/hybrid-services-connector-sidepanel-header.html'
               },
             },
             // If data not present, $state.current.data.displayName inside the component has no effect
@@ -2746,7 +2746,7 @@
               },
             }
           })
-          .state('expressway-connector-sidepanel.alarm-details', {
+          .state('hybrid-services-connector-sidepanel.alarm-details', {
             template: '<alarm-details-sidepanel alarm="$resolve.alarm"></alarm-details-sidepanel>',
             // If data not present, $state.current.data.displayName inside the component has no effect
             data: {},

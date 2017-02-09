@@ -2287,7 +2287,7 @@
       "noNodes": "No nodes found",
       "loadingError": "Could not load cluster data"
     },
-    "expresswayConnectorSidepanel": {
+    "hybridServicesConnectorSidepanel": {
       "overview": "Overview",
       "alarmDetails": "Alarm Details"
     }

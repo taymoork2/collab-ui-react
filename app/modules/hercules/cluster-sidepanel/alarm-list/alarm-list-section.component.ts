@@ -4,7 +4,7 @@ export class AlarmListSectionComponentCtrl implements ng.IComponentController {
 
   public alarms: Array<IAlarm>;
   private connectorType: string;
-  private newPanel: string;
+  private newLink: string;
 
   private severityIconMap = {
     critical: 'icon icon-error',
@@ -46,8 +46,8 @@ export class AlarmListSectionComponentCtrl implements ng.IComponentController {
   }
 
   public goToAlarm(alarm: any): void {
-    if (this.newPanel === 'true') {
-      this.$state.go('expressway-connector-sidepanel.alarm-details', {
+    if (this.newLink === 'true') {
+      this.$state.go('hybrid-services-connector-sidepanel.alarm-details', {
         alarm: alarm,
       });
     } else if (this.connectorType === 'c_mgmt') {
@@ -73,6 +73,6 @@ export class AlarmListSectionComponent implements ng.IComponentOptions {
   public bindings = {
     alarms: '<',
     connectorType: '<',
-    newPanel: '<',
+    newLink: '<',
   };
 }

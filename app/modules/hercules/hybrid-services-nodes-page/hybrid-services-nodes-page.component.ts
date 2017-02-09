@@ -42,7 +42,7 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
 
   public openSidepanel(connector: ISimplifiedConnector) {
     this.openedConnector = connector;
-    this.$state.go('expressway-connector-sidepanel', {
+    this.$state.go('hybrid-services-connector-sidepanel', {
       connector: connector,
     });
   }
