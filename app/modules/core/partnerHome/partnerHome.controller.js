@@ -8,7 +8,7 @@ require('./_partner-landing-trials.scss');
     .controller('PartnerHomeCtrl', PartnerHomeCtrl);
 
   /* @ngInject */
-  function PartnerHomeCtrl($scope, $state, $window, Analytics, Authinfo, CardUtils, Log, Notification, Orgservice, PartnerService, TrialService) {
+  function PartnerHomeCtrl($scope, $state, $window, Analytics, Authinfo, CardUtils, Log, Notification, Orgservice, PartnerService, trialForPaid, TrialService) {
     $scope.currentDataPosition = 0;
 
     $scope.daysExpired = 5;
@@ -22,6 +22,8 @@ require('./_partner-landing-trials.scss');
     $scope.openAddTrialModal = openAddTrialModal;
     $scope.getProgressStatus = getProgressStatus;
     $scope.getDaysAgo = getDaysAgo;
+
+    $scope.featureTrialForPaid = trialForPaid;
 
     init();
 
@@ -46,7 +48,9 @@ require('./_partner-landing-trials.scss');
 
     function openAddTrialModal() {
       Analytics.trackTrialSteps(Analytics.sections.TRIAL.eventNames.START_SETUP);
-      $state.go('trialAdd.info').then(function () {
+
+      var route = TrialService.getAddTrialRoute($scope.featureTrialForPaid);
+      $state.go(route.path, route.params).then(function () {
         $state.modal.result.finally(getTrialsList);
       });
     }
