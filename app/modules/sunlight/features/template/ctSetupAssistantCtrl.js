@@ -828,10 +828,10 @@
         vm.template.configuration.pages.customerInformation.fields.field4 = field4Default;
       } else if (vm.selectedMediaType === vm.mediaTypes.chatPlusCallback) {
         if (vm.template.configuration.pages.customerInformationChat.fields.field4 === undefined) {
-          Object.assign(vm.template.configuration.pages.customerInformationChat.fields.field4, field4Default);
+          vm.template.configuration.pages.customerInformationChat.fields.field4 = _.cloneDeep(field4Default);
         }
         if (vm.template.configuration.pages.customerInformationCallback.fields.field4 === undefined) {
-          Object.assign(vm.template.configuration.pages.customerInformationCallback.fields.field4, field4Default);
+          vm.template.configuration.pages.customerInformationCallback.fields.field4 = _.cloneDeep(field4Default);
         }
       }
     }
@@ -990,6 +990,8 @@
         case 'name':
           return vm.isNamePageValid();
         case 'customerInformation':
+        case 'customerInformationChat':
+        case 'customerInformationCallback':
           return isCustomerInformationPageValid();
         case 'profile':
           return isProfilePageValid();
@@ -1025,11 +1027,20 @@
       }
     }
 
+    function resetActiveItem() {
+      switch (vm.currentState) {
+        case 'customerInformation':
+        case 'customerInformationCallback':
+        case 'customerInformationChat': vm.activeItem = undefined;
+      }
+    }
+
     function nextPage() {
       vm.animation = 'slide-left';
       $timeout(function () {
         vm.currentState = getAdjacentEnabledState(getPageIndex(), 1);
       }, vm.animationTimeout);
+      resetActiveItem();
     }
 
     function previousPage() {
@@ -1037,6 +1048,7 @@
       $timeout(function () {
         vm.currentState = getAdjacentEnabledState(getPageIndex(), -1);
       }, vm.animationTimeout);
+      resetActiveItem();
     }
 
     vm.activeItem = undefined;
@@ -1093,7 +1105,8 @@
     };
 
     vm.isSecondFieldForCallBack = function () {
-      return vm.selectedMediaType === vm.mediaTypes.callback && vm.activeItemName === 'field2';
+      return (vm.selectedMediaType === vm.mediaTypes.callback ||
+        vm.cardMode === vm.mediaTypes.callback) && vm.activeItemName === 'field2';
     };
 
     vm.isDynamicFieldType = function (val) {
