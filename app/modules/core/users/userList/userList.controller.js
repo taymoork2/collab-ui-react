@@ -670,15 +670,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
 
     function onManageUsers() {
 
-      var overThreshold =
-        ($scope.totalUsers >= CsvDownloadService.USER_EXPORT_THRESHOLD) &&
-        !Authinfo.isCisco() &&
-        !vm.useAtlasNewUserExport;
-
-      $state.go('users.manage', {
-        // todo - this can be removed once we start using the new export API
-        isOverExportThreshold: overThreshold
-      });
+      $state.go('users.manage.picker');
     }
 
     // TODO: If using states should be be able to trigger this log elsewhere?

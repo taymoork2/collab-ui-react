@@ -113,10 +113,17 @@
     // - 'responseUrl' => ...
     // - 'startDate' => ...
     // - 'endDate' => ...
-    function generateReport(emailAddresses, query, roomIds, encryptionKeyUrl, responseUrl, startDate, endDate) {
+    function generateReport(postParams) {
       var url = UrlConfig.getArgonautReportUrl();
-      var sd = (startDate !== null) ? moment.utc(startDate).toISOString() : null;
-      var ed = (endDate !== null) ? moment.utc(endDate).add(1, 'days').toISOString() : null;
+      var emailAddresses = _.get(postParams, 'emailAddresses');
+      var query = _.get(postParams, 'query');
+      var roomIds = _.get(postParams, 'roomIds');
+      var encryptionKeyUrl = _.get(postParams, 'encryptionKeyUrl');
+      var responseUrl = _.get(postParams, 'responseUrl');
+      var sd = _.get(postParams, 'startDate');
+      var ed = _.get(postParams, 'endDate');
+      postParams.startDate = (sd && moment.utc(sd).toISOString()) || null;
+      postParams.endDate = (ed && moment.utc(ed).add(1, 'days').toISOString()) || null;
       return $http
         .post(url, {
           emailAddresses: emailAddresses,

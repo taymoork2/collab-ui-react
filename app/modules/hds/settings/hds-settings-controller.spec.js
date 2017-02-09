@@ -21,9 +21,9 @@ describe('Controller: HDSSettingsController', function () {
     initController();
     expect(ctrl).toBeDefined();
   });
-  it('should service model set to trial mode by default', function () {
+  it('should service model set to pre-trial mode by default', function () {
     initController(false);
-    expect(ctrl.model.serviceMode).toBe(ctrl.TRIAL);
+    expect(ctrl.model.serviceMode).toBe(ctrl.PRE_TRIAL);
   });
 
 });

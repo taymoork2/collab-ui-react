@@ -5,20 +5,20 @@
     .module('HDS')
     .controller('HDSSettingsController', HDSSettingsController);
 
-  //////////////////////////////////////////////////////////////
-  // TODO: remove this notes section in future when backend APIs ready
-  // --- Service Status ---
-  // Trial/Production mode -- Ok
-  // Trial Domain
-  // Production Domain
-  // # of resource nodes
-  // # of trial users
-  //////////////////////////////////////////////////////////////
   /* @ngInject */
-  function HDSSettingsController($modal) {
+  function HDSSettingsController($modal, $state) {
     var vm = this;
-    vm.TRIAL = 'trial';    // service status trial/production mode
+    vm.PRE_TRIAL = 'pre_trial';    // service status Trial/Production mode
+    vm.TRIAL = 'trial';
     vm.PRODUCTION = 'production';
+    // TODO: get the trial/prod domains, # of trial users, # of resource nodes from server when APIs ready
+    vm.trialDomain = 'trial.kms.xxx';     // Trial Domain
+    vm.prodDomain = 'Spark Default KMS';  // Production Domain
+    vm.numResourceNodes = 1;              // # of resource nodes
+    vm.numTrialUsers = 10;                 // # of trial users
+    vm.startTrial = startTrial;
+    vm.moveToProduction = moveToProduction;
+    vm.addResource = addResource;
     vm.openAddTrialUsersModal = openAddTrialUsersModal;
     vm.openEditTrialUsersModal = openEditTrialUsersModal;
 
@@ -26,11 +26,23 @@
       title: 'hds.resources.settings.servicestatusTitle'
     };
 
-    var DEFAULT_SERVICE_MODE = vm.TRIAL;
+    var DEFAULT_SERVICE_MODE = vm.PRE_TRIAL;
 
     vm.model = {
       serviceMode: DEFAULT_SERVICE_MODE,
     };
+
+    function startTrial() {
+      vm.model.serviceMode = vm.TRIAL;
+    }
+
+    function moveToProduction() {
+      vm.model.serviceMode = vm.PRODUCTION;
+    }
+
+    function addResource() {
+      $state.go('hds.list');
+    }
 
     function openAddTrialUsersModal() {
       $modal.open({
