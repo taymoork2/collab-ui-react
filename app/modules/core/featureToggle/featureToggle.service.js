@@ -39,6 +39,7 @@
       atlasSipUriDomainEnterprise: 'atlas-sip-uri-domain-enterprise',
       atlasSharedMeetings: 'atlas-shared-meetings',
       atlasSharedMeetingsReports: 'atlas-shared-meetings-reports',
+      atlasSubdomainUpdate: 'atlas-subdomain-update',
       atlasSuppressOnboardingEmail: 'atlas-suppress-onboarding-email',
       atlasTrialsShipDevices: 'atlasTrialsShipDevices',
       atlasDeviceUsageReportV2: 'atlas-device-usage-report-v2',
