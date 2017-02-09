@@ -15,7 +15,7 @@
     };
 
     vm.sipRegistration = {
-      title: 'mediaFusion.sipconfiguration.title'
+      title: 'mediaFusion.videoQuality.title'
     };
 
     vm.deactivateModalOptions = {

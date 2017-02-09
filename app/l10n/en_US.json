@@ -4316,6 +4316,10 @@
       "placeholder": "Enter the SIP trunk address...",
       "example": "Example: sips://203.0.113.0:5062"
     },
+    "videoQuality": {
+      "title": "Video Quality",
+      "description": "Enable 1080P HD video for all participants hosted on on-premises media nodes."
+    },
     "report" : {
       "title": "Hybrid Media",
       "adoption-title": "Adoption",
