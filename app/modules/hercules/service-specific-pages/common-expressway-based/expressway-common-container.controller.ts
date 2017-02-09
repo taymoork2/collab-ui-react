@@ -9,6 +9,7 @@ export abstract class ExpresswayContainerController {
   /* @ngInject */
   constructor(private $modal,
               private $state: ng.ui.IStateService,
+              private Authinfo,
               private ClusterService,
               private Notification: Notification,
               protected ServiceDescriptor,
@@ -37,6 +38,13 @@ export abstract class ExpresswayContainerController {
         return;
       }
       if (enabled) {
+        return;
+      }
+      if (this.Authinfo.isCustomerLaunchedFromPartner()) {
+        this.$modal.open({
+          templateUrl: 'modules/hercules/service-specific-pages/components/add-resource/partnerAdminWarning.html',
+          type: 'dialog',
+        });
         return;
       }
       this.$modal.open({
