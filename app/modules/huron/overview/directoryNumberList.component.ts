@@ -65,5 +65,6 @@ angular
       directoryNumberSref: '@',
       lineThreshold: '@',
       voicemailEnabled: '<',
+      onDirectoryNumberClick: '&',
     },
   });

@@ -3279,6 +3279,18 @@
     "showLess": "Show less",
     "localDialing": "Local Dialing"
   },
+  "preferredLanguage": {
+    "title": "Preferred Language",
+    "description": "Choose the preferred language for this place. This will override the default organization setting.",
+    "placeholder": "Select your language",
+    "organizationSettingLabel": "Organization Setting - ",
+    "descriptionForCloudberryDevice": "Configure preferred language on the room’s device page.",
+    "placesCallOverviewSaveSuccess": "Preferred Language saved successfully",
+    "failedToSaveChanges": "Failed to save preferred Language. Reason:",
+    "failedToFetchCmiPlacesInfo": "Failed to fetch places info. Reason:",
+    "failedToFetchSiteLanguages": "Failed to fetch languages. Reason:",
+    "failedToFetchSiteLevelLanguage": "Failed to fetch site level language. Reason:"
+  },
   "directoryNumberPanel": {
     "title": "Line Configuration",
     "success": "Line configuration saved successfully",
