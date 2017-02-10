@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject  */
-  function CsdmDataModelService($q, $timeout, $rootScope, CsdmCacheUpdater, CsdmDeviceService, CsdmCodeService, CsdmPlaceService, CsdmHuronOrgDeviceService, CsdmHuronPlaceService, CsdmPoller, CsdmConverter, CsdmHubFactory, Authinfo) {
+  function CsdmDataModelService($q, $timeout, $rootScope, CsdmCacheUpdater, CsdmDeviceService, CsdmCodeService, CsdmPlaceService, CsdmHuronOrgDeviceService, CsdmPoller, CsdmConverter, CsdmHubFactory, Authinfo) {
 
     var placesUrl = CsdmPlaceService.getPlacesUrl();
 
@@ -193,8 +193,8 @@
         .then(addPlaceToDataModel);
     }
 
-    function createCmiPlace(name, directoryNumber, externalNumber) {
-      return CsdmHuronPlaceService.createCmiPlace(name, directoryNumber, externalNumber)
+    function createCmiPlace(name, entitlements, directoryNumber, externalNumber) {
+      return CsdmPlaceService.createCmiPlace(name, entitlements, directoryNumber, externalNumber)
         .then(addPlaceToDataModel);
     }
 
