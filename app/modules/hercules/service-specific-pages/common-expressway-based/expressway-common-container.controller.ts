@@ -8,6 +8,7 @@ export abstract class ExpresswayContainerController {
 
   /* @ngInject */
   constructor(private $modal,
+              private $scope: ng.IScope,
               private $state: ng.ui.IStateService,
               private ClusterService,
               private Notification: Notification,
@@ -19,7 +20,9 @@ export abstract class ExpresswayContainerController {
     this.firstTimeSetup();
     this.extractSummary();
     this.subscribeStatusesSummary = this.USSService.subscribeStatusesSummary('data', this.extractSummary.bind(this));
-    this.ClusterService.subscribe('data', this.updateNotifications.bind(this));
+    this.ClusterService.subscribe('data', this.updateNotifications.bind(this), {
+      scope: this.$scope
+    });
   }
 
   private updateNotifications(): void {

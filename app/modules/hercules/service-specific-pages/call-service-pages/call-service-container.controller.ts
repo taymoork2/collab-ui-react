@@ -27,6 +27,7 @@ export class CallServiceContainerController extends ExpresswayContainerControlle
 
   /* @ngInject */
   constructor($modal,
+              $scope: ng.IScope,
               $state: ng.ui.IStateService,
               private $stateParams: ng.ui.IStateParamsService,
               ClusterService,
@@ -35,7 +36,7 @@ export class CallServiceContainerController extends ExpresswayContainerControlle
               ServiceDescriptor,
               ServiceStateChecker,
               USSService ) {
-    super($modal, $state, ClusterService, Notification, ServiceDescriptor, ServiceStateChecker, USSService, ['squared-fusion-uc'], 'c_ucmc');
+    super($modal, $scope, $state, ClusterService, Notification, ServiceDescriptor, ServiceStateChecker, USSService, ['squared-fusion-uc'], 'c_ucmc');
     this.addConnectIfEnabled();
     this.clusterId = this.$stateParams['clusterId'];
   }

@@ -27,6 +27,7 @@ export class CalendarServiceContainerController extends ExpresswayContainerContr
 
   /* @ngInject */
   constructor($modal,
+              $scope: ng.IScope,
               $state: ng.ui.IStateService,
               private $stateParams: ng.ui.IStateParamsService,
               ClusterService,
@@ -35,7 +36,7 @@ export class CalendarServiceContainerController extends ExpresswayContainerContr
               ServiceDescriptor,
               ServiceStateChecker,
               USSService ) {
-    super($modal, $state, ClusterService, Notification, ServiceDescriptor, ServiceStateChecker, USSService, ['squared-fusion-cal'], 'c_cal');
+    super($modal, $scope, $state, ClusterService, Notification, ServiceDescriptor, ServiceStateChecker, USSService, ['squared-fusion-cal'], 'c_cal');
     this.clusterId = this.$stateParams['clusterId'];
   }
 
