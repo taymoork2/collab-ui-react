@@ -21,7 +21,7 @@ export abstract class ExpresswayContainerController {
     this.extractSummary();
     this.subscribeStatusesSummary = this.USSService.subscribeStatusesSummary('data', this.extractSummary.bind(this));
     this.ClusterService.subscribe('data', this.updateNotifications.bind(this), {
-      scope: this.$scope
+      scope: this.$scope,
     });
   }
 
