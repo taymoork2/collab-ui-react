@@ -114,6 +114,7 @@
     }
 
     function updateFallback() {
+      //disconnect is not an action so needs to be re-init
       if (vm.destination.action === 'disconnect') {
         vm.menuEntry.actions[0].queueSettings.fallback.actions[0] = AutoAttendantCeMenuModelService.newCeActionEntry('disconnect', '');
       }
@@ -249,7 +250,8 @@
     }
 
     function populateMaxWaitTime() {
-      vm.minutes = _.range(1, 61);
+      //1-60 increment by 1, then 75, 90, 105, 120
+      vm.minutes = _.concat(vm.minutes, _.range(1, 61), _.range(75, 121, 15));
     }
 
     //populating fallback drop down in sorted order
