@@ -58,6 +58,12 @@
   }
 }
 
+sq-places-page-overview, .sq-devices-page-overview {
+  label {
+    cursor: auto;
+  }
+}
+
 .sq-devices-page-overview, .sq-devices-emergency-services {
   .internal-link {
     color: $gray-dark-1;
