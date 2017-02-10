@@ -61,7 +61,7 @@
         type: 'small',
         controller: 'ReassignClusterControllerV2',
         controllerAs: 'reassignClust',
-        templateUrl: 'modules/mediafusion/media-service-v2/side-panel/reassign-cluster-dialog.html',
+        templateUrl: 'modules/mediafusion/media-service-v2/side-panel/reassign-node-to-different-cluster/reassign-cluster-dialog.html',
       })
         .result
         .then(function() {
@@ -84,7 +84,7 @@
         type: 'small',
         controller: 'HostDeregisterControllerV2',
         controllerAs: 'hostDeregister',
-        templateUrl: 'modules/mediafusion/media-service-v2/side-panel/host-deregister-dialog.html',
+        templateUrl: 'modules/mediafusion/media-service-v2/side-panel/deregister-node/host-deregister-dialog.html',
       })
         .result
         .then(function() {
