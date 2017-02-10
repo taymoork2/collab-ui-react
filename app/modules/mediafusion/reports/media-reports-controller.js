@@ -368,7 +368,7 @@
     function setDummyUtilization() {
       vm.utilizationStatus = vm.EMPTY;
       var response = {
-        graphData: MediaReportsDummyGraphService.dummyUtilizationData(vm.timeSelected),
+        graphData: MediaReportsDummyGraphService.dummyLineChartData(vm.timeSelected),
         graphs: MediaReportsDummyGraphService.dummyUtilizationGraph()
       };
       setUtilizationGraph(response);
@@ -377,7 +377,7 @@
     function setDummyParticipantDistribution() {
       vm.participantDistributionStatus = vm.EMPTY;
       var response = {
-        graphData: MediaReportsDummyGraphService.dummyParticipantDistributionData(vm.timeSelected),
+        graphData: MediaReportsDummyGraphService.dummyLineChartData(vm.timeSelected),
         graphs: MediaReportsDummyGraphService.dummyParticipantDistributionGraph()
       };
       setParticipantDistributionGraph(response);

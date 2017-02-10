@@ -11,27 +11,7 @@
     vm.urlBase = MediaConfigServiceV2.getAthenaUrl() + '/organizations/' + Authinfo.getOrgId();
     vm.allClusters = $translate.instant('mediaFusion.metrics.allclusters');
 
-    function adjustUtilizationData(activeData, returnData, startTime, endTime, graphs) {
-      var returnDataArray = [];
-      var startDate = {
-        time: startTime
-      };
-      activeData.unshift(startDate);
-      for (var i = 0; i < activeData.length; i++) {
-        var tmpItem = {};
-        tmpItem = activeData[i];
-        returnDataArray.push(tmpItem);
-      }
-      var endDate = {
-        time: endTime
-      };
-      returnDataArray.push(endDate);
-      returnData.graphData = returnDataArray;
-      returnData.graphs = graphs;
-      return returnData;
-    }
-
-    function adjustParticipantDistributionData(activeData, returnData, startTime, endTime, graphs) {
+    function adjustLineGraphData(activeData, returnData, startTime, endTime, graphs) {
       var returnDataArray = [];
       var startDate = {
         time: startTime
@@ -130,7 +110,7 @@
       return $http.get(vm.urlBase + getQuerys(vm.utilizationUrl, cluster, time)).then(function (response) {
         if (!_.isUndefined(response) && !_.isUndefined(response.data) && !_.isUndefined(response.data.chartData) && _.isArray(response.data.chartData) && !_.isUndefined(response.data)) {
           returnData.graphData.push(response.data.chartData);
-          return adjustUtilizationData(response.data.chartData, returnData, response.data.startTime, response.data.endTime, response.data.graphs);
+          return adjustLineGraphData(response.data.chartData, returnData, response.data.startTime, response.data.endTime, response.data.graphs);
         } else {
           return returnData;
         }
@@ -158,7 +138,7 @@
     }
 
     function getParticipantDistributionData(time, cluster) {
-      vm.callDistributionUrl = '/clusters_call_volume';
+      vm.callDistributionUrl = '/clusters_call_volume_with_insights';
 
       var returnData = {
         graphData: [],
@@ -167,7 +147,26 @@
       return $http.get(vm.urlBase + getQuerys(vm.callDistributionUrl, cluster, time)).then(function (response) {
         if (!_.isUndefined(response) && !_.isUndefined(response.data) && !_.isUndefined(response.data.chartData) && _.isArray(response.data.chartData) && !_.isUndefined(response.data)) {
           returnData.graphData.push(response.data.chartData);
-          return adjustParticipantDistributionData(response.data.chartData, returnData, response.data.startTime, response.data.endTime, response.data.graphs);
+          return adjustLineGraphData(response.data.chartData, returnData, response.data.startTime, response.data.endTime, response.data.graphs);
+        } else {
+          return returnData;
+        }
+      }, function (error) {
+        return returnErrorCheck(error, $translate.instant('mediaFusion.metrics.overallParticipantDistributionGraphError'), returnData);
+      });
+    }
+
+    function getClientTypeData(time) {
+      vm.clientTypeUrl = '/client_type_trend';
+
+      var returnData = {
+        graphData: [],
+        graphs: []
+      };
+      return $http.get(vm.urlBase + getQuerys(vm.clientTypeUrl, vm.allClusters, time)).then(function (response) {
+        if (!_.isUndefined(response) && !_.isUndefined(response.data) && !_.isUndefined(response.data.chartData) && _.isArray(response.data.chartData) && !_.isUndefined(response.data)) {
+          returnData.graphData.push(response.data.chartData);
+          return adjustLineGraphData(response.data.chartData, returnData, response.data.startTime, response.data.endTime, response.data.graphs);
         } else {
           return returnData;
         }
@@ -243,7 +242,8 @@
       getClusterAvailabilityData: getClusterAvailabilityData,
       getTotalCallsData: getTotalCallsData,
       getClusterAvailabilityTooltip: getClusterAvailabilityTooltip,
-      getHostedOnPremisesTooltip: getHostedOnPremisesTooltip
+      getHostedOnPremisesTooltip: getHostedOnPremisesTooltip,
+      getClientTypeData: getClientTypeData
     };
 
   }

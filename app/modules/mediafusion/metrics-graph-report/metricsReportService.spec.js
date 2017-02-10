@@ -9,7 +9,7 @@ describe('Service: Metrics Reports Service', function () {
   var callVolumeGraphData = getJSONFixture('mediafusion/json/metrics-graph-report/callVolumeGraphData.json');
   var responsedata = callVolumeGraphData.graphData;
   var UtilizationData = getJSONFixture('mediafusion/json/metrics-graph-report/UtilizationData.json');
-  var utilizationdata = UtilizationData.utilization[0];
+  var utilizationdata = UtilizationData.utilizationresponse;
   var utilizationGraphData = getJSONFixture('mediafusion/json/metrics-graph-report/UtilizationGraphData.json');
   var utilizationresponse = utilizationGraphData.graphData;
   var utilizationgraph = utilizationGraphData.graphs;
