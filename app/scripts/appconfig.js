@@ -2838,7 +2838,7 @@
           })
           .state('hds-cluster-details.host-details', {
             templateUrl: 'modules/hercules/cluster-sidepanel/host-details/host-details.html',
-            controller: 'ExpresswayHostDetailsController',
+            controller: 'HybridServicesHostDetailsController',
             controllerAs: 'hostDetailsCtrl',
             data: {
               displayName: 'Node'
@@ -3162,7 +3162,7 @@
             views: {
               'sidepanel@': {
                 templateUrl: 'modules/hercules/cluster-sidepanel/host-details/management-connector-details.html',
-                controller: 'ExpresswayHostDetailsController',
+                controller: 'HybridServicesHostDetailsController',
                 controllerAs: 'hostDetailsCtrl'
               }
             },
@@ -3204,7 +3204,7 @@
           })
           .state('cluster-details.host-details', {
             templateUrl: 'modules/hercules/cluster-sidepanel/host-details/host-details.html',
-            controller: 'ExpresswayHostDetailsController',
+            controller: 'HybridServicesHostDetailsController',
             controllerAs: 'hostDetailsCtrl',
             data: {
               displayName: 'Node'
@@ -3231,6 +3231,46 @@
 
         $stateProvider
         //V2 API changes
+          .state('media-cluster-details', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                template: '<cluster-sidepanel-overview cluster-type="\'mf_mgmt\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType"></cluster-sidepanel-overview>',
+              },
+              'header@media-cluster-details': {
+                templateUrl: 'modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html',
+              },
+            },
+            data: {
+              displayName: 'Overview'
+            },
+            params: {
+              clusterId: null,
+              connectorType: null,
+            },
+            resolve: {
+              id: /* @ngInject */ function ($stateParams) {
+                return $stateParams.clusterId;
+              },
+              connectorType: /* @ngInject */ function ($stateParams) {
+                return $stateParams.connectorType;
+              },
+            }
+          })
+          .state('media-cluster-details.host-details', {
+            templateUrl: 'modules/hercules/cluster-sidepanel/host-details/host-details.html',
+            controller: 'HybridServicesHostDetailsController',
+            controllerAs: 'hostDetailsCtrl',
+            data: {
+              displayName: 'Node'
+            },
+            params: {
+              host: null,
+              hostSerial: null,
+              clusterId: null,
+              connectorType: null
+            }
+          })
           .state('media-service-v2', {
             templateUrl: 'modules/mediafusion/media-service-v2/media-service-overview.html',
             controller: 'MediaServiceControllerV2',

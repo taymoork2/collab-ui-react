@@ -497,6 +497,7 @@
         'reports.mediaservice',
         'services-overview',
         'cluster-list',
+        'media-cluster-details',
       ],
       'webex-messenger': [
         'messenger',

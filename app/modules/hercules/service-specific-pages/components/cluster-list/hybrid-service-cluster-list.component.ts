@@ -81,7 +81,7 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
     let routeMap = {
       'squared-fusion-cal': 'cluster-details',
       'squared-fusion-uc': 'cluster-details',
-      'squared-fusion-media': 'connector-details-v2',
+      'squared-fusion-media': 'media-cluster-details',
       'spark-hybrid-datasecurity': 'hds-cluster-details',
     };
 

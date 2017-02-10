@@ -1581,9 +1581,9 @@
       "alarms": "Alarms",
       "hosts": "Nodes",
       "goToHost": "Go to Node",
-      "removeButton": "Remove",
-      "removeSectionHeader": "Remove",
-      "removeSectionBody": "Remove this node from Cisco Collaboration Cloud.",
+      "moveNode": "Move Node",
+      "deregisterNode": "Deregister Node",
+      "removeNode": "Remove Node",
       "localizedConnectorAndHostHeader": "{{connectorName}} on {{hostname}}",
       "actions": "Actions",
       "no_nodes": "No nodes registered."
@@ -1763,8 +1763,8 @@
       "c_cal": "Calendar Connector",
       "c_ucmc": "Call Connector",
       "c_mgmt": "Management Connector",
-      "mf_mgmt": "Media Connector",
-      "hds_app": "Data Security Connector"
+      "mf_mgmt": "Media Service",
+      "hds_app": "Hybrid Data Security"
     },
     "serviceNameFromConnectorType": {
       "c_cal": "Calendar Service",

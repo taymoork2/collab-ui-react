@@ -40,11 +40,18 @@
 
   <cs-sp-section>
     <div class="section-title-row section-name" translate="hercules.connectors.actions"></div>
-    <div>
-      <a target="_blank" ng-href="https://{{hostDetailsCtrl.host.hostname}}/">
-        <button class="btn btn--primary" translate="hercules.connectors.goToHost"></button>
-      </a>
-    </div>
+    <ul>
+      <li>
+        <a target="_blank" ng-href="https://{{hostDetailsCtrl.host.hostname}}/">
+          <span translate="hercules.connectors.goToHost"></span>
+        </a>
+      </li>
+      <li ng-if="hostDetailsCtrl.showDeleteNodeAction()">
+        <a ng-click="hostDetailsCtrl.deleteHost()">
+          <span translate="hercules.connectors.removeNode"></span>
+        </a>
+      </li>
+    </ul>
   </cs-sp-section>
 
   <alarm-list-section alarms="hostDetailsCtrl.host.alarms" connector-type="'c_mgmt'"></alarm-list-section>
