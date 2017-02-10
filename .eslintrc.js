@@ -14,6 +14,7 @@ module.exports = {
     'eqeqeq': 0,
     'func-names': 0,
     'global-require': 0,
+    'linebreak-style': ['error', process.platform === 'win32' ? 'windows' : 'unix'],
     'max-len': 0,
     'no-bitwise': 0,
     'no-console': 0,
