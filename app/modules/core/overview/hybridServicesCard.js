@@ -72,6 +72,10 @@
             return 'media-service-v2.list';
           } else if (serviceId === 'squared-fusion-gcal') {
             return 'google-calendar-service.settings';
+          } else if (serviceId === 'spark-hybrid-datasecurity') {
+            return 'hds.list';
+          } else if (serviceId === 'contact-center-context') {
+            return 'context-resources';
           }
         }
         return card;

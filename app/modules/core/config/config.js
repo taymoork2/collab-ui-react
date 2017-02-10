@@ -8,7 +8,7 @@
     .factory('Config', Config)
     .name;
 
-  function Config($location, Storage) {
+  function Config($location, $window, Storage) {
     var TEST_ENV_CONFIG = 'TEST_ENV_CONFIG';
 
     var getCurrentHostname = function () {
@@ -337,6 +337,10 @@
       return _.includes(Storage.get(TEST_ENV_CONFIG), 'e2e');
     };
 
+    config.isUserAgent = function (userAgentString) {
+      return $window.navigator.userAgent.indexOf(userAgentString) > -1;
+    };
+
     config.forceProdForE2E = function () {
       return Storage.get(TEST_ENV_CONFIG) === 'e2e-prod';
     };
@@ -435,6 +439,7 @@
         'resource-group-settings',
         'cluster-list',
         'expressway-cluster',
+        'hybrid-services-connector-sidepanel',
         'hds.settings', // Temporary  entitlement until updated in org setting
         'hds',
         'hds.list',
@@ -455,6 +460,7 @@
         'call-service',
         'cluster-list',
         'expressway-cluster',
+        'hybrid-services-connector-sidepanel',
         'services-overview',
       ],
       'squared-fusion-cal': [
@@ -462,6 +468,7 @@
         'calendar-service',
         'cluster-list',
         'expressway-cluster',
+        'hybrid-services-connector-sidepanel',
         'services-overview',
       ],
       'squared-fusion-gcal': [
@@ -520,6 +527,7 @@
         'devices',
         'places',
         'expressway-cluster',
+        'hybrid-services-connector-sidepanel',
         'fusion',
         'hurondetails',
         'huronsettings',

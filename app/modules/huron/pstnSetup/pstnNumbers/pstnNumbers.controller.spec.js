@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: PstnNumbersCtrl', function () {
-  var controller, $compile, $scope, $state, $q, $translate, PstnSetupService, PstnSetup, Notification, TerminusStateService, FeatureToggleService;
+  var controller, $compile, $scope, $state, $q, $translate, PstnSetupService, PstnSetup, Notification, PstnSetupStatesService, FeatureToggleService;
   var element;
 
   var customer = getJSONFixture('huron/json/pstnSetup/customer.json');
@@ -106,7 +106,7 @@ describe('Controller: PstnNumbersCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight')); // Remove this when FeatureToggleService is removed.
 
-  beforeEach(inject(function ($rootScope, _$compile_, _$state_, _$q_, _$translate_, _PstnSetupService_, _PstnSetup_, _Notification_, _TerminusStateService_, _FeatureToggleService_) {
+  beforeEach(inject(function ($rootScope, _$compile_, _$state_, _$q_, _$translate_, _PstnSetupService_, _PstnSetup_, _Notification_, _PstnSetupStatesService_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
     $compile = _$compile_;
     $state = _$state_;
@@ -115,7 +115,7 @@ describe('Controller: PstnNumbersCtrl', function () {
     PstnSetupService = _PstnSetupService_;
     PstnSetup = _PstnSetup_;
     Notification = _Notification_;
-    TerminusStateService = _TerminusStateService_;
+    PstnSetupStatesService = _PstnSetupStatesService_;
     FeatureToggleService = _FeatureToggleService_;
 
     PstnSetup.setCustomerId(customer.uuid);
@@ -129,9 +129,7 @@ describe('Controller: PstnNumbersCtrl', function () {
     spyOn(PstnSetup, 'getServiceAddress').and.returnValue(serviceAddress);
     spyOn(Notification, 'error');
     spyOn($state, 'go');
-    spyOn(TerminusStateService, 'query').and.returnValue({
-      '$promise': $q.resolve(states)
-    });
+    spyOn(PstnSetupStatesService, 'getStateProvinces').and.returnValue($q.resolve(states));
     spyOn($translate, 'instant').and.callThrough();
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
 
@@ -148,7 +146,7 @@ describe('Controller: PstnNumbersCtrl', function () {
     PstnSetupService = undefined;
     PstnSetup = undefined;
     Notification = undefined;
-    TerminusStateService = undefined;
+    PstnSetupStatesService = undefined;
     FeatureToggleService = undefined;
   });
 

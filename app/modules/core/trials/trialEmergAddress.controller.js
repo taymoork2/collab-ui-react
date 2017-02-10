@@ -6,7 +6,7 @@
     .controller('TrialEmergAddressCtrl', TrialEmergAddressCtrl);
 
   /* @ngInject */
-  function TrialEmergAddressCtrl($scope, $translate, Analytics, Notification, PstnServiceAddressService, TerminusStateService, TrialPstnService) {
+  function TrialEmergAddressCtrl($scope, $translate, Analytics, Notification, PstnServiceAddressService, PstnSetupStatesService, TrialPstnService) {
     var vm = this;
 
     vm.trial = TrialPstnService.getData();
@@ -80,7 +80,7 @@
         filter: true
       },
       controller: /* @ngInject */ function ($scope) {
-        TerminusStateService.query().$promise.then(function (states) {
+        PstnSetupStatesService.getStateProvinces().then(function (states) {
           $scope.to.options = states;
         });
       },

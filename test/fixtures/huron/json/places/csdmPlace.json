@@ -1,0 +1,11 @@
+{
+  "orgId": "00000000-0000-0000-0000-000000000000",
+  "cisUuid": "00000000-0000-0000-0000-000000000000",
+  "displayName": "Reception",
+  "url": "https://csdm-integration.wbx2.com/csdm/api/v1/organization/00000000-0000-0000-0000-000000000000/places/00000000-0000-0000-0000-000000000000",
+  "entitlements": [
+    "webex-squared"
+  ],
+  "machineType": "lyra_space",
+  "sipUrl": "reception@localetesting.room.ciscospark.com"
+}

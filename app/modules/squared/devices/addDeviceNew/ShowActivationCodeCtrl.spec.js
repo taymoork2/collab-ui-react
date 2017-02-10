@@ -514,6 +514,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
                 type: 'shared',
                 name: deviceName,
                 organizationId: deviceOrgId,
+                entitlements: entitlements,
                 directoryNumber: directoryNumber,
                 externalNumber: externalNumber,
               },
@@ -683,7 +684,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
 
 
         it('creates a new place and otp', function () {
-          expect(CsdmDataModelService.createCmiPlace).toHaveBeenCalledWith(deviceName, directoryNumber, externalNumber);
+          expect(CsdmDataModelService.createCmiPlace).toHaveBeenCalledWith(deviceName, entitlements, directoryNumber, externalNumber);
           expect(CsdmHuronPlaceService.createOtp).toHaveBeenCalledWith(cisUuid);
           expect(controller.qrCode).toBeTruthy();
           expect(controller.activationCode).toBe(activationCode);

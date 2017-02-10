@@ -1,43 +1,50 @@
-'use strict';
+import { AlarmDetailsSidepanelCtrl } from './alarm-details-sidepanel.component';
 
-describe('Controller: ExpresswayAlarmController', function () {
+describe('Component: AlarmDetailsSidepanel', () => {
+
+  let $scope, $componentController, controller: AlarmDetailsSidepanelCtrl;
 
   beforeEach(angular.mock.module('Hercules'));
-  beforeEach(angular.mock.module('Squared'));
+  beforeEach(inject(dependencies));
 
-  var $scope, $controller, controller;
-  beforeEach(inject(function (_$controller_, $rootScope) {
+  function dependencies(_$componentController_, $rootScope) {
     $scope = $rootScope.$new();
-    $controller = _$controller_;
-    $scope.$apply();
-  }));
+    $componentController = _$componentController_;
+  }
 
   function initController(alarm) {
-    controller = $controller('ExpresswayAlarmController', {
-      $stateParams: { alarm: alarm }
+    controller = $componentController('alarmDetailsSidepanel', { $scope: $scope }, { alarm: alarm });
+    controller.$onChanges({
+      alarm: {
+        previousValue: undefined,
+        currentValue: alarm,
+        isFirstChange() {
+          return true;
+        },
+      },
     });
     $scope.$apply();
   }
 
-  it('should deal with no alarm solution', function () {
+  it('should deal with no alarm solution', () => {
     initController({});
     expect(controller.alarm.alarmSolutionElements).toBeUndefined();
   });
 
-  it('should deal with a solution with no replacement values', function () {
+  it('should deal with a solution with no replacement values', () => {
     initController({ solution: 'This solution has no replacement values' });
     expect(controller.alarm.alarmSolutionElements.length).toBe(1);
     expect(controller.alarm.alarmSolutionElements[0].text).toEqual('This solution has no replacement values');
     expect(controller.alarm.alarmSolutionElements[0].link).toBeUndefined();
   });
 
-  it('should deal with a solution with a non-link replacement value', function () {
+  it('should deal with a solution with a non-link replacement value', () => {
     initController(
       {
         solution: 'This solution has one %s replacement value without a link',
         solutionReplacementValues: [
-          { text: 'Foo' }
-        ]
+          { text: 'Foo' },
+        ],
       });
     expect(controller.alarm.alarmSolutionElements.length).toBe(3);
     expect(controller.alarm.alarmSolutionElements[0].text).toEqual('This solution has one ');
@@ -48,14 +55,14 @@ describe('Controller: ExpresswayAlarmController', function () {
     expect(controller.alarm.alarmSolutionElements[2].link).toBeUndefined();
   });
 
-  it('should deal with a solution with multiple replacement values', function () {
+  it('should deal with a solution with multiple replacement values', () => {
     initController(
       {
         solution: 'This solution %s has two %s replacement values',
         solutionReplacementValues: [
           { text: 'Foo', link: 'https://foo.com' },
-          { text: 'Bar', link: 'https://bar.com' }
-        ]
+          { text: 'Bar', link: 'https://bar.com' },
+        ],
       });
     expect(controller.alarm.alarmSolutionElements.length).toBe(5);
     expect(controller.alarm.alarmSolutionElements[0].text).toEqual('This solution ');
@@ -69,6 +76,4 @@ describe('Controller: ExpresswayAlarmController', function () {
     expect(controller.alarm.alarmSolutionElements[4].text).toEqual(' replacement values');
     expect(controller.alarm.alarmSolutionElements[4].link).toBeUndefined();
   });
-
-
 });

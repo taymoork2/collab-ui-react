@@ -5,7 +5,8 @@ class ClusterSidepanelOverviewCtrl implements ng.IComponentController {
   private clusterId: string;
 
   private cluster: IClusterV1;
-  public hasResourceGroupFeatureToggle: boolean = false;
+  public hasNodesViewFeatureToggle: boolean;
+  public hasResourceGroupFeatureToggle: boolean;
 
   public clusterType: string;
   public connectorType: string;
@@ -46,6 +47,7 @@ export class ClusterSidepanelOverviewComponent implements ng.IComponentOptions {
     clusterType: '<',
     clusterId: '<',
     connectorType: '<',
+    hasNodesViewFeatureToggle: '<',
     hasResourceGroupFeatureToggle: '<',
   };
 }

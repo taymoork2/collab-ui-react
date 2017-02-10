@@ -219,24 +219,24 @@ describe('Controller:MediaReportsController', function () {
 
     it('should call dummysetUtilizationData for setUtilizationData when there is no data', function () {
       spyOn(MediaReportsService, 'getUtilizationData').and.callThrough();
-      spyOn(MediaReportsDummyGraphService, 'dummyUtilizationData').and.callThrough();
+      spyOn(MediaReportsDummyGraphService, 'dummyLineChartData').and.callThrough();
       spyOn(MediaReportsDummyGraphService, 'dummyUtilizationGraph').and.callThrough();
       controller.changeTabs(false, true);
       httpMock.flush();
       expect(MediaReportsService.getUtilizationData).toHaveBeenCalled();
-      expect(MediaReportsDummyGraphService.dummyUtilizationData).toHaveBeenCalled();
+      expect(MediaReportsDummyGraphService.dummyLineChartData).toHaveBeenCalled();
       expect(MediaReportsDummyGraphService.dummyUtilizationGraph).toHaveBeenCalled();
       expect(UtilizationResourceGraphService.setUtilizationGraph).toHaveBeenCalled();
     });
 
     it('should call dummysetParticipantDistribution for setDummyParticipantDistribution when there is no data', function () {
       spyOn(MediaReportsService, 'getParticipantDistributionData').and.callThrough();
-      spyOn(MediaReportsDummyGraphService, 'dummyParticipantDistributionData').and.callThrough();
+      spyOn(MediaReportsDummyGraphService, 'dummyLineChartData').and.callThrough();
       spyOn(MediaReportsDummyGraphService, 'dummyParticipantDistributionGraph').and.callThrough();
       controller.changeTabs(false, true);
       httpMock.flush();
       expect(MediaReportsService.getParticipantDistributionData).toHaveBeenCalled();
-      expect(MediaReportsDummyGraphService.dummyParticipantDistributionData).toHaveBeenCalled();
+      expect(MediaReportsDummyGraphService.dummyLineChartData).toHaveBeenCalled();
       expect(MediaReportsDummyGraphService.dummyParticipantDistributionGraph).toHaveBeenCalled();
       expect(ParticipantDistributionResourceGraphService.setParticipantDistributionGraph).toHaveBeenCalled();
     });

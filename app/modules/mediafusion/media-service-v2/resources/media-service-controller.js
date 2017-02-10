@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function MediaServiceControllerV2($modal, $state, $translate, FusionClusterService) {
+  function MediaServiceControllerV2($modal, $state, $translate, Authinfo, FusionClusterService) {
 
     var vm = this;
     vm.backState = 'services-overview';
@@ -38,6 +38,11 @@
       .then(function (enabled) {
         if (enabled) {
           vm.addResourceModal.resolve.firstTimeSetup = false;
+        } else if (Authinfo.isCustomerLaunchedFromPartner()) {
+          $modal.open({
+            templateUrl: 'modules/hercules/service-specific-pages/components/add-resource/partnerAdminWarning.html',
+            type: 'dialog',
+          });
         } else {
           $modal.open(vm.addResourceModal)
             .result
