@@ -41,6 +41,9 @@ require('./_feature-landing.scss');
     }, {
       name: $translate.instant('callPark.title'),
       filterValue: 'CP'
+    }, {
+      name: $translate.instant('pagingGroup.title'),
+      filterValue: 'PG'
     }];
 
     /* LIST OF FEATURES
@@ -78,6 +81,15 @@ require('./_feature-landing.scss');
       isEmpty: false,
       i18n: 'huronFeatureDetails.cpName',
       color: 'cta'
+    }, {
+      name: 'PG',
+      getFeature: function () {
+        return PagingGroupService.getListOfPagingGroups();
+      },
+      formatter: HuronFeaturesListService.pagingGroups,
+      isEmpty: false,
+      i18n: 'huronFeatureDetails.pgName',
+      color: 'people'
     }];
 
     var piFeature = {
@@ -91,23 +103,9 @@ require('./_feature-landing.scss');
       color: 'attention'
     };
 
-    var pgFeature = {
-      name: 'PG',
-      getFeature: function () {
-        return PagingGroupService.getListOfPagingGroups();
-      },
-      formatter: HuronFeaturesListService.pagingGroups,
-      isEmpty: false,
-      i18n: 'huronFeatureDetails.pgName',
-      color: 'people'
-    };
-
     var featureTogglePromises = [];
     var callPickupPromise = FeatureToggleService.supports(FeatureToggleService.features.huronCallPickup);
-    var pagingGroupPromise = FeatureToggleService.supports(FeatureToggleService.features.huronPagingGroup);
-
     featureTogglePromises.push(callPickupPromise);
-    featureTogglePromises.push(pagingGroupPromise);
     $q.all(featureTogglePromises).then(function (data) {
       if (data[0] === true) {
         var pi = {
@@ -116,14 +114,6 @@ require('./_feature-landing.scss');
         };
         vm.features.push(piFeature);
         vm.filters.push(pi);
-      }
-      if (data[1] === true) {
-        var pg = {
-          name: $translate.instant('pagingGroup.title'),
-          filterValue: 'PG'
-        };
-        vm.filters.push(pg);
-        vm.features.push(pgFeature);
       }
       init();
     });
