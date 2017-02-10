@@ -446,6 +446,8 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
     var huronNewPlace;
     var huronExistingPlace;
     var huronExistingUser;
+    var noTypeExistingUserEntitled;
+    var noTypeExistingUserUnentitled;
     var expectedEmailInfo;
     var entitlements;
 
@@ -566,12 +568,49 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
           };
         }
       };
+      noTypeExistingUserEntitled = {
+        state: function () {
+          return {
+            data: {
+              account: {
+                type: 'personal',
+                cisUuid: cisUuid,
+                organizationId: deviceOrgId,
+                isEntitledToHuron: true
+              },
+              recipient: {
+                firstName: userFirstName,
+                cisUuid: userCisUuid,
+                organizationId: userOrgId,
+              }
+            }
+          };
+        }
+      };
+      noTypeExistingUserUnentitled = {
+        state: function () {
+          return {
+            data: {
+              account: {
+                type: 'personal',
+                cisUuid: cisUuid,
+                organizationId: deviceOrgId
+              },
+              recipient: {
+                firstName: userFirstName,
+                cisUuid: userCisUuid,
+                organizationId: userOrgId,
+              }
+            }
+          };
+        }
+      };
 
       expectedEmailInfo = {
         toCustomerId: userOrgId,
         toUserId: userCisUuid,
-        machineAccountCustomerId: deviceOrgId,
-        machineAccountId: cisUuid,
+        subjectCustomerId: deviceOrgId,
+        subjectAccountId: cisUuid,
         activationCode: activationCode,
         expiryTime: localized(expiryTime)
       };
@@ -776,7 +815,6 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
 
         describe('sending an activation email', function () {
           it('should send it to selected user and notify success', function () {
-            // $httpBackend.expectPOST(HuronConfig.getEmailUrl() + '/email/activationcode', {});
             spyOn(ActivationCodeEmailService, 'save').and.callFake(function (a, emailInfo, success) {
               expect(emailInfo.email).toBe(userEmail);
               expect(emailInfo.firstName).toBe(userFirstName);
@@ -790,9 +828,6 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
 
             controller.sendActivationCodeEmail();
             $scope.$digest();
-            // $httpBackend.flush();
-            // expect(ActivationCodeEmailService.save).toHaveBeenCalled();
-            // expect(Notification.notify).toHaveBeenCalled();
             expect(Notification.notify).toHaveBeenCalledWith(['generateActivationCodeModal.emailSuccess'], 'success', 'generateActivationCodeModal.emailSuccessTitle');
           });
 
@@ -805,6 +840,88 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
             controller.sendActivationCodeEmail();
             $scope.$digest();
             expect(Notification.notify).toHaveBeenCalled();
+          });
+        });
+      });
+    });
+
+    describe('without device type', function () {
+      describe('with existing huron entitled user', function () {
+        beforeEach(function () {
+          stateParams.wizard = noTypeExistingUserEntitled;
+          spyOn(CsdmDataModelService, 'createCodeForExisting').and.returnValue($q.resolve({
+            activationCode: activationCode,
+            expiryTime: expiryTime
+          }));
+          initController();
+          $scope.$digest();
+        });
+
+        it('creates an otp', function () {
+          expect(CsdmDataModelService.createCodeForExisting).toHaveBeenCalledWith(cisUuid);
+          expect(controller.qrCode).toBeTruthy();
+          expect(controller.activationCode).toBe(activationCode);
+          expect(controller.expiryTime).toBe(expiryTime);
+        });
+
+        describe('sending an activation email', function () {
+          it('should send it to selected user and notify success', function () {
+            spyOn(CsdmEmailService, 'sendPersonalEmail').and.returnValue($q.resolve({}));
+            spyOn(Notification, 'notify').and.callThrough();
+
+            controller.sendActivationCodeEmail();
+            $scope.$digest();
+            expect(CsdmEmailService.sendPersonalEmail).toHaveBeenCalledWith(expectedEmailInfo);
+            expect(Notification.notify).toHaveBeenCalledWith(['generateActivationCodeModal.emailSuccess'], 'success', 'generateActivationCodeModal.emailSuccessTitle');
+          });
+
+          it('should try to send email and notify error', function () {
+            spyOn(CsdmEmailService, 'sendPersonalEmail').and.returnValue($q.reject({}));
+            spyOn(Notification, 'notify').and.callThrough();
+
+            controller.sendActivationCodeEmail();
+            $scope.$digest();
+            expect(Notification.notify).toHaveBeenCalledTimes(1);
+          });
+        });
+      });
+
+      describe('with existing huron unentitled user', function () {
+        beforeEach(function () {
+          stateParams.wizard = noTypeExistingUserUnentitled;
+          spyOn(CsdmDataModelService, 'createCodeForExisting').and.returnValue($q.resolve({
+            activationCode: activationCode,
+            expiryTime: expiryTime
+          }));
+          initController();
+          $scope.$digest();
+        });
+
+        it('creates an otp', function () {
+          expect(CsdmDataModelService.createCodeForExisting).toHaveBeenCalledWith(cisUuid);
+          expect(controller.qrCode).toBeTruthy();
+          expect(controller.activationCode).toBe(activationCode);
+          expect(controller.expiryTime).toBe(expiryTime);
+        });
+
+        describe('sending an activation email', function () {
+          it('should send it to selected user and notify success', function () {
+            spyOn(CsdmEmailService, 'sendPersonalCloudberryEmail').and.returnValue($q.resolve({}));
+            spyOn(Notification, 'notify').and.callThrough();
+
+            controller.sendActivationCodeEmail();
+            $scope.$digest();
+            expect(CsdmEmailService.sendPersonalCloudberryEmail).toHaveBeenCalledWith(expectedEmailInfo);
+            expect(Notification.notify).toHaveBeenCalledWith(['generateActivationCodeModal.emailSuccess'], 'success', 'generateActivationCodeModal.emailSuccessTitle');
+          });
+
+          it('should try to send email and notify error', function () {
+            spyOn(CsdmEmailService, 'sendPersonalCloudberryEmail').and.returnValue($q.reject({}));
+            spyOn(Notification, 'notify').and.callThrough();
+
+            controller.sendActivationCodeEmail();
+            $scope.$digest();
+            expect(Notification.notify).toHaveBeenCalledTimes(1);
           });
         });
       });
