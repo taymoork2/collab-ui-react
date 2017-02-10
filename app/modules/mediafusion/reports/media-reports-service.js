@@ -171,7 +171,7 @@
           return returnData;
         }
       }, function (error) {
-        return returnErrorCheck(error, $translate.instant('mediaFusion.metrics.overallParticipantDistributionGraphError'), returnData);
+        return returnErrorCheck(error, $translate.instant('mediaFusion.metrics.overallClientTypeGraphError'), returnData);
       });
     }
 

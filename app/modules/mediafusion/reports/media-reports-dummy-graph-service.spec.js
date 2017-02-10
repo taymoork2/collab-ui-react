@@ -13,6 +13,13 @@ describe('Service: Media Reports Dummy Graph', function () {
   }, {
     value: 4
   }];
+  vm.checkForDefined = function (for4hrs, for24hrs, forLastWeek, forLastMonth, forLastThreeMonth) {
+    expect(for4hrs).toBeDefined();
+    expect(for24hrs).toBeDefined();
+    expect(forLastWeek).toBeDefined();
+    expect(forLastMonth).toBeDefined();
+    expect(forLastThreeMonth).toBeDefined();
+  };
   beforeEach(angular.mock.module('Mediafusion'));
   describe('Dummy Data Responses', function () {
     beforeEach(inject(function (_MediaReportsDummyGraphService_, _chartColors_) {
@@ -27,11 +34,7 @@ describe('Service: Media Reports Dummy Graph', function () {
       var responseForLastMonth = vm.MediaReportsDummyGraphService.dummyAvailabilityData(vm.timeFilter[3]);
       var responseForLastThreeMonth = vm.MediaReportsDummyGraphService.dummyAvailabilityData(vm.timeFilter[4]);
 
-      expect(responseFor4hrs).toBeDefined();
-      expect(responseFor24hrs).toBeDefined();
-      expect(respomseForLastWeek).toBeDefined();
-      expect(responseForLastMonth).toBeDefined();
-      expect(responseForLastThreeMonth).toBeDefined();
+      vm.checkForDefined(responseFor4hrs, responseFor24hrs, respomseForLastWeek, responseForLastMonth, responseForLastThreeMonth);
 
       expect(responseFor4hrs.data[0].isDummy).toBe(true);
       expect(responseFor24hrs.data[0].isDummy).toBe(true);
@@ -47,11 +50,7 @@ describe('Service: Media Reports Dummy Graph', function () {
       var responseForLastMonth = vm.MediaReportsDummyGraphService.dummyCallVolumeData(vm.timeFilter[3]);
       var responseForLastThreeMonth = vm.MediaReportsDummyGraphService.dummyCallVolumeData(vm.timeFilter[4]);
 
-      expect(responseFor4hrs).toBeDefined();
-      expect(responseFor24hrs).toBeDefined();
-      expect(respomseForLastWeek).toBeDefined();
-      expect(responseForLastMonth).toBeDefined();
-      expect(responseForLastThreeMonth).toBeDefined();
+      vm.checkForDefined(responseFor4hrs, responseFor24hrs, respomseForLastWeek, responseForLastMonth, responseForLastThreeMonth);
 
       expect(responseFor4hrs[0].colorTwo).toBe(vm.chartColors.grayLightTwo);
       expect(responseFor24hrs[0].colorTwo).toBe(vm.chartColors.grayLightTwo);
@@ -68,11 +67,7 @@ describe('Service: Media Reports Dummy Graph', function () {
       var responseForLastMonth = vm.MediaReportsDummyGraphService.dummyLineChartData(vm.timeFilter[3]);
       var responseForLastThreeMonth = vm.MediaReportsDummyGraphService.dummyLineChartData(vm.timeFilter[4]);
 
-      expect(responseFor4hrs).toBeDefined();
-      expect(responseFor24hrs).toBeDefined();
-      expect(respomseForLastWeek).toBeDefined();
-      expect(responseForLastMonth).toBeDefined();
-      expect(responseForLastThreeMonth).toBeDefined();
+      vm.checkForDefined(responseFor4hrs, responseFor24hrs, respomseForLastWeek, responseForLastMonth, responseForLastThreeMonth);
 
       expect(responseFor4hrs[0].balloon).toBeFalsy();
       expect(responseFor24hrs[0].balloon).toBeFalsy();

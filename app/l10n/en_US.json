@@ -4466,6 +4466,7 @@
       "overallAverageUtilizationGraphError": "There was an error while loading Average/Peak utilization data",
       "overallClusterAvailabilityGraphError": "There was an error while loading cluster availability data",
       "overallTotalNumberOfCallsError": "There was an error while loading Total Number of calls",
+      "overallClientTypeGraphError":"There was an error while loading Client Type Data",
       "total_calls": "Total Calls",
       "onpremcalls": "Hosted On-Premises",
       "cloudcalls": "Overflowed to Cloud",
