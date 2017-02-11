@@ -14,6 +14,7 @@ export class PstnProvidersComponent implements ng.IComponentOptions {
 }
 
 export class PstnProvidersCtrl implements ng.IComponentController {
+  public show: boolean = false;
   public pstnCarriers: Array<PstnCarrier>;
   private pstnCarrierStatics: Array<IPstnCarrierStatic>;
   private onChangeFn: Function;
@@ -37,6 +38,11 @@ export class PstnProvidersCtrl implements ng.IComponentController {
   public onSetProvider(carrier: PstnCarrier) {
     this.PstnSetup.setProvider(carrier);
     this.onChangeFn();
+  }
+
+  public onReady() {
+    this.show = true;
+    this.onReadyFn();
   }
 
   //Get static carrier informantion from JSON file
@@ -67,19 +73,19 @@ export class PstnProvidersCtrl implements ng.IComponentController {
   private getCarriersNetwork(): void {
     //Are carriers already loaded
     if (this.PstnSetup.isCarrierExists()) {
-      this.onReadyFn();
+      this.onReady();
       return;
     }
 
     if (this.PstnSetup.isCustomerExists()) {
-      //Get Customer Carriers
+      //Get Customer Carriers (Most likely there is only 1, the previous selected carrier)
       this.PstnSetupService.listCustomerCarriers(this.PstnSetup.getCustomerId()).then ( carriers => {
         if (_.isArray(carriers) && carriers.length > 0) {
-          //this.PstnSetup.setCarriers(carriers);
           carriers.forEach(carrier => {
             this.addCarrier(<IPstnCarrierGet> carrier);
           });
-          this.onReadyFn();
+          this.PstnSetup.setCarriers(this.pstnCarriers);
+          this.onReady();
         } else {
           this.getCarriersNetworkDefault();
         }
@@ -94,7 +100,8 @@ export class PstnProvidersCtrl implements ng.IComponentController {
           carriers.forEach(carrier => {
             this.addCarrier(<IPstnCarrierGet> carrier);
           });
-          this.onReadyFn();
+          this.PstnSetup.setCarriers(this.pstnCarriers);
+          this.onReady();
         } else {
           this.getCarriersNetworkDefault();
         }
@@ -110,7 +117,8 @@ export class PstnProvidersCtrl implements ng.IComponentController {
       carriers.forEach(carrier => {
         this.addCarrier(<IPstnCarrierGet> carrier);
       });
-      this.onReadyFn();
+      this.PstnSetup.setCarriers(this.pstnCarriers);
+      this.onReady();
     });
   }
 

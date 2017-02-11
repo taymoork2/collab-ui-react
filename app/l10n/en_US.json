@@ -3634,7 +3634,15 @@
     "feature4": "Caller ID Name Delivery and Registration",
     "feature5": "E911"
   },
-  "partnerHomePage": {
+  "thinktelFeatures": {
+    "feature1": "1 Telephone Number per User",
+    "feature2": "Service available in all provinces/territories",
+    "feature3": "Local and Can/U.S. Long Distance calling",
+    "feature4": "Number port/Transfer fee included",
+    "feature5": "Basic 911 included",
+    "feature6": "Taxes additional"
+  },
+    "partnerHomePage": {
     "trialsHeading": "Trials",
     "onboardingTitle": "Onboarding",
     "activity-title": "Activity",
