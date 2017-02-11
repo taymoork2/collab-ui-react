@@ -10,7 +10,6 @@
     vm.currentCustomer = $stateParams.currentCustomer;
     vm.customerOrgId = vm.currentCustomer.customerOrgId;
     vm.customerName = vm.currentCustomer.customerName;
-    vm.customerEmail = vm.currentCustomer.customerEmail;
     vm.getSubscriptions = getSubscriptions;
     vm.sendMail = sendMail;
     vm.partnerAdmins = [];
@@ -18,6 +17,10 @@
     vm.partnerEmail = Authinfo.getPrimaryEmail();
     vm.customerInfo = [];
     vm.customerInfoClipboard = [];
+    vm.admins = {
+      customerFullAdmins: [],
+      partnerAdmins: [],
+    };
     vm._helpers = {
       getCustomerFullAdmins: getCustomerFullAdmins,
       getSimplifiedUserList: getSimplifiedUserList,
@@ -35,20 +38,25 @@
         customerFullAdmins: getCustomerFullAdmins(),
       };
       $q.all(promises).then(function (results) {
-        vm.partnerAdmins = results.partnerAdmins;
         vm.subscriptions = results.subscriptions;
-        vm.customerFullAdmins = results.customerFullAdmins;
-        var subscriptionDisplay = _.map(results.subscriptions, function (sub) {
+        _.set(vm, 'admins.customerFullAdmins', results.customerFullAdmins);
+        _.set(vm, 'admins.partnerAdmins', results.partnerAdmins);
+
+        var customerFullAdminLineEntries = _.map(results.customerFullAdmins, 'emailAndName');
+        var partnerAdminLineEntries = _.map(results.partnerAdmins, 'emailAndName');
+        var subscriptionLineEntries = _.map(results.subscriptions, function (sub) {
           return sub.subscriptionId + ' - ' + sub.siteUrl;
-        });
-        var partnerAdminDisplay = _.map(results.partnerAdmins, function (admin) {
-          return admin.name + ' - ' + admin.email;
         });
 
         var infoArray = [$translate.instant('customerSubscriptions.customerAdmin'),
-          vm.customerName + ' - ' + vm.customerEmail, '',
-          $translate.instant('customerSubscriptions.partnerAdmin'), partnerAdminDisplay, '',
-          $translate.instant('customerSubscriptions.webexSubscriptions'), subscriptionDisplay];
+          customerFullAdminLineEntries,
+          '',
+          $translate.instant('customerSubscriptions.partnerAdmin'),
+          partnerAdminLineEntries,
+          '',
+          $translate.instant('customerSubscriptions.webexSubscriptions'),
+          subscriptionLineEntries];
+
         vm.customerInfo = vm._helpers.flattenAndJoin(infoArray, newLineHtml);
         vm.customerInfoClipboard = vm._helpers.flattenAndJoin(infoArray, newLine);
       });
@@ -91,9 +99,14 @@
         var email = Userservice.getPrimaryEmailFromUser(user);
         var displayName = Userservice.getAnyDisplayableNameFromUser(user);
         displayName = (displayName === email) ? undefined : displayName;
+        var emailAndName = email;
+        if (displayName) {
+          emailAndName += ' - ' + displayName;
+        }
         return {
           email: email,
-          name: displayName,
+          displayName: displayName,
+          emailAndName: emailAndName,
         };
       });
     }

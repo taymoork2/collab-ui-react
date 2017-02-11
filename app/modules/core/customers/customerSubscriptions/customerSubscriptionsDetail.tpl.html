@@ -26,16 +26,14 @@
     <div class="feature-list">
       <ul>
         <li>
-          <h6 translate="customerSubscriptions.customerAdmin"></h6>
-           <div ng-repeat="customerFullAdmin in customerSubscriptions.customerFullAdmins">
-             {{customerFullAdmin.email}} <span ng-if="customerFullAdmin.name"> - {{customerFullAdmin.name}}</span>
-           </div>
+          <cr-admin-list
+            members="customerSubscriptions.admins.customerFullAdmins"
+            title="{{::'customerSubscriptions.customerAdmin' | translate}}"></cr-admin-list>
         </li>
         <li>
-          <h6 translate="customerSubscriptions.partnerAdmin"></h6>
-          <div ng-repeat="partnerAdmin in customerSubscriptions.partnerAdmins">
-            {{partnerAdmin.email}} <span ng-if="partnerAdmin.name"> - {{partnerAdmin.name}}</span>
-          </div>
+          <cr-admin-list
+            members="customerSubscriptions.admins.partnerAdmins"
+            title="{{::'customerSubscriptions.partnerAdmin' | translate}}"></cr-admin-list>
         </li>
         <li ng-if="customerSubscriptions.subscriptions.length>0">
           <h6 translate="customerSubscriptions.webexSubscriptions"></h6>

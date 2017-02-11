@@ -123,8 +123,8 @@ describe('Controller: customerSubscriptionsDetailCtrl', function () {
         expect(this.controller.subscriptions[1].subscriptionId).toEqual('Test-Sub-08072016b');
       });
       it('must return array of names and emails', function () {
-        expect(this.controller.partnerAdmins.length).toEqual(2);
-        expect(this.controller.partnerAdmins[1].email).toEqual('email@email.net');
+        expect(this.controller.admins.partnerAdmins.length).toEqual(2);
+        expect(this.controller.admins.partnerAdmins[1].email).toEqual('email@email.net');
       });
     });
   });
@@ -153,21 +153,24 @@ describe('Controller: customerSubscriptionsDetailCtrl', function () {
     });
 
     describe('getSimplifiedUserList():', function () {
-      it('should return a list of objects with only "email" and "name" properties', function () {
+      it('should return a list of objects with only "email", "displayName", and "emailAndName" properties', function () {
         var result = this.controller._helpers.getSimplifiedUserList(customerFullAdmins);
         expect(result.length).toBe(3);
         expect(result).toEqual([
           {
             email: 'fake-admin-1@example.com',
-            name: 'first-name-1 last-name-1',
+            displayName: 'first-name-1 last-name-1',
+            emailAndName: 'fake-admin-1@example.com - first-name-1 last-name-1',
           },
           {
             email: 'fake-admin-2@example.com',
-            name: 'first-name-2 last-name-2',
+            displayName: 'first-name-2 last-name-2',
+            emailAndName: 'fake-admin-2@example.com - first-name-2 last-name-2',
           },
           {
             email: 'fake-admin-3@example.com',
-            name: 'first-name-3 last-name-3',
+            displayName: 'first-name-3 last-name-3',
+            emailAndName: 'fake-admin-3@example.com - first-name-3 last-name-3',
           },
         ]);
       });
