@@ -1209,7 +1209,7 @@
         vm.avrilTzUpdated = true;
       }
 
-      if (vm.model.site.preferredLanguage.value !== savedModel.site.preferredLanguage.value) {
+      if (!savedModel.site.preferredLanguage || vm.model.site.preferredLanguage.value !== savedModel.site.preferredLanguage.value) {
         siteData.preferredLanguage = vm.model.site.preferredLanguage.value;
       }
 
@@ -1221,7 +1221,7 @@
         siteData.dateFormat = vm.model.site.dateFormat.value;
       }
 
-      if (vm.model.site.defaultCountry.value !== savedModel.site.defaultCountry.value) {
+      if (!savedModel.site.defaultCountry || vm.model.site.defaultCountry.value !== savedModel.site.defaultCountry.value) {
         siteData.country = vm.model.site.defaultCountry.value;
       }
 
@@ -1702,6 +1702,7 @@
           if (vm.hasVoiceService) {
             promises.push(loadDateFormatOptions());
             promises.push(loadTimeZoneOptions()
+              .then(loadDefaultCountryOptions)
               .then(loadSite)
               .then(loadVoicemailTimeZone)
               .then(loadVoicemailToEmail)
@@ -1713,7 +1714,6 @@
             promises.push(loadDialPlan());
             promises.push(loadCallerId());
             promises.push(loadPreferredLanguageOptions());
-            promises.push(loadDefaultCountryOptions());
           }
 
           if (vm.hasVoicemailService) {

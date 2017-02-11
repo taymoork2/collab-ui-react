@@ -392,6 +392,7 @@ describe('Service: ServiceSetup', function () {
     });
 
     it('should get site countries', function () {
+      FeatureToggleService.supports = jasmine.createSpy().and.returnValue($q.resolve(true));
       ServiceSetup.getSiteCountries().then(function (response) {
         expect(response).toBeDefined();
         expect(response.length).toBe(2);

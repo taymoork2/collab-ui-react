@@ -223,7 +223,9 @@
       },
 
       getSiteCountries: function () {
-        return SiteCountryService.query().$promise;
+        return SiteCountryService.query().$promise.then(function (countries) {
+          return filterFeatureToggleEnabledCountries(countries);
+        });
       },
 
       getTranslatedSiteCountries: function (countries) {
@@ -275,5 +277,35 @@
         return generatedVoicemailNumber;
       }
     };
+
+    function filterFeatureToggleEnabledCountries(countries) {
+      var promises = {};
+      var ftSupportedCountries = [];
+      _.forEach(countries, function (country) {
+        if (country.featureToggle) {
+          promises[country.value] = checkFeatureToggleSupport(country.featureToggle);
+        } else {
+          ftSupportedCountries.push(country);
+        }
+      });
+      if (_.isEmpty(promises)) { return ftSupportedCountries; }
+      return $q.all(promises).then(function (data) {
+        _.forEach(data, function (value, key) {
+          if (value) {
+            ftSupportedCountries.push(_.find(countries, { value: key }));
+          }
+        });
+        return ftSupportedCountries;
+      })
+      .catch(function () {
+        return ftSupportedCountries;
+      });
+    }
+
+    function checkFeatureToggleSupport(feature) {
+      return FeatureToggleService.supports(feature).then(function (isSupported) {
+        return isSupported;
+      });
+    }
   }
 })();
