@@ -83,11 +83,16 @@
           if (_trialData.details.pstnProvider.apiImplementation === "SWIVEL") {
             _trialData.details.pstnNumberInfo.numbers = _trialData.details.swivelNumbers;
             _trialData.details.pstnContractInfo.companyName = customerName;
+            return createPstnCustomerV2(customerOrgId)
+              .then(_.partial(createCustomerSite, customerOrgId))
+              .then(_.partial(reserveNumbersWithCustomerV2, customerOrgId))
+              .then(_.partial(orderNumbers, customerOrgId)); // Terminus V1 order API doesn't support swivel orders
+          } else {
+            return createPstnCustomerV2(customerOrgId)
+              .then(_.partial(createCustomerSite, customerOrgId))
+              .then(_.partial(reserveNumbersWithCustomerV2, customerOrgId))
+              .then(_.partial(orderNumbersV2, customerOrgId));
           }
-          return createPstnCustomerV2(customerOrgId)
-            .then(_.partial(createCustomerSite, customerOrgId))
-            .then(_.partial(reserveNumbersWithCustomerV2, customerOrgId))
-            .then(_.partial(orderNumbersV2, customerOrgId));
         });
     }
 
