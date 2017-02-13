@@ -659,6 +659,11 @@ describe('ClusterService', function () {
 
       expect(callback.callCount).toBe(1);
     });
+    it('should return 404', function () {
+      ClusterService.getConnector('123@calendar-cloud-connector').catch(function (response) {
+        expect(response.status).toBe(404);
+      });
+    });
   });
 
   describe('.deleteHost', function () {
