@@ -6,7 +6,7 @@
     .directive('herculesNotifications', herculesNotificationsDirective);
 
   /* @ngInject */
-  function HerculesNotificationsController($q, $modal, $scope, $state, FusionClusterService, Notification, NotificationService, ServiceDescriptor, ServiceStateChecker, USSService, $translate) {
+  function HerculesNotificationsController($q, $modal, $scope, $state, $translate, FusionClusterService, Notification, NotificationService, ServiceDescriptor, ServiceStateChecker, USSService) {
     var vm = this;
     vm.showNotifications = false;
     vm.notificationsLength = notificationsLength;

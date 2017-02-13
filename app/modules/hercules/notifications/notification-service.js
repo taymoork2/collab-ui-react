@@ -10,8 +10,14 @@
     var notifications = [];
 
     function addNotification(type, id, priority, template, tags, data) {
-      removeNotification(id);
-      notifications.push(new Notification(type, id, priority, template, tags, (data || {})));
+      var notification = new Notification(type, id, priority, template, tags, (data || {}));
+      var existingIndex = _.findIndex(notifications, { 'id': id });
+      if (existingIndex >= 0) {
+        // Replace if it already exists (to avoid UI "flip-flapping") compared to remove/add
+        notifications.splice(existingIndex, 1, notification);
+      } else {
+        notifications.push(notification);
+      }
     }
 
     function removeNotification(id) {

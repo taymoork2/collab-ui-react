@@ -263,7 +263,8 @@
         });
     }
 
-    vm.alarmsKeysToIgnore = ['uss.thresholdAlarmTriggered', 'uss.groupThresholdAlarmTriggered']; // Do not show these as notifications
+    // Do not show these alarms as the checkUserStatuses() notifications already covers the fact that your have users in the error state
+    vm.alarmsKeysToIgnore = ['uss.thresholdAlarmTriggered', 'uss.groupThresholdAlarmTriggered'];
     vm.serviceAlarmPrefix = 'serviceAlarm_';
     function checkServiceAlarms(serviceId) {
       FusionClusterService.getAlarms(serviceId)
@@ -272,7 +273,7 @@
             return !_.includes(vm.alarmsKeysToIgnore, alarm.key);
           });
 
-          // Find and remove the notifications raised for previous alarms
+          // Find the notifications raised for previous alarms
           var existingServiceAlarmIds = _.chain(NotificationService.getNotifications())
             .filter(function (notification) {
               return _.startsWith(notification.id, vm.serviceAlarmPrefix);
@@ -281,9 +282,6 @@
               return notification.id;
             })
             .value();
-          _.forEach(existingServiceAlarmIds, function (id) {
-            NotificationService.removeNotification(id);
-          });
 
           // Raise notifications for the current alarms
           _.forEach(alarmsWeCareAbout, function (alarm) {
@@ -296,6 +294,14 @@
               [serviceId],
               alarm
             );
+            _.remove(existingServiceAlarmIds, function (existingId) {
+              return existingId === notificationId;
+            });
+          });
+
+          // Remove the notifications for alarms that no longer exists
+          _.forEach(existingServiceAlarmIds, function (id) {
+            NotificationService.removeNotification(id);
           });
         });
     }

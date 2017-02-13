@@ -314,9 +314,18 @@ describe('Service: ServiceStateChecker', function () {
 
     ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
     $rootScope.$digest();
-
     expect(NotificationService.getNotificationLength()).toEqual(1);
     var notification = NotificationService.getNotifications()[0];
+    expect(notification.id).toEqual('serviceAlarm_c_cal.shitHitTheFan_1234');
+    expect(notification.data.alarmId).toEqual('1234');
+    expect(notification.data.severity).toEqual('error');
+    expect(notification.data.title).toEqual('Shit is flying all over the place');
+
+    // New check with the same alarm, should yield the same result
+    ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
+    $rootScope.$digest();
+    expect(NotificationService.getNotificationLength()).toEqual(1);
+    notification = NotificationService.getNotifications()[0];
     expect(notification.id).toEqual('serviceAlarm_c_cal.shitHitTheFan_1234');
     expect(notification.data.alarmId).toEqual('1234');
     expect(notification.data.severity).toEqual('error');
@@ -335,7 +344,6 @@ describe('Service: ServiceStateChecker', function () {
 
     ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
     $rootScope.$digest();
-
     expect(NotificationService.getNotificationLength()).toEqual(1);
     notification = NotificationService.getNotifications()[0];
     expect(notification.id).toEqual('serviceAlarm_c_cal.anotherOneBitesTheDust_4567');
