@@ -2285,7 +2285,8 @@
       "serial": "Serial",
       "version": "Version",
       "noNodes": "No nodes found",
-      "loadingError": "Could not load cluster data"
+      "loadingError": "Could not load cluster data",
+      "viewList": "View list"
     },
     "hybridServicesConnectorSidepanel": {
       "overview": "Overview",
