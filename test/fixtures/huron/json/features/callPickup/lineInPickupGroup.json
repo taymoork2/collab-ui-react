@@ -1,0 +1,14 @@
+{
+    "numbers": [
+        {
+            "external": null,
+            "internal": "3081",
+            "primary": false,
+            "shared": false,
+            "siteToSite": "81003081",
+            "url": "https://cmi.huron-int.com/api/v2/customers/226d7977-ff3a-42dc-88ff-f866170a06c8/users/8a270dad-ad05-49b8-916f-9fa3cf8f1fb6/numbers/53625eff-27e9-44be-bbaf-bd9f8d8f1363",
+            "uuid": "53625eff-27e9-44be-bbaf-bd9f8d8f1363"
+        }
+    ],
+    "url": "https://cmi.huron-int.com/api/v2/customers/226d7977-ff3a-42dc-88ff-f866170a06c8/users/8a270dad-ad05-49b8-916f-9fa3cf8f1fb6/numbers"
+}

@@ -36,6 +36,7 @@ export interface ICardMemberCheckbox {
     sublabel?: string;
     value: boolean;
     numberUuid: string;
+    disabled?: boolean;
 }
 
 export interface ICallPickupNumbers {
