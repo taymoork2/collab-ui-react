@@ -1,0 +1,17 @@
+{
+    "directoryNumber": {
+        "url": "https://cmi.huron-int.com/api/v1/voice/customers/226d7977-ff3a-42dc-88ff-f866170a06c8/directorynumbers/53625eff-27e9-44be-bbaf-bd9f8d8f1363",
+        "uuid": "53625eff-27e9-44be-bbaf-bd9f8d8f1363"
+    },
+    "features": [
+        {
+            "name": "helpdesk",
+            "type": "CALL_FEATURE_PICKUP_GROUP",
+            "uuid": "519f9c86-d917-49c6-ae6e-052ba014f642"
+        }
+    ],
+    "number": "3081",
+    "type": "internal",
+    "url": "https://cmi.huron-int.com/api/v2/customers/226d7977-ff3a-42dc-88ff-f866170a06c8/numbers/70611609-941f-4078-bc41-246d6601699c",
+    "uuid": "70611609-941f-4078-bc41-246d6601699c"
+}
