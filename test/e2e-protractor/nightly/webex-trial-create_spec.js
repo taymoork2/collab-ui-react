@@ -1,6 +1,7 @@
 'use strict';
 
-/* global deleteTrialUtils */
+var featureToggle = require('../utils/featureToggle.utils');
+
 /* global LONG_TIMEOUT */
 
 describe('WebEx Trial Creation', function () {
@@ -63,7 +64,7 @@ describe('WebEx Trial Creation', function () {
       utils.click(partner.exitPreviewButton);
       utils.search(partner.newTrial.customerName, -1);
       utils.click(partner.newTrialRow);
-      
+
       utils.expectIsEnabled(partner.launchCustomerPanelButton);
       utils.click(partner.launchCustomerPanelButton);
       utils.switchToNewWindow().then(function () {
@@ -86,14 +87,23 @@ describe('WebEx Trial Creation', function () {
       utils.expectTextToBeSet(wizard.sipURLExample, 'These subdomains will be reserved for you:');
       utils.sendKeys(wizard.sipDomain, partner.newTrial.sipDomain + protractor.Key.ENTER);
       utils.click(wizard.saveCheckbox);
-      utils.click(wizard.nextBtn);
-      notifications.assertSuccess('The Spark SIP Address has been successfully saved');
 
-      utils.expectTextToBeSet(wizard.mainviewTitle, 'Enterprise Settings');
-      utils.click(wizard.nextBtn);
+      if (featureToggle.features.atlasFTSWRemoveUsersSSO) {
+        // click "Save" instead of "Next" because there are no SSO steps
+        // goes to last tab because there is no Add Users
+        utils.click(wizard.saveBtn);
+        notifications.assertSuccess('The Spark SIP Address has been successfully saved');
+      } else {
+        // TODO remove when feature toggle is removed
+        utils.click(wizard.nextBtn);
+        notifications.assertSuccess('The Spark SIP Address has been successfully saved');
 
-      utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
-      utils.click(wizard.skipBtn);
+        utils.expectTextToBeSet(wizard.mainviewTitle, 'Enterprise Settings');
+        utils.click(wizard.nextBtn);
+
+        utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
+        utils.click(wizard.skipBtn);
+      }
 
       utils.expectTextToBeSet(wizard.mainviewTitle, 'Get Started');
       utils.click(wizard.finishBtn);

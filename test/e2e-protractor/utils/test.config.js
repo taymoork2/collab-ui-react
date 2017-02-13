@@ -41,6 +41,14 @@ exports.getAdminServiceUrl = function () {
   }
 }
 
+exports.getScimUrl = function () {
+  return 'https://identity.webex.com/identity/scim/v1/Users/';
+}
+
+exports.getFeatureServiceUrl = function () {
+  return 'https://feature-a.wbx2.com/feature/api/v1/';
+}
+
 exports.cmiServiceUrl = {
   dev: 'https://cmi.huron-int.com/api/v1/',
   integration: 'https://cmi.huron-int.com/api/v1/',
