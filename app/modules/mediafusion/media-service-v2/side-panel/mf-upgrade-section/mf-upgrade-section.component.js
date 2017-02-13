@@ -27,13 +27,10 @@
       }, function (newValue) {
         vm.cluster = newValue;
         var isUpgrading = vm.cluster.aggregates.upgradeState === 'upgrading';
-        console.log('Remember to uncomment the correct versions');
         vm.softwareUpgrade = {
           provisionedVersion: vm.cluster.aggregates.provisioning.provisionedVersion,
-          // availableVersion: vm.cluster.aggregates.provisioning.availableVersion,
-          // isUpgradeAvailable: vm.cluster.aggregates.upgradeAvailable,
-          availableVersion: '1983.02.19',
-          isUpgradeAvailable: true,
+          availableVersion: vm.cluster.aggregates.provisioning.availableVersion,
+          isUpgradeAvailable: vm.cluster.aggregates.upgradeAvailable,
           hasUpgradeWarning: vm.cluster.aggregates.upgradeWarning,
           numberOfHosts: _.size(vm.cluster.aggregates.hosts),
           clusterStatus: vm.cluster.aggregates.state,
@@ -45,7 +42,7 @@
         if (isUpgrading) {
           vm.fakeUpgrade = false;
           var pendingHosts = _.chain(vm.cluster.aggregates.hosts)
-            .filter({upgradeState: 'pending'})
+            .filter({ upgradeState: 'pending' })
             .value();
           vm.upgradeDetails = {
             numberOfUpsmthngHosts: _.size(vm.cluster.aggregates.hosts) - pendingHosts.length,

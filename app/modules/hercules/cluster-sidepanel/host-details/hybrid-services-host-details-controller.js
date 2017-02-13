@@ -21,11 +21,13 @@
       vm.host = _.find(cluster.connectors, {
         hostSerial: $stateParams.hostSerial
       });
-      vm.localizedConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.' + vm.host.connectorType);
-      vm.localizedConnectorSectionHeader = $translate.instant('hercules.connectors.localizedConnectorAndHostHeader', {
-        connectorName: vm.localizedConnectorName,
-        hostname: vm.host.hostname
-      });
+      if (vm.host && vm.host.hostname) {
+        vm.localizedConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.' + vm.host.connectorType);
+        vm.localizedConnectorSectionHeader = $translate.instant('hercules.connectors.localizedConnectorAndHostHeader', {
+          connectorName: vm.localizedConnectorName,
+          hostname: vm.host.hostname
+        });
+      }
     }, true);
 
     function deleteHost() {
@@ -64,7 +66,7 @@
         templateUrl: 'modules/mediafusion/media-service-v2/side-panel/reassign-node-to-different-cluster/reassign-cluster-dialog.html',
       })
         .result
-        .then(function() {
+        .then(function () {
           if (vm.host.connectorType === 'mf_mgmt') {
             $state.go('media-service-v2.list');
           }
@@ -87,22 +89,22 @@
         templateUrl: 'modules/mediafusion/media-service-v2/side-panel/deregister-node/host-deregister-dialog.html',
       })
         .result
-        .then(function() {
+        .then(function () {
           if (vm.host.connectorType === 'mf_mgmt') {
             $state.go('media-service-v2.list');
           }
         });
     };
 
-    vm.showMoveNodeAction = function() {
+    vm.showMoveNodeAction = function () {
       return vm.host.connectorType === 'mf_mgmt';
     };
 
-    vm.showDeregisterNodeAction = function() {
+    vm.showDeregisterNodeAction = function () {
       return vm.host.connectorType === 'mf_mgmt';
     };
 
-    vm.showDeleteNodeAction = function() {
+    vm.showDeleteNodeAction = function () {
       return (vm.host.state === 'offline' && vm.host.connectorType === 'c_mgmt');
     };
   }

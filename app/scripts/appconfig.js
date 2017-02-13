@@ -3271,6 +3271,19 @@
               connectorType: null
             }
           })
+          .state('media-cluster-details.alarm-details', {
+            template: '<alarm-details-sidepanel alarm="$resolve.alarm"></alarm-details-sidepanel>',
+            // If data not present, $state.current.data.displayName inside the component has no effect
+            data: {},
+            params: {
+              alarm: null,
+            },
+            resolve: {
+              alarm: /* @ngInject */ function ($stateParams) {
+                return $stateParams.alarm;
+              },
+            }
+          })
           .state('media-service-v2', {
             templateUrl: 'modules/mediafusion/media-service-v2/media-service-overview.html',
             controller: 'MediaServiceControllerV2',
@@ -3301,65 +3314,6 @@
                 controller: 'MediaServiceSettingsControllerV2',
                 templateUrl: 'modules/mediafusion/media-service-v2/settings/media-service-settings.html'
               }
-            }
-          })
-          .state('connector-details-v2', {
-            parent: 'sidepanel',
-            views: {
-              'sidepanel@': {
-                controllerAs: 'groupDetails',
-                controller: 'GroupDetailsControllerV2',
-                templateUrl: 'modules/mediafusion/media-service-v2/side-panel/group-details.html'
-              },
-              'header@connector-details-v2': {
-                templateUrl: 'modules/mediafusion/media-service-v2/side-panel/group-header.html'
-              }
-            },
-            data: {
-              displayName: 'Overview'
-            },
-            params: {
-              clusterId: {},
-              connectorType: {},
-            }
-          })
-          .state('connector-details-v2.alarm-details', {
-            templateUrl: 'modules/mediafusion/media-service-v2/side-panel/alarm-details.html',
-            controller: 'MediaAlarmControllerV2',
-            controllerAs: 'alarmCtrl',
-            data: {
-              displayName: 'Alarm Details'
-            },
-            params: {
-              alarm: null,
-              host: null
-            }
-          })
-          .state('connector-details-v2.host-details', {
-            templateUrl: 'modules/mediafusion/media-service-v2/side-panel/host-details.html',
-            controller: 'HostDetailsControllerV2',
-            controllerAs: 'hostDetails',
-            data: {
-              displayName: 'Node'
-            },
-            params: {
-              clusterId: null,
-              connector: null,
-              hostLength: null,
-              selectedCluster: null
-            }
-          })
-          .state('connector-details-v2.alarm-detailsForNode', {
-            parent: 'connector-details-v2.host-details',
-            templateUrl: 'modules/mediafusion/media-service-v2/side-panel/alarm-details.html',
-            controller: 'MediaAlarmControllerV2',
-            controllerAs: 'alarmCtrl',
-            data: {
-              displayName: 'Alarm Details'
-            },
-            params: {
-              alarm: null,
-              host: null
             }
           });
 

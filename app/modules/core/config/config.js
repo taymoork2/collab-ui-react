@@ -486,9 +486,6 @@
       ],
       'squared-fusion-media': [
         'add-resource',
-        'connector-details',
-        'connector-details-v2',
-        'media-service',
         'media-service-v2',
         'mediafusion-cluster',
         'metrics',
