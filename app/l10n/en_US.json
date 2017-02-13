@@ -2126,7 +2126,8 @@
     "fusion": {
       "types": {
         "expressway": "Expressway",
-        "mediafusion": "Media"
+        "mediafusion": "Media",
+        "context": "Context"
       },
       "urgentUpgrade": {
         "title": "Urgent Upgrade Schedule"
@@ -2135,7 +2136,9 @@
         "title": "Clusters",
         "empty": "No clusters found.",
         "upgrade-schedule": "Upgrade Schedule",
+        "upgrades-automatically": "Upgrades automatically",
         "clusters": "Clusters",
+        "context": "Context",
         "users": "Users",
         "release-channel": "Release Channel",
         "nodes": "{count, plural, one{# Node} other{# Nodes}}",
@@ -2165,7 +2168,9 @@
           "expressway-description": "Can run Hybrid Call Service or Hybrid Calendar Service",
           "expressway-not-setup": "Expressway not set up",
           "mediafusion-description": "Can run Hybrid Media Service",
-          "mediafusion-not-setup": "Media Service not set up"
+          "mediafusion-not-setup": "Media Service not set up",
+          "context-description": "Can run Hybrid Context",
+          "context-not-setup": "Context not set up"
         },
         "expressway": {
           "services": {
@@ -2186,6 +2191,10 @@
             "help": "The cluster name is only used for display purposes."
           },
           "end": {}
+        },
+        "context": {
+          "register": "Register for Context Service through your on-premises application. Click \"Learn How\" for more information.",
+          "learn-how": "Learn How"
         }
       },
       "add-resource-group": {
@@ -2319,7 +2328,7 @@
     "clusters": {
       "listing": {
         "no_clusters_heading": "No Context clusters registered yet",
-        "no_clusters_text": "Register for Context Service through your on-premise application.",
+        "no_clusters_text": "Register for Context Service through your on-premises application.",
         "learn_how": "Learn How."
       }
     },
@@ -5978,7 +5987,8 @@
           "squared-fusion-uc": "Call",
           "squared-fusion-mgmt": "Management",
           "squared-fusion-media": "Media",
-          "spark-hybrid-datasecurity": "Data Security"
+          "spark-hybrid-datasecurity": "Data Security",
+          "contact-center-context": "Context"
         }
       },
       "licenses": {

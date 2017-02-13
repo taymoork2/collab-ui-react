@@ -27,6 +27,8 @@
     ctrl.hasNodesViewFeatureToggle = false;
     ctrl.getLocalizedReleaseChannel = FusionUtils.getLocalizedReleaseChannel;
     ctrl.hybridServicesComparator = FusionUtils.hybridServicesComparator;
+    ctrl.upgradesAutomatically = upgradesAutomatically;
+    ctrl.hideFooter = hideFooter;
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup)
       .then(function (supported) {
@@ -77,6 +79,10 @@
       } else if (serviceId === 'spark-hybrid-datasecurity') {
         $state.go('hds.list', {
           clusterId: clusterId,
+        });
+      } else if (serviceId === 'contact-center-context') {
+        $state.go('context-resources', {
+          backState: 'cluster-list'
         });
       }
     }
@@ -132,6 +138,18 @@
     function goToExpressway(hostname) {
       $window.open('https://' + encodeURIComponent(hostname) + '/fusionregistration');
 
+    }
+
+    function upgradesAutomatically(cluster) {
+      // these target types don't follow an upgrade
+      // schedule but instead upgrade automatically
+      return ['cs_mgmt'].indexOf(cluster.targetType) > -1;
+    }
+
+    function hideFooter(cluster) {
+      // these target types don't have setting/nodes,
+      // so hide the links in the footer
+      return ['cs_mgmt'].indexOf(cluster.targetType) > -1;
     }
   }
 })();

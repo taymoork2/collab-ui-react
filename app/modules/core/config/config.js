@@ -509,7 +509,8 @@
         'context-settings',
         'context-fields',
         'context-fieldsets',
-        'context-resources'
+        'context-resources',
+        'add-resource'
       ]
     };
 

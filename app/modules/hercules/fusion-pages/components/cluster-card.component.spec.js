@@ -78,5 +78,37 @@ describe('Component: clusterCard', function () {
         expect(controller.hasServices(controller.cluster)).toBe(true);
       });
     });
+
+    describe('upgradesAutomatically()', function () {
+      it('should return true for context service', function () {
+        ['cs_mgmt'].forEach(function (type) {
+          var cluster = { targetType: type };
+          expect(controller.upgradesAutomatically(cluster)).toBe(true);
+        });
+      });
+
+      it('should return false otherwise', function () {
+        ['c_mgmt', 'mf_mgmt', 'hds_app'].forEach(function (type) {
+          var cluster = { targetType: type };
+          expect(controller.upgradesAutomatically(cluster)).toBe(false);
+        });
+      });
+    });
+
+    describe('hideFooter()', function () {
+      it('should return true for context service', function () {
+        ['cs_mgmt'].forEach(function (type) {
+          var cluster = { targetType: type };
+          expect(controller.hideFooter(cluster)).toBe(true);
+        });
+      });
+
+      it('should return false otherwise', function () {
+        ['c_mgmt', 'mf_mgmt', 'hds_app'].forEach(function (type) {
+          var cluster = { targetType: type };
+          expect(controller.hideFooter(cluster)).toBe(false);
+        });
+      });
+    });
   });
 });
