@@ -11,6 +11,7 @@ describe('Controller:MediaReportsController', function () {
   var utilizationGraphData = getJSONFixture('mediafusion/json/metrics-graph-report/UtilizationGraphData.json');
   var participantDistributionGraphData = getJSONFixture('mediafusion/json/metrics-graph-report/ParticipantDistributionGraphData.json');
   var clientTypeData = getJSONFixture('mediafusion/json/metrics-graph-report/clientTypeGraphData.json');
+  var clientTypeCountData = getJSONFixture('mediafusion/json/metrics-graph-report/clientTypeCountData.json');
 
   var timeOptions = [{
     value: 0,
@@ -199,6 +200,14 @@ describe('Controller:MediaReportsController', function () {
       expect(controller.total).toBe(50);
     });
 
+    it('setClientTypeCard should invoke getClienTypeCardData', function () {
+      spyOn(MediaReportsService, 'getClientTypeCardData').and.returnValue($q.resolve(clientTypeCountData));
+      controller.setClientTypeCard();
+      httpMock.flush();
+      expect(MediaReportsService.getClientTypeCardData).toHaveBeenCalled();
+      expect(controller.clientTypeCount).toBe(8);
+    });
+
     it('setClusterAvailability should set the clusterAvailability', function () {
       var response = {
         'data': {
@@ -247,7 +256,7 @@ describe('Controller:MediaReportsController', function () {
       expect(ParticipantDistributionResourceGraphService.setParticipantDistributionGraph).toHaveBeenCalled();
     });
 
-    it('should call dummysetClientType for setDummyClientType when there is no data', function () {
+    xit('should call dummysetClientType for setDummyClientType when there is no data', function () {
       spyOn(MediaReportsService, 'getClientTypeData').and.callThrough();
       spyOn(MediaReportsDummyGraphService, 'dummyLineChartData').and.callThrough();
       spyOn(MediaReportsDummyGraphService, 'dummyClientTypeGraph').and.callThrough();

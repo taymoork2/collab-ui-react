@@ -1,91 +1,136 @@
 {
-  "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
-  "startTime": "2017-02-09T18:15:56Z",
-  "endTime": "2017-02-10T04:15:56Z",
-  "chartData": [
-    {
-      "DESKTOP": "27.0",
-      "TP_ENDPOINT": "17.0",
-      "time": "2017-02-09T18:21:00Z",
-      "SIP": "45.0",
-      "UNKNOWN": "3.0",
-      "ANDROID": "1.0",
-      "JABBER": "1.0",
-      "IPHONE": "11.0"
-    },
-    {
-      "DESKTOP": "13.0",
-      "TP_ENDPOINT": "9.0",
-      "time": "2017-02-09T19:21:00Z",
-      "SIP": "11.0",
-      "ANDROID": "3.0",
-      "IPHONE": "4.0"
-    },
-    {
-      "SPARK_BOARD": "5.0",
-      "DESKTOP": "76.0",
-      "IPAD": "1.0",
-      "TP_ENDPOINT": "49.0",
-      "time": "2017-02-09T20:33:00Z",
-      "SIP": "73.0",
-      "ANDROID": "2.0",
-      "IPHONE": "20.0"
-    },
-    {
-      "SPARK_BOARD": "1.0",
-      "DESKTOP": "39.0",
-      "IPAD": "1.0",
-      "TP_ENDPOINT": "23.0",
-      "time": "2017-02-09T21:22:00Z",
-      "SIP": "47.0",
-      "ANDROID": "7.0",
-      "IPHONE": "13.0"
-    },
-    {
-      "DESKTOP": "27.0",
-      "IPAD": "1.0",
-      "TP_ENDPOINT": "19.0",
-      "time": "2017-02-09T22:22:00Z",
-      "SIP": "47.0",
-      "IPHONE": "14.0"
-    }
-  ],
-  "graphs": [
-    {
-      "title": "SPARK_BOARD",
-      "valueField": "SPARK_BOARD"
-    },
-    {
-      "title": "DESKTOP",
-      "valueField": "DESKTOP"
-    },
-    {
-      "title": "IPAD",
-      "valueField": "IPAD"
-    },
-    {
-      "title": "TP_ENDPOINT",
-      "valueField": "TP_ENDPOINT"
-    },
-    {
-      "title": "SIP",
-      "valueField": "SIP"
-    },
-    {
-      "title": "UNKNOWN",
-      "valueField": "UNKNOWN"
-    },
-    {
-      "title": "ANDROID",
-      "valueField": "ANDROID"
-    },
-    {
-      "title": "JABBER",
-      "valueField": "JABBER"
-    },
-    {
-      "title": "IPHONE",
-      "valueField": "IPHONE"
-    }
+  "graphData": [
+      {
+        "DESKTOP": "27.0",
+        "TP_ENDPOINT": "17.0",
+        "time": "2017-02-09T18:21:00Z",
+        "SIP": "45.0",
+        "UNKNOWN": "3.0",
+        "ANDROID": "1.0",
+        "JABBER": "1.0",
+        "IPHONE": "11.0"
+      },
+      {
+        "DESKTOP": "13.0",
+        "TP_ENDPOINT": "9.0",
+        "time": "2017-02-09T19:21:00Z",
+        "SIP": "11.0",
+        "ANDROID": "3.0",
+        "IPHONE": "4.0"
+      },
+      {
+        "SPARK_BOARD": "5.0",
+        "DESKTOP": "76.0",
+        "IPAD": "1.0",
+        "TP_ENDPOINT": "49.0",
+        "time": "2017-02-09T20:33:00Z",
+        "SIP": "73.0",
+        "ANDROID": "2.0",
+        "IPHONE": "20.0"
+      },
+      {
+        "SPARK_BOARD": "1.0",
+        "DESKTOP": "39.0",
+        "IPAD": "1.0",
+        "TP_ENDPOINT": "23.0",
+        "time": "2017-02-09T21:22:00Z",
+        "SIP": "47.0",
+        "ANDROID": "7.0",
+        "IPHONE": "13.0"
+      },
+      {
+        "DESKTOP": "27.0",
+        "IPAD": "1.0",
+        "TP_ENDPOINT": "19.0",
+        "time": "2017-02-09T22:22:00Z",
+        "SIP": "47.0",
+        "IPHONE": "14.0"
+      }
+    ],
+    "graphs": [
+      {
+        "title": "SPARK_BOARD",
+        "valueField": "SPARK_BOARD"
+      },
+      {
+        "title": "DESKTOP",
+        "valueField": "DESKTOP"
+      },
+      {
+        "title": "IPAD",
+        "valueField": "IPAD"
+      },
+      {
+        "title": "TP_ENDPOINT",
+        "valueField": "TP_ENDPOINT"
+      },
+      {
+        "title": "SIP",
+        "valueField": "SIP"
+      },
+      {
+        "title": "UNKNOWN",
+        "valueField": "UNKNOWN"
+      },
+      {
+        "title": "ANDROID",
+        "valueField": "ANDROID"
+      },
+      {
+        "title": "JABBER",
+        "valueField": "JABBER"
+      },
+      {
+        "title": "IPHONE",
+        "valueField": "IPHONE"
+      }
+    ],
+  "clienttyperesponse":[
+      {
+        "DESKTOP": "27.0",
+        "TP_ENDPOINT": "17.0",
+        "time": "2017-02-09T18:21:00Z",
+        "SIP": "45.0",
+        "UNKNOWN": "3.0",
+        "ANDROID": "1.0",
+        "JABBER": "1.0",
+        "IPHONE": "11.0"
+      },
+      {
+        "DESKTOP": "13.0",
+        "TP_ENDPOINT": "9.0",
+        "time": "2017-02-09T19:21:00Z",
+        "SIP": "11.0",
+        "ANDROID": "3.0",
+        "IPHONE": "4.0"
+      },
+      {
+        "SPARK_BOARD": "5.0",
+        "DESKTOP": "76.0",
+        "IPAD": "1.0",
+        "TP_ENDPOINT": "49.0",
+        "time": "2017-02-09T20:33:00Z",
+        "SIP": "73.0",
+        "ANDROID": "2.0",
+        "IPHONE": "20.0"
+      },
+      {
+        "SPARK_BOARD": "1.0",
+        "DESKTOP": "39.0",
+        "IPAD": "1.0",
+        "TP_ENDPOINT": "23.0",
+        "time": "2017-02-09T21:22:00Z",
+        "SIP": "47.0",
+        "ANDROID": "7.0",
+        "IPHONE": "13.0"
+      },
+      {
+        "DESKTOP": "27.0",
+        "IPAD": "1.0",
+        "TP_ENDPOINT": "19.0",
+        "time": "2017-02-09T22:22:00Z",
+        "SIP": "47.0",
+        "IPHONE": "14.0"
+      }
   ]
 }

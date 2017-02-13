@@ -291,16 +291,15 @@
     }
 
     function setClientTypeCard() {
-      MediaReportsService.getClienTypeCardData(vm.timeSelected).then(function (response) {
+      MediaReportsService.getClientTypeCardData(vm.timeSelected).then(function (response) {
         if (response === vm.ABORT) {
           return;
         } else if (_.isUndefined(response.data) || response.data.length === 0) {
           vm.clientTypeCount = vm.noData;
         } else {
-          vm.clientTypeCount = response.data.dataProvider.length
+          vm.clientTypeCount = response.data.dataProvider.length;
         }
-
-      });  
+      });
     }
 
     function setClusterAvailability() {

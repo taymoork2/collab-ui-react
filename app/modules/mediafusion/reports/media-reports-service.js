@@ -224,10 +224,8 @@
       });
     }
 
-    function getClienTypeCardData(time) {
-      vm.total_calls = '/client_type_trend';
-      
-
+    function getClientTypeCardData(time) {
+      vm.total_calls = '/client_type_count';
       var returnData = [];
       return $http.get(vm.urlBase + getQuerys(vm.total_calls, vm.allClusters, time)).then(function (response) {
         if (!_.isUndefined(response) && !_.isUndefined(response.data)) {
@@ -260,7 +258,7 @@
       getClusterAvailabilityTooltip: getClusterAvailabilityTooltip,
       getHostedOnPremisesTooltip: getHostedOnPremisesTooltip,
       getClientTypeData: getClientTypeData,
-      getClienTypeCardData: getClienTypeCardData
+      getClientTypeCardData: getClientTypeCardData
     };
 
   }
