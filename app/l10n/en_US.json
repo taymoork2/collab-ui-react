@@ -6109,6 +6109,8 @@
     "atlas-portal.support": "Support",
     "atlas-portal.reports": "Reports",
     "atlas-portal.billing": "Billing",
+    "atlas-portal.cisco.partnermgmt": "Partner Management",
+    "atlas-portal.cisco.partnermgmtTooltip": "Access to Partner Management",
     "atlas-portal.partner.helpdesk": "Help Desk Support",
     "atlas-portal.partner.helpdeskTooltip": "Access to Help Desk",
     "atlas-portal.partner.orderadmin": "Order Admin Support",
