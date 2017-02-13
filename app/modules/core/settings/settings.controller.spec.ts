@@ -1,68 +1,86 @@
 /// <reference path="settings.controller.ts"/>
-namespace globalsettings {
+describe('SettingsCtrl', function () {
+  let controller, initController;
 
-  describe('SettingsCtrl', () => {
+  beforeEach(function () {
+    this.initModules('Core', 'Huron', 'Sunlight');
+    this.injectDependencies('$rootScope', '$scope', '$controller', '$q', 'Authinfo', 'FeatureToggleService', 'Orgservice');
 
-    let controller, $controller, Authinfo, FeatureToggleService, Orgservice, $q, $scope;
+    spyOn(this.Orgservice, 'getOrg');
+    spyOn(this.FeatureToggleService, 'atlasDataRetentionSettingsGetStatus');
+    spyOn(this.FeatureToggleService, 'atlasPinSettingsGetStatus');
+    spyOn(this.Authinfo, 'isPartner');
+    spyOn(this.Authinfo, 'isCustomerAdmin');
+    spyOn(this.Authinfo, 'isDirectCustomer');
 
-    beforeEach(angular.mock.module('Core'));
-    beforeEach(angular.mock.module('Huron'));
-    beforeEach(angular.mock.module('Sunlight'));
+    this.FeatureToggleService.atlasPinSettingsGetStatus.and.returnValue(this.$q.when(true));
+    this.FeatureToggleService.atlasDataRetentionSettingsGetStatus.and.returnValue(this.$q.when(true));
 
-    function dependencies(_$controller_, $rootScope, _Authinfo_, _FeatureToggleService_, _Orgservice_, _$q_) {
-      $controller = _$controller_;
-      Authinfo = _Authinfo_;
-      FeatureToggleService = _FeatureToggleService_;
-      $q = _$q_;
-      Orgservice = _Orgservice_;
-      $scope = $rootScope.$new();
-    }
-
-    function initSpies() {
-      spyOn(Orgservice, 'getOrg');
-      spyOn(FeatureToggleService, 'atlasDataRetentionSettingsGetStatus');
-      spyOn(FeatureToggleService, 'atlasPinSettingsGetStatus');
-      spyOn(Authinfo, 'isPartner');
-      spyOn(Authinfo, 'isCustomerAdmin');
-      spyOn(Authinfo, 'isDirectCustomer');
-    }
-
-    function initController() {
-      controller = $controller('SettingsCtrl', {
-        $scope: $scope,
+    initController = () => {
+      controller = this.$controller('SettingsCtrl', {
+        $scope: this.$scope,
         hasFeatureToggle: true,
       });
 
-      $scope.$apply();
-    }
+      this.$scope.$apply();
+    };
+  });
 
-    beforeEach(inject(dependencies));
-    beforeEach(initSpies);
-    beforeEach(setFeatureToggles);
-
-    describe('for partner admin', () => {
-
-      beforeEach(setAuthinfoIsPartnerSpy(true));
-      beforeEach(initController);
-
-      it('should create the ctrl and add the partner setting sections', () => {
-        expect(controller.security).toBeFalsy();
-        expect(controller.domains).toBeFalsy();
-        expect(controller.sipDomain).toBeFalsy();
-        expect(controller.authentication).toBeFalsy();
-        expect(controller.support).toBeTruthy();
-        expect(controller.branding).toBeTruthy();
-        expect(controller.privacy).toBeFalsy();
-        expect(controller.retention).toBeFalsy();
-      });
+  describe('for partner admin', function () {
+    beforeEach(function () {
+      this.Authinfo.isPartner.and.returnValue(true);
+      initController();
     });
 
-    describe('for direct customer', () => {
+    it('should create the ctrl and add the partner setting sections', function () {
+      expect(controller.security).toBeFalsy();
+      expect(controller.domains).toBeFalsy();
+      expect(controller.sipDomain).toBeFalsy();
+      expect(controller.authentication).toBeFalsy();
+      expect(controller.support).toBeTruthy();
+      expect(controller.branding).toBeTruthy();
+      expect(controller.privacy).toBeFalsy();
+      expect(controller.retention).toBeFalsy();
+    });
+  });
 
-      beforeEach(setAuthinfoIsDirectCustomerSpy(true));
-      beforeEach(initController);
+  describe('for direct customer', function () {
+    beforeEach(function () {
+      this.Authinfo.isDirectCustomer.and.returnValue(true);
+      initController();
+    });
 
-      it('should create the ctrl and add the direct customer setting sections', () => {
+    it('should create the ctrl and add the direct customer setting sections', function () {
+      expect(controller.security).toBeTruthy();
+      expect(controller.domains).toBeTruthy();
+      expect(controller.sipDomain).toBeTruthy();
+      expect(controller.authentication).toBeTruthy();
+      expect(controller.support).toBeTruthy();
+      expect(controller.branding).toBeTruthy();
+      expect(controller.privacy).toBeTruthy();
+      expect(controller.retention).toBeTruthy();
+    });
+  });
+
+  describe('for normal admin', function () {
+    beforeEach(function () {
+      this.Authinfo.isPartner.and.returnValue(false);
+      this.Authinfo.isCustomerAdmin.and.returnValue(true);
+    });
+
+    describe('with allowCustomerLogos set to true', function () {
+      beforeEach(function () {
+        this.Orgservice.getOrg.and.returnValue(this.$q.when({
+          data: {
+            orgSettings: {
+              allowCustomerLogos: true,
+            },
+          },
+        }));
+        initController();
+      });
+
+      it('should create the ctrl and add the normal setting sections', function () {
         expect(controller.security).toBeTruthy();
         expect(controller.domains).toBeTruthy();
         expect(controller.sipDomain).toBeTruthy();
@@ -74,81 +92,66 @@ namespace globalsettings {
       });
     });
 
-    describe('for normal admin', () => {
-
-      beforeEach(setAuthinfoIsPartnerSpy(false));
-      beforeEach(setAuthinfoIsCustomerAdminSpy(true));
-
-      describe('with allowCustomerLogos set to true', () => {
-
-        beforeEach(setGetOrgSpy(true));
-        beforeEach(initController);
-
-        it('should create the ctrl and add the normal setting sections', () => {
-          expect(controller.security).toBeTruthy();
-          expect(controller.domains).toBeTruthy();
-          expect(controller.sipDomain).toBeTruthy();
-          expect(controller.authentication).toBeTruthy();
-          expect(controller.support).toBeTruthy();
-          expect(controller.branding).toBeTruthy();
-          expect(controller.privacy).toBeTruthy();
-          expect(controller.retention).toBeTruthy();
-        });
+    describe('with allowCustomerLogos set to false', function () {
+      beforeEach(function () {
+        this.Orgservice.getOrg.and.returnValue(this.$q.when({
+          data: {
+            orgSettings: {
+              allowCustomerLogos: false,
+            },
+          },
+        }));
+        initController();
       });
 
-      describe('with allowCustomerLogos set to false', () => {
-
-        beforeEach(setGetOrgSpy(false));
-        beforeEach(initController);
-
-        it('should create the ctrl and add the normal setting sections', () => {
-          expect(controller.security).toBeTruthy();
-          expect(controller.domains).toBeTruthy();
-          expect(controller.sipDomain).toBeTruthy();
-          expect(controller.authentication).toBeTruthy();
-          expect(controller.support).toBeTruthy();
-          expect(controller.branding).toBeFalsy();
-          expect(controller.privacy).toBeTruthy();
-          expect(controller.retention).toBeTruthy();
-        });
+      it('should create the ctrl and add the normal setting sections', function () {
+        expect(controller.security).toBeTruthy();
+        expect(controller.domains).toBeTruthy();
+        expect(controller.sipDomain).toBeTruthy();
+        expect(controller.authentication).toBeTruthy();
+        expect(controller.support).toBeTruthy();
+        expect(controller.branding).toBeFalsy();
+        expect(controller.privacy).toBeTruthy();
+        expect(controller.retention).toBeTruthy();
       });
     });
-
-    function setAuthinfoIsPartnerSpy(isPartner) {
-      return () => {
-        Authinfo.isPartner.and.returnValue(isPartner);
-      };
-    }
-
-    function setAuthinfoIsCustomerAdminSpy(isCustomerAdmin) {
-      return () => {
-        Authinfo.isCustomerAdmin.and.returnValue(isCustomerAdmin);
-      };
-    }
-
-    function setAuthinfoIsDirectCustomerSpy(isDirectCustomer) {
-      return () => {
-        Authinfo.isDirectCustomer.and.returnValue(isDirectCustomer);
-      };
-    }
-
-    function setGetOrgSpy(allowBranding) {
-      return () => {
-        Orgservice.getOrg.and.returnValue($q.when({ data: { orgSettings: { allowCustomerLogos: allowBranding } } }));
-      };
-    }
-
-    function setFeatureToggles() {
-      togglePinSettings();
-      toggleDataRetentionSettings();
-    }
-
-    function togglePinSettings() {
-      FeatureToggleService.atlasPinSettingsGetStatus.and.returnValue($q.when(true));
-    }
-
-    function toggleDataRetentionSettings() {
-      FeatureToggleService.atlasDataRetentionSettingsGetStatus.and.returnValue($q.when(true));
-    }
   });
-}
+
+  describe('with save\cancel buttons', function () {
+    let ACTIVATE_SAVE_BUTTONS: string = 'settings-control-activate-footer';
+    let REMOVE_SAVE_BUTTONS: string = 'settings-control-remove-footer';
+    let SAVE_BROADCAST: string = 'settings-control-save';
+    let CANCEL_BROADCAST: string = 'settings-control-cancel';
+
+    beforeEach(function () {
+      spyOn(this.$scope, '$emit').and.callThrough();
+      initController();
+    });
+
+    it('should set the save function on broadcast and then reset to defaults after save()', function () {
+      this.$rootScope.$broadcast(ACTIVATE_SAVE_BUTTONS);
+      expect(controller.saveCancelFooter).toBeTruthy();
+
+      controller.save();
+      expect(this.$scope.$emit).toHaveBeenCalledTimes(1);
+      expect(this.$scope.$emit).toHaveBeenCalledWith(SAVE_BROADCAST);
+      expect(controller.saveCancelFooter).toBeFalsy();
+    });
+
+    it('should set the cancel function on broadcast and then reset to defaults after cancel()', function () {
+      this.$rootScope.$broadcast(ACTIVATE_SAVE_BUTTONS);
+      expect(controller.saveCancelFooter).toBeTruthy();
+
+      controller.cancel();
+      expect(this.$scope.$emit).toHaveBeenCalledTimes(1);
+      expect(this.$scope.$emit).toHaveBeenCalledWith(CANCEL_BROADCAST);
+      expect(controller.saveCancelFooter).toBeFalsy();
+    });
+
+    it('should remove save\cancel buttons on REMOVE_SAVE_BUTTONS broadcast', function () {
+      controller.saveCancelFooter = true;
+      this.$rootScope.$broadcast(REMOVE_SAVE_BUTTONS);
+      expect(controller.saveCancelFooter).toBeFalsy();
+    });
+  });
+});

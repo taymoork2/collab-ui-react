@@ -1,5 +1,8 @@
 @import 'styles/toolkit/colors';
 @import 'styles/toolkit/fonts';
+@import 'styles/toolkit/spacing';
+
+@import 'sipDomain/_sip-domain-settings';
 
 .settings {
   background-color: white;
@@ -45,6 +48,18 @@
 
     #webex_client_versions_label_and_dropdown .row {
       margin-top: 2.5rem;
+    }
+  }
+
+  .save-cancel-footer {
+    width: calc(100% - 100px);
+    position: fixed;
+    top: calc(100vh - 60px);
+    background-color: $gray-light-4;
+    @include vr-spacing(ph, 2);
+    @include vr-spacing(pv, 1);
+    .save-cancel-buttons {
+      @include vr-spacing(ml, 0.5)
     }
   }
 }

@@ -5,7 +5,7 @@
     .module('Mediafusion')
     .controller('MediaReportsController', MediaReportsController);
   /* @ngInject */
-  function MediaReportsController($q, $scope, $translate, $interval, MediaClusterServiceV2, UtilizationResourceGraphService, ParticipantDistributionResourceGraphService, MediaReportsService, Notification, MediaReportsDummyGraphService, MediaSneekPeekResourceService, CallVolumeResourceGraphService, AvailabilityResourceGraphService) {
+  function MediaReportsController($q, $scope, $translate, $interval, MediaClusterServiceV2, UtilizationResourceGraphService, ParticipantDistributionResourceGraphService, MediaReportsService, Notification, MediaReportsDummyGraphService, MediaSneekPeekResourceService, CallVolumeResourceGraphService, AvailabilityResourceGraphService, ClientTypeAdoptionGraphService) {
     var vm = this;
     var interval = null;
     var deferred = $q.defer();
@@ -19,6 +19,7 @@
     vm.callVolumeStatus = vm.REFRESH;
     vm.participantDistributionStatus = vm.REFRESH;
     vm.availabilityStatus = vm.REFRESH;
+    vm.clientTypeStatus = vm.REFRESH;
 
     vm.clusterFilter = null;
     vm.timeFilter = null;
@@ -33,6 +34,10 @@
     vm.noData = $translate.instant('mediaFusion.metrics.nodata');
     vm.percentage = $translate.instant('mediaFusion.metrics.percentage');
 
+    vm.total_meetings = $translate.instant('mediaFusion.metrics.totalMeetings');
+    vm.meeting_premises = $translate.instant('mediaFusion.metrics.meetOnPrem');
+    vm.client_types = $translate.instant('mediaFusion.metrics.clientTypes');
+    vm.num_meet = $translate.instant('mediaFusion.metrics.noOfMeet');
     vm.total_calls_heading = $translate.instant('mediaFusion.metrics.total_calls');
     vm.on_prem_calls_heading = $translate.instant('mediaFusion.metrics.onpremcalls');
     vm.hosted_calls_heading = $translate.instant('mediaFusion.metrics.hostedcalls');
@@ -63,12 +68,16 @@
     vm.clusterUpdate = clusterUpdate;
     vm.clusterUpdateFromTooltip = clusterUpdateFromTooltip;
     vm.timeUpdate = timeUpdate;
+    vm.setRefreshTabs = setRefreshTabs;
 
     vm.setClusterAvailability = setClusterAvailability;
     vm.setTotalCallsData = setTotalCallsData;
     vm.setSneekPeekData = setSneekPeekData;
     vm.setAvailabilityData = setAvailabilityData;
     vm.setCallVolumeData = setCallVolumeData;
+
+    vm.setClientTypeData = setClientTypeData;
+    vm.setClientTypeCard = setClientTypeCard;
 
     vm.showAvailabilityTooltip = false;
     vm.showHostedOnPremTooltip = false;
@@ -108,7 +117,8 @@
 
     function loadAdaptionDatas() {
       //Adoption changes here
-      setRefreshInterval();
+      setClientTypeData();
+      setClientTypeCard();
     }
 
     function clusterUpdate() {
@@ -148,6 +158,10 @@
 
     function timeUpdate() {
       setRefreshInterval();
+      setRefreshTabs();
+    }
+
+    function setRefreshTabs() {
       $interval.cancel(interval);
       if (vm.displayResources) {
         loadResourceDatas();
@@ -156,6 +170,35 @@
         loadAdaptionDatas();
         interval = $interval(loadAdaptionDatas, vm.updateInterval);
       }
+    }
+
+    function setRefreshInterval() {
+      if (vm.timeSelected.value === 0) {
+        vm.updateInterval = 60000;
+      } else if (!_.isUndefined(vm.timeSelected.value)) {
+        vm.updateInterval = 300000;
+      } else {
+        vm.updateInterval = 7200000;
+      }
+    }
+
+    function changeTabs(isDisplayAdoption, isDisplayResources) {
+      vm.displayAdoption = isDisplayAdoption;
+      vm.displayResources = isDisplayResources;
+      //We should load only data's which belongs to resources tab here
+      if (vm.displayResources) {
+        loadResourceDatas();
+      } else {
+        loadAdaptionDatas();
+      }
+    }
+
+    function isEmpty(tab) {
+      return tab === vm.EMPTY;
+    }
+
+    function isRefresh(tab) {
+      return tab === vm.REFRESH;
     }
 
     function getCluster() {
@@ -247,6 +290,18 @@
       });
     }
 
+    function setClientTypeCard() {
+      MediaReportsService.getClientTypeCardData(vm.timeSelected).then(function (response) {
+        if (response === vm.ABORT) {
+          return;
+        } else if (_.isUndefined(response.data) || response.data.length === 0) {
+          vm.clientTypeCount = vm.noData;
+        } else {
+          vm.clientTypeCount = response.data.dataProvider.length;
+        }
+      });
+    }
+
     function setClusterAvailability() {
       MediaReportsService.getClusterAvailabilityData(vm.timeSelected, vm.clusterId).then(function (response) {
         if (response === vm.ABORT) {
@@ -315,6 +370,28 @@
       });
     }
 
+    function setClientTypeData() {
+      MediaReportsService.getClientTypeData(vm.timeSelected).then(function (response) {
+        if (_.isUndefined(response.graphData) || _.isUndefined(response.graphs) || response.graphData.length === 0 || response.graphs.length === 0) {
+          setDummyClientType();
+        } else {
+          deferred.promise.then(function () {
+            //set the client type graphs here
+            if (_.isUndefined(setClientTypeGraph(response))) {
+              setDummyClientType();
+            } else {
+              vm.clientTypeStatus = vm.SET;
+            }
+          }, function () {
+            //map is nor formed so we shoud show dummy graphs
+            setDummyClientType();
+          });
+        }
+      }, function () {
+        setDummyClientType();
+      });
+    }
+
     function setAvailabilityData() {
       MediaReportsService.getAvailabilityData(vm.timeSelected, vm.clusterId).then(function (response) {
         if (_.isUndefined(response.data) || !_.isArray(response.data) || response.data.length === 0 || _.isUndefined(response.data[0].clusterCategories) || response.data[0].clusterCategories.length === 0) {
@@ -357,6 +434,11 @@
       return vm.participantDistributionChart;
     }
 
+    function setClientTypeGraph(response) {
+      vm.clientTypeChart = ClientTypeAdoptionGraphService.setClientTypeGraph(response, vm.clientTypeChart, vm.timeSelected);
+      return vm.clientTypeChart;
+    }
+
     function setCallVolumeGraph(response) {
       vm.callVolumeChart = CallVolumeResourceGraphService.setCallVolumeGraph(response.graphData, vm.callVolumeChart, vm.clusterSelected, vm.timeSelected);
     }
@@ -383,6 +465,15 @@
       setParticipantDistributionGraph(response);
     }
 
+    function setDummyClientType() {
+      vm.clientTypeStatus = vm.EMPTY;
+      var response = {
+        graphData: MediaReportsDummyGraphService.dummyLineChartData(vm.timeSelected),
+        graphs: MediaReportsDummyGraphService.dummyClientTypeGraph()
+      };
+      setClientTypeGraph(response);
+    }
+
     function setDummyCallVolume() {
       vm.callVolumeStatus = vm.EMPTY;
       var response = {
@@ -394,35 +485,6 @@
     function setdummyAvailability() {
       vm.availabilityStatus = vm.EMPTY;
       setAvailabilityGraph(MediaReportsDummyGraphService.dummyAvailabilityData(vm.timeSelected));
-    }
-
-    function setRefreshInterval() {
-      if (vm.timeSelected.value === 0) {
-        vm.updateInterval = 60000;
-      } else if (!_.isUndefined(vm.timeSelected.value)) {
-        vm.updateInterval = 300000;
-      } else {
-        vm.updateInterval = 7200000;
-      }
-    }
-
-    function changeTabs(isDisplayAdoption, isDisplayResources) {
-      vm.displayAdoption = isDisplayAdoption;
-      vm.displayResources = isDisplayResources;
-      //We should load only data's which belongs to resources tab here
-      if (vm.displayResources) {
-        loadResourceDatas();
-      } else {
-        loadAdaptionDatas();
-      }
-    }
-
-    function isEmpty(tab) {
-      return tab === vm.EMPTY;
-    }
-
-    function isRefresh(tab) {
-      return tab === vm.REFRESH;
     }
 
     function clusterUpdateFromTooltip() {

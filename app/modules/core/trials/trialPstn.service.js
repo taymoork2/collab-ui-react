@@ -14,6 +14,7 @@
       createPstnEntity: createPstnEntity,
       createPstnEntityV2: createPstnEntityV2,
       resetAddress: resetAddress,
+      checkForPstnSetup: checkForPstnSetup,
     };
 
     return service;
@@ -77,14 +78,21 @@
     }
 
     function createPstnEntityV2(customerOrgId, customerName) {
-      if (_trialData.details.pstnProvider.apiImplementation === "SWIVEL") {
-        _trialData.details.pstnNumberInfo.numbers = _trialData.details.swivelNumbers;
-        _trialData.details.pstnContractInfo.companyName = customerName;
-      }
-      return createPstnCustomerV2(customerOrgId)
-        .then(_.partial(createCustomerSite, customerOrgId))
-        .then(_.partial(reserveNumbersWithCustomerV2, customerOrgId))
-        .then(_.partial(orderNumbersV2, customerOrgId));
+      checkForPstnSetup(customerOrgId)
+        .catch(function () {
+          if (_trialData.details.pstnProvider.apiImplementation === "SWIVEL") {
+            _trialData.details.pstnNumberInfo.numbers = _trialData.details.swivelNumbers;
+            _trialData.details.pstnContractInfo.companyName = customerName;
+          }
+          return createPstnCustomerV2(customerOrgId)
+            .then(_.partial(createCustomerSite, customerOrgId))
+            .then(_.partial(reserveNumbersWithCustomerV2, customerOrgId))
+            .then(_.partial(orderNumbersV2, customerOrgId));
+        });
+    }
+
+    function checkForPstnSetup(customerOrgId) {
+      return PstnSetupService.getCustomerV2(customerOrgId);
     }
 
     function reserveNumbers() {

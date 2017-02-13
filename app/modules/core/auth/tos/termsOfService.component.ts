@@ -3,6 +3,7 @@ import { IToolkitModalService } from 'modules/core/modal';
 
 class TermsOfServiceCtrl implements ng.IComponentController {
   public hasReadAggreement: boolean = false;
+  public acceptingToS: boolean = false;
   public scrollData = {
     iframeHeight: 0,
     curPos: 0,
@@ -40,6 +41,8 @@ class TermsOfServiceCtrl implements ng.IComponentController {
     // is in the hosted PDF, but it looks nice and we can track the user scrolling to the bottom
     let tosHtml: string = this.$templateCache.get<string>('modules/core/auth/tos/tos.html');
     let tosStyle: string = this.$templateCache.get<string>('modules/core/auth/tos/tos-style.html');
+
+    this.acceptingToS = false;
 
     // Load the external hosted PDF.  This does not look good since we are up to the whims of the
     // embedded PDF viewer.  However, at least it is up to date.
@@ -95,12 +98,13 @@ class TermsOfServiceCtrl implements ng.IComponentController {
   }
 
   public agree(): ng.IPromise<any> {
+    this.acceptingToS = true;
     return this.TOSService.acceptTOS()
       .then(() => {
-        this.TOSService.dismissModal();
-        this.$state.go('login', {}, {
-          reload: true,
-        });
+          this.TOSService.dismissModal();
+          this.$state.go('login', {}, {
+            reload: true,
+          });
       });
   }
 

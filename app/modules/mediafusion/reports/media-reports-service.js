@@ -224,6 +224,20 @@
       });
     }
 
+    function getClientTypeCardData(time) {
+      vm.total_calls = '/client_type_count';
+      var returnData = [];
+      return $http.get(vm.urlBase + getQuerys(vm.total_calls, vm.allClusters, time)).then(function (response) {
+        if (!_.isUndefined(response) && !_.isUndefined(response.data)) {
+          return response;
+        } else {
+          return returnData;
+        }
+      }, function (error) {
+        return returnErrorCheck(error, $translate.instant('mediaFusion.metrics.overallTotalNumberOfCallsError'), returnData);
+      });
+    }
+
     function returnErrorCheck(error, message, returnItem) {
       if (error.status === 401 || error.status === 403) {
         Notification.error('reportsPage.unauthorizedError');
@@ -243,7 +257,8 @@
       getTotalCallsData: getTotalCallsData,
       getClusterAvailabilityTooltip: getClusterAvailabilityTooltip,
       getHostedOnPremisesTooltip: getHostedOnPremisesTooltip,
-      getClientTypeData: getClientTypeData
+      getClientTypeData: getClientTypeData,
+      getClientTypeCardData: getClientTypeCardData
     };
 
   }

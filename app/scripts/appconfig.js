@@ -2375,6 +2375,38 @@
               }
             }
           })
+          .state('pstn', {
+            parent: 'modal',
+            params: {
+              customerId: {},
+              customerName: {},
+              customerEmail: {},
+              customerCommunicationLicenseIsTrial: {},
+              customerRoomSystemsLicenseIsTrial: {},
+            },
+            views: {
+              'modal@': {
+                template: '<uc-pstn-wizard customer-id="$resolve.customerId" customer-name="$resolve.customerName" customer-email="$resolve.customerEmail" customer-communication-license-is-trial="$resolve.customerCommunicationLicenseIsTrial" customer-room-systems-license-is-trial="$resolve.customerRoomSystemsLicenseIsTrial"></uc-pstn-wizard>',
+              },
+            },
+            resolve: {
+              customerId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.customerId;
+              },
+              customerName: /* @ngInject */ function ($stateParams) {
+                return $stateParams.customerName;
+              },
+              customerEmail: /* @ngInject */ function ($stateParams) {
+                return $stateParams.customerEmail;
+              },
+              customerCommunicationLicenseIsTrial: /* @ngInject */ function ($stateParams) {
+                return $stateParams.customerCommunicationLicenseIsTrial;
+              },
+              customerRoomSystemsLicenseIsTrial: /* @ngInject */ function ($stateParams) {
+                return $stateParams.customerRoomSystemsLicenseIsTrial;
+              }
+            },
+          })
           .state('pstnSetup', {
             parent: 'modal',
             params: {

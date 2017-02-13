@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: PstnProvidersCtrl', function () {
-  var controller, $controller, $scope, $q, $state, PstnSetup, PstnSetupService, PstnServiceAddressService, Notification;
+  var controller, $controller, $scope, $q, $state, PstnSetup, PstnSetupService, PstnServiceAddressService, Notification, FeatureToggleService;
 
   var carrierList = getJSONFixture('huron/json/pstnSetup/carrierList.json');
   var customer = getJSONFixture('huron/json/pstnSetup/customer.json');
@@ -12,7 +12,7 @@ describe('Controller: PstnProvidersCtrl', function () {
 
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$q_, _$state_, _PstnSetup_, _PstnSetupService_, _PstnServiceAddressService_, _Notification_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$q_, _$state_, _PstnSetup_, _PstnSetupService_, _PstnServiceAddressService_, _Notification_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
@@ -21,6 +21,7 @@ describe('Controller: PstnProvidersCtrl', function () {
     PstnSetupService = _PstnSetupService_;
     PstnServiceAddressService = _PstnServiceAddressService_;
     Notification = _Notification_;
+    FeatureToggleService = _FeatureToggleService_;
 
     PstnSetup.setCustomerId(customer.uuid);
     PstnSetup.setCustomerName(customer.name);
@@ -33,6 +34,7 @@ describe('Controller: PstnProvidersCtrl', function () {
     spyOn(PstnSetup, 'setSingleCarrierReseller');
     spyOn(PstnSetup, 'clearProviderSpecificData');
     spyOn(Notification, 'errorResponse');
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
     spyOn($state, 'go');
   }));
 

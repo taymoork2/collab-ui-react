@@ -35,4 +35,9 @@
       <retention-setting></retention-setting>
     </setting-section>
   </div>
+
+  <div class="save-cancel-footer" ng-if="settingsCtrl.saveCancelFooter">
+    <button type="button" class="btn btn--primary save-cancel-buttons pull-right" translate="common.save" ng-click="settingsCtrl.save()"></button>
+    <button type="button" class="btn save-cancel-buttons pull-right" translate="common.cancel" ng-click="settingsCtrl.cancel()"></button>
+  </div>
 </div>
