@@ -266,7 +266,7 @@
     vm.alarmsKeysToIgnore = ['uss.thresholdAlarmTriggered', 'uss.groupThresholdAlarmTriggered']; // Do not show these as notifications
     vm.serviceAlarmPrefix = 'serviceAlarm_';
     function checkServiceAlarms(serviceId) {
-      FusionClusterService.getAlarms('squared-fusion-gcal')
+      FusionClusterService.getAlarms(serviceId)
         .then(function (alarms) {
           var alarmsWeCareAbout = _.filter(alarms, function (alarm) {
             return !_.includes(vm.alarmsKeysToIgnore, alarm.key);
