@@ -7,7 +7,7 @@ resource-group-card {
   }
 
   .cs-card-layout {
-    padding-bottom: 0 !important;
+    padding: 0 !important;
     margin: 0 !important;
   }
 
@@ -121,12 +121,20 @@ resource-group-card {
       width: 1px;
     }
 
+    &:nth-child(3n+1) {
+      padding-left: 1rem;
+    }
+
+    &:nth-child(3n) {
+      padding-right: 1rem;
+    }
+
     &:nth-child(3n)::after {
       width: 0;
     }
 
     &:nth-child(3n+1)::after {
-      right: 5px;
+      right: 2px;
       background-color: $gray-light-3;
     }
 
@@ -155,10 +163,6 @@ resource-group-card {
 
       .columns {
         padding-left: 0;
-      }
-
-      footer a {
-        border-top: 0;
       }
     }
   }

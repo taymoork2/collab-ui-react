@@ -14,6 +14,7 @@ class ClusterSidepanelOverviewCtrl implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private $scope: ng.IScope,
+    private $state: ng.ui.IStateService,
     private ClusterService,
   ) {}
 
@@ -37,6 +38,22 @@ class ClusterSidepanelOverviewCtrl implements ng.IComponentController {
 
   public hasConnectors() {
     return this.cluster && this.cluster.connectors.length > 0;
+  }
+
+  public goToNodesPage(): void {
+    if (this.cluster.targetType === 'c_mgmt') {
+      this.$state.go('expressway-cluster.nodes', {
+        id: this.clusterId,
+      });
+    } else if (this.cluster.targetType === 'mf_mgmt') {
+      this.$state.go('mediafusion-cluster.nodes', {
+        id: this.clusterId,
+      });
+    } else if (this.cluster.targetType === 'hds_app') {
+      this.$state.go('hds-cluster.nodes', {
+        id: this.clusterId,
+      });
+    }
   }
 }
 
