@@ -12,20 +12,17 @@
     vm.hasSipUriDomainConfigured = false;
     vm.hasVerifiedDomains = false;
     var allExpresswayServices = ['squared-fusion-uc', 'squared-fusion-ec', 'squared-fusion-cal', 'squared-fusion-mgmt'];
-    var defaultReleaseChannelPromise = FusionClusterService.getOrgSettings()
-      .then(function (data) {
-        return data.expresswayClusterReleaseChannel;
-      });
-    var resourceGroupFeatureTogglePromise = FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
 
     function checkState(connectorType, serviceId) {
       if (checkIfFusePerformed()) {
         checkDomainVerified(serviceId);
         checkUserStatuses(serviceId);
         checkCallServiceConnect(serviceId);
+        checkUnassignedClusterReleaseChannels();
+      } else {
         removeAllServiceAndUserNotifications();
       }
-      checkUnassignedClusters();
+      checkServiceAlarms(serviceId);
     }
 
     function checkDomainVerified(serviceId) {
@@ -36,9 +33,6 @@
         return;
       }
       DomainManagementService.getVerifiedDomains()
-        .then(function () {
-          return DomainManagementService.domainList;
-        })
         .then(function (domainList) {
           if (domainList.length === 0) {
             NotificationService.addNotification(
@@ -54,21 +48,16 @@
         });
     }
 
-    function removeAllUserNotifications() {
+    function removeAllServiceAndUserNotifications() {
       NotificationService.removeNotification('squared-fusion-uc:noUsersActivated');
-      NotificationService.removeNotification('squared-fusion-uc:noUsersActivated');
+      NotificationService.removeNotification('squared-fusion-ec:noUsersActivated');
       NotificationService.removeNotification('squared-fusion-cal:noUsersActivated');
-    }
-
-    function removeAllServiceNotifications() {
+      NotificationService.removeNotification('squared-fusion-uc:userErrors');
+      NotificationService.removeNotification('squared-fusion-ec:userErrors');
+      NotificationService.removeNotification('squared-fusion-cal:userErrors');
       NotificationService.removeNotification('sipDomainNotConfigured');
       NotificationService.removeNotification('sipUriDomainEnterpriseNotConfigured');
       NotificationService.removeNotification('callServiceConnectAvailable');
-    }
-
-    function removeAllServiceAndUserNotifications() {
-      removeAllUserNotifications();
-      removeAllServiceNotifications();
     }
 
     function checkIfFusePerformed() {
@@ -129,15 +118,14 @@
         }
       } else {
         NotificationService.removeNotification(noUsersActivatedId);
+        var userErrorsId = serviceId + ':userErrors';
         if (serviceId === 'squared-fusion-uc') {
           // Call Service has two sub-services, need special handling
           var awareStatus = summaryForService;
           var connectStatus = _.find(USSService.getStatusesSummary(), {
             serviceId: 'squared-fusion-ec'
           });
-
           if ((awareStatus && awareStatus.error > 0) || (connectStatus && connectStatus.error > 0)) {
-            var userErrorsId = serviceId + ':userErrors';
             var data = [];
             if (awareStatus.error > 0) {
               data.push(awareStatus);
@@ -155,7 +143,6 @@
           }
         } else {
           // if we are not in the Call Service page, we must be in the Calendar Service page
-          userErrorsId = serviceId + ':userErrors';
           if (summaryForService && summaryForService.error > 0) {
             NotificationService.addNotification(
               NotificationService.types.ALERT,
@@ -235,44 +222,81 @@
       });
     }
 
-    function checkUnassignedClusters() {
-      resourceGroupFeatureTogglePromise
+    function checkUnassignedClusterReleaseChannels() {
+      var defaultReleaseChannelPromise = FusionClusterService.getOrgSettings()
+        .then(function (data) {
+          return data.expresswayClusterReleaseChannel;
+        });
+      FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup)
         .then(function (support) {
           return support ? defaultReleaseChannelPromise : $q.reject();
         })
         .then(function (defaultReleaseChannel) {
-          return FusionClusterService.getAll()
-            .then(function (clusters) {
-              var anomalies = _.filter(clusters, function (cluster) {
-                return cluster.targetType === 'c_mgmt' &&
-                  !cluster.resourceGroupId &&
-                  cluster.releaseChannel !== defaultReleaseChannel;
-              });
-              if (anomalies.length > 0) {
-                _.forEach(anomalies, function (cluster) {
-                  var serviceIds = _.chain(cluster.provisioning)
-                    .map(function (p) {
-                      return FusionUtils.connectorType2ServicesId(p.connectorType);
-                    })
-                    .flatten()
-                    .uniq()
-                    .value();
-                  NotificationService.addNotification(
-                    NotificationService.types.ALERT,
-                    'defaultReleaseChannel' + cluster.id,
-                    5,
-                    'modules/hercules/notifications/release_channel.html',
-                    serviceIds,
-                    {
-                      clusterId: cluster.id,
-                      clusterName: cluster.name,
-                      currentReleaseChannel: $translate.instant('hercules.fusion.add-resource-group.release-channel.' + cluster.releaseChannel),
-                      defaultReleaseChannel: $translate.instant('hercules.fusion.add-resource-group.release-channel.' + cluster.defaultReleaseChannel),
-                    }
-                  );
-                });
-              }
+          var clusters = ClusterService.getClustersByConnectorType('c_mgmt');
+          var anomalies = _.filter(clusters, function (cluster) {
+            return !cluster.resourceGroupId && cluster.releaseChannel !== defaultReleaseChannel;
+          });
+          if (anomalies.length > 0) {
+            _.forEach(anomalies, function (cluster) {
+              var serviceIds = _.chain(cluster.provisioning)
+                .map(function (p) {
+                  return FusionUtils.connectorType2ServicesId(p.connectorType);
+                })
+                .flatten()
+                .uniq()
+                .value();
+              NotificationService.addNotification(
+                NotificationService.types.ALERT,
+                'defaultReleaseChannel' + cluster.id,
+                5,
+                'modules/hercules/notifications/release_channel.html',
+                serviceIds,
+                {
+                  clusterId: cluster.id,
+                  clusterName: cluster.name,
+                  currentReleaseChannel: $translate.instant('hercules.fusion.add-resource-group.release-channel.' + cluster.releaseChannel),
+                  defaultReleaseChannel: $translate.instant('hercules.fusion.add-resource-group.release-channel.' + cluster.defaultReleaseChannel),
+                }
+              );
             });
+          }
+        });
+    }
+
+    vm.alarmsKeysToIgnore = ['uss.thresholdAlarmTriggered', 'uss.groupThresholdAlarmTriggered']; // Do not show these as notifications
+    vm.serviceAlarmPrefix = 'serviceAlarm_';
+    function checkServiceAlarms(serviceId) {
+      FusionClusterService.getAlarms('squared-fusion-gcal')
+        .then(function (alarms) {
+          var alarmsWeCareAbout = _.filter(alarms, function (alarm) {
+            return !_.includes(vm.alarmsKeysToIgnore, alarm.key);
+          });
+
+          // Find and remove the notifications raised for previous alarms
+          var existingServiceAlarmIds = _.chain(NotificationService.getNotifications())
+            .filter(function (notification) {
+              return _.startsWith(notification.id, vm.serviceAlarmPrefix);
+            })
+            .map(function (notification) {
+              return notification.id;
+            })
+            .value();
+          _.forEach(existingServiceAlarmIds, function (id) {
+            NotificationService.removeNotification(id);
+          });
+
+          // Raise notifications for the current alarms
+          _.forEach(alarmsWeCareAbout, function (alarm) {
+            var notificationId = vm.serviceAlarmPrefix + alarm.key + '_' + alarm.alarmId;
+            NotificationService.addNotification(
+              alarm.severity,
+              notificationId,
+              alarm.severity === 'error' ? 1 : 4,
+              'modules/hercules/notifications/service-alarm.html',
+              [serviceId],
+              alarm
+            );
+          });
         });
     }
 

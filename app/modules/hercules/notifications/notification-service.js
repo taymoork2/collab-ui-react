@@ -34,9 +34,13 @@
       getNotificationLength: getNotificationLength,
       removeNotification: removeNotification,
       types: {
+        CRITICAL: 'critical',
         ALERT: 'alert',
         TODO: 'todo',
-        NEW: 'new'
+        NEW: 'new',
+        ERROR: 'error',
+        WARNING: 'warning',
+        INFO: 'info',
       }
     };
   }

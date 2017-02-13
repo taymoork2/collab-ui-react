@@ -2,6 +2,7 @@ interface IAlarms {
   severity: 'critical' | 'error' | 'warning' | 'alert';
   title: string;
   description: string;
+  key: string;
 }
 
 class GoogleCalendarNotificationsDropdownCtrl implements ng.IComponentController {
@@ -21,8 +22,8 @@ class GoogleCalendarNotificationsDropdownCtrl implements ng.IComponentController
   public $onInit() {
     this.handleClick = this.handleClick.bind(this);
     this.FusionClusterService.getAlarms(this.serviceId)
-      .then((data: { items: IAlarms[] }) => {
-        this.alarms = data.items;
+      .then((alarms: IAlarms[]) => {
+        this.alarms = alarms;
       });
   }
 

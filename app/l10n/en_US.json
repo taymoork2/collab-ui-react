@@ -1830,7 +1830,10 @@
       "lastReported": "Last Reported",
       "description": "Description",
       "noAlarms": "No alarms reported",
-      "action": "Action"
+      "action": "Action",
+      "info": "Info",
+      "new": "New",
+      "todo": "To-do"
     },
     "softwareUpgrade": {
       "editSettingsLink": "Edit cluster settings",

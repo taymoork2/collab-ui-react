@@ -6,7 +6,7 @@
     .directive('herculesNotifications', herculesNotificationsDirective);
 
   /* @ngInject */
-  function HerculesNotificationsController($q, $modal, $scope, $state, FusionClusterService, Notification, NotificationService, ServiceDescriptor, ServiceStateChecker, USSService) {
+  function HerculesNotificationsController($q, $modal, $scope, $state, FusionClusterService, Notification, NotificationService, ServiceDescriptor, ServiceStateChecker, USSService, $translate) {
     var vm = this;
     vm.showNotifications = false;
     vm.notificationsLength = notificationsLength;
@@ -37,14 +37,7 @@
     }
 
     function typeDisplayName(type) {
-      switch (type) {
-        case NotificationService.types.ALERT:
-          return 'ALERT';
-        case NotificationService.types.NEW:
-          return 'NEW';
-        default:
-          return 'TO-DO';
-      }
+      return $translate.instant('hercules.alarms.' + type);
     }
 
     function handleClick() {
@@ -54,20 +47,31 @@
     function getNumberCSSClass() {
       if (vm.filteredNotifications().length === 0) {
         return '';
-      } else if (_.some(vm.filteredNotifications(), {
-        type: NotificationService.types.ALERT
+      } else if (_.some(vm.filteredNotifications(), function (notification) {
+        return notification.type === NotificationService.types.ALERT
+          || notification.type === NotificationService.types.ERROR
+          || notification.type === NotificationService.types.CRITICAL;
       })) {
         return 'alert';
+      } else if (_.some(vm.filteredNotifications(), function (notification) {
+        return notification.type === NotificationService.types.WARNING;
+      })) {
+        return 'warning';
       } else {
-        return 'todo';
+        return 'success';
       }
     }
 
     function getBadgeCSSClass(type) {
-      if (type === NotificationService.types.NEW || type === NotificationService.types.TODO) {
-        return 'success';
-      } else {
-        return 'alert';
+      switch (type) {
+        case NotificationService.types.WARNING:
+          return 'warning';
+        case NotificationService.types.ALERT:
+        case NotificationService.types.ERROR:
+        case NotificationService.types.CRITICAL:
+          return 'alert';
+        default:
+          return 'success';
       }
     }
 
