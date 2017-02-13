@@ -1782,7 +1782,12 @@
             parent: 'partner',
             url: '/overview',
             templateUrl: 'modules/core/partnerHome/partnerHome.tpl.html',
-            controller: 'PartnerHomeCtrl'
+            controller: 'PartnerHomeCtrl',
+            resolve: {
+              trialForPaid: function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasStartTrialForPaid);
+              }
+            }
           })
           .state('partnerreports', {
             parent: 'partner',
