@@ -172,11 +172,19 @@
         'method': legendHandler
       }];
 
-
       var chart = AmCharts.makeChart(vm.participantDistributiondiv, chartData);
+      chart.addListener('clickGraph', handleClick);
       // listen for zoomed event and call "handleZoom" method
       chart.addListener('zoomed', handleZoom);
       return chart;
+    }
+
+    //method to handle the individual cluster click
+    function handleClick(event) {
+      var clickedCluster = event.target;
+      $rootScope.$broadcast('clusterClickEvent', {
+        data: clickedCluster.title
+      });
     }
 
     // this method is called each time the selected period of the chart is changed

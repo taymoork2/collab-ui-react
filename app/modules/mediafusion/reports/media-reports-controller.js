@@ -191,6 +191,7 @@
       } else {
         loadAdaptionDatas();
       }
+      setRefreshTabs();
     }
 
     function isEmpty(tab) {
@@ -269,22 +270,27 @@
             vm.onprem = vm.noData;
             vm.cloud = vm.noData;
             vm.total = vm.noData;
+            vm.totalcloudcalls = vm.noData;
           } else if (_.isUndefined(response.data.callsOnPremise) && !_.isUndefined(response.data.callsRedirect)) {
             vm.onprem = vm.noData;
             vm.cloud = response.data.callsRedirect;
             vm.total = vm.cloud;
+            vm.totalcloudcalls = vm.cloud;
           } else if (!_.isUndefined(response.data.callsOnPremise) && _.isUndefined(response.data.callsRedirect)) {
             vm.onprem = response.data.callsOnPremise;
             vm.cloud = vm.noData;
             vm.total = vm.onprem;
+            vm.totalcloudcalls = vm.onprem;
           } else if (_.isUndefined(response.data.callsOnPremise) && _.isUndefined(response.data.callsRedirect)) {
             vm.onprem = vm.noData;
             vm.cloud = vm.noData;
             vm.total = vm.noData;
+            vm.totalcloudcalls = vm.noData;
           } else {
             vm.onprem = response.data.callsOnPremise;
             vm.cloud = response.data.callsRedirect;
             vm.total = vm.onprem + vm.cloud;
+            vm.totalcloudcalls = vm.onprem + vm.cloud;
           }
         }
       });
