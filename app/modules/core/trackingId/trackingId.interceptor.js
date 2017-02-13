@@ -56,7 +56,7 @@
       // should only match specified domains
       regex += ".*" + _.escapeRegExp('.' + blacklistDomain);
 
-      return new RegExp(regex);
+      return new RegExp(regex, 'i');
     }
 
     function buildBlacklistedDomainRegex(blacklistDomain) {
