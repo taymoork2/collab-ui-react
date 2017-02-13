@@ -1306,7 +1306,7 @@
               },
               'header@organization-overview': {
                 templateUrl: 'modules/core/organizations/organizationOverview/organizationHeader.tpl.html'
-              }
+              },
             },
             params: {
               currentOrganization: null
@@ -2375,6 +2375,38 @@
               }
             }
           })
+          .state('pstn', {
+            parent: 'modal',
+            params: {
+              customerId: {},
+              customerName: {},
+              customerEmail: {},
+              customerCommunicationLicenseIsTrial: {},
+              customerRoomSystemsLicenseIsTrial: {},
+            },
+            views: {
+              'modal@': {
+                template: '<uc-pstn-wizard customer-id="$resolve.customerId" customer-name="$resolve.customerName" customer-email="$resolve.customerEmail" customer-communication-license-is-trial="$resolve.customerCommunicationLicenseIsTrial" customer-room-systems-license-is-trial="$resolve.customerRoomSystemsLicenseIsTrial"></uc-pstn-wizard>',
+              },
+            },
+            resolve: {
+              customerId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.customerId;
+              },
+              customerName: /* @ngInject */ function ($stateParams) {
+                return $stateParams.customerName;
+              },
+              customerEmail: /* @ngInject */ function ($stateParams) {
+                return $stateParams.customerEmail;
+              },
+              customerCommunicationLicenseIsTrial: /* @ngInject */ function ($stateParams) {
+                return $stateParams.customerCommunicationLicenseIsTrial;
+              },
+              customerRoomSystemsLicenseIsTrial: /* @ngInject */ function ($stateParams) {
+                return $stateParams.customerRoomSystemsLicenseIsTrial;
+              }
+            },
+          })
           .state('pstnSetup', {
             parent: 'modal',
             params: {
@@ -2725,6 +2757,40 @@
               },
             },
           })
+          .state('hybrid-services-connector-sidepanel', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                template: '<hybrid-services-connector-sidepanel connector="$resolve.connector"></hybrid-services-connector-sidepanel>',
+              },
+              'header@hybrid-services-connector-sidepanel': {
+                templateUrl: 'modules/hercules/hybrid-services-connector-sidepanel/hybrid-services-connector-sidepanel-header.html'
+              },
+            },
+            // If data not present, $state.current.data.displayName inside the component has no effect
+            data: {},
+            params: {
+              connector: null
+            },
+            resolve: {
+              connector: /* @ngInject */ function ($stateParams) {
+                return $stateParams.connector;
+              },
+            }
+          })
+          .state('hybrid-services-connector-sidepanel.alarm-details', {
+            template: '<alarm-details-sidepanel alarm="$resolve.alarm"></alarm-details-sidepanel>',
+            // If data not present, $state.current.data.displayName inside the component has no effect
+            data: {},
+            params: {
+              alarm: null,
+            },
+            resolve: {
+              alarm: /* @ngInject */ function ($stateParams) {
+                return $stateParams.alarm;
+              },
+            }
+          })
           .state('hds', {
             templateUrl: 'modules/hds/resources/hybrid-data-security-container.html',
             controller: 'HDSServiceController',
@@ -2774,7 +2840,7 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                template: '<cluster-sidepanel-overview cluster-type="\'hds_app\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType"></cluster-sidepanel-overview>',
+                template: '<cluster-sidepanel-overview cluster-type="\'hds_app\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType" has-resource-group-feature-toggle="$resolve.hasResourceGroupFeatureToggle" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></cluster-sidepanel-overview>',
               },
               'header@hds-cluster-details': {
                 templateUrl: 'modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html',
@@ -2794,6 +2860,12 @@
               connectorType: /* @ngInject */ function ($stateParams) {
                 return $stateParams.connectorType;
               },
+              hasResourceGroupFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
+              },
+              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
+              },
             }
           })
           .state('hds-cluster-details.host-details', {
@@ -2811,15 +2883,16 @@
             }
           })
           .state('hds-cluster-details.alarm-details', {
-            templateUrl: 'modules/hercules/cluster-sidepanel/alarm-details/alarm-details.html',
-            controller: 'ExpresswayAlarmController',
-            controllerAs: 'alarmCtrl',
-            data: {
-              displayName: 'Alarm Details'
-            },
+            template: '<alarm-details-sidepanel alarm="$resolve.alarm"></alarm-details-sidepanel>',
+            // If data not present, $state.current.data.displayName inside the component has no effect
+            data: {},
             params: {
               alarm: null,
-              host: null
+            },
+            resolve: {
+              alarm: /* @ngInject */ function ($stateParams) {
+                return $stateParams.alarm;
+              },
             }
           })
           .state('hds-cluster', {
@@ -3088,7 +3161,7 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                template: '<cluster-sidepanel-overview cluster-type="\'c_mgmt\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType" has-resource-group-feature-toggle="$resolve.hasResourceGroupFeatureToggle"></cluster-sidepanel-overview>'
+                template: '<cluster-sidepanel-overview cluster-type="\'c_mgmt\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType" has-resource-group-feature-toggle="$resolve.hasResourceGroupFeatureToggle" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></cluster-sidepanel-overview>'
               },
               'header@cluster-details': {
                 templateUrl: 'modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html'
@@ -3110,6 +3183,9 @@
               },
               hasResourceGroupFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
+              },
+              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
               },
             }
           })
@@ -3133,27 +3209,29 @@
             }
           })
           .state('management-connector-details.alarm-details', {
-            templateUrl: 'modules/hercules/cluster-sidepanel/alarm-details/alarm-details.html',
-            controller: 'ExpresswayAlarmController',
-            controllerAs: 'alarmCtrl',
-            data: {
-              displayName: 'Alarm Details'
-            },
+            template: '<alarm-details-sidepanel alarm="$resolve.alarm"></alarm-details-sidepanel>',
+            // If data not present, $state.current.data.displayName inside the component has no effect
+            data: {},
             params: {
               alarm: null,
-              host: null
+            },
+            resolve: {
+              alarm: /* @ngInject */ function ($stateParams) {
+                return $stateParams.alarm;
+              },
             }
           })
           .state('cluster-details.alarm-details', {
-            templateUrl: 'modules/hercules/cluster-sidepanel/alarm-details/alarm-details.html',
-            controller: 'ExpresswayAlarmController',
-            controllerAs: 'alarmCtrl',
-            data: {
-              displayName: 'Alarm Details'
-            },
+            template: '<alarm-details-sidepanel alarm="$resolve.alarm"></alarm-details-sidepanel>',
+            // If data not present, $state.current.data.displayName inside the component has no effect
+            data: {},
             params: {
               alarm: null,
-              host: null
+            },
+            resolve: {
+              alarm: /* @ngInject */ function ($stateParams) {
+                return $stateParams.alarm;
+              },
             }
           })
           .state('cluster-details.host-details', {

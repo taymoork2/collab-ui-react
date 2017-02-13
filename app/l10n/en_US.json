@@ -1654,7 +1654,8 @@
       "selectGroup": "Select…",
       "couldNotReadResourceGroups": "Could not read Resource Groups.",
       "CouldNotSaveResourceGroup": "Resource Group could not be saved. Continue with the registration process, and then try assigning a Resource Group again later.",
-      "hostnameRegistered": "This FQDN belongs to an Expressway cluster that is already registered with Cisco Collaboration Cloud. It is not necessary to register it as a new resource if you want to add more services to it."
+      "hostnameRegistered": "This FQDN belongs to an Expressway cluster that is already registered with Cisco Collaboration Cloud. It is not necessary to register it as a new resource if you want to add more services to it.",
+      "partnersCannotConfigureClusters": "Partner administrators may not set up Hybrid Services or add clusters when viewing customer organizations."
     },
     "activateService": {
       "ingress": "Extend the Cloud to your On-Premise Environment",
@@ -1762,7 +1763,8 @@
       "c_cal": "Calendar Connector",
       "c_ucmc": "Call Connector",
       "c_mgmt": "Management Connector",
-      "hds_app": "Hybrid Data Security Connector"
+      "mf_mgmt": "Media Connector",
+      "hds_app": "Data Security Connector"
     },
     "serviceNameFromConnectorType": {
       "c_cal": "Calendar Service",
@@ -2282,7 +2284,12 @@
       "status": "Status",
       "serial": "Serial",
       "version": "Version",
-      "loadingError": "Could not load the cluster data"
+      "noNodes": "No nodes found",
+      "loadingError": "Could not load cluster data"
+    },
+    "hybridServicesConnectorSidepanel": {
+      "overview": "Overview",
+      "alarmDetails": "Alarm Details"
     }
   },
   "context": {
@@ -2562,6 +2569,7 @@
     }
   },
   "firstTimeWizard": {
+    "required": "This field is required.",
     "termsAndConditions": "Terms and Conditions",
     "simple": "Manually add users",
     "manualEntryStep": "Manual",
@@ -2673,11 +2681,24 @@
     "setSipDomainAsssignedNames": "{count, plural, one{This subdomain is} other{These subdomains are}} reserved for you",
     "setSipDomainCheckAvailability": "Check Availability",
     "setSipDomainPlaceholder": "enter a subdomain",
-    "setSipDomainErrorMessage": "Not available. Please try another name",
+    "setSipDomainErrorMessage": "Not available. Please try another name.",
     "setSipDomainErrorMessageInvalidDomain": "Invalid domain, please try another name",
     "setSipDomainSuccessMessage": "The Spark SIP Address has been successfully saved",
     "setSipDomainConfirmText": "I acknowledge that this is a one-time setting that cannot be changed later.",
     "sparkDomainManagementServiceErrorMessage": "Failed to reach Spark Domain Management Service",
+    "currentSubdomainDescription": "The {count, plural, one{subdomain below is} other{subdomains below are}} being used for your company Spark Sip {count, plural, one{Address} other{Addresses}}.",
+    "subdomainChangesDescription": "Subdomain changes may take up to 45 minutes to complete.",
+    "subdomainDescription": "Select a subdomain that identifies your company. The subdomain will be used to create {count, plural, one{a Spark SIP Address} other{Spark SIP Addresses}}. You can change the subdomain name later in your account settings.",
+    "updateSubdomainMessage": "Are you sure you want to save your changes? Subdomain changes may take up to 45 minutes to complete. Users will no longer be able to make calls using the old SIP Address after changes are completed.",
+    "enterSubdomain": "Enter Subdomain",
+    "subdomainInvalid": "Invalid subdomain name.",
+    "longSubdomain": "Subdomain is too long.  Please enter a subdomain of 40 characters or less.",
+    "subdomainUnavailable": "Subdomain name is unavailable.",
+    "reservedSubdomains": "Reserved Subdomains",
+    "subdomain401And403Error": "User is not authorized to modify the subdomain.",
+    "subdomainSaveError": "There was an error while saving the new subdomain. Please recheck the availability and try again.",
+    "subdomainSaveSuccess": "Spark SIP Address successfully updated.",
+    "editSubdomain": "Edit Subdomain",
     "messageSettings": "Message Settings",
     "callSettings": "Call Settings",
     "enterpriseSettings": "Enterprise Settings",
@@ -3279,6 +3300,18 @@
     "showLess": "Show less",
     "localDialing": "Local Dialing"
   },
+  "preferredLanguage": {
+    "title": "Preferred Language",
+    "description": "Choose the preferred language for this place. This will override the default organization setting.",
+    "placeholder": "Select your language",
+    "organizationSettingLabel": "Organization Setting - ",
+    "descriptionForCloudberryDevice": "Configure preferred language on the room’s device page.",
+    "placesCallOverviewSaveSuccess": "Preferred Language saved successfully",
+    "failedToSaveChanges": "Failed to save preferred Language. Reason:",
+    "failedToFetchCmiPlacesInfo": "Failed to fetch places info. Reason:",
+    "failedToFetchSiteLanguages": "Failed to fetch languages. Reason:",
+    "failedToFetchSiteLevelLanguage": "Failed to fetch site level language. Reason:"
+  },
   "directoryNumberPanel": {
     "title": "Line Configuration",
     "success": "Line configuration saved successfully",
@@ -3360,8 +3393,8 @@
   "autoAnswerPanel": {
     "title": "Auto Answer",
     "description": "Enable to choose which devices to automatically answer this line when a call comes in.",
-    "userSharedLineDescription": "This line is shared, setting auto answer for this {{ownerType}} will turn it off for the {{type}}, {{name}}",
-    "multiDeviceLineDescription": "If auto answer is set, the call will be answered by the selected phone. Other phones will not ring.",
+    "userSharedLineDescription": "This line is shared. Setting auto answer on for this {{ownerType}} will turn it off for the {{type}}, {{name}}",
+    "multiDeviceLineDescription": "The call will be answered by the selected phone.",
     "speaker": "Speaker",
     "headset": "Headset",
     "noSupportedDevices": "No supported devices"
@@ -3465,9 +3498,9 @@
   "serviceAddress": {
     "streetAddress": "Street Address",
     "unit": "Unit",
-    "city": "City",
-    "state": "State",
-    "zipCode": "Zip Code",
+    "city": "City / Town",
+    "state": "State / Region",
+    "zipCode": "Zip / Postal Code",
     "pending": "Emergency Service Address pending verification."
   },
   "pstnSetup": {
@@ -3482,7 +3515,7 @@
     "portNumbersPrompt": "Copy and paste customer's numbers that need to be ported.",
     "portNumbersLabel": "Porting Numbers",
     "manualAdd": "Manually Add New Numbers",
-    "state": "State",
+    "state": "State / Region",
     "selectState": "Select state",
     "searchStates": "Search states",
     "areaCode": "Area Code",
@@ -3601,7 +3634,15 @@
     "feature4": "Caller ID Name Delivery and Registration",
     "feature5": "E911"
   },
-  "partnerHomePage": {
+  "thinktelFeatures": {
+    "feature1": "1 Telephone Number per User",
+    "feature2": "Service available in all provinces/territories",
+    "feature3": "Local and Can/U.S. Long Distance calling",
+    "feature4": "Number port/Transfer fee included",
+    "feature5": "Basic 911 included",
+    "feature6": "Taxes additional"
+  },
+    "partnerHomePage": {
     "trialsHeading": "Trials",
     "onboardingTitle": "Onboarding",
     "activity-title": "Activity",
@@ -3728,7 +3769,7 @@
       "address": "Street Address",
       "unit": "Unit",
       "city": "City",
-      "state": "State",
+      "state": "State/ Province/ Region",
       "zip": "Zip/ Postal Code",
       "province": "State/ Province/ Region",
       "dealId": "Deal ID (United States Only)",
@@ -3748,7 +3789,7 @@
       "pleaseAdd": "Please add phone numbers for the customer",
       "pleaseAdd10": "Please add up to 10 phone numbers for the customer",
       "pleaseAdd5": "Please add up to 5 phone numbers for the customer",
-      "state": "State",
+      "state": "State / Region",
       "areaCode": "Area Code",
       "numbers": "Numbers",
       "contract": "PSTN Contract Information",
@@ -3758,10 +3799,10 @@
       "email": "Signee's Email Address",
       "esa": "Emergency Service Address",
       "esaDesc": "In the case of an emergency call, local emergency response crew would use this address to locate the caller.",
-      "address": "Address",
+      "address": "Street Address",
       "unit": "Unit",
-      "city": "City",
-      "zip": "Zip",
+      "city": "City / Town",
+      "zip": "Zip / Postal Code",
       "skip": "Skip",
       "popover": "Please provide information on the legal contact who can sign the contract",
       "addrRetry": "Use a different address",
@@ -4453,6 +4494,7 @@
       "overallAverageUtilizationGraphError": "There was an error while loading Average/Peak utilization data",
       "overallClusterAvailabilityGraphError": "There was an error while loading cluster availability data",
       "overallTotalNumberOfCallsError": "There was an error while loading Total Number of calls",
+      "overallClientTypeGraphError":"There was an error while loading Client Type Data",
       "total_calls": "Total Calls",
       "onpremcalls": "Hosted On-Premises",
       "cloudcalls": "Overflowed to Cloud",

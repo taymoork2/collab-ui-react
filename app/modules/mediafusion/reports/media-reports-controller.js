@@ -77,6 +77,7 @@
     vm.setCallVolumeData = setCallVolumeData;
 
     vm.setClientTypeData = setClientTypeData;
+    vm.setClientTypeCard = setClientTypeCard;
 
     vm.showAvailabilityTooltip = false;
     vm.showHostedOnPremTooltip = false;
@@ -117,6 +118,7 @@
     function loadAdaptionDatas() {
       //Adoption changes here
       setClientTypeData();
+      setClientTypeCard();
     }
 
     function clusterUpdate() {
@@ -288,6 +290,19 @@
       });
     }
 
+    function setClientTypeCard() {
+      MediaReportsService.getClienTypeCardData(vm.timeSelected).then(function (response) {
+        if (response === vm.ABORT) {
+          return;
+        } else if (_.isUndefined(response.data) || response.data.length === 0) {
+          vm.clientTypeCount = vm.noData;
+        } else {
+          vm.clientTypeCount = response.data.dataProvider.length
+        }
+
+      });  
+    }
+
     function setClusterAvailability() {
       MediaReportsService.getClusterAvailabilityData(vm.timeSelected, vm.clusterId).then(function (response) {
         if (response === vm.ABORT) {
@@ -436,7 +451,7 @@
     function setDummyUtilization() {
       vm.utilizationStatus = vm.EMPTY;
       var response = {
-        graphData: MediaReportsDummyGraphService.dummyUtilizationData(vm.timeSelected),
+        graphData: MediaReportsDummyGraphService.dummyLineChartData(vm.timeSelected),
         graphs: MediaReportsDummyGraphService.dummyUtilizationGraph()
       };
       setUtilizationGraph(response);
@@ -445,7 +460,7 @@
     function setDummyParticipantDistribution() {
       vm.participantDistributionStatus = vm.EMPTY;
       var response = {
-        graphData: MediaReportsDummyGraphService.dummyParticipantDistributionData(vm.timeSelected),
+        graphData: MediaReportsDummyGraphService.dummyLineChartData(vm.timeSelected),
         graphs: MediaReportsDummyGraphService.dummyParticipantDistributionGraph()
       };
       setParticipantDistributionGraph(response);
@@ -454,7 +469,7 @@
     function setDummyClientType() {
       vm.clientTypeStatus = vm.EMPTY;
       var response = {
-        graphData: MediaReportsDummyGraphService.dummyClientTypeData(vm.timeSelected),
+        graphData: MediaReportsDummyGraphService.dummyLineChartData(vm.timeSelected),
         graphs: MediaReportsDummyGraphService.dummyClientTypeGraph()
       };
       setClientTypeGraph(response);

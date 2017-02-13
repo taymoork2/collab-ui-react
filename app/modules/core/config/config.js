@@ -377,8 +377,8 @@
       WX2_User: ['overview', 'support', 'activateProduct'],
       WX2_Support: ['overview', 'reports', 'support'],
       WX2_SquaredInviter: [],
-      PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'gem', 'gemOverview', 'gemCbgDetails', 'customer-overview', 'partnerreports', 'trial', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup', 'video', 'settings'],
-      PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trial', 'trialAdd', 'trialEdit', 'pstnSetup', 'video', 'settings'],
+      PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'gem', 'gemOverview', 'gemCbgDetails', 'customer-overview', 'partnerreports', 'trial', 'trialAdd', 'trialEdit', 'profile', 'pstn', 'pstnSetup', 'video', 'settings'],
+      PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trial', 'trialAdd', 'trialEdit', 'pstn', 'pstnSetup', 'video', 'settings'],
       CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
       //TODO User role is used by Online Ordering UI. The dr* states will be removed once the Online UI is separated from Atlas.
       User: ['drLoginReturn', 'drOnboard', 'drConfirmAdminOrg', 'drOnboardQuestion', 'drOnboardEnterAdminEmail', 'drOrgName', 'drAdminChoices'],
@@ -439,6 +439,7 @@
         'resource-group-settings',
         'cluster-list',
         'expressway-cluster',
+        'hybrid-services-connector-sidepanel',
         'hds.settings', // Temporary  entitlement until updated in org setting
         'hds',
         'hds.list',
@@ -459,6 +460,7 @@
         'call-service',
         'cluster-list',
         'expressway-cluster',
+        'hybrid-services-connector-sidepanel',
         'services-overview',
       ],
       'squared-fusion-cal': [
@@ -466,6 +468,7 @@
         'calendar-service',
         'cluster-list',
         'expressway-cluster',
+        'hybrid-services-connector-sidepanel',
         'services-overview',
       ],
       'squared-fusion-gcal': [
@@ -524,6 +527,7 @@
         'devices',
         'places',
         'expressway-cluster',
+        'hybrid-services-connector-sidepanel',
         'fusion',
         'hurondetails',
         'huronsettings',

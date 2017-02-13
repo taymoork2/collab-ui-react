@@ -28,24 +28,15 @@
       if (data === null || data === 'undefined' || data.length === 0) {
         return;
       } else {
-        // if (graphs[0].isDummy) {
-        //   isDummy = true;
-        // }
-        // if (clusterId !== vm.allClusters && !isDummy) {
-        //   var cluster = _.find(graphs, function (value) {
-        //     return value.valueField === clusterId;
-        //   });
-        //   if (_.isUndefined(cluster)) {
-        //     return undefined;
-        //   }
-        // }
-
+        if (graphs[0].isDummy) {
+          isDummy = true;
+        }
         var startDuration = 1;
         if (!data[0].balloon) {
           startDuration = 0;
         }
 
-        clientTypeChart = createClientTypeGraph(data, graphs, daterange);
+        clientTypeChart = createClientTypeGraph(data, graphs, daterange, isDummy);
         clientTypeChart.dataProvider = data;
         clientTypeChart.graphs = graphs;
         clientTypeChart.startDuration = startDuration;
@@ -67,7 +58,7 @@
       }
     }
 
-    function createClientTypeGraph(data, graphs, daterange) {
+    function createClientTypeGraph(data, graphs, daterange, isDummy) {
       if (data === null || data === 'undefined' || data.length === 0) {
         return;
       }
@@ -140,10 +131,37 @@
       dateLabel = _.replace(dateLabel, /\s/g, '_');
       var ExportFileName = 'MediaService_ClientType_' + '_' + dateLabel + '_' + new Date();
 
+      if (!isDummy) {
+        graphs.push({
+          'title': 'All',
+          'id': 'all',
+          'bullet': 'square',
+          'bulletSize': 10,
+          'lineColor': '#000000',
+          'hidden': true
+        });
+
+        graphs.push({
+          'title': 'None',
+          'id': 'none',
+          'bullet': 'square',
+          'bulletSize': 10,
+          'lineColor': '#000000'
+        });
+      }
+
       var chartData = CommonReportsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, CommonReportsGraphService.getBaseExportForGraph(exportFields, ExportFileName, columnNames));
       chartData.legend = CommonReportsGraphService.getBaseVariable(vm.LEGEND);
       chartData.legend.labelText = '[[title]]';
       chartData.legend.useGraphSettings = true;
+
+      chartData.legend.listeners = [{
+        'event': 'hideItem',
+        "method": legendHandler
+      }, {
+        'event': 'showItem',
+        'method': legendHandler
+      }];
 
       var chart = AmCharts.makeChart(vm.clientTypediv, chartData);
       // listen for zoomed event and call "handleZoom" method
@@ -170,12 +188,33 @@
     function getClusterName(graphs) {
       var tempData = [];
       _.forEach(graphs, function (value) {
-        value.balloonText = '<span class="graph-text"><span class="graph-number">[[value]]</span></span>';
+        value.balloonText = '<span class="graph-text">' + value.title + ' ' + '<span class="graph-number">[[value]]</span></span>';
         value.lineThickness = 2;
         tempData.push(value);
       });
       tempData = _.sortBy(tempData, 'title');
       return tempData;
+    }
+
+    function legendHandler(evt) {
+      if (evt.dataItem.id === 'all') {
+        _.forEach(evt.chart.graphs, function (graph) {
+          if (graph.id != 'all') {
+            evt.chart.showGraph(graph);
+          } else if (graph.id === 'all') {
+            evt.chart.hideGraph(graph);
+          }
+
+        });
+      } else if (evt.dataItem.id === 'none') {
+        _.forEach(evt.chart.graphs, function (graph) {
+          if (graph.id != 'all') {
+            evt.chart.hideGraph(graph);
+          } else if (graph.id === 'all') {
+            evt.chart.showGraph(graph);
+          }
+        });
+      }
     }
 
   }

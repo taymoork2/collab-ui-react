@@ -6,15 +6,14 @@
   function MediaReportsDummyGraphService($translate, chartColors) {
     var vm = this;
     vm.average_utilzation = $translate.instant('mediaFusion.metrics.avgutilization');
+    vm.client_types = $translate.instant('mediaFusion.metrics.clientTypes');
     var timeFormat = "YYYY-MM-DDTHH:mm:ss";
     return {
       dummyCallVolumeData: dummyCallVolumeData,
       dummyAvailabilityData: dummyAvailabilityData,
-      dummyUtilizationData: dummyUtilizationData,
+      dummyLineChartData: dummyLineChartData,
       dummyUtilizationGraph: dummyUtilizationGraph,
-      dummyParticipantDistributionData: dummyParticipantDistributionData,
       dummyParticipantDistributionGraph: dummyParticipantDistributionGraph,
-      dummyClientTypeData: dummyClientTypeData,
       dummyClientTypeGraph: dummyClientTypeGraph
     };
 
@@ -151,13 +150,13 @@
       return dummyGraphVal;
     }
 
-    function dummyUtilizationData(filter) {
+    function dummyLineChartData(filter) {
       var dummyGraphVal = [];
       if (filter.value === 0) {
         for (var i = 240; i >= 1; i--) {
           dummyGraphVal.push({
             time: moment().subtract(i, 'minutes').format(timeFormat),
-            average_util: Math.floor((Math.random() * 10) + 1),
+            field: Math.floor((Math.random() * 10) + 1),
             balloon: false
           });
         }
@@ -165,7 +164,7 @@
         for (i = 288; i >= 1; i--) {
           dummyGraphVal.push({
             time: moment().subtract(i * 5, 'minutes').format(timeFormat),
-            average_util: Math.floor((Math.random() * 10) + 1),
+            field: Math.floor((Math.random() * 10) + 1),
             balloon: false
           });
         }
@@ -173,7 +172,7 @@
         for (i = 168; i >= 1; i--) {
           dummyGraphVal.push({
             time: moment().subtract(i, 'hours').format(timeFormat),
-            average_util: Math.floor((Math.random() * 10) + 1),
+            field: Math.floor((Math.random() * 10) + 1),
             balloon: false
           });
         }
@@ -181,7 +180,7 @@
         for (i = 180; i >= 0; i--) {
           dummyGraphVal.push({
             time: moment().subtract(i * 3, 'hours').format(timeFormat),
-            average_util: Math.floor((Math.random() * 10) + 1),
+            field: Math.floor((Math.random() * 10) + 1),
             balloon: false
           });
         }
@@ -189,7 +188,7 @@
         for (i = 270; i >= 0; i--) {
           dummyGraphVal.push({
             time: moment().subtract(i * 8, 'hours').format(timeFormat),
-            average_util: Math.floor((Math.random() * 10) + 1),
+            field: Math.floor((Math.random() * 10) + 1),
             balloon: false
           });
         }
@@ -201,7 +200,7 @@
       var dummyGraph = [];
       dummyGraph.push({
         title: vm.average_utilzation,
-        valueField: 'average_util',
+        valueField: 'field',
         dashLength: 4,
         lineColor: chartColors.grayLightTwo,
         showBalloon: false,
@@ -210,57 +209,11 @@
       return dummyGraph;
     }
 
-    function dummyParticipantDistributionData(filter) {
-      var dummyGraphVal = [];
-      if (filter.value === 0) {
-        for (var i = 240; i >= 1; i--) {
-          dummyGraphVal.push({
-            time: moment().subtract(i, 'minutes').format(timeFormat),
-            particpant_count: Math.floor((Math.random() * 10) + 1),
-            balloon: false
-          });
-        }
-      } else if (filter.value === 1) {
-        for (i = 288; i >= 1; i--) {
-          dummyGraphVal.push({
-            time: moment().subtract(i * 5, 'minutes').format(timeFormat),
-            particpant_count: Math.floor((Math.random() * 10) + 1),
-            balloon: false
-          });
-        }
-      } else if (filter.value === 2) {
-        for (i = 168; i >= 1; i--) {
-          dummyGraphVal.push({
-            time: moment().subtract(i, 'hours').format(timeFormat),
-            particpant_count: Math.floor((Math.random() * 10) + 1),
-            balloon: false
-          });
-        }
-      } else if (filter.value === 3) {
-        for (i = 180; i >= 0; i--) {
-          dummyGraphVal.push({
-            time: moment().subtract(i * 3, 'hours').format(timeFormat),
-            particpant_count: Math.floor((Math.random() * 10) + 1),
-            balloon: false
-          });
-        }
-      } else {
-        for (i = 270; i >= 0; i--) {
-          dummyGraphVal.push({
-            time: moment().subtract(i * 8, 'hours').format(timeFormat),
-            particpant_count: Math.floor((Math.random() * 10) + 1),
-            balloon: false
-          });
-        }
-      }
-      return dummyGraphVal;
-    }
-
     function dummyParticipantDistributionGraph() {
       var dummyGraph = [];
       dummyGraph.push({
         title: 'Cluster',
-        valueField: 'particpant_count',
+        valueField: 'field',
         lineColor: chartColors.grayLightTwo,
         showBalloon: false,
         isDummy: true
@@ -268,57 +221,11 @@
       return dummyGraph;
     }
 
-    function dummyClientTypeData(filter) {
-      var dummyGraphVal = [];
-      if (filter.value === 0) {
-        for (var i = 240; i >= 1; i--) {
-          dummyGraphVal.push({
-            time: moment().subtract(i, 'minutes').format(timeFormat),
-            particpant_count: Math.floor((Math.random() * 10) + 1),
-            balloon: false
-          });
-        }
-      } else if (filter.value === 1) {
-        for (i = 288; i >= 1; i--) {
-          dummyGraphVal.push({
-            time: moment().subtract(i * 5, 'minutes').format(timeFormat),
-            particpant_count: Math.floor((Math.random() * 10) + 1),
-            balloon: false
-          });
-        }
-      } else if (filter.value === 2) {
-        for (i = 168; i >= 1; i--) {
-          dummyGraphVal.push({
-            time: moment().subtract(i, 'hours').format(timeFormat),
-            particpant_count: Math.floor((Math.random() * 10) + 1),
-            balloon: false
-          });
-        }
-      } else if (filter.value === 3) {
-        for (i = 180; i >= 0; i--) {
-          dummyGraphVal.push({
-            time: moment().subtract(i * 3, 'hours').format(timeFormat),
-            particpant_count: Math.floor((Math.random() * 10) + 1),
-            balloon: false
-          });
-        }
-      } else {
-        for (i = 270; i >= 0; i--) {
-          dummyGraphVal.push({
-            time: moment().subtract(i * 8, 'hours').format(timeFormat),
-            particpant_count: Math.floor((Math.random() * 10) + 1),
-            balloon: false
-          });
-        }
-      }
-      return dummyGraphVal;
-    }
-
     function dummyClientTypeGraph() {
       var dummyGraph = [];
       dummyGraph.push({
-        title: 'Cluster',
-        valueField: 'particpant_count',
+        title: vm.client_types,
+        valueField: 'field',
         lineColor: chartColors.grayLightTwo,
         showBalloon: false,
         isDummy: true

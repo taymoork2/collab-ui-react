@@ -6,7 +6,7 @@
     .controller('HDSServiceController', HDSServiceController);
 
   /* @ngInject */
-  function HDSServiceController($modal, $scope, $state, $stateParams, $translate, ClusterService, FusionClusterService, FeatureToggleService, FusionClusterStatesService) {
+  function HDSServiceController($modal, $scope, $state, $stateParams, $translate, Authinfo, ClusterService, FusionClusterService, FeatureToggleService, FusionClusterStatesService) {
 
 
     ClusterService.subscribe('data', clustersUpdated, {
@@ -80,11 +80,19 @@
       });
     }
 
-    FusionClusterService.serviceIsSetUp('spark-hybrid-datasecurity').then(function (enabled) {
-      if (!enabled) {
-        $modal.open(vm.addResourceModal);
-      }
-    });
+    FusionClusterService.serviceIsSetUp('spark-hybrid-datasecurity')
+      .then(function (enabled) {
+        if (!enabled) {
+          if (Authinfo.isCustomerLaunchedFromPartner()) {
+            $modal.open({
+              templateUrl: 'modules/hercules/service-specific-pages/components/add-resource/partnerAdminWarning.html',
+              type: 'dialog',
+            });
+            return;
+          }
+          $modal.open(vm.addResourceModal);
+        }
+      });
 
     function clustersUpdated() {
       vm.clusters = ClusterService.getClustersByConnectorType('hds_app');

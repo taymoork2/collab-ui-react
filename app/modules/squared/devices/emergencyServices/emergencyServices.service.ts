@@ -15,12 +15,14 @@ export class EmergencyServicesService {
     private ServiceSetup,
     private Authinfo,
     private PstnServiceAddressService,
-    private TerminusStateService,
+    private PstnSetupStatesService,
     private TerminusUserDeviceE911Service,
     private MemberService: MemberService,
     private FeatureMemberService: FeatureMemberService,
   ) {
-    this.stateOptions = this.TerminusStateService.query();
+    this.PstnSetupStatesService.getStateProvinces().then((states) => {
+      this.stateOptions = states;
+    });
   }
 
   public getInitialData(): IEmergencyServicesData {

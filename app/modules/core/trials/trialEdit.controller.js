@@ -482,6 +482,7 @@
           vm.careTrial.enabled = vm.preset.care;
           vm.sbTrial = results.sbTrial;
           updateTrialService(_messageTemplateOptionId);
+          hasSetupPstn(vm.currentTrial.customerOrgId);
 
           // To determine whether to display the ship devices page
           overrideTestOrg = results.ftShipDevices;
@@ -532,7 +533,7 @@
     }
 
     function isPstn() {
-      return ((!vm.preset.call && !vm.preset.roomSystems && !vm.preset.sparkBoard) && (hasEnabledCallTrial() || hasEnabledRoomSystemTrial()));
+      return (((!vm.preset.call && hasEnabledCallTrial()) || (!vm.preset.roomSystems && hasEnabledRoomSystemTrial())) && !vm.preset.pstn);
     }
 
     function toggleTrial() {
@@ -665,13 +666,13 @@
         })
         .then(function (response) {
           vm.customerOrgId = response.data.customerOrgId;
-          if ((vm.callTrial.enabled || vm.roomSystemTrial.enabled || vm.sparkBoardTrial.enabled) && (!vm.preset.call || !vm.preset.roomSystems || !vm.preset.vm.sparkBoard)) {
+          if ((vm.callTrial.enabled && !vm.preset.call) || (vm.roomSystemTrial.enabled && !vm.preset.roomSystems)) {
             return HuronCustomer.create(response.data.customerOrgId, response.data.customerName, response.data.customerEmail)
               .catch(function (response) {
                 Notification.errorResponse(response, 'trialModal.squareducError');
                 return $q.reject(response);
               }).then(function () {
-                if (vm.pstnTrial.enabled) {
+                if (vm.pstnTrial.enabled && !vm.preset.pstn) {
                   return TrialPstnService.createPstnEntityV2(vm.customerOrgId, response.data.customerName);
                 }
               });
@@ -872,5 +873,18 @@
     function sendToAnalytics(eventName, extraData) {
       Analytics.trackTrialSteps(eventName, vm.trialData, extraData);
     }
+
+    function hasSetupPstn(customerOrgId) {
+      if (vm.pstnTrial.enabled) {
+        TrialPstnService.checkForPstnSetup(customerOrgId)
+          .then(function () {
+            vm.preset.pstn = true;
+          })
+          .catch(function () {
+            vm.preset.pstn = false;
+          });
+      }
+    }
+
   }
 })();

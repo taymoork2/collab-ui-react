@@ -36,4 +36,18 @@ hybrid-services-nodes-page {
     color: $gray-dark-3;
     background-color: $gray-light-2;
   }
+
+  .connector-row {
+    &:hover {
+      background-color: $color-primary-lighter;
+    }
+
+    &.active {
+      background-color: $color-primary-base;
+
+      td {
+        color: #fff;
+      }
+    }
+  }
 }
