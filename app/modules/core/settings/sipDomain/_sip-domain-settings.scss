@@ -1,16 +1,20 @@
 @import 'styles/toolkit/colors';
 @import 'styles/toolkit/spacing';
 
-.domain-flow {
+.domain-page {
   .domain {
     color: $gray-dark-4;
+  }
+  .domain-header {
+    @include vr-spacing(mt, 1.25);
+    @include vr-spacing(mb, 0.5);
   }
   .domain-buttons {
     display: inline-flex;
     width: 50%;
     height: vr-adjust(36);
     .btn {
-      margin-left: .5rem;
+      @include vr-spacing(ml, 0.5);
     }
   }
   .domain-description {
@@ -19,10 +23,12 @@
   }
   .domain-error {
     color: $color-negative-base;
+    @include vr-spacing(mr, 0.25);
   }
   .domain-success {
     color: $color-cta-base;
     font-size: vr-adjust(20);
+    @include vr-spacing(mr, 0.25);
   }
   .domain-icon {
     position: relative;
@@ -43,6 +49,10 @@
   }
   .domain-space {
     @include vr-spacing(mt, 1);
+    height: vr-adjust(20);
+  }
+  .domain-space-two {
+    @include vr-spacing(mt, 2.5);
     height: vr-adjust(20);
   }
 }
