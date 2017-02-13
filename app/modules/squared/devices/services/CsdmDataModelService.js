@@ -59,13 +59,23 @@
     }
 
     function fetchHuronDevices() {
-      csdmHuronOrgDeviceService.fetchDevices()
-        .then(function (huronDeviceMap) {
-          updateDeviceMap(huronDeviceMap, function (existing) {
-            return !existing.isHuronDevice;
-          });
-        })
-        .finally(setHuronDevicesLoaded);
+      if (hasHuronLicenses()) {
+        csdmHuronOrgDeviceService.fetchDevices()
+          .then(function (huronDeviceMap) {
+            updateDeviceMap(huronDeviceMap, function (existing) {
+              return !existing.isHuronDevice;
+            });
+          })
+          .finally(setHuronDevicesLoaded);
+      } else {
+        setHuronDevicesLoaded();
+      }
+    }
+
+    function hasHuronLicenses() {
+      return _.filter(Authinfo.getLicenses(), function (l) {
+        return l.licenseType === 'COMMUNICATION';
+      }).length > 0;
     }
 
     function updateDeviceMap(deviceMap, keepFunction) {
