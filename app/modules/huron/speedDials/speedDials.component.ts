@@ -53,9 +53,9 @@ class SpeedDialCtrl implements ng.IComponentController {
       });
     }
     this.actionListCopy.push({
-        actionKey: this.$translate.instant('speedDials.reorder'),
-        actionFunction: this.setReorder.bind(this),
-      });
+      actionKey: this.$translate.instant('speedDials.reorder'),
+      actionFunction: this.setReorder.bind(this),
+    });
     this.actionList = _.cloneDeep(this.actionListCopy);
   }
   public reachSpeedDialLimit() {
@@ -155,15 +155,15 @@ class SpeedDialCtrl implements ng.IComponentController {
 
   public delete(sd): void {
     this.$modal.open({
-        templateUrl: 'modules/huron/speedDials/deleteConfirmation.tpl.html',
-        type: 'dialog',
-      }).result.then(() => {
-        _.pull(this.speedDialList, sd);
-        this.updateIndex();
-        this.SpeedDialService.updateSpeedDials(this.ownerType, this.ownerId, this.speedDialList).then( () => undefined).catch(() => {
-          this.Notification.error('speedDials.speedDialChangesFailed');
-        });
+      templateUrl: 'modules/huron/speedDials/deleteConfirmation.tpl.html',
+      type: 'dialog',
+    }).result.then(() => {
+      _.pull(this.speedDialList, sd);
+      this.updateIndex();
+      this.SpeedDialService.updateSpeedDials(this.ownerType, this.ownerId, this.speedDialList).then( () => undefined).catch(() => {
+        this.Notification.error('speedDials.speedDialChangesFailed');
       });
+    });
   }
 
   private updateIndex(): void {

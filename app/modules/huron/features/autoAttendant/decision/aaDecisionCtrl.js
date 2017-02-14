@@ -156,8 +156,6 @@
       }
 
       vm.actionEntry = action;
-
-      return;
     }
 
     function populateMenu() {

@@ -193,7 +193,7 @@
               var repeatAction = AutoAttendantCeMenuModelService.newCeActionEntry(properties.REPEAT_NAME, '');
               vm.menuEntry.entries[$scope.menuKeyIndex].addAction(repeatAction);
             }
-            return;
+            return undefined;
           }
         case sayMessageType.ACTION:
         // no special handling
@@ -310,8 +310,6 @@
               vm.menuEntry.addAction(sayAction);
             }
             vm.actionEntry = sayAction;
-
-            return;
           }
       }
     }

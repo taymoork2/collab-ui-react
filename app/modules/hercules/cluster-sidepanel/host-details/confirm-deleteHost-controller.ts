@@ -17,16 +17,15 @@ export class ConfirmDeleteHostController implements IConfirmDeleteHostController
   public removeHost(): void {
     this.ClusterService.deleteHost(this.cluster.id, this.hostSerial)
       .then( () => {
-          this.$modalInstance.close();
-          if (this.connectorType === 'c_ucmc') {
-            this.$state.go('call-service.list');
-          }
-          if (this.connectorType === 'c_cal') {
-            this.$state.go('calendar-service.list');
-          }
-          this.Notification.success('hercules.deleteClusterNodeDialog.successNodeRemoval');
-        },
-      )
+        this.$modalInstance.close();
+        if (this.connectorType === 'c_ucmc') {
+          this.$state.go('call-service.list');
+        }
+        if (this.connectorType === 'c_cal') {
+          this.$state.go('calendar-service.list');
+        }
+        this.Notification.success('hercules.deleteClusterNodeDialog.successNodeRemoval');
+      })
       .catch( (error) => {
         this.Notification.errorWithTrackingId(error, 'hercules.deleteClusterNodeDialog.failedNodeRemoval');
       });

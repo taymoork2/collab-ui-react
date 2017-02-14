@@ -46,7 +46,7 @@ export class CertificateFormatterService {
   public formatCerts(certificates): IformattedCertificate[] {
 
     if (!_.isArray(certificates)) {
-       return [];
+      return [];
     }
 
     return _.map(certificates, (certificate: ICertificate) => {

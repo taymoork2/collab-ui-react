@@ -31,8 +31,7 @@ describe('Care Feature Ctrl should ', function () {
     $provide.value("Authinfo", spiedAuthinfo);
   }));
 
-  beforeEach(inject(function (_$rootScope_, $controller, _$filter_, _$state_, _$q_, _$timeout_, _Authinfo_,
-                              _CareFeatureList_, _Notification_, _Log_, _$translate_, _FeatureToggleService_) {
+  beforeEach(inject(function (_$rootScope_, $controller, _$filter_, _$state_, _$q_, _$timeout_, _Authinfo_, _CareFeatureList_, _Notification_, _Log_, _$translate_, _FeatureToggleService_) {
     $rootScope = _$rootScope_;
     $filter = _$filter_;
     $q = _$q_;

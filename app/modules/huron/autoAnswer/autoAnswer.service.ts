@@ -59,46 +59,45 @@ export class AutoAnswerService {
       typeId: _typeId,
       numberId: _numberId,
     }).$promise.then(data => {
-        let autoAnswer = new AutoAnswer();
-        autoAnswer.ownerType = _type as string;
+      let autoAnswer = new AutoAnswer();
+      autoAnswer.ownerType = _type as string;
 
-        let phoneList: Array<IAutoAnswerPhone> = _.get(data, AutoAnswerConst.PHONES, []);
-        autoAnswer.phones = _.map(_.filter(phoneList, (phone) => { return phone.autoAnswer.supported === true ; }), (supportedPhone) => {
-          let label = _.first(this.DeviceService.getTags(this.DeviceService.decodeHuronTags(supportedPhone.description))) as string;
-          if (!label || label === '') {
-            let macAddress: string = this.convertNameToMacAddress(supportedPhone.name);
-            label = supportedPhone.model + ' (' + macAddress + ')';
-          }
-          return new AutoAnswerPhone({
-              uuid: supportedPhone.uuid,
-              name: supportedPhone.name,
-              description: label,
-              model: supportedPhone.model,
-              enabled: supportedPhone.autoAnswer.enabled,
-              mode: supportedPhone.autoAnswer.enabled === true ? supportedPhone.autoAnswer.mode : undefined });
-        });
-
-        let member = _.get(data, AutoAnswerConst.MEMBER);
-        if (!_.isUndefined(member) && !_.isNull(member)) {
-          autoAnswer.member = new AutoAnswerMember(member);
+      let phoneList: Array<IAutoAnswerPhone> = _.get(data, AutoAnswerConst.PHONES, []);
+      autoAnswer.phones = _.map(_.filter(phoneList, (phone) => { return phone.autoAnswer.supported === true ; }), (supportedPhone) => {
+        let label = _.first(this.DeviceService.getTags(this.DeviceService.decodeHuronTags(supportedPhone.description))) as string;
+        if (!label || label === '') {
+          let macAddress: string = this.convertNameToMacAddress(supportedPhone.name);
+          label = supportedPhone.model + ' (' + macAddress + ')';
         }
-        return autoAnswer;
-      },
-    );
+        return new AutoAnswerPhone({
+          uuid: supportedPhone.uuid,
+          name: supportedPhone.name,
+          description: label,
+          model: supportedPhone.model,
+          enabled: supportedPhone.autoAnswer.enabled,
+          mode: supportedPhone.autoAnswer.enabled === true ? supportedPhone.autoAnswer.mode : undefined });
+      });
+
+      let member = _.get(data, AutoAnswerConst.MEMBER);
+      if (!_.isUndefined(member) && !_.isNull(member)) {
+        autoAnswer.member = new AutoAnswerMember(member);
+      }
+      return autoAnswer;
+    });
   }
 
   public createUpdateAutoAnswerPayload(origPhoneData: Array<AutoAnswerPhone>, currPhoneData: Array<AutoAnswerPhone>): ISetAutoAnswer | undefined {
-      let currEnabledPhone: AutoAnswerPhone = _.find(currPhoneData, AutoAnswerConst.ENABLED);
-      let origEnabledPhone: AutoAnswerPhone = _.find(origPhoneData, AutoAnswerConst.ENABLED);
-      let updateAutoAnswerData: ISetAutoAnswer | undefined ;
+    let currEnabledPhone: AutoAnswerPhone = _.find(currPhoneData, AutoAnswerConst.ENABLED);
+    let origEnabledPhone: AutoAnswerPhone = _.find(origPhoneData, AutoAnswerConst.ENABLED);
+    let updateAutoAnswerData: ISetAutoAnswer | undefined ;
 
-      if (currEnabledPhone) {
-        updateAutoAnswerData = { phoneUuid: currEnabledPhone.uuid, enabled: true, mode: currEnabledPhone.mode };
-      } else if (origEnabledPhone) {
-        updateAutoAnswerData = { phoneUuid: origEnabledPhone.uuid, enabled: false, mode: undefined };
-      }
+    if (currEnabledPhone) {
+      updateAutoAnswerData = { phoneUuid: currEnabledPhone.uuid, enabled: true, mode: currEnabledPhone.mode };
+    } else if (origEnabledPhone) {
+      updateAutoAnswerData = { phoneUuid: origEnabledPhone.uuid, enabled: false, mode: undefined };
+    }
 
-      return updateAutoAnswerData;
+    return updateAutoAnswerData;
   }
 
   public setAutoAnswer(_phones: Array<AutoAnswerPhone>, _phoneId: string | undefined, _enabled: boolean, mode: string | undefined): void {
@@ -123,8 +122,8 @@ export class AutoAnswerService {
     } else {
       let phone: AutoAnswerPhone = _.find(_phones, { uuid: _phoneId });
       if (phone) {
-          phone.enabled = _enabled;
-          phone.mode = mode;
+        phone.enabled = _enabled;
+        phone.mode = mode;
       }
     }
   }

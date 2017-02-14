@@ -232,7 +232,7 @@
       MediaReportsService.getTotalCallsData(vm.timeSelected, vm.clusterSelected).then(function (response) {
         if (vm.clusterId === vm.allClusters) {
           if (response === vm.ABORT) {
-            return;
+            return undefined;
           } else if (_.isUndefined(response.data) || response.data.length === 0) {
             vm.onprem = vm.noData;
             vm.cloud = vm.noData;
@@ -265,7 +265,7 @@
 
         } else {
           if (response === vm.ABORT) {
-            return;
+            return undefined;
           } else if (_.isUndefined(response.data) || response.data.length === 0) {
             vm.onprem = vm.noData;
             vm.cloud = vm.noData;
@@ -299,7 +299,7 @@
     function setClientTypeCard() {
       MediaReportsService.getClientTypeCardData(vm.timeSelected).then(function (response) {
         if (response === vm.ABORT) {
-          return;
+          return undefined;
         } else if (_.isUndefined(response.data) || response.data.length === 0) {
           vm.clientTypeCount = vm.noData;
         } else {
@@ -311,7 +311,7 @@
     function setClusterAvailability() {
       MediaReportsService.getClusterAvailabilityData(vm.timeSelected, vm.clusterId).then(function (response) {
         if (response === vm.ABORT) {
-          return;
+          return undefined;
         } else if (_.isUndefined(response.data) || response.data.length === 0 || _.isUndefined(response.data.availabilityPercent)) {
           vm.clusterAvailability = vm.EMPTY;
           vm.clusterAvailability = vm.noData;

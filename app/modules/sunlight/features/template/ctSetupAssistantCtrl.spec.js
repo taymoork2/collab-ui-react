@@ -122,8 +122,7 @@ describe('Care Setup Assistant Ctrl', function () {
   }));
 
   var intializeCtrl = function (_$rootScope_, $controller, _$modal_, _$q_, _$translate_,
-    _$window_, _CTService_, _SunlightConfigService_, _$state_, _Notification_, _$stateParams_,
-                                _LogMetricsService_, UrlConfig, _$httpBackend_) {
+    _$window_, _CTService_, _SunlightConfigService_, _$state_, _Notification_, _$stateParams_, _LogMetricsService_, UrlConfig, _$httpBackend_) {
     $scope = _$rootScope_.$new();
     $modal = _$modal_;
     $q = _$q_;

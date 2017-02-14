@@ -14,8 +14,7 @@
   }
 
   /* @ngInject */
-  function PstnNumbersCtrl($q, $scope, $state, $timeout, $translate, DidService, Notification,
-      PstnSetup, PstnSetupService, TelephoneNumberService, PstnSetupStatesService, ValidationService) {
+  function PstnNumbersCtrl($q, $scope, $state, $timeout, $translate, DidService, Notification, PstnSetup, PstnSetupService, TelephoneNumberService, PstnSetupStatesService, ValidationService) {
     var vm = this;
 
     vm.provider = PstnSetup.getProvider();
@@ -518,7 +517,7 @@
         case undefined:
           return getCommonPattern(telephoneNumber);
         default:
-          return;
+          return undefined;
       }
     }
 
@@ -694,7 +693,7 @@
         case BLOCK_ORDER:
           return order.data.length;
         case undefined:
-          return;
+          return undefined;
       }
     }
 

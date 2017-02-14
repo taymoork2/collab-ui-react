@@ -11,9 +11,9 @@ namespace globalsettings {
     }
 
     private getAdminOrgHandler(data: { success: boolean, ssoEnabled: boolean }) {
-        if (data.success) {
-          this.setSSOStatus(data.ssoEnabled || false);
-        }
+      if (data.success) {
+        this.setSSOStatus(data.ssoEnabled || false);
+      }
     }
 
     private setSSOStatus(ssoEnabled: boolean) {

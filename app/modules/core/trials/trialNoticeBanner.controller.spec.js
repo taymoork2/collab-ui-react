@@ -57,8 +57,7 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
   beforeEach(angular.mock.module('Sunlight'));
 
   /* @ngInject */
-  beforeEach(inject(function ($controller, _$httpBackend_, _$q_, _Authinfo_,
-                              _Notification_, _TrialService_, _UserListService_) {
+  beforeEach(inject(function ($controller, _$httpBackend_, _$q_, _Authinfo_, _Notification_, _TrialService_, _UserListService_) {
 
     controller = $controller;
     $httpBackend = _$httpBackend_;

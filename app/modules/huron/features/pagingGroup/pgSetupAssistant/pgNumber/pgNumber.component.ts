@@ -26,14 +26,14 @@ class PagingNumberCtrl implements ng.IComponentController {
       numberList => {
         this.errorNumberInput = (numberList && numberList.length === 0);
         this.onUpdate({
-             number: this.pagingGroupNumber,
-             isValid: false,
+          number: this.pagingGroupNumber,
+          isValid: false,
         });
         return numberList;
       }, (response) => {
-        this.Notification.errorResponse(response, 'pagingGroup.numberFetchFailure');
-        return [];
-      });
+      this.Notification.errorResponse(response, 'pagingGroup.numberFetchFailure');
+      return [];
+    });
   }
 }
 

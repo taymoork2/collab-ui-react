@@ -21,10 +21,10 @@ describe('Component: sectionTitle', () => {
         actionKey: 'action.key',
         actionFunction: this.actionSpy,
       },
-        {
-          actionKey: 'action.key.2',
-          actionFunction: this.actionSpy2,
-        }];
+      {
+        actionKey: 'action.key.2',
+        actionFunction: this.actionSpy2,
+      }];
     });
 
     it('should default to dropdown menu when not defined', function () {

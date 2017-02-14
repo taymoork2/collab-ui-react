@@ -49,4 +49,4 @@ angular.module('Core')
     bindings: {
       filterArray: '<',
     },
-});
+  });
