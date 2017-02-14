@@ -112,13 +112,13 @@
     function validateAddress() {
       vm.addressLoading = true;
       vm.validation = true;
-      return PstnServiceAddressService.lookupAddress({
+      return PstnServiceAddressService.lookupAddressV2({
         streetAddress: vm.trial.details.emergAddr.streetAddress,
         unit: vm.trial.details.emergAddr.unit,
         city: vm.trial.details.emergAddr.city,
         state: vm.trial.details.emergAddr.state.abbreviation,
         zip: vm.trial.details.emergAddr.zip,
-      })
+      }, vm.trial.details.pstnProvider.uuid)
         .then(function (response) {
           if (!_.isUndefined(response)) {
             vm.addressFound = true;

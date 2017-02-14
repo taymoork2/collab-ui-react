@@ -3841,7 +3841,7 @@
       "skip": "Skip",
       "popover": "Please provide information on the legal contact who can sign the contract",
       "addrRetry": "Use a different address",
-      "addrFound": "This is the address found in the system.",
+      "addrFound": "We have verified the provided address as:",
       "error": {
         "areaCodes": "Failed to get area codes for selected state",
         "numbers": "Failed to get numbers for selected area code",
