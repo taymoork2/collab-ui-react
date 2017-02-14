@@ -34,6 +34,7 @@ describe('Controller: TrialDeviceController', function () {
     spyOn(Orgservice, 'getOrg');
     limitData = TrialDeviceService.getDeviceLimit();
     spyOn(Analytics, 'trackTrialSteps');
+    spyOn(FeatureToggleService, 'atlasPhonesCanadaGetStatus').and.returnValue($q.resolve(false));
     initController();
   });
 
@@ -197,7 +198,8 @@ describe('Controller: TrialDeviceController', function () {
           activeDeviceTrials: 17,
           maxDeviceTrials: 20
         }),
-        getDeviceLimit: limitData
+        getDeviceLimit: limitData,
+        listTypes: {}
       });
       initController();
 
@@ -213,7 +215,8 @@ describe('Controller: TrialDeviceController', function () {
           activeDeviceTrials: 20,
           maxDeviceTrials: 20
         }),
-        getDeviceLimit: limitData
+        getDeviceLimit: limitData,
+        listTypes: {}
       });
       initController();
 
@@ -226,7 +229,8 @@ describe('Controller: TrialDeviceController', function () {
       bard.mockService(TrialDeviceService, {
         getData: trialData.enabled.trials.deviceTrial,
         getLimitsPromise: $q.reject(),
-        getDeviceLimit: limitData
+        getDeviceLimit: limitData,
+        listTypes: {}
       });
       initController();
 
@@ -242,7 +246,8 @@ describe('Controller: TrialDeviceController', function () {
           activeDeviceTrials: 17,
           maxDeviceTrials: 20
         }),
-        getDeviceLimit: limitData
+        getDeviceLimit: limitData,
+        listTypes: {}
       });
       initController();
 
@@ -613,7 +618,8 @@ describe('Controller: TrialDeviceController', function () {
           activeDeviceTrials: 20,
           maxDeviceTrials: 20
         }),
-        getDeviceLimit: limitData
+        getDeviceLimit: limitData,
+        listTypes: {}
       });
 
       initController();
@@ -631,7 +637,8 @@ describe('Controller: TrialDeviceController', function () {
           activeDeviceTrials: 15,
           maxDeviceTrials: 20
         }),
-        getDeviceLimit: limitData
+        getDeviceLimit: limitData,
+        listTypes: {}
       });
       initController();
       controller.canAddMoreDevices = false;
@@ -679,15 +686,43 @@ describe('Controller: TrialDeviceController', function () {
   });
 
   describe('Shipping to additional countries ', function () {
-    it('should show a larger list of countries when only CISCO_SX10 is selected', function () {
+    it('should show a largest list of countries when only CISCO_SX10 is selected', function () {
       controller.sx10.enabled = true;
       controller.sx10.quantity = 1;
       var countryList = controller.getCountriesForSelectedDevices();
-      expect(countryList.length).toBeGreaterThan(1);
+      expect(countryList.length).toBeGreaterThan(2);
     });
-    it('should have a list of countries to be US only when CISCO_SX10 and phone is selected', function () {
+    it('should have a list of countries to be US and Canada only when CISCO_SX10 and Desk Phone is selected AND FT is true', function () {
+      FeatureToggleService.atlasPhonesCanadaGetStatus.and.returnValue($q.resolve(true));
+      initController();
       controller.sx10.enabled = true;
       controller.sx10.quantity = 1;
+      controller.phone8865.enabled = true;
+      controller.phone8865.quantity = 1;
+
+      var countryList = controller.getCountriesForSelectedDevices();
+      expect(countryList.length).toBe(2);
+      expect(countryList).toContain({ country: 'United States' });
+      expect(countryList).toContain({ country: 'Canada' });
+    });
+    it('should have a list of countries to be US only when CISCO_SX10 and Desk Phone is selected and FT is false', function () {
+
+      controller.sx10.enabled = true;
+      controller.sx10.quantity = 1;
+      controller.phone8865.enabled = true;
+      controller.phone8865.quantity = 1;
+      FeatureToggleService.atlasPhonesCanadaGetStatus.and.returnValue($q.resolve(false));
+      var countryList = controller.getCountriesForSelectedDevices();
+      expect(countryList.length).toBe(1);
+      expect(countryList).toContain({ country: 'United States' });
+      expect(countryList).not.toContain({ country: 'Canada' });
+
+    });
+    it('should have a list of countries to still be US only when MX300 phone is selected', function () {
+      controller.sx10.enabled = true;
+      controller.sx10.quantity = 1;
+      controller.mx300.enabled = true;
+      controller.mx300.quantity = 1;
       controller.phone8865.enabled = true;
       controller.phone8865.quantity = 1;
       var countryList = controller.getCountriesForSelectedDevices();
