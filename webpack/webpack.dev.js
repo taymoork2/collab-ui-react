@@ -73,7 +73,7 @@ function webpackConfig(env) {
         new webpack.DllReferencePlugin({
           context: commonWebpackConfig.context,
           manifest: getManifest(dllEntryName),
-        }),
+        }) // eslint-disable-line comma-dangle
       );
     });
   }
