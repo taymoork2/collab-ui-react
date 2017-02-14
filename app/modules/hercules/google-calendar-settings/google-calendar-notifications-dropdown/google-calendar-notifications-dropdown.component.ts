@@ -79,9 +79,7 @@ class GoogleCalendarNotificationsDropdownCtrl implements ng.IComponentController
   public getNumberCSSClass() {
     if (this.alarms.length === 0) {
       return '';
-    } else if (_.some(this.alarms, alarm => {
-        return alarm.severity === 'error' || alarm.severity === 'critical';
-      })) {
+    } else if (_.some(this.alarms, alarm => { return alarm.severity === 'error' || alarm.severity === 'critical'; } )) {
       return 'alert';
     } else if (_.some(this.alarms, { severity: 'warning' })) {
       return 'warning';
