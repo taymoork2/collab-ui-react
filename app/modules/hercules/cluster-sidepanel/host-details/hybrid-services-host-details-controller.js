@@ -9,7 +9,9 @@
   function HybridServicesHostDetailsController($scope, $state, $stateParams, ClusterService, $translate, $modal, FusionClusterStatesService) {
     var cluster;
     var vm = this;
-    vm.deleteHost = deleteHost;
+    vm.deleteExpresswayNode = deleteExpresswayNode;
+    vm.showReassignHostDialog = showReassignHostDialog;
+    vm.showDeregisterHostDialog = showDeregisterHostDialog;
 
     vm.getSeverity = FusionClusterStatesService.getSeverity;
 
@@ -30,7 +32,7 @@
       }
     }, true);
 
-    function deleteHost() {
+    function deleteExpresswayNode() {
       $modal.open({
         templateUrl: 'modules/hercules/cluster-sidepanel/host-details/confirm-deleteHost-dialog.html',
         type: 'dialog',
@@ -50,7 +52,8 @@
       });
     }
 
-    vm.showReassignHostDialog = function () {
+    /* Only used for Hybrid Media nodes  */
+    function showReassignHostDialog() {
       $modal.open({
         resolve: {
           cluster: function () {
@@ -67,13 +70,12 @@
       })
         .result
         .then(function () {
-          if (vm.host.connectorType === 'mf_mgmt') {
-            $state.go('media-service-v2.list');
-          }
+          $state.go('media-service-v2.list');
         });
-    };
+    }
 
-    vm.showDeregisterHostDialog = function () {
+    /* Only used for Hybrid Media nodes  */
+    function showDeregisterHostDialog() {
       $modal.open({
         resolve: {
           cluster: function () {
@@ -90,11 +92,9 @@
       })
         .result
         .then(function () {
-          if (vm.host.connectorType === 'mf_mgmt') {
-            $state.go('media-service-v2.list');
-          }
+          $state.go('media-service-v2.list');
         });
-    };
+    }
 
     vm.showMoveNodeAction = function () {
       return vm.host.connectorType === 'mf_mgmt';
