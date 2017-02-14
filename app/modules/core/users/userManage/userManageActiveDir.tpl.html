@@ -12,10 +12,9 @@
         <h4 translate="userManage.ad.adLabel"></h4>
       </div>
       <div class="ds-sync columns medium-7">
-        <i class="working icon icon-circle" ng-class="{'failing': !ummc.isDirSyncEnabled}"></i>
+        <i class="working icon icon-circle"></i>
         <div class="details">
-          <h6 ng-if="ummc.isDirSyncEnabled" translate="userManage.ad.adStatus"></h6>
-          <h6 ng-if="!ummc.isDirSyncEnabled" translate="userManage.ad.adStatusDisabled"></h6>
+          <h6 translate="userManage.ad.adStatus"></h6>
           <p translate="userManage.ad.adStatusDetails"></p>
           <a class="p" ng-click="umadc.onTurnOffDS()" translate="userManage.ad.turnOffDS" tooltip="{{::'userManage.ad.turnOffDSToolTip'|translate}}"
             tooltip-placement="bottom"></a>
