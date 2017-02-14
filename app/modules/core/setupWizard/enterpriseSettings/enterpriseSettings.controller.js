@@ -5,7 +5,7 @@
     .controller('EnterpriseSettingsCtrl', EnterpriseSettingsCtrl);
 
   /* @ngInject */
-  function EnterpriseSettingsCtrl($q, $rootScope, $scope, $timeout, $translate, $window, Authinfo, Config, Log, Notification, ServiceSetup, PersonalMeetingRoomManagementService, SSOService, Orgservice, UrlConfig) {
+  function EnterpriseSettingsCtrl($q, $rootScope, $scope, $timeout, $translate, $window, Authinfo, Config, Log, Notification, ServiceSetup, PersonalMeetingRoomManagementService, SSOService, Orgservice, UrlConfig, FeatureToggleService) {
     var strEntityDesc = '<EntityDescriptor ';
     var strEntityId = 'entityID="';
     var strEntityIdEnd = '"';
@@ -29,6 +29,7 @@
       label: $translate.instant('timeZones.America/Los_Angeles')
     };
     var vm = this;
+    vm.sipUpdateToggle = false;
 
     vm.pmrField = {
       inputValue: '',
@@ -75,6 +76,10 @@
     init();
 
     function init() {
+      FeatureToggleService.atlasSubdomainUpdateGetStatus().then(function (status) {
+        vm.sipUpdateToggle = status;
+      });
+
       setPMRSiteUrlFromSipDomain();
       updateSSO();
     }

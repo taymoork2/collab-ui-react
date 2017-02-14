@@ -721,8 +721,6 @@
         return translations[order.statusMessage];
       } else if (order.statusMessage !== 'None') {
         return order.statusMessage;
-      } else {
-        return;
       }
     }
 

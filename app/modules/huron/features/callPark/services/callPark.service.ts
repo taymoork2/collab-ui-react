@@ -106,13 +106,13 @@ export class CallParkService {
         let promises: Array<ng.IPromise<IFeatureMemberPicture>> = [];
         _.forEach<any>(callParkResource.members, member => {
           callParkMembers.push(new CallParkMember({
-              memberUuid: member.memberUuid,
-              memberName: member.memberName,
-              memberType: member.memberType === USER_PLACE ? MemberType.USER_PLACE : MemberType.USER_REAL_USER,
-              number: member.number,
-              numberUuid: member.numberUuid,
-              thumbnailSrc: undefined,
-            }));
+            memberUuid: member.memberUuid,
+            memberName: member.memberName,
+            memberType: member.memberType === USER_PLACE ? MemberType.USER_PLACE : MemberType.USER_REAL_USER,
+            number: member.number,
+            numberUuid: member.numberUuid,
+            thumbnailSrc: undefined,
+          }));
           promises.push(this.FeatureMemberService.getMemberPicture(member.memberUuid).catch( () => {
             return <IFeatureMemberPicture>{
               memberUuid: member.memberUuid,

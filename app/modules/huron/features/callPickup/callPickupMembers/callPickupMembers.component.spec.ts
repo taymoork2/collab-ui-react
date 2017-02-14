@@ -95,7 +95,7 @@ describe('Component: callPickupMembers', () => {
       expect(mockMembersList.length).toEqual(suggestedMembersCount);
 
       for (let i = 0; i < mockMembersList.length; i++) {
-         expect(mockMembersList[i].disabled).toEqual(true);
+        expect(mockMembersList[i].disabled).toEqual(true);
       }
     });
   });
@@ -146,7 +146,7 @@ describe('Component: callPickupMembers', () => {
       this.controller.selectedMembers.push(memberData);
       this.controller.removeMember(memberData);
       expect(this.controller.selectedMembers.length).toEqual(0);
-  });
+    });
 
     it('member name input box should be empty when calling select member', function() {
       this.isLineInPickupGroupDefer.resolve(false);

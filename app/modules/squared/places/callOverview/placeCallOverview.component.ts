@@ -132,12 +132,12 @@ class PlaceCallOverview implements ng.IComponentController {
 
   private initPlaceCallOverviewData(): void {
     this.PlaceCallOverviewService.getPlaceCallOverviewData(this.currentPlace.cisUuid)
-        .then( placeCallOverviewData => {
-          this.placeCallOverviewData = placeCallOverviewData;
-          this.preferredLanguage = placeCallOverviewData.preferredLanguage;
-          this.preferredLanguageOptions = placeCallOverviewData.preferredLanguageOptions;
-          this.plIsLoaded = true;
-        });
+      .then(placeCallOverviewData => {
+        this.placeCallOverviewData = placeCallOverviewData;
+        this.preferredLanguage = placeCallOverviewData.preferredLanguage;
+        this.preferredLanguageOptions = placeCallOverviewData.preferredLanguageOptions;
+        this.plIsLoaded = true;
+      });
   }
 
   public setPreferredLanguage(preferredLanguage: any): void {
@@ -147,7 +147,7 @@ class PlaceCallOverview implements ng.IComponentController {
 
   private checkForChanges(): void {
     if (this.PlaceCallOverviewService.checkForPreferredLanguageChanges(this.preferredLanguage)) {
-        this.resetPreferredLanguageFlags();
+      this.resetPreferredLanguageFlags();
     }
   }
 

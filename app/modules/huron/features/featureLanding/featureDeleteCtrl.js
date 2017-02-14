@@ -115,8 +115,6 @@
             deleteError(response);
           }
         );
-      } else {
-        return;
       }
     }
 

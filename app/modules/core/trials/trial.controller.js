@@ -1272,7 +1272,6 @@
           return $q.reject(response);
         });
       }
-      return;
     }
 
     function saveTrialPstn(customerOrgId, customerName, customerEmail) {

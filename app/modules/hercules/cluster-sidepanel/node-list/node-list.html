@@ -4,6 +4,9 @@
     <p translate="hercules.connectors.no_nodes"></p>
   </div>
   <div class="feature-list" ng-if="$ctrl.hasConnectors()">
+    <div ng-if="$ctrl.loading"
+         cs-loader
+         class="loader-example--small"></div>
     <div ng-repeat="host in $ctrl.hosts | orderBy: 'hostname'">
       <h6 class="feature">{{host.hostname}}</h6>
       <ul>

@@ -17,9 +17,9 @@ class SubscriptionUpgradeButton implements ng.IComponentController {
     this.showLoadingButton = (this.showLoading === 'true');
     this.widgetLocation = this.widgetLocation || 'navigation-bar';
     this.emptyBmmpAttr = {
-        subscriptionId: '',
-        productInstanceId: '',
-        changeplanOverride: '',
+      subscriptionId: '',
+      productInstanceId: '',
+      changeplanOverride: '',
     };
   }
 

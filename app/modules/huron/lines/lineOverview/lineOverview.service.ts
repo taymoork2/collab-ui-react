@@ -79,14 +79,14 @@ export class LineOverviewService {
             return this.$q.reject();
           }
           lineOverviewData.line = new Line({
-              uuid: line.uuid,
-              primary: line.primary,
-              shared: line.shared,
-              internal: line.internal,
-              incomingCallMaximum: line.incomingCallMaximum,
-              external: line.external,
-              siteToSite: line.siteToSite,
-            });
+            uuid: line.uuid,
+            primary: line.primary,
+            shared: line.shared,
+            internal: line.internal,
+            incomingCallMaximum: line.incomingCallMaximum,
+            external: line.external,
+            siteToSite: line.siteToSite,
+          });
         })
         .then( () => {
           return this.updateCallForward(consumerType, ownerId, lineOverviewData.line.uuid, data.callForward)
@@ -276,7 +276,8 @@ export class LineOverviewService {
             autoAnswerRes.enabledForSharedLineMember = true;
           }
           return autoAnswerRes;
-    }); }
+        });
+    }
   }
 
   private listCompanyNumbers() {
@@ -299,7 +300,7 @@ export class LineOverviewService {
   private updateSharedLinePhoneList(consumerType: LineConsumerType, ownerId: string, numberId: string, sharedLineId: string, data: Array<SharedLinePhoneListItem>) {
     return this.SharedLineService.updateSharedLinePhoneList(consumerType, ownerId, numberId, sharedLineId, data)
     .catch(error => {
-        this.errors.push(this.Notification.processErrorResponse(error, 'directoryNumberPanel.updateSharedLinePhoneError'));
+      this.errors.push(this.Notification.processErrorResponse(error, 'directoryNumberPanel.updateSharedLinePhoneError'));
     });
   }
 

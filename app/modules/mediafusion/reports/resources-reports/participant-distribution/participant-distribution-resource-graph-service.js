@@ -27,7 +27,7 @@
       var data = response.graphData;
       var graphs = getClusterName(response.graphs, clusterMap);
       if (data === null || data === 'undefined' || data.length === 0) {
-        return;
+        return undefined;
       } else {
         if (graphs[0].isDummy) {
           isDummy = true;

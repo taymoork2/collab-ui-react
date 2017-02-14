@@ -6,9 +6,7 @@
     .factory('ServiceSetup', ServiceSetup);
 
   /* @ngInject */
-  function ServiceSetup($filter, $q, $translate, Authinfo, AvrilSiteService, AvrilSiteUpdateService, CeSiteService, CustomerCommonService,
-  CustomerCosRestrictionServiceV2, DateFormatService, ExternalNumberPool, FeatureToggleService, InternalNumberRangeService, SiteCountryService,
-  SiteLanguageService, SiteService, TimeZoneService, VoicemailService, VoicemailTimezoneService) {
+  function ServiceSetup($filter, $q, $translate, Authinfo, AvrilSiteService, AvrilSiteUpdateService, CeSiteService, CustomerCommonService, CustomerCosRestrictionServiceV2, DateFormatService, ExternalNumberPool, FeatureToggleService, InternalNumberRangeService, SiteCountryService, SiteLanguageService, SiteService, TimeZoneService, VoicemailService, VoicemailTimezoneService) {
     return {
       internalNumberRanges: [],
       sites: [],

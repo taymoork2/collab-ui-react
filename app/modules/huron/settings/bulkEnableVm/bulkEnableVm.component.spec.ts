@@ -224,11 +224,11 @@ describe('Component: bulkEnableVm', () => {
           statusText: 'failed to fetch user',
           trackingID: 'TrackingID1',
         },
-          {
-            userId: 'testUserId2',
-            statusText: 'failed to fetch user',
-            trackingID: 'TrackingID2',
-          }];
+        {
+          userId: 'testUserId2',
+          statusText: 'failed to fetch user',
+          trackingID: 'TrackingID2',
+        }];
         this.$scope.$apply();
         expect(this.view.find('div#errorList')).toExist();
         expect(this.view.find('span#headerRow')).toExist();

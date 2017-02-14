@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: EnterpriseSettingsCtrl', function () {
-  var $scope, $controller, $q, Orgservice, Notification, ServiceSetup;
+  var $scope, $controller, $q, Orgservice, Notification, ServiceSetup, FeatureToggleService;
   var orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');
   var getOrgStatus = 200;
   var rootScope;
@@ -19,7 +19,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
 
   beforeEach(installPromiseMatchers);
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$q_, _Notification_, _Orgservice_, _ServiceSetup_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$q_, _Notification_, _Orgservice_, _ServiceSetup_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
     rootScope = $rootScope;
     $controller = _$controller_;
@@ -27,6 +27,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     Orgservice = _Orgservice_;
     Notification = _Notification_;
     ServiceSetup = _ServiceSetup_;
+    FeatureToggleService = _FeatureToggleService_;
 
     $scope.wizard = {
       nextTab: sinon.stub()
@@ -45,13 +46,16 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
 
     spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.resolve());
     spyOn(ServiceSetup, 'getTranslatedTimeZones').and.returnValue(['1', '2', '3']);
+
+    spyOn(FeatureToggleService, 'atlasSubdomainUpdateGetStatus').and.returnValue($q.resolve(false));
   }
 
   function initController() {
     var ctrl = $controller('EnterpriseSettingsCtrl', {
       $scope: $scope,
       $rootScope: rootScope,
-      Authinfo: authInfo
+      Authinfo: authInfo,
+      FeatureToggleService: FeatureToggleService
     });
 
     $scope.$apply();
@@ -130,9 +134,8 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
   });
 
   describe('test Personal Meeting Room Setup', function () {
-
     it('should handle valid org settings', function () {
-
+      spyOn(FeatureToggleService, 'atlasSubdomainUpdateGetStatus').and.returnValue($q.resolve(false));
       spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
         callback(orgServiceJSONFixture.getOrg, getOrgStatus);
       });
@@ -150,7 +153,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     });
 
     it('should handle org data not having a sipCloudDomain in orgSettings', function () {
-
+      spyOn(FeatureToggleService, 'atlasSubdomainUpdateGetStatus').and.returnValue($q.resolve(false));
       spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
         var org = _.cloneDeep(orgServiceJSONFixture.getOrg);
         org.orgSettings.sipCloudDomain = undefined;

@@ -6,10 +6,10 @@ class HybridVoicemailCtrl implements ng.IComponentController {
   public isCallServiceConnectEnabled: boolean;
   public voicemailSection = {
     title: 'hercules.settings.voicemail.heading',
-    };
+  };
 
- private voicemailToggle: boolean;
- private orgId: string;
+  private voicemailToggle: boolean;
+  private orgId: string;
 
   /* @ngInject */
   constructor(
@@ -22,7 +22,7 @@ class HybridVoicemailCtrl implements ng.IComponentController {
     this.orgId = this.Authinfo.getOrgId();
     this.UCCService.getOrgVoicemailConfiguration(this.orgId)
       .then((data) => {
-      this.voicemailToggle = data.voicemailOrgEnableInfo.orgHybridVoicemailEnabled;
+        this.voicemailToggle = data.voicemailOrgEnableInfo.orgHybridVoicemailEnabled;
       })
       .catch((response) => {
         this.Notification.errorWithTrackingId(response, 'hercules.settings.voicemail.voicemailStatusError');

@@ -35,7 +35,7 @@
 
     function setCallVolumeGraph(data, callVolumeChart, cluster, daterange) {
       if (data === null || data === 'undefined' || data.length === 0) {
-        return;
+        return undefined;
       } else {
         var startDuration = 1;
         if (!data[0].balloon) {

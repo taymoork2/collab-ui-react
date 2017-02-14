@@ -63,7 +63,7 @@
       var startDate = tempData.data[0].startTime;
       startDate = convertToLocalTime(startDate);
       if (tempData === null || tempData === 'undefined' || tempData.length === 0) {
-        return;
+        return undefined;
       } else {
         availabilityChart = createAvailabilityGraph(tempData, selectedCluster, cluster, daterange);
         availabilityChart.period = tempData.data[0].period;
