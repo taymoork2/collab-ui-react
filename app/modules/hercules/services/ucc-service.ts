@@ -31,7 +31,6 @@ export class UCCService {
   /* @ngInject */
   constructor(
     private $http: ng.IHttpService,
-    private $q: ng.IQService,
     private Authinfo,
     private UrlConfig,
   ) {
@@ -56,7 +55,7 @@ export class UCCService {
     if (_.isUndefined(orgId)) {
       orgId = this.Authinfo.getOrgId();
     }
-    return this.$http.get(`${this.hybridVoicemailUrl}/vmOrgStatus/${orgId}/`)
+    return this.$http.get(`${this.hybridVoicemailUrl}/vmOrgStatus/orgs/${orgId}/`)
       .then(this.extractData);
   }
 
@@ -72,7 +71,7 @@ export class UCCService {
     if (_.isUndefined(orgId)) {
       orgId = this.Authinfo.getOrgId();
     }
-    return this.$http.post(`${this.hybridVoicemailUrl}/vmOrgStatus/${orgId}/`, {
+    return this.$http.post(`${this.hybridVoicemailUrl}/vmOrgStatus/orgs/${orgId}/`, {
       voicemailOrgEnableInfo: {
         orgHybridVoicemailEnabled: enable,
       },
@@ -82,19 +81,11 @@ export class UCCService {
   }
 
   public getUserVoicemailInfo(userId: string, orgId?: string): ng.IPromise<IVmInfo> {
-    // See https://wiki.cisco.com/display/WX2/Voicemail+User+Info+APIs
     if (_.isUndefined(orgId)) {
       orgId = this.Authinfo.getOrgId();
     }
-    return this.$q.resolve({ // replace with GET to this.hybridVoicemailUrl + /vmInfo/{orgId}/{userId}/
-      vmInfo: {
-        userId: userId,
-        mwiStatus: true,
-        voicemailPilot: 123456,
-        countUnread: 1,
-        countRead: 0,
-      },
-    });
+    return this.$http.get(`${this.hybridVoicemailUrl}/vmInfo/orgs/${orgId}/users/${userId}/`)
+      .then(this.extractData);
   }
 
 }
