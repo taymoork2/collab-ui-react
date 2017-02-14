@@ -24,6 +24,7 @@ function webpackConfig(env) {
         template: 'index.html',
         inject: 'body',
         ngStrictDi: 'ng-strict-di',
+        loadAdobeScripts: false,
       }),
       new webpack.HotModuleReplacementPlugin(),
     ],
@@ -72,7 +73,7 @@ function webpackConfig(env) {
         new webpack.DllReferencePlugin({
           context: commonWebpackConfig.context,
           manifest: getManifest(dllEntryName),
-        })
+        }),
       );
     });
   }
