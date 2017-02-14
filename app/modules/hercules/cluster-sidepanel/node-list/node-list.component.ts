@@ -1,4 +1,5 @@
 import { IClusterV1 } from 'modules/hercules/herculesInterfaces';
+import { Notification } from 'modules/core/notifications/notification.service';
 
 export class NodeListComponentCtrl implements ng.IComponentController {
 
@@ -8,12 +9,14 @@ export class NodeListComponentCtrl implements ng.IComponentController {
   public getSeverity = this.FusionClusterStatesService.getSeverity;
   public localizedManagementConnectorName = this.$translate.instant('hercules.connectorNameFromConnectorType.c_mgmt');
   public localizedConnectorName = this.$translate.instant(`hercules.connectorNameFromConnectorType.${this.connectorType}`);
+  public loading: boolean = true;
 
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
     private FusionClusterService,
     private FusionClusterStatesService,
+    private Notification: Notification,
   ) {}
 
   public $onInit() {
@@ -21,6 +24,12 @@ export class NodeListComponentCtrl implements ng.IComponentController {
       this.FusionClusterService.get(this.cluster.id)
         .then(cluster => {
           this.hosts = this.FusionClusterService.buildSidepanelConnectorList(cluster, this.connectorType);
+        })
+        .catch((error) => {
+          this.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+        })
+        .finally(() => {
+          this.loading = false;
         });
     }
   }
