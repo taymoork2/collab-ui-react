@@ -1395,12 +1395,6 @@
               vm.model.site.emergencyCallBackNumber = site.emergencyCallBackNumber;
               vm.model.site.uuid = site.uuid;
               vm.model.site.voicemailPilotNumberGenerated = site.voicemailPilotNumberGenerated !== null ? site.voicemailPilotNumberGenerated : 'false';
-              if (_.get(site, 'dateFormat')) {
-                vm.model.site.dateFormat = site.dateFormat;
-              }
-              if (_.get(site, 'timeFormat')) {
-                vm.model.site.timeFormat = site.timeFormat;
-              }
               if (_.get(site, 'emergencyCallBackNumber.pattern')) {
                 vm.model.serviceNumber = {
                   pattern: site.emergencyCallBackNumber.pattern,
