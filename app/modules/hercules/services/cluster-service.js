@@ -261,7 +261,7 @@
 
     function getConnector(connectorId) {
       if (connectorId.search(/@calendar-cloud-connector/i) !== -1) {
-        return $q.reject({ "statusText": "NotFound", "status": 404, "errors": [{ "message": "@calendar-cloud-connector is not a valid connectorId" }] });
+        return $q.reject({ 'data': { 'statusText': 'NotFound', 'status': 404, 'errors': [{ 'message': 'calendar-cloud-connector is not a valid connectorId"' }] } });
       } else {
         var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/connectors/' + connectorId;
         return $http.get(url).then(extractDataFromResponse);
