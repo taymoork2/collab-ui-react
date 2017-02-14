@@ -11,10 +11,11 @@ class PagingGroupMemberCtrl implements ng.IComponentController {
   public numberOfCards: number | undefined = this.cardThreshold;
 
   /* @ngInject */
-  constructor(private FeatureMemberService,
-              private Notification,
-              private $q: ng.IQService) {
-  }
+  constructor(
+    private FeatureMemberService,
+    private Notification,
+    private $q: ng.IQService,
+  ) {}
 
   public selectMembers(member: Member): void {
     if (member) {
@@ -107,7 +108,8 @@ class PagingGroupMemberCtrl implements ng.IComponentController {
           return this.availableMembers;
         });
 
-      }, (response) => {
+      },
+      (response) => {
         this.Notification.errorResponse(response, 'pagingGroup.memberFetchFailure');
       });
   }

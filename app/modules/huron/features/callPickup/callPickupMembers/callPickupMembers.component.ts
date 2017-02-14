@@ -59,37 +59,33 @@ class CallPickupMembersCtrl implements ng.IComponentController {
       );
 
       this.CallPickupGroupService.getMemberNumbers(member.uuid)
-      .then(
-        (data: IMemberNumber[]) => {
+      .then((data: IMemberNumber[]) => {
 
         let scope = this;
         let checked = true;
         _.forEach(data, function(memberNumber, index) {
           scope.CallPickupGroupService.isLineInPickupGroup(memberNumber.internal)
-          .then(
-            (inPickupGroup: boolean) => {
-              let disabled = false;
-              let sublabel = '';
+          .then((inPickupGroup: boolean) => {
+            let disabled = false;
+            let sublabel = '';
 
-              if (inPickupGroup) {
-                scope.CallPickupGroupService.getPickupGroupNameByLine(memberNumber.internal)
-                .then(
-                  (pickupGroupName: string) => {
-                    sublabel = 'Assigned to ' + pickupGroupName;
-                    disabled = true;
-                    memberData.checkboxes = scope.CallPickupGroupService.createCheckBox(memberData, data[index], index,
-                                                                                        sublabel, false, disabled);
-                });
-              } else {
-                memberData.checkboxes = scope.CallPickupGroupService.createCheckBox(memberData, data[index], index,
-                                                                                    sublabel, checked, disabled);
-                // Only check the first open line
-                if (checked) {
-                  checked = false;
-                }
-             }
-            });
+            if (inPickupGroup) {
+              scope.CallPickupGroupService.getPickupGroupNameByLine(memberNumber.internal)
+              .then((pickupGroupName: string) => {
+                sublabel = 'Assigned to ' + pickupGroupName;
+                disabled = true;
+                memberData.checkboxes = scope.CallPickupGroupService.createCheckBox(memberData, data[index], index, sublabel, false, disabled);
+              });
+            } else {
+              memberData.checkboxes = scope.CallPickupGroupService.createCheckBox(memberData, data[index], index,
+                                                                                  sublabel, checked, disabled);
+              // Only check the first open line
+              if (checked) {
+                checked = false;
+              }
+            }
           });
+        });
 
         memberData.saveNumbers.push(scope.getPrimaryNumber(data));
         scope.selectedMembers.push(memberData);
@@ -141,17 +137,17 @@ class CallPickupMembersCtrl implements ng.IComponentController {
           return number.internalNumber === internalNumber;
         });
         if (!scope.isNew) {
-           scope.updateExistingCallPickup('remove');
+          scope.updateExistingCallPickup('remove');
         }
       } else if (!_.findKey(member.saveNumbers, { internalNumber: internalNumber.trim() })) {
-          let saveNumber: ICallPickupNumbers = {
-            uuid: checkbox.numberUuid,
-            internalNumber: checkbox.label.split('&')[0].trim(),
-          };
-          member.saveNumbers.push(saveNumber);
-          if (!scope.isNew) {
-            scope.updateExistingCallPickup('select');
-          }
+        let saveNumber: ICallPickupNumbers = {
+          uuid: checkbox.numberUuid,
+          internalNumber: checkbox.label.split('&')[0].trim(),
+        };
+        member.saveNumbers.push(saveNumber);
+        if (!scope.isNew) {
+          scope.updateExistingCallPickup('select');
+        }
       }
     });
     if (!this.CallPickupGroupService.verifyLineSelected(this.selectedMembers)) {
@@ -165,8 +161,8 @@ class CallPickupMembersCtrl implements ng.IComponentController {
 
   private getPrimaryNumber(numbers: IMemberNumber[]): ICallPickupNumbers {
     let saveNumbers: ICallPickupNumbers = {
-          uuid: _.find(numbers, { primary : true }).uuid,
-          internalNumber: _.find(numbers, { primary : true }).internal,
+      uuid: _.find(numbers, { primary : true }).uuid,
+      internalNumber: _.find(numbers, { primary : true }).internal,
     };
     return saveNumbers;
   }

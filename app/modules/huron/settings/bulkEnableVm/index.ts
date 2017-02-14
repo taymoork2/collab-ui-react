@@ -1,7 +1,7 @@
 import { BulkEnableVmComponent } from './bulkEnableVm.component';
 import { BulkEnableVmService } from './bulkEnableVm.service';
 export * from './bulkEnableVm.service';
-    require('./bulkEnableVm.scss');
+require('./bulkEnableVm.scss');
 
 export default angular
   .module('huron.bulk-enable-vm', [

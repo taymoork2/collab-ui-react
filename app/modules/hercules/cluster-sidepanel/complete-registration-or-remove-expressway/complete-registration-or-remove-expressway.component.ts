@@ -45,12 +45,12 @@ export class CompleteregistrationOrRemoveExpresswayCtrl implements ng.IComponent
       templateUrl: 'modules/hercules/fusion-pages/components/rename-and-deregister-cluster-section/deregister-dialog.html',
       type: 'dialog',
     }).result
-      .then(() => {
-        if (this.connectorType === 'c_cal') {
-          this.$state.go('calendar-service.list');
-        } else if (this.connectorType === 'c_ucmc') {
-          this.$state.go('call-service.list');
-        }
+    .then(() => {
+      if (this.connectorType === 'c_cal') {
+        this.$state.go('calendar-service.list');
+      } else if (this.connectorType === 'c_ucmc') {
+        this.$state.go('call-service.list');
+      }
     });
   }
 

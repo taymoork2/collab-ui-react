@@ -101,10 +101,10 @@ class TermsOfServiceCtrl implements ng.IComponentController {
     this.acceptingToS = true;
     return this.TOSService.acceptTOS()
       .then(() => {
-          this.TOSService.dismissModal();
-          this.$state.go('login', {}, {
-            reload: true,
-          });
+        this.TOSService.dismissModal();
+        this.$state.go('login', {}, {
+          reload: true,
+        });
       });
   }
 

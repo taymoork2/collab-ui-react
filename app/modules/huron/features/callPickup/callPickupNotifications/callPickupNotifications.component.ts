@@ -1,16 +1,16 @@
 class CallPickupNotificationsCtrl implements ng.IComponentController {
-   public onChangeFn: Function;
-   private playSound: boolean;
-   private displayCallingParty;
-   private displayCalledParty;
-   constructor() { }
-   public onChange(): void {
+  public onChangeFn: Function;
+  private playSound: boolean;
+  private displayCallingParty;
+  private displayCalledParty;
+  constructor() { }
+  public onChange(): void {
     this.onChangeFn({
       playSound: this.playSound,
       displayCalledParty: this.displayCalledParty,
       displayCallingParty: this.displayCallingParty,
     });
-   }
+  }
 }
 
 export class CallPickupNotificationsComponent implements ng.IComponentOptions {

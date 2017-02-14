@@ -370,7 +370,7 @@ export class CommonReportService {
       // 'this' is the AmCharts export object
       chart.export.capture({}, function (): void {
         this.toJPG({}, function (data: any): void {
-            this.download(data, 'application/jpg', 'amCharts.jpg');
+          this.download(data, 'application/jpg', 'amCharts.jpg');
         });
       });
     }
@@ -381,7 +381,7 @@ export class CommonReportService {
       // 'this' is the AmCharts export object
       chart.export.capture({}, function (): void {
         this.toPNG({}, function (data: any): void {
-            this.download(data, 'application/png', 'amCharts.png');
+          this.download(data, 'application/png', 'amCharts.png');
         });
       });
     }

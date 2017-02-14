@@ -44,10 +44,10 @@ export class EmergencyServicesService {
 
   public getCompanyECN() {
     return this.ServiceSetup.listSites().then(() => {
-        if (this.ServiceSetup.sites.length !== 0) {
-          return this.ServiceSetup.getSite(this.ServiceSetup.sites[0].uuid)
-          .then(site => _.get(site, 'emergencyCallBackNumber.pattern'));
-        }
+      if (this.ServiceSetup.sites.length !== 0) {
+        return this.ServiceSetup.getSite(this.ServiceSetup.sites[0].uuid)
+        .then(site => _.get(site, 'emergencyCallBackNumber.pattern'));
+      }
     });
   }
 
@@ -56,33 +56,33 @@ export class EmergencyServicesService {
     return this.ServiceSetup.getVoicemailPilotNumber().then(voicemail =>
       voicemailPilotNumber = voicemail.pilotNumber).then(() => {
         return this.ExternalNumberService.refreshNumbers(this.Authinfo.getOrgId(), undefined, filter).then(() => {
-              return _.chain(this.ExternalNumberService.getAssignedNumbers())
-                // remove the voicemail number if it exists
-                .reject(externalNumber => externalNumber.pattern === voicemailPilotNumber)
-                .map(externalNumber => externalNumber.pattern).value();
-            });
+          return _.chain(this.ExternalNumberService.getAssignedNumbers())
+            // remove the voicemail number if it exists
+            .reject(externalNumber => externalNumber.pattern === voicemailPilotNumber)
+            .map(externalNumber => externalNumber.pattern).value();
+        });
       }).catch(() => {
         return this.ExternalNumberService.refreshNumbers(this.Authinfo.getOrgId()).then(() => {
-              return _.chain(this.ExternalNumberService.getAssignedNumbers())
-                .map(externalNumber => externalNumber.pattern).value();
-            });
+          return _.chain(this.ExternalNumberService.getAssignedNumbers())
+            .map(externalNumber => externalNumber.pattern).value();
+        });
       });
   }
 
   public getAddress(): ng.IPromise<IEmergencyAddress> {
     return this.PstnServiceAddressService.getAddress(this.Authinfo.getOrgId()).then((address: IEmergencyAddress) => {
-        let emergencyAddress = {
-          address1: address.streetAddress,
-          address2: address.unit,
-          city: address.city,
-          state: {
-            abbreviation: <string>address.state,
-            name: _.find(this.stateOptions, (state: IState) =>
-              state.abbreviation === address.state).name,
-          },
-          zip: address.zip ? parseInt(<string>address.zip, 10) : undefined,
-        };
-        return emergencyAddress;
+      let emergencyAddress = {
+        address1: address.streetAddress,
+        address2: address.unit,
+        city: address.city,
+        state: {
+          abbreviation: <string>address.state,
+          name: _.find(this.stateOptions, (state: IState) =>
+            state.abbreviation === address.state).name,
+        },
+        zip: address.zip ? parseInt(<string>address.zip, 10) : undefined,
+      };
+      return emergencyAddress;
     });
   }
 

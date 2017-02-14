@@ -287,4 +287,4 @@ angular.module('Core')
       time: '<',
       lowerTooltip: '<',
     },
-});
+  });

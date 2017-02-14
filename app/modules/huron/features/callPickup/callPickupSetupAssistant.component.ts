@@ -29,17 +29,18 @@ class CallPickupSetupAssistantCtrl implements ng.IComponentController {
   public originalCallPickupGroup: IPickupGroup;
   private callPickupProperties: Array<string> = ['name', 'notificationTimer', 'playSound', 'displayCallingPartyId', 'displayCalledPartyId'];
   /* @ngInject */
-  constructor(private $timeout: ng.ITimeoutService,
-              private $modal,
-              private $q,
-              private $element: ng.IRootElementService,
-              private $translate: ng.translate.ITranslateService,
-              private $stateParams,
-              private CallPickupGroupService: CallPickupGroupService,
-              private $state: ng.ui.IStateService,
-              private Notification,
-              private FeatureMemberService,
-              ) {
+  constructor(
+    private $timeout: ng.ITimeoutService,
+    private $modal,
+    private $q,
+    private $element: ng.IRootElementService,
+    private $translate: ng.translate.ITranslateService,
+    private $stateParams,
+    private CallPickupGroupService: CallPickupGroupService,
+    private $state: ng.ui.IStateService,
+    private Notification,
+    private FeatureMemberService,
+  ) {
     this.createLabel = this.$translate.instant('callPickup.createHelpText');
     this.Notification.failureTimeout = 2000;
     this.callPickupId = _.get<string>(this.$stateParams.feature, 'id');
@@ -102,7 +103,7 @@ class CallPickupSetupAssistantCtrl implements ng.IComponentController {
     })
     .finally( function() {
       scope.isLoading = false;
-      });
+    });
   }
 
   public getLastIndex(): number {
@@ -171,17 +172,17 @@ class CallPickupSetupAssistantCtrl implements ng.IComponentController {
   }
 
   public nextPage(): void {
-      this.animation = 'slide-left';
-      this.index++;
-      if (this.index === this.getLastIndex()) {
-        //Change the blue arrow button to a green one
-        let arrowButton = this.$element.find('button.btn--circle.btn--primary.btn--right');
-        arrowButton.addClass('saveCallPickup');
-      }
-      if (this.index === this.getLastIndex() + 1) {
-        this.saveCallPickup();
-        this.index--;
-      }
+    this.animation = 'slide-left';
+    this.index++;
+    if (this.index === this.getLastIndex()) {
+      //Change the blue arrow button to a green one
+      let arrowButton = this.$element.find('button.btn--circle.btn--primary.btn--right');
+      arrowButton.addClass('saveCallPickup');
+    }
+    if (this.index === this.getLastIndex() + 1) {
+      this.saveCallPickup();
+      this.index--;
+    }
   }
 
   public nextText(): string {
@@ -246,7 +247,7 @@ class CallPickupSetupAssistantCtrl implements ng.IComponentController {
     this.CallPickupGroupService.updateCallPickup(this.callPickupId, this.callPickup)
     .then(() => {
       this.Notification.success('callPickup.successUpdate', {
-      callPickupName: this.callPickup.name,
+        callPickupName: this.callPickup.name,
       });
       this.$state.go(this.huronFeaturesUrl);
     },
@@ -255,10 +256,10 @@ class CallPickupSetupAssistantCtrl implements ng.IComponentController {
       if (error
           && _.has(error, 'data')
           && _.has(error.data, 'errorMessage')) {
-            message = error.data.errorMessage;
-          }
+        message = error.data.errorMessage;
+      }
       this.Notification.error('callPickup.errorUpdate', { message: message });
-      })
+    })
     .finally( () => {
       this.saveInProcess = false;
       this.resetForm();
@@ -287,7 +288,7 @@ class CallPickupSetupAssistantCtrl implements ng.IComponentController {
         if (error
           && _.has(error, 'data')
           && _.has(error.data, 'errorMessage')) {
-            message = error.data.errorMessage;
+          message = error.data.errorMessage;
         }
         this.Notification.error('callPickup.errorSave', { message: message });
       })

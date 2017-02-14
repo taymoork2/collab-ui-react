@@ -39,8 +39,8 @@ describe('Component: pgNumber setup', () => {
       (data) => {
         expect(data).toEqual([ '2222' ]);
       }, (response) => {
-        expect(this.Notification.errorResponse).toHaveBeenCalledWith(response, 'pagingGroup.numberFetchFailure');
-      });
+      expect(this.Notification.errorResponse).toHaveBeenCalledWith(response, 'pagingGroup.numberFetchFailure');
+    });
     this.$httpBackend.flush();
   });
 

@@ -37,9 +37,9 @@ class UserStatusHistoryCtrl implements ng.IComponentController {
         this.historyEntries = map(take(filteredEntries, this.numEntriesToShow), this.decorateEntry.bind(this));
         this.setHomedConnectors();
         this.setResourceGroups();
-    }).catch(error => {
-      this.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
-    });
+      }).catch(error => {
+        this.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+      });
   }
 
   private decorateEntry(e) {

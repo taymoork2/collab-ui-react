@@ -10,12 +10,13 @@ export class CallPickupGroupService {
   private callPickupCopy: IPickupGroup;
   private callPickupProperties: Array<string> = ['name', 'notificationTimer', 'playSound', 'displayCallingPartyId', 'displayCalledPartyId'];
  /* @ngInject */
-  constructor(private $resource: ng.resource.IResourceService,
-              private HuronConfig,
-              private Authinfo,
-              private UserNumberService,
-              private $q: ng.IQService,
-              ) {
+  constructor(
+    private $resource: ng.resource.IResourceService,
+    private HuronConfig,
+    private Authinfo,
+    private UserNumberService,
+    private $q: ng.IQService,
+  ) {
     this.pickupGroupResource = <IPickupGroupResource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/features/callpickups/:callPickupGroupId', { wide: true },
       {
         update: {
@@ -35,18 +36,17 @@ export class CallPickupGroupService {
         _.forEach(data, function(memberNumber) {
           let promise = scope.isLineInPickupGroup(memberNumber.internal);
           promises.push(promise);
-          promise.then(
-            (line: boolean) => {
-              if (!line) {
-                disabled = false;
-              }
+          promise.then((line: boolean) => {
+            if (!line) {
+              disabled = false;
+            }
           });
         });
         return scope.$q.all(promises).then(function() {
           return disabled;
         });
       });
-   }
+  }
 
   public saveCallPickupGroup(pickupGroup: IPickupGroup): ng.IPromise<IPickupGroup> {
     return this.pickupGroupResource.save({
@@ -68,7 +68,7 @@ export class CallPickupGroupService {
   }
 
   public getCallPickupGroup(callPickupId): ng.IPromise<IPickupGroup> {
-   return this.pickupGroupResource.get({
+    return this.pickupGroupResource.get({
       customerId: this.Authinfo.getOrgId(),
       callPickupGroupId: callPickupId,
     }).$promise.then( callPickup => {
@@ -117,16 +117,16 @@ export class CallPickupGroupService {
                                 );
 
       return pickupFeatures.get({
-         customerId: this.Authinfo.getOrgId(),
-         internalPoolId: number[0].uuid,
-       }).$promise.then(response => {
-         let features = _.get(response, 'features');
+        customerId: this.Authinfo.getOrgId(),
+        internalPoolId: number[0].uuid,
+      }).$promise.then(response => {
+        let features = _.get(response, 'features');
 
-         if (_.isEmpty(features)) {
-           return ''; // Not in a pickup group
-         } else {
+        if (_.isEmpty(features)) {
+          return ''; // Not in a pickup group
+        } else {
           return features[0].name;
-         }
+        }
       });
     });
   }
@@ -153,39 +153,39 @@ export class CallPickupGroupService {
                                 );
 
       return pickupFeatures.get({
-         customerId: this.Authinfo.getOrgId(),
-         internalPoolId: number[0].uuid,
-       }).$promise.then(response => {
-         let features = _.get(response, 'features');
+        customerId: this.Authinfo.getOrgId(),
+        internalPoolId: number[0].uuid,
+      }).$promise.then(response => {
+        let features = _.get(response, 'features');
 
-         if (_.isEmpty(features)) {
-           return false;
-         } else {
+        if (_.isEmpty(features)) {
+          return false;
+        } else {
           return true;
-         }
+        }
       });
     });
   }
 
   public createCheckBox(member: IMember, number: IMemberNumber, index, sublabel, value, disabled): ICardMemberCheckbox[] {
-        member.checkboxes[index] = {
-          label: number.internal + (number.external ? ' & ' + number.external : '' ),
-          sublabel: sublabel,
-          value: value,
-          numberUuid: number.uuid,
-          disabled: disabled,
-        };
-        return member.checkboxes;
+    member.checkboxes[index] = {
+      label: number.internal + (number.external ? ' & ' + number.external : '' ),
+      sublabel: sublabel,
+      value: value,
+      numberUuid: number.uuid,
+      disabled: disabled,
+    };
+    return member.checkboxes;
   }
 
   public createCheckBoxes(member: IMember, numbers: IMemberNumber[]): ICardMemberCheckbox[] {
     _.forEach(numbers, function(number, index){
-        member.checkboxes[index] = {
-          label: number.internal + (number.external ? ' & ' + number.external : '' ),
-          sublabel: '',
-          value: number.primary ? true : false,
-          numberUuid: number.uuid,
-        };
+      member.checkboxes[index] = {
+        label: number.internal + (number.external ? ' & ' + number.external : '' ),
+        sublabel: '',
+        value: number.primary ? true : false,
+        numberUuid: number.uuid,
+      };
     });
     return member.checkboxes;
   }

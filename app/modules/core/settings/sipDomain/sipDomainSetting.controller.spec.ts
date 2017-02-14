@@ -148,7 +148,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
       controller.inputValue = defaultInput;
       controller.checkSipDomainAvailability();
       expect(controller.isUrlAvailable).toEqual(false);
-      });
+    });
 
     it('should enable Next button when isSSAReserved is true', function () {
       initController();

@@ -195,15 +195,14 @@ describe('DomainManagementService', () => {
 
     $httpBackend
       .expectPOST(url, (data: any) => {
-          data = JSON.parse(data);
-          expect(data).not.toBeNull();
-          expect(data.removePending).toBeDefined();
-          expect(data.removePending).toBeTruthy();  //correct flag
-          expect(data.domain).toBe(domain);
+        data = JSON.parse(data);
+        expect(data).not.toBeNull();
+        expect(data.removePending).toBeDefined();
+        expect(data.removePending).toBeTruthy();  //correct flag
+        expect(data.domain).toBe(domain);
 
-          return true;
-        },
-      ).respond({});
+        return true;
+      }).respond({});
 
     //when('POST', url).respond({});
 
@@ -243,15 +242,14 @@ describe('DomainManagementService', () => {
 
     $httpBackend
       .expectPOST(url, (data: any) => {
-          data = JSON.parse(data);
-          expect(data).not.toBeNull();
-          expect(data.removePending).toBeDefined();
-          expect(data.removePending).toBeTruthy();  //correct flag
-          expect(data.domain).toBe(domain);
+        data = JSON.parse(data);
+        expect(data).not.toBeNull();
+        expect(data.removePending).toBeDefined();
+        expect(data.removePending).toBeTruthy();  //correct flag
+        expect(data.domain).toBe(domain);
 
-          return true;
-        },
-      ).respond(500, 'error-in-request', null, 'error');
+        return true;
+      }).respond(500, 'error-in-request', null, 'error');
 
     //when('POST', url).respond({});
 
@@ -273,15 +271,14 @@ describe('DomainManagementService', () => {
 
     $httpBackend
       .expectPOST(url, (data: any) => {
-          data = JSON.parse(data);
-          expect(data).not.toBeNull();
-          expect(data.removePending).toBeDefined();
-          expect(data.removePending).toBeFalsy();
-          expect(data.domain).toBe(domain);
+        data = JSON.parse(data);
+        expect(data).not.toBeNull();
+        expect(data.removePending).toBeDefined();
+        expect(data.removePending).toBeFalsy();
+        expect(data.domain).toBe(domain);
 
-          return true;
-        },
-      ).respond({});
+        return true;
+      }).respond({});
 
     //when('POST', url).respond({});
 

@@ -38,27 +38,27 @@ describe('Service: callPickupService', () => {
   }
 
   describe('createCallPickup: ', () => {
-      it('should be successful', function () {
-        this.$httpBackend.expectPOST(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/features/callpickups?wide=true').respond(200);
-        this.CallPickupGroupService.saveCallPickupGroup(cp).then(
-          successSpy,
-          failureSpy,
-        );
-        this.$httpBackend.flush();
-        expect(successSpy).toHaveBeenCalled();
-        expect(failureSpy).not.toHaveBeenCalled();
-      });
+    it('should be successful', function () {
+      this.$httpBackend.expectPOST(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/features/callpickups?wide=true').respond(200);
+      this.CallPickupGroupService.saveCallPickupGroup(cp).then(
+        successSpy,
+        failureSpy,
+      );
+      this.$httpBackend.flush();
+      expect(successSpy).toHaveBeenCalled();
+      expect(failureSpy).not.toHaveBeenCalled();
+    });
 
-      it('should fail', function () {
-        this.$httpBackend.expectPOST(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/features/callpickups?wide=true').respond(500);
-        this.CallPickupGroupService.saveCallPickupGroup(cp).then(
-         successSpy,
-          failureSpy,
-        );
-        this.$httpBackend.flush();
-        expect(successSpy).not.toHaveBeenCalled();
-        expect(failureSpy).toHaveBeenCalled();
-      });
+    it('should fail', function () {
+      this.$httpBackend.expectPOST(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/features/callpickups?wide=true').respond(500);
+      this.CallPickupGroupService.saveCallPickupGroup(cp).then(
+        successSpy,
+        failureSpy,
+      );
+      this.$httpBackend.flush();
+      expect(successSpy).not.toHaveBeenCalled();
+      expect(failureSpy).toHaveBeenCalled();
+    });
   });
 
   describe('verify line selected', () => {
