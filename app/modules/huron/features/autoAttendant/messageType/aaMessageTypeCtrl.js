@@ -222,8 +222,6 @@
             break;
           }
       }
-
-      return;
     }
 
     function activate() {

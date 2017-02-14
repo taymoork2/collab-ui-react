@@ -19,7 +19,6 @@
         .then(function (feature) {
           if (!feature) {
             $state.go('404');
-            return;
           }
         });
     }

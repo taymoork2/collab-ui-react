@@ -189,7 +189,7 @@
 
     function setCallVolumeGraph(data, callVolumeChart, cluster, daterange) {
       if (data === null || data === 'undefined' || data.length === 0) {
-        return;
+        return undefined;
       } else if (callVolumeChart !== null && !_.isUndefined(callVolumeChart)) {
         var startDuration = 1;
         if (!data[0].balloon) {
@@ -286,7 +286,7 @@
 
       var isDummy = false;
       if (data === null || data === 'undefined' || data.length === 0) {
-        return;
+        return undefined;
       } else if (utilizationChart !== null && !_.isUndefined(utilizationChart)) {
         if (data[0].colorTwo === chartColors.grayLightTwo) {
           isDummy = true;
@@ -411,7 +411,7 @@
       //var startDate = str.substring(0, 10);
       startDate = convertToLocalTime(startDate);
       if (data === null || data === 'undefined' || data.length === 0) {
-        return;
+        return undefined;
       } else {
         availabilityChart = createAvailabilityGraph(data, selectedCluster, cluster, daterange);
         availabilityChart.period = data.data[0].period;

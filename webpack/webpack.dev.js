@@ -72,7 +72,7 @@ function webpackConfig(env) {
         new webpack.DllReferencePlugin({
           context: commonWebpackConfig.context,
           manifest: getManifest(dllEntryName),
-        })
+        }),
       );
     });
   }
