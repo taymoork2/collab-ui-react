@@ -118,10 +118,7 @@ describe('Manage Users - Manual -', function () {
       utils.expectIsDisplayed(manageUsersPage.buttons.save);
       utils.click(manageUsersPage.buttons.save);
 
-      _.each(allUsers, function (user) {
-        activate.setup(null, user.email);
-      });
-
+      // make sure users were added as expected
       utils.expectTextToBeSet(manageUsersPage.importStatus.newUsers, '' + allUsers.length);
       utils.expectTextToBeSet(manageUsersPage.importStatus.updatedUsers, '0');
       utils.expectTextToBeSet(manageUsersPage.importStatus.errorUsers, '0');
@@ -135,6 +132,7 @@ describe('Manage Users - Manual -', function () {
         utils.expectIsDisplayed(users.servicesPanel);
 
         utils.expectIsDisplayed(users.messageServicePaid);
+        utils.expectIsNotDisplayed(users.messageServiceFree);
         utils.expectIsDisplayed(users.meetingServiceFree);
         utils.click(users.closeSidePanel);
       });
