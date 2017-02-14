@@ -2047,15 +2047,15 @@
       "no-notifications": "No notifications.",
       "callAware": {
         "title": "Enable Call Service Aware for Users",
-        "navigateToUsers": "Go to <a ng-click=\"{{onclick}}\">User and Group Management</a> to enable Call Service Aware for your users."
+        "navigateToUsers": "Go to the <a ng-click=\"{{onclick}}\">Users</a> page to enable Call Service Aware for your users."
       },
       "calendar": {
         "title": "Enable Calendar Service for Users",
-        "navigateToUsers": "Go to <a ng-click=\"{{onclick}}\">User and Group Management</a> to enable Calendar Service for your users."
+        "navigateToUsers": "Go to the <a ng-click=\"{{onclick}}\">Users</a> page to enable Calendar Service for your users."
       },
       "connect": {
         "title": "Enable Call Service Connect for Users",
-        "navigateToUsers": "You have successfully configured Call Service Connect. Go to <a ng-click=\"{{onclick}}\">User and Group Management</a> to enable Call Service Connect for your users. Make sure you selected the applicable method in Expressway to create CTI remote devices for your users. ",
+        "navigateToUsers": "You have successfully configured Call Service Connect. Go to the <a ng-click=\"{{onclick}}\">Users</a> page to enable Call Service Connect for your users. Make sure you selected the applicable method in Expressway to create CTI remote devices for your users. ",
         "connectEnabled": "Call Service Connect has been enabled",
         "connectDisabled": "Call Service Connect has been disabled"
       },

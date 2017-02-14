@@ -27,11 +27,12 @@ export abstract class ExpresswayContainerController {
   }
 
   private updateNotifications(): void {
-    this.ServiceStateChecker.checkState(this.connectorType, this.servicesId[0]);
+    this.ServiceStateChecker.checkState(this.servicesId[0]);
   }
 
   public extractSummary(): void {
     this.userStatusesSummary = this.USSService.extractSummaryForAService(this.servicesId);
+    this.ServiceStateChecker.checkUserStatuses(this.servicesId[0]);
   }
 
   protected firstTimeSetup(): void {

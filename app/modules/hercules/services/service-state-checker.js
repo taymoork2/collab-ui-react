@@ -12,8 +12,9 @@
     vm.hasSipUriDomainConfigured = false;
     vm.hasVerifiedDomains = false;
     var allExpresswayServices = ['squared-fusion-uc', 'squared-fusion-ec', 'squared-fusion-cal', 'squared-fusion-mgmt'];
+    var servicesWithUserAssignments = ['squared-fusion-uc', 'squared-fusion-ec', 'squared-fusion-cal', 'squared-fusion-gcal'];
 
-    function checkState(connectorType, serviceId) {
+    function checkState(serviceId) {
       if (checkIfFusePerformed()) {
         checkDomainVerified(serviceId);
         checkUserStatuses(serviceId);
@@ -89,7 +90,7 @@
     }
 
     function checkUserStatuses(serviceId) {
-      if (serviceId === 'squared-fusion-mgmt') {
+      if (!_.includes(servicesWithUserAssignments, serviceId)) {
         return;
       }
       var summaryForService = _.find(USSService.getStatusesSummary(), {
@@ -308,6 +309,7 @@
 
     return {
       checkState: checkState,
+      checkUserStatuses: checkUserStatuses,
       setSipUriNotificationAcknowledgedAndRemoveNotification: setSipUriNotificationAcknowledgedAndRemoveNotification
     };
   }

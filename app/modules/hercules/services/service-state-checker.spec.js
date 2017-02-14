@@ -66,18 +66,18 @@ describe('Service: ServiceStateChecker', function () {
 
   it('should raise the "fuseNotPerformed" message if there are no connectors', function () {
     ClusterService.getClustersByConnectorType.returns([]);
-    ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
+    ServiceStateChecker.checkState('squared-fusion-cal');
     expect(NotificationService.getNotificationLength()).toEqual(1);
     expect(NotificationService.getNotifications()[0].id).toEqual('fuseNotPerformed');
   });
 
   it('should clear the "fuseNotPerformed" message when fusing a cluster ', function () {
     ClusterService.getClustersByConnectorType.returns([]);
-    ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
+    ServiceStateChecker.checkState('squared-fusion-cal');
     expect(NotificationService.getNotificationLength()).toEqual(1);
     expect(NotificationService.getNotifications()[0].id).toEqual('fuseNotPerformed');
     ClusterService.getClustersByConnectorType.returns([okClusterMockData]);
-    ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
+    ServiceStateChecker.checkState('squared-fusion-cal');
     expect(NotificationService.getNotificationLength()).toEqual(0);
   });
 
@@ -89,14 +89,14 @@ describe('Service: ServiceStateChecker', function () {
       notActivated: 0
     }]);
     ClusterService.getClustersByConnectorType.returns([okClusterMockData]);
-    ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
+    ServiceStateChecker.checkState('squared-fusion-cal');
     expect(NotificationService.getNotificationLength()).toEqual(1);
     expect(NotificationService.getNotifications()[0].id).toEqual('squared-fusion-cal:noUsersActivated');
     USSService.getStatusesSummary.returns([{
       serviceId: 'squared-fusion-cal',
       activated: 1
     }]);
-    ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
+    ServiceStateChecker.checkState('squared-fusion-cal');
     expect(NotificationService.getNotificationLength()).toEqual(0);
   });
 
@@ -108,14 +108,14 @@ describe('Service: ServiceStateChecker', function () {
       notActivated: 0
     }]);
     ClusterService.getClustersByConnectorType.returns([okClusterMockData]);
-    ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
+    ServiceStateChecker.checkState('squared-fusion-cal');
     expect(NotificationService.getNotificationLength()).toEqual(1);
     expect(NotificationService.getNotifications()[0].id).toEqual('squared-fusion-cal:userErrors');
     USSService.getStatusesSummary.returns([{
       serviceId: 'squared-fusion-cal',
       activated: 1
     }]);
-    ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
+    ServiceStateChecker.checkState('squared-fusion-cal');
     expect(NotificationService.getNotificationLength()).toEqual(0);
   });
 
@@ -143,7 +143,7 @@ describe('Service: ServiceStateChecker', function () {
     };
 
     ClusterService.getClustersByConnectorType.returns([okClusterMockData]);
-    ServiceStateChecker.checkState('c_mgmt', 'squared-fusion-uc');
+    ServiceStateChecker.checkState('squared-fusion-uc');
 
     expect(NotificationService.getNotificationLength()).toEqual(1);
     expect(NotificationService.getNotifications()[0].id).toEqual('callServiceConnectAvailable');
@@ -157,7 +157,7 @@ describe('Service: ServiceStateChecker', function () {
       }]);
     };
 
-    ServiceStateChecker.checkState('c_mgmt', 'squared-fusion-uc');
+    ServiceStateChecker.checkState('squared-fusion-uc');
 
     expect(NotificationService.getNotificationLength()).toEqual(0);
   });
@@ -182,7 +182,7 @@ describe('Service: ServiceStateChecker', function () {
     // this should spawn a domain verification notification
     DomainManagementService.getVerifiedDomains = sinon.stub().returns($q.resolve([]));
 
-    ServiceStateChecker.checkState('c_mgmt', 'squared-fusion-uc');
+    ServiceStateChecker.checkState('squared-fusion-uc');
     $rootScope.$digest();
     expect(NotificationService.getNotificationLength()).toEqual(1);
     expect(NotificationService.getNotifications()[0].id).toEqual('noDomains');
@@ -192,7 +192,7 @@ describe('Service: ServiceStateChecker', function () {
       domain: 'somedomain'
     }]));
 
-    ServiceStateChecker.checkState('c_mgmt', 'squared-fusion-uc');
+    ServiceStateChecker.checkState('squared-fusion-uc');
     $rootScope.$digest();
     expect(NotificationService.getNotificationLength()).toEqual(0);
   });
@@ -225,7 +225,7 @@ describe('Service: ServiceStateChecker', function () {
       cb({}, 200);
     };
 
-    ServiceStateChecker.checkState('c_mgmt', 'squared-fusion-uc');
+    ServiceStateChecker.checkState('squared-fusion-uc');
     $rootScope.$digest();
 
     expect(NotificationService.getNotificationLength()).toEqual(1);
@@ -260,7 +260,7 @@ describe('Service: ServiceStateChecker', function () {
       cb({}, 200);
     };
 
-    ServiceStateChecker.checkState('c_mgmt', 'squared-fusion-uc');
+    ServiceStateChecker.checkState('squared-fusion-uc');
     $rootScope.$digest();
 
     expect(NotificationService.getNotificationLength()).toEqual(1);
@@ -274,7 +274,7 @@ describe('Service: ServiceStateChecker', function () {
         }
       }, 200);
 
-      ServiceStateChecker.checkState('c_mgmt', 'squared-fusion-uc');
+      ServiceStateChecker.checkState('squared-fusion-uc');
       $rootScope.$digest();
 
       expect(NotificationService.getNotificationLength()).toEqual(0);
@@ -286,7 +286,7 @@ describe('Service: ServiceStateChecker', function () {
     ClusterService.getClustersByConnectorType.returns([okClusterMockData]);
     FeatureToggleService.supports.returns($q.resolve(true));
 
-    ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
+    ServiceStateChecker.checkState('squared-fusion-cal');
     $rootScope.$digest();
 
     expect(NotificationService.getNotificationLength()).toEqual(1);
@@ -312,7 +312,7 @@ describe('Service: ServiceStateChecker', function () {
       }
     ]));
 
-    ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
+    ServiceStateChecker.checkState('squared-fusion-cal');
     $rootScope.$digest();
     expect(NotificationService.getNotificationLength()).toEqual(1);
     var notification = NotificationService.getNotifications()[0];
@@ -322,7 +322,7 @@ describe('Service: ServiceStateChecker', function () {
     expect(notification.data.title).toEqual('Shit is flying all over the place');
 
     // New check with the same alarm, should yield the same result
-    ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
+    ServiceStateChecker.checkState('squared-fusion-cal');
     $rootScope.$digest();
     expect(NotificationService.getNotificationLength()).toEqual(1);
     notification = NotificationService.getNotifications()[0];
@@ -342,7 +342,7 @@ describe('Service: ServiceStateChecker', function () {
       }
     ]));
 
-    ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
+    ServiceStateChecker.checkState('squared-fusion-cal');
     $rootScope.$digest();
     expect(NotificationService.getNotificationLength()).toEqual(1);
     notification = NotificationService.getNotifications()[0];
@@ -353,7 +353,7 @@ describe('Service: ServiceStateChecker', function () {
 
     // Clear all alarms
     FusionClusterService.getAlarms.returns($q.resolve([]));
-    ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
+    ServiceStateChecker.checkState('squared-fusion-cal');
     $rootScope.$digest();
     expect(NotificationService.getNotificationLength()).toEqual(0);
   });
