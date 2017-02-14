@@ -75,6 +75,9 @@ export class PstnCarrier {
   public title: String;
 
   constructor() {
+    this.logoSrc = '';
+    this.logoAlt = '';
+    this.docSrc = '';
     this.offers = new Array<any>();
     this.services = new Array<any>();
     this.features = new Array<any>();
@@ -104,6 +107,8 @@ export class PstnCarrier {
       this.title = this.displayName;
     } else if (_.isString(this.name) && this.name.length > 0) {
       this.title = this.name;
+    } else if (_.isString(this.description) && this.description.length > 0) {
+      this.title = this.description;
     }
   }
 
