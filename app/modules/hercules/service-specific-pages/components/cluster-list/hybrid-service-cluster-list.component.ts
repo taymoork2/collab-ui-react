@@ -74,7 +74,6 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
     } else if (this.serviceId === 'spark-hybrid-datasecurity' || this.serviceId === 'squared-fusion-media') {
       this.clusterList = this.ClusterService.getClustersByConnectorType(this.connectorType);
     }
-    this.clusterList.sort(this.sortByProperty('name'));
   }
 
   private goToSidepanel(clusterId: string) {
@@ -90,12 +89,6 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
       connectorType: this.connectorType,
     });
 
-  }
-
-  private sortByProperty(property) {
-    return function(a, b) {
-      return a[property].toLocaleUpperCase().localeCompare(b[property].toLocaleUpperCase());
-    };
   }
 
 }
