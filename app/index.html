@@ -8,7 +8,9 @@
     <meta name="viewport" content="width=device-width">
     <link rel="icon" type="image/png" href="images/favicon.ico">
     <link type="image/x-icon" rel="shortcut icon" href="images/favicon.ico"/>
-    <script type="text/javascript" src="//assets.adobedtm.com/2bcd47c09d46d6e1ea2fd7753b40afb656eb0683/satelliteLib-b40066032cf0a1b4f92efb2131e8178ab11ab006.js"></script>
+    <% if (htmlWebpackPlugin.options.loadAdobeScripts) { %>
+    <script src="//assets.adobedtm.com/2bcd47c09d46d6e1ea2fd7753b40afb656eb0683/satelliteLib-b40066032cf0a1b4f92efb2131e8178ab11ab006.js"></script>
+    <% } %>
     <%= htmlWebpackPlugin.options.dllBundlesFrag %>
   </head>
   <body ng-controller="BodyCtrl as bodyCtrl" ng-class="{inverse: bodyCtrl.partner}" class="{{$root.bodyClass}}" cs-breakpoint="{0:'screen-xs', 769:'screen-sm', 993:'screen-md', 1201:'screen-lg'}">
@@ -24,6 +26,8 @@
       You are using an <strong>outdated</strong> version of Internet Explorer. Please <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>upgrade your browser</a> to version 11 or higher.
     </div>
     <![endif]-->
-    <script type="text/javascript">if(typeof _satellite !== 'undefined'){_satellite.pageBottom();}</script>
+    <% if (htmlWebpackPlugin.options.loadAdobeScripts) { %>
+    <script>if(typeof _satellite !== 'undefined'){_satellite.pageBottom();}</script>
+    <% } %>
   </body>
 </html>
