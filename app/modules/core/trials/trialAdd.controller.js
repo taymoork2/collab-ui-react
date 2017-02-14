@@ -564,16 +564,9 @@
     }
 
     function getCountryList() {
-      return FeatureToggleService.huronFederatedSparkCallGetStatus()
-        .then(function (supported) {
-          if (supported) {
-            return HuronCountryService.getCountryList()
-              .catch(function () {
-                return [];
-              });
-          } else {
-            return [];
-          }
+      return HuronCountryService.getCountryList()
+        .catch(function () {
+          return [];
         });
     }
 

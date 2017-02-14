@@ -332,6 +332,7 @@ class CallPickupSetupAssistantCtrl implements ng.IComponentController {
     this.$timeout(function () {
       if (!scope.checkNameValidity() || !scope.checkMemberValidity()) {
         scope.form.$setValidity('', false, scope.form);
+        scope.form.$setDirty();
       } else if (scope.CallPickupGroupService.matchesOriginalConfig(scope.callPickup)) {
         scope.resetForm();
       } else {

@@ -19,6 +19,13 @@
                              connector-type="$ctrl.connectorType"
                              ng-if="!$ctrl.hasNodesViewFeatureToggle && !($ctrl.isExpresswayCluster() && !$ctrl.hasConnectors())"></hybrid-services-node-list>
 
+  <cs-sp-section ng-if="$ctrl.hasNodesViewFeatureToggle && !($ctrl.isExpresswayCluster() && !$ctrl.hasConnectors())">
+    <div class="section-title-row">
+      <div class="section-name" translate="hercules.connectors.hosts"></div>
+    </div>
+    <a class="btn btn--white" translate="hercules.nodesPage.viewList" ng-click="$ctrl.goToNodesPage()"></a>
+  </cs-sp-section>
+
   <complete-registration-or-remove-expressway
                          cluster="$ctrl.cluster"
                          connector-type="$ctrl.connectorType"

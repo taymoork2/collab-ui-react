@@ -157,4 +157,8 @@ export class FeatureMemberService {
     });
   }
 
+  public getMemberSuggestionsByLimit(hint: string, limit: number): ng.IPromise<Member[]> {
+    return this.MemberService.getMemberList(hint, false, undefined, undefined, limit);
+  }
+
 }
