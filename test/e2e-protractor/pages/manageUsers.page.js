@@ -14,7 +14,7 @@ var manageUsersPage = function () {
     back: element(by.buttonText('Back')),
     submit: element(by.buttonText('Submit')),
     done: element(by.buttonText('Done')),
-    finish: element(by.id('btnOnboard'))
+    finish: element(by.buttonText('Finish'))
   };
 
   this.modalDialog = {
