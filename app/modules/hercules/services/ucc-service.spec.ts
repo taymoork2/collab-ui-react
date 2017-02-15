@@ -6,7 +6,6 @@ describe('UCCService', () => {
   beforeEach(angular.mock.module(mockDependencies));
 
   let voicemailBaseUrl = 'https://ucc-integration.wbx2.com/voicemail/api/v1';
-  let HybridVoicemailUrl = 'https://ucc-integration.wbx2.com/voicemail/api/v1';
   let userId: any = '5505f959-6d2f-4771-8f41-53b072335dbb';
   let orgId: any = 'fe5acf7a-6246-484f-8f43-3e8c910fc50d';
   let service: any | UCCService;
@@ -61,13 +60,13 @@ describe('UCCService', () => {
     service.disableHybridVoicemail(orgId);
   });
 
-  it('should call the correct backend when getting UserVoicemailInfo, using the provided orgId', () => {
-    $httpBackend.expectGET(`${HybridVoicemailUrl}/vmInfo/orgs/${orgId}/users/${userId}/`).respond([]);
+  it('should call the correct backend when using the provided orgId', () => {
+    $httpBackend.expectGET(`${voicemailBaseUrl}/vmInfo/orgs/${orgId}/users/${userId}/`).respond([]);
     service.getUserVoicemailInfo(userId, orgId);
   });
 
-  it('should call the correct backend when getting UserVoicemailInfo with the logged-in users orgId if none is provided', () => {
-    $httpBackend.expectGET(`${HybridVoicemailUrl}/vmInfo/orgs/${orgId}/users/${userId}/`).respond([]);
+  it('should call the correct backend with the logged-in users orgId if none is provided', () => {
+    $httpBackend.expectGET(`${voicemailBaseUrl}/vmInfo/orgs/${orgId}/users/${userId}/`).respond([]);
     service.getUserVoicemailInfo(userId);
   });
 
