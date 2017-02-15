@@ -330,13 +330,16 @@
 
       if ($scope.fromFallback) {
         var entry;
-        entry = _.get(vm.menuKeyEntry, 'actions[0]', vm.menuEntry.actions[0]);
-
+        if (_.has(vm.menuKeyEntry, 'actions[0]')) {
+          entry = vm.menuKeyEntry;
+        } else {
+          entry = vm.menuEntry;
+        }
         if (_.get(entry, 'name') === conditional) {
           entry = entry.then;
         }
 
-        var fallbackAction = _.get(entry, 'queueSettings.fallback.actions[0]');
+        var fallbackAction = _.get(entry, 'actions[0].queueSettings.fallback.actions[0]');
         if (fallbackAction && (fallbackAction.getName() !== routeToUserOrVM)) {
           fallbackAction.setName(routeToUserOrVM);
           fallbackAction.setValue('');
