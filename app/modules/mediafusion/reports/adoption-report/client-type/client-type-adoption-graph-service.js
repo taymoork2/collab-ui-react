@@ -16,6 +16,7 @@
     vm.zoomedStartTime = null;
 
     vm.timeStamp = $translate.instant('mediaFusion.metrics.timeStamp');
+    vm.clientType = $translate.instant('mediaFusion.metrics.clientType');
 
     return {
       setClientTypeGraph: setClientTypeGraph
@@ -71,7 +72,7 @@
       valueAxes[0].autoGridCount = true;
       valueAxes[0].position = 'left';
       //Change to i10n
-      valueAxes[0].title = 'Client Type';
+      valueAxes[0].title = vm.clientType;
       valueAxes[0].titleRotation = 0;
 
       var catAxis = CommonReportsGraphService.getBaseVariable(vm.AXIS);
@@ -123,7 +124,7 @@
       };
       var exportFields = [];
       _.forEach(graphs, function (value) {
-        columnNames[value.valueField] = value.title + ' ' + 'Client Type';
+        columnNames[value.valueField] = value.title + ' ' + vm.clientType;
       });
       for (var key in columnNames) {
         exportFields.push(key);
