@@ -58,4 +58,14 @@ describe('HybridServicesHostDetailsController: ', function () {
     expect($modal.open).toHaveBeenCalledWith(jasmine.objectContaining(correctDeregisterHostDialogOptions));
   });
 
+  it('should open the correct modal window when deleteExpresswayNode() is called', function () {
+    var correctDeleteExpresswayNodeDialogOptions = {
+      templateUrl: 'modules/hercules/cluster-sidepanel/host-details/confirm-deleteHost-dialog.html',
+      controller: 'ConfirmDeleteHostController',
+      controllerAs: 'confirmDeleteHostDialog',
+    };
+    controller.deleteExpresswayNode();
+    expect($modal.open).toHaveBeenCalledWith(jasmine.objectContaining(correctDeleteExpresswayNodeDialogOptions));
+  });
+
 });
