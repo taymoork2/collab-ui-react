@@ -14,7 +14,7 @@
     "agree": "Accept ",
     "ciscoSpark": "Cisco Spark",
     "version": "Version: {{version}}",
-    "copyright1": "Copyright &copy; 2016 Cisco Systems.",
+    "copyright1": "Copyright &copy; 2017 Cisco Systems.",
     "copyright2": "All rights reserved.",
     "description": "Cisco Spark is a collaboration application that provides messaging(IM), voice, and video calling capabilities.",
     "loggingOut": "Logging off..."
@@ -576,6 +576,8 @@
       "last4Weeks": "Weekly Last 4 weeks ",
       "last3Months": "Monthly Last 3 Months",
       "missingDays": " (data missing for {{nbrOfMissingDays}} days)",
+      "nameNotFoundFor": "Name not found for",
+      "selectModelsToFilterOn": "Select models to filter on",
       "deviceOptions": {
         "all": "All",
         "roomSystems": "DX, MX, and SX Devices",
@@ -3608,7 +3610,7 @@
     },
     "tos": {
       "titleIntelepeer": "Intelepeer terms of service",
-      "copyright": "Copyright 2016 Cisco Systems.  All rights reserved.",
+      "copyright": "Copyright 2017 Cisco Systems.  All rights reserved.",
       "info": "Cisco Spark is a collaboration application that provides messaging (IM), voice and video calling capabilities.",
       "noticeTitle": "IMPORTANT NOTICES AND DISCLAIMERS",
       "notice": "Please redirect to the following page and read the agreements from you carrier.  Your PSTN numbers will be released after you read and agree these agreements.",
@@ -4508,6 +4510,7 @@
       "cloud_calls": "Overflow to Cloud",
       "cloud_participants": "cloud participants",
       "onprem_participants": "Participants On-Premises",
+      "participants": "Participants",
       "nodata": "Data Not Available",
       "allclusters": "All Clusters",
       "percentage": "%",
@@ -4526,6 +4529,7 @@
       "totalMeetings": "Total number of meetings",
       "meetOnPrem": "Number of Meets on Premises",
       "clientTypes": "Client Types",
+      "clientType": "Client Type",
       "noOfMeet": "Number of Meetings"
     },
     "serviceStatus": {
@@ -5197,7 +5201,11 @@
   "processOrderPage": {
     "errOrgCreation": "Your order is being processed. Please check back after 24 hours.",
     "info": "Status",
-    "wait": "Please wait while we redirect you"
+    "wait": "Please wait while we redirect you",
+    "modalTitle": "Location of PSTN Calling Service",
+    "modalDesc": "Please enter the country where the majority of telephones for your Spark Call service will be located.",
+    "countrySelectLabel": "Please enter the country where your PSTN Service is located",
+    "countrySelectPlaceholder": "Select a country"
   },
   "countries": {
     "greatBritain": "United Kingdom",

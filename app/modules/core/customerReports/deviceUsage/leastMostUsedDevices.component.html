@@ -1,15 +1,22 @@
 <div class="least-most">
-  <h4 class="header" translate="{{$ctrl.title}}"></h4>
+  <h4 class="header" translate="{{$ctrl.displayTitle}}"></h4>
   <table class="table least-most-table">
     <thead>
       <th class="extreme-table-entry" translate="reportsPage.usageReports.deviceName"></th>
       <th class="extreme-table-entry right-aligned" translate="reportsPage.usageReports.hoursUsed"></th>
       <th class="extreme-table-entry right-aligned" translate="reportsPage.usageReports.callCount"></th>
     </thead>
-    <tr class="no-border" ng-repeat="device in $ctrl.usedDevices">
-      <td class="extreme-table-entry">{{device.name}}</td>
+    <tr ng-show="$ctrl.waitingStats === false" class="no-border" ng-repeat="device in $ctrl.usedDevices">
+      <td ng-show="device.info" class="extreme-table-entry missing" title="{{device.info}}">{{device.name}}</td>
+      <td ng-hide="device.info" class="extreme-table-entry" >{{device.name}}</td>
       <td class="extreme-table-entry right-aligned">{{device.duration}}</td>
       <td class="extreme-table-entry right-aligned">{{device.calls}}</td>
     </tr>
+    <tr ng-show="$ctrl.waitingStats === true" class="no-border">
+      <td colspan = "3" width="100%">
+        <div cs-loader class="loader"></div>
+      </td>
+    </tr>
   </table>
+
 </div>

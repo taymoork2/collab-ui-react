@@ -1,6 +1,8 @@
-/* globals LONG_TIMEOUT, manageUsersPage fdescribe */
-
 'use strict';
+
+/* globals LONG_TIMEOUT, manageUsersPage */
+
+var featureToggle = require('../utils/featureToggle.utils');
 
 describe('Squared Add User Flow', function () {
   var token;
@@ -31,6 +33,7 @@ describe('Squared Add User Flow', function () {
 
   //////////////////////////
 
+  // TODO remove suite when atlasFTSWRemoveUsersSSO feature toggle is removed
   describe('Add users through first-time setup wizard', function () {
 
     var appWindow;
@@ -42,11 +45,12 @@ describe('Squared Add User Flow', function () {
         });
     });
 
-    it('should display correct navigation colors', function () {
-      utils.waitClass(navigation.body, 'inverse');
-    });
-
+    // TODO remove spec when atlasFTSWRemoveUsersSSO feature toggle is removed
     it('should create a new trial', function () {
+      if (featureToggle.features.atlasFTSWRemoveUsersSSO) {
+        // Users can't be added from the FTSW
+        return;
+      }
       navigation.clickCustomers();
       utils.wait(partner.addButton, LONG_TIMEOUT);
       utils.click(partner.addButton);
@@ -76,7 +80,12 @@ describe('Squared Add User Flow', function () {
 
     });
 
+    // TODO remove spec when atlasFTSWRemoveUsersSSO feature toggle is removed
     it('should open First Time Setup wizard and navigate to Add Users', function () {
+      if (featureToggle.features.atlasFTSWRemoveUsersSSO) {
+        // Users can't be added from the FTSW
+        return;
+      }
       utils.expectTextToBeSet(wizard.mainviewTitle, 'Plan Review');
       utils.click(wizard.beginBtn);
       utils.click(wizard.saveBtn);
@@ -86,7 +95,12 @@ describe('Squared Add User Flow', function () {
       utils.click(wizard.nextBtn);
     });
 
+    // TODO remove spec when atlasFTSWRemoveUsersSSO feature toggle is removed
     it('should add users successfully', function () {
+      if (featureToggle.features.atlasFTSWRemoveUsersSSO) {
+        // Users can't be added from the FTSW
+        return;
+      }
       utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
       utils.click(inviteusers.manualUpload);
       utils.click(wizard.nextBtn);
@@ -97,8 +111,12 @@ describe('Squared Add User Flow', function () {
       utils.click(users.saveButton);
     });
 
+    // TODO remove spec when atlasFTSWRemoveUsersSSO feature toggle is removed
     it('should navigate to end of First Time Setup wizard', function () {
-
+      if (featureToggle.features.atlasFTSWRemoveUsersSSO) {
+        // Users can't be added from the FTSW
+        return;
+      }
       notifications.clearNotifications();
 
       utils.expectTextToBeSet(wizard.mainviewTitle, 'Get Started');
@@ -109,7 +127,12 @@ describe('Squared Add User Flow', function () {
       utils.click(navigation.usersTab);
     });
 
+    // TODO remove spec when atlasFTSWRemoveUsersSSO feature toggle is removed
     it('should show users pending', function () {
+      if (featureToggle.features.atlasFTSWRemoveUsersSSO) {
+        // Users can't be added from the FTSW
+        return;
+      }
       utils.search(inviteEmail);
       utils.expectText(users.userListStatus, 'Invite Pending');
 
@@ -117,7 +140,12 @@ describe('Squared Add User Flow', function () {
       utils.expectText(users.userListStatus, 'Invite Pending');
     });
 
+    // TODO remove afterAll when atlasFTSWRemoveUsersSSO feature toggle is removed
     afterAll(function () {
+      if (featureToggle.features.atlasFTSWRemoveUsersSSO) {
+        // Users can't be added from the FTSW
+        return navigation.logout();
+      }
       browser.close();
       browser.switchTo().window(appWindow);
 

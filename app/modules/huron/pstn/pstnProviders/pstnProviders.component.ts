@@ -73,6 +73,7 @@ export class PstnProvidersCtrl implements ng.IComponentController {
   private getCarriersNetwork(): void {
     //Are carriers already loaded
     if (this.PstnSetup.isCarrierExists()) {
+      this.pstnCarriers = this.PstnSetup.getCarriers();
       this.onReady();
       return;
     }
@@ -123,13 +124,9 @@ export class PstnProvidersCtrl implements ng.IComponentController {
   }
 
   private addCarrier(carrier: IPstnCarrierGet): void {
-    let pstnCarrier = _.find(this.pstnCarriers, pstnCarrierTest => {
-      return pstnCarrierTest.vendor === carrier.vendor;
-    });
-    if (!_.isObject(pstnCarrier)) {
-      let size: number = this.pstnCarriers.push(new PstnCarrier());
-      pstnCarrier = this.pstnCarriers[size - 1];
-    }
+    let size: number = this.pstnCarriers.push(new PstnCarrier());
+    let pstnCarrier: PstnCarrier = this.pstnCarriers[size - 1];
+
     //Save the Network info in the 'pstnCarrier' object
     pstnCarrier.setPstnCarrierGet(carrier);
     for (let x: number = 0; x < this.pstnCarrierStatics.length; x++) {

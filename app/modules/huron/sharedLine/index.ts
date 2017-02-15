@@ -1,8 +1,8 @@
-import { SharedLineComponent } from './sharedLine.component';
-import { SharedLineService } from './sharedLine.service';
+import { SharedLineComponent } from 'modules/huron/sharedLine/sharedLine.component';
+import { SharedLineService } from 'modules/huron/sharedLine/sharedLine.service';
 
-export * from './sharedLine';
-export * from './sharedLine.service';
+export * from 'modules/huron/sharedLine/sharedLine';
+export * from 'modules/huron/sharedLine/sharedLine.service';
 
 export default angular
   .module('huron.shared-line', [

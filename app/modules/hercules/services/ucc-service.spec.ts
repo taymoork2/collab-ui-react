@@ -46,18 +46,28 @@ describe('UCCService', () => {
   });
 
   it('should call the correct backend when reading org level hybrid voicemail status', () => {
-    $httpBackend.expectGET(`${voicemailBaseUrl}/vmOrgStatus/${orgId}/`).respond([]);
+    $httpBackend.expectGET(`${voicemailBaseUrl}/vmOrgStatus/orgs/${orgId}/`).respond([]);
     service.getOrgVoicemailConfiguration(orgId);
   });
 
   it('should call the correct backend when enabling hybrid voicemail', () => {
-    $httpBackend.expectPOST(`${voicemailBaseUrl}/vmOrgStatus/${orgId}/`).respond([]);
+    $httpBackend.expectPOST(`${voicemailBaseUrl}/vmOrgStatus/orgs/${orgId}/`).respond([]);
     service.enableHybridVoicemail(orgId);
   });
 
   it('should call the correct backend when disabling hybrid voicemail', () => {
-    $httpBackend.expectPOST(`${voicemailBaseUrl}/vmOrgStatus/${orgId}/`).respond([]);
+    $httpBackend.expectPOST(`${voicemailBaseUrl}/vmOrgStatus/orgs/${orgId}/`).respond([]);
     service.disableHybridVoicemail(orgId);
+  });
+
+  it('should call the correct backend when using the provided orgId', () => {
+    $httpBackend.expectGET(`${voicemailBaseUrl}/vmInfo/orgs/${orgId}/users/${userId}/`).respond([]);
+    service.getUserVoicemailInfo(userId, orgId);
+  });
+
+  it('should call the correct backend with the logged-in users orgId if none is provided', () => {
+    $httpBackend.expectGET(`${voicemailBaseUrl}/vmInfo/orgs/${orgId}/users/${userId}/`).respond([]);
+    service.getUserVoicemailInfo(userId);
   });
 
 });

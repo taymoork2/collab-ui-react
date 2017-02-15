@@ -133,7 +133,9 @@
 
     function showEnterpriseSettings() {
       $state.go('setupwizardmodal', {
-        currentTab: 'enterpriseSettings'
+        currentTab: 'enterpriseSettings',
+        currentStep: 'enterpriseSipUrl',
+        onlyShowSingleTab: true,
       });
     }
 
