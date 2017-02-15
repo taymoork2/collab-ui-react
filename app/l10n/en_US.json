@@ -2417,7 +2417,7 @@
         "moveToProduction": "Move to Production",
         "addTrialUsers": "Add Trial Users",
         "editTrialUsers": "Edit Users in Trial",
-        "hdsModeGetError": "Failed to get HDS mode : "
+        "hdsModeGetError": "Failed to get HDS mode: "
       },
       "addTrialUsers": {
         "modalTitle": "Add Users to Trial Mode",

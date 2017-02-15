@@ -420,11 +420,7 @@
 
     function setOrgAltHdsServersHds(orgId, altHdsServers) {
       var serviceUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '/settings/altHdsServers';
-      return $http({
-        method: 'PUT',
-        url: serviceUrl,
-        data: altHdsServers
-      });
+      return $http.put(serviceUrl, altHdsServers);
     }
 
     function isSetupDone(orgId) {

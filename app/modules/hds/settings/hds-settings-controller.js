@@ -25,7 +25,7 @@
     var localizedHdsModeError = $translate.instant('hds.resources.settings.hdsModeGetError');
 
     // TODO: below is the jason to recover initial state, remove it when at the very late stage of HDS dev
-    var jasonTrialMode = {
+    var jsonTrialMode = {
       "altHdsServers": [
         {
           "type": "kms",
@@ -48,7 +48,7 @@
         }
       ]
     };
-    var jasonProductionMode = {
+    var jsonProductionMode = {
       "altHdsServers": [
         {
           "type": "none",
@@ -113,7 +113,7 @@
     }
 
     function recoverPreTrial() {
-      Orgservice.setOrgAltHdsServersHds(Authinfo.getOrgId(), jasonTrialMode)
+      Orgservice.setOrgAltHdsServersHds(Authinfo.getOrgId(), jsonTrialMode)
         .then(function () {
           vm.model.serviceMode = vm.PRE_TRIAL;
         }).catch(function (error) {
@@ -137,18 +137,18 @@
           .then(function () {
             vm.model.serviceMode = vm.TRIAL;
           }).catch(function (error) {
-            Notification.error(localizedHdsModeError + error.statusText);
+            Notification.errorWithTrackingId(error, localizedHdsModeError);
           });
       }
     }
 
     function moveToProduction() {
       if (vm.model.serviceMode === vm.TRIAL) {
-        Orgservice.setOrgAltHdsServersHds(Authinfo.getOrgId(), jasonProductionMode)
+        Orgservice.setOrgAltHdsServersHds(Authinfo.getOrgId(), jsonProductionMode)
           .then(function () {
             vm.model.serviceMode = vm.PRODUCTION;
           }).catch(function (error) {
-            Notification.error(localizedHdsModeError + error.statusText);
+            Notification.errorWithTrackingId(error, localizedHdsModeError);
           });
       }
     }
