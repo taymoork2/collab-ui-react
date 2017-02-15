@@ -36,6 +36,7 @@ class MySubscriptionCtrl {
   /* @ngInject */
   constructor(
     private $http: ng.IHttpService,
+    private $modal,
     private $rootScope: ng.IRootScopeService,
     private $translate: ng.translate.ITranslateService,
     private Authinfo,
@@ -49,20 +50,20 @@ class MySubscriptionCtrl {
     private UrlConfig,
   ) {
     // message subscriptions
-    this.licenseCategory[0] = angular.copy(baseCategory);
+    this.licenseCategory[0] = _.cloneDeep(baseCategory);
     this.licenseCategory[0].label = $translate.instant('subscriptions.message');
 
     // meeting subscriptions
-    this.licenseCategory[1] = angular.copy(baseCategory);
+    this.licenseCategory[1] = _.cloneDeep(baseCategory);
     this.licenseCategory[1].label = $translate.instant('subscriptions.meeting');
     this.licenseCategory[1].borders = true;
 
     // communication subscriptions
-    this.licenseCategory[2] = angular.copy(baseCategory);
+    this.licenseCategory[2] = _.cloneDeep(baseCategory);
     this.licenseCategory[2].label = $translate.instant('subscriptions.call');
 
     // room system subscriptions
-    this.licenseCategory[3] = angular.copy(baseCategory);
+    this.licenseCategory[3] = _.cloneDeep(baseCategory);
     this.licenseCategory[3].label = $translate.instant('subscriptions.room');
 
     this.isOnline = Authinfo.isOnline();
@@ -78,6 +79,19 @@ class MySubscriptionCtrl {
 
   public determineLicenseType(subscription) {
     return this.isSharedMeetingsLicense(subscription) ? this.$translate.instant('firstTimeWizard.sharedLicenses') : this.$translate.instant('firstTimeWizard.namedLicenses');
+  }
+
+  public launchSharedMeetingsLicenseUsageReport(siteUrl: string): void {
+    this.$modal.open({
+      templateUrl: 'modules/core/myCompany/mySubscriptions/sharedMeetings/sharedMeetingsReport.tpl.html',
+      controller: 'SharedMeetingsReportCtrl',
+      controllerAs: 'smrCtrl',
+      resolve: {
+        siteUrl: () => {
+          return siteUrl;
+        },
+      },
+    });
   }
 
   private initFeatures(): void {

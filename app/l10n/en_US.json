@@ -503,7 +503,6 @@
     "title": "MANAGE TEMPLATES"
   },
   "reportsPage": {
-    "title": "ORGANIZATION REPORTS",
     "pageTitle": "Reports",
     "all": "All",
     "engagement": "Engagement",
@@ -518,6 +517,7 @@
     "week2": "last seven days",
     "month": "Last 4 Weeks",
     "month2": "last four weeks",
+    "oneMonth": "Last Month",
     "threeMonths": "Last 3 Months",
     "threeMonths2": "last three months",
     "lastTwelveWeeks": "Last 12 Weeks",
@@ -593,6 +593,17 @@
         "deviceUsageExportFailedOrCancelled": "Device Usage Export failed or was cancelled."
       }
     }
+  },
+  "smpReports": {
+    "title": "Shared Meeting Usage",
+    "link": "View Report",
+    "sharedMeetingReport": "Shared Meeting Report",
+    "sharedMeetingUsage": "Shared Meetings Usage",
+    "smpDescription": "This graph shows the number of concurrent meetings per month.",
+    "concurrentMeetingsTitle": "Actual number of concurrent mettings held",
+    "concurrentMeetings": "Concurrent Meetings",
+    "maxMeetingsTitle": "Maximum number of concurrent meetings allowed",
+    "errorLoadingSMPData": "There was a problem loading the Shared Meeting Report data."
   },
   "careReportsPage": {
     "tasks": "Contacts",
@@ -6087,7 +6098,6 @@
     "numberedName": "Subscription {{number}}",
     "usage": "Usage: ",
     "licenseUsageReport": "License Usage Report",
-    "smpLicenseReportPeriod": "Last 3 Months",
     "more": "More",
     "less": "Less",
     "quantity": "Qty: ",
