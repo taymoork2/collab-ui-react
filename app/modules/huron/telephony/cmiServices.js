@@ -43,6 +43,7 @@
     .factory('DirectoryNumberSipEndPointService', DirectoryNumberSipEndPointService)
     .factory('SipEndpointDirectoryNumberService', SipEndpointDirectoryNumberService)
     .factory('DateFormatService', DateFormatService)
+    .factory('TimeFormatService', TimeFormatService)
     .factory('TimeZoneService', TimeZoneService)
     .factory('SiteLanguageService', SiteLanguageService)
     .factory('SiteCountryService', SiteCountryService)
@@ -433,6 +434,11 @@
   /* @ngInject */
   function DateFormatService($resource) {
     return $resource('modules/huron/serviceSetup/dateFormats.json', {}, {});
+  }
+
+  /* @ngInject */
+  function TimeFormatService($resource) {
+    return $resource('modules/huron/serviceSetup/timeFormat.json', {}, {});
   }
 
   /* @ngInject */
