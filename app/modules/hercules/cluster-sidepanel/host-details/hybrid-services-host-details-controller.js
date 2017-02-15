@@ -96,6 +96,10 @@
         });
     }
 
+    vm.showGoToHostAction = function () {
+      return vm.host.connectorType !== 'mf_mgmt';
+    };
+
     vm.showMoveNodeAction = function () {
       return vm.host.connectorType === 'mf_mgmt';
     };
