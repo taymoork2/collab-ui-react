@@ -9,6 +9,8 @@
     var vm = this;
     vm.providers = [];
     vm.loading = true;
+    vm.enableCarriers = false;
+    vm.showCarriers = false;
     vm.selectProvider = selectProvider;
     vm.onProviderReady = onProviderReady;
     vm.onProviderChange = onProviderChange;
@@ -126,25 +128,6 @@
         });
     }
 
-    function init() {
-      FeatureToggleService.supports(FeatureToggleService.features.huronSupportThinktel).then(function (ftThinkTel) {
-        vm.ftThinkTel = ftThinkTel;
-        if (!vm.ftThinkTel) {
-          initOriginal();
-        }
-      }).catch(function () {
-        initOriginal();
-      });
-    }
-
-    function initOriginal() {
-      $q.all([initCarriers(), initSites()])
-        .then(processSelectedProviders)
-        .finally(function () {
-          vm.loading = false;
-        });
-    }
-
     function initCarrier(carrier) {
       var carrierObj = {
         uuid: carrier.uuid,
@@ -200,12 +183,50 @@
       vm.providers.push(carrierObj);
     }
 
+    function init() {
+      FeatureToggleService.supports(FeatureToggleService.features.huronSupportThinktel).then(function (ftThinkTel) {
+        vm.ftThinkTel = ftThinkTel;
+        if (!vm.ftThinkTel) {
+          initOriginal();
+        } else {
+          initPstnCustomer();
+        }
+      }).catch(function () {
+        initOriginal();
+      });
+    }
+
+    function initOriginal() {
+      $q.all([initCarriers(), initSites()])
+        .then(processSelectedProviders)
+        .finally(function () {
+          vm.loading = false;
+        });
+    }
+
+    function initPstnCustomer() {
+      return PstnSetupService.getCustomerV2(PstnSetup.getCustomerId())
+        .then(function () {
+          PstnSetup.setCustomerExists(true);
+        })
+        .finally(function () {
+          vm.enableCarriers = true;
+        });
+    }
+
     function onProviderReady() {
-      if (PstnSetup.isCarrierExists() && PstnSetup.getCarriers().length === 1) {
-        goToNumbers();
-      } else {
+      initSites().then(function () {
+        if (PstnSetup.isCarrierExists()) {
+          // Only 1 carrier should exist for a customer
+          if (PstnSetup.getCarriers().length === 1) {
+            PstnSetup.setSingleCarrierReseller(true);
+            PstnSetup.setProvider(PstnSetup.getCarriers()[0]);
+            goToNumbers();
+          }
+        }
         vm.loading = false;
-      }
+        vm.showCarriers = true;
+      });
     }
 
     function onProviderChange() {

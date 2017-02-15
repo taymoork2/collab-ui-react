@@ -1,6 +1,8 @@
 class TrialRegionalSettingsCtrl implements ng.IComponentController {
   public defaultCountry: string;
   public defaultCountryList;
+  public countryList;
+  public filterCountryList: boolean;
   public onChangeFn: Function;
   public placeholder: string;
 
@@ -14,8 +16,31 @@ class TrialRegionalSettingsCtrl implements ng.IComponentController {
     this.placeholder = this.$translate.instant('partnerHomePage.defaultCountryPlaceholder');
   }
 
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+    let countryListChanges = changes['defaultCountryList'];
+    if (countryListChanges && countryListChanges.currentValue) {
+      this.processDefaultCountryListChanges(countryListChanges);
+    }
+  }
+
   public $postLink(): void {
     this.$element.addClass('cs-form__section');
+  }
+
+  private processDefaultCountryListChanges(defaultCountryListChanges: ng.IChangesObject): void {
+    this.countryList = this.getCountryList(defaultCountryListChanges.currentValue);
+  }
+
+  private getCountryList(list) {
+    if (this.filterCountryList) {
+      return _.filter(list, country => {
+        if (_.get(country, 'id') === 'US' || _.get(country, 'id') === 'CA') {
+          return true;
+        }
+      });
+    } else {
+      return list;
+    }
   }
 
   public onChange(): void {
@@ -31,6 +56,7 @@ export class TrialRegionalSettingsComponent implements ng.IComponentOptions {
   public bindings = {
     defaultCountry: '<',
     defaultCountryList: '<',
+    filterCountryList: '<',
     onChangeFn: '&',
   };
 }

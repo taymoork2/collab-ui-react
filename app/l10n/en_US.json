@@ -14,7 +14,7 @@
     "agree": "Accept ",
     "ciscoSpark": "Cisco Spark",
     "version": "Version: {{version}}",
-    "copyright1": "Copyright &copy; 2016 Cisco Systems.",
+    "copyright1": "Copyright &copy; 2017 Cisco Systems.",
     "copyright2": "All rights reserved.",
     "description": "Cisco Spark is a collaboration application that provides messaging(IM), voice, and video calling capabilities.",
     "loggingOut": "Logging off..."
@@ -576,6 +576,8 @@
       "last4Weeks": "Weekly Last 4 weeks ",
       "last3Months": "Monthly Last 3 Months",
       "missingDays": " (data missing for {{nbrOfMissingDays}} days)",
+      "nameNotFoundFor": "Name not found for",
+      "selectModelsToFilterOn": "Select models to filter on",
       "deviceOptions": {
         "all": "All",
         "roomSystems": "DX, MX, and SX Devices",
@@ -1830,7 +1832,10 @@
       "lastReported": "Last Reported",
       "description": "Description",
       "noAlarms": "No alarms reported",
-      "action": "Action"
+      "action": "Action",
+      "info": "Info",
+      "new": "New",
+      "todo": "To-do"
     },
     "softwareUpgrade": {
       "editSettingsLink": "Edit cluster settings",
@@ -2044,15 +2049,15 @@
       "no-notifications": "No notifications.",
       "callAware": {
         "title": "Enable Call Service Aware for Users",
-        "navigateToUsers": "Go to <a ng-click=\"{{onclick}}\">User and Group Management</a> to enable Call Service Aware for your users."
+        "navigateToUsers": "Go to the <a ng-click=\"{{onclick}}\">Users</a> page to enable Call Service Aware for your users."
       },
       "calendar": {
         "title": "Enable Calendar Service for Users",
-        "navigateToUsers": "Go to <a ng-click=\"{{onclick}}\">User and Group Management</a> to enable Calendar Service for your users."
+        "navigateToUsers": "Go to the <a ng-click=\"{{onclick}}\">Users</a> page to enable Calendar Service for your users."
       },
       "connect": {
         "title": "Enable Call Service Connect for Users",
-        "navigateToUsers": "You have successfully configured Call Service Connect. Go to <a ng-click=\"{{onclick}}\">User and Group Management</a> to enable Call Service Connect for your users. Make sure you selected the applicable method in Expressway to create CTI remote devices for your users. ",
+        "navigateToUsers": "You have successfully configured Call Service Connect. Go to the <a ng-click=\"{{onclick}}\">Users</a> page to enable Call Service Connect for your users. Make sure you selected the applicable method in Expressway to create CTI remote devices for your users. ",
         "connectEnabled": "Call Service Connect has been enabled",
         "connectDisabled": "Call Service Connect has been disabled"
       },
@@ -2285,7 +2290,8 @@
       "serial": "Serial",
       "version": "Version",
       "noNodes": "No nodes found",
-      "loadingError": "Could not load cluster data"
+      "loadingError": "Could not load cluster data",
+      "viewList": "View list"
     },
     "hybridServicesConnectorSidepanel": {
       "overview": "Overview",
@@ -2412,7 +2418,8 @@
         "serviceProductionModeDesc": "In this mode all users in your org will use this service",
         "moveToProduction": "Move to Production",
         "addTrialUsers": "Add Trial Users",
-        "editTrialUsers": "Edit Users in Trial"
+        "editTrialUsers": "Edit Users in Trial",
+        "hdsModeGetError": "Failed to get HDS mode: "
       },
       "addTrialUsers": {
         "modalTitle": "Add Users to Trial Mode",
@@ -3604,7 +3611,7 @@
     },
     "tos": {
       "titleIntelepeer": "Intelepeer terms of service",
-      "copyright": "Copyright 2016 Cisco Systems.  All rights reserved.",
+      "copyright": "Copyright 2017 Cisco Systems.  All rights reserved.",
       "info": "Cisco Spark is a collaboration application that provides messaging (IM), voice and video calling capabilities.",
       "noticeTitle": "IMPORTANT NOTICES AND DISCLAIMERS",
       "notice": "Please redirect to the following page and read the agreements from you carrier.  Your PSTN numbers will be released after you read and agree these agreements.",
@@ -3634,7 +3641,15 @@
     "feature4": "Caller ID Name Delivery and Registration",
     "feature5": "E911"
   },
-  "partnerHomePage": {
+  "thinktelFeatures": {
+    "feature1": "1 Telephone Number per User",
+    "feature2": "Service available in all provinces/territories",
+    "feature3": "Local and Can/U.S. Long Distance calling",
+    "feature4": "Number port/Transfer fee included",
+    "feature5": "Basic 911 included",
+    "feature6": "Taxes additional"
+  },
+    "partnerHomePage": {
     "trialsHeading": "Trials",
     "onboardingTitle": "Onboarding",
     "activity-title": "Activity",
@@ -4496,6 +4511,7 @@
       "cloud_calls": "Overflow to Cloud",
       "cloud_participants": "cloud participants",
       "onprem_participants": "Participants On-Premises",
+      "participants": "Participants",
       "nodata": "Data Not Available",
       "allclusters": "All Clusters",
       "percentage": "%",
@@ -4510,7 +4526,12 @@
       "availabilityStatus": "Availability Status",
       "clusterTitle": "Cluster",
       "lowAvailableClusters": "Low availability clusters",
-      "clusterTakingMoreCalls": "Clusters hosting more no of calls"
+      "clusterTakingMoreCalls": "Clusters hosting more no of calls",
+      "totalMeetings": "Total number of meetings",
+      "meetOnPrem": "Number of Meets on Premises",
+      "clientTypes": "Client Types",
+      "clientType": "Client Type",
+      "noOfMeet": "Number of Meetings"
     },
     "serviceStatus": {
       "unknown": "Status unknown",
@@ -5181,7 +5202,11 @@
   "processOrderPage": {
     "errOrgCreation": "Your order is being processed. Please check back after 24 hours.",
     "info": "Status",
-    "wait": "Please wait while we redirect you"
+    "wait": "Please wait while we redirect you",
+    "modalTitle": "Location of PSTN Calling Service",
+    "modalDesc": "Please enter the country where the majority of telephones for your Spark Call service will be located.",
+    "countrySelectLabel": "Please enter the country where your PSTN Service is located",
+    "countrySelectPlaceholder": "Select a country"
   },
   "countries": {
     "greatBritain": "United Kingdom",

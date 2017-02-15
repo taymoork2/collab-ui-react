@@ -35,6 +35,9 @@ describe('Service: CsdmDataModelService', function () {
 
   beforeEach(inject(function (Authinfo) {
     spyOn(Authinfo, 'getOrgId').and.returnValue('testOrg');
+    spyOn(Authinfo, 'getLicenses').and.returnValue([{
+      licenseType: 'COMMUNICATION'
+    }]);
   }));
 
   beforeEach(inject(function (_CsdmDataModelService_, _$httpBackend_, _$rootScope_, _$timeout_) {

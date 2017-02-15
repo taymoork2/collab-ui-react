@@ -113,7 +113,8 @@
           data: {
             numbers: numbers
           },
-          type: PstnSetupService.NUMBER_ORDER
+          numberType: PstnSetupService.NUMTYPE_DID,
+          orderType: PstnSetupService.SWIVEL_ORDER
         }];
         PstnSetup.setOrders(swivelOrder);
         $state.go('pstnSetup.review');

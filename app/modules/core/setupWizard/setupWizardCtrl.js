@@ -6,8 +6,10 @@ require('./_setup-wizard.scss');
   angular.module('Core')
     .controller('SetupWizardCtrl', SetupWizardCtrl);
 
-  function SetupWizardCtrl($scope, $stateParams, Authinfo, Config, FeatureToggleService, Orgservice, Utils) {
-
+  function SetupWizardCtrl($scope, $state, $stateParams, Authinfo, Config, FeatureToggleService, Orgservice, Utils) {
+    var isFirstTimeSetup = _.get($state, 'current.data.firstTimeSetup', false);
+    var shouldRemoveAddUserTab = false;
+    var shouldRemoveSSOSteps = false;
     $scope.tabs = [];
     var tabs = [{
       name: 'planReview',
@@ -104,10 +106,24 @@ require('./_setup-wizard.scss');
     $scope.isCSB = Authinfo.isCSB();
 
     if (Authinfo.isCustomerAdmin()) {
-      FeatureToggleService.supportsDirSync()
-        .then(function (result) {
-          $scope.isDirSyncEnabled = result;
-        }).finally(init);
+      initToggles().finally(init);
+    }
+
+    function initToggles() {
+      return FeatureToggleService.supports(FeatureToggleService.features.atlasFTSWRemoveUsersSSO)
+        .then(function (atlasFTSWRemoveUsersSSO) {
+          if (atlasFTSWRemoveUsersSSO) {
+            shouldRemoveAddUserTab = true;
+            if (isFirstTimeSetup) {
+              shouldRemoveSSOSteps = true;
+            }
+          } else {
+            return FeatureToggleService.supportsDirSync()
+              .then(function (result) {
+                $scope.isDirSyncEnabled = result;
+              });
+          }
+        });
     }
 
     function showCallSettings() {
@@ -117,10 +133,15 @@ require('./_setup-wizard.scss');
     }
 
     function init() {
-
       $scope.tabs = filterTabs(tabs);
 
-      setupAddUserSubTabs();
+      if ($stateParams.onlyShowSingleTab) {
+        // do not add any other tabs
+        return;
+      }
+
+      setupAddUserTab();
+      setupEnterpriseSettingsTab();
 
       if (showCallSettings()) {
         $scope.tabs.splice(1, 0, {
@@ -250,50 +271,71 @@ require('./_setup-wizard.scss');
       return filteredTabs;
     }
 
-    function setupAddUserSubTabs() {
+    function setupEnterpriseSettingsTab() {
+      if (shouldRemoveSSOSteps) {
+        var enterpriseSettingTab = _.find($scope.tabs, {
+          name: 'enterpriseSettings'
+        }, {});
+        var ssoInitIndex = _.findIndex(enterpriseSettingTab.steps, {
+          name: 'init'
+        });
+        if (ssoInitIndex > -1) {
+          enterpriseSettingTab.steps.splice(ssoInitIndex);
+        }
+      }
+    }
+
+    function setupAddUserTab() {
       var userTab = _.find($scope.tabs, {
         name: 'addUsers'
       });
-      var simpleSubTab = {
-        name: 'simple',
-        controller: 'OnboardCtrl',
-        steps: [{
-          name: 'init',
-          template: 'modules/core/setupWizard/addUsers/addUsers.init.tpl.html'
-        }, {
-          name: 'manualEntry',
-          template: 'modules/core/setupWizard/addUsers/addUsers.manualEntry.tpl.html'
-        }, {
-          name: 'assignServices',
+      if (userTab) {
+        if (shouldRemoveAddUserTab) {
+          _.remove($scope.tabs, userTab);
+          return;
+        }
+
+        var simpleSubTab = {
+          name: 'simple',
+          controller: 'OnboardCtrl',
+          steps: [{
+            name: 'init',
+            template: 'modules/core/setupWizard/addUsers/addUsers.init.tpl.html'
+          }, {
+            name: 'manualEntry',
+            template: 'modules/core/setupWizard/addUsers/addUsers.manualEntry.tpl.html'
+          }, {
+            name: 'assignServices',
+            template: 'modules/core/setupWizard/addUsers/addUsers.assignServices.tpl.html'
+          }, {
+            name: 'assignDnAndDirectLines',
+            template: 'modules/core/setupWizard/addUsers/addUsers.assignDnAndDirectLines.tpl.html'
+          }, {
+            name: 'addUsersResults',
+            template: 'modules/core/setupWizard/addUsers/addUsers.results.tpl.html'
+          }]
+        };
+        var advancedSubTabSteps = [{
+          name: 'dirsyncServices',
           template: 'modules/core/setupWizard/addUsers/addUsers.assignServices.tpl.html'
         }, {
-          name: 'assignDnAndDirectLines',
-          template: 'modules/core/setupWizard/addUsers/addUsers.assignDnAndDirectLines.tpl.html'
+          name: 'dirsyncProcessing',
+          template: 'modules/core/setupWizard/addUsers/addUsers.processDirSync.tpl.html',
+          buttons: false
         }, {
-          name: 'addUsersResults',
-          template: 'modules/core/setupWizard/addUsers/addUsers.results.tpl.html'
-        }]
-      };
-      var advancedSubTabSteps = [{
-        name: 'dirsyncServices',
-        template: 'modules/core/setupWizard/addUsers/addUsers.assignServices.tpl.html'
-      }, {
-        name: 'dirsyncProcessing',
-        template: 'modules/core/setupWizard/addUsers/addUsers.processDirSync.tpl.html',
-        buttons: false
-      }, {
-        name: 'dirsyncResult',
-        template: 'modules/core/setupWizard/addUsers/addUsers.uploadResultDirSync.tpl.html',
-        buttons: 'modules/core/setupWizard/addUsers/addUsers.dirSyncResultButtons.tpl.html'
-      }];
+          name: 'dirsyncResult',
+          template: 'modules/core/setupWizard/addUsers/addUsers.uploadResultDirSync.tpl.html',
+          buttons: 'modules/core/setupWizard/addUsers/addUsers.dirSyncResultButtons.tpl.html'
+        }];
 
-      if ($scope.isDirSyncEnabled) {
-        var advancedSubTab = _.find(userTab.subTabs, {
-          name: 'advanced'
-        });
-        advancedSubTab.steps = advancedSubTab.steps.concat(advancedSubTabSteps);
-      } else {
-        userTab.subTabs.splice(0, 0, simpleSubTab);
+        if ($scope.isDirSyncEnabled) {
+          var advancedSubTab = _.find(userTab.subTabs, {
+            name: 'advanced'
+          });
+          advancedSubTab.steps = advancedSubTab.steps.concat(advancedSubTabSteps);
+        } else {
+          userTab.subTabs.splice(0, 0, simpleSubTab);
+        }
       }
     }
 

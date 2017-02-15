@@ -150,9 +150,7 @@ describe('Service: AAMediaUploadService', function () {
 
   describe('cleanResourceFieldIndex', function () {
     beforeEach(function () {
-      spyOn(AAMediaUploadService, 'clearResourcesExcept').and.callFake(function () {
-        return;
-      });
+      spyOn(AAMediaUploadService, 'clearResourcesExcept').and.callFake(function () {});
     });
 
     it('should not execute clearResources if field is falsy', function () {

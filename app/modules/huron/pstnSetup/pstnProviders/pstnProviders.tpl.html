@@ -33,6 +33,8 @@
     </div>
     <div ng-if="pstnProviders.ftThinkTel">
       <uc-pstn-providers
+        ng-if="pstnProviders.enableCarriers"
+        ng-show="pstnProviders.showCarriers"
         on-change-fn="pstnProviders.onProviderChange()"
         on-ready-fn="pstnProviders.onProviderReady()">
       </uc-pstn-providers>

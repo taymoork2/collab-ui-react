@@ -14,7 +14,7 @@ describe('First Time Wizard', function () {
       utils.click(ssowizard.viewSsoSettings);
       utils.expectTextToBeSet(wizard.mainviewSubtitle, 'Single Sign-On');
       utils.click(wizard.radiobuttons.last());
-      utils.click(wizard.nextBtn);
+      utils.click(wizard.beginBtn);
     });
 
     it('should verify that the download link is correct', function () {

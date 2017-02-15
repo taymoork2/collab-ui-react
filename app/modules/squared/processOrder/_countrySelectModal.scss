@@ -1,0 +1,26 @@
+@import 'styles/toolkit/colors';
+@import 'styles/toolkit/spacing';
+
+.spark-call-location-body {
+  .cisco-logo {
+    font-size: 2.5em;
+  }
+
+  .spark-name {
+    @include vr-spacing(ml, 0.5);
+
+    color: $color-primary-base;
+  }
+
+  p:first-of-type {
+    @include vr-spacing(mt, 2);
+  }
+
+  p {
+    @include vr-spacing(mb, 1);
+  }
+}
+
+.spark-call-location-list {
+  @include vr-spacing(mt, 1);
+}

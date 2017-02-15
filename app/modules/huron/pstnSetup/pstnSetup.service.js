@@ -36,6 +36,7 @@
     var NUMBER_ORDER = 'NUMBER_ORDER';
     var PORT_ORDER = 'PORT_ORDER';
     var BLOCK_ORDER = 'BLOCK_ORDER';
+    var SWIVEL_ORDER = 'SWIVEL_ORDER';
     //$resource constants
     var BLOCK = 'block';
     var ORDER = 'order';
@@ -98,6 +99,7 @@
       PORT_ORDER: PORT_ORDER,
       BLOCK_ORDER: BLOCK_ORDER,
       NUMBER_ORDER: NUMBER_ORDER,
+      SWIVEL_ORDER: SWIVEL_ORDER,
       NUMTYPE_DID: NUMTYPE_DID,
       NUMTYPE_TOLLFREE: NUMTYPE_TOLLFREE
     };
@@ -719,8 +721,6 @@
         return translations[order.statusMessage];
       } else if (order.statusMessage !== 'None') {
         return order.statusMessage;
-      } else {
-        return;
       }
     }
 

@@ -10,14 +10,14 @@ export class OverviewGoogleCalendarNotification {
       },
       link: () => {
         $modal.open({
-            controller: 'FirstTimeGoogleSetupController',
-            controllerAs: 'vm',
-            templateUrl: 'modules/hercules/service-settings/calendar-service-setup/first-time-google-setup.html',
-          })
-          .result
-          .then(() => {
-            $state.go('google-calendar-service.settings');
-          });
+          controller: 'FirstTimeGoogleSetupController',
+          controllerAs: 'vm',
+          templateUrl: 'modules/hercules/service-settings/calendar-service-setup/first-time-google-setup.html',
+        })
+        .result
+        .then(() => {
+          $state.go('google-calendar-service.settings');
+        });
       },
       linkText: 'homePage.getStarted',
       name: 'calendar',

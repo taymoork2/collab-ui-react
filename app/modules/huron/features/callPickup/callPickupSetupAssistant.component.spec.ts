@@ -305,7 +305,7 @@ describe('Component: callPickupSetupAssistant', () => {
       this.controller.onCancel();
       expect(this.controller.resetForm).toHaveBeenCalled();
     });
-});
+  });
 
   describe('onUpdateMember', () => {
     beforeEach(initComponent);

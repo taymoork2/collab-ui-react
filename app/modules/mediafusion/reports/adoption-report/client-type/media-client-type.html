@@ -1,0 +1,24 @@
+<cs-card id='client-type-card' class="full media-metrics-report-card">
+  <article class="media-service-card">
+    <graphheader>
+              <h4 class='report-section-header' translate='mediaFusion.metrics.clientTypes'>
+              </h4>
+    </graphheader>
+    <section>
+      <div class="client-type-reports">
+        <div id="clientTypediv" class="barchart" ng-class="{'client-type-chart': !$ctrl.parentcntrl.isEmpty($ctrl.parentcntrl.clientTypeStatus) && !$ctrl.parentcntrl.isRefresh($ctrl.parentcntrl.clientTypeStatus)}"></div>
+        <div class="spinner-position" ng-if="$ctrl.parentcntrl.isRefresh($ctrl.parentcntrl.clientTypeStatus)">
+          <i class='icon icon-spinner icon-2x'></i>
+        </div>
+        <div class="no-data-center" ng-if="$ctrl.parentcntrl.isEmpty($ctrl.parentcntrl.clientTypeStatus)">
+          <p>
+            <h3 class="no-data"> 
+            <i class='icon icon-warning no-data-warning'></i>
+            <span translate='mediaFusion.metrics.nodata'></span>
+          </h3>
+            <p>
+        </div>
+      </div>
+    </section>
+  </article>
+</cs-card>

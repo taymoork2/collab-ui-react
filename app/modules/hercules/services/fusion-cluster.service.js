@@ -479,7 +479,46 @@
 
     function getAlarms(serviceId, orgId) {
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + (orgId || Authinfo.getOrgId()) + '/alarms?serviceId=' + serviceId + '&sourceType=cloud';
-      return $http.get(url).then(extractData);
+      return $http.get(url).then(extractAndTranslateAlarms);
+    }
+
+    function extractAndTranslateAlarms(res) {
+      var alarms = res.data.items;
+      return _.chain(alarms)
+        .sortBy(getAlarmSortOrder)
+        .map(function (alarm) {
+          var translateReplacements = convertToTranslateReplacements(alarm.replacementValues);
+          alarm.title = translateWithFallback(alarm.key + '.title', alarm.title, translateReplacements);
+          alarm.description = translateWithFallback(alarm.key + '.description', alarm.description, translateReplacements);
+          return alarm;
+        })
+        .value();
+    }
+
+    function translateWithFallback(alarmKey, fallback, translateReplacements) {
+      var translationKey = 'hercules.serviceAlarms.' + alarmKey;
+      var translation = $translate.instant(translationKey, translateReplacements);
+      return translation === translationKey ? fallback : translation;
+    }
+
+    function convertToTranslateReplacements(alarmReplacementValues) {
+      return _.reduce(alarmReplacementValues, function (translateReplacements, replacementValue) {
+        translateReplacements[replacementValue.key] = replacementValue.type === 'timestamp' ? FusionUtils.getLocalTimestamp(replacementValue.value) : replacementValue.value;
+        return translateReplacements;
+      }, {});
+    }
+
+    function getAlarmSortOrder(alarm) {
+      switch (alarm.severity) {
+        case 'critical':
+          return -1;
+        case 'error':
+          return 0;
+        case 'warning':
+          return 1;
+        default:
+          return 2;
+      }
     }
 
     function getOrgSettings(orgId) {

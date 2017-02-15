@@ -495,10 +495,7 @@
           vm.aaModel.aaRecord.scheduleId = undefined;
           if (isNew) {
             return AACalendarService.deleteCalendar(vm.ui.ceInfo.scheduleId);
-          } else {
-            return;
           }
-
         });
     }
 

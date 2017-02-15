@@ -1,10 +1,10 @@
 [{
     "value": "M-D-Y",
-    "label": "MM/DD/YYYY"
+    "label": "MM-DD-YYYY"
 }, {
     "value": "D-M-Y",
-    "label": "DD/MM/YYYY"
+    "label": "DD-MM-YYYY"
 }, {
     "value": "Y-M-D",
-    "label": "YYYY/MM/DD"
+    "label": "YYYY-MM-DD"
 }]

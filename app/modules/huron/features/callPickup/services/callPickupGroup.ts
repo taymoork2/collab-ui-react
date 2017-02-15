@@ -32,10 +32,11 @@ export interface IMember {
 }
 
 export interface ICardMemberCheckbox {
-    label: string;
-    sublabel?: string;
-    value: boolean;
-    numberUuid: string;
+  label: string;
+  sublabel?: string;
+  value: boolean;
+  numberUuid: string;
+  disabled?: boolean;
 }
 
 export interface ICallPickupNumbers {

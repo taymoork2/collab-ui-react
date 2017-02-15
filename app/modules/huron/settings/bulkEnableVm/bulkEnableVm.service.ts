@@ -25,14 +25,13 @@ export class VoiceMailPayload {
 
 export class BulkEnableVmService {
     /* @ngInject */
-    constructor(
+  constructor(
     private Authinfo,
     private UserListService,
     private UserServiceCommon,
     private UserServiceCommonV2,
     private $q: ng.IQService,
-  ) {
-  }
+  ) {}
 
   private maxRetry = 3;
   private maxUserCount = 1000;

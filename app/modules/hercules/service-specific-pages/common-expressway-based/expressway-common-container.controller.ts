@@ -8,6 +8,7 @@ export abstract class ExpresswayContainerController {
 
   /* @ngInject */
   constructor(private $modal,
+              private $scope: ng.IScope,
               private $state: ng.ui.IStateService,
               private Authinfo,
               private ClusterService,
@@ -20,15 +21,18 @@ export abstract class ExpresswayContainerController {
     this.firstTimeSetup();
     this.extractSummary();
     this.subscribeStatusesSummary = this.USSService.subscribeStatusesSummary('data', this.extractSummary.bind(this));
-    this.ClusterService.subscribe('data', this.updateNotifications.bind(this));
+    this.ClusterService.subscribe('data', this.updateNotifications.bind(this), {
+      scope: this.$scope,
+    });
   }
 
   private updateNotifications(): void {
-    this.ServiceStateChecker.checkState(this.connectorType, this.servicesId[0]);
+    this.ServiceStateChecker.checkState(this.servicesId[0]);
   }
 
   public extractSummary(): void {
     this.userStatusesSummary = this.USSService.extractSummaryForAService(this.servicesId);
+    this.ServiceStateChecker.checkUserStatuses(this.servicesId[0]);
   }
 
   protected firstTimeSetup(): void {

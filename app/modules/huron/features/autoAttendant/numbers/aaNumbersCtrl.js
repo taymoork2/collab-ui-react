@@ -6,9 +6,7 @@
     .controller('AABuilderNumbersCtrl', AABuilderNumbersCtrl); /* was AutoAttendantGeneralCtrl */
 
   /* @ngInject */
-  function AABuilderNumbersCtrl(AAUiModelService, AutoAttendantCeInfoModelService, AANumberAssignmentService,
-        AAModelService, AACommonService, Authinfo, AANotificationService, $translate,
-        telephoneNumberFilter, TelephoneNumberService, TelephonyInfoService, ExternalNumberPool) {
+  function AABuilderNumbersCtrl(AAUiModelService, AutoAttendantCeInfoModelService, AANumberAssignmentService, AAModelService, AACommonService, Authinfo, AANotificationService, $translate, telephoneNumberFilter, TelephoneNumberService, TelephonyInfoService, ExternalNumberPool) {
     var vm = this;
 
     vm.addNumber = addNumber;

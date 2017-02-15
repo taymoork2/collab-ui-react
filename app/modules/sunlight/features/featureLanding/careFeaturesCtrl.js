@@ -6,8 +6,7 @@
       .controller('CareFeaturesCtrl', CareFeaturesCtrl);
 
   /* @ngInject */
-  function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, Authinfo, CardUtils,
-                            CareFeatureList, CTService, Log, Notification, FeatureToggleService) {
+  function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, Authinfo, CardUtils, CareFeatureList, CTService, Log, Notification, FeatureToggleService) {
     var vm = this;
     vm.init = init;
     var pageStates = {

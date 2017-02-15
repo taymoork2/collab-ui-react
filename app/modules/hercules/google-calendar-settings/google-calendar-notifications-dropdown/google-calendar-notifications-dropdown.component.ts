@@ -2,6 +2,7 @@ interface IAlarms {
   severity: 'critical' | 'error' | 'warning' | 'alert';
   title: string;
   description: string;
+  key: string;
 }
 
 class GoogleCalendarNotificationsDropdownCtrl implements ng.IComponentController {
@@ -21,8 +22,8 @@ class GoogleCalendarNotificationsDropdownCtrl implements ng.IComponentController
   public $onInit() {
     this.handleClick = this.handleClick.bind(this);
     this.FusionClusterService.getAlarms(this.serviceId)
-      .then((data: { items: IAlarms[] }) => {
-        this.alarms = data.items;
+      .then((alarms: IAlarms[]) => {
+        this.alarms = alarms;
       });
   }
 
@@ -75,26 +76,28 @@ class GoogleCalendarNotificationsDropdownCtrl implements ng.IComponentController
     return true;
   }
 
-  public removeAlarm(event, alarm) {
-    event.stopPropagation();
-    this.alarms = _.without(this.alarms, alarm);
-    if (this.alarms.length === 0 ) {
-      this.hideDropdown();
-    }
-  }
-
   public getNumberCSSClass() {
     if (this.alarms.length === 0) {
       return '';
-    } else if (_.every(this.alarms, { severity: 'warning' })) {
+    } else if (_.some(this.alarms, alarm => { return alarm.severity === 'error' || alarm.severity === 'critical'; } )) {
+      return 'alert';
+    } else if (_.some(this.alarms, { severity: 'warning' })) {
       return 'warning';
     } else {
-      return 'alert';
+      return 'success';
     }
   }
 
   public getBadgeCSSClass(severity) {
-    return severity === 'warning' ? 'warning' : 'alert';
+    switch (severity) {
+      case 'warning':
+        return 'warning';
+      case 'critical':
+      case 'error':
+        return 'alert';
+      default:
+        return 'success';
+    }
   }
 }
 

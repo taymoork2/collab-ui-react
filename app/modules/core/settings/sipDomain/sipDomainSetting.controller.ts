@@ -273,17 +273,17 @@ export class SipDomainSettingController {
   private updateSubdomain(): void {
     this.saving = true;
     this.ModalService.open({
-        title: this.$translate.instant('firstTimeWizard.setSipDomainTitle'),
-        message: this.$translate.instant('firstTimeWizard.updateSubdomainMessage'),
-        close: this.$translate.instant('common.yes'),
-        dismiss: this.$translate.instant('common.no'),
-        btnType: 'negative',
-      }).result.then((): void => {
-        this.saveSubdomain();
-      }).catch((): void => {
-        this.$rootScope.$broadcast(this.ACTIVATE_SAVE_BUTTONS);
-        this.saving = false;
-      });
+      title: this.$translate.instant('firstTimeWizard.setSipDomainTitle'),
+      message: this.$translate.instant('firstTimeWizard.updateSubdomainMessage'),
+      close: this.$translate.instant('common.yes'),
+      dismiss: this.$translate.instant('common.no'),
+      btnType: 'negative',
+    }).result.then((): void => {
+      this.saveSubdomain();
+    }).catch((): void => {
+      this.$rootScope.$broadcast(this.ACTIVATE_SAVE_BUTTONS);
+      this.saving = false;
+    });
   }
 
   private checkRoomLicense() {
@@ -298,7 +298,7 @@ export class SipDomainSettingController {
   }
 
   private errorResponse(error: any): void {
-     if (error.status === 401 || error.status === 403) {
+    if (error.status === 401 || error.status === 403) {
       this.Notification.errorWithTrackingId(error, 'firstTimeWizard.subdomain401And403Error');
     } else {
       this.Notification.errorWithTrackingId(error, 'firstTimeWizard.sparkDomainManagementServiceErrorMessage');

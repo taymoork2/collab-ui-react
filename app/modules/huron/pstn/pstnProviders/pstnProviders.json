@@ -26,7 +26,14 @@
     "logoSrc": "images/carriers/logo_thinktel.svg",
     "logoAlt": "ThinkTel",
     "docSrc": "",
-    "features": []
+    "features": [
+        "thinktelFeatures.feature1",
+        "thinktelFeatures.feature2",
+        "thinktelFeatures.feature3",
+        "thinktelFeatures.feature4",
+        "thinktelFeatures.feature5",
+        "thinktelFeatures.feature6"
+    ]
 },{
     "name": "TELSTRA",
     "logoSrc": "images/carriers/logo_telstra.svg",

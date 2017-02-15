@@ -23,7 +23,13 @@ class MyCompanyOrdersCtrl implements ng.IComponentController {
     this.loading = true;
     this.initGridOptions();
     this.MyCompanyOrdersService.getOrderDetails().then(orderDetails => {
-      this.orderDetailList = orderDetails;
+      this.orderDetailList = _.map(orderDetails, (orderDetail: any) => {
+        if (_.size(orderDetail.productDescriptionList) > 0) {
+          orderDetail.productDescriptionList =
+              this.formatProductDescriptionList(orderDetail.productDescriptionList);
+        }
+        return orderDetail;
+      });
     }).catch((response) => {
       this.Notification.errorWithTrackingId(response, 'myCompanyOrders.loadError');
     }).finally(() => {
@@ -43,26 +49,26 @@ class MyCompanyOrdersCtrl implements ng.IComponentController {
       columnDefs: [{
         name: 'externalOrderId',
         displayName: this.$translate.instant('myCompanyOrders.numberHeader'),
-        width: '17%',
+        width: '14%',
       }, {
-        name: 'productDescriptionList[0]',
+        name: 'productDescriptionList',
         displayName: this.$translate.instant('myCompanyOrders.descriptionHeader'),
-        width: '30%',
+        width: '45%',
       }, {
         name: 'orderDate',
         displayName: this.$translate.instant('myCompanyOrders.dateHeader'),
         cellFilter: 'date',
-        width: '17%',
+        width: '14%',
       }, {
         name: 'status',
         displayName: this.$translate.instant('myCompanyOrders.statusHeader'),
-        width: '17%',
+        width: '14%',
       }, {
         name: 'total',
         displayName: this.$translate.instant('myCompanyOrders.priceHeader'),
         cellFilter: 'currency',
         width: '*',
-     }],
+      }],
     };
   }
 

@@ -73,23 +73,23 @@
       <a class="redirect-link" href translate="firstTimeWizard.setSipDomainLink" ng-click="vm.openSipHelpWiki()"></a>
     </p>
 
-    <p class="domain domain-space" translate="firstTimeWizard.reservedSubdomains"></p>
+    <p class="domain domain-space-two" translate="firstTimeWizard.reservedSubdomains"></p>
     <div class="domain-space">
-      <span class="p">{{vm.inputValue}}.call{{vm.domainSuffix}}</span>
       <i class="icon icon-error domain-icon domain-error" ng-if="vm.form.$invalid && !vm.emptyOrUnchangedInput()"></i>
       <i class="icon icon-check domain-icon domain-success" ng-if="!vm.form.$invalid && vm.verified"></i>
+      <span class="p">{{vm.inputValue}}.call{{vm.domainSuffix}}</span>
     </div>
     <div ng-if="vm.isRoomLicensed">
-      <span class="p">{{vm.inputValue}}.room{{vm.domainSuffix}}</span>
       <i class="icon icon-error domain-icon domain-error" ng-if="vm.form.$invalid && !vm.emptyOrUnchangedInput()"></i>
       <i class="icon icon-check domain-icon domain-success" ng-if="!vm.form.$invalid && vm.verified"></i>
+      <span class="p">{{vm.inputValue}}.room{{vm.domainSuffix}}</span>
     </div>
 
     <p ng-if="!vm.sipForm && vm.isSSAReserved" class="domain-space">
       <a class="redirect-link" translate="firstTimeWizard.editSubdomain" ng-click="vm.toggleSipForm()"></a>
     </p>
 
-    <p class="domain-space" ng-if="vm.sipForm || !vm.isSSAReserved" translate="firstTimeWizard.enterSubdomain"></p>
+    <p class="domain domain-space-two" ng-if="vm.sipForm || !vm.isSSAReserved" translate="firstTimeWizard.enterSubdomain"></p>
     <form name="vm.form" novalidate role="form" class="domain-form">
       <div class="domain-input" ng-if="vm.sipForm || !vm.isSSAReserved">
         <input cs-input

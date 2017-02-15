@@ -293,7 +293,6 @@
           vm.error = esErrorResponse(response);
           vm.spin = false;
         });
-      return;
     };
 
     function generateEventSourceJson() {

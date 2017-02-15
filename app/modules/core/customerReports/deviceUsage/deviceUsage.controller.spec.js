@@ -67,17 +67,20 @@ describe('Controller: DeviceUsageCtrl', function () {
         missingDays: false
       };
       DeviceUsageTotalService.getDataForRange.returns($q.resolve(deviceData));
-      expect(controller.loading).toBe(true);
+
+      expect(controller.waitingForDeviceMetrics).toBe(true);
       controller.init();
       expect(controller.timeSelected.value).toBe(0);
       $scope.$apply();
+      expect(controller.waitingForDeviceMetrics).toBe(false);
+
       expect(controller.noDataForRange).toBeFalsy();
       expect(controller.reportData).toEqual(deviceData.reportItems);
       done();
     });
 
     it('splunk is reported when date range is selected', function () {
-      controller.timeUpdate();
+      controller.doTimeUpdate();
       expect(splunkService.callCount).toBe(1);
     });
 

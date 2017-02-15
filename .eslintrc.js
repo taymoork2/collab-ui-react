@@ -21,6 +21,7 @@ module.exports = {
     'no-continue': 0,
     'no-else-return': 0,
     'no-lonely-if': 0,
+    'no-multi-assign': 0,
     'no-plusplus': 0,
     'no-shadow': 0,
     'no-undef-init': 0,
