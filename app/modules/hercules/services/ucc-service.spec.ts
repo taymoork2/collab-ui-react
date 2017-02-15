@@ -60,4 +60,14 @@ describe('UCCService', () => {
     service.disableHybridVoicemail(orgId);
   });
 
+  it('should call the correct backend when using the provided orgId', () => {
+    $httpBackend.expectGET(`${voicemailBaseUrl}/vmInfo/orgs/${orgId}/users/${userId}/`).respond([]);
+    service.getUserVoicemailInfo(userId, orgId);
+  });
+
+  it('should call the correct backend with the logged-in users orgId if none is provided', () => {
+    $httpBackend.expectGET(`${voicemailBaseUrl}/vmInfo/orgs/${orgId}/users/${userId}/`).respond([]);
+    service.getUserVoicemailInfo(userId);
+  });
+
 });
