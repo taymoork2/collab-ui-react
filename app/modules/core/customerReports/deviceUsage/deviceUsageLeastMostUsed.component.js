@@ -7,7 +7,8 @@
       templateUrl: 'modules/core/customerReports/deviceUsage/leastMostUsedDevices.component.html',
       bindings: {
         usedDevices: '<',
-        title: '<'
+        waitingStats: '<',
+        displayTitle: '<'
       }
     });
     /* @ngInject */

@@ -150,7 +150,7 @@ describe('DeviceUsageService', function () {
     });
 
     it('replaces missing days with data indicating zero use', function () {
-      var usageRequest = baseOrgUrl + '/usage?interval=day&from=2010-10-25&to=2016-10-28&countryCodes=aggregate&accounts=aggregate&models=aggregate';
+      var usageRequest = baseOrgUrl + '/usage?interval=day&from=2010-10-25&to=2016-10-28&categories=aggregate&countryCodes=aggregate&accounts=aggregate&models=aggregate';
       $httpBackend
         .when('GET', usageRequest)
         .respond({ items: usageDataResponse });

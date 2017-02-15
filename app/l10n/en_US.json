@@ -576,6 +576,8 @@
       "last4Weeks": "Weekly Last 4 weeks ",
       "last3Months": "Monthly Last 3 Months",
       "missingDays": " (data missing for {{nbrOfMissingDays}} days)",
+      "nameNotFoundFor": "Name not found for",
+      "selectModelsToFilterOn": "Select models to filter on",
       "deviceOptions": {
         "all": "All",
         "roomSystems": "DX, MX, and SX Devices",

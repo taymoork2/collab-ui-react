@@ -1,9 +1,5 @@
 @import 'styles/toolkit/colors';
 
-.device-usage-report-pages-waiting {
-  opacity: 0.5;
-  background-color: $gray-light-2;
-}
 .device-usage-report-pages {
   @import 'least-most.scss';
   position: relative;
@@ -33,7 +29,19 @@
     //font-size: 1rem;
     padding-bottom: 0.3rem;
     padding-top: 0.3rem;
+    &.missing {
+      color:#770000;
+      cursor:help;
+    }
   }
+
+  //.extreme-table-entry.missing {
+  //  padding-bottom: 0.3rem;
+  //  padding-top: 0.3rem;
+  //  color:red;
+  //  cursor:pointer;
+  //  border:1px solid green;
+  //}
 
   td.right-aligned, th.right-aligned {
     text-align: right;
@@ -44,6 +52,11 @@
       font-family: 'CiscoSansTT Thin';
       font-size: 3rem;
       color: $brand-primary;
+      min-height: 4.5rem;
+      .loader {
+        padding-top: 2rem;
+        font-size: 1rem;
+      }
     }
 
     .text {
@@ -127,6 +140,12 @@
     margin-right: 0.5rem;
     margin-bottom: 0.5rem;
     min-height: 16rem;
+    .loader {
+      width: 100%;
+      text-align: center;
+      vertical-align: center;
+      font-size: 1.0rem;
+    }
   }
 
   .no-border {
@@ -141,26 +160,5 @@
     .full.side-info-card.cs-card {
       display: block;
     }
-  }
-}
-
-.loading-reports-indicator {
-  opacity: 1.0;
-  z-index: 100;
-  width: 300px;
-  height: 100px;
-  padding: 20px;
-  position: absolute;
-  top: 10%;
-  left: 50%;
-  margin: -70px 0 0 -170px;
-
-  .loading-text {
-    font-size: 2rem;
-    width: 100%;
-    background-color: white;
-    text-align: center;
-    border-radius: 2px;
-    box-shadow: 0px 1px 2px 1px rgba(52, 53, 55, 0.18);
   }
 }
