@@ -3,6 +3,7 @@ import { BulkEnableVmError, UsersInfo } from './bulkEnableVm';
 
 const MAXUSERS = 200;
 const LIMIT = 4;
+const AVRIL = 'AVRIL';
 
 export class BulkEnableVmCtrl implements ng.IComponentController {
   public processProgress: number;
@@ -15,10 +16,12 @@ export class BulkEnableVmCtrl implements ng.IComponentController {
   public isCancelledByUser: boolean;
   public allUsersEnabled: boolean;
   public scope: Object;
+  public avrilVmEnable: boolean;
   /* @ngInject */
   constructor(
     private BulkEnableVmService: BulkEnableVmService,
     private UserCsvService,
+    private FeatureToggleService,
     private $q: ng.IQService,
   ) {
   }
@@ -34,6 +37,11 @@ export class BulkEnableVmCtrl implements ng.IComponentController {
     this.processProgress = 0;
     this.allUsersEnabled = false;
     this.enableVoicemailForCustomer();
+
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.avrilVmEnable).then((result) => {
+      this.avrilVmEnable = result;
+    });
+
     this.scope = this;
   }
 
@@ -131,6 +139,9 @@ export class BulkEnableVmCtrl implements ng.IComponentController {
           userServices = _.cloneDeep(services);
           if (userServices.indexOf('VOICEMAIL') < 0) {
             userServices.push('VOICEMAIL');
+            if (this.avrilVmEnable) {
+              userServices.push(AVRIL);
+            }
             return this.BulkEnableVmService.getUserSitetoSiteNumberRetry(userId);
           }
           return this.$q.resolve('');
