@@ -62,7 +62,7 @@ class MyCompanyOrdersCtrl implements ng.IComponentController {
         displayName: this.$translate.instant('myCompanyOrders.priceHeader'),
         cellFilter: 'currency',
         width: '*',
-     }],
+      }],
     };
   }
 

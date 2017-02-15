@@ -169,14 +169,11 @@
                   return response;
                 }
               }, function (response) {
-                if (response !== ABORT) {
-                  return;
-                } else {
+                if (response === ABORT) {
                   return response;
                 }
               });
             }
-            return;
           },
             function (response) {
               return errorResponse(response);
@@ -254,7 +251,6 @@
             return recursiveQuery(newCdrArray, thisJob);
           } else {
             groupCdrsIntoCalls(newCdrArray);
-            return;
           }
         } else {
           return ABORT;
@@ -337,7 +333,6 @@
         proxyData.push(splitFurther(call, x));
         x++;
       }
-      return;
     }
 
     function splitFurther(callGrouping, callNum) {
@@ -437,7 +432,6 @@
         Log.debug('Request failed due to an error with Elastic Search. Status: ' + response.status);
         Notification.error('cdrLogs.cdr500Error');
       }
-      return;
     }
   }
 })();

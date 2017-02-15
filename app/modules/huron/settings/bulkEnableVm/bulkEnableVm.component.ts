@@ -43,16 +43,17 @@ export class BulkEnableVmCtrl implements ng.IComponentController {
 
   private logError(userName: string, status: number, errorText: string, trackingID: string): void {
     if (status !== 404) {
-        let error = new BulkEnableVmError(userName, status, errorText, trackingID);
-        this.userErrorArray.push(error);
-        this.UserCsvService.setCsvStat({userErrorArray: [{
-                                    row: this.offset,
-                                    email: (userName === null ? '' : userName),
-                                    error: errorText + (trackingID === null ? '' : trackingID),
-                                  }],
-        });
-        this.usersVoicemailFailedCount++;
-      }
+      let error = new BulkEnableVmError(userName, status, errorText, trackingID);
+      this.userErrorArray.push(error);
+      this.UserCsvService.setCsvStat({
+        userErrorArray: [{
+          row: this.offset,
+          email: (userName === null ? '' : userName),
+          error: errorText + (trackingID === null ? '' : trackingID),
+        }],
+      });
+      this.usersVoicemailFailedCount++;
+    }
     this.processProgress = Math.round(((this.usersVoicemailUpdatedCount +
                            this.usersVoicemailFailedCount + this.userVoicemailSkippedCount) / this.totalUsersCount) * 100);
   }
@@ -70,55 +71,55 @@ export class BulkEnableVmCtrl implements ng.IComponentController {
 
     /* get the total users for the customer */
     this.BulkEnableVmService.getSparkCallUserCountRetry().then(count => {
-        this.totalUsersCount = count;
-        this.enableVoicemailInLoop();
-      },
-      () => {
-        this.totalUsersCount = MAXUSERS;
-        this.enableVoicemailInLoop();
-      });
+      this.totalUsersCount = count;
+      this.enableVoicemailInLoop();
+    },
+    () => {
+      this.totalUsersCount = MAXUSERS;
+      this.enableVoicemailInLoop();
+    });
   }
 
   private enableVoicemailInLoop(): void {
-   this.BulkEnableVmService.getUsersRetry(this.offset, LIMIT).then(Users => {
-     if (Users.length === 0) {
+    this.BulkEnableVmService.getUsersRetry(this.offset, LIMIT).then(Users => {
+      if (Users.length === 0) {
         this.processProgress = 100;
         return;
-     }
-     let UsersArray: UsersInfo[] = [];
-     for (let i = 0; i < Users.length; i++) {
-       let voicemailEnabled = false;
-       for (let linkIndex = 0; linkIndex < Users[i].links.length; linkIndex++) {
-           if (Users[i].links[linkIndex].rel === 'voicemail') {
-             voicemailEnabled = true;
+      }
+      let UsersArray: UsersInfo[] = [];
+      for (let i = 0; i < Users.length; i++) {
+        let voicemailEnabled = false;
+        for (let linkIndex = 0; linkIndex < Users[i].links.length; linkIndex++) {
+          if (Users[i].links[linkIndex].rel === 'voicemail') {
+            voicemailEnabled = true;
           }
-       }
-       let userInfo = new UsersInfo(Users[i].uuid, Users[i].userName, voicemailEnabled);
-       UsersArray.push(userInfo);
-     }
-     this.enableVoicemail(UsersArray).then(() => {
-       if (this.processProgress === 100 || this.isCancelledByUser) {
+        }
+        let userInfo = new UsersInfo(Users[i].uuid, Users[i].userName, voicemailEnabled);
+        UsersArray.push(userInfo);
+      }
+      this.enableVoicemail(UsersArray).then(() => {
+        if (this.processProgress === 100 || this.isCancelledByUser) {
           this.processProgress = 100;
           return;
-       }
-       if (this.offset < this.totalUsersCount) {
+        }
+        if (this.offset < this.totalUsersCount) {
           this.enableVoicemailInLoop();
-       } else {
-         this.processProgress = 100;
-       }
+        } else {
+          this.processProgress = 100;
+        }
 
-     }, () => {
+      }, () => {
         this.processProgress = 100;
         return;
       });
-   },
-      (error) => {
-        this.logError('failed to fetch users', error.status ? error.status : 500, error.statusText ? error.statusText : null,
-          (error.config.headers && error.config.headers.TrackingID) ?
-            error.config.headers.TrackingID : null);
-        this.processProgress = 100;
-        return this.$q.reject();
-      });
+    },
+    (error) => {
+      this.logError('failed to fetch users', error.status ? error.status : 500, error.statusText ? error.statusText : null,
+        (error.config.headers && error.config.headers.TrackingID) ?
+          error.config.headers.TrackingID : null);
+      this.processProgress = 100;
+      return this.$q.reject();
+    });
   }
 
   private enableVoicemailForOneUser(userId: string, userName: string, voicemailEnabled: boolean): ng.IPromise<any> {
@@ -127,34 +128,34 @@ export class BulkEnableVmCtrl implements ng.IComponentController {
       /* find the service list */
       return this.BulkEnableVmService.getUserServicesRetry(userId)
         .then(services => {
-            userServices = _.cloneDeep(services);
-            if (userServices.indexOf('VOICEMAIL') < 0) {
-              userServices.push('VOICEMAIL');
-              return this.BulkEnableVmService.getUserSitetoSiteNumberRetry(userId);
-            }
-            return this.$q.resolve('');
-          })
+          userServices = _.cloneDeep(services);
+          if (userServices.indexOf('VOICEMAIL') < 0) {
+            userServices.push('VOICEMAIL');
+            return this.BulkEnableVmService.getUserSitetoSiteNumberRetry(userId);
+          }
+          return this.$q.resolve('');
+        })
         .then(siteToSiteNumber => {
-            if (siteToSiteNumber != null) {
-              let voicemail = new Voicemail(siteToSiteNumber);
-              let voicemailPayload = new VoiceMailPayload(userServices, voicemail);
-              return this.BulkEnableVmService.enableUserVmRetry(userId, voicemailPayload);
-            }
-            let error = new BulkEnableVmError(userName, 0 , 'No Site to Site Number', null);
-            return this.$q.reject(error);
-          })
+          if (siteToSiteNumber != null) {
+            let voicemail = new Voicemail(siteToSiteNumber);
+            let voicemailPayload = new VoiceMailPayload(userServices, voicemail);
+            return this.BulkEnableVmService.enableUserVmRetry(userId, voicemailPayload);
+          }
+          let error = new BulkEnableVmError(userName, 0 , 'No Site to Site Number', null);
+          return this.$q.reject(error);
+        })
         .then(() => {
-            this.usersVoicemailUpdatedCount++;
-            this.processProgress = Math.round(((this.usersVoicemailUpdatedCount +
-              this.usersVoicemailFailedCount + this.userVoicemailSkippedCount) / this.totalUsersCount) * 100);
-          },
-          (error) => {
-            this.logError(userName, error.status ? error.status : 0,
-              error.statusText ? error.statusText : null,
-              (error.config && error.config.headers && error.config.headers.TrackingID) ?
-                error.config.headers.TrackingID : null);
-            return this.$q.resolve();
-          });
+          this.usersVoicemailUpdatedCount++;
+          this.processProgress = Math.round(((this.usersVoicemailUpdatedCount +
+            this.usersVoicemailFailedCount + this.userVoicemailSkippedCount) / this.totalUsersCount) * 100);
+        },
+        (error) => {
+          this.logError(userName, error.status ? error.status : 0,
+            error.statusText ? error.statusText : null,
+            (error.config && error.config.headers && error.config.headers.TrackingID) ?
+              error.config.headers.TrackingID : null);
+          return this.$q.resolve();
+        });
     } else {
       this.userVoicemailSkippedCount++;
       this.processProgress = Math.round(((this.usersVoicemailUpdatedCount +
@@ -165,17 +166,17 @@ export class BulkEnableVmCtrl implements ng.IComponentController {
 
   private enableVoicemail(Users: UsersInfo[]): ng.IPromise<any> {
     if (Users.length === 0) {
-        this.processProgress = 100;
-        return this.$q.resolve();
+      this.processProgress = 100;
+      return this.$q.resolve();
     }
     let i: number;
     let promises: ng.IPromise<any>[] = [];
     for (i = 0; i < Users.length; i++) {
-        promises.push(this.enableVoicemailForOneUser(Users[i].uuid, Users[i].userName, Users[i].voicemailEnabled));
-        this.offset++;
+      promises.push(this.enableVoicemailForOneUser(Users[i].uuid, Users[i].userName, Users[i].voicemailEnabled));
+      this.offset++;
     }
     return this.$q.all(promises);
-   }
+  }
 }
 
 export class BulkEnableVmComponent implements ng.IComponentOptions {

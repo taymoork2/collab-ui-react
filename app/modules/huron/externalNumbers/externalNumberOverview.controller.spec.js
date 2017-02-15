@@ -1,15 +1,13 @@
 'use strict';
 
 describe('Controller: ExternalNumberOverviewCtrl', function () {
-  var controller, $controller, $scope, $state, $stateParams, $q, ExternalNumberService, Notification,
-    ExternalNumberPool;
+  var controller, $controller, $scope, $state, $stateParams, $q, ExternalNumberService, Notification, FeatureToggleService, ExternalNumberPool;
 
   var externalNumbers;
 
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$state_, _$stateParams_, _$q_,
-      _ExternalNumberService_, _Notification_, _ExternalNumberPool_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$state_, _$stateParams_, _$q_, _ExternalNumberService_, _Notification_, _ExternalNumberPool_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $state = _$state_;
@@ -17,6 +15,7 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
     ExternalNumberService = _ExternalNumberService_;
     Notification = _Notification_;
     ExternalNumberPool = _ExternalNumberPool_;
+    FeatureToggleService = _FeatureToggleService_;
     $q = _$q_;
 
     $stateParams.currentCustomer = {
@@ -34,6 +33,7 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
     spyOn(ExternalNumberService, 'getQuantity').and.returnValue(2);
     spyOn(ExternalNumberService, 'isTerminusCustomer').and.returnValue($q.resolve(true));
     spyOn(Notification, 'errorResponse');
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
     spyOn($state, 'go');
 
     controller = $controller('ExternalNumberOverviewCtrl', {

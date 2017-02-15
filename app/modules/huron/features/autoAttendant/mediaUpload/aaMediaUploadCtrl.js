@@ -422,7 +422,6 @@
             break;
           }
       }
-      return;
     }
 
     function gatherMediaSource() {

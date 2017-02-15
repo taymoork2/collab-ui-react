@@ -111,13 +111,12 @@ var Spark = require('@ciscospark/spark-core').default;
     function formatDate(reason, date) {
       var regex = new RegExp('-', 'g');
       var replace = '/';
-      var formattedDate;
-      if (reason == 'display') {
-        formattedDate = _.replace(date, regex, replace).split('T')[0];
-      } else if (reason == 'api') {
-        formattedDate = moment(date).toISOString();
+      if (reason === 'display') {
+        return _.replace(date, regex, replace).split('T')[0];
       }
-      return formattedDate;
+      if (reason === 'api') {
+        return moment(date).toISOString();
+      }
     }
 
     function dateErrors(start, end) {

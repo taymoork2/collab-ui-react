@@ -227,8 +227,6 @@
         return user.firstName;
       } else if (user.lastName) {
         return user.lastName;
-      } else {
-        return;
       }
     }
   }

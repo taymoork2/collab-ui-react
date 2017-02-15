@@ -3,13 +3,15 @@
 describe('Controller:MediaReportsController', function () {
   beforeEach(angular.mock.module('Mediafusion'));
 
-  var controller, $scope, httpMock, $stateParams, $q, $translate, $timeout, $interval, Log, Config, MediaClusterServiceV2, Notification, UtilizationResourceGraphService, ParticipantDistributionResourceGraphService, MediaReportsService, MediaReportsDummyGraphService, AvailabilityResourceGraphService, CallVolumeResourceGraphService, MediaSneekPeekResourceService;
+  var controller, $scope, httpMock, $stateParams, $q, $translate, $timeout, $interval, Log, Config, MediaClusterServiceV2, Notification, ClientTypeAdoptionGraphService, UtilizationResourceGraphService, ParticipantDistributionResourceGraphService, MediaReportsService, MediaReportsDummyGraphService, AvailabilityResourceGraphService, CallVolumeResourceGraphService, MediaSneekPeekResourceService;
 
   var callVolumeData = getJSONFixture('mediafusion/json/metrics-graph-report/callVolumeData.json');
   var clusteravailabilityData = getJSONFixture('mediafusion/json/metrics-graph-report/clusterAvailabilityData.json');
   var callVolumeGraphData = getJSONFixture('mediafusion/json/metrics-graph-report/callVolumeGraphData.json');
   var utilizationGraphData = getJSONFixture('mediafusion/json/metrics-graph-report/UtilizationGraphData.json');
   var participantDistributionGraphData = getJSONFixture('mediafusion/json/metrics-graph-report/ParticipantDistributionGraphData.json');
+  var clientTypeData = getJSONFixture('mediafusion/json/metrics-graph-report/clientTypeGraphData.json');
+  var clientTypeCountData = getJSONFixture('mediafusion/json/metrics-graph-report/clientTypeCountData.json');
 
   var timeOptions = [{
     value: 0,
@@ -30,7 +32,7 @@ describe('Controller:MediaReportsController', function () {
 
   var allClusters = 'mediaFusion.metrics.allclusters';
 
-  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$stateParams_, _$timeout_, _$translate_, _MediaClusterServiceV2_, _$q_, _UtilizationResourceGraphService_, _ParticipantDistributionResourceGraphService_, _Notification_, _MediaReportsDummyGraphService_, _MediaReportsService_, _$interval_, _Log_, _Config_, _AvailabilityResourceGraphService_, _CallVolumeResourceGraphService_, _MediaSneekPeekResourceService_) {
+  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$stateParams_, _$timeout_, _$translate_, _MediaClusterServiceV2_, _$q_, _ClientTypeAdoptionGraphService_, _UtilizationResourceGraphService_, _ParticipantDistributionResourceGraphService_, _Notification_, _MediaReportsDummyGraphService_, _MediaReportsService_, _$interval_, _Log_, _Config_, _AvailabilityResourceGraphService_, _CallVolumeResourceGraphService_, _MediaSneekPeekResourceService_) {
     $scope = $rootScope.$new();
 
     $stateParams = _$stateParams_;
@@ -50,6 +52,7 @@ describe('Controller:MediaReportsController', function () {
     AvailabilityResourceGraphService = _AvailabilityResourceGraphService_;
     CallVolumeResourceGraphService = _CallVolumeResourceGraphService_;
     MediaSneekPeekResourceService = _MediaSneekPeekResourceService_;
+    ClientTypeAdoptionGraphService = _ClientTypeAdoptionGraphService_;
     $interval = _$interval_;
     Log = _Log_;
     Config = _Config_;
@@ -65,6 +68,9 @@ describe('Controller:MediaReportsController', function () {
     });
     spyOn(ParticipantDistributionResourceGraphService, 'setParticipantDistributionGraph').and.returnValue({
       'dataProvider': participantDistributionGraphData
+    });
+    spyOn(ClientTypeAdoptionGraphService, 'setClientTypeGraph').and.returnValue({
+      'dataProvider': clientTypeData
     });
     httpMock.when('GET', /^\w+.*/).respond({});
 
@@ -83,6 +89,7 @@ describe('Controller:MediaReportsController', function () {
       AvailabilityResourceGraphService: AvailabilityResourceGraphService,
       CallVolumeResourceGraphService: CallVolumeResourceGraphService,
       MediaSneekPeekResourceService: MediaSneekPeekResourceService,
+      ClientTypeAdoptionGraphService: ClientTypeAdoptionGraphService,
       Notification: Notification,
       $interval: $interval,
       Log: Log,
@@ -193,6 +200,14 @@ describe('Controller:MediaReportsController', function () {
       expect(controller.total).toBe(50);
     });
 
+    it('setClientTypeCard should invoke getClienTypeCardData', function () {
+      spyOn(MediaReportsService, 'getClientTypeCardData').and.returnValue($q.resolve(clientTypeCountData));
+      controller.setClientTypeCard();
+      httpMock.flush();
+      expect(MediaReportsService.getClientTypeCardData).toHaveBeenCalled();
+      expect(controller.clientTypeCount).toBe(8);
+    });
+
     it('setClusterAvailability should set the clusterAvailability', function () {
       var response = {
         'data': {
@@ -219,26 +234,38 @@ describe('Controller:MediaReportsController', function () {
 
     it('should call dummysetUtilizationData for setUtilizationData when there is no data', function () {
       spyOn(MediaReportsService, 'getUtilizationData').and.callThrough();
-      spyOn(MediaReportsDummyGraphService, 'dummyUtilizationData').and.callThrough();
+      spyOn(MediaReportsDummyGraphService, 'dummyLineChartData').and.callThrough();
       spyOn(MediaReportsDummyGraphService, 'dummyUtilizationGraph').and.callThrough();
       controller.changeTabs(false, true);
       httpMock.flush();
       expect(MediaReportsService.getUtilizationData).toHaveBeenCalled();
-      expect(MediaReportsDummyGraphService.dummyUtilizationData).toHaveBeenCalled();
+      expect(MediaReportsDummyGraphService.dummyLineChartData).toHaveBeenCalled();
       expect(MediaReportsDummyGraphService.dummyUtilizationGraph).toHaveBeenCalled();
       expect(UtilizationResourceGraphService.setUtilizationGraph).toHaveBeenCalled();
     });
 
     it('should call dummysetParticipantDistribution for setDummyParticipantDistribution when there is no data', function () {
       spyOn(MediaReportsService, 'getParticipantDistributionData').and.callThrough();
-      spyOn(MediaReportsDummyGraphService, 'dummyParticipantDistributionData').and.callThrough();
+      spyOn(MediaReportsDummyGraphService, 'dummyLineChartData').and.callThrough();
       spyOn(MediaReportsDummyGraphService, 'dummyParticipantDistributionGraph').and.callThrough();
       controller.changeTabs(false, true);
       httpMock.flush();
       expect(MediaReportsService.getParticipantDistributionData).toHaveBeenCalled();
-      expect(MediaReportsDummyGraphService.dummyParticipantDistributionData).toHaveBeenCalled();
+      expect(MediaReportsDummyGraphService.dummyLineChartData).toHaveBeenCalled();
       expect(MediaReportsDummyGraphService.dummyParticipantDistributionGraph).toHaveBeenCalled();
       expect(ParticipantDistributionResourceGraphService.setParticipantDistributionGraph).toHaveBeenCalled();
+    });
+
+    xit('should call dummysetClientType for setDummyClientType when there is no data', function () {
+      spyOn(MediaReportsService, 'getClientTypeData').and.callThrough();
+      spyOn(MediaReportsDummyGraphService, 'dummyLineChartData').and.callThrough();
+      spyOn(MediaReportsDummyGraphService, 'dummyClientTypeGraph').and.callThrough();
+      controller.changeTabs(true, false);
+      httpMock.flush();
+      expect(MediaReportsService.getClientTypeData).toHaveBeenCalled();
+      expect(MediaReportsDummyGraphService.dummyLineChartData).toHaveBeenCalled();
+      expect(MediaReportsDummyGraphService.dummyClientTypeGraph).toHaveBeenCalled();
+      expect(ClientTypeAdoptionGraphService.setClientTypeGraph).toHaveBeenCalled();
     });
 
     it('it should call dummysetAvailabilityData for setAvailabilityData when response has no data', function () {

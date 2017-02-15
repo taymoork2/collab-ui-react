@@ -65,7 +65,9 @@
         speedDials.editing = true;
         sd.edit = true;
         speedDials.newLabel = sd.label;
-        speedDials.callDest = TelephoneNumberService.getDestinationObject(sd.number);
+        if (sd.number) {
+          speedDials.callDest = TelephoneNumberService.getDestinationObject(sd.number);
+        }
       }
     };
 
@@ -138,15 +140,20 @@
         sd.edit = false;
         sd.label = speedDials.newLabel;
 
-        if (TelephoneNumberService.validateDID(speedDials.callDest.phoneNumber)) {
-          speedDials.newNumber = TelephoneNumberService.getDIDValue(speedDials.callDest.phoneNumber);
+        var phoneNumber = _.get(speedDials, 'callDest.phoneNumber', '');
+
+        if (TelephoneNumberService.validateDID(phoneNumber)) {
+          speedDials.newNumber = TelephoneNumberService.getDIDValue(phoneNumber);
+        } else if (phoneNumber.indexOf('@') === -1) {
+          speedDials.newNumber = _.replace(phoneNumber, /-/g, '');
         } else {
-          speedDials.newNumber = _.replace(speedDials.callDest.phoneNumber, /-/g, '');
+          speedDials.newNumber = phoneNumber;
         }
 
         sd.number = _.replace(speedDials.newNumber, / /g, '');
         speedDials.newLabel = '';
         speedDials.newNumber = '';
+        speedDials.callDest = undefined;
       } else if (speedDials.reordering) {
         updateIndex();
         speedDials.copyList = undefined;

@@ -84,10 +84,10 @@ namespace domainManagement {
         token: '',
         status: DomainManagementService.states.claimed,
       }, {
-          text: 'other.domain',
-          token: '',
-          status: DomainManagementService.states.pending,
-        }];
+        text: 'other.domain',
+        token: '',
+        status: DomainManagementService.states.pending,
+      }];
 
       let ctrl = controllerFactory({ text: 'same.domain', status: 'verified' });
       expect(ctrl.showWarning).toBeFalsy();
@@ -110,11 +110,11 @@ namespace domainManagement {
         token: '',
         status: DomainManagementService.states.verified,
       },
-        {
-          text: 'other.domain',
-          token: '',
-          status: DomainManagementService.states.verified,
-        }];
+      {
+        text: 'other.domain',
+        token: '',
+        status: DomainManagementService.states.verified,
+      }];
       let ctrl = controllerFactory({ text: 'test.example.com', status: 'verified' });
       expect(ctrl.showWarning).toBeTruthy();
     });
@@ -135,11 +135,11 @@ namespace domainManagement {
         token: '',
         status: DomainManagementService.states.verified,
       },
-        {
-          text: 'other.domain',
-          token: '',
-          status: DomainManagementService.states.verified,
-        }];
+      {
+        text: 'other.domain',
+        token: '',
+        status: DomainManagementService.states.verified,
+      }];
 
       let ctrl = controllerFactory({ text: 'same.domain', status: DomainManagementService.states.verified });
 

@@ -1,0 +1,29 @@
+<div class="pstn-providers" ng-if="$ctrl.show">
+  <cs-card-layout block-view="true">
+    <cs-card class="medium header-border pstn-provider-card" ng-repeat="pstnCarrier in $ctrl.pstnCarriers">
+      <article>
+        <header class="align-center">
+          <img ng-src="{{pstnCarrier.logoSrc}}" alt="{{pstnCarrier.logoAlt}}">
+        </header>
+        <section>
+          <h4>{{pstnCarrier.displayName}}</h4>
+          <div class="card-checkbox">
+            <div ng-repeat="feature in pstnCarrier.features" class="feature">
+              <i class="icon icon-check"></i>
+              <span class="feature-text" ng-bind-html="feature"></span>
+            </div>
+          </div>
+        </section>
+        <footer>
+          <button type="button" class="btn btn--people" ng-click="$ctrl.onSetProvider(pstnCarrier)" translate="common.select"></button>
+          <a
+            ng-if="pstnCarrier.docSrc.length != 0"
+            class="icon icon-content-share"
+            ng-href="{{pstnCarrier.docSrc}}"
+            download="{{pstnCarrier.title}}"
+            title="{{::'common.download' | translate}}"></a>
+        </footer>
+      </article>
+    </cs-card>
+  </cs-card-layout>
+</div>

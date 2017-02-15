@@ -39,6 +39,7 @@ function webpackConfig(env) {
         template: 'index.html',
         inject: 'body',
         ngStrictDi: '',
+        loadAdobeScripts: true,
       }),
       new ExtractTextPlugin({
         filename: 'styles/[name].[hash].css',

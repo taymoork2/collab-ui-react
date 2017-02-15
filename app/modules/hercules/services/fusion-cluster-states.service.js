@@ -43,9 +43,9 @@
         case 'not_installed':
         case 'not_configured':
         case 'no_nodes_registered':
+        case 'disabled':
           value = 1;
           break;
-        case 'disabled':
         case 'downloading':
         case 'installing':
         case 'uninstalling':

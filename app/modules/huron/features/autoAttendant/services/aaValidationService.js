@@ -142,8 +142,6 @@
       if (msg) {
         return msg.errRCMsg;
       }
-
-      return;
     }
 
     function noEntriesCeMenu(entry, outErrors, whichLane) {
@@ -197,8 +195,6 @@
               });
 
             }
-
-            return;
 
           }
 

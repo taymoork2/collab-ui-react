@@ -21,6 +21,8 @@
       var startDate = moment(start);
       var endDate = moment(end);
 
+      $log.info("categories parameter ignored in V2:", deviceCategories);
+
       if (_.isEmpty(models)) {
         models = 'aggregate';
       } else {
@@ -30,8 +32,9 @@
         var url = urlBase + '/' + Authinfo.getOrgId() + '/reports/device/usage?';
         url = url + 'interval=day'; // As long week and month is not implemented
         url = url + '&from=' + start + '&to=' + end;
-        url = url + '&categories=' + deviceCategories.join();
-        //url = url + '&accounts=aggregate';
+        //url = url + '&categories=' + deviceCategories;
+        url = url + '&countryCodes=aggregate';
+        url = url + '&accounts=aggregate';
         url = url + '&models=' + models;
         return getUsageData(url, granularity)
           .then(function (res) {
@@ -66,6 +69,7 @@
         }
         return response.data.items;
       }, function (reject) {
+        $log.warn("Reject", reject);
         return $q.reject(analyseReject(reject));
       });
     }
@@ -122,6 +126,7 @@
     }
 
     function analyseReject(reject) {
+
       if (reject.status === -1) {
         reject.statusText = 'Operation timed Out';
         reject.data = {
@@ -195,11 +200,15 @@
 
     function getTotalNoOfUsedDevices(start, end, models) {
       if (_.isEmpty(models)) {
-        models = 'aggregate';
+        models = '__';
       } else {
         models = models.join();
       }
-      var url = getBaseOrgUrl() + "reports/device/usage/count?interval=day&from=" + start + "&to=" + end + "&models=" + models + "&excludeUnused=true";
+      var url = getBaseOrgUrl() +
+        "reports/device/usage/count?interval=day&from="
+        + start + "&to=" + end
+        + "&models=" + models
+        + "&excludeUnused=true";
       return $http.get(url).then(function (response) {
         return response.data.items[0].count;
       });
@@ -226,7 +235,10 @@
 
       //TODO: Include model when backend supports it
 
-      var url = getBaseOrgUrl() + "reports/device/usage/aggregate?interval=day&from=" + start + "&to=" + end + "&accounts=__&orderBy=callDuration&descending=false&excludeUnused=true&limit=" + limit;
+      var url = getBaseOrgUrl() + "reports/device/usage/aggregate?interval=day&from=" + start
+        + "&to=" + end
+        + "&accounts=__&categories=__&models=" + models
+        + "&orderBy=callDuration&descending=false&excludeUnused=true&limit=" + limit;
       return $http.get(url).then(function (response) {
         return response.data.items;
       });
@@ -239,7 +251,10 @@
         models = models.join();
       }
 
-      var url = getBaseOrgUrl() + "reports/device/usage/aggregate?interval=day&from=" + start + "&to=" + end + "&accounts=__&categories=__&models=" + models + "&orderBy=callDuration&descending=true&limit=" + limit;
+      var url = getBaseOrgUrl() + "reports/device/usage/aggregate?interval=day&from=" + start
+        + "&to=" + end
+        + "&accounts=__&categories=__&models=" + models
+        + "&orderBy=callDuration&descending=true&limit=" + limit;
       return $http.get(url).then(function (response) {
         return response.data.items;
       });

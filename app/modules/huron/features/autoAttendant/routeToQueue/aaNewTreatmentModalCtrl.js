@@ -188,7 +188,6 @@
       if (_.isEqual(vm.periodicMinute, 5)) {
         vm.periodicSecond = vm.periodicSeconds[0];
       }
-      return;
     }
 
     function isDestinationValid() {

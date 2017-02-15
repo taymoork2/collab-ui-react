@@ -12,6 +12,8 @@ E2E_EXIT_CODE_FILE=e2e-exit-code
 
 E2E_TEST_RESULTS_JOB_NAME=atlas-web--process-junit-results
 
+# magic CISCOSPARK_* env vars required by '@ciscospark/spark-core', '@ciscospark/plugin-search' & '@ciscospark/plugin-encryption'
+# - see docs at: https://ciscospark.github.io/spark-js-sdk/example/browsers/
 CISCOSPARK_CLIENT_ID=C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec
 CISCOSPARK_CLIENT_SECRET=c10c371b4641010a750073b3c8e65a7fff0567400d316055828d3c74925b0857
 CISCOSPARK_REDIRECT_URI=http://127.0.0.1:8000

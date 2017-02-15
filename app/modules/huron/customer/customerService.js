@@ -11,7 +11,8 @@
     var customerPayload = {
       'uuid': null,
       'name': null,
-      'servicePackage': 'VOICE_ONLY'
+      'servicePackage': 'VOICE_ONLY',
+      'countryCode': null
     };
 
     var service = {
@@ -22,10 +23,11 @@
 
     return service;
 
-    function createCustomer(uuid, name) {
+    function createCustomer(uuid, name, country) {
       var customer = angular.copy(customerPayload);
       customer.uuid = uuid;
       customer.name = name;
+      customer.countryCode = _.get(country, 'id');
 
       return CustomerCommonService.save({}, customer).$promise
         .catch(function (response) {

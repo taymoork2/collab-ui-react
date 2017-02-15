@@ -27,7 +27,7 @@
       var data = response.graphData;
       var graphs = getClusterName(response.graphs, clusterMap);
       if (data === null || data === 'undefined' || data.length === 0) {
-        return;
+        return undefined;
       } else {
         if (graphs[0].isDummy) {
           isDummy = true;
@@ -172,11 +172,19 @@
         'method': legendHandler
       }];
 
-
       var chart = AmCharts.makeChart(vm.participantDistributiondiv, chartData);
+      chart.addListener('clickGraph', handleClick);
       // listen for zoomed event and call "handleZoom" method
       chart.addListener('zoomed', handleZoom);
       return chart;
+    }
+
+    //method to handle the individual cluster click
+    function handleClick(event) {
+      var clickedCluster = event.target;
+      $rootScope.$broadcast('clusterClickEvent', {
+        data: clickedCluster.title
+      });
     }
 
     // this method is called each time the selected period of the chart is changed
@@ -203,7 +211,7 @@
         });
         if (!_.isUndefined(clusterName)) {
           value.title = clusterName;
-          value.balloonText = '<span class="graph-text">' + value.title + ' ' + ' <span class="graph-number">[[value]]</span></span>';
+          value.balloonText = '<span class="graph-text">' + value.title + ' ' + ' <span class="graph-number">[[value]]</span></span>' + ' <span class="graph-text">[[' + value.descriptionField + ']]</span></span>';
           value.lineThickness = 2;
         }
         if (value.title !== value.valueField) {

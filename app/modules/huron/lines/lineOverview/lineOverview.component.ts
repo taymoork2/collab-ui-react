@@ -216,9 +216,9 @@ class LineOverview implements ng.IComponentController {
 
   public deleteLine() {
     this.deleteConfirmation = this.$translate.instant('directoryNumberPanel.deleteConfirmation', {
-        line: this.lineOverviewData.line.internal,
-        user: this.ownerName,
-      });
+      line: this.lineOverviewData.line.internal,
+      user: this.ownerName,
+    });
     this.$modal.open({
       templateUrl: 'modules/huron/lines/lineOverview/lineDelete.html',
       scope: this.$scope,

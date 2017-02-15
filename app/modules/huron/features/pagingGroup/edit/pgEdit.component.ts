@@ -164,8 +164,8 @@ class PgEditComponentCtrl implements ng.IComponentController {
       (data: string[]) => {
         this.availableNumbers = data;
       }, (response) => {
-        this.Notification.errorResponse(response, 'pagingGroup.numberFetchFailure');
-      });
+      this.Notification.errorResponse(response, 'pagingGroup.numberFetchFailure');
+    });
   }
 
   public fetchMembers(): ng.IPromise<Array<Member>> {
@@ -197,8 +197,8 @@ class PgEditComponentCtrl implements ng.IComponentController {
         });
 
       }, (response) => {
-        this.Notification.errorResponse(response, 'pagingGroup.memberFetchFailure');
-      });
+      this.Notification.errorResponse(response, 'pagingGroup.memberFetchFailure');
+    });
   }
 
   public selectMembers(member: Member): void {

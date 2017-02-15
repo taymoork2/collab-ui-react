@@ -564,16 +564,9 @@
     }
 
     function getCountryList() {
-      return FeatureToggleService.huronFederatedSparkCallGetStatus()
-        .then(function (supported) {
-          if (supported) {
-            return HuronCountryService.getCountryList()
-              .catch(function () {
-                return [];
-              });
-          } else {
-            return [];
-          }
+      return HuronCountryService.getCountryList()
+        .catch(function () {
+          return [];
         });
     }
 
@@ -750,7 +743,7 @@
         })
         .then(function (response) {
           if (vm.callTrial.enabled || vm.roomSystemTrial.enabled || vm.sparkBoardTrial.enabled) {
-            return HuronCustomer.create(vm.customerOrgId, response.data.customerName, response.data.customerEmail)
+            return HuronCustomer.create(vm.customerOrgId, response.data.customerName, vm.details.country, response.data.customerEmail)
               .catch(function (response) {
                 Notification.errorResponse(response, 'trialModal.squareducError');
                 return $q.reject(response);

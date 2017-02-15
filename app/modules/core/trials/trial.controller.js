@@ -597,7 +597,7 @@
           vm.canSeeDevicePage = !isTestOrg || overrideTestOrg;
           vm.devicesModal.enabled = vm.canSeeDevicePage;
           vm.defaultCountryList = results.huronCountryList;
-
+          hasSetupPstn(vm.currentTrial.customerOrgId);
           var initResults = (vm.isExistingOrg()) ? getExistingOrgInitResults(results, vm.hasCallEntitlement, vm.preset, vm.paidServices) : getNewOrgInitResults(results, vm.hasCallEntitlement, vm.stateDefaults);
           _.merge(vm, initResults);
           updateTrialService(_messageTemplateOptionId);
@@ -624,16 +624,9 @@
     }
 
     function getCountryList() {
-      return FeatureToggleService.huronFederatedSparkCallGetStatus()
-        .then(function (supported) {
-          if (supported) {
-            return HuronCountryService.getCountryList()
-              .catch(function () {
-                return [];
-              });
-          } else {
-            return [];
-          }
+      return HuronCountryService.getCountryList()
+        .catch(function () {
+          return [];
         });
     }
 
@@ -673,19 +666,22 @@
       }
     }
 
+    function isPstn() {
+      return (((!vm.preset.call && hasEnabledCallTrial()) || (!vm.preset.roomSystems && hasEnabledRoomSystemTrial())) && !vm.preset.pstn);
+    }
+
     function toggleTrial() {
-      var newTrialPstnAdditonalTest = (vm.roomSystemTrial.enabled && vm.isNewTrial());
-      if (vm.isEditTrial()) {
-        newTrialPstnAdditonalTest = true;
-      }
-      if (!vm.callTrial.enabled && !newTrialPstnAdditonalTest) {
+      if (!vm.callTrial.enabled && !vm.roomSystemTrial.enabled && !vm.sparkBoardTrial.enabled) {
         vm.pstnTrial.enabled = false;
-      } else if (vm.hasCallEntitlement && !vm.pstnTrial.skipped) {
+      }
+
+      if ((vm.callTrial.enabled || vm.roomSystemTrial.enabled || vm.sparkBoardTrial.enabled) && vm.hasCallEntitlement && !vm.pstnTrial.skipped) {
         vm.pstnTrial.enabled = true;
       }
-     /* ALINA PR NOTE: WHY the 'add trial for new org does not check trial.call modal?????
-     For add it was additionally handled as can see device page but for edit it required
-     (TrialRoomSystemService.canAddRoomSystemDevice(details, roomSystemsEnabled) || TrialCallService.canAddCallDevice(details, callEnabled));
+
+      /* ALINA PR NOTE: WHY the 'add trial for new org does not check trial.call modal?????
+      For add it was additionally handled as can see device page but for edit it required
+      (TrialRoomSystemService.canAddRoomSystemDevice(details, roomSystemsEnabled) || TrialCallService.canAddCallDevice(details, callEnabled));
       as well
       https://rally1.rallydev.com/#/76458540020d/detail/userstory/76477895516 comes into play as well, But I think that implementation
       below complies
@@ -693,8 +689,8 @@
 
       setViewState('trial.call', canAddDevice());
       setViewState('trial.webex', hasEnabledWebexTrial());
-      setViewState('trial.pstn', hasEnabledCallTrial());
-      setViewState('trial.emergAddress', hasEnabledCallTrial());
+      setViewState('trial.pstn', isPstn());
+      setViewState('trial.emergAddress', isPstn());
       var fieldsArray = [vm.messageFields, vm.meetingFields, vm.webexFields, vm.callFields, vm.licenseCountFields];
 
       _.forEach(fieldsArray, function (fields) {
@@ -865,7 +861,7 @@
           return $q.reject(response);
         }).then(function (response) {
           vm.customerOrgId = response.data.customerOrgId;
-          return saveTrialPstn(vm.customerOrgId, response.data.customerName, response.data.customerEmail);
+          return saveTrialPstn(vm.customerOrgId, response.data.customerName, response.data.customerEmail, vm.details.country);
         })
         .then(function () {
           return saveTrialContext(vm.customerOrgId);
@@ -1240,6 +1236,7 @@
         _.set(initResults, 'preset.context', results.tcHasService);
         _.set(initResults, 'details.licenseCount', preset.licenseCount);
         _.set(initResults, 'details.licenseDuration', preset.licenseDuration);
+        hasSetupPstn(vm.currentTrial.customerOrgId);
       }
       return initResults;
     }
@@ -1279,23 +1276,37 @@
           return $q.reject(response);
         });
       }
-      return;
     }
 
-    function saveTrialPstn(customerOrgId, customerName, customerEmail) {
-      var hasValueChanged = !isExistingOrg() ? vm.callTrial.enabled : (vm.callTrial.enabled && !vm.preset.call);
+    function saveTrialPstn(customerOrgId, customerName, customerEmail, country) {
+      var newOrgCondition = vm.callTrial.enabled || vm.roomSystemTrial.enabled || vm.sparkBoardTrial.enabled;
+      var existingOrgCondition = ((vm.callTrial.enabled && !vm.preset.call) || (vm.roomSystemTrial.enabled && !vm.preset.roomSystems));
+      var hasValueChanged = !isExistingOrg() ? newOrgCondition : existingOrgCondition;
+
       if (!hasValueChanged) {
         return;
       }
-      return HuronCustomer.create(customerOrgId, customerName, customerEmail)
+      return HuronCustomer.create(customerOrgId, customerName, country, customerEmail)
         .catch(function (response) {
           Notification.errorResponse(response, 'trialModal.squareducError');
           return $q.reject(response);
         }).then(function () {
-          if (vm.pstnTrial.enabled) {
-            return TrialPstnService.createPstnEntity(customerOrgId, customerName);
+          if (vm.pstnTrial.enabled && !vm.preset.pstn) {
+            return TrialPstnService.createPstnEntityV2(customerOrgId, customerName);
           }
         });
+    }
+
+    function hasSetupPstn(customerOrgId) {
+      if (vm.pstnTrial.enabled) {
+        TrialPstnService.checkForPstnSetup(customerOrgId)
+          .then(function () {
+            vm.preset.pstn = true;
+          })
+          .catch(function () {
+            vm.preset.pstn = false;
+          });
+      }
     }
 
     function setDefaultCountry(country) {

@@ -8,8 +8,8 @@ describe('Service: IdleTimeoutService: ', function () {
     angular.mock.module(idleTimeoutModule);
     angular.mock.module($provide => {
       let Auth = {
-          isLoggedIn: () => true,
-          logout: () => { },
+        isLoggedIn: () => true,
+        logout: () => { },
       };
       $provide.value('Auth', Auth);
     });

@@ -25,6 +25,11 @@
       .keys()
       .value();
 
+    if (Authinfo.isCustomerLaunchedFromPartner()) {
+      vm.UIstate = 'isPartnerAdmin';
+      return;
+    }
+
     ///////////////
 
     getSetupState(servicesEntitledTo)

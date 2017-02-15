@@ -13,12 +13,12 @@ export default angular
     'atlas.templates',
     'collab.ui',
     'pascalprecht.translate',
-     callPickupName,
-     callPickupMembers,
-     callPickupGroupService,
-     callPickupNotificationTimer,
-     callPickupNotifications,
-     featureMemberService,
+    callPickupName,
+    callPickupMembers,
+    callPickupGroupService,
+    callPickupNotificationTimer,
+    callPickupNotifications,
+    featureMemberService,
   ])
   .component('callPickupSetupAssistant', new CallPickupSetupAssistantComponent())
   .name;

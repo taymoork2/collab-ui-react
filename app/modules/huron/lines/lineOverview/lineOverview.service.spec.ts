@@ -103,14 +103,14 @@ describe('Service: LineOverviewService', () => {
     let autoAnswerData: AutoAnswer = new AutoAnswer();
     _.forEach(_.get(autoAnswerRead, AutoAnswerConst.PHONES, []), (phone: AutoAnswerPhone) => {
       autoAnswerData.phones.push(
-            new AutoAnswerPhone({
-              uuid: phone.uuid,
-              name: phone.name,
-              description: phone.description,
-              model: phone.model,
-              enabled: phone.enabled,
-              mode: phone.enabled ? phone.mode : undefined }));
-      });
+        new AutoAnswerPhone({
+          uuid: phone.uuid,
+          name: phone.name,
+          description: phone.description,
+          model: phone.model,
+          enabled: phone.enabled,
+          mode: phone.enabled ? phone.mode : undefined }));
+    });
     autoAnswerData.member = new AutoAnswerMember(_.get(autoAnswerRead, AutoAnswerConst.MEMBER));
     this.autoAnswer = autoAnswerData;
 

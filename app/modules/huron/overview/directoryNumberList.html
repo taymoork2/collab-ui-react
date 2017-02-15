@@ -3,7 +3,8 @@
     <li class="feature" ng-repeat="directoryNumber in $ctrl.directoryNumbers | limitTo:$ctrl.numberOfLines track by directoryNumber.uuid">
       <a id="{{::directoryNumber.uuid}}"
         ng-if="::$ctrl.directoryNumberSref"
-        ui-sref="{{::$ctrl.directoryNumberSref}}">
+        ui-sref="{{::$ctrl.directoryNumberSref}}"
+        ng-click="$ctrl.onDirectoryNumberClick()">
         <span class="feature-name">
           <span ng-bind="directoryNumber.internal"></span>
           <span class="feature-name" ng-if="directoryNumber.external">

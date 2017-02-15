@@ -5,7 +5,7 @@
   </div>
   <div class="notification-dropdown-container" ng-if="notificationController.showNotifications && notificationController.filteredNotifications().length > 0">
     <ul class="notification-dropdown">
-      <li class="notification-entry" ng-repeat="notification in notificationController.filteredNotifications()">
+      <li class="notification-entry" ng-repeat="notification in notificationController.filteredNotifications() | orderBy : 'priority'">
         <div class="notification-entry-severity">
           <span class="badge" ng-class="notificationController.getBadgeCSSClass(notification.type)">{{::notificationController.typeDisplayName(notification.type)}}</span>
         </div>
