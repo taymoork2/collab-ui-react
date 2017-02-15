@@ -2405,7 +2405,8 @@
         "serviceProductionModeDesc": "In this mode all users in your org will use this service",
         "moveToProduction": "Move to Production",
         "addTrialUsers": "Add Trial Users",
-        "editTrialUsers": "Edit Users in Trial"
+        "editTrialUsers": "Edit Users in Trial",
+        "hdsModeGetError": "Failed to get HDS mode : "
       },
       "addTrialUsers": {
         "modalTitle": "Add Users to Trial Mode",

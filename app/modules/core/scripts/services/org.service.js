@@ -45,6 +45,7 @@
       setHybridServiceAcknowledged: setHybridServiceAcknowledged,
       getEftSetting: getEftSetting,
       setEftSetting: setEftSetting,
+      setOrgAltHdsServersHds: setOrgAltHdsServersHds,
       validateSiteUrl: validateSiteUrl,
       setHybridServiceReleaseChannelEntitlement: setHybridServiceReleaseChannelEntitlement,
       updateDisplayName: updateDisplayName,
@@ -410,6 +411,15 @@
         data: {
           eft: setting
         }
+      });
+    }
+
+    function setOrgAltHdsServersHds(orgId, altHdsServers) {
+      var serviceUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '/settings/altHdsServers';
+      return $http({
+        method: 'PUT',
+        url: serviceUrl,
+        data: altHdsServers
       });
     }
 
