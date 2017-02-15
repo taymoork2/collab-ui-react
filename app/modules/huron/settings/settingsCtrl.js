@@ -95,13 +95,7 @@
     vm.hasVoiceService = false;
     vm.assignedNumbers = [];
     vm.timeZoneOptions = [];
-    vm.timeFormatOptions = [{
-      label: '12 hour',
-      value: Config.timeFormat.HOUR_12
-    }, {
-      label: '24 hour',
-      value: Config.timeFormat.HOUR_24
-    }];
+    vm.timeFormatOptions = [];
     vm.dateFormatOptions = [];
     vm.timeZoneInputPlaceholder = $translate.instant('serviceSetupModal.searchTimeZone');
     vm.preferredLanguageOptions = [];
@@ -1213,11 +1207,11 @@
         siteData.preferredLanguage = vm.model.site.preferredLanguage.value;
       }
 
-      if (vm.model.site.timeFormat.value != savedModel.site.timeFormat.value) {
+      if (vm.model.site.timeFormat != savedModel.site.timeFormat) {
         siteData.timeFormat = vm.model.site.timeFormat.value;
       }
 
-      if (vm.model.site.dateFormat.value != savedModel.site.dateFormat.value) {
+      if (vm.model.site.dateFormat != savedModel.site.dateFormat) {
         siteData.dateFormat = vm.model.site.dateFormat.value;
       }
 
@@ -1475,6 +1469,13 @@
         });
     }
 
+    function loadTimeFormatOptions() {
+      return ServiceSetup.getTimeFormats()
+        .then(function (timeFormats) {
+          vm.timeFormatOptions = timeFormats;
+        });
+    }
+
     function loadTimeZoneOptions() {
       return ServiceSetup.getTimeZones()
         .then(function (timeZones) {
@@ -1695,6 +1696,7 @@
 
           if (vm.hasVoiceService) {
             promises.push(loadDateFormatOptions());
+            promises.push(loadTimeFormatOptions());
             promises.push(loadTimeZoneOptions()
               .then(loadSite)
               .then(loadVoicemailTimeZone)

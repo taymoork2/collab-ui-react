@@ -58,6 +58,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     spyOn(ServiceSetup, 'updateVoicemailTimezone').and.returnValue($q.resolve());
     spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.resolve(timezones));
     spyOn(ServiceSetup, 'getDateFormats').and.returnValue($q.resolve());
+    spyOn(ServiceSetup, 'getTimeFormats').and.returnValue($q.resolve());
     spyOn(ServiceSetup, 'listVoicemailTimezone').and.returnValue($q.resolve(timezone));
     spyOn(ServiceSetup, 'listInternalNumberRanges').and.returnValue($q.resolve(internalNumberRanges));
     spyOn(ServiceSetup, 'saveAutoAttendantSite').and.returnValue($q.resolve());
