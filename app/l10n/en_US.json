@@ -14,7 +14,7 @@
     "agree": "Accept ",
     "ciscoSpark": "Cisco Spark",
     "version": "Version: {{version}}",
-    "copyright1": "Copyright &copy; 2016 Cisco Systems.",
+    "copyright1": "Copyright &copy; 2017 Cisco Systems.",
     "copyright2": "All rights reserved.",
     "description": "Cisco Spark is a collaboration application that provides messaging(IM), voice, and video calling capabilities.",
     "loggingOut": "Logging off..."
@@ -3608,7 +3608,7 @@
     },
     "tos": {
       "titleIntelepeer": "Intelepeer terms of service",
-      "copyright": "Copyright 2016 Cisco Systems.  All rights reserved.",
+      "copyright": "Copyright 2017 Cisco Systems.  All rights reserved.",
       "info": "Cisco Spark is a collaboration application that provides messaging (IM), voice and video calling capabilities.",
       "noticeTitle": "IMPORTANT NOTICES AND DISCLAIMERS",
       "notice": "Please redirect to the following page and read the agreements from you carrier.  Your PSTN numbers will be released after you read and agree these agreements.",
