@@ -1075,25 +1075,19 @@
             }
           })
           .state('user-overview.communication', {
-            templateUrl: 'modules/huron/overview/telephonyOverview.tpl.html',
-            controller: 'TelephonyOverviewCtrl',
-            controllerAs: 'telephonyOverview',
+            template: '<user-call-overview></user-call-overview>',
             params: {
               reloadToggle: false
             },
             data: {
               displayName: 'Call'
-            }
-          })
-          .state('user-overview.communication.directorynumber', {
-            templateUrl: 'modules/huron/lineSettings/lineSettings.tpl.html',
-            controller: 'LineSettingsCtrl',
-            controllerAs: 'lineSettings',
-            params: {
-              directoryNumber: {}
             },
-            data: {
-              displayName: 'Line Configuration'
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/huron/overview'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
             }
           })
           .state('user-overview.csdmDevice', {
@@ -1137,9 +1131,23 @@
             },
           })
           .state('user-overview.communication.voicemail', {
-            template: '<div uc-voicemail></div>',
+            template: '<uc-voicemail  owner-id="$resolve.ownerId"  ></uc-voicemail>',
+            params: {
+              watcher: null,
+              selected: null
+            },
             data: {
               displayName: 'Voicemail'
+            },
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/huron/voicemail'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              },
+              ownerId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentUser, 'id');
+              },
             }
           })
           .state('user-overview.communication.snr', {
@@ -1149,15 +1157,80 @@
             }
           })
           .state('user-overview.communication.speedDials', {
-            template: '<div uc-speed-dials></div>',
+            template: '<uc-speed-dial owner-type="users" owner-id="$resolve.ownerId"></uc-speed-dial>',
             data: {
               displayName: 'Speed Dials'
+            },
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/huron/speedDials'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              },
+              ownerId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentUser, 'id');
+              },
             }
           })
           .state('user-overview.communication.internationalDialing', {
-            template: '<div uc-international-dialing></div>',
+            template: '<uc-dialing  watcher="$resolve.watcher" selected="$resolve.selected" title="internationalDialingPanel.title"></uc-dialing>',
+            params: {
+              watcher: null,
+              selected: null
+            },
             data: {
               displayName: 'International Dialing'
+            },
+            resolve: {
+              watcher: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams, 'watcher');
+              },
+              selected: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams, 'selected');
+              },
+            },
+          })
+          .state('user-overview.communication.local', {
+            template: '<uc-dialing  watcher="$resolve.watcher" selected="$resolve.selected" title="telephonyPreview.localDialing"></uc-dialing>',
+            params: {
+              watcher: null,
+              selected: null
+            },
+            data: {
+              displayName: 'Local Dialing'
+            },
+            resolve: {
+              watcher: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams, 'watcher');
+              },
+              selected: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams, 'selected');
+              },
+            },
+          })
+          .state('user-overview.communication.line-overview', {
+            template: '<uc-line-overview owner-type="user" owner-name="$resolve.ownerName" owner-id="$resolve.ownerId" number-id="$resolve.numberId"></uc-line-overview>',
+            params: {
+              numberId: '',
+            },
+            data: {
+              displayName: 'Line Configuration'
+            },
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/huron/lines/lineOverview'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              },
+              ownerId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentUser, 'id');
+              },
+              ownerName: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentUser, 'displayName');
+              },
+              numberId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams, 'numberId', '');
+              },
             }
           })
           .state('user-overview.messaging', {

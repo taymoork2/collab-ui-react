@@ -1,17 +1,26 @@
 <div class="row full total-usage-table small-padding">
 
   <div class="columns medium-4 center">
-    <div class="digit">{{deviceUsage.noOfDevices}}</div>
+    <div ng-hide="deviceUsage.waitingForDeviceMetrics" class="digit">{{deviceUsage.noOfDevices}}</div>
+    <div ng-show="deviceUsage.waitingForDeviceMetrics" class="digit">
+      <div cs-loader class="loader"></div>
+    </div>
     <div class="text" translate="reportsPage.usageReports.devicesUsed"></div>
   </div>
 
   <div class="columns medium-4 center">
-    <div class="digit">{{deviceUsage.totalDuration}}</div>
+    <div ng-hide="deviceUsage.waitingForDeviceMetrics" class="digit">{{deviceUsage.totalDuration}}</div>
+    <div ng-show="deviceUsage.waitingForDeviceMetrics" class="digit">
+      <div cs-loader class="loader"></div>
+    </div>
     <div class="text" translate="reportsPage.usageReports.totalCallDuration"></div>
   </div>
 
   <div class="columns medium-4 center">
-    <div class="digit">{{deviceUsage.noOfCalls}}</div>
+    <div ng-hide="deviceUsage.waitingForDeviceMetrics" class="digit">{{deviceUsage.noOfCalls}}</div>
+    <div ng-show="deviceUsage.waitingForDeviceMetrics" class="digit">
+      <div cs-loader class="loader"></div>
+    </div>
     <div class="text" translate="reportsPage.usageReports.numberOfCalls"></div>
   </div>
 

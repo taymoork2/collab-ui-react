@@ -146,7 +146,7 @@ class DirectoryNumber implements ng.IComponentController {
 export class DirectoryNumberComponent implements ng.IComponentOptions {
   public controller = DirectoryNumber;
   public templateUrl = 'modules/huron/directoryNumber/directoryNumber.html';
-  public bindings = <{ [binding: string]: string }>{
+  public bindings = {
     showInternalExtensions: '<',
     internalSelected: '<',
     internalNumbers: '<',
