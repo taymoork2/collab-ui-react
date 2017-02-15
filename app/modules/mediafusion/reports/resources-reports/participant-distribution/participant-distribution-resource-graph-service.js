@@ -17,6 +17,8 @@
 
     vm.timeStamp = $translate.instant('mediaFusion.metrics.timeStamp');
     vm.allClusters = $translate.instant('mediaFusion.metrics.allclusters');
+    vm.participants = $translate.instant('mediaFusion.metrics.participants');
+
 
     return {
       setParticipantDistributionGraph: setParticipantDistributionGraph
@@ -80,7 +82,7 @@
       valueAxes[0].minimum = 0;
       valueAxes[0].autoGridCount = true;
       valueAxes[0].position = 'left';
-      valueAxes[0].title = 'Participants';
+      valueAxes[0].title = vm.participants;
       valueAxes[0].titleRotation = 0;
 
       var catAxis = CommonReportsGraphService.getBaseVariable(vm.AXIS);
@@ -132,7 +134,7 @@
       };
       var exportFields = [];
       _.forEach(graphs, function (value) {
-        columnNames[value.valueField] = value.title + ' ' + 'Participants';
+        columnNames[value.valueField] = value.title + ' ' + vm.participants;
       });
       for (var key in columnNames) {
         exportFields.push(key);

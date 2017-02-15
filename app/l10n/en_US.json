@@ -4508,6 +4508,7 @@
       "cloud_calls": "Overflow to Cloud",
       "cloud_participants": "cloud participants",
       "onprem_participants": "Participants On-Premises",
+      "participants": "Participants",
       "nodata": "Data Not Available",
       "allclusters": "All Clusters",
       "percentage": "%",
@@ -4526,6 +4527,7 @@
       "totalMeetings": "Total number of meetings",
       "meetOnPrem": "Number of Meets on Premises",
       "clientTypes": "Client Types",
+      "clientType": "Client Type",
       "noOfMeet": "Number of Meetings"
     },
     "serviceStatus": {
