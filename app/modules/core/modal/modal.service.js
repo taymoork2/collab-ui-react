@@ -14,7 +14,6 @@
     function openModal(options) {
       options = options || {};
       return $modal.open({
-        size: options.size,
         templateUrl: 'modules/core/modal/modal.tpl.html',
         controller: 'ModalCtrl',
         controllerAs: 'modal',
@@ -39,7 +38,7 @@
             return !_.isUndefined(options.dismiss) ? options.dismiss : $translate.instant('common.cancel');
           },
           btnType: function () {
-            return 'btn--' + (options.type || 'primary');
+            return 'btn--' + (options.btnType || 'primary');
           }
         }
       });

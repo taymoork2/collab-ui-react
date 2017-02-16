@@ -204,7 +204,8 @@
             message: $translate.instant('autoAttendant.cancelUpload'),
             close: $translate.instant('common.cancel'),
             dismiss: $translate.instant('common.no'),
-            type: 'negative'
+            btnType: 'negative',
+            type: 'dialog'
           });
           break;
         case types.delete:
@@ -213,7 +214,8 @@
             message: $translate.instant('autoAttendant.deleteUpload'),
             close: $translate.instant('common.delete'),
             dismiss: $translate.instant('common.cancel'),
-            type: 'negative'
+            btnType: 'negative',
+            type: 'dialog'
           });
           break;
         case types.overwrite:
@@ -222,7 +224,8 @@
             message: $translate.instant('autoAttendant.overwriteUpload'),
             close: $translate.instant('common.yes'),
             dismiss: $translate.instant('common.no'),
-            type: 'primary'
+            btnType: 'primary',
+            type: 'dialog'
           });
           break;
       }
