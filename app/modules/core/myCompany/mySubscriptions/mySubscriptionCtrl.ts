@@ -98,16 +98,16 @@ class MySubscriptionCtrl {
     if (this.temporarilyOverrideSharedMeetingsFeatureToggle.default === true) {
       this.isSharedMeetingsEnabled = this.temporarilyOverrideSharedMeetingsFeatureToggle.defaultValue;
     } else {
-      this.FeatureToggleService.atlasSharedMeetingsGetStatus().then((smpStatus) => {
-        this.isSharedMeetingsEnabled = smpStatus;
+      this.FeatureToggleService.atlasSharedMeetingsGetStatus().then((status) => {
+        this.isSharedMeetingsEnabled = status;
       });
     }
 
     if (this.temporarilyOverrideSharedMeetingsReportsFeatureToggle.default) {
       this.isSharedMeetingsReportsEnabled = this.temporarilyOverrideSharedMeetingsReportsFeatureToggle.defaultValue;
     } else {
-      this.FeatureToggleService.atlasSharedMeetingsReportsGetStatus().then((smpReportsStatus) => {
-        this.isSharedMeetingsReportsEnabled = smpReportsStatus;
+      this.FeatureToggleService.atlasSharedMeetingsReportsGetStatus().then((sharedMeetingReportsStatus) => {
+        this.isSharedMeetingsReportsEnabled = sharedMeetingReportsStatus;
       });
     }
   }

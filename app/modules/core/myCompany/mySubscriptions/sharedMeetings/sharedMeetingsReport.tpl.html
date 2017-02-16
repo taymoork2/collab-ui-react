@@ -2,7 +2,7 @@
     <button type="button" class="close" ng-click="$dismiss()">
         <span class="sr-only">Close</span>
     </button>
-    <h3 class="modal-title" translate="smpReports.sharedMeetingReport"></h3>
+    <h3 class="modal-title" translate="sharedMeetingReports.sharedMeetingReport"></h3>
 </div>
 <div class="modal-body shared-meeting-report">
   <div class="body-spacing">
@@ -14,7 +14,7 @@
       </cs-select>
     </div>
     <div class="row row-space">
-      <h3 class="column medium-5" translate="smpReports.sharedMeetingUsage"></h3>
+      <h3 class="column medium-5" translate="sharedMeetingReports.sharedMeetingUsage"></h3>
       <div ng-if="smrCtrl.exportDropdown" class="grid-filter dropdown pull-right">
         <a ng-click="smrCtrl.toggleExportMenu()">
           <i class='icon icon-three-dots export-dots'></i>
@@ -29,7 +29,7 @@
       </div>
     </div>
     <div class="row row-space">
-      <span class="report-description" translate="smpReports.smpDescription"></span>
+      <span class="report-description" translate="sharedMeetingReports.sharedMeetingDescription"></span>
     </div>
     <div class="row">
       <div class="axischart" id="sharedMeetingsChart"></div>

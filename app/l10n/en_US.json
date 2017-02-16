@@ -594,16 +594,16 @@
       }
     }
   },
-  "smpReports": {
+  "sharedMeetingReports": {
     "title": "Shared Meeting Usage",
     "link": "View Report",
     "sharedMeetingReport": "Shared Meeting Report",
     "sharedMeetingUsage": "Shared Meetings Usage",
-    "smpDescription": "This graph shows the number of concurrent meetings per month.",
+    "sharedMeetingDescription": "This graph shows the number of concurrent meetings per month.",
     "concurrentMeetingsTitle": "Actual number of concurrent mettings held",
     "concurrentMeetings": "Concurrent Meetings",
     "maxMeetingsTitle": "Maximum number of concurrent meetings allowed",
-    "errorLoadingSMPData": "There was a problem loading the Shared Meeting Report data."
+    "errorLoadingSharedMeetingData": "There was a problem loading the Shared Meeting Report data."
   },
   "careReportsPage": {
     "tasks": "Contacts",

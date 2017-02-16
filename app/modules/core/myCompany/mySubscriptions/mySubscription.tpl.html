@@ -77,8 +77,8 @@
                       <span class="h6" ng-class="{'warning': offer.usage > offer.volume}">{{::offer.usage}}/{{::offer.volume}}</span>
                     </div>
                     <div class="description-line" ng-show="mcpSubscription.isSharedMeetingsLicense(subscription) && mcpSubscription.isSharedMeetingsReportsEnabled">
-                      <span class="h6" translate="smpReports.title"></span>
-                      <a class="name h6 link" ng-click="mcpSubscription.launchSharedMeetingsLicenseUsageReport(subscription.siteUrl)" translate="smpReports.link"></a>
+                      <span class="h6" translate="sharedMeetingReports.title"></span>
+                      <a class="name h6 link" ng-click="mcpSubscription.launchSharedMeetingsLicenseUsageReport(subscription.siteUrl)" translate="sharedMeetingReports.link"></a>
                     </div>
                   </div>
                 </div>

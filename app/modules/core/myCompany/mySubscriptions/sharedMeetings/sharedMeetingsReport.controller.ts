@@ -7,8 +7,8 @@ import { Notification } from '../../../notifications/notification.service';
 
 import {
   IMeetingData,
-  ISMPTimeFilter,
-  ISMPData,
+  ISharedMeetingTimeFilter,
+  ISharedMeetingData,
 } from './sharedMeetingsReport.interfaces';
 
 class SharedMeetingsReportCtrl {
@@ -37,7 +37,7 @@ class SharedMeetingsReportCtrl {
   private state: string;
 
   // Timefilter controls
-  public timeFilter: Array<ISMPTimeFilter> = [{
+  public timeFilter: Array<ISharedMeetingTimeFilter> = [{
     label: this.$translate.instant('reportsPage.sixMonths'),
     value: this.SIX_MONTHS,
   }, {
@@ -47,7 +47,7 @@ class SharedMeetingsReportCtrl {
     label: this.$translate.instant('reportsPage.oneMonth'),
     value: this.ONE_MONTH,
   }];
-  public timeSelected: ISMPTimeFilter = this.timeFilter[0];
+  public timeSelected: ISharedMeetingTimeFilter = this.timeFilter[0];
 
   // Export Menu Controls
   public exportDropdown: Array<IExportMenu>;
@@ -77,11 +77,11 @@ class SharedMeetingsReportCtrl {
     this.SharedMeetingsReportService.getMaxConcurrentMeetingsData(this.siteUrl, this.getMonth(0), this.getMonth(this.timeSelected.value))
       .then((response: any): void => {
         let data: any = _.get(response, 'data', undefined);
-        let smpData: Array<ISMPData> = this.compileSMPData(data);
+        let sharedMeetingData: Array<ISharedMeetingData> = this.compileSharedMeetingData(data);
 
         this.state = this.ReportConstants.EMPTY;
-        if (smpData.length > 0) {
-          this.chart = this.SharedMeetingsReportService.setChartData(smpData, this.chart);
+        if (sharedMeetingData.length > 0) {
+          this.chart = this.SharedMeetingsReportService.setChartData(sharedMeetingData, this.chart);
           this.state = this.ReportConstants.SET;
         }
         if (_.isUndefined(this.exportDropdown)) {
@@ -89,16 +89,16 @@ class SharedMeetingsReportCtrl {
         }
       })
       .catch((error) => {
-        this.Notification.errorWithTrackingId(error, 'smpReports.errorLoadingSMPData');
+        this.Notification.errorWithTrackingId(error, 'sharedMeetingReports.errorLoadingSharedMeetingData');
         this.state = this.ReportConstants.EMPTY;
       });
   }
 
-  private compileSMPData(data: any): Array<ISMPData> {
+  private compileSharedMeetingData(data: any): Array<ISharedMeetingData> {
     let max: number = _.get(data, 'BucketLengthInMins', 0);
     let meetingArray: Array<IMeetingData> = _.get(data, 'MaxConcurrentMeetings', []);
     let emptyArray: boolean = true;
-    let returnArray: Array<ISMPData> = this.getBaseGraph(max);
+    let returnArray: Array<ISharedMeetingData> = this.getBaseGraph(max);
 
     _.forEach(meetingArray, (item: any): void => {
       let date: string = _.get(item, 'TimeBucketStart', '');
@@ -108,7 +108,7 @@ class SharedMeetingsReportCtrl {
         emptyArray = false;
       }
 
-      _.forEach(returnArray, (returnItem: ISMPData): void => {
+      _.forEach(returnArray, (returnItem: ISharedMeetingData): void => {
         if (returnItem.date === modifiedDate) {
           returnItem.meetings = meetings;
         }
@@ -126,8 +126,8 @@ class SharedMeetingsReportCtrl {
     return moment().subtract(months, this.ReportConstants.MONTH).format('YYYYMM');
   }
 
-  private getBaseGraph(max: number): Array<ISMPData> {
-    let returnArray: Array<ISMPData> = [];
+  private getBaseGraph(max: number): Array<ISharedMeetingData> {
+    let returnArray: Array<ISharedMeetingData> = [];
 
     for (let i = this.timeSelected.value; i >= 0; i--) {
       returnArray.push({
@@ -143,7 +143,7 @@ class SharedMeetingsReportCtrl {
 
   private setDummyData(): void {
     this.state = this.ReportConstants.REFRESH;
-    let dummyData: Array<ISMPData> = [];
+    let dummyData: Array<ISharedMeetingData> = [];
 
     for (let i = this.timeSelected.value; i >= 0; i--) {
       dummyData.push({

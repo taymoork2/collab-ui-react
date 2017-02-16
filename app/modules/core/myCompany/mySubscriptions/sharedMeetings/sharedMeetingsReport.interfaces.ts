@@ -5,12 +5,12 @@ export interface IMeetingData {
   NumOfMtgs: number;
 }
 
-export interface ISMPTimeFilter {
+export interface ISharedMeetingTimeFilter {
   label: string;
   value: number;
 }
 
-export interface ISMPData extends IGraphBase {
+export interface ISharedMeetingData extends IGraphBase {
   maxMeetings: number;
   meetings: number;
 }

@@ -1,5 +1,4 @@
 describe('Service: SharedMeetingsReportService', function () {
-  let validateService: any;
   const data: any = getJSONFixture('core/json/myCompany/sharedMeetingReport.json');
   const chart: any = {
     categoryAxis: {
@@ -21,10 +20,6 @@ describe('Service: SharedMeetingsReportService', function () {
     this.injectDependencies('$httpBackend', 'SharedMeetingsReportService');
 
     this.$httpBackend.whenPOST('').respond(_.cloneDeep(data.APIResponse));
-
-    validateService = {
-      validateData: jasmine.createSpy('validateData'),
-    };
   });
 
   afterEach(function () {
@@ -42,14 +37,14 @@ describe('Service: SharedMeetingsReportService', function () {
   it('should create or update the graph when setChartData is called', function () {
     let chartResponse: any = _.cloneDeep(chart);
     chartResponse.dataProvider = _.cloneDeep(data.filteredData.threeMonths);
-    chartResponse.validateData = validateService.validateData;
+    chartResponse.validateData = jasmine.createSpy('validateData');
     spyOn(AmCharts, 'makeChart').and.returnValue(chartResponse);
 
     let graph: any = this.SharedMeetingsReportService.setChartData(_.cloneDeep(data.filteredData.threeMonths), undefined);
     expect(AmCharts.makeChart).toHaveBeenCalled();
-    expect(validateService.validateData).not.toHaveBeenCalled();
+    expect(chartResponse.validateData).not.toHaveBeenCalled();
 
     this.SharedMeetingsReportService.setChartData(_.cloneDeep(data.filteredData.threeMonths), graph);
-    expect(validateService.validateData).toHaveBeenCalled();
+    expect(chartResponse.validateData).toHaveBeenCalled();
   });
 });

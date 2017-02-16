@@ -1,4 +1,4 @@
-import { ISMPData } from './sharedMeetingsReport.interfaces';
+import { ISharedMeetingData } from './sharedMeetingsReport.interfaces';
 import { CommonGraphService } from '../../../partnerReports/commonReportServices/commonGraph.service';
 
 export class SharedMeetingsReportService {
@@ -20,7 +20,7 @@ export class SharedMeetingsReportService {
     });
   }
 
-  public setChartData(data: Array<ISMPData>, chart: any): any {
+  public setChartData(data: Array<ISharedMeetingData>, chart: any): any {
     if (chart) {
       chart.categoryAxis.gridColor = this.chartColors.grayLightTwo;
       if (!data[0].balloon) {
@@ -36,7 +36,7 @@ export class SharedMeetingsReportService {
     return chart;
   }
 
-  private createChart(data: Array<ISMPData>): any {
+  private createChart(data: Array<ISharedMeetingData>): any {
     let catAxis: any = this.CommonGraphService.getBaseVariable(this.CommonGraphService.LINE_AXIS);
     catAxis.showFirstLabel = false;
     let valueAxes: any = [this.CommonGraphService.getBaseVariable(this.CommonGraphService.AXIS)];
@@ -63,7 +63,7 @@ export class SharedMeetingsReportService {
     return AmCharts.makeChart(this.CHART_DIV, chartData);
   }
 
-  private createGraphs(data: Array<ISMPData>): Array<any> {
+  private createGraphs(data: Array<ISharedMeetingData>): Array<any> {
     let colors: Array<string> = [this.chartColors.primaryBase, this.chartColors.negativeBase];
     if (!data[0].balloon) {
       colors = [this.chartColors.grayLightThree, this.chartColors.grayLightOne];
@@ -71,16 +71,16 @@ export class SharedMeetingsReportService {
 
     let graphs: Array<any> = [];
     graphs.push(this.CommonGraphService.getBaseVariable(this.CommonGraphService.LINE));
-    graphs[0].title = this.$translate.instant('smpReports.concurrentMeetingsTitle');
+    graphs[0].title = this.$translate.instant('sharedMeetingReports.concurrentMeetingsTitle');
     graphs[0].fillColors = colors[0];
     graphs[0].lineColor = colors[0];
     graphs[0].valueField = 'meetings';
     graphs[0].clustered = false;
     graphs[0].showBalloon = data[0].balloon;
-    graphs[0].balloonText = '<span class="graph-text">' + this.$translate.instant('smpReports.concurrentMeetings') + '</span><span class="graph-meetings">[[meetings]]</span>';
+    graphs[0].balloonText = '<span class="graph-text">' + this.$translate.instant('sharedMeetingReports.concurrentMeetings') + '</span><span class="graph-meetings">[[meetings]]</span>';
 
     graphs.push(this.CommonGraphService.getBaseVariable(this.CommonGraphService.SINGLE_LINE));
-    graphs[1].title = this.$translate.instant('smpReports.maxMeetingsTitle');
+    graphs[1].title = this.$translate.instant('sharedMeetingReports.maxMeetingsTitle');
     graphs[1].bullet = 'none';
     graphs[1].lineColor = colors[1];
     graphs[1].valueField = 'maxMeetings';
