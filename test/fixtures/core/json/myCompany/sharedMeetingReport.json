@@ -1,0 +1,148 @@
+{
+  "APIResponse": {
+    "SiteName": "siteUrl",
+    "ReportType": "MONTHLY",
+    "BucketLengthInMins": 15,
+    "StartMonth": "201610",
+    "EndMonth": "201612"
+  },
+  "filteredData":{
+    "threeMonths": [{
+      "date": "Sep '16",
+      "maxMeetings": 15,
+      "meetings": 0,
+      "balloon": true
+    }, {
+      "date": "Oct '16",
+      "maxMeetings": 15,
+      "meetings": 2,
+      "balloon": true
+    }, {
+      "date": "Nov '16",
+      "maxMeetings": 15,
+      "meetings": 1,
+      "balloon": true
+    }, {
+      "date": "Dec '16",
+      "maxMeetings": 15,
+      "meetings": 0,
+      "balloon": true
+    }],
+    "sixMonths": [{
+      "date": "Jun '16",
+      "maxMeetings": 15,
+      "meetings": 0,
+      "balloon": true
+    }, {
+      "date": "Jul '16",
+      "maxMeetings": 15,
+      "meetings": 5,
+      "balloon": true
+    }, {
+      "date": "Aug '16",
+      "maxMeetings": 15,
+      "meetings": 4,
+      "balloon": true
+    }, {
+      "date": "Sep '16",
+      "maxMeetings": 15,
+      "meetings": 3,
+      "balloon": true
+    }, {
+      "date": "Oct '16",
+      "maxMeetings": 15,
+      "meetings": 2,
+      "balloon": true
+    }, {
+      "date": "Nov '16",
+      "maxMeetings": 15,
+      "meetings": 1,
+      "balloon": true
+    }, {
+      "date": "Dec '16",
+      "maxMeetings": 15,
+      "meetings": 0,
+      "balloon": true
+    }]
+  },
+  "dummyData": {
+    "oneMonth":[{
+      "date": "Nov '16",
+      "maxMeetings": 15,
+      "meetings": 2,
+      "balloon": false
+    }, {
+      "date": "Dec '16",
+      "maxMeetings": 15,
+      "meetings": 0,
+      "balloon": false
+    }],
+    "threeMonths":  [{
+      "date": "Sep '16",
+      "maxMeetings": 15,
+      "meetings": 6,
+      "balloon": false
+    }, {
+      "date": "Oct '16",
+      "maxMeetings": 15,
+      "meetings": 4,
+      "balloon": false
+    }, {
+      "date": "Nov '16",
+      "maxMeetings": 15,
+      "meetings": 2,
+      "balloon": false
+    }, {
+      "date": "Dec '16",
+      "maxMeetings": 15,
+      "meetings": 0,
+      "balloon": false
+    }],
+    "sixMonths":  [{
+      "date": "Jun '16",
+      "maxMeetings": 15,
+      "meetings": 12,
+      "balloon": false
+    }, {
+      "date": "Jul '16",
+      "maxMeetings": 15,
+      "meetings": 10,
+      "balloon": false
+    }, {
+      "date": "Aug '16",
+      "maxMeetings": 15,
+      "meetings": 8,
+      "balloon": false
+    }, {
+      "date": "Sep '16",
+      "maxMeetings": 15,
+      "meetings": 6,
+      "balloon": false
+    }, {
+      "date": "Oct '16",
+      "maxMeetings": 15,
+      "meetings": 4,
+      "balloon": false
+    }, {
+      "date": "Nov '16",
+      "maxMeetings": 15,
+      "meetings": 2,
+      "balloon": false
+    }, {
+      "date": "Dec '16",
+      "maxMeetings": 15,
+      "meetings": 0,
+      "balloon": false
+    }]
+  },
+  "timeFilter": [{
+    "label": "reportsPage.sixMonths",
+    "value": 6
+  }, {
+    "label": "reportsPage.threeMonths",
+    "value": 3
+  }, {
+    "label": "reportsPage.oneMonth",
+    "value": 1
+  }]
+}
