@@ -493,7 +493,7 @@ describe('Controller: UserRolesCtrl', function () {
         initController();
       });
 
-      it('should have orderadmin, helpdesk, and partnerManagenment role when already present', function () {
+      it('should have orderadmin, helpdesk, and partner_management role when already present', function () {
 
         var expectedRoles = [
           {
@@ -525,11 +525,11 @@ describe('Controller: UserRolesCtrl', function () {
             roleState: 'ACTIVE'
           },
           {
-            roleName: 'Partner_Management',
+            roleName: 'Order_Admin',
             roleState: 'ACTIVE'
           },
           {
-            roleName: 'Order_Admin',
+            roleName: 'Partner_Management',
             roleState: 'ACTIVE'
           },
           {
