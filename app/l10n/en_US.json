@@ -5215,7 +5215,19 @@
     "greatBritain": "United Kingdom",
     "unitedStates": "United States",
     "canada": "Canada",
-    "colombia": "Colombia"
+    "colombia": "Colombia",
+    "austria": "Austria",
+    "belgium": "Belgium",
+    "france": "France",
+    "germany": "Germany",
+    "italy": "Italy",
+    "netherlands": "Netherlands",
+    "portugal": "Portugal",
+    "spain": "Spain",
+    "sweden": "Sweden",
+    "switzerland": "Switzerland",
+    "ireland": "Ireland",
+    "mexico": "Mexico"
   },
   "languages": {
     "danish": "Dansk",

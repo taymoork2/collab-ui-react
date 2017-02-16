@@ -132,12 +132,13 @@ class PlaceCallOverview implements ng.IComponentController {
 
   private initPlaceCallOverviewData(): void {
     this.PlaceCallOverviewService.getPlaceCallOverviewData(this.currentPlace.cisUuid)
-      .then(placeCallOverviewData => {
-        this.placeCallOverviewData = placeCallOverviewData;
-        this.preferredLanguage = placeCallOverviewData.preferredLanguage;
-        this.preferredLanguageOptions = placeCallOverviewData.preferredLanguageOptions;
-        this.plIsLoaded = true;
-      });
+        .then( placeCallOverviewData => {
+          this.placeCallOverviewData = placeCallOverviewData;
+          this.preferredLanguage = placeCallOverviewData.preferredLanguage;
+          this.preferredLanguageOptions = placeCallOverviewData.preferredLanguageOptions;
+        }).finally(() => {
+          this.plIsLoaded = true;
+        });
   }
 
   public setPreferredLanguage(preferredLanguage: any): void {
