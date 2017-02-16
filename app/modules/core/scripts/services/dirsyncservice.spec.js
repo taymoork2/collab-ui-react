@@ -1,10 +1,10 @@
 'use strict';
 
-describe('DirSyncService', function () {
+describe('DirSyncServiceOld', function () {
   beforeEach(angular.mock.module('Core'));
   describe('getDirSyncStatus', function () {
 
-    var $httpBackend, DirSyncService, UrlConfig, Authinfo, Log;
+    var $httpBackend, DirSyncServiceOld, UrlConfig, Authinfo, Log;
 
     beforeEach(function () {
       angular.mock.module(function ($provide) {
@@ -28,8 +28,8 @@ describe('DirSyncService', function () {
       });
     });
 
-    beforeEach(inject(function ($injector, _DirSyncService_) {
-      DirSyncService = _DirSyncService_;
+    beforeEach(inject(function ($injector, _DirSyncServiceOld_) {
+      DirSyncServiceOld = _DirSyncServiceOld_;
       $httpBackend = $injector.get('$httpBackend');
       $httpBackend.when('GET', 'l10n/en_US.json').respond({});
     }));
@@ -48,7 +48,7 @@ describe('DirSyncService', function () {
         .respond(500);
 
       var callback = sinon.stub();
-      DirSyncService.getDirSyncStatus(callback);
+      DirSyncServiceOld.getDirSyncStatus(callback);
 
       $httpBackend.flush();
 
@@ -67,7 +67,7 @@ describe('DirSyncService', function () {
         });
 
       var callback = sinon.stub();
-      DirSyncService.getDirSyncStatus(callback);
+      DirSyncServiceOld.getDirSyncStatus(callback);
 
       $httpBackend.flush();
 

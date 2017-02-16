@@ -2,10 +2,10 @@
   'use strict';
 
   angular.module('Core')
-    .service('DirSyncService', DirSyncService);
+    .service('DirSyncServiceOld', DirSyncServiceOld);
 
   /* @ngInject */
-  function DirSyncService($http, Log, Authinfo, UrlConfig) {
+  function DirSyncServiceOld($http, Log, Authinfo, UrlConfig) {
 
     var dirsyncUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/dirsync';
 

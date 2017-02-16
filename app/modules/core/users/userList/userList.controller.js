@@ -91,13 +91,10 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     $scope.getUserPhoto = Userservice.getUserPhoto;
     $scope.firstOfType = firstOfType;
     $scope.isValidThumbnail = Userservice.isValidThumbnail;
-    $scope.isNotDirSyncOrException = false;
 
     $scope.getUserList = getUserList;
     $scope.onManageUsers = onManageUsers;
     $scope.sortDirection = sortDirection;
-
-    vm.useAtlasNewUserExport = false;
 
     ////////////////
     var eventListeners = [];
@@ -115,7 +112,6 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
         $scope.isEmailStatusToggled = results.atlasEmailStatus;
         isOnlineOrg = results.isOnlineOrg;
 
-        checkOrg();
         bind();
         getUserList();
       });
@@ -125,24 +121,6 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     function onDestroy() {
       while (!_.isEmpty(eventListeners)) {
         _.attempt(eventListeners.pop());
-      }
-    }
-
-    function checkOrg() {
-      // Allow Cisco org to use the Circle Plus button
-      // Otherwise, block the DirSync orgs from using it
-      if (Authinfo.isCisco()) {
-        $scope.isNotDirSyncOrException = true;
-      } else {
-        FeatureToggleService.supportsDirSync()
-          .then(function (enabled) {
-            $scope.isNotDirSyncOrException = !enabled;
-          });
-
-        FeatureToggleService.atlasNewUserExportGetStatus()
-          .then(function (enabled) {
-            vm.useAtlasNewUserExport = enabled;
-          });
       }
     }
 

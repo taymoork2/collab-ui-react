@@ -4,9 +4,8 @@
   module.exports = FeatureToggleService;
 
   /* @ngInject */
-  function FeatureToggleService($http, $q, $resource, $rootScope, $state, Authinfo, HuronConfig, UrlConfig, Orgservice) {
+  function FeatureToggleService($http, $q, $resource, $rootScope, $state, Authinfo, HuronConfig, UrlConfig) {
     var features = require('./features.config');
-
     var toggles = {};
 
     // returns huron feature toggle value for the given user or user's org
@@ -39,10 +38,6 @@
         },
       });
 
-    var dirSyncConfigurationResource = $resource(UrlConfig.getAdminServiceUrl() + 'organization/:customerId/dirsync', {
-      customerId: '@customerId',
-    });
-
     var service = {
       getUrl: getUrl,
       getFeatureForUser: getFeatureForUser,
@@ -53,7 +48,6 @@
       generateFeatureToggleRule: generateFeatureToggleRule,
       stateSupportsFeature: stateSupportsFeature,
       supports: supports,
-      supportsDirSync: supportsDirSync,
       features: features,
     };
 
@@ -207,11 +201,7 @@
 
     function supports(feature) {
       return $q(function (resolve) {
-        if (feature === features.dirSync) {
-          supportsDirSync().then(function (enabled) {
-            resolve(enabled);
-          });
-        } else if (!_.isUndefined(toggles[feature])) {
+        if (!_.isUndefined(toggles[feature])) {
           resolve(toggles[feature]);
         } else {
           $http.get(UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/me', {
@@ -232,25 +222,6 @@
             return false;
           });
         }
-      });
-    }
-
-    function supportsDirSync() {
-      return dirSyncConfigurationResource.get({
-        customerId: Authinfo.getOrgId(),
-      }).$promise.then(function (response) {
-        return response.serviceMode === 'ENABLED';
-      }).catch(function (response) {
-        Orgservice.getOrgCacheOption(function (data) {
-          if (data.success) {
-            return data.dirsyncEnabled;
-          } else {
-            return $q.reject(response);
-          }
-        }, null,
-          {
-            cache: false,
-          });
       });
     }
 
