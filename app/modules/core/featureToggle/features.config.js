@@ -24,6 +24,7 @@ module.exports = {
   atlasNewRoomSystems: 'atlas-new-roomSystems',
   atlasNewUserExport: 'atlas-new-user-export',
   atlasNurturingEmails: 'atlas-nurturing-emails',
+  atlasPartnerManagement: 'atlas-partner-management',
   atlasPhonesCanada: 'atlas-phones-canada',
   atlasPinSettings: 'atlas-pin-settings',
   atlasPMRonM2: 'atlas-pmr-on-m2',
