@@ -26,7 +26,8 @@ export class PlaceCallOverviewService {
       if (this.ServiceSetup.sites.length !== 0) {
         return this.ServiceSetup.getSite(this.ServiceSetup.sites[0].uuid)
         .then(site => {
-          return _.get(site, 'preferredLanguage', this.DEFAULT_LANG);
+          let siteLanguage = _.get(site, 'preferredLanguage');
+          return siteLanguage ? siteLanguage : this.DEFAULT_LANG;
         });
       }
     });
