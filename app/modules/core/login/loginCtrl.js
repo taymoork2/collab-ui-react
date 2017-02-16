@@ -34,10 +34,11 @@
       }
     };
 
-    // - DO NOT USE OR EXTEND THIS CODE - this code will be removed before 2/10/2017
+    // - DO NOT USE OR EXTEND THIS CODE - this code will be removed before 3/1/2017
+    /* global window */
     if (Config.isUserAgent('QtCarBrowser') || Config.isUserAgent('SMART-TV')) {
-      $window.mixpanel.init('536df13b2664a85b06b0b6cf32721c24');
-      $window.mixpanel.track('inside loginCtrl.js');
+      window.mixpanel.init('536df13b2664a85b06b0b6cf32721c24');
+      window.mixpanel.track('inside loginCtrl.js');
     }
 
     var authorizeUser = function () {
