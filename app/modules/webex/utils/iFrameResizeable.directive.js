@@ -24,7 +24,7 @@
           };
 
           var iframeTopMargin = targetElementLocation.top;
-          var iframeBottomMargin = 14;
+          var iframeBottomMargin = 20;
           var iframeTotalMargin = iframeTopMargin + iframeBottomMargin;
 
           $scope.iframeHeight = (iframeTotalMargin >= innerHeight) ? 0 : innerHeight - iframeTotalMargin;
