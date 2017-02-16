@@ -291,7 +291,7 @@ require('./_wizard.scss');
           message: $translate.instant('serviceSetupModal.saveCallSettingsExtensionLengthAllowed'),
           close: $translate.instant('common.continue'),
           dismiss: $translate.instant('common.cancel'),
-          type: 'negative'
+          btnType: 'negative'
         })
           .result.then(function () {
             executeNextStep(subTabControllerAs);
