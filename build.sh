@@ -3,6 +3,7 @@
 # import helper functions
 source ./bin/include/pid-helpers
 source ./bin/include/setup-helpers
+source ./bin/include/env-var-helpers
 
 
 # -----
@@ -15,6 +16,13 @@ for i in $proc_names_to_scan; do
         kill_wait "$i"
     fi
 done
+
+# - detect if running in local dev environment, inject env vars as appropriate (this won't be needed
+#   in a Jenkins build env, as env vars are injected via other means)
+if ! is_ci; then
+    echo "INFO: detected running in local dev environment, injecting build env vars for \"dev\"."
+    inj_build_env_vars_for "dev"
+fi
 
 
 # -----
