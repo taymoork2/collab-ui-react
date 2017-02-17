@@ -36,11 +36,7 @@ export abstract class ExpresswayContainerController {
   }
 
   protected firstTimeSetup(): void {
-    this.ServiceDescriptor.isServiceEnabled(this.servicesId[0], (error, enabled) => {
-      if (error) {
-        this.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
-        return;
-      }
+    this.ServiceDescriptor.isServiceEnabled(this.servicesId[0]).then((enabled) => {
       if (enabled) {
         return;
       }
@@ -66,7 +62,8 @@ export abstract class ExpresswayContainerController {
         .catch(() => {
           this.$state.go('services-overview');
         });
-
+    }).catch((response) => {
+      this.Notification.errorWithTrackingId(response, 'hercules.genericFailure');
     });
   }
 

@@ -5,41 +5,14 @@
     .service('MediaServiceActivationV2', MediaServiceActivationV2);
 
   /* @ngInject */
-  function MediaServiceActivationV2($http, MediaConfigServiceV2, Authinfo, Notification, $q, FusionClusterService) {
+  function MediaServiceActivationV2($http, MediaConfigServiceV2, Authinfo, Notification, $q, FusionClusterService, ServiceDescriptor) {
     var vm = this;
     vm.mediaServiceId = 'squared-fusion-media';
-
-    var setServiceEnabled = function (serviceId, enabled) {
-      return $http
-        .patch(MediaConfigServiceV2.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId, {
-          enabled: enabled
-        });
-
-    };
 
     var setServiceAcknowledged = function (serviceId, acknowledged) {
       return $http
         .patch(MediaConfigServiceV2.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId, {
           acknowledged: acknowledged
-        });
-
-    };
-
-    var isServiceEnabled = function (serviceId, callback) {
-      $http
-        .get(MediaConfigServiceV2.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services')
-        .success(function (data) {
-          var service = _.find(data.items, {
-            id: serviceId
-          });
-          if (service === undefined) {
-            callback(false);
-          } else {
-            callback(null, service.enabled);
-          }
-        })
-        .error(function () {
-          callback(arguments);
         });
     };
 
@@ -64,7 +37,7 @@
 
 
     function enableMediaService(serviceId) {
-      setServiceEnabled(serviceId, true).then(
+      ServiceDescriptor.enableService(serviceId).then(
         function success() {
           setisMediaServiceEnabled(true);
           enableOrpheusForMediaFusion();
@@ -178,8 +151,6 @@
     return {
       setisMediaServiceEnabled: setisMediaServiceEnabled,
       getMediaServiceState: getMediaServiceState,
-      isServiceEnabled: isServiceEnabled,
-      setServiceEnabled: setServiceEnabled,
       setServiceAcknowledged: setServiceAcknowledged,
       getUserIdentityOrgToMediaAgentOrgMapping: getUserIdentityOrgToMediaAgentOrgMapping,
       setUserIdentityOrgToMediaAgentOrgMapping: setUserIdentityOrgToMediaAgentOrgMapping,

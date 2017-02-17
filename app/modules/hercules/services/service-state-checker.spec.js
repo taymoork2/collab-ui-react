@@ -57,7 +57,7 @@ describe('Service: ServiceStateChecker', function () {
     FusionClusterService.getOrgSettings = sinon.stub().returns($q.resolve({ expresswayClusterReleaseChannel: 'stable' }));
     Orgservice.getOrg = sinon.stub();
     ServiceDescriptor.isServiceEnabled = sinon.stub();
-    ServiceDescriptor.services = sinon.stub();
+    ServiceDescriptor.getServices = sinon.stub();
     USSService.getOrg = sinon.stub();
     USSService.getOrgId = sinon.stub();
     USSService.getStatusesSummary = sinon.stub();
@@ -82,12 +82,14 @@ describe('Service: ServiceStateChecker', function () {
   });
 
   it('should raise the "noUsersActivated" message and clear appropriately when there are no users activated ', function () {
-    USSService.getStatusesSummary.returns([{
-      serviceId: 'squared-fusion-cal',
-      activated: 0,
-      error: 0,
-      notActivated: 0
-    }]);
+    USSService.getStatusesSummary.returns(
+      [{
+        serviceId: 'squared-fusion-cal',
+        activated: 0,
+        error: 0,
+        notActivated: 0
+      }]
+    );
     ClusterService.getClustersByConnectorType.returns([okClusterMockData]);
     ServiceStateChecker.checkState('squared-fusion-cal');
     expect(NotificationService.getNotificationLength()).toEqual(1);
@@ -129,61 +131,59 @@ describe('Service: ServiceStateChecker', function () {
 
     USSService.getOrgId.returns('orgId');
     USSService.getOrg.returns($q.resolve({}));
-
-    ServiceDescriptor.isServiceEnabled = function (type, cb) {
-      cb(null, true);
-    };
-
-    ServiceDescriptor.services = function (cb) {
-      cb(null, [{
+    ClusterService.getClustersByConnectorType.returns([okClusterMockData]);
+    ServiceDescriptor.isServiceEnabled.returns($q.resolve(true));
+    ServiceDescriptor.getServices.returns($q.resolve(
+      [{
         id: 'squared-fusion-ec',
         enabled: false, // will spawn a 'connect available' notification,
         acknowledged: false
-      }]);
-    };
+      }]
+    ));
 
-    ClusterService.getClustersByConnectorType.returns([okClusterMockData]);
     ServiceStateChecker.checkState('squared-fusion-uc');
-
+    $rootScope.$digest();
     expect(NotificationService.getNotificationLength()).toEqual(1);
     expect(NotificationService.getNotifications()[0].id).toEqual('callServiceConnectAvailable');
 
     // this should remove the connect notifications
-    ServiceDescriptor.services = function (cb) {
-      cb(null, [{
+    ServiceDescriptor.getServices.returns($q.resolve(
+      [{
         id: 'squared-fusion-ec',
         enabled: true,
         acknowledged: false
-      }]);
-    };
-
+      }]
+    ));
+    USSService.getOrg.returns($q.resolve({ sipDomain: 'example.com' }));
     ServiceStateChecker.checkState('squared-fusion-uc');
-
+    $rootScope.$digest();
     expect(NotificationService.getNotificationLength()).toEqual(0);
   });
 
   it('should add and correctly clear the domain verification', function () {
+    USSService.getOrgId.returns('orgId');
+    USSService.getOrg.returns($q.resolve({ sipDomain: 'example.com' }));
+    ServiceDescriptor.isServiceEnabled.returns($q.resolve(true));
+    ClusterService.getClustersByConnectorType.returns([okClusterMockData]);
+    ServiceDescriptor.getServices.returns($q.resolve([{
+      id: 'squared-fusion-ec',
+      enabled: true,
+      acknowledged: true
+    }])
+    );
     USSService.getStatusesSummary.returns([{
       serviceId: 'squared-fusion-uc',
       activated: 1,
-      error: 0,
+     // error: 0,
       notActivated: 0
     }]);
-
-    USSService.getOrgId.returns('orgId');
-    USSService.getOrg.returns($q.resolve({}));
-
-    ServiceDescriptor.isServiceEnabled = function (type, cb) {
-      cb(null, true);
-    };
-
-    ClusterService.getClustersByConnectorType.returns([okClusterMockData]);
 
     // this should spawn a domain verification notification
     DomainManagementService.getVerifiedDomains = sinon.stub().returns($q.resolve([]));
 
     ServiceStateChecker.checkState('squared-fusion-uc');
     $rootScope.$digest();
+
     expect(NotificationService.getNotificationLength()).toEqual(1);
     expect(NotificationService.getNotifications()[0].id).toEqual('noDomains');
 
@@ -191,6 +191,13 @@ describe('Service: ServiceStateChecker', function () {
     DomainManagementService.getVerifiedDomains = sinon.stub().returns($q.resolve([{
       domain: 'somedomain'
     }]));
+    ServiceDescriptor.getServices.returns($q.resolve(
+      [{
+        id: 'squared-fusion-ec',
+        enabled: true,
+        acknowledged: false
+      }]
+   ));
 
     ServiceStateChecker.checkState('squared-fusion-uc');
     $rootScope.$digest();
@@ -209,16 +216,16 @@ describe('Service: ServiceStateChecker', function () {
     USSService.getOrg.returns($q.resolve({
       'sipDomain': 'somedomain'
     }));
-    ServiceDescriptor.isServiceEnabled = function (type, cb) {
-      cb(null, true);
-    };
-    ServiceDescriptor.services = function (cb) {
-      cb(null, [{
+    ServiceDescriptor.isServiceEnabled.returns($q.resolve(true));
+
+    ServiceDescriptor.getServices.returns($q.resolve(
+      [{
         id: 'squared-fusion-ec',
-        enabled: true,
+        enabled: true, // will spawn a 'connect available' notification,
         acknowledged: false
-      }]);
-    };
+      }]
+    ));
+
     ClusterService.getClustersByConnectorType.returns([okClusterMockData]);
     FeatureToggleService.supports.returns($q.resolve(true));
     Orgservice.getOrg = function (cb) {
@@ -244,16 +251,16 @@ describe('Service: ServiceStateChecker', function () {
     USSService.getOrg.returns($q.resolve({
       'sipDomain': 'somedomain'
     }));
-    ServiceDescriptor.isServiceEnabled = function (type, cb) {
-      cb(null, true);
-    };
-    ServiceDescriptor.services = function (cb) {
-      cb(null, [{
+    ServiceDescriptor.isServiceEnabled.returns($q.resolve(true));
+
+    ServiceDescriptor.getServices.returns($q.resolve(
+      [{
         id: 'squared-fusion-ec',
         enabled: true,
         acknowledged: false
-      }]);
-    };
+      }]
+    ));
+
     ClusterService.getClustersByConnectorType.returns([okClusterMockData]);
     FeatureToggleService.supports.returns($q.resolve(true));
     Orgservice.getOrg = function (cb) {

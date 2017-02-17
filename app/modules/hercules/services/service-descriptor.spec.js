@@ -112,4 +112,30 @@ describe('ServiceDescriptor', function () {
     Service.setDisableEmailSendingToUser(true);
     expect($httpBackend.flush).not.toThrow();
   });
+
+//
+//
+//
+  it("should return false if service 'squared-fusion-ec' is not enabled", function () {
+    $httpBackend
+     .expectGET('https://hercules-integration.wbx2.com/v1/organizations/' + authinfo.getOrgId() + '/services').respond(
+       200, {}
+    );
+    Service.isServiceEnabled('squared-fusion-ec').then(function (response) {
+      expect(response).toBeFalsy();
+    });
+    $httpBackend.flush();
+  });
+
+  it("should return false if service 'squared-fusion-ec' is enabled", function () {
+    $httpBackend
+      .expectGET('https://hercules-integration.wbx2.com/v1/organizations/' + authinfo.getOrgId() + '/services').respond(
+      200, { items: [{ 'id': 'squared-fusion-ec', 'enabled': true }] }
+    );
+
+    Service.isServiceEnabled('squared-fusion-ec').then(function (response) {
+      expect(response).toBe(true);
+    });
+    $httpBackend.flush();
+  });
 });
