@@ -1,7 +1,12 @@
 <script type="text/ng-template" id="userTemplate.html">
-  <a>
-    <span ng-bind-html="match.label | typeaheadHighlight:query"></span>
-  </a>
+  <a ng-style="match.model.disabled && {}"
+     ng-click="match.model.disabled && $event.stopPropagation(); $event.preventDefault();"
+     ng-class="{'disabled': match.model.disabled}">
+
+  <span ng-bind-html="match.label | typeaheadHighlight:query"
+        ng-class="{'disabled': match.model.disabled}">
+  </span>
+</a>
 </script>
 
 <div class="typeahead-large" ng-if="$ctrl.isNew">
@@ -48,7 +53,7 @@
     <cs-card-member
       ng-repeat="member in $ctrl.selectedMembers track by $index"
       cs-type="complex"
-      cs-member-type="$ctrl.getMemberType(member.member)"
+      cs-member-type="{{$ctrl.getMemberType(member.member)}}"
       cs-title="$ctrl.getDisplayNameOnCard(member.member)"
       cs-subtitle="($ctrl.getUserName(member.member))"
       cs-image="$ctrl.getMembersPictures(member.member)"

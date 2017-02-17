@@ -1,9 +1,12 @@
 import { BmmpService } from '../index';
+import { IBmmpAttr } from 'modules/online/upgrade/upgrade.service';
 
 class SubscriptionUpgradeButton implements ng.IComponentController {
   public showLoading: string;
   public showLoadingButton: boolean;
   public widgetLocation: string;
+  public emptyBmmpAttr: IBmmpAttr;
+  public IBmmpAttr: IBmmpAttr;
 
   /* @ngInject */
   constructor(
@@ -13,11 +16,17 @@ class SubscriptionUpgradeButton implements ng.IComponentController {
   public $onInit(): void {
     this.showLoadingButton = (this.showLoading === 'true');
     this.widgetLocation = this.widgetLocation || 'navigation-bar';
+    this.emptyBmmpAttr = {
+      subscriptionId: '',
+      productInstanceId: '',
+      changeplanOverride: '',
+    };
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
-    let subscriptionIdChange = changes['subscriptionId'];
-    if (subscriptionIdChange && subscriptionIdChange.currentValue) {
+    const bmmpAttrChange = changes['bmmpAttr'];
+    const currentValue = _.get<IBmmpAttr>(bmmpAttrChange, 'currentValue');
+    if (currentValue && !angular.equals(this.emptyBmmpAttr, currentValue)) {
       this.BmmpService.init();
     }
   }
@@ -27,7 +36,7 @@ export class SubscriptionUpgradeButtonComponent implements ng.IComponentOptions 
   public controller = SubscriptionUpgradeButton;
   public templateUrl = 'modules/bmmp/subscriptionUpgradeButton/subscriptionUpgradeButton.html';
   public bindings = <{ [binding: string]: string }>{
-    subscriptionId: '<',
+    bmmpAttr: '<',
     showLoading: '@',
     widgetLocation: '@',
   };

@@ -96,6 +96,11 @@
       var pstnAdvancedOrders = _.remove(vm.orders, function (order) {
         return _.get(order, 'orderType') === PstnSetupService.BLOCK_ORDER && _.get(order, 'numberType') === PstnSetupService.NUMTYPE_DID;
       });
+
+      vm.swivelOrders = _.remove(vm.orders, function (order) {
+        return _.get(order, 'orderType') === PstnSetupService.SWIVEL_ORDER;
+      });
+
       var tollFreeAdvancedOrders = _.remove(vm.orders, function (order) {
         return _.get(order, 'orderType') === PstnSetupService.BLOCK_ORDER && _.get(order, 'numberType') === PstnSetupService.NUMTYPE_TOLLFREE;
       });
@@ -138,6 +143,13 @@
           .catch(pushErrorArray);
         promises.push(promise);
       }
+
+      if (vm.swivelOrders.length > 0) {
+        promise = PstnSetupService.orderNumbers(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), _.get(vm, 'swivelOrders[0].data.numbers'))
+          .catch(pushErrorArray);
+        promises.push(promise);
+      }
+
       _.forEach(vm.advancedOrders, function (order) {
         if (_.get(order, 'orderType') === PstnSetupService.BLOCK_ORDER && _.get(order, 'numberType') === PstnSetupService.NUMTYPE_DID) {
           promise = PstnSetupService.orderBlock(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), order.data.areaCode, order.data.length, order.data.consecutive, order.data.nxx)

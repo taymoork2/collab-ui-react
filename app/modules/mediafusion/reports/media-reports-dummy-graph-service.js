@@ -6,14 +6,15 @@
   function MediaReportsDummyGraphService($translate, chartColors) {
     var vm = this;
     vm.average_utilzation = $translate.instant('mediaFusion.metrics.avgutilization');
-    var timeFormat = "YYYY-MM-DDTHH:mm:ss";
+    vm.client_types = $translate.instant('mediaFusion.metrics.clientTypes');
+    vm.timeFormat = "YYYY-MM-DDTHH:mm:ss";
     return {
       dummyCallVolumeData: dummyCallVolumeData,
       dummyAvailabilityData: dummyAvailabilityData,
-      dummyUtilizationData: dummyUtilizationData,
+      dummyLineChartData: dummyLineChartData,
       dummyUtilizationGraph: dummyUtilizationGraph,
-      dummyParticipantDistributionData: dummyParticipantDistributionData,
-      dummyParticipantDistributionGraph: dummyParticipantDistributionGraph
+      dummyParticipantDistributionGraph: dummyParticipantDistributionGraph,
+      dummyClientTypeGraph: dummyClientTypeGraph
     };
 
     function dummyAvailabilityData(filter) {
@@ -24,28 +25,28 @@
       var color = chartColors.grayLightTwo;
       var period;
       if (filter.value === 0) {
-        end = moment().utc().format(timeFormat);
-        start = moment().utc().subtract(4, 'hours').format(timeFormat);
+        end = moment().utc().format(vm.timeFormat);
+        start = moment().utc().subtract(4, 'hours').format(vm.timeFormat);
         duration = 240;
         period = "mm";
       } else if (filter.value === 1) {
-        end = moment().utc().format(timeFormat);
-        start = moment().utc().subtract(1, 'days').format(timeFormat);
+        end = moment().utc().format(vm.timeFormat);
+        start = moment().utc().subtract(1, 'days').format(vm.timeFormat);
         duration = 1440;
         period = "mm";
       } else if (filter.value === 2) {
-        end = moment().utc().format(timeFormat);
-        start = moment().utc().subtract(7, 'days').format(timeFormat);
+        end = moment().utc().format(vm.timeFormat);
+        start = moment().utc().subtract(7, 'days').format(vm.timeFormat);
         duration = 168;
         period = "hh";
       } else if (filter.value === 3) {
-        end = moment().utc().format(timeFormat);
-        start = moment().utc().subtract(1, 'months').format(timeFormat);
+        end = moment().utc().format(vm.timeFormat);
+        start = moment().utc().subtract(1, 'months').format(vm.timeFormat);
         period = "hh";
         duration = 744;
       } else {
-        end = moment().utc().format(timeFormat);
-        start = moment().utc().subtract(3, 'months').format(timeFormat);
+        end = moment().utc().format(vm.timeFormat);
+        start = moment().utc().subtract(3, 'months').format(vm.timeFormat);
         period = "hh";
         duration = 2260;
       }
@@ -93,7 +94,7 @@
       if (filter.value === 0) {
         for (var i = 240; i >= 1; i--) {
           dummyGraphVal.push({
-            timestamp: moment().subtract(i, 'minutes').format(timeFormat),
+            timestamp: moment().subtract(i, 'minutes').format(vm.timeFormat),
             call_reject: Math.floor((Math.random() * 1) + 1),
             active_calls: Math.floor((Math.random() * 1) + 1),
             balloon: false,
@@ -104,7 +105,7 @@
       } else if (filter.value === 1) {
         for (i = 288; i >= 1; i--) {
           dummyGraphVal.push({
-            timestamp: moment().subtract(i * 5, 'minutes').format(timeFormat),
+            timestamp: moment().subtract(i * 5, 'minutes').format(vm.timeFormat),
             call_reject: Math.floor((Math.random() * 1) + 1),
             active_calls: Math.floor((Math.random() * 1) + 1),
             balloon: false,
@@ -115,7 +116,7 @@
       } else if (filter.value === 2) {
         for (i = 168; i >= 1; i--) {
           dummyGraphVal.push({
-            timestamp: moment().subtract(i, 'hours').format(timeFormat),
+            timestamp: moment().subtract(i, 'hours').format(vm.timeFormat),
             call_reject: Math.floor((Math.random() * 1) + 1),
             active_calls: Math.floor((Math.random() * 1) + 1),
             balloon: false,
@@ -126,7 +127,7 @@
       } else if (filter.value === 3) {
         for (i = 180; i >= 0; i--) {
           dummyGraphVal.push({
-            timestamp: moment().subtract(i * 3, 'hours').format(timeFormat),
+            timestamp: moment().subtract(i * 3, 'hours').format(vm.timeFormat),
             call_reject: Math.floor((Math.random() * 1) + 1),
             active_calls: Math.floor((Math.random() * 1) + 1),
             balloon: false,
@@ -137,7 +138,7 @@
       } else {
         for (i = 270; i >= 0; i--) {
           dummyGraphVal.push({
-            timestamp: moment().subtract(i * 8, 'hours').format(timeFormat),
+            timestamp: moment().subtract(i * 8, 'hours').format(vm.timeFormat),
             call_reject: Math.floor((Math.random() * 1) + 1),
             active_calls: Math.floor((Math.random() * 1) + 1),
             balloon: false,
@@ -149,45 +150,45 @@
       return dummyGraphVal;
     }
 
-    function dummyUtilizationData(filter) {
+    function dummyLineChartData(filter) {
       var dummyGraphVal = [];
       if (filter.value === 0) {
         for (var i = 240; i >= 1; i--) {
           dummyGraphVal.push({
-            time: moment().subtract(i, 'minutes').format(timeFormat),
-            average_util: Math.floor((Math.random() * 10) + 1),
+            time: moment().subtract(i, 'minutes').format(vm.timeFormat),
+            field: Math.floor((Math.random() * 10) + 1),
             balloon: false
           });
         }
       } else if (filter.value === 1) {
         for (i = 288; i >= 1; i--) {
           dummyGraphVal.push({
-            time: moment().subtract(i * 5, 'minutes').format(timeFormat),
-            average_util: Math.floor((Math.random() * 10) + 1),
+            time: moment().subtract(i * 5, 'minutes').format(vm.timeFormat),
+            field: Math.floor((Math.random() * 10) + 1),
             balloon: false
           });
         }
       } else if (filter.value === 2) {
         for (i = 168; i >= 1; i--) {
           dummyGraphVal.push({
-            time: moment().subtract(i, 'hours').format(timeFormat),
-            average_util: Math.floor((Math.random() * 10) + 1),
+            time: moment().subtract(i, 'hours').format(vm.timeFormat),
+            field: Math.floor((Math.random() * 10) + 1),
             balloon: false
           });
         }
       } else if (filter.value === 3) {
         for (i = 180; i >= 0; i--) {
           dummyGraphVal.push({
-            time: moment().subtract(i * 3, 'hours').format(timeFormat),
-            average_util: Math.floor((Math.random() * 10) + 1),
+            time: moment().subtract(i * 3, 'hours').format(vm.timeFormat),
+            field: Math.floor((Math.random() * 10) + 1),
             balloon: false
           });
         }
       } else {
         for (i = 270; i >= 0; i--) {
           dummyGraphVal.push({
-            time: moment().subtract(i * 8, 'hours').format(timeFormat),
-            average_util: Math.floor((Math.random() * 10) + 1),
+            time: moment().subtract(i * 8, 'hours').format(vm.timeFormat),
+            field: Math.floor((Math.random() * 10) + 1),
             balloon: false
           });
         }
@@ -199,7 +200,7 @@
       var dummyGraph = [];
       dummyGraph.push({
         title: vm.average_utilzation,
-        valueField: 'average_util',
+        valueField: 'field',
         dashLength: 4,
         lineColor: chartColors.grayLightTwo,
         showBalloon: false,
@@ -208,57 +209,23 @@
       return dummyGraph;
     }
 
-    function dummyParticipantDistributionData(filter) {
-      var dummyGraphVal = [];
-      if (filter.value === 0) {
-        for (var i = 240; i >= 1; i--) {
-          dummyGraphVal.push({
-            time: moment().subtract(i, 'minutes').format(timeFormat),
-            particpant_count: Math.floor((Math.random() * 10) + 1),
-            balloon: false
-          });
-        }
-      } else if (filter.value === 1) {
-        for (i = 288; i >= 1; i--) {
-          dummyGraphVal.push({
-            time: moment().subtract(i * 5, 'minutes').format(timeFormat),
-            particpant_count: Math.floor((Math.random() * 10) + 1),
-            balloon: false
-          });
-        }
-      } else if (filter.value === 2) {
-        for (i = 168; i >= 1; i--) {
-          dummyGraphVal.push({
-            time: moment().subtract(i, 'hours').format(timeFormat),
-            particpant_count: Math.floor((Math.random() * 10) + 1),
-            balloon: false
-          });
-        }
-      } else if (filter.value === 3) {
-        for (i = 180; i >= 0; i--) {
-          dummyGraphVal.push({
-            time: moment().subtract(i * 3, 'hours').format(timeFormat),
-            particpant_count: Math.floor((Math.random() * 10) + 1),
-            balloon: false
-          });
-        }
-      } else {
-        for (i = 270; i >= 0; i--) {
-          dummyGraphVal.push({
-            time: moment().subtract(i * 8, 'hours').format(timeFormat),
-            particpant_count: Math.floor((Math.random() * 10) + 1),
-            balloon: false
-          });
-        }
-      }
-      return dummyGraphVal;
-    }
-
     function dummyParticipantDistributionGraph() {
       var dummyGraph = [];
       dummyGraph.push({
         title: 'Cluster',
-        valueField: 'particpant_count',
+        valueField: 'field',
+        lineColor: chartColors.grayLightTwo,
+        showBalloon: false,
+        isDummy: true
+      });
+      return dummyGraph;
+    }
+
+    function dummyClientTypeGraph() {
+      var dummyGraph = [];
+      dummyGraph.push({
+        title: vm.client_types,
+        valueField: 'field',
         lineColor: chartColors.grayLightTwo,
         showBalloon: false,
         isDummy: true

@@ -71,13 +71,14 @@
         card.showSSOSettings = function () {
           $state.go('setupwizardmodal', {
             currentTab: 'enterpriseSettings',
-            currentStep: 'init'
+            currentStep: 'init',
+            onlyShowSingleTab: true,
           });
         };
 
         card.manageUsers = function () {
           $state.go('users.list').then(function () {
-            $state.go('users.manage', {});
+            $state.go('users.manage.picker');
           });
         };
 

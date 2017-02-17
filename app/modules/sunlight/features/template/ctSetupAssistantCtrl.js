@@ -205,8 +205,6 @@
           return selectedDay;
         });
       }
-      vm.overlayTitle = config.mediaType && config.mediaType === vm.mediaTypes.chat ?
-          $translate.instant('careChatTpl.editTitle') : $translate.instant('careChatTpl.editCallbackTitle');
     }
     setDayPreview();
 
@@ -801,6 +799,41 @@
     //Use the existing template fields when editing the template
     if ($stateParams.isEditFeature) {
       vm.template = $stateParams.template;
+      // This will become dead once all the existing templates are saved with field4.
+      populateCustomerInformationField4();
+    }
+
+    function populateCustomerInformationField4() {
+      var field4Default = {
+        attributes: [{
+          name: 'required',
+          value: 'optional'
+        }, {
+          name: 'category',
+          value: vm.getCategoryTypeObject('requestInfo')
+        }, {
+          name: 'label',
+          value: $translate.instant('careChatTpl.additionalDetails')
+        }, {
+          name: 'hintText',
+          value: $translate.instant('careChatTpl.additionalDetailsAbtIssue')
+        }, {
+          name: 'type',
+          value: vm.getTypeObject('reason'),
+          categoryOptions: ''
+        }]
+      };
+      if (vm.selectedMediaType === vm.mediaTypes.chat &&
+        vm.template.configuration.pages.customerInformation.fields.field4 === undefined) {
+        vm.template.configuration.pages.customerInformation.fields.field4 = field4Default;
+      } else if (vm.selectedMediaType === vm.mediaTypes.chatPlusCallback) {
+        if (vm.template.configuration.pages.customerInformationChat.fields.field4 === undefined) {
+          vm.template.configuration.pages.customerInformationChat.fields.field4 = _.cloneDeep(field4Default);
+        }
+        if (vm.template.configuration.pages.customerInformationCallback.fields.field4 === undefined) {
+          vm.template.configuration.pages.customerInformationCallback.fields.field4 = _.cloneDeep(field4Default);
+        }
+      }
     }
 
     function cancelModal() {
@@ -957,6 +990,8 @@
         case 'name':
           return vm.isNamePageValid();
         case 'customerInformation':
+        case 'customerInformationChat':
+        case 'customerInformationCallback':
           return isCustomerInformationPageValid();
         case 'profile':
           return isProfilePageValid();
@@ -992,11 +1027,20 @@
       }
     }
 
+    function resetActiveItem() {
+      switch (vm.currentState) {
+        case 'customerInformation':
+        case 'customerInformationCallback':
+        case 'customerInformationChat': vm.activeItem = undefined;
+      }
+    }
+
     function nextPage() {
       vm.animation = 'slide-left';
       $timeout(function () {
         vm.currentState = getAdjacentEnabledState(getPageIndex(), 1);
       }, vm.animationTimeout);
+      resetActiveItem();
     }
 
     function previousPage() {
@@ -1004,6 +1048,7 @@
       $timeout(function () {
         vm.currentState = getAdjacentEnabledState(getPageIndex(), -1);
       }, vm.animationTimeout);
+      resetActiveItem();
     }
 
     vm.activeItem = undefined;
@@ -1060,7 +1105,8 @@
     };
 
     vm.isSecondFieldForCallBack = function () {
-      return vm.selectedMediaType === vm.mediaTypes.callback && vm.activeItemName === 'field2';
+      return (vm.selectedMediaType === vm.mediaTypes.callback ||
+        vm.cardMode === vm.mediaTypes.callback) && vm.activeItemName === 'field2';
     };
 
     vm.isDynamicFieldType = function (val) {

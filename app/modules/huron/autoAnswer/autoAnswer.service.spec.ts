@@ -25,7 +25,7 @@ describe('Service: AutoAnswerService', () => {
               model: phone.model,
               enabled: phone.enabled,
               mode: phone.enabled ? phone.mode : undefined }));
-      });
+    });
     this.autoAnswerData.member = new AutoAnswerMember(_.get(this.autoAnswerRead, AutoAnswerConst.MEMBER));
 
     this.getAutoAnswerNoEnabledPhoneResponse = getJSONFixture('huron/json/autoAnswer/autoAnswerNoEnabledPhoneGetResponse.json');

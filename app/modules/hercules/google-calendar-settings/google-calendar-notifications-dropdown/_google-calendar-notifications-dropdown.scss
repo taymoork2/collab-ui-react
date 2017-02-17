@@ -17,7 +17,7 @@ google-calendar-notifications-dropdown {
     border-radius: 2rem;
     background-color: $gray-light-1;
 
-    &.todo {
+    &.success {
       background-color: $color-cta-base;
     }
 
@@ -91,16 +91,6 @@ google-calendar-notifications-dropdown {
 
     + .notification-entry {
       border-top: 1px solid $gray-light-3;
-    }
-  }
-
-  .notification-entry-close {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-
-    &:hover {
-      cursor: pointer;
     }
   }
 

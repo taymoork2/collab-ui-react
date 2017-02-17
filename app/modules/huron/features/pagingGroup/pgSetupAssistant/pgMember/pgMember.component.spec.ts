@@ -1,7 +1,6 @@
 import { Member } from 'modules/huron/members';
 
 describe('Component: pgMember', () => {
-  const MEMBER_INPUT = 'input#memberInput';
   let membersList = getJSONFixture('huron/json/features/pagingGroup/membersList2.json');
   let fake_picture_path = 'https://09876/zyxwuv';
 
@@ -30,6 +29,16 @@ describe('Component: pgMember', () => {
       }],
   };
 
+  let getMachineAcctResponse = {
+    id: 'fake-userid',
+    schemas: [],
+    name: '',
+    entitlements: [],
+    displayName: '',
+    machineType: 'room',
+    meta: {},
+  };
+
   beforeEach(function () {
     this.initModules('huron.paging-group.member');
     this.injectDependencies(
@@ -52,6 +61,9 @@ describe('Component: pgMember', () => {
     this.getUserDefer = this.$q.defer();
     spyOn(this.FeatureMemberService, 'getUser').and.returnValue(this.getUserDefer.promise);
 
+    this.getMachineAcctDefer = this.$q.defer();
+    spyOn(this.FeatureMemberService, 'getMachineAcct').and.returnValue(this.getMachineAcctDefer.promise);
+
     spyOn(this.Notification, 'success');
     spyOn(this.Notification, 'errorResponse');
   });
@@ -68,8 +80,10 @@ describe('Component: pgMember', () => {
     beforeEach(initComponent);
 
     it('should fetch a list of members', function () {
-      this.view.find(MEMBER_INPUT).val('por').change();
       this.getMemberListDefer.resolve(membersList);
+      this.getMachineAcctDefer.resolve(getMachineAcctResponse);
+      this.controller.memberName = 'por';
+      this.controller.fetchMembers();
       this.$scope.$apply();
       expect(this.controller.availableMembers.length).toEqual(5);
     });

@@ -1,6 +1,6 @@
 'use strict';
 
-describe('UserManageModalController', function () {
+describe('UserManageModalPickerController', function () {
 
   ///////////////////
 
@@ -15,7 +15,7 @@ describe('UserManageModalController', function () {
   }
 
   function initController() {
-    this.controller = this.$controller('UserManageModalController', {
+    this.controller = this.$controller('UserManageModalPickerController', {
       $scope: this.$scope
     });
     this.$scope.$apply();
@@ -24,20 +24,16 @@ describe('UserManageModalController', function () {
   beforeEach(init);
 
   it('should transition to standard org state when DirSync not supported', function () {
-    spyOn(this.FeatureToggleService, 'supportsDirSync').and.returnValue(this.$q.when(false));
+    spyOn(this.FeatureToggleService, 'supportsDirSync').and.returnValue(this.$q.resolve(false));
 
     initController.apply(this);
-
-    expect(this.controller.isDirSyncEnabled).toBeFalsy();
     expect(this.$state.go).toHaveBeenCalledWith('users.manage.org');
   });
 
   it('should transition to advanced org state when DirSync is supported', function () {
-    spyOn(this.FeatureToggleService, 'supportsDirSync').and.returnValue(this.$q.when(true));
+    spyOn(this.FeatureToggleService, 'supportsDirSync').and.returnValue(this.$q.resolve(true));
 
     initController.apply(this);
-
-    expect(this.controller.isDirSyncEnabled).toBeTruthy();
     expect(this.$state.go).toHaveBeenCalledWith('users.manage.activedir');
   });
 

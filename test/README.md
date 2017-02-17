@@ -1,6 +1,29 @@
 Testing Guidelines
 ===========================
 
+Feature Toggles:
+---------------------
+* Can create conditional e2e test flows based on existence of feature toggles.
+* Feature toggles are automatically initialized by the login page object: eg. `login.login('partner-admin')`
+  * If you need to manually populate toggles, can be done directly with the utility `featureToggle.populateFeatureToggles(bearerToken)`
+* Feature toggles can be used by importing the `featureToggle.utils.js` utility and referencing the same keys defined in `features.config.js` and used by the angular service `FeatureToggleService.features`
+```js
+// ${WX2_ADMIN_WEB_CLIENT_HOME}/test/e2e-protractor/utils/featureToggle.utils.js
+var featureToggle = require('path/to/utils/featureToggle.utils');
+
+it('should login', function () {
+  login.login('partner-admin');
+});
+
+it('should do something conditional on atlasFeatureToggle', function () {
+  if (featureToggle.features.atlasFeatureToggle) {
+    utils.click(SOME_ELEMENT);
+  } else {
+    utils.click(ANOTHER_ELEMENT);
+  }
+});
+```
+
 Jasmine:
 ---------------------
 * Suites (_describe()_ function)

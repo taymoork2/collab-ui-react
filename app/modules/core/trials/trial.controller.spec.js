@@ -60,6 +60,7 @@ describe('Controller: TrialCtrl:', function () {
     spyOn(FeatureToggleService, 'atlasContextServiceTrialsGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.resolve(true));
+    spyOn(TrialPstnService, 'checkForPstnSetup').and.returnValue($q.resolve(false));
     spyOn(FeatureToggleService, 'atlasTrialsShipDevicesGetStatus').and.returnValue($q.resolve(false));
     spyOn(FeatureToggleService, 'supports').and.callFake(function (param) {
       fail('the following toggle wasn\'t expected' + param); //taking control of which toggles this controller are using (explicit or implicit)
@@ -96,6 +97,7 @@ describe('Controller: TrialCtrl:', function () {
       HuronCustomer: HuronCustomer,
       HuronCountryService: HuronCountryService,
       FeatureToggleService: FeatureToggleService,
+      TrialPstnService: TrialPstnService
     });
     helpers = controller._helpers;
     $scope.$apply();
@@ -722,6 +724,7 @@ describe('Controller: TrialCtrl:', function () {
       controller.pstnTrial.enabled = true;
       controller.callTrial.enabled = false;
       controller.roomSystemTrial.enabled = false;
+      controller.sparkBoardTrial.enabled = false;
       $scope.$apply();
       $scope.$digest();
       expect(controller.pstnTrial.enabled).toBeFalsy();
@@ -757,6 +760,8 @@ describe('Controller: TrialCtrl:', function () {
         beforeEach(function () {
           controller.callTrial.enabled = false;
           controller.pstnTrial.enabled = false;
+          controller.sparkBoardTrial.enabled = false;
+          controller.roomSystemTrial.enabled = false;
           controller.startTrial();
           $scope.$apply();
         });
@@ -774,6 +779,8 @@ describe('Controller: TrialCtrl:', function () {
         beforeEach(function () {
           controller.callTrial.enabled = false;
           controller.pstnTrial.enabled = false;
+          controller.roomSystemTrial.enabled = false;
+          controller.sparkBoardTrial.enabled = false;
           controller.startTrial(callback);
           $scope.$apply();
         });
@@ -790,7 +797,9 @@ describe('Controller: TrialCtrl:', function () {
       describe('without addNumbers callback', function () {
         beforeEach(function () {
           controller.callTrial.enabled = false;
+          controller.roomSystemTrial.enabled = false;
           controller.pstnTrial.enabled = false;
+          controller.sparkBoardTrial.enabled = false;
           controller.startTrial();
           $scope.$apply();
         });
@@ -836,15 +845,17 @@ describe('Controller: TrialCtrl:', function () {
         it('should have Squared UC offer', function () {
           expect(controller.callTrial.enabled).toBeTruthy();
           expect(controller.pstnTrial.enabled).toBeTruthy();
+
         });
 
         it('should notify success', function () {
+          controller.preset.pstn = false;
           spyOn(HuronCustomer, 'create').and.returnValue($q.resolve());
-          spyOn(TrialPstnService, 'createPstnEntity').and.returnValue($q.resolve());
+          spyOn(TrialPstnService, 'createPstnEntityV2').and.returnValue($q.resolve());
           controller.startTrial();
           $scope.$apply();
           expect(HuronCustomer.create).toHaveBeenCalled();
-          expect(TrialPstnService.createPstnEntity).toHaveBeenCalled();
+          expect(TrialPstnService.createPstnEntityV2).toHaveBeenCalled();
           expect(Notification.success).toHaveBeenCalledWith('trialModal.addSuccess', jasmine.any(Object));
           expect(Notification.success.calls.count()).toEqual(1);
         });
@@ -881,11 +892,13 @@ describe('Controller: TrialCtrl:', function () {
         it('should return false when only sparkboardTrial is enabled', function () {
           controller.sparkBoardTrial.enabled = true;
           controller.roomSystemTrial.enabled = false;
+          controller.sparkBoardTrial.enabled = false;
           expect(controller.hasUserServices()).toBeFalsy();
         });
 
         it('should return false when no services are enabled', function () {
           controller.roomSystemTrial.enabled = false;
+          controller.sparkBoardTrial.enabled = false;
           $scope.$apply();
           expect(controller.hasUserServices()).toBeFalsy();
         });
@@ -902,6 +915,8 @@ describe('Controller: TrialCtrl:', function () {
         it('should enable context service', function () {
           controller.contextTrial.enabled = true;
           controller.callTrial.enabled = false;
+          controller.sparkBoardTrial.enabled = false;
+          controller.roomSystemTrial.enabled = false;
           controller.startTrial();
           $scope.$apply();
           expect(TrialContextService.addService).toHaveBeenCalled();
@@ -912,6 +927,8 @@ describe('Controller: TrialCtrl:', function () {
           addContextSpy.and.returnValue($q.reject('rejected'));
           controller.contextTrial.enabled = true;
           controller.callTrial.enabled = false;
+          controller.roomSystemTrial.enabled = false;
+          controller.sparkBoardTrial.enabled = false;
           controller.startTrial();
           $scope.$apply();
           expect(TrialContextService.addService).toHaveBeenCalled();
@@ -931,6 +948,8 @@ describe('Controller: TrialCtrl:', function () {
         beforeEach(function () {
           controller.contextTrial.enabled = false;
           controller.callTrial.enabled = false;
+          controller.roomSystemTrial.enabled = false;
+          controller.sparkBoardTrial.enabled = false;
           controller.startTrial();
           $scope.$apply();
         });
@@ -1296,6 +1315,8 @@ describe('Controller: TrialCtrl:', function () {
         beforeEach(function () {
           controller.pstnTrial.enabled = true;
           controller.callTrial.enabled = true;
+          controller.preset.call = false;
+          controller.preset.pstn = false;
         });
 
         it('should have Squared UC offer', function () {
@@ -1305,15 +1326,14 @@ describe('Controller: TrialCtrl:', function () {
 
         it('should notify success', function () {
           spyOn(HuronCustomer, 'create').and.returnValue($q.resolve());
-          spyOn(TrialPstnService, 'createPstnEntity').and.returnValue($q.resolve());
+          spyOn(TrialPstnService, 'createPstnEntityV2').and.returnValue($q.resolve());
           controller.startTrial();
           $scope.$apply();
           expect(HuronCustomer.create).toHaveBeenCalled();
-          expect(TrialPstnService.createPstnEntity).toHaveBeenCalled();
+          expect(TrialPstnService.createPstnEntityV2).toHaveBeenCalled();
           expect(Notification.success).toHaveBeenCalledWith('trialModal.addSuccess', jasmine.any(Object));
           expect(Notification.success.calls.count()).toEqual(1);
         });
-
         it('error should notify error', function () {
           spyOn(HuronCustomer, 'create').and.returnValue($q.reject());
           controller.startTrial();

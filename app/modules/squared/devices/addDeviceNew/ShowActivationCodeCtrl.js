@@ -64,7 +64,7 @@
           if (vm.account.cisUuid) { // Existing place
             createCodeForHuronPlace(vm.account.cisUuid).then(success, error);
           } else { // New place
-            createHuronPlace(vm.account.name, wizardData.account.directoryNumber, wizardData.account.externalNumber)
+            createHuronPlace(vm.account.name, wizardData.account.entitlements, wizardData.account.directoryNumber, wizardData.account.externalNumber)
               .then(function (place) {
                 vm.account.cisUuid = place.cisUuid;
                 createCodeForHuronPlace(vm.account.cisUuid).then(success, error);
@@ -122,8 +122,8 @@
       vm.isLoading = false;
     }
 
-    function createHuronPlace(name, directoryNumber, externalNumber) {
-      return CsdmDataModelService.createCmiPlace(name, directoryNumber, externalNumber);
+    function createHuronPlace(name, entitlements, directoryNumber, externalNumber) {
+      return CsdmDataModelService.createCmiPlace(name, entitlements, directoryNumber, externalNumber);
     }
 
     function createCodeForHuronPlace(cisUuid) {

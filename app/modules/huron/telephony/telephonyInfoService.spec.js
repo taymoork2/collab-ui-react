@@ -27,9 +27,7 @@ describe('Service: TelephonyInfoService', function () {
     }]
   };
 
-  beforeEach(inject(function (_$rootScope_, _$httpBackend_, _$translate_, _$q_, _HuronConfig_,
-      _TelephonyInfoService_, _ServiceSetup_, _DirectoryNumber_, _HuronCustomer_, _Authinfo_,
-      _InternationalDialing_, _ExternalNumberPool_) {
+  beforeEach(inject(function (_$rootScope_, _$httpBackend_, _$translate_, _$q_, _HuronConfig_, _TelephonyInfoService_, _ServiceSetup_, _DirectoryNumber_, _HuronCustomer_, _Authinfo_, _InternationalDialing_, _ExternalNumberPool_) {
     $httpBackend = _$httpBackend_;
     $q = _$q_;
     $rootScope = _$rootScope_;

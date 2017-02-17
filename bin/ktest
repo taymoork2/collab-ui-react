@@ -128,16 +128,19 @@ export npm_lifecycle_event=${npm_lifecycle_event=test}
 
 # run 'karma' at the project root dir
 pushd "${WX2_ADMIN_WEB_CLIENT_HOME}" > /dev/null
+# set old generation heap limit to 2GB since we're currently hovering around the 1.4GB default
+karma_process="node --max-old-space-size=2048 ${WX2_ADMIN_WEB_CLIENT_HOME}/node_modules/karma/bin/karma start"
+
 set -x
 # shellcheck disable=SC2086
 if [ "${no_parallel}" = "true" ]; then
-    karma start $shim_file_args $pass_through_opts
+    $karma_process $shim_file_args $pass_through_opts
     exit_status=$?
 else
     # number of concurrent jobs run by parallel can be overridden by 'KTEST__PARALLEL_NUM_JOBS' env var
     parallel_num_jobs=${KTEST__PARALLEL_NUM_JOBS:-${num_cores}}
     parallel_job_log=$(mktemp "$temp_dir/parallel_job_log.XXXXX")
-    parallel -j"${parallel_num_jobs}" --joblog $parallel_job_log karma start $pass_through_opts ::: $shim_file_args
+    parallel -j"${parallel_num_jobs}" --joblog $parallel_job_log $karma_process $pass_through_opts ::: $shim_file_args
     exit_status=$?
     echo "INFO: parallel job log for ktest:"
     cat "$parallel_job_log" || :

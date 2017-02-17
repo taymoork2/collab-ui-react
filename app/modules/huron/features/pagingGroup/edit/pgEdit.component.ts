@@ -46,7 +46,8 @@ class PgEditComponentCtrl implements ng.IComponentController {
               private Notification,
               private PagingGroupService: PagingGroupService,
               private PagingNumberService: PagingNumberService,
-              private FeatureMemberService: FeatureMemberService) {
+              private FeatureMemberService: FeatureMemberService,
+              private $q: ng.IQService) {
   }
 
   public $onInit(): void {
@@ -163,23 +164,41 @@ class PgEditComponentCtrl implements ng.IComponentController {
       (data: string[]) => {
         this.availableNumbers = data;
       }, (response) => {
-        this.Notification.errorResponse(response, 'pagingGroup.numberFetchFailure');
-      });
+      this.Notification.errorResponse(response, 'pagingGroup.numberFetchFailure');
+    });
   }
 
-  public fetchMembers(): void {
-    if (this.memberName && this.memberName.length >= 3) {
-      this.FeatureMemberService.getMemberSuggestions(this.memberName).then(
-          (suggestedMembers: Member[]) => {
-            this.availableMembers = _.reject(suggestedMembers, (mem) => {
-              return _.some(this.members, (member) => {
-                return _.get(member, 'member.uuid') === mem.uuid;
-              });
-            });
-          }, (response) => {
-            this.Notification.errorResponse(response, 'pagingGroup.memberFetchFailure');
+  public fetchMembers(): ng.IPromise<Array<Member>> {
+    return this.FeatureMemberService.getMemberSuggestions(this.memberName).then(
+      (suggestedMembers: Member[]) => {
+        this.availableMembers = _.reject(suggestedMembers, (mem) => {
+          return _.some(this.members, (member) => {
+            return _.get(member, 'member.uuid') === mem.uuid;
           });
-    }
+        });
+
+        let promises: Array<ng.IPromise<any>> = [];
+        _.forEach(this.availableMembers, (item: any): void => {
+          // If Place is a room device type, remove from availableMembers
+          if (item.type === USER_PLACE) {
+            promises.push(this.FeatureMemberService.getMachineAcct(item.uuid).then(
+              (data) => {
+                if (data.machineType === 'lyra_space') {
+                  this.availableMembers = _.reject(this.availableMembers, item);
+                }
+              }).catch(() => {
+                this.availableMembers = _.reject(this.availableMembers, item);
+              }));
+          }
+        });
+
+        return this.$q.all(promises).then(() => {
+          return this.availableMembers;
+        });
+
+      }, (response) => {
+      this.Notification.errorResponse(response, 'pagingGroup.memberFetchFailure');
+    });
   }
 
   public selectMembers(member: Member): void {

@@ -11,6 +11,7 @@ class CallPickupMembersCtrl implements ng.IComponentController {
   public errorMemberInput: boolean = false;
   public memberName: string;
   private maxMembersAllowed: number = parseInt(this.$translate.instant('callPickup.maxMembersAllowed'), 10) || 30;
+  private readonly suggestionLimit = 3;
   public readonly removeText = this.$translate.instant('callPickup.removeMember');
   public isNew: boolean;
   public savedCallPickup: IPickupGroup;
@@ -24,12 +25,20 @@ class CallPickupMembersCtrl implements ng.IComponentController {
 
   public fetchMembers(): void {
     if (this.memberName) {
-      this.FeatureMemberService.getMemberSuggestions(this.memberName)
+      this.FeatureMemberService.getMemberSuggestionsByLimit(this.memberName, this.suggestionLimit)
       .then(
         (members: Member[]) => {
           this.memberList = _.reject(members, mem => _.some(this.selectedMembers, member =>
            member.member.uuid === mem.uuid ));
           this.errorMemberInput = (this.memberList && this.memberList.length === 0);
+          let scope = this;
+          _.forEach(members, function(member) {
+            scope.CallPickupGroupService.areAllLinesInPickupGroup(member)
+            .then(
+              (disabled: boolean) => {
+                member['disabled'] = disabled;
+              });
+          });
         });
     }
   }
@@ -45,16 +54,40 @@ class CallPickupMembersCtrl implements ng.IComponentController {
         saveNumbers: [],
       };
 
-      let numbersPromise = this.CallPickupGroupService.getMemberNumbers(member.uuid);
       this.FeatureMemberService.getMemberPicture(member.uuid).then(
         avatar => memberData.picturePath = avatar.thumbnailSrc,
       );
-      let scope = this;
-      numbersPromise
-      .then(
-        (data: IMemberNumber[]) => {
+
+      this.CallPickupGroupService.getMemberNumbers(member.uuid)
+      .then((data: IMemberNumber[]) => {
+
+        let scope = this;
+        let checked = true;
+        _.forEach(data, function(memberNumber, index) {
+          scope.CallPickupGroupService.isLineInPickupGroup(memberNumber.internal)
+          .then((inPickupGroup: boolean) => {
+            let disabled = false;
+            let sublabel = '';
+
+            if (inPickupGroup) {
+              scope.CallPickupGroupService.getPickupGroupNameByLine(memberNumber.internal)
+              .then((pickupGroupName: string) => {
+                sublabel = 'Assigned to ' + pickupGroupName;
+                disabled = true;
+                memberData.checkboxes = scope.CallPickupGroupService.createCheckBox(memberData, data[index], index, sublabel, false, disabled);
+              });
+            } else {
+              memberData.checkboxes = scope.CallPickupGroupService.createCheckBox(memberData, data[index], index,
+                                                                                  sublabel, checked, disabled);
+              // Only check the first open line
+              if (checked) {
+                checked = false;
+              }
+            }
+          });
+        });
+
         memberData.saveNumbers.push(scope.getPrimaryNumber(data));
-        memberData.checkboxes = scope.CallPickupGroupService.createCheckBoxes(memberData, data);
         scope.selectedMembers.push(memberData);
         if (!scope.isNew) {
           scope.updateExistingCallPickup('select');
@@ -104,17 +137,17 @@ class CallPickupMembersCtrl implements ng.IComponentController {
           return number.internalNumber === internalNumber;
         });
         if (!scope.isNew) {
-           scope.updateExistingCallPickup('remove');
+          scope.updateExistingCallPickup('remove');
         }
       } else if (!_.findKey(member.saveNumbers, { internalNumber: internalNumber.trim() })) {
-          let saveNumber: ICallPickupNumbers = {
-            uuid: checkbox.numberUuid,
-            internalNumber: checkbox.label.split('&')[0].trim(),
-          };
-          member.saveNumbers.push(saveNumber);
-          if (!scope.isNew) {
-            scope.updateExistingCallPickup('select');
-          }
+        let saveNumber: ICallPickupNumbers = {
+          uuid: checkbox.numberUuid,
+          internalNumber: checkbox.label.split('&')[0].trim(),
+        };
+        member.saveNumbers.push(saveNumber);
+        if (!scope.isNew) {
+          scope.updateExistingCallPickup('select');
+        }
       }
     });
     if (!this.CallPickupGroupService.verifyLineSelected(this.selectedMembers)) {
@@ -128,8 +161,8 @@ class CallPickupMembersCtrl implements ng.IComponentController {
 
   private getPrimaryNumber(numbers: IMemberNumber[]): ICallPickupNumbers {
     let saveNumbers: ICallPickupNumbers = {
-          uuid: _.find(numbers, { primary : true }).uuid,
-          internalNumber: _.find(numbers, { primary : true }).internal,
+      uuid: _.find(numbers, { primary : true }).uuid,
+      internalNumber: _.find(numbers, { primary : true }).internal,
     };
     return saveNumbers;
   }

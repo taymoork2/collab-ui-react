@@ -23,7 +23,7 @@ describe('cell-template-action', function () {
     $scope.$digest();
   }
 
-  describe('download symbol', function () {
+  describe('report symbol', function () {
 
     it('not displayed if report is not downloadable', function () {
       $scope.row = {
@@ -33,11 +33,11 @@ describe('cell-template-action', function () {
         }
       };
       compileHtml();
-      var download_icon_class = view.find(".icon-download");
+      var download_icon_class = view.find(".icon-report");
       expect(download_icon_class.length).toBe(0);
     });
 
-    it('displays download symbol if report is downloadable but not downloading', function () {
+    it('displays report symbol if report is downloadable but not downloading', function () {
       $scope.row = {
         entity: {
           isDone: true,
@@ -46,7 +46,7 @@ describe('cell-template-action', function () {
         }
       };
       compileHtml();
-      var download_icon_class = view.find(".icon-download");
+      var download_icon_class = view.find(".icon-report");
       expect(download_icon_class.length).toBeGreaterThan(0);
     });
 
@@ -68,7 +68,7 @@ describe('cell-template-action', function () {
       expect(spinner_icon_class.length).toBeGreaterThan(0);
     });
 
-    it('displays disabled download symbol if report is downloading for another id', function () {
+    it('displays disabled report symbol if report is downloading for another id', function () {
       $scope.grid = {
         appScope: {
           downloadingReportId: "9999"
@@ -82,7 +82,7 @@ describe('cell-template-action', function () {
         }
       };
       compileHtml();
-      var download_icon_class = view.find(".icon-download");
+      var download_icon_class = view.find(".icon-report");
       expect(download_icon_class.length).toBeGreaterThan(0);
       var disabled_icon_class = view.find(".disabled");
       expect(disabled_icon_class.length).toBeGreaterThan(0);

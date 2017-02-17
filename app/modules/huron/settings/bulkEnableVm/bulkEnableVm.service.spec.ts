@@ -1,18 +1,18 @@
 import bulkEnableVmModule from './index';
 describe('Service: BulkEnableVmService', () => {
   beforeEach(function () {
-      this.initModules(bulkEnableVmModule);
-      this.injectDependencies(
-        'UrlConfig',
-        'HuronConfig',
-        'Authinfo',
-        'UserListService',
-        'BulkEnableVmService',
-        '$q',
-        '$httpBackend',
-      );
+    this.initModules(bulkEnableVmModule);
+    this.injectDependencies(
+      'UrlConfig',
+      'HuronConfig',
+      'Authinfo',
+      'UserListService',
+      'BulkEnableVmService',
+      '$q',
+      '$httpBackend',
+    );
 
-      spyOn(this.Authinfo, 'getOrgId').and.returnValue('78901');
+    spyOn(this.Authinfo, 'getOrgId').and.returnValue('78901');
   });
 
   const voiceMailPayload = { services: ['VOICE', 'VOICEMAIL'], voicemail: { dtmfAccessId: '71005001' } };
@@ -83,8 +83,8 @@ describe('Service: BulkEnableVmService', () => {
 
     spyOn(this.BulkEnableVmService, 'enableUserVmRetry').and.callThrough();
     this.BulkEnableVmService.enableUserVmRetry('12345', voiceMailPayload).catch(function (error) {
-          expect(error.status).toBe(500);
-        });
+      expect(error.status).toBe(500);
+    });
     expect(this.BulkEnableVmService.enableUserVmRetry).toHaveBeenCalledTimes(1);
     this.$httpBackend.flush();
   } );
@@ -95,8 +95,8 @@ describe('Service: BulkEnableVmService', () => {
 
     spyOn(this.BulkEnableVmService, 'getUserServicesRetry').and.callThrough();
     this.BulkEnableVmService.getUserServicesRetry('12345').catch(function (error) {
-          expect(error.status).toBe(503);
-        });
+      expect(error.status).toBe(503);
+    });
     this.$httpBackend.flush();
     expect(this.BulkEnableVmService.getUserServicesRetry).toHaveBeenCalledTimes(4);
 
@@ -108,8 +108,8 @@ describe('Service: BulkEnableVmService', () => {
 
     spyOn(this.BulkEnableVmService, 'getUserServicesRetry').and.callThrough();
     this.BulkEnableVmService.getUserServicesRetry('12345').catch(function (error) {
-          expect(error.status).toBe(502);
-        });
+      expect(error.status).toBe(502);
+    });
     this.$httpBackend.flush();
     expect(this.BulkEnableVmService.getUserServicesRetry).toHaveBeenCalledTimes(4);
 
@@ -121,8 +121,8 @@ describe('Service: BulkEnableVmService', () => {
 
     spyOn(this.BulkEnableVmService, 'getUserServicesRetry').and.callThrough();
     this.BulkEnableVmService.getUserServicesRetry('12345').catch(function (error) {
-          expect(error.status).toBe(504);
-        });
+      expect(error.status).toBe(504);
+    });
     this.$httpBackend.flush();
     expect(this.BulkEnableVmService.getUserServicesRetry).toHaveBeenCalledTimes(4);
 
@@ -133,7 +133,7 @@ describe('Service: BulkEnableVmService', () => {
     spyOn(this.BulkEnableVmService, 'getUserSitetoSiteNumberRetry').and.callThrough();
 
     this.BulkEnableVmService.getUserSitetoSiteNumberRetry('12345', 5).catch(function (error) {
-          expect(error.status).toBe(429);
+      expect(error.status).toBe(429);
     });
     this.$httpBackend.flush();
     expect(this.BulkEnableVmService.getUserSitetoSiteNumberRetry).toHaveBeenCalledTimes(6);

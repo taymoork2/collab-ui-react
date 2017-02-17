@@ -36,11 +36,11 @@ namespace domainManagement {
 
     public claim() {
       this.DomainManagementService.claimDomain(this._domain.text).then(() => {
-          this.$previousState.go();
-        },
-        err => {
-          this._error = err;
-        });
+        this.$previousState.go();
+      },
+      err => {
+        this._error = err;
+      });
     }
 
     public cancel() {

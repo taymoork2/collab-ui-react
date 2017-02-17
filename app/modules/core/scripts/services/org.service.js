@@ -45,6 +45,7 @@
       setHybridServiceAcknowledged: setHybridServiceAcknowledged,
       getEftSetting: getEftSetting,
       setEftSetting: setEftSetting,
+      setOrgAltHdsServersHds: setOrgAltHdsServersHds,
       validateSiteUrl: validateSiteUrl,
       setHybridServiceReleaseChannelEntitlement: setHybridServiceReleaseChannelEntitlement,
       updateDisplayName: updateDisplayName,
@@ -277,11 +278,15 @@
         });
     }
 
-    function createOrg(enc) {
+    function createOrg(enc, country) {
       var orgUrl = UrlConfig.getAdminServiceUrl() + 'organizations';
       var orgRequest = {
-        'encryptedQueryString': enc
+        encryptedQueryString: enc,
       };
+      // only set 'country' property if passed in (otherwise, it is safe left as undefined)
+      if (country) {
+        _.set(orgRequest, 'country', _.get(country, 'id', 'US'));
+      }
       return Auth.setAccessToken().then(function () {
         return $http.post(orgUrl, orgRequest).then(function (response) {
           return response.data;
@@ -411,6 +416,11 @@
           eft: setting
         }
       });
+    }
+
+    function setOrgAltHdsServersHds(orgId, altHdsServers) {
+      var serviceUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '/settings/altHdsServers';
+      return $http.put(serviceUrl, altHdsServers);
     }
 
     function isSetupDone(orgId) {

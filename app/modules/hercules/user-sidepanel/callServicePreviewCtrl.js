@@ -120,7 +120,6 @@
         if ($scope.callServiceAware.status && $scope.callServiceAware.status.lastStateChange) {
           $scope.callServiceAware.status.lastStateChangeText = FusionUtils.getTimeSinceText($scope.callServiceAware.status.lastStateChange);
         }
-
         if ($scope.callServiceConnect.status && $scope.callServiceConnect.status.connectorId) {
           ClusterService.getConnector($scope.callServiceConnect.status.connectorId).then(function (connector) {
             $scope.callServiceConnect.homedConnector = connector;

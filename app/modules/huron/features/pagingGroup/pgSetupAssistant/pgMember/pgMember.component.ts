@@ -1,4 +1,4 @@
-import { Member, USER_REAL_USER } from 'modules/huron/members';
+import { Member, USER_REAL_USER, USER_PLACE } from 'modules/huron/members';
 import { IMemberWithPicture } from 'modules/huron/features/pagingGroup';
 
 class PagingGroupMemberCtrl implements ng.IComponentController {
@@ -11,9 +11,11 @@ class PagingGroupMemberCtrl implements ng.IComponentController {
   public numberOfCards: number | undefined = this.cardThreshold;
 
   /* @ngInject */
-  constructor(private FeatureMemberService,
-              private Notification) {
-  }
+  constructor(
+    private FeatureMemberService,
+    private Notification,
+    private $q: ng.IQService,
+  ) {}
 
   public selectMembers(member: Member): void {
     if (member) {
@@ -77,20 +79,39 @@ class PagingGroupMemberCtrl implements ng.IComponentController {
     return this.FeatureMemberService.getUserName(member);
   }
 
-  public fetchMembers(): void {
-    if (this.fetchMembers && this.memberName.length >= 3) {
-      this.FeatureMemberService.getMemberSuggestions(this.memberName).then(
-        (data: Member[]) => {
-          this.availableMembers = _.reject(data, (mem) => {
-              return _.some(this.selectedMembers, (member) => {
-                return _.get(member, 'member.uuid') === mem.uuid;
-              });
-            });
-          this.errorMemberInput = (this.availableMembers && this.availableMembers.length === 0);
-        }, (response) => {
-          this.Notification.errorResponse(response, 'pagingGroup.memberFetchFailure');
+  public fetchMembers(): ng.IPromise<Array<Member>> {
+    return this.FeatureMemberService.getMemberSuggestions(this.memberName).then(
+      (data: Member[]) => {
+        this.availableMembers = _.reject(data, (mem) => {
+          return _.some(this.selectedMembers, (member) => {
+            return _.get(member, 'member.uuid') === mem.uuid;
+          });
         });
-    }
+
+        let promises: Array<ng.IPromise<any>> = [];
+        _.forEach(this.availableMembers, (item: any): void => {
+          // If Place is a room device type, remove from availableMembers
+          if (item.type === USER_PLACE) {
+            promises.push(this.FeatureMemberService.getMachineAcct(item.uuid).then(
+              (data) => {
+                if (data.machineType === 'lyra_space') {
+                  this.availableMembers = _.reject(this.availableMembers, item);
+                }
+              }).catch(() => {
+                this.availableMembers = _.reject(this.availableMembers, item);
+              }));
+          }
+        });
+
+        return this.$q.all(promises).then(() => {
+          this.errorMemberInput = (this.availableMembers && this.availableMembers.length === 0);
+          return this.availableMembers;
+        });
+
+      },
+      (response) => {
+        this.Notification.errorResponse(response, 'pagingGroup.memberFetchFailure');
+      });
   }
 
   public showMemberCounts(): boolean {

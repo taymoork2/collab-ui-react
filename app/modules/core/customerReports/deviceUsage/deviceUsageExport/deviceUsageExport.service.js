@@ -9,11 +9,12 @@
   function DeviceUsageExportService($q, $document, $window, $log, $timeout, $http, Authinfo, UrlConfig) {
 
     var localUrlBase = 'http://localhost:8080/atlas-server/admin/api/v1/organization';
+
     var urlBase = UrlConfig.getAdminServiceUrl() + 'organization';
 
-    function exportData(startDate, endDate, api, statusCallback) {
+    function exportData(startDate, endDate, api, statusCallback, version_2) {
       var granularity = "day";
-      var deviceCategories = ['ce', 'sparkboard'];
+      var deviceCategories = ['ce', 'sparkboard', 'Novum'];
       var baseUrl = '';
       if (api === 'mock') {
         $log.info("Not implemented export for mock data");
@@ -24,12 +25,24 @@
       } else {
         baseUrl = urlBase;
       }
+
+      //TODO: Fix when releasing V2
       var url = baseUrl + '/' + Authinfo.getOrgId() + '/reports/device/call/export?';
       url = url + 'intervalType=' + granularity;
       url = url + '&rangeStart=' + startDate + '&rangeEnd' + endDate;
       url = url + '&deviceCategories=' + deviceCategories.join();
       url = url + '&accounts=__';
       url = url + '&sendMockData=false';
+
+      if (version_2) {
+        url = 'http://berserk.rd.cisco.com:8080/atlas-server/admin/api/v1/organization' + '/' + Authinfo.getOrgId() + '/reports/device/usage/export?';
+        url = url + 'interval=' + granularity;
+        url = url + '&from=' + startDate + '&to' + endDate;
+        url = url + '&categories=' + deviceCategories.join();
+        url = url + '&countryCodes=aggregate';
+        url = url + '&models=__';
+        //url = url + '&sendMockData=false';
+      }
 
       $log.info("Trying to export data using url:", url);
       return downloadReport(url, statusCallback);

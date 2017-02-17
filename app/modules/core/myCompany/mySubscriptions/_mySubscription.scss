@@ -25,19 +25,12 @@
       border-bottom: rem-calc(1) solid $gray-light-3;
     }
 
-    .link { 
+    .link {
       color: $color-primary-base;
     }
 
     .audio-type {
       font-size: 0.75rem;
-    }
-
-    .smp-license-report-period {
-      font-size: 0.5rem;
-      position: absolute;
-      top: 55px;
-      left: -5px;
     }
 
     .license-count-indicator {
@@ -253,6 +246,8 @@
         @include vr-spacing(pr, 1);
         @include vr-spacing(pt, 0.5);
         @include vr-spacing(pb, 0.25);
+
+        min-width: 200px;
       }
 
       .subscription-id {

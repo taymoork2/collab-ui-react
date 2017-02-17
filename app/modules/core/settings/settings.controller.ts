@@ -20,8 +20,16 @@ export class SettingsCtrl {
   public support: SettingSection;
   public retention: SettingSection;
 
+  // Footer and broadcast controls
+  public saveCancelFooter: boolean = false;
+  private readonly ACTIVATE_SAVE_BUTTONS: string = 'settings-control-activate-footer';
+  private readonly REMOVE_SAVE_BUTTONS: string = 'settings-control-remove-footer';
+  private readonly SAVE_BROADCAST: string = 'settings-control-save';
+  private readonly CANCEL_BROADCAST: string = 'settings-control-cancel';
+
   /* @ngInject */
   constructor(
+    private $scope: ng.IScope,
     private Authinfo,
     private Orgservice,
     private FeatureToggleService,
@@ -29,6 +37,14 @@ export class SettingsCtrl {
     // provide these settings to everyone
     this.initBranding();
     this.support = new SupportSetting();
+
+    this.$scope.$on(this.REMOVE_SAVE_BUTTONS, (): void => {
+      this.saveCancelFooter = false;
+    });
+
+    this.$scope.$on(this.ACTIVATE_SAVE_BUTTONS, (): void => {
+      this.saveCancelFooter = true;
+    });
 
     // if they are not a partner, provide everything else
     if (!this.Authinfo.isPartner()) {
@@ -39,6 +55,16 @@ export class SettingsCtrl {
       this.sipDomain = new SipDomainSetting();
       this.initRetention();
     }
+  }
+
+  public save(): void {
+    this.saveCancelFooter = false;
+    this.$scope.$emit(this.SAVE_BROADCAST);
+  }
+
+  public cancel(): void {
+    this.saveCancelFooter = false;
+    this.$scope.$emit(this.CANCEL_BROADCAST);
   }
 
   private initBranding() {

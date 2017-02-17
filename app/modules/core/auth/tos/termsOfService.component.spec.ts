@@ -125,6 +125,22 @@ describe('TermsOfService', () => {
       expect(this.controller.agree).toHaveBeenCalled();
     });
 
+    it('should disable decline button and show accept as loading button after accepting while waiting for acceptTOS to complete', function () {
+      this.controller.hasReadAggreement = true;
+      this.$scope.$apply();
+      let acceptBtn = this.view.find(AGREE_BTN);
+      let disagreeBtn = this.view.find(DISAGREE_BTN);
+
+      expect(acceptBtn).not.toBeDisabled();
+      expect(disagreeBtn).not.toBeDisabled();
+
+      this.controller.acceptingToS = true;
+      this.$scope.$apply();
+
+      expect(acceptBtn).toBeDisabled();
+      expect(disagreeBtn).toBeDisabled();
+    });
+
     // note - this test does not work in PhantomJS :(
     xit('should only enable Accept button when user has scrolled to bottom of ToS', function () {
       let btn = this.view.find(AGREE_BTN);
@@ -138,7 +154,7 @@ describe('TermsOfService', () => {
       this.view.find('.tos-container').height(500);
       let frame = this.$window.frames['tos-frame'];
       let iframeDoc = <Document>frame.document;
-      let scrollEvent = iframeDoc.createEvent( 'CustomEvent' ); // MUST be 'CustomEvent'
+      let scrollEvent = iframeDoc.createEvent('CustomEvent'); // MUST be 'CustomEvent'
       scrollEvent.initCustomEvent('scroll', false, false, null);
       iframeDoc.dispatchEvent(scrollEvent);
 

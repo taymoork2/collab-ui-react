@@ -15,6 +15,7 @@
         keyIndex: '@aaKeyIndex',
         voicemail: '=',
         fromRouteCall: '@aaFromRouteCall',
+        fromDecision: '@aaFromDecision',
         fromFallback: '@aaFromFallback'
       },
       controller: 'AARouteToUserCtrl',

@@ -8,10 +8,7 @@ require('./_line-settings.scss');
     .controller('LineSettingsCtrl', LineSettingsCtrl);
 
   /* @ngInject */
-  function LineSettingsCtrl($scope, $state, $stateParams, $timeout, $translate, $q, $modal, Notification,
-      DirectoryNumber, TelephonyInfoService, LineSettings, HuronAssignedLine, HuronUser,
-      UserListService, SharedLineInfoService, CallerId, DialPlanService,
-      ExternalNumberPool, TelephoneNumberService, Authinfo, AutoAnswerService, FeatureToggleService) {
+  function LineSettingsCtrl($scope, $state, $stateParams, $timeout, $translate, $q, $modal, Notification, DirectoryNumber, TelephonyInfoService, LineSettings, HuronAssignedLine, HuronUser, UserListService, SharedLineInfoService, CallerId, DialPlanService, ExternalNumberPool, TelephoneNumberService, Authinfo, AutoAnswerService, FeatureToggleService) {
     var vm = this;
 
     vm.actionList = [{

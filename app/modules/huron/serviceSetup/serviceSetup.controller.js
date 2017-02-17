@@ -9,7 +9,7 @@
   function ServiceSetupCtrl($q, $state, $scope, ServiceSetup, Notification, Authinfo, $translate, HuronCustomer,
     ValidationService, DialPlanService, TelephoneNumberService, ExternalNumberService,
     CeService, HuntGroupServiceV2, ModalService, DirectoryNumberService, VoicemailMessageAction,
-    PstnSetupService, Orgservice, FeatureToggleService, Config) {
+    PstnSetupService, Orgservice, FeatureToggleService, Config, CustomerCosRestrictionServiceV2) {
     var vm = this;
     vm.isTimezoneAndVoicemail = function () {
       return Authinfo.getLicenses().filter(function (license) {
@@ -45,6 +45,7 @@
     vm.initServiceSetup = initServiceSetup;
     vm.initNext = initNext;
     vm.checkIfTestOrg = checkIfTestOrg;
+    vm.setCustomerCosRestrictions = setCustomerCosRestrictions;
     vm.processing = true;
     vm.externalNumberPool = [];
     vm.inputPlaceholder = $translate.instant('directoryNumberPanel.searchNumber');
@@ -98,7 +99,8 @@
       disableExtensions: false,
       dialingHabit: DEFAULT_DIAL_HABIT,
       regionCode: '',
-      initialRegionCode: ''
+      initialRegionCode: '',
+      cosRestrictions: [],
     };
 
     if (!vm.showTimezoneAndVoicemail) {
@@ -742,6 +744,9 @@
         return initDefaultCountry();
       })
       .then(function () {
+        return initClassOfService();
+      })
+      .then(function () {
         // TODO BLUE-1221 - make /customer requests synchronous until fixed
         return listInternalExtensionRanges();
       })
@@ -881,6 +886,27 @@
       return ServiceSetup.getSiteCountries()
         .then(function (countries) {
           vm.defaultCountryOptions = _.sortBy(ServiceSetup.getTranslatedSiteCountries(countries), 'label');
+        });
+    }
+
+    function initClassOfService() {
+      return FeatureToggleService.supports(FeatureToggleService.features.huronCustomerCos)
+        .then(function (enabled) {
+          if (enabled) {
+            return CustomerCosRestrictionServiceV2.get({
+              customerId: Authinfo.getOrgId()
+            }).$promise.then(function (cosRestrictions) {
+              vm.model.cosRestrictions = _.forEach(cosRestrictions.restrictions, function (restriction) {
+                if (_.has(restriction, 'url')) {
+                  delete restriction['url'];
+                }
+
+                if (_.has(restriction, 'uuid')) {
+                  delete restriction['uuid'];
+                }
+              });
+            });
+          }
         });
     }
 
@@ -1110,7 +1136,7 @@
           message: $translate.instant('huronSettings.disableCompanyVoicemailMessage'),
           close: $translate.instant('common.disable'),
           dismiss: $translate.instant('common.cancel'),
-          type: 'negative'
+          btnType: 'negative'
         })
           .result
           .catch(function () {
@@ -1486,6 +1512,19 @@
         }
       }
 
+      function updateClassOfService() {
+        return FeatureToggleService.supports(FeatureToggleService.features.huronCustomerCos)
+          .then(function (enabled) {
+            if (enabled) {
+              return CustomerCosRestrictionServiceV2.update({
+                customerId: Authinfo.getOrgId()
+              }, {
+                restrictions: vm.model.cosRestrictions
+              });
+            }
+          });
+      }
+
       // Saving the company site has to be in done in a particular order
       // and if one step fails we should prevent other steps from executing,
       // hence the noop catch in the end to allow previous re-thrown rejections
@@ -1499,6 +1538,7 @@
           .then(updateCustomerVoice)
           .then(updateVoicemailUserTemplate)
           .then(saveVoicemailToEmail)
+          .then(updateClassOfService)
           .catch(_.noop);
       }
 
@@ -1595,6 +1635,10 @@
           $scope.to.options = values;
         }
       });
+    }
+
+    function setCustomerCosRestrictions(restrictions) {
+      vm.model.cosRestrictions = restrictions;
     }
 
     $scope.$watchCollection(function () {

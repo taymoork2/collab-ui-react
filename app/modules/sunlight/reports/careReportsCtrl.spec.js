@@ -248,7 +248,7 @@ describe('Controller: Care Reports Controller', function () {
       $scope.$digest();
     });
 
-    it('should use existing table data, if already available', function (done) {
+    xit('should use existing table data, if already available', function (done) {
       controller.tableData = [{ name: 'Test User' }];
       controller.tableDataStatus = 'set';
       controller.tableDataPromise = undefined;

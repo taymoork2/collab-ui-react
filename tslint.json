@@ -39,7 +39,10 @@
       "trace",
       "warn"
     ],
-    "no-consecutive-blank-lines": true,
+    "no-consecutive-blank-lines": [
+      true,
+      2
+    ],
     "no-construct": true,
     "no-debugger": true,
     "no-duplicate-variable": true,
@@ -69,6 +72,13 @@
     "radix": true,
     "semicolon": [true,
       "always"
+    ],
+    "ter-indent": [
+      true,
+      2,
+      {
+        "SwitchCase": 1
+      }
     ],
     "trailing-comma": [true,
       {

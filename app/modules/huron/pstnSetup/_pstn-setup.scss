@@ -29,6 +29,12 @@
   .cs-card-block {
     justify-content: center;
   }
+
+  h4 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 .pstn-provider-logo {

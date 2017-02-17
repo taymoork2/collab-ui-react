@@ -128,7 +128,7 @@
 
         .message {
           @include vr-spacing(p, 0.75);
-
+          @include vr-spacing(m, 0);
           border-radius: 2px 2px 2px 0px;
           background-color: $gray-light-3;
         }
@@ -167,7 +167,7 @@
         }
 
         .agent-status {
-          @include vr-spacing(pr, 4);
+          @include vr-spacing(pr, 6);
         }
       }
     }

@@ -101,7 +101,6 @@
         case 'country':
           var countries = formateCountry();
           vm.btnDisable = (JSON.stringify(countries) == JSON.stringify(info.countries));
-          return;
       }
     }
 

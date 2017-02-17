@@ -7,10 +7,7 @@
 
   /* @ngInject */
 
-  function HuronSettingsCtrl($q, $scope, $state, $translate, Authinfo, CeService, CallerId, Config,
-      DirectoryNumberService, DialPlanService, ExternalNumberService, FeatureToggleService, HuronCustomer,
-      HuntGroupServiceV2, InternationalDialing, ModalService, Notification, PstnSetupService,
-      ServiceSetup, TelephoneNumberService, ValidationService, VoicemailMessageAction, TerminusUserDeviceE911Service, PstnServiceAddressService) {
+  function HuronSettingsCtrl($q, $scope, $state, $translate, Authinfo, CeService, CallerId, Config, DirectoryNumberService, DialPlanService, ExternalNumberService, FeatureToggleService, HuronCustomer, HuntGroupServiceV2, InternationalDialing, ModalService, Notification, PstnSetupService, ServiceSetup, TelephoneNumberService, ValidationService, VoicemailMessageAction, TerminusUserDeviceE911Service, PstnServiceAddressService, CustomerCosRestrictionServiceV2) {
     var vm = this;
     vm.loading = true;
 
@@ -91,19 +88,14 @@
     vm.loadAvrilVoicemailOptions = loadAvrilVoicemailOptions;
     vm.loadPreferredLanguageOptions = loadPreferredLanguageOptions;
     vm.loadSite = loadSite;
+    vm.setCustomerCosRestrictions = setCustomerCosRestrictions;
 
     vm.processing = false;
     vm.hasVoicemailService = false;
     vm.hasVoiceService = false;
     vm.assignedNumbers = [];
     vm.timeZoneOptions = [];
-    vm.timeFormatOptions = [{
-      label: '12 hour',
-      value: Config.timeFormat.HOUR_12
-    }, {
-      label: '24 hour',
-      value: Config.timeFormat.HOUR_24
-    }];
+    vm.timeFormatOptions = [];
     vm.dateFormatOptions = [];
     vm.timeZoneInputPlaceholder = $translate.instant('serviceSetupModal.searchTimeZone');
     vm.preferredLanguageOptions = [];
@@ -166,7 +158,8 @@
       voicemailTimeZone: undefined,
       disableExtensions: false,
       dialingHabit: DEFAULT_DIAL_HABIT,
-      regionCode: ''
+      regionCode: '',
+      cosRestrictions: [],
     };
 
     vm.previousModel = _.cloneDeep(vm.model);
@@ -1210,11 +1203,19 @@
         vm.avrilTzUpdated = true;
       }
 
-      if (vm.model.site.preferredLanguage.value !== savedModel.site.preferredLanguage.value) {
+      if (!savedModel.site.preferredLanguage || vm.model.site.preferredLanguage.value !== savedModel.site.preferredLanguage.value) {
         siteData.preferredLanguage = vm.model.site.preferredLanguage.value;
       }
 
-      if (vm.model.site.defaultCountry.value !== savedModel.site.defaultCountry.value) {
+      if (vm.model.site.timeFormat != savedModel.site.timeFormat) {
+        siteData.timeFormat = vm.model.site.timeFormat.value;
+      }
+
+      if (vm.model.site.dateFormat != savedModel.site.dateFormat) {
+        siteData.dateFormat = vm.model.site.dateFormat.value;
+      }
+
+      if (!savedModel.site.defaultCountry || vm.model.site.defaultCountry.value !== savedModel.site.defaultCountry.value) {
         siteData.country = vm.model.site.defaultCountry.value;
       }
 
@@ -1367,6 +1368,12 @@
               vm.model.site.timeZone = _.find(vm.timeZoneOptions, function (timezone) {
                 return timezone.id === site.timeZone;
               });
+              vm.model.site.dateFormat = _.find(vm.dateFormatOptions, function (dateformat) {
+                return dateformat.value === site.dateFormat;
+              });
+              vm.model.site.timeFormat = _.find(vm.timeFormatOptions, function (timeformat) {
+                return timeformat.value === site.timeFormat;
+              });
               if (site.preferredLanguage) {
                 vm.model.site.preferredLanguage = _.find(vm.preferredLanguageOptions, function (language) {
                   return language.value === site.preferredLanguage;
@@ -1382,12 +1389,6 @@
               vm.model.site.emergencyCallBackNumber = site.emergencyCallBackNumber;
               vm.model.site.uuid = site.uuid;
               vm.model.site.voicemailPilotNumberGenerated = site.voicemailPilotNumberGenerated !== null ? site.voicemailPilotNumberGenerated : 'false';
-              if (_.get(site, 'dateFormat')) {
-                vm.model.site.dateFormat = site.dateFormat;
-              }
-              if (_.get(site, 'timeFormat')) {
-                vm.model.site.timeFormat = site.timeFormat;
-              }
               if (_.get(site, 'emergencyCallBackNumber.pattern')) {
                 vm.model.serviceNumber = {
                   pattern: site.emergencyCallBackNumber.pattern,
@@ -1465,6 +1466,13 @@
       return ServiceSetup.getDateFormats()
         .then(function (dateFormats) {
           vm.dateFormatOptions = dateFormats;
+        });
+    }
+
+    function loadTimeFormatOptions() {
+      return ServiceSetup.getTimeFormats()
+        .then(function (timeFormats) {
+          vm.timeFormatOptions = timeFormats;
         });
     }
 
@@ -1649,16 +1657,35 @@
     }
 
     function loadInternationalDialing() {
-      return ServiceSetup.listCosRestrictions().then(function (cosRestriction) {
+      return FeatureToggleService.supports(FeatureToggleService.features.huronCustomerCos)
+        .then(function (enabled) {
+          if (enabled) {
+            return CustomerCosRestrictionServiceV2.get({
+              customerId: Authinfo.getOrgId()
+            }).$promise.then(function (cosRestrictions) {
+              vm.previousModel.cosRestrictions = vm.model.cosRestrictions = _.forEach(cosRestrictions.restrictions, function (restriction) {
+                if (_.has(restriction, 'url')) {
+                  delete restriction['url'];
+                }
 
-        if (_.get(cosRestriction, 'restrictions[0].restriction') === INTERNATIONAL_DIALING) {
-          vm.model.internationalDialingEnabled = false;
-          vm.model.internationalDialingUuid = cosRestriction.restrictions[0].uuid;
-        } else {
-          vm.model.internationalDialingEnabled = true;
-          vm.model.internationalDialingUuid = null;
-        }
-      });
+                if (_.has(restriction, 'uuid')) {
+                  delete restriction['uuid'];
+                }
+              });
+            });
+          } else {
+            return ServiceSetup.listCosRestrictions()
+              .then(function (cosRestriction) {
+                if (_.get(cosRestriction, 'restrictions[0].restriction') === INTERNATIONAL_DIALING) {
+                  vm.model.internationalDialingEnabled = false;
+                  vm.model.internationalDialingUuid = cosRestriction.restrictions[0].uuid;
+                } else {
+                  vm.model.internationalDialingEnabled = true;
+                  vm.model.internationalDialingUuid = null;
+                }
+              });
+          }
+        });
     }
 
     function loadCompanyInfo() {
@@ -1669,7 +1696,9 @@
 
           if (vm.hasVoiceService) {
             promises.push(loadDateFormatOptions());
+            promises.push(loadTimeFormatOptions());
             promises.push(loadTimeZoneOptions()
+              .then(loadDefaultCountryOptions)
               .then(loadSite)
               .then(loadVoicemailTimeZone)
               .then(loadVoicemailToEmail)
@@ -1681,7 +1710,6 @@
             promises.push(loadDialPlan());
             promises.push(loadCallerId());
             promises.push(loadPreferredLanguageOptions());
-            promises.push(loadDefaultCountryOptions());
           }
 
           if (vm.hasVoicemailService) {
@@ -1843,16 +1871,27 @@
     }
 
     function saveInternationalDialing() {
-      var cosType = {
-        restriction: INTERNATIONAL_DIALING
-      };
+      return FeatureToggleService.supports(FeatureToggleService.features.huronCustomerCos)
+        .then(function (enabled) {
+          if (enabled) {
+            return CustomerCosRestrictionServiceV2.update({
+              customerId: Authinfo.getOrgId()
+            }, {
+              restrictions: vm.model.cosRestrictions
+            });
+          } else {
+            var cosType = {
+              restriction: INTERNATIONAL_DIALING
+            };
 
-      return $q.resolve(true)
-        .then(InternationalDialing.isDisableInternationalDialing)
-        .then(function (isSaveDisabled) {
-          if (!isSaveDisabled) {
-            return ServiceSetup.updateCosRestriction(vm.model.internationalDialingEnabled, vm.model.internationalDialingUuid, cosType)
-              .then(loadInternationalDialing);
+            return $q.resolve(true)
+              .then(InternationalDialing.isDisableInternationalDialing)
+              .then(function (isSaveDisabled) {
+                if (!isSaveDisabled) {
+                  return ServiceSetup.updateCosRestriction(vm.model.internationalDialingEnabled, vm.model.internationalDialingUuid, cosType)
+                    .then(loadInternationalDialing);
+                }
+              });
           }
         });
     }
@@ -2075,6 +2114,8 @@
       vm.model.site.siteSteeringDigit = savedModel.site.siteSteeringDigit;
       vm.model.site.siteCode = savedModel.site.siteCode;
       vm.model.site.timeZone = savedModel.site.timeZone;
+      vm.model.site.timeFormat = savedModel.site.timeFormat;
+      vm.model.site.dateFormat = savedModel.site.dateFormat;
       vm.model.site.preferredLanguage = savedModel.site.preferredLanguage;
       vm.model.site.defaultCountry = savedModel.site.defaultCountry;
       vm.model.site.voicemailPilotNumber = savedModel.site.voicemailPilotNumber;
@@ -2102,6 +2143,7 @@
       vm.model.showServiceAddress = savedModel.showServiceAddress;
       vm.model.serviceNumber = savedModel.serviceNumber;
       vm.model.serviceNumberWarning = savedModel.serviceNumberWarning;
+      vm.model.cosRestrictions = savedModel.cosRestrictions;
     }
 
     $scope.$watchCollection(function () {
@@ -2404,6 +2446,10 @@
           vm.model.companyVoicemail.externalVoicemail = false;
         }
       }
+    }
+
+    function setCustomerCosRestrictions(restrictions) {
+      vm.model.cosRestrictions = restrictions;
     }
 
     $scope.$watchCollection(function () {

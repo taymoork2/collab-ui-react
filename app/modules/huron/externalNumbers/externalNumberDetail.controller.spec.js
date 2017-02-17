@@ -8,8 +8,7 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
 
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$stateParams_, _$q_, _$state_,
-      _ModalService_, _ExternalNumberService_, _DialPlanService_, _Notification_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$stateParams_, _$q_, _$state_, _ModalService_, _ExternalNumberService_, _DialPlanService_, _Notification_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $state = _$state_;

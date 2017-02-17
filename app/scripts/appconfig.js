@@ -4,31 +4,36 @@
   /* eslint angular/di:0 */
   var loadedModules = [];
 
-  function loadModuleAndResolve($ocLazyLoad, resolve) {
-    return function loadModuleCallback(loadModule) {
-      var moduleName;
-      if (_.isObject(loadModule) && _.has(loadModule, 'default')) {
-        moduleName = loadModule.default;
-      } else {
-        moduleName = loadModule;
-      }
-      // Don't reload a loaded module or core angular module
-      if (_.includes(loadedModules, moduleName) || _.includes($ocLazyLoad.getModules(), moduleName) || _.startsWith(moduleName, 'ng')) {
-        resolve();
-      } else {
-        lazyLoadModule(moduleName)
-          .finally(resolve);
-      }
-    };
+  function resolveLazyLoad(requireFunction) {
+    // https://github.com/ocombe/ocLazyLoad/issues/321
+    // $$animateJs issue when 'ng' module is "reloaded" through $ocLazyLoad
+    // force $$animateJs to be loaded before we try to lazy load
+    return /* @ngInject */ function lazyLoad($$animateJs, $ocLazyLoad, $q) {
+      return $q(function resolvePromise(resolve) {
+        requireFunction(requireDoneCallback);
 
-    function lazyLoadModule(moduleName) {
-      loadedModules.push(moduleName);
-      $ocLazyLoad.toggleWatch(true);
-      return $ocLazyLoad.inject(moduleName)
-        .finally(function disableToggleWatch() {
-          $ocLazyLoad.toggleWatch(false);
-        });
-    }
+        function requireDoneCallback(_module) {
+          var moduleName;
+          if (_.isObject(_module) && _.has(_module, 'default')) {
+            moduleName = _module.default;
+          } else {
+            moduleName = _module;
+          }
+          // Don't reload a loaded module or core angular module
+          if (_.includes(loadedModules, moduleName) || _.includes($ocLazyLoad.getModules(), moduleName) || _.startsWith(moduleName, 'ng')) {
+            resolve();
+          } else {
+            loadedModules.push(moduleName);
+            $ocLazyLoad.toggleWatch(true);
+            $ocLazyLoad.inject(moduleName)
+              .finally(function finishLazyLoad() {
+                $ocLazyLoad.toggleWatch(false);
+                resolve();
+              });
+          }
+        }
+      });
+    };
   }
 
   angular
@@ -226,11 +231,9 @@
               }
             },
             resolve: {
-              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
-                return $q(function resolveLogin(resolve) {
-                  require(['./main'], loadModuleAndResolve($ocLazyLoad, resolve));
-                });
-              }
+              lazy: resolveLazyLoad(function (done) {
+                require(['./main'], done);
+              })
             },
             abstract: true,
           })
@@ -241,11 +244,9 @@
               }
             },
             resolve: {
-              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
-                return $q(function resolveLogin(resolve) {
-                  require(['modules/core/login'], loadModuleAndResolve($ocLazyLoad, resolve));
-                });
-              }
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/core/login'], done);
+              })
             },
             abstract: true,
           })
@@ -256,11 +257,9 @@
               }
             },
             resolve: {
-              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
-                return $q(function resolveLogin(resolve) {
-                  require(['modules/core/stateRedirect/stateRedirect.controller'], loadModuleAndResolve($ocLazyLoad, resolve));
-                });
-              }
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/core/stateRedirect/stateRedirect.controller'], done);
+              })
             },
             abstract: true,
           })
@@ -272,11 +271,9 @@
             },
             abstract: true,
             resolve: {
-              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
-                return $q(function resolveLogin(resolve) {
-                  require(['./main'], loadModuleAndResolve($ocLazyLoad, resolve));
-                });
-              }
+              lazy: resolveLazyLoad(function (done) {
+                require(['./main'], done);
+              })
             },
             sticky: true
           })
@@ -537,11 +534,9 @@
               }
             },
             resolve: {
-              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
-                return $q(function resolveLogin(resolve) {
-                  require(['modules/squared/scripts/controllers/activate'], loadModuleAndResolve($ocLazyLoad, resolve));
-                });
-              }
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/squared/scripts/controllers/activate'], done);
+              })
             },
             authenticate: false
           })
@@ -734,11 +729,6 @@
                 controllerAs: 'mcpSubscription',
                 controller: 'MySubscriptionCtrl',
                 templateUrl: 'modules/core/myCompany/mySubscriptions/mySubscription.tpl.html'
-              },
-              'headerRight': {
-                controllerAs: 'subscriptionHeader',
-                controller: 'SubscriptionHeaderCtrl',
-                templateUrl: 'modules/core/myCompany/mySubscriptions/subscriptionHeader.tpl.html'
               }
             }
           })
@@ -882,7 +872,11 @@
           })
 
           ///////////////////////////
+          .state('users.manage.picker', {
+            controller: 'UserManageModalPickerController'
+          })
           .state('users.manage', {
+            abstract: true,
             parent: 'modal',
             views: {
               'modal@': {
@@ -890,9 +884,6 @@
                 controllerAs: 'ummc',
                 template: '<div ui-view></div>'
               }
-            },
-            params: {
-              isOverExportThreshold: {}
             }
           })
           .state('users.manage.org', {
@@ -1079,25 +1070,17 @@
             }
           })
           .state('user-overview.communication', {
-            templateUrl: 'modules/huron/overview/telephonyOverview.tpl.html',
-            controller: 'TelephonyOverviewCtrl',
-            controllerAs: 'telephonyOverview',
+            template: '<user-call-overview></user-call-overview>',
             params: {
               reloadToggle: false
             },
             data: {
               displayName: 'Call'
-            }
-          })
-          .state('user-overview.communication.directorynumber', {
-            templateUrl: 'modules/huron/lineSettings/lineSettings.tpl.html',
-            controller: 'LineSettingsCtrl',
-            controllerAs: 'lineSettings',
-            params: {
-              directoryNumber: {}
             },
-            data: {
-              displayName: 'Line Configuration'
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/overview'], done);
+              })
             }
           })
           .state('user-overview.csdmDevice', {
@@ -1141,9 +1124,21 @@
             },
           })
           .state('user-overview.communication.voicemail', {
-            template: '<div uc-voicemail></div>',
+            template: '<uc-voicemail  owner-id="$resolve.ownerId"  ></uc-voicemail>',
+            params: {
+              watcher: null,
+              selected: null
+            },
             data: {
               displayName: 'Voicemail'
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/voicemail'], done);
+              }),
+              ownerId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentUser, 'id');
+              },
             }
           })
           .state('user-overview.communication.snr', {
@@ -1153,15 +1148,76 @@
             }
           })
           .state('user-overview.communication.speedDials', {
-            template: '<div uc-speed-dials></div>',
+            template: '<uc-speed-dial owner-type="users" owner-id="$resolve.ownerId"></uc-speed-dial>',
             data: {
               displayName: 'Speed Dials'
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/speedDials'], done);
+              }),
+              ownerId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentUser, 'id');
+              },
             }
           })
           .state('user-overview.communication.internationalDialing', {
-            template: '<div uc-international-dialing></div>',
+            template: '<uc-dialing  watcher="$resolve.watcher" selected="$resolve.selected" title="internationalDialingPanel.title"></uc-dialing>',
+            params: {
+              watcher: null,
+              selected: null
+            },
             data: {
               displayName: 'International Dialing'
+            },
+            resolve: {
+              watcher: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams, 'watcher');
+              },
+              selected: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams, 'selected');
+              },
+            },
+          })
+          .state('user-overview.communication.local', {
+            template: '<uc-dialing  watcher="$resolve.watcher" selected="$resolve.selected" title="telephonyPreview.localDialing"></uc-dialing>',
+            params: {
+              watcher: null,
+              selected: null
+            },
+            data: {
+              displayName: 'Local Dialing'
+            },
+            resolve: {
+              watcher: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams, 'watcher');
+              },
+              selected: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams, 'selected');
+              },
+            },
+          })
+          .state('user-overview.communication.line-overview', {
+            template: '<uc-line-overview owner-type="user" owner-name="$resolve.ownerName" owner-id="$resolve.ownerId" number-id="$resolve.numberId"></uc-line-overview>',
+            params: {
+              numberId: '',
+            },
+            data: {
+              displayName: 'Line Configuration'
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/lines/lineOverview'], done);
+              }),
+              ownerId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentUser, 'id');
+              },
+              ownerName: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentUser, 'displayName');
+              },
+              numberId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams, 'numberId', '');
+              },
             }
           })
           .state('user-overview.messaging', {
@@ -1310,7 +1366,7 @@
               },
               'header@organization-overview': {
                 templateUrl: 'modules/core/organizations/organizationOverview/organizationHeader.tpl.html'
-              }
+              },
             },
             params: {
               currentOrganization: null
@@ -1622,11 +1678,9 @@
               displayName: 'Call'
             },
             resolve: {
-              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
-                return $q(function resolveLogin(resolve) {
-                  require(['modules/squared/places/callOverview'], loadModuleAndResolve($ocLazyLoad, resolve));
-                });
-              }
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/squared/places/callOverview'], done);
+              })
             }
           })
           .state('place-overview.communication.speedDials', {
@@ -1635,11 +1689,9 @@
               displayName: 'Speed Dials'
             },
             resolve: {
-              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
-                return $q(function resolveLogin(resolve) {
-                  require(['modules/huron/speedDials'], loadModuleAndResolve($ocLazyLoad, resolve));
-                });
-              },
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/speedDials'], done);
+              }),
               ownerId: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams.currentPlace, 'cisUuid');
               },
@@ -1690,11 +1742,9 @@
               displayName: 'Line Configuration'
             },
             resolve: {
-              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
-                return $q(function resolveLogin(resolve) {
-                  require(['modules/huron/lines/lineOverview'], loadModuleAndResolve($ocLazyLoad, resolve));
-                });
-              },
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/lines/lineOverview'], done);
+              }),
               ownerId: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams.currentPlace, 'cisUuid');
               },
@@ -1775,18 +1825,21 @@
               }
             },
             resolve: {
-              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
-                return $q(function resolveVideo(resolve) {
-                  require(['modules/core/video'], loadModuleAndResolve($ocLazyLoad, resolve));
-                });
-              }
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/core/video'], done);
+              })
             }
           })
           .state('partneroverview', {
             parent: 'partner',
             url: '/overview',
             templateUrl: 'modules/core/partnerHome/partnerHome.tpl.html',
-            controller: 'PartnerHomeCtrl'
+            controller: 'PartnerHomeCtrl',
+            resolve: {
+              trialForPaid: function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasStartTrialForPaid);
+              }
+            }
           })
           .state('partnerreports', {
             parent: 'partner',
@@ -2379,6 +2432,38 @@
               }
             }
           })
+          .state('pstn', {
+            parent: 'modal',
+            params: {
+              customerId: {},
+              customerName: {},
+              customerEmail: {},
+              customerCommunicationLicenseIsTrial: {},
+              customerRoomSystemsLicenseIsTrial: {},
+            },
+            views: {
+              'modal@': {
+                template: '<uc-pstn-wizard customer-id="$resolve.customerId" customer-name="$resolve.customerName" customer-email="$resolve.customerEmail" customer-communication-license-is-trial="$resolve.customerCommunicationLicenseIsTrial" customer-room-systems-license-is-trial="$resolve.customerRoomSystemsLicenseIsTrial"></uc-pstn-wizard>',
+              },
+            },
+            resolve: {
+              customerId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.customerId;
+              },
+              customerName: /* @ngInject */ function ($stateParams) {
+                return $stateParams.customerName;
+              },
+              customerEmail: /* @ngInject */ function ($stateParams) {
+                return $stateParams.customerEmail;
+              },
+              customerCommunicationLicenseIsTrial: /* @ngInject */ function ($stateParams) {
+                return $stateParams.customerCommunicationLicenseIsTrial;
+              },
+              customerRoomSystemsLicenseIsTrial: /* @ngInject */ function ($stateParams) {
+                return $stateParams.customerRoomSystemsLicenseIsTrial;
+              }
+            },
+          })
           .state('pstnSetup', {
             parent: 'modal',
             params: {
@@ -2535,11 +2620,9 @@
             parent: 'hurondetails',
             template: '<call-pickup-setup-assistant></call-pickup-setup-assistant>',
             resolve: {
-              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
-                return $q(function resolveLogin(resolve) {
-                  require(['modules/huron/features/callPickup/callPickupSetupAssistant'], loadModuleAndResolve($ocLazyLoad, resolve));
-                });
-              }
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/features/callPickup/callPickupSetupAssistant'], done);
+              })
             }
           })
           .state('callpickupedit', {
@@ -2550,11 +2633,9 @@
               feature: null
             },
             resolve: {
-              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
-                return $q(function resolveLogin(resolve) {
-                  require(['modules/huron/features/callPickup/callPickupSetupAssistant'], loadModuleAndResolve($ocLazyLoad, resolve));
-                });
-              }
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/features/callPickup/callPickupSetupAssistant'], done);
+              })
             }
           })
           .state('huronCallPark', {
@@ -2562,11 +2643,9 @@
             parent: 'hurondetails',
             template: '<uc-call-park></uc-call-park>',
             resolve: {
-              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
-                return $q(function resolveLogin(resolve) {
-                  require(['modules/huron/features/callPark/callPark'], loadModuleAndResolve($ocLazyLoad, resolve));
-                });
-              }
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/features/callPark/callPark'], done);
+              })
             }
           })
           .state('callparkedit', {
@@ -2577,11 +2656,9 @@
               feature: null
             },
             resolve: {
-              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
-                return $q(function resolveLogin(resolve) {
-                  require(['modules/huron/features/callPark/callPark'], loadModuleAndResolve($ocLazyLoad, resolve));
-                });
-              }
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/features/callPark/callPark'], done);
+              })
             }
           })
           .state('huronHuntGroup', {
@@ -2606,11 +2683,9 @@
             parent: 'main',
             template: '<pg-setup-assistant></pg-setup-assistant>',
             resolve: {
-              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
-                return $q(function resolveLogin(resolve) {
-                  require(['modules/huron/features/pagingGroup/pgSetupAssistant'], loadModuleAndResolve($ocLazyLoad, resolve));
-                });
-              }
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/features/pagingGroup/pgSetupAssistant'], done);
+              })
             }
           })
           .state('huronPagingGroupEdit', {
@@ -2618,11 +2693,9 @@
             parent: 'main',
             template: '<pg-edit pg-id="$resolve.pgId"></pg-edit>',
             resolve: {
-              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
-                return $q(function resolveLogin(resolve) {
-                  require(['modules/huron/features/pagingGroup/edit'], loadModuleAndResolve($ocLazyLoad, resolve));
-                });
-              },
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/features/pagingGroup/edit'], done);
+              }),
               pgId: /* @ngInject */ function pgId($stateParams) {
                 var id = _.get($stateParams.feature, 'id');
                 return id;
@@ -2705,40 +2778,62 @@
           .state('expressway-cluster', {
             abstract: true,
             url: '/services/cluster/expressway/:id',
-            controller: 'ExpresswayClusterController',
-            controllerAs: 'vm',
             parent: 'main',
-            templateUrl: 'modules/hercules/expressway-cluster/expressway-cluster.html',
-            resolve: {
-              hasResourceGroupFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
-              },
-              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
-              },
-            }
-          })
-          .state('expressway-cluster.nodes', {
-            url: '/nodes',
-            views: {
-              expresswayPageView: {
-                template: '<hybrid-services-nodes-page cluster-id="$resolve.id"></hybrid-services-nodes-page>',
-              }
-            },
+            template: '<hybrid-services-cluster-page cluster-id="$resolve.id" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></hybrid-services-cluster-page>',
             resolve: {
               id: /* @ngInject */ function ($stateParams) {
                 return $stateParams.id;
               },
-            }
+              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
+              },
+            },
+          })
+          .state('expressway-cluster.nodes', {
+            url: '/nodes',
+            template: '<hybrid-services-nodes-page cluster-id="$resolve.id"></hybrid-services-nodes-page>',
           })
           .state('expressway-cluster.settings', {
             url: '/settings',
+            template: '<expressway-cluster-settings-page cluster-id="$resolve.id" has-resource-group-feature-toggle="$resolve.hasResourceGroupFeatureToggle"></expressway-cluster-settings-page>',
+            resolve: {
+              hasResourceGroupFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
+              },
+            },
+          })
+          .state('hybrid-services-connector-sidepanel', {
+            parent: 'sidepanel',
             views: {
-              expresswayPageView: {
-                controller: 'ExpresswayClusterSettingsController',
-                controllerAs: 'clusterSettings',
-                templateUrl: 'modules/hercules/fusion-pages/expressway-settings.html',
-              }
+              'sidepanel@': {
+                template: '<hybrid-services-connector-sidepanel connector="$resolve.connector"></hybrid-services-connector-sidepanel>',
+              },
+              'header@hybrid-services-connector-sidepanel': {
+                templateUrl: 'modules/hercules/hybrid-services-connector-sidepanel/hybrid-services-connector-sidepanel-header.html'
+              },
+            },
+            // If data not present, $state.current.data.displayName inside the component has no effect
+            data: {},
+            params: {
+              connector: null
+            },
+            resolve: {
+              connector: /* @ngInject */ function ($stateParams) {
+                return $stateParams.connector;
+              },
+            }
+          })
+          .state('hybrid-services-connector-sidepanel.alarm-details', {
+            template: '<alarm-details-sidepanel alarm="$resolve.alarm"></alarm-details-sidepanel>',
+            // If data not present, $state.current.data.displayName inside the component has no effect
+            data: {},
+            params: {
+              alarm: null,
+            },
+            resolve: {
+              alarm: /* @ngInject */ function ($stateParams) {
+                return $stateParams.alarm;
+              },
             }
           })
           .state('hds', {
@@ -2756,7 +2851,7 @@
             url: '/hds/resources',
             views: {
               'fullPane': {
-                template: '<hybrid-service-cluster-list service-id="\'spark-hybrid-datasecurity\'"></hybrid-service-cluster-list>'
+                template: '<hybrid-service-cluster-list service-id="\'spark-hybrid-datasecurity\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>'
               }
             },
             params: {
@@ -2765,7 +2860,10 @@
             resolve: {
               hasHDSFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity);
-              }
+              },
+              clusterId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.clusterId;
+              },
             }
           })
           .state('hds.settings', {
@@ -2787,7 +2885,7 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                template: '<cluster-sidepanel-overview cluster-type="\'hds_app\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType"></cluster-sidepanel-overview>',
+                template: '<cluster-sidepanel-overview cluster-type="\'hds_app\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType" has-resource-group-feature-toggle="$resolve.hasResourceGroupFeatureToggle" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></cluster-sidepanel-overview>',
               },
               'header@hds-cluster-details': {
                 templateUrl: 'modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html',
@@ -2807,6 +2905,12 @@
               connectorType: /* @ngInject */ function ($stateParams) {
                 return $stateParams.connectorType;
               },
+              hasResourceGroupFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
+              },
+              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
+              },
             }
           })
           .state('hds-cluster-details.host-details', {
@@ -2824,25 +2928,27 @@
             }
           })
           .state('hds-cluster-details.alarm-details', {
-            templateUrl: 'modules/hercules/cluster-sidepanel/alarm-details/alarm-details.html',
-            controller: 'ExpresswayAlarmController',
-            controllerAs: 'alarmCtrl',
-            data: {
-              displayName: 'Alarm Details'
-            },
+            template: '<alarm-details-sidepanel alarm="$resolve.alarm"></alarm-details-sidepanel>',
+            // If data not present, $state.current.data.displayName inside the component has no effect
+            data: {},
             params: {
               alarm: null,
-              host: null
+            },
+            resolve: {
+              alarm: /* @ngInject */ function ($stateParams) {
+                return $stateParams.alarm;
+              },
             }
           })
           .state('hds-cluster', {
             abstract: true,
             url: '/services/cluster/hds/:id',
-            controller: 'HDSClusterController',
-            controllerAs: 'vm',
             parent: 'main',
-            templateUrl: 'modules/hercules/hds-cluster/hds-cluster.html',
+            template: '<hybrid-services-cluster-page cluster-id="$resolve.id" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></hybrid-services-cluster-page>',
             resolve: {
+              id: /* @ngInject */ function ($stateParams) {
+                return $stateParams.id;
+              },
               hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
               },
@@ -2850,35 +2956,20 @@
           })
           .state('hds-cluster.nodes', {
             url: '/nodes',
-            views: {
-              expresswayPageView: {
-                template: '<hybrid-services-nodes-page cluster-id="$resolve.id"></hybrid-services-nodes-page>',
-              }
-            },
-            resolve: {
-              id: /* @ngInject */ function ($stateParams) {
-                return $stateParams.id;
-              },
-            }
+            template: '<hybrid-services-nodes-page cluster-id="$resolve.id"></hybrid-services-nodes-page>',
           })
           .state('hds-cluster.settings', {
             url: '/settings',
-            views: {
-              expresswayPageView: {
-                template: '<hybrid-data-security-cluster-settings></hybrid-data-security-cluster-settings>',
-              }
-            }
+            template: '<hybrid-data-security-cluster-settings cluster-id="$resolve.id"></hybrid-data-security-cluster-settings>',
           })
           .state('mediafusion-cluster', {
             abstract: true,
             url: '/services/cluster/mediafusion/:id',
-            controller: 'MediafusionClusterController',
-            controllerAs: 'vm',
             parent: 'main',
-            templateUrl: 'modules/hercules/mediafusion-cluster/mediafusion-cluster.html',
+            template: '<hybrid-services-cluster-page cluster-id="$resolve.id" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></hybrid-services-cluster-page>',
             resolve: {
-              hasMFFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServicePhaseTwo);
+              id: /* @ngInject */ function ($stateParams) {
+                return $stateParams.id;
               },
               hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
@@ -2887,25 +2978,17 @@
           })
           .state('mediafusion-cluster.nodes', {
             url: '/nodes',
-            views: {
-              expresswayPageView: {
-                template: '<hybrid-services-nodes-page cluster-id="$resolve.id"></hybrid-services-nodes-page>',
-              }
-            },
-            resolve: {
-              id: /* @ngInject */ function ($stateParams) {
-                return $stateParams.id;
-              },
-            }
+            template: '<hybrid-services-nodes-page cluster-id="$resolve.id"></hybrid-services-nodes-page>',
           })
           .state('mediafusion-cluster.settings', {
             url: '/settings',
-            views: {
-              expresswayPageView: {
-                templateUrl: 'modules/hercules/fusion-pages/mediafusion-settings.html',
-                controller: 'MediafusionClusterSettingsController',
-                controllerAs: 'clusterSettings',
-              }
+            templateUrl: 'modules/hercules/fusion-pages/mediafusion-settings.html',
+            controller: 'MediafusionClusterSettingsController',
+            controllerAs: 'clusterSettings',
+            resolve: {
+              hasMFFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServicePhaseTwo);
+              },
             }
           })
           // Add Resource modal
@@ -3123,7 +3206,7 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                template: '<cluster-sidepanel-overview cluster-type="\'c_mgmt\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType" has-resource-group-feature-toggle="$resolve.hasResourceGroupFeatureToggle"></cluster-sidepanel-overview>'
+                template: '<cluster-sidepanel-overview cluster-type="\'c_mgmt\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType" has-resource-group-feature-toggle="$resolve.hasResourceGroupFeatureToggle" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></cluster-sidepanel-overview>'
               },
               'header@cluster-details': {
                 templateUrl: 'modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html'
@@ -3145,6 +3228,9 @@
               },
               hasResourceGroupFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
+              },
+              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
               },
             }
           })
@@ -3168,27 +3254,29 @@
             }
           })
           .state('management-connector-details.alarm-details', {
-            templateUrl: 'modules/hercules/cluster-sidepanel/alarm-details/alarm-details.html',
-            controller: 'ExpresswayAlarmController',
-            controllerAs: 'alarmCtrl',
-            data: {
-              displayName: 'Alarm Details'
-            },
+            template: '<alarm-details-sidepanel alarm="$resolve.alarm"></alarm-details-sidepanel>',
+            // If data not present, $state.current.data.displayName inside the component has no effect
+            data: {},
             params: {
               alarm: null,
-              host: null
+            },
+            resolve: {
+              alarm: /* @ngInject */ function ($stateParams) {
+                return $stateParams.alarm;
+              },
             }
           })
           .state('cluster-details.alarm-details', {
-            templateUrl: 'modules/hercules/cluster-sidepanel/alarm-details/alarm-details.html',
-            controller: 'ExpresswayAlarmController',
-            controllerAs: 'alarmCtrl',
-            data: {
-              displayName: 'Alarm Details'
-            },
+            template: '<alarm-details-sidepanel alarm="$resolve.alarm"></alarm-details-sidepanel>',
+            // If data not present, $state.current.data.displayName inside the component has no effect
+            data: {},
             params: {
               alarm: null,
-              host: null
+            },
+            resolve: {
+              alarm: /* @ngInject */ function ($stateParams) {
+                return $stateParams.alarm;
+              },
             }
           })
           .state('cluster-details.host-details', {
@@ -3221,7 +3309,7 @@
         $stateProvider
         //V2 API changes
           .state('media-service-v2', {
-            templateUrl: 'modules/mediafusion/media-service-v2/overview.html',
+            templateUrl: 'modules/mediafusion/media-service-v2/media-service-overview.html',
             controller: 'MediaServiceControllerV2',
             controllerAs: 'med',
             parent: 'main'
@@ -3230,8 +3318,16 @@
             url: '/mediaserviceV2',
             views: {
               'fullPane': {
-                templateUrl: 'modules/mediafusion/media-service-v2/resources/cluster-list.html'
+                template: '<hybrid-service-cluster-list service-id="\'squared-fusion-media\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>'
               }
+            },
+            params: {
+              clusterId: null,
+            },
+            resolve: {
+              clusterId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.clusterId;
+              },
             }
           })
           .state('media-service-v2.settings', {
@@ -3260,9 +3356,8 @@
               displayName: 'Overview'
             },
             params: {
-              clusterName: {},
-              nodes: {},
-              cluster: {}
+              clusterId: {},
+              connectorType: {},
             }
           })
           .state('connector-details-v2.alarm-details', {

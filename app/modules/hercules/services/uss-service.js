@@ -28,7 +28,7 @@
       updateBulkUserProps: updateBulkUserProps,
       removeAllUsersFromResourceGroup: removeAllUsersFromResourceGroup,
       refreshEntitlementsForUser: refreshEntitlementsForUser,
-      getUserCountFromResourceGroup: getUserCountFromResourceGroup,
+      getUserPropsSummary: getUserPropsSummary,
       getUserJournal: getUserJournal,
       notifyReadOnlyLaunch: notifyReadOnlyLaunch,
       getAllStatuses: getAllStatuses
@@ -193,9 +193,9 @@
         .then(extractData);
     }
 
-    function getUserCountFromResourceGroup(resourceGroupId, orgId) {
+    function getUserPropsSummary(orgId) {
       return $http
-        .get(USSUrl + '/orgs/' + (orgId || Authinfo.getOrgId()) + '/userProps/count?containingResourceGroupId=' + resourceGroupId)
+        .get(USSUrl + '/orgs/' + (orgId || Authinfo.getOrgId()) + '/userProps/summary')
         .then(extractData);
     }
 

@@ -23,8 +23,8 @@ export class PagingNumberService {
     }
     return this.InternalNumberPoolService.query(data).$promise.then(
       (response) => _.map(response, function (dn: any) {
-      return  dn.pattern;
-    }));
+        return  dn.pattern;
+      }));
   }
 
 }

@@ -50,10 +50,15 @@
     margin-top: auto;
   }
 
+  .card-media-icon {
+    @include vr-spacing(pt, 0.5);
+    @include vr-spacing(pl, 0.5);
+    opacity: .3;
+  }
+
   section {
     display: flex;
     flex-direction: column;
     align-items: center;
   }
 }
-

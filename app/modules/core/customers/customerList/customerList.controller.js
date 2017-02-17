@@ -644,7 +644,6 @@ require('./_customer-list.scss');
         addNumbers(org);
         modifyManagedOrgs(org.customerOrgId);
       }
-      return;
     }
 
     function isLicenseInfoAvailable(licenses) {

@@ -17,6 +17,8 @@
 
     vm.timeStamp = $translate.instant('mediaFusion.metrics.timeStamp');
     vm.allClusters = $translate.instant('mediaFusion.metrics.allclusters');
+    vm.participants = $translate.instant('mediaFusion.metrics.participants');
+
 
     return {
       setParticipantDistributionGraph: setParticipantDistributionGraph
@@ -27,7 +29,7 @@
       var data = response.graphData;
       var graphs = getClusterName(response.graphs, clusterMap);
       if (data === null || data === 'undefined' || data.length === 0) {
-        return;
+        return undefined;
       } else {
         if (graphs[0].isDummy) {
           isDummy = true;
@@ -80,7 +82,7 @@
       valueAxes[0].minimum = 0;
       valueAxes[0].autoGridCount = true;
       valueAxes[0].position = 'left';
-      valueAxes[0].title = 'Participants';
+      valueAxes[0].title = vm.participants;
       valueAxes[0].titleRotation = 0;
 
       var catAxis = CommonReportsGraphService.getBaseVariable(vm.AXIS);
@@ -132,7 +134,7 @@
       };
       var exportFields = [];
       _.forEach(graphs, function (value) {
-        columnNames[value.valueField] = value.title + ' ' + 'Participants';
+        columnNames[value.valueField] = value.title + ' ' + vm.participants;
       });
       for (var key in columnNames) {
         exportFields.push(key);
@@ -172,11 +174,19 @@
         'method': legendHandler
       }];
 
-
       var chart = AmCharts.makeChart(vm.participantDistributiondiv, chartData);
+      chart.addListener('clickGraph', handleClick);
       // listen for zoomed event and call "handleZoom" method
       chart.addListener('zoomed', handleZoom);
       return chart;
+    }
+
+    //method to handle the individual cluster click
+    function handleClick(event) {
+      var clickedCluster = event.target;
+      $rootScope.$broadcast('clusterClickEvent', {
+        data: clickedCluster.title
+      });
     }
 
     // this method is called each time the selected period of the chart is changed
@@ -203,7 +213,7 @@
         });
         if (!_.isUndefined(clusterName)) {
           value.title = clusterName;
-          value.balloonText = '<span class="graph-text">' + value.title + ' ' + ' <span class="graph-number">[[value]]</span></span>';
+          value.balloonText = '<span class="graph-text">' + value.title + ' ' + ' <span class="graph-number">[[value]]</span></span>' + ' <span class="graph-text">[[' + value.descriptionField + ']]</span></span>';
           value.lineThickness = 2;
         }
         if (value.title !== value.valueField) {

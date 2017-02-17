@@ -1,3 +1,11 @@
+<cs-sp-buttons ng-class="{invisible: !$ctrl.onPrefLanguageChange}">
+  <button cs-btn loading="$ctrl.prefLanguageSaveInProcess" class="btn btn--primary" ng-click="$ctrl.savePreferredLanguage()" ng-disabled="$ctrl.prefLanguageSaveInProcess" type="click">
+    <span translate="common.save"></span>
+  </button>
+  <button cs-btn ng-click="$ctrl.onCancelPreferredLanguage()">
+    <span translate="common.cancel"></span>
+  </button>
+</cs-sp-buttons>
 <cs-sp-container>
   <cs-sp-section ng-if="$ctrl.currentPlace.sipUrl">
     <section-title
@@ -5,6 +13,16 @@
     </section-title>
     <p>{{$ctrl.currentPlace.sipUrl}}</p>
   </cs-sp-section>
+  <uc-preferred-language
+    cr-feature-toggle feature-show="huron-l10n-user-locale-2"
+    pl-is-loaded="$ctrl.plIsLoaded"
+    has-spark-call="$ctrl.hasSparkCall"
+    on-pref-language-change="$ctrl.onPrefLanguageChange"
+    pref-language-save-in-process="$ctrl.prefLanguageSaveInProcess"
+    preferred-language="$ctrl.preferredLanguage"
+    preferred-language-options="$ctrl.preferredLanguageOptions"
+    on-change-fn="$ctrl.setPreferredLanguage(preferredLanguage)">
+  </uc-preferred-language>
   <cs-sp-section ng-if="$ctrl.hasSparkCall">
     <section-title
       title-key="directoryNumberPanel.directNumbers"
@@ -14,7 +32,8 @@
       directory-numbers="$ctrl.directoryNumbers"
       directory-number-sref="place-overview.communication.line-overview({numberId: directoryNumber.uuid})"
       line-threshold="5"
-      voicemail-enabled="$ctrl.voicemailEnabled">
+      voicemail-enabled="$ctrl.voicemailEnabled"
+      on-directory-number-click="$ctrl.onCancelPreferredLanguage()">
     </directory-number-list>
   </cs-sp-section>
   <cs-sp-section ng-if="$ctrl.hasSparkCall">

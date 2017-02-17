@@ -24,10 +24,10 @@
   }
 
   /* @ngInject */
-  function ServiceAddressCtrl($scope, TerminusStateService) {
-    TerminusStateService.query().$promise.then(function (states) {
+  function ServiceAddressCtrl($scope, PstnSetupStatesService) {
+    PstnSetupStatesService.getStateProvinces().then(function (states) {
       $scope.stateOptions = _.map(states, function (state) {
-        return state.abbreviation;
+        return state.name;
       });
     });
   }

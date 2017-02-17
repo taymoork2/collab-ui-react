@@ -4,7 +4,7 @@ hybrid-services-nodes-page {
   display: block;
 
   .spinner-container {
-    margin-top: 2rem;
+    padding: 2rem 0;
   }
 
   table thead tr {
@@ -35,5 +35,19 @@ hybrid-services-nodes-page {
   .hostname {
     color: $gray-dark-3;
     background-color: $gray-light-2;
+  }
+
+  .connector-row {
+    &:hover {
+      background-color: $color-primary-lighter;
+    }
+
+    &.active {
+      background-color: $color-primary-base;
+
+      td {
+        color: #fff;
+      }
+    }
   }
 }

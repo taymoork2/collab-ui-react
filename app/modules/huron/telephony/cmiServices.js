@@ -43,6 +43,7 @@
     .factory('DirectoryNumberSipEndPointService', DirectoryNumberSipEndPointService)
     .factory('SipEndpointDirectoryNumberService', SipEndpointDirectoryNumberService)
     .factory('DateFormatService', DateFormatService)
+    .factory('TimeFormatService', TimeFormatService)
     .factory('TimeZoneService', TimeZoneService)
     .factory('SiteLanguageService', SiteLanguageService)
     .factory('SiteCountryService', SiteCountryService)
@@ -54,6 +55,7 @@
     .factory('DialPlanDetailsCmiService', DialPlanDetailsCmiService)
     .factory('UserCosRestrictionServiceV2', UserCosRestrictionServiceV2)
     .factory('CustomerCosRestrictionServiceV2', CustomerCosRestrictionServiceV2)
+    .factory('PlacesService', PlacesService)
     .name;
 
   /* @ngInject */
@@ -435,6 +437,11 @@
   }
 
   /* @ngInject */
+  function TimeFormatService($resource) {
+    return $resource('modules/huron/serviceSetup/timeFormat.json', {}, {});
+  }
+
+  /* @ngInject */
   function SiteLanguageService($resource) {
     return $resource('modules/huron/serviceSetup/siteLanguages.json', {}, {});
   }
@@ -534,13 +541,28 @@
       get: {
         method: 'GET',
         transformResponse: transformEnvelope
-      }
+      },
+      update: {
+        method: 'PUT'
+      },
     });
   }
 
   function transformEnvelope(response) {
     var responseObj = _.isString(response) ? JSON.parse(response) : response;
     return _.get(responseObj, '[0]', responseObj);
+  }
+
+    /* @ngInject */
+  function PlacesService($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/places/:placesId', {
+      customerId: '@customerId',
+      placesId: '@placesId'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
   }
 
 })();

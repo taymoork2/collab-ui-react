@@ -122,8 +122,7 @@ describe('Care Setup Assistant Ctrl', function () {
   }));
 
   var intializeCtrl = function (_$rootScope_, $controller, _$modal_, _$q_, _$translate_,
-    _$window_, _CTService_, _SunlightConfigService_, _$state_, _Notification_, _$stateParams_,
-                                _LogMetricsService_, UrlConfig, _$httpBackend_) {
+    _$window_, _CTService_, _SunlightConfigService_, _$state_, _Notification_, _$stateParams_, _LogMetricsService_, UrlConfig, _$httpBackend_) {
     $scope = _$rootScope_.$new();
     $modal = _$modal_;
     $q = _$q_;
@@ -780,8 +779,8 @@ describe('Care Setup Assistant Ctrl', function () {
 
     it('the overview page should have expected cards', function () {
       expect(controller.overviewCards).toEqual([
-        'customerInformation',
-        'offHours'
+        { name: 'customerInformation', mediaIcons: [] },
+        { name: 'offHours', mediaIcons: [] }
       ]);
     });
 
@@ -823,11 +822,11 @@ describe('Care Setup Assistant Ctrl', function () {
 
     it('the overview page should have expected cards', function () {
       expect(controller.overviewCards).toEqual([
-        'customerInformationChat',
-        'agentUnavailable',
-        'feedback',
-        'customerInformationCallback',
-        'offHours'
+        { name: 'customerInformationChat', mediaIcons: ['icon-message'] },
+        { name: 'agentUnavailable', mediaIcons: ['icon-message'] },
+        { name: 'feedback', mediaIcons: ['icon-message'] },
+        { name: 'customerInformationCallback', mediaIcons: ['icon-phone'] },
+        { name: 'offHours', mediaIcons: ['icon-message', 'icon-phone'] }
       ]);
     });
 

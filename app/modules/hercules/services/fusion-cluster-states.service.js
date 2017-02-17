@@ -8,6 +8,7 @@
   /* @ngInject */
   function FusionClusterStatesService() {
     return {
+      getAlarmSeverityCssClass: getAlarmSeverityCssClass,
       getMergedStateSeverity: getMergedStateSeverity,
       getMergedUpgradeState: getMergedUpgradeState,
       getSeverity: getSeverity,
@@ -41,9 +42,10 @@
           break;
         case 'not_installed':
         case 'not_configured':
+        case 'no_nodes_registered':
+        case 'disabled':
           value = 1;
           break;
-        case 'disabled':
         case 'downloading':
         case 'installing':
         case 'uninstalling':
@@ -98,6 +100,13 @@
           break;
       }
       return cssClass;
+    }
+
+    function getAlarmSeverityCssClass(alarmSeverity) {
+      if (alarmSeverity === 'critical' || alarmSeverity === 'error') {
+        return 'danger';
+      }
+      return 'warning';
     }
 
     function getMergedUpgradeState(connectors) {

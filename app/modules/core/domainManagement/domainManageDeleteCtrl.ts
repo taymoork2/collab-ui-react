@@ -29,7 +29,7 @@ namespace domainManagement {
         && this._loggedOnUser.domain === this._domainToDelete.text
           //Not last verified/claimed domain (which is ok to delete, as doing so will reset the enforceUsersInVerifiedAndClaimedDomains flag in CI:
         && this._moreThanOneVerifiedDomainLeft)) {
-          this._error = this.$translate.instant('domainManagement.delete.preventLockoutError');
+        this._error = this.$translate.instant('domainManagement.delete.preventLockoutError');
       }
     }
 

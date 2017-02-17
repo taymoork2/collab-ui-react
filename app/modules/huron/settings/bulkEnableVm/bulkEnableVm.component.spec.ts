@@ -6,9 +6,8 @@ describe('Component: bulkEnableVm', () => {
     this.initModules(bulkEnableVmModule);
     this.injectDependencies('$scope', 'BulkEnableVmService', 'Authinfo',
       'UserListService',
-      'UserServiceCommon', '$q', '$httpBackend', 'UserCsvService');
+      'UserServiceCommon', '$q', '$httpBackend', 'UserCsvService', 'FeatureToggleService');
     this.$scope.scope = this.$scope;
-
   });
   function initComponent() {
     this.compileComponent('ucBulkEnableVm', {
@@ -23,6 +22,7 @@ describe('Component: bulkEnableVm', () => {
       spyOn(this.BulkEnableVmService, 'getUserServicesRetry');
       spyOn(this.BulkEnableVmService, 'getUserSitetoSiteNumberRetry');
       spyOn(this.BulkEnableVmService, 'enableUserVmRetry');
+      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.when(false));
     });
     describe('Voicemail for all users enabled', () => {
       beforeEach(function () {
@@ -137,6 +137,8 @@ describe('Component: bulkEnableVm', () => {
     beforeEach(function () {
       this.$httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users?filter=active%20eq%20true%20and%20entitlements%20eq%20%22ciscouc%22&attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID,userSettings&count=1000')
         .respond({});
+      this.$httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me')
+        .respond({});
     });
     describe('Bulk enable VM progress bar', () => {
       beforeEach(initComponent);
@@ -224,11 +226,11 @@ describe('Component: bulkEnableVm', () => {
           statusText: 'failed to fetch user',
           trackingID: 'TrackingID1',
         },
-          {
-            userId: 'testUserId2',
-            statusText: 'failed to fetch user',
-            trackingID: 'TrackingID2',
-          }];
+        {
+          userId: 'testUserId2',
+          statusText: 'failed to fetch user',
+          trackingID: 'TrackingID2',
+        }];
         this.$scope.$apply();
         expect(this.view.find('div#errorList')).toExist();
         expect(this.view.find('span#headerRow')).toExist();

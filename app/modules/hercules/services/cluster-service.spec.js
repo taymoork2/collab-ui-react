@@ -659,6 +659,11 @@ describe('ClusterService', function () {
 
       expect(callback.callCount).toBe(1);
     });
+    it('should return 404', function () {
+      ClusterService.getConnector('123@calendar-cloud-connector').catch(function (response) {
+        expect(response.data.status).toBe(404);
+      });
+    });
   });
 
   describe('.deleteHost', function () {
@@ -696,6 +701,88 @@ describe('ClusterService', function () {
 
       expect(callback.callCount).toBe(1);
     });
+  });
+
+  describe('.mergeRunningState', function () {
+    var nonEmpty_mf_clusterList, nonEmpty_hds_connectorList, nonEmpty_exp_connectorList, empty_connector_list;
+
+    beforeEach(function () {
+      nonEmpty_mf_clusterList = [
+        {
+          id: 'mf_mgmt@070EC9D0',
+          connectorType: 'mf_app',
+          hostname: 'mf.example.org',
+          hostSerial: '070EC9D0',
+          state: 'not_installed',
+          alarms: [],
+        }
+      ];
+      nonEmpty_hds_connectorList = [
+        {
+          id: 'hds_app@070EC9D0',
+          connectorType: 'hds_app',
+          hostname: 'hds.example.org',
+          hostSerial: '070EC9D0',
+          state: 'disabled',
+          alarms: [],
+        }
+      ];
+      nonEmpty_exp_connectorList = [
+        {
+          id: 'c_mgmt@070EC9D0',
+          connectorType: 'c_mgmt',
+          hostname: 'expressway.example.org',
+          hostSerial: '070EC9D0',
+          state: 'registered',
+          alarms: [],
+        }
+      ];
+      empty_connector_list = [];
+    });
+
+    afterEach(function () {
+      nonEmpty_mf_clusterList = [];
+      nonEmpty_hds_connectorList = [];
+      nonEmpty_exp_connectorList = [];
+      empty_connector_list = [];
+    });
+
+    it('should keep the state for non-empty media clusters', function () {
+      var mergedState = ClusterService.mergeRunningState(nonEmpty_mf_clusterList, 'mf_mgmt');
+      expect(mergedState.state).toBe('not_installed');
+    });
+
+    it('should keep the state for non-empty hds clusters', function () {
+      var mergedState = ClusterService.mergeRunningState(nonEmpty_hds_connectorList, 'hds_app');
+      expect(mergedState.state).toBe('disabled');
+    });
+
+    it('should keep the state for non-empty expressway clusters', function () {
+      var mergedState = ClusterService.mergeRunningState(nonEmpty_exp_connectorList, 'c_mgmt');
+      expect(mergedState.state).toBe('registered');
+    });
+
+    it('should flip to no_nodes_registered for empty media clusters', function () {
+      var mergedState = ClusterService.mergeRunningState(empty_connector_list, 'mf_mgmt');
+      expect(mergedState.state).toBe('no_nodes_registered');
+    });
+
+    it('should flip to no_nodes_registered for empty hds clusters', function () {
+      var mergedState = ClusterService.mergeRunningState(empty_connector_list, 'hds_app');
+      expect(mergedState.state).toBe('no_nodes_registered');
+    });
+
+    it('should flip to not_registered for empty expressway clusters', function () {
+      var mergedState = ClusterService.mergeRunningState(empty_connector_list, 'c_mgmt');
+      expect(mergedState.state).toBe('not_registered');
+    });
+
+    it('should default to expressway if no second argument is provided', function () {
+      var mergedState = ClusterService.mergeRunningState(empty_connector_list);
+      expect(mergedState.state).toBe('not_registered');
+    });
+
+
   });
 
   function org(clusters) {

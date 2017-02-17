@@ -7,12 +7,11 @@
   <div class="typeahead-large">
     <input id="memberInput" ng-model="$ctrl.memberName"
            ng-class="{'error': $ctrl.errorMemberInput}"
-           ng-change="$ctrl.fetchMembers()"
-           typeahead="mem as $ctrl.getDisplayNameInDropdown(mem) for mem in $ctrl.availableMembers | limitTo:10"
+           typeahead="mem as $ctrl.getDisplayNameInDropdown(mem) for mem in $ctrl.fetchMembers($viewValue) | limitTo:10"
            typeahead-on-select="$ctrl.selectMembers($item)"
            typeahead-template-url="userTemplate.html"
            placeholder="{{:: 'pagingGroup.memberPlaceholder' | translate}}"
-           typeahead-min-length="3" typeahead-wait-ms="200" focus-on/>
+           typeahead-min-length="3" typeahead-wait-ms="300" focus-on/>
     <p class="input-description" translate="pagingGroup.memberHint"></p>
     <div class="warning">
       <div class="cs-input__messages pg-cs-input__messages">
@@ -29,7 +28,7 @@
     <cs-card-member
       ng-repeat="member in $ctrl.selectedMembers"
       cs-type="simple"
-      cs-member-type="$ctrl.getMemberType(member.member)"
+      cs-member-type="{{$ctrl.getMemberType(member.member)}}"
       cs-id="member.member.uuid"
       cs-title="$ctrl.getDisplayNameOnCard(member.member)"
       cs-subtitle="$ctrl.getUserName(member.member)"

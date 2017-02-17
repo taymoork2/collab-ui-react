@@ -31,12 +31,12 @@
             <span class="searchText" id="smallBreak" translate="common.dateRange"></span>
           </div>
           <div class="col-md-5 searchBox">
-            <cs-datepicker ng-model="ediscoverySearchCtrl.searchCriteria.startDate" view-format="YYYY-MM-DD"
+            <cs-datepicker required ng-model="ediscoverySearchCtrl.searchCriteria.startDate" view-format="YYYY-MM-DD"
               placeholder="{{'ediscovery.search.startDatePlaceholder' | translate}}" required>
             </cs-datepicker>
           </div>
           <span class="col-md-1" translate="common.to"></span>
-          <cs-datepicker class="col-md-6" ng-model="ediscoverySearchCtrl.searchCriteria.endDate" view-format="YYYY-MM-DD"
+          <cs-datepicker required class="col-md-6" ng-model="ediscoverySearchCtrl.searchCriteria.endDate" view-format="YYYY-MM-DD"
             placeholder="{{'ediscovery.search.endDatePlaceholder' | translate}}" required>
           </cs-datepicker>
         </div>
@@ -44,7 +44,8 @@
           <!-- Text Message and File Name Row -->
           <div class="row">
             <span class="searchText" id="largeBreak" translate="ediscovery.searchParameters.textAndFileName"></span>
-            <input class="cs-input" id="textInput" type="text" placeholder="{{'ediscovery.searchParameters.textAndFileNamePlaceholder' | translate}}">
+            <input class="cs-input" id="textInput" type="text" ng-model="ediscoverySearchCtrl.queryModel" 
+            placeholder="{{'ediscovery.searchParameters.textAndFileNamePlaceholder' | translate}}">
           </div>
 
         </div>

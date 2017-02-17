@@ -407,6 +407,10 @@ describe('Controller: UserRolesCtrl', function () {
             roleState: 'INACTIVE'
           },
           {
+            roleName: 'Partner_Management',
+            roleState: 'INACTIVE'
+          },
+          {
             roleName: 'Spark_SyncKms',
             roleState: 'ACTIVE'
           }
@@ -462,6 +466,10 @@ describe('Controller: UserRolesCtrl', function () {
             roleState: 'INACTIVE'
           },
           {
+            roleName: 'Partner_Management',
+            roleState: 'INACTIVE'
+          },
+          {
             roleName: 'Spark_SyncKms',
             roleState: 'INACTIVE'
           }
@@ -485,7 +493,7 @@ describe('Controller: UserRolesCtrl', function () {
         initController();
       });
 
-      it('should have orderadmin and helpdesk role when already present', function () {
+      it('should have orderadmin, helpdesk, and partner_management role when already present', function () {
 
         var expectedRoles = [
           {
@@ -518,6 +526,10 @@ describe('Controller: UserRolesCtrl', function () {
           },
           {
             roleName: 'Order_Admin',
+            roleState: 'ACTIVE'
+          },
+          {
+            roleName: 'Partner_Management',
             roleState: 'ACTIVE'
           },
           {

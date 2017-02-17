@@ -154,6 +154,14 @@
                 <i tooltip="{{::'ciRoles.atlas-portal.partner.orderadminTooltip' | translate}}" tooltip-placement="right" tooltip-trigger="mouseenter"
                   class="icon icon-information role-information"></i>
               </div>
+              <div class="admin-options" ng-if="showPartnerManagementRole">
+                <cs-checkbox ckid="partnermgmtCkbx" class="indent-checkbox"
+                            label="{{'ciRoles.atlas-portal.cisco.partnermgmt' | translate}}"
+                            ng-model="rolesObj.partnerManagementValue"
+                            isdisabled="isEditingSelf" ng-click="partnerManagementOnCheckedHandler()"></cs-checkbox>
+                <i tooltip="{{::'ciRoles.atlas-portal.cisco.partnermgmtTooltip' | translate}}" tooltip-placement="right" tooltip-trigger="mouseenter"
+                  class="icon icon-information role-information"></i>              
+              </div>
             </div>
 
             <div class="admin-roles-panel" ng-if="showComplianceRole">
