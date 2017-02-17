@@ -161,6 +161,7 @@
             graphs[i].balloonText = '<span class="graph-text">' + $translate.instant(vm.baloontitles[i]) + '\n' + cluster + ':' + ' <span class="graph-number">[[call_reject]]</span></span>';
           }
         }
+        graphs[i].showHandOnHover = true;
         graphs[i].clustered = false;
       }
       return graphs;

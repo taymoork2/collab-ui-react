@@ -4546,7 +4546,8 @@
       "meetOnPrem": "Number of Meets on Premises",
       "clientTypes": "Client Types",
       "clientType": "Client Type",
-      "noOfMeet": "Number of Meetings"
+      "noOfMeet": "Number of Meetings",
+      "numberOfParticipantTitle": "Total Participants"
     },
     "serviceStatus": {
       "unknown": "Status unknown",

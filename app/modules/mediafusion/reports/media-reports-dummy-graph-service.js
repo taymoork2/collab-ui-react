@@ -14,7 +14,8 @@
       dummyLineChartData: dummyLineChartData,
       dummyUtilizationGraph: dummyUtilizationGraph,
       dummyParticipantDistributionGraph: dummyParticipantDistributionGraph,
-      dummyClientTypeGraph: dummyClientTypeGraph
+      dummyClientTypeGraph: dummyClientTypeGraph,
+      dummyNumberOfParticipantGraph: dummyNumberOfParticipantGraph
     };
 
     function dummyAvailabilityData(filter) {
@@ -232,5 +233,18 @@
       });
       return dummyGraph;
     }
+
+    function dummyNumberOfParticipantGraph() {
+      var dummyGraph = [];
+      dummyGraph.push({
+        title: 'Cluster',
+        valueField: 'number_of_particpant_count',
+        lineColor: chartColors.grayLightTwo,
+        showBalloon: false,
+        isDummy: true
+      });
+      return dummyGraph;
+    }
+
   }
 })();
