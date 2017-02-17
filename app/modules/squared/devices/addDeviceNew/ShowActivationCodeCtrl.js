@@ -306,16 +306,24 @@
         var cbEmailInfo = {
           toCustomerId: vm.selectedUser.orgId,
           toUserId: vm.selectedUser.cisUuid,
-          machineAccountCustomerId: wizardData.account.organizationId,
-          machineAccountId: vm.account.cisUuid,
+          subjectCustomerId: wizardData.account.organizationId,
+          subjectAccountId: vm.account.cisUuid,
           activationCode: vm.activationCode,
           expiryTime: vm.getExpiresOn()
         };
         var mailFunction;
-        if (vm.account.deviceType === 'cloudberry') {
-          mailFunction = CsdmEmailService.sendCloudberryEmail;
+        if (vm.account.type == 'personal') {
+          if (vm.account.isEntitledToHuron) {
+            mailFunction = CsdmEmailService.sendPersonalEmail;
+          } else {
+            mailFunction = CsdmEmailService.sendPersonalCloudberryEmail;
+          }
         } else {
-          mailFunction = CsdmEmailService.sendHuronEmail;
+          if (vm.account.deviceType === 'cloudberry') {
+            mailFunction = CsdmEmailService.sendCloudberryEmail;
+          } else {
+            mailFunction = CsdmEmailService.sendHuronEmail;
+          }
         }
 
         mailFunction(cbEmailInfo).then(success, error);

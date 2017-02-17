@@ -9,6 +9,7 @@ export class PlaceCallOverviewData {
 export class PlaceCallOverviewService {
   private placeCallOverviewDataCopy: PlaceCallOverviewData;
   private errors: Array<any> = [];
+  private DEFAULT_LANG: string = 'en_US';
 
   /* @ngInject */
   constructor(
@@ -24,7 +25,10 @@ export class PlaceCallOverviewService {
     return this.ServiceSetup.listSites().then(() => {
       if (this.ServiceSetup.sites.length !== 0) {
         return this.ServiceSetup.getSite(this.ServiceSetup.sites[0].uuid)
-          .then(site => _.get(site, 'preferredLanguage'));
+        .then(site => {
+          let siteLanguage = _.get(site, 'preferredLanguage');
+          return siteLanguage ? siteLanguage : this.DEFAULT_LANG;
+        });
       }
     });
   }

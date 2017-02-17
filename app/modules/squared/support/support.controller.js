@@ -418,7 +418,7 @@ require('./_support.scss');
         message: $translate.instant('supportPage.downloading'),
         close: $translate.instant('common.ok'),
         dismiss: $translate.instant('common.cancel'),
-        type: 'primary'
+        btnType: 'primary'
       }).result.then(function () {
         $scope.getCallflowCharts(rowEntity.orgId, rowEntity.userId, rowEntity.locusId, rowEntity.callStart, rowEntity.fullFilename, true);
       });

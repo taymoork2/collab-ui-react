@@ -6,19 +6,14 @@
     .controller('HDSServiceController', HDSServiceController);
 
   /* @ngInject */
-  function HDSServiceController($modal, $scope, $state, $stateParams, $translate, Authinfo, ClusterService, FusionClusterService, FeatureToggleService, FusionClusterStatesService) {
+  function HDSServiceController($modal, $state, $translate, Authinfo, FusionClusterService, FeatureToggleService) {
 
-
-    ClusterService.subscribe('data', clustersUpdated, {
-      scope: $scope
-    });
 
     var vm = this;
-    vm.serviceEnabled = null;
-    vm.currentServiceType = 'hds_app';
     vm.featureToggled = false;
     vm.backState = 'services-overview';
     vm.pageTitle = 'hds.resources.page_title';
+    vm.state = $state;
     vm.tabs = [
       {
         title: $translate.instant('common.resources'),
@@ -28,40 +23,6 @@
         state: 'hds.settings',
       }
     ];
-    vm.clusters = ClusterService.getClustersByConnectorType('hds_app');
-    vm.getSeverity = FusionClusterStatesService.getSeverity;
-    vm.sortByProperty = sortByProperty;
-    vm.clusterList = [];
-    vm.showClusterSidepanel = showClusterSidepanel;
-    vm.clusterListGridOptions = {
-      data: 'hdsServiceController.clusters',
-      enableSorting: false,
-      multiSelect: false,
-      enableRowHeaderSelection: false,
-      enableColumnResize: true,
-      enableColumnMenus: false,
-      rowHeight: 75,
-      onRegisterApi: function (gridApi) {
-        $scope.gridApi = gridApi;
-        gridApi.selection.on.rowSelectionChanged($scope, function (row) {
-          showClusterSidepanel(row.entity);
-        });
-        if (!_.isUndefined($stateParams.clusterId) && $stateParams.clusterId !== null) {
-          showClusterSidepanel(ClusterService.getCluster('hds_app', $stateParams.clusterId));
-        }
-      },
-      columnDefs: [{
-        field: 'groupName',
-        displayName: 'HDS Clusters',
-        cellTemplate: 'modules/hds/resources/cluster-list-display-name.html',
-        width: '35%'
-      }, {
-        field: 'serviceStatus',
-        displayName: 'Service Status',
-        cellTemplate: 'modules/hds/resources/cluster-list-status.html',
-        width: '65%'
-      }]
-    };
 
     vm.addResourceModal = {
       type: 'small',
@@ -70,19 +31,14 @@
       templateUrl: 'modules/hds/add-resource/add-resource-modal.html',
       modalClass: 'redirect-add-resource',
       resolve: {
-        proceedSetup: false
-      },
+        firstTimeSetup: false
+      }
     };
-
-    function showClusterSidepanel(cluster) {
-      $state.go('hds-cluster-details', {
-        clusterId: cluster.id
-      });
-    }
 
     FusionClusterService.serviceIsSetUp('spark-hybrid-datasecurity')
       .then(function (enabled) {
         if (!enabled) {
+          vm.addResourceModal.resolve.firstTimeSetup = true;
           if (Authinfo.isCustomerLaunchedFromPartner()) {
             $modal.open({
               templateUrl: 'modules/hercules/service-specific-pages/components/add-resource/partnerAdminWarning.html',
@@ -94,24 +50,10 @@
         }
       });
 
-    function clustersUpdated() {
-      vm.clusters = ClusterService.getClustersByConnectorType('hds_app');
-      vm.clusters.sort(sortByProperty('name'));
-    }
-
     FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity)
       .then(function (reply) {
         vm.featureToggled = reply;
       });
-
-    /**
-     * This will sort the string array based on the property passed.
-     */
-    function sortByProperty(property) {
-      return function (a, b) {
-        return a[property].toLocaleUpperCase().localeCompare(b[property].toLocaleUpperCase());
-      };
-    }
 
   }
 }());

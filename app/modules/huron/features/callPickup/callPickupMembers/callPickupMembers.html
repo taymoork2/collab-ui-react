@@ -53,7 +53,7 @@
     <cs-card-member
       ng-repeat="member in $ctrl.selectedMembers track by $index"
       cs-type="complex"
-      cs-member-type="$ctrl.getMemberType(member.member)"
+      cs-member-type="{{$ctrl.getMemberType(member.member)}}"
       cs-title="$ctrl.getDisplayNameOnCard(member.member)"
       cs-subtitle="($ctrl.getUserName(member.member))"
       cs-image="$ctrl.getMembersPictures(member.member)"

@@ -200,6 +200,7 @@
     ProdAdminServiceUrl: 'https://atlas-a.wbx2.com/admin/api/v1/',
     WebexAdvancedEditUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage',
     WebexAdvancedHomeUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminHomePage',
+    WebexMaxConcurrentMeetings: 'https://%s/meetingsapi/v1/report/MonthlyMaxConcurrentMeetings',
     WebClientUrl: 'https://web.ciscospark.com/',
     ArgonautReportSizeUrl: 'https://argonaut-a.wbx2.com/argonaut/api/v1/compliance/report/size',
     ArgonautReportUrl: 'https://argonaut-a.wbx2.com/argonaut/api/v1/compliance/report',

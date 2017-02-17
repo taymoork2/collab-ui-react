@@ -503,7 +503,6 @@
     "title": "MANAGE TEMPLATES"
   },
   "reportsPage": {
-    "title": "ORGANIZATION REPORTS",
     "pageTitle": "Reports",
     "all": "All",
     "engagement": "Engagement",
@@ -518,6 +517,7 @@
     "week2": "last seven days",
     "month": "Last 4 Weeks",
     "month2": "last four weeks",
+    "oneMonth": "Last Month",
     "threeMonths": "Last 3 Months",
     "threeMonths2": "last three months",
     "lastTwelveWeeks": "Last 12 Weeks",
@@ -593,6 +593,17 @@
         "deviceUsageExportFailedOrCancelled": "Device Usage Export failed or was cancelled."
       }
     }
+  },
+  "sharedMeetingReports": {
+    "title": "Shared Meeting Usage",
+    "link": "View Report",
+    "sharedMeetingReport": "Shared Meeting Report",
+    "sharedMeetingUsage": "Shared Meetings Usage",
+    "sharedMeetingDescription": "This graph shows the number of concurrent meetings per month.",
+    "concurrentMeetingsTitle": "Actual number of concurrent mettings held",
+    "concurrentMeetings": "Concurrent Meetings",
+    "maxMeetingsTitle": "Maximum number of concurrent meetings allowed",
+    "errorLoadingSharedMeetingData": "There was a problem loading the Shared Meeting Report data."
   },
   "careReportsPage": {
     "tasks": "Contacts",
@@ -4174,7 +4185,8 @@
     "newCode": "New Code",
     "confirmRoomDeviceOnly": {
       "roomDeviceOnly": "Room Device activation only",
-      "noSparkCallService": "This user doesn't have Spark Call service."
+      "noSparkCallService": "This user doesn't have Spark Call service.",
+      "noSparkCallWarning": "They can still activate a room device and make calls using Spark or SIP addresses. However, for phone dialling and desk phones, you need to give them the Spark Call service from the Users page."
     },
     "chooseDeviceType": {
       "deviceType": "What kind of device do you want to set up?",
@@ -5215,7 +5227,19 @@
     "greatBritain": "United Kingdom",
     "unitedStates": "United States",
     "canada": "Canada",
-    "colombia": "Colombia"
+    "colombia": "Colombia",
+    "austria": "Austria",
+    "belgium": "Belgium",
+    "france": "France",
+    "germany": "Germany",
+    "italy": "Italy",
+    "netherlands": "Netherlands",
+    "portugal": "Portugal",
+    "spain": "Spain",
+    "sweden": "Sweden",
+    "switzerland": "Switzerland",
+    "ireland": "Ireland",
+    "mexico": "Mexico"
   },
   "languages": {
     "danish": "Dansk",
@@ -6090,7 +6114,6 @@
     "numberedName": "Subscription {{number}}",
     "usage": "Usage: ",
     "licenseUsageReport": "License Usage Report",
-    "smpLicenseReportPeriod": "Last 3 Months",
     "more": "More",
     "less": "Less",
     "quantity": "Qty: ",
@@ -6137,6 +6160,8 @@
     "atlas-portal.support": "Support",
     "atlas-portal.reports": "Reports",
     "atlas-portal.billing": "Billing",
+    "atlas-portal.cisco.partnermgmt": "Partner Management",
+    "atlas-portal.cisco.partnermgmtTooltip": "Access to Partner Management",
     "atlas-portal.partner.helpdesk": "Help Desk Support",
     "atlas-portal.partner.helpdeskTooltip": "Access to Help Desk",
     "atlas-portal.partner.orderadmin": "Order Admin Support",

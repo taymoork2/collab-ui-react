@@ -62,7 +62,7 @@
             <cs-card-member
               ng-repeat="member in $ctrl.listOfDisplayMembers | filter: {member: {'type': 'USER_REAL_USER'}} | limitTo:$ctrl.numberOfCardsUsers"
               cs-type="simple"
-              cs-member-type="$ctrl.getMemberType(member.member)"
+              cs-member-type="{{$ctrl.getMemberType(member.member)}}"
               cs-id="member.member.uuid"
               cs-title="$ctrl.getDisplayNameOnCard(member.member)"
               cs-subtitle="member.member.userName"
@@ -89,7 +89,7 @@
             <cs-card-member
               ng-repeat="member in $ctrl.listOfDisplayMembers | filter: {member: {'type': 'USER_PLACE'}} | limitTo:$ctrl.numberOfCardsPlaces"
               cs-type="simple"
-              cs-member-type="$ctrl.getMemberType(member.member)"
+              cs-member-type="{{$ctrl.getMemberType(member.member)}}"
               cs-id="member.member.uuid"
               cs-title="$ctrl.getDisplayNameOnCard(member.member)"
               cs-subtitle="member.member.userName"
