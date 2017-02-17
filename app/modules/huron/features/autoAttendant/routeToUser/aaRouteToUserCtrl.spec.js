@@ -820,8 +820,8 @@ describe('Controller: AARouteToUserCtrl', function () {
 
     });
 
-    describe('fromPhoneMenu_Queue_Fallback', function () {
-      it('should be able to create new route entry from Queue Fallback of PhoneMenu', function () {
+    describe('fromNewStep_Queue_Fallback', function () {
+      it('should be able to create new route entry from Queue Fallback of new step', function () {
 
         var disconnect = AutoAttendantCeMenuModelService.newCeActionEntry('disconnect', '');
         var fallback = AutoAttendantCeMenuModelService.newCeMenuEntry();
@@ -846,5 +846,33 @@ describe('Controller: AARouteToUserCtrl', function () {
         expect(fallbackAction.value).toEqual('');
       });
     });
+
+    describe('fromPhoneMenu_Queue_Fallback', function () {
+      it('should be able to create new route entry from Queue Fallback of Phone Menu', function () {
+        var disconnect = AutoAttendantCeMenuModelService.newCeActionEntry('disconnect', '');
+        var fallback = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        fallback.addAction(disconnect);
+        var queueSettings = {};
+        queueSettings.fallback = fallback;
+        var routeToQueue = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', 'some-queue-id');
+        routeToQueue.queueSettings = queueSettings;
+        var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        menuEntry.addAction(routeToQueue);
+        aaUiModel[schedule].entries[index].addEntryAt(index, menuEntry);
+
+        $scope.fromRouteCall = false;
+        $scope.fromFallback = true;
+
+        var controller = $controller('AARouteToUserCtrl', {
+          $scope: $scope
+        });
+
+        var fallbackAction = _.get(controller.menuKeyEntry, 'actions[0].queueSettings.fallback.actions[0]');
+        $scope.$apply();
+        expect(fallbackAction.name).toEqual('routeToUser');
+        expect(fallbackAction.value).toEqual('');
+      });
+    });
+
   });
 });
