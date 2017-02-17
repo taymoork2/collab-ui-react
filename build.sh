@@ -10,7 +10,7 @@ source ./bin/include/setup-helpers
 # - look for any zombie instances of process names (there shouldn't be any when Jenkins runs this)
 proc_names_to_scan="bin\\/sc gulp bin\\/spin"
 for i in $proc_names_to_scan; do
-    if [ -n "`get_pids $i`" ]; then
+    if [ -n "$(get_pids "$i")" ]; then
         echo "WARNING: stale process found: $i"
         kill_wait "$i"
     fi
@@ -19,19 +19,22 @@ done
 
 # -----
 # Phase 2: Dependencies
-if [ -f $BUILD_DEPS_ARCHIVE ]; then
+if [ -f "$BUILD_DEPS_ARCHIVE" ]; then
     # unpack previously built dependencies (but don't overwrite anything newer)
     echo "Restoring previous deps..."
-    tar --keep-newer-files -xf $BUILD_DEPS_ARCHIVE
+    tar --keep-newer-files -xf "$BUILD_DEPS_ARCHIVE"
 fi
 
+# shellcheck disable=SC2154
 echo "Inspecting checksums of $manifest_files from last successful build... "
-checksums_ok=`is_checksums_ok $manifest_checksums_file && echo "true" || echo "false"`
+# shellcheck disable=SC2154
+checksums_ok=$(is_checksums_ok "$manifest_checksums_file" && echo "true" || echo "false")
 
 echo "Checking if it is time to refresh..."
 min_refresh_period=$(( 60 * 60 * 24 ))  # 24 hours
-time_to_refresh=`is_time_to_refresh $min_refresh_period $last_refreshed_file \
-    && echo "true" || echo "false"`
+# shellcheck disable=SC2154
+time_to_refresh=$(is_time_to_refresh $min_refresh_period "$last_refreshed_file" \
+    && echo "true" || echo "false")
 
 echo "INFO: checksums_ok: $checksums_ok"
 echo "INFO: time_to_refresh: $time_to_refresh"
@@ -49,17 +52,17 @@ else
     if [ $? -eq 0 ]; then
         # - regenerate .manifest-checksums
         echo "Generating new manifest checksums file..."
-        mk_checksum_file $manifest_checksums_file $manifest_files
+        mk_checksum_file "$manifest_checksums_file" "$manifest_files"
 
         # - regenerate .last-refreshed
         echo "Generating new last-refreshed file..."
-        mk_last_refreshed_file $last_refreshed_file
+        mk_last_refreshed_file "$last_refreshed_file"
 
         # archive dependencies
         echo "Generating new build deps archive for later re-use..."
-        tar -cpf $BUILD_DEPS_ARCHIVE \
-            $last_refreshed_file \
-            $manifest_checksums_file \
+        tar -cpf "$BUILD_DEPS_ARCHIVE" \
+            "$last_refreshed_file" \
+            "$manifest_checksums_file" \
             .cache/npm-deps-for-*.tar.gz
 
     # setup failed
@@ -145,7 +148,7 @@ set +x
 
 # groom logs for cleaner sauce labs output
 source ./bin/include/sauce-results-helpers
-mk_test_report ./.cache/e2e-sauce-logs | tee ./.cache/e2e-report-for-${BUILD_TAG}
+mk_test_report ./.cache/e2e-sauce-logs | tee "./.cache/e2e-report-for-${BUILD_TAG}"
 
 
 # -----
@@ -160,8 +163,8 @@ fi
 rm -f wx2-admin-web-client.*.tar.gz
 
 # important: we untar with '--strip-components=1', so use 'dist/*' and NOT './dist/*'
-tar -zcvf ${APP_ARCHIVE} dist/*
-tar -zcvf ${COVERAGE_ARCHIVE} ./test/coverage/
+tar -zcvf "$APP_ARCHIVE" dist/*
+tar -zcvf "$COVERAGE_ARCHIVE" ./test/coverage/
 
 # archive e2e test results
-tar -cf ${E2E_TEST_RESULTS_ARCHIVE} ./test/e2e-protractor/reports/${BUILD_TAG}
+tar -cf "$E2E_TEST_RESULTS_ARCHIVE" "./test/e2e-protractor/reports/${BUILD_TAG}"
