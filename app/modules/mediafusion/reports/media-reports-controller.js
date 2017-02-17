@@ -419,7 +419,7 @@
           });
         }
       }, function () {
-        setDummyClientType();
+        setDummyNumberOfParticipant();
       });
     }
 

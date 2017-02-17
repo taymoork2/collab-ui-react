@@ -40,7 +40,7 @@ describe('Service: Number of Participants Graph Service', function () {
     expect(NumberOfParticipantGraphService).toBeDefined();
   });
 
-  it('setParticipantDistributionGraph should return an amchart object successfully', function () {
+  it('setNumberOfParticipantGraph should return an amchart object successfully', function () {
     var setNumberOfParticipantGraphResponse = NumberOfParticipantGraphService.setNumberOfParticipantGraph(numberOfParticipantGraphData, numberOfParticipantChart, daterange);
     expect(setNumberOfParticipantGraphResponse.graphs.length).toBe(10);
     expect(setNumberOfParticipantGraphResponse.dataProvider).toEqual(numberOfParticipantGraphData.numberOfParticipantResponse);
