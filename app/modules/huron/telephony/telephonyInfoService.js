@@ -188,10 +188,10 @@
       telephonyInfo.alternateDirectoryNumber.pattern = pattern;
     }
 
-    function getRemoteDestinationInfo(userUuid) {
+    function getRemoteDestinationInfo(user) {
       return RemoteDestinationService.query({
         customerId: Authinfo.getOrgId(),
-        userId: userUuid
+        userId: user.id
       }).$promise
         .then(function (remoteDestinationInfo) {
           var snrInfo = angular.copy(telephonyInfo.snrInfo);
@@ -206,6 +206,7 @@
             }
           }
           updateSnr(snrInfo);
+          return snrInfo;
         })
         .catch(function (response) {
           updateSnr({});

@@ -93,3 +93,17 @@ export class UserNumber {
     this.shared = obj.shared;
   }
 }
+
+export class UserRemoteDestination {
+  public uuid?: string;
+  public enableMobileConnect: string;
+
+  constructor(obj: {
+    uuid: string | undefined,
+    enableMobileConnect: string,
+
+  }) {
+    this.uuid = obj.uuid;
+    this.enableMobileConnect = obj.enableMobileConnect;
+  }
+}

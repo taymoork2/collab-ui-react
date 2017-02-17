@@ -54,40 +54,38 @@
 
     init();
 
-    $scope.$on('telephonyInfoUpdated', function () {
-      init();
-    });
-
     function init() {
-      var snrInfo = TelephonyInfoService.getTelephonyInfo().snrInfo;
-      vm.snrInfo.singleNumberReachEnabled = snrInfo.singleNumberReachEnabled;
+      TelephonyInfoService.getRemoteDestinationInfo(vm.currentUser).then(function (data) {
+        var snrInfo = angular.copy(data);
+        vm.snrInfo.singleNumberReachEnabled = snrInfo.singleNumberReachEnabled;
 
-      if (snrInfo.remoteDest) {
-        vm.snrInfo.remoteDest = snrInfo.remoteDest;
-      } else if (snrInfo.destination) {
-        vm.snrInfo.remoteDest = TelephoneNumberService.getDestinationObject(snrInfo.destination);
-      } else {
-        resetForm();
-      }
+        if (snrInfo.remoteDest) {
+          vm.snrInfo.remoteDest = snrInfo.remoteDest;
+        } else { //if (snrInfo.destination) {
+          vm.snrInfo.remoteDest = TelephoneNumberService.getDestinationObject(snrInfo.destination);
+        }
 
-      vm.snrInfo.remoteDestinations = snrInfo.remoteDestinations;
+        vm.snrInfo.remoteDestinations = snrInfo.remoteDestinations;
 
-      function isSelected(option) {
-        return option.value === snrInfo.answerTooLateTimer;
-      }
+        function isSelected(option) {
+          return option.value === snrInfo.answerTooLateTimer;
+        }
 
-      if (vm.snrInfo.singleNumberReachEnabled) {
-        vm.snrWaitSeconds = vm.snrWaitSecondsOptions.filter(isSelected)[0];
-      } else {
-        vm.snrWaitSeconds = {
-          name: '20',
-          value: '20000'
-        };
-      }
-      vm.showRemove = checkSnr();
+        if (vm.snrInfo.singleNumberReachEnabled) {
+          vm.snrWaitSeconds = vm.snrWaitSecondsOptions.filter(isSelected)[0];
+        } else {
+          vm.snrWaitSeconds = {
+            name: '20',
+            value: '20000'
+          };
+        }
+        vm.showRemove = checkSnr();
+      });
     }
 
     function resetForm() {
+      vm.showRemove = checkSnr();
+      init();
       if (vm.form) {
         $timeout(function () {
           vm.form.$setPristine();
@@ -103,7 +101,7 @@
 
     function checkSnr() {
       var remoteDestination = _.get(vm.snrInfo, 'remoteDestinations', []);
-      return (!vm.snrInfo.singleNumberReachEnabled && remoteDestination.length > 0 && remoteDestination[0].destination !== null);
+      return (!vm.snrInfo.singleNumberReachEnabled && remoteDestination && remoteDestination.length > 0 && remoteDestination[0].destination !== null);
     }
 
     function remove() {
@@ -113,7 +111,6 @@
         type: 'dialog'
       }).result.then(function () {
         deleteRemoteDestinationInfo(vm.currentUser);
-        resetForm();
       });
     }
 
@@ -170,10 +167,12 @@
           vm.snrInfo.remoteDest.phoneNumber = null;
           vm.snrInfo.remoteDestinations = [];
           vm.snrInfo.singleNumberReachEnabled = false;
+          vm.snrInfo.remoteDest = 'undefined';
           TelephonyInfoService.updateSnr(vm.snrInfo);
-
+          $scope.$emit('SNR_CHANGE', vm.snrInfo.singleNumberReachEnabled);
           result.msg = $translate.instant('singleNumberReachPanel.removeSuccess');
           result.type = 'success';
+          resetForm();
           Notification.notify([result.msg], result.type);
         },
         function (response) {
@@ -214,12 +213,14 @@
       if (_.isArray(vm.snrInfo.remoteDestinations) && _.get(vm.snrInfo, 'remoteDestinations', []).length > 0) {
         updateRemoteDestinationInfo(vm.currentUser, vm.snrInfo.remoteDest, vm.snrWaitSeconds.value)
         .then(function () {
+          $scope.$emit('SNR_CHANGE', vm.snrInfo.singleNumberReachEnabled);
           resetForm();
         });
       } else if (vm.snrInfo.singleNumberReachEnabled) {
         createRemoteDestinationInfo(vm.currentUser, vm.snrInfo.remoteDest, vm.snrWaitSeconds.value)
           .then(function () {
             TelephonyInfoService.getRemoteDestinationInfo(vm.currentUser.id);
+            $scope.$emit('SNR_CHANGE', vm.snrInfo.singleNumberReachEnabled);
             resetForm();
           });
       } else {
