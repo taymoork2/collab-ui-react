@@ -80,7 +80,7 @@ var PartnerHomePage = function () {
   this.newTrialRow = element(by.cssContainingText('.ui-grid-cell', this.newTrial.customerName));
   this.newSqUCTrialRow = element(by.cssContainingText('.ui-grid-cell', this.newSqUCTrial.customerName));
   this.editTrialForm = element(by.id('editTrialForm'));
-  this.addTrialForm = element(by.id('editTrialForm'));
+  this.addTrialForm = element(by.id('addTrialForm'));
   this.cancelTrialButton = element(by.id('cancelNewTrialButton'));
   this.customerNameForm = element(by.id('customerNameForm'));
   this.customerEmailForm = element(by.id('customerEmailForm'));
@@ -171,7 +171,7 @@ var PartnerHomePage = function () {
       // There is a bug in the trial view where entering search text
       // too soon results in the search being ignored, so let's wait until a
       // known trial shows up in the list...
-      utils.waitIsDisplayed(element(by.cssContainingText('.ui-grid-cell', 
+      utils.waitIsDisplayed(element(by.cssContainingText('.ui-grid-cell',
         'Atlas Test Partner Organization')));
 
       utils.search(partner.newTrial.customerName, -1);
