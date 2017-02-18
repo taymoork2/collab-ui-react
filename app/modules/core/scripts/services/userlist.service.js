@@ -14,7 +14,7 @@
     .name;
 
   /* @ngInject */
-  function UserListService($http, $rootScope, $q, $timeout, Authinfo, Log, Utils, $resource, UrlConfig, $window) {
+  function UserListService($http, $q, $resource, $rootScope, $timeout, $window, Authinfo, Config, Log, Utils, UrlConfig) {
     var searchFilter = 'filter=active%20eq%20true%20and%20%s(userName%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22%20or%20displayName%20sw%20%22%s%22)';
     var attributes = 'attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID,userSettings';
     // Get last 7 day user counts
@@ -141,6 +141,8 @@
     // generate user report request.
     function getUserReports(userReportsID, callback) {
       var userReportsUrl = UrlConfig.getUserReportsUrl(Authinfo.getOrgId()) + '/' + userReportsID;
+      //keep the user from being logged off for inactivity
+      $rootScope.$emit(Config.idleTabKeepAliveEvent);
 
       $http.get(userReportsUrl)
         .success(function (data, status) {

@@ -6,6 +6,7 @@ import featureToggleModule from 'modules/core/featureToggle';
 
 let analyticsModule = require('modules/core/analytics');
 let userListServiceModule = require('modules/core/scripts/services/userlist.service');
+let config = require('modules/core/config/config');
 
 import './_csv-download.scss';
 
@@ -17,6 +18,7 @@ export default angular
     'atlas.templates',
     'collab.ui',
     analyticsModule,
+    config,
     featureToggleModule,
     notificationsModule,
     userListServiceModule,
