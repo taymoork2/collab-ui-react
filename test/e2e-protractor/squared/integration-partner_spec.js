@@ -47,18 +47,6 @@ describe('Partner flow', function () {
       navigation.clickCustomers();
     });
 
-    describe('New Trial box', function () {
-
-      beforeEach(function () {
-        utils.click(partner.addButton);
-        utils.expectIsDisplayed(partner.addTrialForm);
-      });
-
-      afterEach(function () {
-        utils.click(partner.cancelTrialButton);
-      });
-    });
-
     it('should add a new trial', function () {
       //utils.click(partner.trialFilter);
       utils.click(partner.addButton);
