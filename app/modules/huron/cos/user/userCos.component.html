@@ -1,0 +1,24 @@
+<form name="$ctrl.form" novalidate role="form">
+  <cs-sp-buttons ng-show="$ctrl.form.$dirty">
+    <button cs-btn loading="$ctrl.saveInProcess" class="btn-primary" ng-click="$ctrl.save()" type="submit">
+      <span translate="common.save"></span>
+    </button>
+    <button class="btn-default" translate="common.cancel" ng-click="$ctrl.reset()"></button>
+  </cs-sp-buttons>
+  <cs-sp-container>
+    <div ng-repeat="restriction in $ctrl.currentRestrictions track by restriction.restriction">
+      <cs-sp-section>
+        <div class="section-title-row">
+          <span class="section-name" translate="{{$ctrl.getTitle(restriction.restriction)}}"></span>
+        </div>
+        <p class="description-block" translate="{{$ctrl.getDescription(restriction.restriction)}}"></p>
+        <cs-select
+          name="{{restriction.restriction}}-restriction"
+          ng-model="$ctrl.options[restriction.restriction].selected"
+          options="$ctrl.options[restriction.restriction].options"
+          on-change-fn="$ctrl.changeRestriction(restriction)">
+        </cs-select>
+      </cs-sp-section>
+    </div>
+  </cs-sp-container>
+</form>

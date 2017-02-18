@@ -1161,6 +1161,20 @@
               },
             }
           })
+          .state('user-overview.communication.cos', {
+            template: '<uc-user-cos-form member-type="users" member-id="$resolve.ownerId"></uc-user-cos-form>',
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/cos/user'], done);
+              }),
+              ownerId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentUser, 'id');
+              },
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('user-overview.communication.cos').data.displayName = $translate.instant('serviceSetupModal.cos.title');
+              }
+            },
+          })
           .state('user-overview.communication.internationalDialing', {
             template: '<uc-dialing  watcher="$resolve.watcher" selected="$resolve.selected" title="internationalDialingPanel.title"></uc-dialing>',
             params: {
@@ -1696,6 +1710,20 @@
                 return _.get($stateParams.currentPlace, 'cisUuid');
               },
             }
+          })
+          .state('place-overview.communication.cos', {
+            template: '<uc-user-cos-form member-type="places" member-id="$resolve.ownerId"></uc-user-cos-form>',
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/cos/user'], done);
+              }),
+              ownerId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentPlace, 'cisUuid');
+              },
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('place-overview.communication.cos').data.displayName = $translate.instant('serviceSetupModal.cos.title');
+              }
+            },
           })
           .state('place-overview.communication.internationalDialing', {
             template: '<uc-dialing  watcher="$resolve.watcher" selected="$resolve.selected" title="internationalDialingPanel.title"></uc-dialing>',

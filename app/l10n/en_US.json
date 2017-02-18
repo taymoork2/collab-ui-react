@@ -1397,7 +1397,12 @@
       "internationalTitle": "International Dialing",
       "internationalDesc": "Choose whether users are allowed to dial international numbers. Users and Places with Spark Call inherit this setting by default.",
       "premiumTitle": "Premium Dialing",
-      "premiumDesc": "Choose whether users are allowed to dial premium numbers. Premium includes numbers that are charged to dial in or out. Example numbers include 1-XXX-XXX-XXXX, 1-XXX-XXX-XXXX and 1-XXX-XXX-XXXX."
+      "premiumDesc": "Choose whether users are allowed to dial premium numbers. Premium includes numbers that are charged to dial in or out.",
+      "neverAllow": "Never Allow",
+      "alwaysAllow": "Always Allow",
+      "orgSetting": "Organization Settings ({{state}})",
+      "success": "Dialing Restrictions settings successfully saved.",
+      "error": "Dialing Restrictions failed to update"
     },
     "error": {
       "siteSteering": "First digit of Voicemail Access Prefix conflicts with the selected Outbound Dial Digit.",

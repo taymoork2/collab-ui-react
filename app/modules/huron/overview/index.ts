@@ -3,6 +3,7 @@ import serviceModule from 'modules/huron/lines/services';
 import dialingModule from 'modules/huron/dialing';
 import voicemailModule from 'modules/huron/voicemail';
 import huronUserService from 'modules/huron/users';
+import FeatureToggleService from 'modules/core/featureToggle';
 
 export default angular
   .module('huron', [
@@ -13,6 +14,7 @@ export default angular
     dialingModule,
     voicemailModule,
     huronUserService,
+    FeatureToggleService,
   ])
   .component('userCallOverview', new UserCallOverviewComponent())
   .name;
