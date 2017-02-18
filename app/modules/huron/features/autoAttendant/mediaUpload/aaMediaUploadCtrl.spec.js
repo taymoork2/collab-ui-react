@@ -105,6 +105,8 @@ describe('Controller: AAMediaUploadCtrl', function () {
     $scope.change = function () {
       return true;
     };
+    $scope.mediaState = {};
+    $scope.mediaState.uploadInProgress = false;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(ui);
     spyOn(ModalService, 'open').and.returnValue({

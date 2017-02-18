@@ -14,6 +14,7 @@
       validateFile: validateFile,
       isClioEnabled: isClioEnabled,
       deleteRecording: deleteRecording,
+      httpDeleteRetry: httpDeleteRetry,
       getResources: getResources,
       notifyAsSaved: notifyAsSaved,
       notifyAsActive: notifyAsActive,

@@ -57,6 +57,8 @@
     vm.messageType = messageType.ACTION;
     vm.saveUiModel = saveUiModel;
     vm.setMessageOptions = setMessageOptions;
+    vm.mediaState = {};
+    vm.mediaState.uploadProgress = false;
 
     vm.MAX_FILE_SIZE_IN_BYTES = 5 * 1024 * 1024;
 
