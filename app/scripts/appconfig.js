@@ -2802,6 +2802,9 @@
               },
               'contextServiceView': {
                 template: '<hybrid-service-cluster-list service-id="\'contact-center-context\'"></hybrid-service-cluster-list>',
+                controller: /* @ngInject */ function (Analytics) {
+                  return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CONTEXT_LIST);
+                },
               },
             },
             params: {
@@ -2945,6 +2948,9 @@
             views: {
               'fullPane': {
                 template: '<hybrid-service-cluster-list service-id="\'spark-hybrid-datasecurity\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>',
+                controller: /* @ngInject */ function (Analytics) {
+                  return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_HDS_LIST);
+                },
               },
             },
             params: {
@@ -3231,6 +3237,9 @@
             views: {
               calendarServiceView: {
                 templateUrl: 'modules/hercules/service-specific-pages/calendar-service-pages/calendar-service-resources.html',
+                controller: /* @ngInject */ function (Analytics) {
+                  return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CAL_EXC_LIST);
+                },
               },
             },
             params: {
@@ -3260,6 +3269,9 @@
           .state('google-calendar-service.settings', {
             url: '/services/google-calendar/settings',
             template: '<google-calendar-settings-page ng-if="$resolve.hasGoogleCalendarFeatureToggle"></google-calendar-settings-page>',
+            controller: /* @ngInject */ function (Analytics) {
+              return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CAL_GOOG_SETTINGS);
+            },
           })
           .state('call-service', {
             templateUrl: 'modules/hercules/service-specific-pages/call-service-pages/call-service-container.html',
@@ -3275,6 +3287,9 @@
             views: {
               callServiceView: {
                 templateUrl: 'modules/hercules/service-specific-pages/call-service-pages/call-service-resources.html',
+              },
+              controller: /* @ngInject */ function (Analytics) {
+                return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CALL_LIST);
               },
             },
             params: {
@@ -3431,6 +3446,9 @@
             views: {
               'fullPane': {
                 template: '<hybrid-service-cluster-list service-id="\'squared-fusion-media\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>',
+                controller: /* @ngInject */ function (Analytics) {
+                  return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_MEDIA_LIST);
+                },
               },
             },
             params: {
@@ -3450,6 +3468,9 @@
                 controller: 'MediaServiceSettingsControllerV2',
                 templateUrl: 'modules/mediafusion/media-service-v2/settings/media-service-settings.html',
               },
+            },
+            controller: /* @ngInject */ function (Analytics) {
+              return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_MEDIA_SETTINGS);
             },
           });
 

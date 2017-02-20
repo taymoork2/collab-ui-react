@@ -90,6 +90,24 @@
           APP_ERROR: 'app_exeption',
         },
       },
+      HS_NAVIGATION: {
+        name: 'Navigation inside Hybrid Services pages',
+        eventNames: {
+          VISIT_CLUSTER_LIST: 'Visit Hybrid Cluster List Page',
+          VISIT_SERVICES_OVERVIEW: 'Visit Services Overview Page',
+          VISIT_CONTEXT_LIST: 'Visit Hybrid Context Service Cluster List',
+          VISIT_HDS_LIST: 'Visit Hybrid Data Security Service Cluster List',
+          VISIT_HDS_SETTINGS: 'Visit Hybrid Data Security Service Settings',
+          VISIT_CAL_EXC_LIST: 'Visit Hybrid Calendar (Exchange) Service Cluster List',
+          VISIT_CAL_EXC_SETTINGS: 'Visit Hybrid Calendar (Exchange) Service Settings', // TODO
+          VISIT_CAL_GOOG_SETTINGS: 'Visit Hybrid Calendar (Google) Service Settings',
+          VISIT_CALL_LIST: 'Visit Hybrid Call Service Cluster List',
+          VISIT_CALL_SETTINGS: 'Visit Hybrid Call Service Settings',
+          VISIT_MEDIA_LIST: 'Visit Hybrid Media Service Cluster List',
+          VISIT_MEDIA_SETTINGS: 'Visit Hybrid Media Service Settings',
+        },
+        persistentProperties: null,
+      },
     };
 
     var service = {
@@ -111,6 +129,7 @@
       trackUserOnboarding: trackUserOnboarding,
       trackAddUsers: trackAddUsers,
       trackCsv: trackCsv,
+      trackHSNavigation: trackHSNavigation,
     };
 
     return service;
@@ -281,6 +300,20 @@
       }
     }
 
+    /**
+     * Hybrid Services navigation
+     */
+    function trackHSNavigation(eventName, payload) {
+      if (!eventName) {
+        return $q.reject('eventName not passed');
+      }
+
+      var properties = _.extend({
+        userId: _hashSha256(Authinfo.getUserId()),
+        orgId: _hashSha256(Authinfo.getOrgId()),
+      }, payload);
+      return trackEvent(eventName, properties);
+    }
 
     /**
     * General Error Tracking
