@@ -19,6 +19,7 @@ class PlaceCallOverview implements ng.IComponentController {
   public plIsLoaded: boolean = false;
   public prefLanguageSaveInProcess: boolean = false;
   public onPrefLanguageChange: boolean = false;
+  public cosFeatureToggle;
   // Data from services
   public placeCallOverviewData: PlaceCallOverviewData;
 
@@ -33,6 +34,7 @@ class PlaceCallOverview implements ng.IComponentController {
     private DialingService: DialingService,
     private Notification: Notification,
     private PlaceCallOverviewService: PlaceCallOverviewService,
+    private FeatureToggleService,
   ) {
 
     this.displayPlace($stateParams.currentPlace);
@@ -67,6 +69,9 @@ class PlaceCallOverview implements ng.IComponentController {
   public $onInit(): void {
     if (this.hasSparkCall) {
       this.initActions();
+      this.FeatureToggleService.supports(this.FeatureToggleService.features.huronCustomerCos).then((enabled) => {
+        this.cosFeatureToggle = enabled;
+      });
       this.DialingService.initializeDialing(LineConsumerType.PLACES, this.currentPlace.cisUuid).then(() => {
         this.initFeatures();
       });
@@ -103,7 +108,7 @@ class PlaceCallOverview implements ng.IComponentController {
       this.features.push(service);
     }
     this.DialingService.isDisableInternationalDialing().then((isDisableInternationalDialing) => {
-      if (!isDisableInternationalDialing) {
+      if (!isDisableInternationalDialing && !this.cosFeatureToggle) {
         service = {
           name: this.$translate.instant('telephonyPreview.internationalDialing'),
           state: 'internationalDialing',
@@ -114,11 +119,21 @@ class PlaceCallOverview implements ng.IComponentController {
       }
     });
 
-    if (this.currentPlace.type === 'huron') {
+    if (this.currentPlace.type === 'huron' && !this.cosFeatureToggle) {
       service = {
         name: this.$translate.instant('telephonyPreview.localDialing'),
         state: 'local',
         detail: this.DialingService.getLocalDialing(LineConsumerType.PLACES),
+        actionAvailable: true,
+      };
+      this.features.push(service);
+    }
+
+    if (this.currentPlace.type === 'huron' && this.cosFeatureToggle) {
+      service = {
+        name: this.$translate.instant('serviceSetupModal.cos.title'),
+        state: 'cos',
+        detail: undefined,
         actionAvailable: true,
       };
       this.features.push(service);
