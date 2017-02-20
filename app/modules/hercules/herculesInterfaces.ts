@@ -20,7 +20,7 @@ export interface IAlarm {
   id: string;
   firstReported: number;
   lastReported: number;
-  severity: string;
+  severity: 'critical' | 'error' | 'warning' | 'alert';
   title: string;
   description: string;
   solution: string;

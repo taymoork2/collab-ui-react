@@ -74,7 +74,6 @@
       });
 
     }
-    vm.close = $modalInstance.close;
   }
 
   angular
