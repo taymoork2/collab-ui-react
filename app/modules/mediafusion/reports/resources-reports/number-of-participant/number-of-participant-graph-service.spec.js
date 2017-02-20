@@ -27,7 +27,7 @@ describe('Service: Number of Participants Graph Service', function () {
     label: "Last 24 Hours",
     value: "0"
   };
-  var numberOfParticipantGraphData = getJSONFixture('mediafusion/json/metrics-graph-report/ParticipantDistributionGraphData.json');
+  var numberOfParticipantGraphData = getJSONFixture('mediafusion/json/metrics-graph-report/numberOfParticipant.json');
 
   beforeEach(angular.mock.module('Mediafusion'));
 
@@ -42,8 +42,7 @@ describe('Service: Number of Participants Graph Service', function () {
 
   it('setNumberOfParticipantGraph should return an amchart object successfully', function () {
     var setNumberOfParticipantGraphResponse = NumberOfParticipantGraphService.setNumberOfParticipantGraph(numberOfParticipantGraphData, numberOfParticipantChart, daterange);
-    expect(setNumberOfParticipantGraphResponse.graphs.length).toBe(10);
-    expect(setNumberOfParticipantGraphResponse.dataProvider).toEqual(numberOfParticipantGraphData.numberOfParticipantResponse);
+    expect(setNumberOfParticipantGraphResponse.graphs.length).toBe(2);
   });
 
 });
