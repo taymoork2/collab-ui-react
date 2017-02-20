@@ -1,0 +1,50 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="$dismiss()">
+        <span class="sr-only">Close</span>
+    </button>
+    <h3 class="modal-title" translate="sharedMeetingReports.sharedMeetingReport"></h3>
+</div>
+<div class="modal-body shared-meeting-report">
+  <div class="body-spacing">
+    <div class="row">
+      <cs-select class="time-filter pull-right"
+        ng-model="smrCtrl.timeSelected"
+        options="smrCtrl.timeFilter"
+        on-change-fn="smrCtrl.showReport()">
+      </cs-select>
+    </div>
+    <div class="row row-space">
+      <h3 class="column medium-5" translate="sharedMeetingReports.sharedMeetingUsage"></h3>
+      <div ng-if="smrCtrl.exportDropdown" class="grid-filter dropdown pull-right">
+        <a ng-click="smrCtrl.toggleExportMenu()">
+          <i class='icon icon-three-dots export-dots'></i>
+        </a>
+        <ul class="dropdown-menu dropdown-primary" ng-class="{'export-visible': smrCtrl.exportMenu}">
+          <li ng-repeat="object in smrCtrl.exportDropdown" class="export-item">
+            <a id="{{object.id}}" ng-click="smrCtrl.dropdownSelect(object)">
+              <span translate="{{object.label}}"></span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="row row-space">
+      <span class="report-description" translate="sharedMeetingReports.sharedMeetingDescription"></span>
+    </div>
+    <div class="row">
+      <div class="axischart" id="sharedMeetingsChart"></div>
+      <div class="spinner-position" ng-if="smrCtrl.isRefresh()">
+        <i class='icon icon-spinner icon-2x'></i>
+      </div>
+      <div class="no-data-center" ng-if="smrCtrl.isEmpty()">
+        <h3 class="no-data">
+          <i class='icon icon-warning no-data-warning'></i>
+          <span translate='reportsPage.noCustomerData'></span>
+        </h3>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn--primary" ng-click="$dismiss()" translate="common.done"></button>
+</div>

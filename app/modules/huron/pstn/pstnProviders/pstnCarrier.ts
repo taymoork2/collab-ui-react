@@ -73,12 +73,17 @@ export class PstnCarrier {
   public docSrc: String;
   public features: Array<any>;
   public title: String;
+  public selected: boolean;
 
   constructor() {
+    this.logoSrc = '';
+    this.logoAlt = '';
+    this.docSrc = '';
     this.offers = new Array<any>();
     this.services = new Array<any>();
     this.features = new Array<any>();
     this.title = '';
+    this.selected = false;
   }
 
   public setPstnCarrierGet(carrier: IPstnCarrierGet): void {
@@ -104,6 +109,8 @@ export class PstnCarrier {
       this.title = this.displayName;
     } else if (_.isString(this.name) && this.name.length > 0) {
       this.title = this.name;
+    } else if (_.isString(this.description) && this.description.length > 0) {
+      this.title = this.description;
     }
   }
 

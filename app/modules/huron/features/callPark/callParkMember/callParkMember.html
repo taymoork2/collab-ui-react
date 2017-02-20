@@ -45,7 +45,7 @@
   <cs-card-member
     ng-repeat="member in $ctrl.members track by member.memberUuid"
     cs-type="simple"
-    cs-member-type="member.memberType"
+    cs-member-type="{{member.memberType}}"
     cs-id="member.memberUuid"
     cs-title="member.memberName"
     cs-subtitle="member.number"

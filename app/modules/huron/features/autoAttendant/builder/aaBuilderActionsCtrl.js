@@ -136,6 +136,11 @@
     }
 
     function setFeatureToggledActions() {
+      if (AACommonService.isMediaUploadToggle()) {
+        vm.options[0].help = vm.options[0].help.concat('<br></br>').concat($translate.instant('autoAttendant.mediaUploadFileInfo'));
+        vm.options[1].help = vm.options[1].help.concat('<br></br>').concat($translate.instant('autoAttendant.mediaUploadFileInfo'));
+        vm.options[2].help = vm.options[2].help.concat('<br></br>').concat($translate.instant('autoAttendant.mediaUploadFileInfo'));
+      }
       if (AACommonService.isCallerInputToggle()) {
         vm.options.push({
           title: $translate.instant('autoAttendant.actionCallerInput'),

@@ -89,6 +89,7 @@
     require('modules/huron/cos').default,
     require('modules/huron/pstn').default,
     require('modules/huron/pstn/pstnProviders').default,
+    require('modules/huron/overview').default
   ]);
 
   angular.module('Hercules', ['Core', 'Squared', 'core.onboard', 'ngTagsInput']);

@@ -150,6 +150,7 @@
         sales: 'atlas-portal.partner.salesadmin',
         helpdesk: 'atlas-portal.partner.helpdesk',
         orderadmin: 'atlas-portal.partner.orderadmin',
+        partner_management: 'atlas-portal.cisco.partnermgmt',
         spark_synckms: 'spark.synckms',
         readonly_admin: 'id_readonly_admin',
         tech_support: 'atlas-portal.cisco.techsupport'
@@ -165,6 +166,7 @@
         sales: 'Sales_Admin',
         helpdesk: 'Help_Desk',
         orderadmin: 'Order_Admin',
+        partner_management: 'Partner_Management',
         spark_synckms: 'Spark_SyncKms',
         readonly_admin: 'Readonly_Admin',
         compliance_user: 'Compliance_User',

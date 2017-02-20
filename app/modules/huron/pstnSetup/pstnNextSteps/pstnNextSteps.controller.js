@@ -11,6 +11,7 @@
     vm.launchCustomerPortal = launchCustomerPortal;
     vm.portOrders = $stateParams.portOrders;
     vm.pstnOrders = [];
+    vm.isTrial = PstnSetup.getIsTrial();
 
     getOrders();
 

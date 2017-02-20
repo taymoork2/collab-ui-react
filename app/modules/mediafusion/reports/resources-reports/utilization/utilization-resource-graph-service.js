@@ -5,21 +5,22 @@
   /* @ngInject */
   function UtilizationResourceGraphService(CommonReportsGraphService, chartColors, $translate, $rootScope) {
 
-    var utilizationdiv = 'utilizationdiv';
-    var GUIDEAXIS = 'guideaxis';
-    var AXIS = 'axis';
-    var LEGEND = 'legend';
+    var vm = this;
+    vm.utilizationdiv = 'utilizationdiv';
+    vm.GUIDEAXIS = 'guideaxis';
+    vm.AXIS = 'axis';
+    vm.LEGEND = 'legend';
 
-    var timeStamp = $translate.instant('mediaFusion.metrics.timeStamp');
-    var average_utilzation = $translate.instant('mediaFusion.metrics.avgutilization');
-    var allClusters = $translate.instant('mediaFusion.metrics.allclusters');
-    var utilization = $translate.instant('mediaFusion.metrics.utilization');
+    vm.timeStamp = $translate.instant('mediaFusion.metrics.timeStamp');
+    vm.average_utilzation = $translate.instant('mediaFusion.metrics.avgutilization');
+    vm.allClusters = $translate.instant('mediaFusion.metrics.allclusters');
+    vm.utilization = $translate.instant('mediaFusion.metrics.utilization');
 
-    var zoomedEndTime = null;
-    var zoomedStartTime = null;
+    vm.zoomedEndTime = null;
+    vm.zoomedStartTime = null;
 
-    var timeDiff = null;
-    var dateSelected = null;
+    vm.timeDiff = null;
+    vm.dateSelected = null;
 
     return {
       setUtilizationGraph: setUtilizationGraph
@@ -35,7 +36,7 @@
         if (graphs[0].isDummy) {
           isDummy = true;
         }
-        if (clusterId !== allClusters && !isDummy) {
+        if (clusterId !== vm.allClusters && !isDummy) {
           var cluster = _.find(graphs, function (value) {
             return value.valueField === clusterId;
           });
@@ -74,8 +75,8 @@
       if (data === null || data === 'undefined' || data.length === 0) {
         return;
       }
-      var valueAxes = [CommonReportsGraphService.getBaseVariable(GUIDEAXIS)];
-      dateSelected = daterange;
+      var valueAxes = [CommonReportsGraphService.getBaseVariable(vm.GUIDEAXIS)];
+      vm.dateSelected = daterange;
       valueAxes[0].integersOnly = true;
       valueAxes[0].axisAlpha = 0.5;
       valueAxes[0].axisColor = '#1C1C1C';
@@ -87,7 +88,7 @@
       valueAxes[0].titleRotation = 180;
       //valueAxes[0].guides.label = 'Utilization High';
 
-      var catAxis = CommonReportsGraphService.getBaseVariable(AXIS);
+      var catAxis = CommonReportsGraphService.getBaseVariable(vm.AXIS);
       catAxis.gridPosition = 'start';
       catAxis.dataDateFormat = 'YYYY-MM-DDTJJ:NN:SS.QQQZ';
       catAxis.parseDates = true;
@@ -100,16 +101,16 @@
       var dateValue = daterange.value;
 
       if (_.isUndefined(daterange.value)) {
-        timeDiff = Math.floor(moment(dateSelected.endTime).diff(moment(dateSelected.startTime)) / 60000);
-        if (timeDiff <= 240) {
+        vm.timeDiff = Math.floor(moment(vm.dateSelected.endTime).diff(moment(vm.dateSelected.startTime)) / 60000);
+        if (vm.timeDiff <= 240) {
           catAxis.minPeriod = '1mm';
-        } else if (timeDiff > 240 && timeDiff <= 1440) {
+        } else if (vm.timeDiff > 240 && vm.timeDiff <= 1440) {
           catAxis.minPeriod = '10mm';
-        } else if (timeDiff > 1440 && timeDiff <= 10080) {
+        } else if (vm.timeDiff > 1440 && vm.timeDiff <= 10080) {
           catAxis.minPeriod = 'hh';
-        } else if (timeDiff > 10080 && timeDiff <= 43200) {
+        } else if (vm.timeDiff > 10080 && vm.timeDiff <= 43200) {
           catAxis.minPeriod = '3hh';
-        } else if (timeDiff > 43200) {
+        } else if (vm.timeDiff > 43200) {
           catAxis.minPeriod = '8hh';
         }
       } else {
@@ -132,12 +133,12 @@
       }
 
       var columnNames = {
-        'time': timeStamp
+        'time': vm.timeStamp
       };
       var exportFields = [];
       _.forEach(graphs, function (value) {
-        if (value.title !== average_utilzation) {
-          columnNames[value.valueField] = value.title + ' ' + 'Utilization';
+        if (value.title !== vm.average_utilzation) {
+          columnNames[value.valueField] = value.title + ' ' + vm.utilization;
         } else {
           columnNames[value.valueField] = value.title;
         }
@@ -148,7 +149,7 @@
       var cluster = _.replace(clusterSelected, /\s/g, '_');
       dateLabel = _.replace(dateLabel, /\s/g, '_');
       var ExportFileName = 'MediaService_Utilization_' + cluster + '_' + dateLabel + '_' + new Date();
-      if (!isDummy && clusterSelected === allClusters) {
+      if (!isDummy && clusterSelected === vm.allClusters) {
         graphs.push({
           'title': 'All',
           'id': 'all',
@@ -167,7 +168,7 @@
         });
       }
       var chartData = CommonReportsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, CommonReportsGraphService.getBaseExportForGraph(exportFields, ExportFileName, columnNames));
-      chartData.legend = CommonReportsGraphService.getBaseVariable(LEGEND);
+      chartData.legend = CommonReportsGraphService.getBaseVariable(vm.LEGEND);
       chartData.legend.labelText = '[[title]]';
       chartData.legend.useGraphSettings = true;
 
@@ -180,20 +181,20 @@
       }];
 
 
-      var chart = AmCharts.makeChart(utilizationdiv, chartData);
+      var chart = AmCharts.makeChart(vm.utilizationdiv, chartData);
       chart.addListener('zoomed', handleZoom);
       return chart;
     }
 
     // this method is called each time the selected period of the chart is changed
     function handleZoom(event) {
-      zoomedStartTime = event.startDate;
-      zoomedEndTime = event.endDate;
+      vm.zoomedStartTime = event.startDate;
+      vm.zoomedEndTime = event.endDate;
       var selectedTime = {
-        startTime: zoomedStartTime,
-        endTime: zoomedEndTime
+        startTime: vm.zoomedStartTime,
+        endTime: vm.zoomedEndTime
       };
-      if ((_.isUndefined(dateSelected.value) && zoomedStartTime !== dateSelected.startTime && zoomedEndTime !== dateSelected.endTime) || (zoomedStartTime !== dateSelected.startTime && zoomedEndTime !== dateSelected.endTime)) {
+      if ((_.isUndefined(vm.dateSelected.value) && vm.zoomedStartTime !== vm.dateSelected.startTime && vm.zoomedEndTime !== vm.dateSelected.endTime) || (vm.zoomedStartTime !== vm.dateSelected.startTime && vm.zoomedEndTime !== vm.dateSelected.endTime)) {
         $rootScope.$broadcast('zoomedTime', {
           data: selectedTime
         });
@@ -208,11 +209,11 @@
         });
         if (!_.isUndefined(clusterName)) {
           value.title = clusterName;
-          value.balloonText = '<span class="graph-text">' + value.title + ' ' + utilization + ' <span class="graph-number">[[value]]</span></span>';
+          value.balloonText = '<span class="graph-text">' + value.title + ' ' + vm.utilization + ' <span class="graph-number">[[value]]</span></span>';
           value.lineThickness = 2;
         }
         if (value.valueField === 'average_util') {
-          value.title = average_utilzation;
+          value.title = vm.average_utilzation;
           value.lineColor = '#4E5051';
           value.dashLength = 4;
           value.balloonText = '<span class="graph-text">' + value.title + ' <span class="graph-number">[[value]]</span></span>';

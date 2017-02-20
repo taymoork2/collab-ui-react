@@ -1136,7 +1136,7 @@
           message: $translate.instant('huronSettings.disableCompanyVoicemailMessage'),
           close: $translate.instant('common.disable'),
           dismiss: $translate.instant('common.cancel'),
-          type: 'negative'
+          btnType: 'negative'
         })
           .result
           .catch(function () {

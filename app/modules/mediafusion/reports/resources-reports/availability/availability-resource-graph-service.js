@@ -5,28 +5,29 @@
   /* @ngInject */
   function AvailabilityResourceGraphService(CommonReportsGraphService, chartColors, $translate, $rootScope) {
 
-    var availabilitydiv = 'availabilitydiv';
-    var AXIS = 'axis';
-    var LEGEND = 'legend';
+    var vm = this;
+    vm.availabilitydiv = 'availabilitydiv';
+    vm.AXIS = 'axis';
+    vm.LEGEND = 'legend';
 
-    var dateSelected = null;
-    var zoomedEndTime = null;
-    var zoomedStartTime = null;
+    vm.dateSelected = null;
+    vm.zoomedEndTime = null;
+    vm.zoomedStartTime = null;
 
-    var allClusters = $translate.instant('mediaFusion.metrics.allclusters');
-    var clusterTitle = $translate.instant('mediaFusion.metrics.clusterTitle');
-    var startTime = $translate.instant('mediaFusion.metrics.startTime');
-    var endTime = $translate.instant('mediaFusion.metrics.endTime');
-    var nodes = $translate.instant('mediaFusion.metrics.nodes');
-    var node = $translate.instant('mediaFusion.metrics.node');
-    var availabilityStatus = $translate.instant('mediaFusion.metrics.availabilityStatus');
-    var availabilityOfHost = $translate.instant('mediaFusion.metrics.availabilityOfHost');
-    var availableTitle = $translate.instant('mediaFusion.metrics.availableTitle');
-    var unavailableTitle = $translate.instant('mediaFusion.metrics.unavailableTitle');
-    var partialTitle = $translate.instant('mediaFusion.metrics.partialTitle');
+    vm.allClusters = $translate.instant('mediaFusion.metrics.allclusters');
+    vm.clusterTitle = $translate.instant('mediaFusion.metrics.clusterTitle');
+    vm.startTime = $translate.instant('mediaFusion.metrics.startTime');
+    vm.endTime = $translate.instant('mediaFusion.metrics.endTime');
+    vm.nodes = $translate.instant('mediaFusion.metrics.nodes');
+    vm.node = $translate.instant('mediaFusion.metrics.node');
+    vm.availabilityStatus = $translate.instant('mediaFusion.metrics.availabilityStatus');
+    vm.availabilityOfHost = $translate.instant('mediaFusion.metrics.availabilityOfHost');
+    vm.availableTitle = $translate.instant('mediaFusion.metrics.availableTitle');
+    vm.unavailableTitle = $translate.instant('mediaFusion.metrics.unavailableTitle');
+    vm.partialTitle = $translate.instant('mediaFusion.metrics.partialTitle');
 
-    var availabilityLegendCluster = [{ 'title': availableTitle, 'color': chartColors.metricDarkGreen }, { 'title': unavailableTitle, 'color': chartColors.negativeDarker }];
-    var availabilityLegendAllcluster = [{ 'title': availableTitle, 'color': chartColors.metricDarkGreen }, { 'title': unavailableTitle, 'color': chartColors.negativeDarker }, { 'title': partialTitle, 'color': chartColors.attentionBase }];
+    vm.availabilityLegendCluster = [{ 'title': vm.availableTitle, 'color': chartColors.metricDarkGreen }, { 'title': vm.unavailableTitle, 'color': chartColors.negativeDarker }];
+    vm.availabilityLegendAllcluster = [{ 'title': vm.availableTitle, 'color': chartColors.metricDarkGreen }, { 'title': vm.unavailableTitle, 'color': chartColors.negativeDarker }, { 'title': vm.partialTitle, 'color': chartColors.attentionBase }];
 
     return {
       setAvailabilityGraph: setAvailabilityGraph
@@ -43,7 +44,7 @@
       var tempData = angular.copy(data);
       if (_.isUndefined(data.data[0].isDummy)) {
         var availabilityData = [];
-        if (selectedCluster === allClusters) {
+        if (selectedCluster === vm.allClusters) {
           _.forEach(data.data[0].clusterCategories, function (clusterCategory) {
             var clusterName = _.findKey(Idmap, function (val) {
               return val === clusterCategory.category;
@@ -79,23 +80,23 @@
         return;
       }
       var legend;
-      dateSelected = daterange;
-      if (selectedCluster === allClusters) {
-        legend = angular.copy(availabilityLegendAllcluster);
+      vm.dateSelected = daterange;
+      if (selectedCluster === vm.allClusters) {
+        legend = angular.copy(vm.availabilityLegendAllcluster);
       } else {
-        legend = angular.copy(availabilityLegendCluster);
+        legend = angular.copy(vm.availabilityLegendCluster);
       }
       if (!_.isUndefined(data.data[0].isDummy) && data.data[0].isDummy) {
         _.forEach(legend, function (value, key) {
           legend[key].color = '#AAB3B3';
         });
       }
-      var valueAxis = CommonReportsGraphService.getBaseVariable(AXIS);
+      var valueAxis = CommonReportsGraphService.getBaseVariable(vm.AXIS);
       valueAxis.type = 'date';
       valueAxis.balloonTextFunction = function (date) {
         return moment(date.toString()).format('HH:mm, DD MMMM');
       };
-      var catAxes = CommonReportsGraphService.getBaseVariable(AXIS);
+      var catAxes = CommonReportsGraphService.getBaseVariable(vm.AXIS);
       catAxes.labelFunction = formatLabel;
       catAxes.autoGridCount = false;
       catAxes.gridCount = 10;
@@ -110,30 +111,30 @@
       }];
       var exportFields = ['startTime', 'endTime', 'nodes', 'availability', 'category'];
       var columnNames = {};
-      if (cluster === allClusters) {
+      if (cluster === vm.allClusters) {
         columnNames = {
-          'startTime': startTime,
-          'endTime': endTime,
-          'nodes': nodes,
-          'availability': availabilityStatus,
-          'category': clusterTitle,
+          'startTime': vm.startTime,
+          'endTime': vm.endTime,
+          'nodes': vm.nodes,
+          'availability': vm.availabilityStatus,
+          'category': vm.clusterTitle,
         };
       } else {
         columnNames = {
-          'availability': availabilityOfHost,
-          'startTime': startTime,
-          'endTime': endTime,
-          'category': node,
+          'availability': vm.availabilityOfHost,
+          'startTime': vm.startTime,
+          'endTime': vm.endTime,
+          'category': vm.node,
         };
       }
       cluster = _.replace(cluster, /\s/g, '_');
       daterange = _.replace(daterange, /\s/g, '_');
       var ExportFileName = 'MediaService_Availability_' + cluster + '_' + daterange + '_' + new Date();
       var chartData = CommonReportsGraphService.getGanttGraph(data.data[0].clusterCategories, valueAxis, CommonReportsGraphService.getBaseExportForGraph(exportFields, ExportFileName, columnNames), catAxes);
-      chartData.legend = CommonReportsGraphService.getBaseVariable(LEGEND);
+      chartData.legend = CommonReportsGraphService.getBaseVariable(vm.LEGEND);
       chartData.legend.labelText = '[[title]]';
       chartData.legend.data = legend;
-      chartData.graph.showHandOnHover = (selectedCluster === allClusters);
+      chartData.graph.showHandOnHover = (selectedCluster === vm.allClusters);
       chartData.listeners = [{
         "event": "clickGraphItem",
         "method": function (event) {
@@ -142,7 +143,7 @@
           });
         }
       }];
-      var chart = AmCharts.makeChart(availabilitydiv, chartData, 0);
+      var chart = AmCharts.makeChart(vm.availabilitydiv, chartData, 0);
 
       chart.addListener('init', function () {
         // listen for zoomed event and call "handleZoom" method
@@ -162,14 +163,14 @@
 
     // this method is called each time the selected period of the chart is changed
     function handleZoom(event) {
-      zoomedStartTime = moment(event.startValue);
-      zoomedEndTime = moment(event.endValue);
+      vm.zoomedStartTime = moment(event.startValue);
+      vm.zoomedEndTime = moment(event.endValue);
       var selectedTime = {
-        startTime: zoomedStartTime,
-        endTime: zoomedEndTime
+        startTime: vm.zoomedStartTime,
+        endTime: vm.zoomedEndTime
       };
 
-      if ((_.isUndefined(dateSelected.value) && zoomedStartTime !== dateSelected.startTime && zoomedEndTime !== dateSelected.endTime) || (zoomedStartTime !== dateSelected.startTime && zoomedEndTime !== dateSelected.endTime)) {
+      if ((_.isUndefined(vm.dateSelected.value) && vm.zoomedStartTime !== vm.dateSelected.startTime && vm.zoomedEndTime !== vm.dateSelected.endTime) || (vm.zoomedStartTime !== vm.dateSelected.startTime && vm.zoomedEndTime !== vm.dateSelected.endTime)) {
         $rootScope.$broadcast('zoomedTime', {
           data: selectedTime
         });

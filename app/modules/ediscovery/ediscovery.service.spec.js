@@ -223,7 +223,13 @@ describe('Service: EdiscoveryService', function () {
     });
 
     it('can create report', function (done) {
-      Service.createReport('King Kong Rules', roomId, null, null).then(function (result) {
+      var params = {
+        displayName: 'King Kong Rules',
+        roomId: roomId,
+        startDate: null,
+        endDate: null
+      };
+      Service.createReport(params).then(function (result) {
         expect(result.id).toEqual(reportId);
         expect(result.orgId).toEqual(orgId);
         expect(result.displayName).toEqual('King Kong Rules');
