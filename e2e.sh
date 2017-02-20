@@ -52,10 +52,11 @@ test_suite="$(get_test_suite_arg "$@")"
 #   - 1 => tests failed (sauce link available)
 #   - 100 => protractor terminated abnormally (no sauce link available)
 # - write exit status to temp file (used later to determine whether to set the build 'UNSTABLE')
+# - IMPORTANT: `e2e_exit_code=$?` line must always immediately follow the `node ./protractor/e2e ...` command
 # shellcheck disable=SC2086
 node ./protractor/e2e ${test_suite} --sauce
-set +x
 e2e_exit_code=$?
+
 echo "$e2e_exit_code" > "${WX2_ADMIN_WEB_CLIENT_HOME}/.cache/${E2E_EXIT_CODE_FILE}"
 
 kill_wait "lite-server"
