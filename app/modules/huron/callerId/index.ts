@@ -2,7 +2,7 @@ import { CallerIdComponent, CallerIdConfig, CallerIdOption } from './callerId.co
 import { CallerIDService } from './callerId.service';
 import { ICallerID } from './callerId';
 import lineService from '../lines/services';
-
+import customerServiceModule from 'modules/huron/customer';
 export { CallerIdConfig, CallerIdOption };
 export { ICallerID };
 export * from './callerId.service';
@@ -12,6 +12,8 @@ export default angular
     'atlas.templates',
     'collab.ui',
     'pascalprecht.translate',
+    'huron.telephoneNumber',
+    customerServiceModule,
     require('angular-resource'),
     require('modules/core/scripts/services/authinfo'),
     require('modules/huron/telephony/telephonyConfig'),
