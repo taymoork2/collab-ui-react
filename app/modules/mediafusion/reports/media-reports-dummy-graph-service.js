@@ -237,7 +237,6 @@
     function dummyNumberOfParticipantGraph() {
       var dummyGraph = [];
       dummyGraph.push({
-        title: 'Cluster',
         valueField: 'number_of_particpant_count',
         lineColor: chartColors.grayLightTwo,
         showBalloon: false,

@@ -123,7 +123,6 @@
       var columnNames = {
         'time': timeStamp
       };
-      var exportFields = [];
       _.forEach(graphs, function (value) {
         if (value.title !== 'cloud') {
           columnNames[value.valueField] = value.title + ' ' + 'on-premises';
@@ -131,9 +130,10 @@
           columnNames[value.valueField] = value.title + ' ' + 'cloud';
         }
       });
-      for (var key in columnNames) {
+      var exportFields = [];
+      _.forEach(columnNames, function (key) {
         exportFields.push(key);
-      }
+      });
       dateLabel = _.replace(dateLabel, /\s/g, '_');
       var ExportFileName = 'MediaService_Number_of_Participants' + dateLabel + '_' + new Date();
       var chartData = CommonReportsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, CommonReportsGraphService.getBaseExportForGraph(exportFields, ExportFileName, columnNames));
