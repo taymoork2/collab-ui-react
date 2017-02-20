@@ -49,13 +49,14 @@ require('./_wizard.scss');
   }
 
   /* @ngInject */
-  function WizardCtrl($controller, $modal, $rootScope, $scope, $state, $stateParams, $translate, Authinfo, Config, ModalService, PromiseHook, ServiceSetup, SessionStorage) {
+  function WizardCtrl($controller, $modal, $rootScope, $scope, $state, $stateParams, $translate, Authinfo, Config, PromiseHook, SessionStorage) {
     var vm = this;
     vm.current = {};
 
     vm.currentTab = $stateParams.currentTab;
     vm.currentStep = $stateParams.currentStep;
     vm.onlyShowSingleTab = $stateParams.onlyShowSingleTab;
+    vm.numberOfSteps = $stateParams.numberOfSteps;
 
     vm.termsCheckbox = false;
     vm.isCustomerPartner = isCustomerPartner;
@@ -95,12 +96,7 @@ require('./_wizard.scss');
     vm.showDoItLater = false;
     vm.wizardNextLoad = false;
 
-    vm.firstTimeSetup = true;
     vm.showSkipTabBtn = false;
-
-    vm.showTimezoneAndVoicemail = Authinfo.getLicenses().filter(function (license) {
-      return license.licenseType === Config.licenseTypes.COMMUNICATION;
-    }).length > 0;
 
     // If tabs change (feature support in SetupWizard) and a step is not defined, re-initialize
     $scope.$watchCollection('tabs', function (tabs) {
@@ -138,15 +134,9 @@ require('./_wizard.scss');
     }
 
     function init() {
-      ServiceSetup.listSites().then(function () {
-        if (ServiceSetup.sites.length !== 0) {
-          vm.firstTimeSetup = false;
-        }
-      }).finally(function () {
-        initCurrent();
-        setNextText();
-        vm.isNextDisabled = false;
-      });
+      initCurrent();
+      setNextText();
+      vm.isNextDisabled = false;
     }
 
     function getSteps() {
@@ -285,23 +275,6 @@ require('./_wizard.scss');
 
     function nextStep() {
       var subTabControllerAs = _.isUndefined(getSubTab()) ? undefined : getSubTab().controllerAs;
-      if (getTab().name === 'serviceSetup' && getStep().name === 'init' && vm.firstTimeSetup && vm.showTimezoneAndVoicemail) {
-        return ModalService.open({
-          title: $translate.instant('common.warning'),
-          message: $translate.instant('serviceSetupModal.saveCallSettingsExtensionLengthAllowed'),
-          close: $translate.instant('common.continue'),
-          dismiss: $translate.instant('common.cancel'),
-          btnType: 'negative',
-        })
-          .result.then(function () {
-            executeNextStep(subTabControllerAs);
-          });
-      } else {
-        executeNextStep(subTabControllerAs);
-      }
-    }
-
-    function executeNextStep(subTabControllerAs) {
       new PromiseHook($scope, getStepName() + 'Next', getTab().controllerAs, subTabControllerAs).then(function () {
         if (getTab().name === 'enterpriseSettings') {
           if (getStep().name === 'enterpriseSipUrl') {
@@ -373,6 +346,10 @@ require('./_wizard.scss');
       return steps.indexOf(getStep()) === steps.length - 1;
     }
 
+    function isSingleTabSingleStep() {
+      return vm.onlyShowSingleTab && vm.numberOfSteps === 1;
+    }
+
     function isFirstTime() {
       return $scope.isFirstTime;
     }
@@ -386,7 +363,7 @@ require('./_wizard.scss');
     }
 
     function setNextText() {
-      if ((isFirstTab() && isFirstTime() && !isCustomerPartner() && !isFromPartnerLaunch()) || (isFirstTab() && isFirstStep())) {
+      if ((isFirstTab() && isFirstTime() && !isCustomerPartner() && !isFromPartnerLaunch()) || (isFirstTab() && isFirstStep() && !isSingleTabSingleStep())) {
         vm.nextText = $translate.instant('firstTimeWizard.getStarted');
       } else if (isFirstTime() && isLastTab() && isLastStep()) {
         vm.nextText = $translate.instant('common.finish');

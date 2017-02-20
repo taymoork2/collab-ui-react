@@ -91,7 +91,7 @@ require('./_overview.scss');
           Log.debug('Get existing org failed. Status: ' + status);
           Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
         }
-      });
+      }, Authinfo.getOrgId(), true);
       Orgservice.getAdminOrgUsage()
         .then(function (response) {
           var sharedDevicesUsage = -1;

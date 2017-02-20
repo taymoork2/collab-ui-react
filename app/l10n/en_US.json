@@ -2847,7 +2847,7 @@
     "domainSubDesc": "Enter the Acive Directory domain:",
     "connectorSteps": "Follow these steps in order to install the Directory Connector:",
     "readyToGo": "You're ready to go!",
-    "finishDesc": "You have completed the setup wizard. If you have skipped steps or need to change any of the settings, click the gear icon in the upper right hand corner of the page to access this panel again.",
+    "finishDesc": "You have completed the setup wizard. If you need to modify any choices you made, visit the Settings or the Services tab.",
     "finish": "Finish",
     "finishSub": "Complete your setup",
     "completeRequired": "{{name}} must be completed.",

@@ -11,6 +11,7 @@ describe('SetupWizardCtrl', function () {
       '$q',
       '$scope',
       '$state',
+      '$stateParams',
       'Authinfo',
       'FeatureToggleService',
       'Orgservice'
@@ -32,7 +33,6 @@ describe('SetupWizardCtrl', function () {
       return this.$q.resolve(_.includes(this.enabledFeatureToggles, feature));
     }.bind(this));
     spyOn(this.FeatureToggleService, 'supportsDirSync').and.returnValue(this.$q.resolve(false));
-    spyOn(this.FeatureToggleService, 'atlasPMRonM2GetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.Orgservice, 'getAdminOrgUsage').and.returnValue(this.$q.resolve(this.usageFixture));
 
     this._expectStepIndex = _expectStepIndex;
@@ -236,7 +236,7 @@ describe('SetupWizardCtrl', function () {
       this.expectSubStepOrder('planReview', ['init']);
       this.expectSubStepOrder('serviceSetup', ['init']);
       this.expectSubStepOrder('messagingSetup', ['setup']);
-      this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
+      this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'enterprisePmrSetup', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
       this.expectSubStepOrder('careSettings', ['csonboard']);
     });
   });
@@ -337,6 +337,29 @@ describe('SetupWizardCtrl', function () {
           this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl']);
         });
       });
+    });
+  });
+
+  describe('stateParams with onlyShowSingleTab and numberOfSteps', function () {
+    it('should only contain a single tab and specific steps if numberOfSteps is set', function () {
+      _.set(this.$stateParams, 'onlyShowSingleTab', true);
+      _.set(this.$stateParams, 'currentTab', 'enterpriseSettings');
+      _.set(this.$stateParams, 'currentStep', 'init');
+      _.set(this.$stateParams, 'numberOfSteps', 1);
+      this.initController();
+
+      this.expectStepOrder(['enterpriseSettings']);
+      this.expectSubStepOrder('enterpriseSettings', ['init']);
+    });
+
+    it('should only contain a single tab and remaining steps if numberOfSteps is not set', function () {
+      _.set(this.$stateParams, 'onlyShowSingleTab', true);
+      _.set(this.$stateParams, 'currentTab', 'enterpriseSettings');
+      _.set(this.$stateParams, 'currentStep', 'init');
+      this.initController();
+
+      this.expectStepOrder(['enterpriseSettings']);
+      this.expectSubStepOrder('enterpriseSettings', ['init', 'exportMetadata', 'importIdp', 'testSSO']);
     });
   });
 });

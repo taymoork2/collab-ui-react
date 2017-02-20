@@ -2154,6 +2154,7 @@
               currentTab: {},
               currentSubTab: '',
               currentStep: '',
+              numberOfSteps: undefined,
               onlyShowSingleTab: false,
             },
             data: {
