@@ -75,7 +75,6 @@
       valueAxes[0].position = 'left';
       valueAxes[0].title = numberOfParticipantTitle;
       valueAxes[0].titleRotation = 270;
-      //valueAxes[0].guides.label = 'Utilization High';
 
       var catAxis = CommonReportsGraphService.getBaseVariable(AXIS);
       catAxis.gridPosition = 'start';
