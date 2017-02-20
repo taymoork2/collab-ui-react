@@ -210,7 +210,7 @@ exports.config = {
         .takeRight()
         .trimStart('/')
         .value();
-      var jenkinsSubdir = processEnvUtil.isJenkins() ? process.env.BUILD_TAG : '';
+      var jenkinsSubdir = process.env.BUILD_TAG || '';
 
       jasmine.getEnv().addReporter(
         new jasmineReporters.JUnitXmlReporter({
