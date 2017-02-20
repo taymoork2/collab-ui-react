@@ -1161,6 +1161,20 @@
               },
             }
           })
+          .state('user-overview.communication.cos', {
+            template: '<uc-user-cos-form member-type="users" member-id="$resolve.ownerId"></uc-user-cos-form>',
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/cos/user'], done);
+              }),
+              ownerId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentUser, 'id');
+              },
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('user-overview.communication.cos').data.displayName = $translate.instant('serviceSetupModal.cos.title');
+              }
+            },
+          })
           .state('user-overview.communication.internationalDialing', {
             template: '<uc-dialing  watcher="$resolve.watcher" selected="$resolve.selected" title="internationalDialingPanel.title"></uc-dialing>',
             params: {
@@ -1696,6 +1710,20 @@
                 return _.get($stateParams.currentPlace, 'cisUuid');
               },
             }
+          })
+          .state('place-overview.communication.cos', {
+            template: '<uc-user-cos-form member-type="places" member-id="$resolve.ownerId"></uc-user-cos-form>',
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/cos/user'], done);
+              }),
+              ownerId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentPlace, 'cisUuid');
+              },
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('place-overview.communication.cos').data.displayName = $translate.instant('serviceSetupModal.cos.title');
+              }
+            },
           })
           .state('place-overview.communication.internationalDialing', {
             template: '<uc-dialing  watcher="$resolve.watcher" selected="$resolve.selected" title="internationalDialingPanel.title"></uc-dialing>',
@@ -2915,7 +2943,7 @@
           })
           .state('hds-cluster-details.host-details', {
             templateUrl: 'modules/hercules/cluster-sidepanel/host-details/host-details.html',
-            controller: 'ExpresswayHostDetailsController',
+            controller: 'HybridServicesHostDetailsController',
             controllerAs: 'hostDetailsCtrl',
             data: {
               displayName: 'Node'
@@ -3239,7 +3267,7 @@
             views: {
               'sidepanel@': {
                 templateUrl: 'modules/hercules/cluster-sidepanel/host-details/management-connector-details.html',
-                controller: 'ExpresswayHostDetailsController',
+                controller: 'HybridServicesHostDetailsController',
                 controllerAs: 'hostDetailsCtrl'
               }
             },
@@ -3281,7 +3309,7 @@
           })
           .state('cluster-details.host-details', {
             templateUrl: 'modules/hercules/cluster-sidepanel/host-details/host-details.html',
-            controller: 'ExpresswayHostDetailsController',
+            controller: 'HybridServicesHostDetailsController',
             controllerAs: 'hostDetailsCtrl',
             data: {
               displayName: 'Node'
@@ -3308,6 +3336,59 @@
 
         $stateProvider
         //V2 API changes
+          .state('media-cluster-details', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                template: '<cluster-sidepanel-overview cluster-type="\'mf_mgmt\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType"></cluster-sidepanel-overview>',
+              },
+              'header@media-cluster-details': {
+                templateUrl: 'modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html',
+              },
+            },
+            data: {
+              displayName: 'Overview'
+            },
+            params: {
+              clusterId: null,
+              connectorType: null,
+            },
+            resolve: {
+              id: /* @ngInject */ function ($stateParams) {
+                return $stateParams.clusterId;
+              },
+              connectorType: /* @ngInject */ function ($stateParams) {
+                return $stateParams.connectorType;
+              },
+            }
+          })
+          .state('media-cluster-details.host-details', {
+            templateUrl: 'modules/hercules/cluster-sidepanel/host-details/host-details.html',
+            controller: 'HybridServicesHostDetailsController',
+            controllerAs: 'hostDetailsCtrl',
+            data: {
+              displayName: 'Node'
+            },
+            params: {
+              host: null,
+              hostSerial: null,
+              clusterId: null,
+              connectorType: null
+            }
+          })
+          .state('media-cluster-details.alarm-details', {
+            template: '<alarm-details-sidepanel alarm="$resolve.alarm"></alarm-details-sidepanel>',
+            // If data not present, $state.current.data.displayName inside the component has no effect
+            data: {},
+            params: {
+              alarm: null,
+            },
+            resolve: {
+              alarm: /* @ngInject */ function ($stateParams) {
+                return $stateParams.alarm;
+              },
+            }
+          })
           .state('media-service-v2', {
             templateUrl: 'modules/mediafusion/media-service-v2/media-service-overview.html',
             controller: 'MediaServiceControllerV2',
@@ -3338,65 +3419,6 @@
                 controller: 'MediaServiceSettingsControllerV2',
                 templateUrl: 'modules/mediafusion/media-service-v2/settings/media-service-settings.html'
               }
-            }
-          })
-          .state('connector-details-v2', {
-            parent: 'sidepanel',
-            views: {
-              'sidepanel@': {
-                controllerAs: 'groupDetails',
-                controller: 'GroupDetailsControllerV2',
-                templateUrl: 'modules/mediafusion/media-service-v2/side-panel/group-details.html'
-              },
-              'header@connector-details-v2': {
-                templateUrl: 'modules/mediafusion/media-service-v2/side-panel/group-header.html'
-              }
-            },
-            data: {
-              displayName: 'Overview'
-            },
-            params: {
-              clusterId: {},
-              connectorType: {},
-            }
-          })
-          .state('connector-details-v2.alarm-details', {
-            templateUrl: 'modules/mediafusion/media-service-v2/side-panel/alarm-details.html',
-            controller: 'MediaAlarmControllerV2',
-            controllerAs: 'alarmCtrl',
-            data: {
-              displayName: 'Alarm Details'
-            },
-            params: {
-              alarm: null,
-              host: null
-            }
-          })
-          .state('connector-details-v2.host-details', {
-            templateUrl: 'modules/mediafusion/media-service-v2/side-panel/host-details.html',
-            controller: 'HostDetailsControllerV2',
-            controllerAs: 'hostDetails',
-            data: {
-              displayName: 'Node'
-            },
-            params: {
-              clusterId: null,
-              connector: null,
-              hostLength: null,
-              selectedCluster: null
-            }
-          })
-          .state('connector-details-v2.alarm-detailsForNode', {
-            parent: 'connector-details-v2.host-details',
-            templateUrl: 'modules/mediafusion/media-service-v2/side-panel/alarm-details.html',
-            controller: 'MediaAlarmControllerV2',
-            controllerAs: 'alarmCtrl',
-            data: {
-              displayName: 'Alarm Details'
-            },
-            params: {
-              alarm: null,
-              host: null
             }
           });
 

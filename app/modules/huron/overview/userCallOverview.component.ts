@@ -14,6 +14,7 @@ class UserCallOverviewCtrl implements ng.IComponentController {
   public customerVmEnabled: boolean = false;
   public userVmEnabled: boolean = false;
   public userServices: Array<string> = [];
+  private cosFeatureToggle;
 
   /* @ngInject */
   constructor(
@@ -27,6 +28,7 @@ class UserCallOverviewCtrl implements ng.IComponentController {
     private HuronUserService: HuronUserService,
     private $q: ng.IQService,
     private Notification,
+    private FeatureToggleService,
   ) {
     this.currentUser = this.$stateParams.currentUser;
     this.$scope.$on(LINE_CHANGE, () => {
@@ -64,10 +66,12 @@ class UserCallOverviewCtrl implements ng.IComponentController {
       1: this.DialingService.initializeDialing(LineConsumerType.USERS, this.currentUser.id),
       2: this.HuronVoicemailService.isEnabledForCustomer(),
       3: this.HuronUserService.getUserServices(this.currentUser.id),
+      4: this.FeatureToggleService.supports(this.FeatureToggleService.features.huronCustomerCos),
     };
     this.$q.all(promises).then( data => {
       this.customerVmEnabled = data[2];
       this.userServices = data[3];
+      this.cosFeatureToggle = data[4];
     }).then( () => {
       this.userVmEnabled = this.HuronVoicemailService.isEnabledForUser(this.userServices);
       this.initFeatures();
@@ -104,20 +108,31 @@ class UserCallOverviewCtrl implements ng.IComponentController {
       actionAvailable: true,
     };
     this.features.push(service);
-    service = {
-      name: this.$translate.instant('telephonyPreview.internationalDialing'),
-      state: 'internationalDialing',
-      detail: this.DialingService.getInternationalDialing(LineConsumerType.USERS),
-      actionAvailable: true,
-    };
-    this.features.push(service);
-    service = {
-      name: this.$translate.instant('telephonyPreview.localDialing'),
-      state: 'local',
-      detail: this.DialingService.getLocalDialing(LineConsumerType.USERS),
-      actionAvailable: true,
-    };
-    this.features.push(service);
+    if (!this.cosFeatureToggle) {
+      service = {
+        name: this.$translate.instant('telephonyPreview.internationalDialing'),
+        state: 'internationalDialing',
+        detail: this.DialingService.getInternationalDialing(LineConsumerType.USERS),
+        actionAvailable: true,
+      };
+      this.features.push(service);
+      service = {
+        name: this.$translate.instant('telephonyPreview.localDialing'),
+        state: 'local',
+        detail: this.DialingService.getLocalDialing(LineConsumerType.USERS),
+        actionAvailable: true,
+      };
+      this.features.push(service);
+    }
+    if (this.cosFeatureToggle) {
+      service = {
+        name: this.$translate.instant('serviceSetupModal.cos.title'),
+        state: 'cos',
+        detail: undefined,
+        actionAvailable: true,
+      };
+      this.features.push(service);
+    }
   }
 
   public clickFeature(feature: IFeature) {

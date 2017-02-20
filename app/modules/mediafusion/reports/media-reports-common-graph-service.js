@@ -11,14 +11,14 @@
       'type': 'column',
       'fillAlphas': 1,
       'lineAlpha': 0,
-      'balloonColor': chartColors.grayLight,
+      'balloonColor': chartColors.grayLightTwo,
       'columnWidth': 4
     };
     baseVariables['smoothedLine'] = {
       'type': 'smoothedLine',
       'lineColor': chartColors.colorPurple,
       'lineThickness': 2,
-      'balloonColor': chartColors.grayLight,
+      'balloonColor': chartColors.grayLightTwo,
       'negativeLineColor': chartColors.colorPurple,
       'negativeBase': 100,
     };
@@ -41,17 +41,17 @@
       'tickLength': 0
     };
     baseVariables['guideaxis'] = {
-      'axisColor': chartColors.grayLight,
-      'gridColor': chartColors.grayLight,
-      'color': chartColors.grayDarkest,
-      'titleColor': chartColors.grayDarkest,
+      'axisColor': chartColors.grayLightTwo,
+      'gridColor': chartColors.grayLightTwo,
+      'color': chartColors.grayDarkThree,
+      'titleColor': chartColors.grayDarkThree,
       'fontFamily': 'CiscoSansTT Light',
       'gridAlpha': 0,
       'axisAlpha': 1,
       'tickLength': 0
     };
     baseVariables['legend'] = {
-      'color': chartColors.grayDarkest,
+      'color': chartColors.grayDarkThree,
       'autoMargins': false,
       'align': 'center',
       'position': 'bottom',

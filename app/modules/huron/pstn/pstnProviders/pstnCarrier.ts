@@ -73,6 +73,7 @@ export class PstnCarrier {
   public docSrc: String;
   public features: Array<any>;
   public title: String;
+  public selected: boolean;
 
   constructor() {
     this.logoSrc = '';
@@ -82,6 +83,7 @@ export class PstnCarrier {
     this.services = new Array<any>();
     this.features = new Array<any>();
     this.title = '';
+    this.selected = false;
   }
 
   public setPstnCarrierGet(carrier: IPstnCarrierGet): void {

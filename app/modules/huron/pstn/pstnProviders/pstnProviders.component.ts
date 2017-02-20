@@ -36,6 +36,13 @@ export class PstnProvidersCtrl implements ng.IComponentController {
   }
 
   public onSetProvider(carrier: PstnCarrier) {
+    this.pstnCarriers.forEach( (pstnCarrier: PstnCarrier) => {
+      if (pstnCarrier.title === carrier.title) {
+        pstnCarrier.selected = true;
+      } else {
+        pstnCarrier.selected = false;
+      }
+    });
     this.PstnSetup.setProvider(carrier);
     this.onChangeFn();
   }

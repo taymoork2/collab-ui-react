@@ -35,10 +35,17 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
+
+  .pstn-carrier-select {
+    border: 1px;
+    border-style: solid;
+    border-color: $color-primary-base;
+  }
 }
 
 .pstn-provider-logo {
-  height: rem-calc(40px);
+  height: 4rem;
+  width: 100%;
   max-width: rem-calc(235px);
 }
 

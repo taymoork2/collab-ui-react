@@ -18,7 +18,7 @@ var Spark = require('@ciscospark/spark-core').default;
     var spark;
     vm.searchByParameters = searchByParameters;
     vm.goToSearchPage = goToSearchPage;
-    vm.searchByService = searchByService;
+    vm.searchSetup = searchSetup;
     vm.advancedSearch = advancedSearch;
     vm.searchForRoom = searchForRoom;
     vm.createReport = createReport;
@@ -54,7 +54,7 @@ var Spark = require('@ciscospark/spark-core').default;
 
     vm.encryptionKeyUrl = '';
     vm.encryptedKeywords = '';
-    vm.encryptedQuery = '';
+    vm.encryptedQuery = null;
 
     /* generate report status pages */
     vm.isReport = true;
@@ -170,22 +170,18 @@ var Spark = require('@ciscospark/spark-core').default;
       }
     }
 
-    function searchByService() {
-      if (_.eq(vm.searchByOptions[0], vm.searchBySelected)) {
-        advancedSearch();
-      } else if (_.eq(vm.searchByOptions[1], vm.searchBySelected)) {
-        searchForRoom(vm.searchModel);
-      }
-    }
-
-    function advancedSearch() {
-      vm.ongoingSearch = true;
+    function searchSetup() {
       disableAvalonPolling();
+      vm.ongoingSearch = true;
       vm.roomInfo = null;
       vm.report = null;
       vm.error = null;
       vm.searchingForRoom = true;
       vm.searchResults.emailAddresses = [];
+    }
+
+    function advancedSearch() {
+      searchSetup();
       vm.encryptedResult = [];
       vm.accessToken = TokenService.getAccessToken();
       spark = new Spark({
@@ -199,23 +195,24 @@ var Spark = require('@ciscospark/spark-core').default;
             count: 1
           });
         })
-        .then(function (result) {
-          vm.encryptedResult = result[0];
-          vm.encryptionKeyUrl = result[0].uri;
+        .then(function (key) {
+          vm.encryptedResult = key[0];
+          vm.encryptionKeyUrl = key[0].uri;
           return spark.encryption.encryptText(vm.encryptedResult, vm.searchModel);
         })
-        .then(function (result) {
-          vm.encryptedKeywords = result;
-          return spark.encryption.encryptText(vm.encryptedResult, vm.queryModel);
+        .then(function (keyword) {
+          vm.encryptedKeywords = keyword;
+          return _.isNull(vm.queryModel) ? null : spark.encryption.encryptText(vm.encryptedResult, vm.queryModel);
         })
-        .then(function (result) {
-          vm.encryptedQuery = result;
+        .then(function (query) {
+          vm.encryptedQuery = query;
         })
         .then(function () {
           var start = formatDate('api', getStartDate());
           var end = formatDate('api', getEndDate());
           var argonautParam = {
-            emailAddress: vm.encryptedKeywords,
+            roomId: vm.encryptedKeywords,
+            //emailAddress: vm.encryptedKeywords,
             encryptionKeyUrl: vm.encryptionKeyUrl,
             startDate: start,
             endDate: end,
@@ -238,14 +235,8 @@ var Spark = require('@ciscospark/spark-core').default;
     }
 
     function searchForRoom(roomId) {
-      disableAvalonPolling();
-      vm.ongoingSearch = true;
-      vm.roomInfo = null;
-      vm.searchResults.emailAddresses = [];
-      vm.report = null;
-      vm.error = null;
+      searchSetup();
       vm.searchCriteria.roomId = roomId;
-      vm.searchingForRoom = true;
       EdiscoveryService.getAvalonServiceUrl(roomId)
         .then(function (result) {
           return EdiscoveryService.getAvalonRoomInfo(result.avalonRoomsUrl + '/' + roomId);
@@ -303,17 +294,20 @@ var Spark = require('@ciscospark/spark-core').default;
       EdiscoveryService.createReport(vm.createReportParams)
         .then(function (res) {
           vm.currentReportId = res.id;
-          // var reportParams = {
-          //   emailAddresses: vm.encryptedKeywords,
-          //   query: vm.encryptedQuery,
-          //   roomIds: vm.searchCriteria.roomId,
-          //   encryptionKeyUrl: vm.encryptionKeyUrl,
-          //   responseUri: res.url,
-          //   startDate: formatDate('api', getStartDate()),
-          //   endDate: formatDate('api', getEndDate())
-          // };
-          // generateReport(reportParams);
-          runReport(res.runUrl, res.url);
+          if (vm.ediscoveryToggle) {
+            var reportParams = {
+              //emailAddresses: vm.encryptedKeywords,
+              query: vm.encryptedQuery,
+              roomIds: vm.searchModel,
+              encryptionKeyUrl: vm.encryptionKeyUrl,
+              responseUri: res.url,
+              startDate: formatDate('api', getStartDate()),
+              endDate: formatDate('api', getEndDate())
+            };
+            generateReport(reportParams);
+          } else {
+            runReport(res.runUrl, res.url);
+          }
         })
         .catch(function () {
           Notification.error('ediscovery.search.createReportFailed');

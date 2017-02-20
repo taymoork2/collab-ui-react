@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <button id="convertModalClose" type="button" class="close" ng-click="hostDeregister.close()">
+  <button id="convertModalClose" type="button" class="close" ng-click="$dismiss()">
     <span class="sr-only" translate="common.close"></span>
   </button>
   <div ng-show="hostDeregister.error">
@@ -28,7 +28,7 @@
 </div>
 
 <div class="modal-footer" ng-hide="hostDeregister.error">
-  <button id="convertCancelButton" class="btn" ng-click="hostDeregister.close()">
+  <button id="convertCancelButton" class="btn" ng-click="$dismiss()">
     <span translate="common.cancel"></span>
   </button>
   <button ng-disabled="loading || saving" id="convertActionButton" class="btn btn--primary"
@@ -40,7 +40,7 @@
   </button>
 </div>
 <div class="modal-footer" ng-show="hostDeregister.error">
-  <button id="convertCancelButton" class="btn pull-right" ng-click="hostDeregister.close()"
+  <button id="convertCancelButton" class="btn pull-right" ng-click="$dismiss()"
           style="margin-right: 10px">
     <span translate="common.ok"></span>
   </button>

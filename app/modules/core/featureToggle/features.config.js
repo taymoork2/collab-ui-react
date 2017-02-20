@@ -78,7 +78,6 @@ module.exports = {
   huronAARouteRoom: 'huron-aa-routeroom',
   huronClassOfService: 'COS',
   huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
-  huronPagingGroup: 'huronPagingGroup',
   huronNetworkLocale: 'huron-l10n-network-locale',
   huronUserLocale: 'huron-l10n-user-locale',
   huronUserLocale2: 'huron-l10n-user-locale-2',

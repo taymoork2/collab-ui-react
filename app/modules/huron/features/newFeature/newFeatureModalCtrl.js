@@ -29,15 +29,13 @@ require('./_new-feature.scss');
       label: 'callPark.title',
       description: 'callPark.modalDescription',
       toggle: 'huronCallPark'
-    }];
-
-    var pagingGroupService = {
+    }, {
       id: 'PG',
       code: 'pagingGroup.code',
       label: 'pagingGroup.title',
       description: 'pagingGroup.modalDescription',
       toggle: 'huronPagingGroup'
-    };
+    }];
 
     var callPickupService = {
       id: 'PI',
@@ -47,17 +45,11 @@ require('./_new-feature.scss');
       toggle: 'huronCallPickup'
     };
 
-    FeatureToggleService.supports(FeatureToggleService.features.huronPagingGroup).then(function (result) {
-      if (result) {
-        vm.features.push(pagingGroupService);
-      }
-      init();
-    });
-
     FeatureToggleService.supports(FeatureToggleService.features.huronCallPickup).then(function (result) {
       if (result) {
         vm.features.push(callPickupService);
       }
+      init();
     });
 
     vm.ok = ok;

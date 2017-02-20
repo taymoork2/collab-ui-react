@@ -5,7 +5,8 @@
     .module('Mediafusion')
     .controller('MediaReportsController', MediaReportsController);
   /* @ngInject */
-  function MediaReportsController($q, $scope, $translate, $interval, MediaClusterServiceV2, UtilizationResourceGraphService, ParticipantDistributionResourceGraphService, MediaReportsService, Notification, MediaReportsDummyGraphService, MediaSneekPeekResourceService, CallVolumeResourceGraphService, AvailabilityResourceGraphService, ClientTypeAdoptionGraphService) {
+  function MediaReportsController($q, $scope, $translate, $interval, MediaClusterServiceV2, UtilizationResourceGraphService, ParticipantDistributionResourceGraphService, NumberOfParticipantGraphService, MediaReportsService, Notification, MediaReportsDummyGraphService, MediaSneekPeekResourceService, CallVolumeResourceGraphService, AvailabilityResourceGraphService, ClientTypeAdoptionGraphService) {
+
     var vm = this;
     var interval = null;
     var deferred = $q.defer();
@@ -18,6 +19,7 @@
     vm.utilizationStatus = vm.REFRESH;
     vm.callVolumeStatus = vm.REFRESH;
     vm.participantDistributionStatus = vm.REFRESH;
+    vm.numberOfParticipantStatus = vm.REFRESH;
     vm.availabilityStatus = vm.REFRESH;
     vm.clientTypeStatus = vm.REFRESH;
 
@@ -111,6 +113,7 @@
         setClusterAvailability();
         setUtilizationData();
         setParticipantDistributionData();
+        setNumberOfParticipantData();
         setCallVolumeData();
       });
     }
@@ -398,6 +401,28 @@
       });
     }
 
+    function setNumberOfParticipantData() {
+      MediaReportsService.getNumberOfParticipantData(vm.timeSelected).then(function (response) {
+        if (_.isUndefined(response.graphData) || _.isUndefined(response.graphs) || response.graphData.length === 0 || response.graphs.length === 0) {
+          setDummyNumberOfParticipant();
+        } else {
+          deferred.promise.then(function () {
+              //set the number of participants graphs here
+            if (_.isUndefined(setNumberOfParticipantGraph(response))) {
+              setDummyNumberOfParticipant();
+            } else {
+              vm.numberOfParticipantStatus = vm.SET;
+            }
+          }, function () {
+              //map is not formed so we shoud show dummy graphs
+            setDummyNumberOfParticipant();
+          });
+        }
+      }, function () {
+        setDummyNumberOfParticipant();
+      });
+    }
+
     function setAvailabilityData() {
       MediaReportsService.getAvailabilityData(vm.timeSelected, vm.clusterId).then(function (response) {
         if (_.isUndefined(response.data) || !_.isArray(response.data) || response.data.length === 0 || _.isUndefined(response.data[0].clusterCategories) || response.data[0].clusterCategories.length === 0) {
@@ -444,6 +469,10 @@
       vm.clientTypeChart = ClientTypeAdoptionGraphService.setClientTypeGraph(response, vm.clientTypeChart, vm.timeSelected);
       return vm.clientTypeChart;
     }
+    function setNumberOfParticipantGraph(response) {
+      vm.numberOfParticipantChart = NumberOfParticipantGraphService.setNumberOfParticipantGraph(response, vm.numberOfParticipantChart, vm.timeSelected);
+      return vm.numberOfParticipantChart;
+    }
 
     function setCallVolumeGraph(response) {
       vm.callVolumeChart = CallVolumeResourceGraphService.setCallVolumeGraph(response.graphData, vm.callVolumeChart, vm.clusterSelected, vm.timeSelected);
@@ -478,6 +507,15 @@
         graphs: MediaReportsDummyGraphService.dummyClientTypeGraph()
       };
       setClientTypeGraph(response);
+    }
+
+    function setDummyNumberOfParticipant() {
+      vm.numberOfParticipantStatus = vm.EMPTY;
+      var response = {
+        graphData: MediaReportsDummyGraphService.dummyLineChartData(vm.timeSelected),
+        graphs: MediaReportsDummyGraphService.dummyNumberOfParticipantGraph()
+      };
+      setNumberOfParticipantGraph(response);
     }
 
     function setDummyCallVolume() {

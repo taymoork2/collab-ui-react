@@ -1397,7 +1397,12 @@
       "internationalTitle": "International Dialing",
       "internationalDesc": "Choose whether users are allowed to dial international numbers. Users and Places with Spark Call inherit this setting by default.",
       "premiumTitle": "Premium Dialing",
-      "premiumDesc": "Choose whether users are allowed to dial premium numbers. Premium includes numbers that are charged to dial in or out. Example numbers include 1-XXX-XXX-XXXX, 1-XXX-XXX-XXXX and 1-XXX-XXX-XXXX."
+      "premiumDesc": "Choose whether users are allowed to dial premium numbers. Premium includes numbers that are charged to dial in or out.",
+      "neverAllow": "Never Allow",
+      "alwaysAllow": "Always Allow",
+      "orgSetting": "Organization Settings ({{state}})",
+      "success": "Dialing Restrictions settings successfully saved.",
+      "error": "Dialing Restrictions failed to update"
     },
     "error": {
       "siteSteering": "First digit of Voicemail Access Prefix conflicts with the selected Outbound Dial Digit.",
@@ -1594,9 +1599,9 @@
       "alarms": "Alarms",
       "hosts": "Nodes",
       "goToHost": "Go to Node",
-      "removeButton": "Remove",
-      "removeSectionHeader": "Remove",
-      "removeSectionBody": "Remove this node from Cisco Collaboration Cloud.",
+      "moveNode": "Move Node",
+      "deregisterNode": "Deregister Node",
+      "removeNode": "Remove Node",
       "localizedConnectorAndHostHeader": "{{connectorName}} on {{hostname}}",
       "actions": "Actions",
       "no_nodes": "No nodes registered."
@@ -1776,8 +1781,8 @@
       "c_cal": "Calendar Connector",
       "c_ucmc": "Call Connector",
       "c_mgmt": "Management Connector",
-      "mf_mgmt": "Media Connector",
-      "hds_app": "Data Security Connector"
+      "mf_mgmt": "Media Service",
+      "hds_app": "Hybrid Data Security"
     },
     "serviceNameFromConnectorType": {
       "c_cal": "Calendar Service",
@@ -4439,12 +4444,6 @@
     "report_title": "Hybrid Media Service Report",
     "add-resource-button": "Add Resource",
     "genericError": "An unexpected error occurred. Please try again later.",
-    "connectors": {
-      "status": "Status",
-      "alarms": "Alarms",
-      "software": "Software",
-      "nodes": "Nodes"
-    },
     "sipconfiguration": {
       "success": "Unified CM SIP Trunk saved successfully.",
       "title": "Unified CM SIP Trunk",
@@ -4457,14 +4456,6 @@
       "adoption-title": "Adoption",
       "resources-title": "Resources",
       "custom": "Custom"
-    },
-    "settings": {
-      "deactivateBody_1": "You are about to remove the following Hybrid Service for your organization:",
-      "deactivateBody_2": "Deactivating a service will remove any service-related activity from your users. Additional steps are required to remove the service from your on-premises resources.",
-      "removeCluster": "REMOVE CLUSTER",
-      "schedule": "Set a Schedule",
-      "softwareUpgrade": "Software Upgrades",
-      "scheduleText": "Choose a release channel you want this cluster to update with:"
     },
     "deregister": {
       "header": "Deregister Node",
@@ -4546,32 +4537,8 @@
       "meetOnPrem": "Number of Meets on Premises",
       "clientTypes": "Client Types",
       "clientType": "Client Type",
-      "noOfMeet": "Number of Meetings"
-    },
-    "serviceStatus": {
-      "unknown": "Status unknown",
-      "not_configured": "Not configured",
-      "installing": "Installing",
-      "disabled": "Disabled",
-      "not_installed": "Not installed",
-      "stopped": "Stopped",
-      "offline": "Offline",
-      "registered": "Registered",
-      "downloading": "Downloading",
-      "uninstalling": "Uninstalling",
-      "running": "Running",
-      "needs_attention": "Needs attention",
-      "alarm": "Alarms",
-      "Unknown": "Registering",
-      "nohosts": "No Hosts Registered",
-      "no_hosts": "No Hosts Registered",
-      "has_alarms": "Alarms",
-      "upgrading": "Upgrading",
-      "upgraded": "Upgraded",
-      "pending": "Pending",
-      "initializing": "Initializing",
-      "not_operational": "Not Operational",
-      "no_nodes_registered": "No Nodes Registered"
+      "noOfMeet": "Number of Meetings",
+      "numberOfParticipantTitle": "Total Participants"
     },
     "deleteGroup": {
       "message": "Are you sure you want to delete {{groupName}} from Cisco Collaboration Cloud?",
@@ -4635,22 +4602,6 @@
       "deregister_host": "Deregister Host",
       "moveNode": "Move Node",
       "deregister_node": "Deregister Node"
-    },
-    "alarms": {
-      "alarms": "Alarms",
-      "critical": "Critical",
-      "error": "Error",
-      "warning": "Warning",
-      "alert": "Alert",
-      "severity": "Severity",
-      "firstReported": "First Reported",
-      "lastReported": "Last Reported",
-      "description": "Description",
-      "noAlarms": "No alarms reported",
-      "hostImpact": "Host Impacted",
-      "nodeImpact": "Node Impacted",
-      "nodesImpact": "Nodes Impacted",
-      "raised": "Raised"
     },
     "deactivate": {
       "areYou": "Are you sure you want to deactivate your Hybrid Media Service?",

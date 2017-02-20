@@ -38,14 +38,16 @@
 
     function getArgonautServiceUrl(argonautParam) {
       var url = UrlConfig.getArgonautReportSizeUrl();
-      var emailAddress = _.get(argonautParam, 'emailAddress');
+      //var emailAddress = _.get(argonautParam, 'emailAddress', null);
+      var roomId = _.get(argonautParam, 'roomId', null);
       var encryptionKeyUrl = _.get(argonautParam, 'encryptionKeyUrl');
       var startDate = _.get(argonautParam, 'startDate');
       var endDate = _.get(argonautParam, 'endDate');
-      var query = _.get(argonautParam, 'query');
+      var query = _.get(argonautParam, 'query', null);
       return $http
         .post(url, {
-          emailAddress: emailAddress,
+          //emailAddress: emailAddress,
+          roomId: roomId,
           encryptionKeyUrl: encryptionKeyUrl,
           startDate: startDate,
           endDate: endDate,
@@ -115,7 +117,7 @@
         .then(extractData);
     }
 
-    //new report generation api using argonaut notes:
+    // new report generation api using argonaut notes:
     // caller must pass an options object with the following properties:
     // - 'emailAddresses' => an array of email addresses
     // - 'query' => keyword entered into the search
@@ -126,7 +128,7 @@
     // - 'endDate' => end date entered
     function generateReport(postParams) {
       var url = UrlConfig.getArgonautReportUrl();
-      var emailAddresses = _.get(postParams, 'emailAddresses');
+      //var emailAddresses = _.get(postParams, 'emailAddresses');
       var query = _.get(postParams, 'query', null);
       var roomIds = _.get(postParams, 'roomIds', null);
       var encryptionKeyUrl = _.get(postParams, 'encryptionKeyUrl');
@@ -135,7 +137,7 @@
       var ed = _.get(postParams, 'endDate');
       return $http
         .post(url, {
-          emailAddresses: emailAddresses,
+          //emailAddresses: emailAddresses,
           query: query,
           roomIds: roomIds,
           encryptionKeyUrl: encryptionKeyUrl,
