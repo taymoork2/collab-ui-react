@@ -22,7 +22,7 @@ require('modules/squared/processOrder/_countrySelectModal.scss');
       .then(function (countries) {
         if (call === 'thinktel') {
           vm.countryList = _.filter(countries, function (country) {
-            if (_.get(country, 'id') === 'US' || _.get(country, 'id') === 'CA') {
+            if (_.get(country, 'id') === 'US' || _.get(country, 'id') === 'CA' || _.get(country, 'id') === 'N/A') {
               return true;
             }
           });

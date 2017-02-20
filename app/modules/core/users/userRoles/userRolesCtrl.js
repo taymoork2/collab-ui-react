@@ -17,6 +17,9 @@ require('./_user-roles.scss');
     FeatureToggleService.supports(FeatureToggleService.features.atlasHelpDeskOrderSearch).then(function (result) {
       $scope.showOrderAdminRole = result;
     });
+    FeatureToggleService.supports(FeatureToggleService.features.atlasPartnerManagement).then(function (result) {
+      $scope.showPartnerManagementRole = result;
+    });
     $scope.showOrderAdminRole = false;
     $scope.showComplianceRole = false;
     $scope.updateRoles = updateRoles;
@@ -25,6 +28,7 @@ require('./_user-roles.scss');
     $scope.partialCheckboxes = partialCheckboxes;
     $scope.orderadminOnCheckedHandler = orderadminOnCheckedHandler;
     $scope.helpdeskOnCheckedHandler = helpdeskOnCheckedHandler;
+    $scope.partnerManagementOnCheckedHandler = partnerManagementOnCheckedHandler;
     $scope.resetFormData = resetFormData;
     $scope.enableReadonlyAdminOption = false;
     $scope.rolesObj = {
@@ -139,6 +143,7 @@ require('./_user-roles.scss');
       $scope.rolesObj.supportAdminValue = hasRole(Config.backend_roles.support);
       $scope.rolesObj.helpdeskValue = hasRole(Config.backend_roles.helpdesk);
       $scope.rolesObj.orderAdminValue = hasRole(Config.backend_roles.orderadmin);
+      $scope.rolesObj.partnerManagementValue = hasRole(Config.backend_roles.partner_management);
       $scope.rolesObj.complianceValue = $scope.currentUser && _.includes($scope.currentUser.entitlements, 'compliance');
 
       $scope.initialRoles = rolesFromScope();
@@ -305,6 +310,12 @@ require('./_user-roles.scss');
         });
       }
 
+      // Partner Management
+      roles.push({
+        'roleName': Config.roles.partner_management,
+        'roleState': ($scope.rolesObj.partnerManagementValue ? Config.roleState.active : Config.roleState.inactive)
+      });
+
       roles.push({
         'roleName': Config.roles.spark_synckms,
         'roleState': (hasRole(Config.backend_roles.spark_synckms) ? Config.roleState.active : Config.roleState.inactive)
@@ -447,6 +458,10 @@ require('./_user-roles.scss');
         $scope.rolesObj.orderAdminValue = false;
         $scope.rolesEdit.form.$dirty = true;
       }
+    }
+
+    function partnerManagementOnCheckedHandler() {
+      $scope.rolesEdit.form.$dirty = true;
     }
 
     function getPartialAdminValidity() {

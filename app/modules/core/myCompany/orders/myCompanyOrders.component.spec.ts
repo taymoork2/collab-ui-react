@@ -81,6 +81,8 @@ describe('Component: myCompanyOrders', () => {
     it('should load data on orderDetailList', function () {
       expect(this.controller.orderDetailList).toEqual(jasmine.any(Array));
       expect(this.controller.orderDetailList.length).toBeGreaterThan(0);
+      expect(this.controller.orderDetailList[0].productDescriptionList).toEqual('first description');
+      expect(this.controller.orderDetailList[1].productDescriptionList).toEqual('fourth description, fifth description');
     });
 
     it('should have a data row and no loading icon', function () {

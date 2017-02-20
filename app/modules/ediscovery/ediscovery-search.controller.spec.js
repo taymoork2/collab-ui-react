@@ -241,12 +241,18 @@ describe('Controller: EdiscoverySearchController', function () {
       ediscoverySearchController.searchCriteria.roomId = 'whatever';
       ediscoverySearchController.searchCriteria.endDate = moment().format();
       ediscoverySearchController.searchCriteria.startDate = moment().subtract(1, 'day').format();
+      var params = {
+        displayName: sinon.match.any,
+        roomId: sinon.match.any,
+        startDate: sinon.match.any,
+        endDate: sinon.match.any
+      };
 
       ediscoverySearchController.createReport();
       $scope.$apply();
 
       expect(EdiscoveryService.runReport.callCount).toBe(1);
-      expect(EdiscoveryService.createReport.withArgs(sinon.match.any, sinon.match.any, sinon.match.any, sinon.match.any).callCount).toBe(1);
+      expect(EdiscoveryService.createReport.withArgs(params).callCount).toBe(1);
     });
 
   });
@@ -316,8 +322,15 @@ describe('Controller: EdiscoverySearchController', function () {
       ediscoverySearchController.createReport();
       $scope.$apply();
 
+      var params = {
+        displayName: sinon.match.any,
+        roomId: sinon.match.any,
+        startDate: sinon.match.any,
+        endDate: sinon.match.any
+      };
+
       expect(EdiscoveryService.runReport.callCount).toBe(1);
-      expect(EdiscoveryService.createReport.withArgs(sinon.match.any, sinon.match.any, sinon.match.any, sinon.match.any).callCount).toBe(1);
+      expect(EdiscoveryService.createReport.withArgs(params).callCount).toBe(1);
       expect(Notification.error.callCount).toBe(1);
       expect(EdiscoveryService.patchReport.callCount).toBe(1);
     });

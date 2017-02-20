@@ -574,6 +574,7 @@
       var isTestOrg = false;
       var overrideTestOrg = false;
       vm.hasCallEntitlement = Authinfo.isSquaredUC() || vm.isNewTrial();
+      vm.pstnTrial.enabled = vm.hasCallEntitlement;
       var promises = {
         atlasDarling: FeatureToggleService.atlasDarlingGetStatus(),
         ftCareTrials: FeatureToggleService.atlasCareTrialsGetStatus(),
@@ -583,6 +584,9 @@
       };
       if (!vm.isNewTrial()) {
         promises.tcHasService = TrialContextService.trialHasService(vm.currentTrial.customerOrgId);
+        if (vm.pstnTrial.enabled) {
+          promises.hasSetupPstn = TrialPstnService.checkForPstnSetup(vm.currentTrial.customerOrgId).catch(function () { return false; });
+        }
       }
       $q.all(promises)
         .then(function (results) {
@@ -591,13 +595,11 @@
           vm.showCare = results.ftCareTrials;
           vm.sbTrial = results.atlasDarling;
           vm.atlasTrialsShipDevicesEnabled = results.ftShipDevices;
-          vm.pstnTrial.enabled = vm.hasCallEntitlement;
           overrideTestOrg = results.ftShipDevices;
           isTestOrg = _.get(results.adminOrg, 'data.isTestOrg', false);
           vm.canSeeDevicePage = !isTestOrg || overrideTestOrg;
           vm.devicesModal.enabled = vm.canSeeDevicePage;
           vm.defaultCountryList = results.huronCountryList;
-          hasSetupPstn(vm.currentTrial.customerOrgId);
           var initResults = (vm.isExistingOrg()) ? getExistingOrgInitResults(results, vm.hasCallEntitlement, vm.preset, vm.paidServices) : getNewOrgInitResults(results, vm.hasCallEntitlement, vm.stateDefaults);
           _.merge(vm, initResults);
           updateTrialService(_messageTemplateOptionId);
@@ -1236,7 +1238,9 @@
         _.set(initResults, 'preset.context', results.tcHasService);
         _.set(initResults, 'details.licenseCount', preset.licenseCount);
         _.set(initResults, 'details.licenseDuration', preset.licenseDuration);
-        hasSetupPstn(vm.currentTrial.customerOrgId);
+        if (vm.pstnTrial.enabled) {
+          _.set(initResults, 'preset.pstn', results.hasSetupPstn);
+        }
       }
       return initResults;
     }
@@ -1295,18 +1299,6 @@
             return TrialPstnService.createPstnEntityV2(customerOrgId, customerName);
           }
         });
-    }
-
-    function hasSetupPstn(customerOrgId) {
-      if (vm.pstnTrial.enabled) {
-        TrialPstnService.checkForPstnSetup(customerOrgId)
-          .then(function () {
-            vm.preset.pstn = true;
-          })
-          .catch(function () {
-            vm.preset.pstn = false;
-          });
-      }
     }
 
     function setDefaultCountry(country) {

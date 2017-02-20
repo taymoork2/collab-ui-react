@@ -4,31 +4,36 @@
   /* eslint angular/di:0 */
   var loadedModules = [];
 
-  function loadModuleAndResolve($ocLazyLoad, resolve) {
-    return function loadModuleCallback(loadModule) {
-      var moduleName;
-      if (_.isObject(loadModule) && _.has(loadModule, 'default')) {
-        moduleName = loadModule.default;
-      } else {
-        moduleName = loadModule;
-      }
-      // Don't reload a loaded module or core angular module
-      if (_.includes(loadedModules, moduleName) || _.includes($ocLazyLoad.getModules(), moduleName) || _.startsWith(moduleName, 'ng')) {
-        resolve();
-      } else {
-        lazyLoadModule(moduleName)
-          .finally(resolve);
-      }
-    };
+  function resolveLazyLoad(requireFunction) {
+    // https://github.com/ocombe/ocLazyLoad/issues/321
+    // $$animateJs issue when 'ng' module is "reloaded" through $ocLazyLoad
+    // force $$animateJs to be loaded before we try to lazy load
+    return /* @ngInject */ function lazyLoad($$animateJs, $ocLazyLoad, $q) {
+      return $q(function resolvePromise(resolve) {
+        requireFunction(requireDoneCallback);
 
-    function lazyLoadModule(moduleName) {
-      loadedModules.push(moduleName);
-      $ocLazyLoad.toggleWatch(true);
-      return $ocLazyLoad.inject(moduleName)
-        .finally(function disableToggleWatch() {
-          $ocLazyLoad.toggleWatch(false);
-        });
-    }
+        function requireDoneCallback(_module) {
+          var moduleName;
+          if (_.isObject(_module) && _.has(_module, 'default')) {
+            moduleName = _module.default;
+          } else {
+            moduleName = _module;
+          }
+          // Don't reload a loaded module or core angular module
+          if (_.includes(loadedModules, moduleName) || _.includes($ocLazyLoad.getModules(), moduleName) || _.startsWith(moduleName, 'ng')) {
+            resolve();
+          } else {
+            loadedModules.push(moduleName);
+            $ocLazyLoad.toggleWatch(true);
+            $ocLazyLoad.inject(moduleName)
+              .finally(function finishLazyLoad() {
+                $ocLazyLoad.toggleWatch(false);
+                resolve();
+              });
+          }
+        }
+      });
+    };
   }
 
   angular
@@ -226,11 +231,9 @@
               }
             },
             resolve: {
-              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
-                return $q(function resolveLogin(resolve) {
-                  require(['./main'], loadModuleAndResolve($ocLazyLoad, resolve));
-                });
-              }
+              lazy: resolveLazyLoad(function (done) {
+                require(['./main'], done);
+              })
             },
             abstract: true,
           })
@@ -241,11 +244,9 @@
               }
             },
             resolve: {
-              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
-                return $q(function resolveLogin(resolve) {
-                  require(['modules/core/login'], loadModuleAndResolve($ocLazyLoad, resolve));
-                });
-              }
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/core/login'], done);
+              })
             },
             abstract: true,
           })
@@ -256,11 +257,9 @@
               }
             },
             resolve: {
-              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
-                return $q(function resolveLogin(resolve) {
-                  require(['modules/core/stateRedirect/stateRedirect.controller'], loadModuleAndResolve($ocLazyLoad, resolve));
-                });
-              }
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/core/stateRedirect/stateRedirect.controller'], done);
+              })
             },
             abstract: true,
           })
@@ -272,11 +271,9 @@
             },
             abstract: true,
             resolve: {
-              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
-                return $q(function resolveLogin(resolve) {
-                  require(['./main'], loadModuleAndResolve($ocLazyLoad, resolve));
-                });
-              }
+              lazy: resolveLazyLoad(function (done) {
+                require(['./main'], done);
+              })
             },
             sticky: true
           })
@@ -537,11 +534,9 @@
               }
             },
             resolve: {
-              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
-                return $q(function resolveLogin(resolve) {
-                  require(['modules/squared/scripts/controllers/activate'], loadModuleAndResolve($ocLazyLoad, resolve));
-                });
-              }
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/squared/scripts/controllers/activate'], done);
+              })
             },
             authenticate: false
           })
@@ -1075,25 +1070,17 @@
             }
           })
           .state('user-overview.communication', {
-            templateUrl: 'modules/huron/overview/telephonyOverview.tpl.html',
-            controller: 'TelephonyOverviewCtrl',
-            controllerAs: 'telephonyOverview',
+            template: '<user-call-overview></user-call-overview>',
             params: {
               reloadToggle: false
             },
             data: {
               displayName: 'Call'
-            }
-          })
-          .state('user-overview.communication.directorynumber', {
-            templateUrl: 'modules/huron/lineSettings/lineSettings.tpl.html',
-            controller: 'LineSettingsCtrl',
-            controllerAs: 'lineSettings',
-            params: {
-              directoryNumber: {}
             },
-            data: {
-              displayName: 'Line Configuration'
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/overview'], done);
+              })
             }
           })
           .state('user-overview.csdmDevice', {
@@ -1137,9 +1124,21 @@
             },
           })
           .state('user-overview.communication.voicemail', {
-            template: '<div uc-voicemail></div>',
+            template: '<uc-voicemail  owner-id="$resolve.ownerId"  ></uc-voicemail>',
+            params: {
+              watcher: null,
+              selected: null
+            },
             data: {
               displayName: 'Voicemail'
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/voicemail'], done);
+              }),
+              ownerId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentUser, 'id');
+              },
             }
           })
           .state('user-overview.communication.snr', {
@@ -1149,15 +1148,90 @@
             }
           })
           .state('user-overview.communication.speedDials', {
-            template: '<div uc-speed-dials></div>',
+            template: '<uc-speed-dial owner-type="users" owner-id="$resolve.ownerId"></uc-speed-dial>',
             data: {
               displayName: 'Speed Dials'
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/speedDials'], done);
+              }),
+              ownerId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentUser, 'id');
+              },
             }
           })
+          .state('user-overview.communication.cos', {
+            template: '<uc-user-cos-form member-type="users" member-id="$resolve.ownerId"></uc-user-cos-form>',
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/cos/user'], done);
+              }),
+              ownerId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentUser, 'id');
+              },
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('user-overview.communication.cos').data.displayName = $translate.instant('serviceSetupModal.cos.title');
+              }
+            },
+          })
           .state('user-overview.communication.internationalDialing', {
-            template: '<div uc-international-dialing></div>',
+            template: '<uc-dialing  watcher="$resolve.watcher" selected="$resolve.selected" title="internationalDialingPanel.title"></uc-dialing>',
+            params: {
+              watcher: null,
+              selected: null
+            },
             data: {
               displayName: 'International Dialing'
+            },
+            resolve: {
+              watcher: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams, 'watcher');
+              },
+              selected: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams, 'selected');
+              },
+            },
+          })
+          .state('user-overview.communication.local', {
+            template: '<uc-dialing  watcher="$resolve.watcher" selected="$resolve.selected" title="telephonyPreview.localDialing"></uc-dialing>',
+            params: {
+              watcher: null,
+              selected: null
+            },
+            data: {
+              displayName: 'Local Dialing'
+            },
+            resolve: {
+              watcher: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams, 'watcher');
+              },
+              selected: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams, 'selected');
+              },
+            },
+          })
+          .state('user-overview.communication.line-overview', {
+            template: '<uc-line-overview owner-type="user" owner-name="$resolve.ownerName" owner-id="$resolve.ownerId" number-id="$resolve.numberId"></uc-line-overview>',
+            params: {
+              numberId: '',
+            },
+            data: {
+              displayName: 'Line Configuration'
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/lines/lineOverview'], done);
+              }),
+              ownerId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentUser, 'id');
+              },
+              ownerName: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentUser, 'displayName');
+              },
+              numberId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams, 'numberId', '');
+              },
             }
           })
           .state('user-overview.messaging', {
@@ -1618,11 +1692,9 @@
               displayName: 'Call'
             },
             resolve: {
-              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
-                return $q(function resolveLogin(resolve) {
-                  require(['modules/squared/places/callOverview'], loadModuleAndResolve($ocLazyLoad, resolve));
-                });
-              }
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/squared/places/callOverview'], done);
+              })
             }
           })
           .state('place-overview.communication.speedDials', {
@@ -1631,15 +1703,27 @@
               displayName: 'Speed Dials'
             },
             resolve: {
-              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
-                return $q(function resolveLogin(resolve) {
-                  require(['modules/huron/speedDials'], loadModuleAndResolve($ocLazyLoad, resolve));
-                });
-              },
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/speedDials'], done);
+              }),
               ownerId: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams.currentPlace, 'cisUuid');
               },
             }
+          })
+          .state('place-overview.communication.cos', {
+            template: '<uc-user-cos-form member-type="places" member-id="$resolve.ownerId"></uc-user-cos-form>',
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/cos/user'], done);
+              }),
+              ownerId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentPlace, 'cisUuid');
+              },
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('place-overview.communication.cos').data.displayName = $translate.instant('serviceSetupModal.cos.title');
+              }
+            },
           })
           .state('place-overview.communication.internationalDialing', {
             template: '<uc-dialing  watcher="$resolve.watcher" selected="$resolve.selected" title="internationalDialingPanel.title"></uc-dialing>',
@@ -1686,11 +1770,9 @@
               displayName: 'Line Configuration'
             },
             resolve: {
-              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
-                return $q(function resolveLogin(resolve) {
-                  require(['modules/huron/lines/lineOverview'], loadModuleAndResolve($ocLazyLoad, resolve));
-                });
-              },
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/lines/lineOverview'], done);
+              }),
               ownerId: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams.currentPlace, 'cisUuid');
               },
@@ -1771,11 +1853,9 @@
               }
             },
             resolve: {
-              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
-                return $q(function resolveVideo(resolve) {
-                  require(['modules/core/video'], loadModuleAndResolve($ocLazyLoad, resolve));
-                });
-              }
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/core/video'], done);
+              })
             }
           })
           .state('partneroverview', {
@@ -2568,11 +2648,9 @@
             parent: 'hurondetails',
             template: '<call-pickup-setup-assistant></call-pickup-setup-assistant>',
             resolve: {
-              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
-                return $q(function resolveLogin(resolve) {
-                  require(['modules/huron/features/callPickup/callPickupSetupAssistant'], loadModuleAndResolve($ocLazyLoad, resolve));
-                });
-              }
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/features/callPickup/callPickupSetupAssistant'], done);
+              })
             }
           })
           .state('callpickupedit', {
@@ -2583,11 +2661,9 @@
               feature: null
             },
             resolve: {
-              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
-                return $q(function resolveLogin(resolve) {
-                  require(['modules/huron/features/callPickup/callPickupSetupAssistant'], loadModuleAndResolve($ocLazyLoad, resolve));
-                });
-              }
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/features/callPickup/callPickupSetupAssistant'], done);
+              })
             }
           })
           .state('huronCallPark', {
@@ -2595,11 +2671,9 @@
             parent: 'hurondetails',
             template: '<uc-call-park></uc-call-park>',
             resolve: {
-              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
-                return $q(function resolveLogin(resolve) {
-                  require(['modules/huron/features/callPark/callPark'], loadModuleAndResolve($ocLazyLoad, resolve));
-                });
-              }
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/features/callPark/callPark'], done);
+              })
             }
           })
           .state('callparkedit', {
@@ -2610,11 +2684,9 @@
               feature: null
             },
             resolve: {
-              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
-                return $q(function resolveLogin(resolve) {
-                  require(['modules/huron/features/callPark/callPark'], loadModuleAndResolve($ocLazyLoad, resolve));
-                });
-              }
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/features/callPark/callPark'], done);
+              })
             }
           })
           .state('huronHuntGroup', {
@@ -2639,11 +2711,9 @@
             parent: 'main',
             template: '<pg-setup-assistant></pg-setup-assistant>',
             resolve: {
-              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
-                return $q(function resolveLogin(resolve) {
-                  require(['modules/huron/features/pagingGroup/pgSetupAssistant'], loadModuleAndResolve($ocLazyLoad, resolve));
-                });
-              }
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/features/pagingGroup/pgSetupAssistant'], done);
+              })
             }
           })
           .state('huronPagingGroupEdit', {
@@ -2651,11 +2721,9 @@
             parent: 'main',
             template: '<pg-edit pg-id="$resolve.pgId"></pg-edit>',
             resolve: {
-              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
-                return $q(function resolveLogin(resolve) {
-                  require(['modules/huron/features/pagingGroup/edit'], loadModuleAndResolve($ocLazyLoad, resolve));
-                });
-              },
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/features/pagingGroup/edit'], done);
+              }),
               pgId: /* @ngInject */ function pgId($stateParams) {
                 var id = _.get($stateParams.feature, 'id');
                 return id;

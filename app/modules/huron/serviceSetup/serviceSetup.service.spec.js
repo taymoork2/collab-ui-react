@@ -338,6 +338,20 @@ describe('Service: ServiceSetup', function () {
     });
   });
 
+  describe('getTimeFormats', function () {
+    beforeEach(function () {
+      $httpBackend.expectGET('modules/huron/serviceSetup/timeFormat.json').respond(getJSONFixture('huron/json/settings/timeFormats.json'));
+    });
+
+    it('should get the Time formats', function () {
+      ServiceSetup.getTimeFormats().then(function (response) {
+        expect(response).toBeDefined();
+        expect(response.length).toBe(2);
+      });
+      $httpBackend.flush();
+    });
+  });
+
   describe('getTimeZones', function () {
     beforeEach(function () {
       $httpBackend.expectGET('modules/huron/serviceSetup/jodaTimeZones.json').respond(getJSONFixture('huron/json/timeZones/timeZones.json'));
@@ -392,6 +406,7 @@ describe('Service: ServiceSetup', function () {
     });
 
     it('should get site countries', function () {
+      FeatureToggleService.supports = jasmine.createSpy().and.returnValue($q.resolve(true));
       ServiceSetup.getSiteCountries().then(function (response) {
         expect(response).toBeDefined();
         expect(response.length).toBe(2);

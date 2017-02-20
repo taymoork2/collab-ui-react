@@ -1,3 +1,64 @@
+<a name="1.0.5"></a>
+## [1.0.5](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/compare/v1.0.4...v1.0.5) (2017-02-17)
+
+
+### Bug Fixes
+
+* **care:** MediaType dropdown missing in Care reports tab ([14bc816](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/14bc816))
+* **core:** check for thruthyness instead of null in 'put' method ([62cacda](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/62cacda))
+* **core:** DE9346: ATLAS-1745: Unable to connect to site" for WebEx site with mixed case ([99f1070](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/99f1070))
+* **core:** DirSync status now shows correctly in ManageUsers ([12a4266](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/12a4266))
+* **core:** Fix for failing manageusers e2e tests ([c20a824](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/c20a824))
+* **core:** Number should now fully display inside cs-donut ([f86b90e](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/f86b90e))
+* **core:** Order History: Support multiple product names per row ([97fd2a3](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/97fd2a3))
+* **core:** Removed dangling comma that causes an error ([33ee185](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/33ee185))
+* **core:** resolve $$animateJs error ([43005c0](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/43005c0))
+* **core:** Updating copyright notices to say 2017 instead of 2016. ([c9d50bf](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/c9d50bf))
+* **devices:** Only poll Huron when org has licenses ([098670c](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/098670c))
+* **devices:** Warning modal text tweak ([e2611e8](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/e2611e8))
+* **hercules:** "Atlas-1651 Incorrect GET call to FMS in several pages" ([add3b33](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/add3b33))
+* **hercules:** Fix leaking notification subscriptions ([4aa589d](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/4aa589d))
+* **hercules:** Fix leaking notification subscriptions ([0f02fcd](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/0f02fcd))
+* **hercules:** Stop storing the same cluster list twice. ([dfb7295](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/dfb7295))
+* **Hercules:** In node list in cluster sidepanel, give visual feedback when loading. ([7aeecda](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/7aeecda))
+* **huron:** I1412 - Date Time Format Display inconsistency fix ([c9a9635](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/c9a9635))
+* **huron:** I1412 Date/Time format Element mismatch fix ([9cdc1be](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/9cdc1be))
+* **huron:** Pass down countryCode to CMI when creating a trial. ([f0cc9de](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/f0cc9de))
+* **huron,core:** ModalService Updates ([4ab1aa6](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/4ab1aa6))
+* **line:** Line Delete does not release DN in a sharedline case ([fb41652](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/fb41652))
+* **pstn:** Switched swivel orders back to V1 order API ([1aef8cd](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/1aef8cd))
+* **Pstn:** Added ThinkTel Features, and fixed order flow ([20ef017](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/20ef017))
+* **trials:** link to new trial implementation from cust. overview on 'start trial' ([a6cfb1a](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/a6cfb1a))
+* **trials:** merge trialAdd and trialEdit into trial ([0963637](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/0963637))
+* **trials:** move PSTN setup check farther up the chain ([b259ef2](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/b259ef2))
+
+
+### Features
+
+* **cluster-sidepanel:** add a button to the new nodes page when feature toggle on ([ebb0b00](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/ebb0b00))
+* **core:** do not load adobe's tracking when not in production ([731b71f](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/731b71f))
+* **core:** filter country list on add trial based on feature toggle ([f0e91e3](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/f0e91e3))
+* **core:** updated to latest collab-ui and collab-ui-ng ([60aad39](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/60aad39))
+* **core:** US6051 - Add Shared Meetings Report to subscriptions page. ([d68a60d](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/d68a60d))
+* **core:** US6679 - Updating SIP Address save/update UI to match final UX ([7c5825f](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/7c5825f))
+* **devices:** Send new design emails for personal devices ([82052ea](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/82052ea))
+* **ediscovery:** switched to use new argonaut api ([0de8225](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/0de8225))
+* **HDS:** Added software download screen for node setup wizard. ([f4096d0](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/f4096d0))
+* **helpdesk:** US12230 - Add checkbox for partner management ([a1d2dbc](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/a1d2dbc))
+* **hercules:** Updating voicemail urls, using the real API for userinfo. ([c5eb034](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/c5eb034))
+* **huron:** Add 'Not Applicable' to country list in order processing when call=thinktel ([01de720](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/01de720))
+* **huron:** Country select for order processing. ([6ced2f0](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/6ced2f0))
+* **huron:** US269501 Demo UI Feedback changes - Wording Edits ([badac04](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/badac04))
+* **jira ADMINAPPS-241:** Voicemail OFF/ON doesn't create users in Avril ([9506d4d](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/9506d4d))
+* **mediaservice:** Adoption Client type card and graph ([a14b170](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/a14b170))
+* **mediaservice:** Adoption Client type card and graph ([05713f4](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/05713f4))
+* **mediaservice:** adoption reports ([9ff751d](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/9ff751d))
+* **Pickup:**  Gray out and disable members already in a pickup when being selected ([d1c770c](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/d1c770c))
+* **setupWizard:** remove Add Users and SSO steps ([699ed31](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/699ed31))
+* **trials:**  Add Canada to Country list for Spark Call devices ([d848be9](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/d848be9))
+
+
+
 <a name="1.0.4"></a>
 ## [1.0.4](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/compare/v1.0.3...v1.0.4) (2017-02-10)
 

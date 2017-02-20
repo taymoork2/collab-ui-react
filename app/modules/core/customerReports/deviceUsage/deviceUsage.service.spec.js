@@ -21,12 +21,14 @@ describe('DeviceUsageService', function () {
   beforeEach(inject(function (_$httpBackend_, _DeviceUsageService_) {
     DeviceUsageService = _DeviceUsageService_;
     $httpBackend = _$httpBackend_;
+    moment.tz.setDefault('Europe/London');
     jasmine.clock().install();
     var baseTime = now;
     jasmine.clock().mockDate(baseTime);
   }));
 
   afterEach(function () {
+    moment.tz.setDefault();
     jasmine.clock().uninstall();
   });
 
@@ -124,7 +126,7 @@ describe('DeviceUsageService', function () {
 
     });
 
-    xit('reduces data to calculated totals pr day', function () {
+    it('reduces data to calculated totals pr day', function () {
 
       var expectedResult = [{
         callCount: 2,
@@ -147,8 +149,8 @@ describe('DeviceUsageService', function () {
       expect(result).toEqual(expectedResult);
     });
 
-    xit('replaces missing days with data indicating zero use', function () {
-      var usageRequest = baseOrgUrl + '/usage?interval=day&from=2010-10-25&to=2016-10-28&countryCodes=aggregate&accounts=aggregate&models=aggregate';
+    it('replaces missing days with data indicating zero use', function () {
+      var usageRequest = baseOrgUrl + '/usage?interval=day&from=2010-10-25&to=2016-10-28&categories=aggregate&countryCodes=aggregate&accounts=aggregate&models=aggregate';
       $httpBackend
         .when('GET', usageRequest)
         .respond({ items: usageDataResponse });

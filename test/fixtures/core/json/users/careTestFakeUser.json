@@ -99,7 +99,7 @@
       "organizationID": "b1de2d84-c9b1-485b-9698-b35e95c6107f"
     },
     "displayName": "sunlight-fake-user@outlook.com",
-    "roles": ["atlas-portal.partner.orderadmin", "atlas-portal.partner.helpdesk"],
+    "roles": ["atlas-portal.partner.orderadmin", "atlas-portal.partner.helpdesk", "atlas-portal.cisco.partnermgmt"],
     "active": true,
     "licenseID": ["CF_60c17363-5fe5-4aee-b498-c0e3e7918459", "MS_f41bc544-e633-4c37-86b7-b8b120d8a278"],
     "avatarSyncEnabled": false
