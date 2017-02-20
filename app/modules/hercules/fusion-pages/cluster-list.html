@@ -53,6 +53,14 @@
             <cluster-card ng-repeat="cluster in resourceList.displayedGroups[2].unassigned" cluster="cluster"></cluster-card>
           </cs-card-layout>
         </div>
+        <!-- Context resource group -->
+        <div ng-if="resourceList.displayedGroups[3].display">
+          <h5 translate="hercules.fusion.list.context"></h5>
+          <p class="no-clusters" ng-if="resourceList.displayedGroups[3].unassigned.length === 0" translate="hercules.fusion.list.empty"></p>
+          <cs-card-layout block-view="true">
+            <cluster-card ng-repeat="cluster in resourceList.displayedGroups[3].unassigned" cluster="cluster"></cluster-card>
+          </cs-card-layout>
+        </div>
       </div>
 
       <div ng-if="!resourceList.showResourceGroups">

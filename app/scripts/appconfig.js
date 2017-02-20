@@ -2760,9 +2760,12 @@
             controller: 'HybridContextContainerController',
             controllerAs: 'vm',
             parent: 'main',
+            params: {
+              backState: null
+            },
             resolve: {
-              hasContactCenterContextFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.contactCenterContext);
+              backState: /* @ngInject */ function ($stateParams) {
+                return $stateParams.backState;
               }
             }
           })
@@ -2772,11 +2775,6 @@
             views: {
               'contextServiceView': {
                 templateUrl: 'modules/context/resources/hybrid-context-resources.html'
-              }
-            },
-            resolve: {
-              hasContactCenterContextFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.contactCenterContext);
               }
             }
           })
@@ -3144,6 +3142,17 @@
                 controller: 'MediafusionEndController',
                 controllerAs: 'vm',
                 templateUrl: 'modules/hercules/fusion-pages/add-resource/mediafusion/end.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('add-resource.context', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                templateUrl: 'modules/hercules/fusion-pages/add-resource/context/context.html'
               }
             },
             params: {
