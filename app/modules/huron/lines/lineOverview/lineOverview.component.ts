@@ -93,6 +93,7 @@ class LineOverview implements ng.IComponentController {
 
     this.FeatureToggleService.supports(this.FeatureToggleService.features.autoAnswer).then((autoAnswerEnabled) => {
       this.autoAnswerFeatureToggleEnabled = autoAnswerEnabled;
+      this.autoAnswerFeatureToggleEnabled = true;
     });
   }
 

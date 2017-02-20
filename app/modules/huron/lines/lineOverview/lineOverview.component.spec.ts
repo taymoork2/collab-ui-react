@@ -168,7 +168,7 @@ describe('Component: lineOverview', () => {
 
   });
 
-  describe('auto answer', () => {
+  xdescribe('auto answer', () => {
     beforeEach(function () {
       spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.when(false));
     });
