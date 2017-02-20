@@ -2,6 +2,7 @@ import './_mySubscription.scss';
 import { DigitalRiverService } from 'modules/online/digitalRiver/digitalRiver.service';
 import { Notification } from 'modules/core/notifications';
 import { OnlineUpgradeService, IBmmpAttr, IProdInst } from 'modules/online/upgrade/upgrade.service';
+import { SharedMeetingsReportService } from './sharedMeetings/sharedMeetingsReport.service';
 
 const baseCategory = {
   label: undefined,
@@ -36,7 +37,6 @@ class MySubscriptionCtrl {
   /* @ngInject */
   constructor(
     private $http: ng.IHttpService,
-    private $modal,
     private $rootScope: ng.IRootScopeService,
     private $translate: ng.translate.ITranslateService,
     private Authinfo,
@@ -44,6 +44,7 @@ class MySubscriptionCtrl {
     private FeatureToggleService,
     private DigitalRiverService: DigitalRiverService,
     private OnlineUpgradeService: OnlineUpgradeService,
+    private SharedMeetingsReportService: SharedMeetingsReportService,
     private Notification: Notification,
     private Orgservice,
     private ServiceDescriptor,
@@ -80,16 +81,7 @@ class MySubscriptionCtrl {
   }
 
   public launchSharedMeetingsLicenseUsageReport(siteUrl: string): void {
-    this.$modal.open({
-      templateUrl: 'modules/core/myCompany/mySubscriptions/sharedMeetings/sharedMeetingsReport.tpl.html',
-      controller: 'SharedMeetingsReportCtrl',
-      controllerAs: 'smrCtrl',
-      resolve: {
-        siteUrl: () => {
-          return siteUrl;
-        },
-      },
-    });
+    this.SharedMeetingsReportService.openModal(siteUrl);
   }
 
   private initFeatures(): void {

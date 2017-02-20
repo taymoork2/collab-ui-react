@@ -42,7 +42,7 @@ describe('Controller: MySubscriptionCtrl', function () {
     this.data.trialSubscriptionData[0].name = undefined;
 
     this.initModules('Core', 'Hercules', 'Sunlight');
-    this.injectDependencies('$controller', '$httpBackend', '$modal', '$rootScope', '$scope', '$q', 'Authinfo', 'DigitalRiverService', 'FeatureToggleService', 'OnlineUpgradeService', 'Orgservice', 'ServiceDescriptor');
+    this.injectDependencies('$controller', '$httpBackend', '$rootScope', '$scope', '$q', 'Authinfo', 'DigitalRiverService', 'FeatureToggleService', 'OnlineUpgradeService', 'Orgservice', 'ServiceDescriptor', 'SharedMeetingsReportService');
 
     spyOn(this.ServiceDescriptor, 'getServices').and.returnValue(this.$q.when(this.data.servicesResponse));
     spyOn(this.FeatureToggleService, 'atlasSharedMeetingsGetStatus').and.returnValue(this.$q.when(false));
@@ -52,7 +52,7 @@ describe('Controller: MySubscriptionCtrl', function () {
     spyOn(this.DigitalRiverService, 'getSubscriptionsUrl').and.returnValue(this.$q.when(drUrlResponse));
     spyOn(this.$rootScope, '$broadcast').and.callThrough();
 
-    spyOn(this.$modal, 'open');
+    spyOn(this.SharedMeetingsReportService, 'openModal');
 
     this.startController = (): void => {
       this.controller = this.$controller('MySubscriptionCtrl', {
@@ -170,13 +170,14 @@ describe('Controller: MySubscriptionCtrl', function () {
   });
 
   describe('Shared Meeting Report: ', function () {
+    const siteUrl: string = 'siteUrl';
+
     it('should open a modal when the shared meeting report is launched', function () {
       spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.when(this.data.subscriptionsTrialResponse));
       this.startController();
 
-      expect(this.$modal.open).toHaveBeenCalledTimes(0);
-      this.controller.launchSharedMeetingsLicenseUsageReport('siteUrl');
-      expect(this.$modal.open).toHaveBeenCalledTimes(1);
+      this.controller.launchSharedMeetingsLicenseUsageReport(siteUrl);
+      expect(this.SharedMeetingsReportService.openModal).toHaveBeenCalledWith(siteUrl);
     });
   });
 });

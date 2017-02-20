@@ -207,6 +207,7 @@
     WebexAdvancedEditUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage',
     WebexAdvancedHomeUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminHomePage',
     WebexMaxConcurrentMeetings: 'https://%s/meetingsapi/v1/report/MonthlyMaxConcurrentMeetings',
+    WebexConcurrentMeetings: 'https://%s/meetingsapi/v1/report/ConcurrentMeetingsDetailByMonth',
     WebClientUrl: 'https://web.ciscospark.com/',
     ArgonautReportSizeUrl: 'https://argonaut-a.wbx2.com/argonaut/api/v1/compliance/report/size',
     ArgonautReportUrl: 'https://argonaut-a.wbx2.com/argonaut/api/v1/compliance/report',

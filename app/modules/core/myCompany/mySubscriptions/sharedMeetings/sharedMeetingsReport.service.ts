@@ -1,23 +1,77 @@
 import { ISharedMeetingData } from './sharedMeetingsReport.interfaces';
 import { CommonGraphService } from '../../../partnerReports/commonReportServices/commonGraph.service';
+import { IToolkitModalService, IToolkitModalServiceInstance } from 'modules/core/modal';
+import { Notification } from '../../../notifications/notification.service';
+
+interface IWindowService extends ng.IWindowService {
+  webkitURL: any;
+}
 
 export class SharedMeetingsReportService {
+  public readonly FILENAME: string = 'shared_meeting.csv';
   private readonly CHART_DIV: string = 'sharedMeetingsChart';
+  private meetingModal: IToolkitModalServiceInstance |  undefined;
+  private blob: any;
 
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
     private $http: ng.IHttpService,
+    private $modal: IToolkitModalService,
+    private $window: IWindowService,
     private CommonGraphService: CommonGraphService,
+    private Notification: Notification,
     private UrlConfig,
     private chartColors,
   ) {}
+
+  public openModal(siteUrl: string): void {
+    if (siteUrl) {
+      this.meetingModal = this.$modal.open({
+        template: '<shared-meeting-report class="modal-content" site-url="' + siteUrl + '"></shared-meeting-report>',
+        type: 'full',
+      });
+    } else {
+      this.Notification.error('sharedMeetingReports.siteUrlError');
+    }
+  }
+
+  public dismissModal(): void {
+    if (this.meetingModal) {
+      this.meetingModal.dismiss();
+      this.meetingModal = undefined;
+    }
+  }
 
   public getMaxConcurrentMeetingsData(siteName: string, endMonth: string, startMonth: string): ng.IHttpPromise<any> {
     return this.$http.post(this.UrlConfig.getWebexMaxConcurrentMeetings(siteName), {
       StartMonth: startMonth,
       EndMonth: endMonth,
     });
+  }
+
+  public getDetailedReportData(siteName: string, endMonth: string, startMonth: string): ng.IHttpPromise<any> {
+    return this.$http.post(this.UrlConfig.getWebexConcurrentMeetings(siteName), {
+      StartMonth: startMonth,
+      EndMonth: endMonth,
+    });
+  }
+
+  public getDownloadCSV(csvString: string): string | undefined {
+    this.blob = new this.$window.Blob([csvString], { type: 'text/plain' });
+
+    // IE download option since IE won't download the created url
+    if (_.get(this.$window, 'navigator.msSaveOrOpenBlob', false)) {
+      return;
+    } else {
+      return (this.$window.URL || this.$window.webkitURL).createObjectURL(this.blob);
+    }
+  }
+
+  public downloadInternetExplorer(): void {
+    if (_.get(this.$window, 'navigator.msSaveOrOpenBlob', false)) {
+      this.$window.navigator.msSaveOrOpenBlob(this.blob, this.FILENAME);
+    }
   }
 
   public setChartData(data: Array<ISharedMeetingData>, chart: any): any {

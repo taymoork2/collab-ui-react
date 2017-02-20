@@ -604,7 +604,20 @@
     "concurrentMeetingsTitle": "Actual number of concurrent mettings held",
     "concurrentMeetings": "Concurrent Meetings",
     "maxMeetingsTitle": "Maximum number of concurrent meetings allowed",
-    "errorLoadingSharedMeetingData": "There was a problem loading the Shared Meeting Report data."
+    "errorLoadingSharedMeetingData": "There was a problem loading the Shared Meeting Report data.",
+    "errorLoadingSharedMeetingDetails": "There was a problem loading the Shared Meeting Report details data.",
+    "siteUrlError": "Site URL is undefined.  Cannot retrieve shared meetings report.",
+    "csvPageError": "Unable to retrieve the detailed report for download.",
+    "downloadHref": "Download a <a href=\"{{href}}\" download=\"{{download}}\">detailed report</a> of shared meetings usage.",
+    "downloadClick": "Download a <a ng-click=\"{{onclick}}\">detailed report</a> of shared meetings usage.",
+    "csvMeetingTopic": "Meeting Topic",
+    "csvStartTime": "Start Time",
+    "csvEndTime": "End Time",
+    "csvConfId": "Conference ID",
+    "csvDuration": "Meeting Duration (Seconds)",
+    "csvMeetingType": "Meeting Type",
+    "csvHostId": "Host Id",
+    "csvHostName": "Host Name"
   },
   "careReportsPage": {
     "tasks": "Contacts",
