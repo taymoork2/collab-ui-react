@@ -1,9 +1,9 @@
 // DO NOT IMPORT ANYTHING THAT GENERATES OUTPUT
-@import '~collab-ui/scss/config/settings.foundation';
-@import '~collab-ui/scss/config/variables.baseline';
-@import '~collab-ui/scss/config/variables.ui';
-@import '~collab-ui/scss/tools/baseline';
-@import '~collab-ui/scss/tools/functions/functions.core';
-@import '~collab-ui/scss/tools/mixins/spacing.responsive';
+@import '~collab-ui/scss/settings/settings';
+@import '~collab-ui/scss/settings/settings-foundation';
+@import '~collab-ui/scss/settings/settings-collab-ui';
+@import '~collab-ui/scss/tools/mixins/baseline';
+@import '~collab-ui/scss/tools/functions/core';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
 
 @import './overrides';

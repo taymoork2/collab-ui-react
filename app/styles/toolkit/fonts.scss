@@ -1,6 +1,6 @@
 // DO NOT IMPORT ANYTHING THAT GENERATES OUTPUT
-@import '~collab-ui/scss/config/settings.foundation';
-@import '~collab-ui/scss/config/variables.baseline';
-@import '~collab-ui/scss/config/variables.ui';
+@import '~collab-ui/scss/settings/settings-foundation';
+@import '~collab-ui/scss/settings/settings';
+@import '~collab-ui/scss/settings/settings-collab-ui';
 
 @import './overrides';

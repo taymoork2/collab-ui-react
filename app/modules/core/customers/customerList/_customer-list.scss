@@ -2,7 +2,7 @@
 @import 'styles/toolkit/layout';
 @import 'styles/toolkit/spacing';
 
-@import '~collab-ui/scss/foundation-trumps/labels';
+@import '~collab-ui/scss/objects/labels';
 
 .customer-list {
   @extend %grid-subheader;
