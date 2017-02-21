@@ -22,8 +22,13 @@
     init();
 
     function init() {
-      vm.trialUserGroupId = HDSService.getHdsTrialUserGroupID();
-      getExistingTrialUsers();
+      HDSService.getHdsTrialUserGroupID()
+        .then(function (gid) {
+          vm.trialUserGroupId = gid;
+          getExistingTrialUsers();
+        }).catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.settings.emailNotificationsSavingError');
+        });
     }
 
     function getExistingTrialUsers() {
