@@ -53,7 +53,7 @@
                 <!-- default path, no borders -->
                 <cs-donut name="subscription.id" value="subscription.usage" max="subscription.volume" ssize="48" class="text-center" ng-if="!licenseCategory.borders"></cs-donut>
                 <div class="subscription-description" ng-if="!licenseCategory.borders" ng-if="!licenseCategory.borders">
-                  <div class="h6" translate="subscriptions.licenseTypes.{{::subscription.offerName}}"></div>
+                  <div class="h5" translate="subscriptions.licenseTypes.{{::subscription.offerName}}"></div>
                   <div>
                     <span class="h6" translate="subscriptions.usage"></span>
                     <span class="h6" ng-class="{'warning': subscription.usage > subscription.volume}">{{::subscription.usage}}/{{::subscription.volume}}</span>
@@ -61,24 +61,35 @@
                 </div>
                 <!-- if not default, there are borders -->
                 <div class="license-item" ng-repeat="offer in subscription.offers" ng-if="licenseCategory.borders">
-                  <div class="license-count-indicator">
+                  <div class="license-count-indicator" ng-if="!subscription.siteUrl || (subscription.siteUrl && !mcpSubscription.isSharedMeetingsLicense(subscription))">
                     <cs-donut name="offer.id" value="offer.usage" max="offer.volume" ssize="48" class="text-center"></cs-donut>
                   </div>
-                  <div class="subscription-description">
-                    <div class="h5 subscription-site" ng-if="subscription.siteUrl && licenseCategory.borders">{{::subscription.siteUrl}}</div>
+                  <div class="subscription-description subscription-detail" ng-class="{'subscription-advanced-detail': mcpSubscription.isSharedMeetingsLicense(subscription)}">
                     <div class="description-line">
-                      <span class="name h6" translate="subscriptions.licenseTypes.{{::offer.offerName}}"></span>
+                      <span class="name h5" translate="subscriptions.licenseTypes.{{::offer.offerName}}"></span>
                     </div>
-                    <div class="description-line" ng-if="subscription.siteUrl && mcpSubscription.isSharedMeetingsEnabled">
+                    <div class="h6 subscription-site siteUrl" ng-if="subscription.siteUrl && licenseCategory.borders">{{::subscription.siteUrl}}</div>
+                    <div class="description-line" ng-if="subscription.siteUrl && mcpSubscription.isSharedMeetingsEnabled && !mcpSubscription.isSharedMeetingsLicense(subscription)">
                       <span class="name h6">{{mcpSubscription.determineLicenseType(subscription)}}</span>
                     </div>
                     <div class="description-line" ng-hide="mcpSubscription.isSharedMeetingsLicense(subscription) && mcpSubscription.isSharedMeetingsEnabled">
                       <span class="h6" translate="subscriptions.usage"></span>
                       <span class="h6" ng-class="{'warning': offer.usage > offer.volume}">{{::offer.usage}}/{{::offer.volume}}</span>
                     </div>
+                  </div>
+                  <div class="subscription-description subscription-detail">
+                    <div class="description-line" ng-show="mcpSubscription.isSharedMeetingsLicense(subscription) && mcpSubscription.isSharedMeetingsReportsEnabled">
+                      <span class="h5 license-detail" ng-class="{'warning': offer.usage > offer.volume}" translate="sharedMeetingReports.hostsSharingLicenses" translate-values="{usage: offer.usage, volume: offer.volume}"></span>
+                    </div>
                     <div class="description-line" ng-show="mcpSubscription.isSharedMeetingsLicense(subscription) && mcpSubscription.isSharedMeetingsReportsEnabled">
                       <span class="h6" translate="sharedMeetingReports.title"></span>
                       <a class="name h6 link" ng-click="mcpSubscription.launchSharedMeetingsLicenseUsageReport(subscription.siteUrl)" translate="sharedMeetingReports.link"></a>
+                    </div>
+                  </div>
+                  <div class="subscription-description subscription-detail">
+                    <div class="description-line" ng-show="mcpSubscription.isSharedMeetingsLicense(subscription) && mcpSubscription.isSharedMeetingsReportsEnabled">
+                      <span class="h5 license-detail" translate="sharedMeetingReports.availableSharedLicenses"></span>
+                      <span class="h6">{{::offer.volume}}</span>
                     </div>
                   </div>
                 </div>

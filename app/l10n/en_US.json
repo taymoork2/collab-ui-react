@@ -598,8 +598,10 @@
     }
   },
   "sharedMeetingReports": {
-    "title": "Shared Meeting Usage",
+    "title": "SHARED MEETING USAGE",
     "link": "View Report",
+    "hostsSharingLicenses": "{{usage}} hosts using {{volume}} shared licenses",
+    "availableSharedLicenses": "Available Shared Licenses: ",
     "sharedMeetingReport": "Shared Meeting Report",
     "sharedMeetingUsage": "Shared Meetings Usage",
     "sharedMeetingDescription": "This graph shows the number of concurrent meetings per month.",
@@ -6215,7 +6217,7 @@
     "loadError": "An error occurred while loading subscriptions.",
     "licenseTypes": {
       "MS": "Standard Team Spaces",
-      "CF": "Meeting 25 Party",
+      "CF": "Spark 25 Party Meetings",
       "MC": "WebEx Meeting Center",
       "SC": "WebEx Support Center",
       "TC": "WebEx Training Center",
