@@ -20,7 +20,7 @@
             scope.currentTime = date.fromNow();
           }
         });
-      }
+      },
     };
   }
 })();

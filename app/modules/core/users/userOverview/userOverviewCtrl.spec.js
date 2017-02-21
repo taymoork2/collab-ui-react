@@ -28,7 +28,7 @@ describe('Controller: UserOverviewCtrl', function () {
     this.getUserSpy = spyOn(this.UserOverviewService, 'getUser').and.callFake(function () {
       var getUserResponse = {
         user: _.cloneDeep(_this.updatedUser),
-        sqEntitlements: _this.Utils.getSqEntitlements(_this.updatedUser)
+        sqEntitlements: _this.Utils.getSqEntitlements(_this.updatedUser),
       };
       getUserResponse.user.hasEntitlement = function (entitlement) {
         var index = _.findIndex(this.entitlements, function (ent) {
@@ -57,7 +57,7 @@ describe('Controller: UserOverviewCtrl', function () {
       .then(function (response) {
         _this.$stateParams = {
           currentUser: response.user,
-          entitlements: response.sqEntitlements
+          entitlements: response.sqEntitlements,
         };
       });
     this.$scope.$apply();
@@ -70,7 +70,7 @@ describe('Controller: UserOverviewCtrl', function () {
       Config: this.Config,
       Authinfo: this.Authinfo,
       Userservice: this.Userservice,
-      FeatureToggleService: this.FeatureToggleService
+      FeatureToggleService: this.FeatureToggleService,
     });
     this.$scope.$apply();
   }
@@ -134,7 +134,7 @@ describe('Controller: UserOverviewCtrl', function () {
     it('should reload the user data from identity response and set title with givenName and FamilyName', function () {
       this.updatedUser.name = {
         givenName: "Given Name",
-        familyName: "Family Name"
+        familyName: "Family Name",
       };
       this.$scope.$broadcast('entitlementsUpdated');
       this.$scope.$digest();
@@ -143,7 +143,7 @@ describe('Controller: UserOverviewCtrl', function () {
 
     it('should reload the user data from identity response and set subTitleCard to addresses', function () {
       this.updatedUser.addresses.push({
-        "locality": "AddressLine1"
+        "locality": "AddressLine1",
       });
       this.$scope.$broadcast('USER_LIST_UPDATED');
       this.$scope.$digest();
@@ -256,7 +256,7 @@ describe('Controller: UserOverviewCtrl', function () {
         uuid: '111112',
         userStatus: 'pending',
         dirsyncEnabled: true,
-        entitlements: ["squared-call-initiation", "spark", "webex-squared"]
+        entitlements: ["squared-call-initiation", "spark", "webex-squared"],
       };
     });
 

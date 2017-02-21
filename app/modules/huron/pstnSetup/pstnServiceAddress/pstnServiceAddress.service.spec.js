@@ -1,10 +1,11 @@
 'use strict';
 
 describe('Service: PstnServiceAddressService', function () {
-  var $httpBackend, HuronConfig, PstnServiceAddressService;
+  var $httpBackend, $q, HuronConfig, PstnServiceAddressService, FeatureToggleService;
 
   var customerId = '744d58c5-9205-47d6-b7de-a176e3ca431f';
   var siteId = '29c63c1f-83b0-42b9-98ee-85624e4c9234';
+  var carrierId = '4f5f5bf7-0034-4ade-8b1c-db63777f062c';
 
   var customerSiteList = getJSONFixture('huron/json/pstnSetup/customerSiteList.json');
   var customerSite = getJSONFixture('huron/json/pstnSetup/customerSite.json');
@@ -13,17 +14,19 @@ describe('Service: PstnServiceAddressService', function () {
 
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function (_$httpBackend_, _HuronConfig_, _PstnServiceAddressService_) {
+  beforeEach(inject(function (_$httpBackend_, _$q_, _HuronConfig_, _PstnServiceAddressService_, _FeatureToggleService_) {
     $httpBackend = _$httpBackend_;
+    $q = _$q_;
     HuronConfig = _HuronConfig_;
     PstnServiceAddressService = _PstnServiceAddressService_;
+    FeatureToggleService = _FeatureToggleService_;
 
     address = {
       streetAddress: '123 My Street Drive',
       unit: 'Apt 100',
       city: 'Richardson',
       state: 'TX',
-      zip: '75082'
+      zip: '75082',
     };
 
     terminusAddress = {
@@ -31,7 +34,7 @@ describe('Service: PstnServiceAddressService', function () {
       address2: 'Apt 100',
       city: 'Richardson',
       state: 'TX',
-      zip: '75082'
+      zip: '75082',
     };
 
     serviceAddress = {
@@ -43,7 +46,7 @@ describe('Service: PstnServiceAddressService', function () {
       serviceAddressSub: 'Apt 100',
       serviceCity: 'Richardson',
       serviceState: 'TX',
-      serviceZip: '75082'
+      serviceZip: '75082',
     };
   }));
 
@@ -52,11 +55,35 @@ describe('Service: PstnServiceAddressService', function () {
     $httpBackend.verifyNoOutstandingRequest();
   });
 
-  it('should lookup an address through terminus and find a match', function () {
+  it('should lookup an address through terminus using V1 API and find a match', function () {
     $httpBackend.expectPOST(HuronConfig.getTerminusUrl() + '/lookup/e911', terminusAddress).respond({
-      addresses: [terminusAddress]
+      addresses: [terminusAddress],
     });
     PstnServiceAddressService.lookupAddress(address).then(function (response) {
+      expect(response).toEqual(jasmine.objectContaining(address));
+    });
+    $httpBackend.flush();
+  });
+
+  it('should lookup an address through terminus using V2 API as feature toggle is True, and find a match', function () {
+    FeatureToggleService.supports = jasmine.createSpy().and.returnValue($q.resolve(true));
+
+    $httpBackend.expectPOST(HuronConfig.getTerminusV2Url() + '/carriers/' + carrierId + '/e911/lookup').respond({
+      addresses: [terminusAddress],
+    });
+    PstnServiceAddressService.lookupAddressV2(address, carrierId).then(function (response) {
+      expect(response).toEqual(jasmine.objectContaining(address));
+    });
+    $httpBackend.flush();
+  });
+
+  it('should lookup an address through terminus using V1 API as feature toggle is False, and find a match', function () {
+    FeatureToggleService.supports = jasmine.createSpy().and.returnValue($q.resolve(false));
+
+    $httpBackend.expectPOST(HuronConfig.getTerminusUrl() + '/lookup/e911', terminusAddress).respond({
+      addresses: [terminusAddress],
+    });
+    PstnServiceAddressService.lookupAddressV2(address, carrierId).then(function (response) {
       expect(response).toEqual(jasmine.objectContaining(address));
     });
     $httpBackend.flush();
@@ -78,8 +105,8 @@ describe('Service: PstnServiceAddressService', function () {
           "serviceAddressSub": "Apt 100",
           "serviceCity": "Richardson",
           "serviceState": "TX",
-          "serviceZip": "75082"
-        }
+          "serviceZip": "75082",
+        },
       })]);
     });
     $httpBackend.flush();
@@ -88,7 +115,7 @@ describe('Service: PstnServiceAddressService', function () {
   it('should create a customer site', function () {
     $httpBackend.expectPOST(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/sites', {
       name: 'Test Customer Site',
-      serviceAddress: serviceAddress
+      serviceAddress: serviceAddress,
     }).respond(201);
     PstnServiceAddressService.createCustomerSite(customerId, 'Test Customer Site', address);
     $httpBackend.flush();
@@ -109,7 +136,7 @@ describe('Service: PstnServiceAddressService', function () {
       unit: '',
       city: 'Menomonee Falls',
       state: 'WI',
-      zip: '53051'
+      zip: '53051',
     };
 
     var irregularServiceAddress = {
@@ -121,12 +148,12 @@ describe('Service: PstnServiceAddressService', function () {
       serviceAddressSub: '',
       serviceCity: 'Menomonee Falls',
       serviceState: 'WI',
-      serviceZip: '53051'
+      serviceZip: '53051',
     };
 
     $httpBackend.expectPOST(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/sites', {
       name: 'Irregular Test Customer Site',
-      serviceAddress: irregularServiceAddress
+      serviceAddress: irregularServiceAddress,
     }).respond(201);
     PstnServiceAddressService.createCustomerSite(customerId, 'Irregular Test Customer Site', irregularAddress);
     $httpBackend.flush();
@@ -137,7 +164,7 @@ describe('Service: PstnServiceAddressService', function () {
       $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/sites').respond(customerSiteList);
       $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/sites/' + siteId).respond(customerSite);
       $httpBackend.expectPUT(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/sites/' + siteId, {
-        serviceAddress: serviceAddress
+        serviceAddress: serviceAddress,
       }).respond(200);
     });
     afterEach(function () {

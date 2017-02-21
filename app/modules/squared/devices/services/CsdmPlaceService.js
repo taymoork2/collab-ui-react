@@ -19,7 +19,7 @@
 
     function updateItemName(place, name) {
       return $http.patch(place.url, {
-        name: name
+        name: name,
       }).then(function (res) {
         res.data.type = place.type;
         return CsdmConverter.convertPlace(res.data);
@@ -50,7 +50,7 @@
         directoryNumber: directoryNumber,
         externalNumber: externalNumber,
         entitlements: entitlements,
-        machineType: machineType
+        machineType: machineType,
       }).then(function (res) {
         var convertedPlace = CsdmConverter.convertPlace(res.data);
         // TODO: Don't need to set these here when CSDM returns the lines on place creation
@@ -64,7 +64,7 @@
       return $http.patch(placeUrl, {
         directoryNumber: directoryNumber,
         externalNumber: externalNumber,
-        entitlements: entitlements
+        entitlements: entitlements,
       }).then(function (res) {
         return CsdmConverter.convertPlace(res.data);
       });
@@ -79,7 +79,7 @@
       getPlacesList: getPlacesList,
       updateItemName: updateItemName,
       getPlacesUrl: getPlacesUrl,
-      updatePlace: updatePlace
+      updatePlace: updatePlace,
     };
   }
 

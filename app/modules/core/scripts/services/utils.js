@@ -112,7 +112,7 @@
           }
         }
         return string;
-      }
+      },
     };
 
     var getDeepKeyValues = function (obj, key) {
@@ -284,7 +284,7 @@
         } else {
           return "";
         }
-      }
+      },
 
     };
   }

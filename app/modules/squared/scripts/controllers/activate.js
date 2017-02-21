@@ -19,7 +19,7 @@
       provisionSuccess: false,
       codeExpired: false,
       resendSuccess: false,
-      errmsg: false
+      errmsg: false,
     };
 
     var hideAllMessages = function () {

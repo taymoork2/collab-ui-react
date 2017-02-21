@@ -15,19 +15,19 @@
       REPEAT_NAME: "repeatActionsOnInput",
       LABEL: "label",
       VALUE: "value",
-      HEADER_TYPE: "MENU_OPTION_ANNOUNCEMENT"
+      HEADER_TYPE: "MENU_OPTION_ANNOUNCEMENT",
     };
 
     var messageType = {
       ACTION: 1,
       MENUHEADER: 2,
       MENUKEY: 3,
-      SUBMENU_HEADER: 4
+      SUBMENU_HEADER: 4,
     };
 
     var actionType = {
       PLAY: 0,
-      SAY: 1
+      SAY: 1,
     };
 
     var holdActionDesc;
@@ -41,17 +41,17 @@
 
     vm.messageOption = {
       label: '',
-      value: ''
+      value: '',
     };
 
     vm.messageOptions = [{
       "label": $translate.instant('autoAttendant.uploadedFile'),
       "value": "uploadFile",
-      "action": "play"
+      "action": "play",
     }, {
       "label": $translate.instant('autoAttendant.actionSayMessage'),
       "value": "sayMessage",
-      "action": "say"
+      "action": "say",
     }];
 
     vm.messageType = messageType.ACTION;

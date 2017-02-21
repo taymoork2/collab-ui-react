@@ -23,16 +23,16 @@ describe('ServiceStatusSummaryService', function () {
       services: [{
         service_type: "c_cal",
         connectors: [{
-          state: "running"
+          state: "running",
         }, {
           alarms: [{
-            alarm: "isRaised"
+            alarm: "isRaised",
           }],
-          state: "downloading"
+          state: "downloading",
         }, {
-          state: "disabled"
-        }]
-      }]
+          state: "disabled",
+        }],
+      }],
     };
     var aggregated = Service.clusterAggregatedStatus("c_cal", clusterMockData);
     expect(aggregated).toEqual("alarm");
@@ -85,37 +85,37 @@ describe('ServiceStatusSummaryService', function () {
           release_note: "no release note for this test data",
           service: {
             display_name: "calendar connector",
-            service_type: "c_cal"
+            service_type: "c_cal",
           },
           tlp_url: "whatever_url",
-          version: "1.2.3.4"
-        }]
+          version: "1.2.3.4",
+        }],
       },
       services: [{
         service_type: "c_cal",
         connectors: [{
-          state: "running"
+          state: "running",
         }, {
           alarms: [{
-            alarm: "isRaised"
+            alarm: "isRaised",
           }],
-          state: "downloading"
+          state: "downloading",
         }, {
-          state: "disabled"
-        }]
+          state: "disabled",
+        }],
       }, {
         service_type: "c_ucmc",
         connectors: [{
-          state: "running"
+          state: "running",
         }, {
           alarms: [{
-            alarm: "isRaised"
+            alarm: "isRaised",
           }],
-          state: "downloading"
+          state: "downloading",
         }, {
-          state: "disabled"
-        }]
-      }]
+          state: "disabled",
+        }],
+      }],
     };
 
     var software = Service.softwareUpgradeAvailable("c_cal", clusterMockData);
@@ -130,16 +130,16 @@ describe('ServiceStatusSummaryService', function () {
       services: [{
         service_type: "c_cal",
         connectors: [{
-          state: "running"
+          state: "running",
         }, {
           alarms: [{
-            alarm: "isRaised"
+            alarm: "isRaised",
           }],
-          state: "downloading"
+          state: "downloading",
         }, {
-          state: "disabled"
-        }]
-      }]
+          state: "disabled",
+        }],
+      }],
     };
 
     var software = Service.softwareUpgradeAvailable("c_cal", clusterMockData);
@@ -157,13 +157,13 @@ describe('ServiceStatusSummaryService', function () {
       services: [{
         service_type: "c_cal",
         connectors: [{
-          state: "a"
+          state: "a",
         }, {
-          state: "b"
+          state: "b",
         }, {
-          state: "c"
-        }]
-      }]
+          state: "c",
+        }],
+      }],
     };
 
     var generated = createAClusterMockWithGivenStates("a", "b", "c");
@@ -182,10 +182,10 @@ describe('ServiceStatusSummaryService', function () {
         "connectors": [{
           "host": {
             "host_name": "host1.cisco.com",
-            "serial": "9999-host1.cisco.com"
+            "serial": "9999-host1.cisco.com",
           },
-          "state": "running"
-        }]
+          "state": "running",
+        }],
       }, {
         "service_type": "c_cal",
         "enabled": true,
@@ -193,11 +193,11 @@ describe('ServiceStatusSummaryService', function () {
         "connectors": [{
           "host": {
             "host_name": "host1.cisco.com",
-            "serial": "9999-host1.cisco.com"
+            "serial": "9999-host1.cisco.com",
           },
-          "state": "running"
-        }]
-      }]
+          "state": "running",
+        }],
+      }],
     }, {
       "id": "9876-cluster2",
       "cluster_type": "c_mgmt",
@@ -209,16 +209,16 @@ describe('ServiceStatusSummaryService', function () {
         "connectors": [{
           "host": {
             "host_name": "host2.cisco.com",
-            "serial": "9999-host2.cisco.com"
+            "serial": "9999-host2.cisco.com",
           },
-          "state": "running"
+          "state": "running",
         }, {
           "host": {
             "host_name": "host3.cisco.com",
-            "serial": "9999-host3.cisco.com"
+            "serial": "9999-host3.cisco.com",
           },
-          "state": "running"
-        }]
+          "state": "running",
+        }],
       }, {
         "service_type": "c_cal",
         "enabled": true,
@@ -226,17 +226,17 @@ describe('ServiceStatusSummaryService', function () {
         "connectors": [{
           "host": {
             "host_name": "host2.cisco.com",
-            "serial": "9999-host2.cisco.com"
+            "serial": "9999-host2.cisco.com",
           },
-          "state": "running"
+          "state": "running",
         }, {
           "host": {
             "host_name": "host3.cisco.com",
-            "serial": "9999-host3.cisco.com"
+            "serial": "9999-host3.cisco.com",
           },
-          "state": "running"
-        }]
-      }]
+          "state": "running",
+        }],
+      }],
     }];
 
     var cluster1 = createCompleteClustersMockData("cluster1", ["c_mgmt", "c_cal"], ["host1.cisco.com"]);
@@ -251,7 +251,7 @@ describe('ServiceStatusSummaryService', function () {
     var connectorsArray = [];
     _.each(arguments, function (state) {
       connectorsArray.push({
-        state: state
+        state: state,
       });
     });
 
@@ -259,8 +259,8 @@ describe('ServiceStatusSummaryService', function () {
       id: 0,
       services: [{
         service_type: "c_cal",
-        connectors: connectorsArray
-      }]
+        connectors: connectorsArray,
+      }],
     };
   };
 
@@ -271,9 +271,9 @@ describe('ServiceStatusSummaryService', function () {
       connectors.push({
         host: {
           host_name: host,
-          serial: "9999-" + host
+          serial: "9999-" + host,
         },
-        state: "running"
+        state: "running",
       });
     });
 
@@ -293,7 +293,7 @@ describe('ServiceStatusSummaryService', function () {
         service_type: serviceType,
         enabled: true,
         display_name: displayName(serviceType),
-        connectors: connectors
+        connectors: connectors,
       });
     });
 
@@ -301,7 +301,7 @@ describe('ServiceStatusSummaryService', function () {
       id: "9876-" + clusterName,
       cluster_type: "c_mgmt",
       name: clusterName,
-      services: services
+      services: services,
     };
   };
 

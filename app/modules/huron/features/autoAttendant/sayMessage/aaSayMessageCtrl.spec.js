@@ -6,7 +6,7 @@ describe('Controller: AASayMessageCtrl', function () {
   var $rootScope, $scope;
 
   var aaUiModel = {
-    openHours: {}
+    openHours: {},
   };
   var schedule = 'openHours';
   var index = '0';
@@ -74,7 +74,7 @@ describe('Controller: AASayMessageCtrl', function () {
     beforeEach(inject(function ($controller) {
       $scope = $rootScope;
       controller = $controller('AASayMessageCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
       $scope.$apply();
 
@@ -150,7 +150,7 @@ describe('Controller: AASayMessageCtrl', function () {
       aaUiModel[schedule]['entries'][index] = menu;
 
       controller = $controller('AASayMessageCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
       $scope.$apply();
     }));
@@ -201,7 +201,7 @@ describe('Controller: AASayMessageCtrl', function () {
       menu.entries.push(keyEntry);
 
       controller = $controller('AASayMessageCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
       $scope.$apply();
     }));
@@ -243,7 +243,7 @@ describe('Controller: AASayMessageCtrl', function () {
       AutoAttendantCeMenuModelService.clearCeMenuMap();
       getBasePhoneMenuWithHeader();
       controller = $controller('AASayMessageCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
       $scope.$apply();
     }));
@@ -284,7 +284,7 @@ describe('Controller: AASayMessageCtrl', function () {
       menu.entries[index] = submenu;
 
       controller = $controller('AASayMessageCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
       $scope.$apply();
 
@@ -345,7 +345,7 @@ describe('Controller: AASayMessageCtrl', function () {
       menu.entries[index] = submenu;
 
       controller = $controller('AASayMessageCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
       $scope.$apply();
 
@@ -388,7 +388,7 @@ describe('Controller: AASayMessageCtrl', function () {
       keyEntry.addAction(emptyAction);
       menu.entries.push(keyEntry);
       controller = $controller('AASayMessageCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
       $scope.$apply();
 
@@ -431,7 +431,7 @@ describe('Controller: AASayMessageCtrl', function () {
       menu.entries.push(keyEntry);
 
       controller = $controller('AASayMessageCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
       $scope.$apply();
     }));

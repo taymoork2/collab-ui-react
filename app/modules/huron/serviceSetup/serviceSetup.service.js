@@ -14,13 +14,13 @@
 
       createSite: function (site) {
         return SiteService.save({
-          customerId: Authinfo.getOrgId()
+          customerId: Authinfo.getOrgId(),
         }, site).$promise;
       },
 
       listSites: function () {
         return SiteService.query({
-          customerId: Authinfo.getOrgId()
+          customerId: Authinfo.getOrgId(),
         }, angular.bind(this, function (sites) {
           this.sites = sites;
         })).$promise;
@@ -29,28 +29,28 @@
       getSite: function (siteUuid) {
         return SiteService.get({
           customerId: Authinfo.getOrgId(),
-          siteId: siteUuid
+          siteId: siteUuid,
         }).$promise;
       },
 
       getAvrilSite: function (siteUuid) {
         return AvrilSiteUpdateService.get({
           customerId: Authinfo.getOrgId(),
-          siteId: siteUuid
+          siteId: siteUuid,
         }).$promise;
       },
 
       updateSite: function (siteUuid, site) {
         return SiteService.update({
           customerId: Authinfo.getOrgId(),
-          siteId: siteUuid
+          siteId: siteUuid,
         }, site).$promise;
       },
 
       updateAvrilSite: function (siteUuid, features) {
         return AvrilSiteUpdateService.update({
           customerId: Authinfo.getOrgId(),
-          siteId: siteUuid
+          siteId: siteUuid,
         }, features).$promise;
       },
 
@@ -63,13 +63,13 @@
           language: lang,
           timeZone: timezone,
           extensionLength: extLength,
-          pilotNumber: voicemailPilotNumber
+          pilotNumber: voicemailPilotNumber,
         }).$promise;
       },
 
       saveAutoAttendantSite: function (site) {
         return CeSiteService.save({
-          customerId: Authinfo.getOrgId()
+          customerId: Authinfo.getOrgId(),
         }, site).$promise;
       },
 
@@ -84,7 +84,7 @@
           _.forEach(extPool, function (extNum) {
             extNumPool.push({
               uuid: extNum.uuid,
-              pattern: extNum.pattern
+              pattern: extNum.pattern,
             });
           });
           this.externalNumberPool = extNumPool;
@@ -94,44 +94,44 @@
       listVoicemailTimezone: function () {
         return VoicemailTimezoneService.query({
           query: '(alias startswith ' + Authinfo.getOrgId() + ')',
-          customerId: Authinfo.getOrgId()
+          customerId: Authinfo.getOrgId(),
         }).$promise;
       },
 
       updateVoicemailTimezone: function (timeZone, objectId) {
         return VoicemailTimezoneService.update({
           customerId: Authinfo.getOrgId(),
-          objectId: objectId
+          objectId: objectId,
         }, {
-          timeZoneName: timeZone
+          timeZoneName: timeZone,
         }).$promise;
       },
 
       updateVoicemailPostalcode: function (postalCode, objectId) {
         return VoicemailTimezoneService.update({
           customerId: Authinfo.getOrgId(),
-          objectId: objectId
+          objectId: objectId,
         }, {
-          postalCode: postalCode
+          postalCode: postalCode,
         }).$promise;
       },
 
       updateVoicemailUserTemplate: function (payload, objectId) {
         return VoicemailTimezoneService.update({
           customerId: Authinfo.getOrgId(),
-          objectId: objectId
+          objectId: objectId,
         }, payload).$promise;
       },
 
       getVoicemailPilotNumber: function () {
         return VoicemailService.get({
-          customerId: Authinfo.getOrgId()
+          customerId: Authinfo.getOrgId(),
         }).$promise;
       },
 
       updateCustomer: function (customer) {
         return CustomerCommonService.update({
-          customerId: Authinfo.getOrgId()
+          customerId: Authinfo.getOrgId(),
         }, customer).$promise;
       },
 
@@ -140,7 +140,7 @@
           internalNumberRange.name = internalNumberRange.description = internalNumberRange.beginNumber + ' - ' + internalNumberRange.endNumber;
           internalNumberRange.patternUsage = "Device";
           return InternalNumberRangeService.save({
-            customerId: Authinfo.getOrgId()
+            customerId: Authinfo.getOrgId(),
           }, internalNumberRange, function (data, headers) {
             internalNumberRange.uuid = headers('location').split("/").pop();
           }).$promise;
@@ -155,7 +155,7 @@
           internalNumberRange.patternUsage = "Device";
           return InternalNumberRangeService.save({
             customerId: Authinfo.getOrgId(),
-            internalNumberRangeId: internalNumberRange.uuid
+            internalNumberRangeId: internalNumberRange.uuid,
           }, internalNumberRange, function (data, headers) {
             internalNumberRange.uuid = headers('location').split("/").pop();
           }).$promise;
@@ -167,13 +167,13 @@
       deleteInternalNumberRange: function (internalNumberRange) {
         return InternalNumberRangeService.delete({
           customerId: Authinfo.getOrgId(),
-          internalNumberRangeId: internalNumberRange.uuid
+          internalNumberRangeId: internalNumberRange.uuid,
         }).$promise;
       },
 
       listInternalNumberRanges: function () {
         return InternalNumberRangeService.query({
-          customerId: Authinfo.getOrgId()
+          customerId: Authinfo.getOrgId(),
         }, angular.bind(this, function (internalNumberRanges) {
           this.internalNumberRanges = internalNumberRanges;
         })).$promise;
@@ -194,7 +194,7 @@
       getTranslatedTimeZones: function (timeZones) {
         var localizedTimeZones = _.map(timeZones, function (timeZone) {
           return _.extend(timeZone, {
-            label: $translate.instant('timeZones.' + timeZone.id)
+            label: $translate.instant('timeZones.' + timeZone.id),
           });
         });
         return localizedTimeZones;
@@ -220,7 +220,7 @@
       getTranslatedSiteLanguages: function (languages) {
         var localizedLanguages = _.map(languages, function (language) {
           return _.assign(language, {
-            label: $translate.instant(language.label)
+            label: $translate.instant(language.label),
           });
         });
         return localizedLanguages;
@@ -235,7 +235,7 @@
       getTranslatedSiteCountries: function (countries) {
         var localizedCountries = _.map(countries, function (country) {
           return _.assign(country, {
-            label: $translate.instant(country.label)
+            label: $translate.instant(country.label),
           });
         });
         return localizedCountries;
@@ -247,7 +247,7 @@
 
       listCosRestrictions: function () {
         return CustomerCosRestrictionServiceV2.get({
-          customerId: Authinfo.getOrgId()
+          customerId: Authinfo.getOrgId(),
         }, angular.bind(this, function (cosRestrictions) {
           this.cosRestrictions = cosRestrictions;
         })).$promise;
@@ -257,12 +257,12 @@
         if ((cosUuid != null) && (cosEnabled)) {
           return CustomerCosRestrictionServiceV2.delete({
             customerId: Authinfo.getOrgId(),
-            restrictionId: cosUuid
+            restrictionId: cosUuid,
           }).$promise;
         } else if ((cosUuid == null) && (!cosEnabled)) {
           return CustomerCosRestrictionServiceV2.save({
             customerId: Authinfo.getOrgId(),
-            restrictionId: cosUuid
+            restrictionId: cosUuid,
           }, cosType).$promise;
         } else {
           return $q.resolve();
@@ -279,7 +279,7 @@
         str = countrycode + _.replace(str, /^0+/, "");
         var generatedVoicemailNumber = $filter('limitTo')(str, 40, 0);
         return generatedVoicemailNumber;
-      }
+      },
     };
 
     function filterFeatureToggleEnabledCountries(countries) {

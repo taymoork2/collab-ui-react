@@ -16,7 +16,7 @@ describe('WebexClientVersion Test', function () {
     UrlConfig = _UrlConfig_;
 
     clientVersions1 = {
-      "clientVersions": ["c1", "c2", "c3"]
+      "clientVersions": ["c1", "c2", "c3"],
     };
 
   }));

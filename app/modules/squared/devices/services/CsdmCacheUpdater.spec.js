@@ -12,13 +12,13 @@ describe('Service: CsdmCacheUpdaterSpec', function () {
   it('keep object reference for unchanged collections', function () {
     var a = {
       foo: {
-        a: 1
-      }
+        a: 1,
+      },
     };
     var b = {
       foo: {
-        a: 1
-      }
+        a: 1,
+      },
     };
 
     var aRef = a.foo;
@@ -31,13 +31,13 @@ describe('Service: CsdmCacheUpdaterSpec', function () {
   it('should update when props are changed', function () {
     var a = {
       foo: {
-        a: 1
-      }
+        a: 1,
+      },
     };
     var b = {
       foo: {
-        a: 2
-      }
+        a: 2,
+      },
     };
     var aRef = a.foo;
 
@@ -50,14 +50,14 @@ describe('Service: CsdmCacheUpdaterSpec', function () {
   it('should update when objs are added', function () {
     var a = {
       foo: {
-        a: 1
-      }
+        a: 1,
+      },
     };
     var b = {
       foo: {
-        a: 1
+        a: 1,
       },
-      bar: {}
+      bar: {},
     };
     var aRef = a.foo;
 
@@ -70,14 +70,14 @@ describe('Service: CsdmCacheUpdaterSpec', function () {
   it('should update when objs are removed', function () {
     var a = {
       foo: {
-        a: 1
+        a: 1,
       },
-      bar: {}
+      bar: {},
     };
     var b = {
       foo: {
-        a: 1
-      }
+        a: 1,
+      },
     };
     var aRef = a.foo;
 

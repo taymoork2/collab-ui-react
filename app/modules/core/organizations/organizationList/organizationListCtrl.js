@@ -23,7 +23,7 @@ require('./_organization-list.scss');
     $scope.placeholder = {
       name: $translate.instant('organizationsPage.search'),
       filterValue: '',
-      count: 0
+      count: 0,
     };
 
     $scope.filters = [];
@@ -70,7 +70,7 @@ require('./_organization-list.scss');
     function initializeGrid() {
       $scope.sort = {
         by: 'displayName',
-        order: 'ascending'
+        order: 'ascending',
       };
 
       var actionsTemplate = '<span cs-dropdown class="actions-menu">' +
@@ -103,19 +103,19 @@ require('./_organization-list.scss');
         columnDefs: [{
           field: 'displayName',
           displayName: $translate.instant('organizationsPage.displayName'),
-          sortable: true
+          sortable: true,
         }, {
           field: 'action',
           displayName: $translate.instant('usersPage.actionHeader'),
           sortable: false,
-          cellTemplate: actionsTemplate
-        }]
+          cellTemplate: actionsTemplate,
+        }],
       };
     }
 
     function showOrganizationDetails(currentOrganization) {
       $state.go('organization-overview', {
-        currentOrganization: currentOrganization
+        currentOrganization: currentOrganization,
       });
     }
 

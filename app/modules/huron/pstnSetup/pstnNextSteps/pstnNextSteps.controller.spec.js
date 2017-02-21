@@ -23,7 +23,7 @@ describe('Controller: PstnNextStepsCtrl', function () {
     spyOn($window, 'open');
 
     controller = $controller('PstnNextStepsCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
 
     $httpBackend
@@ -42,7 +42,7 @@ describe('Controller: PstnNextStepsCtrl', function () {
     it('should create proper url', function () {
       expect($state.href).toHaveBeenCalledWith('login_swap', {
         customerOrgId: customer.uuid,
-        customerOrgName: customer.name
+        customerOrgName: customer.name,
       });
     });
 

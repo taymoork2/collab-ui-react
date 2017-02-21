@@ -6,7 +6,7 @@
     .controller('HelpdeskUserController', HelpdeskUserController);
 
   /* @ngInject */
-  function HelpdeskUserController($modal, $q, $stateParams, $translate, $window, Authinfo, Config, FeatureToggleService, HelpdeskCardsUserService, HelpdeskHuronService, HelpdeskLogService, HelpdeskService, LicenseService, Notification, USSService, WindowLocation, FusionUtils, ClusterService, Userservice, ResourceGroupService, UCCService) {
+  function HelpdeskUserController($modal, $q, $stateParams, $translate, $window, Authinfo, Config, FeatureToggleService, HelpdeskCardsUserService, HelpdeskHuronService, HelpdeskLogService, HelpdeskService, LicenseService, Notification, USSService, WindowLocation, FusionUtils, FusionClusterService, Userservice, ResourceGroupService, UCCService) {
     var vm = this;
     var SUPPRESSED_STATE = {
       LOADING: 'loading',
@@ -22,7 +22,7 @@
       vm.userId = $stateParams.id;
       vm.orgId = $stateParams.orgId;
       vm.org = {
-        id: $stateParams.orgId
+        id: $stateParams.orgId,
       };
     }
     vm.resendInviteEmail = resendInviteEmail;
@@ -45,7 +45,7 @@
     vm.hasEmailProblem = hasEmailProblem;
     vm.clear = clear;
     vm._helpers = {
-      notifyError: notifyError
+      notifyError: notifyError,
     };
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasHelpDeskExt).then(function (result) {
@@ -60,7 +60,7 @@
       var trimmedUserData = {
         displayName: vm.user.displayName,
         email: vm.user.userName,
-        onlineOrderIds: _.get(vm.user, 'onlineOrderIds', [])
+        onlineOrderIds: _.get(vm.user, 'onlineOrderIds', []),
       };
       HelpdeskService.resendInviteEmail(trimmedUserData)
         .then(function () {
@@ -97,8 +97,8 @@
             },
             data: function () {
               return vm.user;
-            }
-          }
+            },
+          },
         });
       }
     }
@@ -265,7 +265,7 @@
       var TOTAL_ENDPOINTS = 3;
 
       var wrappedEmailEvent = {
-        emailEvent: emailEvent
+        emailEvent: emailEvent,
       };
 
       // notes:
@@ -406,9 +406,10 @@
             if (status.lastStateChange) {
               status.lastStateChangeText = FusionUtils.getTimeSinceText(status.lastStateChange);
             }
-            if (status.connectorId) {
-              ClusterService.getConnector(status.connectorId).then(function (connector) {
-                status.homedConnector = connector;
+            if (status.clusterId) {
+              FusionClusterService.get(status.clusterId, vm.orgId).then(function (cluster) {
+                status.homedCluster = cluster;
+                status.homedConnector = _.find(cluster.connectors, { id: status.connectorId });
               });
             }
             if (status.resourceGroupId) {
@@ -498,8 +499,8 @@
               },
               data: function () {
                 return hsData;
-              }
-            }
+              },
+            },
           });
         })
         .catch(function (error) {

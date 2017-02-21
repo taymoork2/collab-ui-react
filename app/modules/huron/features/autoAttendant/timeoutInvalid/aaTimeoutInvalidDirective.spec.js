@@ -8,8 +8,8 @@ describe('Directive: aaTimeOutInvalid', function () {
   var aaUiModel = {
     openHours: {},
     ceInfo: {
-      name: 'aa'
-    }
+      name: 'aa',
+    },
   };
 
   var schedule = 'openHours';

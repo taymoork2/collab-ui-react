@@ -15,7 +15,7 @@
     /* User alias */
     vm.aliasFormModel = [];
     vm.aliasMessages = {
-      required: $translate.instant('common.invalidRequired')
+      required: $translate.instant('common.invalidRequired'),
     };
 
     vm.alias = [{
@@ -24,14 +24,14 @@
       templateOptions: {
         type: 'text',
         required: true,
-        maxlength: 50
-      }
+        maxlength: 50,
+      },
     }];
 
     /* User roles */
     vm.roles = [
       $translate.instant('contactCenterUserConfig.userRoles.user'),
-      $translate.instant('contactCenterUserConfig.userRoles.supervisor')
+      $translate.instant('contactCenterUserConfig.userRoles.supervisor'),
     ];
 
     /* By default "User" role is selected for new user */
@@ -56,7 +56,7 @@
 
       if (!updatedUserInfo.alias) {
         Notification.error('contactCenterUserConfig.failureMessages.emptyAliasErrorMessage', {
-          userId: vm.currentUser.userName
+          userId: vm.currentUser.userName,
         });
         return;
       }
@@ -65,13 +65,13 @@
         .then(function () {
           vm.hideSaveCancel();
           Notification.success('contactCenterUserConfig.successMessages.userUpdateSuccessMessage', {
-            userId: vm.currentUser.userName
+            userId: vm.currentUser.userName,
           });
 
         }, function (response) {
           Log.debug('Failed to save sunlight user information in sunlight config Service. Status: ' + response.status + ' statusText: ' + response.statusText);
           Notification.errorWithTrackingId(response, 'contactCenterUserConfig.failureMessages.userUpdateFailureMessage', {
-            userId: vm.currentUser.userName
+            userId: vm.currentUser.userName,
           });
         });
     };
@@ -95,7 +95,7 @@
         }, function (response) {
           Log.debug('Failed to retrieve sunlight user information from sunlight config Service with Status: ' + response.status + ' statusText: ' + response.statusText);
           Notification.error('contactCenterUserConfig.failureMessages.userloadFailureMessage', {
-            userId: vm.currentUser.userName
+            userId: vm.currentUser.userName,
           });
         });
     };

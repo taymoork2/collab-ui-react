@@ -11,8 +11,8 @@ describe('Controller: TypeSelectorController', function () {
     $rootScope = _$rootScope_;
     $stateParams = {
       wizard: {
-        next: function () {}
-      }
+        next: function () {},
+      },
     };
     Authinfo = _Authinfo_;
     FusionClusterService = _FusionClusterService_;
@@ -95,7 +95,7 @@ describe('Controller: TypeSelectorController', function () {
       expect(controller.hasSetup).toEqual({
         expressway: true,
         mediafusion: false,
-        context: true
+        context: true,
       });
     });
 

@@ -36,7 +36,7 @@ describe('Service: CsdmDataModelService', function () {
   beforeEach(inject(function (Authinfo) {
     spyOn(Authinfo, 'getOrgId').and.returnValue('testOrg');
     spyOn(Authinfo, 'getLicenses').and.returnValue([{
-      licenseType: 'COMMUNICATION'
+      licenseType: 'COMMUNICATION',
     }]);
   }));
 
@@ -623,7 +623,7 @@ describe('Service: CsdmDataModelService', function () {
 
       var updatedPlace = {
         'url': huronPlaceWithoutDeviceUrl,
-        'devices': { 'http://new/device': { 'url': 'http://new/device' } }
+        'devices': { 'http://new/device': { 'url': 'http://new/device' } },
       };
       $httpBackend.expectGET(placeToUpdateUrl).respond(updatedPlace);
 
@@ -660,7 +660,7 @@ describe('Service: CsdmDataModelService', function () {
       var newDisplayName = 'New display name! Wow!';
       var updatedPlace = {
         'displayName': newDisplayName,
-        'url': huronPlaceWithoutDeviceUrl
+        'url': huronPlaceWithoutDeviceUrl,
       };
       $httpBackend.expectGET(placeToUpdateUrl).respond(updatedPlace);
 
@@ -691,7 +691,7 @@ describe('Service: CsdmDataModelService', function () {
 
       var updatedPlace = {
         'url': pWithDeviceUrl,
-        'devices': {}
+        'devices': {},
       };
       $httpBackend.expectGET(placeToUpdateUrl).respond(updatedPlace);
 
@@ -734,8 +734,8 @@ describe('Service: CsdmDataModelService', function () {
         'sipUrl': newSipUrl,
         'displayName': newName,
         'devices': {
-          deviceToUpdateUrl: { 'url': deviceToUpdateUrl, 'sipUrl': newSipUrl }
-        }
+          deviceToUpdateUrl: { 'url': deviceToUpdateUrl, 'sipUrl': newSipUrl },
+        },
       };
 
       $httpBackend.expectPATCH(placeToUpdateUrl).respond(placeReturnedFromPatch);
@@ -945,7 +945,7 @@ describe('Service: CsdmDataModelService', function () {
       $rootScope.$apply();
 
       CsdmDataModelService.devicePollerOn('data', _.noop, {
-        scope: scope
+        scope: scope,
       });
 
       $rootScope.$digest();
@@ -1013,7 +1013,7 @@ describe('Service: CsdmDataModelService', function () {
           "url": "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/aaaaaa-ed35-4e00-a20d-d4d3519efb4f",
           "createTime": "2016-09-15T01:12:01.105Z",
           "description": "[\"one\", \"two\", \"three\"]",
-          "product": "SX10"
+          "product": "SX10",
         };
 
         $httpBackend.expectGET(devicesUrl).respond(devicesWithOneAdded);

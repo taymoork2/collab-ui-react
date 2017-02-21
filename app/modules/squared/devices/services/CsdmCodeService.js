@@ -8,14 +8,14 @@
 
     function createCodeForExisting(cisUuid) {
       return $http.post(codesUrl, {
-        cisUuid: cisUuid
+        cisUuid: cisUuid,
       }).then(function (res) {
         return CsdmConverter.convertCode(res.data);
       });
     }
 
     return {
-      createCodeForExisting: createCodeForExisting
+      createCodeForExisting: createCodeForExisting,
     };
   }
 

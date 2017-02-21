@@ -30,7 +30,7 @@
     vm.availabilityLegendAllcluster = [{ 'title': vm.availableTitle, 'color': chartColors.metricDarkGreen }, { 'title': vm.unavailableTitle, 'color': chartColors.negativeDarker }, { 'title': vm.partialTitle, 'color': chartColors.attentionBase }];
 
     return {
-      setAvailabilityGraph: setAvailabilityGraph
+      setAvailabilityGraph: setAvailabilityGraph,
     };
 
     function convertToLocalTime(startDate) {
@@ -105,9 +105,9 @@
         "event": "clickItem",
         "method": function (event) {
           $rootScope.$broadcast('clusterClickEvent', {
-            data: event.serialDataItem.category
+            data: event.serialDataItem.category,
           });
-        }
+        },
       }];
       var exportFields = ['startTime', 'endTime', 'nodes', 'availability', 'category'];
       var columnNames = {};
@@ -139,9 +139,9 @@
         "event": "clickGraphItem",
         "method": function (event) {
           $rootScope.$broadcast('clusterClickEvent', {
-            data: event.item.category
+            data: event.item.category,
           });
-        }
+        },
       }];
       var chart = AmCharts.makeChart(vm.availabilitydiv, chartData, 0);
 
@@ -167,12 +167,12 @@
       vm.zoomedEndTime = moment(event.endValue);
       var selectedTime = {
         startTime: vm.zoomedStartTime,
-        endTime: vm.zoomedEndTime
+        endTime: vm.zoomedEndTime,
       };
 
       if ((_.isUndefined(vm.dateSelected.value) && vm.zoomedStartTime !== vm.dateSelected.startTime && vm.zoomedEndTime !== vm.dateSelected.endTime) || (vm.zoomedStartTime !== vm.dateSelected.startTime && vm.zoomedEndTime !== vm.dateSelected.endTime)) {
         $rootScope.$broadcast('zoomedTime', {
-          data: selectedTime
+          data: selectedTime,
         });
       }
     }

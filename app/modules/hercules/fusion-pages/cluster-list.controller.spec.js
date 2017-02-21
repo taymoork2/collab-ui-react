@@ -62,24 +62,24 @@ describe('Controller: FusionClusterListController', function () {
           alarms: [],
           connectorType: 'c_mgmt',
           runningState: 'running',
-          hostname: 'a.elg.no'
-        }]
+          hostname: 'a.elg.no',
+        }],
       }, {
         targetType: 'mf_mgmt',
         connectors: [{
           alarms: [],
           connectorType: 'mf_mgmt',
           runningState: 'running',
-          hostname: 'a.elg.no'
-        }]
+          hostname: 'a.elg.no',
+        }],
       }, {
         targetType: 'cs_mgmt',
         connectors: [{
           alarms: [],
           connectorType: 'cs_mgmt',
           runningState: 'running',
-          hostname: 'a.elg.no'
-        }]
+          hostname: 'a.elg.no',
+        }],
       }]));
       initController();
       expect(controller.filters[0].count).toBe(0);

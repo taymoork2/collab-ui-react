@@ -29,7 +29,7 @@ describe('Controller: HelpdeskOrderController', function () {
       spyOn(HelpdeskService, 'searchOrders').and.returnValue($q.resolve(order1TierJson));
       orderController = $controller('HelpdeskOrderController', {
         HelpdeskService: HelpdeskService,
-        $stateParams: $stateParams
+        $stateParams: $stateParams,
       });
     });
 
@@ -60,8 +60,8 @@ describe('Controller: HelpdeskOrderController', function () {
       sinon.stub(HelpdeskService, 'getOrg');
       var rejectData = {
         data: {
-          errorCode: 420000
-        }
+          errorCode: 420000,
+        },
       };
       var promise = $q.reject(rejectData);
       HelpdeskService.getOrg.returns(promise);
@@ -70,7 +70,7 @@ describe('Controller: HelpdeskOrderController', function () {
       orderController = $controller('HelpdeskOrderController', {
         HelpdeskService: HelpdeskService,
         $stateParams: $stateParams,
-        Notification: Notification
+        Notification: Notification,
       });
 
       $scope.$apply();
@@ -85,7 +85,7 @@ describe('Controller: HelpdeskOrderController', function () {
       spyOn(HelpdeskService, 'searchOrders').and.returnValue($q.resolve(order2TierJson));
       orderController = $controller('HelpdeskOrderController', {
         HelpdeskService: HelpdeskService,
-        $stateParams: $stateParams
+        $stateParams: $stateParams,
       });
     });
 
@@ -105,7 +105,7 @@ describe('Controller: HelpdeskOrderController', function () {
       $stateParams.id = '67891234';
       spyOn(HelpdeskService, 'searchOrders').and.returnValue($.when(order1TierJson));
       orderController = $controller('HelpdeskOrderController', {
-        $stateParams: $stateParams
+        $stateParams: $stateParams,
       });
     });
 

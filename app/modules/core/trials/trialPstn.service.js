@@ -43,13 +43,13 @@
             companyName: '',
             signeeFirstName: '',
             signeeLastName: '',
-            email: ''
+            email: '',
           },
           pstnNumberInfo: {
             state: {},
             areaCode: {},
             nxx: {},
-            numbers: []
+            numbers: [],
           },
           pstnOrderData: [],
           emergAddr: {
@@ -57,9 +57,9 @@
             unit: '',
             city: '',
             state: '',
-            zip: ''
-          }
-        }
+            zip: '',
+          },
+        },
       };
 
       _trialData = angular.copy(defaults);
@@ -126,11 +126,11 @@
         ).then(function (reservationData) {
           var order = {
             data: {
-              numbers: reservationData.numbers
+              numbers: reservationData.numbers,
             },
             numberType: PstnSetupService.NUMTYPE_DID,
             orderType: PstnSetupService.NUMBER_ORDER,
-            reservationId: reservationData.uuid
+            reservationId: reservationData.uuid,
           };
           _trialData.details.pstnOrderData.push(order);
         }).catch(function (response) {
@@ -201,7 +201,7 @@
           unit: _trialData.details.emergAddr.unit,
           city: _trialData.details.emergAddr.city,
           state: _trialData.details.emergAddr.state,
-          zip: _trialData.details.emergAddr.zip
+          zip: _trialData.details.emergAddr.zip,
         };
         return PstnServiceAddressService.createCustomerSite(
           customerOrgId,

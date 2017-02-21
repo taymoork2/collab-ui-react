@@ -15,7 +15,7 @@
       getTemplate: getTemplate,
       formatTemplates: formatTemplates,
       deleteTemplate: deleteTemplate,
-      filterCards: filterCards
+      filterCards: filterCards,
     };
 
     return service;
@@ -23,35 +23,35 @@
     function getChatTemplates() {
       return ConfigTemplateService.query({
         orgId: Authinfo.getOrgId(),
-        mediaType: 'chat'
+        mediaType: 'chat',
       }).$promise;
     }
 
     function getCallbackTemplates() {
       return ConfigTemplateService.query({
         orgId: Authinfo.getOrgId(),
-        mediaType: 'callback'
+        mediaType: 'callback',
       }).$promise;
     }
 
     function getChatPlusCallbackTemplates() {
       return ConfigTemplateService.query({
         orgId: Authinfo.getOrgId(),
-        mediaType: 'chatPlusCallback'
+        mediaType: 'chatPlusCallback',
       }).$promise;
     }
 
     function deleteTemplate(templateId) {
       return ConfigTemplateService.delete({
         orgId: Authinfo.getOrgId(),
-        templateId: templateId
+        templateId: templateId,
       }).$promise;
     }
 
     function getTemplate(templateId) {
       return ConfigTemplateService.get({
         orgId: Authinfo.getOrgId(),
-        templateId: templateId
+        templateId: templateId,
       }).$promise;
     }
 
@@ -64,7 +64,7 @@
 
     function filterCards(list, filterValue, filterText) {
       var filterStringProperties = [
-        'name'
+        'name',
       ];
       var filteredList = _.filter(list, function (feature) {
         if (feature.mediaType !== filterValue && filterValue !== 'all') {

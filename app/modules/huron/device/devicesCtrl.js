@@ -47,7 +47,7 @@
             displayName: data.displayName,
             userName: data.userName,
             cisUuid: data.id,
-            organizationId: data.meta.organizationID
+            organizationId: data.meta.organizationID,
           };
         }
         userDetailsDeferred.resolve();
@@ -88,7 +88,7 @@
     vm.showDeviceDetails = function (device) {
       $state.go('user-overview.csdmDevice', {
         currentDevice: device,
-        huronDeviceService: vm.csdmHuronUserDeviceService
+        huronDeviceService: vm.csdmHuronUserDeviceService,
       });
     };
 
@@ -123,15 +123,15 @@
             organizationId: vm.currentUser.meta.organizationID,
             type: 'personal',
             deviceType: vm.showPersonal ? undefined : 'huron',
-            isEntitledToHuron: isCurrentUserEntitledToHuron()
+            isEntitledToHuron: isCurrentUserEntitledToHuron(),
           },
           recipient: {
             cisUuid: vm.currentUser.id,
             email: email,
             displayName: vm.currentUser.displayName,
             firstName: userFirstName,
-            organizationId: vm.currentUser.meta.organizationID
-          }
+            organizationId: vm.currentUser.meta.organizationID,
+          },
         },
         history: [],
         currentStateName: vm.isOrgEntitledToHuron() && !isCurrentUserEntitledToHuron()
@@ -139,14 +139,14 @@
           : 'addDeviceFlow.showActivationCode',
         wizardState: {
           'addDeviceFlow.confirmRoomDeviceOnly': {
-            next: 'addDeviceFlow.showActivationCode'
+            next: 'addDeviceFlow.showActivationCode',
           },
-          'addDeviceFlow.showActivationCode': {}
-        }
+          'addDeviceFlow.showActivationCode': {},
+        },
       };
       var wizard = WizardFactory.create(wizardState);
       $state.go(wizard.state().currentStateName, {
-        wizard: wizard
+        wizard: wizard,
       });
     };
 

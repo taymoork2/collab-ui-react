@@ -2,10 +2,12 @@
   'use strict';
 
   /* @ngInject */
-  function LoginCtrl($location, $rootScope, $window, $scope, $state, $stateParams, Auth, Authinfo, Config, Log, LogMetricsService, PageParam, SessionStorage, TokenService, Utils) {
+  function LoginCtrl($location, $rootScope, $window, $scope, $state, $stateParams, Auth, Authinfo, Config, Log, LogMetricsService, PageParam, SessionStorage, Storage, TokenService, Utils) {
     var storedState = 'storedState';
     var storedParams = 'storedParams';
     var queryParams = SessionStorage.popObject('queryParams');
+
+    $scope.message = Storage.get('loginMessage');
 
     var pageParam = $location.search().pp;
     if (pageParam) {
@@ -37,7 +39,7 @@
     var authorizeUser = function () {
       $scope.loading = true;
       Auth.authorize({
-        reauthorize: $stateParams.reauthorize
+        reauthorize: $stateParams.reauthorize,
       })
         .then(function () {
           if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {

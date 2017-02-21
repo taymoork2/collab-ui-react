@@ -4,28 +4,28 @@ describe('Service: Number of Participants Graph Service', function () {
   var NumberOfParticipantGraphService;
 
   var validateService = {
-    validate: function () {}
+    validate: function () {},
   };
 
   var numberOfParticipantChart = {
     dataProvider: [],
     startDuration: "",
     balloon: {
-      enabled: false
+      enabled: false,
     },
     chartCursor: {
       valueLineBalloonEnabled: false,
       valueLineEnabled: false,
-      categoryBalloonEnabled: false
+      categoryBalloonEnabled: false,
     },
     validateData: function () {
       return true;
-    }
+    },
   };
 
   var daterange = {
     label: "Last 24 Hours",
-    value: "0"
+    value: "0",
   };
   var numberOfParticipantGraphData = getJSONFixture('mediafusion/json/metrics-graph-report/numberOfParticipant.json');
 

@@ -5,7 +5,7 @@ describe('Care Feature Ctrl should ', function () {
   var controller, $filter, $q, $rootScope, $state, $scope, $timeout, Authinfo, CareFeatureList,
     Log, Notification, deferred, callbackDeferred, chatPlusCallbackDeferred, $translate, FeatureToggleService;
   var spiedAuthinfo = {
-    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('Test-Org-Id')
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('Test-Org-Id'),
   };
 
   var templateList = getJSONFixture('sunlight/json/features/chatTemplates/chatTemplateList.json');
@@ -21,7 +21,7 @@ describe('Care Feature Ctrl should ', function () {
     return {
       'data': 'Internal Server Error',
       'status': 500,
-      'statusText': 'Internal Server Error'
+      'statusText': 'Internal Server Error',
     };
   };
 
@@ -66,7 +66,7 @@ describe('Care Feature Ctrl should ', function () {
       Log: Log,
       Notification: Notification,
       $translate: $translate,
-      FeatureToggleService: FeatureToggleService
+      FeatureToggleService: FeatureToggleService,
     });
   }));
 
@@ -109,7 +109,7 @@ describe('Care Feature Ctrl should ', function () {
     expect($state.go).toHaveBeenCalledWith('care.Features.DeleteFeature', {
       deleteFeatureName: featureTobBeDeleted.name,
       deleteFeatureId: featureTobBeDeleted.templateId,
-      deleteFeatureType: featureTobBeDeleted.featureType
+      deleteFeatureType: featureTobBeDeleted.featureType,
     });
   });
 
@@ -124,7 +124,7 @@ describe('Care Feature Ctrl should ', function () {
     $rootScope.$broadcast('CARE_FEATURE_DELETED', {
       deleteFeatureName: featureTobBeDeleted.name,
       deleteFeatureId: featureTobBeDeleted.templateId,
-      deleteFeatureType: featureTobBeDeleted.featureType
+      deleteFeatureType: featureTobBeDeleted.featureType,
     });
     expect(controller.filteredListOfFeatures).not.toEqual(jasmine.arrayContaining([featureTobBeDeleted]));
   });
@@ -140,7 +140,7 @@ describe('Care Feature Ctrl should ', function () {
     $rootScope.$broadcast('CARE_FEATURE_DELETED', {
       deleteFeatureName: featureTobBeDeleted.name,
       deleteFeatureId: featureTobBeDeleted.templateId,
-      deleteFeatureType: featureTobBeDeleted.featureType
+      deleteFeatureType: featureTobBeDeleted.featureType,
     });
     expect(controller.filteredListOfFeatures).not.toEqual(jasmine.arrayContaining([featureTobBeDeleted]));
     expect(controller.pageState).toEqual('NewFeature');

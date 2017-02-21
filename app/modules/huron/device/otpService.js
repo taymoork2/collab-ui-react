@@ -11,7 +11,7 @@
     var service = {
       hyphenateOtp: hyphenateOtp,
       generateOtp: generateOtp,
-      convertExpiryTime: convertExpiryTime
+      convertExpiryTime: convertExpiryTime,
     };
 
     return service;
@@ -25,7 +25,7 @@
           friendlyCode: hyphenateOtp(data.password),
           expiresOn: data.expiresOn,
           friendlyExpiresOn: convertExpiryTime(data.expiresOn),
-          valid: 'valid'
+          valid: 'valid',
         };
         $rootScope.$broadcast("otpGenerated");
         return otp;

@@ -8,7 +8,7 @@
     return {
       set: function (url) {
         $window.location.href = url;
-      }
+      },
     };
   }
 })();

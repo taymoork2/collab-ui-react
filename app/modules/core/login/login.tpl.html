@@ -6,6 +6,12 @@
       <div ng-show="result">
         <div class="results alert alert-danger" ng-bind-html="result"></div>
       </div>
+      <div id="generic-message" class="validation-messages info" ng-if="message && !loading">
+          <div class="cs-input__messages" >
+            <div class="message" translate="{{message}}">
+            </div>
+          </div>
+      </div>
       <form novalidate name="loginForm" class="typeahead-group" autocomplete="off">
         <div class="row">
           <div class="cs-input-group small-12 columns">

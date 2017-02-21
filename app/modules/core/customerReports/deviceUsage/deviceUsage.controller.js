@@ -53,8 +53,8 @@ require('modules/core/reports/amcharts-export.scss');
     vm.tabs = [
       {
         title: $translate.instant('reportsPage.usageReports.all'),
-        state: 'reports.device-usage'
-      }
+        state: 'reports.device-usage',
+      },
     ];
 
     vm.timeOptions = _.cloneDeep(ReportConstants.TIME_FILTER);
@@ -76,16 +76,16 @@ require('modules/core/reports/amcharts-export.scss');
     vm.deviceOptions = [
       {
         value: 0,
-        label: $translate.instant('reportsPage.usageReports.deviceOptions.all')
+        label: $translate.instant('reportsPage.usageReports.deviceOptions.all'),
       },
       {
         value: 1,
-        label: $translate.instant('reportsPage.usageReports.deviceOptions.roomSystems')
+        label: $translate.instant('reportsPage.usageReports.deviceOptions.roomSystems'),
       },
       {
         value: 2,
-        label: $translate.instant('reportsPage.usageReports.deviceOptions.sparkBoard')
-      }
+        label: $translate.instant('reportsPage.usageReports.deviceOptions.sparkBoard'),
+      },
     ];
     vm.deviceFilter = vm.deviceOptions[0];
 
@@ -164,7 +164,7 @@ require('modules/core/reports/amcharts-export.scss');
         { event: 'rollOverGraphItem', method: rollOverGraphItem },
         { event: 'rollOutGraphItem', method: rollOutGraphItem },
         //{ event: 'dataUpdated', method: graphRendered },
-        { event: 'clickGraphItem', method: graphClick }
+        { event: 'clickGraphItem', method: graphClick },
       ];
       amChart = DeviceUsageGraphService.makeChart('device-usage-total-chart', chart);
       getDataForSelectedRange(vm.timeSelected.value);
@@ -351,7 +351,7 @@ require('modules/core/reports/amcharts-export.scss');
     vm.startDeviceUsageExport = function () {
       $modal.open({
         templateUrl: "modules/core/customerReports/deviceUsage/deviceUsageExport/devices-usage-export.html",
-        type: 'dialog'
+        type: 'dialog',
       }).result.then(function () {
         vm.openExportProgressTracker();
       }, function () {
@@ -366,7 +366,7 @@ require('modules/core/reports/amcharts-export.scss');
         var now = moment();
         var data = {
           timeSelected: vm.timeSelected,
-          duration: now.diff(exportStarted).valueOf()
+          duration: now.diff(exportStarted).valueOf(),
         };
         DeviceUsageSplunkMetricsService.reportOperation(DeviceUsageSplunkMetricsService.eventTypes.fullReportDownload, data);
         vm.exporting = false;
@@ -391,7 +391,7 @@ require('modules/core/reports/amcharts-export.scss');
           vm.modelOptions.push({
             value: item.model,
             label: item.model,
-            isSelected: false
+            isSelected: false,
           });
         }
       });

@@ -4,13 +4,13 @@ describe('Controller: Dummy Metrics Reports', function () {
   var DummyMetricsReportService;
   var chartColors;
   var timeFilter = [{
-    value: 0
+    value: 0,
   }, {
-    value: 1
+    value: 1,
   }, {
-    value: 2
+    value: 2,
   }, {
-    value: 3
+    value: 3,
   }];
   beforeEach(angular.mock.module('Mediafusion'));
   describe('Dummy Data Responses', function () {

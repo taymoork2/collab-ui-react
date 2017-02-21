@@ -34,7 +34,7 @@
           attributeMapping: ['uid=uid', 'mail=mail'],
           autofedAttribute: 'uid',
           ignoreSignatureVerification: selfSigned,
-          ssoEnabled: ssoEnabled
+          ssoEnabled: ssoEnabled,
         };
 
         $http.post(remoteIdpUrl, payload)
@@ -57,7 +57,7 @@
           schemas: ['urn:cisco:codev:identity:idbroker:metadata:schemas:1.0'],
           metadataXml: metadataXmlContent,
           ignoreSignatureVerification: selfSigned,
-          ssoEnabled: ssoEnabled
+          ssoEnabled: ssoEnabled,
         };
 
         //for ssoEnabled=false we don't need a metadataXml so remove it if argument is undefined or null
@@ -68,7 +68,7 @@
         $http({
           method: 'PATCH',
           url: metaUrl,
-          data: payload
+          data: payload,
         })
           .success(function (data, status) {
             data = _.isObject(data) ? data : {};
@@ -113,7 +113,7 @@
             callback(data, status);
           });
 
-      }
+      },
     };
   }
 })();

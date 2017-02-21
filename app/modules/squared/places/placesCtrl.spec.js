@@ -33,7 +33,7 @@ describe('Controller: PlacesCtrl', function () {
     controller = $controller('PlacesCtrl', {
       $scope: $scope,
       $state: $state,
-      CsdmDataModelService: CsdmDataModelService
+      CsdmDataModelService: CsdmDataModelService,
     });
     $scope.$apply();
   }
@@ -73,7 +73,7 @@ describe('Controller: PlacesCtrl', function () {
         displayName: adminDisplayName,
         userName: adminUserName,
         cisUuid: adminCisUuid,
-        organizationId: adminOrgId
+        organizationId: adminOrgId,
       };
       spyOn(controller, 'isOrgEntitledToHuron').and.returnValue(isEntitledToHuron);
       spyOn(Authinfo, 'isDeviceMgmt').and.returnValue(isEntitledToRoomSystem);

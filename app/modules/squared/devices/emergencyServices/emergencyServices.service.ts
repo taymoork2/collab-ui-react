@@ -113,6 +113,8 @@ export class EmergencyServicesService {
   }
 
   public validateAddress(address: IEmergencyAddress): ng.IPromise<any> {
+    // TODO - Need to update this to call /customer/e911/lookup when Terminus supports it
+    // For now just call the V1 API as a workaround
     return this.PstnServiceAddressService.lookupAddress(address, true);
   }
 

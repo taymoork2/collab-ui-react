@@ -26,17 +26,17 @@
         function open(place) {
           return $modal.open({
             resolve: {
-              place: _.constant(place)
+              place: _.constant(place),
             },
             controllerAs: 'rdc',
             controller: 'RemPlaceController',
             templateUrl: 'modules/squared/places/remPlace/remPlace.html',
-            type: 'dialog'
+            type: 'dialog',
           }).result;
         }
 
         return {
-          open: open
+          open: open,
         };
       }
     );

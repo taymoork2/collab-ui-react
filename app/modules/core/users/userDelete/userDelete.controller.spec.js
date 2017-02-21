@@ -6,7 +6,7 @@ describe('Controller: UserDeleteCtrl', function () {
   var stateParams = {
     deleteUserOrgId: '123',
     deleteUserUuId: '456',
-    deleteUsername: 'myUser'
+    deleteUsername: 'myUser',
   };
 
   beforeEach(angular.mock.module('Core'));
@@ -51,7 +51,7 @@ describe('Controller: UserDeleteCtrl', function () {
   function initController() {
     controller = $controller('UserDeleteCtrl', {
       $scope: $scope,
-      $stateParams: stateParams
+      $stateParams: stateParams,
     });
     $scope.$apply();
   }
@@ -60,7 +60,7 @@ describe('Controller: UserDeleteCtrl', function () {
     var entitlements = Array.prototype.slice.apply(arguments);
     Userservice.getUser.and.callFake(function (uuid, callback) {
       callback({
-        entitlements: entitlements
+        entitlements: entitlements,
       });
     });
   }
@@ -94,12 +94,12 @@ describe('Controller: UserDeleteCtrl', function () {
 
       it('should call Userservice.deactivateUser', function () {
         expect(Userservice.deactivateUser).toHaveBeenCalledWith({
-          email: stateParams.deleteUsername
+          email: stateParams.deleteUsername,
         });
       });
       it('should have notified success', function () {
         expect(Notification.success).toHaveBeenCalledWith('usersPage.deleteUserSuccess', {
-          email: stateParams.deleteUsername
+          email: stateParams.deleteUsername,
         });
         expect(Notification.errorResponse).not.toHaveBeenCalled();
       });
@@ -124,7 +124,7 @@ describe('Controller: UserDeleteCtrl', function () {
 
       it('should call Userservice.deactivateUser', function () {
         expect(Userservice.deactivateUser).toHaveBeenCalledWith({
-          email: stateParams.deleteUsername
+          email: stateParams.deleteUsername,
         });
       });
       it('should have notified error', function () {

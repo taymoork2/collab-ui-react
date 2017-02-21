@@ -22,7 +22,7 @@
 
     vm.deleteAreYouSure = $translate.instant(
       'mediaFusion.deleteGroup.message', {
-        groupName: cluster.name
+        groupName: cluster.name,
       });
 
     MediaClusterServiceV2.getAll()
@@ -102,7 +102,7 @@
         var hostname = vm.hosts[i].hostname;
         var toClusterName = vm.selectModel[hostname];
         var toCluster = $filter('filter')(vm.clusters, {
-          'name': toClusterName
+          'name': toClusterName,
         }, true)[0];
 
         if (!_.includes(clusterListNames, toClusterName)) {
@@ -131,7 +131,7 @@
       });
 
       host = $filter('filter')(vm.hosts, {
-        'hostname': hostname
+        'hostname': hostname,
       }, true)[0];
 
       if (_.isUndefined(toCluster)) {
@@ -156,7 +156,7 @@
         vm.successCount++;
         vm.successMove = $translate.instant('mediaFusion.clusters.movedTo', {
           nodeName: host.hostname,
-          clusterName: toCluster.data.name
+          clusterName: toCluster.data.name,
         });
         Notification.success(vm.successMove);
         deleteCluster();
@@ -175,14 +175,14 @@
       if (vm.successCount == vm.noOfHost) {
         MediaClusterServiceV2.deleteV2Cluster(vm.cluster.id).then(function () {
           vm.success = $translate.instant('mediaFusion.clusters.clusterdeleteSuccess', {
-            clustername: vm.cluster.name
+            clustername: vm.cluster.name,
           });
           Notification.success(vm.success);
           $modalInstance.close();
           $state.go("media-service-v2.list");
         }, function (err) {
           vm.error = $translate.instant('mediaFusion.deleteGroup.errorMessage', {
-            groupName: vm.cluster.name
+            groupName: vm.cluster.name,
           });
           Notification.errorWithTrackingId(err, vm.error);
         });
@@ -195,7 +195,7 @@
         });
         vm.unableToMoveNodes = $translate.instant(
           'mediaFusion.clusters.unabletomovenodes', {
-            nodes: nodesString
+            nodes: nodesString,
           });
       }
     }

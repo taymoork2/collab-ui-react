@@ -121,8 +121,8 @@
           },
           userStatusSummary: function () {
             return USSService.extractSummaryForAService(servicesId);
-          }
-        }
+          },
+        },
       });
     }
 
@@ -152,9 +152,9 @@
       controllerAs: 'notificationController',
       bindToController: true,
       scope: {
-        filterTag: '='
+        filterTag: '=',
       },
-      templateUrl: 'modules/hercules/notifications/hercules-notifications.html'
+      templateUrl: 'modules/hercules/notifications/hercules-notifications.html',
     };
   }
 })();

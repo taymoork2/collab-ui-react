@@ -14,8 +14,8 @@ describe('Controller: AARouteToHGCtrl', function () {
   var aaUiModel = {
     openHours: {},
     ceInfo: {
-      name: 'AA2'
-    }
+      name: 'AA2',
+    },
   };
 
   var huntGroups = [{
@@ -23,37 +23,37 @@ describe('Controller: AARouteToHGCtrl', function () {
     numbers: [{
       'uuid': '15098786-2413-42af-87f4-2ab9b1382885',
       'number': '987654321',
-      'type': 'NUMBER_FORMAT_ENTERPRISE_LINE'
+      'type': 'NUMBER_FORMAT_ENTERPRISE_LINE',
     }],
     number: '987654321',
-    uuid: 'c16a6027-caef-4429-b3af-9d61ddc7964b'
+    uuid: 'c16a6027-caef-4429-b3af-9d61ddc7964b',
   }, {
     name: 'Test Hunt Group',
     numbers: [{
       'uuid': '15098786-2413-42af-87f4-2ab9b1382885',
       'number': '987654321',
-      'type': 'NUMBER_FORMAT_ENTERPRISE_LINE'
+      'type': 'NUMBER_FORMAT_ENTERPRISE_LINE',
     }],
     number: '987654321',
-    uuid: 'c16a6027-caef-4429-b3af-9d61ddc7964b'
+    uuid: 'c16a6027-caef-4429-b3af-9d61ddc7964b',
   }, {
     name: 'AA Hunt Group',
     numbers: [{
       'uuid': '15098786-2413-42af-87f4-2ab9b1382885',
       'number': '987654321',
-      'type': 'NUMBER_FORMAT_ENTERPRISE_LINE'
+      'type': 'NUMBER_FORMAT_ENTERPRISE_LINE',
     }],
     number: '987654321',
-    uuid: 'c16a6027-caef-4429-b3af-9d61ddc7964b'
+    uuid: 'c16a6027-caef-4429-b3af-9d61ddc7964b',
   }, {
     name: 'Super Hunt Group',
     numbers: [{
       'uuid': '15098786-2413-42af-87f4-2ab9b1382885',
       'number': '987654321',
-      'type': 'NUMBER_FORMAT_ENTERPRISE_LINE'
+      'type': 'NUMBER_FORMAT_ENTERPRISE_LINE',
     }],
     number: '987654321',
-    uuid: 'c16a6027-caef-4429-b3af-9d61ddc7964b'
+    uuid: 'c16a6027-caef-4429-b3af-9d61ddc7964b',
   }];
 
   var sortedOptions = [{
@@ -139,7 +139,7 @@ describe('Controller: AARouteToHGCtrl', function () {
     it('should create a HG conditional action with then clause', function () {
 
       var controller = $controller('AARouteToHGCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       expect(controller.menuEntry.actions[0].then).toBeDefined();
@@ -152,7 +152,7 @@ describe('Controller: AARouteToHGCtrl', function () {
       aaUiModel[schedule].entries[0].actions[0] = undefined;
 
       var controller = $controller('AARouteToHGCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       expect(controller.menuEntry.actions[0].name).toEqual('conditional');
@@ -166,7 +166,7 @@ describe('Controller: AARouteToHGCtrl', function () {
       aaUiModel[schedule].entries[index].actions[0].then = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', '');
 
       var controller = $controller('AARouteToHGCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       expect(controller.menuEntry.actions[0].name).toEqual('conditional');
@@ -192,7 +192,7 @@ describe('Controller: AARouteToHGCtrl', function () {
       $scope.fromRouteCall = true;
 
       var controller = $controller('AARouteToHGCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       expect(controller).toBeDefined();
@@ -215,12 +215,12 @@ describe('Controller: AARouteToHGCtrl', function () {
     it('should populate the ui from the menuEntry', function () {
 
       var controller = $controller('AARouteToHGCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       controller.hgSelected = {
         name: "Oleg's Call Experience 1",
-        id: "c16a6027-caef-4429-b3af-9d61ddc7964b"
+        id: "c16a6027-caef-4429-b3af-9d61ddc7964b",
       };
 
       var action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToHuntgroup', 'myId');
@@ -238,7 +238,7 @@ describe('Controller: AARouteToHGCtrl', function () {
     it('should be able to create new HG entry from Route Call', function () {
 
       var controller = $controller('AARouteToHGCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       expect(controller).toBeDefined();
@@ -251,11 +251,11 @@ describe('Controller: AARouteToHGCtrl', function () {
     it('should be able to change update via saveUIModel', function () {
 
       var controller = $controller('AARouteToHGCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
       controller.hgSelected = {
         name: "Oleg's Call Experience 1",
-        id: "c16a6027-caef-4429-b3af-9d61ddc7964b"
+        id: "c16a6027-caef-4429-b3af-9d61ddc7964b",
       };
 
       var action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToHuntgroup', 'fobar');
@@ -276,7 +276,7 @@ describe('Controller: AARouteToHGCtrl', function () {
     it('should be able to create new HG entry', function () {
 
       var controller = $controller('AARouteToHGCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       expect(controller).toBeDefined();
@@ -288,7 +288,7 @@ describe('Controller: AARouteToHGCtrl', function () {
     it('should initialize the options list and check for sorted list', function () {
 
       var controller = $controller('AARouteToHGCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       $scope.$apply();
@@ -308,7 +308,7 @@ describe('Controller: AARouteToHGCtrl', function () {
         menuEntry.addAction(actionEntry);
         aaUiModel[schedule].entries[0].addEntry(menuEntry);
         var controller = $controller('AARouteToHGCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
 
         $scope.$apply();
@@ -317,8 +317,8 @@ describe('Controller: AARouteToHGCtrl', function () {
       });
     });
 
-    describe('fromPhoneMenu_Queue_Fallback', function () {
-      it('should be able to create new route entry from Queue Fallback of PhoneMenu', function () {
+    describe('fromNewStep_Queue_Fallback', function () {
+      it('should be able to create new route entry from Queue Fallback in New Step', function () {
 
         var disconnect = AutoAttendantCeMenuModelService.newCeActionEntry('disconnect', '');
         var fallback = AutoAttendantCeMenuModelService.newCeMenuEntry();
@@ -334,7 +334,7 @@ describe('Controller: AARouteToHGCtrl', function () {
         $scope.fromFallback = true;
 
         var controller = $controller('AARouteToHGCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
 
         var fallbackAction = _.get(controller.menuEntry, 'actions[0].queueSettings.fallback.actions[0]');
@@ -344,5 +344,31 @@ describe('Controller: AARouteToHGCtrl', function () {
       });
     });
 
+    describe('fromPhoneMenu_Queue_Fallback', function () {
+      it('should be able to create new route entry from Queue Fallback of Phone Menu', function () {
+        var disconnect = AutoAttendantCeMenuModelService.newCeActionEntry('disconnect', '');
+        var fallback = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        fallback.addAction(disconnect);
+        var queueSettings = {};
+        queueSettings.fallback = fallback;
+        var routeToQueue = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', 'some-queue-id');
+        routeToQueue.queueSettings = queueSettings;
+        var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        menuEntry.addAction(routeToQueue);
+        aaUiModel[schedule].entries[index].addEntryAt(index, menuEntry);
+
+        $scope.fromRouteCall = false;
+        $scope.fromFallback = true;
+
+        var controller = $controller('AARouteToHGCtrl', {
+          $scope: $scope,
+        });
+
+        var fallbackAction = _.get(controller.menuKeyEntry, 'actions[0].queueSettings.fallback.actions[0]');
+        $scope.$apply();
+        expect(fallbackAction.name).toEqual('routeToHuntGroup');
+        expect(fallbackAction.value).toEqual('');
+      });
+    });
   });
 });

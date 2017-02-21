@@ -254,7 +254,7 @@
           headers: {
             'Content-Type': undefined,
           },
-          data: fd
+          data: fd,
         });
       } else {
         return undefined;

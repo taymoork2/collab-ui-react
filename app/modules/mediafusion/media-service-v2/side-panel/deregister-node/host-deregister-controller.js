@@ -17,7 +17,7 @@
           Notification.success('mediaFusion.deleteNodeSuccess');
         }, function (err) {
           vm.error = $translate.instant('mediaFusion.clusters.deregisterErrorGeneric', {
-            clusterName: cluster.name
+            clusterName: cluster.name,
           });
           Notification.errorWithTrackingId(err, vm.error);
           vm.saving = false;

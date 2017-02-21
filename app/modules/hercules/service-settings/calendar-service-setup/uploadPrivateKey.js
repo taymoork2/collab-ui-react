@@ -9,7 +9,7 @@
       controllerAs: 'uploadKey',
       bindings: {
         data: '=',
-      }
+      },
     });
 
   /* @ngInject */

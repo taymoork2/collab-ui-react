@@ -28,7 +28,7 @@
     vm.reassignText = $translate.instant(
       'mediaFusion.reassign.reassignTextV2', {
         clusterName: connector.hostname,
-        displayName: cluster.name
+        displayName: cluster.name,
       });
     vm.saving = false;
     vm.canContinue = function () {
@@ -53,7 +53,7 @@
           moveHost(res);
         }, function () {
           vm.error = $translate.instant('mediaFusion.reassign.reassignErrorMessage', {
-            hostName: vm.selectedCluster
+            hostName: vm.selectedCluster,
           });
           Notification.error(vm.error);
 
@@ -68,7 +68,7 @@
         Notification.success('mediaFusion.moveHostSuccess');
       }, function (err) {
         vm.error = $translate.instant('mediaFusion.reassign.reassignErrorMessage', {
-          hostName: vm.selectedCluster
+          hostName: vm.selectedCluster,
         });
         Notification.errorWithTrackingId(err, vm.error);
       });

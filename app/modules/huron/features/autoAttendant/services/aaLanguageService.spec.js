@@ -87,7 +87,7 @@ describe('Service: AALanguageService', function () {
 
     it('should return proper language code for given language value', function () {
       var code = AALanguageService.getLanguageCode({
-        "value": en_US
+        "value": en_US,
       });
       expect(code).toEqual(en_US);
 
@@ -97,7 +97,7 @@ describe('Service: AALanguageService', function () {
 
     it('should return proper language code for given language value w/special char', function () {
       var code = AALanguageService.getLanguageCode({
-        "value": es_ESValencia
+        "value": es_ESValencia,
       });
       expect(code).toEqual(es_ESValenciaCode);
 
@@ -119,19 +119,19 @@ describe('Service: AALanguageService', function () {
 
     it('should return proper voice options for given language option', function () {
       var voiceOptions = AALanguageService.getVoiceOptions({
-        "value": en_US
+        "value": en_US,
       });
       expect(voiceOptions).toBeDefined();
       expect(voiceOptions.length).toEqual(8);
 
       var voiceOptions2 = AALanguageService.getVoiceOptions({
-        "value": pt_BR
+        "value": pt_BR,
       });
       expect(voiceOptions2).toBeDefined();
       expect(voiceOptions2.length).toEqual(2);
 
       var voiceOptions3 = AALanguageService.getVoiceOptions({
-        "value": fr_FR
+        "value": fr_FR,
       });
       expect(voiceOptions3).toBeDefined();
       expect(voiceOptions3.length).toEqual(3);
@@ -149,7 +149,7 @@ describe('Service: AALanguageService', function () {
 
     it('should return empty array of voice options for unkown language option', function () {
       var voiceOptions = AALanguageService.getVoiceOptions({
-        "value": "test"
+        "value": "test",
       });
       expect(voiceOptions).toBeDefined();
       expect(voiceOptions.length).toEqual(0);

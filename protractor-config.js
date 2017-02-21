@@ -64,7 +64,7 @@ exports.config = {
       },
     },
     shardTestFiles: true,
-    maxInstances: maxInstances
+    maxInstances: maxInstances,
   },
 
   plugins: [{
@@ -77,7 +77,7 @@ exports.config = {
       /object Object/,
       /favicon/,
       /\/browser-sync\//,
-    ]
+    ],
   }],
 
   // A base URL for your application under test. Calls to protractor.get()
@@ -215,14 +215,14 @@ exports.config = {
       jasmine.getEnv().addReporter(
         new jasmineReporters.JUnitXmlReporter({
           savePath: 'test/e2e-protractor/reports/' + jenkinsSubdir + '/run-' + processEnvUtil.getE2eRunCounter(),
-          consolidateAll: false
+          consolidateAll: false,
         })
       );
 
       jasmine.getEnv().addReporter(
         new SpecReporter({
           displayStacktrace: true,
-          displaySpecDuration: true
+          displaySpecDuration: true,
         })
       );
 
@@ -274,12 +274,12 @@ exports.config = {
     showColors: true,
     print: function () {},
     includeStackTrace: true,
-    defaultTimeoutInterval: VERY_LONG_TIMEOUT
+    defaultTimeoutInterval: VERY_LONG_TIMEOUT,
   },
 
   // The timeout for each script run on the browser. This should be longer
   // than the maximum time your application needs to stabilize between tasks.
-  allScriptsTimeout: VERY_LONG_TIMEOUT
+  allScriptsTimeout: VERY_LONG_TIMEOUT,
 };
 
 function Logger() {

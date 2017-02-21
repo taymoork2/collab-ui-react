@@ -16,7 +16,7 @@ describe(' sunlightReportService', function () {
   var ciUserStats = dummyStats.ciUserStats;
 
   var spiedAuthinfo = {
-    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('676a82cd-64e9-4ebd-933c-4dce087a02bd')
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('676a82cd-64e9-4ebd-933c-4dce087a02bd'),
   };
 
   beforeEach(angular.mock.module('Sunlight'));
@@ -84,8 +84,8 @@ describe(' sunlightReportService', function () {
         "viewType": 'fifteen_minutes',
         "mediaType": 'chat',
         "startTime": '1465381084699',
-        "endTime": '1467973084699'
-      }
+        "endTime": '1467973084699',
+      },
     };
     sunlightReportService.getStats('org_stats', config).then(function (response) {
       expect(response.data.data.length).toBe(2);
@@ -112,8 +112,8 @@ describe(' sunlightReportService', function () {
         "viewType": 'hourly',
         "mediaType": 'chat',
         "startTime": '1465381084699',
-        "endTime": '1467973084699'
-      }
+        "endTime": '1467973084699',
+      },
     };
     sunlightReportService.getStats('org_stats', config).then(function (response) {
       expect(response.data.data.length).toBe(3);
@@ -134,8 +134,8 @@ describe(' sunlightReportService', function () {
         "viewType": 'daily',
         "mediaType": 'chat',
         "startTime": '1465381084699',
-        "endTime": '1467973084699'
-      }
+        "endTime": '1467973084699',
+      },
     };
     sunlightReportService.getStats('org_stats', config).then(function (response) {
       expect(response.data.data.length).toBe(2);
@@ -167,8 +167,8 @@ describe(' sunlightReportService', function () {
         "viewType": 'weekly',
         "mediaType": 'chat',
         "startTime": '1465381084699',
-        "endTime": '1467973084699'
-      }
+        "endTime": '1467973084699',
+      },
     };
     sunlightReportService.getStats('org_stats', config).then(function (response) {
       expect(response.data.data.length).toBe(2);

@@ -23,7 +23,7 @@
     vm.dateSelected = null;
 
     return {
-      setUtilizationGraph: setUtilizationGraph
+      setUtilizationGraph: setUtilizationGraph,
     };
 
     function setUtilizationGraph(response, utilizationChart, clusterSelected, clusterId, daterange, clusterMap) {
@@ -133,7 +133,7 @@
       }
 
       var columnNames = {
-        'time': vm.timeStamp
+        'time': vm.timeStamp,
       };
       var exportFields = [];
       _.forEach(graphs, function (value) {
@@ -156,7 +156,7 @@
           'bullet': 'square',
           'bulletSize': 10,
           'lineColor': '#000000',
-          'hidden': true
+          'hidden': true,
         });
 
         graphs.push({
@@ -164,7 +164,7 @@
           'id': 'none',
           'bullet': 'square',
           'bulletSize': 10,
-          'lineColor': '#000000'
+          'lineColor': '#000000',
         });
       }
       var chartData = CommonReportsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, CommonReportsGraphService.getBaseExportForGraph(exportFields, ExportFileName, columnNames));
@@ -174,10 +174,10 @@
 
       chartData.legend.listeners = [{
         'event': 'hideItem',
-        "method": legendHandler
+        "method": legendHandler,
       }, {
         'event': 'showItem',
-        'method': legendHandler
+        'method': legendHandler,
       }];
 
 
@@ -192,11 +192,11 @@
       vm.zoomedEndTime = event.endDate;
       var selectedTime = {
         startTime: vm.zoomedStartTime,
-        endTime: vm.zoomedEndTime
+        endTime: vm.zoomedEndTime,
       };
       if ((_.isUndefined(vm.dateSelected.value) && vm.zoomedStartTime !== vm.dateSelected.startTime && vm.zoomedEndTime !== vm.dateSelected.endTime) || (vm.zoomedStartTime !== vm.dateSelected.startTime && vm.zoomedEndTime !== vm.dateSelected.endTime)) {
         $rootScope.$broadcast('zoomedTime', {
-          data: selectedTime
+          data: selectedTime,
         });
       }
     }

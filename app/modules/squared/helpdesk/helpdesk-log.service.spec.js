@@ -14,21 +14,21 @@ describe('Service: HelpdeskLogService', function () {
       success: true,
       metadataList: [{
         filename: "logFile1",
-        timestamp: "2016-01-25T11:46:24.757Z"
+        timestamp: "2016-01-25T11:46:24.757Z",
       }, {
         filename: "logFile2",
-        timestamp: "2016-02-04T11:02:48.354Z"
+        timestamp: "2016-02-04T11:02:48.354Z",
       }, {
         filename: "logFile3",
-        timestamp: "2016-02-08T09:18:54.238Z"
+        timestamp: "2016-02-08T09:18:54.238Z",
       }, {
         filename: "logFile4",
-        timestamp: "2016-01-25T11:19:19.443Z"
-      }]
+        timestamp: "2016-01-25T11:19:19.443Z",
+      }],
     };
     var download = {
       success: true,
-      tempURL: 'http://download.com'
+      tempURL: 'http://download.com',
     };
 
     sinon.stub(LogService, 'searchLogs');

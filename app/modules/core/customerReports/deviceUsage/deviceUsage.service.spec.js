@@ -46,7 +46,7 @@ describe('DeviceUsageService', function () {
           "model": "SX20",
           "countryCode": "*",
           "callCount": 6,
-          "callDuration": 2500
+          "callDuration": 2500,
         },
         {
           "date": "2016-10-28T00:00:00.000Z",
@@ -55,8 +55,8 @@ describe('DeviceUsageService', function () {
           "model": "MX700",
           "countryCode": "*",
           "callCount": 5,
-          "callDuration": 1000
-        }
+          "callDuration": 1000,
+        },
       ];
 
       var usageDataResponseDay2 = [
@@ -67,7 +67,7 @@ describe('DeviceUsageService', function () {
           "model": "SX20",
           "countryCode": "*",
           "callCount": 4,
-          "callDuration": 500
+          "callDuration": 500,
         }, {
           "date": "2016-10-27T00:00:00.000Z",
           "accountId": "*",
@@ -75,8 +75,8 @@ describe('DeviceUsageService', function () {
           "model": "SparkBoard 55",
           "countryCode": "*",
           "callCount": 2,
-          "callDuration": 1000
-        }
+          "callDuration": 1000,
+        },
       ];
 
       //var usageDataResponseDay3 = undefined; // missing data
@@ -89,7 +89,7 @@ describe('DeviceUsageService', function () {
           "model": "SX20",
           "countryCode": "*",
           "callCount": 2,
-          "callDuration": 500
+          "callDuration": 500,
         },
         {
           "date": "2016-10-25T00:00:00.000Z",
@@ -99,7 +99,7 @@ describe('DeviceUsageService', function () {
           "countryCode": "*",
           // "callCount": 0, // missing callCount same as 0
           // "callDuration": 500  // missing callDuration same as 0
-        }
+        },
       ];
 
       usageDataResponse = usageDataResponseDay4
@@ -111,17 +111,17 @@ describe('DeviceUsageService', function () {
       availableDataResponse = [
         {
           "date": "2016-10-25T00:00:00.000Z",
-          "available": true
+          "available": true,
         }, {
           "date": "2016-10-26T00:00:00.000Z",
-          "available": false
+          "available": false,
         }, {
           "date": "2017-10-27T00:00:00.000Z",
-          "available": true
+          "available": true,
         }, {
           "date": "2017-10-28T00:00:00.000Z",
-          "available": true
-        }
+          "available": true,
+        },
       ];
 
     });
@@ -132,17 +132,17 @@ describe('DeviceUsageService', function () {
         callCount: 2,
         totalDuration: 500,
         totalDurationY: '0.14',
-        time: '2016-10-25'
+        time: '2016-10-25',
       }, {
         callCount: 6,
         totalDuration: 1500,
         totalDurationY: '0.42',
-        time: '2016-10-27'
+        time: '2016-10-27',
       }, {
         callCount: 11,
         totalDuration: 3500,
         totalDurationY: '0.97',
-        time: '2016-10-28'
+        time: '2016-10-28',
       }];
 
       var result = DeviceUsageService.reduceAllData(usageDataResponse, 'day');
@@ -164,22 +164,22 @@ describe('DeviceUsageService', function () {
         callCount: 2,
         totalDuration: 500,
         totalDurationY: '0.14',
-        time: '2016-10-25'
+        time: '2016-10-25',
       }, {
         callCount: 0,
         totalDuration: 0,
         totalDurationY: '0.00',
-        time: '2016-10-26'
+        time: '2016-10-26',
       }, {
         callCount: 6,
         totalDuration: 1500,
         totalDurationY: '0.42',
-        time: '2016-10-27'
+        time: '2016-10-27',
       }, {
         callCount: 11,
         totalDuration: 3500,
         totalDurationY: '0.97',
-        time: '2016-10-28'
+        time: '2016-10-28',
       }];
 
       var dataResponse;

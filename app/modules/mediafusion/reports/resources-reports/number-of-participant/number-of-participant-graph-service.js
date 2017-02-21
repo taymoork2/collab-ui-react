@@ -20,7 +20,7 @@
     var dateSelected = null;
 
     return {
-      setNumberOfParticipantGraph: setNumberOfParticipantGraph
+      setNumberOfParticipantGraph: setNumberOfParticipantGraph,
     };
 
     function setNumberOfParticipantGraph(response, numberOfParticipantChart, daterange) {
@@ -121,7 +121,7 @@
       }
 
       var columnNames = {
-        'time': timeStamp
+        'time': timeStamp,
       };
       _.forEach(graphs, function (value) {
         if (value.title !== 'cloud') {
@@ -152,11 +152,11 @@
       zoomedEndTime = event.endDate;
       var selectedTime = {
         startTime: zoomedStartTime,
-        endTime: zoomedEndTime
+        endTime: zoomedEndTime,
       };
       if ((_.isUndefined(dateSelected.value) && zoomedStartTime !== dateSelected.startTime && zoomedEndTime !== dateSelected.endTime) || (zoomedStartTime !== dateSelected.startTime && zoomedEndTime !== dateSelected.endTime)) {
         $rootScope.$broadcast('zoomedTime', {
-          data: selectedTime
+          data: selectedTime,
         });
       }
     }

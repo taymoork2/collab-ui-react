@@ -6,7 +6,8 @@
     "license": "By using Cisco Spark Services you accept the Terms of Service and Privacy Statement.",
     "tos": "Terms of Service",
     "privacy": "Privacy Statement",
-    "copyright": "Cisco and/or affiliates. All rights reserved."
+    "copyright": "Cisco and/or affiliates. All rights reserved.",
+    "expired": "Your session has expired due to inactivity."
   },
   "termsOfService": {
     "title": "Terms of Service",
@@ -3841,7 +3842,7 @@
       "skip": "Skip",
       "popover": "Please provide information on the legal contact who can sign the contract",
       "addrRetry": "Use a different address",
-      "addrFound": "This is the address found in the system.",
+      "addrFound": "We have verified the provided address as:",
       "error": {
         "areaCodes": "Failed to get area codes for selected state",
         "numbers": "Failed to get numbers for selected area code",
@@ -6608,6 +6609,16 @@
       "3008": "Failed to check callback group name",
       "3009": "The callback group name is duplicated",
       "genericError": "An unexpected error occurred. Please try again later."
+    },
+    "tds": {
+      "field": {
+        "status": "Status",
+        "bridgeSet": "Bridge Set",
+        "webDomain": "Web Domain",
+        "description": "Partner TD Name",
+        "totalSites": "Sites Assigned",
+        "telephonyDomains": "Telephony Domains"
+      }
     },
     "cbgs": {
       "overview": "Overview",

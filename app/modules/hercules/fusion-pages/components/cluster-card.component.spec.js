@@ -26,34 +26,34 @@ describe('Component: clusterCard', function () {
         state: {
           name: 'offline',
           severity: 3,
-          label: 'error'
+          label: 'error',
         },
-        total: 1
+        total: 1,
       }, {
         serviceId: 'squared-fusion-uc',
         state: {
           name: 'not_installed',
           severity: 1,
-          label: 'unknown'
+          label: 'unknown',
         },
-        total: 0
+        total: 0,
       }, {
         serviceId: 'squared-fusion-cal',
         state: {
           name: 'offline',
           severity: 3,
-          label: 'error'
+          label: 'error',
         },
-        total: 1
-      }]
+        total: 1,
+      }],
     };
 
     beforeEach(inject(function ($injector) {
       $componentController = $injector.get('$componentController');
       controller = $componentController('clusterCard', {
-        $scope: {}
+        $scope: {},
       }, {
-        cluster: mockCluster
+        cluster: mockCluster,
       });
     }));
 

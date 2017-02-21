@@ -19,7 +19,7 @@
     vm.customerInfo = [];
     vm.customerInfoClipboard = [];
     vm._helpers = {
-      flattenAndJoin: flattenAndJoin
+      flattenAndJoin: flattenAndJoin,
     };
 
     init();
@@ -29,7 +29,7 @@
       var newLineHtml = '%0D%0A';
       var promises = {
         partnerAdmins: getPartnerAdmins(),
-        subscriptions: getSubscriptions()
+        subscriptions: getSubscriptions(),
       };
       $q.all(promises).then(function (results) {
         vm.partnerAdmins = results.partnerAdmins;
@@ -64,7 +64,7 @@
           if (siteUrl !== '') {
             if (!_.find(subscriptionArray, {
               siteUrl: siteUrl,
-              subscriptionId: subscriptionId
+              subscriptionId: subscriptionId,
             })) {
               customerSubscription = {
                 siteUrl: siteUrl,

@@ -21,62 +21,62 @@
 
     vm.ifOption = {
       label: '',
-      value: ''
+      value: '',
     };
 
     vm.ifOptions = [{
       /* caller returned not implemented yet */
       label: $translate.instant('autoAttendant.decisionCallerReturned'),
       value: 'callerReturned',
-      buffer: ''
+      buffer: '',
     }, {
       label: $translate.instant('autoAttendant.decisionNumberDialed'),
       value: 'Original-Called-Number',
-      buffer: ''
+      buffer: '',
     }, {
       label: $translate.instant('autoAttendant.decisionCallerNumber'),
       value: 'Original-Caller-Number',
-      buffer: ''
+      buffer: '',
     }, {
       label: $translate.instant('autoAttendant.decisionCallerName'),
       value: 'Original-Remote-Party-ID',
-      buffer: ''
+      buffer: '',
     }, {
       label: $translate.instant('autoAttendant.decisionCallerCountryCode'),
       value: 'Original-Caller-Country-Code',
-      buffer: ''
+      buffer: '',
     }, {
       label: $translate.instant('autoAttendant.decisionCallerAreaCode'),
       value: 'Original-Caller-Area-Code',
-      buffer: ''
+      buffer: '',
     }];
 
     vm.thenOption = {
       label: '',
-      value: ''
+      value: '',
     };
 
     vm.thenOptions = [{
       label: $translate.instant('autoAttendant.phoneMenuRouteHunt'),
-      value: 'routeToHuntGroup'
+      value: 'routeToHuntGroup',
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteAA'),
-      value: 'goto'
+      value: 'goto',
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteUser'),
-      value: 'routeToUser'
+      value: 'routeToUser',
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteVM'),
-      value: 'routeToVoiceMail'
+      value: 'routeToVoiceMail',
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteToExtNum'),
-      value: 'route'
+      value: 'route',
     }];
 
     /* caller returned options will be implemented later */
     vm.callerReturnedOption = {
       label: $translate.instant('autoAttendant.callerReturnedOneWeek'),
-      value: 'One Week'
+      value: 'One Week',
     };
 
     vm.callerReturnedOptions = [{

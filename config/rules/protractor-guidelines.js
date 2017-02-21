@@ -8,7 +8,7 @@ module.exports = function (context) {
     'notifications', 'landing', 'login', 'enterEmailAddrPage', 'createAccountPage', 'navigation', 'users', 'reports', 'support', 'roles', 'partner', 'wizard', 'invite', 'activate',
     'callrouting', 'autoattendant', 'servicesetup', 'telephony', 'huronFeatures', 'huntGroup', 'mediaservice', 'careLandingPage', 'careChatTemplateSetupPage',
   // Others
-    'Math', '_'
+    'Math', '_',
   ];
 
   var allowedPageElementMethods = ['first', 'last', 'then'];
@@ -88,6 +88,6 @@ module.exports = function (context) {
       // Log unchecked nodes
       // console.log('SOURCE: ' + context.getSource(node));
       // console.dir(node);
-    }
+    },
   };
 };

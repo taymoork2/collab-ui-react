@@ -13,7 +13,7 @@
         $timeout(function () {
           $element[0].focus();
         });
-      }
+      },
     };
   }
 })();

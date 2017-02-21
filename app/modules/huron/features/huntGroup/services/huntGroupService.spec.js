@@ -10,7 +10,7 @@ describe('Hunt Group Service', function () {
   var customerId = '123';
 
   var spiedAuthinfo = {
-    getOrgId: jasmine.createSpy('getOrgId').and.returnValue(customerId)
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue(customerId),
   };
   var huntList = getJSONFixture('huron/json/features/huntGroup/hgList.json');
 

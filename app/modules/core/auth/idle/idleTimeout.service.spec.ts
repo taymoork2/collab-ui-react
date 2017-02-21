@@ -45,14 +45,14 @@ describe('Service: IdleTimeoutService: ', function () {
   describe('Should with FT disabled:', () => {
     it('start the timer on init', () => {
       IdleTimeoutService.init();
-      expect(Log.debug).toHaveBeenCalledWith('Starting Tab Timer');
+      expect(Log.debug).toHaveBeenCalledWith('IDLE TIMEOUT SERVICE: Starting Tab Timer');
     });
 
     it('not wire events on login', () => {
       IdleTimeoutService.init();
       $rootScope.$broadcast('LOGIN');
       $rootScope.$digest();
-      expect(Log.debug).not.toHaveBeenCalledWith('Wiring up events');
+      expect(Log.debug).not.toHaveBeenCalledWith('IDLE TIMEOUT SERVICE: Wiring up events');
     });
   });
 
@@ -65,7 +65,7 @@ describe('Service: IdleTimeoutService: ', function () {
     });
 
     it('wire events on login', () => {
-      expect(Log.debug).toHaveBeenCalledWith('Wiring up events');
+      expect(Log.debug).toHaveBeenCalledWith('IDLE TIMEOUT SERVICE: Wiring up events');
 
     });
 
@@ -75,22 +75,31 @@ describe('Service: IdleTimeoutService: ', function () {
     });
     // idleTabTimeout: 1200000, //20 mins
     it('log user out ONLY after the timeout expires without user action', () => {
-      expect(Log.debug).toHaveBeenCalledWith('Starting Tab Timer');
+      expect(Log.debug).toHaveBeenCalledWith('IDLE TIMEOUT SERVICE: Starting Tab Timer');
       expect(Auth.logout).not.toHaveBeenCalled();
       $timeout.flush(1100000);
       expect(Auth.logout).not.toHaveBeenCalled();
       $timeout.flush(100000);
-      expect(Log.debug).not.toHaveBeenCalledWith('broadcasting to keep alive');
+      expect(Log.debug).not.toHaveBeenCalledWith('IDLE TIMEOUT SERVICE: broadcasting to keep alive');
       expect(Auth.logout).toHaveBeenCalled();
     });
 
     it('reset the timer with user action', () => {
       let element = angular.element(IdleTimeoutService.$document);
-      expect(Log.debug).toHaveBeenCalledWith('Starting Tab Timer');
+      expect(Log.debug).toHaveBeenCalledWith('IDLE TIMEOUT SERVICE: Starting Tab Timer');
       $timeout.flush(1100000);
       element.triggerHandler('keydown');
       $timeout.flush(100000);
-      expect(Log.debug).toHaveBeenCalledWith('broadcasting to keep alive');
+      expect(Log.debug).toHaveBeenCalledWith('IDLE TIMEOUT SERVICE: broadcasting to keep alive');
+      expect(Auth.logout).not.toHaveBeenCalled();
+    });
+    it('reset the timer on IDLE_TIMEOUT_KEEP_ALIVE event', () => {
+      expect(Log.debug).toHaveBeenCalledWith('IDLE TIMEOUT SERVICE: Starting Tab Timer');
+      $timeout.flush(1100000);
+      $rootScope.$broadcast('IDLE_TIMEOUT_KEEP_ALIVE');
+      $rootScope.$digest();
+      $timeout.flush(100000);
+      expect(Log.debug).toHaveBeenCalledWith('IDLE TIMEOUT SERVICE: broadcasting to keep alive');
       expect(Auth.logout).not.toHaveBeenCalled();
     });
   });

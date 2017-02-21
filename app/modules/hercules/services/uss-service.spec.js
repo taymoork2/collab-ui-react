@@ -11,11 +11,11 @@ describe('Service: USSService', function () {
   beforeEach(angular.mock.module(function ($provide) {
     hubOn = sinon.spy();
     CsdmHubFactory = {
-      create: sinon.stub()
+      create: sinon.stub(),
     };
     CsdmHubFactory.create.returns({
       on: hubOn,
-      onListener: sinon.stub()
+      onListener: sinon.stub(),
     });
     $provide.value('CsdmHubFactory', CsdmHubFactory);
   }));
@@ -41,14 +41,14 @@ describe('Service: USSService', function () {
           orgId: 'cisco',
           serviceId: 'squared-fusion-yolo',
           entitled: true,
-          state: 'deactivated'
+          state: 'deactivated',
         }, {
           userId: '123',
           orgId: 'cisco',
           serviceId: 'squared-fusion-voicemail',
           entitled: true,
-          state: 'activated'
-        }]
+          state: 'activated',
+        }],
       });
 
     USSService.getStatusesForUser('123')
@@ -79,7 +79,7 @@ describe('Service: USSService', function () {
                 key: 'c_cal.warn',
                 title: 'warn title',
                 severity: 'warning',
-                description: 'warn description'
+                description: 'warn description',
               },
               {
                 key: 'c_cal.error',
@@ -89,17 +89,17 @@ describe('Service: USSService', function () {
                 replacementValues: [
                   {
                     key: 'replace1',
-                    value: 'value1'
+                    value: 'value1',
                   },
                   {
                     key: 'replace2',
                     value: '2017-01-31T14:05:34.069Z',
-                    type: 'timestamp'
-                  }
-                ]
-              }
-            ]
-          }]
+                    type: 'timestamp',
+                  },
+                ],
+              },
+            ],
+          }],
         });
 
       USSService.getStatusesForUser('123')
@@ -138,7 +138,7 @@ describe('Service: USSService', function () {
       it('error state is not entitled', function () {
         var status = USSService.decorateWithStatus({
           entitled: false,
-          state: 'error'
+          state: 'error',
         });
         expect(status).toBe('not_entitled');
       });
@@ -146,7 +146,7 @@ describe('Service: USSService', function () {
       it('deactivated state is not entitled', function () {
         var status = USSService.decorateWithStatus({
           entitled: false,
-          state: 'deactivated'
+          state: 'deactivated',
         });
         expect(status).toBe('not_entitled');
       });
@@ -154,7 +154,7 @@ describe('Service: USSService', function () {
       it('notActivated state is not entitled', function () {
         var status = USSService.decorateWithStatus({
           entitled: false,
-          state: 'notActivated'
+          state: 'notActivated',
         });
         expect(status).toBe('not_entitled');
       });
@@ -162,7 +162,7 @@ describe('Service: USSService', function () {
       it('activated state is pending deactivation', function () {
         var status = USSService.decorateWithStatus({
           entitled: false,
-          state: 'activated'
+          state: 'activated',
         });
         expect(status).toBe('not_entitled');
       });
@@ -170,7 +170,7 @@ describe('Service: USSService', function () {
       it('other state is unknown', function () {
         var status = USSService.decorateWithStatus({
           entitled: true,
-          state: 'other'
+          state: 'other',
         });
         expect(status).toBe('unknown');
       });
@@ -180,7 +180,7 @@ describe('Service: USSService', function () {
       it('deactivated state is pending activation', function () {
         var status = USSService.decorateWithStatus({
           entitled: true,
-          state: 'deactivated'
+          state: 'deactivated',
         });
         expect(status).toBe('pending_activation');
       });
@@ -188,7 +188,7 @@ describe('Service: USSService', function () {
       it('notActivated state is pending activation', function () {
         var status = USSService.decorateWithStatus({
           entitled: true,
-          state: 'notActivated'
+          state: 'notActivated',
         });
         expect(status).toBe('pending_activation');
       });
@@ -196,7 +196,7 @@ describe('Service: USSService', function () {
       it('activated state is activated', function () {
         var status = USSService.decorateWithStatus({
           entitled: true,
-          state: 'activated'
+          state: 'activated',
         });
         expect(status).toBe('activated');
       });
@@ -204,7 +204,7 @@ describe('Service: USSService', function () {
       it('error state is error', function () {
         var status = USSService.decorateWithStatus({
           entitled: true,
-          state: 'error'
+          state: 'error',
         });
         expect(status).toBe('error');
       });
@@ -212,7 +212,7 @@ describe('Service: USSService', function () {
       it('other state is unknown', function () {
         var status = USSService.decorateWithStatus({
           entitled: true,
-          state: 'other'
+          state: 'other',
         });
         expect(status).toBe('unknown');
       });
@@ -225,7 +225,7 @@ describe('Service: USSService', function () {
         .when('GET', rootPath + 'orgs/456')
         .respond({
           id: '456',
-          sipDomain: ''
+          sipDomain: '',
         });
 
       USSService.getOrg('456')
@@ -241,16 +241,16 @@ describe('Service: USSService', function () {
       $httpBackend
         .when('PATCH', rootPath + 'orgs/456', {
           id: '456',
-          sipDomain: 'whatever'
+          sipDomain: 'whatever',
         })
         .respond({
           id: '456',
-          sipDomain: 'whatever'
+          sipDomain: 'whatever',
         });
 
       USSService.updateOrg({
         id: '456',
-        sipDomain: 'whatever'
+        sipDomain: 'whatever',
       })
         .then(function (response) {
           expect(response.sipDomain).toEqual('whatever');
@@ -279,7 +279,7 @@ describe('Service: USSService', function () {
             orgId: '456',
             serviceId: 'squared-fusion-cal',
             entitled: true,
-            state: 'notActivated'
+            state: 'notActivated',
           }, {
             userId: 'ABC',
             orgId: '456',
@@ -289,10 +289,10 @@ describe('Service: USSService', function () {
             connectorId: 'c_cal@0A5E3DE8',
             description: {
               key: 'c_cal.DiscoveryScoreException',
-              defaultMessage: 'Failed to get score for the user:  MailServer Error:  User folder bind error'
+              defaultMessage: 'Failed to get score for the user:  MailServer Error:  User folder bind error',
             },
-            clusterId: 'f61e9340-928e-11e5-9965-005056b12db1'
-          }]
+            clusterId: 'f61e9340-928e-11e5-9965-005056b12db1',
+          }],
         });
 
       USSService.getAllStatuses('squared-fusion-cal', null)
@@ -321,8 +321,8 @@ describe('Service: USSService', function () {
             orgId: '456',
             serviceId: 'squared-fusion-cal',
             entitled: true,
-            state: 'active'
-          }]
+            state: 'active',
+          }],
         });
 
       USSService.getStatusesForUserInOrg('123', '456')

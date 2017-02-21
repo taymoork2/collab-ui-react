@@ -17,12 +17,12 @@
       },
       {
         title: $translate.instant('servicesOverview.cards.hybridContext.buttons.fields'),
-        state: 'context-fields'
+        state: 'context-fields',
       },
       {
         title: $translate.instant('servicesOverview.cards.hybridContext.buttons.fieldsets'),
-        state: 'context-fieldsets'
-      }
+        state: 'context-fieldsets',
+      },
     ];
   }
 }());

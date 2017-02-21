@@ -89,7 +89,7 @@
     require('modules/huron/cos').default,
     require('modules/huron/pstn').default,
     require('modules/huron/pstn/pstnProviders').default,
-    require('modules/huron/overview').default
+    require('modules/huron/overview').default,
   ]);
 
   angular.module('Hercules', ['Core', 'Squared', 'core.onboard', 'ngTagsInput']);
@@ -107,7 +107,7 @@
   angular.module('Sunlight', [
     'Core',
     'CareDetails',
-    'Sunlight.pagination'
+    'Sunlight.pagination',
   ]);
 
   angular.module('Context', ['Core']);
@@ -131,7 +131,7 @@
     'Context',
     'GSS',
     'oc.lazyLoad',
-    'Gemini'
+    'Gemini',
   ]).config(require('./main.config'))
     .run(require('./main.run'))
     .name;

@@ -2,10 +2,10 @@ import includes = require('lodash/includes');
 import filter = require('lodash/filter');
 import { Notification } from 'modules/core/notifications';
 import map = require('lodash/map');
-import uniq = require('lodash/uniq');
 import forEach = require('lodash/forEach');
 import find = require('lodash/find');
 import take = require('lodash/take');
+import some = require('lodash/some');
 
 class UserStatusHistoryCtrl implements ng.IComponentController {
   public readonly numEntriesToShow = 20;
@@ -21,7 +21,7 @@ class UserStatusHistoryCtrl implements ng.IComponentController {
     private Authinfo,
     private Notification: Notification,
     private FusionUtils,
-    private ClusterService,
+    private FusionClusterService,
     private ResourceGroupService,
   ) {
     this.userId = this.$stateParams.currentUser.id;
@@ -53,20 +53,20 @@ class UserStatusHistoryCtrl implements ng.IComponentController {
   }
 
   private setHomedConnectors() {
-    let uniqueConnectorIds = uniq(map(this.historyEntries, entry => {
-      return entry.payload.connectorId;
-    }));
-    forEach(uniqueConnectorIds, connectorId => {
-      if (connectorId) {
-        this.ClusterService.getConnector(connectorId).then(connector => {
+    if (some(this.historyEntries, entry => { return entry.payload.clusterId; })) {
+      this.FusionClusterService.getAll()
+        .then(clusterList => {
           forEach(this.historyEntries, entry => {
-            if (entry.payload.connectorId === connectorId) {
-              entry.homedConnector = connector;
+            entry.homedCluster = find(clusterList, { id: entry.payload.clusterId });
+            if (entry.homedCluster) {
+              entry.homedConnector = find(entry.homedCluster.connectors, { id: entry.payload.connectorId });
             }
           });
+        })
+        .catch((error) => {
+          this.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
         });
-      }
-    });
+    }
   }
 
   private setResourceGroups() {

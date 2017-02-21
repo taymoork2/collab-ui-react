@@ -40,20 +40,20 @@ describe('Controller: DevicesCtrl', function () {
     spyOn(Userservice, 'getUser').and.callFake(function (userId, callback) {
       callback({
         data: {
-          meta: {}
-        }
+          meta: {},
+        },
       });
     });
 
     spyOn(AccountOrgService, 'getAccount').and.returnValue({
-      success: _.noop
+      success: _.noop,
     });
   }
 
   function initController() {
     controller = $controller('DevicesCtrl', {
       $scope: $scope,
-      $state: $state
+      $state: $state,
     });
     $scope.$apply();
   }
@@ -121,7 +121,7 @@ describe('Controller: DevicesCtrl', function () {
         displayName: adminDisplayName,
         userName: adminUserName,
         cisUuid: adminCisUuid,
-        organizationId: adminOrgId
+        organizationId: adminOrgId,
       };
       controller.showATA = showATA;
       controller.showPersonal = showPersonal;
@@ -165,7 +165,7 @@ describe('Controller: DevicesCtrl', function () {
       controller = $controller('DevicesCtrl', {
         $scope: $scope,
         $state: $state,
-        FeatureToggleService: FeatureToggleService
+        FeatureToggleService: FeatureToggleService,
       });
       expect(controller.addDeviceIsDisabled).toBeTruthy();
       $scope.$digest();
@@ -177,7 +177,7 @@ describe('Controller: DevicesCtrl', function () {
       spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue(deferred.promise);
       controller = $controller('DevicesCtrl', {
         $scope: $scope,
-        $state: $state
+        $state: $state,
       });
       expect(controller.addDeviceIsDisabled).toBeTruthy();
       deferred.reject();
@@ -201,19 +201,19 @@ describe('Controller: DevicesCtrl', function () {
           then: function (okCallback, cancelCallback) {
             this.okCallback = okCallback;
             this.cancelCallback = cancelCallback;
-          }
+          },
         },
         opened: {
           then: function (okCallback) {
             okCallback();
-          }
+          },
         },
         close: function (item) {
           this.result.okCallback(item);
         },
         dismiss: function (type) {
           this.result.cancelCallback(type);
-        }
+        },
       };
       spyOn($modal, 'open').and.returnValue(fakeModal);
       spyOn(Notification, 'success');

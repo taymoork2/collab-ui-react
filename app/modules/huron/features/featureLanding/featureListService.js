@@ -14,7 +14,7 @@
       pagingGroups: pagingGroups,
       pickupGroups: pickupGroups,
       filterCards: filterCards,
-      orderByFilter: orderByFilter
+      orderByFilter: orderByFilter,
     };
 
     var formattedCard = {
@@ -147,7 +147,7 @@
         'startRange',
         'endRange',
         'pgNumber',
-        'memberCount'
+        'memberCount',
       ];
       var filteredList = _.filter(list, function (feature) {
         if (feature.filterValue !== filterValue && filterValue !== 'all') {

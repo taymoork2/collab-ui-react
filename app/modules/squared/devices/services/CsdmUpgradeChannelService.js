@@ -15,13 +15,13 @@
 
     function updateUpgradeChannel(deviceUrl, newUpgradeChannel) {
       return $http.post(deviceUrl + '/upgradeChannel', {
-        channel: newUpgradeChannel
+        channel: newUpgradeChannel,
       });
     }
 
     return {
       getUpgradeChannelsPromise: getUpgradeChannelsPromise,
-      updateUpgradeChannel: updateUpgradeChannel
+      updateUpgradeChannel: updateUpgradeChannel,
     };
   }
 

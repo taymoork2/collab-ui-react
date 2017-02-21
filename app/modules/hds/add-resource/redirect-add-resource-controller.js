@@ -13,7 +13,7 @@
       INIT: 0,          //Initial Screen (Yes/No options)
       NO_PROCEED: 1,    //NoProceed download software screen
       YES_PROCEED: 2,   //Yes proceed screen with cluste/node info
-      REGISTER_NODE: 3  //Register node screen
+      REGISTER_NODE: 3,  //Register node screen
     };
     vm.states = states;
     vm.selectPlaceholder = $translate.instant('hds.add-resource-dialog.cluster');
@@ -54,7 +54,7 @@
       }
       $modal.open({
         templateUrl: 'modules/hds/add-resource/confirm-setup-cancel-dialog.html',
-        type: 'dialog'
+        type: 'dialog',
       })
         .result.then(function () {
           $modalInstance.dismiss();

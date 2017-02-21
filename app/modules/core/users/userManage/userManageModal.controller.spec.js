@@ -16,7 +16,7 @@ describe('UserManageModalPickerController', function () {
 
   function initController() {
     this.controller = this.$controller('UserManageModalPickerController', {
-      $scope: this.$scope
+      $scope: this.$scope,
     });
     this.$scope.$apply();
   }

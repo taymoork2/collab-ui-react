@@ -13,7 +13,7 @@
       readCe: readCe,
       createCe: createCe,
       updateCe: updateCe,
-      deleteCe: deleteCe
+      deleteCe: deleteCe,
     };
 
     return service;
@@ -22,7 +22,7 @@
 
     function listCes() {
       return CeService.query({
-        customerId: Authinfo.getOrgId()
+        customerId: Authinfo.getOrgId(),
       }).$promise;
     }
 
@@ -30,13 +30,13 @@
       var aCeId = getCeId(ceUrl);
       return CeService.get({
         customerId: Authinfo.getOrgId(),
-        ceId: aCeId
+        ceId: aCeId,
       }).$promise;
     }
 
     function createCe(ceDefinition) {
       return CeService.save({
-        customerId: Authinfo.getOrgId()
+        customerId: Authinfo.getOrgId(),
       },
         ceDefinition
       ).$promise;
@@ -46,7 +46,7 @@
       var aCeId = getCeId(ceUrl);
       return CeService.update({
         customerId: Authinfo.getOrgId(),
-        ceId: aCeId
+        ceId: aCeId,
       },
         ceDefinition
       ).$promise;
@@ -56,7 +56,7 @@
       var aCeId = getCeId(ceUrl);
       return CeService.delete({
         customerId: Authinfo.getOrgId(),
-        ceId: aCeId
+        ceId: aCeId,
       }).$promise.then(
         function () {
           // on successful delete of AA, delete the AA mapping in CMI

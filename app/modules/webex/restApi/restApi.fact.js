@@ -74,19 +74,19 @@
 
             mockResult = {
               "errorCode": "060502",
-              "errorMessage": "Auth token is invalid."
+              "errorMessage": "Auth token is invalid.",
             };
 
             return $q.reject(mockResult);
           }
           if (WebExApiGatewayConstsService.csvStates.none == mockCsvStatusReq) {
             mockResult = {
-              jobType: WebExApiGatewayConstsService.csvJobTypes.typeNone
+              jobType: WebExApiGatewayConstsService.csvJobTypes.typeNone,
             };
           } else if (WebExApiGatewayConstsService.csvStates.exportInProgress == mockCsvStatusReq) {
             mockResult = {
               jobType: WebExApiGatewayConstsService.csvJobTypes.typeExport,
-              request: WebExApiGatewayConstsService.csvJobStatus.statusQueued
+              request: WebExApiGatewayConstsService.csvJobStatus.statusQueued,
             };
           } else if (WebExApiGatewayConstsService.csvStates.exportCompletedNoErr == mockCsvStatusReq) {
             mockResult = {
@@ -98,7 +98,7 @@
               totalRecords: 5,
               successRecords: 5,
               failedRecords: 0,
-              exportFileLink: "http://google.com"
+              exportFileLink: "http://google.com",
             };
           } else if (WebExApiGatewayConstsService.csvStates.exportCompletedWithErr == mockCsvStatusReq) {
             mockResult = {
@@ -110,7 +110,7 @@
               totalRecords: 5,
               successRecords: 4,
               failedRecords: 1,
-              exportFileLink: "http://google.com"
+              exportFileLink: "http://google.com",
             };
           } else if (WebExApiGatewayConstsService.csvStates.importInProgress == mockCsvStatusReq) {
             mockResult = {
@@ -127,7 +127,7 @@
               finished: '03/23/16 12:41 AM',
               totalRecords: 5,
               successRecords: 5,
-              failedRecords: 0
+              failedRecords: 0,
             };
           } else if (WebExApiGatewayConstsService.csvStates.importCompletedWithErr == mockCsvStatusReq) {
             mockResult = {
@@ -140,7 +140,7 @@
               totalRecords: 5,
               successRecords: 3,
               failedRecords: 2,
-              errorLogLink: 'http://yahoo.com'
+              errorLogLink: 'http://yahoo.com',
             };
           }
         }

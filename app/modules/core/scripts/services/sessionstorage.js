@@ -40,7 +40,7 @@
       },
       clear: function () {
         $window.sessionStorage.clear();
-      }
+      },
     };
   }
 

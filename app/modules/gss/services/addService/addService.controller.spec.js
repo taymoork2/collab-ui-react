@@ -27,10 +27,10 @@ describe('controller: AddServiceCtrl', function () {
   function initController() {
     controller = $controller('AddServiceCtrl', {
       $modalInstance: {
-        close: sinon.stub()
+        close: sinon.stub(),
       },
       $scope: $scope,
-      GSSService: GSSService
+      GSSService: GSSService,
     });
 
     $scope.$apply();

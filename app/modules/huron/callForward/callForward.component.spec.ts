@@ -148,7 +148,6 @@ describe('Component: callForward', () => {
 
     it('should not have `Voicemail` checkbox checkedin call forward all', function() {
       expect(this.view).toContainElement(CALL_FWD_PHONE_NUMBER);
-      // expect(this.view.find(CALL_FWD_PHONE_NUMBER).find(DROPDOWN_OPTIONS)).toHaveLength(0);
       expect(this.view.CALL_FWD_BUSY_VOICEMAIL).not.toBeChecked();
     });
 

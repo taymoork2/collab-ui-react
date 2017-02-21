@@ -15,7 +15,7 @@
 
     $rootScope.typeOfExport = {
       USER: 1,
-      CUSTOMER: 2
+      CUSTOMER: 2,
     };
     $window.$state = $state;
     //Enable logging

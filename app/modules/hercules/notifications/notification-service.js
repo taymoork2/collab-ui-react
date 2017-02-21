@@ -22,7 +22,7 @@
 
     function removeNotification(id) {
       _.remove(notifications, {
-        id: id
+        id: id,
       });
     }
 
@@ -47,7 +47,7 @@
         ERROR: 'error',
         WARNING: 'warning',
         INFO: 'info',
-      }
+      },
     };
   }
 

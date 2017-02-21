@@ -34,7 +34,7 @@
       getV2Url: getV2Url,
       getUSSUrl: getUSSUrl,
       getCalliopeUrl: getCalliopeUrl,
-      getAthenaUrl: getAthenaUrl
+      getAthenaUrl: getAthenaUrl,
     };
   }
 })();

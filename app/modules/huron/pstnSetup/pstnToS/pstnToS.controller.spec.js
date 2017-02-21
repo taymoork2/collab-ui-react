@@ -30,7 +30,7 @@ describe('Controller: PstnToSCtrl', function () {
     controller = $controller('PstnToSCtrl', {
       $scope: $scope,
       Orgservice: Orgservice,
-      PstnSetupService: PstnSetupService
+      PstnSetupService: PstnSetupService,
     });
     $rootScope.$apply();
   }));

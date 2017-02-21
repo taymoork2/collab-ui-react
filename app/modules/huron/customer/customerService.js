@@ -12,13 +12,12 @@
       'uuid': null,
       'name': null,
       'servicePackage': 'VOICE_ONLY',
-      'countryCode': null
     };
 
     var service = {
       create: createCustomer,
       get: getCustomer,
-      put: putCustomer
+      put: putCustomer,
     };
 
     return service;
@@ -72,18 +71,18 @@
       if (carrierName) {
         var payload = {
           carrier: {
-            name: carrierName
-          }
+            name: carrierName,
+          },
         };
         return CustomerVoiceCmiService.update({
-          customerId: uuid
+          customerId: uuid,
         }, payload).$promise;
       }
     }
 
     function getCustomer(uuid) {
       return CustomerCommonService.get({
-        customerId: uuid || Authinfo.getOrgId()
+        customerId: uuid || Authinfo.getOrgId(),
       }).$promise;
     }
 
@@ -94,7 +93,7 @@
       customer.voicemail = undefined;
 
       return CustomerCommonService.update({
-        customerId: uuid || Authinfo.getOrgId()
+        customerId: uuid || Authinfo.getOrgId(),
       }, customer).$promise;
     }
   }

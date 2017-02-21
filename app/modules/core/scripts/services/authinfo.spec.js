@@ -8,14 +8,14 @@ describe('Authinfo:', function () {
   var defaultConfig = {
     restrictedStates: {
       customer: [],
-      partner: []
+      partner: [],
     },
     publicStates: [],
     ciscoOnly: [],
     ciscoOrgId: '',
     ciscoMockOrgId: '',
     roleStates: {},
-    serviceStates: {}
+    serviceStates: {},
   };
   var defaultUser = {
     name: 'Test',
@@ -26,7 +26,7 @@ describe('Authinfo:', function () {
     services: [],
     roles: [],
     managedOrgs: [],
-    setupDone: true
+    setupDone: true,
   };
 
   beforeEach(function () {
@@ -51,8 +51,8 @@ describe('Authinfo:', function () {
           SC: 'onboardModal.supportCenter',
           TC: 'onboardModal.trainingCenter',
           EC: 'onboardModal.eventCenter',
-          CO: 'onboardModal.communication'
-        }
+          CO: 'onboardModal.communication',
+        },
       });
       Authinfo = setupUser();
 
@@ -101,7 +101,7 @@ describe('Authinfo:', function () {
 
     it('should return true if the state is an in publicStates', function () {
       setupConfig({
-        publicStates: ['blah']
+        publicStates: ['blah'],
       });
 
       var Authinfo = setupUser();
@@ -113,13 +113,13 @@ describe('Authinfo:', function () {
       setupConfig({
         restrictedStates: {
           customer: [],
-          partner: ['blah']
+          partner: ['blah'],
         },
-        publicStates: ['blob', 'blah']
+        publicStates: ['blob', 'blah'],
       });
 
       var Authinfo = setupUser({
-        roles: ['PARTNER_ADMIN'] // OR PARTNER_USER
+        roles: ['PARTNER_ADMIN'], // OR PARTNER_USER
       });
 
       expect(Authinfo.isAllowedState('blob')).toBe(true);
@@ -130,13 +130,13 @@ describe('Authinfo:', function () {
       setupConfig({
         restrictedStates: {
           customer: ['blah'],
-          partner: []
+          partner: [],
         },
-        publicStates: ['blob', 'blah']
+        publicStates: ['blob', 'blah'],
       });
 
       var Authinfo = setupUser({
-        roles: ['pokemon'] // definitely not a partner role
+        roles: ['pokemon'], // definitely not a partner role
       });
 
       expect(Authinfo.isAllowedState('blob')).toBe(true);
@@ -147,11 +147,11 @@ describe('Authinfo:', function () {
       setupConfig({
         ciscoOnly: ['blah'],
         ciscoOrgId: '123',
-        ciscoMockOrgId: '456'
+        ciscoMockOrgId: '456',
       });
 
       var Authinfo = setupUser({
-        orgId: '123'
+        orgId: '123',
       });
 
       expect(Authinfo.isAllowedState('blah')).toBe(true);
@@ -159,7 +159,7 @@ describe('Authinfo:', function () {
       //////// Mock Org
 
       Authinfo = setupUser({
-        orgId: '456'
+        orgId: '456',
       });
 
       expect(Authinfo.isAllowedState('blah')).toBe(true);
@@ -169,13 +169,13 @@ describe('Authinfo:', function () {
       setupConfig({
         roleStates: {
           A_Role: [
-            'blah'
-          ]
-        }
+            'blah',
+          ],
+        },
       });
 
       var Authinfo = setupUser({
-        roles: ['A_Role']
+        roles: ['A_Role'],
       });
 
       expect(Authinfo.isAllowedState('blah')).toBe(true);
@@ -185,16 +185,16 @@ describe('Authinfo:', function () {
       setupConfig({
         serviceStates: {
           'le-service': [
-            'blah'
-          ]
-        }
+            'blah',
+          ],
+        },
       });
 
       var Authinfo = setupUser({
         services: [{
           // we don't care about the other service properties
-          ciName: 'le-service'
-        }]
+          ciName: 'le-service',
+        }],
       });
 
       expect(Authinfo.isAllowedState('blah')).toBe(true);
@@ -202,7 +202,7 @@ describe('Authinfo:', function () {
 
     it('should only care about the parent state', function () {
       setupConfig({
-        publicStates: ['blah']
+        publicStates: ['blah'],
       });
 
       var Authinfo = setupUser();
@@ -213,7 +213,7 @@ describe('Authinfo:', function () {
     it('should return true if user is in delegated administration org', function () {
       setupConfig();
       var Authinfo = setupUser({
-        isInDelegatedAdministrationOrg: true
+        isInDelegatedAdministrationOrg: true,
       });
       expect(Authinfo.isInDelegatedAdministrationOrg()).toBe(true);
     });
@@ -221,11 +221,11 @@ describe('Authinfo:', function () {
     it('should return true if user is part of Cisco Mock Org', function () {
       setupConfig({
         ciscoOnly: ['blah'],
-        ciscoMockOrgId: '4567'
+        ciscoMockOrgId: '4567',
       });
 
       var Authinfo = setupUser({
-        orgId: '4567'
+        orgId: '4567',
       });
 
       expect(Authinfo.isCiscoMock()).toBe(true);
@@ -235,7 +235,7 @@ describe('Authinfo:', function () {
       setupConfig();
 
       var Authinfo = setupUser({
-        roles: ['Help_Desk', 'Compliance_User']
+        roles: ['Help_Desk', 'Compliance_User'],
       });
 
       expect(Authinfo.isAllowedState('support')).toBe(true);
@@ -249,14 +249,14 @@ describe('Authinfo:', function () {
         "customerName": "Atlas_Test_1",
         "licenses": [{
           "licenseType": "CONFERENCING",
-          "siteUrl": "whatever"
-        }]
-      }]
+          "siteUrl": "whatever",
+        }],
+      }],
     };
 
     it('is patched with Site_Admin role if customer has full admin role.', function () {
       var Authinfo = setupUser({
-        roles: ['Full_Admin']
+        roles: ['Full_Admin'],
       });
       Authinfo.updateAccountInfo(accountData);
       expect(Authinfo.getRoles()).toEqual(["Full_Admin", "Site_Admin"]);
@@ -264,7 +264,7 @@ describe('Authinfo:', function () {
 
     it('is patched with Site_Admin role if customer has read only admin role.', function () {
       var Authinfo = setupUser({
-        roles: ['Readonly_Admin']
+        roles: ['Readonly_Admin'],
       });
       Authinfo.updateAccountInfo(accountData);
       expect(Authinfo.getRoles()).toEqual(["Readonly_Admin", "Site_Admin"]);
@@ -278,14 +278,14 @@ describe('Authinfo:', function () {
         "customerName": "Atlas_Test_2",
         "licenses": [{
           "licenseType": "CONFERENCING",
-          "linkedSiteUrl": "www.abc.com"
-        }]
-      }]
+          "linkedSiteUrl": "www.abc.com",
+        }],
+      }],
     };
 
     it('have linked site conference service', function () {
       var Authinfo = setupUser({
-        roles: ['Full_Admin']
+        roles: ['Full_Admin'],
       });
       Authinfo.updateAccountInfo(accountData);
       expect(Authinfo.getConferenceServicesWithLinkedSiteUrl()).toBeTruthy();
@@ -294,7 +294,7 @@ describe('Authinfo:', function () {
 
     it('is patched with Site_Admin role if customer has full admin role.', function () {
       var Authinfo = setupUser({
-        roles: ['Full_Admin']
+        roles: ['Full_Admin'],
       });
       Authinfo.updateAccountInfo(accountData);
       expect(Authinfo.getRoles()).toEqual(["Full_Admin", "Site_Admin"]);
@@ -302,7 +302,7 @@ describe('Authinfo:', function () {
 
     it('is patched with Site_Admin role if customer has read only admin role.', function () {
       var Authinfo = setupUser({
-        roles: ['Readonly_Admin']
+        roles: ['Readonly_Admin'],
       });
       Authinfo.updateAccountInfo(accountData);
       expect(Authinfo.getRoles()).toEqual(["Readonly_Admin", "Site_Admin"]);

@@ -6,28 +6,28 @@ describe('Service: Utilization Resource GraphService', function () {
   var clusterId = "615209ed-98a3-4ab3-a1aa-033e5a0c1dc3";
 
   var validateService = {
-    validate: function () {}
+    validate: function () {},
   };
 
   var utilizationChart = {
     dataProvider: [],
     startDuration: "",
     balloon: {
-      enabled: false
+      enabled: false,
     },
     chartCursor: {
       valueLineBalloonEnabled: false,
       valueLineEnabled: false,
-      categoryBalloonEnabled: false
+      categoryBalloonEnabled: false,
     },
     validateData: function () {
       return true;
-    }
+    },
   };
 
   var daterange = {
     label: "Last 24 Hours",
-    value: "0"
+    value: "0",
   };
   var clusterNameMapping = getJSONFixture('mediafusion/json/metrics-graph-report/ParticipantDistributionGraphData.json');
   var IdMap = angular.copy(clusterNameMapping.clusterIdToNameMap);

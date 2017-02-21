@@ -77,7 +77,7 @@
               date: day,
               callDuration: 0,
               callCount: 0,
-              inserted: true
+              inserted: true,
             };
             usageData.push(missingDayData);
           }
@@ -122,7 +122,7 @@
       if (reject.status === -1) {
         reject.statusText = 'Operation timed Out';
         reject.data = {
-          message: 'Operation timed out'
+          message: 'Operation timed out',
         };
       }
       return reject;
@@ -134,7 +134,7 @@
         if (typeof result[date] === 'undefined') {
           result[date] = {
             callCount: 0,
-            totalDuration: 0
+            totalDuration: 0,
           };
         }
         if (_.isNil(item.callCount) || _.isNaN(item.callCount)) {
@@ -166,7 +166,7 @@
         least: [],
         noOfDevices: 0,
         noOfCalls: calculateTotalNoOfCalls(reduced),
-        totalDuration: calculateTotalDuration(reduced)
+        totalDuration: calculateTotalDuration(reduced),
       };
       var limit = 20;
       $q.all([getLeast(start, end, models, limit), getMost(start, end, models, limit), getTotalNoOfUsedDevices(start, end, models)]).then(function (results) {
@@ -287,7 +287,7 @@
             //$log.info("Problems resolving device", err);
             return {
               "displayName": $translate.instant('reportsPage.usageReports.nameNotFoundFor') + " id=" + device.accountId,
-              "info": $translate.instant('reportsPage.usageReports.nameNotFoundFor') + " device id=" + device.accountId
+              "info": $translate.instant('reportsPage.usageReports.nameNotFoundFor') + " device id=" + device.accountId,
             };
           })
         );
@@ -297,7 +297,7 @@
 
     function cancelableHttpGET(url) {
       var config = {
-        timeout: HttpRequestCanceller.newCancelableTimeout()
+        timeout: HttpRequestCanceller.newCancelableTimeout(),
       };
 
       return $http
@@ -318,7 +318,7 @@
       extractStats: extractStats,
       resolveDeviceData: resolveDeviceData,
       reduceAllData: reduceAllData,
-      cancelAllRequests: cancelAllRequests
+      cancelAllRequests: cancelAllRequests,
     };
   }
 }());

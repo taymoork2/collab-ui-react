@@ -9,7 +9,7 @@ describe('Controller: DevicesCtrlHuron', function () {
 
   var userOverview = {
     enableAuthCodeLink: jasmine.createSpy(),
-    disableAuthCodeLink: jasmine.createSpy()
+    disableAuthCodeLink: jasmine.createSpy(),
   };
 
 
@@ -33,8 +33,8 @@ describe('Controller: DevicesCtrlHuron', function () {
         "ciscouc",
         "squared-call-initiation",
         "webex-squared",
-        "squared-syncup"
-      ]
+        "squared-syncup",
+      ],
     };
 
     poller = {
@@ -46,7 +46,7 @@ describe('Controller: DevicesCtrlHuron', function () {
       },
       dataLoaded: function () {
         return true;
-      }
+      },
     };
 
     spyOn(_CsdmDeviceService_, 'fetchDevicesForUser').and.returnValue($q.resolve({}));
@@ -61,7 +61,7 @@ describe('Controller: DevicesCtrlHuron', function () {
   function initController() {
     controller = $controller('DevicesCtrlHuron', {
       $scope: $scope,
-      FeatureToggleService: FeatureToggleService
+      FeatureToggleService: FeatureToggleService,
     });
 
     $scope.$apply();
@@ -187,14 +187,14 @@ describe('Controller: DevicesCtrlHuron', function () {
         entitlements: ['ciscouc'],
         emails: [{
           primary: true,
-          value: email
+          value: email,
         }],
         name: {
-          givenName: firstName
+          givenName: firstName,
         },
         meta: {
-          organizationID: orgId
-        }
+          organizationID: orgId,
+        },
       };
       controller.showATA = showATA;
       controller.adminUserDetails = {
@@ -203,7 +203,7 @@ describe('Controller: DevicesCtrlHuron', function () {
         displayName: adminDisplayName,
         userName: adminUserName,
         cisUuid: adminCisUuid,
-        organizationId: adminOrgId
+        organizationId: adminOrgId,
       };
       spyOn($state, 'go');
       controller.resetCode();

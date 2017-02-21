@@ -14,7 +14,7 @@ describe('HybridContextContainerController', function () {
     var $scope = {};
     controller = $controller('HybridContextContainerController', {
       $scope: $scope,
-      backState: backState
+      backState: backState,
     });
   }
 

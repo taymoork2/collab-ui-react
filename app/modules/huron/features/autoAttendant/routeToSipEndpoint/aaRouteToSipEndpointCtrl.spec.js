@@ -12,8 +12,8 @@ describe('Controller: AARouteToSipEndpointCtrl', function () {
   var aaUiModel = {
     openHours: {},
     ceInfo: {
-      name: 'AA2'
-    }
+      name: 'AA2',
+    },
   };
 
   var schedule = 'openHours';
@@ -74,7 +74,7 @@ describe('Controller: AARouteToSipEndpointCtrl', function () {
 
     it('should be able to create new key entry', function () {
       var controller = $controller('AARouteToSipEndpointCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       expect(controller).toBeDefined();
@@ -94,7 +94,7 @@ describe('Controller: AARouteToSipEndpointCtrl', function () {
         menuEntry.addAction(actionEntry);
         aaUiModel[schedule].entries[0].addEntry(menuEntry);
         var controller = $controller('AARouteToSipEndpointCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
 
         $scope.$apply();
@@ -108,10 +108,10 @@ describe('Controller: AARouteToSipEndpointCtrl', function () {
       beforeEach(function () {
         sipInput = 'sip:shwegupt@go.webex.com';
         controller = $controller('AARouteToSipEndpointCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
         controller.aaRouteToSipForm = {
-          $valid: true
+          $valid: true,
         };
         controller.model.sipInput = sipInput;
       });
@@ -146,10 +146,10 @@ describe('Controller: AARouteToSipEndpointCtrl', function () {
       it('should write SIP number back into Ui Model from Route Call', function () {
         var sipInput = 'sip:shwegupt@go.webex.com';
         var controller = $controller('AARouteToSipEndpointCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
         controller.aaRouteToSipForm = {
-          $valid: true
+          $valid: true,
         };
         controller.model.sipInput = sipInput;
 
@@ -166,7 +166,7 @@ describe('Controller: AARouteToSipEndpointCtrl', function () {
       it('should be able to create new AA entry from Route Call', function () {
 
         var controller = $controller('AARouteToSipEndpointCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
 
         expect(controller.menuEntry.actions[0].name).toEqual('routeToSipEndpoint');
@@ -189,7 +189,7 @@ describe('Controller: AARouteToSipEndpointCtrl', function () {
         $scope.fromRouteCall = true;
 
         var controller = $controller('AARouteToSipEndpointCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
 
         expect(controller.menuEntry.actions[0].name).toEqual('routeToSipEndpoint');
@@ -215,7 +215,7 @@ describe('Controller: AARouteToSipEndpointCtrl', function () {
         $scope.fromFallback = true;
 
         var controller = $controller('AARouteToSipEndpointCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
 
         var fallbackAction = _.get(controller.menuEntry, 'actions[0].queueSettings.fallback.actions[0]');

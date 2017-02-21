@@ -30,19 +30,19 @@ describe('Controller: Trial Webex', function () {
         return $q(function (resolve) {
           if (siteUrl === 'acmecorp.webex.com') {
             resolve({
-              isValid: true
+              isValid: true,
             });
           } else {
             resolve({
-              isValid: false
+              isValid: false,
             });
           }
         });
-      }
+      },
     });
 
     bard.mockService(TrialTimeZoneService, {
-      getTimeZones: $q.resolve([])
+      getTimeZones: $q.resolve([]),
     });
 
     spyOn(Orgservice, 'getOrg');

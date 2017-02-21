@@ -75,7 +75,7 @@
       return {
         value: i,
         name: name,
-        label: $translate.instant('careReportsPage.media_type_' + name)
+        label: $translate.instant('careReportsPage.media_type_' + name),
       };
     });
 
@@ -149,17 +149,17 @@
       vm.taskIncomingDescription = $translate.instant('taskIncoming.description', {
         time: vm.timeSelected.description,
         interval: vm.timeSelected.intervalTxt,
-        taskStatus: vm.timeSelected.taskStatus
+        taskStatus: vm.timeSelected.taskStatus,
       });
 
       vm.taskTimeDescription = $translate.instant('taskTime.description', {
         time: vm.timeSelected.description,
-        interval: vm.timeSelected.intervalTxt
+        interval: vm.timeSelected.intervalTxt,
       });
 
       vm.averageCsatDescription = $translate.instant('averageCsat.description', {
         time: vm.timeSelected.description,
-        interval: vm.timeSelected.intervalTxt
+        interval: vm.timeSelected.intervalTxt,
       });
     }
 
@@ -243,7 +243,7 @@
         return {
           value: i,
           name: name,
-          label: $translate.instant('careReportsPage.media_type_' + name)
+          label: $translate.instant('careReportsPage.media_type_' + name),
         };
       });
     }

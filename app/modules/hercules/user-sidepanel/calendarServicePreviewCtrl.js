@@ -6,10 +6,10 @@
     .controller('CalendarServicePreviewCtrl', CalendarServicePreviewCtrl);
 
   /*@ngInject*/
-  function CalendarServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Orgservice, Notification, USSService, ClusterService, $translate, ResourceGroupService, FeatureToggleService, FusionUtils) {
+  function CalendarServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Orgservice, Notification, USSService, FusionClusterService, $translate, ResourceGroupService, FeatureToggleService, FusionUtils) {
     $scope.entitlementNames = {
       'squared-fusion-cal': 'squaredFusionCal',
-      'squared-fusion-gcal': 'squaredFusionGCal'
+      'squared-fusion-gcal': 'squaredFusionGCal',
     };
 
     $scope.currentUser = $stateParams.currentUser;
@@ -17,7 +17,7 @@
     $scope.localizedServiceName = $translate.instant('hercules.serviceNames.squared-fusion-cal');
     $scope.localizedConnectorName = $translate.instant('hercules.connectorNames.squared-fusion-cal');
     $scope.localizedOnboardingWarning = $translate.instant('hercules.userSidepanel.warningInvitePending', {
-      ServiceName: $scope.localizedServiceName
+      ServiceName: $scope.localizedServiceName,
     });
     $scope.extension = {
       id: $stateParams.extensionId,
@@ -27,7 +27,7 @@
       currentUserEntitled: $stateParams.currentUser.entitlements && $stateParams.currentUser.entitlements.indexOf($stateParams.extensionId) > -1, // Tracks the actual entitlement on the user
       isExchange: function () {
         return this.id === 'squared-fusion-cal';
-      }
+      },
     };
     $scope.resourceGroup = {
       show: false,
@@ -56,7 +56,7 @@
       },
       updateShow: function () {
         this.show = $scope.extension.isExchange() && _.size(this.options) > 1;
-      }
+      },
     };
     $scope.resourceGroup.init();
 
@@ -79,7 +79,7 @@
         this.selected = $scope.extension.id;
         this.exchangeEnabled = this.exchangeSetup && !isEntitled();
         this.googleEnabled = this.googleSetup && !isEntitled();
-      }
+      },
     };
     $scope.calendarType.init();
 
@@ -122,9 +122,10 @@
         $scope.extension.status = _.find(statuses, function (status) {
           return $scope.extension.id === status.serviceId;
         });
-        if ($scope.extension.status && $scope.extension.status.connectorId) {
-          ClusterService.getConnector($scope.extension.status.connectorId).then(function (connector) {
-            $scope.extension.homedConnector = connector;
+        if ($scope.extension.status && $scope.extension.status.clusterId) {
+          FusionClusterService.get($scope.extension.status.clusterId).then(function (cluster) {
+            $scope.extension.homedCluster = cluster;
+            $scope.extension.homedConnector = _.find(cluster.connectors, { id: $scope.extension.status.connectorId });
           });
         }
         if ($scope.extension.status && $scope.extension.status.lastStateChange) {
@@ -198,17 +199,17 @@
     var updateEntitlement = function (entitled) {
       $scope.savingEntitlements = true;
       var user = [{
-        'address': $scope.currentUser.userName
+        'address': $scope.currentUser.userName,
       }];
       var entitlement = [{
         entitlementName: $scope.entitlementNames[$scope.extension.id],
-        entitlementState: entitled === true ? 'ACTIVE' : 'INACTIVE'
+        entitlementState: entitled === true ? 'ACTIVE' : 'INACTIVE',
       }];
 
       Userservice.updateUsers(user, null, entitlement, 'updateEntitlement', function (data) {
         var entitleResult = {
           msg: null,
-          type: 'null'
+          type: 'null',
         };
         if (data.success) {
           var userStatus = data.userResponse[0].status;
@@ -233,7 +234,7 @@
             refreshUserInUss();
           } else if (userStatus === 404) {
             entitleResult.msg = $translate.instant('hercules.userSidepanel.entitlements-dont-exist', {
-              userName: $scope.currentUser.userName
+              userName: $scope.currentUser.userName,
             });
             entitleResult.type = 'error';
           } else if (userStatus === 409) {
@@ -241,7 +242,7 @@
             entitleResult.type = 'error';
           } else {
             entitleResult.msg = $translate.instant('hercules.userSidepanel.not-updated', {
-              userName: $scope.currentUser.userName
+              userName: $scope.currentUser.userName,
             });
             entitleResult.type = 'error';
           }
@@ -252,9 +253,9 @@
         } else {
           entitleResult = {
             msg: $translate.instant('hercules.userSidepanel.not-updated', {
-              userName: $scope.currentUser.userName
+              userName: $scope.currentUser.userName,
             }),
-            type: 'error'
+            type: 'error',
           };
           Notification.notify([entitleResult.msg], entitleResult.type);
         }

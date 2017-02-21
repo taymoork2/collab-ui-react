@@ -20,7 +20,7 @@
     function buildRequest(url) {
       return {
         url: url,
-        headers: {}
+        headers: {},
       };
     }
 

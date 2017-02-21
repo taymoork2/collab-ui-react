@@ -8,7 +8,7 @@
     if (!avalonRoomsUrlCache) {
       avalonRoomsUrlCache = new CacheFactory('avalonRoomsUrlCache', {
         maxAge: 300 * 1000,
-        deleteOnExpire: 'aggressive'
+        deleteOnExpire: 'aggressive',
       });
     }
 
@@ -51,7 +51,7 @@
           encryptionKeyUrl: encryptionKeyUrl,
           startDate: startDate,
           endDate: endDate,
-          query: query
+          query: query,
         });
     }
 
@@ -109,8 +109,8 @@
         roomQuery: {
           startDate: sd,
           endDate: ed,
-          roomId: roomId
-        }
+          roomId: roomId,
+        },
       };
       return $http
         .post(urlBase + 'compliance/organizations/' + orgId + '/reports/', roomParams)
@@ -143,7 +143,7 @@
           encryptionKeyUrl: encryptionKeyUrl,
           responseUri: responseUri,
           startDate: sd,
-          endDate: ed
+          endDate: ed,
         });
     }
 
@@ -154,7 +154,7 @@
         "roomId": roomId,
         "responseUrl": responseUrl,
         "startDate": sd,
-        "endDate": ed
+        "endDate": ed,
       });
     }
 
@@ -175,17 +175,17 @@
 
     function setEntitledForCompliance(orgId, userId, entitled) {
       return $http.patch(urlBase + 'compliance/organizations/' + orgId + '/users/' + userId, {
-        entitledForCompliance: entitled
+        entitledForCompliance: entitled,
       });
     }
 
     function downloadReport(report) {
       return $http.get(report.downloadUrl, {
-        responseType: 'arraybuffer'
+        responseType: 'arraybuffer',
       }).success(function (data) {
         var fileName = 'report_' + report.id + '.zip';
         var file = new $window.Blob([data], {
-          type: 'application/zip'
+          type: 'application/zip',
         });
         if ($window.navigator.msSaveOrOpenBlob) {
           // IE
@@ -199,7 +199,7 @@
           downloadLink.attr({
             'href': $window.URL.createObjectURL(file),
             'download': fileName,
-            'target': '_blank'
+            'target': '_blank',
           });
           $document.find('body').append(downloadContainer);
           $timeout(function () {
@@ -223,7 +223,7 @@
       patchReport: patchReport,
       deleteReport: deleteReport,
       setEntitledForCompliance: setEntitledForCompliance,
-      downloadReport: downloadReport
+      downloadReport: downloadReport,
     };
   }
 

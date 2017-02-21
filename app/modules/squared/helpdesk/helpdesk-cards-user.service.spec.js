@@ -10,13 +10,13 @@ describe('HelpdeskCardsService', function () {
   }));
 
   var entFalse = {
-    entitled: false
+    entitled: false,
   };
 
   function emptyCard() {
     return {
       entitled: false,
-      entitlements: []
+      entitlements: [],
     };
   }
 
@@ -24,7 +24,7 @@ describe('HelpdeskCardsService', function () {
     return {
       entitled: false,
       entitlements: [],
-      licensesByWebExSite: {}
+      licensesByWebExSite: {},
     };
   }
 
@@ -34,7 +34,7 @@ describe('HelpdeskCardsService', function () {
       cal: entFalse,
       gcal: entFalse,
       uc: entFalse,
-      ec: entFalse
+      ec: entFalse,
     };
   }
 
@@ -65,13 +65,13 @@ describe('HelpdeskCardsService', function () {
       expect(card.entitlements.length).toEqual(0);
 
       card = HelpdeskCardsUserService.getMessageCardForUser({
-        entitlements: []
+        entitlements: [],
       });
       expect(card.entitled).toBeFalsy();
       expect(card.entitlements.length).toEqual(0);
 
       card = HelpdeskCardsUserService.getMessageCardForUser({
-        entitlements: ['webex-squared']
+        entitlements: ['webex-squared'],
       });
       expect(card.entitled).toBeTruthy();
       expect(card.entitlements.length).toEqual(1);
@@ -79,7 +79,7 @@ describe('HelpdeskCardsService', function () {
 
       // Entitled, but no license (free)
       card = HelpdeskCardsUserService.getMessageCardForUser({
-        entitlements: ['webex-squared', 'squared-room-moderation']
+        entitlements: ['webex-squared', 'squared-room-moderation'],
       });
       expect(card.entitled).toBeTruthy();
       expect(card.entitlements.length).toEqual(1);
@@ -88,7 +88,7 @@ describe('HelpdeskCardsService', function () {
       // Entitled and with license (Paid)
       card = HelpdeskCardsUserService.getMessageCardForUser({
         entitlements: ['webex-squared', 'squared-room-moderation'],
-        licenseID: ['MS_62b343df-bdd5-463b-8895-d07fc3a94832']
+        licenseID: ['MS_62b343df-bdd5-463b-8895-d07fc3a94832'],
       });
       expect(card.entitled).toBeTruthy();
       expect(card.entitlements.length).toEqual(1);
@@ -101,14 +101,14 @@ describe('HelpdeskCardsService', function () {
       expect(card.entitlements.length).toEqual(0);
 
       card = HelpdeskCardsUserService.getMeetingCardForUser({
-        entitlements: []
+        entitlements: [],
       });
       expect(card.entitled).toBeFalsy();
       expect(card.entitlements.length).toEqual(0);
 
       // Entitled, but no license (free)
       card = HelpdeskCardsUserService.getMeetingCardForUser({
-        entitlements: ['squared-syncup']
+        entitlements: ['squared-syncup'],
       });
       expect(card.entitled).toBeTruthy();
       expect(card.entitlements.length).toEqual(1);
@@ -117,7 +117,7 @@ describe('HelpdeskCardsService', function () {
       // Entitled and with license (Paid)
       card = HelpdeskCardsUserService.getMeetingCardForUser({
         entitlements: ['squared-syncup'],
-        licenseID: ['CF_56b343df-bdd5-463b-8895-d07fc3a94877']
+        licenseID: ['CF_56b343df-bdd5-463b-8895-d07fc3a94877'],
       });
       expect(card.entitled).toBeTruthy();
       expect(card.entitlements.length).toEqual(1);
@@ -125,7 +125,7 @@ describe('HelpdeskCardsService', function () {
 
       // WebEx 11 (meetings)
       card = HelpdeskCardsUserService.getMeetingCardForUser({
-        entitlements: ['meetings']
+        entitlements: ['meetings'],
       });
       expect(card.entitled).toBeTruthy();
       expect(card.entitlements.length).toEqual(1);
@@ -133,7 +133,7 @@ describe('HelpdeskCardsService', function () {
 
       // WebEx no licenses (cloudmeetings)
       card = HelpdeskCardsUserService.getMeetingCardForUser({
-        entitlements: ['cloudmeetings']
+        entitlements: ['cloudmeetings'],
       });
       expect(card.entitled).toBeTruthy();
       expect(card.entitlements.length).toEqual(0);
@@ -141,7 +141,7 @@ describe('HelpdeskCardsService', function () {
       // WebEx with licenses (cloudmeetings)
       card = HelpdeskCardsUserService.getMeetingCardForUser({
         entitlements: ['cloudmeetings'],
-        licenseID: ['MC_56b343df-bdd5-463b-8895-d07fc3a94877_100_testing.webex.com']
+        licenseID: ['MC_56b343df-bdd5-463b-8895-d07fc3a94877_100_testing.webex.com'],
       });
       expect(card.entitled).toBeTruthy();
       expect(_.size(card.licensesByWebExSite)).toEqual(1);
@@ -150,7 +150,7 @@ describe('HelpdeskCardsService', function () {
 
     it('Should return correct hybrid services card for user', function () {
       var card = HelpdeskCardsUserService.getHybridServicesCardForUser({
-        entitlements: ['squared-fusion-cal']
+        entitlements: ['squared-fusion-cal'],
       });
       expect(card.entitled).toBeTruthy();
       expect(card.cal.entitled).toBeTruthy();
@@ -159,7 +159,7 @@ describe('HelpdeskCardsService', function () {
       expect(card.ec.entitled).toBeFalsy();
 
       card = HelpdeskCardsUserService.getHybridServicesCardForUser({
-        entitlements: ['squared-fusion-gcal']
+        entitlements: ['squared-fusion-gcal'],
       });
       expect(card.entitled).toBeTruthy();
       expect(card.cal.entitled).toBeFalsy();
@@ -168,7 +168,7 @@ describe('HelpdeskCardsService', function () {
       expect(card.ec.entitled).toBeFalsy();
 
       card = HelpdeskCardsUserService.getHybridServicesCardForUser({
-        entitlements: ['squared-fusion-uc']
+        entitlements: ['squared-fusion-uc'],
       });
       expect(card.entitled).toBeTruthy();
       expect(card.cal.entitled).toBeFalsy();
@@ -177,7 +177,7 @@ describe('HelpdeskCardsService', function () {
       expect(card.ec.entitled).toBeFalsy();
 
       card = HelpdeskCardsUserService.getHybridServicesCardForUser({
-        entitlements: ['squared-fusion-cal', 'squared-fusion-gcal', 'squared-fusion-uc', 'squared-fusion-ec']
+        entitlements: ['squared-fusion-cal', 'squared-fusion-gcal', 'squared-fusion-uc', 'squared-fusion-ec'],
       });
       expect(card.entitled).toBeTruthy();
       expect(card.cal.entitled).toBeTruthy();

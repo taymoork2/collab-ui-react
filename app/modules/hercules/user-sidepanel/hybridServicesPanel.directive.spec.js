@@ -33,7 +33,7 @@ describe('Directive Controller: hybridServicesPanelCtrl', function () {
       FeatureToggleService: FeatureToggleService,
       ServiceDescriptor: ServiceDescriptor,
       Authinfo: Authinfo,
-      CloudConnectorService: CloudConnectorService
+      CloudConnectorService: CloudConnectorService,
     });
     $scope.$apply();
     return controller;

@@ -360,8 +360,8 @@ describe('Controller: TrialAddCtrl', function () {
     beforeEach(function () {
       spyOn(TrialService, 'startTrial').and.returnValue($q.reject({
         data: {
-          message: 'An error occurred'
-        }
+          message: 'An error occurred',
+        },
       }));
       controller.startTrial();
       $scope.$apply();
@@ -381,8 +381,8 @@ describe('Controller: TrialAddCtrl', function () {
       spyOn(Orgservice, 'getAdminOrg').and.returnValue($q.resolve({
         data: {
           success: true,
-          isTestOrg: true
-        }
+          isTestOrg: true,
+        },
       }));
       controller.setDeviceModal();
       $scope.$apply();
@@ -495,34 +495,34 @@ describe('Controller: TrialAddCtrl', function () {
     var emailInput;
     var testCase = [{
       retVal: {
-        unique: true
+        unique: true,
       },
-      targetVal: true
+      targetVal: true,
     }, {
       retVal: {
-        error: 'trialModal.errorInUse'
+        error: 'trialModal.errorInUse',
       },
-      targetVal: false
+      targetVal: false,
     }, {
       retVal: {
-        error: 'trialModal.errorInvalidName'
+        error: 'trialModal.errorInvalidName',
       },
-      targetVal: false
+      targetVal: false,
     }, {
       retVal: {
-        error: 'trialModal.errorInvalid'
+        error: 'trialModal.errorInvalid',
       },
-      targetVal: false
+      targetVal: false,
     }, {
       retVal: {
-        error: 'trialModal.errorServerDown'
+        error: 'trialModal.errorServerDown',
       },
-      targetVal: false
+      targetVal: false,
     }, {
       retVal: {
-        bad: 'bad'
+        bad: 'bad',
       },
-      targetVal: false
+      targetVal: false,
     }];
 
     beforeEach(function () {
@@ -530,13 +530,13 @@ describe('Controller: TrialAddCtrl', function () {
       emailInput = controller.custInfoFields[1];
       orgInput.options = {
         validation: {
-          show: null
-        }
+          show: null,
+        },
       };
       emailInput.options = {
         validation: {
-          show: null
-        }
+          show: null,
+        },
       };
     });
 

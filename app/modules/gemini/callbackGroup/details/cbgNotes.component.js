@@ -5,7 +5,7 @@
     .module('Gemini')
     .component('cbgNotes', {
       templateUrl: 'modules/gemini/callbackGroup/details/cbgNotes.tpl.html',
-      controller: CbgNotesCtrl
+      controller: CbgNotesCtrl,
     });
   /* @ngInject */
   function CbgNotesCtrl($state, $stateParams, $translate, cbgService, Notification, PreviousState, gemService) {
@@ -31,7 +31,7 @@
         customerID: customerId,
         siteID: ccaGroupId,
         action: 'add_note',
-        objectName: vm.model.postData
+        objectName: vm.model.postData,
       };
       var notes = _.get(postData, 'objectName');
       vm.loading = true;

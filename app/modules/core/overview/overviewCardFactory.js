@@ -14,7 +14,7 @@
       createCareCard: OverviewCareCard.createCard,
       createRoomSystemsCard: OverviewRoomSystemsCard.createCard,
       createHybridServicesCard: OverviewHybridServicesCard.createCard,
-      createUsersCard: OverviewUsersCard.createCard
+      createUsersCard: OverviewUsersCard.createCard,
     };
   }
 })();

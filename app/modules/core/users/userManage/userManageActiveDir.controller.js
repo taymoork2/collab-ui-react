@@ -18,11 +18,11 @@ require('./_user-manage.scss');
     vm.maxUsersInManual = OnboardService.maxUsersInManual;
 
     var dirSyncResource = $resource(UrlConfig.getAdminServiceUrl() + 'organization/:customerId/dirsync/mode?enabled=false', {
-      customerId: '@customerId'
+      customerId: '@customerId',
     }, {
       patch: {
-        method: 'PATCH'
-      }
+        method: 'PATCH',
+      },
     });
 
     vm.onInit();
@@ -33,10 +33,10 @@ require('./_user-manage.scss');
     function onTurnOffDS() {
       $modal.open({
         type: 'dialog',
-        templateUrl: 'modules/core/users/userManage/userManageActiveDirDisableConfirm.tpl.html'
+        templateUrl: 'modules/core/users/userManage/userManageActiveDirDisableConfirm.tpl.html',
       }).result.then(function () {
         dirSyncResource.patch({
-          customerId: Authinfo.getOrgId()
+          customerId: Authinfo.getOrgId(),
         }).$promise.then(function () {
           Notification.success('userManage.ad.dirSyncDisableSuccess');
           $state.go('users.manage.org');

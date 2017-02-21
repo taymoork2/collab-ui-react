@@ -8,7 +8,7 @@ describe('Controller: SingleNumberReachInfoCtrl', function () {
   var telephonyInfoWithoutDest = getJSONFixture('huron/json/telephonyInfo/snrEnabledWithoutDest.json');
   var modalDefer;
   var $stateParams = {
-    currentUser: currentUser
+    currentUser: currentUser,
   };
 
   beforeEach(angular.mock.module('Huron'));
@@ -32,13 +32,13 @@ describe('Controller: SingleNumberReachInfoCtrl', function () {
     spyOn(Notification, 'notify');
     spyOn(DialPlanService, 'getCustomerVoice').and.returnValue($q.resolve({ regionCode: '' }));
     spyOn($modal, 'open').and.returnValue({
-      result: modalDefer.promise
+      result: modalDefer.promise,
     });
     controller = $controller('SingleNumberReachInfoCtrl', {
       $scope: $scope,
       $stateParams: $stateParams,
       TelephonyInfoService: TelephonyInfoService,
-      Notification: Notification
+      Notification: Notification,
     });
     $scope = $rootScope.$new();
     $scope.$apply();
@@ -67,7 +67,7 @@ describe('Controller: SingleNumberReachInfoCtrl', function () {
       $scope.$apply();
       controller.snrInfo.remoteDestinations = [{
         "uuid": "123456",
-        "pattern": "555"
+        "pattern": "555",
       }];
       controller.saveSingleNumberReach();
       $httpBackend.flush();
@@ -79,7 +79,7 @@ describe('Controller: SingleNumberReachInfoCtrl', function () {
       TelephonyInfoService.getTelephonyInfo.and.returnValue(telephonyInfoWithDest);
       controller.snrInfo.remoteDestinations = [{
         "uuid": "123456",
-        "pattern": "555"
+        "pattern": "555",
       }];
       $scope.$apply();
 
@@ -95,7 +95,7 @@ describe('Controller: SingleNumberReachInfoCtrl', function () {
       $scope.$apply();
       controller.snrInfo.remoteDestinations = [{
         "uuid": "123456",
-        "pattern": "555"
+        "pattern": "555",
       }];
       controller.snrInfo.singleNumberReachEnabled = false;
       controller.remove();

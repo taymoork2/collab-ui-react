@@ -66,11 +66,11 @@
     function openService(serviceId, clusterId) {
       if (serviceId === 'squared-fusion-uc') {
         $state.go('call-service.list', {
-          clusterId: clusterId
+          clusterId: clusterId,
         });
       } else if (serviceId === 'squared-fusion-cal') {
         $state.go('calendar-service.list', {
-          clusterId: clusterId
+          clusterId: clusterId,
         });
       } else if (serviceId === 'squared-fusion-media') {
         $state.go('media-service-v2.list', {
@@ -82,7 +82,7 @@
         });
       } else if (serviceId === 'contact-center-context') {
         $state.go('context-resources', {
-          backState: 'cluster-list'
+          backState: 'cluster-list',
         });
       }
     }
@@ -90,15 +90,15 @@
     function openNodes(type, id) {
       if (type === 'c_mgmt') {
         $state.go('expressway-cluster.nodes', {
-          id: id
+          id: id,
         });
       } else if (type === 'mf_mgmt') {
         $state.go('mediafusion-cluster.nodes', {
-          id: id
+          id: id,
         });
       } else if (type === 'hds_app') {
         $state.go('hds-cluster.nodes', {
-          id: id
+          id: id,
         });
       }
     }
@@ -106,15 +106,15 @@
     function openSettings(type, id) {
       if (type === 'c_mgmt') {
         $state.go('expressway-cluster.settings', {
-          id: id
+          id: id,
         });
       } else if (type === 'mf_mgmt') {
         $state.go('mediafusion-cluster.settings', {
-          id: id
+          id: id,
         });
       } else if (type === 'hds_app') {
         $state.go('hds-cluster.settings', {
-          id: id
+          id: id,
         });
       }
     }
@@ -124,12 +124,12 @@
         resolve: {
           cluster: function () {
             return cluster;
-          }
+          },
         },
         controller: 'ClusterDeregisterController',
         controllerAs: 'clusterDeregister',
         templateUrl: 'modules/hercules/fusion-pages/components/rename-and-deregister-cluster-section/deregister-dialog.html',
-        type: 'dialog'
+        type: 'dialog',
       }).result.then(function () {
         $state.go('cluster-list', {}, { reload: true });
       });

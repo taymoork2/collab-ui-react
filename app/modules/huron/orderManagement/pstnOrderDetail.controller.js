@@ -26,7 +26,7 @@
               status: vm.currentOrder.status,
               tooltip: vm.currentOrder.tooltip,
               label: '(' + vm.currentOrder.areaCode + ') XXX-XXXX ' + $translate.instant('pstnSetup.quantity') +
-                        ': ' + vm.currentOrder.quantity
+                        ': ' + vm.currentOrder.quantity,
             });
           } else {
             pushNumbersToView(vm.currentOrder.numbers);
@@ -46,7 +46,7 @@
           number: num.number,
           label: TelephoneNumberService.getDIDLabel(num.number),
           status: num.status,
-          tooltip: num.tooltip
+          tooltip: num.tooltip,
         });
       });
     }

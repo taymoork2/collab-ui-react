@@ -13,7 +13,7 @@
     var positionOffset = 90; //additional pixels for the vertical line x2 and the (+)
 
     var service = {
-      scrollBuilderToTarget: scrollBuilderToTarget
+      scrollBuilderToTarget: scrollBuilderToTarget,
     };
 
     return service;
@@ -40,7 +40,7 @@
           var offset = scrollPosition + targetHeight + positionOffset;
           $container.stop(true, true); //clear current and any pending animations on the container
           $container.animate({
-            scrollTop: offset
+            scrollTop: offset,
           }, 800);
         }
       }, timeoutDelay);

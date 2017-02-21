@@ -21,7 +21,7 @@ describe('Controller: SupportCtrl', function () {
 
     currentUser = {
       success: true,
-      roles: ['ciscouc.devops', 'ciscouc.devsupport']
+      roles: ['ciscouc.devops', 'ciscouc.devsupport'],
     };
 
     spyOn(Userservice, 'getUser').and.callFake(function (uid, callback) {
@@ -34,7 +34,7 @@ describe('Controller: SupportCtrl', function () {
       $scope: $scope,
       Authinfo: Authinfo,
       Userservice: Userservice,
-      Config: Config
+      Config: Config,
     });
   }));
 
@@ -76,7 +76,7 @@ describe('Controller: SupportCtrl', function () {
     it('should change WindowLocation on success', function () {
 
       var result = {
-        resultsUrl: 'http://sample.org'
+        resultsUrl: 'http://sample.org',
       };
 
       $httpBackend.expectGET(expectedUrl).respond(200, result);

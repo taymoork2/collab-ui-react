@@ -109,7 +109,7 @@ require('./_organization-overview.scss');
 
     $scope.exportBtn = {
       title: $filter('translate')('organizationsPage.exportBtn'),
-      disabled: false
+      disabled: false,
     };
 
     if ($rootScope.exporting === true) {

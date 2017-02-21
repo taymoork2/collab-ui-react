@@ -12,7 +12,7 @@
     vm.localizedConnectorName = $translate.instant('hercules.connectorNames.squared-fusion-cal');
 
     vm.documentationSection = {
-      title: 'common.help'
+      title: 'common.help',
     };
 
   }

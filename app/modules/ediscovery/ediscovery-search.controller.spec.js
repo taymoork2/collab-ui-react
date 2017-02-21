@@ -26,7 +26,7 @@ describe('Controller: EdiscoverySearchController', function () {
       EdiscoveryService: EdiscoveryService,
       EdiscoveryNotificationService: EdiscoveryNotificationService,
       FeatureToggleService: FeatureToggleService,
-      Notification: Notification
+      Notification: Notification,
     });
 
     $scope.$apply();
@@ -45,7 +45,7 @@ describe('Controller: EdiscoverySearchController', function () {
         id: '1234',
         displayName: 'whatever',
         participants: {
-          items: ['abc@test.com']
+          items: ['abc@test.com'],
         },
         lastReadableActivityDate: lastReadableActivityDate,
         published: publishedDate,
@@ -94,7 +94,7 @@ describe('Controller: EdiscoverySearchController', function () {
 
       sinon.stub(EdiscoveryService, 'getAvalonRoomInfo');
       var promise = $q.reject({
-        "status": 404
+        "status": 404,
       });
       EdiscoveryService.getAvalonRoomInfo.returns(promise);
     });
@@ -125,7 +125,7 @@ describe('Controller: EdiscoverySearchController', function () {
 
       sinon.stub(EdiscoveryService, 'getAvalonRoomInfo');
       var promise = $q.reject({
-        "status": 400
+        "status": 400,
       });
       EdiscoveryService.getAvalonRoomInfo.returns(promise);
     });
@@ -156,7 +156,7 @@ describe('Controller: EdiscoverySearchController', function () {
       sinon.stub(Notification, "error");
       sinon.stub(EdiscoveryService, 'getAvalonRoomInfo');
       var promise = $q.reject({
-        "status": 500
+        "status": 500,
       });
       EdiscoveryService.getAvalonRoomInfo.returns(promise);
     });
@@ -193,7 +193,7 @@ describe('Controller: EdiscoverySearchController', function () {
         id: '1234',
         displayName: 'whatever',
         participants: {
-          items: ['abc@test.com']
+          items: ['abc@test.com'],
         },
         lastReadableActivityDate: lastReadableActivityDate,
         published: publishedDate,
@@ -230,7 +230,7 @@ describe('Controller: EdiscoverySearchController', function () {
       var promise = $q.resolve({
         displayName: 'test',
         url: 'whatever',
-        id: '12345678'
+        id: '12345678',
       });
       EdiscoveryService.createReport.returns(promise);
     });
@@ -245,7 +245,7 @@ describe('Controller: EdiscoverySearchController', function () {
         displayName: sinon.match.any,
         roomId: sinon.match.any,
         startDate: sinon.match.any,
-        endDate: sinon.match.any
+        endDate: sinon.match.any,
       };
 
       ediscoverySearchController.createReport();
@@ -266,9 +266,9 @@ describe('Controller: EdiscoverySearchController', function () {
           message: 'Invalid Input',
           errors: [{
             errorCode: 420000,
-            description: 'displayName: may not be empty'
-          }]
-        }
+            description: 'displayName: may not be empty',
+          }],
+        },
       });
       EdiscoveryService.createReport.returns(promise);
     });
@@ -299,7 +299,7 @@ describe('Controller: EdiscoverySearchController', function () {
       promise = $q.resolve({
         displayName: 'test',
         url: 'whatever',
-        id: '12345678'
+        id: '12345678',
       });
       EdiscoveryService.createReport.returns(promise);
 
@@ -311,7 +311,7 @@ describe('Controller: EdiscoverySearchController', function () {
       promise = $q.resolve({
         displayName: 'test',
         url: 'whatever',
-        id: '12345678'
+        id: '12345678',
       });
       EdiscoveryService.getReport.returns(promise);
     });
@@ -326,7 +326,7 @@ describe('Controller: EdiscoverySearchController', function () {
         displayName: sinon.match.any,
         roomId: sinon.match.any,
         startDate: sinon.match.any,
-        endDate: sinon.match.any
+        endDate: sinon.match.any,
       };
 
       expect(EdiscoveryService.runReport.callCount).toBe(1);
@@ -358,11 +358,11 @@ describe('Controller: EdiscoverySearchController', function () {
             roomQuery: {
               roomId: 'roomIdFromStateParam',
               startDate: 'startDateFromStateParam',
-              endDate: 'endDateFromStateParam'
-            }
+              endDate: 'endDateFromStateParam',
+            },
           },
-          reRun: true
-        }
+          reRun: true,
+        },
       });
 
       expect(ediscoverySearchController.searchCriteria.roomId).toEqual('roomIdFromStateParam');
@@ -386,10 +386,10 @@ describe('Controller: EdiscoverySearchController', function () {
               roomId: 'roomIdFromStateParam',
               startDate: 'startDateFromStateParam',
               endDate: 'endDateFromStateParam',
-            }
+            },
           },
-          reRun: false
-        }
+          reRun: false,
+        },
       });
       expect(ediscoverySearchController.searchCriteria.roomId).toEqual('roomIdFromStateParam');
       expect(ediscoverySearchController.searchCriteria.displayName).toEqual('whatever');

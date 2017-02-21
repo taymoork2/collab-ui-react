@@ -71,7 +71,7 @@
       return {
         timestamp: lastLog.timestamp,
         filename: lastLog.filename,
-        platform: platform
+        platform: platform,
       };
     }
 
@@ -84,7 +84,7 @@
     return {
       searchForLastPushedLog: searchForLastPushedLog,
       getLastPushedLogForUser: getLastPushedLogForUser,
-      downloadLog: downloadLog
+      downloadLog: downloadLog,
     };
 
   }

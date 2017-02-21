@@ -12,11 +12,11 @@
     vm.hasMFFeatureToggle = hasMFFeatureToggle;
     //vm.sipurlconfiguration = '';
     vm.upgradeSchedule = {
-      title: 'hercules.expresswayClusterSettings.upgradeScheduleHeader'
+      title: 'hercules.expresswayClusterSettings.upgradeScheduleHeader',
     };
 
     vm.sipRegistration = {
-      title: 'mediaFusion.sipconfiguration.title'
+      title: 'mediaFusion.sipconfiguration.title',
     };
 
     MediaClusterServiceV2.getProperties($stateParams.id)
@@ -28,11 +28,11 @@
       resolve: {
         cluster: function () {
           return vm.cluster;
-        }
+        },
       },
       controller: 'DeleteClusterSettingControllerV2',
       controllerAs: 'deleteClust',
-      templateUrl: 'modules/mediafusion/media-service-v2/delete-cluster/delete-cluster-dialog.html'
+      templateUrl: 'modules/mediafusion/media-service-v2/delete-cluster/delete-cluster-dialog.html',
     };
 
     loadCluster($stateParams.id);
@@ -57,7 +57,7 @@
 
     function saveSipTrunk() {
       vm.payLoad = {
-        'mf.ucSipTrunk': vm.sipurlconfiguration
+        'mf.ucSipTrunk': vm.sipurlconfiguration,
       };
       MediaClusterServiceV2
         .setProperties($stateParams.id, vm.payLoad)

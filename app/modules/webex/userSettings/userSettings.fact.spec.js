@@ -17,7 +17,7 @@ describe('WebExUserSettingsFact multi-center licenses tests', function () {
       "emails": [{
         "primary": true,
         "type": "work",
-        "value": "wesleyzhu7+78695@gmail.com"
+        "value": "wesleyzhu7+78695@gmail.com",
       }],
       "entitlements": ["cloudmeetings", "squared-call-initiation", "spark", "webex-squared"],
       "id": "9eba1b0d-176c-43ac-a22c-2232a74e9e5e",
@@ -26,7 +26,7 @@ describe('WebExUserSettingsFact multi-center licenses tests', function () {
         "lastModified": "2016-02-08T23:30:14.853Z",
         "version": "29814623198",
         "location": "https://identity.webex.com/identity/scim/7a9204db-af2d-4fb1-bf84-6576800da161/v1/Users/9eba1b0d-176c-43ac-a22c-2232a74e9e5e",
-        "organizationID": "7a9204db-af2d-4fb1-bf84-6576800da161"
+        "organizationID": "7a9204db-af2d-4fb1-bf84-6576800da161",
       },
       "displayName": "wesleyzhu7+78695@gmail.com",
       "active": true,
@@ -36,9 +36,9 @@ describe('WebExUserSettingsFact multi-center licenses tests', function () {
         "CMR_aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa_10_t30citestprov13.webex.com",
       ],
       "trainSiteNames": ["t30citestprov13.webex.com"],
-      "avatarSyncEnabled": false
+      "avatarSyncEnabled": false,
     },
-    "site": "t30citestprov13.webex.com"
+    "site": "t30citestprov13.webex.com",
   }; // fakeStateParams
 
   var fakeOrgLicenses = {
@@ -52,45 +52,45 @@ describe('WebExUserSettingsFact multi-center licenses tests', function () {
           "licenseId": "MS_3e3cd067-4cee-4a89-9941-0c4ae920ebe6",
           "licenseType": "MESSAGING",
           "volume": 10,
-          "usage": 0
+          "usage": 0,
         }, {
           "licenseId": "ST_9d89488a-6017-4d21-945f-111df325585e_5",
           "licenseType": "STORAGE",
           "volume": 0,
           "capacity": 5,
-          "usage": 0
+          "usage": 0,
         }, {
           "licenseId": "CMR_d5736761-df83-42e5-bbf3-e8d6dab71e36_10_t30citestprov13.webex.com",
           "licenseType": "CMR",
           "volume": 10,
           "capacity": 10,
-          "usage": 3
+          "usage": 3,
         }, {
           "licenseId": "EC_4c6e5366-2e44-4886-9b91-f2d2c90ebcff_200_t30citestprov13.webex.com",
           "licenseType": "CONFERENCING",
           "volume": 200,
           "capacity": 200,
-          "usage": 6
+          "usage": 6,
         }, {
           "licenseId": "MC_61d4e4eb-ecbc-4bac-8f6b-b8030128e1b7_200_t30citestprov13.webex.com",
           "licenseType": "CONFERENCING",
           "volume": 200,
           "capacity": 200,
-          "usage": 5
+          "usage": 5,
         }, {
           "licenseId": "CF_437a6b1d-f049-4583-aa16-acab6a0583c8_10",
           "licenseType": "CONFERENCING",
           "volume": 5,
           "capacity": 10,
-          "usage": 0
+          "usage": 0,
         }],
         "commerceRelation": "Direct",
         "licenseEnforcement": {
           "licenseExceedAction": "NOTHING",
-          "licenseExceedThreshold": "NA"
-        }
-      }]
-    }
+          "licenseExceedThreshold": "NA",
+        },
+      }],
+    },
   }; // fakeOrgLicenses
 
   var fakeWebExSessionTicket = "fakeWebExSessionTicket";
@@ -249,7 +249,7 @@ describe('WebExUserSettingsFact pmr/cmr tests', function () {
       "emails": [{
         "primary": true,
         "type": "work",
-        "value": "wesleyzhu7+78695@gmail.com"
+        "value": "wesleyzhu7+78695@gmail.com",
       }],
       "entitlements": ["cloudmeetings", "squared-call-initiation", "spark", "webex-squared"],
       "id": "9eba1b0d-176c-43ac-a22c-2232a74e9e5e",
@@ -258,7 +258,7 @@ describe('WebExUserSettingsFact pmr/cmr tests', function () {
         "lastModified": "2016-02-08T23:30:14.853Z",
         "version": "29814623198",
         "location": "https://identity.webex.com/identity/scim/7a9204db-af2d-4fb1-bf84-6576800da161/v1/Users/9eba1b0d-176c-43ac-a22c-2232a74e9e5e",
-        "organizationID": "7a9204db-af2d-4fb1-bf84-6576800da161"
+        "organizationID": "7a9204db-af2d-4fb1-bf84-6576800da161",
       },
       "displayName": "wesleyzhu7+78695@gmail.com",
       "active": true,
@@ -268,9 +268,9 @@ describe('WebExUserSettingsFact pmr/cmr tests', function () {
         "CMR_aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa_10_t30citestprov13.webex.com",
       ],
       "trainSiteNames": ["t30citestprov13.webex.com"],
-      "avatarSyncEnabled": false
+      "avatarSyncEnabled": false,
     },
-    "site": "t30citestprov13.webex.com"
+    "site": "t30citestprov13.webex.com",
   }; // fakeStateParams
 
   beforeEach(angular.mock.module('WebExApp'));
@@ -279,53 +279,53 @@ describe('WebExUserSettingsFact pmr/cmr tests', function () {
     WebexUserSettingsSvc = {
       'pmr': {
         'isSiteEnabled': true,
-        'value': true
+        'value': true,
       },
       'cmr': {
-        'value': true
+        'value': true,
       },
       'telephonyPriviledge': {
         "telephonyType": {
           "isWebExAudio": false,
-          "isTspAudio": false
+          "isTspAudio": false,
         },
         "hybridAudio": {
-          "isSiteEnabled": false
+          "isSiteEnabled": false,
         },
         'callInTeleconf': {
           'value': false,
           'selectedCallInTollType': 0,
           'toll': {
-            'value': false
+            'value': false,
           },
           'tollFree': {
-            'value': false
+            'value': false,
           },
           'teleconfViaGlobalCallIn': {
             'isSiteEnabled': false,
-            'value': false
+            'value': false,
           },
           'teleCLIAuthEnabled': {
             'isSiteEnabled': false,
-            'value': false
-          }
+            'value': false,
+          },
         },
         'callBackTeleconf': {
           'isSiteEnabled': false,
           'value': false,
           'globalCallBackTeleconf': {
             'isSiteEnabled': false,
-            'value': false
-          }
+            'value': false,
+          },
         },
         'otherTeleconfServices': {
           'isSiteEnabled': false,
-          'value': false
+          'value': false,
         },
         'integratedVoIP': {
           'isSiteEnabled': false,
-          'value': false
-        }
+          'value': false,
+        },
       },
       'videoSettings': {
         'hiQualVideo': {
@@ -333,14 +333,14 @@ describe('WebExUserSettingsFact pmr/cmr tests', function () {
           'value': false,
           'hiDefVideo': {
             'isSiteEnabled': false,
-            'value': false
-          }
-        }
+            'value': false,
+          },
+        },
       },
       "meetingCenter": {
         "id": "MC",
         "serviceType": "MeetingCenter",
-        "isSiteEnabled": false
+        "isSiteEnabled": false,
       },
       "trainingCenter": {
         "id": "TC",
@@ -348,8 +348,8 @@ describe('WebExUserSettingsFact pmr/cmr tests', function () {
         "isSiteEnabled": false,
         "handsOnLabAdmin": {
           "value": false,
-          "isSiteEnabled": false
-        }
+          "isSiteEnabled": false,
+        },
       },
       "eventCenter": {
         "id": "EC",
@@ -357,16 +357,16 @@ describe('WebExUserSettingsFact pmr/cmr tests', function () {
         "isSiteEnabled": false,
         "optimizeBandwidthUsage": {
           "isSiteEnabled": false,
-          "value": false
-        }
+          "value": false,
+        },
       },
       "supportCenter": {
         "id": "SC",
         "serviceType": "SupportCenter",
-        "isSiteEnabled": false
+        "isSiteEnabled": false,
       },
       'disableCancel2': false,
-      'isT31Site': false
+      'isT31Site': false,
     };
 
     $provide.value('WebexUserSettingsSvc', WebexUserSettingsSvc);

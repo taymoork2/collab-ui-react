@@ -20,7 +20,7 @@
       }, {
         title: $translate.instant('common.settings'),
         state: 'media-service-v2.settings',
-      }
+      },
     ];
     vm.addResourceModal = {
       resolve: {
@@ -31,7 +31,7 @@
       controller: 'RedirectAddResourceControllerV2',
       controllerAs: 'redirectResource',
       templateUrl: 'modules/mediafusion/media-service-v2/add-resources/add-resource-dialog.html',
-      modalClass: 'redirect-add-resource'
+      modalClass: 'redirect-add-resource',
     };
 
     FusionClusterService.serviceIsSetUp('squared-fusion-media')

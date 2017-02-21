@@ -13,8 +13,8 @@ describe('Controller: aaBuilderNameCtrl', function () {
     "assignedResources": [{
       "id": "00097a86-45ef-44a7-aa78-6d32a0ca1d3b",
       "type": "directoryNumber",
-      "trigger": "incomingCall"
-    }]
+      "trigger": "incomingCall",
+    }],
   };
 
   var aaModel = {};
@@ -62,7 +62,7 @@ describe('Controller: aaBuilderNameCtrl', function () {
     spyOn($rootScope, '$broadcast').and.callThrough();
 
     controller = $controller('aaBuilderNameCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
     $scope.$apply();
   }));

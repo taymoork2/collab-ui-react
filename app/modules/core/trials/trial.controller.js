@@ -96,7 +96,7 @@
       type: 'checkbox',
       templateOptions: {
         label: $translate.instant('trials.context'),
-        id: 'contextTrial'
+        id: 'contextTrial',
       },
     }];
 
@@ -117,7 +117,7 @@
         'data.paid': function () {
           return vm.messageTrial.paid;
         },
-      }
+      },
     }];
 
     vm.meetingFields = [{
@@ -136,7 +136,7 @@
         'data.paid': function () {
           return vm.meetingTrial.paid;
         },
-      }
+      },
     }];
 
     vm.webexFields = [{
@@ -146,7 +146,7 @@
       type: 'checkbox',
       templateOptions: {
         label: $translate.instant('trials.webex'),
-        id: _webexTemplateOptionId
+        id: _webexTemplateOptionId,
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
@@ -155,7 +155,7 @@
         'data.paid': function () {
           return vm.webexTrial.paid;
         },
-      }
+      },
     }];
 
     vm.callFields = [{
@@ -168,7 +168,7 @@
         id: _callTemplateOptionId,
 
         inputClass: 'medium-5 small-offset-1',
-        secondaryLabel: $translate.instant('trials.licenses')
+        secondaryLabel: $translate.instant('trials.licenses'),
 
       },
       hideExpression: function () {
@@ -181,7 +181,7 @@
         'data.paid': function () {
           return vm.callTrial.paid;
         },
-      }
+      },
     }];
 
     vm.careFields = [{
@@ -191,7 +191,7 @@
       type: 'checkbox',
       templateOptions: {
         id: 'careTrial',
-        label: $translate.instant('trials.care')
+        label: $translate.instant('trials.care'),
       },
       hideExpression: function () {
         return !vm.showCare;
@@ -206,7 +206,7 @@
         'data.paid': function () {
           return vm.careTrial.paid;
         },
-      }
+      },
     }, {
       model: vm.careTrial.details,
       key: 'quantity',
@@ -216,10 +216,10 @@
         id: 'trialCareLicenseCount',
         inputClass: 'medium-5 small-offset-1',
         secondaryLabel: $translate.instant('trials.licenses'),
-        type: 'number'
+        type: 'number',
       },
       modelOptions: {
-        allowInvalid: true
+        allowInvalid: true,
       },
       expressionProperties: {
         'templateOptions.required': function () {
@@ -227,7 +227,7 @@
         },
         'templateOptions.disabled': function () {
           return careLicenseInputDisabledExpression();
-        }
+        },
       },
       validators: {
         quantity: {
@@ -236,8 +236,8 @@
           },
           message: function () {
             return $translate.instant('partnerHomePage.invalidTrialCareQuantity');
-          }
-        }
+          },
+        },
       },
       watcher: {
         expression: function () {
@@ -247,8 +247,8 @@
           if (newValue !== oldValue) {
             field.formControl.$validate();
           }
-        }
-      }
+        },
+      },
     }];
 
     // Room Systems Trial
@@ -258,14 +258,14 @@
       type: 'checkbox',
       templateOptions: {
         label: $translate.instant('trials.roomSystem'),
-        id: _roomSystemsTemplateOptionId
+        id: _roomSystemsTemplateOptionId,
       },
       watcher: {
         listener: function (field, newValue, oldValue) {
           if (newValue !== oldValue) {
             field.model.details.quantity = newValue ? _roomSystemDefaultQuantity : 0;
           }
-        }
+        },
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
@@ -283,7 +283,7 @@
         id: 'trialRoomSystemsAmount',
         inputClass: 'medium-5 small-offset-1',
         secondaryLabel: $translate.instant('trials.licenses'),
-        type: 'number'
+        type: 'number',
       },
       expressionProperties: {
         'templateOptions.required': function () {
@@ -300,9 +300,9 @@
           },
           message: function () {
             return $translate.instant('partnerHomePage.invalidTrialRoomSystemQuantity');
-          }
-        }
-      }
+          },
+        },
+      },
     }];
 
     vm.sparkBoardFields = [{
@@ -311,14 +311,14 @@
       type: 'checkbox',
       templateOptions: {
         id: _sparkBoardTemplateOptionId,
-        label: $translate.instant('trials.sparkBoardSystem')
+        label: $translate.instant('trials.sparkBoardSystem'),
       },
       watcher: {
         listener: function (field, newValue, oldValue) {
           if (newValue !== oldValue) {
             field.model.details.quantity = newValue ? _roomSystemDefaultQuantity : 0;
           }
-        }
+        },
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
@@ -327,7 +327,7 @@
         'data.paid': function () {
           return vm.sparkBoardTrial.paid;
         },
-      }
+      },
     }, {
       model: vm.sparkBoardTrial.details,
       key: 'quantity',
@@ -336,7 +336,7 @@
         id: 'trialSparkBoardAmount',
         inputClass: 'medium-5 small-offset-1',
         secondaryLabel: $translate.instant('trials.licenses'),
-        type: 'number'
+        type: 'number',
       },
       expressionProperties: {
         'templateOptions.required': function () {
@@ -353,9 +353,9 @@
           },
           message: function () {
             return $translate.instant('partnerHomePage.invalidTrialSparkBoardQuantity');
-          }
-        }
-      }
+          },
+        },
+      },
     }];
 
     vm.licenseCountFields = [{
@@ -366,10 +366,10 @@
         label: $translate.instant('trials.licenseQuantity'),
         inputClass: 'medium-5',
         type: 'number',
-        secondaryLabel: $translate.instant('trials.users')
+        secondaryLabel: $translate.instant('trials.users'),
       },
       modelOptions: {
-        allowInvalid: true
+        allowInvalid: true,
       },
       expressionProperties: {
         'templateOptions.required': function () {
@@ -384,7 +384,7 @@
           } else {
             return 0;
           }
-        }
+        },
       },
       validators: {
         count: {
@@ -393,7 +393,7 @@
           },
           message: function () {
             return $translate.instant('partnerHomePage.invalidTrialLicenseCount');
-          }
+          },
         },
         countWithCare: {
           expression: function () {
@@ -401,8 +401,8 @@
           },
           message: function () {
             return $translate.instant('partnerHomePage.careLicenseCountExceedsTotalCount');
-          }
-        }
+          },
+        },
       },
       watcher: {
         expression: function () {
@@ -412,8 +412,8 @@
           if (newValue !== oldValue) {
             field.formControl.$validate();
           }
-        }
-      }
+        },
+      },
     }];
 
     vm.trialTermsFields = [{
@@ -434,7 +434,7 @@
             vm.licenseCountChanged = true;
             isProceedDisabled();
           }
-        }
+        },
       },
     }];
 
@@ -453,7 +453,7 @@
         },
         onBlur: function (value, options) {
           options.validation.show = null;
-        }
+        },
       },
       asyncValidators: {
         uniqueName: {
@@ -471,15 +471,15 @@
           message: function () {
             return errorMessage('uniqueNameError');
           },
-        }
+        },
       },
       modelOptions: {
         updateOn: 'default blur',
         debounce: {
           default: debounceTimeout,
-          blur: 0
+          blur: 0,
         },
-      }
+      },
     }, {
       model: vm.details,
       key: 'customerEmail',
@@ -494,7 +494,7 @@
         },
         onBlur: function (value, options) {
           options.validation.show = null;
-        }
+        },
       },
       asyncValidators: {
         uniqueEmail: {
@@ -511,16 +511,16 @@
           },
           message: function () {
             return errorMessage('uniqueEmailError');
-          }
-        }
+          },
+        },
       },
       modelOptions: {
         updateOn: 'default blur',
         debounce: {
           default: debounceTimeout,
-          blur: 0
+          blur: 0,
         },
-      }
+      },
     }];
 
    // US12171 - always entitle call (previously Authinfo.isSquaredUC())
@@ -559,10 +559,10 @@
       getExistingOrgInitResults: getExistingOrgInitResults,
       getPaidLicense: getPaidLicense,
       hasOfferType: hasOfferType,
-      getPaidServicesForDisplay: getPaidServicesForDisplay
+      getPaidServicesForDisplay: getPaidServicesForDisplay,
     };
     vm.devicesModal = _.find(vm.trialStates, {
-      name: 'trial.call'
+      name: 'trial.call',
     });
     vm.setDefaultCountry = setDefaultCountry;
 
@@ -647,7 +647,7 @@
     function hasUserServices() {
       var services = [vm.callTrial, vm.meetingTrial, vm.webexTrial, vm.messageTrial];
       var result = _.some(services, {
-        enabled: true
+        enabled: true,
       });
       return result;
     }
@@ -709,7 +709,7 @@
     function addRemoveStates() {
       _.forEach(vm.trialStates, function (state) {
         if (!state.enabled || _.every(state.trials, {
-          enabled: false
+          enabled: false,
         })) {
           removeNavState(state.name);
         } else {
@@ -819,7 +819,7 @@
       return TrialService.editTrial(custId, trialId)
         .catch(function (response) {
           Notification.errorResponse(response, 'trialModal.editError', {
-            customerName: vm.details.customerName
+            customerName: vm.details.customerName,
           });
           return $q.reject(response);
         })
@@ -858,7 +858,7 @@
       return TrialService.startTrial(vm.currentTrial.customerOrgId)
         .catch(function (response) {
           Notification.errorResponse(response, 'trialModal.addError', {
-            customerName: vm.details.customerName
+            customerName: vm.details.customerName,
           });
           return $q.reject(response);
         }).then(function (response) {
@@ -874,7 +874,7 @@
         .then(function () {
           vm.finishSetup();
           return {
-            customerOrgId: vm.customerOrgId
+            customerOrgId: vm.customerOrgId,
           };
         })
         .finally(function () {
@@ -889,7 +889,7 @@
 
     function findOffer(configOption) {
       return _.find(vm.currentTrial.offers, {
-        id: configOption
+        id: configOption,
       });
     }
 
@@ -898,7 +898,7 @@
       var result = {
         label: label,
         qty: 0,
-        licenseItems: []
+        licenseItems: [],
       };
       if (offerNames && !_.isArray(offerNames)) {
         offerNames = [offerNames];
@@ -918,7 +918,7 @@
             result.licenseItems.push({
               partnerOrgId: license.partnerOrgId,
               label: label,
-              qty: license.volume
+              qty: license.volume,
             });
           }
         }
@@ -933,7 +933,7 @@
     function setViewState(modalStage, value) {
 
       _.find(vm.trialStates, {
-        name: modalStage
+        name: modalStage,
       }).enabled = value;
     }
 
@@ -947,7 +947,7 @@
         vm.preset.care && (vm.preset.careLicenseValue !== vm.careTrial.details.quantity),
         (vm.preset.licenseCount !== vm.details.licenseCount) && !(isNewTrial() && isExistingOrg()),
         vm.licenseCountChanged,
-        canAddDevice()
+        canAddDevice(),
       ];
 
       // bail at first true result
@@ -1055,7 +1055,7 @@
       sendToAnalytics(Analytics.eventNames.YES);
       $window.open($state.href('login_swap', {
         customerOrgId: customerOrgId,
-        customerOrgName: customerOrgName
+        customerOrgName: customerOrgName,
       }));
       $state.modal.close();
     }
@@ -1138,7 +1138,7 @@
         licenseDuration: _.get(vm, 'currentTrial.duration', 0),
         care: hasOfferType(Config.offerTypes.care),
         careLicenseValue: _.get(findOffer(Config.offerTypes.care), 'licenseCount', 0),
-        context: false // we don't know this yet, so default to false
+        context: false, // we don't know this yet, so default to false
       };
     }
 
@@ -1162,7 +1162,7 @@
         trialDuration: _trialDurationDefaultLength,
         roomSystemsDefault: _roomSystemDefaultQuantity,
         sparkBoardDefault: _roomSystemDefaultQuantity,
-        careDefault: _careDefaultQuantity
+        careDefault: _careDefaultQuantity,
       };
     }
 
@@ -1253,7 +1253,7 @@
       sendToAnalytics(Analytics.sections.TRIAL.eventNames.FINISH);
       //edit
       Notification.success(notifictionSuccessText, {
-        customerName: customerName
+        customerName: customerName,
       });
 
       if (_.isFunction(addNumbersCallback)) {

@@ -10,12 +10,12 @@
     function create(userId) {
       var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/devices/?cisUuid=' + userId + '&type=huron';
       return $injector.instantiate(CsdmHuronDeviceService, {
-        devicesUrl: devicesUrl
+        devicesUrl: devicesUrl,
       });
     }
 
     return {
-      create: create
+      create: create,
     };
   }
 
@@ -23,12 +23,12 @@
     function create() {
       var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/devices/?type=huron';
       return $injector.instantiate(CsdmHuronDeviceService, {
-        devicesUrl: devicesUrl
+        devicesUrl: devicesUrl,
       });
     }
 
     return {
-      create: create
+      create: create,
     };
   }
 
@@ -122,7 +122,7 @@
           return $q.all(_.map(res.data, function (directoryNumber) {
             var line = {
               'directoryNumber': directoryNumber.directoryNumber.pattern,
-              'usage': directoryNumber.dnUsage
+              'usage': directoryNumber.dnUsage,
             };
             return $http.get(getAlternateNumbersUrl(directoryNumber.directoryNumber.uuid)).then(function (alternates) {
               if (alternates.data && alternates.data[0]) {
@@ -140,7 +140,7 @@
       return $http.get(getPhoneUrl(huronDevice.huronId, huronDevice.cisUuid))
         .then(function (res) {
           var response = {
-            timeZone: null
+            timeZone: null,
           };
           if (res.data) {
             response.timeZone = res.data.timeZone;
@@ -158,7 +158,7 @@
             "port": null,
             "inputAudioLevel": null,
             "outputAudioLevel": null,
-            "impedance": null
+            "impedance": null,
           };
           if (res.data) {
             response.port = res.data.port;
@@ -172,7 +172,7 @@
 
     function setTimezoneForDevice(huronDevice, timezone) {
       return $http.put(getPhoneUrl(huronDevice.huronId, huronDevice.cisUuid), {
-        timeZone: timezone
+        timeZone: timezone,
       });
     }
 
@@ -182,23 +182,23 @@
 
     function setCountryForDevice(huronDevice, country) {
       return $http.put(getPhoneUrl(huronDevice.huronId, huronDevice.cisUuid), {
-        country: country
+        country: country,
       });
     }
 
     function setEmergencyCallback(huronDevice, emergencyCallbackNumber) {
       return $http.put(getPhoneUrl(huronDevice.huronId, huronDevice.cisUuid), {
         emergencyCallbackNumber: {
-          number: emergencyCallbackNumber
-        }
+          number: emergencyCallbackNumber,
+        },
       });
     }
 
     function resetDevice(url) {
       return $http.put(url, {
         actions: {
-          reset: true
-        }
+          reset: true,
+        },
       });
     }
 
@@ -212,13 +212,13 @@
       }
 
       return $http.put(url, {
-        description: jsonTags
+        description: jsonTags,
       });
     }
 
     function uploadLogs(device, feedbackId) {
       return $http.post(getCmiUploadLogsUrl(device.cisUuid, device.huronId), {
-        ticketId: feedbackId
+        ticketId: feedbackId,
       });
     }
 
@@ -241,7 +241,7 @@
       setSettingsForAta: setSettingsForAta,
       resetDevice: resetDevice,
       uploadLogs: uploadLogs,
-      fetch: fetch
+      fetch: fetch,
     };
   }
 })();

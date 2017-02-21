@@ -46,7 +46,7 @@ describe('SiteCSVModalCtrl: initiate export', function () {
 
     fakeSiteRow = {
       license: {
-        siteUrl: "fake.webex.com"
+        siteUrl: "fake.webex.com",
       },
 
       csvMock: {
@@ -64,8 +64,8 @@ describe('SiteCSVModalCtrl: initiate export', function () {
     SiteCSVModalCtrl = $controller('SiteCSVModalCtrl', {
       $scope: $scope,
       $stateParams: {
-        siteRow: fakeSiteRow
-      }
+        siteRow: fakeSiteRow,
+      },
     });
 
     $scope.$apply();
@@ -127,7 +127,7 @@ describe('SiteCSVModalCtrl: initiate export', function () {
     expect(WebExApiGatewayService.csvExport).toHaveBeenCalled();
 
     deferredCSVExport.reject({
-      errorCode: 'errorCode'
+      errorCode: 'errorCode',
     });
 
     $rootScope.$apply();
@@ -180,7 +180,7 @@ describe('SiteCSVModalCtrl: initiate export', function () {
 
     deferredCSVImport.reject({
       "errorCode": "060100",
-      "errorMessage": "Your request has been prevented because a task is now running. Try again later."
+      "errorMessage": "Your request has been prevented because a task is now running. Try again later.",
     });
 
     $rootScope.$apply();
@@ -229,15 +229,15 @@ describe('SiteCSVModalCtrl read only', function () {
 
     fakeSiteRow = {
       license: {
-        siteUrl: "fake.webex.com"
-      }
+        siteUrl: "fake.webex.com",
+      },
     };
 
     SiteCSVModalCtrl = _$controller_('SiteCSVModalCtrl', {
       $scope: $scope,
       $stateParams: {
-        siteRow: fakeSiteRow
-      }
+        siteRow: fakeSiteRow,
+      },
     });
 
     $scope.$apply();
@@ -255,7 +255,7 @@ describe('SiteCSVModalCtrl read only', function () {
 
     deferredCSVImport.reject({
       "errorCode": "000001",
-      "errorMessage": "Insufficient privileges."
+      "errorMessage": "Insufficient privileges.",
     });
 
     $rootScope.$apply();

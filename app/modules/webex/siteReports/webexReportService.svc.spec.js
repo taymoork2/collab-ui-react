@@ -60,7 +60,7 @@ describe('WebexReportService Test', function () {
   it("webex: can reverse mapping", function () {
     var mapping = {
       "x": "y",
-      "w": "z"
+      "w": "z",
     };
     var reversedMap = WebexReportService.reverseMapping(mapping);
     var x = reversedMap["y"];

@@ -33,7 +33,7 @@ require('./_cdr-logs.scss');
       name: 'custom-file',
       templateUrl: 'modules/huron/cdrLogs/formly-field-custom-file.tpl.html',
       wrapper: ['ciscoWrapper'],
-      overwriteOk: true
+      overwriteOk: true,
     });
 
     vm.gridData = [];
@@ -47,13 +47,13 @@ require('./_cdr-logs.scss');
       'endTime': moment().format(timeFormat),
       'startDate': moment().subtract(1, 'days').format(dateFormat),
       'endDate': moment().format(dateFormat),
-      'hitSize': 50
+      'hitSize': 50,
     };
     vm.updateLogstashPath = updateLogstashPath;
 
     //TODO: remove this once the ng-change is availabe with cs-datepicker directive!!
     $scope.cdr = {
-      model: {}
+      model: {},
     };
     $scope.$watch("cdr.model.endDate", function () {
       vm.validations.endDate();
@@ -66,40 +66,40 @@ require('./_cdr-logs.scss');
       label: $translate.instant('cdrLogs.searchForm'),
       value: vm.SEARCH,
       name: 'radioSearchUpload',
-      id: 'cdrSearch'
+      id: 'cdrSearch',
     }, {
       label: $translate.instant('cdrLogs.uploadFile'),
       value: vm.UPLOAD,
       name: 'radioSearchUpload',
-      id: 'cdrUpload'
+      id: 'cdrUpload',
     }];
     vm.radioSelected = vm.SEARCH;
 
     vm.messages = {
       number: {
         pattern: $translate.instant('cdrLogs.phoneNumberError'),
-        invalid: $translate.instant('cdrLogs.phoneNumberErrorTwo')
+        invalid: $translate.instant('cdrLogs.phoneNumberErrorTwo'),
       },
       time: {
         required: $translate.instant('cdrLogs.required'),
-        pattern: $translate.instant('cdrLogs.invalidTime')
+        pattern: $translate.instant('cdrLogs.invalidTime'),
       },
       date: {
         invalidStartDate: $translate.instant('cdrLogs.invalidStartDate'),
         invalidEndDate: $translate.instant('cdrLogs.invalidEndDate'),
-        invalidFutureDate: $translate.instant('cdrLogs.invalidFutureDate')
+        invalidFutureDate: $translate.instant('cdrLogs.invalidFutureDate'),
       },
       hitSize: {
         required: $translate.instant('cdrLogs.required'),
         number: $translate.instant('cdrLogs.invalidNumber'),
         min: $translate.instant('cdrLogs.hitSizeError'),
-        max: $translate.instant('cdrLogs.hitSizeError')
-      }
+        max: $translate.instant('cdrLogs.hitSizeError'),
+      },
     };
 
     vm.patterns = {
       number: /^(\+[1-9])?([0-9]+)$/,
-      time: /^([0-2][0-9][:])([0-5][0-9][:])([0-5][0-9])([ ][apAP][mM])?$/
+      time: /^([0-2][0-9][:])([0-5][0-9][:])([0-5][0-9])([ ][apAP][mM])?$/,
     };
 
     vm.search = function () {
@@ -200,7 +200,7 @@ require('./_cdr-logs.scss');
         if (isValid) {
           updateLogstashPath();
         }
-      }
+      },
     };
 
     var expression = {
@@ -209,7 +209,7 @@ require('./_cdr-logs.scss');
       },
       uploadDisabled: function (viewValue, modelValue, scope) {
         return _.isUndefined(scope.model.uploadFile);
-      }
+      },
     };
 
     vm.fields = [{
@@ -232,9 +232,9 @@ require('./_cdr-logs.scss');
               Notification.error('cdrLogs.jsonTypeError');
             });
           },
-          fileSuffix: "json"
+          fileSuffix: "json",
         },
-        hideExpression: 'expression.hideUpload'
+        hideExpression: 'expression.hideUpload',
       }, {
         key: 'uploadBtn',
         type: 'button',
@@ -260,13 +260,13 @@ require('./_cdr-logs.scss');
               vm.dataState = 0;
               Notification.error('cdrLogs.jsonSyntaxError');
             }
-          }
+          },
         },
         hideExpression: 'expression.hideUpload',
         expressionProperties: {
-          'templateOptions.disabled': expression.uploadDisabled
-        }
-      }]
+          'templateOptions.disabled': expression.uploadDisabled,
+        },
+      }],
     }];
 
     vm.statusAvalibility = statusAvalibility;
@@ -327,7 +327,7 @@ require('./_cdr-logs.scss');
       header = $translate.instant("cdrLogs.cdrAccordionHeader", {
         firstTimestamp: firstTimestamp,
         numberOfCdrs: numberOfCdrs,
-        totalDuration: totalDuration
+        totalDuration: totalDuration,
       });
       if (sparkCall) {
         header += ' ' + $translate.instant("cdrLogs.sparkCall");
@@ -351,7 +351,7 @@ require('./_cdr-logs.scss');
         uniqueIds: CdrService.extractUniqueIds(call),
         events: vm.events,
         imported: vm.imported,
-        logstashPath: vm.logstashPath
+        logstashPath: vm.logstashPath,
       });
     }
   }

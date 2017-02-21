@@ -8,22 +8,22 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Pilot Number Lookup', f
     "type": "INTERNAL",
     "uuid": "167da8d1-0711-4155-832b-0172ba48e1af",
     "number": "2101",
-    "assigned": false
+    "assigned": false,
   };
 
   var anotherNumber = {
     "type": "INTERNAL",
     "uuid": "973d465a-cf96-47a1-beb8-500eccfeb4ef",
     "number": "2102",
-    "assigned": false
+    "assigned": false,
   };
 
   var successResponse = {
-    "numbers": [someNumber, anotherNumber]
+    "numbers": [someNumber, anotherNumber],
   };
 
   var spiedAuthinfo = {
-    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
   };
 
   beforeEach(angular.mock.module('Huron'));
@@ -48,7 +48,7 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Pilot Number Lookup', f
     controller = $controller('HuntGroupSetupAssistantCtrl', {
       $scope: $scope,
       HuntGroupService: HuntGroupService,
-      Notification: Notification
+      Notification: Notification,
     });
 
   }));
@@ -141,7 +141,7 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Pilot Number Lookup', f
 
   it("shows danger indicator when input typed is >= 3 and no valid suggestions.", function () {
     var noSuggestion = {
-      "numbers": []
+      "numbers": [],
     };
     $httpBackend.expectGET(NumberLookupUrl).respond(200, noSuggestion);
     controller.fetchNumbers("123");

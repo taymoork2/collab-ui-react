@@ -15,7 +15,7 @@
       getRanks: getRanks,
       addHoursRange: addHoursRange,
       getHoursRanges: getHoursRanges,
-      getDefaultDayHours: getDefaultDayHours
+      getDefaultDayHours: getDefaultDayHours,
     };
 
     return service;
@@ -30,13 +30,13 @@
 
     function getDefaultRange() {
       var hours = {
-        days: []
+        days: [],
       };
       _.each(getTwoLetterDays(), function (value, index) {
         hours.days[((index - 1) + 7) % 7] = {
           abbr: value,
           index: index,
-          active: false
+          active: false,
         };
       });
       return hours;
@@ -50,23 +50,23 @@
       return [{
         label: 'ranks.first',
         index: 0,
-        number: 1
+        number: 1,
       }, {
         label: 'ranks.second',
         index: 1,
-        number: 2
+        number: 2,
       }, {
         label: 'ranks.third',
         index: 2,
-        number: 3
+        number: 3,
       }, {
         label: 'ranks.fourth',
         index: 3,
-        number: 4
+        number: 4,
       }, {
         label: 'ranks.last',
         index: -1,
-        number: -1
+        number: -1,
       }];
     }
 
@@ -108,7 +108,7 @@
             dateData = {
               'year': date.year(),
               'month': date.month(),
-              'date': date.date()
+              'date': date.date(),
             };
             starttime = moment(hoursRange.starttime, 'hh:mm A').set(dateData);
             endtime = moment(hoursRange.endtime, 'hh:mm A').set(dateData);
@@ -124,7 +124,7 @@
               dateData = {
                 'year': date.year(),
                 'month': date.month(),
-                'date': date.date()
+                'date': date.date(),
               };
             } else {
               //Find the first occurrence of the rule
@@ -132,7 +132,7 @@
               dateData = {
                 'year': date.year(),
                 'month': date.month(),
-                'date': date.date()
+                'date': date.date(),
               };
               //Save the rule in the description
               description += ';' + hoursRange.month.number + ';' + hoursRange.rank.number + ';' + hoursRange.day.abbr;
@@ -140,22 +140,22 @@
             if (hoursRange.allDay) {
               startData = {
                 'hours': 0,
-                'minutes': 0
+                'minutes': 0,
               };
               endData = {
                 'hours': 24,
-                'minutes': 0
+                'minutes': 0,
               };
             } else {
               var time = moment(hoursRange.starttime, 'hh:mm A');
               startData = {
                 'hours': time.hours(),
-                'minutes': time.minutes()
+                'minutes': time.minutes(),
               };
               time = moment(hoursRange.endtime, 'hh:mm A');
               endData = {
                 'hours': time.hours(),
-                'minutes': time.minutes()
+                'minutes': time.minutes(),
               };
             }
             starttime = moment().set(dateData).set(startData);
@@ -224,7 +224,7 @@
         //Set the date to the last of the <month>
         date = moment().set({
           month: hoursRange.month.index + 1,
-          date: 0
+          date: 0,
         });
 
         //Find the last <dayOfWeek> of this month for the current year
@@ -237,7 +237,7 @@
           date = moment().set({
             month: hoursRange.month.index + 1,
             date: 0,
-            year: moment().year() + 1
+            year: moment().year() + 1,
           });
           //Find the last <dayOfWeek> of this month for next year.
           while (date.day() != dayOfWeek && date.month() == hoursRange.month.index) {
@@ -248,7 +248,7 @@
         //Set the date to the 1st of the <month>
         date = moment().set({
           month: hoursRange.month.index,
-          date: 1
+          date: 1,
         });
 
         //Find the first <dayOfWeek> of this month for this year.
@@ -263,7 +263,7 @@
           date = moment().set({
             month: hoursRange.month.index,
             date: 1,
-            year: moment().year() + 1
+            year: moment().year() + 1,
           });
 
           //Find the first <dayOfWeek> of this month for this year.
@@ -278,7 +278,7 @@
       date = moment().set({
         year: date.year(),
         month: date.month(),
-        date: date.date()
+        date: date.date(),
       });
       date.format('YYYY-MM-DD');
       return date;
@@ -290,7 +290,7 @@
 
       return new ical.Timezone({
         component: timezoneComp,
-        tzid: tzid
+        tzid: tzid,
       });
     }
 
@@ -312,7 +312,7 @@
         hour: time.hours(),
         minute: time.minutes(),
         second: 0,
-        isDate: false
+        isDate: false,
       }));
       p.setParameter('tzid', timezone.tzid);
       return p;
@@ -337,11 +337,11 @@
 
         hoursRange.starttime = moment().set({
           hour: dtstart.hour,
-          minute: dtstart.minute
+          minute: dtstart.minute,
         }).format('hh:mm A');
         hoursRange.endtime = moment().set({
           hour: dtend.hour,
-          minute: dtend.minute
+          minute: dtend.minute,
         }).format('hh:mm A');
         if (summary === 'open') {
           hoursRanges.push(hoursRange);
@@ -371,7 +371,7 @@
           hoursRange.date = moment().set({
             year: dtstart.year,
             month: dtstart.month - 1,
-            date: dtstart.day
+            date: dtstart.day,
           }).format('YYYY-MM-DD');
           if (dtstart.hour === 0 && dtstart.minute === 0 && dtend.hour === 0 && dtend.minute === 0) {
             hoursRange.allDay = true;
@@ -415,7 +415,7 @@
 
       return {
         hours: hoursRanges,
-        holidays: holidayRanges
+        holidays: holidayRanges,
       };
     }
 
@@ -424,7 +424,7 @@
       for (var i = 0; i < 7; i++) {
         var day = {
           label: '',
-          hours: []
+          hours: [],
         };
         day.label = moment().weekday(i + 1).format('dddd');
         days.push(day);

@@ -3,7 +3,7 @@
 describe('Controller: organizationOverviewCtrl', function () {
   var controller, $scope, Orgservice, $q, $controller, Notification, currentOrganization;
   var authInfo = {
-    getOrgId: sinon.stub()
+    getOrgId: sinon.stub(),
   };
 
   beforeEach(angular.mock.module(function ($provide) {
@@ -22,8 +22,8 @@ describe('Controller: organizationOverviewCtrl', function () {
 
     spyOn(Orgservice, 'getEftSetting').and.returnValue($q.resolve({
       data: {
-        eft: true
-      }
+        eft: true,
+      },
     }));
     spyOn(Orgservice, 'setEftSetting').and.returnValue($q.resolve({}));
     spyOn(Orgservice, 'setHybridServiceReleaseChannelEntitlement').and.returnValue($q.resolve({}));
@@ -39,8 +39,8 @@ describe('Controller: organizationOverviewCtrl', function () {
       $scope: $scope,
       Authinfo: authInfo,
       $stateParams: {
-        currentOrganization: currentOrganization
-      }
+        currentOrganization: currentOrganization,
+      },
     });
     $scope.$apply();
   }

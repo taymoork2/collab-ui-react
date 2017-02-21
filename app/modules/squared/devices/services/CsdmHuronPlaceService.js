@@ -8,19 +8,19 @@
 
     function createOtp(machineUuid) {
       return $http.post(cmiOtpUri, {
-        machineUuid: machineUuid
+        machineUuid: machineUuid,
       }).then(function (res) {
         return CsdmConverter.convertCode({
           type: 'huron',
           activationCode: res.data.password,
           expiryTime: res.data.expiresOn,
-          id: machineUuid
+          id: machineUuid,
         });
       });
     }
 
     return {
-      createOtp: createOtp
+      createOtp: createOtp,
     };
   }
 

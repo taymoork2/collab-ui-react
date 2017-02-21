@@ -11,13 +11,13 @@
     var eventTypes = {
       fullReportDownload: 'FULLREPORTDOWNLOAD',
       timeRangeSelected: 'TIMERANGESELECTED',
-      graphClick: 'GRAPHCLICK'
+      graphClick: 'GRAPHCLICK',
     };
 
     function reportOperation(operation, data) {
       var json = {
         operation: operation,
-        data: data
+        data: data,
       };
       $log.info('reportOperation', json);
 
@@ -34,7 +34,7 @@
 
     return {
       reportOperation: reportOperation,
-      eventTypes: eventTypes
+      eventTypes: eventTypes,
     };
   }
 }());

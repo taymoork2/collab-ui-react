@@ -9,7 +9,7 @@
   function TrialResource($resource, UrlConfig, Authinfo) {
     return $resource(UrlConfig.getAdminServiceUrl() + 'organization/:orgId/trials/:trialId', {
       orgId: Authinfo.getOrgId(),
-      trialId: '@trialId'
+      trialId: '@trialId',
     }, {});
   }
 
@@ -35,7 +35,7 @@
       getDaysLeftForCurrentUser: getDaysLeftForCurrentUser,
       notifyPartnerTrialExt: notifyPartnerTrialExt,
       getAddTrialRoute: getAddTrialRoute,
-      getEditTrialRoute: getEditTrialRoute
+      getEditTrialRoute: getEditTrialRoute,
 
     };
 
@@ -45,15 +45,15 @@
 
     function getTrial(id) {
       return TrialResource.get({
-        trialId: id
+        trialId: id,
       }).$promise;
     }
 
     function getTrialsList(searchText) {
       return $http.get(trialsUrl, {
         params: {
-          customerName: searchText
-        }
+          customerName: searchText,
+        },
       });
     }
 
@@ -64,51 +64,51 @@
         method: 'POST',
         url: validationUrl,
         headers: {
-          'Content-Type': 'text/plain'
+          'Content-Type': 'text/plain',
         },
         data: {
           isTrial: true,
           properties: [{
             key: key,
-            value: val
-          }]
-        }
+            value: val,
+          }],
+        },
       };
 
       return $http(config).then(function (response) {
         var data = response.data || {};
         var obj = _.find(data.properties, {
-          key: key
+          key: key,
         });
         if (_.isUndefined(obj)) {
           return {
-            error: 'trialModal.errorServerDown'
+            error: 'trialModal.errorServerDown',
           };
         } else {
           // we allow duplicate emails for the  the user who is a consumer
           if (obj.isExist === 'true' && !(key === 'endCustomerEmail' && obj.isConsumer === 'true')) {
             return {
-              error: 'trialModal.errorInUse'
+              error: 'trialModal.errorInUse',
             };
           } else if (obj.isValid === 'false') {
             if (key === 'organizationName') {
               return {
-                error: 'trialModal.errorInvalidName'
+                error: 'trialModal.errorInvalidName',
               };
             } else {
               return {
-                error: 'trialModal.errorInvalid'
+                error: 'trialModal.errorInvalid',
               };
             }
           }
           return {
-            unique: true
+            unique: true,
           };
         }
       }).catch(function (response) {
         return {
           error: 'trialModal.errorServerDown',
-          status: response.status
+          status: response.status,
         };
       });
     }
@@ -117,7 +117,7 @@
       return service.getTrialsList().then(function (response) {
         return {
           activeDeviceTrials: response.data.activeDeviceTrials,
-          maxDeviceTrials: response.data.activeDeviceTrialsLimit
+          maxDeviceTrials: response.data.activeDeviceTrialsLimit,
         };
       });
     }
@@ -129,7 +129,7 @@
         trialPeriod: data.details.licenseDuration,
         dealId: data.trials.deviceTrial.shippingInfo.dealId,
         details: _getDetails(data),
-        offers: _getOffers(data)
+        offers: _getOffers(data),
       };
 
       var editTrialUrl = trialsUrl + '/' + trialId;
@@ -154,7 +154,7 @@
         dealId: data.trials.deviceTrial.shippingInfo.dealId,
         startDate: new Date(),
         details: _getDetails(data),
-        offers: _getOffers(data)
+        offers: _getOffers(data),
       };
 
       function logStartTrialMetric(data, status) {
@@ -199,18 +199,18 @@
       var deviceDetails = _trialData.trials.deviceTrial;
       var details = {
         devices: [],
-        shippingInfo: deviceDetails.shippingInfo
+        shippingInfo: deviceDetails.shippingInfo,
       };
 
       _(data.trials)
         .filter({
-          enabled: true
+          enabled: true,
         })
         .forEach(function (trial) {
           if (trial.type === Config.offerTypes.roomSystems) {
             var roomSystemDevices = _(trial.details.roomSystems)
               .filter({
-                enabled: true
+                enabled: true,
               })
               .map(function (device) {
                 return _.pick(device, ['model', 'quantity']);
@@ -220,7 +220,7 @@
           } else if (trial.type === Config.offerTypes.call || trial.type === Config.offerTypes.squaredUC) {
             var callDevices = _(trial.details.phones)
               .filter({
-                enabled: true
+                enabled: true,
               })
               .map(function (device) {
                 return _.pick(device, ['model', 'quantity']);
@@ -268,7 +268,7 @@
     function _getOffers(data) {
       return _(data.trials)
         .filter({
-          enabled: true
+          enabled: true,
         })
         .map(function (trial) {
           if (trial.type === Config.offerTypes.pstn || trial.type === Config.offerTypes.context) {
@@ -304,7 +304,7 @@
         licenseDuration: 90,
         dealId: '',
         country: '',
-        licenseCount: 100
+        licenseCount: 100,
       };
 
       _trialData = {
@@ -319,7 +319,7 @@
           sparkBoardTrial: TrialSparkBoardService.getData(),
           deviceTrial: TrialDeviceService.getData(),
           pstnTrial: TrialPstnService.getData(),
-          contextTrial: TrialContextService.getData()
+          contextTrial: TrialContextService.getData(),
         },
       };
 
@@ -351,7 +351,7 @@
 
           return {
             startDate: startDate,
-            trialPeriod: trialPeriod
+            trialPeriod: trialPeriod,
           };
         });
     }
@@ -391,8 +391,8 @@
         path: (isNewImplementation) ? 'trial.info' : 'trialAdd.info',
         params: (isNewImplementation) ? {
           mode: 'add',
-          currentTrial: currentCustomer
-        } : {}
+          currentTrial: currentCustomer,
+        } : {},
       };
       return result;
     }
@@ -401,11 +401,11 @@
       var params = {
         currentTrial: currentCustomer,
         details: trialDetails,
-        mode: 'edit'
+        mode: 'edit',
       };
       var result = {
         path: (isNewImplementation) ? 'trial.info' : 'trialEdit.info',
-        params: params
+        params: params,
       };
       return result;
     }

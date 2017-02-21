@@ -19,7 +19,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
   var deferred;
 
   var ui = {
-    openHours: {}
+    openHours: {},
   };
   var uiMenu = {};
   var menuEntry = {};
@@ -44,17 +44,17 @@ describe('Controller: AAMediaUploadCtrl', function () {
   var validFile = {
     lastModified: fileModified,
     name: fileNameValid,
-    size: fileSize
+    size: fileSize,
   };
   var validFile2 = {
     lastModified: fileModified2,
     name: fileNameValid2,
-    size: fileSize2
+    size: fileSize2,
   };
   var invalidFileByName = {
     lastModified: fileModified,
     name: fileNameInvalid,
-    size: fileSize
+    size: fileSize,
   };
   var invalidFileBySize = {
     lastModified: fileModified,
@@ -108,7 +108,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(ui);
     spyOn(ModalService, 'open').and.returnValue({
-      result: modal.promise
+      result: modal.promise,
     });
     spyOn(Upload, 'mediaDuration').and.returnValue(deferred.promise);
     spyOn(Analytics, 'trackEvent').and.returnValue($q.when[{
@@ -740,7 +740,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
       $scope.isMenuHeader = '';
 
       c = controller('AAMediaUploadCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       expect(c.isSquishable()).toBeFalsy();
@@ -755,7 +755,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
       $scope.isMenuHeader = '';
 
       c = controller('AAMediaUploadCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       expect(c.isSquishable()).toBeFalsy();
@@ -772,7 +772,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
       $scope.isMenuHeader = '';
 
       c = controller('AAMediaUploadCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       expect(c.isSquishable()).toBeFalsy();
@@ -790,7 +790,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
       $scope.isMenuHeader = '';
 
       c = controller('AAMediaUploadCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       expect(c.isSquishable()).toBeFalsy();
@@ -821,7 +821,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
       $scope.isMenuHeader = 'false';
 
       c = controller('AAMediaUploadCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       expect(c.isSquishable()).toBeTruthy();

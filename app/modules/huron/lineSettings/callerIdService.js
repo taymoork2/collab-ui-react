@@ -31,7 +31,7 @@
       listEndPointDirectoryNumbers: listEndPointDirectoryNumbers,
       updateEndPointDn: updateEndPointDn,
       updateLineEndPoint: updateLineEndPoint,
-      updateInternalCallerId: updateInternalCallerId
+      updateInternalCallerId: updateInternalCallerId,
     };
     return service;
     //////////////////////
@@ -71,8 +71,8 @@
           externalCallerIdType: externalCallerIdType,
           name: name,
           pattern: pattern,
-          uuid: uuid
-        }
+          uuid: uuid,
+        },
       };
     }
 
@@ -98,27 +98,27 @@
 
     function listCompanyNumbers() {
       return CompanyNumberService.query({
-        customerId: Authinfo.getOrgId()
+        customerId: Authinfo.getOrgId(),
       }).$promise;
     }
 
     function saveCompanyNumber(data) {
       return CompanyNumberService.save({
-        customerId: Authinfo.getOrgId()
+        customerId: Authinfo.getOrgId(),
       }, data).$promise;
     }
 
     function updateCompanyNumber(companyNumberId, data) {
       return CompanyNumberService.update({
         customerId: Authinfo.getOrgId(),
-        companyNumberId: companyNumberId
+        companyNumberId: companyNumberId,
       }, data).$promise;
     }
 
     function deleteCompanyNumber(companyNumberId) {
       return CompanyNumberService.delete({
         customerId: Authinfo.getOrgId(),
-        companyNumberId: companyNumberId
+        companyNumberId: companyNumberId,
       }).$promise;
     }
 
@@ -134,13 +134,13 @@
           lineTextLabel = userDn.pattern + ' - ' + lineTextLabel;
           var data = {
             display: userName,
-            label: lineTextLabel
+            label: lineTextLabel,
           };
           // Only update on primary line and all primary lines where there's no primary user.
           if (userDn.isPrimary || !userDn.hasSharedPrimary) {
             // Update alerting name on DN
             promise = DirectoryNumber.updateDirectoryNumber(userDn.uuid, {
-              alertingName: userName
+              alertingName: userName,
             }).then(function () {
               // for each shared user
               var sharedUserPromises = [];
@@ -172,7 +172,7 @@
       // Get all the lines of the user
       return UserDirectoryNumberService.query({
         customerId: Authinfo.getOrgId(),
-        userId: userUuid
+        userId: userUuid,
       }).$promise.then(function (userDnInfo) {
         var promises = [];
         var promise;
@@ -183,14 +183,14 @@
             isPrimary: userDn.dnUsage === 'Primary',
             userDnUuid: userDn.uuid,
             hasSharedPrimary: false,
-            sharedUsers: []
+            sharedUsers: [],
           };
           userDnList.push(userLine);
 
             // Get all the users of the line to decide if this line is a shared line
           promise = DirectoryNumberUserService.query({
             'customerId': Authinfo.getOrgId(),
-            'directoryNumberId': userLine.uuid
+            'directoryNumberId': userLine.uuid,
           }).$promise
               .then(function (dnUserInfo) {
                 dnUserInfo.forEach(function (dnUser) {
@@ -228,14 +228,14 @@
     function listUserEndPoints(userUuid) {
       return UserEndpointService.query({
         customerId: Authinfo.getOrgId(),
-        userId: userUuid
+        userId: userUuid,
       }).$promise;
     }
 
     function listEndPointDirectoryNumbers(endPointUuid) {
       return SipEndpointDirectoryNumberService.query({
         customerId: Authinfo.getOrgId(),
-        sipendpointId: endPointUuid
+        sipendpointId: endPointUuid,
       }).$promise;
     }
 
@@ -243,7 +243,7 @@
       return SipEndpointDirectoryNumberService.update({
         customerId: Authinfo.getOrgId(),
         sipendpointId: endPointUuid,
-        endpointDnAssnId: endpointDnAssnId
+        endpointDnAssnId: endpointDnAssnId,
       }, data).$promise;
     }
 

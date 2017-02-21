@@ -5,7 +5,7 @@
     .module('Core')
     .component('crBmmpBanner', {
       templateUrl: 'modules/core/myCompany/bmmpBanner/bmmpBanner.tpl.html',
-      controller: BmmpBannerCtrl
+      controller: BmmpBannerCtrl,
     });
 
   ////////////////////
@@ -19,13 +19,13 @@
       userId: Authinfo.getUserId(),
       locale: $translate.use(),
       appName: 'atlas',
-      apiBaseUrl: UrlConfig.getBmmpUrl()
+      apiBaseUrl: UrlConfig.getBmmpUrl(),
     };
 
     vm.$onInit = onInit;
     vm.canShow = canShow;
     vm._helpers = {
-      initBmmpBanner: initBmmpBanner
+      initBmmpBanner: initBmmpBanner,
     };
 
     ///////////////////////

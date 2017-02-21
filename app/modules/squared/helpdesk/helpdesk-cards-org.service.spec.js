@@ -23,33 +23,33 @@ describe('HelpdeskCardsService', function () {
 
   describe('Org Cards', function () {
     var org = {
-      services: ['spark-room-system', 'ciscouc', 'webex-squared', 'rubbish']
+      services: ['spark-room-system', 'ciscouc', 'webex-squared', 'rubbish'],
     };
     var licenses = [{
       offerCode: 'MS',
       type: 'MESSAGING',
       volume: 100,
-      usage: 50
+      usage: 50,
     }, {
       offerCode: 'CF',
       type: 'CONFERENCING',
       volume: 100,
-      usage: 50
+      usage: 50,
     }, {
       offerCode: 'CO',
       type: 'COMMUNICATION',
       volume: 200,
-      usage: 100
+      usage: 100,
     }, {
       offerCode: 'SD',
       type: 'SHARED_DEVICES',
       volume: 100,
-      usage: 50
+      usage: 50,
     }, {
       offerCode: 'RB',
       type: 'RUBBISH',
       volume: 100,
-      usage: 50
+      usage: 50,
     }];
 
     beforeEach(function () {
@@ -111,7 +111,7 @@ describe('HelpdeskCardsService', function () {
         "siteSteeringDigit": "4",
         "siteCode": "100",
         "mediaTraversalMode": "TURNOnly",
-        "uuid": "7b9ad03e-8c78-4ffa-8680-df50664bcce4"
+        "uuid": "7b9ad03e-8c78-4ffa-8680-df50664bcce4",
       });
       HelpdeskHuronService.getOrgSiteInfo.returns(deferredSiteInfoResult.promise);
 
@@ -120,7 +120,7 @@ describe('HelpdeskCardsService', function () {
       deferredTenantInfoResult.resolve({
         "name": "SomeTestCustomer",
         "regionCode": "940",
-        "uuid": "7b9ad03e-8c78-4ffa-8680-df50664bcce4"
+        "uuid": "7b9ad03e-8c78-4ffa-8680-df50664bcce4",
       });
       HelpdeskHuronService.getTenantInfo.returns(deferredTenantInfoResult.promise);
 
@@ -161,7 +161,7 @@ describe('HelpdeskCardsService', function () {
 
     it('should return correct hybrid service card for org with only calendar setup', function () {
       var org = {
-        services: ['squared-fusion-mgmt', 'squared-fusion-cal', 'squared-fusion-uc', 'squared-fusion-media']
+        services: ['squared-fusion-mgmt', 'squared-fusion-cal', 'squared-fusion-uc', 'squared-fusion-media'],
       };
       var card = HelpdeskCardsOrgService.getHybridServicesCardForOrg(org);
       $scope.$apply();
@@ -189,7 +189,7 @@ describe('HelpdeskCardsService', function () {
     it('should return correct hybrid service card when google calendar is enabled', function () {
       spyOn(CloudConnectorService, 'getService').and.returnValue(q.resolve({ serviceId: 'squared-fusion-gcal', setup: true, status: 'OK', statusCss: 'success' }));
       var org = {
-        services: ['squared-fusion-mgmt', 'squared-fusion-gcal']
+        services: ['squared-fusion-mgmt', 'squared-fusion-gcal'],
       };
       var card = HelpdeskCardsOrgService.getHybridServicesCardForOrg(org);
       $scope.$apply();

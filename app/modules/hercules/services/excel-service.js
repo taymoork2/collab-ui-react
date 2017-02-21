@@ -17,7 +17,7 @@
     var firstLine = 'sep=' + separator + EOL;
     var service = {
       createFile: createFile,
-      downloadFile: downloadFile
+      downloadFile: downloadFile,
     };
 
     return service;
@@ -41,7 +41,7 @@
 
     function downloadFile(filename, textContent) {
       var blob = new $window.Blob([textContent], {
-        type: 'text/csv;charset=utf-8;'
+        type: 'text/csv;charset=utf-8;',
       });
 
       if ($window.navigator.msSaveOrOpenBlob) {
@@ -56,7 +56,7 @@
         downloadLink.attr({
           'href': $window.URL.createObjectURL(blob),
           'download': filename,
-          'target': '_blank'
+          'target': '_blank',
         });
         $document.find('body').append(downloadContainer);
         $timeout(function () {

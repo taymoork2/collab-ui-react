@@ -53,7 +53,7 @@
     function doRequest(url, granularity, start, end) {
       var deferred = $q.defer();
       var timeout = {
-        timeout: deferred.promise
+        timeout: deferred.promise,
       };
       $timeout(function () {
         deferred.resolve();
@@ -102,7 +102,7 @@
             date: day,
             totalDuration: 0,
             pairedCount: 0,
-            callCount: 0
+            callCount: 0,
           });
         }
       });
@@ -145,7 +145,7 @@
       if (reject.status === -1) {
         reject.statusText = 'Operation timed Out';
         reject.data = {
-          message: 'Operation timed out'
+          message: 'Operation timed out',
         };
       }
       return reject;
@@ -160,7 +160,7 @@
             totalDuration: 0,
             pairedCount: 0,
             deviceCategories: {},
-            accountIds: {}
+            accountIds: {},
           };
         }
         if (_.isNil(item.callCount) || _.isNaN(item.callCount)) {
@@ -183,7 +183,7 @@
             deviceCategory: item.deviceCategory,
             totalDuration: item.totalDuration,
             callCount: item.callCount,
-            pairedCount: item.pairedCount
+            pairedCount: item.pairedCount,
           };
         } else {
           result[date].deviceCategories[item.deviceCategory].totalDuration += item.totalDuration;
@@ -195,7 +195,7 @@
             accountId: item.accountId,
             totalDuration: item.totalDuration,
             callCount: item.callCount,
-            pairedCount: item.pairedCount
+            pairedCount: item.pairedCount,
           };
         } else if (item.accountId) {
           result[date].accountIds[item.accountId].totalDuration += item.totalDuration;
@@ -224,7 +224,7 @@
               result[item.accountId] = {
                 callCount: item.callCount,
                 pairedCount: item.pairedCount,
-                totalDuration: item.totalDuration
+                totalDuration: item.totalDuration,
               };
             } else {
               result[item.accountId].callCount += item.callCount;
@@ -253,7 +253,7 @@
         least: _.takeRight(accounts, n).reverse(),
         noOfDevices: accounts.length,
         noOfCalls: calculateTotal(accounts).noOfCalls,
-        totalDuration: calculateTotal(accounts).totalDuration
+        totalDuration: calculateTotal(accounts).totalDuration,
       };
       //$log.info('Extracted stats:', stats);
       return $q.resolve(stats);
@@ -295,7 +295,7 @@
           .catch(function (err) {
             $log.info("Problems resolving device", err);
             return {
-              "displayName": "Unknown [id:" + device.accountId + "]"
+              "displayName": "Unknown [id:" + device.accountId + "]",
             };
           })
         );
@@ -307,7 +307,7 @@
       getDataForRange: getDataForRange,
       extractStats: extractStats,
       resolveDeviceData: resolveDeviceData,
-      reduceAllData: reduceAllData
+      reduceAllData: reduceAllData,
     };
   }
 }());

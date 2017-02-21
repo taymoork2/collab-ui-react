@@ -21,7 +21,7 @@
     var customerList = [];
     var allCustomers = {
       value: 0,
-      label: $translate.instant('reports.allCustomers')
+      label: $translate.instant('reports.allCustomers'),
     };
 
     $scope.entCount = 0;
@@ -52,7 +52,7 @@
           });
           customerList.push({
             value: Authinfo.getOrgId(),
-            label: Authinfo.getOrgName()
+            label: Authinfo.getOrgName(),
           });
           customerList.sort(function (a, b) {
             var org1 = a.label;
@@ -75,8 +75,8 @@
         dummyChartVals.push({
           data: [{
             'date': currentDate.toISOString(),
-            'count': 0
-          }]
+            'count': 0,
+          }],
         });
       }
       dummyChartVals = formatMultipleOrgData(dummyChartVals.reverse());
@@ -123,7 +123,7 @@
         'valueLineBalloonEnabled': true,
         'cursorColor': chartColors.grayDarkThree,
         'valueBalloonsEnabled': false,
-        'cursorPosition': 'mouse'
+        'cursorPosition': 'mouse',
       };
 
       return AmCharts.makeChart(entId, chartObject);
@@ -152,7 +152,7 @@
 
       for (var date2 in dateMap) {
         var chartSection = {
-          'date': date2
+          'date': date2,
         };
         var currentDateObj = dateMap[date2];
         for (var obj2 in currentDateObj) {
@@ -182,7 +182,7 @@
 
     function errorMessage(title, response) {
       Notification.errorResponse(response, 'reports.error', {
-        graph: title.toLowerCase()
+        graph: title.toLowerCase(),
       });
     }
 

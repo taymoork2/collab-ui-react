@@ -30,11 +30,11 @@
         .delComponent(vm.component)
         .then(function () {
           Notification.success('gss.componentsPage.deleteComponentSucceed', {
-            componentName: vm.componentName
+            componentName: vm.componentName,
           });
         }).catch(function (error) {
           Notification.errorWithTrackingId(error, 'gss.componentsPage.deleteComponentFailed', {
-            componentName: vm.componentName
+            componentName: vm.componentName,
           });
         }).finally(function () {
           vm.isDeleting = false;

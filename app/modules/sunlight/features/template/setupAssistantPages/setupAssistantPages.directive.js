@@ -10,7 +10,7 @@
     'ctAgentUnavailable',
     'ctOffHours',
     'ctChatStatusMessages',
-    'ctSummary'
+    'ctSummary',
   ];
 
   pageDirectiveNames.forEach(function (directiveName) {
@@ -28,7 +28,7 @@
       },
       templateUrl: 'modules/sunlight/features/template/setupAssistantPages/' + pageFile,
       restrict: 'EA',
-      scope: false
+      scope: false,
     };
 
     return directive;

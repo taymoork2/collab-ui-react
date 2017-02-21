@@ -25,17 +25,17 @@
     }
     vm.hasVoicemailFeatureToggle = hasVoicemailFeatureToggle;
     vm.help = {
-      title: 'common.help'
+      title: 'common.help',
     };
     vm.callServiceAware = {
-      title: 'hercules.serviceNames.squared-fusion-uc.full'
+      title: 'hercules.serviceNames.squared-fusion-uc.full',
     };
 
     vm.domainVerification = {
-      title: 'hercules.settings.call.domainVerification'
+      title: 'hercules.settings.call.domainVerification',
     };
     vm.callServiceConnect = {
-      title: 'hercules.serviceNames.squared-fusion-ec'
+      title: 'hercules.serviceNames.squared-fusion-ec',
     };
 
     vm.storeEc = function (toggleConnect) {
@@ -120,8 +120,8 @@
         resolve: {
           cert: function () {
             return cert;
-          }
-        }
+          },
+        },
       }).result
         .then(readCerts);
     };
