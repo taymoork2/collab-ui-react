@@ -488,9 +488,6 @@
       ],
       'squared-fusion-media': [
         'add-resource',
-        'connector-details',
-        'connector-details-v2',
-        'media-service',
         'media-service-v2',
         'mediafusion-cluster',
         'metrics',
@@ -499,6 +496,7 @@
         'reports.mediaservice',
         'services-overview',
         'cluster-list',
+        'media-cluster-details',
       ],
       'webex-messenger': [
         'messenger',
@@ -511,7 +509,8 @@
         'context-settings',
         'context-fields',
         'context-fieldsets',
-        'context-resources'
+        'context-resources',
+        'add-resource'
       ]
     };
 

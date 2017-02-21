@@ -1,6 +1,6 @@
 <cs-sp-section>
 
-  <div ng-if="$ctrl.hasResourceGroupFeatureToggle"
+  <div ng-if="$ctrl.hasResourceGroupFeatureToggle || $ctrl.clusterType === 'mf_mgmt'"
        class="section-title-row feature-inline">
     <span class="section-name"
           translate="common.releaseChannel"></span>

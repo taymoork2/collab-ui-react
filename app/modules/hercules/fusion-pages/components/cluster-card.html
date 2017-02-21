@@ -10,9 +10,13 @@
       <div class="columns medium-6">
         <div>
           <div class="cluster-list-cat" translate="hercules.fusion.list.upgrade-schedule"></div>
-          <div class="cluster-list-info" ng-if="$ctrl.cluster.upgradeSchedule">{{$ctrl.formatTimeAndDate($ctrl.cluster.upgradeSchedule)}}<br/>
-          <div class="cluster-list-timezone" title="{{$ctrl.cluster.upgradeSchedule.scheduleTimeZone}}">{{$ctrl.cluster.upgradeSchedule.scheduleTimeZone}}</div></div>
-          <div class="cluster-list-info" ng-if="!$ctrl.cluster.upgradeSchedule" translate="common.notSet"></div>
+          <div class="cluster-list-info" ng-if="$ctrl.upgradesAutomatically($ctrl.cluster)" translate="hercules.fusion.list.upgrades-automatically"></div>
+          <div ng-if="!$ctrl.upgradesAutomatically($ctrl.cluster)">
+            <div class="cluster-list-info" ng-if="$ctrl.cluster.upgradeSchedule">{{$ctrl.formatTimeAndDate($ctrl.cluster.upgradeSchedule)}}<br/>
+              <div class="cluster-list-timezone" title="{{$ctrl.cluster.upgradeSchedule.scheduleTimeZone}}">{{$ctrl.cluster.upgradeSchedule.scheduleTimeZone}}</div>
+            </div>
+            <div class="cluster-list-info" ng-if="!$ctrl.cluster.upgradeSchedule" translate="common.notSet"></div>
+          </div>
         </div>
         <div ng-if="$ctrl.cluster.targetType == 'mf_mgmt' || $ctrl.hasResourceGroupFeatureToggle">
           <div class="cluster-list-cat" translate="hercules.fusion.list.release-channel"></div>
@@ -53,11 +57,13 @@
       </div>
     </div>
     <footer ng-if="!$ctrl.cluster.isEmptyExpresswayCluster && !$ctrl.hasNodesViewFeatureToggle">
-      <a ng-click="$ctrl.openSettings($ctrl.cluster.targetType, $ctrl.cluster.id)" translate="hercules.fusion.list.settings"></a>
+      <a ng-if="!$ctrl.hideFooter($ctrl.cluster)" ng-click="$ctrl.openSettings($ctrl.cluster.targetType, $ctrl.cluster.id)" translate="hercules.fusion.list.settings"></a>
     </footer>
     <footer class="double-footer" ng-if="!$ctrl.cluster.isEmptyExpresswayCluster && $ctrl.hasNodesViewFeatureToggle">
-      <a ng-click="$ctrl.openNodes($ctrl.cluster.targetType, $ctrl.cluster.id)" translate="hercules.fusion.list.nodesBtn"></a>
-      <a ng-click="$ctrl.openSettings($ctrl.cluster.targetType, $ctrl.cluster.id)" translate="hercules.fusion.list.settings"></a>
+      <a ng-if="!$ctrl.hideFooter($ctrl.cluster)"
+      ng-click="$ctrl.openNodes($ctrl.cluster.targetType, $ctrl.cluster.id)" translate="hercules.fusion.list.nodesBtn"></a>
+      <a ng-if="!$ctrl.hideFooter($ctrl.cluster)"
+      ng-click="$ctrl.openSettings($ctrl.cluster.targetType, $ctrl.cluster.id)" translate="hercules.fusion.list.settings"></a>
     </footer>
 
     <div class="row cluster-list-body empty-cluster-body" ng-if="$ctrl.cluster.isEmptyExpresswayCluster">

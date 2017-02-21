@@ -54,15 +54,7 @@
 
   }
 
-  /* @ngInject */
-  function MediaAlarmControllerV2($stateParams) {
-    var vm = this;
-    vm.alarm = $stateParams.alarm;
-    vm.host = $stateParams.host;
-  }
-
   angular
     .module('Mediafusion')
-    .controller('MediaServiceControllerV2', MediaServiceControllerV2)
-    .controller('MediaAlarmControllerV2', MediaAlarmControllerV2);
+    .controller('MediaServiceControllerV2', MediaServiceControllerV2);
 }());

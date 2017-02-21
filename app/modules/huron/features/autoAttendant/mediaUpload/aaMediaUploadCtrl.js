@@ -242,10 +242,15 @@
 
     function modalDelete() {
       if (mediaResources.uploads.length > 1) {
-        vm.actionEntry = _.cloneDeep(savedActionEntry);
+        vm.actionEntry.description = savedActionEntry.description;
+        vm.actionEntry.value = savedActionEntry.value;
+        vm.actionEntry.deleteUrl = savedActionEntry.deleteUrl;
+        vm.actionEntry.voice = savedActionEntry.voice;
+
         //ok to delete at this point all the unsaved uploads
         AAMediaUploadService.clearResourcesExcept(uniqueCtrlIdentifier, 0);
         setUpEntry(vm.actionEntry);
+
       } else {
         //this case only occurs with a single saved action
         //in the queue for deletion, so we can't delete it until save occurs
@@ -465,10 +470,7 @@
         } catch (exception) {
           //if somehow a bad format came through
           //catch and keep disallowed
-          action.value = '';
-          action.description = '';
-          action.deleteUrl = '';
-          action.voice = '';
+          reset(action);
         }
       } else {
         reset(action);
@@ -479,8 +481,10 @@
       gatherMediaSource();
       //set up the view according to the play
       setUpEntry(vm.actionEntry);
+
       //set up the last saved according to the play
       savedActionEntry = _.cloneDeep(vm.actionEntry);
+
       //set up the initial mediaUploads
       mediaResources.uploads[0] = _.cloneDeep(savedActionEntry);
       //if previously saved a real value, want to esure not deleted

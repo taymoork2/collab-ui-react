@@ -96,6 +96,11 @@
           display: Authinfo.isEntitled(Config.entitlements.hds),
           unassigned: _.filter(response.unassigned, { targetType: 'hds_app' }),
         },
+        {
+          targetType: 'cs_mgmt',
+          display: Authinfo.isEntitled(Config.entitlements.context),
+          unassigned: _.filter(response.unassigned, { targetType: 'cs_mgmt' }),
+        },
       ];
     }
 
@@ -119,6 +124,13 @@
         filters.push({
           name: $translate.instant('hercules.fusion.list.hds'),
           filterValue: 'hds_app',
+          count: 0,
+        });
+      }
+      if (Authinfo.isEntitled(Config.entitlements.context)) {
+        filters.push({
+          name: $translate.instant('hercules.fusion.list.context'),
+          filterValue: 'cs_mgmt',
           count: 0,
         });
       }
@@ -223,7 +235,8 @@
         data: {
           targetType: '',
           expressway: {},
-          mediafusion: {}
+          mediafusion: {},
+          context: {}
         },
         history: [],
         currentStateName: 'add-resource.type-selector',
@@ -231,7 +244,8 @@
           'add-resource.type-selector': {
             nextOptions: {
               expressway: 'add-resource.expressway.service-selector',
-              mediafusion: 'add-resource.mediafusion.hostname'
+              mediafusion: 'add-resource.mediafusion.hostname',
+              context: 'add-resource.context'
             }
           },
           // expressway
@@ -255,7 +269,9 @@
           'add-resource.mediafusion.name': {
             next: 'add-resource.mediafusion.end'
           },
-          'add-resource.mediafusion.end': {}
+          'add-resource.mediafusion.end': {},
+          // context
+          'add-resource.context': {}
         }
       };
       var wizard = WizardFactory.create(initialState);
