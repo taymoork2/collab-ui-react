@@ -3045,7 +3045,7 @@
     "langaugeAndVoiceHelp": "These selections apply to Say and Error Messages.",
     "initialAnnouncement": "Initial Announcement",
     "mediaUploadFileInfo": "Audio files must be in .wav format.  Recommended format is 8bit, 8Khz u-law.  Maximum message file size is 5MB.",
-    "queueMaxMusicSize": "Maximum Music file size is 120MB.",
+    "queueMaxMusicSize": "Maximum music file size is 120MB.",
     "initialHelpText": "Specify a message to play when the caller enters the queue.",
     "periodicHelpText": "Specify a message to play and how often to play it while the caller is waiting in the queue.",
     "periodicRestartMusicHelpText": "After this announcement, the music will restart from the beginning.",
