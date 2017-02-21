@@ -112,7 +112,7 @@
           // augment statuses with details about the cluster/connector the user is homed on
           return _.map(statuses, function (status) {
             status.cluster = clustersById[status.clusterId];
-            status.connector = _.find(status.cluster.connectors, { id: status.connectorId });
+            status.connector = status.cluster ? _.find(status.cluster.connectors, { id: status.connectorId }) : undefined;
             return status;
           });
         });
