@@ -20,7 +20,7 @@
       getHdsTrialUsers: getHdsTrialUsers,
       addHdsTrialUsers: addHdsTrialUsers,
       removeHdsTrialUsers: removeHdsTrialUsers,
-      replaceHdsTrialUsers: replaceHdsTrialUsers
+      replaceHdsTrialUsers: replaceHdsTrialUsers,
     };
 
 
@@ -53,9 +53,9 @@
         "displayName": "HDS Test Group",
         "members": [
           {
-            "value": "4c93e416-ad47-4d3b-b63e-1a4bfa40a2a2"
-          }
-        ]
+            "value": "4c93e416-ad47-4d3b-b63e-1a4bfa40a2a2",
+          },
+        ],
       };
       return $http.post(serviceUrl, json).then(extractData);
     }
@@ -123,7 +123,7 @@
         members: _.map(uids, function (uid) {
           return {
             value: uid,
-            operation: "delete"
+            operation: "delete",
           };
         }),
       };

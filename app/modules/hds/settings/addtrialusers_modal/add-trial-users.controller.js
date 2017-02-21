@@ -59,7 +59,7 @@
               schemas: ['urn:scim:schemas:core:1.0', 'urn:scim:schemas:extension:cisco:commonidentity:1.0'],
               members: _.map(data.Resources, function (resource) {
                 return {
-                  value: resource.id
+                  value: resource.id,
                 };
               }),
             };

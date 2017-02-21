@@ -37,7 +37,7 @@
                   var email = response.data.userName;
                   user['email'] = email;
                   vm.emailTrialUsers.push({
-                    text: email
+                    text: email,
                   });
                 });
             }
@@ -80,12 +80,12 @@
               schemas: ['urn:scim:schemas:core:1.0', 'urn:scim:schemas:extension:cisco:commonidentity:1.0'],
               meta: {
                 attributes: [
-                  'members'
-                ]
+                  'members',
+                ],
               },
               members: _.map(data.Resources, function (resource) {
                 return {
-                  value: resource.id
+                  value: resource.id,
                 };
               }),
             };
