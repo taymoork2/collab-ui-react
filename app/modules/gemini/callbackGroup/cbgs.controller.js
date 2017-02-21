@@ -6,7 +6,7 @@
     .controller('CbgsCtrl', CbgsCtrl);
 
   /* @ngInject */
-  function CbgsCtrl($stateParams, $scope, $timeout, $rootScope, $translate, $filter, $templateCache, $state, Notification, cbgService) {
+  function CbgsCtrl($stateParams, $scope, $timeout, $rootScope, $translate, $filter, $templateCache, $state, Notification, cbgService, gemService) {
     var vm = this;
     vm.searchStr = '';
     vm.gridRefresh = true;
@@ -15,6 +15,7 @@
     vm.exportCSV = exportCSV;
     vm.filterList = filterList;
     vm.customerId = _.get($stateParams, 'customerId', '');
+    vm.companyName = _.get($stateParams, 'companyName', '');
     vm.placeholder = $translate.instant('gemini.cbgs.placeholder-text');
 
     var columnDefs = [{
@@ -61,10 +62,24 @@
     $scope.showCbgDetails = showCbgDetails;
     init();
     function init() {
-      $rootScope.$on('cbgsUpdate', function () {
+      initParameters();
+      var deregister = $rootScope.$on('cbgsUpdate', function () {
         getcbgs();
       });
+      $scope.$on('$destroy', deregister);
       $scope.$emit('headerTitle', $stateParams.companyName);
+    }
+
+    function initParameters() {
+      if (!vm.customerId) {
+        vm.customerId = gemService.getStorage('gmCustomerId');
+        vm.companyName = gemService.getStorage('gmCompanyName');
+        $state.go('gem.base.cbgs', { companyName: vm.companyName, customerId: vm.customerId });
+        return;
+      }
+
+      vm.customerId = vm.customerId && gemService.setStorage('gmCustomerId', vm.customerId);
+      vm.companyName = vm.companyName && gemService.setStorage('gmCompanyName', vm.companyName);
       getcbgs();
     }
 

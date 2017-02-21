@@ -6609,6 +6609,16 @@
       "3009": "The callback group name is duplicated",
       "genericError": "An unexpected error occurred. Please try again later."
     },
+    "tds": {
+      "field": {
+        "status": "Status",
+        "bridgeSet": "Bridge Set",
+        "webDomain": "Web Domain",
+        "description": "Partner TD Name",
+        "totalSites": "Sites Assigned",
+        "telephonyDomains": "Telephony Domains"
+      }
+    },
     "cbgs": {
       "overview": "Overview",
       "openedOn": "Opened on",
