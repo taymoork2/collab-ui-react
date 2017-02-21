@@ -28,8 +28,8 @@
 
     function getExistingTrialUsers() {
       HDSService.getHdsTrialUsers(Authinfo.getOrgId(), vm.trialUserGroupId)
-        .then(function (response) {
-          vm.trialUsers = _.isObject(response.data.members) ? response.data.members : {};
+        .then(function (data) {
+          vm.trialUsers = _.isObject(data.members) ? data.members : {};
           _.forEach(vm.trialUsers, function (user) {
             if (user) {
               Userservice.getUserAsPromise(user.value)
@@ -70,33 +70,31 @@
         return data.text;
       }).join(',');
       if (isValidEmails(emailTrialUsers)) {
-        var jsonEmailTrialUsers = {
-          "schemas": ["urn:scim:schemas:core:1.0", "urn:scim:schemas:extension:cisco:commonidentity:1.0"],
-          "meta": {
-            "attributes": [
-              "members"
-            ]
-          },
-          "members": []
-        };
         HDSService.queryUsers(Authinfo.getOrgId(), vm.emailTrialUsers)
-          .then(function (response) {
-            var numInvalidUsers = vm.emailTrialUsers.length - response.data.Resources.length;
+          .then(function (data) {
+            var numInvalidUsers = vm.emailTrialUsers.length - data.Resources.length;
             if (numInvalidUsers > 0) {
               Notification.error(numInvalidUsers + " not valid user(s) in this org won't be saved.");
             }
-            _.forEach(response.data.Resources, function (resource) {
-              var uid = resource.id;
-              jsonEmailTrialUsers.members.push({
-                "value": uid
-              });
-            });
+            var jsonEmailTrialUsers = {
+              schemas: ['urn:scim:schemas:core:1.0', 'urn:scim:schemas:extension:cisco:commonidentity:1.0'],
+              meta: {
+                attributes: [
+                  'members'
+                ]
+              },
+              members: _.map(data.Resources, function (resource) {
+                return {
+                  value: resource.id
+                };
+              }),
+            };
             HDSService.replaceHdsTrialUsers(Authinfo.getOrgId(), jsonEmailTrialUsers)
               .then(function () {
                 vm.savingEmail = false;
                 Notification.success('hercules.settings.emailNotificationsSavingSuccess');
               }).catch(function (error) {
-                Notification.error('hercules.settings.emailNotificationsSavingError' + error.status + error.statusText);
+                Notification.errorWithTrackingId(error, 'hercules.settings.emailNotificationsSavingError');
               });
           }).catch(function (error) {
             Notification.error(error);

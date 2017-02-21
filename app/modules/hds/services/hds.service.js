@@ -43,7 +43,7 @@
     // TODO: the below 2 functions could be removed when HDS is stable
     function getHdsTrialUsersGroup(oid) {
       var serviceUrl = _.replace(UrlConfig.getScimUrl(oid), 'Users', 'Groups');
-      return $http.get(serviceUrl);
+      return $http.get(serviceUrl).then(extractData);
     }
 
     function createHdsTrialUsersTestGroup(oid) {
@@ -57,7 +57,7 @@
           }
         ]
       };
-      return $http.post(serviceUrl, json);
+      return $http.post(serviceUrl, json).then(extractData);
     }
 
     function getHdsTrialUserGroupID() {
@@ -83,21 +83,18 @@
 
     function queryUser(oid, email) {
       var serviceUrl = UrlConfig.getScimUrl(oid) + '?filter=username eq "' + email + '"';
-      return $http.get(serviceUrl);
+      return $http.get(serviceUrl).then(extractData);
     }
 
     function queryUsers(oid, emails) {
       var serviceUrl = UrlConfig.getScimUrl(oid);
-      var isFirstEmail = true;
-      _.forEach(emails, function (email) {
-        if (isFirstEmail) {
-          serviceUrl += '?filter=username eq "' + email.text + '"';
-          isFirstEmail = false;
-        } else {
-          serviceUrl += ' or username eq "' + email.text + '"';
-        }
-      });
-      return $http.get(serviceUrl);
+      serviceUrl += '?filter=' + _.chain(emails)
+        .map(function (email) {
+          return 'username eq "' + email.text + '"';
+        })
+        .join(' or ')
+        .value();
+      return $http.get(serviceUrl).then(extractData);
     }
 
     function getHdsTrialUsers(oid) {
@@ -105,7 +102,7 @@
         getOrgHdsInfo();
       }
       var serviceUrl = _.replace(UrlConfig.getScimUrl(oid) + '/' + trialUserGroupId, 'Users', 'Groups');
-      return $http.get(serviceUrl);
+      return $http.get(serviceUrl).then(extractData);
     }
 
     function addHdsTrialUsers(oid, jsonMembers) {
@@ -113,7 +110,7 @@
         getOrgHdsInfo();
       }
       var serviceUrl = _.replace(UrlConfig.getScimUrl(oid) + '/' + trialUserGroupId, 'Users', 'Groups');
-      return $http.patch(serviceUrl, jsonMembers);
+      return $http.patch(serviceUrl, jsonMembers).then(extractData);
     }
 
     function removeHdsTrialUsers(oid, uids) {
@@ -122,16 +119,15 @@
       }
       var serviceUrl = _.replace(UrlConfig.getScimUrl(oid) + '/' + trialUserGroupId, 'Users', 'Groups');
       var json = {
-        "schemas": ["urn:scim:schemas:core:1.0", "urn:scim:schemas:extension:cisco:commonidentity:1.0"],
-        "members": []
+        schemas: ['urn:scim:schemas:core:1.0', 'urn:scim:schemas:extension:cisco:commonidentity:1.0'],
+        members: _.map(uids, function (uid) {
+          return {
+            value: uid,
+            operation: "delete"
+          };
+        }),
       };
-      _.forEach(uids, function (uid) {
-        json.members.push({
-          value: uid,
-          "operation": "delete"
-        });
-      });
-      return $http.patch(serviceUrl, json);
+      return $http.patch(serviceUrl, json).then(extractData);
     }
 
     function replaceHdsTrialUsers(oid, jsonMembers) {
@@ -139,7 +135,11 @@
         getOrgHdsInfo();
       }
       var serviceUrl = _.replace(UrlConfig.getScimUrl(oid) + '/' + trialUserGroupId, 'Users', 'Groups');
-      return $http.patch(serviceUrl, jsonMembers);
+      return $http.patch(serviceUrl, jsonMembers).then(extractData);
+    }
+
+    function extractData(response) {
+      return response.data;
     }
   }
 }());
