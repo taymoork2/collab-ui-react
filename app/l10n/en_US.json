@@ -3639,13 +3639,14 @@
       "textLink": "Accept Now"
     },
     "tos": {
-      "titleIntelepeer": "Intelepeer terms of service",
+      "title": "terms of service",
       "copyright": "Copyright 2017 Cisco Systems.  All rights reserved.",
       "info": "Cisco Spark is a collaboration application that provides messaging (IM), voice and video calling capabilities.",
       "noticeTitle": "IMPORTANT NOTICES AND DISCLAIMERS",
       "notice": "Please redirect to the following page and read the agreements from you carrier.  Your PSTN numbers will be released after you read and agree these agreements.",
       "confirmHeading": "Confirm the legal contact who accept this terms.",
       "agreeInstructions": "By clicking 'Agree' you have read and agree to comply with the terms and conditions.",
+      "agreeInstructionsCanadaThinkTel": "By clicking 'Agree' you have read, understood, accept, and agree to comply with the terms and conditions, including specifically, the limitations to the ThinkTel VoIP 9-1-1 emergency dialing services described in Appendix 1 of the terms and conditions.",
       "viewTos": "View Terms of Service"
     }
   },
