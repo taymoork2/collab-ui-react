@@ -12,7 +12,6 @@
       'uuid': null,
       'name': null,
       'servicePackage': 'VOICE_ONLY',
-      'countryCode': null,
     };
 
     var service = {
