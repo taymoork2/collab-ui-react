@@ -6,9 +6,10 @@
     .controller('EditTrialUsersController', EditTrialUsersController);
 
   /* @ngInject */
-  function EditTrialUsersController($translate, MailValidatorService, Notification) {
+  function EditTrialUsersController($translate, Authinfo, Userservice, HDSService, MailValidatorService, Notification) {
     var vm = this;
-    vm.emailTrialUsers = ["user1@cisco.com", "user2@cisco.com", "user3@cisco.com", "user4@cisco.com", "user5@cisco.com"]; // TODO: rm data when APIs ready
+    vm.emailTrialUsers = [];
+    vm.trialUserGroupId = null;
     vm.localizedAddEmailWatermark = $translate.instant('hds.resources.editTrialUsers.emailNotificationsWatermark');
     vm.hasTrialUsers = true;
     vm.savingEmail = false;
@@ -17,7 +18,36 @@
     vm.saveTrialUsers = saveTrialUsers;
     vm.getNumUsersInTagField = getNumUsersInTagField;
     vm.maxTrialUsers = 250;
-    // TODO: check if input is valid user
+
+    init();
+
+    function init() {
+      vm.trialUserGroupId = HDSService.getHdsTrialUserGroupID();
+      getExistingTrialUsers();
+    }
+
+    function getExistingTrialUsers() {
+      HDSService.getHdsTrialUsers(Authinfo.getOrgId(), vm.trialUserGroupId)
+        .then(function (response) {
+          vm.trialUsers = _.isObject(response.data.members) ? response.data.members : {};
+          _.forEach(vm.trialUsers, function (user) {
+            if (user) {
+              Userservice.getUserAsPromise(user.value)
+                .then(function (response) {
+                  var email = response.data.userName;
+                  user['email'] = email;
+                  vm.emailTrialUsers.push({
+                    text: email
+                  });
+                });
+            }
+          });
+          vm.numTrialUsers = vm.trialUsers.length;
+        }).catch(function (error) {
+          Notification.errorWithTrackingId(error);
+        });
+    }
+
 
     function removeUser(email) {
       if (email) {
@@ -35,20 +65,42 @@
     }
 
     function saveTrialUsers() {
+      vm.emailTrialUsers = _.uniq(vm.emailTrialUsers);
       var emailTrialUsers = _.map(vm.emailTrialUsers, function (data) {
         return data.text;
       }).join(',');
       if (isValidEmails(emailTrialUsers)) {
-        // TODO: use the real API when available
-        /*ServiceDescriptor.setEmailSubscribers('squared-fusion-uc', emailSubscribers, function (statusCode) {
-          if (statusCode === 204) {
-            Notification.success('hercules.settings.emailNotificationsSavingSuccess');
-          } else {
-            Notification.error('hercules.settings.emailNotificationsSavingError');
-          }
-          vm.savingEmail = false;
-        });*/
-        vm.savingEmail = false;
+        var jsonEmailTrialUsers = {
+          "schemas": ["urn:scim:schemas:core:1.0", "urn:scim:schemas:extension:cisco:commonidentity:1.0"],
+          "meta": {
+            "attributes": [
+              "members"
+            ]
+          },
+          "members": []
+        };
+        HDSService.queryUsers(Authinfo.getOrgId(), vm.emailTrialUsers)
+          .then(function (response) {
+            var numInvalidUsers = vm.emailTrialUsers.length - response.data.Resources.length;
+            if (numInvalidUsers > 0) {
+              Notification.error(numInvalidUsers + " not valid user(s) in this org won't be saved.");
+            }
+            _.forEach(response.data.Resources, function (resource) {
+              var uid = resource.id;
+              jsonEmailTrialUsers.members.push({
+                "value": uid
+              });
+            });
+            HDSService.replaceHdsTrialUsers(Authinfo.getOrgId(), jsonEmailTrialUsers)
+              .then(function () {
+                vm.savingEmail = false;
+                Notification.success('hercules.settings.emailNotificationsSavingSuccess');
+              }).catch(function (error) {
+                Notification.error('hercules.settings.emailNotificationsSavingError' + error.status + error.statusText);
+              });
+          }).catch(function (error) {
+            Notification.error(error);
+          });
       }
     }
 
