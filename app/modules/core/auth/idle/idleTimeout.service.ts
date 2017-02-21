@@ -104,6 +104,7 @@ export class IdleTimeoutService {
     this.Log.debug('IDLE TIMEOUT SERVICE: Starting Tab Timer');
     //start the timer
     this.$rootScope.$on(IdleTimeoutService.LOGIN_EVENT, () => {
+      this.Storage.remove(IdleTimeoutService.LOGIN_MESSAGE);
 
       return this.FeatureToggleService.atlasIdleLogoutGetStatus()
       .then(result => {
@@ -116,7 +117,6 @@ export class IdleTimeoutService {
           /* userCsvController processCsvRows() issues a rest API for every 10 users in the CSV file
           */
           this.keepAliveDeregistrer  = this.$rootScope.$on(this.Config.idleTabKeepAliveEvent, () => this.resetAndBroadcast({ type: this.Config.idleTabKeepAliveEvent }));
-          this.Storage.remove(IdleTimeoutService.LOGIN_MESSAGE);
           this.idleSetter = this.initIdleTimer();
           //bind events to reset the timer.
           let throttled = _.throttle(e => {

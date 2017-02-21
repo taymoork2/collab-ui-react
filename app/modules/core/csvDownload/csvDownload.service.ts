@@ -45,8 +45,10 @@ export class CsvDownloadService {
     private $window: IWindowService,
     private $http: ng.IHttpService,
     private $q: IQServiceNewer,
+    private $rootScope: ng.IRootScopeService,
     private $timeout: ng.ITimeoutService,
     private Authinfo,
+    private Config,
     private UrlConfig,
     private Utils,
     private UserListService,
@@ -177,6 +179,8 @@ export class CsvDownloadService {
 
     // continue get
     this.canceler = this.$q.defer();  // used to cancel the request
+    // this event is picked up by idleTimeoutService to keep the user logged in
+    this.$rootScope.$emit(this.Config.idleTabKeepAliveEvent);
     return this.$http.get(url, { timeout: this.canceler.promise })
       .then((response) => {
         this.lastProgressMessage = _.get(response, 'data.message', '');
