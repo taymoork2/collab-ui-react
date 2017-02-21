@@ -313,6 +313,14 @@ require('./_hg-edit.scss');
           placeholder: $translate.instant('huronHuntGroup.nameLabel'),
           description: $translate.instant('huronHuntGroup.nameDesc'),
           required: true,
+          pattern: '^[a-zA-Z 0-9._-]{1,50}$',
+        },
+        validation: {
+          messages: {
+            pattern: function () {
+              return $translate.instant('huronHuntGroup.errorNamePattern');
+            },
+          },
         },
       }, {
         key: 'numbers',
