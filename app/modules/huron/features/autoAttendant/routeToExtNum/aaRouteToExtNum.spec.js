@@ -12,8 +12,8 @@ describe('Controller: AARouteToExtNumCtrl', function () {
   var aaUiModel = {
     openHours: {},
     ceInfo: {
-      name: 'AA2'
-    }
+      name: 'AA2',
+    },
   };
 
   var schedule = 'openHours';
@@ -74,7 +74,7 @@ describe('Controller: AARouteToExtNumCtrl', function () {
 
     it('should be able to create new key entry', function () {
       var controller = $controller('AARouteToExtNumCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       expect(controller).toBeDefined();
@@ -94,7 +94,7 @@ describe('Controller: AARouteToExtNumCtrl', function () {
         menuEntry.addAction(actionEntry);
         aaUiModel[schedule].entries[0].addEntry(menuEntry);
         var controller = $controller('AARouteToExtNumCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
 
         $scope.$apply();
@@ -107,7 +107,7 @@ describe('Controller: AARouteToExtNumCtrl', function () {
       it('should write UI entry back into UI model', function () {
 
         var controller = $controller('AARouteToExtNumCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
 
         var phoneNumber = '1408 474 4088';
@@ -125,7 +125,7 @@ describe('Controller: AARouteToExtNumCtrl', function () {
       it('should write UI entry back into UI model when phone number changes', function () {
 
         var controller = $controller('AARouteToExtNumCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
 
         var phoneNumber1 = '+14084744088';
@@ -158,7 +158,7 @@ describe('Controller: AARouteToExtNumCtrl', function () {
       it('should conditional action with then clause', function () {
 
         var controller = $controller('AARouteToExtNumCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
 
         expect(controller.menuEntry.actions[0].then).toBeDefined();
@@ -171,7 +171,7 @@ describe('Controller: AARouteToExtNumCtrl', function () {
         aaUiModel[schedule].entries[0].actions[0] = undefined;
 
         var controller = $controller('AARouteToExtNumCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
 
         expect(controller.menuEntry.actions[0].name).toEqual('conditional');
@@ -185,7 +185,7 @@ describe('Controller: AARouteToExtNumCtrl', function () {
         aaUiModel[schedule].entries[index].actions[0].then = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', '');
 
         var controller = $controller('AARouteToExtNumCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
 
         expect(controller.menuEntry.actions[0].name).toEqual('conditional');
@@ -211,7 +211,7 @@ describe('Controller: AARouteToExtNumCtrl', function () {
         var phoneNumber = '14084744088';
 
         var controller = $controller('AARouteToExtNumCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
 
         controller.model.phoneNumberInput.phoneNumber = phoneNumber;
@@ -231,7 +231,7 @@ describe('Controller: AARouteToExtNumCtrl', function () {
       it('should be able to create new AA entry from Route Call', function () {
 
         var controller = $controller('AARouteToExtNumCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
 
         expect(controller.menuEntry.actions[0].name).toEqual('route');
@@ -254,7 +254,7 @@ describe('Controller: AARouteToExtNumCtrl', function () {
         $scope.fromRouteCall = true;
 
         var controller = $controller('AARouteToExtNumCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
 
         expect(controller.menuEntry.actions[0].name).toEqual('route');
@@ -280,7 +280,7 @@ describe('Controller: AARouteToExtNumCtrl', function () {
         $scope.fromFallback = true;
 
         var controller = $controller('AARouteToExtNumCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
 
         var fallbackAction = _.get(controller.menuEntry, 'actions[0].queueSettings.fallback.actions[0]');

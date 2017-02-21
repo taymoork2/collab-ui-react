@@ -18,7 +18,7 @@ describe('SiteCSVResultsCtr: export results', function () {
 
     var fakeSiteRow = {
       license: {
-        siteUrl: "fake.webex.com"
+        siteUrl: "fake.webex.com",
       },
 
       csvStatusObj: {
@@ -35,15 +35,15 @@ describe('SiteCSVResultsCtr: export results', function () {
           "totalRecords": 25,
           "successRecords": 25,
           "failedRecords": 0,
-          "exportFileLink": "exportFileID"
-        }
+          "exportFileLink": "exportFileID",
+        },
       },
     };
 
     SiteCSVResultsCtrl = $controller('SiteCSVResultsCtrl', {
       $stateParams: {
-        siteRow: fakeSiteRow
-      }
+        siteRow: fakeSiteRow,
+      },
     });
   })); // beforeEach(inject())
 
@@ -80,7 +80,7 @@ describe('SiteCSVResultsCtr: import results', function () {
 
     var fakeSiteRow = {
       "license": {
-        siteUrl: "fake.webex.com"
+        siteUrl: "fake.webex.com",
       },
       "csvStatusObj": {
         siteUrl: "fake.webex.com",
@@ -96,15 +96,15 @@ describe('SiteCSVResultsCtr: import results', function () {
           "totalRecords": 14,
           "successRecords": 0,
           "failedRecords": 14,
-          "importFileName": "NewSiteUsersU16LE.csv"
-        }
-      }
+          "importFileName": "NewSiteUsersU16LE.csv",
+        },
+      },
     };
 
     SiteCSVResultsCtrl = $controller('SiteCSVResultsCtrl', {
       $stateParams: {
-        siteRow: fakeSiteRow
-      }
+        siteRow: fakeSiteRow,
+      },
     });
   })); // beforeEach(inject())
 

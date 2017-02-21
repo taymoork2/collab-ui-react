@@ -11,7 +11,7 @@
 
     var service = {
       getUiModel: getUiModel,
-      initUiModel: initUiModel
+      initUiModel: initUiModel,
     };
 
     return service;

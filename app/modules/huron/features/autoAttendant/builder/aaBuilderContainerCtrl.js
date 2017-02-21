@@ -28,9 +28,9 @@
         resolve: {
           sectionToToggle: function () {
             return sectionToToggle;
-          }
+          },
         },
-        modalClass: 'aa-schedule'
+        modalClass: 'aa-schedule',
       });
 
       modalInstance.result.then(function () {

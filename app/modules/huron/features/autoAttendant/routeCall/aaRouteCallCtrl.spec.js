@@ -5,12 +5,12 @@ describe('Controller: AARouteCallMenuCtrl', function () {
   var AAUiModelService, AutoAttendantCeMenuModelService, QueueHelperService, AACommonService;
   var $rootScope, $scope, $q;
   var aaUiModel = {
-    openHours: {}
+    openHours: {},
   };
   var queueName = 'Sunlight Queue 1';
   var queues = [{
     queueName: queueName,
-    queueUrl: '/c16a6027-caef-4429-b3af-9d61ddc7964b'
+    queueUrl: '/c16a6027-caef-4429-b3af-9d61ddc7964b',
 
   }];
 
@@ -63,7 +63,7 @@ describe('Controller: AARouteCallMenuCtrl', function () {
       AACommonService.setRouteQueueToggle(false);
 
       controller = controller('AARouteCallMenuCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
       $scope.$apply();
 
@@ -93,7 +93,7 @@ describe('Controller: AARouteCallMenuCtrl', function () {
       AACommonService.setRouteQueueToggle(true);
 
       controller = controller('AARouteCallMenuCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
       $scope.$apply();
 

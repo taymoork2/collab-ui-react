@@ -15,8 +15,8 @@
     vm.validationMessages = {
       required: $translate.instant('common.invalidRequired'),
       minlength: $translate.instant('common.invalidMinLength', {
-        min: vm.minlength
-      })
+        min: vm.minlength,
+      }),
     };
 
     ///////////////
@@ -24,8 +24,8 @@
     function next() {
       $stateParams.wizard.next({
         mediafusion: {
-          hostname: vm.hostname
-        }
+          hostname: vm.hostname,
+        },
       });
     }
 

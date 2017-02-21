@@ -25,7 +25,7 @@ describe('controller: GemCtrl', function () {
   function initController() {
     controller = $controller("GemCtrl", {
       $scope: {},
-      FeatureToggleService: FeatureToggleService
+      FeatureToggleService: FeatureToggleService,
     });
   }
 

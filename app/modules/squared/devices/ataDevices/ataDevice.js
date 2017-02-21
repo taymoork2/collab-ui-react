@@ -37,8 +37,8 @@
           options: {
             showSelectionBar: true,
             floor: ata.inputMin,
-            ceil: ata.inputMax
-          }
+            ceil: ata.inputMax,
+          },
         };
 
         ata.outputMin = -14;
@@ -48,8 +48,8 @@
           options: {
             showSelectionBar: true,
             floor: ata.outputMin,
-            ceil: ata.outputMax
-          }
+            ceil: ata.outputMax,
+          },
         };
 
         ata.impedanceMin = 0;
@@ -59,8 +59,8 @@
           options: {
             showSelectionBar: true,
             floor: ata.impedanceMin,
-            ceil: ata.impedanceMax
-          }
+            ceil: ata.impedanceMax,
+          },
         };
 
         huronDeviceService.getAtaInfo(ata.device).then(function (result) {
@@ -92,7 +92,7 @@
           var settings = {
             inputAudioLevel: ata.inputOptions.value,
             outputAudioLevel: ata.outputOptions.value,
-            impedance: ata.impedanceOptions.value
+            impedance: ata.impedanceOptions.value,
           };
 
           huronDeviceService.setSettingsForAta(ata.device, settings).then(function () {
@@ -110,17 +110,17 @@
         function open(device) {
           return $modal.open({
             resolve: {
-              device: _.constant(device)
+              device: _.constant(device),
             },
             controllerAs: 'ata',
             controller: 'AtaDeviceController',
             templateUrl: 'modules/squared/devices/ataDevices/ataDevice.html',
-            type: 'modal'
+            type: 'modal',
           }).result;
         }
 
         return {
-          open: open
+          open: open,
         };
       }
     );

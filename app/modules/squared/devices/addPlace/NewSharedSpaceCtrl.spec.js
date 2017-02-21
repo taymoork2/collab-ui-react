@@ -18,7 +18,7 @@ describe('NewSharedSpaceCtrl: Ctrl', function () {
     controller = $controller('NewSharedSpaceCtrl', {
       $scope: $scope,
       $state: $state,
-      $stateParams: $stateParams
+      $stateParams: $stateParams,
     });
   }
 
@@ -34,10 +34,10 @@ describe('NewSharedSpaceCtrl: Ctrl', function () {
         state: function () {
           return {
             data: {
-              title: title
-            }
+              title: title,
+            },
           };
-        }
+        },
       };
       initController();
 
@@ -52,10 +52,10 @@ describe('NewSharedSpaceCtrl: Ctrl', function () {
       $stateParams.wizard = {
         state: function () {
           return {
-            data: {}
+            data: {},
           };
         },
-        next: function () {}
+        next: function () {},
       };
       initController();
       controller.deviceName = deviceDisplayName;

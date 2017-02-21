@@ -19,7 +19,7 @@ describe('Controller: PlanReviewCtrl', function () {
     getCareServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/careServices.json').careLicense),
     getCmrServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/cmrServices.json')),
     getLicenses: sinon.stub().returns(getJSONFixture('core/json/authInfo/licenseServices.json')),
-    isCare: sinon.stub().returns(true)
+    isCare: sinon.stub().returns(true),
   };
 
   beforeEach(angular.mock.module(function ($provide) {
@@ -52,7 +52,7 @@ describe('Controller: PlanReviewCtrl', function () {
     });
 
     controller = $controller('PlanReviewCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
 
     $httpBackend.whenGET(UrlConfig.getAdminServiceUrl() + 'organization/5632f806-ad09-4a26-a0c0-a49a13f38873/trials/33e66606-b1b8-4794-a7c5-5bfc5046380f').respond(function () {

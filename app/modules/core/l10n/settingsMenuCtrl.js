@@ -11,7 +11,7 @@
     vm.options = _.map(languages, function (lang) {
       return {
         value: lang.value,
-        label: $translate.instant(lang.label)
+        label: $translate.instant(lang.label),
       };
     });
 

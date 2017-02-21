@@ -23,7 +23,7 @@ module.exports = csp({
       'https://*.webexconnect.com',
       'https://wbxdmz.admin.ciscospark.com',
       'https://wbxbts.admin.ciscospark.com',
-      'blob:'
+      'blob:',
     ],
     frameSrc: [
       'https://buy.ciscospark.com', // Digital River
@@ -63,7 +63,7 @@ module.exports = csp({
       'http://dev-admin.ciscospark.com:8080',
       'http://dpm.demdex.net', // Adobe DTM Omniture
       'http://ciscowebex.d1.sc.omtrdc.net', // Adobe DTM Omniture
-      'https://*.clouddrive.com' // CSV download
+      'https://*.clouddrive.com', // CSV download
     ],
     fontSrc: [
       '\'self\'',
@@ -102,6 +102,6 @@ module.exports = csp({
       'http://dev-admin.ciscospark.com:8000', // manual DNS entry for local dev
       // Webpack Dev
       'blob:',
-    ]
-  }
+    ],
+  },
 });

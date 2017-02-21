@@ -20,8 +20,8 @@ require('./_setup-wizard.scss');
       controller: 'PlanReviewCtrl as planReview',
       steps: [{
         name: 'init',
-        template: 'modules/core/setupWizard/planReview/planReview.tpl.html'
-      }]
+        template: 'modules/core/setupWizard/planReview/planReview.tpl.html',
+      }],
     }, {
       name: 'messagingSetup',
       label: 'firstTimeWizard.messageSettings',
@@ -31,8 +31,8 @@ require('./_setup-wizard.scss');
       controller: 'MessagingSetupCtrl as msgSetup',
       steps: [{
         name: 'setup',
-        template: 'modules/core/setupWizard/messageSettings/messagingSetup.tpl.html'
-      }]
+        template: 'modules/core/setupWizard/messageSettings/messagingSetup.tpl.html',
+      }],
     }, {
       name: 'enterpriseSettings',
       label: 'firstTimeWizard.enterpriseSettings',
@@ -42,20 +42,20 @@ require('./_setup-wizard.scss');
       controller: 'EnterpriseSettingsCtrl as entprCtrl',
       steps: [{
         name: 'enterpriseSipUrl',
-        template: 'modules/core/setupWizard/enterpriseSettings/enterprise.setSipDomain.tpl.html'
+        template: 'modules/core/setupWizard/enterpriseSettings/enterprise.setSipDomain.tpl.html',
       }, {
         name: 'init',
-        template: 'modules/core/setupWizard/enterpriseSettings/enterprise.init.tpl.html'
+        template: 'modules/core/setupWizard/enterpriseSettings/enterprise.init.tpl.html',
       }, {
         name: 'exportMetadata',
-        template: 'modules/core/setupWizard/enterpriseSettings/enterprise.exportMetadata.tpl.html'
+        template: 'modules/core/setupWizard/enterpriseSettings/enterprise.exportMetadata.tpl.html',
       }, {
         name: 'importIdp',
-        template: 'modules/core/setupWizard/enterpriseSettings/enterprise.importIdp.tpl.html'
+        template: 'modules/core/setupWizard/enterpriseSettings/enterprise.importIdp.tpl.html',
       }, {
         name: 'testSSO',
-        template: 'modules/core/setupWizard/enterpriseSettings/enterprise.testSSO.tpl.html'
-      }]
+        template: 'modules/core/setupWizard/enterpriseSettings/enterprise.testSSO.tpl.html',
+      }],
     }, {
       name: 'addUsers',
       label: 'firstTimeWizard.addUsers',
@@ -69,36 +69,36 @@ require('./_setup-wizard.scss');
         controllerAs: 'csv',
         steps: [{
           name: 'init',
-          template: 'modules/core/setupWizard/addUsers/addUsers.init.tpl.html'
+          template: 'modules/core/setupWizard/addUsers/addUsers.init.tpl.html',
         }, {
           name: 'csvDownload',
-          template: 'modules/core/setupWizard/addUsers/addUsers.downloadCsv.tpl.html'
+          template: 'modules/core/setupWizard/addUsers/addUsers.downloadCsv.tpl.html',
         }, {
           name: 'csvUpload',
-          template: 'modules/core/setupWizard/addUsers/addUsers.uploadCsv.tpl.html'
+          template: 'modules/core/setupWizard/addUsers/addUsers.uploadCsv.tpl.html',
         }, {
           name: 'csvProcessing',
           template: 'modules/core/setupWizard/addUsers/addUsers.processCsv.tpl.html',
-          buttons: false
+          buttons: false,
         }, {
           name: 'csvResult',
           template: 'modules/core/setupWizard/addUsers/addUsers.uploadResult.tpl.html',
-          buttons: 'modules/core/setupWizard/addUsers/addUsers.csvResultButtons.tpl.html'
-        }]
+          buttons: 'modules/core/setupWizard/addUsers/addUsers.csvResultButtons.tpl.html',
+        }],
       }, {
         name: 'advanced',
         controller: 'OnboardCtrl',
         steps: [{
           name: 'init',
-          template: 'modules/core/setupWizard/addUsers/addUsers.init.tpl.html'
+          template: 'modules/core/setupWizard/addUsers/addUsers.init.tpl.html',
         }, {
           name: 'installConnector',
-          template: 'modules/core/setupWizard/addUsers/addUsers.installConnector.tpl.html'
+          template: 'modules/core/setupWizard/addUsers/addUsers.installConnector.tpl.html',
         }, {
           name: 'syncStatus',
-          template: 'modules/core/setupWizard/addUsers/addUsers.syncStatus.tpl.html'
-        }]
-      }]
+          template: 'modules/core/setupWizard/addUsers/addUsers.syncStatus.tpl.html',
+        }],
+      }],
     }];
 
     $scope.isDirSyncEnabled = false;
@@ -155,8 +155,8 @@ require('./_setup-wizard.scss');
           controllerAs: 'squaredUcSetup',
           steps: [{
             name: 'init',
-            template: 'modules/core/setupWizard/callSettings/serviceSetup.tpl.html'
-          }]
+            template: 'modules/core/setupWizard/callSettings/serviceSetup.tpl.html',
+          }],
         });
       }
 
@@ -174,14 +174,14 @@ require('./_setup-wizard.scss');
           controller: 'WizardFinishCtrl',
           steps: [{
             name: 'init',
-            template: 'modules/core/setupWizard/finish/finish.tpl.html'
-          }]
+            template: 'modules/core/setupWizard/finish/finish.tpl.html',
+          }],
         });
       }
 
       if ($scope.isCSB) {
         _.remove($scope.tabs, {
-          name: 'addUsers'
+          name: 'addUsers',
         });
       }
 
@@ -206,7 +206,7 @@ require('./_setup-wizard.scss');
         if (response) {
           var step = {
             name: 'enterprisePmrSetup',
-            template: 'modules/core/setupWizard/enterpriseSettings/enterprise.pmrSetup.tpl.html'
+            template: 'modules/core/setupWizard/enterpriseSettings/enterprise.pmrSetup.tpl.html',
           };
           $scope.tabs = _.each($scope.tabs, function (tab) {
             if (tab.name === 'enterpriseSettings') {
@@ -234,8 +234,8 @@ require('./_setup-wizard.scss');
         controller: 'CareSettingsCtrl as careSettings',
         steps: [{
           name: 'csonboard',
-          template: 'modules/core/setupWizard/careSettings/careSettings.tpl.html'
-        }]
+          template: 'modules/core/setupWizard/careSettings/careSettings.tpl.html',
+        }],
       };
 
       var userOrFinishTabIndex = _.findIndex($scope.tabs, function (tab) {
@@ -262,7 +262,7 @@ require('./_setup-wizard.scss');
         //prevent "back" button if a step is defined in single tab mode:
         var tab = filteredTabs[0];
         var index = _.findIndex(tab.steps, {
-          name: $stateParams.currentStep
+          name: $stateParams.currentStep,
         });
         if (index > 0) {
           tab.steps.splice(0, index);
@@ -274,10 +274,10 @@ require('./_setup-wizard.scss');
     function setupEnterpriseSettingsTab() {
       if (shouldRemoveSSOSteps) {
         var enterpriseSettingTab = _.find($scope.tabs, {
-          name: 'enterpriseSettings'
+          name: 'enterpriseSettings',
         }, {});
         var ssoInitIndex = _.findIndex(enterpriseSettingTab.steps, {
-          name: 'init'
+          name: 'init',
         });
         if (ssoInitIndex > -1) {
           enterpriseSettingTab.steps.splice(ssoInitIndex);
@@ -287,7 +287,7 @@ require('./_setup-wizard.scss');
 
     function setupAddUserTab() {
       var userTab = _.find($scope.tabs, {
-        name: 'addUsers'
+        name: 'addUsers',
       });
       if (userTab) {
         if (shouldRemoveAddUserTab) {
@@ -300,37 +300,37 @@ require('./_setup-wizard.scss');
           controller: 'OnboardCtrl',
           steps: [{
             name: 'init',
-            template: 'modules/core/setupWizard/addUsers/addUsers.init.tpl.html'
+            template: 'modules/core/setupWizard/addUsers/addUsers.init.tpl.html',
           }, {
             name: 'manualEntry',
-            template: 'modules/core/setupWizard/addUsers/addUsers.manualEntry.tpl.html'
+            template: 'modules/core/setupWizard/addUsers/addUsers.manualEntry.tpl.html',
           }, {
             name: 'assignServices',
-            template: 'modules/core/setupWizard/addUsers/addUsers.assignServices.tpl.html'
+            template: 'modules/core/setupWizard/addUsers/addUsers.assignServices.tpl.html',
           }, {
             name: 'assignDnAndDirectLines',
-            template: 'modules/core/setupWizard/addUsers/addUsers.assignDnAndDirectLines.tpl.html'
+            template: 'modules/core/setupWizard/addUsers/addUsers.assignDnAndDirectLines.tpl.html',
           }, {
             name: 'addUsersResults',
-            template: 'modules/core/setupWizard/addUsers/addUsers.results.tpl.html'
-          }]
+            template: 'modules/core/setupWizard/addUsers/addUsers.results.tpl.html',
+          }],
         };
         var advancedSubTabSteps = [{
           name: 'dirsyncServices',
-          template: 'modules/core/setupWizard/addUsers/addUsers.assignServices.tpl.html'
+          template: 'modules/core/setupWizard/addUsers/addUsers.assignServices.tpl.html',
         }, {
           name: 'dirsyncProcessing',
           template: 'modules/core/setupWizard/addUsers/addUsers.processDirSync.tpl.html',
-          buttons: false
+          buttons: false,
         }, {
           name: 'dirsyncResult',
           template: 'modules/core/setupWizard/addUsers/addUsers.uploadResultDirSync.tpl.html',
-          buttons: 'modules/core/setupWizard/addUsers/addUsers.dirSyncResultButtons.tpl.html'
+          buttons: 'modules/core/setupWizard/addUsers/addUsers.dirSyncResultButtons.tpl.html',
         }];
 
         if ($scope.isDirSyncEnabled) {
           var advancedSubTab = _.find(userTab.subTabs, {
-            name: 'advanced'
+            name: 'advanced',
           });
           advancedSubTab.steps = advancedSubTab.steps.concat(advancedSubTabSteps);
         } else {

@@ -6,25 +6,25 @@ describe('Controller: ReassignClusterControllerV2', function () {
   beforeEach(inject(function ($controller, _MediaClusterServiceV2_, _Notification_, _$q_, _$translate_, _$httpBackend_) {
     connector = {
       hostname: 'hostname',
-      id: 'id'
+      id: 'id',
     };
     cluster = {
       id: 'a',
       name: 'b',
       properties: {
-        'mf.group.displayName': 'trichy'
+        'mf.group.displayName': 'trichy',
       },
-      assigned_property_sets: '606599c8-8e72-491f-9212-153a0877eb84' // or whatever you prefer
+      assigned_property_sets: '606599c8-8e72-491f-9212-153a0877eb84', // or whatever you prefer
     };
 
     clusterList = [{
       id: 'a',
       name: 'name1',
-      targetType: 'mf_mgmt'
+      targetType: 'mf_mgmt',
     }, {
       id: 'a',
       name: 'name1',
-      targetType: 'c_mgmt'
+      targetType: 'c_mgmt',
     }];
 
     MediaClusterServiceV2 = _MediaClusterServiceV2_;
@@ -34,10 +34,10 @@ describe('Controller: ReassignClusterControllerV2', function () {
     $q = _$q_;
     $translate = _$translate_;
     modalInstanceMock = {
-      close: sinon.stub()
+      close: sinon.stub(),
     };
     windowMock = {
-      open: sinon.stub()
+      open: sinon.stub(),
     };
     spyOn(MediaClusterServiceV2, 'getAll').and.returnValue($q.resolve(clusterList));
 
@@ -49,7 +49,7 @@ describe('Controller: ReassignClusterControllerV2', function () {
       $translate: $translate,
       $modalInstance: modalInstanceMock,
       $window: windowMock,
-      connector: connector
+      connector: connector,
     });
   }));
   it('check if ReassignClusterControllerV2 is Defined', function () {
@@ -58,7 +58,7 @@ describe('Controller: ReassignClusterControllerV2', function () {
   it('check if moveV2Host is called with  clusterId', function () {
     httpMock.when('POST', /^\w+.*/).respond({});
     controller.clusterDetail = {
-      id: 'id'
+      id: 'id',
     };
     spyOn(MediaClusterServiceV2, 'moveV2Host').and.returnValue($q.resolve({}));
     controller.reassign();
@@ -69,7 +69,7 @@ describe('Controller: ReassignClusterControllerV2', function () {
   it('should notify error when moveV2Host call fails', function () {
     httpMock.when('POST', /^\w+.*/).respond(500, null);
     controller.clusterDetail = {
-      id: 'id'
+      id: 'id',
     };
     controller.selectedCluster = "testCluster1";
     spyOn(MediaClusterServiceV2, 'moveV2Host').and.returnValue($q.reject());
@@ -83,14 +83,14 @@ describe('Controller: ReassignClusterControllerV2', function () {
     controller.clusterDetail = null;
     controller.selectModel = {
       "10.196.5.251": "MFA_TEST3",
-      "10.196.5.246": "MFA_TEST4"
+      "10.196.5.246": "MFA_TEST4",
     };
     controller.clusters = [{
       "id": "a050fcc7-9ade-4790-a06d-cca596910421",
-      "name": "MFA_TEST2"
+      "name": "MFA_TEST2",
     }];
     spyOn(MediaClusterServiceV2, 'createClusterV2').and.returnValue($q.resolve({
-      data: ""
+      data: "",
     }));
     controller.reassign();
     httpMock.verifyNoOutstandingExpectation();

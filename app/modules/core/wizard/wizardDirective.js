@@ -112,7 +112,7 @@ require('./_wizard.scss');
     function initCurrent() {
       if ($stateParams.currentTab) {
         vm.current.tab = _.find(getTabs(), {
-          name: $stateParams.currentTab
+          name: $stateParams.currentTab,
         });
       } else {
         vm.current.tab = getTabs()[0];
@@ -120,14 +120,14 @@ require('./_wizard.scss');
 
       if ($stateParams.currentSubTab) {
         vm.current.subTab = _.find(getTab().subTabs, {
-          name: $stateParams.currentSubTab
+          name: $stateParams.currentSubTab,
         });
       }
 
       var steps = getSteps();
       if (steps.length) {
         var index = _.findIndex(steps, {
-          name: $stateParams.currentStep
+          name: $stateParams.currentStep,
         });
         if (index === -1) {
           index = 0;
@@ -228,7 +228,7 @@ require('./_wizard.scss');
       var tab = getTab();
       if (tab && tab.controller) {
         return $controller(tab.controller, {
-          $scope: $scope
+          $scope: $scope,
         });
       }
     }
@@ -238,7 +238,7 @@ require('./_wizard.scss');
       var subTab = getSubTab();
       if (subTab && subTab.controller) {
         return $controller(subTab.controller, {
-          $scope: $scope
+          $scope: $scope,
         });
       }
     }
@@ -291,7 +291,7 @@ require('./_wizard.scss');
           message: $translate.instant('serviceSetupModal.saveCallSettingsExtensionLengthAllowed'),
           close: $translate.instant('common.continue'),
           dismiss: $translate.instant('common.cancel'),
-          btnType: 'negative'
+          btnType: 'negative',
         })
           .result.then(function () {
             executeNextStep(subTabControllerAs);
@@ -408,7 +408,7 @@ require('./_wizard.scss');
 
     function openTermsAndConditions() {
       $modal.open({
-        templateUrl: 'modules/core/wizard/termsAndConditions.tpl.html'
+        templateUrl: 'modules/core/wizard/termsAndConditions.tpl.html',
       });
     }
 
@@ -442,9 +442,9 @@ require('./_wizard.scss');
       scope: {
         tabs: '=',
         finish: '=',
-        isFirstTime: "="
+        isFirstTime: "=",
       },
-      templateUrl: 'modules/core/wizard/wizard.tpl.html'
+      templateUrl: 'modules/core/wizard/wizard.tpl.html',
     };
 
     return directive;
@@ -454,7 +454,7 @@ require('./_wizard.scss');
     var directive = {
       require: '^crWizard',
       restrict: 'AE',
-      templateUrl: 'modules/core/wizard/wizardNav.tpl.html'
+      templateUrl: 'modules/core/wizard/wizardNav.tpl.html',
     };
 
     return directive;
@@ -467,7 +467,7 @@ require('./_wizard.scss');
       restrict: 'AE',
       scope: true,
       templateUrl: 'modules/core/wizard/wizardMain.tpl.html',
-      link: link
+      link: link,
     };
 
     return directive;
@@ -497,7 +497,7 @@ require('./_wizard.scss');
       restrict: 'AE',
       scope: true,
       templateUrl: 'modules/core/wizard/wizardButtons.tpl.html',
-      link: link
+      link: link,
     };
 
     return directive;

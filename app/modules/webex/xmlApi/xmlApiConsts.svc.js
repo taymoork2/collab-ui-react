@@ -178,41 +178,41 @@
 
       replaceSets: [{
         replaceThis: /<ep:/g,
-        withThis: "<ep_"
+        withThis: "<ep_",
       }, {
         replaceThis: /<\/ep:/g,
-        withThis: "</ep_"
+        withThis: "</ep_",
       }, {
         replaceThis: /<ns1:/g,
-        withThis: "<ns1_"
+        withThis: "<ns1_",
       }, {
         replaceThis: /<\/ns1:/g,
-        withThis: "</ns1_"
+        withThis: "</ns1_",
       }, {
         replaceThis: /<serv:/g,
-        withThis: "<serv_"
+        withThis: "<serv_",
       }, {
         replaceThis: /<\/serv:/g,
-        withThis: "</serv_"
+        withThis: "</serv_",
       }, {
         replaceThis: /<use:/g,
-        withThis: "<use_"
+        withThis: "<use_",
       }, {
         replaceThis: /<\/use:/g,
-        withThis: "</use_"
+        withThis: "</use_",
       }, {
         replaceThis: /<com:/g,
-        withThis: "<com_"
+        withThis: "<com_",
       }, {
         replaceThis: /<\/com:/g,
-        withThis: "</com_"
+        withThis: "</com_",
       }, {
         replaceThis: /<mtgtype:/g,
-        withThis: "<mtgtype_"
+        withThis: "<mtgtype_",
       }, {
         replaceThis: /<\/mtgtype:/g,
-        withThis: "</mtgtype_"
-      }] // replaceSets[]
+        withThis: "</mtgtype_",
+      }], // replaceSets[]
     }; // return
   } // XmlApiConstants
 })();

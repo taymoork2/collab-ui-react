@@ -46,28 +46,28 @@
       tname: 'Basic',
       actions: [{
         lane: 'openHours',
-        actionset: ['say', 'runActionsOnInput']
-      }]
+        actionset: ['say', 'runActionsOnInput'],
+      }],
     }, {
       tname: 'Custom',
       actions: [{
         lane: 'openHours',
-        actionset: []
-      }]
+        actionset: [],
+      }],
     }, {
       tname: 'BusinessHours',
       actions: [{
         lane: 'openHours',
-        actionset: []
+        actionset: [],
       }, {
         lane: 'closedHours',
-        actionset: []
-      }]
+        actionset: [],
+      }],
     }];
 
     var DEFAULT_TZ = {
       id: 'America/Los_Angeles',
-      label: $translate.instant('timeZones.America/Los_Angeles')
+      label: $translate.instant('timeZones.America/Los_Angeles'),
     };
 
     setLoadingStarted();
@@ -86,7 +86,7 @@
     function sendMetrics(metric) {
       if (vm.isAANameDefined && !_.isUndefined(metric)) {
         Analytics.trackEvent(AAMetricNameService.BUILDER_PAGE, {
-          type: metric
+          type: metric,
         });
       }
     }
@@ -227,7 +227,7 @@
           function (response) {
             if (_.get(response, 'failedResources.length', false)) {
               AANotificationService.errorResponse(response, 'autoAttendant.errorFailedToAssignNumbers', {
-                phoneNumbers: _.map(response.failedResources, 'id')
+                phoneNumbers: _.map(response.failedResources, 'id'),
               });
             }
             return response;
@@ -259,14 +259,14 @@
             var nameChangeEvent = {
               'type': 'AANameChange',
               'scheduleId': scheduleId,
-              'newName': aaRecord.callExperienceName
+              'newName': aaRecord.callExperienceName,
             };
             AADependencyService.notifyAANameChange(nameChangeEvent);
             AATrackChangeService.track('AAName', aaRecord.callExperienceName);
           }
 
           AANotificationService.success('autoAttendant.successUpdateCe', {
-            name: aaRecord.callExperienceName
+            name: aaRecord.callExperienceName,
           });
 
           $rootScope.$broadcast('CE Saved');
@@ -276,7 +276,7 @@
           AANotificationService.errorResponse(response, 'autoAttendant.errorUpdateCe', {
             name: aaRecord.callExperienceName,
             statusText: response.statusText,
-            status: response.status
+            status: response.status,
           });
           unAssignAssigned();
         }
@@ -305,7 +305,7 @@
           AATrackChangeService.track('AAName', aaRecord.callExperienceName);
 
           AANotificationService.success('autoAttendant.successCreateCe', {
-            name: aaRecord.callExperienceName
+            name: aaRecord.callExperienceName,
           });
 
         },
@@ -313,7 +313,7 @@
           AANotificationService.errorResponse(response, 'autoAttendant.errorCreateCe', {
             name: aaRecord.callExperienceName,
             statusText: response.statusText,
-            status: response.status
+            status: response.status,
           });
           unAssignAssigned();
         }
@@ -349,7 +349,7 @@
       if (!AAValidationService.isNameValidationSuccess(vm.ui.builder.ceInfo_name, aaRecordUUID)) {
         deferred.reject({
           statusText: '',
-          status: 'VALIDATION_FAILURE'
+          status: 'VALIDATION_FAILURE',
         });
         return deferred.promise;
       }
@@ -357,7 +357,7 @@
       if (validateCES && !AAValidationService.isValidCES(vm.ui)) {
         deferred.reject({
           statusText: '',
-          status: 'VALIDATION_FAILURE'
+          status: 'VALIDATION_FAILURE',
         });
         return deferred.promise;
       }
@@ -435,19 +435,19 @@
       }
 
       var specifiedTemplate = _.find(vm.templateDefinitions, {
-        tname: vm.templateName
+        tname: vm.templateName,
       });
 
       if (_.isUndefined(specifiedTemplate) || _.isUndefined(specifiedTemplate.tname) || specifiedTemplate.tname.length === 0) {
         AANotificationService.error('autoAttendant.errorInvalidTemplate', {
-          template: vm.templateName
+          template: vm.templateName,
         });
         return;
       }
 
       if (_.isUndefined(specifiedTemplate.actions) || specifiedTemplate.actions.length === 0) {
         AANotificationService.error('autoAttendant.errorInvalidTemplateDef', {
-          template: vm.templateName
+          template: vm.templateName,
         });
         return;
       }
@@ -465,7 +465,7 @@
 
         if (_.isUndefined(action.actionset)) {
           AANotificationService.error('autoAttendant.errorInvalidTemplateDef', {
-            template: vm.templateName
+            template: vm.templateName,
           });
           return;
         }
@@ -505,7 +505,7 @@
         } else {
 
           var aaRecord = _.find(vm.aaModel.aaRecords, {
-            callExperienceName: aaName
+            callExperienceName: aaName,
           });
 
           if (!_.isUndefined(aaRecord)) {
@@ -521,14 +521,14 @@
                 AANotificationService.errorResponse(response, 'autoAttendant.errorReadCe', {
                   name: aaName,
                   statusText: response.statusText,
-                  status: response.status
+                  status: response.status,
                 });
               }
             );
             return;
           } else {
             AANotificationService.error('autoAttendant.errorReadCe', {
-              name: aaName
+              name: aaName,
             });
           }
         }
@@ -567,7 +567,7 @@
           AANotificationService.errorResponse(error, 'autoAttendant.errorCreateSchedule', {
             name: aaName,
             statusText: error.statusText,
-            status: error.status
+            status: error.status,
           });
           return $q.reject('SAVE_SCHEDULE_FAILURE');
         }
@@ -593,7 +593,7 @@
             AANotificationService.errorResponse(response, 'autoAttendant.errorDeletePredefinedSchedule', {
               name: vm.ui.ceInfo.name,
               statusText: error.statusText,
-              status: error.status
+              status: error.status,
             });
           }
         );

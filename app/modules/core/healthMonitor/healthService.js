@@ -3,7 +3,7 @@
 
   module.exports = angular
     .module('core.healthservice', [
-      require('modules/core/config/urlConfig')
+      require('modules/core/config/urlConfig'),
     ])
     .service('HealthService', HealthService)
     .name;
@@ -14,7 +14,7 @@
     var healthUrl = UrlConfig.getAdminServiceUrl() + 'ping';
 
     var service = {
-      getHealthStatus: getHealthStatus
+      getHealthStatus: getHealthStatus,
     };
 
     return service;

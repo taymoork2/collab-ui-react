@@ -21,7 +21,7 @@
           showBalloon: false,
           lineColor: dummyColors[i],
           fillColors: dummyColors[i],
-          pattern: ''
+          pattern: '',
         });
       });
       chartConfig.export.enabled = false;
@@ -67,13 +67,13 @@
         fillColors: chartColors.colorLightRedFill,
         valueField: 'numTasksAbandonedState',
         showBalloon: true,
-        balloonFunction: balloonTextForTaskVolume
+        balloonFunction: balloonTextForTaskVolume,
       };
 
       var handledGraph = {
         title: $translate.instant('careReportsPage.handled'),
         lineColor: chartColors.ctaBase,
-        valueField: 'numTasksHandledState'
+        valueField: 'numTasksHandledState',
       };
 
       var graphsPartial = [handledGraph, abandonedGraph];
@@ -189,7 +189,7 @@
       var pattern = {
         "url": "line_pattern.png",
         "width": 14,
-        "height": 14
+        "height": 14,
       };
 
       var queueGraph = {
@@ -201,13 +201,13 @@
         fillAlphas: 1,
         pattern: pattern,
         showBalloon: true,
-        balloonFunction: balloonTextForTaskTime
+        balloonFunction: balloonTextForTaskTime,
       };
       var handleGraph = {
         title: $translate.instant('careReportsPage.handleTime'),
         lineColor: chartColors.ctaBase,
         fillColors: chartColors.colorLightGreenFill,
-        valueField: 'avgTaskCloseTime'
+        valueField: 'avgTaskCloseTime',
       };
 
       var graphsPartial = [handleGraph, queueGraph];
@@ -251,7 +251,7 @@
       var pattern = {
         "url": "line_pattern.png",
         "width": 14,
-        "height": 14
+        "height": 14,
       };
 
       var inQueueGraph = {
@@ -263,7 +263,7 @@
         fillAlphas: 1,
         pattern: pattern,
         showBalloon: true,
-        balloonFunction: balloonTextForTaskAggregate
+        balloonFunction: balloonTextForTaskAggregate,
       };
 
       var assignedGraph = {
@@ -322,7 +322,7 @@
         bullet: 'circle',
         bulletAlpha: 0,
         bulletBorderAlpha: 0,
-        bulletSize: 2
+        bulletSize: 2,
       };
       var graphsPartial = [csatGraph];
       var graphs = _.map(graphsPartial, function (graph) {
@@ -346,7 +346,7 @@
       getTaskTimeGraphConfig: getTaskTimeGraphConfig,
       getAverageCsatGraphConfig: getAverageCsatGraphConfig,
       getTaskAggregateGraphConfig: getTaskAggregateGraphConfig,
-      millisToTime: millisToTime
+      millisToTime: millisToTime,
     };
 
     return service;

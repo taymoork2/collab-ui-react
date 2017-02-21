@@ -15,8 +15,8 @@
       link: link,
       scope: {
         featureShow: '@',
-        featureHide: '@'
-      }
+        featureHide: '@',
+      },
     };
 
     return directive;

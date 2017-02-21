@@ -14,7 +14,7 @@ describe('Service: FusionClusterStatesService', function () {
     it('should accept a connector as argument', function () {
       var connector = {
         alarms: [],
-        state: 'running'
+        state: 'running',
       };
       var severity = FusionClusterStatesService.getStateSeverity(connector);
       expect(severity).toBe(0);
@@ -28,7 +28,7 @@ describe('Service: FusionClusterStatesService', function () {
     it('should return 2 for the \'has_warning_alarms\' state', function () {
       var connector = {
         alarms: [{ severity: 'warning' }, { severity: 'alert' }],
-        state: 'running'
+        state: 'running',
       };
       var severity = FusionClusterStatesService.getStateSeverity(connector);
       expect(severity).toBe(2);
@@ -37,7 +37,7 @@ describe('Service: FusionClusterStatesService', function () {
     it('should return 3 for the \'has_error_alarms\' state', function () {
       var connector = {
         alarms: [{ severity: 'critical' }, { severity: 'error' }],
-        state: 'running'
+        state: 'running',
       };
       var severity = FusionClusterStatesService.getStateSeverity(connector);
       expect(severity).toBe(3);
@@ -62,10 +62,10 @@ describe('Service: FusionClusterStatesService', function () {
     it('should upgraded when all connectors are upgraded', function () {
       var connectors = [{
         alarms: [],
-        upgradeState: 'upgraded'
+        upgradeState: 'upgraded',
       }, {
         alarms: [],
-        upgradeState: 'upgraded'
+        upgradeState: 'upgraded',
       }];
       var state = FusionClusterStatesService.getMergedUpgradeState(connectors);
       expect(state).toBe('upgraded');
@@ -74,10 +74,10 @@ describe('Service: FusionClusterStatesService', function () {
     it('should upgrading if at least one connector is pending', function () {
       var connectors = [{
         alarms: [],
-        upgradeState: 'pending'
+        upgradeState: 'pending',
       }, {
         alarms: [],
-        upgradeState: 'upgraded'
+        upgradeState: 'upgraded',
       }];
       var state = FusionClusterStatesService.getMergedUpgradeState(connectors);
       expect(state).toBe('upgrading');
@@ -88,13 +88,13 @@ describe('Service: FusionClusterStatesService', function () {
     it('should return the most severe state', function () {
       var connectors = [{
         alarms: [],
-        state: 'running'
+        state: 'running',
       }, {
         alarms: [],
-        state: 'not_configured'
+        state: 'not_configured',
       }, {
         alarms: [],
-        state: 'stopped'
+        state: 'stopped',
       }];
       var state = FusionClusterStatesService.getMergedStateSeverity(connectors);
       expect(state).toEqual({

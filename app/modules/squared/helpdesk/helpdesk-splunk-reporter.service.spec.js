@@ -36,7 +36,7 @@ describe('Service: HelpdeskSplunkReporterService', function () {
         200,
         anyTime,
         1, {
-          "operation": "search"
+          "operation": "search",
         }
       );
     });
@@ -46,7 +46,7 @@ describe('Service: HelpdeskSplunkReporterService', function () {
 
       var searchString = "whatever";
       var result = {
-        "result": "whatever"
+        "result": "whatever",
       };
       var orgId = "12345";
       var statsResult = Service.reportStats(searchString, result, moment(), orgId);

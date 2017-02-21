@@ -27,7 +27,7 @@
       'entitlementCount': entitlementCount,
       'contentSharedCount': contentSharedCount,
       'callsCount': callsUrl,
-      'conversationsCount': conversationsUrl
+      'conversationsCount': conversationsUrl,
     };
 
     return {
@@ -46,7 +46,7 @@
       getPartnerMetrics: getPartnerMetrics,
       healthMonitor: healthMonitor,
       getHealthStatus: getHealthStatus,
-      getOverviewMetrics: getOverviewMetrics
+      getOverviewMetrics: getOverviewMetrics,
     };
 
     ///////////////////////
@@ -82,7 +82,7 @@
     function sendChartResponse(data, status, metricType) {
       var response = {
         'data': data,
-        'status': status
+        'status': status,
       };
       $rootScope.$broadcast(metricType + 'Loaded', response);
     }
@@ -94,7 +94,7 @@
         'spanCount': 1,
         'spanType': 'week',
         'cache': useCache,
-        'isCustomerView': true
+        'isCustomerView': true,
       }, paramOverrides);
 
       _.forEach(customerCharts, function (customerChart) {
@@ -150,7 +150,7 @@
         'spanCount': 1,
         'spanType': 'week',
         'cache': useCache,
-        'isCustomerView': false
+        'isCustomerView': false,
       };
 
       _.forEach(partnerCharts, function (partnerChart) {
@@ -163,14 +163,14 @@
       getTimeCharts(useCache, charts, {
         intervalType: 'week',
         intervalCount: 2,
-        spanType: 'week'
+        spanType: 'week',
       });
 
       var callCharts = ['oneOnOneCalls', 'groupCalls'];
       getTimeCharts(useCache, callCharts, {
         intervalType: 'month',
         intervalCount: 2,
-        spanType: 'month'
+        spanType: 'month',
       });
     }
 
@@ -178,7 +178,7 @@
       $http.get(healthUrl,
         {
           // statuspage.io doesn't play nice w/ our oauth header, so we unset it specifically here
-          headers: { Authorization: undefined }
+          headers: { Authorization: undefined },
         })
         .success(function (data, status) {
           data = _.isObject(data) ? data : {};
@@ -200,7 +200,7 @@
       return $http.get(healthUrl,
         {
           // statuspage.io doesn't play nice w/ our oauth header, so we unset it specifically here
-          headers: { Authorization: undefined }
+          headers: { Authorization: undefined },
         })
         .then(function (response) {
           var length = response.data.components.length;

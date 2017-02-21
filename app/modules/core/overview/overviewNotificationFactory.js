@@ -20,7 +20,7 @@
       createHybridMediaNotification: OverviewHybridMediaNotification.createNotification,
       createPMRNotification: OverviewPMRNotification.createNotification,
       createHybridDataSecurityNotification: OverviewDataSecurityNotification.createNotification,
-      createPSTNToSNotification: OverviewPSTNToSNotification.createNotification
+      createPSTNToSNotification: OverviewPSTNToSNotification.createNotification,
     };
   }
 })();

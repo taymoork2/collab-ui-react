@@ -21,7 +21,7 @@
       positiveNumber: positiveNumber,
       maxNumber100: maxNumber100,
       phoneUS: phoneUS,
-      phoneAny: phoneAny
+      phoneAny: phoneAny,
     };
 
     return factory;

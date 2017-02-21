@@ -54,11 +54,11 @@
             customerName: vm.currentCustomer.customerName,
             customerEmail: vm.currentCustomer.customerEmail,
             customerCommunicationLicenseIsTrial: getCommTrial(vm.currentCustomer, 'communications'),
-            customerRoomSystemsLicenseIsTrial: getCommTrial(vm.currentCustomer, 'roomSystems')
+            customerRoomSystemsLicenseIsTrial: getCommTrial(vm.currentCustomer, 'roomSystems'),
           });
         } else {
           return $state.go('didadd', {
-            currentOrg: vm.currentCustomer
+            currentOrg: vm.currentCustomer,
           });
         }
       });

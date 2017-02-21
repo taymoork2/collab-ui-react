@@ -10,10 +10,10 @@
     var vm = this;
     vm.tabs = [{
       state: 'gem.servicesPartner',
-      title: 'gemini.tdTitle'
+      title: 'gemini.tdTitle',
     }, {
       state: 'gem.cbgBase.cbgs',
-      title: 'gemini.cbgs.title'
+      title: 'gemini.cbgs.title',
     }];
     vm.backState = 'gem.servicesPartner';
 

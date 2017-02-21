@@ -128,7 +128,7 @@
 
       newResource: function () {
         return new CeInfoResource();
-      }
+      },
     };
 
     return service;

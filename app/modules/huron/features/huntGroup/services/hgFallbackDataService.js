@@ -35,7 +35,7 @@
       isFallbackDirty: isFallbackDirty,
       setAsPristine: setAsPristine,
       isVoicemailDisabled: isVoicemailDisabled,
-      isValidInternalOrgNumber: isValidInternalOrgNumber
+      isValidInternalOrgNumber: isValidInternalOrgNumber,
     };
 
     ////////////////
@@ -92,7 +92,7 @@
 
     function setFallbackMemberFromJSON(fallbackJSON, resetFromBackend, asyncTask) {
       fallbackMember = {
-        sendToVoicemail: fallbackJSON.sendToVoicemail
+        sendToVoicemail: fallbackJSON.sendToVoicemail,
       };
 
       if (resetFromBackend) {
@@ -153,7 +153,7 @@
       fallbackMember = {
         member: item,
         number: "",
-        sendToVoicemail: false
+        sendToVoicemail: false,
       };
       return fallbackMember;
     }
@@ -179,7 +179,7 @@
      */
     function getFallbackDestinationJSON() {
       var data = {
-        fallbackDestination: {}
+        fallbackDestination: {},
       };
       if (isValidInternalNumber || isValidExternalNumber) {
         if (_.isObject(fallbackNumber) && _.has(fallbackNumber, 'phoneNumber')) {
@@ -187,7 +187,7 @@
         } else if (_.has(fallbackMember, 'member.searchNumber')) {
           data.fallbackDestination = {
             number: _.get(fallbackMember, 'member.searchNumber'),
-            sendToVoicemail: fallbackMember.sendToVoicemail
+            sendToVoicemail: fallbackMember.sendToVoicemail,
           };
         } else {
           data.fallbackDestination.number = TelephoneNumberService.getDIDValue(fallbackNumber);
@@ -195,12 +195,12 @@
       } else if (_.has(fallbackMember, 'member.searchNumber')) {
         data.fallbackDestination = {
           number: _.get(fallbackMember, 'member.searchNumber'),
-          sendToVoicemail: fallbackMember.sendToVoicemail
+          sendToVoicemail: fallbackMember.sendToVoicemail,
         };
       } else {
         data.fallbackDestination = {
           numberUuid: fallbackMemberNumberUuid(),
-          sendToVoicemail: fallbackMember.sendToVoicemail
+          sendToVoicemail: fallbackMember.sendToVoicemail,
         };
       }
       return data.fallbackDestination;
@@ -279,7 +279,7 @@
     function isVoicemailDisabled(customerId, fallbackUuid) {
       return DirectoryNumberService.get({
         customerId: customerId,
-        directoryNumberId: fallbackUuid
+        directoryNumberId: fallbackUuid,
       }).$promise.then(function (data) {
         return !data.voiceMailProfile;
       });

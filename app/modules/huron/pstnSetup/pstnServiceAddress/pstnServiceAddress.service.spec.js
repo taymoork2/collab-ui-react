@@ -23,7 +23,7 @@ describe('Service: PstnServiceAddressService', function () {
       unit: 'Apt 100',
       city: 'Richardson',
       state: 'TX',
-      zip: '75082'
+      zip: '75082',
     };
 
     terminusAddress = {
@@ -31,7 +31,7 @@ describe('Service: PstnServiceAddressService', function () {
       address2: 'Apt 100',
       city: 'Richardson',
       state: 'TX',
-      zip: '75082'
+      zip: '75082',
     };
 
     serviceAddress = {
@@ -43,7 +43,7 @@ describe('Service: PstnServiceAddressService', function () {
       serviceAddressSub: 'Apt 100',
       serviceCity: 'Richardson',
       serviceState: 'TX',
-      serviceZip: '75082'
+      serviceZip: '75082',
     };
   }));
 
@@ -54,7 +54,7 @@ describe('Service: PstnServiceAddressService', function () {
 
   it('should lookup an address through terminus and find a match', function () {
     $httpBackend.expectPOST(HuronConfig.getTerminusUrl() + '/lookup/e911', terminusAddress).respond({
-      addresses: [terminusAddress]
+      addresses: [terminusAddress],
     });
     PstnServiceAddressService.lookupAddress(address).then(function (response) {
       expect(response).toEqual(jasmine.objectContaining(address));
@@ -78,8 +78,8 @@ describe('Service: PstnServiceAddressService', function () {
           "serviceAddressSub": "Apt 100",
           "serviceCity": "Richardson",
           "serviceState": "TX",
-          "serviceZip": "75082"
-        }
+          "serviceZip": "75082",
+        },
       })]);
     });
     $httpBackend.flush();
@@ -88,7 +88,7 @@ describe('Service: PstnServiceAddressService', function () {
   it('should create a customer site', function () {
     $httpBackend.expectPOST(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/sites', {
       name: 'Test Customer Site',
-      serviceAddress: serviceAddress
+      serviceAddress: serviceAddress,
     }).respond(201);
     PstnServiceAddressService.createCustomerSite(customerId, 'Test Customer Site', address);
     $httpBackend.flush();
@@ -109,7 +109,7 @@ describe('Service: PstnServiceAddressService', function () {
       unit: '',
       city: 'Menomonee Falls',
       state: 'WI',
-      zip: '53051'
+      zip: '53051',
     };
 
     var irregularServiceAddress = {
@@ -121,12 +121,12 @@ describe('Service: PstnServiceAddressService', function () {
       serviceAddressSub: '',
       serviceCity: 'Menomonee Falls',
       serviceState: 'WI',
-      serviceZip: '53051'
+      serviceZip: '53051',
     };
 
     $httpBackend.expectPOST(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/sites', {
       name: 'Irregular Test Customer Site',
-      serviceAddress: irregularServiceAddress
+      serviceAddress: irregularServiceAddress,
     }).respond(201);
     PstnServiceAddressService.createCustomerSite(customerId, 'Irregular Test Customer Site', irregularAddress);
     $httpBackend.flush();
@@ -137,7 +137,7 @@ describe('Service: PstnServiceAddressService', function () {
       $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/sites').respond(customerSiteList);
       $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/sites/' + siteId).respond(customerSite);
       $httpBackend.expectPUT(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/sites/' + siteId, {
-        serviceAddress: serviceAddress
+        serviceAddress: serviceAddress,
       }).respond(200);
     });
     afterEach(function () {

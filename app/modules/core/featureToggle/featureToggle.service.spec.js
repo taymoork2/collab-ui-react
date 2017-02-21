@@ -140,7 +140,7 @@ describe('FeatureToggleService', function () {
 
     it('should return true for a DirSync org', function () {
       this.$httpBackend.whenGET(this.dirSyncRegex).respond(200, {
-        serviceMode: 'ENABLED'
+        serviceMode: 'ENABLED',
       });
       this.FeatureToggleService.supportsDirSync().then(function (data) {
         expect(data).toBe(true);
@@ -150,7 +150,7 @@ describe('FeatureToggleService', function () {
 
     it('should return false for a non-DirSync org', function () {
       this.$httpBackend.whenGET(this.dirSyncRegex).respond(200, {
-        serviceMode: 'DISABLED'
+        serviceMode: 'DISABLED',
       });
       this.FeatureToggleService.supportsDirSync().then(function (data) {
         expect(data).toBe(false);

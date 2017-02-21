@@ -12,7 +12,7 @@
       addDid: addDid,
       removeDid: removeDid,
       getDidList: getDidList,
-      clearDidList: clearDidList
+      clearDidList: clearDidList,
     };
 
     return service;

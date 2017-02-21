@@ -5,7 +5,7 @@
     .module('Gemini')
     .component('cbgDetails', {
       templateUrl: 'modules/gemini/callbackGroup/details/cbgDetails.tpl.html',
-      controller: CbgDetailsCtrl
+      controller: CbgDetailsCtrl,
     });
 
   /* @ngInject */
@@ -40,7 +40,7 @@
     function onCancelSubmission() {
       $modal.open({
         type: 'dialog',
-        templateUrl: 'modules/gemini/callbackGroup/details/cancelSubmissionConfirm.tpl.html'
+        templateUrl: 'modules/gemini/callbackGroup/details/cancelSubmissionConfirm.tpl.html',
       }).result.then(function () {
         setButtonStatus('CancelSubmission');
         updateCallbackGroupStatus('cancel');
@@ -50,7 +50,7 @@
     function onApprove() {
       $modal.open({
         type: 'dialog',
-        templateUrl: 'modules/gemini/callbackGroup/details/approveConfirm.tpl.html'
+        templateUrl: 'modules/gemini/callbackGroup/details/approveConfirm.tpl.html',
       }).result.then(function () {
         setButtonStatus('Approve');
         updateCallbackGroupStatus('approve');
@@ -74,7 +74,7 @@
             $modalInstance.close();
           }
         },
-        templateUrl: 'modules/gemini/callbackGroup/details/declineSmallDialog.tpl.html'
+        templateUrl: 'modules/gemini/callbackGroup/details/declineSmallDialog.tpl.html',
       }).result.then(function () {
         updateCallbackGroupStatus('decline', { comments: vm.comments });
       });
@@ -172,7 +172,7 @@
           if (operation === 'approve') {
             $modal.open({
               type: 'dialog',
-              templateUrl: 'modules/gemini/callbackGroup/details/provisionConfirm.tpl.html'
+              templateUrl: 'modules/gemini/callbackGroup/details/provisionConfirm.tpl.html',
             }).result.then(function () {
               updateCallbackGroupStatus('provision');
             });

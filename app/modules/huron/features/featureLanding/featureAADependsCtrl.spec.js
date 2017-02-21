@@ -13,14 +13,14 @@ describe('Controller: HuronFeatureAADependsCtrl', function () {
 
     $stateParams = {
       detailsFeatureName: "AA for example",
-      detailsDependsList: 'AA depend one, AA depend two'
+      detailsDependsList: 'AA depend one, AA depend two',
     };
 
     createController = function () {
       return $controller('HuronFeatureAADependsCtrl', {
         $rootScope: $rootScope,
         $scope: $scope,
-        $stateParams: $stateParams
+        $stateParams: $stateParams,
       });
     };
 

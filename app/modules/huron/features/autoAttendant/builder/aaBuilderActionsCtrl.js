@@ -19,7 +19,7 @@
       help: $translate.instant('autoAttendant.sayMessageHelp') + appendSpecialCharHelp,
       metric: 'Say-Message-Title',
       showHelpLink: true,
-      actions: ['play', 'say']
+      actions: ['play', 'say'],
     }, {
       title: $translate.instant('autoAttendant.actionPhoneMenu'),
       controller: 'AAPhoneMenuCtrl as aaPhoneMenu',
@@ -28,7 +28,7 @@
       help: $translate.instant('autoAttendant.phoneMenuHelp') + appendSpecialCharHelp,
       metric: 'Phone-Menu-Title',
       showHelpLink: true,
-      actions: ['runActionsOnInput']
+      actions: ['runActionsOnInput'],
     }, {
       title: $translate.instant('autoAttendant.phoneMenuDialExt'),
       controller: 'AADialByExtCtrl as aaDialByExtCtrl',
@@ -38,7 +38,7 @@
       metric: 'Dial-By-Extension-Title',
       showHelpLink: false,
       type: [2], // to flag that this is not phonemenu, see setOption
-      actions: ['runActionsOnInput']
+      actions: ['runActionsOnInput'],
     }, {
       title: $translate.instant('autoAttendant.actionRouteCall'),
       controller: 'AARouteCallMenuCtrl as aaRouteCallMenu',
@@ -47,7 +47,7 @@
       help: $translate.instant('autoAttendant.routeCallMenuHelp'),
       metric: 'Route-Call-Title',
       showHelpLink: false,
-      actions: ['route', 'goto', 'routeToUser', 'routeToVoiceMail', 'routeToHuntGroup', 'routeToQueue', 'routeToSipEndpoint']
+      actions: ['route', 'goto', 'routeToUser', 'routeToVoiceMail', 'routeToHuntGroup', 'routeToQueue', 'routeToSipEndpoint'],
     }];
 
     vm.actionPlaceholder = $translate.instant("autoAttendant.actionPlaceholder");
@@ -99,7 +99,7 @@
     function getOptionController() {
       if (vm.option && vm.option.controller) {
         return $controller(vm.option.controller, {
-          $scope: $scope
+          $scope: $scope,
         });
       }
     }
@@ -151,7 +151,7 @@
           metric: 'Caller-Input-Title',
           type: [3, 4],
           showHelpLink: true,
-          actions: ['runActionsOnInput']
+          actions: ['runActionsOnInput'],
         });
       }
       if (AACommonService.isDecisionToggle()) {
@@ -164,7 +164,7 @@
           help: $translate.instant('autoAttendant.actionDecisionHelp'),
           metric: 'Decision-Title',
           showHelpLink: true,
-          actions: ['conditional']
+          actions: ['conditional'],
         });
       }
     }

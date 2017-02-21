@@ -13,7 +13,7 @@
     // define functions available in this factory
     var service = {
       getLineList: getLineList,
-      exportCSV: exportCSV
+      exportCSV: exportCSV,
     };
     return service;
 
@@ -21,7 +21,7 @@
       var wildcard = "%";
 
       var queryString = {
-        'customerId': customerId
+        'customerId': customerId,
       };
 
       if (searchStr.length > 0) {
@@ -88,7 +88,7 @@
                   nonProvisionedPendingLines.push({
                     externalNumber: number.number,
                     status: order.statusMessage !== 'None' ? $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage : $translate.instant('linesPage.inProgress'),
-                    tooltip: PstnSetupService.translateStatusMessage(order)
+                    tooltip: PstnSetupService.translateStatusMessage(order),
                   });
                 }
               });

@@ -139,7 +139,7 @@
         method: "POST",
         url: cdrUrl,
         data: esQuery,
-        timeout: TIMEOUT_IN_MILI
+        timeout: TIMEOUT_IN_MILI,
       }).success(function (response) {
         defer.resolve(response);
       }).error(function (response, status) {
@@ -149,19 +149,19 @@
             method: "POST",
             url: cdrUrl,
             data: esQuery,
-            timeout: TIMEOUT_IN_MILI
+            timeout: TIMEOUT_IN_MILI,
           }).success(function (secondaryResponse) {
             defer.resolve(secondaryResponse);
           }).error(function (secondaryResponse, secondaryStatus) {
             defer.reject({
               'response': secondaryResponse,
-              'status': secondaryStatus
+              'status': secondaryStatus,
             });
           });
         } else {
           defer.reject({
             'response': response,
-            'status': status
+            'status': status,
           });
         }
       });
@@ -174,12 +174,12 @@
         method: "POST",
         url: callflowDiagramUrl,
         data: {
-          "data": message
+          "data": message,
         },
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json, application/xml'
-        }
+          'Accept': 'application/json, application/xml',
+        },
       })
         .success(function (response) {
           defer.resolve(response);
@@ -188,7 +188,7 @@
           Log.debug('Failed to retrieve ladder diagram from ' + serviceName + ' server.');
           defer.reject({
             'response': response,
-            'status': status
+            'status': status,
           });
         });
       return defer.promise;
@@ -207,8 +207,8 @@
         url: getActivitiesUrl + "?id=lid." + locusid + "&start=" + start + "&end=" + end,
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        }
+          'Accept': 'application/json',
+        },
       })
         .success(function (response) {
           defer.resolve(response);
@@ -217,7 +217,7 @@
           Log.debug('Failed to retrieve ladder diagram from ' + serviceName + ' server.');
           defer.reject({
             'response': response,
-            'status': status
+            'status': status,
           });
         });
       return defer.promise;

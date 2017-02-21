@@ -38,7 +38,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
     $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/sipendpoints/3/addonmodules').respond(200);
     $httpBackend.whenGET('modules/huron/pstnSetup/states.json').respond([{
       name: "Texas",
-      abbreviation: "TX"
+      abbreviation: "TX",
     }]);
     $httpBackend.whenGET('https://cmi.huron-int.com/api/v1/voice/customers/sites').respond([]);
     spyOn(CsdmHuronDeviceService, 'getLinesForDevice').and.returnValue($q.resolve([]));
@@ -47,7 +47,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
 
   CsdmHuronDeviceService = {
     getLinesForDevice: {},
-    getDeviceInfo: {}
+    getDeviceInfo: {},
   };
 
   var $stateParams = {
@@ -57,9 +57,9 @@ describe('Controller: DeviceOverviewCtrl', function () {
       product: 'Cisco 8865',
       cisUuid: 2,
       huronId: 3,
-      kem: []
+      kem: [],
     },
-    huronDeviceService: CsdmHuronDeviceService
+    huronDeviceService: CsdmHuronDeviceService,
   };
 
   function initController() {
@@ -69,7 +69,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
       $stateParams: $stateParams,
       $state: $state,
       Userservice: Userservice,
-      FeatureToggleService: FeatureToggleService
+      FeatureToggleService: FeatureToggleService,
     });
     $scope.$apply();
   }
@@ -110,7 +110,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
       spyOn(RemoteSupportModal, 'open');
 
       controller.currentDevice = {
-        hasRemoteSupport: true
+        hasRemoteSupport: true,
       };
       controller.showRemoteSupportDialog();
 
@@ -127,7 +127,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
 
     it('should show remote support button when supported', function () {
       controller.currentDevice = {
-        hasRemoteSupport: true
+        hasRemoteSupport: true,
       };
       expect(controller.showRemoteSupportButton()).toBe(true);
     });
@@ -144,7 +144,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
     it('should ignore already present tags', function () {
       controller.newTag = 'existing tag';
       controller.currentDevice = {
-        tags: ['existing tag']
+        tags: ['existing tag'],
       };
       controller.addTag();
       expect(controller.isAddingTag).toBeFalsy();
@@ -154,7 +154,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
     it('should ignore leading and trailing whitespace when checking for existing tags', function () {
       controller.newTag = ' existing tag ';
       controller.currentDevice = {
-        tags: ['existing tag']
+        tags: ['existing tag'],
       };
       controller.addTag();
       expect(controller.isAddingTag).toBeFalsy();
@@ -166,7 +166,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
       controller.currentDevice = {
         isCloudberryDevice: true,
         tags: [],
-        url: 'testUrl'
+        url: 'testUrl',
       };
       spyOn(CsdmDeviceService, 'updateTags').and.returnValue($q.resolve());
       controller.addTag();
@@ -180,7 +180,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
       controller.currentDevice = {
         isCloudberryDevice: true,
         tags: ['old tag'],
-        url: 'testUrl'
+        url: 'testUrl',
       };
       spyOn(CsdmDeviceService, 'updateTags').and.returnValue($q.resolve());
       controller.addTag();
@@ -193,7 +193,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
       controller.currentDevice = {
         isCloudberryDevice: true,
         tags: ['old tag', 'old tag2'],
-        url: 'testUrl'
+        url: 'testUrl',
       };
       spyOn(CsdmDeviceService, 'updateTags').and.returnValue($q.resolve());
       controller.removeTag('old tag');
@@ -207,7 +207,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
       controller.currentDevice = {
         isCloudberryDevice: true,
         tags: [],
-        url: 'testUrl'
+        url: 'testUrl',
       };
       spyOn(CsdmDeviceService, 'updateTags').and.returnValue($q.resolve());
       controller.addTag();
@@ -219,7 +219,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
     it('should ignore keys other than Enter', function () {
       spyOn(controller, 'addTag');
       controller.addTagOnEnter({
-        keyCode: 12
+        keyCode: 12,
       });
       $scope.$apply();
       expect(controller.addTag).not.toHaveBeenCalled();
@@ -228,7 +228,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
     it('should call addTag on Enter', function () {
       spyOn(controller, 'addTag');
       controller.addTagOnEnter({
-        keyCode: 13
+        keyCode: 13,
       });
       $scope.$apply();
       expect(controller.addTag).toHaveBeenCalled();
@@ -261,20 +261,20 @@ describe('Huron Device', function () {
     $stateParams = {
       currentDevice: {
         url: 'http://thedeviceurl',
-        isHuronDevice: true
+        isHuronDevice: true,
       },
-      huronDeviceService: CsdmHuronDeviceService($q)
+      huronDeviceService: CsdmHuronDeviceService($q),
     };
   }
 
   newTimeZone = {
     "id": "America/Anchorage",
-    "label": "America/Anchorage"
+    "label": "America/Anchorage",
   };
 
   newCountry = {
     "label": "Canada",
-    "value": "CA"
+    "value": "CA",
   };
 
   function CsdmHuronDeviceService(q) {
@@ -299,7 +299,7 @@ describe('Huron Device', function () {
       setTimezoneForDevice: setTimezoneForDevice,
       setCountryForDevice: setCountryForDevice,
       getDeviceInfo: getDeviceInfo,
-      getLinesForDevice: getLinesForDevice
+      getLinesForDevice: getLinesForDevice,
     };
   }
 
@@ -311,7 +311,7 @@ describe('Huron Device', function () {
     $httpBackend.whenGET(HuronConfig.getTerminusV2Url() + '/customers/numbers/e911').respond(200);
     $httpBackend.whenGET('modules/huron/pstnSetup/states.json').respond([{
       name: "Texas",
-      abbreviation: "TX"
+      abbreviation: "TX",
     }]);
     countries = getJSONFixture('huron/json/settings/countries.json');
 
@@ -327,7 +327,7 @@ describe('Huron Device', function () {
     controller = $controller('DeviceOverviewCtrl', {
       $scope: $scope,
       channels: {},
-      $stateParams: $stateParams
+      $stateParams: $stateParams,
     });
 
     $scope.$apply();

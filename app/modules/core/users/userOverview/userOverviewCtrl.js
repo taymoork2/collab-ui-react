@@ -38,28 +38,28 @@
       icon: 'icon-circle-message',
       state: 'messaging',
       detail: $translate.instant('onboardModal.msgFree'),
-      actionAvailable: false
+      actionAvailable: false,
     };
     var commState = {
       name: $translate.instant('onboardModal.call'),
       icon: 'icon-circle-call',
       state: 'communication',
       detail: $translate.instant('onboardModal.callFree'),
-      actionAvailable: false
+      actionAvailable: false,
     };
     var confState = {
       name: $translate.instant('onboardModal.meeting'),
       icon: 'icon-circle-group',
       state: 'conferencing',
       detail: $translate.instant('onboardModal.mtgFree'),
-      actionAvailable: false
+      actionAvailable: false,
     };
     var contactCenterState = {
       name: $translate.instant('onboardModal.contactCenter'),
       icon: 'icon-circle-contact-centre',
       state: 'contactCenter',
       detail: $translate.instant('onboardModal.freeContactCenter'),
-      actionAvailable: true
+      actionAvailable: true,
     };
 
     init();
@@ -112,7 +112,7 @@
 
     function initActionList() {
       var action = {
-        actionKey: 'common.edit'
+        actionKey: 'common.edit',
       };
       if (Authinfo.isCSB()) {
         action.actionFunction = goToUserRedirect;
@@ -125,7 +125,7 @@
 
     function goToEditService() {
       $state.go('editService', {
-        currentUser: vm.currentUser
+        currentUser: vm.currentUser,
       });
     }
 
@@ -172,7 +172,7 @@
         _.forEach(_.get(response, 'developer'), function (el) {
           if (el.val !== 'false' && el.val !== '0') {
             var newEl = {
-              key: el.key
+              key: el.key,
             };
             if (el.val !== 'true') {
               newEl.val = el.val;

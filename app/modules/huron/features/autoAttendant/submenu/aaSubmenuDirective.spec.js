@@ -8,8 +8,8 @@ describe('Directive: aaSubmenu', function () {
   var aaUiModel = {
     openHours: {},
     ceInfo: {
-      name: 'aa'
-    }
+      name: 'aa',
+    },
   };
   var schedule = 'openHours';
   var index = '0';
@@ -18,7 +18,7 @@ describe('Directive: aaSubmenu', function () {
   var submenu;
   var queues = [{
     queueName: 'Test Queue',
-    queueUrl: ''
+    queueUrl: '',
   }];
 
   afterEach(function () {

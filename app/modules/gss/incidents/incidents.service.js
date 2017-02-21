@@ -18,7 +18,7 @@
       getComponents: getComponents,
       updateIncident: updateIncident,
       getAffectedComponents: getAffectedComponents,
-      updateIncidentMessage: updateIncidentMessage
+      updateIncidentMessage: updateIncidentMessage,
     };
 
     return service;

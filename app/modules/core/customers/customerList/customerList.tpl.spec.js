@@ -31,21 +31,21 @@
       $scope.timeoutVal = 1;
       $rootScope.typeOfExport = {
         USER: 1,
-        CUSTOMER: 2
+        CUSTOMER: 2,
       };
 
       trialForPaid = false;
 
 
       spyOn(PartnerService, 'getManagedOrgsList').and.returnValue($q.resolve({
-        data: {}
+        data: {},
       }));
 
       spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
 
       spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
         callback({
-          success: true
+          success: true,
         }, 200);
       });
       spyOn(Authinfo, 'isCare').and.returnValue(true);
@@ -77,7 +77,7 @@
     function initAndCompile() {
       controller = $controller('CustomerListCtrl', {
         $scope: $scope,
-        trialForPaid: trialForPaid
+        trialForPaid: trialForPaid,
       });
       $scope.customerList = controller;
       var template = $templateCache.get('modules/core/customers/customerList/customerList.tpl.html');

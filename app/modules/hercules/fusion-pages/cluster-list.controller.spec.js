@@ -62,25 +62,37 @@ describe('Controller: FusionClusterListController', function () {
           alarms: [],
           connectorType: 'c_mgmt',
           runningState: 'running',
-          hostname: 'a.elg.no'
-        }]
+          hostname: 'a.elg.no',
+        }],
       }, {
         targetType: 'mf_mgmt',
         connectors: [{
           alarms: [],
           connectorType: 'mf_mgmt',
           runningState: 'running',
-          hostname: 'a.elg.no'
-        }]
+          hostname: 'a.elg.no',
+        }],
+      }, {
+        targetType: 'cs_mgmt',
+        connectors: [{
+          alarms: [],
+          connectorType: 'cs_mgmt',
+          runningState: 'running',
+          hostname: 'a.elg.no',
+        }],
       }]));
       initController();
       expect(controller.filters[0].count).toBe(0);
       expect(controller.filters[1].count).toBe(0);
+      expect(controller.filters[2].count).toBe(0);
+      expect(controller.filters[3].count).toBe(0);
       expect(controller.displayedClusters.length).toBe(0);
       $rootScope.$apply(); // force FusionClusterService.getAll() to return
       expect(controller.filters[0].count).toBe(1);
       expect(controller.filters[1].count).toBe(1);
-      expect(controller.displayedClusters.length).toBe(2);
+      expect(controller.filters[2].count).toBe(0);
+      expect(controller.filters[3].count).toBe(1);
+      expect(controller.displayedClusters.length).toBe(3);
     });
 
   });

@@ -27,7 +27,7 @@
       vm.formOptions = {
         day: getDayOptions(),
         time: getTimeOptions(),
-        timeZone: getTimeZoneOptions()
+        timeZone: getTimeZoneOptions(),
       };
       vm.upgradeSchedule = {};
       vm.errorMessage = '';
@@ -79,25 +79,25 @@
       if (data.scheduleDays.length === 7) {
         scheduleDay = {
           label: $translate.instant('weekDays.daily'),
-          value: 'everyDay'
+          value: 'everyDay',
         };
       } else {
         scheduleDay = {
           label: labelForDay(data.scheduleDays[0]),
-          value: data.scheduleDays[0]
+          value: data.scheduleDays[0],
         };
       }
 
       return {
         scheduleTime: {
           label: labelForTime(data.scheduleTime),
-          value: data.scheduleTime
+          value: data.scheduleTime,
         },
         scheduleDay: scheduleDay,
         scheduleTimeZone: {
           label: labelForTimeZone(data.scheduleTimeZone),
-          value: data.scheduleTimeZone
-        }
+          value: data.scheduleTimeZone,
+        },
       };
     }
 
@@ -152,14 +152,14 @@
       return _.map(values, function (value) {
         return {
           label: labelForTime(value),
-          value: value
+          value: value,
         };
       });
     }
 
     function labelForDay(day) {
       return $translate.instant('weekDays.everyDay', {
-        day: $translate.instant('weekDays.' + day)
+        day: $translate.instant('weekDays.' + day),
       });
     }
 
@@ -168,7 +168,7 @@
       var days = _.map(KEYS, function (day) {
         return {
           label: labelForDay(day),
-          value: day
+          value: day,
         };
       });
       // if USA, put Sunday first
@@ -180,7 +180,7 @@
         // add daily option at the top
         return [{
           label: $translate.instant('weekDays.daily'),
-          value: 'everyDay'
+          value: 'everyDay',
         }].concat(days);
       } else {
         return days;
@@ -201,7 +201,7 @@
         .map(function (zone) {
           return {
             'label': labelForTimeZone(zone),
-            'value': zone
+            'value': zone,
           };
         })
         .sort(function (a, b) {

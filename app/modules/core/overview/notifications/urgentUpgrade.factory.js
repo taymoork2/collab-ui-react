@@ -18,10 +18,10 @@
           textValues: {
             connector: $translate.instant('hercules.connectorNameFromConnectorType.' + connectorType),
             link: (connectorType === 'c_cal') ? 'calendar-service.list' : 'call-service.list',
-          }
+          },
         };
         return notification;
-      }
+      },
     };
   }
 })();

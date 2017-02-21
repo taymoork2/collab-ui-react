@@ -43,7 +43,7 @@
       isSingleCarrierReseller: isSingleCarrierReseller,
       setSingleCarrierReseller: setSingleCarrierReseller,
       setIsTrial: setIsTrial,
-      getIsTrial: getIsTrial
+      getIsTrial: getIsTrial,
     };
 
     return model;

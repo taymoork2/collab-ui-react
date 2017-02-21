@@ -25,7 +25,7 @@ describe('SetupWizardCtrl', function () {
     spyOn(this.Authinfo, 'isCSB').and.returnValue(true);
     spyOn(this.Authinfo, 'isCare').and.returnValue(false);
     spyOn(this.Authinfo, 'getLicenses').and.returnValue([{
-      licenseType: 'SHARED_DEVICES'
+      licenseType: 'SHARED_DEVICES',
     }]);
 
     spyOn(this.FeatureToggleService, 'supports').and.callFake(function (feature) {
@@ -44,18 +44,18 @@ describe('SetupWizardCtrl', function () {
 
   function _expectStepIndex(step, index) {
     expect(_.findIndex(this.$scope.tabs, {
-      name: step
+      name: step,
     })).toBe(index);
   }
 
   function _expectSubStepIndex(step, subStep, index) {
     expect(_.chain(this.$scope.tabs)
       .find({
-        name: step
+        name: step,
       })
       .get('steps')
       .findIndex({
-        name: subStep
+        name: subStep,
       })
       .value()).toBe(index);
   }
@@ -70,7 +70,7 @@ describe('SetupWizardCtrl', function () {
   function expectSubStepOrder(macroStep, subSteps) {
     // get the step
     var stepVal = _.find(this.$scope.tabs, {
-      name: macroStep
+      name: macroStep,
     });
 
     // verify substeps length
@@ -84,7 +84,7 @@ describe('SetupWizardCtrl', function () {
 
   function initController() {
     this.$controller('SetupWizardCtrl', {
-      $scope: this.$scope
+      $scope: this.$scope,
     });
     this.$scope.$apply();
   }
@@ -127,7 +127,7 @@ describe('SetupWizardCtrl', function () {
   describe('When has COMMUNICATION license', function () {
     beforeEach(function () {
       this.Authinfo.getLicenses.and.returnValue([{
-        licenseType: 'COMMUNICATION'
+        licenseType: 'COMMUNICATION',
       }]);
       this.initController();
     });
@@ -221,7 +221,7 @@ describe('SetupWizardCtrl', function () {
     beforeEach(function () {
       this.Authinfo.isSetupDone.and.returnValue(true);
       this.Authinfo.getLicenses.and.returnValue([{
-        licenseType: 'COMMUNICATION'
+        licenseType: 'COMMUNICATION',
       }]);
       this.Authinfo.isCare.and.returnValue(true);
 
@@ -246,8 +246,8 @@ describe('SetupWizardCtrl', function () {
       $scope: this.$scope,
       $stateParams: {
         onlyShowSingleTab: true,
-        currentTab: 'messagingSetup'
-      }
+        currentTab: 'messagingSetup',
+      },
     });
     this.$scope.$apply();
 
@@ -260,8 +260,8 @@ describe('SetupWizardCtrl', function () {
       $stateParams: {
         currentTab: 'enterpriseSettings',
         currentStep: 'init',
-        onlyShowSingleTab: true
-      }
+        onlyShowSingleTab: true,
+      },
     });
     this.$scope.$apply();
     this.expectStepOrder(['enterpriseSettings']);

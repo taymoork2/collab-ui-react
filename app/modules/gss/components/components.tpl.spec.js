@@ -36,7 +36,7 @@ describe('components:showComponents', function () {
     controller = $controller('ComponentsCtrl', {
       $scope: $scope,
       GSSService: GSSService,
-      ComponentsService: ComponentsService
+      ComponentsService: ComponentsService,
     });
     $scope.comp = controller;
     spyOn(controller, 'addComponent').and.returnValue($q.resolve(true));

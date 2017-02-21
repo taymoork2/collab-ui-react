@@ -15,12 +15,12 @@
       vm.org = $stateParams.device.organization;
     } else {
       vm.org = {
-        id: vm.orgId
+        id: vm.orgId,
       };
     }
 
     vm._helpers = {
-      notifyError: notifyError
+      notifyError: notifyError,
     };
 
     HelpdeskService.getCloudberryDevice(vm.orgId, vm.deviceId).then(initDeviceView, vm._helpers.notifyError);

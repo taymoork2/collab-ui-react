@@ -174,7 +174,7 @@
                     authData.roles.push('Site_Admin');
                   }
                   service = new ServiceFeature($translate.instant(Config.confMap[license.offerName], {
-                    capacity: license.capacity
+                    capacity: license.capacity,
                   }), x + 1, 'confRadio', license);
                   if (license.siteUrl) {
                     confLicensesWithoutSiteUrl.push(service);
@@ -530,7 +530,7 @@
       },
       isComplianceUser: function () {
         return this.hasRole(Config.roles.compliance_user);
-      }
+      },
     };
   }
 })();

@@ -36,7 +36,7 @@
       verifyOauthState: verifyOauthState,
       getAuthorizationUrl: getAuthorizationUrl,
       getAuthorizationUrlList: getAuthorizationUrlList,
-      isOnlineOrg: isOnlineOrg
+      isOnlineOrg: isOnlineOrg,
     };
 
     var REFRESH_ACCESS_TOKEN_DEBOUNCE_MS = 1000;
@@ -45,7 +45,7 @@
       REFRESH_ACCESS_TOKEN_DEBOUNCE_MS,
       {
         leading: true,
-        trailing: false
+        trailing: false,
       }
     );
 
@@ -63,7 +63,7 @@
         .then(function (res) {
           return $q.all([
             deferredAuth(res),
-            getHuronDomain(res)
+            getHuronDomain(res),
           ]);
         })
         .then(function (responseArray) {
@@ -177,8 +177,8 @@
           var clientTokens = _.filter(response.data.data, {
             client_id: OAuthConfig.getClientId(),
             user_info: {
-              client_session_id: TokenService.getClientSessionId()
-            }
+              client_session_id: TokenService.getClientSessionId(),
+            },
           });
 
           _.each(clientTokens, function (tokenData) {
@@ -263,7 +263,7 @@
               type: 'PAID',
               isBeta: false,
               isConfigurable: false,
-              isIgnored: true
+              isIgnored: true,
             });
           }
           return authData;
@@ -286,7 +286,7 @@
           ciName: service.ciService || service.ciName,
           serviceId: service.sqService || service.serviceId,
           ciService: undefined,
-          sqService: undefined
+          sqService: undefined,
         });
       });
       return authData;
@@ -341,8 +341,8 @@
         data: data,
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          'Authorization': 'Basic ' + token
-        }
+          'Authorization': 'Basic ' + token,
+        },
       });
     }
 

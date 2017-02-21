@@ -37,7 +37,7 @@
     var authorizeUser = function () {
       $scope.loading = true;
       Auth.authorize({
-        reauthorize: $stateParams.reauthorize
+        reauthorize: $stateParams.reauthorize,
       })
         .then(function () {
           if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {

@@ -32,33 +32,33 @@
           "kmsServer": "customer.com",
           "kmsServerMachineUUID": "e336ae2b-7afb-4e90-a023-61103e06a861",
           "groupId": "df75b71f-0028-4c63-8572-37dfbf0b2f9a",
-          "active": false
+          "active": false,
         },
         {
           "type": "adr",
           "adrServer": "5f40d7be-da6b-4a10-9c6c-8b061aee053a",
           "groupId": "df75b71f-0028-4c63-8572-37dfbf0b2f9a",
-          "active": false
+          "active": false,
         },
         {
           "type": "sec",
           "securityService": "2d2bdeaf-3e63-4561-be2f-4ecc1a48dcd4",
           "groupId": "df75b71f-0028-4c63-8572-37dfbf0b2f9a",
-          "active": false
-        }
-      ]
+          "active": false,
+        },
+      ],
     };
     var jsonProductionMode = {
       "altHdsServers": [
         {
           "type": "none",
-          "active": false
-        }
-      ]
+          "active": false,
+        },
+      ],
     };
 
     vm.servicestatus = {
-      title: 'hds.resources.settings.servicestatusTitle'
+      title: 'hds.resources.settings.servicestatusTitle',
     };
 
     var DEFAULT_SERVICE_MODE = vm.NA_MODE;
@@ -131,7 +131,7 @@
           });
         }
         var myJSON = {
-          "altHdsServers": vm.altHdsServers
+          "altHdsServers": vm.altHdsServers,
         };
         Orgservice.setOrgAltHdsServersHds(Authinfo.getOrgId(), myJSON)
           .then(function () {
@@ -162,7 +162,7 @@
         controller: 'AddTrialUsersController',
         controllerAs: 'addTrialUsersCtrl',
         templateUrl: 'modules/hds/settings/addtrialusers_modal/add-trial-users.html',
-        type: 'small'
+        type: 'small',
       });
     }
 
@@ -171,7 +171,7 @@
         controller: 'EditTrialUsersController',
         controllerAs: 'editTrialUsersCtrl',
         templateUrl: 'modules/hds/settings/edittrialusers_modal/edit-trial-users.html',
-        type: 'small'
+        type: 'small',
       });
     }
   }

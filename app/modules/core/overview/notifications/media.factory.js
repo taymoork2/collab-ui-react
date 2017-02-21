@@ -21,11 +21,11 @@
           },
           linkText: 'homePage.getStarted',
           name: 'media',
-          text: 'homePage.setUpHybridMediaService'
+          text: 'homePage.setUpHybridMediaService',
         };
 
         return notification;
-      }
+      },
     };
   }
 })();

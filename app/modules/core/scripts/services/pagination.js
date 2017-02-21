@@ -15,7 +15,7 @@
       var paginator = {
         perPage: perPage,
         page: 0,
-        scope: scope
+        scope: scope,
       };
 
       var listUsers = function (startIndex, sortBy, sortOrder, type) {

@@ -15,7 +15,7 @@
     vm.hideQueues = true;
     vm.queueSelected = {
       description: '',
-      id: ''
+      id: '',
     };
 
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceHolder');
@@ -24,7 +24,7 @@
 
     vm.uiMenu = {};
     vm.menuEntry = {
-      entries: []
+      entries: [],
     };
     vm.menuKeyEntry = {};
 
@@ -46,7 +46,7 @@
 
     var maxWaitTime = {
       index: '14',
-      label: '15'
+      label: '15',
     };
 
     /////////////////////
@@ -71,7 +71,7 @@
             periodicAnnouncementType: action.queueSettings.periodicAnnouncement.actions[0].name,
             periodicAnnouncementDescription: action.queueSettings.periodicAnnouncement.actions[0].description,
             initialAnnouncementType: action.queueSettings.initialAnnouncement.actions[0].name,
-            initialAnnouncementDescription: action.queueSettings.initialAnnouncement.actions[0].description
+            initialAnnouncementDescription: action.queueSettings.initialAnnouncement.actions[0].description,
           };
         } else {
           vm.menuKeyEntry.actions[0].description = {
@@ -79,7 +79,7 @@
             periodicAnnouncementType: vm.menuKeyEntry.actions[0].queueSettings.periodicAnnouncement.actions[0].name,
             periodicAnnouncementDescription: vm.menuKeyEntry.actions[0].queueSettings.periodicAnnouncement.actions[0].description,
             initialAnnouncementType: vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement.actions[0].name,
-            initialAnnouncementDescription: vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement.actions[0].description
+            initialAnnouncementDescription: vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement.actions[0].description,
           };
         }
       }, function () {
@@ -116,9 +116,9 @@
           },
           aa_from_decision: function () {
             return $scope.fromDecision;
-          }
+          },
         },
-        modalClass: 'aa-queue-settings-modal'
+        modalClass: 'aa-queue-settings-modal',
       });
     }
 
@@ -144,7 +144,7 @@
           saveUiModel();
         }
         vm.queueSelected.description = _.result(_.find(vm.queues, {
-          'id': vm.queueSelected.id
+          'id': vm.queueSelected.id,
         }), 'description', '');
       } catch (e) {
         AANotificationService.error('No valid queue configured to display Call Queue option.');

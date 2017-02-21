@@ -44,8 +44,8 @@ describe('Service: UserDetails', function () {
         .respond({
           Resources: [{
             id: '111',
-            userName: 'sparkuser1@gmail.com'
-          }]
+            userName: 'sparkuser1@gmail.com',
+          }],
         });
       var simulatedResponse = [{
         userId: '111',
@@ -77,8 +77,8 @@ describe('Service: UserDetails', function () {
         .respond({
           Resources: [{
             id: '111',
-            userName: 'sparkuser1@gmail.com'
-          }]
+            userName: 'sparkuser1@gmail.com',
+          }],
         });
       var simulatedResponse = [{
         userId: '111',
@@ -90,8 +90,8 @@ describe('Service: UserDetails', function () {
         messages: [{
           key: 'tull',
           severity: 'error',
-          description: 'WebEx is not configured'
-        }]
+          description: 'WebEx is not configured',
+        }],
       }];
       UserDetails.getUsers('5632-f806-org', simulatedResponse, progress)
         .then(function (userRows) {
@@ -106,8 +106,8 @@ describe('Service: UserDetails', function () {
         .respond({
           Resources: [{
             id: '111',
-            userName: 'sparkuser1@gmail.com'
-          }]
+            userName: 'sparkuser1@gmail.com',
+          }],
         });
       var simulatedResponse = [{
         userId: '111',
@@ -117,8 +117,8 @@ describe('Service: UserDetails', function () {
         messages: [{
           key: '987',
           severity: 'warning',
-          description: 'The request failed. The SMTP address has no mailbox associated with it.'
-        }]
+          description: 'The request failed. The SMTP address has no mailbox associated with it.',
+        }],
       }];
       UserDetails.getUsers('5632-f806-org', simulatedResponse, progress)
         .then(function (userRows) {
@@ -134,29 +134,29 @@ describe('Service: UserDetails', function () {
         .respond({
           Resources: [{
             id: '111',
-            userName: 'balleklorin@gmail.com'
-          }]
+            userName: 'balleklorin@gmail.com',
+          }],
         });
       $httpBackend
         .when('GET', 'https://identity.webex.com/organization/5632-f806-org/v1/Machines?filter=id eq "222" or id eq "333"')
         .respond({
-          data: [{ id: '222', name: 'machine1', displayName: 'Cloudberry Device', machineType: 'lyra_space' }]
+          data: [{ id: '222', name: 'machine1', displayName: 'Cloudberry Device', machineType: 'lyra_space' }],
         });
       var simulatedResponse = [{
         userId: '111', // User
         entitled: true,
         serviceId: 'squared-fusion-cal',
-        state: 'activated'
+        state: 'activated',
       }, {
         userId: '222', // Machine account
         entitled: true,
         serviceId: 'squared-fusion-cal',
-        state: 'error'
+        state: 'error',
       }, {
         userId: '333', // Unknown (not found)
         entitled: true,
         serviceId: 'squared-fusion-cal',
-        state: 'error'
+        state: 'error',
       }];
       UserDetails.getUsers('5632-f806-org', simulatedResponse, progress)
         .then(function (userRows) {
@@ -174,12 +174,12 @@ describe('Service: UserDetails', function () {
         .respond({
           Resources: [{
             id: '111',
-            userName: 'sparkuser1@gmail.com'
+            userName: 'sparkuser1@gmail.com',
           },
           {
             id: '222',
-            userName: 'sparkuser2@gmail.com'
-          }]
+            userName: 'sparkuser2@gmail.com',
+          }],
         });
       var simulatedResponse = [{
         userId: '111',
@@ -188,7 +188,7 @@ describe('Service: UserDetails', function () {
         serviceId: 'squared-fusion-cal',
         connector: { hostname: 'cool.cisco.com' },
         cluster: { name: 'Tom is Awesome Cluster' },
-        resourceGroup: { name: 'ResourceGroupA' }
+        resourceGroup: { name: 'ResourceGroupA' },
       },
       {
         userId: '222',
@@ -213,11 +213,11 @@ describe('Service: UserDetails', function () {
         .respond({
           Resources: [{
             id: '111',
-            userName: 'sparkuser1@gmail.com'
+            userName: 'sparkuser1@gmail.com',
           }, {
             id: '222',
-            userName: 'sparkuser2@gmail.com'
-          }]
+            userName: 'sparkuser2@gmail.com',
+          }],
         });
       var simulatedResponse = [{
         userId: '111',

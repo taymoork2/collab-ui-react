@@ -16,14 +16,14 @@ describe('Service: HDSService', function () {
     var response = {
       data: {
         orgSettings: {
-          kmsServer: 'kms1'
-        }
-      }
+          kmsServer: 'kms1',
+        },
+      },
     };
     $provide.value('Orgservice', {
       getOrg: function () {
         return $q.resolve(response);
-      }
+      },
     });
   }
 

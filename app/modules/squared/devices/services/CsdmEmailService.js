@@ -25,7 +25,7 @@
       sendPersonalEmail: sendPersonalEmail,
       sendPersonalCloudberryEmail: sendPersonalCloudberryEmail,
       sendCloudberryEmail: sendCloudberryEmail,
-      sendHuronEmail: sendHuronEmail
+      sendHuronEmail: sendHuronEmail,
     };
   }
 

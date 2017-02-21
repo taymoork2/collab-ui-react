@@ -18,20 +18,20 @@ describe('Controller: CustomerOverviewCtrl', function () {
         licenseId: licenseString,
         offerName: "MC",
         licenseType: "CONFERENCING",
-        siteUrl: "t30citest.webex.com"
+        siteUrl: "t30citest.webex.com",
       }, {
         licenseId: "ST_04b1c66d-9cb7-4280-bd0e-cfdb763fbdc6",
         offerName: "ST",
-        licenseType: "STORAGE"
-      }]
+        licenseType: "STORAGE",
+      }],
     };
     identityCustomer = {
-      services: ['webex-squared', 'ciscouc']
+      services: ['webex-squared', 'ciscouc'],
     };
 
     $scope.trialForPaid = trialForPaid;
     Userservice = {
-      updateUsers: function () {}
+      updateUsers: function () {},
     };
     Authinfo = {
       getPrimaryEmail: function () {
@@ -51,10 +51,10 @@ describe('Controller: CustomerOverviewCtrl', function () {
       },
       isCare: function () {
         return true;
-      }
+      },
     };
     BrandService = {
-      getSettings: function () {}
+      getSettings: function () {},
     };
 
     FeatureToggleService = _FeatureToggleService_;
@@ -70,7 +70,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
     $controller = _$controller_;
 
     $state.modal = {
-      result: $q.resolve()
+      result: $q.resolve(),
     };
 
     TrialService = _TrialService_;
@@ -109,7 +109,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
       BrandService: BrandService,
       FeatureToggleService: FeatureToggleService,
       $modal: modal,
-      trialForPaid: trialForPaid
+      trialForPaid: trialForPaid,
     });
 
     $scope.$apply();
@@ -186,7 +186,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
       it('should create proper url', function () {
         expect($state.href).toHaveBeenCalledWith('login_swap', {
           customerOrgId: controller.currentCustomer.customerOrgId,
-          customerOrgName: controller.currentCustomer.customerName
+          customerOrgName: controller.currentCustomer.customerName,
         });
       });
 

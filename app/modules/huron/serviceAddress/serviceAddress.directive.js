@@ -17,7 +17,7 @@
         hideSearch: '=',
         formName: '=',
         addressValidate: '&',
-        modify: '&'
+        modify: '&',
       },
     };
     return directive;
@@ -36,7 +36,7 @@
     var directive = {
       restrict: 'A',
       require: '^form',
-      link: isolateFormLink
+      link: isolateFormLink,
     };
 
     return directive;

@@ -14,18 +14,18 @@ describe('Service: AutoAttendantCeInfoModelService', function () {
       "id": "1111", //"212b075f-0a54-4040-bd94-d2aa247bd9f9", //workaround Tropo-AA integration
       "trigger": "incomingCall",
       "type": "directoryNumber",
-      "number": "1111"
+      "number": "1111",
     }],
-    "ceUrl": "https://ces.hitest.huron-dev.com/api/v1/customers/6662df48-b367-4c1e-9c3c-aa408aaa79a1/callExperiences/c16a6027-caef-4429-b3af-9d61ddc7964b"
+    "ceUrl": "https://ces.hitest.huron-dev.com/api/v1/customers/6662df48-b367-4c1e-9c3c-aa408aaa79a1/callExperiences/c16a6027-caef-4429-b3af-9d61ddc7964b",
   }, {
     "name": "AA2",
     "resources": [{
       "id": "1112", //"00097a86-45ef-44a7-aa78-6d32a0ca1d3b", //workaround Tropo-AA integration
       "trigger": "incomingCall",
       "type": "directoryNumber",
-      "number": "1112"
+      "number": "1112",
     }],
-    "ceUrl": "https://ces.hitest.huron-dev.com/api/v1/customers/6662df48-b367-4c1e-9c3c-aa408aaa79a1/callExperiences/0c192613-a960-43bb-9101-b9bc80be049c"
+    "ceUrl": "https://ces.hitest.huron-dev.com/api/v1/customers/6662df48-b367-4c1e-9c3c-aa408aaa79a1/callExperiences/0c192613-a960-43bb-9101-b9bc80be049c",
   }];
 
   beforeEach(angular.mock.module('uc.autoattendant'));
@@ -114,12 +114,12 @@ describe('Service: AutoAttendantCeInfoModelService', function () {
   describe('getCeInfosList', function () {
     var notFoundResponse = {
       'status': 404,
-      'statusText': 'Not Found'
+      'statusText': 'Not Found',
     };
 
     var errorResponse = {
       'status': 500,
-      'statusText': 'Server Error'
+      'statusText': 'Server Error',
     };
     var aaModel, listCesDeferred, readCeDependsDeferred;
 

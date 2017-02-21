@@ -38,14 +38,14 @@
     var _helpers = {
       isSunlightUserUpdateRequired: isSunlightUserUpdateRequired,
       getUserLicence: getUserLicence,
-      createUserData: createUserData
+      createUserData: createUserData,
     };
 
     return service;
 
     function updateUsers(usersDataArray, licenses, entitlements, method, callback) {
       var userData = {
-        users: []
+        users: [],
       };
 
       _.forEach(usersDataArray, function (userInfo) {
@@ -54,7 +54,7 @@
           var user = {
             email: userEmail,
             userEntitlements: entitlements,
-            licenses: licenses
+            licenses: licenses,
           };
 
           var userLic = {};
@@ -78,7 +78,7 @@
         return $http({
           method: 'PATCH',
           url: userUrl + 'organization/' + Authinfo.getOrgId() + '/users',
-          data: userData
+          data: userData,
         }).success(function (data, status, headers) {
           data = _.isObject(data) ? data : {};
           $rootScope.$broadcast('Userservice::updateUsers');
@@ -101,7 +101,7 @@
 
     function addUsers(usersDataArray, entitlements, callback) {
       var userData = {
-        'users': []
+        'users': [],
       };
 
       _.forEach(usersDataArray, function (userInfo) {
@@ -110,7 +110,7 @@
         var user = {
           'email': null,
           'name': null,
-          'userEntitlements': entitlements
+          'userEntitlements': entitlements,
         };
         if (userEmail.length > 0) {
           user.email = userEmail;
@@ -154,7 +154,7 @@
         callback = noCache;
       }
       return $http.get(scimUrl, {
-        cache: !noCache
+        cache: !noCache,
       })
         .success(function (data, status) {
           data = _.isObject(data) ? data : {};
@@ -185,7 +185,7 @@
       return $http({
         method: 'PATCH',
         url: scimUrl,
-        data: userData
+        data: userData,
       })
         .then(function (response) {
           var entitlements = _.get(response, 'data.entitlements', []);
@@ -220,7 +220,7 @@
       }
 
       var userData = {
-        'inviteList': []
+        'inviteList': [],
       };
 
       _.forEach(usersDataArray, function (userInfo) {
@@ -234,7 +234,7 @@
         var user = {
           'email': userEmail,
           'displayName': userName,
-          'userEntitlements': null
+          'userEntitlements': null,
         };
         if (entitlements) {
           user['userEntitlements'] = entitlements;
@@ -266,7 +266,7 @@
     function sendEmail(userEmail, adminEmail, callback) {
       var requestBody = {
         'recipientEmail': userEmail,
-        'adminEmail': adminEmail
+        'adminEmail': adminEmail,
       };
       $http.post(userUrl + 'user/mail/provisioning', requestBody)
         .success(function (data, status) {
@@ -302,25 +302,25 @@
         'users': [{
           'userRoles': roles,
           'email': email,
-          'name': name
-        }]
+          'name': name,
+        }],
       };
 
       return $http({
         method: 'PATCH',
         url: patchUrl,
-        data: requestBody
+        data: requestBody,
       });
     }
 
     function migrateUsers(users, callback) {
       var requestBody = {
-        'users': []
+        'users': [],
       };
 
       for (var x in users) {
         var user = {
-          'email': users[x].userName
+          'email': users[x].userName,
         };
         requestBody.users.push(user);
       }
@@ -346,7 +346,7 @@
       // bind the licenses and entitlements that are shared by all users
       var getUserPayload = getUserPayloadForOnboardAPI.bind({
         licenses: licenses,
-        entitlements: entitlements
+        entitlements: entitlements,
       });
       var userPayload = getUserPayload(usersDataArray, true);
       return onboardUsersAPI(userPayload, cancelPromise);
@@ -374,7 +374,7 @@
       var licenses = (!_.isUndefined(thisParams) && _.isArray(thisParams.licenses)) ? thisParams.licenses : undefined;
       var entitlements = (!_.isUndefined(thisParams) && _.isArray(thisParams.entitlements)) ? thisParams.entitlements : undefined;
       var userPayload = {
-        'users': []
+        'users': [],
       };
 
       _.forEach(users, function (userData) {
@@ -389,7 +389,7 @@
             'familyName': null,
           },
           'userEntitlements': null,
-          'licenses': null
+          'licenses': null,
         };
 
         if (userEmail.length > 0) {
@@ -434,14 +434,14 @@
       }
       return {
         'givenName': givenName,
-        'familyName': familyName
+        'familyName': familyName,
       };
     }
 
     function onboardUsersAPI(userPayload, cancelPromise) {
       if (userPayload && _.isArray(userPayload.users) && userPayload.users.length > 0) {
         var onboardUsersPromise = $http.post(userUrl + 'organization/' + Authinfo.getOrgId() + '/users/onboard', userPayload, {
-          timeout: cancelPromise
+          timeout: cancelPromise,
         });
         onboardUsersPromise.then(function (response) {
           checkAndOnboardSunlightUser(response.data.userResponse, userPayload.users);
@@ -488,7 +488,7 @@
 
     function checkAndPatchSunlightRolesAndEntitlements(userId, hasSyncKms, hasContextServiceEntitlement) {
       var userRoleData = {
-        schemas: Config.scimSchemas
+        schemas: Config.scimSchemas,
       };
       if (!hasSyncKms) {
         userRoleData.roles = [Config.backend_roles.spark_synckms];
@@ -576,7 +576,7 @@
     function sendSparkWelcomeEmail(userEmail, userName) {
       var userData = [{
         'address': userEmail,
-        'name': userName
+        'name': userName,
       }];
 
       return $q(function (resolve, reject) {

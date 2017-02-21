@@ -24,7 +24,7 @@ describe('Directive: hrServiceAddress', function () {
       streetAddress: '123 My Street',
       city: 'Richardson',
       state: 'TX',
-      zip: '75082'
+      zip: '75082',
     };
 
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200, {});

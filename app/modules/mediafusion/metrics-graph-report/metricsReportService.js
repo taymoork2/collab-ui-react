@@ -26,7 +26,7 @@
       getCallVolumeData: getCallVolumeData,
       getAvailabilityData: getAvailabilityData,
       getClusterAvailabilityData: getClusterAvailabilityData,
-      getTotalCallsData: getTotalCallsData
+      getTotalCallsData: getTotalCallsData,
     };
 
     function getUtilizationData(time, cluster) {
@@ -36,7 +36,7 @@
       activePromiseForUtilization = $q.defer();
       var returnData = {
         graphData: [],
-        graphs: []
+        graphs: [],
       };
       return getService(urlBase + getQuerys(utilizationUrl, cluster, time), activePromiseForUtilization).then(function (response) {
         if (!_.isUndefined(response) && !_.isUndefined(response.data) && !_.isUndefined(response.data.chartData) && _.isArray(response.data.chartData) && !_.isUndefined(response.data)) {
@@ -57,7 +57,7 @@
       }
       activePromise = $q.defer();
       var returnData = {
-        graphData: []
+        graphData: [],
       };
       return getService(urlBase + getQuerys(callVolumeUrl, cluster, time), activePromise).then(function (response) {
         if (!_.isUndefined(response) && !_.isUndefined(response.data[0]) && !_.isUndefined(response.data[0].values) && _.isArray(response.data[0].values) && !_.isUndefined(response.data[0])) {
@@ -137,14 +137,14 @@
         balloon: true,
         call_reject: 0,
         active_calls: 0,
-        timestamp: null
+        timestamp: null,
       };
       var startDate = {
         colorOne: chartColors.primaryBase,
         colorTwo: chartColors.attentionBase,
         call_reject: 0,
         active_calls: 0,
-        timestamp: startTime
+        timestamp: startTime,
       };
       activeData.unshift(startDate);
       for (var i = 0; i < activeData.length; i++) {
@@ -157,7 +157,7 @@
       var endDate = {
         colorOne: chartColors.primaryBase,
         colorTwo: chartColors.attentionBase,
-        timestamp: endTime
+        timestamp: endTime,
       };
       returnDataArray.push(endDate);
       returnData.graphData = returnDataArray;
@@ -167,7 +167,7 @@
     function adjustUtilizationData(activeData, returnData, startTime, endTime, graphs) {
       var returnDataArray = [];
       var startDate = {
-        time: startTime
+        time: startTime,
       };
       activeData.unshift(startDate);
       for (var i = 0; i < activeData.length; i++) {
@@ -176,7 +176,7 @@
         returnDataArray.push(tmpItem);
       }
       var endDate = {
-        time: endTime
+        time: endTime,
       };
       returnDataArray.push(endDate);
       returnData.graphData = returnDataArray;
@@ -212,7 +212,7 @@
         return $http.get(url);
       } else {
         return $http.get(url, {
-          timeout: canceler.promise
+          timeout: canceler.promise,
         });
       }
     }

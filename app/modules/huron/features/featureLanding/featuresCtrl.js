@@ -27,23 +27,23 @@ require('./_feature-landing.scss');
     vm.noFeatures = false;
     vm.loading = true;
     vm.placeholder = {
-      'name': 'Search'
+      'name': 'Search',
     };
     vm.filters = [{
       name: $translate.instant('common.all'),
-      filterValue: 'all'
+      filterValue: 'all',
     }, {
       name: $translate.instant('autoAttendant.title'),
-      filterValue: 'AA'
+      filterValue: 'AA',
     }, {
       name: $translate.instant('huronHuntGroup.modalTitle'),
-      filterValue: 'HG'
+      filterValue: 'HG',
     }, {
       name: $translate.instant('callPark.title'),
-      filterValue: 'CP'
+      filterValue: 'CP',
     }, {
       name: $translate.instant('pagingGroup.title'),
-      filterValue: 'PG'
+      filterValue: 'PG',
     }];
 
     /* LIST OF FEATURES
@@ -62,7 +62,7 @@ require('./_feature-landing.scss');
       formatter: HuronFeaturesListService.huntGroups,
       isEmpty: false,
       i18n: 'huronFeatureDetails.hgName',
-      color: 'alerts'
+      color: 'alerts',
     }, {
       name: 'AA',
       getFeature: function () {
@@ -71,7 +71,7 @@ require('./_feature-landing.scss');
       formatter: HuronFeaturesListService.autoAttendants,
       isEmpty: false,
       i18n: 'huronFeatureDetails.aaName',
-      color: 'primary'
+      color: 'primary',
     }, {
       name: 'CP',
       getFeature: function () {
@@ -80,7 +80,7 @@ require('./_feature-landing.scss');
       formatter: HuronFeaturesListService.callParks,
       isEmpty: false,
       i18n: 'huronFeatureDetails.cpName',
-      color: 'cta'
+      color: 'cta',
     }, {
       name: 'PG',
       getFeature: function () {
@@ -89,7 +89,7 @@ require('./_feature-landing.scss');
       formatter: HuronFeaturesListService.pagingGroups,
       isEmpty: false,
       i18n: 'huronFeatureDetails.pgName',
-      color: 'people'
+      color: 'people',
     }];
 
     var piFeature = {
@@ -100,7 +100,7 @@ require('./_feature-landing.scss');
       formatter: HuronFeaturesListService.pickupGroups,
       isEmpty: false,
       i18n: 'huronFeatureDetails.piName',
-      color: 'attention'
+      color: 'attention',
     };
 
     var featureTogglePromises = [];
@@ -110,7 +110,7 @@ require('./_feature-landing.scss');
       if (data[0] === true) {
         var pi = {
           name: $translate.instant('callPickup.title'),
-          filterValue: 'PI'
+          filterValue: 'PI',
         };
         vm.features.push(piFeature);
         vm.filters.push(pi);
@@ -149,7 +149,7 @@ require('./_feature-landing.scss');
 
     function reload() {
       $state.go($state.current, {}, {
-        reload: true
+        reload: true,
       });
     }
     vm.featureFilter = function (feature) {
@@ -188,7 +188,7 @@ require('./_feature-landing.scss');
 
       Log.warn('Could fetch features for customer with Id:', Authinfo.getOrgId());
       Notification.errorResponse(response, 'huronFeatureDetails.failedToLoad', {
-        featureType: $filter('translate')(feature.i18n)
+        featureType: $filter('translate')(feature.i18n),
       });
 
       feature.isEmpty = true;
@@ -219,23 +219,23 @@ require('./_feature-landing.scss');
       if (feature.filterValue === 'AA') {
         vm.aaModel.aaName = feature.cardName;
         $state.go('huronfeatures.aabuilder', {
-          aaName: vm.aaModel.aaName
+          aaName: vm.aaModel.aaName,
         });
       } else if (feature.filterValue === 'HG') {
         $state.go('huntgroupedit', {
-          feature: feature
+          feature: feature,
         });
       } else if (feature.filterValue === 'CP') {
         $state.go('callparkedit', {
-          feature: feature
+          feature: feature,
         });
       } else if (feature.filterValue === 'PG') {
         $state.go('huronPagingGroupEdit', {
-          feature: feature
+          feature: feature,
         });
       } else if (feature.filterValue === 'PI') {
         $state.go('callpickupedit', {
-          feature: feature
+          feature: feature,
         });
       }
     };
@@ -243,7 +243,7 @@ require('./_feature-landing.scss');
     vm.deleteHuronFeature = function (feature) {
       if (feature.hasDepends) {
         Notification.error('huronFeatureDetails.aaDeleteBlocked', {
-          aaNames: feature.dependsNames.join(", ")
+          aaNames: feature.dependsNames.join(", "),
         });
         return;
       }
@@ -252,7 +252,7 @@ require('./_feature-landing.scss');
       $state.go('huronfeatures.deleteFeature', {
         deleteFeatureName: feature.cardName,
         deleteFeatureId: feature.id,
-        deleteFeatureType: feature.filterValue
+        deleteFeatureType: feature.filterValue,
       });
     };
 
@@ -261,7 +261,7 @@ require('./_feature-landing.scss');
         detailsFeatureName: feature.cardName,
         detailsFeatureId: feature.id,
         detailsFeatureType: feature.filterValue,
-        detailsDependsList: feature.dependsNames
+        detailsDependsList: feature.dependsNames,
       });
     };
 
@@ -325,7 +325,7 @@ require('./_feature-landing.scss');
       var modalInstance = $modal.open({
         templateUrl: 'modules/huron/features/newFeature/newFeatureModal.tpl.html',
         controller: 'NewFeatureModalCtrl',
-        controllerAs: 'newFeatureModalCtrl'
+        controllerAs: 'newFeatureModalCtrl',
       });
 
       /* Goto the corresponding Set up Assistant controller

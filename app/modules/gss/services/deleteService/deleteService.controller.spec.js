@@ -5,8 +5,8 @@ describe('controller: DeleteServiceCtrl', function () {
   var testData = {
     deleteCommand: 'DELETE',
     serviceForDelete: {
-      serviceId: 'testServiceId'
-    }
+      serviceId: 'testServiceId',
+    },
   };
 
   beforeEach(angular.mock.module('GSS'));
@@ -42,7 +42,7 @@ describe('controller: DeleteServiceCtrl', function () {
       $scope: $scope,
       $state: $state,
       $stateParams: $stateParams,
-      GSSService: GSSService
+      GSSService: GSSService,
     });
 
     $scope.$apply();

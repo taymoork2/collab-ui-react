@@ -69,8 +69,8 @@ describe('Controller: TrialCtrl:', function () {
     spyOn(Orgservice, 'getAdminOrgAsPromise').and.returnValue($q.resolve({
       data: {
         success: true,
-        isTestOrg: true
-      }
+        isTestOrg: true,
+      },
     }));
     //spyOn(Orgservice, 'getOrg');
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
@@ -97,7 +97,7 @@ describe('Controller: TrialCtrl:', function () {
       HuronCustomer: HuronCustomer,
       HuronCountryService: HuronCountryService,
       FeatureToggleService: FeatureToggleService,
-      TrialPstnService: TrialPstnService
+      TrialPstnService: TrialPstnService,
     });
     helpers = controller._helpers;
     $scope.$apply();
@@ -108,16 +108,16 @@ describe('Controller: TrialCtrl:', function () {
       var stateParams = {
         currentTrial: {
           offers: [{
-            id: 'COLLAB'
+            id: 'COLLAB',
           }, {
-            id: 'SQUAREDUC'
+            id: 'SQUAREDUC',
           }],
           customerOrgId: '1234',
         },
         isEditing: true,
         mode: 'edit',
 
-        details: {}
+        details: {},
       };
       initController(stateParams);
     });
@@ -164,8 +164,8 @@ describe('Controller: TrialCtrl:', function () {
         beforeEach(function () {
           spyOn(TrialService, 'editTrial').and.returnValue($q.reject({
             data: {
-              message: 'An error occurred'
-            }
+              message: 'An error occurred',
+            },
           }));
           controller.editTrial();
           $scope.$apply();
@@ -187,7 +187,7 @@ describe('Controller: TrialCtrl:', function () {
           origCurrentTrial = controller.currentTrial;
           controller.currentTrial = {
             customerOrgId: 'fake-customer-org-id',
-            customerName: 'fake-customer-name'
+            customerName: 'fake-customer-name',
           };
           controller.launchCustomerPortal();
         });
@@ -204,7 +204,7 @@ describe('Controller: TrialCtrl:', function () {
           it('should call $state.href() with vm.currentTrial.customer* properties', function () {
             expect($state.href).toHaveBeenCalledWith('login_swap', {
               customerOrgId: 'fake-customer-org-id',
-              customerOrgName: 'fake-customer-name'
+              customerOrgName: 'fake-customer-name',
             });
           });
         });
@@ -226,27 +226,27 @@ describe('Controller: TrialCtrl:', function () {
         it('should expect an object with a boolean property named "enabled" as its first arg, and an object with a boolean property named "message" as its second arg', function () {
           var hasEnabledMessageTrial = helpers.hasEnabledMessageTrial;
           expect(hasEnabledMessageTrial({
-            enabled: true
+            enabled: true,
           }, {
-            message: false
+            message: false,
           })).toBe(true);
 
           expect(hasEnabledMessageTrial({
-            enabled: true
+            enabled: true,
           }, {
-            message: true
+            message: true,
           })).toBe(false);
 
           expect(hasEnabledMessageTrial({
-            enabled: false
+            enabled: false,
           }, {
-            message: false
+            message: false,
           })).toBe(false);
 
           expect(hasEnabledMessageTrial({
-            enabled: false
+            enabled: false,
           }, {
-            message: true
+            message: true,
           })).toBe(false);
         });
       });
@@ -255,27 +255,27 @@ describe('Controller: TrialCtrl:', function () {
         it('should expect an object with a boolean property named "enabled" as its first arg, and an object with a boolean property named "meeting" as its second arg', function () {
           var hasEnabledMeetingTrial = helpers.hasEnabledMeetingTrial;
           expect(hasEnabledMeetingTrial({
-            enabled: true
+            enabled: true,
           }, {
-            meeting: false
+            meeting: false,
           })).toBe(true);
 
           expect(hasEnabledMeetingTrial({
-            enabled: true
+            enabled: true,
           }, {
-            meeting: true
+            meeting: true,
           })).toBe(false);
 
           expect(hasEnabledMeetingTrial({
-            enabled: false
+            enabled: false,
           }, {
-            meeting: false
+            meeting: false,
           })).toBe(false);
 
           expect(hasEnabledMeetingTrial({
-            enabled: false
+            enabled: false,
           }, {
-            meeting: true
+            meeting: true,
           })).toBe(false);
         });
       });
@@ -284,27 +284,27 @@ describe('Controller: TrialCtrl:', function () {
         it('should expect an object with a boolean property named "enabled" as its first arg, and an object with a boolean property named "call" as its second arg', function () {
           var hasEnabledCallTrial = helpers.hasEnabledCallTrial;
           expect(hasEnabledCallTrial({
-            enabled: true
+            enabled: true,
           }, {
-            call: false
+            call: false,
           })).toBe(true);
 
           expect(hasEnabledCallTrial({
-            enabled: true
+            enabled: true,
           }, {
-            call: true
+            call: true,
           })).toBe(false);
 
           expect(hasEnabledCallTrial({
-            enabled: false
+            enabled: false,
           }, {
-            call: false
+            call: false,
           })).toBe(false);
 
           expect(hasEnabledCallTrial({
-            enabled: false
+            enabled: false,
           }, {
-            call: true
+            call: true,
           })).toBe(false);
         });
       });
@@ -313,27 +313,27 @@ describe('Controller: TrialCtrl:', function () {
         it('should expect an object with a boolean property named "enabled" as its first arg, and an object with a boolean property named "roomSystems" as its second arg', function () {
           var hasEnabledRoomSystemTrial = helpers.hasEnabledRoomSystemTrial;
           expect(hasEnabledRoomSystemTrial({
-            enabled: true
+            enabled: true,
           }, {
-            roomSystems: false
+            roomSystems: false,
           })).toBe(true);
 
           expect(hasEnabledRoomSystemTrial({
-            enabled: true
+            enabled: true,
           }, {
-            roomSystems: true
+            roomSystems: true,
           })).toBe(false);
 
           expect(hasEnabledRoomSystemTrial({
-            enabled: false
+            enabled: false,
           }, {
-            roomSystems: false
+            roomSystems: false,
           })).toBe(false);
 
           expect(hasEnabledRoomSystemTrial({
-            enabled: false
+            enabled: false,
           }, {
-            roomSystems: true
+            roomSystems: true,
           })).toBe(false);
         });
       });
@@ -342,27 +342,27 @@ describe('Controller: TrialCtrl:', function () {
         it('should expect an object with a boolean property named "enabled" as its first arg, and an object with a boolean property named "roomSystems" as its second arg', function () {
           var hasEnabledSparkBoardTrial = helpers.hasEnabledSparkBoardTrial;
           expect(hasEnabledSparkBoardTrial({
-            enabled: true
+            enabled: true,
           }, {
-            sparkBoard: false
+            sparkBoard: false,
           })).toBe(true);
 
           expect(hasEnabledSparkBoardTrial({
-            enabled: true
+            enabled: true,
           }, {
-            sparkBoard: true
+            sparkBoard: true,
           })).toBe(false);
 
           expect(hasEnabledSparkBoardTrial({
-            enabled: false
+            enabled: false,
           }, {
-            sparkBoard: false
+            sparkBoard: false,
           })).toBe(false);
 
           expect(hasEnabledSparkBoardTrial({
-            enabled: false
+            enabled: false,
           }, {
-            sparkBoard: true
+            sparkBoard: true,
           })).toBe(false);
         });
       });
@@ -373,27 +373,27 @@ describe('Controller: TrialCtrl:', function () {
           function () {
             var hasEnabledCareTrial = helpers.hasEnabledCareTrial;
             expect(hasEnabledCareTrial({
-              enabled: true
+              enabled: true,
             }, {
-              care: false
+              care: false,
             })).toBe(true);
 
             expect(hasEnabledCareTrial({
-              enabled: true
+              enabled: true,
             }, {
-              care: true
+              care: true,
             })).toBe(false);
 
             expect(hasEnabledCareTrial({
-              enabled: false
+              enabled: false,
             }, {
-              care: false
+              care: false,
             })).toBe(false);
 
             expect(hasEnabledCareTrial({
-              enabled: false
+              enabled: false,
             }, {
-              care: true
+              care: true,
             })).toBe(false);
           });
       });
@@ -408,30 +408,30 @@ describe('Controller: TrialCtrl:', function () {
             beforeEach(function () {
               _vm = {
                 messageTrial: {
-                  enabled: false
+                  enabled: false,
                 },
                 meetingTrial: {
-                  enabled: false
+                  enabled: false,
                 },
                 callTrial: {
-                  enabled: false
+                  enabled: false,
                 },
                 roomSystemTrial: {
-                  enabled: false
+                  enabled: false,
                 },
                 sparkBoardTrial: {
-                  enabled: false
+                  enabled: false,
                 },
                 careTrial: {
-                  enabled: false
-                }
+                  enabled: false,
+                },
               };
               _preset = {
                 message: false,
                 meeting: false,
                 call: false,
                 roomSystems: false,
-                care: false
+                care: false,
               };
             });
 
@@ -972,8 +972,8 @@ describe('Controller: TrialCtrl:', function () {
       beforeEach(function () {
         spyOn(TrialService, 'startTrial').and.returnValue($q.reject({
           data: {
-            message: 'An error occurred'
-          }
+            message: 'An error occurred',
+          },
         }));
         controller.startTrial();
         $scope.$apply();
@@ -993,8 +993,8 @@ describe('Controller: TrialCtrl:', function () {
         spyOn(Orgservice, 'getAdminOrg').and.returnValue($q.resolve({
           data: {
             success: true,
-            isTestOrg: true
-          }
+            isTestOrg: true,
+          },
         }));
         $scope.$apply();
         expect(controller.devicesModal.enabled).toBeFalsy();
@@ -1083,34 +1083,34 @@ describe('Controller: TrialCtrl:', function () {
       var emailInput;
       var testCase = [{
         retVal: {
-          unique: true
+          unique: true,
         },
-        targetVal: true
+        targetVal: true,
       }, {
         retVal: {
-          error: 'trialModal.errorInUse'
+          error: 'trialModal.errorInUse',
         },
-        targetVal: false
+        targetVal: false,
       }, {
         retVal: {
-          error: 'trialModal.errorInvalidName'
+          error: 'trialModal.errorInvalidName',
         },
-        targetVal: false
+        targetVal: false,
       }, {
         retVal: {
-          error: 'trialModal.errorInvalid'
+          error: 'trialModal.errorInvalid',
         },
-        targetVal: false
+        targetVal: false,
       }, {
         retVal: {
-          error: 'trialModal.errorServerDown'
+          error: 'trialModal.errorServerDown',
         },
-        targetVal: false
+        targetVal: false,
       }, {
         retVal: {
-          bad: 'bad'
+          bad: 'bad',
         },
-        targetVal: false
+        targetVal: false,
       }];
 
       beforeEach(function () {
@@ -1118,13 +1118,13 @@ describe('Controller: TrialCtrl:', function () {
         emailInput = controller.custInfoFields[1];
         orgInput.options = {
           validation: {
-            show: null
-          }
+            show: null,
+          },
         };
         emailInput.options = {
           validation: {
-            show: null
-          }
+            show: null,
+          },
         };
       });
 
@@ -1438,8 +1438,8 @@ describe('Controller: TrialCtrl:', function () {
       beforeEach(function () {
         spyOn(TrialService, 'startTrial').and.returnValue($q.reject({
           data: {
-            message: 'An error occurred'
-          }
+            message: 'An error occurred',
+          },
         }));
         controller.startTrial();
         $scope.$apply();
@@ -1459,8 +1459,8 @@ describe('Controller: TrialCtrl:', function () {
         spyOn(Orgservice, 'getAdminOrg').and.returnValue($q.resolve({
           data: {
             success: true,
-            isTestOrg: true
-          }
+            isTestOrg: true,
+          },
         }));
         $scope.$apply();
         expect(controller.devicesModal.enabled).toBeFalsy();

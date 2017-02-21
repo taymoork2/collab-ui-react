@@ -38,7 +38,7 @@ describe('Controller: PstnReviewCtrl', function () {
     spyOn($state, 'go');
 
     controller = $controller('PstnReviewCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
 
     $scope.$apply();
@@ -75,7 +75,7 @@ describe('Controller: PstnReviewCtrl', function () {
         expect(PstnServiceAddressService.createCustomerSite).not.toHaveBeenCalled();
         expect(PstnSetupService.orderNumbersV2).toHaveBeenCalled();
         expect($state.go).toHaveBeenCalledWith('pstnSetup.nextSteps', {
-          portOrders: [orderCart[1]]
+          portOrders: [orderCart[1]],
         });
       });
 
@@ -107,7 +107,7 @@ describe('Controller: PstnReviewCtrl', function () {
         expect(PstnServiceAddressService.createCustomerSite).not.toHaveBeenCalled();
         expect(PstnSetupService.orderNumbersV2).toHaveBeenCalled();
         expect($state.go).toHaveBeenCalledWith('pstnSetup.nextSteps', {
-          portOrders: [orderCart[1]]
+          portOrders: [orderCart[1]],
         });
       });
     });
@@ -128,7 +128,7 @@ describe('Controller: PstnReviewCtrl', function () {
         expect(PstnServiceAddressService.createCustomerSite).not.toHaveBeenCalled();
         expect(PstnSetupService.orderNumbersV2).toHaveBeenCalled();
         expect($state.go).toHaveBeenCalledWith('pstnSetup.nextSteps', {
-          portOrders: [orderCart[1]]
+          portOrders: [orderCart[1]],
         });
       });
     });
@@ -148,7 +148,7 @@ describe('Controller: PstnReviewCtrl', function () {
         expect(PstnServiceAddressService.createCustomerSite).toHaveBeenCalled();
         expect(PstnSetupService.orderNumbersV2).toHaveBeenCalled();
         expect($state.go).toHaveBeenCalledWith('pstnSetup.nextSteps', {
-          portOrders: [orderCart[1]]
+          portOrders: [orderCart[1]],
         });
       });
     });

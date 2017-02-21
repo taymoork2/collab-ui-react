@@ -8,7 +8,7 @@
   /* @ngInject */
   function TimezoneService() {
     var service = {
-      getCountryMapping: getCountryMapping
+      getCountryMapping: getCountryMapping,
     };
 
     return service;
@@ -433,7 +433,7 @@
         'Indian/Mayotte': 'Mayotte',
         'Africa/Johannesburg': 'South Africa',
         'Africa/Lusaka': 'Zambia',
-        'Africa/Harare': 'Zimbabwe'
+        'Africa/Harare': 'Zimbabwe',
       };
     }
   }

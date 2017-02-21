@@ -16,7 +16,7 @@
 
     vm.model = {
       userInputOption: 0,
-      uploadProgress: 0
+      uploadProgress: 0,
     };
 
     vm.placeholder = $translate.instant('directoryNumberPanel.chooseNumber');
@@ -95,15 +95,15 @@
           name: vm.displayName,
           cisUuid: vm.cisUuid,
           username: vm.userName,
-          isEntitledToHuron: vm.isEntitledToHuron
+          isEntitledToHuron: vm.isEntitledToHuron,
         },
         recipient: {
           displayName: vm.displayName,
           firstName: vm.firstName,
           cisUuid: vm.cisUuid,
           email: vm.userName,
-          organizationId: vm.organizationId
-        }
+          organizationId: vm.organizationId,
+        },
       });
     };
 

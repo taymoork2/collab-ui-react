@@ -11,7 +11,7 @@
     vm.custOrgId = _.get($stateParams, 'currentCustomer.customerOrgId');
     vm.domains = [];
     vm.helpers = {
-      buildDomain: _buildDomain
+      buildDomain: _buildDomain,
     };
     vm.isLoading = true;
     init();
@@ -31,7 +31,7 @@
       return {
         siteUrl: siteUrl,
         timeZone: (timeZoneId) ? _.get(TrialTimeZoneService.getTimeZone(timeZoneId), 'label', '') : null,
-        pending: status !== Config.webexSiteStatus.PROVISIONED
+        pending: status !== Config.webexSiteStatus.PROVISIONED,
       };
     }
   }

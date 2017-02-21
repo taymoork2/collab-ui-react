@@ -56,17 +56,17 @@
         function open(currentDevice) {
           return $modal.open({
             resolve: {
-              currentDevice: _.constant(currentDevice)
+              currentDevice: _.constant(currentDevice),
             },
             controllerAs: 'rs',
             controller: 'RemoteSupportController',
             templateUrl: 'modules/squared/devices/remoteSupport/remoteSupport.html',
-            modalId: 'remoteSupportModal'
+            modalId: 'remoteSupportModal',
           }).result;
         }
 
         return {
-          open: open
+          open: open,
         };
       }
     );

@@ -11,11 +11,11 @@ describe('orgService', function () {
   beforeEach(function () {
     angular.mock.module(function ($provide) {
       Auth = {
-        setAccessToken: sinon.stub()
+        setAccessToken: sinon.stub(),
       };
 
       Authinfo = {
-        getOrgId: jasmine.createSpy().and.returnValue('bar')
+        getOrgId: jasmine.createSpy().and.returnValue('bar'),
       };
 
       UrlConfig = {
@@ -30,7 +30,7 @@ describe('orgService', function () {
         },
         getProdAdminServiceUrl: function () {
           return '/prodAdmin';
-        }
+        },
       };
       Config = {
         entitlements: {
@@ -41,11 +41,11 @@ describe('orgService', function () {
           mediafusion: 'squared-fusion-media',
           fusion_mgmt: 'squared-fusion-mgmt',
           room_system: 'spark-room-system',
-          fusion_ec: 'squared-fusion-ec'
-        }
+          fusion_ec: 'squared-fusion-ec',
+        },
       };
       Log = {
-        debug: sinon.stub()
+        debug: sinon.stub(),
       };
       $provide.value('Auth', Auth);
       $provide.value('Authinfo', Authinfo);
@@ -79,13 +79,13 @@ describe('orgService', function () {
 
   it('should successfully get an organization for a given orgId and resolve the returned promise', function () {
     var responseObj = {
-      test: 'val'
+      test: 'val',
     };
     httpBackend.expect('GET', UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId()).respond(200, responseObj);
     Orgservice.getOrg(_.noop, Authinfo.getOrgId())
       .then(function (response) {
         expect(response.data).toEqual(jasmine.objectContaining(_.assign({}, responseObj, {
-          orgSettings: {}
+          orgSettings: {},
         })));
       });
     httpBackend.flush();
@@ -249,7 +249,7 @@ describe('orgService', function () {
       reportingSiteDesc: 'Description',
       helpUrl: 'http://example.com/help',
       isCiscoHelp: true,
-      isCiscoSupport: false
+      isCiscoSupport: false,
     };
     httpBackend.expect('GET', UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId() + '?disableCache=true').respond(200, {});
     httpBackend.expect('PATCH', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/settings', payload).respond(200, {});
@@ -272,11 +272,11 @@ describe('orgService', function () {
 
     it('should not leak settings across different org-ids', function () {
       var save1 = {
-        set1: '1'
+        set1: '1',
       };
 
       var save2 = {
-        set2: '2'
+        set2: '2',
       };
 
       var payload = _.clone(save1);
@@ -296,13 +296,13 @@ describe('orgService', function () {
     it('with no saved values, a get will have no cached values', function () {
       httpBackend.expect('GET', UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId()).respond(200, {
         orgSettings: [JSON.stringify({
-          a: '1'
-        })]
+          a: '1',
+        })],
       });
       var promise = Orgservice.getOrg(_.noop, Authinfo.getOrgId())
         .then(function (response) {
           expect(response.data.orgSettings).toEqual({
-            a: '1'
+            a: '1',
           });
         });
       httpBackend.flush();
@@ -311,21 +311,21 @@ describe('orgService', function () {
 
     it('should return the cached values on a getOrg call', function () {
       var saveData = {
-        a: '2'
+        a: '2',
       };
       testMultiSave({
         saves: [saveData],
         saveTimes: [moment(baseTime)],
-        payloads: [_.clone(saveData)]
+        payloads: [_.clone(saveData)],
       });
       httpBackend.expect('GET', UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId()).respond(200, {
         orgSettings: [JSON.stringify({
-          a: '1'
-        })]
+          a: '1',
+        })],
       });
       var getPromise = Orgservice.getOrg(_.noop).then(function (response) {
         expect(response.data.orgSettings).toEqual({
-          a: '2'
+          a: '2',
         });
       });
       httpBackend.flush();
@@ -338,11 +338,11 @@ describe('orgService', function () {
         reportingSiteDesc: 'Description',
         helpUrl: 'http://example.com/help',
         isCiscoHelp: true,
-        isCiscoSupport: false
+        isCiscoSupport: false,
       };
 
       var save2 = {
-        allowCrashLogUpload: true
+        allowCrashLogUpload: true,
       };
 
       var payload = _.clone(save1);
@@ -351,7 +351,7 @@ describe('orgService', function () {
       testMultiSave({
         saves: [save1, save2],
         saveTimes: [moment(baseTime), moment(baseTime)],
-        payloads: [payload, payload2]
+        payloads: [payload, payload2],
       });
     });
 
@@ -361,11 +361,11 @@ describe('orgService', function () {
         reportingSiteDesc: 'Description',
         helpUrl: 'http://example.com/help',
         isCiscoHelp: true,
-        isCiscoSupport: false
+        isCiscoSupport: false,
       };
 
       var save2 = {
-        allowCrashLogUpload: true
+        allowCrashLogUpload: true,
       };
 
       var payload = _.clone(save1);
@@ -373,7 +373,7 @@ describe('orgService', function () {
       testMultiSave({
         saves: [save1, save2],
         saveTimes: [moment(baseTime), moment(baseTime).add(5, 'minutes')],
-        payloads: [payload, payload2]
+        payloads: [payload, payload2],
       });
     });
 
@@ -383,11 +383,11 @@ describe('orgService', function () {
         reportingSiteDesc: 'Description',
         helpUrl: 'http://example.com/help',
         isCiscoHelp: true,
-        isCiscoSupport: false
+        isCiscoSupport: false,
       };
 
       var save2 = {
-        isCiscoSupport: true
+        isCiscoSupport: true,
       };
 
       var payload = _.clone(save1);
@@ -395,25 +395,25 @@ describe('orgService', function () {
       testMultiSave({
         saves: [save1, save2],
         saveTimes: [moment(baseTime), moment(baseTime).add(2, 'seconds')],
-        payloads: [payload, payload2]
+        payloads: [payload, payload2],
       });
     });
 
     it('multiple saves should have net result to be save 3 and 4', function () {
       var fiveMinutes = moment(baseTime).add(5, 'minutes');
       var saves = [{
-        a: '1'
+        a: '1',
       }, {
-        b: '1'
+        b: '1',
       }, {
-        b: '2'
+        b: '2',
       }, {
-        c: '1'
+        c: '1',
       }];
       var testData = {
         saves: saves,
         saveTimes: [moment(baseTime), fiveMinutes, fiveMinutes, fiveMinutes],
-        payloads: [_.clone(saves[0]), _.clone(saves[1]), _.clone(saves[2]), _.merge(_.clone(saves[2]), _.clone(saves[3]))]
+        payloads: [_.clone(saves[0]), _.clone(saves[1]), _.clone(saves[2]), _.merge(_.clone(saves[2]), _.clone(saves[3]))],
       };
       testMultiSave(testData);
     });
@@ -441,7 +441,7 @@ describe('orgService', function () {
       reportingSiteDesc: 'Description',
       helpUrl: 'http://example.com/help',
       isCiscoHelp: true,
-      isCiscoSupport: false
+      isCiscoSupport: false,
     };
     httpBackend.when('GET', UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId() + '?disableCache=true').respond(200, {});
     httpBackend.when('PATCH', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/settings', payload).respond(500, {});
@@ -453,17 +453,17 @@ describe('orgService', function () {
   it('should overwrite current settings with new settings', function () {
     var callback = sinon.stub();
     var currentSettings = {
-      'orgSettings': ['{"reportingSiteUrl": "http://example.com", "isCiscoSupport": true}']
+      'orgSettings': ['{"reportingSiteUrl": "http://example.com", "isCiscoSupport": true}'],
     };
     var settings = {
-      'reportingSiteUrl': 'https://helpMeRhonda.ciscospark.com'
+      'reportingSiteUrl': 'https://helpMeRhonda.ciscospark.com',
     };
     httpBackend.expect('GET', UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId() + '?disableCache=true').respond(200, currentSettings);
 
     // Assert PATCH data overwrites current reporting url with new reporting url
     httpBackend.expect('PATCH', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/settings', {
       'reportingSiteUrl': 'https://helpMeRhonda.ciscospark.com',
-      'isCiscoSupport': true
+      'isCiscoSupport': true,
     }).respond(200, {});
 
     var promise = Orgservice.setOrgSettings(Authinfo.getOrgId(), settings, callback);
@@ -475,23 +475,23 @@ describe('orgService', function () {
     var items = [{
       "id": "squared-fusion-cal",
       "enabled": true,
-      "acknowledged": true
+      "acknowledged": true,
     }, {
       "id": "squared-fusion-mgmt",
       "enabled": true,
-      "acknowledged": true
+      "acknowledged": true,
     }, {
       "id": "squared-fusion-uc",
       "enabled": true,
-      "acknowledged": false
+      "acknowledged": false,
     }, {
       "id": "squared-fusion-media",
       "enabled": false,
-      "acknowledged": false
+      "acknowledged": false,
     }, {
       "id": "squared-fusion-ec",
       "enabled": true,
-      "acknowledged": true
+      "acknowledged": true,
     }];
     httpBackend.when('GET', UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services').respond(200, items);
     var response = Orgservice.getHybridServiceAcknowledged();
@@ -509,7 +509,7 @@ describe('orgService', function () {
 
   it('should set Acknowledged', function () {
     var data = {
-      "acknowledged": true
+      "acknowledged": true,
     };
     httpBackend.when('PATCH', UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + Config.entitlements.fusion_cal, data).respond(200, {});
     Orgservice.setHybridServiceAcknowledged('calendar-service');
@@ -518,7 +518,7 @@ describe('orgService', function () {
 
   it('should set Acknowledged for media service', function () {
     var data = {
-      "acknowledged": true
+      "acknowledged": true,
     };
     httpBackend.when('PATCH', UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + Config.entitlements.mediafusion, data).respond(200, {});
     Orgservice.setHybridServiceAcknowledged('squared-fusion-media');
@@ -543,8 +543,8 @@ describe('orgService', function () {
     var currentOrgId = '555';
     httpBackend.whenGET(eftSettingRegex).respond([200, {
       data: {
-        isEFT: false
-      }
+        isEFT: false,
+      },
     }]);
     Orgservice.getEftSetting(currentOrgId).then(function (response) {
       expect(response.data.isEFT).toBe(false);
@@ -591,7 +591,7 @@ describe('orgService', function () {
   describe('updateDisplayName()', function () {
     beforeEach(function () {
       this.patchRequest = httpBackend.expectPATCH(UrlConfig.getAdminServiceUrl() + '/customers/123/displayName', {
-        displayName: 'new display name'
+        displayName: 'new display name',
       }).respond({
         status: 'SUCCESS',
       });
@@ -626,7 +626,7 @@ describe('orgService', function () {
   describe('validateDisplayName()', function () {
     beforeEach(function () {
       this.patchRequest = httpBackend.expectPATCH(UrlConfig.getAdminServiceUrl() + '/customers/123/displayName?verify=true', {
-        displayName: 'new display name'
+        displayName: 'new display name',
       }).respond({
         status: 'ALLOWED',
       });

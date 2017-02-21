@@ -26,7 +26,7 @@
       beforeEach(function () {
         PreviousState.isValid.and.returnValue(true);
         controller = $controller('StateRedirectCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
       });
 
@@ -58,7 +58,7 @@
       beforeEach(function () {
         PreviousState.isValid.and.returnValue(false);
         controller = $controller('StateRedirectCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
       });
 

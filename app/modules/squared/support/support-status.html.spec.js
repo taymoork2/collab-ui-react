@@ -22,7 +22,7 @@ describe('Controller: SupportCtrl', function () {
     controller('SupportCtrl', {
       $scope: $scope,
       Authinfo: Authinfo,
-      Userservice: Userservice
+      Userservice: Userservice,
     });
   }));
 
@@ -51,13 +51,13 @@ describe('Controller: SupportCtrl', function () {
       Authinfo.isHelpDeskUser = sinon.stub().returns(false);
       Userservice.getUser = sinon.stub().yields({
         success: true,
-        roles: ['ciscouc.devops', 'ciscouc.devsupport']
+        roles: ['ciscouc.devops', 'ciscouc.devsupport'],
       });
 
       controller('SupportCtrl', {
         $scope: $scope,
         Authinfo: Authinfo,
-        Userservice: Userservice
+        Userservice: Userservice,
       });
 
       $scope.$digest();
@@ -69,7 +69,7 @@ describe('Controller: SupportCtrl', function () {
       Authinfo.isHelpDeskUser = sinon.stub().returns(false);
       Userservice.getUser = sinon.stub().yields({
         success: true,
-        roles: ['noDevRole']
+        roles: ['noDevRole'],
       });
       $scope.$digest();
       var hasToolsCard = _.includes(view.html(), "supportPageToolsCard");
@@ -97,13 +97,13 @@ describe('Controller: SupportCtrl', function () {
       Authinfo.isHelpDeskUser = sinon.stub().returns(false);
       Userservice.getUser = sinon.stub().yields({
         success: true,
-        roles: ['ciscouc.devops', 'ciscouc.devsupport']
+        roles: ['ciscouc.devops', 'ciscouc.devsupport'],
       });
 
       controller('SupportCtrl', {
         $scope: $scope,
         Authinfo: Authinfo,
-        Userservice: Userservice
+        Userservice: Userservice,
       });
 
       $scope.gotoCdrSupport = sinon.spy($scope, 'gotoCdrSupport');
@@ -117,13 +117,13 @@ describe('Controller: SupportCtrl', function () {
       Authinfo.isHelpDeskUser = sinon.stub().returns(false);
       Userservice.getUser = sinon.stub().yields({
         success: true,
-        roles: ['noDevopRole']
+        roles: ['noDevopRole'],
       });
 
       controller('SupportCtrl', {
         $scope: $scope,
         Authinfo: Authinfo,
-        Userservice: Userservice
+        Userservice: Userservice,
       });
 
       $scope.gotoCdrSupport = sinon.spy($scope, 'gotoCdrSupport');

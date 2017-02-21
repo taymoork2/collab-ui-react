@@ -3,7 +3,7 @@ import userStatusHistory from './index';
 describe('Component: userStatusHistory', () => {
 
   let mockJournalEntries = <any>[];
-  let mockClusterList= <any>[];
+  let mockClusterList = <any>[];
   let mockResourceGroups = <any>[];
   let serviceId = '\'squared-fusion-cal\'';
 

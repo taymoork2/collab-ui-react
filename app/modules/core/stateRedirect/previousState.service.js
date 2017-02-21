@@ -10,7 +10,7 @@
   function PreviousState($state) {
     var state, params;
     var unallowedReturnStates = [
-      'login'
+      'login',
     ];
 
     var service = {
@@ -19,7 +19,7 @@
       setParams: setParams,
       getParams: getParams,
       isValid: isValid,
-      go: go
+      go: go,
     };
 
     return service;

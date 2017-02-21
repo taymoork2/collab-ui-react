@@ -25,7 +25,7 @@ describe('WebExSiteSettingsCtrl Test', function () {
     $controller = _$controller_;
 
     $stateParams = {
-      'siteUrl': siteUrl
+      'siteUrl': siteUrl,
     };
 
     spyOn(Authinfo, 'getPrimaryEmail').and.returnValue(email);

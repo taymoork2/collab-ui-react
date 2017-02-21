@@ -9,14 +9,14 @@
   function gemService($http, UrlConfig, Authinfo, $translate) {
     var URL = {
       spData: UrlConfig.getGeminiUrl() + 'servicepartner',
-      remedyTicket: UrlConfig.getGeminiUrl() + 'remedyTicket/customers/'
+      remedyTicket: UrlConfig.getGeminiUrl() + 'remedyTicket/customers/',
     };
     var service = {
       isAvops: isAvops,
       showError: showError,
       getSpData: getSpData,
       isServicePartner: isServicePartner,
-      getCbgRemedyTicket: getCbgRemedyTicket
+      getCbgRemedyTicket: getCbgRemedyTicket,
     };
     return service;
 

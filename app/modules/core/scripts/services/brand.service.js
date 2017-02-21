@@ -16,7 +16,7 @@
       'enableCustomerLogos': enableCustomerLogos,
       'disableCustomerLogos': disableCustomerLogos,
       'resetCdnLogo': resetCdnLogo,
-      'upload': upload
+      'upload': upload,
     };
     return service;
 
@@ -31,7 +31,7 @@
               resolve({
                 'usePartnerLogo': settings.usePartnerLogo,
                 'allowCustomerLogos': settings.allowCustomerLogos,
-                'logoUrl': settings.logoUrl
+                'logoUrl': settings.logoUrl,
               });
             } else {
               reject();
@@ -54,7 +54,7 @@
 
     function usePartnerLogo(orgId) {
       var settings = {
-        'usePartnerLogo': true
+        'usePartnerLogo': true,
       };
 
       return setOrgSetting(orgId, settings);
@@ -62,7 +62,7 @@
 
     function useCustomLogo(orgId) {
       var settings = {
-        'usePartnerLogo': false
+        'usePartnerLogo': false,
       };
 
       return setOrgSetting(orgId, settings);
@@ -70,7 +70,7 @@
 
     function enableCustomerLogos(orgId) {
       var settings = {
-        'allowCustomerLogos': true
+        'allowCustomerLogos': true,
       };
 
       return setOrgSetting(orgId, settings);
@@ -78,7 +78,7 @@
 
     function disableCustomerLogos(orgId) {
       var settings = {
-        'allowCustomerLogos': false
+        'allowCustomerLogos': false,
       };
 
       return setOrgSetting(orgId, settings);
@@ -104,9 +104,9 @@
           url: response.data.tempURL,
           method: 'PUT',
           headers: {
-            'Content-Type': 'image/png'
+            'Content-Type': 'image/png',
           },
-          data: file
+          data: file,
         });
       });
     }
@@ -117,7 +117,7 @@
 
     function notifyError(response) {
       Notification.errorResponse(response, 'errors.statusError', {
-        status: response.status
+        status: response.status,
       });
     }
   }

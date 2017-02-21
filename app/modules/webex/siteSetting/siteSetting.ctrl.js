@@ -42,7 +42,7 @@
     $scope.siteSettingsBreadcrumbUiSref = "site-list.site-settings({siteUrl:" + "'" + siteUrl + "'" + "})";
     $scope.siteSettingsBreadcrumbLabel = $translate.instant(
       "webexSiteSettingsLabels.siteSettingsIndexPageTitleFull", {
-        siteUrl: siteUrl
+        siteUrl: siteUrl,
       }
     );
 

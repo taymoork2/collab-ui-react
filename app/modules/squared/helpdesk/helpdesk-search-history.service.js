@@ -38,7 +38,7 @@
     return {
       saveSearch: saveSearch,
       getAllSearches: getAllSearches,
-      clearSearchHistory: clearSearchHistory
+      clearSearchHistory: clearSearchHistory,
     };
   }
 

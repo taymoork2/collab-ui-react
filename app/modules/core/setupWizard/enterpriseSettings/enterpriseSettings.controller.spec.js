@@ -7,7 +7,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
   var rootScope;
 
   var authInfo = {
-    getOrgId: sinon.stub().returns('bcd7afcd-839d-4c61-a7a8-31c6c7f016d7')
+    getOrgId: sinon.stub().returns('bcd7afcd-839d-4c61-a7a8-31c6c7f016d7'),
   };
 
   beforeEach(angular.mock.module(function ($provide) {
@@ -30,7 +30,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     FeatureToggleService = _FeatureToggleService_;
 
     $scope.wizard = {
-      nextTab: sinon.stub()
+      nextTab: sinon.stub(),
     };
   }));
 
@@ -55,7 +55,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
       $scope: $scope,
       $rootScope: rootScope,
       Authinfo: authInfo,
-      FeatureToggleService: FeatureToggleService
+      FeatureToggleService: FeatureToggleService,
     });
 
     $scope.$apply();

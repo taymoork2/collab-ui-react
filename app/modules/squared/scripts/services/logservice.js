@@ -9,7 +9,7 @@
     var service = {
       listLogs: listLogs,
       searchLogs: searchLogs,
-      downloadLog: downloadLog
+      downloadLog: downloadLog,
     };
 
     return service;
@@ -53,7 +53,7 @@
     function downloadLog(filename, callback) {
       var logsUrl = UrlConfig.getAdminServiceUrl() + 'logs/';
       var payload = {
-        file: filename
+        file: filename,
       };
 
       $http.post(logsUrl, payload)

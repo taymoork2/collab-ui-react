@@ -16,31 +16,31 @@
     var huronCustomerResource;
 
     var orgResource = $resource(UrlConfig.getFeatureUrl() + '/features/rules/:id', {
-      id: '@id'
+      id: '@id',
     },
       {
         get: {
           method: 'GET',
-          cache: true
+          cache: true,
         },
         refresh: {
           method: 'GET',
-          cache: false
-        }
+          cache: false,
+        },
       });
 
     var userResource = $resource(UrlConfig.getFeatureUrl() + '/features/users/:id', {
-      id: '@id'
+      id: '@id',
     },
       {
         get: {
           method: 'GET',
-          cache: true
-        }
+          cache: true,
+        },
       });
 
     var dirSyncConfigurationResource = $resource(UrlConfig.getAdminServiceUrl() + 'organization/:customerId/dirsync', {
-      customerId: '@customerId'
+      customerId: '@customerId',
     });
 
     var service = {
@@ -54,7 +54,7 @@
       stateSupportsFeature: stateSupportsFeature,
       supports: supports,
       supportsDirSync: supportsDirSync,
-      features: features
+      features: features,
     };
 
     init();
@@ -103,7 +103,7 @@
       }
       clearCache = clearCache || false;
       var info = {
-        id: id
+        id: id,
       };
       var url = getUrl(isUser);
 
@@ -141,7 +141,7 @@
     function getHuronToggleForUser(userId, feature) {
       return huronUserResource.get({
         userId: userId,
-        featureName: feature
+        featureName: feature,
       }).$promise.then(function (data) {
         toggles[feature] = data.val;
         return data.val;
@@ -154,7 +154,7 @@
     function getHuronToggleForCustomer(customerId, feature) {
       return huronCustomerResource.get({
         customerId: customerId,
-        featureName: feature
+        featureName: feature,
       }).$promise.then(function (data) {
         toggles[feature] = data.val;
         return data.val;
@@ -171,7 +171,7 @@
       var atlasToggle = getFeatures(isUser, id).then(function (features) {
         // find the toggle, then get the val, default to false
         return _.get(_.find(features.developer, {
-          key: feature
+          key: feature,
         }), 'val', false);
       }).catch(function () {
         return false;
@@ -237,7 +237,7 @@
 
     function supportsDirSync() {
       return dirSyncConfigurationResource.get({
-        customerId: Authinfo.getOrgId()
+        customerId: Authinfo.getOrgId(),
       }).$promise.then(function (response) {
         return response.serviceMode === 'ENABLED';
       }).catch(function (response) {
@@ -249,7 +249,7 @@
           }
         }, null,
           {
-            cache: false
+            cache: false,
           });
       });
     }
@@ -262,7 +262,7 @@
       var usingId = isUser ? undefined : '';
 
       return getUrl(isUser).save({
-        id: usingId
+        id: usingId,
       }, listOfFeatureToggleRules).$promise;
     }
 
@@ -300,26 +300,26 @@
     function setHuronUserResource() {
       huronUserResource = $resource(HuronConfig.getMinervaUrl() + '/features/users/:userId/developer/:featureName', {
         userId: '@userId',
-        featureName: '@featureName'
+        featureName: '@featureName',
       },
         {
           get: {
             method: 'GET',
-            cache: true
-          }
+            cache: true,
+          },
         });
     }
 
     function setHuronCustomerResource() {
       huronCustomerResource = $resource(HuronConfig.getMinervaUrl() + '/features/customers/:customerId/developer/:featureName', {
         customerId: '@customerId',
-        featureName: '@featureName'
+        featureName: '@featureName',
       },
         {
           get: {
             method: 'GET',
-            cache: true
-          }
+            cache: true,
+          },
         });
     }
 

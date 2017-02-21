@@ -11,7 +11,7 @@ describe('Manage Users - Manual -', function () {
     return {
       email: utils.randomTestGmailwithSalt('manual'),
       first: 'EmailOnly',
-      last: 'McTestuser-' + utils.randomDid()
+      last: 'McTestuser-' + utils.randomDid(),
     };
   });
 
@@ -19,7 +19,7 @@ describe('Manage Users - Manual -', function () {
     return {
       email: utils.randomTestGmailwithSalt('manual'),
       first: 'NamesAndEmail',
-      last: 'McTestuser-' + utils.randomDid()
+      last: 'McTestuser-' + utils.randomDid(),
     };
   });
 

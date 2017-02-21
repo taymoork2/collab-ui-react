@@ -11,7 +11,7 @@ describe('Features Controller', function () {
   var getPGListFailureResp = {
     'data': 'Internal Server Error',
     'status': 500,
-    'statusText': 'Internal Server Error'
+    'statusText': 'Internal Server Error',
   };
   var pagingGroups = {
     "paginggroups": [{
@@ -20,15 +20,15 @@ describe('Features Controller', function () {
       "pgNumber": "5010",
       "memberCount": 2,
       "featureName": "huronFeatureDetails.pg",
-      "filterValue": "PG"
+      "filterValue": "PG",
     }, {
       "id": "abcd1234-abcd-abcd-abcddef123456",
       "cardName": "Test2",
       "pgNumber": "5011",
       "memberCount": 3,
       "featureName": "huronFeatureDetails.pg",
-      "filterValue": "PG"
-    }]
+      "filterValue": "PG",
+    }],
   };
 
   beforeEach(angular.mock.module('Huron'));
@@ -78,7 +78,7 @@ describe('Features Controller', function () {
       PagingGroupService: PagingGroupService,
       TelephoneNumberService: TelephoneNumberService,
       Log: Log,
-      Notification: Notification
+      Notification: Notification,
     });
 
   }));
@@ -109,7 +109,7 @@ describe('Features Controller', function () {
     $timeout.flush();
     expect(Notification.errorResponse).toHaveBeenCalledWith(getPGListFailureResp,
       'huronFeatureDetails.failedToLoad', {
-        featureType: 'huronFeatureDetails.pgName'
+        featureType: 'huronFeatureDetails.pgName',
       });
   });
   it('should set the pageState to Loading when controller is getting data from back-end', function () {
@@ -145,7 +145,7 @@ describe('Features Controller', function () {
   it('should be able to edit an PagingGroup ', function () {
     featureCtrl.editHuronFeature(pagingGroups.paginggroups[0]);
     expect($state.go).toHaveBeenCalledWith('huronPagingGroupEdit', {
-      feature: pagingGroups.paginggroups[0]
+      feature: pagingGroups.paginggroups[0],
     });
   });
 });

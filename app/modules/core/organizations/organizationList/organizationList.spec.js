@@ -22,7 +22,7 @@ describe('Controller: ListOrganizationsCtrl', function () {
       $scope: $scope,
       $state: $state,
       $timeout: $timeout,
-      Orgservice: _Orgservice_
+      Orgservice: _Orgservice_,
     });
     $scope.$apply();
   }));

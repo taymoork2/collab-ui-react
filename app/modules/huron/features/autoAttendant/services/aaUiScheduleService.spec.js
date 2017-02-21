@@ -12,34 +12,34 @@ describe('Service: AAUiScheduleService', function () {
       days: [{
         abbr: 'SU',
         index: 0,
-        active: false
+        active: false,
       }, {
         abbr: 'MO',
         index: 1,
-        active: true
+        active: true,
       }, {
         abbr: 'TU',
         index: 2,
-        active: true
+        active: true,
       }, {
         abbr: 'WE',
         index: 3,
-        active: true
+        active: true,
       }, {
         abbr: 'TH',
         index: 4,
-        active: true
+        active: true,
       }, {
         abbr: 'FR',
         index: 5,
-        active: true
+        active: true,
       }, {
         abbr: 'SAy',
         index: 6,
-        active: false
+        active: false,
       }],
       starttime: _starttime,
-      endtime: _endtime
+      endtime: _endtime,
     }];
     _.each(defaultRange, function (hours) {
       AAICalService.addHoursRange('open', calendar, hours);
@@ -48,7 +48,7 @@ describe('Service: AAUiScheduleService', function () {
   }
 
   var createCalendarSuccess = {
-    "scheduleUrl": "https://ces.huron-int.com/api/v1/customers/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/schedules/b8e9b7f9-dcd2-4203-90c4-d392caca3afc"
+    "scheduleUrl": "https://ces.huron-int.com/api/v1/customers/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/schedules/b8e9b7f9-dcd2-4203-90c4-d392caca3afc",
   };
   var scheduleIdSuccess = 'b8e9b7f9-dcd2-4203-90c4-d392caca3afc';
 
@@ -86,7 +86,7 @@ describe('Service: AAUiScheduleService', function () {
         AANotificationService.errorResponse(response, 'autoAttendant.errorCreateCe', {
           name: 'AA',
           statusText: response.statusText,
-          status: response.status
+          status: response.status,
         });
       });
     }));
@@ -107,7 +107,7 @@ describe('Service: AAUiScheduleService', function () {
       expect(AACalendarService.createCalendar).toHaveBeenCalledWith('AA', getRange8To5());
       createCalendarDefer.reject({
         statusText: 'failure',
-        status: '500'
+        status: '500',
       });
 
       $scope.$apply();

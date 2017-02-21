@@ -8,7 +8,7 @@ describe('Controller: SingleNumberReachInfoCtrl', function () {
   var telephonyInfoWithoutDest = getJSONFixture('huron/json/telephonyInfo/snrEnabledWithoutDest.json');
   var modalDefer;
   var $stateParams = {
-    currentUser: currentUser
+    currentUser: currentUser,
   };
 
   beforeEach(angular.mock.module('Huron'));
@@ -24,23 +24,23 @@ describe('Controller: SingleNumberReachInfoCtrl', function () {
     DialPlanService = _DialPlanService_;
     $q = _$q_;
     modalDefer = $q.defer();
-
+    $scope.currentUser = currentUser.id;
     url = HuronConfig.getCmiUrl() + '/voice/customers/' + currentUser.meta.organizationID + '/users/' + currentUser.id + '/remotedestinations';
 
     spyOn(TelephonyInfoService, 'getTelephonyInfo').and.returnValue(telephonyInfoWithDest);
-    spyOn(TelephonyInfoService, 'getRemoteDestinationInfo');
+    spyOn(TelephonyInfoService, 'getRemoteDestinationInfo').and.returnValue($q.resolve(telephonyInfoWithoutDest));
     spyOn(Notification, 'notify');
     spyOn(DialPlanService, 'getCustomerVoice').and.returnValue($q.resolve({ regionCode: '' }));
     spyOn($modal, 'open').and.returnValue({
-      result: modalDefer.promise
+      result: modalDefer.promise,
     });
     controller = $controller('SingleNumberReachInfoCtrl', {
       $scope: $scope,
       $stateParams: $stateParams,
       TelephonyInfoService: TelephonyInfoService,
-      Notification: Notification
+      Notification: Notification,
     });
-
+    $scope = $rootScope.$new();
     $scope.$apply();
   }));
 
@@ -50,10 +50,12 @@ describe('Controller: SingleNumberReachInfoCtrl', function () {
   });
 
   describe('saveSingleNumberReach', function () {
+    beforeEach(function () {
+      TelephonyInfoService.getRemoteDestinationInfo.and.returnValue($q.resolve(telephonyInfoWithDest));
+    });
+
     it('should notify on add', function () {
       $httpBackend.whenPOST(url).respond(201);
-      TelephonyInfoService.getTelephonyInfo.and.returnValue(telephonyInfoWithoutDest);
-      $scope.$broadcast('telephonyInfoUpdated');
       $scope.$apply();
       controller.saveSingleNumberReach();
       $httpBackend.flush();
@@ -62,9 +64,11 @@ describe('Controller: SingleNumberReachInfoCtrl', function () {
 
     it('should notify on update', function () {
       $httpBackend.whenPUT(url + '/' + telephonyInfoWithDest.snrInfo.remoteDestinations[0].uuid).respond(200);
-      TelephonyInfoService.getTelephonyInfo.and.returnValue(telephonyInfoWithDest);
-      $scope.$broadcast('telephonyInfoUpdated');
       $scope.$apply();
+      controller.snrInfo.remoteDestinations = [{
+        "uuid": "123456",
+        "pattern": "555",
+      }];
       controller.saveSingleNumberReach();
       $httpBackend.flush();
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
@@ -73,8 +77,12 @@ describe('Controller: SingleNumberReachInfoCtrl', function () {
     it('should notify on disable SNR update', function () {
       $httpBackend.whenPUT(url + '/' + telephonyInfoWithDest.snrInfo.remoteDestinations[0].uuid).respond(200);
       TelephonyInfoService.getTelephonyInfo.and.returnValue(telephonyInfoWithDest);
-      $scope.$broadcast('telephonyInfoUpdated');
+      controller.snrInfo.remoteDestinations = [{
+        "uuid": "123456",
+        "pattern": "555",
+      }];
       $scope.$apply();
+
       controller.snrInfo.singleNumberReachEnabled = false;
       controller.saveSingleNumberReach();
       $httpBackend.flush();
@@ -84,8 +92,11 @@ describe('Controller: SingleNumberReachInfoCtrl', function () {
     it('should notify on delete', function () {
       $httpBackend.whenDELETE(url + '/' + telephonyInfoWithDest.snrInfo.remoteDestinations[0].uuid).respond(204);
       TelephonyInfoService.getTelephonyInfo.and.returnValue(telephonyInfoWithDest);
-      $scope.$broadcast('telephonyInfoUpdated');
       $scope.$apply();
+      controller.snrInfo.remoteDestinations = [{
+        "uuid": "123456",
+        "pattern": "555",
+      }];
       controller.snrInfo.singleNumberReachEnabled = false;
       controller.remove();
       modalDefer.resolve();

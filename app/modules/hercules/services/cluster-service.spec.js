@@ -9,19 +9,19 @@ describe('ClusterService', function () {
 
   beforeEach(angular.mock.module(function ($provide) {
     var Authinfo = {
-      getOrgId: sinon.stub().returns('orgId')
+      getOrgId: sinon.stub().returns('orgId'),
     };
     $provide.value('Authinfo', Authinfo);
     var UrlConfig = {
       getHerculesUrl: sinon.stub().returns('http://ulv.no'),
-      getHerculesUrlV2: sinon.stub().returns('http://elg.no')
+      getHerculesUrlV2: sinon.stub().returns('http://elg.no'),
     };
     $provide.value('UrlConfig', UrlConfig);
     forceAction = sinon.stub();
     CsdmPoller = {
       create: sinon.stub().returns({
-        forceAction: forceAction
-      })
+        forceAction: forceAction,
+      }),
     };
     $provide.value('CsdmPoller', CsdmPoller);
   }));
@@ -54,9 +54,9 @@ describe('ClusterService', function () {
       solutionReplacementValues: [
         {
           text: 't',
-          link: 'l'
-        }
-      ]
+          link: 'l',
+        },
+      ],
     };
 
     it('should return an empty list when no alarms are present', function () {
@@ -186,8 +186,8 @@ describe('ClusterService', function () {
       var response = org([
         {
           id: clusterId,
-          targetType: 'unknown'
-        }
+          targetType: 'unknown',
+        },
       ]);
       $httpBackend
         .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
@@ -208,8 +208,8 @@ describe('ClusterService', function () {
         cluster([
           connector('c_mgmt'),
           connector('c_ucmc'),
-          connector('c_cal')
-        ])
+          connector('c_cal'),
+        ]),
       ]);
       $httpBackend
         .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
@@ -235,8 +235,8 @@ describe('ClusterService', function () {
     it('should not expose a cluster if it has 0 connectors of the type we want', function () {
       var response = org([
         cluster([
-          connector('c_mgmt')
-        ])
+          connector('c_mgmt'),
+        ]),
       ]);
       $httpBackend
         .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
@@ -256,8 +256,8 @@ describe('ClusterService', function () {
     it('should add aggregates and filter connectors but not touch the other information of the cluster', function () {
       var response = org([
         cluster([
-          connector('c_mgmt')
-        ])
+          connector('c_mgmt'),
+        ]),
       ]);
       $httpBackend
         .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
@@ -278,7 +278,7 @@ describe('ClusterService', function () {
       expect(managementCluster.aggregates).toBeDefined();
       expect(managementCluster.aggregates.provisioning).toEqual(jasmine.objectContaining({
         connectorType: 'c_mgmt',
-        availableVersion: '1.0'
+        availableVersion: '1.0',
       }));
     });
 
@@ -287,14 +287,14 @@ describe('ClusterService', function () {
         cluster([
           connector('c_mgmt', {
             alarms: 2,
-            alarmsSeverity: 'alert'
+            alarmsSeverity: 'alert',
           }),
           connector('c_mgmt', {
             alarms: 1,
             alarmsSeverity: 'warning',
-            hostname: 'host2.example.com'
-          })
-        ])
+            hostname: 'host2.example.com',
+          }),
+        ]),
       ]);
       $httpBackend
         .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
@@ -316,14 +316,14 @@ describe('ClusterService', function () {
         cluster([
           connector('c_mgmt', {
             alarms: 2,
-            alarmsSeverity: 'error'
+            alarmsSeverity: 'error',
           }),
           connector('c_mgmt', {
             alarms: 1,
             alarmsSeverity: 'critical',
-            hostname: 'host2.example.com'
-          })
-        ])
+            hostname: 'host2.example.com',
+          }),
+        ]),
       ]);
       $httpBackend
         .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
@@ -346,9 +346,9 @@ describe('ClusterService', function () {
           connector('c_mgmt'),
           connector('c_mgmt', {
             state: 'not_configured',
-            hostname: 'host2.example.com'
-          })
-        ])
+            hostname: 'host2.example.com',
+          }),
+        ]),
       ]);
       $httpBackend
         .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
@@ -370,9 +370,9 @@ describe('ClusterService', function () {
           connector('c_mgmt'),
           connector('c_mgmt', {
             upgradeState: 'upgrading',
-            hostname: 'host2.example.com'
-          })
-        ])
+            hostname: 'host2.example.com',
+          }),
+        ]),
       ]);
       $httpBackend
         .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
@@ -391,8 +391,8 @@ describe('ClusterService', function () {
     it('should NOT say that an upgrade is available when there is none', function () {
       var response = org([
         cluster([
-          connector('c_mgmt')
-        ])
+          connector('c_mgmt'),
+        ]),
       ]);
       $httpBackend
         .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
@@ -412,9 +412,9 @@ describe('ClusterService', function () {
       var response = org([
         cluster([
           connector('c_mgmt', {
-            runningVersion: 'whatever that is not 1.0 (latest availableVersion)'
-          })
-        ])
+            runningVersion: 'whatever that is not 1.0 (latest availableVersion)',
+          }),
+        ]),
       ]);
       $httpBackend
         .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
@@ -436,11 +436,11 @@ describe('ClusterService', function () {
           connector('c_mgmt'),
           connector('c_mgmt', {
             state: 'offline',
-            hostname: 'host2.example.com'
-          })
+            hostname: 'host2.example.com',
+          }),
         ], {
-          upgradeAvailable: ['c_mgmt']
-        })
+          upgradeAvailable: ['c_mgmt'],
+        }),
       ]);
       $httpBackend
         .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
@@ -462,8 +462,8 @@ describe('ClusterService', function () {
       var cluster = getJSONFixture('hercules/x2-alpha-vcscluster.json');
       var response = org([
         cluster, {
-          upgradeAvailable: ['c_mgmt']
-        }
+          upgradeAvailable: ['c_mgmt'],
+        },
       ]);
 
       $httpBackend
@@ -485,12 +485,12 @@ describe('ClusterService', function () {
         cluster([
           connector('c_mgmt'),
           connector('c_mgmt', {
-            hostname: 'host2.example.com'
+            hostname: 'host2.example.com',
           }),
           connector('c_mgmt', {
-            hostname: 'host3.example.com'
-          })
-        ])
+            hostname: 'host3.example.com',
+          }),
+        ]),
       ]);
       $httpBackend
         .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
@@ -528,11 +528,11 @@ describe('ClusterService', function () {
       var response = org([
         cluster([
           connector('c_mgmt'),
-          connector('c_ucmc')
+          connector('c_ucmc'),
         ]),
         cluster([
-          connector('c_mgmt')
-        ])
+          connector('c_mgmt'),
+        ]),
       ]);
       $httpBackend
         .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
@@ -571,8 +571,8 @@ describe('ClusterService', function () {
     it('should return a cluster formatted for a certain type', function () {
       var response = org([
         cluster([
-          connector('c_mgmt')
-        ])
+          connector('c_mgmt'),
+        ]),
       ]);
       $httpBackend
         .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
@@ -594,7 +594,7 @@ describe('ClusterService', function () {
       $httpBackend
         .when('POST', 'http://ulv.no/organizations/orgId/clusters/cluster_0/services/c_mgmt/upgrade', {})
         .respond({
-          foo: 'bar'
+          foo: 'bar',
         });
 
       var callback = sinon.stub();
@@ -609,7 +609,7 @@ describe('ClusterService', function () {
       $httpBackend
         .when('POST', 'http://ulv.no/organizations/orgId/clusters/cluster_0/services/c_mgmt/upgrade', {})
         .respond({
-          foo: 'bar'
+          foo: 'bar',
         });
 
       ClusterService.upgradeSoftware('cluster_0', 'c_mgmt');
@@ -681,7 +681,7 @@ describe('ClusterService', function () {
           hostSerial: '070EC9D0',
           state: 'not_installed',
           alarms: [],
-        }
+        },
       ];
       nonEmpty_hds_connectorList = [
         {
@@ -691,7 +691,7 @@ describe('ClusterService', function () {
           hostSerial: '070EC9D0',
           state: 'disabled',
           alarms: [],
-        }
+        },
       ];
       nonEmpty_exp_connectorList = [
         {
@@ -701,7 +701,7 @@ describe('ClusterService', function () {
           hostSerial: '070EC9D0',
           state: 'registered',
           alarms: [],
-        }
+        },
       ];
       empty_connector_list = [];
     });
@@ -755,7 +755,7 @@ describe('ClusterService', function () {
     return {
       id: _.uniqueId('org_'),
       name: 'Org',
-      clusters: clusters
+      clusters: clusters,
     };
   }
 
@@ -768,7 +768,7 @@ describe('ClusterService', function () {
     var provisioning = _.map(typesUsed, function (type) {
       return {
         connectorType: type,
-        availableVersion: _.includes(options.upgradeAvailable, type) ? '2.0' : '1.0'
+        availableVersion: _.includes(options.upgradeAvailable, type) ? '2.0' : '1.0',
       };
     });
     return {
@@ -776,7 +776,7 @@ describe('ClusterService', function () {
       name: options.name || 'Cluster',
       state: options.state || 'fused',
       provisioning: provisioning,
-      connectors: connectors
+      connectors: connectors,
     };
   }
 
@@ -795,7 +795,7 @@ describe('ClusterService', function () {
       state: options.state || 'running',
       upgradeState: options.upgradeState || 'upgraded',
       connectorType: type || 'c_mgmt',
-      runningVersion: options.runningVersion || '1.0'
+      runningVersion: options.runningVersion || '1.0',
     };
   }
 });

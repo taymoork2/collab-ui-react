@@ -5,7 +5,7 @@ describe('Controller: AASubmenuCtrl', function () {
   var AutoAttendantCeMenuModelService, AACommonService;
   var $rootScope, $scope;
   var aaUiModel = {
-    openHours: {}
+    openHours: {},
   };
   var schedule = 'openHours';
   var index = '0';
@@ -65,7 +65,7 @@ describe('Controller: AASubmenuCtrl', function () {
     spyOn(AACommonService, 'isRouteQueueToggle').and.returnValue(false);
 
     controller = $controller('AASubmenuCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
     $scope.$apply();
 
@@ -79,7 +79,7 @@ describe('Controller: AASubmenuCtrl', function () {
 
     it('feature toggle false', function () {
       var count = _.findIndex(controller.keyActions, {
-        "name": 'phoneMenuRouteQueue'
+        "name": 'phoneMenuRouteQueue',
       });
       expect(count).toEqual(-1);
     });

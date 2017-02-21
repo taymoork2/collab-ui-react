@@ -31,8 +31,8 @@
         vm.isLoading = true;
         $stateParams.wizard.next({
           account: {
-            deviceType: vm.selectedDeviceType
-          }
+            deviceType: vm.selectedDeviceType,
+          },
         }, vm.selectedDeviceType);
       }
     };

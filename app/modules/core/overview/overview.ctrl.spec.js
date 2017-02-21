@@ -66,8 +66,8 @@ describe('Controller: OverviewCtrl', function () {
         components: [{
           name: 'Spark Call',
           status: 'error',
-          id: 'gfg7cvjszyw0'
-        }]
+          id: 'gfg7cvjszyw0',
+        }],
       });
 
       expect(callCard.healthStatus).toEqual('danger');
@@ -174,7 +174,7 @@ describe('Controller: OverviewCtrl', function () {
     FusionClusterService.getAll.and.returnValue($q.resolve());
 
     ServiceDescriptor = {
-      services: function () {}
+      services: function () {},
     };
 
     ServiceStatusDecriptor = {
@@ -182,13 +182,13 @@ describe('Controller: OverviewCtrl', function () {
         var defer = $q.defer();
         defer.resolve(null);
         return defer.promise;
-      }
+      },
     };
     Orgservice = {
       getAdminOrg: function () {},
       getAdminOrgUsage: function () {
         return $q.resolve({
-          data: orgServiceJSONFixture.getLicensesUsage.singleSub
+          data: orgServiceJSONFixture.getLicensesUsage.singleSub,
         });
       },
       getUnlicensedUsers: function () {},
@@ -202,51 +202,51 @@ describe('Controller: OverviewCtrl', function () {
           data: {
             items: [{
               id: Config.entitlements.fusion_cal,
-              acknowledged: false
+              acknowledged: false,
             }, {
               id: Config.entitlements.fusion_uc,
-              acknowledged: false
+              acknowledged: false,
             }, {
               id: Config.entitlements.fusion_ec,
-              acknowledged: false
-            }]
-          }
+              acknowledged: false,
+            }],
+          },
         });
         return defer.promise;
       },
-      setHybridServiceAcknowledged: jasmine.createSpy()
+      setHybridServiceAcknowledged: jasmine.createSpy(),
     };
 
     PstnSetupService = {
       getCustomerV2: function () {
         return $q.resolve({
-          trial: true
+          trial: true,
         });
       },
       getCustomerTrialV2: function () {
         return $q.resolve({
-          acceptedDate: "today"
+          acceptedDate: "today",
         });
-      }
+      },
     };
 
     ReportsService = {
       getOverviewMetrics: function () {},
-      healthMonitor: function () {}
+      healthMonitor: function () {},
     };
 
     spyOn(Authinfo, 'getConferenceServicesWithoutSiteUrl').and.returnValue([{
       license: {
-        siteUrl: 'fakesite1'
-      }
+        siteUrl: 'fakesite1',
+      },
     }, {
       license: {
-        siteUrl: 'fakesite2'
-      }
+        siteUrl: 'fakesite2',
+      },
     }, {
       license: {
-        siteUrl: 'fakesite3'
-      }
+        siteUrl: 'fakesite3',
+      },
     }]);
     spyOn(Authinfo, 'getOrgId').and.returnValue('1');
     spyOn(Authinfo, 'isPartner').and.returnValue(false);

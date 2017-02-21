@@ -2,7 +2,7 @@
   'use strict';
 
   module.exports = angular.module('core.pageparam', [
-    require('modules/core/scripts/services/storage')
+    require('modules/core/scripts/services/storage'),
   ])
     .service('PageParam', PageParam)
     .name;
@@ -14,7 +14,7 @@
 
     var paramData = {
       'route': null,
-      'param': {}
+      'param': {},
     };
 
     var parseParam = function () {
@@ -51,7 +51,7 @@
         Storage.remove(pageParamKey);
         paramData.route = null;
         paramData.param = {};
-      }
+      },
     };
 
   }

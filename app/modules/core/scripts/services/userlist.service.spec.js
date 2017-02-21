@@ -54,7 +54,7 @@ describe('User List Service', function () {
         startIndex: '1',
         schemas: testData.listUsers.schemas,
         Resources: testData.listUsers.users,
-        success: true
+        success: true,
       });
 
       this.UserListService.listUsers(testData.listUsers.startIndex, testData.listUsers.count,
@@ -79,7 +79,7 @@ describe('User List Service', function () {
         startIndex: '1',
         schemas: testData.listUsers.schemas,
         Resources: testData.listUsers.users,
-        success: true
+        success: true,
       });
 
       this.UserListService.listUsers(0, 10,
@@ -104,7 +104,7 @@ describe('User List Service', function () {
         startIndex: '1',
         schemas: testData.listUsers.schemas,
         Resources: testData.listUsers.users,
-        success: true
+        success: true,
       });
 
       this.UserListService.listUsers(0, 10,
@@ -129,7 +129,7 @@ describe('User List Service', function () {
         startIndex: '1',
         schemas: testData.listUsers.schemas,
         Resources: testData.listUsers.users,
-        success: true
+        success: true,
       });
 
       this.UserListService.listUsers(0, 10,
@@ -152,7 +152,7 @@ describe('User List Service', function () {
 
       this.$httpBackend.expectPOST(generateUserReportsUrl).respond(202, {
         id: testData.exportCSV.id,
-        status: 'pending'
+        status: 'pending',
       });
 
       this.UserListService.generateUserReports('userName', function (data, status) {
@@ -170,7 +170,7 @@ describe('User List Service', function () {
       this.$httpBackend.expectGET(userReportsUrl).respond(200, {
         report: testData.exportCSV.report,
         id: testData.exportCSV.id,
-        status: 'success'
+        status: 'success',
       });
 
       this.$httpBackend.expectDELETE(userReportsUrl).respond(204);
@@ -201,13 +201,13 @@ describe('User List Service', function () {
 
       this.$httpBackend.expectPOST(generateUserReportsUrl).respond(202, {
         id: testData.exportCSV.id,
-        status: 'pending'
+        status: 'pending',
       });
 
       this.$httpBackend.expectGET(getUserReportsUrl).respond(200, {
         report: testData.exportCSV.report,
         id: testData.exportCSV.id,
-        status: 'success'
+        status: 'success',
       });
 
       this.$httpBackend.expectDELETE(getUserReportsUrl).respond(204);
@@ -238,10 +238,10 @@ describe('User List Service', function () {
           data: [{
             details: {
               activeUsers: '0',
-              totalRegisteredUsers: '2'
-            }
-          }]
-        }]
+              totalRegisteredUsers: '2',
+            },
+          }],
+        }],
       });
 
       this.UserListService.getUserCount()
@@ -272,8 +272,8 @@ describe('User List Service', function () {
           data: [
             { details: { totalRegisteredUsers: '0' } }, { details: { totalRegisteredUsers: '0' } }, { details: { totalRegisteredUsers: '0' } },
             { details: { totalRegisteredUsers: '0' } }, { details: { totalRegisteredUsers: '0' } }, { details: { totalRegisteredUsers: '0' } },
-            { details: { totalRegisteredUsers: '0' } }]
-        }]
+            { details: { totalRegisteredUsers: '0' } }],
+        }],
       });
 
       this.UserListService.getUserCount()
@@ -311,7 +311,7 @@ describe('User List Service', function () {
 
       this.$httpBackend.expectGET(adminUrl).respond(200, {
         partners: testData.listPartners.partners,
-        status: true
+        status: true,
       });
 
       this.UserListService.listPartners(orgId, function (data, status) {

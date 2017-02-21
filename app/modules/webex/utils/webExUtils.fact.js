@@ -44,7 +44,7 @@
       var confLicenses = _.filter(licenses, {
         siteUrl: siteUrl,
         licenseType: 'CONFERENCING',
-        isCIUnifiedSite: false
+        isCIUnifiedSite: false,
       });
 
       if (
@@ -64,7 +64,7 @@
         var cmrLicenses = _.filter(licenses, {
           siteUrl: siteUrl,
           licenseType: 'CMR',
-          isCIUnifiedSite: false
+          isCIUnifiedSite: false,
         });
 
         if (
@@ -92,7 +92,7 @@
         ".my",
         ".mydmz",
         ".mybts",
-        ".mydev"
+        ".mydev",
       ];
 
       var dotIndex = siteUrl.indexOf(".");
@@ -132,17 +132,17 @@
 
         licensesTotal: {
           id: "licensesTotal",
-          count: "---"
+          count: "---",
         },
 
         licensesUsage: {
           id: "licensesUsage",
-          count: "---"
+          count: "---",
         },
 
         licensesAvailable: {
           id: "licensesAvailable",
-          count: "---"
+          count: "---",
         },
 
         iframeLinkObj1: {
@@ -209,7 +209,7 @@
         headerJson: headerJson,
         bodyJson: bodyJson,
         errId: errId,
-        errReason: errReason
+        errReason: errReason,
       };
 
       return result;
@@ -278,7 +278,7 @@
 
       var trainReleaseJson = {
         trainReleaseVersion: null,
-        trainReleaseOrder: null
+        trainReleaseOrder: null,
       };
 
       // var trainReleaseVersion = null;
@@ -437,15 +437,15 @@
           type: 'POST',
           url: logoutUrl,
           data: $.param({
-            ngxsiteurl: siteUrl.toLowerCase()
+            ngxsiteurl: siteUrl.toLowerCase(),
           }),
           xhrFields: {
-            withCredentials: true
+            withCredentials: true,
           },
           headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
+            'Content-Type': 'application/x-www-form-urlencoded',
           },
-          timeout: 250
+          timeout: 250,
         });
 
         promise = $q.resolve(jqpromise); //convert into angularjs promise

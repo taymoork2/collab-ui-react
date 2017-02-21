@@ -28,7 +28,7 @@ describe('Controller: ExpresswayServiceClusterController', function () {
     changing.returns(managementCluster);
 
     clusterServiceMock = {
-      getCluster: changing
+      getCluster: changing,
     };
 
     controller = $componentController('expresswayUpgradeSection', {

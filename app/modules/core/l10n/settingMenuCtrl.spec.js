@@ -15,7 +15,7 @@ describe('settingsMenuCtrl', function () {
       $translate.use = sinon.stub().returns('no_NO');
 
       controller = $controller('SettingsMenuCtrl', {
-        $scope: $rootScope.$new
+        $scope: $rootScope.$new,
       });
     }));
 
@@ -33,15 +33,15 @@ describe('settingsMenuCtrl', function () {
       $translate = _$translate_;
       $translate.instant = sinon.stub().returns('foo');
       $translate.use = sinon.stub().returns({
-        then: sinon.stub()
+        then: sinon.stub(),
       });
 
       controller = $controller('SettingsMenuCtrl', {
         $scope: $rootScope.$new,
         languages: [{
           value: 'foo_BAR',
-          label: 'languages.simplifiedDothraki'
-        }]
+          label: 'languages.simplifiedDothraki',
+        }],
       });
     }));
 

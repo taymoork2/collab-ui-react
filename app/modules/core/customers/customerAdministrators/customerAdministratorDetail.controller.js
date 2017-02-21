@@ -32,7 +32,7 @@
       canAddUser: canAddUser,
       isUserAlreadyAssigned: isUserAlreadyAssigned,
       resetResultsError: resetResultsError,
-      setResultsError: setResultsError
+      setResultsError: setResultsError,
     };
 
     init();
@@ -55,7 +55,7 @@
     function addCustomerAdmin(fullName) {
       vm.loading = true;
       var user = _.find(vm.foundUsers, {
-        fullName: fullName
+        fullName: fullName,
       });
       return CustomerAdministratorService.addCustomerAdmin(user, customerOrgId)
         .then(function () {
@@ -77,19 +77,19 @@
       ModalService.open({
         title: $translate.instant('customerAdminPanel.deleteAdministrator'),
         message: $translate.instant('customerAdminPanel.deleteConfirmation', {
-          pattern: fullName
+          pattern: fullName,
         }),
         close: $translate.instant('common.yes'),
         dismiss: $translate.instant('common.no'),
-        btnType: 'negative'
+        btnType: 'negative',
       }).result.then(function () {
         var user = _.find(vm.assignedAdmins, {
-          fullName: fullName
+          fullName: fullName,
         });
         return CustomerAdministratorService.removeCustomerAdmin(user, customerOrgId)
           .then(function () {
             _.remove(vm.assignedAdmins, {
-              fullName: fullName
+              fullName: fullName,
             });
             var uuid = _.get(user, 'uuid', 'N/A');
             Notification.success('customerAdminPanel.customerAdministratorRemoveSuccess');
@@ -112,7 +112,7 @@
         var stringMatches = {
           fullName: fullName && _.includes(fullName.toLowerCase(), lcaseStr),
           displayName: user.displayName && _.includes(user.displayName.toLowerCase(), lcaseStr),
-          email: email && _.includes(email.toLowerCase(), lcaseStr)
+          email: email && _.includes(email.toLowerCase(), lcaseStr),
         };
         if (_.some(stringMatches)) {
           adminProfile = getAdminProfileFromUser(user);
@@ -158,7 +158,7 @@
         fullName: fullName,
         email: email,
         roles: roles,
-        avatarSyncEnabled: avatarSyncEnabled
+        avatarSyncEnabled: avatarSyncEnabled,
       };
       return adminProfile;
     }
@@ -166,14 +166,14 @@
     function canAddUser() {
       var fullName = vm.selected;
       var validUser = fullName && _.some(vm.foundUsers, {
-        fullName: fullName
+        fullName: fullName,
       });
       return validUser && !vm._helpers.isUserAlreadyAssigned(fullName);
     }
 
     function isUserAlreadyAssigned(fullName) {
       return _.some(vm.assignedAdmins, {
-        fullName: fullName
+        fullName: fullName,
       });
     }
 

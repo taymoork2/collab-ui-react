@@ -6,17 +6,17 @@ describe('Service: Availability Resource GraphService', function () {
   var clusterId = "615209ed-98a3-4ab3-a1aa-033e5a0c1dc3";
 
   var validateService = {
-    validate: function () {}
+    validate: function () {},
   };
 
   var availabilityChart = {
     period: "",
-    startDate: ""
+    startDate: "",
   };
 
   var daterange = {
     label: "Last 24 Hours",
-    value: "0"
+    value: "0",
   };
   var clusteravailabilityGraphData = getJSONFixture('mediafusion/json/metrics-graph-report/clusterAvailabilityGraphData.json');
   var clusteravailabilityData = getJSONFixture('mediafusion/json/metrics-graph-report/clusterAvailabilityData.json');
@@ -47,13 +47,13 @@ describe('Service: Availability Resource GraphService', function () {
           clusterCategories: [
             {
               category: "Seong_Cluster",
-              segments: []
-            }
+              segments: [],
+            },
           ],
           startTime: "2016-09-20T10:20:14Z",
-          endTime: "2016-09-21T10:20:14Z"
-        }
-      ]
+          endTime: "2016-09-21T10:20:14Z",
+        },
+      ],
     };
 
     var setAvailabilityGraphResponse = AvailabilityResourceGraphService.setAvailabilityGraph(data, availabilityChart, clusterId, allClusters, daterange, IdMap);
@@ -61,8 +61,8 @@ describe('Service: Availability Resource GraphService', function () {
       [
         {
           "category": "Seong_Cluster",
-          "segments": []
-        }
+          "segments": [],
+        },
       ]);
   });
 

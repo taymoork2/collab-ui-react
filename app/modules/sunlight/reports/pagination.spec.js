@@ -48,7 +48,7 @@ describe('paging factory', function () {
       ngModelCtrl = {};
       config = {
         foo: 'bar',
-        itemsPerPage: 12
+        itemsPerPage: 12,
       };
     });
 
@@ -191,8 +191,8 @@ describe('paging factory', function () {
         evt = {
           preventDefault: jasmine.createSpy('evt.preventDefault'),
           target: {
-            blur: jasmine.createSpy('evt.target.blur')
-          }
+            blur: jasmine.createSpy('evt.target.blur'),
+          },
         };
       });
 
@@ -231,7 +231,7 @@ describe('paging factory', function () {
 
   it('should get the default text', function () {
     ctrl.config = {
-      fooText: 'bar'
+      fooText: 'bar',
     };
 
     expect($scope.getText('foo')).toBe('bar');

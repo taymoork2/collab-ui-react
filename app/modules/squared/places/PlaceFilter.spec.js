@@ -19,12 +19,12 @@ describe('Service: PlaceFilter', function () {
   it('should reset filter when resetFilters() is called', function () {
     expect(translate.instant).toHaveBeenCalledTimes(0);
     var arr = [{
-      devices: [{}]
+      devices: [{}],
     }, {
       displayName: 'yolo',
-      devices: [{}]
+      devices: [{}],
     }, {
-      devices: []
+      devices: [],
     }];
 
     PlaceFilter.setCurrentSearch('yolo');
@@ -36,47 +36,47 @@ describe('Service: PlaceFilter', function () {
     expect(translate.instant).toHaveBeenCalledTimes(2);
     var filters = PlaceFilter.getFilters();
     expect(_.find(filters, {
-      filterValue: 'all'
+      filterValue: 'all',
     }).count).toBe(3);
     expect(_.find(filters, {
-      filterValue: 'devices'
+      filterValue: 'devices',
     }).count).toBe(2);
   });
 
   it('should return a list of filters with correct count', function () {
     PlaceFilter.getFilteredList([{
-      devices: [{}]
+      devices: [{}],
     }, {
-      devices: [{}]
+      devices: [{}],
     }, {
-      devices: []
+      devices: [],
     }]);
     var filters = PlaceFilter.getFilters();
 
     expect(_.find(filters, {
-      filterValue: 'all'
+      filterValue: 'all',
     }).count).toBe(3);
     expect(_.find(filters, {
-      filterValue: 'devices'
+      filterValue: 'devices',
     }).count).toBe(2);
   });
 
   it('should filter all but all when search filter is set', function () {
     PlaceFilter.setCurrentSearch('yolo');
     PlaceFilter.getFilteredList([{
-      devices: [{}]
+      devices: [{}],
     }, {
-      devices: [{}]
+      devices: [{}],
     }, {
-      devices: []
+      devices: [],
     }]);
     var filters = PlaceFilter.getFilters();
 
     expect(_.find(filters, {
-      filterValue: 'all'
+      filterValue: 'all',
     }).count).toBe(0);
     expect(_.find(filters, {
-      filterValue: 'devices'
+      filterValue: 'devices',
     }).count).toBe(0);
   });
 
@@ -88,7 +88,7 @@ describe('Service: PlaceFilter', function () {
 
     it('should search on display name', function () {
       var arr = [{
-        displayName: 'xfoox'
+        displayName: 'xfoox',
       }, {}];
 
       PlaceFilter.setCurrentSearch('foo');
@@ -99,7 +99,7 @@ describe('Service: PlaceFilter', function () {
 
     it('should search on type', function () {
       var arr = [{
-        readableType: 'xfoox'
+        readableType: 'xfoox',
       }, {}];
 
       PlaceFilter.setCurrentSearch('foo');
@@ -110,7 +110,7 @@ describe('Service: PlaceFilter', function () {
 
     it('should search on SIP uri', function () {
       var arr = [{
-        sipUrl: "xfoox"
+        sipUrl: "xfoox",
       }, {}];
 
       PlaceFilter.setCurrentSearch('foo');
@@ -122,9 +122,9 @@ describe('Service: PlaceFilter', function () {
     it('should search on multiple terms', function () {
       var arr = [{
         displayName: 'xfoox',
-        readableType: 'xbarx'
+        readableType: 'xbarx',
       }, {
-        displayName: 'xfoox'
+        displayName: 'xfoox',
       }];
 
       PlaceFilter.setCurrentSearch('foo,bar');

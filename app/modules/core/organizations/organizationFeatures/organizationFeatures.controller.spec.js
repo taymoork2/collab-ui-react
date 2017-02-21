@@ -8,7 +8,7 @@ describe('Controller: OrganizationFeaturesCtrl', function () {
   }];
 
   var data = {
-    featureToggles: featureToggles
+    featureToggles: featureToggles,
   };
 
   var currentOrg = {

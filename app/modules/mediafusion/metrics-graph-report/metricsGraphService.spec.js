@@ -5,7 +5,7 @@ describe('Service: Metrics Graph Service', function () {
   var chartColors;
   var callVolumeChart, availabilityChart;
   var validateService = {
-    validate: function () {}
+    validate: function () {},
   };
 
   var callVolumeData = getJSONFixture('mediafusion/json/metrics-graph-report/callVolumeGraphData.json');
@@ -42,17 +42,17 @@ describe('Service: Metrics Graph Service', function () {
           clusterCategories: [
             {
               category: "Seong_Cluster",
-              segments: []
-            }
+              segments: [],
+            },
           ],
           startTime: "2016-09-20T10:20:14Z",
-          endTime: "2016-09-21T10:20:14Z"
-        }
-      ]
+          endTime: "2016-09-21T10:20:14Z",
+        },
+      ],
     };
     var availabilityChart = {
       period: "",
-      startDate: ""
+      startDate: "",
     };
     var selectedCluster = "All Clusters";
     var cluster = "All Clusters";
@@ -62,20 +62,20 @@ describe('Service: Metrics Graph Service', function () {
       [
         {
           "category": "Seong_Cluster",
-          "segments": []
-        }
+          "segments": [],
+        },
       ]);
   });
 
   it('setCallVolumeGraph should return an amchart object successfully', function () {
     var data = [{
       baloon: "true",
-      colorTwo: chartColors.grayLightTwo
+      colorTwo: chartColors.grayLightTwo,
     }];
     var callVolumeChart = {
       dataProvider: [],
       graphs: [],
-      startDuration: ""
+      startDuration: "",
     };
     var cluster = "All Clusters";
     var daterange = "Last 24 Hours";
@@ -83,12 +83,12 @@ describe('Service: Metrics Graph Service', function () {
     expect(setCallVolumeGraphResponse.dataProvider).toEqual(
       [{
         baloon: "true",
-        colorTwo: chartColors.grayLightTwo
+        colorTwo: chartColors.grayLightTwo,
       }]);
   });
   it('setCallVolumeGraph should return an amchart object successfully when callVolumeChart is unavailable', function () {
     var data = [{
-      baloon: "true"
+      baloon: "true",
     }];
     var callVolumeChart = null;
     var cluster = "All Clusters";
@@ -96,73 +96,73 @@ describe('Service: Metrics Graph Service', function () {
     var setCallVolumeGraphResponse = MetricsGraphService.setCallVolumeGraph(data, callVolumeChart, cluster, daterange);
     expect(setCallVolumeGraphResponse.dataProvider).toEqual(
       [{
-        baloon: "true"
+        baloon: "true",
       }]);
   });
   it('setUtilizationGraph should return an amchart object successfully', function () {
     var data = [{
       baloon: "false",
-      colorTwo: chartColors.grayLightTwo
+      colorTwo: chartColors.grayLightTwo,
     }];
     var graphs = [{
       title: "graphTitle",
-      valueField: "graphValue"
+      valueField: "graphValue",
     }];
     var utilizationChart = {
       dataProvider: [],
       graphs: [],
       startDuration: "",
       balloon: {
-        enabled: false
+        enabled: false,
       },
       chartCursor: {
         valueLineBalloonEnabled: false,
         valueLineEnabled: false,
-        categoryBalloonEnabled: false
+        categoryBalloonEnabled: false,
       },
       validateData: function () {
         return true;
-      }
+      },
     };
     var cluster = "All Clusters";
     var daterange = {
       label: "Last 24 Hours",
-      value: "0"
+      value: "0",
     };
     var setUtilizationGraphResponse = MetricsGraphService.setUtilizationGraph(data, graphs, utilizationChart, cluster, daterange);
     expect(setUtilizationGraphResponse.dataProvider).toEqual(
       [{
         baloon: "false",
-        colorTwo: chartColors.grayLightTwo
+        colorTwo: chartColors.grayLightTwo,
       }]);
   });
   it('setUtilizationGraph should return an amchart object successfully when utilizationChart is unavailable', function () {
     var data = [{
       baloon: "false",
-      colorTwo: chartColors.grayLightTwo
+      colorTwo: chartColors.grayLightTwo,
     }];
     var graphs = [{
       title: "graphTitle",
-      valueField: "graphValue"
+      valueField: "graphValue",
     }];
     var utilizationChart = null;
     var cluster = "All Clusters";
     var daterange = {
       label: "Last 24 Hours",
-      value: "0"
+      value: "0",
     };
     var setUtilizationGraphResponse = MetricsGraphService.setUtilizationGraph(data, graphs, utilizationChart, cluster, daterange);
     expect(setUtilizationGraphResponse.dataProvider).toEqual(
       [{
         baloon: "false",
-        colorTwo: chartColors.grayLightTwo
+        colorTwo: chartColors.grayLightTwo,
       }]);
   });
   xdescribe('Active Users graph services', function () {
     beforeEach(function () {
       spyOn(AmCharts, 'makeChart').and.returnValue({
         'dataProvider': callVolumeData,
-        validateData: validateService.validate
+        validateData: validateService.validate,
       });
       callVolumeChart = null;
       callVolumeChart = MetricsGraphService.setCallVolumeGraph(callVolumeData, callVolumeChart);
@@ -181,7 +181,7 @@ describe('Service: Metrics Graph Service', function () {
   xdescribe('Active Users graph services', function () {
     beforeEach(function () {
       spyOn(AmCharts, 'makeChart').and.returnValue({
-        'dataProvider': clusteravailabilityData
+        'dataProvider': clusteravailabilityData,
            //validateData: validateService.validate
       });
       availabilityChart = null;

@@ -47,23 +47,16 @@ describe('Partner flow', function () {
       navigation.clickCustomers();
     });
 
-    describe('New Trial box', function () {
-
-      beforeEach(function () {
-        utils.click(partner.addButton);
-        utils.expectIsDisplayed(partner.addTrialForm);
-      });
-
-      afterEach(function () {
-        utils.click(partner.cancelTrialButton);
-      });
-    });
-
     it('should add a new trial', function () {
       //utils.click(partner.trialFilter);
       utils.click(partner.addButton);
-      utils.expectIsDisplayed(partner.addTrialForm);
 
+      if (featureToggle.features.atlasStartTrialForPaid) {
+        utils.expectIsDisplayed(partner.editTrialForm);
+      } else {
+        // TODO: remove when feature toggle is removed
+        utils.expectIsDisplayed(partner.addTrialForm);
+      }
       utils.expectIsDisabled(partner.startTrialButton);
 
       utils.expectCheckbox(partner.squaredUCTrialCheckbox, true);
@@ -147,7 +140,7 @@ describe('Partner flow', function () {
         // goes to last tab because there is no Add Users
         utils.click(wizard.saveBtn);
       } else {
-        // TODO remove when feature toggle is removed
+        // TODO: remove when feature toggle is removed
         utils.click(wizard.nextBtn);
         utils.click(wizard.nextBtn);
 

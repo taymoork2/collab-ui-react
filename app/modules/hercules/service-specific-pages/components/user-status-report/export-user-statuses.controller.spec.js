@@ -12,10 +12,10 @@ describe('ExportUserStatusesController', function () {
         getServices: function () {
           return [{
             ciName: 'squared-fusion-cal',
-            displayName: 'myService'
+            displayName: 'myService',
           }];
         },
-        getOrgId: sinon.stub().returns('5632-f806-org')
+        getOrgId: sinon.stub().returns('5632-f806-org'),
       };
       $provide.value('Authinfo', Authinfo);
     });
@@ -35,7 +35,7 @@ describe('ExportUserStatusesController', function () {
 
     ExcelService = {
       createFile: sinon.stub(),
-      downloadFile: sinon.stub()
+      downloadFile: sinon.stub(),
     };
 
     var userStatusSummary = [{
@@ -45,7 +45,7 @@ describe('ExportUserStatusesController', function () {
       activated: 0,
       error: 12,
       deactivated: 0,
-      notEntitled: 0
+      notEntitled: 0,
     }];
 
     USSService = {
@@ -59,11 +59,11 @@ describe('ExportUserStatusesController', function () {
               clusterId: 'a5140c4a-9f6e-11e5-a58e-005056b12db1',
               serviceId: 'squared-fusion-uc',
               entitled: true,
-              state: 'notActivated'
+              state: 'notActivated',
             };
           })
         );
-      }
+      },
     };
     sinon.spy(USSService, 'getAllStatuses');
 
@@ -76,9 +76,9 @@ describe('ExportUserStatusesController', function () {
             id: 'c_cal@aaa',
             hostname: 'deadbeef.rd.cisco.com',
             connectorType: 'c_cal',
-          }]
+          }],
         }]);
-      }
+      },
     };
     sinon.spy(FusionClusterService, 'getAll');
 
@@ -88,7 +88,7 @@ describe('ExportUserStatusesController', function () {
       },
       getCSVColumnHeaders: function () {
         return ['whatever', 'foo', 'bar'];
-      }
+      },
     };
     sinon.spy(UserDetails, 'getUsers');
     sinon.spy(ResourceGroupService, 'getAll');
@@ -96,11 +96,11 @@ describe('ExportUserStatusesController', function () {
     ResourceGroupService = {
       getAll: function () {
         return $q.resolve([]);
-      }
+      },
     };
 
     var $modalInstance = {
-      close: sinon.stub()
+      close: sinon.stub(),
     };
 
     vm = $controller('ExportUserStatusesController', {
@@ -113,12 +113,12 @@ describe('ExportUserStatusesController', function () {
       UserDetails: UserDetails,
       ExcelService: ExcelService,
       FusionClusterService: FusionClusterService,
-      ResourceGroupService: ResourceGroupService
+      ResourceGroupService: ResourceGroupService,
     });
     vm.statusTypes = [{
       stateType: 'notActivated',
       count: 51,
-      selected: true
+      selected: true,
     }];
   }));
 

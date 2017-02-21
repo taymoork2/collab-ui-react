@@ -20,13 +20,13 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
     $q = _$q_;
 
     $stateParams.currentCustomer = {
-      customerOrgId: '5555-6666'
+      customerOrgId: '5555-6666',
     };
 
     externalNumbers = [{
-      'number': '123'
+      'number': '123',
     }, {
-      'number': '456'
+      'number': '456',
     }];
 
     modalDefer = $q.defer();
@@ -38,14 +38,14 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
     spyOn(ExternalNumberService, 'getPendingNumbersAndOrders').and.returnValue($q.resolve());
 
     spyOn(ModalService, 'open').and.returnValue({
-      result: modalDefer.promise
+      result: modalDefer.promise,
     });
     spyOn(Notification, 'success');
     spyOn(Notification, 'errorResponse');
     spyOn(DialPlanService, 'getCustomerDialPlanCountryCode').and.returnValue($q.resolve('+1'));
 
     controller = $controller('ExternalNumberDetailCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
 
     $scope.$apply();
@@ -82,9 +82,9 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
 
   it('should refresh list of assigned phone numbers', function () {
     var newNumbers = externalNumbers.concat([{
-      'number': '789'
+      'number': '789',
     }, {
-      'number': '000'
+      'number': '000',
     }]);
     ExternalNumberService.getAssignedNumbersV2.and.returnValue($q.resolve(newNumbers));
     controller.listPhoneNumbers();
@@ -103,7 +103,7 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
   it('should show no numbers if no customer found', function () {
     delete $stateParams.currentCustomer.customerOrgId;
     controller = $controller('ExternalNumberDetailCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
     $scope.$apply();
     expect(controller.assignedNumbers).toEqual([]);

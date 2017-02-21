@@ -11,14 +11,14 @@
       'type': 'column',
       'fillAlphas': 1,
       'lineAlpha': 0,
-      'balloonColor': chartColors.grayLight,
-      'columnWidth': 4
+      'balloonColor': chartColors.grayLightTwo,
+      'columnWidth': 4,
     };
     baseVariables['smoothedLine'] = {
       'type': 'smoothedLine',
       'lineColor': chartColors.colorPurple,
       'lineThickness': 2,
-      'balloonColor': chartColors.grayLight,
+      'balloonColor': chartColors.grayLightTwo,
       'negativeLineColor': chartColors.colorPurple,
       'negativeBase': 100,
     };
@@ -28,7 +28,7 @@
       'fillAlphas': 0,
       'lineAlpha': 1,
       'lineThickness': 3,
-      'hidden': false
+      'hidden': false,
     };
     baseVariables['axis'] = {
       'axisColor': '#1C1C1C',
@@ -38,20 +38,20 @@
       'fontFamily': 'CiscoSansTT Light',
       'gridAlpha': 0,
       'axisAlpha': 0.5,
-      'tickLength': 0
+      'tickLength': 0,
     };
     baseVariables['guideaxis'] = {
-      'axisColor': chartColors.grayLight,
-      'gridColor': chartColors.grayLight,
-      'color': chartColors.grayDarkest,
-      'titleColor': chartColors.grayDarkest,
+      'axisColor': chartColors.grayLightTwo,
+      'gridColor': chartColors.grayLightTwo,
+      'color': chartColors.grayDarkThree,
+      'titleColor': chartColors.grayDarkThree,
       'fontFamily': 'CiscoSansTT Light',
       'gridAlpha': 0,
       'axisAlpha': 1,
-      'tickLength': 0
+      'tickLength': 0,
     };
     baseVariables['legend'] = {
-      'color': chartColors.grayDarkest,
+      'color': chartColors.grayDarkThree,
       'autoMargins': false,
       'align': 'center',
       'position': 'bottom',
@@ -64,12 +64,12 @@
       'horizontalGap': 5,
       'valueAlign': 'left',
       'valueWidth': 0,
-      'verticalGap': 20
+      'verticalGap': 20,
     };
     baseVariables['numFormat'] = {
       'precision': 0,
       'decimalSeparator': '.',
-      'thousandsSeparator': ','
+      'thousandsSeparator': ',',
     };
     baseVariables['balloon'] = {
       'adjustBorderColor': true,
@@ -77,12 +77,12 @@
       'fillAlpha': 1,
       'fillColor': chartColors.brandWhite,
       'fixedPosition': true,
-      'shadowAlpha': 0
+      'shadowAlpha': 0,
     };
     baseVariables['export'] = {
       'enabled': true,
       'libs': {
-        'autoLoad': false
+        'autoLoad': false,
       },
       'menu': [{
         'class': 'export-main',
@@ -91,22 +91,22 @@
           'label': $translate.instant('reportsPage.saveAs'),
           'title': $translate.instant('reportsPage.saveAs'),
           'class': 'export-list',
-          'menu': ['PNG', 'JPG', 'PDF']
-        }, 'PRINT']
-      }]
+          'menu': ['PNG', 'JPG', 'PDF'],
+        }, 'PRINT'],
+      }],
     };
     baseVariables['prefixesOfBigNumbers'] = [{
       number: 1e+3,
-      prefix: 'K'
+      prefix: 'K',
     }, {
       number: 1e+6,
-      prefix: 'M'
+      prefix: 'M',
     }, {
       number: 1e+9,
-      prefix: 'B'
+      prefix: 'B',
     }, {
       number: 1e+12,
-      prefix: 'T'
+      prefix: 'T',
     }];
     return {
       getBaseVariable: getBaseVariable,
@@ -114,7 +114,7 @@
       getBaseStackSerialGraph: getBaseStackSerialGraph,
       getGanttGraph: getGanttGraph,
       getBasePieChart: getBasePieChart,
-      getDummyPieChart: getDummyPieChart
+      getDummyPieChart: getDummyPieChart,
     };
 
     function getBaseVariable(key) {
@@ -132,7 +132,7 @@
         'columnNames': columnNames,
         'fileName': fileName,
         'libs': {
-          'autoLoad': false
+          'autoLoad': false,
         },
         'menu': [{
           'class': 'export-main',
@@ -141,7 +141,7 @@
             'label': $translate.instant('reportsPage.saveAs'),
             'title': $translate.instant('reportsPage.saveAs'),
             'class': 'export-list',
-            'menu': ['PNG', 'JPG']
+            'menu': ['PNG', 'JPG'],
           }, {
             'label': $translate.instant('reportsPage.pdf'),
             'title': $translate.instant('reportsPage.pdf'),
@@ -151,14 +151,14 @@
                   $window.open(data, 'amCharts.pdf');
                 });
               });
-            }
+            },
           }, {
             'class': 'export-list',
             'label': $translate.instant('reportsPage.export'),
             'title': $translate.instant('reportsPage.export'),
-            'menu': ['CSV', 'XLSX']
-          }]
-        }]
+            'menu': ['CSV', 'XLSX'],
+          }],
+        }],
       };
       return baseVariables['export'];
     }
@@ -198,7 +198,7 @@
           'valueLineBalloonEnabled': true,
           'valueLineEnabled': true,
           'zoomable': true,
-          'valueZoomable': false
+          'valueZoomable': false,
         },
         'chartScrollbar': {
           'offset': 30,
@@ -212,15 +212,15 @@
           'selectedGraphLineAlpha': 1,
           'autoGridCount': true,
           'color': '#AAAAAA',
-          'updateOnReleaseOnly': true
+          'updateOnReleaseOnly': true,
         },
         'valueScrollbar': {
           'offset': 3,
           'color': '#AAAAAA',
           'backgroundColor': '#ffffff',
           'backgroundAlpha': 1,
-          'oppositeAxis': false
-        }
+          'oppositeAxis': false,
+        },
       });
     }
 
@@ -239,10 +239,10 @@
         'fontFamily': 'CiscoSansTT Extra Light',
         'graph': {
           'fillAlphas': 1,
-          'balloonText': '<b>[[availability]]</b></br><b>[[nodes]]</b>'
+          'balloonText': '<b>[[availability]]</b></br><b>[[nodes]]</b>',
         },
         'balloon': {
-          'fixedPosition': false
+          'fixedPosition': false,
         },
         'rotate': true,
         'categoryField': 'category',
@@ -257,7 +257,7 @@
           'color': '#AAAAAA',
           'backgroundColor': '#D7DBDD',
           'backgroundAlpha': 1,
-          'updateOnReleaseOnly': true
+          'updateOnReleaseOnly': true,
         },
         'chartCursor': {
           'cursorColor': '#55bb76',
@@ -267,9 +267,9 @@
           'valueLineBalloonEnabled': true,
           'valueLineEnabled': true,
           'zoomable': false,
-          'valueZoomable': true
+          'valueZoomable': true,
         },
-        'export': exportData
+        'export': exportData,
       });
     }
 
@@ -299,10 +299,10 @@
           'forceWidth': true,
           'switchable': false,
           'valueText': '',
-          'markerSize': 8
+          'markerSize': 8,
         },
         'titles': [],
-        'dataProvider': data.dataProvider
+        'dataProvider': data.dataProvider,
       });
     }
 
@@ -327,7 +327,7 @@
         'fontSize': 10,
         'theme': 'light',
         'balloon': {
-          'fontSize': 0
+          'fontSize': 0,
         },
         'legend': {
           'enabled': true,
@@ -338,18 +338,18 @@
           'markerSize': 5,
           'valueAlign': 'left',
           'valueText': '',
-          'switchable': false
+          'switchable': false,
         },
         'titles': [],
         'dataProvider': [{
           'name': 'No data',
           'value': '60',
-          'color': '#ececec'
+          'color': '#ececec',
         }, {
           'name': 'No data',
           'value': '40',
-          'color': '#d9d9d9'
-        }]
+          'color': '#d9d9d9',
+        }],
       });
     }
   }

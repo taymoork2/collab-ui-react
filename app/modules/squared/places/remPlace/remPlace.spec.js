@@ -3,7 +3,7 @@
 describe('Controller: RemPlaceController', function () {
   var controller, $q, $rootScope, $httpBackend, CsdmPlaceService, place;
   var fakeModal = {
-    close: sinon.stub()
+    close: sinon.stub(),
   };
 
   var pWithoutDeviceUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/938d9c32-placeWithoutDevice-88d7c1a7f63e';
@@ -44,7 +44,7 @@ describe('Controller: RemPlaceController', function () {
 
       controller = $controller('RemPlaceController', {
         $modalInstance: fakeModal,
-        place: place
+        place: place,
       });
 
       CsdmDataModelService.getPlacesMap();
@@ -62,7 +62,7 @@ describe('Controller: RemPlaceController', function () {
         type: 'cloudberry',
         url: pWithoutDeviceUrl,
         cisUuid: cisUidOfPlace,
-        isPlace: true
+        isPlace: true,
       };
       controller.deletePlace();
       $rootScope.$digest();
@@ -76,7 +76,7 @@ describe('Controller: RemPlaceController', function () {
         type: 'cloudberry',
         url: pWithDeviceUrl,
         cisUuid: cisUidOfPlaceWithDev,
-        isPlace: true
+        isPlace: true,
       };
       controller.deletePlace();
       $rootScope.$digest();
@@ -90,7 +90,7 @@ describe('Controller: RemPlaceController', function () {
         type: 'huron',
         isHuronDevice: true,
         url: 'fake url',
-        isPlace: true
+        isPlace: true,
       };
       controller.deletePlace();
       $rootScope.$digest();

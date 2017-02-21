@@ -8,7 +8,7 @@
   /* @ngInject */
   function TrackingIdInterceptor($injector) {
     var interceptor = {
-      request: request
+      request: request,
     };
 
     var TRACKING_ID = 'TrackingID';
@@ -18,14 +18,14 @@
 
     // These services don't allow TrackingID header
     var blacklist = [
-      'statuspage.io'
+      'statuspage.io',
     ];
 
     // These services don't allow Access-Control-Expose-Headers header
     var accessControlExposeHeadersRegexBlacklist = [
       // Disallow all webex.com domains except for identity.webex.com subdomain
       buildBlacklistedDomainWithWhitelistedSubdomainRegex('webex.com', ['identity']),
-      buildBlacklistedDomainRegex('webexconnect.com')
+      buildBlacklistedDomainRegex('webexconnect.com'),
     ];
 
     return interceptor;

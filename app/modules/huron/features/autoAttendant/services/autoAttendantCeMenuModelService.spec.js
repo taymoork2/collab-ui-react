@@ -20,21 +20,21 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
     "assignedResources": [{
       "trigger": "incomingCall",
       "type": "directoryNumber",
-      "id": "e7d68d8c-9e92-4330-a881-5fc9ace1f7d3"
+      "id": "e7d68d8c-9e92-4330-a881-5fc9ace1f7d3",
     }],
     "defaultActionSet": "openHours",
     "scheduleEventTypeMap": {
-      "open": "openHours"
+      "open": "openHours",
     },
     "actionSets": [{
       "name": "openHours",
       "actions": [{
         "play": {
           "description": "Welcome prompt",
-          "url": "file1.avi"
-        }
-      }]
-    }]
+          "url": "file1.avi",
+        },
+      }],
+    }],
   };
 
   // Combined menu
@@ -146,7 +146,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
 
       _ceRecord.defaultActionSet = "openHours";
       _ceRecord.scheduleEventTypeMap = {
-        open: "openHours"
+        open: "openHours",
       };
       _ceRecord.callExperienceName = 'AA Welcome';
       var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcomeNoDescription, 'openHours');
@@ -164,7 +164,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       var _ceRecord = angular.copy(ceInfos[0]);
       _ceRecord.defaultActionSet = "openHours";
       _ceRecord.scheduleEventTypeMap = {
-        open: "openHours"
+        open: "openHours",
       };
       _ceRecord.callExperienceName = 'AA Custom';
       var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcome, 'openHours');
@@ -187,7 +187,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       var _ceRecord = angular.copy(ceInfos[0]);
       _ceRecord.defaultActionSet = "openHours";
       _ceRecord.scheduleEventTypeMap = {
-        open: "openHours"
+        open: "openHours",
       };
       ceWelcome = wmenu.ceWelcome;
 
@@ -213,7 +213,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       var _ceRecord = angular.copy(ceInfos[0]);
       _ceRecord.defaultActionSet = "openHours";
       _ceRecord.scheduleEventTypeMap = {
-        open: "openHours"
+        open: "openHours",
       };
       _ceRecord.callExperienceName = 'AA Option';
       var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcome, 'openHours');
@@ -234,7 +234,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       var _ceRecord = angular.copy(ceInfos[0]);
       _ceRecord.defaultActionSet = "openHours";
       _ceRecord.scheduleEventTypeMap = {
-        open: "openHours"
+        open: "openHours",
       };
       _ceRecord.callExperienceName = 'AA Option';
       var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcome, 'openHours');
@@ -509,7 +509,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
 
     it('should not change defaultActionSet', function () {
       var _ceRecord = {
-        defaultActionSet: 'test'
+        defaultActionSet: 'test',
       };
       AutoAttendantCeMenuModelService.updateDefaultActionSet(_ceRecord, undefined);
       expect(_ceRecord.defaultActionSet).toBe('test');
@@ -523,8 +523,8 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
         scheduleEventTypeMap: {
           open: 'openHours',
           closed: 'closedHours',
-          holiday: 'holidays'
-        }
+          holiday: 'holidays',
+        },
       };
       AutoAttendantCeMenuModelService.deleteScheduleActionSetMap(_ceRecord, 'closedHours');
       expect(_.isUndefined(_ceRecord.scheduleEventTypeMap.closed)).toBe(true);

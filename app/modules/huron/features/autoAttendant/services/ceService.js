@@ -10,23 +10,23 @@
   function CeService($resource, HuronConfig) {
     return $resource(HuronConfig.getCesUrl() + '/customers/:customerId/callExperiences/:ceId', {
       customerId: '@customerId',
-      ceId: '@ceId'
+      ceId: '@ceId',
     }, {
       'update': {
         method: 'PUT',
-        isArray: false
-      }
+        isArray: false,
+      },
     });
   }
 
   function CeSiteService($resource, HuronConfig) {
     return $resource(HuronConfig.getCesUrl() + '/customers/:customerId/sites', {
-      customerId: '@customerId'
+      customerId: '@customerId',
     }, {
       'update': {
         method: 'PUT',
-        isArray: false
-      }
+        isArray: false,
+      },
     });
   }
 })();

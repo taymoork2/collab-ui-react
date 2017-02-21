@@ -25,7 +25,7 @@ require('./_overview.scss');
       OverviewCardFactory.createCareCard(),
       OverviewCardFactory.createRoomSystemsCard(),
       OverviewCardFactory.createHybridServicesCard(),
-      OverviewCardFactory.createUsersCard()
+      OverviewCardFactory.createUsersCard(),
     ];
 
     vm.notifications = [];
@@ -177,7 +177,7 @@ require('./_overview.scss');
     function removeCardUserTitle() {
       if (vm.isCSB) {
         _.remove(vm.cards, {
-          name: 'overview.cards.users.title'
+          name: 'overview.cards.users.title',
         });
       }
     }
@@ -190,7 +190,7 @@ require('./_overview.scss');
 
     function dismissNotification(notification) {
       vm.notifications = _.reject(vm.notifications, {
-        name: notification.name
+        name: notification.name,
       });
       notification.dismiss();
     }
@@ -226,7 +226,7 @@ require('./_overview.scss');
 
     $scope.$on('DISMISS_SIP_NOTIFICATION', function () {
       vm.notifications = _.reject(vm.notifications, {
-        name: 'cloudSipUri'
+        name: 'cloudSipUri',
       });
     });
 

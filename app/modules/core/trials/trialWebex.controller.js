@@ -26,10 +26,10 @@
         labelClass: '',
         inputClass: '',
         label: $translate.instant('trialModal.meeting.siteUrl'),
-        placeholder: $translate.instant('trialModal.meeting.siteUrlPlaceholder')
+        placeholder: $translate.instant('trialModal.meeting.siteUrlPlaceholder'),
       },
       modelOptions: {
-        'updateOn': 'blur'
+        'updateOn': 'blur',
       },
       asyncValidators: {
         siteUrl: {
@@ -38,12 +38,12 @@
             var errors = {
               'domainInvalid': $translate.instant('trialModal.meeting.domainInvalid'),
               'duplicateSite': $translate.instant('trialModal.meeting.duplicateSite'),
-              'invalidSite': $translate.instant('trialModal.meeting.invalidSite')
+              'invalidSite': $translate.instant('trialModal.meeting.invalidSite'),
             };
 
             return errors[vm.siteUrlErrorCode];
-          }
-        }
+          },
+        },
       },
     }];
 
@@ -53,14 +53,14 @@
       type: 'select',
       defaultValue: {
         'label': $translate.instant('trialModal.meeting.timeZonePlaceholder'),
-        'timeZoneId': undefined
+        'timeZoneId': undefined,
       },
       templateOptions: {
         required: true,
         labelfield: 'label',
         labelProp: 'label',
         valueProp: 'timeZoneId',
-        label: $translate.instant('trialModal.meeting.timezone')
+        label: $translate.instant('trialModal.meeting.timezone'),
       },
       expressionProperties: {
         'templateOptions.options': function () {
@@ -69,16 +69,16 @@
           return _.filter(timeZones, function (timeZone) {
             return _.includes(validTimeZoneIds, timeZone.timeZoneId);
           });
-        }
+        },
       },
       validators: {
         'timezone': {
           expression: function ($viewValue, $modelValue) {
             var timezone = $modelValue || $viewValue;
             return !_.isUndefined(timezone.timeZoneId);
-          }
-        }
-      }
+          },
+        },
+      },
     }];
 
     ////////////////

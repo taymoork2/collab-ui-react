@@ -10,7 +10,7 @@ describe('controller: CbgsCtrl', function () {
     "customerName": "Test-Feng",
     "groupName": "CB_11111_Test-Feng",
     "status": "P",
-    "totalSites": 0
+    "totalSites": 0,
   };
 
   beforeEach(angular.mock.module('Core'));
@@ -45,7 +45,7 @@ describe('controller: CbgsCtrl', function () {
     controller = $controller("CbgsCtrl", {
       $scope: $scope,
       $filter: filter,
-      cbgService: cbgService
+      cbgService: cbgService,
     });
   }
 

@@ -16,7 +16,7 @@
     vm.uniqueCtrlIdentifer = '';
 
     vm.model.phoneNumberInput = {
-      phoneNumber: ''
+      phoneNumber: '',
     };
 
     vm.countryList = [{
@@ -24,13 +24,13 @@
       type: 'countrylist',
       templateOptions: {
         placeholder: $translate.instant('autoAttendant.routeExtNumPlaceHolder'),
-        required: true
-      }
+        required: true,
+      },
     }];
 
     vm.uiMenu = {};
     vm.menuEntry = {
-      entries: []
+      entries: [],
     };
     vm.menuKeyEntry = {};
 

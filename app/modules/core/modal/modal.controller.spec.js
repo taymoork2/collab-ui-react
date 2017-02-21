@@ -14,7 +14,7 @@ describe('Controller: ModalCtrl', function () {
       dismiss: 'myDismiss',
       btnType: 'myBtnType',
       hideTitle: false,
-      hideDismiss: false
+      hideDismiss: false,
     };
 
     this.initModules(testModule, function ($provide) {
@@ -37,7 +37,7 @@ describe('Controller: ModalCtrl', function () {
   function initController() {
     this.$scope = this.$rootScope.$new();
     this.controller = this.$controller('ModalCtrl', {
-      $scope: this.$scope
+      $scope: this.$scope,
     });
 
     this.$scope.$apply();

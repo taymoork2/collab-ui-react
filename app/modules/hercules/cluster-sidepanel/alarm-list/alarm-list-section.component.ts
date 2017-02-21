@@ -62,6 +62,10 @@ export class AlarmListSectionComponentCtrl implements ng.IComponentController {
       this.$state.go('hds-cluster-details.alarm-details', {
         alarm: alarm,
       });
+    } else if (this.connectorType === 'mf_mgmt') {
+      this.$state.go('media-cluster-details.alarm-details', {
+        alarm: alarm,
+      });
     }
   }
 

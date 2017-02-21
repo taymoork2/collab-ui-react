@@ -31,7 +31,7 @@
       getUserPropsSummary: getUserPropsSummary,
       getUserJournal: getUserJournal,
       notifyReadOnlyLaunch: notifyReadOnlyLaunch,
-      getAllStatuses: getAllStatuses
+      getAllStatuses: getAllStatuses,
     };
 
     CsdmPoller.create(fetchStatusesSummary, hub);
@@ -56,11 +56,11 @@
             activated: 0,
             notActivated: 0,
             error: 0,
-            total: 0
+            total: 0,
           };
           _.forEach(['squared-fusion-cal', 'squared-fusion-uc'], function (serviceId) {
             var found = _.find(summary, {
-              serviceId: serviceId
+              serviceId: serviceId,
             });
             if (!found) {
               var newSummary = angular.copy(emptySummary);

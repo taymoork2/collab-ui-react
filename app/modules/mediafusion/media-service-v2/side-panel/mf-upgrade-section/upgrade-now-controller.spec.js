@@ -12,17 +12,17 @@ describe('Controller: UpgradeNowControllerV2', function () {
 
     MediaClusterServiceV2 = {
 
-      upgradeCluster: sinon.stub()
+      upgradeCluster: sinon.stub(),
     };
     Notification = _Notification_;
     $q = _$q_;
     $translate = _$translate_;
 
     modalInstanceMock = {
-      close: sinon.stub()
+      close: sinon.stub(),
     };
     windowMock = {
-      open: sinon.stub()
+      open: sinon.stub(),
     };
     controller = $controller('UpgradeNowControllerV2', {
       $scope: $rootScope.$new(),
@@ -32,7 +32,7 @@ describe('Controller: UpgradeNowControllerV2', function () {
       $q: $q,
       $translate: $translate,
       $modalInstance: modalInstanceMock,
-      $window: windowMock
+      $window: windowMock,
     });
 
   }));

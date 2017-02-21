@@ -57,36 +57,36 @@ require('./_user-manage.scss');
       $scope.csv = {
         isDirSyncEnabled: true,
         isCancelledByUser: false,
-        onCancelImport: onCancelImport
+        onCancelImport: onCancelImport,
       };
     }
 
     var transitions = {
       'installConnector': {
         next: '^.syncStatus',
-        prev: rootState
+        prev: rootState,
       },
 
       'syncStatus': {
         next: '^.dirsyncServices',
-        prev: '^.installConnector'
+        prev: '^.installConnector',
       },
 
       'dirsyncServices': {
         next: '^.dirsyncResult',
-        prev: '^.syncStatus'
+        prev: '^.syncStatus',
       },
 
       'dirsyncResult': {
-        next: 'users.list'
-      }
+        next: 'users.list',
+      },
     };
 
     function onCancelImport() {
       if (isCsvProcessing()) {
         $modal.open({
           type: 'dialog',
-          templateUrl: 'modules/core/users/userCsv/userCsvStopImportConfirm.tpl.html'
+          templateUrl: 'modules/core/users/userCsv/userCsvStopImportConfirm.tpl.html',
         }).result.then(function () {
           // cancel the current import
           $scope.csv.isCancelledByUser = true;

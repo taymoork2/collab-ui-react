@@ -4,7 +4,7 @@ describe('Service: CallerId', function () {
   var CallerId, $httpBackend, HuronConfig, companyNumber;
 
   var Authinfo = {
-    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
   };
 
   beforeEach(angular.mock.module('Huron'));
@@ -57,14 +57,14 @@ describe('Service: CallerId', function () {
       dnUsage: 'Primary',
       directoryNumber: {
         uuid: '222',
-        pattern: '1234'
-      }
+        pattern: '1234',
+      },
     }];
     var dnUserInfo = [{
       user: {
-        uuid: '123'
+        uuid: '123',
       },
-      dnUsage: 'Primary'
+      dnUsage: 'Primary',
     }];
     beforeEach(function () {
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/1/users/123/directorynumbers').respond(userDnInfo);
@@ -81,7 +81,7 @@ describe('Service: CallerId', function () {
 
   describe('listUserEndPoints', function () {
     var endPoints = [{
-      uuid: '111'
+      uuid: '111',
     }];
     beforeEach(function () {
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/1/users/123/endpoints').respond(endPoints);
@@ -97,7 +97,7 @@ describe('Service: CallerId', function () {
 
   describe('listEndPointDirectoryNumbers', function () {
     var endPointDns = [{
-      uuid: '111'
+      uuid: '111',
     }];
     beforeEach(function () {
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/1/sipendpoints/111/directorynumbers').respond(endPointDns);
@@ -118,7 +118,7 @@ describe('Service: CallerId', function () {
 
     it('should update end point dn map', function () {
       CallerId.updateLineEndPoint('111', '222', {
-        label: '1234 - J P'
+        label: '1234 - J P',
       });
       $httpBackend.flush();
     });

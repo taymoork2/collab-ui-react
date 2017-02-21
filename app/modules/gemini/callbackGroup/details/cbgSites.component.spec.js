@@ -57,17 +57,17 @@ describe('Component: cbgSites', function () {
       moveSiteResponse.content.data.returnCode = 0;
       var site = {
         siteId: 'ff808081582992dd01589a5b232410bb',
-        siteUrl: 'atlascca1.qa.webex.com'
+        siteUrl: 'atlascca1.qa.webex.com',
       };
       ctrl.sites = [
         {
           siteId: 'ff808081582992dd01589a5b232410bb',
-          siteUrl: 'atlascca1.qa.webex.com'
+          siteUrl: 'atlascca1.qa.webex.com',
         },
         {
           siteId: 'ff808081582992dd01589a5b232ccccc',
-          siteUrl: 'atlascca2.qa.webex.com'
-        }
+          siteUrl: 'atlascca2.qa.webex.com',
+        },
       ];
       var toGroupId = 'ff8080815708077601581a417ded1a1e';
       cbgService.moveSite.and.returnValue($q.resolve(moveSiteResponse));
@@ -81,7 +81,7 @@ describe('Component: cbgSites', function () {
       moveSiteResponse.content.data.returnCode = 1000;
       var site = {
         siteId: 'ff808081582992dd01589a5b232410bb',
-        siteUrl: 'atlascca1.qa.webex.com'
+        siteUrl: 'atlascca1.qa.webex.com',
       };
       var toGroupId = 'ff8080815708077601581a417ded1a1e';
       cbgService.moveSite.and.returnValue($q.resolve(moveSiteResponse));

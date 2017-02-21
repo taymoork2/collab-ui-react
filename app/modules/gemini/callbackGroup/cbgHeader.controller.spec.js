@@ -15,7 +15,7 @@ describe('controller: CbgHeaderCtrl', function () {
 
   function initController() {
     controller = $controller('CbgHeaderCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
   }
 

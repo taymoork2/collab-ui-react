@@ -59,7 +59,7 @@
 
     return {
       tweakReport: tweakReport,
-      setTimeoutInSeconds: setTimeoutInSeconds
+      setTimeoutInSeconds: setTimeoutInSeconds,
     };
   }
 

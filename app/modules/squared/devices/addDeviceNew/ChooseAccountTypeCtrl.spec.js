@@ -18,7 +18,7 @@ describe('ChooseAccountTypeCtrl: Ctrl', function () {
     controller = $controller('ChooseAccountTypeCtrl', {
       $scope: $scope,
       $state: $state,
-      $stateParams: $stateParams
+      $stateParams: $stateParams,
     });
   }
 
@@ -34,10 +34,10 @@ describe('ChooseAccountTypeCtrl: Ctrl', function () {
         state: function () {
           return {
             data: {
-              title: title
-            }
+              title: title,
+            },
           };
-        }
+        },
       };
       initController();
       expect(controller.title).toBe(title);
@@ -51,11 +51,11 @@ describe('ChooseAccountTypeCtrl: Ctrl', function () {
       $stateParams.wizard = {
         state: function () {
           return {
-            data: {}
+            data: {},
           };
         },
         next: function () {
-        }
+        },
       };
       initController();
       spyOn($stateParams.wizard, 'next');

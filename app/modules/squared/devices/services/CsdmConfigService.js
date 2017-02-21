@@ -17,7 +17,7 @@
 
     return {
       getUrl: getUrl,
-      getEnrollmentServiceUrl: getEnrollmentServiceUrl
+      getEnrollmentServiceUrl: getEnrollmentServiceUrl,
     };
   }
 })();

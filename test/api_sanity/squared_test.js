@@ -27,8 +27,8 @@ describe('atlas api -', function () {
       opts = {
         url: 'https://atlas-a.wbx2.com/admin/api/v1/userauthinfo',
         auth: {
-          bearer: this.bearer
-        }
+          bearer: this.bearer,
+        },
       };
       request.get(opts, function (err, res, body) {
         refuteError(err);
@@ -44,8 +44,8 @@ describe('atlas api -', function () {
       opts = {
         url: 'https://atlas-a.wbx2.com/admin/api/v1/organizations/c1e59258-29e1-42d7-bfa7-84ab26632b46/managedOrgs',
         auth: {
-          bearer: this.bearer
-        }
+          bearer: this.bearer,
+        },
       };
       request.get(opts, function (err, res, body) {
         refuteError(err);

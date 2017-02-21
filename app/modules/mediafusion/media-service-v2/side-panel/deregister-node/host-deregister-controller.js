@@ -2,14 +2,9 @@
   'use strict';
 
   /* @ngInject */
-  function HostDeregisterControllerV2(cluster, connector, orgName, MediaClusterServiceV2, $translate, $modalInstance, Notification) {
+  function HostDeregisterControllerV2(cluster, connector, MediaClusterServiceV2, $translate, $modalInstance, Notification) {
     var vm = this;
 
-    vm.deregisterAreYouSure = $translate.instant(
-      'mediaFusion.clusters.deregisterAreYouSure', {
-        clusterName: cluster.name,
-        organizationName: orgName
-      });
     vm.saving = false;
 
     vm.deregister = function () {
@@ -22,15 +17,13 @@
           Notification.success('mediaFusion.deleteNodeSuccess');
         }, function (err) {
           vm.error = $translate.instant('mediaFusion.clusters.deregisterErrorGeneric', {
-            clusterName: cluster.name
+            clusterName: cluster.name,
           });
           Notification.errorWithTrackingId(err, vm.error);
           vm.saving = false;
         });
       return false;
     };
-
-    vm.close = $modalInstance.close;
   }
 
   angular

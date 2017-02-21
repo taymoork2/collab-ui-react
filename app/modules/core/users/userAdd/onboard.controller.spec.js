@@ -12,7 +12,7 @@ describe('OnboardCtrl: Ctrl', function () {
 
   function initController() {
     this.initController('OnboardCtrl', {
-      $scope: this.$scope
+      $scope: this.$scope,
     });
   }
 
@@ -20,8 +20,8 @@ describe('OnboardCtrl: Ctrl', function () {
     this.mock = {};
     var current = {
       step: {
-        name: 'fakeStep'
-      }
+        name: 'fakeStep',
+      },
     };
     this.$scope.wizard = {};
     this.$scope.wizard.current = current;
@@ -37,8 +37,8 @@ describe('OnboardCtrl: Ctrl', function () {
     spyOn(this.$state, 'go');
     spyOn(this.$previousState, 'get').and.returnValue({
       state: {
-        name: 'test.state'
-      }
+        name: 'test.state',
+      },
     });
 
     this.mock.internalNumbers = getJSONFixture('huron/json/internalNumbers/internalNumbers.json');
@@ -83,7 +83,7 @@ describe('OnboardCtrl: Ctrl', function () {
     spyOn(this.TelephonyInfoService, 'loadInternalNumberPool').and.returnValue(this.$q.when(this.mock.internalNumbers));
     spyOn(this.TelephonyInfoService, 'getExternalNumberPool').and.returnValue(this.mock.externalNumbers);
     spyOn(this.DialPlanService, 'getCustomerDialPlanDetails').and.returnValue(this.$q.when({
-      extensionGenerated: 'false'
+      extensionGenerated: 'false',
     }));
 
     spyOn(this.TelephonyInfoService, 'loadExternalNumberPool').and.returnValue(this.$q.when(this.mock.externalNumbers));
@@ -110,14 +110,14 @@ describe('OnboardCtrl: Ctrl', function () {
           status: statusCode,
           httpStatus: statusCode,
           message: responseMessage,
-          email: 'blah@example.com'
+          email: 'blah@example.com',
         }, {
           status: statusCode,
           httpStatus: statusCode,
           message: responseMessage,
-          email: 'blah@example.com'
-        }]
-      }
+          email: 'blah@example.com',
+        }],
+      },
     };
   }
 
@@ -132,9 +132,9 @@ describe('OnboardCtrl: Ctrl', function () {
         displayName: 'Testy McTestUser',
         name: {
           givenName: 'Firsty',
-          familyName: 'Lasty'
+          familyName: 'Lasty',
         },
-        userName: 'User McUsername'
+        userName: 'User McUsername',
       };
 
       expect(this.$scope.currentUserDisplayName()).toEqual('Testy McTestUser');
@@ -163,11 +163,11 @@ describe('OnboardCtrl: Ctrl', function () {
     var validUserList = [{
       firstName: 'John',
       lastName: 'Doe',
-      Email: 'johnDoe@example.com'
+      Email: 'johnDoe@example.com',
     }, {
       firstName: 'Jane',
       lastName: 'Doe',
-      Email: 'janeDoe@domain.com'
+      Email: 'janeDoe@domain.com',
     }];
 
     beforeEach(installPromiseMatchers);
@@ -266,37 +266,37 @@ describe('OnboardCtrl: Ctrl', function () {
     beforeEach(initController);
     it('should return false if more than one license', function () {
       var displayMessageCheckbox = this.$scope.checkMessageVisibility([{
-        license: 1
+        license: 1,
       }, {
-        license: 2
+        license: 2,
       }]);
       expect(displayMessageCheckbox).toBeFalsy();
     });
 
     it('should return true if only one license and no billingServiceId', function () {
       var displayMessageCheckbox = this.$scope.checkMessageVisibility([{
-        license: 1
+        license: 1,
       }], 2);
       expect(displayMessageCheckbox).toBeTruthy();
     });
 
     it('should return true if only one license and no selectedSubscription', function () {
       var displayMessageCheckbox = this.$scope.checkMessageVisibility([{
-        billingServiceId: 1
+        billingServiceId: 1,
       }]);
       expect(displayMessageCheckbox).toBeTruthy();
     });
 
     it('should return false if only one license and billingServiceId does not match selectedSubscription', function () {
       var displayMessageCheckbox = this.$scope.checkMessageVisibility([{
-        billingServiceId: 1
+        billingServiceId: 1,
       }], 2);
       expect(displayMessageCheckbox).toBeFalsy();
     });
 
     it('should return true if only one license and billingServiceId match selectedSubscription', function () {
       var displayMessageCheckbox = this.$scope.checkMessageVisibility([{
-        billingServiceId: 1
+        billingServiceId: 1,
       }], 1);
       expect(displayMessageCheckbox).toBeTruthy();
     });
@@ -312,7 +312,7 @@ describe('OnboardCtrl: Ctrl', function () {
         licenseId: 'testABC',
         offerName: 'CS',
         siteUrl: 'testOrg1@webex.com',
-        volume: 100
+        volume: 100,
       }, {
         billing: 'testOrg2',
         confModel: false,
@@ -320,7 +320,7 @@ describe('OnboardCtrl: Ctrl', function () {
         licenseId: 'testDEF',
         offerName: 'CS',
         siteUrl: 'testOrg2@webex.com',
-        volume: 100
+        volume: 100,
       }];
     });
     it('should initialize all licenses correctly', function () {
@@ -344,7 +344,7 @@ describe('OnboardCtrl: Ctrl', function () {
         spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
         spyOn(this.Authinfo, 'getMessageServices').and.returnValue(this.mock.getMessageServices.singleLicense);
         this.$stateParams.currentUser = {
-          licenseID: ['MS_07bbaaf5-735d-4878-a6ea-d67d69feb1c0']
+          licenseID: ['MS_07bbaaf5-735d-4878-a6ea-d67d69feb1c0'],
         };
       });
       beforeEach(initController);
@@ -361,7 +361,7 @@ describe('OnboardCtrl: Ctrl', function () {
         spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
         spyOn(this.Authinfo, 'getMessageServices').and.returnValue(this.mock.getMessageServices.multipleLicenses);
         this.$stateParams.currentUser = {
-          licenseID: ['MS_07bbaaf5-735d-4878-a6ea-d67d69feb1c0']
+          licenseID: ['MS_07bbaaf5-735d-4878-a6ea-d67d69feb1c0'],
         };
       });
       beforeEach(initController);
@@ -383,13 +383,13 @@ describe('OnboardCtrl: Ctrl', function () {
       this.$stateParams.currentUser = {
         licenseID: [
           'MS_07bbaaf5-735d-4878-a6ea-d67d69feb1c0',
-          'CF_5761413b-5bad-4d6a-b40d-c157c0f99062'
+          'CF_5761413b-5bad-4d6a-b40d-c157c0f99062',
         ],
         pendingStatus: true,
         invitations: {
           ms: true,
-          cf: 'CF_5761413b-5bad-4d6a-b40d-c157c0f99062'
-        }
+          cf: 'CF_5761413b-5bad-4d6a-b40d-c157c0f99062',
+        },
       };
     });
     beforeEach(initController);
@@ -401,7 +401,7 @@ describe('OnboardCtrl: Ctrl', function () {
         licenseId: 'CF_5761413b-5bad-4d6a-b40d-c157c0f99062',
         offerName: 'CF',
         siteUrl: '',
-        volume: 100
+        volume: 100,
       }];
     });
     it('should set MS license to true based on invitation', function () {
@@ -418,23 +418,23 @@ describe('OnboardCtrl: Ctrl', function () {
     beforeEach(function () {
       this.$scope.usrlist = [{
         "name": "dntodid",
-        "address": "dntodid@gmail.com"
+        "address": "dntodid@gmail.com",
       }, {
         "name": "dntodid1",
-        "address": "dntodid1@gmail.com"
+        "address": "dntodid1@gmail.com",
       }];
       this.$scope.convertSelectedList = [{
         "name": {
           "givenName": "dntodid",
-          "familyName": ""
+          "familyName": "",
         },
-        "userName": "dntodid@gmail.com"
+        "userName": "dntodid@gmail.com",
       }, {
         "name": {
           "givenName": "dntodid1",
-          "familyName": ""
+          "familyName": "",
         },
-        "userName": "dntodid1@gmail.com"
+        "userName": "dntodid1@gmail.com",
       }];
       this.$scope.radioStates.commRadio = 'true';
       this.$scope.internalNumberPool = this.mock.internalNumbers;
@@ -469,7 +469,7 @@ describe('OnboardCtrl: Ctrl', function () {
 
     it('editServicesSave', function () {
       this.$scope.currentUser = {
-        userName: 'johndoe@example.com'
+        userName: 'johndoe@example.com',
       };
       this.$scope.editServicesSave();
       this.$scope.$apply();
@@ -477,7 +477,7 @@ describe('OnboardCtrl: Ctrl', function () {
       expect(this.$scope.usrlist[0]).toEqual(jasmine.objectContaining({
         address: 'johndoe@example.com',
         assignedDn: this.mock.internalNumbers[0],
-        externalNumber: this.mock.externalNumbers[0]
+        externalNumber: this.mock.externalNumbers[0],
       }));
       expect(this.$state.go).toHaveBeenCalledWith('editService.dn');
       expect(this.$scope.editServicesFlow).toBe(true);
@@ -604,13 +604,13 @@ describe('OnboardCtrl: Ctrl', function () {
 
     function initUserWithoutCall() {
       this.$stateParams.currentUser = {
-        entitlements: []
+        entitlements: [],
       };
     }
 
     function initUserWithCall() {
       this.$stateParams.currentUser = {
-        entitlements: ['ciscouc']
+        entitlements: ['ciscouc'],
       };
     }
   });
@@ -636,13 +636,13 @@ describe('OnboardCtrl: Ctrl', function () {
 
     function initUserWithoutHybridCall() {
       this.$stateParams.currentUser = {
-        entitlements: []
+        entitlements: [],
       };
     }
 
     function initUserWithHybridCall() {
       this.$stateParams.currentUser = {
-        entitlements: ['squared-fusion-uc']
+        entitlements: ['squared-fusion-uc'],
       };
     }
   });
@@ -748,7 +748,7 @@ describe('OnboardCtrl: Ctrl', function () {
 
     function initCustomUsrList() {
       this.usrlist = [{
-        address: 'customTestUser'
+        address: 'customTestUser',
       }];
       this.$scope.usrlist = this.usrlist;
     }
@@ -800,7 +800,7 @@ describe('OnboardCtrl: Ctrl', function () {
         spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
         spyOn(this.Authinfo, 'getCareServices').and.returnValue(this.mock.getCareServices.careLicense);
         this.$stateParams.currentUser = {
-          licenseID: ['CDC_da652e7d-cd34-4545-8f23-936b74359afd']
+          licenseID: ['CDC_da652e7d-cd34-4545-8f23-936b74359afd'],
         };
       });
       beforeEach(initController);
@@ -838,7 +838,7 @@ describe('OnboardCtrl: Ctrl', function () {
         spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
         spyOn(this.Authinfo, 'getCareServices').and.returnValue(this.mock.getCareServices.careLicense);
         this.$stateParams.currentUser = {
-          licenseID: ['CDC_da652e7d-cd34-4545-8f23-936b74359afd']
+          licenseID: ['CDC_da652e7d-cd34-4545-8f23-936b74359afd'],
         };
       });
       beforeEach(initController);
@@ -860,7 +860,7 @@ describe('OnboardCtrl: Ctrl', function () {
         this.$stateParams.currentUser = {
           licenseID: ['MS_cd66217d-a419-4cfb-92b4-a196b7fe3c74'],
           entitlements: ['cloud-contact-center'],
-          id: userId
+          id: userId,
         };
       });
       beforeEach(initController);
@@ -890,7 +890,7 @@ describe('OnboardCtrl: Ctrl', function () {
           licenseID: ['CDC_da652e7d-cd34-4545-8f23-936b74359afd'],
           entitlements: ['cloud-contact-center'],
           roles: ['spark.synckms'],
-          id: userId
+          id: userId,
         };
       });
       beforeEach(initController);
@@ -920,7 +920,7 @@ describe('OnboardCtrl: Ctrl', function () {
         this.$stateParams.currentUser = {
           licenseID: ['CDC_da652e7d-cd34-4545-8f23-936b74359afd'],
           entitlements: ['cloud-contact-center', 'contact-center-context'],
-          id: userId
+          id: userId,
         };
       });
       beforeEach(initController);
@@ -951,7 +951,7 @@ describe('OnboardCtrl: Ctrl', function () {
           licenseID: ['CDC_da652e7d-cd34-4545-8f23-936b74359afd'],
           entitlements: ['cloud-contact-center', 'contact-center-context'],
           roles: ['spark.synckms'],
-          id: userId
+          id: userId,
         };
       });
       beforeEach(initController);
@@ -984,21 +984,21 @@ describe('OnboardCtrl: Ctrl', function () {
       beforeEach(function () {
         userObj = {
           assignedDn: {
-            pattern: '912'
-          }
+            pattern: '912',
+          },
         };
       });
 
       it('should be true if pattern starts with telephonyInfo.steeringDigit', function () {
         this.$scope.telephonyInfo = {
-          steeringDigit: '9'
+          steeringDigit: '9',
         };
         expect(this.$scope.checkDnOverlapsSteeringDigit(userObj)).toBe(true);
       });
 
       it('should be false if pattern does not start with telephonyInfo.steeringDigit', function () {
         this.$scope.telephonyInfo = {
-          steeringDigit: '5'
+          steeringDigit: '5',
         };
         expect(this.$scope.checkDnOverlapsSteeringDigit(userObj)).toBe(false);
       });
@@ -1138,7 +1138,7 @@ describe('OnboardCtrl: Ctrl', function () {
 
   function initCurrentUser() {
     this.$stateParams.currentUser = {
-      userName: 'testUser'
+      userName: 'testUser',
     };
   }
 

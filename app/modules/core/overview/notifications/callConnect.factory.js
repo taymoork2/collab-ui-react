@@ -21,11 +21,11 @@
           },
           linkText: 'homePage.getStarted',
           name: 'callConnect',
-          text: 'homePage.setUpCallConnectService'
+          text: 'homePage.setUpCallConnectService',
         };
 
         return notification;
-      }
+      },
     };
   }
 })();

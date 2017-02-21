@@ -22,7 +22,7 @@
       getChatConfig: getChatConfig,
       deleteUser: deleteUser,
       onBoardCare: onBoardCare,
-      updateChatConfig: updateChatConfig
+      updateChatConfig: updateChatConfig,
     };
 
     return service;

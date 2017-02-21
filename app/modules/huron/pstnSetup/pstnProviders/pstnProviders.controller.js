@@ -136,7 +136,7 @@
         vendor: carrier.vendor,
         countryCode: carrier.countryCode,
         country: carrier.country,
-        title: carrier.displayName || carrier.name
+        title: carrier.displayName || carrier.name,
       };
       if (carrier.vendor === PstnSetupService.INTELEPEER) {
         _.extend(carrierObj, {
@@ -148,9 +148,9 @@
             $translate.instant('intelepeerFeatures.feature1'),
             $translate.instant('intelepeerFeatures.feature2'),
             $translate.instant('intelepeerFeatures.feature3'),
-            $translate.instant('intelepeerFeatures.feature4')
+            $translate.instant('intelepeerFeatures.feature4'),
           ],
-          selectFn: goToNumbers
+          selectFn: goToNumbers,
         });
       } else if (carrier.vendor === PstnSetupService.TATA) {
         _.extend(carrierObj, {
@@ -161,23 +161,23 @@
             $translate.instant('tataFeatures.feature2'),
             $translate.instant('tataFeatures.feature3'),
             $translate.instant('tataFeatures.feature4'),
-            $translate.instant('tataFeatures.feature5')
+            $translate.instant('tataFeatures.feature5'),
           ],
-          selectFn: goToNumbers
+          selectFn: goToNumbers,
         });
       } else if (carrier.vendor === PstnSetupService.TELSTRA) {
         _.extend(carrierObj, {
           logoSrc: 'images/carriers/logo_telstra.svg',
           logoAlt: 'Telstra',
           features: [],
-          selectFn: goToNumbers
+          selectFn: goToNumbers,
         });
       } else if (carrier.vendor === PstnSetupService.WESTUC) {
         _.extend(carrierObj, {
           logoSrc: 'images/carriers/logo_westuc.jpg',
           logoAlt: 'West Corporation',
           features: [],
-          selectFn: goToNumbers
+          selectFn: goToNumbers,
         });
       }
       vm.providers.push(carrierObj);

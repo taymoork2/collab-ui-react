@@ -7,7 +7,7 @@ describe('Controller: AATimeoutInvalidCtrl', function () {
   var AAUiModelService, AutoAttendantCeMenuModelService;
   var $rootScope, $scope;
   var aaUiModel = {
-    openHours: {}
+    openHours: {},
   };
   var schedule = 'openHours';
   var index = '0';
@@ -36,7 +36,7 @@ describe('Controller: AATimeoutInvalidCtrl', function () {
     aaUiModel['openHours'].entries[0].addAction(action);
 
     controller = $controller('AATimeoutInvalidCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
     $scope.$apply();
 
@@ -111,7 +111,7 @@ describe('Controller: AATimeoutInvalidCtrl', function () {
       controller.uiMenu.entries = [{
         "type": "MENU_OPTION",
         "entries": [],
-        "headers": []
+        "headers": [],
       }];
       $scope.index = 0;
       controller.menuEntry = controller.uiMenu.entries[$scope.index];
@@ -126,7 +126,7 @@ describe('Controller: AATimeoutInvalidCtrl', function () {
       controller.uiMenu.entries = [{
         "type": "MENU_OPTION",
         "entries": [],
-        "headers": []
+        "headers": [],
       }];
       $scope.index = 0;
       controller.menuEntry = controller.uiMenu.entries[$scope.index];
@@ -144,7 +144,7 @@ describe('Controller: AATimeoutInvalidCtrl', function () {
       controller.uiMenu.entries = [{
         "type": "MENU_OPTION",
         "entries": [],
-        "headers": []
+        "headers": [],
       }];
       $scope.index = 0;
       controller.menuEntry = controller.uiMenu.entries[$scope.index];

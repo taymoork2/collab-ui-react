@@ -5,7 +5,7 @@ import map = require('lodash/map');
 import forEach = require('lodash/forEach');
 import find = require('lodash/find');
 import take = require('lodash/take');
-import some = require("lodash/some");
+import some = require('lodash/some');
 
 class UserStatusHistoryCtrl implements ng.IComponentController {
   public readonly numEntriesToShow = 20;
@@ -65,7 +65,7 @@ class UserStatusHistoryCtrl implements ng.IComponentController {
         })
         .catch((error) => {
           this.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
-        })
+        });
     }
   }
 

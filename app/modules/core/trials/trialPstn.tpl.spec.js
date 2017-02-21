@@ -7,7 +7,7 @@ describe('Template: trialPstn.tpl.spec.js:', function () {
 
   var states = [{
     name: 'Texas',
-    abbreviation: 'TX'
+    abbreviation: 'TX',
   }];
 
   afterEach(function () {
@@ -50,7 +50,7 @@ describe('Template: trialPstn.tpl.spec.js:', function () {
     var template = $templateCache.get('modules/core/trials/trialPstn.tpl.html');
 
     $controller('TrialPstnCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
 
     view = $compile(angular.element(template))($scope);

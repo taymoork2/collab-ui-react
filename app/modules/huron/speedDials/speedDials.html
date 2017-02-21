@@ -57,7 +57,7 @@
                     id="number{{$index}}"
                     name="number{{$index}}"
                     select-type="select"
-                    custom-number-translations="speedDials.customTranslations"
+                    custom-number-translations="$ctrl.customTranslations"
                     external-number-region-code-fn="$ctrl.getRegionCode()"
                     on-change-fn="$ctrl.setSpeedDial(model)">
                 </cs-call-destination>

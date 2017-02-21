@@ -23,7 +23,7 @@
         } else {
           return $filter('translate')('index.genericTitle');
         }
-      }
+      },
     };
   }
 })();
