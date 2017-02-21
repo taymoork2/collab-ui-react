@@ -12,7 +12,7 @@
       c_ucmc: {},
       c_cal: {},
       mf_mgmt: {},
-      hds_app: {}
+      hds_app: {},
     };
     var hub = CsdmHubFactory.create();
     var poller = CsdmPoller.create(fetch, hub);
@@ -54,7 +54,7 @@
         return {
           state: connector.state,
           stateSeverity: severity.label,
-          stateSeverityValue: severity.severity
+          stateSeverityValue: severity.severity,
         };
       } else {
         return previous;
@@ -100,20 +100,20 @@
         return {
           state: 'no_nodes_registered',
           stateSeverity: 'neutral',
-          stateSeverityValue: 1
+          stateSeverityValue: 1,
         };
       }
       if (_.size(connectors) === 0) {
         return {
           state: 'not_registered',
           stateSeverity: 'neutral',
-          stateSeverityValue: 1
+          stateSeverityValue: 1,
         };
       }
       return _.chain(connectors)
         .map(overrideStateIfAlarms)
         .reduce(getMostSevereRunningState, {
-          stateSeverityValue: -1
+          stateSeverityValue: -1,
         })
         .value();
     }
@@ -148,9 +148,9 @@
             alarms: connector.alarms,
             hostname: host,
             state: connector.state,
-            upgradeState: connector.upgradeState
+            upgradeState: connector.upgradeState,
           };
-        })
+        }),
       };
     }
 
@@ -192,7 +192,7 @@
             c_ucmc: clusterType('c_ucmc', clusters),
             c_cal: clusterType('c_cal', clusters),
             mf_mgmt: clusterType('mf_mgmt', clusters),
-            hds_app: clusterType('hds_app', clusters)
+            hds_app: clusterType('hds_app', clusters),
           };
         })
         .then(function (clusters) {
@@ -201,7 +201,7 @@
             c_ucmc: addAggregatedData('c_ucmc', clusters.c_ucmc),
             c_cal: addAggregatedData('c_cal', clusters.c_cal),
             mf_mgmt: addAggregatedData('mf_mgmt', clusters.mf_mgmt),
-            hds_app: addAggregatedData('hds_app', clusters.hds_app)
+            hds_app: addAggregatedData('hds_app', clusters.hds_app),
           };
           return result;
         })
@@ -211,7 +211,7 @@
             c_ucmc: _.keyBy(clusters.c_ucmc, 'id'),
             c_cal: _.keyBy(clusters.c_cal, 'id'),
             mf_mgmt: _.keyBy(clusters.mf_mgmt, 'id'),
-            hds_app: _.keyBy(clusters.hds_app, 'id')
+            hds_app: _.keyBy(clusters.hds_app, 'id'),
           };
           return result;
         })

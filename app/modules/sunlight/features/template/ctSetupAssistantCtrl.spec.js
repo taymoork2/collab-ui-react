@@ -21,12 +21,12 @@ describe('Care Setup Assistant Ctrl', function () {
 
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue(OrgId),
-    getOrgName: jasmine.createSpy('getOrgName').and.returnValue(OrgName)
+    getOrgName: jasmine.createSpy('getOrgName').and.returnValue(OrgName),
   };
 
   var getDummyLogo = function (data) {
     return {
-      data: data
+      data: data,
     };
   };
 
@@ -36,8 +36,8 @@ describe('Care Setup Assistant Ctrl', function () {
     success: false,
     status: 403,
     Errors: [{
-      errorCode: '100106'
-    }]
+      errorCode: '100106',
+    }],
   };
 
   var deSelectAllDays = function () {
@@ -52,52 +52,52 @@ describe('Care Setup Assistant Ctrl', function () {
     'field1': {
       attributes: [{
         name: 'type',
-        value: { id: 'name' }
-      }]
+        value: { id: 'name' },
+      }],
     },
     'field2': {
       attributes: [{
         name: 'type',
-        value: { id: 'email' }
-      }]
+        value: { id: 'email' },
+      }],
     },
     'field3': {
       attributes: [{
         name: 'type',
-        value: { id: 'name' }
-      }]
+        value: { id: 'name' },
+      }],
     },
     'field4': {
       attributes: [{
         name: 'type',
-        value: { id: 'phone' }
-      }]
+        value: { id: 'phone' },
+      }],
     } };
   var customerInfoWithLongAttributeValue = {
     'welcomeHeader': {
       'attributes': [
         { 'name': 'header', 'value': 'Welcome to' },
-        { 'name': 'organization', 'value': Array(52).join("c") }
-      ]
+        { 'name': 'organization', 'value': Array(52).join("c") },
+      ],
     },
     'field1': {
       'attributes': [
         { 'name': 'label', 'value': 'Name' },
         { 'name': 'hintText', 'value': 'Something' },
-        { 'name': 'type', 'value': { id: 'name' } }
+        { 'name': 'type', 'value': { id: 'name' } },
       ] },
     'field2': {
       'attributes': [
         { 'name': 'label', 'value': 'Email' },
         { 'name': 'hintText', 'value': Array(52).join("d") },
-        { 'name': 'type', 'value': { id: 'email' } }
+        { 'name': 'type', 'value': { id: 'email' } },
       ] },
     'field3': {
       'attributes': [
         { 'name': 'label', 'value': 'SomethingElse' },
         { 'name': 'hintText', 'value': 'SomethingElse' },
-        { 'name': 'type', 'value': { id: 'custom' } }
-      ] }
+        { 'name': 'type', 'value': { id: 'custom' } },
+      ] },
   };
 
   var selectedDaysByDefault = businessHours.selectedDaysByDefault;
@@ -152,10 +152,10 @@ describe('Care Setup Assistant Ctrl', function () {
     spyOn(SunlightConfigService, 'updateChatConfig');
     $stateParams = {
       template: undefined,
-      isEditFeature: false
+      isEditFeature: false,
     };
     controller = $controller('CareSetupAssistantCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
   };
 
@@ -177,7 +177,7 @@ describe('Care Setup Assistant Ctrl', function () {
 
   function rejectLogoPromise() {
     getLogoDeferred.reject({
-      status: 500
+      status: 500,
     });
     $scope.$apply();
   }
@@ -308,7 +308,7 @@ describe('Care Setup Assistant Ctrl', function () {
         useOrgProfile: true,
         useAgentRealName: true,
         displayText: OrgName,
-        orgLogoUrl: dummyLogoUrl
+        orgLogoUrl: dummyLogoUrl,
       });
     });
 
@@ -361,11 +361,11 @@ describe('Care Setup Assistant Ctrl', function () {
       var returnObj = {
         attributes: [{
           name: 'header',
-          value: 'careChatTpl.defaultWelcomeText'
+          value: 'careChatTpl.defaultWelcomeText',
         }, {
           name: 'organization',
-          value: OrgName
-        }]
+          value: OrgName,
+        }],
       };
       controller.setActiveItem("welcomeHeader");
       expect(controller.activeItem).toEqual(returnObj);
@@ -422,7 +422,7 @@ describe('Care Setup Assistant Ctrl', function () {
       var testObj = {
         "trees-14": "x-10000",
         "trees-15": "x-20000",
-        "trees-16": "x-30000"
+        "trees-16": "x-30000",
       };
       var isDefinedRes = controller.isDefined(testObj, "trees-15");
       expect(isDefinedRes).toBe(true);
@@ -432,7 +432,7 @@ describe('Care Setup Assistant Ctrl', function () {
       var testObj = {
         "trees-14": "x-10000",
         "trees-15": "x-20000",
-        "trees-16": ""
+        "trees-16": "",
       };
       var isDefinedRes = controller.isDefined(testObj, "trees-17");
       expect(isDefinedRes).toBe(false);
@@ -442,7 +442,7 @@ describe('Care Setup Assistant Ctrl', function () {
 
     it("should add a new category token and clear the input field when a new token is added", function () {
       var ENTER_KEYPRESS_EVENT = {
-        which: 13
+        which: 13,
       };
       controller.categoryOptionTag = 'Mock Category Token';
       var mockElementObject = jasmine.createSpyObj('element', ['tokenfield']);
@@ -491,7 +491,7 @@ describe('Care Setup Assistant Ctrl', function () {
 
     function setTimezone(timeZoneValue) {
       controller.scheduleTimeZone = _.find(CTService.getTimezoneOptions(), {
-        value: timeZoneValue
+        value: timeZoneValue,
       });
     }
 
@@ -531,13 +531,13 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(_.map(controller.startTimeOptions, 'label')).toEqual(startTimeOptions);
       var startTime = {
         label: '09:00 AM',
-        value: '09:00'
+        value: '09:00',
       };
       var oldEndTime = controller.timings.endTime;
       setTimings(startTime);
       expect(controller.timings).toEqual({
         startTime: startTime,
-        endTime: oldEndTime
+        endTime: oldEndTime,
 
       });
     });
@@ -546,16 +546,16 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(_.map(controller.startTimeOptions, 'label')).toEqual(startTimeOptions);
       var startTime = {
         label: '05:00 PM',
-        value: '17:00'
+        value: '17:00',
       };
       var endTime = {
         label: '05:30 PM',
-        value: '17:30'
+        value: '17:30',
       };
       setTimings(startTime);
       expect(controller.timings).toEqual({
         startTime: startTime,
-        endTime: endTime
+        endTime: endTime,
       });
     });
 
@@ -563,16 +563,16 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(_.map(controller.startTimeOptions, 'label')).toEqual(startTimeOptions);
       var startTime = {
         label: '11:30 PM',
-        value: '23:30'
+        value: '23:30',
       };
       var endTime = {
         label: '11:59 PM',
-        value: '23:59'
+        value: '23:59',
       };
       setTimings(startTime);
       expect(controller.timings).toEqual({
         startTime: startTime,
-        endTime: endTime
+        endTime: endTime,
       });
     });
 
@@ -583,11 +583,11 @@ describe('Care Setup Assistant Ctrl', function () {
       controller.setDay(6); // set Saturday
       var startTime = {
         label: '10:30 AM',
-        value: '10:30'
+        value: '10:30',
       };
       var endTime = {
         label: '05:30 PM',
-        value: '17:30'
+        value: '17:30',
       };
       setTimings(startTime);
       controller.timings.endTime = endTime;
@@ -601,10 +601,10 @@ describe('Care Setup Assistant Ctrl', function () {
           open24Hours: false,
           timings: {
             startTime: '10:30 AM',
-            endTime: '05:30 PM'
+            endTime: '05:30 PM',
           },
-          timezone: 'America/Nassau'
-        }
+          timezone: 'America/Nassau',
+        },
       });
     });
 
@@ -645,7 +645,7 @@ describe('Care Setup Assistant Ctrl', function () {
         headers: function () {
           return 'something/abc123';
         },
-        status: 201
+        status: 201,
       });
 
       $httpBackend.expectGET(_scomUrl).respond(404, {});
@@ -659,11 +659,11 @@ describe('Care Setup Assistant Ctrl', function () {
         controllerAs: 'embedCodeCtrl',
         resolve: {
           templateId: jasmine.any(Function),
-          templateHeader: jasmine.any(Function)
-        }
+          templateHeader: jasmine.any(Function),
+        },
       });
       expect(Notification.success).toHaveBeenCalledWith(jasmine.any(String), {
-        featureName: jasmine.any(String)
+        featureName: jasmine.any(String),
       });
       expect(controller.saveCTErrorOccurred).toBeFalsy();
       expect($state.go).toHaveBeenCalled();
@@ -682,7 +682,7 @@ describe('Care Setup Assistant Ctrl', function () {
         headers: function () {
           return 'something/abc123';
         },
-        status: 200
+        status: 200,
       });
 
       $httpBackend.expectGET(_scomUrl).respond(404, {});
@@ -696,11 +696,11 @@ describe('Care Setup Assistant Ctrl', function () {
         controllerAs: 'embedCodeCtrl',
         resolve: {
           templateId: jasmine.any(Function),
-          templateHeader: jasmine.any(Function)
-        }
+          templateHeader: jasmine.any(Function),
+        },
       });
       expect(Notification.success).toHaveBeenCalledWith(jasmine.any(String), {
-        featureName: jasmine.any(String)
+        featureName: jasmine.any(String),
       });
       expect(controller.saveCTErrorOccurred).toBeFalsy();
       expect($state.go).toHaveBeenCalled();
@@ -773,14 +773,14 @@ describe('Care Setup Assistant Ctrl', function () {
         'overview',
         'customerInformation',
         'offHours',
-        'summary'
+        'summary',
       ]);
     });
 
     it('the overview page should have expected cards', function () {
       expect(controller.overviewCards).toEqual([
         { name: 'customerInformation', mediaIcons: [] },
-        { name: 'offHours', mediaIcons: [] }
+        { name: 'offHours', mediaIcons: [] },
       ]);
     });
 
@@ -816,7 +816,7 @@ describe('Care Setup Assistant Ctrl', function () {
         'chatStatusMessages',
         'customerInformationCallback',
         'offHours',
-        'summary'
+        'summary',
       ]);
     });
 
@@ -826,7 +826,7 @@ describe('Care Setup Assistant Ctrl', function () {
         { name: 'agentUnavailable', mediaIcons: ['icon-message'] },
         { name: 'feedback', mediaIcons: ['icon-message'] },
         { name: 'customerInformationCallback', mediaIcons: ['icon-phone'] },
-        { name: 'offHours', mediaIcons: ['icon-message', 'icon-phone'] }
+        { name: 'offHours', mediaIcons: ['icon-message', 'icon-phone'] },
       ]);
     });
 

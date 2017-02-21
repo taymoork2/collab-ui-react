@@ -79,7 +79,7 @@ beforeEach(function () {
   this.initController = function (controller, options) {
     this.injectDependencies('$controller', '$scope');
     this.controller = this.$controller(controller, _.extend({
-      $scope: this.$scope
+      $scope: this.$scope,
     }, _.get(options, 'controllerLocals')));
     var controllerAs = _.get(options, 'controllerAs');
     if (controllerAs) {

@@ -11,7 +11,7 @@
     var getStatusCount = 0;
     var invalidcount = 0;
     $scope.options = {
-      addUsers: 0
+      addUsers: 0,
     };
 
     FeatureToggleService.supportsDirSync().then(function (dirSyncEnabled) {
@@ -24,19 +24,19 @@
       label: $translate.instant('firstTimeWizard.simple'),
       value: 0,
       name: 'syncOptions',
-      id: 'syncSimple'
+      id: 'syncSimple',
     };
     $scope.syncUpload = {
       label: $translate.instant('firstTimeWizard.upload'),
       value: 1,
       name: 'syncOptions',
-      id: 'syncUpload'
+      id: 'syncUpload',
     };
     $scope.syncAdvanced = {
       label: $translate.instant('firstTimeWizard.advanced'),
       value: 2,
       name: 'syncOptions',
-      id: 'syncAdvanced'
+      id: 'syncAdvanced',
     };
 
     $scope.initNext = function () {
@@ -44,13 +44,13 @@
 
       if (!_.isUndefined($scope.options.addUsers) && !_.isUndefined($scope.wizard) && _.isFunction($scope.wizard.setSubTab)) {
         var simpleSubTab = _.find($scope.wizard.current.tab.subTabs, {
-          name: 'simple'
+          name: 'simple',
         });
         var csvSubTab = _.find($scope.wizard.current.tab.subTabs, {
-          name: 'csv'
+          name: 'csv',
         });
         var advancedSubTab = _.find($scope.wizard.current.tab.subTabs, {
-          name: 'advanced'
+          name: 'advanced',
         });
         if ($scope.options.addUsers === 0) {
           $scope.wizard.setSubTab(simpleSubTab);
@@ -102,7 +102,7 @@
       //tokenfield setup - Should make it into a directive later.
       angular.element('#usersfield-wiz').tokenfield({
         delimiter: [',', ';'],
-        createTokensOnBlur: true
+        createTokensOnBlur: true,
       })
         .on('tokenfield:createtoken', function (e) {
           //Removing anything in brackets from user data
@@ -270,7 +270,7 @@
           } else {
             Log.debug('Failed to create directory sync domain. Status: ' + status);
             Notification.error('dirsyncModal.setDomainFailed', {
-              status: status
+              status: status,
             });
           }
         });
@@ -306,7 +306,7 @@
           Log.debug('Failed to retrieve directory sync status. Status: ' + status);
           $rootScope.$emit('add-user-dirsync-error');
           Notification.error('dirsyncModal.getStatusFailed', {
-            status: status
+            status: status,
           });
           Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.SYNC_REFRESH, null, { result: 'error', clicks: getStatusCount });
         }
@@ -319,11 +319,11 @@
         _.forEach(csvData, function (row) {
           var userArrObj = {
             Email: null,
-            Name: null
+            Name: null,
           };
           var userNameObj = {
             firstName: null,
-            lastName: null
+            lastName: null,
           };
           userArrObj.Email = row.email;
           userArrObj.Name = _.trim(row.firstName + ' ' + row.lastName);
@@ -348,13 +348,13 @@
           $scope.syncNowLoad = false;
           Log.debug('DirSync started successfully. Status: ' + status);
           Notification.success('dirsyncModal.dirsyncSuccess', {
-            status: status
+            status: status,
           });
         } else {
           $scope.syncNowLoad = false;
           Log.debug('Failed to start directory sync. Status: ' + status);
           Notification.error('dirsyncModal.dirsyncFailed', {
-            status: status
+            status: status,
           });
         }
       });
@@ -425,7 +425,7 @@
       var usersList = getUsersList();
       Log.debug('Invite: ', usersList);
       $scope.results = {
-        resultList: []
+        resultList: [],
       };
       var isComplete = true;
       var callback = function (data, status) {
@@ -436,7 +436,7 @@
 
             var userResult = {
               email: data.inviteResponse[i].email,
-              alertType: null
+              alertType: null,
             };
 
             var userStatus = data.inviteResponse[i].status;

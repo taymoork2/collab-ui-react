@@ -40,7 +40,7 @@
       areaCodeOptions: null,
       areaCodeEnable: false,
       nxxOptions: null,
-      nxxEnable: false
+      nxxEnable: false,
     };
 
     //TATA Tokenfield
@@ -51,7 +51,7 @@
       createTokensOnBlur: true,
       limit: 100,
       tokens: [],
-      beautify: false
+      beautify: false,
     };
     vm.manualTokenMethods = {
       createtoken: manualCreateToken,
@@ -69,7 +69,7 @@
       limit: pstnTokenLimit,
       tokens: [],
       minLength: 9,
-      beautify: false
+      beautify: false,
     };
     vm.tokenMethods = {
       createtoken: createToken,
@@ -91,11 +91,11 @@
           vm.providerImplementation = vm.trialData.details.pstnProvider.apiImplementation;
           resetNumbers();
           vm.providerSelected = true;
-        }
+        },
       },
       controller: /* @ngInject */ function ($scope) {
         _getCarriers($scope);
-      }
+      },
     }];
 
     vm.contractInfoFields = [{
@@ -301,7 +301,7 @@
       var params = {
         npa: vm.trialData.details.pstnNumberInfo.areaCode.code,
         count: pstnTokenLimit.toString(),
-        sequential: false
+        sequential: false,
       };
 
       var nxx = getNxxValue();

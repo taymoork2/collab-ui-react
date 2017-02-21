@@ -3,7 +3,7 @@
 describe('Controller: RemDeviceController', function () {
   var controller, $q, $rootScope, $httpBackend, CsdmDeviceService, CsdmHuronDeviceService, CsdmPlaceService, device;
   var fakeModal = {
-    close: sinon.stub()
+    close: sinon.stub(),
   };
 
   var cisUidOfPlace = 'a19b308a-PlaceWithDevice-71898e423bec';
@@ -48,7 +48,7 @@ describe('Controller: RemDeviceController', function () {
 
       controller = $controller('RemDeviceController', {
         $modalInstance: fakeModal,
-        device: device
+        device: device,
       });
 
       CsdmDataModelService.getPlacesMap();
@@ -65,7 +65,7 @@ describe('Controller: RemDeviceController', function () {
         type: 'cloudberry',
         isCloudberryDevice: true,
         url: device1Url,
-        cisUuid: cisUidOfPlace
+        cisUuid: cisUidOfPlace,
       };
       controller.deleteDevice();
       $rootScope.$digest();
@@ -80,7 +80,7 @@ describe('Controller: RemDeviceController', function () {
         type: 'huron',
         isHuronDevice: true,
         url: huronDevice2Url,
-        cisUuid: '68351854-Place2WithHuronDevice-c9c844421ec2'
+        cisUuid: '68351854-Place2WithHuronDevice-c9c844421ec2',
       };
       controller.deleteDevice();
       $rootScope.$digest();

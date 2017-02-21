@@ -31,24 +31,24 @@
 
     vm.snrWaitSecondsOptions = [{
       name: '20',
-      value: '20000'
+      value: '20000',
     }, {
       name: '30',
-      value: '30000'
+      value: '30000',
     }, {
       name: '45',
-      value: '45000'
+      value: '45000',
     }, {
       name: '60',
-      value: '60000'
+      value: '60000',
     }];
 
     vm.snrOptions = [{
       label: 'All Lines',
-      line: 'all'
+      line: 'all',
     }, {
       label: 'Only certain lines',
-      line: 'specific'
+      line: 'specific',
     }];
     vm.snrLineOption = vm.snrOptions[0];
 
@@ -76,7 +76,7 @@
         } else {
           vm.snrWaitSeconds = {
             name: '20',
-            value: '20000'
+            value: '20000',
           };
         }
         vm.showRemove = checkSnr();
@@ -108,7 +108,7 @@
       $modal.open({
         templateUrl: 'modules/huron/snr/snrDeleteConfirmation.tpl.html',
         scope: $scope,
-        type: 'dialog'
+        type: 'dialog',
       }).result.then(function () {
         deleteRemoteDestinationInfo(vm.currentUser);
       });
@@ -129,16 +129,16 @@
         'destination': removePhoneNumberFormatting(destination.phoneNumber),
         'name': 'RD-' + getRandomString(),
         'autoAssignRemoteDestinationProfile': true,
-        'answerTooLateTimer': answerTooLateTimer
+        'answerTooLateTimer': answerTooLateTimer,
       };
       var result = {
         msg: null,
-        type: 'null'
+        type: 'null',
       };
 
       return RemoteDestinationService.save({
         customerId: user.meta.organizationID,
-        userId: user.id
+        userId: user.id,
       }, rdBean,
         function () {
           TelephonyInfoService.updateSnr(vm.snrInfo);
@@ -155,13 +155,13 @@
     function deleteRemoteDestinationInfo(user) {
       var result = {
         msg: null,
-        type: 'null'
+        type: 'null',
       };
 
       return RemoteDestinationService.delete({
         customerId: user.meta.organizationID,
         userId: user.id,
-        remoteDestId: vm.snrInfo.remoteDestinations[0].uuid
+        remoteDestId: vm.snrInfo.remoteDestinations[0].uuid,
       },
         function () {
           vm.snrInfo.remoteDest.phoneNumber = null;
@@ -184,17 +184,17 @@
       var rdBean = {
         'destination': removePhoneNumberFormatting(destination.phoneNumber),
         'answerTooLateTimer': answerTooLateTimer,
-        'enableMobileConnect': (vm.snrInfo.singleNumberReachEnabled) ? "true" : "false"
+        'enableMobileConnect': (vm.snrInfo.singleNumberReachEnabled) ? "true" : "false",
       };
       var result = {
         msg: null,
-        type: 'null'
+        type: 'null',
       };
 
       return RemoteDestinationService.update({
         customerId: user.meta.organizationID,
         userId: user.id,
-        remoteDestId: vm.snrInfo.remoteDestinations[0].uuid
+        remoteDestId: vm.snrInfo.remoteDestinations[0].uuid,
       }, rdBean,
         function () {
           vm.snrInfo.answerTooLateTimer = answerTooLateTimer;

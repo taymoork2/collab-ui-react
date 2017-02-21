@@ -119,7 +119,7 @@
             // recover from not finding the connector on the server
             return {
               id: connectorId,
-              host_name: null
+              host_name: null,
             };
           });
       });
@@ -177,21 +177,21 @@
           text: $translate.instant('hercules.activationStatus.activated'),
           count: service.activated,
           selected: false,
-          unselectable: service.activated === 0
+          unselectable: service.activated === 0,
         }, {
           id: service.serviceId,
           stateType: 'notActivated',
           text: $translate.instant('hercules.activationStatus.pending_activation'),
           count: service.notActivated,
           selected: service.notActivated > 0,
-          unselectable: service.notActivated === 0
+          unselectable: service.notActivated === 0,
         }, {
           id: service.serviceId,
           stateType: 'error',
           text: $translate.instant('hercules.activationStatus.error'),
           count: service.error,
           selected: service.error > 0,
-          unselectable: service.error === 0
+          unselectable: service.error === 0,
         }];
       });
     }

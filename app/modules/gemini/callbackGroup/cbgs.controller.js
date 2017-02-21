@@ -29,16 +29,16 @@
       field: 'totalSites',
       cellClass: 'text-right',
       sort: { direction: 'asc', priority: 0 },
-      displayName: $translate.instant('gemini.cbgs.field.totalSites')
+      displayName: $translate.instant('gemini.cbgs.field.totalSites'),
     }, {
       width: '12%',
       field: 'status',
       displayName: $translate.instant('gemini.cbgs.field.status_'),
-      cellTemplate: $templateCache.get('modules/gemini/callbackGroup/cbgsStatus.tpl.html')
+      cellTemplate: $templateCache.get('modules/gemini/callbackGroup/cbgsStatus.tpl.html'),
     }, {
       field: 'customerAttribute',
       cellTooltip: true,
-      displayName: $translate.instant('gemini.cbgs.field.alias')
+      displayName: $translate.instant('gemini.cbgs.field.alias'),
     }];
     vm.gridOptions = {
       rowHeight: 44,
@@ -53,7 +53,7 @@
         gridApi.selection.on.rowSelectionChanged($scope, function (row) {
           $scope.showCbgDetails(row.entity);
         });
-      }
+      },
     };
 
     $scope.gridData = [];
@@ -90,7 +90,7 @@
       var info = {
         groupId: cbg.ccaGroupId,
         customerId: vm.customerId,
-        cbgs: $scope.gridData_
+        cbgs: $scope.gridData_,
       };
       $state.go('gemCbgDetails', { info: info });
     }

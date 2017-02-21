@@ -14,7 +14,7 @@
       getData: getData,
       setData: setData,
       getElement: getElement,
-      setElement: setElement
+      setElement: setElement,
     };
 
     function getData() {
@@ -40,7 +40,7 @@
       restrict: 'A',
       scope: {
         draggable: '=',
-        onEnterKey: '&'
+        onEnterKey: '&',
       },
       link: function (scope, elem) {
         elem.attr('draggable', true);
@@ -81,7 +81,7 @@
             }
           });
         });
-      }
+      },
     };
   }
 
@@ -92,7 +92,7 @@
       scope: {
         dropList: '=',
         callback: '&',
-        unique: '@'
+        unique: '@',
       },
       link: function (scope, elem) {
         var placeholder = getPlaceholderElement(),
@@ -217,7 +217,7 @@
           event.stopPropagation();
           return false;
         });
-      }
+      },
     };
   }
 })();

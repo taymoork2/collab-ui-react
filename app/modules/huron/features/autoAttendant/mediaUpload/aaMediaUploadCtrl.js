@@ -42,7 +42,7 @@
 
     var properties = {
       NAME: ['play', 'say', 'runActionsOnInput', 'routeToQueue'],
-      HEADER_TYPE: 'MENU_OPTION_ANNOUNCEMENT'
+      HEADER_TYPE: 'MENU_OPTION_ANNOUNCEMENT',
     };
 
     var messageType = {
@@ -73,7 +73,7 @@
             standardUpload(file);
           } else {
             AANotificationService.error('autoAttendant.fileUploadSizeIncorrect', {
-              fileSize: $scope.aaFileSize / 1024 / 1024 // convert bytes to MB sent
+              fileSize: $scope.aaFileSize / 1024 / 1024, // convert bytes to MB sent
             });
           }
         } else {
@@ -205,7 +205,7 @@
             close: $translate.instant('common.cancel'),
             dismiss: $translate.instant('common.no'),
             btnType: 'negative',
-            type: 'dialog'
+            type: 'dialog',
           });
           break;
         case types.delete:
@@ -215,7 +215,7 @@
             close: $translate.instant('common.delete'),
             dismiss: $translate.instant('common.cancel'),
             btnType: 'negative',
-            type: 'dialog'
+            type: 'dialog',
           });
           break;
         case types.overwrite:
@@ -225,7 +225,7 @@
             close: $translate.instant('common.yes'),
             dismiss: $translate.instant('common.no'),
             btnType: 'primary',
-            type: 'dialog'
+            type: 'dialog',
           });
           break;
       }

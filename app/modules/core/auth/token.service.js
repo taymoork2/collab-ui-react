@@ -30,7 +30,7 @@
       completeLogout: completeLogout,
       clearStorage: clearStorage,
       triggerGlobalLogout: triggerGlobalLogout,
-      init: init
+      init: init,
     };
 
     var ACCESS_TOKEN = 'accessToken';
@@ -72,7 +72,7 @@
 
     function setClientSessionId(sessionId) {
       $cookies.put(CLIENT_SESSION_ID, sessionId, {
-        expires: moment().add(CLIENT_SESSION_COOKIE_DURATION, MONTHS).toDate()
+        expires: moment().add(CLIENT_SESSION_COOKIE_DURATION, MONTHS).toDate(),
       });
     }
 

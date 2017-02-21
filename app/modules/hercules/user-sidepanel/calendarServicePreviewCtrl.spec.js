@@ -55,7 +55,7 @@ describe('Directive Controller: CalendarServicePreviewCtrl', function () {
       ClusterService: ClusterService,
       $translate: $translate,
       ResourceGroupService: ResourceGroupService,
-      FeatureToggleService: FeatureToggleService
+      FeatureToggleService: FeatureToggleService,
     });
     $scope.$apply();
   }

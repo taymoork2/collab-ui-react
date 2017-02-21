@@ -15,7 +15,7 @@
           canDismiss: true,
           dismiss: function () {
             var settings = {
-              allowCrashLogUpload: true
+              allowCrashLogUpload: true,
             };
             Orgservice.setOrgSettings(Authinfo.getOrgId(), settings);
           },
@@ -24,11 +24,11 @@
           },
           linkText: 'homePage.viewOrEditSettings',
           name: 'crashlog',
-          text: 'globalSettings.privacy.crashReportNotificationText'
+          text: 'globalSettings.privacy.crashReportNotificationText',
         };
 
         return notification;
-      }
+      },
     };
   }
 })();

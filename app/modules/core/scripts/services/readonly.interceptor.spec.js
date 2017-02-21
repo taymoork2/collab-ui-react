@@ -26,7 +26,7 @@ describe('ReadonlyInterceptor', function () {
     it('intercepts POST operations and creates a read-only notification', function () {
       Interceptor.request({
         data: "x",
-        method: "POST"
+        method: "POST",
       });
       expect($q.reject.callCount).toEqual(1);
       expect(Notification.notifyReadOnly.callCount).toEqual(1);
@@ -35,7 +35,7 @@ describe('ReadonlyInterceptor', function () {
     it('intercepts PUT operations and creates a read-only notification', function () {
       Interceptor.request({
         data: "x",
-        method: "PUT"
+        method: "PUT",
       });
       expect($q.reject.callCount).toEqual(1);
       expect(Notification.notifyReadOnly.callCount).toEqual(1);
@@ -44,7 +44,7 @@ describe('ReadonlyInterceptor', function () {
     it('intercepts DELETE operations and creates a read-only notification', function () {
       Interceptor.request({
         data: "x",
-        method: "DELETE"
+        method: "DELETE",
       });
       expect($q.reject.callCount).toEqual(1);
       expect(Notification.notifyReadOnly.callCount).toEqual(1);
@@ -53,7 +53,7 @@ describe('ReadonlyInterceptor', function () {
     it('intercepts PATCH operations and creates a read-only notification', function () {
       Interceptor.request({
         data: "x",
-        method: "PATCH"
+        method: "PATCH",
       });
       expect($q.reject.callCount).toEqual(1);
       expect(Notification.notifyReadOnly.callCount).toEqual(1);
@@ -62,7 +62,7 @@ describe('ReadonlyInterceptor', function () {
     it('does not intercept read operations', function () {
       var config = {
         data: "x",
-        method: "GET"
+        method: "GET",
       };
       Interceptor.request(config);
       expect($q.reject.callCount).toEqual(0);
@@ -72,7 +72,7 @@ describe('ReadonlyInterceptor', function () {
     it('allows CI patches to self (own user)', function () {
       var config = {
         url: "https://identity.webex.com/identity/scim/fe5acf7a-6246-484f-8f43-3e8c910fc50d/v1/Users/09bd9c92-bdd0-4dfb-832d-618494246be5",
-        method: "PATCH"
+        method: "PATCH",
       };
       Interceptor.request(config);
       expect($q.reject.callCount).toEqual(0);
@@ -82,7 +82,7 @@ describe('ReadonlyInterceptor', function () {
     it('intercepts PATCH requests to other CI users)', function () {
       var config = {
         url: "https://identity.webex.com/identity/scim/fe5acf7a-6246-484f-8f43-3e8c910fc50d/v1/Users/2c5c9a99-3ab4-4266-aeb1-e950f52ec806",
-        method: "PATCH"
+        method: "PATCH",
       };
       Interceptor.request(config);
       expect($q.reject.callCount).toEqual(1);
@@ -98,7 +98,7 @@ describe('ReadonlyInterceptor', function () {
       Notification.notifyReadOnly = sinon.spy();
       var config = {
         data: "x",
-        method: "POST"
+        method: "POST",
       };
       Interceptor.request(config);
       expect($q.reject.callCount).toEqual(0);

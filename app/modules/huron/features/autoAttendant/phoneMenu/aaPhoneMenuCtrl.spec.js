@@ -6,7 +6,7 @@ describe('Controller: AAPhoneMenuCtrl', function () {
   var AAUiModelService, AutoAttendantCeMenuModelService, QueueHelperService, AACommonService;
   var $rootScope, $scope, $q;
   var aaUiModel = {
-    openHours: {}
+    openHours: {},
   };
   var schedule = 'openHours';
   var index = '0';
@@ -15,7 +15,7 @@ describe('Controller: AAPhoneMenuCtrl', function () {
   var queueName = 'Sunlight Queue 1';
   var queues = [{
     queueName: queueName,
-    queueUrl: '/c16a6027-caef-4429-b3af-9d61ddc7964b'
+    queueUrl: '/c16a6027-caef-4429-b3af-9d61ddc7964b',
 
   }];
 
@@ -106,7 +106,7 @@ describe('Controller: AAPhoneMenuCtrl', function () {
     aaUiModel['openHours'].addEntryAt(index, menu);
 
     controller = $controller('AAPhoneMenuCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
     $scope.$apply();
 
@@ -176,7 +176,7 @@ describe('Controller: AAPhoneMenuCtrl', function () {
       var phoneMenu = {
         "type": "MENU_OPTION",
         "entries": [],
-        "headers": []
+        "headers": [],
       };
       controller.menuEntry = phoneMenu;
       controller.selectedActions = [];
@@ -195,7 +195,7 @@ describe('Controller: AAPhoneMenuCtrl', function () {
       var phoneMenu = {
         "type": "MENU_OPTION",
         "entries": [],
-        "headers": []
+        "headers": [],
       };
       controller.menuEntry = phoneMenu;
       controller.selectedActions = [];
@@ -218,7 +218,7 @@ describe('Controller: AAPhoneMenuCtrl', function () {
         "type": "MENU_OPTION",
         "entries": [],
         "headers": [],
-        "attempts": 4
+        "attempts": 4,
       };
       controller.menuEntry = phoneMenu;
       controller.selectedActions = [];
@@ -244,7 +244,7 @@ describe('Controller: AAPhoneMenuCtrl', function () {
         "type": "MENU_OPTION",
         "entries": [],
         "headers": [],
-        "attempts": attempts
+        "attempts": attempts,
       };
       controller.menuEntry = phoneMenu;
       controller.selectedActions = [];
@@ -269,7 +269,7 @@ describe('Controller: AAPhoneMenuCtrl', function () {
       var phoneMenu = {
         "type": "MENU_OPTION",
         "entries": [],
-        "headers": []
+        "headers": [],
       };
       phoneMenu.entries.push(phoneMenuEntry);
       controller.menuEntry = phoneMenu;

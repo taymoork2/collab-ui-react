@@ -110,7 +110,7 @@
       return _.filter(tabs, function (tab) {
         return !tab.feature || _.some(features, {
           feature: tab.feature.replace(/^!/, ''),
-          enabled: !/^!/.test(tab.feature)
+          enabled: !/^!/.test(tab.feature),
         });
       });
     }
@@ -127,8 +127,8 @@
             feature: feature,
             enabled: _.some(existingFeatures, {
               feature: feature.feature,
-              enabled: true
-            })
+              enabled: true,
+            }),
           };
         })
         .value();

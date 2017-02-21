@@ -13,7 +13,7 @@
       listCustomerSites: listCustomerSites,
       createCustomerSite: createCustomerSite,
       getStatus: getStatus,
-      setStatus: setStatus
+      setStatus: setStatus,
     };
 
     // Mapping of terminus to huron address object keys
@@ -22,7 +22,7 @@
       address2: 'unit',
       city: 'city',
       state: 'state',
-      zip: 'zip'
+      zip: 'zip',
     };
 
     // Terminus service address data structure
@@ -35,7 +35,7 @@
       serviceAddressSub: 'unit',
       serviceCity: 'city',
       serviceState: 'state',
-      serviceZip: 'zip'
+      serviceZip: 'zip',
     };
 
     var addressStatus;
@@ -130,7 +130,7 @@
 
     function listCustomerSites(customerId) {
       return TerminusCustomerSiteService.query({
-        customerId: customerId
+        customerId: customerId,
       }).$promise
         .then(function (sites) {
           var promises = [];
@@ -150,32 +150,32 @@
     function getCustomerSite(customerId, siteId) {
       return TerminusCustomerSiteService.get({
         customerId: customerId,
-        siteId: siteId
+        siteId: siteId,
       }).$promise;
     }
 
     function createCustomerSite(customerId, name, address) {
       var payload = {
         name: name,
-        serviceAddress: {}
+        serviceAddress: {},
       };
       address.name = name;
       payload.serviceAddress = formatServiceAddress(address);
       return TerminusCustomerSiteService.save({
-        customerId: customerId
+        customerId: customerId,
       }, payload).$promise;
     }
 
     function updateSite(customerId, siteId, site) {
       return TerminusCustomerSiteService.update({
         customerId: customerId,
-        siteId: siteId
+        siteId: siteId,
       }, site).$promise;
     }
 
     function updateAddress(customerId, address) {
       var site = {
-        serviceAddress: formatServiceAddress(address)
+        serviceAddress: formatServiceAddress(address),
       };
       return listCustomerSites(customerId)
         .then(function (sites) {

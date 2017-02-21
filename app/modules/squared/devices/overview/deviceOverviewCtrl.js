@@ -94,7 +94,7 @@
     function getEmergencyAddress() {
       TerminusUserDeviceE911Service.get({
         customerId: Authinfo.getOrgId(),
-        number: deviceOverview.emergencyCallbackNumber
+        number: deviceOverview.emergencyCallbackNumber,
       }).$promise.then(function (info) {
         deviceOverview.emergencyAddress = info.e911Address;
         deviceOverview.emergencyAddressStatus = info.status;
@@ -219,7 +219,7 @@
         currentAddress: deviceOverview.emergencyAddress,
         currentNumber: deviceOverview.emergencyCallbackNumber,
         status: deviceOverview.emergencyAddressStatus,
-        staticNumber: !deviceOverview.currentDevice.isHuronDevice
+        staticNumber: !deviceOverview.currentDevice.isHuronDevice,
       };
 
       if ($state.current.name === 'user-overview.csdmDevice' || $state.current.name === 'place-overview.csdmDevice') {
@@ -381,7 +381,7 @@
       }
       return {
         label: label,
-        value: channel
+        value: channel,
       };
     }
 

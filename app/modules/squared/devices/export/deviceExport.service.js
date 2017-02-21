@@ -21,14 +21,14 @@
       return $http.get(url, {
         responseType: 'arraybuffer',
         headers: {
-          'Accept': 'text/csv'
+          'Accept': 'text/csv',
         },
-        timeout: exportCanceler.promise
+        timeout: exportCanceler.promise,
       }).then(function (response) {
         var data = response.data;
         var fileName = 'devices.csv';
         var file = new $window.Blob([data], {
-          type: 'application/json'
+          type: 'application/json',
         });
         if ($window.navigator.msSaveOrOpenBlob) {
           // IE
@@ -42,7 +42,7 @@
           downloadLink.attr({
             'href': $window.URL.createObjectURL(file),
             'download': fileName,
-            'target': '_blank'
+            'target': '_blank',
           });
           $document.find('body').append(downloadContainer);
           $timeout(function () {
@@ -63,7 +63,7 @@
 
     return {
       exportDevices: exportDevices,
-      cancelExport: cancelExport
+      cancelExport: cancelExport,
     };
   }
 }());

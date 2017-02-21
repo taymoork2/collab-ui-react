@@ -17,7 +17,7 @@
     // with a different value like in case of a feature toggle. If there are no shipping FTs - should be empty
     var _shipCountryListReplacement = [{
       default: TrialDeviceService.listTypes.ROLLOUT2,
-      override: TrialDeviceService.listTypes.US_ONLY
+      override: TrialDeviceService.listTypes.US_ONLY,
     }];
     vm.deviceLimit = TrialDeviceService.getDeviceLimit();
 
@@ -75,25 +75,25 @@
     }
 
     vm.sx10 = _.find(_trialRoomSystemData.details.roomSystems, {
-      model: 'CISCO_SX10'
+      model: 'CISCO_SX10',
     });
     vm.dx80 = _.find(_trialRoomSystemData.details.roomSystems, {
-      model: 'CISCO_DX80'
+      model: 'CISCO_DX80',
     });
     vm.mx300 = _.find(_trialRoomSystemData.details.roomSystems, {
-      model: 'CISCO_MX300'
+      model: 'CISCO_MX300',
     });
     vm.phone8865 = _.find(_trialCallData.details.phones, {
-      model: 'CISCO_8865'
+      model: 'CISCO_8865',
     });
     vm.phone8845 = _.find(_trialCallData.details.phones, {
-      model: 'CISCO_8845'
+      model: 'CISCO_8845',
     });
     vm.phone8841 = _.find(_trialCallData.details.phones, {
-      model: 'CISCO_8841'
+      model: 'CISCO_8841',
     });
     vm.phone7841 = _.find(_trialCallData.details.phones, {
-      model: 'CISCO_7841'
+      model: 'CISCO_7841',
     });
 
     vm.setQuantity(vm.sx10);
@@ -117,9 +117,9 @@
       expressionProperties: {
         'templateOptions.disabled': function () {
           return !vm.canAddRoomSystemDevice;
-        }
+        },
       },
-      validators: _checkValidators()
+      validators: _checkValidators(),
     }, {
       model: vm.sx10,
       key: 'quantity',
@@ -136,10 +136,10 @@
         disabled: true,
       },
       modelOptions: {
-        allowInvalid: true
+        allowInvalid: true,
       },
       validation: {
-        show: true
+        show: true,
       },
 
       expressionProperties: {
@@ -151,11 +151,11 @@
         },
         'model.quantity': function () {
           return vm.getQuantityInputDefault(vm.sx10);
-        }
+        },
 
       },
       watcher: _addWatcher(),
-      validators: _addDeviceQuantityValidators(vm.deviceLimit.CISCO_SX10, vm.deviceLimit.roomSystems)
+      validators: _addDeviceQuantityValidators(vm.deviceLimit.CISCO_SX10, vm.deviceLimit.roomSystems),
     }, {
       model: vm.dx80,
       key: 'enabled',
@@ -169,9 +169,9 @@
       expressionProperties: {
         'templateOptions.disabled': function () {
           return !vm.canAddRoomSystemDevice;
-        }
+        },
       },
-      validators: _checkValidators()
+      validators: _checkValidators(),
     }, {
       model: vm.dx80,
       key: 'quantity',
@@ -188,10 +188,10 @@
         disabled: true,
       },
       modelOptions: {
-        allowInvalid: true
+        allowInvalid: true,
       },
       validation: {
-        show: true
+        show: true,
       },
 
       expressionProperties: {
@@ -203,10 +203,10 @@
         },
         'model.quantity': function () {
           return vm.getQuantityInputDefault(vm.dx80);
-        }
+        },
       },
       watcher: _addWatcher(),
-      validators: _addDeviceQuantityValidators(vm.deviceLimit.CISCO_DX80, vm.deviceLimit.roomSystems)
+      validators: _addDeviceQuantityValidators(vm.deviceLimit.CISCO_DX80, vm.deviceLimit.roomSystems),
     }, {
       model: vm.mx300,
       key: 'enabled',
@@ -220,13 +220,13 @@
       expressionProperties: {
         'templateOptions.disabled': function () {
           return !vm.canAddRoomSystemDevice;
-        }
+        },
       },
       // TODO - remove hideExpression when MX300 are officially supported
       hideExpression: function () {
         return !vm.showNewRoomSystems;
       },
-      validators: _checkValidators()
+      validators: _checkValidators(),
     }, {
       model: vm.mx300,
       key: 'quantity',
@@ -243,10 +243,10 @@
         disabled: true,
       },
       modelOptions: {
-        allowInvalid: true
+        allowInvalid: true,
       },
       validation: {
-        show: true
+        show: true,
       },
       expressionProperties: {
         'templateOptions.required': function () {
@@ -257,14 +257,14 @@
         },
         'model.quantity': function () {
           return vm.getQuantityInputDefault(vm.mx300);
-        }
+        },
       },
       // TODO - remove hideExpression when MX300 are officially supported
       hideExpression: function () {
         return !vm.showNewRoomSystems;
       },
       watcher: _addWatcher(),
-      validators: _addDeviceQuantityValidators(vm.deviceLimit.CISCO_MX300, vm.deviceLimit.roomSystems)
+      validators: _addDeviceQuantityValidators(vm.deviceLimit.CISCO_MX300, vm.deviceLimit.roomSystems),
     }];
 
     vm.deskPhoneFields = [{
@@ -280,9 +280,9 @@
       expressionProperties: {
         'templateOptions.disabled': function () {
           return !vm.canAddCallDevice;
-        }
+        },
       },
-      validators: _checkValidators()
+      validators: _checkValidators(),
     }, {
       model: vm.phone8865,
       key: 'quantity',
@@ -299,10 +299,10 @@
         disabled: true,
       },
       modelOptions: {
-        allowInvalid: true
+        allowInvalid: true,
       },
       validation: {
-        show: true
+        show: true,
       },
       expressionProperties: {
         'templateOptions.required': function () {
@@ -313,10 +313,10 @@
         },
         'model.quantity': function () {
           return vm.getQuantityInputDefault(vm.phone8865);
-        }
+        },
       },
       watcher: _addWatcher(),
-      validators: _addDeviceQuantityValidators(vm.deviceLimit.CISCO_8865, vm.deviceLimit.callDevices)
+      validators: _addDeviceQuantityValidators(vm.deviceLimit.CISCO_8865, vm.deviceLimit.callDevices),
     }, {
       model: vm.phone8845,
       key: 'enabled',
@@ -330,9 +330,9 @@
       expressionProperties: {
         'templateOptions.disabled': function () {
           return !vm.canAddCallDevice;
-        }
+        },
       },
-      validators: _checkValidators()
+      validators: _checkValidators(),
     }, {
       model: vm.phone8845,
       key: 'quantity',
@@ -349,10 +349,10 @@
         disabled: true,
       },
       modelOptions: {
-        allowInvalid: true
+        allowInvalid: true,
       },
       validation: {
-        show: true
+        show: true,
       },
       expressionProperties: {
         'templateOptions.required': function () {
@@ -363,11 +363,11 @@
         },
         'model.quantity': function () {
           return vm.getQuantityInputDefault(vm.phone8845);
-        }
+        },
 
       },
       watcher: _addWatcher(),
-      validators: _addDeviceQuantityValidators(vm.deviceLimit.CISCO_8845, vm.deviceLimit.callDevices)
+      validators: _addDeviceQuantityValidators(vm.deviceLimit.CISCO_8845, vm.deviceLimit.callDevices),
     }, {
       model: vm.phone8841,
       key: 'enabled',
@@ -381,9 +381,9 @@
       expressionProperties: {
         'templateOptions.disabled': function () {
           return !vm.canAddCallDevice;
-        }
+        },
       },
-      validators: _checkValidators()
+      validators: _checkValidators(),
     }, {
       model: vm.phone8841,
       key: 'quantity',
@@ -400,10 +400,10 @@
         disabled: true,
       },
       modelOptions: {
-        allowInvalid: true
+        allowInvalid: true,
       },
       validation: {
-        show: true
+        show: true,
       },
       expressionProperties: {
         'templateOptions.required': function () {
@@ -414,10 +414,10 @@
         },
         'model.quantity': function () {
           return vm.getQuantityInputDefault(vm.phone8841);
-        }
+        },
       },
       watcher: _addWatcher(),
-      validators: _addDeviceQuantityValidators(vm.deviceLimit.CISCO_8841, vm.deviceLimit.callDevices)
+      validators: _addDeviceQuantityValidators(vm.deviceLimit.CISCO_8841, vm.deviceLimit.callDevices),
     }, {
       model: vm.phone7841,
       key: 'enabled',
@@ -431,9 +431,9 @@
       expressionProperties: {
         'templateOptions.disabled': function () {
           return !vm.canAddCallDevice;
-        }
+        },
       },
-      validators: _checkValidators()
+      validators: _checkValidators(),
     }, {
       model: vm.phone7841,
       key: 'quantity',
@@ -450,10 +450,10 @@
         disabled: true,
       },
       modelOptions: {
-        allowInvalid: true
+        allowInvalid: true,
       },
       validation: {
-        show: true
+        show: true,
       },
       expressionProperties: {
         'templateOptions.required': function () {
@@ -464,10 +464,10 @@
         },
         'model.quantity': function () {
           return vm.getQuantityInputDefault(vm.phone7841);
-        }
+        },
       },
       watcher: _addWatcher(),
-      validators: _addDeviceQuantityValidators(vm.deviceLimit.CISCO_7841, vm.deviceLimit.callDevices)
+      validators: _addDeviceQuantityValidators(vm.deviceLimit.CISCO_7841, vm.deviceLimit.callDevices),
     }];
 
     vm.shippingFields = [{
@@ -480,7 +480,7 @@
         inputClass: '',
         label: $translate.instant('trialModal.call.name'),
         type: 'text',
-        required: true
+        required: true,
       },
     }, {
       model: vm.shippingInfo,
@@ -501,8 +501,8 @@
           },
           message: function () {
             return $translate.instant('common.invalidPhoneNumber');
-          }
-        }
+          },
+        },
       },
 
       watcher: {
@@ -513,8 +513,8 @@
           if (newValue !== oldValue && field.formControl) {
             field.formControl.$validate();
           }
-        }
-      }
+        },
+      },
     }, {
       model: vm.shippingInfo,
       key: 'addressLine1',
@@ -525,8 +525,8 @@
         inputClass: '',
         label: $translate.instant('trialModal.call.address'),
         type: 'text',
-        required: true
-      }
+        required: true,
+      },
     }, {
       model: vm.shippingInfo,
       key: 'addressLine2',
@@ -537,7 +537,7 @@
         inputClass: '',
 
         label: $translate.instant('trialModal.call.unit'),
-        type: 'text'
+        type: 'text',
       },
     }, {
       model: vm.shippingInfo,
@@ -549,14 +549,14 @@
         inputClass: '',
         label: $translate.instant('trialModal.call.city'),
         type: 'text',
-        required: true
+        required: true,
       },
     }, {
       model: vm.shippingInfo,
       key: 'state',
       type: 'select',
       defaultValue: _.find(TrialDeviceService.getStates(), {
-        country: vm.shippingInfo.state
+        country: vm.shippingInfo.state,
       }),
       className: 'pull-left medium-8 with-slim-offset',
       templateOptions: {
@@ -568,7 +568,7 @@
         valuefield: 'abbr',
         labelProp: 'abbr',
         valueProp: 'state',
-        filter: true
+        filter: true,
 
       },
       expressionProperties: {
@@ -610,7 +610,7 @@
         type: 'text',
         max: 99999,
         min: 0,
-        required: true
+        required: true,
       },
       expressionProperties: {
         'templateOptions.pattern': function () {
@@ -623,16 +623,16 @@
         messages: {
           pattern: function () {
             return $translate.instant('common.invalidZipCode');
-          }
-        }
-      }
+          },
+        },
+      },
     },
     {
       model: vm.shippingInfo,
       key: 'country',
       type: 'select',
       defaultValue: _.find(getCountriesForSelectedDevices(), {
-        country: vm.shippingInfo.country
+        country: vm.shippingInfo.country,
       }),
       className: '',
       templateOptions: {
@@ -647,14 +647,14 @@
           vm.selectedCountryCode = TrialDeviceService.getCountryCodeByName(value);
           options.model.country = value;
           options.model.state = null;
-        }
+        },
       },
       watcher: _countryWatcher(),
       expressionProperties: {
         'templateOptions.options': function () {
           return _.map(getCountriesForSelectedDevices(), 'country');
         },
-      }
+      },
     },
     {
       model: vm.shippingInfo,
@@ -667,15 +667,15 @@
         label: $translate.instant('trialModal.call.dealId'),
         type: 'text',
         required: false,
-        pattern: '\\d{1,10}'
+        pattern: '\\d{1,10}',
       },
       validation: {
         messages: {
           pattern: function () {
             return $translate.instant('trialModal.call.invalidDealId');
-          }
-        }
-      }
+          },
+        },
+      },
     }];
 
     init();
@@ -746,7 +746,7 @@
       var remainingTrials = vm.maxTrials - vm.activeTrials;
       if (_.inRange(remainingTrials, 1, 4)) {
         Notification.warning('trialModal.call.remainingDeviceTrials', {
-          number: remainingTrials
+          number: remainingTrials,
         });
       }
     }
@@ -809,7 +809,7 @@
         .flatten()
         .value();
       var storedQuantity = vm.calcQuantity(_.filter(devicesValue, {
-        readonly: true
+        readonly: true,
       }));
       var totalQuantity = vm.calcQuantity(devicesValue);
       var quantity = totalQuantity - storedQuantity;
@@ -821,7 +821,7 @@
       return _(devices)
         .flatten()
         .filter({
-          enabled: true
+          enabled: true,
         })
         .map('quantity')
         .reduce(_.add) || 0;
@@ -863,7 +863,7 @@
           if (newValue !== oldValue && field.formControl) {
             field.formControl.$validate();
           }
-        }
+        },
       };
     }
 
@@ -880,7 +880,7 @@
               field.model.country = null;
             }
           }
-        }
+        },
       };
     }
 
@@ -894,20 +894,20 @@
             } else {
               return $translate.instant('trialModal.call.invalidQuantity', { min: deviceLimit.min, max: deviceLimit.max });
             }
-          }
+          },
         },
         typeQuantity: {
           expression: vm.validateTypeQuantity,
           message: function () {
             return $translate.instant(groupLimit.errorMessage, { max: groupLimit.max });
-          }
+          },
         },
         totalQuantity: {
           expression: vm.validateTotalQuantity,
           message: function () {
             return $translate.instant('trialModal.call.invalidTotalQuantity', { min: vm.deviceLimit.totalDevices.min, max: vm.deviceLimit.totalDevices.max });
-          }
-        }
+          },
+        },
       };
     }
 
@@ -923,7 +923,7 @@
 
     function getQuantity(deviceModel) {
       return _.get(_.find(_.get($stateParams, 'details.details.devices', []), {
-        model: deviceModel.model
+        model: deviceModel.model,
       }), 'quantity', 0);
     }
 
@@ -932,7 +932,7 @@
         .concat(_trialRoomSystemData.details.roomSystems)
         .flatten()
         .filter({
-          enabled: true
+          enabled: true,
         })
         .isEmpty()
         .value();
@@ -945,15 +945,15 @@
     function _checkValidators() {
       return {
         checkbox: {
-          expression: vm.validateChecks
-        }
+          expression: vm.validateChecks,
+        },
       };
     }
 
     function hasExistingDevices() {
       var devices = _.get($stateParams, 'details.details.devices');
       return !_.every(devices, {
-        quantity: 0
+        quantity: 0,
       });
     }
   }

@@ -8,8 +8,8 @@ describe('Directive: aaDialByExt', function () {
   var aaUiModel = {
     openHours: {},
     ceInfo: {
-      name: 'aa'
-    }
+      name: 'aa',
+    },
   };
 
   afterEach(function () {

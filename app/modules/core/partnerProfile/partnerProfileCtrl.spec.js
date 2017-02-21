@@ -39,7 +39,7 @@ describe('Controller: PartnerProfileCtrl', function () {
 
   function initController() {
     $controller('PartnerProfileCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
     $scope.$apply();
   }
@@ -62,7 +62,7 @@ describe('Controller: PartnerProfileCtrl', function () {
           reportingSiteDesc: 'this is support text',
           helpUrl: 'helpUrl',
           isCiscoHelp: false,
-          isCiscoSupport: false
+          isCiscoSupport: false,
         };
         expect(Orgservice.setOrgSettings).toHaveBeenCalledWith(null, expectedOrgSettings);
       });

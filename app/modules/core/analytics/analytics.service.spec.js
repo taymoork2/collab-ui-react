@@ -6,13 +6,13 @@ describe('Service: Analytics', function () {
   var customerData = getJSONFixture('core/json/customers/customer.json');
   var getOrgData = {
     data: {
-      isPartner: 'true'
-    }
+      isPartner: 'true',
+    },
   };
   var listUsersData = {
     data: {
-      totalResults: 5
-    }
+      totalResults: 5,
+    },
   };
 
   beforeEach(angular.mock.module('Core'));
@@ -50,7 +50,7 @@ describe('Service: Analytics', function () {
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
       callback({
         success: true,
-        isTestOrg: true
+        isTestOrg: true,
       }, 200);
     });
     spyOn(Orgservice, 'getAdminOrgAsPromise').and.returnValue($q.resolve(getOrgData));
@@ -99,8 +99,8 @@ describe('Service: Analytics', function () {
         randomValue: 'something',
         details: {
           licenseDuration: 1,
-          licenseCount: 1
-        }
+          licenseCount: 1,
+        },
       };
       delete fakeTrialDataMissingDetails.details;
 
@@ -203,7 +203,7 @@ describe('Service: Analytics', function () {
     it('should not modify persistentProperties if not empty and orgId same as Authinfo orgId ', function () {
       Analytics.sections.ADD_USERS.persistentProperties = {
         orgId: '999',
-        userCountPrior: '4'
+        userCountPrior: '4',
       };
 
       Analytics._getOrgData('ADD_USERS').then(function (result) {
@@ -255,7 +255,7 @@ describe('Service: Analytics', function () {
         cisco_message: 'Something went wrong',
         cisco_cause: 'some cause',
         cisco_domain: 'someplace.edu',
-        cisco_state: 'my-state'
+        cisco_state: 'my-state',
       }));
     });
   });

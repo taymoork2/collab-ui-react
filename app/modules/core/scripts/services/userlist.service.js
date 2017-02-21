@@ -116,12 +116,12 @@
       var generateUserReportsUrl = UrlConfig.getUserReportsUrl(Authinfo.getOrgId());
       var requestData = {
         sortedBy: [sortBy],
-        attributes: ["name", "displayName", "userName", "entitlements", "active"]
+        attributes: ["name", "displayName", "userName", "entitlements", "active"],
       };
       $http({
         method: 'POST',
         url: generateUserReportsUrl,
-        data: requestData
+        data: requestData,
       })
         .success(function (data, status) {
           data = _.isObject(data) ? data : {};
@@ -189,16 +189,16 @@
 
       // Pako magic
       var userReport = pako.inflate(byteData, {
-        to: 'string'
+        to: 'string',
       });
 
       // Filtering user report
       var users = _.filter(JSON.parse(userReport), {
-        active: true
+        active: true,
       });
       if (entitlementFilter) {
         users = _.filter(users, {
-          roles: ['id_full_admin']
+          roles: ['id_full_admin'],
         });
       }
 
@@ -310,14 +310,14 @@
         .catch(function (data, status) {
           data = _.extend({}, data, {
             success: false,
-            status: status
+            status: status,
           });
           return $q.reject(data);
         })
         .then(function (data, status) {
           data = _.extend({}, data, {
             success: true,
-            status: status
+            status: status,
           });
           return data;
         });

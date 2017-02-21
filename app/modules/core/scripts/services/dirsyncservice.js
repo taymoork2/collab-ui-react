@@ -47,7 +47,7 @@
       postDomainName: function (domainName, callback) {
         var domainUrl = dirsyncUrl + '/domain';
         var payload = {
-          domainName: domainName
+          domainName: domainName,
         };
 
         $http.post(domainUrl, payload)
@@ -68,13 +68,13 @@
       syncUsers: function (incrSyncInterval, callback) {
         var payload = {
           incrSyncInterval: incrSyncInterval,
-          fullSyncEnable: true
+          fullSyncEnable: true,
         };
 
         $http({
           method: 'PATCH',
           url: dirsyncUrl,
-          data: payload
+          data: payload,
         })
           .success(function (data, status) {
             data = _.isObject(data) ? data : {};

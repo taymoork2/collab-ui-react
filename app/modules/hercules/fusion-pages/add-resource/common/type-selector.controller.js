@@ -11,7 +11,7 @@
     vm.isEntitledTo = {
       expressway: Authinfo.isEntitled(Config.entitlements.fusion_mgmt),
       mediafusion: Authinfo.isEntitled(Config.entitlements.mediafusion),
-      context: Authinfo.isEntitled(Config.entitlements.context)
+      context: Authinfo.isEntitled(Config.entitlements.context),
     };
     vm.selectedType = '';
     vm.next = next;
@@ -54,7 +54,7 @@
           context: $translate.instant('hercules.fusion.types.context'),
           expresswayHelpText: vm.hasSetup.expressway ? $translate.instant('hercules.fusion.add-resource.type.expressway-description') : $translate.instant('hercules.fusion.add-resource.type.expressway-not-setup'),
           mediafusionHelpText: vm.hasSetup.mediafusion ? $translate.instant('hercules.fusion.add-resource.type.mediafusion-description') : $translate.instant('hercules.fusion.add-resource.type.mediafusion-not-setup'),
-          contextHelpText: vm.hasSetup.context ? $translate.instant('hercules.fusion.add-resource.type.context-description') : $translate.instant('hercules.fusion.add-resource.type.context-not-setup')
+          contextHelpText: vm.hasSetup.context ? $translate.instant('hercules.fusion.add-resource.type.context-description') : $translate.instant('hercules.fusion.add-resource.type.context-not-setup'),
         };
         vm.UIstate = 'success';
       })
@@ -82,7 +82,7 @@
 
     function next() {
       $stateParams.wizard.next({
-        targetType: vm.selectedType
+        targetType: vm.selectedType,
       }, vm.selectedType);
     }
 

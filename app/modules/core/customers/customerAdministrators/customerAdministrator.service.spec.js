@@ -48,7 +48,7 @@ describe('Service: CustomerAdministratorService', function () {
   describe('addCustomerAdmin()', function () {
 
     var user = {
-      userName: 'tester'
+      userName: 'tester',
     };
 
     it('should reject if customerOrgId is invalid', function () {
@@ -88,7 +88,7 @@ describe('Service: CustomerAdministratorService', function () {
 
       var user = {
         userName: 'test user',
-        roles: []
+        roles: [],
       };
 
       spyOn(Authinfo, 'getOrgId').and.returnValue('abcdefg');
@@ -118,7 +118,7 @@ describe('Service: CustomerAdministratorService', function () {
     it('should get assignedSalesAdmins', function () {
       $httpBackend.whenGET(getSalesAdminRegex).respond(function () {
         var data = {
-          totalResults: 2
+          totalResults: 2,
         };
         return [200, data];
       });
@@ -133,7 +133,7 @@ describe('Service: CustomerAdministratorService', function () {
 
     it('should call through to "UserRoleService.disableFullAdmin()"', function () {
       var fakeUser = {
-        userName: 'fake-userName'
+        userName: 'fake-userName',
       };
       spyOn(UserRoleService, 'disableFullAdmin');
 
@@ -143,7 +143,7 @@ describe('Service: CustomerAdministratorService', function () {
 
     it('should reject promise when passed invalid customerId', function () {
       var fakeUser = {
-        userName: 'fake-userName'
+        userName: 'fake-userName',
       };
       spyOn(UserRoleService, 'disableFullAdmin');
 

@@ -32,7 +32,7 @@
       return $translate.instant('common.invalidMinLength', {
         min: function () {
           return scope.options.templateOptions.minlength;
-        }
+        },
       });
     }
 
@@ -40,13 +40,13 @@
       return $translate.instant('common.invalidMaxLength', {
         max: function () {
           return scope.options.templateOptions.maxlength;
-        }
+        },
       });
     }
 
     function getMaxMessage($viewValue, $modelValue, scope) {
       return $translate.instant('common.invalidMax', {
-        max: scope.options.templateOptions.max
+        max: scope.options.templateOptions.max,
       });
     }
 

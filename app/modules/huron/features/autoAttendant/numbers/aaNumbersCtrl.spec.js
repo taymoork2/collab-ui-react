@@ -16,28 +16,28 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       "id": "00097a86-45ef-44a7-aa78-6d32a0ca1d3b",
       "type": "directoryNumber",
       "trigger": "incomingCall",
-      "number": "999999"
+      "number": "999999",
     }, {
       "id": "00097a86-45ef-44a7-aa78-6d32a0ca1d3c",
       "type": "directoryNumber",
       "trigger": "incomingCall",
-      "number": "12068551179"
-    }]
+      "number": "12068551179",
+    }],
   };
 
   var cmiAAAssignedNumbers = [{
     "number": "2578",
     "type": "NUMBER_FORMAT_EXTENSION",
-    "uuid": "29d70a54-cf0a-4279-ad75-09116eedb7a7"
+    "uuid": "29d70a54-cf0a-4279-ad75-09116eedb7a7",
   }, {
     "number": "8002578",
     "type": "NUMBER_FORMAT_ENTERPRISE_LINE",
-    "uuid": "29d70b54-cf0a-4279-ad75-09116eedb7a7"
+    "uuid": "29d70b54-cf0a-4279-ad75-09116eedb7a7",
   }];
 
   var cmiAAAsignment = {
     "numbers": cmiAAAssignedNumbers,
-    "url": "https://cmi.huron-int.com/api/v2/customers/3338d491-d6ca-4786-82ed-cbe9efb02ad2/features/autoattendants/23a42558-6485-4dab-9505-704b6204410c/numbers"
+    "url": "https://cmi.huron-int.com/api/v2/customers/3338d491-d6ca-4786-82ed-cbe9efb02ad2/features/autoattendants/23a42558-6485-4dab-9505-704b6204410c/numbers",
   };
 
   var cmiAAAsignments = [cmiAAAsignment];
@@ -69,7 +69,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
   var authInfo = {
     getOrgId: sinon.stub().returns('1'),
-    getOrgName: sinon.stub().returns('awesomeco')
+    getOrgName: sinon.stub().returns('awesomeco'),
   };
 
   beforeEach(angular.mock.module(function ($provide) {
@@ -96,10 +96,10 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
     $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&order=pattern').respond(200, [{
       'pattern': '+9999999991',
-      'uuid': '9999999991-id'
+      'uuid': '9999999991-id',
     }, {
       'pattern': '+8888888881',
-      'uuid': '8888888881-id'
+      'uuid': '8888888881-id',
     }]);
 
     // for an external number query, return the number formatted with a +
@@ -111,7 +111,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
         var response = [{
           'pattern': '+' + pattern.replace(/\D/g, ''),
-          'uuid': pattern.replace(/\D/g, '') + '-id'
+          'uuid': pattern.replace(/\D/g, '') + '-id',
         }];
 
         return [200, response];
@@ -119,7 +119,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
     $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/internalnumberpools?directorynumber=&order=pattern').respond([{
       "pattern": "4000",
-      "uuid": "3f51ef5b-584f-42db-9ad8-8810b5e9e9ea"
+      "uuid": "3f51ef5b-584f-42db-9ad8-8810b5e9e9ea",
     }]);
 
     // CMI assignment will fail when there is any bad number in the list
@@ -139,7 +139,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
     aaModel.aaRecordUUID = '2';
 
     controller = $controller('AABuilderNumbersCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
     $scope.$apply();
   }));
@@ -184,12 +184,12 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
     it('should move an external phone number from available to selected successfully', function () {
       aaModel.ceInfos.push({
-        name: rawCeInfo.callExperienceName
+        name: rawCeInfo.callExperienceName,
       });
 
       controller.availablePhoneNums[0] = {
         label: "2064261234",
-        value: "2064261234"
+        value: "2064261234",
       };
 
       controller.addNumber("2064261234");
@@ -202,12 +202,12 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
     it('should remove an internal phone number from available successfully', function () {
       aaModel.ceInfos.push({
-        name: rawCeInfo.callExperienceName
+        name: rawCeInfo.callExperienceName,
       });
 
       controller.availablePhoneNums[0] = {
         label: "1234",
-        value: "1234"
+        value: "1234",
       };
 
       controller.addNumber("1234");
@@ -223,25 +223,25 @@ describe('Controller: AABuilderNumbersCtrl', function () {
     it('should sort combination of internal/external numbers with internals sorting last', function () {
 
       aaModel.ceInfos.push({
-        name: rawCeInfo.callExperienceName
+        name: rawCeInfo.callExperienceName,
       });
 
       // start out with 2 external available numbers, with an internal in-between, that are not sorted
       controller.availablePhoneNums[0] = {
         label: "2064261234",
-        value: "2064261234"
+        value: "2064261234",
       };
       controller.numberTypeList["2064261234"] = "externalNumber";
 
       controller.availablePhoneNums[1] = {
         label: "1234",
-        value: "1234"
+        value: "1234",
       };
       controller.numberTypeList["1234"] = "directoryNumber";
 
       controller.availablePhoneNums[2] = {
         label: "1234567",
-        value: "1234567"
+        value: "1234567",
       };
       controller.numberTypeList["1234567"] = "externalNumber";
 
@@ -284,16 +284,16 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
     it('should not move a bad or missing phone number from available', function () {
       aaModel.ceInfos.push({
-        name: rawCeInfo.callExperienceName
+        name: rawCeInfo.callExperienceName,
       });
 
       controller.availablePhoneNums[0] = {
         label: "2064261234",
-        value: "2064261234"
+        value: "2064261234",
       };
       controller.availablePhoneNums[1] = {
         label: "1234",
-        value: "1234"
+        value: "1234",
       };
 
       controller.addNumber('');
@@ -309,12 +309,12 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
     it('should not move a number that fails to assign in CMI', function () {
       aaModel.ceInfos.push({
-        name: rawCeInfo.callExperienceName
+        name: rawCeInfo.callExperienceName,
       });
 
       controller.availablePhoneNums[0] = {
         label: "bad",
-        value: "bad"
+        value: "bad",
       };
 
       controller.addNumber('bad');
@@ -331,12 +331,12 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
     it('should report error when cannot format extension on assignment', function () {
       aaModel.ceInfos.push({
-        name: rawCeInfo.callExperienceName
+        name: rawCeInfo.callExperienceName,
       });
 
       controller.availablePhoneNums[0] = {
         label: "1234",
-        value: "1234"
+        value: "1234",
       };
 
       errorSpy = jasmine.createSpy('error');
@@ -344,7 +344,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
       spyOn(AANumberAssignmentService, 'formatAAExtensionResourcesBasedOnCMI').and.returnValue($q.reject({
         statusText: "server error",
-        status: 500
+        status: 500,
       }));
 
       controller.addNumber("1234");
@@ -376,11 +376,11 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       // start out as 2 available numbers that are not sorted
       controller.availablePhoneNums[0] = {
         label: "2345678",
-        value: "2345678"
+        value: "2345678",
       };
       controller.availablePhoneNums[1] = {
         label: "1234567",
-        value: "1234567"
+        value: "1234567",
       };
 
       controller.removeNumber(rawCeInfo.assignedResources[0].number);

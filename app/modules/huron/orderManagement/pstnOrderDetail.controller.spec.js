@@ -23,7 +23,7 @@ describe('Controller: PstnOrderDetailCtrl', function () {
       numbers: [{ number: '+14697862340', network: 'PROVISIONED', status: 'Successful', tooltip: 'Completed Successfully' }, { number: '+14697862371', network: 'PROVISIONED', status: 'Successful', tooltip: 'Completed Successfully' }],
       status: 'Successful',
       type: 'Advance Numbers',
-      tooltip: 'Completed Successfully'
+      tooltip: 'Completed Successfully',
     };
 
     pendingBlockOrder = {
@@ -35,7 +35,7 @@ describe('Controller: PstnOrderDetailCtrl', function () {
       quantity: '2',
       status: 'In Progress',
       type: 'Advance Numbers',
-      tooltip: 'Still Pending Queue'
+      tooltip: 'Still Pending Queue',
     };
 
     fulfilledNumberOrder = {
@@ -45,20 +45,20 @@ describe('Controller: PstnOrderDetailCtrl', function () {
       numbers: [{ number: '+14697862340', network: 'PROVISIONED', status: 'Successful', tooltip: 'Completed Successfully' }, { number: '+14697862371', network: 'PROVISIONED', status: 'Successful', tooltip: 'Completed Successfully' }],
       status: 'Successful',
       type: 'New Numbers',
-      tooltip: 'Completed Successfully'
+      tooltip: 'Completed Successfully',
     };
 
     PstnSetupService = {
       getCustomerV2: function () {
         return $q.resolve({
-          trial: true
+          trial: true,
         });
       },
       getCustomerTrialV2: function () {
         return $q.resolve({
-          acceptedDate: "today"
+          acceptedDate: "today",
         });
-      }
+      },
     };
 
     spyOn($translate, 'instant');
@@ -69,13 +69,13 @@ describe('Controller: PstnOrderDetailCtrl', function () {
   function initController(order) {
     $stateParams.currentOrder = order;
     $stateParams.currentCustomer = {
-      customerOrgId: "1111OrgId"
+      customerOrgId: "1111OrgId",
     };
     controller = $controller('PstnOrderDetailCtrl', {
       $scope: $scope,
       $stateParams: $stateParams,
       $translate: $translate,
-      PstnSetupService: PstnSetupService
+      PstnSetupService: PstnSetupService,
     });
     $scope.$apply();
   }
@@ -91,12 +91,12 @@ describe('Controller: PstnOrderDetailCtrl', function () {
       number: '+14697862340',
       label: '(469) 786-2340',
       status: 'Successful',
-      tooltip: 'Completed Successfully'
+      tooltip: 'Completed Successfully',
     }, {
       number: '+14697862371',
       label: '(469) 786-2371',
       status: 'Successful',
-      tooltip: 'Completed Successfully'
+      tooltip: 'Completed Successfully',
     });
   });
 
@@ -106,7 +106,7 @@ describe('Controller: PstnOrderDetailCtrl', function () {
     expect(controller.info).toContain({
       label: '(469) XXX-XXXX Quantity: 2',
       status: 'In Progress',
-      tooltip: 'Still Pending Queue'
+      tooltip: 'Still Pending Queue',
     });
   });
 
@@ -116,12 +116,12 @@ describe('Controller: PstnOrderDetailCtrl', function () {
       number: '+14697862340',
       label: '(469) 786-2340',
       status: 'Successful',
-      tooltip: 'Completed Successfully'
+      tooltip: 'Completed Successfully',
     }, {
       number: '+14697862371',
       label: '(469) 786-2371',
       status: 'Successful',
-      tooltip: 'Completed Successfully'
+      tooltip: 'Completed Successfully',
     });
   });
 });

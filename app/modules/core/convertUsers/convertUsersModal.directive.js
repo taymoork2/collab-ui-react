@@ -5,6 +5,6 @@ angular.module('Core')
 
 function directive() {
   return {
-    templateUrl: 'modules/core/convertUsers/convertUsersModal.tpl.html'
+    templateUrl: 'modules/core/convertUsers/convertUsersModal.tpl.html',
   };
 }

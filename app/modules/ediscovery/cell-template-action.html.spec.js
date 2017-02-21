@@ -29,8 +29,8 @@ describe('cell-template-action', function () {
       $scope.row = {
         entity: {
           isDone: true,
-          canBeDownloaded: false
-        }
+          canBeDownloaded: false,
+        },
       };
       compileHtml();
       var download_icon_class = view.find(".icon-report");
@@ -42,8 +42,8 @@ describe('cell-template-action', function () {
         entity: {
           isDone: true,
           canBeDownloaded: true,
-          downloadingReportId: undefined
-        }
+          downloadingReportId: undefined,
+        },
       };
       compileHtml();
       var download_icon_class = view.find(".icon-report");
@@ -53,15 +53,15 @@ describe('cell-template-action', function () {
     it('displays downloading progress symbol if report is downloading for given id', function () {
       $scope.grid = {
         appScope: {
-          downloadingReportId: "1234"
-        }
+          downloadingReportId: "1234",
+        },
       };
       $scope.row = {
         entity: {
           id: "1234",
           isDone: true,
-          canBeDownloaded: true
-        }
+          canBeDownloaded: true,
+        },
       };
       compileHtml();
       var spinner_icon_class = view.find(".icon-spinner");
@@ -71,15 +71,15 @@ describe('cell-template-action', function () {
     it('displays disabled report symbol if report is downloading for another id', function () {
       $scope.grid = {
         appScope: {
-          downloadingReportId: "9999"
-        }
+          downloadingReportId: "9999",
+        },
       };
       $scope.row = {
         entity: {
           id: "1234",
           isDone: true,
-          canBeDownloaded: true
-        }
+          canBeDownloaded: true,
+        },
       };
       compileHtml();
       var download_icon_class = view.find(".icon-report");
@@ -95,8 +95,8 @@ describe('cell-template-action', function () {
     it('not displayed if report is not done', function () {
       $scope.row = {
         entity: {
-          isDone: false
-        }
+          isDone: false,
+        },
       };
       compileHtml();
       var refresh_icon_class = view.find(".icon-refresh");
@@ -106,8 +106,8 @@ describe('cell-template-action', function () {
     it('displayed if report is done', function () {
       $scope.row = {
         entity: {
-          isDone: true
-        }
+          isDone: true,
+        },
       };
       compileHtml();
       var refresh_icon_class = view.find(".icon-refresh");
@@ -120,8 +120,8 @@ describe('cell-template-action', function () {
     it('displays if report is done', function () {
       $scope.row = {
         entity: {
-          isDone: true
-        }
+          isDone: true,
+        },
       };
       compileHtml();
       var refresh_icon_class = view.find(".icon-refresh");
@@ -131,8 +131,8 @@ describe('cell-template-action', function () {
     it('does not display if report is not done', function () {
       $scope.row = {
         entity: {
-          isDone: false
-        }
+          isDone: false,
+        },
       };
       compileHtml();
       var refresh_icon_class = view.find(".icon-refresh");
@@ -146,8 +146,8 @@ describe('cell-template-action', function () {
     it('displays if report is not done', function () {
       $scope.row = {
         entity: {
-          isDone: false
-        }
+          isDone: false,
+        },
       };
       compileHtml();
       var info_icon_class = view.find(".icon-info-outline");
@@ -157,8 +157,8 @@ describe('cell-template-action', function () {
     it('does not display if report is done', function () {
       $scope.row = {
         entity: {
-          isDone: true
-        }
+          isDone: true,
+        },
       };
       compileHtml();
       var info_icon_class = view.find(".icon-info-outline");

@@ -5,7 +5,7 @@ describe('Controller: Care Local Settings', function () {
     sunlightCSOnboardUrl;
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
-    getOrgName: jasmine.createSpy('getOrgName').and.returnValue('SunlightConfigService test org')
+    getOrgName: jasmine.createSpy('getOrgName').and.returnValue('SunlightConfigService test org'),
   };
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module(function ($provide) {
@@ -27,7 +27,7 @@ describe('Controller: Care Local Settings', function () {
       controller = $controller('CareLocalSettingsCtrl', {
         $scope: $scope,
         $interval: $intervalSpy,
-        Notification: Notification
+        Notification: Notification,
       });
       spyOn(sunlightConfigService, 'updateChatConfig').and.callFake(function () {
         var deferred = $q.defer();

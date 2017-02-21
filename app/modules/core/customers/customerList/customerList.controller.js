@@ -57,62 +57,62 @@ require('./_customer-list.scss');
         value: 'messaging',
         label: $translate.instant('customerPage.message'),
         isSelected: false,
-        isAccountFilter: false
+        isAccountFilter: false,
       }, {
         value: 'conferencing',
         label: $translate.instant('customerPage.meeting'),
         isSelected: false,
-        isAccountFilter: false
+        isAccountFilter: false,
       }, {
         value: 'webex',
         label: $translate.instant('customerPage.webexOverview'),
         isSelected: false,
-        isAccountFilter: false
+        isAccountFilter: false,
       }, {
         value: 'communications',
         label: $translate.instant('customerPage.call'),
         isSelected: false,
-        isAccountFilter: false
+        isAccountFilter: false,
       }, {
         value: 'roomSystems',
         label: $translate.instant('customerPage.roomSystem'),
         isSelected: false,
-        isAccountFilter: false
+        isAccountFilter: false,
       }, {
         value: 'sparkBoard',
         label: $translate.instant('customerPage.sparkBoard'),
         isSelected: false,
-        isAccountFilter: false
+        isAccountFilter: false,
       }, {
         value: 'care',
         label: $translate.instant('customerPage.care'),
         isSelected: false,
-        isAccountFilter: false // a non-account filter filters on services instead
+        isAccountFilter: false, // a non-account filter filters on services instead
       }, {
         value: 'trial',
         label: $translate.instant('customerPage.trialAccountsFilter', {
-          count: 0
+          count: 0,
         }),
         count: 0,
         isSelected: false,
-        isAccountFilter: true
+        isAccountFilter: true,
       }, {
         value: 'active',
         label: $translate.instant('customerPage.activeAccountsFilter', {
-          count: 0
+          count: 0,
         }),
         count: 0,
         isSelected: false,
-        isAccountFilter: true
+        isAccountFilter: true,
       }, {
         value: 'expired',
         label: $translate.instant('customerPage.expiredAccountsFilter', {
-          count: 0
+          count: 0,
         }),
         count: 0,
         isSelected: false,
-        isAccountFilter: true
-      }]
+        isAccountFilter: true,
+      }],
     };
     $scope.$watch(function () {
       return vm.filter.selected;
@@ -136,7 +136,7 @@ require('./_customer-list.scss');
       launchCustomerPortal: launchCustomerPortal,
       getLicenseObj: getLicenseObj,
       updateResultCount: updateResultCount,
-      updateServiceForOrg: updateServiceForOrg
+      updateServiceForOrg: updateServiceForOrg,
     };
 
     var nameTemplate = $templateCache.get('modules/core/customers/customerList/grid/nameColumn.tpl.html');
@@ -159,14 +159,14 @@ require('./_customer-list.scss');
       sort: {
         direction: 'asc',
         priority: 0,
-      }
+      },
     };
     var allServicesField = {
       field: 'uniqueServiceCount',
       displayName: $translate.instant('customerPage.services'),
       width: '25%',
       cellTemplate: compactServiceTemplate,
-      headerCellClass: 'align-center'
+      headerCellClass: 'align-center',
     };
     var accountStatusField = {
       field: 'accountStatus',
@@ -174,14 +174,14 @@ require('./_customer-list.scss');
       width: '16.5%',
       cellTemplate: accountStatusTemplate,
       headerCellClass: 'align-center',
-      sortingAlgorithm: accountStatusSort
+      sortingAlgorithm: accountStatusSort,
     };
     var licenseQuantityField = {
       field: 'totalLicenses',
       displayName: $translate.instant('customerPage.totalLicenses'),
       width: '16.5%',
       cellTemplate: licenseCountTemplate,
-      headerCellClass: 'align-center'
+      headerCellClass: 'align-center',
     };
   /* AG TODO:  once we have data for total users -- add back
       var totalUsersField = {
@@ -196,7 +196,7 @@ require('./_customer-list.scss');
       field: 'notes',
       displayName: $translate.instant('customerPage.notes'),
       cellTemplate: newNoteTemplate,
-      sortingAlgorithm: notesSort
+      sortingAlgorithm: notesSort,
     };
 
     var myOrgDetails = {};
@@ -231,40 +231,40 @@ require('./_customer-list.scss');
           columnGroup: 'conferencing',
           columnName: 'conferencing',
           offerCode: 'CF',
-          tooltip: $translate.instant('customerPage.meeting')
+          tooltip: $translate.instant('customerPage.meeting'),
         }, {
           columnGroup: 'webex',
           offerCode: 'EE',
           columnName: 'webexEEConferencing',
-          tooltip: $translate.instant('customerPage.webex')
+          tooltip: $translate.instant('customerPage.webex'),
         }, {
           columnGroup: 'webex',
           offerCode: 'CMR',
           columnName: 'webexCMR',
-          tooltip: $translate.instant('customerPage.webex')
+          tooltip: $translate.instant('customerPage.webex'),
         }, {
           columnGroup: 'webex',
           offerCode: 'MC',
           columnName: 'webexMeetingCenter',
-          tooltip: $translate.instant('customerPage.webex')
+          tooltip: $translate.instant('customerPage.webex'),
         }, {
           columnGroup: 'webex',
           offerCode: 'SC',
           columnName: 'webexSupportCenter',
-          tooltip: $translate.instant('customerPage.webex')
+          tooltip: $translate.instant('customerPage.webex'),
         }, {
           columnGroup: 'webex',
           offerCode: 'TC',
           columnName: 'webexTrainingCenter',
-          tooltip: $translate.instant('customerPage.webex')
+          tooltip: $translate.instant('customerPage.webex'),
         }, {
           columnGroup: 'webex',
           offerCode: 'EC',
           columnName: 'webexEventCenter',
-          tooltip: $translate.instant('customerPage.webex')
-        }]
+          tooltip: $translate.instant('customerPage.webex'),
+        }],
       },
-      columnDefs: vm.gridColumns
+      columnDefs: vm.gridColumns,
     };
 
     init();
@@ -316,7 +316,7 @@ require('./_customer-list.scss');
 
     function isOrgSetup(customer) {
       return _.every(customer.unmodifiedLicenses, {
-        status: 'ACTIVE'
+        status: 'ACTIVE',
       });
     }
 
@@ -417,7 +417,7 @@ require('./_customer-list.scss');
         textSuspended,
         textExpiringToday,
         textExpired,
-        textLicenseInfoNotAvailable
+        textLicenseInfoNotAvailable,
       ];
       textArray.sort();
       _.forEach(textArray, function (text, index) {
@@ -451,7 +451,7 @@ require('./_customer-list.scss');
     function rowFilter(rows) {
       var selectedFilters = {
         account: _.filter(vm.filter.selected, { isAccountFilter: true }),
-        license: _.filter(vm.filter.selected, { isAccountFilter: false })
+        license: _.filter(vm.filter.selected, { isAccountFilter: false }),
       };
 
       _.forEach(rows, function (row) {
@@ -463,7 +463,7 @@ require('./_customer-list.scss');
           byLicenseFilter: (!selectedFilters.license.length) ||
             _.some(selectedFilters.license, function (filter) {
               return vm.isLicenseTypeAny(row.entity, filter.value);
-            })
+            }),
         };
 
         row.visible = _.every(isVisibleFlags);
@@ -507,21 +507,21 @@ require('./_customer-list.scss');
             myOrg[0].customerOrgId = accountId;
 
             myOrg[0].messaging = vm._helpers.updateServiceForOrg(myOrg[0].messaging, licenses, {
-              licenseType: 'MESSAGING'
+              licenseType: 'MESSAGING',
             });
             myOrg[0].communications = vm._helpers.updateServiceForOrg(myOrg[0].communications, licenses, {
-              licenseType: 'COMMUNICATION'
+              licenseType: 'COMMUNICATION',
             });
             myOrg[0].roomSystems = vm._helpers.updateServiceForOrg(myOrg[0].roomSystems, licenses, {
-              licenseType: 'SHARED_DEVICES'
+              licenseType: 'SHARED_DEVICES',
             });
             myOrg[0].conferencing = vm._helpers.updateServiceForOrg(myOrg[0].conferencing, licenses, {
               licenseType: 'CONFERENCING',
-              offerName: 'CF'
+              offerName: 'CF',
             });
             myOrg[0].webexEEConferencing = vm._helpers.updateServiceForOrg(myOrg[0].webexEEConferencing, licenses, {
               licenseType: 'CONFERENCING',
-              offerName: 'EE'
+              offerName: 'EE',
             });
 
             myOrgDetails = myOrg;
@@ -552,7 +552,7 @@ require('./_customer-list.scss');
             var managed = PartnerService.loadRetrievedDataToList(orgList, false,
               vm.isCareEnabled);
             var indexMyOwnOrg = _.findIndex(managed, {
-              customerOrgId: Authinfo.getOrgId()
+              customerOrgId: Authinfo.getOrgId(),
             });
             // 4/11/2016 admolla
             // TODO: for some reason if I refactor this to not need an array, karma acts up....
@@ -619,7 +619,7 @@ require('./_customer-list.scss');
 
       $window.open($state.href('login_swap', {
         customerOrgId: customer.customerOrgId,
-        customerOrgName: customer.customerName
+        customerOrgName: customer.customerName,
       }));
     }
 
@@ -711,7 +711,7 @@ require('./_customer-list.scss');
     function showCustomerDetails(customer) {
       vm.currentTrial = customer;
       $state.go('customer-overview', {
-        currentCustomer: customer
+        currentCustomer: customer,
       });
     }
 
@@ -733,11 +733,11 @@ require('./_customer-list.scss');
               customerName: org.customerName,
               customerEmail: org.customerEmail,
               customerCommunicationLicenseIsTrial: getIsTrial(org, 'communications'),
-              customerRoomSystemsLicenseIsTrial: getIsTrial(org, 'roomSystems')
+              customerRoomSystemsLicenseIsTrial: getIsTrial(org, 'roomSystems'),
             });
           } else {
             return $state.go('didadd', {
-              currentOrg: org
+              currentOrg: org,
             });
           }
         });

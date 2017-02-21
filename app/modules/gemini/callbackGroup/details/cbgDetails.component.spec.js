@@ -58,13 +58,13 @@ describe('Component: CbgDetails', function () {
         'data': {
           'body': '',
           'returnCode': 0,
-          'trackId': ''
+          'trackId': '',
         },
         'health': {
           'code': 200,
-          'status': 'OK'
-        }
-      }
+          'status': 'OK',
+        },
+      },
     };
     var info = preData.common;
     _.set(info, key, val);

@@ -41,7 +41,7 @@ describe('Controller: TrialEmergAddressCtrl', function () {
       unit: '4321',
       city: 'Dallas',
       state: 'TX',
-      zip: '75080'
+      zip: '75080',
     };
 
     it('should set the carrier', function () {

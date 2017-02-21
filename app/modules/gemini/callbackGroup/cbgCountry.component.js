@@ -5,10 +5,10 @@
     .module('Gemini')
     .component('cbgCountry', {
       bindings: {
-        selected: '='
+        selected: '=',
       },
       controller: cbgCountryCtrl,
-      templateUrl: 'modules/gemini/callbackGroup/cbgCountry.tpl.html'
+      templateUrl: 'modules/gemini/callbackGroup/cbgCountry.tpl.html',
     });
 
   /* @ngInject */
@@ -19,7 +19,7 @@
       fullFileName: '',
       uploadProgress: 0,
       processProgress: 0,
-      isProcessing: false
+      isProcessing: false,
     };
 
     vm.options = [];

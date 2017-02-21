@@ -17,7 +17,7 @@
       setReleaseChannel: setReleaseChannel,
       assign: assign,
       getAllAsOptions: getAllAsOptions,
-      resourceGroupHasEligibleCluster: resourceGroupHasEligibleCluster
+      resourceGroupHasEligibleCluster: resourceGroupHasEligibleCluster,
     };
 
     return service;
@@ -38,7 +38,7 @@
       return $http
         .post(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/resourceGroups', {
           name: name,
-          releaseChannel: releaseChannel
+          releaseChannel: releaseChannel,
         })
         .then(extractDataFromResponse);
     }
@@ -50,7 +50,7 @@
     function setName(resourceGroupId, name) {
       return $http
         .patch(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/resourceGroups/' + resourceGroupId, {
-          name: name
+          name: name,
         })
         .then(extractDataFromResponse);
     }
@@ -58,7 +58,7 @@
     function setReleaseChannel(resourceGroupId, channel) {
       return $http
         .patch(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/resourceGroups/' + resourceGroupId, {
-          releaseChannel: channel
+          releaseChannel: channel,
         })
         .then(extractDataFromResponse);
     }
@@ -90,7 +90,7 @@
           _.each(groups, function (group) {
             options.push({
               label: group.name + (group.releaseChannel ? ' (' + $translate.instant('hercules.fusion.add-resource-group.release-channel.' + group.releaseChannel) + ')' : ''),
-              value: group.id
+              value: group.id,
             });
           });
         }

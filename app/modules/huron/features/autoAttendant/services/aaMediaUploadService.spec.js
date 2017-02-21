@@ -21,7 +21,7 @@ describe('Service: AAMediaUploadService', function () {
   var variantKeys = '12987-253235-235235-235235';
   var variantsMap = {};
   variantsMap[variantKeys] = {
-    variantUrl: variantUrlPlayback
+    variantUrl: variantUrlPlayback,
   };
   var clioValidRetrieve = {
     variants: variantsMap,
@@ -33,43 +33,43 @@ describe('Service: AAMediaUploadService', function () {
   };
   var clioInvalidRetrieveNoKeys = {
     variants: {
-    }
+    },
   };
   var clioInvalidRetrieveNoVariantKeysMap = {
     variants: {
-      noNestedFields: undefined
-    }
+      noNestedFields: undefined,
+    },
   };
   var clioInvalidRetrieveNoVariantKeys = {
     variants: {
       noNestedFields: {
-      }
-    }
+      },
+    },
   };
   var clioInvalidRetrieveNoVariantUrl = {
     variants: {
       noNestedFields: {
-        notVariantUrlField: 'sampleValue'
-      }
-    }
+        notVariantUrlField: 'sampleValue',
+      },
+    },
   };
   var clioInvalidRetrieveEmptyVariantUrl = {
     variants: {
       noNestedFields: {
-        variantUrl: undefined
-      }
-    }
+        variantUrl: undefined,
+      },
+    },
   };
   var successResultLackingPath = {
     malformed: {
-    }
+    },
   };
   var successResultRecording = {
     data: {
       metadata: {
-        variants: variantsMap
+        variants: variantsMap,
       },
-    }
+    },
   };
 
   beforeEach(angular.mock.module('uc.autoattendant'));
@@ -123,8 +123,8 @@ describe('Service: AAMediaUploadService', function () {
         mediaUploadCtrlN: {
           active: true,
           saved: false,
-          uploads: []
-        }
+          uploads: [],
+        },
       });
       AAMediaUploadService.clearResourcesExcept('value', 0);
       expect(AAMediaUploadService.getResources).not.toHaveBeenCalled();
@@ -182,8 +182,8 @@ describe('Service: AAMediaUploadService', function () {
           mediaUploadCtrlN: {
             active: false,
             saved: '',
-            uploads: ['value']
-          }
+            uploads: ['value'],
+          },
         });
         $rootScope.$broadcast('CE Saved');
         expect(AAMediaUploadService.cleanResourceFieldIndex).not.toHaveBeenCalled();
@@ -198,7 +198,7 @@ describe('Service: AAMediaUploadService', function () {
         spyOn(AAMediaUploadService, 'getResources').and.returnValue({
           active: '',
           saved: false,
-          uploads: ['value']
+          uploads: ['value'],
         });
         $rootScope.$broadcast('CE Closed');
         expect(AAMediaUploadService.cleanResourceFieldIndex).not.toHaveBeenCalled();

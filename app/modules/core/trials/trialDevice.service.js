@@ -11,159 +11,159 @@
     var _countryReference = [
       {
         country: 'United States',
-        code: 'US'
+        code: 'US',
       },
       {
         country: 'Argentina',
-        code: 'AR'
+        code: 'AR',
       },
       {
         country: 'Australia',
-        code: 'AU'
+        code: 'AU',
       },
       {
         country: 'Austria',
-        code: 'AT'
+        code: 'AT',
       },
       {
         country: 'Belgium',
-        code: 'BE'
+        code: 'BE',
       },
       {
         country: 'Bulgaria',
-        code: 'BG'
+        code: 'BG',
       },
       {
         country: 'Canada',
-        code: 'CA'
+        code: 'CA',
       },
       {
         country: 'Chile',
-        code: 'CL'
+        code: 'CL',
       },
       {
         country: 'Colombia',
-        code: 'CO'
+        code: 'CO',
       },
       {
         country: 'Costa Rica',
-        code: 'CR'
+        code: 'CR',
       },
       {
         country: 'Croatia',
-        code: 'HR'
+        code: 'HR',
       },
       {
         country: 'Cyprus',
-        code: 'CY'
+        code: 'CY',
       },
       {
         country: 'Czech Republic',
-        code: 'CZ'
+        code: 'CZ',
       },
       {
         country: 'Denmark',
-        code: 'DK'
+        code: 'DK',
       },
       {
         country: 'Estonia',
-        code: 'EE'
+        code: 'EE',
       },
       {
         country: 'Finland',
-        code: 'FI'
+        code: 'FI',
       },
       {
         country: 'France',
-        code: 'FR'
+        code: 'FR',
       },
       {
         country: 'Germany',
-        code: 'GE'
+        code: 'GE',
       },
       {
         country: 'Hungary',
-        code: 'HU'
+        code: 'HU',
       },
       {
         country: 'Ireland',
-        code: 'IE'
+        code: 'IE',
       },
       {
         country: 'Italy',
-        code: 'IT'
+        code: 'IT',
       },
       {
         country: 'Lativa',
-        code: 'LV'
+        code: 'LV',
       },
       {
         country: 'Lithuania',
-        code: 'LT'
+        code: 'LT',
       },
       {
         country: 'Luxembourg',
-        code: 'LU'
+        code: 'LU',
       },
       {
         country: 'Netherlands',
-        code: 'NL'
+        code: 'NL',
       },
       {
         country: 'Norway',
-        code: 'NO'
+        code: 'NO',
       },
       {
         country: 'Peru',
-        code: 'PE'
+        code: 'PE',
       },
       {
         country: 'Poland',
-        code: 'PL'
+        code: 'PL',
       },
       {
         country: 'Portugal',
-        code: 'PT'
+        code: 'PT',
       },
       {
         country: 'Romania',
-        code: 'RO'
+        code: 'RO',
       },
       {
         country: 'Slovakia',
-        code: 'SK'
+        code: 'SK',
       },
       {
         country: 'Slovenia',
-        code: 'SI'
+        code: 'SI',
       },
       {
         country: 'Spain',
-        code: 'ES'
+        code: 'ES',
       },
       {
         country: 'Sweden',
-        code: 'SE'
+        code: 'SE',
       },
       {
         country: 'Switzerland',
-        code: 'SC'
+        code: 'SC',
       },
       {
         country: 'Ukraine',
-        code: 'UA'
+        code: 'UA',
       },
       {
         country: 'United Kingdom',
-        code: 'GB'
-      }
+        code: 'GB',
+      },
     ];
     var _countries = {
       US: ['United States'],
       ROLLOUT1: ['United States', 'Australia', 'Austria', 'Belgium', 'Bulgaria', 'Canada', 'Croatia', 'Cyprus', 'Czech Republic',
         'Denmark', 'Estonia', 'Finland', 'France', 'Germany', 'Hungary', 'Ireland', 'Italy', 'Latvia', 'Lithuania', 'Luxembourg', 'Netherlands', 'Norway', 'Poland',
         'Portugal', 'Romania', 'Slovakia', 'Slovenia', 'Spain', 'Sweden', 'Switzerland', 'Ukraine', 'United Kingdom'],
-      ROLLOUT2: ['United States', 'Canada']
+      ROLLOUT2: ['United States', 'Canada'],
     };
 
     var _deviceLimit = {
@@ -171,67 +171,67 @@
         min: 1,
         max: 3,
         type: 'ROOM_SYSTEMS',
-        errorMessage: 'trialModal.call.invalidRoomSystemsQuantity'
+        errorMessage: 'trialModal.call.invalidRoomSystemsQuantity',
       },
       callDevices: {
         min: 1,
         max: 4,
         type: 'CALL_DEVICES',
-        errorMessage: 'trialModal.call.invalidPhonesQuantity'
+        errorMessage: 'trialModal.call.invalidPhonesQuantity',
       },
       totalDevices: {
         min: 1,
         max: 5,
-        type: 'TOTAL'
+        type: 'TOTAL',
       },
       CISCO_SX10: {
         min: 1,
         max: 3,
         model: 'CISCO_SX10',
-        type: 'ROOM_SYSTEMS'
+        type: 'ROOM_SYSTEMS',
       },
       CISCO_DX80: {
         min: 1,
         max: 3,
         model: 'CISCO_DX80',
-        type: 'ROOM_SYSTEMS'
+        type: 'ROOM_SYSTEMS',
       },
       CISCO_MX300: {
         min: 1,
         max: 1,
         model: 'CISCO_MX300',
-        type: 'ROOM_SYSTEMS'
+        type: 'ROOM_SYSTEMS',
       },
       CISCO_8865: {
         min: 1,
         max: 4,
         model: 'CISCO_8865',
-        type: 'CALL_DEVICES'
+        type: 'CALL_DEVICES',
       },
       CISCO_8845: {
         min: 1,
         max: 4,
         model: 'CISCO_8845',
-        type: 'CALL_DEVICES'
+        type: 'CALL_DEVICES',
       },
       CISCO_8841: {
         min: 1,
         max: 4,
         model: 'CISCO_8841',
-        type: 'CALL_DEVICES'
+        type: 'CALL_DEVICES',
       },
       CISCO_7841: {
         min: 1,
         max: 4,
         model: 'CISCO_7841',
-        type: 'CALL_DEVICES'
-      }
+        type: 'CALL_DEVICES',
+      },
     };
 
     var listTypes = {
       ROLLOUT1: 'ROLLOUT1',
       ROLLOUT2: 'ROLLOUT2',
-      US_ONLY: 'US'
+      US_ONLY: 'US',
     };
 
     var countryListTypes = {
@@ -287,7 +287,7 @@
           city: '',
           state: '',
           postalCode: '',
-          dealId: ''
+          dealId: '',
         },
       };
       _trialData = angular.copy(defaults);
@@ -324,157 +324,157 @@
     function getStates() {
       return [{
         state: 'Alabama',
-        abbr: 'AL'
+        abbr: 'AL',
       }, {
         state: 'Alaska',
-        abbr: 'AK'
+        abbr: 'AK',
       }, {
         state: 'Arizona',
-        abbr: 'AZ'
+        abbr: 'AZ',
       }, {
         state: 'Arkansas',
-        abbr: 'AR'
+        abbr: 'AR',
       }, {
         state: 'California',
-        abbr: 'CA'
+        abbr: 'CA',
       }, {
         state: 'Colorado',
-        abbr: 'CO'
+        abbr: 'CO',
       }, {
         state: 'Connecticut',
-        abbr: 'CT'
+        abbr: 'CT',
       }, {
         state: 'Delaware',
-        abbr: 'DE'
+        abbr: 'DE',
       }, {
         state: 'District of Columbia',
-        abbr: 'DC'
+        abbr: 'DC',
       }, {
         state: 'Florida',
-        abbr: 'FL'
+        abbr: 'FL',
       }, {
         state: 'Georgia',
-        abbr: 'GA'
+        abbr: 'GA',
       }, {
         state: 'Hawaii',
-        abbr: 'HI'
+        abbr: 'HI',
       }, {
         state: 'Idaho',
-        abbr: 'ID'
+        abbr: 'ID',
       }, {
         state: 'Illinois',
-        abbr: 'IL'
+        abbr: 'IL',
       }, {
         state: 'Indiana',
-        abbr: 'IN'
+        abbr: 'IN',
       }, {
         state: 'Iowa',
-        abbr: 'IA'
+        abbr: 'IA',
       }, {
         state: 'Kansas',
-        abbr: 'KS'
+        abbr: 'KS',
       }, {
         state: 'Kentucky',
-        abbr: 'KY'
+        abbr: 'KY',
       }, {
         state: 'Louisiana',
-        abbr: 'LA'
+        abbr: 'LA',
       }, {
         state: 'Maine',
-        abbr: 'ME'
+        abbr: 'ME',
       }, {
         state: 'Maryland',
-        abbr: 'MD'
+        abbr: 'MD',
       }, {
         state: 'Massachusetts',
-        abbr: 'MA'
+        abbr: 'MA',
       }, {
         state: 'Michigan',
-        abbr: 'MI'
+        abbr: 'MI',
       }, {
         state: 'Minnesota',
-        abbr: 'MN'
+        abbr: 'MN',
       }, {
         state: 'Mississippi',
-        abbr: 'MS'
+        abbr: 'MS',
       }, {
         state: 'Missouri',
-        abbr: 'MO'
+        abbr: 'MO',
       }, {
         state: 'Montana',
-        abbr: 'MT'
+        abbr: 'MT',
       }, {
         state: 'Nebraska',
-        abbr: 'NE'
+        abbr: 'NE',
       }, {
         state: 'Nevada',
-        abbr: 'NV'
+        abbr: 'NV',
       }, {
         state: 'New Hampshire',
-        abbr: 'NH'
+        abbr: 'NH',
       }, {
         state: 'New Jersey',
-        abbr: 'NJ'
+        abbr: 'NJ',
       }, {
         state: 'New Mexico',
-        abbr: 'NM'
+        abbr: 'NM',
       }, {
         state: 'New York',
-        abbr: 'NY'
+        abbr: 'NY',
       }, {
         state: 'North Carolina',
-        abbr: 'NC'
+        abbr: 'NC',
       }, {
         state: 'North Dakota',
-        abbr: 'ND'
+        abbr: 'ND',
       }, {
         state: 'Ohio',
-        abbr: 'OH'
+        abbr: 'OH',
       }, {
         state: 'Oklahoma',
-        abbr: 'OK'
+        abbr: 'OK',
       }, {
         state: 'Oregon',
-        abbr: 'OR'
+        abbr: 'OR',
       }, {
         state: 'Pennsylvania',
-        abbr: 'PA'
+        abbr: 'PA',
       }, {
         state: 'Rhode Island',
-        abbr: 'RI'
+        abbr: 'RI',
       }, {
         state: 'South Carolina',
-        abbr: 'SC'
+        abbr: 'SC',
       }, {
         state: 'South Dakota',
-        abbr: 'SD'
+        abbr: 'SD',
       }, {
         state: 'Tennessee',
-        abbr: 'TN'
+        abbr: 'TN',
       }, {
         state: 'Texas',
-        abbr: 'TX'
+        abbr: 'TX',
       }, {
         state: 'Utah',
-        abbr: 'UT'
+        abbr: 'UT',
       }, {
         state: 'Vermont',
-        abbr: 'VT'
+        abbr: 'VT',
       }, {
         state: 'Virginia',
-        abbr: 'VA'
+        abbr: 'VA',
       }, {
         state: 'Washington',
-        abbr: 'WA'
+        abbr: 'WA',
       }, {
         state: 'West Virginia',
-        abbr: 'WV'
+        abbr: 'WV',
       }, {
         state: 'Wisconsin',
-        abbr: 'WI'
+        abbr: 'WI',
       }, {
         state: 'Wyoming',
-        abbr: 'WY'
+        abbr: 'WY',
       }];
     }
 

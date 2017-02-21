@@ -19,19 +19,19 @@
       vm.radios = [{
         label: $translate.instant('gss.incidentStatus.investigating'),
         value: 'investigating',
-        id: 'investigating'
+        id: 'investigating',
       }, {
         label: $translate.instant('gss.incidentStatus.identified'),
         value: 'identified',
-        id: 'identified'
+        id: 'identified',
       }, {
         label: $translate.instant('gss.incidentStatus.monitoring'),
         value: 'monitoring',
-        id: 'monitoring'
+        id: 'monitoring',
       }, {
         label: $translate.instant('gss.incidentStatus.resolved'),
         value: 'resolved',
-        id: 'resolved'
+        id: 'resolved',
       }];
 
       vm.status = vm.radios[0].value;
@@ -48,16 +48,16 @@
         incidentName: vm.incidentName,
         status: vm.status,
         message: vm.message,
-        email: Authinfo.getUserName()
+        email: Authinfo.getUserName(),
       }).then(function () {
         goBack();
 
         Notification.success('gss.incidentsPage.createIncidentSucceed', {
-          incidentName: vm.incidentName
+          incidentName: vm.incidentName,
         });
       }).catch(function (error) {
         Notification.errorWithTrackingId(error, 'gss.incidentsPage.createIncidentFailed', {
-          incidentName: vm.incidentName
+          incidentName: vm.incidentName,
         });
       }).finally(function () {
         vm.isLoading = false;

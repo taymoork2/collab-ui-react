@@ -47,7 +47,7 @@
       },
       clear: function () {
         getLocalStorage().clear();
-      }
+      },
     };
   }
 })();

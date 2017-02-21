@@ -10,7 +10,7 @@ describe('ServiceDescriptor', function () {
   beforeEach(function () {
     angular.mock.module(function ($provide) {
       authinfo = {
-        getOrgId: sinon.stub()
+        getOrgId: sinon.stub(),
       };
       authinfo.getOrgId.returns("12345");
       $provide.value('Authinfo', authinfo);
@@ -40,7 +40,7 @@ describe('ServiceDescriptor', function () {
           enabled: true,
           acknowledged: false,
           emailSubscribers: "alvar@example.org",
-        }]
+        }],
       });
     /*
     Service.services(function (error, services) {
@@ -68,7 +68,7 @@ describe('ServiceDescriptor', function () {
           enabled: true,
           acknowledged: false,
           emailSubscribers: "aalto@example.org",
-        }]
+        }],
       });
     Service.getEmailSubscribers("squared-fusion-cal").then(function (emailSubscribers) {
       expect(emailSubscribers).toEqual(["aalto@example.org"]);
@@ -80,7 +80,7 @@ describe('ServiceDescriptor', function () {
     $httpBackend
       .expectPATCH(
         'https://hercules-integration.wbx2.com/v1/organizations/12345/services/squared-fusion-mgmt', {
-          emailSubscribers: "alvar@example.org"
+          emailSubscribers: "alvar@example.org",
         })
       .respond(204, '');
     Service.setEmailSubscribers("squared-fusion-mgmt", "alvar@example.org").then(function (response) {
@@ -91,7 +91,7 @@ describe('ServiceDescriptor', function () {
 
   it('should GET DisableEmailSendingToUser', function () {
     var data = {
-      "orgSettings": ["{\"calSvcDisableEmailSendingToEndUser\":true}"]
+      "orgSettings": ["{\"calSvcDisableEmailSendingToEndUser\":true}"],
     };
     $httpBackend.expectGET('https://identity.webex.com/organization/scim/v1/Orgs/' + authinfo.getOrgId() + '?disableCache=true')
       .respond(200, data);
@@ -103,7 +103,7 @@ describe('ServiceDescriptor', function () {
 
   it('should PATCH DisableEmailSendingToUser', function () {
     var data = {
-      "calSvcDisableEmailSendingToEndUser": true
+      "calSvcDisableEmailSendingToEndUser": true,
     };
     $httpBackend.expectGET('https://identity.webex.com/organization/scim/v1/Orgs/' + authinfo.getOrgId() + '?disableCache=true')
       .respond(200, {});

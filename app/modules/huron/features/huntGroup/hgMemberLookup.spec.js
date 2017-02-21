@@ -8,21 +8,21 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Member Lookup', functio
   var user2 = getJSONFixture('huron/json/features/huntGroup/user2.json');
 
   var successResponse = {
-    "users": [user1, user2]
+    "users": [user1, user2],
   };
 
   var member1 = {
     uuid: user1.uuid,
     displayUser: true,
     user: user1,
-    selectableNumber: user1.numbers[0]
+    selectableNumber: user1.numbers[0],
   };
 
   var member2 = {
     uuid: user2.uuid,
     displayUser: true,
     user: user2,
-    selectableNumber: user2.numbers[0]
+    selectableNumber: user2.numbers[0],
   };
 
   function listContains(someList, item) {
@@ -32,7 +32,7 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Member Lookup', functio
   }
 
   var spiedAuthinfo = {
-    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
   };
 
   beforeEach(angular.mock.module('Huron'));
@@ -56,7 +56,7 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Member Lookup', functio
 
     controller = $controller('HuntGroupSetupAssistantCtrl', {
       $scope: $scope,
-      Notification: Notification
+      Notification: Notification,
     });
 
   }));
@@ -165,7 +165,7 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Member Lookup', functio
     controller.selectHuntGroupMember(member2);
 
     toggleAndFetchEmail(user1, {
-      email: "test1@cisco.com"
+      email: "test1@cisco.com",
     }); // user1 header clicked.
     expect(controller.openMemberPanelUuid).toBe(user1.uuid); // opens user1 panel.
 
@@ -176,7 +176,7 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Member Lookup', functio
     controller.toggleMemberPanel(user1); // user1 header clicked.
     $scope.$apply();
     toggleAndFetchEmail(user2, {
-      email: "test2@cisco.com"
+      email: "test2@cisco.com",
     }); // user2 header clicked.
     expect(controller.openMemberPanelUuid).toBe(user2.uuid); //shows user2 panel.
   });
@@ -202,7 +202,7 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Member Lookup', functio
   it("shows danger indicator when input typed is >= 3 and no valid suggestions.", function () {
     controller.selectHuntGroupMember(member1);
     var noSuggestion = {
-      "users": []
+      "users": [],
     };
     $httpBackend.expectGET(MemberLookupUrl).respond(200, noSuggestion);
     controller.fetchHuntMembers("sun");
@@ -220,7 +220,7 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Member Lookup', functio
   it("does not search on the number api when looking for members", function () {
     controller.selectHuntGroupMember(member1);
     var noSuggestion = {
-      "users": []
+      "users": [],
     };
     $httpBackend.expectGET(MemberLookupUrl).respond(200, noSuggestion);
     controller.fetchHuntMembers("123");

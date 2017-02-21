@@ -83,7 +83,7 @@ describe('Languages', function () {
   it('should contain an english language object', function () {
     expect(this.languages).toContain({
       value: 'en_US',
-      label: 'languages.englishAmerican'
+      label: 'languages.englishAmerican',
     });
   });
 });

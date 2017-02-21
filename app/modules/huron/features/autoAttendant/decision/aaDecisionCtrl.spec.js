@@ -9,7 +9,7 @@ describe('Controller: AADecisionCtrl', function () {
   var $rootScope, $scope;
 
   var aaUiModel = {
-    openHours: {}
+    openHours: {},
   };
   var queue = [{
     queueName: "queueyLewis",
@@ -32,7 +32,7 @@ describe('Controller: AADecisionCtrl', function () {
     index = '0';
 
     aaUiModel = {
-      openHours: {}
+      openHours: {},
     };
     controller = $controller;
 
@@ -85,7 +85,7 @@ describe('Controller: AADecisionCtrl', function () {
       aaUiModel['openHours'].addEntryAt(0, menu);
 
       c = controller('AADecisionCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       $scope.$apply();
@@ -101,7 +101,7 @@ describe('Controller: AADecisionCtrl', function () {
       action.if.rightCondition = 'Hello world';
 
       c = controller('AADecisionCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       $scope.$apply();
@@ -123,7 +123,7 @@ describe('Controller: AADecisionCtrl', function () {
       action.then.value = 'Demo AA';
 
       c = controller('AADecisionCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       $scope.$apply();
@@ -142,7 +142,7 @@ describe('Controller: AADecisionCtrl', function () {
       action.if.rightCondition = 'Hello world';
 
       c = controller('AADecisionCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       $scope.$apply();
@@ -164,7 +164,7 @@ describe('Controller: AADecisionCtrl', function () {
       action.if.rightCondition = 'Hello world';
 
       c = controller('AADecisionCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       $scope.$apply();
@@ -203,7 +203,7 @@ describe('Controller: AADecisionCtrl', function () {
       aaUiModel['openHours'].addEntryAt(index, menu);
 
       c = controller('AADecisionCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       $scope.$apply();

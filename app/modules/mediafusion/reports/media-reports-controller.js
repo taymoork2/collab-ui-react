@@ -59,7 +59,7 @@
     vm.cloudparticipants = {
       isShow: '',
       value: '',
-      footerDesc: vm.cloud_participants_heading
+      footerDesc: vm.cloud_participants_heading,
     };
 
     vm.displayAdoption = false;
@@ -86,19 +86,19 @@
 
     vm.timeOptions = [{
       value: 0,
-      label: $translate.instant('mediaFusion.metrics.last4Hours')
+      label: $translate.instant('mediaFusion.metrics.last4Hours'),
     }, {
       value: 1,
-      label: $translate.instant('mediaFusion.metrics.today')
+      label: $translate.instant('mediaFusion.metrics.today'),
     }, {
       value: 2,
-      label: $translate.instant('mediaFusion.metrics.week')
+      label: $translate.instant('mediaFusion.metrics.week'),
     }, {
       value: 3,
-      label: $translate.instant('mediaFusion.metrics.month')
+      label: $translate.instant('mediaFusion.metrics.month'),
     }, {
       value: 4,
-      label: $translate.instant('mediaFusion.metrics.threeMonths')
+      label: $translate.instant('mediaFusion.metrics.threeMonths'),
     }];
     vm.timeSelected = vm.timeOptions[0];
 
@@ -149,7 +149,7 @@
     $scope.$on('zoomedTime', function (event, data) {
       vm.timeSelected = {
         startTime: data.data.startTime,
-        endTime: data.data.endTime
+        endTime: data.data.endTime,
       };
       vm.timeSelected.label = vm.customPlaceholder;
       timeUpdate();
@@ -486,7 +486,7 @@
       vm.utilizationStatus = vm.EMPTY;
       var response = {
         graphData: MediaReportsDummyGraphService.dummyLineChartData(vm.timeSelected),
-        graphs: MediaReportsDummyGraphService.dummyUtilizationGraph()
+        graphs: MediaReportsDummyGraphService.dummyUtilizationGraph(),
       };
       setUtilizationGraph(response);
     }
@@ -495,7 +495,7 @@
       vm.participantDistributionStatus = vm.EMPTY;
       var response = {
         graphData: MediaReportsDummyGraphService.dummyLineChartData(vm.timeSelected),
-        graphs: MediaReportsDummyGraphService.dummyParticipantDistributionGraph()
+        graphs: MediaReportsDummyGraphService.dummyParticipantDistributionGraph(),
       };
       setParticipantDistributionGraph(response);
     }
@@ -504,7 +504,7 @@
       vm.clientTypeStatus = vm.EMPTY;
       var response = {
         graphData: MediaReportsDummyGraphService.dummyLineChartData(vm.timeSelected),
-        graphs: MediaReportsDummyGraphService.dummyClientTypeGraph()
+        graphs: MediaReportsDummyGraphService.dummyClientTypeGraph(),
       };
       setClientTypeGraph(response);
     }
@@ -513,7 +513,7 @@
       vm.numberOfParticipantStatus = vm.EMPTY;
       var response = {
         graphData: MediaReportsDummyGraphService.dummyLineChartData(vm.timeSelected),
-        graphs: MediaReportsDummyGraphService.dummyNumberOfParticipantGraph()
+        graphs: MediaReportsDummyGraphService.dummyNumberOfParticipantGraph(),
       };
       setNumberOfParticipantGraph(response);
     }
@@ -521,7 +521,7 @@
     function setDummyCallVolume() {
       vm.callVolumeStatus = vm.EMPTY;
       var response = {
-        graphData: MediaReportsDummyGraphService.dummyCallVolumeData(vm.timeSelected)
+        graphData: MediaReportsDummyGraphService.dummyCallVolumeData(vm.timeSelected),
       };
       setCallVolumeGraph(response);
     }

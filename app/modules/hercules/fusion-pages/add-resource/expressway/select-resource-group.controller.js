@@ -15,7 +15,7 @@
     vm.assignToResourceGroup = 'no';
     vm._translation = {
       assignYes: $translate.instant('hercules.addResourceDialog.assignYes'),
-      assignNo: $translate.instant('hercules.addResourceDialog.assignNo')
+      assignNo: $translate.instant('hercules.addResourceDialog.assignNo'),
     };
     vm.next = next;
     vm.canGoNext = canGoNext;

@@ -8,18 +8,18 @@
       httpBackend = $httpBackend;
       httpBackend.when('GET', /^\w+.*/).respond({});
       redirectTargetPromise = {
-        then: sinon.stub()
+        then: sinon.stub(),
       };
       $state = {
         'params': {
           'wizard': {},
           'firstTimeSetup': false,
           'yesProceed': true,
-          'fromClusters': true
+          'fromClusters': true,
         },
         'modal': {
-          close: sinon.stub()
-        }
+          close: sinon.stub(),
+        },
       };
       $stateParams = _$stateParams_;
       $window = _$window_;
@@ -59,7 +59,7 @@
       controller.hosts = [{
         "id": "mf_mgmt@ac43493e-3f11-4eaa-aec0-f16f2a69969a",
         "hostname": "10.196.5.251",
-        "hostSerial": "ac43493e-3f11-4eaa-aec0-f16f2a69969a"
+        "hostSerial": "ac43493e-3f11-4eaa-aec0-f16f2a69969a",
       }];
       controller.canGoNext();
       expect(controller.canGoNext()).toBeFalsy();

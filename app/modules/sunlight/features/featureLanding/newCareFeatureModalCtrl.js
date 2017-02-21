@@ -16,7 +16,7 @@
       code: 'sunlightDetails.chatTemplateCode',
       label: 'sunlightDetails.newFeatures.chatType',
       description: 'sunlightDetails.newFeatures.selectCHDesc',
-      icons: ['icon-message']
+      icons: ['icon-message'],
     };
 
     var careCallbackService = {
@@ -24,7 +24,7 @@
       code: 'sunlightDetails.callbackTemplateCode',
       label: 'sunlightDetails.newFeatures.callbackType',
       description: 'sunlightDetails.newFeatures.selectCADesc',
-      icons: ['icon-calls']
+      icons: ['icon-calls'],
     };
 
     var careChatCallbackService = {
@@ -32,7 +32,7 @@
       code: 'sunlightDetails.chatTemplateCode',
       label: 'sunlightDetails.newFeatures.chatPlusCallbackType',
       description: 'sunlightDetails.newFeatures.selectCHCADesc',
-      icons: ['icon-message', 'icon-calls']
+      icons: ['icon-message', 'icon-calls'],
     };
 
     if (Authinfo.isCare()) {
@@ -53,15 +53,15 @@
     function ok(featureId) {
       if (featureId === 'Ch') {
         $state.go('care.setupAssistant', {
-          type: 'chat'
+          type: 'chat',
         });
       } else if (featureId === 'Ca') {
         $state.go('care.setupAssistant', {
-          type: 'callback'
+          type: 'callback',
         });
       } else if (featureId === 'ChCa') {
         $state.go('care.setupAssistant', {
-          type: 'chatPlusCallback'
+          type: 'chatPlusCallback',
         });
       }
       $modalInstance.close(featureId);

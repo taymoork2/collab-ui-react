@@ -36,7 +36,7 @@
           clusterStatus: vm.cluster.aggregates.state,
           showUpgradeWarning: function () {
             return vm.softwareUpgrade.isUpgradeAvailable && vm.softwareUpgrade.hasUpgradeWarning;
-          }
+          },
         };
 
         if (isUpgrading) {
@@ -46,7 +46,7 @@
             .value();
           vm.upgradeDetails = {
             numberOfUpsmthngHosts: _.size(vm.cluster.aggregates.hosts) - pendingHosts.length,
-            upgradingHostname: findUpgradingHostname(vm.cluster.aggregates.hosts)
+            upgradingHostname: findUpgradingHostname(vm.cluster.aggregates.hosts),
           };
         }
 
@@ -80,12 +80,12 @@
         resolve: {
           clusterId: function () {
             return vm.clusterId;
-          }
+          },
         },
         type: 'small',
         controller: 'UpgradeNowControllerV2',
         controllerAs: 'upgradeClust',
-        templateUrl: 'modules/mediafusion/media-service-v2/side-panel/mf-upgrade-section/upgrade-now-cluster-dialog.html'
+        templateUrl: 'modules/mediafusion/media-service-v2/side-panel/mf-upgrade-section/upgrade-now-cluster-dialog.html',
       });
 
       $scope.$on('$destroy', function () {

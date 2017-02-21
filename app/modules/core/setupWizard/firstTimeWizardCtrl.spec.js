@@ -27,21 +27,21 @@ describe('FirstTimeWizardCtrl', function () {
       data: {
         id: 'admin-user',
         roles: ['full_admin'],
-        entitlements: ['spark', 'cloud-contact-center', 'contact-center-context']
+        entitlements: ['spark', 'cloud-contact-center', 'contact-center-context'],
       },
-      status: 200
+      status: 200,
     };
     var successResponseWithoutCare = {
       data: {
         id: 'admin-user',
         roles: ['full_admin'],
-        entitlements: ['spark']
+        entitlements: ['spark'],
       },
-      status: 200
+      status: 200,
     };
     var failedResponse = {
       data: '',
-      status: 404
+      status: 404,
     };
 
     afterAll(function () {
@@ -50,7 +50,7 @@ describe('FirstTimeWizardCtrl', function () {
 
     function initController() {
       $controller('FirstTimeWizardCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
       $scope.$apply();
     }
@@ -75,7 +75,7 @@ describe('FirstTimeWizardCtrl', function () {
     it('should not get user details if there are no care licenses', function () {
       initControllerWith({
         asDelegatedAdmin: false,
-        careServices: []
+        careServices: [],
       });
 
       expect(Authinfo.getCareServices).toHaveBeenCalled();
@@ -86,9 +86,9 @@ describe('FirstTimeWizardCtrl', function () {
       initControllerWith({
         asDelegatedAdmin: false,
         careServices: [{
-          type: 'CDC_xxx'
+          type: 'CDC_xxx',
         }],
-        getUserResponse: failedResponse
+        getUserResponse: failedResponse,
       });
 
       expect(Authinfo.getCareServices).toHaveBeenCalled();
@@ -100,10 +100,10 @@ describe('FirstTimeWizardCtrl', function () {
       initControllerWith({
         asDelegatedAdmin: false,
         careServices: [{
-          type: 'CDC_xxx'
+          type: 'CDC_xxx',
         }],
         getUserResponse: successResponseWithoutCare,
-        updateUserProfileResponse: failedResponse
+        updateUserProfileResponse: failedResponse,
       });
 
       expect(Authinfo.getCareServices).toHaveBeenCalled();
@@ -118,10 +118,10 @@ describe('FirstTimeWizardCtrl', function () {
         initControllerWith({
           asDelegatedAdmin: false,
           careServices: [{
-            type: 'CDC_xxx'
+            type: 'CDC_xxx',
           }],
           getUserResponse: successResponseWithoutCare,
-          updateUserProfileResponse: successResponseWithCare
+          updateUserProfileResponse: successResponseWithCare,
         });
 
         expect(Auth.logout).toHaveBeenCalled();
@@ -132,10 +132,10 @@ describe('FirstTimeWizardCtrl', function () {
         initControllerWith({
           asDelegatedAdmin: false,
           careServices: [{
-            type: 'CDC_xxx'
+            type: 'CDC_xxx',
           }],
           getUserResponse: successResponseWithCare,
-          updateUserProfileResponse: successResponseWithCare
+          updateUserProfileResponse: successResponseWithCare,
         });
 
         expect(Auth.logout).not.toHaveBeenCalled();

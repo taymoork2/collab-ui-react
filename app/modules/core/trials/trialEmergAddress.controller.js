@@ -29,13 +29,13 @@
         required: true,
         labelfield: 'label',
         label: $translate.instant('trialModal.pstn.address'),
-        inputClass: 'medium-11'
+        inputClass: 'medium-11',
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
           return vm.addressFound;
-        }
-      }
+        },
+      },
     }, {
       model: vm.trial.details.emergAddr,
       key: 'unit',
@@ -43,13 +43,13 @@
       className: 'medium-3 inline-row left',
       templateOptions: {
         labelfield: 'label',
-        label: $translate.instant('trialModal.pstn.unit')
+        label: $translate.instant('trialModal.pstn.unit'),
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
           return vm.addressFound;
-        }
-      }
+        },
+      },
     }, {
       model: vm.trial.details.emergAddr,
       key: 'city',
@@ -63,8 +63,8 @@
       expressionProperties: {
         'templateOptions.disabled': function () {
           return vm.addressFound;
-        }
-      }
+        },
+      },
     }, {
       model: vm.trial.details.emergAddr,
       key: 'state',
@@ -77,7 +77,7 @@
         valuefield: 'abbreviation',
         inputClass: 'medium-11',
         options: [],
-        filter: true
+        filter: true,
       },
       controller: /* @ngInject */ function ($scope) {
         PstnSetupStatesService.getStateProvinces().then(function (states) {
@@ -87,8 +87,8 @@
       expressionProperties: {
         'templateOptions.disabled': function () {
           return vm.addressFound;
-        }
-      }
+        },
+      },
     }, {
       model: vm.trial.details.emergAddr,
       key: 'zip',
@@ -98,13 +98,13 @@
         required: true,
         labelfield: 'label',
         label: $translate.instant('trialModal.pstn.zip'),
-        onBlur: validateAddress
+        onBlur: validateAddress,
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
           return vm.addressFound;
-        }
-      }
+        },
+      },
     }];
 
     Analytics.trackTrialSteps(Analytics.eventNames.ENTER, vm.parentTrialData);
@@ -117,7 +117,7 @@
         unit: vm.trial.details.emergAddr.unit,
         city: vm.trial.details.emergAddr.city,
         state: vm.trial.details.emergAddr.state.abbreviation,
-        zip: vm.trial.details.emergAddr.zip
+        zip: vm.trial.details.emergAddr.zip,
       })
         .then(function (response) {
           if (!_.isUndefined(response)) {

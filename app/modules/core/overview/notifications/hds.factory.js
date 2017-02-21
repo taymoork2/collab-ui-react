@@ -21,10 +21,10 @@
           },
           linkText: 'homePage.getStarted',
           name: 'hds',
-          text: 'homePage.setUpHybridDataSecurity'
+          text: 'homePage.setUpHybridDataSecurity',
         };
         return notification;
-      }
+      },
     };
   }
 })();

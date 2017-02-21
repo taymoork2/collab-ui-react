@@ -21,11 +21,11 @@
           },
           linkText: 'homePage.getStarted',
           name: 'callAware',
-          text: 'homePage.setUpCallAwareService'
+          text: 'homePage.setUpCallAwareService',
         };
 
         return notification;
-      }
+      },
     };
   }
 })();

@@ -5,8 +5,8 @@ describe('controller: GSSServicesCtrl', function () {
   var testData = {
     deleteCommand: 'DELETE',
     serviceForDelete: {
-      serviceId: 'testServiceId'
-    }
+      serviceId: 'testServiceId',
+    },
   };
 
   beforeEach(angular.mock.module('GSS'));
@@ -35,7 +35,7 @@ describe('controller: GSSServicesCtrl', function () {
   function initSpies() {
     spyOn(GSSService, 'getServices').and.returnValue($q.resolve());
     spyOn($modal, 'open').and.returnValue({
-      result: $q.resolve()
+      result: $q.resolve(),
     });
     spyOn($state, 'go');
     spyOn($scope, '$emit').and.callThrough();
@@ -46,7 +46,7 @@ describe('controller: GSSServicesCtrl', function () {
       $modal: $modal,
       $scope: $scope,
       $state: $state,
-      GSSService: GSSService
+      GSSService: GSSService,
     });
 
     $scope.$apply();
@@ -66,7 +66,7 @@ describe('controller: GSSServicesCtrl', function () {
     controller.deleteService(testData.serviceForDelete);
 
     expect($state.go).toHaveBeenCalledWith('gss.services.delete', {
-      service: testData.serviceForDelete
+      service: testData.serviceForDelete,
     });
   });
 

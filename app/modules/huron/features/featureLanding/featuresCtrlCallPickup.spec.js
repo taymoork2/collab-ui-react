@@ -11,7 +11,7 @@ describe('Features Controller', function () {
   var getPIListFailureResp = {
     'data': 'Internal Server Error',
     'status': 500,
-    'statusText': 'Internal Server Error'
+    'statusText': 'Internal Server Error',
   };
   var pickupGroups = {
     "pickupGroups": [{
@@ -19,20 +19,20 @@ describe('Features Controller', function () {
       cardName: "blue",
       memberCount: 2,
       filterValue: 'PI',
-      featureName: 'huronFeatureDetails.pi'
+      featureName: 'huronFeatureDetails.pi',
     }, {
       id: "bce45ce1-743a-454b-b1bf-30ca838ee3e5",
       cardName: "check",
       memberCount: 3,
       filterValue: 'PI',
-      featureName: 'huronFeatureDetails.pi'
+      featureName: 'huronFeatureDetails.pi',
     }, {
       id: "1e861505-c281-4086-98c5-2e46b4659065",
       cardName: "demo_1",
       memberCount: 2,
       filterValue: 'PI',
-      featureName: 'huronFeatureDetails.pi'
-    }]
+      featureName: 'huronFeatureDetails.pi',
+    }],
   };
 
   beforeEach(angular.mock.module('Huron'));
@@ -81,7 +81,7 @@ describe('Features Controller', function () {
       CallPickupGroupService: CallPickupGroupService,
       TelephoneNumberService: TelephoneNumberService,
       Log: Log,
-      Notification: Notification
+      Notification: Notification,
     });
 
   }));
@@ -112,7 +112,7 @@ describe('Features Controller', function () {
     $timeout.flush();
     expect(Notification.errorResponse).toHaveBeenCalledWith(getPIListFailureResp,
       'huronFeatureDetails.failedToLoad', {
-        featureType: 'huronFeatureDetails.piName'
+        featureType: 'huronFeatureDetails.piName',
       });
   });
   it('should set the pageState to Loading when controller is getting data from back-end', function () {

@@ -89,7 +89,7 @@ describe('Service: Trial Device Service:', function () {
     it('should replace the country list correctly if replacement is supplied', function () {
       var replacement = [{
         default: TrialDeviceService.listTypes.ROLLOUT2,
-        override: TrialDeviceService.listTypes.US_ONLY
+        override: TrialDeviceService.listTypes.US_ONLY,
       }];
       var countries = TrialDeviceService.getCountries(['CISCO_SX10', 'CISCO_8841'], replacement);
       expect(countries.length).toBe(1);
@@ -129,7 +129,7 @@ describe('Service: Trial Device Service:', function () {
       var arr = [TrialDeviceService.canAddDevice({}, true, true, false),
         TrialDeviceService.canAddDevice({}, true, false, false),
         TrialDeviceService.canAddDevice({}, false, true, false),
-        TrialDeviceService.canAddDevice({}, false, false, false)
+        TrialDeviceService.canAddDevice({}, false, false, false),
       ];
 
       // bail out at the first true value

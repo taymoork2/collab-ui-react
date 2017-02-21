@@ -17,20 +17,20 @@ describe('Service: Trial Service:', function () {
     bard.mockService(Authinfo, {
       getOrgId: '1',
       getLicenses: [{
-        'trialId': 'fake-uuid-value-0'
+        'trialId': 'fake-uuid-value-0',
       }, {
-        'trialId': 'fake-uuid-value-1'
+        'trialId': 'fake-uuid-value-1',
       }, {
-        'trialId': 'fake-uuid-value-2'
-      }]
+        'trialId': 'fake-uuid-value-2',
+      }],
     });
     $httpBackend.whenGET(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials').respond({
       activeDeviceTrials: 17,
-      maxDeviceTrials: 20
+      maxDeviceTrials: 20,
     });
     $httpBackend.whenGET(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials' + '?customerName=searchStr').respond({
       activeDeviceTrials: 17,
-      maxDeviceTrials: 20
+      maxDeviceTrials: 20,
     });
   });
 
@@ -91,28 +91,28 @@ describe('Service: Trial Service:', function () {
     describe('start trial with enabled trials', function () {
       beforeEach(function () {
         bard.mockService(TrialMessageService, {
-          getData: trialData.enabled.trials.messageTrial
+          getData: trialData.enabled.trials.messageTrial,
         });
         bard.mockService(TrialMeetingService, {
-          getData: trialData.enabled.trials.meetingTrial
+          getData: trialData.enabled.trials.meetingTrial,
         });
         bard.mockService(TrialWebexService, {
-          getData: trialData.enabled.trials.webexTrial
+          getData: trialData.enabled.trials.webexTrial,
         });
         bard.mockService(TrialCallService, {
-          getData: trialData.enabled.trials.callTrial
+          getData: trialData.enabled.trials.callTrial,
         });
         bard.mockService(TrialCareService, {
-          getData: trialData.enabled.trials.careTrial
+          getData: trialData.enabled.trials.careTrial,
         });
         bard.mockService(TrialRoomSystemService, {
-          getData: trialData.enabled.trials.roomSystemTrial
+          getData: trialData.enabled.trials.roomSystemTrial,
         });
         bard.mockService(TrialSparkBoardService, {
-          getData: trialData.enabled.trials.sparkBoardTrial
+          getData: trialData.enabled.trials.sparkBoardTrial,
         });
         bard.mockService(TrialDeviceService, {
-          getData: trialData.enabled.trials.deviceTrial
+          getData: trialData.enabled.trials.deviceTrial,
         });
         TrialService.getData();
       });
@@ -123,7 +123,7 @@ describe('Service: Trial Service:', function () {
           var offers = JSON.parse(data).offers;
           return _.every(offerList, function (offer) {
             return _.some(offers, {
-              id: offer
+              id: offer,
             });
           });
         }).respond(200);
@@ -148,10 +148,10 @@ describe('Service: Trial Service:', function () {
         $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
           var deviceList = [{
             model: 'CISCO_SX10',
-            quantity: 2
+            quantity: 2,
           }, {
             model: 'CISCO_8865',
-            quantity: 3
+            quantity: 3,
           }];
           var dataJson = JSON.parse(data);
           var devices = dataJson.details.devices;
@@ -179,7 +179,7 @@ describe('Service: Trial Service:', function () {
       it('should get state correcty from string', function () {
         testData.shippingInfo.state = 'TX';
         bard.mockService(TrialDeviceService, {
-          getData: testData
+          getData: testData,
         });
         TrialService.getData();
         $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
@@ -195,10 +195,10 @@ describe('Service: Trial Service:', function () {
       it('should get state correcty from object', function () {
         testData.shippingInfo.state = {
           'abbr': 'IL',
-          'state': 'Illinois'
+          'state': 'Illinois',
         };
         bard.mockService(TrialDeviceService, {
-          getData: testData
+          getData: testData,
         });
         TrialService.getData();
         $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
@@ -214,7 +214,7 @@ describe('Service: Trial Service:', function () {
       it('should get country correcty from string', function () {
         testData.shippingInfo.country = 'Canada';
         bard.mockService(TrialDeviceService, {
-          getData: testData
+          getData: testData,
         });
         TrialService.getData();
         $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
@@ -229,10 +229,10 @@ describe('Service: Trial Service:', function () {
 
       it('should get country correcty from object', function () {
         testData.shippingInfo.country = {
-          'country': 'Germany'
+          'country': 'Germany',
         };
         bard.mockService(TrialDeviceService, {
-          getData: testData
+          getData: testData,
         });
         TrialService.getData();
         $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
@@ -273,7 +273,7 @@ describe('Service: Trial Service:', function () {
     describe('start call trial with skipped devices', function () {
       beforeEach(function () {
         bard.mockService(TrialCallService, {
-          getData: trialData.enabled.trials.skipDeviceTrial
+          getData: trialData.enabled.trials.skipDeviceTrial,
         });
         TrialService.getData();
       });
@@ -296,7 +296,7 @@ describe('Service: Trial Service:', function () {
     var fakeTrialId = 'fake-uuid-value-1000';
     var fakeTrialPeriodData = {
       startDate: '2015-12-06T00:00:00.000Z',
-      trialPeriod: 90
+      trialPeriod: 90,
     };
     var fakeToday, fakeStartDate;
 
@@ -367,14 +367,14 @@ describe('Service: Trial Service:', function () {
         describe('failed fetch of trial data:', function () {
           beforeEach(function () {
             spyOn(TrialService, 'getTrial').and.returnValue($q.reject({
-              message: 'getTrial failed'
+              message: 'getTrial failed',
             }));
           });
 
           it('should bubble up rejection that that caused "getTrial" to reject', function () {
             TrialService.getTrialPeriodData(fakeTrialId).catch(function (reason) {
               expect(reason).toEqual({
-                message: 'getTrial failed'
+                message: 'getTrial failed',
               });
             });
           });
@@ -391,7 +391,7 @@ describe('Service: Trial Service:', function () {
             it('should resolve with 29, given 1 day passed since the start date and trial period is 30', function () {
               var fakeTrialPeriodData = $q.resolve({
                 startDate: '2016-01-01T00:00:00.000Z',
-                trialPeriod: 30
+                trialPeriod: 30,
               });
               spyOn(TrialService, 'getTrialPeriodData').and.returnValue(fakeTrialPeriodData);
 
@@ -404,7 +404,7 @@ describe('Service: Trial Service:', function () {
             it('should resolve with 30, given start date and current date are the same and trial period is 30', function () {
               var fakeTrialPeriodData = $q.resolve({
                 startDate: '2016-01-02T00:00:00.000Z',
-                trialPeriod: 30
+                trialPeriod: 30,
               });
               spyOn(TrialService, 'getTrialPeriodData').and.returnValue(fakeTrialPeriodData);
 
@@ -417,7 +417,7 @@ describe('Service: Trial Service:', function () {
             it('should resolve with -1, given 31 days passed since the start date and trial period is 30', function () {
               var fakeTrialPeriodData = $q.resolve({
                 startDate: '2015-12-02T00:00:00.000Z',
-                trialPeriod: 30
+                trialPeriod: 30,
               });
               spyOn(TrialService, 'getTrialPeriodData').and.returnValue(fakeTrialPeriodData);
 
@@ -555,8 +555,8 @@ describe('Service: Trial Service:', function () {
             key: org,
             value: 'Test Name',
             isValid: 'true',
-            isExist: 'false'
-          }]
+            isExist: 'false',
+          }],
         };
       });
 
@@ -567,7 +567,7 @@ describe('Service: Trial Service:', function () {
       it('should return unique', function () {
         $httpBackend.whenPOST(UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke').respond(JSON.stringify(valData));
         expectShallowVal(org, {
-          unique: true
+          unique: true,
         });
       });
 
@@ -575,7 +575,7 @@ describe('Service: Trial Service:', function () {
         valData.properties[0].isExist = 'true';
         $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke').respond(JSON.stringify(valData));
         expectShallowVal(org, {
-          error: 'trialModal.errorInUse'
+          error: 'trialModal.errorInUse',
         });
       });
 
@@ -583,7 +583,7 @@ describe('Service: Trial Service:', function () {
         valData.properties[0].isValid = 'false';
         $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke').respond(JSON.stringify(valData));
         expectShallowVal(org, {
-          error: 'trialModal.errorInvalidName'
+          error: 'trialModal.errorInvalidName',
         });
       });
 
@@ -592,7 +592,7 @@ describe('Service: Trial Service:', function () {
         valData.properties[0].isValid = 'false';
         $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke').respond(JSON.stringify(valData));
         expectShallowVal(email, {
-          error: 'trialModal.errorInvalid'
+          error: 'trialModal.errorInvalid',
         });
       });
 
@@ -600,7 +600,7 @@ describe('Service: Trial Service:', function () {
         valData = {};
         $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke').respond(JSON.stringify(valData));
         expectShallowVal(org, {
-          error: 'trialModal.errorServerDown'
+          error: 'trialModal.errorServerDown',
         });
       });
 
@@ -610,7 +610,7 @@ describe('Service: Trial Service:', function () {
         }).respond(501);
         expectShallowVal(org, {
           error: 'trialModal.errorServerDown',
-          status: 501
+          status: 501,
         });
       });
     });

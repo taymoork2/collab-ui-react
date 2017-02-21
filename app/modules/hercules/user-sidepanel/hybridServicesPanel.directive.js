@@ -48,7 +48,7 @@
             previousCalendarService.entitled = false;
           }
         }
-      }
+      },
     };
     vm.setEntitlements = setEntitlements;
     vm.hasHuronCallEntitlement = hasHuronCallEntitlement;
@@ -68,7 +68,7 @@
     function init() {
       $q.all({
         servicesFromFms: ServiceDescriptor.getServices(),
-        gcalService: vm.hasGoogleCalendarFeature ? CloudConnectorService.getService('squared-fusion-gcal') : $q.resolve({})
+        gcalService: vm.hasGoogleCalendarFeature ? CloudConnectorService.getService('squared-fusion-gcal') : $q.resolve({}),
       }).then(function (response) {
         vm.services.calendarExchange = getServiceIfEnabled(response.servicesFromFms, 'squared-fusion-cal');
         vm.services.callServiceAware = getServiceIfEnabled(response.servicesFromFms, 'squared-fusion-uc');
@@ -106,7 +106,7 @@
       }
       if (!_.isUndefined(vm.updateEntitlements)) {
         vm.updateEntitlements({
-          'entitlements': vm.entitlements
+          'entitlements': vm.entitlements,
         });
       }
     }
@@ -114,7 +114,7 @@
     function getServiceIfEnabled(services, id) {
       var service = _.find(services, {
         'id': id,
-        'enabled': true
+        'enabled': true,
       });
       if (service) {
         service.entitled = false;
@@ -134,12 +134,12 @@
     return {
       restrict: 'E',
       scope: {
-        'updateEntitlements': '&bindEntitlements'
+        'updateEntitlements': '&bindEntitlements',
       },
       bindToController: true,
       controllerAs: 'hybridServicesPanelCtrl',
       controller: 'hybridServicesPanelCtrl',
-      templateUrl: 'modules/hercules/user-sidepanel/hybridServicesPanel.tpl.html'
+      templateUrl: 'modules/hercules/user-sidepanel/hybridServicesPanel.tpl.html',
     };
   }
 })();

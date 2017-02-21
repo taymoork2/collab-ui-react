@@ -93,7 +93,7 @@
     return {
       addRedirectTargetClicked: addRedirectTargetClicked,
       updateClusterLists: updateClusterLists,
-      redirectPopUpAndClose: redirectPopUpAndClose
+      redirectPopUpAndClose: redirectPopUpAndClose,
     };
 
   }

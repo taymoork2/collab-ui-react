@@ -14,7 +14,7 @@ describe('Controller: ConfirmCertificateDeleteController', function () {
   }
 
   modalInstanceMock = {
-    close: sinon.stub()
+    close: sinon.stub(),
   };
 
   function initController() {
@@ -22,7 +22,7 @@ describe('Controller: ConfirmCertificateDeleteController', function () {
       CertService: CertService,
       Notification: Notification,
       cert: {},
-      $modalInstance: modalInstanceMock
+      $modalInstance: modalInstanceMock,
     });
   }
 

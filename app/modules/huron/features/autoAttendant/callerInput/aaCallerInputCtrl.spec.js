@@ -10,23 +10,23 @@ describe('Controller: AACallerInputCtrl', function () {
   var $rootScope, $scope;
 
   var aaUiModel = {
-    openHours: {}
+    openHours: {},
   };
   var inputActions = [{
     "key": "1",
     "value": "",
     "keys": [
-      "0", "1", "4", "5", "6", "7", "8", "9", "#", "*"
+      "0", "1", "4", "5", "6", "7", "8", "9", "#", "*",
     ] }, {
       "key": "2",
       "value": "",
       "keys": [
-        "0", "2", "4", "5", "6", "7", "8", "9", "#", "*"
+        "0", "2", "4", "5", "6", "7", "8", "9", "#", "*",
       ] }, {
         "key": "3",
         "value": "",
         "keys": [
-          "0", "3", "4", "5", "6", "7", "8", "9", "#", "*"
+          "0", "3", "4", "5", "6", "7", "8", "9", "#", "*",
         ] }];
 
   var schedule = 'openHours';
@@ -46,7 +46,7 @@ describe('Controller: AACallerInputCtrl', function () {
     menuId = 'menu1';
 
     aaUiModel = {
-      openHours: {}
+      openHours: {},
     };
 
     featureToggleService = _FeatureToggleService_;
@@ -73,7 +73,7 @@ describe('Controller: AACallerInputCtrl', function () {
     aaUiModel['openHours'].addEntryAt(index, menu);
 
     controller = $controller('AACallerInputCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
 
     $scope.$apply();
@@ -216,15 +216,15 @@ describe('Controller: AACallerInputCtrl', function () {
     it('should find the voice option', function () {
       var voiceOptions = [{
         label: 'label1',
-        value: 'Miss Piggy'
+        value: 'Miss Piggy',
       }, {
         label: 'label2',
-        value: 'Kermit'
+        value: 'Kermit',
       }];
 
       var voiceOption = {
         label: 'label1',
-        value: 'Miss Piggy'
+        value: 'Miss Piggy',
       };
 
       spyOn(aaLanguageService, 'getVoiceOption').and.returnValue(voiceOption);
@@ -237,15 +237,15 @@ describe('Controller: AACallerInputCtrl', function () {
     it('should not find the voice option', function () {
       var voiceOptions = [{
         label: 'label1',
-        value: 'Miss Piggy'
+        value: 'Miss Piggy',
       }, {
         label: 'label2',
-        value: 'Kermit'
+        value: 'Kermit',
       }];
 
       var voiceOption = {
         label: 'label',
-        value: 'Miss Piggy'
+        value: 'Miss Piggy',
       };
 
       spyOn(aaLanguageService, 'getVoiceOption').and.returnValue(voiceOption);

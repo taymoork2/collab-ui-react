@@ -60,7 +60,7 @@ describe('Directive Controller: CallServicePreviewCtrl', function () {
       $translate: $translate,
       ResourceGroupService: ResourceGroupService,
       FeatureToggleService: FeatureToggleService,
-      UCCService: UCCService
+      UCCService: UCCService,
     });
     $scope.$apply();
   }
@@ -109,12 +109,12 @@ describe('Directive Controller: CallServicePreviewCtrl', function () {
         state: 'activated',
         serviceId: 'squared-fusion-uc',
         entitled: true,
-        connectorId: '1234'
+        connectorId: '1234',
       }, { userId: '1234', state: 'activated', serviceId: 'squared-fusion-ec', entitled: true }]));
       $stateParams.currentUser = {
         id: '1234',
         userName: 'tvasset@cisco.com',
-        entitlements: ['squared-fusion-uc', 'squared-fusion-ec']
+        entitlements: ['squared-fusion-uc', 'squared-fusion-ec'],
       };
       $stateParams.extensions = [{ id: 'squared-fusion-ec', isSetup: true }];
     });

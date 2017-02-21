@@ -17,7 +17,7 @@
     function getCallCardForOrg(org, licenses) {
       var callCard = {
         entitled: LicenseService.orgIsEntitledTo(org, 'ciscouc'),
-        aggregatedLicenses: LicenseService.aggregatedLicenses(licenses, Config.licenseTypes.COMMUNICATION)
+        aggregatedLicenses: LicenseService.aggregatedLicenses(licenses, Config.licenseTypes.COMMUNICATION),
       };
       HelpdeskHuronService.getOrgSiteInfo(org.id).then(function (site) {
         callCard.voiceMailPrefix = site.siteSteeringDigit + site.siteCode;
@@ -50,7 +50,7 @@
         entitled: _.some(hybridServiceIds, function (serviceId) {
           return LicenseService.orgIsEntitledTo(org, serviceId);
         }) || LicenseService.orgIsEntitledTo(org, 'squared-fusion-gcal'),
-        services: []
+        services: [],
       };
       if (!hybridServicesCard.entitled) {
         return;
@@ -79,7 +79,7 @@
       getMeetingCardForOrg: getMeetingCardForOrg,
       getCallCardForOrg: getCallCardForOrg,
       getHybridServicesCardForOrg: getHybridServicesCardForOrg,
-      getRoomSystemsCardForOrg: getRoomSystemsCardForOrg
+      getRoomSystemsCardForOrg: getRoomSystemsCardForOrg,
     };
   }
 

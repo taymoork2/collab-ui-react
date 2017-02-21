@@ -16,10 +16,10 @@ describe('Directive: aaScheduleInfo', function () {
   var aaModel = {
     aaRecord: {
       scheduleId: '1',
-      callExperienceName: 'AA1'
+      callExperienceName: 'AA1',
     },
     aaRecordUUID: '1111',
-    ceInfos: []
+    ceInfos: [],
   };
   var schedule = 'openHours';
   var openHours = [];

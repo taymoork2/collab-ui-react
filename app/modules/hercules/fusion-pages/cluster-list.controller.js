@@ -23,7 +23,7 @@
     vm.placeholder = {
       name: $translate.instant('hercules.fusion.list.all'),
       filterValue: 'all',
-      count: 0
+      count: 0,
     };
     vm.filters = setupFilters();
 
@@ -224,7 +224,7 @@
         } else {
           // Filter on the cluster name only
           vm.displayedClusters = $filter('filter')(clustersCache, {
-            name: searchStr
+            name: searchStr,
           });
         }
       }
@@ -236,7 +236,7 @@
           targetType: '',
           expressway: {},
           mediafusion: {},
-          context: {}
+          context: {},
         },
         history: [],
         currentStateName: 'add-resource.type-selector',
@@ -245,38 +245,38 @@
             nextOptions: {
               expressway: 'add-resource.expressway.service-selector',
               mediafusion: 'add-resource.mediafusion.hostname',
-              context: 'add-resource.context'
-            }
+              context: 'add-resource.context',
+            },
           },
           // expressway
           'add-resource.expressway.service-selector': {
-            next: 'add-resource.expressway.hostname'
+            next: 'add-resource.expressway.hostname',
           },
           'add-resource.expressway.hostname': {
-            next: 'add-resource.expressway.name'
+            next: 'add-resource.expressway.name',
           },
           'add-resource.expressway.name': {
-            next: 'add-resource.expressway.resource-group'
+            next: 'add-resource.expressway.resource-group',
           },
           'add-resource.expressway.resource-group': {
-            next: 'add-resource.expressway.end'
+            next: 'add-resource.expressway.end',
           },
           'add-resource.expressway.end': {},
           // mediafusion
           'add-resource.mediafusion.hostname': {
-            next: 'add-resource.mediafusion.name'
+            next: 'add-resource.mediafusion.name',
           },
           'add-resource.mediafusion.name': {
-            next: 'add-resource.mediafusion.end'
+            next: 'add-resource.mediafusion.end',
           },
           'add-resource.mediafusion.end': {},
           // context
-          'add-resource.context': {}
-        }
+          'add-resource.context': {},
+        },
       };
       var wizard = WizardFactory.create(initialState);
       $state.go(initialState.currentStateName, {
-        wizard: wizard
+        wizard: wizard,
       });
     }
 
@@ -300,7 +300,7 @@
           unassignedClusters: function () {
             return groupsCache[0].unassigned;
           },
-        }
+        },
       }).result
       .then(refreshList);
     }

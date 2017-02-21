@@ -11,13 +11,13 @@
     function deleteUser(uuid) {
       return UserServiceCommon.remove({
         customerId: Authinfo.getOrgId(),
-        userId: uuid
+        userId: uuid,
       }).$promise;
     }
 
     function acquireOTP(userName) {
       var otpRequest = {
-        'userName': userName
+        'userName': userName,
       };
 
       return IdentityOTPService.save({}, otpRequest).$promise;
@@ -49,7 +49,7 @@
       }
 
       return UserServiceCommonV2.save({
-        customerId: Authinfo.getOrgId()
+        customerId: Authinfo.getOrgId(),
       }, user).$promise
         .then(function () {
           return sendWelcomeEmail(user.userName, user.lastName, uuid, Authinfo.getOrgId());
@@ -65,11 +65,11 @@
         'oneTimePassword': null,
         'expiresOn': null,
         'userId': uuid,
-        'customerId': customerId
+        'customerId': customerId,
       };
       return UserDirectoryNumberService.query({
         customerId: customerId,
-        userId: uuid
+        userId: uuid,
       }).$promise
         .then(function (userDnInfo) {
           if (userDnInfo && userDnInfo[0] && userDnInfo[0].directoryNumber && userDnInfo[0].directoryNumber.pattern) {
@@ -103,7 +103,7 @@
     function update(uuid, data) {
       var user = {
         firstName: '',
-        lastName: ''
+        lastName: '',
       };
       if (data.name && data.name.givenName) {
         user.firstName = data.name.givenName.trim();
@@ -114,7 +114,7 @@
 
       return UserServiceCommon.update({
         customerId: Authinfo.getOrgId(),
-        userId: uuid
+        userId: uuid,
       }, user).$promise.then(function () {
         var userName = '';
         userName = (user.firstName) ? user.firstName : '';
@@ -127,13 +127,13 @@
     function updateDtmfAccessId(uuid, dtmfAccessId) {
       var payload = {
         'voicemail': {
-          'dtmfAccessId': dtmfAccessId
-        }
+          'dtmfAccessId': dtmfAccessId,
+        },
       };
 
       return UserServiceCommon.update({
         customerId: Authinfo.getOrgId(),
-        userId: uuid
+        userId: uuid,
       }, payload).$promise;
     }
 
@@ -143,7 +143,7 @@
       create: create,
       update: update,
       updateDtmfAccessId: updateDtmfAccessId,
-      sendWelcomeEmail: sendWelcomeEmail
+      sendWelcomeEmail: sendWelcomeEmail,
     };
 
   }

@@ -4,7 +4,7 @@ describe('Service: AutoAttendantCeService', function () {
   var QueueHelperService, $httpBackend, HuronConfig, url;
   // require('jasmine-collection-matchers');
   var Authinfo = {
-    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
   };
 
   var queues = getJSONFixture('huron/json/autoAttendant/aaQueue.json');

@@ -12,7 +12,7 @@
       transclude: true,
       restrict: 'EA',
       scope: false,
-      templateUrl: 'modules/huron/snr/snr.tpl.html'
+      templateUrl: 'modules/huron/snr/snr.tpl.html',
     };
 
     return directive;

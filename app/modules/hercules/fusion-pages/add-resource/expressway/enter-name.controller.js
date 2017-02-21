@@ -15,14 +15,14 @@
     vm.provisioning = false;
     vm._translation = {
       help: $translate.instant('hercules.renameAndDeregisterComponent.renameClusterDescription'),
-      placeholder: $translate.instant('hercules.addResourceDialog.clusternameWatermark')
+      placeholder: $translate.instant('hercules.addResourceDialog.clusternameWatermark'),
     };
     vm.minlength = 1;
     vm.validationMessages = {
       required: $translate.instant('common.invalidRequired'),
       minlength: $translate.instant('common.invalidMinLength', {
-        min: vm.minlength
-      })
+        min: vm.minlength,
+      }),
     };
     vm.releaseChannel = 'stable';
 
@@ -80,8 +80,8 @@
           $stateParams.wizard.next({
             expressway: {
               name: vm.name,
-              clusterId: vm.clusterId
-            }
+              clusterId: vm.clusterId,
+            },
           });
         })
         .catch(function (error) {

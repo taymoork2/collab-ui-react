@@ -11,7 +11,7 @@
       huronCallEntitlement: false,
       validateEmail: validateEmail,
       usersToOnboard: [],
-      maxUsersInManual: 25
+      maxUsersInManual: 25,
     };
 
     return service;

@@ -15,29 +15,29 @@
     vm.selectedActions = [];
     vm.selectedTimeout = {
       name: '',
-      value: ''
+      value: '',
     };
     vm.menuEntry = {};
     vm.repeatOptions = [{
       label: $translate.instant('autoAttendant.phoneMenuRepeatOnce'),
       name: 'repeatOnce',
-      value: 2
+      value: 2,
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRepeatTwice'),
       name: 'repeatTwice',
-      value: 3
+      value: 3,
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRepeatThree'),
       name: 'repeatThree',
-      value: 4
+      value: 4,
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRepeatFour'),
       name: 'repeatFour',
-      value: 5
+      value: 5,
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRepeatFive'),
       name: 'repeatFive',
-      value: 6
+      value: 6,
     }];
 
     vm.timeoutInvalidChanged = timeoutInvalidChanged;
@@ -49,13 +49,13 @@
       label: $translate.instant('autoAttendant.phoneMenuContinue'),
       name: 'continue',
       action: 'repeatActionsOnInput',
-      value: 1
+      value: 1,
     }, {
       label: $translate.instant('autoAttendant.repeatMenu'),
       name: 'repeatMenu',
       action: 'repeatActionsOnInput',
       value: 2,
-      childOptions: vm.repeatOptions
+      childOptions: vm.repeatOptions,
     }];
 
     var runActionsOnInput = 'runActionsOnInput';
@@ -91,11 +91,11 @@
       }
       if (_.has(entry, 'type') && entry.type === 'MENU_OPTION') {
         Analytics.trackEvent(AAMetricNameService.TIMEOUT_PHONE_MENU, {
-          type: type
+          type: type,
         });
       } else if (_.has(entry, 'actions[0].name') && entry.actions[0].name === runActionsOnInput && _.has(entry, 'actions[0].inputType') && entry.actions[0].inputType === 2) {
         Analytics.trackEvent(AAMetricNameService.TIMEOUT_DIAL_BY_EXT, {
-          type: type
+          type: type,
         });
       }
     }

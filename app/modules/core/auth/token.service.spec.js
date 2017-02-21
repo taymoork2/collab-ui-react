@@ -11,8 +11,8 @@ describe('TokenService', function () {
     sessionStorage: {},
     localStorage: {
       setItem: function () {},
-      removeItem: function () {}
-    }
+      removeItem: function () {},
+    },
   };
 
   afterEach(function () {

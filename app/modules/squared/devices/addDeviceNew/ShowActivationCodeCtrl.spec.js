@@ -28,7 +28,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
       $scope: $scope,
       $state: state,
       $stateParams: stateParams,
-      CsdmDataModelService: CsdmDataModelService
+      CsdmDataModelService: CsdmDataModelService,
     });
   }
 
@@ -61,17 +61,17 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
                 type: accountType,
                 name: deviceName,
                 cisUuid: place.cisUuid,
-                isEntitledToHuron: isEntitledToHuron
+                isEntitledToHuron: isEntitledToHuron,
               },
               recipient: {
                 displayName: displayName,
                 email: email,
                 cisUuid: userCisUuid,
-                firstName: userFirstName
-              }
-            }
+                firstName: userFirstName,
+              },
+            },
           };
-        }
+        },
       };
       initController();
 
@@ -95,10 +95,10 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
             data: {
               function: 'showCode',
               account: {},
-              recipient: {}
-            }
+              recipient: {},
+            },
           };
-        }
+        },
       };
       initController();
 
@@ -111,10 +111,10 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
           return {
             data: {
               account: {},
-              recipient: {}
-            }
+              recipient: {},
+            },
           };
-        }
+        },
       };
       initController();
 
@@ -141,12 +141,12 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
                 account: {
                   type: accountType,
                   deviceType: deviceType,
-                  isEntitledToHuron: isEntitledToHuron
+                  isEntitledToHuron: isEntitledToHuron,
                 },
-                recipient: {}
-              }
+                recipient: {},
+              },
             };
-          }
+          },
         };
       });
 
@@ -300,16 +300,16 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
                 displayName: adminDisplayName,
                 userName: adminUserName,
                 cisUuid: adminCisUuid,
-                organizationId: adminOrgId
+                organizationId: adminOrgId,
               },
               account: {
                 organizationId: customerOrgId,
-                type: 'shared'
+                type: 'shared',
               },
-              recipient: {}
-            }
+              recipient: {},
+            },
           };
-        }
+        },
       };
       spyOn(UserListService, 'listUsers').and.callFake(function (startIndex, count, sortBy, sortOrder, callback) {
         callback(returnedDataCustomerOrg);
@@ -331,9 +331,9 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
           {
             displayName: 'test',
             userName: '',
-            meta: {}
-          }
-        ]
+            meta: {},
+          },
+        ],
       };
       initController();
       var resultPromise = controller.searchUser('tes');
@@ -364,9 +364,9 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
           {
             displayName: 'atest',
             userName: '',
-            meta: {}
-          }
-        ]
+            meta: {},
+          },
+        ],
       };
       initController();
       var resultPromise = controller.searchUser('adm');
@@ -394,7 +394,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
       adminCisUuid = 'adminCisUuid';
       adminOrgId = 'adminOrgId';
       returnedDataCustomerOrg = {
-        Resources: []
+        Resources: [],
       };
       initController();
       var resultPromise = controller.searchUser('adm');
@@ -476,16 +476,16 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
                 organizationId: deviceOrgId,
                 entitlements: entitlements,
                 directoryNumber: directoryNumber,
-                externalNumber: externalNumber
+                externalNumber: externalNumber,
               },
               recipient: {
                 organizationId: userOrgId,
                 cisUuid: userCisUuid,
-                email: userEmail
-              }
-            }
+                email: userEmail,
+              },
+            },
           };
-        }
+        },
       };
 
       cloudberryExistingPlace = {
@@ -496,16 +496,16 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
                 deviceType: 'cloudberry',
                 type: 'shared',
                 cisUuid: cisUuid,
-                organizationId: deviceOrgId
+                organizationId: deviceOrgId,
               },
               recipient: {
                 organizationId: userOrgId,
                 cisUuid: userCisUuid,
-                email: userEmail
-              }
-            }
+                email: userEmail,
+              },
+            },
           };
-        }
+        },
       };
       huronNewPlace = {
         state: function () {
@@ -523,11 +523,11 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
               recipient: {
                 organizationId: userOrgId,
                 cisUuid: userCisUuid,
-                email: userEmail
-              }
-            }
+                email: userEmail,
+              },
+            },
           };
-        }
+        },
       };
       huronExistingPlace = {
         state: function () {
@@ -537,16 +537,16 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
                 deviceType: 'huron',
                 type: 'shared',
                 cisUuid: cisUuid,
-                organizationId: deviceOrgId
+                organizationId: deviceOrgId,
               },
               recipient: {
                 organizationId: userOrgId,
                 cisUuid: userCisUuid,
-                email: userEmail
-              }
-            }
+                email: userEmail,
+              },
+            },
           };
-        }
+        },
       };
       huronExistingUser = {
         state: function () {
@@ -556,17 +556,17 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
                 deviceType: 'huron',
                 type: 'personal',
                 username: userEmail,
-                organizationId: deviceOrgId
+                organizationId: deviceOrgId,
               },
               recipient: {
                 email: userEmail,
                 firstName: userFirstName,
                 cisUuid: userCisUuid,
                 organizationId: userOrgId,
-              }
-            }
+              },
+            },
           };
-        }
+        },
       };
       noTypeExistingUserEntitled = {
         state: function () {
@@ -576,16 +576,16 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
                 type: 'personal',
                 cisUuid: cisUuid,
                 organizationId: deviceOrgId,
-                isEntitledToHuron: true
+                isEntitledToHuron: true,
               },
               recipient: {
                 firstName: userFirstName,
                 cisUuid: userCisUuid,
                 organizationId: userOrgId,
-              }
-            }
+              },
+            },
           };
-        }
+        },
       };
       noTypeExistingUserUnentitled = {
         state: function () {
@@ -594,16 +594,16 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
               account: {
                 type: 'personal',
                 cisUuid: cisUuid,
-                organizationId: deviceOrgId
+                organizationId: deviceOrgId,
               },
               recipient: {
                 firstName: userFirstName,
                 cisUuid: userCisUuid,
                 organizationId: userOrgId,
-              }
-            }
+              },
+            },
           };
-        }
+        },
       };
 
       expectedEmailInfo = {
@@ -612,7 +612,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
         subjectCustomerId: deviceOrgId,
         subjectAccountId: cisUuid,
         activationCode: activationCode,
-        expiryTime: localized(expiryTime)
+        expiryTime: localized(expiryTime),
       };
     });
 
@@ -624,7 +624,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
           spyOn(CsdmDataModelService, 'createCsdmPlace').and.returnValue($q.resolve({ cisUuid: cisUuid }));
           spyOn(CsdmDataModelService, 'createCodeForExisting').and.returnValue($q.resolve({
             activationCode: activationCode,
-            expiryTime: expiryTime
+            expiryTime: expiryTime,
           }));
           initController();
           $scope.$digest();
@@ -666,7 +666,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
           stateParams.wizard = cloudberryExistingPlace;
           spyOn(CsdmDataModelService, 'createCodeForExisting').and.returnValue($q.resolve({
             activationCode: activationCode,
-            expiryTime: expiryTime
+            expiryTime: expiryTime,
           }));
           initController();
           $scope.$digest();
@@ -715,7 +715,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
           spyOn(CsdmDataModelService, 'createCmiPlace').and.returnValue($q.resolve(newPlace));
           spyOn(CsdmHuronPlaceService, 'createOtp').and.returnValue($q.resolve({
             activationCode: activationCode,
-            expiryTime: expiryTime
+            expiryTime: expiryTime,
           }));
           initController();
           $scope.$digest();
@@ -759,7 +759,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
           stateParams.wizard = huronExistingPlace;
           spyOn(CsdmHuronPlaceService, 'createOtp').and.returnValue($q.resolve({
             activationCode: activationCode,
-            expiryTime: expiryTime
+            expiryTime: expiryTime,
           }));
           initController();
           $scope.$digest();
@@ -800,7 +800,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
           stateParams.wizard = huronExistingUser;
           spyOn(OtpService, 'generateOtp').and.returnValue($q.resolve({
             code: activationCode,
-            friendlyExpiresOn: expiryTime
+            friendlyExpiresOn: expiryTime,
           }));
           initController();
           $scope.$digest();
@@ -851,7 +851,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
           stateParams.wizard = noTypeExistingUserEntitled;
           spyOn(CsdmDataModelService, 'createCodeForExisting').and.returnValue($q.resolve({
             activationCode: activationCode,
-            expiryTime: expiryTime
+            expiryTime: expiryTime,
           }));
           initController();
           $scope.$digest();
@@ -891,7 +891,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
           stateParams.wizard = noTypeExistingUserUnentitled;
           spyOn(CsdmDataModelService, 'createCodeForExisting').and.returnValue($q.resolve({
             activationCode: activationCode,
-            expiryTime: expiryTime
+            expiryTime: expiryTime,
           }));
           initController();
           $scope.$digest();

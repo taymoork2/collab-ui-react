@@ -24,7 +24,7 @@ describe('Controller: LineListCtrl', function () {
     spyOn(FeatureToggleService, 'supports');
 
     controller = $controller('LinesListCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
 
     $scope.$apply();
@@ -80,7 +80,7 @@ describe('Controller: LineListCtrl', function () {
     it('should display notification on exception', function () {
       LineListService.getLineList.and.returnValue($q.reject());
       controller = $controller('LinesListCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
       $scope.$apply();
       expect(Notification.errorResponse).toHaveBeenCalled();
@@ -94,8 +94,8 @@ describe('Controller: LineListCtrl', function () {
       var sortColumns = [{
         'name': 'internalnumber',
         'sort': {
-          'direction': 'asc'
-        }
+          'direction': 'asc',
+        },
       }];
 
       controller.sortColumn($scope, sortColumns);

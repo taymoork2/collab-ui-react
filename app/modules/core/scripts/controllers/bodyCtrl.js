@@ -2,7 +2,7 @@
   'use strict';
 
   module.exports = angular.module('core.body', [
-    require('modules/core/scripts/services/authinfo')
+    require('modules/core/scripts/services/authinfo'),
   ])
     .controller('BodyCtrl', BodyCtrl)
     .name;

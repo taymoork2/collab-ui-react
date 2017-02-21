@@ -80,10 +80,10 @@ require('./_partner-landing-trials.scss');
         })
         .then(function (trialsList) {
           $scope.activeList = _.filter(trialsList, {
-            state: "ACTIVE"
+            state: "ACTIVE",
           });
           $scope.expiredList = _.filter(trialsList, {
-            state: "EXPIRED"
+            state: "EXPIRED",
           });
           $scope.showExpired = $scope.expiredList.length > 0;
           Log.debug('active trial records found:' + $scope.activeList.length);
@@ -98,7 +98,7 @@ require('./_partner-landing-trials.scss');
     function launchCustomerPortal(trial) {
       $window.open($state.href('login_swap', {
         customerOrgId: trial.customerOrgId,
-        customerOrgName: trial.customerName
+        customerOrgName: trial.customerName,
       }));
     }
   }

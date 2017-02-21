@@ -10,26 +10,26 @@ describe('Controller: HostDeregisterControllerV2', function () {
     $rootScope = _$rootScope_;
     cluster = {
       id: 'id',
-      name: 'b'
+      name: 'b',
     };
     orgName = '123';
     connector = {
-      id: 'id'
+      id: 'id',
     };
     MediaClusterServiceV2 = {
 
       deleteCluster: sinon.stub(),
-      defuseV2Connector: sinon.stub()
+      defuseV2Connector: sinon.stub(),
     };
     Notification = _Notification_;
     $q = _$q_;
     $translate = _$translate_;
 
     modalInstanceMock = {
-      close: sinon.stub()
+      close: sinon.stub(),
     };
     windowMock = {
-      open: sinon.stub()
+      open: sinon.stub(),
     };
     controller = $controller('HostDeregisterControllerV2', {
       $scope: $rootScope.$new(),
@@ -41,7 +41,7 @@ describe('Controller: HostDeregisterControllerV2', function () {
       $q: $q,
       $translate: $translate,
       $modalInstance: modalInstanceMock,
-      $window: windowMock
+      $window: windowMock,
     });
 
   }));

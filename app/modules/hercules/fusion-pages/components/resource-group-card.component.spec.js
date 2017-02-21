@@ -11,15 +11,15 @@ describe('Component: resourceGroupCard', function () {
       id: '1',
       name: 'Bøler',
       numberOfUsers: 0,
-      releaseChannel: 'stable'
+      releaseChannel: 'stable',
     };
 
     beforeEach(inject(function ($injector) {
       $componentController = $injector.get('$componentController');
       controller = $componentController('resourceGroupCard', {
-        $scope: {}
+        $scope: {},
       }, {
-        group: mockGroup
+        group: mockGroup,
       });
     }));
 

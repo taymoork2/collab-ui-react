@@ -8,8 +8,8 @@
       bindings: {
         usedDevices: '<',
         waitingStats: '<',
-        displayTitle: '<'
-      }
+        displayTitle: '<',
+      },
     });
     /* @ngInject */
   function LeastUsedCtrl() {

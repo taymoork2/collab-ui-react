@@ -13,7 +13,7 @@
 
     vm.hgSelected = {
       description: '',
-      id: ''
+      id: '',
     };
 
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceHolder');
@@ -22,7 +22,7 @@
 
     vm.uiMenu = {};
     vm.menuEntry = {
-      entries: []
+      entries: [],
     };
     vm.menuKeyEntry = {};
 
@@ -54,7 +54,7 @@
       vm.hgSelected.id = action.getValue();
 
       vm.hgSelected.description = _.result(_.find(vm.huntGroups, {
-        'id': vm.hgSelected.id
+        'id': vm.hgSelected.id,
       }), 'description', '');
     }
 
@@ -83,7 +83,7 @@
         _.each(hgPool, function (aHuntGroup) {
           vm.huntGroups.push({
             description: aHuntGroup.name.concat(' (').concat(_.head(_.map(aHuntGroup.numbers, 'number'))).concat(')'),
-            id: aHuntGroup.uuid
+            id: aHuntGroup.uuid,
           });
         });
       });

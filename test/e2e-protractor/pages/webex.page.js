@@ -10,10 +10,10 @@ function post(url, body) {
   var options = {
     method: 'POST',
     headers: {
-      'content-type': 'application/x-www-form-urlencoded'
+      'content-type': 'application/x-www-form-urlencoded',
     },
     url: url,
-    body: body
+    body: body,
   };
 
   function callback(error, response) {

@@ -5,8 +5,8 @@ describe('controller: DeleteIncidentCtrl', function () {
   var testData = {
     deleteCommand: 'DELETE',
     incidentForDelete: {
-      incidentId: 'testIncidentId'
-    }
+      incidentId: 'testIncidentId',
+    },
   };
 
   beforeEach(angular.mock.module('GSS'));
@@ -38,7 +38,7 @@ describe('controller: DeleteIncidentCtrl', function () {
   function initController() {
     controller = $controller('DeleteIncidentCtrl', {
       $scope: $scope,
-      IncidentsService: IncidentsService
+      IncidentsService: IncidentsService,
     });
 
     $scope.$apply();

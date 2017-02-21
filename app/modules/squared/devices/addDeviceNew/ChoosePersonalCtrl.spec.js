@@ -18,7 +18,7 @@ describe('ChoosePersonalCtrl: Ctrl', function () {
     controller = $controller('ChoosePersonalCtrl', {
       $scope: $scope,
       $state: $state,
-      $stateParams: $stateParams
+      $stateParams: $stateParams,
     });
   }
 
@@ -36,11 +36,11 @@ describe('ChoosePersonalCtrl: Ctrl', function () {
             data: {
               title: title,
               account: {
-                deviceType: 'cloudberry'
-              }
-            }
+                deviceType: 'cloudberry',
+              },
+            },
           };
-        }
+        },
       };
       initController();
 
@@ -65,12 +65,12 @@ describe('ChoosePersonalCtrl: Ctrl', function () {
           return {
             data: {
               account: {
-                deviceType: 'cloudberry'
-              }
-            }
+                deviceType: 'cloudberry',
+              },
+            },
           };
         },
-        next: function () {}
+        next: function () {},
       };
       initController();
       controller.deviceName = displayName;

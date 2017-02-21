@@ -16,19 +16,19 @@ describe('Controller: CustomerListCtrl', function () {
     daysLeft: NaN,
     communications: {
       isTrial: false,
-      volume: 5
+      volume: 5,
     },
     licenseList: [{
       isTrial: false,
       volume: 5,
-      name: 'communications'
-    }]
+      name: 'communications',
+    }],
   };
   var numberResponse = {
-    numbers: [1, 2, 3]
+    numbers: [1, 2, 3],
   };
   var noNumberResponse = {
-    numbers: []
+    numbers: [],
   };
 
   beforeEach(angular.mock.module('Core'));
@@ -52,7 +52,7 @@ describe('Controller: CustomerListCtrl', function () {
     $scope.timeoutVal = 1;
     $rootScope.typeOfExport = {
       USER: 1,
-      CUSTOMER: 2
+      CUSTOMER: 2,
     };
 
     trialForPaid = false;
@@ -88,7 +88,7 @@ describe('Controller: CustomerListCtrl', function () {
       $state: $state,
       Authinfo: Authinfo,
       Config: Config,
-      trialForPaid: trialForPaid
+      trialForPaid: trialForPaid,
     });
 
     $scope.$apply();
@@ -113,15 +113,15 @@ describe('Controller: CustomerListCtrl', function () {
         numUsers: 10,
         activeUsers: 3,
         communications: {
-          isTrial: true
+          isTrial: true,
         },
         licenses: 10,
         deviceLicenses: 5,
         licenseList: [{
           isTrial: false,
           volume: 5,
-          name: 'communications'
-        }]
+          name: 'communications',
+        }],
       };
     });
 
@@ -207,7 +207,7 @@ describe('Controller: CustomerListCtrl', function () {
       controller.addNumbers(testOrg);
       $httpBackend.flush();
       expect($state.go).toHaveBeenCalledWith('didadd', {
-        currentOrg: testOrg
+        currentOrg: testOrg,
       });
     });
 
@@ -221,7 +221,7 @@ describe('Controller: CustomerListCtrl', function () {
         customerName: testOrg.customerName,
         customerEmail: testOrg.customerEmail,
         customerCommunicationLicenseIsTrial: testOrg.communications.isTrial,
-        customerRoomSystemsLicenseIsTrial: true
+        customerRoomSystemsLicenseIsTrial: true,
       });
     });
 
@@ -234,7 +234,7 @@ describe('Controller: CustomerListCtrl', function () {
         customerName: testOrg.customerName,
         customerEmail: testOrg.customerEmail,
         customerCommunicationLicenseIsTrial: testOrg.communications.isTrial,
-        customerRoomSystemsLicenseIsTrial: true
+        customerRoomSystemsLicenseIsTrial: true,
       });
     });
   });
@@ -258,10 +258,10 @@ describe('Controller: CustomerListCtrl', function () {
     it('return 9 items in the filter list without Care with care FT turned off', function () {
       expect(controller.filter.options.length).toBe(9);
       expect(controller.filter.options).toContain(jasmine.objectContaining({
-        value: 'sparkBoard'
+        value: 'sparkBoard',
       }));
       expect(controller.filter.options).not.toContain(jasmine.objectContaining({
-        value: 'care'
+        value: 'care',
       }));
     });
 
@@ -271,10 +271,10 @@ describe('Controller: CustomerListCtrl', function () {
       $scope.$apply();
       expect(controller.filter.options.length).toBe(10);
       expect(controller.filter.options).toContain(jasmine.objectContaining({
-        value: 'care'
+        value: 'care',
       }));
       expect(controller.filter.options).toContain(jasmine.objectContaining({
-        value: 'sparkBoard'
+        value: 'sparkBoard',
       }));
     });
   });
@@ -289,7 +289,7 @@ describe('Controller: CustomerListCtrl', function () {
         label: '',
         isSelected: false,
         isAccountFilter: true,
-        count: 0
+        count: 0,
       }];
 
       controller._helpers.updateResultCount(controller.gridOptions.data);
@@ -303,12 +303,12 @@ describe('Controller: CustomerListCtrl', function () {
     beforeEach(function () {
       initController();
       compareObject = {
-        licenseType: 'MESSAGING'
+        licenseType: 'MESSAGING',
       };
       src = {
         status: undefined,
         customerName: '47ciscocomCmiPartnerOrg',
-        sortOrder: 0
+        sortOrder: 0,
       };
       licenses = _.cloneDeep(managedOrgsResponse.data.organizations[0].licenses);
     });
@@ -346,7 +346,7 @@ describe('Controller: CustomerListCtrl', function () {
         }, {
           'licenseId': 'CF_14aee12e-62f0-431b-afe0-58554d064ec3',
           'licenseType': 'CONFERENCING',
-        }]
+        }],
       };
 
       var result = controller.getSubfields(entry, 'meeting');
@@ -355,7 +355,7 @@ describe('Controller: CustomerListCtrl', function () {
 
     it('should return the EE for 2nd webex column if there is no webex license', function () {
       var entry = {
-        'licenseList': [{}]
+        'licenseList': [{}],
       };
 
       var result = controller.getSubfields(entry, 'meeting');
@@ -373,7 +373,7 @@ describe('Controller: CustomerListCtrl', function () {
           'offerName': 'CMR',
           'licenseType': 'CMR',
           'status': 'ACTIVE',
-        }]
+        }],
       };
 
       var result = controller.getSubfields(entry, 'meeting');
@@ -390,8 +390,8 @@ describe('Controller: CustomerListCtrl', function () {
         customerName: 'ControllerTestOrg',
         customerEmail: 'customer@cisco.com',
         communications: {
-          isTrial: true
-        }
+          isTrial: true,
+        },
       };
       $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + org.customerOrgId).respond(200);
       controller.addNumbers(org);
@@ -401,7 +401,7 @@ describe('Controller: CustomerListCtrl', function () {
         customerName: org.customerName,
         customerEmail: org.customerEmail,
         customerCommunicationLicenseIsTrial: true,
-        customerRoomSystemsLicenseIsTrial: true
+        customerRoomSystemsLicenseIsTrial: true,
       });
     });
 
@@ -411,8 +411,8 @@ describe('Controller: CustomerListCtrl', function () {
         customerName: 'ControllerTestOrg',
         customerEmail: 'customer@cisco.com',
         communications: {
-          isTrial: false
-        }
+          isTrial: false,
+        },
       };
       $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + org.customerOrgId).respond(200);
       controller.addNumbers(org);
@@ -422,7 +422,7 @@ describe('Controller: CustomerListCtrl', function () {
         customerName: org.customerName,
         customerEmail: org.customerEmail,
         customerCommunicationLicenseIsTrial: false,
-        customerRoomSystemsLicenseIsTrial: true
+        customerRoomSystemsLicenseIsTrial: true,
       });
     });
 
@@ -430,7 +430,7 @@ describe('Controller: CustomerListCtrl', function () {
       var org = {
         customerOrgId: '1234-34534-afdagfg-425345-afaf',
         customerName: 'ControllerTestOrg',
-        customerEmail: 'customer@cisco.com'
+        customerEmail: 'customer@cisco.com',
       };
       $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + org.customerOrgId).respond(200);
       controller.addNumbers(org);
@@ -440,7 +440,7 @@ describe('Controller: CustomerListCtrl', function () {
         customerName: org.customerName,
         customerEmail: org.customerEmail,
         customerCommunicationLicenseIsTrial: true,
-        customerRoomSystemsLicenseIsTrial: true
+        customerRoomSystemsLicenseIsTrial: true,
       });
     });
 
@@ -451,8 +451,8 @@ describe('Controller: CustomerListCtrl', function () {
         customerEmail: 'customer@cisco.com',
         isPartner: true,
         communications: {
-          isTrial: true
-        }
+          isTrial: true,
+        },
       };
       $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + org.customerOrgId).respond(200);
       controller.addNumbers(org);
@@ -462,7 +462,7 @@ describe('Controller: CustomerListCtrl', function () {
         customerName: org.customerName,
         customerEmail: org.customerEmail,
         customerCommunicationLicenseIsTrial: false,
-        customerRoomSystemsLicenseIsTrial: false
+        customerRoomSystemsLicenseIsTrial: false,
       });
     });
   });

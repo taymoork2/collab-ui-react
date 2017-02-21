@@ -4,12 +4,12 @@ describe('OverviewUsersCard', function () {
 
   var convertUserData = {
     success: true,
-    totalResults: 10
+    totalResults: 10,
   };
 
   var userData = {
     success: true,
-    totalResults: 0
+    totalResults: 0,
   };
 
   afterEach(function () {

@@ -7,7 +7,7 @@
       'Cisco 8851': {},
       'Cisco 8851NR': {},
       'Cisco 8861': {},
-      'Cisco 8865': {}
+      'Cisco 8865': {},
     };
 
     function getLabel() {
@@ -32,7 +32,7 @@
 
     return {
       isKEMAvailable: isKEMAvailable,
-      getKemOption: getKemOption
+      getKemOption: getKemOption,
     };
   }
 

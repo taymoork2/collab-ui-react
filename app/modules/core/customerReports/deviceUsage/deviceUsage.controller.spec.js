@@ -51,7 +51,7 @@ describe('Controller: DeviceUsageCtrl', function () {
         DeviceUsageSplunkMetricsService: DeviceUsageSplunkMetricsService,
         DeviceUsageModelService: DeviceUsageModelService,
         $scope: $scope,
-        $state: $state
+        $state: $state,
       });
 
       splunkService = sinon.stub(DeviceUsageSplunkMetricsService, 'reportOperation');
@@ -62,9 +62,9 @@ describe('Controller: DeviceUsageCtrl', function () {
       sinon.stub(DeviceUsageTotalService, 'getDataForRange');
       var deviceData = {
         reportItems: [
-          { totalDuration: 42 }
+          { totalDuration: 42 },
         ],
-        missingDays: false
+        missingDays: false,
       };
       DeviceUsageTotalService.getDataForRange.returns($q.resolve(deviceData));
 
@@ -94,19 +94,19 @@ describe('Controller: DeviceUsageCtrl', function () {
             then: function (okCallback, cancelCallback) {
               this.okCallback = okCallback;
               this.cancelCallback = cancelCallback;
-            }
+            },
           },
           opened: {
             then: function (okCallback) {
               okCallback();
-            }
+            },
           },
           close: function (item) {
             this.result.okCallback(item);
           },
           dismiss: function (type) {
             this.result.cancelCallback(type);
-          }
+          },
         };
         spyOn($modal, 'open').and.returnValue(fakeModal);
         spyOn(Notification, 'success');

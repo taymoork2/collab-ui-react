@@ -16,7 +16,7 @@
       type: wizardData.account.type,
       deviceType: wizardData.account.deviceType,
       cisUuid: wizardData.account.cisUuid,
-      isEntitledToHuron: wizardData.account.isEntitledToHuron
+      isEntitledToHuron: wizardData.account.isEntitledToHuron,
     };
 
     vm.hideBackButton = wizardData.function === 'showCode';
@@ -26,7 +26,7 @@
       email: wizardData.recipient.email,
       cisUuid: wizardData.recipient.cisUuid,
       firstName: wizardData.recipient.firstName,
-      orgId: wizardData.recipient.organizationId
+      orgId: wizardData.recipient.organizationId,
     };
     vm.qrCode = undefined;
     vm.timeLeft = '';
@@ -117,7 +117,7 @@
       vm.qrCode = qrImage.imageSync(vm.activationCode, {
         ec_level: 'L',
         size: 14,
-        margin: 5
+        margin: 5,
       }).toString('base64');
       vm.isLoading = false;
     }
@@ -257,7 +257,7 @@
         userName: userName,
         displayName: displayName,
         cisUuid: cisUuid,
-        orgId: orgId
+        orgId: orgId,
       };
     };
 
@@ -267,7 +267,7 @@
         email: $item.userName,
         cisUuid: $item.cisUuid,
         firstName: $item.firstName,
-        orgId: $item.orgId
+        orgId: $item.orgId,
       };
       vm.foundUser = "";
     };
@@ -276,7 +276,7 @@
       var success = function () {
         Notification.notify(
           [$translate.instant('generateActivationCodeModal.emailSuccess', {
-            'address': vm.selectedUser.email
+            'address': vm.selectedUser.email,
           })],
           'success',
           $translate.instant('generateActivationCodeModal.emailSuccessTitle')
@@ -285,7 +285,7 @@
       var error = function () {
         Notification.notify(
           [$translate.instant('generateActivationCodeModal.emailError', {
-            'address': vm.selectedUser.email
+            'address': vm.selectedUser.email,
           })],
           'error',
           $translate.instant('generateActivationCodeModal.emailErrorTitle')
@@ -299,7 +299,7 @@
           oneTimePassword: vm.activationCode,
           expiresOn: vm.getExpiresOn(),
           userId: vm.selectedUser.cisUuid,
-          customerId: vm.selectedUser.orgId
+          customerId: vm.selectedUser.orgId,
         };
         ActivationCodeEmailService.save({}, emailInfo, success, error);
       } else {
@@ -309,7 +309,7 @@
           subjectCustomerId: wizardData.account.organizationId,
           subjectAccountId: vm.account.cisUuid,
           activationCode: vm.activationCode,
-          expiryTime: vm.getExpiresOn()
+          expiryTime: vm.getExpiresOn(),
         };
         var mailFunction;
         if (vm.account.type == 'personal') {

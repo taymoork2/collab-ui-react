@@ -15,7 +15,7 @@ describe('Service: AAConfigEnvMetricService', function () {
   }));
   var message = 'autoAttendant.errorMocked';
   var properties = {
-    type: message
+    type: message,
   };
 
   describe('trackProdOrIntegNotifications', function () {

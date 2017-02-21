@@ -12,7 +12,7 @@
       getData: getData,
       reset: reset,
       hasRoomSystemDeviceAvailable: hasRoomSystemDeviceAvailable,
-      canAddRoomSystemDevice: canAddRoomSystemDevice
+      canAddRoomSystemDevice: canAddRoomSystemDevice,
     };
 
     return service;
@@ -38,10 +38,10 @@
               enabled: false,
               quantity: 0,
               readonly: false,
-              valid: true
-            }
+              valid: true,
+            },
           ],
-        }
+        },
       };
 
       _trialData = angular.copy(defaults);

@@ -9,7 +9,7 @@
   function HDSService($q, Orgservice) {
     var service = {
       getServiceStatus: getServiceStatus,
-      getOrgSettings: getOrgSettings
+      getOrgSettings: getOrgSettings,
     };
 
 

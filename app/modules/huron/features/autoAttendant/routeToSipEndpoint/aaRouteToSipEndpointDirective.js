@@ -14,11 +14,11 @@
         index: '=aaIndex',
         keyIndex: '@aaKeyIndex',
         fromRouteCall: '@aaFromRouteCall',
-        fromFallback: '@aaFromFallback'
+        fromFallback: '@aaFromFallback',
       },
       templateUrl: 'modules/huron/features/autoAttendant/routeToSipEndpoint/aaRouteToSipEndpoint.tpl.html',
       controllerAs: 'aaRouteToSip',
-      controller: 'AARouteToSipEndpointCtrl'
+      controller: 'AARouteToSipEndpointCtrl',
     };
   }
 })();

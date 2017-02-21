@@ -13,13 +13,13 @@ require('./_line-settings.scss');
 
     vm.actionList = [{
       actionKey: 'directoryNumberPanel.removeNumber',
-      actionFunction: deleteLineSettings
+      actionFunction: deleteLineSettings,
     }];
     vm.showActions = false;
 
     vm.cfModel = {
       forward: 'busy',
-      forwardExternalCalls: false
+      forwardExternalCalls: false,
     };
 
     vm.allDirectVoicemail = true;
@@ -27,18 +27,18 @@ require('./_line-settings.scss');
     vm.externalDirectVoicemail = true;
 
     vm.simultaneousModel = {
-      incomingCallMaximum: 8
+      incomingCallMaximum: 8,
     };
 
     vm.multipleCalls = {
-      incomingCallMaximum: 2
+      incomingCallMaximum: 2,
     };
 
     vm.validations = {
       phoneNumber: function (viewValue, modelValue) {
         var value = modelValue || viewValue;
         return /^(\+?)?[\d]{10,11}$/.test(value);
-      }
+      },
     };
 
     vm.currentUser = $stateParams.currentUser;
@@ -90,7 +90,7 @@ require('./_line-settings.scss');
       by: 'name',
       order: 'ascending',
       maxCount: 10,
-      startAt: 0
+      startAt: 0,
     };
     // end SharedLine Info ---
 
@@ -128,7 +128,7 @@ require('./_line-settings.scss');
     vm.setCallerIdNumber = setCallerIdNumber;
     vm.customTranslations = {
       placeholderText: $translate.instant('callDestination.alternateCustomPlaceholder'),
-      helpText: $translate.instant('callDestination.alternateCustomHelpText')
+      helpText: $translate.instant('callDestination.alternateCustomHelpText'),
     };
     vm.callerId = {};
 
@@ -161,16 +161,16 @@ require('./_line-settings.scss');
       templateOptions: {
         model: 'incomingCallMaximum',
         label: $translate.instant('multipleCalls.two'),
-        value: 2
-      }
+        value: 2,
+      },
     }, {
       key: 'simultaneousEight',
       type: 'radio',
       templateOptions: {
         model: 'incomingCallMaximum',
         label: $translate.instant('multipleCalls.eight'),
-        value: 8
-      }
+        value: 8,
+      },
     }];
 
     vm.callerIdInfo = {};
@@ -198,7 +198,7 @@ require('./_line-settings.scss');
         if (!_.isUndefined(toState)) {
           event.preventDefault();
           $modal.open({
-            templateUrl: 'modules/huron/lineSettings/confirmModal.tpl.html'
+            templateUrl: 'modules/huron/lineSettings/confirmModal.tpl.html',
           }).result.then(function () {
             if (vm.form) {
               vm.form.$setPristine();
@@ -230,7 +230,7 @@ require('./_line-settings.scss');
       if (vm.telephonyInfo.currentDirectoryNumber.uuid !== 'new') {
         LineSettings.getSimultaneousCalls(vm.telephonyInfo.currentDirectoryNumber.uuid, vm.currentUser.id).then(function (simultaneous) {
           vm.simultaneousModel = {
-            incomingCallMaximum: simultaneous.incomingCallMaximum
+            incomingCallMaximum: simultaneous.incomingCallMaximum,
           };
         }).catch(function (response) {
           Notification.errorResponse(response, 'simultaneousCalls.mulitpleCallsLoadError');
@@ -258,11 +258,11 @@ require('./_line-settings.scss');
 
       vm.assignedInternalNumber = {
         uuid: 'none',
-        pattern: ''
+        pattern: '',
       };
       vm.assignedExternalNumber = {
         uuid: 'none',
-        pattern: 'None'
+        pattern: 'None',
       };
 
       vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
@@ -282,7 +282,7 @@ require('./_line-settings.scss');
         DirectoryNumber.getDirectoryNumber(vm.telephonyInfo.currentDirectoryNumber.uuid).then(function (dn) {
           var internalNumber = {
             'uuid': dn.uuid,
-            'pattern': dn.pattern
+            'pattern': dn.pattern,
           };
 
           vm.directoryNumber = dn;
@@ -327,7 +327,7 @@ require('./_line-settings.scss');
           if (typeof dn !== 'undefined') {
             var internalNumber = {
               'uuid': dn.uuid,
-              'pattern': dn.pattern
+              'pattern': dn.pattern,
             };
             vm.assignedInternalNumber = internalNumber;
           }
@@ -399,7 +399,7 @@ require('./_line-settings.scss');
         if (modifiedFieldName === 'externalNumber') {
           assignedExternalNumberChange();
           var matchingDn = _.find(vm.internalNumberPool, {
-            pattern: vm.assignedExternalNumber.pattern.substr(-dnLength)
+            pattern: vm.assignedExternalNumber.pattern.substr(-dnLength),
           });
           if (matchingDn) {
             vm.assignedInternalNumber = matchingDn;
@@ -426,7 +426,7 @@ require('./_line-settings.scss');
           var promises = [];
           if (vm.callerIdInfo.callerIdSelection.value.uuid) {
             companyNumberObj = {
-              uuid: vm.callerIdInfo.callerIdSelection.value.uuid
+              uuid: vm.callerIdInfo.callerIdSelection.value.uuid,
             };
           }
           vm.directoryNumber.externalCallerIdType = vm.callerIdInfo.callerIdSelection.value.externalCallerIdType;
@@ -519,7 +519,7 @@ require('./_line-settings.scss');
                 vm.directoryNumber.alertingName = name;
                 if (vm.callerIdInfo.callerIdSelection.value.uuid) {
                   companyNumberObj = {
-                    uuid: vm.callerIdInfo.callerIdSelection.value.uuid
+                    uuid: vm.callerIdInfo.callerIdSelection.value.uuid,
                   };
                 }
                 vm.directoryNumber.externalCallerIdType = vm.callerIdInfo.callerIdSelection.value.externalCallerIdType;
@@ -543,14 +543,14 @@ require('./_line-settings.scss');
                       }).then(function () {
                         Notification.success('directoryNumberPanel.success');
                         $state.go('user-overview.communication.directorynumber', {
-                          directoryNumber: vm.directoryNumber
+                          directoryNumber: vm.directoryNumber,
                         });
                         vm.saveInProcess = false; // Set flag for 'Save' button behavior
                       });
                   });
               } else {
                 Notification.error('directoryNumberPanel.maxLines', {
-                  user: name
+                  user: name,
                 });
                 $state.go('user-overview.communication');
                 vm.saveInProcess = false; // Set flag for 'Save' button behavior
@@ -567,13 +567,13 @@ require('./_line-settings.scss');
       // fill in the {{line}} and {{user}} for directoryNumberPanel.deleteConfirmation
       vm.confirmationDialogue = $translate.instant('directoryNumberPanel.deleteConfirmation', {
         line: vm.telephonyInfo.currentDirectoryNumber.pattern,
-        user: name
+        user: name,
       });
 
       $modal.open({
         templateUrl: 'modules/huron/lineSettings/deleteConfirmation.tpl.html',
         scope: $scope,
-        type: 'dialog'
+        type: 'dialog',
       }).result.then(function () {
         if (vm.telephonyInfo.currentDirectoryNumber.dnUsage != 'Primary') {
           return LineSettings.disassociateInternalLine(vm.currentUser.id, vm.telephonyInfo.currentDirectoryNumber.userDnUuid)
@@ -891,7 +891,7 @@ require('./_line-settings.scss');
       var intNumPool = TelephonyInfoService.getInternalNumberPool();
       var internalNumber = {
         'uuid': telephonyInfo.currentDirectoryNumber.uuid,
-        'pattern': telephonyInfo.currentDirectoryNumber.pattern
+        'pattern': telephonyInfo.currentDirectoryNumber.pattern,
       };
 
       vm.assignedInternalNumber = internalNumber;
@@ -903,7 +903,7 @@ require('./_line-settings.scss');
       var extNumPool = TelephonyInfoService.getExternalNumberPool();
       var externalNumber = {
         'uuid': telephonyInfo.alternateDirectoryNumber.uuid,
-        'pattern': telephonyInfo.alternateDirectoryNumber.pattern
+        'pattern': telephonyInfo.alternateDirectoryNumber.pattern,
       };
 
       vm.assignedExternalNumber = externalNumber;
@@ -932,7 +932,7 @@ require('./_line-settings.scss');
         'name': getUserName($item.name, $item.userName),
         'userName': $item.userName,
         'userDnUuid': 'none',
-        'entitlements': $item.entitlements
+        'entitlements': $item.entitlements,
       };
 
       vm.selected = undefined;
@@ -958,7 +958,7 @@ require('./_line-settings.scss');
         // Exclude current user
         if (!isVoiceUser) {
           Notification.error('sharedLinePanel.invalidUser', {
-            user: userInfo.name
+            user: userInfo.name,
           });
         }
         isValidUser = false;
@@ -996,14 +996,14 @@ require('./_line-settings.scss');
               } else {
                 name = (user.name) ? user.name : user.userName;
                 Notification.error('directoryNumberPanel.maxLines', {
-                  user: name
+                  user: name,
                 });
               }
             })
             .catch(function (response) {
               name = (user.name) ? user.name : user.userName;
               Notification.errorResponse(response, 'directoryNumberPanel.userError', {
-                user: name
+                user: name,
               });
             });
           promises.push(promise);
@@ -1055,7 +1055,7 @@ require('./_line-settings.scss');
               .then(function () {
                 if (vm.currentUser.id == userInfo.uuid) {
                   $state.go('user-overview.communication', {
-                    reloadToggle: !$stateParams.reloadToggle
+                    reloadToggle: !$stateParams.reloadToggle,
                   });
                 } else {
                   return listSharedLineUsers(vm.directoryNumber.uuid);

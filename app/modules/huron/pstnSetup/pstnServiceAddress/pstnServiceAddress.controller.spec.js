@@ -25,7 +25,7 @@ describe('Controller: PstnServiceAddressCtrl', function () {
     spyOn(Notification, 'error');
 
     controller = $controller('PstnServiceAddressCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
 
     $scope.$apply();
@@ -38,7 +38,7 @@ describe('Controller: PstnServiceAddressCtrl', function () {
 
   it('should lookup address and return valid', function () {
     var myAddress = {
-      streetAddress: '555 My Street'
+      streetAddress: '555 My Street',
     };
     controller.address = myAddress;
     controller.validateAddress();

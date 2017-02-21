@@ -87,7 +87,7 @@ require('./_hg-edit.scss');
         })
         .catch(function (error) {
           Notification.errorResponse(error, 'huronHuntGroup.huntGroupFetchFailure', {
-            huntGroupName: vm.model.name
+            huntGroupName: vm.model.name,
           });
           $state.go(vm.huronFeaturesUrl);
         });
@@ -262,14 +262,14 @@ require('./_hg-edit.scss');
           }
           return {
             type: numberObj.type,
-            number: numberObj.number
+            number: numberObj.number,
           };
         }),
         huntMethod: vm.model.huntMethod,
         maxRingSecs: vm.model.maxRingSecs.value,
         maxWaitMins: vm.model.maxWaitMins.value,
         fallbackDestination: HuntGroupFallbackDataService.getFallbackDestinationJSON(),
-        members: HuntGroupMemberDataService.getMembersNumberUuidJSON()
+        members: HuntGroupMemberDataService.getMembersNumberUuidJSON(),
       };
     }
 
@@ -284,7 +284,7 @@ require('./_hg-edit.scss');
       HuntGroupService.updateHuntGroup(customerId, vm.hgId, updateJSONRequest).then(function () {
         vm.saveInProgress = false;
         Notification.success('huronHuntGroup.successUpdate', {
-          huntGroupName: vm.model.name
+          huntGroupName: vm.model.name,
         });
 
         if (angular.isDefined(tempExternalNumber)) {
@@ -298,7 +298,7 @@ require('./_hg-edit.scss');
       }, function (data) {
         vm.saveInProgress = false;
         Notification.errorResponse(data, 'huronHuntGroup.errorUpdate', {
-          huntGroupName: vm.model.name
+          huntGroupName: vm.model.name,
         });
       });
     }
@@ -312,8 +312,8 @@ require('./_hg-edit.scss');
           label: $translate.instant('huronHuntGroup.nameLabel'),
           placeholder: $translate.instant('huronHuntGroup.nameLabel'),
           description: $translate.instant('huronHuntGroup.nameDesc'),
-          required: true
-        }
+          required: true,
+        },
       }, {
         key: 'numbers',
         type: 'select',
@@ -332,7 +332,7 @@ require('./_hg-edit.scss');
           required: true,
           onClick: function () {
             vm.form.$setDirty();
-          }
+          },
         },
         controller: /* @ngInject */ function ($scope) {
           $scope.to.options = vm.allPilotOptions;
@@ -352,7 +352,7 @@ require('./_hg-edit.scss');
               }
             }
           });
-        }
+        },
       }, {
         key: 'maxRingSecs',
         type: 'select',
@@ -362,11 +362,11 @@ require('./_hg-edit.scss');
           description: $translate.instant('huronHuntGroup.ringTimeDesc'),
           labelfield: 'label',
           valuefield: 'value',
-          secondaryLabel: $translate.instant('huronHuntGroup.ringTimeSecondaryLabel')
+          secondaryLabel: $translate.instant('huronHuntGroup.ringTimeSecondaryLabel'),
         },
         controller: /* @ngInject */ function ($scope) {
           $scope.to.options = HuntGroupEditDataService.getMaxRingSecsOptions();
-        }
+        },
       }, {
         key: 'maxWaitMins',
         type: 'select',
@@ -376,11 +376,11 @@ require('./_hg-edit.scss');
           description: $translate.instant('huronHuntGroup.waitTimeDesc'),
           labelfield: 'label',
           valuefield: 'value',
-          secondaryLabel: $translate.instant('huronHuntGroup.waitTimeSecondaryLabel')
+          secondaryLabel: $translate.instant('huronHuntGroup.waitTimeSecondaryLabel'),
         },
         controller: /* @ngInject */ function ($scope) {
           $scope.to.options = HuntGroupEditDataService.getMaxWaitMinsOptions();
-        }
+        },
       }];
       vm.isLoadingCompleted = true;
     }

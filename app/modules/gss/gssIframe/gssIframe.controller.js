@@ -21,7 +21,7 @@
         controller: 'AddServiceCtrl',
         controllerAs: 'addServiceCtrl',
         templateUrl: 'modules/gss/services/addService/addService.tpl.html',
-        modalClass: 'status-add-service'
+        modalClass: 'status-add-service',
       }).result.then(function () {
         GSSService.getServices()
           .then(function (services) {
@@ -41,19 +41,19 @@
       var serviceOptions = _.map(services, function (service) {
         return {
           label: service.serviceName,
-          value: service.serviceId
+          value: service.serviceId,
         };
       });
 
       return [].concat(serviceOptions, {
         label: $translate.instant('gss.addStatusPage'),
-        value: addServiceOptionValue
+        value: addServiceOptionValue,
       });
     }
 
     function findServiceOptionWithId(serviceId) {
       return _.find(vm.options, {
-        value: serviceId
+        value: serviceId,
       });
     }
 
@@ -75,16 +75,16 @@
 
       vm.headerTabs = [{
         title: $translate.instant('gss.dashboard'),
-        state: 'gss.dashboard'
+        state: 'gss.dashboard',
       }, {
         title: $translate.instant('gss.services'),
-        state: 'gss.services'
+        state: 'gss.services',
       }, {
         title: $translate.instant('gss.components'),
-        state: 'gss.components'
+        state: 'gss.components',
       }, {
         title: $translate.instant('gss.incidents'),
-        state: 'gss.incidents'
+        state: 'gss.incidents',
       }];
 
       vm.selected = '';

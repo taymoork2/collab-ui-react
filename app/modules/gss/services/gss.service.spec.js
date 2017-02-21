@@ -7,17 +7,17 @@ describe('Service: GSSService', function () {
     serviceName: 'testServiceName',
     serviceDesc: 'testServiceDescription',
     getResponse: {
-      serviceId: 'testServiceId'
+      serviceId: 'testServiceId',
     },
     addResponse: {
-      code: 'post succeed'
+      code: 'post succeed',
     },
     deleteResponse: {
-      code: 'delete succeed'
+      code: 'delete succeed',
     },
     modifyResponse: {
-      code: 'put succeed'
-    }
+      code: 'put succeed',
+    },
   };
 
   beforeEach(angular.mock.module('GSS'));

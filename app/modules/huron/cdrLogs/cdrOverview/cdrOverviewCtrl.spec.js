@@ -18,9 +18,9 @@ describe('Controller: CdrOverviewCtrl', function () {
       top: 0,
       right: 3,
       left: 0,
-      bottom: 0
+      bottom: 0,
     },
-    autohidemode: "leave"
+    autohidemode: "leave",
   };
 
   beforeEach(inject(function ($rootScope, $controller, _$state_, _$stateParams_, _CdrService_) {
@@ -35,7 +35,7 @@ describe('Controller: CdrOverviewCtrl', function () {
     spyOn(CdrService, 'createDownload').and.callFake(function () {
       return {
         jsonBlob: 'blob',
-        jsonUrl: 'url'
+        jsonUrl: 'url',
       };
     });
     spyOn(CdrService, 'downloadInIE');
@@ -45,7 +45,7 @@ describe('Controller: CdrOverviewCtrl', function () {
       $scope: $scope,
       $state: $state,
       $stateParams: $stateParams,
-      CdrService: CdrService
+      CdrService: CdrService,
     });
 
     $scope.$apply();
@@ -76,7 +76,7 @@ describe('Controller: CdrOverviewCtrl', function () {
       call: $stateParams.call,
       uniqueIds: $stateParams.uniqueIds,
       events: $stateParams.events,
-      logstashPath: $stateParams.logstashPath
+      logstashPath: $stateParams.logstashPath,
     });
   });
 

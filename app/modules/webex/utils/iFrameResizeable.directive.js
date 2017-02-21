@@ -20,7 +20,7 @@
           var targetElement = $window.document.getElementById(targetElementId).getBoundingClientRect();
           var targetElementLocation = {
             left: targetElement.left + $window.pageXOffset,
-            top: targetElement.top + $window.pageYOffset
+            top: targetElement.top + $window.pageYOffset,
           };
 
           var iframeTopMargin = targetElementLocation.top;

@@ -8,21 +8,21 @@ describe('RedirectAddResourceControllerV2', function () {
       then: function (confirmCallback, cancelCallback) {
         this.confirmCallBack = confirmCallback;
         this.cancelCallback = cancelCallback;
-      }
+      },
     },
     close: function (item) {
       this.result.confirmCallBack(item);
     },
     dismiss: function (type) {
       this.result.cancelCallback(type);
-    }
+    },
   };
   beforeEach(inject(function (_Notification_, _$translate_, _$state_, _$stateParams_, _AddResourceCommonServiceV2_, $httpBackend, $controller, _$q_, _$modal_) {
     $q = _$q_;
     httpBackend = $httpBackend;
     httpBackend.when('GET', /^\w+.*/).respond({});
     redirectTargetPromise = {
-      then: sinon.stub()
+      then: sinon.stub(),
     };
     $state = _$state_;
     $stateParams = _$stateParams_;
@@ -30,7 +30,7 @@ describe('RedirectAddResourceControllerV2', function () {
     $translate = _$translate_;
     Notification = _Notification_;
     $modalInstance = {
-      close: sinon.stub()
+      close: sinon.stub(),
     };
     $modal = _$modal_;
     yesProceed = true;
@@ -45,7 +45,7 @@ describe('RedirectAddResourceControllerV2', function () {
       $modalInstance: $modalInstance,
       $modal: $modal,
       yesProceed: yesProceed,
-      firstTimeSetup: firstTimeSetup
+      firstTimeSetup: firstTimeSetup,
     });
   }));
   it('controller should be defined', function () {
@@ -99,7 +99,7 @@ describe('RedirectAddResourceControllerV2', function () {
     controller.hosts = [{
       "id": "mf_mgmt@ac43493e-3f11-4eaa-aec0-f16f2a69969a",
       "hostname": "10.196.5.251",
-      "hostSerial": "ac43493e-3f11-4eaa-aec0-f16f2a69969a"
+      "hostSerial": "ac43493e-3f11-4eaa-aec0-f16f2a69969a",
     }];
     controller.canGoNext();
     expect(controller.canGoNext()).toBeFalsy();

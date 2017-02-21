@@ -29,7 +29,7 @@ describe('controller: DelComponentCtrl', function () {
       $scope: $scope,
       $state: $state,
       $stateParams: $stateParams,
-      ComponentsService: ComponentsService
+      ComponentsService: ComponentsService,
     });
 
     $scope.$apply();

@@ -21,13 +21,13 @@
       cluster = newValue;
       vm.clustername = cluster.name;
       vm.host = _.find(cluster.connectors, {
-        hostSerial: $stateParams.hostSerial
+        hostSerial: $stateParams.hostSerial,
       });
       if (vm.host && vm.host.hostname) {
         vm.localizedConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.' + vm.host.connectorType);
         vm.localizedConnectorSectionHeader = $translate.instant('hercules.connectors.localizedConnectorAndHostHeader', {
           connectorName: vm.localizedConnectorName,
-          hostname: vm.host.hostname
+          hostname: vm.host.hostname,
         });
       }
     }, true);
@@ -48,7 +48,7 @@
           connectorType: function () {
             return vm.host.connectorType;
           },
-        }
+        },
       });
     }
 
@@ -61,7 +61,7 @@
           },
           connector: function () {
             return vm.host;
-          }
+          },
         },
         type: 'small',
         controller: 'ReassignClusterControllerV2',
@@ -83,7 +83,7 @@
           },
           connector: function () {
             return vm.host;
-          }
+          },
         },
         type: 'small',
         controller: 'HostDeregisterControllerV2',

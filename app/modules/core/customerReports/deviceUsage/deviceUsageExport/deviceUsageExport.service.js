@@ -53,11 +53,11 @@
       exportCanceler = $q.defer();
       return $http.get(url, {
         responseType: 'arraybuffer',
-        timeout: exportCanceler.promise
+        timeout: exportCanceler.promise,
       }).success(function (data) {
         var fileName = 'device-usage.csv';
         var file = new $window.Blob([data], {
-          type: 'application/json'
+          type: 'application/json',
         });
         if ($window.navigator.msSaveOrOpenBlob) {
           // IE
@@ -71,7 +71,7 @@
           downloadLink.attr({
             'href': $window.URL.createObjectURL(file),
             'download': fileName,
-            'target': '_blank'
+            'target': '_blank',
           });
           $document.find('body').append(downloadContainer);
           $timeout(function () {
@@ -92,7 +92,7 @@
 
     return {
       exportData: exportData,
-      cancelExport: cancelExport
+      cancelExport: cancelExport,
     };
   }
 }());
