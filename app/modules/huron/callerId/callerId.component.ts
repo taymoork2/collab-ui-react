@@ -86,6 +86,9 @@ class CallerId implements ng.IComponentController {
       this.callerIdSelected = data.selected;
       this.onChange();
     }
+    if (changes.customCallerIdNumber && changes.customCallerIdNumber.previousValue === undefined) {
+      this.customCallDest = this.TelephoneNumberService.getDestinationObject(this.customCallerIdNumber);
+    }
   }
 
   public onChange(): void {
@@ -120,9 +123,6 @@ class CallerId implements ng.IComponentController {
     this.blockOption = new CallerIdOption(CallerId.BLOCK_CALLERID_TYPE.name, new CallerIdConfig('', this.$translate.instant('callerIdPanel.blockedCallerIdDescription'), '', CallerId.BLOCK_CALLERID_TYPE.key));
     this.options.push(this.blockOption);
     this.callerIdInputs = callerIdInputs;
-    if (this.showCustom()) {
-      this.customCallDest = this.TelephoneNumberService.getDestinationObject(this.customCallerIdNumber);
-    }
   }
 
   private updateCompanyNumberOptions(companyNumbers) {
