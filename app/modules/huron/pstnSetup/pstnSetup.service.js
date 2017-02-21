@@ -60,6 +60,7 @@
       setCustomerTrialV2: setCustomerTrialV2,
       getCarrierInventory: getCarrierInventory,
       getCarrierTollFreeInventory: getCarrierTollFreeInventory,
+      getCarrierDetails: getCarrierDetails,
       searchCarrierInventory: searchCarrierInventory,
       searchCarrierTollFreeInventory: searchCarrierTollFreeInventory,
       reserveCarrierInventory: reserveCarrierInventory,
