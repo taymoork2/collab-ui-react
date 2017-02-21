@@ -407,7 +407,7 @@
               status.lastStateChangeText = FusionUtils.getTimeSinceText(status.lastStateChange);
             }
             if (status.clusterId) {
-              FusionClusterService.get(status.clusterId).then(function (cluster) {
+              FusionClusterService.get(status.clusterId, vm.orgId).then(function (cluster) {
                 status.homedCluster = cluster;
                 status.homedConnector = _.find(cluster.connectors, { id: status.connectorId });
               });

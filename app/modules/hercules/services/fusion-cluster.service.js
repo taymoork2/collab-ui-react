@@ -47,9 +47,9 @@
 
     ////////////////
 
-    function get(clusterId) {
+    function get(clusterId, orgId) {
       return $http
-        .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '?fields=@wide')
+        .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + (orgId || Authinfo.getOrgId()) + '/clusters/' + clusterId + '?fields=@wide')
         .then(extractData);
     }
 
