@@ -6,7 +6,7 @@
     .controller('CalendarServicePreviewCtrl', CalendarServicePreviewCtrl);
 
   /*@ngInject*/
-  function CalendarServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Orgservice, Notification, USSService, ClusterService, $translate, ResourceGroupService, FeatureToggleService, FusionUtils) {
+  function CalendarServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Orgservice, Notification, USSService, FusionClusterService, $translate, ResourceGroupService, FeatureToggleService, FusionUtils) {
     $scope.entitlementNames = {
       'squared-fusion-cal': 'squaredFusionCal',
       'squared-fusion-gcal': 'squaredFusionGCal'
@@ -122,9 +122,10 @@
         $scope.extension.status = _.find(statuses, function (status) {
           return $scope.extension.id === status.serviceId;
         });
-        if ($scope.extension.status && $scope.extension.status.connectorId) {
-          ClusterService.getConnector($scope.extension.status.connectorId).then(function (connector) {
-            $scope.extension.homedConnector = connector;
+        if ($scope.extension.status && $scope.extension.status.clusterId) {
+          FusionClusterService.get($scope.extension.status.clusterId).then(function (cluster) {
+            $scope.extension.homedCluster = cluster;
+            $scope.extension.homedConnector = _.find(cluster.connectors, { id: $scope.extension.status.connectorId });
           });
         }
         if ($scope.extension.status && $scope.extension.status.lastStateChange) {

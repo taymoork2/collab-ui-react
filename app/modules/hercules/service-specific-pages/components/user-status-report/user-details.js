@@ -96,7 +96,7 @@
       var row = [
         getUserName(userOrMachine),
         getType(userOrMachine),
-        status.connector ? status.connector.cluster_name + ' (' + status.connector.host_name + ')' : '',
+        getClusterAndHost(status),
         $translate.instant('hercules.activationStatus.' + USSService.decorateWithStatus(status)),
         flattenMessages(status.messages),
         status.userId,
@@ -136,6 +136,13 @@
         default:
           return '';
       }
+    }
+
+    function getClusterAndHost(status) {
+      if (!status.cluster) {
+        return '';
+      }
+      return status.cluster.name + (status.connector && status.connector.hostname ? ' (' + status.connector.hostname + ')' : '');
     }
 
     function flattenMessages(messages) {

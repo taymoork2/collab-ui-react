@@ -632,40 +632,6 @@ describe('ClusterService', function () {
     });
   });
 
-  describe('.getConnector', function () {
-    it('should be using the correct backend', function () {
-      $httpBackend
-        .when('GET', 'http://ulv.no/organizations/orgId/connectors/123')
-        .respond({
-          foo: 'bar'
-        });
-
-      var callback = sinon.stub();
-      ClusterService.getConnector('123').then(callback);
-      $httpBackend.flush();
-
-      expect(callback.callCount).toBe(1);
-      expect(callback.getCall(0).args[0].foo).toBe('bar');
-    });
-
-    it('should fail on 500 errors', function () {
-      $httpBackend
-        .when('GET', 'http://ulv.no/organizations/orgId/connectors/123')
-        .respond(500);
-
-      var callback = sinon.stub();
-      ClusterService.getConnector('123').then(undefined, callback);
-      $httpBackend.flush();
-
-      expect(callback.callCount).toBe(1);
-    });
-    it('should return 404', function () {
-      ClusterService.getConnector('123@calendar-cloud-connector').catch(function (response) {
-        expect(response.data.status).toBe(404);
-      });
-    });
-  });
-
   describe('.deleteHost', function () {
     it('should be using the correct backend', function () {
       $httpBackend

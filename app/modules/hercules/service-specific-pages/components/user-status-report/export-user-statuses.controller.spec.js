@@ -4,7 +4,7 @@ describe('ExportUserStatusesController', function () {
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Hercules'));
 
-  var vm, Authinfo, scope, $httpBackend, $q, $rootScope, UserDetails, USSService, ClusterService, ExcelService, ResourceGroupService;
+  var vm, Authinfo, scope, $httpBackend, $q, $rootScope, UserDetails, USSService, FusionClusterService, ExcelService, ResourceGroupService;
 
   beforeEach(function () {
     angular.mock.module(function ($provide) {
@@ -56,6 +56,7 @@ describe('ExportUserStatusesController', function () {
               userId: 'DEADBEEF' + i,
               orgId: '0FF1CE',
               connectorId: 'c_cal@aaa',
+              clusterId: 'a5140c4a-9f6e-11e5-a58e-005056b12db1',
               serviceId: 'squared-fusion-uc',
               entitled: true,
               state: 'notActivated'
@@ -66,19 +67,20 @@ describe('ExportUserStatusesController', function () {
     };
     sinon.spy(USSService, 'getAllStatuses');
 
-    ClusterService = {
-      getConnector: function (id) {
-        return $q.resolve({
-          id: id,
-          cluster_id: 'a5140c4a-9f6e-11e5-a58e-005056b12db1',
-          display_name: 'Calendar Connector',
-          host_name: 'deadbeef.rd.cisco.com',
-          cluster_name: 'deadbeef.rd.cisco.com',
-          connector_type: 'c_cal',
-        });
+    FusionClusterService = {
+      getAll: function () {
+        return $q.resolve([{
+          id: 'a5140c4a-9f6e-11e5-a58e-005056b12db1',
+          name: 'deadbeef.rd.cisco.com',
+          connectors: [{
+            id: 'c_cal@aaa',
+            hostname: 'deadbeef.rd.cisco.com',
+            connectorType: 'c_cal',
+          }]
+        }]);
       }
     };
-    sinon.spy(ClusterService, 'getConnector');
+    sinon.spy(FusionClusterService, 'getAll');
 
     UserDetails = {
       getUsers: function (stateInfos) {
@@ -110,7 +112,7 @@ describe('ExportUserStatusesController', function () {
       USSService: USSService,
       UserDetails: UserDetails,
       ExcelService: ExcelService,
-      ClusterService: ClusterService,
+      FusionClusterService: FusionClusterService,
       ResourceGroupService: ResourceGroupService
     });
     vm.statusTypes = [{
@@ -140,10 +142,23 @@ describe('ExportUserStatusesController', function () {
       $rootScope.$apply();
       expect(USSService.getAllStatuses.called).toBe(true);
     });
-    it('should call ClusterService.getConnector if there at least one connectorId', function () {
+    it('should call FusionClusterService.getAll if there at least one clusterId', function () {
       vm.exportCSV();
       $rootScope.$apply();
-      expect(ClusterService.getConnector.called).toBe(true);
+      expect(FusionClusterService.getAll.called).toBe(true);
+    });
+    it('should not call FusionClusterService.getAll if there no clusterIds', function () {
+      USSService.getAll = function () {
+        return $q.resolve([{
+          userId: 'DEADBEEF',
+          orgId: '0FF1CE',
+          serviceId: 'squared-fusion-uc',
+          state: 'error',
+        }]);
+      };
+      vm.exportCSV();
+      $rootScope.$apply();
+      expect(FusionClusterService.getAll.called).toBe(true);
     });
     it('should call UserDetails.getUsers as much as it has to', function () {
       vm.exportCSV();

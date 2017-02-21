@@ -40,6 +40,7 @@
       getAlarms: getAlarms,
       getOrgSettings: getOrgSettings,
       setOrgSettings: setOrgSettings,
+      getConnector: getConnector,
     };
 
     return service;
@@ -529,6 +530,15 @@
     function setOrgSettings(data, orgId) {
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + (orgId || Authinfo.getOrgId()) + '/settings';
       return $http.patch(url, data).then(extractData);
+    }
+
+    function getConnector(connectorId, orgId) {
+      if (connectorId.search(/@calendar-cloud-connector/i) !== -1) {
+        return $q.reject({ 'data': { 'statusText': 'NotFound', 'status': 404, 'errors': [{ 'message': 'calendar-cloud-connector is not a valid connectorId' }] } });
+      } else {
+        var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + (orgId || Authinfo.getOrgId()) + '/connectors/' + connectorId;
+        return $http.get(url).then(extractData);
+      }
     }
   }
 })();

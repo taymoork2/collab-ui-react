@@ -46,12 +46,12 @@
         </div>
       </div>
 
-      <div class="row collapse" ng-if="callServiceAware.currentUserEntitled && callServiceAware.homedConnector">
+      <div class="row collapse" ng-if="callServiceAware.currentUserEntitled && callServiceAware.homedCluster">
         <div class="columns small-3">
           <span class="cloud-extension-label">{{::'cloudExtensions.cluster' | translate}}:</span>
         </div>
         <div class="columns small-9">
-          <span class="cloud-extension-label">{{callServiceAware.homedConnector.cluster_name}}</span>
+          <span class="cloud-extension-label">{{callServiceAware.homedCluster.name}}</span>
         </div>
       </div>
 
@@ -61,7 +61,7 @@
         </div>
         <div class="columns small-9">
           <span class="cloud-extension-label">
-            <a href="https://{{callServiceAware.homedConnector.host_name}}" target="_blank">{{callServiceAware.homedConnector.host_name}}</a>
+            <a href="https://{{callServiceAware.homedConnector.hostname}}" target="_blank">{{callServiceAware.homedConnector.hostname}}</a>
           </span>
         </div>
       </div>

@@ -6,7 +6,7 @@
     .service('ClusterService', ClusterService);
 
   /* @ngInject */
-  function ClusterService($http, CsdmPoller, CsdmCacheUpdater, CsdmHubFactory, UrlConfig, Authinfo, FusionClusterStatesService, $q) {
+  function ClusterService($http, CsdmPoller, CsdmCacheUpdater, CsdmHubFactory, UrlConfig, Authinfo, FusionClusterStatesService) {
     var clusterCache = {
       c_mgmt: {},
       c_ucmc: {},
@@ -17,12 +17,11 @@
     var hub = CsdmHubFactory.create();
     var poller = CsdmPoller.create(fetch, hub);
 
-    var service = {
+    return {
       deleteHost: deleteHost,
       fetch: fetch,
       getCluster: getCluster,
       getClustersByConnectorType: getClustersByConnectorType,
-      getConnector: getConnector,
       subscribe: hub.on,
       upgradeSoftware: upgradeSoftware,
       mergeRunningState: mergeRunningState,
@@ -30,8 +29,6 @@
       // Internal functions exposed for easier testing.
       _mergeAllAlarms: mergeAllAlarms,
     };
-
-    return service;
 
     ////////////////
 
@@ -258,15 +255,5 @@
           return data;
         });
     }
-
-    function getConnector(connectorId) {
-      if (connectorId.search(/@calendar-cloud-connector/i) !== -1) {
-        return $q.reject({ 'data': { 'statusText': 'NotFound', 'status': 404, 'errors': [{ 'message': 'calendar-cloud-connector is not a valid connectorId' }] } });
-      } else {
-        var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/connectors/' + connectorId;
-        return $http.get(url).then(extractDataFromResponse);
-      }
-    }
-
   }
 }());

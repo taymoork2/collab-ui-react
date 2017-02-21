@@ -6,7 +6,7 @@
     .controller('CallServicePreviewCtrl', CallServicePreviewCtrl);
 
   /*@ngInject*/
-  function CallServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, ClusterService, UriVerificationService, DomainManagementService, $translate, FeatureToggleService, ResourceGroupService, UCCService, FusionUtils) {
+  function CallServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, FusionClusterService, UriVerificationService, DomainManagementService, $translate, FeatureToggleService, ResourceGroupService, UCCService, FusionUtils) {
     $scope.saveLoading = false;
     $scope.domainVerificationError = false;
     $scope.currentUser = $stateParams.currentUser;
@@ -112,18 +112,14 @@
           return $scope.callServiceConnect.id === status.serviceId;
         });
         refreshUserInUssIfServiceEntitledButNoStatus($scope.callServiceConnect, userIsRefreshed);
-        if ($scope.callServiceAware.status && $scope.callServiceAware.status.connectorId) {
-          ClusterService.getConnector($scope.callServiceAware.status.connectorId).then(function (connector) {
-            $scope.callServiceAware.homedConnector = connector;
+        if ($scope.callServiceAware.status && $scope.callServiceAware.status.clusterId) {
+          FusionClusterService.get($scope.callServiceAware.status.clusterId).then(function (cluster) {
+            $scope.callServiceAware.homedCluster = cluster;
+            $scope.callServiceAware.homedConnector = _.find(cluster.connectors, { id: $scope.callServiceAware.status.connectorId });
           });
         }
         if ($scope.callServiceAware.status && $scope.callServiceAware.status.lastStateChange) {
           $scope.callServiceAware.status.lastStateChangeText = FusionUtils.getTimeSinceText($scope.callServiceAware.status.lastStateChange);
-        }
-        if ($scope.callServiceConnect.status && $scope.callServiceConnect.status.connectorId) {
-          ClusterService.getConnector($scope.callServiceConnect.status.connectorId).then(function (connector) {
-            $scope.callServiceConnect.homedConnector = connector;
-          });
         }
         if ($scope.callServiceConnect.status && $scope.callServiceConnect.status.lastStateChange) {
           $scope.callServiceConnect.status.lastStateChangeText = FusionUtils.getTimeSinceText($scope.callServiceConnect.status.lastStateChange);

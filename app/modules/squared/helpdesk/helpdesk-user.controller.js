@@ -6,7 +6,7 @@
     .controller('HelpdeskUserController', HelpdeskUserController);
 
   /* @ngInject */
-  function HelpdeskUserController($modal, $q, $stateParams, $translate, $window, Authinfo, Config, FeatureToggleService, HelpdeskCardsUserService, HelpdeskHuronService, HelpdeskLogService, HelpdeskService, LicenseService, Notification, USSService, WindowLocation, FusionUtils, ClusterService, Userservice, ResourceGroupService, UCCService) {
+  function HelpdeskUserController($modal, $q, $stateParams, $translate, $window, Authinfo, Config, FeatureToggleService, HelpdeskCardsUserService, HelpdeskHuronService, HelpdeskLogService, HelpdeskService, LicenseService, Notification, USSService, WindowLocation, FusionUtils, FusionClusterService, Userservice, ResourceGroupService, UCCService) {
     var vm = this;
     var SUPPRESSED_STATE = {
       LOADING: 'loading',
@@ -406,9 +406,10 @@
             if (status.lastStateChange) {
               status.lastStateChangeText = FusionUtils.getTimeSinceText(status.lastStateChange);
             }
-            if (status.connectorId) {
-              ClusterService.getConnector(status.connectorId).then(function (connector) {
-                status.homedConnector = connector;
+            if (status.clusterId) {
+              FusionClusterService.get(status.clusterId).then(function (cluster) {
+                status.homedCluster = cluster;
+                status.homedConnector = _.find(cluster.connectors, { id: status.connectorId });
               });
             }
             if (status.resourceGroupId) {

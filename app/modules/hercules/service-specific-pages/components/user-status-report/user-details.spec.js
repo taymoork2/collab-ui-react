@@ -52,7 +52,8 @@ describe('Service: UserDetails', function () {
         entitled: true,
         state: 'activated',
         serviceId: 'squared-fusion-cal',
-        connector: { cluster_name: 'Tom is Awesome Cluster', host_name: 'cool.cisco.com' },
+        connector: { hostname: 'cool.cisco.com' },
+        cluster: { name: 'Tom is Awesome Cluster' },
       }];
       UserDetails.getUsers('5632-f806-org', simulatedResponse, progress)
         .then(function (userRows) {
@@ -84,7 +85,8 @@ describe('Service: UserDetails', function () {
         entitled: true,
         state: 'activated',
         serviceId: 'squared-fusion-cal',
-        connector: { cluster_name: 'Tom is Awesome Cluster', host_name: 'cool.cisco.com' },
+        connector: { hostname: 'cool.cisco.com' },
+        cluster: { name: 'Tom is Awesome Cluster' },
         messages: [{
           key: 'tull',
           severity: 'error',
@@ -184,7 +186,8 @@ describe('Service: UserDetails', function () {
         entitled: true,
         state: 'activated',
         serviceId: 'squared-fusion-cal',
-        connector: { cluster_name: 'Tom is Awesome Cluster', host_name: 'cool.cisco.com' },
+        connector: { hostname: 'cool.cisco.com' },
+        cluster: { name: 'Tom is Awesome Cluster' },
         resourceGroup: { name: 'ResourceGroupA' }
       },
       {
@@ -192,7 +195,8 @@ describe('Service: UserDetails', function () {
         entitled: true,
         state: 'activated',
         serviceId: 'squared-fusion-cal',
-        connector: { cluster_name: 'Tom is Awesome Cluster', host_name: 'cool.cisco.com' }
+        connector: { hostname: 'cool.cisco.com' },
+        cluster: { name: 'Tom is Awesome Cluster' },
       }];
       UserDetails.getUsers('5632-f806-org', simulatedResponse, progress, true)
         .then(function (userRows) {

@@ -6,7 +6,7 @@
     .controller('ExportUserStatusesController', ExportUserStatusesController);
 
   /* @ngInject */
-  function ExportUserStatusesController($scope, $q, $translate, $modalInstance, userStatusSummary, Authinfo, UserDetails, USSService, ClusterService, ExcelService, ResourceGroupService) {
+  function ExportUserStatusesController($scope, $q, $translate, $modalInstance, userStatusSummary, Authinfo, UserDetails, USSService, FusionClusterService, ExcelService, ResourceGroupService) {
     var vm = this;
     var numberOfUsersPrCiRequest = 50; // can probably go higher, depending on the CI backend...
 
@@ -43,7 +43,7 @@
 
       return getAllUserStatuses(selectedTuples)
         .then(_.flatten)
-        .then(addConnectorsDetails)
+        .then(addClusterAndConnectorsDetails)
         .then(addResourceGroupNames)
         .then(replaceWithDetails)
         .then(function (statuses) {
@@ -98,40 +98,21 @@
         });
     }
 
-    function addConnectorsDetails(statuses) {
+    function addClusterAndConnectorsDetails(statuses) {
       vm.progress.message = $translate.instant('hercules.export.readingConnectors');
-      var connectorIds = _.reduce(statuses, function (result, userStatus) {
-        if (userStatus.connectorId && !_.includes(result, userStatus.connectorId)) {
-          result.push(userStatus.connectorId);
-        }
-        return result;
-      }, []);
-
-      if (connectorIds.length === 0) {
+      if (_.every(statuses, function (userStatus) { return !userStatus.clusterId; })) {
         // we have nothing to do
         return $q.resolve(statuses);
       }
-
-      // Get more information about the connector IDs we collected
-      var promises = _.map(connectorIds, function (connectorId) {
-        return ClusterService.getConnector(connectorId)
-          .catch(function () {
-            // recover from not finding the connector on the server
-            return {
-              id: connectorId,
-              host_name: null
-            };
-          });
-      });
-      return $q.all(promises)
-        .then(function (connectors) {
-          // convert response to a more usable data structure
-          var connectorsById = _.chain(connectors)
+      return FusionClusterService.getAll()
+        .then(function (clusterList) {
+          var clustersById = _.chain(clusterList)
             .keyBy('id')
             .value();
-          // augment statuses with details about the connectors
+          // augment statuses with details about the cluster/connector the user is homed on
           return _.map(statuses, function (status) {
-            status.connector = connectorsById[status.connectorId];
+            status.cluster = clustersById[status.clusterId];
+            status.connector = _.find(status.cluster.connectors, { id: status.connectorId });
             return status;
           });
         });

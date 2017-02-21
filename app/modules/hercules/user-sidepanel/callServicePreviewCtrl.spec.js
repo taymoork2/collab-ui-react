@@ -3,9 +3,9 @@
 describe('Directive Controller: CallServicePreviewCtrl', function () {
   beforeEach(angular.mock.module('Hercules'));
 
-  var $scope, $rootScope, $controller, $q, USSService, $state, $stateParams, FeatureToggleService, Notification, ClusterService, ResourceGroupService, $translate, Userservice, Authinfo, UriVerificationService, DomainManagementService, UCCService;
+  var $scope, $rootScope, $controller, $q, USSService, $state, $stateParams, FeatureToggleService, Notification, FusionClusterService, ResourceGroupService, $translate, Userservice, Authinfo, UriVerificationService, DomainManagementService, UCCService;
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, _$state_, _$stateParams_, _Authinfo_, _USSService_, _$q_, _Notification_, _ClusterService_, _ResourceGroupService_, _FeatureToggleService_, _$translate_, _Userservice_, _UriVerificationService_, _DomainManagementService_, _UCCService_) {
+  beforeEach(inject(function (_$rootScope_, _$controller_, _$state_, _$stateParams_, _Authinfo_, _USSService_, _$q_, _Notification_, _FusionClusterService_, _ResourceGroupService_, _FeatureToggleService_, _$translate_, _Userservice_, _UriVerificationService_, _DomainManagementService_, _UCCService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $controller = _$controller_;
@@ -13,7 +13,7 @@ describe('Directive Controller: CallServicePreviewCtrl', function () {
     $q = _$q_;
     $state = _$state_;
     Notification = _Notification_;
-    ClusterService = _ClusterService_;
+    FusionClusterService = _FusionClusterService_;
     ResourceGroupService = _ResourceGroupService_;
     FeatureToggleService = _FeatureToggleService_;
     $stateParams = _$stateParams_;
@@ -25,9 +25,9 @@ describe('Directive Controller: CallServicePreviewCtrl', function () {
     UCCService = _UCCService_;
 
     var resourceGroupsAsOptions = [];
-    var userStatuses = [{ userId: '1234', state: 'notActivated', serviceId: 'squared-fusion-uc', entitled: true }];
+    var userStatuses = [{ userId: '1234', state: 'activated', serviceId: 'squared-fusion-uc', entitled: true, clusterId: 'clusterId', connectorId: '1234' }];
     var userDiscovery = { directoryURI: 'tvasset@cisco.com' };
-    var connector = { id: '1234', cluster_name: 'SuperCluster' };
+    var cluster = { id: 'clusterId', name: 'SuperCluster', connectors: [{ id: '1234', hostname: 'jalla.com' }] };
     var domains = [{ status: 'verified', text: 'cisco.com' }];
     $stateParams.currentUser = { id: '1234', userName: 'tvasset@cisco.com', entitlements: ['squared-fusion-uc'] };
 
@@ -41,7 +41,7 @@ describe('Directive Controller: CallServicePreviewCtrl', function () {
     spyOn(USSService, 'getStatusesForUser').and.returnValue($q.resolve(userStatuses));
     spyOn(USSService, 'refreshEntitlementsForUser').and.returnValue($q.resolve({}));
     spyOn(UCCService, 'getUserDiscovery').and.returnValue($q.resolve(userDiscovery));
-    spyOn(ClusterService, 'getConnector').and.returnValue($q.resolve(connector));
+    spyOn(FusionClusterService, 'get').and.returnValue($q.resolve(cluster));
     spyOn(DomainManagementService, 'getVerifiedDomains').and.returnValue($q.resolve(domains));
   }));
 
@@ -54,7 +54,7 @@ describe('Directive Controller: CallServicePreviewCtrl', function () {
       Userservice: Userservice,
       Notification: Notification,
       USSService: USSService,
-      ClusterService: ClusterService,
+      FusionClusterService: FusionClusterService,
       UriVerificationService: UriVerificationService,
       DomainManagementService: DomainManagementService,
       $translate: $translate,
@@ -69,7 +69,7 @@ describe('Directive Controller: CallServicePreviewCtrl', function () {
     initController();
     expect($scope.callServiceAware.entitled).toBeTruthy();
     expect($scope.callServiceAware.status).toBeDefined();
-    expect($scope.callServiceAware.status.state).toBe('notActivated');
+    expect($scope.callServiceAware.status.state).toBe('activated');
     expect($scope.callServiceConnect.entitled).toBeFalsy();
     expect($scope.isInvitePending).toBeFalsy();
     expect($scope.resourceGroup.show).toBeFalsy();
@@ -109,6 +109,7 @@ describe('Directive Controller: CallServicePreviewCtrl', function () {
         state: 'activated',
         serviceId: 'squared-fusion-uc',
         entitled: true,
+        clusterId: 'clusterId',
         connectorId: '1234'
       }, { userId: '1234', state: 'activated', serviceId: 'squared-fusion-ec', entitled: true }]));
       $stateParams.currentUser = {
@@ -125,8 +126,10 @@ describe('Directive Controller: CallServicePreviewCtrl', function () {
       expect($scope.callServiceAware.entitled).toBeTruthy();
       expect($scope.callServiceAware.status).toBeDefined();
       expect($scope.callServiceAware.status.state).toBe('activated');
+      expect($scope.callServiceAware.homedCluster).toBeDefined();
+      expect($scope.callServiceAware.homedCluster.name).toBe('SuperCluster');
       expect($scope.callServiceAware.homedConnector).toBeDefined();
-      expect($scope.callServiceAware.homedConnector.cluster_name).toBe('SuperCluster');
+      expect($scope.callServiceAware.homedConnector.hostname).toBe('jalla.com');
       expect($scope.callServiceAware.directoryUri).toBe('tvasset@cisco.com');
       expect($scope.domainVerificationError).toBeFalsy();
 

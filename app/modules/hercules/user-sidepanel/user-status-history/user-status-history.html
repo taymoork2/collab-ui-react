@@ -28,7 +28,7 @@
         <span class="history-label description" translate="hercules.userHistory.serviceEnabled"></span>
       </div>
     </div>
-    <div class="row collapse" ng-if="entry.payload.description">
+    <div class="row collapse" ng-if="entry.payload.description && !entry.payload.messages">
       <div class="columns small-4">
         <span class="history-label">{{'common.description' | translate}}:</span>
       </div>
@@ -36,12 +36,22 @@
         <span class="history-label description">{{entry.payload.description}}</span>
       </div>
     </div>
-    <div class="row collapse" ng-if="entry.homedConnector">
+
+    <div class="row collapse" ng-if="entry.payload.messages">
+      <div class="columns small-4">
+        <span class="history-label">{{'cloudExtensions.details' | translate}}:</span>
+      </div>
+      <div class="columns small-8">
+        <user-status-messages messages="entry.payload.messages"></user-status-messages>
+      </div>
+    </div>
+
+    <div class="row collapse" ng-if="entry.homedCluster">
       <div class="columns small-4">
         <span class="history-label">{{'cloudExtensions.cluster' | translate}}:</span>
       </div>
       <div class="columns small-8">
-        <span class="history-label">{{entry.homedConnector.cluster_name}}</span>
+        <span class="history-label">{{entry.homedCluster.name}}</span>
       </div>
     </div>
     <div class="row collapse" ng-if="entry.homedConnector">
@@ -50,7 +60,7 @@
       </div>
       <div class="columns small-8">
         <span class="history-label">
-          <a href="https://{{entry.homedConnector.host_name}}" target="_blank">{{entry.homedConnector.host_name}}</a>
+          <a href="https://{{entry.homedConnector.hostname}}" target="_blank">{{entry.homedConnector.hostname}}</a>
         </span>
       </div>
     </div>
