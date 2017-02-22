@@ -243,9 +243,11 @@ describe('Controller: EdiscoverySearchController', function () {
       ediscoverySearchController.searchCriteria.startDate = moment().subtract(1, 'day').format();
       var params = {
         displayName: sinon.match.any,
-        roomId: sinon.match.any,
+        roomIds: sinon.match.any,
         startDate: sinon.match.any,
         endDate: sinon.match.any,
+        keyword: sinon.match.any,
+        emailAddresses: null,
       };
 
       ediscoverySearchController.createReport();
@@ -324,9 +326,11 @@ describe('Controller: EdiscoverySearchController', function () {
 
       var params = {
         displayName: sinon.match.any,
-        roomId: sinon.match.any,
+        roomIds: sinon.match.any,
         startDate: sinon.match.any,
         endDate: sinon.match.any,
+        keyword: sinon.match.any,
+        emailAddresses: null,
       };
 
       expect(EdiscoveryService.runReport.callCount).toBe(1);
