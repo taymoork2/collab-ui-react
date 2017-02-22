@@ -2341,30 +2341,6 @@
     },
     "dictionary": {
       "welcome": "Welcome to the Context Dictionary"
-    },
-    "serviceName" : "Hybrid Context",
-    "serviceStatus": {
-      "unknown": "Status unknown",
-      "not_configured": "Not configured",
-      "installing": "Installing",
-      "disabled": "Disabled",
-      "not_installed": "Not installed",
-      "stopped": "Stopped",
-      "offline": "Offline",
-      "registered": "Registered",
-      "downloading": "Downloading",
-      "uninstalling": "Uninstalling",
-      "running": "Running",
-      "has_alarms": "Alarms",
-      "upgrading": "Upgrading",
-      "upgraded": "Upgraded",
-      "pending": "Pending",
-      "initializing": "Initializing",
-      "not_operational": "Not Operational",
-      "nonodes": "No Nodes Registered",
-      "not_registered": "Registration not completed",
-      "urgentUpgradeAvailable": "Urgent upgrade available",
-      "registrationTimeout": "Registration timeout"
     }
   },
   "hds": {

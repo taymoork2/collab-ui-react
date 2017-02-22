@@ -96,7 +96,7 @@
 
     function mergeRunningState(connectors, type) {
       if (_.size(connectors) === 0 &&
-          (type === 'hds_app' || type === 'mf_mgmt' || type === 'cs_mgmt' || type === 'cs_context')) {
+          (type === 'hds_app' || type === 'mf_mgmt')) {
         return {
           state: 'no_nodes_registered',
           stateSeverity: 'neutral',
