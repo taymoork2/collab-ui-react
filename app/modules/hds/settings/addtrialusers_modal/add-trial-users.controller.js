@@ -23,7 +23,7 @@
         .then(function (gid) {
           vm.trialUserGroupId = gid;
         }).catch(function (error) {
-          Notification.errorWithTrackingId(error, 'hercules.settings.emailNotificationsSavingError');
+          Notification.errorWithTrackingId(error);
         });
     }
 
