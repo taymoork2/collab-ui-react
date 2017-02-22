@@ -147,7 +147,6 @@ describe('Service: MediaClusterServiceV2', function () {
       }],
       "runningVersion": "2016.06.29.146",
       "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/2c3c9f9e-73d9-4460-a668-047162ff1bac/channels/DEV/packages/mf_mgmt",
-      "registered": true,
     }];
 
     var object = Service.mergeAllAlarms(connectors);
@@ -178,7 +177,6 @@ describe('Service: MediaClusterServiceV2', function () {
       "alarms": [],
       "runningVersion": "2016.06.29.146",
       "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/2c3c9f9e-73d9-4460-a668-047162ff1bac/channels/DEV/packages/mf_mgmt",
-      "registered": true,
     };
     var object = Service.getMostSevereRunningState(previous, connector);
 
@@ -215,7 +213,6 @@ describe('Service: MediaClusterServiceV2', function () {
         }],
         "runningVersion": "2016.06.16.124",
         "packageUrl": " ",
-        "registered": true,
       }],
       "releaseChannel": "GA",
       "provisioning": [{
@@ -225,7 +222,6 @@ describe('Service: MediaClusterServiceV2', function () {
         "availableVersion": "1.0",
         "packageUrl": " ",
       }],
-      "registered": true,
       "targetType": "mf_mgmt",
     };
 

@@ -177,7 +177,6 @@
 
     function getNumberOfParticipantData(time) {
       vm.numberOfParticipantUrl = '/participants_distribution';
-
       var returnData = {
         graphData: [],
         graphs: [],
@@ -191,6 +190,25 @@
         }
       }, function (error) {
         return returnErrorCheck(error, $translate.instant('mediaFusion.metrics.overallClientTypeGraphError'), returnData);
+      });
+    }
+
+    function getMeetingLocationData(time) {
+      vm.meetingLcationUrl = '/meeting_location_trend';
+
+      var returnData = {
+        graphData: [],
+        graphs: [],
+      };
+      return $http.get(vm.urlBase + getQuerys(vm.meetingLcationUrl, vm.allClusters, time)).then(function (response) {
+        if (!_.isUndefined(response) && !_.isUndefined(response.data) && !_.isUndefined(response.data.chartData) && _.isArray(response.data.chartData) && !_.isUndefined(response.data)) {
+          returnData.graphData.push(response.data.chartData);
+          return adjustLineGraphData(response.data.chartData, returnData, response.data.startTime, response.data.endTime, response.data.graphs);
+        } else {
+          return returnData;
+        }
+      }, function (error) {
+        return returnErrorCheck(error, $translate.instant('mediaFusion.metrics.overallMeetingLocationGraphError'), returnData);
       });
     }
 
@@ -271,7 +289,6 @@
       getUtilizationData: getUtilizationData,
       getCallVolumeData: getCallVolumeData,
       getParticipantDistributionData: getParticipantDistributionData,
-      getNumberOfParticipantData: getNumberOfParticipantData,
       getAvailabilityData: getAvailabilityData,
       getClusterAvailabilityData: getClusterAvailabilityData,
       getTotalCallsData: getTotalCallsData,
@@ -279,6 +296,8 @@
       getHostedOnPremisesTooltip: getHostedOnPremisesTooltip,
       getClientTypeData: getClientTypeData,
       getClientTypeCardData: getClientTypeCardData,
+      getMeetingLocationData: getMeetingLocationData,
+      getNumberOfParticipantData: getNumberOfParticipantData,
     };
 
   }

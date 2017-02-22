@@ -393,7 +393,9 @@
                 break;
               case 'squared-fusion-uc':
                 vm.hybridServicesCard.uc.status = status;
+                vm.hybridServicesCard.uc.showDirectoryUri = false;
                 if (vm.hybridServicesCard.uc.status.state === 'error' || vm.hybridServicesCard.uc.status.state === 'activated') {
+                  vm.hybridServicesCard.uc.showDirectoryUri = true;
                   UCCService.getUserDiscovery(vm.userId, vm.orgId).then(function (userDiscovery) {
                     vm.hybridServicesCard.uc.directoryUri = userDiscovery.directoryURI;
                   });

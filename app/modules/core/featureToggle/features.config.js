@@ -55,6 +55,7 @@ module.exports = {
   calliopeDiscovery: 'calliope-discovery',
   huronCallPickup: 'huronCallPickup',
   huronPagingInitiator: 'huronPagingInitiator',
+  huronBlfPickup: 'huronBlfPickup',
   calsvcDetectCmrLoc: 'calsvc_detect_cmr_loc',
   calsvcWebexMeetingRegistries: 'calsvc_webex_meeting_registries',
   calsvcShowPreferredSiteName: 'calsvc-show-preferred-sitename',

@@ -3,10 +3,10 @@
 
   angular
     .module('Context')
-    .controller('HybridContextFieldsetsController', HybridContextFieldsetsController);
+    .controller('HybridContextFieldsetsCtrl', HybridContextFieldsetsCtrl);
 
   /* @ngInject */
-  function HybridContextFieldsetsController() {
+  function HybridContextFieldsetsCtrl() {
 
   }
 }());

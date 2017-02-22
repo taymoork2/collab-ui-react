@@ -83,7 +83,7 @@
             <div class="columns small-4 details-heading">
               <span>{{::'cloudExtensions.status' | translate}}:</span>
             </div>
-            <div class="columns small-8 details-value-large">
+            <div class="columns small-8 details-value">
               <span ng-if="!helpdeskUserCtrl.hybridServicesCard.cal.status" translate="common.on"></span>
               <span ng-if="helpdeskUserCtrl.hybridServicesCard.cal.status"
                     ng-class="helpdeskUserCtrl.hybridServicesCard.cal.status.state === 'error' ? 'helpdesk-red' : ''"
@@ -127,7 +127,7 @@
             <div class="columns small-4 details-heading">
               <span>{{::'cloudExtensions.status' | translate}}:</span>
             </div>
-            <div class="columns small-8 details-value-large">
+            <div class="columns small-8 details-value">
               <span ng-if="!helpdeskUserCtrl.hybridServicesCard.gcal.status" translate="common.on"></span>
               <span ng-if="helpdeskUserCtrl.hybridServicesCard.gcal.status"
                     ng-class="helpdeskUserCtrl.hybridServicesCard.gcal.status.state === 'error' ? 'helpdesk-red' : ''"
@@ -147,7 +147,7 @@
             <div class="columns small-4 details-heading">
               <span>{{::'cloudExtensions.status' | translate}}:</span>
             </div>
-            <div class="columns small-8 details-value-large">
+            <div class="columns small-8 details-value">
               <span ng-if="!helpdeskUserCtrl.hybridServicesCard.uc.status" translate="common.on"></span>
               <span ng-if="helpdeskUserCtrl.hybridServicesCard.uc.status"
                     ng-class="helpdeskUserCtrl.hybridServicesCard.uc.status.state === 'error' ? 'helpdesk-red' : ''"
@@ -175,7 +175,7 @@
               <span>{{helpdeskUserCtrl.hybridServicesCard.uc.status.resourceGroup.name}}</span>
             </div>
           </div>
-          <div class="row collapse" ng-if="helpdeskUserCtrl.hybridServicesCard.uc.status.resourceGroup">
+          <div class="row collapse" ng-if="helpdeskUserCtrl.hybridServicesCard.uc.showDirectoryUri">
             <div class="columns small-4 details-heading">
               <span>{{::'cloudExtensions.sipUri' | translate}}:</span>
             </div>
@@ -191,7 +191,7 @@
             <div class="columns small-4 details-heading">
               <span>{{::'cloudExtensions.status' | translate}}:</span>
             </div>
-            <div class="columns small-8 details-value-large">
+            <div class="columns small-8 details-value">
               <span ng-if="!helpdeskUserCtrl.hybridServicesCard.ec.status" translate="common.on"></span>
               <span ng-if="helpdeskUserCtrl.hybridServicesCard.ec.status"
                     ng-class="helpdeskUserCtrl.hybridServicesCard.ec.status.state === 'error' ? 'helpdesk-red' : ''"

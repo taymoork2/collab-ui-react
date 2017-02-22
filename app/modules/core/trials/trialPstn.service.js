@@ -11,7 +11,6 @@
     var service = {
       getData: getData,
       reset: reset,
-      createPstnEntity: createPstnEntity,
       createPstnEntityV2: createPstnEntityV2,
       resetAddress: resetAddress,
       checkForPstnSetup: checkForPstnSetup,
@@ -66,17 +65,6 @@
       return _trialData;
     }
 
-    function createPstnEntity(customerOrgId, customerName) {
-      if (_trialData.details.pstnProvider.apiImplementation === "SWIVEL") {
-        _trialData.details.pstnNumberInfo.numbers = _trialData.details.swivelNumbers;
-        _trialData.details.pstnContractInfo.companyName = customerName;
-      }
-      return reserveNumbers()
-        .then(_.partial(createPstnCustomer, customerOrgId))
-        .then(_.partial(orderNumbers, customerOrgId))
-        .then(_.partial(createCustomerSite, customerOrgId));
-    }
-
     function createPstnEntityV2(customerOrgId, customerName) {
       checkForPstnSetup(customerOrgId)
         .catch(function () {
@@ -98,22 +86,6 @@
 
     function checkForPstnSetup(customerOrgId) {
       return PstnSetupService.getCustomerV2(customerOrgId);
-    }
-
-    function reserveNumbers() {
-      if (_trialData.details.pstnProvider.apiImplementation !== "SWIVEL") {
-        return PstnSetupService.reserveCarrierInventory(
-          '',
-          _trialData.details.pstnProvider.uuid,
-          _trialData.details.pstnNumberInfo.numbers,
-          false
-        ).catch(function (response) {
-          Notification.errorResponse(response, 'trialModal.pstn.error.reserveFail');
-          return $q.reject(response);
-        });
-      } else {
-        return $q.resolve();
-      }
     }
 
     function reserveNumbersWithCustomerV2(customerOrgId) {
@@ -140,22 +112,6 @@
       } else {
         return $q.resolve();
       }
-    }
-
-    function createPstnCustomer(customerOrgId) {
-      return PstnSetupService.createCustomer(
-        customerOrgId,
-        _trialData.details.pstnContractInfo.companyName,
-        _trialData.details.pstnContractInfo.signeeFirstName,
-        _trialData.details.pstnContractInfo.signeeLastName,
-        _trialData.details.pstnContractInfo.email,
-        _trialData.details.pstnProvider.uuid,
-        _trialData.details.pstnNumberInfo.numbers,
-        _trialData.details.isTrial
-      ).catch(function (response) {
-        Notification.errorResponse(response, 'trialModal.pstn.error.customerFail');
-        return $q.reject(response);
-      });
     }
 
     function createPstnCustomerV2(customerOrgId) {

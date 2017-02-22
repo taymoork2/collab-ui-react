@@ -59,7 +59,17 @@ class TelephonyDomains implements ng.IComponentController {
   }
 
   public exportCSV() {
-    // TODO will do by my Colleague --- xiaoyuan
+    this.exportLoading = true;
+    return this.TelephonyDomainService.telephonyDomainsExportCSV(this.customerId).then((res) => {
+      this.Notification.success('gemini.tds.export.result.success');
+      return res;
+    }).catch((res) => {
+      this.Notification.errorResponse(res, 'gemini.tds.export.result.failed');
+    }).finally(() => {
+      this.$timeout(() => {
+        this.exportLoading = false;
+      }, 1500);
+    });
   }
 
   private initParameters(): void {

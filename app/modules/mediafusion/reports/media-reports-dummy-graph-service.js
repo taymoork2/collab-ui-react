@@ -7,6 +7,7 @@
     var vm = this;
     vm.average_utilzation = $translate.instant('mediaFusion.metrics.avgutilization');
     vm.client_types = $translate.instant('mediaFusion.metrics.clientTypes');
+    vm.locations = $translate.instant('mediaFusion.metrics.location');
     vm.timeFormat = "YYYY-MM-DDTHH:mm:ss";
     return {
       dummyCallVolumeData: dummyCallVolumeData,
@@ -15,6 +16,7 @@
       dummyUtilizationGraph: dummyUtilizationGraph,
       dummyParticipantDistributionGraph: dummyParticipantDistributionGraph,
       dummyClientTypeGraph: dummyClientTypeGraph,
+      dummyMeetingLocationGraph: dummyMeetingLocationGraph,
       dummyNumberOfParticipantGraph: dummyNumberOfParticipantGraph,
     };
 
@@ -245,5 +247,16 @@
       return dummyGraph;
     }
 
+    function dummyMeetingLocationGraph() {
+      var dummyGraph = [];
+      dummyGraph.push({
+        title: vm.locations,
+        valueField: 'field',
+        lineColor: chartColors.grayLightTwo,
+        showBalloon: false,
+        isDummy: true,
+      });
+      return dummyGraph;
+    }
   }
 })();

@@ -2334,7 +2334,21 @@
       }
     },
     "dictionary": {
-      "welcome": "Welcome to the Context Dictionary"
+      "welcome": "Welcome to the Context Dictionary",
+      "fieldPage": {
+        "fieldId": "Field ID",
+        "dataType":"Data Type",
+        "classification": "Data Privacy",
+        "searchable": "Searchable",
+        "lastUpdated":"Date Updated",
+        "startSearching": "To begin, search for a field",
+        "noSearchResults": "Search yielded no results",
+        "fieldReadFailed": "Unable to retrieve fields. Refresh your browser to try again.",
+        "piiEncrypted": "PII Encrypted",
+        "encrypted": "Non-PII Encrypted",
+        "unencrypted": "Unencrypted",
+        "dateFormat": "MM/dd/yyyy"
+      }
     }
   },
   "hds": {
@@ -3045,7 +3059,7 @@
     "langaugeAndVoiceHelp": "These selections apply to Say and Error Messages.",
     "initialAnnouncement": "Initial Announcement",
     "mediaUploadFileInfo": "Audio files must be in .wav format.  Recommended format is 8bit, 8Khz u-law.  Maximum message file size is 5MB.",
-    "queueMaxMusicSize": "Maximum Music file size is 120MB.",
+    "queueMaxMusicSize": "Maximum music file size is 120MB.",
     "initialHelpText": "Specify a message to play when the caller enters the queue.",
     "periodicHelpText": "Specify a message to play and how often to play it while the caller is waiting in the queue.",
     "periodicRestartMusicHelpText": "After this announcement, the music will restart from the beginning.",
@@ -3639,13 +3653,14 @@
       "textLink": "Accept Now"
     },
     "tos": {
-      "titleIntelepeer": "Intelepeer terms of service",
+      "title": "terms of service",
       "copyright": "Copyright 2017 Cisco Systems.  All rights reserved.",
       "info": "Cisco Spark is a collaboration application that provides messaging (IM), voice and video calling capabilities.",
       "noticeTitle": "IMPORTANT NOTICES AND DISCLAIMERS",
       "notice": "Please redirect to the following page and read the agreements from you carrier.  Your PSTN numbers will be released after you read and agree these agreements.",
       "confirmHeading": "Confirm the legal contact who accept this terms.",
       "agreeInstructions": "By clicking 'Agree' you have read and agree to comply with the terms and conditions.",
+      "agreeInstructionsCanadaThinkTel": "By clicking 'Agree' you have read, understood, accept, and agree to comply with the terms and conditions, including specifically, the limitations to the ThinkTel VoIP 9-1-1 emergency dialing services described in Appendix 1 of the terms and conditions.",
       "viewTos": "View Terms of Service"
     }
   },
@@ -4517,7 +4532,8 @@
       "overallAverageUtilizationGraphError": "There was an error while loading Average/Peak utilization data",
       "overallClusterAvailabilityGraphError": "There was an error while loading cluster availability data",
       "overallTotalNumberOfCallsError": "There was an error while loading Total Number of calls",
-      "overallClientTypeGraphError":"There was an error while loading Client Type Data",
+      "overallClientTypeGraphError": "There was an error while loading Client Type Data",
+      "overallMeetingLocationGraphError": "There was an error while loading Meeting Location Data",
       "total_calls": "Total Calls",
       "onpremcalls": "Hosted On-Premises",
       "cloudcalls": "Overflowed to Cloud",
@@ -4548,7 +4564,9 @@
       "clientTypes": "Client Types",
       "clientType": "Client Type",
       "noOfMeet": "Number of Meetings",
-      "numberOfParticipantTitle": "Total Participants"
+      "meetingLocationTitle": "Total Meetings by Location",
+      "meetings": "Meetings",
+      "location": "Location"
     },
     "deleteGroup": {
       "message": "Are you sure you want to delete {{groupName}} from Cisco Collaboration Cloud?",
@@ -6611,8 +6629,16 @@
       "genericError": "An unexpected error occurred. Please try again later."
     },
     "tds": {
+      "export": {
+        "csvFilename": "exported_telephonyDomain.csv",
+        "result": {
+          "success": "Telephony Domain list has been successfully exported.",
+          "failed": "There was an error exporting Telephony Domain list."
+        }
+      },
       "field": {
         "status": "Status",
+        "sites": "Site URL",
         "bridgeSet": "Bridge Set",
         "webDomain": "Web Domain",
         "description": "Partner TD Name",

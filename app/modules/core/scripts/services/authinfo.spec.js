@@ -39,6 +39,22 @@ describe('Authinfo:', function () {
     };
   });
 
+  describe('initialization', function () {
+    beforeEach(function () {
+      this.Authinfo = setupUser({
+        managedOrgs: undefined,
+        roles: undefined,
+        services: undefined,
+      });
+    });
+
+    it('should set empty arrays if initial collections are undefined', function () {
+      expect(this.Authinfo.getManagedOrgs()).toEqual([]);
+      expect(this.Authinfo.getRoles()).toEqual([]);
+      expect(this.Authinfo.getServices()).toEqual([]);
+    });
+  });
+
   describe('getLicenseIsTrial():', function () {
     var Authinfo, accountData;
     beforeEach(function () {

@@ -81,6 +81,10 @@ export class PstnProvidersCtrl implements ng.IComponentController {
     //Are carriers already loaded
     if (this.PstnSetup.isCarrierExists()) {
       this.pstnCarriers = this.PstnSetup.getCarriers();
+      //reset any selected carriers.
+      this.pstnCarriers.forEach((carrier: PstnCarrier) => {
+        carrier.selected = false;
+      });
       this.onReady();
       return;
     }

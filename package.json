@@ -211,6 +211,7 @@
     "typings": "^2.1.0",
     "unparse-args": "^1.1.0",
     "uuid": "^2.0.2",
+    "watchpack": "1.2.1",
     "webpack": "^2.2.1",
     "webpack-dev-middleware": "^1.6.1",
     "webpack-dev-server": "^1.14.1",
