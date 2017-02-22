@@ -498,6 +498,9 @@
       isCare: function () {
         return isEntitled(Config.entitlements.care);
       },
+      isCareVoice: function () {
+        return isEntitled(Config.entitlements.care_inbound_voice);
+      },
       hasAccount: function () {
         return authData.hasAccount;
       },
