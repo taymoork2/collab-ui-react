@@ -25,12 +25,15 @@
     vm.customerOrgId = undefined;
     vm.showRoomSystems = false;
     vm.showCare = false;
+    vm.showBasicCare = false;
+    vm.showAdvanceCare = false;
     vm.details = vm.trialData.details;
     vm.messageTrial = vm.trialData.trials.messageTrial;
     vm.meetingTrial = vm.trialData.trials.meetingTrial;
     vm.webexTrial = vm.trialData.trials.webexTrial;
     vm.callTrial = vm.trialData.trials.callTrial;
     vm.careTrial = vm.trialData.trials.careTrial;
+    vm.advanceCareTrial = vm.trialData.trials.advanceCareTrial;
     vm.roomSystemTrial = vm.trialData.trials.roomSystemTrial;
     vm.sparkBoardTrial = vm.trialData.trials.sparkBoardTrial;
     vm.pstnTrial = vm.trialData.trials.pstnTrial;
@@ -332,26 +335,6 @@
 
     // Care Trial
     vm.careFields = [{
-      model: vm.careTrial,
-      key: 'enabled',
-      type: 'checkbox',
-      className: '',
-      templateOptions: {
-        id: 'careTrial',
-        label: $translate.instant('trials.care'),
-      },
-      hideExpression: function () {
-        return !vm.showCare;
-      },
-      expressionProperties: {
-        'templateOptions.required': function () {
-          return (vm.messageTrial.enabled && vm.callTrial.enabled); // Since, it depends on Message and Call Offer
-        },
-        'templateOptions.disabled': function () {
-          return vm.messageOfferDisabledExpression() || vm.callOfferDisabledExpression();
-        },
-      },
-    }, {
       model: vm.careTrial.details,
       key: 'quantity',
       type: 'input',
@@ -385,7 +368,52 @@
       },
       watcher: {
         expression: function () {
-          return vm.details.licenseCount;
+          return vm.details.licenseCount - vm.advanceCareTrial.details.quantity;
+        },
+        listener: function (field, newValue, oldValue) {
+          if (newValue !== oldValue) {
+            field.formControl.$validate();
+          }
+        },
+      },
+    }];
+
+    // Advance Care Trial
+    vm.advanceCareFields = [{
+      model: vm.advanceCareTrial.details,
+      key: 'quantity',
+      type: 'input',
+      className: '',
+      templateOptions: {
+        id: 'trialCareLicenseCount',
+        inputClass: 'medium-5 small-offset-1',
+        secondaryLabel: $translate.instant('trials.licenses'),
+        type: 'number',
+      },
+      expressionProperties: {
+        'templateOptions.required': function () {
+          return vm.advanceCareTrial.enabled;
+        },
+        'templateOptions.disabled': function () {
+          return vm.advanceCareLicenseInputDisabledExpression();
+        },
+      },
+      modelOptions: {
+        allowInvalid: true,
+      },
+      validators: {
+        quantity: {
+          expression: function ($viewValue, $modelValue) {
+            return vm.validateAdvanceCareLicense($viewValue, $modelValue);
+          },
+          message: function () {
+            return $translate.instant('partnerHomePage.invalidTrialCareQuantity');
+          },
+        },
+      },
+      watcher: {
+        expression: function () {
+          return vm.details.licenseCount - vm.careTrial.details.quantity;
         },
         listener: function (field, newValue, oldValue) {
           if (newValue !== oldValue) {
@@ -445,7 +473,7 @@
       },
       watcher: {
         expression: function () {
-          return vm.careTrial.details.quantity;
+          return vm.careTrial.details.quantity + vm.advanceCareTrial.details.quantity;
         },
         listener: function (field, newValue, oldValue) {
           if (newValue !== oldValue) {
@@ -485,7 +513,9 @@
     vm.messageOfferDisabledExpression = messageOfferDisabledExpression;
     vm.callOfferDisabledExpression = callOfferDisabledExpression;
     vm.careLicenseInputDisabledExpression = careLicenseInputDisabledExpression;
+    vm.advanceCareLicenseInputDisabledExpression = advanceCareLicenseInputDisabledExpression;
     vm.validateCareLicense = validateCareLicense;
+    vm.validateAdvanceCareLicense = validateAdvanceCareLicense;
     vm.careLicenseCountLessThanTotalCount = careLicenseCountLessThanTotalCount;
     vm.cancelModal = cancelModal;
     init();
@@ -495,6 +525,7 @@
     function init() {
       $q.all({
         atlasCareTrials: FeatureToggleService.atlasCareTrialsGetStatus(),
+        atlasAdvanceCareTrials: FeatureToggleService.atlasCareInboundTrialsGetStatus(),
         atlasContextServiceTrials: FeatureToggleService.atlasContextServiceTrialsGetStatus(),
         atlasDarling: FeatureToggleService.atlasDarlingGetStatus(),
         atlasTrialsShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus(),
@@ -514,8 +545,12 @@
           vm.defaultCountryList = results.huronCountryList;
           updateTrialService(messageTemplateOptionId);
 
-          vm.showCare = results.atlasCareTrials;
+          vm.showBasicCare = results.atlasCareTrials;
+          vm.showAdvanceCare = results.atlasAdvanceCareTrials;
+          vm.showCare = vm.showBasicCare || vm.showAdvanceCare;
           vm.careTrial.enabled = results.atlasCareTrials;
+          vm.advanceCareTrial.enabled = results.atlasCareTrials;
+
           vm.sbTrial = results.atlasDarling;
           // TODO: US12063 overrides using this var but requests code to be left in for now
           //var devicesModal = _.find(vm.trialStates, {
@@ -573,6 +608,7 @@
     function messageOfferDisabledExpression() {
       if (!vm.messageTrial.enabled) {
         vm.careTrial.enabled = false;
+        vm.advanceCareTrial.enabled = false;
       }
       return !vm.messageTrial.enabled;
     }
@@ -580,6 +616,7 @@
     function callOfferDisabledExpression() {
       if (!vm.callTrial.enabled) {
         vm.careTrial.enabled = false;
+        vm.advanceCareTrial.enabled = false;
       }
       return !vm.callTrial.enabled;
     }
@@ -599,13 +636,33 @@
       }
     }
 
+    function advanceCareLicenseInputDisabledExpression() {
+      if (vm.advanceCareTrial.enabled) {
+        resetAdvanceToDefaultIfNeeded();
+      } else {
+        vm.advanceCareTrial.details.quantity = 0;
+      }
+      return !vm.advanceCareTrial.enabled;
+    }
+
+    function resetAdvanceToDefaultIfNeeded() {
+      if (vm.advanceCareTrial.details.quantity === 0) {
+        vm.advanceCareTrial.details.quantity = _careDefaultQuantity;
+      }
+    }
+
     function validateCareLicense($viewValue, $modelValue) {
       return !vm.careTrial.enabled || ValidationService.trialCareQuantity(
-        $viewValue, $modelValue, vm.details.licenseCount);
+        $viewValue, $modelValue, vm.details.licenseCount - vm.advanceCareTrial.details.quantity);
+    }
+
+    function validateAdvanceCareLicense($viewValue, $modelValue) {
+      return !vm.advanceCareTrial.enabled || ValidationService.trialCareQuantity(
+        $viewValue, $modelValue, vm.details.licenseCount - vm.careTrial.details.quantity);
     }
 
     function careLicenseCountLessThanTotalCount() {
-      return (!vm.careTrial.enabled || +vm.details.licenseCount >= +vm.careTrial.details.quantity);
+      return (!(vm.careTrial.enabled || vm.advanceCareTrial.enabled) || (+vm.details.licenseCount >= (+vm.careTrial.details.quantity + +vm.advanceCareTrial.details.quantity)));
     }
 
     function hasUserServices() {
