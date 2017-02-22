@@ -306,6 +306,7 @@
         dealId: '',
         country: '',
         licenseCount: 100,
+        validLocation: null,
       };
 
       _trialData = {

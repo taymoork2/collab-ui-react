@@ -5,7 +5,7 @@
     .controller('TrialCtrl', TrialCtrl);
 
   /* @ngInject */
-  function TrialCtrl($q, $state, $scope, $stateParams, $translate, $window, Analytics, Authinfo, Config, HuronCountryService, HuronCustomer, FeatureToggleService, Notification, Orgservice, TrialContextService, TrialDeviceService, TrialPstnService, TrialService, ValidationService) {
+  function TrialCtrl($q, $state, $scope, $stateParams, $translate, $window, Analytics, Authinfo, Config, formlyConfig, HuronCountryService, HuronCustomer, FeatureToggleService, Notification, Orgservice, TrialContextService, TrialDeviceService, TrialPstnService, TrialService, ValidationService) {
     var vm = this;
 
     var _careDefaultQuantity = 15;
@@ -19,6 +19,12 @@
     var _callTemplateOptionId = 'callTrial';
     var _roomSystemsTemplateOptionId = 'roomSystemsTrial';
     var _sparkBoardTemplateOptionId = 'sparkBoardTrial';
+
+    formlyConfig.setType({
+      name: 'custom-checkbox-link',
+      templateUrl: 'modules/core/trials/formly-field-checkbox-label-link.tpl.html',
+      overwriteOk: true,
+    });
 
     var debounceTimeout = 2000;
     vm.currentTrial = ($stateParams.currentTrial) ? angular.copy($stateParams.currentTrial) : {};
@@ -57,7 +63,6 @@
     vm.advanceCareTrial = vm.trialData.trials.advanceCareTrial;
     vm.hasUserServices = hasUserServices;
     _licenseCountDefaultQuantity = vm.trialData.details.licenseCount;
-
     vm.isNewTrial = isNewTrial;
     vm.isEditTrial = isEditTrial;
     vm.isExistingOrg = isExistingOrg;
@@ -519,6 +524,9 @@
         },
         onBlur: function (value, options) {
           options.validation.show = null;
+          if (options.model.validLocation === null) {
+            options.model.validLocation = false;
+          }
         },
       },
       asyncValidators: {
@@ -546,6 +554,21 @@
           blur: 0,
         },
       },
+    }];
+
+    vm.validLocationField = [{
+      model: vm.details,
+      key: 'validLocation',
+      type: 'custom-checkbox-link',
+      templateOptions: {
+        test: $translate.instant('supportSelectLocations'),
+        label_1: $translate.instant('trials.supportedLocationsCertification1'),
+        label_2: $translate.instant('trials.supportedLocationsCertification2'),
+        link_text: $translate.instant('trials.supportedLocationsCertificationLinkText'),
+        link: 'https://support.ciscospark.com/customer/portal/articles/1940194-where-is-cisco-spark-available',
+        id: 'validLocation',
+      },
+
     }];
 
    // US12171 - always entitle call (previously Authinfo.isSquaredUC())
@@ -980,6 +1003,7 @@
         (vm.preset.licenseCount !== vm.details.licenseCount) && !(isNewTrial() && isExistingOrg()),
         vm.licenseCountChanged,
         canAddDevice(),
+        vm.details.validLocation,
       ];
 
       // bail at first true result
@@ -1137,6 +1161,9 @@
     }
 
     function isAddTrialValid(isFormValid) {
+      if (!vm.details.validLocation) {
+        return false;
+      }
       if (!(isFormValid && vm.hasTrial())) {
         return false;
       }

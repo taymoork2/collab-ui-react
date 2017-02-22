@@ -19,9 +19,11 @@
         <input cs-input type="text" disabled="disabled" ng-model="trial.currentTrial.customerName">
         <label class="sub-section__label" translate="partnerHomePage.customerEmail"></label>
         <input cs-input type="text" disabled="disabled" ng-model="trial.currentTrial.customerEmail">
+        <formly-form model="trial.details" fields="trial.validLocationField"></formly-form>
       </div>
       <div class="section__content" ng-if="!trial.isExistingOrg()">
         <formly-form model="trial.details" fields="trial.custInfoFields"></formly-form>
+        <formly-form model="trial.details" fields="trial.validLocationField"></formly-form>
       </div>
     </div>
     <!-- regional settings -->
@@ -46,7 +48,6 @@
     <div class="cs-form__section">
       <div class="section__info">
         <h4  translate="partnerHomePage.trialServices"></h4>
-        <p class="cs-input__help-text" translate="trials.supportSelectLocations"></p>
       </div>
       <!-- paid services: TODO: refactor as a component -->
       <div class="section__content">
