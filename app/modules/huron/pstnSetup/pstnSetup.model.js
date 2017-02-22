@@ -9,7 +9,7 @@
 
     init();
     var model = {
-      clear: init,
+      clear: clear,
       clearProviderSpecificData: clearProviderSpecificData,
       setCustomerId: setCustomerId,
       getCustomerId: getCustomerId,
@@ -49,6 +49,10 @@
     return model;
 
     function init() {
+      clear();
+    }
+
+    function clear() {
       customerId = '';
       customerName = '';
       customerFirstName = '';
@@ -70,9 +74,12 @@
     function clearProviderSpecificData() {
       customerFirstName = '';
       customerLastName = '';
+      serviceAddress = {};
+      siteExists = false;
+      carrierExists = false;
+      carrierExists = [];
       numbers = [];
       orders = [];
-      serviceAddress = {};
     }
 
     function setCustomerId(_customerId) {

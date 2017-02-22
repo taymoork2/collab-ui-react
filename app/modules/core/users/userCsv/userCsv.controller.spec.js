@@ -12,9 +12,9 @@ describe('userCsv.controller', function () {
   function init() {
     this.initModules('Core', 'Hercules', 'Huron', 'Sunlight', 'Messenger', userCsvServiceModule, csvDownloadModule);
 
-    this.injectDependencies('$scope', '$controller', '$timeout', '$interval', '$q', '$state',
-      '$modal', '$previousState', 'Notification', 'Userservice', 'Orgservice', 'FeatureToggleService', 'Authinfo', 'CsvDownloadService', 'HuronCustomer',
-      'UserCsvService', 'ResourceGroupService', 'USSService', 'Analytics');
+    this.injectDependencies('$controller', '$interval', '$modal', '$previousState', '$q', '$rootScope',
+      '$scope', '$state', '$timeout', 'Analytics', 'Authinfo', 'CsvDownloadService', 'FeatureToggleService',
+      'HuronCustomer', 'Notification', 'Orgservice', 'ResourceGroupService', 'UserCsvService', 'Userservice', 'USSService');
 
     initFixtures.apply(this);
     initMocks.apply(this);
@@ -68,6 +68,7 @@ describe('userCsv.controller', function () {
         name: 'test.state',
       },
     });
+    spyOn(this.$rootScope, '$emit');
   }
 
   function initFixtures() {
@@ -364,6 +365,14 @@ describe('userCsv.controller', function () {
         this.$timeout.flush();
       });
 
+      it('should emit an event to keep the user from logging out', function () {
+        this.Userservice.bulkOnboardUsers.and.callFake(this.bulkOnboardUsersResponseMock(201));
+        this.controller.startUpload();
+        this.$scope.$apply();
+        this.$timeout.flush();
+        expect(this.$rootScope.$emit).toHaveBeenCalledWith('IDLE_TIMEOUT_KEEP_ALIVE'); //keep from logging out
+      });
+
       it('should fail all users on server error', function () {
         this.Userservice.bulkOnboardUsers.and.callFake(this.bulkOnboardUsersErrorResponseMock(403, {
           'tracking-id': 'UNIT-TEST',
@@ -579,6 +588,7 @@ describe('userCsv.controller', function () {
         expect(this.controller.model.numNewUsers).toEqual(2);
         expect(this.controller.model.numExistingUsers).toEqual(0);
         expect(this.controller.model.userErrorArray.length).toEqual(0);
+
       });
     });
 

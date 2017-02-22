@@ -40,6 +40,9 @@ var Spark = require('@ciscospark/spark-core').default;
 
     /* initial search variables page */
     vm.searchPlaceholder = $translate.instant('ediscovery.searchParameters.searchByEmailPlaceholder');
+    vm.emailError = $translate.instant('ediscovery.searchParameters.emailError');
+    vm.startDatePlaceholder = moment().subtract(30, 'days').format('YYYY-MM-DD');
+    vm.endDatePlaceholder = moment().format('YYYY-MM-DD');
     vm.searchByOptions = ['Email ID', 'Room ID'];
     vm.searchBySelected = '' || vm.searchByOptions[0];
     vm.searchModel = '';
@@ -402,7 +405,10 @@ var Spark = require('@ciscospark/spark-core').default;
       var ESC = 27;
       var ENTER = 13;
       var activeElement = angular.element($window.document.activeElement);
-      var inputFieldHasFocus = activeElement[0]["id"] === "searchInput";
+      var searchInput = activeElement[0]['id'] === 'searchInput';
+      var searchModel = activeElement[0].getAttribute('ng-model') === 'ediscoverySearchCtrl.searchModel';
+      var queryModel = activeElement[0].getAttribute('ng-model') === 'ediscoverySearchCtrl.queryModel';
+      var inputFieldHasFocus = searchInput || searchModel || queryModel;
       if (!inputFieldHasFocus || !(event.keyCode === ESC || event.keyCode === ENTER)) {
         return; // if not escape and enter, nothing to do
       }
@@ -413,7 +419,7 @@ var Spark = require('@ciscospark/spark-core').default;
 
         case ENTER:
           $timeout(function () {
-            angular.element("#ediscoverySearchButton").trigger('click');
+            angular.element('#ediscoverySearchButton').trigger('click');
           });
           break;
       }

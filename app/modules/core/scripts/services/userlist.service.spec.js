@@ -14,6 +14,7 @@ describe('User List Service', function () {
       '$http',
       '$httpBackend',
       '$q',
+      '$rootScope',
       'Authinfo',
       'UrlConfig',
       'UserListService'
@@ -21,6 +22,7 @@ describe('User List Service', function () {
 
     // spies
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
+    spyOn(this.$rootScope, '$emit');
 
     // closured vars
     testData = _.clone(getJSONFixture('core/json/users/userlist.service.json'));
@@ -165,6 +167,7 @@ describe('User List Service', function () {
 
   describe('getUserReportsUrl():', function () {
     it('should successfully return the user reports data from calling getUserReports', function () {
+      var _this = this;
       var userReportsUrl = this.UrlConfig.getUserReportsUrl(this.Authinfo.getOrgId()) + '/' + testData.exportCSV.id;
 
       this.$httpBackend.expectGET(userReportsUrl).respond(200, {
@@ -180,6 +183,7 @@ describe('User List Service', function () {
         expect(data.status).toBe('success');
         expect(data.id).toBe(testData.exportCSV.id);
         expect(data.report).toBe(testData.exportCSV.report);
+        expect(_this.$rootScope.$emit).toHaveBeenCalledWith('IDLE_TIMEOUT_KEEP_ALIVE'); //keep from logging out
       });
     });
   });

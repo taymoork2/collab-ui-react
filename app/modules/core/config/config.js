@@ -52,6 +52,7 @@
       },
 
       idleTabTimeout: 1200000, //20 mins
+      idleTabKeepAliveEvent: 'IDLE_TIMEOUT_KEEP_ALIVE',
 
       siteDomainUrl: {
         webexUrl: '.webex.com',
@@ -70,6 +71,7 @@
         fusion_ec: 'squared-fusion-ec',
         messenger: 'webex-messenger',
         care: 'cloud-contact-center',
+        care_inbound_voice: 'cloud-contact-center-inbound-voice',
         context: 'contact-center-context',
         fusion_google_cal: 'squared-fusion-gcal',
       },

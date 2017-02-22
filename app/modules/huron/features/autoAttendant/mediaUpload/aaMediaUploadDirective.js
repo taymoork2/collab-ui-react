@@ -21,6 +21,7 @@
         fromSubMenu: '@aaFromSubMenu',
         type: '@aaMediaType',
         change: "&aaChange",
+        mediaState: "=aaMediaState",
       },
     };
   }

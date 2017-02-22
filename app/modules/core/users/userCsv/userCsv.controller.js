@@ -806,6 +806,8 @@ require('./_user-csv.scss');
             // We filled out chunk or this is the last user. Process the bulk onboard
             // we pass idx since this is used for reference to original CSV in error reporting
             csvPromiseChain = onboardCsvUsers(tempUserArray, csvPromiseChain);
+            // this event is picked up by idleTimeoutService to keep the user logged in
+            $rootScope.$emit(Config.idleTabKeepAliveEvent);
             tempUserArray = [];
           }
 

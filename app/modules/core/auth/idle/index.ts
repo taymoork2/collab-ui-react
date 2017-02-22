@@ -7,6 +7,7 @@ export default angular
     require('modules/core/config/config'),
     require('modules/core/scripts/services/log'),
     require('modules/core/auth/auth'),
+    require('modules/core/scripts/services/storage'),
     FeatureToggleService,
     windowModule,
   ])

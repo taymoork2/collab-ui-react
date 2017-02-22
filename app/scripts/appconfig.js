@@ -1917,17 +1917,19 @@
             controller: 'servicePartnerCtrl',
             controllerAs: 'gsls',
           })
-          .state('gem.cbgBase', {
+          .state('gem.base', {
             abstract: true,
-            templateUrl: 'modules/gemini/callbackGroup/cbgBase.tpl.html',
-            controller: 'CbgHeaderCtrl',
-            controllerAs: 'header',
+            template: '<gem-base></gem-base>',
           })
-          .state('gem.cbgBase.cbgs', {
+          .state('gem.base.cbgs', {
             controller: 'CbgsCtrl',
             controllerAs: 'cbgsCtrl',
             url: '/services/gemcbg/:companyName/:customerId',
             templateUrl: 'modules/gemini/callbackGroup/cbgs.tpl.html',
+          })
+          .state('gem.base.tds', {
+            url: '/services/td/:companyName/:customerId',
+            template: '<gm-telephony-domains></gm-telephony-domains>',
           })
           .state('gem.modal', {
             abstract: true,

@@ -153,3 +153,16 @@
     white-space: normal;
   }
 }
+
+.gm-header {
+  .page-header__left {
+    flex-grow: 8;
+    width: 1%;
+
+    .page-header__title {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}

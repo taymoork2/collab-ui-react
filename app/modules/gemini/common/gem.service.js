@@ -11,10 +11,13 @@
       spData: UrlConfig.getGeminiUrl() + 'servicepartner',
       remedyTicket: UrlConfig.getGeminiUrl() + 'remedyTicket/customers/',
     };
+    var data = {};
     var service = {
       isAvops: isAvops,
       showError: showError,
       getSpData: getSpData,
+      setStorage: setStorage,
+      getStorage: getStorage,
       isServicePartner: isServicePartner,
       getCbgRemedyTicket: getCbgRemedyTicket,
     };
@@ -43,6 +46,15 @@
 
     function isServicePartner() {
       return Authinfo.getRoles().indexOf('PARTNER_ADMIN') > -1;
+    }
+
+    function setStorage(key, val) {
+      data[key] = val;
+      return data[key];
+    }
+
+    function getStorage(key) {
+      return data[key];
     }
 
     function extractData(response) {

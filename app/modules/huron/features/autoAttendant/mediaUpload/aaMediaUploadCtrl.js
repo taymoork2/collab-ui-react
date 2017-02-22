@@ -116,6 +116,7 @@
         modalCanceled = false;
         uploadServProm = AAMediaUploadService.upload(file);
         if (uploadServProm) {
+          $scope.mediaState.uploadInProgress = true;
           uploadServProm.then(uploadSuccess.bind(null, metrics), uploadError, uploadProgress).finally(cleanUp);
         } else {
           uploadError();
@@ -179,6 +180,7 @@
 
     //global media upload for save
     function cleanUp() {
+      $scope.mediaState.uploadInProgress = false;
       uploadServProm = undefined;
       AACommonService.setIsValid(uniqueCtrlIdentifier, true);
       AACommonService.setMediaUploadStatus(true);
@@ -236,8 +238,8 @@
     //the dialog modal user selected action option
     //else the dismiss is called and no action taken
     function modalAction() {
-      rollBack();
       modalCanceled = true;
+      rollBack();
     }
 
     function modalDelete() {
@@ -272,6 +274,12 @@
       if (uploadServProm) {
         uploadServProm.abort();
         uploadServProm = undefined;
+      } else {
+        //only delete the existing in the case of the media completing
+        //upload while the cancel modal is on the screen and then cancels
+        if (modalCanceled) {
+          AAMediaUploadService.httpDeleteRetry(vm.actionEntry.deleteUrl, 0);
+        }
       }
       if (angular.isDefined(vm.actionCopy)) {
         revert(vm.actionEntry);

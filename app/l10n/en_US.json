@@ -6,7 +6,8 @@
     "license": "By using Cisco Spark Services you accept the Terms of Service and Privacy Statement.",
     "tos": "Terms of Service",
     "privacy": "Privacy Statement",
-    "copyright": "Cisco and/or affiliates. All rights reserved."
+    "copyright": "Cisco and/or affiliates. All rights reserved.",
+    "expired": "Your session has expired due to inactivity."
   },
   "termsOfService": {
     "title": "Terms of Service",
@@ -3044,7 +3045,7 @@
     "langaugeAndVoiceHelp": "These selections apply to Say and Error Messages.",
     "initialAnnouncement": "Initial Announcement",
     "mediaUploadFileInfo": "Audio files must be in .wav format.  Recommended format is 8bit, 8Khz u-law.  Maximum message file size is 5MB.",
-    "queueMaxMusicSize": "Maximum Music file size is 120MB.",
+    "queueMaxMusicSize": "Maximum music file size is 120MB.",
     "initialHelpText": "Specify a message to play when the caller enters the queue.",
     "periodicHelpText": "Specify a message to play and how often to play it while the caller is waiting in the queue.",
     "periodicRestartMusicHelpText": "After this announcement, the music will restart from the beginning.",
@@ -3638,13 +3639,14 @@
       "textLink": "Accept Now"
     },
     "tos": {
-      "titleIntelepeer": "Intelepeer terms of service",
+      "title": "terms of service",
       "copyright": "Copyright 2017 Cisco Systems.  All rights reserved.",
       "info": "Cisco Spark is a collaboration application that provides messaging (IM), voice and video calling capabilities.",
       "noticeTitle": "IMPORTANT NOTICES AND DISCLAIMERS",
       "notice": "Please redirect to the following page and read the agreements from you carrier.  Your PSTN numbers will be released after you read and agree these agreements.",
       "confirmHeading": "Confirm the legal contact who accept this terms.",
       "agreeInstructions": "By clicking 'Agree' you have read and agree to comply with the terms and conditions.",
+      "agreeInstructionsCanadaThinkTel": "By clicking 'Agree' you have read, understood, accept, and agree to comply with the terms and conditions, including specifically, the limitations to the ThinkTel VoIP 9-1-1 emergency dialing services described in Appendix 1 of the terms and conditions.",
       "viewTos": "View Terms of Service"
     }
   },
@@ -3841,7 +3843,7 @@
       "skip": "Skip",
       "popover": "Please provide information on the legal contact who can sign the contract",
       "addrRetry": "Use a different address",
-      "addrFound": "This is the address found in the system.",
+      "addrFound": "We have verified the provided address as:",
       "error": {
         "areaCodes": "Failed to get area codes for selected state",
         "numbers": "Failed to get numbers for selected area code",
@@ -6608,6 +6610,24 @@
       "3008": "Failed to check callback group name",
       "3009": "The callback group name is duplicated",
       "genericError": "An unexpected error occurred. Please try again later."
+    },
+    "tds": {
+      "export": {
+        "csvFilename": "exported_telephonyDomain.csv",
+        "result": {
+          "success": "Telephony Domain list has been successfully exported.",
+          "failed": "There was an error exporting Telephony Domain list."
+        }
+      },
+      "field": {
+        "status": "Status",
+        "sites": "Site URL",
+        "bridgeSet": "Bridge Set",
+        "webDomain": "Web Domain",
+        "description": "Partner TD Name",
+        "totalSites": "Sites Assigned",
+        "telephonyDomains": "Telephony Domains"
+      }
     },
     "cbgs": {
       "overview": "Overview",

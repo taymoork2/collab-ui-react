@@ -38,7 +38,7 @@
 
     function validateAddress() {
       vm.loading = true;
-      PstnServiceAddressService.lookupAddress(vm.address)
+      PstnServiceAddressService.lookupAddressV2(vm.address, PstnSetup.getProviderId())
         .then(function (address) {
           if (address) {
             vm.address = address;
