@@ -348,7 +348,7 @@ require('./_wizard.scss');
     }
 
     function isCustomerPartner() {
-      return Authinfo.getRoles().indexOf('CUSTOMER_PARTNER') > -1;
+      return Authinfo.hasRole('CUSTOMER_PARTNER');
     }
 
     function isFromPartnerLaunch() {

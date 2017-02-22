@@ -41,11 +41,11 @@
     }
 
     function isAvops() {
-      return Authinfo.getRoles().indexOf('Full_Admin') > -1;
+      return Authinfo.hasRole('Full_Admin');
     }
 
     function isServicePartner() {
-      return Authinfo.getRoles().indexOf('PARTNER_ADMIN') > -1;
+      return Authinfo.hasRole('PARTNER_ADMIN');
     }
 
     function setStorage(key, val) {
