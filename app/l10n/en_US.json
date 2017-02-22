@@ -4521,7 +4521,8 @@
       "overallAverageUtilizationGraphError": "There was an error while loading Average/Peak utilization data",
       "overallClusterAvailabilityGraphError": "There was an error while loading cluster availability data",
       "overallTotalNumberOfCallsError": "There was an error while loading Total Number of calls",
-      "overallClientTypeGraphError":"There was an error while loading Client Type Data",
+      "overallClientTypeGraphError": "There was an error while loading Client Type Data",
+      "overallMeetingLocationGraphError": "There was an error while loading Meeting Location Data",
       "total_calls": "Total Calls",
       "onpremcalls": "Hosted On-Premises",
       "cloudcalls": "Overflowed to Cloud",
@@ -4551,7 +4552,10 @@
       "meetOnPrem": "Number of Meets on Premises",
       "clientTypes": "Client Types",
       "clientType": "Client Type",
-      "noOfMeet": "Number of Meetings"
+      "noOfMeet": "Number of Meetings",
+      "meetingLocationTitle": "Total Meetings by Location",
+      "meetings": "Meetings",
+      "location": "Location"
     },
     "serviceStatus": {
       "unknown": "Status unknown",

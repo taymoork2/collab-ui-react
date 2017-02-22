@@ -5,7 +5,7 @@
     .module('Mediafusion')
     .controller('MediaReportsController', MediaReportsController);
   /* @ngInject */
-  function MediaReportsController($q, $scope, $translate, $interval, MediaClusterServiceV2, UtilizationResourceGraphService, ParticipantDistributionResourceGraphService, MediaReportsService, Notification, MediaReportsDummyGraphService, MediaSneekPeekResourceService, CallVolumeResourceGraphService, AvailabilityResourceGraphService, ClientTypeAdoptionGraphService) {
+  function MediaReportsController($q, $scope, $translate, $interval, MediaClusterServiceV2, UtilizationResourceGraphService, MeetingLocationAdoptionGraphService, ParticipantDistributionResourceGraphService, MediaReportsService, Notification, MediaReportsDummyGraphService, MediaSneekPeekResourceService, CallVolumeResourceGraphService, AvailabilityResourceGraphService, ClientTypeAdoptionGraphService) {
     var vm = this;
     var interval = null;
     var deferred = $q.defer();
@@ -20,6 +20,7 @@
     vm.participantDistributionStatus = vm.REFRESH;
     vm.availabilityStatus = vm.REFRESH;
     vm.clientTypeStatus = vm.REFRESH;
+    vm.meetingLocationStatus = vm.REFRESH;
 
     vm.clusterFilter = null;
     vm.timeFilter = null;
@@ -78,6 +79,7 @@
 
     vm.setClientTypeData = setClientTypeData;
     vm.setClientTypeCard = setClientTypeCard;
+    vm.setMeetingLocationData = setMeetingLocationData;
 
     vm.showAvailabilityTooltip = false;
     vm.showHostedOnPremTooltip = false;
@@ -119,6 +121,7 @@
       //Adoption changes here
       setClientTypeData();
       setClientTypeCard();
+      setMeetingLocationData();
     }
 
     function clusterUpdate() {
@@ -398,6 +401,28 @@
       });
     }
 
+    function setMeetingLocationData() {
+      MediaReportsService.getMeetingLocationData(vm.timeSelected).then(function (response) {
+        if (_.isUndefined(response.graphData) || _.isUndefined(response.graphs) || response.graphData.length === 0 || response.graphs.length === 0) {
+          setDummyMeetingLocation();
+        } else {
+          deferred.promise.then(function () {
+            //set the client type graphs here
+            if (_.isUndefined(setMeetingLocationGraph(response))) {
+              setDummyMeetingLocation();
+            } else {
+              vm.meetingLocationStatus = vm.SET;
+            }
+          }, function () {
+            //map is nor formed so we shoud show dummy graphs
+            setDummyMeetingLocation();
+          });
+        }
+      }, function () {
+        setDummyMeetingLocation();
+      });
+    }
+
     function setAvailabilityData() {
       MediaReportsService.getAvailabilityData(vm.timeSelected, vm.clusterId).then(function (response) {
         if (_.isUndefined(response.data) || !_.isArray(response.data) || response.data.length === 0 || _.isUndefined(response.data[0].clusterCategories) || response.data[0].clusterCategories.length === 0) {
@@ -445,6 +470,11 @@
       return vm.clientTypeChart;
     }
 
+    function setMeetingLocationGraph(response) {
+      vm.meetingLocationChart = MeetingLocationAdoptionGraphService.setMeetingLocationGraph(response, vm.meetingLocationChart, vm.timeSelected);
+      return vm.meetingLocationChart;
+    }
+
     function setCallVolumeGraph(response) {
       vm.callVolumeChart = CallVolumeResourceGraphService.setCallVolumeGraph(response.graphData, vm.callVolumeChart, vm.clusterSelected, vm.timeSelected);
     }
@@ -478,6 +508,15 @@
         graphs: MediaReportsDummyGraphService.dummyClientTypeGraph()
       };
       setClientTypeGraph(response);
+    }
+
+    function setDummyMeetingLocation() {
+      vm.meetingLocationStatus = vm.EMPTY;
+      var response = {
+        graphData: MediaReportsDummyGraphService.dummyLineChartData(vm.timeSelected),
+        graphs: MediaReportsDummyGraphService.dummyMeetingLocationGraph()
+      };
+      setMeetingLocationGraph(response);
     }
 
     function setDummyCallVolume() {
