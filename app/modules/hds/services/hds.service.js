@@ -21,6 +21,7 @@
       addHdsTrialUsers: addHdsTrialUsers,
       removeHdsTrialUsers: removeHdsTrialUsers,
       replaceHdsTrialUsers: replaceHdsTrialUsers,
+      refreshEncryptionServerForTrialUsers: refreshEncryptionServerForTrialUsers,
     };
 
 
@@ -126,6 +127,11 @@
     function replaceHdsTrialUsers(oid, jsonMembers) {
       var serviceUrl = _.replace(UrlConfig.getScimUrl(oid) + '/' + trialUserGroupId, 'Users', 'Groups');
       return $http.patch(serviceUrl, jsonMembers).then(extractData);
+    }
+
+    function refreshEncryptionServerForTrialUsers(gid) {
+      var serviceUrl = UrlConfig.getHybridEncryptionServiceUrl() + '/flushTrialUserGroupCache/' + gid;
+      return $http.post(serviceUrl).then(extractData);
     }
 
     function extractData(response) {

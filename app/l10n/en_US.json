@@ -2467,6 +2467,7 @@
         "modalDesc": "Enter the email addresses of the users that will be assigned to the Hybrid Data Security Service.",
         "emailNotificationsWatermark": "Email addresses",
         "emailExample": "For example: john.doe@example.com",
+        "refreshOtherServices": "Refresh other services to avoid a 24 hours delay.",
         "modalSST": "Add Users"
       },
       "editTrialUsers": {

@@ -200,6 +200,12 @@
       integration: 'https://discovery.appstaging.ciscoccservice.com/discovery/apps/v1',
       prod: 'https://discovery.produs1.ciscoccservice.com/discovery/apps/v1',
     },
+    HybridEncryptionServiceUrl: {
+      dev: 'https://encryption-integration.wbx2.com/encryption/api/v1',
+      cfe: 'https://encryption-integration.wbx2.com/encryption/api/v1',
+      integration: 'https://encryption-integration.wbx2.com/encryption/api/v1',
+      prod: 'https://encryption-a.wbx2.com/encryption/api/v1',
+    },
 
     // urls same for all environments
 
