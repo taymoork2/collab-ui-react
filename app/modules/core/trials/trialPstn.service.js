@@ -66,7 +66,7 @@
     }
 
     function createPstnEntityV2(customerOrgId, customerName) {
-      checkForPstnSetup(customerOrgId)
+      return checkForPstnSetup(customerOrgId)
         .catch(function () {
           if (_trialData.details.pstnProvider.apiImplementation === "SWIVEL") {
             _trialData.details.pstnNumberInfo.numbers = _trialData.details.swivelNumbers;
