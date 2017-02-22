@@ -126,9 +126,9 @@
       _.forEach(graphs, function (value) {
         columnNames[value.valueField] = value.title + ' ' + vm.meetingLocation;
       });
-      for (var key in columnNames) {
+      _.forEach(columnNames, function (key) {
         exportFields.push(key);
-      }
+      });
       dateLabel = _.replace(dateLabel, /\s/g, '_');
       var ExportFileName = 'MediaService_MeetingLocation_' + '_' + dateLabel + '_' + new Date();
 
