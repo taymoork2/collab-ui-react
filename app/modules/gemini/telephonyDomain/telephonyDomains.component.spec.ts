@@ -48,6 +48,7 @@ describe('Component: gmTelephonyDomains', () => {
     spyOn(this.Notification, 'error');
     spyOn(this.Notification, 'errorResponse');
     spyOn(this.TelephonyDomainService, 'getTelephonyDomains').and.returnValue(this.$q.resolve());
+    spyOn(this.TelephonyDomainService, 'telephonyDomainsExportCSV').and.returnValue(this.$q.resolve());
   }
 
   function initComponent() {
@@ -100,6 +101,28 @@ describe('Component: gmTelephonyDomains', () => {
       this.controller.filterList('Test12');
       this.$timeout.flush();
       expect(this.controller.gridData.length).toBe(1);
+    });
+  });
+
+  describe('export telephony Domains list', () => {
+    it('should show notification when export TD list successfully', function() {
+      let mockData = this.preData.common;
+      mockData.content.data.body = this.telephonyDomains;
+
+      this.TelephonyDomainService.telephonyDomainsExportCSV.and.returnValue(this.$q.resolve(mockData));
+      initComponent.call(this);
+      this.controller.exportCSV().then((res) => {
+        expect(this.Notification.success).toHaveBeenCalled();
+        expect(res.length).toBe(3);
+      });
+    });
+
+    it('should show notification when export TD list failed', function() {
+      this.TelephonyDomainService.telephonyDomainsExportCSV.and.returnValue(this.$q.reject({ status: 404 }));
+      initComponent.call(this);
+      this.controller.exportCSV().then(() => {
+        expect(this.Notification.errorResponse).toHaveBeenCalled();
+      });
     });
   });
 });

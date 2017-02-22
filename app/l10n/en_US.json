@@ -6612,8 +6612,16 @@
       "genericError": "An unexpected error occurred. Please try again later."
     },
     "tds": {
+      "export": {
+        "csvFilename": "exported_telephonyDomain.csv",
+        "result": {
+          "success": "Telephony Domain list has been successfully exported.",
+          "failed": "There was an error exporting Telephony Domain list."
+        }
+      },
       "field": {
         "status": "Status",
+        "sites": "Site URL",
         "bridgeSet": "Bridge Set",
         "webDomain": "Web Domain",
         "description": "Partner TD Name",
