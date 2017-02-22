@@ -12,8 +12,7 @@
     "hostSerial": "070EC9D0",
     "alarms": [],
     "runningVersion": "8.7-1.0.321168",
-    "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_mgmt",
-    "registered": true
+    "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_mgmt"
   }, {
     "url": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/89f3fc3a-3498-11e6-8de3-005056b111e6/connectors/c_ucmc@070EC9D0",
     "id": "c_ucmc@070EC9D0",
@@ -24,8 +23,7 @@
     "hostSerial": "070EC9D0",
     "alarms": [],
     "runningVersion": "8.7-1.0.2265",
-    "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_ucmc",
-    "registered": true
+    "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_ucmc"
   }, {
     "url": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/89f3fc3a-3498-11e6-8de3-005056b111e6/connectors/c_cal@070EC9D0",
     "id": "c_cal@070EC9D0",
@@ -36,8 +34,7 @@
     "hostSerial": "070EC9D0",
     "alarms": [],
     "runningVersion": "8.7-1.0.3208",
-    "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_cal",
-    "registered": true
+    "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_cal"
   }],
   "releaseChannel": "GA",
   "provisioning": [{
@@ -59,7 +56,6 @@
     "availableVersion": "8.7-1.0.2265",
     "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_ucmc"
   }],
-  "registered": true,
   "targetType": "c_mgmt",
   "upgradeScheduleUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/89f3fc3a-3498-11e6-8de3-005056b111e6/upgradeSchedule",
   "upgradeSchedule": {
@@ -112,8 +108,7 @@
     "hostSerial": "0379F08E",
     "alarms": [],
     "runningVersion": "8.7-1.0.321168",
-    "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_mgmt",
-    "registered": true
+    "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_mgmt"
   }, {
     "url": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/a31a92df-4e16-4a7e-a1c2-30405b512350/connectors/c_cal@0D09EDC5",
     "id": "c_cal@0D09EDC5",
@@ -124,8 +119,7 @@
     "hostSerial": "0D09EDC5",
     "alarms": [],
     "runningVersion": "8.7-1.0.3250",
-    "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_cal",
-    "registered": true
+    "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_cal"
   }, {
     "url": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/a31a92df-4e16-4a7e-a1c2-30405b512350/connectors/c_mgmt@0D10F849",
     "id": "c_mgmt@0D10F849",
@@ -136,8 +130,7 @@
     "hostSerial": "0D10F849",
     "alarms": [],
     "runningVersion": "8.7-1.0.321168",
-    "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_mgmt",
-    "registered": true
+    "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_mgmt"
   }, {
     "url": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/a31a92df-4e16-4a7e-a1c2-30405b512350/connectors/c_cal@0D10F849",
     "id": "c_cal@0D10F849",
@@ -148,8 +141,7 @@
     "hostSerial": "0D10F849",
     "alarms": [],
     "runningVersion": "8.7-1.0.3250",
-    "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_cal",
-    "registered": true
+    "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_cal"
   }, {
     "url": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/a31a92df-4e16-4a7e-a1c2-30405b512350/connectors/c_mgmt@0D09EDC5",
     "id": "c_mgmt@0D09EDC5",
@@ -160,8 +152,7 @@
     "hostSerial": "0D09EDC5",
     "alarms": [],
     "runningVersion": "8.7-1.0.321168",
-    "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_mgmt",
-    "registered": true
+    "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_mgmt"
   }, {
     "url": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/a31a92df-4e16-4a7e-a1c2-30405b512350/connectors/c_cal@0379F08E",
     "id": "c_cal@0379F08E",
@@ -172,8 +163,7 @@
     "hostSerial": "0379F08E",
     "alarms": [],
     "runningVersion": "8.7-1.0.3250",
-    "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_cal",
-    "registered": true
+    "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_cal"
   }, {
     "url": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/a31a92df-4e16-4a7e-a1c2-30405b512350/connectors/c_cal@07A00089",
     "id": "c_cal@07A00089",
@@ -184,8 +174,7 @@
     "hostSerial": "07A00089",
     "alarms": [],
     "runningVersion": "8.7-1.0.3250",
-    "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_cal",
-    "registered": true
+    "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_cal"
   }, {
     "url": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/a31a92df-4e16-4a7e-a1c2-30405b512350/connectors/c_mgmt@07A00089",
     "id": "c_mgmt@07A00089",
@@ -196,8 +185,7 @@
     "hostSerial": "07A00089",
     "alarms": [],
     "runningVersion": "8.7-1.0.321168",
-    "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_mgmt",
-    "registered": true
+    "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_mgmt"
   }],
   "releaseChannel": "GA",
   "provisioning": [{
@@ -213,7 +201,6 @@
     "availableVersion": "8.7-1.0.3251",
     "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_cal"
   }],
-  "registered": true,
   "targetType": "c_mgmt",
   "upgradeScheduleUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/a31a92df-4e16-4a7e-a1c2-30405b512350/upgradeSchedule",
   "upgradeSchedule": {

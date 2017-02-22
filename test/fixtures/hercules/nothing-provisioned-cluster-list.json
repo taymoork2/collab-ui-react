@@ -5,7 +5,6 @@
   "connectors": [],
   "releaseChannel": "GA",
   "provisioning": [],
-  "registered": true,
   "targetType": "c_mgmt",
   "upgradeScheduleUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/89f3fc3a-3498-11e6-8de3-005056b111e6/upgradeSchedule",
   "upgradeSchedule": {
@@ -27,7 +26,6 @@
   "connectors": [],
   "releaseChannel": "GA",
   "provisioning": [],
-  "registered": true,
   "targetType": "c_mgmt",
   "upgradeScheduleUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/a31a92df-4e16-4a7e-a1c2-30405b512350/upgradeSchedule",
   "upgradeSchedule": {
