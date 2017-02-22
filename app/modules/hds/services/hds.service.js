@@ -61,11 +61,7 @@
     }
 
     function getHdsTrialUserGroupID() {
-      getOrgHdsInfo();
-      return trialUserGroupId;
-    }
-
-    function getOrgHdsInfo() {
+      var deferred = $q.defer();
       Orgservice.getOrg(function (data, status) {
         if (data.success || status === 200) {
           var altHdsServers = data.orgSettings.altHdsServers;
@@ -76,9 +72,15 @@
                 trialUserGroupId = server.groupId;
               }
             });
+            deferred.resolve(trialUserGroupId);
+          } else {
+            deferred.reject(data);
           }
+        } else {
+          deferred.reject(data);
         }
       });
+      return deferred.promise;
     }
 
     function queryUser(oid, email) {
@@ -97,26 +99,17 @@
       return $http.get(serviceUrl).then(extractData);
     }
 
-    function getHdsTrialUsers(oid) {
-      if (trialUserGroupId.length < 1) {
-        getOrgHdsInfo();
-      }
-      var serviceUrl = _.replace(UrlConfig.getScimUrl(oid) + '/' + trialUserGroupId, 'Users', 'Groups');
+    function getHdsTrialUsers(oid, gid) {
+      var serviceUrl = _.replace(UrlConfig.getScimUrl(oid) + '/' + gid, 'Users', 'Groups');
       return $http.get(serviceUrl).then(extractData);
     }
 
     function addHdsTrialUsers(oid, jsonMembers) {
-      if (trialUserGroupId.length < 1) {
-        getOrgHdsInfo();
-      }
       var serviceUrl = _.replace(UrlConfig.getScimUrl(oid) + '/' + trialUserGroupId, 'Users', 'Groups');
       return $http.patch(serviceUrl, jsonMembers).then(extractData);
     }
 
     function removeHdsTrialUsers(oid, uids) {
-      if (trialUserGroupId.length < 1) {
-        getOrgHdsInfo();
-      }
       var serviceUrl = _.replace(UrlConfig.getScimUrl(oid) + '/' + trialUserGroupId, 'Users', 'Groups');
       var json = {
         schemas: ['urn:scim:schemas:core:1.0', 'urn:scim:schemas:extension:cisco:commonidentity:1.0'],
@@ -131,9 +124,6 @@
     }
 
     function replaceHdsTrialUsers(oid, jsonMembers) {
-      if (trialUserGroupId.length < 1) {
-        getOrgHdsInfo();
-      }
       var serviceUrl = _.replace(UrlConfig.getScimUrl(oid) + '/' + trialUserGroupId, 'Users', 'Groups');
       return $http.patch(serviceUrl, jsonMembers).then(extractData);
     }
