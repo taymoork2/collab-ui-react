@@ -148,6 +148,9 @@ require('./_support.scss');
     };
 
     var getOrg = function () {
+      var params = {
+        basicInfo: true,
+      };
       Orgservice.getOrg(function (data, status) {
         if (data.success) {
           var settings = data.orgSettings;
@@ -163,7 +166,7 @@ require('./_support.scss');
         } else {
           Log.debug('Get org failed. Status: ' + status);
         }
-      });
+      }, null, params);
     };
 
     //Retrieving logs for user

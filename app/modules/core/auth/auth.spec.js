@@ -519,7 +519,7 @@ describe('Auth Service', function () {
           });
 
         $httpBackend
-          .expectGET('path/organizations/1337?disableCache=true')
+          .expectGET('path/organizations/1337?disableCache=true&basicInfo=true')
           .respond(200, this.orgInfo.orgSettingsWithDomain);
 
       });
@@ -573,7 +573,7 @@ describe('Auth Service', function () {
           });
 
         $httpBackend
-          .expectGET('path/organizations/1337?disableCache=true')
+          .expectGET('path/organizations/1337?disableCache=true&basicInfo=true')
           .respond(200, this.orgInfo.orgSettingsWithDomain);
 
         $httpBackend
@@ -633,7 +633,7 @@ describe('Auth Service', function () {
           });
 
         $httpBackend
-          .expectGET('path/organizations/1337?disableCache=true')
+          .expectGET('path/organizations/1337?disableCache=true&basicInfo=true')
           .respond(200, this.orgInfo.orgSettingsWithDomain);
 
         $httpBackend
@@ -673,7 +673,7 @@ describe('Auth Service', function () {
         });
 
       $httpBackend
-        .expectGET('path/organizations/1337?disableCache=true')
+        .expectGET('path/organizations/1337?disableCache=true&basicInfo=true')
         .respond(200, this.orgInfo.orgSettingsWithDomain);
 
       $httpBackend
@@ -708,7 +708,7 @@ describe('Auth Service', function () {
         });
 
       $httpBackend
-        .expectGET('path/organizations/1337?disableCache=true')
+        .expectGET('path/organizations/1337?disableCache=true&basicInfo=true')
         .respond(200, this.orgInfo.orgSettingsWithDomain);
 
       $httpBackend
@@ -749,7 +749,7 @@ describe('Auth Service', function () {
         });
 
       $httpBackend
-        .expectGET('path/organizations/1337?disableCache=true')
+        .expectGET('path/organizations/1337?disableCache=true&basicInfo=true')
         .respond(200, this.orgInfo.orgSettingsWithDomain);
 
       $httpBackend
@@ -789,7 +789,7 @@ describe('Auth Service', function () {
         });
 
       $httpBackend
-        .expectGET('path/organizations/1337?disableCache=true')
+        .expectGET('path/organizations/1337?disableCache=true&basicInfo=true')
         .respond(200, this.orgInfo.orgSettingsWithDomain);
 
       $httpBackend

@@ -863,8 +863,10 @@
     function setDeviceModal() {
       var overrideTestOrg = vm.atlasTrialsShipDevicesEnabled;
       var isTestOrg = false;
-
-      Orgservice.getAdminOrg(_.noop).then(function (results) {
+      var params = {
+        basicInfo: true,
+      };
+      Orgservice.getAdminOrg(_.noop, null, params).then(function (results) {
         if (results.data.success) {
           isTestOrg = results.data.isTestOrg;
         }

@@ -56,16 +56,22 @@
 
     return service;
 
-    function getOrg(callback, orgId, disableCache) {
+    function getOrg(callback, orgId, params) {
       if (!orgId) {
         orgId = Authinfo.getOrgId();
       }
-      var scomUrl = UrlConfig.getScomUrl() + '/' + orgId;
 
-      if (disableCache) {
-        scomUrl = scomUrl + '?disableCache=true';
+      if ((!_.isUndefined(params) && !_.isObject(params)) || !_.isFunction(callback)) {
+        return $q.reject('Invalid parameters passed into getOrg service call');
       }
-      return $http.get(scomUrl)
+
+      var scomUrl = UrlConfig.getScomUrl() + '/' + orgId;
+      var config = {};
+      if (_.isObject(params)) {
+        config.params = params;
+      }
+
+      return $http.get(scomUrl, config)
         .success(function (data, status) {
           data = _.isObject(data) ? data : {};
           data.success = true;
@@ -88,7 +94,7 @@
         });
     }
 
-    function getAdminOrg(callback, oid, disableCache) {
+    function getAdminOrg(callback, oid, params) {
       var adminUrl = null;
       if (oid) {
         adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + oid;
@@ -96,12 +102,17 @@
         adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId();
       }
 
-      var cacheDisabled = !!disableCache;
-      return $http.get(adminUrl, {
-        params: {
-          disableCache: cacheDisabled,
-        },
-      })
+      var config = {};
+      var defaultParams = {
+        disableCache: false,
+      };
+      config.params = _.extend(defaultParams, params);
+
+      if ((!_.isUndefined(params) && !_.isObject(params)) || !_.isFunction(callback)) {
+        return $q.reject('Invalid parameters passed into getOrg service call');
+      }
+
+      return $http.get(adminUrl, config)
         .success(function (data, status) {
           data = _.isObject(data) ? data : {};
           data.success = true;
@@ -117,8 +128,8 @@
         });
     }
 
-    function getAdminOrgAsPromise(oid, disableCache) {
-      return getAdminOrg(_.noop, oid, disableCache)
+    function getAdminOrgAsPromise(oid, params) {
+      return getAdminOrg(_.noop, oid, params)
         .catch(function (data, status) {
           data = _.extend({}, data, {
             success: false,
@@ -266,7 +277,10 @@
         propertySaveTimeStamp: new Date(),
         setting: _.clone(settings),
       });
-      return getOrg(_.noop, orgId, true) //get retrieves the pushed value above, no need to re assign to orgSettings
+      var params = {
+        disableCache: true,
+      };
+      return getOrg(_.noop, orgId, params) //get retrieves the pushed value above, no need to re assign to orgSettings
         .then(function (response) {
           var orgSettings = _.get(response, 'data.orgSettings', {});
 

@@ -67,9 +67,13 @@ require('./_overview.scss');
           });
           resizeNotifications();
         } else {
-          Log.error("Error in GET service acknowledged status");
+          Log.error('Error in GET service acknowledged status');
         }
       });
+      var params = {
+        basicInfo: true,
+        disableCache: true,
+      };
       Orgservice.getOrg(function (data, status) {
         if (status === 200) {
           vm.orgData = data;
@@ -99,7 +103,7 @@ require('./_overview.scss');
           Log.debug('Get existing org failed. Status: ' + status);
           Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
         }
-      }, Authinfo.getOrgId(), true);
+      }, Authinfo.getOrgId(), params);
       Orgservice.getAdminOrgUsage()
         .then(function (response) {
           var sharedDevicesUsage = -1;
@@ -228,7 +232,11 @@ require('./_overview.scss');
 
     SunlightReportService.getOverviewData();
 
-    Orgservice.getAdminOrg(_.partial(forwardEvent, 'orgEventHandler'), false, true);
+    var params = {
+      disableCache: true,
+      basicInfo: true,
+    };
+    Orgservice.getAdminOrg(_.partial(forwardEvent, 'orgEventHandler'), false, params);
 
     Orgservice.getUnlicensedUsers(_.partial(forwardEvent, 'unlicensedUsersHandler'));
 
@@ -243,7 +251,11 @@ require('./_overview.scss');
     });
 
     $rootScope.$watch('ssoEnabled', function () {
-      Orgservice.getAdminOrg(_.partial(forwardEvent, 'orgEventHandler'), false, true);
+      var params = {
+        disableCache: true,
+        basicInfo: true,
+      };
+      Orgservice.getAdminOrg(_.partial(forwardEvent, 'orgEventHandler'), false, params);
     });
   }
 })();

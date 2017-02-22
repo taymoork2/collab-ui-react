@@ -2086,7 +2086,10 @@
               identityCustomer: /* @ngInject */ function ($stateParams, $q, Orgservice) {
                 var defer = $q.defer();
                 if ($stateParams.currentCustomer) {
-                  Orgservice.getOrg(orgCallback, $stateParams.currentCustomer.customerOrgId);
+                  var params = {
+                    basicInfo: true,
+                  };
+                  Orgservice.getOrg(orgCallback, $stateParams.currentCustomer.customerOrgId, params);
                 }
 
                 return defer.promise;

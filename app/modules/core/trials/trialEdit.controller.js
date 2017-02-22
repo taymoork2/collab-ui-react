@@ -492,7 +492,7 @@
         ftCareTrials: FeatureToggleService.atlasCareTrialsGetStatus(),
         ftAdvanceCareTrials: FeatureToggleService.atlasCareInboundTrialsGetStatus(),
         ftShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus(),  //TODO add true for shipping testing.
-        adminOrg: Orgservice.getAdminOrgAsPromise().catch(function (err) {
+        adminOrg: Orgservice.getAdminOrgAsPromise(null, null, true).catch(function (err) {
           getAdminOrgError = true;
           return err;
         }),
