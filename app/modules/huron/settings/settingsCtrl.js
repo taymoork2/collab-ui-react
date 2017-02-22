@@ -169,11 +169,14 @@
       vm.isTerminusCustomer = true;
     });
 
+    var params = {
+      basicInfo: true,
+    };
     Orgservice.getOrg(function (data) {
       if (data.countryCode) {
         PstnSetup.setCountryCode(data.countryCode);
       }
-    });
+    }, null, params);
 
     vm.validations = {
       greaterThan: function (viewValue, modelValue, scope) {

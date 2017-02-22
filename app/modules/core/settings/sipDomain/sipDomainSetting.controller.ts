@@ -361,6 +361,10 @@ export class SipDomainSettingController {
   }
 
   private loadSubdomains() {
+    let params = {
+      basicInfo: true,
+      disableCache: true,
+    };
     this.Orgservice.getOrg((data, status) => {
       let displayName = '';
       let sparkDomainStr = this.UrlConfig.getSparkDomainCheckUrl();
@@ -380,7 +384,7 @@ export class SipDomainSettingController {
       if (this.Config.isE2E()) {
         this.$scope.$emit(this.DISMISS_DISABLE, false);
       }
-    }, false, true);
+    }, false, params);
   }
 
 }

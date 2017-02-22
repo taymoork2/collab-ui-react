@@ -135,10 +135,12 @@ describe('orgService', function () {
   });
 
   it('should successfully get an admin organization for a given orgId with disableCache', function () {
-    var disableCache = true;
+    var params = {
+      disableCache: true,
+    };
     var callback = sinon.stub();
     httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "?disableCache=true").respond(200, {});
-    Orgservice.getAdminOrg(callback, Authinfo.getOrgId(), disableCache);
+    Orgservice.getAdminOrg(callback, Authinfo.getOrgId(), params);
     httpBackend.flush();
     expect(callback.callCount).toBe(1);
     expect(callback.args[0][0].success).toBe(true);

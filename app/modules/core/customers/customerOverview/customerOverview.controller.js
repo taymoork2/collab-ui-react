@@ -365,14 +365,19 @@ require('./_customer-overview.scss');
       return vm.customerName === Authinfo.getOrgName();
     }
 
+    // Refactor this out; we have multiple places where we are making getOrg calls for this same 'isTestOrg' flag.
+    // Preferably call another service for this, or call once and store into universal data object
     function getIsTestOrg() {
+      var params = {
+        basicInfo: true,
+      };
       Orgservice.getOrg(function (data, status) {
         if (data.success) {
           vm.isTest = data.isTestOrg;
         } else {
           Log.error('Query org info failed. Status: ' + status);
         }
-      }, vm.customerOrgId);
+      }, vm.customerOrgId, params);
     }
 
     function deleteTestOrg() {
