@@ -9,7 +9,7 @@ module.exports = {
   rules: {
     // override (temporarily) some rules from the "airbnb-base/legacy" configuration
     'camelcase': 0,
-    'comma-dangle': ['error', {
+    'comma-dangle': [2, {
       arrays: 'always-multiline',
       objects: 'always-multiline',
       imports: 'always-multiline',
@@ -20,7 +20,7 @@ module.exports = {
     'eqeqeq': 0,
     'func-names': 0,
     'global-require': 0,
-    'linebreak-style': ['error', process.platform === 'win32' ? 'windows' : 'unix'],
+    'linebreak-style': [2, process.platform === 'win32' ? 'windows' : 'unix'],
     'max-len': 0,
     'no-bitwise': 0,
     'no-console': 0,
@@ -35,9 +35,8 @@ module.exports = {
     'no-use-before-define': 0,
     'operator-assignment': 0,
     'padded-blocks': 0,
-    'quote-props': 0,
-    'quotes': 0,
-    'spaced-comment': 0,
+    'quote-props': [2, 'consistent-as-needed'],
+    'quotes': [2, 'single', { avoidEscape: true }],
     'vars-on-top': 0,
     // activate rules from the lodash plugin
     'lodash/callback-binding': 2,
