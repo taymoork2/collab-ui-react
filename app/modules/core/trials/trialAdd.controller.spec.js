@@ -35,6 +35,7 @@ describe('Controller: TrialAddCtrl', function () {
     addContextSpy = spyOn(TrialContextService, 'addService').and.returnValue($q.resolve());
 
     spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.resolve(true));
+    spyOn(FeatureToggleService, 'atlasCareInboundTrialsGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'atlasContextServiceTrialsGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'atlasTrialsShipDevicesGetStatus').and.returnValue($q.resolve(false));
     spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.resolve(true));
@@ -390,13 +391,14 @@ describe('Controller: TrialAddCtrl', function () {
     });
   });
 
-  describe('Care offer trial', function () {
+  describe('Care Basic and Advance offer trial', function () {
 
     describe('primary behaviors:', function () {
       it('Message, Call and Care are enabled by default', function () {
         expect(controller.callTrial.enabled).toBeTruthy();
         expect(controller.messageTrial.enabled).toBeTruthy();
         expect(controller.careTrial.enabled).toBeTruthy();
+        expect(controller.advanceCareTrial.enabled).toBeTruthy();
       });
     });
 
@@ -409,11 +411,13 @@ describe('Controller: TrialAddCtrl', function () {
           controller.messageTrial.enabled = false;
           expect(controller.messageOfferDisabledExpression()).toBeTruthy();
           expect(controller.careTrial.enabled).toBeFalsy();
+          expect(controller.advanceCareTrial.enabled).toBeFalsy();
 
           controller.messageTrial.enabled = true;
           expect(controller.messageOfferDisabledExpression()).toBeFalsy();
           //Care is a choice to enable/disable when Message is enabled.
           expect(controller.careTrial.enabled).toBeFalsy();
+          expect(controller.advanceCareTrial.enabled).toBeFalsy();
         });
       });
 
@@ -422,11 +426,13 @@ describe('Controller: TrialAddCtrl', function () {
           controller.callTrial.enabled = false;
           expect(controller.callOfferDisabledExpression()).toBeTruthy();
           expect(controller.careTrial.enabled).toBeFalsy();
+          expect(controller.advanceCareTrial.enabled).toBeFalsy();
 
           controller.callTrial.enabled = true;
           expect(controller.callOfferDisabledExpression()).toBeFalsy();
           //Care is a choice to enable/disable when Call is enabled.
           expect(controller.careTrial.enabled).toBeFalsy();
+          expect(controller.advanceCareTrial.enabled).toBeFalsy();
         });
       });
 
@@ -453,6 +459,29 @@ describe('Controller: TrialAddCtrl', function () {
         });
       });
 
+      describe('advanceCareLicenseInputDisabledExpression:', function () {
+        it('advance care license count disabled expression works correctly.', function () {
+          controller.advanceCareTrial.enabled = true;
+          controller.advanceCareTrial.details.quantity = CARE_LICENSE_COUNT;
+          expect(controller.advanceCareLicenseInputDisabledExpression()).toBeFalsy();
+          expect(controller.advanceCareTrial.details.quantity).toEqual(CARE_LICENSE_COUNT);
+        });
+
+        it('advance care license count resets to 0 when disabled.', function () {
+          controller.advanceCareTrial.details.quantity = CARE_LICENSE_COUNT;
+          controller.advanceCareTrial.enabled = false;
+          expect(controller.advanceCareLicenseInputDisabledExpression()).toBeTruthy();
+          expect(controller.advanceCareTrial.details.quantity).toEqual(0);
+        });
+
+        it('advance care license count shows default value when enabled.', function () {
+          controller.advanceCareTrial.details.quantity = 0;
+          controller.advanceCareTrial.enabled = true;
+          expect(controller.advanceCareLicenseInputDisabledExpression()).toBeFalsy();
+          expect(controller.advanceCareTrial.details.quantity).toEqual(CARE_LICENSE_COUNT_DEFAULT);
+        });
+      });
+
       describe('validateCareLicense:', function () {
         it('care license validation is not used when care is not selected.', function () {
           controller.careTrial.enabled = false;
@@ -465,10 +494,49 @@ describe('Controller: TrialAddCtrl', function () {
           expect(controller.validateCareLicense(CARE_LICENSE_COUNT, CARE_LICENSE_COUNT)).toBeTruthy();
         });
 
+        it('care license validation allows value between 0 and 50.', function () {
+          controller.details.licenseCount = 100;
+          controller.careTrial.enabled = true;
+
+          expect(controller.validateCareLicense(-1, -1)).toBeFalsy();
+          expect(controller.validateCareLicense(1, 1)).toBeTruthy();
+          expect(controller.validateCareLicense(50, 50)).toBeTruthy();
+          expect(controller.validateCareLicense(51, 51)).toBeFalsy();
+        });
+
         it('care license validation disallows value greater than total users.', function () {
           controller.details.licenseCount = 10;
           controller.careTrial.enabled = true;
           expect(controller.validateCareLicense(CARE_LICENSE_COUNT + 1, CARE_LICENSE_COUNT + 1)).toBeFalsy();
+        });
+      });
+
+      describe('validateAdvanceCareLicense:', function () {
+        it('care license validation is not used when care is not selected.', function () {
+          controller.advanceCareTrial.enabled = false;
+          expect(controller.validateAdvanceCareLicense()).toBeTruthy();
+        });
+
+        it('care license validation allows value between 1 and 50.', function () {
+          controller.details.licenseCount = 100;
+          controller.advanceCareTrial.enabled = true;
+          expect(controller.validateAdvanceCareLicense(CARE_LICENSE_COUNT, CARE_LICENSE_COUNT)).toBeTruthy();
+        });
+
+        it('care license validation allows value between 0 and 50.', function () {
+          controller.details.licenseCount = 100;
+          controller.advanceCareTrial.enabled = true;
+
+          expect(controller.validateAdvanceCareLicense(-1, -1)).toBeFalsy();
+          expect(controller.validateAdvanceCareLicense(1, 1)).toBeTruthy();
+          expect(controller.validateAdvanceCareLicense(50, 50)).toBeTruthy();
+          expect(controller.validateAdvanceCareLicense(51, 51)).toBeFalsy();
+        });
+
+        it('care license validation disallows value greater than total users.', function () {
+          controller.details.licenseCount = 10;
+          controller.advanceCareTrial.enabled = true;
+          expect(controller.validateAdvanceCareLicense(CARE_LICENSE_COUNT + 1, CARE_LICENSE_COUNT + 1)).toBeFalsy();
         });
       });
 
@@ -480,10 +548,46 @@ describe('Controller: TrialAddCtrl', function () {
           expect(controller.careLicenseCountLessThanTotalCount()).toBeFalsy();
         });
 
+        it('Total license count cannot be lesser than Advance Care license count.', function () {
+          controller.details.licenseCount = 10;
+          controller.advanceCareTrial.enabled = true;
+          controller.advanceCareTrial.details.quantity = 20;
+          expect(controller.careLicenseCountLessThanTotalCount()).toBeFalsy();
+        });
+
+        it('Total license count cannot be lesser than Basic Care plus Advance Care license count.', function () {
+          controller.details.licenseCount = 20;
+          controller.advanceCareTrial.enabled = true;
+          controller.advanceCareTrial.details.quantity = 20;
+          controller.careTrial.enabled = true;
+          controller.careTrial.details.quantity = 20;
+          expect(controller.careLicenseCountLessThanTotalCount()).toBeFalsy();
+        });
+
+        it('Total license validation with only Care is applicable only when careTrial is enabled.', function () {
+          controller.details.licenseCount = 10;
+          controller.careTrial.enabled = false;
+          controller.careTrial.details.quantity = 20;
+          controller.advanceCareTrial.enabled = false;
+          controller.advanceCareTrial.details.quantity = 0;
+          expect(controller.careLicenseCountLessThanTotalCount()).toBeTruthy();
+        });
+
+        it('Total license validation with only Advance Care is applicable only when advanceCareTrial is enabled.', function () {
+          controller.details.licenseCount = 10;
+          controller.advanceCareTrial.enabled = false;
+          controller.advanceCareTrial.details.quantity = 20;
+          controller.careTrial.enabled = false;
+          controller.careTrial.details.quantity = 20;
+          expect(controller.careLicenseCountLessThanTotalCount()).toBeTruthy();
+        });
+
         it('Total license validation with Care is applicable only when careTrial is enabled.', function () {
           controller.details.licenseCount = 10;
           controller.careTrial.enabled = false;
           controller.careTrial.details.quantity = 20;
+          controller.advanceCareTrial.enabled = false;
+          controller.advanceCareTrial.details.quantity = 20;
           expect(controller.careLicenseCountLessThanTotalCount()).toBeTruthy();
         });
       });
