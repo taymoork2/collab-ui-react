@@ -4397,7 +4397,15 @@
       "sparkCallHelp": "In addition to calling with Spark and SIP addresses, if you have set up your organization’s PSTN provider this place will be able to call to/from landlines and mobile phones.",
       "sparkCallConnect": "Spark + Call Service Connect (Hybrid)",
       "sparkCallConnectHelp": "This place will be connected to your existing on-premises phone infrastructure. Therefore, it can call on-premises devices directly and leverage any existing PSTN services, if they are available",
-      "servicesSaved": "Services updated successfully"
+      "servicesSaved": "Services updated successfully",
+      "calendar": "Calendar",
+      "toggleCalendar": "Turn on calendar service to enable One Button To Push for this place",
+      "calendarStatusOn": "Status: on",
+      "exchangeTitle": "Exchange calendar",
+      "exchangeHelp": "This is enabling exchange calendar",
+      "googleTitle": "Google calendar",
+      "googleHelp": "This is enabling google calendar",
+      "calendarEmail": "Email address of the calendar"
     },
     "sparkCallConnect": {
       "editSettingsTitle": "Edit the settings for Hybrid Call Service Connect"

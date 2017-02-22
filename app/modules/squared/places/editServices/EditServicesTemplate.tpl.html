@@ -47,12 +47,12 @@
       <div class="callServiceRow" ng-if="editServices.sparkCalendarPlaceEnabled">
         <div class="callServiceTitle">
           <i class="icon icon-circle-call modal-icon-flex-row icon-lg"></i>
-          <h3 translate="Calendar"></h3>
+          <h3 translate="addDeviceWizard.editServices.calendar"></h3>
         </div>
         <div class="cs-radio-group callServiceControls">
-          <span>Calendar service enables One Button To Push for places</span>
-          <cs-toggle-switch ng-model="editServices.enableCalService" toggle-id="calService" name="toggleExample"></cs-toggle-switch>
-          <span>Status: off</span>
+          <p translate="addDeviceWizard.editServices.toggleCalendar"></p>
+          <cs-toggle-switch ng-model="editServices.enableCalService" toggle-id="calService" name="toggleExample" size="small"></cs-toggle-switch>
+          <p ng-if="editServices.enableCalService" translate="addDeviceWizard.editServices.calendarStatusOn"></p>
         </div>
       </div>
     </form>

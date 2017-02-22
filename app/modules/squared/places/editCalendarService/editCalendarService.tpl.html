@@ -1,77 +1,83 @@
 <div class="modal-header">
   <button type="button" class="close" ng-click="editCalendarService.close()">
   </button>
-  <!-- <h3 class="modal-title" translate="{{editCalendarService.title}}"></h3> -->
   <h3 class="modal-title" translate="{{editCalendarService.title}}"></h3>
 </div>
 <div class="modal-body">
   <form name="placesEditCalServices" class="chooseServiceForm" onsubmit="$('#next-button').click()">
-    <h4 translate="Which calendar provider do you want to use?"></h4>
     <div class="callServiceRow">
-      <!-- <div class="callServiceTitle">
-        <i class="icon icon-circle-calendar modal-icon-flex-row icon-lg"></i>
-        <h3 translate="calendar"></h3>
-      </div> -->
-      <div class="cs-radio-group calendarServiceControls">
-        <input
-          ng-if="editCalendarService.getShowCalService()"
-          cs-input
-          type="radio"
-          ng-model="editCalendarService.calService"
-          id="service1"
-          name="service"
-          value="squared-fusion-cal"
-          cs-input-label="{{'Exchange calendar' | translate}}"
-          cs-input-help-text="{{'This is enabling exchange calendar' | translate}}">
-        <input
-          ng-if="editCalendarService.getShowGCalService()"
-          cs-input
-          type="radio"
-          ng-model="editCalendarService.calService"
-          id="service2"
-          name="service"
-          value="squared-fusion-gcal"
-          cs-input-label="{{'Google calendar' | translate}}"
-          cs-input-help-text="{{'This is enabling google calendar' | translate}}">
+      <div class="callServiceTitle">
+        <i class="icon icon-circle-call modal-icon-flex-row icon-lg"></i>
+        <h3 translate="addDeviceWizard.editServices.calendar"></h3>
       </div>
+      <div>
+        <div class="callServiceRow rightColumn">
+          <div class="cs-radio-group calendarServiceControls">
+            <div class="section-title-row">
+              <span class="section-name" translate="Which calendar provider do you want to use?"></span>
+            </div>
+            <input
+              ng-if="editCalendarService.getShowCalService()"
+              cs-input
+              type="radio"
+              ng-model="editCalendarService.calService"
+              id="service1"
+              name="service"
+              value="squared-fusion-cal"
+              cs-input-label="{{'addDeviceWizard.editServices.exchangeTitle' | translate}}"
+              cs-input-help-text="{{'addDeviceWizard.editServices.exchangeHelp' | translate}}">
+            <input
+              ng-if="editCalendarService.getShowGCalService()"
+              cs-input
+              type="radio"
+              ng-model="editCalendarService.calService"
+              id="service2"
+              name="service"
+              value="squared-fusion-gcal"
+              cs-input-label="{{'addDeviceWizard.editServices.googleTitle' | translate}}"
+              cs-input-help-text="{{'addDeviceWizard.editServices.googleHelp' | translate}}">
+          </div>
 
-    </div>
-    <div class="callServiceRow">
-      <div class="cs-radio-group calendarServiceControls">
-        <label for="email" translate="Email address of calendar"></label>
-        <input id="email" type="email" ng-model="editCalendarService.emailOfMailbox">
-      </div>
-    </div>
-
-
-    <div class="cloud-extensions" ng-if="editCalendarService.getResourceGroupShow()">
-      <div class="section-title-row">
-        <span class="section-name" translate="hercules.resourceGroups.resourceGroupHeading"></span>
-      </div>
-      <div ng-if="!resourceGroup.cannotFindResouceGroup">
-        <p class="extension-description" translate="hercules.resourceGroups.setPlaceDescription"></p>
-        <cs-select
-          ng-model="resourceGroup.selected"
-          options="resourceGroup.options"
-          on-change-fn="selectedResourceGroupChanged()">
-        </cs-select>
-        <div class="warning-message" ng-if="resourceGroup.shouldWarn">
-          <i class="icon icon-warning"></i>
-          <p class="message"
-             translate="hercules.resourceGroups.groupIsEmptyWarning"
-             translate-values="{ConnectorName: localizedConnectorName}">
-          </p>
         </div>
-      </div>
-      <div ng-if="resourceGroup.cannotFindResouceGroup" class="error-message">
-        <i class="icon icon-error"></i>
-        <p class="message"
-           translate="hercules.resourceGroups.groupHasBeenDeleted"></p>
-        <form>
-          <button class="btn" type="submit" ng-click="setResourceGroupOnUser('')">
-            <span translate="common.remove"></span>
-          </button>
-        </form>
+        <div class="callServiceRow">
+          <div class="cs-radio-group calendarServiceControls emailControls">
+            <label for="email" translate="addDeviceWizard.editServices.calendarEmail"></label>
+            <input id="email" type="email" ng-model="editCalendarService.emailOfMailbox">
+          </div>
+        </div>
+
+
+        <div class="calenderResourcesRow" ng-if="editCalendarService.getResourceGroupShow()">
+          <div class="section-title-row">
+            <span class="section-name" translate="hercules.resourceGroups.resourceGroupHeading"></span>
+          </div>
+          <div ng-if="!resourceGroup.cannotFindResouceGroup">
+            <p translate="hercules.resourceGroups.setPlaceDescription"></p>
+            <cs-select
+              class="selectResourceGroup"
+              ng-model="resourceGroup.selected"
+              options="resourceGroup.options"
+              on-change-fn="selectedResourceGroupChanged()">
+            </cs-select>
+            <div class="warning-message" ng-if="resourceGroup.shouldWarn">
+              <i class="icon icon-warning"></i>
+              <p class="message"
+                 translate="hercules.resourceGroups.groupIsEmptyWarning"
+                 translate-values="{ConnectorName: localizedConnectorName}">
+              </p>
+            </div>
+          </div>
+          <div ng-if="resourceGroup.cannotFindResouceGroup" class="error-message">
+            <i class="icon icon-error"></i>
+            <p class="message"
+               translate="hercules.resourceGroups.groupHasBeenDeleted"></p>
+            <form>
+              <button class="btn" type="submit" ng-click="setResourceGroupOnUser('')">
+                <span translate="common.remove"></span>
+              </button>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
   </form>
