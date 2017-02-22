@@ -3,10 +3,10 @@
 
   angular
     .module('core.trial')
-    .factory('TrialCareService', TrialCareService);
+    .factory('TrialAdvanceCareService', TrialAdvanceCareService);
 
   /* @ngInject */
-  function TrialCareService(Config) {
+  function TrialAdvanceCareService(Config) {
     var _trialData;
     var service = {
       getData: getData,
@@ -27,7 +27,7 @@
 
     function _makeTrial() {
       var defaults = {
-        type: Config.offerTypes.care,
+        type: Config.offerTypes.advanceCare,
         enabled: false,
         details: {
           enabled: false,
