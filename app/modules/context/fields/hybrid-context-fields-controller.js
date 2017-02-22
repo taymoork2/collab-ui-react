@@ -11,7 +11,7 @@ require('./_fields-list.scss');
     //Initialize variables
     var vm = this;
 
-    vm.$onInit = onInit;
+    vm.init = init;
     vm.initializeGrid = initializeGrid;
 
     $scope.$on('$destroy', onDestroy);
@@ -22,7 +22,6 @@ require('./_fields-list.scss');
     $scope.gridRefresh = false;
     $scope.noSearchesYet = true;
     $scope.noSearchResults = false;
-    $scope.listeners = null;
     $scope.fieldsList = {
       allFields: [],
     };
@@ -32,7 +31,9 @@ require('./_fields-list.scss');
 
     var eventListeners = [];
 
-    function onInit() {
+    init();
+
+    function init() {
       var promises = {
         initializeGrid: vm.initializeGrid(),
       };
@@ -52,7 +53,6 @@ require('./_fields-list.scss');
           }
         }
       }));
-      $scope.$on('destroy', $scope.listeners);
     }
 
     function onDestroy() {
@@ -72,7 +72,7 @@ require('./_fields-list.scss');
         UNENCRYPTED: $translate.instant('context.dictionary.fieldPage.unencrypted'),
         PII: $translate.instant('context.dictionary.fieldPage.piiEncrypted'),
       };
-      _.map(fieldList, function (field) {
+      _.forEach(fieldList, function (field) {
 
         field.searchable = searchableMap[field.searchable] || $translate.instant('common.yes');
 

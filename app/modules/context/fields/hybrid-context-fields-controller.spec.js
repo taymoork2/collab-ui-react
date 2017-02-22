@@ -2,7 +2,7 @@
 
 describe('HybridContextFieldsCtrl', function () {
 
-  function init() {
+  function initExternalDependencies() {
     this.initModules('Context');
     this.injectDependencies(
       '$controller',
@@ -46,12 +46,12 @@ describe('HybridContextFieldsCtrl', function () {
       return _this.$q.resolve();
     });
 
-    this.ctrl.$onInit();
+    this.ctrl.init();
     expect(this.$scope.load).toBeTruthy('load is not set as true initially');
     this.$scope.$apply();
   }
 
-  beforeEach(init);
+  beforeEach(initExternalDependencies);
 
   describe('init controller', function () {
     it('should set the default value', function () {

@@ -2348,6 +2348,11 @@
         "encrypted": "Non-PII Encrypted",
         "unencrypted": "Unencrypted",
         "dateFormat": "MM/dd/yyyy"
+      },
+      "fieldsetPage": {
+        "fieldsetId": "Fieldset ID",
+        "numOfFields": "No. of Fields",
+        "fieldsetReadFailed": "Unable to retrieve fieldsets. Refresh your browser to try again."
       }
     }
   },
