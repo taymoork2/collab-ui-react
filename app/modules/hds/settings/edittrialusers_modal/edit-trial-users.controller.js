@@ -27,7 +27,7 @@
           vm.trialUserGroupId = gid;
           getExistingTrialUsers();
         }).catch(function (error) {
-          Notification.errorWithTrackingId(error);
+          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
         });
     }
 

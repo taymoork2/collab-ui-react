@@ -80,7 +80,7 @@
           var trialUsers = _.isObject(data.members) ? data.members : {};
           vm.numTrialUsers = trialUsers.length;
         }).catch(function (error) {
-          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+          Notification.errorWithTrackingId(error, localizedHdsModeError);
         });
     }
 
