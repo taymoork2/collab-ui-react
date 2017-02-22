@@ -762,11 +762,16 @@
 
 @media only screen and (max-width: 1280px) {
   .helpdesk-details {
-    .details-value-large {
-      margin-top: -1rem;
-      margin-bottom: 0.75rem;
-      width: 100%;
-      display: block;
+    .hybrid-service-section {
+      .details-heading {
+        width: 100%;
+      }
+      .details-value {
+        margin-top: -1rem;
+        margin-bottom: 0.75rem;
+        width: 100%;
+        display: block;
+      }
     }
   }
 }
