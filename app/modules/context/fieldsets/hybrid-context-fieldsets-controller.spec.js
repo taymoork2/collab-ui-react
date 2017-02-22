@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: HybridContextFieldsetsController', function () {
+describe('Controller: HybridContextFieldsetsCtrl', function () {
 
   beforeEach(angular.mock.module('Context'));
 
@@ -12,7 +12,7 @@ describe('Controller: HybridContextFieldsetsController', function () {
 
   function initController() {
     var $scope = {};
-    ctrl = $controller('HybridContextFieldsetsController', { $scope: $scope });
+    ctrl = $controller('HybridContextFieldsetsCtrl', { $scope: $scope });
   }
 
   it('should be defined', function () {

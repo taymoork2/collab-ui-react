@@ -2334,7 +2334,21 @@
       }
     },
     "dictionary": {
-      "welcome": "Welcome to the Context Dictionary"
+      "welcome": "Welcome to the Context Dictionary",
+      "fieldPage": {
+        "fieldId": "Field ID",
+        "dataType":"Data Type",
+        "classification": "Data Privacy",
+        "searchable": "Searchable",
+        "lastUpdated":"Date Updated",
+        "startSearching": "To begin, search for a field",
+        "noSearchResults": "Search yielded no results",
+        "fieldReadFailed": "Unable to retrieve fields. Refresh your browser to try again.",
+        "piiEncrypted": "PII Encrypted",
+        "encrypted": "Non-PII Encrypted",
+        "unencrypted": "Unencrypted",
+        "dateFormat": "MM/dd/yyyy"
+      }
     }
   },
   "hds": {
