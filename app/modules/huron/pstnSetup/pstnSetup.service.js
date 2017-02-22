@@ -51,7 +51,6 @@
     var NXX = 'nxx';
 
     var service = {
-      createCustomer: createCustomer,
       createCustomerV2: createCustomerV2,
       updateCustomerCarrier: updateCustomerCarrier,
       getCustomer: getCustomer,
@@ -106,24 +105,6 @@
     };
 
     return service;
-
-    function createCustomer(uuid, name, firstName, lastName, email, pstnCarrierId, numbers, trial) {
-      var payload = {
-        uuid: uuid,
-        name: name,
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        pstnCarrierId: pstnCarrierId,
-        numbers: numbers,
-        trial: trial,
-      };
-
-      if (PstnSetup.isResellerExists()) {
-        payload.resellerId = Authinfo.getOrgId();
-      }
-      return TerminusCustomerService.save({}, payload).$promise;
-    }
 
     function createCustomerV2(uuid, name, firstName, lastName, email, pstnCarrierId, trial) {
       var payload = {
