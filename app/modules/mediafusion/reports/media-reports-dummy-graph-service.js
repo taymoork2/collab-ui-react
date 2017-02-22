@@ -16,7 +16,8 @@
       dummyUtilizationGraph: dummyUtilizationGraph,
       dummyParticipantDistributionGraph: dummyParticipantDistributionGraph,
       dummyClientTypeGraph: dummyClientTypeGraph,
-      dummyMeetingLocationGraph: dummyMeetingLocationGraph
+      dummyMeetingLocationGraph: dummyMeetingLocationGraph,
+      dummyNumberOfParticipantGraph: dummyNumberOfParticipantGraph,
     };
 
     function dummyAvailabilityData(filter) {
@@ -62,31 +63,31 @@
             "start": 1,
             "duration": duration,
             "color": color,
-            "task": "No data"
-          }]
+            "task": "No data",
+          }],
         }, {
           "category": "Cluster/Host",
           "segments": [{
             "start": 1,
             "duration": duration,
             "color": color,
-            "task": "No data"
-          }]
+            "task": "No data",
+          }],
         }, {
           "category": "Cluster/Host",
           "segments": [{
             "start": 1,
             "duration": duration,
             "color": color,
-            "task": "No data"
-          }]
+            "task": "No data",
+          }],
         }],
         "startTime": start,
-        "endTime": end
+        "endTime": end,
       }];
       var returnData;
       returnData = {
-        'data': data
+        'data': data,
       };
       return returnData;
     }
@@ -101,7 +102,7 @@
             active_calls: Math.floor((Math.random() * 1) + 1),
             balloon: false,
             colorOne: chartColors.grayLightThree,
-            colorTwo: chartColors.grayLightTwo
+            colorTwo: chartColors.grayLightTwo,
           });
         }
       } else if (filter.value === 1) {
@@ -112,7 +113,7 @@
             active_calls: Math.floor((Math.random() * 1) + 1),
             balloon: false,
             colorOne: chartColors.grayLightThree,
-            colorTwo: chartColors.grayLightTwo
+            colorTwo: chartColors.grayLightTwo,
           });
         }
       } else if (filter.value === 2) {
@@ -123,7 +124,7 @@
             active_calls: Math.floor((Math.random() * 1) + 1),
             balloon: false,
             colorOne: chartColors.grayLightThree,
-            colorTwo: chartColors.grayLightTwo
+            colorTwo: chartColors.grayLightTwo,
           });
         }
       } else if (filter.value === 3) {
@@ -134,7 +135,7 @@
             active_calls: Math.floor((Math.random() * 1) + 1),
             balloon: false,
             colorOne: chartColors.grayLightThree,
-            colorTwo: chartColors.grayLightTwo
+            colorTwo: chartColors.grayLightTwo,
           });
         }
       } else {
@@ -145,7 +146,7 @@
             active_calls: Math.floor((Math.random() * 1) + 1),
             balloon: false,
             colorOne: chartColors.grayLightThree,
-            colorTwo: chartColors.grayLightTwo
+            colorTwo: chartColors.grayLightTwo,
           });
         }
       }
@@ -159,7 +160,7 @@
           dummyGraphVal.push({
             time: moment().subtract(i, 'minutes').format(vm.timeFormat),
             field: Math.floor((Math.random() * 10) + 1),
-            balloon: false
+            balloon: false,
           });
         }
       } else if (filter.value === 1) {
@@ -167,7 +168,7 @@
           dummyGraphVal.push({
             time: moment().subtract(i * 5, 'minutes').format(vm.timeFormat),
             field: Math.floor((Math.random() * 10) + 1),
-            balloon: false
+            balloon: false,
           });
         }
       } else if (filter.value === 2) {
@@ -175,7 +176,7 @@
           dummyGraphVal.push({
             time: moment().subtract(i, 'hours').format(vm.timeFormat),
             field: Math.floor((Math.random() * 10) + 1),
-            balloon: false
+            balloon: false,
           });
         }
       } else if (filter.value === 3) {
@@ -183,7 +184,7 @@
           dummyGraphVal.push({
             time: moment().subtract(i * 3, 'hours').format(vm.timeFormat),
             field: Math.floor((Math.random() * 10) + 1),
-            balloon: false
+            balloon: false,
           });
         }
       } else {
@@ -191,7 +192,7 @@
           dummyGraphVal.push({
             time: moment().subtract(i * 8, 'hours').format(vm.timeFormat),
             field: Math.floor((Math.random() * 10) + 1),
-            balloon: false
+            balloon: false,
           });
         }
       }
@@ -206,7 +207,7 @@
         dashLength: 4,
         lineColor: chartColors.grayLightTwo,
         showBalloon: false,
-        isDummy: true
+        isDummy: true,
       });
       return dummyGraph;
     }
@@ -218,7 +219,7 @@
         valueField: 'field',
         lineColor: chartColors.grayLightTwo,
         showBalloon: false,
-        isDummy: true
+        isDummy: true,
       });
       return dummyGraph;
     }
@@ -230,7 +231,18 @@
         valueField: 'field',
         lineColor: chartColors.grayLightTwo,
         showBalloon: false,
-        isDummy: true
+        isDummy: true,
+      });
+      return dummyGraph;
+    }
+
+    function dummyNumberOfParticipantGraph() {
+      var dummyGraph = [];
+      dummyGraph.push({
+        valueField: 'number_of_particpant_count',
+        lineColor: chartColors.grayLightTwo,
+        showBalloon: false,
+        isDummy: true,
       });
       return dummyGraph;
     }
@@ -242,7 +254,7 @@
         valueField: 'field',
         lineColor: chartColors.grayLightTwo,
         showBalloon: false,
-        isDummy: true
+        isDummy: true,
       });
       return dummyGraph;
     }

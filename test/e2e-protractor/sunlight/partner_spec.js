@@ -1,5 +1,7 @@
 'use strict';
 
+var featureToggle = require('../utils/featureToggle.utils');
+
 /* global LONG_TIMEOUT, deleteTrialUtils */
 
 describe('Spark Care Partner flow', function () {
@@ -14,7 +16,12 @@ describe('Spark Care Partner flow', function () {
       //utils.click(partner.trialFilter);
       utils.click(partner.addButton);
 
-      utils.expectIsDisplayed(partner.addTrialForm);
+      if (featureToggle.features.atlasStartTrialForPaid) {
+        utils.expectIsDisplayed(partner.editTrialForm);
+      } else {
+        // TODO: remove when feature toggle is removed
+        utils.expectIsDisplayed(partner.addTrialForm);
+      }
       utils.expectIsDisabled(partner.startTrialButton);
 
       utils.expectIsDisplayed(partner.messageTrialCheckbox);

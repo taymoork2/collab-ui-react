@@ -10,7 +10,7 @@
 
     var token = {
       PROD_KEY: 'a64cd4bbec043ed6bf9d5cd31e4b001c',
-      TEST_KEY: '536df13b2664a85b06b0b6cf32721c24'
+      TEST_KEY: '536df13b2664a85b06b0b6cf32721c24',
     };
 
     var isTestOrgPromise = null;
@@ -31,7 +31,7 @@
       SAVE: 'Save',
       ENTER_SCREEN: 'Entered Screen',
       VALIDATION_ERROR: 'Validation Error',
-      RUNTIME_ERROR: 'Runtime Error'
+      RUNTIME_ERROR: 'Runtime Error',
     };
 
     var sections = {
@@ -39,16 +39,16 @@
         name: 'Trial Flow',
         eventNames: {
           START_SETUP: 'Trial flow: Start Trial Setup',
-          START_TRIAL: 'Trial flow: Start Trial'
+          START_TRIAL: 'Trial flow: Start Trial',
         },
-        persistentProperties: null
+        persistentProperties: null,
       },
       PARTNER: {
         name: 'Partner',
         eventNames: {
           ASSIGN: 'Partner Admin Assigning',
           REMOVE: 'Partner Admin Removal',
-          PATCH: 'Patch User Call'
+          PATCH: 'Patch User Call',
         },
         persistentProperties: null,
       },
@@ -56,7 +56,7 @@
         name: 'User Onboarding',
         eventNames: {
           CMR_CHECKBOX: 'CMR Checkbox Unselected',
-          CONVERT_USER: 'Convert User Search'
+          CONVERT_USER: 'Convert User Search',
         },
         persistentProperties: null,
       },
@@ -72,24 +72,24 @@
           DIRECTORY_SYNC: 'Add Users: Directory Sync',
           SYNC_REFRESH: 'Add Users: Sync Refresh',
           SYNC_ERROR: 'Add Users: Sync Error',
-          GO_BACK_FIX: 'Add Users: Go Back Fix Errors'
+          GO_BACK_FIX: 'Add Users: Go Back Fix Errors',
         },
         persistentProperties: null,
         uploadMethods: {
           MANUAL: 'manual',
           CSV: 'csv',
-          SYNC: 'sync'
+          SYNC: 'sync',
         },
         manualMethods: {
           '0': 'emailOnly',
-          '1': 'nameAndEmail'
+          '1': 'nameAndEmail',
         },
         saveResults: {
           SUCCESS: 'success',
           USER_ERROR: 'user_error',
-          APP_ERROR: 'app_exeption'
-        }
-      }
+          APP_ERROR: 'app_exeption',
+        },
+      },
     };
 
     var service = {
@@ -110,7 +110,7 @@
       trackTrialSteps: trackTrialSteps,
       trackUserOnboarding: trackUserOnboarding,
       trackAddUsers: trackAddUsers,
-      trackCsv: trackCsv
+      trackCsv: trackCsv,
     };
 
     return service;
@@ -219,7 +219,7 @@
       var properties = {
         uuid: _hashSha256(UUID),
         orgId: _hashSha256(orgId),
-        section: sections.PARTNER.name
+        section: sections.PARTNER.name,
       };
       return trackEvent(eventName, properties);
     }
@@ -258,7 +258,7 @@
         return $q.reject('eventName not passed');
       }
       var properties = {
-        from: _.get($state, '$current.name')
+        from: _.get($state, '$current.name'),
       };
 
       // populate static properties
@@ -301,7 +301,7 @@
         userId: _hashSha256(Authinfo.getUserId()),
         orgId: _hashSha256(Authinfo.getOrgId()),
         domain: _getDomainFromEmail(Authinfo.getPrimaryEmail()),
-        state: _.get($state, '$current.name')
+        state: _.get($state, '$current.name'),
       });
     }
 
@@ -345,14 +345,14 @@
         domain: _getDomainFromEmail(Authinfo.getPrimaryEmail()),
         uuid: _hashSha256(Authinfo.getUserId()),
         role: Authinfo.getRoles(),
-        section: sections[sectionName].name
+        section: sections[sectionName].name,
       };
       var promises = {
         listUsers: UserListService.listUsers(0, 1, null, null, _.noop),
         getOrg: Orgservice.getAdminOrgAsPromise().catch(function (err) {
           return err;
         }),
-        trialDaysLeft: TrialService.getDaysLeftForCurrentUser()
+        trialDaysLeft: TrialService.getDaysLeftForCurrentUser(),
       };
       return $q.all(promises).then(function (data) {
         sections[sectionName].persistentProperties.userCountPrior = _.get(data.listUsers, 'data.totalResults');

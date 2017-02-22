@@ -40,6 +40,9 @@ var Spark = require('@ciscospark/spark-core').default;
 
     /* initial search variables page */
     vm.searchPlaceholder = $translate.instant('ediscovery.searchParameters.searchByEmailPlaceholder');
+    vm.emailError = $translate.instant('ediscovery.searchParameters.emailError');
+    vm.startDatePlaceholder = moment().subtract(30, 'days').format('YYYY-MM-DD');
+    vm.endDatePlaceholder = moment().format('YYYY-MM-DD');
     vm.searchByOptions = ['Email ID', 'Room ID'];
     vm.searchBySelected = '' || vm.searchByOptions[0];
     vm.searchModel = '';
@@ -49,7 +52,7 @@ var Spark = require('@ciscospark/spark-core').default;
       emailAddresses: [],
       numFiles: null,
       numMessages: null,
-      totalSize: null
+      totalSize: null,
     };
 
     vm.encryptionKeyUrl = '';
@@ -83,13 +86,13 @@ var Spark = require('@ciscospark/spark-core').default;
       if (report) {
         vm.roomInfo = {
           id: report.roomQuery.roomId,
-          displayName: report.displayName
+          displayName: report.displayName,
         };
         vm.searchCriteria = {
           roomId: report.roomQuery.roomId,
           startDate: report.roomQuery.startDate,
           endDate: report.roomQuery.endDate,
-          displayName: report.displayName
+          displayName: report.displayName,
         };
         if (!reRun) {
           vm.report = report;
@@ -142,7 +145,7 @@ var Spark = require('@ciscospark/spark-core').default;
       var errors = dateErrors(getStartDate(), getEndDate());
       if (errors.length > 0) {
         vm.dateValidationError = {
-          errors: errors
+          errors: errors,
         };
         return false;
       } else {
@@ -186,13 +189,13 @@ var Spark = require('@ciscospark/spark-core').default;
       vm.accessToken = TokenService.getAccessToken();
       spark = new Spark({
         credentials: {
-          access_token: vm.accessToken
-        }
+          access_token: vm.accessToken,
+        },
       });
       spark.mercury.connect()
         .then(function () {
           return spark.encryption.kms.createUnboundKeys({
-            count: 1
+            count: 1,
           });
         })
         .then(function (key) {
@@ -216,7 +219,7 @@ var Spark = require('@ciscospark/spark-core').default;
             encryptionKeyUrl: vm.encryptionKeyUrl,
             startDate: start,
             endDate: end,
-            query: vm.encryptedQuery
+            query: vm.encryptedQuery,
           };
           return EdiscoveryService.getArgonautServiceUrl(argonautParam)
             .then(function (result) {
@@ -255,17 +258,17 @@ var Spark = require('@ciscospark/spark-core').default;
           switch (status) {
             case 400:
               vm.error = $translate.instant("ediscovery.search.invalidRoomId", {
-                roomId: roomId
+                roomId: roomId,
               });
               break;
             case 404:
               vm.error = $translate.instant("ediscovery.search.roomNotFound", {
-                roomId: roomId
+                roomId: roomId,
               });
               break;
             default:
               vm.error = $translate.instant("ediscovery.search.roomNotFound", {
-                roomId: roomId
+                roomId: roomId,
               });
               Notification.error('ediscovery.search.roomLookupError');
               break;
@@ -283,13 +286,13 @@ var Spark = require('@ciscospark/spark-core').default;
       vm.report = {
         displayName: vm.searchCriteria.displayName,
         state: 'INIT',
-        progress: 0
+        progress: 0,
       };
       vm.createReportParams = {
         displayName: vm.searchCriteria.displayName,
         roomId: vm.searchCriteria.roomId,
         startDate: getStartDate(),
-        endDate: getEndDate()
+        endDate: getEndDate(),
       };
       EdiscoveryService.createReport(vm.createReportParams)
         .then(function (res) {
@@ -302,7 +305,7 @@ var Spark = require('@ciscospark/spark-core').default;
               encryptionKeyUrl: vm.encryptionKeyUrl,
               responseUri: res.url,
               startDate: formatDate('api', getStartDate()),
-              endDate: formatDate('api', getEndDate())
+              endDate: formatDate('api', getEndDate()),
             };
             generateReport(reportParams);
           } else {
@@ -322,7 +325,7 @@ var Spark = require('@ciscospark/spark-core').default;
           Notification.error('ediscovery.search.runFailed');
           EdiscoveryService.patchReport(vm.currentReportId, {
             state: 'FAILED',
-            failureReason: 'UNEXPECTED_FAILURE'
+            failureReason: 'UNEXPECTED_FAILURE',
           });
         }).finally(function () {
           enableAvalonPolling();
@@ -365,7 +368,7 @@ var Spark = require('@ciscospark/spark-core').default;
           Notification.error('ediscovery.search.runFailed');
           EdiscoveryService.patchReport(vm.currentReportId, {
             state: "FAILED",
-            failureReason: "UNEXPECTED_FAILURE"
+            failureReason: "UNEXPECTED_FAILURE",
           });
         }).finally(function () {
           enableAvalonPolling();
@@ -383,7 +386,7 @@ var Spark = require('@ciscospark/spark-core').default;
     function cancelReport(id) {
       vm.cancellingReport = true;
       EdiscoveryService.patchReport(id, {
-        state: "ABORTED"
+        state: "ABORTED",
       }).then(function () {
         if (!EdiscoveryNotificationService.notificationsEnabled()) {
           Notification.success('ediscovery.search.reportCancelled');
@@ -402,7 +405,10 @@ var Spark = require('@ciscospark/spark-core').default;
       var ESC = 27;
       var ENTER = 13;
       var activeElement = angular.element($window.document.activeElement);
-      var inputFieldHasFocus = activeElement[0]["id"] === "searchInput";
+      var searchInput = activeElement[0]['id'] === 'searchInput';
+      var searchModel = activeElement[0].getAttribute('ng-model') === 'ediscoverySearchCtrl.searchModel';
+      var queryModel = activeElement[0].getAttribute('ng-model') === 'ediscoverySearchCtrl.queryModel';
+      var inputFieldHasFocus = searchInput || searchModel || queryModel;
       if (!inputFieldHasFocus || !(event.keyCode === ESC || event.keyCode === ENTER)) {
         return; // if not escape and enter, nothing to do
       }
@@ -413,7 +419,7 @@ var Spark = require('@ciscospark/spark-core').default;
 
         case ENTER:
           $timeout(function () {
-            angular.element("#ediscoverySearchButton").trigger('click');
+            angular.element('#ediscoverySearchButton').trigger('click');
           });
           break;
       }

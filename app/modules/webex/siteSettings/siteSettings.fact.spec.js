@@ -9,7 +9,7 @@ describe('WebExSiteSettingsFact Test', function () {
 
   beforeEach(angular.mock.module(function ($provide) {
     var $stateParams = {
-      'siteUrl': siteUrl
+      'siteUrl': siteUrl,
     };
     $provide.value('$stateParams', $stateParams);
   }));

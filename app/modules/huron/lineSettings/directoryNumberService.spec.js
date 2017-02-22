@@ -7,7 +7,7 @@ describe('Service: DirectoryNumber', function () {
   beforeEach(angular.mock.module('ngResource'));
 
   var authInfo = {
-    getOrgId: sinon.stub().returns('1')
+    getOrgId: sinon.stub().returns('1'),
   };
 
   beforeEach(angular.mock.module(function ($provide) {
@@ -25,26 +25,26 @@ describe('Service: DirectoryNumber', function () {
     hasCustomAlertingName: false,
     callForwardAll: {
       voicemailEnabled: false,
-      destination: ''
+      destination: '',
     },
     callForwardBusy: {
       intVoiceMailEnabled: false,
       voicemailEnabled: false,
       intDestination: '',
-      destination: ''
+      destination: '',
     },
     callForwardNoAnswer: {
       intVoiceMailEnabled: false,
       voicemailEnabled: false,
       intDestination: '',
-      destination: ''
+      destination: '',
     },
     callForwardNotRegistered: {
       intVoiceMailEnabled: false,
       voicemailEnabled: false,
       intDestination: '',
-      destination: ''
-    }
+      destination: '',
+    },
   };
 
   beforeEach(

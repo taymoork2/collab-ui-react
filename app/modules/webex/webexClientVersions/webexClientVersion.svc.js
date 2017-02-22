@@ -19,7 +19,7 @@
       'clientVersions': 'clientversions', //get
       'getTemplate': 'partnertemplate/${partnerId}',
       'postTemplate': 'partnertemplate',
-      'putTemplate': 'partnertemplate/${partnerTemplateId}'
+      'putTemplate': 'partnertemplate/${partnerTemplateId}',
     };
 
     this.getVersionJson = function (partnerTemplate, partnerId, version, useLatest) {
@@ -27,7 +27,7 @@
         'partnerTemplateId': partnerTemplate,
         'partnerId': partnerId,
         'clientVersion': version,
-        'useLatest': useLatest
+        'useLatest': useLatest,
       };
     };
 

@@ -23,11 +23,11 @@
           },
           linkText: 'homePage.goSetupCloudSipUri',
           name: 'cloudSipUri',
-          text: 'homePage.setupCloudSipUriMessage'
+          text: 'homePage.setupCloudSipUriMessage',
         };
 
         return notification;
-      }
+      },
     };
   }
 })();

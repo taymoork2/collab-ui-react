@@ -19,15 +19,15 @@
 
     vm.tabs = [{
       title: 'huronDetails.linesTitle',
-      state: 'huronlines'
+      state: 'huronlines',
     }, {
       title: 'huronDetails.settingsTitle',
-      state: 'huronsettings'
+      state: 'huronsettings',
     }];
     if (showFeatureTab()) {
       vm.tabs.splice(1, 0, {
         title: 'huronDetails.featuresTitle',
-        state: 'huronfeatures'
+        state: 'huronfeatures',
       });
     }
   }

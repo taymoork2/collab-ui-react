@@ -21,11 +21,11 @@ require('./_brandingUpload.scss');
     brand.logoCriteria = {
       'pattern': '.png',
       'width': {
-        min: '100'
+        min: '100',
       },
       'size': {
-        max: '1MB'
-      }
+        max: '1MB',
+      },
     };
 
     brand.useLatestWbxVersion = false;
@@ -174,14 +174,14 @@ require('./_brandingUpload.scss');
       wbxclientversionselectchanged,
       2000, {
         'leading': true,
-        'trailing': false
+        'trailing': false,
       });
 
     brand.toggleWebexSelectLatestVersionAlways = _.debounce(
       toggleWebexSelectLatestVersionAlways,
       100, {
         'leading': true,
-        'trailing': false
+        'trailing': false,
       });
 
     brand.upload = function (file) {
@@ -198,7 +198,7 @@ require('./_brandingUpload.scss');
         type: 'small',
         scope: $scope,
         modalClass: 'modal-logo-upload',
-        templateUrl: 'modules/core/partnerProfile/branding/brandingUpload.tpl.html'
+        templateUrl: 'modules/core/partnerProfile/branding/brandingUpload.tpl.html',
       });
     }
 
@@ -210,7 +210,7 @@ require('./_brandingUpload.scss');
       }
     }, 2000, {
       'leading': true,
-      'trailing': false
+      'trailing': false,
     });
 
     brand.toggleAllowCustomerLogos = _.debounce(function (value) {
@@ -221,13 +221,13 @@ require('./_brandingUpload.scss');
       }
     }, 2000, {
       'leading': true,
-      'trailing': false
+      'trailing': false,
     });
 
     // Add branding example static page
     brand.showBrandingExample = function (type) {
       $state.go('brandingExample', {
-        modalType: type
+        modalType: type,
       });
     };
 

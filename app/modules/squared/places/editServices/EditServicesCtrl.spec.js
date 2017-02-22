@@ -21,7 +21,7 @@ describe('EditServicesCtrl: Ctrl', function () {
     controller = $controller('EditServicesCtrl', {
       $scope: $scope,
       $state: $state,
-      CsdmDataModelService: CsdmDataModelService
+      CsdmDataModelService: CsdmDataModelService,
     });
   }
 
@@ -37,11 +37,11 @@ describe('EditServicesCtrl: Ctrl', function () {
           return {
             data: {
               account: {
-                entitlements: ['ciscouc']
-              }
-            }
+                entitlements: ['ciscouc'],
+              },
+            },
           };
-        }
+        },
       };
       initController();
 
@@ -54,11 +54,11 @@ describe('EditServicesCtrl: Ctrl', function () {
           return {
             data: {
               account: {
-                entitlements: ['something']
-              }
-            }
+                entitlements: ['something'],
+              },
+            },
           };
-        }
+        },
       };
       initController();
 
@@ -71,11 +71,11 @@ describe('EditServicesCtrl: Ctrl', function () {
           return {
             data: {
               account: {
-                entitlements: ['fusionec']
-              }
-            }
+                entitlements: ['fusionec'],
+              },
+            },
           };
-        }
+        },
       };
       initController();
 
@@ -91,11 +91,11 @@ describe('EditServicesCtrl: Ctrl', function () {
             data: {
               csdmHybridCallFeature: false,
               account: {
-                entitlements: ['something']
-              }
-            }
+                entitlements: ['something'],
+              },
+            },
           };
-        }
+        },
       };
       initController();
       $scope.$apply();
@@ -109,11 +109,11 @@ describe('EditServicesCtrl: Ctrl', function () {
             data: {
               csdmHybridCallFeature: false,
               account: {
-                entitlements: ['fusionec']
-              }
-            }
+                entitlements: ['fusionec'],
+              },
+            },
           };
-        }
+        },
       };
       initController();
       $scope.$digest();
@@ -127,11 +127,11 @@ describe('EditServicesCtrl: Ctrl', function () {
             data: {
               csdmHybridCallFeature: true,
               account: {
-                entitlements: ['something']
-              }
-            }
+                entitlements: ['something'],
+              },
+            },
           };
-        }
+        },
       };
       initController();
       $scope.$digest();
@@ -152,16 +152,16 @@ describe('EditServicesCtrl: Ctrl', function () {
             data: {
               csdmHybridCallFeature: true,
               account: {
-                entitlements: ['something']
+                entitlements: ['something'],
               },
-              function: 'anotherFunction'
-            }
+              function: 'anotherFunction',
+            },
           };
         };
         $stateParams.wizard = {
           state: state,
           next: function () {
-          }
+          },
         };
         initController();
 
@@ -173,16 +173,16 @@ describe('EditServicesCtrl: Ctrl', function () {
           return {
             data: {
               account: {
-                entitlements: ['fusionec']
+                entitlements: ['fusionec'],
               },
-              function: 'editServices'
-            }
+              function: 'editServices',
+            },
           };
         };
         $stateParams.wizard = {
           state: state,
           next: function () {
-          }
+          },
         };
         initController();
         controller.service = 'sparkCall';
@@ -195,16 +195,16 @@ describe('EditServicesCtrl: Ctrl', function () {
           return {
             data: {
               account: {
-                entitlements: ['ciscouc']
+                entitlements: ['ciscouc'],
               },
-              function: 'editServices'
-            }
+              function: 'editServices',
+            },
           };
         };
         $stateParams.wizard = {
           state: state,
           next: function () {
-          }
+          },
         };
         initController();
         controller.service = 'sparkCallConnect';
@@ -217,16 +217,16 @@ describe('EditServicesCtrl: Ctrl', function () {
           return {
             data: {
               account: {
-                entitlements: ['something']
+                entitlements: ['something'],
               },
-              function: 'editServices'
-            }
+              function: 'editServices',
+            },
           };
         };
         $stateParams.wizard = {
           state: state,
           next: function () {
-          }
+          },
         };
         initController();
         expect(controller.hasNextStep()).toBe(false);
@@ -240,15 +240,15 @@ describe('EditServicesCtrl: Ctrl', function () {
           return {
             data: {
               account: {
-                entitlements: ['something']
-              }
-            }
+                entitlements: ['something'],
+              },
+            },
           };
         };
         $stateParams.wizard = {
           state: state,
           next: function () {
-          }
+          },
         };
         spyOn($stateParams.wizard, 'next');
         initController();
@@ -264,15 +264,15 @@ describe('EditServicesCtrl: Ctrl', function () {
           return {
             data: {
               account: {
-                entitlements: ['something']
-              }
-            }
+                entitlements: ['something'],
+              },
+            },
           };
         };
         $stateParams.wizard = {
           state: state,
           next: function () {
-          }
+          },
         };
         spyOn($stateParams.wizard, 'next');
         initController();
@@ -299,10 +299,10 @@ describe('EditServicesCtrl: Ctrl', function () {
           state: function () {
             return {
               data: {
-                account: {}
-              }
+                account: {},
+              },
             };
-          }
+          },
         };
         initController();
         controller.save();
@@ -316,11 +316,11 @@ describe('EditServicesCtrl: Ctrl', function () {
               data: {
                 account: {
                   cisUuid: deviceCisUuid,
-                  entitlements: ['ciscouc', 'something']
-                }
-              }
+                  entitlements: ['ciscouc', 'something'],
+                },
+              },
             };
-          }
+          },
         };
         var place = { cisUuid: deviceCisUuid };
         CsdmDataModelService.getPlacesMap = function () {
@@ -345,11 +345,11 @@ describe('EditServicesCtrl: Ctrl', function () {
               data: {
                 account: {
                   cisUuid: deviceCisUuid,
-                  entitlements: ['ciscouc']
-                }
-              }
+                  entitlements: ['ciscouc'],
+                },
+              },
             };
-          }
+          },
         };
         spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.resolve({ 'http://placeurl': {} }));
         initController();
@@ -367,11 +367,11 @@ describe('EditServicesCtrl: Ctrl', function () {
               data: {
                 account: {
                   cisUuid: deviceCisUuid,
-                  entitlements: ['ciscouc']
-                }
-              }
+                  entitlements: ['ciscouc'],
+                },
+              },
             };
-          }
+          },
         };
         spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.reject());
         initController();
@@ -389,11 +389,11 @@ describe('EditServicesCtrl: Ctrl', function () {
               data: {
                 account: {
                   cisUuid: deviceCisUuid,
-                  entitlements: ['ciscouc']
-                }
-              }
+                  entitlements: ['ciscouc'],
+                },
+              },
             };
-          }
+          },
         };
         spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.resolve({ 'http://placeurl': { cisUuid: deviceCisUuid } }));
         spyOn(CsdmDataModelService, 'updateCloudberryPlace').and.returnValue($q.reject());

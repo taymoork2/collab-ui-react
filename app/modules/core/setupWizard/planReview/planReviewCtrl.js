@@ -10,37 +10,37 @@
     var vm = this;
     var classes = {
       userService: 'user-service-',
-      hasRoomSys: 'has-room-systems'
+      hasRoomSys: 'has-room-systems',
     };
 
     vm.messagingServices = {
       isNewTrial: false,
-      services: []
+      services: [],
     };
 
     vm.confServices = {
       isNewTrial: false,
-      services: []
+      services: [],
     };
 
     vm.commServices = {
       isNewTrial: false,
-      services: []
+      services: [],
     };
 
     vm.careServices = {
       isNewTrial: false,
-      services: Authinfo.getCareServices() || []
+      services: Authinfo.getCareServices() || [],
     };
 
     vm.cmrServices = {
       isNewTrial: false,
-      services: []
+      services: [],
     };
 
     vm.roomServices = {
       isNewTrial: false,
-      services: []
+      services: [],
     };
 
     vm.roomSystemsCount = 0;
@@ -52,7 +52,7 @@
     vm.isInitialized = false; // invert the logic and initialize to false so the template doesn't flicker before spinner
     vm.getUserServiceRowClass = getUserServiceRowClass;
     vm._helpers = {
-      maxServiceRows: maxServiceRows
+      maxServiceRows: maxServiceRows,
     };
     vm.isCareEnabled = false;
     vm.isSharedMeetingsEnabled = false;

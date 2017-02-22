@@ -37,7 +37,7 @@ describe('Directive: aaBuilderLane', function () {
     var event = {
       type: 'keydown',
       keyCode: keyCode_enter,
-      preventDefault: function () {}
+      preventDefault: function () {},
     };
 
     scope.name = 'AA Test';
@@ -55,7 +55,7 @@ describe('Directive: aaBuilderLane', function () {
     var event = {
       type: 'keydown',
       keyCode: 65,
-      preventDefault: function () {}
+      preventDefault: function () {},
     };
 
     scope.name = '';
@@ -83,7 +83,7 @@ describe('Directive: aaBuilderLane', function () {
     var event = {
       type: 'keydown',
       keyCode: 65,
-      preventDefault: function () {}
+      preventDefault: function () {},
     };
 
     scope.name = 'AA';
@@ -121,7 +121,7 @@ describe('Directive: aaBuilderLane', function () {
   it('should update name via ngModel on keyup event', function () {
     var event = {
       type: 'keyup',
-      keyCode: 65
+      keyCode: 65,
     };
 
     scope.name = '';
@@ -138,7 +138,7 @@ describe('Directive: aaBuilderLane', function () {
 
   it('should update name via ngModel and set focus to false on blur event', function () {
     var event = {
-      type: 'blur'
+      type: 'blur',
     };
 
     scope.name = '';

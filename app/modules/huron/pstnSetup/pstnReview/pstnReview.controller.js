@@ -40,7 +40,7 @@
 
     function goToNextSteps() {
       $state.go('pstnSetup.nextSteps', {
-        portOrders: vm.portOrders
+        portOrders: vm.portOrders,
       });
     }
 

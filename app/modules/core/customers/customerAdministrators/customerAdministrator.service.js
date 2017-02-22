@@ -16,8 +16,8 @@
       addCustomerAdmin: addCustomerAdmin,
       removeCustomerAdmin: removeCustomerAdmin,
       _helpers: {
-        needsSalesAdminRoleForPartnerOrg: needsSalesAdminRoleForPartnerOrg
-      }
+        needsSalesAdminRoleForPartnerOrg: needsSalesAdminRoleForPartnerOrg,
+      },
     };
 
     return service;

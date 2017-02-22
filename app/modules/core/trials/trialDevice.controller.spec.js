@@ -52,13 +52,13 @@ describe('Controller: TrialDeviceController', function () {
 
     it('should have nothing enabled', function () {
       var roomSystems = _.find(controller.details.roomSystems, {
-        enabled: true
+        enabled: true,
       });
       var phones = _.filter(controller.details.phones, {
-        enabled: true
+        enabled: true,
       });
       var shippingInfo = _.find(controller.details.shippingInfo, {
-        enabled: true
+        enabled: true,
       });
 
       expect(roomSystems).toBeUndefined();
@@ -110,19 +110,19 @@ describe('Controller: TrialDeviceController', function () {
         enabled: true,
         quantity: 2,
         readonly: false,
-        valid: true
+        valid: true,
       }, {
         model: 'CISCO_DX80',
         enabled: true,
         quantity: 1,
         readonly: false,
-        valid: true
+        valid: true,
       }, {
         model: 'CISCO_8865',
         enabled: false,
         quantity: 2,
         readonly: false,
-        valid: true
+        valid: true,
 
       }];
       var devices2 = [{
@@ -130,7 +130,7 @@ describe('Controller: TrialDeviceController', function () {
         enabled: true,
         quantity: 4,
         readonly: false,
-        valid: true
+        valid: true,
 
       }];
       var devices3 = [{
@@ -138,20 +138,20 @@ describe('Controller: TrialDeviceController', function () {
         enabled: false,
         quantity: 2,
         readonly: false,
-        valid: true
+        valid: true,
 
       }, {
         model: 'CISCO_MX300',
         enabled: false,
         quantity: 2,
         readonly: false,
-        valid: true
+        valid: true,
       }, {
         model: 'CISCO_8865',
         enabled: false,
         quantity: 2,
         readonly: false,
-        valid: true
+        valid: true,
 
       }];
 
@@ -164,7 +164,7 @@ describe('Controller: TrialDeviceController', function () {
       var deviceModel = {
         enabled: true,
         quantity: 3,
-        readonly: false
+        readonly: false,
 
       };
 
@@ -179,7 +179,7 @@ describe('Controller: TrialDeviceController', function () {
       var deviceModel = {
         enabled: false,
         quantity: 0,
-        readonly: false
+        readonly: false,
 
       };
       spyOn(controller, 'getQuantity').and.returnValue(2);
@@ -196,10 +196,10 @@ describe('Controller: TrialDeviceController', function () {
         getData: trialData.enabled.trials.deviceTrial,
         getLimitsPromise: $q.resolve({
           activeDeviceTrials: 17,
-          maxDeviceTrials: 20
+          maxDeviceTrials: 20,
         }),
         getDeviceLimit: limitData,
-        listTypes: {}
+        listTypes: {},
       });
       initController();
 
@@ -213,10 +213,10 @@ describe('Controller: TrialDeviceController', function () {
         getData: trialData.enabled.trials.deviceTrial,
         getLimitsPromise: $q.resolve({
           activeDeviceTrials: 20,
-          maxDeviceTrials: 20
+          maxDeviceTrials: 20,
         }),
         getDeviceLimit: limitData,
-        listTypes: {}
+        listTypes: {},
       });
       initController();
 
@@ -230,7 +230,7 @@ describe('Controller: TrialDeviceController', function () {
         getData: trialData.enabled.trials.deviceTrial,
         getLimitsPromise: $q.reject(),
         getDeviceLimit: limitData,
-        listTypes: {}
+        listTypes: {},
       });
       initController();
 
@@ -244,10 +244,10 @@ describe('Controller: TrialDeviceController', function () {
         getData: trialData.enabled.trials.deviceTrial,
         getLimitsPromise: $q.resolve({
           activeDeviceTrials: 17,
-          maxDeviceTrials: 20
+          maxDeviceTrials: 20,
         }),
         getDeviceLimit: limitData,
-        listTypes: {}
+        listTypes: {},
       });
       initController();
 
@@ -265,7 +265,7 @@ describe('Controller: TrialDeviceController', function () {
         readonly: false,
         valid: true,
         minQuantity: 1,
-        maxQuantity: 3
+        maxQuantity: 3,
       };
       device.quantity = controller.getQuantityInputDefault(device);
       expect(device.quantity).toBe(0);
@@ -279,7 +279,7 @@ describe('Controller: TrialDeviceController', function () {
         readonly: false,
         valid: true,
         minQuantity: 1,
-        maxQuantity: 3
+        maxQuantity: 3,
       };
       device.quantity = controller.getQuantityInputDefault(device);
       expect(device.quantity).toBe(1);
@@ -293,7 +293,7 @@ describe('Controller: TrialDeviceController', function () {
         readonly: false,
         valid: true,
         minQuantity: 1,
-        maxQuantity: 3
+        maxQuantity: 3,
       };
       device.quantity = controller.getQuantityInputDefault(device, 1);
       expect(device.quantity).toBe(3);
@@ -307,8 +307,8 @@ describe('Controller: TrialDeviceController', function () {
         model: {
           enabled: false,
           minQuantity: 1,
-          maxQuantity: 3
-        }
+          maxQuantity: 3,
+        },
       });
       expect(valid).toBe(true);
     });
@@ -317,14 +317,14 @@ describe('Controller: TrialDeviceController', function () {
       var valid1 = controller.validateInputQuantity(1, 1, {
         model: {
           enabled: true,
-          model: 'CISCO_8865'
-        }
+          model: 'CISCO_8865',
+        },
       });
       var valid2 = controller.validateInputQuantity(4, 4, {
         model: {
           enabled: true,
-          model: 'CISCO_8865'
-        }
+          model: 'CISCO_8865',
+        },
       });
 
       expect(valid1).toBe(true);
@@ -335,8 +335,8 @@ describe('Controller: TrialDeviceController', function () {
     it('should validate quantity between 1 and 5 for trial prior to 9/1/2016', function () {
       var stateParams = {
         currentTrial: {
-          startDate: new Date(2016, 7, 1)
-        }
+          startDate: new Date(2016, 7, 1),
+        },
       };
 
       var controller = $controller('TrialDeviceController', { $scope: scope.$new(), $stateParams: stateParams });
@@ -344,14 +344,14 @@ describe('Controller: TrialDeviceController', function () {
       var valid1 = controller.validateInputQuantity(1, 1, {
         model: {
           enabled: true,
-          model: 'CISCO_8845'
-        }
+          model: 'CISCO_8845',
+        },
       });
       var valid2 = controller.validateInputQuantity(5, 5, {
         model: {
           enabled: true,
-          model: 'CISCO_8845'
-        }
+          model: 'CISCO_8845',
+        },
       });
 
       expect(valid1).toBe(true);
@@ -362,14 +362,14 @@ describe('Controller: TrialDeviceController', function () {
       var valid1 = controller.validateInputQuantity(0, 0, {
         model: {
           enabled: true,
-          model: 'CISCO_8845'
-        }
+          model: 'CISCO_8845',
+        },
       });
       var valid2 = controller.validateInputQuantity(6, 6, {
         model: {
           enabled: true,
-          model: 'CISCO_8845'
-        }
+          model: 'CISCO_8845',
+        },
       });
 
       expect(valid1).toBe(false);
@@ -381,14 +381,14 @@ describe('Controller: TrialDeviceController', function () {
       var valid1 = controller.validateInputQuantity(1, 1, {
         model: {
           enabled: true,
-          model: 'CISCO_MX300'
-        }
+          model: 'CISCO_MX300',
+        },
       });
       var valid2 = controller.validateInputQuantity(2, 2, {
         model: {
           enabled: true,
-          model: 'CISCO_MX300'
-        }
+          model: 'CISCO_MX300',
+        },
       });
       expect(valid1).toBe(true);
       expect(valid2).toBe(false);
@@ -398,8 +398,8 @@ describe('Controller: TrialDeviceController', function () {
   describe('total quantity validation', function () {
     var model = {
       model: {
-        enabled: true
-      }
+        enabled: true,
+      },
     };
 
     it('should validate when quantity is between 1 and 5 for new trial', function () {
@@ -415,8 +415,8 @@ describe('Controller: TrialDeviceController', function () {
     it('should validate when quantity is between 1 and 7 for trial prior to 9/1/2016', function () {
       var stateParams = {
         currentTrial: {
-          startDate: new Date(2016, 7, 1)
-        }
+          startDate: new Date(2016, 7, 1),
+        },
       };
 
       var controller = $controller('TrialDeviceController', { $scope: scope.$new(), $stateParams: stateParams });
@@ -441,8 +441,8 @@ describe('Controller: TrialDeviceController', function () {
     it('should validate when device is not enabled', function () {
       var valid = controller.validateTotalQuantity(null, null, {
         model: {
-          enabled: false
-        }
+          enabled: false,
+        },
       });
       expect(valid).toBe(true);
     });
@@ -452,8 +452,8 @@ describe('Controller: TrialDeviceController', function () {
     var model = {
       model: {
         enabled: true,
-        model: 'CISCO_DX80'
-      }
+        model: 'CISCO_DX80',
+      },
     };
 
     it('should validate when quantity is 3 or less', function () {
@@ -483,8 +483,8 @@ describe('Controller: TrialDeviceController', function () {
     it('should validate when device is not enabled', function () {
       var valid = controller.validateTypeQuantity(null, null, {
         model: {
-          enabled: false
-        }
+          enabled: false,
+        },
       });
       expect(valid).toBe(true);
     });
@@ -495,7 +495,7 @@ describe('Controller: TrialDeviceController', function () {
       model: {
         enabled: true,
         model: 'CISCO_8865',
-      }
+      },
     };
 
     it('should validate when quantity is 4 or less for new trial', function () {
@@ -510,8 +510,8 @@ describe('Controller: TrialDeviceController', function () {
 
       var stateParams = {
         currentTrial: {
-          startDate: new Date(2016, 7, 1)
-        }
+          startDate: new Date(2016, 7, 1),
+        },
       };
 
       var controller = $controller('TrialDeviceController', { $scope: scope.$new(), $stateParams: stateParams });
@@ -542,8 +542,8 @@ describe('Controller: TrialDeviceController', function () {
     it('should validate when device is not enabled', function () {
       var valid = controller.validateTypeQuantity(null, null, {
         model: {
-          enabled: false
-        }
+          enabled: false,
+        },
       });
       expect(valid).toBe(true);
     });
@@ -582,8 +582,8 @@ describe('Controller: TrialDeviceController', function () {
     it('should validate when model valid is true', function () {
       var valid = controller.validateChecks(null, null, {
         model: {
-          valid: true
-        }
+          valid: true,
+        },
       });
       expect(valid).toBe(true);
     });
@@ -592,8 +592,8 @@ describe('Controller: TrialDeviceController', function () {
       var valid = controller.validateChecks(null, null, {
         model: {
           enabled: true,
-          valid: true
-        }
+          valid: true,
+        },
       });
       expect(valid).toBe(true);
     });
@@ -602,8 +602,8 @@ describe('Controller: TrialDeviceController', function () {
       var valid = controller.validateChecks(null, null, {
         model: {
           enabled: false,
-          valid: false
-        }
+          valid: false,
+        },
       });
       expect(valid).toBe(false);
     });
@@ -616,10 +616,10 @@ describe('Controller: TrialDeviceController', function () {
         getData: trialData.enabled.trials.deviceTrial,
         getLimitsPromise: $q.resolve({
           activeDeviceTrials: 20,
-          maxDeviceTrials: 20
+          maxDeviceTrials: 20,
         }),
         getDeviceLimit: limitData,
-        listTypes: {}
+        listTypes: {},
       });
 
       initController();
@@ -635,10 +635,10 @@ describe('Controller: TrialDeviceController', function () {
         getData: trialData.enabled.trials.deviceTrial,
         getLimitsPromise: $q.resolve({
           activeDeviceTrials: 15,
-          maxDeviceTrials: 20
+          maxDeviceTrials: 20,
         }),
         getDeviceLimit: limitData,
-        listTypes: {}
+        listTypes: {},
       });
       initController();
       controller.canAddMoreDevices = false;
@@ -656,7 +656,7 @@ describe('Controller: TrialDeviceController', function () {
         enabled: false,
         quantity: 3,
         readonly: false,
-        valid: true
+        valid: true,
       };
 
       expect(controller.areTemplateOptionsDisabled(device)).toBeTruthy();
@@ -668,7 +668,7 @@ describe('Controller: TrialDeviceController', function () {
         enabled: true,
         quantity: 3,
         readonly: false,
-        valid: true
+        valid: true,
       };
       expect(controller.areTemplateOptionsDisabled(device)).toBeFalsy();
     });
@@ -679,7 +679,7 @@ describe('Controller: TrialDeviceController', function () {
         enabled: false,
         quantity: 3,
         readonly: true,
-        valid: true
+        valid: true,
       };
       expect(controller.areTemplateOptionsDisabled(device)).toBeTruthy();
     });

@@ -10,7 +10,7 @@
       }
       return UserEndpointService.query({
         customerId: orgId,
-        userId: userId
+        userId: userId,
       }).$promise
         .then(function (devices) {
           var deviceList = [];
@@ -18,7 +18,7 @@
             var device = {
               uuid: devices[i].endpoint.uuid,
               name: devices[i].endpoint.name,
-              deviceStatus: {}
+              deviceStatus: {},
             };
 
             deviceList.push(device);
@@ -26,7 +26,7 @@
             SipEndpointService.get({
               customerId: orgId,
               sipEndpointId: device.uuid,
-              status: true
+              status: true,
             }).$promise.then(function (endpoint) {
               this.model = endpoint.model;
               this.description = endpoint.description;
@@ -104,7 +104,7 @@
       }
       return UserServiceCommonV2.get({
         customerId: orgId,
-        userId: userId
+        userId: userId,
       }).$promise.then(function (res) {
         var userNumbers = extractNumbers(res);
         $http.get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/users/' + userId + "/directorynumbers")
@@ -170,12 +170,12 @@
                     var device = {
                       uuid: deviceNumberAssociation.endpoint.uuid,
                       name: deviceNumberAssociation.endpoint.name,
-                      numbers: [num.number]
+                      numbers: [num.number],
                     };
                     // Filter out "weird" devices (the ones that don't start with SEP seems to be device profiles or something)"
                     if (_.startsWith(device.name, 'SEP')) {
                       var existingDevice = _.find(devices, {
-                        uuid: device.uuid
+                        uuid: device.uuid,
                       });
                       if (!existingDevice) {
                         devices.push(massageDevice(device));
@@ -226,7 +226,7 @@
           } else {
             SipEndpointService.get({
               customerId: device.organization.id,
-              sipEndpointId: device.uuid
+              sipEndpointId: device.uuid,
             })
               .$promise.then(function (endpoint) {
                 this.model = endpoint.model;
@@ -294,11 +294,11 @@
       if (!device.deviceStatus) {
         if (device.registrationStatus) {
           device.deviceStatus = {
-            status: angular.lowercase(device.registrationStatus) === 'registered' ? 'Online' : 'Offline'
+            status: angular.lowercase(device.registrationStatus) === 'registered' ? 'Online' : 'Offline',
           };
         } else {
           device.deviceStatus = {
-            status: 'Unknown'
+            status: 'Unknown',
           };
         }
       } else if (!device.deviceStatus.status) {
@@ -352,7 +352,7 @@
       findDevicesMatchingNumber: findDevicesMatchingNumber,
       sanitizeNumberSearchInput: sanitizeNumberSearchInput,
       getOrgSiteInfo: getOrgSiteInfo,
-      getTenantInfo: getTenantInfo
+      getTenantInfo: getTenantInfo,
     };
   }
 

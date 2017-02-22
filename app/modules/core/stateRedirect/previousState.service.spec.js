@@ -41,7 +41,7 @@
       beforeEach(function () {
         state = 'myPreviousState';
         stateParams = {
-          myParam: 'myValue'
+          myParam: 'myValue',
         };
         PreviousState.set(state);
         PreviousState.setParams(stateParams);
@@ -69,7 +69,7 @@
       beforeEach(function () {
         state = 'login';
         stateParams = {
-          myParam: 'myValue'
+          myParam: 'myValue',
         };
         PreviousState.set(state);
         PreviousState.setParams(stateParams);

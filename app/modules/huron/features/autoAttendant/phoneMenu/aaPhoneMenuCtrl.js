@@ -11,7 +11,7 @@
     this.keys = [];
     this.action = {
       name: '',
-      label: ''
+      label: '',
     };
   }
 
@@ -24,7 +24,7 @@
     vm.selectedActions = [];
     vm.selectedTimeout = {
       name: '',
-      value: ''
+      value: '',
     };
     vm.menuEntry = {};
 
@@ -46,7 +46,7 @@
       label: $translate.instant('autoAttendant.phoneMenuRepeatMenu'),
       name: 'phoneMenuRepeatMenu',
       action: 'repeatActionsOnInput',
-      level: 0
+      level: 0,
     }, {
       label: $translate.instant('autoAttendant.actionSayMessage'),
       name: 'phoneMenuSayMessage',
@@ -55,31 +55,31 @@
       label: $translate.instant('autoAttendant.phoneMenuDialExt'),
       name: 'phoneMenuDialExt',
       action: 'runActionsOnInput',
-      inputType: 2
+      inputType: 2,
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteHunt'),
       name: 'phoneMenuRouteHunt',
-      action: 'routeToHuntGroup'
+      action: 'routeToHuntGroup',
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteAA'),
       name: 'phoneMenuRouteAA',
-      action: 'goto'
+      action: 'goto',
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteUser'),
       name: 'phoneMenuRouteUser',
-      action: 'routeToUser'
+      action: 'routeToUser',
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteVM'),
       name: 'phoneMenuRouteMailbox',
-      action: 'routeToVoiceMail'
+      action: 'routeToVoiceMail',
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteToExtNum'),
       name: 'phoneMenuRouteToExtNum',
-      action: 'route'
+      action: 'route',
     }, {
       label: $translate.instant('autoAttendant.phoneMenuPlaySubmenu'),
       name: 'phoneMenuPlaySubmenu',
-      action: 'runActionsOnInput'
+      action: 'runActionsOnInput',
     }];
 
     // search for a key action by its name
@@ -283,13 +283,13 @@
           vm.keyActions.push({
             label: $translate.instant('autoAttendant.phoneMenuRouteQueue'),
             name: 'phoneMenuRouteQueue',
-            action: 'routeToQueue'
+            action: 'routeToQueue',
           });
           _.each(aaQueueList, function (aaQueue) {
             var idPos = aaQueue.queueUrl.lastIndexOf("/");
             vm.queues.push({
               description: aaQueue.queueName,
-              id: aaQueue.queueUrl.substr(idPos + 1)
+              id: aaQueue.queueUrl.substr(idPos + 1),
             });
           });
         }
@@ -300,7 +300,7 @@
       vm.keyActions.push({
         label: $translate.instant('autoAttendant.phoneMenuRouteToSipEndpoint'),
         name: 'phoneMenuRouteToSipEndpoint',
-        action: 'routeToSipEndpoint'
+        action: 'routeToSipEndpoint',
       });
     }
 

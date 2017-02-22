@@ -77,7 +77,7 @@ var LoginPage = function () {
 
   this.loginUsingIntegrationBackend = function (username, expectedUrl) {
     return this.login(username, expectedUrl, {
-      navigateUsingIntegrationBackend: true
+      navigateUsingIntegrationBackend: true,
     });
   };
 
@@ -113,7 +113,7 @@ var LoginPage = function () {
 
   this.loginThroughGuiUsingIntegrationBackend = function (username, password, expectedUrl) {
     return this.loginThroughGui(username, password, expectedUrl, {
-      navigateUsingIntegrationBackend: true
+      navigateUsingIntegrationBackend: true,
     });
   };
 

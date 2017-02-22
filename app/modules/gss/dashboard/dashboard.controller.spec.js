@@ -7,9 +7,9 @@ describe('controller: DashboardCtrl', function () {
     testIncident: {
       incidentId: 'testIncidentId',
       status: 'resolved',
-      localizedStatus: 'gss.incidentStatus.resolved'
+      localizedStatus: 'gss.incidentStatus.resolved',
     },
-    actionType: 'update'
+    actionType: 'update',
   };
 
 
@@ -39,7 +39,7 @@ describe('controller: DashboardCtrl', function () {
       $scope: $scope,
       $state: $state,
       DashboardService: DashboardService,
-      GSSService: GSSService
+      GSSService: GSSService,
     });
 
     $scope.$apply();
@@ -49,7 +49,7 @@ describe('controller: DashboardCtrl', function () {
     spyOn($state, 'go');
     spyOn(DashboardService, 'modifyComponent').and.returnValue($q.resolve());
     spyOn($modal, 'open').and.returnValue({
-      result: $q.resolve()
+      result: $q.resolve(),
     });
   }
 
@@ -60,8 +60,8 @@ describe('controller: DashboardCtrl', function () {
       status: 'testStatus',
       statusObj: {
         label: 'statusLabel',
-        value: 'statusValue'
-      }
+        value: 'statusValue',
+      },
     };
 
     var subComponent = _.clone(testComponent, true);
@@ -84,7 +84,7 @@ describe('controller: DashboardCtrl', function () {
     controller.goToUpdateIncidentPage(testData.testIncident);
     expect($state.go).toHaveBeenCalledWith('gss.incidents.update', {
       incident: testData.testIncident,
-      actionType: testData.actionType
+      actionType: testData.actionType,
     });
   });
 

@@ -15,11 +15,11 @@
         keyIndex: '@aaKeyIndex',
         fromRouteCall: '@aaFromRouteCall',
         fromDecision: '@aaFromDecision',
-        queues: '@aaQueues'
+        queues: '@aaQueues',
       },
       controller: 'AARouteToQueueCtrl',
       controllerAs: 'aaRouteToQueue',
-      templateUrl: 'modules/huron/features/autoAttendant/routeToQueue/aaRouteToQueue.tpl.html'
+      templateUrl: 'modules/huron/features/autoAttendant/routeToQueue/aaRouteToQueue.tpl.html',
     };
   }
 })();

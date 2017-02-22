@@ -26,7 +26,7 @@
       suggestionsNeeded: suggestionsNeeded,
       getHuntMemberWithSelectedNumber: getHuntMemberWithSelectedNumber,
       NUMBER_FORMAT_DIRECT_LINE: "NUMBER_FORMAT_DIRECT_LINE",
-      NUMBER_FORMAT_EXTENSION: "NUMBER_FORMAT_EXTENSION"
+      NUMBER_FORMAT_EXTENSION: "NUMBER_FORMAT_EXTENSION",
     };
 
     return service;
@@ -36,7 +36,7 @@
         longestIdle: "DA_LONGEST_IDLE_TIME",
         broadcast: "DA_BROADCAST",
         circular: "DA_CIRCULAR",
-        topDown: "DA_TOP_DOWN"
+        topDown: "DA_TOP_DOWN",
       };
     }
 
@@ -99,7 +99,7 @@
         var helper = getNumbers();
         helper.setApiArgs({
           number: hint,
-          assigned: assigned
+          assigned: assigned,
         });
         return helper;
       }
@@ -155,7 +155,7 @@
             .then(main)
             .catch(fail);
           return asyncResult.promise;
-        }
+        },
       };
       return helper;
 
@@ -243,7 +243,7 @@
             displayUser: false,
             selectableNumber: number,
             user: user,
-            uuid: user.uuid
+            uuid: user.uuid,
           };
         });
 
@@ -261,7 +261,7 @@
       _.forEach(numbers, function (number) {
         huntNumbers.push({
           searchNumber: number.number,
-          uuid: _.get(number, 'directoryNumber.uuid')
+          uuid: _.get(number, 'directoryNumber.uuid'),
         });
       });
       return huntNumbers;
@@ -290,7 +290,7 @@
     function getListOfHuntGroups() {
 
       return HuntGroupServiceV2.query({
-        customerId: customerId
+        customerId: customerId,
       }).$promise;
     }
 
@@ -298,20 +298,20 @@
 
       return HuntGroupServiceV2.delete({
         customerId: customerId,
-        huntGroupId: huntGroupId
+        huntGroupId: huntGroupId,
       }).$promise;
     }
 
     function saveHuntGroup(customerId, details) {
       return HuntGroupServiceV2.save({
-        customerId: customerId
+        customerId: customerId,
       }, details).$promise;
     }
 
     function updateHuntGroup(customerId, huntGroupId, huntGroupData) {
       return HuntGroupServiceV2.update({
         customerId: customerId,
-        huntGroupId: huntGroupId
+        huntGroupId: huntGroupId,
       }, huntGroupData).$promise;
     }
 
@@ -319,7 +319,7 @@
       var helper = getNumbers();
       helper.setApiArgs({
         number: '',
-        assigned: false
+        assigned: false,
       });
 
       return helper.fetch().then(function (nums) {
@@ -330,14 +330,14 @@
     function getDetails(customerId, huntGroupId) {
       return HuntGroupServiceV2.get({
         customerId: customerId,
-        huntGroupId: huntGroupId
+        huntGroupId: huntGroupId,
       }).$promise;
     }
 
     function getMemberInfo(customerId, userId) {
       return UserServiceCommonV2.get({
         customerId: customerId,
-        userId: userId
+        userId: userId,
       }).$promise;
     }
   }

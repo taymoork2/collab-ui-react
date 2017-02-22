@@ -27,5 +27,5 @@ function toList(filePath) {
 }
 
 module.exports = {
-  toList: toList
+  toList: toList,
 };

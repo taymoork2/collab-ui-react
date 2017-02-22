@@ -36,6 +36,10 @@ class ClusterSidepanelOverviewCtrl implements ng.IComponentController {
     return this.cluster && this.cluster.targetType === 'hds_app';
   }
 
+  public isMediaCluster() {
+    return this.cluster && this.cluster.targetType === 'mf_mgmt';
+  }
+
   public hasConnectors() {
     return this.cluster && this.cluster.connectors.length > 0;
   }

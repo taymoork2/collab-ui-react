@@ -70,11 +70,11 @@
         .then(function () {
           Notification.success('gss.componentsPage.addComponentSucceed', {
             componentName: vm.componentName,
-            componentGroupName: vm.groupName
+            componentGroupName: vm.groupName,
           });
         }).catch(function (error) {
           Notification.errorWithTrackingId(error, 'gss.componentsPage.addComponentFailed', {
-            componentName: vm.componentName
+            componentName: vm.componentName,
           });
         }).finally(function () {
           vm.isAdding = false;
@@ -89,7 +89,7 @@
       vm.selectPlaceholder = $translate.instant('gss.componentsPage.selectPlaceholder');
       vm.groupOptions = [{
         value: creatingGroupOptionValue,
-        label: $translate.instant('gss.componentsPage.createNewComponentGroup')
+        label: $translate.instant('gss.componentsPage.createNewComponentGroup'),
       }];
       vm.isAdding = false;
 

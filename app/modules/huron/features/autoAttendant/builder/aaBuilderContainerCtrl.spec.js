@@ -6,12 +6,12 @@ describe('Controller: AABuilderContainerCtrl', function () {
 
   var uiModel = {
     isClosedHours: false,
-    isHolidays: false
+    isHolidays: false,
   };
   var aaModel = {
     aaRecord: {
-      scheduleId: undefined
-    }
+      scheduleId: undefined,
+    },
   };
 
   var fakeModal = {
@@ -19,14 +19,14 @@ describe('Controller: AABuilderContainerCtrl', function () {
       then: function (okCallback, cancelCallback) {
         this.okCallback = okCallback;
         this.cancelCallback = cancelCallback;
-      }
+      },
     },
     close: function (item) {
       this.result.okCallback(item);
     },
     dismiss: function (type) {
       this.result.cancelCallback(type);
-    }
+    },
   };
 
   beforeEach(angular.mock.module('uc.autoattendant'));
@@ -47,7 +47,7 @@ describe('Controller: AABuilderContainerCtrl', function () {
     spyOn($modal, 'open').and.returnValue(fakeModal);
 
     controller = $controller('AABuilderContainerCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
 
   }));
@@ -68,7 +68,7 @@ describe('Controller: AABuilderContainerCtrl', function () {
       controller.openScheduleModal();
       fakeModal.close({
         holidays: [],
-        hours: []
+        hours: [],
       });
 
       $scope.$apply();

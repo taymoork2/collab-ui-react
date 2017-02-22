@@ -13,7 +13,7 @@
       listDevices: listDevices,
       addDevice: addDevice,
       deleteDevice: deleteDevice,
-      getDeviceStatus: getDeviceStatus
+      getDeviceStatus: getDeviceStatus,
     };
 
     return service;
@@ -35,7 +35,7 @@
 
     function addDevice(newDeviceName, callback) {
       var deviceData = {
-        'name': newDeviceName
+        'name': newDeviceName,
       };
 
       if (deviceData.name.length > 0) {

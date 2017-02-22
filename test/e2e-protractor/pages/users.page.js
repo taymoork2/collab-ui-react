@@ -7,7 +7,7 @@ var UsersPage = function () {
   this.inviteTestUser = {
     username: 'pbr-org-admin@squared2webex.com',
     password: 'C1sc0123!',
-    usernameWithNoEntitlements: 'collabctg+doNotDeleteTestUser@gmail.com'
+    usernameWithNoEntitlements: 'collabctg+doNotDeleteTestUser@gmail.com',
   };
 
   this.testUser = {

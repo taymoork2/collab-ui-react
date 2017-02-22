@@ -6,7 +6,7 @@
     .controller('CallServicePreviewCtrl', CallServicePreviewCtrl);
 
   /*@ngInject*/
-  function CallServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, ClusterService, UriVerificationService, DomainManagementService, $translate, FeatureToggleService, ResourceGroupService, UCCService, FusionUtils) {
+  function CallServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, FusionClusterService, UriVerificationService, DomainManagementService, $translate, FeatureToggleService, ResourceGroupService, UCCService, FusionUtils) {
     $scope.saveLoading = false;
     $scope.domainVerificationError = false;
     $scope.currentUser = $stateParams.currentUser;
@@ -22,7 +22,7 @@
     $scope.localizedServiceName = $translate.instant('hercules.serviceNames.' + $stateParams.extensionId);
     $scope.localizedConnectorName = $translate.instant('hercules.connectorNames.' + $stateParams.extensionId);
     $scope.localizedOnboardingWarning = $translate.instant('hercules.userSidepanel.warningInvitePending', {
-      ServiceName: $scope.localizedServiceName
+      ServiceName: $scope.localizedServiceName,
     });
 
     $scope.callServiceAware = {
@@ -30,7 +30,7 @@
       name: 'squaredFusionUC',
       entitled: isEntitled('squared-fusion-uc'), // Tracks the entitlement as set in the UI (toggle)
       directoryUri: null,
-      currentUserEntitled: isEntitled('squared-fusion-uc') // Tracks the actual entitlement on the user
+      currentUserEntitled: isEntitled('squared-fusion-uc'), // Tracks the actual entitlement on the user
     };
     $scope.callServiceConnect = {
       id: 'squared-fusion-ec',
@@ -64,7 +64,7 @@
             $scope.resourceGroup.shouldWarn = !hasEligibleCluster;
           });
         }
-      }
+      },
     };
     $scope.resourceGroup.init();
 
@@ -112,18 +112,14 @@
           return $scope.callServiceConnect.id === status.serviceId;
         });
         refreshUserInUssIfServiceEntitledButNoStatus($scope.callServiceConnect, userIsRefreshed);
-        if ($scope.callServiceAware.status && $scope.callServiceAware.status.connectorId) {
-          ClusterService.getConnector($scope.callServiceAware.status.connectorId).then(function (connector) {
-            $scope.callServiceAware.homedConnector = connector;
+        if ($scope.callServiceAware.status && $scope.callServiceAware.status.clusterId) {
+          FusionClusterService.get($scope.callServiceAware.status.clusterId).then(function (cluster) {
+            $scope.callServiceAware.homedCluster = cluster;
+            $scope.callServiceAware.homedConnector = _.find(cluster.connectors, { id: $scope.callServiceAware.status.connectorId });
           });
         }
         if ($scope.callServiceAware.status && $scope.callServiceAware.status.lastStateChange) {
           $scope.callServiceAware.status.lastStateChangeText = FusionUtils.getTimeSinceText($scope.callServiceAware.status.lastStateChange);
-        }
-        if ($scope.callServiceConnect.status && $scope.callServiceConnect.status.connectorId) {
-          ClusterService.getConnector($scope.callServiceConnect.status.connectorId).then(function (connector) {
-            $scope.callServiceConnect.homedConnector = connector;
-          });
         }
         if ($scope.callServiceConnect.status && $scope.callServiceConnect.status.lastStateChange) {
           $scope.callServiceConnect.status.lastStateChangeText = FusionUtils.getTimeSinceText($scope.callServiceConnect.status.lastStateChange);
@@ -236,23 +232,23 @@
       $scope.savingAwareEntitlement = $scope.callServiceAware.currentUserEntitled !== $scope.callServiceAware.entitled;
       $scope.savingConnectEntitlement = $scope.callServiceConnect.currentUserEntitled !== $scope.callServiceConnect.entitled;
       var user = [{
-        'address': $scope.currentUser.userName
+        'address': $scope.currentUser.userName,
       }];
       var entitlements = [{
         entitlementName: $scope.callServiceAware.name,
-        entitlementState: $scope.callServiceAware.entitled === true ? 'ACTIVE' : 'INACTIVE'
+        entitlementState: $scope.callServiceAware.entitled === true ? 'ACTIVE' : 'INACTIVE',
       }];
       if ($scope.callServiceConnect.orgEntitled && $scope.callServiceConnect.enabledInFMS) {
         entitlements.push({
           entitlementName: $scope.callServiceConnect.name,
-          entitlementState: $scope.callServiceAware.entitled === true && $scope.callServiceConnect.entitled === true ? 'ACTIVE' : 'INACTIVE'
+          entitlementState: $scope.callServiceAware.entitled === true && $scope.callServiceConnect.entitled === true ? 'ACTIVE' : 'INACTIVE',
         });
       }
 
       Userservice.updateUsers(user, null, entitlements, 'updateEntitlement', function (data) {
         var entitleResult = {
           msg: null,
-          type: 'null'
+          type: 'null',
         };
         if (data.success) {
           var userStatus = data.userResponse[0].status;
@@ -278,7 +274,7 @@
             refreshUserInUss();
           } else if (userStatus === 404) {
             entitleResult.msg = $translate.instant('hercules.userSidepanel.entitlements-dont-exist', {
-              userName: $scope.currentUser.userName
+              userName: $scope.currentUser.userName,
             });
             entitleResult.type = 'error';
           } else if (userStatus === 409) {
@@ -286,7 +282,7 @@
             entitleResult.type = 'error';
           } else {
             entitleResult.msg = $translate.instant('hercules.userSidepanel.not-updated', {
-              userName: $scope.currentUser.userName
+              userName: $scope.currentUser.userName,
             });
             entitleResult.type = 'error';
           }
@@ -297,9 +293,9 @@
         } else {
           entitleResult = {
             msg: $translate.instant('hercules.userSidepanel.not-updated', {
-              userName: $scope.currentUser.userName
+              userName: $scope.currentUser.userName,
             }),
-            type: 'error'
+            type: 'error',
           };
           Notification.notify([entitleResult.msg], entitleResult.type);
         }

@@ -22,7 +22,7 @@ describe('Service: WebExSiteRowService', function () {
       "isTrial": false,
       "status": "ACTIVE",
       "capacity": 200,
-      "siteUrl": "cisjsite031.webex.com"
+      "siteUrl": "cisjsite031.webex.com",
     },
     "isCustomerPartner": false,
     "showCSVInfo": true,
@@ -56,10 +56,10 @@ describe('Service: WebExSiteRowService', function () {
       "mockStatusCurrentIndex": null,
       "mockExport": false,
       "mockImport": false,
-      "mockFileDownload": false
+      "mockFileDownload": false,
     },
     "$$hashKey": "uiGrid-0007",
-    "showCSVIconAndResults": true
+    "showCSVIconAndResults": true,
   };
   var fakeSiteRow2 = {
     "label": "Meeting Center 200",
@@ -75,7 +75,7 @@ describe('Service: WebExSiteRowService', function () {
       "isTrial": false,
       "status": "ACTIVE",
       "capacity": 200,
-      "siteUrl": "sjsite04.webex.com"
+      "siteUrl": "sjsite04.webex.com",
     },
     "isCustomerPartner": false,
     "showCSVInfo": true,
@@ -93,15 +93,15 @@ describe('Service: WebExSiteRowService', function () {
         "totalRecords": 20,
         "successRecords": 0,
         "failedRecords": 20,
-        "importFileName": "NewSiteUsersU16LE.csv"
-      }
+        "importFileName": "NewSiteUsersU16LE.csv",
+      },
     },
     "csvPollIntervalObj": {
       "$$state": {
         "status": 2,
-        "value": "canceled"
+        "value": "canceled",
       },
-      "$$intervalId": 90
+      "$$intervalId": 90,
     },
     "isIframeSupported": true,
     "isAdminReportEnabled": true,
@@ -131,11 +131,11 @@ describe('Service: WebExSiteRowService', function () {
       "mockStatusCurrentIndex": null,
       "mockExport": false,
       "mockImport": false,
-      "mockFileDownload": false
+      "mockFileDownload": false,
     },
     "$$hashKey": "uiGrid-0009",
     "showCSVIconAndResults": true,
-    "asyncErr": false
+    "asyncErr": false,
   };
 
   // var fakeConferenceService1 = {
@@ -170,9 +170,9 @@ describe('Service: WebExSiteRowService', function () {
       "isTrial": false,
       "status": "ACTIVE",
       "capacity": 200,
-      "siteUrl": "sjsite04.webex.com"
+      "siteUrl": "sjsite04.webex.com",
     },
-    "isCustomerPartner": false
+    "isCustomerPartner": false,
   };
   //var fakeConferenceServicesArray = [fakeConferenceService1, fakeConferenceService2];
   var fakeConferenceServicesArray = [fakeConferenceService2];
@@ -181,17 +181,17 @@ describe('Service: WebExSiteRowService', function () {
     "webexSite": "sjsite04.webex.com",
     "siteHasMCLicense": true,
     "offerCode": "MC",
-    "capacity": "200"
+    "capacity": "200",
   }, {
     "webexSite": "cisjsite031.webex.com",
     "siteHasMCLicense": true,
     "offerCode": "MC",
-    "capacity": "200"
+    "capacity": "200",
   }, {
     "webexSite": "sjsite04.webex.com",
     "siteHasMCLicense": true,
     "offerCode": "CMR",
-    "capacity": "100"
+    "capacity": "100",
   }];
 
   afterAll(function () {
@@ -228,7 +228,7 @@ describe('Service: WebExSiteRowService', function () {
       exportCompletedWithErr: 'exportCompletedWithErr',
       importInProgress: 'importInProgress',
       importCompletedNoErr: 'importCompletedNoErr',
-      importCompletedWithErr: 'importCompletedWithErr'
+      importCompletedWithErr: 'importCompletedWithErr',
     };
 
     WebExApiGatewayConstsService.csvStatusTypes = [
@@ -238,7 +238,7 @@ describe('Service: WebExSiteRowService', function () {
       WebExApiGatewayConstsService.csvStates.exportCompletedWithErr,
       WebExApiGatewayConstsService.csvStates.importInProgress,
       WebExApiGatewayConstsService.csvStates.importCompletedNoErr,
-      WebExApiGatewayConstsService.csvStates.importCompletedWithErr
+      WebExApiGatewayConstsService.csvStates.importCompletedWithErr,
     ];
 
     spyOn(Auth, 'redirectToLogin');
@@ -302,9 +302,9 @@ describe('Service: WebExSiteRowService', function () {
         "isTrial": false,
         "status": "ACTIVE",
         "capacity": 200,
-        "linkedSiteUrl": "sjsite07.webex.com"
+        "linkedSiteUrl": "sjsite07.webex.com",
       },
-      "isCustomerPartner": false
+      "isCustomerPartner": false,
     };
     spyOn(Authinfo, 'getConferenceServicesWithLinkedSiteUrl').and.returnValue([fakeLinkedConferenceService]);
 
@@ -329,7 +329,7 @@ describe('Service: WebExSiteRowService', function () {
       siteUrl: "sjsite04.webex.com",
       isIframeSupported: false,
       isAdminReportEnabled: false,
-      isCSVSupported: false
+      isCSVSupported: false,
     });
 
     $rootScope.$apply();
@@ -354,7 +354,7 @@ describe('Service: WebExSiteRowService', function () {
       siteUrl: "fake.webex.com",
       isIframeSupported: false,
       isAdminReportEnabled: true,
-      isCSVSupported: false
+      isCSVSupported: false,
     });
 
     $rootScope.$apply();
@@ -379,7 +379,7 @@ describe('Service: WebExSiteRowService', function () {
       siteUrl: "fake.webex.com",
       isIframeSupported: true,
       isAdminReportEnabled: false,
-      isCSVSupported: false
+      isCSVSupported: false,
     });
 
     $rootScope.$apply();
@@ -404,7 +404,7 @@ describe('Service: WebExSiteRowService', function () {
       siteUrl: "fake.webex.com",
       isIframeSupported: true,
       isAdminReportEnabled: true,
-      isCSVSupported: false
+      isCSVSupported: false,
     });
 
     $rootScope.$apply();
@@ -431,7 +431,7 @@ describe('Service: WebExSiteRowService', function () {
       siteUrl: "sjsite04.webex.com",
       isIframeSupported: true,
       isAdminReportEnabled: true,
-      isCSVSupported: true
+      isCSVSupported: true,
     });
 
     $rootScope.$apply();
@@ -451,7 +451,7 @@ describe('Service: WebExSiteRowService', function () {
       siteUrl: "sjsite04.webex.com",
       isIframeSupported: true,
       isAdminReportEnabled: true,
-      isCSVSupported: true
+      isCSVSupported: true,
     });
 
     deferredCsvStatus.resolve({
@@ -479,7 +479,7 @@ describe('Service: WebExSiteRowService', function () {
       siteUrl: "sjsite04.webex.com",
       isIframeSupported: true,
       isAdminReportEnabled: true,
-      isCSVSupported: true
+      isCSVSupported: true,
     });
 
     deferredCsvStatus.resolve({
@@ -508,7 +508,7 @@ describe('Service: WebExSiteRowService', function () {
       siteUrl: "sjsite04.webex.com",
       isIframeSupported: true,
       isAdminReportEnabled: true,
-      isCSVSupported: true
+      isCSVSupported: true,
     });
 
     deferredCsvStatus.resolve({
@@ -537,7 +537,7 @@ describe('Service: WebExSiteRowService', function () {
       siteUrl: "sjsite04.webex.com",
       isIframeSupported: true,
       isAdminReportEnabled: true,
-      isCSVSupported: true
+      isCSVSupported: true,
     });
 
     deferredCsvStatus.resolve({
@@ -566,7 +566,7 @@ describe('Service: WebExSiteRowService', function () {
       siteUrl: "sjsite04.webex.com",
       isIframeSupported: true,
       isAdminReportEnabled: true,
-      isCSVSupported: true
+      isCSVSupported: true,
     });
 
     deferredCsvStatus.resolve({
@@ -595,7 +595,7 @@ describe('Service: WebExSiteRowService', function () {
       siteUrl: "sjsite04.webex.com",
       isIframeSupported: true,
       isAdminReportEnabled: true,
-      isCSVSupported: true
+      isCSVSupported: true,
     });
 
     deferredCsvStatus.resolve({
@@ -624,7 +624,7 @@ describe('Service: WebExSiteRowService', function () {
       siteUrl: "sjsite04.webex.com",
       isIframeSupported: true,
       isAdminReportEnabled: true,
-      isCSVSupported: true
+      isCSVSupported: true,
     });
 
     deferredCsvStatus.resolve({
@@ -654,7 +654,7 @@ describe('Service: WebExSiteRowService', function () {
       siteUrl: "sjsite04.webex.com",
       isIframeSupported: true,
       isAdminReportEnabled: true,
-      isCSVSupported: true
+      isCSVSupported: true,
     });
 
     deferredCsvStatus.reject({
@@ -662,7 +662,7 @@ describe('Service: WebExSiteRowService', function () {
       status: 'error',
       errorId: '060502',
       errorDesc: 'Auth token is invalid.',
-      completionDetails: null
+      completionDetails: null,
     });
 
     $rootScope.$apply();
@@ -681,7 +681,7 @@ describe('Service: WebExSiteRowService', function () {
       siteUrl: "sjsite04.webex.com",
       isIframeSupported: true,
       isAdminReportEnabled: true,
-      isCSVSupported: true
+      isCSVSupported: true,
     });
 
     $rootScope.$apply();

@@ -31,7 +31,7 @@ describe('HealthService', function () {
 
     it('should return online if service is available', function () {
       $httpBackend.expect('GET', regex).respond({
-        serviceState: 'online'
+        serviceState: 'online',
       });
 
       var promise = HealthService.getHealthStatus();

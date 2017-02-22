@@ -46,7 +46,7 @@
       licenseDuration: _.get(vm, 'currentTrial.duration', 0),
       care: hasOfferType(Config.offerTypes.care),
       careLicenseValue: _.get(findOffer(Config.offerTypes.care), 'licenseCount', 0),
-      context: false // we don't know this yet, so default to false
+      context: false, // we don't know this yet, so default to false
     };
 
     vm.details.licenseCount = vm.preset.licenseCount;
@@ -84,7 +84,7 @@
       type: 'checkbox',
       templateOptions: {
         label: $translate.instant('trials.context'),
-        id: 'contextTrial'
+        id: 'contextTrial',
       },
     }];
 
@@ -102,8 +102,8 @@
       expressionProperties: {
         'templateOptions.disabled': function () {
           return vm.preset.message;
-        }
-      }
+        },
+      },
     }];
 
     vm.meetingFields = [{
@@ -120,8 +120,8 @@
       expressionProperties: {
         'templateOptions.disabled': function () {
           return vm.preset.meeting;
-        }
-      }
+        },
+      },
     }, {
       // Webex Trial
       model: vm.webexTrial,
@@ -136,8 +136,8 @@
       expressionProperties: {
         'templateOptions.disabled': function () {
           return vm.preset.webex;
-        }
-      }
+        },
+      },
     }];
 
     vm.callFields = [{
@@ -157,8 +157,8 @@
       expressionProperties: {
         'templateOptions.disabled': function () {
           return vm.preset.call;
-        }
-      }
+        },
+      },
     }];
 
     vm.careFields = [{
@@ -169,7 +169,7 @@
       className: '',
       templateOptions: {
         id: 'careTrial',
-        label: $translate.instant('trials.care')
+        label: $translate.instant('trials.care'),
       },
       hideExpression: function () {
         return !vm.showCare;
@@ -180,8 +180,8 @@
         },
         'templateOptions.disabled': function () {
           return messageOfferDisabledExpression() || callOfferDisabledExpression() || vm.preset.care;
-        }
-      }
+        },
+      },
     }, {
       model: vm.careTrial.details,
       key: 'quantity',
@@ -192,10 +192,10 @@
         id: 'trialCareLicenseCount',
         inputClass: 'medium-5 small-offset-1',
         secondaryLabel: $translate.instant('trials.licenses'),
-        type: 'number'
+        type: 'number',
       },
       modelOptions: {
-        allowInvalid: true
+        allowInvalid: true,
       },
       expressionProperties: {
         'templateOptions.required': function () {
@@ -203,7 +203,7 @@
         },
         'templateOptions.disabled': function () {
           return careLicenseInputDisabledExpression();
-        }
+        },
       },
       validators: {
         quantity: {
@@ -212,8 +212,8 @@
           },
           message: function () {
             return $translate.instant('partnerHomePage.invalidTrialCareQuantity');
-          }
-        }
+          },
+        },
       },
       watcher: {
         expression: function () {
@@ -223,8 +223,8 @@
           if (newValue !== oldValue) {
             field.formControl.$validate();
           }
-        }
-      }
+        },
+      },
     }];
 
     vm.licenseCountFields = [{
@@ -237,10 +237,10 @@
         inputClass: 'medium-5',
         type: 'number',
 
-        secondaryLabel: $translate.instant('trials.users')
+        secondaryLabel: $translate.instant('trials.users'),
       },
       modelOptions: {
-        allowInvalid: true
+        allowInvalid: true,
       },
       expressionProperties: {
         'templateOptions.required': function () {
@@ -256,7 +256,7 @@
           } else {
             return 0;
           }
-        }
+        },
       },
 
       validators: {
@@ -266,7 +266,7 @@
           },
           message: function () {
             return $translate.instant('partnerHomePage.invalidTrialLicenseCount');
-          }
+          },
         },
         countWithCare: {
           expression: function () {
@@ -274,8 +274,8 @@
           },
           message: function () {
             return $translate.instant('partnerHomePage.careLicenseCountExceedsTotalCount');
-          }
-        }
+          },
+        },
       },
 
       watcher: {
@@ -286,8 +286,8 @@
           if (newValue !== oldValue) {
             field.formControl.$validate();
           }
-        }
-      }
+        },
+      },
     }];
 
     vm.trialTermsFields = [{
@@ -306,7 +306,7 @@
         onChange: function () {
           vm.licenseCountChanged = true;
           isProceedDisabled();
-        }
+        },
       },
     }];
 
@@ -318,14 +318,14 @@
       className: '',
       templateOptions: {
         label: $translate.instant('trials.roomSystem'),
-        id: 'trialRoomSystem'
+        id: 'trialRoomSystem',
       },
       watcher: {
         listener: function (field, newValue, oldValue) {
           if (newValue !== oldValue) {
             field.model.details.quantity = newValue ? 5 : 0;
           }
-        }
+        },
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
@@ -341,7 +341,7 @@
         id: 'trialRoomSystemsAmount',
         inputClass: 'medium-5 small-offset-1',
         secondaryLabel: $translate.instant('trials.licenses'),
-        type: 'number'
+        type: 'number',
       },
       expressionProperties: {
         'templateOptions.required': function () {
@@ -358,9 +358,9 @@
           },
           message: function () {
             return $translate.instant('partnerHomePage.invalidTrialRoomSystemQuantity');
-          }
-        }
-      }
+          },
+        },
+      },
     }];
 
     vm.sparkBoardFields = [{
@@ -370,20 +370,20 @@
       className: '',
       templateOptions: {
         id: 'sparkBoardTrial',
-        label: $translate.instant('trials.sparkBoardSystem')
+        label: $translate.instant('trials.sparkBoardSystem'),
       },
       watcher: {
         listener: function (field, newValue, oldValue) {
           if (newValue !== oldValue) {
             field.model.details.quantity = newValue ? 5 : 0;
           }
-        }
+        },
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
           return vm.preset.sparkBoard;
         },
-      }
+      },
     }, {
       model: vm.sparkBoardTrial.details,
       key: 'quantity',
@@ -393,7 +393,7 @@
         id: 'trialSparkBoardAmount',
         inputClass: 'medium-5 small-offset-1',
         secondaryLabel: $translate.instant('trials.licenses'),
-        type: 'number'
+        type: 'number',
       },
       expressionProperties: {
         'templateOptions.required': function () {
@@ -410,9 +410,9 @@
           },
           message: function () {
             return $translate.instant('partnerHomePage.invalidTrialSparkBoardQuantity');
-          }
-        }
-      }
+          },
+        },
+      },
     }];
 
     vm.hasCallEntitlement = Authinfo.isSquaredUC();
@@ -442,7 +442,7 @@
       callOfferDisabledExpression: callOfferDisabledExpression,
       careLicenseInputDisabledExpression: careLicenseInputDisabledExpression,
       validateCareLicense: validateCareLicense,
-      careLicenseCountLessThanTotalCount: careLicenseCountLessThanTotalCount
+      careLicenseCountLessThanTotalCount: careLicenseCountLessThanTotalCount,
     };
 
     init();
@@ -462,7 +462,7 @@
           getAdminOrgError = true;
           return err;
         }),
-        sbTrial: FeatureToggleService.atlasDarlingGetStatus()
+        sbTrial: FeatureToggleService.atlasDarlingGetStatus(),
       };
 
       $q.all(promises)
@@ -516,7 +516,7 @@
     function hasUserServices() {
       var services = [vm.callTrial, vm.meetingTrial, vm.webexTrial, vm.messageTrial];
       var result = _.some(services, {
-        enabled: true
+        enabled: true,
       });
       return result;
     }
@@ -562,7 +562,7 @@
     function addRemoveStates() {
       _.forEach(vm.trialStates, function (state) {
         if (!state.enabled || _.every(state.trials, {
-          enabled: false
+          enabled: false,
         })) {
           removeNavState(state.name);
         } else {
@@ -660,7 +660,7 @@
       return TrialService.editTrial(custId, trialId)
         .catch(function (response) {
           Notification.errorResponse(response, 'trialModal.editError', {
-            customerName: vm.details.customerName
+            customerName: vm.details.customerName,
           });
           return $q.reject(response);
         })
@@ -696,7 +696,7 @@
         .then(function () {
           _.assign($stateParams.currentTrial, vm.currentTrial);
           Notification.success('trialModal.editSuccess', {
-            customerName: vm.currentTrial.customerName
+            customerName: vm.currentTrial.customerName,
           });
 
           if (_.isFunction(callback)) {
@@ -718,19 +718,19 @@
 
     function hasOfferType(configOption) {
       return _.some(vm.currentTrial.offers, {
-        id: configOption
+        id: configOption,
       });
     }
 
     function findOffer(configOption) {
       return _.find(vm.currentTrial.offers, {
-        id: configOption
+        id: configOption,
       });
     }
 
     function setViewState(modalStage, value) {
       _.find(vm.trialStates, {
-        name: modalStage
+        name: modalStage,
       }).enabled = value;
     }
 
@@ -743,7 +743,7 @@
         vm.preset.care && (vm.preset.careLicenseValue !== vm.careTrial.details.quantity),
         vm.preset.licenseCount !== vm.details.licenseCount,
         vm.licenseCountChanged,
-        canAddDevice()
+        canAddDevice(),
       ];
 
       // bail at first true result
@@ -848,7 +848,7 @@
     function launchCustomerPortal() {
       $window.open($state.href('login_swap', {
         customerOrgId: vm.currentTrial.customerOrgId,
-        customerOrgName: vm.currentTrial.customerName
+        customerOrgName: vm.currentTrial.customerName,
       }));
       $state.modal.close();
     }

@@ -38,7 +38,7 @@
 
     function updateTags(deviceUrl, tags) {
       return $http.patch(deviceUrl, {
-        description: JSON.stringify(tags || [])
+        description: JSON.stringify(tags || []),
       });
     }
 
@@ -51,7 +51,7 @@
         command: "logUpload",
         eventType: "room.request_logs",
         feedbackId: feedbackId,
-        email: email
+        email: email,
       });
     }
 
@@ -61,7 +61,7 @@
         eventType: "room.localAccess",
         displayName: displayName,
         email: email,
-        token: token
+        token: token,
       });
     }
 
@@ -71,7 +71,7 @@
         eventType: "room.renewRSU",
         feedbackId: feedbackId,
         email: email,
-        message: Utils.getUUID()
+        message: Utils.getUUID(),
       });
     }
 
@@ -87,7 +87,7 @@
 //Grey list:
       uploadLogs: uploadLogs,
       deleteDevice: deleteDevice,
-      renewRsuKey: renewRsuKey
+      renewRsuKey: renewRsuKey,
     };
   }
 

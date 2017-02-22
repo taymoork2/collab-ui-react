@@ -10,10 +10,10 @@
       restrict: 'E',
       scope: {
         type: '@',
-        row: '='
+        row: '=',
       },
       templateUrl: 'modules/core/customers/customerList/grid/serviceColumnIcon.tpl.html',
-      link: link
+      link: link,
     };
 
     function link(scope) {
@@ -35,14 +35,14 @@
         trial: 'trial',
         purchased: 'purchased',
         free: 'free',
-        noInfo: 'licenseInfoNotAvailable'
+        noInfo: 'licenseInfoNotAvailable',
       };
       var TYPE_TO_TRANSLATION_CONVERSIONS = {
         // an unfortunate requirement since (some of) the translations don't match the object names
         messaging: 'message',
         communications: 'call',
         conferencing: 'meeting',
-        roomSystems: 'roomSystem'
+        roomSystems: 'roomSystem',
       };
 
       // necessary to call this function due to the way that both toolkit's tooltip works
@@ -62,7 +62,7 @@
         var serviceStatus = getServiceStatus(rowData, type);
         var serviceManagedByAnotherPartner = !PartnerService.helpers.isServiceManagedByCurrentPartner(rowData[type]);
         var tooltipDataObj = {
-          statusClass: serviceStatus
+          statusClass: serviceStatus,
         };
 
         if (TYPE_TO_TRANSLATION_CONVERSIONS[type]) {
@@ -108,7 +108,7 @@
         });
         if (webexServicesCounted > MAX_SITES_DISPLAYED) {
           var additionalSiteCount = $translate.instant('customerPage.webexSiteCount', {
-            count: webexServicesCounted - MAX_SITES_DISPLAYED
+            count: webexServicesCounted - MAX_SITES_DISPLAYED,
           }, 'messageformat');
           tooltip.append('<p class="service-text">' + additionalSiteCount + '</p>');
         }
@@ -122,10 +122,10 @@
         var tooltipDataObj = {
           url: licenseData.siteUrl,
           qty: $translate.instant('customerPage.quantityWithValue', {
-            quantity: licenseData.volume
+            quantity: licenseData.volume,
           }),
           statusClass: serviceStatus,
-          status: $translate.instant('customerPage.' + serviceStatus)
+          status: $translate.instant('customerPage.' + serviceStatus),
         };
 
         if (serviceManagedByAnotherPartner && serviceStatus !== POSSIBLE_SERVICE_STATUSES.free && rowData[licenseType].volume) {

@@ -18,7 +18,7 @@
 
     function readCeDependencies() {
       return CeDependenciesService.get({
-        customerId: Authinfo.getOrgId()
+        customerId: Authinfo.getOrgId(),
       }).$promise;
     }
   }

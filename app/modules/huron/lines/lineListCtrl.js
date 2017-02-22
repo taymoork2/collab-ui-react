@@ -25,25 +25,25 @@
 
     vm.sort = {
       by: 'userid',
-      order: '-asc'
+      order: '-asc',
     };
 
     // Defines Grid Filter "All"
     vm.placeholder = {
       name: $translate.instant('linesPage.allLines'),
-      filterValue: 'all'
+      filterValue: 'all',
     };
 
     // Defines Grid Filters "Unassigned" and "Assigned"
     vm.filters = [{
       name: $translate.instant('linesPage.unassignedLines'),
-      filterValue: 'unassignedLines'
+      filterValue: 'unassignedLines',
     }, {
       name: $translate.instant('linesPage.assignedLines'),
-      filterValue: 'assignedLines'
+      filterValue: 'assignedLines',
     }, {
       name: $translate.instant('linesPage.pending'),
-      filterValue: 'pending'
+      filterValue: 'pending',
     }];
 
     // Set data filter
@@ -140,13 +140,13 @@
         displayName: $translate.instant('linesPage.internalNumberHeader'),
         width: '20%',
         cellClass: 'internalNumberColumn',
-        sortable: true
+        sortable: true,
       }, {
         field: 'externalNumber',
         displayName: $translate.instant('linesPage.phoneNumbers'),
         sortable: true,
         cellClass: 'externalNumberColumn',
-        width: '20%'
+        width: '20%',
       }, {
         field: 'displayField()',
         displayName: $translate.instant('linesPage.assignedTo'),
@@ -154,10 +154,10 @@
         sortable: true,
         sort: {
           direction: 'asc',
-          priority: 0
+          priority: 0,
         },
-        sortCellFiltered: true
-      }]
+        sortCellFiltered: true,
+      }],
     };
 
     function sortColumn(scope, sortColumns) {

@@ -12,7 +12,7 @@ describe('UserListCtrl: Ctrl', function () {
   function initFixtures() {
     this.$rootScope.typeOfExport = {
       USER: 1,
-      CUSTOMER: 2
+      CUSTOMER: 2,
     };
 
     this.photoUsers = _.clone(getJSONFixture('core/json/users/userlist.controller.json'));
@@ -29,7 +29,7 @@ describe('UserListCtrl: Ctrl', function () {
     var _this = this;
 
     var successData = {
-      success: true
+      success: true,
     };
 
     // var failedData = {
@@ -81,7 +81,7 @@ describe('UserListCtrl: Ctrl', function () {
       Userservice: this.Userservice,
       UserListService: this.UserListService,
       Authinfo: this.Authinfo,
-      Config: this.Config
+      Config: this.Config,
     });
 
     spyOn(this.controller, 'configureGrid').and.callFake(function () {
@@ -90,8 +90,8 @@ describe('UserListCtrl: Ctrl', function () {
         infiniteScroll: {
           saveScrollPercentage: jasmine.createSpy().and.returnValue(),
           resetScroll: jasmine.createSpy().and.returnValue(),
-          dataLoaded: jasmine.createSpy().and.returnValue()
-        }
+          dataLoaded: jasmine.createSpy().and.returnValue(),
+        },
       };
       return _this.$q.resolve();
     });
@@ -265,11 +265,11 @@ describe('UserListCtrl: Ctrl', function () {
 
       var sortColumns = [{
         'colDef': {
-          'id': 'displayName'
+          'id': 'displayName',
         },
         'sort': {
-          'direction': 'asc'
-        }
+          'direction': 'asc',
+        },
       }];
 
       this.$scope.sortDirection(this.$scope, sortColumns);
@@ -286,7 +286,7 @@ describe('UserListCtrl: Ctrl', function () {
       spyOn(this.$scope, 'canShowUserDelete').and.returnValue(true);
 
       this.user = {
-        userStatus: 'active'
+        userStatus: 'active',
       };
     });
 
@@ -360,7 +360,7 @@ describe('UserListCtrl: Ctrl', function () {
       spyOn(this.Userservice, 'isHuronUser').and.returnValue(false);
 
       this.user = {
-        userStatus: 'active'
+        userStatus: 'active',
       };
 
       this.$scope.isCSB = false;

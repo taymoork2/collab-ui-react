@@ -24,7 +24,7 @@ describe('Template: planReview', function () {
     getCareServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/careServices.json').careLicense),
     getCmrServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/cmrServices.json')),
     getLicenses: sinon.stub().returns(getJSONFixture('core/json/authInfo/licenseServices.json')),
-    isCare: sinon.stub().returns(true)
+    isCare: sinon.stub().returns(true),
   };
 
   beforeEach(angular.mock.module(function ($provide) {
@@ -65,7 +65,7 @@ describe('Template: planReview', function () {
 
   function compileView() {
     controller = $controller('PlanReviewCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
     $scope.planReview = controller;
     var template = $templateCache.get('modules/core/setupWizard/planReview/planReview.tpl.html');

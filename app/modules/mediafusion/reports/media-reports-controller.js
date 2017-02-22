@@ -5,7 +5,8 @@
     .module('Mediafusion')
     .controller('MediaReportsController', MediaReportsController);
   /* @ngInject */
-  function MediaReportsController($q, $scope, $translate, $interval, MediaClusterServiceV2, UtilizationResourceGraphService, MeetingLocationAdoptionGraphService, ParticipantDistributionResourceGraphService, MediaReportsService, Notification, MediaReportsDummyGraphService, MediaSneekPeekResourceService, CallVolumeResourceGraphService, AvailabilityResourceGraphService, ClientTypeAdoptionGraphService) {
+  function MediaReportsController($q, $scope, $translate, $interval, MediaClusterServiceV2, UtilizationResourceGraphService, MeetingLocationAdoptionGraphService, ParticipantDistributionResourceGraphService, NumberOfParticipantGraphService, MediaReportsService, Notification, MediaReportsDummyGraphService, MediaSneekPeekResourceService, CallVolumeResourceGraphService, AvailabilityResourceGraphService, ClientTypeAdoptionGraphService) {
+
     var vm = this;
     var interval = null;
     var deferred = $q.defer();
@@ -18,6 +19,7 @@
     vm.utilizationStatus = vm.REFRESH;
     vm.callVolumeStatus = vm.REFRESH;
     vm.participantDistributionStatus = vm.REFRESH;
+    vm.numberOfParticipantStatus = vm.REFRESH;
     vm.availabilityStatus = vm.REFRESH;
     vm.clientTypeStatus = vm.REFRESH;
     vm.meetingLocationStatus = vm.REFRESH;
@@ -58,7 +60,7 @@
     vm.cloudparticipants = {
       isShow: '',
       value: '',
-      footerDesc: vm.cloud_participants_heading
+      footerDesc: vm.cloud_participants_heading,
     };
 
     vm.displayAdoption = false;
@@ -86,19 +88,19 @@
 
     vm.timeOptions = [{
       value: 0,
-      label: $translate.instant('mediaFusion.metrics.last4Hours')
+      label: $translate.instant('mediaFusion.metrics.last4Hours'),
     }, {
       value: 1,
-      label: $translate.instant('mediaFusion.metrics.today')
+      label: $translate.instant('mediaFusion.metrics.today'),
     }, {
       value: 2,
-      label: $translate.instant('mediaFusion.metrics.week')
+      label: $translate.instant('mediaFusion.metrics.week'),
     }, {
       value: 3,
-      label: $translate.instant('mediaFusion.metrics.month')
+      label: $translate.instant('mediaFusion.metrics.month'),
     }, {
       value: 4,
-      label: $translate.instant('mediaFusion.metrics.threeMonths')
+      label: $translate.instant('mediaFusion.metrics.threeMonths'),
     }];
     vm.timeSelected = vm.timeOptions[0];
 
@@ -113,6 +115,7 @@
         setClusterAvailability();
         setUtilizationData();
         setParticipantDistributionData();
+        setNumberOfParticipantData();
         setCallVolumeData();
       });
     }
@@ -149,7 +152,7 @@
     $scope.$on('zoomedTime', function (event, data) {
       vm.timeSelected = {
         startTime: data.data.startTime,
-        endTime: data.data.endTime
+        endTime: data.data.endTime,
       };
       vm.timeSelected.label = vm.customPlaceholder;
       timeUpdate();
@@ -423,6 +426,28 @@
       });
     }
 
+    function setNumberOfParticipantData() {
+      MediaReportsService.getNumberOfParticipantData(vm.timeSelected).then(function (response) {
+        if (_.isUndefined(response.graphData) || _.isUndefined(response.graphs) || response.graphData.length === 0 || response.graphs.length === 0) {
+          setDummyNumberOfParticipant();
+        } else {
+          deferred.promise.then(function () {
+              //set the number of participants graphs here
+            if (_.isUndefined(setNumberOfParticipantGraph(response))) {
+              setDummyNumberOfParticipant();
+            } else {
+              vm.numberOfParticipantStatus = vm.SET;
+            }
+          }, function () {
+              //map is not formed so we shoud show dummy graphs
+            setDummyNumberOfParticipant();
+          });
+        }
+      }, function () {
+        setDummyNumberOfParticipant();
+      });
+    }
+
     function setAvailabilityData() {
       MediaReportsService.getAvailabilityData(vm.timeSelected, vm.clusterId).then(function (response) {
         if (_.isUndefined(response.data) || !_.isArray(response.data) || response.data.length === 0 || _.isUndefined(response.data[0].clusterCategories) || response.data[0].clusterCategories.length === 0) {
@@ -469,6 +494,10 @@
       vm.clientTypeChart = ClientTypeAdoptionGraphService.setClientTypeGraph(response, vm.clientTypeChart, vm.timeSelected);
       return vm.clientTypeChart;
     }
+    function setNumberOfParticipantGraph(response) {
+      vm.numberOfParticipantChart = NumberOfParticipantGraphService.setNumberOfParticipantGraph(response, vm.numberOfParticipantChart, vm.timeSelected);
+      return vm.numberOfParticipantChart;
+    }
 
     function setMeetingLocationGraph(response) {
       vm.meetingLocationChart = MeetingLocationAdoptionGraphService.setMeetingLocationGraph(response, vm.meetingLocationChart, vm.timeSelected);
@@ -487,7 +516,7 @@
       vm.utilizationStatus = vm.EMPTY;
       var response = {
         graphData: MediaReportsDummyGraphService.dummyLineChartData(vm.timeSelected),
-        graphs: MediaReportsDummyGraphService.dummyUtilizationGraph()
+        graphs: MediaReportsDummyGraphService.dummyUtilizationGraph(),
       };
       setUtilizationGraph(response);
     }
@@ -496,7 +525,7 @@
       vm.participantDistributionStatus = vm.EMPTY;
       var response = {
         graphData: MediaReportsDummyGraphService.dummyLineChartData(vm.timeSelected),
-        graphs: MediaReportsDummyGraphService.dummyParticipantDistributionGraph()
+        graphs: MediaReportsDummyGraphService.dummyParticipantDistributionGraph(),
       };
       setParticipantDistributionGraph(response);
     }
@@ -505,7 +534,7 @@
       vm.clientTypeStatus = vm.EMPTY;
       var response = {
         graphData: MediaReportsDummyGraphService.dummyLineChartData(vm.timeSelected),
-        graphs: MediaReportsDummyGraphService.dummyClientTypeGraph()
+        graphs: MediaReportsDummyGraphService.dummyClientTypeGraph(),
       };
       setClientTypeGraph(response);
     }
@@ -514,15 +543,24 @@
       vm.meetingLocationStatus = vm.EMPTY;
       var response = {
         graphData: MediaReportsDummyGraphService.dummyLineChartData(vm.timeSelected),
-        graphs: MediaReportsDummyGraphService.dummyMeetingLocationGraph()
+        graphs: MediaReportsDummyGraphService.dummyMeetingLocationGraph(),
       };
       setMeetingLocationGraph(response);
+    }
+
+    function setDummyNumberOfParticipant() {
+      vm.numberOfParticipantStatus = vm.EMPTY;
+      var response = {
+        graphData: MediaReportsDummyGraphService.dummyLineChartData(vm.timeSelected),
+        graphs: MediaReportsDummyGraphService.dummyNumberOfParticipantGraph(),
+      };
+      setNumberOfParticipantGraph(response);
     }
 
     function setDummyCallVolume() {
       vm.callVolumeStatus = vm.EMPTY;
       var response = {
-        graphData: MediaReportsDummyGraphService.dummyCallVolumeData(vm.timeSelected)
+        graphData: MediaReportsDummyGraphService.dummyCallVolumeData(vm.timeSelected),
       };
       setCallVolumeGraph(response);
     }

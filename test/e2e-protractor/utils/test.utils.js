@@ -101,9 +101,9 @@ exports.getToken = function () {
     auth: {
       'user': config.oauthClientRegistration.id,
       'pass': config.oauthClientRegistration.secret,
-      'sendImmediately': true
+      'sendImmediately': true,
     },
-    body: 'grant_type=client_credentials&scope=' + config.oauthClientRegistration.scope
+    body: 'grant_type=client_credentials&scope=' + config.oauthClientRegistration.scope,
   };
 
   return this.sendRequest(options).then(function (data) {

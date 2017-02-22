@@ -60,6 +60,7 @@
       setCustomerTrialV2: setCustomerTrialV2,
       getCarrierInventory: getCarrierInventory,
       getCarrierTollFreeInventory: getCarrierTollFreeInventory,
+      getCarrierDetails: getCarrierDetails,
       searchCarrierInventory: searchCarrierInventory,
       searchCarrierTollFreeInventory: searchCarrierTollFreeInventory,
       reserveCarrierInventory: reserveCarrierInventory,
@@ -101,7 +102,7 @@
       NUMBER_ORDER: NUMBER_ORDER,
       SWIVEL_ORDER: SWIVEL_ORDER,
       NUMTYPE_DID: NUMTYPE_DID,
-      NUMTYPE_TOLLFREE: NUMTYPE_TOLLFREE
+      NUMTYPE_TOLLFREE: NUMTYPE_TOLLFREE,
     };
 
     return service;
@@ -115,7 +116,7 @@
         email: email,
         pstnCarrierId: pstnCarrierId,
         numbers: numbers,
-        trial: trial
+        trial: trial,
       };
 
       if (PstnSetup.isResellerExists()) {
@@ -132,7 +133,7 @@
         lastName: lastName,
         email: email,
         pstnCarrierId: pstnCarrierId,
-        trial: trial
+        trial: trial,
       };
 
       if (PstnSetup.isResellerExists()) {
@@ -143,7 +144,7 @@
 
     function getResellerV2() {
       return TerminusV2ResellerService.get({
-        resellerId: Authinfo.getOrgId()
+        resellerId: Authinfo.getOrgId(),
       }).$promise;
     }
 
@@ -151,64 +152,64 @@
       var payload = {
         uuid: Authinfo.getOrgId(),
         name: Authinfo.getOrgName(),
-        email: Authinfo.getPrimaryEmail()
+        email: Authinfo.getPrimaryEmail(),
       };
       return TerminusV2ResellerService.save({}, payload).$promise;
     }
 
     function updateCustomerCarrier(customerId, pstnCarrierId) {
       var payload = {
-        pstnCarrierId: pstnCarrierId
+        pstnCarrierId: pstnCarrierId,
       };
       return TerminusCustomerService.update({
-        customerId: customerId
+        customerId: customerId,
       }, payload).$promise;
     }
 
     function getCustomer(customerId) {
       return TerminusCustomerService.get({
-        customerId: customerId
+        customerId: customerId,
       }).$promise;
     }
 
     function getCustomerV2(customerId) {
       return TerminusCustomerV2Service.get({
-        customerId: customerId
+        customerId: customerId,
       }).$promise;
     }
 
     function getCustomerTrialV2(customerId) {
       return TerminusCustomerTrialV2Service.get({
-        customerId: customerId
+        customerId: customerId,
       }).$promise;
     }
 
     function setCustomerTrialV2(customerId, fname, lname, email) {
       return TerminusCustomerTrialV2Service.save({
-        customerId: customerId
+        customerId: customerId,
       }, {
         "acceptedFirstName": fname,
         "acceptedLastName": lname,
-        "acceptedEmail": email
+        "acceptedEmail": email,
       }).$promise;
     }
 
     function listDefaultCarriers() {
       return TerminusCarrierService.query({
         service: PSTN,
-        defaultOffer: true
+        defaultOffer: true,
       }).$promise.then(getCarrierDetails);
     }
 
     function listResellerCarriers() {
       return TerminusResellerCarrierService.query({
-        resellerId: Authinfo.getOrgId()
+        resellerId: Authinfo.getOrgId(),
       }).$promise.then(getCarrierDetails);
     }
 
     function listCustomerCarriers(customerId) {
       return TerminusCustomerCarrierService.query({
-        customerId: customerId
+        customerId: customerId,
       }).$promise.then(getCarrierDetails);
     }
 
@@ -216,7 +217,7 @@
       var promises = [];
       _.forEach(carriers, function (carrier) {
         var promise = TerminusCarrierService.get({
-          carrierId: carrier.uuid
+          carrierId: carrier.uuid,
         }).$promise;
         promises.push(promise);
       });
@@ -226,7 +227,7 @@
     function getCarrierInventory(carrierId, state, npa) {
       var config = {
         carrierId: carrierId,
-        state: state
+        state: state,
       };
       if (_.isString(npa)) {
         if (npa.length > 0) {
@@ -240,7 +241,7 @@
     function getCarrierTollFreeInventory(carrierId) {
       return TerminusV2CarrierNumberCountService.get({
         carrierId: carrierId,
-        numberType: NUMTYPE_TOLLFREE
+        numberType: NUMTYPE_TOLLFREE,
       }).$promise;
     }
 
@@ -272,16 +273,16 @@
         // If a customer exists, reserve with the customer
         return TerminusCustomerCarrierInventoryReserve.save({
           customerId: customerId,
-          carrierId: carrierId
+          carrierId: carrierId,
         }, {
-          numbers: numbers
+          numbers: numbers,
         }).$promise;
       } else {
         // Otherwise reserve with carrier
         return TerminusCarrierInventoryReserve.save({
-          carrierId: carrierId
+          carrierId: carrierId,
         }, {
-          numbers: numbers
+          numbers: numbers,
         }).$promise;
       }
     }
@@ -294,16 +295,16 @@
         // If a customer exists, release with the customer
         return TerminusCustomerCarrierInventoryRelease.save({
           customerId: customerId,
-          carrierId: carrierId
+          carrierId: carrierId,
         }, {
-          numbers: numbers
+          numbers: numbers,
         }).$promise;
       } else {
         // Otherwise release with carrier
         return TerminusCarrierInventoryRelease.save({
-          carrierId: carrierId
+          carrierId: carrierId,
         }, {
-          numbers: numbers
+          numbers: numbers,
         }).$promise;
       }
     }
@@ -316,10 +317,10 @@
       if (isCustomerExists) {
         // If a customer exists, reserve with the customer
         return TerminusV2CustomerNumberReservationService.save({
-          customerId: customerId
+          customerId: customerId,
         }, {
           numberType: NUMTYPE_DID,
-          numbers: numbers
+          numbers: numbers,
         }, function (data, headers) {
           data.uuid = headers('location').split("/").pop();
           return data;
@@ -328,10 +329,10 @@
         // Otherwise reserve with carrier
         return TerminusV2ResellerCarrierNumberReservationService.save({
           resellerId: Authinfo.getOrgId(),
-          carrierId: carrierId
+          carrierId: carrierId,
         }, {
           numberType: NUMTYPE_DID,
-          numbers: numbers
+          numbers: numbers,
         }, function (data, headers) {
           data.uuid = headers('location').split("/").pop();
           return data;
@@ -347,17 +348,17 @@
         // If a customer exists, release with the customer
         return TerminusV2CustomerNumberReservationService.delete({
           customerId: customerId,
-          reservationId: reservationId
+          reservationId: reservationId,
         }, {
-          numbers: numbers
+          numbers: numbers,
         }).$promise;
       } else {
         // Otherwise release with carrier
         return TerminusV2ResellerNumberReservationService.delete({
           resellerId: Authinfo.getOrgId(),
-          reservationId: reservationId
+          reservationId: reservationId,
         }, {
-          numbers: numbers
+          numbers: numbers,
         }).$promise;
       }
     }
@@ -370,17 +371,17 @@
         // If a customer exists, release with the customer
         return TerminusV2CustomerNumberReservationService.delete({
           customerId: customerId,
-          reservationId: reservationId
+          reservationId: reservationId,
         }, {
-          numbers: numbers
+          numbers: numbers,
         }).$promise;
       } else {
         // Otherwise release with carrier
         return TerminusV2ResellerNumberReservationService.delete({
           resellerId: Authinfo.getOrgId(),
-          reservationId: reservationId
+          reservationId: reservationId,
         }, {
-          numbers: numbers
+          numbers: numbers,
         }).$promise;
       }
     }
@@ -393,10 +394,10 @@
       if (isCustomerExists) {
         // If a customer exists, reserve with the customer
         return TerminusV2CustomerNumberReservationService.save({
-          customerId: customerId
+          customerId: customerId,
         }, {
           numberType: NUMTYPE_TOLLFREE,
-          numbers: numbers
+          numbers: numbers,
         }, function (data, headers) {
           data.uuid = headers('location').split("/").pop();
           return data;
@@ -405,10 +406,10 @@
         // Otherwise reserve with carrier
         return TerminusV2ResellerCarrierNumberReservationService.save({
           resellerId: Authinfo.getOrgId(),
-          carrierId: carrierId
+          carrierId: carrierId,
         }, {
           numberType: NUMTYPE_TOLLFREE,
-          numbers: numbers
+          numbers: numbers,
         }, function (data, headers) {
           data.uuid = headers('location').split("/").pop();
           return data;
@@ -420,7 +421,7 @@
       return listCustomerCarriers(customerId).then(function (carriers) {
         if (_.isArray(carriers)) {
           var carrier = _.find(carriers, {
-            name: TATA
+            name: TATA,
           });
           if (carrier) {
             return true;
@@ -434,7 +435,7 @@
       var payload = {
         npa: npa,
         quantity: quantity,
-        sequential: isSequential
+        sequential: isSequential,
       };
       if (_.isString(nxx)) {
         payload['nxx'] = nxx;
@@ -443,7 +444,7 @@
       return TerminusCustomerCarrierDidService.save({
         customerId: customerId,
         carrierId: carrierId,
-        type: BLOCK
+        type: BLOCK,
       }, payload).$promise;
     }
 
@@ -451,10 +452,10 @@
       var payload = {
         npa: npa,
         quantity: quantity,
-        numberType: NUMTYPE_TOLLFREE
+        numberType: NUMTYPE_TOLLFREE,
       };
       return TerminusV2CustomerNumberOrderBlockService.save({
-        customerId: customerId
+        customerId: customerId,
       }, payload).$promise;
     }
 
@@ -462,12 +463,12 @@
       var promises = [];
       var payload = {
         pstn: {
-          numbers: []
+          numbers: [],
         },
         tollFree: {
           numberType: NUMTYPE_TOLLFREE,
-          numbers: []
-        }
+          numbers: [],
+        },
       };
       _.forEach(numbers, function (number) {
         var phoneNumberType = TelephoneNumberService.getPhoneNumberType(number);
@@ -478,7 +479,7 @@
         } else {
           Notification.error('pstnSetup.errors.unsupportedNumberType', {
             type: phoneNumberType,
-            number: number
+            number: number,
           });
         }
       });
@@ -486,7 +487,7 @@
         var pstnPromise = TerminusCustomerCarrierDidService.save({
           customerId: customerId,
           carrierId: carrierId,
-          type: ORDER
+          type: ORDER,
         }, payload.pstn).$promise;
         promises.push(pstnPromise);
       }
@@ -498,18 +499,18 @@
       _.forEach(newNumberOrders, function (order) {
         if (order.numberType === NUMTYPE_DID) {
           var didOrderPromise = TerminusOrderV2Service.save({
-            customerId: customerId
+            customerId: customerId,
           }, {
             reservationIds: [_.get(order, 'reservationId', '')],
-            numberType: order.numberType
+            numberType: order.numberType,
           }).$promise;
           promises.push(didOrderPromise);
         } else if (order.numberType === NUMTYPE_TOLLFREE) {
           var tollFreeOrderPromise = TerminusOrderV2Service.save({
-            customerId: customerId
+            customerId: customerId,
           }, {
             reservationIds: [_.get(order, 'reservationId', '')],
-            numberType: order.numberType
+            numberType: order.numberType,
           }).$promise;
           promises.push(tollFreeOrderPromise);
         } else {
@@ -529,23 +530,23 @@
 
       var tfnPayload = {
         numbers: tfnNumbers,
-        numberType: NUMTYPE_TOLLFREE
+        numberType: NUMTYPE_TOLLFREE,
       };
 
       var payload = {
-        numbers: numbers
+        numbers: numbers,
       };
 
       if (numbers.length > 0) {
         promises.push(TerminusCustomerCarrierDidService.save({
           customerId: customerId,
           carrierId: carrierId,
-          type: PORT
+          type: PORT,
         }, payload).$promise);
       }
       if (tfnNumbers.length > 0) {
         promises.push(TerminusCustomerPortService.save({
-          customerId: customerId
+          customerId: customerId,
         }, tfnPayload).$promise);
       }
 
@@ -603,7 +604,7 @@
       return TerminusOrderV2Service.query({
         customerId: customerId,
         type: orderType,
-        status: PENDING
+        status: PENDING,
       }).$promise;
     }
 
@@ -616,7 +617,7 @@
 
     function getFormattedNumberOrders(customerId) {
       return TerminusOrderV2Service.query({
-        customerId: customerId
+        customerId: customerId,
       }).$promise.then(function (orders) {
         var promises = [];
         // Lookup each order and add the numbers to original response
@@ -646,7 +647,7 @@
                 statusMessage: _.get(order, 'statusMessage') === 'None' ? null : _.get(order, 'statusMessage'),
                 tooltip: translateStatusMessage(order),
                 uuid: _.get(order, 'uuid'),
-                numbers: _.get(order, 'numbers')
+                numbers: _.get(order, 'numbers'),
               };
 
               //translate order status
@@ -714,7 +715,7 @@
         'LOA Not Signed': $translate.instant('pstnSetup.orderStatus.loaNotSigned'),
         'Master Service Agreement not signed': $translate.instant('pstnSetup.orderStatus.msaNotSigned'),
         'Pending FOC from Vendor': $translate.instant('pstnSetup.orderStatus.pendingVendor'),
-        'Rejected': $translate.instant('pstnSetup.orderStatus.rejected')
+        'Rejected': $translate.instant('pstnSetup.orderStatus.rejected'),
       };
 
       if (!_.isUndefined(translations[order.statusMessage])) {
@@ -743,7 +744,7 @@
               }
               pendingNumbers.push({
                 pattern: '(' + areaCode + ') XXX-XXXX',
-                quantity: orderQuantity
+                quantity: orderQuantity,
               });
             });
             promises.push(promise);
@@ -754,8 +755,8 @@
                 if (orderNumber && orderNumber.number && (orderNumber.network === PENDING || orderNumber.network === QUEUED)) {
                   pendingNumbers.push({
                     pattern: _.get(orderNumber, 'number', $translate.instant('pstnSetup.errors.orders.missingNumber', {
-                      orderNumber: _.get(response, 'carrierOrderId')
-                    }))
+                      orderNumber: _.get(response, 'carrierOrderId'),
+                    })),
                   });
                 }
               });
@@ -773,7 +774,7 @@
     function deleteNumber(customerId, number) {
       return TerminusNumberService.delete({
         customerId: customerId,
-        did: number
+        did: number,
       }).$promise;
     }
 

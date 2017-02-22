@@ -4,7 +4,7 @@
   module.exports = angular
     .module('huron.resources', [
       require('angular-resource'),
-      require('modules/huron/telephony/telephonyConfig')
+      require('modules/huron/telephony/telephonyConfig'),
     ])
     // Temporary email service for Huron add user email.  This will be removed when the squared/huron emails are integrated
     .factory('HuronEmailService', HuronEmailService)
@@ -81,7 +81,7 @@
   /* @ngInject */
   function LineService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/directorynumbers?order=pattern-asc', {
-      customerId: '@customerId'
+      customerId: '@customerId',
     }, {});
   }
 
@@ -90,11 +90,11 @@
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/users/:userId/remotedestinations/:remoteDestId', {
       customerId: '@customerId',
       userId: '@userId',
-      remoteDestId: '@remoteDestId'
+      remoteDestId: '@remoteDestId',
     }, {
       update: {
-        method: 'PUT'
-      }
+        method: 'PUT',
+      },
     });
   }
 
@@ -103,7 +103,7 @@
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/users/:userId/directorynumbers/:directoryNumberId', {
       customerId: '@customerId',
       userId: '@userId',
-      directoryNumberId: '@directoryNumberId'
+      directoryNumberId: '@directoryNumberId',
     });
   }
 
@@ -111,22 +111,22 @@
   function DirectoryNumberService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/directorynumbers/:directoryNumberId', {
       customerId: '@customerId',
-      directoryNumberId: '@directoryNumberId'
+      directoryNumberId: '@directoryNumberId',
     }, {
       update: {
-        method: 'PUT'
-      }
+        method: 'PUT',
+      },
     });
   }
 
   /* @ngInject */
   function CustomerCommonService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/common/customers/:customerId', {
-      customerId: '@customerId'
+      customerId: '@customerId',
     }, {
       update: {
-        method: 'PUT'
-      }
+        method: 'PUT',
+      },
     });
   }
 
@@ -134,8 +134,8 @@
   function UserServiceCommon($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/common/customers/:customerId/users/:userId', {}, {
       update: {
-        method: 'PUT'
-      }
+        method: 'PUT',
+      },
     });
   }
 
@@ -143,8 +143,8 @@
   function UserServiceCommonV2($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/users/:userId', {}, {
       update: {
-        method: 'PUT'
-      }
+        method: 'PUT',
+      },
     });
   }
 
@@ -167,7 +167,7 @@
     return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/numbers', {
       customerId: '@customerId',
       number: '@number',
-      assigned: '@assigned'
+      assigned: '@assigned',
     });
   }
 
@@ -176,14 +176,14 @@
     var baseUrl = HuronConfig.getCmiV2Url();
     return $resource(baseUrl + '/customers/:customerId/features/huntgroups/:huntGroupId', {
       customerId: '@customerId',
-      huntGroupId: '@huntGroupId'
+      huntGroupId: '@huntGroupId',
     }, {
       update: {
-        method: 'PUT'
+        method: 'PUT',
       },
       delete: {
-        method: 'DELETE'
-      }
+        method: 'DELETE',
+      },
     });
   }
 
@@ -192,18 +192,18 @@
     var baseUrl = HuronConfig.getCmiV2Url();
     return $resource(baseUrl + '/customers/:customerId/features/autoattendants/:cesId/numbers', {
       customerId: '@customerId',
-      cesId: '@cesId'
+      cesId: '@cesId',
     }, {
       get: {
         method: 'GET',
-        transformResponse: transformEnvelope
+        transformResponse: transformEnvelope,
       },
       update: {
-        method: 'PUT'
+        method: 'PUT',
       },
       delete: {
-        method: 'DELETE'
-      }
+        method: 'DELETE',
+      },
     });
   }
 
@@ -211,19 +211,19 @@
   function UserServiceVoice($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/users/:userId', {
       customerId: '@customerId',
-      userId: '@userId'
+      userId: '@userId',
     }, {
       query: {
         method: 'GET',
-        isArray: false
-      }
+        isArray: false,
+      },
     });
   }
 
   /* @ngInject */
   function VoicemailService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voicemail/customers/:customerId', {
-      customerId: '@customerId'
+      customerId: '@customerId',
     });
   }
 
@@ -231,11 +231,11 @@
   function VoicemailTimezoneService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voicemail/customers/:customerId/usertemplates/:objectId', {
       customerId: '@customerId',
-      objectId: '@objectId'
+      objectId: '@objectId',
     }, {
       update: {
-        method: 'PUT'
-      }
+        method: 'PUT',
+      },
     });
   }
 
@@ -244,11 +244,11 @@
     return $resource(HuronConfig.getCmiUrl() + '/voicemail/customers/:customerId/usertemplates/:userTemplateId/messageactions/:messageActionId', {
       customerId: '@customerId',
       userTemplateId: '@userTemplateId',
-      messageActionId: '@messageActionId'
+      messageActionId: '@messageActionId',
     }, {
       update: {
-        method: 'PUT'
-      }
+        method: 'PUT',
+      },
     });
   }
 
@@ -256,11 +256,11 @@
   function CompanyNumberService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/companynumbers/:companyNumberId', {
       customerId: '@customerId',
-      companyNumberId: '@companyNumberId'
+      companyNumberId: '@companyNumberId',
     }, {
       update: {
-        method: 'PUT'
-      }
+        method: 'PUT',
+      },
     });
   }
 
@@ -268,7 +268,7 @@
   function InternalNumberPoolService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/internalnumberpools/:internalNumberId', {
       customerId: '@customerId',
-      internalNumberId: '@internalNumberId'
+      internalNumberId: '@internalNumberId',
     });
   }
 
@@ -276,7 +276,7 @@
   function ExternalNumberPoolService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/externalnumberpools/:externalNumberId', {
       customerId: '@customerId',
-      externalNumberId: '@externalNumberId'
+      externalNumberId: '@externalNumberId',
     });
   }
 
@@ -285,17 +285,17 @@
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/directorynumbers/:directoryNumberId/alternatenumbers/:alternateNumberId', {
       customerId: '@customerId',
       directoryNumberId: '@directoryNumberId',
-      alternateNumberId: '@alternateNumberId'
+      alternateNumberId: '@alternateNumberId',
     }, {
       update: {
-        method: 'PUT'
+        method: 'PUT',
       },
       save: {
         method: 'POST',
         headers: {
-          'Access-Control-Expose-Headers': 'Location'
-        }
-      }
+          'Access-Control-Expose-Headers': 'Location',
+        },
+      },
     });
   }
 
@@ -303,18 +303,18 @@
   function DirectoryNumberCopyService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/directorynumbers/copy/:ultId', {
       customerId: '@customerId',
-      ultId: '@ultId'
+      ultId: '@ultId',
     }, {
       query: {
         method: 'GET',
-        isArray: false
+        isArray: false,
       },
       save: {
         method: 'POST',
         headers: {
-          'Access-Control-Expose-Headers': 'Location'
-        }
-      }
+          'Access-Control-Expose-Headers': 'Location',
+        },
+      },
     });
   }
 
@@ -322,25 +322,25 @@
   function SiteService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/sites/:siteId', {
       customerId: '@customerId',
-      siteId: '@siteId'
+      siteId: '@siteId',
     }, {
       update: {
-        method: 'PUT'
-      }
+        method: 'PUT',
+      },
     });
   }
 
   /* @ngInject */
   function AvrilSiteService($resource, HuronConfig) {
     return $resource(HuronConfig.getAvrilUrl() + '/customers/:customerId/sites/', {
-      customerId: '@customerId'
+      customerId: '@customerId',
     }, {
       save: {
         method: 'POST',
         headers: {
-          'Access-Control-Expose-Headers': 'Location'
-        }
-      }
+          'Access-Control-Expose-Headers': 'Location',
+        },
+      },
     });
   }
 
@@ -348,14 +348,14 @@
   function AvrilSiteUpdateService($resource, HuronConfig) {
     return $resource(HuronConfig.getAvrilUrl() + '/customers/:customerId/sites/:siteId', {
       customerId: '@customerId',
-      siteId: '@siteId'
+      siteId: '@siteId',
     }, {
       update: {
-        method: 'PUT'
+        method: 'PUT',
       },
       get: {
-        method: 'GET'
-      }
+        method: 'GET',
+      },
     });
   }
 
@@ -363,14 +363,14 @@
   function InternalNumberRangeService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/internalnumberranges/:internalNumberRangeId', {
       customerId: '@customerId',
-      internalNumberRangeId: '@internalNumberRangeId'
+      internalNumberRangeId: '@internalNumberRangeId',
     }, {
       save: {
         method: 'POST',
         headers: {
-          'Access-Control-Expose-Headers': 'Location'
-        }
-      }
+          'Access-Control-Expose-Headers': 'Location',
+        },
+      },
     });
   }
 
@@ -379,7 +379,7 @@
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/users/:userId/endpoints/:userEndpointAssnId', {
       customerId: '@customerId',
       userId: '@userId',
-      userEndpointAssnId: '@userEndpointAssnId'
+      userEndpointAssnId: '@userEndpointAssnId',
     });
   }
 
@@ -387,11 +387,11 @@
   function SipEndpointService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/sipendpoints/:sipEndpointId', {
       customerId: '@customerId',
-      sipEndpointId: '@sipEndpointId'
+      sipEndpointId: '@sipEndpointId',
     }, {
       update: {
-        method: 'PUT'
-      }
+        method: 'PUT',
+      },
     });
   }
 
@@ -400,7 +400,7 @@
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/directorynumbers/:directoryNumberId/users/:dnUserAssnId', {
       customerId: '@customerId',
       directoryNumberId: '@directoryNumberId',
-      dnUserAssnId: '@dnUserAssnId'
+      dnUserAssnId: '@dnUserAssnId',
     });
   }
 
@@ -409,7 +409,7 @@
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/directorynumbers/:directoryNumberId/sipendpoints/:endpointDnAssnId', {
       customerId: '@customerId',
       sipendpointId: '@directoryNumberId',
-      endpointDnAssnId: '@endpointDnAssnId'
+      endpointDnAssnId: '@endpointDnAssnId',
     });
   }
 
@@ -418,11 +418,11 @@
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/sipendpoints/:sipendpointId/directorynumbers/:endpointDnAssnId', {
       customerId: '@customerId',
       sipendpointId: '@sipendpointId',
-      endpointDnAssnId: '@endpointDnAssnId'
+      endpointDnAssnId: '@endpointDnAssnId',
     }, {
       update: {
-        method: 'PUT'
-      }
+        method: 'PUT',
+      },
     });
   }
 
@@ -459,25 +459,25 @@
   /* @ngInject */
   function UserLineAssociationService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/userlineassociations', {
-      customerId: '@customerId'
+      customerId: '@customerId',
     });
   }
 
   /* @ngInject */
   function UserLineAssociationCountService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/userlineassociationcounts', {
-      customerId: '@customerId'
+      customerId: '@customerId',
     });
   }
 
   /* @ngInject */
   function CustomerVoiceCmiService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId', {
-      customerId: '@customerId'
+      customerId: '@customerId',
     }, {
       update: {
-        method: 'PUT'
-      }
+        method: 'PUT',
+      },
     });
   }
 
@@ -485,7 +485,7 @@
   function DialPlanCmiService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/clusters/:clusterId/dialplans/:dialPlanId', {
       clusterId: '@clusterId',
-      dialPlanId: '@dialPlanId'
+      dialPlanId: '@dialPlanId',
     });
   }
 
@@ -493,7 +493,7 @@
   function DialPlanDetailsCmiService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/clusters/:clusterId/dialplandetails/:dialPlanId', {
       clusterId: '@clusterId',
-      dialPlanId: '@dialPlanId'
+      dialPlanId: '@dialPlanId',
     });
   }
 
@@ -503,15 +503,15 @@
     return $resource(baseUrl + '/customers/:customerId/users/:userId/features/restrictions/:restrictionId', {
       customerId: '@customerId',
       userId: '@userId',
-      restrictionId: '@restrictionId'
+      restrictionId: '@restrictionId',
     }, {
       update: {
-        method: 'PUT'
+        method: 'PUT',
       },
       get: {
         method: 'GET',
-        transformResponse: transformEnvelope
-      }
+        transformResponse: transformEnvelope,
+      },
     });
   }
 
@@ -520,14 +520,14 @@
     return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/places/:placesId/numbers/:numberId', {
       customerId: '@customerId',
       numberId: '@numberId',
-      placesId: '@placesId'
+      placesId: '@placesId',
     }, {
       update: {
-        method: 'PUT'
+        method: 'PUT',
       },
       get: {
-        method: 'GET'
-      }
+        method: 'GET',
+      },
     });
   }
 
@@ -536,14 +536,14 @@
     var baseUrl = HuronConfig.getCmiV2Url();
     return $resource(baseUrl + '/customers/:customerId/features/restrictions/:restrictionId', {
       customerId: '@customerId',
-      restrictionId: '@restrictionId'
+      restrictionId: '@restrictionId',
     }, {
       get: {
         method: 'GET',
-        transformResponse: transformEnvelope
+        transformResponse: transformEnvelope,
       },
       update: {
-        method: 'PUT'
+        method: 'PUT',
       },
     });
   }
@@ -557,11 +557,11 @@
   function PlacesService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/places/:placesId', {
       customerId: '@customerId',
-      placesId: '@placesId'
+      placesId: '@placesId',
     }, {
       update: {
-        method: 'PUT'
-      }
+        method: 'PUT',
+      },
     });
   }
 

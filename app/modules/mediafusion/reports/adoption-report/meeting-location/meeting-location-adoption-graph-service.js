@@ -19,7 +19,7 @@
     vm.meetingLocation = $translate.instant('mediaFusion.metrics.meetings');
 
     return {
-      setMeetingLocationGraph: setMeetingLocationGraph
+      setMeetingLocationGraph: setMeetingLocationGraph,
     };
 
     function setMeetingLocationGraph(response, meetingLocationChart, daterange) {
@@ -120,7 +120,7 @@
       }
 
       var columnNames = {
-        'time': vm.timeStamp
+        'time': vm.timeStamp,
       };
       var exportFields = [];
       _.forEach(graphs, function (value) {
@@ -139,7 +139,7 @@
           'bullet': 'square',
           'bulletSize': 10,
           'lineColor': '#000000',
-          'hidden': true
+          'hidden': true,
         });
 
         graphs.push({
@@ -147,7 +147,7 @@
           'id': 'none',
           'bullet': 'square',
           'bulletSize': 10,
-          'lineColor': '#000000'
+          'lineColor': '#000000',
         });
       }
 
@@ -158,10 +158,10 @@
 
       chartData.legend.listeners = [{
         'event': 'hideItem',
-        "method": legendHandler
+        "method": legendHandler,
       }, {
         'event': 'showItem',
-        'method': legendHandler
+        'method': legendHandler,
       }];
 
       var chart = AmCharts.makeChart(vm.meetingLocationdiv, chartData);
@@ -176,12 +176,12 @@
       vm.zoomedEndTime = event.endDate;
       var selectedTime = {
         startTime: vm.zoomedStartTime,
-        endTime: vm.zoomedEndTime
+        endTime: vm.zoomedEndTime,
       };
 
       if ((_.isUndefined(vm.dateSelected.value) && vm.zoomedStartTime !== vm.dateSelected.startTime && vm.zoomedEndTime !== vm.dateSelected.endTime) || (vm.zoomedStartTime !== vm.dateSelected.startTime && vm.zoomedEndTime !== vm.dateSelected.endTime)) {
         $rootScope.$broadcast('zoomedTime', {
-          data: selectedTime
+          data: selectedTime,
         });
       }
     }

@@ -23,14 +23,14 @@
       isPossibleAreaCode: isPossibleAreaCode,
       getDestinationObject: getDestinationObject,
       checkPhoneNumberType: checkPhoneNumberType,
-      internationalNumberValidator: internationalNumberValidator
+      internationalNumberValidator: internationalNumberValidator,
     };
     var TOLL_FREE = 'TOLL_FREE';
     var PREMIUM_RATE = 'PREMIUM_RATE';
 
     var exampleNumbers = {
       us: '15556667777, +15556667777, 1-555-666-7777, +1 (555) 666-7777',
-      au: '61255566777, +61255566777, +61 2 5556 6777'
+      au: '61255566777, +61255566777, +61 2 5556 6777',
     };
 
     // Default
@@ -46,7 +46,7 @@
       } else {
         countryCode = value;
         regionCode = _.result(_.find(CountryCodes, {
-          number: countryCode
+          number: countryCode,
         }), 'code');
       }
     }
@@ -58,7 +58,7 @@
     function setRegionCode(region) {
       regionCode = _.isString(region) ? region.toLowerCase() : '';
       countryCode = _.result(_.find(CountryCodes, {
-        code: regionCode
+        code: regionCode,
       }), 'number');
     }
 
@@ -155,7 +155,7 @@
           name: data.name,
           code: data.code,
           number: data.number,
-          phoneNumber: number
+          phoneNumber: number,
         };
       } catch (exception) {
         return { phoneNumber: number };

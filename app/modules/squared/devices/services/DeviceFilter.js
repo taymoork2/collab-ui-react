@@ -14,19 +14,19 @@
         filters = [{
           count: 0,
           name: $translate.instant('common.all'),
-          filterValue: 'all'
+          filterValue: 'all',
         }, {
           count: 0,
           name: $translate.instant('CsdmStatus.OnlineWithIssues'),
-          filterValue: 'issues'
+          filterValue: 'issues',
         }, {
           count: 0,
           name: $translate.instant('CsdmStatus.Offline'),
-          filterValue: 'offline'
+          filterValue: 'offline',
         }, {
           count: 0,
           name: $translate.instant('CsdmStatus.Online'),
-          filterValue: 'online'
+          filterValue: 'online',
         }];
         setCurrentSearch('');
         setCurrentFilter('');
@@ -39,28 +39,28 @@
 
       var updateFilters = function (list) {
         _.find(filters, {
-          filterValue: 'issues'
+          filterValue: 'issues',
         }).count = _.chain(list)
           .filter(hasIssues)
           .filter(matchesSearch)
           .value().length;
 
         _.find(filters, {
-          filterValue: 'online'
+          filterValue: 'online',
         }).count = _.chain(list)
           .filter(isOnline)
           .filter(matchesSearch)
           .value().length;
 
         _.find(filters, {
-          filterValue: 'offline'
+          filterValue: 'offline',
         }).count = _.chain(list)
           .filter(isOffline)
           .filter(matchesSearch)
           .value().length;
 
         _.find(filters, {
-          filterValue: 'all'
+          filterValue: 'all',
         }).count = _.filter(list, matchesSearch).length;
       };
 

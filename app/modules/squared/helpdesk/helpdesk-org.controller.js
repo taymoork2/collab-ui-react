@@ -44,7 +44,7 @@
     vm.findServiceOrders = findServiceOrders;
     vm.openHybridServicesModal = openHybridServicesModal;
     vm._helpers = {
-      notifyError: notifyError
+      notifyError: notifyError,
     };
 
     vm.editOrgValidationMessages = {
@@ -133,8 +133,8 @@
             },
             data: function () {
               return vm.org;
-            }
-          }
+            },
+          },
         });
       }
     }
@@ -142,7 +142,7 @@
     function initOrgView(org) {
       vm.org = org;
       vm.delegatedAdministration = org.delegatedAdministration ? $translate.instant('helpdesk.delegatedAdministration', {
-        numManages: org.manages ? org.manages.length : 0
+        numManages: org.manages ? org.manages.length : 0,
       }) : null;
 
       LicenseService.getLicensesInOrg(vm.orgId).then(function (licenses) {
@@ -175,7 +175,7 @@
             if (displayName) {
               org.managedByOrgs.push({
                 id: managingOrg.orgId,
-                displayName: displayName
+                displayName: displayName,
               });
             }
           }, _.noop);
@@ -200,7 +200,7 @@
           CCW: 'Cisco Commerce',
           CCW_CSB: 'Cisco Commerce',
           CISCO_ONLINE_OPC: 'Cisco Online Trial',
-          DIGITAL_RIVER: 'Cisco Online Marketplace'
+          DIGITAL_RIVER: 'Cisco Online Marketplace',
         };
         vm.orderSystems = [];
         _.forEach(orders, function (order) {
@@ -216,7 +216,7 @@
       HelpdeskService.usersWithRole(org.id, 'id_full_admin', 100).then(function (users) {
         vm.adminUsers = users;
         vm.showAllAdminUsersText = $translate.instant('helpdesk.showAllAdminUsers', {
-          numUsers: users.length
+          numUsers: users.length,
         });
         vm.adminUsersAvailable = true;
       }, vm._helpers.notifyError);
@@ -262,14 +262,14 @@
 
     function daysLeftText(license) {
       return $translate.instant('helpdesk.numDaysLeft', {
-        days: license.trialExpiresInDays
+        days: license.trialExpiresInDays,
       });
     }
 
     function usageText(usage, volume) {
       return $translate.instant('helpdesk.usage', {
         usage: usage,
-        volume: volume
+        volume: volume,
       });
     }
 
@@ -283,7 +283,7 @@
       HelpdeskService.elevateToReadonlyAdmin(vm.orgId).then(function () {
         $window.open($state.href('login_swap', {
           customerOrgId: vm.orgId,
-          customerOrgName: vm.org.displayName
+          customerOrgName: vm.org.displayName,
         }));
       }, vm._helpers.notifyError)
         .finally(function () {
@@ -304,8 +304,8 @@
               },
               data: function () {
                 return hsData;
-              }
-            }
+              },
+            },
           });
         })
         .catch(function (error) {

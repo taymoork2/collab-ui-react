@@ -12,15 +12,15 @@ describe('DirSyncService', function () {
           getAdminServiceUrl: function () {
             return '/foo/';
           },
-          getOauth2Url: sinon.stub()
+          getOauth2Url: sinon.stub(),
         };
         Authinfo = {
           getOrgId: function () {
             return 'bar';
-          }
+          },
         };
         Log = {
-          debug: sinon.stub()
+          debug: sinon.stub(),
         };
         $provide.value('Log', Log);
         $provide.value('UrlConfig', UrlConfig);
@@ -63,7 +63,7 @@ describe('DirSyncService', function () {
           '/foo/organization/bar/dirsync/status'
         )
         .respond({
-          serviceMode: 'ENABLED'
+          serviceMode: 'ENABLED',
         });
 
       var callback = sinon.stub();

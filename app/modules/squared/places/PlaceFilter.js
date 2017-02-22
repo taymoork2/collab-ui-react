@@ -12,11 +12,11 @@
         filters = [{
           count: 0,
           name: $translate.instant('common.all'),
-          filterValue: 'all'
+          filterValue: 'all',
         }, {
           count: 0,
           name: $translate.instant('CsdmStatus.WithDevices'),
-          filterValue: 'devices'
+          filterValue: 'devices',
         }];
         setCurrentSearch('');
         setCurrentFilter('');
@@ -29,14 +29,14 @@
 
       var updateFilters = function (list) {
         _.find(filters, {
-          filterValue: 'devices'
+          filterValue: 'devices',
         }).count = _.chain(list)
           .filter(hasDevices)
           .filter(matchesSearch)
           .value().length;
 
         _.find(filters, {
-          filterValue: 'all'
+          filterValue: 'all',
         }).count = _.filter(list, matchesSearch).length;
       };
 
@@ -108,7 +108,7 @@
         getFilteredList: getFilteredList,
         resetFilters: resetFilters,
         setCurrentFilter: setCurrentFilter,
-        setCurrentSearch: setCurrentSearch
+        setCurrentSearch: setCurrentSearch,
       };
 
     }

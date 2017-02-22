@@ -32,7 +32,7 @@
     function downloadEmbedCode($event) {
       var anchorElement = $window.document.getElementById('downloadChatCodeTxt');
       var blob = new $window.Blob([vm.embedCodeSnippet], {
-        type: "text/plain;charset=utf-8;"
+        type: "text/plain;charset=utf-8;",
       });
       if ($window.navigator.msSaveOrOpenBlob) {
         $window.navigator.msSaveBlob(blob, "Chat_Code_Snippet");

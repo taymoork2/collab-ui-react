@@ -6,7 +6,10 @@ interface IValidationMessages {
   required: string;
   pattern: string;
 }
-
+interface ITranslationMessages {
+  placeholderText: string;
+  helpText: string;
+}
 const SPEED_DIAL_LIMIT = 125;
 const inputs: string[] = ['external', 'uri', 'custom'];
 class SpeedDialCtrl implements ng.IComponentController {
@@ -21,6 +24,7 @@ class SpeedDialCtrl implements ng.IComponentController {
   private newNumber: string;
   private labelMessages: IValidationMessages;
   private numberMessages: IValidationMessages;
+  private customTranslations: ITranslationMessages;
   private actionList: IActionItem[];
   private actionListCopy: IActionItem[] = [];
  // private
@@ -57,6 +61,10 @@ class SpeedDialCtrl implements ng.IComponentController {
     this.numberMessages = {
       required: this.$translate.instant('common.invalidRequired'),
       pattern: this.$translate.instant('common.incorrectFormat'),
+    };
+    this.customTranslations = {
+      placeholderText: this.$translate.instant('callDestination.alternateCustomPlaceholder'),
+      helpText: this.$translate.instant('callDestination.alternateCustomHelpText'),
     };
 
     if (!this.reachSpeedDialLimit()) {

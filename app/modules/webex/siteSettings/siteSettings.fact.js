@@ -85,7 +85,7 @@
             pageObjs: null,
             lang: null,
 
-            subSectionObjs: []
+            subSectionObjs: [],
           };
 
           if ("SC" == cardId) {
@@ -93,14 +93,14 @@
               id: "WebACD",
               label: "WebACD",
               lang: null,
-              pageObjs: null
+              pageObjs: null,
             });
 
             cardObj.subSectionObjs.push({
               id: "RA",
               label: "Remote Access",
               lang: null,
-              pageObjs: null
+              pageObjs: null,
             });
           }
 
@@ -116,7 +116,7 @@
             id: categoryId,
             pinPageId: categoryPinPageId,
             pinPageObj: null,
-            pageObjs: []
+            pageObjs: [],
           };
 
           return categoryObj;
@@ -133,7 +133,7 @@
         var siteName = WebExUtilsFact.getSiteName(siteUrl);
         var pageTitle = $translate.instant("webexSiteSettingsLabels.siteSettingsIndexPageTitle");
         var pageTitleFull = $translate.instant("webexSiteSettingsLabels.siteSettingsIndexPageTitleFull", {
-          siteUrl: siteUrl
+          siteUrl: siteUrl,
         });
 
         logMsg = funcName + ": " + "\n" +
@@ -366,7 +366,7 @@
           pageId: pageId,
           label: indexPageLabel,
           iframeUrl: iframeUrl,
-          uiSref: uiSref
+          uiSref: uiSref,
         };
 
         logMsg = funcName + ": " + "\n" +
@@ -569,7 +569,7 @@
         return $q.all({
           // siteInfoXml: siteInfoXml,
           // meetingTypesInfoXml: meetingTypesInfoXml,
-          settingPagesInfoXml: settingPagesInfoXml
+          settingPagesInfoXml: settingPagesInfoXml,
         });
       }, // getSiteSettingsInfoXml()
     }; // return

@@ -38,11 +38,11 @@ describe('Service: PstnSetupService', function () {
     email: "myEmail",
     pstnCarrierId: suite.carrierId,
     numbers: numbers,
-    trial: true
+    trial: true,
   };
 
   var updatePayload = {
-    pstnCarrierId: suite.carrierId
+    pstnCarrierId: suite.carrierId,
   };
 
   var blockOrderPayload = {
@@ -54,15 +54,15 @@ describe('Service: PstnSetupService', function () {
     "npa": "555",
     "quantity": "20",
     "sequential": true,
-    "nxx": "777"
+    "nxx": "777",
   };
 
   var orderPayload = {
-    numbers: numbers
+    numbers: numbers,
   };
 
   var portOrderPayload = {
-    numbers: portNumbers
+    numbers: portNumbers,
   };
 
   var portOrderPstnPayload = {
@@ -71,15 +71,15 @@ describe('Service: PstnSetupService', function () {
 
   var portOrderTfnPayload = {
     numbers: ['+18004321010'],
-    numberType: "TOLLFREE"
+    numberType: "TOLLFREE",
   };
 
   var pstnOrderPayload = {
-    numbers: onlyPstnNumbers
+    numbers: onlyPstnNumbers,
   };
 
   var Authinfo = {
-    getOrgId: jasmine.createSpy('getOrgId').and.returnValue(suite.partnerId)
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue(suite.partnerId),
   };
 
   beforeEach(angular.mock.module('Huron'));
@@ -190,7 +190,7 @@ describe('Service: PstnSetupService', function () {
     var promise = PstnSetupService.listResellerCarriers();
     promise.then(function (carrierList) {
       expect(carrierList).toContain(jasmine.objectContaining({
-        vendor: 'INTELEPEER'
+        vendor: 'INTELEPEER',
       }));
     });
     $httpBackend.flush();
@@ -202,7 +202,7 @@ describe('Service: PstnSetupService', function () {
     var promise = PstnSetupService.listCustomerCarriers(suite.customerId);
     promise.then(function (carrierList) {
       expect(carrierList).toContain(jasmine.objectContaining({
-        vendor: 'INTELEPEER'
+        vendor: 'INTELEPEER',
       }));
     });
     $httpBackend.flush();
@@ -264,11 +264,11 @@ describe('Service: PstnSetupService', function () {
     var promise = PstnSetupService.listPendingNumbers(suite.customerId);
     promise.then(function (numbers) {
       expect(numbers).toContain(jasmine.objectContaining({
-        pattern: '5125934450'
+        pattern: '5125934450',
       }));
       expect(numbers).toContain(jasmine.objectContaining({
         pattern: '(123) XXX-XXXX',
-        quantity: 1
+        quantity: 1,
       }));
     });
     $httpBackend.flush();
@@ -293,7 +293,7 @@ describe('Service: PstnSetupService', function () {
 
   it('should get original order status message since it does not exist in translations', function () {
     var translated = PstnSetupService.translateStatusMessage({
-      statusMessage: 'This should not be translated'
+      statusMessage: 'This should not be translated',
     });
     expect(translated).toEqual('This should not be translated');
   });
@@ -319,7 +319,7 @@ describe('Service: PstnSetupService', function () {
     });
     it('should call GET on Terminus V2 carrier number API and query for toll free numbers in the 800 area code', function () {
       var params = {
-        npa: "800"
+        npa: "800",
       };
       $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/carriers/' + suite.carrierId + '/numbers?npa=800&numberType=TOLLFREE').respond(200);
       PstnSetupService.searchCarrierTollFreeInventory(suite.carrierId, params);
@@ -328,7 +328,7 @@ describe('Service: PstnSetupService', function () {
     });
     it('should call GET on Terminus V2 carrier number API and query for ten toll free numbers', function () {
       var params = {
-        count: 10
+        count: 10,
       };
       $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/carriers/' + suite.carrierId + '/numbers?count=10&numberType=TOLLFREE').respond(200);
       PstnSetupService.searchCarrierTollFreeInventory(suite.carrierId, params);
@@ -341,7 +341,7 @@ describe('Service: PstnSetupService', function () {
     it('should call POST on Terminus V2 customer number reservation API for existing customers', function () {
       var isCustomerExists = true;
       $httpBackend.expectPOST(HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/reservations').respond(201, {}, {
-        'location': 'http://some/url/123456'
+        'location': 'http://some/url/123456',
       });
       PstnSetupService.reserveCarrierTollFreeInventory(suite.customerId, suite.carrierId, onlyTollFreeNumbers, isCustomerExists);
       $httpBackend.flush();
@@ -350,7 +350,7 @@ describe('Service: PstnSetupService', function () {
     it('should call POST on Terminus V2 reseller carrier reservation API for non-existing customers', function () {
       var isCustomerExists = false;
       $httpBackend.expectPOST(HuronConfig.getTerminusV2Url() + '/resellers/' + suite.partnerId + '/carriers/' + suite.carrierId + '/numbers/reservations').respond(201, {}, {
-        'location': 'http://some/url/123456'
+        'location': 'http://some/url/123456',
       });
       PstnSetupService.reserveCarrierTollFreeInventory(suite.partnerId, suite.carrierId, onlyTollFreeNumbers, isCustomerExists);
       $httpBackend.flush();

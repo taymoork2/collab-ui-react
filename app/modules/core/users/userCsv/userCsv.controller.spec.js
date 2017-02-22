@@ -12,9 +12,9 @@ describe('userCsv.controller', function () {
   function init() {
     this.initModules('Core', 'Hercules', 'Huron', 'Sunlight', 'Messenger', userCsvServiceModule, csvDownloadModule);
 
-    this.injectDependencies('$scope', '$controller', '$timeout', '$interval', '$q', '$state',
-      '$modal', '$previousState', 'Notification', 'Userservice', 'Orgservice', 'FeatureToggleService', 'Authinfo', 'CsvDownloadService', 'HuronCustomer',
-      'UserCsvService', 'ResourceGroupService', 'USSService', 'Analytics');
+    this.injectDependencies('$controller', '$interval', '$modal', '$previousState', '$q', '$rootScope',
+      '$scope', '$state', '$timeout', 'Analytics', 'Authinfo', 'CsvDownloadService', 'FeatureToggleService',
+      'HuronCustomer', 'Notification', 'Orgservice', 'ResourceGroupService', 'UserCsvService', 'Userservice', 'USSService');
 
     initFixtures.apply(this);
     initMocks.apply(this);
@@ -28,7 +28,7 @@ describe('userCsv.controller', function () {
     spyOn(this.Authinfo, 'isOnline').and.returnValue(true);
     this.modalDefer = this.$q.defer();
     spyOn(this.$modal, 'open').and.returnValue({
-      result: this.modalDefer.promise
+      result: this.modalDefer.promise,
     });
 
     spyOn(this.Orgservice, 'getHybridServiceAcknowledged').and.returnValue(this.$q.resolve(this.fusionServices));
@@ -65,9 +65,10 @@ describe('userCsv.controller', function () {
 
     spyOn(this.$previousState, 'get').and.returnValue({
       state: {
-        name: 'test.state'
-      }
+        name: 'test.state',
+      },
     });
+    spyOn(this.$rootScope, '$emit');
   }
 
   function initFixtures() {
@@ -108,8 +109,8 @@ describe('userCsv.controller', function () {
               return headers[name];
             },
             data: {
-              userResponse: []
-            }
+              userResponse: [],
+            },
           };
           return _this.$q.reject(response);
         } else {
@@ -138,8 +139,8 @@ describe('userCsv.controller', function () {
       statusCodes = statusCodes || [];
       var response = {
         data: {
-          userResponse: []
-        }
+          userResponse: [],
+        },
       };
 
       // set up the status codes to return
@@ -162,7 +163,7 @@ describe('userCsv.controller', function () {
           status: status,
           httpStatus: status,
           email: user.address,
-          uuid: 'b345abe1-5b9d-43b2-9a89-1e4e64ad478c'
+          uuid: 'b345abe1-5b9d-43b2-9a89-1e4e64ad478c',
         });
       });
       return this.$q.resolve(response);
@@ -172,8 +173,8 @@ describe('userCsv.controller', function () {
       this.uploadedDataCapture = uploadedData;
       var response = {
         data: {
-          userResponse: []
-        }
+          userResponse: [],
+        },
       };
 
       _.forEach(uploadedData, function (user) {
@@ -181,7 +182,7 @@ describe('userCsv.controller', function () {
           status: defaultStatusCode,
           httpStatus: defaultStatusCode,
           email: _.toUpper(user.address),
-          uuid: 'b345abe1-5b9d-43b2-9a89-1e4e64ad478c'
+          uuid: 'b345abe1-5b9d-43b2-9a89-1e4e64ad478c',
         });
       });
       return this.$q.resolve(response);
@@ -192,7 +193,7 @@ describe('userCsv.controller', function () {
   function initController() {
     this.controller = this.$controller('UserCsvCtrl', {
       $scope: this.$scope,
-      $state: this.$state
+      $state: this.$state,
     });
 
     this.$scope.$apply();
@@ -211,7 +212,7 @@ describe('userCsv.controller', function () {
       var user = [
         'First' + ii, 'Last' + ii, 'First' + ii + ' Last' + ii, 'firstlast' + ii + '@example.com',
         5001 + ii, '',
-        'true', 'true', 'true', 'true'
+        'true', 'true', 'true', 'true',
       ];
       if (_.includes(invalidUsers, csv.length + 1)) {
         // create an error in the CSV data for user
@@ -364,9 +365,17 @@ describe('userCsv.controller', function () {
         this.$timeout.flush();
       });
 
+      it('should emit an event to keep the user from logging out', function () {
+        this.Userservice.bulkOnboardUsers.and.callFake(this.bulkOnboardUsersResponseMock(201));
+        this.controller.startUpload();
+        this.$scope.$apply();
+        this.$timeout.flush();
+        expect(this.$rootScope.$emit).toHaveBeenCalledWith('IDLE_TIMEOUT_KEEP_ALIVE'); //keep from logging out
+      });
+
       it('should fail all users on server error', function () {
         this.Userservice.bulkOnboardUsers.and.callFake(this.bulkOnboardUsersErrorResponseMock(403, {
-          'tracking-id': 'UNIT-TEST'
+          'tracking-id': 'UNIT-TEST',
         }));
         this.controller.startUpload();
         this.$scope.$apply();
@@ -483,20 +492,20 @@ describe('userCsv.controller', function () {
 
         expect(this.controller.model.userErrorArray.length).toEqual(3);
         expect(this.controller.model.userErrorArray).toContain(jasmine.objectContaining({
-          row: 3
+          row: 3,
         }));
         expect(this.controller.model.userErrorArray).toContain(jasmine.objectContaining({
-          row: 4
+          row: 4,
         }));
         expect(this.controller.model.userErrorArray).toContain(jasmine.objectContaining({
-          row: 6
+          row: 6,
         }));
 
         expect(this.controller.model.userErrorArray).not.toContain(jasmine.objectContaining({
-          row: 2
+          row: 2,
         }));
         expect(this.controller.model.userErrorArray).not.toContain(jasmine.objectContaining({
-          row: 5
+          row: 5,
         }));
       });
 
@@ -579,6 +588,7 @@ describe('userCsv.controller', function () {
         expect(this.controller.model.numNewUsers).toEqual(2);
         expect(this.controller.model.numExistingUsers).toEqual(0);
         expect(this.controller.model.userErrorArray.length).toEqual(0);
+
       });
     });
 
@@ -609,7 +619,7 @@ describe('userCsv.controller', function () {
         // and we have 10 users, the mock will be called 5 times.
         this.Userservice.bulkOnboardUsers.and.callFake(this.bulkOnboardUsersErrorResponseMock(429, {
           'tracking-id': 'UNIT-TEST',
-          'retry-after': 200
+          'retry-after': 200,
         }, retryAttempts * (this.numCsvUsers / this.UserCsvService.chunkSizeWithSparkCall), 201));
         this.controller.startUpload();
 
@@ -630,7 +640,7 @@ describe('userCsv.controller', function () {
 
         this.Userservice.bulkOnboardUsers.and.callFake(this.bulkOnboardUsersErrorResponseMock(503, {
           'tracking-id': 'UNIT-TEST',
-          'retry-after': 200
+          'retry-after': 200,
         }, retryAttempts * (this.numCsvUsers / this.UserCsvService.chunkSizeWithSparkCall), 201));
         this.controller.startUpload();
 
@@ -649,13 +659,13 @@ describe('userCsv.controller', function () {
 
         this.Userservice.bulkOnboardUsers.and.callFake(this.bulkOnboardUsersResponseMock(201, [{
           status: 503,
-          users: 4
+          users: 4,
         }, {
           status: 429,
-          users: 2
+          users: 2,
         }, {
           status: 200,
-          users: 3
+          users: 3,
         }]));
 
         this.controller.model.numRetriesToAttempt = retryAttempts;
@@ -788,9 +798,9 @@ describe('userCsv.controller', function () {
           userId: 'b345abe1-5b9d-43b2-9a89-1e4e64ad478c',
           resourceGroups: {
             'squared-fusion-cal': 'be46e71f-c8ea-470b-ba13-2342d310a202',
-            'squared-fusion-uc': 'be46e71f-c8ea-470b-ba13-2342d310a202'
-          }
-        }
+            'squared-fusion-uc': 'be46e71f-c8ea-470b-ba13-2342d310a202',
+          },
+        },
       ]));
       var updatedUserProps = this.initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'Resource Group B', 'Resource Group B', 'true', 'true']);
       expect(updatedUserProps.length).toEqual(0);
@@ -803,9 +813,9 @@ describe('userCsv.controller', function () {
           userId: 'b345abe1-5b9d-43b2-9a89-1e4e64ad478c',
           resourceGroups: {
             'squared-fusion-cal': 'be46e71f-c8ea-470b-ba13-2342d310a202',
-            'squared-fusion-uc': '445a3f8e-06a3-476b-b6f1-215a7db09083'
-          }
-        }
+            'squared-fusion-uc': '445a3f8e-06a3-476b-b6f1-215a7db09083',
+          },
+        },
       ]));
       var updatedUserProps = this.initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'Resource Group A', 'Resource Group B', 'true', 'true']);
       expect(updatedUserProps.length).toEqual(1);
@@ -821,9 +831,9 @@ describe('userCsv.controller', function () {
           userId: 'b345abe1-5b9d-43b2-9a89-1e4e64ad478c',
           resourceGroups: {
             'squared-fusion-cal': 'be46e71f-c8ea-470b-ba13-2342d310a202',
-            'squared-fusion-uc': '445a3f8e-06a3-476b-b6f1-215a7db09083'
-          }
-        }
+            'squared-fusion-uc': '445a3f8e-06a3-476b-b6f1-215a7db09083',
+          },
+        },
       ]));
       var updatedUserProps = this.initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', '', '', 'true', 'true']);
       expect(updatedUserProps.length).toEqual(1);
@@ -870,9 +880,9 @@ describe('userCsv.controller', function () {
           userId: 'b345abe1-5b9d-43b2-9a89-1e4e64ad478c',
           resourceGroups: {
             'squared-fusion-cal': 'be46e71f-c8ea-470b-ba13-2342d310a202',
-            'squared-fusion-uc': '445a3f8e-06a3-476b-b6f1-215a7db09083'
-          }
-        }
+            'squared-fusion-uc': '445a3f8e-06a3-476b-b6f1-215a7db09083',
+          },
+        },
       ]));
       var updatedUserProps = this.initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'true', 'true'], ['First Name', 'Last Name', 'Display Name', 'User ID/Email (Required)', 'Calendar Service', 'Call Service Aware']);
       expect(updatedUserProps.length).toEqual(0);

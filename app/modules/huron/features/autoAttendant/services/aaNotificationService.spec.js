@@ -8,20 +8,20 @@ describe('Service: AANotificationService', function () {
   var error = {
     key: key,
     message: [description],
-    trackingId: trackingId
+    trackingId: trackingId,
   };
   var data = {
-    error: error
+    error: error,
   };
   var response = {
-    data: data
+    data: data,
   };
 
   var message = 'autoAttendant.errorCreateCe';
   var parameters = {
     name: 'AA',
     statusText: 'failure',
-    status: '500'
+    status: '500',
   };
 
   beforeEach(angular.mock.module('uc.autoattendant'));
@@ -50,10 +50,10 @@ describe('Service: AANotificationService', function () {
 
   describe('errorResponse', function () {
     var data = {
-      errorMessage: 'improper uuid format in request'
+      errorMessage: 'improper uuid format in request',
     };
     var response = {
-      data: data
+      data: data,
     };
 
     it('should parse through response and call core Notification for CMI', function () {
@@ -66,13 +66,13 @@ describe('Service: AANotificationService', function () {
     var error = {
       key: key,
       message: 'message field is not an object',
-      trackingId: trackingId
+      trackingId: trackingId,
     };
     var data = {
-      error: error
+      error: error,
     };
     var response = {
-      data: data
+      data: data,
     };
 
     it('should parse through response with data.error.message which is not an object', function () {

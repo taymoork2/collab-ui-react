@@ -14,6 +14,7 @@
       validateFile: validateFile,
       isClioEnabled: isClioEnabled,
       deleteRecording: deleteRecording,
+      httpDeleteRetry: httpDeleteRetry,
       getResources: getResources,
       notifyAsSaved: notifyAsSaved,
       notifyAsActive: notifyAsActive,
@@ -254,7 +255,7 @@
           headers: {
             'Content-Type': undefined,
           },
-          data: fd
+          data: fd,
         });
       } else {
         return undefined;

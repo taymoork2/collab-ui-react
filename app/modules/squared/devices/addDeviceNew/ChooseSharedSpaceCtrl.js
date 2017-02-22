@@ -99,11 +99,11 @@
     vm.message = {
       required: $translate.instant('common.invalidRequired'),
       min: $translate.instant('common.invalidMinLength', {
-        'min': minlength
+        'min': minlength,
       }),
       max: $translate.instant('common.invalidMaxLength', {
-        'max': maxlength
-      })
+        'max': maxlength,
+      }),
     };
 
     vm.isNameValid = function () {
@@ -130,8 +130,8 @@
           name: vm.deviceName,
           cisUuid: cisUuid,
           type: 'shared',
-          deviceType: vm.deviceType
-        }
+          deviceType: vm.deviceType,
+        },
       }, nextOption);
     };
 

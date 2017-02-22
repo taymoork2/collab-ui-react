@@ -45,7 +45,7 @@
       }
       $modal.open({
         templateUrl: 'modules/hercules/service-specific-pages/common-expressway-based/confirm-setup-cancel-dialog.html',
-        type: 'dialog'
+        type: 'dialog',
       })
         .result.then(function (isAborting) {
           if (isAborting) {

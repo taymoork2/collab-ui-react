@@ -6,16 +6,16 @@ describe('Directive: ct-customer Customer Information Page', function () {
   var mockActiveItem = {
     attributes: [{
       name: 'required',
-      value: 'optional'
+      value: 'optional',
     }, {
       name: 'category',
-      value: {}
+      value: {},
     }, {
       name: 'label',
-      value: {}
+      value: {},
     }, {
       name: 'hintText',
-      value: {}
+      value: {},
     }, {
       name: 'type',
       value: {
@@ -23,11 +23,11 @@ describe('Directive: ct-customer Customer Information Page', function () {
         text: "category",
         dictionaryType: {
           fieldSet: "ccc_core",
-          fieldName: "ccc_category"
-        }
+          fieldName: "ccc_category",
+        },
       },
-      categoryOptions: ['option1', 'option2', 'option3']
-    }]
+      categoryOptions: ['option1', 'option2', 'option3'],
+    }],
   };
 
   afterEach(function () {

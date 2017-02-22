@@ -33,7 +33,7 @@
             element.addClass('active');
           }
         });
-      }
+      },
     };
   }
 
@@ -84,8 +84,8 @@
         placeholderAttr: '@',
         requiredAttr: '@',
         categoryAttr: '@',
-        mediaTypeAttr: '='
-      }
+        mediaTypeAttr: '=',
+      },
     };
   }
 
@@ -136,12 +136,12 @@
       name: 'US',
       code: 'us',
       number: '1',
-      phoneNumber: '+12345556789'
+      phoneNumber: '+12345556789',
     };
 
     var getAttribute = function (field, attributeName) {
       var attr = _.find(field.attributes, {
-        name: attributeName
+        name: attributeName,
       });
       if (attr) {
         return attr.value;

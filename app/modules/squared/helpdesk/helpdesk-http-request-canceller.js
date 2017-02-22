@@ -60,7 +60,7 @@
       newCancelableTimeout: newCancelableTimeout,
       cancelAll: cancelAll,
       nrOfRegisteredRequests: nrOfRegisteredRequests,
-      empty: empty
+      empty: empty,
     };
   }
 

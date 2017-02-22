@@ -12,7 +12,7 @@ module.exports = {
     middleware: [
       compression,
       customCSPmiddleware,
-    ]
+    ],
   },
   ghostMode: {
     clicks: false,

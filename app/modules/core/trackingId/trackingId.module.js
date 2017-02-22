@@ -2,7 +2,7 @@
   'use strict';
 
   module.exports = angular.module('core.trackingId', [
-    require('modules/core/scripts/services/utils')
+    require('modules/core/scripts/services/utils'),
   ]).name;
 
   require('./trackingId.service');

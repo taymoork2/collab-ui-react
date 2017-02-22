@@ -15,14 +15,14 @@
     vm.handleKeypress = handleKeypress;
     vm.provisioning = false;
     vm._translation = {
-      help: $translate.instant('hercules.fusion.add-resource.mediafusion.name.help')
+      help: $translate.instant('hercules.fusion.add-resource.mediafusion.name.help'),
     };
     vm.minlength = 1;
     vm.validationMessages = {
       required: $translate.instant('common.invalidRequired'),
       minlength: $translate.instant('common.invalidMinLength', {
-        min: vm.minlength
-      })
+        min: vm.minlength,
+      }),
     };
 
     ///////////////
@@ -66,8 +66,8 @@
           $stateParams.wizard.next({
             mediafusion: {
               name: vm.name,
-              id: clusterId
-            }
+              id: clusterId,
+            },
           });
         })
         .catch(function (error) {

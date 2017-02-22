@@ -5,15 +5,15 @@ describe('controller:GssIframeCtrl', function () {
   var testData = {
     selectedServiceOption: {
       label: 'testServiceOption',
-      value: 'testServiceId'
+      value: 'testServiceId',
     },
     addServiceOption: {
       label: 'addServiceOption',
-      value: 'addService'
+      value: 'addService',
     },
     services: [{
-      serviceId: 'testServiceId'
-    }]
+      serviceId: 'testServiceId',
+    }],
   };
 
   beforeEach(angular.mock.module('GSS'));
@@ -42,7 +42,7 @@ describe('controller:GssIframeCtrl', function () {
     spyOn(GSSService, 'getServices').and.returnValue($q.resolve(testData.services));
     spyOn(GSSService, 'getServiceId').and.callThrough();
     spyOn($modal, 'open').and.returnValue({
-      result: $q.resolve()
+      result: $q.resolve(),
     });
     spyOn($scope, '$broadcast').and.callThrough();
     spyOn($state, 'go');
@@ -52,7 +52,7 @@ describe('controller:GssIframeCtrl', function () {
     controller = $controller('GssIframeCtrl', {
       $scope: $scope,
       GSSService: GSSService,
-      $state: $state
+      $state: $state,
     });
 
     $scope.$apply();

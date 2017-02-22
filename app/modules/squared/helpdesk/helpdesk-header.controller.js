@@ -19,7 +19,7 @@
 
     function loadSearch(search) {
       $scope.$broadcast('helpdeskLoadSearchEvent', {
-        message: search
+        message: search,
       });
     }
 

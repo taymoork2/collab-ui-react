@@ -18,8 +18,8 @@
     vm.next = function () {
       $stateParams.wizard.next({
         account: {
-          entitlements: getUpdatedEntitlements()
-        }
+          entitlements: getUpdatedEntitlements(),
+        },
       }, vm.service);
     };
 

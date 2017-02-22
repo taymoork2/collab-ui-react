@@ -91,11 +91,11 @@ function setEnv() {
   }
   if (args.prod) {
     dotenv.config({
-      path: './test/env/production.properties'
+      path: './test/env/production.properties',
     });
   } else if (args.int) {
     dotenv.config({
-      path: './test/env/integration.properties'
+      path: './test/env/integration.properties',
     });
   }
 }

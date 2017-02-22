@@ -9,14 +9,14 @@ describe('Service: LineListService', function () {
   var formattedPendingLines = getJSONFixture('huron/json/lines/formattedPendingNumbers.json');
 
   var Authinfo = {
-    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
   };
 
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
   var authInfo = {
-    getOrgId: sinon.stub().returns('1')
+    getOrgId: sinon.stub().returns('1'),
   };
 
   beforeEach(angular.mock.module(function ($provide) {

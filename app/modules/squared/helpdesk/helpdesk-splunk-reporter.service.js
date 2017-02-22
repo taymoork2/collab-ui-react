@@ -26,7 +26,7 @@
         withinOrg: orgId != null,
         nrOfRequests: res.length,
         searchResult: results,
-        searchError: errors
+        searchError: errors,
       };
 
       LogMetricsService.logMetrics(
@@ -44,7 +44,7 @@
 
     function reportOperation(operation) {
       var json = {
-        operation: operation
+        operation: operation,
       };
 
       LogMetricsService.logMetrics(
@@ -75,7 +75,7 @@
       ORDER_SEARCH: "Order search",
       SEARCH_HISTORY: "searchHistory",
       SEARCH_HELP: "searchHelp",
-      SPARK_STATUS: "sparkStatus"
+      SPARK_STATUS: "sparkStatus",
     };
   }
 

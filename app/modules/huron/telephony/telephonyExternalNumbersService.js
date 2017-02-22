@@ -29,7 +29,7 @@
         deleteAll: deleteAll,
         getAll: getAll,
         getExternalNumbers: getExternalNumbers,
-        queryExternalNumberPools: queryExternalNumberPools
+        queryExternalNumberPools: queryExternalNumberPools,
       };
 
       return service;
@@ -37,17 +37,17 @@
 
       function create(_customerId, pattern) {
         var externalNumber = {
-          'pattern': pattern
+          'pattern': pattern,
         };
 
         return ExternalNumberPoolService.save({
-          customerId: _customerId
+          customerId: _customerId,
         }, externalNumber).$promise;
       }
 
       function getAll(_customerId) {
         var query = {
-          order: 'pattern'
+          order: 'pattern',
         };
         return queryExternalNumberPools(_customerId, query);
       }
@@ -56,7 +56,7 @@
         var query = {
           externalnumbertype: numberType,
           order: 'pattern',
-          pattern: pattern ? '%' + pattern + '%' : undefined
+          pattern: pattern ? '%' + pattern + '%' : undefined,
         };
         if (extraQueries) {
           _.extend(query, extraQueries);
@@ -88,20 +88,20 @@
         var customerId = _customerId;
         return ExternalNumberPoolService.delete({
           customerId: customerId,
-          externalNumberId: externalNumberUuid
+          externalNumberId: externalNumberUuid,
         }).$promise;
       }
 
       function deleteAll(_customerId) {
         var customerId = _customerId;
         return ExternalNumberPoolService.query({
-          customerId: customerId
+          customerId: customerId,
         }, function (data) {
           var promises = [];
           for (var i = 0; i < data.length; i++) {
             var promise = ExternalNumberPoolService.delete({
               customerId: customerId,
-              externalNumberId: data[i].uuid
+              externalNumberId: data[i].uuid,
             });
 
             promises.push(promise);

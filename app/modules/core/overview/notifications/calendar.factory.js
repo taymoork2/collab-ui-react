@@ -21,11 +21,11 @@
           },
           linkText: 'homePage.getStarted',
           name: 'calendar',
-          text: 'homePage.setUpCalendarService'
+          text: 'homePage.setUpCalendarService',
         };
 
         return notification;
-      }
+      },
     };
   }
 })();

@@ -9,10 +9,10 @@ describe(' sunlightConfigService', function () {
     sunlightChatConfigUrl, sunlightChatTemplateUrl, chatConfig, userData, userId, orgId, csConnString, templateId;
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
-    getOrgName: jasmine.createSpy('getOrgName').and.returnValue('SunlightConfigService test org')
+    getOrgName: jasmine.createSpy('getOrgName').and.returnValue('SunlightConfigService test org'),
   };
   var errorData = {
-    'errorType': 'Internal Server Error'
+    'errorType': 'Internal Server Error',
   };
 
   beforeEach(angular.mock.module('Sunlight'));

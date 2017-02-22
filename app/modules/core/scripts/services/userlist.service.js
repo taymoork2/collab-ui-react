@@ -14,7 +14,7 @@
     .name;
 
   /* @ngInject */
-  function UserListService($http, $rootScope, $q, $timeout, Authinfo, Log, Utils, $resource, UrlConfig, $window) {
+  function UserListService($http, $q, $resource, $rootScope, $timeout, $window, Authinfo, Config, Log, Utils, UrlConfig) {
     var searchFilter = 'filter=active%20eq%20true%20and%20%s(userName%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22%20or%20displayName%20sw%20%22%s%22)';
     var attributes = 'attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID,userSettings';
     // Get last 7 day user counts
@@ -116,12 +116,12 @@
       var generateUserReportsUrl = UrlConfig.getUserReportsUrl(Authinfo.getOrgId());
       var requestData = {
         sortedBy: [sortBy],
-        attributes: ["name", "displayName", "userName", "entitlements", "active"]
+        attributes: ["name", "displayName", "userName", "entitlements", "active"],
       };
       $http({
         method: 'POST',
         url: generateUserReportsUrl,
-        data: requestData
+        data: requestData,
       })
         .success(function (data, status) {
           data = _.isObject(data) ? data : {};
@@ -141,6 +141,8 @@
     // generate user report request.
     function getUserReports(userReportsID, callback) {
       var userReportsUrl = UrlConfig.getUserReportsUrl(Authinfo.getOrgId()) + '/' + userReportsID;
+      //keep the user from being logged off for inactivity
+      $rootScope.$emit(Config.idleTabKeepAliveEvent);
 
       $http.get(userReportsUrl)
         .success(function (data, status) {
@@ -189,16 +191,16 @@
 
       // Pako magic
       var userReport = pako.inflate(byteData, {
-        to: 'string'
+        to: 'string',
       });
 
       // Filtering user report
       var users = _.filter(JSON.parse(userReport), {
-        active: true
+        active: true,
       });
       if (entitlementFilter) {
         users = _.filter(users, {
-          roles: ['id_full_admin']
+          roles: ['id_full_admin'],
         });
       }
 
@@ -310,14 +312,14 @@
         .catch(function (data, status) {
           data = _.extend({}, data, {
             success: false,
-            status: status
+            status: status,
           });
           return $q.reject(data);
         })
         .then(function (data, status) {
           data = _.extend({}, data, {
             success: true,
-            status: status
+            status: status,
           });
           return data;
         });

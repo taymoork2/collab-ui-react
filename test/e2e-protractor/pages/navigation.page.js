@@ -309,7 +309,7 @@ var Navigation = function () {
 
   this.navigateUsingIntegrationBackend = function (url) {
     return browser.get(getUrl(url, {
-      forceIntegration: true
+      forceIntegration: true,
     }));
   };
 

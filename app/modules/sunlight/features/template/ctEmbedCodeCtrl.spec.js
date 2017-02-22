@@ -22,7 +22,7 @@ describe('Chat template embed code control', function () {
         CTService: CTService,
         templateId: 'abc123',
         templateHeader: 'chat template header',
-        SunlightConfigService: SunlightConfigService
+        SunlightConfigService: SunlightConfigService,
       });
     };
     fakeCodeSnippet = 'some_fake_script';
@@ -57,8 +57,8 @@ describe('Chat template embed code control', function () {
     spyOn(SunlightConfigService, 'getChatConfig').and.callFake(function () {
       var data = {
         "allowedOrigins": [
-          ".*"
-        ]
+          ".*",
+        ],
       };
       return q.resolve({ data: data });
     });
@@ -75,8 +75,8 @@ describe('Chat template embed code control', function () {
       var data = {
         "allowedOrigins": [
           "ciscoccservice.com",
-          "cisco.com"
-        ]
+          "cisco.com",
+        ],
       };
       return q.resolve({ data: data });
     });

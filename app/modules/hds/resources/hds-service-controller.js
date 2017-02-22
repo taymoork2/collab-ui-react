@@ -21,7 +21,7 @@
       }, {
         title: $translate.instant('common.settings'),
         state: 'hds.settings',
-      }
+      },
     ];
 
     vm.addResourceModal = {
@@ -31,8 +31,8 @@
       templateUrl: 'modules/hds/add-resource/add-resource-modal.html',
       modalClass: 'redirect-add-resource',
       resolve: {
-        firstTimeSetup: false
-      }
+        firstTimeSetup: false,
+      },
     };
 
     FusionClusterService.serviceIsSetUp('spark-hybrid-datasecurity')

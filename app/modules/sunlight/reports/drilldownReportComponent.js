@@ -37,13 +37,13 @@
             paginationPageSize: 5,
             enablePaginationControls: false,
             onRegisterApi: onRegisterApi,
-            columnDefs: dd.props.table.columnDefs
+            columnDefs: dd.props.table.columnDefs,
           },
           pagination: {
-            maxPages: 3
-          }
+            maxPages: 3,
+          },
         },
-        title: ''
+        title: '',
       };
 
       dd.props = _.merge(defaultProps, dd.props);
@@ -95,7 +95,7 @@
       dd.callback(
         {
           onSuccess: dd.onGetDataSuccess,
-          onError: dd.onGetDataError
+          onError: dd.onGetDataError,
         }
       );
     };
@@ -168,10 +168,10 @@
     bindings: {
       props: '=',
       callback: '&',
-      gridData: '=?'
+      gridData: '=?',
     },
     templateUrl: 'modules/sunlight/reports/drilldownReport.tpl.html',
-    controllerAs: 'dd'
+    controllerAs: 'dd',
   }
   );
 

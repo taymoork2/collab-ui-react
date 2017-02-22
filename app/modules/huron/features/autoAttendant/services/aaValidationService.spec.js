@@ -9,8 +9,8 @@ describe('Service: AAValidationService', function () {
     "assignedResources": [{
       "id": "00097a86-45ef-44a7-aa78-6d32a0ca1d3b",
       "type": "directoryNumber",
-      "trigger": "incomingCall"
-    }]
+      "trigger": "incomingCall",
+    }],
   };
 
   var aaModel = {};
@@ -349,7 +349,7 @@ describe('Service: AAValidationService', function () {
         key: '0',
         schedule: 'autoAttendant.scheduleOpen',
         at: 1,
-        subkey: '2'
+        subkey: '2',
       }]);
 
       expect(AANotificationService.error).toHaveBeenCalled();

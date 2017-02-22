@@ -13,7 +13,7 @@ describe('ResponseInterceptor', function () {
     angular.mock.module(function ($provide) {
       Auth = {
         logout: jasmine.createSpy('logout'),
-        refreshAccessTokenAndResendRequest: jasmine.createSpy('refreshAccessTokenAndResendRequest')
+        refreshAccessTokenAndResendRequest: jasmine.createSpy('refreshAccessTokenAndResendRequest'),
       };
       $provide.value('Auth', Auth);
     });
@@ -28,16 +28,16 @@ describe('ResponseInterceptor', function () {
       status: 401,
       data: {
         Errors: [{
-          errorCode: '200001'
-        }]
-      }
+          errorCode: '200001',
+        }],
+      },
     });
   });
 
   it('should refresh token for HTTP auth errors', function () {
     testRefreshAccessTokenAndResendRequestForResponse({
       status: 401,
-      data: 'This request requires HTTP authentication.'
+      data: 'This request requires HTTP authentication.',
     });
   });
 
@@ -46,9 +46,9 @@ describe('ResponseInterceptor', function () {
       status: 401,
       data: {
         error: {
-          message: 'Request unauthorized'
-        }
-      }
+          message: 'Request unauthorized',
+        },
+      },
     });
   });
 
@@ -58,10 +58,10 @@ describe('ResponseInterceptor', function () {
       data: {
         error: {
           message: [{
-            description: "Invalid access token."
-          }]
-        }
-      }
+            description: "Invalid access token.",
+          }],
+        },
+      },
     });
   });
 
@@ -69,8 +69,8 @@ describe('ResponseInterceptor', function () {
     testLogoutForResponse({
       status: 400,
       data: {
-        error_description: 'The refresh token provided is expired'
-      }
+        error_description: 'The refresh token provided is expired',
+      },
     });
   });
 
@@ -78,8 +78,8 @@ describe('ResponseInterceptor', function () {
     testLogoutForResponse({
       status: 400,
       data: {
-        error_description: 'The requested scope is invalid'
-      }
+        error_description: 'The requested scope is invalid',
+      },
     });
   });
 

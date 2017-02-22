@@ -4,21 +4,21 @@
   describe('Controller: TabsCtrl', function () {
     var tabsController, $q, $controller, $rootScope, injectedRootScope, $scope, $location, Authinfo, Auth, UrlConfig, $provide, $injector;
     var featureToggleService = {
-      supports: function () {}
+      supports: function () {},
     };
     var tabConfig;
 
     var defaultConfig = {
       restrictedStates: {
         customer: [],
-        partner: []
+        partner: [],
       },
       publicStates: [],
       ciscoOnly: [],
       ciscoOrgId: '',
       ciscoMockOrgId: '',
       roleStates: {},
-      serviceStates: {}
+      serviceStates: {},
     };
     var defaultUser = {
       name: 'Test',
@@ -29,7 +29,7 @@
       services: [],
       roles: [],
       managedOrgs: [],
-      setupDone: true
+      setupDone: true,
     };
 
     var states;
@@ -65,7 +65,7 @@
         icon: 'tab1.icon',
         title: 'tab1.title',
         state: 'tab1',
-        link: '/tab1Path'
+        link: '/tab1Path',
       }, {
         tab: 'tabMenu',
         icon: 'tabMenu.icon',
@@ -76,15 +76,15 @@
           title: 'subTab1.title',
           desc: 'subTab1.desc',
           state: 'subTab1',
-          link: '/subTab1Path'
+          link: '/subTab1Path',
         }, {
           tab: 'subTab2',
           icon: 'subTab2.icon',
           title: 'subTab2.title',
           desc: 'subTab2.desc',
           state: 'subTab2',
-          link: '/subTab2Path'
-        }]
+          link: '/subTab2Path',
+        }],
       }];
 
       spyOn($location, 'path');
@@ -97,7 +97,7 @@
       injectedRootScope.tykk = 'test2';
       var v = _.merge({
         $scope: $scope,
-        $rootScope: injectedRootScope
+        $rootScope: injectedRootScope,
       }, args || {});
       tabsController = $controller('TabsCtrl',
         v
@@ -125,9 +125,9 @@
               orgId: 1337,
               services: [{
                 ciService: 'foo',
-                sqService: 'bar'
+                sqService: 'bar',
               }],
-              roles: ['User', 'WX2_User']
+              roles: ['User', 'WX2_User'],
             });
             return deferred.promise;
           });
@@ -136,7 +136,7 @@
         it('will initialize tabs if not admin', function (done) {
           tabConfig.push({
             tab: 'tabbover',
-            state: 'overview'
+            state: 'overview',
           });
 
           Auth.authorize().then(function () {
@@ -155,65 +155,65 @@
         var Authinfo = setupUser();
 
         initTabsController({
-          Authinfo: Authinfo
+          Authinfo: Authinfo,
         });
         expect(tabsController.tabs).toEqual([]);
       });
 
       it('should remove a single tab that is not allowed', function () {
         setupConfig({
-          publicStates: _.difference(states, ['tab1'])
+          publicStates: _.difference(states, ['tab1']),
         });
         var Authinfo = setupUser();
 
         _.remove(tabConfig, {
-          state: 'tab1'
+          state: 'tab1',
         });
 
         initTabsController({
-          Authinfo: Authinfo
+          Authinfo: Authinfo,
         });
         expect(tabsController.tabs).toEqual(setAllTabsActive(tabConfig, false));
       });
 
       it('should remove a single subPage that is not allowed', function () {
         setupConfig({
-          publicStates: _.difference(states, ['subTab1'])
+          publicStates: _.difference(states, ['subTab1']),
         });
         var Authinfo = setupUser();
 
         _.remove(tabConfig[1].subPages, {
-          state: 'subTab1'
+          state: 'subTab1',
         });
         initTabsController({
-          Authinfo: Authinfo
+          Authinfo: Authinfo,
         });
         expect(tabsController.tabs).toEqual(setAllTabsActive(tabConfig, false));
       });
 
       it('should remove a subPage parent if all subPages are not allowed', function () {
         setupConfig({
-          publicStates: _.difference(states, ['subTab1', 'subTab2'])
+          publicStates: _.difference(states, ['subTab1', 'subTab2']),
         });
         var Authinfo = setupUser();
 
         _.remove(tabConfig, {
-          tab: 'tabMenu'
+          tab: 'tabMenu',
         });
         initTabsController({
-          Authinfo: Authinfo
+          Authinfo: Authinfo,
         });
         expect(tabsController.tabs).toEqual(setAllTabsActive(tabConfig, false));
       });
 
       it('should keep tab structure if all pages are allowed', function () {
         setupConfig({
-          publicStates: states
+          publicStates: states,
         });
         var Authinfo = setupUser();
 
         initTabsController({
-          Authinfo: Authinfo
+          Authinfo: Authinfo,
         });
         expect(tabsController.tabs).toEqual(setAllTabsActive(tabConfig, false));
       });
@@ -223,18 +223,18 @@
           publicStates: states,
           isProd: function () {
             return true;
-          }
+          },
         });
         var Authinfo = setupUser();
         _.remove(tabConfig, {
-          tab: 'devTab'
+          tab: 'devTab',
         });
         _.remove(tabConfig, {
-          tab: 'devMenu'
+          tab: 'devMenu',
         });
 
         initTabsController({
-          Authinfo: Authinfo
+          Authinfo: Authinfo,
         });
         expect(tabsController.tabs).toEqual(setAllTabsActive(tabConfig, false));
       });
@@ -336,7 +336,7 @@
           icon: 'tab3.icon',
           title: 'tab3.title',
           state: 'tab3',
-          link: '/tab3Path'
+          link: '/tab3Path',
         }];
         $provide.value('tabConfig', tabConfig);
         spyOn(Authinfo, 'isAllowedState').and.returnValue(true);
@@ -362,7 +362,7 @@
       var performFeatureToggleTest = function (tab, feature, featureIsEnabled, expectedResult) {
         tabConfig.push({
           tab: tab,
-          feature: feature
+          feature: feature,
         });
         spyOn(Authinfo, 'isAllowedState').and.returnValue(true);
         spyOn(featureToggleService, 'supports').and.returnValue($q.resolve(featureIsEnabled));
@@ -371,7 +371,7 @@
         broadcastEvent('TABS_UPDATED');
         $scope.$apply();
         expect(_.some(tabsController.tabs, {
-          tab: tab
+          tab: tab,
         })).toBe(expectedResult);
       };
       it('a tab with a feature toggle should be gone when feature is not available', function () {
@@ -400,7 +400,7 @@
       if (name) {
         return _.some(tabsController.tabs, {
           tab: name,
-          isActive: true
+          isActive: true,
         });
       } else {
         return _.some(tabsController.tabs, 'isActive');

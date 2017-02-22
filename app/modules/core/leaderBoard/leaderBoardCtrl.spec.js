@@ -32,7 +32,7 @@ describe('LeaderBoard', function () {
 
   function initController() {
     controller = $controller('leaderBoardCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
     $scope.$apply();
   }

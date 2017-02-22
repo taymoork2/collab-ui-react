@@ -10,7 +10,7 @@
       restrict: 'E',
       templateUrl: 'modules/core/customers/customerOverview/webexOverview.tpl.html',
       controller: 'CustomerWebexOverviewCtrl',
-      controllerAs: 'customerWebexOverview'
+      controllerAs: 'customerWebexOverview',
     };
 
     return directive;

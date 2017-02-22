@@ -16,7 +16,7 @@ describe('Features Controller', function () {
   var getHGListFailureResp = {
     'data': 'Internal Server Error',
     'status': 500,
-    'statusText': 'Internal Server Error'
+    'statusText': 'Internal Server Error',
   };
   var huntGroups = [{
     'cardName': 'Technical Support',
@@ -25,7 +25,7 @@ describe('Features Controller', function () {
     'id': 'abcd1234-abcd-abcd-abcddef123456',
     'featureName': 'huronHuntGroup.hg',
     'filterValue': 'HG',
-    'toggle': 'huronHuntGroup'
+    'toggle': 'huronHuntGroup',
   }, {
     cardName: 'Marketing',
     numbers: ['5076', '13026824905', '4145551244', '4145551245'],
@@ -33,7 +33,7 @@ describe('Features Controller', function () {
     id: 'bbcd1234-abcd-abcd-abcddef123456',
     featureName: 'huronHuntGroup.hg',
     filterValue: 'HG',
-    toggle: 'huronHuntGroup'
+    toggle: 'huronHuntGroup',
   }];
 
   beforeEach(angular.mock.module('Huron'));
@@ -84,7 +84,7 @@ describe('Features Controller', function () {
       HuntGroupService: HuntGroupService,
       TelephoneNumberService: TelephoneNumberService,
       Log: Log,
-      Notification: Notification
+      Notification: Notification,
     });
 
   }));
@@ -115,7 +115,7 @@ describe('Features Controller', function () {
     $timeout.flush();
     expect(Notification.errorResponse).toHaveBeenCalledWith(getHGListFailureResp,
       'huronFeatureDetails.failedToLoad', {
-        featureType: 'huronFeatureDetails.hgName'
+        featureType: 'huronFeatureDetails.hgName',
       });
   });
 
@@ -144,7 +144,7 @@ describe('Features Controller', function () {
     expect($state.go).toHaveBeenCalledWith('huronfeatures.deleteFeature', {
       deleteFeatureName: huntGroups[0].cardName,
       deleteFeatureId: huntGroups[0].id,
-      deleteFeatureType: 'HG'
+      deleteFeatureType: 'HG',
     });
   });
 
@@ -152,7 +152,7 @@ describe('Features Controller', function () {
     $rootScope.$broadcast('HURON_FEATURE_DELETED', {
       deleteFeatureName: huntGroups[0].cardName,
       deleteFeatureId: huntGroups[0].id,
-      deleteFeatureType: 'HG'
+      deleteFeatureType: 'HG',
     });
     expect(featureCtrl.listOfFeatures).not.toEqual(jasmine.arrayContaining([huntGroups[0]]));
 
@@ -169,7 +169,7 @@ describe('Features Controller', function () {
     $rootScope.$broadcast('HURON_FEATURE_DELETED', {
       deleteFeatureName: huntGroups[0].cardName,
       deleteFeatureId: huntGroups[0].id,
-      deleteFeatureType: 'HG'
+      deleteFeatureType: 'HG',
     });
     expect(featureCtrl.listOfFeatures).not.toEqual(jasmine.arrayContaining([huntGroups[0]]));
     expect(featureCtrl.pageState).toEqual('NewFeature');

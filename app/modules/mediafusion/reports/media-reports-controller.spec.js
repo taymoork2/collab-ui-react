@@ -16,19 +16,19 @@ describe('Controller:MediaReportsController', function () {
 
   var timeOptions = [{
     value: 0,
-    label: 'mediaFusion.metrics.last4Hours'
+    label: 'mediaFusion.metrics.last4Hours',
   }, {
     value: 1,
-    label: 'mediaFusion.metrics.today'
+    label: 'mediaFusion.metrics.today',
   }, {
     value: 2,
-    label: 'mediaFusion.metrics.week'
+    label: 'mediaFusion.metrics.week',
   }, {
     value: 3,
-    label: 'mediaFusion.metrics.month'
+    label: 'mediaFusion.metrics.month',
   }, {
     value: 4,
-    label: 'mediaFusion.metrics.threeMonths'
+    label: 'mediaFusion.metrics.threeMonths',
   }];
 
   var allClusters = 'mediaFusion.metrics.allclusters';
@@ -60,19 +60,19 @@ describe('Controller:MediaReportsController', function () {
     Config = _Config_;
 
     spyOn(CallVolumeResourceGraphService, 'setCallVolumeGraph').and.returnValue({
-      'dataProvider': callVolumeData
+      'dataProvider': callVolumeData,
     });
     spyOn(AvailabilityResourceGraphService, 'setAvailabilityGraph').and.returnValue({
-      'dataProvider': clusteravailabilityData
+      'dataProvider': clusteravailabilityData,
     });
     spyOn(UtilizationResourceGraphService, 'setUtilizationGraph').and.returnValue({
-      'dataProvider': utilizationGraphData
+      'dataProvider': utilizationGraphData,
     });
     spyOn(ParticipantDistributionResourceGraphService, 'setParticipantDistributionGraph').and.returnValue({
-      'dataProvider': participantDistributionGraphData
+      'dataProvider': participantDistributionGraphData,
     });
     spyOn(ClientTypeAdoptionGraphService, 'setClientTypeGraph').and.returnValue({
-      'dataProvider': clientTypeData
+      'dataProvider': clientTypeData,
     });
     httpMock.when('GET', /^\w+.*/).respond({});
 
@@ -96,7 +96,7 @@ describe('Controller:MediaReportsController', function () {
       Notification: Notification,
       $interval: $interval,
       Log: Log,
-      Config: Config
+      Config: Config,
     });
   }));
   it('controller should be defined', function () {
@@ -191,8 +191,8 @@ describe('Controller:MediaReportsController', function () {
       var response = {
         'data': {
           'callsOnPremise': 20,
-          'callsRedirect': 30
-        }
+          'callsRedirect': 30,
+        },
       };
       spyOn(MediaReportsService, 'getTotalCallsData').and.returnValue($q.resolve(response));
       controller.setTotalCallsData();
@@ -214,8 +214,8 @@ describe('Controller:MediaReportsController', function () {
     it('setClusterAvailability should set the clusterAvailability', function () {
       var response = {
         'data': {
-          'availabilityPercent': 20
-        }
+          'availabilityPercent': 20,
+        },
       };
       spyOn(MediaReportsService, 'getClusterAvailabilityData').and.returnValue($q.resolve(response));
       controller.setClusterAvailability();
@@ -227,7 +227,7 @@ describe('Controller:MediaReportsController', function () {
     it('setSneekPeekData should call MediaReportsService and MediaSneekPeekResourceService', function () {
       spyOn(MediaReportsService, 'getClusterAvailabilityTooltip').and.callThrough();
       spyOn(MediaSneekPeekResourceService, 'getClusterAvailabilitySneekPeekValues').and.returnValue({
-        values: ["dummyCluster"]
+        values: ["dummyCluster"],
       });
       controller.setSneekPeekData();
       httpMock.flush();

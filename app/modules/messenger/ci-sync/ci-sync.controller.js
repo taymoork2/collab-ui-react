@@ -19,23 +19,23 @@
     vm.dataStates = Object.freeze({
       loading: 1,
       loaded: 2,
-      error: 3
+      error: 3,
     });
 
     // the label is only a stake holder right now
     vm.adminTypes = Object.freeze({
       org: {
-        label: $translate.instant(translatePrefix + 'labelOrgAdmin')
+        label: $translate.instant(translatePrefix + 'labelOrgAdmin'),
       },
       ops: {
-        label: $translate.instant(translatePrefix + 'labelOpsAdmin')
+        label: $translate.instant(translatePrefix + 'labelOpsAdmin'),
       },
       read: {
-        label: $translate.instant(translatePrefix + 'labelReadAdmin')
+        label: $translate.instant(translatePrefix + 'labelReadAdmin'),
       },
       unknown: {
-        label: $translate.instant(translatePrefix + 'labelUnauthorizedUser')
-      }
+        label: $translate.instant(translatePrefix + 'labelUnauthorizedUser'),
+      },
     });
 
     // Public
@@ -68,7 +68,7 @@
       isPwdSync: true,
       isSparkEnt: true,
       isUsrDis: true,
-      isUsrDel: true
+      isUsrDel: true,
     };
 
     vm.fields = [{
@@ -79,8 +79,8 @@
         label: $translate.instant(translatePrefix + 'labelOrgName'),
         required: false,
         disabled: true,
-        placeholder: ''
-      }
+        placeholder: '',
+      },
     }, {
       key: 'messengerOrgId',
       type: 'input',
@@ -89,8 +89,8 @@
         label: $translate.instant(translatePrefix + 'labelOrgId'),
         required: false,
         disabled: true,
-        placeholder: ''
-      }
+        placeholder: '',
+      },
     }, {
       key: 'linkDate',
       type: 'input',
@@ -99,8 +99,8 @@
         label: $translate.instant(translatePrefix + 'labelCILinkDate'),
         required: false,
         disabled: true,
-        placeholder: ''
-      }
+        placeholder: '',
+      },
     }];
 
     vm.init = init;
@@ -273,13 +273,13 @@
 
   function msgrTextStatusOn() {
     return {
-      templateUrl: 'modules/messenger/ci-sync/ciSyncTextStatusOn.html'
+      templateUrl: 'modules/messenger/ci-sync/ciSyncTextStatusOn.html',
     };
   }
 
   function msgrTextStatusOff() {
     return {
-      templateUrl: 'modules/messenger/ci-sync/ciSyncTextStatusOff.html'
+      templateUrl: 'modules/messenger/ci-sync/ciSyncTextStatusOff.html',
     };
   }
 })();

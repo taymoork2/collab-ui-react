@@ -15,7 +15,7 @@
           });
 
           return $(element).iCheck({
-            checkboxClass: 'icheckbox_square-blue'
+            checkboxClass: 'icheckbox_square-blue',
           }).on('ifChanged', function (event) {
             if ($(element).attr('type') === 'checkbox' && $attrs.ngModel) {
               $scope.$apply(function () {
@@ -27,7 +27,7 @@
             }
           });
         });
-      }
+      },
     };
   }
 })();

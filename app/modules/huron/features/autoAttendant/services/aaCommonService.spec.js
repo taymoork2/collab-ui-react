@@ -9,30 +9,30 @@
 
     var sortedOptions = [{
       "title": 'autoAttendant.actionPhoneMenu',
-      "label": 'AutoAttendantTestLabel'
+      "label": 'AutoAttendantTestLabel',
     }, {
       "title": 'autoAttendant.actionRouteCall',
-      "label": 'autoAttendantTestLabel'
+      "label": 'autoAttendantTestLabel',
     }, {
       "title": 'autoAttendant.actionSayMessage',
-      "label": 'secondTestLabel'
+      "label": 'secondTestLabel',
     }, {
       "title": 'autoAttendant.phoneMenuDialExt',
-      "label": 'testLabel'
+      "label": 'testLabel',
     }];
 
     var unSortedOptions = [{
       "title": 'autoAttendant.actionRouteCall',
-      "label": 'testLabel'
+      "label": 'testLabel',
     }, {
       "title": 'autoAttendant.phoneMenuDialExt',
-      "label": 'autoAttendantTestLabel'
+      "label": 'autoAttendantTestLabel',
     }, {
       "title": 'autoAttendant.actionSayMessage',
-      "label": 'AutoAttendantTestLabel'
+      "label": 'AutoAttendantTestLabel',
     }, {
       "title": 'autoAttendant.actionPhoneMenu',
-      "label": 'secondTestLabel'
+      "label": 'secondTestLabel',
     }];
 
 
@@ -269,9 +269,9 @@
         var expected = ['2', '3', '4', '5', '6', '7', '8', '9', '#', '*'];
 
         var inputActions = [{
-          key: '0'
+          key: '0',
         }, {
-          key: '1'
+          key: '1',
         }];
 
         var available = AACommonService.keyActionAvailable('', inputActions);
@@ -284,11 +284,11 @@
       it('should send back available keys minus 0, 1 but with 9', function () {
 
         var inputActions = [{
-          key: '0'
+          key: '0',
         }, {
-          key: '1'
+          key: '1',
         }, {
-          key: '9'
+          key: '9',
         }];
 
         var available = AACommonService.keyActionAvailable('9', inputActions);
@@ -301,11 +301,11 @@
         var expected = ['2', '3', '4', '5', '6', '7', '8', '#', '*'];
 
         var inputActions = [{
-          key: '0'
+          key: '0',
         }, {
-          key: '1'
+          key: '1',
         }, {
-          key: '9'
+          key: '9',
         }];
 
         var available = AACommonService.keyActionAvailable('5', inputActions);

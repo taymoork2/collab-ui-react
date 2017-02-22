@@ -5,28 +5,28 @@ describe('Service: Meeting Location Adoption GraphService', function () {
 
 
   var validateService = {
-    validate: function () {}
+    validate: function () {},
   };
 
   var meetingLocationChart = {
     dataProvider: [],
     startDuration: "",
     balloon: {
-      enabled: false
+      enabled: false,
     },
     chartCursor: {
       valueLineBalloonEnabled: false,
       valueLineEnabled: false,
-      categoryBalloonEnabled: false
+      categoryBalloonEnabled: false,
     },
     validateData: function () {
       return true;
-    }
+    },
   };
 
   var daterange = {
     label: "Last 24 Hours",
-    value: "0"
+    value: "0",
   };
   var meetingLocationGraphData = getJSONFixture('mediafusion/json/metrics-graph-report/meetingLocationGraphData.json');
 

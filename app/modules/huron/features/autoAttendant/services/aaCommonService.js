@@ -59,7 +59,7 @@
       keyActionAvailable: keyActionAvailable,
       DIGITS_DIAL_BY: 2,
       DIGITS_RAW: 3,
-      DIGITS_CHOICE: 4
+      DIGITS_CHOICE: 4,
     };
 
     return service;

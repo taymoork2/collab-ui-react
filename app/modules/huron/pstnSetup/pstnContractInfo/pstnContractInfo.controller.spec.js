@@ -19,7 +19,7 @@ describe('Controller: PstnContractInfoCtrl', function () {
     spyOn($state, 'go');
 
     controller = $controller('PstnContractInfoCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
 
     $scope.$apply();

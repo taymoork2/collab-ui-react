@@ -9,7 +9,7 @@
 
     init();
     var model = {
-      clear: init,
+      clear: clear,
       clearProviderSpecificData: clearProviderSpecificData,
       setCustomerId: setCustomerId,
       getCustomerId: getCustomerId,
@@ -43,12 +43,16 @@
       isSingleCarrierReseller: isSingleCarrierReseller,
       setSingleCarrierReseller: setSingleCarrierReseller,
       setIsTrial: setIsTrial,
-      getIsTrial: getIsTrial
+      getIsTrial: getIsTrial,
     };
 
     return model;
 
     function init() {
+      clear();
+    }
+
+    function clear() {
       customerId = '';
       customerName = '';
       customerFirstName = '';
@@ -70,9 +74,12 @@
     function clearProviderSpecificData() {
       customerFirstName = '';
       customerLastName = '';
+      serviceAddress = {};
+      siteExists = false;
+      carrierExists = false;
+      carrierExists = [];
       numbers = [];
       orders = [];
-      serviceAddress = {};
     }
 
     function setCustomerId(_customerId) {

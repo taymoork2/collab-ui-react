@@ -9,14 +9,14 @@ describe('Controller: FeatureCtrl', function () {
       then: function (okCallback, cancelCallback) {
         this.okCallback = okCallback;
         this.cancelCallback = cancelCallback;
-      }
+      },
     },
     close: function (item) {
       this.result.okCallback(item);
     },
     dismiss: function (type) {
       this.result.cancelCallback(type);
-    }
+    },
   };
 
   beforeEach(angular.mock.module('Huron'));
@@ -44,7 +44,7 @@ describe('Controller: FeatureCtrl', function () {
       HuntGroupService: HuntGroupService,
       CallParkService: CallParkService,
       Log: Log,
-      Notification: Notification
+      Notification: Notification,
     });
 
     spyOn($modal, 'open').and.returnValue(fakeModal);

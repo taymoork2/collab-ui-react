@@ -9,7 +9,7 @@
       xmlApiUrl: "",
       webexAdminID: "",
       webexSessionTicket: "",
-      webexUserId: ""
+      webexUserId: "",
     }; // return
   } // WebExXmlApiInfo()
 })();

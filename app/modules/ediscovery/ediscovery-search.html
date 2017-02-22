@@ -11,18 +11,19 @@
         <!-- Search By Row-->
         <div class="row">
           <div class="col-md-6 large-3 searchBox">
-            <span class="searchText" translate="ediscovery.searchParameters.searchBy"></span>
+            <span id="searchBy" class="searchText" translate="ediscovery.searchParameters.searchBy"></span>
             <cs-select ng-model="ediscoverySearchCtrl.searchBySelected"
               ng-change="ediscoverySearchCtrl.searchByParameters()"
               options="ediscoverySearchCtrl.searchByOptions"
               placeholder="ediscoverySearchCtrl.searchByOptions[0]">
             </cs-select>
           </div>
-          <div class="col-md-6" id="midBreak">
-            <input cs-input type="text"
+          <div class="col-md-6" id="midBreak">  
+              <input cs-input type="text"
               ng-model="ediscoverySearchCtrl.searchModel" autofocus="true"
               ng-keyup="ediscoverySearchCtrl.keyPressHandler($event)"
-              placeholder="{{ediscoverySearchCtrl.searchPlaceholder}}">
+              placeholder="ediscoverySearchCtrl.searchPlaceholder"
+              ng-required="true">   
           </div>
         </div>
         <!-- Date Range Row -->
@@ -32,12 +33,12 @@
           </div>
           <div class="col-md-5 searchBox">
             <cs-datepicker required ng-model="ediscoverySearchCtrl.searchCriteria.startDate" view-format="YYYY-MM-DD"
-              placeholder="{{'ediscovery.search.startDatePlaceholder' | translate}}" required>
+              placeholder="{{ediscoverySearchCtrl.startDatePlaceholder}}" required>
             </cs-datepicker>
           </div>
           <span class="col-md-1" translate="common.to"></span>
           <cs-datepicker required class="col-md-6" ng-model="ediscoverySearchCtrl.searchCriteria.endDate" view-format="YYYY-MM-DD"
-            placeholder="{{'ediscovery.search.endDatePlaceholder' | translate}}" required>
+            placeholder="{{ediscoverySearchCtrl.endDatePlaceholder}}" required>
           </cs-datepicker>
         </div>
         <div class="row">
@@ -45,13 +46,14 @@
           <div class="row">
             <span class="searchText" id="largeBreak" translate="ediscovery.searchParameters.textAndFileName"></span>
             <input class="cs-input" id="textInput" type="text" ng-model="ediscoverySearchCtrl.queryModel" 
-            placeholder="{{'ediscovery.searchParameters.textAndFileNamePlaceholder' | translate}}">
+            placeholder="{{'ediscovery.searchParameters.textAndFileNamePlaceholder' | translate}}"
+            ng-keyup="ediscoverySearchCtrl.keyPressHandler($event)">
           </div>
 
         </div>
         <div class="row" id="midBreak">
-          <button type="submit" class="btn btn--primary searchButton" translate="common.search"
-          ng-click="ediscoverySearchCtrl.advancedSearch()"
+          <button type="submit" id="ediscoverySearchButton" class="btn btn--primary searchButton" 
+          translate="common.search" ng-click="ediscoverySearchCtrl.advancedSearch()"
           ng-disabled="ediscoverySearchCtrl.searchButtonDisabled()"></button>
           <div ng-if="ediscoverySearchCtrl.error">
             <i class="icon icon-warning searchWarning"></i>

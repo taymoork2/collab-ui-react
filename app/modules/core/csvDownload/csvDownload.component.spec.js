@@ -34,7 +34,7 @@ describe('csvDownload', function () {
       $q: this.$q,
       $rootScope: this.$rootScope,
       FeatureToggleService: this.FeatureToggleService,
-      CsvDownloadService: this.CsvDownloadService
+      CsvDownloadService: this.CsvDownloadService,
     });
     this.controller.$onInit();
   }
@@ -98,7 +98,7 @@ describe('csvDownload', function () {
     it('should replace the element with the appropriate content', function () {
       initComponentWithBindings.apply(this, [{
         type: 'template',
-        filename: 'template.csv'
+        filename: 'template.csv',
       }]);
 
       expect(this.controller.downloading).toBeFalsy();
@@ -112,7 +112,7 @@ describe('csvDownload', function () {
       initComponentWithBindings.apply(this, [{
         type: 'template',
         filename: 'template.csv',
-        icon: 'abc-icon'
+        icon: 'abc-icon',
       }]);
 
       expect(this.view.find('i:first')).toHaveClass('abc-icon');
@@ -122,7 +122,7 @@ describe('csvDownload', function () {
       initComponentWithBindings.apply(this, [{
         type: 'any',
         filename: 'some.csv',
-        noIcon: 'true'
+        noIcon: 'true',
       }]);
 
       expect(this.view.find('i:first')).toHaveClass("icon");
@@ -132,7 +132,7 @@ describe('csvDownload', function () {
     it('should download template by clicking the anchor', function () {
       initComponentWithBindings.apply(this, [{
         type: 'template',
-        filename: 'template.csv'
+        filename: 'template.csv',
       }]);
 
       var downloadAnchor = this.view.find('a');
@@ -160,7 +160,7 @@ describe('csvDownload', function () {
     it('should contain tooltip for download type=user', function () {
       initComponentWithBindings.apply(this, [{
         type: 'user',
-        filename: 'exported_users.csv'
+        filename: 'exported_users.csv',
       }]);
       expect(this.view.find('span:first')).toHaveAttr('tooltip', 'usersPage.csvBtnTitle');
     });
@@ -179,7 +179,7 @@ describe('csvDownload', function () {
     it('should download template by clicking the anchor', function () {
       initComponentWithBindings.apply(this, [{
         type: 'template',
-        filename: 'template.csv'
+        filename: 'template.csv',
       }]);
 
       var downloadAnchor = this.view.find('a');

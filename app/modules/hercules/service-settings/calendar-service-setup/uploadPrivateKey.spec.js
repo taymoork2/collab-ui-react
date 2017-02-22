@@ -20,7 +20,7 @@ describe('Component: uploadPrivateKey', function () {
         googleServiceAccount: originalServiceAccount,
         file: '',
         fileName: '',
-      }
+      },
     };
     var ctrl = $componentController('uploadPrivateKey', null, bindings);
 
@@ -35,7 +35,7 @@ describe('Component: uploadPrivateKey', function () {
         googleServiceAccount: '',
         file: 'data:application/x-pkcs12;base64,LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktL…',
         fileName: 'certificate_file.p12',
-      }
+      },
     };
     var ctrl = $componentController('uploadPrivateKey', null, bindings);
 
@@ -51,7 +51,7 @@ describe('Component: uploadPrivateKey', function () {
         googleServiceAccount: '',
         file: 'data:image/jpeg;base64,/9j/4QEaRXhpZgAASUkqAAgAAAAIABIBAwA…',
         fileName: 'not_a_certificate_file.jpg',
-      }
+      },
     };
     var ctrl = $componentController('uploadPrivateKey', null, bindings);
 

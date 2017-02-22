@@ -10,39 +10,39 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
   var fakePeriodicMinute = [
     {
       index: 0,
-      label: 0
+      label: 0,
     },
     {
       index: 3,
-      label: 3
+      label: 3,
     },
     {
       index: 5,
-      label: 5
-    }
+      label: 5,
+    },
   ];
 
   var fakePeriodicSecond = [
     {
       index: 0,
-      label: 0
+      label: 0,
     },
     {
       index: 6,
-      label: 30
+      label: 30,
     },
     {
       index: 5,
-      label: 5
+      label: 5,
     },
     {
       index: 0,
-      label: 5
-    }
+      label: 5,
+    },
   ];
   var modalFake = {
     close: jasmine.createSpy('modalInstance.close'),
-    dismiss: jasmine.createSpy('modalInstance.dismiss')
+    dismiss: jasmine.createSpy('modalInstance.dismiss'),
   };
   var VALUE = 'value';
   var DEFAULT_MOH = 'musicOnHoldDefault';
@@ -50,7 +50,7 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
   var CISCO_STD_MOH_URL = 'http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav';
 
   var ui = {
-    openHours: {}
+    openHours: {},
   };
   var uiMenu = {};
   var menuEntry = {};
@@ -83,7 +83,7 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
   }, {
     "label": 'autoAttendant.phoneMenuRouteUser',
   }, {
-    "label": 'autoAttendant.phoneMenuRouteVM'
+    "label": 'autoAttendant.phoneMenuRouteVM',
   }];
 
   beforeEach(angular.mock.module('uc.autoattendant'));
@@ -137,7 +137,7 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
       aa_index: index,
       aa_key_index: keyIndex,
       aa_from_route_call: false,
-      aa_from_decision: false
+      aa_from_decision: false,
     });
   }));
 
@@ -273,7 +273,7 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
         aa_index: index,
         aa_key_index: keyIndex,
         aa_from_route_call: false,
-        aa_from_decision: false
+        aa_from_decision: false,
       });
 
       $scope.$apply();
@@ -293,7 +293,7 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
         aa_index: index,
         aa_key_index: keyIndex,
         aa_from_route_call: true,
-        aa_from_decision: false
+        aa_from_decision: false,
       });
 
       $scope.$apply();
@@ -313,7 +313,7 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
         aa_index: index,
         aa_key_index: keyIndex,
         aa_from_route_call: true,
-        aa_from_decision: false
+        aa_from_decision: false,
       });
 
       controller.languageOption.value = 'de_DE';
@@ -338,7 +338,7 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
         aa_index: index,
         aa_key_index: keyIndex,
         aa_from_route_call: false,
-        aa_from_decision: false
+        aa_from_decision: false,
       });
 
 

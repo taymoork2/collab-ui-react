@@ -23,14 +23,14 @@ describe('LicenseService', function () {
         "name": "Messaging",
         "status": "ACTIVE",
         "volume": 100,
-        "isTrial": false
+        "isTrial": false,
       }, {
         "type": "CONFERENCING",
         "name": "Conferencing",
         "status": "ACTIVE",
         "volume": 99,
         "isTrial": true,
-        "trialExpiresInDays": 49
+        "trialExpiresInDays": 49,
       }];
 
       $httpBackend
@@ -57,13 +57,13 @@ describe('LicenseService', function () {
     expect(LicenseService.userIsEntitledTo(null, 'squared-fusion-mgmt')).toBeFalsy();
     expect(LicenseService.userIsEntitledTo({}, 'squared-fusion-mgmt')).toBeFalsy();
     expect(LicenseService.userIsEntitledTo({
-      entitlements: []
+      entitlements: [],
     }, 'squared-fusion-mgmt')).toBeFalsy();
     expect(LicenseService.userIsEntitledTo({
-      entitlements: ['squared-fusion-uc']
+      entitlements: ['squared-fusion-uc'],
     }, 'squared-fusion-mgmt')).toBeFalsy();
     expect(LicenseService.userIsEntitledTo({
-      entitlements: ['squared-fusion-mgmt']
+      entitlements: ['squared-fusion-mgmt'],
     }, 'squared-fusion-mgmt')).toBeTruthy();
   });
 
@@ -71,13 +71,13 @@ describe('LicenseService', function () {
     expect(LicenseService.orgIsEntitledTo(null, 'squared-fusion-mgmt')).toBeFalsy();
     expect(LicenseService.orgIsEntitledTo({}, 'squared-fusion-mgmt')).toBeFalsy();
     expect(LicenseService.orgIsEntitledTo({
-      services: []
+      services: [],
     }, 'squared-fusion-mgmt')).toBeFalsy();
     expect(LicenseService.orgIsEntitledTo({
-      services: ['squared-fusion-uc']
+      services: ['squared-fusion-uc'],
     }, 'squared-fusion-mgmt')).toBeFalsy();
     expect(LicenseService.orgIsEntitledTo({
-      services: ['squared-fusion-mgmt']
+      services: ['squared-fusion-mgmt'],
     }, 'squared-fusion-mgmt')).toBeTruthy();
   });
 
@@ -85,19 +85,19 @@ describe('LicenseService', function () {
     expect(LicenseService.userIsLicensedFor(null, 'MS')).toBeFalsy();
     expect(LicenseService.userIsLicensedFor({}, 'MS')).toBeFalsy();
     expect(LicenseService.userIsLicensedFor({
-      licenseID: []
+      licenseID: [],
     }, 'MS')).toBeFalsy();
     expect(LicenseService.userIsLicensedFor({
-      licenseID: ['MC_f36c1a2c-20d6-460d-9f55-01fc85d52e04_100_t30citest.webex.com']
+      licenseID: ['MC_f36c1a2c-20d6-460d-9f55-01fc85d52e04_100_t30citest.webex.com'],
     }, 'MS')).toBeFalsy();
     expect(LicenseService.userIsLicensedFor({
-      licenseID: ['MS_62b343df-bdd5-463b-8895-d07fc3a94832']
+      licenseID: ['MS_62b343df-bdd5-463b-8895-d07fc3a94832'],
     }, 'MS')).toBeTruthy();
     expect(LicenseService.userIsLicensedFor({
-      licenseID: ['MC_f36c1a2c-20d6-460d-9f55-01fc85d52e04_100_t30citest.webex.com']
+      licenseID: ['MC_f36c1a2c-20d6-460d-9f55-01fc85d52e04_100_t30citest.webex.com'],
     }, 'MC')).toBeTruthy();
     expect(LicenseService.userIsLicensedFor({
-      licenseID: ['CO_f36c1a2c-20d6-460d-9f55-01fc85d52e04', 'MS_62b343df-bdd5-463b-8895-d07fc3a94832']
+      licenseID: ['CO_f36c1a2c-20d6-460d-9f55-01fc85d52e04', 'MS_62b343df-bdd5-463b-8895-d07fc3a94832'],
     }, 'CO')).toBeTruthy();
   });
 
@@ -125,7 +125,7 @@ describe('LicenseService', function () {
       "status": "ACTIVE",
       "volume": 10,
       "isTrial": false,
-      "usage": 5
+      "usage": 5,
     }, {
       "offerCode": "MS",
       "type": "MESSAGING",
@@ -133,7 +133,7 @@ describe('LicenseService', function () {
       "status": "ACTIVE",
       "volume": 20,
       "isTrial": false,
-      "usage": 10
+      "usage": 10,
     }, {
       "offerCode": "MS",
       "type": "MESSAGING",
@@ -141,7 +141,7 @@ describe('LicenseService', function () {
       "status": "SUSPENDED",
       "volume": 100,
       "isTrial": false,
-      "usage": 50
+      "usage": 50,
     }, {
       "offerCode": "MC",
       "type": "CONFERENCING",
@@ -151,7 +151,7 @@ describe('LicenseService', function () {
       "isTrial": false,
       "usage": 50,
       "capacity": 25,
-      "siteUrl": "mock.webex.com"
+      "siteUrl": "mock.webex.com",
     }, {
       "offerCode": "MC",
       "type": "CONFERENCING",
@@ -161,7 +161,7 @@ describe('LicenseService', function () {
       "isTrial": false,
       "usage": 150,
       "capacity": 25,
-      "siteUrl": "mock.webex.com"
+      "siteUrl": "mock.webex.com",
     }, {
       "offerCode": "MC",
       "type": "CONFERENCING",
@@ -171,7 +171,7 @@ describe('LicenseService', function () {
       "isTrial": false,
       "usage": 15,
       "capacity": 200,
-      "siteUrl": "ladidadi.webex.com"
+      "siteUrl": "ladidadi.webex.com",
     }, {
       "offerCode": "TC",
       "type": "CONFERENCING",
@@ -181,7 +181,7 @@ describe('LicenseService', function () {
       "isTrial": false,
       "usage": 250,
       "capacity": 25,
-      "siteUrl": "mock.webex.com"
+      "siteUrl": "mock.webex.com",
     }, {
       "offerCode": "TC",
       "type": "CONFERENCING",
@@ -191,7 +191,7 @@ describe('LicenseService', function () {
       "isTrial": false,
       "usage": 250,
       "capacity": 25,
-      "siteUrl": "mock.webex.com"
+      "siteUrl": "mock.webex.com",
     }, {
       "offerCode": "CMR",
       "type": "CONFERENCING",
@@ -201,7 +201,7 @@ describe('LicenseService', function () {
       "isTrial": false,
       "usage": 250,
       "capacity": 25,
-      "siteUrl": "mock.webex.com"
+      "siteUrl": "mock.webex.com",
     }, {
       "offerCode": "CF",
       "type": "CONFERENCING",
@@ -209,7 +209,7 @@ describe('LicenseService', function () {
       "status": "ACTIVE",
       "volume": 100,
       "isTrial": true,
-      "trialExpiresInDays": 49
+      "trialExpiresInDays": 49,
     }, {
       "offerCode": "CF",
       "type": "CONFERENCING",
@@ -217,7 +217,7 @@ describe('LicenseService', function () {
       "status": "EXPIRED",
       "volume": 500,
       "isTrial": true,
-      "trialExpiresInDays": 0
+      "trialExpiresInDays": 0,
     }, {
       "offerCode": "CO",
       "type": "COMMUNICATION",
@@ -225,13 +225,13 @@ describe('LicenseService', function () {
       "status": "ACTIVE",
       "volume": 1000,
       "isTrial": true,
-      "trialExpiresInDays": 100
+      "trialExpiresInDays": 100,
     }, {
       "type": "SHARED_DEVICES",
       "name": "Shared Devices",
       "status": "ACTIVE",
       "volume": 50,
-      "isTrial": false
+      "isTrial": false,
     }];
 
     // MESSAGING
@@ -252,7 +252,7 @@ describe('LicenseService', function () {
 
     // MC-mock.webex.com
     aggregate = _.find(aggregated, {
-      key: 'MC#25#mock.webex.com'
+      key: 'MC#25#mock.webex.com',
     });
     expect(aggregate.totalVolume).toEqual(2000);
     expect(aggregate.totalUsage).toEqual(200);
@@ -263,7 +263,7 @@ describe('LicenseService', function () {
 
     // MC-ladidadi.webex.com
     aggregate = _.find(aggregated, {
-      key: 'MC#200#ladidadi.webex.com'
+      key: 'MC#200#ladidadi.webex.com',
     });
     expect(aggregate.totalVolume).toEqual(300);
     expect(aggregate.totalUsage).toEqual(15);
@@ -274,7 +274,7 @@ describe('LicenseService', function () {
 
     // TC
     aggregate = _.find(aggregated, {
-      key: 'TC#25#mock.webex.com'
+      key: 'TC#25#mock.webex.com',
     });
     expect(aggregate.totalVolume).toEqual(1250);
     expect(aggregate.totalUsage).toEqual(500);
@@ -285,7 +285,7 @@ describe('LicenseService', function () {
 
     // CMR
     aggregate = _.find(aggregated, {
-      key: 'CMR#25#mock.webex.com'
+      key: 'CMR#25#mock.webex.com',
     });
     expect(aggregate.totalVolume).toEqual(250);
     expect(aggregate.totalUsage).toEqual(250);
@@ -296,7 +296,7 @@ describe('LicenseService', function () {
 
     // CF
     aggregate = _.find(aggregated, {
-      key: 'CF#0'
+      key: 'CF#0',
     });
     expect(aggregate.totalVolume).toEqual(600);
     expect(aggregate.totalUsage).toEqual(0);

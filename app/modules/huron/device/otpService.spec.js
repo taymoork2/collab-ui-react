@@ -9,7 +9,7 @@ describe('Service: OtpService', function () {
   beforeEach(angular.mock.module('ngResource'));
 
   var authInfo = {
-    getOrgId: sinon.stub().returns('1')
+    getOrgId: sinon.stub().returns('1'),
   };
 
   beforeEach(angular.mock.module(function ($provide) {
@@ -40,7 +40,7 @@ describe('Service: OtpService', function () {
 
     it('should generate an OTP', function () {
       $httpBackend.whenPOST(HuronConfig.getCmiUrl() + '/identity/users/otp', {
-        'userName': 'someUser'
+        'userName': 'someUser',
       }).respond(200, getJSONFixture('huron/json/device/otps/0001000200030004.json'));
       OtpService.generateOtp('someUser').then(function (data) {
         expect(data.code).toEqual('0001000200030004');

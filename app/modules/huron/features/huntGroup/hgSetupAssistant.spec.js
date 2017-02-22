@@ -33,7 +33,7 @@ describe('Huron Setup Assistant Ctrl', function () {
       $modal: $modal,
       Notification: Notification,
       HuntGroupService: HuntGroupService,
-      $state: $state
+      $state: $state,
     });
   }));
 

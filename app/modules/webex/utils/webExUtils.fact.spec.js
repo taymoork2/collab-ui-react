@@ -21,7 +21,7 @@ describe('WebExUtilsFact: isCIEnabledSite() test', function () {
     "isCIUnifiedSite": true,
     "status": "ACTIVE",
     "capacity": 200,
-    "siteUrl": "fakeConferencingIsCITrue.fake.com"
+    "siteUrl": "fakeConferencingIsCITrue.fake.com",
   }, {
     "licenseId": "MC_5320533d-da5d-4f92-b95e-1a42567c55a0_fakeConferencingIsCIFalse.fake.com",
     "offerName": "MC",
@@ -33,7 +33,7 @@ describe('WebExUtilsFact: isCIEnabledSite() test', function () {
     "isCIUnifiedSite": false,
     "status": "ACTIVE",
     "capacity": 200,
-    "siteUrl": "fakeConferencingIsCIFalse.fake.com"
+    "siteUrl": "fakeConferencingIsCIFalse.fake.com",
   }, {
     "licenseId": "MC_5320533d-da5d-4f92-b95e-1a42567c55a0_fakeConferencing.fake.com",
     "offerName": "MC",
@@ -44,7 +44,7 @@ describe('WebExUtilsFact: isCIEnabledSite() test', function () {
     "isTrial": false,
     "status": "ACTIVE",
     "capacity": 200,
-    "siteUrl": "fakeConferencing.fake.com"
+    "siteUrl": "fakeConferencing.fake.com",
   }, {
     "licenseId": "CMR_1b25c88e-8016-4251-bc81-e1a856a5c0f0_fakeCMRIsCITrue.fake.com",
     "offerName": "CMR",
@@ -56,7 +56,7 @@ describe('WebExUtilsFact: isCIEnabledSite() test', function () {
     "isCIUnifiedSite": true,
     "status": "ACTIVE",
     "capacity": 100,
-    "siteUrl": "fakeCMRIsCITrue.fake.com"
+    "siteUrl": "fakeCMRIsCITrue.fake.com",
   }, {
     "licenseId": "CMR_1b25c88e-8016-4251-bc81-e1a856a5c0f0_fakeCMRIsCIFalse.fake.com",
     "offerName": "CMR",
@@ -68,7 +68,7 @@ describe('WebExUtilsFact: isCIEnabledSite() test', function () {
     "isCIUnifiedSite": false,
     "status": "ACTIVE",
     "capacity": 100,
-    "siteUrl": "fakeCMRIsCIFalse.fake.com"
+    "siteUrl": "fakeCMRIsCIFalse.fake.com",
   }, {
     "licenseId": "CMR_1b25c88e-8016-4251-bc81-e1a856a5c0f0_fakeCMR.fake.com",
     "offerName": "CMR",
@@ -79,7 +79,7 @@ describe('WebExUtilsFact: isCIEnabledSite() test', function () {
     "isTrial": false,
     "status": "ACTIVE",
     "capacity": 100,
-    "siteUrl": "fakeCMR.fake.com"
+    "siteUrl": "fakeCMR.fake.com",
   }];
 
   beforeEach(inject(function (
@@ -234,106 +234,106 @@ describe('WebExUtilsFact', function () {
           "licenseType": "CONFERENCING",
           "volume": 3,
           "capacity": 200,
-          "usage": 0
+          "usage": 0,
         }, {
           "licenseId": "MS_a6d7016a-478d-4d94-9889-9c37f337a8ce",
           "licenseType": "MESSAGING",
           "volume": 10,
-          "usage": 1
+          "usage": 1,
         }, {
           "licenseId": "MS_970610a0-14fd-433b-a1ee-cd14f4c5ab9c",
           "licenseType": "MESSAGING",
           "volume": 5,
-          "usage": 1
+          "usage": 1,
         }, {
           "licenseId": "MC_3ada1218-1763-428b-bb7f-d03f8ea91fa1_200_t30citestprov9.webex.com",
           "licenseType": "CONFERENCING",
           "volume": 25,
           "capacity": 200,
-          "usage": 1
+          "usage": 1,
         }, {
           "licenseId": "MS_41d0fcfe-4de4-4ce0-abec-ed4d4942898e",
           "licenseType": "MESSAGING",
           "volume": 10,
-          "usage": 0
+          "usage": 0,
         }, {
           "licenseId": "CF_0d98b765-3c43-4996-9320-a5a649a9542f_8",
           "licenseType": "CONFERENCING",
           "volume": 8,
           "capacity": 8,
-          "usage": 0
+          "usage": 0,
         }, {
           "licenseId": "MC_66e1a7c9-3549-442f-942f-41a53b020689_200_sjsite04.webex.com",
           "licenseType": "CONFERENCING",
           "volume": 25,
           "capacity": 200,
-          "usage": 0
+          "usage": 0,
         }, {
           "licenseId": "MS_145d46ef-beef-4868-8980-f11812774589",
           "licenseType": "MESSAGING",
           "volume": 10,
-          "usage": 0
+          "usage": 0,
         }, {
           "licenseId": "ST_e1c86f12-5fa4-463e-82f2-b670fcfeca0e_5",
           "licenseType": "STORAGE",
           "volume": 0,
           "capacity": 5,
-          "usage": 0
+          "usage": 0,
         }, {
           "licenseId": "CMR_1b25c88e-8016-4251-bc81-e1a856a5c0f0_100_sjsite14.webex.com",
           "licenseType": "CMR",
           "volume": 100,
           "capacity": 100,
-          "usage": 1
+          "usage": 1,
         }, {
           "licenseId": "MS_b700e98c-a109-4e1b-bc6d-6ea5af20598a",
           "licenseType": "MESSAGING",
           "volume": 10,
-          "usage": 0
+          "usage": 0,
         }, {
           "licenseId": "ST_251d6481-7a5f-4f11-ba89-957e7008905f_10",
           "licenseType": "STORAGE",
           "volume": 0,
           "capacity": 10,
-          "usage": 0
+          "usage": 0,
         }, {
           "licenseId": "MC_5320533d-da5d-4f92-b95e-1a42567c55a0_200_cisjsite031.webex.com",
           "licenseType": "CONFERENCING",
           "volume": 25,
           "capacity": 200,
-          "usage": 1
+          "usage": 1,
         }, {
           "licenseId": "MC_5f078901-2e59-4129-bba4-b2126d356b61_25_sjsite04.webex.com",
           "licenseType": "CONFERENCING",
           "volume": 25,
           "capacity": 25,
-          "usage": 0
+          "usage": 0,
         }, {
           "licenseId": "ST_b1f9330b-1a32-43e8-ac3a-e5da0685ebf4_10",
           "licenseType": "STORAGE",
           "volume": 0,
           "capacity": 10,
-          "usage": 0
+          "usage": 0,
         }, {
           "licenseId": "ST_57f29b75-7df8-4f60-b57e-6f6f4891e73a_10",
           "licenseType": "STORAGE",
           "volume": 0,
           "capacity": 10,
-          "usage": 0
+          "usage": 0,
         }, {
           "licenseId": "ST_c4d1597d-7c01-4aab-8ce0-11991b2d918c_10",
           "licenseType": "STORAGE",
           "volume": 0,
           "capacity": 10,
-          "usage": 0
+          "usage": 0,
         }],
         "commerceRelation": "Direct",
         "licenseEnforcement": {
           "licenseExceedAction": "NOTHING",
-          "licenseExceedThreshold": "NA"
-        }
-      }]
-    }
+          "licenseExceedThreshold": "NA",
+        },
+      }],
+    },
   };
 
   beforeEach(angular.mock.module('Core'));

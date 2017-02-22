@@ -15,7 +15,7 @@
 
     return {
       track: track,
-      isChanged: isChanged
+      isChanged: isChanged,
     };
 
     function track(key, value) {

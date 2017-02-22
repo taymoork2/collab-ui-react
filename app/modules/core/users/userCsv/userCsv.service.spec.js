@@ -22,7 +22,7 @@ describe('Controller: UserCsvService', function () {
     numNewUsers: 0,
     numExistingUsers: 0,
     userArray: [],
-    userErrorArray: []
+    userErrorArray: [],
   };
 
   var updatedCsvStat = {
@@ -33,7 +33,7 @@ describe('Controller: UserCsvService', function () {
     numNewUsers: 7,
     numExistingUsers: 7,
     userArray: [],
-    userErrorArray: []
+    userErrorArray: [],
   };
 
   beforeEach(angular.mock.module('Core'));
@@ -64,8 +64,8 @@ describe('Controller: UserCsvService', function () {
           userErrorArray: [{
             row: 1,
             email: email,
-            error: 'errorMsg'
-          }]
+            error: 'errorMsg',
+          }],
         });
         expect(csvStat.userErrorArray).toHaveLength(1);
 
@@ -73,8 +73,8 @@ describe('Controller: UserCsvService', function () {
           userErrorArray: [{
             row: 2,
             email: email,
-            error: 'errorMsg'
-          }]
+            error: 'errorMsg',
+          }],
         });
         expect(csvStat.userErrorArray).toHaveLength(2);
 
@@ -181,7 +181,7 @@ describe('Controller: UserCsvService', function () {
 
       it('addErrorWithTrackingID should add trackingId when there is none', function () {
         var responseWithHeader = UserCsvService.addErrorWithTrackingID(errorMsg, {
-          headers: headerFuncOne
+          headers: headerFuncOne,
         });
         var noResponseAndHeader = UserCsvService.addErrorWithTrackingID(errorMsg, null, headerFuncOne);
 
@@ -191,7 +191,7 @@ describe('Controller: UserCsvService', function () {
 
       it('addErrorWithTrackingID should use existing trackingId when there is one', function () {
         var responseWithHeader = UserCsvService.addErrorWithTrackingID(errorMsg, {
-          headers: headerFuncTwo
+          headers: headerFuncTwo,
         });
         var noResponseAndHeader = UserCsvService.addErrorWithTrackingID(errorMsg, null, headerFuncTwo);
 

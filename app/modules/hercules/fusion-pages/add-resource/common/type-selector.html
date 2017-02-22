@@ -23,6 +23,18 @@
           type="radio"
           ng-model="vm.selectedType"
           name="selectedType"
+          value="context"
+          id="selectedType_context"
+          ng-show="vm.isEntitledTo.context"
+          ng-disabled="!vm.hasSetup.context"
+          ng-keypress="vm.handleKeypress($event)"
+          cs-input-label="{{vm._translation.context}}"
+          cs-input-help-text="{{vm._translation.contextHelpText}}">
+        <input
+          cs-input
+          type="radio"
+          ng-model="vm.selectedType"
+          name="selectedType"
           value="expressway"
           id="selectedType_expressway"
           ng-show="vm.isEntitledTo.expressway"

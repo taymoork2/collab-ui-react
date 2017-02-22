@@ -26,17 +26,17 @@ describe('Service: Media Reports Service', function () {
   beforeEach(angular.mock.module('Mediafusion'));
 
   vm.timeFilter = {
-    value: 0
+    value: 0,
   };
 
   vm.Authinfo = {
-    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
   };
   vm.error = {
     message: 'error',
     data: {
-      trackingId: "id"
-    }
+      trackingId: "id",
+    },
   };
 
   beforeEach(angular.mock.module(function ($provide) {
@@ -85,7 +85,7 @@ describe('Service: Media Reports Service', function () {
 
       vm.MediaReportsService.getCallVolumeData(vm.timeFilter, vm.allClusters).then(function (response) {
         expect(response).toEqual({
-          graphData: vm.responsedata
+          graphData: vm.responsedata,
         });
       });
 
@@ -98,7 +98,7 @@ describe('Service: Media Reports Service', function () {
 
       vm.MediaReportsService.getCallVolumeData(vm.timeFilter, vm.allClusters).then(function (response) {
         expect(response).toEqual({
-          graphData: []
+          graphData: [],
         });
         expect(vm.Notification.errorWithTrackingId).toHaveBeenCalledTimes(1);
       });
@@ -115,7 +115,7 @@ describe('Service: Media Reports Service', function () {
       vm.MediaReportsService.getUtilizationData(vm.timeFilter, vm.allClusters).then(function (response) {
         expect(response).toEqual({
           graphData: [],
-          graphs: []
+          graphs: [],
         });
         expect(vm.Notification.errorWithTrackingId).toHaveBeenCalledTimes(1);
       });
@@ -132,7 +132,7 @@ describe('Service: Media Reports Service', function () {
       vm.MediaReportsService.getParticipantDistributionData(vm.timeFilter, vm.allClusters).then(function (response) {
         expect(response).toEqual({
           graphData: [],
-          graphs: []
+          graphs: [],
         });
         expect(vm.Notification.errorWithTrackingId).toHaveBeenCalledTimes(1);
       });
@@ -149,7 +149,7 @@ describe('Service: Media Reports Service', function () {
       vm.MediaReportsService.getClientTypeData(vm.timeFilter).then(function (response) {
         expect(response).toEqual({
           graphData: [],
-          graphs: []
+          graphs: [],
         });
         expect(vm.Notification.errorWithTrackingId).toHaveBeenCalledTimes(1);
       });

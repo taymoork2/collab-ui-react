@@ -26,15 +26,15 @@ describe('Controller: customerSubscriptionsDetailCtrl', function () {
         Resources: [{
           name: {
             givenName: 'Jane',
-            familyName: 'Doe'
-          }
+            familyName: 'Doe',
+          },
         }, {
           name: {
             givenName: 'John',
-            familyName: 'Doe'
+            familyName: 'Doe',
           },
-        }]
-      }
+        }],
+      },
     };
 
     // spies

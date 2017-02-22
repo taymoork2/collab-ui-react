@@ -29,15 +29,15 @@
     vm.validationMessages = {
       required: $translate.instant('common.invalidRequired'),
       minlength: $translate.instant('common.invalidMinLength', {
-        min: vm.minlength
-      })
+        min: vm.minlength,
+      }),
     };
     vm.createResourceGroup = createResourceGroup;
     vm.canCreate = canCreate;
     vm.handleKeypress = handleKeypress;
     vm.plop = {
       title: 'Resource Group Details',
-      description: 'Resource group are a set of clusters you may assign users to.'
+      description: 'Resource group are a set of clusters you may assign users to.',
     };
     vm.allowedChannels = [];
 

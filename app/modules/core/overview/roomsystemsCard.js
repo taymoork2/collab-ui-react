@@ -49,7 +49,7 @@
 
           card.allLicenses = licenses;
           card.trial = _.some(filterLicenses(licenses), {
-            'isTrial': true
+            'isTrial': true,
           });
 
           if (filterLicenses(licenses).length > 0) {
@@ -72,7 +72,7 @@
         };
 
         return card;
-      }
+      },
     };
   }
 })();
