@@ -23,7 +23,7 @@
         .then(function (gid) {
           vm.trialUserGroupId = gid;
         }).catch(function (error) {
-          Notification.errorWithTrackingId(error);
+          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
         });
     }
 
