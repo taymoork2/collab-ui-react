@@ -2848,7 +2848,7 @@
                 templateUrl: 'modules/hercules/hybrid-services-connector-sidepanel/hybrid-services-connector-sidepanel-header.html',
               },
             },
-            // If data not present, $state.current.data.displayName inside the component has no effect
+            // If data not present, $state.current.data.displayName can't be changed
             data: {},
             params: {
               connector: null,
@@ -2861,7 +2861,7 @@
           })
           .state('hybrid-services-connector-sidepanel.alarm-details', {
             template: '<alarm-details-sidepanel alarm="$resolve.alarm"></alarm-details-sidepanel>',
-            // If data not present, $state.current.data.displayName inside the component has no effect
+            // If data not present, $state.current.data.displayName can't be changed
             data: {},
             params: {
               alarm: null,
@@ -2963,7 +2963,7 @@
           })
           .state('hds-cluster-details.alarm-details', {
             template: '<alarm-details-sidepanel alarm="$resolve.alarm"></alarm-details-sidepanel>',
-            // If data not present, $state.current.data.displayName inside the component has no effect
+            // If data not present, $state.current.data.displayName can't be changed
             data: {},
             params: {
               alarm: null,
@@ -3257,9 +3257,8 @@
                 templateUrl: 'modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html',
               },
             },
-            data: {
-              displayName: 'Overview',
-            },
+            // If data not present, $state.current.data.displayName can't be changed
+            data: {},
             params: {
               clusterId: null,
               connectorType: null,
@@ -3283,9 +3282,8 @@
             templateUrl: 'modules/hercules/cluster-sidepanel/host-details/host-details.html',
             controller: 'HybridServicesHostDetailsController',
             controllerAs: 'hostDetailsCtrl',
-            data: {
-              displayName: 'Node',
-            },
+            // If data not present, $state.current.data.displayName can't be changed
+            data: {},
             params: {
               host: null,
               hostSerial: null,
@@ -3296,7 +3294,7 @@
           })
           .state('expressway-cluster-sidepanel.alarm-details', {
             template: '<alarm-details-sidepanel alarm="$resolve.alarm"></alarm-details-sidepanel>',
-            // If data not present, $state.current.data.displayName inside the component has no effect
+            // If data not present, $state.current.data.displayName can't be changed
             data: {},
             params: {
               alarm: null,
@@ -3362,7 +3360,7 @@
           })
           .state('media-cluster-details.alarm-details', {
             template: '<alarm-details-sidepanel alarm="$resolve.alarm"></alarm-details-sidepanel>',
-            // If data not present, $state.current.data.displayName inside the component has no effect
+            // If data not present, $state.current.data.displayName can't be changed
             data: {},
             params: {
               alarm: null,

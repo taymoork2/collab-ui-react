@@ -6,7 +6,7 @@
     .controller('HybridServicesHostDetailsController', HybridServicesHostDetailsController);
 
   /* @ngInject */
-  function HybridServicesHostDetailsController($scope, $state, $stateParams, ClusterService, $translate, $modal, FusionClusterStatesService) {
+  function HybridServicesHostDetailsController($modal, $rootScope, $scope, $state, $stateParams, $translate, ClusterService, FusionClusterStatesService) {
     var cluster;
     var vm = this;
     var type = $stateParams.specificType || $stateParams.connectorType;
@@ -16,6 +16,9 @@
     vm.showDeregisterHostDialog = showDeregisterHostDialog;
 
     vm.getSeverity = FusionClusterStatesService.getSeverity;
+
+    $state.current.data.displayName = localizedConnectorName;
+    $rootScope.$broadcast('displayNameUpdated');
 
     $scope.$watch(function () {
       return ClusterService.getCluster(type, $stateParams.clusterId);
