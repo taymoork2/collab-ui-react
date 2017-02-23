@@ -1,15 +1,15 @@
 <script type="text/ng-template" id="userTemplate.html">
-  <a ng-style="match.model.disabled && {}"
-     ng-click="match.model.disabled && $event.stopPropagation(); $event.preventDefault();"
+  <a ng-click="match.model.disabled && $event.stopPropagation()"
      ng-class="{'disabled': match.model.disabled}">
 
-  <span ng-bind-html="match.label | typeaheadHighlight:query"
-        ng-class="{'disabled': match.model.disabled}">
-  </span>
-</a>
+    <span ng-bind-html="match.label | typeaheadHighlight:query"
+          ng-class="{'disabled': match.model.disabled}">
+    </span>
+  </a>
 </script>
 
 <div class="typeahead-large" ng-if="$ctrl.isNew">
+
   <input
     id="memberInput"
     ng-model="$ctrl.memberName"
@@ -22,7 +22,9 @@
     typeahead-min-length="3"
     typeahead-wait-ms="200"
     autocomplete="off"
-    focus-on>
+    focus-on
+    disable-enter-key-hook>
+
   <p class="input-description" translate="callPickup.memberHint"></p>
   <div class="warning">
     <div class="pi-cs-input__messages">
@@ -32,7 +34,7 @@
 </div>
 <div ng-if="!$ctrl.isNew" class="typeahead">
   <input
-  cs-input
+    cs-input
     id="memberInput"
     ng-model="$ctrl.memberName"
     ng-class="{'error': $ctrl.errorMemberInput}"
@@ -46,7 +48,7 @@
     cs-input-size="small-12"
     autocomplete="off"
     no-dirty
-  >
+    disable-enter-key-hook>
   </div>
 <div id="cs-card-members">
   <cs-card-layout>
