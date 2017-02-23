@@ -9,6 +9,8 @@
   function HybridServicesHostDetailsController($scope, $state, $stateParams, ClusterService, $translate, $modal, FusionClusterStatesService) {
     var cluster;
     var vm = this;
+    var type = $stateParams.specificType || $stateParams.connectorType;
+    var localizedConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.' + type);
     vm.deleteExpresswayNode = deleteExpresswayNode;
     vm.showReassignHostDialog = showReassignHostDialog;
     vm.showDeregisterHostDialog = showDeregisterHostDialog;
@@ -16,17 +18,17 @@
     vm.getSeverity = FusionClusterStatesService.getSeverity;
 
     $scope.$watch(function () {
-      return ClusterService.getCluster($stateParams.connectorType, $stateParams.clusterId);
+      return ClusterService.getCluster(type, $stateParams.clusterId);
     }, function (newValue) {
       cluster = newValue;
       vm.clustername = cluster.name;
       vm.host = _.find(cluster.connectors, {
         hostSerial: $stateParams.hostSerial,
+        connectorType: type,
       });
       if (vm.host && vm.host.hostname) {
-        vm.localizedConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.' + vm.host.connectorType);
         vm.localizedConnectorSectionHeader = $translate.instant('hercules.connectors.localizedConnectorAndHostHeader', {
-          connectorName: vm.localizedConnectorName,
+          connectorName: localizedConnectorName,
           hostname: vm.host.hostname,
         });
       }

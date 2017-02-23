@@ -2959,8 +2959,6 @@
             params: {
               host: null,
               hostSerial: null,
-              clusterId: null,
-              connectorType: null,
             },
           })
           .state('hds-cluster-details.alarm-details', {
@@ -3281,36 +3279,19 @@
               },
             },
           })
-          .state('management-connector-details', {
-            parent: 'sidepanel',
-            views: {
-              'sidepanel@': {
-                templateUrl: 'modules/hercules/cluster-sidepanel/host-details/management-connector-details.html',
-                controller: 'HybridServicesHostDetailsController',
-                controllerAs: 'hostDetailsCtrl',
-              },
-            },
+          .state('expressway-cluster-sidepanel.host-details', {
+            templateUrl: 'modules/hercules/cluster-sidepanel/host-details/host-details.html',
+            controller: 'HybridServicesHostDetailsController',
+            controllerAs: 'hostDetailsCtrl',
             data: {
-              displayName: 'Management Connector',
+              displayName: 'Node',
             },
             params: {
               host: null,
               hostSerial: null,
-              clusterId: null,
-              connectorType: 'c_mgmt',
-            },
-          })
-          .state('management-connector-details.alarm-details', {
-            template: '<alarm-details-sidepanel alarm="$resolve.alarm"></alarm-details-sidepanel>',
-            // If data not present, $state.current.data.displayName inside the component has no effect
-            data: {},
-            params: {
-              alarm: null,
-            },
-            resolve: {
-              alarm: /* @ngInject */ function ($stateParams) {
-                return $stateParams.alarm;
-              },
+              // we inherit params from the parent, and because of management connectors we shouldn't override
+              // the parent connectorType param…
+              specificType: null,
             },
           })
           .state('expressway-cluster-sidepanel.alarm-details', {
@@ -3324,20 +3305,6 @@
               alarm: /* @ngInject */ function ($stateParams) {
                 return $stateParams.alarm;
               },
-            },
-          })
-          .state('expressway-cluster-sidepanel.host-details', {
-            templateUrl: 'modules/hercules/cluster-sidepanel/host-details/host-details.html',
-            controller: 'HybridServicesHostDetailsController',
-            controllerAs: 'hostDetailsCtrl',
-            data: {
-              displayName: 'Node',
-            },
-            params: {
-              host: null,
-              hostSerial: null,
-              clusterId: null,
-              connectorType: null,
             },
           })
           .state('resource-group-settings', {
@@ -3391,8 +3358,6 @@
             params: {
               host: null,
               hostSerial: null,
-              clusterId: null,
-              connectorType: null,
             },
           })
           .state('media-cluster-details.alarm-details', {
