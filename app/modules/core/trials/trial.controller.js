@@ -992,6 +992,9 @@
     }
 
     function isProceedDisabled() {
+      if (!vm.details.validLocation) {
+        return true;
+      }
       // ALINA PR note: change for adding to purchased. LicenseCount will be different
       var checks = [
         hasEnabledAnyTrial(vm, vm.preset),
@@ -1003,7 +1006,7 @@
         (vm.preset.licenseCount !== vm.details.licenseCount) && !(isNewTrial() && isExistingOrg()),
         vm.licenseCountChanged,
         canAddDevice(),
-        vm.details.validLocation,
+
       ];
 
       // bail at first true result
