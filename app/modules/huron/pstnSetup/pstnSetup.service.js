@@ -7,11 +7,11 @@
   /* @ngInject */
   function PstnSetupService($q, $translate, Authinfo, Notification, PstnSetup, TerminusCarrierService,
     TerminusCustomerService, TerminusCustomerV2Service, TerminusCustomerTrialV2Service,
-    TerminusCustomerCarrierService, TerminusOrderV2Service,
+    TerminusCarrierV2Service, TerminusCustomerCarrierV2Service, TerminusOrderV2Service,
     TerminusCarrierInventoryCount, TerminusNumberService, TerminusCarrierInventorySearch,
     TerminusCarrierInventoryReserve, TerminusCarrierInventoryRelease,
     TerminusCustomerCarrierInventoryReserve, TerminusCustomerCarrierInventoryRelease,
-    TerminusCustomerCarrierDidService, TerminusCustomerPortService, TerminusResellerCarrierService,
+    TerminusCustomerCarrierDidService, TerminusCustomerPortService, TerminusResellerCarrierV2Service,
     TerminusV2ResellerService,
     TerminusV2CarrierNumberCountService, TerminusV2CarrierNumberService,
     TerminusV2ResellerNumberReservationService, TerminusV2ResellerCarrierNumberReservationService,
@@ -87,6 +87,8 @@
       listPendingNumbers: listPendingNumbers,
       deleteNumber: deleteNumber,
       getAreaCode: getAreaCode,
+      getCountryCode: getCountryCode,
+      setCountryCode: setCountryCode,
       INTELEPEER: INTELEPEER,
       TATA: TATA,
       TELSTRA: TELSTRA,
@@ -176,20 +178,22 @@
     }
 
     function listDefaultCarriers() {
-      return TerminusCarrierService.query({
+      return TerminusCarrierV2Service.query({
         service: PSTN,
         defaultOffer: true,
+        country: PstnSetup.getCountryCode(),
       }).$promise.then(getCarrierDetails);
     }
 
     function listResellerCarriers() {
-      return TerminusResellerCarrierService.query({
+      return TerminusResellerCarrierV2Service.query({
         resellerId: Authinfo.getOrgId(),
+        country: PstnSetup.getCountryCode(),
       }).$promise.then(getCarrierDetails);
     }
 
     function listCustomerCarriers(customerId) {
-      return TerminusCustomerCarrierService.query({
+      return TerminusCustomerCarrierV2Service.query({
         customerId: customerId,
       }).$promise.then(getCarrierDetails);
     }
@@ -765,6 +769,16 @@
         .slice(-3)
         .join('')
         .value();
+    }
+
+    function setCountryCode(countryCode) {
+      PstnSetup.setCountryCode(countryCode);
+      //reset carriers
+      PstnSetup.setCarriers([]);
+    }
+
+    function getCountryCode() {
+      return PstnSetup.getCountryCode();
     }
 
   }

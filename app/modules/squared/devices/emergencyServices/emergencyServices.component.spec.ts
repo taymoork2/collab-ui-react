@@ -1,12 +1,14 @@
 describe('component: emergencyServices', () => {
   const EMERGENCYNUMBER_SELECT = '.csSelect-container[name="emergencyCallbackNumber"]';
   const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
+  let usCanStatesList = getJSONFixture('../../app/modules/huron/pstnSetup/states_plus_canada.json');
 
   beforeEach(function() {
     this.initModules('Huron');
     this.injectDependencies('$q', 'EmergencyServicesService', '$httpBackend');
 
     this.$httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200, {});
+    this.$httpBackend.whenGET('modules/huron/pstnSetup/states_plus_canada.json').respond(usCanStatesList);
 
     spyOn(this.EmergencyServicesService, 'getOptions').and
     .returnValue(this.$q.when(['1', '2']));

@@ -106,7 +106,8 @@ describe('Controller: TrialPstnCtrl', function () {
     $q = _$q_;
 
     spyOn(TrialService, 'getDeviceTrialsLimit');
-    spyOn(PstnSetupStatesService, 'getStateProvinces').and.returnValue($q.resolve(states));
+    spyOn(PstnSetupStatesService, 'getStates').and.returnValue($q.resolve(states));
+    spyOn(PstnSetupStatesService, 'getProvinces').and.returnValue($q.resolve(states));
 
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
     spyOn(Orgservice, 'getOrg');
