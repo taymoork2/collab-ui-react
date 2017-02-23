@@ -37,6 +37,7 @@ describe('Spark Care Partner flow', function () {
 
       utils.sendKeys(partner.customerNameInput, partner.newTrial.customerName);
       utils.sendKeys(partner.customerEmailInput, partner.newTrial.customerEmail);
+      utils.click(partner.validLocationCheckbox); //set valid location checkbox
 
       // Disable other offers
       utils.click(partner.squaredUCTrialCheckbox);
@@ -64,6 +65,7 @@ describe('Spark Care Partner flow', function () {
 
         utils.click(partner.termsActionButton);
         utils.click(partner.editTermsButton);
+        utils.click(partner.validLocationCheckbox);
 
         utils.waitForModal().then(function () {
           utils.expectIsDisplayed(partner.editTrialForm);

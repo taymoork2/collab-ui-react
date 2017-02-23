@@ -14,7 +14,7 @@
   }
 
   /* @ngInject */
-  function TrialService($http, $q, Authinfo, Config, LogMetricsService, TrialCallService, TrialCareService, TrialContextService, TrialDeviceService, TrialMeetingService, TrialMessageService, TrialPstnService, TrialResource, TrialRoomSystemService, TrialSparkBoardService, TrialWebexService, UrlConfig) {
+  function TrialService($http, $q, Authinfo, Config, LogMetricsService, TrialCallService, TrialAdvanceCareService, TrialCareService, TrialContextService, TrialDeviceService, TrialMeetingService, TrialMessageService, TrialPstnService, TrialResource, TrialRoomSystemService, TrialSparkBoardService, TrialWebexService, UrlConfig) {
     var _trialData;
     var trialsUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials';
 
@@ -275,7 +275,7 @@
             return undefined;
           }
           var licenseCount =
-            (trial.type === Config.trials.roomSystems || trial.type === Config.offerTypes.care || trial.type === Config.offerTypes.sparkBoard) ?
+            (trial.type === Config.trials.roomSystems || trial.type === Config.offerTypes.care || trial.type === Config.offerTypes.advanceCare || trial.type === Config.offerTypes.sparkBoard) ?
             trial.details.quantity : data.details.licenseCount;
           return {
             id: trial.type,
@@ -297,6 +297,7 @@
       TrialDeviceService.reset();
       TrialPstnService.reset();
       TrialContextService.reset();
+      TrialAdvanceCareService.reset();
 
       var defaults = {
         customerName: '',
@@ -305,6 +306,7 @@
         dealId: '',
         country: '',
         licenseCount: 100,
+        validLocation: null,
       };
 
       _trialData = {
@@ -315,6 +317,7 @@
           webexTrial: TrialWebexService.getData(),
           callTrial: TrialCallService.getData(),
           careTrial: TrialCareService.getData(),
+          advanceCareTrial: TrialAdvanceCareService.getData(),
           roomSystemTrial: TrialRoomSystemService.getData(),
           sparkBoardTrial: TrialSparkBoardService.getData(),
           deviceTrial: TrialDeviceService.getData(),

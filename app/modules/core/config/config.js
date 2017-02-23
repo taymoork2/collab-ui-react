@@ -94,6 +94,7 @@
         sparkBoard: 'SPARKBOARDS',
         pstn: 'PSTN',
         care: 'CARE',
+        advanceCare: 'CAREVOICE',
         context: 'CONTEXT',
       },
 
@@ -102,6 +103,7 @@
         'messaging',
         'communications',
         'care',
+        'advanceCare',
         'roomSystems',
         'conferencing',
         'webexCMR',
@@ -221,6 +223,7 @@
         SHARED_DEVICES: 'SHARED_DEVICES',
         CMR: 'CMR',
         CARE: 'CARE',
+        ADVANCE_CARE: 'ADVANCE_CARE',
       },
 
       messageErrors: {

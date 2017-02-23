@@ -1783,12 +1783,16 @@
       "c_ucmc": "Call Connector",
       "c_mgmt": "Management Connector",
       "mf_mgmt": "Media Service",
-      "hds_app": "Hybrid Data Security"
+      "hds_app": "Hybrid Data Security",
+      "cs_mgmt": "Management Connector",
+      "cs_context": "Context Connector"
     },
     "serviceNameFromConnectorType": {
       "c_cal": "Calendar Service",
       "c_ucmc": "Call Service",
-      "c_mgmt": "Management Service"
+      "c_mgmt": "Management Service",
+      "cs_mgmt": "Management Connector",
+      "cs_context": "Context Connector"
     },
     "clusterTypeFromServiceId": {
       "squared-fusion-mgmt": "Expressway",
@@ -1865,6 +1869,7 @@
       "pending": "Pending",
       "upgrade": "Upgrade",
       "upgradeNow": "Upgrade Now",
+      "upgradesAutomatically": "Upgrades automatically",
       "upgradeProcessInitiating": "Initiating the upgrade to version {{version}}…",
       "upgradingHost": "Upgrading {{host}} to {{version}}",
       "upgradeDone": "Upgrade completed!",
@@ -1924,6 +1929,7 @@
       "clusters-title-squared-fusion-uc": "Expressway Clusters",
       "clusters-title-squared-fusion-media": "Media Clusters",
       "clusters-title-spark-hybrid-datasecurity": "HDS Clusters",
+      "clusters-title-contact-center-context": "Context Clusters",
       "status-title": "Service Status"
     },
     "hybridVoicemailUserSection": {
@@ -3747,7 +3753,7 @@
     "invalidTrialLicenseCount": "Number of Licenses should be greater than 0 and less than 1000.",
     "invalidTrialRoomSystemQuantity": "Number of Licenses should be between 1 and 20.",
     "invalidTrialSparkBoardQuantity": "Number of Licenses should be between 1 and 20.",
-    "invalidTrialCareQuantity": "Number of Licenses must be between 1 and message license quantity or maximum 50.",
+    "invalidTrialCareQuantity": "K1 and K2 licenses should be between 1 and 50 each and not exceed the Licenses Quantity in total.",
     "careLicenseCountExceedsTotalCount": "Care license requested is more than the message license quantity.",
     "individualUserServices": "Individual User Services",
     "roomSystems": "Room Devices",
@@ -3905,9 +3911,15 @@
     "meeting": "Meeting 25 Party",
     "webex": "WebEx Enterprise Edition 200 with CMR/TNU+",
     "call": "Call",
-    "care": "Care",
+    "care": "K1",
+    "careHelp": "Provide customer care through Chat and Callback",
+    "advanceCareHelp": "Provide customer care through Chat, Callback and Inbound Call",
+    "advanceCare": "K2",
     "callUsOnly": "Call (Currently U.S. only)",
     "supportSelectLocations": "Cisco Spark is supported in selected locations.  <a href='http://www.cisco.com/go/spark-availability' target='_blank' ng-click='{{click}}'>Learn more</a>",
+    "supportedLocationsCertification1": "I certify that this customer is in a ",
+    "supportedLocationsCertification2": " for Cisco Spark",
+    "supportedLocationsCertificationLinkText": "supported location",
     "context": "Enable Context Service for Cisco Unified Contact Center.",
     "roomSystem": "DX, MX or SX system",
     "sparkBoardSystem": "Cisco Spark Board",

@@ -1,0 +1,19 @@
+<div class="form-group location-check">
+  <input id="{{::id}}" name="{{::id}}" ng-model="model[options.key]" type="checkbox" value="true" />
+  <label for="{{::id}}">
+    <div>
+      <span>{{options.templateOptions.label_1}}</span>
+      <a href="{{options.templateOptions.link}}" target="_blank">{{options.templateOptions.link_text}}</a>
+      <span>{{options.templateOptions.label_2}}</span>
+    </div>
+  </label>
+  <div class="error" ng-show = "model[options.key] === false">
+    <div class="cs-input__messages">
+      <span class = "message" translate="common.invalidRequired"></span>
+    </div>
+  </div>
+</div>
+
+
+
+
