@@ -3249,13 +3249,13 @@
               },
             },
           })
-          .state('cluster-details', {
+          .state('expressway-cluster-sidepanel', {
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
                 template: '<cluster-sidepanel-overview cluster-type="\'c_mgmt\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType" has-resource-group-feature-toggle="$resolve.hasResourceGroupFeatureToggle" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></cluster-sidepanel-overview>',
               },
-              'header@cluster-details': {
+              'header@expressway-cluster-sidepanel': {
                 templateUrl: 'modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html',
               },
             },
@@ -3313,7 +3313,7 @@
               },
             },
           })
-          .state('cluster-details.alarm-details', {
+          .state('expressway-cluster-sidepanel.alarm-details', {
             template: '<alarm-details-sidepanel alarm="$resolve.alarm"></alarm-details-sidepanel>',
             // If data not present, $state.current.data.displayName inside the component has no effect
             data: {},
@@ -3326,7 +3326,7 @@
               },
             },
           })
-          .state('cluster-details.host-details', {
+          .state('expressway-cluster-sidepanel.host-details', {
             templateUrl: 'modules/hercules/cluster-sidepanel/host-details/host-details.html',
             controller: 'HybridServicesHostDetailsController',
             controllerAs: 'hostDetailsCtrl',
