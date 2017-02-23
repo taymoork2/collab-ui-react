@@ -1558,7 +1558,7 @@
         //deleteUrl has been configured
         //else it will go to a sayList, blank or otherwise
         //which is used later to trigger play or say
-        if (list[0].deleteUrl) {
+        if (_.get(list, '[0].deleteUrl', undefined)) {
           inputAction.prompts.playList = list;
         } else {
           inputAction.prompts.sayList = list;
