@@ -64,6 +64,7 @@
 
     vm.avrilTzUpdated = false;
     vm.avrilDialPlanUpdated = false;
+    vm.avrilLanguageUpdated = false;
     vm.voicemailAvrilCustomer = false;
     vm.isAvrilVoiceEnabled = false;
     vm.init = init;
@@ -1145,7 +1146,7 @@
               };
 
               return ServiceSetup.getAvrilSite(ServiceSetup.sites[0].uuid).then(function () {
-                if (vm.avrilTzUpdated || vm.avrilDialPlanUpdated) {
+                if (vm.avrilTzUpdated || vm.avrilDialPlanUpdated || vm.avrilLanguageUpdated) {
                   ServiceSetup.updateAvrilSite(setupSites.uuid, mSite);
                 }
               })
@@ -1205,6 +1206,7 @@
 
       if (!savedModel.site.preferredLanguage || vm.model.site.preferredLanguage.value !== savedModel.site.preferredLanguage.value) {
         siteData.preferredLanguage = vm.model.site.preferredLanguage.value;
+        vm.avrilLanguageUpdated = true;
       }
 
       if (vm.model.site.timeFormat != savedModel.site.timeFormat) {
