@@ -241,6 +241,7 @@ describe('Huron Device', function () {
   var $scope, $controller, controller, $httpBackend;
   var $q, CsdmConfigService;
   var $stateParams, ServiceSetup, timeZone, newTimeZone, countries, newCountry, HuronConfig;
+  var $timeout;
 
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module('Squared'));
@@ -250,11 +251,12 @@ describe('Huron Device', function () {
   beforeEach(initSpies);
 
 
-  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _CsdmConfigService_, _ServiceSetup_, _HuronConfig_) {
+  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _CsdmConfigService_, _ServiceSetup_, _HuronConfig_, _$timeout_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
     $q = _$q_;
+    $timeout = _$timeout_;
     CsdmConfigService = _CsdmConfigService_;
     ServiceSetup = _ServiceSetup_;
     HuronConfig = _HuronConfig_;
@@ -287,6 +289,10 @@ describe('Huron Device', function () {
       return q.resolve(true);
     }
 
+    function setSettingsForAta() {
+      return q.resolve(true);
+    }
+
     function getDeviceInfo() {
       return q.resolve({ timeZone: 'America/Los_Angeles', country: 'US' });
     }
@@ -298,6 +304,7 @@ describe('Huron Device', function () {
     return {
       setTimezoneForDevice: setTimezoneForDevice,
       setCountryForDevice: setCountryForDevice,
+      setSettingsForAta: setSettingsForAta,
       getDeviceInfo: getDeviceInfo,
       getLinesForDevice: getLinesForDevice,
     };
@@ -319,7 +326,7 @@ describe('Huron Device', function () {
     spyOn(ServiceSetup, 'getSiteCountries').and.returnValue($q.resolve(countries));
     spyOn($stateParams.huronDeviceService, 'setTimezoneForDevice').and.returnValue($q.resolve(true));
     spyOn($stateParams.huronDeviceService, 'setCountryForDevice').and.returnValue($q.resolve(true));
-
+    spyOn($stateParams.huronDeviceService, 'setSettingsForAta').and.returnValue($q.resolve(true));
 
   }
 
@@ -347,6 +354,23 @@ describe('Huron Device', function () {
       $scope.$apply();
 
       expect($stateParams.huronDeviceService.setTimezoneForDevice).toHaveBeenCalledWith(jasmine.any(Object), newTimeZone.id);
+    });
+  });
+
+  describe('T38 support', function () {
+    beforeEach(initController);
+
+
+    it('should init controller', function () {
+      expect(controller).toBeDefined();
+    });
+
+    it('should update T38 status', function () {
+      controller.saveT38Settings();
+      $scope.$apply();
+
+      $timeout.flush();
+      expect($stateParams.huronDeviceService.setSettingsForAta).toHaveBeenCalledWith(jasmine.any(Object), { t38FaxEnabled: false });
     });
   });
 
