@@ -1382,9 +1382,13 @@
                 });
               }
               if (site.country) {
-                vm.model.site.defaultCountry = _.find(vm.defaultCountryOptions, function (country) {
-                  return country.value === site.country;
-                });
+                if (vm.defaultCountryOptions.length !== 0) {
+                  vm.model.site.defaultCountry = _.find(vm.defaultCountryOptions, function (country) {
+                    return country.value === site.country;
+                  });
+                } else {
+                  vm.model.site.defaultCountry = DEFAULT_COUNTRY;
+                }
               }
               vm.model.site.siteCode = site.siteCode;
               vm.model.site.vmCluster = site.vmCluster;
