@@ -178,7 +178,7 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Fallback Destination', funct
     controller.selectFallback(fallbackMember1);
     controller.validateFallbackNumber();
 
-    expect(controller.selectedFallbackNumber).toBeUndefined();
+    expect(controller.selectedFallbackNumber).toEqual({});
     expect(controller.isFallbackValid()).toBeTruthy();
     expect(controller.selectedFallbackMember).not.toBeUndefined();
   });
