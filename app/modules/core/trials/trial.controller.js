@@ -622,6 +622,7 @@
     ///////////////////////
 
     function init() {
+      vm.loading = true;
       var isTestOrg = false;
       var overrideTestOrg = false;
       vm.hasCallEntitlement = Authinfo.isSquaredUC() || vm.isNewTrial();
@@ -676,6 +677,7 @@
           }
 
           toggleTrial();
+          vm.loading = false;
         });
     }
 
