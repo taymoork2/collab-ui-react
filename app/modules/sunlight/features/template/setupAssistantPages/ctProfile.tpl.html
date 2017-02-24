@@ -77,6 +77,7 @@
                 <div focus-on class="agent-name-options">
                   <cs-radio ng-repeat="(key, name) in careSetupAssistant.agentNames" label="name" value="name" name="{{name}}"
                             id="name" ng-model="careSetupAssistant.selectedAgentProfile"
+                            class="ct-agent-name-options"
                             ng-click="careSetupAssistant.setAgentProfile()"></cs-radio>
                 </div>
               </div>
