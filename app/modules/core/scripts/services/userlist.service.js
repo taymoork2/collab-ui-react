@@ -137,15 +137,19 @@
       return service._helpers.mkAttrsSwValExpr(['userName', 'name.givenName', 'name.familyName', 'displayName'], searchStr);
     }
 
-    // params:
-    // - 'filterParams.nameStartsWith' - prefix substring to search for in any name attribute
-    // - 'filterParams.allEntitlements' - single entitlement (e.g. 'ciscouc'), or list of
-    //     entitlements that must ALL be present (e.g. ['ciscouc', 'spark'])
-    // - 'filterParams.allRoles' - single role (e.g. 'id_full_admin'), or list of roles that
-    //     must ALL be present (e.g. ['id_user_admin', 'id_readonly_admin'])
-    // - 'filterParams.useUnboundedResultsHack' - set to true if needing to include
-    //     CI_QUERY.DISPLAYNAME_SW_XZ expression by default in the final expression (not included
-    //     though, if a search string of length > 1 is present)
+    /**
+     * Helper function for combining multiple CI query expressions into one.
+     *
+     * @param {string} filterParams.nameStartsWith - prefix substring to search for in any name attribute
+     * @param {(string|string[])} filterParams.allEntitlements - single entitlement (e.g. 'ciscouc'), or list of
+     *   entitlements that must ALL be present (e.g. ['ciscouc', 'spark'])
+     * @param {(string|string[])} filterParams.allRoles - single role (e.g. 'id_full_admin'), or list of roles that must
+     *   ALL be present (e.g. ['id_user_admin', 'id_readonly_admin'])
+     * @param {string} filterParams.useUnboundedResultsHack - set to true if needing to include
+     *   CI_QUERY.DISPLAYNAME_SW_XZ expression by default in the final expression (not included though, if a search
+     *   string of length > 1 is present)
+     * @return {string} - combined CI query expressing (each expression combined using 'and')
+     */
     function mkFilterExpr(filterParams) {
       var exprList;
       var defaultExpr = CI_QUERY.ACTIVE_EQ_TRUE;
@@ -186,13 +190,15 @@
         });
     }
 
-    // notes:
-    // - caller should provide an options object with all params:
-    //   - 'params.orgId' - org id of users to search for (default: logged-in user's org id)
-    //   - 'params.filter.*' - properties to define criteria for the 'filter' property
-    //       (see: 'mkFilterExpr()')
-    //   - 'params.ci.*' - properties passed through to the underlying GET to CI .../Users endpoint
-    //       (see: https://wiki.cisco.com/display/PLATFORM/CI3.0+SCIM+API+-+Query+Users)
+    /**
+     * Fetch users from CI using query parameters.
+     *
+     * @param {(string|number)} params.orgId - org id of users to search for (default: logged-in user's org id)
+     * @param {Object} params.filter - params object passed through to 'mkFilterExpr()'
+     * @param {Object} params.ci - params object passed through to the underlying '$http.get()' request
+     * @see {@link mkFilterExpr}
+     * @see {@link https://wiki.cisco.com/display/PLATFORM/CI3.0+SCIM+API+-+Query+Users}
+     */
     function listUsersAsPromise(params) {
       var searchOrgId = _.get(params, 'orgId', Authinfo.getOrgId());
       var url = UrlConfig.getScimUrl(searchOrgId);
