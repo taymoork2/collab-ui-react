@@ -20,6 +20,9 @@
     vm.resetAddress = resetAddress;
     vm.skip = skip;
 
+    var UNITED_STATES = 'US';
+    var CANADA = 'CA';
+
     vm.emergencyAddressFields = [{
       model: vm.trial.details.emergAddr,
       key: 'streetAddress',
@@ -80,9 +83,21 @@
         filter: true,
       },
       controller: /* @ngInject */ function ($scope) {
-        PstnSetupStatesService.getStateProvinces().then(function (states) {
-          $scope.to.options = states;
-        });
+        switch (vm.trial.details.countryCode) {
+          case CANADA:
+            PstnSetupStatesService.getProvinces()
+              .then(function (response) {
+                $scope.to.options = response.data;
+              });
+            break;
+          case UNITED_STATES:
+          default:
+            PstnSetupStatesService.getStates()
+              .then(function (response) {
+                $scope.to.options = response.data;
+              });
+            break;
+        }
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
