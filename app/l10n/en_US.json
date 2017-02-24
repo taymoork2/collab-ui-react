@@ -4593,7 +4593,9 @@
       "noOfMeet": "Number of Meetings",
       "meetingLocationTitle": "Total Meetings by Location",
       "meetings": "Meetings",
-      "location": "Location"
+      "location": "Location",
+      "totalCloud": "Total Cloud Participants",
+      "clientTypeHeading": "Client Type Distribution Across Calls"
     },
     "deleteGroup": {
       "message": "Are you sure you want to delete {{groupName}} from Cisco Collaboration Cloud?",

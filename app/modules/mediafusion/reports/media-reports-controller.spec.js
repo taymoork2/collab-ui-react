@@ -199,7 +199,7 @@ describe('Controller:MediaReportsController', function () {
       httpMock.verifyNoOutstandingExpectation();
       expect(MediaReportsService.getTotalCallsData).toHaveBeenCalled();
       expect(controller.onprem).toBe(20);
-      expect(controller.cloud).toBe(30);
+      expect(controller.cloudOverflow).toBe(30);
       expect(controller.total).toBe(50);
     });
 
