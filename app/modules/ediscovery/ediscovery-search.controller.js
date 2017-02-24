@@ -66,7 +66,7 @@ var Spark = require('@ciscospark/spark-core').default;
     vm.isReportMaxRooms = false;
 
     vm.generateDescription = '';
-    vm.exportOptions = ['JSON', 'CSV'];
+    vm.exportOptions = ['JSON'];
     vm.exportSelected = '' || vm.exportOptions[0];
 
     init($stateParams.report, $stateParams.reRun);
