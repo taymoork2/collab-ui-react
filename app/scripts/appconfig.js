@@ -763,13 +763,6 @@
                 template: '<my-company-orders></my-company-orders>',
               },
             },
-            resolve: {
-              isOnline: /* @ngInject */ function ($q, Authinfo) {
-                if (!Authinfo.isOnline()) {
-                  return $q.reject();
-                }
-              },
-            },
           })
           .state('users', {
             abstract: true,

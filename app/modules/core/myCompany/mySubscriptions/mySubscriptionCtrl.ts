@@ -307,10 +307,11 @@ class MySubscriptionCtrl {
             this.hasEnterpriseTrial = true;
           }
         } else {
+          const userId = this.Authinfo.getUserId();
           if (subscription.isTrial) {
             this.upgradeTrialUrl(subscription.internalSubscriptionId).then((response) => {
               if (response) {
-                this.OnlineUpgradeService.getProductInstance(this.Authinfo.getUserId()).then((prodResponse: IProdInst) => {
+                this.OnlineUpgradeService.getProductInstance(userId, subscription.internalSubscriptionId).then((prodResponse: IProdInst) => {
                   if (prodResponse) {
                     this.subscriptionDetails[index].productInstanceId = prodResponse.productInstanceId;
                     this.subscriptionDetails[index].name = prodResponse.name;
@@ -326,7 +327,7 @@ class MySubscriptionCtrl {
               subscription.upgradeTrialUrl = response;
             });
           } else {
-            this.OnlineUpgradeService.getProductInstance(this.Authinfo.getUserId()).then((prodResponse: IProdInst) => {
+            this.OnlineUpgradeService.getProductInstance(userId, subscription.internalSubscriptionId).then((prodResponse: IProdInst) => {
               if (prodResponse) {
                 this.subscriptionDetails[index].productInstanceId = prodResponse.productInstanceId;
                 this.subscriptionDetails[index].name = prodResponse.name;

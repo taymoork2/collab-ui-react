@@ -76,9 +76,13 @@ export class OnlineUpgradeService {
     return _.get<string>(this.Authinfo.getSubscriptions(), '[0].subscriptionId');
   }
 
-  public getProductInstance(userId): ng.IPromise<IProdInst> {
+  public getProductInstance(userId, subId): ng.IPromise<IProdInst> {
     return this.$http.get<any>(this.UrlConfig.getAdminServiceUrl() + 'commerce/productinstances?ciUUID=' + userId).then((response) => {
-      const productInstance = _.get<any>(response, 'data.productGroups[0].productInstance[0]', undefined);
+      const productGroups = _.get(response, 'data.productGroups');
+      const productInstances = _.flatMap(productGroups, 'productInstance');
+      const productInstance = _.find(productInstances, (instance: any) => {
+        return instance.subscriptionInfo.subscriptionId === subId && instance.baseProduct;
+      });
       return this.getProdInstAttrs(productInstance);
     });
   }
