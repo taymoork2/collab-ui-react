@@ -364,7 +364,9 @@
     "spark": "Spark",
     "calling": "Calling",
     "enabledBetaFeatures": "Enabled Beta Features",
-    "otpShareButton": "Share"
+    "otpShareButton": "Share",
+    "userDetails": "User Details",
+    "userPreferredLanguageError": "Failed to fetch user preferred language. Reason:"
   },
   "tabs": {
     "overviewTab": "Overview",

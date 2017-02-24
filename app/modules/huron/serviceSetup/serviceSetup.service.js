@@ -200,8 +200,10 @@
         return localizedTimeZones;
       },
 
+      getAllLanguages: getAllLanguages,
+
       getSiteLanguages: function () {
-        return SiteLanguageService.query().$promise.then(function (languages) {
+        return getAllLanguages().then(function (languages) {
           return FeatureToggleService.supports(
               FeatureToggleService.features.huronUserLocale2
             ).then(function (isHuronUserLocale2Enabled) {
@@ -310,6 +312,10 @@
       return FeatureToggleService.supports(feature).then(function (isSupported) {
         return isSupported;
       });
+    }
+
+    function getAllLanguages() {
+      return SiteLanguageService.query().$promise;
     }
   }
 })();
