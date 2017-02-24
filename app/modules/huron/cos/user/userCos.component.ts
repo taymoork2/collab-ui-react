@@ -16,6 +16,7 @@ class UserClassOfService implements ng.IComponentController {
   public memberType: string;
   public memberId;
   public form;
+  public premiumNumbers: string;
   public loading: boolean = false;
   public saveInProcess: boolean = false;
   private changedRestrictions = new Array<any>();
@@ -35,6 +36,10 @@ class UserClassOfService implements ng.IComponentController {
     this.neverAllow = this.$translate.instant('serviceSetupModal.cos.neverAllow');
     this.on = this.$translate.instant('common.on');
     this.off = this.$translate.instant('common.off');
+
+    this.UserCosService.getPremiumNumbers().then(dialPlan => {
+      this.premiumNumbers = _.get(dialPlan, 'premiumNumbers', []).toString();
+    });
 
     this.loadRestrictions();
   }

@@ -2,6 +2,7 @@ class ClassOfService implements ng.IComponentController {
 
   private inputModel;
   private cosRestrictions;
+  public premiumNumbers;
   private NATIONAL_CALLS = 'DIALINGCOSTAG_NATIONAL';
   private INTERNATIONAL_CALLS = 'DIALINGCOSTAG_INTERNATIONAL';
   private MOBILE_CALLS = 'DIALINGCOSTAG_MOBILE';
@@ -69,5 +70,6 @@ export class ClassOfServiceComponent implements ng.IComponentOptions {
     env: '@',
     onChangeFn: '&',
     inputModel: '<',
+    premiumNumbers: '<',
   };
 }
