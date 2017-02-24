@@ -8,7 +8,7 @@ require('./_user-add.scss');
     .controller('OnboardCtrl', OnboardCtrl);
 
   /*@ngInject*/
-  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Analytics, Authinfo, chartColors, Config, DialPlanService, FeatureToggleService, Log, LogMetricsService, NAME_DELIMITER, Notification, OnboardService, Orgservice, SunlightConfigService, TelephonyInfoService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact, ServiceSetup, ExternalNumberPool) {
+  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Analytics, Authinfo, chartColors, Config, DialPlanService, FeatureToggleService, Log, LogMetricsService, NAME_DELIMITER, Notification, OnboardService, Orgservice, SunlightConfigService, TelephonyInfoService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact, ServiceSetup, ExternalNumberPool, DirSyncService) {
     var vm = this;
 
     $scope.hasAccount = Authinfo.hasAccount();
@@ -240,15 +240,15 @@ require('./_user-add.scss');
     function loadExternalNumberPool(pattern) {
       // Numbers loaded here should be limited to standard DID numbers. No Toll-Free numbers.
       return TelephonyInfoService.loadExternalNumberPool(pattern, ExternalNumberPool.FIXED_LINE_OR_MOBILE)
-      .then(function (externalNumberPool) {
-        $scope.externalNumberPool = externalNumberPool;
-      }).catch(function (response) {
-        $scope.externalNumberPool = [{
-          uuid: 'none',
-          pattern: $translate.instant('directoryNumberPanel.none'),
-        }];
-        Notification.errorResponse(response, 'directoryNumberPanel.externalNumberPoolError');
-      });
+        .then(function (externalNumberPool) {
+          $scope.externalNumberPool = externalNumberPool;
+        }).catch(function (response) {
+          $scope.externalNumberPool = [{
+            uuid: 'none',
+            pattern: $translate.instant('directoryNumberPanel.none'),
+          }];
+          Notification.errorResponse(response, 'directoryNumberPanel.externalNumberPoolError');
+        });
     }
 
     function mapDidToDn() {
@@ -258,19 +258,19 @@ require('./_user-add.scss');
 
       // Numbers loaded here should be limited to standard DID numbers. No Toll-Free numbers.
       TelephonyInfoService.loadExtPoolWithMapping(count, ExternalNumberPool.FIXED_LINE_OR_MOBILE)
-      .then(function (externalNumberMapping) {
-        $scope.externalNumberMapping = externalNumberMapping;
-        assignMapUserList(count, externalNumberMapping);
-        $scope.isMapped = true;
-        $scope.isMapInProgress = false;
-        $scope.validateDnForUser();
-      }).catch(function (response) {
-        $scope.isMapInProgress = false;
-        $scope.isMapped = false;
-        $scope.isMapEnabled = true;
-        $scope.externalNumberMapping = [];
-        Notification.errorResponse(response, 'directoryNumberPanel.externalNumberMappingError');
-      });
+        .then(function (externalNumberMapping) {
+          $scope.externalNumberMapping = externalNumberMapping;
+          assignMapUserList(count, externalNumberMapping);
+          $scope.isMapped = true;
+          $scope.isMapInProgress = false;
+          $scope.validateDnForUser();
+        }).catch(function (response) {
+          $scope.isMapInProgress = false;
+          $scope.isMapped = false;
+          $scope.isMapEnabled = true;
+          $scope.externalNumberMapping = [];
+          Notification.errorResponse(response, 'directoryNumberPanel.externalNumberMappingError');
+        });
     }
 
     function assignDNForUserList() {
@@ -653,9 +653,9 @@ require('./_user-add.scss');
               }
             });
           },
-        function () {
-          $scope.radioStates.careRadio = false;
-        });
+          function () {
+            $scope.radioStates.careRadio = false;
+          });
       }
     }
 
@@ -1329,9 +1329,7 @@ require('./_user-add.scss');
     };
     var isDuplicate = false;
 
-    FeatureToggleService.supportsDirSync().then(function (supportsDirSync) {
-      $scope.isDirSyncEnabled = supportsDirSync;
-    });
+    $scope.isDirSyncEnabled = DirSyncService.isDirSyncEnabled();
 
     function setInvalidToken(token) {
       angular.element(token.relatedTarget).addClass('invalid');
@@ -2063,7 +2061,7 @@ require('./_user-add.scss');
     };
 
     var watchCheckboxes = function () {
-      $timeout(function () {});
+      $timeout(function () { });
       var flag = false;
       $scope.$watchCollection('entitlements', function (newEntitlements, oldEntitlements) {
         if (flag) {
@@ -2347,9 +2345,9 @@ require('./_user-add.scss');
     // Bulk DirSync Onboarding logic
     // Wizard hooks
     $scope.installConnectorNext = function () {
-      return FeatureToggleService.supportsDirSync().then(function (dirSyncEnabled) {
+      return DirSyncService.refreshStatus().then(function () {
         return $q(function (resolve, reject) {
-          if (dirSyncEnabled) {
+          if (DirSyncService.isDirSyncEnabled()) {
             // getStatus() is in the parent scope - AddUserCtrl
             if (_.isFunction($scope.getStatus)) {
               return $scope.getStatus().then(function () {
@@ -2365,7 +2363,6 @@ require('./_user-add.scss');
             resolve();
           }
         });
-
       });
     };
 

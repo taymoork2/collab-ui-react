@@ -8,6 +8,7 @@ import { SecuritySetting } from './securitySetting.component';
 import { SipDomainSetting } from './sipDomainSetting.component';
 import { SupportSetting } from './supportSection/supportSetting.component';
 import { PrivacySetting } from './privacySection/privacySettings.component';
+import { DirSyncSetting } from './dirSyncSetting.component';
 
 export class SettingsCtrl {
 
@@ -19,6 +20,7 @@ export class SettingsCtrl {
   public branding: SettingSection;
   public support: SettingSection;
   public retention: SettingSection;
+  public dirsync: SettingSection;
 
   // Footer and broadcast controls
   public saveCancelFooter: boolean = false;
@@ -30,10 +32,15 @@ export class SettingsCtrl {
   /* @ngInject */
   constructor(
     private $scope: ng.IScope,
+    private $stateParams: ng.ui.IStateParamsService,
+    private $timeout: ng.ITimeoutService,
     private Authinfo,
     private Orgservice,
     private FeatureToggleService,
   ) {
+  }
+
+  public $onInit(): void {
     // provide these settings to everyone
     this.initBranding();
     this.support = new SupportSetting();
@@ -53,7 +60,16 @@ export class SettingsCtrl {
       this.domains = new DomainsSetting();
       this.privacy = new PrivacySetting();
       this.sipDomain = new SipDomainSetting();
+      this.dirsync = new DirSyncSetting();
       this.initRetention();
+    }
+
+    let settingsToShow = _.get<any>(this.$stateParams, 'showSettings', null);
+    if (!_.isNull(settingsToShow)) {
+      // scroll the selected settings section in to view.
+      this.$timeout(() => {
+        this.scrollIntoView(settingsToShow);
+      });
     }
   }
 
@@ -65,6 +81,15 @@ export class SettingsCtrl {
   public cancel(): void {
     this.saveCancelFooter = false;
     this.$scope.$emit(this.CANCEL_BROADCAST);
+  }
+
+  public scrollIntoView(settingsToShow: string): void {
+    let settingElement = $(`setting-section[setting="settingsCtrl.${settingsToShow}"]`);
+    if (_.isElement(settingElement[0])) {
+      settingElement[0].scrollIntoView({ behavior: 'instant' });
+      let body = $('body');
+      body.scrollTop(body.scrollTop() - $('.settings').offset().top);
+    }
   }
 
   private initBranding() {

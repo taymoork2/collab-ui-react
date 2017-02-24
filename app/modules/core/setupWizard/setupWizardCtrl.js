@@ -6,7 +6,7 @@ require('./_setup-wizard.scss');
   angular.module('Core')
     .controller('SetupWizardCtrl', SetupWizardCtrl);
 
-  function SetupWizardCtrl($q, $scope, $state, $stateParams, Authinfo, Config, FeatureToggleService, Orgservice, Utils) {
+  function SetupWizardCtrl($q, $scope, $state, $stateParams, Authinfo, Config, FeatureToggleService, Orgservice, Utils, DirSyncService) {
     var isFirstTimeSetup = _.get($state, 'current.data.firstTimeSetup', false);
     var shouldRemoveAddUserTab = false;
     var shouldRemoveSSOSteps = false;
@@ -30,10 +30,9 @@ require('./_setup-wizard.scss');
               shouldRemoveSSOSteps = true;
             }
           } else {
-            return FeatureToggleService.supportsDirSync()
-              .then(function (result) {
-                $scope.isDirSyncEnabled = result;
-              });
+            return DirSyncService.refreshStatus().then(function () {
+              $scope.isDirSyncEnabled = DirSyncService.isDirSyncEnabled();
+            });
           }
         });
 

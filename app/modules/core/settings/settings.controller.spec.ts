@@ -1,64 +1,70 @@
 /// <reference path="settings.controller.ts"/>
 describe('SettingsCtrl', function () {
-  let controller, initController;
 
   beforeEach(function () {
     this.initModules('Core', 'Huron', 'Sunlight');
-    this.injectDependencies('$rootScope', '$scope', '$controller', '$q', 'Authinfo', 'FeatureToggleService', 'Orgservice');
+    this.injectDependencies('$rootScope', '$scope', '$stateParams', '$controller', '$q', '$timeout', 'Authinfo', 'FeatureToggleService', 'Orgservice');
 
-    spyOn(this.Orgservice, 'getOrg');
-    spyOn(this.FeatureToggleService, 'atlasDataRetentionSettingsGetStatus');
-    spyOn(this.FeatureToggleService, 'atlasPinSettingsGetStatus');
-    spyOn(this.Authinfo, 'isPartner');
-    spyOn(this.Authinfo, 'isCustomerAdmin');
-    spyOn(this.Authinfo, 'isDirectCustomer');
+    spyOn(this.Orgservice, 'getOrg').and.returnValue(this.$q.reject());
+    spyOn(this.Authinfo, 'isPartner').and.returnValue(false);
+    spyOn(this.Authinfo, 'isCustomerAdmin').and.returnValue(false);
+    spyOn(this.Authinfo, 'isDirectCustomer').and.returnValue(false);
 
-    this.FeatureToggleService.atlasPinSettingsGetStatus.and.returnValue(this.$q.when(true));
-    this.FeatureToggleService.atlasDataRetentionSettingsGetStatus.and.returnValue(this.$q.when(true));
-
-    initController = () => {
-      controller = this.$controller('SettingsCtrl', {
-        $scope: this.$scope,
-        hasFeatureToggle: true,
-      });
-
-      this.$scope.$apply();
-    };
+    spyOn(this.FeatureToggleService, 'atlasDataRetentionSettingsGetStatus').and.returnValue(this.$q.when(true));
+    spyOn(this.FeatureToggleService, 'atlasPinSettingsGetStatus').and.returnValue(this.$q.when(true));
   });
+
+  function initController(injectors) {
+    this.controller = this.$controller('SettingsCtrl', _.merge({
+      $scope: this.$scope,
+    }, injectors));
+    this.$scope.$apply();
+    spyOn(this.controller, 'scrollIntoView').and.callFake(_.noop);
+    this.controller.$onInit();
+    this.$scope.$apply();
+  }
+
+  ////////////////////////
 
   describe('for partner admin', function () {
     beforeEach(function () {
       this.Authinfo.isPartner.and.returnValue(true);
-      initController();
+      initController.apply(this);
     });
 
     it('should create the ctrl and add the partner setting sections', function () {
-      expect(controller.security).toBeFalsy();
-      expect(controller.domains).toBeFalsy();
-      expect(controller.sipDomain).toBeFalsy();
-      expect(controller.authentication).toBeFalsy();
-      expect(controller.support).toBeTruthy();
-      expect(controller.branding).toBeTruthy();
-      expect(controller.privacy).toBeFalsy();
-      expect(controller.retention).toBeFalsy();
+      expect(this.controller.branding).toBeTruthy();
+      expect(this.controller.support).toBeTruthy();
+
+      // these do not exist for Partner admins
+      expect(this.controller.security).toBeFalsy();
+      expect(this.controller.authentication).toBeFalsy();
+      expect(this.controller.domains).toBeFalsy();
+      expect(this.controller.privacy).toBeFalsy();
+      expect(this.controller.sipDomain).toBeFalsy();
+      expect(this.controller.dirsync).toBeFalsy();
+      expect(this.controller.retention).toBeFalsy();
     });
   });
 
   describe('for direct customer', function () {
     beforeEach(function () {
       this.Authinfo.isDirectCustomer.and.returnValue(true);
-      initController();
+      initController.apply(this);
     });
 
     it('should create the ctrl and add the direct customer setting sections', function () {
-      expect(controller.security).toBeTruthy();
-      expect(controller.domains).toBeTruthy();
-      expect(controller.sipDomain).toBeTruthy();
-      expect(controller.authentication).toBeTruthy();
-      expect(controller.support).toBeTruthy();
-      expect(controller.branding).toBeTruthy();
-      expect(controller.privacy).toBeTruthy();
-      expect(controller.retention).toBeTruthy();
+      expect(this.controller.branding).toBeTruthy();
+      expect(this.controller.support).toBeTruthy();
+
+      // these should exist for non-Partner admin
+      expect(this.controller.security).toBeTruthy();
+      expect(this.controller.authentication).toBeTruthy();
+      expect(this.controller.domains).toBeTruthy();
+      expect(this.controller.privacy).toBeTruthy();
+      expect(this.controller.sipDomain).toBeTruthy();
+      expect(this.controller.dirsync).toBeTruthy();
+      expect(this.controller.retention).toBeTruthy();
     });
   });
 
@@ -70,49 +76,49 @@ describe('SettingsCtrl', function () {
 
     describe('with allowCustomerLogos set to true', function () {
       beforeEach(function () {
-        this.Orgservice.getOrg.and.returnValue(this.$q.when({
+        this.Orgservice.getOrg.and.returnValue(this.$q.resolve({
           data: {
             orgSettings: {
               allowCustomerLogos: true,
             },
           },
         }));
-        initController();
+        initController.apply(this);
       });
 
       it('should create the ctrl and add the normal setting sections', function () {
-        expect(controller.security).toBeTruthy();
-        expect(controller.domains).toBeTruthy();
-        expect(controller.sipDomain).toBeTruthy();
-        expect(controller.authentication).toBeTruthy();
-        expect(controller.support).toBeTruthy();
-        expect(controller.branding).toBeTruthy();
-        expect(controller.privacy).toBeTruthy();
-        expect(controller.retention).toBeTruthy();
+        expect(this.controller.security).toBeTruthy();
+        expect(this.controller.domains).toBeTruthy();
+        expect(this.controller.sipDomain).toBeTruthy();
+        expect(this.controller.authentication).toBeTruthy();
+        expect(this.controller.support).toBeTruthy();
+        expect(this.controller.branding).toBeTruthy();
+        expect(this.controller.privacy).toBeTruthy();
+        expect(this.controller.retention).toBeTruthy();
       });
     });
 
     describe('with allowCustomerLogos set to false', function () {
       beforeEach(function () {
-        this.Orgservice.getOrg.and.returnValue(this.$q.when({
+        this.Orgservice.getOrg.and.returnValue(this.$q.resolve({
           data: {
             orgSettings: {
               allowCustomerLogos: false,
             },
           },
         }));
-        initController();
+        initController.apply(this);
       });
 
       it('should create the ctrl and add the normal setting sections', function () {
-        expect(controller.security).toBeTruthy();
-        expect(controller.domains).toBeTruthy();
-        expect(controller.sipDomain).toBeTruthy();
-        expect(controller.authentication).toBeTruthy();
-        expect(controller.support).toBeTruthy();
-        expect(controller.branding).toBeFalsy();
-        expect(controller.privacy).toBeTruthy();
-        expect(controller.retention).toBeTruthy();
+        expect(this.controller.security).toBeTruthy();
+        expect(this.controller.domains).toBeTruthy();
+        expect(this.controller.sipDomain).toBeTruthy();
+        expect(this.controller.authentication).toBeTruthy();
+        expect(this.controller.support).toBeTruthy();
+        expect(this.controller.branding).toBeFalsy();
+        expect(this.controller.privacy).toBeTruthy();
+        expect(this.controller.retention).toBeTruthy();
       });
     });
   });
@@ -125,33 +131,50 @@ describe('SettingsCtrl', function () {
 
     beforeEach(function () {
       spyOn(this.$scope, '$emit').and.callThrough();
-      initController();
+      initController.apply(this);
     });
 
     it('should set the save function on broadcast and then reset to defaults after save()', function () {
       this.$rootScope.$broadcast(ACTIVATE_SAVE_BUTTONS);
-      expect(controller.saveCancelFooter).toBeTruthy();
+      expect(this.controller.saveCancelFooter).toBeTruthy();
 
-      controller.save();
+      this.controller.save();
       expect(this.$scope.$emit).toHaveBeenCalledTimes(1);
       expect(this.$scope.$emit).toHaveBeenCalledWith(SAVE_BROADCAST);
-      expect(controller.saveCancelFooter).toBeFalsy();
+      expect(this.controller.saveCancelFooter).toBeFalsy();
     });
 
     it('should set the cancel function on broadcast and then reset to defaults after cancel()', function () {
       this.$rootScope.$broadcast(ACTIVATE_SAVE_BUTTONS);
-      expect(controller.saveCancelFooter).toBeTruthy();
+      expect(this.controller.saveCancelFooter).toBeTruthy();
 
-      controller.cancel();
+      this.controller.cancel();
       expect(this.$scope.$emit).toHaveBeenCalledTimes(1);
       expect(this.$scope.$emit).toHaveBeenCalledWith(CANCEL_BROADCAST);
-      expect(controller.saveCancelFooter).toBeFalsy();
+      expect(this.controller.saveCancelFooter).toBeFalsy();
     });
 
     it('should remove save\cancel buttons on REMOVE_SAVE_BUTTONS broadcast', function () {
-      controller.saveCancelFooter = true;
+      this.controller.saveCancelFooter = true;
       this.$rootScope.$broadcast(REMOVE_SAVE_BUTTONS);
-      expect(controller.saveCancelFooter).toBeFalsy();
+      expect(this.controller.saveCancelFooter).toBeFalsy();
     });
+  });
+
+  describe('with showSettings stateParam', function () {
+
+    it('should not call scrollIntoView when no showSettigs param supplied', function() {
+      initController.apply(this);
+      expect(this.controller.scrollIntoView).not.toHaveBeenCalled();
+    });
+
+    it('should call scrollIntoView with the requested section name', function() {
+      initController.apply(this, [{
+        $stateParams: { showSettings: 'privacy' },
+      }]);
+      this.$timeout.flush();
+      expect(this.controller.scrollIntoView).toHaveBeenCalledWith('privacy');
+    });
+
   });
 });

@@ -6,12 +6,14 @@ describe('UserManageModalPickerController', function () {
 
   function init() {
     this.initModules('Core', 'Huron', 'Sunlight');
-    this.injectDependencies('$scope', '$rootScope', '$controller', '$q', 'FeatureToggleService', '$state');
+    this.injectDependencies('$scope', '$rootScope', '$controller', '$q', '$state', 'DirSyncService');
     initDependencySpies.apply(this);
   }
 
   function initDependencySpies() {
     spyOn(this.$state, 'go');
+    spyOn(this.DirSyncService, 'requiresRefresh').and.returnValue(false);
+    spyOn(this.DirSyncService, 'refreshStatus').and.returnValue(this.$q.resolve());
   }
 
   function initController() {
@@ -19,19 +21,21 @@ describe('UserManageModalPickerController', function () {
       $scope: this.$scope,
     });
     this.$scope.$apply();
+    this.controller.onInit();
+    this.$scope.$apply();
   }
 
   beforeEach(init);
 
   it('should transition to standard org state when DirSync not supported', function () {
-    spyOn(this.FeatureToggleService, 'supportsDirSync').and.returnValue(this.$q.resolve(false));
+    spyOn(this.DirSyncService, 'isDirSyncEnabled').and.returnValue(false);
 
     initController.apply(this);
     expect(this.$state.go).toHaveBeenCalledWith('users.manage.org');
   });
 
   it('should transition to advanced org state when DirSync is supported', function () {
-    spyOn(this.FeatureToggleService, 'supportsDirSync').and.returnValue(this.$q.resolve(true));
+    spyOn(this.DirSyncService, 'isDirSyncEnabled').and.returnValue(true);
 
     initController.apply(this);
     expect(this.$state.go).toHaveBeenCalledWith('users.manage.activedir');
