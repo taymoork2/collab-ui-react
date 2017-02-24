@@ -139,8 +139,12 @@
             //If org has subscriptions get the license information from subscriptions, else from licences
             if (_.has(customerAccount, 'licenses')) {
               customerAccountLicenses = _.get(customerAccount, 'licenses');
-            } else if (_.has(customerAccount, 'subscriptions[0].licenses')) {
-              customerAccountLicenses = _.get(customerAccount, 'subscriptions[0].licenses');
+            } else if (customerAccount.subscriptions) {
+              for (var subId = 0; subId < customerAccount.subscriptions.length; subId++) {
+                if (customerAccount.subscriptions[subId].licenses) {
+                  customerAccountLicenses = _.concat(customerAccountLicenses, customerAccount.subscriptions[subId].licenses);
+                }
+              }
             }
 
             for (var l = 0; l < customerAccountLicenses.length; l++) {

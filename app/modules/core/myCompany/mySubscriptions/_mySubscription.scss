@@ -63,6 +63,7 @@
 
     .sub-name {
       @include vr-spacing(m, 1);
+      padding-top: 0;
 
       width: auto;
     }
@@ -84,7 +85,6 @@
     .subscription-upgrade,
     .license-item {
       display: flex;
-      flex-wrap: wrap;
     }
 
     .subscription-column {
@@ -243,12 +243,9 @@
       align-items: center;
 
       .license-quantity {
-        @include vr-spacing(pr, 1);
         @include vr-spacing(pt, 0.5);
         @include vr-spacing(pb, 0.25);
-
-        min-width: 200px;
-      }
+       }
 
       .subscription-id {
         right: vr-adjust(24);
@@ -256,6 +253,10 @@
         top: vr-adjust(60);
         text-align: right;
         width: vr-adjust(500);
+      }
+
+      .upgrade-button {
+        width: vr-adjust(188);
       }
     }
   }
