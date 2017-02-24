@@ -115,6 +115,11 @@ describe('Controller: HuronSettingsCtrl', function () {
     $httpBackend
       .expectGET(HuronConfig.getCmiV2Url() + '/customers/' + customer.uuid + '/features/huntgroups')
       .respond([]);
+    $httpBackend
+      .expectGET(HuronConfig.getCmiV2Url() + '/customers/' + customer.uuid + '/dialplans')
+      .respond({
+        premiumNumbers: ['800', '900'],
+      });
   }));
 
   describe('SettingsCtrlBasic', function () {
