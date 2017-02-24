@@ -174,7 +174,7 @@
       dev: 'https://statusbts.webex.com/status',
       cfe: 'https://statusbts.webex.com/status',
       integration: 'https://statusbts.webex.com/status',
-      prod: 'https://statusbts.webex.com/status',
+      prod: 'https://healthstatus.webex.com/status',
     },
     UccUrl: {
       dev: 'https://ucc-integration.wbx2.com/ucm-service/api/v1',
