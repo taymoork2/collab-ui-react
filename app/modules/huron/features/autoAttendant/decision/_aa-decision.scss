@@ -14,6 +14,16 @@
     @include vr-spacing(mb, .75);
   }
 
+  .select-toggle {
+    @include vr-spacing(pr, 1.75);
+
+    > i {
+      &.icon {
+        right: -0.3rem;
+      }
+    }
+  }
+
   .aa-decision-textarea {
     line-height: 1.5rem;
     width: 100%;
