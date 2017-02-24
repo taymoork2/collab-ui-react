@@ -7,7 +7,7 @@
 
   /* @ngInject */
 
-  function huntGroupService($q, HuntGroupServiceV2, UserServiceCommonV2, UserSearchServiceV2, NumberSearchServiceV2, Authinfo) {
+  function huntGroupService($q, HuntGroupServiceV2, UserServiceCommonV2, NumberSearchServiceV2, Authinfo, MemberSearchServiceV2) {
 
     var customerId = Authinfo.getOrgId();
     var service = {
@@ -60,13 +60,13 @@
       if (suggestionsNeeded(hint)) {
         var helper = getServiceHelper();
         if (isNaN(hint) || onlyMembers) {
-          helper.setService(UserSearchServiceV2);
+          helper.setService(MemberSearchServiceV2);
           helper.setApiArgs({
             name: hint,
             wide: true,
           });
           helper.setExtractData(function (data) {
-            return data.users;
+            return data.members;
           });
           helper.setMapping(constructUserNumberMappingForUI);
         } else {
