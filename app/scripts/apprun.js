@@ -63,10 +63,8 @@
           SessionStorage.putObject(storedParams, toParams);
           SessionStorage.putObject(queryParams, $location.search());
           HealthService.getHealthStatus()
-            .then(function (status) {
-              if (status === 'online') {
-                $state.go('login');
-              }
+            .then(function () {
+              $state.go('login');
             }).catch(function () {
               $state.go('server-maintenance');
             });
