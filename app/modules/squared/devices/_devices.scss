@@ -26,7 +26,7 @@
 }
 
 .none_found {
-  @include vr-spacing(pt, 10);
+  @include vr-spacing(pt, 7);
 
   display: flex;
   flex-direction: column;
@@ -47,13 +47,22 @@
     @include vr-spacing(mt, 1);
   }
 
-  h4,
-  h1 {
+  .h5,
+  .h2 {
     @include vr-spacing(mv, 0.5);
+    color: $gray-base;
+    text-align: center;
+    margin-bottom: 12px;
+    max-width: 440px;
+    margin-left: auto;
+    margin-right: auto;
+
+    @media screen and (max-width: 640px) {
+      width: 90%;
+    }
   }
 
-  i,
-  h5 {
+  i {
     color: $gray-light-1;
   }
 }

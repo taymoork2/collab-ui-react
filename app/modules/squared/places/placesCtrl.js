@@ -1,4 +1,5 @@
 require('./_places.scss');
+require('../devices/_devices.scss');
 
 (function () {
   'use strict';

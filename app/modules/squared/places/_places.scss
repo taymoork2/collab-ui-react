@@ -13,17 +13,6 @@
       width: 35px;
     }
   }
-
-  .emptyList {
-    text-align: center;
-    width: 60%;
-    margin-left: auto;
-    margin-right: auto;
-
-    @media screen and (max-width: 640px) {
-      width: 90%;
-    }
-  }
 }
 
 .callServiceRow {
