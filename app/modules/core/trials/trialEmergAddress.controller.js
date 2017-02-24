@@ -117,12 +117,13 @@
         streetAddress: vm.trial.details.emergAddr.streetAddress,
         unit: vm.trial.details.emergAddr.unit,
         city: vm.trial.details.emergAddr.city,
-        state: vm.trial.details.emergAddr.state.abbreviation,
+        state: vm.trial.details.emergAddr.state,
         zip: vm.trial.details.emergAddr.zip,
       }, vm.trial.details.pstnProvider.uuid)
         .then(function (response) {
           if (!_.isUndefined(response)) {
             vm.addressFound = true;
+            vm.readOnly = true;
             _.extend(vm.trial.details.emergAddr, response);
           } else {
             vm.validation = false;
@@ -146,6 +147,7 @@
       TrialPstnService.resetAddress();
       vm.validation = false;
       vm.addressFound = false;
+      vm.readOnly = false;
     }
   }
 })();

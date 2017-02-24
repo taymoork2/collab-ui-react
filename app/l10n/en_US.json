@@ -3599,11 +3599,11 @@
     "waitOnTOSAcceptance": "Waiting on ToS acceptance from customer"
   },
   "serviceAddress": {
-    "streetAddress": "Street Address",
-    "unit": "Unit",
+    "streetAddress": "Address Line 1",
+    "unit": "Address Line 2",
     "city": "City / Town",
-    "state": "State / Region",
     "zipCode": "Zip / Postal Code",
+    "country": "Country",
     "pending": "Emergency Service Address pending verification."
   },
   "pstnSetup": {

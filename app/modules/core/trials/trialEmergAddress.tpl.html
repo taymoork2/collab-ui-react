@@ -11,29 +11,7 @@
 <!-- body -->
 <div class="modal-body trials">
   <form class="trial-modal" id="callTrialForm" name="trialForm" novalidate>
-    <div class="cs-form__section" style="">
-      <div class="section__info">
-        <h4 class="section__title" translate="trialModal.pstn.esa"></h4>
-        <h6 class="section__description" translate="trialModal.pstn.esaDesc"></h6>
-      </div>
-      <div class="section__content">
-        <formly-form model="eAddressTrial.emergencyAddress" fields="eAddressTrial.emergencyAddressFields">
-          </formly-form>
-      </div>
-    </div>
-    <div class="cs-form__section center">
-      <div class="cs-form__content" ng-show="eAddressTrial.validation === true">
-        <div class="text-center" ng-show="eAddressTrial.addressLoading">
-          <i class="icon icon-spinner icon-2x text-center"></i>
-        </div>
-        <div ng-show="eAddressTrial.addressFound">
-          <h6 translate="trialModal.pstn.addrFound"></h6>
-          <h5>{{eAddressTrial.trial.details.emergAddr.streetAddress}} {{eAddressTrial.trial.details.emergAddr.unit}}</h5>
-          <h5>{{eAddressTrial.trial.details.emergAddr.city}}, {{eAddressTrial.trial.details.emergAddr.state}}, {{eAddressTrial.trial.details.emergAddr.zip}}</h5>
-          <a href="" class="primary" ng-click="eAddressTrial.resetAddress()" translate="trialModal.pstn.addrRetry"></a>
-        </div>
-      </div>
-    </div>
+    <emergency-services address="eAddressTrial.trial.details.emergAddr" country-code="eAddressTrial.trial.details.countryCode" validation="eAddressTrial.validation" address-loading="eAddressTrial.addressLoading" address-found="eAddressTrial.addressFound" reset-address="eAddressTrial.resetAddress()" read-only="eAddressTrial.readOnly"></emergency-services>
   </form>
 </div>
 
