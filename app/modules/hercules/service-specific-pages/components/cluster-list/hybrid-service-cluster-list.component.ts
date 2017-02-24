@@ -71,7 +71,9 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
         .catch(() => {
           this.clusterList = this.ClusterService.getClustersByConnectorType(this.connectorType);
         });
-    } else if (this.serviceId === 'spark-hybrid-datasecurity' || this.serviceId === 'squared-fusion-media') {
+    } else if (this.serviceId === 'spark-hybrid-datasecurity' ||
+               this.serviceId === 'squared-fusion-media' ||
+               this.serviceId === 'contact-center-context') {
       this.clusterList = this.ClusterService.getClustersByConnectorType(this.connectorType);
     }
   }

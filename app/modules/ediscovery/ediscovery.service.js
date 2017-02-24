@@ -38,16 +38,16 @@
 
     function getArgonautServiceUrl(argonautParam) {
       var url = UrlConfig.getArgonautReportSizeUrl();
-      //var emailAddress = _.get(argonautParam, 'emailAddress', null);
-      var roomId = _.get(argonautParam, 'roomId', null);
+      var emailAddresses = _.get(argonautParam, 'emailAddresses', null);
+      var roomIds = _.get(argonautParam, 'roomIds');
       var encryptionKeyUrl = _.get(argonautParam, 'encryptionKeyUrl');
       var startDate = _.get(argonautParam, 'startDate');
       var endDate = _.get(argonautParam, 'endDate');
       var query = _.get(argonautParam, 'query', null);
       return $http
         .post(url, {
-          //emailAddress: emailAddress,
-          roomId: roomId,
+          emailAddresses: emailAddresses,
+          roomIds: roomIds,
           encryptionKeyUrl: encryptionKeyUrl,
           startDate: startDate,
           endDate: endDate,
@@ -99,9 +99,11 @@
     function createReport(postParams) {
       var orgId = Authinfo.getOrgId();
       var displayName = _.get(postParams, 'displayName');
-      var roomId = _.get(postParams, 'roomId');
       var startDate = _.get(postParams, 'startDate');
       var endDate = _.get(postParams, 'endDate');
+      var keyword = _.get(postParams, 'keyword');
+      var roomIds = _.get(postParams, 'roomIds');
+      var emailAddresses = _.get(postParams, 'emailAddresses');
       var sd = (startDate !== null) ? moment.utc(startDate).toISOString() : null;
       var ed = (endDate !== null) ? moment.utc(endDate).toISOString() : null;
       var roomParams = {
@@ -109,7 +111,9 @@
         roomQuery: {
           startDate: sd,
           endDate: ed,
-          roomId: roomId,
+          keyword: keyword,
+          roomIds: roomIds,
+          emailAddresses: emailAddresses,
         },
       };
       return $http
@@ -128,16 +132,16 @@
     // - 'endDate' => end date entered
     function generateReport(postParams) {
       var url = UrlConfig.getArgonautReportUrl();
-      //var emailAddresses = _.get(postParams, 'emailAddresses');
+      var emailAddresses = _.get(postParams, 'emailAddresses');
       var query = _.get(postParams, 'query', null);
-      var roomIds = _.get(postParams, 'roomIds', null);
+      var roomIds = _.get(postParams, 'roomIds');
       var encryptionKeyUrl = _.get(postParams, 'encryptionKeyUrl');
       var responseUri = _.get(postParams, 'responseUri');
       var sd = _.get(postParams, 'startDate');
       var ed = _.get(postParams, 'endDate');
       return $http
         .post(url, {
-          //emailAddresses: emailAddresses,
+          emailAddresses: emailAddresses,
           query: query,
           roomIds: roomIds,
           encryptionKeyUrl: encryptionKeyUrl,

@@ -31,8 +31,9 @@ export class PstnProvidersCtrl implements ng.IComponentController {
   public $onInit() {
     this.pstnCarriers = new Array<PstnCarrier>();
     this.pstnCarrierStatics = new Array<IPstnCarrierStatic>();
-    this.getCarriersStatic();
-    this.getCarriersNetwork();
+    this.getCarriersStatic().then(() => {
+      this.getCarriersNetwork();
+    });
   }
 
   public onSetProvider(carrier: PstnCarrier) {
@@ -53,8 +54,8 @@ export class PstnProvidersCtrl implements ng.IComponentController {
   }
 
   //Get static carrier informantion from JSON file
-  private getCarriersStatic() {
-    this.getCarriersJson().query().$promise.then(carriers => {
+  private getCarriersStatic(): any {
+    return this.getCarriersJson().query().$promise.then(carriers => {
       carriers.forEach((carrier: IPstnCarrierStatic) => {
         //translate the feature strings
         for (let i: number = 0; i < carrier.features.length; i++) {
@@ -81,10 +82,6 @@ export class PstnProvidersCtrl implements ng.IComponentController {
     //Are carriers already loaded
     if (this.PstnSetup.isCarrierExists()) {
       this.pstnCarriers = this.PstnSetup.getCarriers();
-      //reset any selected carriers.
-      this.pstnCarriers.forEach((carrier: PstnCarrier) => {
-        carrier.selected = false;
-      });
       this.onReady();
       return;
     }

@@ -47,20 +47,24 @@
     vm.total_participants_heading = $translate.instant('mediaFusion.metrics.total_participants');
     vm.on_prem_participants_heading = $translate.instant('mediaFusion.metrics.onprem_participants');
     vm.cloud_participants_heading = $translate.instant('mediaFusion.metrics.cloud_participants');
+    vm.overflow_heading = $translate.instant('mediaFusion.metrics.cloud_calls');
     vm.cloud_calls_heading = $translate.instant('mediaFusion.metrics.cloud_calls');
     vm.redirected_calls_heading = $translate.instant('mediaFusion.metrics.redirectedcalls');
     vm.cluster_availability_heading = $translate.instant('mediaFusion.metrics.overAllAvailability');
     vm.customPlaceholder = $translate.instant('mediaFusion.report.custom');
+    vm.total_cloud_heading = $translate.instant('mediaFusion.metrics.totalCloud');
 
-    vm.hosted_heading = vm.on_prem_calls_heading;
+    vm.second_card_heading = vm.total_cloud_heading;
     vm.redirected_heading = vm.cloud_calls_heading;
+    vm.second_card_value = 0;
     vm.hosted_participants_heading = vm.on_prem_participants_heading;
+    vm.hosted_heading = vm.on_prem_calls_heading;
 
     vm.Map = {};
-    vm.cloudparticipants = {
+    vm.secondCardFooter = {
       isShow: '',
       value: '',
-      footerDesc: vm.cloud_participants_heading,
+      footerDesc: vm.overflow_heading,
     };
 
     vm.displayAdoption = false;
@@ -130,14 +134,12 @@
     function clusterUpdate() {
       if (vm.clusterSelected !== vm.allClusters) {
         vm.clusterId = vm.Map[vm.clusterSelected];
-        vm.hosted_heading = vm.on_prem_calls_heading;
+        vm.second_card_heading = vm.redirected_calls_heading;
         vm.redirected_heading = vm.redirected_calls_heading;
-        vm.hosted_participants_heading = vm.on_prem_participants_heading;
       } else {
         vm.clusterId = vm.allClusters;
-        vm.hosted_heading = vm.on_prem_calls_heading;
+        vm.second_card_heading = vm.total_cloud_heading;
         vm.redirected_heading = vm.cloud_calls_heading;
-        vm.hosted_participants_heading = vm.on_prem_participants_heading;
       }
       loadResourceDatas();
     }
@@ -241,63 +243,68 @@
             return undefined;
           } else if (_.isUndefined(response.data) || response.data.length === 0) {
             vm.onprem = vm.noData;
-            vm.cloud = vm.noData;
+            vm.cloudOverflow = vm.noData;
             vm.total = vm.noData;
+            vm.cloudcalls = vm.noData;
           } else if (_.isUndefined(response.data.callsOnPremise) && !_.isUndefined(response.data.cloudCalls)) {
             vm.onprem = vm.noData;
-            vm.cloud = response.data.callsOverflow;
+            vm.cloudOverflow = response.data.callsOverflow;
             vm.cloudcalls = response.data.cloudCalls;
-            vm.cloudparticipants.isShow = true;
-            vm.cloudparticipants.value = vm.cloudcalls;
-            vm.total = vm.cloud;
+            vm.secondCardFooter.isShow = true;
+            vm.secondCardFooter.value = vm.cloudOverflow;
+            vm.total = vm.cloudOverflow;
             vm.totalcloudcalls = vm.cloudcalls;
           } else if (!_.isUndefined(response.data.callsOnPremise) && _.isUndefined(response.data.cloudCalls)) {
             vm.onprem = response.data.callsOnPremise;
-            vm.cloud = vm.noData;
+            vm.cloudOverflow = vm.noData;
+            vm.cloudcalls = vm.noData;
             vm.total = vm.onprem;
           } else if (_.isUndefined(response.data.callsOnPremise) && _.isUndefined(response.data.callsOverflow)) {
             vm.onprem = vm.noData;
-            vm.cloud = vm.noData;
+            vm.cloudOverflow = vm.noData;
             vm.total = vm.noData;
+            vm.cloudcalls = vm.noData;
           } else {
             vm.onprem = response.data.callsOnPremise;
-            vm.cloud = response.data.callsOverflow;
+            vm.cloudOverflow = response.data.callsOverflow;
             vm.cloudcalls = response.data.cloudCalls;
-            vm.total = vm.onprem + vm.cloud;
+            vm.total = vm.onprem + vm.cloudOverflow;
             vm.totalcloudcalls = vm.onprem + vm.cloudcalls;
-            vm.cloudparticipants.isShow = true;
-            vm.cloudparticipants.value = vm.cloudcalls;
+            vm.secondCardFooter.isShow = true;
+            vm.secondCardFooter.value = vm.cloudOverflow;
           }
+          vm.second_card_value = vm.cloudcalls;
 
         } else {
           if (response === vm.ABORT) {
             return undefined;
           } else if (_.isUndefined(response.data) || response.data.length === 0) {
             vm.onprem = vm.noData;
-            vm.cloud = vm.noData;
+            vm.cloudOverflow = vm.noData;
             vm.total = vm.noData;
             vm.totalcloudcalls = vm.noData;
           } else if (_.isUndefined(response.data.callsOnPremise) && !_.isUndefined(response.data.callsRedirect)) {
             vm.onprem = vm.noData;
-            vm.cloud = response.data.callsRedirect;
-            vm.total = vm.cloud;
-            vm.totalcloudcalls = vm.cloud;
+            vm.cloudOverflow = response.data.callsRedirect;
+            vm.total = vm.cloudOverflow;
+            vm.totalcloudcalls = vm.cloudOverflow;
           } else if (!_.isUndefined(response.data.callsOnPremise) && _.isUndefined(response.data.callsRedirect)) {
             vm.onprem = response.data.callsOnPremise;
-            vm.cloud = vm.noData;
+            vm.cloudOverflow = vm.noData;
             vm.total = vm.onprem;
             vm.totalcloudcalls = vm.onprem;
           } else if (_.isUndefined(response.data.callsOnPremise) && _.isUndefined(response.data.callsRedirect)) {
             vm.onprem = vm.noData;
-            vm.cloud = vm.noData;
+            vm.cloudOverflow = vm.noData;
             vm.total = vm.noData;
             vm.totalcloudcalls = vm.noData;
           } else {
             vm.onprem = response.data.callsOnPremise;
-            vm.cloud = response.data.callsRedirect;
-            vm.total = vm.onprem + vm.cloud;
-            vm.totalcloudcalls = vm.onprem + vm.cloud;
+            vm.cloudOverflow = response.data.callsRedirect;
+            vm.total = vm.onprem + vm.cloudOverflow;
+            vm.totalcloudcalls = vm.onprem + vm.cloudOverflow;
           }
+          vm.second_card_value = vm.cloudOverflow;
         }
       });
     }

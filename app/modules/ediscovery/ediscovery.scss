@@ -125,10 +125,6 @@
         padding-bottom: 1rem;
       }
 
-      .pointer {
-        cursor: pointer;
-      }
-
       .main-heading {
         padding-top: 2rem;
 
@@ -150,11 +146,11 @@
         }
       }
 
-      .searchWarning {
+      .search-warning {
         color: $color-attention-base;
       }
 
-      .searchByRoom {
+      .ediscovery-advanced-search {
         margin-top: 48px;
         display: inline-block;
         width: 50%;
@@ -167,16 +163,11 @@
           max-width: 100%;
         }
 
-        #searchBy {
-          padding-left: 0;
-        }
-
-        .searchText {
+        .search-text {
           float: left;
-          padding-left: 0.5rem;
         }
 
-        .searchBox {
+        .search-box {
           padding-left: 0px;
         }
 
@@ -184,24 +175,24 @@
           width: 50%;
         }
 
+        .query-row {
+          padding-right: 0.5rem;
+        }
+
         .searchButton {
           float: left;
           width: 100px;
         }
 
-        #textInput {
-          margin-left: 0.5rem;
-        }
-
-        #smallBreak {
+        .small-gap {
           margin-top: 16px;
         }
 
-        #midBreak{
+        .mid-gap {
           padding-top: 24px;
         }
 
-        #largeBreak {
+        .large-gap {
           margin-top: 36px;
         }
       }

@@ -604,7 +604,20 @@
     "concurrentMeetingsTitle": "Actual number of concurrent mettings held",
     "concurrentMeetings": "Concurrent Meetings",
     "maxMeetingsTitle": "Maximum number of concurrent meetings allowed",
-    "errorLoadingSharedMeetingData": "There was a problem loading the Shared Meeting Report data."
+    "errorLoadingSharedMeetingData": "There was a problem loading the Shared Meeting Report data.",
+    "errorLoadingSharedMeetingDetails": "There was a problem loading the Shared Meeting Report details data.",
+    "siteUrlError": "Site URL is undefined.  Cannot retrieve shared meetings report.",
+    "csvPageError": "Unable to retrieve the detailed report for download.",
+    "downloadHref": "Download a <a href=\"{{href}}\" download=\"{{download}}\">detailed report</a> of shared meetings usage.",
+    "downloadClick": "Download a <a ng-click=\"{{onclick}}\">detailed report</a> of shared meetings usage.",
+    "csvMeetingTopic": "Meeting Topic",
+    "csvStartTime": "Start Time",
+    "csvEndTime": "End Time",
+    "csvConfId": "Conference ID",
+    "csvDuration": "Meeting Duration (Seconds)",
+    "csvMeetingType": "Meeting Type",
+    "csvHostId": "Host Id",
+    "csvHostName": "Host Name"
   },
   "careReportsPage": {
     "tasks": "Contacts",
@@ -1783,12 +1796,16 @@
       "c_ucmc": "Call Connector",
       "c_mgmt": "Management Connector",
       "mf_mgmt": "Media Service",
-      "hds_app": "Hybrid Data Security"
+      "hds_app": "Hybrid Data Security",
+      "cs_mgmt": "Management Connector",
+      "cs_context": "Context Connector"
     },
     "serviceNameFromConnectorType": {
       "c_cal": "Calendar Service",
       "c_ucmc": "Call Service",
-      "c_mgmt": "Management Service"
+      "c_mgmt": "Management Service",
+      "cs_mgmt": "Management Connector",
+      "cs_context": "Context Connector"
     },
     "clusterTypeFromServiceId": {
       "squared-fusion-mgmt": "Expressway",
@@ -1865,6 +1882,7 @@
       "pending": "Pending",
       "upgrade": "Upgrade",
       "upgradeNow": "Upgrade Now",
+      "upgradesAutomatically": "Upgrades automatically",
       "upgradeProcessInitiating": "Initiating the upgrade to version {{version}}…",
       "upgradingHost": "Upgrading {{host}} to {{version}}",
       "upgradeDone": "Upgrade completed!",
@@ -1924,6 +1942,7 @@
       "clusters-title-squared-fusion-uc": "Expressway Clusters",
       "clusters-title-squared-fusion-media": "Media Clusters",
       "clusters-title-spark-hybrid-datasecurity": "HDS Clusters",
+      "clusters-title-contact-center-context": "Context Clusters",
       "status-title": "Service Status"
     },
     "hybridVoicemailUserSection": {
@@ -2574,6 +2593,7 @@
       "backToSearch": "Back to Search",
       "searchInfo": "Search Info",
       "emailId": "Email Id",
+      "roomId": "Room Id",
       "dateRange": "Date Range",
       "textMessage": "Text Messages Contains",
       "fileName": "File Name Contains",
@@ -3565,7 +3585,8 @@
     "portNumbersPrompt": "Copy and paste customer's numbers that need to be ported.",
     "portNumbersLabel": "Porting Numbers",
     "manualAdd": "Manually Add New Numbers",
-    "state": "State / Region",
+    "state": "State",
+    "province": "Province",
     "selectState": "Select state",
     "searchStates": "Search states",
     "areaCode": "Area Code",
@@ -4575,7 +4596,9 @@
       "noOfMeet": "Number of Meetings",
       "meetingLocationTitle": "Total Meetings by Location",
       "meetings": "Meetings",
-      "location": "Location"
+      "location": "Location",
+      "totalCloud": "Total Cloud Participants",
+      "clientTypeHeading": "Client Type Distribution Across Calls"
     },
     "deleteGroup": {
       "message": "Are you sure you want to delete {{groupName}} from Cisco Collaboration Cloud?",
@@ -6109,6 +6132,7 @@
     "upgrade": "Upgrade",
     "purchase": "Purchase",
     "changePlan": "Change Plan",
+    "contact": "Contact Account Rep",
     "onlineTrialUpgradeUrlError": "Unable to retrieve purchase url for trial {{trialId}}.  To purchase a paid subscription, contact your partner via email or use the purchase button on the trial banner to have one sent for you.",
     "onlineProductInstanceError": "Unable to retrieve product instance for trial {{trialId}}.  To purchase a paid subscription, contact your partner via email or use the purchase button on the trial banner to have one sent for you.",
     "loadError": "An error occurred while loading subscriptions.",

@@ -5,6 +5,7 @@ describe('Directive: hrServiceAddress', function () {
   var SEARCH_BUTTON = '.search-custom';
   var HIDE = 'ng-hide';
   var element;
+  var usCanStatesList = getJSONFixture('../../app/modules/huron/pstnSetup/states_plus_canada.json');
 
   afterEach(function () {
     if (element) {
@@ -28,6 +29,7 @@ describe('Directive: hrServiceAddress', function () {
     };
 
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200, {});
+    $httpBackend.whenGET('modules/huron/pstnSetup/states_plus_canada.json').respond(usCanStatesList);
   }));
 
   it('should show the address form inputs', function () {

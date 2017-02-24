@@ -730,6 +730,11 @@
                 controller: 'MySubscriptionCtrl',
                 templateUrl: 'modules/core/myCompany/mySubscriptions/mySubscription.tpl.html',
               },
+              'headerRight': {
+                controllerAs: 'subscriptionHeader',
+                controller: 'SubscriptionHeaderCtrl',
+                templateUrl: 'modules/core/myCompany/mySubscriptions/subscriptionHeader.tpl.html',
+              },
             },
           })
           .state('my-company.info', {
@@ -2760,7 +2765,7 @@
           .state('context', {
             templateUrl: 'modules/context/container/hybrid-context-container.html',
             controller: 'HybridContextContainerController',
-            controllerAs: 'vm',
+            controllerAs: 'hybridContextContainerController',
             parent: 'main',
             params: {
               backState: null,
@@ -2776,7 +2781,15 @@
             parent: 'context',
             views: {
               'contextServiceView': {
-                templateUrl: 'modules/context/resources/hybrid-context-resources.html',
+                template: '<hybrid-service-cluster-list service-id="\'contact-center-context\'"></hybrid-service-cluster-list>',
+              },
+            },
+            params: {
+              clusterId: null,
+            },
+            resolve: {
+              hasContactCenterContextFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.contactCenterContext);
               },
             },
           })

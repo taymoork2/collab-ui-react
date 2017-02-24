@@ -3,7 +3,13 @@
 describe('Controller: DeviceOverviewCtrl', function () {
   var $scope, $controller, $state, controller, $httpBackend;
   var $q, CsdmConfigService, CsdmDeviceService, Authinfo, Notification;
-  var RemoteSupportModal, HuronConfig, FeatureToggleService, Userservice, CsdmHuronDeviceService;
+  var RemoteSupportModal, HuronConfig, FeatureToggleService, Userservice;
+  var PstnSetupStatesService, CsdmHuronDeviceService;
+
+  var states = [{
+    name: 'Texas',
+    abbreviation: 'TX',
+  }];
 
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module('Squared'));
@@ -13,7 +19,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
   beforeEach(initSpies);
   beforeEach(initController);
 
-  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _CsdmConfigService_, _CsdmDeviceService_, _Authinfo_, _Notification_, _RemoteSupportModal_, _HuronConfig_, _FeatureToggleService_, _Userservice_) {
+  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _CsdmConfigService_, _CsdmDeviceService_, _Authinfo_, _Notification_, _RemoteSupportModal_, _HuronConfig_, _FeatureToggleService_, _Userservice_, _PstnSetupStatesService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
@@ -28,6 +34,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
     Notification = _Notification_;
     RemoteSupportModal = _RemoteSupportModal_;
     HuronConfig = _HuronConfig_;
+    PstnSetupStatesService = _PstnSetupStatesService_;
   }
 
   function initSpies() {
@@ -36,13 +43,11 @@ describe('Controller: DeviceOverviewCtrl', function () {
     $httpBackend.whenGET('http://thedeviceurl').respond(200);
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200);
     $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/sipendpoints/3/addonmodules').respond(200);
-    $httpBackend.whenGET('modules/huron/pstnSetup/states.json').respond([{
-      name: "Texas",
-      abbreviation: "TX",
-    }]);
+    $httpBackend.whenGET('modules/huron/pstnSetup/states.json').respond(states);
     $httpBackend.whenGET('https://cmi.huron-int.com/api/v1/voice/customers/sites').respond([]);
     spyOn(CsdmHuronDeviceService, 'getLinesForDevice').and.returnValue($q.resolve([]));
     spyOn(CsdmHuronDeviceService, 'getDeviceInfo').and.returnValue($q.resolve({}));
+    spyOn(PstnSetupStatesService, 'getStateProvinces').and.returnValue($q.resolve(states));
   }
 
   CsdmHuronDeviceService = {
@@ -241,6 +246,8 @@ describe('Huron Device', function () {
   var $scope, $controller, controller, $httpBackend;
   var $q, CsdmConfigService;
   var $stateParams, ServiceSetup, timeZone, newTimeZone, countries, newCountry, HuronConfig;
+  var usStatesList = getJSONFixture('../../app/modules/huron/pstnSetup/states.json');
+  var usCanStatesList = getJSONFixture('../../app/modules/huron/pstnSetup/states_plus_canada.json');
   var $timeout;
 
   beforeEach(angular.mock.module('Hercules'));
@@ -316,10 +323,9 @@ describe('Huron Device', function () {
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200);
     $httpBackend.whenGET('http://thedeviceurl').respond(200);
     $httpBackend.whenGET(HuronConfig.getTerminusV2Url() + '/customers/numbers/e911').respond(200);
-    $httpBackend.whenGET('modules/huron/pstnSetup/states.json').respond([{
-      name: "Texas",
-      abbreviation: "TX",
-    }]);
+    $httpBackend.whenGET('modules/huron/pstnSetup/states.json').respond(usStatesList);
+    $httpBackend.whenGET('modules/huron/pstnSetup/states_plus_canada.json').respond(usCanStatesList);
+
     countries = getJSONFixture('huron/json/settings/countries.json');
 
     spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.resolve(timeZone));

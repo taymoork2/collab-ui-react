@@ -69,7 +69,7 @@
         } else {
           vm.currentState = vm.states.NO_PROCEED;
           //TODO: Switch to HDS link when available
-          $window.open('https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/Media-Fusion-Management-Connector/mfusion.ova');
+          $window.open('https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/HybridDataSecurityProduction/20170221023633/hds.ova');
         }
       } else if (vm.currentState === vm.states.YES_PROCEED) {
         vm.currentState = vm.states.REGISTER_NODE;
