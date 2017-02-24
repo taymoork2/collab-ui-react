@@ -58,6 +58,8 @@
     var NXX_EMPTY = '--';
     var MIN_BLOCK_QUANTITY = 2;
     var MAX_BLOCK_QUANTITY = 100;
+    var UNITED_STATES = 'US';
+    var CANADA = 'CA';
 
     vm.addToCart = addToCart;
     vm.addAdvancedOrder = addAdvancedOrder;
@@ -74,6 +76,7 @@
     vm.formatTelephoneNumber = formatTelephoneNumber;
     vm.showOrderQuantity = showOrderQuantity;
     vm.searchResults = [];
+    vm.location = '';
 
     vm.model.pstn.paginateOptions = {
       currentPage: 0,
@@ -116,19 +119,34 @@
     init();
 
     function init() {
-      PstnSetupStatesService.getStateProvinces().then(function (states) {
-        vm.model.pstn.quantity = null;
-        vm.model.pstn.states = states;
-        if (_.get(PstnSetup.getServiceAddress(), 'state')) {
-          vm.model.pstn.state = {
-            abbreviation: PstnSetup.getServiceAddress().state,
-            name: _.result(_.find(states, {
-              'abbreviation': PstnSetup.getServiceAddress().state,
-            }), 'name'),
-          };
-          getStateInventory();
+      var provider = PstnSetup.getProvider();
+      if (provider) {
+        switch (provider.country) {
+          case CANADA:
+            vm.location = $translate.instant('pstnSetup.province');
+            PstnSetupStatesService.getProvinces().then(loadLocations);
+            break;
+          case UNITED_STATES:
+          default:
+            vm.location = $translate.instant('pstnSetup.state');
+            PstnSetupStatesService.getStates().then(loadLocations);
+            break;
         }
-      });
+      }
+    }
+
+    function loadLocations(locations) {
+      vm.model.pstn.quantity = null;
+      vm.model.pstn.states = locations.data;
+      if (_.get(PstnSetup.getServiceAddress(), 'state')) {
+        vm.model.pstn.state = {
+          abbreviation: PstnSetup.getServiceAddress().state,
+          name: _.result(_.find(locations, {
+            'abbreviation': PstnSetup.getServiceAddress().state,
+          }), 'name'),
+        };
+        getStateInventory();
+      }
     }
 
     vm.tollFreeFields = [{

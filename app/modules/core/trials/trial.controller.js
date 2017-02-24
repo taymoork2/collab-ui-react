@@ -1396,6 +1396,7 @@
     }
 
     function setDefaultCountry(country) {
+      TrialPstnService.setCountryCode(country.id);
       vm.details.country = country;
     }
   }
