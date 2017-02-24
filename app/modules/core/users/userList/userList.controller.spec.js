@@ -4,7 +4,8 @@ describe('UserListCtrl: Ctrl', function () {
 
   function init() {
     this.initModules('Core', 'Huron', 'Sunlight');
-    this.injectDependencies('$rootScope', '$state', '$controller', '$q', '$httpBackend', 'Userservice', 'UserListService', 'Orgservice', 'Authinfo', 'Auth', 'Config', 'Notification', 'FeatureToggleService');
+    this.injectDependencies('$rootScope', '$state', '$controller', '$q', '$httpBackend', 'Userservice', 'UserListService',
+      'Orgservice', 'Authinfo', 'Auth', 'Config', 'Notification', 'FeatureToggleService');
     initFixtures.apply(this);
     initDependencySpies.apply(this);
   }
@@ -63,7 +64,6 @@ describe('UserListCtrl: Ctrl', function () {
     this.isCiscoSpy = spyOn(this.Authinfo, 'isCisco').and.returnValue(false);
     spyOn(this.Auth, 'isOnlineOrg').and.returnValue(this.$q.resolve(false));
 
-    this.supportsDirSyncSpy = spyOn(this.FeatureToggleService, 'supportsDirSync').and.returnValue(this.$q.resolve(false));
     spyOn(this.FeatureToggleService, 'atlasEmailStatusGetStatus').and.returnValue(this.$q.resolve(false));
 
     this.$httpBackend.whenGET(/.*\/v1\/Users\/me.*/g).respond(200);
@@ -104,24 +104,6 @@ describe('UserListCtrl: Ctrl', function () {
   beforeEach(init);
 
   //////////////////////////////////
-
-
-  describe('initController', function () {
-
-    it('should enable isNotDirSyncOrException when the org is Cisco org', function () {
-      this.isCiscoSpy.and.returnValue(true);
-      initController.apply(this);
-      expect(this.$scope.isNotDirSyncOrException).toEqual(true);
-    });
-
-    it('should disable isNotDirSyncOrException when it is a DirSync org', function () {
-      this.isCiscoSpy.and.returnValue(false);
-      this.supportsDirSyncSpy.and.returnValue(this.$q.resolve(true));
-      initController.apply(this);
-      expect(this.$scope.isNotDirSyncOrException).toEqual(false);
-    });
-
-  });
 
   describe('getUserList', function () {
     beforeEach(function () {
@@ -238,7 +220,6 @@ describe('UserListCtrl: Ctrl', function () {
         "userName": "telstraUser",
         "licenseID": undefined,
       };
-      this.supportsDirSyncSpy.and.returnValue(this.$q.resolve(true));
       initController.apply(this);
     });
 

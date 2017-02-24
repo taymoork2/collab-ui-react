@@ -1,10 +1,9 @@
 'use strict';
 
 describe('SetupWizardCtrl', function () {
+
   beforeEach(function () {
-    this.initModules(
-      'Core'
-    );
+    this.initModules('Core');
 
     this.injectDependencies(
       '$controller',
@@ -14,7 +13,8 @@ describe('SetupWizardCtrl', function () {
       '$stateParams',
       'Authinfo',
       'FeatureToggleService',
-      'Orgservice'
+      'Orgservice',
+      'DirSyncService'
     );
 
     this.usageFixture = getJSONFixture('core/json/organizations/usage.json');
@@ -29,10 +29,12 @@ describe('SetupWizardCtrl', function () {
       licenseType: 'SHARED_DEVICES',
     }]);
 
+    spyOn(this.DirSyncService, 'requiresRefresh').and.returnValue(false);
+    spyOn(this.DirSyncService, 'refreshStatus').and.returnValue(this.$q.resolve());
+
     spyOn(this.FeatureToggleService, 'supports').and.callFake(function (feature) {
       return this.$q.resolve(_.includes(this.enabledFeatureToggles, feature));
     }.bind(this));
-    spyOn(this.FeatureToggleService, 'supportsDirSync').and.returnValue(this.$q.resolve(false));
     spyOn(this.Orgservice, 'getAdminOrgUsage').and.returnValue(this.$q.resolve(this.usageFixture));
 
     this._expectStepIndex = _expectStepIndex;
@@ -143,7 +145,7 @@ describe('SetupWizardCtrl', function () {
 
   describe('When dirsync is enabled', function () {
     beforeEach(function () {
-      this.FeatureToggleService.supportsDirSync.and.returnValue(this.$q.resolve(true));
+      spyOn(this.DirSyncService, 'isDirSyncEnabled').and.returnValue(true);
       this.initController();
     });
 
@@ -226,7 +228,7 @@ describe('SetupWizardCtrl', function () {
       this.Authinfo.isCare.and.returnValue(true);
 
       this.FeatureToggleService.supports.and.returnValue(this.$q.resolve(true));
-      this.FeatureToggleService.supportsDirSync.and.returnValue(this.$q.resolve(true));
+      spyOn(this.DirSyncService, 'isDirSyncEnabled').and.returnValue(true);
 
       this.initController();
     });
