@@ -4131,7 +4131,8 @@
   },
   "customerSubscriptions": {
     "customerAdmin": "Customer Admin(s):",
-    "subscriptionInfo": "{{name}} Subscription Info",
+    "subscriptionInfoFor": "{{name}} Subscription Info:",
+    "subscriptionInfo": "Subscription Info:",
     "partnerAdmin": "Partner Admin(s):",
     "webexSubscriptions": "Webex Subscriptions",
     "noWebexSubscriptions": "No Webex Subscriptions",

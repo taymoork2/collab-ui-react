@@ -12,33 +12,46 @@
 
     <cs-sp-buttons class="subscriptions">
       <form novalidate role="form">
-        <button class="btn" ngclipboard data-clipboard-text="{{customerSubscriptions.customerInfoClipboard}}">
+        <button
+          class="btn btn__clipboard"
+          ngclipboard
+          data-clipboard-text="{{$ctrl.clipboardText}}">
           <span translate="customerSubscriptions.copyToClipboard"></span>
         </button>
-        <button class="bttn btn--primary" ng-click="customerSubscriptions.sendMail(customerSubscriptions.subscriptions)" translate="customerSubscriptions.sendOrderRequest"></button>
+        <button
+          class="btn btn--primary btn__sendmail"
+          ng-click="$ctrl.sendMail()"
+          translate="customerSubscriptions.sendOrderRequest"></button>
       </form>
     </cs-sp-buttons>
   </cs-sp-section>
   <cs-sp-section>
     <div class="section-title-row">
-      <span class="section-name" translate="customerSubscriptions.subscriptionInfo" translate-values="{name: customerOverview.currentCustomer.customerName}"></span>
+      <span
+        class="section-name"
+        translate="customerSubscriptions.subscriptionInfoFor"
+        translate-values="{name: $ctrl.customerName}"></span>
     </div>
     <div class="feature-list">
       <ul>
         <li>
           <cr-admin-list
-            members="customerSubscriptions.admins.customerFullAdmins"
-            title="{{::'customerSubscriptions.customerAdmin' | translate}}"></cr-admin-list>
+            members="$ctrl.orderReq.customerFullAdmins"
+            title="{{::'customerSubscriptions.customerAdmin' | translate}}"
+            order-by="{{::$ctrl.DEFAULT_ORDER_BY}}"
+            ></cr-admin-list>
         </li>
         <li>
           <cr-admin-list
-            members="customerSubscriptions.admins.partnerAdmins"
-            title="{{::'customerSubscriptions.partnerAdmin' | translate}}"></cr-admin-list>
+            members="$ctrl.orderReq.partnerAdmins"
+            title="{{::'customerSubscriptions.partnerAdmin' | translate}}"
+            order-by="{{::$ctrl.DEFAULT_ORDER_BY}}"
+            ></cr-admin-list>
         </li>
-        <li ng-if="customerSubscriptions.subscriptions.length>0">
+        <li ng-if="$ctrl.subscriptions.length>0">
           <h6 translate="customerSubscriptions.webexSubscriptions"></h6>
-          <ul class="feature-list" ng-if="customerSubscriptions.subscriptions.length>0">
-            <li ng-repeat="customerSubscription in customerSubscriptions.subscriptions">
+          <ul class="feature-list" ng-if="$ctrl.subscriptions.length>0">
+            <li ng-repeat="customerSubscription in $ctrl.subscriptions">
               <span class="feature-detail">{{customerSubscription.subscriptionId}} - {{customerSubscription.siteUrl}}</span>
             </li>
           </ul>

@@ -2050,7 +2050,7 @@
           })
           .state('customer-overview.customerSubscriptions', {
             controller: 'CustomerSubscriptionsDetailCtrl',
-            controllerAs: 'customerSubscriptions',
+            controllerAs: '$ctrl',
             templateUrl: 'modules/core/customers/customerSubscriptions/customerSubscriptionsDetail.tpl.html',
             resolve: {
               data: /* @ngInject */ function ($state, $translate) {
