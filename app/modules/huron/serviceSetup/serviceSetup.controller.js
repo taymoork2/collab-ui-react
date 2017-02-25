@@ -38,6 +38,7 @@
 
     vm.avrilTzUpdated = false;
     vm.avrilDialPlanUpdated = false;
+    vm.avrilLanguageUpdated = false;
     vm.voicemailAvrilCustomer = false;
     vm.addInternalNumberRange = addInternalNumberRange;
     vm.deleteInternalNumberRange = deleteInternalNumberRange;
@@ -1267,7 +1268,7 @@
                 };
 
                 return ServiceSetup.getAvrilSite(ServiceSetup.sites[0].uuid).then(function () {
-                  if (vm.avrilTzUpdated || vm.avrilDialPlanUpdated) {
+                  if (vm.avrilTzUpdated || vm.avrilDialPlanUpdated || vm.avrilLanguageUpdated) {
                     ServiceSetup.updateAvrilSite(setupSites.uuid, mSite);
                   }
                 })
@@ -1342,6 +1343,7 @@
           }
           if (_.get(vm, 'model.site.preferredLanguage.value') !== _.get(vm, 'model.ftswPreferredLanguage.value')) {
             siteData.preferredLanguage = vm.model.site.preferredLanguage.value;
+            vm.avrilLanguageUpdated = true;
           }
           if (_.get(vm, 'model.site.country.value') !== _.get(vm, 'model.ftswCountry.value')) {
             siteData.country = vm.model.site.country.value;
