@@ -39,7 +39,8 @@ describe('Template: trialPstn.tpl.spec.js:', function () {
     Analytics = _Analytics_;
     PstnSetupService = _PstnSetupService_;
 
-    spyOn(PstnSetupStatesService, 'getStateProvinces').and.returnValue($q.resolve(states));
+    spyOn(PstnSetupStatesService, 'getStates').and.returnValue($q.resolve(states));
+    spyOn(PstnSetupStatesService, 'getProvinces').and.returnValue($q.resolve(states));
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
     spyOn(Analytics, 'trackTrialSteps');
     spyOn(PstnSetupService, 'getResellerV2').and.returnValue($q.resolve());

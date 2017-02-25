@@ -1195,37 +1195,39 @@
 
     function updateSite() {
       var siteData = {};
-      if (vm.model.site.steeringDigit !== savedModel.site.steeringDigit) {
+      if (_.get(vm, 'model.site.steeringDigit') && (vm.model.site.steeringDigit !== savedModel.site.steeringDigit)) {
         siteData.steeringDigit = vm.model.site.steeringDigit;
       }
 
-      if (vm.model.site.timeZone.id !== savedModel.site.timeZone.id) {
+      if (_.get(vm, 'model.site.timeZone') && (vm.model.site.timeZone.id !== savedModel.site.timeZone.id)) {
         siteData.timeZone = vm.model.site.timeZone.id;
         vm.avrilTzUpdated = true;
       }
 
-      if (!savedModel.site.preferredLanguage || vm.model.site.preferredLanguage.value !== savedModel.site.preferredLanguage.value) {
+      if (_.get(vm, 'model.site.preferredLanguage') &&
+        (!savedModel.site.preferredLanguage || vm.model.site.preferredLanguage.value !== savedModel.site.preferredLanguage.value)) {
         siteData.preferredLanguage = vm.model.site.preferredLanguage.value;
         vm.avrilLanguageUpdated = true;
       }
 
-      if (vm.model.site.timeFormat != savedModel.site.timeFormat) {
+      if (_.get(vm, 'model.site.timeFormat') && (vm.model.site.timeFormat !== savedModel.site.timeFormat)) {
         siteData.timeFormat = vm.model.site.timeFormat.value;
       }
 
-      if (vm.model.site.dateFormat != savedModel.site.dateFormat) {
+      if (_.get(vm, 'model.site.dateFormat') && (vm.model.site.dateFormat !== savedModel.site.dateFormat)) {
         siteData.dateFormat = vm.model.site.dateFormat.value;
       }
 
-      if (!savedModel.site.defaultCountry || vm.model.site.defaultCountry.value !== savedModel.site.defaultCountry.value) {
+      if (_.get(vm, 'model.site.defaultCountry') &&
+        (!savedModel.site.defaultCountry || vm.model.site.defaultCountry.value !== savedModel.site.defaultCountry.value)) {
         siteData.country = vm.model.site.defaultCountry.value;
       }
 
-      if (vm.model.site.extensionLength !== savedModel.site.extensionLength) {
+      if (_.get(vm, 'model.site.extensionLength') && (vm.model.site.extensionLength !== savedModel.site.extensionLength)) {
         siteData.extensionLength = vm.model.site.extensionLength;
       }
 
-      if (vm.model.site.siteSteeringDigit.siteDialDigit !== savedModel.site.siteSteeringDigit.siteDialDigit) {
+      if (_.get(vm, 'model.site.siteSteeringDigit.siteDialDigit') && (vm.model.site.siteSteeringDigit.siteDialDigit !== savedModel.site.siteSteeringDigit.siteDialDigit)) {
         siteData.siteSteeringDigit = vm.model.site.siteSteeringDigit.siteDialDigit;
         vm.avrilDialPlanUpdated = true;
       }
@@ -1382,9 +1384,13 @@
                 });
               }
               if (site.country) {
-                vm.model.site.defaultCountry = _.find(vm.defaultCountryOptions, function (country) {
-                  return country.value === site.country;
-                });
+                if (vm.defaultCountryOptions.length !== 0) {
+                  vm.model.site.defaultCountry = _.find(vm.defaultCountryOptions, function (country) {
+                    return country.value === site.country;
+                  });
+                } else {
+                  vm.model.site.defaultCountry = DEFAULT_COUNTRY;
+                }
               }
               vm.model.site.siteCode = site.siteCode;
               vm.model.site.vmCluster = site.vmCluster;

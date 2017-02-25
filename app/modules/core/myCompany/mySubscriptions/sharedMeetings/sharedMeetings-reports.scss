@@ -1,89 +1,98 @@
 @import 'styles/toolkit/fonts';
 @import 'styles/toolkit/spacing';
 
-.modal-body.shared-meeting-report {
-  .axischart {
-    font-size: rem-calc(11);
-    height: vr-adjust(500);
-    width: 85%;
-    margin-left: 5%;
-    margin-right: auto;
-    z-index: 50;
-    .graph-text, .graph-meetings {
-      font-family: $brand-font-cisco-TT-Regular;
-      font-size: rem-calc(16);
-      color: $gray-darkest;
-      text-align: left;
-      float: left;
+.reveal-modal.full shared-meeting-report.modal-content {
+  margin: 0;
+  .modal-body.shared-report {
+    .axischart {
+      font-size: rem-calc(11);
+      height: vr-adjust(430);
+      width: 85%;
+      margin-left: 5%;
+      margin-right: auto;
+      z-index: 50;
+      .graph-text, .graph-meetings {
+        font-family: $brand-font-cisco-TT-Regular;
+        font-size: rem-calc(16);
+        color: $gray-darkest;
+        text-align: left;
+        float: left;
+      }
+      .graph-meetings {
+        color: $color-primary-base;
+        @include vr-spacing(ml, 0.25);
+      }
     }
-    .graph-meetings {
+    .body-spacing {
+      @include vr-spacing(pl, 4);
+      @include vr-spacing(pr, 1);
+    }
+    .report-description {
+      @include vr-spacing(ml, 0.5);
+    }
+    .row-space {
+      @include vr-spacing(mt, 1);
+    }
+    .time-filter{
+      width: rem-calc(200);
+    }
+    .no-data-center {
+      position: relative;
+      z-index: 100;
+      height: 0;
+      top: rem-calc(-300);
+      left: rem-calc(-8);
+      width: 100%;
+      .no-data {
+        color: $gray-darkest;
+        font-family: $brand-font-cisco-TT-Light;
+        font-size: rem-calc(16);
+        text-align: center;
+        margin: 0;
+        span {
+          position: relative;
+          top: -3px;
+        }
+        .no-data-warning {
+          color: $color-attention-base;
+          padding-right: rem-calc(15);
+        }
+      }
+    }
+    .spinner-position {
+      position: relative;
+      z-index: 100;
+      top: rem-calc(-300);
+      left: -2.5%;
+      width: 100%;
+      .icon-2x {
+        font-size: 4em;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    }
+    .export-dots {
+      color: $gray-base;
+    }
+    .export-dots:hover {
       color: $color-primary-base;
-      @include vr-spacing(ml, 0.25);
     }
-  }
-  .body-spacing {
-    @include vr-spacing(pl, 4);
-    @include vr-spacing(pr, 1);
-  }
-  .report-description {
-    @include vr-spacing(ml, 1);
-  }
-  .row-space {
-    @include vr-spacing(mt, 1);
-  }
-  .time-filter{
-    width: rem-calc(200);
-  }
-  .no-data-center {
-    position: relative;
-    z-index: 100;
-    height: 0;
-    top: rem-calc(-300);
-    left: rem-calc(-8);
-    width: 100%;
-    .no-data {
-      color: $gray-darkest;
-      font-family: $brand-font-cisco-TT-Light;
-      font-size: rem-calc(16);
-      text-align: center;
-      margin: 0;
-      span {
-        position: relative;
-        top: -3px;
-      }
-      .no-data-warning {
-        color: $color-attention-base;
-        padding-right: rem-calc(15);
-      }
-    }
-  }
-  .spinner-position {
-    position: relative;
-    z-index: 100;
-    top: rem-calc(-300);
-    left: -2.5%;
-    width: 100%;
-    .icon-2x {
-      font-size: 4em;
+    .dropdown-menu.dropdown-primary.export-visible {
+      display: inline-block;
+      width: rem-calc(100);
       position: absolute;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      left: rem-calc(-75);
+      @include vr-spacing(p, 0);
+      .export-item:first-of-type:hover {
+        background: none;
+      }
     }
-  }
-  .export-dots {
-    color: $gray-base;
-  }
-  .export-dots:hover {
-    color: $color-primary-base;
-  }
-  .dropdown-menu.dropdown-primary.export-visible {
-    display: inline-block;
-    width: rem-calc(100);
-    position: absolute;
-    left: rem-calc(-75);
-    @include vr-spacing(p, 0);
-    .export-item:first-of-type:hover {
-      background: none;
+    .center-text {
+      text-align: center;
+      .report-loader .cs-loading {
+        color: $color-primary-base;
+      }
     }
   }
 }

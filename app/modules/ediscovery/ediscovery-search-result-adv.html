@@ -10,9 +10,9 @@
 		    </div>
 				<header><h4 class="result-info" translate="ediscovery.searchResults.searchInfo"></h4></header>
 				<section>		
-					<p class="result-title" translate="ediscovery.searchResults.emailId"></p>
-					<div ng-repeat="emailAddress in ediscoverySearchCtrl.searchResults.emailAddresses">
-						<p class="result-info">{{emailAddress}}</p>
+					<p class="result-title">{{ediscoverySearchCtrl.searchResultsHeader}}</p>
+					<div ng-repeat="keyword in ediscoverySearchCtrl.searchResults.keywords">
+						<p class="result-info">{{keyword}}</p>
 					</div>
 					<p class="result-title" translate="ediscovery.searchResults.dateRange"></p>
 					<p class="result-info">{{ediscoverySearchCtrl.searchCriteria.startDate}} - {{ediscoverySearchCtrl.searchCriteria.endDate}}</p>
@@ -23,7 +23,7 @@
 		</cs-card>
 		<cs-card class="large">
 			<article>
-				<header class="summaryHeader"><h4 translate="ediscovery.searchResults.reportSummary"></h4></header>
+				<header class="summary-header"><h4 translate="ediscovery.searchResults.reportSummary"></h4></header>
 				<section class="row">
 					<div class="col-md-2">
 						<p translate="ediscovery.searchResults.rooms"></p>

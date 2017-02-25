@@ -10,7 +10,7 @@ require('./_user-csv.scss');
   /* @ngInject */
   function UserCsvCtrl($interval, $modal, $q, $rootScope, $scope, $state, $timeout, $translate, $previousState,
     Analytics, Authinfo, Config, CsvDownloadService, FeatureToggleService, HuronCustomer, LogMetricsService, NAME_DELIMITER,
-    Notification, Orgservice, TelephoneNumberService, UserCsvService, Userservice, ResourceGroupService, USSService) {
+    Notification, Orgservice, TelephoneNumberService, UserCsvService, Userservice, ResourceGroupService, USSService, DirSyncService) {
     // variables
     var vm = this;
     vm.licenseUnavailable = false;
@@ -42,10 +42,13 @@ require('./_user-csv.scss');
       Notification.errorResponse(response, 'firstTimeWizard.downloadHeadersError');
     });
 
-    vm.isDirSyncEnabled = false;
-    FeatureToggleService.supportsDirSync().then(function (enabled) {
-      vm.isDirSyncEnabled = enabled;
-    });
+    vm.isDirSyncEnabled = DirSyncService.isDirSyncEnabled();
+    if (DirSyncService.requiresRefresh()) {
+      DirSyncService.refreshStatus().then(function () {
+        vm.isDirSyncEnabled = DirSyncService.isDirSyncEnabled();
+      });
+    }
+
     FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup).then(function (enabled) {
       vm.hasResourceGroupFeatureToggle = enabled;
     });

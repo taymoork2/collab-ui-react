@@ -1,9 +1,10 @@
 <script type="text/ng-template" id="userTemplate.html">
   <div class="hunt-member-name" ng-if="match.label.displayUser">
-    <span ng-if="match.label.user.firstName !== null" ng-bind-html="match.label.user.firstName | typeaheadHighlight:query"></span>&nbsp;
-    <span ng-if="match.label.user.lastName !== null" ng-bind-html="match.label.user.lastName | typeaheadHighlight:query"></span>
-    <span ng-if="match.label.user.firstName !== null || match.label.user.lastName !== null" ng-bind-html="' (' + match.label.user.userName + ')' | typeaheadHighlight:query"></span>
-    <span ng-if="match.label.user.firstName === null && match.label.user.lastName === null" ng-bind-html="match.label.user.userName | typeaheadHighlight:query"></span>
+    <span ng-if="match.label.user.displayName " ng-bind-html="match.label.user.displayName | typeaheadHighlight:query"></span>
+    <span ng-if="match.label.user.firstName" ng-bind-html="match.label.user.firstName | typeaheadHighlight:query">&nbsp;</span>
+    <span ng-if="match.label.user.lastName" ng-bind-html="match.label.user.lastName | typeaheadHighlight:query"></span>
+    <span ng-if="match.label.user.userName && match.label.user.firstName || match.label.user.lastName" ng-bind-html="' (' + match.label.user.userName + ')' | typeaheadHighlight:query"></span>
+    <span ng-if="match.label.user.userName && !match.label.user.firstName && !match.label.user.lastName" ng-bind-html="match.label.user.userName | typeaheadHighlight:query"></span>
   </div>
   <a class="hunt-member-line">
     <span

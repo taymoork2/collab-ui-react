@@ -12,10 +12,11 @@ describe('Hunt Group EditCtrl Controller', function () {
   var pilotNumbers = getJSONFixture('huron/json/features/edit/pilotNumbers.json');
   var GetMember1Url = new RegExp(".*/api/v2/customers/1/users/ba6c9d76-bed9-413f-a373-054a40df7095.*");
   var GetMember2Url = new RegExp(".*/api/v2/customers/1/users/5dea2d85-7f23-4392-a1bc-360b8a74a487.*");
-  var GetMemberListUrl = new RegExp(".*/api/v2/customers/1/users?.*");
+  var GetMemberListUrl = new RegExp(".*/api/v2/customers/1/members?.*");
   var GetFallbackNumbersUrl = new RegExp(".*/api/v2/customers/1/numbers.*");
   var user1 = getJSONFixture('huron/json/features/huntGroup/member1.json');
   var user2 = getJSONFixture('huron/json/features/huntGroup/member2.json');
+  var member1 = getJSONFixture('huron/json/features/huntGroup/member3.json');
   var member1ResponseHandler, member2ResponseHandler;
   var members = {
     "users": [user1, user2],
@@ -65,6 +66,7 @@ describe('Hunt Group EditCtrl Controller', function () {
     spyOn(HuntGroupService, 'getDetails').and.returnValue($q.resolve(hgFeature));
     spyOn(HuntGroupService, 'getAllUnassignedPilotNumbers').and.returnValue($q.resolve(pilotNumbers));
     spyOn(HuntGroupFallbackDataService, 'isVoicemailDisabled').and.returnValue($q.defer().promise);
+    spyOn(HuntGroupMemberDataService, 'fetchHuntMembers');
     member1ResponseHandler = $httpBackend.whenGET(GetMember1Url).respond(200, user1);
     member2ResponseHandler = $httpBackend.whenGET(GetMember2Url).respond(200, user2);
 
@@ -190,8 +192,8 @@ describe('Hunt Group EditCtrl Controller', function () {
     $scope.$apply();
     $httpBackend.verifyNoOutstandingRequest(); // No request made.
 
+    HuntGroupMemberDataService.fetchHuntMembers.and.returnValue(member1);
     hgEditCtrl.fetchHuntMembers("mem");
-    $httpBackend.flush();
   });
 
   it('on trying to change fallback member, is able to fetch the members from member data service', function () {
@@ -200,8 +202,8 @@ describe('Hunt Group EditCtrl Controller', function () {
     $scope.$apply();
     $httpBackend.verifyNoOutstandingRequest(); // No request made.
 
+    HuntGroupMemberDataService.fetchHuntMembers.and.returnValue(member1);
     hgEditCtrl.fetchFallbackDestination("mem");
-    $httpBackend.flush();
   });
 
   it('disables the save button when it fines the vm.form.invalid is true', function () {

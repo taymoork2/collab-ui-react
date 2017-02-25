@@ -158,7 +158,7 @@ exports.vendorImages = {
 };
 
 exports.dependencies = [{
-  test: require.resolve('jquery'),
+  test: /jquery.js$/,
   use: [
     {
       loader: 'expose-loader',

@@ -1566,13 +1566,21 @@
           .then(setupVoiceService)
           .then(saveForm)
           .catch(_.noop)
-          .then(processErrors)
-          .catch(function (response) {
-            return $q.reject(response);
-          });
+          .then(processErrors);
       }
 
-      if (vm.firstTimeSetup) {
+      // This is ported as-is from an incorrect implementation in wizardDirective
+      // TODO refactor whatever this is trying to do
+      if (vm.firstTimeSetup && vm.showTimezoneAndVoicemail) {
+        return ModalService.open({
+          title: $translate.instant('common.warning'),
+          message: $translate.instant('serviceSetupModal.saveCallSettingsExtensionLengthAllowed'),
+          close: $translate.instant('common.continue'),
+          dismiss: $translate.instant('common.cancel'),
+          btnType: 'negative',
+        })
+          .result.then(saveProcess);
+      } else if (vm.firstTimeSetup) {
         return saveProcess();
       } else if (vm.showTimezoneAndVoicemail) {
         return ModalService.open({
@@ -1582,10 +1590,7 @@
           close: $translate.instant('common.yes'),
           dismiss: $translate.instant('common.no'),
         })
-          .result.then(saveProcess)
-          .catch(function (errors) {
-            return $q.reject(errors);
-          });
+          .result.then(saveProcess);
       }
     }
 

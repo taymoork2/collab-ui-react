@@ -14,6 +14,8 @@
     var MAX_CARRIER_CNT = 50;
     var pstnTokenLimit = 10;
     var SELECT = '';
+    var UNITED_STATES = 'US';
+    var CANADA = 'CA';
 
     vm.parentTrialData = $scope.$parent.trialData;
     vm.trialData = TrialPstnService.getData();
@@ -34,6 +36,7 @@
     vm._getCarriers = _getCarriers;
     vm.onProviderChange = onProviderChange;
     vm.onProviderReady = onProviderReady;
+    vm.location = '';
 
     vm.pstn = {
       stateOptions: [],
@@ -155,9 +158,7 @@
         vm.ftHuronSupportThinktel = results;
       });
 
-      PstnSetupStatesService.getStateProvinces().then(function (states) {
-        vm.pstn.stateOptions = states;
-      });
+      initLocations();
 
       Analytics.trackTrialSteps(Analytics.eventNames.ENTER_SCREEN, vm.parentTrialData);
       if (_.has(vm.trialData, 'details.pstnNumberInfo.state.abbreviation')) {
@@ -181,6 +182,24 @@
       }, 100);
     }
 
+    function initLocations() {
+      switch (vm.trialData.details.countryCode) {
+        case CANADA:
+          vm.location = $translate.instant('pstnSetup.province');
+          PstnSetupStatesService.getProvinces().then(loadLocations);
+          break;
+        case UNITED_STATES:
+        default:
+          vm.location = $translate.instant('pstnSetup.state');
+          PstnSetupStatesService.getStates().then(loadLocations);
+          break;
+      }
+    }
+
+    function loadLocations(locations) {
+      vm.pstn.stateOptions = locations.data;
+    }
+
     function onProviderChange() {
       vm.trialData.details.pstnProvider = PstnSetup.getProvider();
       vm.providerImplementation = vm.trialData.details.pstnProvider.apiImplementation;
@@ -190,8 +209,9 @@
 
     function onProviderReady() {
       if (PstnSetup.getCarriers().length === 1) {
-        vm.trialData.details.pstnProvider = PstnSetup.getCarriers()[0];
-        vm.providerImplementation = vm.trialData.details.pstnProvider.apiImplementation;
+        PstnSetup.getCarriers()[0].selected = true;
+        PstnSetup.setProvider(PstnSetup.getCarriers()[0]);
+        onProviderChange();
       } else {
         PstnSetup.getCarriers().forEach(function (pstnCarrier) {
           if (pstnCarrier.selected) {

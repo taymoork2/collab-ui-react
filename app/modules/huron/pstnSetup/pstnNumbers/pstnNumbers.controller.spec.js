@@ -129,7 +129,8 @@ describe('Controller: PstnNumbersCtrl', function () {
     spyOn(PstnSetup, 'getServiceAddress').and.returnValue(serviceAddress);
     spyOn(Notification, 'error');
     spyOn($state, 'go');
-    spyOn(PstnSetupStatesService, 'getStateProvinces').and.returnValue($q.resolve(states));
+    spyOn(PstnSetupStatesService, 'getProvinces').and.returnValue($q.resolve(states));
+    spyOn(PstnSetupStatesService, 'getStates').and.returnValue($q.resolve(states));
     spyOn($translate, 'instant').and.callThrough();
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
 

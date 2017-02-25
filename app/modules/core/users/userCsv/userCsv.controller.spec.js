@@ -14,7 +14,7 @@ describe('userCsv.controller', function () {
 
     this.injectDependencies('$controller', '$interval', '$modal', '$previousState', '$q', '$rootScope',
       '$scope', '$state', '$timeout', 'Analytics', 'Authinfo', 'CsvDownloadService', 'FeatureToggleService',
-      'HuronCustomer', 'Notification', 'Orgservice', 'ResourceGroupService', 'UserCsvService', 'Userservice', 'USSService');
+      'HuronCustomer', 'Notification', 'Orgservice', 'ResourceGroupService', 'UserCsvService', 'Userservice', 'USSService', 'DirSyncService');
 
     initFixtures.apply(this);
     initMocks.apply(this);
@@ -31,6 +31,9 @@ describe('userCsv.controller', function () {
       result: this.modalDefer.promise,
     });
 
+    spyOn(this.DirSyncService, 'requiresRefresh').and.returnValue(false);
+    spyOn(this.DirSyncService, 'refreshStatus').and.returnValue(this.$q.resolve());
+
     spyOn(this.Orgservice, 'getHybridServiceAcknowledged').and.returnValue(this.$q.resolve(this.fusionServices));
     spyOn(this.CsvDownloadService, 'getCsv').and.callFake(function (type) {
       if (type === 'headers') {
@@ -45,7 +48,6 @@ describe('userCsv.controller', function () {
     spyOn(this.Orgservice, 'getUnlicensedUsers').and.callThrough();
 
     spyOn(this.FeatureToggleService, 'getFeaturesForUser').and.returnValue(this.getMyFeatureToggles);
-    spyOn(this.FeatureToggleService, 'supportsDirSync').and.returnValue(this.$q.resolve(false));
     spyOn(this.FeatureToggleService, 'supports').and.callFake(function () {
       return _this.$q.resolve(false);
     });

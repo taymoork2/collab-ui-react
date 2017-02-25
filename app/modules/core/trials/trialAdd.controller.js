@@ -885,6 +885,7 @@
 
     function setDefaultCountry(country) {
       vm.details.country = country;
+      TrialPstnService.setCountryCode(country);
     }
   }
 })();

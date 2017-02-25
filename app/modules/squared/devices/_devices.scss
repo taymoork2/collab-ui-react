@@ -148,6 +148,16 @@ sq-places-page-overview, .sq-devices-page-overview {
   .issue-link {
     color: $color-primary-base;
   }
+
+  .warningFaxes {
+    font-style: italic;
+    color: $gray-light-1;
+  }
+  .updatingT38 {
+    display: block;
+    margin-top: -4em;
+    margin-left: 4em;
+  }
 }
 
 .sq-devices-emergency-services {

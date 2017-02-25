@@ -28,12 +28,15 @@
       spyOn(TOSService, 'hasAcceptedTOS').and.returnValue($q.resolve(true));
       spyOn(TOSService, 'openTOSModal').and.returnValue();
       spyOn(TrackingId, 'clear').and.callThrough();
-      spyOn($state, 'go').and.callThrough();
+      spyOn($state, 'go');
     }));
 
     function goToState(state) {
-      $state.go(state);
+      $rootScope.$apply();
       $state.go.calls.reset();
+      $state.transitionTo(state, {}, {
+        location: false,
+      });
       $rootScope.$apply();
     }
 
@@ -100,26 +103,34 @@
           Authinfo.isInitialized.and.returnValue(false);
         });
 
-        it('should not redirect on login if getHealthStatus has error', function () {
-          goToState('login');
+        it('should not redirect on unauthenticated state if getHealthStatus has error', function () {
+          goToState('login');  // unauthenticated
           expect($state.go).not.toHaveBeenCalledWith('server-maintenance');
+          // should not redirect to login since requested state doesn't require authentication
+          expect($state.go).not.toHaveBeenCalledWith('login');
         });
 
-        it('should redirect on authenticated state if getHealthStatus has error', function () {
-          goToState('overview');
+        it('should redirect to server-maintenance on authenticated state if getHealthStatus has error', function () {
+          goToState('overview'); // authenticated
           expect($state.go).toHaveBeenCalledWith('server-maintenance');
+          // should not have redirected to login
+          expect($state.go).not.toHaveBeenCalledWith('login');
         });
 
-        it('should not redirect if getHealthStatus is online', function () {
+        it('should redirect to login if getHealthStatus is online', function () {
           HealthService.getHealthStatus.and.returnValue($q.resolve('online'));
-          goToState('overview');
+          goToState('overview'); // authenticated
           expect($state.go).not.toHaveBeenCalledWith('server-maintenance');
+          // should have redirected to login
+          expect($state.go).toHaveBeenCalledWith('login');
         });
 
-        it('should not redirect if getHealthStatus is offline', function () {
+        it('should redirect to login if getHealthStatus is offline', function () {
           HealthService.getHealthStatus.and.returnValue($q.resolve('offline'));
-          goToState('overview');
+          goToState('overview'); // authenticated
           expect($state.go).not.toHaveBeenCalledWith('server-maintenance');
+          // should have redirected to login
+          expect($state.go).toHaveBeenCalledWith('login');
         });
       });
 

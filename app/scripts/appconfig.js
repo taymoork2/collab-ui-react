@@ -650,6 +650,9 @@
             controller: 'SettingsCtrl',
             controllerAs: 'settingsCtrl',
             parent: 'main',
+            params: {
+              showSettings: null,
+            },
           })
           .state('authentication.enable3rdPartyAuth', {
             parent: 'modal',
@@ -729,6 +732,11 @@
                 controllerAs: 'mcpSubscription',
                 controller: 'MySubscriptionCtrl',
                 templateUrl: 'modules/core/myCompany/mySubscriptions/mySubscription.tpl.html',
+              },
+              'headerRight': {
+                controllerAs: 'subscriptionHeader',
+                controller: 'SubscriptionHeaderCtrl',
+                templateUrl: 'modules/core/myCompany/mySubscriptions/subscriptionHeader.tpl.html',
               },
             },
           })
@@ -874,6 +882,8 @@
           ///////////////////////////
           .state('users.manage.picker', {
             controller: 'UserManageModalPickerController',
+            template: '<div class="center-spinner">' +
+                '<i class="icon icon-spinner icon-2x"></i></div>',
           })
           .state('users.manage', {
             abstract: true,
@@ -2149,6 +2159,7 @@
               currentTab: {},
               currentSubTab: '',
               currentStep: '',
+              numberOfSteps: undefined,
               onlyShowSingleTab: false,
             },
             data: {

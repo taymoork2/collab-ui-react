@@ -1,5 +1,5 @@
-<bmmp-subscription-upgrade-button
+<bmmp-subscription-upgrade-button ng-if="subscriptionHeader.numSubscriptions === 1"
   class="btn btn--primary"
-  ng-if="subscriptionHeader.isOnline"
-  subscription-id="subscriptionHeader.productInstanceId">
+  bmmp-attr="subscriptionHeader.bmmpAttr"
+  widget-location="navigation-bar">
 </bmmp-subscription-upgrade-button>

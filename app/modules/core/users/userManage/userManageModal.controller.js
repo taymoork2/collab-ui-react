@@ -32,7 +32,7 @@ require('./_user-manage.scss');
   /////////////////////////
 
   /* @ngInject */
-  function UserManageModalPickerController($state, FeatureToggleService) {
+  function UserManageModalPickerController($state, $q, DirSyncService) {
     var vm = this;
 
     vm.onInit = onInit;
@@ -41,17 +41,17 @@ require('./_user-manage.scss');
 
     //////////////////
     function onInit() {
-      FeatureToggleService.supportsDirSync()
-        .then(function (dirSyncEnabled) {
-          if (dirSyncEnabled) {
-            $state.go('users.manage.activedir');
-          } else {
-            $state.go('users.manage.org');
-          }
-        });
+      var promise = (DirSyncService.requiresRefresh() ? DirSyncService.refreshStatus() : $q.resolve());
+      promise.then(function () {
+        if (DirSyncService.isDirSyncEnabled()) {
+          $state.go('users.manage.activedir');
+        } else {
+          $state.go('users.manage.org');
+        }
+      });
     }
 
   }
-}
 
+}
 )();
