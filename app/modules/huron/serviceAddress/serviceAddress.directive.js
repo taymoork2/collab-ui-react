@@ -24,12 +24,19 @@
   }
 
   /* @ngInject */
-  function ServiceAddressCtrl($scope, PstnSetupStatesService) {
-    PstnSetupStatesService.getStateProvinces().then(function (states) {
-      $scope.stateOptions = _.map(states, function (state) {
-        return state.name;
-      });
+  function ServiceAddressCtrl($scope, PstnSetupStatesService, PstnSetup) {
+    PstnSetupStatesService.getLocation(PstnSetup.getCountryCode()).then(function (location) {
+      $scope.areaName = location.type;
+      $scope.stateOptions = location.areas;
     });
+    $scope.locationModel = {};
+    $scope.onLocationSelect = function () {
+      $scope.address.state = $scope.locationModel.abbreviation;
+    };
+    $scope.onModify = function () {
+      $scope.locationModel = {};
+      $scope.modify();
+    };
   }
 
   function isolateForm() {

@@ -58,8 +58,6 @@
     var NXX_EMPTY = '--';
     var MIN_BLOCK_QUANTITY = 2;
     var MAX_BLOCK_QUANTITY = 100;
-    var UNITED_STATES = 'US';
-    var CANADA = 'CA';
 
     vm.addToCart = addToCart;
     vm.addAdvancedOrder = addAdvancedOrder;
@@ -76,7 +74,7 @@
     vm.formatTelephoneNumber = formatTelephoneNumber;
     vm.showOrderQuantity = showOrderQuantity;
     vm.searchResults = [];
-    vm.location = '';
+    vm.locationLabel = '';
 
     vm.model.pstn.paginateOptions = {
       currentPage: 0,
@@ -119,34 +117,20 @@
     init();
 
     function init() {
-      var provider = PstnSetup.getProvider();
-      if (provider) {
-        switch (provider.country) {
-          case CANADA:
-            vm.location = $translate.instant('pstnSetup.province');
-            PstnSetupStatesService.getProvinces().then(loadLocations);
-            break;
-          case UNITED_STATES:
-          default:
-            vm.location = $translate.instant('pstnSetup.state');
-            PstnSetupStatesService.getStates().then(loadLocations);
-            break;
+      PstnSetupStatesService.getLocation(PstnSetup.getCountryCode()).then(function (location) {
+        vm.model.pstn.quantity = null;
+        vm.locationLabel = location.type;
+        vm.model.pstn.states = location.areas;
+        if (_.get(PstnSetup.getServiceAddress(), 'state')) {
+          vm.model.pstn.state = {
+            abbreviation: PstnSetup.getServiceAddress().state,
+            name: _.result(_.find(vm.model.pstn.states, {
+              'abbreviation': PstnSetup.getServiceAddress().state,
+            }), 'name'),
+          };
+          getStateInventory();
         }
-      }
-    }
-
-    function loadLocations(locations) {
-      vm.model.pstn.quantity = null;
-      vm.model.pstn.states = locations.data;
-      if (_.get(PstnSetup.getServiceAddress(), 'state')) {
-        vm.model.pstn.state = {
-          abbreviation: PstnSetup.getServiceAddress().state,
-          name: _.result(_.find(locations, {
-            'abbreviation': PstnSetup.getServiceAddress().state,
-          }), 'name'),
-        };
-        getStateInventory();
-      }
+      });
     }
 
     vm.tollFreeFields = [{

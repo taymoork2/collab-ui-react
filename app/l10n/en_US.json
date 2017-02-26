@@ -3894,7 +3894,7 @@
       "title": "Trial Added"
     },
     "trialSuccess": "Your trial is ready",
-    "nextStepPrompt": "Do you want to setup the services for the customer?",
+    "nextStepPrompt": "Do you want to set up the services for the customer?",
     "setupLater": "No, thanks",
     "setupNow": "Yes, setup the services",
     "skip": "Skip",

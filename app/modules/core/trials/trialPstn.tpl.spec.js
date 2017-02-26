@@ -5,10 +5,13 @@ describe('Template: trialPstn.tpl.spec.js:', function () {
   var view;
   var skipBtn, backBtn;
 
-  var states = [{
-    name: 'Texas',
-    abbreviation: 'TX',
-  }];
+  var location = {
+    type: 'State',
+    areas: [{
+      name: 'Texas',
+      abbreviation: 'TX',
+    }],
+  };
 
   afterEach(function () {
     if (view) {
@@ -16,10 +19,6 @@ describe('Template: trialPstn.tpl.spec.js:', function () {
     }
     $q = $compile = $controller = $scope = $templateCache = Analytics = Orgservice = PstnSetupStatesService = FeatureToggleService = PstnSetupService = undefined;
     view = skipBtn = backBtn = undefined;
-  });
-
-  afterAll(function () {
-    states = undefined;
   });
 
   beforeEach(angular.mock.module('Huron'));
@@ -39,8 +38,7 @@ describe('Template: trialPstn.tpl.spec.js:', function () {
     Analytics = _Analytics_;
     PstnSetupService = _PstnSetupService_;
 
-    spyOn(PstnSetupStatesService, 'getStates').and.returnValue($q.resolve(states));
-    spyOn(PstnSetupStatesService, 'getProvinces').and.returnValue($q.resolve(states));
+    spyOn(PstnSetupStatesService, 'getLocation').and.returnValue($q.resolve(location));
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
     spyOn(Analytics, 'trackTrialSteps');
     spyOn(PstnSetupService, 'getResellerV2').and.returnValue($q.resolve());

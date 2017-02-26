@@ -5,7 +5,7 @@
     .controller('PstnProvidersCtrl', PstnProvidersCtrl);
 
   /* @ngInject */
-  function PstnProvidersCtrl($q, $translate, $state, PstnSetup, PstnSetupService, PstnServiceAddressService, Notification, FeatureToggleService) {
+  function PstnProvidersCtrl($q, $translate, $state, PstnSetup, PstnSetupService, PstnServiceAddressService, Orgservice, Notification, FeatureToggleService) {
     var vm = this;
     vm.providers = [];
     vm.loading = true;
@@ -205,13 +205,19 @@
     }
 
     function initPstnCustomer() {
-      return PstnSetupService.getCustomerV2(PstnSetup.getCustomerId())
-        .then(function () {
-          PstnSetup.setCustomerExists(true);
-        })
-        .finally(function () {
-          vm.enableCarriers = true;
-        });
+       //Get and save organization/customer information
+      Orgservice.getOrg(function (data) {
+        if (data.countryCode) {
+          PstnSetup.setCountryCode(data.countryCode);
+          PstnSetupService.getCustomerV2(PstnSetup.getCustomerId())
+          .then(function () {
+            PstnSetup.setCustomerExists(true);
+          })
+          .finally(function () {
+            vm.enableCarriers = true;
+          });
+        }
+      }, PstnSetup.getCustomerId());
     }
 
     function onProviderReady() {
