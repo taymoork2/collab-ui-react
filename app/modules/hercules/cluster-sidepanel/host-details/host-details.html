@@ -43,6 +43,11 @@
           <span translate="hercules.connectors.deregisterNode"></span>
         </a>
       </li>
+      <li ng-if="hostDetailsCtrl.showDeleteNodeAction()">
+        <a ng-click="hostDetailsCtrl.deleteExpresswayOrHDSNode()">
+          <span translate="hercules.connectors.removeNode"></span>
+        </a>
+      </li>
     </ul>
   </cs-sp-section>
 
