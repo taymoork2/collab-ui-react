@@ -207,7 +207,7 @@
     "tslint": "^4.4.2",
     "tslint-eslint-rules": "^3.2.3",
     "tslint-loader": "^3.3.0",
-    "typescript": "~2.1.0",
+    "typescript": "~2.2.1",
     "typings": "^2.1.0",
     "unparse-args": "^1.1.0",
     "uuid": "^2.0.2",
