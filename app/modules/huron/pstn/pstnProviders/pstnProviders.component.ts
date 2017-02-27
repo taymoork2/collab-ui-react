@@ -104,7 +104,7 @@ export class PstnProvidersCtrl implements ng.IComponentController {
       });
     } else {
       //Get Reseller Carriers
-      this.PstnSetupService.listResellerCarriers().then(carriers => {
+      this.PstnSetupService.listResellerCarriersV2().then(carriers => {
         if (_.isArray(carriers) && carriers.length > 0) {
           carriers.forEach(carrier => {
             this.addCarrier(<IPstnCarrierGet> carrier);
@@ -122,7 +122,7 @@ export class PstnProvidersCtrl implements ng.IComponentController {
   }
 
   private getCarriersNetworkDefault() {
-    this.PstnSetupService.listDefaultCarriers().then ( carriers => {
+    this.PstnSetupService.listDefaultCarriersV2().then ( carriers => {
       carriers.forEach(carrier => {
         this.addCarrier(<IPstnCarrierGet> carrier);
       });
