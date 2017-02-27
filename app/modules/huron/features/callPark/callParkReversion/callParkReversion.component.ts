@@ -32,12 +32,12 @@ class CallParkReversionCtrl implements ng.IComponentController {
   ) {}
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
-    let callParkChanges = changes['fallbackDestination'];
-    if (callParkChanges && callParkChanges.currentValue) {
+    const { fallbackDestination } = changes;
+    if (fallbackDestination && fallbackDestination.currentValue) {
       if (this.cpReversionForm) {
         this.cpReversionForm.$setValidity('', true, this.cpReversionForm);
       }
-      this.processCallParkReversionChanges(callParkChanges);
+      this.processCallParkReversionChanges(fallbackDestination);
     }
   }
 
