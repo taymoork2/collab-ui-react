@@ -275,6 +275,20 @@
       });
     }
 
+    function getMeetingLocationCardData(time) {
+      vm.meetingLocationCardUrl = '/meeting_location_count';
+      var returnData = [];
+      return $http.get(vm.urlBase + getQuerys(vm.meetingLocationCardUrl, vm.allClusters, time)).then(function (response) {
+        if (!_.isUndefined(response) && !_.isUndefined(response.data)) {
+          return response;
+        } else {
+          return returnData;
+        }
+      }, function (error) {
+        return returnErrorCheck(error, $translate.instant('mediaFusion.metrics.overallTotalNumberOfCallsError'), returnData);
+      });
+    }
+
     function returnErrorCheck(error, message, returnItem) {
       if (error.status === 401 || error.status === 403) {
         Notification.error('reportsPage.unauthorizedError');
@@ -298,6 +312,7 @@
       getClientTypeCardData: getClientTypeCardData,
       getMeetingLocationData: getMeetingLocationData,
       getNumberOfParticipantData: getNumberOfParticipantData,
+      getMeetingLocationCardData: getMeetingLocationCardData,
     };
 
   }

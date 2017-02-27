@@ -107,6 +107,33 @@
       animation: graphAxisFade 2s ease-in-out 1 forwards;
     }
   }
+  .cardDonutDiv {
+    width   : 100%;
+    height    : 140px;
+    font-size : 11px;
+  }
+  .no-data-warning-card {
+    color: #f7c100;
+    padding-right: rem-calc(8);
+  }
+  .no-data-center-card {
+    position: absolute;
+    z-index: 100;
+    height: 0;
+    left: 0;
+    top: rem-calc(90);
+    width: 100%;
+    .no-data-card {
+      color: $gray-darkest;
+      font-family: $brand-font-cisco-TT-Light;
+      font-size: rem-calc(10);
+      text-align: center;
+      margin: 0;
+    }
+  }
+  .adoption-card {
+    width: 33.3333% !important;
+  }
 }
 .availabilityCursor{
   .amcharts-category-axis .amcharts-axis-label {

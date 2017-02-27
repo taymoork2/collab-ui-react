@@ -8,12 +8,12 @@
           <i class="icon icon-chevron-down"></i>
         </div>
         <ul ng-class="{'dropdown-menu dropdown-primary' : breakpoint === 'screen-xs' || breakpoint === 'screen-sm' }">
-          <li class="filter" ng-class="{'active' : nav.displayAdoption}" ng-click="nav.changeTabs(true, false);">
+          <li id="adoptionReportsLi" class="filter" ng-class="{'active' : nav.displayAdoption}" ng-click="nav.changeTabs(true, false);">
             <a id="adoptionReports">
               <span class="name" translate="mediaFusion.report.adoption-title"></span>
             </a>
           </li>
-          <li class="filter" ng-class="{'active' : nav.displayResources}" ng-click="nav.changeTabs(false, true);">
+          <li id="resourceReportsLi" class="filter" ng-class="{'active' : nav.displayResources}" ng-click="nav.changeTabs(false, true);">
             <a id="resourceReports">
               <span class="name" translate="mediaFusion.report.resources-title"></span>
             </a>
@@ -34,14 +34,14 @@
         <uc-media-report-card parentcntrl="nav" headername="nav.hosted_participants_heading" value="nav.onprem" headercolor="'green'"></uc-media-report-card>
         <uc-media-report-card parentcntrl="nav" headername="nav.cluster_availability_heading" value="nav.clusterAvailability" headercolor="'blue'" tooltip-options="nav.availabilityTooltipOptions"></uc-media-report-card>
         <uc-media-utilization parentcntrl="nav"></uc-media-utilization>
-        <uc-number-of-participant parentcntrl="nav"></uc-number-of-participant>
+        <uc-number-of-participant parentcntrl="nav" ng-class="{'no-display': nav.clusterSelected !== nav.allClusters}"></uc-number-of-participant>
         <uc-media-participant-distribution parentcntrl="nav"></uc-media-participant-distribution>
         <uc-media-availability parentcntrl="nav"></uc-media-availability>
       </cs-card-layout>
       <cs-card-layout ng-if="nav.displayAdoption">
-        <uc-media-report-card parentcntrl="nav" headername="nav.total_meetings" value="0" headercolor="'grey'"></uc-media-report-card>
-        <uc-media-report-card parentcntrl="nav" headername="nav.meeting_premises" value="0" headercolor="'orange'"></uc-media-report-card>
-        <uc-media-report-card parentcntrl="nav" headername="nav.client_types" value="nav.clientTypeCount" headercolor="'green'"></uc-media-report-card>
+        <uc-media-report-card parentcntrl="nav" headername="nav.total_meetings" value="nav.tot_number_meetings" headercolor="'grey'" donut-options="'none'" is-adoption="'true'"></uc-media-report-card>
+        <uc-media-report-card parentcntrl="nav" headername="nav.meeting_premises" headercolor="'orange'" donut-options="nav.numberOfMeetsOnPremisesDonutOptions" is-adoption="'true'"></uc-media-report-card>
+        <uc-media-report-card parentcntrl="nav" headername="nav.client_types" headercolor="'green'" donut-options="nav.clientTypesDonutOptions" is-adoption="'true'"></uc-media-report-card>
         <uc-media-meeting-location parentcntrl="nav"></uc-media-meeting-location>
         <uc-media-client-type parentcntrl="nav"></uc-media-client-type>
       </cs-card-layout>
