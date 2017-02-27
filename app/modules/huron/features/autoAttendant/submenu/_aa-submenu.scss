@@ -45,12 +45,12 @@
     @include vr-spacing(pb, 0);
   }
 
-  .aa-sm-key-select,
   .aa-sm-action-select {
     @extend %aa-menu-select;
   }
 
   .aa-sm-key-select {
+    @include aa-menu-toggle-button(0, -0.5);
     @include aa-menu-key-button($color-primary-darker, 56);
   }
 
