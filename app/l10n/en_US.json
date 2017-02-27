@@ -2479,6 +2479,8 @@
         "moveToProduction": "Move to Production",
         "addTrialUsers": "Add Trial Users",
         "editTrialUsers": "Edit Users in Trial",
+        "confirmProdMoveDialogHeader": "Move to Production",
+        "confirmProdMoveDialogBody": "Are you sure you want to move to production ?",
         "hdsModeGetError": "Failed to get HDS mode: "
       },
       "addTrialUsers": {
@@ -2495,6 +2497,7 @@
         "modalHeading": "Edit Users",
         "emailNotificationsWatermark": "add new ...",
         "tooManyUsers": "<i class='icon icon-error'></i> Max number of users reached, delete existing users to add more.",
+        "invalidUsers": " not valid user(s) in this org won't be saved.",
         "modalDesc": "To remove a user click the X in the user's field and they will be removed from the Hybrid Data Security Service."
       },
       "page_title": "Hybrid Data Security Service",
