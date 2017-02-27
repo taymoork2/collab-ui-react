@@ -4361,7 +4361,6 @@
     "clipboardFallback": "Press cmd+c to copy the text below.",
     "emailSuccessTitle": "Email sent",
     "emailSuccess": "Activation code has been sent to {{address}}",
-    "emailErrorTitle": "Email not sent",
     "emailError": "Failed to send activation code to {{address}}",
     "clipboardSuccessTitle": "Copied to clipboard",
     "clipboardSuccess": "Activation code has been copied to the clipboard.",
