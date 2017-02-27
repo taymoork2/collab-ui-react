@@ -1,4 +1,5 @@
 import { Member, MemberService, USER_REAL_USER, USER_PLACE } from 'modules/huron/members';
+import { IMemberWithPicture } from 'modules/huron/features/pagingGroup';
 
 export interface IFeatureMemberPicture {
   memberUuid: string;
@@ -155,6 +156,14 @@ export class FeatureMemberService {
     return this.$http.get(domainMgmtUrl, {}).then((response) => {
       return _.get(response, 'data');
     });
+  }
+
+  public populateFeatureMemberInfo(memberWithPicture: IMemberWithPicture, user: any) {
+    memberWithPicture.member.firstName = this.getFirstNameFromUser(user);
+    memberWithPicture.member.lastName = this.getLastNameFromUser(user);
+    memberWithPicture.member.displayName = this.getDisplayNameFromUser(user);
+    memberWithPicture.member.userName = this.getUserNameFromUser(user);
+    memberWithPicture.picturePath = this.getUserPhoto(user);
   }
 
   public getMemberSuggestionsByLimit(hint: string, limit: number): ng.IPromise<Member[]> {
