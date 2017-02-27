@@ -7,7 +7,7 @@
 
   /* @ngInject */
 
-  function HuronSettingsCtrl($q, $scope, $state, $translate, Authinfo, CeService, CallerId, Config, DirectoryNumberService, DialPlanService, ExternalNumberService, FeatureToggleService, HuronCustomer, HuntGroupServiceV2, InternationalDialing, ModalService, Notification, PstnSetupService, ServiceSetup, TelephoneNumberService, ValidationService, VoicemailMessageAction, TerminusUserDeviceE911Service, PstnServiceAddressService, CustomerCosRestrictionServiceV2) {
+  function HuronSettingsCtrl($q, $scope, $state, $translate, Authinfo, CeService, CallerId, Config, DirectoryNumberService, DialPlanService, ExternalNumberService, FeatureToggleService, HuronCustomer, HuntGroupServiceV2, InternationalDialing, ModalService, Notification, PstnSetupService, ServiceSetup, TelephoneNumberService, ValidationService, VoicemailMessageAction, TerminusUserDeviceE911Service, PstnServiceAddressService, CustomerCosRestrictionServiceV2, CustomerDialPlanServiceV2) {
     var vm = this;
     vm.loading = true;
 
@@ -1608,6 +1608,16 @@
       return (length < range.length) ? range.slice(0, length) : _.padEnd(range, length, char);
     }
 
+    function loadPremiumNumbers() {
+      return CustomerDialPlanServiceV2.get({
+        customerId: Authinfo.getOrgId(),
+      }).$promise.then(function (dialPlan) {
+        vm.premiumNumbers = _.get(dialPlan, 'premiumNumbers', []).toString();
+      }).catch(function (error) {
+        Notification.errorResponse(error, 'serviceSetupModal.customerDialPlanDetailsGetError');
+      });
+    }
+
     function loadExternalNumbers() {
       return ExternalNumberService.refreshNumbers(Authinfo.getOrgId()).then(function () {
         vm.unassignedExternalNumbers = ExternalNumberService.getUnassignedNumbers();
@@ -2050,6 +2060,7 @@
       promises.push(loadServiceAddress());
       promises.push(loadExternalNumbers());
       promises.push(enableExtensionLengthModifiable());
+      promises.push(loadPremiumNumbers());
 
       $q.all(promises)
         .finally(function () {

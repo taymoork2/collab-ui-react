@@ -1411,7 +1411,7 @@
       "internationalTitle": "International Dialing",
       "internationalDesc": "Choose whether users are allowed to dial international numbers. Users and Places with Spark Call inherit this setting by default.",
       "premiumTitle": "Premium Dialing",
-      "premiumDesc": "Choose whether users are allowed to dial premium numbers. Premium includes numbers that are charged to dial in or out.",
+      "premiumDesc": "Choose whether users are allowed to dial numbers that are charged for dial in and dial out. These include numbers starting with {{premiumNumbers}}.",
       "neverAllow": "Never Allow",
       "alwaysAllow": "Always Allow",
       "orgSetting": "Organization Settings ({{state}})",
