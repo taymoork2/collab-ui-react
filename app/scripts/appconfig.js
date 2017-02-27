@@ -1152,9 +1152,20 @@
             },
           })
           .state('user-overview.communication.snr', {
-            template: '<div uc-single-number-reach></div>',
+            template: '<uc-snr owner-id="$resolve.ownerId" ></uc-snr>',
             data: {
               displayName: 'Single Number Reach',
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/snr'], done);
+              }),
+              ownerId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentUser, 'id');
+              },
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('user-overview.communication.snr').data.displayName = $translate.instant('singleNumberReachPanel.title');
+              },
             },
           })
           .state('user-overview.communication.speedDials', {
