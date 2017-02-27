@@ -282,14 +282,12 @@
           $translate.instant('generateActivationCodeModal.emailSuccessTitle')
         );
       };
-      var error = function () {
-        Notification.notify(
-          [$translate.instant('generateActivationCodeModal.emailError', {
+      var error = function (error) {
+        Notification.errorResponse(error,
+          'generateActivationCodeModal.emailError',
+          {
             'address': vm.selectedUser.email,
-          })],
-          'error',
-          $translate.instant('generateActivationCodeModal.emailErrorTitle')
-        );
+          });
       };
 
       if (vm.account.deviceType === 'huron' && vm.account.type === 'personal') {
