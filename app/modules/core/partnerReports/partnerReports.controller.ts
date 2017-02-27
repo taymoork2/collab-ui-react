@@ -14,6 +14,7 @@ import {
   IMediaQualityData,
   IPopulationData,
   IReportCard,
+  IReportCardTable,
   IReportsCustomer,
   ITimespan,
   ISecondaryReport,
@@ -181,7 +182,7 @@ class PartnerReportCtrl {
   };
 
   // endpoint report options
-  public endpointReportOptions: IReportCard = {
+  public endpointReportOptions: IReportCardTable = {
     animate: true,
     description: 'registeredEndpoints.description',
     headerTitle: 'registeredEndpoints.registeredEndpoints',

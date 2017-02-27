@@ -166,8 +166,9 @@ export class GraphService {
       }
 
       chart.valueAxes[0].maximum = 100;
-      if (data[0].percentage > data[0].overallPopulation && data[0].percentage > 100) {
-        chart.valueAxes[0].maximum = data[0].percentage;
+      let dataPercentage = data[0].percentage;
+      if (_.isNumber(dataPercentage) && dataPercentage > data[0].overallPopulation && dataPercentage > 100) {
+        chart.valueAxes[0].maximum = dataPercentage;
       } else if (data[0].overallPopulation > 100) {
         chart.valueAxes[0].maximum = data[0].overallPopulation;
       }
@@ -194,8 +195,9 @@ export class GraphService {
     valueAxes[0].minimum = 0;
     valueAxes[0].maximum = 100;
     valueAxes[0].unit = '%';
-    if (data[1].percentage > data[0].overallPopulation && data[1].percentage > 100) {
-      valueAxes[0].maximum = data[1].percentage;
+    let dataPercentage = data[1].percentage;
+    if (_.isNumber(dataPercentage) && dataPercentage > data[0].overallPopulation && dataPercentage > 100) {
+      valueAxes[0].maximum = dataPercentage;
     } else if (data[0].overallPopulation > 100) {
       valueAxes[0].maximum = data[0].overallPopulation;
     }
@@ -247,7 +249,7 @@ export class GraphService {
     if (data.length >= 1) {
       _.forEach(data, (item: IPopulationData) => {
         if (item.balloon) {
-          if ((item.percentage - item.overallPopulation) >= 0) {
+          if (_.isNumber(item.percentage) && (item.percentage - item.overallPopulation) >= 0) {
             item.color = this.chartColors.peopleLight;
           } else {
             item.color = this.chartColors.negativeBase;

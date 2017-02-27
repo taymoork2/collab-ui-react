@@ -13,12 +13,12 @@ export interface IDropdownBase {
 export interface IExportMenu {
   id: string;
   label: string;
-  click: Function | undefined;
+  click?: Function;
 }
 
 // time slider
 export interface ITimeSliderFunctions {
-  sliderUpdate: Function | undefined;
+  sliderUpdate?: Function;
   update: Function;
 }
 
@@ -39,7 +39,7 @@ export interface IFilterObject {
   id: string;
   label: string;
   selected: boolean;
-  toggle: Function | void;
+  toggle?: Function;
 }
 
 // Table information used by the report-card
@@ -51,8 +51,12 @@ export interface IReportCard {
   id: string;
   reportType: string;
   state: string;
-  table: IReportsTable | void;
+  table?: IReportsTable;
   titlePopover: string;
+}
+
+export interface IReportCardTable extends IReportCard {
+  table: IReportsTable;
 }
 
 export interface ISecondaryReport {
@@ -65,7 +69,7 @@ export interface ISecondaryReport {
   search: boolean;
   state: string;
   sortOptions: Array<IReportSortOption>;
-  table: IReportsTable | void;
+  table: IReportsTable;
   title: string;
 }
 
@@ -93,8 +97,8 @@ export interface IReportSortOption {
 }
 
 export interface IReportLabel {
-  class: string | undefined;
-  click: Function | undefined;
+  class?: string;
+  click?: Function;
   hidden: boolean;
   number: number | string;
   text: string;
@@ -109,7 +113,7 @@ export interface IReportTooltip {
 export interface IEndpointData {
   class: string;
   output: Array<string>;
-  splitClasses: string | void;
+  splitClasses?: string;
 }
 
 // Call Metrics Interfaces
@@ -165,10 +169,10 @@ export interface IActiveTableData extends IActiveTableBase {
 }
 
 export interface IPopulationData {
-  customerName: string | void;
-  percentage: number | void;
+  customerName?: string;
+  percentage?: number;
   overallPopulation: number;
-  color: string | void;
+  color?: string;
   balloon: boolean;
   labelColorField: string;
 }
@@ -192,7 +196,7 @@ export interface IIntervalQuery {
 
 export interface ITypeQuery {
   name: string;
-  extension: string | undefined;
+  extension?: string;
   type: string;
   cache: boolean;
 }
@@ -212,5 +216,5 @@ export interface ICustomerIntervalQuery {
   spanCount: number;
   spanType: string;
   cache: boolean;
-  customerView: boolean | undefined;
+  customerView?: boolean;
 }
