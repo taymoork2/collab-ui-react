@@ -196,7 +196,10 @@
         controllerAs: 'addTrialUsersCtrl',
         templateUrl: 'modules/hds/settings/addtrialusers_modal/add-trial-users.html',
         type: 'small',
-      });
+      })
+        .result.then(function () {
+          getTrialUsersInfo();
+        });
     }
 
     function openEditTrialUsersModal() {
@@ -205,7 +208,10 @@
         controllerAs: 'editTrialUsersCtrl',
         templateUrl: 'modules/hds/settings/edittrialusers_modal/edit-trial-users.html',
         type: 'small',
-      });
+      })
+        .result.then(function () {
+          getTrialUsersInfo();
+        });
     }
   }
 }());
