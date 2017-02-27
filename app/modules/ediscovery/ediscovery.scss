@@ -163,6 +163,10 @@
           max-width: 100%;
         }
 
+        .cs-datepicker {
+          display: block;
+        }
+
         .search-text {
           float: left;
         }
@@ -179,7 +183,7 @@
           padding-right: 0.5rem;
         }
 
-        .searchButton {
+        .search-button {
           float: left;
           width: 100px;
         }
@@ -212,10 +216,6 @@
 
         @media only screen and (max-width: 640px) {
           max-width: 90%;
-        }
-
-        .searchInputForm {
-          margin-bottom: 0;
         }
 
         input {
@@ -353,9 +353,13 @@
 
         .report-parameters {
           padding: 12px 32px;
+
+          .results-spacing {
+            margin-top: 16px;
+          }
         }
 
-        .summaryHeader {
+        .summary-header {
           padding-left: 30px;
         }
 

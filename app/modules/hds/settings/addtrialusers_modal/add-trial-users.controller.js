@@ -15,6 +15,7 @@
     vm.addUser = addUser;
     vm.removeUser = removeUser;
     vm.saveTrialUsers = saveTrialUsers;
+    var localizedRefreshOtherServices = $translate.instant('hds.resources.addTrialUsers.refreshOtherServices');
 
     init();
 
@@ -73,6 +74,13 @@
               .then(function () {
                 vm.savingEmail = false;
                 Notification.success('hercules.settings.emailNotificationsSavingSuccess');
+                // refresh encryption server for the updated trial users
+                HDSService.refreshEncryptionServerForTrialUsers(vm.trialUserGroupId)
+                  .then(function () {
+                    Notification.success(localizedRefreshOtherServices);
+                  }).catch(function (error) {
+                    Notification.errorWithTrackingId(error, localizedRefreshOtherServices);
+                  });
               }).catch(function (error) {
                 Notification.errorWithTrackingId(error, 'hercules.settings.emailNotificationsSavingError');
               });

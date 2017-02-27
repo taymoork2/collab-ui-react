@@ -1,10 +1,11 @@
+
 'use strict';
 
 var csvDownloadModule = require('modules/core/csvDownload').default;
 
 describe('assignServices', function () {
   var $scope, $state, $previousState, $httpBackend, $q;
-  var view, authinfo, csvDownloadService, Orgservice, FeatureToggleService;
+  var view, authinfo, csvDownloadService, Orgservice;
 
   var orgid = '1';
 
@@ -57,7 +58,7 @@ describe('assignServices', function () {
   beforeEach(angular.mock.module(csvDownloadModule));
 
   beforeEach(inject(function ($compile, $rootScope, $templateCache, _$httpBackend_,
-    $controller, _$q_, _$state_, _Authinfo_, _CsvDownloadService_, _FeatureToggleService_,
+    $controller, _$q_, _$state_, _Authinfo_, _CsvDownloadService_,
     _Orgservice_, _$previousState_) {
 
     $scope = $rootScope.$new();
@@ -70,7 +71,6 @@ describe('assignServices', function () {
     Orgservice = _Orgservice_;
     authinfo = _Authinfo_;
     csvDownloadService = _CsvDownloadService_;
-    FeatureToggleService = _FeatureToggleService_;
 
     var headers = getJSONFixture('core/json/users/headers.json');
     var accountData = getJSONFixture('core/json/authInfo/msg_mtg_comm_Licenses.json');
@@ -123,7 +123,6 @@ describe('assignServices', function () {
 
     spyOn(_Orgservice_, 'getUnlicensedUsers');
     spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.resolve(getLicensesUsage));
-    spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.resolve(false));
 
     spyOn(csvDownloadService, 'getCsv').and.callFake(function (type) {
       if (type === 'headers') {

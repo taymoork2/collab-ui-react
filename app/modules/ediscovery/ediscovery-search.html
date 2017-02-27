@@ -18,10 +18,10 @@
               placeholder="ediscoverySearchCtrl.searchByOptions[0]">
             </cs-select>
           </div>
-          <div class="col-md-6 mid-gap">  
+          <div class="col-md-6 mid-gap">
           <input cs-input type="text" ng-model="ediscoverySearchCtrl.searchModel" autofocus="true"
           ng-keyup="ediscoverySearchCtrl.keyPressHandler($event)" placeholder="{{ediscoverySearchCtrl.searchPlaceholder}}"
-          ng-required="true">   
+          ng-minlength="5" ng-required="true">
           </div>
         </div>
         <!-- Date Range Row -->
@@ -49,7 +49,7 @@
           ng-keyup="ediscoverySearchCtrl.keyPressHandler($event)">
         </div>
         <div class="row mid-gap">
-          <button type="submit" id="ediscoverySearchButton" class="btn btn--primary searchButton" 
+          <button type="submit" class="btn btn--primary search-button" 
           translate="common.search" ng-click="ediscoverySearchCtrl.advancedSearch()"
           ng-disabled="ediscoverySearchCtrl.searchButtonDisabled()"></button>
           <div ng-if="ediscoverySearchCtrl.error">
@@ -67,8 +67,8 @@
         <span translate="ediscovery.subheading"></span>
       </div>
       <div class="typeahead-large">
-        <input maxlength="50" spellcheck="false" class="fit" id="searchInput" type="search" tabindex="1" autocomplete="off" ng-model="ediscoverySearchCtrl.searchCriteria.roomId" autofocus="true" ng-keyup="ediscoverySearchCtrl.keyPressHandler($event)"/>
-        <button type="submit" id="ediscoverySearchButton" class="btn btn--circle btn--primary icon icon-search" ng-click="ediscoverySearchCtrl.searchForRoom(ediscoverySearchCtrl.searchCriteria.roomId);" ng-disabled="ediscoverySearchCtrl.searchButtonDisabled()"></button>
+        <input maxlength="50" spellcheck="false" class="fit" type="search" tabindex="1" autocomplete="off" ng-model="ediscoverySearchCtrl.searchCriteria.roomId" autofocus="true" ng-keyup="ediscoverySearchCtrl.keyPressHandler($event)"/>
+        <button type="submit" class="btn btn--circle btn--primary icon icon-search" ng-click="ediscoverySearchCtrl.searchForRoom(ediscoverySearchCtrl.searchCriteria.roomId);" ng-disabled="ediscoverySearchCtrl.searchButtonDisabled()"></button>
         <div class="input-description"></div>
       </div>
 

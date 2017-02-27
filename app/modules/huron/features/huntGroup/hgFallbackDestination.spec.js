@@ -2,7 +2,7 @@
 
 describe('Controller: HuntGroupSetupAssistantCtrl - Fallback Destination', function () {
 
-  var $httpBackend, $scope, $state, controller, Notification, $q, HuntGroupFallbackDataService;
+  var $httpBackend, $scope, $state, controller, Notification, $q, HuntGroupFallbackDataService, HuntGroupMemberDataService;
 
   var user1 = getJSONFixture('huron/json/features/huntGroup/user1.json');
   var user2 = getJSONFixture('huron/json/features/huntGroup/user2.json');
@@ -43,7 +43,6 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Fallback Destination', funct
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
   };
 
-  var MemberLookupUrl = new RegExp(".*/api/v2/customers/1/users.*");
   var GetNumberUrl = new RegExp(".*/api/v2/customers/1/numbers.*");
   var GetMemberUrl = new RegExp(".*/api/v2/customers/1/users/.*");
   var SaveHuntGroupUrl = new RegExp(".*/api/v2/customers/1/features/huntgroups.*");
@@ -54,12 +53,13 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Fallback Destination', funct
     $provide.value("Authinfo", spiedAuthinfo);
   }));
 
-  beforeEach(inject(function ($rootScope, $controller, _$state_, _$httpBackend_, _Notification_, _$q_, _HuntGroupFallbackDataService_) {
+  beforeEach(inject(function ($rootScope, $controller, _$state_, _$httpBackend_, _Notification_, _$q_, _HuntGroupFallbackDataService_, _HuntGroupMemberDataService_) {
     $scope = $rootScope.$new();
     $state = _$state_;
     $httpBackend = _$httpBackend_;
     Notification = _Notification_;
     $q = _$q_;
+    HuntGroupMemberDataService = _HuntGroupMemberDataService_;
     HuntGroupFallbackDataService = _HuntGroupFallbackDataService_;
 
     controller = $controller('HuntGroupSetupAssistantCtrl', {
@@ -69,7 +69,7 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Fallback Destination', funct
     });
 
     spyOn(HuntGroupFallbackDataService, 'isVoicemailDisabled').and.returnValue($q.defer().promise);
-
+    spyOn(HuntGroupMemberDataService, 'fetchMembers');
   }));
 
   afterEach(function () {
@@ -77,18 +77,11 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Fallback Destination', funct
     $httpBackend.verifyNoOutstandingRequest();
   });
 
-  it("notifies with error response when member fetch fails for fallback.", function () {
-    spyOn(Notification, 'errorResponse');
-    $httpBackend.expectGET(MemberLookupUrl).respond(500);
-    controller.fetchFallbackDestination("sun").then(function () {
-      expect(Notification.errorResponse).toHaveBeenCalledWith(jasmine.anything(),
-        'huronHuntGroup.memberFetchFailure');
-    });
-    $httpBackend.flush();
+  afterAll(function () {
+    $httpBackend = $scope = $state = controller = Notification = $q = HuntGroupFallbackDataService = HuntGroupMemberDataService = user1 = user2 = huntPilotNumber1 = huntPilotNumber2 = huntGroupMember1 = fallbackMember1 = successResponse = spiedAuthinfo = GetNumberUrl = SaveHuntGroupUrl = undefined;
   });
 
   it("calls the backend only after 3 key strokes.", function () {
-    $httpBackend.expectGET(MemberLookupUrl).respond(200, successResponse);
     controller.fetchFallbackDestination("s");
     $scope.$apply();
     $httpBackend.verifyNoOutstandingRequest(); // No request made.
@@ -97,8 +90,9 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Fallback Destination', funct
     $scope.$apply();
     $httpBackend.verifyNoOutstandingRequest(); // No request made.
 
+    HuntGroupMemberDataService.fetchMembers.and.returnValue(fallbackMember1);
     controller.fetchFallbackDestination("sun");
-    $httpBackend.flush(); // Request made.
+    expect(HuntGroupMemberDataService.fetchMembers).toHaveBeenCalled();
   });
 
   it("should invalidate the fallback number if entered invalid", function () {
@@ -184,7 +178,7 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Fallback Destination', funct
     controller.selectFallback(fallbackMember1);
     controller.validateFallbackNumber();
 
-    expect(controller.selectedFallbackNumber).toBeUndefined();
+    expect(controller.selectedFallbackNumber).toEqual({});
     expect(controller.isFallbackValid()).toBeTruthy();
     expect(controller.selectedFallbackMember).not.toBeUndefined();
   });
@@ -333,19 +327,14 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Fallback Destination', funct
   );
 
   it("shows danger indicator when input typed is >= 3 and no valid suggestions.", function () {
-    var noSuggestion = {
-      "users": [],
-    };
-    $httpBackend.expectGET(MemberLookupUrl).respond(200, noSuggestion);
+    HuntGroupMemberDataService.fetchMembers.and.returnValue([]);
     controller.fetchFallbackDestination("sun");
     $scope.$apply();
-    $httpBackend.flush(); // Request made.
     expect(controller.isErrorFallbackInput()).toBeUndefined();
 
-    $httpBackend.expectGET(MemberLookupUrl).respond(200, successResponse);
+    HuntGroupMemberDataService.fetchMembers.and.returnValue(successResponse);
     controller.fetchFallbackDestination("sun");
     $scope.$apply();
-    $httpBackend.flush(); // Request made.
     expect(controller.isErrorFallbackInput()).toBeFalsy();
   });
 

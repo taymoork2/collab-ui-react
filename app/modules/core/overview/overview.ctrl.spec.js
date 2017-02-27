@@ -11,6 +11,7 @@ describe('Controller: OverviewCtrl', function () {
   var orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');
   var usageOnlySharedDevicesFixture = getJSONFixture('core/json/organizations/usageOnlySharedDevices.json');
   var services = getJSONFixture('squared/json/services.json');
+  var isCustomerLaunchedFromPartner = true;
 
   afterEach(function () {
     controller = $rootScope = $scope = $q = $state = $translate = Authinfo = Config = FeatureToggleService = Log = Orgservice = PstnSetupService = OverviewNotificationFactory = ReportsService = ServiceDescriptor = ServiceStatusDecriptor = TrialService = FusionClusterService = SunlightReportService = undefined;
@@ -146,6 +147,27 @@ describe('Controller: OverviewCtrl', function () {
     });
   });
 
+  describe('Notifications - Login as Partner: ', function () {
+    beforeEach(function () {
+      isCustomerLaunchedFromPartner = true;
+      inject(defaultWireUpFunc);
+    });
+
+    it('should NOT call ToS check if logged in as a Partner', function () {
+      expect(PstnSetupService.getCustomerTrialV2).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Notifications - Login as Customer: ', function () {
+    beforeEach(function () {
+      isCustomerLaunchedFromPartner = false;
+      inject(defaultWireUpFunc);
+    });
+    it('should call ToS check if logged in as a Customer', function () {
+      expect(PstnSetupService.getCustomerTrialV2).toHaveBeenCalled();
+    });
+  });
+
   function getCard(filter) {
     return _(controller.cards).filter(function (card) {
       return card.name == filter;
@@ -256,9 +278,11 @@ describe('Controller: OverviewCtrl', function () {
     spyOn(Authinfo, 'isSetupDone').and.returnValue(false);
     spyOn(Authinfo, 'isCustomerAdmin').and.returnValue(true);
     spyOn(Authinfo, 'isDeviceMgmt').and.returnValue(true);
+    spyOn(Authinfo, 'isCustomerLaunchedFromPartner').and.returnValue(isCustomerLaunchedFromPartner);
     spyOn(FeatureToggleService, 'atlasPMRonM2GetStatus').and.returnValue($q.resolve(true));
     spyOn(TrialService, 'getDaysLeftForCurrentUser').and.returnValue($q.resolve(1));
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
+    spyOn(PstnSetupService, 'getCustomerTrialV2').and.callThrough();
 
     controller = $controller('OverviewCtrl', {
       $scope: $scope,

@@ -2486,6 +2486,7 @@
         "modalDesc": "Enter the email addresses of the users that will be assigned to the Hybrid Data Security Service.",
         "emailNotificationsWatermark": "Email addresses",
         "emailExample": "For example: john.doe@example.com",
+        "refreshOtherServices": "Refresh other services to avoid a 24 hours delay.",
         "modalSST": "Add Users"
       },
       "editTrialUsers": {
@@ -6106,6 +6107,27 @@
       "problemReportsTextPlaceholder": "Enter additional support contact information here, like phone numbers or email addresses",
       "helpSiteLabel": "Help Site",
       "useCustomHelpSite": "Use a custom help site"
+    },
+    "dirsync" : {
+      "loading": "Updating Status",
+      "title": "Directory Synchronization",
+      "syncTitle": "Directory Synchronization",
+      "status": "Status",
+      "enabled": "Enabled",
+      "disabled": "Disabled",
+      "turnOffDirSync": "Turn off Directory Synchronization",
+      "turnOnDirSync": "How to Turn On Directory Synchronization",
+      "connectorsTitle": "Directory Connectors",
+      "deregister": "Deregister",
+      "register": "Register",
+      "emailNotifications": "Email Notifications",
+      "manageNotifications": "Manage Notifications",
+      "turnOffDirSyncWarning": "Are you sure that you want to turn off directory synchronization? It can only be enabled again from Cisco Directory Connector. After it's turned off, you must manually add new users.",
+      "disableDirSyncSuccess": "Directory Synchronization has been turned off.",
+      "disableDirSyncFailed": "Error turning off Directory Synchronization",
+      "deregisterWarning": "Please uninstall the Directory Connector before deregistering.",
+      "deregisterSuccess": "Directory Connector '{{name}}' successfully deregistered.",
+      "deregisterFailed": "Failed to deregister Directory Connector '{{name}}'."
     }
   },
   "my-company": {

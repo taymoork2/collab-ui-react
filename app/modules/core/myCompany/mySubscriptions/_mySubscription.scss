@@ -41,24 +41,20 @@
       border-bottom: none;
     }
 
-    .icon-header {
-      @include vr-spacing(pt, 1.5);
-
-      height: vr-adjust(20);
-      line-height: vr-adjust(20);
+    .icon-container {
+      @include vr-spacing(mt, 1.25);
+      @include vr-spacing(ml, 0.75);
+      height: vr-adjust(32);
+      width: vr-adjust(32);
       cursor: pointer;
+      .icon-right-arrow-contained {
+        @include vr-spacing(pl, 0.5);
+        position: relative;
+        top: 0.3rem;
+      }
     }
-
-    .icon-arrow-down {
-      @include vr-spacing(mr, 1);
-
-      font-size: vr-adjust(48);
-      right: vr-adjust(8);
-      width: vr-adjust(20);
-    }
-
-    .icon-right-arrow-contained {
-      @include vr-spacing(pl, 0.75);
+    .icon-container-down {
+      transform: rotate(90deg);
     }
 
     .sub-name {
@@ -89,8 +85,8 @@
 
     .subscription-column {
       @include vr-spacing(p, 0);
-
       border-left: rem-calc(1) solid $gray-light-3;
+      flex-wrap: wrap;
 
       .detail {
         @include vr-spacing(pt, 0.25);
@@ -156,7 +152,7 @@
 
       .subscription-item.item-with-borders {
         @include vr-spacing(p, 1.5);
-
+        width: 50%;
         display: block;
         border-right: rem-calc(1) solid $gray-light-3;
         border-bottom: rem-calc(1) solid $gray-light-3;

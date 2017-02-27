@@ -15,7 +15,7 @@
         card.template = 'modules/core/overview/usersCard.tpl.html';
         card.cardClass = 'user-card';
         card.icon = 'icon-circle-user';
-
+        card.isUpdating = true;
         card.showLicenseCard = false;
 
         card.unlicensedUsersHandler = function (data) {
@@ -54,6 +54,7 @@
         }
 
         card.orgEventHandler = function (data) {
+          card.isUpdating = false;
           if (data.success) {
             card.ssoEnabled = data.ssoEnabled || false;
             card.dirsyncEnabled = data.dirsyncEnabled || false;
@@ -73,6 +74,12 @@
             currentTab: 'enterpriseSettings',
             currentStep: 'init',
             onlyShowSingleTab: true,
+          });
+        };
+
+        card.showDirSyncSettings = function () {
+          $state.go('settings', {
+            showSettings: 'dirsync',
           });
         };
 

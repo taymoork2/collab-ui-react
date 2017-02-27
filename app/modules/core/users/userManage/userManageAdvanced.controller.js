@@ -8,7 +8,7 @@ require('./_user-manage.scss');
 
   /* @ngInject */
   function UserManageAdvancedController($modal, $previousState, $rootScope, $scope, $state, $timeout, $translate,
-    Analytics, FeatureToggleService, Notification) {
+    Analytics, DirSyncService, Notification) {
     var vm = this;
 
     vm.onInit = onInit;
@@ -124,17 +124,13 @@ require('./_user-manage.scss');
       if (curState === 'installConnector') {
         // make sure directory syncing is enabled. If not, then we can't continue and need
         // to display an error
-        vm.isBusy = true;
-        FeatureToggleService.supportsDirSync().then(function (dirSyncEnabled) {
-          vm.isBusy = false;
-          if (dirSyncEnabled) {
-            Analytics.trackAddUsers(Analytics.eventNames.NEXT);
-            $state.go(nextState);
-          } else {
-            Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.SYNC_ERROR, null, { error: 'Directory Connector not installed' });
-            Notification.warning('userManage.advanced.noDirSync');
-          }
-        });
+        if (DirSyncService.isDirSyncEnabled()) {
+          Analytics.trackAddUsers(Analytics.eventNames.NEXT);
+          $state.go(nextState);
+        } else {
+          Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.SYNC_ERROR, null, { error: 'Directory Connector not installed' });
+          Notification.warning('userManage.advanced.noDirSync');
+        }
       } else {
         // move on
         Analytics.trackAddUsers(Analytics.eventNames.NEXT);

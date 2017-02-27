@@ -650,6 +650,9 @@
             controller: 'SettingsCtrl',
             controllerAs: 'settingsCtrl',
             parent: 'main',
+            params: {
+              showSettings: null,
+            },
           })
           .state('authentication.enable3rdPartyAuth', {
             parent: 'modal',
@@ -879,6 +882,8 @@
           ///////////////////////////
           .state('users.manage.picker', {
             controller: 'UserManageModalPickerController',
+            template: '<div class="center-spinner">' +
+                '<i class="icon icon-spinner icon-2x"></i></div>',
           })
           .state('users.manage', {
             abstract: true,
