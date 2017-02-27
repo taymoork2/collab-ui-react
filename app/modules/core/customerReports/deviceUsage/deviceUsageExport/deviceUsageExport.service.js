@@ -12,9 +12,8 @@
 
     var urlBase = UrlConfig.getAdminServiceUrl() + 'organization';
 
-    function exportData(startDate, endDate, api, statusCallback, version_2) {
+    function exportData(startDate, endDate, api, statusCallback, deviceCategories, version_2) {
       var granularity = "day";
-      var deviceCategories = ['ce', 'sparkboard', 'Novum'];
       var baseUrl = '';
       if (api === 'mock') {
         $log.info("Not implemented export for mock data");

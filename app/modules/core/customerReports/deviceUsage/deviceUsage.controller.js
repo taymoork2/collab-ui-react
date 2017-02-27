@@ -22,14 +22,16 @@ require('modules/core/reports/amcharts-export.scss');
     vm.modelsSelected = [];
     vm.modelOptions = [];
 
+    var allDeviceCategories = ['ce', 'SparkBoard', 'Novum'];
+
     vm.selectModelsPlaceholder = $translate.instant('reportsPage.usageReports.selectModelsToFilterOn');
 
     vm.leastUsedDevices = [];
     vm.mostUsedDevices = [];
 
-    vm.totalDuration = "...";
-    vm.noOfCalls = "...";
-    vm.noOfDevices = "...";
+    vm.totalDuration = "-";
+    vm.noOfCalls = "-";
+    vm.noOfDevices = "-";
 
     vm.waitForLeastMost = true;
     vm.waitingForDeviceMetrics = true;
@@ -64,9 +66,18 @@ require('modules/core/reports/amcharts-export.scss');
       DeviceUsageService.cancelAllRequests().then(doTimeUpdate);
     }
 
+    function clearDisplayedStats() {
+      vm.totalDuration = "-";
+      vm.noOfCalls = "-";
+      vm.noOfDevices = "-";
+      vm.leastUsedDevices = [];
+      vm.mostUsedDevices = [];
+    }
+
     function doTimeUpdate() {
       vm.modelsSelected = [];
       vm.modelOptions = [];
+      clearDisplayedStats();
       vm.selectModelsPlaceholder = $translate.instant('reportsPage.usageReports.selectModelsToFilterOn');
       DeviceUsageSplunkMetricsService.reportOperation(DeviceUsageSplunkMetricsService.eventTypes.timeRangeSelected, vm.timeSelected);
       vm.deviceFilter = vm.deviceOptions[0];
@@ -234,7 +245,7 @@ require('modules/core/reports/amcharts-export.scss');
     function loadLastWeek(dates, models) {
       vm.waitingForDeviceMetrics = true;
       vm.waitForLeastMost = true;
-      DeviceUsageTotalService.getDataForRange(dates.start, dates.end, 'day', ['ce', 'SparkBoard'], models, apiToUse).then(function (data) {
+      DeviceUsageTotalService.getDataForRange(dates.start, dates.end, 'day', allDeviceCategories, models, apiToUse).then(function (data) {
         loadChartData(data, $translate.instant('reportsPage.usageReports.last7Days'), models);
         if ($state.current.name === 'reports.device-usage-v2') {
           if (!models) {
@@ -247,7 +258,7 @@ require('modules/core/reports/amcharts-export.scss');
     function loadLastMonth(dates, models) {
       vm.waitingForDeviceMetrics = true;
       vm.waitForLeastMost = true;
-      DeviceUsageTotalService.getDataForRange(dates.start, dates.end, 'week', ['ce', 'SparkBoard'], models, apiToUse).then(function (data) {
+      DeviceUsageTotalService.getDataForRange(dates.start, dates.end, 'week', allDeviceCategories, models, apiToUse).then(function (data) {
         loadChartData(data, $translate.instant('reportsPage.usageReports.last4Weeks'), models);
         if ($state.current.name === 'reports.device-usage-v2') {
           if (!models) {
@@ -260,7 +271,7 @@ require('modules/core/reports/amcharts-export.scss');
     function loadLast3Months(dates, models) {
       vm.waitingForDeviceMetrics = true;
       vm.waitForLeastMost = true;
-      DeviceUsageTotalService.getDataForRange(dates.start, dates.end, 'month', ['ce', 'SparkBoard'], models, apiToUse).then(function (data) {
+      DeviceUsageTotalService.getDataForRange(dates.start, dates.end, 'month', allDeviceCategories, models, apiToUse).then(function (data) {
         loadChartData(data, $translate.instant('reportsPage.usageReports.last3Months'), models);
         if ($state.current.name === 'reports.device-usage-v2') {
           if (!models) {
@@ -344,7 +355,7 @@ require('modules/core/reports/amcharts-export.scss');
       exportProgressDialog.opened.then(function () {
         vm.exporting = true;
         exportStarted = moment();
-        DeviceUsageExportService.exportData(dateRange.start, dateRange.end, apiToUse, vm.exportStatus, ($state.current.name === 'reports.device-usage-v2'));
+        DeviceUsageExportService.exportData(dateRange.start, dateRange.end, apiToUse, vm.exportStatus, allDeviceCategories, ($state.current.name === 'reports.device-usage-v2'));
       });
     };
 
@@ -382,7 +393,7 @@ require('modules/core/reports/amcharts-export.scss');
     };
 
     function getModelsForRange(start, end) {
-      return DeviceUsageModelService.getModelsForRange(start, end, 'day', ['ce', 'SparkBoard', 'Novum'], 'local');
+      return DeviceUsageModelService.getModelsForRange(start, end, 'day', allDeviceCategories, 'local');
     }
 
     function modelsForRange(items) {
