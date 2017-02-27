@@ -440,8 +440,7 @@
         'services-overview',
       ],
       'squared-fusion-mgmt': [
-        'cluster-details',
-        'management-connector-details',
+        'expressway-cluster-sidepanel',
         'services-overview',
         'resource-group-settings',
         'cluster-list',

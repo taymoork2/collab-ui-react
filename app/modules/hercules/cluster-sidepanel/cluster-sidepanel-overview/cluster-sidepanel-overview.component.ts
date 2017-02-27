@@ -13,12 +13,16 @@ class ClusterSidepanelOverviewCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
+    private $rootScope: ng.IRootScopeService,
     private $scope: ng.IScope,
     private $state: ng.ui.IStateService,
+    private $translate: ng.translate.ITranslateService,
     private ClusterService,
   ) {}
 
   public $onInit() {
+    this.$state.current.data.displayName = this.$translate.instant('common.overview');
+    this.$rootScope.$broadcast('displayNameUpdated');
     if (this.clusterId && this.connectorType) {
       this.$scope.$watch(() => {
         return this.ClusterService.getCluster(this.connectorType, this.clusterId);
