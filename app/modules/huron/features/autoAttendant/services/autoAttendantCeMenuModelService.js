@@ -623,7 +623,7 @@
       pieces[1] = '';
 
       for (var i = 1; i < btwQuotes.length - 1; i += 2) {
-        pieces[1] += btwQuotes[1] + ",";
+        pieces[1] += btwQuotes[i] + ",";
       }
 
       pieces[1] += btwQuotes[btwQuotes.length - 1];
