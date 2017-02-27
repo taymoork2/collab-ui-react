@@ -443,6 +443,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
     var userFirstName;
     var cloudberryNewPlace;
     var cloudberryExistingPlace;
+    var cloudberryNewPlaceWithoutCalendar;
     var huronNewPlace;
     var huronExistingPlace;
     var huronExistingUser;
@@ -492,6 +493,29 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
             },
           };
         },
+      };
+
+      cloudberryNewPlaceWithoutCalendar = {
+        state: function () {
+          return {
+            data: {
+              account: {
+                deviceType: 'cloudberry',
+                type: 'shared',
+                name: deviceName,
+                organizationId: deviceOrgId,
+                entitlements: entitlements,
+                directoryNumber: directoryNumber,
+                externalNumber: externalNumber,
+              },
+              recipient: {
+                organizationId: userOrgId,
+                cisUuid: userCisUuid,
+                email: userEmail
+              }
+            }
+          };
+        }
       };
 
       cloudberryExistingPlace = {
@@ -664,6 +688,27 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
             $scope.$digest();
             expect(Notification.notify).toHaveBeenCalledTimes(1);
           });
+        });
+      });
+
+      describe('with new place without calendar', function () {
+        beforeEach(function () {
+          stateParams.wizard = cloudberryNewPlaceWithoutCalendar;
+          spyOn(CsdmDataModelService, 'createCsdmPlace').and.returnValue($q.resolve({ cisUuid: cisUuid }));
+          spyOn(CsdmDataModelService, 'createCodeForExisting').and.returnValue($q.resolve({
+            activationCode: activationCode,
+            expiryTime: expiryTime
+          }));
+          initController();
+          $scope.$digest();
+        });
+
+        it('creates a new place and otp', function () {
+          expect(CsdmDataModelService.createCsdmPlace).toHaveBeenCalledWith(deviceName, entitlements, directoryNumber, externalNumber, null, null);
+          expect(CsdmDataModelService.createCodeForExisting).toHaveBeenCalledWith(cisUuid);
+          expect(controller.qrCode).toBeTruthy();
+          expect(controller.activationCode).toBe(activationCode);
+          expect(controller.expiryTime).toBe(expiryTime);
         });
       });
 

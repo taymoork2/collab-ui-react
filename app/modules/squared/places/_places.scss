@@ -28,7 +28,7 @@
   .callServiceControls {
     flex-basis: 100%;
   }
-  .calendarServiceControls.emailControls{
+  .calendarServiceControls.emailControls {
     width: 100%;
     margin-top: -1.5em;
     #email {
@@ -38,7 +38,7 @@
   }
   @media screen and (max-width: 640px) {
     display: block;
-    .calendarServiceControls.emailControls{
+    .calendarServiceControls.emailControls {
       #email {
         min-width: 100%;
         width: 100%;
@@ -47,14 +47,14 @@
   }
 }
 
-.rightColumn{
+.rightColumn {
   padding-top: 5px;
 }
 
-.calenderResourcesRow{
+.calenderResourcesRow {
   padding: 30px 30px 15px 15px;
   width: 100%;
-  .selectResourceGroup{
+  .selectResourceGroup {
     min-width: 310px;
     width: 50%;
     @media screen and (max-width: 640px) {

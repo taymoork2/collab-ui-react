@@ -11,7 +11,7 @@
         <h3 translate="addDeviceWizard.editServices.calendar"></h3>
       </div>
       <div>
-        <div class="callServiceRow rightColumn">
+        <div class="callServiceRow rightColumn" ng-if="editCalendarService.getShowServiceOptions()">
           <div class="cs-radio-group calendarServiceControls">
             <div class="section-title-row">
               <span class="section-name" translate="Which calendar provider do you want to use?"></span>
@@ -51,15 +51,15 @@
           <div class="section-title-row">
             <span class="section-name" translate="hercules.resourceGroups.resourceGroupHeading"></span>
           </div>
-          <div ng-if="!resourceGroup.cannotFindResouceGroup">
+          <div ng-if="!editCalendarService.resourceGroup.cannotFindResouceGroup">
             <p translate="hercules.resourceGroups.setPlaceDescription"></p>
             <cs-select
               class="selectResourceGroup"
-              ng-model="resourceGroup.selected"
-              options="resourceGroup.options"
-              on-change-fn="selectedResourceGroupChanged()">
+              ng-model="editCalendarService.resourceGroup.selected"
+              options="editCalendarService.resourceGroup.options"
+              on-change-fn="editCalendarService.selectedResourceGroupChanged()">
             </cs-select>
-            <div class="warning-message" ng-if="resourceGroup.shouldWarn">
+            <div class="warning-message" ng-if="editCalendarService.resourceGroup.shouldWarn">
               <i class="icon icon-warning"></i>
               <p class="message"
                  translate="hercules.resourceGroups.groupIsEmptyWarning"
@@ -67,12 +67,12 @@
               </p>
             </div>
           </div>
-          <div ng-if="resourceGroup.cannotFindResouceGroup" class="error-message">
+          <div ng-if="editCalendarService.resourceGroup.cannotFindResouceGroup" class="error-message">
             <i class="icon icon-error"></i>
             <p class="message"
                translate="hercules.resourceGroups.groupHasBeenDeleted"></p>
             <form>
-              <button class="btn" type="submit" ng-click="setResourceGroupOnUser('')">
+              <button class="btn" type="submit" ng-click="editCalendarService.setResourceGroupOnUser('')">
                 <span translate="common.remove"></span>
               </button>
             </form>

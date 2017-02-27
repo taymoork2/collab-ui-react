@@ -40,16 +40,23 @@ describe('EditCalendarService component:', () => {
           $stateParams: {
             wizard: {
               state: () => {
-                return { data: { account: { entitlements: ['webex-squared'] } } };
+                return {
+                  data: {
+                    account: { entitlements: ['webex-squared'] },
+                    atlasHerculesGoogleCalendarFeatureToggle: true,
+                  },
+                };
               },
             },
           },
         });
         state.controller.$onInit();
       });
-      it('should only show exchange and be selected', () => {
+      it('should select exchange and not show it', () => {
         test.$rootScope.$digest();
         expect(state.controller.getShowGCalService()).toBe(false);
+        expect(state.controller.getShowServiceOptions()).toBe(false);
+        expect(state.controller.getShowCalService()).toBe(false);
         expect(state.controller.calService).toBe(FUSION_CAL_ENTITLEMENT);
         // expect(test.view.find('#service2').disabled()).toBe(true);
       });
@@ -68,7 +75,12 @@ describe('EditCalendarService component:', () => {
           $stateParams: {
             wizard: {
               state: () => {
-                return { data: { account: { entitlements: ['webex-squared'] } } };
+                return {
+                  data: {
+                    account: { entitlements: ['webex-squared'] },
+                    atlasHerculesGoogleCalendarFeatureToggle: true,
+                  },
+                };
               },
             },
           },
@@ -79,7 +91,8 @@ describe('EditCalendarService component:', () => {
         test.$rootScope.$digest();
 
         expect(state.controller.getShowGCalService()).toBe(true);
-        expect(state.controller.getShowGCalService()).toBe(true);
+        expect(state.controller.getShowCalService()).toBe(true);
+        expect(state.controller.getShowServiceOptions()).toBe(true);
         expect(state.controller.calService).toBe('');
       });
     });
@@ -97,18 +110,24 @@ describe('EditCalendarService component:', () => {
           $stateParams: {
             wizard: {
               state: () => {
-                return { data: { account: { entitlements: ['webex-squared'] } } };
+                return {
+                  data: {
+                    account: { entitlements: ['webex-squared'] },
+                    atlasHerculesGoogleCalendarFeatureToggle: true,
+                  },
+                };
               },
             },
           },
         });
         state.controller.$onInit();
       });
-      it('should show gcal and radio button, and select gcal', () => {
+      it('should select gcal', () => {
         test.$rootScope.$digest();
 
-        expect(state.controller.getShowGCalService()).toBe(true);
+        expect(state.controller.getShowGCalService()).toBe(false);
         expect(state.controller.getShowCalService()).toBe(false);
+        expect(state.controller.getShowServiceOptions()).toBe(false);
         expect(state.controller.calService).toBe(FUSION_GCAL_ENTITLEMENT);
       });
     });
@@ -153,8 +172,8 @@ describe('EditCalendarService component:', () => {
         let wizardState = state.wizardData.next.calls.mostRecent().args[0];
 
         expect(wizardState.account.entitlements).toEqual(['webex-squared', FUSION_CAL_ENTITLEMENT]);
-        expect(wizardState.account.externalCalendarIdentifier.email).toEqual(email);
-        expect(wizardState.account.externalCalendarIdentifier.type).toEqual(FUSION_CAL_ENTITLEMENT);
+        expect(wizardState.account.externalCalendarIdentifier.accountGUID).toEqual(email);
+        expect(wizardState.account.externalCalendarIdentifier.providerID).toEqual(FUSION_CAL_ENTITLEMENT);
       });
     });
 
@@ -172,8 +191,8 @@ describe('EditCalendarService component:', () => {
         let wizardState = state.wizardData.next.calls.mostRecent().args[0];
 
         expect(wizardState.account.entitlements).toEqual(['webex-squared', FUSION_GCAL_ENTITLEMENT]);
-        expect(wizardState.account.externalCalendarIdentifier.email).toEqual(email);
-        expect(wizardState.account.externalCalendarIdentifier.type).toEqual(FUSION_GCAL_ENTITLEMENT);
+        expect(wizardState.account.externalCalendarIdentifier.accountGUID).toEqual(email);
+        expect(wizardState.account.externalCalendarIdentifier.providerID).toEqual(FUSION_GCAL_ENTITLEMENT);
       });
       it('next should be enabled', () => {
         expect(state.controller.isNextDisabled()).toBeFalsy();

@@ -7,10 +7,12 @@ interface IDevice {
 interface IPlace {
   devices: {};
   cisUuid?: string;
+  id?: string;
   type?: string;
   url?: string;
   entitlements?: Array<any>;
   displayName?: string;
+  externalLinkedAccounts?: any[];
 }
 
 class PlaceOverview implements ng.IComponentController {
@@ -20,7 +22,13 @@ class PlaceOverview implements ng.IComponentController {
   public showPstn: boolean = false;
   public showATA: boolean = false;
   public csdmHybridCallFeature: boolean = false;
+  private csdmHybridCalendarFeature = false;
+  private hybridCalendarEnabledOnOrg = false;
+  private atlasHerculesGoogleCalendarFeatureToggle = false;
+  private atlasF237ResourceGroups = false;
   public generateCodeIsDisabled = true;
+  private static fusionCal = 'squared-fusion-cal';
+  private static fusionGCal = 'squared-fusion-gcal';
 
   private currentPlace: IPlace = <IPlace>{ devices: {} };
   private csdmHuronUserDeviceService;
@@ -35,6 +43,7 @@ class PlaceOverview implements ng.IComponentController {
               private CsdmHuronUserDeviceService,
               private CsdmDataModelService,
               private FeatureToggleService,
+              private ServiceDescriptor,
               private Notification,
               private Userservice,
               private WizardFactory) {
@@ -49,6 +58,7 @@ class PlaceOverview implements ng.IComponentController {
 
   private displayPlace(newPlace) {
     this.currentPlace = newPlace;
+    this.currentPlace.id =  this.currentPlace.cisUuid;
     this.loadServices();
     this.loadActions();
   }
@@ -74,6 +84,16 @@ class PlaceOverview implements ng.IComponentController {
     }
     this.services = [];
     this.services.push(service);
+    if (this.hasEntitlement(PlaceOverview.fusionGCal) || this.hasEntitlement(PlaceOverview.fusionCal)) {
+      service = {
+        name: this.$translate.instant('hercules.serviceNames.squared-fusion-cal'),
+        icon: 'icon-circle-calendar',
+        state: 'communication',
+        detail: this.$translate.instant('placesPage.sparkCalendar'),
+        actionAvailable: true,
+      };
+      this.services.push(service);
+    }
   }
 
   private fetchAsyncSettings() {
@@ -83,8 +103,22 @@ class PlaceOverview implements ng.IComponentController {
     let hybridPromise = this.FeatureToggleService.csdmHybridCallGetStatus().then((feature) => {
       this.csdmHybridCallFeature = feature;
     });
+    let placeCalendarPromise = this.FeatureToggleService.csdmPlaceCalendarGetStatus().then(feature => {
+      this.csdmHybridCalendarFeature = feature;
+    });
+    let gcalFeaturePromise = this.FeatureToggleService.atlasHerculesGoogleCalendarGetStatus().then(feature => {
+      this.atlasHerculesGoogleCalendarFeatureToggle = feature;
+    });
+    let anyCalendarEnabledPromise = this.ServiceDescriptor.getServices().then(services => {
+      this.hybridCalendarEnabledOnOrg = _.chain(this.ServiceDescriptor.filterEnabledServices(services)).filter(service => {
+        return service.id === 'squared-fusion-gcal' || service.id === 'squared-fusion-cal';
+      }).some().value();
+    });
+    let atlasF237ResourceGroupsPromise = this.FeatureToggleService.atlasF237ResourceGroupGetStatus().then(feature => {
+      this.atlasF237ResourceGroups = feature;
+    });
 
-    this.$q.all([ataPromise, hybridPromise, this.fetchDetailsForLoggedInUser()]).finally(() => {
+    this.$q.all([ataPromise, hybridPromise, placeCalendarPromise, gcalFeaturePromise, anyCalendarEnabledPromise, atlasF237ResourceGroupsPromise, this.fetchDetailsForLoggedInUser()]).finally(() => {
       this.generateCodeIsDisabled = false;
     });
   }
@@ -125,12 +159,18 @@ class PlaceOverview implements ng.IComponentController {
       data: {
         function: 'editServices',
         title: 'usersPreview.editServices',
+        csdmHybridCallFeature: this.csdmHybridCallFeature,
+        csdmHybridCalendarFeature: this.csdmHybridCalendarFeature,
+        hybridCalendarEnabledOnOrg: this.hybridCalendarEnabledOnOrg,
+        atlasHerculesGoogleCalendarFeatureToggle: this.atlasHerculesGoogleCalendarFeatureToggle,
+        atlasF237ResourceGroups: this.atlasF237ResourceGroups,
         account: {
           deviceType: this.currentPlace.type,
           type: 'shared',
           name: this.currentPlace.displayName,
           cisUuid: this.currentPlace.cisUuid,
           entitlements: this.currentPlace.entitlements,
+          externalLinkedAccounts: this.currentPlace.externalLinkedAccounts,
         },
       },
       history: [],
@@ -140,6 +180,7 @@ class PlaceOverview implements ng.IComponentController {
           nextOptions: {
             sparkCall: 'addDeviceFlow.addLines',
             sparkCallConnect: 'addDeviceFlow.callConnectOptions',
+            sparkOnlyAndCalendar: 'addDeviceFlow.editCalendarService',
           },
         },
         'addDeviceFlow.addLines': {},
@@ -191,6 +232,10 @@ class PlaceOverview implements ng.IComponentController {
         function: 'showCode',
         showATA: this.showATA,
         csdmHybridCallFeature: this.csdmHybridCallFeature,
+        csdmHybridCalendarFeature: this.csdmHybridCalendarFeature,
+        hybridCalendarEnabledOnOrg: this.hybridCalendarEnabledOnOrg,
+        atlasHerculesGoogleCalendarFeatureToggle: this.atlasHerculesGoogleCalendarFeatureToggle,
+        atlasF237ResourceGroups: this.atlasF237ResourceGroups,
         admin: this.adminUserDetails,
         account: {
           type: 'shared',

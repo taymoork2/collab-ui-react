@@ -34,13 +34,18 @@ require('../devices/_devices.scss');
           var placeCalendarPromise = FeatureToggleService.csdmPlaceCalendarGetStatus().then(function (feature) {
             vm.csdmHybridCalendarFeature = feature;
           });
-          var anyCalendarEnabledPromise = ServiceDescriptor.getServices().then(function (services) {
-            var anyEnabledCalendarService = _.chain(ServiceDescriptor.filterEnabledServices(services)).filter(function (service) {
-              return service.id === '' || service.id === '';
-            }).some();
-            vm.hybridCalendarEnabledOnOrg = !!anyEnabledCalendarService;
+          var gcalFeaturePromise = FeatureToggleService.atlasHerculesGoogleCalendarGetStatus().then(function (feature) {
+            vm.atlasHerculesGoogleCalendarFeatureToggle = feature;
           });
-          $q.all([ataPromise, hybridPromise, placeCalendarPromise, anyCalendarEnabledPromise, fetchDisplayNameForLoggedInUser()]).finally(function () {
+          var anyCalendarEnabledPromise = ServiceDescriptor.getServices().then(function (services) {
+            vm.hybridCalendarEnabledOnOrg = _.chain(ServiceDescriptor.filterEnabledServices(services)).filter(function (service) {
+              return service.id === 'squared-fusion-gcal' || service.id === 'squared-fusion-cal';
+            }).some().value();
+          });
+          var atlasF237ResourceGroupsPromise = FeatureToggleService.atlasF237ResourceGroupGetStatus().then(function (feature) {
+            vm.atlasF237ResourceGroups = feature;
+          });
+          $q.all([ataPromise, hybridPromise, placeCalendarPromise, gcalFeaturePromise, atlasF237ResourceGroupsPromise, anyCalendarEnabledPromise, fetchDisplayNameForLoggedInUser()]).finally(function () {
             vm.addPlaceIsDisabled = false;
           });
         }
@@ -178,6 +183,8 @@ require('../devices/_devices.scss');
               csdmHybridCallFeature: vm.csdmHybridCallFeature,
               csdmHybridCalendarFeature: vm.csdmHybridCalendarFeature,
               hybridCalendarEnabledOnOrg: vm.hybridCalendarEnabledOnOrg,
+              atlasHerculesGoogleCalendarFeatureToggle: vm.atlasHerculesGoogleCalendarFeatureToggle,
+              atlasF237ResourceGroups: vm.atlasF237ResourceGroups,
               title: 'addDeviceWizard.newSharedSpace.title',
               isEntitledToHuron: vm.isOrgEntitledToHuron(),
               isEntitledToRoomSystem: vm.isOrgEntitledToRoomSystem(),

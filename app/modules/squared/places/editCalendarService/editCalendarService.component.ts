@@ -1,40 +1,85 @@
+interface IExternalLinkedAccount {
+  providerID: string;
+  accountGUID: string;
+}
+
 class EditCalendarService implements ng.IComponentController {
   private dismiss: Function;
   public emailOfMailbox: string;
-  private wizardData;
+  private wizardData: {
+    title: string,
+    function: string,
+    account: {
+      entitlements, externalLinkedAccounts: IExternalLinkedAccount[],
+      cisUuid,
+    },
+    atlasHerculesGoogleCalendarFeatureToggle: boolean,
+    atlasF237ResourceGroups: boolean,
+  };
   private static fusionCal = 'squared-fusion-cal';
   private static fusionGCal = 'squared-fusion-gcal';
   public calService = '';
   private initialCalService;
   private isLoading: boolean;
   public externalCalendarIdentifier: string;
-  // private Notification;
   public title: string;
-  public resourceGroup = '';
+  public resourceGroup: {
+    selected?: { label: string, value: string },
+    current?: { label: string, value: string },
+    options: { label: string, value: string }[],
+    shouldWarn: boolean,
+    init: () => void,
+  } = {
+    init: () => {
+      this.resourceGroup.options = [{
+        label: this.$translate.instant('hercules.resourceGroups.noGroupSelected'),
+        value: '',
+      }];
+      this.resourceGroup.selected = this.resourceGroup.current = this.resourceGroup.options[0];
+      this.resourceGroup.shouldWarn = false;
+    },
+    options: [],
+    shouldWarn: false,
+  };
   public resourceGroupPlaceHolder = 'Select resource group';
-  public availResourceGroups = [];
-  public noAvailResourceGroups = true;
-  private showGcalService = false;
+  // public availResourceGroups = [];
+  // public noAvailResourceGroups = true;
+  private showGCalService = false;
   private showExchangeService = false;
 
   public $onInit(): void {
     this.wizardData = this.$stateParams.wizard.state().data;
+    this.resourceGroup.init();
     this.title = 'T e s t 1';
     this.title = this.wizardData.title;
     this.initialCalService = this.getCalServiceEnabled(this.wizardData.account.entitlements);
+    this.fetchResourceGroups();
   }
 
   /* @ngInject */
-  constructor(private CsdmDataModelService, private $stateParams, ServiceDescriptor) {
+  constructor(private CsdmDataModelService, private $stateParams, private $translate, ServiceDescriptor, private ResourceGroupService, private USSService) {
     ServiceDescriptor.getServices()
       .then((services) => {
         let enabledServices: Array<{ id: string }> = ServiceDescriptor.filterEnabledServices(services);
         let calendarExchange = _.head(_.filter(enabledServices, x => x.id === EditCalendarService.fusionCal));
         let googleCal = _.head(_.filter(enabledServices, x => x.id === EditCalendarService.fusionGCal));
-        this.showGcalService = !!googleCal;
+        this.showGCalService = !!googleCal && this.wizardData.atlasHerculesGoogleCalendarFeatureToggle;
         this.showExchangeService = !!calendarExchange;
-        if (!this.showGcalService || !this.showExchangeService) {
-          this.calService = this.showExchangeService ? EditCalendarService.fusionCal : EditCalendarService.fusionGCal;
+
+        let existingCalLinks: IExternalLinkedAccount = _.head(_.filter(this.wizardData.account.externalLinkedAccounts, (linkedAccount) => {
+          return linkedAccount && (linkedAccount.providerID === EditCalendarService.fusionCal || linkedAccount.providerID === EditCalendarService.fusionGCal);
+        }));
+
+        if (calendarExchange && this.showGCalService) {
+          this.calService = '';
+        } else {
+          this.calService = this.showGCalService ? EditCalendarService.fusionGCal : EditCalendarService.fusionCal;
+          this.showGCalService = false;
+          this.showExchangeService = false;
+        }
+        if (existingCalLinks) {
+          this.calService = existingCalLinks.providerID;
+          this.emailOfMailbox = existingCalLinks.accountGUID;
         }
       });
   }
@@ -55,15 +100,43 @@ class EditCalendarService implements ng.IComponentController {
   }
 
   public getShowGCalService() {
-    return true; //this.showGcalService;
+    return this.showGCalService;
   }
 
   public getResourceGroupShow() {
-    return true;
+    return this.wizardData.atlasF237ResourceGroups && this.resourceGroup && this.resourceGroup.options.length > 0;
   }
 
   public getShowCalService() {
     return this.showExchangeService;
+  }
+
+  public getShowServiceOptions() {
+    return this.showExchangeService || this.showGCalService;
+  }
+
+  private fetchResourceGroups() {
+    if (this.wizardData.atlasF237ResourceGroups) {
+      this.ResourceGroupService.getAllAsOptions().then((options) => {
+        if (options.length > 0) {
+          this.resourceGroup.options = this.resourceGroup.options.concat(options);
+          // if (this.extension.status && this.extension.status.resourceGroupId) {
+          //   this.setSelectedResourceGroup(this.extension.status.resourceGroupId);
+          // } else {
+          if (this.wizardData.account.cisUuid) {
+            this.USSService.getUserProps(this.wizardData.account.cisUuid).then((props) => {
+              if (props.resourceGroups && props.resourceGroups['']) { //this.extension.id]) {
+                //this.setSelectedResourceGroup(props.resourceGroups['']) { //this.extension.id]);
+              } else {
+                // this.resourceGroup.displayWarningIfNecessary();
+              }
+            });
+            // }
+          }
+          //this.resourceGroup.updateShow();
+        }
+      });
+    }
   }
 
   public getCalServiceEnabled(entitlements) {
@@ -84,14 +157,18 @@ class EditCalendarService implements ng.IComponentController {
     this.$stateParams.wizard.next({
       account: {
         entitlements: this.getUpdatedEntitlements(),
-        externalCalendarIdentifier: { type: this.calService, email: this.emailOfMailbox }, //TODO email is wrong
-        ussProps: { resourceGroup: this.resourceGroup },
+        externalCalendarIdentifier: {
+          providerID: this.calService,
+          accountGUID: this.emailOfMailbox,
+          status: 'unconfirmed-email',
+        },
+        ussProps: this.getUssProps(),
       },
     });
   }
 
   public isNextDisabled() {
-    return !(this.calService && this.emailOfMailbox && (this.resourceGroup || this.noAvailResourceGroups));
+    return !(this.calService && this.emailOfMailbox && (this.resourceGroup.selected || !this.resourceGroup.options || this.resourceGroup.options.length === 0));
   }
 
   public close() {
@@ -132,16 +209,23 @@ class EditCalendarService implements ng.IComponentController {
       this.dismiss();
     }
   }
+
+  private getUssProps(): {}|null {
+    if (this.resourceGroup.selected) {
+      return {
+        userId: this.wizardData.account.cisUuid,
+        resourceGroups: { 'squared-fusion-cal': this.resourceGroup.selected.value },
+      };
+    }
+    return null;
+  }
 }
 
-export class EditCalendarServiceOverviewComponent implements ng
-  .
-  IComponentOptions {
+export class EditCalendarServiceOverviewComponent implements ng.IComponentOptions {
   public controller = EditCalendarService;
   public controllerAs = 'editCalendarService';
   public templateUrl = 'modules/squared/places/editCalendarService/editCalendarService.tpl.html';
   public bindings = {
     dismiss: '&',
-    $stateParams: '<',
   };
 }

@@ -4405,7 +4405,7 @@
       "exchangeHelp": "This is enabling exchange calendar",
       "googleTitle": "Google calendar",
       "googleHelp": "This is enabling google calendar",
-      "calendarEmail": "Email address of the calendar"
+      "calendarEmail": "Email address of the calendar mailbox"
     },
     "sparkCallConnect": {
       "editSettingsTitle": "Edit the settings for Hybrid Call Service Connect"
