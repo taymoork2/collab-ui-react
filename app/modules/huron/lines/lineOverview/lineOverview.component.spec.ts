@@ -79,9 +79,6 @@ describe('Component: lineOverview', () => {
   }
 
   describe('existing line with primary = true', () => {
-    beforeEach(function () {
-      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.when(true));
-    });
     beforeEach(initComponent);
     beforeEach(function () {
       this.$scope.numberId = this.existingLinePrimary.uuid;
@@ -114,7 +111,6 @@ describe('Component: lineOverview', () => {
     });
 
     it('should have autoanswer section if huron-auto-answer feature toggle is on', function () {
-      expect(this.FeatureToggleService.supports).toHaveBeenCalledWith('huron-auto-answer');
       expect(this.view.find(AUTO_ANSWER)).toExist();
     });
 
@@ -128,9 +124,6 @@ describe('Component: lineOverview', () => {
   });
 
   describe('new line', () => {
-    beforeEach(function () {
-      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.when(true));
-    });
     beforeEach(initComponent);
     beforeEach(function () {
       this.lineOverview = {
@@ -164,19 +157,6 @@ describe('Component: lineOverview', () => {
       this.view.find(BUTTON_SAVE).click();
       this.saveDefer.resolve();
       expect(this.LineOverviewService.save).toHaveBeenCalledWith(LineConsumerType.PLACES, '007', undefined, this.lineOverview, []);
-    });
-
-  });
-
-  xdescribe('auto answer', () => {
-    beforeEach(function () {
-      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.when(false));
-    });
-    beforeEach(initComponent);
-
-    it('should have not autoanswer section if huron-auto-answer feature toggle is off', function () {
-      expect(this.FeatureToggleService.supports).toHaveBeenCalledWith('huron-auto-answer');
-      expect(this.view.find(AUTO_ANSWER)).not.toExist();
     });
 
   });

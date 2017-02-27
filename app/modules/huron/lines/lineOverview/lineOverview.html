@@ -50,7 +50,7 @@
       <uc-auto-answer
         auto-answer="$ctrl.lineOverviewData.autoAnswer"
         on-change-fn="$ctrl.setAutoAnswer(phoneId, enabled, mode)"
-        ng-if="!$ctrl.isCloudberryPlace() && $ctrl.autoAnswerFeatureToggleEnabled">
+        ng-if="!$ctrl.isCloudberryPlace()">
       </uc-auto-answer>
       <uc-shared-line
         shared-lines="$ctrl.lineOverviewData.sharedLines"
