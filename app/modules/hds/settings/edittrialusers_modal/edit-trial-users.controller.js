@@ -19,6 +19,7 @@
     vm.getNumUsersInTagField = getNumUsersInTagField;
     vm.maxTrialUsers = 250;
     var localizedRefreshOtherServices = $translate.instant('hds.resources.addTrialUsers.refreshOtherServices');
+    var localizedInvalidUsers = $translate.instant('hds.resources.editTrialUsers.invalidUsers');
 
     init();
 
@@ -80,7 +81,7 @@
           .then(function (data) {
             var numInvalidUsers = vm.emailTrialUsers.length - data.Resources.length;
             if (numInvalidUsers > 0) {
-              Notification.error(numInvalidUsers + " not valid user(s) in this org won't be saved.");
+              Notification.error(numInvalidUsers + localizedInvalidUsers);
             }
             var jsonEmailTrialUsers = {
               schemas: ['urn:scim:schemas:core:1.0', 'urn:scim:schemas:extension:cisco:commonidentity:1.0'],

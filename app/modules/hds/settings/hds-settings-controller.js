@@ -6,7 +6,7 @@
     .controller('HDSSettingsController', HDSSettingsController);
 
   /* @ngInject */
-  function HDSSettingsController($modal, $state, $translate, Authinfo, Orgservice, HDSService, Notification) {
+  function HDSSettingsController($modal, $state, $translate, Authinfo, Orgservice, HDSService, FusionClusterService, Notification) {
     var vm = this;
     vm.PRE_TRIAL = 'pre_trial';    // service status Trial/Production mode
     vm.TRIAL = 'trial';
@@ -84,6 +84,19 @@
         });
     }
 
+    function getResourceInfo() {
+      FusionClusterService.getAll()
+        .then(function (data) {
+          _.forEach(data, function (obj) {
+            if (obj.targetType === 'hds_app') {
+              vm.numResourceNodes = obj.connectors.length; // TODO: we may need to check if the status is active
+            }
+          });
+        }).catch(function (error) {
+          Notification.errorWithTrackingId(error, localizedHdsModeError);
+        });
+    }
+
     function getOrgHdsInfo() {
       Orgservice.getOrg(function (data, status) {
         if (data.success || status === 200) {
@@ -114,6 +127,7 @@
                 }
               });
               getTrialUsersInfo();
+              getResourceInfo();
             } else {
               vm.model.serviceMode = vm.NA_MODE;
             }
@@ -157,11 +171,17 @@
 
     function moveToProduction() {
       if (vm.model.serviceMode === vm.TRIAL) {
-        Orgservice.setOrgAltHdsServersHds(Authinfo.getOrgId(), jsonProductionMode)
-          .then(function () {
-            vm.model.serviceMode = vm.PRODUCTION;
-          }).catch(function (error) {
-            Notification.errorWithTrackingId(error, localizedHdsModeError);
+        $modal.open({
+          templateUrl: 'modules/hds/settings/confirm-move-to-production-dialog.html',
+          type: 'dialog',
+        })
+          .result.then(function () {
+            Orgservice.setOrgAltHdsServersHds(Authinfo.getOrgId(), jsonProductionMode)
+              .then(function () {
+                vm.model.serviceMode = vm.PRODUCTION;
+              }).catch(function (error) {
+                Notification.errorWithTrackingId(error, localizedHdsModeError);
+              });
           });
       }
     }
