@@ -3,12 +3,12 @@
 
   angular
     .module('Mediafusion')
-    .service('AdoptionPiechartService', AdoptionPiechartService);
+    .service('AdoptionCardService', AdoptionCardService);
   /* @ngInject */
-  function AdoptionPiechartService(CommonReportsGraphService) {
+  function AdoptionCardService(CommonReportsGraphService) {
     var vm = this;
-    vm.clientTypeDonutDiv = 'clientTypeDonutDiv';
-    vm.numberOfMeetsOnPremisesDonutDiv = 'numberOfMeetsOnPremisesDonutDiv';
+    vm.clientTypeChartDiv = 'clientTypeChartDiv';
+    vm.numberOfMeetsOnPremisesChartDiv = 'numberOfMeetsOnPremisesChartDiv';
 
 
     return {
@@ -20,25 +20,25 @@
 
     function setClientTypePiechart(data) {
       var chartData = CommonReportsGraphService.getBasePieChart(data);
-      var chart = AmCharts.makeChart(vm.clientTypeDonutDiv, chartData, 0);
+      var chart = AmCharts.makeChart(vm.clientTypeChartDiv, chartData, 0);
       return chart;
     }
 
     function setNumberOfMeetsOnPremisesPiechart(data) {
       var chartData = CommonReportsGraphService.getBasePieChart(data);
-      var chart = AmCharts.makeChart(vm.numberOfMeetsOnPremisesDonutDiv, chartData, 0);
+      var chart = AmCharts.makeChart(vm.numberOfMeetsOnPremisesChartDiv, chartData, 0);
       return chart;
     }
 
     function setDummyClientTypePiechart() {
       var chartData = CommonReportsGraphService.getDummyPieChart();
-      var chart = AmCharts.makeChart(vm.clientTypeDonutDiv, chartData, 0);
+      var chart = AmCharts.makeChart(vm.clientTypeChartDiv, chartData, 0);
       return chart;
     }
 
     function setDummyNumberOfMeetsOnPremisesPiechart() {
       var chartData = CommonReportsGraphService.getDummyPieChart();
-      var chart = AmCharts.makeChart(vm.numberOfMeetsOnPremisesDonutDiv, chartData, 0);
+      var chart = AmCharts.makeChart(vm.numberOfMeetsOnPremisesChartDiv, chartData, 0);
       return chart;
     }
 

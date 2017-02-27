@@ -39,9 +39,9 @@
         <uc-media-availability parentcntrl="nav"></uc-media-availability>
       </cs-card-layout>
       <cs-card-layout ng-if="nav.displayAdoption">
-        <uc-media-report-card parentcntrl="nav" headername="nav.total_meetings" value="nav.tot_number_meetings" headercolor="'grey'" donut-options="'none'" is-adoption="'true'"></uc-media-report-card>
-        <uc-media-report-card parentcntrl="nav" headername="nav.meeting_premises" headercolor="'orange'" donut-options="nav.numberOfMeetsOnPremisesDonutOptions" is-adoption="'true'"></uc-media-report-card>
-        <uc-media-report-card parentcntrl="nav" headername="nav.client_types" headercolor="'green'" donut-options="nav.clientTypesDonutOptions" is-adoption="'true'"></uc-media-report-card>
+        <uc-media-report-card parentcntrl="nav" headername="nav.total_meetings" value="nav.tot_number_meetings" headercolor="'grey'" chart-options="'none'" card-class="'three-cards'"></uc-media-report-card>
+        <uc-media-report-card parentcntrl="nav" headername="nav.meeting_premises" headercolor="'orange'" chart-options="nav.numberOfMeetsOnPremiseschartOptions" card-class="'three-cards'"></uc-media-report-card>
+        <uc-media-report-card parentcntrl="nav" headername="nav.client_types" headercolor="'green'" chart-options="nav.clientTypeschartOptions" card-class="'three-cards'"></uc-media-report-card>
         <uc-media-meeting-location parentcntrl="nav"></uc-media-meeting-location>
         <uc-media-client-type parentcntrl="nav"></uc-media-client-type>
       </cs-card-layout>

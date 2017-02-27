@@ -7,8 +7,8 @@ export class MediaReportCard implements ng.IComponentOptions {
     headercolor: '<',
     tooltipOptions: '<',
     footerOptions: '<',
-    donutOptions: '<',
-    isAdoption: '=',
+    chartOptions: '<',
+    cardClass: '=',
   };
 }
 angular.module('Mediafusion').component('ucMediaReportCard', new MediaReportCard());
