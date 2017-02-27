@@ -1,6 +1,7 @@
 import { HuronUserService } from './user.service';
 export * from './user';
 export * from './user.service';
+import { UserDetailsComponent } from './userDetails.component';
 
 export default angular
   .module('huron.user', [
@@ -9,4 +10,5 @@ export default angular
     require('modules/huron/telephony/telephonyConfig'),
   ])
   .service('HuronUserService', HuronUserService)
+  .component('ucUserDetails', new UserDetailsComponent())
   .name;
