@@ -4,7 +4,6 @@ import { CallForward } from 'modules/huron/callForward';
 describe('Component: lineOverview', () => {
   const BUTTON_SAVE = '.button-container .btn--primary';
   const BUTTON_CANCEL = '.button-container button:not(.btn--primary)';
-  const AUTO_ANSWER = 'uc-auto-answer';
 
   let existingLinePrimary: Line = {
     uuid: '0000',
@@ -41,7 +40,6 @@ describe('Component: lineOverview', () => {
       'LineOverviewService',
       'DirectoryNumberOptionsService',
       'CallerIDService',
-      'FeatureToggleService',
     );
 
     this.existingLinePrimary = existingLinePrimary;
@@ -108,10 +106,6 @@ describe('Component: lineOverview', () => {
     it('should NOT show save and cancel buttons immediately', function () {
       expect(this.view.find(BUTTON_SAVE)).not.toExist();
       expect(this.view.find(BUTTON_CANCEL)).not.toExist();
-    });
-
-    it('should have autoanswer section if huron-auto-answer feature toggle is on', function () {
-      expect(this.view.find(AUTO_ANSWER)).toExist();
     });
 
     it('should show save and cancel buttons when form is dirty', function () {
