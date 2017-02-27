@@ -11,7 +11,7 @@
     var vm = this;
     var type = $stateParams.specificType || $stateParams.connectorType;
     var localizedConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.' + type);
-    vm.deleteExpresswayNode = deleteExpresswayNode;
+    vm.deleteExpresswayOrHDSNode = deleteExpresswayOrHDSNode;
     vm.showReassignHostDialog = showReassignHostDialog;
     vm.showDeregisterHostDialog = showDeregisterHostDialog;
 
@@ -37,7 +37,7 @@
       }
     }, true);
 
-    function deleteExpresswayNode() {
+    function deleteExpresswayOrHDSNode() {
       $modal.open({
         templateUrl: 'modules/hercules/cluster-sidepanel/host-details/confirm-deleteHost-dialog.html',
         type: 'dialog',
@@ -114,7 +114,7 @@
     };
 
     vm.showDeleteNodeAction = function () {
-      return (vm.host.state === 'offline' && vm.host.connectorType === 'c_mgmt');
+      return ((vm.host.state === 'offline' && vm.host.connectorType === 'c_mgmt') || vm.host.connectorType === 'hds_app');
     };
   }
 }());
