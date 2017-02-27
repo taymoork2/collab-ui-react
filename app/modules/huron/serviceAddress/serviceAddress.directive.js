@@ -24,8 +24,8 @@
   }
 
   /* @ngInject */
-  function ServiceAddressCtrl($scope, PstnSetupStatesService, PstnSetup) {
-    PstnSetupStatesService.getLocation(PstnSetup.getCountryCode()).then(function (location) {
+  function ServiceAddressCtrl($scope, PstnSetupStatesService, HuronCompassService) {
+    PstnSetupStatesService.getLocation(HuronCompassService.getCountryCode()).then(function (location) {
       $scope.areaName = location.type;
       $scope.stateOptions = location.areas;
     });

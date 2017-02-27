@@ -176,13 +176,13 @@ describe('Service: PstnSetupService', function () {
   });
 
   it('should retrieve available default carriers', function () {
-    $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/carriers?country=US&defaultOffer=true&service=PSTN').respond(200);
+    $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/carriers?country=US&defaultOffer=true&service=PSTN').respond(200);
     PstnSetupService.listDefaultCarriers();
     $httpBackend.flush();
   });
 
   it('should retrieve a resellers\'s carriers', function () {
-    $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/resellers/' + suite.partnerId + '/carriers?country=US').respond(resellerCarrierList);
+    $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/resellers/' + suite.partnerId + '/carriers?country=US').respond(resellerCarrierList);
     $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/carriers/' + suite.carrierId).respond(carrierIntelepeer);
 
     var promise = PstnSetupService.listResellerCarriers();
@@ -195,7 +195,7 @@ describe('Service: PstnSetupService', function () {
   });
 
   it('should retrieve a customer\'s carrier', function () {
-    $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/carriers').respond(customerCarrierList);
+    $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + suite.customerId + '/carriers').respond(customerCarrierList);
     $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/carriers/' + suite.carrierId).respond(carrierIntelepeer);
     var promise = PstnSetupService.listCustomerCarriers(suite.customerId);
     promise.then(function (carrierList) {
