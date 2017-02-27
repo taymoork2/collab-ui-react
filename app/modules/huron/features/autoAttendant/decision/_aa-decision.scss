@@ -24,6 +24,14 @@
     }
   }
 
+  .select-list {
+    @include vr-spacing(pr, 1.75);
+    .dropdown-menu {
+        min-width: 100%;
+        width: auto;
+    }
+  }
+
   .aa-decision-textarea {
     line-height: 1.5rem;
     width: 100%;
