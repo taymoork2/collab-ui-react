@@ -1,11 +1,12 @@
-@import 'styles/toolkit/colors';
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/typography';
 
 .roles-panel {
   width: 700px;
   height: 100%;
 
   .edit-title {
-    font-family: 'CiscoSansTT Extra Light';
+    font-family: $brand-font-extra-light;
     font-size: 24px;
     line-height: 1;
     display: block;

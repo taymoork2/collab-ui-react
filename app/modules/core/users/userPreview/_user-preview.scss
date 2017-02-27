@@ -1,6 +1,8 @@
-@import 'styles/toolkit/colors';
-@import 'styles/toolkit/fonts';
-@import 'styles/toolkit/overflow';
+@import '~collab-ui/scss/settings/core';
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/typography';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~collab-ui/scss/tools/mixins/text-overflow';
 
 .user-management {
   top: 0px;

@@ -1,4 +1,5 @@
-@import 'styles/toolkit/spacing';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~collab-ui/scss/settings/core';
 
 .callpark {
   &.overlay-panel {
