@@ -47,6 +47,7 @@ var Spark = require('@ciscospark/spark-core').default;
 
     vm.searchResults = {
       keywords: [],
+      queries: [],
       numFiles: null,
       numMessages: null,
       totalSize: null,
@@ -102,6 +103,14 @@ var Spark = require('@ciscospark/spark-core').default;
         vm.searchCriteria = {};
         vm.roomInfo = null;
       }
+    }
+
+    function splitWords(_words) {
+      var words = (_words).split(',').map(
+        function (s) {
+          return s.trim();
+        });
+      return words;
     }
 
     function goToSearchPage() {
@@ -193,7 +202,7 @@ var Spark = require('@ciscospark/spark-core').default;
     }
 
     function createEncryptedEmails(_emails) {
-      var emails = (_emails).split(',').map(function (s) { return s.trim(); });
+      var emails = splitWords(_emails);
       var promises = emails.map(function (s) {
         return spark.encryption.encryptText(vm.encryptedResult, s);
       });
@@ -208,6 +217,7 @@ var Spark = require('@ciscospark/spark-core').default;
 
     function searchResults(result) {
       var keywords = _.eq(vm.searchByOptions[0], vm.searchBySelected) ? vm.unencryptedEmails : vm.unencryptedRoomIds;
+      var queries = splitWords(vm.queryModel);
       vm.roomInfo = result;
       vm.searchCriteria = {
         startDate: formatDate('display', getStartDate()),
@@ -215,6 +225,7 @@ var Spark = require('@ciscospark/spark-core').default;
       };
       vm.searchResults = {
         keywords: keywords,
+        queries: queries,
         numFiles: result.data.numFiles,
         numMessages: result.data.numMessages,
         totalSize: convertBytesToGB(result.data.totalSizeInBytes),
@@ -239,12 +250,12 @@ var Spark = require('@ciscospark/spark-core').default;
         .then(function (unboundKeys) {
           vm.encryptedResult = unboundKeys[0];
           vm.encryptionKeyUrl = unboundKeys[0].uri;
-          vm.unencryptedEmails = (vm.searchModel).split(',').map(function (s) { return s.trim(); });
+          vm.unencryptedEmails = splitWords(vm.searchModel);
           return vm.emailSelected ? createEncryptedEmails(vm.searchModel) : vm.searchModel;
         })
         .then(function (keyword) {
           vm.encryptedEmails = vm.emailSelected ? keyword : null;
-          vm.unencryptedRoomIds = vm.roomIdSelected ? keyword.split(',').map(function (s) { return s.trim(); }) : null;
+          vm.unencryptedRoomIds = vm.roomIdSelected ? splitWords(keyword) : null;
           return _.isNull(vm.queryModel) ? null : spark.encryption.encryptText(vm.encryptedResult, vm.queryModel);
         })
         .then(function (query) {

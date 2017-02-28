@@ -16,8 +16,10 @@
 					</div>
 					<p class="result-title" translate="ediscovery.searchResults.dateRange"></p>
 					<p class="result-info">{{ediscoverySearchCtrl.searchCriteria.startDate}} - {{ediscoverySearchCtrl.searchCriteria.endDate}}</p>
-					<p class="result-title" translate="ediscovery.searchResults.textMessage"></p>
-					<p class="result-title" translate="ediscovery.searchResults.fileName"></p>
+					<p class="result-title" translate="ediscovery.searchResults.textAndFileName"></p>
+					<div ng-repeat="query in ediscoverySearchCtrl.searchResults.queries">
+						<p class="result-info">{{query}}</p>
+					</div>
 				</section>
 			</article>
 		</cs-card>
