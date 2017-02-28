@@ -5,10 +5,10 @@
     .factory('PstnSetupService', PstnSetupService);
 
   /* @ngInject */
-  function PstnSetupService($q, $translate, Authinfo, Notification, PstnSetup, TerminusCarrierService,
-    TerminusCustomerService, TerminusCustomerV2Service, TerminusCustomerTrialV2Service,
-    TerminusCarrierV2Service,
-    TerminusCustomerCarrierService, TerminusCustomerCarrierV2Service,
+  function PstnSetupService($q, $translate, Authinfo, Notification, PstnSetup,
+    TerminusCustomerService, TerminusCustomerCarrierService,
+    TerminusCustomerV2Service, TerminusCustomerTrialV2Service,
+    TerminusCarrierService, TerminusCarrierV2Service,
     TerminusOrderV2Service,
     TerminusCarrierInventoryCount, TerminusNumberService, TerminusCarrierInventorySearch,
     TerminusCarrierInventoryReserve, TerminusCarrierInventoryRelease,
@@ -75,7 +75,6 @@
       getResellerV2: getResellerV2,
       createResellerV2: createResellerV2,
       listCustomerCarriers: listCustomerCarriers,
-      listCustomerCarriersV2: listCustomerCarriersV2,
       listResellerCarriers: listResellerCarriers,
       listResellerCarriersV2: listResellerCarriersV2,
       listDefaultCarriers: listDefaultCarriers,
@@ -187,7 +186,6 @@
       return TerminusCarrierService.query({
         service: PSTN,
         defaultOffer: true,
-        country: PstnSetup.getCountryCode(),
       }).$promise.then(getCarrierDetails);
     }
 
@@ -202,7 +200,6 @@
     function listResellerCarriers() {
       return TerminusResellerCarrierService.query({
         resellerId: Authinfo.getOrgId(),
-        country: PstnSetup.getCountryCode(),
       }).$promise.then(getCarrierDetails);
     }
 
@@ -215,12 +212,6 @@
 
     function listCustomerCarriers(customerId) {
       return TerminusCustomerCarrierService.query({
-        customerId: customerId,
-      }).$promise.then(getCarrierDetails);
-    }
-
-    function listCustomerCarriersV2(customerId) {
-      return TerminusCustomerCarrierV2Service.query({
         customerId: customerId,
       }).$promise.then(getCarrierDetails);
     }

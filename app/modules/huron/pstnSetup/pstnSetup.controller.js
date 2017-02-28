@@ -12,6 +12,9 @@
     PstnSetup.setCustomerEmail($stateParams.customerEmail);
     PstnSetup.setIsTrial($stateParams.customerCommunicationLicenseIsTrial && $stateParams.customerRoomSystemsLicenseIsTrial);
 
+    //Reset Carriers
+    PstnSetup.setCarriers([]);
+
     //Verify the the Terminus Reseller is setup, otherwise setup the Reseller
     if (!PstnSetup.isResellerExists()) {
       PstnSetupService.getResellerV2().then(function () {

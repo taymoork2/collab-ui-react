@@ -222,7 +222,8 @@
 
     function onProviderReady() {
       initSites().then(function () {
-        if (PstnSetup.isCarrierExists()) {
+        //If new PSTN setup show all the carriers even if there only one
+        if (PstnSetup.isCarrierExists() && PstnSetup.isCustomerExists()) {
           // Only 1 carrier should exist for a customer
           if (PstnSetup.getCarriers().length === 1) {
             PstnSetup.setSingleCarrierReseller(true);
