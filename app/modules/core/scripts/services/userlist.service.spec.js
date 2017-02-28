@@ -6,7 +6,7 @@ describe('User List Service', function () {
   beforeEach(function () {
     // modules
     this.initModules(
-      'Core'
+      require('./userlist.service')
     );
 
     // dependencies

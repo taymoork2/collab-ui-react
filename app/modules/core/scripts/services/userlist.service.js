@@ -7,6 +7,7 @@
     require('angular-resource'),
     require('modules/core/scripts/services/authinfo'),
     require('modules/core/scripts/services/log'),
+    require('modules/core/notifications').default,
     require('modules/core/scripts/services/utils'),
     require('modules/core/config/urlConfig'),
   ])
