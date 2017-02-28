@@ -59,6 +59,7 @@ module.exports = {
   calsvcDetectCmrLoc: 'calsvc_detect_cmr_loc',
   calsvcWebexMeetingRegistries: 'calsvc_webex_meeting_registries',
   calsvcShowPreferredSiteName: 'calsvc-show-preferred-sitename',
+  calsvcSetOrgLevelDefaultSiteName: 'calsvc-set-org-level-default-sitename',
   calsvcOneButtonToPushInterval: 'calsvc-OneButtonToPush-interval',
   clientRingbackV2: 'client-ringback-v2',
   console: 'console',
