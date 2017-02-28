@@ -173,16 +173,11 @@ require('modules/core/reports/amcharts-export.scss');
       chart.listeners = [
         { event: 'rollOverGraphItem', method: rollOverGraphItem },
         { event: 'rollOutGraphItem', method: rollOutGraphItem },
-        //{ event: 'dataUpdated', method: graphRendered },
         { event: 'clickGraphItem', method: graphClick },
       ];
       amChart = DeviceUsageGraphService.makeChart('device-usage-total-chart', chart);
       getDataForSelectedRange(vm.timeSelected.value);
     }
-
-//     function graphRendered() {
-//       vm.waitingForDeviceMetrics = false;
-//     }
 
     function graphClick() {
       DeviceUsageSplunkMetricsService.reportOperation(DeviceUsageSplunkMetricsService.eventTypes.graphClick);
@@ -217,10 +212,9 @@ require('modules/core/reports/amcharts-export.scss');
         clearDisplayedStats();
       } else {
         vm.noDataForRange = false;
+        scaleYAxisToHaveRoomForTextOverBar(reportItems);
       }
       vm.reportData = reportItems;
-      var max = _.maxBy(reportItems, 'totalDuration').totalDuration;
-      amChart.valueAxes[0].maximum = (max / 3600) * 1.1;
       amChart.dataProvider = reportItems;
 
       if (title) {
@@ -235,6 +229,11 @@ require('modules/core/reports/amcharts-export.scss');
       amChart.animateAgain();
       vm.showDevices = false;
       fillInStats(reportItems, dateRange.start, dateRange.end, models);
+    }
+
+    function scaleYAxisToHaveRoomForTextOverBar(reportItems) {
+      var max = _.maxBy(reportItems, 'totalDuration').totalDuration;
+      amChart.valueAxes[0].maximum = (max / 3600) * 1.1;
     }
 
     function loadChartDataForDeviceType(data) {
