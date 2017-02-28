@@ -3,12 +3,16 @@
 /* global LONG_TIMEOUT */
 
 describe('Org Entitlement flow', function () {
+  var token;
+  var testUser = utils.randomTestGmailwithSalt('roles');
   var newLastName = 'Doe';
   var newDisplayName = 'John Doe ' + utils.randomId();
-  var searchStr = 'sq-testpaiduser@atlas.test.com';
 
   it('should login as non-sso admin user', function () {
-    login.login('partner-admin');
+    login.login('partner-admin')
+      .then(function (bearerToken) {
+        token = bearerToken;
+      });
   });
 
   it('should launch partner organization portal', function () {
@@ -23,7 +27,11 @@ describe('Org Entitlement flow', function () {
   }, LONG_TIMEOUT);
 
   it('should display conversations panel for test user', function () {
-    utils.searchAndClick(searchStr);
+    users.createUser(testUser);
+    utils.click(users.saveButton);
+    utils.click(users.finishButton);
+    utils.expectIsNotDisplayed(users.manageDialog);
+    utils.searchAndClick(testUser);
   });
 
   it('should display subdetails panel', function () {
@@ -54,11 +62,13 @@ describe('Org Entitlement flow', function () {
   });
 
   it('should verify user name change', function () {
-    roles.getDisplayName().then(function (userName) {
-      utils.click(users.closeSidePanel);
-      utils.searchAndClick(searchStr);
-      utils.click(users.rolesChevron);
-      utils.expectValueToBeSet(roles.displayNameInput, userName);
-    });
+    utils.click(users.closeSidePanel);
+    utils.searchAndClick(testUser);
+    utils.click(users.rolesChevron);
+    utils.expectValueToBeSet(roles.displayNameInput, newDisplayName);
+  });
+
+  afterAll(function () {
+    deleteUtils.deleteUser(testUser, token);
   });
 });

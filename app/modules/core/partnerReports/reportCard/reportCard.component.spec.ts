@@ -1,9 +1,9 @@
 import {
   IExportMenu,
   IReportCard,
+  IReportCardTable,
   IReportDropdown,
   IReportLabel,
-  IReportsTable,
   ITimespan,
   ISecondaryReport,
 } from '../partnerReportInterfaces';
@@ -284,8 +284,8 @@ describe('Component: reportCard', () => {
   });
 
   describe('main report with table only:', function () {
-    let options: IReportCard = _.cloneDeep(ctrlData.endpointOptions);
-    let tableData: IReportsTable = _.cloneDeep(endpointsData.registeredEndpointResponse);
+    let options: IReportCardTable = _.cloneDeep(ctrlData.endpointOptions);
+    let tableData = _.cloneDeep(endpointsData.registeredEndpointResponse);
     options.table.data = tableData;
 
     beforeEach(function () {

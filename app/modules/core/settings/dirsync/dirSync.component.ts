@@ -18,7 +18,7 @@ class DirSyncController implements ng.IComponentController {
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }) {
-    let enabled = changes['enabled'];
+    const { enabled } = changes;
     if (enabled && enabled.currentValue) {
       this.enabled = enabled.currentValue;
       this.setLinkText();

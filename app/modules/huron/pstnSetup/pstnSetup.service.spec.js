@@ -176,13 +176,13 @@ describe('Service: PstnSetupService', function () {
   });
 
   it('should retrieve available default carriers', function () {
-    $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/carriers?country=US&defaultOffer=true&service=PSTN').respond(200);
+    $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/carriers?defaultOffer=true&service=PSTN').respond(200);
     PstnSetupService.listDefaultCarriers();
     $httpBackend.flush();
   });
 
   it('should retrieve a resellers\'s carriers', function () {
-    $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/resellers/' + suite.partnerId + '/carriers?country=US').respond(resellerCarrierList);
+    $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/resellers/' + suite.partnerId + '/carriers').respond(resellerCarrierList);
     $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/carriers/' + suite.carrierId).respond(carrierIntelepeer);
 
     var promise = PstnSetupService.listResellerCarriers();

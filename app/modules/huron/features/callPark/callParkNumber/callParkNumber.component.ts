@@ -32,9 +32,9 @@ class CallParkNumberCtrl implements ng.IComponentController {
   ) {}
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
-    let callParkChanges = changes['range'];
-    if (callParkChanges && callParkChanges.currentValue) {
-      this.processCallParkNumberChanges(callParkChanges);
+    const { range } = changes;
+    if (range && range.currentValue) {
+      this.processCallParkNumberChanges(range);
     }
   }
 

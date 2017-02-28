@@ -34,8 +34,8 @@ interface IDirectoryConnectorsResource extends ng.resource.IResourceClass<IDirec
 interface IDirSyncOrgResource extends ng.resource.IResourceClass<ng.resource.IResource<IDirSyncInfo>> {
 }
 
-interface IDirSyncModeResource extends ng.resource.IResourceClass<any> {
-  disable: void;
+interface IDirSyncModeResource extends ng.resource.IResourceClass<ng.resource.IResource<any>> {
+  disable: ng.resource.IResourceMethod<ng.resource.IResource<any>>;
 }
 
 /**

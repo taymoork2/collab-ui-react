@@ -6,7 +6,7 @@
     .controller('AABuilderMainCtrl', AABuilderMainCtrl); /* was AutoAttendantMainCtrl */
 
   /* @ngInject */
-  function AABuilderMainCtrl($rootScope, $scope, $translate, $state, $stateParams, $q, AAUiModelService,
+  function AABuilderMainCtrl($rootScope, $scope, $translate, $state, $stateParams, $q, AAUiModelService, AAMediaUploadService,
     AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AutoAttendantCeService,
     AAValidationService, AANumberAssignmentService, AANotificationService, Authinfo, AACommonService, AAUiScheduleService, AACalendarService,
     AATrackChangeService, AADependencyService, ServiceSetup, Analytics, AAMetricNameService, FeatureToggleService) {
@@ -134,7 +134,9 @@
     }
 
     function closePanel() {
-      $rootScope.$broadcast('CE Closed');
+
+      AAMediaUploadService.resetResources();
+
       AutoAttendantCeMenuModelService.clearCeMenuMap();
       unAssignAssigned().finally(function () {
         $state.go('huronfeatures');
@@ -270,6 +272,8 @@
           });
 
           $rootScope.$broadcast('CE Saved');
+
+          AAMediaUploadService.saveResources();
 
         },
         function (response) {

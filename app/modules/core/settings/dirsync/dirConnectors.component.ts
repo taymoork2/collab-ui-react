@@ -17,7 +17,7 @@ class DirConnectorsController implements ng.IComponentController {
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }) {
-    let connectors = changes['connectors'];
+    const { connectors } = changes;
     if (connectors && connectors.currentValue) {
       this.connectors = _.cloneDeep(connectors.currentValue);
     }

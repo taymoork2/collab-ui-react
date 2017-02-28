@@ -96,6 +96,14 @@
       return Orgservice.setOrgSettings(Authinfo.getOrgId(), settings);
     };
 
+    var setDefaultWebExSiteOrgLevel = function (defaultWebExSiteOrgLevel) {
+      var settings = {
+        calSvcDefaultWebExSite: defaultWebExSiteOrgLevel,
+      };
+
+      return Orgservice.setOrgSettings(Authinfo.getOrgId(), settings);
+    };
+
     var setOneButtonToPushIntervalMinutes = function (bgbIntervalMinutes) {
       var settings = {
         bgbIntervalMinutes: bgbIntervalMinutes,
@@ -158,6 +166,7 @@
       setEmailSubscribers: setEmailSubscribers,
       getOrgSettings: getOrgSettings,
       setDisableEmailSendingToUser: setDisableEmailSendingToUser,
+      setDefaultWebExSiteOrgLevel: setDefaultWebExSiteOrgLevel,
       setOneButtonToPushIntervalMinutes: setOneButtonToPushIntervalMinutes,
       enableService: enableService,
       disableService: disableService,
