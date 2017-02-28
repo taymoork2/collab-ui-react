@@ -355,11 +355,27 @@
 
 .form-group.location-check {
   font-size: .825rem;
-  span, a {
+
+  span,
+  a {
     font-size: .825rem;
   }
+
   .error .message {
     margin-left: 1rem;
   }
 }
 
+.large-form {
+  .columns {
+    width: 100%;
+  }
+
+  .address-validation-container .flex-address {
+    flex: none;
+  }
+
+  &.full .flex-address {
+    width: 100%;
+  }
+}
