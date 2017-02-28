@@ -10,7 +10,7 @@
         <div class="small-9 columns">
           <cs-select ng-model="keyAction.action" valuefield="name" labelfield="label" options="aaPhoneMenu.keyActions" placeholder="aaPhoneMenu.actionPlaceholder" on-change-fn="aaPhoneMenu.keyActionChanged($index, keyAction.action)" class="aa-pm-action-select" icon="icon-chevron-down">
           </cs-select>
-          <div ng-switch="keyAction.action.name" class="aa-pm-action"> 
+          <div ng-switch="keyAction.action.name" class="aa-pm-action">
             <aa-route-to-user ng-switch-when="phoneMenuRouteUser" aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-user>
             <aa-route-to-user ng-switch-when="phoneMenuRouteMailbox" voicemail=true aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-user>
             <aa-route-to-aa ng-switch-when="phoneMenuRouteAA" aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-aa>
