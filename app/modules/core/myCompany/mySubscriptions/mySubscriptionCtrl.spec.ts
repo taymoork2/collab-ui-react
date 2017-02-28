@@ -20,6 +20,8 @@ describe('Controller: MySubscriptionCtrl', function () {
     this.data.licensesFormatted.forEach(function (item){
       item.subscriptions[0].siteUrl = undefined;
     });
+    this.data.licensesFormatted[4].subscriptions[0].siteUrl = undefined;
+    this.data.licensesFormatted[4].subscriptions[1].siteUrl = undefined;
     this.data.licensesFormatted[1].subscriptions[0].offers[0].siteUrl = undefined;
     this.data.trialLicenseData[0].subscriptions[0].siteUrl = undefined;
 
@@ -27,6 +29,8 @@ describe('Controller: MySubscriptionCtrl', function () {
     this.data.subscriptionsFormatted[0].licenses[1].siteUrl = undefined;
     this.data.subscriptionsFormatted[0].licenses[7].siteUrl = undefined;
     this.data.subscriptionsFormatted[0].licenses[8].siteUrl = undefined;
+    this.data.subscriptionsFormatted[0].licenses[9].siteUrl = undefined;
+    this.data.subscriptionsFormatted[0].licenses[10].siteUrl = undefined;
     this.data.subscriptionsFormatted[0].internalSubscriptionId = undefined;
     this.data.subscriptionsFormatted[0].upgradeTrialUrl = undefined;
     this.data.subscriptionsFormatted[0].productInstanceId = undefined;

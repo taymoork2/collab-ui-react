@@ -74,7 +74,7 @@
                     </div>
                     <div class="description-line" ng-hide="mcpSubscription.isSharedMeetingsLicense(subscription) && mcpSubscription.isSharedMeetingsEnabled">
                       <span class="h6" translate="subscriptions.usage"></span>
-                      <span class="h6" ng-class="{'warning': offer.usage > offer.volume}">{{::offer.usage}}/{{::offer.volume}}</span>
+                      <span class="h6" ng-class="{'warning': subscription.usage > subscription.volume}">{{::subscription.usage}}/{{::subscription.volume}}</span>
                     </div>
                   </div>
                   <div class="subscription-description subscription-detail">
@@ -94,6 +94,7 @@
                   </div>
                 </div>
               </div>
+
             </div>
           </div>
           <div class="row" ng-show="mcpSubscription.hybridServices && mcpSubscription.hybridServices.length > 0">

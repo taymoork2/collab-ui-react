@@ -15,8 +15,9 @@ const messageClass = 'icon-message';
 const meetingRoomClass = 'icon-meeting-room';
 const webexClass = 'icon-webex';
 const callClass = 'icon-calls';
+const careClass = 'icon-headset';
 
-const licenseTypes = ['MS', 'CF', 'MC', 'TC', 'EC', 'EE', 'CMR', 'CO', 'SD', 'SB'];
+const licenseTypes = ['MS', 'CF', 'MC', 'TC', 'EC', 'EE', 'CMR', 'CO', 'SD', 'SB', 'CDC', 'CVC'];
 
 class MySubscriptionCtrl {
   public hybridServices: any[] = [];
@@ -66,6 +67,10 @@ class MySubscriptionCtrl {
     // room system subscriptions
     this.licenseCategory[3] = _.cloneDeep(baseCategory);
     this.licenseCategory[3].label = $translate.instant('subscriptions.room');
+
+    //care subscriptions
+    this.licenseCategory[4] = _.cloneDeep(baseCategory);
+    this.licenseCategory[4].label = $translate.instant('subscriptions.care');
 
     this.hybridServicesRetrieval();
     this.subscriptionRetrieval();
@@ -245,6 +250,12 @@ class MySubscriptionCtrl {
                   case 9: {
                     offer.class = meetingRoomClass;
                     this.addSubscription(3, offer, -1);
+                    break;
+                  }
+                  case 10:
+                  case 11: {
+                    offer.class = careClass;
+                    this.addSubscription(4, offer, -1);
                     break;
                   }
                   default: {

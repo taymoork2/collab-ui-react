@@ -88,6 +88,7 @@
 
     .subscription-column {
       @include vr-spacing(p, 0);
+      flex-direction: column;
       border-left: rem-calc(1) solid $gray-light-3;
       flex-wrap: wrap;
 
