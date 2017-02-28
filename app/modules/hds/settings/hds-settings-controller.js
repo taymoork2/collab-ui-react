@@ -49,14 +49,14 @@
         },
       ],
     };
-    var jsonProductionMode = {
+    /*var jsonProductionMode = {
       "altHdsServers": [
         {
           "type": "none",
           "active": false,
         },
       ],
-    };
+    };*/
 
     vm.servicestatus = {
       title: 'hds.resources.settings.servicestatusTitle',
@@ -106,7 +106,10 @@
             // prod info
             vm.prodDomain = vm.orgSettings.kmsServer;
             if (typeof vm.prodDomain === 'undefined') {
-              vm.model.serviceMode = vm.NA_MODE;
+              //vm.model.serviceMode = vm.NA_MODE;
+              // TODO: temp relax the condition to keep production mode when no prodDomain in org settings
+              //        remove this when LA testing done
+              vm.model.serviceMode = vm.PRODUCTION;
             } else {
               vm.model.serviceMode = vm.PRODUCTION;
             }
@@ -176,7 +179,7 @@
           type: 'dialog',
         })
           .result.then(function () {
-            Orgservice.setOrgAltHdsServersHds(Authinfo.getOrgId(), jsonProductionMode)
+            HDSService.moveToProductionMode(Authinfo.getOrgId())
               .then(function () {
                 vm.model.serviceMode = vm.PRODUCTION;
               }).catch(function (error) {

@@ -21,6 +21,7 @@
       addHdsTrialUsers: addHdsTrialUsers,
       removeHdsTrialUsers: removeHdsTrialUsers,
       replaceHdsTrialUsers: replaceHdsTrialUsers,
+      moveToProductionMode: moveToProductionMode,
       refreshEncryptionServerForTrialUsers: refreshEncryptionServerForTrialUsers,
     };
 
@@ -127,6 +128,11 @@
     function replaceHdsTrialUsers(oid, jsonMembers) {
       var serviceUrl = _.replace(UrlConfig.getScimUrl(oid) + '/' + trialUserGroupId, 'Users', 'Groups');
       return $http.patch(serviceUrl, jsonMembers).then(extractData);
+    }
+
+    function moveToProductionMode(oid) {
+      var serviceUrl = UrlConfig.getAdminServiceUrl() + '/organizations/' + oid + '/settings/altHdsServers';
+      return $http.delete(serviceUrl);
     }
 
     function refreshEncryptionServerForTrialUsers(gid) {
