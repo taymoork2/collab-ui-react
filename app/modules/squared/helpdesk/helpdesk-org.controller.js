@@ -215,7 +215,7 @@
     function findAdminUsers(org) {
       HelpdeskService.usersWithRole(org.id, 'id_full_admin', 100).then(function (users) {
         vm.adminUsers = users;
-        vm.showAllAdminUsersText = $translate.instant('helpdesk.showAllAdminUsers', {
+        vm.showAllAdminUsersText = $translate.instant('common.showAllAdminUsers', {
           numUsers: users.length,
         });
         vm.adminUsersAvailable = true;

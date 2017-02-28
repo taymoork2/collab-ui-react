@@ -297,4 +297,48 @@ describe('User Service', function () {
       expect(this.Userservice.getPrimaryEmailFromUser(user)).toBe('foo-2@example.com');
     });
   });
+
+  describe('getAnyDisplayableNameFromUser():', function () {
+    var getAnyDisplayableNameFromUser;
+
+    beforeEach(function () {
+      needsHttpFlush = false;
+      getAnyDisplayableNameFromUser = this.Userservice.getAnyDisplayableNameFromUser;
+    });
+
+    afterEach(function () {
+      getAnyDisplayableNameFromUser = undefined;
+    });
+
+    it('should use either or both of "name.givenName" and "name.familyName" if available', function () {
+      var userObj = {
+        name: {
+          givenName: 'first-name',
+          familyName: 'last-name',
+        },
+      };
+      expect(getAnyDisplayableNameFromUser(userObj)).toBe('first-name last-name');
+
+      userObj.name.givenName = undefined;
+      expect(getAnyDisplayableNameFromUser(userObj)).toBe('last-name');
+
+      userObj.name.givenName = 'first-name';
+      userObj.name.familyName = undefined;
+      expect(getAnyDisplayableNameFromUser(userObj)).toBe('first-name');
+    });
+
+    it('failing "name.*" properties, it should use "displayName" if available', function () {
+      var userObj = {
+        displayName: 'display-name',
+      };
+      expect(getAnyDisplayableNameFromUser(userObj)).toBe('display-name');
+    });
+
+    it('failing "name.*" and "displayName" properties, it should return "userName" property', function () {
+      var userObj = {
+        userName: 'user-name',
+      };
+      expect(getAnyDisplayableNameFromUser(userObj)).toBe('user-name');
+    });
+  });
 });

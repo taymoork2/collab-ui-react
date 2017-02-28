@@ -29,6 +29,7 @@
       sendSparkWelcomeEmail: sendSparkWelcomeEmail,
       getUserPhoto: getUserPhoto,
       isValidThumbnail: isValidThumbnail,
+      getAnyDisplayableNameFromUser: getAnyDisplayableNameFromUser,
       getFullNameFromUser: getFullNameFromUser,
       getPrimaryEmailFromUser: getPrimaryEmailFromUser,
       getUserLicence: getUserLicence,
@@ -604,6 +605,25 @@
     function isValidThumbnail(user) {
       var userPhotoValue = getUserPhoto(user);
       return !(_.startsWith(userPhotoValue, 'file:') || _.isEmpty(userPhotoValue));
+    }
+
+    function getAnyDisplayableNameFromUser(user) {
+      var givenName = _.get(user, 'name.givenName', '');
+      var familyName = _.get(user, 'name.familyName', '');
+      var nameParts = [];
+      if (givenName) {
+        nameParts.push(givenName);
+      }
+      if (familyName) {
+        nameParts.push(familyName);
+      }
+      if (nameParts.length) {
+        return nameParts.join(' ');
+      }
+      if (user.displayName) {
+        return user.displayName;
+      }
+      return user.userName;
     }
 
     function getFullNameFromUser(user) {

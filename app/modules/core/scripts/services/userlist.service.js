@@ -7,6 +7,7 @@
     require('angular-resource'),
     require('modules/core/scripts/services/authinfo'),
     require('modules/core/scripts/services/log'),
+    require('modules/core/notifications').default,
     require('modules/core/scripts/services/utils'),
     require('modules/core/config/urlConfig'),
   ])
@@ -14,15 +15,30 @@
     .name;
 
   /* @ngInject */
-  function UserListService($http, $q, $resource, $rootScope, $timeout, $window, Authinfo, Config, Log, Utils, UrlConfig) {
+  function UserListService($http, $q, $resource, $rootScope, $timeout, $window, Authinfo, Config, Log, Notification, Utils, UrlConfig) {
+    // DEPRECATED
+    // - remove these vars after all calls to 'listUsers()' has been migrated to 'listUsersAsPromise()'
     var searchFilter = 'filter=active%20eq%20true%20and%20%s(userName%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22%20or%20displayName%20sw%20%22%s%22)';
     var attributes = 'attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID,userSettings';
+
     // Get last 7 day user counts
     var userCountResource = $resource(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/detailed/activeUsers?&intervalCount=7&intervalType=day&spanCount=1&spanType=day');
     var pako = require('pako');
 
+    var CI_QUERY = {
+      ACTIVE_EQ_TRUE: 'active eq true',
+      DEFAULT_ATTRS: 'name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID,userSettings',
+
+      // US8552: For organizations with too many users, don't load the user list
+      // searching a large org with too few characters 'xz' triggers an useful error.
+      DISPLAYNAME_SW_XZ: 'displayName sw "xz"',
+    };
+
     var service = {
       listUsers: listUsers,
+      listUsersAsPromise: listUsersAsPromise,
+      listNonAdminUsers: listNonAdminUsers,
+      listFullAdminUsers: listFullAdminUsers,
       generateUserReports: generateUserReports,
       getUserReports: getUserReports,
       extractUsers: extractUsers,
@@ -31,11 +47,140 @@
       listPartnersAsPromise: listPartnersAsPromise,
       getUserCount: getUserCount,
       queryUser: queryUser,
+      _helpers: {
+        mkAttrEqValsExpr: mkAttrEqValsExpr,
+        mkAttrsSwValExpr: mkAttrsSwValExpr,
+        mkAttrsFilterExpr: mkAttrsFilterExpr,
+        mkEntitlementsExpr: mkEntitlementsExpr,
+        mkRolesExpr: mkRolesExpr,
+        mkNameStartsWithExpr: mkNameStartsWithExpr,
+        mkFilterExpr: mkFilterExpr,
+      },
     };
 
     return service;
 
     ////////////////
+
+    function mkAttrEqValsExpr(attrName, matchVals, booleanOp) {
+      if (!attrName || !matchVals) {
+        return;
+      }
+
+      // convert to array if arg is provided as a string (ie. a single value)
+      matchVals = _.isString(matchVals) ? [matchVals] : matchVals;
+
+      // default to using 'and' as the boolean operator when joining multiple expressions
+      booleanOp = booleanOp || 'and';
+
+      // make a list of expressions for each value
+      // e.g. attribute name of 'foo' and match val of ['bar']
+      //   => ['foo eq "bar"']
+      // e.g. attribute name of 'foo' and match vals of ['a', 'b']
+      //   => ['foo eq "a"', 'foo eq "b"']
+      var exprList = _.map(matchVals, function (matchVal) {
+        return attrName + ' eq "' + matchVal + '"';
+      });
+
+      // combine all expressions back into a single one
+      // e.g. attribute name of 'foo' and match val of ['bar']
+      //   => '(foo eq "bar")'
+      // e.g. attribute name of 'foo' and match vals of ['a', 'b']
+      //   => '(foo eq "a" and foo eq "b")'
+      return '(' + exprList.join(' ' + booleanOp + ' ') + ')';
+    }
+
+    function mkAttrsFilterExpr(attrNames, searchStr, filterOp, booleanOp) {
+      if (!attrNames || !searchStr) {
+        return;
+      }
+
+      // convert to array if arg is provided as a string (ie. a single value)
+      attrNames = _.isString(attrNames) ? [attrNames] : attrNames;
+
+      // default to using 'sw' (starts with) as the filter operator
+      filterOp = filterOp || 'sw';
+
+      // default to using 'or' as the boolean operator when joining multiple expressions
+      booleanOp = booleanOp || 'or';
+
+      // make a list of expressions for each attribute name
+      // e.g. attribute name of 'foo' and search value of 'bar'
+      //   => ['foo sw "bar"']
+      // e.g. attribute names of ['a', 'b'] and search value of 'bar'
+      //   => ['a sw "bar"', 'b sw "bar"']
+      var exprList = _.map(attrNames, function (attrName) {
+        return attrName + ' ' + filterOp + ' "' + searchStr + '"';
+      });
+
+      // combine all expressions back into a single one
+      // e.g. attribute name of 'foo' and search value of 'bar'
+      //   => '(foo sw "bar")'
+      // e.g. attribute names of ['a', 'b'] and search value of 'bar'
+      //   => '('a' sw "bar" or b sw "bar")'
+      return '(' + exprList.join(' ' + booleanOp + ' ') + ')';
+    }
+
+    function mkAttrsSwValExpr(attrNames, searchStr) {
+      return service._helpers.mkAttrsFilterExpr(attrNames, searchStr, 'sw', 'or');
+    }
+
+    function mkEntitlementsExpr(entitlements) {
+      return service._helpers.mkAttrEqValsExpr('entitlements', entitlements);
+    }
+
+    function mkRolesExpr(roles) {
+      return service._helpers.mkAttrEqValsExpr('roles', roles);
+    }
+
+    function mkNameStartsWithExpr(searchStr) {
+      return service._helpers.mkAttrsSwValExpr(['userName', 'name.givenName', 'name.familyName', 'displayName'], searchStr);
+    }
+
+    /**
+     * Helper function for combining multiple CI query expressions into one.
+     *
+     * @param {string} filterParams.nameStartsWith - prefix substring to search for in any name attribute
+     * @param {(string|string[])} filterParams.allEntitlements - single entitlement (e.g. 'ciscouc'), or list of
+     *   entitlements that must ALL be present (e.g. ['ciscouc', 'spark'])
+     * @param {(string|string[])} filterParams.allRoles - single role (e.g. 'id_full_admin'), or list of roles that must
+     *   ALL be present (e.g. ['id_user_admin', 'id_readonly_admin'])
+     * @param {string} filterParams.useUnboundedResultsHack - set to true if needing to include
+     *   CI_QUERY.DISPLAYNAME_SW_XZ expression by default in the final expression (not included though, if a search
+     *   string of length > 1 is present)
+     * @return {string} - combined CI query expressing (each expression combined using 'and')
+     */
+    function mkFilterExpr(filterParams) {
+      var exprList;
+      var defaultExpr = CI_QUERY.ACTIVE_EQ_TRUE;
+
+      var nameStartsWith = _.get(filterParams, 'nameStartsWith');
+      var allRoles = _.get(filterParams, 'allRoles');
+      var allEntitlements = _.get(filterParams, 'allEntitlements');
+      var useUnboundedResultsHack = _.get(filterParams, 'useUnboundedResultsHack');
+
+      var isAdequateSearchStr = nameStartsWith && nameStartsWith.length > 1;
+
+      // append hack when option is enabled and no valid search string is present
+      if (useUnboundedResultsHack && !isAdequateSearchStr) {
+        defaultExpr = defaultExpr + ' or ' + CI_QUERY.DISPLAYNAME_SW_XZ;
+      }
+      exprList = [defaultExpr];
+
+      if (nameStartsWith && isAdequateSearchStr) {
+        exprList.push(mkNameStartsWithExpr(nameStartsWith));
+      }
+
+      if (allRoles) {
+        exprList.push(mkRolesExpr(allRoles));
+      }
+
+      if (allEntitlements) {
+        exprList.push(mkEntitlementsExpr(allEntitlements));
+      }
+
+      return exprList.join(' and ');
+    }
 
     function queryUser(searchEmail) {
       return listUsers(0, 1, null, null, _.noop, searchEmail, false)
@@ -45,6 +190,54 @@
         });
     }
 
+    /**
+     * Fetch users from CI using query parameters.
+     *
+     * @param {(string|number)} params.orgId - org id of users to search for (default: logged-in user's org id)
+     * @param {Object} params.filter - params object passed through to 'mkFilterExpr()'
+     * @param {Object} params.ci - params object passed through to the underlying '$http.get()' request
+     * @see {@link mkFilterExpr}
+     * @see {@link https://wiki.cisco.com/display/PLATFORM/CI3.0+SCIM+API+-+Query+Users}
+     */
+    function listUsersAsPromise(params) {
+      var searchOrgId = _.get(params, 'orgId', Authinfo.getOrgId());
+      var url = UrlConfig.getScimUrl(searchOrgId);
+
+      // crunch 'filter.*' properties to make a proper filter expression, then set as 'ci.filter'
+      var filterParams = _.get(params, 'filter');
+      var filterExpr = service._helpers.mkFilterExpr(filterParams);
+      _.set(params, 'ci.filter', filterExpr);
+
+      // define 'ci.attributes' property
+      _.set(params, 'ci.attributes', CI_QUERY.DEFAULT_ATTRS);
+
+      return $http.get(url, {
+        params: _.get(params, 'ci'),
+      })
+      .catch(function (response) {
+        Notification.errorWithTrackingId(response, 'usersPage.loadError');
+      });
+    }
+
+    function listNonAdminUsers(params, searchStr) {
+      params = _.assignIn({}, params);
+      _.set(params, 'filter.nameStartsWith', searchStr);
+      _.set(params, 'filter.useUnboundedResultsHack', true);
+      return service.listUsersAsPromise(params);
+    }
+
+    function listFullAdminUsers(params, searchStr) {
+      params = _.assignIn({}, params);
+      _.set(params, 'filter.nameStartsWith', searchStr);
+      _.set(params, 'filter.allRoles', 'id_full_admin');
+      return service.listUsersAsPromise(params);
+    }
+
+    // DEPRECATED
+    // - update all callers of this method to use 'listUsersAsPromise()' instead, before removing
+    //   this implementataion
+    // - 'listUsersAsPromise()' can then assume this name after all callers use promise-style
+    //   chaining
     function listUsers(startIndex, count, sortBy, sortOrder, callback, searchStr, getAdmins, entitlements, orgId) {
       var searchOrgId = orgId || Authinfo.getOrgId();
       var listUrl = UrlConfig.getScimUrl(searchOrgId) + '?' + '&' + attributes;
