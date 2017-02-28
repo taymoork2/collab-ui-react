@@ -2983,7 +2983,7 @@
     "decisionCallerNumber": "The Caller's Number",
     "decisionCallerName": "The Caller's Name",
     "decisionCallerCountryCode": "The Caller's Country Code",
-    "decisionCallerAreaCode": "The Caller's National Destination Code",
+    "decisionCallerAreaCode": "The Caller's Area Code",
     "callerReturned5Mins": "5 Minutes",
     "callerReturnedOneDay": "1 Day",
     "callerReturnedOneWeek": "1 Week",
