@@ -16,7 +16,6 @@ export class SipDomainSettingController {
   public saving: boolean;
   public toggle: boolean;
   public showSaveButton: boolean;
-  private _inputValue: string = '';
   public currentDisplayName: string;
   public domainSuffix: string;
   public isRoomLicensed: boolean = false;
@@ -31,6 +30,9 @@ export class SipDomainSettingController {
     required: this.$translate.instant('firstTimeWizard.required'),
     subdomainUnavailable: this.$translate.instant('firstTimeWizard.subdomainUnavailable'),
   };
+
+  private isCsc: boolean = false;
+  private _inputValue: string = '';
 
   private readonly ACTIVATE_SAVE_BUTTONS: string = 'settings-control-activate-footer';
   private readonly REMOVE_SAVE_BUTTONS: string = 'settings-control-remove-footer';
@@ -52,7 +54,8 @@ export class SipDomainSettingController {
     private $translate: ng.translate.ITranslateService,
     private $window,
     private UrlConfig,
-    private ModalService,
+    private $modal,
+    private ServiceDescriptor,
   ) {
     this.FeatureToggleService.atlasSubdomainUpdateGetStatus().then((status: boolean): void => {
       this.toggle = status;
@@ -63,6 +66,12 @@ export class SipDomainSettingController {
       this.checkRoomLicense();
 
       if (this.toggle) {
+        this.ServiceDescriptor.isServiceEnabled('squared-fusion-ec', (error: any, enabled: boolean): void => {
+          if (!error) {
+            this.isCsc = enabled;
+          }
+        });
+
         let onSaveEventDeregister = this.$rootScope.$on(this.WIZARD_BROADCAST, (): void => {
           if (this.inputValue === this.currentDisplayName) {
             return;
@@ -82,6 +91,7 @@ export class SipDomainSettingController {
         $scope.$on('$destroy', onSaveEventDeregister);
         $scope.$on('$destroy', onSettingsSaveEventDeregister);
         $scope.$on('$destroy', onSettingsCancelEventDeregister);
+
         this.loadSubdomains();
       } else {
         this.errorMsg = $translate.instant('firstTimeWizard.setSipDomainErrorMessage');
@@ -195,6 +205,14 @@ export class SipDomainSettingController {
   }
 
   // Used in New Feature
+  public editSubdomain() {
+    if (this.isCsc) {
+      this.cscWarning();
+    } else {
+      this.toggleSipForm();
+    }
+  }
+
   public emptyOrUnchangedInput(): boolean {
     return this.inputValue === '' || _.isUndefined(this.inputValue) || _.isNull(this.inputValue) || this.inputValue === this.currentDisplayName;
   }
@@ -271,18 +289,36 @@ export class SipDomainSettingController {
   }
 
   private updateSubdomain(): void {
+    let vm = this;
     this.saving = true;
-    this.ModalService.open({
-      title: this.$translate.instant('firstTimeWizard.setSipDomainTitle'),
-      message: this.$translate.instant('firstTimeWizard.updateSubdomainMessage'),
-      close: this.$translate.instant('common.yes'),
-      dismiss: this.$translate.instant('common.no'),
-      btnType: 'negative',
+    this.$modal.open({
+      templateUrl: 'modules/core/settings/sipDomain/updateSipDomainWarning.tpl.html',
+      controller: function () {
+        this.isCsc = vm.isCsc;
+        this.openDocumentation = vm.openSipHelpWiki;
+      },
+      controllerAs: 'subdomain',
+      type: 'dialog',
     }).result.then((): void => {
       this.saveSubdomain();
     }).catch((): void => {
       this.$rootScope.$broadcast(this.ACTIVATE_SAVE_BUTTONS);
       this.saving = false;
+    });
+  }
+
+  private cscWarning(): void {
+    let vm = this;
+    this.saving = true;
+    this.$modal.open({
+      templateUrl: 'modules/core/settings/sipDomain/editCSCWarning.tpl.html',
+      controller: function () {
+        this.openDocumentation = vm.openSipHelpWiki;
+      },
+      controllerAs: 'subdomain',
+      type: 'dialog',
+    }).result.then((): void => {
+      this.toggleSipForm();
     });
   }
 
