@@ -84,6 +84,7 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
       'squared-fusion-uc': 'expressway-cluster-sidepanel',
       'squared-fusion-media': 'media-cluster-details',
       'spark-hybrid-datasecurity': 'hds-cluster-details',
+      'contact-center-context': 'context-cluster-sidepanel',
     };
 
     this.$state.go(routeMap[this.serviceId], {
