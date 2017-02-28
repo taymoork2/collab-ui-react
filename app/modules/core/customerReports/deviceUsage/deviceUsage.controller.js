@@ -45,7 +45,6 @@ require('modules/core/reports/amcharts-export.scss');
     // Preliminary beta functionality
     vm.v1 = true;
     if ($state.current.name === 'reports.device-usage-v2') {
-      apiToUse = 'local';
       vm.v1 = false;
       DeviceUsageTotalService = DeviceUsageService;
     } else {
@@ -215,6 +214,7 @@ require('modules/core/reports/amcharts-export.scss');
         vm.noDataForRange = true;
         var warning = 'No report data available for : \n' + dateRange.start + ' to ' + dateRange.end;
         Notification.notify([warning], 'warning');
+        clearDisplayedStats();
       } else {
         vm.noDataForRange = false;
       }
@@ -393,7 +393,7 @@ require('modules/core/reports/amcharts-export.scss');
     };
 
     function getModelsForRange(start, end) {
-      return DeviceUsageModelService.getModelsForRange(start, end, 'day', allDeviceCategories, 'local');
+      return DeviceUsageModelService.getModelsForRange(start, end, 'day', allDeviceCategories, apiToUse);
     }
 
     function modelsForRange(items) {
