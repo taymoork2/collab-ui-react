@@ -47,6 +47,7 @@
     var errCallerInputNoInputValuesEnteredMsg = 'autoAttendant.callerInputMenuErrorNoInputValuesEntered';
     var errPhoneMenuNoInputValuesEnteredMsg = 'autoAttendant.phoneMenuMenuErrorNoInputValuesEntered';
     var errSubMenuNoInputValuesEnteredMsg = 'autoAttendant.subMenuErrorNoInputValuesEntered';
+    var errMissingIsVariableMsg = 'autoAttendant.conditionalIsEntryVariableMissing';
     var errMissingIfVariableMsg = 'autoAttendant.conditionalIfEntryVariableMissing';
     var errMissingThenVariableMsg = 'autoAttendant.conditionalThenTargetMissing';
 
@@ -213,10 +214,15 @@
       if (_.get(action, 'name', '') !== 'conditional') {
         return true;
       }
-
-      if (_.isEmpty(action.if.rightCondition)) {
+      if (_.isEmpty(action.if.leftCondition)) {
         validAction = false;
         AANotificationService.error(errMissingIfVariableMsg, {
+          schedule: translatedLabel,
+          at: _.indexOf(conditionalMenus, conditionalMenu) + 1,
+        });
+      } else if (_.isEmpty(action.if.rightCondition)) {
+        validAction = false;
+        AANotificationService.error(errMissingIsVariableMsg, {
           schedule: translatedLabel,
           at: _.indexOf(conditionalMenus, conditionalMenu) + 1,
         });
