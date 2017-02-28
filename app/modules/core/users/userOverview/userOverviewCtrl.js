@@ -14,6 +14,7 @@
     vm.queryuserslist = $stateParams.queryuserslist;
 
     vm.services = [];
+    vm.userDetailList = [];
     vm.showGenerateOtpLink = false;
     vm.titleCard = '';
     vm.subTitleCard = '';
@@ -61,6 +62,10 @@
       detail: $translate.instant('onboardModal.freeContactCenter'),
       actionAvailable: true,
     };
+    var preferredLanguageState = {
+      name: $translate.instant('preferredLanguage.title'),
+      detail: $translate.instant('languages.englishAmerican'),
+    };
 
     init();
 
@@ -90,6 +95,7 @@
       initActionList();
       updateUserTitleCard();
       getUserFeatures();
+      initUserDetails();
       FeatureToggleService.cloudberryPersonalModeGetStatus().then(function (enablePersonalCloudberry) {
         vm.showDevices = currentUserIsSquaredUC() || (enablePersonalCloudberry && Authinfo.isDeviceMgmt());
       });
@@ -268,6 +274,18 @@
             });
         }
       }
+    }
+
+    function initUserDetails() {
+      var ciLanguageCode = _.get(vm.currentUser, 'preferredLanguage');
+      if (ciLanguageCode) {
+        UserOverviewService.getUserPreferredLanguage(ciLanguageCode).then(function (userPreferredLanguage) {
+          preferredLanguageState.detail = userPreferredLanguage ? _.get(userPreferredLanguage, 'label') : ciLanguageCode;
+        }).catch(function (error) {
+          Notification.errorResponse(error, 'usersPreview.userPreferredLanguageError');
+        });
+      }
+      vm.userDetailList.push(preferredLanguageState);
     }
 
     function resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {

@@ -7,6 +7,11 @@ export interface IBmmpAttr {
   changeplanOverride: string;
 }
 
+export interface IProdInst {
+  productInstanceId: string;
+  name: string;
+}
+
 interface ISubscriptionResource extends ng.resource.IResourceClass<ng.resource.IResource<any>> {
   patch: ng.resource.IResourceMethod<any>;
 }
@@ -71,10 +76,24 @@ export class OnlineUpgradeService {
     return _.get<string>(this.Authinfo.getSubscriptions(), '[0].subscriptionId');
   }
 
-  public getProductInstanceId(userId): ng.IPromise<string> {
+  public getProductInstance(userId): ng.IPromise<IProdInst> {
     return this.$http.get<any>(this.UrlConfig.getAdminServiceUrl() + 'commerce/productinstances?ciUUID=' + userId).then((response) => {
-      return _.get<string>(response, 'data.productGroups[0].productInstance[0].productInstanceId', '');
+      const productInstance = _.get<any>(response, 'data.productGroups[0].productInstance[0]', undefined);
+      return this.getProdInstAttrs(productInstance);
     });
+  }
+
+  private getProdInstAttrs(productInstance): IProdInst {
+    let prodInst: IProdInst = {
+      productInstanceId: '',
+      name: '',
+    };
+    if (productInstance) {
+      prodInst.productInstanceId = productInstance.productInstanceId;
+      prodInst.name = productInstance.description;
+    }
+
+    return prodInst;
   }
 
   public getSubscription(subId): ng.IPromise<any> {

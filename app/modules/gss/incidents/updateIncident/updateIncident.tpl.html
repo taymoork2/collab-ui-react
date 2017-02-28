@@ -59,7 +59,7 @@
 
       <div class="sub-section">
         <label class="cs-input__label" for="updateIncidentMessage" translate="gss.incidentsPage.message"></label>
-        <textarea id="updateIncidentMessage" ng-model="updateIncidentCtrl.incidentForUpdate.message"></textarea>
+        <textarea id="updateIncidentMessage" ng-model="updateIncidentCtrl.incidentForUpdate.message" maxlength="4000" ></textarea>
       </div>
 
       <div class="sub-section">
@@ -78,11 +78,11 @@
 
               <div class="columns medium-2">
                 <a ng-show="!groupComponent.isOverridden" ng-click="updateIncidentCtrl.toggleOverridden(groupComponent)"
-                   translate="gss.overrideStatus">
+                   translate="gss.useDerivedStatus">
                 </a>
 
                 <a ng-show="groupComponent.isOverridden" ng-click="updateIncidentCtrl.toggleOverridden(groupComponent)"
-                   translate="gss.useDerivedStatus">
+                   translate="gss.overrideStatus">
                 </a>
               </div>
 
@@ -166,7 +166,7 @@
 
             <div>
               <span translate="gss.incidentsPage.postedAt"></span>
-              <span>{{ message.postAt | date: "MMM d, y HH:mm" : "UTC" }} UTC</span>
+              <span>{{ message.createTime | date: "MMM d, y HH:mm" : "UTC" }} UTC</span>
             </div>
             <div>
               <span translate="gss.incidentsPage.lastUpdatedOn"></span>

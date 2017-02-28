@@ -364,7 +364,9 @@
     "spark": "Spark",
     "calling": "Calling",
     "enabledBetaFeatures": "Enabled Beta Features",
-    "otpShareButton": "Share"
+    "otpShareButton": "Share",
+    "userDetails": "User Details",
+    "userPreferredLanguageError": "Failed to fetch user preferred language. Reason:"
   },
   "tabs": {
     "overviewTab": "Overview",
@@ -604,7 +606,20 @@
     "concurrentMeetingsTitle": "Actual number of concurrent mettings held",
     "concurrentMeetings": "Concurrent Meetings",
     "maxMeetingsTitle": "Maximum number of concurrent meetings allowed",
-    "errorLoadingSharedMeetingData": "There was a problem loading the Shared Meeting Report data."
+    "errorLoadingSharedMeetingData": "There was a problem loading the Shared Meeting Report data.",
+    "errorLoadingSharedMeetingDetails": "There was a problem loading the Shared Meeting Report details data.",
+    "siteUrlError": "Site URL is undefined.  Cannot retrieve shared meetings report.",
+    "csvPageError": "Unable to retrieve the detailed report for download.",
+    "downloadHref": "Download a <a href=\"{{href}}\" download=\"{{download}}\">detailed report</a> of shared meetings usage.",
+    "downloadClick": "Download a <a ng-click=\"{{onclick}}\">detailed report</a> of shared meetings usage.",
+    "csvMeetingTopic": "Meeting Topic",
+    "csvStartTime": "Start Time",
+    "csvEndTime": "End Time",
+    "csvConfId": "Conference ID",
+    "csvDuration": "Meeting Duration (Seconds)",
+    "csvMeetingType": "Meeting Type",
+    "csvHostId": "Host Id",
+    "csvHostName": "Host Name"
   },
   "careReportsPage": {
     "tasks": "Contacts",
@@ -1398,7 +1413,7 @@
       "internationalTitle": "International Dialing",
       "internationalDesc": "Choose whether users are allowed to dial international numbers. Users and Places with Spark Call inherit this setting by default.",
       "premiumTitle": "Premium Dialing",
-      "premiumDesc": "Choose whether users are allowed to dial premium numbers. Premium includes numbers that are charged to dial in or out.",
+      "premiumDesc": "Choose whether users are allowed to dial numbers that are charged for dial in and dial out. These include numbers starting with {{premiumNumbers}}.",
       "neverAllow": "Never Allow",
       "alwaysAllow": "Always Allow",
       "orgSetting": "Organization Settings ({{state}})",
@@ -1535,11 +1550,11 @@
     "reset": "Reset",
     "rsuKeyWasReset": "The remote support key was reset. Any key you may have shared with Cisco Support is now not usable anymore.",
     "rsuKeyResetFailed": "The remote support key reset failed, the device did not return a new key in time.",
-    "nothingHere": "No devices yet.",
-    "nothingHerePlaces": "No places yet.",
-    "noDevices": "Let's enable devices",
-    "noneFound": "No Devices Found",
-    "tryAgain": "Try another Search",
+    "nothingHere": "No devices yet",
+    "nothingHerePlaces": "No places yet",
+    "noDevices": "After you activate Cisco desk phones and room devices, you'll see them listed here.",
+    "noneFound": "No devices found",
+    "tryAgain": "Try another search.",
     "licenseWarningTitle": "License",
     "licenseWarningHeader": "There is a problem with the license for this service.",
     "licenseSuspendedWarning": "Your room device licenses are suspended.",
@@ -1783,12 +1798,16 @@
       "c_ucmc": "Call Connector",
       "c_mgmt": "Management Connector",
       "mf_mgmt": "Media Service",
-      "hds_app": "Hybrid Data Security"
+      "hds_app": "Hybrid Data Security",
+      "cs_mgmt": "Management Connector",
+      "cs_context": "Context Connector"
     },
     "serviceNameFromConnectorType": {
       "c_cal": "Calendar Service",
       "c_ucmc": "Call Service",
-      "c_mgmt": "Management Service"
+      "c_mgmt": "Management Service",
+      "cs_mgmt": "Management Connector",
+      "cs_context": "Context Connector"
     },
     "clusterTypeFromServiceId": {
       "squared-fusion-mgmt": "Expressway",
@@ -1865,6 +1884,7 @@
       "pending": "Pending",
       "upgrade": "Upgrade",
       "upgradeNow": "Upgrade Now",
+      "upgradesAutomatically": "Upgrades automatically",
       "upgradeProcessInitiating": "Initiating the upgrade to version {{version}}…",
       "upgradingHost": "Upgrading {{host}} to {{version}}",
       "upgradeDone": "Upgrade completed!",
@@ -1924,6 +1944,7 @@
       "clusters-title-squared-fusion-uc": "Expressway Clusters",
       "clusters-title-squared-fusion-media": "Media Clusters",
       "clusters-title-spark-hybrid-datasecurity": "HDS Clusters",
+      "clusters-title-contact-center-context": "Context Clusters",
       "status-title": "Service Status"
     },
     "hybridVoicemailUserSection": {
@@ -2320,7 +2341,6 @@
       "viewList": "View list"
     },
     "hybridServicesConnectorSidepanel": {
-      "overview": "Overview",
       "alarmDetails": "Alarm Details"
     }
   },
@@ -2348,6 +2368,11 @@
         "encrypted": "Non-PII Encrypted",
         "unencrypted": "Unencrypted",
         "dateFormat": "MM/dd/yyyy"
+      },
+      "fieldsetPage": {
+        "fieldsetId": "Fieldset ID",
+        "numOfFields": "No. of Fields",
+        "fieldsetReadFailed": "Unable to retrieve fieldsets. Refresh your browser to try again."
       }
     }
   },
@@ -2459,6 +2484,8 @@
         "moveToProduction": "Move to Production",
         "addTrialUsers": "Add Trial Users",
         "editTrialUsers": "Edit Users in Trial",
+        "confirmProdMoveDialogHeader": "Move to Production",
+        "confirmProdMoveDialogBody": "Are you sure you want to move to production ?",
         "hdsModeGetError": "Failed to get HDS mode: "
       },
       "addTrialUsers": {
@@ -2467,6 +2494,7 @@
         "modalDesc": "Enter the email addresses of the users that will be assigned to the Hybrid Data Security Service.",
         "emailNotificationsWatermark": "Email addresses",
         "emailExample": "For example: john.doe@example.com",
+        "refreshOtherServices": "Refresh other services to avoid a 24 hours delay.",
         "modalSST": "Add Users"
       },
       "editTrialUsers": {
@@ -2474,6 +2502,7 @@
         "modalHeading": "Edit Users",
         "emailNotificationsWatermark": "add new ...",
         "tooManyUsers": "<i class='icon icon-error'></i> Max number of users reached, delete existing users to add more.",
+        "invalidUsers": " not valid user(s) in this org won't be saved.",
         "modalDesc": "To remove a user click the X in the user's field and they will be removed from the Hybrid Data Security Service."
       },
       "page_title": "Hybrid Data Security Service",
@@ -2574,9 +2603,9 @@
       "backToSearch": "Back to Search",
       "searchInfo": "Search Info",
       "emailId": "Email Id",
+      "roomId": "Room Id",
       "dateRange": "Date Range",
-      "textMessage": "Text Messages Contains",
-      "fileName": "File Name Contains",
+      "textAndFileName": "Text Messages or File Name Contains",
       "reportSummary": "Report Summary",
       "rooms": "Rooms",
       "messages": "Messages",
@@ -2827,7 +2856,7 @@
     "domainSubDesc": "Enter the Acive Directory domain:",
     "connectorSteps": "Follow these steps in order to install the Directory Connector:",
     "readyToGo": "You're ready to go!",
-    "finishDesc": "You have completed the setup wizard. If you have skipped steps or need to change any of the settings, click the gear icon in the upper right hand corner of the page to access this panel again.",
+    "finishDesc": "You have completed the setup wizard. If you need to modify any choices you made, visit the Settings or the Services tab.",
     "finish": "Finish",
     "finishSub": "Complete your setup",
     "completeRequired": "{{name}} must be completed.",
@@ -3323,20 +3352,34 @@
     "createHelpText": "Create",
     "numberFetchFailure": "Unable to get numbers.",
     "memberFetchFailure": "Unable to get members.",
+    "initiatorFetchFailure": "Unable to get initiators.",
     "pagingGroupName": "Paging Group Name",
     "pagingGroupNumber": "Paging Group Number",
     "pagingGroupMembers": "Paging Group Members",
     "memberEditHint": "Select the users or places that will be paged.  Members must have a desk phone in the the same multicast group for paging to work.",
     "editMemberPlaceholder": "Add Members",
+    "pagingGroupInitiator": "Paging Group Initiators",
+    "initiatorEditHint": "These are the devices that will be allowed to page this group. The devices need to be in the same multicast group for paging to work.",
+    "editInitiatorPlaceholder": "Add Initiators",
     "users": " Users",
     "places": " Places",
+    "initiators": " Initiators",
     "search": "Search Members",
+    "searchInitiators": "Search Initiators",
+    "initiatorTitle": "Select Initiators",
+    "initiatorHint": "Select the users or places that can initiate a page.",
+    "initiatorWarning": "The initiators must have a desk phone in the the same multicast group for paging to work.",
+    "all": "All Users and Places",
+    "allMembers": "All Paging Group Members",
+    "custom": "Custom",
+    "addInitiatorPlaceholder": "Add Initiators",
     "saveLabel": "Do you want to save your changes?",
     "successUpdate": "'{{pagingGroupName}}' paging group has been updated successfully",
     "successSave": "'{{pagingGroupName}}' paging group has been created successfully",
     "errorUpdate": "Failed to update the paging group: '{{message}}'",
     "errorSave": "Failed to create the paging group: '{{message}}'",
-    "errorSavePartial": "'{{pagingGroupName}}' paging group has been created successfully but following member ids did not get added: '{{message}}'"
+    "errorSaveMemeberPartial": "'{{pagingGroupName}}' paging group has been created successfully but following members ids did not get added: '{{message}}'",
+    "errorSaveInitiatorPartial": "'{{pagingGroupName}}' paging group has been created successfully but following initiators ids did not get added: '{{message}}'"
   },
   "telephonyPreview": {
     "lines": "Lines",
@@ -3565,7 +3608,8 @@
     "portNumbersPrompt": "Copy and paste customer's numbers that need to be ported.",
     "portNumbersLabel": "Porting Numbers",
     "manualAdd": "Manually Add New Numbers",
-    "state": "State / Region",
+    "state": "State",
+    "province": "Province",
     "selectState": "Select state",
     "searchStates": "Search states",
     "areaCode": "Area Code",
@@ -3746,7 +3790,7 @@
     "invalidTrialLicenseCount": "Number of Licenses should be greater than 0 and less than 1000.",
     "invalidTrialRoomSystemQuantity": "Number of Licenses should be between 1 and 20.",
     "invalidTrialSparkBoardQuantity": "Number of Licenses should be between 1 and 20.",
-    "invalidTrialCareQuantity": "Number of Licenses must be between 1 and message license quantity or maximum 50.",
+    "invalidTrialCareQuantity": "K1 and K2 licenses should be between 1 and 50 each and not exceed the Licenses Quantity in total.",
     "careLicenseCountExceedsTotalCount": "Care license requested is more than the message license quantity.",
     "individualUserServices": "Individual User Services",
     "roomSystems": "Room Devices",
@@ -3873,7 +3917,7 @@
       "title": "Trial Added"
     },
     "trialSuccess": "Your trial is ready",
-    "nextStepPrompt": "Do you want to setup the services for the customer?",
+    "nextStepPrompt": "Do you want to set up the services for the customer?",
     "setupLater": "No, thanks",
     "setupNow": "Yes, setup the services",
     "skip": "Skip",
@@ -3904,9 +3948,15 @@
     "meeting": "Meeting 25 Party",
     "webex": "WebEx Enterprise Edition 200 with CMR/TNU+",
     "call": "Call",
-    "care": "Care",
+    "care": "K1",
+    "careHelp": "Provide customer care through Chat and Callback",
+    "advanceCareHelp": "Provide customer care through Chat, Callback and Inbound Call",
+    "advanceCare": "K2",
     "callUsOnly": "Call (Currently U.S. only)",
     "supportSelectLocations": "Cisco Spark is supported in selected locations.  <a href='http://www.cisco.com/go/spark-availability' target='_blank' ng-click='{{click}}'>Learn more</a>",
+    "supportedLocationsCertification1": "I certify that this customer is in a ",
+    "supportedLocationsCertification2": " for Cisco Spark",
+    "supportedLocationsCertificationLinkText": "supported location",
     "context": "Enable Context Service for Cisco Unified Contact Center.",
     "roomSystem": "DX, MX or SX system",
     "sparkBoardSystem": "Cisco Spark Board",
@@ -4208,7 +4258,10 @@
     "impedanceDescr": "Adjust the frequency response level for sound quality.",
     "input": "Input Audio Level",
     "output": "Output Audio Level",
-    "saved": "The settings are saved. You will have to reboot the device for the changes to take effect"
+    "saved": "The settings are saved. You will have to reboot the device for the changes to take effect",
+    "t38Warning": "Warning: T.38 faxes will not be encrypted",
+    "t38Label": "T.38 Fax Protocol",
+    "savedT38": "T.38 settings updated"
   },
   "addDeviceWizard": {
     "newDevice": "New Device",
@@ -4331,7 +4384,6 @@
     "clipboardFallback": "Press cmd+c to copy the text below.",
     "emailSuccessTitle": "Email sent",
     "emailSuccess": "Activation code has been sent to {{address}}",
-    "emailErrorTitle": "Email not sent",
     "emailError": "Failed to send activation code to {{address}}",
     "clipboardSuccessTitle": "Copied to clipboard",
     "clipboardSuccess": "Activation code has been copied to the clipboard.",
@@ -4524,6 +4576,7 @@
       "partialTitle": "Partially Available",
       "utilizationTitle": "Percentage Utilization",
       "participantDistributionTitle": "Participant Distribution",
+      "numberOfParticipantTitle": "Total Participants",
       "clusteravailability": "Cluster Availability",
       "overallUtilizationGraphError": "There was an error while loading detailed utilization data",
       "overallParticipantDistributionGraphError": "There was an error while loading detailed participant distribution data",
@@ -4560,13 +4613,15 @@
       "lowAvailableClusters": "Low availability clusters",
       "clusterTakingMoreCalls": "Clusters hosting more no of calls",
       "totalMeetings": "Total number of meetings",
-      "meetOnPrem": "Number of Meets on Premises",
+      "meetOnPrem": "Meetings Location",
       "clientTypes": "Client Types",
       "clientType": "Client Type",
       "noOfMeet": "Number of Meetings",
       "meetingLocationTitle": "Total Meetings by Location",
       "meetings": "Meetings",
-      "location": "Location"
+      "location": "Location",
+      "totalCloud": "Total Cloud Participants",
+      "clientTypeHeading": "Client Type Distribution Across Calls"
     },
     "deleteGroup": {
       "message": "Are you sure you want to delete {{groupName}} from Cisco Collaboration Cloud?",
@@ -5492,14 +5547,14 @@
     "nameHeader": "Name",
     "typeHeader": "Type",
     "deviceHeader": "No. of Devices",
-    "noneFound": "No Places Found",
+    "noneFound": "No places found",
     "actionHeader": "Actions",
     "servicesHeader": "Services",
     "sparkCall": "Spark + Spark Call",
     "sparkOnly": "Spark only",
     "placeAdd": "Add Place",
     "placesDefinition": "A place represents a physical location containing a device not owned by a specific user, such as a meeting room with a room device or a reception with shared phones.",
-    "placesUses": "You'll be able to view your places here - and the devices and configurations that belong to them.",
+    "placesUses": "Places can contain shared devices. You'll be able to view your places here - and the devices and configurations that belong to them.",
     "deletePlace": "Delete Place",
     "deletePlaceConfText": "Are you sure you want to delete {{ placeName }}?",
     "failedToSaveChanges": "Failed to save changes to place. Reason:",
@@ -6074,6 +6129,27 @@
       "problemReportsTextPlaceholder": "Enter additional support contact information here, like phone numbers or email addresses",
       "helpSiteLabel": "Help Site",
       "useCustomHelpSite": "Use a custom help site"
+    },
+    "dirsync" : {
+      "loading": "Updating Status",
+      "title": "Directory Synchronization",
+      "syncTitle": "Directory Synchronization",
+      "status": "Status",
+      "enabled": "Enabled",
+      "disabled": "Disabled",
+      "turnOffDirSync": "Turn off Directory Synchronization",
+      "turnOnDirSync": "How to Turn On Directory Synchronization",
+      "connectorsTitle": "Directory Connectors",
+      "deregister": "Deregister",
+      "register": "Register",
+      "emailNotifications": "Email Notifications",
+      "manageNotifications": "Manage Notifications",
+      "turnOffDirSyncWarning": "Are you sure that you want to turn off directory synchronization? It can only be enabled again from Cisco Directory Connector. After it's turned off, you must manually add new users.",
+      "disableDirSyncSuccess": "Directory Synchronization has been turned off.",
+      "disableDirSyncFailed": "Error turning off Directory Synchronization",
+      "deregisterWarning": "Please uninstall the Directory Connector before deregistering.",
+      "deregisterSuccess": "Directory Connector '{{name}}' successfully deregistered.",
+      "deregisterFailed": "Failed to deregister Directory Connector '{{name}}'."
     }
   },
   "my-company": {
@@ -6100,6 +6176,7 @@
     "upgrade": "Upgrade",
     "purchase": "Purchase",
     "changePlan": "Change Plan",
+    "contact": "Contact Account Rep",
     "onlineTrialUpgradeUrlError": "Unable to retrieve purchase url for trial {{trialId}}.  To purchase a paid subscription, contact your partner via email or use the purchase button on the trial banner to have one sent for you.",
     "onlineProductInstanceError": "Unable to retrieve product instance for trial {{trialId}}.  To purchase a paid subscription, contact your partner via email or use the purchase button on the trial banner to have one sent for you.",
     "loadError": "An error occurred while loading subscriptions.",

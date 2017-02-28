@@ -94,8 +94,10 @@
       var res = false;
       try {
         var phoneNumberType;
-        if (phoneUtils.isValidNumberForRegion(number, regionCode)) {
-          phoneNumberType = phoneUtils.getNumberType(number, regionCode);
+        var formattedNumber = phoneUtils.formatE164(number);
+        var extractedRegionCode = phoneUtils.getRegionCodeForNumber(formattedNumber).toLowerCase();
+        if (phoneUtils.isValidNumberForRegion(formattedNumber, extractedRegionCode)) {
+          phoneNumberType = phoneUtils.getNumberType(formattedNumber, extractedRegionCode);
           switch (phoneNumberType) {
             case PREMIUM_RATE:
               res = false;
@@ -113,7 +115,7 @@
 
     function getDIDValue(number) {
       if (validateDID(number)) {
-        return phoneUtils.formatE164(number, regionCode);
+        return phoneUtils.formatE164(number);
       } else if (_.isString(number)) {
         return _.replace(number, filterRegex, '');
       } else {

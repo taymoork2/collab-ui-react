@@ -71,15 +71,17 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
         .catch(() => {
           this.clusterList = this.ClusterService.getClustersByConnectorType(this.connectorType);
         });
-    } else if (this.serviceId === 'spark-hybrid-datasecurity' || this.serviceId === 'squared-fusion-media') {
+    } else if (this.serviceId === 'spark-hybrid-datasecurity' ||
+               this.serviceId === 'squared-fusion-media' ||
+               this.serviceId === 'contact-center-context') {
       this.clusterList = this.ClusterService.getClustersByConnectorType(this.connectorType);
     }
   }
 
   private goToSidepanel(clusterId: string) {
     let routeMap = {
-      'squared-fusion-cal': 'cluster-details',
-      'squared-fusion-uc': 'cluster-details',
+      'squared-fusion-cal': 'expressway-cluster-sidepanel',
+      'squared-fusion-uc': 'expressway-cluster-sidepanel',
       'squared-fusion-media': 'media-cluster-details',
       'spark-hybrid-datasecurity': 'hds-cluster-details',
     };

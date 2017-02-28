@@ -65,6 +65,7 @@ describe('Partner flow', function () {
       utils.click(partner.roomSystemsTrialCheckbox); // no room systems on this trial
       utils.click(partner.sparkBoardTrialCheckbox); // no spark board system on this trial
       utils.click(partner.careTrialCheckbox); // no care on this trial
+      utils.click(partner.validLocationCheckbox); // valid location checked
       utils.expectCheckbox(partner.squaredUCTrialCheckbox, false);
       utils.expectCheckbox(partner.roomSystemsTrialCheckbox, false);
       utils.expectCheckbox(partner.sparkBoardTrialCheckbox, false);
@@ -94,6 +95,7 @@ describe('Partner flow', function () {
       utils.expectIsDisplayed(partner.previewPanel);
       utils.click(partner.termsActionButton);
       utils.click(partner.editTermsButton);
+      utils.click(partner.validLocationCheckbox); //valid location
 
       utils.waitForModal().then(function () {
         utils.expectIsDisplayed(partner.editTrialForm);

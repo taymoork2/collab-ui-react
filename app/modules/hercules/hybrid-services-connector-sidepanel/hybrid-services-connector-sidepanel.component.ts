@@ -12,7 +12,7 @@ class HybridServicesConnectorSidepanelCtrl implements ng.IComponentController {
   ) {}
 
   public $onInit() {
-    this.$state.current.data.displayName = this.$translate.instant('hercules.hybridServicesConnectorSidepanel.overview');
+    this.$state.current.data.displayName = this.$translate.instant('common.overview');
     this.$rootScope.$broadcast('displayNameUpdated');
     this.titleKey = `hercules.connectorNameFromConnectorType.${this.connector.connectorType}`;
   }

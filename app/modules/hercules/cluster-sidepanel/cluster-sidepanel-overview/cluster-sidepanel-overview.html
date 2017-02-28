@@ -20,7 +20,7 @@
 
   <hybrid-services-node-list cluster="$ctrl.cluster"
                              connector-type="$ctrl.connectorType"
-                             ng-if="!$ctrl.hasNodesViewFeatureToggle && !($ctrl.isExpresswayCluster() && !$ctrl.hasConnectors())"></hybrid-services-node-list>
+                             ng-if="!$ctrl.hasNodesViewFeatureToggle && !($ctrl.isExpresswayCluster() && !$ctrl.hasConnectors()) || $ctrl.isHDSCluster()"></hybrid-services-node-list>
 
   <cs-sp-section ng-if="$ctrl.hasNodesViewFeatureToggle && !($ctrl.isExpresswayCluster() && !$ctrl.hasConnectors())">
     <div class="section-title-row">

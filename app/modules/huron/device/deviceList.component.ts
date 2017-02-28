@@ -29,8 +29,8 @@ class DeviceList implements ng.IComponentController {
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
-    let deviceListChange = changes['deviceList'];
-    this.showGenerateButton = _.size(Object.keys(deviceListChange.currentValue)) === 0;
+    const { deviceList } = changes;
+    this.showGenerateButton = _.size(Object.keys(deviceList.currentValue)) === 0;
     this.showActions = this.multipleOtp && !this.showGenerateButton;
   }
 

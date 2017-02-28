@@ -188,7 +188,9 @@ describe('Service: EdiscoveryService', function () {
         'roomQuery': {
           'startDate': null,
           'endDate': null,
-          'roomId': roomId,
+          'roomIds': roomId,
+          'emailAddresses': null,
+          'keyword': null,
         },
       }).respond(createReport);
 
@@ -225,7 +227,9 @@ describe('Service: EdiscoveryService', function () {
     it('can create report', function (done) {
       var params = {
         displayName: 'King Kong Rules',
-        roomId: roomId,
+        roomIds: roomId,
+        emailAddresses: null,
+        keyword: null,
         startDate: null,
         endDate: null,
       };

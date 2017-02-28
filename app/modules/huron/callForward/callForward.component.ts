@@ -15,8 +15,6 @@ class CallForwardCtrl implements ng.IComponentController {
   public forwardState: string;
   public forwardExternalCalls: boolean = false;
   public forwardAllCalls: any;
-  public forwardNABCalls: any;
-  public forwardExternalNABCalls: any;
   public forwardOptions: string[] = [];
   public voicemailEnabled: boolean;
   public callForward: CallForward;
@@ -43,11 +41,11 @@ class CallForwardCtrl implements ng.IComponentController {
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
-    let callForwardChanges = changes['callForward'];
+    const { callForward } = changes;
 
-    if (callForwardChanges && callForwardChanges.currentValue) {
-      this.processForwardOptionsChange(callForwardChanges);
-      this.processCallForwardChanges(callForwardChanges);
+    if (callForward && callForward.currentValue) {
+      this.processForwardOptionsChange(callForward);
+      this.processCallForwardChanges(callForward);
     }
   }
 

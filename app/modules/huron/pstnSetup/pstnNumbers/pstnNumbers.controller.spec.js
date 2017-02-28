@@ -73,10 +73,13 @@ describe('Controller: PstnNumbersCtrl', function () {
     orderType: "BLOCK_ORDER",
   };
 
-  var states = [{
-    name: 'Texas',
-    abbreviation: 'TX',
-  }];
+  var location = {
+    type: 'State',
+    areas: [{
+      name: 'Texas',
+      abbreviation: 'TX',
+    }],
+  };
 
   var response = {
     areaCodes: [{
@@ -121,6 +124,7 @@ describe('Controller: PstnNumbersCtrl', function () {
     PstnSetup.setCustomerId(customer.uuid);
     PstnSetup.setCustomerName(customer.name);
     PstnSetup.setProvider(customerCarrierList[0]);
+    PstnSetup.setCountryCode('US');
 
     spyOn(PstnSetupService, 'releaseCarrierInventory').and.returnValue($q.resolve());
     spyOn(PstnSetupService, 'releaseCarrierInventoryV2').and.returnValue($q.resolve());
@@ -129,7 +133,7 @@ describe('Controller: PstnNumbersCtrl', function () {
     spyOn(PstnSetup, 'getServiceAddress').and.returnValue(serviceAddress);
     spyOn(Notification, 'error');
     spyOn($state, 'go');
-    spyOn(PstnSetupStatesService, 'getStateProvinces').and.returnValue($q.resolve(states));
+    spyOn(PstnSetupStatesService, 'getLocation').and.returnValue($q.resolve(location));
     spyOn($translate, 'instant').and.callThrough();
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
 
@@ -161,7 +165,6 @@ describe('Controller: PstnNumbersCtrl', function () {
     advancedOrder = undefined;
     advancedNxxOrder = undefined;
     advancedTollFreeOrder = undefined;
-    states = undefined;
     response = undefined;
     serviceAddress = undefined;
   });
@@ -186,7 +189,7 @@ describe('Controller: PstnNumbersCtrl', function () {
     });
 
     it('should have state set through pstnSetupService on first time', function () {
-      expect(controller.model.pstn.state).toEqual(states[0]);
+      expect(controller.model.pstn.state).toEqual(location.areas[0]);
     });
 
     it('should have showTollFreeNumbers set to false if feature toggle returns false', function () {

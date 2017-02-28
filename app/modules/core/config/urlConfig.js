@@ -174,7 +174,7 @@
       dev: 'https://statusbts.webex.com/status',
       cfe: 'https://statusbts.webex.com/status',
       integration: 'https://statusbts.webex.com/status',
-      prod: 'https://statusbts.webex.com/status',
+      prod: 'https://healthstatus.webex.com/status',
     },
     UccUrl: {
       dev: 'https://ucc-integration.wbx2.com/ucm-service/api/v1',
@@ -200,6 +200,12 @@
       integration: 'https://discovery.appstaging.ciscoccservice.com/discovery/apps/v1',
       prod: 'https://discovery.produs1.ciscoccservice.com/discovery/apps/v1',
     },
+    HybridEncryptionServiceUrl: {
+      dev: 'https://encryption-integration.wbx2.com/encryption/api/v1',
+      cfe: 'https://encryption-integration.wbx2.com/encryption/api/v1',
+      integration: 'https://encryption-integration.wbx2.com/encryption/api/v1',
+      prod: 'https://encryption-a.wbx2.com/encryption/api/v1',
+    },
 
     // urls same for all environments
 
@@ -207,6 +213,7 @@
     WebexAdvancedEditUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage',
     WebexAdvancedHomeUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminHomePage',
     WebexMaxConcurrentMeetings: 'https://%s/meetingsapi/v1/report/MonthlyMaxConcurrentMeetings',
+    WebexConcurrentMeetings: 'https://%s/meetingsapi/v1/report/ConcurrentMeetingsDetailByMonth',
     WebClientUrl: 'https://web.ciscospark.com/',
     ArgonautReportSizeUrl: 'https://argonaut-a.wbx2.com/argonaut/api/v1/compliance/report/size',
     ArgonautReportUrl: 'https://argonaut-a.wbx2.com/argonaut/api/v1/compliance/report',

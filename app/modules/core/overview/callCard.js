@@ -60,8 +60,7 @@
 
         function filterLicenses(licenses) {
           return _.filter(licenses, function (l) {
-            //  return l.offerName === 'CO'
-            return (l.licenseType === 'COMMUNICATION' && card.helper.isntCancelledOrSuspended(l)) || (l.licenseType === 'SHARED_DEVICES' && card.helper.isntCancelledOrSuspended(l));
+            return l.licenseType === 'COMMUNICATION' && card.helper.isntCancelledOrSuspended(l);
           });
         }
 

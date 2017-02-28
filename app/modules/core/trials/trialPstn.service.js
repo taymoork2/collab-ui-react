@@ -14,6 +14,7 @@
       createPstnEntityV2: createPstnEntityV2,
       resetAddress: resetAddress,
       checkForPstnSetup: checkForPstnSetup,
+      setCountryCode: setCountryCode,
     };
 
     return service;
@@ -36,6 +37,7 @@
         reseller: false,
         details: {
           isTrial: true,
+          countryCode: 'US',
           pstnProvider: {},
           swivelNumbers: [],
           pstnContractInfo: {
@@ -66,7 +68,7 @@
     }
 
     function createPstnEntityV2(customerOrgId, customerName) {
-      checkForPstnSetup(customerOrgId)
+      return checkForPstnSetup(customerOrgId)
         .catch(function () {
           if (_trialData.details.pstnProvider.apiImplementation === "SWIVEL") {
             _trialData.details.pstnNumberInfo.numbers = _trialData.details.swivelNumbers;
@@ -177,5 +179,12 @@
       _trialData.details.emergAddr.state = '';
       _trialData.details.emergAddr.zip = '';
     }
+
+    function setCountryCode(countryCode) {
+      getData();
+      _trialData.details.countryCode = countryCode;
+      PstnSetupService.setCountryCode(countryCode);
+    }
+
   }
 })();

@@ -74,6 +74,7 @@
     vm.formatTelephoneNumber = formatTelephoneNumber;
     vm.showOrderQuantity = showOrderQuantity;
     vm.searchResults = [];
+    vm.locationLabel = '';
 
     vm.model.pstn.paginateOptions = {
       currentPage: 0,
@@ -116,13 +117,14 @@
     init();
 
     function init() {
-      PstnSetupStatesService.getStateProvinces().then(function (states) {
+      PstnSetupStatesService.getLocation(PstnSetup.getCountryCode()).then(function (location) {
         vm.model.pstn.quantity = null;
-        vm.model.pstn.states = states;
+        vm.locationLabel = location.type;
+        vm.model.pstn.states = location.areas;
         if (_.get(PstnSetup.getServiceAddress(), 'state')) {
           vm.model.pstn.state = {
             abbreviation: PstnSetup.getServiceAddress().state,
-            name: _.result(_.find(states, {
+            name: _.result(_.find(vm.model.pstn.states, {
               'abbreviation': PstnSetup.getServiceAddress().state,
             }), 'name'),
           };

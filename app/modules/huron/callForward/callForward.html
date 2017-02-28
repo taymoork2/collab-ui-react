@@ -64,7 +64,7 @@
           <div ng-if="$ctrl.internalVoicemailEnabled === false">
             <cs-call-destination
               class="row"
-              model="$ctrl.forwardNABCalls"
+              model="$ctrl.callDestInternal"
               size="medium-12"
               inputs="$ctrl.forwardOptions"
               select-type="select"
@@ -94,7 +94,7 @@
           <div ng-if="$ctrl.externalVoicemailEnabled === false">
             <cs-call-destination
               class="row"
-              model="$ctrl.forwardExternalNABCalls"
+              model="$ctrl.callDestExternal"
               size="medium-12"
               inputs="$ctrl.forwardOptions"
               select-type="select"

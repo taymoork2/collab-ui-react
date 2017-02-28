@@ -352,3 +352,14 @@
     }
   }
 }
+
+.form-group.location-check {
+  font-size: .825rem;
+  span, a {
+    font-size: .825rem;
+  }
+  .error .message {
+    margin-left: 1rem;
+  }
+}
+

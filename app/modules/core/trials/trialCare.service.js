@@ -35,7 +35,7 @@
         },
       };
 
-      _trialData = angular.copy(defaults);
+      _trialData = _.clone(defaults);
       return _trialData;
     }
   }

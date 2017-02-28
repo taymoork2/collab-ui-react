@@ -11,7 +11,7 @@
         <div class="section-title-row">
           <span class="section-name" translate="{{$ctrl.getTitle(restriction.restriction)}}"></span>
         </div>
-        <p class="description-block" translate="{{$ctrl.getDescription(restriction.restriction)}}"></p>
+        <p class="description-block" translate="{{$ctrl.getDescription(restriction.restriction)}}" translate-values="{premiumNumbers: $ctrl.premiumNumbers}"></p>
         <cs-select
           name="{{restriction.restriction}}-restriction"
           ng-model="$ctrl.options[restriction.restriction].selected"

@@ -9,7 +9,7 @@
   function ServiceSetupCtrl($q, $state, $scope, ServiceSetup, Notification, Authinfo, $translate, HuronCustomer,
     ValidationService, DialPlanService, TelephoneNumberService, ExternalNumberService,
     CeService, HuntGroupServiceV2, ModalService, DirectoryNumberService, VoicemailMessageAction,
-    PstnSetupService, Orgservice, FeatureToggleService, Config, CustomerCosRestrictionServiceV2) {
+    PstnSetupService, Orgservice, FeatureToggleService, Config, CustomerCosRestrictionServiceV2, CustomerDialPlanServiceV2) {
     var vm = this;
     vm.isTimezoneAndVoicemail = function () {
       return Authinfo.getLicenses().filter(function (license) {
@@ -38,6 +38,7 @@
 
     vm.avrilTzUpdated = false;
     vm.avrilDialPlanUpdated = false;
+    vm.avrilLanguageUpdated = false;
     vm.voicemailAvrilCustomer = false;
     vm.addInternalNumberRange = addInternalNumberRange;
     vm.deleteInternalNumberRange = deleteInternalNumberRange;
@@ -747,6 +748,9 @@
         return initClassOfService();
       })
       .then(function () {
+        return initDialPlan();
+      })
+      .then(function () {
         // TODO BLUE-1221 - make /customer requests synchronous until fixed
         return listInternalExtensionRanges();
       })
@@ -908,6 +912,14 @@
             });
           }
         });
+    }
+
+    function initDialPlan() {
+      return CustomerDialPlanServiceV2.get({
+        customerId: Authinfo.getOrgId(),
+      }).$promise.then(function (dialPlan) {
+        vm.premiumNumbers = _.get(dialPlan, 'premiumNumbers', []).toString();
+      });
     }
 
     function testForExtensions() {
@@ -1267,7 +1279,7 @@
                 };
 
                 return ServiceSetup.getAvrilSite(ServiceSetup.sites[0].uuid).then(function () {
-                  if (vm.avrilTzUpdated || vm.avrilDialPlanUpdated) {
+                  if (vm.avrilTzUpdated || vm.avrilDialPlanUpdated || vm.avrilLanguageUpdated) {
                     ServiceSetup.updateAvrilSite(setupSites.uuid, mSite);
                   }
                 })
@@ -1342,6 +1354,7 @@
           }
           if (_.get(vm, 'model.site.preferredLanguage.value') !== _.get(vm, 'model.ftswPreferredLanguage.value')) {
             siteData.preferredLanguage = vm.model.site.preferredLanguage.value;
+            vm.avrilLanguageUpdated = true;
           }
           if (_.get(vm, 'model.site.country.value') !== _.get(vm, 'model.ftswCountry.value')) {
             siteData.country = vm.model.site.country.value;
@@ -1564,13 +1577,21 @@
           .then(setupVoiceService)
           .then(saveForm)
           .catch(_.noop)
-          .then(processErrors)
-          .catch(function (response) {
-            return $q.reject(response);
-          });
+          .then(processErrors);
       }
 
-      if (vm.firstTimeSetup) {
+      // This is ported as-is from an incorrect implementation in wizardDirective
+      // TODO refactor whatever this is trying to do
+      if (vm.firstTimeSetup && vm.showTimezoneAndVoicemail) {
+        return ModalService.open({
+          title: $translate.instant('common.warning'),
+          message: $translate.instant('serviceSetupModal.saveCallSettingsExtensionLengthAllowed'),
+          close: $translate.instant('common.continue'),
+          dismiss: $translate.instant('common.cancel'),
+          btnType: 'negative',
+        })
+          .result.then(saveProcess);
+      } else if (vm.firstTimeSetup) {
         return saveProcess();
       } else if (vm.showTimezoneAndVoicemail) {
         return ModalService.open({
@@ -1580,10 +1601,7 @@
           close: $translate.instant('common.yes'),
           dismiss: $translate.instant('common.no'),
         })
-          .result.then(saveProcess)
-          .catch(function (errors) {
-            return $q.reject(errors);
-          });
+          .result.then(saveProcess);
       }
     }
 

@@ -1,0 +1,29 @@
+{
+  "groupId": "bbcd1234-abcd-abcd-abcddef123456",
+  "name": "Test1",
+  "extension": "5010",
+  "url": "",
+  "members": [
+    {
+      "deviceId": [],
+      "memberId": "0001",
+      "type": "USER"
+    },
+    {
+      "deviceId": [],
+      "memberId": "0002",
+      "type": "PLACE"
+    }
+  ],
+  "initiatorType": "CUSTOM",
+  "initiators": [
+    {
+      "initiatorId": "0001",
+      "type": "USER"
+    },
+    {
+      "initiatorId": "0002",
+      "type": "PLACE"
+    }
+  ]
+}

@@ -159,12 +159,14 @@
             "inputAudioLevel": null,
             "outputAudioLevel": null,
             "impedance": null,
+            "t38FaxEnabled": false,
           };
           if (res.data) {
             response.port = res.data.port;
             response.inputAudioLevel = res.data.inputAudioLevel;
             response.outputAudioLevel = res.data.outputAudioLevel;
             response.impedance = res.data.impedance;
+            response.t38FaxEnabled = res.data.t38FaxEnabled;
           }
           return response;
         });

@@ -72,7 +72,7 @@
       className: 'medium-8 inline-row left',
       templateOptions: {
         required: true,
-        label: $translate.instant('trialModal.pstn.state'),
+        label: ' ',
         labelfield: 'name',
         valuefield: 'abbreviation',
         inputClass: 'medium-11',
@@ -80,8 +80,9 @@
         filter: true,
       },
       controller: /* @ngInject */ function ($scope) {
-        PstnSetupStatesService.getStateProvinces().then(function (states) {
-          $scope.to.options = states;
+        PstnSetupStatesService.getLocation(vm.trial.details.countryCode).then(function (location) {
+          $scope.to.label = location.type;
+          $scope.to.options = location.areas;
         });
       },
       expressionProperties: {

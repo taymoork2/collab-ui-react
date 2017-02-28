@@ -13,7 +13,8 @@ describe('Directive: selectOn', () => {
     beforeEach(function () {
       this.compileTemplate('<div><input type="text" value="my text" select-on></div>');
       document.body.appendChild(this.view[0]);
-      this.$timeout.flush();
+      // should flush without error
+      expect(this.$timeout.flush).not.toThrow();
     });
 
     it('should immediately select the input text', function () {
@@ -26,7 +27,8 @@ describe('Directive: selectOn', () => {
       this.$scope.shouldSelect = false;
       this.compileTemplate('<div><input type="text" value="my text" select-on="shouldSelect"></div>');
       document.body.appendChild(this.view[0]);
-      this.$timeout.flush();
+      // should error because nothing to flush yet
+      expect(this.$timeout.flush).toThrow();
     });
 
     it('should only select the input text when condition is truthy', function () {

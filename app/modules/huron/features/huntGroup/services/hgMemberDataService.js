@@ -219,7 +219,9 @@
         return;
       }
 
-      if (!user.firstName && !user.lastName) {
+      if (user.displayName) {
+        return user.displayName;
+      } else if (!user.firstName && !user.lastName) {
         return user.userName;
       } else if (user.firstName && user.lastName) {
         return user.firstName + ' ' + user.lastName;

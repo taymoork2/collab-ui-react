@@ -69,56 +69,35 @@ export class LineOverviewService {
     return _.isEqual(lineOverviewData, this.lineOverviewDataCopy);
   }
 
+  private rejectAndNotifyPossibleErrors(): void | ng.IPromise<any> {
+    if (this.errors.length > 0) {
+      this.Notification.notify(this.errors, 'error');
+      return this.$q.reject();
+    }
+  }
+
+  private createSharedLineMembers(consumerType: LineConsumerType, ownerId: string, lineOverviewData: LineOverviewData, newSharedLineMembers: Member[]) {
+    if (newSharedLineMembers.length > 0) {
+      let promises: Array<ng.IPromise<any>> = [];
+      _.forEach(newSharedLineMembers, (sharedLineMember) => {
+        promises.push(this.createSharedLine(consumerType, ownerId, lineOverviewData.line.uuid, sharedLineMember));
+      });
+      return this.$q.all(promises);
+    }
+  }
+
   public save(consumerType: LineConsumerType, ownerId: string, numberId: string = '', data: LineOverviewData, newSharedLineMembers: Member[]) {
     let lineOverviewData = new LineOverviewData();
     if (!data.line.uuid) {
       return this.createLine(consumerType, ownerId, data.line)
-        .then( (line) => {
-          if (this.errors.length > 0) {
-            this.Notification.notify(this.errors, 'error');
-            return this.$q.reject();
-          }
-          lineOverviewData.line = new Line({
-            uuid: line.uuid,
-            primary: line.primary,
-            shared: line.shared,
-            internal: line.internal,
-            incomingCallMaximum: line.incomingCallMaximum,
-            external: line.external,
-            siteToSite: line.siteToSite,
-          });
-        })
-        .then( () => {
-          return this.updateCallForward(consumerType, ownerId, lineOverviewData.line.uuid, data.callForward)
-            .then( () => {
-              if (this.errors.length > 0) {
-                this.Notification.notify(this.errors, 'error');
-                return this.$q.reject();
-              }
-              lineOverviewData.callForward = data.callForward;
-            });
-        })
-        .then( () => {
-          if (newSharedLineMembers.length > 0) {
-            let promises: Array<ng.IPromise<any>> = [];
-            _.forEach(newSharedLineMembers, (sharedLineMember) => {
-              promises.push(this.createSharedLine(consumerType, ownerId, lineOverviewData.line.uuid, sharedLineMember));
-            });
-            return this.$q.all(promises).then( () => {
-              if (this.errors.length > 0) {
-                this.Notification.notify(this.errors, 'error');
-                return this.$q.reject();
-              }
-            });
-          }
-        })
-        .then( () => {
-          if (this.errors.length > 0) {
-            this.Notification.notify(this.errors, 'error');
-            return this.$q.reject();
-          }
-          return this.get(consumerType, ownerId, lineOverviewData.line.uuid);
-        });
+        .then((line) => lineOverviewData.line = line)
+        .then(() => this.rejectAndNotifyPossibleErrors())
+        .then(() => this.updateCallForward(consumerType, ownerId, lineOverviewData.line.uuid, data.callForward))
+        .then(() => lineOverviewData.callForward = data.callForward)
+        .then(() => this.rejectAndNotifyPossibleErrors())
+        .then<any>(() => this.createSharedLineMembers(consumerType, ownerId, lineOverviewData, newSharedLineMembers))
+        .then(() => this.rejectAndNotifyPossibleErrors())
+        .then(() => this.get(consumerType, ownerId, lineOverviewData.line.uuid));
     } else { // update
       let promises: Array<ng.IPromise<any>> = [];
       if (!_.isEqual(data.line, this.lineOverviewDataCopy.line)) {
@@ -156,19 +135,14 @@ export class LineOverviewService {
         }
       }
 
-      return this.$q.all(promises).then( () => {
-        if (this.errors.length > 0) {
-          this.Notification.notify(this.errors, 'error');
-          return this.$q.reject();
-        }
-        if (!_.isEqual(data.callerId, this.lineOverviewDataCopy.callerId)) {
-          return this.updateCallerId(consumerType, ownerId, numberId, data.callerId).then(() => {
-            return this.get(consumerType, ownerId, this.lineOverviewDataCopy.line.uuid);
-          });
-        } else {
-          return this.get(consumerType, ownerId, this.lineOverviewDataCopy.line.uuid);
-        }
-      });
+      return this.$q.all(promises)
+        .then(() => this.rejectAndNotifyPossibleErrors())
+        .then<any>(() => {
+          if (!_.isEqual(data.callerId, this.lineOverviewDataCopy.callerId)) {
+            return this.updateCallerId(consumerType, ownerId, numberId, data.callerId);
+          }
+        })
+        .then(() => this.get(consumerType, ownerId, this.lineOverviewDataCopy.line.uuid));
     }
   }
 
@@ -185,7 +159,7 @@ export class LineOverviewService {
     }
   }
 
-  private createLine(consumerType: LineConsumerType, ownerId: string, data: Line): ng.IPromise<Line | void> {
+  private createLine(consumerType: LineConsumerType, ownerId: string, data: Line): ng.IPromise<Line> {
     return this.LineService.createLine(consumerType, ownerId, data).then( location => {
       let newUuid = _.last(location.split('/'));
       return this.LineService.getLine(consumerType, ownerId, newUuid)
@@ -193,6 +167,7 @@ export class LineOverviewService {
           return new Line(_.pick<Line, Line>(line, this.numberProperties));
         }).catch(error => {
           this.errors.push(this.Notification.processErrorResponse(error, 'directoryNumberPanel.createLineError'));
+          return new Line();
         });
     });
   }
@@ -285,16 +260,10 @@ export class LineOverviewService {
   }
 
   private createSharedLine(consumerType: LineConsumerType, ownerId: string, numberId: string = '', data: Member) {
-    return this.SharedLineService.createSharedLine(consumerType, ownerId, numberId, data).then( () => {
-      return this.SharedLineService.getSharedLineList(consumerType, ownerId, numberId)
+    return this.SharedLineService.createSharedLine(consumerType, ownerId, numberId, data)
       .catch(error => {
-        this.errors.push(this.Notification.processErrorResponse(error, 'directoryNumberPanel.getSharedLinesError'));
-        return [];
+        this.errors.push(this.Notification.processErrorResponse(error, 'directoryNumberPanel.createSharedLinesError'));
       });
-    }).catch(error => {
-      this.errors.push(this.Notification.processErrorResponse(error, 'directoryNumberPanel.createSharedLinesError'));
-      return [];
-    });
   }
 
   private updateSharedLinePhoneList(consumerType: LineConsumerType, ownerId: string, numberId: string, sharedLineId: string, data: Array<SharedLinePhoneListItem>) {
@@ -304,7 +273,7 @@ export class LineOverviewService {
     });
   }
 
-  private updateCallerId(consumerType: LineConsumerType, ownerId: string, numberId: string | undefined, data: any) {
+  private updateCallerId(consumerType: LineConsumerType, ownerId: string, numberId: string | undefined, data: any): ng.IPromise<ICallerID> {
     return this.CallerIDService.updateCallerId(consumerType, ownerId, numberId, data);
   }
 

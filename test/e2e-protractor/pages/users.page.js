@@ -163,14 +163,16 @@ var UsersPage = function () {
   this.hybridServices_UC = element(by.css('label[for="squared-fusion-uc"]'));
   this.hybridServices_EC = element(by.css('label[for="squared-fusion-ec"]'));
 
-  this.hybridServices_sidePanel_Calendar = element(by.id('squared-fusion-cal-status'));
-  this.hybridServices_sidePanel_UC = element(by.id('squared-fusion-uc-status'));
+  this.hybridServices_sidePanel_Calendar = element(by.css('#link_squared-fusion-cal .feature-status'));
+  this.hybridServices_sidePanel_UC = element(by.css('#link_squared-fusion-uc .feature-status'));
 
   this.callServiceAware_link = element(by.id('link_squared-fusion-uc'));
 
   this.callServiceAwareStatus = element(by.id('callServiceAwareStatus'));
   this.callServiceConnectStatus = element(by.id('callServiceConnectStatus'));
 
+  this.callServiceAwareToggle = element(by.css('label[for="callServiceAwareEntitledToggle"]'));
+  this.callServiceConnectToggle = element(by.css('label[for="callServiceConnectEntitledToggle"]'));
   this.msgRadio = element(by.repeater('license in msgFeature.licenses'));
 
   this.messageService = element(by.cssContainingText('.feature-name', 'Message'));
@@ -265,7 +267,6 @@ var UsersPage = function () {
     utils.click(users.finishButton);
     utils.expectIsNotDisplayed(users.manageDialog);
 
-    activate.setup(null, alias);
     utils.search(alias);
   };
 

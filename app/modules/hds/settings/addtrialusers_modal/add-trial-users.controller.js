@@ -15,11 +15,18 @@
     vm.addUser = addUser;
     vm.removeUser = removeUser;
     vm.saveTrialUsers = saveTrialUsers;
+    var localizedRefreshOtherServices = $translate.instant('hds.resources.addTrialUsers.refreshOtherServices');
+    var localizedInvalidUsers = $translate.instant('hds.resources.editTrialUsers.invalidUsers');
 
     init();
 
     function init() {
-      vm.trialUserGroupId = HDSService.getHdsTrialUserGroupID();
+      HDSService.getHdsTrialUserGroupID()
+        .then(function (gid) {
+          vm.trialUserGroupId = gid;
+        }).catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+        });
     }
 
     function addUser() {
@@ -53,7 +60,7 @@
           .then(function (data) {
             var numInvalidUsers = vm.emailTrialUsers.length - data.Resources.length;
             if (numInvalidUsers > 0) {
-              Notification.error(numInvalidUsers + " not valid user(s) in this org won't be saved.");
+              Notification.error(numInvalidUsers + localizedInvalidUsers);
             }
             var jsonEmailTrialUsers = {
               schemas: ['urn:scim:schemas:core:1.0', 'urn:scim:schemas:extension:cisco:commonidentity:1.0'],
@@ -68,6 +75,13 @@
               .then(function () {
                 vm.savingEmail = false;
                 Notification.success('hercules.settings.emailNotificationsSavingSuccess');
+                // refresh encryption server for the updated trial users
+                HDSService.refreshEncryptionServerForTrialUsers(vm.trialUserGroupId)
+                  .then(function () {
+                    Notification.success(localizedRefreshOtherServices);
+                  }).catch(function (error) {
+                    Notification.errorWithTrackingId(error, localizedRefreshOtherServices);
+                  });
               }).catch(function (error) {
                 Notification.errorWithTrackingId(error, 'hercules.settings.emailNotificationsSavingError');
               });

@@ -1,5 +1,5 @@
 <div class="address-validation-container">
-  <div class="flex-address"> 
+  <div class="flex-address">
     <div class="row full">
       <div class="columns medium-9">
         <label for="streetAddress" translate="serviceAddress.streetAddress"></label>
@@ -18,8 +18,16 @@
     </div>
     <div class="row full">
       <div class="columns medium-7">
-        <label for="state" translate="serviceAddress.state"></label>
-        <cs-select ng-model="address.state" options="stateOptions" labelfield="abbreviation" valuefield="abbreviation" required="true" is-disabled="readOnly"></cs-select>
+        <label for="state">{{areaName}}</label>
+        <cs-select
+          ng-model="locationModel"
+          options="stateOptions"
+          labelfield="name"
+          valuefield="abbreviation"
+          required="true"
+          on-change-fn="onLocationSelect()"
+          is-disabled="readOnly">
+        </cs-select>
       </div>
       <div class="columns medium-5">
         <label for="zip" translate="serviceAddress.zipCode"></label>
@@ -42,7 +50,7 @@
         </div>
       </div>
       <div>
-        <p><a href ng-click="modify()" translate="trialModal.pstn.addrRetry"></a></p>
+        <p><a href ng-click="onModify()" translate="trialModal.pstn.addrRetry"></a></p>
         <br>
       </div>
     </div>

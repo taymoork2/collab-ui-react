@@ -91,7 +91,7 @@ require('./_overview.scss');
           Log.debug('Get existing org failed. Status: ' + status);
           Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
         }
-      });
+      }, Authinfo.getOrgId(), true);
       Orgservice.getAdminOrgUsage()
         .then(function (response) {
           var sharedDevicesUsage = -1;
@@ -135,6 +135,10 @@ require('./_overview.scss');
     }
 
     function getTOSStatus() {
+      //Don't allow the Parner to accept ToS for the customer
+      if (Authinfo.isCustomerLaunchedFromPartner()) {
+        return;
+      }
       if (vm.orgData !== null) {
         PstnSetupService.getCustomerV2(vm.orgData.id).then(function (customer) {
           if (customer.trial) {
