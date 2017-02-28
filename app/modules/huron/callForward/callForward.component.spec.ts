@@ -9,24 +9,27 @@ describe('Component: callForward', () => {
   const CALL_FWD_BUSY_VOICEMAIL = 'input#internalDirectVoicemail';
   const CALL_FWD_EXTERNAL_VOICEMAIL = 'input#externalDirectVoicemail';
   const CALL_FWD_BUSY_EXT_CHECK = 'input#ckForwardExternalCalls';
-  const CALL_FWD_PHONE_NUMBER = 'div.phone-number input';
+  const CALL_FWD_PHONE_NUMBER = 'input.phone-number';
 
   beforeEach(function() {
     this.initModules(callForwardModule);
     this.injectDependencies(
       '$scope', 'HuronCustomerService', 'Authinfo', '$q',
     );
-    this.$scope.voicemailEnabled = true;
+    this.$scope.userVoicemailEnabled = true;
     this.$scope.callForward = new CallForward();
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
+    this.$scope.ownerType = 'users';
   });
 
   function initComponent() {
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('1');
-    spyOn(this.HuronCustomerService, 'getVoiceCustomer').and.returnValue(this.$q.resolve({}));
+    spyOn(this.HuronCustomerService, 'getVoiceCustomer').and.returnValue(this.$q.resolve({ uuid: '123', regionCode: '214', dialPlanDetails: { countryCode: '+1' } }));
+
     this.compileComponent('ucCallForward', {
       callForward: 'callForward',
-      voicemailEnabled: 'voicemailEnabled',
+      userVoicemailEnabled: 'userVoicemailEnabled',
+      ownerType: 'ownerType',
       onChangeFn: 'onChangeFn(callForward)',
     });
   }
@@ -106,6 +109,7 @@ describe('Component: callForward', () => {
       let callForward = new CallForward();
       expect(this.view.find(CALL_FWD_BUSY_VOICEMAIL)).not.toBeChecked();
       callForward.callForwardBusy.internalVoicemailEnabled = true;
+      callForward.callForwardBusy.externalVoicemailEnabled = true;
       this.view.find(CALL_FWD_BUSY_VOICEMAIL).click();
       expect(this.$scope.onChangeFn).toHaveBeenCalledWith(callForward);
     });
@@ -137,9 +141,10 @@ describe('Component: callForward', () => {
     });
   });
 
-  describe('Call Forward All with voicemailEnabled = false', () => {
+  describe('Call Forward All with voicemailEnabled = false and Destination number changed', () => {
     beforeEach(function () {
-      this.$scope.voicemailEnabled = false;
+      //This is User Voicemail or system voicemail setting
+      this.$scope.userVoicemailEnabled = true;
     });
     beforeEach(initComponent);
     beforeEach(function () {
@@ -154,16 +159,16 @@ describe('Component: callForward', () => {
     it('should invoke `onChangeFn` when value is typed in call forward all combo box', function() {
       let callForward = new CallForward();
       callForward.callForwardAll.destination = '+19725551212';
-
       this.view.find(CALL_FWD_PHONE_NUMBER).val('9725551212').change().blur();
       expect(this.$scope.onChangeFn).toHaveBeenCalledWith(callForward);
       expect(this.$scope.onChangeFn).toHaveBeenCalled();
     });
   });
 
-  describe('Call Forward Busy with voicemailEnabled = false', () => {
+  describe('Call Forward Busy with User voicemailEnabled = false and Number changed', () => {
     beforeEach(function () {
-      this.$scope.voicemailEnabled = false;
+      //This is User Voicemail or system voicemail setting
+      this.$scope.userVoicemailEnabled = false;
     });
     beforeEach(initComponent);
     beforeEach(function () {
@@ -173,6 +178,7 @@ describe('Component: callForward', () => {
     it('should invoke `onChangeFn` when value is typed in call forward busy combo box', function() {
       let callForward = new CallForward();
       callForward.callForwardBusy.internalDestination = '+19725551212';
+      callForward.callForwardBusy.externalDestination = '+19725551212';
       this.view.find(CALL_FWD_PHONE_NUMBER).val('9725551212').change().blur();
       expect(this.$scope.onChangeFn).toHaveBeenCalledWith(callForward);
       expect(this.$scope.onChangeFn).toHaveBeenCalled();
