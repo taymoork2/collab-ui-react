@@ -1,4 +1,6 @@
+@import 'styles/toolkit/colors';
 @import 'styles/toolkit/layout';
+@import 'styles/toolkit/spacing';
 
 .field-list {
   @extend %grid-subheader;
@@ -22,13 +24,12 @@
       top: 70%;
     }
   }
+}
 
-  .search-noresults {
-    position: absolute;
-    top: 150px;
-    left: 0;
-    right: 0;
-    text-align: center;
-    color: $gray-darker;
-  }
+.context-fields-state {
+  background-color: $gray-lightest;
+}
+
+.context-fieldsets-state {
+  background-color: $gray-lightest;
 }
