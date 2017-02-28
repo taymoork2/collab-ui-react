@@ -49,14 +49,6 @@
         },
       ],
     };
-    /*var jsonProductionMode = {
-      "altHdsServers": [
-        {
-          "type": "none",
-          "active": false,
-        },
-      ],
-    };*/
 
     vm.servicestatus = {
       title: 'hds.resources.settings.servicestatusTitle',
@@ -86,12 +78,14 @@
 
     function getResourceInfo() {
       FusionClusterService.getAll()
-        .then(function (data) {
-          _.forEach(data, function (obj) {
-            if (obj.targetType === 'hds_app') {
-              vm.numResourceNodes = obj.connectors.length; // TODO: we may need to check if the status is active
+        .then(function (clusters) {
+          vm.numResourceNodes = _.reduce(clusters, function (total, cluster) {
+            if (cluster.targetType === 'hds_app') {
+              // TODO: we may need to check if the status is active
+              return total + cluster.connectors.length;
             }
-          });
+            return total;
+          }, 0);
         }).catch(function (error) {
           Notification.errorWithTrackingId(error, localizedHdsModeError);
         });
@@ -130,11 +124,11 @@
                 }
               });
               getTrialUsersInfo();
-              getResourceInfo();
             } else {
               vm.model.serviceMode = vm.NA_MODE;
             }
           }
+          getResourceInfo();
         } else {
           vm.model.serviceMode = vm.NA_MODE;
           Notification.error(localizedHdsModeError + status);
