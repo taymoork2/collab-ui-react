@@ -7,7 +7,7 @@ describe('Controller: HuronSettingsCtrl', function () {
   var HuronCustomer, ServiceSetup, CallerId, HuronConfig, InternationalDialing, VoicemailMessageAction;
   var modalDefer, customer, timezones, timezone, internalNumberRanges, languages, avrilSites;
   var sites, site, companyNumbers, cosRestrictions, customerCarriers, messageAction, countries;
-  var $rootScope, didVoicemailCustomer, FeatureToggleService, TerminusUserDeviceE911Service, Orgservice;
+  var $rootScope, FeatureToggleService, TerminusUserDeviceE911Service, Orgservice;
 
   var controller, compile, styleSheet, element, window;
 
