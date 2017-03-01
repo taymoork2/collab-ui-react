@@ -5,9 +5,10 @@ describe('Controller: HuronSettingsCtrl', function () {
   var Authinfo, Notification;
   var ExternalNumberService, DialPlanService, PstnSetupService, ModalService;
   var HuronCustomer, ServiceSetup, CallerId, HuronConfig, InternationalDialing, VoicemailMessageAction;
-  var modalDefer, customer, timezones, timezone, voicemailCustomer, internalNumberRanges, languages, avrilSites;
+  var modalDefer, customer, timezones, timezone, internalNumberRanges, languages, avrilSites;
   var sites, site, companyNumbers, cosRestrictions, customerCarriers, messageAction, countries;
-  var $rootScope, didVoicemailCustomer, FeatureToggleService, TerminusUserDeviceE911Service, Orgservice;
+  var $rootScope, FeatureToggleService, TerminusUserDeviceE911Service, Orgservice;
+
   var controller, compile, styleSheet, element, window;
 
   beforeEach(angular.mock.module('Huron'));
@@ -48,7 +49,6 @@ describe('Controller: HuronSettingsCtrl', function () {
     sites = getJSONFixture('huron/json/settings/sites.json');
     avrilSites = getJSONFixture('huron/json/settings/AvrilSite.json');
     companyNumbers = getJSONFixture('huron/json/settings/companyNumbers.json');
-    voicemailCustomer = getJSONFixture('huron/json/settings/voicemailCustomer.json');
     cosRestrictions = getJSONFixture('huron/json/settings/cosRestrictions.json');
     customerCarriers = getJSONFixture('huron/json/pstnSetup/customerCarrierList.json');
     messageAction = getJSONFixture('huron/json/settings/messageAction.json');
@@ -130,9 +130,6 @@ describe('Controller: HuronSettingsCtrl', function () {
 
       site = sites[0];
       spyOn(ServiceSetup, 'getSite').and.returnValue($q.resolve(site));
-      voicemailCustomer = getJSONFixture('huron/json/settings/voicemailCustomer.json');
-      didVoicemailCustomer = voicemailCustomer[0];
-      spyOn(ServiceSetup, 'getVoicemailPilotNumber').and.returnValue($q.resolve(didVoicemailCustomer));
       controller = $controller('HuronSettingsCtrl', {
         $scope: $scope,
       });
@@ -151,7 +148,6 @@ describe('Controller: HuronSettingsCtrl', function () {
       expect(ServiceSetup.listInternalNumberRanges).toHaveBeenCalled();
       expect(ServiceSetup.listSites).toHaveBeenCalled();
       expect(CallerId.listCompanyNumbers).toHaveBeenCalled();
-      expect(ServiceSetup.getVoicemailPilotNumber).toHaveBeenCalled();
       expect(ServiceSetup.listCosRestrictions).toHaveBeenCalled();
       expect(controller.model.callerId.callerIdName).toEqual('Cisco');
     });
@@ -1107,9 +1103,6 @@ describe('Controller: HuronSettingsCtrl', function () {
 
       site = sites[0];
       spyOn(ServiceSetup, 'getSite').and.returnValue($q.resolve(site));
-      voicemailCustomer = getJSONFixture('huron/json/settings/voicemailCustomer.json');
-      didVoicemailCustomer = voicemailCustomer[0];
-      spyOn(ServiceSetup, 'getVoicemailPilotNumber').and.returnValue($q.resolve(didVoicemailCustomer));
 
       controller = $controller('HuronSettingsCtrl', {
         $scope: $scope,
@@ -1148,10 +1141,7 @@ describe('Controller: HuronSettingsCtrl', function () {
       $scope = $rootScope;
       site = sites[1];
       spyOn(ServiceSetup, 'getSite').and.returnValue($q.resolve(site));
-      voicemailCustomer = getJSONFixture('huron/json/settings/voicemailCustomer.json');
-      didVoicemailCustomer = voicemailCustomer[1];
-      spyOn(ServiceSetup, 'getVoicemailPilotNumber').and.returnValue($q.resolve(didVoicemailCustomer));
-      spyOn(ServiceSetup, 'generateVoiceMailNumber').and.returnValue("+911201020715001211081011150409060510000");
+      spyOn(ServiceSetup, 'generateVoiceMailNumber').and.returnValue("+12063199276");
       controller = $controller('HuronSettingsCtrl', {
         $scope: $scope,
       });
@@ -1161,9 +1151,9 @@ describe('Controller: HuronSettingsCtrl', function () {
 
     it('test loadVoicemailNumber should return genereated Voice Pilot Number', function () {
       controller.hasVoicemailService = true;
-      controller.loadVoicemailNumber();
+      controller.loadVoicemailNumber(site);
       $scope.$apply();
-      expect(controller.model.site.voicemailPilotNumber).toEqual('+911201020715001211081011150409060510000');
+      expect(controller.model.site.voicemailPilotNumber).toEqual('+12063199276');
     });
 
     it('should update the external did as company pilot number', function () {

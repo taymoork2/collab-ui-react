@@ -793,6 +793,7 @@
 
               vm.previousTimeZone = vm.model.site.timeZone;
               vm.model.site.voicemailPilotNumberGenerated = (site.voicemailPilotNumberGenerated !== null) ? site.voicemailPilotNumberGenerated : 'false';
+              loadVoicemailPilotNumber(site);
             });
           } else if (vm.model.numberRanges.length !== 0) {
             vm.model.site.extensionLength = vm.model.numberRanges[0].endNumber.length;
@@ -800,35 +801,7 @@
         });
       })
       .then(function () {
-        if (vm.hasVoicemailService) {
-          return ServiceSetup.getVoicemailPilotNumber().then(function (voicemail) {
-            if (vm.model.site.voicemailPilotNumberGenerated === 'false' &&
-                  (voicemail.pilotNumber.length < 40)) {
-              vm.model.ftswCompanyVoicemail.ftswExternalVoicemail = true;
-            } else {
-              vm.model.ftswCompanyVoicemail.ftswExternalVoicemail = false;
-            }
-            if (voicemail.pilotNumber === Authinfo.getOrgId()) {
-              // There may be existing customers who have yet to set the company
-              // voicemail number; likely they have it set to orgId.
-              // Remove this logic once we can confirm no existing customers are configured
-              // this way.
-              vm.model.site.voicemailPilotNumber = undefined;
-            } else if (voicemail.pilotNumber) {
-              vm.model.site.voicemailPilotNumber = voicemail.pilotNumber;
-              vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
-
-              if (vm.model.ftswCompanyVoicemail.ftswExternalVoicemail) {
-                vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = {
-                  pattern: voicemail.pilotNumber,
-                  label: TelephoneNumberService.getDIDLabel(voicemail.pilotNumber),
-                };
-              }
-            }
-          }).catch(function (response) {
-            Notification.errorResponse(response, 'serviceSetupModal.voicemailGetError');
-          });
-        } else if (!Authinfo.isSetupDone()) {
+        if (!Authinfo.isSetupDone() && !vm.hasVoicemailService) {
           // set voicemail toggle to enabled when non-test customer runs FTSW for the very first time
           return checkIfTestOrg().then(function (isTestOrg) {
             if (isTestOrg) {
@@ -840,8 +813,6 @@
             }
           });
         }
-      })
-      .then(function () {
         return loadExternalNumberPool();
       });
     }
@@ -859,6 +830,32 @@
         });
       });
       return isTestOrg;
+    }
+
+    function loadVoicemailPilotNumber(site) {
+      if (vm.model.site.voicemailPilotNumberGenerated === 'false' &&
+            (site.voicemailPilotNumber.length < 40)) {
+        vm.model.ftswCompanyVoicemail.ftswExternalVoicemail = true;
+      } else {
+        vm.model.ftswCompanyVoicemail.ftswExternalVoicemail = false;
+      }
+      if (site.voicemailPilotNumber === Authinfo.getOrgId()) {
+        // There may be existing customers who have yet to set the company
+        // voicemail number; likely they have it set to orgId.
+        // Remove this logic once we can confirm no existing customers are configured
+        // this way.
+        vm.model.site.voicemailPilotNumber = undefined;
+      } else if (site.voicemailPilotNumber) {
+        vm.model.site.voicemailPilotNumber = site.voicemailPilotNumber;
+        vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
+
+        if (vm.model.ftswCompanyVoicemail.ftswExternalVoicemail) {
+          vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = {
+            pattern: site.voicemailPilotNumber,
+            label: TelephoneNumberService.getDIDLabel(site.voicemailPilotNumber),
+          };
+        }
+      }
     }
 
     function loadExternalNumberPool() {
