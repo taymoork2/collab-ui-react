@@ -514,6 +514,7 @@
         'context-fields',
         'context-fieldsets',
         'context-resources',
+        'context-cluster-sidepanel',
         'add-resource',
       ],
     };

@@ -34,6 +34,7 @@
           connectorName: localizedConnectorName,
           hostname: vm.host.hostname,
         });
+        vm.isHybridContextCluster = (cluster.targetType === 'cs_mgmt');
       }
     }, true);
 
