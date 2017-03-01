@@ -38,7 +38,7 @@ export class ServicesOverviewCtrl {
       new ServicesOverviewHybridCalendarCard(this.Authinfo, this.FusionClusterStatesService),
       new ServicesOverviewHybridCallCard(this.Authinfo, this.FusionClusterStatesService),
       new ServicesOverviewHybridMediaCard(this.Authinfo, this.Config, this.FusionClusterStatesService),
-      new ServicesOverviewHybridDataSecurityCard(this.FusionClusterStatesService),
+      new ServicesOverviewHybridDataSecurityCard(this.Authinfo, this.Config, this.FusionClusterStatesService),
       new ServicesOverviewHybridContextCard(this.FusionClusterStatesService),
     ];
 
@@ -51,11 +51,6 @@ export class ServicesOverviewCtrl {
         if (supports) {
           this.getPMRStatus();
         }
-      });
-
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridDataSecurity)
-      .then(supports => {
-        this.forwardEvent('hybridDataSecurityToggleEventHandler', supports);
       });
 
     this.FeatureToggleService.supports(this.FeatureToggleService.features.contactCenterContext)

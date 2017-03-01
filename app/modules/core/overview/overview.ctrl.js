@@ -33,12 +33,6 @@ require('./_overview.scss');
     vm.trialDaysLeft = undefined;
     vm.dismissNotification = dismissNotification;
 
-    vm.hasHDSFeatureToggle = false;
-    FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity)
-      .then(function (reply) {
-        vm.hasHDSFeatureToggle = reply;
-      });
-
     // for smaller screens where the notifications are on top, the layout needs to resize after the notifications are loaded
     function resizeNotifications() {
       CardUtils.resize(0, '.fourth.cs-card-layout');
@@ -66,7 +60,7 @@ require('./_overview.scss');
                 vm.notifications.push(OverviewNotificationFactory.createCallConnectNotification());
               } else if (item.id === Config.entitlements.mediafusion) {
                 vm.notifications.push(OverviewNotificationFactory.createHybridMediaNotification());
-              } else if (item.id === Config.entitlements.hds && vm.hasHDSFeatureToggle) {
+              } else if (item.id === Config.entitlements.hds) {
                 vm.notifications.push(OverviewNotificationFactory.createHybridDataSecurityNotification());
               }
             }
