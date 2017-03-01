@@ -2899,11 +2899,6 @@
             controller: 'HDSServiceController',
             controllerAs: 'hdsServiceController',
             parent: 'main',
-            resolve: {
-              hasHDSFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity);
-              },
-            },
           })
           .state('hds.list', {
             url: '/hds/resources',
@@ -2916,9 +2911,6 @@
               clusterId: null,
             },
             resolve: {
-              hasHDSFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity);
-              },
               clusterId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.clusterId;
               },
@@ -2931,11 +2923,6 @@
                 controller: 'HDSSettingsController',
                 controllerAs: 'hdsSettings',
                 templateUrl: 'modules/hds/settings/hds-settings.html',
-              },
-            },
-            resolve: {
-              hasHDSFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity);
               },
             },
           })

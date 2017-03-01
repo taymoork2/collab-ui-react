@@ -165,7 +165,6 @@ module.exports = {
   atlasHybridVoicemail: 'atlas-hybrid-voicemail',
   gemServicesTab: 'gem-services-tab',
   gemCCA: 'gem-cloud-connected-audio',
-  atlasHybridDataSecurity: 'atlas-data-security',
   atlasHerculesGoogleCalendar: 'atlas-hercules-google-calendar',
   avrilVmEnable: 'avril-vm-enable',
   avrilVoicemaill1249: 'avril-voicemail-l1249',
