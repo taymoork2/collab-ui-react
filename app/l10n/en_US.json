@@ -2493,8 +2493,9 @@
         "moveToProduction": "Move to Production",
         "addTrialUsers": "Add Trial Users",
         "editTrialUsers": "Edit Users in Trial",
-        "confirmProdMoveDialogHeader": "Move to Production",
-        "confirmProdMoveDialogBody": "Are you sure you want to move to production ?",
+        "confirmProdMoveDialogHeader": "Move to Production Mode?",
+        "confirmProdMoveDialogBody": "It is not possible to undo this action or return to Trial mode. For various reasons this is a one-way street.",
+        "confirmProdMoveDialogButton": "Production Mode",
         "hdsModeGetError": "Failed to get HDS mode: "
       },
       "addTrialUsers": {
