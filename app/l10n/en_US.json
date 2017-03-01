@@ -2384,10 +2384,13 @@
     "dictionary": {
       "welcome": "Welcome to the Context Dictionary",
       "fieldPage": {
+        "associatedFieldsets": "Associated Fieldsets",
+        "associatedFieldsetsError": "Unable to load associated fieldsets.",
         "fieldId": "Field ID",
         "dataType":"Data Type",
         "classification": "Data Privacy",
         "searchable": "Searchable",
+        "searchableHelpText": "Make data in this field searchable.",
         "lastUpdated":"Date Updated",
         "startSearching": "To begin, search for a field",
         "noSearchResults": "Search yielded no results",

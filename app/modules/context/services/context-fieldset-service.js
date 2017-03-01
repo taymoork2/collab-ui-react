@@ -10,6 +10,7 @@
   function contextFieldsetsService($http, Discovery) {
     var service = {
       getFieldsets: getFieldsets,
+      getFieldMembership: getFieldMembership,
     };
 
     return service;
@@ -28,6 +29,23 @@
             .then(function (response) {
               return response.data;
             });
+        });
+    }
+
+    function getFieldMembership(fieldId) {
+      return Discovery.getEndpointForService('dictionary')
+        .then(function (dictionaryUrl) {
+          var searchQuery = 'fieldId:';
+          return $http.get(dictionaryUrl + dictionaryPath, {
+            params: {
+              q: searchQuery + fieldId,
+              maxEntries: 200,
+            },
+          });
+        }).then(function (response) {
+          return _.map(response.data, function (fieldset) {
+            return fieldset.id;
+          });
         });
     }
   }
