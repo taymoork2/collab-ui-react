@@ -79,7 +79,6 @@
                   ng-model="trial.careTrial.enabled"
                   ng-disabled="trial._helpers.messageOfferDisabledExpression() || trial.preset.care"
                   cs-input-label="{{::'trials.careDescription' | translate}}"
-                  cs-input-help-text="{{::'trials.careHelp' | translate}}"
           >
           <formly-form model="trial.trialData.trials" fields="trial.careFields" hide-directive="ng-show" ng-if="trial.showBasicCare">
           </formly-form>
@@ -92,7 +91,6 @@
                   ng-model="trial.advanceCareTrial.enabled"
                   ng-disabled="trial._helpers.messageOfferDisabledExpression() || trial.preset.advanceCare"
                   cs-input-label="{{::'trials.advanceCareDescription' | translate}}"
-                  cs-input-help-text="{{::'trials.advanceCareHelp' | translate}}"
           >
           <formly-form model="trial.trialData.trials" fields="trial.advanceCareFields" hide-directive="ng-show" ng-if="trial.showAdvanceCare" >
           </formly-form>
