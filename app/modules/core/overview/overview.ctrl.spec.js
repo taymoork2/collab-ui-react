@@ -7,7 +7,7 @@ describe('Controller: OverviewCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  var controller, $rootScope, $scope, $q, $state, $translate, Authinfo, Config, FeatureToggleService, Log, Orgservice, PstnSetupService, OverviewNotificationFactory, ReportsService, ServiceDescriptor, ServiceStatusDecriptor, TrialService, FusionClusterService, SunlightReportService;
+  var controller, $rootScope, $scope, $q, $state, $translate, Authinfo, Config, FeatureToggleService, Log, Orgservice, PstnSetupService, OverviewNotificationFactory, ReportsService, ServiceDescriptor, ServiceStatusDecriptor, TrialService, FusionClusterService, SunlightReportService, LicenseService;
   var orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');
   var usageOnlySharedDevicesFixture = getJSONFixture('core/json/organizations/usageOnlySharedDevices.json');
   var services = getJSONFixture('squared/json/services.json');
@@ -76,7 +76,7 @@ describe('Controller: OverviewCtrl', function () {
   });
 
   describe('Notifications', function () {
-    var TOTAL_NOTIFICATIONS = 8;
+    var TOTAL_NOTIFICATIONS = 9;
     beforeEach(inject(defaultWireUpFunc));
 
     it('should all be shown', function () {
@@ -135,6 +135,14 @@ describe('Controller: OverviewCtrl', function () {
       expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS);
 
       var notification = OverviewNotificationFactory.createCallConnectNotification();
+      controller.dismissNotification(notification);
+      expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS - 1);
+    });
+
+    it('should dismiss the Care License notification', function () {
+      expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS);
+
+      var notification = OverviewNotificationFactory.createCareLicenseNotification();
       controller.dismissNotification(notification);
       expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS - 1);
     });
@@ -252,6 +260,10 @@ describe('Controller: OverviewCtrl', function () {
       },
     };
 
+    LicenseService = {
+      orgIsEntitledTo: function () {},
+    };
+
     ReportsService = {
       getOverviewMetrics: function () {},
       healthMonitor: function () {},
@@ -279,10 +291,12 @@ describe('Controller: OverviewCtrl', function () {
     spyOn(Authinfo, 'isCustomerAdmin').and.returnValue(true);
     spyOn(Authinfo, 'isDeviceMgmt').and.returnValue(true);
     spyOn(Authinfo, 'isCustomerLaunchedFromPartner').and.returnValue(isCustomerLaunchedFromPartner);
+    spyOn(Authinfo, 'isCare').and.returnValue(true);
     spyOn(FeatureToggleService, 'atlasPMRonM2GetStatus').and.returnValue($q.resolve(true));
     spyOn(TrialService, 'getDaysLeftForCurrentUser').and.returnValue($q.resolve(1));
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
     spyOn(PstnSetupService, 'getCustomerTrialV2').and.callThrough();
+    spyOn(LicenseService, 'orgIsEntitledTo').and.returnValue(false);
 
     controller = $controller('OverviewCtrl', {
       $scope: $scope,
@@ -301,6 +315,7 @@ describe('Controller: OverviewCtrl', function () {
       OverviewNotificationFactory: OverviewNotificationFactory,
       SunlightReportService: SunlightReportService,
       hasGoogleCalendarFeatureToggle: false,
+      LicenseService: LicenseService,
     });
 
     $scope.$apply();
