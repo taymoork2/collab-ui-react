@@ -10,6 +10,7 @@ import { ServicesOverviewHybridCallCard } from './hybridCallCard';
 import { ServicesOverviewHybridMediaCard } from './hybridMediaCard';
 import { ServicesOverviewHybridDataSecurityCard } from './hybridDataSecurityCard';
 import { ServicesOverviewHybridContextCard } from './hybridContextCard';
+import { ServicesOverviewPrivateTrunkCard } from './privateTrunkCard';
 
 export class ServicesOverviewCtrl {
 
@@ -40,6 +41,7 @@ export class ServicesOverviewCtrl {
       new ServicesOverviewHybridMediaCard(this.Authinfo, this.Config, this.FusionClusterStatesService),
       new ServicesOverviewHybridDataSecurityCard(this.Authinfo, this.Config, this.FusionClusterStatesService),
       new ServicesOverviewHybridContextCard(this.FusionClusterStatesService),
+      new ServicesOverviewPrivateTrunkCard(this.FusionClusterStatesService),
     ];
 
     this.loadWebexSiteList();
@@ -69,6 +71,12 @@ export class ServicesOverviewCtrl {
       .then(supports => {
         this.forwardEvent('googleCalendarFeatureToggleEventHandler', supports);
       });
+
+    this.FeatureToggleService.supports(FeatureToggleService.features.enterprisePrivateTrunk)
+      .then(supports => {
+        this.forwardEvent('privateTrunkFeatureToggleEventHandler', supports);
+      });
+
   }
 
   public getHybridCards() {

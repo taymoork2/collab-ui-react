@@ -6677,6 +6677,13 @@
           "fields": "Fields",
           "fieldsets": "Fieldsets"
         }
+      },
+      "privateTrunk": {
+        "title": "Enterprise Private Trunking ",
+        "description": "Extends Your organization.",
+        "buttons": {
+          "verify": "Verify prerequisites"
+        }
       }
     },
     "showMore": "View all",
