@@ -4,7 +4,7 @@
 
   <alarm-list-section alarms="$ctrl.cluster.aggregates.alarms"
                       connector-type="$ctrl.connectorType"
-                      ng-if="!$ctrl.hasNodesViewFeatureToggle && $ctrl.hasConnectors()"></alarm-list-section>
+                      ng-if="!$ctrl.hasNodesViewFeatureToggle && $ctrl.hasConnectors() && !$ctrl.isHybridContextCluster()"></alarm-list-section>
 
   <schedule-info-section cluster="$ctrl.cluster"
                          cluster-type="$ctrl.clusterType"
@@ -22,7 +22,7 @@
                              connector-type="$ctrl.connectorType"
                              ng-if="!$ctrl.hasNodesViewFeatureToggle && !($ctrl.isExpresswayCluster() && !$ctrl.hasConnectors()) || $ctrl.isHDSCluster()"></hybrid-services-node-list>
 
-  <cs-sp-section ng-if="$ctrl.hasNodesViewFeatureToggle && !($ctrl.isExpresswayCluster() && !$ctrl.hasConnectors())">
+  <cs-sp-section ng-if="$ctrl.hasNodesViewFeatureToggle && !($ctrl.isExpresswayCluster() && !$ctrl.hasConnectors()) && !$ctrl.isHybridContextCluster()">
     <div class="section-title-row">
       <div class="section-name" translate="hercules.connectors.hosts"></div>
     </div>
