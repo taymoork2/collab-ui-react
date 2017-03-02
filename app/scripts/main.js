@@ -63,6 +63,7 @@
     require('modules/core/trials/emergencyServices').default,
     require('modules/huron/countries').default,
     require('modules/huron/settings').default,
+    require('modules/huron/dialPlans').default,
   ])
     .constant('CryptoJS', require('crypto-js'))
     .constant('phone', require('google-libphonenumber'))
@@ -110,7 +111,11 @@
 
   angular.module('Mediafusion', ['Core', 'Hercules', 'Squared']);
 
-  angular.module('WebExApp', ['Core']);
+  angular.module('WebExApp', [
+    'Core',
+    require('modules/webex/utils').default,
+    require('modules/webex/xmlApi').default,
+  ]);
 
   angular.module('Messenger', ['Core']);
 
@@ -118,6 +123,7 @@
     'Core',
     'CareDetails',
     'Sunlight.pagination',
+    require('modules/sunlight/services').default,
   ]);
 
   angular.module('Context', ['Core']);
