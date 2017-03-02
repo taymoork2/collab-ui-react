@@ -324,11 +324,12 @@ export class SipDomainSettingController {
 
   private checkRoomLicense() {
     this.Orgservice.getLicensesUsage().then((response) => {
-      let licenses: any = _.get(response, '[0].licenses');
-      let roomLicensed = _.find(licenses, {
-        offerName: 'SD',
+      this.isRoomLicensed = _.some(response, function (subscription) {
+        let licenses = _.get(subscription, 'licenses');
+        return _.some(licenses, function (license) {
+          return _.get(license, 'offerName') === 'SD' || _.get(license, 'offerName') === 'SB';
+        });
       });
-      this.isRoomLicensed = !_.isUndefined(roomLicensed);
       this.subdomainCount++;
     });
   }

@@ -574,10 +574,44 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
         licenses: [{
           offerName: 'CF',
         }],
+      }, {
+        licenses: [{
+          offerName: 'CF',
+        }],
       }]));
       this.initController();
 
       expect(this.controller.isRoomLicensed).toEqual(false);
+    });
+
+    it('checkRoomLicense function should set isRoomLicensed to true based on license returned [Spark Board]', function () {
+      this.Orgservice.getLicensesUsage.and.returnValue(this.$q.when([{
+        licenses: [{
+          offerName: 'CF',
+        }],
+      }, {
+        licenses: [{
+          offerName: 'SD',
+        }],
+      }]));
+      this.initController();
+
+      expect(this.controller.isRoomLicensed).toEqual(true);
+    });
+
+    it('checkRoomLicense function should set isRoomLicensed to true based on license returned [Shared Devices]', function () {
+      this.Orgservice.getLicensesUsage.and.returnValue(this.$q.when([{
+        licenses: [{
+          offerName: 'CF',
+        }],
+      }, {
+        licenses: [{
+          offerName: 'SB',
+        }],
+      }]));
+      this.initController();
+
+      expect(this.controller.isRoomLicensed).toEqual(true);
     });
   });
 });
