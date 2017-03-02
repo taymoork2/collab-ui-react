@@ -168,12 +168,22 @@
 
       .date-error {
         color: $color-negative-base;
+        float: left;
+        padding: 3px;
       }
 
       .ediscovery-advanced-search {
         margin-top: 48px;
         display: inline-block;
         width: 50%;
+
+        .subheading {
+          font-size: 14px;
+          font-weight: 300;
+          line-height: 1.71;
+          color: #858688;
+          margin-bottom: 8px;
+        }
 
         .cs-input {
           width: 100%;
@@ -195,8 +205,12 @@
           display: block;
         }
 
-        .search-text {
+        .search-spacing {
           float: left;
+        }
+
+        .search-text {
+          color: #4f5051;
         }
 
         .search-box {

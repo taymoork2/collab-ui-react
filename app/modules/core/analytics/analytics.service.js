@@ -35,6 +35,16 @@
     };
 
     var sections = {
+      EDISCOVERY: {
+        name: 'eDiscovery',
+        eventNames: {
+          INITIAL_SEARCH: 'eDiscovery: Search Button Clicked',
+          GENERATE_REPORT: 'eDiscovery: Generate Report Button Clicked',
+          SEARCH_SECTION: 'eDiscovery: Search Section Viewed',
+          REPORTS_SECTION: 'eDiscovery: Report Viewed',
+        },
+        persistentProperties: null,
+      },
       TRIAL: {
         name: 'Trial Flow',
         eventNames: {
@@ -133,6 +143,7 @@
       sections: sections,
       trackError: trackError,
       trackEvent: trackEvent,
+      trackEdiscoverySteps: trackEdiscoverySteps,
       trackPartnerActions: trackPartnerActions,
       trackTrialSteps: trackTrialSteps,
       trackUserOnboarding: trackUserOnboarding,
@@ -208,6 +219,26 @@
       return _init().then(function () {
         return service._track(eventName, properties);
       });
+    }
+
+    /**
+      * Ediscovery Events
+      */
+    function trackEdiscoverySteps(eventName) {
+      if (!_.isString(eventName) && eventName.length !== 0) {
+        return $q.reject('eventName not passed');
+      }
+
+      var properties = {
+        from: _.get($state, '$current.name'),
+      };
+
+      _getOrgData('EDISCOVERY').then(function (data) {
+        _.extend(properties, data);
+        delete properties.realOrgId;
+      });
+
+      return trackEvent(eventName, properties);
     }
 
     /**
