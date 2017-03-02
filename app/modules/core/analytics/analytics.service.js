@@ -87,7 +87,7 @@
         saveResults: {
           SUCCESS: 'success',
           USER_ERROR: 'user_error',
-          APP_ERROR: 'app_exeption',
+          APP_ERROR: 'app_exception',
         },
       },
       HS_NAVIGATION: {
@@ -186,9 +186,9 @@
     function trackEvent(eventName, properties) {
       var prefix = 'cisco_';
       properties = properties || {};
-      //prepending properties with cisco
-      _.each(properties, function (value, key) {
-        if (key.indexOf(prefix) !== 0) {
+      // prepending properties with cisco
+      _.forEach(properties, function (value, key) {
+        if (!_.startsWith(key, prefix)) {
           delete properties[key];
           properties[prefix + key] = value;
         }
@@ -260,7 +260,7 @@
 
       if (eventName === sections.USER_ONBOARDING.eventNames.CMR_CHECKBOX) {
         if (!additionalData.licenseId) {
-          $q.reject('license id not passed');
+          return $q.reject('license id not passed');
         } else {
           properties.licenseId = additionalData.licenseId;
         }
