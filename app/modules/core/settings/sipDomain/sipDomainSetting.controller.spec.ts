@@ -196,6 +196,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
       CANCEL_BROADCAST: 'settings-control-cancel',
       DISMISS_BROADCAST: 'DISMISS_SIP_NOTIFICATION',
       WIZARD_BROADCAST: 'wizard-enterprise-sip-url-event',
+      WIZARD_EMIT: 'wizard-enterprise-sip-save',
       DISMISS_DISABLE: 'wizardNextButtonDisable',
     };
 
@@ -382,6 +383,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
         this.initController();
         this.controller.form = getForm();
         this.controller.inputValue = this.testInput;
+        this.controller.isSSAReserved = false;
 
         this.$rootScope.$broadcast(broadcasts.WIZARD_BROADCAST);
         expect(this.controller.saving).toBeTruthy();
@@ -403,6 +405,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
         this.initController();
         this.controller.form = getForm();
         this.controller.inputValue = this.testInput;
+        this.controller.isSSAReserved = false;
 
         this.$rootScope.$broadcast(broadcasts.WIZARD_BROADCAST);
         expect(this.controller.saving).toBeTruthy();
@@ -419,6 +422,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
         this.initController();
         this.controller.form = getForm();
         this.controller.inputValue = this.testInput;
+        this.controller.isSSAReserved = false;
 
         this.$rootScope.$broadcast(broadcasts.WIZARD_BROADCAST);
         expect(this.controller.saving).toBeTruthy();
@@ -438,6 +442,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
         this.initController();
         this.controller.form = getForm();
         this.controller.inputValue = this.testInput;
+        this.controller.isSSAReserved = false;
         this.$rootScope.$broadcast(broadcasts.WIZARD_BROADCAST);
         this.$scope.$apply();
         expect(this.Notification.errorWithTrackingId.calls.mostRecent().args).toEqual([this.ERROR_FOUR_ZERO_ONE, this.unauthorizedError]);
@@ -448,6 +453,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
         this.initController();
         this.controller.form = getForm();
         this.controller.inputValue = this.testInput;
+        this.controller.isSSAReserved = false;
         this.$rootScope.$broadcast(broadcasts.WIZARD_BROADCAST);
         this.$scope.$apply();
         expect(this.Notification.errorWithTrackingId.calls.mostRecent().args).toEqual([this.ERROR_FIVE_HUNDRED, this.serverError]);
