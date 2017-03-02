@@ -10,22 +10,24 @@ describe('Component: callForward', () => {
   const CALL_FWD_EXTERNAL_VOICEMAIL = 'input#externalDirectVoicemail';
   const CALL_FWD_BUSY_EXT_CHECK = 'input#ckForwardExternalCalls';
   const CALL_FWD_PHONE_NUMBER = 'input.phone-number';
+  const CALL_FWD_NOANSWER_TIMER = 'input[name="callForwardTimer"]';
 
   beforeEach(function() {
     this.initModules(callForwardModule);
     this.injectDependencies(
       '$scope', 'HuronCustomerService', 'Authinfo', '$q',
+      'FeatureToggleService',
     );
     this.$scope.userVoicemailEnabled = true;
     this.$scope.callForward = new CallForward();
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
     this.$scope.ownerType = 'users';
+    spyOn(this.FeatureToggleService, 'supports');
   });
 
   function initComponent() {
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('1');
     spyOn(this.HuronCustomerService, 'getVoiceCustomer').and.returnValue(this.$q.resolve({ uuid: '123', regionCode: '214', dialPlanDetails: { countryCode: '+1' } }));
-
     this.compileComponent('ucCallForward', {
       callForward: 'callForward',
       userVoicemailEnabled: 'userVoicemailEnabled',
@@ -35,6 +37,9 @@ describe('Component: callForward', () => {
   }
 
   describe('Call Forward None (initial state)', () => {
+    beforeEach(function () {
+      this.FeatureToggleService.supports.and.returnValue(this.$q.when(true));
+    });
     beforeEach(initComponent);
 
     it('should have a callForwardNone radio button', function() {
@@ -61,6 +66,9 @@ describe('Component: callForward', () => {
   });
 
   describe('Call Forward All with voicemailEnabled = true', () => {
+    beforeEach(function () {
+      this.FeatureToggleService.supports.and.returnValue(this.$q.when(true));
+    });
     beforeEach(initComponent);
     beforeEach(function () {
       this.view.find(CALL_FWD_ALL_RADIO).click().click();
@@ -88,6 +96,9 @@ describe('Component: callForward', () => {
   });
 
   describe('Call Forward Busy with voicemailEnabled', () => {
+    beforeEach(function () {
+      this.FeatureToggleService.supports.and.returnValue(this.$q.when(true));
+    });
     beforeEach(initComponent);
     beforeEach(function () {
       this.view.find(CALL_FWD_BUSY_RADIO).click().click();
@@ -116,6 +127,9 @@ describe('Component: callForward', () => {
   });
 
   describe('Call Forward Busy External with voicemailEnabled', () => {
+    beforeEach(function () {
+      this.FeatureToggleService.supports.and.returnValue(this.$q.when(false));
+    });
     beforeEach(initComponent);
     beforeEach(function () {
       this.view.find(CALL_FWD_BUSY_RADIO).click().click();
@@ -143,6 +157,7 @@ describe('Component: callForward', () => {
 
   describe('Call Forward All with voicemailEnabled = false and Destination number changed', () => {
     beforeEach(function () {
+      this.FeatureToggleService.supports.and.returnValue(this.$q.when(true));
       //This is User Voicemail or system voicemail setting
       this.$scope.userVoicemailEnabled = true;
     });
@@ -168,6 +183,7 @@ describe('Component: callForward', () => {
   describe('Call Forward Busy with User voicemailEnabled = false and Number changed', () => {
     beforeEach(function () {
       //This is User Voicemail or system voicemail setting
+      this.FeatureToggleService.supports.and.returnValue(this.$q.when(true));
       this.$scope.userVoicemailEnabled = false;
     });
     beforeEach(initComponent);
@@ -182,6 +198,55 @@ describe('Component: callForward', () => {
       this.view.find(CALL_FWD_PHONE_NUMBER).val('9725551212').change().blur();
       expect(this.$scope.onChangeFn).toHaveBeenCalledWith(callForward);
       expect(this.$scope.onChangeFn).toHaveBeenCalled();
+    });
+  });
+
+  describe('Call Forward Busy with ringDuration timer', () => {
+    beforeEach(function () {
+      this.$scope.voicemailEnabled = false;
+      this.FeatureToggleService.supports.and.returnValue(this.$q.when(true));
+    });
+    beforeEach(initComponent);
+    beforeEach(function () {
+      this.view.find(CALL_FWD_BUSY_RADIO).click().click();
+    });
+
+    it('should have CFNA timer value default 25', function() {
+      this.view.find(CALL_FWD_NOANSWER_TIMER).val('25');
+    });
+
+    it('should invoke `onChangeFn` when CFNA timer value is changed', function() {
+      let callForward = new CallForward();
+      callForward.callForwardBusy.internalVoicemailEnabled = true;
+      callForward.callForwardBusy.externalVoicemailEnabled = true;
+      this.view.find(CALL_FWD_BUSY_VOICEMAIL).click();
+      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(callForward);
+      this.view.find(CALL_FWD_NOANSWER_TIMER).val(130).change();
+      callForward.callForwardBusy.ringDurationTimer = 130;
+      this.view.find(CALL_FWD_NOANSWER_TIMER).val('130').change().blur();
+      expect(this.controller.isError).toBeFalsy();
+      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(callForward);
+      expect(this.$scope.onChangeFn).toHaveBeenCalled();
+    });
+
+    it('should validate the timer value when CFNA timer value is changed', function() {
+      this.controller.callForwardTimer = 350;
+      expect(this.controller.validateCallForwardTimer()).toBeFalsy();
+      this.controller.callForwardTimer = -1;
+      expect(this.controller.validateCallForwardTimer()).toBeFalsy();
+      this.controller.callForwardTimer = 114;
+      expect(this.controller.validateCallForwardTimer()).toBeTruthy();
+    });
+  });
+
+  describe('call forward timer feature toggle', () => {
+    beforeEach(function () {
+      this.FeatureToggleService.supports.and.returnValue(this.$q.when(false));
+    });
+    beforeEach(initComponent);
+    it('should have not autoanswer section if huron-auto-answer feature toggle is off', function () {
+      expect(this.FeatureToggleService.supports).toHaveBeenCalledWith('huron-cfna-timer');
+      expect(this.view.find(CALL_FWD_NOANSWER_TIMER)).not.toExist();
     });
   });
 });

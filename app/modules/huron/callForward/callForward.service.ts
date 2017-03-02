@@ -1,4 +1,4 @@
-import { CallForward, CallForwardAll, CallForwardBusy } from './callForward';
+import { CallForward, CallForwardAll } from './callForward';
 import { LineConsumerType } from '../lines/services';
 
 interface ICallForwardResource extends ng.resource.IResourceClass<ng.resource.IResource<CallForward>> {
@@ -34,12 +34,6 @@ export class CallForwardService {
   }
 
   public updateCallForward(type: LineConsumerType, typeId: string, numberId: string | undefined, data: CallForward): ng.IPromise<void> {
-    let callForwardBusy = new CallForwardBusy({
-      internalVoicemailEnabled: data.callForwardBusy.internalVoicemailEnabled,
-      internalDestination: data.callForwardBusy.internalDestination,
-      externalVoicemailEnabled: data.callForwardBusy.externalVoicemailEnabled,
-      externalDestination: data.callForwardBusy.externalDestination,
-    });
     return this.callForwardService.update({
       customerId: this.Authinfo.getOrgId(),
       type: type,
@@ -50,9 +44,22 @@ export class CallForwardService {
         voicemailEnabled: data.callForwardAll.voicemailEnabled,
         destination: data.callForwardAll.destination,
       }),
-      callForwardBusy: callForwardBusy,
-      callForwardNoAnswer: callForwardBusy,
-      callForwardNotRegistered: callForwardBusy,
+      callForwardBusy: {internalVoicemailEnabled: data.callForwardBusy.internalVoicemailEnabled,
+        internalDestination: data.callForwardBusy.internalDestination,
+        externalVoicemailEnabled: data.callForwardBusy.externalVoicemailEnabled,
+        externalDestination: data.callForwardBusy.externalDestination},
+
+      callForwardNoAnswer: {internalVoicemailEnabled: data.callForwardBusy.internalVoicemailEnabled,
+        internalDestination: data.callForwardBusy.internalDestination,
+        externalVoicemailEnabled: data.callForwardBusy.externalVoicemailEnabled,
+        externalDestination: data.callForwardBusy.externalDestination,
+        ringDurationTimer: data.callForwardBusy.ringDurationTimer},
+
+      callForwardNotRegistered: {internalVoicemailEnabled: data.callForwardBusy.internalVoicemailEnabled,
+        internalDestination: data.callForwardBusy.internalDestination,
+        externalVoicemailEnabled: data.callForwardBusy.externalVoicemailEnabled,
+        externalDestination: data.callForwardBusy.externalDestination},
+
     }).$promise;
   }
 

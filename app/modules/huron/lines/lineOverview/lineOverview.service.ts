@@ -22,7 +22,7 @@ export class LineOverviewService {
 
   private numberProperties: Array<string> = ['uuid', 'primary', 'shared', 'internal', 'external', 'siteToSite', 'incomingCallMaximum'];
   private callForwardAllProperties: Array<string> = ['destination', 'voicemailEnabled'];
-  private callForwardBusyProperties: Array<string> = ['internalDestination', 'internalVoicemailEnabled', 'externalDestination', 'externalVoicemailEnabled'];
+  private callForwardBusyProperties: Array<string> = ['internalDestination', 'internalVoicemailEnabled', 'externalDestination', 'externalVoicemailEnabled', 'ringDurationTimer'];
   private lineOverviewDataCopy: LineOverviewData;
   private errors: Array<any> = [];
 
@@ -197,8 +197,8 @@ export class LineOverviewService {
           if (callForwardRes.callForwardAll) {
             callForward.callForwardAll = new CallForwardAll(_.pick<CallForwardAll, CallForwardAll>(callForwardRes.callForwardAll, this.callForwardAllProperties));
           }
-          if (callForwardRes.callForwardBusy) {
-            callForward.callForwardBusy = new CallForwardBusy(_.pick<CallForwardBusy, CallForwardBusy>(callForwardRes.callForwardBusy, this.callForwardBusyProperties));
+          if (callForwardRes.callForwardNoAnswer) {
+            callForward.callForwardBusy = new CallForwardBusy(_.pick<CallForwardBusy, CallForwardBusy>(callForwardRes.callForwardNoAnswer, this.callForwardBusyProperties));
           }
           return callForward;
         }).catch(error => {
