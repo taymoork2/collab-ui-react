@@ -23,6 +23,12 @@
       </tbody>
     </table>
   </cs-sp-section>
+  <cs-sp-section ng-if="$ctrl.alarm.affectedNodes.length > 0">
+    <section-title title-key="hercules.alarms.affectedNodes"></section-title>
+    <ul ng-repeat="node in $ctrl.alarm.affectedNodes">
+      <li>{{node}}</li>
+    </ul>
+  </cs-sp-section>
   <cs-sp-section>
     <section-title title-key="hercules.alarms.description"></section-title>
     <p>{{$ctrl.alarm.description}}</p>

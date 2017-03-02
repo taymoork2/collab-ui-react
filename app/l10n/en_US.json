@@ -1867,6 +1867,7 @@
       "sinceTime": "since {{timestamp}}"
     },
     "alarms": {
+      "affectedNodes": "Affected Nodes",
       "alarms": "Alarms",
       "critical": "Critical",
       "error": "Error",
