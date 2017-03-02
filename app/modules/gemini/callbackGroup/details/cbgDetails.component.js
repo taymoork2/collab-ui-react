@@ -27,6 +27,7 @@
     vm.onOpenRemedyTicket = onOpenRemedyTicket;
     vm.onCancelSubmission = onCancelSubmission;
     vm.cbgs = _.get($stateParams, 'info.cbgs', []);
+    vm.groupId = _.get($stateParams, 'info.groupId', '');
     vm.customerId = _.get($stateParams, 'info.customerId', '');
 
 
@@ -127,9 +128,13 @@
     }
 
     function getRemedyTicket() {
-      gemService.getCbgRemedyTicket(vm.customerId)
+      var type = 9;
+      gemService.getRemedyTicket(vm.customerId, type)
         .then(function (res) {
-          var resArr = _.get(res.content, 'data');
+          var resArr = _.filter(_.get(res, 'content.data'), function (item) {
+            return item.description === vm.groupId;
+          });
+
           vm.remedyTicket = _.first(resArr);
           vm.remedyTicket.createTime = moment(vm.remedyTicket.createTime).toDate().toString();
           vm.remedyTicketLoading = false;

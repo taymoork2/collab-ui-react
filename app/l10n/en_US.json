@@ -6729,6 +6729,7 @@
     "msg": {
       "splsResponseErr": "No partner organization found, please contact ccaportal@cisco.com for help."
     },
+    "region": "Region",
     "cbgTitle": "Callback Groups",
     "tdTitle": "Telephony Domain",
     "button": {
@@ -6751,6 +6752,11 @@
       "genericError": "An unexpected error occurred. Please try again later."
     },
     "tds": {
+      "seeAll": "See All",
+      "phoneNumbers": "Phone Numbers",
+      "noteToCisco": "Note to Cisco Team",
+      "defaultToll": "Default Toll",
+      "defaultTollFree": "Default Toll Free",
       "export": {
         "csvFilename": "exported_telephonyDomain.csv",
         "result": {
@@ -6763,8 +6769,8 @@
         "sites": "Site URL",
         "bridgeSet": "Bridge Set",
         "webDomain": "Web Domain",
-        "description": "Partner TD Name",
         "totalSites": "Sites Assigned",
+        "partnerTdName": "Partner TD Name",
         "telephonyDomains": "Telephony Domains"
       }
     },
