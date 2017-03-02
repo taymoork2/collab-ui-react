@@ -186,7 +186,7 @@
         return;
       }
       ServiceDescriptor.getServices().then(function (items) {
-        var callServiceConnect = _.find(items || {}, {
+        var callServiceConnect = _.find(items, {
           id: 'squared-fusion-ec'
         });
         if (callServiceConnect && callServiceConnect.enabled) {
@@ -217,7 +217,7 @@
           }
         }
       }).catch(function (error) {
-        Notification.errorWithTrackingId(error, 'hercules.error.failedToDisableConnect');
+        Notification.errorWithTrackingId(error, 'hercules.error.couldNotGetServices');
       });
     }
 

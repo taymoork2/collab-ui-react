@@ -14,7 +14,7 @@
     }
 
     function extractData(res) {
-      return res.data.items || [];
+      return res.data.items;
     }
 
     var filterEnabledServices = function (services) {
@@ -93,10 +93,9 @@
     };
 
     var isServiceEnabled = function (serviceId) {
-      return $http
-        .get(UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services')
-        .then(function (response) {
-          var service = _.find(response.data.items, {
+      return getServices()
+        .then(function (items) {
+          var service = _.find(items, {
             id: serviceId
           });
           return service ? service.enabled : false;

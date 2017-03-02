@@ -83,10 +83,10 @@
         return;
       }
       // Filter out extensions that are not enabled in FMS
-      ServiceDescriptor.getServices().then(function (response) {
-        if (response) {
+      ServiceDescriptor.getServices().then(function (services) {
+        if (services) {
           _.forEach(vm.extensions, function (extension) {
-            extension.enabled = ServiceDescriptor.filterEnabledServices(response).some(function (service) {
+            extension.enabled = ServiceDescriptor.filterEnabledServices(services).some(function (service) {
               return extension.id === service.id && extension.id !== 'squared-fusion-gcal';
             });
             extension.isSetup = extension.enabled;

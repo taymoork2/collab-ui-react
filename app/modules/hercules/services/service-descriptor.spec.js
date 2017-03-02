@@ -42,14 +42,7 @@ describe('ServiceDescriptor', function () {
           emailSubscribers: "alvar@example.org",
         }]
       });
-    /*
-    Service.services(function (error, services) {
-      expect(services.length).toEqual(2);
-      expect(services[0].id).toEqual('squared-fusion-cal');
-      expect(services[0].emailSubscribers).toEqual('aalto@example.org');
-      done();
-    });
-    */
+
     Service.getServices().then(function (services) {
       expect(services.length).toEqual(2);
       expect(services[0].id).toEqual('squared-fusion-cal');
@@ -113,9 +106,6 @@ describe('ServiceDescriptor', function () {
     expect($httpBackend.flush).not.toThrow();
   });
 
-//
-//
-//
   it("should return false if service 'squared-fusion-ec' is not enabled", function () {
     $httpBackend
      .expectGET('https://hercules-integration.wbx2.com/v1/organizations/' + authinfo.getOrgId() + '/services').respond(

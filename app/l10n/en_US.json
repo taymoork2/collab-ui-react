@@ -1796,7 +1796,8 @@
       "failedToDisableConnect": "Could not disable Call Service Connect.",
       "sipDomainSaved": "SIP Destination saved successfully.",
       "sipDomainInvalid": "Could not save SIP Destination. Try again later.",
-      "invalidEmail": "Please enter a list of comma-separated email addresses"
+      "invalidEmail": "Please enter a list of comma-separated email addresses",
+      "couldNotGetServices": "Could not get services."
     },
     "cloudExtensions": {
       "serviceNames": {
