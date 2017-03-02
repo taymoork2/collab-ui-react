@@ -13,7 +13,7 @@ class EmailNotificationsSectionCtrl implements ng.IComponentController {
   public defaultWebExSiteOrgLevelSelectPlaceholder = this.$translate.instant('hercules.settings.defaultWebExSiteOrgLevelSelectPlaceholder');
   public searchable = true;
   public hasCalsvcOneButtonToPushIntervalFeatureToggle = false;
-  public oneButtonToPushIntervalOptions = [0, 5, 10 , 15];
+  public oneButtonToPushIntervalOptions = [0, 1, 5, 10, 15];
   public oneButtonToPushIntervalMinutes: number | null = null;
 
   private serviceId: string;
