@@ -96,9 +96,9 @@
         if (data.success || status === 200) {
           vm.orgSettings = data.orgSettings;
           vm.altHdsServers = data.orgSettings.altHdsServers;
+          vm.prodDomain = vm.orgSettings.kmsServer;
           if (typeof vm.altHdsServers === 'undefined' || vm.altHdsServers.length === 1) {
             // prod info
-            vm.prodDomain = vm.orgSettings.kmsServer;
             if (typeof vm.prodDomain === 'undefined') {
               //vm.model.serviceMode = vm.NA_MODE;
               // TODO: temp relax the condition to keep production mode when no prodDomain in org settings
