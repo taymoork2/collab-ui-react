@@ -18,9 +18,12 @@
 }
 
 .btn--myCompany {
+  .header-label {
+    margin-right: 0.75rem !important;
+  }
+
   .icon {
     position: static !important;
-    margin-left: 0.75rem !important;
   }
 }
 
