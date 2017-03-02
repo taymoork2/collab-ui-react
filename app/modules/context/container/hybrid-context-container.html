@@ -1,12 +1,7 @@
 <div class="expressway-service hercules hercules-fix-paragraphs">
   <cs-page-header title="hercules.hybridServiceNames.hybrid-context" tabs="hybridContextContainerController.tabs"
                   back="true" back-url="hybridContextContainerController.backState"></cs-page-header>
-  <div class="content-container">
-    <cs-page-sub-header>
-      <cs-page-sub-header-right>
-        <add-hybrid-resource-button modal-window-options=""></add-hybrid-resource-button>
-      </cs-page-sub-header-right>
-    </cs-page-sub-header>
+  <div ui-view="subHeader">
   </div>
 
   <div ui-view="contextServiceView">

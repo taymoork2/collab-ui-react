@@ -71,6 +71,10 @@ export class ScheduleInfoSectionComponentCtrl implements ng.IComponentController
     return this.cluster && this.cluster.upgradeSchedule && this.cluster.upgradeSchedule.urgentScheduleTime;
   }
 
+  public isHybridContextCluster() {
+    return this.cluster && this.cluster.targetType === 'cs_mgmt';
+  }
+
 }
 
 export class ScheduleInfoSectionComponent implements ng.IComponentOptions {

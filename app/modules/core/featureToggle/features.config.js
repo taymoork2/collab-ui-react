@@ -166,7 +166,6 @@ module.exports = {
   atlasHybridVoicemail: 'atlas-hybrid-voicemail',
   gemServicesTab: 'gem-services-tab',
   gemCCA: 'gem-cloud-connected-audio',
-  atlasHybridDataSecurity: 'atlas-data-security',
   atlasHerculesGoogleCalendar: 'atlas-hercules-google-calendar',
   avrilVmEnable: 'avril-vm-enable',
   avrilVoicemaill1249: 'avril-voicemail-l1249',
@@ -188,4 +187,5 @@ module.exports = {
   huronNetworkLocaleCH: 'huron-l10n-network-locale-ch',
   huronNetworkLocaleIE: 'huron-l10n-network-locale-ie',
   huronNetworkLocaleMX: 'huron-l10n-network-locale-mx',
+  enterprisePrivateTrunk: 'enterprise-private-trunk',
 };

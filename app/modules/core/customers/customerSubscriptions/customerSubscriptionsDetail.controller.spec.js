@@ -113,18 +113,18 @@ describe('Controller: customerSubscriptionsDetailCtrl', function () {
     describe('after init():', function () {
       it('must push customerSubscriptions into View-Model subscriptions array', function () {
         expect(this.controller).toBeDefined();
-        expect(this.controller.getSubscriptions).toBeDefined();
-        expect(this.controller.subscriptions).toBeDefined();
-        expect(this.controller.subscriptions[0].siteUrl).toEqual('AtlasTestRitwchau05.webex.com');
-        expect(this.controller.subscriptions[0].subscriptionId).toEqual('Test-Sub-08072016a');
+        expect(this.controller._helpers.getSubscriptions).toBeDefined();
+        expect(this.controller.orderReq.subscriptions).toBeDefined();
+        expect(this.controller.orderReq.subscriptions[0].siteUrl).toEqual('AtlasTestRitwchau05.webex.com');
+        expect(this.controller.orderReq.subscriptions[0].subscriptionId).toEqual('Test-Sub-08072016a');
       });
       it('must only put unique siteUrl/subscriptionID combinations array', function () {
-        expect(this.controller.subscriptions.length).toEqual(2);
-        expect(this.controller.subscriptions[1].subscriptionId).toEqual('Test-Sub-08072016b');
+        expect(this.controller.orderReq.subscriptions.length).toEqual(2);
+        expect(this.controller.orderReq.subscriptions[1].subscriptionId).toEqual('Test-Sub-08072016b');
       });
       it('must return array of names and emails', function () {
-        expect(this.controller.admins.partnerAdmins.length).toEqual(2);
-        expect(this.controller.admins.partnerAdmins[1].email).toEqual('email@email.net');
+        expect(this.controller.orderReq.partnerAdmins.length).toEqual(2);
+        expect(this.controller.orderReq.partnerAdmins[1].email).toEqual('email@email.net');
       });
     });
   });

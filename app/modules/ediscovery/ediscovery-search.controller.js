@@ -106,10 +106,10 @@ var Spark = require('@ciscospark/spark-core').default;
     }
 
     function splitWords(_words) {
-      var words = (_words).split(',').map(
+      var words = _words ? (_words).split(',').map(
         function (s) {
           return s.trim();
-        });
+        }) : null;
       return words;
     }
 

@@ -236,7 +236,7 @@
       // Find and add all c_mgmt connectors (always displayed no matter the current service pages we are looking at)
       // plus the connectors we're really interested in
       _.forEach(cluster.connectors, function (connector) {
-        if (connector.connectorType === 'c_mgmt' || connector.connectorType === connectorTypeToKeep) {
+        if (connector.connectorType === 'c_mgmt' || connector.connectorType === connectorTypeToKeep || connector.connectorType === 'cs_context' || connector.connectorType === 'cs_mgmt') {
           var node = _.find(nodes, function (node) {
             return node.hostname === connector.hostname;
           });

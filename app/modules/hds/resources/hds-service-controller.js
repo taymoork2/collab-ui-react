@@ -6,11 +6,10 @@
     .controller('HDSServiceController', HDSServiceController);
 
   /* @ngInject */
-  function HDSServiceController($modal, $state, $translate, Authinfo, FusionClusterService, FeatureToggleService) {
+  function HDSServiceController($modal, $state, $translate, Authinfo, FusionClusterService) {
 
 
     var vm = this;
-    vm.featureToggled = false;
     vm.backState = 'services-overview';
     vm.pageTitle = 'hds.resources.page_title';
     vm.state = $state;
@@ -48,11 +47,6 @@
           }
           $modal.open(vm.addResourceModal);
         }
-      });
-
-    FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity)
-      .then(function (reply) {
-        vm.featureToggled = reply;
       });
 
   }

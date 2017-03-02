@@ -4,66 +4,82 @@
   angular.module('Core')
   .controller('CustomerSubscriptionsDetailCtrl', CustomerSubscriptionsDetail);
 
-  function CustomerSubscriptionsDetail($stateParams, $q, $translate, $window, Authinfo, Auth, CustomerAdministratorService, Notification, UserListService, Userservice) {
+  function CustomerSubscriptionsDetail($stateParams, $q, $translate, Authinfo, Auth, CustomerAdministratorService, Notification, UserListService, Userservice, Utils) {
     var vm = this;
-    vm.subscriptions = [];
+    vm.DEFAULT_ORDER_BY = 'email';
     vm.currentCustomer = $stateParams.currentCustomer;
     vm.customerOrgId = vm.currentCustomer.customerOrgId;
     vm.customerName = vm.currentCustomer.customerName;
-    vm.getSubscriptions = getSubscriptions;
     vm.sendMail = sendMail;
-    vm.partnerAdmins = [];
     vm.partnerOrgName = Authinfo.getOrgName();
-    vm.partnerEmail = Authinfo.getPrimaryEmail();
-    vm.customerInfo = [];
-    vm.customerInfoClipboard = [];
-    vm.admins = {
+    vm.clipboardText = '';
+    vm.orderReq = {
+      subscriptions: [],
       customerFullAdmins: [],
       partnerAdmins: [],
+      body: '',
     };
     vm._helpers = {
+      getSubscriptions: getSubscriptions,
       getCustomerFullAdmins: getCustomerFullAdmins,
       getSimplifiedUserList: getSimplifiedUserList,
       flattenAndJoin: flattenAndJoin,
+      updateOrderReqBody: updateOrderReqBody,
     };
 
     init();
 
     function init() {
-      var newLine = '\n';
-      var newLineHtml = '%0D%0A';
       var promises = {
+        customerFullAdmins: getCustomerFullAdmins(),
         partnerAdmins: getPartnerAdmins(),
         subscriptions: getSubscriptions(),
-        customerFullAdmins: getCustomerFullAdmins(),
       };
       $q.all(promises).then(function (results) {
-        vm.subscriptions = results.subscriptions;
-        _.set(vm, 'admins.customerFullAdmins', results.customerFullAdmins);
-        _.set(vm, 'admins.partnerAdmins', results.partnerAdmins);
-
-        var customerFullAdminLineEntries = _.map(results.customerFullAdmins, 'emailAndName');
-        var partnerAdminLineEntries = _.map(results.partnerAdmins, 'emailAndName');
-        var subscriptionLineEntries = _.map(results.subscriptions, function (sub) {
-          return sub.subscriptionId + ' - ' + sub.siteUrl;
-        });
-
-        var infoArray = [$translate.instant('customerSubscriptions.customerAdmin'),
-          customerFullAdminLineEntries,
-          '',
-          $translate.instant('customerSubscriptions.partnerAdmin'),
-          partnerAdminLineEntries,
-          '',
-          $translate.instant('customerSubscriptions.webexSubscriptions'),
-          subscriptionLineEntries];
-
-        vm.customerInfo = vm._helpers.flattenAndJoin(infoArray, newLineHtml);
-        vm.customerInfoClipboard = vm._helpers.flattenAndJoin(infoArray, newLine);
+        // sort lists of admins, then set
+        results.customerFullAdmins = _.sortBy(results.customerFullAdmins, vm.DEFAULT_ORDER_BY);
+        results.partnerAdmins = _.sortBy(results.partnerAdmins, vm.DEFAULT_ORDER_BY);
+        _.set(vm, 'orderReq.customerFullAdmins', results.customerFullAdmins);
+        _.set(vm, 'orderReq.partnerAdmins', results.partnerAdmins);
+        _.set(vm, 'orderReq.subscriptions', results.subscriptions);
+        vm._helpers.updateOrderReqBody();
       });
     }
 
+    function updateOrderReqBody() {
+      var customerFullAdminLineEntries = _.map(vm.orderReq.customerFullAdmins, 'emailAndName');
+      var partnerAdminLineEntries = _.map(vm.orderReq.partnerAdmins, 'emailAndName');
+      var subscriptionLineEntries = _.map(vm.orderReq.subscriptions, function (sub) {
+        return sub.subscriptionId + ' - ' + sub.siteUrl;
+      });
+
+      var result = [
+        $translate.instant('customerSubscriptions.customerAdmin'),
+        customerFullAdminLineEntries,
+        '',
+        $translate.instant('customerSubscriptions.partnerAdmin'),
+        partnerAdminLineEntries,
+        '',
+      ];
+
+      if (!subscriptionLineEntries.length) {
+        result.push($translate.instant('customerSubscriptions.noWebexSubscriptions'));
+      } else {
+        result.push($translate.instant('customerSubscriptions.webexSubscriptions'));
+        result.push(subscriptionLineEntries);
+      }
+
+      vm.orderReq.body = vm._helpers.flattenAndJoin(result, '\n');
+      vm.clipboardText = vm.orderReq.body;
+    }
+
     function sendMail() {
-      $window.location.href = 'mailto:' + '' + '?subject=' + 'Subscription Info: ' + vm.customerName + '&body=' + vm.customerInfo;
+      var subject = $translate.instant('customerSubscriptions.subscriptionInfo') + ' ' + vm.customerName;
+      var body = vm.orderReq.body;
+      Utils.mailTo({
+        subject: subject,
+        body: body,
+      });
     }
 
     function getSubscriptions() {

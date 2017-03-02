@@ -29,12 +29,17 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
     return [this.setupButton];
   }
 
-  public hybridDataSecurityToggleEventHandler(hasFeature: boolean) {
-    this.display = hasFeature;
+  private checkRoles() {
+    const hasRequiredRoles = _.includes(this.Authinfo.getRoles(), this.Config.roles.full_admin) ||
+      _.includes(this.Authinfo.getRoles(), this.Config.roles.readonly_admin);
+    this.display = hasRequiredRoles && this.Authinfo.isFusionHDS();
   }
 
   /* @ngInject */
-  public constructor(FusionClusterStatesService) {
+  public constructor(
+    private Authinfo,
+    private Config,
+    FusionClusterStatesService) {
     super({
       active: false,
       cardClass: 'media',
@@ -45,5 +50,6 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
       routerState: 'hds.list',
       service: 'spark-hybrid-datasecurity',
     }, FusionClusterStatesService);
+    this.checkRoles();
   }
 }
