@@ -560,7 +560,6 @@
       "distribution": "Distribution",
       "timeline": "Timeline",
       "overview": "Overview",
-      "all": "All",
       "deviceMetrics": "Room Device Metrics",
       "downloadFullReport": "Download Full Report",
       "mostUsed": "Most Used",
@@ -579,7 +578,7 @@
       "last7Days": "Last 7 Days",
       "last4Weeks": "Weekly Last 4 weeks ",
       "last3Months": "Monthly Last 3 Months",
-      "missingDays": " (data missing for {{nbrOfMissingDays}} days)",
+      "missingDays": "no data available for {{nbrOfMissingDays}} days",
       "nameNotFoundFor": "Name not found for",
       "selectModelsToFilterOn": "Select models to filter on",
       "deviceOptions": {

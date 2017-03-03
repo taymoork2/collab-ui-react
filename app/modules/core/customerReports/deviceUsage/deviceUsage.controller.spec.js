@@ -3,7 +3,7 @@
 describe('Controller: DeviceUsageCtrl', function () {
 
   beforeEach(angular.mock.module('Core'));
-  var DeviceUsageTotalService, DeviceUsageGraphService, DeviceUsageSplunkMetricsService, DeviceUsageExportService, FeatureToggleService, DeviceUsageModelService;
+  var DeviceUsageService, DeviceUsageGraphService, DeviceUsageSplunkMetricsService, DeviceUsageExportService, DeviceUsageModelService;
   var $controller;
   var controller;
   var splunkService;
@@ -14,15 +14,14 @@ describe('Controller: DeviceUsageCtrl', function () {
   var $modal;
 
   afterEach(function () {
-    DeviceUsageTotalService = DeviceUsageGraphService = DeviceUsageSplunkMetricsService = $controller = controller = splunkService = $scope = $q = $state = DeviceUsageModelService = undefined;
+    DeviceUsageService = DeviceUsageGraphService = DeviceUsageSplunkMetricsService = $controller = controller = splunkService = $scope = $q = $state = DeviceUsageModelService = undefined;
   });
 
-  beforeEach(inject(function (_$q_, _$rootScope_, _DeviceUsageTotalService_, _DeviceUsageGraphService_, _DeviceUsageExportService_, _DeviceUsageSplunkMetricsService_, _FeatureToggleService_, _$controller_, _$state_, _Notification_, _$modal_, _DeviceUsageModelService_) {
-    DeviceUsageTotalService = _DeviceUsageTotalService_;
+  beforeEach(inject(function (_$q_, _$rootScope_, _DeviceUsageService_, _DeviceUsageGraphService_, _DeviceUsageExportService_, _DeviceUsageSplunkMetricsService_, _$controller_, _$state_, _Notification_, _$modal_, _DeviceUsageModelService_) {
+    DeviceUsageService = _DeviceUsageService_;
     DeviceUsageExportService = _DeviceUsageExportService_;
     DeviceUsageGraphService = _DeviceUsageGraphService_;
     DeviceUsageSplunkMetricsService = _DeviceUsageSplunkMetricsService_;
-    FeatureToggleService = _FeatureToggleService_;
     DeviceUsageModelService = _DeviceUsageModelService_;
     $controller = _$controller_;
     $scope = _$rootScope_.$new();
@@ -34,9 +33,6 @@ describe('Controller: DeviceUsageCtrl', function () {
     sinon.stub(DeviceUsageGraphService, 'makeChart');
     DeviceUsageGraphService.makeChart.returns(amchartMock());
 
-    sinon.stub(FeatureToggleService, 'atlasDeviceUsageReportV2GetStatus');
-    FeatureToggleService.atlasDeviceUsageReportV2GetStatus.returns(false);
-
     sinon.stub(DeviceUsageModelService, 'getModelsForRange');
     DeviceUsageModelService.getModelsForRange.returns($q.resolve([]));
 
@@ -46,7 +42,7 @@ describe('Controller: DeviceUsageCtrl', function () {
 
     beforeEach(function () {
       controller = $controller('DeviceUsageCtrl', {
-        DeviceUsageTotalService: DeviceUsageTotalService,
+        DeviceUsageService: DeviceUsageService,
         DeviceUsageGraphService: DeviceUsageGraphService,
         DeviceUsageSplunkMetricsService: DeviceUsageSplunkMetricsService,
         DeviceUsageModelService: DeviceUsageModelService,
@@ -59,14 +55,16 @@ describe('Controller: DeviceUsageCtrl', function () {
 
 
     it('starts with fetching initial data based on default last 7 days range', function (done) {
-      sinon.stub(DeviceUsageTotalService, 'getDataForRange');
+      sinon.stub(DeviceUsageService, 'getDataForRange');
+      sinon.stub(DeviceUsageService, 'extractStats');
       var deviceData = {
         reportItems: [
           { totalDuration: 42 },
         ],
         missingDays: false,
       };
-      DeviceUsageTotalService.getDataForRange.returns($q.resolve(deviceData));
+      DeviceUsageService.getDataForRange.returns($q.resolve(deviceData));
+      DeviceUsageService.extractStats.returns($q.resolve([]));
 
       expect(controller.waitingForDeviceMetrics).toBe(true);
       controller.init();

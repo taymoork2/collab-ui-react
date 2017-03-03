@@ -18,7 +18,7 @@
       var startDate = moment(start);
       var endDate = moment(end);
 
-      $log.info("categories parameter ignored in V2:", deviceCategories);
+      //$log.info("categories parameter ignored in V2:", deviceCategories);
 
       if (_.isEmpty(models)) {
         models = 'aggregate';
@@ -282,7 +282,6 @@
       _.each(devices, function (device) {
         promises.push(cancelableHttpGET(csdmUrl + device.accountId)
           .then(function (res) {
-            //$log.info("resolving", res);
             return res.data;
           })
           .catch(function () {
