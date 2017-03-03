@@ -7376,7 +7376,11 @@
       "partialOutage": "Partial Outage",
       "majorOutage": "Major Outage",
       "underMaintenance": "Under Maintenance"
-    }
+    },
+    "syncBtn": "Sync up",
+    "syncMessage": "Please sync up the data before start.",
+    "syncSucceed": "Sync up succeed.",
+    "syncError": "Error occurred when try to sync up the data, please try again."
   },
   "machineTypes": {
     "bot": "Bot",
