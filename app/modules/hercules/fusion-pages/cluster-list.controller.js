@@ -6,7 +6,7 @@
     .controller('FusionClusterListController', FusionClusterListController);
 
   /* @ngInject */
-  function FusionClusterListController($filter, $modal, $state, $translate, Authinfo, Config, hasResourceGroupFeatureToggle, FusionClusterService, Notification, WizardFactory) {
+  function FusionClusterListController($filter, $modal, $state, $translate, Analytics, Authinfo, Config, hasResourceGroupFeatureToggle, FusionClusterService, Notification, WizardFactory) {
     var vm = this;
     if (hasResourceGroupFeatureToggle) {
       var groupsCache = [];
@@ -15,6 +15,9 @@
       var clustersCache = [];
       vm.displayedClusters = clustersCache;
     }
+    Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CLUSTER_LIST, {
+      hasResourceGroupFeatureToggle: hasResourceGroupFeatureToggle,
+    });
 
     vm.showResourceGroups = hasResourceGroupFeatureToggle;
     vm.loading = true;
