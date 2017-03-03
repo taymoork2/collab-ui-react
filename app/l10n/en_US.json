@@ -4648,7 +4648,7 @@
       "location": "Location",
       "totalCloud": "Total Cloud Participants",
       "clientTypeHeading": "Client Type Distribution",
-      "onPremisesHeading": "On Premises",
+      "onPremisesHeading": "On-Premises",
       "cloudHeading": "Cloud",
       "hybridHeading": "Hybrid"
     },
