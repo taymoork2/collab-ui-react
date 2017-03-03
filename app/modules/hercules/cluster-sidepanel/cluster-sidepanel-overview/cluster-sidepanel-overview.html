@@ -16,7 +16,11 @@
                               ng-if="$ctrl.isExpresswayCluster() && $ctrl.hasConnectors()"></expressway-upgrade-section>
 
   <mf-upgrade-section cluster-id="$ctrl.cluster.id"
+                              connector-type="$ctrl.connectorType"
                               ng-if="$ctrl.isMediaCluster() && $ctrl.hasConnectors() && $ctrl.cluster.releaseChannel !== 'latest'"></mf-upgrade-section>
+
+  <hds-upgrade-section cluster-id="$ctrl.cluster.id"
+                              ng-if="$ctrl.isHDSCluster() && $ctrl.hasConnectors()"></hds-upgrade-section>
 
   <hybrid-services-node-list cluster="$ctrl.cluster"
                              connector-type="$ctrl.connectorType"
