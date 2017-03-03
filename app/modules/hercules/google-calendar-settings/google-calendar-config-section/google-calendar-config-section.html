@@ -9,6 +9,14 @@
             cs-input-help-text="{{$ctrl.localizedGoogleServiceAccountHelpText}}">
   </div>
   <div class="sub-section">
+    <h5 class="sub-section__label" translate="hercules.settings.googleCalendar.aclAccountHeader"></h5>
+    <p class="sub-section__description" translate="hercules.settings.googleCalendar.aclAccountText"></p>
+    <input cs-input
+           disabled
+           type="text"
+           ng-model="$ctrl.aclAdminAccount">
+  </div>
+  <div class="sub-section">
     <h5 class="sub-section__label" translate="hercules.settings.googleCalendar.privateKeyHeader"></h5>
     <p class="sub-section__description" translate="hercules.settings.googleCalendar.privateKeyText"></p>
             <button
