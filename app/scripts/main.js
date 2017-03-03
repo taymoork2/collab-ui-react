@@ -95,7 +95,7 @@
 
   angular.module('Hercules', ['Core', 'Squared', 'core.onboard', 'ngTagsInput']);
 
-  angular.module('HDS', ['Core']);
+  angular.module('HDS', ['Core', 'Hercules']);
 
   angular.module('Ediscovery', ['Core']);
 
