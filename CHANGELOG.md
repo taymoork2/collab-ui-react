@@ -1,3 +1,51 @@
+<a name="1.0.7"></a>
+## [1.0.7](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/compare/v1.0.6...v1.0.7) (2017-03-03)
+
+
+### Bug Fixes
+
+* **core:** Fix 'this' binding to reference the correct context in 'checkActive' function ([b476a0b](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/b476a0b))
+* **core:** Fix for >10k user export using old CI export ([4ac8798](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/4ac8798))
+* **core:** Fixing myCompany icon layout on smaller screens ([c1b1cbf](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/c1b1cbf))
+* **core:** Fixing myCompany icon layout on smaller screens ([ac26279](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/ac26279))
+* **core:** Show Order History for customers with both online and enterprise ([cb79562](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/cb79562))
+* **core:** US13116 - Fix for FTSW not showing second subdomain update warning ([5844347](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/5844347))
+* **core,customer:** display all customer full admins on 'Order Request' panel ([cccdb9e](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/cccdb9e))
+* **core,customer:** rm customer admin email sub-header from overview panel ([ccdb873](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/ccdb873))
+* **core,users:** explictly import 'core.notifications' in 'userlist.service.js' ([bb11a2c](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/bb11a2c))
+* **core,users:** use consistent sort in clipboard text as in template ([767d84c](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/767d84c))
+* **devices:** Fix user search ([42839f8](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/42839f8))
+* **ediscovery:** splitWords returned error when a null value was passed, fixed to return null ([66d88f4](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/66d88f4))
+* **Global Service Status:** fix issue when add component ([40b1f98](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/40b1f98))
+* **helpdesk:** DE857 - user language change ([2c98be5](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/2c98be5))
+* **hercules:** Adding missing string from the UI, was removed by mistake som weeks ago. ([3dc0125](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/3dc0125))
+* **hercules:** Moving from _.each to _.map like Thomas suggested. ([064a477](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/064a477))
+* **Hercules:** Adding affected hosts to ClusterSevice's alarms aggregates. ([31adf3c](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/31adf3c))
+* **huron:** AUTOATTN-1019 ([630c71b](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/630c71b))
+* **huron:** AUTOATTN-994 - intital commit ([2a7a4e8](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/2a7a4e8))
+* **huron:** AUTOATTN1012 AUTOATTN1007 ([e3e8e39](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/e3e8e39))
+* **huron:** AUTOATTN1021 ([77c166f](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/77c166f))
+* **huron:** change call Forward voicemail and call Forward External ([9afe4da](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/9afe4da))
+* **huron:** JIRA ADMINAPPS-239 and US270402 ([b38e324](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/b38e324))
+* **huron:** JIRA ADMINAPPS-239 and US270402: revised ([4c9a263](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/4c9a263))
+* **l10n:** handle various browser language code formats ([dbcc8b0](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/dbcc8b0))
+* **mixpanel:** improve a few lines ([92b8ed4](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/92b8ed4))
+* **sunlight:** fix fields sync issue and template rerender ([20b0545](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/20b0545))
+* **sunlight:** spark care reports export menu fix ([9b44732](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/9b44732))
+
+
+### Features
+
+* **core:** missing entitlements for care on notifications card ([2d986bb](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/2d986bb))
+* **core:** US13116 - Additional warnings when CSC is enabled ([a3ba840](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/a3ba840))
+* **core,customer:** add 'adminList.component.ts' and friends ([f6f998f](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/f6f998f))
+* **ediscovery:** queries now show up in search result page ([718f516](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/718f516))
+* **HDS:** Added upgrade schedule section to cluster settings. ([33b1c35](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/33b1c35))
+* **HDS:** Removed feature toggle for HDS. All HDS UI element will be controlled by org entitlements and user roles only. ([cbc3a05](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/cbc3a05))
+* **hercules:** track visited pages ([7dd3f73](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/7dd3f73))
+
+
+
 <a name="1.0.6"></a>
 ## [1.0.6](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/compare/v1.0.5...v1.0.6) (2017-02-28)
 
