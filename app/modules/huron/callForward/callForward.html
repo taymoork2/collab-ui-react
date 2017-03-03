@@ -62,6 +62,20 @@
       <div ng-if="$ctrl.forwardState === 'busy'">
         <div class="cs-input-group cs-input--nested-1">
           <label for="forwardNABCalls" translate="callForwardPanel.internalAndExternal"></label>
+          <div class="cs-input-group" style="display:flex"  ng-if="$ctrl.cfnaTimerFeatureToggleEnabled">
+            <input
+              cs-input
+              type= "number"
+              name="callForwardTimer"
+              ng-model="$ctrl.callForwardTimer"
+              required="true"
+              min="1" max="300"
+              cs-input-label="{{:: 'callForwardPanel.forwardBusyNoAnswerTimerDescription' | translate }}"
+              cs-input-secondary-label="{{:: 'callForwardPanel.forwardBusyNoAnswerTimerSeconds' | translate}}"
+              ng-change="$ctrl.onCFNATimerChange()"
+              cs-input-messages="$ctrl.errorMsg"
+              ng-class="{'error': $ctrl.isError}">
+          </div>
           <div ng-if="$ctrl.busyInternal.voicemail === false">
             <cs-call-destination
               class="row"

@@ -187,4 +187,5 @@ module.exports = {
   huronNetworkLocaleIE: 'huron-l10n-network-locale-ie',
   huronNetworkLocaleMX: 'huron-l10n-network-locale-mx',
   enterprisePrivateTrunk: 'enterprise-private-trunk',
+  huroncfnatimer: 'huron-cfna-timer',
 };

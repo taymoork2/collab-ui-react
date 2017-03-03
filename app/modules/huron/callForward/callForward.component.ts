@@ -10,6 +10,8 @@ interface IForwardDestination {
   voicemail: boolean;
 }
 const callForwardInputs = ['external', 'uri', 'custom'];
+const MIN_SECONDS = 1;
+const MAX_SECONDS = 300;
 class CallForwardCtrl implements ng.IComponentController {
   public static ALL: string = 'all';
   public static BUSY: string = 'busy';
@@ -27,17 +29,31 @@ class CallForwardCtrl implements ng.IComponentController {
   public forwardAll: IForwardDestination;
   public busyInternal: IForwardDestination;
   public busyExternal: IForwardDestination;
+  public callForwardTimer: number = 25;
+  public isError: boolean = false;
+  public errorMsg: {};
+  public cfnaTimerFeatureToggleEnabled: boolean = false;
+
  /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
     private HuronCustomerService: HuronCustomerService,
     private TelephoneNumberService,
+    private FeatureToggleService,
   ) {
     this.customTranslations = {
       placeholderText: this.$translate.instant('callDestination.alternateCustomPlaceholder'),
       helpText: this.$translate.instant('callDestination.alternateCustomHelpText'),
     };
     this.forwardOptions = callForwardInputs;
+    this.errorMsg = {
+      min: this.$translate.instant('callForwardPanel.ringDurationTimer.validation.error'),
+      max: this.$translate.instant('callForwardPanel.ringDurationTimer.validation.error'),
+    };
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.huroncfnatimer).then((cfnaTimerEnabled) => {
+      this.cfnaTimerFeatureToggleEnabled = cfnaTimerEnabled;
+    });
+
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
@@ -91,7 +107,7 @@ class CallForwardCtrl implements ng.IComponentController {
     this.forwardState = (all.destination.phoneNumber || all.voicemail) ? CallForwardCtrl.ALL : ((internal.destination.phoneNumber || internal.voicemail) ?  CallForwardCtrl.BUSY : this.forwardState = CallForwardCtrl.NONE);
 
     this.forwardExternalCallsDifferently = (( external.destination.phoneNumber || external.voicemail ) && !_.isEqual(internal, external) );
-
+    this.callForwardTimer = _.get<number>(callForwardChanges, 'currentValue.callForwardBusy.ringDurationTimer');
   }
 
   private addForwardOption(value: string): void {
@@ -201,6 +217,25 @@ class CallForwardCtrl implements ng.IComponentController {
     }
     return newNumber.replace(/ /g, '');
   }
+
+  public onCFNATimerChange(): void {
+    if (this.validateCallForwardTimer()) {
+      this.isError = false;
+    } else {
+      this.isError = true;
+    }
+
+    let callForwardBusy: CallForwardBusy = _.cloneDeep(this.callForward.callForwardBusy);
+    callForwardBusy.ringDurationTimer = this.callForwardTimer;
+    this.callForward.callForwardAll = new CallForwardAll();
+    this.callForward.callForwardBusy = callForwardBusy;
+    this.change(this.callForward);
+  }
+
+  private validateCallForwardTimer(): boolean {
+    return _.inRange(this.callForwardTimer, MIN_SECONDS, MAX_SECONDS + 1);
+  }
+
 
 }
 
