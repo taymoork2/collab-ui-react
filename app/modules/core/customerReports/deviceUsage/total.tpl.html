@@ -1,6 +1,5 @@
 <div class="device-usage-report-pages">
   <cs-page-sub-header>
-    </cs-page-sub-header-left>
     <cs-page-sub-header-right>
         <cs-select id="timeFilter" name="timeFilter" class="customer-report-filter" ng-model="deviceUsage.timeSelected" options="deviceUsage.timeOptions" on-change-fn="deviceUsage.timeUpdate()"></cs-select>
         <cs-select class="model-filter" ng-show="deviceUsage.v2" on-change-fn="deviceUsage.modelsChanged()" ng-model="deviceUsage.modelsSelected" options="deviceUsage.modelOptions" placeholder="deviceUsage.selectModelsPlaceholder" multi="true" singular="Model" plural="Models"></cs-select>
