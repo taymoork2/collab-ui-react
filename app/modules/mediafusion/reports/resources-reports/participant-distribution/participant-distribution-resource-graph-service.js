@@ -83,7 +83,8 @@
       valueAxes[0].autoGridCount = true;
       valueAxes[0].position = 'left';
       valueAxes[0].title = vm.participants;
-      valueAxes[0].titleRotation = 0;
+      //valueAxes[0].titleRotation = 0;
+      valueAxes[0].labelOffset = 28;
 
       var catAxis = CommonReportsGraphService.getBaseVariable(vm.AXIS);
       catAxis.gridPosition = 'start';

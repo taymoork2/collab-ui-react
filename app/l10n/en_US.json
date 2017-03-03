@@ -4638,16 +4638,19 @@
       "lowAvailableClusters": "Low availability clusters",
       "clusterTakingMoreCalls": "Clusters hosting more no of calls",
       "totalMeetings": "Total Number of Meetings",
-      "meetOnPrem": "Meetings Location",
+      "meetOnPrem": "Meeting Host Type",
       "clientTypes": "Client Types",
       "clientType": "Client Type",
       "clients": "Clients",
       "noOfMeet": "Number of Meetings",
-      "meetingLocationTitle": "Total Meetings by Location",
+      "meetingLocationTitle": "Total Meetings by Host Type",
       "meetings": "Meetings",
       "location": "Location",
       "totalCloud": "Total Cloud Participants",
-      "clientTypeHeading": "Client Type Distribution Across Calls"
+      "clientTypeHeading": "Client Type Distribution",
+      "onPremisesHeading": "On-Premises",
+      "cloudHeading": "Cloud",
+      "hybridHeading": "Hybrid"
     },
     "deleteGroup": {
       "message": "Are you sure you want to delete {{groupName}} from Cisco Collaboration Cloud?",
