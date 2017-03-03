@@ -495,10 +495,12 @@
 
       //set up the initial mediaUploads
       mediaResources.uploads[0] = _.cloneDeep(savedActionEntry);
-      //if previously saved a real value, want to esure not deleted
+
+      //if previously saved a real value, want to ensure not deleted
       if (savedActionEntry.description.length > 0) {
         AAMediaUploadService.notifyAsSaved(uniqueCtrlIdentifier, true);
       }
+
     }
 
     function isSquishable() {
