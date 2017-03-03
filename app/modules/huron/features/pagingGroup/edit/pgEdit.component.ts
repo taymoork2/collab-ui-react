@@ -86,6 +86,7 @@ class PgEditComponentCtrl implements ng.IComponentController {
             this.initiatorType = this.pg.initiatorType;
           }
           if (this.pg.initiators !== undefined) {
+            this.initiatorCount = this.pg.initiators.length;
             this.getInitiators(this.pg.initiators);
           }
           this.loading = false;
@@ -421,7 +422,11 @@ class PgEditComponentCtrl implements ng.IComponentController {
   public onCancel(): void {
     this.name = this.pg.name;
     this.number = this.pg.extension;
+    if (this.pg.initiatorType !== undefined) {
+      this.initiatorType = this.pg.initiatorType;
+    }
     this.members = [];
+    this.initiators = [];
     this.listOfDisplayMembers = [];
     this.listOfDisplayInitiators = [];
     _.forEach(this.originalMembersList, (mem) => {
@@ -429,8 +434,14 @@ class PgEditComponentCtrl implements ng.IComponentController {
       this.listOfDisplayMembers.push(mem);
     });
 
+    _.forEach(this.originalInitiatorsList, (initiator) => {
+      this.initiators.push(initiator);
+      this.listOfDisplayInitiators.push(initiator);
+    });
+
     this.userCount = _.get(_.countBy(this.originalMembersList, 'member.type'), USER_REAL_USER, 0);
     this.placeCount = _.get(_.countBy(this.originalMembersList, 'member.type'), USER_PLACE, 0);
+    this.initiatorCount = this.originalInitiatorsList.length;
     this.errorNameInput = false;
     this.formChanged = false;
     this.form.$setPristine();
@@ -438,13 +449,13 @@ class PgEditComponentCtrl implements ng.IComponentController {
   }
 
   public onChange(): void {
+    this.errorNoIntiators = false;
     let reg = /^[A-Za-z\-\_\d\s]+$/;
     this.errorNameInput = !reg.test(this.name);
     if (this.initiatorType === CUSTOM && this.initiators.length === 0) {
-      this.formChanged = false;
-    } else {
-      this.formChanged = true;
+      this.errorNoIntiators = true;
     }
+    this.formChanged = true;
   }
 
   public showDisableSave() {
@@ -464,13 +475,15 @@ class PgEditComponentCtrl implements ng.IComponentController {
       members.push(member);
     });
     //Populate Initiator data
-    _.forEach(this.initiators, function (mem) {
-      let initiator: IInitiatorData = <IInitiatorData> {
-        initiatorId: mem.member.uuid,
-        type: (mem.member.type === USER_REAL_USER) ? USER : PLACE,
-      };
-      initiators.push(initiator);
-    });
+    if (this.initiatorType === CUSTOM) {
+      _.forEach(this.initiators, function (mem) {
+        let initiator: IInitiatorData = <IInitiatorData> {
+          initiatorId: mem.member.uuid,
+          type: (mem.member.type === USER_REAL_USER) ? USER : PLACE,
+        };
+        initiators.push(initiator);
+      });
+    }
     let pg: IPagingGroup = <IPagingGroup>{
       name: this.name,
       extension: this.number,
@@ -530,7 +543,7 @@ class PgEditComponentCtrl implements ng.IComponentController {
           this.getSearchedCount(this.listOfDisplayMembers, USER_PLACE) > this.cardThreshold);
     } else {
       return (this.initiatorCount > this.cardThreshold && this.numberOfCardsInitiators === this.cardThreshold &&
-      this.listOfDisplayInitiators.length > this.cardThreshold);
+      this.listOfDisplayInitiators.length > this.cardThreshold && this.initiatorType === CUSTOM);
     }
   }
 
@@ -543,7 +556,7 @@ class PgEditComponentCtrl implements ng.IComponentController {
           this.getSearchedCount(this.listOfDisplayMembers, USER_PLACE) > this.cardThreshold);
     } else {
       return (this.initiatorCount > this.cardThreshold && this.numberOfCardsInitiators === undefined &&
-        this.listOfDisplayInitiators.length > this.cardThreshold);
+        this.listOfDisplayInitiators.length > this.cardThreshold && this.initiatorType === CUSTOM);
     }
   }
 
