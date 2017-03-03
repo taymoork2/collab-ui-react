@@ -19,6 +19,7 @@
     vm.connectorType = '';
     vm.cluster = {};
     vm.localizedManagementConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.c_mgmt');
+    vm.localizedCCCName = $translate.instant('common.ciscoCollaborationCloud');
     vm.localizedConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.' + vm.connectorType);
     vm.servicesId = FusionUtils.connectorType2ServicesId(vm.connectorType);
 
