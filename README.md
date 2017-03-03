@@ -67,7 +67,7 @@ See [git-terminology](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-c
 * Run `git remote add <your-CEC-id> <your-forks-url>`
 
   ```
-  git remote add foo git@sqbu-github.cisco.com:foo/wx2-admin-web-client.git
+  git remote add johnsmith git@sqbu-github.cisco.com:johnsmith/wx2-admin-web-client.git
   ```
 
 #### 4. Set a remote to point at Gauntlet (build queue-ing tool) for validated merge (after approved review)
@@ -112,9 +112,9 @@ See [git-terminology](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-c
     * [example.service.spec.ts](examples/unit/example.service.spec.ts)
 
 ##### 5. Create End-to-End test
+  * **Important:** *Our functional e2e tests are only intended for the few, happy-path, critical workflows in Atlas. The majority of these deal with creating trials and users for particular services.  There should be a valid critical reason for adding a new e2e test. If you want to any advice, we do have a (rarely used) "Atlas UI E2E Tests" space in the Atlas Team.*
   * `npm run protractor` to run protractor e2e tests
   * e2e tests are organized by [modules](test/e2e-protractor)
-    * Only add e2e tests for critical, happy-path workflows
   * Protractor elements are abstracted into [Page Objects](test/e2e-protractor/pages)
   * All element interactions are implemented through [Util functions](test/e2e-protractor/utils/test.utils.js)
 
