@@ -20,8 +20,8 @@ describe('Controller: HDSSettingsController', function () {
 
   function initSpies() {
     spyOn(Authinfo, 'getOrgId').and.returnValue('123456');
-    HDSService.getHdsTrialUsers = sinon.stub().returns($q.resolve({}));
-    FusionClusterService.getAll = sinon.stub().returns($q.resolve({}));
+    spyOn(HDSService, 'getHdsTrialUsers').and.returnValue($q.resolve({}));
+    spyOn(FusionClusterService, 'getAll').and.returnValue($q.resolve({}));
   }
 
   function initController() {
@@ -40,29 +40,29 @@ describe('Controller: HDSSettingsController', function () {
         callback({
           success: true,
           orgSettings: {
-            "kmsServer": "partner.com",
-            "kmsServerMachineUUID": "ded8327b-518d-4694-a219-ca7db5bfc2db",
-            "adrServer": "dc5b76db-ccb8-4c36-b734-c3f443f7bec6",
-            "securityService": "0d61621d-113d-4936-8869-2f264b174b55",
-            "altHdsServers": [
+            kmsServer: 'partner.com',
+            kmsServerMachineUUID: 'ded8327b-518d-4694-a219-ca7db5bfc2db',
+            adrServer: 'dc5b76db-ccb8-4c36-b734-c3f443f7bec6',
+            securityService: '0d61621d-113d-4936-8869-2f264b174b55',
+            altHdsServers: [
               {
-                "type": "kms",
-                "kmsServer": "customer.com",
-                "kmsServerMachineUUID": "e336ae2b-7afb-4e90-a023-61103e06a861",
-                "groupId": "755d989a-feef-404a-8669-085eb054afef",
-                "active": true,
+                type: 'kms',
+                kmsServer: 'customer.com',
+                kmsServerMachineUUID: 'e336ae2b-7afb-4e90-a023-61103e06a861',
+                groupId: '755d989a-feef-404a-8669-085eb054afef',
+                active: true,
               },
               {
-                "type": "adr",
-                "adrServer": "5f40d7be-da6b-4a10-9c6c-8b061aee053a",
-                "groupId": "755d989a-feef-404a-8669-085eb054afef",
-                "active": true,
+                type: 'adr',
+                adrServer: '5f40d7be-da6b-4a10-9c6c-8b061aee053a',
+                groupId: '755d989a-feef-404a-8669-085eb054afef',
+                active: true,
               },
               {
-                "type": "sec",
-                "securityService": "2d2bdeaf-3e63-4561-be2f-4ecc1a48dcd4",
-                "groupId": "755d989a-feef-404a-8669-085eb054afef",
-                "active": true,
+                type: 'sec',
+                securityService: '2d2bdeaf-3e63-4561-be2f-4ecc1a48dcd4',
+                groupId: '755d989a-feef-404a-8669-085eb054afef',
+                active: true,
               },
             ],
           },
@@ -71,11 +71,8 @@ describe('Controller: HDSSettingsController', function () {
       initController();
     });
 
-    it('controller should be defined', function () {
+    it('controller should be initialized, parse the right values from org settings with HDS trial mode', function () {
       expect(controller).toBeDefined();
-    });
-
-    it('HDS mode, production/trial domains, ...', function () {
       expect(controller.model.serviceMode).toBe(controller.TRIAL);
       expect(controller.trialDomain).toBe('customer.com');
       expect(controller.prodDomain).toBe('partner.com');
@@ -89,17 +86,17 @@ describe('Controller: HDSSettingsController', function () {
         callback({
           success: true,
           orgSettings: {
-            "kmsServer": "partner.com",
-            "kmsServerMachineUUID": "ded8327b-518d-4694-a219-ca7db5bfc2db",
-            "adrServer": "dc5b76db-ccb8-4c36-b734-c3f443f7bec6",
-            "securityService": "0d61621d-113d-4936-8869-2f264b174b55",
+            kmsServer: 'partner.com',
+            kmsServerMachineUUID: 'ded8327b-518d-4694-a219-ca7db5bfc2db',
+            adrServer: 'dc5b76db-ccb8-4c36-b734-c3f443f7bec6',
+            securityService: '0d61621d-113d-4936-8869-2f264b174b55',
           },
         }, 200);
       });
       initController();
     });
 
-    it('HDS mode, production/trial domains', function () {
+    it('controller should parse the right values from org settings with HDS production mode', function () {
       expect(controller.model.serviceMode).toBe(controller.PRODUCTION);
       expect(controller.prodDomain).toBe('partner.com');
     });
