@@ -73,7 +73,8 @@
       valueAxes[0].position = 'left';
       //Change to i10n
       valueAxes[0].title = vm.meetingLocation;
-      valueAxes[0].titleRotation = 0;
+      //valueAxes[0].titleRotation = 0;
+      valueAxes[0].labelOffset = 28;
 
       var catAxis = CommonReportsGraphService.getBaseVariable(vm.AXIS);
       catAxis.gridPosition = 'start';
@@ -125,6 +126,13 @@
       var exportFields = [];
       _.forEach(graphs, function (value) {
         columnNames[value.valueField] = value.title + ' ' + vm.meetingLocation;
+        if (value.valueField === 'ON_PREM') {
+          value.lineColor = '#67b7dc';
+        } else if (value.valueField === 'CLOUD') {
+          value.lineColor = '#fdd400';
+        } else if (value.valueField === 'HYBRID') {
+          value.lineColor = '#84b761';
+        }
       });
       _.forEach(columnNames, function (key) {
         exportFields.push(key);

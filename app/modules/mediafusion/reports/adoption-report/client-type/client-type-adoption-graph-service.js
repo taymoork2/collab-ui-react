@@ -73,7 +73,8 @@
       valueAxes[0].position = 'left';
       //Change to i10n
       valueAxes[0].title = vm.clients;
-      valueAxes[0].titleRotation = 0;
+      //valueAxes[0].titleRotation = 0;
+      valueAxes[0].labelOffset = 28;
 
       var catAxis = CommonReportsGraphService.getBaseVariable(vm.AXIS);
       catAxis.gridPosition = 'start';
