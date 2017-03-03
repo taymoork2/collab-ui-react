@@ -23,13 +23,15 @@ require('./_support.scss');
     $scope.helpContent = 'Help content is provided';
     $scope.searchInput = 'none';
     $scope.showCdrCallFlowLink = false;
+    $scope.showPartnerManagementLink = false;
     $scope.isCiscoDevRole = isCiscoDevRole;
-    $scope.initializeShowCdrCallFlowLink = initializeShowCdrCallFlowLink;
+    $scope.initializeShowLinks = initializeShowLinks;
     $scope.placeholder = $translate.instant('supportPage.inputPlaceholder');
     $scope.gridRefresh = false;
     $scope.gotoHelpdesk = gotoHelpdesk;
     $scope.gotoCdrSupport = gotoCdrSupport;
     $scope.gotoEdiscovery = gotoEdiscovery;
+    $scope.gotoPartnerManagement = gotoPartnerManagement;
 
     var vm = this;
     vm.masonryRefreshed = false;
@@ -49,11 +51,25 @@ require('./_support.scss');
       $window.open(url, '_blank');
     }
 
-    function initializeShowCdrCallFlowLink() {
+    function gotoPartnerManagement() {
+      var url = $state.href('partnerManagement');
+      $window.open(url, '_blank');
+    }
+
+    function initializeShowLinks() {
       Userservice.getUser('me', function (user, status) {
         if (user.success) {
+          var bReinstate = false;
           if (isCiscoDevRole(user.roles)) {
             $scope.showCdrCallFlowLink = true;
+            bReinstate = true;
+          }
+          if (isPartnerManagementRole(user.roles)) {
+            $scope.showPartnerManagementLink = true;
+            bReinstate = true;
+          }
+
+          if (bReinstate === true) {
             reInstantiateMasonry();
           }
         } else {
@@ -77,6 +93,15 @@ require('./_support.scss');
           if ((roleArray.indexOf('ciscouc.devops') >= 0 || roleArray.indexOf('ciscouc.devsupport') >= 0) && (Authinfo.isCisco() || Authinfo.isCiscoMock())) {
             return true;
           }
+        }
+      }
+      return false;
+    }
+
+    function isPartnerManagementRole(roleArray) {
+      if (Array.isArray(roleArray)) {
+        if (roleArray.indexOf('atlas-portal.cisco.partnermgmt') >= 0) {
+          return true;
         }
       }
       return false;
@@ -195,7 +220,7 @@ require('./_support.scss');
     var init = function () {
       getHealthMetrics();
       getOrg();
-      initializeShowCdrCallFlowLink();
+      initializeShowLinks();
     };
 
     init();

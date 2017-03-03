@@ -43,7 +43,7 @@ describe('Controller: SupportCtrl', function () {
   });
 
   it('should show CdrCallFlowLink for user has devsupport or devops role', function () {
-    $scope.initializeShowCdrCallFlowLink();
+    $scope.initializeShowLinks();
     expect($scope.showCdrCallFlowLink).toEqual(true);
   });
 

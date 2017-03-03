@@ -945,6 +945,9 @@
         "viewCdrCallFlowDesc": "Open the tool in a new tab",
         "ediscovery": "Activity Reports",
         "launchEdicoveryDesc": "Open the Activity Reports dashboard in a new tab",
+        "partnerManagement": "Partner Management",
+        "viewPartnerManagementDesc": "Open the Partner Management portal in a new tab",
+        "viewPartnerManagement": "View Partner Management",
         "viewEdiscovery": "View Activity Reports"
       }
     }

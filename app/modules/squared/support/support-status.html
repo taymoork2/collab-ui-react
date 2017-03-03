@@ -34,9 +34,8 @@
           </a>
         </div>
 
-        <br>
-
         <div ng-if="showEdiscoveryLink()">
+          <br>
           <h5 translate="supportPage.cards.tools.ediscovery"></h5>
           <p class="content" translate="supportPage.cards.tools.launchEdicoveryDesc"></p>
           <a target="_blank">
@@ -44,13 +43,21 @@
           </a>
         </div>
 
-        <br>
-
         <div ng-show="showCdrCallFlowLink">
+          <br>
           <h5 translate="supportPage.cards.tools.cdrLogs"></h5>
           <p class="content" translate="supportPage.cards.tools.viewCdrCallFlowDesc"></p>
           <a>
             <button id="toolsCardCdrCallFlowButton" ng-click="gotoCdrSupport()" class="btn btn--people btn--medium" style="margin-top: 20px;" translate="supportPage.cards.tools.viewCdrCallFlow"></button>
+          </a>
+        </div>
+
+        <div ng-show="showPartnerManagementLink">
+          <br>
+          <h5 translate="supportPage.cards.tools.partnerManagement"></h5>
+          <p class="content" translate="supportPage.cards.tools.viewPartnerManagementDesc"></p>
+          <a>
+            <button id="toolsCardPartnerManagementButton" ng-click="gotoPartnerManagement()" class="btn btn--people btn--medium" style="margin-top: 20px;" translate="supportPage.cards.tools.viewPartnerManagement"></button>
           </a>
         </div>
       </section>
