@@ -75,10 +75,11 @@ describe('Controller: HDSSettingsController', function () {
       expect(controller).toBeDefined();
     });
 
-    it('HDS mode, production/trial domains', function () {
+    it('HDS mode, production/trial domains, ...', function () {
       expect(controller.model.serviceMode).toBe(controller.TRIAL);
       expect(controller.trialDomain).toBe('customer.com');
       expect(controller.prodDomain).toBe('partner.com');
+      expect(controller.trialUserGroupId).toBe('755d989a-feef-404a-8669-085eb054afef');
     });
   });
 
