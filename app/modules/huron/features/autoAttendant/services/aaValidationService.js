@@ -6,7 +6,7 @@
     .factory('AAValidationService', AAValidationService);
 
   /* @ngInject */
-  function AAValidationService(AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AANotificationService, AACommonService, $translate) {
+  function AAValidationService(AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AANotificationService, AACommonService, $translate, AAUtilityService) {
 
     var routeToCalls = [{
       'name': 'goto',
@@ -48,6 +48,7 @@
     var errPhoneMenuNoInputValuesEnteredMsg = 'autoAttendant.phoneMenuMenuErrorNoInputValuesEntered';
     var errSubMenuNoInputValuesEnteredMsg = 'autoAttendant.subMenuErrorNoInputValuesEntered';
     var errMissingIsVariableMsg = 'autoAttendant.conditionalIsEntryVariableMissing';
+    var errUnevenQuotesIsVariableMsg = 'autoAttendant.conditionalIsEntryVariableUnevenQouotes';
     var errMissingIfVariableMsg = 'autoAttendant.conditionalIfEntryVariableMissing';
     var errMissingThenVariableMsg = 'autoAttendant.conditionalThenTargetMissing';
 
@@ -226,6 +227,12 @@
           schedule: translatedLabel,
           at: _.indexOf(conditionalMenus, conditionalMenu) + 1,
         });
+      } else if (isUnclosedQuotesConditional(action.if.rightCondition)) {
+        validAction = false;
+        AANotificationService.error(errUnevenQuotesIsVariableMsg, {
+          schedule: translatedLabel,
+          at: _.indexOf(conditionalMenus, conditionalMenu) + 1,
+        });
       }
       if (!action.then || _.isEmpty(action.then.value)) {
         validAction = false;
@@ -237,6 +244,10 @@
 
       return validAction;
 
+    }
+
+    function isUnclosedQuotesConditional(rightCondition) {
+      return AAUtilityService.countOccurences(rightCondition, '"') % 2 !== 0;
     }
 
     function checkForValidCallerInputs(callerInputMenu, callerInputMenus, fromLane, translatedLabel) {

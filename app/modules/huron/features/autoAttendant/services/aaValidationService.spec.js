@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Service: AAValidationService', function () {
-  var AANotificationService, AAModelService, AutoAttendantCeInfoModelService, AAValidationService, AACommonService, AutoAttendantCeMenuModelService;
+  var AANotificationService, AAModelService, AutoAttendantCeInfoModelService, AAValidationService, AACommonService, AutoAttendantCeMenuModelService, AAUtilityService;
 
   var rawCeInfo = {
     "callExperienceName": "AAA2",
@@ -44,15 +44,17 @@ describe('Service: AAValidationService', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_AANotificationService_, _AutoAttendantCeInfoModelService_, _AAModelService_, _AutoAttendantCeMenuModelService_, _AAValidationService_, _AACommonService_) {
+  beforeEach(inject(function (_AANotificationService_, _AutoAttendantCeInfoModelService_, _AAModelService_, _AutoAttendantCeMenuModelService_, _AAValidationService_, _AACommonService_, _AAUtilityService_) {
     AAModelService = _AAModelService_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AAValidationService = _AAValidationService_;
     AANotificationService = _AANotificationService_;
     AACommonService = _AACommonService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
+    AAUtilityService = _AAUtilityService_;
 
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
+    spyOn(AAUtilityService, 'countOccurences').and.returnValue(0);
 
   }));
 

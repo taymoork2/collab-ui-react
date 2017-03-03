@@ -3,7 +3,7 @@
 describe('Service: AutoAttendantCeMenuModelService', function () {
   var AutoAttendantCeMenuModelService;
   // require('jasmine-collection-matchers');
-
+  var AAUtilityService;
   var ceInfos = getJSONFixture('huron/json/autoAttendant/rawCeInfos.json');
 
   // Welcome menu
@@ -59,8 +59,9 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function (_AutoAttendantCeMenuModelService_) {
+  beforeEach(inject(function (_AutoAttendantCeMenuModelService_, _AAUtilityService_) {
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
+    AAUtilityService = _AAUtilityService_;
     AutoAttendantCeMenuModelService.clearCeMenuMap();
     wmenu = getJSONFixture('huron/json/autoAttendant/welcomeMenu.json');
     ceWelcome = wmenu.ceWelcome;
@@ -68,6 +69,8 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
     ceWelcomeNoDescriptionTemp = wmenu.ceWelcomeNoDescriptionTemp;
     welcomeMenu = wmenu.welcomeMenu;
     ceMenuFull = wmenu.ceMenuFull;
+    spyOn(AAUtilityService, 'splitOnCommas').and.returnValue([]);
+    spyOn(AAUtilityService, 'addQuotesAroundCommadQuotedValues').and.returnValue('');
   }));
 
   afterEach(function () {
