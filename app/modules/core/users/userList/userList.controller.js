@@ -616,6 +616,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
       $state.go('user-overview', {
         queryuserslist: $scope.queryuserslist,
         currentUserId: $scope.currentUser.id,
+        orgInfo: $scope.org,
       });
     }
 

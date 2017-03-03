@@ -367,7 +367,9 @@
     "enabledBetaFeatures": "Enabled Beta Features",
     "otpShareButton": "Share",
     "userDetails": "User Details",
-    "userPreferredLanguageError": "Failed to fetch user preferred language. Reason:"
+    "userPreferredLanguageError": "Failed to fetch user preferred language. Reason:",
+    "notConfigured": "Not Configured",
+    "dirsyncToolTip": "Use DirSync to update the user's preferred language."
   },
   "tabs": {
     "overviewTab": "Overview",
