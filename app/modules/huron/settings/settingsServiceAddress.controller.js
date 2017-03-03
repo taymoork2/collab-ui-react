@@ -5,7 +5,8 @@
     .controller('SettingsServiceAddressCtrl', SettingsServiceAddressCtrl);
 
   /* @ngInject */
-  function SettingsServiceAddressCtrl($q, $timeout, PstnServiceAddressService, Authinfo, Notification, PstnSetup) {
+  function SettingsServiceAddressCtrl($q, $timeout, PstnServiceAddressService, PstnSetup, Authinfo, Notification) {
+
     var vm = this;
     vm.validate = validate;
     vm.cancelEdit = cancelEdit;
@@ -21,6 +22,7 @@
     vm.isValid = false;
     vm.addressFound = false;
     vm.address = {};
+    vm.carrierId = undefined;
 
     var origAddress = {};
 
@@ -30,6 +32,8 @@
       vm.loadingInit = true;
       vm.addressStatus = PstnServiceAddressService.getStatus();
       vm.countryCode = PstnSetup.getCountryCode();
+      vm.carrierId = PstnSetup.getProviderId();
+
       return PstnServiceAddressService.getAddress(Authinfo.getOrgId())
         .then(function (address) {
           if (address) {
@@ -112,7 +116,8 @@
 
     function validate() {
       vm.loadingValidate = true;
-      PstnServiceAddressService.lookupAddress(vm.address)
+
+      PstnServiceAddressService.lookupAddressV2(vm.address, vm.carrierId)
         .then(function (address) {
           if (address) {
             vm.address = address;
