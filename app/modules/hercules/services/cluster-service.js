@@ -64,11 +64,12 @@
 
       var allAlarms = _.chain(connectors)
         .reduce(function (acc, connector) {
-          _.each(connector.alarms, function (alarm) {
+          var modifiedAlarms = _.map(connector.alarms, function (alarm) {
             alarm.hostname = connector.hostname;
             alarm.affectedNodes = [connector.hostname];
+            return alarm;
           });
-          return acc.concat(connector.alarms);
+          return acc.concat(modifiedAlarms);
         }, [])
         // This sort must happen before the uniqWith so that we keep the oldest alarm when
         // finding duplicates (the order is preserved when running uniqWith, that is, the
@@ -98,7 +99,7 @@
 
       if (allAlarms.length > deduplicatedAlarms.length) {
         var removedAlarms = _.differenceWith(allAlarms, deduplicatedAlarms, _.isEqual);
-        _.each(removedAlarms, function (removedAlarm) {
+        _.forEach(removedAlarms, function (removedAlarm) {
           var alarmSiblings = _.filter(allAlarms, function (a) {
             return removedAlarm.id === a.id
               && removedAlarm.title === a.title
@@ -107,7 +108,7 @@
               && removedAlarm.solution === a.solution
               && _.isEqual(removedAlarm.solutionReplacementValues, a.solutionReplacementValues);
           });
-          _.each(alarmSiblings, function (alarm) {
+          _.forEach(alarmSiblings, function (alarm) {
             alarm.affectedNodes = _.flatMap(alarmSiblings, function (a) {
               return a.hostname;
             });
