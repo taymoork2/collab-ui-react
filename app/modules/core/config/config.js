@@ -3,7 +3,7 @@
 
   module.exports = angular
     .module('core.config', [
-      require('modules/core/scripts/services/storage'),
+      require('modules/core/storage').default,
     ])
     .factory('Config', Config)
     .name;
