@@ -1260,11 +1260,10 @@
     "getStarted": "Get Started",
     "urgentUpgrade": "An urgent upgrade is available for <a ui-sref='{{link}}'>{{connector}}</a> and it will upgrade during the next scheduled upgrade.",
     "setUpHybridDataSecurity": "Use premises-based Data Security for encryption.",
-    "careLicenseMsgMissingText": "Message is mandatory for chat and voice interaction.",
-    "careLicenseCallMissingText": "Call is mandatory for voice interaction.",
-    "careLicenseMsgAndCallMissingText": "Message and Call are mandatory for chat and voice interaction respectively.",
-    "careLicenseLinkText1": "Go here to contact your partner or Cisco Sales to enable this service.",
-    "careLicenseLinkText2": "Go here to contact your partner or Cisco Sales to enable these services."
+    "careLicenseMsgMissingText": "Message is mandatory for Care services. To enable Message,",
+    "careLicenseCallMissingText": "Call is mandatory for voice-based Care services. To enable Call,",
+    "careLicenseMsgAndCallMissingText": "Message and Call are mandatory for Care services like chat and voice interaction respectively. To enable Message and Call,",
+    "careLicenseLinkText": "contact your partner or Cisco sales."
   },
   "inviteModal": {
     "title": "Service Entitlement",

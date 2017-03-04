@@ -86,13 +86,13 @@ require('./_overview.scss');
             var hasCall = LicenseService.orgIsEntitledTo(data, 'ciscouc');
             if (!hasMessage && !hasCall) {
               vm.notifications.push(OverviewNotificationFactory
-                .createCareLicenseNotification('homePage.careLicenseMsgAndCallMissingText', 'homePage.careLicenseLinkText2'));
+                .createCareLicenseNotification('homePage.careLicenseMsgAndCallMissingText', 'homePage.careLicenseLinkText'));
             } else if (!hasMessage) {
               vm.notifications.push(OverviewNotificationFactory
-                .createCareLicenseNotification('homePage.careLicenseMsgMissingText', 'homePage.careLicenseLinkText1'));
+                .createCareLicenseNotification('homePage.careLicenseMsgMissingText', 'homePage.careLicenseLinkText'));
             } else if (!hasCall) {
               vm.notifications.push(OverviewNotificationFactory
-                .createCareLicenseNotification('homePage.careLicenseCallMissingText', 'homePage.careLicenseLinkText1'));
+                .createCareLicenseNotification('homePage.careLicenseCallMissingText', 'homePage.careLicenseLinkText'));
             }
           }
         } else {
