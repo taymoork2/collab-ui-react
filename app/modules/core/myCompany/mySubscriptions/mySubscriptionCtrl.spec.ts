@@ -18,11 +18,15 @@ describe('Controller: MySubscriptionCtrl', function () {
   beforeEach(function () {
     this.data = _.cloneDeep(getJSONFixture('core/json/myCompany/subscriptionData.json'));
     this.data.licensesFormatted.forEach(function (item){
-      item.subscriptions[0].siteUrl = undefined;
+      if (item.label !== 'subscriptions.care') {
+        item.subscriptions[0].siteUrl = undefined;
+      }
     });
-    this.data.licensesFormatted[4].subscriptions[0].siteUrl = undefined;
-    this.data.licensesFormatted[4].subscriptions[1].siteUrl = undefined;
+
+    this.data.licensesFormatted[4].subscriptions[0].offers[0].siteUrl = undefined;
+    this.data.licensesFormatted[4].subscriptions[0].offers[1].siteUrl = undefined;
     this.data.licensesFormatted[1].subscriptions[0].offers[0].siteUrl = undefined;
+
     this.data.trialLicenseData[0].subscriptions[0].siteUrl = undefined;
 
     this.data.subscriptionsFormatted[0].licenses[0].siteUrl = undefined;

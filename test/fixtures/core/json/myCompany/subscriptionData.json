@@ -41,7 +41,7 @@
   }, {
     "label": "subscriptions.care",
     "subscriptions": [],
-    "borders": false
+    "borders": true
   }],
   "trialSubscriptionData": [{
     "subscriptionId": "subID",
@@ -289,29 +289,37 @@
       "class": "icon-meeting-room"
     }]
   }, {
-    "label": "subscriptions.care",
-    "borders": false ,
-    "subscriptions": [{
-      "licenseId": "CDC_21770613-64d6-4658-a1f2-4a63ea819af2",
-      "licenseType": "CARE",
-      "licenseModel": "",
-      "offerName": "CDC",
-      "usage": 3,
-      "volume": 100,
-      "id": "donutId09",
-      "tooltip": "subscriptions.licenseTypes.CDC<br>subscriptions.usage3/100",
-      "class": "icon-headset"
-    }, {
-      "licenseId": "CVC_21770613-64d6-4658-a1f2-4a63ea819af2",
-      "licenseType": "CARE",
-      "licenseModel": "",
-      "offerName": "CVC",
-      "usage": 3,
-      "volume": 100,
-      "id": "donutId010",
-      "tooltip": "subscriptions.licenseTypes.CVC<br>subscriptions.usage3/100",
-      "class": "icon-headset"
-    }]
+    "label":"subscriptions.care",
+    "subscriptions":[
+      {
+        "offers":[
+          {
+            "licenseId":"CDC_21770613-64d6-4658-a1f2-4a63ea819af2",
+            "licenseType":"CARE",
+            "licenseModel":"",
+            "offerName":"CDC",
+            "usage":3,
+            "volume":100,
+            "id":"donutId09",
+            "tooltip":"subscriptions.licenseTypes.CDC<br>subscriptions.usage3/100",
+            "class":"icon-headset"
+          },
+          {
+            "licenseId":"CVC_21770613-64d6-4658-a1f2-4a63ea819af2",
+            "licenseType":"CARE",
+            "licenseModel":"",
+            "offerName":"CVC",
+            "usage":3,
+            "volume":100,
+            "id":"donutId010",
+            "tooltip":"subscriptions.licenseTypes.CVC<br>subscriptions.usage3/100",
+            "class":"icon-headset"
+          }
+        ],
+        "type":"CARE"
+      }
+    ],
+    "borders":true
   }],
   "subscriptionsFormatted": [{
     "subscriptionId": "subID",

@@ -11,14 +11,14 @@
           <h4 ng-if="!subscription.name" class="sub-name" translate="subscriptions.numberedName" translate-values="{number: $index + 1}"></h4>
         </div>
         <div class="columns medium-8 subscription-column">
-            <div ng-repeat="license in subscription.licenses" class="detail" ng-if="($index < 3) || subscription.viewAll" ng-class="{'tooltip-present': !subscription.viewAll}" tooltip-html-unsafe="{{::license.tooltip}}" tooltip-enable="!subscription.viewAll && license.tooltip" tooltip-placement="top-left" tooltip-class="subscription-tooltip" tooltip-append-to-body="true">
-              <i class="icon {{::license.class}} icon-detail" ng-if="license.class"></i>
-              <span class="h6" translate="subscriptions.licenseTypes.{{::license.offerName}}"></span>
-              <div class="detail-break" ng-class="{'match-icon': license.class}" ng-if="subscription.viewAll">
-                <span class="h6" translate="subscriptions.usage"></span>
-                <span class="h6" ng-class="{'warning': license.usage > license.volume}">{{::license.usage}}/{{::license.volume}}</span>
-              </div>
+          <div ng-repeat="license in subscription.licenses" class="detail" ng-if="($index < 3) || subscription.viewAll" ng-class="{'tooltip-present': !subscription.viewAll}" tooltip-html-unsafe="{{::license.tooltip}}" tooltip-enable="!subscription.viewAll && license.tooltip" tooltip-placement="top-left" tooltip-class="subscription-tooltip" tooltip-append-to-body="true">
+            <i class="icon {{::license.class}} icon-detail" ng-if="license.class"></i>
+            <span class="h6" translate="subscriptions.licenseTypes.{{::license.offerName}}"></span>
+            <div class="detail-break" ng-class="{'match-icon': license.class}" ng-if="subscription.viewAll">
+              <span class="h6" translate="subscriptions.usage"></span>
+              <span class="h6" ng-class="{'warning': license.usage > license.volume}">{{::license.usage}}/{{::license.volume}}</span>
             </div>
+          </div>
         </div>
         <div class="columns medium-2 subscription-upgrade">
           <div class="license-quantity">
@@ -74,7 +74,7 @@
                     </div>
                     <div class="description-line" ng-hide="mcpSubscription.isSharedMeetingsLicense(subscription) && mcpSubscription.isSharedMeetingsEnabled">
                       <span class="h6" translate="subscriptions.usage"></span>
-                      <span class="h6" ng-class="{'warning': subscription.usage > subscription.volume}">{{::subscription.usage}}/{{::subscription.volume}}</span>
+                      <span class="h6" ng-class="{'warning': offer.usage > offer.volume}">{{::offer.usage}}/{{::offer.volume}}</span>
                     </div>
                   </div>
                   <div class="subscription-description subscription-detail">
@@ -94,7 +94,6 @@
                   </div>
                 </div>
               </div>
-
             </div>
           </div>
           <div class="row" ng-show="mcpSubscription.hybridServices && mcpSubscription.hybridServices.length > 0">
