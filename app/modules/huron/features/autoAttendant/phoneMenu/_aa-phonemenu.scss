@@ -86,15 +86,14 @@
 
 @mixin aa-menu-toggle-button($right, $left) {
   .select-toggle {
+    position: relative;
+    z-index: 1;
     > i {
-      @include vr-spacing(mr, $right);
-      @include vr-spacing(ml, $left);
-      &.icon {
-        right: -1.0rem;
+        @include vr-spacing(mr, $right);
+        @include vr-spacing(ml, $left);
       }
     }
   }
-}
 
 @mixin aa-menu-key-button($background_color, $width) {
   .select-toggle {
