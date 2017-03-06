@@ -39,6 +39,8 @@ describe('controller:GssIframeCtrl', function () {
   }
 
   function initSpies() {
+    spyOn(GSSService, 'syncCheck').and.returnValue(($q.resolve(false)));
+    spyOn(GSSService, 'syncUp').and.returnValue(($q.resolve(true)));
     spyOn(GSSService, 'getServices').and.returnValue($q.resolve(testData.services));
     spyOn(GSSService, 'getServiceId').and.callThrough();
     spyOn($modal, 'open').and.returnValue({
@@ -58,7 +60,18 @@ describe('controller:GssIframeCtrl', function () {
     $scope.$apply();
   }
 
+  it('event serviceDeleted, should check the version', function () {
+    expect(GSSService.syncCheck).toHaveBeenCalled();
+  });
+
+  it('compare version, should show sync button', function () {
+    controller.syncUp();
+
+    expect(GSSService.syncUp).toHaveBeenCalled();
+  });
+
   it('addService, should open edit modal, refresh services list and notify edited', function () {
+    controller.init();
     controller.addService();
 
     expect($modal.open).toHaveBeenCalled();
@@ -83,6 +96,7 @@ describe('controller:GssIframeCtrl', function () {
   });
 
   it('$watch $state.current.name, should go to dashboard when current name is gss', function () {
+    controller.init();
     $state.current.name = 'gss';
     $scope.$digest();
 
@@ -90,12 +104,14 @@ describe('controller:GssIframeCtrl', function () {
   });
 
   it('event serviceEdited, should refresh options when got event serviceEdited', function () {
+    controller.init();
     $scope.$new().$emit('serviceEdited');
 
     expect(GSSService.getServices).toHaveBeenCalled();
   });
 
   it('event serviceDeleted, should refresh options when got event serviceDeleted', function () {
+    controller.init();
     $scope.$new().$emit('serviceDeleted');
 
     expect(GSSService.getServices).toHaveBeenCalled();
