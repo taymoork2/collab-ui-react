@@ -133,6 +133,8 @@ export class UserOverviewService {
     private WebExUtilsFact,
     private Config,
     private SunlightConfigService,
+    private ServiceSetup,
+    private $translate,
   ) {
     this.invitationResource = this.$resource(this.UrlConfig.getAdminServiceUrl() + 'organization/:customerId/invitations/:userId', {
       customerId: '@customerId',
@@ -275,5 +277,26 @@ export class UserOverviewService {
         userData.user.pendingStatus = !isActiveUser;
         return userData;
       });
+  }
+
+  public getUserPreferredLanguage(languageCode) {
+    return this.ServiceSetup.getAllLanguages().then(languages => {
+      if (_.isEmpty(languages)) { return this.DEFAULT_LANG; }
+      let translatedLanguages =  this.ServiceSetup.getTranslatedSiteLanguages(languages);
+      return this.findPreferredLanguageByCode(translatedLanguages, languageCode);
+    });
+  }
+
+  private findPreferredLanguageByCode(languages, language_code): any {
+    return _.find(languages, {
+      value: language_code,
+    });
+  }
+
+  private get DEFAULT_LANG() {
+    return {
+      label: this.$translate.instant('languages.englishAmerican'),
+      value: 'en_US',
+    };
   }
 }

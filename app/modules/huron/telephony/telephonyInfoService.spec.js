@@ -17,19 +17,17 @@ describe('Service: TelephonyInfoService', function () {
     "servicePackage": "DEMO_STANDARD",
     "links": [{
       "rel": "common",
-      "href": "/api/v1/common/customers/84562afa-2f35-474f-ba0f-2def42864e12"
+      "href": "/api/v1/common/customers/84562afa-2f35-474f-ba0f-2def42864e12",
     }, {
       "rel": "voicemail",
-      "href": "/api/v1/voicemail/customers/84562afa-2f35-474f-ba0f-2def42864e12"
+      "href": "/api/v1/voicemail/customers/84562afa-2f35-474f-ba0f-2def42864e12",
     }, {
       "rel": "voice",
-      "href": "/api/v1/voice/customers/84562afa-2f35-474f-ba0f-2def42864e12"
-    }]
+      "href": "/api/v1/voice/customers/84562afa-2f35-474f-ba0f-2def42864e12",
+    }],
   };
 
-  beforeEach(inject(function (_$rootScope_, _$httpBackend_, _$translate_, _$q_, _HuronConfig_,
-      _TelephonyInfoService_, _ServiceSetup_, _DirectoryNumber_, _HuronCustomer_, _Authinfo_,
-      _InternationalDialing_, _ExternalNumberPool_) {
+  beforeEach(inject(function (_$rootScope_, _$httpBackend_, _$translate_, _$q_, _HuronConfig_, _TelephonyInfoService_, _ServiceSetup_, _DirectoryNumber_, _HuronCustomer_, _Authinfo_, _InternationalDialing_, _ExternalNumberPool_) {
     $httpBackend = _$httpBackend_;
     $q = _$q_;
     $rootScope = _$rootScope_;
@@ -48,7 +46,7 @@ describe('Service: TelephonyInfoService', function () {
     getExternalNumberPool = externalNumbers.slice(0);
     getExternalNumberPool.unshift({
       "uuid": "none",
-      "pattern": "directoryNumberPanel.none"
+      "pattern": "directoryNumberPanel.none",
     });
     cosRestrictions = getJSONFixture('huron/json/telephonyInfo/userCosRestrictions.json');
 

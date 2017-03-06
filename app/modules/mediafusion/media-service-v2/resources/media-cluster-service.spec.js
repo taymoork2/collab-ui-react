@@ -143,11 +143,10 @@ describe('Service: MediaClusterServiceV2', function () {
         "lastReported": "2016-06-30T18:33:58.740Z",
         "severity": "critical",
         "title": "Call switching process connection failure",
-        "description": "The call switching process lost connectivity with the cloud."
+        "description": "The call switching process lost connectivity with the cloud.",
       }],
       "runningVersion": "2016.06.29.146",
       "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/2c3c9f9e-73d9-4460-a668-047162ff1bac/channels/DEV/packages/mf_mgmt",
-      "registered": true
     }];
 
     var object = Service.mergeAllAlarms(connectors);
@@ -165,7 +164,7 @@ describe('Service: MediaClusterServiceV2', function () {
   it('should return the getMostSevereRunningState', function () {
     // body...
     var previous = {
-      "stateSeverityValue": -1
+      "stateSeverityValue": -1,
     };
     var connector = {
       "url": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/2c3c9f9…-b436-d1805bfc9c0c/connectors/mf_mgmt@b286c14a-6637-46ad-b436-d1805bfc9c0c",
@@ -178,7 +177,6 @@ describe('Service: MediaClusterServiceV2', function () {
       "alarms": [],
       "runningVersion": "2016.06.29.146",
       "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/2c3c9f9e-73d9-4460-a668-047162ff1bac/channels/DEV/packages/mf_mgmt",
-      "registered": true
     };
     var object = Service.getMostSevereRunningState(previous, connector);
 
@@ -211,11 +209,10 @@ describe('Service: MediaClusterServiceV2', function () {
           "lastReported": "2016-07-01T22:10:12.994Z",
           "severity": "warning",
           "title": "Management process error",
-          "description": "No such container: 5415fb12efbde04f7178a34a3c92e14f1185d07d4fca942abbfc0962899a4455\n"
+          "description": "No such container: 5415fb12efbde04f7178a34a3c92e14f1185d07d4fca942abbfc0962899a4455\n",
         }],
         "runningVersion": "2016.06.16.124",
         "packageUrl": " ",
-        "registered": true
       }],
       "releaseChannel": "GA",
       "provisioning": [{
@@ -223,10 +220,9 @@ describe('Service: MediaClusterServiceV2', function () {
         "connectorType": "mf_mgmt",
         "provisionedVersion": "1.0",
         "availableVersion": "1.0",
-        "packageUrl": " "
+        "packageUrl": " ",
       }],
-      "registered": true,
-      "targetType": "mf_mgmt"
+      "targetType": "mf_mgmt",
     };
 
     var object = Service.buildAggregates(type, cluster);

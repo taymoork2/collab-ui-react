@@ -116,7 +116,7 @@
 
     .details-heading {
       color: $gray-dark-4;
-      margin-bottom: 1rem;
+      margin-bottom: 0.75rem;
     }
 
     .details-value {
@@ -125,6 +125,11 @@
     }
 
     .details-value-device {
+      color: $gray-dark-1;
+      word-wrap: break-word;
+    }
+
+    .details-value-large {
       color: $gray-dark-1;
       word-wrap: break-word;
     }
@@ -573,6 +578,26 @@
     .red {
       color: $color-alerts-base;
     }
+
+    .icon-error {
+      color: $color-alerts-base;
+      padding-right: 5px;
+    }
+
+    .icon-warning {
+      color: $color-attention-base;
+      padding-right: 5px;
+    }
+
+    .icon-info {
+      color: $color-primary-base;
+      margin: 0;
+      padding-right: 5px;
+    }
+
+    .last-status-message {
+      padding-bottom: 0.75rem;
+    }
   }
 
   .cta-base {
@@ -603,6 +628,20 @@
 
   .cs-donut-text {
     font-size: 4rem;
+  }
+
+  .hybrid-service-section {
+    border-bottom: 1px solid $gray-light-2;
+    margin-top: 1.0rem;
+    &:last-child {
+      border-bottom: 0;
+    }
+    &:first-child {
+      margin-top: 0;
+    }
+    h5 {
+      margin-bottom: 0.5rem;
+    }
   }
 }
 
@@ -703,7 +742,7 @@
   width: 10rem;
 }
 
-.helpdesk-spark-status-dropdown-menu {
+.helpdesk-app-container .helpdesk-spark-status-dropdown-menu {
   @extend .helpdesk-header-dropdown-menu;
 
   width: 18rem;
@@ -721,11 +760,30 @@
   }
 }
 
+@media only screen and (max-width: 1280px) {
+  .helpdesk-details {
+    .hybrid-service-section {
+      .details-heading {
+        width: 100%;
+      }
+      .details-value {
+        margin-top: -1rem;
+        margin-bottom: 0.75rem;
+        width: 100%;
+        display: block;
+      }
+    }
+  }
+}
+
 @media only screen and (max-width: 1024px) {
   .helpdesk-details {
+    .details-heading {
+      width: 100%;
+    }
     .details-value {
       margin-top: -1rem;
-      margin-bottom: 1rem;
+      margin-bottom: 0.75rem;
       width: 100%;
       display: block;
     }
@@ -735,9 +793,13 @@
     .cs-card {
       padding: 0;
       width: 100%;
-
       article {
         width: 100%;
+      }
+      section {
+        .last-status-message {
+          padding-bottom: 0;
+        }
       }
     }
   }
@@ -841,7 +903,7 @@
 
   .details-value-device {
     margin-top: -1rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
     width: 100%;
     display: block;
   }

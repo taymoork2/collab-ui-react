@@ -16,7 +16,7 @@
       type: wizardData.account.type,
       deviceType: wizardData.account.deviceType,
       cisUuid: wizardData.account.cisUuid,
-      isEntitledToHuron: wizardData.account.isEntitledToHuron
+      isEntitledToHuron: wizardData.account.isEntitledToHuron,
     };
 
     vm.hideBackButton = wizardData.function === 'showCode';
@@ -26,7 +26,7 @@
       email: wizardData.recipient.email,
       cisUuid: wizardData.recipient.cisUuid,
       firstName: wizardData.recipient.firstName,
-      orgId: wizardData.recipient.organizationId
+      orgId: wizardData.recipient.organizationId,
     };
     vm.qrCode = undefined;
     vm.timeLeft = '';
@@ -64,7 +64,7 @@
           if (vm.account.cisUuid) { // Existing place
             createCodeForHuronPlace(vm.account.cisUuid).then(success, error);
           } else { // New place
-            createHuronPlace(vm.account.name, wizardData.account.directoryNumber, wizardData.account.externalNumber)
+            createHuronPlace(vm.account.name, wizardData.account.entitlements, wizardData.account.directoryNumber, wizardData.account.externalNumber)
               .then(function (place) {
                 vm.account.cisUuid = place.cisUuid;
                 createCodeForHuronPlace(vm.account.cisUuid).then(success, error);
@@ -117,13 +117,13 @@
       vm.qrCode = qrImage.imageSync(vm.activationCode, {
         ec_level: 'L',
         size: 14,
-        margin: 5
+        margin: 5,
       }).toString('base64');
       vm.isLoading = false;
     }
 
-    function createHuronPlace(name, directoryNumber, externalNumber) {
-      return CsdmDataModelService.createCmiPlace(name, directoryNumber, externalNumber);
+    function createHuronPlace(name, entitlements, directoryNumber, externalNumber) {
+      return CsdmDataModelService.createCmiPlace(name, entitlements, directoryNumber, externalNumber);
     }
 
     function createCodeForHuronPlace(cisUuid) {
@@ -257,7 +257,7 @@
         userName: userName,
         displayName: displayName,
         cisUuid: cisUuid,
-        orgId: orgId
+        orgId: orgId,
       };
     };
 
@@ -267,7 +267,7 @@
         email: $item.userName,
         cisUuid: $item.cisUuid,
         firstName: $item.firstName,
-        orgId: $item.orgId
+        orgId: $item.orgId,
       };
       vm.foundUser = "";
     };
@@ -276,20 +276,18 @@
       var success = function () {
         Notification.notify(
           [$translate.instant('generateActivationCodeModal.emailSuccess', {
-            'address': vm.selectedUser.email
+            'address': vm.selectedUser.email,
           })],
           'success',
           $translate.instant('generateActivationCodeModal.emailSuccessTitle')
         );
       };
-      var error = function () {
-        Notification.notify(
-          [$translate.instant('generateActivationCodeModal.emailError', {
-            'address': vm.selectedUser.email
-          })],
-          'error',
-          $translate.instant('generateActivationCodeModal.emailErrorTitle')
-        );
+      var error = function (error) {
+        Notification.errorResponse(error,
+          'generateActivationCodeModal.emailError',
+          {
+            'address': vm.selectedUser.email,
+          });
       };
 
       if (vm.account.deviceType === 'huron' && vm.account.type === 'personal') {
@@ -299,23 +297,31 @@
           oneTimePassword: vm.activationCode,
           expiresOn: vm.getExpiresOn(),
           userId: vm.selectedUser.cisUuid,
-          customerId: vm.selectedUser.orgId
+          customerId: vm.selectedUser.orgId,
         };
         ActivationCodeEmailService.save({}, emailInfo, success, error);
       } else {
         var cbEmailInfo = {
           toCustomerId: vm.selectedUser.orgId,
           toUserId: vm.selectedUser.cisUuid,
-          machineAccountCustomerId: wizardData.account.organizationId,
-          machineAccountId: vm.account.cisUuid,
+          subjectCustomerId: wizardData.account.organizationId,
+          subjectAccountId: vm.account.cisUuid,
           activationCode: vm.activationCode,
-          expiryTime: vm.getExpiresOn()
+          expiryTime: vm.getExpiresOn(),
         };
         var mailFunction;
-        if (vm.account.deviceType === 'cloudberry') {
-          mailFunction = CsdmEmailService.sendCloudberryEmail;
+        if (vm.account.type == 'personal') {
+          if (vm.account.isEntitledToHuron) {
+            mailFunction = CsdmEmailService.sendPersonalEmail;
+          } else {
+            mailFunction = CsdmEmailService.sendPersonalCloudberryEmail;
+          }
         } else {
-          mailFunction = CsdmEmailService.sendHuronEmail;
+          if (vm.account.deviceType === 'cloudberry') {
+            mailFunction = CsdmEmailService.sendCloudberryEmail;
+          } else {
+            mailFunction = CsdmEmailService.sendHuronEmail;
+          }
         }
 
         mailFunction(cbEmailInfo).then(success, error);

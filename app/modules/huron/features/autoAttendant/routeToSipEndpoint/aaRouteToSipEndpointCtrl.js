@@ -15,13 +15,18 @@
     vm.model.sipInput = '';
     vm.uiMenu = {};
     vm.menuEntry = {
-      entries: []
+      entries: [],
     };
     vm.menuKeyEntry = {};
 
-    vm.saveUiModel = saveUiModel;
-    vm.isSipValid = isSipValid;
+    vm.updateUiModel = updateUiModel;
     vm.routeToSipPlaceHolder = $translate.instant('autoAttendant.routeToSipPlaceHolder');
+    vm.errorMessages = {
+      required: $translate.instant('common.invalidRequired'),
+      minlength: $translate.instant('autoAttendant.routeToSipInputShort'),
+      maxlength: $translate.instant('autoAttendant.routeToSipInputLong'),
+      pattern: $translate.instant('autoAttendant.routeToSipInputInvalid'),
+    };
 
     // the CE action verb is 'routeToSipEndpoint'
     var routeToSipEndpoint = 'routeToSipEndpoint';
@@ -30,20 +35,6 @@
     var sipInitial = "sip:";
 
     /////////////////////
-
-    function isSipValid() {
-      var pattern = new RegExp(/^([a-zA-Z0-9:.]+)@([a-zA-Z0-9.]+)\.([a-z]{3,7})$/g);
-      var result = pattern.test(vm.model.sipInput);
-
-      if (result) {
-        AACommonService.setIsValid(vm.uniqueCtrlIdentifer, true);
-      } else {
-        AACommonService.setIsValid(vm.uniqueCtrlIdentifer, false);
-      }
-
-      return result;
-
-    }
 
     function populateUiModel() {
       var entry;
@@ -60,10 +51,18 @@
       }
     }
 
-    function saveUiModel() {
+    function setValidStatus() {
+      AACommonService.setIsValid(vm.uniqueCtrlIdentifer, vm.aaRouteToSipForm.$valid);
       AACommonService.setPhoneMenuStatus(true);
-      var entry;
+    }
 
+    function updateUiModel() {
+      setValidStatus();
+      saveUiModel();
+    }
+
+    function saveUiModel() {
+      var entry;
       if (fromRouteCall) {
         entry = _.get(vm.menuEntry, 'actions[0].queueSettings.fallback', vm.menuEntry);
       } else {

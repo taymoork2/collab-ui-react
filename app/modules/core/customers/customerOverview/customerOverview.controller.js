@@ -51,7 +51,7 @@ require('./_customer-overview.scss');
     vm._helpers = {
       canUpdateLicensesForSelf: canUpdateLicensesForSelf,
       openCustomerPortal: openCustomerPortal,
-      updateUsers: updateUsers
+      updateUsers: updateUsers,
     };
 
     vm.featureTrialForPaid = trialForPaid;
@@ -79,7 +79,7 @@ require('./_customer-overview.scss');
         .map(function (trialService) {
           return _.assign({}, trialService, {
             detail: trialService.qty + ' ' + QTY,
-            actionAvailable: hasSubview(trialService)
+            actionAvailable: hasSubview(trialService),
           });
         })
         .value();
@@ -87,7 +87,7 @@ require('./_customer-overview.scss');
         isTrial: false }), function (service) {
         return _.assign({}, service, {
           detail: service.free ? FREE : service.qty + ' ' + QTY,
-          actionAvailable: hasSubview(service)
+          actionAvailable: hasSubview(service),
         });
       });
     }
@@ -102,7 +102,7 @@ require('./_customer-overview.scss');
       }
     }, 2000, {
       'leading': true,
-      'trailing': false
+      'trailing': false,
     });
 
     function init() {
@@ -117,13 +117,13 @@ require('./_customer-overview.scss');
       if (PartnerService.canAdminTrial(vm.currentCustomer.licenseList)) {
         vm.trialActions.push({
           actionKey: 'customerPage.edit',
-          actionFunction: openEditTrialModal
+          actionFunction: openEditTrialModal,
         });
       } else {
         if (vm.featureTrialForPaid && !vm.currentCustomer.trialId) {
           vm.trialActions.push({
             actionKey: 'customerPage.addTrial',
-            actionFunction: openAddTrialModal
+            actionFunction: openAddTrialModal,
           });
         }
       }
@@ -203,7 +203,7 @@ require('./_customer-overview.scss');
       var licIds = collectLicenseIdsForWebexSites(liclist);
       var partnerEmail = Authinfo.getPrimaryEmail();
       var emailObj = {
-        'address': partnerEmail
+        'address': partnerEmail,
       };
       var promise = $q.resolve();
       if (vm.isPartnerAdmin) {
@@ -261,7 +261,7 @@ require('./_customer-overview.scss');
     function openCustomerPortal() {
       return $window.open($state.href('login_swap', {
         customerOrgId: vm.customerOrgId,
-        customerOrgName: vm.customerName
+        customerOrgName: vm.customerName,
       }));
     }
 
@@ -272,7 +272,7 @@ require('./_customer-overview.scss');
         $state.go(route.path, route.params).then(function () {
           $state.modal.result.then(function () {
             $state.go('partnercustomers.list', {}, {
-              reload: true
+              reload: true,
             });
           });
         });
@@ -284,7 +284,7 @@ require('./_customer-overview.scss');
       $state.go(route.path, route.params).then(function () {
         $state.modal.result.then(function () {
           $state.go('partnercustomers.list', {}, {
-            reload: true
+            reload: true,
           });
         });
       });
@@ -314,7 +314,7 @@ require('./_customer-overview.scss');
         })
         .catch(function (error) {
           Notification.errorResponse(error, 'customerPage.errGetTrial', {
-            customer: vm.customerName
+            customer: vm.customerName,
           });
           return false;
         });
@@ -354,7 +354,7 @@ require('./_customer-overview.scss');
             .then(function (isPartnerCreator) {
               if (isPartnerCreator) {
                 Notification.errorResponse(error, 'customerPage.isSetupDoneError', {
-                  orgName: vm.customerName
+                  orgName: vm.customerName,
                 });
               }
             });
@@ -384,19 +384,19 @@ require('./_customer-overview.scss');
             var ctrl = this;
             ctrl.orgName = vm.customerName;
           },
-          controllerAs: 'ctrl'
+          controllerAs: 'ctrl',
         }).result.then(function () {
           // delete the customer
           vm.isDeleting = true;
           Orgservice.deleteOrg(vm.customerOrgId).then(function () {
             $state.go('partnercustomers.list');
             Notification.success('customerPage.deleteOrgSuccess', {
-              orgName: vm.customerName
+              orgName: vm.customerName,
             });
           }).catch(function (error) {
             vm.isDeleting = false;
             Notification.errorResponse(error, 'customerPage.deleteOrgError', {
-              orgName: vm.customerName
+              orgName: vm.customerName,
             });
           });
         });

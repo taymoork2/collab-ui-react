@@ -5,15 +5,15 @@ describe('Controller: Care Local Settings', function () {
     sunlightCSOnboardUrl;
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
-    getOrgName: jasmine.createSpy('getOrgName').and.returnValue('SunlightConfigService test org')
+    getOrgName: jasmine.createSpy('getOrgName').and.returnValue('SunlightConfigService test org'),
+    isCareVoice: jasmine.createSpy('isCareVoice').and.returnValue(false),
   };
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", spiedAuthinfo);
   }));
   beforeEach(
-    inject(function ($controller, _$rootScope_, _$httpBackend_, _Notification_, _SunlightConfigService_, _$interval_,
-                     UrlConfig, $q) {
+    inject(function ($controller, _$rootScope_, _$httpBackend_, _Notification_, _SunlightConfigService_, _$interval_, UrlConfig, $q) {
       sunlightConfigService = _SunlightConfigService_;
       $httpBackend = _$httpBackend_;
       Notification = _Notification_;
@@ -28,7 +28,7 @@ describe('Controller: Care Local Settings', function () {
       controller = $controller('CareLocalSettingsCtrl', {
         $scope: $scope,
         $interval: $intervalSpy,
-        Notification: Notification
+        Notification: Notification,
       });
       spyOn(sunlightConfigService, 'updateChatConfig').and.callFake(function () {
         var deferred = $q.defer();
@@ -54,7 +54,7 @@ describe('Controller: Care Local Settings', function () {
       expect(controller.state).toBe(controller.ONBOARDED);
     });
 
-    it('should show loading animation on setup care button, if Org orboarding is in progress', function () {
+    it('should show loading animation on setup care button, if Org onboarding is in progress', function () {
       $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { csOnboardingStatus: 'Pending' });
       expect(controller.state).toBe(controller.ONBOARDED);
       $httpBackend.flush();
@@ -86,7 +86,7 @@ describe('Controller: Care Local Settings', function () {
       $httpBackend.flush();
       expect(controller.state).toBe(controller.NOT_ONBOARDED);
       $httpBackend.expectPUT(sunlightCSOnboardUrl).respond(200, {});
-      controller.onboardToCs();
+      controller.onboardToCare();
       $httpBackend.expectGET(sunlightChatConfigUrl).respond(404, {});
       expect(controller.state).toBe(controller.IN_PROGRESS);
     });
@@ -99,7 +99,7 @@ describe('Controller: Care Local Settings', function () {
       $httpBackend.flush();
       expect(controller.state).toBe(controller.NOT_ONBOARDED);
       $httpBackend.expectPUT(sunlightCSOnboardUrl).respond(200, {});
-      controller.onboardToCs();
+      controller.onboardToCare();
       $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { csOnboardingStatus: 'Success' });
       $interval.flush(10001);
       $httpBackend.flush();
@@ -115,7 +115,7 @@ describe('Controller: Care Local Settings', function () {
       });
       $httpBackend.whenGET(sunlightChatConfigUrl).respond(404, {});
       $httpBackend.expectPUT(sunlightCSOnboardUrl).respond(200, {});
-      controller.onboardToCs();
+      controller.onboardToCare();
       for (var i = 30; i >= 0; i--) {
         $httpBackend.whenGET(sunlightChatConfigUrl).respond(404, {});
         $interval.flush(10000);
@@ -131,7 +131,7 @@ describe('Controller: Care Local Settings', function () {
       });
       $httpBackend.whenGET(sunlightChatConfigUrl).respond(500, {});
       $httpBackend.expectPUT(sunlightCSOnboardUrl).respond(200, {});
-      controller.onboardToCs();
+      controller.onboardToCare();
       for (var i = 3; i >= 0; i--) {
         $httpBackend.whenGET(sunlightChatConfigUrl).respond(500, {});
         $interval.flush(10000);
@@ -147,6 +147,120 @@ describe('Controller: Care Local Settings', function () {
       $httpBackend.flush();
       expect(controller.state).toBe(controller.ONBOARDED);
     });
+  });
+});
 
+describe('Care Settings - when org has K2 entitlement', function () {
+  var controller, sunlightChatConfigUrl, sunlightConfigService, $httpBackend, Notification, orgId, $interval, $intervalSpy, $scope,
+    sunlightCSOnboardUrl, sunlightAAOnboardUrl;
+  var spiedAuthinfo = {
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
+    getOrgName: jasmine.createSpy('getOrgName').and.returnValue('SunlightConfigService test org'),
+    isCareVoice: jasmine.createSpy('isCareVoice').and.returnValue(true),
+  };
+  beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module(function ($provide) {
+    $provide.value("Authinfo", spiedAuthinfo);
+  }));
+  beforeEach(
+    inject(function ($controller, _$rootScope_, _$httpBackend_, _Notification_, _SunlightConfigService_, _$interval_, UrlConfig, $q) {
+      sunlightConfigService = _SunlightConfigService_;
+      $httpBackend = _$httpBackend_;
+      Notification = _Notification_;
+      $scope = _$rootScope_.$new();
+      $interval = _$interval_;
+      $intervalSpy = jasmine.createSpy('$interval', $interval).and.callThrough();
+      $scope.wizard = {};
+      $scope.wizard.isNextDisabled = false;
+      orgId = 'deba1221-ab12-cd34-de56-abcdef123456';
+      sunlightChatConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + orgId + '/chat';
+      sunlightCSOnboardUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + orgId + '/csonboard';
+      sunlightAAOnboardUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + orgId + '/aaonboard';
+      controller = $controller('CareLocalSettingsCtrl', {
+        $scope: $scope,
+        $interval: $intervalSpy,
+        Notification: Notification,
+      });
+      spyOn(sunlightConfigService, 'updateChatConfig').and.callFake(function () {
+        var deferred = $q.defer();
+        deferred.resolve('fake update response');
+        return deferred.promise;
+      });
+    })
+  );
+
+  it('should enable setup care button, when Org is not onboarded', function () {
+    $httpBackend.expectGET(sunlightChatConfigUrl)
+      .respond(200, {
+        csOnboardingStatus: 'Unknown',
+        aaOnboardingStatus: 'Unknown',
+      });
+    $httpBackend.flush();
+    expect(controller.state).toBe(controller.NOT_ONBOARDED);
+  });
+
+  it('should disable setup care, if already onboarded', function () {
+    $httpBackend.expectGET(sunlightChatConfigUrl)
+      .respond(200, {
+        csOnboardingStatus: 'Success',
+        aaOnboardingStatus: 'Success',
+      });
+    expect(controller.state).toBe(controller.ONBOARDED);
+    $httpBackend.flush();
+    expect(controller.state).toBe(controller.ONBOARDED);
+  });
+
+  it('should show loading animation on setup care button, if Org onboarding is in progress', function () {
+    $httpBackend.expectGET(sunlightChatConfigUrl)
+      .respond(200, {
+        csOnboardingStatus: 'Pending',
+        aaOnboardingStatus: 'Pending',
+      });
+    expect(controller.state).toBe(controller.ONBOARDED);
+    $httpBackend.flush();
+    expect(controller.state).toBe(controller.IN_PROGRESS);
+  });
+
+  it('should show loading animation on setup care button, if csOnboarding or aaOnboarding is pending', function () {
+    $httpBackend.expectGET(sunlightChatConfigUrl)
+      .respond(200, {
+        csOnboardingStatus: 'Success',
+        aaOnboardingStatus: 'Pending',
+      });
+    expect(controller.state).toBe(controller.ONBOARDED);
+    $httpBackend.flush();
+    expect(controller.state).toBe(controller.IN_PROGRESS);
+  });
+
+  it('should enable setup care button, if csOnboarding or aaOnboarding is failure', function () {
+    $httpBackend.expectGET(sunlightChatConfigUrl)
+      .respond(200, {
+        csOnboardingStatus: 'Success',
+        aaOnboardingStatus: 'Failure',
+      });
+    expect(controller.state).toBe(controller.ONBOARDED);
+    $httpBackend.flush();
+    expect(controller.state).toBe(controller.NOT_ONBOARDED);
+  });
+
+  it('should disable setup care button, after onboarding is complete', function () {
+    spyOn(Notification, 'success').and.callFake(function () {
+      return true;
+    });
+    $httpBackend.expectGET(sunlightChatConfigUrl).respond(404, {});
+    $httpBackend.flush();
+    expect(controller.state).toBe(controller.NOT_ONBOARDED);
+    $httpBackend.expectPUT(sunlightCSOnboardUrl).respond(200, {});
+    $httpBackend.expectPOST(sunlightAAOnboardUrl).respond(204, {});
+    controller.onboardToCare();
+    $httpBackend.expectGET(sunlightChatConfigUrl)
+      .respond(200, {
+        csOnboardingStatus: 'Success',
+        aaOnboardingStatus: 'Success',
+      });
+    $interval.flush(10001);
+    $httpBackend.flush();
+    expect(controller.state).toBe(controller.ONBOARDED);
+    expect(Notification.success).toHaveBeenCalled();
   });
 });

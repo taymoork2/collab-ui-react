@@ -8,7 +8,7 @@ describe('controller: UpdateIncidentCtrl', function () {
     incidentStatusResolved: 'resolved',
     noneStatus: {
       label: 'testLabel',
-      value: 'none'
+      value: 'none',
     },
     incidentForUpdate: {
       incidentId: 'testIncidentId',
@@ -16,11 +16,11 @@ describe('controller: UpdateIncidentCtrl', function () {
       impact: 'none',
       message: 'testMessage',
       status: 'investigating',
-      localizedStatus: 'gss.incidentStatus.investigating'
+      localizedStatus: 'gss.incidentStatus.investigating',
     },
     majorOutageStatus: {
       label: 'gss.componentStatus.majorOutage',
-      value: 'major_outage'
+      value: 'major_outage',
     },
     components: [{
       componentId: 'testComponentId',
@@ -30,25 +30,25 @@ describe('controller: UpdateIncidentCtrl', function () {
         status: 'operational',
         statusObj: {
           label: 'gss.componentStatus.operational',
-          value: 'operational'
-        }
+          value: 'operational',
+        },
       }, {
         componentId: 'testComponentId',
         status: 'operational',
         statusObj: {
           label: 'gss.componentStatus.majorOutage',
-          value: 'major_outage'
-        }
-      }]
+          value: 'major_outage',
+        },
+      }],
     }],
     groupComponent: {
-      isOverridden: false
+      isOverridden: false,
     },
     message: {
       isEditingMessage: false,
       message: 'testMessage',
-      messageId: 'testMessageId'
-    }
+      messageId: 'testMessageId',
+    },
   };
 
   beforeEach(angular.mock.module('GSS'));
@@ -93,7 +93,7 @@ describe('controller: UpdateIncidentCtrl', function () {
       $scope: $scope,
       $stateParams: $stateParams,
       GSSService: GSSService,
-      IncidentsService: IncidentsService
+      IncidentsService: IncidentsService,
     });
 
     $scope.$apply();
@@ -147,7 +147,7 @@ describe('controller: UpdateIncidentCtrl', function () {
 
   it('isIncidentStatusResolved true, with status resolved', function () {
     controller.incidentForUpdate = {
-      status: testData.incidentStatusResolved
+      status: testData.incidentStatusResolved,
     };
 
     expect(controller.isIncidentStatusResolved()).toBeTruthy();
@@ -159,7 +159,7 @@ describe('controller: UpdateIncidentCtrl', function () {
 
   it('isValidForIncident true, with incident message', function () {
     controller.incidentForUpdate = {
-      message: testData.incidentForUpdate.message
+      message: testData.incidentForUpdate.message,
     };
 
     expect(controller.isValidForIncident()).toBeTruthy();
@@ -167,7 +167,7 @@ describe('controller: UpdateIncidentCtrl', function () {
 
   it('isValidForIncident false, without incident message', function () {
     controller.incidentForUpdate = {
-      message: testData.empty
+      message: testData.empty,
     };
 
     expect(controller.isValidForIncident()).toBeFalsy();
@@ -177,7 +177,7 @@ describe('controller: UpdateIncidentCtrl', function () {
     controller.incidentForUpdate = {
       incidentId: testData.incidentForUpdate.incidentId,
       message: testData.incidentForUpdate.message,
-      status: testData.incidentForUpdate.status
+      status: testData.incidentForUpdate.status,
     };
 
     controller.updateIncident();
@@ -186,7 +186,7 @@ describe('controller: UpdateIncidentCtrl', function () {
 
   it('updateIncident isValidForIncident false, should not call updateIncident service', function () {
     controller.incidentForUpdate = {
-      message: testData.empty
+      message: testData.empty,
     };
 
     controller.updateIncident();

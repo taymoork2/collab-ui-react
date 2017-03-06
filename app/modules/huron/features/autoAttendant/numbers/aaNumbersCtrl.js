@@ -6,9 +6,7 @@
     .controller('AABuilderNumbersCtrl', AABuilderNumbersCtrl); /* was AutoAttendantGeneralCtrl */
 
   /* @ngInject */
-  function AABuilderNumbersCtrl(AAUiModelService, AutoAttendantCeInfoModelService, AANumberAssignmentService,
-        AAModelService, AACommonService, Authinfo, AANotificationService, $translate,
-        telephoneNumberFilter, TelephoneNumberService, TelephonyInfoService, ExternalNumberPool) {
+  function AABuilderNumbersCtrl(AAUiModelService, AutoAttendantCeInfoModelService, AANumberAssignmentService, AAModelService, AACommonService, Authinfo, AANotificationService, $translate, telephoneNumberFilter, TelephoneNumberService, TelephonyInfoService, ExternalNumberPool) {
     var vm = this;
 
     vm.addNumber = addNumber;
@@ -40,7 +38,7 @@
     // but right now at least, we don't want to pre-select any number, so it's blank
     vm.selected = {
       "label": "",
-      "value": ""
+      "value": "",
     };
 
     /////////////////////
@@ -70,7 +68,7 @@
         // clear selection
         vm.selected = {
           "label": "",
-          "value": ""
+          "value": "",
         };
       }
 
@@ -93,7 +91,7 @@
       // clear selection
       vm.selected = {
         "label": "",
-        "value": ""
+        "value": "",
       };
 
     }
@@ -170,7 +168,7 @@
             function (response) {
               AANotificationService.errorResponse(response, 'autoAttendant.errorAddCMI', {
                 phoneNumber: number,
-                statusText: response.statusText
+                statusText: response.statusText,
               });
 
               resources.pop();
@@ -182,7 +180,7 @@
           AANotificationService.errorResponse(response, 'autoAttendant.errorAddCMI', {
             phoneNumber: number,
             statusText: response.statusText,
-            status: response.status
+            status: response.status,
           });
 
           resources.pop();
@@ -270,7 +268,7 @@
     function addToAvailableNumberList(label, number) {
       var opt = {
         label: label,
-        value: number
+        value: number,
       };
       vm.availablePhoneNums.push(opt);
     }
@@ -330,7 +328,7 @@
 
           var dn = {
             id: extPool[i].uuid,
-            number: extPool[i].pattern
+            number: extPool[i].pattern,
           };
 
           // the externalNumberList will contain the info as it came from CMI
@@ -372,13 +370,13 @@
           if (onlyCMI.length > 0) {
             vm.aaModel.possibleNumberDiscrepancy = true;
             AANotificationService.error('autoAttendant.errorNumbersCMIOnly', {
-              phoneNumbers: onlyCMI
+              phoneNumbers: onlyCMI,
             });
           }
           if (onlyResources.length > 0) {
             vm.aaModel.possibleNumberDiscrepancy = true;
             AANotificationService.error('autoAttendant.errorNumbersCESOnly', {
-              phoneNumbers: onlyResources
+              phoneNumbers: onlyResources,
             });
           }
         },

@@ -46,7 +46,7 @@
     return {
       setUtilizationGraph: setUtilizationGraph,
       setCallVolumeGraph: setCallVolumeGraph,
-      setAvailabilityGraph: setAvailabilityGraph
+      setAvailabilityGraph: setAvailabilityGraph,
     };
 
     function getBaseExportForGraph(fields, fileName, columnNames) {
@@ -56,7 +56,7 @@
         'columnNames': columnNames,
         'fileName': fileName,
         'libs': {
-          'autoLoad': false
+          'autoLoad': false,
         },
         'menu': [{
           'class': 'export-main',
@@ -65,7 +65,7 @@
             'label': $translate.instant('reportsPage.saveAs'),
             'title': $translate.instant('reportsPage.saveAs'),
             'class': 'export-list',
-            'menu': ['PNG', 'JPG']
+            'menu': ['PNG', 'JPG'],
           }, {
             'label': $translate.instant('reportsPage.pdf'),
             'title': $translate.instant('reportsPage.pdf'),
@@ -75,14 +75,14 @@
                   $window.open(data, 'amCharts.pdf');
                 });
               });
-            }
+            },
           }, {
             'class': 'export-list',
             'label': $translate.instant('reportsPage.export'),
             'title': $translate.instant('reportsPage.export'),
-            'menu': ['CSV', 'XLSX']
-          }]
-        }]
+            'menu': ['CSV', 'XLSX'],
+          }],
+        }],
       };
       return baseVariables['export'];
     }
@@ -189,7 +189,7 @@
 
     function setCallVolumeGraph(data, callVolumeChart, cluster, daterange) {
       if (data === null || data === 'undefined' || data.length === 0) {
-        return;
+        return undefined;
       } else if (callVolumeChart !== null && !_.isUndefined(callVolumeChart)) {
         var startDuration = 1;
         if (!data[0].balloon) {
@@ -255,7 +255,7 @@
       }
 
       var columnNames = {
-        'time': timeStamp
+        'time': timeStamp,
       };
       var exportFields = [];
       _.forEach(graphs, function (value) {
@@ -286,7 +286,7 @@
 
       var isDummy = false;
       if (data === null || data === 'undefined' || data.length === 0) {
-        return;
+        return undefined;
       } else if (utilizationChart !== null && !_.isUndefined(utilizationChart)) {
         if (data[0].colorTwo === chartColors.grayLightTwo) {
           isDummy = true;
@@ -411,7 +411,7 @@
       //var startDate = str.substring(0, 10);
       startDate = convertToLocalTime(startDate);
       if (data === null || data === 'undefined' || data.length === 0) {
-        return;
+        return undefined;
       } else {
         availabilityChart = createAvailabilityGraph(data, selectedCluster, cluster, daterange);
         availabilityChart.period = data.data[0].period;

@@ -5,15 +5,16 @@
     .factory('PstnServiceAddressService', PstnServiceAddressService);
 
   /* @ngInject */
-  function PstnServiceAddressService($q, TerminusLookupE911Service, TerminusCustomerSiteService) {
+  function PstnServiceAddressService($q, TerminusLookupE911Service, TerminusV2LookupE911Service, TerminusCustomerSiteService, FeatureToggleService) {
     var service = {
       lookupAddress: lookupAddress,
+      lookupAddressV2: lookupAddressV2,
       getAddress: getAddress,
       updateAddress: updateAddress,
       listCustomerSites: listCustomerSites,
       createCustomerSite: createCustomerSite,
       getStatus: getStatus,
-      setStatus: setStatus
+      setStatus: setStatus,
     };
 
     // Mapping of terminus to huron address object keys
@@ -22,7 +23,7 @@
       address2: 'unit',
       city: 'city',
       state: 'state',
-      zip: 'zip'
+      zip: 'zip',
     };
 
     // Terminus service address data structure
@@ -35,7 +36,7 @@
       serviceAddressSub: 'unit',
       serviceCity: 'city',
       serviceState: 'state',
-      serviceZip: 'zip'
+      serviceZip: 'zip',
     };
 
     var addressStatus;
@@ -92,21 +93,50 @@
       if (!noMap) {
         searchPayload = getTerminusAddress(_.omitBy(searchPayload, _.isEmpty));
       }
+      return lookupAddressV1(searchPayload, noMap);
+    }
+
+    function lookupAddressV2(address, carrierId, noMap) {
+      // format terminus payload and omit empty strings
+      var searchPayload = address;
+      if (!noMap) {
+        searchPayload = getTerminusAddress(_.omitBy(searchPayload, _.isEmpty));
+      }
+
+      return FeatureToggleService.supports(
+        FeatureToggleService.features.huronSupportThinktel
+      ).then(function (hasFeatureToggle) {
+        if (hasFeatureToggle) {
+          return TerminusV2LookupE911Service.save({ carrierId: carrierId }, searchPayload).$promise
+            .then(function (response) {
+              return getFormattedAddressFromLookupResponse(response, noMap);
+            });
+        } else {
+          return lookupAddressV1(searchPayload, noMap);
+        }
+      });
+    }
+
+    function lookupAddressV1(searchPayload, noMap) {
       return TerminusLookupE911Service.save({}, searchPayload).$promise
         .then(function (response) {
-          var address = _.get(response, 'addresses[0]');
-          if (address) {
-            // Remove response value if None
-            if (address.address2 === 'None') {
-              delete address.address2;
-            }
-            // format response back to huron model
-            if (!noMap) {
-              return getHuronAddress(address);
-            }
-            return address;
-          }
+          return getFormattedAddressFromLookupResponse(response, noMap);
         });
+    }
+
+    function getFormattedAddressFromLookupResponse(response, noMap) {
+      var address = _.get(response, 'addresses[0]');
+      if (address) {
+        // Remove response value if None
+        if (address.address2 === 'None') {
+          delete address.address2;
+        }
+        // format response back to huron model
+        if (!noMap) {
+          return getHuronAddress(address);
+        }
+        return address;
+      }
     }
 
     function getAddress(customerId) {
@@ -130,7 +160,7 @@
 
     function listCustomerSites(customerId) {
       return TerminusCustomerSiteService.query({
-        customerId: customerId
+        customerId: customerId,
       }).$promise
         .then(function (sites) {
           var promises = [];
@@ -150,32 +180,32 @@
     function getCustomerSite(customerId, siteId) {
       return TerminusCustomerSiteService.get({
         customerId: customerId,
-        siteId: siteId
+        siteId: siteId,
       }).$promise;
     }
 
     function createCustomerSite(customerId, name, address) {
       var payload = {
         name: name,
-        serviceAddress: {}
+        serviceAddress: {},
       };
       address.name = name;
       payload.serviceAddress = formatServiceAddress(address);
       return TerminusCustomerSiteService.save({
-        customerId: customerId
+        customerId: customerId,
       }, payload).$promise;
     }
 
     function updateSite(customerId, siteId, site) {
       return TerminusCustomerSiteService.update({
         customerId: customerId,
-        siteId: siteId
+        siteId: siteId,
       }, site).$promise;
     }
 
     function updateAddress(customerId, address) {
       var site = {
-        serviceAddress: formatServiceAddress(address)
+        serviceAddress: formatServiceAddress(address),
       };
       return listCustomerSites(customerId)
         .then(function (sites) {

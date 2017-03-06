@@ -41,7 +41,6 @@ describe('Service: Trial Device Service:', function () {
       expect(countries).toContain({
         country: 'Croatia',
       });
-
     });
 
     it('should contain only US for MX300', function () {
@@ -69,13 +68,35 @@ describe('Service: Trial Device Service:', function () {
     });
 
     it('should contain US only if one of the devices supplied only supports US shipping', function () {
-      var countries = TrialDeviceService.getCountries(['CISCO_SX10', 'CISCO_8841']);
+      var countries = TrialDeviceService.getCountries(['CISCO_SX10', 'CISCO_MX300']);
       expect(countries.length).toBe(1);
       expect(countries).toContain({
         country: 'United States',
       });
     });
 
+    it('should be US and Canada if Room System and phone', function () {
+      var countries = TrialDeviceService.getCountries(['CISCO_SX10', 'CISCO_8841']);
+      expect(countries.length).toBe(2);
+      expect(countries).toContain({
+        country: 'Canada',
+      });
+      expect(countries).toContain({
+        country: 'United States',
+      });
+    });
+
+    it('should replace the country list correctly if replacement is supplied', function () {
+      var replacement = [{
+        default: TrialDeviceService.listTypes.ROLLOUT2,
+        override: TrialDeviceService.listTypes.US_ONLY,
+      }];
+      var countries = TrialDeviceService.getCountries(['CISCO_SX10', 'CISCO_8841'], replacement);
+      expect(countries.length).toBe(1);
+      expect(countries[0]).toEqual({
+        country: 'United States',
+      });
+    });
   });
 
   describe('Get Country Code By Name', function () {
@@ -108,7 +129,7 @@ describe('Service: Trial Device Service:', function () {
       var arr = [TrialDeviceService.canAddDevice({}, true, true, false),
         TrialDeviceService.canAddDevice({}, true, false, false),
         TrialDeviceService.canAddDevice({}, false, true, false),
-        TrialDeviceService.canAddDevice({}, false, false, false)
+        TrialDeviceService.canAddDevice({}, false, false, false),
       ];
 
       // bail out at the first true value

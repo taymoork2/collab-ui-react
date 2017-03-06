@@ -36,13 +36,13 @@
       limit: 50,
       tokens: [],
       minLength: 9,
-      beautify: false
+      beautify: false,
     };
     vm.tokenmethods = {
       createtoken: createToken,
       createdtoken: createdToken,
       removedtoken: removedToken,
-      edittoken: editToken
+      edittoken: editToken,
     };
 
     vm.checkForInvalidTokens = checkForInvalidTokens;
@@ -152,7 +152,7 @@
                   Notification.errorResponse(response, 'serviceSetupModal.carrierCountryGetError');
                 }
                 setDidValidationCountry({
-                  country: "us"
+                  country: "us",
                 });
               });
           })
@@ -173,7 +173,7 @@
               Notification.errorResponse(response, 'serviceSetupModal.carrierCountryGetError');
             }
             setDidValidationCountry({
-              country: "us"
+              country: "us",
             });
           }).then(reinitTokens);
       }
@@ -249,7 +249,7 @@
           }).catch(function (response) {
             errors.push({
               pattern: newDid,
-              message: response.status === 409 ? $translate.instant('didManageModal.didAlreadyExist') : Notification.processErrorResponse(response)
+              message: response.status === 409 ? $translate.instant('didManageModal.didAlreadyExist') : Notification.processErrorResponse(response),
             });
           });
           promises.push(addPromise);
@@ -277,7 +277,7 @@
 
     function backtoEditTrial() {
       $state.go('trialEdit.info', {
-        currentTrial: vm.currentTrial
+        currentTrial: vm.currentTrial,
       });
     }
 
@@ -289,7 +289,7 @@
       var emailInfo = {
         'email': vm.currentOrg.customerEmail,
         'customerName': vm.currentOrg.customerName,
-        'partnerName': Authinfo.getOrgName()
+        'partnerName': Authinfo.getOrgName(),
       };
       DidAddEmailService.save({}, emailInfo, function () {
         Notification.success('didManageModal.emailSuccessText');

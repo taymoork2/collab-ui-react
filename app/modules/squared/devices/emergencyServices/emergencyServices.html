@@ -87,7 +87,7 @@
             </div>
             <div class="row collapse-both">
               <div class="columns medium-7">
-                <p class="label-margin" translate="serviceAddress.state"></p>
+                <p class="label-margin">{{$ctrl.locationLabel}}</p>
                 <cs-select
                   form="$ctrl.form"
                   name="stateInput"
@@ -104,13 +104,13 @@
                 cs-input
                 form="$ctrl.form"
                 name="addressZipcodeInput"
-                type="number"
+                type="text"
                 ng-model="$ctrl.emergency.emergencyAddress.zip"
                 cs-input-group-size="medium-4"
                 cs-input-label="{{::'serviceAddress.zipCode' | translate}}"
                 ng-disabled="$ctrl.useCompanyAddress"
                 ng-required="!$ctrl.useCompanyAddress"
-                maxlength="5">
+                maxlength="7">
             </div>
           </div>
         </div>

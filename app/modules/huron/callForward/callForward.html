@@ -24,17 +24,29 @@
         ng-change="$ctrl.onCallFwdAllChange()"
         cs-input-label="{{::'callForwardPanel.forwardAllCalls'|translate}}">
 
-      <div class="cs-input-group cs-input--nested-1" ng-if="$ctrl.forwardState === 'all'">
-        <cs-select
-          name="forwardAllCalls"
-          ng-model="$ctrl.forwardAllCalls"
-          selected="$ctrl.forwardAllCalls"
-          options="$ctrl.forwardOptions"
-          required="true"
-          maxlength="50"
-          combo="true"
-          on-change-fn="$ctrl.onCallFwdAllChange(value)">
-        </cs-select>
+      <div id='all' class="cs-input-group cs-input--nested-1" ng-if="$ctrl.forwardState === 'all'">
+        <div ng-if="$ctrl.forwardAll.voicemail === false">
+          <cs-call-destination
+            class="row"
+            model="$ctrl.forwardAll.destination"
+            size="medium-12"
+            inputs="$ctrl.forwardOptions"
+            select-type="select"
+            custom-number-translations="$ctrl.customTranslations"
+            external-number-region-code-fn="$ctrl.getRegionCode()"
+            on-change-fn="$ctrl.onCallFwdAllChange(model)">
+          </cs-call-destination>
+        </div>
+        <div ng-if="$ctrl.showVoicemail()">
+          <input
+            cs-input
+            type="checkbox"
+            id="allDirectVoicemail"
+            name="allDirectVoicemail"
+            ng-model="$ctrl.forwardAll.voicemail"
+            cs-input-label="{{::'callForwardPanel.directVoicemail' | translate}}"
+            ng-click="$ctrl.onVoicemailAll()">
+         </div>
       </div>
 
       <input
@@ -50,38 +62,75 @@
       <div ng-if="$ctrl.forwardState === 'busy'">
         <div class="cs-input-group cs-input--nested-1">
           <label for="forwardNABCalls" translate="callForwardPanel.internalAndExternal"></label>
-          <cs-select
-            name="forwardNABCalls"
-            ng-model="$ctrl.forwardNABCalls"
-            selected="$ctrl.forwardNABCalls"
-            options="$ctrl.forwardOptions"
-            required="true"
-            maxlength="50"
-            combo="true"
-            on-change-fn="$ctrl.onCallFwdBusyChange(value)">
-          </cs-select>
-        </div>
-        <div class="cs-input-group cs-input--nested-1">
-          <input
-            cs-input
-            type="checkbox"
-            id="ckForwardExternalCalls"
-            name="ckForwardExternalCalls"
-            ng-model="$ctrl.forwardExternalCalls"
-            cs-input-label="{{::'callForwardPanel.forwardExternal'|translate}}"
-            ng-click="$ctrl.onCallFwdBusyExternal()">
-        </div>
-        <div class="cs-input-group cs-input--nested-1" ng-if="$ctrl.forwardExternalCalls">
-          <cs-select
-            name="forwardExternalNABCalls"
-            ng-model="$ctrl.forwardExternalNABCalls"
-            selected="$ctrl.forwardExternalNABCalls"
-            options="$ctrl.forwardOptions"
-            required="true"
-            maxlength="50"
-            combo="true"
-            on-change-fn="$ctrl.onCallFwdBusyExternal(value)">
-          </cs-select>
+          <div class="cs-input-group" style="display:flex"  ng-if="$ctrl.cfnaTimerFeatureToggleEnabled">
+            <input
+              cs-input
+              type= "number"
+              name="callForwardTimer"
+              ng-model="$ctrl.callForwardTimer"
+              required="true"
+              min="1" max="300"
+              cs-input-label="{{:: 'callForwardPanel.forwardBusyNoAnswerTimerDescription' | translate }}"
+              cs-input-secondary-label="{{:: 'callForwardPanel.forwardBusyNoAnswerTimerSeconds' | translate}}"
+              ng-change="$ctrl.onCFNATimerChange()"
+              cs-input-messages="$ctrl.errorMsg"
+              ng-class="{'error': $ctrl.isError}">
+          </div>
+          <div ng-if="$ctrl.busyInternal.voicemail === false">
+            <cs-call-destination
+              class="row"
+              model="$ctrl.busyInternal.destination"
+              size="medium-12"
+              inputs="$ctrl.forwardOptions"
+              select-type="select"
+              custom-number-translations="$ctrl.customTranslations"
+              external-number-region-code-fn="$ctrl.getRegionCode()"
+              on-change-fn="$ctrl.onCallFwdBusyChange(model)">
+            </cs-call-destination>
+          </div>
+          <div ng-if="$ctrl.showVoicemail()">
+            <input
+              cs-input
+              type="checkbox"
+              id="internalDirectVoicemail"
+              name="internalDirectVoicemail"
+              ng-model="$ctrl.busyInternal.voicemail"
+              cs-input-label="{{::'callForwardPanel.directVoicemail' | translate}}"
+              ng-click="$ctrl.onVoicemailBusy()">
+           </div>
+             <input
+              cs-input
+              type="checkbox"
+              id="ckForwardExternalCalls"
+              name="ckForwardExternalCalls"
+              ng-model="$ctrl.forwardExternalCallsDifferently"
+              cs-input-label="{{::'callForwardPanel.forwardExternal'|translate}}"
+              ng-click="$ctrl.onCallForwardBusyDifferentlyChange()">
+          </div>
+          <div class="cs-input-group cs-input--nested-1" ng-if="$ctrl.forwardExternalCallsDifferently">
+            <div ng-if="$ctrl.busyExternal.voicemail === false">
+              <cs-call-destination
+                class="row"
+                model="$ctrl.busyExternal.destination"
+                size="medium-12"
+                inputs="$ctrl.forwardOptions"
+                select-type="select"
+                custom-number-translations="$ctrl.customTranslations"
+                external-number-region-code-fn="$ctrl.getRegionCode()"
+                on-change-fn="$ctrl.onCallFwdBusyExternalChange(model)">
+              </cs-call-destination>
+            </div>
+            <div ng-if="$ctrl.showVoicemail()">
+              <input
+                cs-input
+                type="checkbox"
+                id="externalDirectVoicemail"
+                name="externalDirectVoicemail"
+                ng-model="$ctrl.busyExternal.voicemail"
+                cs-input-label="{{::'callForwardPanel.directVoicemail' | translate}}"
+                ng-click="$ctrl.onVoicemailBusyExternal()">
+            </div>
+          </div>
         </div>
       </div>
     </div>

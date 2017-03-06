@@ -1,0 +1,36 @@
+<cs-page-sub-header>
+  <cs-page-sub-header-left>
+    <cs-searchfilter placeholder-text="{{$ctrl.placeholder}}" search-item-fn="$ctrl.filterList(searchStr)"></cs-searchfilter>
+  </cs-page-sub-header-left>
+
+  <cs-page-sub-header-right>
+    <div class="page-option-buttons" ng-if="$ctrl.gridData.length > 0">
+      <div ng-if="!$ctrl.exportLoading"
+           tooltip="Export to CSV"
+           tooltip-placement="top"
+           tooltip-trigger="mouseenter">
+        <a class="export-users" ng-csv="$ctrl.exportCSV()" filename="{{::'gemini.tds.export.csvFilename' | translate}}">
+          <button class="btn--none"><i class="icon icon-download-contain icon-lg"></i></button>
+        </a>
+      </div>
+      <div ng-if="$ctrl.exportLoading" class="btn btn-none"
+           tooltip="Export in process"
+           tooltip-placement="top"
+           tooltip-trigger="mouseenter">
+        <div ng-if="$ctrl.exportLoading" class="btn btn-none">
+          <span class="export-lines">
+            <i class="icon icon-spinner"></i>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn--people" id="request" translate="gemini.cbgs.request.button" ng-click="$ctrl.onRequest()"></button>
+  </cs-page-sub-header-right>
+</cs-page-sub-header>
+
+<div id="cbgListPanel" class="gridStyle col-md-12" ui-grid="$ctrl.gridOptions" gridscrollbar ui-grid-selection ui-grid-resize-columns ui-grid-move-columns ui-grid-infinite-scroll></div>
+
+<div class="grid-refresh" ng-if="$ctrl.gridRefresh">
+  <i class="icon icon-spinner icon-3x"></i>
+</div>

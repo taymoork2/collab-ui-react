@@ -14,7 +14,6 @@ describe('FeatureToggleService', function () {
     this.userId = '1';
     this.userRegex = /.*\/feature\/api\/v1\/features\/users\.*/;
     this.identityMe = 'https://identity.webex.com/identity/scim/null/v1/Users/me';
-    this.dirSyncRegex = /.*\/organization\/.*\/dirsync\.*/;
 
     this.getUserMe = getJSONFixture('core/json/users/me.json');
     this.$httpBackend.whenGET(this.identityMe).respond(200, this.getUserMe);
@@ -130,32 +129,6 @@ describe('FeatureToggleService', function () {
       this.FeatureToggleService.stateSupportsFeature('non-existant-feature');
       this.$httpBackend.flush();
       expect(this.$state.go).toHaveBeenCalledWith('login');
-    });
-  });
-
-  describe('function supportsDirSync', function () {
-    beforeEach(function () {
-      spyOn(this.Authinfo, 'getOrgId').and.returnValue('1');
-    });
-
-    it('should return true for a DirSync org', function () {
-      this.$httpBackend.whenGET(this.dirSyncRegex).respond(200, {
-        serviceMode: 'ENABLED'
-      });
-      this.FeatureToggleService.supportsDirSync().then(function (data) {
-        expect(data).toBe(true);
-      });
-      this.$httpBackend.flush();
-    });
-
-    it('should return false for a non-DirSync org', function () {
-      this.$httpBackend.whenGET(this.dirSyncRegex).respond(200, {
-        serviceMode: 'DISABLED'
-      });
-      this.FeatureToggleService.supportsDirSync().then(function (data) {
-        expect(data).toBe(false);
-      });
-      this.$httpBackend.flush();
     });
   });
 

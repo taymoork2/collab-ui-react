@@ -8,9 +8,10 @@
     <cs-select
       name="defaultCountry"
       ng-model="$ctrl.defaultCountry"
-      options="$ctrl.defaultCountryList"
+      options="$ctrl.countryList"
       labelfield="name"
       valuefield="id"
+      required
       placeholder="$ctrl.placeholder"
       on-change-fn="$ctrl.onChange()">
     </cs-select>

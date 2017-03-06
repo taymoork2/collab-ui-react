@@ -11,13 +11,14 @@
     vm.launchCustomerPortal = launchCustomerPortal;
     vm.portOrders = $stateParams.portOrders;
     vm.pstnOrders = [];
+    vm.isTrial = PstnSetup.getIsTrial();
 
     getOrders();
 
     function getOrders() {
       return TerminusOrderService.query({
         customerId: PstnSetup.getCustomerId(),
-        type: "PSTN"
+        type: "PSTN",
       }).$promise.then(function (response) {
         vm.pstnOrders = response;
       });
@@ -28,7 +29,7 @@
     function launchCustomerPortal() {
       $window.open($state.href('login_swap', {
         customerOrgId: PstnSetup.getCustomerId(),
-        customerOrgName: PstnSetup.getCustomerName()
+        customerOrgName: PstnSetup.getCustomerName(),
       }));
     }
   }

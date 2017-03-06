@@ -4,7 +4,7 @@ describe('SparkDomainManagementService: Service', function () {
   beforeEach(angular.mock.module('Core'));
 
   var authInfo = {
-    getOrgId: sinon.stub().returns('bcd7afcd-839d-4c61-a7a8-31c6c7f016d7')
+    getOrgId: sinon.stub().returns('bcd7afcd-839d-4c61-a7a8-31c6c7f016d7'),
   };
 
   beforeEach(angular.mock.module(function ($provide) {
@@ -38,7 +38,7 @@ describe('SparkDomainManagementService: Service', function () {
     $httpBackend.whenPOST(sparkDomainRegex).respond(function () {
       var data = {
         'isDomainAvailable': false,
-        'isDomainReserved': true
+        'isDomainReserved': true,
       };
       return [200, data];
     });
@@ -55,7 +55,7 @@ describe('SparkDomainManagementService: Service', function () {
     $httpBackend.whenPOST(sparkDomainRegex).respond(function () {
       var data = {
         'isDomainAvailable': true,
-        'isDomainReserved': false
+        'isDomainReserved': false,
       };
       return [200, data];
     });
@@ -72,7 +72,7 @@ describe('SparkDomainManagementService: Service', function () {
     $httpBackend.whenPOST(sparkDomainRegex).respond(function () {
       var data = {
         'isDomainAvailable': false,
-        'isDomainReserved': true
+        'isDomainReserved': true,
       };
       return [200, data];
     });

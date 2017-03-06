@@ -1,173 +1,623 @@
-namespace globalsettings {
+describe('Controller: EnterpriseSettingsCtrl', function () {
+  beforeEach(function () {
+    this.initModules('Core', 'Hercules');
+    this.injectDependencies('$controller', '$modal', '$rootScope', '$scope', '$translate', '$q', '$window', 'Config',
+      'FeatureToggleService', 'Notification', 'Orgservice', 'ServiceDescriptor', 'SparkDomainManagementService', 'UrlConfig');
 
-describe('Controller: EnterpriseSettingsCtrl', ()  => {
-  let controller, $scope, Config, Orgservice, SparkDomainManagementService, $q, $controller, Notification;
-  let orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');
-  let getOrgStatus = 200;
-  let rootScope;
+    this.orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');
+    this.domainSuffix = '.ciscospark.com';
+    this.defaultInput = 'amtest2';
+    this.testInput = 'test';
+    this.unauthorizedError = 'firstTimeWizard.subdomain401And403Error';
+    this.serverError = 'firstTimeWizard.sparkDomainManagementServiceErrorMessage';
+    this.saveError = 'firstTimeWizard.subdomainSaveError';
+    this.successNotification = 'firstTimeWizard.subdomainSaveSuccess';
 
-  let authInfo = {
-    getOrgId: sinon.stub().returns('bcd7afcd-839d-4c61-a7a8-31c6c7f016d7'),
-  };
-
-  beforeEach(angular.mock.module(($provide) => {
-    $provide.value('Authinfo', authInfo);
-  }));
-
-  beforeEach(angular.mock.module('Core'));
-
-  beforeEach(installPromiseMatchers);
-
-  beforeEach(inject(($rootScope, _$controller_, _Notification_, _Config_, _$q_, _Orgservice_, _SparkDomainManagementService_) => {
-    $scope = $rootScope.$new();
-    rootScope = $rootScope;
-    SparkDomainManagementService = _SparkDomainManagementService_;
-    Config = _Config_;
-    $controller = _$controller_;
-    Orgservice = _Orgservice_;
-    Notification = _Notification_;
-    $q = _$q_;
-
-    $scope.wizard = {
-      nextTab: sinon.stub(),
-    };
-
-    spyOn($scope.wizard, 'nextTab');
-    spyOn($scope, '$emit').and.callThrough();
-    spyOn(SparkDomainManagementService, 'checkDomainAvailability').and.returnValue($q.when({
+    this.availableResponse = {
       data: {
         isDomainAvailable: true,
         isDomainReserved: false,
       },
-    }));
+    };
+    this.unavailableResponse = _.cloneDeep(this.availableResponse);
+    this.unavailableResponse.data.isDomainAvailable = false;
+    this.unavailableResponse.data.isDomainReserved = true;
 
-    spyOn(SparkDomainManagementService, 'addSipDomain').and.returnValue($q.when({
+    this.ERROR_FIVE_HUNDRED = {
+      status: 500,
+    };
+    this.ERROR_FIVE_ZERO_TWO = {
+      status: 502,
+    };
+    this.ERROR_FOUR_HUNDRED = {
+      status: 400,
+    };
+    this.ERROR_FOUR_ZERO_ONE = {
+      status: 401,
+    };
+
+    this.modal = {
+      templateUrl: '',
+      controller: jasmine.any(Function),
+      controllerAs: 'subdomain',
+      type: 'dialog',
+    };
+
+    spyOn(this.$rootScope, '$broadcast').and.callThrough();
+    spyOn(this.$window, 'open');
+    spyOn(this.$translate, 'instant').and.callThrough();
+    spyOn(this.Notification, 'success');
+    spyOn(this.Notification, 'error');
+    spyOn(this.Notification, 'errorWithTrackingId');
+    spyOn(this.UrlConfig, 'getSparkDomainCheckUrl').and.returnValue(this.domainSuffix);
+    spyOn(this.$scope, '$emit').and.callThrough();
+
+    let AuthInfo = {
+      getOrgId: 'bcd7afcd-839d-4c61-a7a8-31c6c7f016d7',
+    };
+
+    this.$scope.wizard = {
+      nextTab: jasmine.createSpy('nextTab'),
+    };
+
+    spyOn(this.SparkDomainManagementService, 'addSipDomain').and.returnValue(this.$q.when({
       data: {
         isDomainAvailable: false,
         isDomainReserved: true,
       },
     }));
 
-    spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.when([{
+    spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.when([{
       licenses: [{
         offerName: 'SD',
       }],
     }]));
 
-    spyOn(Orgservice, 'getOrg').and.callFake((callback) => {
-      callback(orgServiceJSONFixture.getOrg, getOrgStatus);
-    });
-    spyOn(Notification, 'error');
-    spyOn(Notification, 'errorWithTrackingId');
-  }));
-
-  function initController() {
-    controller = $controller('SipDomainSettingController', {
-      $scope: $scope,
-      $rootScope: rootScope,
-      Authinfo: authInfo,
+    spyOn(this.Orgservice, 'getOrg').and.callFake((callback) => {
+      callback(this.orgServiceJSONFixture.getOrg, 200);
     });
 
-    $scope.$apply();
-  }
+    spyOn(this.ServiceDescriptor, 'isServiceEnabled').and.callFake((_type, callFunction: Function): void => {
+      callFunction(false, true);
+    });
 
-  describe('test Orgservice getOrg callback setting displayName', () => {
-    beforeEach(() => {
-      Orgservice.getOrg.and.callFake((callback) => {
-        callback(orgServiceJSONFixture.getOrg, 201);
+    this.initController = (): void => {
+      this.controller = this.$controller('SipDomainSettingController', {
+        $scope: this.$scope,
+        $rootScope: this.$rootScope,
+        $translate: this.$translate,
+        $modal: this.$modal,
+        Authinfo: AuthInfo,
+        Notification: this.Notification,
+        UrlConfig: this.UrlConfig,
+        SparkDomainManagementService: this.SparkDomainManagementService,
+        Orgservice: this.Orgservice,
       });
-      initController();
-    });
 
-    it('should gracefully error', () => {
-      expect(Notification.error).toHaveBeenCalled();
-    });
+      this.$scope.$apply();
+    };
   });
 
-  describe('test if checkSipDomainAvailability function sets isUrlAvailable to true', () => {
-    beforeEach(initController);
+  describe('FeatureToggleService returns false', function () {
+    beforeEach(function () {
+      spyOn(this.FeatureToggleService, 'atlasSubdomainUpdateGetStatus').and.returnValue(this.$q.when(false));
 
-    it('should emit wizardNextDisabled', () => {
-      expect($scope.$emit).toHaveBeenCalledWith('wizardNextButtonDisable', true);
+      spyOn(this.SparkDomainManagementService, 'checkDomainAvailability').and.returnValue(this.$q.when({
+        data: {
+          isDomainAvailable: true,
+          isDomainReserved: false,
+        },
+      }));
     });
 
-    it('should check if checkSipDomainAvailability in success state sets isUrlAvailable to true ', (done) => {
-      controller.inputValue = 'shatest1';
-      controller.checkSipDomainAvailability().then(() => {
-        expect(controller.isUrlAvailable).toEqual(true);
-        expect(SparkDomainManagementService.checkDomainAvailability).toHaveBeenCalledWith(controller.inputValue);
-        done();
+    it('initialization should gracefully error', function () {
+      this.Orgservice.getOrg.and.callFake((callback) => {
+        callback(this.orgServiceJSONFixture.getOrg, 201);
       });
-      $scope.$apply();
+      this.initController();
+
+      expect(this.Notification.error).toHaveBeenCalled();
     });
 
-    it('should disable the field and clear error on the field validation', () => {
-      controller._inputValue = controller._validatedValue = 'alalalalalong!';
-      controller.isConfirmed = true;
-      controller.saveDomain();
-      $scope.$apply();
-      expect(controller.isError).toEqual(false);
-      expect(controller.isDisabled).toEqual(true);
+    it('initialization should emit wizardNextDisabled and', function () {
+      this.initController();
+      expect(this.$scope.$emit).toHaveBeenCalledWith('wizardNextButtonDisable', true);
+      expect(this.controller.isRoomLicensed).toEqual(true);
     });
 
-    it('should check if checkSipDomainAvailability in success state is set to false ', () => {
-      controller.inputValue = 'amtest2';
-      controller.checkSipDomainAvailability();
-      expect(controller.isUrlAvailable).toEqual(false);
+    it('should check if checkSipDomainAvailability in success state sets isUrlAvailable to true ', function () {
+      this.initController();
+      this.controller.inputValue = 'shatest1';
+      this.controller.checkSipDomainAvailability().then(() => {
+        expect(this.controller.isUrlAvailable).toEqual(true);
+        expect(this.SparkDomainManagementService.checkDomainAvailability).toHaveBeenCalledWith(this.controller.inputValue);
+      });
+      this.$scope.$apply();
+    });
+
+    it('should disable the field and clear error on the field validation', function () {
+      this.initController();
+      this.controller._inputValue = this.controller._validatedValue = 'alalalalalong!';
+      this.controller.isConfirmed = true;
+      this.controller.saveDomain();
+      this.$scope.$apply();
+      expect(this.controller.isError).toEqual(false);
+      expect(this.controller.isDisabled).toEqual(true);
+    });
+
+    it('should check if checkSipDomainAvailability in success state is set to false ', function () {
+      this.initController();
+      this.controller.inputValue = this.defaultInput;
+      this.controller.checkSipDomainAvailability();
+      expect(this.controller.isUrlAvailable).toEqual(false);
+    });
+
+    it('should enable Next button when isSSAReserved is true', function () {
+      this.initController();
+      this.controller.isSSAReserved = true;
+      expect(this.$scope.$emit).toHaveBeenCalledWith('wizardNextButtonDisable', false);
+    });
+
+    it('should enable Next button when isSSARerved is false and depends on isConfirmed', function () {
+      this.initController();
+      this.controller.isSSAReserved = false;
+      expect(this.$scope.$emit).toHaveBeenCalledWith('wizardNextButtonDisable', !this.controller.isConfirmed);
+    });
+
+    it('addSipDomain should error gracefully', function () {
+      this.SparkDomainManagementService.addSipDomain.and.returnValue(this.$q.reject());
+      this.initController();
+
+      this.controller._inputValue = this.controller._validatedValue = 'alalalalalong!';
+      this.controller.isConfirmed = true;
+      this.controller.saveDomain();
+      this.$scope.$apply();
+      expect(this.Notification.errorWithTrackingId).toHaveBeenCalled();
     });
   });
 
-  describe('test checkSSAReservation', () => {
-    beforeEach(initController);
+  describe('FeatureToggleService returns true', function () {
+    const helpUrl: string = 'https://help.webex.com/docs/DOC-7763';
+    const blank: string = '_blank';
+    const subdomainUnavailable: string = 'subdomainUnavailable';
+    const invalidSubdomain: string = 'invalidSubdomain';
 
-    it('should enable Next button when isSSAReserved is true', () => {
-        controller.isSSAReserved = true;
-        expect($scope.$emit).toHaveBeenCalledWith('wizardNextButtonDisable', false);
+    const messages = {
+      invalidSubdomain: 'firstTimeWizard.subdomainInvalid',
+      maxlength: 'firstTimeWizard.longSubdomain',
+      required: 'firstTimeWizard.required',
+      subdomainUnavailable: 'firstTimeWizard.subdomainUnavailable',
+    };
+
+    const broadcasts = {
+      ACTIVATE_SAVE_BUTTONS: 'settings-control-activate-footer',
+      REMOVE_SAVE_BUTTONS: 'settings-control-remove-footer',
+      SAVE_BROADCAST: 'settings-control-save',
+      CANCEL_BROADCAST: 'settings-control-cancel',
+      DISMISS_BROADCAST: 'DISMISS_SIP_NOTIFICATION',
+      WIZARD_BROADCAST: 'wizard-enterprise-sip-url-event',
+      WIZARD_EMIT: 'wizard-enterprise-sip-save',
+      DISMISS_DISABLE: 'wizardNextButtonDisable',
+    };
+
+    let getForm = function(): any {
+      return {
+        sipDomainInput: {
+          $setValidity: jasmine.createSpy('$setValidity'),
+        },
+        $setPristine: jasmine.createSpy('$setPristine'),
+        $setUntouched: jasmine.createSpy('$setUntouched'),
+      };
+    };
+
+    beforeEach(function () {
+      spyOn(this.FeatureToggleService, 'atlasSubdomainUpdateGetStatus').and.returnValue(this.$q.when(true));
     });
 
-    it('should enable Next button when isSSARerved is false and depends on isConfirmed', () => {
-        controller.isSSAReserved = false;
-        expect($scope.$emit).toHaveBeenCalledWith('wizardNextButtonDisable', !controller.isConfirmed);
+    it('should load with expected defaults', function () {
+      this.initController();
+      expect(this.$translate.instant).toHaveBeenCalledTimes(4);
+      expect(this.$scope.$emit).toHaveBeenCalledWith(broadcasts.DISMISS_DISABLE, true);
+      expect(this.$scope.$emit).toHaveBeenCalledWith(broadcasts.DISMISS_DISABLE, false);
+      expect(this.$scope.$emit).toHaveBeenCalledTimes(2);
+
+      expect(this.controller.saving).toBeFalsy();
+      expect(this.controller.toggle).toBeTruthy();
+      expect(this.controller.showSaveButton).toBeFalsy();
+      expect(this.controller.inputValue).toEqual(this.defaultInput);
+      expect(this.controller.currentDisplayName).toEqual(this.defaultInput);
+      expect(this.controller.domainSuffix).toEqual(this.domainSuffix);
+      expect(this.controller.isRoomLicensed).toBeTruthy();
+      expect(this.controller.isSSAReserved).toBeTruthy();
+      expect(this.controller.sipForm).toBeFalsy();
+      expect(this.controller.verified).toBeFalsy();
+      expect(this.controller.subdomainCount).toEqual(2);
+      expect(this.controller.form).toBeUndefined();
+
+      _.forEach(this.controller.messages, (message: string, key: string) => {
+        expect(message).toEqual(messages[key]);
+      });
+
+      _.forEach(broadcasts, (broadcast: string, key: string) => {
+        expect(this.controller[key]).toEqual(broadcast);
+      });
     });
-  });
 
-  describe('test if addSipDomain errors gracefully', () => {
-    beforeEach(() => {
-      SparkDomainManagementService.addSipDomain.and.returnValue($q.reject());
-      initController();
+    it('emptyOrUnchangedInput should return true/false as expected based on inputValue and currentDisplayName', function () {
+      this.initController();
+      expect(this.controller.emptyOrUnchangedInput()).toBeTruthy();
+      this.controller.inputValue = 'test';
+      expect(this.controller.emptyOrUnchangedInput()).toBeFalsy();
+      this.controller.inputValue = '';
+      expect(this.controller.emptyOrUnchangedInput()).toBeTruthy();
     });
 
-    it('addSipDomain should error gracefully', () => {
-
-      controller._inputValue = controller._validatedValue = 'alalalalalong!';
-      controller.isConfirmed = true;
-      controller.saveDomain();
-      $scope.$apply();
-      expect(Notification.errorWithTrackingId).toHaveBeenCalled();
+    it('notVerified should change verified to false and emit DISMISS_DISABLE broadcast as true', function () {
+      this.initController();
+      this.controller.verified = true;
+      this.controller.notVerified();
+      expect(this.controller.verified).toBeFalsy();
+      expect(this.$scope.$emit.calls.mostRecent().args).toEqual([broadcasts.DISMISS_DISABLE, true]);
     });
-  });
 
-  describe('test if checkRoomLicense function sets isRoomLicensed to true', () => {
-    beforeEach(initController);
-
-    it('checkRoomLicense should set Room license to true', () => {
-      expect(controller.isRoomLicensed).toEqual(true);
+    it('openSipHelpWiki should open url in new window', function () {
+      this.initController();
+      this.controller.openSipHelpWiki();
+      expect(this.$window.open).toHaveBeenCalledTimes(1);
+      expect(this.$window.open).toHaveBeenCalledWith(helpUrl, blank);
     });
-  });
 
-  describe('test if checkRoomLicense function sets isRoomLicensed to false', () => {
-    beforeEach(() => {
-      Orgservice.getLicensesUsage.and.returnValue($q.when([{
+    it('toggleSipForm should turn the input form on/off and reset defaults', function () {
+      this.initController();
+      this.controller.inputValue = this.testInput;
+      this.controller.verified = true;
+      this.controller.form = getForm();
+
+      this.controller.toggleSipForm();
+      expect(this.controller.sipForm).toBeTruthy();
+      expect(this.controller.inputValue).toEqual(this.defaultInput);
+      expect(this.controller.verified).toBeFalsy();
+      expect(this.controller.form.sipDomainInput.$setValidity).toHaveBeenCalledTimes(2);
+      expect(this.controller.form.sipDomainInput.$setValidity.calls.allArgs()).toEqual([[ subdomainUnavailable, true ], [ invalidSubdomain, true ]]);
+      expect(this.controller.form.$setPristine).toHaveBeenCalledTimes(1);
+      expect(this.controller.form.$setUntouched).toHaveBeenCalledTimes(1);
+      expect(this.$scope.$emit.calls.mostRecent().args).toEqual([broadcasts.DISMISS_DISABLE, false]);
+      expect(this.$scope.$emit).toHaveBeenCalledTimes(3);
+      expect(this.$rootScope.$broadcast.calls.mostRecent().args).toEqual([broadcasts.REMOVE_SAVE_BUTTONS]);
+      expect(this.$rootScope.$broadcast).toHaveBeenCalledTimes(3);
+
+      this.controller.isSSAReserved = false;
+      this.controller.toggleSipForm();
+      expect(this.controller.sipForm).toBeFalsy();
+      expect(this.controller.form.sipDomainInput.$setValidity).toHaveBeenCalledTimes(4);
+      expect(this.controller.form.$setPristine).toHaveBeenCalledTimes(2);
+      expect(this.controller.form.$setUntouched).toHaveBeenCalledTimes(2);
+      expect(this.$scope.$emit.calls.mostRecent().args).toEqual([broadcasts.DISMISS_DISABLE, true]);
+      expect(this.$scope.$emit).toHaveBeenCalledTimes(4);
+    });
+
+    describe('verifyAvailabilityAndValidity should set controller.verified based on the inputValue', function () {
+      it('available response', function () {
+        spyOn(this.SparkDomainManagementService, 'checkDomainAvailability').and.returnValue(this.$q.when(this.availableResponse));
+        this.initController();
+        this.controller.form = getForm();
+        this.controller.verifyAvailabilityAndValidity();
+        this.$scope.$apply();
+
+        expect(this.controller.form.sipDomainInput.$setValidity).toHaveBeenCalledTimes(2);
+        expect(this.controller.form.sipDomainInput.$setValidity.calls.allArgs()).toEqual([[subdomainUnavailable, true], [invalidSubdomain, true]]);
+        expect(this.$rootScope.$broadcast.calls.mostRecent().args).toEqual([broadcasts.ACTIVATE_SAVE_BUTTONS]);
+        expect(this.controller.verified).toBeTruthy();
+        expect(this.Notification.errorWithTrackingId).toHaveBeenCalledTimes(0);
+      });
+
+      it('unavailable', function () {
+        spyOn(this.SparkDomainManagementService, 'checkDomainAvailability').and.returnValue(this.$q.when(this.unavailableResponse));
+        this.initController();
+        this.controller.form = getForm();
+        this.controller.verifyAvailabilityAndValidity();
+        this.$scope.$apply();
+
+        expect(this.controller.form.sipDomainInput.$setValidity).toHaveBeenCalledTimes(3);
+        expect(this.controller.form.sipDomainInput.$setValidity.calls.mostRecent().args).toEqual([subdomainUnavailable, false]);
+        expect(this.controller.verified).toBeFalsy();
+        expect(this.Notification.errorWithTrackingId).toHaveBeenCalledTimes(0);
+      });
+
+      it('inputValue equals invalidInput', function () {
+        spyOn(this.SparkDomainManagementService, 'checkDomainAvailability').and.returnValue(this.$q.reject(this.ERROR_FOUR_HUNDRED));
+        this.initController();
+        this.controller.form = getForm();
+        this.controller.verifyAvailabilityAndValidity();
+        this.$scope.$apply();
+
+        expect(this.controller.form.sipDomainInput.$setValidity).toHaveBeenCalledTimes(3);
+        expect(this.controller.form.sipDomainInput.$setValidity.calls.mostRecent().args).toEqual([invalidSubdomain, false]);
+        expect(this.controller.verified).toBeFalsy();
+        expect(this.Notification.errorWithTrackingId).toHaveBeenCalledTimes(0);
+      });
+
+      it('error response', function () {
+        spyOn(this.SparkDomainManagementService, 'checkDomainAvailability').and.returnValue(this.$q.reject(this.ERROR_FIVE_HUNDRED));
+        this.initController();
+        this.controller.form = getForm();
+        this.controller.verifyAvailabilityAndValidity();
+        this.$scope.$apply();
+
+        expect(this.controller.form.sipDomainInput.$setValidity).toHaveBeenCalledTimes(0);
+        expect(this.controller.verified).toBeFalsy();
+        expect(this.Notification.errorWithTrackingId).toHaveBeenCalledTimes(1);
+        expect(this.Notification.errorWithTrackingId.calls.mostRecent().args).toEqual([this.ERROR_FIVE_HUNDRED, this.serverError]);
+      });
+
+      it('unauthorized response', function () {
+        spyOn(this.SparkDomainManagementService, 'checkDomainAvailability').and.returnValue(this.$q.reject(this.ERROR_FOUR_ZERO_ONE));
+        this.initController();
+        this.controller.form = getForm();
+        this.controller.verifyAvailabilityAndValidity();
+        this.$scope.$apply();
+
+        expect(this.controller.form.sipDomainInput.$setValidity).toHaveBeenCalledTimes(0);
+        expect(this.controller.verified).toBeFalsy();
+        expect(this.Notification.errorWithTrackingId).toHaveBeenCalledTimes(1);
+        expect(this.Notification.errorWithTrackingId.calls.mostRecent().args).toEqual([this.ERROR_FOUR_ZERO_ONE, this.unauthorizedError]);
+      });
+    });
+
+    describe('first time wizard broadcast', function () {
+      it('should not save if inputValue is not updated', function () {
+        this.initController();
+        this.controller.form = getForm();
+        this.$rootScope.$broadcast(broadcasts.WIZARD_BROADCAST);
+        this.$scope.$apply();
+
+        expect(this.SparkDomainManagementService.addSipDomain).not.toHaveBeenCalled();
+        expect(this.controller.currentDisplayName).toEqual(this.defaultInput);
+        expect(this.controller.form.sipDomainInput.$setValidity).not.toHaveBeenCalled();
+        expect(this.controller.form.$setPristine).not.toHaveBeenCalled();
+        expect(this.controller.form.$setUntouched).not.toHaveBeenCalled();
+      });
+
+      it('should save after inputValue is updated', function () {
+        this.SparkDomainManagementService.addSipDomain.and.returnValue(this.$q.when(this.unavailableResponse));
+        this.initController();
+        this.controller.form = getForm();
+        this.controller.inputValue = this.testInput;
+        this.controller.isSSAReserved = false;
+
+        this.$rootScope.$broadcast(broadcasts.WIZARD_BROADCAST);
+        expect(this.controller.saving).toBeTruthy();
+        this.$scope.$apply();
+
+        expect(this.controller.saving).toBeFalsy();
+        expect(this.controller.verified).toBeFalsy();
+        expect(this.controller.sipForm).toBeFalsy();
+        expect(this.controller.currentDisplayName).toEqual(this.testInput);
+        expect(this.controller.form.sipDomainInput.$setValidity).toHaveBeenCalledTimes(2);
+        expect(this.controller.form.sipDomainInput.$setValidity.calls.allArgs()).toEqual([[subdomainUnavailable, true], [invalidSubdomain, true]]);
+        expect(this.controller.form.$setPristine).toHaveBeenCalledTimes(1);
+        expect(this.controller.form.$setUntouched).toHaveBeenCalledTimes(1);
+        expect(this.Notification.success).not.toHaveBeenCalled();
+      });
+
+      it('should signal an error if save returns with isDomainReserved as false', function () {
+        this.SparkDomainManagementService.addSipDomain.and.returnValue(this.$q.when(this.availableResponse));
+        this.initController();
+        this.controller.form = getForm();
+        this.controller.inputValue = this.testInput;
+        this.controller.isSSAReserved = false;
+
+        this.$rootScope.$broadcast(broadcasts.WIZARD_BROADCAST);
+        expect(this.controller.saving).toBeTruthy();
+        this.$scope.$apply();
+
+        expect(this.controller.saving).toBeFalsy();
+        expect(this.controller.verified).toBeFalsy();
+        expect(this.controller.currentDisplayName).toEqual(this.defaultInput);
+        expect(this.Notification.error.calls.mostRecent().args).toEqual([this.saveError]);
+      });
+
+      it('should signal a save error for a 502 error', function () {
+        this.SparkDomainManagementService.addSipDomain.and.returnValue(this.$q.reject(this.ERROR_FIVE_ZERO_TWO));
+        this.initController();
+        this.controller.form = getForm();
+        this.controller.inputValue = this.testInput;
+        this.controller.isSSAReserved = false;
+
+        this.$rootScope.$broadcast(broadcasts.WIZARD_BROADCAST);
+        expect(this.controller.saving).toBeTruthy();
+        this.$scope.$apply();
+
+        expect(this.controller.saving).toBeFalsy();
+        expect(this.controller.verified).toBeFalsy();
+        expect(this.controller.currentDisplayName).toEqual(this.defaultInput);
+        expect(this.controller.form.sipDomainInput.$setValidity).not.toHaveBeenCalled();
+        expect(this.controller.form.$setPristine).not.toHaveBeenCalled();
+        expect(this.controller.form.$setUntouched).not.toHaveBeenCalled();
+        expect(this.Notification.errorWithTrackingId.calls.mostRecent().args).toEqual([this.ERROR_FIVE_ZERO_TWO, this.saveError]);
+      });
+
+      it('should signal an unauthorized error for a 401 error', function () {
+        this.SparkDomainManagementService.addSipDomain.and.returnValue(this.$q.reject(this.ERROR_FOUR_ZERO_ONE));
+        this.initController();
+        this.controller.form = getForm();
+        this.controller.inputValue = this.testInput;
+        this.controller.isSSAReserved = false;
+        this.$rootScope.$broadcast(broadcasts.WIZARD_BROADCAST);
+        this.$scope.$apply();
+        expect(this.Notification.errorWithTrackingId.calls.mostRecent().args).toEqual([this.ERROR_FOUR_ZERO_ONE, this.unauthorizedError]);
+      });
+
+      it('should signal a server error for a 500 error', function () {
+        this.SparkDomainManagementService.addSipDomain.and.returnValue(this.$q.reject(this.ERROR_FIVE_HUNDRED));
+        this.initController();
+        this.controller.form = getForm();
+        this.controller.inputValue = this.testInput;
+        this.controller.isSSAReserved = false;
+        this.$rootScope.$broadcast(broadcasts.WIZARD_BROADCAST);
+        this.$scope.$apply();
+        expect(this.Notification.errorWithTrackingId.calls.mostRecent().args).toEqual([this.ERROR_FIVE_HUNDRED, this.serverError]);
+      });
+    });
+
+    describe('Function editSubdomain - ', function () {
+      beforeEach(function () {
+        this.cscModal = _.cloneDeep(this.modal);
+        this.cscModal.templateUrl = 'modules/core/settings/sipDomain/editCSCWarning.tpl.html';
+      });
+
+      it('should open a modal warning about the effects CSC changes and call toggleSipForm on close', function () {
+        spyOn(this.$modal, 'open').and.returnValue({
+          result: this.$q.when(true),
+        });
+        this.initController();
+        spyOn(this.controller, 'toggleSipForm').and.callThrough();
+
+        this.controller.editSubdomain();
+        this.$scope.$apply();
+        expect(this.$modal.open).toHaveBeenCalledWith(this.cscModal);
+        expect(this.controller.toggleSipForm).toHaveBeenCalledTimes(1);
+      });
+
+      it('should open a modal warning about the effects CSC changes and do nothing on dismiss', function () {
+        spyOn(this.$modal, 'open').and.returnValue({
+          result: this.$q.reject(false),
+        });
+        this.initController();
+        spyOn(this.controller, 'toggleSipForm').and.callThrough();
+
+        this.controller.editSubdomain();
+        this.$scope.$apply();
+        expect(this.$modal.open).toHaveBeenCalledWith(this.cscModal);
+        expect(this.controller.toggleSipForm).not.toHaveBeenCalled();
+      });
+
+      it('should only call toggleSipForm', function () {
+        this.ServiceDescriptor.isServiceEnabled.and.callFake((_type, callFunction: Function): void => {
+          callFunction(false, false);
+        });
+        spyOn(this.$modal, 'open').and.returnValue({
+          result: this.$q.reject(false),
+        });
+        this.initController();
+        spyOn(this.controller, 'toggleSipForm').and.callThrough();
+
+        this.controller.editSubdomain();
+        expect(this.$modal.open).not.toHaveBeenCalled();
+        expect(this.controller.toggleSipForm).toHaveBeenCalledTimes(1);
+      });
+    });
+
+    describe('Account Settings Save and Cancel Options', function () {
+      beforeEach(function () {
+        this.saveModal = _.cloneDeep(this.modal);
+        this.saveModal.templateUrl = 'modules/core/settings/sipDomain/updateSipDomainWarning.tpl.html';
+      });
+
+      it('should verify through a modal', function () {
+        spyOn(this.$modal, 'open').and.returnValue({
+          result: this.$q.when(true),
+        });
+        this.SparkDomainManagementService.addSipDomain.and.returnValue(this.$q.when(this.unavailableResponse));
+        this.initController();
+
+        this.controller.form = getForm();
+        this.controller.inputValue = this.testInput;
+        this.controller.showSaveButton = true;
+        this.$rootScope.$emit(broadcasts.SAVE_BROADCAST);
+        this.$scope.$apply();
+
+        expect(this.controller.currentDisplayName).toEqual(this.testInput);
+        expect(this.controller.form.sipDomainInput.$setValidity).toHaveBeenCalledTimes(2);
+        expect(this.controller.form.sipDomainInput.$setValidity.calls.allArgs()).toEqual([[subdomainUnavailable, true], [invalidSubdomain, true]]);
+        expect(this.controller.form.$setPristine).toHaveBeenCalledTimes(1);
+        expect(this.controller.form.$setUntouched).toHaveBeenCalledTimes(1);
+        expect(this.Notification.success).toHaveBeenCalledTimes(1);
+        expect(this.Notification.success).toHaveBeenCalledWith(this.successNotification);
+        expect(this.$modal.open).toHaveBeenCalledWith(this.saveModal);
+      });
+
+      it('should reactivate save\cancel buttons if modal has "no" selected', function () {
+        spyOn(this.$modal, 'open').and.returnValue({
+          result: this.$q.reject(false),
+        });
+        this.SparkDomainManagementService.addSipDomain.and.returnValue(this.$q.when(this.unavailableResponse));
+        this.initController();
+
+        this.controller.form = getForm();
+        this.controller.inputValue = this.testInput;
+        this.controller.showSaveButton = true;
+        this.$rootScope.$broadcast.calls.reset();
+        this.$rootScope.$emit(broadcasts.SAVE_BROADCAST);
+        this.$scope.$apply();
+
+        expect(this.$rootScope.$broadcast).toHaveBeenCalledTimes(1);
+        expect(this.$rootScope.$broadcast).toHaveBeenCalledWith(broadcasts.ACTIVATE_SAVE_BUTTONS);
+        expect(this.$rootScope.$broadcast.calls.mostRecent().args).toEqual([broadcasts.ACTIVATE_SAVE_BUTTONS]);
+
+        expect(this.controller.currentDisplayName).toEqual(this.defaultInput);
+        expect(this.controller.form.sipDomainInput.$setValidity).not.toHaveBeenCalled();
+        expect(this.controller.form.$setPristine).not.toHaveBeenCalled();
+        expect(this.controller.form.$setUntouched).not.toHaveBeenCalled();
+        expect(this.Notification.success).not.toHaveBeenCalled();
+        expect(this.$modal.open).toHaveBeenCalledWith(this.saveModal);
+      });
+
+      it('should toggle the form off on the cancel broadcast', function () {
+        this.initController();
+        this.controller.form = getForm();
+        this.controller.inputValue = this.testInput;
+        this.controller.sipForm = true;
+        this.$rootScope.$emit(broadcasts.CANCEL_BROADCAST);
+        expect(this.controller.sipForm).toBeFalsy();
+        expect(this.controller.inputValue).toEqual(this.defaultInput);
+        expect(this.controller.verified).toBeFalsy();
+      });
+    });
+
+    it('checkRoomLicense function should set isRoomLicensed to false based on license returned', function () {
+      this.Orgservice.getLicensesUsage.and.returnValue(this.$q.when([{
+        licenses: [{
+          offerName: 'CF',
+        }],
+      }, {
         licenses: [{
           offerName: 'CF',
         }],
       }]));
-      initController();
+      this.initController();
+
+      expect(this.controller.isRoomLicensed).toEqual(false);
     });
 
-    it('checkRoomLicense should set Room license to false', () => {
-      expect(controller.isRoomLicensed).toEqual(false);
+    it('checkRoomLicense function should set isRoomLicensed to true based on license returned [Spark Board]', function () {
+      this.Orgservice.getLicensesUsage.and.returnValue(this.$q.when([{
+        licenses: [{
+          offerName: 'CF',
+        }],
+      }, {
+        licenses: [{
+          offerName: 'SD',
+        }],
+      }]));
+      this.initController();
+
+      expect(this.controller.isRoomLicensed).toEqual(true);
+    });
+
+    it('checkRoomLicense function should set isRoomLicensed to true based on license returned [Shared Devices]', function () {
+      this.Orgservice.getLicensesUsage.and.returnValue(this.$q.when([{
+        licenses: [{
+          offerName: 'CF',
+        }],
+      }, {
+        licenses: [{
+          offerName: 'SB',
+        }],
+      }]));
+      this.initController();
+
+      expect(this.controller.isRoomLicensed).toEqual(true);
     });
   });
 });
-}

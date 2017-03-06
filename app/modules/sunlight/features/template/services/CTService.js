@@ -25,7 +25,7 @@
       getLengthValidationConstants: getLengthValidationConstants,
       getValidationMessages: getValidationMessages,
       getStatesBasedOnType: getStatesBasedOnType,
-      getOverviewPageCards: getOverviewPageCards
+      getOverviewPageCards: getOverviewPageCards,
     };
     return service;
 
@@ -34,14 +34,14 @@
         singleLineMaxCharLimit25: 25,
         singleLineMaxCharLimit50: 50,
         multiLineMaxCharLimit: 250,
-        empty: 0
+        empty: 0,
       };
     }
 
     function getLogo() {
       return BrandService.getLogoUrl(Authinfo.getOrgId()).then(function (logoUrl) {
         return $http.get(logoUrl, {
-          responseType: "arraybuffer"
+          responseType: "arraybuffer",
         });
       });
     }
@@ -87,7 +87,7 @@
       return _.map(values, function (value) {
         return {
           label: labelForTime(value),
-          value: value
+          value: value,
         };
       });
     }
@@ -97,11 +97,11 @@
       // Push 11:59 PM as end time to handle the scenario where start time is 11:30 PM.
       timeOptions.push({
         label: labelForTime('23:59'),
-        value: '23:59'
+        value: '23:59',
       });
       var index = _.findIndex(timeOptions, {
         label: labelForTime(startTime.value),
-        value: startTime.value
+        value: startTime.value,
       });
       return timeOptions.slice(index + 1, timeOptions.length);
     }
@@ -110,11 +110,11 @@
       var timeOptions = getTimeOptions();
       return {
         startTime: _.find(timeOptions, {
-          value: '08:00'
+          value: '08:00',
         }),
         endTime: _.find(timeOptions, {
-          value: '16:00'
-        })
+          value: '16:00',
+        }),
       };
     }
 
@@ -132,7 +132,7 @@
         .map(function (zone) {
           return {
             'label': labelForTimezone(zone),
-            'value': zone
+            'value': zone,
           };
         })
         .sort(function (a, b) {
@@ -143,13 +143,13 @@
 
     function getDefaultTimeZone() {
       return _.find(getTimezoneOptions(), {
-        value: 'America/New_York'
+        value: 'America/New_York',
       });
     }
 
     function getTimeZone(zone) {
       return _.find(getTimezoneOptions(), {
-        value: zone
+        value: zone,
       });
     }
 
@@ -169,31 +169,31 @@
       return [{
         day: 'S',
         label: 'Sunday',
-        isSelected: false
+        isSelected: false,
       }, {
         day: 'M',
         label: 'Monday',
-        isSelected: true
+        isSelected: true,
       }, {
         day: 'T',
         label: 'Tuesday',
-        isSelected: true
+        isSelected: true,
       }, {
         day: 'W',
         label: 'Wednesday',
-        isSelected: true
+        isSelected: true,
       }, {
         day: 'T',
         label: 'Thursday',
-        isSelected: true
+        isSelected: true,
       }, {
         day: 'F',
         label: 'Friday',
-        isSelected: true
+        isSelected: true,
       }, {
         day: 'S',
         label: 'Saturday',
-        isSelected: false
+        isSelected: false,
       }];
     }
 
@@ -210,8 +210,8 @@
           },
           templateHeader: function () {
             return header + templateName;
-          }
-        }
+          },
+        },
       });
     }
 
@@ -219,25 +219,35 @@
       return {
         required: $translate.instant('common.invalidRequired'),
         minlength: $translate.instant('common.invalidMinLength', {
-          'min': minLength
+          'min': minLength,
         }),
         maxlength: $translate.instant('common.invalidMaxLength', {
-          'max': maxLength
-        })
+          'max': maxLength,
+        }),
       };
     }
 
     function getOverviewPageCards(mediaType) {
       switch (mediaType) {
         case 'chat':
-          return ['customerInformation',
-            'agentUnavailable',
-            'offHours',
-            'feedback'
+          return [
+            { name: 'customerInformation', mediaIcons: [] },
+            { name: 'agentUnavailable', mediaIcons: [] },
+            { name: 'offHours', mediaIcons: [] },
+            { name: 'feedback', mediaIcons: [] },
           ];
         case 'callback':
-          return ['customerInformation',
-            'offHours'
+          return [
+            { name: 'customerInformation', mediaIcons: [] },
+            { name: 'offHours', mediaIcons: [] },
+          ];
+        case 'chatPlusCallback':
+          return [
+            { name: 'customerInformationChat', mediaIcons: ['icon-message'] },
+            { name: 'agentUnavailable', mediaIcons: ['icon-message'] },
+            { name: 'feedback', mediaIcons: ['icon-message'] },
+            { name: 'customerInformationCallback', mediaIcons: ['icon-phone'] },
+            { name: 'offHours', mediaIcons: ['icon-message', 'icon-phone'] },
           ];
         default:
           return [];
@@ -255,14 +265,26 @@
             'feedback',
             'profile',
             'chatStatusMessages',
-            'summary'
+            'summary',
           ];
         case 'callback':
           return ['name',
             'overview',
             'customerInformation',
             'offHours',
-            'summary'
+            'summary',
+          ];
+        case 'chatPlusCallback':
+          return ['name',
+            'overview',
+            'customerInformationChat',
+            'agentUnavailable',
+            'feedback',
+            'profile',
+            'chatStatusMessages',
+            'customerInformationCallback',
+            'offHours',
+            'summary',
           ];
         default:
           return [];

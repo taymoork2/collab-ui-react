@@ -4,10 +4,13 @@ require('./_user-manage.scss');
   'use strict';
 
   angular.module('Core')
-    .controller('UserManageModalController', UserManageModalController);
+    .controller('UserManageModalController', UserManageModalController)
+    .controller('UserManageModalPickerController', UserManageModalPickerController);
+
+  ///////////////////////////
 
   /* @ngInject */
-  function UserManageModalController($state, $stateParams, Analytics, FeatureToggleService) {
+  function UserManageModalController($state, Analytics) {
     var vm = this;
 
     vm.onInit = onInit;
@@ -18,21 +21,6 @@ require('./_user-manage.scss');
     ///////////////////////
 
     function onInit() {
-
-      vm.isDirSyncEnabled = false;
-      vm.isOverExportThreshold = !!$stateParams.isOverExportThreshold;
-
-      // Is DirSync enabled or not? Our options depend on it.
-      FeatureToggleService.supportsDirSync()
-        .then(function (dirSyncEnabled) {
-          vm.isDirSyncEnabled = dirSyncEnabled;
-          if (dirSyncEnabled) {
-            $state.go('users.manage.activedir');
-          } else {
-            $state.go('users.manage.org');
-          }
-        });
-
     }
 
     function cancelModal() {
@@ -40,4 +28,30 @@ require('./_user-manage.scss');
       $state.modal.dismiss();
     }
   }
-})();
+
+  /////////////////////////
+
+  /* @ngInject */
+  function UserManageModalPickerController($state, $q, DirSyncService) {
+    var vm = this;
+
+    vm.onInit = onInit;
+
+    vm.onInit();
+
+    //////////////////
+    function onInit() {
+      var promise = (DirSyncService.requiresRefresh() ? DirSyncService.refreshStatus() : $q.resolve());
+      promise.then(function () {
+        if (DirSyncService.isDirSyncEnabled()) {
+          $state.go('users.manage.activedir');
+        } else {
+          $state.go('users.manage.org');
+        }
+      });
+    }
+
+  }
+
+}
+)();

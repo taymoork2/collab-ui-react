@@ -4,7 +4,8 @@ describe('UserListCtrl: Ctrl', function () {
 
   function init() {
     this.initModules('Core', 'Huron', 'Sunlight');
-    this.injectDependencies('$rootScope', '$state', '$controller', '$q', '$httpBackend', 'Userservice', 'UserListService', 'Orgservice', 'Authinfo', 'Auth', 'Config', 'Notification', 'FeatureToggleService');
+    this.injectDependencies('$rootScope', '$state', '$controller', '$q', '$httpBackend', 'Userservice', 'UserListService',
+      'Orgservice', 'Authinfo', 'Auth', 'Config', 'Notification', 'FeatureToggleService');
     initFixtures.apply(this);
     initDependencySpies.apply(this);
   }
@@ -12,7 +13,7 @@ describe('UserListCtrl: Ctrl', function () {
   function initFixtures() {
     this.$rootScope.typeOfExport = {
       USER: 1,
-      CUSTOMER: 2
+      CUSTOMER: 2,
     };
 
     this.photoUsers = _.clone(getJSONFixture('core/json/users/userlist.controller.json'));
@@ -29,7 +30,7 @@ describe('UserListCtrl: Ctrl', function () {
     var _this = this;
 
     var successData = {
-      success: true
+      success: true,
     };
 
     // var failedData = {
@@ -63,7 +64,6 @@ describe('UserListCtrl: Ctrl', function () {
     this.isCiscoSpy = spyOn(this.Authinfo, 'isCisco').and.returnValue(false);
     spyOn(this.Auth, 'isOnlineOrg').and.returnValue(this.$q.resolve(false));
 
-    this.supportsDirSyncSpy = spyOn(this.FeatureToggleService, 'supportsDirSync').and.returnValue(this.$q.resolve(false));
     spyOn(this.FeatureToggleService, 'atlasEmailStatusGetStatus').and.returnValue(this.$q.resolve(false));
 
     this.$httpBackend.whenGET(/.*\/v1\/Users\/me.*/g).respond(200);
@@ -81,7 +81,7 @@ describe('UserListCtrl: Ctrl', function () {
       Userservice: this.Userservice,
       UserListService: this.UserListService,
       Authinfo: this.Authinfo,
-      Config: this.Config
+      Config: this.Config,
     });
 
     spyOn(this.controller, 'configureGrid').and.callFake(function () {
@@ -90,8 +90,8 @@ describe('UserListCtrl: Ctrl', function () {
         infiniteScroll: {
           saveScrollPercentage: jasmine.createSpy().and.returnValue(),
           resetScroll: jasmine.createSpy().and.returnValue(),
-          dataLoaded: jasmine.createSpy().and.returnValue()
-        }
+          dataLoaded: jasmine.createSpy().and.returnValue(),
+        },
       };
       return _this.$q.resolve();
     });
@@ -104,24 +104,6 @@ describe('UserListCtrl: Ctrl', function () {
   beforeEach(init);
 
   //////////////////////////////////
-
-
-  describe('initController', function () {
-
-    it('should enable isNotDirSyncOrException when the org is Cisco org', function () {
-      this.isCiscoSpy.and.returnValue(true);
-      initController.apply(this);
-      expect(this.$scope.isNotDirSyncOrException).toEqual(true);
-    });
-
-    it('should disable isNotDirSyncOrException when it is a DirSync org', function () {
-      this.isCiscoSpy.and.returnValue(false);
-      this.supportsDirSyncSpy.and.returnValue(this.$q.resolve(true));
-      initController.apply(this);
-      expect(this.$scope.isNotDirSyncOrException).toEqual(false);
-    });
-
-  });
 
   describe('getUserList', function () {
     beforeEach(function () {
@@ -238,7 +220,6 @@ describe('UserListCtrl: Ctrl', function () {
         "userName": "telstraUser",
         "licenseID": undefined,
       };
-      this.supportsDirSyncSpy.and.returnValue(this.$q.resolve(true));
       initController.apply(this);
     });
 
@@ -265,11 +246,11 @@ describe('UserListCtrl: Ctrl', function () {
 
       var sortColumns = [{
         'colDef': {
-          'id': 'displayName'
+          'id': 'displayName',
         },
         'sort': {
-          'direction': 'asc'
-        }
+          'direction': 'asc',
+        },
       }];
 
       this.$scope.sortDirection(this.$scope, sortColumns);
@@ -286,7 +267,7 @@ describe('UserListCtrl: Ctrl', function () {
       spyOn(this.$scope, 'canShowUserDelete').and.returnValue(true);
 
       this.user = {
-        userStatus: 'active'
+        userStatus: 'active',
       };
     });
 
@@ -360,7 +341,7 @@ describe('UserListCtrl: Ctrl', function () {
       spyOn(this.Userservice, 'isHuronUser').and.returnValue(false);
 
       this.user = {
-        userStatus: 'active'
+        userStatus: 'active',
       };
 
       this.$scope.isCSB = false;

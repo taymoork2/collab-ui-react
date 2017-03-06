@@ -6,7 +6,7 @@ describe('Controller: UserOverviewCtrl', function () {
 
   function init() {
     this.initModules(testModule, 'WebExApp', 'Sunlight', 'Huron');
-    this.injectDependencies('$scope', '$controller', '$q', 'UserOverviewService', 'Utils', 'FeatureToggleService', 'Config', 'Authinfo', 'Userservice', 'UrlConfig', 'Notification');
+    this.injectDependencies('$scope', '$controller', '$q', 'UserOverviewService', 'Utils', 'FeatureToggleService', 'Config', 'Authinfo', 'Userservice', 'UrlConfig', 'Notification', 'ServiceSetup');
     initData.apply(this);
     initDependencySpies.apply(this);
     initStateParams.apply(this);
@@ -18,6 +18,7 @@ describe('Controller: UserOverviewCtrl', function () {
     this.updatedUser.trainSiteNames = ['testSite'];
     this.invitations = getJSONFixture('core/json/users/invitations.json');
     this.featureToggles = getJSONFixture('core/json/users/me/featureToggles.json');
+    this.languages = getJSONFixture('huron/json/settings/languages.json');
   }
 
   function initDependencySpies() {
@@ -28,7 +29,7 @@ describe('Controller: UserOverviewCtrl', function () {
     this.getUserSpy = spyOn(this.UserOverviewService, 'getUser').and.callFake(function () {
       var getUserResponse = {
         user: _.cloneDeep(_this.updatedUser),
-        sqEntitlements: _this.Utils.getSqEntitlements(_this.updatedUser)
+        sqEntitlements: _this.Utils.getSqEntitlements(_this.updatedUser),
       };
       getUserResponse.user.hasEntitlement = function (entitlement) {
         var index = _.findIndex(this.entitlements, function (ent) {
@@ -49,6 +50,7 @@ describe('Controller: UserOverviewCtrl', function () {
 
     spyOn(this.Notification, 'success');
     spyOn(this.Authinfo, 'isSquaredTeamMember').and.returnValue(false);
+    spyOn(this.ServiceSetup, 'getAllLanguages').and.returnValue(this.$q.resolve(this.languages));
   }
 
   function initStateParams() {
@@ -57,7 +59,7 @@ describe('Controller: UserOverviewCtrl', function () {
       .then(function (response) {
         _this.$stateParams = {
           currentUser: response.user,
-          entitlements: response.sqEntitlements
+          entitlements: response.sqEntitlements,
         };
       });
     this.$scope.$apply();
@@ -70,7 +72,7 @@ describe('Controller: UserOverviewCtrl', function () {
       Config: this.Config,
       Authinfo: this.Authinfo,
       Userservice: this.Userservice,
-      FeatureToggleService: this.FeatureToggleService
+      FeatureToggleService: this.FeatureToggleService,
     });
     this.$scope.$apply();
   }
@@ -134,7 +136,7 @@ describe('Controller: UserOverviewCtrl', function () {
     it('should reload the user data from identity response and set title with givenName and FamilyName', function () {
       this.updatedUser.name = {
         givenName: "Given Name",
-        familyName: "Family Name"
+        familyName: "Family Name",
       };
       this.$scope.$broadcast('entitlementsUpdated');
       this.$scope.$digest();
@@ -143,7 +145,7 @@ describe('Controller: UserOverviewCtrl', function () {
 
     it('should reload the user data from identity response and set subTitleCard to addresses', function () {
       this.updatedUser.addresses.push({
-        "locality": "AddressLine1"
+        "locality": "AddressLine1",
       });
       this.$scope.$broadcast('USER_LIST_UPDATED');
       this.$scope.$digest();
@@ -256,7 +258,7 @@ describe('Controller: UserOverviewCtrl', function () {
         uuid: '111112',
         userStatus: 'pending',
         dirsyncEnabled: true,
-        entitlements: ["squared-call-initiation", "spark", "webex-squared"]
+        entitlements: ["squared-call-initiation", "spark", "webex-squared"],
       };
     });
 

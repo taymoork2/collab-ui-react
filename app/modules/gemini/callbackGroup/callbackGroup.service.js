@@ -13,7 +13,7 @@
       updateCallbackGroup: geminURL + 'callbackgroup/',
       downloadCountryUrl: geminURL + 'callbackgroup/countryRegionTemplate',
       callbackGroup: geminURL + 'callbackgroup/customerId/',
-      activityLogs: geminURL + 'activityLogs'
+      activityLogs: geminURL + 'activityLogs',
     };
     var service = {
       getNotes: getNotes,
@@ -99,7 +99,7 @@
           totalSites: $translate.instant('gemini.cbgs.field.totalSites'),
           status: $translate.instant('gemini.cbgs.field.status_'),
           customerAttribute: $translate.instant('gemini.cbgs.field.alias'),
-          sites: $translate.instant('gemini.cbgs.field.sites')
+          sites: $translate.instant('gemini.cbgs.field.sites'),
         };
 
         exportedLines.push(headerLine);

@@ -1,12 +1,14 @@
 import { IHuronService, IEmergencyAddress, IEmergency, IState, IEmergencyServicesData, IEmergencyServicesStateParams, IDevice } from './index';
 import { MemberService } from 'modules/huron/members';
 import { FeatureMemberService } from 'modules/huron/features/featureMember.service';
+import { HuronCompassService } from 'modules/huron/compass/compass.service';
 
 export class EmergencyServicesService {
   private emergencyDataCopy: IEmergency;
   private currentDevice: IDevice;
   private huronDeviceService: IHuronService;
   private stateOptions: IState[];
+  private locationLabel: string;
 
   /* @ngInject */
   constructor(
@@ -15,12 +17,16 @@ export class EmergencyServicesService {
     private ServiceSetup,
     private Authinfo,
     private PstnServiceAddressService,
-    private TerminusStateService,
+    private PstnSetupStatesService,
     private TerminusUserDeviceE911Service,
     private MemberService: MemberService,
     private FeatureMemberService: FeatureMemberService,
+    private HuronCompassService: HuronCompassService,
   ) {
-    this.stateOptions = this.TerminusStateService.query();
+    this.PstnSetupStatesService.getLocation(this.HuronCompassService.getCountryCode()).then((location) => {
+      this.locationLabel = location.type;
+      this.stateOptions = location.areas;
+    });
   }
 
   public getInitialData(): IEmergencyServicesData {
@@ -35,6 +41,7 @@ export class EmergencyServicesService {
     return {
       emergency: emergencyData,
       currentDevice: this.currentDevice,
+      locationLabel: this.locationLabel,
       stateOptions: this.stateOptions,
       staticNumber: this.$stateParams.staticNumber,
     };
@@ -42,10 +49,10 @@ export class EmergencyServicesService {
 
   public getCompanyECN() {
     return this.ServiceSetup.listSites().then(() => {
-        if (this.ServiceSetup.sites.length !== 0) {
-          return this.ServiceSetup.getSite(this.ServiceSetup.sites[0].uuid)
-          .then(site => _.get(site, 'emergencyCallBackNumber.pattern'));
-        }
+      if (this.ServiceSetup.sites.length !== 0) {
+        return this.ServiceSetup.getSite(this.ServiceSetup.sites[0].uuid)
+        .then(site => _.get(site, 'emergencyCallBackNumber.pattern'));
+      }
     });
   }
 
@@ -54,33 +61,33 @@ export class EmergencyServicesService {
     return this.ServiceSetup.getVoicemailPilotNumber().then(voicemail =>
       voicemailPilotNumber = voicemail.pilotNumber).then(() => {
         return this.ExternalNumberService.refreshNumbers(this.Authinfo.getOrgId(), undefined, filter).then(() => {
-              return _.chain(this.ExternalNumberService.getAssignedNumbers())
-                // remove the voicemail number if it exists
-                .reject(externalNumber => externalNumber.pattern === voicemailPilotNumber)
-                .map(externalNumber => externalNumber.pattern).value();
-            });
+          return _.chain(this.ExternalNumberService.getAssignedNumbers())
+            // remove the voicemail number if it exists
+            .reject(externalNumber => externalNumber.pattern === voicemailPilotNumber)
+            .map(externalNumber => externalNumber.pattern).value();
+        });
       }).catch(() => {
         return this.ExternalNumberService.refreshNumbers(this.Authinfo.getOrgId()).then(() => {
-              return _.chain(this.ExternalNumberService.getAssignedNumbers())
-                .map(externalNumber => externalNumber.pattern).value();
-            });
+          return _.chain(this.ExternalNumberService.getAssignedNumbers())
+            .map(externalNumber => externalNumber.pattern).value();
+        });
       });
   }
 
   public getAddress(): ng.IPromise<IEmergencyAddress> {
     return this.PstnServiceAddressService.getAddress(this.Authinfo.getOrgId()).then((address: IEmergencyAddress) => {
-        let emergencyAddress = {
-          address1: address.streetAddress,
-          address2: address.unit,
-          city: address.city,
-          state: {
-            abbreviation: <string>address.state,
-            name: _.find(this.stateOptions, (state: IState) =>
-              state.abbreviation === address.state).name,
-          },
-          zip: address.zip ? parseInt(<string>address.zip, 10) : undefined,
-        };
-        return emergencyAddress;
+      let emergencyAddress = {
+        address1: address.streetAddress,
+        address2: address.unit,
+        city: address.city,
+        state: {
+          abbreviation: <string>address.state,
+          name: _.find(this.stateOptions, (state: IState) =>
+            state.abbreviation === address.state).name,
+        },
+        zip: address.zip ? parseInt(<string>address.zip, 10) : undefined,
+      };
+      return emergencyAddress;
     });
   }
 
@@ -111,6 +118,8 @@ export class EmergencyServicesService {
   }
 
   public validateAddress(address: IEmergencyAddress): ng.IPromise<any> {
+    // TODO - Need to update this to call /customer/e911/lookup when Terminus supports it
+    // For now just call the V1 API as a workaround
     return this.PstnServiceAddressService.lookupAddress(address, true);
   }
 

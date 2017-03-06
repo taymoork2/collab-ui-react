@@ -2,7 +2,7 @@ var WebExCommon = function () {
   this.testInfo = {
     describeCount: 0,
     testType: null,
-    describeText: null
+    describeText: null,
   };
 
   //Webex BTS sites
@@ -17,7 +17,7 @@ var WebExCommon = function () {
   this.BTS1 = {
     siteUrl: 't30test-mc25.webex.com',
     testAdminUsername: 'provteam+mc25@csgtrials.webex.com',
-    testAdminPassword: 'Cisco!23'
+    testAdminPassword: 'Cisco!23',
   };
 
   this.BTS1.siteElement = element(by.id(this.BTS1.siteUrl));
@@ -36,7 +36,7 @@ var WebExCommon = function () {
   this.BTS2 = {
     siteUrl: 't30test-mc200.webex.com',
     testAdminUsername: 'provteam+mc@csgtrials.webex.com',
-    testAdminPassword: 'Cisco!23'
+    testAdminPassword: 'Cisco!23',
   };
 
   this.BTS2.siteElement = element(by.id(this.BTS2.siteUrl));
@@ -55,7 +55,7 @@ var WebExCommon = function () {
   this.BTS3 = {
     siteUrl: 't30test-ee.webex.com',
     testAdminUsername: 'provteam+ee@csgtrials.webex.com',
-    testAdminPassword: 'Cisco!23'
+    testAdminPassword: 'Cisco!23',
   };
 
   this.BTS3.siteElement = element(by.id(this.BTS3.siteUrl));
@@ -74,7 +74,7 @@ var WebExCommon = function () {
   this.BTS4 = {
     siteUrl: 't30test-mc200-cmr.webex.com', //The sitename is misleading; its actually a T31 site
     testAdminUsername: 'provteam+mc200@csgtrials.webex.com',
-    testAdminPassword: 'Cisco!23'
+    testAdminPassword: 'Cisco!23',
   };
 
   this.BTS4.siteElement = element(by.id(this.BTS4.siteUrl));
@@ -93,7 +93,7 @@ var WebExCommon = function () {
   this.BTS6 = {
     siteUrl: 't31test-ee.webex.com',
     testAdminUsername: 'T31-EE-lhsieh@mailinator.com',
-    testAdminPassword: 'Cisco!23'
+    testAdminPassword: 'Cisco!23',
   };
 
   this.BTS6.siteElement = element(by.id(this.BTS6.siteUrl));
@@ -117,7 +117,7 @@ var WebExCommon = function () {
   this.devDmzInfo = {
     siteUrl: 'sjsite04.webex.com',
     testAdminUsername: 'dev-dmz-e2e@mailinator.com',
-    testAdminPassword: 'Cisco!23'
+    testAdminPassword: 'Cisco!23',
   };
 
   this.devDmzInfo.siteElement = element(by.id(this.devDmzInfo.siteUrl));

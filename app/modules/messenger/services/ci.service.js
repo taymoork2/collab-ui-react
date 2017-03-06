@@ -102,7 +102,7 @@
               status: user.userStatus,
               created: user.meta.created,
               ci_entitlements: user.entitlements,
-              ci_roles: user.roles
+              ci_roles: user.roles,
             });
           }
         } else {
@@ -167,7 +167,7 @@
     }
 
     function isLoggedInToPartnerPortal() {
-      return Authinfo.getRoles().indexOf('PARTNER_ADMIN') > -1;
+      return Authinfo.hasRole('PARTNER_ADMIN');
     }
 
     function isOrgManager() {
@@ -175,7 +175,7 @@
         .then(function (response) {
           return _.some(response.data.managedOrgs, {
             orgId: Authinfo.getOrgId(),
-            role: Config.backend_roles.full_admin
+            role: Config.backend_roles.full_admin,
           });
         });
     }

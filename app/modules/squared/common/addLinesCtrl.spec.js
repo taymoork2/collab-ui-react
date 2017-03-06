@@ -1,7 +1,7 @@
 'use strict';
 
 describe('AddLinesCtrl: Ctrl', function () {
-  var controller, $stateParams, $state, $scope, Notification, $q, CommonLineService, CsdmHuronPlaceService, CsdmDataModelService, DialPlanService;
+  var controller, $stateParams, $state, $scope, Notification, $q, CommonLineService, CsdmDataModelService, DialPlanService;
   var $controller;
   var $httpBackend;
   var internalNumbers;
@@ -16,7 +16,7 @@ describe('AddLinesCtrl: Ctrl', function () {
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module('Squared'));
 
-  beforeEach(inject(function (_$controller_, $rootScope, _$q_, _$state_, _$stateParams_, _Notification_, _CsdmHuronPlaceService_, _CsdmDataModelService_, _CommonLineService_, _DialPlanService_, _$httpBackend_) {
+  beforeEach(inject(function (_$controller_, $rootScope, _$q_, _$state_, _$stateParams_, _Notification_, _CsdmDataModelService_, _CommonLineService_, _DialPlanService_, _$httpBackend_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
@@ -25,23 +25,22 @@ describe('AddLinesCtrl: Ctrl', function () {
     $stateParams = _$stateParams_;
     Notification = _Notification_;
     CommonLineService = _CommonLineService_;
-    CsdmHuronPlaceService = _CsdmHuronPlaceService_;
     CsdmDataModelService = _CsdmDataModelService_;
     DialPlanService = _DialPlanService_;
     var current = {
       step: {
-        name: 'fakeStep'
-      }
+        name: 'fakeStep',
+      },
     };
 
     var data = {
       data: {
-        deviceName: "Red River"
-      }
+        deviceName: "Red River",
+      },
     };
 
     $scope.entitylist = [{
-      name: "Red River"
+      name: "Red River",
     }];
 
     $scope.wizard = {};
@@ -52,11 +51,11 @@ describe('AddLinesCtrl: Ctrl', function () {
         return {
           data: {
             account: {
-              name: 'Red River'
-            }
-          }
+              name: 'Red River',
+            },
+          },
         };
-      }
+      },
     };
     $scope.wizardData = data;
 
@@ -86,21 +85,20 @@ describe('AddLinesCtrl: Ctrl', function () {
     spyOn(CommonLineService, 'loadPrimarySiteInfo').and.returnValue($q.resolve(sites));
     spyOn(CommonLineService, 'mapDidToDn').and.returnValue($q.resolve(externalNumberPoolMap));
     spyOn(DialPlanService, 'getCustomerDialPlanDetails').and.returnValue($q.resolve({
-      extensionGenerated: 'false'
+      extensionGenerated: 'false',
     }));
 
     spyOn(CommonLineService, 'assignMapUserList').and.returnValue((entitylist));
 
     entitylist[0].assignedDn = internalNumbers[0];
     spyOn(CommonLineService, 'assignDNForUserList').and.callThrough();
-    spyOn(CsdmHuronPlaceService, 'createCmiPlace');
   }));
 
   function initController() {
     controller = $controller('AddLinesCtrl', {
       $scope: $scope,
       $state: $state,
-      CommonLineService: CommonLineService
+      CommonLineService: CommonLineService,
     });
 
   }
@@ -117,7 +115,7 @@ describe('AddLinesCtrl: Ctrl', function () {
         .respond({});
       initController();
       $scope.entitylist = [{
-        name: "Red River"
+        name: "Red River",
       }];
 
       $scope.$apply();
@@ -161,12 +159,12 @@ describe('AddLinesCtrl: Ctrl', function () {
             return {
               data: {
                 account: {
-                  cisUuid: deviceCisUuid
-                }
-              }
+                  cisUuid: deviceCisUuid,
+                },
+              },
             };
           },
-          next: function () {}
+          next: function () {},
         };
         spyOn($stateParams.wizard, 'next');
         initController();
@@ -201,13 +199,13 @@ describe('AddLinesCtrl: Ctrl', function () {
               data: {
                 account: {
                   cisUuid: deviceCisUuid,
-                  entitlements: entitlements
-                }
-              }
+                  entitlements: entitlements,
+                },
+              },
             };
           },
           save: function () {
-          }
+          },
         };
         spyOn($stateParams.wizard, 'save');
         initController();
@@ -221,7 +219,7 @@ describe('AddLinesCtrl: Ctrl', function () {
       it('passes on the selected numbers to CsdmDataModeService', function () {
         spyOn(controller, 'getSelectedNumbers').and.returnValue({
           directoryNumber: directoryNumber,
-          externalNumber: externalNumber
+          externalNumber: externalNumber,
         });
         var place = { cisUuid: deviceCisUuid };
         spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.resolve({ 'http://placeurl': place }));
@@ -236,7 +234,7 @@ describe('AddLinesCtrl: Ctrl', function () {
       it('display warning when place not found', function () {
         spyOn(controller, 'getSelectedNumbers').and.returnValue({
           directoryNumber: directoryNumber,
-          externalNumber: externalNumber
+          externalNumber: externalNumber,
         });
         spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.resolve({ 'http://placeurl': {} }));
         controller.save();
@@ -248,7 +246,7 @@ describe('AddLinesCtrl: Ctrl', function () {
       it('display error when fetching places fails', function () {
         spyOn(controller, 'getSelectedNumbers').and.returnValue({
           directoryNumber: directoryNumber,
-          externalNumber: externalNumber
+          externalNumber: externalNumber,
         });
         spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.reject());
         controller.save();
@@ -260,7 +258,7 @@ describe('AddLinesCtrl: Ctrl', function () {
       it('display error when update fails', function () {
         spyOn(controller, 'getSelectedNumbers').and.returnValue({
           directoryNumber: directoryNumber,
-          externalNumber: externalNumber
+          externalNumber: externalNumber,
         });
         spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.resolve({ 'http://placeurl': { cisUuid: deviceCisUuid } }));
         spyOn(CsdmDataModelService, 'updateCloudberryPlace').and.returnValue($q.reject());

@@ -71,18 +71,16 @@ describe('Huron Auto Attendant', function () {
     it('should add a single phone number to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
       autoattendant.scrollIntoView(autoattendant.lanesWrapper);
-      utils.wait(autoattendant.addAANumbers, 12000);
-
-      utils.click(autoattendant.numberDropDownArrow);
+      utils.click(autoattendant.addAANumbers, 12000);
 
       // we are going to arbitrarily select the last one
       utils.click(autoattendant.numberDropDownOptions.last());
 
-      utils.click(autoattendant.numberDropDownArrow);
+      utils.click(autoattendant.addAANumbers, 12000);
 
       utils.click(autoattendant.numberDropDownOptions.last());
 
-      // No save and until valid Phone Menu - see AutoAttn 922 
+      // No save and until valid Phone Menu - see AutoAttn 922
 
     }, 60000);
 
@@ -93,25 +91,25 @@ describe('Huron Auto Attendant', function () {
 
       expect(autoattendant.numberByNameCloseAll.count()).toEqual(0);
 
-      // No save and until valid Phone Menu - see AutoAttn 922 
+      // No save and until valid Phone Menu - see AutoAttn 922
 
     }, 60000);
 
     it('should add a second phone number to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
-      utils.click(autoattendant.numberDropDownArrow);
+      utils.click(autoattendant.addAANumbers, 12000);
 
       // we are going to arbitrarily select the last one
       utils.click(autoattendant.numberDropDownOptions.last());
 
-      // No save and until valid Phone Menu - see AutoAttn 922 
+      // No save and until valid Phone Menu - see AutoAttn 922
 
     }, 60000);
 
     it('should add Play Message, select Language and Voice to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
       var absolutePath = utils.resolvePath(autoattendant.mediaFileToUpload);
 
-      autoattendant.scrollIntoView(autoattendant.messageOptions);
+      autoattendant.scrollIntoView(autoattendant.sayMessageBody);
 
       // media upload
 
@@ -123,15 +121,15 @@ describe('Huron Auto Attendant', function () {
 
       $(autoattendant.mediaUploadSend).sendKeys(absolutePath);
 
-      // No save and until valid Phone Menu - see AutoAttn 922 
+      // No save and until valid Phone Menu - see AutoAttn 922
 
-      // and delete
+      // and delete -- once clio local upload is working -- CORS ISSUE TODO
       //utils.click(autoattendant.deleteMedia);
       //utils.click(autoattendant.deleteConfirmationModalClose);
 
       utils.click(autoattendant.messageOptions);
 
-      // No save and until valid Phone Menu - see AutoAttn 922 
+      // No save and until valid Phone Menu - see AutoAttn 922
 
       utils.click(autoattendant.sayMessageOption);
     }, 60000);
@@ -155,7 +153,7 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.sayMessageVoice);
       utils.click(autoattendant.sayMessageVoiceOptions);
 
-      // No save and until valid Phone Menu - see AutoAttn 922 
+      // No save and until valid Phone Menu - see AutoAttn 922
 
     }, 60000);
 
@@ -308,8 +306,9 @@ describe('Huron Auto Attendant', function () {
 
       utils.click(autoattendant.saveButton);
 
-      //autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
-      //utils.expectIsDisabled(autoattendant.saveButton);
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
+
+      utils.expectIsDisabled(autoattendant.saveButton);
 
     }, 150000);
 
@@ -498,6 +497,37 @@ describe('Huron Auto Attendant', function () {
 
     }, 60000);
 
+    it('should add Decision Conditional via New Step action selection to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+      autoattendant.scrollIntoView(autoattendant.addStepLast);
+      utils.click(autoattendant.addStepLast);
+      utils.expectIsDisplayed(autoattendant.newStep);
+      utils.click(autoattendant.newStepMenu);
+
+      // 2nd menu option is Decision
+      utils.click(autoattendant.newStepDecision);
+      utils.wait(autoattendant.decisionFirst, 12000);
+      autoattendant.scrollIntoView(autoattendant.decisionFirst);
+
+      utils.click(autoattendant.decisionIf);
+
+      utils.wait(autoattendant.decisionIf, 12000);
+
+      utils.click(autoattendant.decisionIfDropDownOptions);
+
+      utils.wait(autoattendant.decisionCallerNumberTextArea, 12000);
+
+      utils.sendKeys(autoattendant.decisionCallerNumberTextArea, "Hello World");
+
+      utils.click(autoattendant.decisionThen);
+
+      utils.wait(autoattendant.decisionThen, 12000);
+
+      utils.click(autoattendant.decisionThenDropDownOptions);
+
+      utils.wait(autoattendant.decisionPhoneNumber, 12000);
+      utils.sendKeys(autoattendant.decisionPhoneNumber, "2065551234");
+
+    });
 
     it('should add Caller Input via New Step action selection to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
       autoattendant.scrollIntoView(autoattendant.addStepLast);
@@ -505,7 +535,7 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsDisplayed(autoattendant.newStep);
       utils.click(autoattendant.newStepMenu);
 
-      // 4th/last menu option is Route Call
+      // 4th/last menu option is Caller Input
       utils.click(autoattendant.newStepCallerInput);
       utils.wait(autoattendant.callerInputFirst, 12000);
       autoattendant.scrollIntoView(autoattendant.callerInputFirst);

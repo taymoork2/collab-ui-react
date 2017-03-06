@@ -7,31 +7,31 @@ describe('Service: IncidentsService', function () {
     incidentId: 'testIncidentId',
     messageId: 'testMessageId',
     getResponse: {
-      response: 'testResponse'
+      response: 'testResponse',
     },
     incidentForPost: {
       incidentId: 'testIncidentId',
-      incidentData: {}
+      incidentData: {},
     },
     postResponse: {
-      code: 'post succeed'
+      code: 'post succeed',
     },
     incidentForDelete: {
-      incidentId: 'testIncidentId'
+      incidentId: 'testIncidentId',
     },
     deleteResponse: {
-      code: 'delete succeed'
+      code: 'delete succeed',
     },
     incidentForPut: {
       incidentId: 'testIncidentId',
       incidentName: 'testIncidentName',
       impact: 'testImpact',
       messageId: 'testMessageId',
-      message: {}
+      message: {},
     },
     putResponse: {
-      code: 'put succeed'
-    }
+      code: 'put succeed',
+    },
   };
 
   beforeEach(angular.mock.module('GSS'));

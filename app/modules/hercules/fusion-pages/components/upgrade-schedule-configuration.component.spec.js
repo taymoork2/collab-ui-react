@@ -20,15 +20,15 @@ describe('Component: upgradeScheduleConfiguration', function () {
     scheduleTimeZone: 'Pacific/Tahiti',
     nextUpgradeWindow: {
       startTime: '2016-06-29T15:00:57.332Z',
-      endTime: '2016-06-29T16:00:57.332Z'
+      endTime: '2016-06-29T16:00:57.332Z',
     },
     moratoria: [{
       timeWindow: {
         startTime: '2016-06-29T15:00:35Z',
-        endTime: '2016-06-29T16:00:35Z'
+        endTime: '2016-06-29T16:00:35Z',
       },
-      id: 'deadbeef'
-    }]
+      id: 'deadbeef',
+    }],
   };
 
   describe('Controller: upgradeScheduleConfiguration', function () {
@@ -53,7 +53,7 @@ describe('Component: upgradeScheduleConfiguration', function () {
       // modify the form
       controller.formData.scheduleTime = {
         label: '01:00',
-        value: '01:00'
+        value: '01:00',
       };
       // simulate the change on the server also
       upgradeScheduleMock.scheduleTime = '01:00';
@@ -69,7 +69,7 @@ describe('Component: upgradeScheduleConfiguration', function () {
       expect(FusionClusterService.deleteMoratoria.calls.count()).toBe(0);
       controller.formData.scheduleTime = {
         label: '02:00',
-        value: '02:00'
+        value: '02:00',
       };
       upgradeScheduleMock.scheduleTime = '02:00';
       $scope.$apply();
@@ -81,7 +81,7 @@ describe('Component: upgradeScheduleConfiguration', function () {
       $scope.clusterId = '123';
       var controller = initController($scope);
       controller.postpone({
-        preventDefault: function () {}
+        preventDefault: function () {},
       });
       expect(FusionClusterService.postponeUpgradeSchedule.calls.count()).toBe(1);
       expect(FusionClusterService.get.calls.count()).toBe(1);
@@ -91,7 +91,7 @@ describe('Component: upgradeScheduleConfiguration', function () {
       var modifiedUpgradeScheduleMock = upgradeScheduleMock;
       modifiedUpgradeScheduleMock.scheduleDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
       FusionClusterService.get.and.returnValue($q.resolve({
-        upgradeSchedule: upgradeScheduleMock
+        upgradeSchedule: upgradeScheduleMock,
       }));
       $scope.clusterId = '123';
       var controller = initController($scope);
@@ -111,8 +111,8 @@ describe('Component: upgradeScheduleConfiguration', function () {
         terminal: true,
         scope: {
           // only attribute we are interested in
-          isDisabled: '='
-        }
+          isDisabled: '=',
+        },
       };
     });
   }
@@ -124,7 +124,7 @@ describe('Component: upgradeScheduleConfiguration', function () {
     $q = _$q_;
     FusionClusterService = _FusionClusterService_;
     spyOn(FusionClusterService, 'get').and.returnValue($q.resolve({
-      upgradeSchedule: upgradeScheduleMock
+      upgradeSchedule: upgradeScheduleMock,
     }));
     spyOn(FusionClusterService, 'postponeUpgradeSchedule').and.returnValue($q.resolve());
     spyOn(FusionClusterService, 'setUpgradeSchedule').and.returnValue($q.resolve());

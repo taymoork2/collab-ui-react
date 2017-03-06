@@ -34,7 +34,7 @@ describe('Controller: UserRolesCtrl', function () {
     spyOn(FeatureToggleService, 'supports').and.returnValue({
       then: function () {
         return true;
-      }
+      },
     });
 
     spyOn(Userservice, 'patchUserRoles').and.callFake(function () {
@@ -49,19 +49,19 @@ describe('Controller: UserRolesCtrl', function () {
 
   function initController() {
     controller = $controller('UserRolesCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
 
     $scope.$apply();
     $scope.rolesEdit = {
       form: {
         displayName: {
-          $setValidity: jasmine.createSpy('$setValidity')
+          $setValidity: jasmine.createSpy('$setValidity'),
         },
         partialAdmin: {
-          $setValidity: jasmine.createSpy('$setValidity')
-        }
-      }
+          $setValidity: jasmine.createSpy('$setValidity'),
+        },
+      },
     };
   }
 
@@ -211,9 +211,9 @@ describe('Controller: UserRolesCtrl', function () {
           schemas: Config.scimSchemas,
           name: _.cloneDeep($scope.formUserData.name),
           meta: {
-            attributes: []
+            attributes: [],
           },
-          displayName: _.cloneDeep($scope.formUserData.displayName)
+          displayName: _.cloneDeep($scope.formUserData.displayName),
         };
 
         spyOn($rootScope, '$broadcast');
@@ -380,36 +380,40 @@ describe('Controller: UserRolesCtrl', function () {
         var expectedRoles = [
           {
             roleName: 'Full_Admin',
-            roleState: 'ACTIVE'
+            roleState: 'ACTIVE',
           },
           {
             roleName: 'Readonly_Admin',
-            roleState: 'INACTIVE'
+            roleState: 'INACTIVE',
           },
           {
             roleName: 'Sales_Admin',
-            roleState: 'INACTIVE'
+            roleState: 'INACTIVE',
           },
           {
             roleName: 'Billing',
-            roleState: 'INACTIVE'
+            roleState: 'INACTIVE',
           },
           {
             roleName: 'Support',
-            roleState: 'INACTIVE'
+            roleState: 'INACTIVE',
           },
           {
             roleName: 'Reports',
-            roleState: 'INACTIVE'
+            roleState: 'INACTIVE',
           },
           {
             roleName: 'Help_Desk',
-            roleState: 'INACTIVE'
+            roleState: 'INACTIVE',
+          },
+          {
+            roleName: 'Partner_Management',
+            roleState: 'INACTIVE',
           },
           {
             roleName: 'Spark_SyncKms',
-            roleState: 'ACTIVE'
-          }
+            roleState: 'ACTIVE',
+          },
         ];
 
         // set user to full admin.
@@ -435,36 +439,40 @@ describe('Controller: UserRolesCtrl', function () {
         var expectedRoles = [
           {
             roleName: 'Full_Admin',
-            roleState: 'ACTIVE'
+            roleState: 'ACTIVE',
           },
           {
             roleName: 'Readonly_Admin',
-            roleState: 'INACTIVE'
+            roleState: 'INACTIVE',
           },
           {
             roleName: 'Sales_Admin',
-            roleState: 'INACTIVE'
+            roleState: 'INACTIVE',
           },
           {
             roleName: 'Billing',
-            roleState: 'INACTIVE'
+            roleState: 'INACTIVE',
           },
           {
             roleName: 'Support',
-            roleState: 'INACTIVE'
+            roleState: 'INACTIVE',
           },
           {
             roleName: 'Reports',
-            roleState: 'INACTIVE'
+            roleState: 'INACTIVE',
           },
           {
             roleName: 'Help_Desk',
-            roleState: 'INACTIVE'
+            roleState: 'INACTIVE',
+          },
+          {
+            roleName: 'Partner_Management',
+            roleState: 'INACTIVE',
           },
           {
             roleName: 'Spark_SyncKms',
-            roleState: 'INACTIVE'
-          }
+            roleState: 'INACTIVE',
+          },
         ];
 
         // set user to full admin.
@@ -485,45 +493,49 @@ describe('Controller: UserRolesCtrl', function () {
         initController();
       });
 
-      it('should have orderadmin and helpdesk role when already present', function () {
+      it('should have orderadmin, helpdesk, and partner_management role when already present', function () {
 
         var expectedRoles = [
           {
             roleName: 'Full_Admin',
-            roleState: 'ACTIVE'
+            roleState: 'ACTIVE',
           },
           {
             roleName: 'Readonly_Admin',
-            roleState: 'INACTIVE'
+            roleState: 'INACTIVE',
           },
           {
             roleName: 'Sales_Admin',
-            roleState: 'INACTIVE'
+            roleState: 'INACTIVE',
           },
           {
             roleName: 'Billing',
-            roleState: 'INACTIVE'
+            roleState: 'INACTIVE',
           },
           {
             roleName: 'Support',
-            roleState: 'INACTIVE'
+            roleState: 'INACTIVE',
           },
           {
             roleName: 'Reports',
-            roleState: 'INACTIVE'
+            roleState: 'INACTIVE',
           },
           {
             roleName: 'Help_Desk',
-            roleState: 'ACTIVE'
+            roleState: 'ACTIVE',
           },
           {
             roleName: 'Order_Admin',
-            roleState: 'ACTIVE'
+            roleState: 'ACTIVE',
+          },
+          {
+            roleName: 'Partner_Management',
+            roleState: 'ACTIVE',
           },
           {
             roleName: 'Spark_SyncKms',
-            roleState: 'INACTIVE'
-          }
+            roleState: 'INACTIVE',
+          },
         ];
 
         expect($scope.rolesObj.adminRadioValue).not.toEqual(1);

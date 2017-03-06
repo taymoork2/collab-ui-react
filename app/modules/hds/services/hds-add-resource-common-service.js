@@ -6,7 +6,7 @@
     .service('HDSAddResourceCommonService', HDSAddResourceCommonService);
 
   /* @ngInject */
-  function HDSAddResourceCommonService($log, $window, FusionClusterService, Notification, ServiceDescriptor) {
+  function HDSAddResourceCommonService($window, FusionClusterService, Notification, ServiceDescriptor) {
     var vm = this;
     vm.clusters = null;
     vm.onlineNodeList = [];
@@ -21,7 +21,6 @@
       // returns a promise directly
       return FusionClusterService.getAll()
         .then(function (clusters) {
-          $log.info('updateClusterLists clusters', clusters);
           vm.clusters = _.filter(clusters, { targetType: 'hds_app' });
           // vm.clusters already had only hds clusters, let's use the shorthand version
           // if _.map() to extract the name of each cluster
@@ -41,7 +40,6 @@
             }
           });
           // inside a promise, we can just return a value
-          $log.info('updateClusterLists clusterList', clusterList);
           return clusterList;
         });
     }
@@ -85,7 +83,7 @@
       return FusionClusterService.addPreregisteredClusterToAllowList(hostName, 3600, clusterId);
     }
 
-    function redirectPopUpAndClose(hostName, enteredCluster, clusterId, firstTimeSetup) {
+    function redirectPopUpAndClose(hostName, enteredCluster, firstTimeSetup) {
       if (firstTimeSetup) {
         ServiceDescriptor.enableService('spark-hybrid-datasecurity');
       }
@@ -95,7 +93,7 @@
     return {
       addRedirectTargetClicked: addRedirectTargetClicked,
       updateClusterLists: updateClusterLists,
-      redirectPopUpAndClose: redirectPopUpAndClose
+      redirectPopUpAndClose: redirectPopUpAndClose,
     };
 
   }

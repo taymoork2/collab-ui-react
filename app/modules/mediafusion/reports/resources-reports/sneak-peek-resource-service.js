@@ -8,7 +8,7 @@
     vm.allClusters = $translate.instant('mediaFusion.metrics.allclusters');
 
     return {
-      getClusterAvailabilitySneekPeekValues: getClusterAvailabilitySneekPeekValues
+      getClusterAvailabilitySneekPeekValues: getClusterAvailabilitySneekPeekValues,
     };
 
     function getClusterAvailabilitySneekPeekValues(response, clusterMap, clusterAvailability, clusterId) {
@@ -36,7 +36,7 @@
       }
       var availabilityTooltipOptions = {
         isShow: isShow,
-        values: valuesArray
+        values: valuesArray,
       };
       return availabilityTooltipOptions;
     }

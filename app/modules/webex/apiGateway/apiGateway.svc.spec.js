@@ -24,28 +24,28 @@ describe('WebExApiGatewayService.csvConstructHttpsObj() test', function () {
       request: 'csvStatus',
       api: 'importexportstatus',
       method: 'GET',
-      contentType: 'application/json;charset=utf-8'
+      contentType: 'application/json;charset=utf-8',
     },
 
     {
       request: 'csvExport',
       api: 'export',
       method: 'POST',
-      contentType: 'application/json;charset=utf-8'
+      contentType: 'application/json;charset=utf-8',
     },
 
     {
       request: 'csvImport',
       api: 'import',
       method: 'POST',
-      contentType: 'multipart/form-data;charset=utf-8'
+      contentType: 'multipart/form-data;charset=utf-8',
     },
 
     {
       request: 'csvFileDownload',
       api: null,
       method: 'POST',
-      contentType: 'application/json;charset=utf-8'
+      contentType: 'application/json;charset=utf-8',
     },
     ];
 
@@ -61,8 +61,8 @@ describe('WebExApiGatewayService.csvConstructHttpsObj() test', function () {
       method: 'GET',
       headers: {
         'Content-Type': 'multipart/form-data;charset=utf-8',
-        'Authorization': 'Bearer someFakeBearer'
-      }
+        'Authorization': 'Bearer someFakeBearer',
+      },
     };
 
     csvConstructHttpsObj = WebExApiGatewayService.csvConstructHttpsObj(
@@ -80,8 +80,8 @@ describe('WebExApiGatewayService.csvConstructHttpsObj() test', function () {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
-        'Authorization': 'Bearer someFakeBearer'
-      }
+        'Authorization': 'Bearer someFakeBearer',
+      },
     };
 
     csvConstructHttpsObj = WebExApiGatewayService.csvConstructHttpsObj(
@@ -99,8 +99,8 @@ describe('WebExApiGatewayService.csvConstructHttpsObj() test', function () {
       method: 'POST',
       headers: {
         'Content-Type': 'multipart/form-data;charset=utf-8',
-        'Authorization': 'Bearer someFakeBearer'
-      }
+        'Authorization': 'Bearer someFakeBearer',
+      },
     };
 
     csvConstructHttpsObj = WebExApiGatewayService.csvConstructHttpsObj(
@@ -129,20 +129,20 @@ describe('WebExApiGatewayService.csvStatus() and csvImport() tests', function ()
     method: 'GET',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
-      'Authorization': 'Bearer someFakeBearer'
-    }
+      'Authorization': 'Bearer someFakeBearer',
+    },
   };
 
   var fakeViewModel = {
     'siteUrl': 'test.site.com',
     'siteRow': {
       'csvMock': {
-        'mockImport': true
-      }
+        'mockImport': true,
+      },
     },
     'modal': {
-      'file': 'Some file content'
-    }
+      'file': 'Some file content',
+    },
   };
 
   beforeEach(angular.mock.module('WebExApp'));
@@ -166,35 +166,35 @@ describe('WebExApiGatewayService.csvStatus() and csvImport() tests', function ()
       csvStatus: 'csvStatus',
       csvExport: 'csvExport',
       csvImport: 'csvImport',
-      csvFileDownload: 'csvFileDownload'
+      csvFileDownload: 'csvFileDownload',
     };
 
     WebExApiGatewayConstsService.csvAPIs = [{
       request: 'csvStatus',
       api: 'importexportstatus',
       method: 'GET',
-      contentType: 'application/json;charset=utf-8'
+      contentType: 'application/json;charset=utf-8',
     },
 
     {
       request: 'csvExport',
       api: 'export',
       method: 'POST',
-      contentType: 'application/json;charset=utf-8'
+      contentType: 'application/json;charset=utf-8',
     },
 
     {
       request: 'csvImport',
       api: 'import',
       method: 'POST',
-      contentType: 'multipart/form-data;charset=utf-8'
+      contentType: 'multipart/form-data;charset=utf-8',
     },
 
     {
       request: 'csvFileDownload',
       api: null,
       method: 'POST',
-      contentType: 'application/json;charset=utf-8'
+      contentType: 'application/json;charset=utf-8',
     },
     ];
 
@@ -202,7 +202,7 @@ describe('WebExApiGatewayService.csvStatus() and csvImport() tests', function ()
       statusQueued: 0,
       statusPreProcess: 1,
       statusCompleted: 2,
-      statusInProcess: 3
+      statusInProcess: 3,
     };
 
     WebExApiGatewayConstsService.csvStates = {
@@ -212,7 +212,7 @@ describe('WebExApiGatewayService.csvStatus() and csvImport() tests', function ()
       exportCompletedWithErr: 'exportCompletedWithErr',
       importInProgress: 'importInProgress',
       importCompletedNoErr: 'importCompletedNoErr',
-      importCompletedWithErr: 'importCompletedWithErr'
+      importCompletedWithErr: 'importCompletedWithErr',
     };
 
     WebExApiGatewayConstsService.csvStatusTypes = [
@@ -222,7 +222,7 @@ describe('WebExApiGatewayService.csvStatus() and csvImport() tests', function ()
       'exportCompletedWithErr',
       'importInProgress',
       'importCompletedNoErr',
-      'importCompletedWithErr'
+      'importCompletedWithErr',
     ]; // csvStatusTypes[]
 
     deferredCsvApiRequest = $q.defer();
@@ -284,7 +284,7 @@ describe('WebExApiGatewayService.csvStatus() and csvImport() tests', function ()
 
     var fakeResult = {
       "jobType": 2,
-      "request": 0
+      "request": 0,
     };
 
     deferredCsvApiRequest.resolve(fakeResult);
@@ -317,7 +317,7 @@ describe('WebExApiGatewayService.csvStatus() and csvImport() tests', function ()
       "totalRecords": 5,
       "successRecords": 5,
       "failedRecords": 0,
-      "exportFileLink": "http://sjsite14.webex.com/meetingsapi/v1/files/ODAyJSVjdnNmaWxl"
+      "exportFileLink": "http://sjsite14.webex.com/meetingsapi/v1/files/ODAyJSVjdnNmaWxl",
     };
 
     deferredCsvApiRequest.resolve(fakeResult);
@@ -350,7 +350,7 @@ describe('WebExApiGatewayService.csvStatus() and csvImport() tests', function ()
       "totalRecords": 5,
       "successRecords": 4,
       "failedRecords": 1,
-      "exportFileLink": "http://sjsite14.webex.com/meetingsapi/v1/files/ODAyJSVjdnNmaWxl"
+      "exportFileLink": "http://sjsite14.webex.com/meetingsapi/v1/files/ODAyJSVjdnNmaWxl",
     };
 
     deferredCsvApiRequest.resolve(fakeResult);
@@ -408,7 +408,7 @@ describe('WebExApiGatewayService.csvStatus() and csvImport() tests', function ()
       "finished": "03/23/16 12:41 AM",
       "totalRecords": 5,
       "successRecords": 5,
-      "failedRecords": 0
+      "failedRecords": 0,
     };
 
     deferredCsvApiRequest.resolve(fakeResult);
@@ -441,7 +441,7 @@ describe('WebExApiGatewayService.csvStatus() and csvImport() tests', function ()
       "finished": "03/23/16 12:41 AM",
       "totalRecords": 5,
       "successRecords": 3,
-      "failedRecords": 2
+      "failedRecords": 2,
     };
 
     deferredCsvApiRequest.resolve(fakeResult);

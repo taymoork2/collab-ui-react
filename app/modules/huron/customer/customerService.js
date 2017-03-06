@@ -11,21 +11,22 @@
     var customerPayload = {
       'uuid': null,
       'name': null,
-      'servicePackage': 'VOICE_ONLY'
+      'servicePackage': 'VOICE_ONLY',
     };
 
     var service = {
       create: createCustomer,
       get: getCustomer,
-      put: putCustomer
+      put: putCustomer,
     };
 
     return service;
 
-    function createCustomer(uuid, name) {
+    function createCustomer(uuid, name, country) {
       var customer = angular.copy(customerPayload);
       customer.uuid = uuid;
       customer.name = name;
+      customer.countryCode = _.get(country, 'id');
 
       return CustomerCommonService.save({}, customer).$promise
         .catch(function (response) {
@@ -70,18 +71,18 @@
       if (carrierName) {
         var payload = {
           carrier: {
-            name: carrierName
-          }
+            name: carrierName,
+          },
         };
         return CustomerVoiceCmiService.update({
-          customerId: uuid
+          customerId: uuid,
         }, payload).$promise;
       }
     }
 
     function getCustomer(uuid) {
       return CustomerCommonService.get({
-        customerId: uuid || Authinfo.getOrgId()
+        customerId: uuid || Authinfo.getOrgId(),
       }).$promise;
     }
 
@@ -92,7 +93,7 @@
       customer.voicemail = undefined;
 
       return CustomerCommonService.update({
-        customerId: uuid || Authinfo.getOrgId()
+        customerId: uuid || Authinfo.getOrgId(),
       }, customer).$promise;
     }
   }

@@ -33,6 +33,24 @@
       }
     }
 
+    .private-trunk {
+      .description {
+        flex: none!important;
+      }
+      .card-button {
+        text-align: left;
+        div:nth-child(1) {
+          margin-left: -1.5rem;
+          margin-top: -1rem;
+        }
+        div:nth-child(2) {
+          position: absolute;
+          bottom: 1.5rem;
+          width: calc(100% - 3rem);
+        }
+       }
+     }
+
     .cs-card-layout {
       padding-bottom: 2rem;
       z-index: 1;
@@ -146,10 +164,9 @@
             span {
               color: $gray-base;
             }
-          }
         }
       }
-
+    }
       .cs-card.header-bar.cta-bar header::after {
         border-top-color: $color-cta-base !important;
       }

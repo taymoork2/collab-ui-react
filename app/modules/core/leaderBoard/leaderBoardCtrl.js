@@ -27,7 +27,7 @@ require('./_leaderBoard.scss');
       'communication',
       'shared_devices',
       'storage',
-      'sites'
+      'sites',
     ];
 
     vm.isCustomer = !Authinfo.isPartner();
@@ -91,7 +91,7 @@ require('./_leaderBoard.scss');
               }
             } else {
               subscription['cf'] = {
-                'services': []
+                'services': [],
               };
               subscription['cf']['services'].push(license);
             }
@@ -142,9 +142,9 @@ require('./_leaderBoard.scss');
       controller: 'leaderBoardCtrl',
       controllerAs: 'lBoardCtrl',
       scope: {
-        bucketName: '='
+        bucketName: '=',
       },
-      templateUrl: 'modules/core/leaderBoard/leaderBoard.tpl.html'
+      templateUrl: 'modules/core/leaderBoard/leaderBoard.tpl.html',
     };
   }
 })();

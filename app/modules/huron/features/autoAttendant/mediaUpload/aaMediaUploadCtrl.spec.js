@@ -19,7 +19,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
   var deferred;
 
   var ui = {
-    openHours: {}
+    openHours: {},
   };
   var uiMenu = {};
   var menuEntry = {};
@@ -34,6 +34,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
   var fileNameValid2 = "ILTQq5.wav";
   var fileSize = 41236;
   var fileSize2 = 43451;
+  var fileSizeMax = 5 * 1024 * 1024;
   var fileSizeInvalid = (5 * 1024 * 1024) + 1;
   var fileModified = 1470671405088;
   var fileModified2 = 1470671405088;
@@ -43,17 +44,17 @@ describe('Controller: AAMediaUploadCtrl', function () {
   var validFile = {
     lastModified: fileModified,
     name: fileNameValid,
-    size: fileSize
+    size: fileSize,
   };
   var validFile2 = {
     lastModified: fileModified2,
     name: fileNameValid2,
-    size: fileSize2
+    size: fileSize2,
   };
   var invalidFileByName = {
     lastModified: fileModified,
     name: fileNameInvalid,
-    size: fileSize
+    size: fileSize,
   };
   var invalidFileBySize = {
     lastModified: fileModified,
@@ -104,10 +105,12 @@ describe('Controller: AAMediaUploadCtrl', function () {
     $scope.change = function () {
       return true;
     };
+    $scope.mediaState = {};
+    $scope.mediaState.uploadInProgress = false;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(ui);
     spyOn(ModalService, 'open').and.returnValue({
-      result: modal.promise
+      result: modal.promise,
     });
     spyOn(Upload, 'mediaDuration').and.returnValue(deferred.promise);
     spyOn(Analytics, 'trackEvent').and.returnValue($q.when[{
@@ -121,6 +124,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
 
     $scope.schedule = schedule;
     $scope.index = index;
+    $scope.aaFileSize = fileSizeMax;
 
     uiMenu = AutoAttendantCeMenuModelService.newCeMenu();
     ui[schedule] = uiMenu;
@@ -659,7 +663,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
           deferred.resolve(1);
           $scope.$digest();
           expect(AAMediaUploadService.upload).not.toHaveBeenCalled();
-          expect(AANotificationService.error).toHaveBeenCalledWith('autoAttendant.fileUploadSizeIncorrect');
+          expect(AANotificationService.error).toHaveBeenCalledWith('autoAttendant.fileUploadSizeIncorrect', { fileSize: fileSizeMax / 1024 / 1024 });
           expect(Analytics.trackEvent).not.toHaveBeenCalled();
         });
 
@@ -738,7 +742,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
       $scope.isMenuHeader = '';
 
       c = controller('AAMediaUploadCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       expect(c.isSquishable()).toBeFalsy();
@@ -753,7 +757,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
       $scope.isMenuHeader = '';
 
       c = controller('AAMediaUploadCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       expect(c.isSquishable()).toBeFalsy();
@@ -770,7 +774,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
       $scope.isMenuHeader = '';
 
       c = controller('AAMediaUploadCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       expect(c.isSquishable()).toBeFalsy();
@@ -788,7 +792,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
       $scope.isMenuHeader = '';
 
       c = controller('AAMediaUploadCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       expect(c.isSquishable()).toBeFalsy();
@@ -819,7 +823,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
       $scope.isMenuHeader = 'false';
 
       c = controller('AAMediaUploadCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       expect(c.isSquishable()).toBeTruthy();

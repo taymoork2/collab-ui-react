@@ -45,8 +45,10 @@ export class CsvDownloadService {
     private $window: IWindowService,
     private $http: ng.IHttpService,
     private $q: IQServiceNewer,
+    private $rootScope: ng.IRootScopeService,
     private $timeout: ng.ITimeoutService,
     private Authinfo,
+    private Config,
     private UrlConfig,
     private Utils,
     private UserListService,
@@ -61,7 +63,9 @@ export class CsvDownloadService {
   /* Begin process of exporting the requested file */
   public getCsv(csvType: string, tooManyUsers: boolean, fileName: string, newUserExportToggle: boolean = false): ng.IPromise<any> {
     this.isTooManyUsers = !!tooManyUsers;
-    if (csvType !== CsvDownloadTypes.TYPE_TEMPLATE && tooManyUsers) {
+    // todo - simplify this once we get rid of newUserExportToggle
+    if (!newUserExportToggle && !this.Authinfo.isCisco() && csvType !== CsvDownloadTypes.TYPE_TEMPLATE && tooManyUsers) {
+      // old-style bulk export for large datasets that aren't Cisco and not using new export system
       this.canceler = this.UserListService.exportCSV()
         .then((csvData) => {
           let csvString = ($ as any).csv.fromObjects(csvData, { headers: false });
@@ -177,6 +181,8 @@ export class CsvDownloadService {
 
     // continue get
     this.canceler = this.$q.defer();  // used to cancel the request
+    // this event is picked up by idleTimeoutService to keep the user logged in
+    this.$rootScope.$emit(this.Config.idleTabKeepAliveEvent);
     return this.$http.get(url, { timeout: this.canceler.promise })
       .then((response) => {
         this.lastProgressMessage = _.get(response, 'data.message', '');

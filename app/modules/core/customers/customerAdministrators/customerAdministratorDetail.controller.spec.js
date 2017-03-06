@@ -36,7 +36,7 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
     modalDefer = $q.defer();
     testUsers = [{
       fullName: 'Frank Sinatra',
-      uuid: 'd3434d78-26452-445a2-845d8-4c1816565b3f0a'
+      uuid: 'd3434d78-26452-445a2-845d8-4c1816565b3f0a',
     }];
     spyOn(CustomerAdministratorService, 'removeCustomerAdmin').and.returnValue($q.resolve({}));
     spyOn(CustomerAdministratorService, 'getPartnerUsers').and.returnValue($q.reject({
@@ -44,32 +44,32 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
         Errors: [{
           code: '403',
           description: 'Organization has too many users.',
-          errorCode: '200046'
-        }]
+          errorCode: '200046',
+        }],
       },
-      status: 403
+      status: 403,
     }));
     spyOn(CustomerAdministratorService, 'getCustomerAdmins').and.returnValue($q.resolve({
       data: {
         Resources: [{
           name: {
             givenName: 'Jane',
-            familyName: 'Doe'
+            familyName: 'Doe',
           },
           id: '1',
-          avatarSyncEnabled: false
+          avatarSyncEnabled: false,
         }, {
           name: {
             givenName: 'John',
-            familyName: 'Doe'
+            familyName: 'Doe',
           },
           id: '2',
-          avatarSyncEnabled: true
-        }]
-      }
+          avatarSyncEnabled: true,
+        }],
+      },
     }));
     spyOn(ModalService, 'open').and.returnValue({
-      result: modalDefer.promise
+      result: modalDefer.promise,
     });
     spyOn(Analytics, 'trackEvent').and.returnValue($q.resolve({}));
     spyOn(Notification, 'error');
@@ -85,7 +85,7 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
   function initController() {
     controller = $controller('CustomerAdministratorDetailCtrl', {
       $scope: $scope,
-      $stateParams: $stateParams
+      $stateParams: $stateParams,
     });
     $scope.$apply();
   }
@@ -148,16 +148,16 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
         emails: [{
           primary: true,
           type: 'work',
-          value: 'frank.sinatra+sinatrahelpdesk@gmail.com'
+          value: 'frank.sinatra+sinatrahelpdesk@gmail.com',
         }],
         name: {
           givenName: 'Frank',
-          familyName: 'Sinatra'
+          familyName: 'Sinatra',
         },
         roles: ['sinatras_bank_admin'],
         displayName: 'Frank Sinatra',
         id: 'd3434d78-26452-445a2-845d8-4c1816565b3f0a',
-        avatarSyncEnabled: false
+        avatarSyncEnabled: false,
       }));
       initController();
     });
@@ -189,15 +189,15 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
         emails: [{
           primary: true,
           type: 'work',
-          value: 'frank.sinatra+sinatrahelpdesk@gmail.com'
+          value: 'frank.sinatra+sinatrahelpdesk@gmail.com',
         }],
         name: {
           givenName: 'Frank',
-          familyName: 'Sinatra'
+          familyName: 'Sinatra',
         },
         displayName: 'Frank Sinatra',
         id: 'd3434d78-26452-445a2-845d8-4c1816565b3f0a',
-        avatarSyncEnabled: false
+        avatarSyncEnabled: false,
       }));
       initController();
     });
@@ -214,16 +214,16 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
         emails: [{
           primary: true,
           type: 'work',
-          value: 'frank.sinatra+sinatrahelpdesk@gmail.com'
+          value: 'frank.sinatra+sinatrahelpdesk@gmail.com',
         }],
         name: {
           givenName: 'Frank',
-          familyName: 'Sinatra'
+          familyName: 'Sinatra',
         },
         roles: ['atlas-portal.partner.salesadmin', 'id_full_admin'],
         displayName: 'Frank Sinatra',
         id: 'd3434d78-26452-445a2-845d8-4c1816565b3f0a',
-        avatarSyncEnabled: false
+        avatarSyncEnabled: false,
       }));
       initController();
     });

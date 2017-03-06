@@ -31,7 +31,7 @@
       getHuntMembers: getHuntMembers,
       isMemberDirty: isMemberDirty,
       setAsPristine: setAsPristine,
-      rearrangeResponsesInSequence: rearrangeResponsesInSequence // elevated for unit testing
+      rearrangeResponsesInSequence: rearrangeResponsesInSequence, // elevated for unit testing
     };
 
     ////////////////
@@ -179,7 +179,7 @@
       return fetchMembers(nameHint, onlyMembers, {
         sourceKey: 'uuid',
         responseKey: 'uuid',
-        dataToStrip: selectedHuntMembers
+        dataToStrip: selectedHuntMembers,
       });
     }
 
@@ -219,7 +219,9 @@
         return;
       }
 
-      if (!user.firstName && !user.lastName) {
+      if (user.displayName) {
+        return user.displayName;
+      } else if (!user.firstName && !user.lastName) {
         return user.userName;
       } else if (user.firstName && user.lastName) {
         return user.firstName + ' ' + user.lastName;
@@ -227,8 +229,6 @@
         return user.firstName;
       } else if (user.lastName) {
         return user.lastName;
-      } else {
-        return;
       }
     }
   }

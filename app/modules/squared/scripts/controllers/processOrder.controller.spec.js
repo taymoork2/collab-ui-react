@@ -10,7 +10,7 @@ describe('Controller: ProcessorderCtrl', function () {
   function dependencies($rootScope, _$controller_, _$q_, _Auth_, _ModalService_, _Orgservice_) {
     $controller = _$controller_;
     $location = {
-      search: function () {}
+      search: function () {},
     };
     $q = _$q_;
     $scope = $rootScope.$new();
@@ -21,7 +21,8 @@ describe('Controller: ProcessorderCtrl', function () {
 
   function initSpies() {
     spyOn($location, 'search').and.returnValue({
-      enc: 'fake-encrypted-payload'
+      enc: 'fake-encrypted-payload',
+      call: 'false',
     });
     spyOn(Orgservice, 'createOrg');
     spyOn(Auth, 'logoutAndRedirectTo');
@@ -38,7 +39,7 @@ describe('Controller: ProcessorderCtrl', function () {
     controller = $controller('ProcessorderCtrl', {
       $scope: $scope,
       $location: $location,
-      Orgservice: Orgservice
+      Orgservice: Orgservice,
     });
   }
 
@@ -54,7 +55,7 @@ describe('Controller: ProcessorderCtrl', function () {
       });
 
       it('should call "Orgservice.createOrg()" with "enc" parameter from the browser\'s location', function () {
-        expect(Orgservice.createOrg).toHaveBeenCalledWith('fake-encrypted-payload');
+        expect(Orgservice.createOrg).toHaveBeenCalledWith('fake-encrypted-payload', undefined);
       });
     });
 
@@ -62,7 +63,7 @@ describe('Controller: ProcessorderCtrl', function () {
       describe('when "Orgservice.createOrg()" resolves:', function () {
         beforeEach(function () {
           Orgservice.createOrg.and.returnValue($q.resolve({
-            redirectUrl: 'fake-redirect-url'
+            redirectUrl: 'fake-redirect-url',
           }));
         });
         beforeEach(initController);
@@ -86,7 +87,7 @@ describe('Controller: ProcessorderCtrl', function () {
           expect(ModalService.open).toHaveBeenCalledWith({
             title: 'processOrderPage.info',
             message: 'processOrderPage.errOrgCreation',
-            dismiss: false,
+            hideDismiss: true,
           });
         });
       });

@@ -7,6 +7,7 @@
   /* @ngInject */
   function AAMediaUploadCtrl($scope, $translate, Upload, ModalService, AANotificationService, AACommonService, AAMediaUploadService, AAUiModelService, AutoAttendantCeMenuModelService, Analytics, CryptoJS, Authinfo, AAMetricNameService) {
     var vm = this;
+    var conditional = 'conditional';
 
     vm.uploadFile = '';
     vm.uploadDate = '';
@@ -41,7 +42,7 @@
 
     var properties = {
       NAME: ['play', 'say', 'runActionsOnInput', 'routeToQueue'],
-      HEADER_TYPE: 'MENU_OPTION_ANNOUNCEMENT'
+      HEADER_TYPE: 'MENU_OPTION_ANNOUNCEMENT',
     };
 
     var messageType = {
@@ -62,25 +63,30 @@
     var savedActionEntry = undefined;
     var uniqueCtrlIdentifier = 'mediaUploadCtrl' + AACommonService.getUniqueId();
     var mediaResources = AAMediaUploadService.getResources(uniqueCtrlIdentifier);
-    var MAX_FILE_SIZE_IN_B = 5 * 1024 * 1024;
 
     //////////////////////////////////////////////////////
 
     function upload(file) {
       if (file) {
         if (AAMediaUploadService.validateFile(file.name)) {
-          if (file.size <= MAX_FILE_SIZE_IN_B) {
-            if (isOverwrite()) {
-              confirmOverwrite(file);
-            } else {
-              continueUpload(file);
-            }
+          if (file.size <= $scope.aaFileSize) {
+            standardUpload(file);
           } else {
-            AANotificationService.error('autoAttendant.fileUploadSizeIncorrect');
+            AANotificationService.error('autoAttendant.fileUploadSizeIncorrect', {
+              fileSize: $scope.aaFileSize / 1024 / 1024, // convert bytes to MB sent
+            });
           }
         } else {
           AANotificationService.error('fileUpload.errorFileType');
         }
+      }
+    }
+
+    function standardUpload(file) {
+      if (isOverwrite()) {
+        confirmOverwrite(file);
+      } else {
+        continueUpload(file);
       }
     }
 
@@ -110,6 +116,7 @@
         modalCanceled = false;
         uploadServProm = AAMediaUploadService.upload(file);
         if (uploadServProm) {
+          $scope.mediaState.uploadInProgress = true;
           uploadServProm.then(uploadSuccess.bind(null, metrics), uploadError, uploadProgress).finally(cleanUp);
         } else {
           uploadError();
@@ -173,6 +180,7 @@
 
     //global media upload for save
     function cleanUp() {
+      $scope.mediaState.uploadInProgress = false;
       uploadServProm = undefined;
       AACommonService.setIsValid(uniqueCtrlIdentifier, true);
       AACommonService.setMediaUploadStatus(true);
@@ -198,7 +206,8 @@
             message: $translate.instant('autoAttendant.cancelUpload'),
             close: $translate.instant('common.cancel'),
             dismiss: $translate.instant('common.no'),
-            type: 'negative'
+            btnType: 'negative',
+            type: 'dialog',
           });
           break;
         case types.delete:
@@ -207,7 +216,8 @@
             message: $translate.instant('autoAttendant.deleteUpload'),
             close: $translate.instant('common.delete'),
             dismiss: $translate.instant('common.cancel'),
-            type: 'negative'
+            btnType: 'negative',
+            type: 'dialog',
           });
           break;
         case types.overwrite:
@@ -216,7 +226,8 @@
             message: $translate.instant('autoAttendant.overwriteUpload'),
             close: $translate.instant('common.yes'),
             dismiss: $translate.instant('common.no'),
-            type: 'primary'
+            btnType: 'primary',
+            type: 'dialog',
           });
           break;
       }
@@ -227,16 +238,21 @@
     //the dialog modal user selected action option
     //else the dismiss is called and no action taken
     function modalAction() {
-      rollBack();
       modalCanceled = true;
+      rollBack();
     }
 
     function modalDelete() {
       if (mediaResources.uploads.length > 1) {
-        vm.actionEntry = _.cloneDeep(savedActionEntry);
+        vm.actionEntry.description = savedActionEntry.description;
+        vm.actionEntry.value = savedActionEntry.value;
+        vm.actionEntry.deleteUrl = savedActionEntry.deleteUrl;
+        vm.actionEntry.voice = savedActionEntry.voice;
+
         //ok to delete at this point all the unsaved uploads
         AAMediaUploadService.clearResourcesExcept(uniqueCtrlIdentifier, 0);
         setUpEntry(vm.actionEntry);
+
       } else {
         //this case only occurs with a single saved action
         //in the queue for deletion, so we can't delete it until save occurs
@@ -258,6 +274,12 @@
       if (uploadServProm) {
         uploadServProm.abort();
         uploadServProm = undefined;
+      } else {
+        //only delete the existing in the case of the media completing
+        //upload while the cancel modal is on the screen and then cancels
+        if (modalCanceled) {
+          AAMediaUploadService.httpDeleteRetry(vm.actionEntry.deleteUrl, 0);
+        }
       }
       if (angular.isDefined(vm.actionCopy)) {
         revert(vm.actionEntry);
@@ -374,7 +396,12 @@
         var ui = AAUiModelService.getUiModel();
         var uiMenu = ui[$scope.schedule];
         vm.menuEntry = uiMenu.entries[$scope.index];
-        queueAction = vm.menuEntry.actions[0];
+        queueAction = _.get(vm.menuEntry, 'actions[0]');
+
+        if (_.get(queueAction, 'name') === conditional) {
+          queueAction = queueAction.then;
+        }
+
         sourceMenu = queueAction.queueSettings[$scope.type];
         vm.actionEntry = getAction(sourceMenu);
       }
@@ -411,7 +438,6 @@
             break;
           }
       }
-      return;
     }
 
     function gatherMediaSource() {
@@ -452,10 +478,7 @@
         } catch (exception) {
           //if somehow a bad format came through
           //catch and keep disallowed
-          action.value = '';
-          action.description = '';
-          action.deleteUrl = '';
-          action.voice = '';
+          reset(action);
         }
       } else {
         reset(action);
@@ -466,8 +489,10 @@
       gatherMediaSource();
       //set up the view according to the play
       setUpEntry(vm.actionEntry);
+
       //set up the last saved according to the play
       savedActionEntry = _.cloneDeep(vm.actionEntry);
+
       //set up the initial mediaUploads
       mediaResources.uploads[0] = _.cloneDeep(savedActionEntry);
       //if previously saved a real value, want to esure not deleted

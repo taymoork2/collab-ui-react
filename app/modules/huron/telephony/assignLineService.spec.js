@@ -8,7 +8,7 @@ describe('Service: HuronAssignedLine', function () {
   beforeEach(angular.mock.module('Huron'));
 
   var authInfo = {
-    getOrgId: sinon.stub().returns('1')
+    getOrgId: sinon.stub().returns('1'),
   };
 
   beforeEach(angular.mock.module(function ($provide) {
@@ -26,7 +26,7 @@ describe('Service: HuronAssignedLine', function () {
     $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/directorynumbers/copy').respond(directoryNumbersCopy);
     $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/internalnumberpools?directorynumber=').respond(internalNumbers);
     $httpBackend.whenPOST(HuronConfig.getCmiUrl() + '/voice/customers/1/directorynumbers/copy/b75952c0-2b37-4b33-a548-2641d7c233a7').respond(201, {}, {
-      'location': '123456'
+      'location': '123456',
     });
   }));
 
@@ -40,7 +40,7 @@ describe('Service: HuronAssignedLine', function () {
       HuronAssignedLine.assignDirectoryNumber('111-222-333').then(function (response) {
         expect(internalNumbers).toContain({
           pattern: response.pattern,
-          uuid: response.uuid
+          uuid: response.uuid,
         });
       });
       $httpBackend.flush();

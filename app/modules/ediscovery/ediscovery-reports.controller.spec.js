@@ -21,21 +21,21 @@ describe('Controller: EdiscoveryReportsController', function () {
       reports: {
         "displayName": "test",
         "url": "whatever",
-        "id": "12345678"
+        "id": "12345678",
       },
       paging: {
         count: 20,
         limit: 10,
         next: "n.a",
-        offset: 0
-      }
+        offset: 0,
+      },
     });
     EdiscoveryService.getReports.withArgs(sinon.match.any, sinon.match.any).returns(promise);
 
     controller = $controller('EdiscoveryReportsController', {
       $translate: $translate,
       $scope: $scope,
-      EdiscoveryService: EdiscoveryService
+      EdiscoveryService: EdiscoveryService,
     });
 
   }));

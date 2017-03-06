@@ -6,14 +6,18 @@
     .module('GSS')
     .controller('GssIframeCtrl', GssIframeCtrl);
 
-  function GssIframeCtrl($modal, $scope, $state, $translate, GSSService) {
+  function GssIframeCtrl($modal, $scope, $state, $translate, GSSService, Notification) {
     var vm = this;
     var addServiceOptionValue = 'addService';
 
     vm.addService = addService;
     vm.onServiceSelectionChanged = onServiceSelectionChanged;
+    vm.isLoading = false;
+    vm.isCompareVersionLoading = true;
+    vm.syncUp = syncUp;
+    vm.init = init;
 
-    init();
+    syncCheck();
 
     function addService() {
       $modal.open({
@@ -21,7 +25,7 @@
         controller: 'AddServiceCtrl',
         controllerAs: 'addServiceCtrl',
         templateUrl: 'modules/gss/services/addService/addService.tpl.html',
-        modalClass: 'status-add-service'
+        modalClass: 'status-add-service',
       }).result.then(function () {
         GSSService.getServices()
           .then(function (services) {
@@ -41,19 +45,19 @@
       var serviceOptions = _.map(services, function (service) {
         return {
           label: service.serviceName,
-          value: service.serviceId
+          value: service.serviceId,
         };
       });
 
       return [].concat(serviceOptions, {
         label: $translate.instant('gss.addStatusPage'),
-        value: addServiceOptionValue
+        value: addServiceOptionValue,
       });
     }
 
     function findServiceOptionWithId(serviceId) {
       return _.find(vm.options, {
-        value: serviceId
+        value: serviceId,
       });
     }
 
@@ -70,21 +74,46 @@
       }
     }
 
+    function syncCheck() {
+      GSSService.syncCheck().then(function (syncResult) {
+        vm.isCompareVersionLoading = false;
+        vm.isEqualVersion = syncResult;
+        if (vm.isEqualVersion) {
+          init();
+        }
+      });
+    }
+
+    function syncUp() {
+      vm.isLoading = true;
+      GSSService.syncUp().then(function () {
+        vm.isEqualVersion = true;
+        Notification.success('gss.syncSucceed');
+        init();
+      })
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'gss.syncError');
+        })
+        .finally(function () {
+          vm.isLoading = false;
+        });
+    }
+
     function init() {
       vm.pageTitle = $translate.instant('gss.pageTitle');
 
       vm.headerTabs = [{
         title: $translate.instant('gss.dashboard'),
-        state: 'gss.dashboard'
+        state: 'gss.dashboard',
       }, {
         title: $translate.instant('gss.services'),
-        state: 'gss.services'
+        state: 'gss.services',
       }, {
         title: $translate.instant('gss.components'),
-        state: 'gss.components'
+        state: 'gss.components',
       }, {
         title: $translate.instant('gss.incidents'),
-        state: 'gss.incidents'
+        state: 'gss.incidents',
       }];
 
       vm.selected = '';

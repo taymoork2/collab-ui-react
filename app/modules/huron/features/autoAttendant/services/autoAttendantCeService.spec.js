@@ -4,7 +4,7 @@ describe('Service: AutoAttendantCeService', function () {
   var AutoAttendantCeService, $httpBackend, HuronConfig, url, callExperienceURL;
   // require('jasmine-collection-matchers');
   var Authinfo = {
-    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
   };
 
   var callExperiences = getJSONFixture('huron/json/autoAttendant/callExperiences.json');

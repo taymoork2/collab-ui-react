@@ -28,7 +28,7 @@
     }
 
     function isGroupSelected() {
-      return _.isNumber(vm.selectedGroup.value);
+      return !_.isEmpty(vm.selectedGroup.value) && vm.selectedGroup.value !== creatingGroupOptionValue;
     }
 
     function hasComponentName() {
@@ -75,11 +75,11 @@
         .then(function () {
           Notification.success('gss.componentsPage.updateComponentSucceed', {
             componentName: vm.componentName,
-            componentGroupName: vm.groupName
+            componentGroupName: vm.groupName,
           });
         }).catch(function (error) {
           Notification.errorWithTrackingId(error, 'gss.componentsPage.updateComponentFailed', {
-            componentName: vm.componentName
+            componentName: vm.componentName,
           });
         }).finally(function () {
           $modalInstance.close();
@@ -104,7 +104,7 @@
       vm.selectPlaceholder = $translate.instant('gss.componentsPage.selectPlaceholder');
       vm.groupOptions = [{
         value: creatingGroupOptionValue,
-        label: $translate.instant('gss.componentsPage.createNewComponentGroup')
+        label: $translate.instant('gss.componentsPage.createNewComponentGroup'),
       }];
       vm.isUpdating = false;
 

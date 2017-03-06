@@ -21,6 +21,7 @@ class DomainManagementService {
   private _invokeUnverifyDomainUrl;
   private _invokeVerifyDomainUrl;
   private _claimDomainUrl;
+  private _sunlightConfigUrl;
 
   /* @ngInject */
   constructor(
@@ -51,6 +52,7 @@ class DomainManagementService {
     //Claim: http://wikicentral.cisco.com/display/IDENTITY/Domain+management+API+-+Add+Domain
     //DELETE https://<server name>/organization/<orgId>/v1/Domains/<domainValue>
     this._claimDomainUrl = this.UrlConfig.getDomainManagementUrl(orgId) + 'Domains';
+    this._sunlightConfigUrl = this.UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + orgId + '/chat';
 
   }
 
@@ -105,7 +107,10 @@ class DomainManagementService {
       if (existingDomain && existingDomain.status !== this._states.pending && !_.some(this._domainList, d => { return (d.status === this._states.verified || d.status === this._states.claimed); })) {
         //last domain was deleted. CI will set the _enforceUsersInVerifiedAndClaimedDomains flag to false on server side. We will do it now in our browser cache:
         this._enforceUsersInVerifiedAndClaimedDomains = false;
-     }
+      }
+      if (this.Authinfo.isCare()) {
+        this.syncDomainsWithCare();
+      }
     }, err => {
       this.Log.error('Failed to unverify domain: ' + domain, err);
       return this.$q.reject(this.getErrorMessage(err));
@@ -120,18 +125,21 @@ class DomainManagementService {
       return this.$q.reject();
     }
     return this.$http.post(this._invokeVerifyDomainUrl, {
-        domain: domain,
-        claimDomain: false,
-      })
-      .then(() => {
-        let domainInList = _.find(this._domainList, { text: domain, status: this.states.pending });
-        if (domainInList) {
-          domainInList.status = this.states.verified;
-        }
-      }, err => {
-        this.Log.error('Failed to verify domain: ' + domain, err);
-        return this.$q.reject(this.getErrorMessage(err));
-      });
+      domain: domain,
+      claimDomain: false,
+    })
+    .then(() => {
+      let domainInList = _.find(this._domainList, { text: domain, status: this.states.pending });
+      if (domainInList) {
+        domainInList.status = this.states.verified;
+      }
+      if (this.Authinfo.isCare()) {
+        this.syncDomainsWithCare();
+      }
+    }, err => {
+      this.Log.error('Failed to verify domain: ' + domain, err);
+      return this.$q.reject(this.getErrorMessage(err));
+    });
   }
 
   public claimDomain(domain) {
@@ -140,20 +148,19 @@ class DomainManagementService {
       return this.$q.reject();
     }
     return this.$http.post(this._claimDomainUrl, {
-        data: [{ domain: domain }],
-      })
-      .then(() => {
+      data: [{ domain: domain }],
+    })
+    .then(() => {
 
-        let claimedDomain = _.find(this._domainList, { text: domain, status: this.states.verified });
+      let claimedDomain = _.find(this._domainList, { text: domain, status: this.states.verified });
 
-        if (claimedDomain) {
-          claimedDomain.status = this.states.claimed;
-        }
-
-      }, err => {
-        this.Log.error('Failed to claim domain: ' + domain, err);
-        return this.$q.reject(this.getErrorMessage(err));
-      });
+      if (claimedDomain) {
+        claimedDomain.status = this.states.claimed;
+      }
+    }, err => {
+      this.Log.error('Failed to claim domain: ' + domain, err);
+      return this.$q.reject(this.getErrorMessage(err));
+    });
   }
 
   public unclaimDomain(domain) {
@@ -241,6 +248,17 @@ class DomainManagementService {
           status: domainStatus,
         });
       }
+    });
+  }
+
+  public syncDomainsWithCare() {
+    this.getVerifiedDomains().then(response => {
+      let verifiedDomains = _.chain(response)
+        .filter({ status : this.states.verified })
+        .map('text')
+        .value();
+      verifiedDomains = verifiedDomains.length > 0 ? verifiedDomains : ['.*'];
+      this.$http.put(this._sunlightConfigUrl, { allowedOrigins : verifiedDomains });
     });
   }
 }

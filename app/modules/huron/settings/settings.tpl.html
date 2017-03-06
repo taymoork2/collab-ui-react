@@ -33,7 +33,7 @@
             ></cs-select>
           </div>
         </div>
-        <div class="sub-section" ng-if="settings.callDateTimeFormat">
+        <div class="sub-section">
           <label class="control-label" for="dateFormatSelect" translate="serviceSetupModal.dateFormat"></label>
           <p class="description-block" translate="serviceSetupModal.dfDescription"></p>
           <div class="medium-5">
@@ -47,7 +47,7 @@
             ></cs-select>
           </div>
         </div>
-        <div class="sub-section" ng-if="settings.callDateTimeFormat">
+        <div class="sub-section">
           <label class="control-label" for="timeFormatSelect" translate="serviceSetupModal.timeFormat"></label>
           <p class="description-block" translate="serviceSetupModal.tfDescription"></p>
           <div class="medium-5">
@@ -61,7 +61,7 @@
             ></cs-select>
           </div>
         </div>
-        <div class="sub-section service-setup service-setup-regional-settings" cr-feature-toggle feature-show="huron-l10n-user-locale">
+        <div class="sub-section service-setup service-setup-regional-settings">
           <label class="control-label" translate="serviceSetupModal.preferredLanguage"></label>
           <p class="description-block" translate="serviceSetupModal.preferredLanguageDescription"></p>
           <div class="medium-5">
@@ -162,7 +162,7 @@
     </div>
 
     <!-- international dialing selection -->
-    <div class="cs-form__section">
+    <div class="cs-form__section" cr-feature-toggle feature-hide="huron-customer-cos">
       <div class="section__info">
         <div cs-sticky>
           <h4 class="section__title" translate="internationalDialing.internationalDialing"></h4>
@@ -170,6 +170,19 @@
       </div>
       <div class="section__content">
         <formly-form model="settings.model" fields="settings.internationalDialingSelection" form="settings.form"></formly-form>
+      </div>
+    </div>
+
+    <!-- class of service selection -->
+    <div class="cs-form__section" cr-feature-toggle feature-show="huron-customer-cos">
+      <div class="section__info">
+        <div cs-sticky>
+          <h4 class="section__title" translate="serviceSetupModal.cos.title"></h4>
+          <h6 class="section__description" translate="serviceSetupModal.cos.desc"></h6>
+        </div>
+      </div>
+      <div class="section__content">
+        <uc-cos-form input-model="settings.model.cosRestrictions" on-change-fn="settings.setCustomerCosRestrictions(restrictions)" premium-numbers="settings.premiumNumbers"></uc-cos-form>
       </div>
     </div>
 

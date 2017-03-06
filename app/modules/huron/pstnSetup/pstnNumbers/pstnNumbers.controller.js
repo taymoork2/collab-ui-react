@@ -14,8 +14,7 @@
   }
 
   /* @ngInject */
-  function PstnNumbersCtrl($q, $scope, $state, $timeout, $translate, DidService, Notification,
-      PstnSetup, PstnSetupService, TelephoneNumberService, TerminusStateService, ValidationService) {
+  function PstnNumbersCtrl($q, $scope, $state, $timeout, $translate, DidService, Notification, PstnSetup, PstnSetupService, TelephoneNumberService, PstnSetupStatesService, ValidationService) {
     var vm = this;
 
     vm.provider = PstnSetup.getProvider();
@@ -39,12 +38,12 @@
       searchResultsModel: {},
       showAdvancedOrder: false,
       state: '',
-      states: []
+      states: [],
     };
 
     vm.model = {
       pstn: _.clone(baseModel),
-      tollFree: _.clone(baseModel)
+      tollFree: _.clone(baseModel),
     };
 
     vm.orderNumbersTotal = 0;
@@ -75,6 +74,7 @@
     vm.formatTelephoneNumber = formatTelephoneNumber;
     vm.showOrderQuantity = showOrderQuantity;
     vm.searchResults = [];
+    vm.locationLabel = '';
 
     vm.model.pstn.paginateOptions = {
       currentPage: 0,
@@ -89,7 +89,7 @@
       nextPage: function () {
         vm.model.pstn.searchResultsModel = {};
         this.currentPage++;
-      }
+      },
     };
 
     $scope.$watchCollection(function () {
@@ -111,21 +111,22 @@
       nextPage: function () {
         vm.model.tollFree.searchResultsModel = {};
         this.currentPage++;
-      }
+      },
     };
 
     init();
 
     function init() {
-      TerminusStateService.query().$promise.then(function (states) {
+      PstnSetupStatesService.getLocation(PstnSetup.getCountryCode()).then(function (location) {
         vm.model.pstn.quantity = null;
-        vm.model.pstn.states = states;
+        vm.locationLabel = location.type;
+        vm.model.pstn.states = location.areas;
         if (_.get(PstnSetup.getServiceAddress(), 'state')) {
           vm.model.pstn.state = {
             abbreviation: PstnSetup.getServiceAddress().state,
-            name: _.result(_.find(states, {
-              'abbreviation': PstnSetup.getServiceAddress().state
-            }), 'name')
+            name: _.result(_.find(vm.model.pstn.states, {
+              'abbreviation': PstnSetup.getServiceAddress().state,
+            }), 'name'),
           };
           getStateInventory();
         }
@@ -150,7 +151,7 @@
           filter: true,
           onChangeFn: function () {
             vm.model.tollFree.showAdvancedOrder = false;
-          }
+          },
         },
         controller: /* @ngInject */ function ($scope) {
           $scope.$watchCollection(function () {
@@ -159,7 +160,7 @@
             newAreaCodes = newAreaCodes || [];
             $scope.to.options = _.sortBy(newAreaCodes, 'code');
           });
-        }
+        },
       }, {
         type: 'input',
         key: 'tollFree.quantity',
@@ -167,7 +168,7 @@
         className: 'medium-2 columns',
         templateOptions: {
           required: true,
-          label: $translate.instant('pstnSetup.quantity')
+          label: $translate.instant('pstnSetup.quantity'),
         },
         hideExpression: function () {
           return !vm.model.tollFree.block;
@@ -177,15 +178,15 @@
             expression: ValidationService.positiveNumber,
             message: function () {
               return $translate.instant('validation.positiveNumber');
-            }
+            },
           },
           maxValue: {
             expression: ValidationService.maxNumber100,
             message: function () {
               return $translate.instant('validation.maxNumber100');
-            }
-          }
-        }
+            },
+          },
+        },
       }, {
         type: 'button',
         key: 'searchBtn',
@@ -193,14 +194,14 @@
         templateOptions: {
           btnClass: 'btn btn--circle primary',
           spanClass: 'icon icon-search',
-          onClick: searchCarrierTollFreeInventory
+          onClick: searchCarrierTollFreeInventory,
         },
         expressionProperties: {
           'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
             return !scope.model.tollFree.areaCode || !scope.model.tollFree.quantity;
-          }
-        }
-      }]
+          },
+        },
+      }],
     }, {
       className: 'row',
       fieldGroup: [{
@@ -216,13 +217,13 @@
             if (!vm.model.tollFree.block) {
               vm.model.tollFree.quantity = 1;
             }
-          }
-        }
+          },
+        },
       }, {
         className: '',
         noFormControl: true,
-        template: '<i class="icon icon-info" tooltip="{{::\'pstnSetup.advancedOrder.blockTooltip\' | translate}}"  tooltip-trigger="mouseenter" tooltip-placement="right" tooltip-animation="false" ></i>'
-      }]
+        template: '<i class="icon icon-info" tooltip="{{::\'pstnSetup.advancedOrder.blockTooltip\' | translate}}"  tooltip-trigger="mouseenter" tooltip-placement="right" tooltip-animation="false" ></i>',
+      }],
     }];
 
     ////////////////////////
@@ -319,7 +320,7 @@
       var params = {
         npa: vm.model.pstn.areaCode.code,
         count: getCount(),
-        sequential: vm.model.pstn.consecutive
+        sequential: vm.model.pstn.consecutive,
       };
       //add optional nxx parameter
       var nxx = getNxxValue();
@@ -356,7 +357,7 @@
       var field = this;
       var params = {
         npa: vm.model.tollFree.areaCode.code,
-        count: vm.model.tollFree.quantity === 1 ? undefined : vm.model.tollFree.quantity
+        count: vm.model.tollFree.quantity === 1 ? undefined : vm.model.tollFree.quantity,
       };
       vm.model.tollFree.searchResults = [];
       vm.model.tollFree.searchResultsModel = {};
@@ -424,17 +425,17 @@
               .then(function (reservationData) {
                 var order = {
                   data: {
-                    numbers: numbers
+                    numbers: numbers,
                   },
                   numberType: numberType,
                   orderType: NUMBER_ORDER,
-                  reservationId: reservationData.uuid
+                  reservationId: reservationData.uuid,
                 };
                 vm.orderCart.push(order);
                 // return the index to be used in the promise callback
                 return {
                   searchResultsIndex: searchResultsIndex,
-                  searchResultsModelIndex: key
+                  searchResultsModelIndex: key,
                 };
               }).catch(function (response) {
                 Notification.errorResponse(response);
@@ -473,10 +474,10 @@
         data: {
           areaCode: model.areaCode.code,
           length: parseInt(model.quantity, 10),
-          consecutive: model.consecutive
+          consecutive: model.consecutive,
         },
         numberType: numberType,
-        orderType: BLOCK_ORDER
+        orderType: BLOCK_ORDER,
       };
       var nxx = getNxxValue();
       if (nxx !== null) {
@@ -518,7 +519,7 @@
         case undefined:
           return getCommonPattern(telephoneNumber);
         default:
-          return;
+          return undefined;
       }
     }
 
@@ -551,13 +552,13 @@
       limit: 50,
       tokens: [],
       minLength: 9,
-      beautify: false
+      beautify: false,
     };
     vm.tokenmethods = {
       createtoken: createToken,
       createdtoken: createdToken,
       removedtoken: removedToken,
-      edittoken: editToken
+      edittoken: editToken,
     };
 
     function createToken(e) {
@@ -620,13 +621,13 @@
     function addPortNumbersToOrder() {
       var portOrder = {
         data: {},
-        orderType: PORT_ORDER
+        orderType: PORT_ORDER,
       };
       var portNumbersPartition = _.partition(getTokens(), 'invalid');
       var invalidPortNumbers = _.map(portNumbersPartition[0], 'value');
       portOrder.data.numbers = _.map(portNumbersPartition[1], 'value');
       var existingPortOrder = _.find(vm.orderCart, {
-        orderType: PORT_ORDER
+        orderType: PORT_ORDER,
       });
       if (existingPortOrder) {
         var newPortNumbers = _.difference(portOrder.data.numbers, existingPortOrder.data.numbers);
@@ -694,7 +695,7 @@
         case BLOCK_ORDER:
           return order.data.length;
         case undefined:
-          return;
+          return undefined;
       }
     }
 

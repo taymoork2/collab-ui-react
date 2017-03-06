@@ -26,54 +26,56 @@ export class AutoAnswerCtrl implements ng.IComponentController {
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
-    let autoAnswerChanges = changes['autoAnswer'];
-    if (autoAnswerChanges) {
-      this.processPhoneListChange(autoAnswerChanges);
+    const { autoAnswer } = changes;
+    if (autoAnswer) {
+      this.processPhoneListChange(autoAnswer);
 
       if (!this.autoAnswerNoSupportedPhone) {
-        this.processAutoAnswerSelectionChange(autoAnswerChanges);
-        this.setCustomSharedLineMemberWarningMsg(autoAnswerChanges);
+        this.processAutoAnswerSelectionChange(autoAnswer);
+        this.setCustomSharedLineMemberWarningMsg(autoAnswer);
       }
     }
   }
 
   public onAutoAnswerOptionChange(): void {
-      this.change(this.autoAnswerPhoneSelected!.value, this.autoAnswerEnabled, this.autoAnswerMode);
+    this.change(this.autoAnswerPhoneSelected!.value, this.autoAnswerEnabled, this.autoAnswerMode);
   }
 
   public onAutoAnswerToggleChange(value: boolean): void {
     let phoneId: string;
     if (value) {
-        this.autoAnswerMode = AutoAnswerConst.SPEAKERPHONE;
-        this.autoAnswerPhoneSelected = this.autoAnswerPhoneOptions![0] ;
-        phoneId = this.autoAnswerPhoneSelected.value;
+      this.autoAnswerMode = AutoAnswerConst.SPEAKERPHONE;
+      this.autoAnswerPhoneSelected = this.autoAnswerPhoneOptions![0] ;
+      phoneId = this.autoAnswerPhoneSelected.value;
     } else {
-        phoneId = this.autoAnswerPhoneSelected!.value;
+      phoneId = this.autoAnswerPhoneSelected!.value;
     }
     this.change(phoneId, value, this.autoAnswerMode);
   }
 
   private processPhoneListChange(autoAnswerChanges: ng.IChangesObject): void {
-      if (_.isUndefined(autoAnswerChanges.currentValue) || _.isNull(autoAnswerChanges.currentValue)) {
-            this.autoAnswerNoSupportedPhone = true;
-            return;
-      }
+    if (_.isUndefined(autoAnswerChanges.currentValue) || _.isNull(autoAnswerChanges.currentValue)) {
+      this.autoAnswerNoSupportedPhone = true;
+      return;
+    }
 
-      let _phoneList: Array<AutoAnswerPhone> = autoAnswerChanges.currentValue.phones;
-      if (_.isUndefined(_phoneList) || _.isNull(_phoneList) || _phoneList.length === 0) {
-        this.autoAnswerNoSupportedPhone = true;
-        return;
-      }
+    let _phoneList: Array<AutoAnswerPhone> = autoAnswerChanges.currentValue.phones;
+    if (_.isUndefined(_phoneList) || _.isNull(_phoneList) || _phoneList.length === 0) {
+      this.autoAnswerNoSupportedPhone = true;
+      return;
+    }
 
-      if (_.isUndefined(this.autoAnswerPhoneOptions)) {
-        this.convertAutoAnswerPhonesToOptionsArray(_phoneList as Array<AutoAnswerPhone>);
-      }
+    if (_.isUndefined(this.autoAnswerPhoneOptions)) {
+      this.convertAutoAnswerPhonesToOptionsArray(_phoneList as Array<AutoAnswerPhone>);
+    }
   }
 
   private convertAutoAnswerPhonesToOptionsArray(autoAnswerPhones: Array<AutoAnswerPhone>): void {
     this.autoAnswerPhoneOptions = _.map(autoAnswerPhones, (phone) => {
-      return { label: phone.description,
-               value: phone.uuid };
+      return {
+        label: phone.description,
+        value: phone.uuid,
+      };
     });
   }
 

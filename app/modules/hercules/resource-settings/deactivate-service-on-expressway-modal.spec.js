@@ -23,7 +23,7 @@ describe('DeactivateServiceModalView', function () {
   it('should call deactivateService() when Confirm is clicked', function () {
 
     $scope.deactivateServiceOnExpresswayModal = {
-      deactivateService: sinon.stub()
+      deactivateService: sinon.stub(),
     };
 
     view.find("#confirm").click();

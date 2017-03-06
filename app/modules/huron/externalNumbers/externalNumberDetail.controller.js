@@ -5,8 +5,7 @@
     .controller('ExternalNumberDetailCtrl', ExternalNumberDetail);
 
   /* @ngInject */
-  function ExternalNumberDetail($stateParams, $translate, DialPlanService, ExternalNumberService,
-      ModalService, Notification, TelephoneNumberService) {
+  function ExternalNumberDetail($stateParams, $translate, DialPlanService, ExternalNumberService, ModalService, Notification, TelephoneNumberService) {
     var vm = this;
     vm.currentCustomer = $stateParams.currentCustomer;
 
@@ -70,21 +69,21 @@
       ModalService.open({
         title: $translate.instant('externalNumberPanel.deleteNumber'),
         message: $translate.instant('externalNumberPanel.deleteConfirmation', {
-          pattern: number.number
+          pattern: number.number,
         }) + '<br>' + $translate.instant('externalNumberPanel.deleteWarning'),
         close: $translate.instant('common.yes'),
         dismiss: $translate.instant('common.no'),
-        btnType: 'negative'
+        btnType: 'negative',
       }).result.then(function () {
         return ExternalNumberService.deleteNumber(vm.currentCustomer.customerOrgId, number)
           .then(function () {
             Notification.success('notifications.successDelete', {
-              item: number.number
+              item: number.number,
             });
             listPhoneNumbers();
           }).catch(function (response) {
             Notification.errorResponse(response, 'notifications.errorDelete', {
-              item: number.number
+              item: number.number,
             });
           });
       });

@@ -10,14 +10,14 @@
 
     var service = {
       csadminUrl: csadminUrl,
-      setCsAdmin: setCsAdmin
+      setCsAdmin: setCsAdmin,
     };
 
     return service;
 
     function setCsAdmin(encryptedParam, callback) {
       var csadminData = {
-        'encryptedQueryString': encryptedParam
+        'encryptedQueryString': encryptedParam,
       };
       $http.post(csadminUrl, csadminData)
         .success(function (data, status) {

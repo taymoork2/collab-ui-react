@@ -10,7 +10,7 @@
 
     var token = {
       PROD_KEY: 'a64cd4bbec043ed6bf9d5cd31e4b001c',
-      TEST_KEY: '536df13b2664a85b06b0b6cf32721c24'
+      TEST_KEY: '536df13b2664a85b06b0b6cf32721c24',
     };
 
     var isTestOrgPromise = null;
@@ -31,7 +31,7 @@
       SAVE: 'Save',
       ENTER_SCREEN: 'Entered Screen',
       VALIDATION_ERROR: 'Validation Error',
-      RUNTIME_ERROR: 'Runtime Error'
+      RUNTIME_ERROR: 'Runtime Error',
     };
 
     var sections = {
@@ -39,16 +39,16 @@
         name: 'Trial Flow',
         eventNames: {
           START_SETUP: 'Trial flow: Start Trial Setup',
-          START_TRIAL: 'Trial flow: Start Trial'
+          START_TRIAL: 'Trial flow: Start Trial',
         },
-        persistentProperties: null
+        persistentProperties: null,
       },
       PARTNER: {
         name: 'Partner',
         eventNames: {
           ASSIGN: 'Partner Admin Assigning',
           REMOVE: 'Partner Admin Removal',
-          PATCH: 'Patch User Call'
+          PATCH: 'Patch User Call',
         },
         persistentProperties: null,
       },
@@ -56,7 +56,7 @@
         name: 'User Onboarding',
         eventNames: {
           CMR_CHECKBOX: 'CMR Checkbox Unselected',
-          CONVERT_USER: 'Convert User Search'
+          CONVERT_USER: 'Convert User Search',
         },
         persistentProperties: null,
       },
@@ -72,24 +72,42 @@
           DIRECTORY_SYNC: 'Add Users: Directory Sync',
           SYNC_REFRESH: 'Add Users: Sync Refresh',
           SYNC_ERROR: 'Add Users: Sync Error',
-          GO_BACK_FIX: 'Add Users: Go Back Fix Errors'
+          GO_BACK_FIX: 'Add Users: Go Back Fix Errors',
         },
         persistentProperties: null,
         uploadMethods: {
           MANUAL: 'manual',
           CSV: 'csv',
-          SYNC: 'sync'
+          SYNC: 'sync',
         },
         manualMethods: {
           '0': 'emailOnly',
-          '1': 'nameAndEmail'
+          '1': 'nameAndEmail',
         },
         saveResults: {
           SUCCESS: 'success',
           USER_ERROR: 'user_error',
-          APP_ERROR: 'app_exeption'
-        }
-      }
+          APP_ERROR: 'app_exception',
+        },
+      },
+      HS_NAVIGATION: {
+        name: 'Navigation inside Hybrid Services pages',
+        eventNames: {
+          VISIT_CLUSTER_LIST: 'Visit Hybrid Cluster List Page',
+          VISIT_SERVICES_OVERVIEW: 'Visit Services Overview Page',
+          VISIT_CONTEXT_LIST: 'Visit Hybrid Context Service Cluster List',
+          VISIT_HDS_LIST: 'Visit Hybrid Data Security Service Cluster List',
+          VISIT_HDS_SETTINGS: 'Visit Hybrid Data Security Service Settings',
+          VISIT_CAL_EXC_LIST: 'Visit Hybrid Calendar (Exchange) Service Cluster List',
+          VISIT_CAL_EXC_SETTINGS: 'Visit Hybrid Calendar (Exchange) Service Settings', // TODO
+          VISIT_CAL_GOOG_SETTINGS: 'Visit Hybrid Calendar (Google) Service Settings',
+          VISIT_CALL_LIST: 'Visit Hybrid Call Service Cluster List',
+          VISIT_CALL_SETTINGS: 'Visit Hybrid Call Service Settings',
+          VISIT_MEDIA_LIST: 'Visit Hybrid Media Service Cluster List',
+          VISIT_MEDIA_SETTINGS: 'Visit Hybrid Media Service Settings',
+        },
+        persistentProperties: null,
+      },
     };
 
     var service = {
@@ -110,7 +128,8 @@
       trackTrialSteps: trackTrialSteps,
       trackUserOnboarding: trackUserOnboarding,
       trackAddUsers: trackAddUsers,
-      trackCsv: trackCsv
+      trackCsv: trackCsv,
+      trackHSNavigation: trackHSNavigation,
     };
 
     return service;
@@ -167,9 +186,9 @@
     function trackEvent(eventName, properties) {
       var prefix = 'cisco_';
       properties = properties || {};
-      //prepending properties with cisco
-      _.each(properties, function (value, key) {
-        if (key.indexOf(prefix) !== 0) {
+      // prepending properties with cisco
+      _.forEach(properties, function (value, key) {
+        if (!_.startsWith(key, prefix)) {
           delete properties[key];
           properties[prefix + key] = value;
         }
@@ -219,7 +238,7 @@
       var properties = {
         uuid: _hashSha256(UUID),
         orgId: _hashSha256(orgId),
-        section: sections.PARTNER.name
+        section: sections.PARTNER.name,
       };
       return trackEvent(eventName, properties);
     }
@@ -241,7 +260,7 @@
 
       if (eventName === sections.USER_ONBOARDING.eventNames.CMR_CHECKBOX) {
         if (!additionalData.licenseId) {
-          $q.reject('license id not passed');
+          return $q.reject('license id not passed');
         } else {
           properties.licenseId = additionalData.licenseId;
         }
@@ -258,7 +277,7 @@
         return $q.reject('eventName not passed');
       }
       var properties = {
-        from: _.get($state, '$current.name')
+        from: _.get($state, '$current.name'),
       };
 
       // populate static properties
@@ -281,6 +300,20 @@
       }
     }
 
+    /**
+     * Hybrid Services navigation
+     */
+    function trackHSNavigation(eventName, payload) {
+      if (!eventName) {
+        return $q.reject('eventName not passed');
+      }
+
+      var properties = _.extend({
+        userId: _hashSha256(Authinfo.getUserId()),
+        orgId: _hashSha256(Authinfo.getOrgId()),
+      }, payload);
+      return trackEvent(eventName, properties);
+    }
 
     /**
     * General Error Tracking
@@ -301,7 +334,7 @@
         userId: _hashSha256(Authinfo.getUserId()),
         orgId: _hashSha256(Authinfo.getOrgId()),
         domain: _getDomainFromEmail(Authinfo.getPrimaryEmail()),
-        state: _.get($state, '$current.name')
+        state: _.get($state, '$current.name'),
       });
     }
 
@@ -345,14 +378,14 @@
         domain: _getDomainFromEmail(Authinfo.getPrimaryEmail()),
         uuid: _hashSha256(Authinfo.getUserId()),
         role: Authinfo.getRoles(),
-        section: sections[sectionName].name
+        section: sections[sectionName].name,
       };
       var promises = {
         listUsers: UserListService.listUsers(0, 1, null, null, _.noop),
         getOrg: Orgservice.getAdminOrgAsPromise().catch(function (err) {
           return err;
         }),
-        trialDaysLeft: TrialService.getDaysLeftForCurrentUser()
+        trialDaysLeft: TrialService.getDaysLeftForCurrentUser(),
       };
       return $q.all(promises).then(function (data) {
         sections[sectionName].persistentProperties.userCountPrior = _.get(data.listUsers, 'data.totalResults');

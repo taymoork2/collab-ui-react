@@ -29,7 +29,7 @@ describe('Controller: PstnSetupCtrl', function () {
     $stateParams.customerRoomSystemsLicenseIsTrial = customer.isTrial;
     deferred = $q.defer();
     $state.modal = {
-      result: deferred.promise
+      result: deferred.promise,
     };
 
     spyOn(PstnSetup, 'setCustomerId');
@@ -43,7 +43,7 @@ describe('Controller: PstnSetupCtrl', function () {
     spyOn(PstnSetupService, 'createResellerV2').and.returnValue($q.resolve());
 
     $ctrl('PstnSetupCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
     $scope.$apply();
 
@@ -60,7 +60,7 @@ describe('Controller: PstnSetupCtrl', function () {
     spyOn(PstnSetupService, 'createResellerV2').and.returnValue($q.resolve());
 
     $ctrl('PstnSetupCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
     $scope.$apply();
 
@@ -75,7 +75,7 @@ describe('Controller: PstnSetupCtrl', function () {
     spyOn(Notification, 'errorResponse').and.callThrough();
 
     $ctrl('PstnSetupCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
     $scope.$apply();
 
@@ -90,7 +90,7 @@ describe('Controller: PstnSetupCtrl', function () {
     spyOn(Notification, 'errorResponse').and.callThrough();
 
     $ctrl('PstnSetupCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
     $scope.$apply();
 

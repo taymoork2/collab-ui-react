@@ -13,37 +13,37 @@ var PartnerHomePage = function () {
     customerName: trialName,
     customerEmail: 'collabctg+' + trialName + '@gmail.com',
     webexSiteURL: trialName.replace(/_/g, '-') + '.webex.com',
-    sipDomain: dateTime.replace(/_/g, '-')
+    sipDomain: dateTime.replace(/_/g, '-'),
   };
 
   this.editTrial = {
-    licenseCount: '90'
+    licenseCount: '90',
   };
 
   this.newSqUCTrial = {
     customerName: 'Atlas_Test_UC_' + randomNumber.slice(0, 5),
-    customerEmail: 'collabctg+Atlas' + randomNumber.slice(0, 5) + '@gmail.com'
+    customerEmail: 'collabctg+Atlas' + randomNumber.slice(0, 5) + '@gmail.com',
   };
 
   this.differentTrial = {
     customerName: 'collabctg+Atlas_Different',
-    customerEmail: 'collabctg+Atlas_Different@gmail.com'
+    customerEmail: 'collabctg+Atlas_Different@gmail.com',
   };
 
   this.testuser = {
     username: 'atlaspartneradmin@atlas.test.com',
-    password: 'C1sc0123!'
+    password: 'C1sc0123!',
   };
 
   this.csrole = {
     adminOrgId: '9a65eda3-272a-4aca-ac28-c72cb34013e4',
-    regularOrgId: 'c6b0e64c-908e-498e-a94e-5d3ae1e650ad'
+    regularOrgId: 'c6b0e64c-908e-498e-a94e-5d3ae1e650ad',
   };
 
   this.dids = {
     one: utils.randomDid(),
     two: utils.randomDid(),
-    three: utils.randomDid()
+    three: utils.randomDid(),
   };
 
   this.getDidTokenClose = function (did) {
@@ -108,6 +108,7 @@ var PartnerHomePage = function () {
   this.careTrialCheckbox = element(by.css('label[for="careTrial"]'));
   this.webexTrialCheckbox = element(by.css('label[for="webexTrial"]'));
   this.careLicenseCountTextbox = element(by.css('input[name="input_trialCareLicenseCount"]'));
+  this.validLocationCheckbox = element(by.css('label[for="formly_5_custom-checkbox-link_validLocation_0"]'));
   this.customerNameHeader = element(by.cssContainingText('.ngHeaderText ', 'Customer Name'));
   this.myOrganization = element(by.id('partner'));
   this.launchButton = element(by.id('launchPartner'));
@@ -171,7 +172,7 @@ var PartnerHomePage = function () {
       // There is a bug in the trial view where entering search text
       // too soon results in the search being ignored, so let's wait until a
       // known trial shows up in the list...
-      utils.waitIsDisplayed(element(by.cssContainingText('.ui-grid-cell', 
+      utils.waitIsDisplayed(element(by.cssContainingText('.ui-grid-cell',
         'Atlas Test Partner Organization')));
 
       utils.search(partner.newTrial.customerName, -1);

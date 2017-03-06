@@ -29,11 +29,11 @@
       '/meetingsapi/v1/files/',
       '/channels',
       '/api/v1/internals/actions/invalidateUser/invoke',
-      '/releaseChannels'
+      '/releaseChannels',
     ];
 
     return {
-      request: rejectOnNotRead
+      request: rejectOnNotRead,
     };
 
     function rejectOnNotRead(config) {
@@ -62,7 +62,7 @@
 
     function isUpdatingSelfInCI(url) {
       var Authinfo = $injector.get('Authinfo');
-      return _.includes(url, 'identity/scim/' + Authinfo.getOrgId() + '/v1/Users/' + Authinfo.getUserId());
+      return _.includes(url, 'identity/scim/' + Authinfo.getUserOrgId() + '/v1/Users/' + Authinfo.getUserId());
     }
   }
 

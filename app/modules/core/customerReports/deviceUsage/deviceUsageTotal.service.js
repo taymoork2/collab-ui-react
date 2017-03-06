@@ -16,10 +16,12 @@
     var timeoutInMillis = 20000;
     var intervalType = 'day'; // Used as long as week and month is not implemented
 
-    function getDataForRange(start, end, granularity, deviceCategories, api) {
+    function getDataForRange(start, end, granularity, deviceCategories, models, api) {
       var startDate = moment(start);
       var endDate = moment(end);
       var now = moment();
+
+      models = 'na'; // just here for compatibility with V2
 
       if (startDate.isValid() && endDate.isValid() && startDate.isBefore(endDate) && endDate.isBefore(now)) {
         if (api === 'mock') {
@@ -31,6 +33,7 @@
           url = url + 'intervalType=' + intervalType; // As long week and month is not implemented
           url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
           url = url + '&deviceCategories=' + deviceCategories.join();
+          url = url + '&models=' + models;
           url = url + '&accounts=__';
           url = url + '&sendMockData=false';
           return doRequest(url, granularity, start, end);
@@ -39,6 +42,7 @@
           url = url + 'intervalType=' + intervalType; // As long week and month is not implemented
           url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
           url = url + '&deviceCategories=' + deviceCategories.join();
+          url = url + '&models=' + models;
           url = url + '&accounts=__';
           return doRequest(url, granularity, start, end);
         }
@@ -49,7 +53,7 @@
     function doRequest(url, granularity, start, end) {
       var deferred = $q.defer();
       var timeout = {
-        timeout: deferred.promise
+        timeout: deferred.promise,
       };
       $timeout(function () {
         deferred.resolve();
@@ -98,7 +102,7 @@
             date: day,
             totalDuration: 0,
             pairedCount: 0,
-            callCount: 0
+            callCount: 0,
           });
         }
       });
@@ -141,7 +145,7 @@
       if (reject.status === -1) {
         reject.statusText = 'Operation timed Out';
         reject.data = {
-          message: 'Operation timed out'
+          message: 'Operation timed out',
         };
       }
       return reject;
@@ -156,7 +160,7 @@
             totalDuration: 0,
             pairedCount: 0,
             deviceCategories: {},
-            accountIds: {}
+            accountIds: {},
           };
         }
         if (_.isNil(item.callCount) || _.isNaN(item.callCount)) {
@@ -179,7 +183,7 @@
             deviceCategory: item.deviceCategory,
             totalDuration: item.totalDuration,
             callCount: item.callCount,
-            pairedCount: item.pairedCount
+            pairedCount: item.pairedCount,
           };
         } else {
           result[date].deviceCategories[item.deviceCategory].totalDuration += item.totalDuration;
@@ -191,7 +195,7 @@
             accountId: item.accountId,
             totalDuration: item.totalDuration,
             callCount: item.callCount,
-            pairedCount: item.pairedCount
+            pairedCount: item.pairedCount,
           };
         } else if (item.accountId) {
           result[date].accountIds[item.accountId].totalDuration += item.totalDuration;
@@ -220,7 +224,7 @@
               result[item.accountId] = {
                 callCount: item.callCount,
                 pairedCount: item.pairedCount,
-                totalDuration: item.totalDuration
+                totalDuration: item.totalDuration,
               };
             } else {
               result[item.accountId].callCount += item.callCount;
@@ -249,7 +253,7 @@
         least: _.takeRight(accounts, n).reverse(),
         noOfDevices: accounts.length,
         noOfCalls: calculateTotal(accounts).noOfCalls,
-        totalDuration: calculateTotal(accounts).totalDuration
+        totalDuration: calculateTotal(accounts).totalDuration,
       };
       //$log.info('Extracted stats:', stats);
       return $q.resolve(stats);
@@ -291,7 +295,7 @@
           .catch(function (err) {
             $log.info("Problems resolving device", err);
             return {
-              "displayName": "Unknown [id:" + device.accountId + "]"
+              "displayName": "Unknown [id:" + device.accountId + "]",
             };
           })
         );
@@ -303,7 +307,7 @@
       getDataForRange: getDataForRange,
       extractStats: extractStats,
       resolveDeviceData: resolveDeviceData,
-      reduceAllData: reduceAllData
+      reduceAllData: reduceAllData,
     };
   }
 }());

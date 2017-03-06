@@ -23,17 +23,25 @@ export class CallServiceContainerController extends ExpresswayContainerControlle
     type: 'small',
   };
 
+  public clusterId: string;
+
   /* @ngInject */
-  constructor($modal,
-              $state: ng.ui.IStateService,
-              ClusterService,
-              Notification: Notification,
-              private $translate: ng.translate.ITranslateService,
-              ServiceDescriptor,
-              ServiceStateChecker,
-              USSService ) {
-    super($modal, $state, ClusterService, Notification, ServiceDescriptor, ServiceStateChecker, USSService, ['squared-fusion-uc'], 'c_ucmc');
+  constructor(
+    $modal,
+    $scope: ng.IScope,
+    $state: ng.ui.IStateService,
+    private $stateParams: ng.ui.IStateParamsService,
+    Authinfo,
+    ClusterService,
+    Notification: Notification,
+    private $translate: ng.translate.ITranslateService,
+    ServiceDescriptor,
+    ServiceStateChecker,
+    USSService,
+  ) {
+    super($modal, $scope, $state, Authinfo, ClusterService, Notification, ServiceDescriptor, ServiceStateChecker, USSService, ['squared-fusion-uc'], 'c_ucmc');
     this.addConnectIfEnabled();
+    this.clusterId = this.$stateParams['clusterId'];
   }
 
   private addConnectIfEnabled() {

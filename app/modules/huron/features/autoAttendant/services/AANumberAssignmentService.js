@@ -24,7 +24,7 @@
       NUMBER_FORMAT_EXTENSION: "NUMBER_FORMAT_EXTENSION",
       NUMBER_FORMAT_ENTERPRISE_LINE: "NUMBER_FORMAT_ENTERPRISE_LINE",
       DIRECTORY_NUMBER: "directoryNumber",
-      EXTERNAL_NUMBER: "externalNumber"
+      EXTERNAL_NUMBER: "externalNumber",
     };
 
     return service;
@@ -34,7 +34,7 @@
 
       return AssignAutoAttendantService.get({
         customerId: customerId,
-        cesId: cesId
+        cesId: cesId,
       }).$promise.then(
         function (response) {
           // success
@@ -225,7 +225,7 @@
 
         var numObj = {
           "number": number,
-          "type": numType
+          "type": numType,
         };
 
         numObjList.push(numObj);
@@ -233,12 +233,12 @@
       }
 
       var data = {
-        numbers: numObjList
+        numbers: numObjList,
       };
 
       return AssignAutoAttendantService.update({
         customerId: customerId,
-        cesId: cesId
+        cesId: cesId,
       }, data).$promise.then(
         function (response) {
           // success
@@ -263,7 +263,7 @@
         return setAANumberAssignment(customerId, cesId, resources).then(function () {
           return {
             workingResources: [],
-            failedResources: []
+            failedResources: [],
           };
         },
           function (response) {
@@ -313,7 +313,7 @@
 
       return AssignAutoAttendantService.delete({
         customerId: customerId,
-        cesId: cesId
+        cesId: cesId,
       }).$promise;
 
     }

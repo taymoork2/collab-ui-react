@@ -29,7 +29,8 @@
       </uc-directory-number>
       <uc-call-forward
         call-forward="$ctrl.lineOverviewData.callForward"
-        voicemail-enabled="$ctrl.voicemailEnabled"
+        user-voicemail-enabled="$ctrl.userVoicemailEnabled"
+        owner-type="$ctrl.ownerType"
         ng-if="!$ctrl.isCloudberryPlace()"
         on-change-fn="$ctrl.setCallForward(callForward)">
       </uc-call-forward>
@@ -50,7 +51,7 @@
       <uc-auto-answer
         auto-answer="$ctrl.lineOverviewData.autoAnswer"
         on-change-fn="$ctrl.setAutoAnswer(phoneId, enabled, mode)"
-        ng-if="!$ctrl.isCloudberryPlace() && $ctrl.autoAnswerFeatureToggleEnabled">
+        ng-if="!$ctrl.isCloudberryPlace()">
       </uc-auto-answer>
       <uc-shared-line
         shared-lines="$ctrl.lineOverviewData.sharedLines"

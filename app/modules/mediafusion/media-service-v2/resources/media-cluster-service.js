@@ -4,7 +4,7 @@
   /* @ngInject */
   function MediaClusterServiceV2($http, CsdmPoller, CsdmCacheUpdater, CsdmHubFactory, UrlConfig, Authinfo, MediaConfigServiceV2) {
     var clusterCache = {
-      mf_mgmt: {}
+      mf_mgmt: {},
     };
 
     function extractDataFromResponse(res) {
@@ -23,18 +23,18 @@
           // start modeling the response to match how the UI uses it
           var onlyMfMgmt = _.filter(clusters, { targetType: 'mf_mgmt' });
           return {
-            mf_mgmt: onlyMfMgmt
+            mf_mgmt: onlyMfMgmt,
           };
         })
         .then(function (clusters) {
           var result = {
-            mf_mgmt: addAggregatedData('mf_mgmt', clusters.mf_mgmt)
+            mf_mgmt: addAggregatedData('mf_mgmt', clusters.mf_mgmt),
           };
           return result;
         })
         .then(function (clusters) {
           var result = {
-            mf_mgmt: _.keyBy(clusters.mf_mgmt, 'id')
+            mf_mgmt: _.keyBy(clusters.mf_mgmt, 'id'),
           };
           return result;
         })
@@ -87,7 +87,7 @@
 
       return {
         label: label,
-        value: value
+        value: value,
       };
     }
 
@@ -97,7 +97,7 @@
         return {
           state: connector.state,
           stateSeverity: stateSeverity.label,
-          stateSeverityValue: stateSeverity.value
+          stateSeverityValue: stateSeverity.value,
         };
       } else {
         return previous;
@@ -118,13 +118,13 @@
     function mergeRunningState(connectors) {
       if (connectors.length == 0) {
         return {
-          state: 'no_hosts'
+          state: 'no_hosts',
         };
       }
       return _.chain(connectors)
         .map(overrideStateIfAlarms)
         .reduce(getMostSevereRunningState, {
-          stateSeverityValue: -1
+          stateSeverityValue: -1,
         })
         // .get('state')
         .value();
@@ -155,9 +155,9 @@
             alarms: connector.alarms,
             hostname: host,
             state: connector.state,
-            upgradeState: connector.upgradeState
+            upgradeState: connector.upgradeState,
           };
-        })
+        }),
       };
     }
 
@@ -204,7 +204,7 @@
       var payLoad = {
         "name": clusterName,
         "releaseChannel": releaseChannel,
-        "targetType": "mf_mgmt"
+        "targetType": "mf_mgmt",
       };
 
       var url = MediaConfigServiceV2.getV2Url() + '/organizations/' + Authinfo.getOrgId() + '/clusters';
@@ -216,7 +216,7 @@
       var payLoad = {
         "hostname": hostName,
         "clusterId": clusterId,
-        ttlInSeconds: 60 * 60
+        ttlInSeconds: 60 * 60,
       };
 
       var url = MediaConfigServiceV2.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/allowedRedirectTargets';
@@ -252,7 +252,7 @@
     function updateV2Cluster(clusterId, clusterName, releaseChannel) {
       var payLoad = {
         "name": clusterName,
-        "releaseChannel": releaseChannel
+        "releaseChannel": releaseChannel,
       };
 
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId;
@@ -336,7 +336,7 @@
       getRunningStateSeverity: getRunningStateSeverity,
       mergeAllAlarms: mergeAllAlarms,
       getMostSevereRunningState: getMostSevereRunningState,
-      buildAggregates: buildAggregates
+      buildAggregates: buildAggregates,
     };
   }
 

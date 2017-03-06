@@ -6,7 +6,7 @@ describe('Service: ExternalNumberPool', function () {
   beforeEach(angular.mock.module('Huron'));
 
   var authInfo = {
-    getOrgId: sinon.stub().returns('1')
+    getOrgId: sinon.stub().returns('1'),
   };
 
   beforeEach(angular.mock.module(function ($provide) {

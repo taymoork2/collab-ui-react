@@ -21,11 +21,11 @@
       "roomQuery": {
         "startDate": "2016-06-13T00:00:00.000Z",
         "endDate": "2016-06-14T00:00:00.000Z",
-        "roomId": "396dbfb0-3238-11e6-9f82-c97e9d5e622d"
+        "roomId": "396dbfb0-3238-11e6-9f82-c97e9d5e622d",
       },
       "runUrl": "https://avalon-integration.wbx2.com/avalon/api/v1/compliance/report/room",
       "url": "https://atlas-integration.wbx2.com/admin/api/v1/compliance/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports/e882dd0e-b86c-4d93-9246-dd6d11ac3452",
-      "timeoutDetected": false
+      "timeoutDetected": false,
     };
 
     function getReport(id) {
@@ -35,7 +35,7 @@
       if (report) {
         return {
           data: _.cloneDeep(report),
-          status: 200
+          status: 200,
         };
       }
     }
@@ -80,10 +80,10 @@
             count: totalNrOfReports,
             limit: limit,
             next: "n.a", // not applicable for mock
-            offset: offset
-          }
+            offset: offset,
+          },
         },
-        status: 200
+        status: 200,
       };
       return response;
     }
@@ -112,7 +112,7 @@
 
     return {
       getReports: getReports,
-      getReport: getReport
+      getReport: getReport,
     };
   }
 

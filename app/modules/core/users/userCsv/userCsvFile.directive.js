@@ -7,7 +7,7 @@ require('./_user-csv.scss');
     .directive('crUserCsvFile', function () {
       return {
         restrict: 'E',
-        templateUrl: 'modules/core/users/userCsv/userCsvFile.tpl.html'
+        templateUrl: 'modules/core/users/userCsv/userCsvFile.tpl.html',
       };
     });
 })();

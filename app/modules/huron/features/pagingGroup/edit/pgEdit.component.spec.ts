@@ -5,7 +5,6 @@ describe('Component: pgEdit', () => {
   const NAME_INPUT = 'input#paging-group-name';
   const SAVE_BUTTON = 'button.btn.btn--primary.ng-isolate-scope';
   const CANCEL_BUTTON = 'button.ng-binding';
-  const MEMBER_INPUT = 'input#paging-group-member';
   const SEARCH_INPUT = 'input#search-member-box';
 
   let getNumberSuggestionsFailureResp = {
@@ -14,7 +13,8 @@ describe('Component: pgEdit', () => {
     statusText: 'Internal Server Error',
   };
 
-  let pg = getJSONFixture('huron/json/features/pagingGroup/pgWithMembers.json');
+  let pg = getJSONFixture('huron/json/features/pagingGroup/pgWithMembersAndInitiators.json');
+  let pg2 = getJSONFixture('huron/json/features/pagingGroup/pgWithEmptyInitiators.json');
   let pgUpdated = getJSONFixture('huron/json/features/pagingGroup/pgUpdated.json');
   let invalidName = 'Invalid <>';
   let pilotNumbers = getJSONFixture('huron/json/features/pagingGroup/numberList.json');
@@ -23,7 +23,7 @@ describe('Component: pgEdit', () => {
 
   let fake_picture_path = 'https://09876/zyxwuv';
 
-  let getMemberListFailureResp = {
+  let pagingServiceFailureResp = {
     data: 'Internal Server Error',
     status: 500,
     statusText: 'Internal Server Error',
@@ -62,12 +62,33 @@ describe('Component: pgEdit', () => {
     statusText: 'Not Found',
   };
 
+  let getMachineAcctResponse = {
+    id: 'fake-userid',
+    schemas: [],
+    name: '',
+    entitlements: [],
+    displayName: '',
+    machineType: 'room',
+    meta: {},
+  };
+
+  let getMachineAcctResponse2 = {
+    id: '0002',
+    schemas: [],
+    name: '',
+    entitlements: [],
+    displayName: '',
+    machineType: 'lyra_space',
+    meta: {},
+  };
+
   beforeEach(function () {
     this.initModules('huron.paging-group.edit');
     this.injectDependencies(
       '$q',
       '$scope',
       '$state',
+      'FeatureToggleService',
       'Notification',
       'Authinfo',
       'PagingGroupService',
@@ -105,6 +126,10 @@ describe('Component: pgEdit', () => {
     this.getMemberPictureDefer = this.$q.defer();
     spyOn(this.FeatureMemberService, 'getMemberPicture').and.returnValue(this.getMemberPictureDefer.promise);
 
+    this.getMachineAcctDefer = this.$q.defer();
+    spyOn(this.FeatureMemberService, 'getMachineAcct').and.returnValue(this.getMachineAcctDefer.promise);
+
+    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
   });
 
   function initComponent() {
@@ -151,7 +176,10 @@ describe('Component: pgEdit', () => {
     it('should invoke onChange with number on option click', function () {
       this.getNumberSuggestionsDefer.resolve(pilotNumbers);
       this.getPagingGroupDefer.resolve(pg);
+      this.getUserDefer.resolve(userResponse);
+      this.getPlaceDefer.resolve(placeResponse);
       this.$scope.$apply();
+      expect(this.controller.initiatorType).toEqual('CUSTOM');
       this.view.find(NUMBER_SELECT).find(DROPDOWN_OPTIONS).get(1).click();
       expect(this.controller.formChanged).toBeTruthy();
     });
@@ -159,10 +187,19 @@ describe('Component: pgEdit', () => {
     it('should invoke onChange with name change', function () {
       this.getNumberSuggestionsDefer.resolve(pilotNumbers);
       this.getPagingGroupDefer.resolve(pg);
+      this.getUserDefer.resolve(userResponse);
+      this.getPlaceDefer.resolve(placeResponse);
       this.$scope.$apply();
       this.view.find(NAME_INPUT).click();
       this.view.find(NAME_INPUT).val(pgUpdated.name).change();
       expect(this.controller.formChanged).toBeTruthy();
+    });
+
+    it('should display Notification when getPagingGroup failed', function () {
+      this.getNumberSuggestionsDefer.resolve(pilotNumbers);
+      this.getPagingGroupDefer.reject(pagingServiceFailureResp);
+      this.$scope.$apply();
+      expect(this.Notification.error).toHaveBeenCalledWith('pagingGroup.errorUpdate', { message: '' });
     });
   });
 
@@ -189,7 +226,6 @@ describe('Component: pgEdit', () => {
 
   describe('disableSaveForm', () => {
     beforeEach(initComponent);
-
     it('should disable show Save button', function () {
       this.getPagingGroupDefer.resolve(pg);
       this.getNumberSuggestionsDefer.resolve(pilotNumbers);
@@ -203,7 +239,6 @@ describe('Component: pgEdit', () => {
 
   describe('saveForm', () => {
     beforeEach(initComponent);
-
     it('should be able to cancel updatePagingGroup', function () {
       this.getPagingGroupDefer.resolve(pg);
       this.getNumberSuggestionsDefer.resolve(pilotNumbers);
@@ -219,9 +254,9 @@ describe('Component: pgEdit', () => {
     });
 
     it('should update PagingGroup', function () {
-      this.getPagingGroupDefer.resolve(pg);
-      this.updatePagingGroupDefer.resolve(pgUpdated);
-      this.getNumberSuggestionsDefer.resolve(pilotNumbers);
+      this.getPagingGroupDefer.resolve(_.cloneDeep(pg));
+      this.updatePagingGroupDefer.resolve(_.cloneDeep(pgUpdated));
+      this.getNumberSuggestionsDefer.resolve(_.cloneDeep(pilotNumbers));
       this.getPlaceDefer.resolve(placeResponse);
       this.getUserDefer.resolve(userResponse);
       this.$scope.$apply();
@@ -235,11 +270,11 @@ describe('Component: pgEdit', () => {
     });
 
     it('should update PagingGroup fail and notify', function () {
-      this.getPagingGroupDefer.resolve(pg);
+      this.getPagingGroupDefer.resolve(_.cloneDeep(pg));
       this.updatePagingGroupDefer.reject(updateFailureResp);
-      this.getNumberSuggestionsDefer.resolve(pilotNumbers);
-      this.getPlaceDefer.resolve(placeResponse);
-      this.getUserDefer.resolve(userResponse);
+      this.getNumberSuggestionsDefer.resolve(_.cloneDeep(pilotNumbers));
+      this.getPlaceDefer.resolve(_.cloneDeep(placeResponse));
+      this.getUserDefer.resolve(_.cloneDeep(userResponse));
       this.$scope.$apply();
       this.controller.name = pgUpdated.name;
       this.controller.number = pgUpdated.extension;
@@ -251,11 +286,11 @@ describe('Component: pgEdit', () => {
     });
 
     it('should update PagingGroup fail and not notify', function () {
-      this.getPagingGroupDefer.resolve(pg);
+      this.getPagingGroupDefer.resolve(_.cloneDeep(pg));
       this.updatePagingGroupDefer.reject();
-      this.getNumberSuggestionsDefer.resolve(pilotNumbers);
-      this.getPlaceDefer.resolve(placeResponse);
-      this.getUserDefer.resolve(userResponse);
+      this.getNumberSuggestionsDefer.resolve(_.cloneDeep(pilotNumbers));
+      this.getPlaceDefer.resolve(_.cloneDeep(placeResponse));
+      this.getUserDefer.resolve(_.cloneDeep(userResponse));
       this.$scope.$apply();
       this.controller.name = pgUpdated.name;
       this.controller.number = pgUpdated.extension;
@@ -267,30 +302,83 @@ describe('Component: pgEdit', () => {
     });
   });
 
-  describe('add member test', () => {
+  describe('add member or initiator test', () => {
     beforeEach(initComponent);
 
-    it('should fetch a list of members', function () {
+    it('should fetch a list of members or initiators', function () {
       this.getNumberSuggestionsDefer.resolve(pilotNumbers);
       this.getPagingGroupDefer.resolve(pg);
       this.getUserDefer.resolve(userResponse);
       this.getPlaceDefer.resolve(placeResponse);
       this.$scope.$apply();
-      this.view.find(MEMBER_INPUT).val('por').change();
+      this.controller.memberName = 'por';
       this.getMemberListDefer.resolve(membersList);
+      this.getMachineAcctDefer.resolve(getMachineAcctResponse);
+      this.controller.fetchMembers('MEMBER');
       this.$scope.$apply();
       expect(this.controller.availableMembers.length).toEqual(3);
-    });
-
-    it('should fetchMembers with failure', function () {
-      this.getMemberListDefer.reject(getMemberListFailureResp);
-      this.controller.memberName = 'por';
-      this.controller.fetchMembers();
+      this.controller.initiatorName = 'por';
+      this.getMemberListDefer.resolve(membersList);
+      this.getMachineAcctDefer.resolve(getMachineAcctResponse);
+      this.controller.fetchMembers('INITIATOR');
       this.$scope.$apply();
-      expect(this.Notification.errorResponse).toHaveBeenCalledWith(getMemberListFailureResp, 'pagingGroup.memberFetchFailure');
+      expect(this.controller.availableInitiators.length).toEqual(3);
     });
 
-    it('should be able to select and unselect a member', function () {
+    it('should fetchMembers with member failure', function () {
+      this.getMemberListDefer.reject(_.cloneDeep(pagingServiceFailureResp));
+      this.controller.memberName = 'por';
+      this.controller.fetchMembers('MEMBER');
+      this.$scope.$apply();
+      expect(this.Notification.errorResponse).toHaveBeenCalledWith(pagingServiceFailureResp, 'pagingGroup.memberFetchFailure');
+    });
+
+    it('should fetchMembers with initiator failure', function () {
+      this.getMemberListDefer.reject(_.cloneDeep(pagingServiceFailureResp));
+      this.controller.memberName = 'por';
+      this.controller.fetchMembers('INITIATOR');
+      this.$scope.$apply();
+      expect(this.Notification.errorResponse).toHaveBeenCalledWith(pagingServiceFailureResp, 'pagingGroup.InitiatorFetchFailure');
+    });
+
+    it('should only display subset of fetched initiators if place phone is room device', function () {
+      this.getNumberSuggestionsDefer.resolve(pilotNumbers);
+      this.getPagingGroupDefer.resolve(_.cloneDeep(pg2));
+      this.getUserDefer.resolve(_.cloneDeep(userResponse));
+      this.getPlaceDefer.resolve(_.cloneDeep(placeResponse));
+      this.$scope.$apply();
+      this.controller.memberName = 'por';
+      this.getMemberListDefer.resolve(_.cloneDeep(membersList));
+      this.getMachineAcctDefer.resolve(_.cloneDeep(getMachineAcctResponse2));
+      this.controller.fetchMembers('MEMBER');
+      this.$scope.$apply();
+      expect(this.controller.availableMembers.length).toEqual(4);
+      this.controller.initiatorName = 'por';
+      this.controller.initiatorType = 'CUSTOM';
+      this.controller.fetchMembers('INITIATOR');
+      this.$scope.$apply();
+      expect(this.controller.availableInitiators.length).toEqual(4);
+    });
+
+    it('should only display subset of fetched initiators if getMachineAcct failed', function () {
+      this.getNumberSuggestionsDefer.resolve(pilotNumbers);
+      this.getPagingGroupDefer.resolve(_.cloneDeep(pg2));
+      this.getUserDefer.resolve(userResponse);
+      this.getPlaceDefer.resolve(placeResponse);
+      this.$scope.$apply();
+      this.controller.memberName = 'por';
+      this.getMemberListDefer.resolve(_.cloneDeep(membersList));
+      this.getMachineAcctDefer.reject(pagingServiceFailureResp);
+      this.controller.fetchMembers('MEMBER');
+      this.$scope.$apply();
+      expect(this.controller.availableMembers.length).toEqual(4);
+      this.controller.initiatorName = 'por';
+      this.controller.fetchMembers('INITIATOR');
+      this.$scope.$apply();
+      expect(this.controller.availableInitiators.length).toEqual(4);
+    });
+
+    it('should be able to select and unselect a member and initiator', function () {
       this.controller.availableMembers = membersList;
       let mem1 = angular.copy(this.controller.availableMembers[0]);
       this.getUserDefer.resolve(userResponse);
@@ -301,6 +389,16 @@ describe('Component: pgEdit', () => {
       expect(this.controller.members[0].member.type).toEqual('USER_REAL_USER');
       expect(this.controller.members[0].picturePath).toEqual(fake_picture_path);
 
+      this.controller.availableInitiators = membersList;
+      let initiator1 = angular.copy(this.controller.availableInitiators[0]);
+      this.getUserDefer.resolve(userResponse);
+      this.controller.selectInitiators(initiator1);
+      this.$scope.$apply();
+      expect(this.controller.initiators.length).toEqual(1);
+      expect(this.controller.initiators[0].member.uuid).toEqual('0001');
+      expect(this.controller.initiators[0].member.type).toEqual('USER_REAL_USER');
+      expect(this.controller.initiators[0].picturePath).toEqual(fake_picture_path);
+
       let memWithPic = {
         member: mem1,
         picturePath: fake_picture_path,
@@ -308,6 +406,9 @@ describe('Component: pgEdit', () => {
 
       this.controller.removeMembers(memWithPic);
       expect(this.controller.members.length).toEqual(0);
+
+      this.controller.removeInitiators(memWithPic);
+      expect(this.controller.initiators.length).toEqual(0);
     });
   });
 
@@ -381,29 +482,29 @@ describe('Component: pgEdit', () => {
     beforeEach(initComponent);
 
     it('Test ShowMoreClicked', function () {
-      this.controller.showMoreClicked('USER_REAL_USER');
+      this.controller.showMoreClicked('USER_REAL_USER', 'MEMBER');
       expect(this.controller.numberOfCardsUsers).toEqual(undefined);
-      this.controller.showMoreClicked('USER_PLACE');
+      this.controller.showMoreClicked('USER_PLACE', 'MEMBER');
       expect(this.controller.numberOfCardsPlaces).toEqual(undefined);
     });
 
     it('Test showLessClicked', function () {
-      this.controller.showLessClicked('USER_REAL_USER');
+      this.controller.showLessClicked('USER_REAL_USER', 'MEMBER');
       expect(this.controller.numberOfCardsUsers).toEqual(this.controller.cardThreshold);
-      this.controller.showLessClicked('USER_PLACE');
+      this.controller.showLessClicked('USER_PLACE', 'MEMBER');
       expect(this.controller.numberOfCardsPlaces).toEqual(this.controller.cardThreshold);
     });
 
     it('Test showMoreButton', function () {
       spyOn(this.controller, 'getUserCount').and.returnValue(7);
       this.controller.numberOfCardsUsers = this.controller.cardThreshold;
-      expect(this.controller.showMoreButton('USER_REAL_USER')).toBeTruthy;
+      expect(this.controller.showMoreButton('USER_REAL_USER', 'MEMBER')).toBeTruthy;
     });
 
     it('Test showLessButton', function () {
       spyOn(this.controller, 'getUserCount').and.returnValue(7);
       this.controller.numberOfCardsUsers = undefined;
-      expect(this.controller.showLessButton('USER_REAL_USER')).toBeTruthy;
+      expect(this.controller.showLessButton('USER_REAL_USER', 'MEMBER')).toBeTruthy;
     });
   });
 

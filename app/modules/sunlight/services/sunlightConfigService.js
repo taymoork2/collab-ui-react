@@ -22,7 +22,8 @@
       getChatConfig: getChatConfig,
       deleteUser: deleteUser,
       onBoardCare: onBoardCare,
-      updateChatConfig: updateChatConfig
+      updateChatConfig: updateChatConfig,
+      aaOnboard: aaOnboard,
     };
 
     return service;
@@ -65,6 +66,11 @@
       var onboardPayload = { 'orgDisplayName': Authinfo.getOrgName(),
         'csDiscoveryUrl': 'discovery.produs1.ciscoccservice.com' };
       return $http.put(sunlightChatConfigBase + '/' + Authinfo.getOrgId() + '/csonboard', onboardPayload);
+    }
+
+    function aaOnboard() {
+      var onboardPayload = {};
+      return $http.post(sunlightChatConfigBase + '/' + Authinfo.getOrgId() + '/aaonboard', onboardPayload);
     }
   }
 })();

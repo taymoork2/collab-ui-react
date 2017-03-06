@@ -25,7 +25,7 @@
       "avgTaskCloseTime": 0,
       "avgTaskWaitTime": 0,
       "numCsatScores": 0,
-      "numPendingTasks": 0
+      "numPendingTasks": 0,
     };
 
     var emptyUserstats = {
@@ -33,14 +33,14 @@
       "contactsAssigned": 0,
       "avgCsatScore": 0,
       "handleTime": 0,
-      "numCsatScores": 0
+      "numCsatScores": 0,
     };
 
     var service = {
       getStats: getStats,
       getReportingData: getReportingData,
       getOverviewData: getOverviewData,
-      getAllUsersAggregatedData: getAllUsersAggregatedData
+      getAllUsersAggregatedData: getAllUsersAggregatedData,
     };
 
     return service;
@@ -120,7 +120,7 @@
         intervalCount: 2,
         spanType: 'month',
         viewType: 'daily',
-        mediaType: 'chat'
+        mediaType: 'chat',
       });
     }
 
@@ -280,8 +280,8 @@
           viewType: viewType,
           mediaType: mediaType,
           startTime: startTimeStamp.valueOf(),
-          endTime: endTimeStamp.valueOf()
-        }
+          endTime: endTimeStamp.valueOf(),
+        },
       };
     }
 

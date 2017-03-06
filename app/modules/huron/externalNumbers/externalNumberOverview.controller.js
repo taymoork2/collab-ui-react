@@ -5,15 +5,19 @@
     .controller('ExternalNumberOverviewCtrl', ExternalNumberOverview);
 
   /* @ngInject */
-  function ExternalNumberOverview($scope, $state, $stateParams, ExternalNumberService, Notification,
-      ExternalNumberPool) {
+  function ExternalNumberOverview($scope, $state, $stateParams, ExternalNumberService, Notification, ExternalNumberPool, FeatureToggleService) {
     var vm = this;
     vm.currentCustomer = $stateParams.currentCustomer;
     vm.loading = true;
     vm.allNumbersCount = 0;
     vm.isTerminusCustomer = isTerminusCustomer;
+    vm.isHuronSupportThinktel = false;
     var ALL = 'all';
 
+    //(Paul Clark)This will be used for new "PstnProviders.component.ts"
+    FeatureToggleService.supports(FeatureToggleService.features.huronSupportThinktel).then(function (result) {
+      vm.isHuronSupportThinktel = result;
+    });
     updatePhoneNumberCount();
 
     $scope.$watchCollection(function () {
@@ -50,11 +54,11 @@
             customerName: vm.currentCustomer.customerName,
             customerEmail: vm.currentCustomer.customerEmail,
             customerCommunicationLicenseIsTrial: getCommTrial(vm.currentCustomer, 'communications'),
-            customerRoomSystemsLicenseIsTrial: getCommTrial(vm.currentCustomer, 'roomSystems')
+            customerRoomSystemsLicenseIsTrial: getCommTrial(vm.currentCustomer, 'roomSystems'),
           });
         } else {
           return $state.go('didadd', {
-            currentOrg: vm.currentCustomer
+            currentOrg: vm.currentCustomer,
           });
         }
       });

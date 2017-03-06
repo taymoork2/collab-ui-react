@@ -27,7 +27,6 @@ describe('Template: editServices', function () {
         return this.$q.resolve({});
       }
     }.bind(this));
-    spyOn(this.FeatureToggleService, 'supportsDirSync').and.returnValue(this.$q.resolve(false));
     spyOn(this.FeatureToggleService, 'atlasSharedMeetingsGetStatus').and.returnValue(this.$q.when(false));
     spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
     spyOn(this.Orgservice, 'getHybridServiceAcknowledged').and.returnValue(this.$q.resolve(this.mock.fusionServices));
@@ -35,8 +34,8 @@ describe('Template: editServices', function () {
     spyOn(this.Orgservice, 'getUnlicensedUsers');
     spyOn(this.$previousState, 'get').and.returnValue({
       state: {
-        name: 'test.state'
-      }
+        name: 'test.state',
+      },
     });
     this.$httpBackend.expectGET(this.UrlConfig.getSunlightConfigServiceUrl() + '/user/' + userId).respond(200);
     this.$httpBackend
@@ -48,7 +47,7 @@ describe('Template: editServices', function () {
         "uuid": "70b8d459-7f58-487a-afc8-02c0a82d53ca",
         "steeringDigit": "9",
         "timeZone": "America/Los_Angeles",
-        "voicemailPilotNumberGenerated": "false"
+        "voicemailPilotNumberGenerated": "false",
       }]);
   }
 

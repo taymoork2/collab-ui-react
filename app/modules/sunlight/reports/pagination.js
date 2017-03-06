@@ -11,7 +11,7 @@ angular.module('Sunlight.tabindex', [])
         attrs.$observe('disabled', function (disabled) {
           attrs.$set('tabindex', disabled ? -1 : null);
         });
-      }
+      },
     };
   });
 
@@ -100,7 +100,7 @@ angular.module('Sunlight.paging', [])
             ctrl._watchers.shift()();
           }
         });
-      }
+      },
     };
   });
 
@@ -130,7 +130,7 @@ angular.module('Sunlight.pagination', ['Sunlight.paging', 'Sunlight.tabindex', '
       return {
         number: number,
         text: text,
-        active: isActive
+        active: isActive,
       };
     }
 
@@ -224,7 +224,7 @@ angular.module('Sunlight.pagination', ['Sunlight.paging', 'Sunlight.tabindex', '
     nextText: 'Next',
     lastText: 'Last',
     rotate: true,
-    forceEllipses: false
+    forceEllipses: false,
   })
 
   .directive('slPagination', function (slPaginationConfig) {
@@ -235,7 +235,7 @@ angular.module('Sunlight.pagination', ['Sunlight.paging', 'Sunlight.tabindex', '
         previousText: '@',
         nextText: '@',
         lastText: '@',
-        ngDisabled: '='
+        ngDisabled: '=',
       },
       require: ['slPagination', '?ngModel'],
       restrict: 'A',
@@ -251,6 +251,6 @@ angular.module('Sunlight.pagination', ['Sunlight.paging', 'Sunlight.tabindex', '
         }
 
         paginationCtrl.init(ngModelCtrl, slPaginationConfig);
-      }
+      },
     };
   });

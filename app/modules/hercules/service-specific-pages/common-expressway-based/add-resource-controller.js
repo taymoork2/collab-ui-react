@@ -33,19 +33,19 @@
     vm.localizedAddToExistingExpressway = $translate.instant('hercules.addResourceDialog.addToExistingExpressway');
     vm.localizedWillBeInstalledMessage = $translate.instant('hercules.addResourceDialog.willBeInstalled', {
       ConnectorName: vm.localizedConnectorName,
-      ServiceName: vm.localizedServiceName
+      ServiceName: vm.localizedServiceName,
     });
     vm.localizedExpresswaysName = $translate.instant('hercules.addResourceDialog.selectClusterPlaceholder');
     vm.localizedCannotProvionError = $translate.instant('hercules.addResourceDialog.cannotProvisionConnector', {
-      ConnectorName: vm.localizedConnectorName
+      ConnectorName: vm.localizedConnectorName,
     });
     vm.localizedServiceIsReady = $translate.instant('hercules.addResourceDialog.serviceIsReady', {
-      ServiceName: vm.localizedServiceName
+      ServiceName: vm.localizedServiceName,
     });
     vm.optionalSelectResourceGroupStep = false;
     vm.chooseClusterName = false;
     vm.validationMessages = {
-      required: $translate.instant('common.invalidRequired')
+      required: $translate.instant('common.invalidRequired'),
     };
     vm.clustername = '';
     vm.localizedHostNameHelpText = $translate.instant('hercules.addResourceDialog.nameHelptext');
@@ -122,11 +122,11 @@
         .catch(function () {
           if (connectorType === 'c_mgmt') {
             throw $translate.instant('hercules.addResourceDialog.cannotProvisionConnector', {
-              ConnectorName: vm.localizedManagementConnectorName
+              ConnectorName: vm.localizedManagementConnectorName,
             });
           }
           throw $translate.instant('hercules.addResourceDialog.cannotProvisionConnector', {
-            ConnectorName: vm.localizedConnectorName
+            ConnectorName: vm.localizedConnectorName,
           });
         });
     }
@@ -160,7 +160,7 @@
             id: cluster.id,
             name: cluster.name,
             provisionedConnectors: _.map(cluster.provisioning, 'connectorType'),
-            connectorsHostname: cluster.connectors
+            connectorsHostname: cluster.connectors,
           });
 
         }
@@ -191,7 +191,7 @@
       expressways.forEach(function (expressway) {
         vm.expresswayOptions.push({
           value: expressway.id,
-          label: expressway.name
+          label: expressway.name,
         });
       });
       if (vm.expresswayOptions.length === 0) {
@@ -210,7 +210,7 @@
         })
         .catch(function (response) {
           Notification.errorWithTrackingId(response, 'hercules.addResourceDialog.cannotProvisionConnector', {
-            ConnectorName: vm.localizedConnectorName
+            ConnectorName: vm.localizedConnectorName,
           });
         })
         .finally(function () {
@@ -299,7 +299,7 @@
       $window.open("https://" + encodeURIComponent(vm.hostname) + "/fusionregistration");
     };
 
-    FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups)
+    FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup)
       .then(function (support) {
         if (support) {
           ResourceGroupService.getAllAsOptions().then(function (options) {

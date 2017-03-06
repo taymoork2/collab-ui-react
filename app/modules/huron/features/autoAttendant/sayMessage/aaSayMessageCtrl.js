@@ -15,24 +15,24 @@
       REPEAT_NAME: "repeatActionsOnInput",
       LABEL: "label",
       VALUE: "value",
-      HEADER_TYPE: "MENU_OPTION_ANNOUNCEMENT"
+      HEADER_TYPE: "MENU_OPTION_ANNOUNCEMENT",
     };
 
     var sayMessageType = {
       ACTION: 1,
       MENUHEADER: 2,
       MENUKEY: 3,
-      SUBMENU_HEADER: 4
+      SUBMENU_HEADER: 4,
     };
 
     var languageOption = {
       label: '',
-      value: ''
+      value: '',
     };
 
     var voiceOption = {
       label: '',
-      value: ''
+      value: '',
     };
 
 
@@ -103,7 +103,7 @@
 
     function setVoiceOption() {
       if (vm.voiceBackup && _.find(vm.voiceOptions, {
-        "value": vm.voiceBackup.value
+        "value": vm.voiceBackup.value,
       })) {
         vm.voiceOption = vm.voiceBackup;
       } else if (_.find(vm.voiceOptions, AALanguageService.getVoiceOption())) {
@@ -193,7 +193,7 @@
               var repeatAction = AutoAttendantCeMenuModelService.newCeActionEntry(properties.REPEAT_NAME, '');
               vm.menuEntry.entries[$scope.menuKeyIndex].addAction(repeatAction);
             }
-            return;
+            return undefined;
           }
         case sayMessageType.ACTION:
         // no special handling
@@ -310,8 +310,6 @@
               vm.menuEntry.addAction(sayAction);
             }
             vm.actionEntry = sayAction;
-
-            return;
           }
       }
     }

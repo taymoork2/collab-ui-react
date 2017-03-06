@@ -29,11 +29,11 @@ describe('controller: AddComponentCtrl', function () {
   function initController() {
     controller = $controller('AddComponentCtrl', {
       $modalInstance: {
-        close: sinon.stub()
+        close: sinon.stub(),
       },
       $scope: $scope,
       ComponentsService: ComponentsService,
-      GSSService: GSSService
+      GSSService: GSSService,
     });
 
     $scope.$apply();
@@ -42,7 +42,7 @@ describe('controller: AddComponentCtrl', function () {
   it('isValid true, group selected with component name', function () {
     controller.componentName = 'testComponentName';
     controller.selectedGroup = {
-      value: 1
+      value: '1',
     };
 
     expect(controller.isValid()).toBe(true);
@@ -52,7 +52,7 @@ describe('controller: AddComponentCtrl', function () {
     controller.componentName = 'testComponentName';
     controller.groupName = 'testGroupName';
     controller.selectedGroup = {
-      value: 'creatingGroup'
+      value: 'creatingGroup',
     };
 
     expect(controller.isValid()).toBe(true);
@@ -64,7 +64,7 @@ describe('controller: AddComponentCtrl', function () {
 
   it('isCreatingGroup true, creating group', function () {
     controller.selectedGroup = {
-      value: 'creatingGroup'
+      value: 'creatingGroup',
     };
 
     expect(controller.isCreatingGroup()).toBe(true);
@@ -83,7 +83,7 @@ describe('controller: AddComponentCtrl', function () {
     controller.componentName = 'testComponentName';
     controller.groupName = 'testGroupName';
     controller.selectedGroup = {
-      value: 'creatingGroup'
+      value: 'creatingGroup',
     };
 
     controller.addComponent();

@@ -8,16 +8,15 @@ require('./_user-csv.scss');
     .controller('UserCsvCtrl', UserCsvCtrl);
 
   /* @ngInject */
-  function UserCsvCtrl($interval, $modal, $q, $rootScope, $scope, $state, $timeout, $translate, $previousState, $stateParams,
+  function UserCsvCtrl($interval, $modal, $q, $rootScope, $scope, $state, $timeout, $translate, $previousState,
     Analytics, Authinfo, Config, CsvDownloadService, FeatureToggleService, HuronCustomer, LogMetricsService, NAME_DELIMITER,
-    Notification, Orgservice, TelephoneNumberService, UserCsvService, Userservice, ResourceGroupService, USSService) {
+    Notification, Orgservice, TelephoneNumberService, UserCsvService, Userservice, ResourceGroupService, USSService, DirSyncService) {
     // variables
     var vm = this;
     vm.licenseUnavailable = false;
     vm.isCancelledByUser = false;
     vm.isExporting = false;
     vm.isCsvValid = false;
-    vm.isOverExportThreshold = !!$stateParams.isOverExportThreshold;
     vm.handleHybridServicesResourceGroups = false;
     vm.hybridServicesUserProps = [];
 
@@ -28,11 +27,11 @@ require('./_user-csv.scss');
     var csvHeaders = null;
     var orgHeaders;
     var renamedHeaders = {
-      'Calendar Service': 'Hybrid Calendar Service (Exchange)'
+      'Calendar Service': 'Hybrid Calendar Service (Exchange)',
     };
     var mutuallyExclusiveCalendarEntitlements = {
       'squaredFusionCal': 'squaredFusionGCal',
-      'squaredFusionGCal': 'squaredFusionCal'
+      'squaredFusionGCal': 'squaredFusionCal',
     };
     var USER_ID_EMAIL_HEADER = 'User ID/Email (Required)';
     var NO_RESOURCE_GROUP = '**no resource group**';
@@ -43,12 +42,15 @@ require('./_user-csv.scss');
       Notification.errorResponse(response, 'firstTimeWizard.downloadHeadersError');
     });
 
-    vm.isDirSyncEnabled = false;
-    FeatureToggleService.supportsDirSync().then(function (enabled) {
-      vm.isDirSyncEnabled = enabled;
-    });
-    FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups).then(function (enabled) {
-      vm.isAtlasF237ResourceGroupsEnabled = enabled;
+    vm.isDirSyncEnabled = DirSyncService.isDirSyncEnabled();
+    if (DirSyncService.requiresRefresh()) {
+      DirSyncService.refreshStatus().then(function () {
+        vm.isDirSyncEnabled = DirSyncService.isDirSyncEnabled();
+      });
+    }
+
+    FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup).then(function (enabled) {
+      vm.hasResourceGroupFeatureToggle = enabled;
     });
 
     var csvPromiseChain = $q.resolve();
@@ -68,7 +70,7 @@ require('./_user-csv.scss');
             isCalendarOrCallServiceEntitled = true;
           }
         });
-        vm.handleHybridServicesResourceGroups = isCalendarOrCallServiceEntitled && vm.isAtlasF237ResourceGroupsEnabled;
+        vm.handleHybridServicesResourceGroups = isCalendarOrCallServiceEntitled && vm.hasResourceGroupFeatureToggle;
       }
     });
     var bulkStartLog = null;
@@ -95,10 +97,10 @@ require('./_user-csv.scss');
 
       userArray: [],
       userErrorArray: [],
-      csvChunk: 0
+      csvChunk: 0,
     };
     vm.model.desc = $translate.instant("csvUpload.desc", {
-      maxUsers: maxUsers
+      maxUsers: maxUsers,
     });
     vm.model.templateAnchorText = $translate.instant("firstTimeWizard.downloadStep");
 
@@ -192,7 +194,7 @@ require('./_user-csv.scss');
       if (vm.model.isProcessing) {
         $modal.open({
           type: 'dialog',
-          templateUrl: 'modules/core/users/userCsv/userCsvStopImportConfirm.tpl.html'
+          templateUrl: 'modules/core/users/userCsv/userCsvStopImportConfirm.tpl.html',
         }).result.then(function () {
           // cancel the current import
           vm.cancelProcessCsv();
@@ -207,7 +209,7 @@ require('./_user-csv.scss');
       var analyticsData = {
         numberOfErrors: vm.model.userErrorArray.length,
         usersAdded: vm.model.numNewUsers,
-        usersUpdated: vm.model.numExistingUsers
+        usersUpdated: vm.model.numExistingUsers,
       };
       Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.FINISH, null, analyticsData);
       $state.modal.dismiss();
@@ -229,7 +231,7 @@ require('./_user-csv.scss');
       if (Authinfo.isOnline()) {
         $modal.open({
           type: 'dialog',
-          templateUrl: "modules/core/users/userCsv/licenseUnavailabilityModal.tpl.html"
+          templateUrl: "modules/core/users/userCsv/licenseUnavailabilityModal.tpl.html",
         }).result.then(function () {
           $state.go('my-company.subscriptions');
         });
@@ -244,7 +246,7 @@ require('./_user-csv.scss');
     function warnCsvUserCount() {
       if (csvUsersArray.length > maxUsers) {
         Notification.error('firstTimeWizard.csvMaxLinesError', {
-          max: String(maxUsers)
+          max: String(maxUsers),
         });
       } else {
         Notification.error('firstTimeWizard.uploadCsvEmpty');
@@ -281,7 +283,7 @@ require('./_user-csv.scss');
       var data = {
         'newUsersCount': vm.model.numNewUsers || 0,
         'updatedUsersCount': vm.model.numExistingUsers || 0,
-        'errorUsersCount': _.isArray(vm.model.userErrorArray) ? vm.model.userErrorArray.length : 0
+        'errorUsersCount': _.isArray(vm.model.userErrorArray) ? vm.model.userErrorArray.length : 0,
       };
       LogMetricsService.logMetrics('Finished bulk processing', eType, LogMetricsService.getEventAction('buttonClick'), 200, bulkStartLog, 1, data);
     }
@@ -290,7 +292,7 @@ require('./_user-csv.scss');
       return {
         entitlementName: name,
         entitlementState: state ? 'ACTIVE' : 'INACTIVE',
-        properties: {}
+        properties: {},
       };
     }
 
@@ -298,7 +300,7 @@ require('./_user-csv.scss');
       return {
         id: name.toString(),
         idOperation: bAdd ? 'ADD' : 'REMOVE',
-        properties: {}
+        properties: {},
       };
     }
 
@@ -339,14 +341,14 @@ require('./_user-csv.scss');
         vm.model.userErrorArray.push({
           row: row,
           email: email,
-          error: errorMsg
+          error: errorMsg,
         });
         UserCsvService.setCsvStat({
           userErrorArray: [{
             row: row,
             email: email,
-            error: errorMsg
-          }]
+            error: errorMsg,
+          }],
         });
       });
     }
@@ -363,7 +365,7 @@ require('./_user-csv.scss');
         vm.model.importCompletedAt = Date.now();
         UserCsvService.setCsvStat({
           numTotalUsers: vm.model.numTotalUsers,
-          processProgress: vm.model.processProgress
+          processProgress: vm.model.processProgress,
         });
 
         if (vm.model.numTotalUsers >= csvUsersArray.length) {
@@ -374,7 +376,7 @@ require('./_user-csv.scss');
           vm.resetFile();
           vm.model.isProcessing = false;
           UserCsvService.setCsvStat({
-            isProcessing: false
+            isProcessing: false,
           });
           $scope.$broadcast('timer-stop');
           sendBulkMetric();
@@ -455,20 +457,20 @@ require('./_user-csv.scss');
                 $timeout(function () {
                   vm.model.numExistingUsers++;
                   UserCsvService.setCsvStat({
-                    numExistingUsers: vm.model.numExistingUsers
+                    numExistingUsers: vm.model.numExistingUsers,
                   });
                 });
               } else {
                 $timeout(function () {
                   vm.model.numNewUsers++;
                   UserCsvService.setCsvStat({
-                    numNewUsers: vm.model.numNewUsers
+                    numNewUsers: vm.model.numNewUsers,
                   });
                 });
               }
               // Build list of successful onboards and patches
               var addItem = {
-                address: user.email
+                address: user.email,
               };
               if (addItem.address.length > 0) {
                 addedUsersList.push(addItem);
@@ -635,7 +637,7 @@ require('./_user-csv.scss');
               if (!resourceGroup) {
                 processingError = true;
                 addUserError(csvRowIndex, id, $translate.instant("firstTimeWizard.invalidCalendarServiceResourceGroup", {
-                  group: calendarServiceResourceGroup
+                  group: calendarServiceResourceGroup,
                 }));
               } else {
                 calendarServiceResourceGroup = resourceGroup.id;
@@ -652,7 +654,7 @@ require('./_user-csv.scss');
               if (!resourceGroup) {
                 processingError = true;
                 addUserError(csvRowIndex, id, $translate.instant("firstTimeWizard.invalidCallServiceResourceGroup", {
-                  group: callServiceResourceGroup
+                  group: callServiceResourceGroup,
                 }));
               } else {
                 callServiceResourceGroup = resourceGroup.id;
@@ -746,7 +748,7 @@ require('./_user-csv.scss');
               'internalExtension': directoryNumber,
               'directLine': directLine,
               'licenses': licenseList,
-              'entitlements': entitleList
+              'entitlements': entitleList,
             };
             if (vm.handleHybridServicesResourceGroups) {
               user.resourceGroups = {};
@@ -807,6 +809,8 @@ require('./_user-csv.scss');
             // We filled out chunk or this is the last user. Process the bulk onboard
             // we pass idx since this is used for reference to original CSV in error reporting
             csvPromiseChain = onboardCsvUsers(tempUserArray, csvPromiseChain);
+            // this event is picked up by idleTimeoutService to keep the user logged in
+            $rootScope.$emit(Config.idleTabKeepAliveEvent);
             tempUserArray = [];
           }
 
@@ -820,7 +824,7 @@ require('./_user-csv.scss');
         return {
           seconds: (millisec / 1e3) % 60 | 0,
           minutes: (millisec / 6e4) % 60 | 0,
-          hours: (millisec / 36e5) % 24 | 0
+          hours: (millisec / 36e5) % 24 | 0,
         };
       }
 
@@ -895,7 +899,7 @@ require('./_user-csv.scss');
         numNewUsers: 0,
         numExistingUsers: 0,
         userArray: csvUsersArray,
-        userErrorArray: []
+        userErrorArray: [],
       }, true);
 
       initBulkMetric();

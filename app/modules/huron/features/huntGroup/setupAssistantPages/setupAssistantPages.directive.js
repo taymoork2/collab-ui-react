@@ -11,7 +11,7 @@ require('./_hg-pilot-lookup.scss');
     'hgPilotLookup',
     'hgMethod',
     'hgMemberLookup',
-    'hgFallbackDestination'
+    'hgFallbackDestination',
   ];
 
   pageDirectiveNames.forEach(function (directiveName) {
@@ -27,7 +27,7 @@ require('./_hg-pilot-lookup.scss');
       link: function () {},
       templateUrl: 'modules/huron/features/huntGroup/setupAssistantPages/' + pageFile,
       restrict: 'EA',
-      scope: false
+      scope: false,
     };
 
     return directive;

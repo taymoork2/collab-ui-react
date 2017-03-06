@@ -5,7 +5,7 @@ describe('Features Controller', function () {
   var featureCtrl, $rootScope, $scope, $modal, $q, $state, $filter, $timeout, Authinfo, HuntGroupService, TelephoneNumberService, Log, Notification, getDeferred, AutoAttendantCeInfoModelService, AAModelService, FeatureToggleService, CallParkService, CallPickupGroupService, PagingGroupService;
   var listOfCPs = getJSONFixture('huron/json/features/callPark/cpList.json');
   var emptyListOfCPs = {
-    callparks: []
+    callparks: [],
   };
   var getCPListSuccessResp = function (data) {
     return data;
@@ -13,7 +13,7 @@ describe('Features Controller', function () {
   var getCPListFailureResp = {
     'data': 'Internal Server Error',
     'status': 500,
-    'statusText': 'Internal Server Error'
+    'statusText': 'Internal Server Error',
   };
   var callParks = {
     "callparks": [{
@@ -23,7 +23,7 @@ describe('Features Controller', function () {
       "endRange": "5012",
       "memberCount": 3,
       "featureName": "huronFeatureDetails.cp",
-      "filterValue": "CP"
+      "filterValue": "CP",
     }, {
       "id": "abcd1234-abcd-abcd-abcddef123456",
       "cardName": "Technical Support",
@@ -31,8 +31,8 @@ describe('Features Controller', function () {
       "endRange": "5010",
       "memberCount": 2,
       "featureName": "huronFeatureDetails.cp",
-      "filterValue": "CP"
-    }]
+      "filterValue": "CP",
+    }],
   };
 
   var singlePark = {
@@ -41,8 +41,8 @@ describe('Features Controller', function () {
       "name": "Technical Support",
       "startRange": "5010",
       "endRange": "5010",
-      "memberCount": 2
-    }]
+      "memberCount": 2,
+    }],
   };
 
 
@@ -94,7 +94,7 @@ describe('Features Controller', function () {
       CallParkService: CallParkService,
       TelephoneNumberService: TelephoneNumberService,
       Log: Log,
-      Notification: Notification
+      Notification: Notification,
     });
 
   }));
@@ -124,7 +124,7 @@ describe('Features Controller', function () {
     $timeout.flush();
     expect(Notification.errorResponse).toHaveBeenCalledWith(getCPListFailureResp,
       'huronFeatureDetails.failedToLoad', {
-        featureType: 'huronFeatureDetails.cpName'
+        featureType: 'huronFeatureDetails.cpName',
       });
   });
   it('should set the pageState to Loading when controller is getting data from back-end', function () {
@@ -151,14 +151,14 @@ describe('Features Controller', function () {
     expect($state.go).toHaveBeenCalledWith('huronfeatures.deleteFeature', {
       deleteFeatureName: callParks.callparks[0].cardName,
       deleteFeatureId: callParks.callparks[0].id,
-      deleteFeatureType: 'CP'
+      deleteFeatureType: 'CP',
     });
   });
   it('should receive the HURON_FEATURE_DELETED event when a callPark gets deleted', function () {
     $rootScope.$broadcast('HURON_FEATURE_DELETED', {
       deleteFeatureName: callParks.callparks[0].cardName,
       deleteFeatureId: callParks.callparks[0].id,
-      deleteFeatureType: 'CP'
+      deleteFeatureType: 'CP',
     });
     expect(featureCtrl.listOfFeatures).not.toEqual(jasmine.arrayContaining([callParks.callparks[0]]));
   });
@@ -173,7 +173,7 @@ describe('Features Controller', function () {
     $rootScope.$broadcast('HURON_FEATURE_DELETED', {
       deleteFeatureName: callParks.callparks[0].cardName,
       deleteFeatureId: callParks.callparks[0].id,
-      deleteFeatureType: 'CP'
+      deleteFeatureType: 'CP',
     });
     expect(featureCtrl.listOfFeatures).not.toEqual(jasmine.arrayContaining([callParks.callparks[0]]));
     expect(featureCtrl.pageState).toEqual('NewFeature');

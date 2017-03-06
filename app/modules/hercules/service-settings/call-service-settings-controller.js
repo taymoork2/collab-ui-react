@@ -6,7 +6,7 @@
     .controller('CallServiceSettingsController', CallServiceSettingsController);
 
   /* @ngInject */
-  function CallServiceSettingsController($modal, ServiceDescriptor, Authinfo, USSService, CertService, Notification, CertificateFormatterService, $translate, hasVoicemailFeatureToggle, UCCService) {
+  function CallServiceSettingsController($modal, Analytics, ServiceDescriptor, Authinfo, USSService, CertService, Notification, CertificateFormatterService, $translate, hasVoicemailFeatureToggle, UCCService) {
     var vm = this;
     vm.formattedCertificateList = [];
     vm.readCerts = readCerts;
@@ -25,18 +25,20 @@
     }
     vm.hasVoicemailFeatureToggle = hasVoicemailFeatureToggle;
     vm.help = {
-      title: 'common.help'
+      title: 'common.help',
     };
     vm.callServiceAware = {
-      title: 'hercules.serviceNames.squared-fusion-uc.full'
+      title: 'hercules.serviceNames.squared-fusion-uc.full',
     };
 
     vm.domainVerification = {
-      title: 'hercules.settings.call.domainVerification'
+      title: 'hercules.settings.call.domainVerification',
     };
     vm.callServiceConnect = {
-      title: 'hercules.serviceNames.squared-fusion-ec'
+      title: 'hercules.serviceNames.squared-fusion-ec',
     };
+
+    Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CALL_SETTINGS);
 
     vm.storeEc = function (toggleConnect) {
       if (!toggleConnect) {
@@ -120,8 +122,8 @@
         resolve: {
           cert: function () {
             return cert;
-          }
-        }
+          },
+        },
       }).result
         .then(readCerts);
     };

@@ -1,0 +1,29 @@
+<div class="modal-header">
+  <button class="close" id="convertModalClose" ng-click="$dismiss()" type="button">
+    <span class="sr-only" translate="common.close">
+    </span>
+  </button>
+  <h5 class="modal-title" translate="mediaFusion.reassign.moveNode">
+</div>
+<div class="modal-body">
+  <div >
+    <p>
+      {{reassignClust.reassignText}}
+    </p>
+  </div>
+  <br>
+  <div class="columns medium-8 moveNodeDropDown inputHostNameForm">
+    <cs-select ng-model="reassignClust.selectedCluster" options="reassignClust.options" placeholder="reassignClust.selectPlaceholder" combo="true">
+    </cs-select>
+  </div>
+</div>
+<div class="modal-footer" >
+  <button class="btn btn--primary pull-right" id="convertActionButton" ng-click="reassignClust.reassign()" ng-disabled="!reassignClust.canContinue()">
+    <span translate="mediaFusion.reassign.moveNode">
+    </span>
+  </button>
+  <button class="btn pull-right" id="convertCancelButton" ng-click="$dismiss()" style="margin-right: 10px">
+    <span translate="mediaFusion.clusters.deregisterCancel">
+    </span>
+  </button>
+</div>

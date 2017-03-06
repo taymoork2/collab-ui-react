@@ -22,7 +22,7 @@
 
         function init() {
           $q.all({
-            hasHDSFeatureToggle: FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity),
+            hasContactCenterContextFeatureToggle: FeatureToggleService.supports(FeatureToggleService.features.contactCenterContext),
             hasGoogleCalendarFeatureToggle: FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar),
           }).then(function (featureToggles) {
             return $q.all({
@@ -43,8 +43,11 @@
             if (Authinfo.isEntitled(Config.entitlements.mediafusion)) {
               card.serviceList.push(FusionClusterService.getStatusForService('squared-fusion-media', response.clusterList));
             }
-            if (response.featureToggles.hasHDSFeatureToggle && Authinfo.isEntitled(Config.entitlements.hds)) {
+            if (Authinfo.isEntitled(Config.entitlements.hds)) {
               card.serviceList.push(FusionClusterService.getStatusForService('spark-hybrid-datasecurity', response.clusterList));
+            }
+            if (response.featureToggles.hasContactCenterContextFeatureToggle && Authinfo.isEntitled(Config.entitlements.context)) {
+              card.serviceList.push(FusionClusterService.getStatusForService('contact-center-context', response.clusterList));
             }
             card.enabled = _.some(card.serviceList, function (service) {
               return service.setup;
@@ -68,10 +71,14 @@
             return 'media-service-v2.list';
           } else if (serviceId === 'squared-fusion-gcal') {
             return 'google-calendar-service.settings';
+          } else if (serviceId === 'spark-hybrid-datasecurity') {
+            return 'hds.list';
+          } else if (serviceId === 'contact-center-context') {
+            return 'context-resources';
           }
         }
         return card;
-      }
+      },
     };
   }
 })();

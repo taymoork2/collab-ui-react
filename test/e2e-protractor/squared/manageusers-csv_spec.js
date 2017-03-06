@@ -10,15 +10,14 @@ describe('Manage Users - CSV File -', function () {
   var CSV_FILE_PATH = utils.resolvePath('./../data/' + CSV_FILE_NAME);
   var userList = users.createCsvAndReturnUsers(CSV_FILE_PATH);
 
-  // Given an email alias, activate the user and confirm entitlements set
+  // Given an email alias, find user and confirm entitlements set
   function confirmUserOnboarded(email) {
-    activate.setup(null, email);
 
     utils.searchAndClick(email);
     utils.expectIsDisplayed(users.servicesPanel);
 
     utils.expectIsDisplayed(users.messageServiceFree);
-    utils.expectIsDisplayed(users.meetingService);
+    utils.expectIsDisplayed(users.meetingServicePaid);
     // utils.expectIsDisplayed(users.hybridServices_sidePanel_Calendar);
     // utils.expectIsDisplayed(users.hybridServices_sidePanel_UC);
 

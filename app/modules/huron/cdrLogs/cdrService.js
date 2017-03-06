@@ -30,7 +30,7 @@
       createDownload: createDownload,
       downloadInIE: downloadInIE,
       extractUniqueIds: extractUniqueIds,
-      proxy: proxy
+      proxy: proxy,
     };
 
     function getUser(userName, calltype) {
@@ -44,7 +44,7 @@
         } else {
           Log.debug('User does not exist in this org.');
           Notification.error('cdrLogs.nonexistentUser', {
-            calltype: calltype
+            calltype: calltype,
           });
           defer.reject(null);
         }
@@ -59,10 +59,10 @@
 
     function createDownload(call) {
       var jsonFileData = {
-        cdrs: call
+        cdrs: call,
       };
       var jsonBlob = new $window.Blob([JSON.stringify(jsonFileData)], {
-        type: 'application/json'
+        type: 'application/json',
       });
 
       var jsonUrl;
@@ -72,7 +72,7 @@
 
       return {
         jsonBlob: jsonBlob,
-        jsonUrl: jsonUrl
+        jsonUrl: jsonUrl,
       };
     }
 
@@ -169,14 +169,11 @@
                   return response;
                 }
               }, function (response) {
-                if (response !== ABORT) {
-                  return;
-                } else {
+                if (response === ABORT) {
                   return response;
                 }
               });
             }
-            return;
           },
             function (response) {
               return errorResponse(response);
@@ -254,7 +251,6 @@
             return recursiveQuery(newCdrArray, thisJob);
           } else {
             groupCdrsIntoCalls(newCdrArray);
-            return;
           }
         } else {
           return ABORT;
@@ -337,7 +333,6 @@
         proxyData.push(splitFurther(call, x));
         x++;
       }
-      return;
     }
 
     function splitFurther(callGrouping, callNum) {
@@ -379,7 +374,7 @@
           method: "POST",
           url: cdrUrl,
           data: query,
-          timeout: cancelPromise.promise
+          timeout: cancelPromise.promise,
         }).success(function (response) {
           defer.resolve(response);
         }).error(function (response, status) {
@@ -389,26 +384,26 @@
               method: "POST",
               url: cdrUrl,
               data: query,
-              timeout: cancelPromise.promise
+              timeout: cancelPromise.promise,
             }).success(function (secondaryResponse) {
               defer.resolve(secondaryResponse);
             }).error(function (secondaryResponse, secondaryStatus) {
               defer.reject({
                 'response': secondaryResponse,
-                'status': secondaryStatus
+                'status': secondaryStatus,
               });
             });
           } else {
             defer.reject({
               'response': response,
-              'status': status
+              'status': status,
             });
           }
         });
       } else {
         defer.reject({
           'response': "",
-          'status': -1
+          'status': -1,
         });
       }
 
@@ -437,7 +432,6 @@
         Log.debug('Request failed due to an error with Elastic Search. Status: ' + response.status);
         Notification.error('cdrLogs.cdr500Error');
       }
-      return;
     }
   }
 })();

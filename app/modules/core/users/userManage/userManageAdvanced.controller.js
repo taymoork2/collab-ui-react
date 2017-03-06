@@ -8,7 +8,7 @@ require('./_user-manage.scss');
 
   /* @ngInject */
   function UserManageAdvancedController($modal, $previousState, $rootScope, $scope, $state, $timeout, $translate,
-    Analytics, FeatureToggleService, Notification) {
+    Analytics, DirSyncService, Notification) {
     var vm = this;
 
     vm.onInit = onInit;
@@ -57,36 +57,36 @@ require('./_user-manage.scss');
       $scope.csv = {
         isDirSyncEnabled: true,
         isCancelledByUser: false,
-        onCancelImport: onCancelImport
+        onCancelImport: onCancelImport,
       };
     }
 
     var transitions = {
       'installConnector': {
         next: '^.syncStatus',
-        prev: rootState
+        prev: rootState,
       },
 
       'syncStatus': {
         next: '^.dirsyncServices',
-        prev: '^.installConnector'
+        prev: '^.installConnector',
       },
 
       'dirsyncServices': {
         next: '^.dirsyncResult',
-        prev: '^.syncStatus'
+        prev: '^.syncStatus',
       },
 
       'dirsyncResult': {
-        next: 'users.list'
-      }
+        next: 'users.list',
+      },
     };
 
     function onCancelImport() {
       if (isCsvProcessing()) {
         $modal.open({
           type: 'dialog',
-          templateUrl: 'modules/core/users/userCsv/userCsvStopImportConfirm.tpl.html'
+          templateUrl: 'modules/core/users/userCsv/userCsvStopImportConfirm.tpl.html',
         }).result.then(function () {
           // cancel the current import
           $scope.csv.isCancelledByUser = true;
@@ -124,17 +124,13 @@ require('./_user-manage.scss');
       if (curState === 'installConnector') {
         // make sure directory syncing is enabled. If not, then we can't continue and need
         // to display an error
-        vm.isBusy = true;
-        FeatureToggleService.supportsDirSync().then(function (dirSyncEnabled) {
-          vm.isBusy = false;
-          if (dirSyncEnabled) {
-            Analytics.trackAddUsers(Analytics.eventNames.NEXT);
-            $state.go(nextState);
-          } else {
-            Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.SYNC_ERROR, null, { error: 'Directory Connector not installed' });
-            Notification.warning('userManage.advanced.noDirSync');
-          }
-        });
+        if (DirSyncService.isDirSyncEnabled()) {
+          Analytics.trackAddUsers(Analytics.eventNames.NEXT);
+          $state.go(nextState);
+        } else {
+          Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.SYNC_ERROR, null, { error: 'Directory Connector not installed' });
+          Notification.warning('userManage.advanced.noDirSync');
+        }
       } else {
         // move on
         Analytics.trackAddUsers(Analytics.eventNames.NEXT);

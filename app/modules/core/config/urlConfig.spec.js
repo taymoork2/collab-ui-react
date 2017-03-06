@@ -29,7 +29,7 @@ describe('UrlConfigSpec', function () {
       'dev': devHost,
       'cfe': cfeHost,
       'integration': intHost,
-      'prod': prodHost
+      'prod': prodHost,
     };
     return {
       expectUrlToBe: function (obj) {
@@ -48,7 +48,7 @@ describe('UrlConfigSpec', function () {
             throw new Error("Expected " + fn + " in " + env + " to be '" + expected + "' but it was '" + actual + "'");
           }
         });
-      }
+      },
     };
   };
 
@@ -61,7 +61,7 @@ describe('UrlConfigSpec', function () {
       dev: 'https://identity.webex.com/identity/scim/abc123efg456/v1/Users',
       cfe: 'https://identitybts.webex.com/identity/scim/abc123efg456/v1/Users',
       integration: 'https://identity.webex.com/identity/scim/abc123efg456/v1/Users',
-      prod: 'https://identity.webex.com/identity/scim/abc123efg456/v1/Users'
+      prod: 'https://identity.webex.com/identity/scim/abc123efg456/v1/Users',
     });
   });
 
@@ -70,7 +70,7 @@ describe('UrlConfigSpec', function () {
       dev: 'https://identity.webex.com/identity/config/abc123efg456/v1/UserReports',
       cfe: 'https://identitybts.webex.com/identity/config/abc123efg456/v1/UserReports',
       integration: 'https://identity.webex.com/identity/config/abc123efg456/v1/UserReports',
-      prod: 'https://identity.webex.com/identity/config/abc123efg456/v1/UserReports'
+      prod: 'https://identity.webex.com/identity/config/abc123efg456/v1/UserReports',
     });
   });
 
@@ -79,7 +79,7 @@ describe('UrlConfigSpec', function () {
       dev: 'https://identity.webex.com/organization/scim/v1/Orgs',
       cfe: 'https://identitybts.webex.com/organization/scim/v1/Orgs',
       integration: 'https://identity.webex.com/organization/scim/v1/Orgs',
-      prod: 'https://identity.webex.com/organization/scim/v1/Orgs'
+      prod: 'https://identity.webex.com/organization/scim/v1/Orgs',
     });
   });
 
@@ -97,7 +97,7 @@ describe('UrlConfigSpec', function () {
       dev: 'https://csdm-integration.wbx2.com/csdm/api/v1',
       cfe: 'https://csdm-e.wbx2.com/csdm/api/v1',
       integration: 'https://csdm-integration.wbx2.com/csdm/api/v1',
-      prod: 'https://csdm-a.wbx2.com/csdm/api/v1'
+      prod: 'https://csdm-a.wbx2.com/csdm/api/v1',
     });
   });
 
@@ -106,7 +106,7 @@ describe('UrlConfigSpec', function () {
       dev: 'https://admin-portal-test-public.wbx2.com/locus',
       cfe: 'https://admin-portal-test-public.wbx2.com/locus',
       integration: 'https://admin-portal-test-public.wbx2.com/locus',
-      prod: 'https://admin-portal-test-public.wbx2.com/locus'
+      prod: 'https://admin-portal-test-public.wbx2.com/locus',
     });
   });
 
@@ -115,7 +115,7 @@ describe('UrlConfigSpec', function () {
       dev: 'https://locus-a.wbx2.com',
       cfe: 'https://locus-e.wbx2.com',
       integration: 'https://locus-a.wbx2.com',
-      prod: 'https://locus-a.wbx2.com'
+      prod: 'https://locus-a.wbx2.com',
     });
   });
 
@@ -133,7 +133,7 @@ describe('UrlConfigSpec', function () {
       dev: 'https://msgr-admin-bts.webexconnect.com:443/admin-service/messenger/admin/api/v1',
       cfe: 'https://msgr-admin-bts.webexconnect.com:443/admin-service/messenger/admin/api/v1',
       integration: 'https://msgr-admin-bts.webexconnect.com:443/admin-service/messenger/admin/api/v1',
-      prod: 'https://msgr-admin.webexconnect.com:443/admin-service/messenger/admin/api/v1'
+      prod: 'https://msgr-admin.webexconnect.com:443/admin-service/messenger/admin/api/v1',
     });
   });
 
@@ -142,7 +142,7 @@ describe('UrlConfigSpec', function () {
       dev: 'https://identity.webex.com/organization/foo/v1/',
       cfe: 'https://identitybts.webex.com/organization/foo/v1/',
       integration: 'https://identity.webex.com/organization/foo/v1/',
-      prod: 'https://identity.webex.com/organization/foo/v1/'
+      prod: 'https://identity.webex.com/organization/foo/v1/',
     });
   });
 
@@ -151,7 +151,7 @@ describe('UrlConfigSpec', function () {
       dev: 'https://atlas-integration.wbx2.com/admin/api/v1/',
       cfe: 'https://atlas-integration.wbx2.com/admin/api/v1/',
       integration: 'https://atlas-integration.wbx2.com/admin/api/v1/',
-      prod: 'https://atlas-a.wbx2.com/admin/api/v1/'
+      prod: 'https://atlas-a.wbx2.com/admin/api/v1/',
     });
   });
 
@@ -160,7 +160,7 @@ describe('UrlConfigSpec', function () {
       dev: '.wbx2.com',
       cfe: '.wbx2.com',
       integration: '.wbx2.com',
-      prod: '.ciscospark.com'
+      prod: '.ciscospark.com',
     });
   });
 
@@ -169,7 +169,7 @@ describe('UrlConfigSpec', function () {
       dev: 'https://idbroker.webex.com/idb/idbconfig/',
       cfe: 'https://idbroker.webex.com/idb/idbconfig/',
       integration: 'https://idbroker.webex.com/idb/idbconfig/',
-      prod: 'https://idbroker.webex.com/idb/idbconfig/'
+      prod: 'https://idbroker.webex.com/idb/idbconfig/',
     });
   });
 
@@ -178,7 +178,7 @@ describe('UrlConfigSpec', function () {
       dev: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
       cfe: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
       integration: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
-      prod: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp'
+      prod: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
     });
   });
 
@@ -187,7 +187,7 @@ describe('UrlConfigSpec', function () {
       dev: 'https://ciscospark.statuspage.io/index.json',
       cfe: 'https://ciscospark.statuspage.io/index.json',
       integration: 'https://ciscospark.statuspage.io/index.json',
-      prod: 'https://ciscospark.statuspage.io/index.json'
+      prod: 'https://ciscospark.statuspage.io/index.json',
     });
   });
 
@@ -196,7 +196,7 @@ describe('UrlConfigSpec', function () {
       dev: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
       cfe: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
       integration: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
-      prod: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics'
+      prod: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
     });
   });
 
@@ -205,7 +205,7 @@ describe('UrlConfigSpec', function () {
       dev: 'https://admin-portal-test-public.wbx2.com/atlas-server/admin/api/v1/',
       cfe: 'https://admin-portal-test-public.wbx2.com/atlas-server/admin/api/v1/',
       integration: 'https://admin-portal-test-public.wbx2.com/atlas-server/admin/api/v1/',
-      prod: 'https://admin-portal-test-public.wbx2.com/atlas-server/admin/api/v1/'
+      prod: 'https://admin-portal-test-public.wbx2.com/atlas-server/admin/api/v1/',
     });
   });
 
@@ -214,7 +214,7 @@ describe('UrlConfigSpec', function () {
       dev: 'http://status.ciscospark.com/',
       cfe: 'http://status.ciscospark.com/',
       integration: 'http://status.ciscospark.com/',
-      prod: 'http://status.ciscospark.com/'
+      prod: 'http://status.ciscospark.com/',
     });
   });
 
@@ -223,7 +223,7 @@ describe('UrlConfigSpec', function () {
       dev: 'squared://',
       cfe: 'squared://',
       integration: 'squared://',
-      prod: 'squared://'
+      prod: 'squared://',
     });
   });
 
@@ -232,7 +232,7 @@ describe('UrlConfigSpec', function () {
       dev: 'http://cs.co/sqios',
       cfe: 'http://cs.co/sqios',
       integration: 'http://cs.co/sqios',
-      prod: 'http://cs.co/sqios'
+      prod: 'http://cs.co/sqios',
     });
   });
 
@@ -241,7 +241,7 @@ describe('UrlConfigSpec', function () {
       dev: 'http://cs.co/sqandroid',
       cfe: 'http://cs.co/sqandroid',
       integration: 'http://cs.co/sqandroid',
-      prod: 'http://cs.co/sqandroid'
+      prod: 'http://cs.co/sqandroid',
     });
   });
 
@@ -250,7 +250,7 @@ describe('UrlConfigSpec', function () {
       dev: 'https://web.ciscospark.com/',
       cfe: 'https://web.ciscospark.com/',
       integration: 'https://web.ciscospark.com/',
-      prod: 'https://web.ciscospark.com/'
+      prod: 'https://web.ciscospark.com/',
     });
   });
 
@@ -259,7 +259,7 @@ describe('UrlConfigSpec', function () {
       dev: 'https://hercules-integration.wbx2.com/v1',
       cfe: 'https://hercules-e.wbx2.com/v1',
       integration: 'https://hercules-integration.wbx2.com/v1',
-      prod: 'https://hercules-a.wbx2.com/v1'
+      prod: 'https://hercules-a.wbx2.com/v1',
     });
   });
 
@@ -268,7 +268,7 @@ describe('UrlConfigSpec', function () {
       dev: 'https://hercules-integration.wbx2.com/hercules/api/v2',
       cfe: 'https://hercules-e.wbx2.com/hercules/api/v2',
       integration: 'https://hercules-integration.wbx2.com/hercules/api/v2',
-      prod: 'https://hercules-a.wbx2.com/hercules/api/v2'
+      prod: 'https://hercules-a.wbx2.com/hercules/api/v2',
     });
   });
 
@@ -277,7 +277,7 @@ describe('UrlConfigSpec', function () {
       dev: 'https://hades.huron-int.com/api/v1/elasticsearch/',
       cfe: 'https://hades.huron-dev.com/api/v1/elasticsearch/',
       integration: 'https://hades.huron-int.com/api/v1/elasticsearch/',
-      prod: 'https://hades.huron-dev.com/api/v1/elasticsearch/'
+      prod: 'https://hades.huron-dev.com/api/v1/elasticsearch/',
     });
   });
 
@@ -286,7 +286,7 @@ describe('UrlConfigSpec', function () {
       dev: 'https://uss-integration.wbx2.com/',
       cfe: 'https://uss-e.wbx2.com/',
       integration: 'https://uss-integration.wbx2.com/',
-      prod: 'https://uss-a.wbx2.com/'
+      prod: 'https://uss-a.wbx2.com/',
     });
   });
 
@@ -295,7 +295,7 @@ describe('UrlConfigSpec', function () {
       dev: 'https://calliope-integration.wbx2.com/calliope/api/authorization/v1',
       cfe: 'https://calliope-e.wbx2.com/calliope/api/authorization/v1',
       integration: 'https://calliope-integration.wbx2.com/calliope/api/authorization/v1',
-      prod: 'https://calliope-a.wbx2.com/calliope/api/authorization/v1'
+      prod: 'https://calliope-a.wbx2.com/calliope/api/authorization/v1',
     });
   });
 
@@ -304,7 +304,7 @@ describe('UrlConfigSpec', function () {
       dev: 'https://certs-integration.wbx2.com/',
       cfe: 'https://certs-e.wbx2.com/',
       integration: 'https://certs-integration.wbx2.com/',
-      prod: 'https://certs-a.wbx2.com/'
+      prod: 'https://certs-a.wbx2.com/',
     });
   });
 
@@ -313,7 +313,7 @@ describe('UrlConfigSpec', function () {
       dev: 'https://feature-a.wbx2.com/feature/api/v1',
       cfe: 'http://feature.cfe.wbx2.com/feature/api/v1',
       integration: 'https://feature-a.wbx2.com/feature/api/v1',
-      prod: 'https://feature-a.wbx2.com/feature/api/v1'
+      prod: 'https://feature-a.wbx2.com/feature/api/v1',
     });
   });
 
@@ -322,7 +322,7 @@ describe('UrlConfigSpec', function () {
       dev: 'http://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
       cfe: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
       integration: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
-      prod: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1'
+      prod: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
     });
   });
 
@@ -331,7 +331,7 @@ describe('UrlConfigSpec', function () {
       dev: 'https://webex.com/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminHomePage',
       cfe: 'https://webex.com/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminHomePage',
       integration: 'https://webex.com/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminHomePage',
-      prod: 'https://webex.com/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminHomePage'
+      prod: 'https://webex.com/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminHomePage',
     });
   });
 
@@ -340,7 +340,7 @@ describe('UrlConfigSpec', function () {
       dev: 'https://webex.com/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage',
       cfe: 'https://webex.com/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage',
       integration: 'https://webex.com/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage',
-      prod: 'https://webex.com/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage'
+      prod: 'https://webex.com/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage',
     });
   });
 
@@ -349,7 +349,7 @@ describe('UrlConfigSpec', function () {
       dev: 'https://config.devus1.ciscoccservice.com/config/v1',
       cfe: 'https://config.appstaging.ciscoccservice.com/config/v1',
       integration: 'https://config.appstaging.ciscoccservice.com/config/v1',
-      prod: 'https://config.produs1.ciscoccservice.com/config/v1'
+      prod: 'https://config.produs1.ciscoccservice.com/config/v1',
     });
   });
 
@@ -358,7 +358,7 @@ describe('UrlConfigSpec', function () {
       dev: 'https://bubble.devus1.ciscoccservice.com',
       cfe: 'https://bubble.appstaging.ciscoccservice.com',
       integration: 'https://bubble.appstaging.ciscoccservice.com',
-      prod: 'https://bubble.produs1.ciscoccservice.com'
+      prod: 'https://bubble.produs1.ciscoccservice.com',
     });
   });
 
@@ -367,7 +367,7 @@ describe('UrlConfigSpec', function () {
       dev: 'https://atlas-a.wbx2.com/admin/api/v1/',
       cfe: 'https://atlas-a.wbx2.com/admin/api/v1/',
       integration: 'https://atlas-a.wbx2.com/admin/api/v1/',
-      prod: 'https://atlas-a.wbx2.com/admin/api/v1/'
+      prod: 'https://atlas-a.wbx2.com/admin/api/v1/',
     });
   });
 
@@ -376,7 +376,7 @@ describe('UrlConfigSpec', function () {
       dev: 'https://foo/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage',
       cfe: 'https://foo/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage',
       integration: 'https://foo/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage',
-      prod: 'https://foo/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage'
+      prod: 'https://foo/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage',
     });
   });
 
@@ -385,7 +385,7 @@ describe('UrlConfigSpec', function () {
       dev: 'https://foo/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminHomePage',
       cfe: 'https://foo/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminHomePage',
       integration: 'https://foo/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminHomePage',
-      prod: 'https://foo/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminHomePage'
+      prod: 'https://foo/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminHomePage',
     });
   });
 
@@ -394,7 +394,7 @@ describe('UrlConfigSpec', function () {
       dev: 'https://web.ciscospark.com/',
       cfe: 'https://web.ciscospark.com/',
       integration: 'https://web.ciscospark.com/',
-      prod: 'https://web.ciscospark.com/'
+      prod: 'https://web.ciscospark.com/',
     });
   });
 
@@ -403,7 +403,7 @@ describe('UrlConfigSpec', function () {
       dev: 'https://bmmp.dmz.ciscospark.com/api/v1',
       cfe: 'https://bmmp.ciscospark.com/api/v1',
       integration: 'https://bmmp.dmz.ciscospark.com/api/v1',
-      prod: 'https://bmmp.ciscospark.com/api/v1'
+      prod: 'https://bmmp.ciscospark.com/api/v1',
     });
   });
 

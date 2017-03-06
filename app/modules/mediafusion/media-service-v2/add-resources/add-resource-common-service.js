@@ -71,7 +71,7 @@
         })
         .catch(function (error) {
           var errorMessage = $translate.instant('mediaFusion.clusters.clusterCreationFailed', {
-            enteredCluster: enteredCluster
+            enteredCluster: enteredCluster,
           });
           Notification.errorWithTrackingId(error, errorMessage);
         });
@@ -96,7 +96,7 @@
     return {
       addRedirectTargetClicked: addRedirectTargetClicked,
       updateClusterLists: updateClusterLists,
-      redirectPopUpAndClose: redirectPopUpAndClose
+      redirectPopUpAndClose: redirectPopUpAndClose,
     };
 
   }

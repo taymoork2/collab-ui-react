@@ -6,18 +6,17 @@
     .controller('MediafusionClusterSettingsController', MediafusionClusterSettingsController);
 
   /* @ngInject */
-  function MediafusionClusterSettingsController($stateParams, $translate, FusionClusterService, Notification, MediaClusterServiceV2, hasMFFeatureToggle) {
+  function MediafusionClusterSettingsController($stateParams, FusionClusterService, Notification, MediaClusterServiceV2, hasMFFeatureToggle) {
     var vm = this;
-    vm.backUrl = 'cluster-list';
     vm.saveSipTrunk = saveSipTrunk;
     vm.hasMFFeatureToggle = hasMFFeatureToggle;
     //vm.sipurlconfiguration = '';
     vm.upgradeSchedule = {
-      title: 'hercules.expresswayClusterSettings.upgradeScheduleHeader'
+      title: 'hercules.expresswayClusterSettings.upgradeScheduleHeader',
     };
 
     vm.sipRegistration = {
-      title: 'mediaFusion.sipconfiguration.title'
+      title: 'mediaFusion.sipconfiguration.title',
     };
 
     MediaClusterServiceV2.getProperties($stateParams.id)
@@ -29,11 +28,11 @@
       resolve: {
         cluster: function () {
           return vm.cluster;
-        }
+        },
       },
       controller: 'DeleteClusterSettingControllerV2',
       controllerAs: 'deleteClust',
-      templateUrl: 'modules/mediafusion/media-service-v2/delete-cluster/delete-cluster-dialog.html'
+      templateUrl: 'modules/mediafusion/media-service-v2/delete-cluster/delete-cluster-dialog.html',
     };
 
     loadCluster($stateParams.id);
@@ -46,11 +45,6 @@
           });
           vm.cluster = cluster;
           vm.clusters = clusters;
-          if (vm.cluster) {
-            vm.localizedTitle = $translate.instant('hercules.expresswayClusterSettings.pageTitle', {
-              clusterName: cluster.name
-            });
-          }
           if (cluster && cluster.connectors && cluster.connectors.length === 0) {
             /* We have cluster data, but there are no nodes. Let's use the default deregistration dialog.  */
             vm.deregisterModalOptions = undefined;
@@ -63,7 +57,7 @@
 
     function saveSipTrunk() {
       vm.payLoad = {
-        'mf.ucSipTrunk': vm.sipurlconfiguration
+        'mf.ucSipTrunk': vm.sipurlconfiguration,
       };
       MediaClusterServiceV2
         .setProperties($stateParams.id, vm.payLoad)
@@ -73,12 +67,5 @@
             Notification.errorWithTrackingId(err, 'hercules.genericFailure');
           });
     }
-
-    /* Callback function used by <rename-and-deregister-cluster-section>  */
-    vm.nameUpdated = function () {
-      loadCluster($stateParams.id);
-    };
-
-
   }
 })();

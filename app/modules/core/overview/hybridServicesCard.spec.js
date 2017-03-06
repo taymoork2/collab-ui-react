@@ -56,7 +56,7 @@ describe('OverviewHybridServicesCard', function () {
     FusionClusterService.getStatusForService.and.returnValue({
       serviceId: '',
       setup: true,
-      status: 'operational'
+      status: 'operational',
     });
     var clustersWithManyServices = getJSONFixture('hercules/disco-systems-cluster-list.json');
     FusionClusterService.getAll.and.returnValue($q.resolve(clustersWithManyServices));
@@ -72,7 +72,7 @@ describe('OverviewHybridServicesCard', function () {
       return {
         serviceId: serviceId,
         setup: serviceId === 'squared-fusion-cal',
-        status: 'operational'
+        status: 'operational',
       };
     });
     var clustersWithManyServices = getJSONFixture('hercules/disco-systems-cluster-list.json');

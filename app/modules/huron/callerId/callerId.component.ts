@@ -1,4 +1,8 @@
 import { IOption } from './../dialing/dialing.service';
+import { HuronCustomerService } from 'modules/huron/customer/customer.service';
+
+const callerIdInputs = ['external'];
+
 class CallerId implements ng.IComponentController {
   private onChangeFn: Function;
   private customCallerIdName: string | null;
@@ -15,6 +19,8 @@ class CallerId implements ng.IComponentController {
   private companyNumberPattern: string;
   private listApiSuccess: boolean = false;
   private firstTime: boolean = true;
+  private customCallDest: any | null;
+  private callerIdInputs: string[];
   private static readonly BLOCK_CALLERID_TYPE = {
     name: 'Blocked Outbound Caller ID',
     key: 'EXT_CALLER_ID_BLOCKED_CALLER_ID',
@@ -35,10 +41,14 @@ class CallerId implements ng.IComponentController {
     name: 'Custom',
     key: 'EXT_CALLER_ID_CUSTOM',
   };
-
   /* @ngInject */
-  constructor(private $translate: ng.translate.ITranslateService) {
+  constructor(
+    private $translate: ng.translate.ITranslateService,
+    private HuronCustomerService: HuronCustomerService,
+    private TelephoneNumberService ) {
+
     this.initCallerId();
+
   }
 
   public $onInit(): void {
@@ -76,6 +86,9 @@ class CallerId implements ng.IComponentController {
       this.callerIdSelected = data.selected;
       this.onChange();
     }
+    if (changes.customCallerIdNumber && changes.customCallerIdNumber.previousValue === undefined) {
+      this.customCallDest = this.TelephoneNumberService.getDestinationObject(this.customCallerIdNumber);
+    }
   }
 
   public onChange(): void {
@@ -109,6 +122,7 @@ class CallerId implements ng.IComponentController {
     // Block Caller ID
     this.blockOption = new CallerIdOption(CallerId.BLOCK_CALLERID_TYPE.name, new CallerIdConfig('', this.$translate.instant('callerIdPanel.blockedCallerIdDescription'), '', CallerId.BLOCK_CALLERID_TYPE.key));
     this.options.push(this.blockOption);
+    this.callerIdInputs = callerIdInputs;
   }
 
   private updateCompanyNumberOptions(companyNumbers) {
@@ -200,6 +214,27 @@ class CallerId implements ng.IComponentController {
       label: selected.label,
     };
     return _selected;
+  }
+
+  public getRegionCode() {
+    if (this.showCustom()) {
+      return this.HuronCustomerService.getVoiceCustomer();
+    }
+  }
+
+  public setCallerIdNumber(callDest: any) {
+    this.customCallerIdNumber = (callDest && callDest.phoneNumber) ? this.validate(callDest.phoneNumber) : null;
+    this.onChange();
+  }
+
+  public validate(number: any) {
+    let newNumber = number;
+    if (number && this.TelephoneNumberService.validateDID(number)) {
+      newNumber = this.TelephoneNumberService.getDIDValue(number);
+    } else if (number.indexOf('@') === -1) {
+      newNumber = _.replace(number, /-/g, '');
+    }
+    return newNumber.replace(/ /g, '');
   }
 }
 

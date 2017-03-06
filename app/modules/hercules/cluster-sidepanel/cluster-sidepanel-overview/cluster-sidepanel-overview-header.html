@@ -7,7 +7,8 @@
   <div class="header-info">
     <div class="header-info-wrap">
       <div class="header-title">
-        <span>{{$ctrl.cluster.name}}</span>
+        <span tooltip-class="cluster-name" tooltip-trigger="mouseenter" tooltip-placement="bottom"
+              tooltip-animation="true" tooltip="{{$ctrl.cluster.name}}">{{$ctrl.cluster.name}}</span>
       </div>
     </div>
   </div>

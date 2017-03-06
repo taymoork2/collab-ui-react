@@ -25,7 +25,7 @@ describe('Controller: SettingsServiceAddressCtrl', function () {
     spyOn(Notification, 'errorResponse');
 
     controller = $controller('SettingsServiceAddressCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
 
     $scope.$apply();

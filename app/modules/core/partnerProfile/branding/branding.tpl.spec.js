@@ -50,7 +50,7 @@ describe('Template: branding', function () {
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
       callback({
         success: true,
-        orgSettings: {}
+        orgSettings: {},
       });
     });
     spyOn(BrandService, 'getLogoUrl').and.returnValue($q.resolve());
@@ -63,7 +63,7 @@ describe('Template: branding', function () {
 
   function compileView() {
     controller = $controller('BrandingCtrl as bctrl', {
-      $scope: $scope
+      $scope: $scope,
     });
     var template = $templateCache.get('modules/core/partnerProfile/branding/branding.tpl.html');
     view = $compile(angular.element(template))($scope);

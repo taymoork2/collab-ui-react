@@ -14,11 +14,12 @@
         index: '=aaIndex',
         keyIndex: '@aaKeyIndex',
         fromRouteCall: '@aaFromRouteCall',
-        fromFallback: '@aaFromFallback'
+        fromDecision: '@aaFromDecision',
+        fromFallback: '@aaFromFallback',
       },
       controller: 'AARouteToExtNumCtrl',
       controllerAs: 'aaRouteToExtNum',
-      templateUrl: 'modules/huron/features/autoAttendant/routeToExtNum/aaRouteToExtNum.tpl.html'
+      templateUrl: 'modules/huron/features/autoAttendant/routeToExtNum/aaRouteToExtNum.tpl.html',
     };
   }
 })();

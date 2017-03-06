@@ -5,7 +5,7 @@ describe('Controller: AASubmenuCtrl', function () {
   var AutoAttendantCeMenuModelService, AACommonService;
   var $rootScope, $scope;
   var aaUiModel = {
-    openHours: {}
+    openHours: {},
   };
   var schedule = 'openHours';
   var index = '0';
@@ -14,7 +14,7 @@ describe('Controller: AASubmenuCtrl', function () {
   var queueName = 'Sunlight Queue 1';
   var queues = [{
     queueName: queueName,
-    queueUrl: '/c16a6027-caef-4429-b3af-9d61ddc7964b'
+    queueUrl: '/c16a6027-caef-4429-b3af-9d61ddc7964b',
   }];
 
   var data = getJSONFixture('huron/json/autoAttendant/aaPhoneMenuCtrl.json');
@@ -67,7 +67,7 @@ describe('Controller: AASubmenuCtrl', function () {
   }, {
     "label": 'autoAttendant.phoneMenuRouteToExtNum',
   }, {
-    "label": 'autoAttendant.phoneMenuRouteToSipEndpoint'
+    "label": 'autoAttendant.phoneMenuRouteToSipEndpoint',
   }, {
     "label": 'autoAttendant.phoneMenuRouteUser',
   }, {
@@ -97,7 +97,7 @@ describe('Controller: AASubmenuCtrl', function () {
     spyOn(AACommonService, 'isRouteSIPAddressToggle').and.returnValue(true);
 
     controller = $controller('AASubmenuCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
     $scope.$apply();
 
@@ -167,7 +167,7 @@ describe('Controller: AASubmenuCtrl', function () {
       var phoneMenu = {
         "type": "MENU_OPTION",
         "entries": [],
-        "headers": []
+        "headers": [],
       };
       controller.menuEntry = phoneMenu;
       controller.selectedActions = [];
@@ -186,7 +186,7 @@ describe('Controller: AASubmenuCtrl', function () {
       var phoneMenu = {
         "type": "MENU_OPTION",
         "entries": [],
-        "headers": []
+        "headers": [],
       };
       controller.menuEntry = phoneMenu;
       controller.selectedActions = [];
@@ -210,7 +210,7 @@ describe('Controller: AASubmenuCtrl', function () {
       var phoneMenu = {
         "type": "MENU_OPTION",
         "entries": [],
-        "headers": []
+        "headers": [],
       };
       controller.menuEntry = phoneMenu;
       controller.selectedActions = [];
@@ -233,7 +233,7 @@ describe('Controller: AASubmenuCtrl', function () {
       var phoneMenu = {
         "type": "MENU_OPTION",
         "entries": [],
-        "headers": []
+        "headers": [],
       };
       phoneMenu.entries.push(phoneMenuEntry);
       controller.menuEntry = phoneMenu;

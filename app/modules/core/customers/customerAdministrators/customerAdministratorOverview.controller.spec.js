@@ -22,8 +22,8 @@ describe('Controller: customerAdministratorOverviewCtrl', function () {
 
     spyOn(CustomerAdministratorService, 'getCustomerAdmins').and.returnValue($q.resolve({
       data: {
-        totalResults: 2
-      }
+        totalResults: 2,
+      },
     }));
     spyOn(Notification, 'error');
   }));
@@ -31,7 +31,7 @@ describe('Controller: customerAdministratorOverviewCtrl', function () {
   function initController() {
     controller = $controller('CustomerAdministratorOverviewCtrl', {
       $scope: $scope,
-      $stateParams: $stateParams
+      $stateParams: $stateParams,
     });
     $scope.$apply();
   }

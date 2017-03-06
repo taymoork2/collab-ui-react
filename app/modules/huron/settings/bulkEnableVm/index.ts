@@ -1,13 +1,15 @@
 import { BulkEnableVmComponent } from './bulkEnableVm.component';
 import { BulkEnableVmService } from './bulkEnableVm.service';
+import featureToggleModule from 'modules/core/featureToggle';
 export * from './bulkEnableVm.service';
-    require('./bulkEnableVm.scss');
+require('./bulkEnableVm.scss');
 
 export default angular
   .module('huron.bulk-enable-vm', [
     'atlas.templates',
     'collab.ui',
     'pascalprecht.translate',
+    featureToggleModule,
     require('modules/core/scripts/services/authinfo'),
     require('modules/core/scripts/services/userlist.service'),
     require('modules/huron/telephony/cmiServices'),

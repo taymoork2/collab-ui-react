@@ -3,7 +3,7 @@
 describe('Care Setup Assistant Ctrl', function () {
 
   var controller, $scope, $modal, $q, CTService, getLogoDeferred, getLogoUrlDeferred, SunlightConfigService, $state, $stateParams, LogMetricsService;
-  var Notification, $translate, DomainManagementService, _scomUrl, $httpBackend;
+  var Notification, $translate, _scomUrl, $httpBackend;
 
   var escapeKey = 27;
   var templateName = 'Atlas UT Template';
@@ -21,12 +21,12 @@ describe('Care Setup Assistant Ctrl', function () {
 
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue(OrgId),
-    getOrgName: jasmine.createSpy('getOrgName').and.returnValue(OrgName)
+    getOrgName: jasmine.createSpy('getOrgName').and.returnValue(OrgName),
   };
 
   var getDummyLogo = function (data) {
     return {
-      data: data
+      data: data,
     };
   };
 
@@ -36,8 +36,8 @@ describe('Care Setup Assistant Ctrl', function () {
     success: false,
     status: 403,
     Errors: [{
-      errorCode: '100106'
-    }]
+      errorCode: '100106',
+    }],
   };
 
   var deSelectAllDays = function () {
@@ -52,46 +52,52 @@ describe('Care Setup Assistant Ctrl', function () {
     'field1': {
       attributes: [{
         name: 'type',
-        value: { id: 'name' }
-      }]
+        value: { id: 'name' },
+      }],
     },
     'field2': {
       attributes: [{
         name: 'type',
-        value: { id: 'email' }
-      }]
+        value: { id: 'email' },
+      }],
     },
     'field3': {
       attributes: [{
         name: 'type',
-        value: { id: 'name' }
-      }]
+        value: { id: 'name' },
+      }],
+    },
+    'field4': {
+      attributes: [{
+        name: 'type',
+        value: { id: 'phone' },
+      }],
     } };
   var customerInfoWithLongAttributeValue = {
     'welcomeHeader': {
       'attributes': [
         { 'name': 'header', 'value': 'Welcome to' },
-        { 'name': 'organization', 'value': Array(52).join("c") }
-      ]
+        { 'name': 'organization', 'value': Array(52).join("c") },
+      ],
     },
     'field1': {
       'attributes': [
         { 'name': 'label', 'value': 'Name' },
         { 'name': 'hintText', 'value': 'Something' },
-        { 'name': 'type', 'value': { id: 'name' } }
+        { 'name': 'type', 'value': { id: 'name' } },
       ] },
     'field2': {
       'attributes': [
         { 'name': 'label', 'value': 'Email' },
         { 'name': 'hintText', 'value': Array(52).join("d") },
-        { 'name': 'type', 'value': { id: 'email' } }
+        { 'name': 'type', 'value': { id: 'email' } },
       ] },
     'field3': {
       'attributes': [
         { 'name': 'label', 'value': 'SomethingElse' },
         { 'name': 'hintText', 'value': 'SomethingElse' },
-        { 'name': 'type', 'value': { id: 'custom' } }
-      ] }
+        { 'name': 'type', 'value': { id: 'custom' } },
+      ] },
   };
 
   var selectedDaysByDefault = businessHours.selectedDaysByDefault;
@@ -101,7 +107,7 @@ describe('Care Setup Assistant Ctrl', function () {
   var defaultTimings = businessHours.defaultTimings;
 
   afterEach(function () {
-    controller = $scope = $modal = $q = CTService = getLogoDeferred = getLogoUrlDeferred = SunlightConfigService = $state = $stateParams = LogMetricsService = DomainManagementService = undefined;
+    controller = $scope = $modal = $q = CTService = getLogoDeferred = getLogoUrlDeferred = SunlightConfigService = $state = $stateParams = LogMetricsService = undefined;
     Notification = $translate = undefined;
   });
 
@@ -116,8 +122,7 @@ describe('Care Setup Assistant Ctrl', function () {
   }));
 
   var intializeCtrl = function (_$rootScope_, $controller, _$modal_, _$q_, _$translate_,
-    _$window_, _CTService_, _SunlightConfigService_, _$state_, _Notification_, _$stateParams_,
-                                _LogMetricsService_, _DomainManagementService_, UrlConfig, _$httpBackend_) {
+    _$window_, _CTService_, _SunlightConfigService_, _$state_, _Notification_, _$stateParams_, _LogMetricsService_, UrlConfig, _$httpBackend_) {
     $scope = _$rootScope_.$new();
     $modal = _$modal_;
     $q = _$q_;
@@ -128,7 +133,6 @@ describe('Care Setup Assistant Ctrl', function () {
     Notification = _Notification_;
     $stateParams = _$stateParams_;
     LogMetricsService = _LogMetricsService_;
-    DomainManagementService = _DomainManagementService_;
     _scomUrl = UrlConfig.getScomUrl() + '/' + OrgId;
     $httpBackend = _$httpBackend_;
 
@@ -148,10 +152,10 @@ describe('Care Setup Assistant Ctrl', function () {
     spyOn(SunlightConfigService, 'updateChatConfig');
     $stateParams = {
       template: undefined,
-      isEditFeature: false
+      isEditFeature: false,
     };
     controller = $controller('CareSetupAssistantCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
   };
 
@@ -173,7 +177,7 @@ describe('Care Setup Assistant Ctrl', function () {
 
   function rejectLogoPromise() {
     getLogoDeferred.reject({
-      status: 500
+      status: 500,
     });
     $scope.$apply();
   }
@@ -304,7 +308,7 @@ describe('Care Setup Assistant Ctrl', function () {
         useOrgProfile: true,
         useAgentRealName: true,
         displayText: OrgName,
-        orgLogoUrl: dummyLogoUrl
+        orgLogoUrl: dummyLogoUrl,
       });
     });
 
@@ -357,11 +361,11 @@ describe('Care Setup Assistant Ctrl', function () {
       var returnObj = {
         attributes: [{
           name: 'header',
-          value: 'careChatTpl.defaultWelcomeText'
+          value: 'careChatTpl.defaultWelcomeText',
         }, {
           name: 'organization',
-          value: OrgName
-        }]
+          value: OrgName,
+        }],
       };
       controller.setActiveItem("welcomeHeader");
       expect(controller.activeItem).toEqual(returnObj);
@@ -418,7 +422,7 @@ describe('Care Setup Assistant Ctrl', function () {
       var testObj = {
         "trees-14": "x-10000",
         "trees-15": "x-20000",
-        "trees-16": "x-30000"
+        "trees-16": "x-30000",
       };
       var isDefinedRes = controller.isDefined(testObj, "trees-15");
       expect(isDefinedRes).toBe(true);
@@ -428,7 +432,7 @@ describe('Care Setup Assistant Ctrl', function () {
       var testObj = {
         "trees-14": "x-10000",
         "trees-15": "x-20000",
-        "trees-16": ""
+        "trees-16": "",
       };
       var isDefinedRes = controller.isDefined(testObj, "trees-17");
       expect(isDefinedRes).toBe(false);
@@ -438,7 +442,7 @@ describe('Care Setup Assistant Ctrl', function () {
 
     it("should add a new category token and clear the input field when a new token is added", function () {
       var ENTER_KEYPRESS_EVENT = {
-        which: 13
+        which: 13,
       };
       controller.categoryOptionTag = 'Mock Category Token';
       var mockElementObject = jasmine.createSpyObj('element', ['tokenfield']);
@@ -487,7 +491,7 @@ describe('Care Setup Assistant Ctrl', function () {
 
     function setTimezone(timeZoneValue) {
       controller.scheduleTimeZone = _.find(CTService.getTimezoneOptions(), {
-        value: timeZoneValue
+        value: timeZoneValue,
       });
     }
 
@@ -527,13 +531,13 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(_.map(controller.startTimeOptions, 'label')).toEqual(startTimeOptions);
       var startTime = {
         label: '09:00 AM',
-        value: '09:00'
+        value: '09:00',
       };
       var oldEndTime = controller.timings.endTime;
       setTimings(startTime);
       expect(controller.timings).toEqual({
         startTime: startTime,
-        endTime: oldEndTime
+        endTime: oldEndTime,
 
       });
     });
@@ -542,16 +546,16 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(_.map(controller.startTimeOptions, 'label')).toEqual(startTimeOptions);
       var startTime = {
         label: '05:00 PM',
-        value: '17:00'
+        value: '17:00',
       };
       var endTime = {
         label: '05:30 PM',
-        value: '17:30'
+        value: '17:30',
       };
       setTimings(startTime);
       expect(controller.timings).toEqual({
         startTime: startTime,
-        endTime: endTime
+        endTime: endTime,
       });
     });
 
@@ -559,16 +563,16 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(_.map(controller.startTimeOptions, 'label')).toEqual(startTimeOptions);
       var startTime = {
         label: '11:30 PM',
-        value: '23:30'
+        value: '23:30',
       };
       var endTime = {
         label: '11:59 PM',
-        value: '23:59'
+        value: '23:59',
       };
       setTimings(startTime);
       expect(controller.timings).toEqual({
         startTime: startTime,
-        endTime: endTime
+        endTime: endTime,
       });
     });
 
@@ -579,11 +583,11 @@ describe('Care Setup Assistant Ctrl', function () {
       controller.setDay(6); // set Saturday
       var startTime = {
         label: '10:30 AM',
-        value: '10:30'
+        value: '10:30',
       };
       var endTime = {
         label: '05:30 PM',
-        value: '17:30'
+        value: '17:30',
       };
       setTimings(startTime);
       controller.timings.endTime = endTime;
@@ -597,10 +601,10 @@ describe('Care Setup Assistant Ctrl', function () {
           open24Hours: false,
           timings: {
             startTime: '10:30 AM',
-            endTime: '05:30 PM'
+            endTime: '05:30 PM',
           },
-          timezone: 'America/Nassau'
-        }
+          timezone: 'America/Nassau',
+        },
       });
     });
 
@@ -641,7 +645,7 @@ describe('Care Setup Assistant Ctrl', function () {
         headers: function () {
           return 'something/abc123';
         },
-        status: 201
+        status: 201,
       });
 
       $httpBackend.expectGET(_scomUrl).respond(404, {});
@@ -655,11 +659,11 @@ describe('Care Setup Assistant Ctrl', function () {
         controllerAs: 'embedCodeCtrl',
         resolve: {
           templateId: jasmine.any(Function),
-          templateHeader: jasmine.any(Function)
-        }
+          templateHeader: jasmine.any(Function),
+        },
       });
       expect(Notification.success).toHaveBeenCalledWith(jasmine.any(String), {
-        featureName: jasmine.any(String)
+        featureName: jasmine.any(String),
       });
       expect(controller.saveCTErrorOccurred).toBeFalsy();
       expect($state.go).toHaveBeenCalled();
@@ -678,7 +682,7 @@ describe('Care Setup Assistant Ctrl', function () {
         headers: function () {
           return 'something/abc123';
         },
-        status: 200
+        status: 200,
       });
 
       $httpBackend.expectGET(_scomUrl).respond(404, {});
@@ -692,11 +696,11 @@ describe('Care Setup Assistant Ctrl', function () {
         controllerAs: 'embedCodeCtrl',
         resolve: {
           templateId: jasmine.any(Function),
-          templateHeader: jasmine.any(Function)
-        }
+          templateHeader: jasmine.any(Function),
+        },
       });
       expect(Notification.success).toHaveBeenCalledWith(jasmine.any(String), {
-        featureName: jasmine.any(String)
+        featureName: jasmine.any(String),
       });
       expect(controller.saveCTErrorOccurred).toBeFalsy();
       expect($state.go).toHaveBeenCalled();
@@ -757,7 +761,7 @@ describe('Care Setup Assistant Ctrl', function () {
   describe('For callback media', function () {
     beforeEach(inject(intializeCtrl));
     beforeEach(function () {
-      controller.type = 'callback';
+      controller.selectedMediaType = 'callback';
       controller.setStates();
       controller.setOverviewCards();
       controller.getDefaultTemplate();
@@ -769,14 +773,14 @@ describe('Care Setup Assistant Ctrl', function () {
         'overview',
         'customerInformation',
         'offHours',
-        'summary'
+        'summary',
       ]);
     });
 
     it('the overview page should have expected cards', function () {
       expect(controller.overviewCards).toEqual([
-        'customerInformation',
-        'offHours'
+        { name: 'customerInformation', mediaIcons: [] },
+        { name: 'offHours', mediaIcons: [] },
       ]);
     });
 
@@ -792,39 +796,51 @@ describe('Care Setup Assistant Ctrl', function () {
     });
   });
 
-  describe('Syncing verified domains with care', function () {
+  describe('For chat plus callback selected media type', function () {
     beforeEach(inject(intializeCtrl));
-    it('when the org has no verified domains', function () {
-      spyOn(DomainManagementService, 'getVerifiedDomains').and.callFake(function () {
-        var data = [{
-          "text": "ccservice.com",
-          "status": "pending"
-        }];
-        return $q.resolve(data);
-      });
-      controller.syncDomains();
-      $scope.$apply();
-      expect(SunlightConfigService.updateChatConfig).toHaveBeenCalledWith({ "allowedOrigins": [".*"] });
+    beforeEach(function () {
+      controller.selectedMediaType = 'chatPlusCallback';
+      controller.setStates();
+      controller.setOverviewCards();
+      controller.getDefaultTemplate();
     });
-    it('when the org has verified domains', function () {
-      spyOn(DomainManagementService, 'getVerifiedDomains').and.callFake(function () {
-        var data = [{
-          "text": "ccservice.com",
-          "status": "verified"
-        }];
-        return $q.resolve(data);
-      });
-      controller.syncDomains();
-      $scope.$apply();
-      expect(SunlightConfigService.updateChatConfig).toHaveBeenCalledWith({ "allowedOrigins": ["ccservice.com"] });
+
+    it('the page order should be as expected', function () {
+      expect(controller.states).toEqual([
+        'name',
+        'overview',
+        'customerInformationChat',
+        'agentUnavailable',
+        'feedback',
+        'profile',
+        'chatStatusMessages',
+        'customerInformationCallback',
+        'offHours',
+        'summary',
+      ]);
     });
-    it('when the domain management service call fails', function () {
-      spyOn(DomainManagementService, 'getVerifiedDomains').and.callFake(function () {
-        return $q.reject({});
-      });
-      controller.syncDomains();
-      $scope.$apply();
-      expect(SunlightConfigService.updateChatConfig).not.toHaveBeenCalled();
+
+    it('the overview page should have expected cards', function () {
+      expect(controller.overviewCards).toEqual([
+        { name: 'customerInformationChat', mediaIcons: ['icon-message'] },
+        { name: 'agentUnavailable', mediaIcons: ['icon-message'] },
+        { name: 'feedback', mediaIcons: ['icon-message'] },
+        { name: 'customerInformationCallback', mediaIcons: ['icon-phone'] },
+        { name: 'offHours', mediaIcons: ['icon-message', 'icon-phone'] },
+      ]);
+    });
+
+    it('default template should be of type chatPlusCallback', function () {
+      expect(controller.template.configuration.mediaType).toEqual('chatPlusCallback');
+    });
+
+    it('should initialize only customer info & off-hours cards as enabled', function () {
+      expect(controller.template.configuration.pages.customerInformationChat.enabled).toBe(true);
+      expect(controller.template.configuration.pages.customerInformationCallback.enabled).toBe(true);
+      expect(controller.template.configuration.pages.agentUnavailable.enabled).toBe(true);
+      expect(controller.template.configuration.pages.offHours.enabled).toBe(true);
+      expect(controller.template.configuration.pages.callbackConfirmation.enabled).toBe(true);
+      expect(controller.template.configuration.pages.feedback.enabled).toBe(true);
     });
   });
 

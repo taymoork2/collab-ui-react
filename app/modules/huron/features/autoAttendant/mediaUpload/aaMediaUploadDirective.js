@@ -15,11 +15,13 @@
         schedule: '@aaSchedule',
         menuId: '@aaMenuId',
         index: '=aaIndex',
+        aaFileSize: '@aaMediaUploadSize',
         isMenuHeader: '@aaMenuHeader',
         menuKeyIndex: '@aaKeyIndex',
         fromSubMenu: '@aaFromSubMenu',
         type: '@aaMediaType',
         change: "&aaChange",
+        mediaState: "=aaMediaState",
       },
     };
   }

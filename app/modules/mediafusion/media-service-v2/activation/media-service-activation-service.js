@@ -12,7 +12,7 @@
     var setServiceEnabled = function (serviceId, enabled) {
       return $http
         .patch(MediaConfigServiceV2.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId, {
-          enabled: enabled
+          enabled: enabled,
         });
 
     };
@@ -20,7 +20,7 @@
     var setServiceAcknowledged = function (serviceId, acknowledged) {
       return $http
         .patch(MediaConfigServiceV2.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId, {
-          acknowledged: acknowledged
+          acknowledged: acknowledged,
         });
 
     };
@@ -30,7 +30,7 @@
         .get(MediaConfigServiceV2.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services')
         .success(function (data) {
           var service = _.find(data.items, {
-            id: serviceId
+            id: serviceId,
           });
           if (service === undefined) {
             callback(false);
@@ -53,7 +53,7 @@
       return $http
         .put(url, {
           identityOrgId: Authinfo.getOrgId(),
-          mediaAgentOrgIds: mediaAgentOrgIdsArray
+          mediaAgentOrgIds: mediaAgentOrgIdsArray,
         });
     };
 
@@ -112,7 +112,7 @@
         function success() {},
         function error(errorResponse) {
           Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
-            failureMessage: errorResponse.message
+            failureMessage: errorResponse.message,
           });
         });
     };
@@ -155,7 +155,7 @@
               function success() {},
               function error(errorResponse) {
                 Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
-                  failureMessage: errorResponse.message
+                  failureMessage: errorResponse.message,
                 });
               });
           } else {
@@ -163,7 +163,7 @@
               function success() {},
               function error(errorResponse) {
                 Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
-                  failureMessage: errorResponse.message
+                  failureMessage: errorResponse.message,
                 });
               });
           }
@@ -186,7 +186,7 @@
       deleteUserIdentityOrgToMediaAgentOrgMapping: deleteUserIdentityOrgToMediaAgentOrgMapping,
       enableMediaService: enableMediaService,
       disableOrpheusForMediaFusion: disableOrpheusForMediaFusion,
-      deactivateHybridMedia: deactivateHybridMedia
+      deactivateHybridMedia: deactivateHybridMedia,
     };
   }
 })();

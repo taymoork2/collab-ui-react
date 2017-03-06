@@ -12,8 +12,8 @@ describe('Controller: AARouteToSipEndpointCtrl', function () {
   var aaUiModel = {
     openHours: {},
     ceInfo: {
-      name: 'AA2'
-    }
+      name: 'AA2',
+    },
   };
 
   var schedule = 'openHours';
@@ -74,7 +74,7 @@ describe('Controller: AARouteToSipEndpointCtrl', function () {
 
     it('should be able to create new key entry', function () {
       var controller = $controller('AARouteToSipEndpointCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       expect(controller).toBeDefined();
@@ -94,7 +94,7 @@ describe('Controller: AARouteToSipEndpointCtrl', function () {
         menuEntry.addAction(actionEntry);
         aaUiModel[schedule].entries[0].addEntry(menuEntry);
         var controller = $controller('AARouteToSipEndpointCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
 
         $scope.$apply();
@@ -103,30 +103,32 @@ describe('Controller: AARouteToSipEndpointCtrl', function () {
       });
     });
 
-    describe('saveUiModel', function () {
+    describe('updateUiModel', function () {
       var sipInput, controller;
       beforeEach(function () {
         sipInput = 'sip:shwegupt@go.webex.com';
         controller = $controller('AARouteToSipEndpointCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
-
+        controller.aaRouteToSipForm = {
+          $valid: true,
+        };
         controller.model.sipInput = sipInput;
       });
 
       it('should write UI entry back into UI model', function () {
-        controller.saveUiModel();
+        controller.updateUiModel();
         $scope.$apply();
         expect(controller.menuKeyEntry.actions[0].value).toEqual(sipInput);
       });
 
       it('should write UI entry back into UI model when SIP number changes', function () {
-        controller.saveUiModel();
+        controller.updateUiModel();
         $scope.$apply();
 
         var sipInputChanged = 'sip:shwegupt_changed@go.webex.com';
         controller.model.sipInput = sipInputChanged;
-        controller.saveUiModel();
+        controller.updateUiModel();
         $scope.$apply();
 
         expect(controller.menuKeyEntry.actions[0].value).toEqual('sip:shwegupt_changed@go.webex.com');
@@ -144,16 +146,18 @@ describe('Controller: AARouteToSipEndpointCtrl', function () {
       it('should write SIP number back into Ui Model from Route Call', function () {
         var sipInput = 'sip:shwegupt@go.webex.com';
         var controller = $controller('AARouteToSipEndpointCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
-
+        controller.aaRouteToSipForm = {
+          $valid: true,
+        };
         controller.model.sipInput = sipInput;
 
         controller.menuEntry.actions = [];
         var action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToSipEndpoint', 'fobar');
         controller.menuEntry.actions = [];
         controller.menuEntry.actions[0] = action;
-        controller.saveUiModel();
+        controller.updateUiModel();
         $scope.$apply();
 
         expect(controller.menuEntry.actions[0].value).toEqual("sip:shwegupt@go.webex.com");
@@ -162,7 +166,7 @@ describe('Controller: AARouteToSipEndpointCtrl', function () {
       it('should be able to create new AA entry from Route Call', function () {
 
         var controller = $controller('AARouteToSipEndpointCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
 
         expect(controller.menuEntry.actions[0].name).toEqual('routeToSipEndpoint');
@@ -185,7 +189,7 @@ describe('Controller: AARouteToSipEndpointCtrl', function () {
         $scope.fromRouteCall = true;
 
         var controller = $controller('AARouteToSipEndpointCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
 
         expect(controller.menuEntry.actions[0].name).toEqual('routeToSipEndpoint');
@@ -211,7 +215,7 @@ describe('Controller: AARouteToSipEndpointCtrl', function () {
         $scope.fromFallback = true;
 
         var controller = $controller('AARouteToSipEndpointCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
 
         var fallbackAction = _.get(controller.menuEntry, 'actions[0].queueSettings.fallback.actions[0]');

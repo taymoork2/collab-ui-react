@@ -6,15 +6,14 @@
       .controller('CareFeaturesCtrl', CareFeaturesCtrl);
 
   /* @ngInject */
-  function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, Authinfo, CardUtils,
-                            CareFeatureList, CTService, Log, Notification, FeatureToggleService) {
+  function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, Authinfo, CardUtils, CareFeatureList, CTService, Log, Notification, FeatureToggleService) {
     var vm = this;
     vm.init = init;
     var pageStates = {
       newFeature: 'NewFeature',
       showFeatures: 'ShowFeatures',
       loading: 'Loading',
-      error: 'Error'
+      error: 'Error',
     };
     var listOfAllFeatures = [];
     var featureToBeDeleted = {};
@@ -25,7 +24,7 @@
     vm.pageState = pageStates.loading;
     vm.cardColor = {};
     vm.placeholder = {
-      name: 'Search'
+      name: 'Search',
     };
     vm.filterText = '';
     vm.template = null;
@@ -47,7 +46,7 @@
       isEmpty: false,
       color: 'primary',
       icons: ['icon-message'],
-      data: []
+      data: [],
     }, {
       name: 'Ca',
       getFeature: CareFeatureList.getCallbackTemplates,
@@ -56,18 +55,18 @@
       isEmpty: false,
       color: 'alerts',
       icons: ['icon-phone'],
-      data: []
+      data: [],
     }];
 
     vm.filters = [{
       name: $translate.instant('common.all'),
-      filterValue: 'all'
+      filterValue: 'all',
     }, {
       name: $translate.instant('sunlightDetails.chatMediaType'),
-      filterValue: 'chat'
+      filterValue: 'chat',
     }, {
       name: $translate.instant('sunlightDetails.callbackMediaType'),
-      filterValue: 'callback'
+      filterValue: 'callback',
     }];
 
     FeatureToggleService.atlasCareChatPlusCallbackTrialsGetStatus().then(function (enabled) {
@@ -80,11 +79,11 @@
           isEmpty: false,
           color: 'cta',
           icons: ['icon-message', 'icon-phone'],
-          data: []
+          data: [],
         });
         vm.filters.push({
           name: $translate.instant('sunlightDetails.chatPlusCallbackMediaType'),
-          filterValue: 'chatPlusCallback'
+          filterValue: 'chatPlusCallback',
         });
       }
       init();
@@ -143,7 +142,7 @@
       vm.pageState = pageStates.error;
       Log.warn('Could not fetch features for customer with Id:', Authinfo.getOrgId());
       Notification.errorWithTrackingId(response, 'careChatTpl.failedToLoad', {
-        featureText: $filter('translate')(feature.i18n)
+        featureText: $filter('translate')(feature.i18n),
       });
     }
 
@@ -162,7 +161,7 @@
     }
 
     function reInstantiateMasonry() {
-      CardUtils.resize();
+      CardUtils.resize(200);
     }
 
     function showReloadPageIfNeeded() {
@@ -189,7 +188,7 @@
         $state.go('care.setupAssistant', {
           isEditFeature: true,
           template: template,
-          type: template.configuration.mediaType
+          type: template.configuration.mediaType,
         });
       });
     };
@@ -199,7 +198,7 @@
       $state.go('care.Features.DeleteFeature', {
         deleteFeatureName: feature.name,
         deleteFeatureId: feature.templateId,
-        deleteFeatureType: feature.featureType
+        deleteFeatureType: feature.featureType,
       });
     }
 
@@ -211,7 +210,7 @@
       $modal.open({
         templateUrl: 'modules/sunlight/features/featureLanding/newCareFeatureModal.tpl.html',
         controller: 'NewCareFeatureModalCtrl',
-        controllerAs: 'NewCareFeatureModalCtrl'
+        controllerAs: 'NewCareFeatureModalCtrl',
       });
     }
 

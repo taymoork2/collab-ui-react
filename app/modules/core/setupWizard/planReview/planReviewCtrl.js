@@ -10,37 +10,37 @@
     var vm = this;
     var classes = {
       userService: 'user-service-',
-      hasRoomSys: 'has-room-systems'
+      hasRoomSys: 'has-room-systems',
     };
 
     vm.messagingServices = {
       isNewTrial: false,
-      services: []
+      services: [],
     };
 
     vm.confServices = {
       isNewTrial: false,
-      services: []
+      services: [],
     };
 
     vm.commServices = {
       isNewTrial: false,
-      services: []
+      services: [],
     };
 
     vm.careServices = {
       isNewTrial: false,
-      services: Authinfo.getCareServices() || []
+      services: Authinfo.getCareServices() || [],
     };
 
     vm.cmrServices = {
       isNewTrial: false,
-      services: []
+      services: [],
     };
 
     vm.roomServices = {
       isNewTrial: false,
-      services: []
+      services: [],
     };
 
     vm.roomSystemsCount = 0;
@@ -52,7 +52,7 @@
     vm.isInitialized = false; // invert the logic and initialize to false so the template doesn't flicker before spinner
     vm.getUserServiceRowClass = getUserServiceRowClass;
     vm._helpers = {
-      maxServiceRows: maxServiceRows
+      maxServiceRows: maxServiceRows,
     };
     vm.isCareEnabled = false;
     vm.isSharedMeetingsEnabled = false;
@@ -141,17 +141,21 @@
 
       vm.hasBasicLicenses = function () {
         return _.some(vm.confServices.services, function (service) {
-          return !_.has(service, 'license.siteUrl');
+          return _.get(service, 'license.offerName') === 'CF';
         });
       };
 
       /* TODO: Refactor this functions into MultipleSubscriptions Controller */
       vm.selectedSubscriptionHasBasicLicenses = function (subscriptionId) {
-        return _.some(vm.confServices.services, function (service) {
-          if (_.get(service, 'license.billingServiceId') === subscriptionId) {
-            return !_.has(service, 'license.siteUrl');
-          }
-        });
+        if (subscriptionId && subscriptionId !== 'Trial') {
+          return _.some(vm.confServices.services, function (service) {
+            if (_.get(service, 'license.billingServiceId') === subscriptionId) {
+              return !_.has(service, 'license.siteUrl');
+            }
+          });
+        } else {
+          return vm.hasBasicLicenses();
+        }
       };
 
       /* TODO: Refactor this functions into MultipleSubscriptions Controller */

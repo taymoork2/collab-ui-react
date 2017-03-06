@@ -19,7 +19,7 @@
 
     function updateItemName(place, name) {
       return $http.patch(place.url, {
-        name: name
+        name: name,
       }).then(function (res) {
         res.data.type = place.type;
         return CsdmConverter.convertPlace(res.data);
@@ -37,12 +37,20 @@
     }
 
     function createCsdmPlace(name, entitlements, directoryNumber, externalNumber) {
+      return createPlace(name, entitlements || ['webex-squared'], directoryNumber, externalNumber, 'lyra_space');
+    }
+
+    function createCmiPlace(name, entitlements, directoryNumber, externalNumber) {
+      return createPlace(name, entitlements || ['ciscouc'], directoryNumber, externalNumber, 'room');
+    }
+
+    function createPlace(name, entitlements, directoryNumber, externalNumber, machineType) {
       return $http.post(csdmPlacesUrl, {
         name: name,
         directoryNumber: directoryNumber,
         externalNumber: externalNumber,
-        entitlements: entitlements || ['webex-squared'],
-        machineType: 'lyra_space'
+        entitlements: entitlements,
+        machineType: machineType,
       }).then(function (res) {
         var convertedPlace = CsdmConverter.convertPlace(res.data);
         // TODO: Don't need to set these here when CSDM returns the lines on place creation
@@ -56,7 +64,7 @@
       return $http.patch(placeUrl, {
         directoryNumber: directoryNumber,
         externalNumber: externalNumber,
-        entitlements: entitlements
+        entitlements: entitlements,
       }).then(function (res) {
         return CsdmConverter.convertPlace(res.data);
       });
@@ -67,10 +75,11 @@
       deleteItem: deletePlace,
       fetchItem: fetchItem,
       createCsdmPlace: createCsdmPlace,
+      createCmiPlace: createCmiPlace,
       getPlacesList: getPlacesList,
       updateItemName: updateItemName,
       getPlacesUrl: getPlacesUrl,
-      updatePlace: updatePlace
+      updatePlace: updatePlace,
     };
   }
 

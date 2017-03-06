@@ -17,7 +17,7 @@ describe('CsdmPoller', function () {
     var defer, serviceCallCount = 0;
 
     var scope = {
-      $on: sinon.stub()
+      $on: sinon.stub(),
     };
 
     var service = function () {
@@ -30,7 +30,7 @@ describe('CsdmPoller', function () {
 
     var callback = sinon.stub();
     hub.on('data', callback, {
-      scope: scope
+      scope: scope,
     });
 
     // perform the initial callback

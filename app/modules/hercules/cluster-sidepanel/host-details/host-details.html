@@ -9,7 +9,7 @@
         <td translate="common.status"></td>
         <td>
           <i class="icon icon-circle status-indicator"
-             ng-class="clusterDetailsCtrl.getSeverity(hostDetailsCtrl.host.state).cssClass"></i>
+             ng-class="hostDetailsCtrl.getSeverity(hostDetailsCtrl.host.state).cssClass"></i>
           <span translate="{{'hercules.status.' + hostDetailsCtrl.host.state }}"></span><span ng-if="hostDetailsCtrl.host.upgradeState === 'upgrading'"> | <span translate="hercules.status.upgrading"></span></span>
         </td>
       </tr>
@@ -27,24 +27,30 @@
 
   <cs-sp-section>
     <div class="section-title-row section-name" translate="hercules.connectors.actions"></div>
-    <div>
-      <a target="_blank" ng-href="https://{{hostDetailsCtrl.host.hostname}}/">
-        <button class="btn btn--primary" translate="hercules.connectors.goToHost"></button>
-      </a>
-    </div>
+    <ul>
+      <li ng-if="hostDetailsCtrl.showGoToHostAction()">
+        <a target="_blank" ng-href="https://{{hostDetailsCtrl.host.hostname}}/">
+          <span translate="hercules.connectors.goToHost"></span>
+        </a>
+      </li>
+      <li ng-if="hostDetailsCtrl.showMoveNodeAction()">
+        <a ng-click="hostDetailsCtrl.showReassignHostDialog()">
+          <span translate="hercules.connectors.moveNode"></span>
+        </a>
+      </li>
+      <li ng-if="hostDetailsCtrl.showMoveNodeAction()">
+        <a ng-click="hostDetailsCtrl.showDeregisterHostDialog()">
+          <span translate="hercules.connectors.deregisterNode"></span>
+        </a>
+      </li>
+      <li ng-if="hostDetailsCtrl.showDeleteNodeAction()">
+        <a ng-click="hostDetailsCtrl.deleteExpresswayOrHDSNode()">
+          <span translate="hercules.connectors.removeNode"></span>
+        </a>
+      </li>
+    </ul>
   </cs-sp-section>
 
-  <alarm-list-section alarms="hostDetailsCtrl.host.alarms"></alarm-list-section>
-
-  <cs-sp-section ng-if="hostDetailsCtrl.host.state === 'offline'">
-    <div class="section-title-row section-name" translate="hercules.connectors.removeSectionHeader"></div>
-    <span translate="hercules.connectors.removeSectionBody"></span>
-    <div>
-      <button class="btn btn--negative hercules-btn-deregister"
-              translate="hercules.connectors.removeButton"
-              ng-click="hostDetailsCtrl.deleteHost()">
-      </button>
-    </div>
-  </cs-sp-section>
+  <alarm-list-section ng-if="!hostDetailsCtrl.isHybridContextCluster" alarms="hostDetailsCtrl.host.alarms" connector-type="hostDetailsCtrl.host.connectorType"></alarm-list-section>
 
 </cs-sp-container>

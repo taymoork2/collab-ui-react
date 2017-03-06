@@ -1,5 +1,7 @@
 'use strict';
 
+var featureToggle = require('../utils/featureToggle.utils');
+
 /*global TIMEOUT*/
 
 var LoginPage = function () {
@@ -65,7 +67,9 @@ var LoginPage = function () {
             browser.refresh();
             return navigation.expectDriverCurrentUrl(typeof expectedUrl !== 'undefined' ? expectedUrl : '/overview');
           });
-        });
+        })
+    }).then(function () {
+      return featureToggle.populateFeatureToggles(bearer);
     }).then(function () {
       return bearer;
     });
@@ -73,7 +77,7 @@ var LoginPage = function () {
 
   this.loginUsingIntegrationBackend = function (username, expectedUrl) {
     return this.login(username, expectedUrl, {
-      navigateUsingIntegrationBackend: true
+      navigateUsingIntegrationBackend: true,
     });
   };
 
@@ -109,7 +113,7 @@ var LoginPage = function () {
 
   this.loginThroughGuiUsingIntegrationBackend = function (username, password, expectedUrl) {
     return this.loginThroughGui(username, password, expectedUrl, {
-      navigateUsingIntegrationBackend: true
+      navigateUsingIntegrationBackend: true,
     });
   };
 

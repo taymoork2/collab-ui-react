@@ -6,24 +6,27 @@
     .controller('FusionClusterListController', FusionClusterListController);
 
   /* @ngInject */
-  function FusionClusterListController($filter, $modal, $state, $translate, Authinfo, Config, hasF237FeatureToggle, FusionClusterService, Notification, WizardFactory) {
+  function FusionClusterListController($filter, $modal, $state, $translate, Analytics, Authinfo, Config, hasResourceGroupFeatureToggle, FusionClusterService, Notification, WizardFactory) {
     var vm = this;
-    if (hasF237FeatureToggle) {
+    if (hasResourceGroupFeatureToggle) {
       var groupsCache = [];
       vm.displayedGroups = groupsCache;
     } else {
       var clustersCache = [];
       vm.displayedClusters = clustersCache;
     }
+    Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CLUSTER_LIST, {
+      hasResourceGroupFeatureToggle: hasResourceGroupFeatureToggle,
+    });
 
-    vm.showResourceGroups = hasF237FeatureToggle;
+    vm.showResourceGroups = hasResourceGroupFeatureToggle;
     vm.loading = true;
     vm.backState = 'services-overview';
     vm.openAllGroups = false;
     vm.placeholder = {
       name: $translate.instant('hercules.fusion.list.all'),
       filterValue: 'all',
-      count: 0
+      count: 0,
     };
     vm.filters = setupFilters();
 
@@ -37,7 +40,7 @@
     refreshList();
 
     function refreshList() {
-      if (hasF237FeatureToggle) {
+      if (hasResourceGroupFeatureToggle) {
         loadResourceGroups();
       } else {
         loadClusters();
@@ -96,6 +99,11 @@
           display: Authinfo.isEntitled(Config.entitlements.hds),
           unassigned: _.filter(response.unassigned, { targetType: 'hds_app' }),
         },
+        {
+          targetType: 'cs_mgmt',
+          display: Authinfo.isEntitled(Config.entitlements.context),
+          unassigned: _.filter(response.unassigned, { targetType: 'cs_mgmt' }),
+        },
       ];
     }
 
@@ -122,11 +130,18 @@
           count: 0,
         });
       }
+      if (Authinfo.isEntitled(Config.entitlements.context)) {
+        filters.push({
+          name: $translate.instant('hercules.fusion.list.context'),
+          filterValue: 'cs_mgmt',
+          count: 0,
+        });
+      }
       return filters;
     }
 
     function updateFilters() {
-      if (hasF237FeatureToggle) {
+      if (hasResourceGroupFeatureToggle) {
         vm.placeholder.count = _.reduce(groupsCache, function (acc, entry) {
           if (entry.groups) {
             acc = acc + _.reduce(entry.groups, function (a, group) {
@@ -157,7 +172,7 @@
     }
 
     function setFilter(filter) {
-      if (hasF237FeatureToggle) {
+      if (hasResourceGroupFeatureToggle) {
         if (filter.filterValue === 'all') {
           vm.displayedGroups = _.map(groupsCache, function (group) {
             group.display = true;
@@ -180,7 +195,7 @@
 
     function searchData(searchStr) {
       vm.openAllGroups = searchStr !== '';
-      if (hasF237FeatureToggle) {
+      if (hasResourceGroupFeatureToggle) {
         if (searchStr === '') {
           vm.displayedGroups = groupsCache;
         } else {
@@ -212,7 +227,7 @@
         } else {
           // Filter on the cluster name only
           vm.displayedClusters = $filter('filter')(clustersCache, {
-            name: searchStr
+            name: searchStr,
           });
         }
       }
@@ -223,7 +238,8 @@
         data: {
           targetType: '',
           expressway: {},
-          mediafusion: {}
+          mediafusion: {},
+          context: {},
         },
         history: [],
         currentStateName: 'add-resource.type-selector',
@@ -231,36 +247,39 @@
           'add-resource.type-selector': {
             nextOptions: {
               expressway: 'add-resource.expressway.service-selector',
-              mediafusion: 'add-resource.mediafusion.hostname'
-            }
+              mediafusion: 'add-resource.mediafusion.hostname',
+              context: 'add-resource.context',
+            },
           },
           // expressway
           'add-resource.expressway.service-selector': {
-            next: 'add-resource.expressway.hostname'
+            next: 'add-resource.expressway.hostname',
           },
           'add-resource.expressway.hostname': {
-            next: 'add-resource.expressway.name'
+            next: 'add-resource.expressway.name',
           },
           'add-resource.expressway.name': {
-            next: 'add-resource.expressway.resource-group'
+            next: 'add-resource.expressway.resource-group',
           },
           'add-resource.expressway.resource-group': {
-            next: 'add-resource.expressway.end'
+            next: 'add-resource.expressway.end',
           },
           'add-resource.expressway.end': {},
           // mediafusion
           'add-resource.mediafusion.hostname': {
-            next: 'add-resource.mediafusion.name'
+            next: 'add-resource.mediafusion.name',
           },
           'add-resource.mediafusion.name': {
-            next: 'add-resource.mediafusion.end'
+            next: 'add-resource.mediafusion.end',
           },
-          'add-resource.mediafusion.end': {}
-        }
+          'add-resource.mediafusion.end': {},
+          // context
+          'add-resource.context': {},
+        },
       };
       var wizard = WizardFactory.create(initialState);
       $state.go(initialState.currentStateName, {
-        wizard: wizard
+        wizard: wizard,
       });
     }
 
@@ -284,7 +303,7 @@
           unassignedClusters: function () {
             return groupsCache[0].unassigned;
           },
-        }
+        },
       }).result
       .then(refreshList);
     }

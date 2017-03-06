@@ -3,7 +3,16 @@
 describe('Controller: DeviceOverviewCtrl', function () {
   var $scope, $controller, $state, controller, $httpBackend;
   var $q, CsdmConfigService, CsdmDeviceService, Authinfo, Notification;
-  var RemoteSupportModal, HuronConfig, FeatureToggleService, Userservice, CsdmHuronDeviceService;
+  var RemoteSupportModal, HuronConfig, FeatureToggleService, Userservice;
+  var PstnSetupStatesService, CsdmHuronDeviceService;
+
+  var location = {
+    type: 'State',
+    areas: [{
+      name: 'Texas',
+      abbreviation: 'TX',
+    }],
+  };
 
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module('Squared'));
@@ -13,9 +22,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
   beforeEach(initSpies);
   beforeEach(initController);
 
-  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _CsdmConfigService_, _CsdmDeviceService_,
-                        _Authinfo_, _Notification_, _RemoteSupportModal_, _HuronConfig_, _FeatureToggleService_,
-                        _Userservice_) {
+  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _CsdmConfigService_, _CsdmDeviceService_, _Authinfo_, _Notification_, _RemoteSupportModal_, _HuronConfig_, _FeatureToggleService_, _Userservice_, _PstnSetupStatesService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
@@ -30,6 +37,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
     Notification = _Notification_;
     RemoteSupportModal = _RemoteSupportModal_;
     HuronConfig = _HuronConfig_;
+    PstnSetupStatesService = _PstnSetupStatesService_;
   }
 
   function initSpies() {
@@ -38,18 +46,15 @@ describe('Controller: DeviceOverviewCtrl', function () {
     $httpBackend.whenGET('http://thedeviceurl').respond(200);
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200);
     $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/sipendpoints/3/addonmodules').respond(200);
-    $httpBackend.whenGET('modules/huron/pstnSetup/states.json').respond([{
-      name: "Texas",
-      abbreviation: "TX"
-    }]);
     $httpBackend.whenGET('https://cmi.huron-int.com/api/v1/voice/customers/sites').respond([]);
     spyOn(CsdmHuronDeviceService, 'getLinesForDevice').and.returnValue($q.resolve([]));
     spyOn(CsdmHuronDeviceService, 'getDeviceInfo').and.returnValue($q.resolve({}));
+    spyOn(PstnSetupStatesService, 'getLocation').and.returnValue($q.resolve(location));
   }
 
   CsdmHuronDeviceService = {
     getLinesForDevice: {},
-    getDeviceInfo: {}
+    getDeviceInfo: {},
   };
 
   var $stateParams = {
@@ -59,9 +64,9 @@ describe('Controller: DeviceOverviewCtrl', function () {
       product: 'Cisco 8865',
       cisUuid: 2,
       huronId: 3,
-      kem: []
+      kem: [],
     },
-    huronDeviceService: CsdmHuronDeviceService
+    huronDeviceService: CsdmHuronDeviceService,
   };
 
   function initController() {
@@ -71,7 +76,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
       $stateParams: $stateParams,
       $state: $state,
       Userservice: Userservice,
-      FeatureToggleService: FeatureToggleService
+      FeatureToggleService: FeatureToggleService,
     });
     $scope.$apply();
   }
@@ -112,7 +117,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
       spyOn(RemoteSupportModal, 'open');
 
       controller.currentDevice = {
-        hasRemoteSupport: true
+        hasRemoteSupport: true,
       };
       controller.showRemoteSupportDialog();
 
@@ -129,7 +134,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
 
     it('should show remote support button when supported', function () {
       controller.currentDevice = {
-        hasRemoteSupport: true
+        hasRemoteSupport: true,
       };
       expect(controller.showRemoteSupportButton()).toBe(true);
     });
@@ -146,7 +151,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
     it('should ignore already present tags', function () {
       controller.newTag = 'existing tag';
       controller.currentDevice = {
-        tags: ['existing tag']
+        tags: ['existing tag'],
       };
       controller.addTag();
       expect(controller.isAddingTag).toBeFalsy();
@@ -156,7 +161,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
     it('should ignore leading and trailing whitespace when checking for existing tags', function () {
       controller.newTag = ' existing tag ';
       controller.currentDevice = {
-        tags: ['existing tag']
+        tags: ['existing tag'],
       };
       controller.addTag();
       expect(controller.isAddingTag).toBeFalsy();
@@ -168,7 +173,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
       controller.currentDevice = {
         isCloudberryDevice: true,
         tags: [],
-        url: 'testUrl'
+        url: 'testUrl',
       };
       spyOn(CsdmDeviceService, 'updateTags').and.returnValue($q.resolve());
       controller.addTag();
@@ -182,7 +187,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
       controller.currentDevice = {
         isCloudberryDevice: true,
         tags: ['old tag'],
-        url: 'testUrl'
+        url: 'testUrl',
       };
       spyOn(CsdmDeviceService, 'updateTags').and.returnValue($q.resolve());
       controller.addTag();
@@ -195,7 +200,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
       controller.currentDevice = {
         isCloudberryDevice: true,
         tags: ['old tag', 'old tag2'],
-        url: 'testUrl'
+        url: 'testUrl',
       };
       spyOn(CsdmDeviceService, 'updateTags').and.returnValue($q.resolve());
       controller.removeTag('old tag');
@@ -209,7 +214,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
       controller.currentDevice = {
         isCloudberryDevice: true,
         tags: [],
-        url: 'testUrl'
+        url: 'testUrl',
       };
       spyOn(CsdmDeviceService, 'updateTags').and.returnValue($q.resolve());
       controller.addTag();
@@ -221,7 +226,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
     it('should ignore keys other than Enter', function () {
       spyOn(controller, 'addTag');
       controller.addTagOnEnter({
-        keyCode: 12
+        keyCode: 12,
       });
       $scope.$apply();
       expect(controller.addTag).not.toHaveBeenCalled();
@@ -230,7 +235,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
     it('should call addTag on Enter', function () {
       spyOn(controller, 'addTag');
       controller.addTagOnEnter({
-        keyCode: 13
+        keyCode: 13,
       });
       $scope.$apply();
       expect(controller.addTag).toHaveBeenCalled();
@@ -243,6 +248,9 @@ describe('Huron Device', function () {
   var $scope, $controller, controller, $httpBackend;
   var $q, CsdmConfigService;
   var $stateParams, ServiceSetup, timeZone, newTimeZone, countries, newCountry, HuronConfig;
+  var usStatesList = getJSONFixture('../../app/modules/huron/pstnSetup/states.json');
+  var usCanStatesList = getJSONFixture('../../app/modules/huron/pstnSetup/states_plus_canada.json');
+  var $timeout;
 
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module('Squared'));
@@ -252,31 +260,32 @@ describe('Huron Device', function () {
   beforeEach(initSpies);
 
 
-  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _CsdmConfigService_, _ServiceSetup_, _HuronConfig_) {
+  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _CsdmConfigService_, _ServiceSetup_, _HuronConfig_, _$timeout_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
     $q = _$q_;
+    $timeout = _$timeout_;
     CsdmConfigService = _CsdmConfigService_;
     ServiceSetup = _ServiceSetup_;
     HuronConfig = _HuronConfig_;
     $stateParams = {
       currentDevice: {
         url: 'http://thedeviceurl',
-        isHuronDevice: true
+        isHuronDevice: true,
       },
-      huronDeviceService: CsdmHuronDeviceService($q)
+      huronDeviceService: CsdmHuronDeviceService($q),
     };
   }
 
   newTimeZone = {
     "id": "America/Anchorage",
-    "label": "America/Anchorage"
+    "label": "America/Anchorage",
   };
 
   newCountry = {
     "label": "Canada",
-    "value": "CA"
+    "value": "CA",
   };
 
   function CsdmHuronDeviceService(q) {
@@ -286,6 +295,10 @@ describe('Huron Device', function () {
     }
 
     function setCountryForDevice() {
+      return q.resolve(true);
+    }
+
+    function setSettingsForAta() {
       return q.resolve(true);
     }
 
@@ -300,8 +313,9 @@ describe('Huron Device', function () {
     return {
       setTimezoneForDevice: setTimezoneForDevice,
       setCountryForDevice: setCountryForDevice,
+      setSettingsForAta: setSettingsForAta,
       getDeviceInfo: getDeviceInfo,
-      getLinesForDevice: getLinesForDevice
+      getLinesForDevice: getLinesForDevice,
     };
   }
 
@@ -311,17 +325,16 @@ describe('Huron Device', function () {
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200);
     $httpBackend.whenGET('http://thedeviceurl').respond(200);
     $httpBackend.whenGET(HuronConfig.getTerminusV2Url() + '/customers/numbers/e911').respond(200);
-    $httpBackend.whenGET('modules/huron/pstnSetup/states.json').respond([{
-      name: "Texas",
-      abbreviation: "TX"
-    }]);
+    $httpBackend.whenGET('modules/huron/pstnSetup/states.json').respond(usStatesList);
+    $httpBackend.whenGET('modules/huron/pstnSetup/states_plus_canada.json').respond(usCanStatesList);
+
     countries = getJSONFixture('huron/json/settings/countries.json');
 
     spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.resolve(timeZone));
     spyOn(ServiceSetup, 'getSiteCountries').and.returnValue($q.resolve(countries));
     spyOn($stateParams.huronDeviceService, 'setTimezoneForDevice').and.returnValue($q.resolve(true));
     spyOn($stateParams.huronDeviceService, 'setCountryForDevice').and.returnValue($q.resolve(true));
-
+    spyOn($stateParams.huronDeviceService, 'setSettingsForAta').and.returnValue($q.resolve(true));
 
   }
 
@@ -329,7 +342,7 @@ describe('Huron Device', function () {
     controller = $controller('DeviceOverviewCtrl', {
       $scope: $scope,
       channels: {},
-      $stateParams: $stateParams
+      $stateParams: $stateParams,
     });
 
     $scope.$apply();
@@ -349,6 +362,23 @@ describe('Huron Device', function () {
       $scope.$apply();
 
       expect($stateParams.huronDeviceService.setTimezoneForDevice).toHaveBeenCalledWith(jasmine.any(Object), newTimeZone.id);
+    });
+  });
+
+  describe('T38 support', function () {
+    beforeEach(initController);
+
+
+    it('should init controller', function () {
+      expect(controller).toBeDefined();
+    });
+
+    it('should update T38 status', function () {
+      controller.saveT38Settings();
+      $scope.$apply();
+
+      $timeout.flush();
+      expect($stateParams.huronDeviceService.setSettingsForAta).toHaveBeenCalledWith(jasmine.any(Object), { t38FaxEnabled: false });
     });
   });
 

@@ -5,11 +5,16 @@
     .controller('PstnProvidersCtrl', PstnProvidersCtrl);
 
   /* @ngInject */
-  function PstnProvidersCtrl($q, $translate, $state, PstnSetup, PstnSetupService, PstnServiceAddressService, Notification) {
+  function PstnProvidersCtrl($q, $translate, $state, PstnSetup, PstnSetupService, PstnServiceAddressService, Orgservice, Notification, FeatureToggleService) {
     var vm = this;
     vm.providers = [];
     vm.loading = true;
+    vm.enableCarriers = false;
+    vm.showCarriers = false;
     vm.selectProvider = selectProvider;
+    vm.onProviderReady = onProviderReady;
+    vm.onProviderChange = onProviderChange;
+    vm.ftThinkTel = false; //feature toggle is used in tpl.html
 
     init();
 
@@ -123,14 +128,6 @@
         });
     }
 
-    function init() {
-      $q.all([initCarriers(), initSites()])
-        .then(processSelectedProviders)
-        .finally(function () {
-          vm.loading = false;
-        });
-    }
-
     function initCarrier(carrier) {
       var carrierObj = {
         uuid: carrier.uuid,
@@ -139,7 +136,7 @@
         vendor: carrier.vendor,
         countryCode: carrier.countryCode,
         country: carrier.country,
-        title: carrier.displayName || carrier.name
+        title: carrier.displayName || carrier.name,
       };
       if (carrier.vendor === PstnSetupService.INTELEPEER) {
         _.extend(carrierObj, {
@@ -151,9 +148,9 @@
             $translate.instant('intelepeerFeatures.feature1'),
             $translate.instant('intelepeerFeatures.feature2'),
             $translate.instant('intelepeerFeatures.feature3'),
-            $translate.instant('intelepeerFeatures.feature4')
+            $translate.instant('intelepeerFeatures.feature4'),
           ],
-          selectFn: goToNumbers
+          selectFn: goToNumbers,
         });
       } else if (carrier.vendor === PstnSetupService.TATA) {
         _.extend(carrierObj, {
@@ -164,26 +161,83 @@
             $translate.instant('tataFeatures.feature2'),
             $translate.instant('tataFeatures.feature3'),
             $translate.instant('tataFeatures.feature4'),
-            $translate.instant('tataFeatures.feature5')
+            $translate.instant('tataFeatures.feature5'),
           ],
-          selectFn: goToNumbers
+          selectFn: goToNumbers,
         });
       } else if (carrier.vendor === PstnSetupService.TELSTRA) {
         _.extend(carrierObj, {
           logoSrc: 'images/carriers/logo_telstra.svg',
           logoAlt: 'Telstra',
           features: [],
-          selectFn: goToNumbers
+          selectFn: goToNumbers,
         });
       } else if (carrier.vendor === PstnSetupService.WESTUC) {
         _.extend(carrierObj, {
           logoSrc: 'images/carriers/logo_westuc.jpg',
           logoAlt: 'West Corporation',
           features: [],
-          selectFn: goToNumbers
+          selectFn: goToNumbers,
         });
       }
       vm.providers.push(carrierObj);
+    }
+
+    function init() {
+      FeatureToggleService.supports(FeatureToggleService.features.huronSupportThinktel).then(function (ftThinkTel) {
+        vm.ftThinkTel = ftThinkTel;
+        if (!vm.ftThinkTel) {
+          initOriginal();
+        } else {
+          initPstnCustomer();
+        }
+      }).catch(function () {
+        initOriginal();
+      });
+    }
+
+    function initOriginal() {
+      $q.all([initCarriers(), initSites()])
+        .then(processSelectedProviders)
+        .finally(function () {
+          vm.loading = false;
+        });
+    }
+
+    function initPstnCustomer() {
+       //Get and save organization/customer information
+      Orgservice.getOrg(function (data) {
+        if (data.countryCode) {
+          PstnSetup.setCountryCode(data.countryCode);
+          PstnSetupService.getCustomerV2(PstnSetup.getCustomerId())
+          .then(function () {
+            PstnSetup.setCustomerExists(true);
+          })
+          .finally(function () {
+            vm.enableCarriers = true;
+          });
+        }
+      }, PstnSetup.getCustomerId());
+    }
+
+    function onProviderReady() {
+      initSites().then(function () {
+        //If new PSTN setup show all the carriers even if there only one
+        if (PstnSetup.isCarrierExists() && PstnSetup.isCustomerExists()) {
+          // Only 1 carrier should exist for a customer
+          if (PstnSetup.getCarriers().length === 1) {
+            PstnSetup.setSingleCarrierReseller(true);
+            PstnSetup.setProvider(PstnSetup.getCarriers()[0]);
+            goToNumbers();
+          }
+        }
+        vm.loading = false;
+        vm.showCarriers = true;
+      });
+    }
+
+    function onProviderChange() {
+      goToNumbers();
     }
   }
 })();

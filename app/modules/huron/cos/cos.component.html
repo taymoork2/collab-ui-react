@@ -1,0 +1,19 @@
+<div class="cos-style" ng-repeat="restriction in $ctrl.cosRestrictions track by restriction.restriction">
+  <label
+    class="control-label title-margin-bottom"
+    ng-class="{'h5': $ctrl.env === 'ftsw'}"
+    for="{{restriction.restriction}}" 
+    translate="{{$ctrl.getTitle(restriction.restriction)}}">
+  </label>
+  <p class="description-block" translate="{{$ctrl.getDescription(restriction.restriction)}}" translate-values="{premiumNumbers: $ctrl.premiumNumbers}"></p>
+  <cs-toggle-switch
+    class="switch-bottom-margin"
+    ng-model="restriction.blocked"
+    toggle-id="{{restriction.restriction}}-toggle"
+    size="small"
+    name="{{restriction.restriction}}-toggle"
+    cs-change="$ctrl.onChange({restriction: restriction.restriction, blocked:!restriction.blocked})"
+    cs-true-value="false"
+    cs-false-value="true">
+  </cs-toggle-switch>
+</div>

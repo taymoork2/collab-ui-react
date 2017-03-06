@@ -1,34 +1,51 @@
 import { IClusterV1 } from 'modules/hercules/herculesInterfaces';
+import { Notification } from 'modules/core/notifications/notification.service';
 
 export class NodeListComponentCtrl implements ng.IComponentController {
 
   private cluster: IClusterV1;
-  private connectorType;
   private hosts;
+  public connectorType;
   public getSeverity = this.FusionClusterStatesService.getSeverity;
   public localizedManagementConnectorName = this.$translate.instant('hercules.connectorNameFromConnectorType.c_mgmt');
   public localizedConnectorName = this.$translate.instant(`hercules.connectorNameFromConnectorType.${this.connectorType}`);
+  public localizedContextManagementConnectorName = this.$translate.instant('hercules.connectorNameFromConnectorType.cs_mgmt');
+  public localizedContextConnectorName = this.$translate.instant('hercules.connectorNameFromConnectorType.cs_context');
+  public loading: boolean = true;
 
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
     private FusionClusterService,
     private FusionClusterStatesService,
+    private Notification: Notification,
   ) {}
 
   public $onInit() {
-    this.FusionClusterService.get(this.cluster.id)
-      .then(cluster => {
-        this.hosts = this.FusionClusterService.buildSidepanelConnectorList(cluster, this.connectorType);
-      });
+    if (this.cluster) {
+      this.FusionClusterService.get(this.cluster.id)
+        .then(cluster => {
+          this.hosts = this.FusionClusterService.buildSidepanelConnectorList(cluster, this.connectorType);
+        })
+        .catch((error) => {
+          this.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    }
   }
 
-  public sortConnectors(connector1): number {
-    if (connector1.connectorType === 'c_mgmt') {
+  public sortConnectors(connector): number {
+    if (connector.connectorType === 'c_mgmt') {
       return -1;
     } else {
       return 1;
     }
+  }
+
+  public hasConnectors = () => {
+    return this.cluster && this.cluster.connectors.length > 0;
   }
 
 }

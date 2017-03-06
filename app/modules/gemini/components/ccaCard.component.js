@@ -5,7 +5,7 @@
     .module('Gemini')
     .component('ccaCard', {
       templateUrl: 'modules/gemini/components/cca-card.html',
-      controller: CcaCardCtrl
+      controller: CcaCardCtrl,
     });
 
   /* @ngInject */
@@ -19,7 +19,6 @@
         .then(function (feature) {
           if (!feature) {
             $state.go('404');
-            return;
           }
         });
     }

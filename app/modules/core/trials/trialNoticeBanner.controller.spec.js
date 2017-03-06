@@ -14,33 +14,33 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
       'partners': [{
         'userName': 'fake-partner-email@example.com',
         'displayName': 'fakeuser admin1',
-        'id': '2'
+        'id': '2',
       }, {
         'userName': 'fake-partner-email2@example.com',
         'displayName': 'fakeuser admin2',
-        'id': '1'
-      }]
-    }
+        'id': '1',
+      }],
+    },
   };
 
   var fakeTrialPeriodData = {
     startDate: '2015-12-06T00:00:00.000Z',
-    trialPeriod: 90
+    trialPeriod: 90,
   };
 
   var fakeConferenceDataWithWebex = [{
     'license': {
       'licenseType': 'CONFERENCING',
       'siteUrl': 'test.webex.com',
-    }
+    },
   }, {
     'license': {
       'licenseType': 'CONFERENCING',
-    }
+    },
   }];
 
   var fakeConferenceDataWithoutWebex = [{
-    'license': {}
+    'license': {},
   }];
 
   afterEach(function () {
@@ -57,8 +57,7 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
   beforeEach(angular.mock.module('Sunlight'));
 
   /* @ngInject */
-  beforeEach(inject(function ($controller, _$httpBackend_, _$q_, _Authinfo_,
-                              _Notification_, _TrialService_, _UserListService_) {
+  beforeEach(inject(function ($controller, _$httpBackend_, _$q_, _Authinfo_, _Notification_, _TrialService_, _UserListService_) {
 
     controller = $controller;
     $httpBackend = _$httpBackend_;
@@ -77,7 +76,7 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
       Authinfo: Authinfo,
       Notification: Notification,
       TrialService: TrialService,
-      UserListService: UserListService
+      UserListService: UserListService,
     });
 
     $httpBackend.flush();
@@ -116,8 +115,8 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
       it('should have called "TrialService.notifyPartnerTrialExt()"', function () {
         var fakePartnerNotifyResponse = {
           'data': {
-            'notifyPartnerEmailStatusList': []
-          }
+            'notifyPartnerEmailStatusList': [],
+          },
         };
         spyOn(TrialService, 'notifyPartnerTrialExt').and.returnValue($q.resolve(fakePartnerNotifyResponse));
 
@@ -186,8 +185,8 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
       it('should set requestResult to TOTAL_FAILURE when the request to notify partners has no notifications', function () {
         var fakePartnerNotifyResponse = {
           data: {
-            notifyPartnerEmailStatusList: []
-          }
+            notifyPartnerEmailStatusList: [],
+          },
         };
         spyOn(TrialService, 'notifyPartnerTrialExt').and.returnValue($q.resolve(fakePartnerNotifyResponse));
 
@@ -204,12 +203,12 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
           data: {
             notifyPartnerEmailStatusList: [{
               adminEmail: 'fakeuserunodostres+admin1@gmail.com',
-              status: 400
+              status: 400,
             }, {
               adminEmail: 'fakeuserunodostres+admin2@gmail.com',
-              status: 400
-            }]
-          }
+              status: 400,
+            }],
+          },
         };
         spyOn(TrialService, 'notifyPartnerTrialExt').and.returnValue($q.resolve(fakePartnerNotifyResponse));
 
@@ -226,12 +225,12 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
           data: {
             notifyPartnerEmailStatusList: [{
               adminEmail: 'fakeuserunodostres+admin1@gmail.com',
-              status: 200
+              status: 200,
             }, {
               adminEmail: 'fakeuserunodostres+admin2@gmail.com',
-              status: 400
-            }]
-          }
+              status: 400,
+            }],
+          },
         };
         spyOn(TrialService, 'notifyPartnerTrialExt').and.returnValue($q.resolve(fakePartnerNotifyResponse));
 
@@ -248,12 +247,12 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
           data: {
             notifyPartnerEmailStatusList: [{
               adminEmail: 'fakeuserunodostres+admin1@gmail.com',
-              status: 200
+              status: 200,
             }, {
               adminEmail: 'fakeuserunodostres+admin2@gmail.com',
-              status: 200
-            }]
-          }
+              status: 200,
+            }],
+          },
         };
         spyOn(TrialService, 'notifyPartnerTrialExt').and.returnValue($q.resolve(fakePartnerNotifyResponse));
 

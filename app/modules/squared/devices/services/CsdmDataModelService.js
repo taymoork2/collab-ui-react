@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject  */
-  function CsdmDataModelService($q, $timeout, $rootScope, CsdmCacheUpdater, CsdmDeviceService, CsdmCodeService, CsdmPlaceService, CsdmHuronOrgDeviceService, CsdmHuronPlaceService, CsdmPoller, CsdmConverter, CsdmHubFactory, Authinfo) {
+  function CsdmDataModelService($q, $timeout, $rootScope, CsdmCacheUpdater, CsdmDeviceService, CsdmCodeService, CsdmPlaceService, CsdmHuronOrgDeviceService, CsdmPoller, CsdmConverter, CsdmHubFactory, Authinfo) {
 
     var placesUrl = CsdmPlaceService.getPlacesUrl();
 
@@ -59,13 +59,23 @@
     }
 
     function fetchHuronDevices() {
-      csdmHuronOrgDeviceService.fetchDevices()
-        .then(function (huronDeviceMap) {
-          updateDeviceMap(huronDeviceMap, function (existing) {
-            return !existing.isHuronDevice;
-          });
-        })
-        .finally(setHuronDevicesLoaded);
+      if (hasHuronLicenses()) {
+        csdmHuronOrgDeviceService.fetchDevices()
+          .then(function (huronDeviceMap) {
+            updateDeviceMap(huronDeviceMap, function (existing) {
+              return !existing.isHuronDevice;
+            });
+          })
+          .finally(setHuronDevicesLoaded);
+      } else {
+        setHuronDevicesLoaded();
+      }
+    }
+
+    function hasHuronLicenses() {
+      return _.filter(Authinfo.getLicenses(), function (l) {
+        return l.licenseType === 'COMMUNICATION';
+      }).length > 0;
     }
 
     function updateDeviceMap(deviceMap, keepFunction) {
@@ -193,8 +203,8 @@
         .then(addPlaceToDataModel);
     }
 
-    function createCmiPlace(name, directoryNumber, externalNumber) {
-      return CsdmHuronPlaceService.createCmiPlace(name, directoryNumber, externalNumber)
+    function createCmiPlace(name, entitlements, directoryNumber, externalNumber) {
+      return CsdmPlaceService.createCmiPlace(name, entitlements, directoryNumber, externalNumber)
         .then(addPlaceToDataModel);
     }
 
@@ -410,7 +420,7 @@
       createCmiPlace: createCmiPlace,
       updateCloudberryPlace: updateCloudberryPlace,
       subscribeToChanges: subscribeToChanges,
-      notifyDevicesInPlace: notifyDevicesInPlace
+      notifyDevicesInPlace: notifyDevicesInPlace,
     };
   }
 

@@ -161,7 +161,7 @@
           "msgType": msgType,
           "remoteAlias": remoteAlias,
           "localAlias": event.eventSource.hostname,
-          "callflowTransition": true
+          "callflowTransition": true,
         });
       }
 
@@ -177,7 +177,7 @@
           "msgType": msgType,
           "remoteAlias": event.eventSource.hostname,
           "localAlias": remoteAlias,
-          "callflowTransition": true
+          "callflowTransition": true,
         });
       }
 
@@ -189,7 +189,7 @@
         "msgType": msgType,
         "remoteAlias": remoteAlias,
         "localAlias": localAlias,
-        "callflowTransition": false
+        "callflowTransition": false,
       };
       addEventData(sparkEvent);
     }
@@ -204,7 +204,7 @@
             "serviceID": "",
             "serviceInstanceID": "0",
             "customerID": "none",
-            "hostname": event.localAlias
+            "hostname": event.localAlias,
           },
           "dataParam": {
             "remoteName": event.remoteAlias,
@@ -214,8 +214,8 @@
             "localAlias": event.localAlias,
             "localIPAddress": event.sourceIp,
             "remotePAddress": event.destinationIp,
-            "callflowTransition": event.callflowTransition
-          }
+            "callflowTransition": event.callflowTransition,
+          },
         });
 
         if ((event.type === "SparkEvent") && (!_.includes(vm.sparkHostNames, event.localAlias))) {
@@ -239,20 +239,20 @@
     function generateDownloads() {
       var jsonFileData = {
         cdrs: vm.call,
-        events: vm.events
+        events: vm.events,
       };
       var jsonBlob = new $window.Blob([JSON.stringify(jsonFileData, null, 2)], {
-        type: 'application/json'
+        type: 'application/json',
       });
       vm.jsonUrl = ($window.URL || $window.webkitURL).createObjectURL(jsonBlob);
 
       var csvBlob = new $window.Blob([convertCsv()], {
-        type: 'text/csv'
+        type: 'text/csv',
       });
       vm.csvUrl = ($window.URL || $window.webkitURL).createObjectURL(csvBlob);
 
       var htmlBlob = new $window.Blob([vm.diagramHTML], {
-        type: 'text/html'
+        type: 'text/html',
       });
       vm.htmlUrl = ($window.URL || $window.webkitURL).createObjectURL(htmlBlob);
 
@@ -293,7 +293,6 @@
           vm.error = esErrorResponse(response);
           vm.spin = false;
         });
-      return;
     };
 
     function generateEventSourceJson() {
@@ -563,8 +562,8 @@
         if (vm.filterCallIdOptions[i].value === true) {
           filtered = _.union(filtered, $filter('filter')(vm.events, {
             dataParam: {
-              callID: vm.filterCallIdOptions[i].label
-            }
+              callID: vm.filterCallIdOptions[i].label,
+            },
           }));
         }
       }
@@ -605,14 +604,14 @@
           filtered = _.union(filtered, $filter('filter')(vm.events, {
             dataParam: {
               localSessionID: sessionIds[0],
-              remoteSessionID: sessionIds[1]
-            }
+              remoteSessionID: sessionIds[1],
+            },
           }));
           filtered = _.union(filtered, $filter('filter')(vm.events, {
             dataParam: {
               localSessionID: sessionIds[1],
-              remoteSessionID: sessionIds[0]
-            }
+              remoteSessionID: sessionIds[0],
+            },
           }));
         }
       });
@@ -662,8 +661,8 @@
         if (option.value === true) {
           filtered = _.union(filtered, $filter('filter')(vm.events, {
             eventSource: {
-              hostname: option.name
-            }
+              hostname: option.name,
+            },
           }));
         }
       });
@@ -672,8 +671,8 @@
         if (option.value === true) {
           filtered = _.union(filtered, $filter('filter')(vm.events, {
             eventSource: {
-              hostname: option.name
-            }
+              hostname: option.name,
+            },
           }));
         }
       });

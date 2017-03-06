@@ -17,7 +17,7 @@
     return {
       request: requestHandler,
       response: responseHandler,
-      responseError: responseError
+      responseError: responseError,
     };
 
     function requestHandler(config) {

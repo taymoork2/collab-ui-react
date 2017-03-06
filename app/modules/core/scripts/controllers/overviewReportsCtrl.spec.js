@@ -8,12 +8,12 @@ describe('Controller: Overview Reports', function () {
 
   var Authinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue(customerData.customerOptions[3].value),
-    getOrgName: jasmine.createSpy('getOrgName').and.returnValue(customerData.customerOptions[3].label)
+    getOrgName: jasmine.createSpy('getOrgName').and.returnValue(customerData.customerOptions[3].label),
   };
 
   var allCustomers = {
     value: 0,
-    label: 'reports.allCustomers'
+    label: 'reports.allCustomers',
   };
 
   var customerList = [];
@@ -21,14 +21,14 @@ describe('Controller: Overview Reports', function () {
   _.forEach(customerData.customerOptions, function (org) {
     customerList.push({
       value: org.value,
-      label: org.label
+      label: org.label,
     });
   });
 
   // fake function used by mock services
   var emptyFunction = function () {};
   var validateService = {
-    validate: emptyFunction
+    validate: emptyFunction,
   };
 
   beforeEach(angular.mock.module('Core'));
@@ -46,7 +46,7 @@ describe('Controller: Overview Reports', function () {
       spyOn(AmCharts, 'makeChart').and.callFake(function (div, data) {
         return {
           'dataProvider': data,
-          validateData: validateService.validate
+          validateData: validateService.validate,
         };
       });
 
@@ -54,10 +54,10 @@ describe('Controller: Overview Reports', function () {
         getManagedOrgsList: jasmine.createSpy('getManagedOrgsList').and.callFake(function () {
           return q.when({
             data: {
-              organizations: angular.copy(customerData.customerResponse)
-            }
+              organizations: angular.copy(customerData.customerResponse),
+            },
           });
-        })
+        }),
       };
 
       ReportsService = {
@@ -69,7 +69,7 @@ describe('Controller: Overview Reports', function () {
         Authinfo: Authinfo,
         Notification: Notification,
         PartnerService: PartnerService,
-        ReportsService: ReportsService
+        ReportsService: ReportsService,
       });
       $scope.$apply();
     }));

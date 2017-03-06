@@ -16,7 +16,7 @@
       avrilUrl: {
         dev: 'https://avrildirmgmt.appstaging.ciscoccservice.com/avrildirmgmt/api/v1',
         integration: 'https://avrildirmgmt.appstaging.ciscoccservice.com/avrildirmgmt/api/v1',
-        prod: 'https://avrildirmgmt.produs1.ciscoccservice.com/avrildirmgmt/api/v1'
+        prod: 'https://avrildirmgmt.produs1.ciscoccservice.com/avrildirmgmt/api/v1',
       },
 
       getBaseDomain: function () {
@@ -72,7 +72,7 @@
         } else {
           return this.avrilUrl.prod;
         }
-      }
+      },
     };
     return config;
   }

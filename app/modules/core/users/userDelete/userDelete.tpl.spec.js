@@ -31,7 +31,7 @@ describe('Template: userDelete', function () {
 
   function compileView() {
     controller = $controller('UserDeleteCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
     $scope.userDelete = controller;
 

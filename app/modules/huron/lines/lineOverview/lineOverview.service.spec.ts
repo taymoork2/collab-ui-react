@@ -15,6 +15,8 @@ describe('Service: LineOverviewService', () => {
       'SharedLineService',
       'CallerIDService',
       'AutoAnswerService',
+      'HuronVoicemailService',
+      'HuronUserService',
       '$rootScope',
       '$scope',
       '$q',
@@ -103,14 +105,14 @@ describe('Service: LineOverviewService', () => {
     let autoAnswerData: AutoAnswer = new AutoAnswer();
     _.forEach(_.get(autoAnswerRead, AutoAnswerConst.PHONES, []), (phone: AutoAnswerPhone) => {
       autoAnswerData.phones.push(
-            new AutoAnswerPhone({
-              uuid: phone.uuid,
-              name: phone.name,
-              description: phone.description,
-              model: phone.model,
-              enabled: phone.enabled,
-              mode: phone.enabled ? phone.mode : undefined }));
-      });
+        new AutoAnswerPhone({
+          uuid: phone.uuid,
+          name: phone.name,
+          description: phone.description,
+          model: phone.model,
+          enabled: phone.enabled,
+          mode: phone.enabled ? phone.mode : undefined }));
+    });
     autoAnswerData.member = new AutoAnswerMember(_.get(autoAnswerRead, AutoAnswerConst.MEMBER));
     this.autoAnswer = autoAnswerData;
 
@@ -122,6 +124,7 @@ describe('Service: LineOverviewService', () => {
     this.lineOverview.callerId = this.callerId;
     this.lineOverview.companyNumbers = [];
     this.lineOverview.autoAnswer = this.autoAnswer;
+    this.lineOverview.voicemailEnabled = false;
 
     this.getLineDefer = this.$q.defer();
     spyOn(this.LineService, 'getLine').and.returnValue(this.getLineDefer.promise);
@@ -165,6 +168,10 @@ describe('Service: LineOverviewService', () => {
 
     spyOn(this.LineOverviewService, 'cloneLineOverviewData').and.callThrough();
     spyOn(this.$q, 'all').and.callThrough();
+
+    this.userServiceDefer = this.$q.defer();
+    spyOn(this.HuronUserService, 'getUserServices').and.returnValue(this.userServiceDefer.promise);
+    spyOn(this.HuronVoicemailService, 'isEnabledForUser').and.returnValue(false);
   });
 
   describe('get exising line', () => {
@@ -176,6 +183,7 @@ describe('Service: LineOverviewService', () => {
       this.getCallerIdDefer.resolve(this.callerId);
       this.listCompanyNumbersDefer.resolve([]);
       this.getAutoAnswerDefer.resolve(this.autoAnswer);
+      this.userServiceDefer.resolve([]);
     });
 
     it('should call LineService.getLine and CallForward.getCallForward', function () {

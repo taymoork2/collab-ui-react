@@ -1,17 +1,18 @@
+
 'use strict';
 
 var csvDownloadModule = require('modules/core/csvDownload').default;
 
 describe('assignServices', function () {
   var $scope, $state, $previousState, $httpBackend, $q;
-  var view, authinfo, csvDownloadService, Orgservice, FeatureToggleService;
+  var view, authinfo, csvDownloadService, Orgservice;
 
   var orgid = '1';
 
   var BUCKET = {
     msg: '#paidMsg',
     conf: '#paidMtg',
-    comm: '#CO_1'
+    comm: '#CO_1',
   };
 
   var ENT = {
@@ -20,18 +21,18 @@ describe('assignServices', function () {
     cal: 'squared-fusion-cal',
     id_uc: '#squared-fusion-uc',
     id_ec: '#squared-fusion-ec',
-    id_cal: '#squared-fusion-cal'
+    id_cal: '#squared-fusion-cal',
   };
 
   var ENT_NAMES = {
     'squared-fusion-uc': 'squaredFusionUC',
     'squared-fusion-ec': 'squaredFusionEC',
-    'squared-fusion-cal': 'squaredFusionCal'
+    'squared-fusion-cal': 'squaredFusionCal',
   };
 
   var expectCB = function (name, entitled) {
     var entitlement = _.find(view.scope().hybridServicesPanelCtrl.entitlements, {
-      entitlementName: ENT_NAMES[name]
+      entitlementName: ENT_NAMES[name],
     });
     if (entitled) {
       expect(entitlement).toBeDefined();
@@ -57,7 +58,7 @@ describe('assignServices', function () {
   beforeEach(angular.mock.module(csvDownloadModule));
 
   beforeEach(inject(function ($compile, $rootScope, $templateCache, _$httpBackend_,
-    $controller, _$q_, _$state_, _Authinfo_, _CsvDownloadService_, _FeatureToggleService_,
+    $controller, _$q_, _$state_, _Authinfo_, _CsvDownloadService_,
     _Orgservice_, _$previousState_) {
 
     $scope = $rootScope.$new();
@@ -70,7 +71,6 @@ describe('assignServices', function () {
     Orgservice = _Orgservice_;
     authinfo = _Authinfo_;
     csvDownloadService = _CsvDownloadService_;
-    FeatureToggleService = _FeatureToggleService_;
 
     var headers = getJSONFixture('core/json/users/headers.json');
     var accountData = getJSONFixture('core/json/authInfo/msg_mtg_comm_Licenses.json');
@@ -78,8 +78,8 @@ describe('assignServices', function () {
 
     var current = {
       step: {
-        name: 'fakeStep'
-      }
+        name: 'fakeStep',
+      },
     };
     $scope.wizard = {};
     $scope.wizard.current = current;
@@ -87,23 +87,23 @@ describe('assignServices', function () {
     spyOn($state, 'go');
     spyOn($previousState, 'get').and.returnValue({
       state: {
-        name: 'test.state'
-      }
+        name: 'test.state',
+      },
     });
 
     function setupAuthinfo() {
       spyOn(authinfo, 'getConferenceServicesWithoutSiteUrl').and.returnValue([{
         license: {
-          siteUrl: 'fakesite1'
-        }
+          siteUrl: 'fakesite1',
+        },
       }, {
         license: {
-          siteUrl: 'fakesite2'
-        }
+          siteUrl: 'fakesite2',
+        },
       }, {
         license: {
-          siteUrl: 'fakesite3'
-        }
+          siteUrl: 'fakesite3',
+        },
       }]);
       spyOn(authinfo, 'getOrgId').and.returnValue(orgid);
       spyOn(authinfo, 'isInitialized').and.returnValue(true);
@@ -123,7 +123,6 @@ describe('assignServices', function () {
 
     spyOn(_Orgservice_, 'getUnlicensedUsers');
     spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.resolve(getLicensesUsage));
-    spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.resolve(false));
 
     spyOn(csvDownloadService, 'getCsv').and.callFake(function (type) {
       if (type === 'headers') {
@@ -143,7 +142,7 @@ describe('assignServices', function () {
         "uuid": "70b8d459-7f58-487a-afc8-02c0a82d53ca",
         "steeringDigit": "9",
         "timeZone": "America/Los_Angeles",
-        "voicemailPilotNumberGenerated": "false"
+        "voicemailPilotNumberGenerated": "false",
       }]);
 
     $httpBackend
@@ -156,16 +155,16 @@ describe('assignServices', function () {
         items: [{
           id: ENT.cal,
           enabled: true,
-          acknowledged: false
+          acknowledged: false,
         }, {
           id: ENT.uc,
           enabled: true,
-          acknowledged: false
+          acknowledged: false,
         }, {
           id: ENT.ec,
           enabled: true,
-          acknowledged: false
-        }]
+          acknowledged: false,
+        }],
       });
 
     // Org info
@@ -179,7 +178,7 @@ describe('assignServices', function () {
 
     $controller('OnboardCtrl', {
       $scope: $scope,
-      $state: $state
+      $state: $state,
     });
 
     var html = $templateCache.get("modules/core/users/userAdd/assignServices.tpl.html");

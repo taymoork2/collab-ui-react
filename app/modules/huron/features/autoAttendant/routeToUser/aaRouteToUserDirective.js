@@ -15,11 +15,12 @@
         keyIndex: '@aaKeyIndex',
         voicemail: '=',
         fromRouteCall: '@aaFromRouteCall',
-        fromFallback: '@aaFromFallback'
+        fromDecision: '@aaFromDecision',
+        fromFallback: '@aaFromFallback',
       },
       controller: 'AARouteToUserCtrl',
       controllerAs: 'aaRouteUser',
-      templateUrl: 'modules/huron/features/autoAttendant/routeToUser/aaRouteToUser.tpl.html'
+      templateUrl: 'modules/huron/features/autoAttendant/routeToUser/aaRouteToUser.tpl.html',
     };
   }
 })();

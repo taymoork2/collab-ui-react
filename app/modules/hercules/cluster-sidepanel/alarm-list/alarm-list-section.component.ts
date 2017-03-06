@@ -4,6 +4,7 @@ export class AlarmListSectionComponentCtrl implements ng.IComponentController {
 
   public alarms: Array<IAlarm>;
   private connectorType: string;
+  private newLink: string;
 
   private severityIconMap = {
     critical: 'icon icon-error',
@@ -17,10 +18,7 @@ export class AlarmListSectionComponentCtrl implements ng.IComponentController {
     private $state: ng.ui.IStateService,
   ) {}
 
-  public $onInit() {}
-
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject}) {
-
     const { alarms } = changes;
     if (alarms && alarms.currentValue) {
       this.alarms = this.sortAlarmsBySeverity(alarms.currentValue);
@@ -28,7 +26,6 @@ export class AlarmListSectionComponentCtrl implements ng.IComponentController {
   }
 
   public sortAlarmsBySeverity(alarms: Array<IAlarm>): Array<IAlarm> {
-
     enum SortOrder {
       'critical' = 0,
       'error' = 1,
@@ -49,12 +46,20 @@ export class AlarmListSectionComponentCtrl implements ng.IComponentController {
   }
 
   public goToAlarm(alarm: any): void {
-    if (this.connectorType === 'c_mgmt') {
-      this.$state.go('management-connector-details.alarm-details', {
+    if (this.newLink === 'true') {
+      this.$state.go('hybrid-services-connector-sidepanel.alarm-details', {
         alarm: alarm,
       });
-    } else {
-      this.$state.go('cluster-details.alarm-details', {
+    } else if (this.connectorType === 'c_mgmt' || this.connectorType === 'c_cal' || this.connectorType === 'c_ucmc') {
+      this.$state.go('expressway-cluster-sidepanel.alarm-details', {
+        alarm: alarm,
+      });
+    } else if (this.connectorType === 'hds_app') {
+      this.$state.go('hds-cluster-details.alarm-details', {
+        alarm: alarm,
+      });
+    } else if (this.connectorType === 'mf_mgmt') {
+      this.$state.go('media-cluster-details.alarm-details', {
         alarm: alarm,
       });
     }
@@ -68,5 +73,6 @@ export class AlarmListSectionComponent implements ng.IComponentOptions {
   public bindings = {
     alarms: '<',
     connectorType: '<',
+    newLink: '<',
   };
 }

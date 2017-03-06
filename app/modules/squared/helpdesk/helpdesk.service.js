@@ -52,28 +52,28 @@
     if (!orgCache) {
       orgCache = new CacheFactory('helpdeskOrgCache', {
         maxAge: 120 * 1000,
-        deleteOnExpire: 'aggressive'
+        deleteOnExpire: 'aggressive',
       });
     }
     var orgDisplayNameCache = CacheFactory.get('helpdeskOrgDisplayNameCache');
     if (!orgDisplayNameCache) {
       orgDisplayNameCache = new CacheFactory('helpdeskOrgDisplayNameCache', {
         maxAge: 10 * 60 * 1000,
-        deleteOnExpire: 'aggressive'
+        deleteOnExpire: 'aggressive',
       });
     }
     var devicesInOrgCache = CacheFactory.get('helpdeskDevicesInOrgCache');
     if (!devicesInOrgCache) {
       devicesInOrgCache = new CacheFactory('helpdeskDevicesInOrgCache', {
         maxAge: 180 * 1000,
-        deleteOnExpire: 'aggressive'
+        deleteOnExpire: 'aggressive',
       });
     }
     var userCache = CacheFactory.get('helpdeskUserCache');
     if (!userCache) {
       userCache = new CacheFactory('helpdeskUserCache', {
         maxAge: 60 * 1000,
-        deleteOnExpire: 'aggressive'
+        deleteOnExpire: 'aggressive',
       });
     }
 
@@ -96,7 +96,7 @@
       },
       all: function () {
         return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
-      }
+      },
     };
 
     function checkIfMobile() {
@@ -159,7 +159,7 @@
 
     function cancelableHttpGET(url) {
       var config = {
-        timeout: HelpdeskHttpRequestCanceller.newCancelableTimeout()
+        timeout: HelpdeskHttpRequestCanceller.newCancelableTimeout(),
       };
 
       return $http
@@ -226,7 +226,7 @@
         $q.reject('Need specify email recipient');
       }
       var payload = {
-        emailId: adminEmail
+        emailId: adminEmail,
       };
 
       if (toCustomer) {
@@ -352,7 +352,7 @@
       user.displayName = getCorrectedDisplayName(user);
       user.isConsumerUser = user.orgId === Config.consumerOrgId;
       user.organization = {
-        id: user.orgId
+        id: user.orgId,
       };
       if (!user.accountStatus) {
         user.statuses = [];
@@ -445,12 +445,12 @@
       var payload = {
         inviteList: [{
           displayName: displayName,
-          email: email
-        }]
+          email: email,
+        }],
       };
       if (isSparkOnlineUser(trimmedUserData)) {
         payload = {
-          onlineOrderIds: onlineOrderIds
+          onlineOrderIds: onlineOrderIds,
         };
       }
       return payload;
@@ -470,8 +470,8 @@
         .post(urlBase + 'helpdesk/actions/sendverificationcode/invoke', {
           inviteList: [{
             displayName: displayName,
-            email: email
-          }]
+            email: email,
+          }],
         })
         .then(extractData);
     }

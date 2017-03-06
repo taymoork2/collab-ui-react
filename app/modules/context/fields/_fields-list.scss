@@ -1,0 +1,34 @@
+@import 'styles/toolkit/layout';
+
+.field-list {
+  @extend %grid-subheader;
+  @extend %page-background-white;
+
+  .ngCell.col0 .ngVerticalBar,
+  .ngHeaderCell.col0 .ngVerticalBar {
+    display: none;
+  }
+
+  .ngHeaderText.colt5 {
+    text-align: left;
+  }
+
+  .ngCell.colt5 {
+    overflow: visible;
+
+    .dropdown-menu {
+      right: 25px;
+      left: auto;
+      top: 70%;
+    }
+  }
+
+  .search-noresults {
+    position: absolute;
+    top: 150px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: $gray-darker;
+  }
+}

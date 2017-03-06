@@ -6,6 +6,12 @@
       <div ng-show="result">
         <div class="results alert alert-danger" ng-bind-html="result"></div>
       </div>
+      <div id="generic-message" class="validation-messages info" ng-if="message && !loading">
+          <div class="cs-input__messages" >
+            <div class="message" translate="{{message}}">
+            </div>
+          </div>
+      </div>
       <form novalidate name="loginForm" class="typeahead-group" autocomplete="off">
         <div class="row">
           <div class="cs-input-group small-12 columns">
@@ -33,7 +39,7 @@
   <div class="messagebox-backdrop__footer">
     <i class="icon icon-cisco-logo"></i>
     <div class="body-smallest">
-      <a href="http://www.ciscospark.com/terms-of-service.html" target="_blank" translate="loginPage.tos"></a> | <a href="http://www.cisco.com/web/siteassets/legal/privacy.html" target="_blank" translate="loginPage.privacy"></a> &copy; 2016 <span translate="loginPage.copyright"></span>
+      <a href="http://www.ciscospark.com/terms-of-service.html" target="_blank" translate="loginPage.tos"></a> | <a href="http://www.cisco.com/web/siteassets/legal/privacy.html" target="_blank" translate="loginPage.privacy"></a> &copy; 2017 <span translate="loginPage.copyright"></span>
     </div>
   </div>
 </div>

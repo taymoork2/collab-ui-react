@@ -19,14 +19,14 @@ describe('OAuthConfig', function () {
   var prodHost = 'admin.ciscospark.com';
   var cfeHost = 'cfe-admin.ciscospark.com';
   var intHost = 'int-admin.ciscospark.com';
-  var scope = encodeURIComponent('webexsquare:admin webexsquare:billing ciscouc:admin Identity:SCIM Identity:Config Identity:Organization Identity:OAuthToken cloudMeetings:login webex-messenger:get_webextoken cloud-contact-center:admin compliance:spark_conversations_read contact-center-context:pod_read contact-center-context:pod_write spark-admin:people_read spark-admin:people_write spark-admin:customers_read spark-admin:customers_write spark-admin:organizations_read spark-admin:licenses_read spark-admin:logs_read');
+  var scope = encodeURIComponent('webexsquare:admin webexsquare:billing ciscouc:admin Identity:SCIM Identity:Config Identity:Organization Identity:OAuthToken cloudMeetings:login webex-messenger:get_webextoken cloud-contact-center:admin compliance:spark_conversations_read contact-center-context:pod_read contact-center-context:pod_write spark-admin:people_read spark-admin:people_write spark-admin:customers_read spark-admin:customers_write spark-admin:organizations_read spark-admin:licenses_read spark-admin:logs_read spark:kms');
 
   var whenCalling = function (fn, arg1, arg2) {
     var hosts = {
       'dev': devHost,
       'cfe': cfeHost,
       'integration': intHost,
-      'prod': prodHost
+      'prod': prodHost,
     };
     return {
       expectUrlToBe: function (obj) {
@@ -45,7 +45,7 @@ describe('OAuthConfig', function () {
             throw new Error("Expected " + fn + " in " + env + " to be '" + expected + "' but it was '" + actual + "'");
           }
         });
-      }
+      },
     };
   };
 
@@ -58,7 +58,7 @@ describe('OAuthConfig', function () {
       dev: 'grant_type=refresh_token&refresh_token=foo',
       cfe: 'grant_type=refresh_token&refresh_token=foo',
       integration: 'grant_type=refresh_token&refresh_token=foo',
-      prod: 'grant_type=refresh_token&refresh_token=foo'
+      prod: 'grant_type=refresh_token&refresh_token=foo',
     });
   });
 
@@ -67,7 +67,7 @@ describe('OAuthConfig', function () {
       dev: 'https://idbroker.webex.com/idb/oauth2/v1/authorize?response_type=code&client_id=C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec&scope=' + scope + '&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000&state=random-string&cisService=spark&email=a%40a.com',
       cfe: 'https://idbrokerbts.webex.com/idb/oauth2/v1/authorize?response_type=code&client_id=C5469b72a6de8f8f0c5a23e50b073063ea872969fc74bb461d0ea0438feab9c03&scope=' + scope + '&redirect_uri=https%3A%2F%2Fcfe-admin.ciscospark.com&state=random-string&cisService=spark&email=a%40a.com',
       integration: 'https://idbroker.webex.com/idb/oauth2/v1/authorize?response_type=code&client_id=C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec&scope=' + scope + '&redirect_uri=https%3A%2F%2Fint-admin.ciscospark.com%2F&state=random-string&cisService=spark&email=a%40a.com',
-      prod: 'https://idbroker.webex.com/idb/oauth2/v1/authorize?response_type=code&client_id=C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec&scope=' + scope + '&redirect_uri=https%3A%2F%2Fadmin.ciscospark.com%2F&state=random-string&cisService=spark&email=a%40a.com'
+      prod: 'https://idbroker.webex.com/idb/oauth2/v1/authorize?response_type=code&client_id=C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec&scope=' + scope + '&redirect_uri=https%3A%2F%2Fadmin.ciscospark.com%2F&state=random-string&cisService=spark&email=a%40a.com',
     });
   });
 

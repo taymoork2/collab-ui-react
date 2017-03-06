@@ -116,6 +116,7 @@ cluster-card {
     footer {
       text-align: center;
       padding: 0;
+      height: 60px;
 
       a {
         display: block;
@@ -126,6 +127,18 @@ cluster-card {
 
         &:focus {
           box-shadow: none;
+        }
+      }
+    }
+
+    .double-footer {
+      display: flex;
+
+      a {
+        flex: 1 0 50%;
+
+        &:first-child {
+          border-right: 1px solid $gray-light-3;
         }
       }
     }

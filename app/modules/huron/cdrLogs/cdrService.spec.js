@@ -15,7 +15,7 @@ describe('Controller: CdrService', function () {
     'endTime': '04:16:06 PM',
     'startDate': '2015-09-29',
     'endDate': '2015-09-30',
-    'hitSize': 1
+    'hitSize': 1,
   };
 
   var formDate = function (date, time) {

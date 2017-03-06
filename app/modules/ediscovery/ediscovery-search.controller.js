@@ -1,11 +1,13 @@
 require('./ediscovery.scss');
+require('@ciscospark/plugin-search');
+var Spark = require('@ciscospark/spark-core').default;
 
 (function () {
   'use strict';
 
   /* @ngInject */
-  function EdiscoverySearchController($stateParams, $translate, $timeout, $scope, $state, $window, EdiscoveryService, EdiscoveryNotificationService,
-    FeatureToggleService, Notification) {
+  function EdiscoverySearchController($q, $stateParams, $translate, $timeout, $scope, $window, EdiscoveryService, EdiscoveryNotificationService,
+    FeatureToggleService, Notification, TokenService) {
     $scope.$on('$viewContentLoaded', function () {
       angular.element('#searchInput').focus();
     });
@@ -13,12 +15,13 @@ require('./ediscovery.scss');
       $window.document.title = $translate.instant("ediscovery.browserTabHeaderTitle");
     });
     var vm = this;
+    var spark;
     vm.searchByParameters = searchByParameters;
     vm.goToSearchPage = goToSearchPage;
-    vm.searchByService = searchByService;
     vm.advancedSearch = advancedSearch;
     vm.searchForRoom = searchForRoom;
     vm.createReport = createReport;
+    vm.generateReport = generateReport;
     vm.runReport = runReport;
     vm.cancelReport = cancelReport;
     vm.reportProgress = reportProgress;
@@ -26,7 +29,6 @@ require('./ediscovery.scss');
     vm.searchButtonDisabled = searchButtonDisabled;
     vm.downloadReport = downloadReport;
     vm.retrySearch = retrySearch;
-    vm.prettyPrintBytes = EdiscoveryService.prettyPrintBytes;
     vm.ediscoveryToggle = false;
     vm.createReportInProgress = false;
     vm.searchingForRoom = false;
@@ -36,16 +38,26 @@ require('./ediscovery.scss');
 
     /* initial search variables page */
     vm.searchPlaceholder = $translate.instant('ediscovery.searchParameters.searchByEmailPlaceholder');
+    vm.startDatePlaceholder = moment().subtract(30, 'days').format('YYYY-MM-DD');
+    vm.endDatePlaceholder = moment().format('YYYY-MM-DD');
     vm.searchByOptions = ['Email ID', 'Room ID'];
     vm.searchBySelected = '' || vm.searchByOptions[0];
-    vm.searchModel = '';
+    vm.searchModel = null;
+    vm.queryModel = null;
 
     vm.searchResults = {
-      emailAddresses: [],
+      keywords: [],
+      queries: [],
       numFiles: null,
       numMessages: null,
-      totalSize: null
+      totalSize: null,
     };
+
+    /* Encrypted Search Variables */
+    vm.encryptionKeyUrl = '';
+    vm.encryptedEmails = null;
+    vm.unencryptedRoomIds = null;
+    vm.encryptedQuery = null;
 
     /* generate report status pages */
     vm.isReport = true;
@@ -55,7 +67,7 @@ require('./ediscovery.scss');
     vm.isReportMaxRooms = false;
 
     vm.generateDescription = '';
-    vm.exportOptions = ['CSV', 'PDF'];
+    vm.exportOptions = ['JSON'];
     vm.exportSelected = '' || vm.exportOptions[0];
 
     init($stateParams.report, $stateParams.reRun);
@@ -74,13 +86,13 @@ require('./ediscovery.scss');
       if (report) {
         vm.roomInfo = {
           id: report.roomQuery.roomId,
-          displayName: report.displayName
+          displayName: report.displayName,
         };
         vm.searchCriteria = {
           roomId: report.roomQuery.roomId,
           startDate: report.roomQuery.startDate,
           endDate: report.roomQuery.endDate,
-          displayName: report.displayName
+          displayName: report.displayName,
         };
         if (!reRun) {
           vm.report = report;
@@ -93,10 +105,16 @@ require('./ediscovery.scss');
       }
     }
 
+    function splitWords(_words) {
+      var words = _words ? (_words).split(',').map(
+        function (s) {
+          return s.trim();
+        }) : null;
+      return words;
+    }
+
     function goToSearchPage() {
-      $state.go('ediscovery.search', {
-        report: $stateParams.report
-      });
+      vm.roomInfo = false;
     }
 
     function getStartDate() {
@@ -105,6 +123,17 @@ require('./ediscovery.scss');
 
     function getEndDate() {
       return vm.searchCriteria.endDate;
+    }
+
+    function formatDate(reason, date) {
+      var regex = new RegExp('-', 'g');
+      var replace = '/';
+      if (reason === 'display') {
+        return _.replace(date, regex, replace).split('T')[0];
+      }
+      if (reason === 'api') {
+        return moment(date).toISOString();
+      }
     }
 
     function dateErrors(start, end) {
@@ -124,7 +153,7 @@ require('./ediscovery.scss');
       var errors = dateErrors(getStartDate(), getEndDate());
       if (errors.length > 0) {
         vm.dateValidationError = {
-          errors: errors
+          errors: errors,
         };
         return false;
       } else {
@@ -146,55 +175,130 @@ require('./ediscovery.scss');
 
     function searchByParameters() {
       if (_.eq(vm.searchByOptions[0], vm.searchBySelected)) {
-        vm.searchPlaceholder = $translate.instant("ediscovery.searchParameters.searchByEmailPlaceholder");
+        vm.searchPlaceholder = $translate.instant('ediscovery.searchParameters.searchByEmailPlaceholder');
       } else if (_.eq(vm.searchByOptions[1], vm.searchBySelected)) {
-        vm.searchPlaceholder = $translate.instant("ediscovery.searchParameters.searchByRoomPlaceholder");
+        vm.searchPlaceholder = $translate.instant('ediscovery.searchParameters.searchByRoomPlaceholder');
       }
     }
 
-    function searchByService() {
-      if (_.eq(vm.searchByOptions[0], vm.searchBySelected)) {
-        advancedSearch();
-      } else if (_.eq(vm.searchByOptions[1], vm.searchBySelected)) {
-        searchForRoom(vm.searchModel);
-      }
+    function searchSetup() {
+      disableAvalonPolling();
+      vm.ongoingSearch = true;
+      vm.roomInfo = null;
+      vm.report = null;
+      vm.error = null;
+      vm.searchingForRoom = true;
+      vm.searchResults.keywords = [];
+    }
+
+    //advanced search section
+    function sparkSetup() {
+      vm.accessToken = TokenService.getAccessToken();
+      spark = new Spark({
+        credentials: {
+          access_token: vm.accessToken,
+        },
+      });
+    }
+
+    function createEncryptedEmails(_emails) {
+      var emails = splitWords(_emails);
+      var promises = emails.map(function (s) {
+        return spark.encryption.encryptText(vm.encryptedResult, s);
+      });
+      return $q.all(promises);
+    }
+
+    function convertBytesToGB(bytes) {
+      var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+      var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10);
+      return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
+    }
+
+    function searchResults(result) {
+      var keywords = _.eq(vm.searchByOptions[0], vm.searchBySelected) ? vm.unencryptedEmails : vm.unencryptedRoomIds;
+      var queries = splitWords(vm.queryModel);
+      vm.roomInfo = result;
+      vm.searchCriteria = {
+        startDate: formatDate('display', getStartDate()),
+        endDate: formatDate('display', getEndDate()),
+      };
+      vm.searchResults = {
+        keywords: keywords,
+        queries: queries,
+        numFiles: result.data.numFiles,
+        numMessages: result.data.numMessages,
+        totalSize: convertBytesToGB(result.data.totalSizeInBytes),
+      };
+      vm.searchResultsHeader = _.eq(vm.searchByOptions[0], vm.searchBySelected) ? $translate.instant('ediscovery.searchResults.emailId') : $translate.instant('ediscovery.searchResults.roomId');
     }
 
     function advancedSearch() {
-      vm.searchingForRoom = true;
-      EdiscoveryService.getArgonautServiceUrl(vm.searchModel, 'kms://cisco.com/keys/7831cef0-f0ad-4327-a170-465c88dab9d1', vm.searchCriteria.startDate, vm.searchCriteria.endDate)
-        .then(function (result) {
-          vm.roomInfo = result;
-          vm.searchResults.numFiles = result.data.numFiles;
-          vm.searchResults.numMessages = result.data.numMessages;
-          vm.searchResults.totalSize = result.data.totalSizeInBytes;
+      searchSetup();
+      sparkSetup();
+      vm.encryptedResult = [];
+      vm.encryptedEmails = null;
+      vm.unencryptedRoomIds = null;
+      vm.emailSelected = _.eq(vm.searchByOptions[0], vm.searchBySelected);
+      vm.roomIdSelected = _.eq(vm.searchByOptions[1], vm.searchBySelected);
+      spark.mercury.connect()
+        .then(function () {
+          return spark.encryption.kms.createUnboundKeys({
+            count: 1,
+          });
         })
-        .finally(function () {
-          vm.searchingForRoom = false;
+        .then(function (unboundKeys) {
+          vm.encryptedResult = unboundKeys[0];
+          vm.encryptionKeyUrl = unboundKeys[0].uri;
+          vm.unencryptedEmails = splitWords(vm.searchModel);
+          return vm.emailSelected ? createEncryptedEmails(vm.searchModel) : vm.searchModel;
+        })
+        .then(function (keyword) {
+          vm.encryptedEmails = vm.emailSelected ? keyword : null;
+          vm.unencryptedRoomIds = vm.roomIdSelected ? splitWords(keyword) : null;
+          return _.isNull(vm.queryModel) ? null : spark.encryption.encryptText(vm.encryptedResult, vm.queryModel);
+        })
+        .then(function (query) {
+          vm.encryptedQuery = query;
+        })
+        .then(function () {
+          var start = formatDate('api', getStartDate());
+          var end = formatDate('api', getEndDate());
+          var argonautParam = {
+            roomIds: vm.unencryptedRoomIds,
+            emailAddresses: vm.encryptedEmails,
+            encryptionKeyUrl: vm.encryptionKeyUrl,
+            startDate: start,
+            endDate: end,
+            query: vm.encryptedQuery,
+          };
+          return EdiscoveryService.getArgonautServiceUrl(argonautParam)
+            .then(function (result) {
+              searchResults(result);
+            })
+            .catch(function (err) {
+              vm.error = _.get(err, 'data.message', $translate.instant('ediscovery.search.roomLookupError'));
+            })
+            .finally(function () {
+              vm.searchingForRoom = false;
+            });
         });
     }
 
     function searchForRoom(roomId) {
-      vm.ongoingSearch = true;
-      disableAvalonPolling();
-      vm.roomInfo = null;
-      vm.report = null;
-      vm.error = null;
+      searchSetup();
       vm.searchCriteria.roomId = roomId;
-      vm.searchingForRoom = true;
       EdiscoveryService.getAvalonServiceUrl(roomId)
         .then(function (result) {
           return EdiscoveryService.getAvalonRoomInfo(result.avalonRoomsUrl + '/' + roomId);
         })
         .then(function (result) {
-          var regex = new RegExp('-', 'g');
-          var replace = '/';
           vm.roomInfo = result;
-          vm.searchCriteria.startDate = vm.searchCriteria.startDate || _.replace(result.published, regex, replace).split('T')[0];
-          vm.searchCriteria.endDate = result.lastRelevantActivityDate ? _.replace(result.lastRelevantActivityDate, regex, replace).split('T')[0] : vm.searchCriteria.startDate;
+          vm.searchCriteria.startDate = formatDate('display', getStartDate()) || formatDate('display', result.published);
+          vm.searchCriteria.endDate = result.lastRelevantActivityDate ? formatDate('display', result.lastRelevantActivityDate) : formatDate('display', getEndDate());
           vm.searchCriteria.displayName = result.displayName;
           _.forEach(result.participants.items, function (response) {
-            vm.searchResults.emailAddresses.push(response.emailAddress);
+            vm.searchResults.keywords.push(response.emailAddress);
           });
         })
         .catch(function (err) {
@@ -202,17 +306,17 @@ require('./ediscovery.scss');
           switch (status) {
             case 400:
               vm.error = $translate.instant("ediscovery.search.invalidRoomId", {
-                roomId: roomId
+                roomId: roomId,
               });
               break;
             case 404:
               vm.error = $translate.instant("ediscovery.search.roomNotFound", {
-                roomId: roomId
+                roomId: roomId,
               });
               break;
             default:
               vm.error = $translate.instant("ediscovery.search.roomNotFound", {
-                roomId: roomId
+                roomId: roomId,
               });
               Notification.error('ediscovery.search.roomLookupError');
               break;
@@ -230,17 +334,51 @@ require('./ediscovery.scss');
       vm.report = {
         displayName: vm.searchCriteria.displayName,
         state: 'INIT',
-        progress: 0
+        progress: 0,
       };
-      EdiscoveryService.createReport(vm.searchCriteria.displayName, vm.searchCriteria.roomId, vm.searchCriteria.startDate, vm.searchCriteria.endDate)
+      vm.createReportParams = {
+        displayName: vm.searchCriteria.displayName,
+        startDate: getStartDate(),
+        endDate: getEndDate(),
+        keyword: vm.encryptedQuery,
+        emailAddresses: vm.encryptedEmails,
+        roomIds: vm.ediscoveryToggle ? vm.unencryptedRoomIds : vm.searchCriteria.roomId,
+      };
+      EdiscoveryService.createReport(vm.createReportParams)
         .then(function (res) {
           vm.currentReportId = res.id;
-          runReport(res.runUrl, res.url);
+          if (vm.ediscoveryToggle) {
+            var reportParams = {
+              emailAddresses: vm.encryptedEmails,
+              query: vm.encryptedQuery,
+              roomIds: vm.unencryptedRoomIds,
+              encryptionKeyUrl: vm.encryptionKeyUrl,
+              responseUri: res.url,
+              startDate: formatDate('api', getStartDate()),
+              endDate: formatDate('api', getEndDate()),
+            };
+            generateReport(reportParams);
+          } else {
+            runReport(res.runUrl, res.url);
+          }
         })
         .catch(function () {
           Notification.error('ediscovery.search.createReportFailed');
           vm.report = null;
           vm.createReportInProgress = false;
+        });
+    }
+
+    function generateReport(postParams) {
+      EdiscoveryService.generateReport(postParams)
+        .catch(function () {
+          Notification.error('ediscovery.search.runFailed');
+          EdiscoveryService.patchReport(vm.currentReportId, {
+            state: 'FAILED',
+            failureReason: 'UNEXPECTED_FAILURE',
+          });
+        }).finally(function () {
+          enableAvalonPolling();
         });
     }
 
@@ -275,12 +413,12 @@ require('./ediscovery.scss');
     }
 
     function runReport(runUrl, url) {
-      EdiscoveryService.runReport(runUrl, vm.searchCriteria.roomId, url, vm.searchCriteria.startDate, vm.searchCriteria.endDate)
+      EdiscoveryService.runReport(runUrl, vm.searchCriteria.roomId, url, getStartDate(), getEndDate())
         .catch(function () {
           Notification.error('ediscovery.search.runFailed');
           EdiscoveryService.patchReport(vm.currentReportId, {
             state: "FAILED",
-            failureReason: "UNEXPECTED_FAILURE"
+            failureReason: "UNEXPECTED_FAILURE",
           });
         }).finally(function () {
           enableAvalonPolling();
@@ -298,7 +436,7 @@ require('./ediscovery.scss');
     function cancelReport(id) {
       vm.cancellingReport = true;
       EdiscoveryService.patchReport(id, {
-        state: "ABORTED"
+        state: "ABORTED",
       }).then(function () {
         if (!EdiscoveryNotificationService.notificationsEnabled()) {
           Notification.success('ediscovery.search.reportCancelled');
@@ -317,7 +455,10 @@ require('./ediscovery.scss');
       var ESC = 27;
       var ENTER = 13;
       var activeElement = angular.element($window.document.activeElement);
-      var inputFieldHasFocus = activeElement[0]["id"] === "searchInput";
+      var searchInput = activeElement[0]['id'] === 'searchInput';
+      var searchModel = activeElement[0].getAttribute('ng-model') === 'ediscoverySearchCtrl.searchModel';
+      var queryModel = activeElement[0].getAttribute('ng-model') === 'ediscoverySearchCtrl.queryModel';
+      var inputFieldHasFocus = searchInput || searchModel || queryModel;
       if (!inputFieldHasFocus || !(event.keyCode === ESC || event.keyCode === ENTER)) {
         return; // if not escape and enter, nothing to do
       }
@@ -328,7 +469,7 @@ require('./ediscovery.scss');
 
         case ENTER:
           $timeout(function () {
-            angular.element("#ediscoverySearchButton").trigger('click');
+            angular.element('#ediscoverySearchButton').trigger('click');
           });
           break;
       }

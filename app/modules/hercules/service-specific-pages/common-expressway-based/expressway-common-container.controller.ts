@@ -7,27 +7,34 @@ export abstract class ExpresswayContainerController {
   protected subscribeStatusesSummary: any;
 
   /* @ngInject */
-  constructor(private $modal,
-              private $state: ng.ui.IStateService,
-              private ClusterService,
-              private Notification: Notification,
-              protected ServiceDescriptor,
-              private ServiceStateChecker,
-              protected USSService,
-              protected servicesId: string[],
-              private connectorType: string ) {
+  constructor(
+    private $modal,
+    private $scope: ng.IScope,
+    private $state: ng.ui.IStateService,
+    private Authinfo,
+    private ClusterService,
+    private Notification: Notification,
+    protected ServiceDescriptor,
+    private ServiceStateChecker,
+    protected USSService,
+    protected servicesId: string[],
+    private connectorType: string,
+  ) {
     this.firstTimeSetup();
     this.extractSummary();
     this.subscribeStatusesSummary = this.USSService.subscribeStatusesSummary('data', this.extractSummary.bind(this));
-    this.ClusterService.subscribe('data', this.updateNotifications.bind(this));
+    this.ClusterService.subscribe('data', this.updateNotifications.bind(this), {
+      scope: this.$scope,
+    });
   }
 
   private updateNotifications(): void {
-    this.ServiceStateChecker.checkState(this.connectorType, this.servicesId[0]);
+    this.ServiceStateChecker.checkState(this.servicesId[0]);
   }
 
   public extractSummary(): void {
     this.userStatusesSummary = this.USSService.extractSummaryForAService(this.servicesId);
+    this.ServiceStateChecker.checkUserStatuses(this.servicesId[0]);
   }
 
   protected firstTimeSetup(): void {
@@ -37,6 +44,13 @@ export abstract class ExpresswayContainerController {
         return;
       }
       if (enabled) {
+        return;
+      }
+      if (this.Authinfo.isCustomerLaunchedFromPartner()) {
+        this.$modal.open({
+          templateUrl: 'modules/hercules/service-specific-pages/components/add-resource/partnerAdminWarning.html',
+          type: 'dialog',
+        });
         return;
       }
       this.$modal.open({

@@ -10,13 +10,13 @@
     var vm = this;
     vm.backUrl = 'cluster-list';
     vm.clusters = {
-      title: 'hercules.resourceGroupSettings.clustersHeader'
+      title: 'hercules.resourceGroupSettings.clustersHeader',
     };
     vm.users = {
-      title: 'hercules.resourceGroupSettings.usersHeader'
+      title: 'hercules.resourceGroupSettings.usersHeader',
     };
     vm.resourceGroup = {
-      title: 'hercules.resourceGroups.resourceGroupHeading'
+      title: 'hercules.resourceGroups.resourceGroupHeading',
     };
     vm.allowRemove = false;
     vm.setGroupName = setGroupName;
@@ -34,7 +34,7 @@
           vm.group = group;
           vm.newGroupName = group.name;
           vm.localizedTitle = $translate.instant('hercules.resourceGroupSettings.pageTitle', {
-            groupName: group.name
+            groupName: group.name,
           });
         })
         .catch(function (error) {
@@ -60,7 +60,7 @@
         .then(function () {
           vm.group.name = newName;
           vm.localizedTitle = $translate.instant('hercules.resourceGroupSettings.pageTitle', {
-            groupName: newName
+            groupName: newName,
           });
           Notification.success('hercules.resourceGroupSettings.groupNameSaved');
         }, function (response) {
@@ -77,12 +77,12 @@
         resolve: {
           resourceGroup: function () {
             return vm.group;
-          }
+          },
         },
         controller: 'ConfirmDeleteResourceGroupController',
         controllerAs: 'vm',
         templateUrl: 'modules/hercules/fusion-pages/resource-group-settings/confirm-delete-resource-group.html',
-        type: 'dialog'
+        type: 'dialog',
       }).result.then(function () {
         $state.go('cluster-list');
       });
@@ -93,7 +93,7 @@
         resolve: {
           resourceGroup: function () {
             return vm.group;
-          }
+          },
         },
         controller: 'AssignClustersController',
         controllerAs: 'vm',

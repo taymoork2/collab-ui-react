@@ -6,20 +6,30 @@
     .controller('HDSRedirectAddResourceController', HDSRedirectAddResourceController);
 
   /* @ngInject */
-  function HDSRedirectAddResourceController($modal, $modalInstance, $state, $translate, $window, HDSAddResourceCommonService, Notification, proceedSetup) {
+  function HDSRedirectAddResourceController($modal, $modalInstance, $state, $translate, $window, HDSAddResourceCommonService, Notification, firstTimeSetup) {
     var vm = this;
     vm.clusterList = [];
+    var states = {
+      INIT: 0,          //Initial Screen (Yes/No options)
+      NO_PROCEED: 1,    //NoProceed download software screen
+      YES_PROCEED: 2,   //Yes proceed screen with cluste/node info
+      REGISTER_NODE: 3,  //Register node screen
+    };
+    vm.states = states;
     vm.selectPlaceholder = $translate.instant('hds.add-resource-dialog.cluster');
     vm.redirectToTargetAndCloseWindowClicked = redirectToTargetAndCloseWindowClicked;
     vm.next = next;
-    vm.enableRedirectToTarget = false;
+    vm.back = back;
     vm.selectedCluster = '';
-    vm.selectedClusterId = '';
+    vm.firstTimeSetup = firstTimeSetup;
     vm.closeSetupModal = closeSetupModal;
-    vm.radio = 1;
-    vm.noProceed = false;
-    vm.proceedSetup = proceedSetup;
+    if (vm.firstTimeSetup) {
+      vm.radio = '2';
+    } else {
+      vm.radio = '1';
+    }
     vm.canGoNext = canGoNext;
+    vm.currentState = vm.states.INIT;
 
     HDSAddResourceCommonService.updateClusterLists().then(function (clusterList) {
       vm.clusterList = clusterList;
@@ -29,51 +39,58 @@
     });
 
     function redirectToTargetAndCloseWindowClicked(hostName, enteredCluster) {
-      $modalInstance.close();
+      $modalInstance.dismiss();
       HDSAddResourceCommonService.addRedirectTargetClicked(hostName, enteredCluster).then(function () {
-        HDSAddResourceCommonService.redirectPopUpAndClose(hostName, enteredCluster, vm.selectedClusterId);
+        HDSAddResourceCommonService.redirectPopUpAndClose(hostName, enteredCluster, vm.firstTimeSetup);
       });
     }
 
+
     function closeSetupModal(isCloseOk) {
       if (isCloseOk) {
-        $modalInstance.close();
+        $modalInstance.dismiss();
         $state.go('services-overview');
         return;
       }
       $modal.open({
         templateUrl: 'modules/hds/add-resource/confirm-setup-cancel-dialog.html',
-        type: 'dialog'
+        type: 'dialog',
       })
         .result.then(function () {
-          $modalInstance.close();
+          $modalInstance.dismiss();
           $state.go('services-overview');
         });
     }
 
-
     function next() {
-      if (vm.radio === 0) {
-        vm.noProceed = true;
-        //TODO: Switch to HDS link when available
-        $window.open('https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/Media-Fusion-Management-Connector/mfusion.ova');
-      } else if (vm.proceedSetup) {
-        if (!_.isUndefined(vm.selectedCluster) && vm.selectedCluster !== '' && !_.isUndefined(vm.hostName)) {
-          vm.enableRedirectToTarget = true;
+      if (vm.currentState === vm.states.INIT) {
+        if (vm.radio === '1') {
+          vm.currentState = vm.states.YES_PROCEED;
+        } else {
+          vm.currentState = vm.states.NO_PROCEED;
+          //TODO: Switch to HDS link when available
+          $window.open('https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/HybridDataSecurityProduction/20170221023633/hds.ova');
         }
-      } else {
-        vm.proceedSetup = true;
+      } else if (vm.currentState === vm.states.YES_PROCEED) {
+        vm.currentState = vm.states.REGISTER_NODE;
       }
     }
 
     function canGoNext() {
-      if (!vm.proceedSetup) {
+      if (vm.currentState === vm.states.INIT) {
         return true;
-      } else if (vm.proceedSetup && !_.isUndefined(vm.hostName) && vm.hostName !== '' && !_.isUndefined(vm.selectedCluster) && vm.selectedCluster !== '') {
-        return true;
-      } else {
-        return false;
+      } else if (vm.currentState === vm.states.YES_PROCEED) {
+        if (_.isUndefined(vm.hostName) || vm.hostName === '' || _.isUndefined(vm.selectedCluster) || vm.selectedCluster === '') {
+          return false;
+        } else {
+          return true;
+        }
       }
+      return false;
+    }
+
+    function back() {
+      vm.currentState = vm.states.YES_PROCEED;
     }
   }
 }());

@@ -1,0 +1,72 @@
+@import 'styles/toolkit/colors';
+@import 'styles/toolkit/spacing';
+
+.reveal-modal.dialog .modal-body.subdomain-modal, .subdomain-modal {
+  @include vr-spacing(ph, 3);
+  margin: 0;
+  .modal-space {
+    @include vr-spacing(mt, 0.75);
+  }
+  .subdomain-modal-warning {
+    display: inline-flex;
+    .subdomain-warning-icon {
+      color: $color-attention-base;
+    }
+  }
+}
+
+.domain-page {
+  .domain {
+    color: $gray-dark-4;
+  }
+  .domain-header {
+    @include vr-spacing(mt, 1.25);
+    @include vr-spacing(mb, 0.5);
+  }
+  .domain-buttons {
+    display: inline-flex;
+    width: 50%;
+    height: vr-adjust(36);
+    .btn {
+      @include vr-spacing(ml, 0.5);
+    }
+  }
+  .domain-description {
+    position: relative;
+    top: vr-adjust(-16);
+  }
+  .domain-error {
+    color: $color-negative-base;
+    @include vr-spacing(mr, 0.25);
+  }
+  .domain-success {
+    color: $color-cta-base;
+    font-size: vr-adjust(20);
+    @include vr-spacing(mr, 0.25);
+  }
+  .domain-icon {
+    position: relative;
+    top: vr-adjust(4);
+    @include vr-spacing(ml, 0.25);
+  }
+  .domain-form {
+    display: inline-flex;
+    width: 100%;
+    height: 0;
+  }
+  .domain-input {
+    min-width: vr-adjust(200);
+    width: 50%;
+    input {
+      width: 100%;
+    }
+  }
+  .domain-space {
+    @include vr-spacing(mt, 1);
+    height: vr-adjust(20);
+  }
+  .domain-space-two {
+    @include vr-spacing(mt, 2.5);
+    height: vr-adjust(20);
+  }
+}

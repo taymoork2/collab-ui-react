@@ -13,11 +13,11 @@
 
     var languageOption = {
       label: '',
-      value: ''
+      value: '',
     };
     var voiceOption = {
       label: '',
-      value: ''
+      value: '',
     };
 
     var selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
@@ -54,7 +54,7 @@
 
     function setVoiceOption() {
       if (vm.voiceBackup && _.find(vm.voiceOptions, {
-        "value": vm.voiceBackup.value
+        "value": vm.voiceBackup.value,
       })) {
         vm.voiceOption = vm.voiceBackup;
       } else if (_.find(vm.voiceOptions, AALanguageService.getVoiceOption())) {

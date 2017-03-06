@@ -23,7 +23,6 @@
     "availableVersion": "8.7-1.0.2265",
     "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_ucmc"
   }],
-  "registered": true,
   "targetType": "c_mgmt",
   "upgradeScheduleUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/89f3fc3a-3498-11e6-8de3-005056b111e6/upgradeSchedule",
   "upgradeSchedule": {

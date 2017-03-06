@@ -22,7 +22,7 @@
       getPendingOrderQuantity: getPendingOrderQuantity,
       getQuantity: getQuantity,
       getAssignedNumbersV2: getAssignedNumbersV2,
-      getUnassignedNumbersV2: getUnassignedNumbersV2
+      getUnassignedNumbersV2: getUnassignedNumbersV2,
     };
     var allNumbers = [];
     var pendingNumbers = [];
@@ -166,7 +166,7 @@
         number: hint,
         customerId: customerId,
         type: EXTERNAL,
-        assigned: 'true'
+        assigned: 'true',
       }).$promise.then(function (data) {
         return data.numbers;
       });
@@ -189,7 +189,7 @@
         number: hint,
         customerId: customerId,
         type: EXTERNAL,
-        assigned: 'false'
+        assigned: 'false',
       }).$promise.then(function (data) {
         return data.numbers;
       });
@@ -203,7 +203,7 @@
     function getNumbersWithoutPending(numbersArray) {
       return _.reject(numbersArray, function (numberObj) {
         return _.some(pendingNumbers, {
-          pattern: numberObj.pattern
+          pattern: numberObj.pattern,
         });
       });
     }
@@ -220,7 +220,7 @@
     function hasExternalNumbers(customerId) {
       return NumberSearchServiceV2.get({
         customerId: customerId,
-        type: 'external'
+        type: 'external',
       }).$promise.then(function (response) {
         if (_.get(response, 'numbers.length') !== 0) {
           return false;
@@ -232,7 +232,7 @@
 
     function allowPstnSetup(customerId) {
       terminusDetails.push({
-        customerId: customerId
+        customerId: customerId,
       });
       return true;
     }

@@ -12,8 +12,8 @@ describe('Controller: AARouteToAACtrl', function () {
   var aaUiModel = {
     openHours: {},
     ceInfo: {
-      name: 'AA2'
-    }
+      name: 'AA2',
+    },
   };
   var schedule = 'openHours';
   var index = '0';
@@ -74,7 +74,7 @@ describe('Controller: AARouteToAACtrl', function () {
     describe('activate', function () {
       it('should be able to create new AA entry', function () {
         var controller = $controller('AARouteToAACtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
         expect(controller).toBeDefined();
         expect(controller.menuEntry.actions[0].name).toEqual('goto');
@@ -83,7 +83,7 @@ describe('Controller: AARouteToAACtrl', function () {
 
       it('should initialize the options list', function () {
         var controller = $controller('AARouteToAACtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
         expect(controller.options.length).toEqual(1);
         expect(controller.options[0]).toEqual("Oleg's Call Experience 1");
@@ -91,7 +91,7 @@ describe('Controller: AARouteToAACtrl', function () {
 
       it('should initialize aaName', function () {
         var controller = $controller('AARouteToAACtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
         expect(controller.aaName).toEqual('');
       });
@@ -104,7 +104,7 @@ describe('Controller: AARouteToAACtrl', function () {
         menuEntry.addAction(actionEntry);
         aaUiModel[schedule].entries[0].addEntry(menuEntry);
         var controller = $controller('AARouteToAACtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
         expect(controller.aaName).toEqual("Oleg's Call Experience 1");
       });
@@ -117,13 +117,67 @@ describe('Controller: AARouteToAACtrl', function () {
         menuEntry.addAction(actionEntry);
         aaUiModel[schedule].entries[0].addEntry(menuEntry);
         var controller = $controller('AARouteToAACtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
         expect(controller.aaName).toEqual('');
         controller.aaName = "Oleg's Call Experience 1";
         controller.saveUiModel();
         expect(actionEntry.value).toEqual('c16a6027-caef-4429-b3af-9d61ddc7964b');
       });
+    });
+
+    describe('fromDecision', function () {
+      beforeEach(function () {
+        $scope.fromDecision = true;
+
+        aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
+
+        aaUiModel[schedule].entries[0].actions = [];
+
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('conditional', '');
+        aaUiModel[schedule].entries[0].actions[0] = action;
+
+      });
+
+      it('should create a conditional action with a "then" clause', function () {
+
+        var controller = $controller('AARouteToAACtrl', {
+          $scope: $scope,
+        });
+
+        expect(controller.menuEntry.actions[0].then).toBeDefined();
+        expect(controller.menuEntry.actions[0].then.name).toEqual('goto');
+
+      });
+
+      it('should create a condition action with then clause', function () {
+
+        aaUiModel[schedule].entries[0].actions[0] = undefined;
+
+        var controller = $controller('AARouteToAACtrl', {
+          $scope: $scope,
+        });
+
+        expect(controller.menuEntry.actions[0].name).toEqual('conditional');
+        expect(controller.menuEntry.actions[0].then).toBeDefined();
+        expect(controller.menuEntry.actions[0].then.name).toEqual('goto');
+
+      });
+
+      it('should change an action from routetoQueue to route', function () {
+
+        aaUiModel[schedule].entries[index].actions[0].then = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', '');
+
+        var controller = $controller('AARouteToAACtrl', {
+          $scope: $scope,
+        });
+
+        expect(controller.menuEntry.actions[0].name).toEqual('conditional');
+        expect(controller.menuEntry.actions[0].then).toBeDefined();
+        expect(controller.menuEntry.actions[0].then.name).toEqual('goto');
+
+      });
+
     });
 
     describe('fromRouteCall', function () {
@@ -139,7 +193,7 @@ describe('Controller: AARouteToAACtrl', function () {
         $scope.fromRouteCall = true;
 
         var controller = $controller('AARouteToAACtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
 
         expect(controller.menuEntry.actions[0].name).toEqual('goto');
@@ -158,7 +212,7 @@ describe('Controller: AARouteToAACtrl', function () {
       it('should be able to create new AA entry from Route Call', function () {
 
         var controller = $controller('AARouteToAACtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
 
         expect(controller).toBeDefined();
@@ -166,6 +220,33 @@ describe('Controller: AARouteToAACtrl', function () {
         expect(controller.menuEntry.actions[0].name).toEqual('goto');
         expect(controller.menuEntry.actions[0].value).toEqual('');
 
+      });
+    });
+
+    describe('PhoneMenu Queue Fallback', function () {
+      it('should be able to create new AA entry from Queue Fallback of PhoneMenu', function () {
+
+        var disconnect = AutoAttendantCeMenuModelService.newCeActionEntry('disconnect', '');
+        var fallback = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        fallback.addAction(disconnect);
+        var queueSettings = {};
+        queueSettings.fallback = fallback;
+        var routeToAA = AutoAttendantCeMenuModelService.newCeActionEntry('goto', 'some-queue-id');
+        routeToAA.queueSettings = queueSettings;
+        var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        menuEntry.addAction(routeToAA);
+        aaUiModel[schedule].addEntryAt(index, menuEntry);
+        $scope.fromRouteCall = true;
+        $scope.fromFallback = true;
+
+        var controller = $controller('AARouteToAACtrl', {
+          $scope: $scope,
+        });
+
+        var fallbackAction = _.get(controller.menuEntry, 'actions[0].queueSettings.fallback.actions[0]');
+        $scope.$apply();
+        expect(fallbackAction.name).toEqual('goto');
+        expect(fallbackAction.value).toEqual('');
       });
     });
 

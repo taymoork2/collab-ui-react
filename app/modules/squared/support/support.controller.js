@@ -101,13 +101,13 @@ require('./_support.scss');
 
     $scope.tabs = [{
       title: $translate.instant('supportPage.tabs.status'),
-      state: "support.status"
+      state: "support.status",
     }];
 
     if (Authinfo.isInDelegatedAdministrationOrg() && !Authinfo.isHelpDeskAndComplianceUserOnly()) {
       $scope.tabs.push({
         title: $translate.instant('supportPage.tabs.logs'),
-        state: "support.logs"
+        state: "support.logs",
       });
     }
 
@@ -222,7 +222,7 @@ require('./_support.scss');
       search = $stateParams.search;
     }
     $scope.input = {
-      search: search
+      search: search,
     };
 
     Log.debug('param search string: ' + $scope.input.search);
@@ -319,7 +319,7 @@ require('./_support.scss');
                 callStart: callstart,
                 date: data.metadataList[index].timestamp,
                 userId: data.metadataList[index].userId,
-                orgId: data.metadataList[index].orgId
+                orgId: data.metadataList[index].orgId,
               };
               $scope.userLogs.push(log);
               $scope.logSearchBtnLoad = false;
@@ -339,7 +339,7 @@ require('./_support.scss');
           $scope.gridRefresh = false;
           Log.debug('Failed to retrieve user logs. Status: ' + status);
           Notification.error('supportPage.errLogQuery', {
-            status: status
+            status: status,
           });
         }
       });
@@ -418,7 +418,7 @@ require('./_support.scss');
         message: $translate.instant('supportPage.downloading'),
         close: $translate.instant('common.ok'),
         dismiss: $translate.instant('common.cancel'),
-        type: 'primary'
+        btnType: 'primary',
       }).result.then(function () {
         $scope.getCallflowCharts(rowEntity.orgId, rowEntity.userId, rowEntity.locusId, rowEntity.callStart, rowEntity.fullFilename, true);
       });
@@ -447,15 +447,15 @@ require('./_support.scss');
         displayName: $filter('translate')('supportPage.logEmailAddress'),
         sortable: true,
         cellClass: 'email-address',
-        headerCellClass: 'header-email-address'
+        headerCellClass: 'header-email-address',
       }, {
         field: 'locusId',
         displayName: $filter('translate')('supportPage.logLocusId'),
-        sortable: true
+        sortable: true,
       }, {
         field: 'callStart',
         displayName: $filter('translate')('supportPage.logCallStart'),
-        sortable: true
+        sortable: true,
       }, {
         field: 'clientLog',
         displayName: $filter('translate')('supportPage.logAction'),
@@ -463,7 +463,7 @@ require('./_support.scss');
         cellTemplate: clientLogTemplate,
         cellClass: 'client-log',
         headerCellClass: 'header-client-log',
-        maxWidth: 200
+        maxWidth: 200,
       }, {
         field: 'callflowLogs',
         displayName: $filter('translate')('supportPage.callflowLogsAction'),
@@ -471,7 +471,7 @@ require('./_support.scss');
         cellTemplate: callFlowLogsTemplate,
         cellClass: 'call-flow-logs',
         headerCellClass: 'header-call-flow-logs',
-        maxWidth: 200
+        maxWidth: 200,
       }, {
         field: 'callFlow',
         displayName: $filter('translate')('supportPage.callflowAction'),
@@ -479,8 +479,8 @@ require('./_support.scss');
         cellTemplate: callFlowTemplate,
         cellClass: 'call-flow',
         headerCellClass: 'header-call-flow',
-        visible: Authinfo.isCisco()
-      }]
+        visible: Authinfo.isCisco(),
+      }],
     };
   }
 })();

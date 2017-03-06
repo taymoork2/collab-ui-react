@@ -12,18 +12,18 @@
 
     var languageOption = {
       label: '',
-      value: ''
+      value: '',
     };
 
     var voiceOption = {
       label: '',
-      value: ''
+      value: '',
     };
 
     var runActionName = 'runActionsOnInput';
 
     var properties = {
-      LABEL: "label"
+      LABEL: "label",
     };
     var selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
     var INPUT_DIGIT_MAX_LENGTH = 20;
@@ -65,7 +65,7 @@
 
     vm.nameInput = '';
     vm.validationMsg = {
-      maxlength: $translate.instant('autoAttendant.callerInputVariableTooLongMsg')
+      maxlength: $translate.instant('autoAttendant.callerInputVariableTooLongMsg'),
     };
 
     /////////////////////
@@ -134,7 +134,7 @@
 
     function setVoiceOption() {
       if (vm.voiceBackup && _.find(vm.voiceOptions, {
-        "value": vm.voiceBackup.value
+        "value": vm.voiceBackup.value,
       })) {
         vm.voiceOption = vm.voiceBackup;
       } else if (_.find(vm.voiceOptions, AALanguageService.getVoiceOption())) {
@@ -203,8 +203,6 @@
       }
 
       vm.actionEntry = action;
-
-      return;
     }
 
     function populateMenu() {

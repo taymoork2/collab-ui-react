@@ -6,7 +6,7 @@
     .controller('RedirectAddResourceControllerV2', RedirectAddResourceControllerV2);
 
   /* @ngInject */
-  function RedirectAddResourceControllerV2($modalInstance, $translate, firstTimeSetup, yesProceed, $modal, $state, AddResourceCommonServiceV2, $window) {
+  function RedirectAddResourceControllerV2($modalInstance, $translate, firstTimeSetup, yesProceed, $modal, AddResourceCommonServiceV2, $window) {
     var vm = this;
     vm.clusterList = [];
     vm.selectPlaceholder = $translate.instant('mediaFusion.add-resource-dialog.cluster-placeholder');
@@ -36,22 +36,20 @@
 
     function closeSetupModal(isCloseOk) {
       if (!firstTimeSetup) {
-        $modalInstance.close();
+        $modalInstance.dismiss();
         return;
       }
       if (isCloseOk) {
         $modalInstance.close();
-        $state.go('services-overview');
         return;
       }
       $modal.open({
         templateUrl: 'modules/hercules/service-specific-pages/common-expressway-based/confirm-setup-cancel-dialog.html',
-        type: 'dialog'
+        type: 'dialog',
       })
         .result.then(function (isAborting) {
           if (isAborting) {
-            $modalInstance.close();
-            $state.go('services-overview');
+            $modalInstance.dismiss();
           }
         });
     }

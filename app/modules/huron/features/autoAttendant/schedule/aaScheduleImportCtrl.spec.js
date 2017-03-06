@@ -4,15 +4,15 @@ describe('Controller: AAScheduleImportCtrl', function () {
   var $scope, controller, $modalInstance, AACalendarService, AAICalService, AAModelService, $q, Analytics;
   var aaModel = {
     aaRecord: {
-      scheduleId: 'url-1'
+      scheduleId: 'url-1',
     },
     aaRecords: [{
       callExperienceURL: 'url-1',
-      callExperienceName: 'AA1'
+      callExperienceName: 'AA1',
     }, {
       callExperienceURL: 'url-2',
-      callExperienceName: 'AA2'
-    }]
+      callExperienceName: 'AA2',
+    }],
   };
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
@@ -29,10 +29,10 @@ describe('Controller: AAScheduleImportCtrl', function () {
     spyOn(AACalendarService, 'readCalendar').and.returnValue($q.resolve({}));
     spyOn(AACalendarService, 'listCalendars').and.returnValue($q.resolve([{
       scheduleUrl: '/schedules/url-1',
-      scheduleName: 'Calendar for AA1'
+      scheduleName: 'Calendar for AA1',
     }, {
       scheduleUrl: '/schedules/url-2',
-      scheduleName: 'Calendar for AA2'
+      scheduleName: 'Calendar for AA2',
     }]));
 
     spyOn(AAICalService, 'getHoursRanges').and.returnValue({});
@@ -40,7 +40,7 @@ describe('Controller: AAScheduleImportCtrl', function () {
     spyOn(Analytics, 'trackEvent').and.returnValue($q.resolve({}));
     controller = $controller('AAScheduleImportCtrl as vm', {
       $scope: $scope,
-      $modalInstance: $modalInstance
+      $modalInstance: $modalInstance,
     });
     $scope.$apply();
   }));

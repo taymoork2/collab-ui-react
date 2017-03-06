@@ -7,6 +7,10 @@
 
   /*@ngInject*/
   function FusionUtils($translate) {
+    // Visual order to respect accross Atlas UI
+    var orderedConnectors = ['c_mgmt', 'c_cal', 'c_ucmc', 'mf_mgmt', 'hds_app'];
+    var orderedServices = ['squared-fusion-mgmt', 'squared-fusion-cal', 'squared-fusion-gcal', 'squared-fusion-uc', 'squared-fusion-ec', 'squared-fusion-media', 'spark-hybrid-datasecurity'];
+
     return {
       connectorType2RouteName: connectorType2RouteName,
       connectorType2ServicesId: connectorType2ServicesId,
@@ -14,7 +18,9 @@
       serviceId2Icon: serviceId2Icon,
       getLocalizedReleaseChannel: getLocalizedReleaseChannel,
       getTimeSinceText: getTimeSinceText,
-      getLocalTimestamp: getLocalTimestamp
+      getLocalTimestamp: getLocalTimestamp,
+      hybridServicesComparator: hybridServicesComparator,
+      hybridConnectorsComparator: hybridConnectorsComparator,
     };
 
     //////////
@@ -42,6 +48,8 @@
           return ['squared-fusion-media'];
         case 'hds_app':
           return ['spark-hybrid-datasecurity'];
+        case 'cs_mgmt':
+          return ['contact-center-context'];
         default:
           return [];
       }
@@ -60,6 +68,8 @@
           return 'mf_mgmt';
         case 'spark-hybrid-datasecurity':
           return 'hds_app';
+        case 'contact-center-context':
+          return 'cs_mgmt';
         default:
           return '';
       }
@@ -90,14 +100,14 @@
 
     function getTimeSinceText(timestamp) {
       var timestampText = moment(timestamp).calendar(null, {
-        sameElse: 'LL' // e.g. December 15, 2016
+        sameElse: 'LL', // e.g. December 15, 2016
       });
       if (timestampText.startsWith('Last') || timestampText.startsWith('Today') || timestampText.startsWith('Tomorrow') || timestampText.startsWith('Yesterday')) {
         // Lowercase the first letter for some well known English terms (it just looked bad with these uppercase). Other languages are left alone.
         timestampText = timestampText[0].toLowerCase() + timestampText.slice(1);
       }
       return $translate.instant('hercules.cloudExtensions.sinceTime', {
-        timestamp: timestampText
+        timestamp: timestampText,
       });
     }
 
@@ -107,6 +117,28 @@
         timezone = 'UTC';
       }
       return moment(timestamp).local().tz(timezone).format(format || 'LLL (z)');
+    }
+
+    function hybridServicesComparator(serviceType1, serviceType2) {
+      if (serviceType1 === serviceType2) {
+        return 0;
+      }
+      if (_.indexOf(orderedServices, serviceType1) < _.indexOf(orderedServices, serviceType2)) {
+        return -1;
+      } else {
+        return 1;
+      }
+    }
+
+    function hybridConnectorsComparator(connectorType1, connectorType2) {
+      if (connectorType1 === connectorType2) {
+        return 0;
+      }
+      if (_.indexOf(orderedConnectors, connectorType1) < _.indexOf(orderedConnectors, connectorType2)) {
+        return -1;
+      } else {
+        return 1;
+      }
     }
   }
 }());

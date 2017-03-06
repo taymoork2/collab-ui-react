@@ -14,11 +14,12 @@
         index: '=aaIndex',
         keyIndex: '@aaKeyIndex',
         fromRouteCall: '@aaFromRouteCall',
-        fromFallback: '@aaFromFallback'
+        fromDecision: '@aaFromDecision',
+        fromFallback: '@aaFromFallback',
       },
       controller: 'AARouteToAACtrl',
       controllerAs: 'aaRouteToAA',
-      templateUrl: 'modules/huron/features/autoAttendant/routeToAA/aaRouteToAA.tpl.html'
+      templateUrl: 'modules/huron/features/autoAttendant/routeToAA/aaRouteToAA.tpl.html',
     };
   }
 })();

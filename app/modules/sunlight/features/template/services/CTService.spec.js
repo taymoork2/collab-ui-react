@@ -9,14 +9,14 @@ describe('Chat Template Service', function () {
   var appName = 'testApp.ciscoservice.com';
   var templateId = 'abcd';
   var orgSettings = {
-    'logoUrl': logoUrl
+    'logoUrl': logoUrl,
   };
 
   var spiedUrlConfig = {
-    getSunlightBubbleUrl: jasmine.createSpy('getSunlightBubbleUrl').and.returnValue(appName)
+    getSunlightBubbleUrl: jasmine.createSpy('getSunlightBubbleUrl').and.returnValue(appName),
   };
   var spiedAuthinfo = {
-    getOrgId: jasmine.createSpy('getOrgId').and.returnValue(orgId)
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue(orgId),
   };
 
   beforeEach(angular.mock.module('Sunlight'));

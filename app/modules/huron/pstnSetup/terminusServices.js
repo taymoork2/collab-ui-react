@@ -6,6 +6,7 @@
     .factory('TerminusCustomerV2Service', TerminusCustomerV2Service)
     .factory('TerminusCustomerTrialV2Service', TerminusCustomerTrialV2Service)
     .factory('TerminusResellerCarrierService', TerminusResellerCarrierService)
+    .factory('TerminusResellerCarrierV2Service', TerminusResellerCarrierV2Service)
     .factory('TerminusCustomerCarrierService', TerminusCustomerCarrierService)
     .factory('TerminusCustomerSiteService', TerminusCustomerSiteService)
     .factory('TerminusCustomerCarrierDidService', TerminusCustomerCarrierDidService)
@@ -14,6 +15,7 @@
     .factory('TerminusOrderV2Service', TerminusOrderV2Service)
     .factory('TerminusNumberService', TerminusNumberService)
     .factory('TerminusCarrierService', TerminusCarrierService)
+    .factory('TerminusCarrierV2Service', TerminusCarrierV2Service)
     .factory('TerminusCarrierInventoryCount', TerminusCarrierInventoryCount)
     .factory('TerminusCarrierInventorySearch', TerminusCarrierInventorySearch)
     .factory('TerminusCarrierInventoryReserve', TerminusCarrierInventoryReserve)
@@ -22,6 +24,7 @@
     .factory('TerminusCustomerCarrierInventoryRelease', TerminusCustomerCarrierInventoryRelease)
     .factory('TerminusStateService', TerminusStateService)
     .factory('TerminusLookupE911Service', TerminusLookupE911Service)
+    .factory('TerminusV2LookupE911Service', TerminusV2LookupE911Service)
     .factory('TerminusUserDeviceE911Service', TerminusUserDeviceE911Service)
     .factory('TerminusV2CarrierNumberService', TerminusV2CarrierNumberService)
     .factory('TerminusV2CarrierNumberCountService', TerminusV2CarrierNumberCountService)
@@ -39,8 +42,8 @@
   function TerminusCustomerService($resource, HuronConfig) {
     return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId', {}, {
       update: {
-        method: 'PUT'
-      }
+        method: 'PUT',
+      },
     });
   }
 
@@ -48,8 +51,8 @@
   function TerminusCustomerV2Service($resource, HuronConfig) {
     return $resource(HuronConfig.getTerminusV2Url() + '/customers/:customerId', {}, {
       update: {
-        method: 'PUT'
-      }
+        method: 'PUT',
+      },
     });
   }
 
@@ -57,14 +60,19 @@
   function TerminusCustomerTrialV2Service($resource, HuronConfig) {
     return $resource(HuronConfig.getTerminusV2Url() + '/customers/:customerId/trials', {}, {
       update: {
-        method: 'PUT'
-      }
+        method: 'PUT',
+      },
     });
   }
 
   /* @ngInject */
   function TerminusResellerCarrierService($resource, HuronConfig) {
     return $resource(HuronConfig.getTerminusUrl() + '/resellers/:resellerId/carriers/:carrierId', {}, {});
+  }
+
+  /* @ngInject */
+  function TerminusResellerCarrierV2Service($resource, HuronConfig) {
+    return $resource(HuronConfig.getTerminusV2Url() + '/resellers/:resellerId/carriers/:carrierId', {}, {});
   }
 
   /* @ngInject */
@@ -76,8 +84,8 @@
   function TerminusCustomerSiteService($resource, HuronConfig) {
     return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId/sites/:siteId', {}, {
       update: {
-        method: 'PUT'
-      }
+        method: 'PUT',
+      },
     });
   }
 
@@ -109,6 +117,11 @@
   /* @ngInject */
   function TerminusCarrierService($resource, HuronConfig) {
     return $resource(HuronConfig.getTerminusUrl() + '/carriers/:carrierId', {});
+  }
+
+  /* @ngInject */
+  function TerminusCarrierV2Service($resource, HuronConfig) {
+    return $resource(HuronConfig.getTerminusV2Url() + '/carriers/:carrierId', {});
   }
 
   /* @ngInject */
@@ -147,8 +160,8 @@
       query: {
         method: 'GET',
         isArray: true,
-        cache: true
-      }
+        cache: true,
+      },
     });
   }
 
@@ -157,12 +170,17 @@
     return $resource(HuronConfig.getTerminusUrl() + '/lookup/e911');
   }
 
+    /* @ngInject */
+  function TerminusV2LookupE911Service($resource, HuronConfig) {
+    return $resource(HuronConfig.getTerminusV2Url() + '/carriers/:carrierId/e911/lookup');
+  }
+
   /* @ngInject */
   function TerminusUserDeviceE911Service($resource, HuronConfig) {
     return $resource(HuronConfig.getTerminusV2Url() + '/customers/:customerId/numbers/:number/e911', {}, {
       update: {
-        method: 'PUT'
-      }
+        method: 'PUT',
+      },
     });
   }
 
@@ -196,10 +214,10 @@
     return $resource(HuronConfig.getTerminusV2Url() + '/customers/:customerId/numbers/reservations/:reservationId', {}, {
       save: {
         headers: {
-          'Access-Control-Expose-Headers': 'Location'
+          'Access-Control-Expose-Headers': 'Location',
         },
-        method: 'POST'
-      }
+        method: 'POST',
+      },
     });
   }
 
@@ -218,10 +236,10 @@
     return $resource(HuronConfig.getTerminusV2Url() + '/resellers/:resellerId/carriers/:carrierId/numbers/reservations', {}, {
       save: {
         headers: {
-          'Access-Control-Expose-Headers': 'Location'
+          'Access-Control-Expose-Headers': 'Location',
         },
-        method: 'POST'
-      }
+        method: 'POST',
+      },
     });
   }
 

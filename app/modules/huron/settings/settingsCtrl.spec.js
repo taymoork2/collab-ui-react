@@ -5,9 +5,10 @@ describe('Controller: HuronSettingsCtrl', function () {
   var Authinfo, Notification;
   var ExternalNumberService, DialPlanService, PstnSetupService, ModalService;
   var HuronCustomer, ServiceSetup, CallerId, HuronConfig, InternationalDialing, VoicemailMessageAction;
-  var modalDefer, customer, timezones, timezone, voicemailCustomer, internalNumberRanges, languages, avrilSites;
+  var modalDefer, customer, timezones, timezone, internalNumberRanges, languages, avrilSites;
   var sites, site, companyNumbers, cosRestrictions, customerCarriers, messageAction, countries;
-  var $rootScope, didVoicemailCustomer, FeatureToggleService, TerminusUserDeviceE911Service;
+  var $rootScope, FeatureToggleService, TerminusUserDeviceE911Service, Orgservice;
+
   var controller, compile, styleSheet, element, window;
 
   beforeEach(angular.mock.module('Huron'));
@@ -15,7 +16,7 @@ describe('Controller: HuronSettingsCtrl', function () {
 
   beforeEach(inject(function (_$rootScope_, _$q_, _$httpBackend_, _ExternalNumberService_, _DialPlanService_,
     _PstnSetupService_, _ModalService_, _Notification_, _HuronCustomer_, _ServiceSetup_, _InternationalDialing_, _Authinfo_, _HuronConfig_,
-    _CallerId_, _VoicemailMessageAction_, $compile, _FeatureToggleService_, _TerminusUserDeviceE911Service_) {
+    _CallerId_, _VoicemailMessageAction_, $compile, _FeatureToggleService_, _TerminusUserDeviceE911Service_, _Orgservice_) {
 
     $q = _$q_;
     $rootScope = _$rootScope_;
@@ -36,6 +37,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     VoicemailMessageAction = _VoicemailMessageAction_;
     FeatureToggleService = _FeatureToggleService_;
     TerminusUserDeviceE911Service = _TerminusUserDeviceE911Service_;
+    Orgservice = _Orgservice_;
     window = window || {};
 
     modalDefer = $q.defer();
@@ -47,7 +49,6 @@ describe('Controller: HuronSettingsCtrl', function () {
     sites = getJSONFixture('huron/json/settings/sites.json');
     avrilSites = getJSONFixture('huron/json/settings/AvrilSite.json');
     companyNumbers = getJSONFixture('huron/json/settings/companyNumbers.json');
-    voicemailCustomer = getJSONFixture('huron/json/settings/voicemailCustomer.json');
     cosRestrictions = getJSONFixture('huron/json/settings/cosRestrictions.json');
     customerCarriers = getJSONFixture('huron/json/pstnSetup/customerCarrierList.json');
     messageAction = getJSONFixture('huron/json/settings/messageAction.json');
@@ -58,6 +59,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     spyOn(ServiceSetup, 'updateVoicemailTimezone').and.returnValue($q.resolve());
     spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.resolve(timezones));
     spyOn(ServiceSetup, 'getDateFormats').and.returnValue($q.resolve());
+    spyOn(ServiceSetup, 'getTimeFormats').and.returnValue($q.resolve());
     spyOn(ServiceSetup, 'listVoicemailTimezone').and.returnValue($q.resolve(timezone));
     spyOn(ServiceSetup, 'listInternalNumberRanges').and.returnValue($q.resolve(internalNumberRanges));
     spyOn(ServiceSetup, 'saveAutoAttendantSite').and.returnValue($q.resolve());
@@ -71,11 +73,12 @@ describe('Controller: HuronSettingsCtrl', function () {
     spyOn(DialPlanService, 'getCustomerVoice').and.returnValue($q.resolve({
       dialPlanDetails: {
         extensionGenerated: 'false',
-        countryCode: '+1'
-      }
+        countryCode: '+1',
+      },
     }));
     spyOn(DialPlanService, 'updateCustomerVoice').and.returnValue($q.resolve());
     spyOn(TerminusUserDeviceE911Service, 'update').and.returnValue($q.resolve());
+    spyOn(Orgservice, 'getOrg').and.returnValue($q.resolve());
     spyOn(ServiceSetup, 'listSites').and.callFake(function () {
       ServiceSetup.sites = sites;
       return $q.resolve();
@@ -93,7 +96,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     spyOn(InternationalDialing, 'isDisableInternationalDialing').and.returnValue($q.resolve(true));
     spyOn(PstnSetupService, 'listCustomerCarriers').and.returnValue($q.resolve(customerCarriers));
     spyOn(ModalService, 'open').and.returnValue({
-      result: modalDefer.promise
+      result: modalDefer.promise,
     });
     spyOn(Notification, 'success');
     spyOn(Notification, 'processErrorResponse').and.returnValue('');
@@ -109,11 +112,16 @@ describe('Controller: HuronSettingsCtrl', function () {
     $httpBackend
       .expectGET(HuronConfig.getCesUrl() + '/customers/' + customer.uuid + '/callExperiences')
       .respond([{
-        itemID: 0
+        itemID: 0,
       }]);
     $httpBackend
       .expectGET(HuronConfig.getCmiV2Url() + '/customers/' + customer.uuid + '/features/huntgroups')
       .respond([]);
+    $httpBackend
+      .expectGET(HuronConfig.getCmiV2Url() + '/customers/' + customer.uuid + '/dialplans')
+      .respond({
+        premiumNumbers: ['800', '900'],
+      });
   }));
 
   describe('SettingsCtrlBasic', function () {
@@ -122,11 +130,8 @@ describe('Controller: HuronSettingsCtrl', function () {
 
       site = sites[0];
       spyOn(ServiceSetup, 'getSite').and.returnValue($q.resolve(site));
-      voicemailCustomer = getJSONFixture('huron/json/settings/voicemailCustomer.json');
-      didVoicemailCustomer = voicemailCustomer[0];
-      spyOn(ServiceSetup, 'getVoicemailPilotNumber').and.returnValue($q.resolve(didVoicemailCustomer));
       controller = $controller('HuronSettingsCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
       $scope.$apply();
       $httpBackend.flush();
@@ -143,7 +148,6 @@ describe('Controller: HuronSettingsCtrl', function () {
       expect(ServiceSetup.listInternalNumberRanges).toHaveBeenCalled();
       expect(ServiceSetup.listSites).toHaveBeenCalled();
       expect(CallerId.listCompanyNumbers).toHaveBeenCalled();
-      expect(ServiceSetup.getVoicemailPilotNumber).toHaveBeenCalled();
       expect(ServiceSetup.listCosRestrictions).toHaveBeenCalled();
       expect(controller.model.callerId.callerIdName).toEqual('Cisco');
     });
@@ -151,7 +155,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     it('should save new internal number range', function () {
       controller.model.displayNumberRanges.push({
         beginNumber: '1001',
-        endNumber: '1004'
+        endNumber: '1004',
       });
       controller.save();
       $scope.$apply();
@@ -177,7 +181,7 @@ describe('Controller: HuronSettingsCtrl', function () {
       controller.allExternalNumbers = [{
         pattern: '+19725551001',
         label: '(972) 555-1001',
-        uuid: '123456'
+        uuid: '123456',
       }];
       controller.model.callerId.callerIdEnabled = true;
       controller.model.callerId.externalNumber.uuid = '123456';
@@ -239,7 +243,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     it('should save the emergency callback number', function () {
       controller.model.serviceNumber = {
         label: "(972) 555-1000",
-        pattern: "+19725551000"
+        pattern: "+19725551000",
       };
 
       controller.save();
@@ -252,11 +256,11 @@ describe('Controller: HuronSettingsCtrl', function () {
     it('should save the emergency callback number if its changing', function () {
       controller.model.serviceNumber = {
         label: "(972) 555-1000",
-        pattern: "+19725551000"
+        pattern: "+19725551000",
       };
 
       controller.model.site.emergencyCallBackNumber = {
-        pattern: "+19725552000"
+        pattern: "+19725552000",
       };
 
       controller.save();
@@ -277,11 +281,11 @@ describe('Controller: HuronSettingsCtrl', function () {
     it('should not save the emergency callback number if it is NOT changing', function () {
       controller.model.serviceNumber = {
         label: "(972) 555-1000",
-        pattern: "+19725551000"
+        pattern: "+19725551000",
       };
 
       controller.model.site.emergencyCallBackNumber = {
-        pattern: "+19725551000"
+        pattern: "+19725551000",
       };
 
       controller.save();
@@ -295,12 +299,12 @@ describe('Controller: HuronSettingsCtrl', function () {
       controller.unassignedExternalNumbers = [{
         uuid: '1234',
         pattern: '+12292291234',
-        label: '(229) 229-1234'
+        label: '(229) 229-1234',
       }];
 
       var pilotNumber = {
         pattern: '+12292291234',
-        label: '(229) 229-1234'
+        label: '(229) 229-1234',
       };
 
       controller.hasVoicemailService = true;
@@ -319,26 +323,52 @@ describe('Controller: HuronSettingsCtrl', function () {
       expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
     });
 
+    it('should update the timeFormat when changed', function () {
+      controller.model.site.timeFormat = {
+        label: '12 hour',
+        value: '12-hour',
+      };
+
+      controller.save();
+      $scope.$apply();
+
+      expect(ServiceSetup.updateSite).toHaveBeenCalled();
+      expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
+    });
+
+    it('should update the DateFormat when changed', function () {
+      controller.model.site.dateFormat = {
+        label: 'MM-DD-YY',
+        value: 'M-D-Y',
+      };
+
+      controller.save();
+      $scope.$apply();
+
+      expect(ServiceSetup.updateSite).toHaveBeenCalled();
+      expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
+    });
+
     it('should update the company pilot number and voicemail site timezone', function () {
       controller.unassignedExternalNumbers = [{
         uuid: '1234',
         pattern: '+12292291234',
-        label: '(229) 229-1234'
+        label: '(229) 229-1234',
       }];
 
       var pilotNumber = {
         pattern: '+12292291234',
-        label: '(229) 229-1234'
+        label: '(229) 229-1234',
       };
 
       var userTemplate = [{
         timeZoneName: "America/Anchorage",
-        objectId: "d297d451-35f0-420a-a4d5-7db6cd941a72"
+        objectId: "d297d451-35f0-420a-a4d5-7db6cd941a72",
       }];
 
       controller.model.site.timeZone = {
         id: "Pacific/Honolulu",
-        label: "Pacific/Honolulu"
+        label: "Pacific/Honolulu",
       };
 
       ServiceSetup.listVoicemailTimezone.and.returnValue($q.resolve(userTemplate));
@@ -362,12 +392,12 @@ describe('Controller: HuronSettingsCtrl', function () {
       controller.unassignedExternalNumbers = [{
         uuid: '1234',
         pattern: '+12292291234',
-        label: '(229) 229-1234'
+        label: '(229) 229-1234',
       }];
 
       var pilotNumber = {
         pattern: '+12292291234',
-        label: '(229) 229-1234'
+        label: '(229) 229-1234',
       };
 
       controller.hasVoicemailService = false;
@@ -389,12 +419,12 @@ describe('Controller: HuronSettingsCtrl', function () {
       controller.unassignedExternalNumbers = [{
         uuid: '1234',
         pattern: '+12292291234',
-        label: '(229) 229-1234'
+        label: '(229) 229-1234',
       }];
 
       var pilotNumber = {
         pattern: '+12292291234',
-        label: '(229) 229-1234'
+        label: '(229) 229-1234',
       };
 
       controller.hasVoicemailService = true;
@@ -415,11 +445,11 @@ describe('Controller: HuronSettingsCtrl', function () {
       controller.unassignedExternalNumbers = [{
         uuid: '1234',
         pattern: '+12292291234',
-        label: '(229) 229-1234'
+        label: '(229) 229-1234',
       }];
       var pilotNumber = {
         label: '(229) 229-1234',
-        pattern: '+12292291234'
+        pattern: '+12292291234',
       };
       controller.model.serviceNumber = undefined;
       controller.hasVoicemailService = true;
@@ -430,7 +460,7 @@ describe('Controller: HuronSettingsCtrl', function () {
       controller.model.companyVoicemail.voicemailToEmail = true;
       controller.voicemailMessageAction = {
         objectId: '1',
-        voicemailAction: 3
+        voicemailAction: 3,
       };
 
       controller.save();
@@ -486,7 +516,7 @@ describe('Controller: HuronSettingsCtrl', function () {
 
       controller.timeZoneOptions = [{
         id: "America/Anchorage",
-        label: "America/Anchorage"
+        label: "America/Anchorage",
       }];
 
       controller._buildTimeZoneOptions($scope);
@@ -500,7 +530,7 @@ describe('Controller: HuronSettingsCtrl', function () {
 
       controller.preferredLanguageOptions = [{
         label: "Test Language",
-        value: "test"
+        value: "test",
       }];
 
       controller._buildPreferredLanguageOptions($scope);
@@ -514,7 +544,7 @@ describe('Controller: HuronSettingsCtrl', function () {
 
       controller.defaultCountryOptions = [{
         label: "Test Country",
-        value: "TC"
+        value: "TC",
       }];
 
       controller._buildDefaultCountryOptions($scope);
@@ -530,10 +560,10 @@ describe('Controller: HuronSettingsCtrl', function () {
     describe('formly watcher functions: ', function () {
       var assignedExternalNumbers = [{
         pattern: '+19725551001',
-        label: '(972) 555-1001'
+        label: '(972) 555-1001',
       }, {
         pattern: '+19725551002',
-        label: '(972) 555-1002'
+        label: '(972) 555-1002',
       }];
 
       beforeEach(function () {
@@ -543,34 +573,34 @@ describe('Controller: HuronSettingsCtrl', function () {
 
         controller.allExternalNumbers = [{
           pattern: '+19725551001',
-          label: '(972) 555-1001'
+          label: '(972) 555-1001',
         }, {
           pattern: '+19725551002',
-          label: '(972) 555-1002'
+          label: '(972) 555-1002',
         }, {
           pattern: '+19725551003',
-          label: '(972) 555-1003'
+          label: '(972) 555-1003',
         }, {
           pattern: '+19725551004',
-          label: '(972) 555-1004'
+          label: '(972) 555-1004',
         }];
 
         controller.unassignedExternalNumbers = [{
           pattern: '+19725551003',
-          label: '(972) 555-1003'
+          label: '(972) 555-1003',
         }, {
           pattern: '+19725551004',
-          label: '(972) 555-1004'
+          label: '(972) 555-1004',
         }];
 
         // assignedExternalNumbers array is constructed by the difference of all minus
         // unassigned numbers
         controller.assignedExternalNumbers = [{
           pattern: '+19725551001',
-          label: '(972) 555-1001'
+          label: '(972) 555-1001',
         }, {
           pattern: '+19725551002',
-          label: '(972) 555-1002'
+          label: '(972) 555-1002',
         }];
       });
 
@@ -583,22 +613,22 @@ describe('Controller: HuronSettingsCtrl', function () {
 
       it('_buildServiceNumberOptions - add the service number back in the list if it is already set but not assigned to a user or spark call feature', function () {
         controller.model.site.emergencyCallBackNumber = {
-          pattern: '+19725551003'
+          pattern: '+19725551003',
         };
         controller.model.serviceNumber = {
           pattern: '+19725551003',
-          label: '(972) 555-1003'
+          label: '(972) 555-1003',
         };
 
         var expectedOptions = [{
           pattern: '+19725551001',
-          label: '(972) 555-1001'
+          label: '(972) 555-1001',
         }, {
           pattern: '+19725551002',
-          label: '(972) 555-1002'
+          label: '(972) 555-1002',
         }, {
           pattern: '+19725551003',
-          label: '(972) 555-1003'
+          label: '(972) 555-1003',
         }];
 
         controller._buildServiceNumberOptions($scope);
@@ -611,7 +641,7 @@ describe('Controller: HuronSettingsCtrl', function () {
         controller.model.site.voicemailPilotNumber = '+19725551001';
         var expectedOptions = [{
           pattern: '+19725551002',
-          label: '(972) 555-1002'
+          label: '(972) 555-1002',
         }];
         controller._buildServiceNumberOptions($scope);
         $scope.$apply();
@@ -634,13 +664,13 @@ describe('Controller: HuronSettingsCtrl', function () {
         controller.model.site.voicemailPilotNumber = '+19725551001';
         var expectedOptions = [{
           pattern: '+19725551003',
-          label: '(972) 555-1003'
+          label: '(972) 555-1003',
         }, {
           pattern: '+19725551004',
-          label: '(972) 555-1004'
+          label: '(972) 555-1004',
         }, {
           pattern: '+19725551001',
-          label: '(972) 555-1001'
+          label: '(972) 555-1001',
         }];
 
         controller._buildVoicemailNumberOptions($scope);
@@ -652,15 +682,15 @@ describe('Controller: HuronSettingsCtrl', function () {
       it('_buildVoicemailNumberOptions - should remove the emergency callback number if found', function () {
         controller.model.serviceNumber = {
           pattern: '+19725551003',
-          label: '(972) 555-1003'
+          label: '(972) 555-1003',
         };
         controller.model.site.voicemailPilotNumber = '+19725551001';
         var expectedOptions = [{
           pattern: '+19725551004',
-          label: '(972) 555-1004'
+          label: '(972) 555-1004',
         }, {
           pattern: '+19725551001',
-          label: '(972) 555-1001'
+          label: '(972) 555-1001',
         }];
 
         controller._buildVoicemailNumberOptions($scope);
@@ -674,10 +704,10 @@ describe('Controller: HuronSettingsCtrl', function () {
         controller.model.site.voicemailPilotNumber = '+19725551001';
         var expectedOptions = [{
           pattern: '+19725551004',
-          label: '(972) 555-1004'
+          label: '(972) 555-1004',
         }, {
           pattern: '+19725551001',
-          label: '(972) 555-1001'
+          label: '(972) 555-1001',
         }];
 
         controller._buildVoicemailNumberOptions($scope);
@@ -701,7 +731,7 @@ describe('Controller: HuronSettingsCtrl', function () {
         controller.model.site.voicemailPilotNumber = '+19725551001';
         controller.model.serviceNumber = {
           pattern: '+19725551002',
-          label: '(972) 555-1002'
+          label: '(972) 555-1002',
         };
         var expectedOptions = ['(972) 555-1002', '(972) 555-1003', '(972) 555-1004'];
 
@@ -726,7 +756,7 @@ describe('Controller: HuronSettingsCtrl', function () {
         // call once to validate voicemail number is removed
         controller.model.companyVoicemail.companyVoicemailNumber = {
           pattern: '+19725551001',
-          label: '(972) 555-1001'
+          label: '(972) 555-1001',
         };
         $scope.$apply();
         expect($scope.to.options).toEqual(expectedOptions);
@@ -756,14 +786,14 @@ describe('Controller: HuronSettingsCtrl', function () {
 
         var expectedOptions = [{
           pattern: '+19725551004',
-          label: '(972) 555-1004'
+          label: '(972) 555-1004',
         }];
         var reorderedOptions = [{
           pattern: '+19725551004',
-          label: '(972) 555-1004'
+          label: '(972) 555-1004',
         }, {
           pattern: '+19725551003',
-          label: '(972) 555-1003'
+          label: '(972) 555-1003',
         }];
 
         controller._buildVoicemailNumberOptions($scope);
@@ -800,7 +830,7 @@ describe('Controller: HuronSettingsCtrl', function () {
         controller.model.site.voicemailPilotNumber = undefined;
         controller.model.companyVoicemail.companyVoicemailNumber = {
           pattern: '+19725551001',
-          label: '(972) 555-1001'
+          label: '(972) 555-1001',
         };
         controller.model.companyVoicemail.companyVoicemailEnabled = false;
 
@@ -818,7 +848,7 @@ describe('Controller: HuronSettingsCtrl', function () {
 
         var expectedValue = {
           pattern: '+19725551003',
-          label: '(972) 555-1003'
+          label: '(972) 555-1003',
         };
 
         controller._buildVoicemailNumberOptions($scope);
@@ -833,7 +863,7 @@ describe('Controller: HuronSettingsCtrl', function () {
         controller.model.companyVoicemail.companyVoicemailNumber = undefined;
         controller.model.companyVoicemail.companyVoicemailEnabled = true;
         controller.model.serviceNumber = {
-          pattern: undefined
+          pattern: undefined,
         };
         controller.unassignedExternalNumbers = [];
         $scope.to.options = [];
@@ -877,14 +907,14 @@ describe('Controller: HuronSettingsCtrl', function () {
       it('should update timezone when timezone selection changes', function () {
         var newTimeZone = {
           id: "America/Anchorage",
-          label: "America/Anchorage"
+          label: "America/Anchorage",
         };
         controller.model.site.timeZone = newTimeZone;
         controller.save();
         $scope.$apply();
 
         expect(ServiceSetup.updateSite).toHaveBeenCalledWith(jasmine.any(String), {
-          timeZone: newTimeZone.id
+          timeZone: newTimeZone.id,
         });
         expect(ServiceSetup.updateVoicemailTimezone).toHaveBeenCalledWith(newTimeZone.id, jasmine.any(String));
         expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
@@ -896,7 +926,7 @@ describe('Controller: HuronSettingsCtrl', function () {
         being sent to unity and updm */
         controller.model.site.timeZone = {
           id: "America/Los_Angeles",
-          label: "America/Los_Angeles"
+          label: "America/Los_Angeles",
         };
         controller.save();
         $scope.$apply();
@@ -909,7 +939,7 @@ describe('Controller: HuronSettingsCtrl', function () {
       it('should update preferred language when preferred language selection changes', function () {
         var newLanguage = {
           label: 'French (Canadian)',
-          value: 'fr_CA'
+          value: 'fr_CA',
         };
 
         controller.model.site.preferredLanguage = newLanguage;
@@ -917,7 +947,7 @@ describe('Controller: HuronSettingsCtrl', function () {
         $scope.$apply();
 
         expect(ServiceSetup.updateSite).toHaveBeenCalledWith(jasmine.any(String), {
-          preferredLanguage: newLanguage.value
+          preferredLanguage: newLanguage.value,
         });
         expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
       });
@@ -932,7 +962,7 @@ describe('Controller: HuronSettingsCtrl', function () {
       it('should not update preferred language when preferred language selection did not change', function () {
         var defaultLanguage = {
           label: 'English (United States)',
-          value: 'en_US'
+          value: 'en_US',
         };
 
         controller.model.site.preferredLanguage = defaultLanguage;
@@ -946,7 +976,7 @@ describe('Controller: HuronSettingsCtrl', function () {
       it('should update default country when country selection changes', function () {
         var newCountry = {
           label: 'Canada',
-          value: 'CA'
+          value: 'CA',
         };
 
         controller.model.site.defaultCountry = newCountry;
@@ -954,7 +984,7 @@ describe('Controller: HuronSettingsCtrl', function () {
         $scope.$apply();
 
         expect(ServiceSetup.updateSite).toHaveBeenCalledWith(jasmine.any(String), {
-          country: newCountry.value
+          country: newCountry.value,
         });
         expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
       });
@@ -962,7 +992,7 @@ describe('Controller: HuronSettingsCtrl', function () {
       it('should not update default country when country selection did not change', function () {
         var defaultCountry = {
           label: 'United States',
-          value: 'US'
+          value: 'US',
         };
 
         controller.model.site.defaultCountry = defaultCountry;
@@ -995,7 +1025,7 @@ describe('Controller: HuronSettingsCtrl', function () {
         controller.model.site.siteSteeringDigit.voicemailPrefixLabel = '1100';
         controller.model.displayNumberRanges = [{
           beginNumber: 1000,
-          endNumber: 1999
+          endNumber: 1999,
         }];
 
         expect(controller.siteSteeringDigitWarningValidation()).toBe(true);
@@ -1005,7 +1035,7 @@ describe('Controller: HuronSettingsCtrl', function () {
         controller.model.site.steeringDigit = '1';
         controller.model.displayNumberRanges = [{
           beginNumber: 1000,
-          endNumber: 1999
+          endNumber: 1999,
         }];
 
         expect(controller.steeringDigitWarningValidation()).toBe(true);
@@ -1017,9 +1047,9 @@ describe('Controller: HuronSettingsCtrl', function () {
         var localscope = {
           fields: [{
             formControl: {
-              $setValidity: function () {}
-            }
-          }]
+              $setValidity: function () {},
+            },
+          }],
         };
 
         expect(controller.siteAndSteeringDigitErrorValidation('', '', localscope)).toBe(true);
@@ -1073,12 +1103,9 @@ describe('Controller: HuronSettingsCtrl', function () {
 
       site = sites[0];
       spyOn(ServiceSetup, 'getSite').and.returnValue($q.resolve(site));
-      voicemailCustomer = getJSONFixture('huron/json/settings/voicemailCustomer.json');
-      didVoicemailCustomer = voicemailCustomer[0];
-      spyOn(ServiceSetup, 'getVoicemailPilotNumber').and.returnValue($q.resolve(didVoicemailCustomer));
 
       controller = $controller('HuronSettingsCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
       $scope.$apply();
       $httpBackend.flush();
@@ -1114,12 +1141,9 @@ describe('Controller: HuronSettingsCtrl', function () {
       $scope = $rootScope;
       site = sites[1];
       spyOn(ServiceSetup, 'getSite').and.returnValue($q.resolve(site));
-      voicemailCustomer = getJSONFixture('huron/json/settings/voicemailCustomer.json');
-      didVoicemailCustomer = voicemailCustomer[1];
-      spyOn(ServiceSetup, 'getVoicemailPilotNumber').and.returnValue($q.resolve(didVoicemailCustomer));
-      spyOn(ServiceSetup, 'generateVoiceMailNumber').and.returnValue("+911201020715001211081011150409060510000");
+      spyOn(ServiceSetup, 'generateVoiceMailNumber').and.returnValue("+12063199276");
       controller = $controller('HuronSettingsCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
       $scope.$apply();
       $httpBackend.flush();
@@ -1127,21 +1151,21 @@ describe('Controller: HuronSettingsCtrl', function () {
 
     it('test loadVoicemailNumber should return genereated Voice Pilot Number', function () {
       controller.hasVoicemailService = true;
-      controller.loadVoicemailNumber();
+      controller.loadVoicemailNumber(site);
       $scope.$apply();
-      expect(controller.model.site.voicemailPilotNumber).toEqual('+911201020715001211081011150409060510000');
+      expect(controller.model.site.voicemailPilotNumber).toEqual('+12063199276');
     });
 
     it('should update the external did as company pilot number', function () {
       controller.unassignedExternalNumbers = [{
         uuid: '1234',
         pattern: '+12292291234',
-        label: '(229) 229-1234'
+        label: '(229) 229-1234',
       }];
 
       var pilotNumber = {
         pattern: '+12292291234',
-        label: '(229) 229-1234'
+        label: '(229) 229-1234',
       };
 
       controller.hasVoicemailService = true;
@@ -1186,14 +1210,14 @@ describe('Controller: HuronSettingsCtrl', function () {
     it('should have the correct payload for the esn site update', function () {
       controller.model.site.uuid = '1234-56789';
       controller.model.serviceNumber = {
-        pattern: '+19723456789'
+        pattern: '+19723456789',
       };
 
       controller.saveEmergencyCallBack();
       expect(ServiceSetup.updateSite).toHaveBeenCalledWith(controller.model.site.uuid, {
         emergencyCallBackNumber: {
-          pattern: controller.model.serviceNumber.pattern
-        }
+          pattern: controller.model.serviceNumber.pattern,
+        },
       });
     });
   });

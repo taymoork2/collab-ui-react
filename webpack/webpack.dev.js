@@ -24,6 +24,7 @@ function webpackConfig(env) {
         template: 'index.html',
         inject: 'body',
         ngStrictDi: 'ng-strict-di',
+        loadAdobeScripts: false,
       }),
       new webpack.HotModuleReplacementPlugin(),
     ],

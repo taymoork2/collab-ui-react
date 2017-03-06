@@ -19,7 +19,7 @@ describe('Service: AADependencyService', function () {
     var event = {
       type: 'AANameChange',
       scheduleId: '123',
-      newName: 'AA'
+      newName: 'AA',
     };
 
     beforeEach(function () {
@@ -55,7 +55,7 @@ describe('Service: AADependencyService', function () {
       var event = {
         type: 'AANameChange',
         scheduleId: '123',
-        newName: 'AA'
+        newName: 'AA',
       };
       var notifyResponse;
 
@@ -77,11 +77,11 @@ describe('Service: AADependencyService', function () {
       var event = {
         type: 'AANameChange',
         scheduleId: '123',
-        newName: 'AA'
+        newName: 'AA',
       };
       var error = {
         statusText: 'error',
-        status: '500'
+        status: '500',
       };
 
       var notifyResponse;
@@ -105,7 +105,7 @@ describe('Service: AADependencyService', function () {
       var event = {
         type: 'AANameChange',
         scheduleId: undefined,
-        newName: 'ABC'
+        newName: 'ABC',
       };
       var notifyResponse;
 

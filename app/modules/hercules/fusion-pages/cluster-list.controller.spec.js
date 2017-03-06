@@ -1,17 +1,18 @@
 'use strict';
 
 describe('Controller: FusionClusterListController', function () {
-  var controller, $controller, $q, $rootScope, Authinfo, FusionClusterService, Notification;
+  var controller, $controller, $q, $rootScope, Analytics, Authinfo, FusionClusterService, Notification;
 
   beforeEach(angular.mock.module('Squared'));
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
-  function dependencies(_$rootScope_, _$controller_, _$q_, _Authinfo_, _FusionClusterService_, _Notification_) {
+  function dependencies(_$rootScope_, _$controller_, _$q_, _Analytics_, _Authinfo_, _FusionClusterService_, _Notification_) {
     $rootScope = _$rootScope_;
     $controller = _$controller_;
     $q = _$q_;
+    Analytics = _Analytics_;
     Authinfo = _Authinfo_;
     FusionClusterService = _FusionClusterService_;
     Notification = _Notification_;
@@ -19,13 +20,14 @@ describe('Controller: FusionClusterListController', function () {
 
   function initSpies() {
     spyOn(FusionClusterService, 'getAll');
+    spyOn(Analytics, 'trackHSNavigation');
     spyOn(Notification, 'errorWithTrackingId');
     spyOn(Authinfo, 'isEntitled').and.returnValue(true);
   }
 
   function initController() {
     controller = $controller('FusionClusterListController', {
-      hasF237FeatureToggle: false,
+      hasResourceGroupFeatureToggle: false,
     });
   }
 
@@ -62,25 +64,37 @@ describe('Controller: FusionClusterListController', function () {
           alarms: [],
           connectorType: 'c_mgmt',
           runningState: 'running',
-          hostname: 'a.elg.no'
-        }]
+          hostname: 'a.elg.no',
+        }],
       }, {
         targetType: 'mf_mgmt',
         connectors: [{
           alarms: [],
           connectorType: 'mf_mgmt',
           runningState: 'running',
-          hostname: 'a.elg.no'
-        }]
+          hostname: 'a.elg.no',
+        }],
+      }, {
+        targetType: 'cs_mgmt',
+        connectors: [{
+          alarms: [],
+          connectorType: 'cs_mgmt',
+          runningState: 'running',
+          hostname: 'a.elg.no',
+        }],
       }]));
       initController();
       expect(controller.filters[0].count).toBe(0);
       expect(controller.filters[1].count).toBe(0);
+      expect(controller.filters[2].count).toBe(0);
+      expect(controller.filters[3].count).toBe(0);
       expect(controller.displayedClusters.length).toBe(0);
       $rootScope.$apply(); // force FusionClusterService.getAll() to return
       expect(controller.filters[0].count).toBe(1);
       expect(controller.filters[1].count).toBe(1);
-      expect(controller.displayedClusters.length).toBe(2);
+      expect(controller.filters[2].count).toBe(0);
+      expect(controller.filters[3].count).toBe(1);
+      expect(controller.displayedClusters.length).toBe(3);
     });
 
   });

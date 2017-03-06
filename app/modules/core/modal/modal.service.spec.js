@@ -10,14 +10,13 @@ describe('Service: ModalService', function () {
   var myClose = 'myClose';
   var myDismiss = 'myDismiss';
   var myType = 'myType';
-  var mySize = 'mySize';
 
   afterEach(function () {
     ModalService = $modal = undefined;
   });
 
   afterAll(function () {
-    myTitle = myMessage = myClose = myDismiss = myType = mySize = undefined;
+    myTitle = myMessage = myClose = myDismiss = myType = undefined;
   });
 
   beforeEach(angular.mock.module(testModule));
@@ -37,10 +36,8 @@ describe('Service: ModalService', function () {
       close: myClose,
       dismiss: myDismiss,
       btnType: myType,
-      size: mySize
     });
     expect($modal.open).toHaveBeenCalledWith({
-      size: mySize,
       templateUrl: 'modules/core/modal/modal.tpl.html',
       controller: 'ModalCtrl',
       controllerAs: 'modal',
@@ -52,8 +49,8 @@ describe('Service: ModalService', function () {
         dismiss: jasmine.any(Function),
         btnType: jasmine.any(Function),
         hideTitle: jasmine.any(Function),
-        hideDismiss: jasmine.any(Function)
-      }
+        hideDismiss: jasmine.any(Function),
+      },
     });
   });
 

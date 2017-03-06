@@ -1,6 +1,15 @@
 @import 'styles/toolkit/colors';
 @import 'styles/toolkit/spacing';
 
+.modal-content .center-spinner {
+  height: 100%;
+
+  .icon {
+    top: 50%;
+    left: 50%;
+  }
+}
+
 .modal-usermanage-dialog {
   width: 900px;
 }

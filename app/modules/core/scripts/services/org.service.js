@@ -19,7 +19,7 @@
       configModule,
       logModule,
       urlConfigModule,
-      utilsModule
+      utilsModule,
     ])
     .factory('Orgservice', Orgservice)
     .name;
@@ -45,10 +45,11 @@
       setHybridServiceAcknowledged: setHybridServiceAcknowledged,
       getEftSetting: getEftSetting,
       setEftSetting: setEftSetting,
+      setOrgAltHdsServersHds: setOrgAltHdsServersHds,
       validateSiteUrl: validateSiteUrl,
       setHybridServiceReleaseChannelEntitlement: setHybridServiceReleaseChannelEntitlement,
       updateDisplayName: updateDisplayName,
-      validateDisplayName: validateDisplayName
+      validateDisplayName: validateDisplayName,
     };
 
     var savedOrgSettingsCache = [];
@@ -98,8 +99,8 @@
       var cacheDisabled = !!disableCache;
       return $http.get(adminUrl, {
         params: {
-          disableCache: cacheDisabled
-        }
+          disableCache: cacheDisabled,
+        },
       })
         .success(function (data, status) {
           data = _.isObject(data) ? data : {};
@@ -121,7 +122,7 @@
         .catch(function (data, status) {
           data = _.extend({}, data, {
             success: false,
-            status: status
+            status: status,
           });
           return $q.reject(data);
 
@@ -129,7 +130,7 @@
         .then(function (data, status) {
           data = _.extend({}, data, {
             success: true,
-            status: status
+            status: status,
           });
           return data;
         });
@@ -152,7 +153,7 @@
           _.forEach(usageLicenses, function (usageLicense) {
             var licenses = _.filter(usageLicense.licenses, function (license) {
               var match = _.find(statusLicenses, {
-                'licenseId': license.licenseId
+                'licenseId': license.licenseId,
               });
               trial = license.isTrial ? 'Trial' : 'unknown';
               return !(_.isUndefined(match) || match.status === 'CANCELLED' || match.status === 'SUSPENDED');
@@ -162,7 +163,7 @@
               "subscriptionId": usageLicense.subscriptionId ? usageLicense.subscriptionId : trial,
               "internalSubscriptionId": usageLicense.internalSubscriptionId ?
                 usageLicense.internalSubscriptionId : trial,
-              "licenses": licenses
+              "licenses": licenses,
             };
             result.push(subscription);
           });
@@ -190,7 +191,7 @@
 
         validLicenses = _.filter(usageLicenses, function (license) {
           var match = _.find(statusLicenses, {
-            'licenseId': license.licenseId
+            'licenseId': license.licenseId,
           });
           // If the license is not valid do not add to list
           return !(match.status === 'CANCELLED' || match.status === 'SUSPENDED');
@@ -237,7 +238,7 @@
 
       return $http({
         method: 'PATCH',
-        url: adminUrl
+        url: adminUrl,
       });
     }
 
@@ -263,7 +264,7 @@
       savedOrgSettingsCache.push({
         orgId: orgId,
         propertySaveTimeStamp: new Date(),
-        setting: _.clone(settings)
+        setting: _.clone(settings),
       });
       return getOrg(_.noop, orgId, true) //get retrieves the pushed value above, no need to re assign to orgSettings
         .then(function (response) {
@@ -272,16 +273,20 @@
           return $http({
             method: 'PATCH',
             url: orgUrl,
-            data: orgSettings
+            data: orgSettings,
           });
         });
     }
 
-    function createOrg(enc) {
+    function createOrg(enc, country) {
       var orgUrl = UrlConfig.getAdminServiceUrl() + 'organizations';
       var orgRequest = {
-        'encryptedQueryString': enc
+        encryptedQueryString: enc,
       };
+      // only set 'country' property if passed in (otherwise, it is safe left as undefined)
+      if (country) {
+        _.set(orgRequest, 'country', _.get(country, 'id', 'US'));
+      }
       return Auth.setAccessToken().then(function () {
         return $http.post(orgUrl, orgRequest).then(function (response) {
           return response.data;
@@ -297,7 +302,7 @@
 
       return $http({
         method: 'DELETE',
-        url: serviceUrl
+        url: serviceUrl,
       });
     }
 
@@ -312,8 +317,8 @@
           // return it in the same manner as listOrgs
           return {
             data: {
-              organizations: [result.data]
-            }
+              organizations: [result.data],
+            },
           };
         });
       }
@@ -351,7 +356,7 @@
       var serviceUrl = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services';
       return $http({
         method: 'GET',
-        url: serviceUrl
+        url: serviceUrl,
       });
     }
 
@@ -378,8 +383,8 @@
         method: 'PATCH',
         url: serviceUrl,
         data: {
-          "acknowledged": true
-        }
+          "acknowledged": true,
+        },
       }).error(function () {
         Log.error("Error in PATCH acknowledge status to " + serviceUrl);
       });
@@ -393,7 +398,7 @@
 
       return $http({
         method: 'GET',
-        url: serviceUrl
+        url: serviceUrl,
       });
     }
 
@@ -408,9 +413,14 @@
         method: 'PUT',
         url: serviceUrl,
         data: {
-          eft: setting
-        }
+          eft: setting,
+        },
       });
+    }
+
+    function setOrgAltHdsServersHds(orgId, altHdsServers) {
+      var serviceUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '/settings/altHdsServers';
+      return $http.put(serviceUrl, altHdsServers);
     }
 
     function isSetupDone(orgId) {
@@ -424,7 +434,7 @@
       return $http
         .post(UrlConfig.getAdminServiceUrl() + 'hybridservices/organizations/' + orgId + '/releaseChannels', {
           channel: channel,
-          entitled: entitled
+          entitled: entitled,
         });
     }
 
@@ -434,22 +444,22 @@
         method: 'POST',
         url: validationUrl,
         headers: {
-          'Content-Type': 'text/plain'
+          'Content-Type': 'text/plain',
         },
         data: {
           callbackUrl: 'https://api.cisco.com/sbp/provCallBack/',
           properties: [{
             key: 'siteUrl',
-            value: siteUrl
-          }]
-        }
+            value: siteUrl,
+          }],
+        },
       };
 
       return $http(config).then(function (response) {
         var data = _.get(response, 'data.properties[0]', {});
         var isValid = (data.isValid === 'true' && data.errorCode === '0');
         return {
-          isValid: isValid
+          isValid: isValid,
         };
       });
     }
@@ -457,14 +467,14 @@
     function patchDisplayName(orgId, displayName, isValidate) {
       var customerDisplayNameResource = $resource(UrlConfig.getAdminServiceUrl() + '/customers/:customerId/displayName', {}, {
         patch: {
-          method: 'PATCH'
-        }
+          method: 'PATCH',
+        },
       });
       return customerDisplayNameResource.patch({
         customerId: orgId,
-        verify: isValidate
+        verify: isValidate,
       }, {
-        displayName: displayName
+        displayName: displayName,
       }).$promise;
     }
 

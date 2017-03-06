@@ -23,10 +23,10 @@ describe('Controller: UploadGoogleCalendarKeyController', function () {
     CloudConnectorServiceMock = {
       updateConfig: function () {
         return $q.resolve();
-      }
+      },
     };
     modalInstanceMock = {
-      close: sinon.stub()
+      close: sinon.stub(),
     };
   }
 
@@ -38,6 +38,7 @@ describe('Controller: UploadGoogleCalendarKeyController', function () {
     controller = $controller('UploadGoogleCalendarKeyController', {
       CloudConnectorService: CloudConnectorServiceMock,
       $modalInstance: modalInstanceMock,
+      aclAccount: 'admin@example.org',
       googleServiceAccount: 'test@example.org',
       Notification: Notification,
     });

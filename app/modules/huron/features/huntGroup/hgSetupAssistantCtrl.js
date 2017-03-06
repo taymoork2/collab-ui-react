@@ -111,7 +111,7 @@ require('./_hunt-group.scss');
         GetPilotNumbers.setFilter({
           sourceKey: 'uuid',
           responseKey: 'uuid',
-          dataToStrip: vm.selectedPilotNumbers
+          dataToStrip: vm.selectedPilotNumbers,
         });
 
         return GetPilotNumbers.fetch().then(function (numbers) {
@@ -189,7 +189,7 @@ require('./_hunt-group.scss');
     function cancelModal() {
       $modal.open({
         templateUrl: 'modules/huron/features/huntGroup/hgCancelModal.tpl.html',
-        type: 'dialog'
+        type: 'dialog',
       });
     }
 
@@ -266,7 +266,7 @@ require('./_hunt-group.scss');
     // Fallback destination presentation controller functions.
 
     function selectFallback($item) {
-      vm.selectedFallbackNumber = undefined;
+      vm.selectedFallbackNumber = {};
       vm.selectedFallbackMember = HuntGroupFallbackDataService.setFallbackMember($item);
       HuntGroupFallbackDataService.isVoicemailDisabled(customerId, _.get($item, 'selectableNumber.uuid')).then(function (isVoicemailDisabled) {
         vm.disableVoicemail = isVoicemailDisabled;
@@ -331,13 +331,13 @@ require('./_hunt-group.scss');
       HuntGroupService.saveHuntGroup(customerId, data).then(function () {
         vm.saveProgress = false;
         Notification.success('huronHuntGroup.successSave', {
-          huntGroupName: vm.huntGroupName
+          huntGroupName: vm.huntGroupName,
         });
         $state.go('huronfeatures');
       }, function (error) {
         vm.saveProgress = false;
         Notification.errorResponse(error, 'huronHuntGroup.errorSave', {
-          huntGroupName: vm.huntGroupName
+          huntGroupName: vm.huntGroupName,
         });
       });
     }
@@ -352,7 +352,7 @@ require('./_hunt-group.scss');
         }
         data.numbers.push({
           type: number.type,
-          number: number.number
+          number: number.number,
         });
       });
     }

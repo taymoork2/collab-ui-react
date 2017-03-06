@@ -11,7 +11,6 @@
       "hostSerial": "0DCF03E2",
       "alarms": [],
       "runningVersion": "8.7-1.0.321216",
-      "registered": true,
       "connectorStatus": {
         "operational": true,
         "initialized": true,
@@ -31,7 +30,6 @@
       "availablePackageIsUrgent": false
     }
   ],
-  "registered": true,
   "targetType": "c_mgmt",
   "upgradeSchedule": {
     "scheduleDays": [

@@ -1,4 +1,5 @@
 require('./_places.scss');
+require('../devices/_devices.scss');
 
 (function () {
   'use strict';
@@ -53,7 +54,7 @@ require('./_places.scss');
                 displayName: data.displayName,
                 userName: data.userName,
                 cisUuid: data.id,
-                organizationId: data.meta.organizationID
+                organizationId: data.meta.organizationID,
               };
             }
             userDetailsDeferred.resolve();
@@ -109,7 +110,7 @@ require('./_places.scss');
         vm.showPlaceDetails = function (place) {
           vm.currentPlace = place; // fixme: modals depend on state set here
           $state.go('place-overview', {
-            currentPlace: place
+            currentPlace: place,
           });
         };
 
@@ -131,32 +132,32 @@ require('./_places.scss');
             displayName: '',
             cellTemplate: getTemplate('_imageTpl'),
             sortable: false,
-            width: 70
+            width: 70,
           }, {
             field: 'displayName',
             displayName: $translate.instant('placesPage.nameHeader'),
             sortingAlgorithm: sortFn,
             sort: {
               direction: 'asc',
-              priority: 1
+              priority: 1,
             },
-            sortCellFiltered: true
+            sortCellFiltered: true,
           }, {
             field: 'readableType',
             displayName: $translate.instant('placesPage.typeHeader'),
-            sortable: true
+            sortable: true,
           }, {
             field: 'devices',
             displayName: $translate.instant('placesPage.deviceHeader'),
             cellTemplate: getTemplate('_devicesTpl'),
             sortable: true,
-            sortingAlgorithm: sortNoDevicesFn
+            sortingAlgorithm: sortNoDevicesFn,
           }, {
             field: 'action',
             displayName: $translate.instant('placesPage.actionHeader'),
             cellTemplate: getTemplate('_actionsTpl'),
-            sortable: false
-          }]
+            sortable: false,
+          }],
         };
 
         vm.startAddPlaceFlow = function () {
@@ -171,46 +172,46 @@ require('./_places.scss');
               isEntitledToRoomSystem: vm.isOrgEntitledToRoomSystem(),
               account: {
                 type: 'shared',
-                organizationId: Authinfo.getOrgId()
+                organizationId: Authinfo.getOrgId(),
               },
               recipient: {
                 cisUuid: Authinfo.getUserId(),
                 displayName: vm.adminUserDetails.displayName,
                 email: Authinfo.getPrimaryEmail(),
-                organizationId: vm.adminUserDetails.organizationId
-              }
+                organizationId: vm.adminUserDetails.organizationId,
+              },
             },
             history: [],
             currentStateName: 'addDeviceFlow.newSharedSpace',
             wizardState: {
               'addDeviceFlow.newSharedSpace': {
-                next: 'addDeviceFlow.chooseDeviceType'
+                next: 'addDeviceFlow.chooseDeviceType',
               },
               'addDeviceFlow.chooseDeviceType': {
                 nextOptions: {
                   cloudberry: 'addDeviceFlow.editServices',
-                  huron: 'addDeviceFlow.addLines'
-                }
+                  huron: 'addDeviceFlow.addLines',
+                },
               },
               'addDeviceFlow.editServices': {
                 nextOptions: {
                   sparkCall: 'addDeviceFlow.addLines',
                   sparkCallConnect: 'addDeviceFlow.callConnectOptions',
-                  sparkOnly: 'addDeviceFlow.showActivationCode'
-                }
+                  sparkOnly: 'addDeviceFlow.showActivationCode',
+                },
               },
               'addDeviceFlow.callConnectOptions': {
-                next: 'addDeviceFlow.showActivationCode'
+                next: 'addDeviceFlow.showActivationCode',
               },
               'addDeviceFlow.addLines': {
-                next: 'addDeviceFlow.showActivationCode'
-              }
-            }
+                next: 'addDeviceFlow.showActivationCode',
+              },
+            },
           };
 
           var wizard = WizardFactory.create(wizardState);
           $state.go(wizardState.currentStateName, {
-            wizard: wizard
+            wizard: wizard,
           });
         };
 

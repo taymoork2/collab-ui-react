@@ -25,7 +25,7 @@
     width: 54.5rem;
 
     .member-count {
-      color: $gray-light;
+      color: $gray-base;
     }
   }
 
@@ -66,7 +66,7 @@
 
   .cs-form__section--member {
     overflow-y: auto;
-    overflow: hidden;
+    overflow: visible;
     height: 100%;
 
     .section__content {
@@ -85,6 +85,7 @@
         .search-member {
           width: 300px;
           position: relative;
+
           @include vr-spacing(ml, 2);
 
           .icon-search {
@@ -126,5 +127,109 @@
       color: $gray-light;
       padding-right: 2rem;
     }
+  }
+}
+
+.paging-initiator-select {
+  text-align: center;
+  top: -3.5rem;
+
+  .paging-group-initiator-title {
+    .title {
+      color: $gray-light-1;
+      font-family: $brand-font-thin;
+      font-size: $font-size-h3;
+    }
+
+    .desc {
+      @include vr-spacing(pb, 1.5);
+
+      color: $gray-base;
+      font-family: $brand-font-light;
+      font-style: italic;
+      font-size: $font-size-h5;
+    }
+
+    .initiator-warning {
+      @include vr-spacing(pl, 0);
+
+      color: $gray-darkest;
+    }
+
+    .pg-init-cs-input__messages {
+      display: block;
+      visibility: hidden;
+    }
+
+    .warning .pg-init-cs-input__messages {
+      margin-top: -1rem;
+      margin-bottom: 1rem;
+      visibility: visible;
+    }
+  }
+
+  position: relative;
+
+  .cs-radio-group {
+    text-align: center;
+    margin-top: 0.5rem;
+
+    .cs-input-group {
+      display: inline;
+      padding-right: 1rem;
+
+      .cs-input {
+        position: inherit;
+        display: inline;
+        padding-right: 1rem;
+      }
+    }
+  }
+
+  .dropdown-menu {
+    width: auto;
+
+    li {
+      text-align: left;
+    }
+
+    .active > a {
+      background-color: $gray-light-2;
+    }
+  }
+
+  .pg-header {
+    text-align: left;
+    margin: auto;
+    width: 54.5rem;
+
+    .initiator-count {
+      color: $gray-base;
+    }
+  }
+
+  .typeahead-large-init {
+    input {
+      height: 49px;
+      font-size: 36px;
+    }
+  }
+
+  .cs-card-layout {
+    @include vr-spacing(ml, 28.5, 0px, true);
+    @include vr-spacing(mt, 3.5, 0px, true);
+    @include vr-spacing(pb, 1);
+
+    position: fixed !important;
+    height: 14rem !important;
+    width: 58rem;
+    left: 50%;
+    margin-right: auto;
+    overflow: auto;
+    display: inline-flex;
+    flex-flow: row wrap;
+    flex: 1;
+    align-content: flex-start;
+    justify-content: center;
   }
 }

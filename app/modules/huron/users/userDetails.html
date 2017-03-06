@@ -1,0 +1,11 @@
+<cs-sp-section>
+    <section-title title-key="usersPreview.userDetails"></section-title>
+    <div class="feature-list">
+        <ul>
+            <li class="feature" ng-repeat="userDetail in $ctrl.details track by $index">
+                <span class="feature-name">{{userDetail.name}}</span>
+                <span class="feature-details feature-label">{{userDetail.detail}}</span>
+            </li>
+        </ul>
+    </div>
+</cs-sp-section>

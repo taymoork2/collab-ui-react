@@ -40,7 +40,7 @@ describe('controller: CbgRequestCtrl', function () {
     $stateParams.customerId = 'ff808081552992ec0155299619cb0001';
     ctrl = $controller('CbgRequestCtrl', {
       $scope: $scope,
-      $stateParams: $stateParams
+      $stateParams: $stateParams,
     });
 
     ctrl.countries = preData.getCountries.content.data;

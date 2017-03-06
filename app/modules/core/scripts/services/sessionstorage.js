@@ -10,12 +10,12 @@
   function SessionStorage($window) {
     return {
       put: function (key, value) {
-        if (value !== null) {
+        if (value) {
           $window.sessionStorage.setItem(key, value);
         }
       },
       putObject: function (key, object) {
-        if (object !== null) {
+        if (object) {
           $window.sessionStorage.setItem(key, JSON.stringify(object));
         }
       },
@@ -40,7 +40,7 @@
       },
       clear: function () {
         $window.sessionStorage.clear();
-      }
+      },
     };
   }
 

@@ -6,11 +6,27 @@
     .service('DeviceUsageModelService', DeviceUsageModelService);
 
     /* @ngInject */
-  function DeviceUsageModelService(Authinfo, UrlConfig, $http, $q, $timeout, $log) {
+  function DeviceUsageModelService(Authinfo, UrlConfig, $http, $q, $timeout) {
 
     var localUrlBase = 'http://berserk.rd.cisco.com:8080/atlas-server/admin/api/v1/organization';
     var urlBase = UrlConfig.getAdminServiceUrl() + 'organization';
     var timeoutInMillis = 20000;
+
+    var modelsToValueMap = {
+      out: {
+        'MX200': ['MX200 G2'],
+        'MX300': ['MX300 G2'],
+        'MX700': ['MX700', 'MX700ST'],
+        'MX800': ['MX800', 'MX800D', 'MX800ST'],
+      },
+      in: {
+        'MX200 G2': 'MX200',
+        'MX300 G2': 'MX300',
+        'MX700ST': 'MX700',
+        'MX800ST': 'MX800',
+        'MX800D': 'MX800',
+      },
+    };
 
     function getModelsForRange(start, end, granularity, deviceCategories, api) {
       var startDate = moment(start);
@@ -36,7 +52,7 @@
     function requestModelsForRange(url) {
       var deferred = $q.defer();
       var timeout = {
-        timeout: deferred.promise
+        timeout: deferred.promise,
       };
       $timeout(function () {
         deferred.resolve();
@@ -44,7 +60,6 @@
 
       return $http.get(url, timeout).then(function (response) {
         if (response.data && response.data.items) {
-          $log.info('requestModelsForRange', response.data.items);
           return response.data.items;
         }
       }, function (reject) {
@@ -56,14 +71,44 @@
       if (reject.status === -1) {
         reject.statusText = 'Operation timed Out';
         reject.data = {
-          message: 'Operation timed out'
+          message: 'Operation timed out',
         };
       }
       return reject;
     }
 
+    function mapModelsIn(items) {
+      var mapped = _.chain(items).map(function (item) {
+        if (modelsToValueMap.in[item.model]) {
+          item.model = modelsToValueMap.in[item.model];
+        }
+        return item;
+      }).uniqBy('model').value();
+      return mapped;
+    }
+
+    function mapModelsOut(items) {
+      var mapped = [];
+      _.each(items, function (item) {
+        if (modelsToValueMap.out[item.value]) {
+          _.each(modelsToValueMap.out[item.value], function (value) {
+            mapped.push({
+              label: value,
+              value: value,
+              isSelected: item.isSelected,
+            });
+          });
+        } else {
+          mapped.push(item);
+        }
+      });
+      return mapped;
+    }
+
     return {
-      getModelsForRange: getModelsForRange
+      getModelsForRange: getModelsForRange,
+      mapModelsOut: mapModelsOut,
+      mapModelsIn: mapModelsIn,
     };
   }
 }());

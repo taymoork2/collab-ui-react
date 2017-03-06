@@ -11,14 +11,14 @@
       'type': 'column',
       'fillAlphas': 1,
       'lineAlpha': 0,
-      'balloonColor': chartColors.grayLight,
-      'columnWidth': 4
+      'balloonColor': chartColors.grayLightTwo,
+      'columnWidth': 4,
     };
     baseVariables['smoothedLine'] = {
       'type': 'smoothedLine',
       'lineColor': chartColors.colorPurple,
       'lineThickness': 2,
-      'balloonColor': chartColors.grayLight,
+      'balloonColor': chartColors.grayLightTwo,
       'negativeLineColor': chartColors.colorPurple,
       'negativeBase': 100,
     };
@@ -28,7 +28,7 @@
       'fillAlphas': 0,
       'lineAlpha': 1,
       'lineThickness': 3,
-      'hidden': false
+      'hidden': false,
     };
     baseVariables['axis'] = {
       'axisColor': '#1C1C1C',
@@ -38,22 +38,22 @@
       'fontFamily': 'CiscoSansTT Light',
       'gridAlpha': 0,
       'axisAlpha': 0.5,
-      'tickLength': 0
+      'tickLength': 0,
     };
     baseVariables['guideaxis'] = {
-      'axisColor': chartColors.grayLight,
-      'gridColor': chartColors.grayLight,
-      'color': chartColors.grayDarkest,
-      'titleColor': chartColors.grayDarkest,
+      'axisColor': chartColors.grayLightTwo,
+      'gridColor': chartColors.grayLightTwo,
+      'color': chartColors.grayDarkThree,
+      'titleColor': chartColors.grayDarkThree,
       'fontFamily': 'CiscoSansTT Light',
       'gridAlpha': 0,
       'axisAlpha': 1,
-      'tickLength': 0
+      'tickLength': 0,
     };
     baseVariables['legend'] = {
-      'color': chartColors.grayDarkest,
+      'color': chartColors.grayDarkThree,
       'autoMargins': false,
-      'align': 'center',
+      'align': 'right',
       'position': 'bottom',
       'switchable': true,
       'fontSize': 13,
@@ -64,12 +64,12 @@
       'horizontalGap': 5,
       'valueAlign': 'left',
       'valueWidth': 0,
-      'verticalGap': 20
+      'verticalGap': 20,
     };
     baseVariables['numFormat'] = {
       'precision': 0,
       'decimalSeparator': '.',
-      'thousandsSeparator': ','
+      'thousandsSeparator': ',',
     };
     baseVariables['balloon'] = {
       'adjustBorderColor': true,
@@ -77,12 +77,12 @@
       'fillAlpha': 1,
       'fillColor': chartColors.brandWhite,
       'fixedPosition': true,
-      'shadowAlpha': 0
+      'shadowAlpha': 0,
     };
     baseVariables['export'] = {
       'enabled': true,
       'libs': {
-        'autoLoad': false
+        'autoLoad': false,
       },
       'menu': [{
         'class': 'export-main',
@@ -91,22 +91,22 @@
           'label': $translate.instant('reportsPage.saveAs'),
           'title': $translate.instant('reportsPage.saveAs'),
           'class': 'export-list',
-          'menu': ['PNG', 'JPG', 'PDF']
-        }, 'PRINT']
-      }]
+          'menu': ['PNG', 'JPG', 'PDF'],
+        }, 'PRINT'],
+      }],
     };
     baseVariables['prefixesOfBigNumbers'] = [{
       number: 1e+3,
-      prefix: 'K'
+      prefix: 'K',
     }, {
       number: 1e+6,
-      prefix: 'M'
+      prefix: 'M',
     }, {
       number: 1e+9,
-      prefix: 'B'
+      prefix: 'B',
     }, {
       number: 1e+12,
-      prefix: 'T'
+      prefix: 'T',
     }];
     return {
       getBaseVariable: getBaseVariable,
@@ -114,7 +114,7 @@
       getBaseStackSerialGraph: getBaseStackSerialGraph,
       getGanttGraph: getGanttGraph,
       getBasePieChart: getBasePieChart,
-      getDummyPieChart: getDummyPieChart
+      getDummyPieChart: getDummyPieChart,
     };
 
     function getBaseVariable(key) {
@@ -132,7 +132,7 @@
         'columnNames': columnNames,
         'fileName': fileName,
         'libs': {
-          'autoLoad': false
+          'autoLoad': false,
         },
         'menu': [{
           'class': 'export-main',
@@ -141,7 +141,7 @@
             'label': $translate.instant('reportsPage.saveAs'),
             'title': $translate.instant('reportsPage.saveAs'),
             'class': 'export-list',
-            'menu': ['PNG', 'JPG']
+            'menu': ['PNG', 'JPG'],
           }, {
             'label': $translate.instant('reportsPage.pdf'),
             'title': $translate.instant('reportsPage.pdf'),
@@ -151,14 +151,14 @@
                   $window.open(data, 'amCharts.pdf');
                 });
               });
-            }
+            },
           }, {
             'class': 'export-list',
             'label': $translate.instant('reportsPage.export'),
             'title': $translate.instant('reportsPage.export'),
-            'menu': ['CSV', 'XLSX']
-          }]
-        }]
+            'menu': ['CSV', 'XLSX'],
+          }],
+        }],
       };
       return baseVariables['export'];
     }
@@ -173,9 +173,8 @@
         'backgroundColor': chartColors.brandWhite,
         'backgroundAlpha': 1,
         'balloon': baseVariables['balloon'],
-        'autoMarginOffset': 25,
         'autoMargins': false,
-        'marginLeft': 70,
+        'marginLeft': 100,
         'marginTop': 60,
         'marginRight': 60,
         'usePrefixes': true,
@@ -198,29 +197,38 @@
           'valueLineBalloonEnabled': true,
           'valueLineEnabled': true,
           'zoomable': true,
-          'valueZoomable': false
+          'valueZoomable': false,
         },
         'chartScrollbar': {
-          'offset': 30,
-          'scrollbarHeight': 20,
+          'offset': 20,
+          'scrollbarHeight': 2,
           'backgroundAlpha': 0,
-          'selectedBackgroundAlpha': 0.1,
-          'selectedBackgroundColor': '#888888',
+          'selectedBackgroundAlpha': 0.4,
+          'selectedBackgroundColor': '#48b7ea',
+          'dragIcon': 'dragIconRoundSmall',
+          'dragIconHeight': 25,
+          'dragIconWidth': 25,
           'graphFillAlpha': 0,
           'graphLineAlpha': 0.5,
           'selectedGraphFillAlpha': 0,
           'selectedGraphLineAlpha': 1,
           'autoGridCount': true,
           'color': '#AAAAAA',
-          'updateOnReleaseOnly': true
+          'updateOnReleaseOnly': true,
         },
         'valueScrollbar': {
-          'offset': 3,
+          'offset': 20,
           'color': '#AAAAAA',
           'backgroundColor': '#ffffff',
           'backgroundAlpha': 1,
-          'oppositeAxis': false
-        }
+          'oppositeAxis': false,
+          'selectedBackgroundAlpha': 0.4,
+          'selectedBackgroundColor': '#48b7ea',
+          'dragIcon': 'dragIconRoundSmall',
+          'dragIconHeight': 25,
+          'dragIconWidth': 25,
+          'scrollbarHeight': 2,
+        },
       });
     }
 
@@ -239,10 +247,10 @@
         'fontFamily': 'CiscoSansTT Extra Light',
         'graph': {
           'fillAlphas': 1,
-          'balloonText': '<b>[[availability]]</b></br><b>[[nodes]]</b>'
+          'balloonText': '<b>[[availability]]</b></br><b>[[nodes]]</b>',
         },
         'balloon': {
-          'fixedPosition': false
+          'fixedPosition': false,
         },
         'rotate': true,
         'categoryField': 'category',
@@ -257,7 +265,13 @@
           'color': '#AAAAAA',
           'backgroundColor': '#D7DBDD',
           'backgroundAlpha': 1,
-          'updateOnReleaseOnly': true
+          'updateOnReleaseOnly': true,
+          'selectedBackgroundAlpha': 0.4,
+          'selectedBackgroundColor': '#48b7ea',
+          'dragIcon': 'dragIconRoundSmall',
+          'dragIconHeight': 25,
+          'dragIconWidth': 25,
+          'scrollbarHeight': 2,
         },
         'chartCursor': {
           'cursorColor': '#55bb76',
@@ -267,89 +281,75 @@
           'valueLineBalloonEnabled': true,
           'valueLineEnabled': true,
           'zoomable': false,
-          'valueZoomable': true
+          'valueZoomable': true,
         },
-        'export': exportData
+        'export': exportData,
       });
     }
 
-    function getBasePieChart(data, chartOptions) {
+    function getBasePieChart(data) {
       return angular.copy({
         'type': 'pie',
-        'startDuration': 0,
-        'balloonText': chartOptions.balloonText,
-        'outlineThickness': 0,
-        'hoverAlpha': 0.5,
-        'labelRadius': 1,
-        'marginBottom': 40,
-        'marginLeft': 40,
-        'marginRight': 40,
-        'marginTop': 40,
-        'autoMargins': false,
-        'pullOutRadius': '1%',
+        'theme': 'light',
         'titleField': 'name',
         'valueField': 'value',
-        'theme': 'light',
+        'startDuration': 0,
+        'labelRadius': 5,
+        'radius': '42%',
+        'innerRadius': '40%',
+        'colorField': 'color',
+        'labelText': '[[name]]: [[percents]]% ([[value]])',
+        'dataProvider': data.dataProvider,
+        'outlineThickness': 0,
+        'hoverAlpha': 0.5,
+        'marginBottom': 5,
+        'marginLeft': 5,
+        'marginRight': 5,
+        'marginTop': 5,
+        'autoMargins': false,
+        'pullOutRadius': '1%',
         'allLabels': [],
         'balloon': {},
         'fontSize': 10,
-        'legend': {
-          'enabled': true,
-          'align': 'center',
-          'forceWidth': true,
-          'switchable': false,
-          'valueText': '',
-          'markerSize': 8
-        },
         'titles': [],
-        'dataProvider': data.dataProvider
       });
     }
 
     function getDummyPieChart() {
       return angular.copy({
         'type': 'pie',
+        'theme': 'light',
+        'titleField': 'name',
+        'valueField': 'value',
         'startDuration': 0,
-        'labelRadius': 1,
-        'marginBottom': 40,
-        'marginLeft': 40,
-        'marginRight': 40,
-        'marginTop': 40,
+        'labelRadius': 5,
+        'radius': '42%',
+        'innerRadius': '40%',
+        'labelText': '[[title]]',
+        'marginBottom': 5,
+        'marginLeft': 5,
+        'marginRight': 5,
+        'marginTop': 5,
         'autoMargins': false,
         'balloonText': '',
-        'labelText': '[[title]]',
         'pullOutRadius': '1%',
         'colorField': 'color',
         'outlineColor': '#ECECEC',
-        'titleField': 'name',
-        'valueField': 'value',
         'borderColor': '#A4ACAC',
         'fontSize': 10,
-        'theme': 'light',
         'balloon': {
-          'fontSize': 0
-        },
-        'legend': {
-          'enabled': true,
-          'align': 'center',
-          'labelWidth': 0,
-          'markerBorderThickness': 5,
-          'markerLabelGap': 6,
-          'markerSize': 5,
-          'valueAlign': 'left',
-          'valueText': '',
-          'switchable': false
+          'fontSize': 0,
         },
         'titles': [],
         'dataProvider': [{
-          'name': 'No data',
+          'name': '',
           'value': '60',
-          'color': '#ececec'
+          'color': '#ececec',
         }, {
-          'name': 'No data',
+          'name': '',
           'value': '40',
-          'color': '#d9d9d9'
-        }]
+          'color': '#d9d9d9',
+        }],
       });
     }
   }

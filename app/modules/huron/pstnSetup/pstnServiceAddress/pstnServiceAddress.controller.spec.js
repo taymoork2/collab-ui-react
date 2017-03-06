@@ -3,6 +3,7 @@
 describe('Controller: PstnServiceAddressCtrl', function () {
   var controller, $controller, $scope, $q, $state, PstnSetup, PstnServiceAddressService, Notification;
   var customer = getJSONFixture('huron/json/pstnSetup/customer.json');
+  var carrier = getJSONFixture('huron/json/pstnSetup/carrierIntelepeer.json');
   var address = getJSONFixture('huron/json/pstnSetup/huronServiceAddress.json');
 
   beforeEach(angular.mock.module('Huron'));
@@ -19,13 +20,14 @@ describe('Controller: PstnServiceAddressCtrl', function () {
     PstnSetup.setCustomerId(customer.uuid);
     PstnSetup.setCustomerName(customer.name);
     PstnSetup.setCustomerEmail(customer.email);
+    PstnSetup.setProvider(carrier);
 
-    spyOn(PstnServiceAddressService, 'lookupAddress').and.returnValue($q.resolve(address));
+    spyOn(PstnServiceAddressService, 'lookupAddressV2').and.returnValue($q.resolve(address));
     spyOn($state, 'go');
     spyOn(Notification, 'error');
 
     controller = $controller('PstnServiceAddressCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
 
     $scope.$apply();
@@ -38,22 +40,22 @@ describe('Controller: PstnServiceAddressCtrl', function () {
 
   it('should lookup address and return valid', function () {
     var myAddress = {
-      streetAddress: '555 My Street'
+      streetAddress: '555 My Street',
     };
     controller.address = myAddress;
     controller.validateAddress();
     $scope.$apply();
 
-    expect(PstnServiceAddressService.lookupAddress).toHaveBeenCalledWith(myAddress);
+    expect(PstnServiceAddressService.lookupAddressV2).toHaveBeenCalledWith(myAddress, carrier.uuid);
     expect(controller.isValid).toEqual(true);
   });
 
   it('should notify error if address is not valid', function () {
-    PstnServiceAddressService.lookupAddress.and.returnValue($q.resolve());
+    PstnServiceAddressService.lookupAddressV2.and.returnValue($q.resolve());
     controller.validateAddress();
     $scope.$apply();
 
-    expect(PstnServiceAddressService.lookupAddress).toHaveBeenCalled();
+    expect(PstnServiceAddressService.lookupAddressV2).toHaveBeenCalled();
     expect(controller.isValid).toEqual(false);
     expect(Notification.error).toHaveBeenCalledWith('pstnSetup.serviceAddressNotFound');
   });
@@ -66,7 +68,7 @@ describe('Controller: PstnServiceAddressCtrl', function () {
 
     expect(controller.isValid).toEqual(true);
 
-    controller.validateNext();
+    controller.next();
     $scope.$apply();
 
     expect(PstnSetup.getServiceAddress()).toEqual(address);

@@ -4,6 +4,7 @@ interface ICountryResource extends ng.resource.IResourceClass<ng.resource.IResou
 
 export class HuronCountryService {
   private countryResource: ICountryResource;
+  private hardCodedCountryResource: ICountryResource;
   private countries: Array<ICountry>;
 
   /* @ngInject */
@@ -13,6 +14,7 @@ export class HuronCountryService {
     private $q: ng.IQService,
   ) {
     this.countryResource = <ICountryResource>this.$resource(`${this.HuronConfig.getCmiV2Url()}/lists/countries`);
+    this.hardCodedCountryResource = <ICountryResource>this.$resource('modules/huron/countries/countryList.json');
   }
 
   public getCountryList(): ng.IPromise<Array<ICountry>> {
@@ -20,6 +22,21 @@ export class HuronCountryService {
       return this.fetchCountryList();
     }
     return this.$q.resolve(this.countries);
+  }
+
+  // TODO (jlowery): Remove this after country selection in order processing is moved
+  // to the commerce application.
+  public getHardCodedCountryList(): ng.IPromise<Array<ICountry>> {
+    return this.hardCodedCountryResource.query({}).$promise
+      .then(countries => {
+        return _.map(countries, country => {
+          return {
+            id: _.get(country, 'id'),
+            name: _.get(country, 'name'),
+            domain: _.get(country, 'domain'),
+          };
+        });
+      });
   }
 
   private fetchCountryList(): ng.IPromise<Array<ICountry>> {

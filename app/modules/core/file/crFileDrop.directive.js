@@ -16,7 +16,7 @@
         fileValidator: '&',
         readingStrategy: '@',
       },
-      link: link
+      link: link,
     };
 
     return directive;

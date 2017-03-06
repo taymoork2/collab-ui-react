@@ -11,7 +11,7 @@ describe('Window Location', function () {
 
   beforeEach(angular.mock.module(function ($provide) {
     $provide.value('$window', $window = {
-      location: {}
+      location: {},
     });
   }));
 

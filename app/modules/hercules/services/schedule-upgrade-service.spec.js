@@ -23,10 +23,10 @@ describe('Service: Schedule Upgrade', function () {
 
   it('ScheduleUpgradeService.path should query the server with the right params', function () {
     $httpBackend.expectPATCH('https://hercules-integration.wbx2.com/v1/organizations/123/services/c_cal/upgrade_schedule', {
-      a: 'b'
+      a: 'b',
     }).respond({});
     ScheduleUpgradeService.patch('123', 'c_cal', {
-      a: 'b'
+      a: 'b',
     });
   });
 });

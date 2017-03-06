@@ -19,6 +19,10 @@
       <sipdomain-setting show-save-button="true"></sipdomain-setting>
     </setting-section>
 
+    <setting-section setting="settingsCtrl.dirsync" ng-if="settingsCtrl.dirsync">
+      <dirsync-setting></dirsync-setting>
+    </setting-section>
+
     <setting-section setting="settingsCtrl.authentication" ng-if="settingsCtrl.authentication">
       <authentication-setting></authentication-setting>
     </setting-section>
@@ -34,5 +38,10 @@
     <setting-section setting="settingsCtrl.retention" hide-bottom-line=true ng-if="settingsCtrl.retention">
       <retention-setting></retention-setting>
     </setting-section>
+  </div>
+
+  <div class="save-cancel-footer" ng-if="settingsCtrl.saveCancelFooter">
+    <button type="button" class="btn btn--primary save-cancel-buttons pull-right" translate="common.save" ng-click="settingsCtrl.save()"></button>
+    <button type="button" class="btn save-cancel-buttons pull-right" translate="common.cancel" ng-click="settingsCtrl.cancel()"></button>
   </div>
 </div>

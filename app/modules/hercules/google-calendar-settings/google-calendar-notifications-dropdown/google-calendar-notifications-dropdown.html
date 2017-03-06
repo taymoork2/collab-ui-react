@@ -5,9 +5,8 @@
 <div class="notification-dropdown-container" ng-if="$ctrl.open">
   <ul class="notification-dropdown">
     <li class="notification-entry" ng-repeat="alarm in $ctrl.alarms">
-      <div class="notification-entry-close" ng-click="$ctrl.removeAlarm($event, alarm)"><i class="icon icon-close"></i></div>
       <div class="notification-entry-severity">
-        <span class="badge" ng-class="$ctrl.getBadgeCSSClass(alarm.severity)">{{::alarm.severity}}</span>
+        <span class="badge" ng-class="$ctrl.getBadgeCSSClass(alarm.severity)">{{::'hercules.alarms.' + alarm.severity | translate}}</span>
       </div>
       <div class="notification-entry-details">
         <div class="notification-entry-title">{{::alarm.title}}</div>

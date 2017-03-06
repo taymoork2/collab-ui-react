@@ -4,6 +4,7 @@ import { LineService, LineConsumerType, Line, LINE_CHANGE } from 'modules/huron/
 import { IActionItem } from 'modules/core/components/sectionTitle/sectionTitle.component';
 import { IFeature } from 'modules/core/components/featureList/featureList.component';
 import { Notification } from 'modules/core/notifications';
+import { PlaceCallOverviewService, PlaceCallOverviewData } from './placeCallOverview.service';
 
 class PlaceCallOverview implements ng.IComponentController {
 
@@ -13,6 +14,14 @@ class PlaceCallOverview implements ng.IComponentController {
   public features: IFeature[];
 
   public directoryNumbers: Line[];
+  public preferredLanguageOptions: any[];
+  public preferredLanguage: any;
+  public plIsLoaded: boolean = false;
+  public prefLanguageSaveInProcess: boolean = false;
+  public onPrefLanguageChange: boolean = false;
+  public cosFeatureToggle;
+  // Data from services
+  public placeCallOverviewData: PlaceCallOverviewData;
 
   /* @ngInject */
   constructor(
@@ -24,6 +33,8 @@ class PlaceCallOverview implements ng.IComponentController {
     private LineService: LineService,
     private DialingService: DialingService,
     private Notification: Notification,
+    private PlaceCallOverviewService: PlaceCallOverviewService,
+    private FeatureToggleService,
   ) {
 
     this.displayPlace($stateParams.currentPlace);
@@ -58,10 +69,14 @@ class PlaceCallOverview implements ng.IComponentController {
   public $onInit(): void {
     if (this.hasSparkCall) {
       this.initActions();
+      this.FeatureToggleService.supports(this.FeatureToggleService.features.huronCustomerCos).then((enabled) => {
+        this.cosFeatureToggle = enabled;
+      });
       this.DialingService.initializeDialing(LineConsumerType.PLACES, this.currentPlace.cisUuid).then(() => {
         this.initFeatures();
       });
       this.initNumbers();
+      this.initPlaceCallOverviewData();
     }
   }
 
@@ -92,9 +107,8 @@ class PlaceCallOverview implements ng.IComponentController {
       };
       this.features.push(service);
     }
-
     this.DialingService.isDisableInternationalDialing().then((isDisableInternationalDialing) => {
-      if (!isDisableInternationalDialing) {
+      if (!isDisableInternationalDialing && !this.cosFeatureToggle) {
         service = {
           name: this.$translate.instant('telephonyPreview.internationalDialing'),
           state: 'internationalDialing',
@@ -105,11 +119,21 @@ class PlaceCallOverview implements ng.IComponentController {
       }
     });
 
-    if (this.currentPlace.type === 'huron') {
+    if (this.currentPlace.type === 'huron' && !this.cosFeatureToggle) {
       service = {
         name: this.$translate.instant('telephonyPreview.localDialing'),
         state: 'local',
         detail: this.DialingService.getLocalDialing(LineConsumerType.PLACES),
+        actionAvailable: true,
+      };
+      this.features.push(service);
+    }
+
+    if (this.currentPlace.type === 'huron' && this.cosFeatureToggle) {
+      service = {
+        name: this.$translate.instant('serviceSetupModal.cos.title'),
+        state: 'cos',
+        detail: undefined,
         actionAvailable: true,
       };
       this.features.push(service);
@@ -119,6 +143,59 @@ class PlaceCallOverview implements ng.IComponentController {
   private initNumbers(): void {
     this.LineService.getLineList(LineConsumerType.PLACES, this.currentPlace.cisUuid)
       .then(lines => this.directoryNumbers = lines);
+  }
+
+  private initPlaceCallOverviewData(): void {
+    this.PlaceCallOverviewService.getPlaceCallOverviewData(this.currentPlace.cisUuid)
+        .then( placeCallOverviewData => {
+          this.placeCallOverviewData = placeCallOverviewData;
+          this.preferredLanguage = placeCallOverviewData.preferredLanguage;
+          this.preferredLanguageOptions = placeCallOverviewData.preferredLanguageOptions;
+        }).finally(() => {
+          this.plIsLoaded = true;
+        });
+  }
+
+  public setPreferredLanguage(preferredLanguage: any): void {
+    this.preferredLanguage = preferredLanguage;
+    this.checkForChanges();
+  }
+
+  private checkForChanges(): void {
+    if (this.PlaceCallOverviewService.checkForPreferredLanguageChanges(this.preferredLanguage)) {
+      this.resetPreferredLanguageFlags();
+    }
+  }
+
+  private resetPreferredLanguageFlags(): void {
+    this.prefLanguageSaveInProcess = false;
+    this.onPrefLanguageChange = false;
+  }
+
+  public savePreferredLanguage(): void {
+    this.prefLanguageSaveInProcess = true;
+    if (!this.PlaceCallOverviewService.checkForPreferredLanguageChanges(this.preferredLanguage)) {
+      let prefLang = this.preferredLanguage.value ? this.preferredLanguage.value : null;
+      this.PlaceCallOverviewService.updateCmiPlacePreferredLanguage(this.currentPlace.cisUuid, prefLang)
+        .then(() => {
+          this.placeCallOverviewData.placesPreferredLanguage = prefLang;
+          this.placeCallOverviewData.preferredLanguage = this.preferredLanguage;
+          this.Notification.success('preferredLanguage.placesCallOverviewSaveSuccess');
+        })
+        .catch(error => {
+          this.Notification.errorResponse(error, 'preferredLanguage.failedToSaveChanges');
+        }).finally(() => {
+          this.resetPreferredLanguageFlags();
+          this.plIsLoaded = true;
+        });
+    }
+  }
+
+  public onCancelPreferredLanguage(): void {
+    if (!this.PlaceCallOverviewService.checkForPreferredLanguageChanges(this.preferredLanguage)) {
+      this.preferredLanguage = this.placeCallOverviewData.preferredLanguage;
+    }
+    this.resetPreferredLanguageFlags();
   }
 
   private hasEntitlement(entitlement: string): boolean {
@@ -139,6 +216,7 @@ class PlaceCallOverview implements ng.IComponentController {
       selected: feature.state === 'local' ? this.DialingService.getLocalDialing(LineConsumerType.PLACES) : this.DialingService.getInternationalDialing(LineConsumerType.PLACES),
       currentPlace: this.currentPlace,
     });
+    this.onCancelPreferredLanguage();
   }
 }
 

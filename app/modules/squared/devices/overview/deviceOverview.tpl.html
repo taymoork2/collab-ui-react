@@ -155,7 +155,6 @@
           <p class="form-control-static">{{deviceOverview.currentDevice.serial}}</p>
         </div>
       </div>
-
       <div class="form-group" ng-show="deviceOverview.currentDevice.isHuronDevice">
         <label class="col-sm-4 control-label" translate="deviceOverviewPage.timeZone"></label>
         <div class="col-sm-8" cs-loader ng-hide="deviceOverview.tzIsLoaded"></div>
@@ -236,6 +235,17 @@
           <a sq-click-promise="deviceOverview.showRemoteSupportDialog()" class="internal-link" translate="spacesPage.remoteAccessKey"></a>
         </div>
       </div>
+      <div class="form-group" ng-show="deviceOverview.currentDevice.isATA">
+        <label class="col-sm-4 control-label" translate="ataSettings.t38Label"></label>
+        <div class="col-sm-8">
+          <cs-toggle-switch is-disabled="deviceOverview.updatingT38Settings" cs-change="deviceOverview.saveT38Settings()" ng-model="deviceOverview.faxEnabled" toggle-id="faxEnabled" name="faxEnabled" size="small"></cs-toggle-switch>
+          <p class="form-control-static warningFaxes" translate="ataSettings.t38Warning"></p>
+          <div class="col-sm-4 updatingT38" ng-show="deviceOverview.updatingT38Settings">
+            <div cs-loader class="loader-example--small"></div>
+          </div>
+        </div>
+      </div>
+
     </cs-sp-section>
     <cs-sp-section ng-show="deviceOverview.showE911">
       <div>

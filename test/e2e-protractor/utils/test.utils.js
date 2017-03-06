@@ -101,9 +101,9 @@ exports.getToken = function () {
     auth: {
       'user': config.oauthClientRegistration.id,
       'pass': config.oauthClientRegistration.secret,
-      'sendImmediately': true
+      'sendImmediately': true,
     },
-    body: 'grant_type=client_credentials&scope=' + config.oauthClientRegistration.scope
+    body: 'grant_type=client_credentials&scope=' + config.oauthClientRegistration.scope,
   };
 
   return this.sendRequest(options).then(function (data) {
@@ -386,7 +386,9 @@ exports.click = function (elem, maxRetry) {
     } else {
       return elem.click().then(_.noop, function (e) {
         log('Failed to click element: ' + elem.locator() + ' Error: ' + ((e && e.message) || e));
-        return exports.click(elem, --maxRetry);
+        return notifications.clearNotifications().then(function () {
+          return exports.click(elem, --maxRetry);
+        });
       });
     }
   });

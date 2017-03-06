@@ -11,7 +11,7 @@
       updateConfig: updateConfig,
       deactivateService: deactivateService,
       getService: getService,
-      getStatusCss: getStatusCss
+      getStatusCss: getStatusCss,
     };
 
     function extractDataFromResponse(res) {
@@ -31,12 +31,14 @@
         });
     }
 
-    function updateConfig(newServiceAccountId, privateKey, serviceId) {
+    function updateConfig(newServiceAccountId, newAclAccount, privateKey, serviceId) {
+      var data = {
+        serviceAccountId: newServiceAccountId,
+        aclAdminAccount: newAclAccount,
+        privateKeyData: privateKey.split(',')[1],
+      };
       return $http
-        .post(UrlConfig.getCccUrl() + '/orgs/' + Authinfo.getOrgId() + '/services/' + serviceId, {
-          serviceAccountId: newServiceAccountId,
-          privateKeyData: privateKey.split(',')[1]
-        })
+        .post(UrlConfig.getCccUrl() + '/orgs/' + Authinfo.getOrgId() + '/services/' + serviceId, data)
         .then(function () {
           return ServiceDescriptor.enableService(serviceId);
         });

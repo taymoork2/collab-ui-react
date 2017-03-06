@@ -1,12 +1,12 @@
-<digital-river-iframe
-  iframe-src="$ctrl.digitalRiverOrderHistoryUrl"
-  iframe-loading="$ctrl.loading">
-</digital-river-iframe>
-<div ng-if="false"
+<div class="page-sub-header">
+  <span class="h6" translate="myCompanyOrders.overview"></span>
+</div>
+
+<div
   class="gridStyle"
   ui-grid="$ctrl.gridOptions">
 </div>
-<div ng-if="false"
+<div ng-if="$ctrl.loading"	
   class="grid-refresh">
   <i class='icon icon-spinner icon-2x'></i>
 </div>

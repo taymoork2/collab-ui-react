@@ -2,10 +2,19 @@
   'use strict';
 
   /* @ngInject */
-  function LoginCtrl($location, $rootScope, $scope, $state, $stateParams, Auth, Authinfo, Log, LogMetricsService, PageParam, SessionStorage, TokenService, Utils) {
+  function LoginCtrl($location, $rootScope, $scope, $state, $stateParams, $translate, Auth, Authinfo, Config, Log, LogMetricsService, PageParam, SessionStorage, Storage, TokenService, Utils) {
     var storedState = 'storedState';
     var storedParams = 'storedParams';
     var queryParams = SessionStorage.popObject('queryParams');
+    var language = Storage.get('language');
+
+    $scope.message = Storage.get('loginMessage');
+
+    if (language) {
+      $translate.use(language).then(function () {
+        moment.locale(language);
+      });
+    }
 
     var pageParam = $location.search().pp;
     if (pageParam) {
@@ -37,7 +46,7 @@
     var authorizeUser = function () {
       $scope.loading = true;
       Auth.authorize({
-        reauthorize: $stateParams.reauthorize
+        reauthorize: $stateParams.reauthorize,
       })
         .then(function () {
           if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {

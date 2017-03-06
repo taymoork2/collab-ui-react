@@ -19,7 +19,7 @@ describe('Controller: HeaderCtrl', function () {
 
   function initController() {
     controller = $controller('HeaderCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
     $scope.$apply();
   }

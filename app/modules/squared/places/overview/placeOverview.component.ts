@@ -157,10 +157,9 @@ class PlaceOverview implements ng.IComponentController {
       .updateItemName(this.currentPlace, newName)
       .then((updatedPlace) => this.displayPlace(updatedPlace))
       .catch((error) => {
-          this.Notification.errorResponse(error, 'placesPage.failedToSaveChanges');
-          return this.$q.reject(error);
-        },
-      );
+        this.Notification.errorResponse(error, 'placesPage.failedToSaveChanges');
+        return this.$q.reject(error);
+      });
   }
 
   public showDeviceDetails(device: IDevice): void {

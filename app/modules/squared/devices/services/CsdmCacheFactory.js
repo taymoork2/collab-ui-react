@@ -6,7 +6,7 @@
     return {
       create: function (opts) {
         return new CsdmCache(opts, CsdmPoller, CsdmCacheUpdater, CsdmHubFactory);
-      }
+      },
     };
   }
 
@@ -29,7 +29,7 @@
       opts.initializeData.then(function (data) {
         CsdmCacheUpdater.update(cache, data);
         hub.emit('data', {
-          data: data
+          data: data,
         });
       });
     }
@@ -89,7 +89,7 @@
       list: list,
       remove: remove,
       update: update,
-      create: create
+      create: create,
     };
   }
 

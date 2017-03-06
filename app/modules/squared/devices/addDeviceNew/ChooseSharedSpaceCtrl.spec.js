@@ -20,7 +20,7 @@ describe('ChooseSharedSpaceCtrl: Ctrl', function () {
     controller = $controller('ChooseSharedSpaceCtrl', {
       $scope: $scope,
       $state: $state,
-      $stateParams: $stateParams
+      $stateParams: $stateParams,
     });
   }
 
@@ -39,11 +39,11 @@ describe('ChooseSharedSpaceCtrl: Ctrl', function () {
             data: {
               title: title,
               account: {
-                deviceType: deviceType
-              }
-            }
+                deviceType: deviceType,
+              },
+            },
           };
-        }
+        },
       };
       initController();
 
@@ -71,12 +71,12 @@ describe('ChooseSharedSpaceCtrl: Ctrl', function () {
           return {
             data: {
               account: {
-                deviceType: deviceType
-              }
-            }
+                deviceType: deviceType,
+              },
+            },
           };
         },
-        next: function () {}
+        next: function () {},
       };
       initController();
       controller.deviceName = deviceDisplayName;
@@ -100,12 +100,12 @@ describe('ChooseSharedSpaceCtrl: Ctrl', function () {
             data: {
               function: 'addPlace',
               account: {
-                deviceType: deviceType
-              }
-            }
+                deviceType: deviceType,
+              },
+            },
           };
         },
-        next: function () {}
+        next: function () {},
       };
       initController();
       controller.deviceName = deviceDisplayName;
@@ -128,12 +128,12 @@ describe('ChooseSharedSpaceCtrl: Ctrl', function () {
           return {
             data: {
               account: {
-                deviceType: deviceType
-              }
-            }
+                deviceType: deviceType,
+              },
+            },
           };
         },
-        next: function () {}
+        next: function () {},
       };
       initController();
       controller.deviceName = deviceDisplayName;
@@ -157,13 +157,13 @@ describe('ChooseSharedSpaceCtrl: Ctrl', function () {
           return {
             data: {
               account: {
-                deviceType: deviceType
+                deviceType: deviceType,
               },
-              showPersonal: true
-            }
+              showPersonal: true,
+            },
           };
         },
-        next: function () {}
+        next: function () {},
       };
       initController();
       controller.deviceName = deviceDisplayName;

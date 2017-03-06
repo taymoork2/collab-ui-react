@@ -32,7 +32,7 @@
     vm.partnerOrgExists = partnerOrgExists;
 
     vm._helpers = {
-      notifyError: notifyError
+      notifyError: notifyError,
     };
 
     var oneTier = '1-tier';

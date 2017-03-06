@@ -39,7 +39,7 @@
 
           _.remove(stdFeatures, function (obj) {
             return _.filter(dbFeatures, {
-              name: obj.name
+              name: obj.name,
             })[0];
           });
 
@@ -62,7 +62,7 @@
       FeatureToggleService.setFeatureToggles(false, featureToggleRules)
         .then(function () {
           var toggle = _.find(vm.defaults, {
-            name: featureToggleRules.key
+            name: featureToggleRules.key,
           });
           if (_.has(toggle, 'model')) {
             toggle.model = featureToggleRules.val;
@@ -70,7 +70,7 @@
           Notification.success('organizationsPage.toggleModSuccess', {
             featureToggleName: featureToggleRules.key,
             orgId: featureToggleRules.orgId,
-            toggleState: featureToggleRules.val
+            toggleState: featureToggleRules.val,
           });
         })
         .catch(function (response) {
@@ -81,7 +81,7 @@
 
     function handleClick(toggle) {
       var clickedToggle = _.find(vm.unalteredToggles, {
-        name: toggle.name
+        name: toggle.name,
       });
       // Logic to capture one click with the right model value
       if (_.has(clickedToggle, 'model')) {

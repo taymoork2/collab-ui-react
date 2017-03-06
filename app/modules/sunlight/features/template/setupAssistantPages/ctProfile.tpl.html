@@ -1,6 +1,6 @@
 <div>
     <div class="ct-title">
-      <span class="h3" translate="careChatTpl.profile"></span>
+      <span class="h3">{{careSetupAssistant.getLocalisedText('careChatTpl.profile')}}</span>
     </div>
     <div class="h5 ct-title-desc" translate="careChatTpl.profileDesc"></div>
   <div class="cs-card-container ct-profile ct-sa-content">
@@ -19,8 +19,7 @@
                   <i class="icon icon-user-chat icon-2x"></i>
                 </div>
               </div>
-              <div class="h5 profile-name" ng-if="careSetupAssistant.selectedTemplateProfile === careSetupAssistant.profiles.org"
-                   title="{{careSetupAssistant.getAttributeParam('value', 'organization', 'welcomeHeader')}}">
+              <div class="h5 profile-name" ng-if="careSetupAssistant.selectedTemplateProfile === careSetupAssistant.profiles.org">
                 {{careSetupAssistant.getAttributeParam('value', 'organization', 'welcomeHeader')}}
               </div>
               <div class="h5 profile-name" ng-if="careSetupAssistant.selectedTemplateProfile === careSetupAssistant.profiles.agent">
@@ -66,7 +65,7 @@
                 <input focus-on class="h6"
                        cs-input type="text"
                        ng-readonly="true"
-                       ng-model="careSetupAssistant.template.configuration.pages.customerInformation.fields.welcomeHeader.attributes[1].value"
+                       ng-model="careSetupAssistant.getCustomerInformationFormFields().welcomeHeader.attributes[1].value"
                        cs-input-group-size="medium-14">
               </div>
               <div class="profile-image" ng-if="careSetupAssistant.selectedTemplateProfile === careSetupAssistant.profiles.agent">
@@ -78,6 +77,7 @@
                 <div focus-on class="agent-name-options">
                   <cs-radio ng-repeat="(key, name) in careSetupAssistant.agentNames" label="name" value="name" name="{{name}}"
                             id="name" ng-model="careSetupAssistant.selectedAgentProfile"
+                            class="ct-agent-name-options"
                             ng-click="careSetupAssistant.setAgentProfile()"></cs-radio>
                 </div>
               </div>

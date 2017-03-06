@@ -6,7 +6,7 @@
     .factory('AAMediaUploadService', AAMediaUploadService);
 
   /* @ngInject */
-  function AAMediaUploadService($window, $http, $rootScope, Authinfo, Upload, AACommonService, AACtrlResourcesService, Config) {
+  function AAMediaUploadService($window, $http, Authinfo, Upload, AACommonService, AACtrlResourcesService, Config) {
     var service = {
       upload: upload,
       retrieve: retrieve,
@@ -14,11 +14,14 @@
       validateFile: validateFile,
       isClioEnabled: isClioEnabled,
       deleteRecording: deleteRecording,
+      httpDeleteRetry: httpDeleteRetry,
       getResources: getResources,
       notifyAsSaved: notifyAsSaved,
       notifyAsActive: notifyAsActive,
       clearResourcesExcept: clearResourcesExcept,
       cleanResourceFieldIndex: cleanResourceFieldIndex,
+      resetResources: resetResources,
+      saveResources: saveResources,
     };
 
     var devUploadBaseUrl = 'http://54.183.25.170:8001/api/notify/upload';
@@ -55,9 +58,6 @@
     //the resources are mapped from a common controller resource service
     var resources = AACtrlResourcesService.getCtrlToResourceMap();
 
-    $rootScope.$on('CE Closed', closeResources);
-    $rootScope.$on('CE Saved', saveResources);
-
     return service;
 
     function upload(file) {
@@ -66,15 +66,6 @@
 
     function retrieve(result) {
       return retrieveByResult(result);
-    }
-
-    //when the aa builder has been closed, clean up all resources from
-    //saved until the end
-    function closeResources() {
-      _.each(AACtrlResourcesService.getCtrlKeys(), function (key) {
-        cleanResourceFieldIndex('saved', 0, key);
-        delete resources[key];
-      });
     }
 
     //when the aa save is complete, we want to keep the main active
@@ -122,6 +113,13 @@
         return resources[unqCtrlId];
       }
       return undefined;
+    }
+
+    function resetResources() {
+      _.forEach(resources, function (r, key) {
+        clearResourcesExcept(key, 0);
+      });
+
     }
 
     //clean all resources except for a specific index from the resource array
@@ -254,7 +252,7 @@
           headers: {
             'Content-Type': undefined,
           },
-          data: fd
+          data: fd,
         });
       } else {
         return undefined;

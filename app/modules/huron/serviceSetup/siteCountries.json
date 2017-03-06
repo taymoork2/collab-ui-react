@@ -1,13 +1,65 @@
 [{
   "label": "countries.unitedStates",
-  "value": "US"
+  "value": "US",
+  "featureToggle": "huron-l10n-network-locale"
 }, {
   "label": "countries.canada",
-  "value": "CA"
+  "value": "CA",
+  "featureToggle": "huron-l10n-network-locale"
 }, {
   "label": "countries.colombia",
-  "value": "CO"
+  "value": "CO",
+  "featureToggle": "huron-l10n-network-locale-co"
 }, {
   "label": "countries.greatBritain",
-  "value": "GB"
+  "value": "GB",
+  "featureToggle": "huron-l10n-network-locale-gb"
+}, {
+  "label": "countries.austria",
+  "value": "AT",
+  "featureToggle": "huron-l10n-network-locale-at"
+}, {
+  "label": "countries.belgium",
+  "value": "BE",
+  "featureToggle": "huron-l10n-network-locale-be"
+}, {
+  "label": "countries.france",
+  "value": "FR",
+  "featureToggle": "huron-l10n-network-locale-fr"
+}, {
+  "label": "countries.germany",
+  "value": "DE",
+  "featureToggle": "huron-l10n-network-locale-de"
+}, {
+  "label": "countries.italy",
+  "value": "IT",
+  "featureToggle": "huron-l10n-network-locale-it"
+}, {
+  "label": "countries.netherlands",
+  "value": "NL",
+  "featureToggle": "huron-l10n-network-locale-nl"
+}, {
+  "label": "countries.portugal",
+  "value": "PT",
+  "featureToggle": "huron-l10n-network-locale-pt"
+}, {
+  "label": "countries.spain",
+  "value": "ES",
+  "featureToggle": "huron-l10n-network-locale-es"
+}, {
+  "label": "countries.sweden",
+  "value": "SE",
+  "featureToggle": "huron-l10n-network-locale-se"
+}, {
+  "label": "countries.switzerland",
+  "value": "CH",
+  "featureToggle": "huron-l10n-network-locale-ch"
+}, {
+  "label": "countries.ireland",
+  "value": "IE",
+  "featureToggle": "huron-l10n-network-locale-ie"
+}, {
+  "label": "countries.mexico",
+  "value": "MX",
+  "featureToggle": "huron-l10n-network-locale-mx"
 }]

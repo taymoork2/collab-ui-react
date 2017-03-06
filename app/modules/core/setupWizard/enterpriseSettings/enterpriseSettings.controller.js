@@ -5,7 +5,7 @@
     .controller('EnterpriseSettingsCtrl', EnterpriseSettingsCtrl);
 
   /* @ngInject */
-  function EnterpriseSettingsCtrl($q, $rootScope, $scope, $timeout, $translate, $window, Authinfo, Config, Log, Notification, ServiceSetup, PersonalMeetingRoomManagementService, SSOService, Orgservice, UrlConfig) {
+  function EnterpriseSettingsCtrl($q, $rootScope, $scope, $timeout, $translate, $window, Authinfo, Config, Log, Notification, ServiceSetup, PersonalMeetingRoomManagementService, SSOService, Orgservice, UrlConfig, FeatureToggleService) {
     var strEntityDesc = '<EntityDescriptor ';
     var strEntityId = 'entityID="';
     var strEntityIdEnd = '"';
@@ -21,14 +21,15 @@
       enableSSORadioOption: null,
       SSOSelfSigned: 0,
       modifySSO: false,
-      deleteSSOBySwitchingRadio: false
+      deleteSSOBySwitchingRadio: false,
     };
 
     var DEFAULT_TZ = {
       id: 'America/Los_Angeles',
-      label: $translate.instant('timeZones.America/Los_Angeles')
+      label: $translate.instant('timeZones.America/Los_Angeles'),
     };
     var vm = this;
+    vm.sipUpdateToggle = false;
 
     vm.pmrField = {
       inputValue: '',
@@ -40,7 +41,7 @@
       availableUrlValue: '',
       isRoomLicensed: false,
       domainSuffix: UrlConfig.getSparkDomainCheckUrl(),
-      errorMsg: $translate.instant('firstTimeWizard.setPersonalMeetingRoomInputFieldErrorMessage')
+      errorMsg: $translate.instant('firstTimeWizard.setPersonalMeetingRoomInputFieldErrorMessage'),
     };
 
     var pmrField = vm.pmrField;
@@ -49,8 +50,8 @@
     vm.loadTimeZoneOptions = loadTimeZoneOptions;
     vm.model = {
       site: {
-        timeZone: DEFAULT_TZ
-      }
+        timeZone: DEFAULT_TZ,
+      },
     };
 
     vm.timeZoneSelection = [{
@@ -64,17 +65,21 @@
         labelfield: 'label',
         valuefield: 'id',
         inputPlaceholder: $translate.instant('serviceSetupModal.searchTimeZone'),
-        filter: true
+        filter: true,
       },
       controller: /* @ngInject */ function ($scope) {
         _buildTimeZoneOptions($scope);
         loadTimeZoneOptions();
-      }
+      },
     }];
 
     init();
 
     function init() {
+      FeatureToggleService.atlasSubdomainUpdateGetStatus().then(function (status) {
+        vm.sipUpdateToggle = status;
+      });
+
       setPMRSiteUrlFromSipDomain();
       updateSSO();
     }
@@ -188,36 +193,36 @@
       label: $translate.instant('ssoModal.disableSSO'),
       value: 1,
       name: 'ssoOptions',
-      id: 'ssoNoProvider'
+      id: 'ssoNoProvider',
     }, {
       label: $translate.instant('ssoModal.enableSSO'),
       value: 0,
       name: 'ssoOptions',
-      id: 'ssoProvider'
+      id: 'ssoProvider',
     }];
 
     $scope.SSOSelfSignedOptions = [{
       label: $translate.instant('ssoModal.requiredCertMetadata'),
       value: 0,
       name: 'ssoSelfSignedCert',
-      id: 'ssoNoSelfSigned'
+      id: 'ssoNoSelfSigned',
     }, {
       label: $translate.instant('ssoModal.allowSelfCertMetadata'),
       value: 1,
       name: 'ssoSelfSignedCert',
-      id: 'ssoSelfSigned'
+      id: 'ssoSelfSigned',
     }];
 
     $scope.enableSSOOptions = [{
       label: $translate.instant('ssoModal.finalEnableSSO'),
       value: 1,
       name: 'finalssoOptions',
-      id: 'finalSsoProvider'
+      id: 'finalSsoProvider',
     }, {
       label: $translate.instant('ssoModal.finalDisableSSO'),
       value: 0,
       name: 'finalssoOptions',
-      id: 'finalSsoNoProvider'
+      id: 'finalSsoNoProvider',
     }];
 
     $scope.$watch('options.configureSSO', function (updatedConfigureSSOValue) {
@@ -332,7 +337,7 @@
           Log.debug('Failed to retrieve meta url. Status: ' + status);
           $scope.idpFile.error = true;
           $scope.idpFile.errorMsg = $translate.instant('ssoModal.importFailed', {
-            status: status
+            status: status,
           });
         }
       });
@@ -368,14 +373,14 @@
                   } else {
                     Log.debug('Failed to Patch On-premise IdP Metadata. Status: ' + status);
                     Notification.error('ssoModal.disableFailed', {
-                      status: status
+                      status: status,
                     });
                   }
                 });
               } else {
                 Log.debug('Failed to Patch On-premise IdP Metadata. Status: ' + status);
                 Notification.error('ssoModal.disableFailed', {
-                  status: status
+                  status: status,
                 });
 
               }
@@ -384,7 +389,7 @@
         } else {
           Log.debug('Failed to retrieve meta url. Status: ' + status);
           Notification.error('ssoModal.disableFailed', {
-            status: status
+            status: status,
           });
         }
         $scope.wizard.wizardNextLoad = false;
@@ -415,7 +420,7 @@
           //check if data already exists for this entityId
           var newEntityId = checkNewEntityId(data);
           metaUrl = _.get(_.find(data.data, {
-            entityId: newEntityId
+            entityId: newEntityId,
           }), 'url');
           if (metaUrl) {
             SSOService.patchRemoteIdp(metaUrl, $rootScope.fileContents, selfSigned, true, function (data, status) {
@@ -427,7 +432,7 @@
               } else {
                 Log.debug('Failed to enable Single Sign-On (SSO). Status: ' + status);
                 Notification.error('ssoModal.enableSSOFailure', {
-                  status: status
+                  status: status,
                 });
               }
             });
@@ -442,7 +447,7 @@
             } else {
               Log.debug('Failed to enable Single Sign-On (SSO). Status: ' + status);
               Notification.error('ssoModal.enableSSOFailure', {
-                status: status
+                status: status,
               });
             }
           });
@@ -460,7 +465,7 @@
           Log.debug('Failed to Import On-premise IdP Metadata. Status: ' + status);
           $scope.idpFile.error = true;
           $scope.idpFile.errorMsg = $translate.instant('ssoModal.importFailed', {
-            status: status
+            status: status,
           });
         }
       });
@@ -476,7 +481,7 @@
           Log.debug('Failed to Patch On-premise IdP Metadata. Status: ' + status);
           $scope.idpFile.error = true;
           $scope.idpFile.errorMsg = $translate.instant('ssoModal.importFailed', {
-            status: status
+            status: status,
           });
         }
       });
@@ -520,13 +525,13 @@
           } else {
             Log.debug('Retrieved null Entity id. Status: ' + status);
             Notification.error('ssoModal.retrieveEntityIdFailed', {
-              status: status
+              status: status,
             });
           }
         } else {
           Log.debug('Failed to retrieve entity id. Status: ' + status);
           Notification.error('ssoModal.retrieveEntityIdFailed', {
-            status: status
+            status: status,
           });
         }
       });
@@ -539,7 +544,7 @@
           $scope.metaFilename = 'idb-meta-' + Authinfo.getOrgId() + '-SP.xml';
           var content = data.metadataXml;
           var blob = new $window.Blob([content], {
-            type: 'text/xml'
+            type: 'text/xml',
           });
           $scope.url = ($window.URL || $window.webkitURL).createObjectURL(blob);
         } else {
