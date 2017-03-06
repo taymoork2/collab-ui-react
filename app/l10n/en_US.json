@@ -2485,7 +2485,7 @@
       "registrationTimeout": "Registration timeout"
     },
     "softwareUpgrade": {
-      "explanation": "You are about to upgrade {{connectorType}} to version {{newVersion}} on all nodes in your Hybrid Data Security cluster"
+      "text1": "During upgrade, this Hybrid Data Security Node will enter maintenance mode. After 2 hours, this node will be upgraded and any new calls will be redirected to an available node or the cloud."
     },
     "resources": {
       "settings": {
