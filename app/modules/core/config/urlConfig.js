@@ -206,6 +206,12 @@
       integration: 'https://encryption-integration.wbx2.com/encryption/api/v1',
       prod: 'https://encryption-a.wbx2.com/encryption/api/v1',
     },
+    L2sipUrl: {
+      dev: 'https://l2sip-cfa-web.wbx2.com/l2sip/api/v1',
+      cfe: 'https://l2sip-integration-web.wbx2.com/l2sip/api/v1',
+      integration: 'https://l2sip-cfa-web.wbx2.com/l2sip/api/v1', // https://l2sip-integration-web.wbx2.com/l2sip/api/v1
+      prod: 'https://l2sip-cfa-web.wbx2.com/l2sip/api/v1',
+    },
 
     // urls same for all environments
 

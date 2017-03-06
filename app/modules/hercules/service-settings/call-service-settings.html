@@ -36,7 +36,7 @@
           </i>
         </p>
         <div class="row">
-          <div class="columns medium-8">
+          <div class="columns medium-12">
             <form name="inputSipDestinationForm" ng-submit="callServiceSettings.updateSipDomain()" class="hercules-sip-destination-table">
               <input ng-disabled="callServiceSettings.savingSip"
                      placeholder="{{'hercules.settings.call.sipDomainPlaceholder' | translate}} "
@@ -51,6 +51,8 @@
                       ng-disabled="inputSipDestinationForm.$invalid || callServiceSettings.savingSip">
                 <span translate="common.save"></span>
               </button>
+              <verify-sip-destination ng-if="callServiceSettings.hasAtlasHybridCallDiagnosticTool"
+                                      destination-url="callServiceSettings.org.sipDomain"></verify-sip-destination>
               <span class=right ng-show="callServiceSettings.savingSip">
                 <i class="icon icon-spinner"/>
               </span>

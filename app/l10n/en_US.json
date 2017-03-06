@@ -1172,6 +1172,7 @@
     "showAllAdminUsers": "Show all {{numUsers}} administrators",
     "status": "Status",
     "submit": "Submit",
+    "test": "Test",
     "to": "to",
     "trackingId": "Tracking Id: {{trackingId}}.",
     "tryAgain": "Try Again",
@@ -2075,6 +2076,10 @@
         "certificateDeleteTooltip": "Delete Certificate",
         "noUploadedCertificate": "No certificates uploaded. Using the default trust list.",
         "uploadedCertificates": "Uploaded Certificates:"
+      },
+      "verifySipDestination": {
+        "title": "Verify SIP Destination",
+        "info": "Use this test tool to verify whether or not your SIP destination is configured correctly and is operational."
       },
       "googleCalendar": {
         "title": "Google Calendar",

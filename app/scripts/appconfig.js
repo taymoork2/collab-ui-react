@@ -3550,6 +3550,9 @@
               hasVoicemailFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridVoicemail);
               },
+              hasAtlasHybridCallDiagnosticTool: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCallDiagnosticTool);
+              },
             },
           })
           .state('expressway-cluster-sidepanel', {

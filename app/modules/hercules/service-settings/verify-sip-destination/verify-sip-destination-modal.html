@@ -1,0 +1,25 @@
+<div class="modal-header">
+  <div class="modal-title" translate="hercules.settings.verifySipDestination.title"></div>
+</div>
+<div class="modal-body">
+  <p translate="hercules.settings.verifySipDestination.info"></p>
+
+  <form ng-submit="">
+    <input placeholder="{{'hercules.settings.call.sipDomainPlaceholder' | translate}} "
+           class="form-control" id="sipDomain"
+           type="text"
+           ng-model="vm.destinationUrl" />
+  </form>
+
+  <p>Url: {{vm.destinationUrl}}</p>
+  <p>Result (TODO: Format nicely, localize etc.):</p>
+  <div ng-if="!vm.loading">
+    <p><pre>{{vm.result}}</pre></p>
+  </div>
+  <span class="spinner-example--large" ng-if="vm.loading">
+   <i class="icon icon-spinner"></i>
+  </span>
+</div>
+<div class="modal-footer">
+  <button ng-click="$close()" class="btn"translate="common.close"></button>
+</div>

@@ -6,7 +6,7 @@
     .controller('CallServiceSettingsController', CallServiceSettingsController);
 
   /* @ngInject */
-  function CallServiceSettingsController($modal, Analytics, ServiceDescriptor, Authinfo, USSService, CertService, Notification, CertificateFormatterService, $translate, hasVoicemailFeatureToggle, UCCService) {
+  function CallServiceSettingsController($modal, Analytics, ServiceDescriptor, Authinfo, USSService, CertService, Notification, CertificateFormatterService, $translate, hasAtlasHybridCallDiagnosticTool, hasVoicemailFeatureToggle, UCCService) {
     var vm = this;
     vm.formattedCertificateList = [];
     vm.readCerts = readCerts;
@@ -27,6 +27,7 @@
           this.Notification.errorWithTrackingId(response, 'hercules.genericFailure');
         });
     }
+    vm.hasAtlasHybridCallDiagnosticTool = hasAtlasHybridCallDiagnosticTool;
     vm.hasVoicemailFeatureToggle = hasVoicemailFeatureToggle;
     vm.help = {
       title: 'common.help',
