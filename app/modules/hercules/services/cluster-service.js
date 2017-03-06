@@ -6,23 +6,24 @@
     .service('ClusterService', ClusterService);
 
   /* @ngInject */
-  function ClusterService($http, CsdmPoller, CsdmCacheUpdater, CsdmHubFactory, UrlConfig, Authinfo, FusionClusterStatesService, $q) {
+  function ClusterService($http, CsdmPoller, CsdmCacheUpdater, CsdmHubFactory, UrlConfig, Authinfo, FusionClusterStatesService) {
     var clusterCache = {
       c_mgmt: {},
       c_ucmc: {},
       c_cal: {},
       mf_mgmt: {},
-      hds_app: {}
+      hds_app: {},
+      cs_mgmt: {},
+      cs_context: {},
     };
     var hub = CsdmHubFactory.create();
     var poller = CsdmPoller.create(fetch, hub);
 
-    var service = {
+    return {
       deleteHost: deleteHost,
       fetch: fetch,
       getCluster: getCluster,
       getClustersByConnectorType: getClustersByConnectorType,
-      getConnector: getConnector,
       subscribe: hub.on,
       upgradeSoftware: upgradeSoftware,
       mergeRunningState: mergeRunningState,
@@ -30,8 +31,6 @@
       // Internal functions exposed for easier testing.
       _mergeAllAlarms: mergeAllAlarms,
     };
-
-    return service;
 
     ////////////////
 
@@ -54,7 +53,7 @@
         return {
           state: connector.state,
           stateSeverity: severity.label,
-          stateSeverityValue: severity.severity
+          stateSeverityValue: severity.severity,
         };
       } else {
         return previous;
@@ -96,24 +95,25 @@
     }
 
     function mergeRunningState(connectors, type) {
-      if (_.size(connectors) === 0 && (type === 'hds_app' || type === 'mf_mgmt')) {
+      if (_.size(connectors) === 0 &&
+          (type === 'hds_app' || type === 'mf_mgmt')) {
         return {
           state: 'no_nodes_registered',
           stateSeverity: 'neutral',
-          stateSeverityValue: 1
+          stateSeverityValue: 1,
         };
       }
       if (_.size(connectors) === 0) {
         return {
           state: 'not_registered',
           stateSeverity: 'neutral',
-          stateSeverityValue: 1
+          stateSeverityValue: 1,
         };
       }
       return _.chain(connectors)
         .map(overrideStateIfAlarms)
         .reduce(getMostSevereRunningState, {
-          stateSeverityValue: -1
+          stateSeverityValue: -1,
         })
         .value();
     }
@@ -148,9 +148,9 @@
             alarms: connector.alarms,
             hostname: host,
             state: connector.state,
-            upgradeState: connector.upgradeState
+            upgradeState: connector.upgradeState,
           };
-        })
+        }),
       };
     }
 
@@ -192,7 +192,9 @@
             c_ucmc: clusterType('c_ucmc', clusters),
             c_cal: clusterType('c_cal', clusters),
             mf_mgmt: clusterType('mf_mgmt', clusters),
-            hds_app: clusterType('hds_app', clusters)
+            hds_app: clusterType('hds_app', clusters),
+            cs_mgmt: clusterType('cs_mgmt', clusters),
+            cs_context: clusterType('cs_context', clusters),
           };
         })
         .then(function (clusters) {
@@ -201,7 +203,9 @@
             c_ucmc: addAggregatedData('c_ucmc', clusters.c_ucmc),
             c_cal: addAggregatedData('c_cal', clusters.c_cal),
             mf_mgmt: addAggregatedData('mf_mgmt', clusters.mf_mgmt),
-            hds_app: addAggregatedData('hds_app', clusters.hds_app)
+            hds_app: addAggregatedData('hds_app', clusters.hds_app),
+            cs_mgmt: addAggregatedData('cs_mgmt', clusters.cs_mgmt),
+            cs_context: addAggregatedData('cs_context', clusters.cs_context),
           };
           return result;
         })
@@ -211,7 +215,9 @@
             c_ucmc: _.keyBy(clusters.c_ucmc, 'id'),
             c_cal: _.keyBy(clusters.c_cal, 'id'),
             mf_mgmt: _.keyBy(clusters.mf_mgmt, 'id'),
-            hds_app: _.keyBy(clusters.hds_app, 'id')
+            hds_app: _.keyBy(clusters.hds_app, 'id'),
+            cs_mgmt: _.keyBy(clusters.cs_mgmt, 'id'),
+            cs_context: _.keyBy(clusters.cs_context, 'id'),
           };
           return result;
         })
@@ -221,6 +227,8 @@
           CsdmCacheUpdater.update(clusterCache.c_cal, clusters.c_cal);
           CsdmCacheUpdater.update(clusterCache.mf_mgmt, clusters.mf_mgmt);
           CsdmCacheUpdater.update(clusterCache.hds_app, clusters.hds_app);
+          CsdmCacheUpdater.update(clusterCache.cs_mgmt, clusters.cs_mgmt);
+          CsdmCacheUpdater.update(clusterCache.cs_context, clusters.cs_context);
           return clusterCache;
         });
     }
@@ -258,15 +266,5 @@
           return data;
         });
     }
-
-    function getConnector(connectorId) {
-      if (connectorId.search(/@calendar-cloud-connector/i) !== -1) {
-        return $q.reject({ 'data': { 'statusText': 'NotFound', 'status': 404, 'errors': [{ 'message': 'calendar-cloud-connector is not a valid connectorId' }] } });
-      } else {
-        var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/connectors/' + connectorId;
-        return $http.get(url).then(extractDataFromResponse);
-      }
-    }
-
   }
 }());

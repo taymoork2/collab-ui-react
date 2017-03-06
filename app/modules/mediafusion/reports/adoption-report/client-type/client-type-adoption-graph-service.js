@@ -16,10 +16,10 @@
     vm.zoomedStartTime = null;
 
     vm.timeStamp = $translate.instant('mediaFusion.metrics.timeStamp');
-    vm.clientType = $translate.instant('mediaFusion.metrics.clientType');
+    vm.clients = $translate.instant('mediaFusion.metrics.clients');
 
     return {
-      setClientTypeGraph: setClientTypeGraph
+      setClientTypeGraph: setClientTypeGraph,
     };
 
     function setClientTypeGraph(response, clientTypeChart, daterange) {
@@ -72,7 +72,7 @@
       valueAxes[0].autoGridCount = true;
       valueAxes[0].position = 'left';
       //Change to i10n
-      valueAxes[0].title = vm.clientType;
+      valueAxes[0].title = vm.clients;
       valueAxes[0].titleRotation = 0;
 
       var catAxis = CommonReportsGraphService.getBaseVariable(vm.AXIS);
@@ -120,7 +120,7 @@
       }
 
       var columnNames = {
-        'time': vm.timeStamp
+        'time': vm.timeStamp,
       };
       var exportFields = [];
       _.forEach(graphs, function (value) {
@@ -139,7 +139,7 @@
           'bullet': 'square',
           'bulletSize': 10,
           'lineColor': '#000000',
-          'hidden': true
+          'hidden': true,
         });
 
         graphs.push({
@@ -147,7 +147,7 @@
           'id': 'none',
           'bullet': 'square',
           'bulletSize': 10,
-          'lineColor': '#000000'
+          'lineColor': '#000000',
         });
       }
 
@@ -158,10 +158,10 @@
 
       chartData.legend.listeners = [{
         'event': 'hideItem',
-        "method": legendHandler
+        "method": legendHandler,
       }, {
         'event': 'showItem',
-        'method': legendHandler
+        'method': legendHandler,
       }];
 
       var chart = AmCharts.makeChart(vm.clientTypediv, chartData);
@@ -176,12 +176,12 @@
       vm.zoomedEndTime = event.endDate;
       var selectedTime = {
         startTime: vm.zoomedStartTime,
-        endTime: vm.zoomedEndTime
+        endTime: vm.zoomedEndTime,
       };
 
       if ((_.isUndefined(vm.dateSelected.value) && vm.zoomedStartTime !== vm.dateSelected.startTime && vm.zoomedEndTime !== vm.dateSelected.endTime) || (vm.zoomedStartTime !== vm.dateSelected.startTime && vm.zoomedEndTime !== vm.dateSelected.endTime)) {
         $rootScope.$broadcast('zoomedTime', {
-          data: selectedTime
+          data: selectedTime,
         });
       }
     }

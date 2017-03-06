@@ -14,7 +14,7 @@
     function adjustLineGraphData(activeData, returnData, startTime, endTime, graphs) {
       var returnDataArray = [];
       var startDate = {
-        time: startTime
+        time: startTime,
       };
       activeData.unshift(startDate);
       for (var i = 0; i < activeData.length; i++) {
@@ -23,7 +23,7 @@
         returnDataArray.push(tmpItem);
       }
       var endDate = {
-        time: endTime
+        time: endTime,
       };
       returnDataArray.push(endDate);
       returnData.graphData = returnDataArray;
@@ -39,14 +39,14 @@
         balloon: true,
         call_reject: 0,
         active_calls: 0,
-        timestamp: null
+        timestamp: null,
       };
       var startDate = {
         colorOne: chartColors.primaryBase,
         colorTwo: chartColors.attentionBase,
         call_reject: 0,
         active_calls: 0,
-        timestamp: startTime
+        timestamp: startTime,
       };
       activeData.unshift(startDate);
       for (var i = 0; i < activeData.length; i++) {
@@ -59,7 +59,7 @@
       var endDate = {
         colorOne: chartColors.primaryBase,
         colorTwo: chartColors.attentionBase,
-        timestamp: endTime
+        timestamp: endTime,
       };
       returnDataArray.push(endDate);
       returnData.graphData = returnDataArray;
@@ -105,7 +105,7 @@
 
       var returnData = {
         graphData: [],
-        graphs: []
+        graphs: [],
       };
       return $http.get(vm.urlBase + getQuerys(vm.utilizationUrl, cluster, time)).then(function (response) {
         if (!_.isUndefined(response) && !_.isUndefined(response.data) && !_.isUndefined(response.data.chartData) && _.isArray(response.data.chartData) && !_.isUndefined(response.data)) {
@@ -123,7 +123,7 @@
       vm.callVolumeUrl = '/call_volume';
 
       var returnData = {
-        graphData: []
+        graphData: [],
       };
       return $http.get(vm.urlBase + getQuerys(vm.callVolumeUrl, cluster, time)).then(function (response) {
         if (!_.isUndefined(response) && !_.isUndefined(response.data[0]) && !_.isUndefined(response.data[0].values) && _.isArray(response.data[0].values) && !_.isUndefined(response.data[0])) {
@@ -142,7 +142,7 @@
 
       var returnData = {
         graphData: [],
-        graphs: []
+        graphs: [],
       };
       return $http.get(vm.urlBase + getQuerys(vm.callDistributionUrl, cluster, time)).then(function (response) {
         if (!_.isUndefined(response) && !_.isUndefined(response.data) && !_.isUndefined(response.data.chartData) && _.isArray(response.data.chartData) && !_.isUndefined(response.data)) {
@@ -161,7 +161,7 @@
 
       var returnData = {
         graphData: [],
-        graphs: []
+        graphs: [],
       };
       return $http.get(vm.urlBase + getQuerys(vm.clientTypeUrl, vm.allClusters, time)).then(function (response) {
         if (!_.isUndefined(response) && !_.isUndefined(response.data) && !_.isUndefined(response.data.chartData) && _.isArray(response.data.chartData) && !_.isUndefined(response.data)) {
@@ -172,6 +172,43 @@
         }
       }, function (error) {
         return returnErrorCheck(error, $translate.instant('mediaFusion.metrics.overallClientTypeGraphError'), returnData);
+      });
+    }
+
+    function getNumberOfParticipantData(time) {
+      vm.numberOfParticipantUrl = '/participants_distribution';
+      var returnData = {
+        graphData: [],
+        graphs: [],
+      };
+      return $http.get(vm.urlBase + getQuerys(vm.numberOfParticipantUrl, vm.allClusters, time)).then(function (response) {
+        if (!_.isUndefined(response) && !_.isUndefined(response.data) && !_.isUndefined(response.data.chartData) && _.isArray(response.data.chartData) && !_.isUndefined(response.data)) {
+          returnData.graphData.push(response.data.chartData);
+          return adjustLineGraphData(response.data.chartData, returnData, response.data.startTime, response.data.endTime, response.data.graphs);
+        } else {
+          return returnData;
+        }
+      }, function (error) {
+        return returnErrorCheck(error, $translate.instant('mediaFusion.metrics.overallClientTypeGraphError'), returnData);
+      });
+    }
+
+    function getMeetingLocationData(time) {
+      vm.meetingLcationUrl = '/meeting_location_trend';
+
+      var returnData = {
+        graphData: [],
+        graphs: [],
+      };
+      return $http.get(vm.urlBase + getQuerys(vm.meetingLcationUrl, vm.allClusters, time)).then(function (response) {
+        if (!_.isUndefined(response) && !_.isUndefined(response.data) && !_.isUndefined(response.data.chartData) && _.isArray(response.data.chartData) && !_.isUndefined(response.data)) {
+          returnData.graphData.push(response.data.chartData);
+          return adjustLineGraphData(response.data.chartData, returnData, response.data.startTime, response.data.endTime, response.data.graphs);
+        } else {
+          return returnData;
+        }
+      }, function (error) {
+        return returnErrorCheck(error, $translate.instant('mediaFusion.metrics.overallMeetingLocationGraphError'), returnData);
       });
     }
 
@@ -238,6 +275,20 @@
       });
     }
 
+    function getMeetingLocationCardData(time) {
+      vm.meetingLocationCardUrl = '/meeting_location_count';
+      var returnData = [];
+      return $http.get(vm.urlBase + getQuerys(vm.meetingLocationCardUrl, vm.allClusters, time)).then(function (response) {
+        if (!_.isUndefined(response) && !_.isUndefined(response.data)) {
+          return response;
+        } else {
+          return returnData;
+        }
+      }, function (error) {
+        return returnErrorCheck(error, $translate.instant('mediaFusion.metrics.overallTotalNumberOfCallsError'), returnData);
+      });
+    }
+
     function returnErrorCheck(error, message, returnItem) {
       if (error.status === 401 || error.status === 403) {
         Notification.error('reportsPage.unauthorizedError');
@@ -258,7 +309,10 @@
       getClusterAvailabilityTooltip: getClusterAvailabilityTooltip,
       getHostedOnPremisesTooltip: getHostedOnPremisesTooltip,
       getClientTypeData: getClientTypeData,
-      getClientTypeCardData: getClientTypeCardData
+      getClientTypeCardData: getClientTypeCardData,
+      getMeetingLocationData: getMeetingLocationData,
+      getNumberOfParticipantData: getNumberOfParticipantData,
+      getMeetingLocationCardData: getMeetingLocationCardData,
     };
 
   }

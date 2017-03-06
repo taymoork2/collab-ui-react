@@ -30,7 +30,7 @@
       eventAction: {
         buttonClick: 'BUTTONCLICK',
         pageLoad: 'PAGELOAD',
-        keyInputs: 'KEYINPUTS'
+        keyInputs: 'KEYINPUTS',
       },
 
       eventType: {
@@ -71,7 +71,7 @@
         careTemplateFinish: 'CARETEMPLATEFINISH',
         careReports: 'CAREREPORTS',
         careEnabled: 'CAREENABLED',
-        careDisabled: 'CAREDISABLED'
+        careDisabled: 'CAREDISABLED',
       },
 
       getEventAction: function (eAction) {
@@ -93,7 +93,7 @@
 
           events[0] = new LogMetricEvent(eAction, eType, status, elapsedTime, units, data);
           var logsMetricEvent = {
-            metrics: events
+            metrics: events,
           };
           Log.debug(logsMetricEvent);
           if (Config.isProd()) {
@@ -166,7 +166,7 @@
         if (stateFound && (msg !== null) && (eType !== null)) {
           this.logMetrics(msg, eType, this.eventAction['buttonClick'], 200, moment(), 1, null);
         }
-      }
+      },
 
     };
   }

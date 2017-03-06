@@ -11,7 +11,7 @@
       require: '?ngModel',
       scope: {
         aaMaxLength: '@',
-        aaNameFocus: '='
+        aaNameFocus: '=',
       },
       restrict: 'E',
       link: function (scope, element, attrs, ngModel) {
@@ -88,7 +88,7 @@
         });
 
         ngModel.$render();
-      }
+      },
     };
   }
 })();

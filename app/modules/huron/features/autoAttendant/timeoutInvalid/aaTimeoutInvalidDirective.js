@@ -12,11 +12,11 @@
         schedule: '@aaSchedule',
         menuId: '@aaMenuId',
         index: '=aaIndex',
-        keyIndex: '@aaKeyIndex'
+        keyIndex: '@aaKeyIndex',
       },
       controller: 'AATimeoutInvalidCtrl',
       controllerAs: 'aaTimeoutInvalidCtrl',
-      templateUrl: 'modules/huron/features/autoAttendant/timeoutInvalid/aaTimeoutInvalid.tpl.html'
+      templateUrl: 'modules/huron/features/autoAttendant/timeoutInvalid/aaTimeoutInvalid.tpl.html',
     };
   }
 })();

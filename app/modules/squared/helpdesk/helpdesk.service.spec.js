@@ -34,7 +34,7 @@ describe('HelpdeskService', function () {
       "displayName": "Marvel Partners",
       "meta": {
         "created": "2015-04-03T00:06:14.681Z",
-        "uri": "https://identity.webex.com/organization/scim/v1/Orgs/ce8d17f8-1734-4a54-8510-fae65acc505e"
+        "uri": "https://identity.webex.com/organization/scim/v1/Orgs/ce8d17f8-1734-4a54-8510-fae65acc505e",
       },
       "zone": "AllZone",
       "ssoEnabled": false,
@@ -48,23 +48,23 @@ describe('HelpdeskService', function () {
         "squared-syncup",
         "cloudmeetings",
         "webex-squared",
-        "ciscouc"
+        "ciscouc",
       ],
       "selfSubscribeServices": ["squared-call-initiation", "squared-syncup", "cloudMeetings", "webex-squared"],
       "manages": [{
         "orgId": "aed98e0f-485b-46b5-8623-ed48bab2f882",
-        "roles": ["id_full_admin"]
+        "roles": ["id_full_admin"],
       }, {
         "orgId": "192e66a3-3f63-45a2-a0a3-e2c5f1a97396",
-        "roles": ["id_full_admin"]
+        "roles": ["id_full_admin"],
       }, {
         "orgId": "bc1d8493-69a7-4ba7-a0c0-62abf1b57ac6",
-        "roles": ["id_full_admin"]
+        "roles": ["id_full_admin"],
       }],
       "isPartner": false,
       "delegatedAdministration": true,
       "isTestOrg": true,
-      "orgSettings": []
+      "orgSettings": [],
     };
 
     $httpBackend
@@ -84,18 +84,18 @@ describe('HelpdeskService', function () {
     var orgSearchResponseMock = {
       "items": [{
         "id": "2222",
-        "displayName": "Bill Gates Foundation"
-      }]
+        "displayName": "Bill Gates Foundation",
+      }],
     };
 
     var userSearchResult = [{
       "active": true,
       "id": "1111",
       "organization": {
-        id: "2222"
+        id: "2222",
       },
       "userName": "bill.gates",
-      "displayName": "Bill Gates"
+      "displayName": "Bill Gates",
     }];
 
     $httpBackend
@@ -119,8 +119,8 @@ describe('HelpdeskService', function () {
     var orgSearchResponseMock = {
       "items": [{
         "id": "2222",
-        "displayName": "Bill Gates Foundation"
-      }]
+        "displayName": "Bill Gates Foundation",
+      }],
     };
 
     $httpBackend
@@ -147,8 +147,8 @@ describe('HelpdeskService', function () {
     var orgSearchResponseMock = {
       "items": [{
         "id": "2222",
-        "displayName": "Bill Gates Foundation"
-      }]
+        "displayName": "Bill Gates Foundation",
+      }],
     };
 
 
@@ -182,27 +182,27 @@ describe('HelpdeskService', function () {
       "acknowledged": false,
       "emailSubscribers": "",
       "enabled": false,
-      "id": "squared-not-fusion"
+      "id": "squared-not-fusion",
     }, {
       "acknowledged": false,
       "emailSubscribers": "",
       "enabled": false,
-      "id": "squared-fusion-uc"
+      "id": "squared-fusion-uc",
     }, {
       "acknowledged": false,
       "emailSubscribers": "",
       "enabled": false,
-      "id": "squared-fusion-cal"
+      "id": "squared-fusion-cal",
     }, {
       "acknowledged": false,
       "emailSubscribers": "",
       "enabled": false,
-      "id": "squared-fusion-mgmt"
+      "id": "squared-fusion-mgmt",
     }, {
       "acknowledged": false,
       "emailSubscribers": "",
       "enabled": false,
-      "id": "squared-a-cool-service"
+      "id": "squared-a-cool-service",
     }];
 
     sinon.stub(ServiceDescriptor, 'getServices');
@@ -402,22 +402,22 @@ describe('HelpdeskService', function () {
   it('getInviteResendPayload: returns an appropriate object depending on the userData provided', function () {
     var result = Service.getInviteResendPayload({
       displayName: 'fake-displayName',
-      email: 'fake-email'
+      email: 'fake-email',
     });
     expect(result).toEqual({
       inviteList: [{
         displayName: 'fake-displayName',
-        email: 'fake-email'
-      }]
+        email: 'fake-email',
+      }],
     });
 
     result = Service.getInviteResendPayload({
       displayName: 'fake-displayName',
       email: 'fake-email',
-      onlineOrderIds: ['fake-onlineOrderId-0']
+      onlineOrderIds: ['fake-onlineOrderId-0'],
     });
     expect(result).toEqual({
-      onlineOrderIds: ['fake-onlineOrderId-0']
+      onlineOrderIds: ['fake-onlineOrderId-0'],
     });
   });
 
@@ -425,7 +425,7 @@ describe('HelpdeskService', function () {
     var fakeUserData = {
       displayName: 'fake-displayName',
       email: 'fake-email',
-      onlineOrderIds: ['fake-onlineOrderId-0']
+      onlineOrderIds: ['fake-onlineOrderId-0'],
     };
 
     spyOn(Service, 'getInviteResendUrl').and.callThrough();
@@ -483,7 +483,7 @@ describe('HelpdeskService', function () {
       fakeUserData = {
         displayName: 'fake-displayName',
         email: 'fake-email',
-        onlineOrderIds: ['fake-onlineOrderId-0']
+        onlineOrderIds: ['fake-onlineOrderId-0'],
       };
 
       spyOn(Service, 'invokeInviteEmail');

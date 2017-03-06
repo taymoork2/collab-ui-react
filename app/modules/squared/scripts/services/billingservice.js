@@ -9,7 +9,7 @@
     var service = {
       getOrderStatus: getOrderStatus,
       resendCustomerEmail: resendCustomerEmail,
-      resendPartnerEmail: resendPartnerEmail
+      resendPartnerEmail: resendPartnerEmail,
     };
 
     return service;

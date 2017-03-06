@@ -172,7 +172,7 @@
         if (Authinfo.isEntitled(extensionEntitlement)) {
           return {
             id: extensionEntitlement,
-            entitled: hasEntitlement(extensionEntitlement)
+            entitled: hasEntitlement(extensionEntitlement),
           };
         }
       }));
@@ -188,7 +188,7 @@
       return _.map(vm.extensions, function (extensionEntitlement) {
         if (_.includes(extensionCallEntitlements, extensionEntitlement.id)) {
           return {
-            status: extensionEntitlement.status
+            status: extensionEntitlement.status,
           };
         }
       });
@@ -227,9 +227,9 @@
       controller: 'HybridServicesCtrl',
       controllerAs: 'hybridServicesCtrl',
       bindToController: {
-        user: '='
+        user: '=',
       },
-      templateUrl: 'modules/hercules/user-sidepanel/hybridServices.tpl.html'
+      templateUrl: 'modules/hercules/user-sidepanel/hybridServices.tpl.html',
     };
   }
 }());

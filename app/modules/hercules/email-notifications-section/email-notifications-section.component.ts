@@ -8,6 +8,10 @@ class EmailNotificationsSectionCtrl implements ng.IComponentController {
   public emailSubscribers: { text: string }[] = [];
   public enableEmailSendingToUser = false;
   public savingEmail = false;
+  public hasCalsvcSetOrgLevelDefaultSiteNameFeatureToggle = false;
+  public defaultWebExSiteOrgLevel = '';
+  public defaultWebExSiteOrgLevelSelectPlaceholder = this.$translate.instant('hercules.settings.defaultWebExSiteOrgLevelSelectPlaceholder');
+  public searchable = true;
   public hasCalsvcOneButtonToPushIntervalFeatureToggle = false;
   public oneButtonToPushIntervalOptions = [0, 5, 10 , 15];
   public oneButtonToPushIntervalMinutes: number | null = null;
@@ -39,9 +43,16 @@ class EmailNotificationsSectionCtrl implements ng.IComponentController {
     this.ServiceDescriptor.getOrgSettings()
       .then(orgSettings => {
         this.enableEmailSendingToUser = !orgSettings.calSvcDisableEmailSendingToEndUser;
+        if (orgSettings.calSvcDefaultWebExSite !== undefined) {
+          this.defaultWebExSiteOrgLevel = orgSettings.calSvcDefaultWebExSite;
+        }
         if (orgSettings.bgbIntervalMinutes !== undefined) {
           this.oneButtonToPushIntervalMinutes = orgSettings.bgbIntervalMinutes;
         }
+      });
+    this.FeatureToggleService.calsvcSetOrgLevelDefaultSiteNameGetStatus()
+      .then(support => {
+        this.hasCalsvcSetOrgLevelDefaultSiteNameFeatureToggle = support;
       });
     this.FeatureToggleService.calsvcOneButtonToPushIntervalGetStatus()
       .then(support => {
@@ -86,6 +97,12 @@ class EmailNotificationsSectionCtrl implements ng.IComponentController {
   public setEnableEmailSendingToUser() {
     this.writeEnableEmailSendingToUser(this.enableEmailSendingToUser);
   }
+
+  public setDefaultWebExSiteOrgLevel = function () {
+    this.ServiceDescriptor.setDefaultWebExSiteOrgLevel(this.defaultWebExSiteOrgLevel)
+      .then(() => this.Notification.success('hercules.settings.defaultWebExSiteOrgLevelSavingSuccess'))
+      .catch(error => this.Notification.errorWithTrackingId(error, 'hercules.settings.defaultWebExSiteOrgLevelSavingError'));
+  };
 
   public setOneButtonToPushIntervalMinutes = function () {
     this.ServiceDescriptor.setOneButtonToPushIntervalMinutes(this.oneButtonToPushIntervalMinutes)

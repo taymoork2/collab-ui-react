@@ -1,7 +1,8 @@
 import './_mySubscription.scss';
 import { DigitalRiverService } from 'modules/online/digitalRiver/digitalRiver.service';
 import { Notification } from 'modules/core/notifications';
-import { OnlineUpgradeService, IBmmpAttr } from 'modules/online/upgrade/upgrade.service';
+import { OnlineUpgradeService, IBmmpAttr, IProdInst } from 'modules/online/upgrade/upgrade.service';
+import { SharedMeetingsReportService } from './sharedMeetings/sharedMeetingsReport.service';
 
 const baseCategory = {
   label: undefined,
@@ -22,7 +23,7 @@ class MySubscriptionCtrl {
   public licenseCategory: any[] = [];
   public subscriptionDetails: any[] = [];
   public visibleSubscriptions = false;
-  public isOnline = false;
+  public hasEnterpriseTrial = false;
   public trialUrlFailed = false;
   public productInstanceFailed = false;
   public loading = false;
@@ -43,29 +44,28 @@ class MySubscriptionCtrl {
     private FeatureToggleService,
     private DigitalRiverService: DigitalRiverService,
     private OnlineUpgradeService: OnlineUpgradeService,
+    private SharedMeetingsReportService: SharedMeetingsReportService,
     private Notification: Notification,
     private Orgservice,
     private ServiceDescriptor,
     private UrlConfig,
   ) {
     // message subscriptions
-    this.licenseCategory[0] = angular.copy(baseCategory);
+    this.licenseCategory[0] = _.cloneDeep(baseCategory);
     this.licenseCategory[0].label = $translate.instant('subscriptions.message');
 
     // meeting subscriptions
-    this.licenseCategory[1] = angular.copy(baseCategory);
+    this.licenseCategory[1] = _.cloneDeep(baseCategory);
     this.licenseCategory[1].label = $translate.instant('subscriptions.meeting');
     this.licenseCategory[1].borders = true;
 
     // communication subscriptions
-    this.licenseCategory[2] = angular.copy(baseCategory);
+    this.licenseCategory[2] = _.cloneDeep(baseCategory);
     this.licenseCategory[2].label = $translate.instant('subscriptions.call');
 
     // room system subscriptions
-    this.licenseCategory[3] = angular.copy(baseCategory);
+    this.licenseCategory[3] = _.cloneDeep(baseCategory);
     this.licenseCategory[3].label = $translate.instant('subscriptions.room');
-
-    this.isOnline = Authinfo.isOnline();
 
     this.hybridServicesRetrieval();
     this.subscriptionRetrieval();
@@ -80,20 +80,24 @@ class MySubscriptionCtrl {
     return this.isSharedMeetingsLicense(subscription) ? this.$translate.instant('firstTimeWizard.sharedLicenses') : this.$translate.instant('firstTimeWizard.namedLicenses');
   }
 
+  public launchSharedMeetingsLicenseUsageReport(siteUrl: string): void {
+    this.SharedMeetingsReportService.openModal(siteUrl);
+  }
+
   private initFeatures(): void {
     if (this.temporarilyOverrideSharedMeetingsFeatureToggle.default === true) {
       this.isSharedMeetingsEnabled = this.temporarilyOverrideSharedMeetingsFeatureToggle.defaultValue;
     } else {
-      this.FeatureToggleService.atlasSharedMeetingsGetStatus().then((smpStatus) => {
-        this.isSharedMeetingsEnabled = smpStatus;
+      this.FeatureToggleService.atlasSharedMeetingsGetStatus().then((status) => {
+        this.isSharedMeetingsEnabled = status;
       });
     }
 
     if (this.temporarilyOverrideSharedMeetingsReportsFeatureToggle.default) {
       this.isSharedMeetingsReportsEnabled = this.temporarilyOverrideSharedMeetingsReportsFeatureToggle.defaultValue;
     } else {
-      this.FeatureToggleService.atlasSharedMeetingsReportsGetStatus().then((smpReportsStatus) => {
-        this.isSharedMeetingsReportsEnabled = smpReportsStatus;
+      this.FeatureToggleService.atlasSharedMeetingsReportsGetStatus().then((sharedMeetingReportsStatus) => {
+        this.isSharedMeetingsReportsEnabled = sharedMeetingReportsStatus;
       });
     }
   }
@@ -137,6 +141,8 @@ class MySubscriptionCtrl {
       isTrial: subscription.isTrial,
       subId: subscription.internalSubscriptionId,
       productInstanceId: subscription.productInstanceId,
+      changeplanOverride: subscription.changeplanOverride,
+      numSubscriptions: subscription.numSubscriptions,
       upgradeTrialUrl: trialUrl,
     });
   }
@@ -188,17 +194,23 @@ class MySubscriptionCtrl {
           internalSubscriptionId: undefined,
           licenses: [] as any[],
           isTrial: false,
-          isOnline: this.isOnline,
+          isOnline: false,
           viewAll: false,
           upgradeTrialUrl: undefined,
           productInstanceId: undefined,
           changeplanOverride: undefined,
+          name: undefined,
+          quantity: undefined,
+          numSubscriptions: subscriptions.length,
         };
         if (subscription.subscriptionId && (subscription.subscriptionId !== 'unknown')) {
           newSubscription.subscriptionId = subscription.subscriptionId;
         }
         if (subscription.internalSubscriptionId && (subscription.internalSubscriptionId !== 'unknown')) {
           newSubscription.internalSubscriptionId = subscription.internalSubscriptionId;
+          if (subscription.internalSubscriptionId !== 'Trial') {
+            newSubscription.isOnline = true;
+          }
         }
 
         _.forEach(subscription.licenses, (license: any, licenseIndex: number) => {
@@ -273,47 +285,61 @@ class MySubscriptionCtrl {
         });
 
         if (newSubscription.licenses.length > 0) {
+          if (newSubscription.isOnline) {
+            newSubscription.quantity = newSubscription.licenses[0].volume;
+          }
           // sort licenses into display order/order for determining subscription name
           newSubscription.licenses.sort((a, b) => {
             return licenseTypes.indexOf(a.offerName) - licenseTypes.indexOf(b.offerName);
           });
-          this.subscriptionDetails.push(newSubscription);
+          if (newSubscription.isOnline) {
+            this.subscriptionDetails.unshift(newSubscription);
+          } else {
+            this.subscriptionDetails.push(newSubscription);
+          }
         }
       });
 
-      _.forEach(this.subscriptionDetails, (subscription: any) => {
-        if (subscription.isOnline) {
+      _.forEach(this.subscriptionDetails, (subscription: any, index: number) => {
+        if (!subscription.isOnline) {
+          if (subscription.isTrial) {
+            this.subscriptionDetails[index].name = this.$translate.instant('customerPage.trial');
+            this.hasEnterpriseTrial = true;
+          }
+        } else {
           if (subscription.isTrial) {
             this.upgradeTrialUrl(subscription.internalSubscriptionId).then((response) => {
-              if (response && this.subscriptionDetails.length === 1) {
-                this.OnlineUpgradeService.getProductInstanceId(this.Authinfo.getUserId()).then((prodResponse) => {
+              if (response) {
+                this.OnlineUpgradeService.getProductInstance(this.Authinfo.getUserId()).then((prodResponse: IProdInst) => {
                   if (prodResponse) {
-                    this.subscriptionDetails[0].productInstanceId = prodResponse;
+                    this.subscriptionDetails[index].productInstanceId = prodResponse.productInstanceId;
+                    this.subscriptionDetails[index].name = prodResponse.name;
                     this.bmmpAttr = {
-                      subscriptionId: this.subscriptionDetails[0].internalSubscriptionId,
-                      productInstanceId: this.subscriptionDetails[0].productInstanceId,
+                      subscriptionId: this.subscriptionDetails[index].internalSubscriptionId,
+                      productInstanceId: this.subscriptionDetails[index].productInstanceId,
                       changeplanOverride: '',
                     };
-                    this.broadcastSingleSubscription(this.subscriptionDetails[0], response);
+                    this.broadcastSingleSubscription(this.subscriptionDetails[index], response);
                   }
                 });
               }
               subscription.upgradeTrialUrl = response;
             });
           } else {
-            this.OnlineUpgradeService.getProductInstanceId(this.Authinfo.getUserId()).then((prodResponse) => {
+            this.OnlineUpgradeService.getProductInstance(this.Authinfo.getUserId()).then((prodResponse: IProdInst) => {
               if (prodResponse) {
-                this.subscriptionDetails[0].productInstanceId = prodResponse;
+                this.subscriptionDetails[index].productInstanceId = prodResponse.productInstanceId;
+                this.subscriptionDetails[index].name = prodResponse.name;
                 this.getChangeSubURL().then((urlResponse) => {
                   if (urlResponse) {
-                    this.subscriptionDetails[0].changeplanOverride = urlResponse;
+                    this.subscriptionDetails[index].changeplanOverride = urlResponse;
                     this.bmmpAttr = {
-                      subscriptionId: this.subscriptionDetails[0].internalSubscriptionId,
-                      productInstanceId: this.subscriptionDetails[0].productInstanceId,
+                      subscriptionId: this.subscriptionDetails[index].internalSubscriptionId,
+                      productInstanceId: this.subscriptionDetails[index].productInstanceId,
                       changeplanOverride: urlResponse,
                     };
 
-                    this.broadcastSingleSubscription(this.subscriptionDetails[0], undefined);
+                    this.broadcastSingleSubscription(this.subscriptionDetails[index], undefined);
                   }
                 });
               }

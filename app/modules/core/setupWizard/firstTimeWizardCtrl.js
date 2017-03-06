@@ -8,7 +8,7 @@
   function FirstTimeWizardCtrl($q, $scope, $state, $translate, Auth, Authinfo,
     Config, Log, Orgservice, Userservice) {
     $scope.greeting = $translate.instant('index.greeting', {
-      name: Authinfo.getUserName()
+      name: Authinfo.getUserName(),
     });
 
     $scope.finish = function () {
@@ -69,7 +69,7 @@
       var userData = {
         schemas: Config.scimSchemas,
         roles: [Config.backend_roles.spark_synckms],
-        entitlements: [Config.entitlements.care, Config.entitlements.context]
+        entitlements: [Config.entitlements.care, Config.entitlements.context],
       };
 
       return Userservice.updateUserProfile(admin.id, userData);

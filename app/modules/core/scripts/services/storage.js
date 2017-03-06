@@ -17,12 +17,12 @@
     }
     return {
       put: function (key, value) {
-        if (value !== null) {
+        if (value) {
           getLocalStorage().setItem(key, value);
         }
       },
       putObject: function (key, object) {
-        if (object !== null) {
+        if (object) {
           getLocalStorage().setItem(key, JSON.stringify(object));
         }
       },
@@ -47,7 +47,7 @@
       },
       clear: function () {
         getLocalStorage().clear();
-      }
+      },
     };
   }
 })();

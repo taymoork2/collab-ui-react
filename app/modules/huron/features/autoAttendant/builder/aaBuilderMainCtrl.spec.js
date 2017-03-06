@@ -22,8 +22,8 @@ describe('Controller: AABuilderMainCtrl', function () {
     "assignedResources": [{
       "id": "00097a86-45ef-44a7-aa78-6d32a0ca1d3b",
       "type": "directoryNumber",
-      "trigger": "incomingCall"
-    }]
+      "trigger": "incomingCall",
+    }],
   };
 
   var aaModel = {};
@@ -100,16 +100,16 @@ describe('Controller: AABuilderMainCtrl', function () {
         siteSteeringDigit: '6',
         siteCode: '200',
         voicemailPilotNumber: "+16506679080",
-        timeZone: 'America/Los_Angeles'
-      }
+        timeZone: 'America/Los_Angeles',
+      },
     };
     timeZone = [{
       id: 'America/Los_Angeles',
-      label: 'America/Los_Angeles'
+      label: 'America/Los_Angeles',
     }];
     translatedTimeZone = [{
       id: 'America/Los_Angeles',
-      label: 'timeZones.America/Los_Angeles'
+      label: 'timeZones.America/Los_Angeles',
     }];
 
     spyOn($state, 'go');
@@ -129,7 +129,7 @@ describe('Controller: AABuilderMainCtrl', function () {
     controller = $controller('AABuilderMainCtrl as vm', {
       $scope: $scope,
       $stateParams: $stateParams,
-      AANotificationService: AANotificationService
+      AANotificationService: AANotificationService,
     });
     $scope.$apply();
   }));
@@ -159,18 +159,18 @@ describe('Controller: AABuilderMainCtrl', function () {
   describe('areAssignedResourcesDifferent', function () {
     it('should show no differences', function () {
       var a1 = [{
-        id: "408792221"
+        id: "408792221",
       }, {
-        id: "4087963542"
+        id: "4087963542",
       }, {
-        id: "40872655"
+        id: "40872655",
       }];
       var a2 = [{
-        id: "408792221"
+        id: "408792221",
       }, {
-        id: "4087963542"
+        id: "4087963542",
       }, {
-        id: "40872655"
+        id: "40872655",
       }];
 
       var ret = controller.areAssignedResourcesDifferent(a1, a2, "id");
@@ -183,18 +183,18 @@ describe('Controller: AABuilderMainCtrl', function () {
 
     it('should show a difference', function () {
       var a1 = [{
-        id: "40892221"
+        id: "40892221",
       }, {
-        id: "4087963542"
+        id: "4087963542",
       }, {
-        id: "40872655"
+        id: "40872655",
       }];
       var a2 = [{
-        id: "408792221"
+        id: "408792221",
       }, {
-        id: "4087963542"
+        id: "4087963542",
       }, {
-        id: "40872655"
+        id: "40872655",
       }];
 
       var ret = controller.areAssignedResourcesDifferent(a1, a2, "id");
@@ -213,7 +213,6 @@ describe('Controller: AABuilderMainCtrl', function () {
       $scope.$apply();
       expect($state.go).toHaveBeenCalled();
       expect(AutoAttendantCeMenuModelService.clearCeMenuMap).toHaveBeenCalled();
-      expect($rootScope.$broadcast).toHaveBeenCalledWith('CE Closed');
     });
 
     it('should warn on CMI assignment failure on close', function () {
@@ -262,7 +261,7 @@ describe('Controller: AABuilderMainCtrl', function () {
 
           var response = [{
             'pattern': '+' + pattern.replace(/\D/g, ''),
-            'uuid': pattern.replace(/\D/g, '') + '-id'
+            'uuid': pattern.replace(/\D/g, '') + '-id',
           }];
 
           return [200, response];
@@ -271,7 +270,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       spyOn(AANotificationService, 'errorResponse');
       var resources = {
         workingResources: [],
-        failedResources: ["9999999991"]
+        failedResources: ["9999999991"],
       };
       spyOn(AANumberAssignmentService, 'setAANumberAssignmentWithErrorDetail').and.returnValue($q.resolve(resources));
 
@@ -334,7 +333,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       aaModel.aaRecordUUID = "";
       createCeSpy.and.returnValue($q.reject({
         statusText: "server error",
-        status: 500
+        status: 500,
       }));
       controller.saveAARecords();
       $scope.$apply();
@@ -401,7 +400,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       aaModel.aaRecordUUID = 'c16a6027-caef-4429-b3af-9d61ddc7964b';
       updateCeSpy.and.returnValue($q.reject({
         statusText: "server error",
-        status: 500
+        status: 500,
       }));
       controller.saveAARecords();
       $scope.$apply();
@@ -515,7 +514,7 @@ describe('Controller: AABuilderMainCtrl', function () {
     it('should return error when the backend return 500 error', function () {
       readCe.and.returnValue(
         $q.reject({
-          status: 500
+          status: 500,
         })
       );
       $scope.vm.aaModel = {};
@@ -561,8 +560,8 @@ describe('Controller: AABuilderMainCtrl', function () {
         tname: "template2",
         actions: [{
           lane: "openHours",
-          actionset: ["play3", "play4", "play5"]
-        }]
+          actionset: ["play3", "play4", "play5"],
+        }],
       }];
       $scope.vm.templateName = 'template2';
       controller.setupTemplate();
@@ -578,11 +577,11 @@ describe('Controller: AABuilderMainCtrl', function () {
         tname: "template3",
         actions: [{
           lane: 'openHours',
-          actionset: ["playOpen1", "playOpen2"]
+          actionset: ["playOpen1", "playOpen2"],
         }, {
           lane: 'closedHours',
-          actionset: ["playClosed1"]
-        }]
+          actionset: ["playClosed1"],
+        }],
       }];
       $scope.vm.templateName = 'template3';
       controller.setupTemplate();
@@ -629,10 +628,10 @@ describe('Controller: AABuilderMainCtrl', function () {
         tname: "templateMissingActionSet",
         actions: [{
           lane: "openHours",
-          actionset: ["playOpen1", "playOpen2"]
+          actionset: ["playOpen1", "playOpen2"],
         }, {
-          lane: "closedHours"
-        }]
+          lane: "closedHours",
+        }],
       }];
 
       $scope.vm.templateName = 'templateMissingActionSet';
@@ -785,7 +784,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       $scope.vm.isAANameDefined = true;
       controller.setLoadingDone();
       expect(Analytics.trackEvent).toHaveBeenCalledWith(AAMetricNameService.BUILDER_PAGE, {
-        type: 'load'
+        type: 'load',
       });
     });
 
@@ -845,7 +844,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       createScheduleDefer.reject({
         name: 'AA',
         statusText: 'Server Error',
-        status: '500'
+        status: '500',
       });
 
       expect(errorText).toBe('');

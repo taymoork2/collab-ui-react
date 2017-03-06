@@ -7,7 +7,7 @@
     <div ng-if="squaredUcSetup.showTimezoneAndVoicemail">
       <formly-form model="squaredUcSetup.model" fields="squaredUcSetup.ftswTimeZoneSelection" form="squaredUcSetup.form"></formly-form>
     </div>
-    <div ng-if="squaredUcSetup.showTimezoneAndVoicemail" class="row full service-setup service-setup-regional-settings bottom-margin" cr-feature-toggle feature-show="huron-l10n-user-locale">
+    <div ng-if="squaredUcSetup.showTimezoneAndVoicemail" class="row full service-setup service-setup-regional-settings bottom-margin">
       <label class="control-label" translate="serviceSetupModal.preferredLanguage"></label>
       <p class="description-block" translate="serviceSetupModal.preferredLanguageDescription"></p>
       <div class="medium-4">
@@ -82,7 +82,8 @@
       <uc-cos-form
         env="ftsw"
         input-model="squaredUcSetup.model.cosRestrictions"
-        on-change-fn="squaredUcSetup.setCustomerCosRestrictions(restrictions)">
+        on-change-fn="squaredUcSetup.setCustomerCosRestrictions(restrictions)"
+        premium-numbers="squaredUcSetup.premiumNumbers">
       </uc-cos-form>
     </div>
     <formly-form model="squaredUcSetup.model" fields="squaredUcSetup.ftswSteeringDigitSelection" form="squaredUcSetup.form"></formly-form>

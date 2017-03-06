@@ -3,7 +3,7 @@ import testModule from './index';
 describe('Service: UserOverviewService', () => {
 
   beforeEach(function () {
-    this.initModules(testModule, 'WebExApp', 'Sunlight');
+    this.initModules(testModule, 'WebExApp', 'Sunlight', 'Huron');
     this.injectDependencies(
       '$httpBackend',
       'UserOverviewService',
@@ -13,6 +13,7 @@ describe('Service: UserOverviewService', () => {
       '$rootScope',
       'Config',
       'SunlightConfigService',
+      'ServiceSetup',
     );
 
     this.pristineUser = angular.copy(getJSONFixture('core/json/currentUser.json'));
@@ -21,6 +22,8 @@ describe('Service: UserOverviewService', () => {
     this.isCIEnabledSiteSpy = spyOn(this.WebExUtilsFact, 'isCIEnabledSite').and.returnValue(true);
     this.isOnlineOrgSpy = spyOn(this.Auth, 'isOnlineOrg').and.returnValue(this.$q.resolve(false));
     this.SunlightConfigServiceSpy = spyOn(this.SunlightConfigService, 'getUserInfo').and.returnValue(this.$q.resolve());
+    this.languages = angular.copy(getJSONFixture('huron/json/settings/languages.json'));
+    this.ServiceSetupSpy = spyOn(this.ServiceSetup, 'getAllLanguages').and.returnValue(this.$q.resolve(this.languages));
 
     installPromiseMatchers();
   });
@@ -252,5 +255,18 @@ describe('Service: UserOverviewService', () => {
       });
     });
 
+    describe('getUserPreferredLanguage()', () => {
+      it('should get user preferred language from languages list', function () {
+        let languageCode = 'en_US';
+        let languageLabel = 'English (United States)';
+        let promise = this.UserOverviewService.getUserPreferredLanguage(languageCode)
+          .then(userPreferredLanguage => {
+            expect(userPreferredLanguage).toBeDefined();
+            expect(userPreferredLanguage.value).toEqual(languageCode);
+            expect(userPreferredLanguage.label).toEqual(languageLabel);
+          });
+        expect(promise).toBeResolved();
+      });
+    });
   });
 });

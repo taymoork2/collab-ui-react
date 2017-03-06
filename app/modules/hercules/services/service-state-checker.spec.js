@@ -12,24 +12,24 @@ describe('Service: ServiceStateChecker', function () {
     releaseChannel: 'stable',
     connectors: [{
       connectorType: 'c_mgmt',
-      state: 'running'
+      state: 'running',
     }, {
       connectorType: 'c_cal',
-      state: 'running'
+      state: 'running',
     }, {
       connectorType: 'c_cal',
-      state: 'running'
-    }]
+      state: 'running',
+    }],
   };
 
   function mockDependencies($provide) {
     $provide.value('CsdmPoller', {
       create: sinon.stub().returns({
-        forceAction: sinon.stub()
-      })
+        forceAction: sinon.stub(),
+      }),
     });
     $provide.value('Authinfo', {
-      getOrgId: sinon.stub().returns('orgId')
+      getOrgId: sinon.stub().returns('orgId'),
     });
   }
 
@@ -51,7 +51,7 @@ describe('Service: ServiceStateChecker', function () {
     ClusterService.getClustersByConnectorType = sinon.stub().returns([]);
     ClusterService.subscribe = sinon.stub();
     DomainManagementService.getVerifiedDomains = sinon.stub().returns($q.resolve([{
-      domain: 'somedomain'
+      domain: 'somedomain',
     }]));
     FeatureToggleService.supports = sinon.stub().returns($q.resolve(false));
     FusionClusterService.getOrgSettings = sinon.stub().returns($q.resolve({ expresswayClusterReleaseChannel: 'stable' }));
@@ -87,16 +87,17 @@ describe('Service: ServiceStateChecker', function () {
         serviceId: 'squared-fusion-cal',
         activated: 0,
         error: 0,
-        notActivated: 0
+        notActivated: 0,
       }]
     );
+
     ClusterService.getClustersByConnectorType.returns([okClusterMockData]);
     ServiceStateChecker.checkState('squared-fusion-cal');
     expect(NotificationService.getNotificationLength()).toEqual(1);
     expect(NotificationService.getNotifications()[0].id).toEqual('squared-fusion-cal:noUsersActivated');
     USSService.getStatusesSummary.returns([{
       serviceId: 'squared-fusion-cal',
-      activated: 1
+      activated: 1,
     }]);
     ServiceStateChecker.checkState('squared-fusion-cal');
     expect(NotificationService.getNotificationLength()).toEqual(0);
@@ -107,7 +108,7 @@ describe('Service: ServiceStateChecker', function () {
       serviceId: 'squared-fusion-cal',
       activated: 0,
       error: 5,
-      notActivated: 0
+      notActivated: 0,
     }]);
     ClusterService.getClustersByConnectorType.returns([okClusterMockData]);
     ServiceStateChecker.checkState('squared-fusion-cal');
@@ -115,7 +116,7 @@ describe('Service: ServiceStateChecker', function () {
     expect(NotificationService.getNotifications()[0].id).toEqual('squared-fusion-cal:userErrors');
     USSService.getStatusesSummary.returns([{
       serviceId: 'squared-fusion-cal',
-      activated: 1
+      activated: 1,
     }]);
     ServiceStateChecker.checkState('squared-fusion-cal');
     expect(NotificationService.getNotificationLength()).toEqual(0);
@@ -126,7 +127,7 @@ describe('Service: ServiceStateChecker', function () {
       serviceId: 'squared-fusion-uc',
       activated: 1,
       error: 0,
-      notActivated: 0
+      notActivated: 0,
     }]);
 
     USSService.getOrgId.returns('orgId');
@@ -137,9 +138,10 @@ describe('Service: ServiceStateChecker', function () {
       [{
         id: 'squared-fusion-ec',
         enabled: false, // will spawn a 'connect available' notification,
-        acknowledged: false
+        acknowledged: false,
       }]
     ));
+
 
     ServiceStateChecker.checkState('squared-fusion-uc');
     $rootScope.$digest();
@@ -151,10 +153,11 @@ describe('Service: ServiceStateChecker', function () {
       [{
         id: 'squared-fusion-ec',
         enabled: true,
-        acknowledged: false
+        acknowledged: false,
       }]
     ));
     USSService.getOrg.returns($q.resolve({ sipDomain: 'example.com' }));
+
     ServiceStateChecker.checkState('squared-fusion-uc');
     $rootScope.$digest();
     expect(NotificationService.getNotificationLength()).toEqual(0);
@@ -168,14 +171,13 @@ describe('Service: ServiceStateChecker', function () {
     ServiceDescriptor.getServices.returns($q.resolve([{
       id: 'squared-fusion-ec',
       enabled: true,
-      acknowledged: true
+      acknowledged: true,
     }])
     );
     USSService.getStatusesSummary.returns([{
       serviceId: 'squared-fusion-uc',
       activated: 1,
-     // error: 0,
-      notActivated: 0
+      notActivated: 0,
     }]);
 
     // this should spawn a domain verification notification
@@ -189,13 +191,13 @@ describe('Service: ServiceStateChecker', function () {
 
     // Domain added, should clear the notification
     DomainManagementService.getVerifiedDomains = sinon.stub().returns($q.resolve([{
-      domain: 'somedomain'
+      domain: 'somedomain',
     }]));
     ServiceDescriptor.getServices.returns($q.resolve(
       [{
         id: 'squared-fusion-ec',
         enabled: true,
-        acknowledged: false
+        acknowledged: false,
       }]
    ));
 
@@ -210,11 +212,11 @@ describe('Service: ServiceStateChecker', function () {
       serviceId: 'squared-fusion-uc',
       activated: 1,
       error: 0,
-      notActivated: 0
+      notActivated: 0,
     }]);
     USSService.getOrgId.returns('orgId');
     USSService.getOrg.returns($q.resolve({
-      'sipDomain': 'somedomain'
+      'sipDomain': 'somedomain',
     }));
     ServiceDescriptor.isServiceEnabled.returns($q.resolve(true));
 
@@ -222,7 +224,7 @@ describe('Service: ServiceStateChecker', function () {
       [{
         id: 'squared-fusion-ec',
         enabled: true, // will spawn a 'connect available' notification,
-        acknowledged: false
+        acknowledged: false,
       }]
     ));
 
@@ -245,11 +247,11 @@ describe('Service: ServiceStateChecker', function () {
       serviceId: 'squared-fusion-uc',
       activated: 1,
       error: 0,
-      notActivated: 0
+      notActivated: 0,
     }]);
     USSService.getOrgId.returns('orgId');
     USSService.getOrg.returns($q.resolve({
-      'sipDomain': 'somedomain'
+      'sipDomain': 'somedomain',
     }));
     ServiceDescriptor.isServiceEnabled.returns($q.resolve(true));
 
@@ -257,9 +259,10 @@ describe('Service: ServiceStateChecker', function () {
       [{
         id: 'squared-fusion-ec',
         enabled: true,
-        acknowledged: false
+        acknowledged: false,
       }]
     ));
+
 
     ClusterService.getClustersByConnectorType.returns([okClusterMockData]);
     FeatureToggleService.supports.returns($q.resolve(true));
@@ -277,8 +280,8 @@ describe('Service: ServiceStateChecker', function () {
     Orgservice.getOrg = function (cb) {
       cb({
         'orgSettings': {
-          'sipCloudDomain': 'sipCloudDomain'
-        }
+          'sipCloudDomain': 'sipCloudDomain',
+        },
       }, 200);
 
       ServiceStateChecker.checkState('squared-fusion-uc');
@@ -315,8 +318,8 @@ describe('Service: ServiceStateChecker', function () {
         key: 'c_cal.shitHitTheFan',
         severity: 'error',
         title: 'Shit is flying all over the place',
-        description: 'And it might hit someone in the face'
-      }
+        description: 'And it might hit someone in the face',
+      },
     ]));
 
     ServiceStateChecker.checkState('squared-fusion-cal');
@@ -345,8 +348,8 @@ describe('Service: ServiceStateChecker', function () {
         key: 'c_cal.anotherOneBitesTheDust',
         severity: 'warning',
         title: 'I am not feelin well, man',
-        description: 'Might wanna check it out!'
-      }
+        description: 'Might wanna check it out!',
+      },
     ]));
 
     ServiceStateChecker.checkState('squared-fusion-cal');

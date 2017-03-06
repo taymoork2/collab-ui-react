@@ -6,7 +6,7 @@ describe('Service: Huron Customer', function () {
   beforeEach(angular.mock.module('Huron'));
 
   var Authinfo = {
-    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
   };
 
   beforeEach(angular.mock.module(function ($provide) {
@@ -49,13 +49,13 @@ describe('Service: Huron Customer', function () {
 
     it('should update voice customer when one pstn reseller carrier is found', function () {
       PstnSetupService.listResellerCarriers.and.returnValue($q.resolve([{
-        name: 'AUDP_INT'
+        name: 'AUDP_INT',
       }]));
       $httpBackend.expectPOST(HuronConfig.getCmiUrl() + '/common/customers').respond(201);
       $httpBackend.expectPUT(HuronConfig.getCmiUrl() + '/voice/customers/123', {
         carrier: {
-          name: 'AUDP_INT'
-        }
+          name: 'AUDP_INT',
+        },
       }).respond(200);
       HuronCustomer.create('123', 'My Customer', 'myCustomer@cisco.com');
       $httpBackend.flush();
@@ -64,7 +64,7 @@ describe('Service: Huron Customer', function () {
 
     it('should not update voice customer if pstn reseller is not found', function () {
       PstnSetupService.listResellerCarriers.and.returnValue($q.reject({
-        status: 404
+        status: 404,
       }));
       $httpBackend.expectPOST(HuronConfig.getCmiUrl() + '/common/customers').respond(201);
       HuronCustomer.create('123', 'My Customer', 'myCustomer@cisco.com');
@@ -84,7 +84,7 @@ describe('Service: Huron Customer', function () {
       $httpBackend.expectPOST(HuronConfig.getCmiUrl() + '/common/customers').respond(409);
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/common/customers/123').respond(200, {
         uuid: '123',
-        name: 'My Customer'
+        name: 'My Customer',
       });
       $httpBackend.expectPUT(HuronConfig.getCmiUrl() + '/common/customers/123').respond(200);
       HuronCustomer.create('123', 'My Customer', 'myCustomer@cisco.com').catch(function (response) {

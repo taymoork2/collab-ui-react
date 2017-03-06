@@ -20,53 +20,53 @@ describe('Service: ExternalNumberService', function () {
     customerId = '12345-67890-12345';
     externalNumber = {
       uuid: '22222-33333',
-      number: '+14795552233'
+      number: '+14795552233',
     };
 
     pendingNumbers = [{
-      pattern: '123'
+      pattern: '123',
     }, {
-      pattern: '456'
+      pattern: '456',
     }];
 
     pendingOrders = [{
       pattern: '(123) XXX-XXXX',
-      quantity: 1
+      quantity: 1,
     }];
 
     unassignedNumbers = [{
       uuid: '55555555',
-      pattern: '555'
+      pattern: '555',
     }, {
       uuid: '66666666',
       pattern: '666',
-      directoryNumber: null
+      directoryNumber: null,
     }];
 
     assignedNumbers = [{
       uuid: '77777777',
       pattern: '777',
       directoryNumber: {
-        uuid: '7777-7777'
-      }
+        uuid: '7777-7777',
+      },
     }, {
       uuid: '88888888',
       pattern: '888',
       directoryNumber: {
-        uuid: '8888-8888'
-      }
+        uuid: '8888-8888',
+      },
     }];
 
     numberResponse = {
-      numbers: [1, 2, 3]
+      numbers: [1, 2, 3],
     };
 
     noNumberResponse = {
-      numbers: []
+      numbers: [],
     };
 
     malformedAdvanceOrder = {
-      orderNumber: 654987
+      orderNumber: 654987,
     };
 
     pendingAdvanceOrder = '(123) XXX-XXXX Quantity: 1';
@@ -154,7 +154,7 @@ describe('Service: ExternalNumberService', function () {
     expect(ExternalNumberService.getPendingNumbers()).toEqual(pendingNumbers);
     expect(ExternalNumberService.getUnassignedNumbers()).toEqual(unassignedNumbers);
     expect(ExternalNumberService.getPendingOrders()).toContain(jasmine.objectContaining({
-      label: pendingAdvanceOrder
+      label: pendingAdvanceOrder,
     }));
     expect(ExternalNumberService.getPendingOrderQuantity()).toEqual(1);
   });
@@ -175,7 +175,7 @@ describe('Service: ExternalNumberService', function () {
 
     $rootScope.$apply();
     expect(ExternalNumberService.getPendingOrders()).toContain(jasmine.objectContaining({
-      label: malformedAdvanceOrderLabel
+      label: malformedAdvanceOrderLabel,
     }));
   });
 
@@ -205,7 +205,7 @@ describe('Service: ExternalNumberService', function () {
 
   it('should clear only pending numbers on pending 404', function () {
     PstnSetupService.listPendingNumbers.and.returnValue($q.reject({
-      status: 404
+      status: 404,
     }));
     ExternalNumberService.refreshNumbers();
 

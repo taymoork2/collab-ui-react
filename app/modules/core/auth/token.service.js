@@ -30,7 +30,7 @@
       completeLogout: completeLogout,
       clearStorage: clearStorage,
       triggerGlobalLogout: triggerGlobalLogout,
-      init: init
+      init: init,
     };
 
     var ACCESS_TOKEN = 'accessToken';
@@ -40,6 +40,7 @@
     var CLIENT_SESSION_ID = 'clientSessionId';
     var CLIENT_SESSION_COOKIE_DURATION = 3;
     var MONTHS = 'months';
+    var LOGIN_MESSAGE = 'loginMessage';
 
     return service;
 
@@ -49,8 +50,8 @@
 
       // If no sessionStorage tokens and the tab was not logged out, ask other tabs for the sessionStorage
       if (!$window.sessionStorage.length && !$window.sessionStorage.getItem(LOGOUT)) {
-        $window.localStorage.setItem(requestSessionStorageEvent, FOOBAR);
-        $window.localStorage.removeItem(requestSessionStorageEvent, FOOBAR);
+        Storage.put(requestSessionStorageEvent, FOOBAR);
+        Storage.remove(requestSessionStorageEvent, FOOBAR);
       }
     }
 
@@ -72,7 +73,7 @@
 
     function setClientSessionId(sessionId) {
       $cookies.put(CLIENT_SESSION_ID, sessionId, {
-        expires: moment().add(CLIENT_SESSION_COOKIE_DURATION, MONTHS).toDate()
+        expires: moment().add(CLIENT_SESSION_COOKIE_DURATION, MONTHS).toDate(),
       });
     }
 
@@ -95,17 +96,20 @@
       $injector.get('$http').defaults.headers.common.Authorization = 'Bearer ' + (token || getAccessToken());
     }
 
-    function completeLogout(redirectUrl) {
+    function completeLogout(redirectUrl, loginMessage) {
+      loginMessage = loginMessage || Storage.get(LOGIN_MESSAGE);
       clearStorage();
       // We store a key value in sessionStorage to
       // prevent a login when multiple tabs are open
       SessionStorage.put(LOGOUT, LOGOUT);
       WindowLocation.set(redirectUrl);
+      Storage.put(LOGIN_MESSAGE, loginMessage);
     }
 
-    function triggerGlobalLogout() {
-      $window.localStorage.setItem(logoutEvent, LOGOUT);
-      $window.localStorage.removeItem(logoutEvent, LOGOUT);
+    function triggerGlobalLogout(loginMessage) {
+      Storage.put(logoutEvent, LOGOUT);
+      Storage.remove(logoutEvent, LOGOUT);
+      Storage.put(LOGIN_MESSAGE, loginMessage);
     }
 
     function clearStorage() {
@@ -118,15 +122,15 @@
       if (!event.newValue) return;
       if (event.key === requestSessionStorageEvent) {
         // a tab asked for the sessionStorage, so send it
-        $window.localStorage.setItem(respondSessionStorageEvent, JSON.stringify($window.sessionStorage));
-        $window.localStorage.removeItem(respondSessionStorageEvent);
+        Storage.putObject(respondSessionStorageEvent, $window.sessionStorage);
+        Storage.remove(respondSessionStorageEvent);
       } else if (event.key === logoutEvent) {
         completeLogout(OAuthConfig.getLogoutUrl());
       } else if (event.key === respondSessionStorageEvent && !$window.sessionStorage.length) {
         // a tab sent data, so get it
         var data = JSON.parse(event.newValue);
         for (var key in data) {
-          $window.sessionStorage.setItem(key, data[key]);
+          SessionStorage.put(key, data[key]);
         }
 
         if (getAccessToken() && (getAccessToken() !== '')) {

@@ -11,13 +11,13 @@ describe('Controller: FirstTimeGoogleSetupController', function () {
   beforeEach(initController);
 
   modalInstanceMock = {
-    close: sinon.stub()
+    close: sinon.stub(),
   };
 
   CloudConnectorServiceMock = {
     updateConfig: function () {
       return $q.reject();
-    }
+    },
   };
 
   function dependencies(_$controller_, $rootScope, _$q_, _Notification_) {

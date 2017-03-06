@@ -11,41 +11,41 @@
     var conditional = 'conditional';
 
     var properties = {
-      LABEL: "label"
+      LABEL: "label",
     };
 
     vm.showLanguageAndVoiceOptions = false;
 
     var languageOption = {
       label: '',
-      value: ''
+      value: '',
     };
 
     var voiceOption = {
       label: '',
-      value: ''
+      value: '',
     };
 
     vm.inputPlaceHolder = $translate.instant('autoAttendant.inputPlaceHolder');
 
     vm.destinationOptions = [{
       label: $translate.instant('autoAttendant.destinations.Disconnect'),
-      action: 'disconnect'
+      action: 'disconnect',
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteHunt'),
-      action: 'routeToHuntGroup'
+      action: 'routeToHuntGroup',
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteAA'),
-      action: 'goto'
+      action: 'goto',
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteUser'),
-      action: 'routeToUser'
+      action: 'routeToUser',
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteVM'),
-      action: 'routeToVoiceMail'
+      action: 'routeToVoiceMail',
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteToExtNum'),
-      action: 'route'
+      action: 'route',
     }];
     vm.destination = vm.destinationOptions[0];
     vm.musicOnHold = '';
@@ -114,6 +114,7 @@
     }
 
     function updateFallback() {
+      //disconnect is not an action so needs to be re-init
       if (vm.destination.action === 'disconnect') {
         vm.menuEntry.actions[0].queueSettings.fallback.actions[0] = AutoAttendantCeMenuModelService.newCeActionEntry('disconnect', '');
       }
@@ -206,7 +207,7 @@
 
     function setVoiceOption() {
       if (vm.voiceBackup && _.find(vm.voiceOptions, {
-        "value": vm.voiceBackup.value
+        "value": vm.voiceBackup.value,
       })) {
         vm.voiceOption = vm.voiceBackup;
       } else if (_.find(vm.voiceOptions, AALanguageService.getVoiceOption())) {
@@ -249,7 +250,8 @@
     }
 
     function populateMaxWaitTime() {
-      vm.minutes = _.range(1, 61);
+      //1-60 increment by 1, then 75, 90, 105, 120
+      vm.minutes = _.concat(vm.minutes, _.range(1, 61), _.range(75, 121, 15));
     }
 
     //populating fallback drop down in sorted order
@@ -312,7 +314,7 @@
       if (AACommonService.isRouteSIPAddressToggle()) {
         vm.destinationOptions.push({
           label: $translate.instant('autoAttendant.phoneMenuRouteToSipEndpoint'),
-          action: 'routeToSipEndpoint'
+          action: 'routeToSipEndpoint',
         });
       }
     }

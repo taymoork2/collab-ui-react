@@ -15,8 +15,8 @@ describe('ServerErrorInterceptor', function () {
     var response = {
       status: 500,
       config: {
-        headers: {}
-      }
+        headers: {},
+      },
     };
     Config.isProd = sinon.stub().returns(false);
     $log.error = sinon.stub();
@@ -30,8 +30,8 @@ describe('ServerErrorInterceptor', function () {
     var response = {
       status: 500,
       config: {
-        headers: {}
-      }
+        headers: {},
+      },
     };
     Config.isProd = sinon.stub().returns(true);
     $log.error = sinon.stub();
@@ -45,8 +45,8 @@ describe('ServerErrorInterceptor', function () {
     var response = {
       status: 404,
       config: {
-        headers: {}
-      }
+        headers: {},
+      },
     };
     Config.isProd = sinon.stub().returns(false);
     $log.error = sinon.stub();

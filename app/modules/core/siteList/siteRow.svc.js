@@ -50,7 +50,7 @@
 
     this.getSiteRow = function (siteUrl) {
       var siteRow = _.find(_this.siteRows.gridData, {
-        siteUrl: siteUrl
+        siteUrl: siteUrl,
       });
       return siteRow;
     };
@@ -92,7 +92,7 @@
         field: 'siteUrl',
         displayName: $translate.instant('siteList.siteName'),
         sortable: false,
-        width: '25%'
+        width: '25%',
       });
 
       _this.siteRows.gridOptions.columnDefs.push({
@@ -100,7 +100,7 @@
         displayName: $translate.instant('siteList.licenseTypes'),
         cellTemplate: 'modules/core/siteList/siteLicenseTypesColumn.tpl.html',
         sortable: false,
-        width: '17%'
+        width: '17%',
       });
 
       _this.siteRows.gridOptions.columnDefs.push({
@@ -132,7 +132,7 @@
 
           var findCriteria = {
             siteUrl: newSiteUrl,
-            isLinkedSite: false
+            isLinkedSite: false,
           };
 
           var siteRowExists = _.find(
@@ -185,7 +185,7 @@
               mockStatusCurrentIndex: null,
               mockExport: false,
               mockImport: false,
-              mockFileDownload: false
+              mockFileDownload: false,
             };
 
             _this.addSiteRow(conferenceService);
@@ -206,7 +206,7 @@
 
           var findCriteria = {
             siteUrl: newSiteUrl,
-            isLinkedSite: true
+            isLinkedSite: true,
           };
 
           var siteRowExists = _.find(
@@ -274,7 +274,7 @@
           // $log.log(logMsg);
 
           _.filter(_this.siteRows.gridData, {
-            isLinkedSite: false
+            isLinkedSite: false,
           }).forEach(
             function processGridForLicense(siteRow) {
               // linked site don't need to process license
@@ -291,7 +291,7 @@
               //MC
               var siteMC = _.filter(allSitesLicenseInfo, {
                 webexSite: siteUrl,
-                offerCode: "MC"
+                offerCode: "MC",
               });
 
               if (
@@ -305,14 +305,14 @@
                   function processDisplayText(mc) {
                     //Grid content display
                     siteRow.licenseTypeContentDisplay = $translate.instant('helpdesk.licenseDisplayNames.' + mc.offerCode, {
-                      capacity: mc.capacity
+                      capacity: mc.capacity,
                     });
 
                     siteRow.licenseTypeId = siteRow.licenseTypeId + "MC" + mc.capacity + "-";
 
                     //Tooltip display
                     siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "<br>" + $translate.instant('helpdesk.licenseDisplayNames.' + mc.offerCode, {
-                      capacity: mc.capacity
+                      capacity: mc.capacity,
                     });
 
                     count++;
@@ -326,7 +326,7 @@
               //EE
               var siteEE = _.filter(allSitesLicenseInfo, {
                 webexSite: siteUrl,
-                offerCode: "EE"
+                offerCode: "EE",
               });
 
               if (
@@ -340,14 +340,14 @@
                   function processDisplayText(ee) {
                     //Grid content display
                     siteRow.licenseTypeContentDisplay = $translate.instant('helpdesk.licenseDisplayNames.' + ee.offerCode, {
-                      capacity: ee.capacity
+                      capacity: ee.capacity,
                     });
 
                     siteRow.licenseTypeId = siteRow.licenseTypeId + "EE" + ee.capacity + "-";
 
                     //Tooltip display
                     siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "<br>" + $translate.instant('helpdesk.licenseDisplayNames.' + ee.offerCode, {
-                      capacity: ee.capacity
+                      capacity: ee.capacity,
                     });
 
                     count++;
@@ -361,7 +361,7 @@
               //CMR
               var siteCMR = _.filter(allSitesLicenseInfo, {
                 webexSite: siteUrl,
-                offerCode: "CMR"
+                offerCode: "CMR",
               });
 
               if (
@@ -375,14 +375,14 @@
                   function processDisplayText(cmr) {
                     //Grid content display
                     siteRow.licenseTypeContentDisplay = $translate.instant('helpdesk.licenseDisplayNames.' + cmr.offerCode, {
-                      capacity: cmr.capacity
+                      capacity: cmr.capacity,
                     });
 
                     siteRow.licenseTypeId = siteRow.licenseTypeId + "CMR" + cmr.capacity + "-";
 
                     //Tooltip display
                     siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "<br>" + $translate.instant('helpdesk.licenseDisplayNames.' + cmr.offerCode, {
-                      capacity: cmr.capacity
+                      capacity: cmr.capacity,
                     });
 
                     count++;
@@ -396,7 +396,7 @@
               //EC
               var siteEC = _.filter(allSitesLicenseInfo, {
                 webexSite: siteUrl,
-                offerCode: "EC"
+                offerCode: "EC",
               });
 
               if (
@@ -410,14 +410,14 @@
                   function processDisplayText(ec) {
                     //Grid content display
                     siteRow.licenseTypeContentDisplay = $translate.instant('helpdesk.licenseDisplayNames.' + ec.offerCode, {
-                      capacity: ec.capacity
+                      capacity: ec.capacity,
                     });
 
                     siteRow.licenseTypeId = siteRow.licenseTypeId + "EC" + ec.capacity + "-";
 
                     //Tooltip display
                     siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "<br>" + $translate.instant('helpdesk.licenseDisplayNames.' + ec.offerCode, {
-                      capacity: ec.capacity
+                      capacity: ec.capacity,
                     });
 
                     count++;
@@ -431,7 +431,7 @@
               //SC
               var siteSC = _.filter(allSitesLicenseInfo, {
                 webexSite: siteUrl,
-                offerCode: "SC"
+                offerCode: "SC",
               });
 
               if (
@@ -445,14 +445,14 @@
                   function processDisplayText(sc) {
                     //Grid content display
                     siteRow.licenseTypeContentDisplay = $translate.instant('helpdesk.licenseDisplayNames.' + sc.offerCode, {
-                      capacity: sc.capacity
+                      capacity: sc.capacity,
                     });
 
                     siteRow.licenseTypeId = siteRow.licenseTypeId + "SC" + sc.capacity + "-";
 
                     //Tooltip display
                     siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "<br>" + $translate.instant('helpdesk.licenseDisplayNames.' + sc.offerCode, {
-                      capacity: sc.capacity
+                      capacity: sc.capacity,
                     });
 
                     count++;
@@ -466,7 +466,7 @@
               //TC
               var siteTC = _.filter(allSitesLicenseInfo, {
                 webexSite: siteUrl,
-                offerCode: "TC"
+                offerCode: "TC",
               });
 
               if (
@@ -480,14 +480,14 @@
                   function processDisplayText(tc) {
                     //Grid content display
                     siteRow.licenseTypeContentDisplay = $translate.instant('helpdesk.licenseDisplayNames.' + tc.offerCode, {
-                      capacity: tc.capacity
+                      capacity: tc.capacity,
                     });
 
                     siteRow.licenseTypeId = siteRow.licenseTypeId + "TC" + tc.capacity + "-";
 
                     //Tooltip display
                     siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "<br>" + $translate.instant('helpdesk.licenseDisplayNames.' + tc.offerCode, {
-                      capacity: tc.capacity
+                      capacity: tc.capacity,
                     });
 
                     count++;
@@ -534,7 +534,7 @@
       // var logMsg = "";
 
       _.filter(_this.siteRows.gridData, {
-        isLinkedSite: false
+        isLinkedSite: false,
       }).forEach(function (siteRow) {
         _this.updateActionsColumnForOneRow(siteRow);
       }); // gridData.forEach()

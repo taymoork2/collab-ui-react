@@ -11,7 +11,7 @@
       updateConfig: updateConfig,
       deactivateService: deactivateService,
       getService: getService,
-      getStatusCss: getStatusCss
+      getStatusCss: getStatusCss,
     };
 
     function extractDataFromResponse(res) {
@@ -35,7 +35,7 @@
       return $http
         .post(UrlConfig.getCccUrl() + '/orgs/' + Authinfo.getOrgId() + '/services/' + serviceId, {
           serviceAccountId: newServiceAccountId,
-          privateKeyData: privateKey.split(',')[1]
+          privateKeyData: privateKey.split(',')[1],
         })
         .then(function () {
           return ServiceDescriptor.enableService(serviceId);

@@ -4,55 +4,84 @@
   angular.module('Core')
   .controller('CustomerSubscriptionsDetailCtrl', CustomerSubscriptionsDetail);
 
-  function CustomerSubscriptionsDetail($stateParams, $q, $translate, $window, Authinfo, Auth, CustomerAdministratorService, Userservice, Notification) {
+  function CustomerSubscriptionsDetail($stateParams, $q, $translate, Authinfo, Auth, CustomerAdministratorService, Notification, UserListService, Userservice, Utils) {
     var vm = this;
-    vm.subscriptions = [];
+    vm.DEFAULT_ORDER_BY = 'email';
     vm.currentCustomer = $stateParams.currentCustomer;
     vm.customerOrgId = vm.currentCustomer.customerOrgId;
     vm.customerName = vm.currentCustomer.customerName;
-    vm.customerEmail = vm.currentCustomer.customerEmail;
-    vm.getSubscriptions = getSubscriptions;
     vm.sendMail = sendMail;
-    vm.partnerAdmins = [];
     vm.partnerOrgName = Authinfo.getOrgName();
-    vm.partnerEmail = Authinfo.getPrimaryEmail();
-    vm.customerInfo = [];
-    vm.customerInfoClipboard = [];
+    vm.clipboardText = '';
+    vm.orderReq = {
+      subscriptions: [],
+      customerFullAdmins: [],
+      partnerAdmins: [],
+      body: '',
+    };
     vm._helpers = {
-      flattenAndJoin: flattenAndJoin
+      getSubscriptions: getSubscriptions,
+      getCustomerFullAdmins: getCustomerFullAdmins,
+      getSimplifiedUserList: getSimplifiedUserList,
+      flattenAndJoin: flattenAndJoin,
+      updateOrderReqBody: updateOrderReqBody,
     };
 
     init();
 
     function init() {
-      var newLine = '\n';
-      var newLineHtml = '%0D%0A';
       var promises = {
+        customerFullAdmins: getCustomerFullAdmins(),
         partnerAdmins: getPartnerAdmins(),
-        subscriptions: getSubscriptions()
+        subscriptions: getSubscriptions(),
       };
       $q.all(promises).then(function (results) {
-        vm.partnerAdmins = results.partnerAdmins;
-        vm.subscriptions = results.subscriptions;
-        var subscriptionDisplay = _.map(results.subscriptions, function (sub) {
-          return sub.subscriptionId + ' - ' + sub.siteUrl;
-        });
-        var partnerAdminDisplay = _.map(results.partnerAdmins, function (admin) {
-          return admin.name + ' - ' + admin.email;
-        });
-
-        var infoArray = [$translate.instant('customerSubscriptions.customerAdmin'),
-          vm.customerName + ' - ' + vm.customerEmail, '',
-          $translate.instant('customerSubscriptions.partnerAdmin'), partnerAdminDisplay, '',
-          $translate.instant('customerSubscriptions.webexSubscriptions'), subscriptionDisplay];
-        vm.customerInfo = vm._helpers.flattenAndJoin(infoArray, newLineHtml);
-        vm.customerInfoClipboard = vm._helpers.flattenAndJoin(infoArray, newLine);
+        // sort lists of admins, then set
+        results.customerFullAdmins = _.sortBy(results.customerFullAdmins, vm.DEFAULT_ORDER_BY);
+        results.partnerAdmins = _.sortBy(results.partnerAdmins, vm.DEFAULT_ORDER_BY);
+        _.set(vm, 'orderReq.customerFullAdmins', results.customerFullAdmins);
+        _.set(vm, 'orderReq.partnerAdmins', results.partnerAdmins);
+        _.set(vm, 'orderReq.subscriptions', results.subscriptions);
+        vm._helpers.updateOrderReqBody();
       });
     }
 
-    function sendMail() {
-      $window.location.href = 'mailto:' + '' + '?subject=' + 'Subscription Info: ' + vm.customerName + '&body=' + vm.customerInfo;
+    function updateOrderReqBody() {
+      var customerFullAdminLineEntries = _.map(vm.orderReq.customerFullAdmins, 'emailAndName');
+      var partnerAdminLineEntries = _.map(vm.orderReq.partnerAdmins, 'emailAndName');
+      var subscriptionLineEntries = _.map(vm.orderReq.subscriptions, function (sub) {
+        return sub.subscriptionId + ' - ' + sub.siteUrl;
+      });
+
+      var result = [
+        $translate.instant('customerSubscriptions.customerAdmin'),
+        customerFullAdminLineEntries,
+        '',
+        $translate.instant('customerSubscriptions.partnerAdmin'),
+        partnerAdminLineEntries,
+        '',
+      ];
+
+      if (!subscriptionLineEntries.length) {
+        result.push($translate.instant('customerSubscriptions.noWebexSubscriptions'));
+      } else {
+        result.push($translate.instant('customerSubscriptions.webexSubscriptions'));
+        result.push(subscriptionLineEntries);
+      }
+
+      vm.orderReq.body = vm._helpers.flattenAndJoin(result, '\n');
+      vm.clipboardText = vm.orderReq.body;
     }
+
+    function sendMail() {
+      var subject = $translate.instant('customerSubscriptions.subscriptionInfo') + ' ' + vm.customerName;
+      var body = vm.orderReq.body;
+      Utils.mailTo({
+        subject: subject,
+        body: body,
+      });
+    }
+
     function getSubscriptions() {
       var subscriptionArray = [];
       return Auth.getCustomerAccount(vm.customerOrgId).then(function (response) {
@@ -64,7 +93,7 @@
           if (siteUrl !== '') {
             if (!_.find(subscriptionArray, {
               siteUrl: siteUrl,
-              subscriptionId: subscriptionId
+              subscriptionId: subscriptionId,
             })) {
               customerSubscription = {
                 siteUrl: siteUrl,
@@ -79,14 +108,33 @@
         return [];
       });
     }
+
+    function getSimplifiedUserList(ciResponse) {
+      var users = _.get(ciResponse, 'data.Resources', []);
+      return _.map(users, function (user) {
+        var email = Userservice.getPrimaryEmailFromUser(user);
+        var displayName = Userservice.getAnyDisplayableNameFromUser(user);
+        displayName = (displayName === email) ? undefined : displayName;
+        var emailAndName = email;
+        if (displayName) {
+          emailAndName += ' - ' + displayName;
+        }
+        return {
+          email: email,
+          displayName: displayName,
+          emailAndName: emailAndName,
+        };
+      });
+    }
+
+    function getCustomerFullAdmins() {
+      var params = { orgId: vm.customerOrgId };
+      return UserListService.listFullAdminUsers(params).then(getSimplifiedUserList);
+    }
+
     function getPartnerAdmins() {
       return CustomerAdministratorService.getCustomerAdmins(vm.customerOrgId)
-        .then(function (response) {
-          var users = _.get(response, 'data.Resources', []);
-          return _.map(users, function (user) {
-            return { name: Userservice.getFullNameFromUser(user), email: Userservice.getPrimaryEmailFromUser(user) };
-          });
-        })
+        .then(getSimplifiedUserList)
         .catch(function (response) {
           Notification.errorWithTrackingId(response, 'customerAdminPanel.customerAdministratorServiceError');
           return [];

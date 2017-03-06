@@ -35,8 +35,8 @@
         'schemas': Config.scimSchemas,
         'name': {},
         'meta': {
-          'attributes': []
-        }
+          'attributes': [],
+        },
       };
       // Add or delete properties depending on whether or not their value is empty/blank.
       // With property value set to "", the back-end will respond with a 400 error.

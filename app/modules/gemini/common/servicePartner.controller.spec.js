@@ -27,7 +27,7 @@ describe('controller: servicePartnerCtrl', function () {
   function initController() {
     controller = $controller('servicePartnerCtrl', {
       $scope: $scope,
-      gemService: gemService
+      gemService: gemService,
     });
   }
 

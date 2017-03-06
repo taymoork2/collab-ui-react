@@ -22,6 +22,7 @@
     vm.providerImplementation = vm.SWIVEL;
     vm.carrierCnt = 0;
     vm.ftHuronSupportThinktel = false;
+    vm.providerSelected = false;
 
     vm.getStateInventory = getStateInventory;
     vm.onAreaCodeChange = onAreaCodeChange;
@@ -33,13 +34,14 @@
     vm._getCarriers = _getCarriers;
     vm.onProviderChange = onProviderChange;
     vm.onProviderReady = onProviderReady;
+    vm.location = '';
 
     vm.pstn = {
       stateOptions: [],
       areaCodeOptions: null,
       areaCodeEnable: false,
       nxxOptions: null,
-      nxxEnable: false
+      nxxEnable: false,
     };
 
     //TATA Tokenfield
@@ -50,7 +52,7 @@
       createTokensOnBlur: true,
       limit: 100,
       tokens: [],
-      beautify: false
+      beautify: false,
     };
     vm.manualTokenMethods = {
       createtoken: manualCreateToken,
@@ -68,7 +70,7 @@
       limit: pstnTokenLimit,
       tokens: [],
       minLength: 9,
-      beautify: false
+      beautify: false,
     };
     vm.tokenMethods = {
       createtoken: createToken,
@@ -89,11 +91,12 @@
         onChangeFn: function () {
           vm.providerImplementation = vm.trialData.details.pstnProvider.apiImplementation;
           resetNumbers();
-        }
+          vm.providerSelected = true;
+        },
       },
       controller: /* @ngInject */ function ($scope) {
         _getCarriers($scope);
-      }
+      },
     }];
 
     vm.contractInfoFields = [{
@@ -148,13 +151,12 @@
       _setupResellers();
 
       SELECT = $translate.instant('common.select');
-      FeatureToggleService.supports(FeatureToggleService.features.huronSupportThinktel).then(function (results) {
+      FeatureToggleService.supports(FeatureToggleService.features.huronSupportThinktel)
+      .then(function (results) {
         vm.ftHuronSupportThinktel = results;
       });
 
-      PstnSetupStatesService.getStateProvinces().then(function (states) {
-        vm.pstn.stateOptions = states;
-      });
+      PstnSetupStatesService.getLocation(vm.trialData.details.countryCode).then(loadLocations);
 
       Analytics.trackTrialSteps(Analytics.eventNames.ENTER_SCREEN, vm.parentTrialData);
       if (_.has(vm.trialData, 'details.pstnNumberInfo.state.abbreviation')) {
@@ -178,16 +180,30 @@
       }, 100);
     }
 
+    function loadLocations(location) {
+      vm.location = location.type;
+      vm.pstn.stateOptions = location.areas;
+    }
+
     function onProviderChange() {
       vm.trialData.details.pstnProvider = PstnSetup.getProvider();
       vm.providerImplementation = vm.trialData.details.pstnProvider.apiImplementation;
       resetNumberSearch();
+      vm.providerSelected = true;
     }
 
     function onProviderReady() {
       if (PstnSetup.getCarriers().length === 1) {
-        vm.trialData.details.pstnProvider = PstnSetup.getCarriers()[0];
-        vm.providerImplementation = vm.trialData.details.pstnProvider.apiImplementation;
+        PstnSetup.getCarriers()[0].selected = true;
+        PstnSetup.setProvider(PstnSetup.getCarriers()[0]);
+        onProviderChange();
+      } else {
+        PstnSetup.getCarriers().forEach(function (pstnCarrier) {
+          if (pstnCarrier.selected) {
+            PstnSetup.setProvider(pstnCarrier);
+            onProviderChange();
+          }
+        });
       }
     }
 
@@ -290,7 +306,7 @@
       var params = {
         npa: vm.trialData.details.pstnNumberInfo.areaCode.code,
         count: pstnTokenLimit.toString(),
-        sequential: false
+        sequential: false,
       };
 
       var nxx = getNxxValue();

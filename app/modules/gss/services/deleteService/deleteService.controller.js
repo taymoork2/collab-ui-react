@@ -29,7 +29,7 @@
         .deleteService(vm.serviceId)
         .then(function () {
           Notification.success('gss.deleteServiceSucceed', {
-            serviceName: vm.serviceName
+            serviceName: vm.serviceName,
           });
 
           notifyServiceDeleted();
@@ -37,7 +37,7 @@
         })
         .catch(function (error) {
           Notification.errorWithTrackingId(error, 'gss.deleteServiceFailed', {
-            serviceName: vm.serviceName
+            serviceName: vm.serviceName,
           });
         })
         .finally(function () {

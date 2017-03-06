@@ -1,5 +1,9 @@
 <div class="expressway-service hercules hercules-fix-paragraphs">
-  <cs-page-header title="hercules.hybridServiceNames.hybrid-context" tabs="vm.tabs" back="true"
-                  back-url="vm.backState"></cs-page-header>
-  <div ui-view="contextServiceView" class="content-container"></div>
+  <cs-page-header title="hercules.hybridServiceNames.hybrid-context" tabs="hybridContextContainerController.tabs"
+                  back="true" back-url="hybridContextContainerController.backState"></cs-page-header>
+  <div ui-view="subHeader">
+  </div>
+
+  <div ui-view="contextServiceView">
+  </div>
 </div>

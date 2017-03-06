@@ -35,7 +35,7 @@
         .then(function (response) {
           var data = response.data;
           var service = _.find(data.items, {
-            id: serviceId
+            id: serviceId,
           });
           if (service !== undefined) {
             return _.without(service.emailSubscribers.split(','), '');
@@ -47,7 +47,7 @@
     var setEmailSubscribers = function (serviceId, emailSubscribers) {
       return $http
         .patch(UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId, {
-          emailSubscribers: emailSubscribers
+          emailSubscribers: emailSubscribers,
         });
     };
 
@@ -62,7 +62,15 @@
 
     var setDisableEmailSendingToUser = function (calSvcDisableEmailSendingToEndUser) {
       var settings = {
-        calSvcDisableEmailSendingToEndUser: !!calSvcDisableEmailSendingToEndUser
+        calSvcDisableEmailSendingToEndUser: !!calSvcDisableEmailSendingToEndUser,
+      };
+
+      return Orgservice.setOrgSettings(Authinfo.getOrgId(), settings);
+    };
+
+    var setDefaultWebExSiteOrgLevel = function (defaultWebExSiteOrgLevel) {
+      var settings = {
+        calSvcDefaultWebExSite: defaultWebExSiteOrgLevel,
       };
 
       return Orgservice.setOrgSettings(Authinfo.getOrgId(), settings);
@@ -70,7 +78,7 @@
 
     var setOneButtonToPushIntervalMinutes = function (bgbIntervalMinutes) {
       var settings = {
-        bgbIntervalMinutes: bgbIntervalMinutes
+        bgbIntervalMinutes: bgbIntervalMinutes,
       };
 
       return Orgservice.setOrgSettings(Authinfo.getOrgId(), settings);
@@ -79,7 +87,7 @@
     var enableService = function (serviceId) {
       var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId;
       return $http.patch(url, {
-        enabled: true
+        enabled: true,
       })
         .then(extractData);
     };
@@ -87,7 +95,7 @@
     var disableService = function (serviceId) {
       var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId;
       return $http.patch(url, {
-        enabled: false
+        enabled: false,
       })
         .then(extractData);
     };
@@ -96,7 +104,7 @@
       return getServices()
         .then(function (items) {
           var service = _.find(items, {
-            id: serviceId
+            id: serviceId,
           });
           return service ? service.enabled : false;
         });
@@ -105,7 +113,7 @@
     var acknowledgeService = function (serviceId) {
       return $http
         .patch(UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId, {
-          acknowledged: true
+          acknowledged: true,
         });
     };
 
@@ -119,6 +127,7 @@
       setEmailSubscribers: setEmailSubscribers,
       getOrgSettings: getOrgSettings,
       setDisableEmailSendingToUser: setDisableEmailSendingToUser,
+      setDefaultWebExSiteOrgLevel: setDefaultWebExSiteOrgLevel,
       setOneButtonToPushIntervalMinutes: setOneButtonToPushIntervalMinutes,
       enableService: enableService,
       disableService: disableService,

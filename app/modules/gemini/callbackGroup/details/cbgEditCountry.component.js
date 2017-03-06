@@ -5,7 +5,7 @@
     .module('Gemini')
     .component('cbgEditCountry', {
       controller: cbgEditCountry,
-      templateUrl: 'modules/gemini/callbackGroup/details/cbgEditCountry.tpl.html'
+      templateUrl: 'modules/gemini/callbackGroup/details/cbgEditCountry.tpl.html',
     });
 
   /* @ngInject */
@@ -17,7 +17,7 @@
     vm.btnDisable = true;
     vm.model = {
       groupName: _.get(info, 'groupName'),
-      customerAttribute: _.get(info, 'customerAttribute')
+      customerAttribute: _.get(info, 'customerAttribute'),
     };
     vm.customerId = _.get($stateParams, 'obj.customerId', '');
 
@@ -53,7 +53,7 @@
         groupName: vm.model.groupName,
         customerName: vm.model.customerAttribute,
         callbackGroupSites: info.callbackGroupSites,
-        customerAttribute: vm.model.customerAttribute
+        customerAttribute: vm.model.customerAttribute,
       };
 
       cbgService.updateCallbackGroup(data)

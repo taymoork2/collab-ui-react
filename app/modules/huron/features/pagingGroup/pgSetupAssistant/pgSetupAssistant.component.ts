@@ -1,4 +1,4 @@
-import { IPagingGroup, IMemberData, IMemberWithPicture, PLACE, USER } from 'modules/huron/features/pagingGroup/pagingGroup';
+import { IPagingGroup, IMemberData, IInitiatorData, IMemberWithPicture, PLACE, USER, PUBLIC, CUSTOM } from 'modules/huron/features/pagingGroup/pagingGroup';
 import { PagingGroupService } from 'modules/huron/features/pagingGroup/pagingGroup.service';
 import { USER_REAL_USER } from 'modules/huron/members';
 import { IToolkitModalService } from 'modules/core/modal';
@@ -16,9 +16,16 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
   //Paging group members with picture
   public selectedMembers: IMemberWithPicture[] = [];
 
+  //Paging Group initiator - default to PUBLIC
+  public initiatorType: string = PUBLIC;
+  public selectedInitiators: IMemberWithPicture[] = [];
+
   public animation: string = 'slide-left';
   private index: number = 0;
   private createLabel: string = '';
+
+  //Remove later
+  public initiatorFeature: boolean = false;
 
   /* @ngInject */
   constructor(private $timeout: ng.ITimeoutService,
@@ -27,12 +34,23 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
               private $state: ng.ui.IStateService,
               private $translate: ng.translate.ITranslateService,
               private PagingGroupService: PagingGroupService,
-              private Notification) {
+              private Notification,
+              private FeatureToggleService) {
     this.createLabel = this.$translate.instant('pagingGroup.createHelpText');
+
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.huronPagingInitiator).then(supports => {
+      if (supports) {
+        this.initiatorFeature = true;
+      }
+    });
   }
 
   public get lastIndex(): number {
-    return 2;
+    if (this.initiatorFeature) {
+      return 3;
+    } else {
+      return 2;
+    }
   }
 
   public getPageIndex(): number {
@@ -54,8 +72,24 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
         return !(this.number === undefined) && this.isNumberValid;
       case 2:
         let memberDefined: boolean = this.selectedMembers && this.selectedMembers.length !== 0;
+        if (this.initiatorFeature) {
+          return memberDefined;
+        } else {
+          let helpText = this.$element.find('div.btn-helptext.helptext-btn--right');
+          if (memberDefined) {
+            //Show helpText
+            helpText.addClass('active');
+            helpText.addClass('enabled');
+          } else {
+            //Hide helpText
+            helpText.removeClass('active');
+            helpText.removeClass('enabled');
+          }
+        }
+      case 3:
+        let initiatorDefined: boolean = (this.initiatorType === CUSTOM) ? (this.selectedInitiators.length > 0) : (this.initiatorType !== null);
         let helpText = this.$element.find('div.btn-helptext.helptext-btn--right');
-        if (memberDefined) {
+        if (initiatorDefined) {
           //Show helpText
           helpText.addClass('active');
           helpText.addClass('enabled');
@@ -64,7 +98,7 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
           helpText.removeClass('active');
           helpText.removeClass('enabled');
         }
-        return memberDefined;
+        return initiatorDefined;
       default:
         return true;
     }
@@ -148,23 +182,38 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
     this.selectedMembers = members;
   }
 
+  public onUpdateInitiator(initiatorType: string, selectedInitiators: IMemberWithPicture[]): void {
+    this.initiatorType = initiatorType;
+    this.selectedInitiators = selectedInitiators;
+  }
+
   public savePagingGroup(): void {
     let members: IMemberData[] = [];
-    let emptyDeviceId: string[] = [];
+    let initiators: IInitiatorData[] = [];
 
     _.forEach(this.selectedMembers, function (mem) {
       let member: IMemberData = <IMemberData> {
         memberId: mem.member.uuid,
-        deviceIds: emptyDeviceId,
         type: (mem.member.type === USER_REAL_USER) ? USER : PLACE,
       };
       members.push(member);
+    });
+
+    //populate the paging group initiators
+    _.forEach(this.selectedInitiators, function (mem) {
+      let initiator: IInitiatorData = <IInitiatorData> {
+        initiatorId: mem.member.uuid,
+        type: (mem.member.type === USER_REAL_USER) ? USER : PLACE,
+      };
+      initiators.push(initiator);
     });
 
     let pg: IPagingGroup = <IPagingGroup>{
       name: this.name,
       extension: this.number,
       members: members,
+      initiatorType: this.initiatorType,
+      initiators: initiators,
     };
 
     this.PagingGroupService.savePagingGroup(pg).then(
@@ -189,15 +238,26 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
   public compareMembers(pg, data): void {
     let result: Array<String> = [];
     if (data.members !== undefined) {
-      if (data.members.length === pg.members.length) {
+      if ((data.members.length === pg.members.length) && ((data.initiatorType === CUSTOM) ? (data.initiators.length === pg.initiators.length) : true)) {
         this.Notification.success('pagingGroup.successSave', { pagingGroupName: data.name });
       } else {
-        for (let i = 0; i < pg.members.length; i++) {
-          if (_.find(data.members, { memberId: pg.members[i].memberId }) === undefined) {
-            result.push(pg.members[i].memberId);
+        if (data.members.length !== pg.members.length) {
+          for (let i = 0; i < pg.members.length; i++) {
+            if (_.find(data.members, { memberId: pg.members[i].memberId }) === undefined) {
+              result.push(pg.members[i].memberId);
+            }
           }
+          this.Notification.error('pagingGroup.errorSaveMemberPartial', { pagingGroupName: data.name, message: result });
         }
-        this.Notification.error('pagingGroup.errorSavePartial', { pagingGroupName: data.name, message: result });
+        if ((data.initiatorType === CUSTOM) ? (data.initiators.length !== pg.initiators.length) : false) {
+          result = [];
+          for (let i = 0; i < pg.initiators.length; i++) {
+            if (_.find(data.initiators, { initiatorId: pg.initiators[i].initiatorId }) === undefined) {
+              result.push(pg.initiators[i].initiatorId);
+            }
+          }
+          this.Notification.error('pagingGroup.errorSaveInitiatorPartial', { pagingGroupName: data.name, message: result });
+        }
       }
     }
   }

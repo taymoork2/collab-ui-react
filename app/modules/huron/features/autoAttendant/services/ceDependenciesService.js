@@ -8,7 +8,7 @@
   /* @ngInject */
   function CeDependenciesService($resource, HuronConfig) {
     return $resource(HuronConfig.getCesUrl() + '/customers/:customerId/dependencies', {
-      customerId: '@customerId'
+      customerId: '@customerId',
     });
   }
 })();

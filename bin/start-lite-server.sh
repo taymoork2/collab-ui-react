@@ -48,4 +48,4 @@ unset -v pass_through_args[0]
 kill_wait "lite-server"
 
 env_suffix="$1"
-lite-server -c "$WX2_ADMIN_WEB_CLIENT_HOME/config/lite-server-${env_suffix}.js" "${pass_through_args[@]}"
+node --max-old-space-size=2048 "$WX2_ADMIN_WEB_CLIENT_HOME/node_modules/lite-server/bin/lite-server" -c "$WX2_ADMIN_WEB_CLIENT_HOME/config/lite-server-${env_suffix}.js" "${pass_through_args[@]}"

@@ -8,7 +8,7 @@ require('./_overview.scss');
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($rootScope, $modal, $state, $scope, $translate, Authinfo, CardUtils, Config, FeatureToggleService, FusionClusterService, hasGoogleCalendarFeatureToggle, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, SunlightReportService, TrialService, UrlConfig, PstnSetupService) {
+  function OverviewCtrl($modal, $rootScope, $state, $scope, $translate, Authinfo, CardUtils, Config, FeatureToggleService, FusionClusterService, hasGoogleCalendarFeatureToggle, Log, LicenseService, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, SunlightReportService, TrialService, UrlConfig, PstnSetupService) {
     var vm = this;
 
     var PSTN_TOS_ACCEPT = 'pstn-tos-accept-event';
@@ -25,19 +25,13 @@ require('./_overview.scss');
       OverviewCardFactory.createCareCard(),
       OverviewCardFactory.createRoomSystemsCard(),
       OverviewCardFactory.createHybridServicesCard(),
-      OverviewCardFactory.createUsersCard()
+      OverviewCardFactory.createUsersCard(),
     ];
 
     vm.notifications = [];
     vm.pstnToSNotification = null;
     vm.trialDaysLeft = undefined;
     vm.dismissNotification = dismissNotification;
-
-    vm.hasHDSFeatureToggle = false;
-    FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity)
-      .then(function (reply) {
-        vm.hasHDSFeatureToggle = reply;
-      });
 
     // for smaller screens where the notifications are on top, the layout needs to resize after the notifications are loaded
     function resizeNotifications() {
@@ -66,7 +60,7 @@ require('./_overview.scss');
                 vm.notifications.push(OverviewNotificationFactory.createCallConnectNotification());
               } else if (item.id === Config.entitlements.mediafusion) {
                 vm.notifications.push(OverviewNotificationFactory.createHybridMediaNotification());
-              } else if (item.id === Config.entitlements.hds && vm.hasHDSFeatureToggle) {
+              } else if (item.id === Config.entitlements.hds) {
                 vm.notifications.push(OverviewNotificationFactory.createHybridDataSecurityNotification());
               }
             }
@@ -87,11 +81,25 @@ require('./_overview.scss');
           if (vm.isDeviceManagement && _.isUndefined(data.orgSettings.allowCrashLogUpload)) {
             vm.notifications.push(OverviewNotificationFactory.createCrashLogNotification());
           }
+          if (Authinfo.isCare() || Authinfo.isCareVoice()) {
+            var hasMessage = LicenseService.orgIsEntitledTo(data, 'squared-room-moderation');
+            var hasCall = LicenseService.orgIsEntitledTo(data, 'ciscouc');
+            if (!hasMessage && !hasCall) {
+              vm.notifications.push(OverviewNotificationFactory
+                .createCareLicenseNotification('homePage.careLicenseMsgAndCallMissingText', 'homePage.careLicenseLinkText2'));
+            } else if (!hasMessage) {
+              vm.notifications.push(OverviewNotificationFactory
+                .createCareLicenseNotification('homePage.careLicenseMsgMissingText', 'homePage.careLicenseLinkText1'));
+            } else if (!hasCall) {
+              vm.notifications.push(OverviewNotificationFactory
+                .createCareLicenseNotification('homePage.careLicenseCallMissingText', 'homePage.careLicenseLinkText1'));
+            }
+          }
         } else {
           Log.debug('Get existing org failed. Status: ' + status);
           Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
         }
-      });
+      }, Authinfo.getOrgId(), true);
       Orgservice.getAdminOrgUsage()
         .then(function (response) {
           var sharedDevicesUsage = -1;
@@ -135,6 +143,10 @@ require('./_overview.scss');
     }
 
     function getTOSStatus() {
+      //Don't allow the Parner to accept ToS for the customer
+      if (Authinfo.isCustomerLaunchedFromPartner()) {
+        return;
+      }
       if (vm.orgData !== null) {
         PstnSetupService.getCustomerV2(vm.orgData.id).then(function (customer) {
           if (customer.trial) {
@@ -177,7 +189,7 @@ require('./_overview.scss');
     function removeCardUserTitle() {
       if (vm.isCSB) {
         _.remove(vm.cards, {
-          name: 'overview.cards.users.title'
+          name: 'overview.cards.users.title',
         });
       }
     }
@@ -190,7 +202,7 @@ require('./_overview.scss');
 
     function dismissNotification(notification) {
       vm.notifications = _.reject(vm.notifications, {
-        name: notification.name
+        name: notification.name,
       });
       notification.dismiss();
     }
@@ -226,7 +238,7 @@ require('./_overview.scss');
 
     $scope.$on('DISMISS_SIP_NOTIFICATION', function () {
       vm.notifications = _.reject(vm.notifications, {
-        name: 'cloudSipUri'
+        name: 'cloudSipUri',
       });
     });
 

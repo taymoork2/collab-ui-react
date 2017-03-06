@@ -18,7 +18,7 @@ describe('drilldownReports Controller Positive Test cases', function () {
     var props = {
       broadcast: {
         refresh: "DummyRefreshString",
-        reset: "DummyResetString"
+        reset: "DummyResetString",
       },
       description: "Dummy set Description",
       display: false,
@@ -36,16 +36,16 @@ describe('drilldownReports Controller Positive Test cases', function () {
             field: 'userName',
             id: 'userName',
             displayName: "Dummy userName",
-            sortable: true
+            sortable: true,
           }, {
             field: 'csat',
             id: 'averageCsat',
             displayName: "Dummy Csat",
-            sortable: true
-          }
-        ]
+            sortable: true,
+          },
+        ],
       },
-      title: "Dummy Title"
+      title: "Dummy Title",
     };
 
     $scope = $rootScope.$new();
@@ -55,11 +55,11 @@ describe('drilldownReports Controller Positive Test cases', function () {
       $log: $log,
       ReportConstants: ReportConstants,
       $timeout: $timeout,
-      CardUtils: CardUtils
+      CardUtils: CardUtils,
     }, {
       props: props,
       callback: callbackSpy,
-      gridData: []
+      gridData: [],
     });
     $log.warn($rootScope);
   });

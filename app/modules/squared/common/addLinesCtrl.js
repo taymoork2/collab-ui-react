@@ -10,7 +10,7 @@
     vm.title = wizardData.title;
 
     $scope.entitylist = [{
-      name: wizardData.account.name
+      name: wizardData.account.name,
     }];
     $scope.telephonyInfo = {};
     vm.isMapped = false;
@@ -41,8 +41,8 @@
       $stateParams.wizard.next({
         account: {
           directoryNumber: numbers.directoryNumber,
-          externalNumber: numbers.externalNumber
-        }
+          externalNumber: numbers.externalNumber,
+        },
       });
     };
 
@@ -87,7 +87,7 @@
       }
       return {
         directoryNumber: directoryNumber,
-        externalNumber: externalNumber
+        externalNumber: externalNumber,
       };
     };
 
@@ -153,10 +153,10 @@
     function toggleShowExtensions() {
       return DialPlanService.getCustomerDialPlanDetails().then(function (response) {
         var indexOfDidColumn = _.findIndex(vm.addDnGridOptions.columnDefs, {
-          field: 'externalNumber'
+          field: 'externalNumber',
         });
         var indexOfDnColumn = _.findIndex(vm.addDnGridOptions.columnDefs, {
-          field: 'internalExtension'
+          field: 'internalExtension',
         });
         if (response.extensionGenerated === "true") {
           vm.showExtensions = false;
@@ -187,7 +187,7 @@
         // if the externalNumber was changed, find a matching DN and set the internalNumber to match
         if (modifiedFieldName === "externalNumber") {
           var matchingDn = _.find(CommonLineService.getInternalNumberPool(), {
-            pattern: rowEntity.externalNumber.pattern.substr(-dnLength)
+            pattern: rowEntity.externalNumber.pattern.substr(-dnLength),
           });
           if (matchingDn) {
             rowEntity.assignedDn = matchingDn;
@@ -260,7 +260,7 @@
         displayName: $translate.instant('usersPage.nameHeader'),
         sortable: false,
         cellTemplate: nameTemplate,
-        width: '*'
+        width: '*',
       }, {
         field: 'externalNumber',
         displayName: $translate.instant('usersPage.directLineHeader'),
@@ -268,7 +268,7 @@
         cellTemplate: externalExtensionTemplate,
         maxWidth: 220,
         minWidth: 140,
-        width: '*'
+        width: '*',
       }, {
         field: 'internalExtension',
         displayName: $translate.instant('usersPage.extensionHeader'),
@@ -276,8 +276,8 @@
         cellTemplate: internalExtensionTemplate,
         maxWidth: 220,
         minWidth: 140,
-        width: '*'
-      }]
+        width: '*',
+      }],
     };
 
     vm.activateDID();

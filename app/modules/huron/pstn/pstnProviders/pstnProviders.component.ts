@@ -31,11 +31,19 @@ export class PstnProvidersCtrl implements ng.IComponentController {
   public $onInit() {
     this.pstnCarriers = new Array<PstnCarrier>();
     this.pstnCarrierStatics = new Array<IPstnCarrierStatic>();
-    this.getCarriersStatic();
-    this.getCarriersNetwork();
+    this.getCarriersStatic().then(() => {
+      this.getCarriersNetwork();
+    });
   }
 
   public onSetProvider(carrier: PstnCarrier) {
+    this.pstnCarriers.forEach( (pstnCarrier: PstnCarrier) => {
+      if (pstnCarrier.title === carrier.title) {
+        pstnCarrier.selected = true;
+      } else {
+        pstnCarrier.selected = false;
+      }
+    });
     this.PstnSetup.setProvider(carrier);
     this.onChangeFn();
   }
@@ -46,8 +54,8 @@ export class PstnProvidersCtrl implements ng.IComponentController {
   }
 
   //Get static carrier informantion from JSON file
-  private getCarriersStatic() {
-    this.getCarriersJson().query().$promise.then(carriers => {
+  private getCarriersStatic(): any {
+    return this.getCarriersJson().query().$promise.then(carriers => {
       carriers.forEach((carrier: IPstnCarrierStatic) => {
         //translate the feature strings
         for (let i: number = 0; i < carrier.features.length; i++) {
@@ -96,7 +104,7 @@ export class PstnProvidersCtrl implements ng.IComponentController {
       });
     } else {
       //Get Reseller Carriers
-      this.PstnSetupService.listResellerCarriers().then(carriers => {
+      this.PstnSetupService.listResellerCarriersV2().then(carriers => {
         if (_.isArray(carriers) && carriers.length > 0) {
           carriers.forEach(carrier => {
             this.addCarrier(<IPstnCarrierGet> carrier);
@@ -114,7 +122,7 @@ export class PstnProvidersCtrl implements ng.IComponentController {
   }
 
   private getCarriersNetworkDefault() {
-    this.PstnSetupService.listDefaultCarriers().then ( carriers => {
+    this.PstnSetupService.listDefaultCarriersV2().then ( carriers => {
       carriers.forEach(carrier => {
         this.addCarrier(<IPstnCarrierGet> carrier);
       });

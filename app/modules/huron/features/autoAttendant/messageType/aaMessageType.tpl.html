@@ -1,11 +1,11 @@
 <div class="large-6 small-6 columns aa-message-select-list">
   <label for="messageSelect{{ schedule + index + menuKeyIndex }}" translate="autoAttendant.messageType"></label>
-  <cs-select id="messageSelect{{ schedule + index + menuKeyIndex }}" name="messageSelect" options="aaMessageType.messageOptions" icon="icon-chevron-down" labelfield="label" valuefield="value" ng-model="aaMessageType.messageOption" ng-change="aaMessageType.setMessageOptions()">
+  <cs-select id="messageSelect{{ schedule + index + menuKeyIndex }}" name="messageSelect" options="aaMessageType.messageOptions" icon="icon-chevron-down" labelfield="label" valuefield="value" ng-model="aaMessageType.messageOption" ng-change="aaMessageType.setMessageOptions()" is-disabled="aaMessageType.mediaState.uploadInProgress">
   </cs-select>
 </div>
 <div ng-class="{'row' : !fromNewTreatment}">
   <div ng-switch="aaMessageType.messageOption.value" class="large-12 small-12 columns aa-message-only-type">
-    <aa-media-upload ng-switch-when="uploadFile" id="mediaUploadInput{{ schedule + index + menuKeyIndex }}" name="mediaUploadInput" ng-model="aaMessageType.actionEntry" aa-from-sub-menu={{fromSubMenu}} aa-media-type="{{ type }}" aa-index="index" aa-schedule="{{schedule}}" aa-key-index="{{menuKeyIndex}}" aa-menu-header="{{isMenuHeader}}" aa-menu-id="{{menuId}}" aa-media-upload-size="{{ :: aaMessageType.MAX_FILE_SIZE_IN_BYTES }}"></aa-media-upload>
+    <aa-media-upload ng-switch-when="uploadFile" id="mediaUploadInput{{ schedule + index + menuKeyIndex }}" name="mediaUploadInput" ng-model="aaMessageType.actionEntry" aa-from-sub-menu={{fromSubMenu}} aa-media-type="{{ type }}" aa-index="index" aa-schedule="{{schedule}}" aa-key-index="{{menuKeyIndex}}" aa-menu-header="{{isMenuHeader}}" aa-menu-id="{{menuId}}" aa-media-upload-size="{{ :: aaMessageType.MAX_FILE_SIZE_IN_BYTES }}" aa-media-state="aaMessageType.mediaState"></aa-media-upload>
     <textarea ng-switch-when="sayMessage" class="aa-message-type-textarea" aa-keypress ng-change="aaMessageType.saveUiModel()" ng-model="aaMessageType.messageInput" type="text" id="messageType{{ schedule + index + menuKeyIndex }}" name="messageInput" placeholder="{{ :: aaMessageType.messageInputPlaceholder }}" rows="4" maxlength="2000"></textarea>
   </div>
 </div>

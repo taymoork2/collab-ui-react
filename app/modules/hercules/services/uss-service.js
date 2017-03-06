@@ -31,7 +31,7 @@
       getUserPropsSummary: getUserPropsSummary,
       getUserJournal: getUserJournal,
       notifyReadOnlyLaunch: notifyReadOnlyLaunch,
-      getAllStatuses: getAllStatuses
+      getAllStatuses: getAllStatuses,
     };
 
     CsdmPoller.create(fetchStatusesSummary, hub);
@@ -56,11 +56,11 @@
             activated: 0,
             notActivated: 0,
             error: 0,
-            total: 0
+            total: 0,
           };
           _.forEach(['squared-fusion-cal', 'squared-fusion-uc'], function (serviceId) {
             var found = _.find(summary, {
-              serviceId: serviceId
+              serviceId: serviceId,
             });
             if (!found) {
               var newSummary = angular.copy(emptySummary);
@@ -81,7 +81,15 @@
     }
 
     function extractJournalEntries(res) {
-      return res.data.entries || [];
+      var entries = res.data.entries || [];
+      return _.chain(entries)
+        .map(function (entry) {
+          if (entry.entry.payload) {
+            entry.entry.payload.messages = sortAndTweakUserMessages(entry.entry.payload.messages);
+          }
+          return entry;
+        })
+        .value();
     }
 
     function decorateWithStatus(status) {
@@ -213,23 +221,28 @@
       var userStatuses = res.data ? res.data.userStatuses : res;
       return _.chain(userStatuses)
         .map(function (userStatus) {
-          if (_.size(userStatus.messages) > 0) {
-            userStatus.messages = _.chain(userStatus.messages)
-              .sortBy(function (message) {
-                return getMessageSortOrder(message.severity);
-              })
-              .map(function (message) {
-                var translateReplacements = convertToTranslateReplacements(message.replacementValues);
-                message.title = translateWithFallback(message.key + '.title', message.title, translateReplacements);
-                message.description = translateWithFallback(message.key + '.description', message.description, translateReplacements);
-                message.iconClass = getMessageIconClass(message.severity);
-                return message;
-              })
-              .value();
-          }
+          userStatus.messages = sortAndTweakUserMessages(userStatus.messages);
           return userStatus;
         })
         .value();
+    }
+
+    function sortAndTweakUserMessages(messages) {
+      if (_.size(messages) > 0) {
+        return _.chain(messages)
+          .sortBy(function (message) {
+            return getMessageSortOrder(message.severity);
+          })
+          .map(function (message) {
+            var translateReplacements = convertToTranslateReplacements(message.replacementValues);
+            message.title = translateWithFallback(message.key + '.title', message.title, translateReplacements);
+            message.description = translateWithFallback(message.key + '.description', message.description, translateReplacements);
+            message.iconClass = getMessageIconClass(message.severity);
+            return message;
+          })
+          .value();
+      }
+      return messages;
     }
 
     function translateWithFallback(messageKey, fallback, translateReplacements) {

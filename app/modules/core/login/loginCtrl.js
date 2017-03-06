@@ -2,10 +2,12 @@
   'use strict';
 
   /* @ngInject */
-  function LoginCtrl($location, $rootScope, $window, $scope, $state, $stateParams, Auth, Authinfo, Config, Log, LogMetricsService, PageParam, SessionStorage, TokenService, Utils) {
+  function LoginCtrl($location, $rootScope, $window, $scope, $state, $stateParams, Auth, Authinfo, Config, Log, LogMetricsService, PageParam, SessionStorage, Storage, TokenService, Utils) {
     var storedState = 'storedState';
     var storedParams = 'storedParams';
     var queryParams = SessionStorage.popObject('queryParams');
+
+    $scope.message = Storage.get('loginMessage');
 
     var pageParam = $location.search().pp;
     if (pageParam) {
@@ -34,16 +36,10 @@
       }
     };
 
-    // - DO NOT USE OR EXTEND THIS CODE - this code will be removed before 2/10/2017
-    if (Config.isUserAgent('QtCarBrowser') || Config.isUserAgent('SMART-TV')) {
-      $window.mixpanel.init('536df13b2664a85b06b0b6cf32721c24');
-      $window.mixpanel.track('inside loginCtrl.js');
-    }
-
     var authorizeUser = function () {
       $scope.loading = true;
       Auth.authorize({
-        reauthorize: $stateParams.reauthorize
+        reauthorize: $stateParams.reauthorize,
       })
         .then(function () {
           if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {

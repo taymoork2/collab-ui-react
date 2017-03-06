@@ -9,11 +9,11 @@
     return {
       restrict: 'E',
       scope: {
-        schedule: '@aaSchedule'
+        schedule: '@aaSchedule',
       },
       controller: 'AABuilderLaneCtrl',
       controllerAs: 'aaLane',
-      templateUrl: 'modules/huron/features/autoAttendant/builder/aaBuilderLane.tpl.html'
+      templateUrl: 'modules/huron/features/autoAttendant/builder/aaBuilderLane.tpl.html',
     };
   }
 })();

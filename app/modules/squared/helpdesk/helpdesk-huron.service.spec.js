@@ -10,18 +10,18 @@ describe('HelpdeskHuronService', function () {
       "number": "+14084744527",
       "type": "external",
       "directoryNumber": {
-        "uuid": "26cd541b-0978-4677-a237-7b3f2a514a1a"
-      }
-    }]
+        "uuid": "26cd541b-0978-4677-a237-7b3f2a514a1a",
+      },
+    }],
   };
 
   var devicesForNumber = [{
     "endpoint": {
       "uuid": "c498a32e-8b95-4e38-aa70-2a8c90b1f0f4",
-      "name": "SEP5ABCD7DB89F6"
+      "name": "SEP5ABCD7DB89F6",
     },
     "e164Mask": null,
-    "uuid": "4f7f009b-ef6a-4115-bbc0-00852cafcd2f"
+    "uuid": "4f7f009b-ef6a-4115-bbc0-00852cafcd2f",
   }];
 
   var device = {
@@ -32,8 +32,8 @@ describe('HelpdeskHuronService', function () {
     "model": "Cisco 8861",
     "ownerUser": {
       "uuid": "74c2ca8d-99ca-4bdf-b6b9-a142d503f024",
-      "userId": "58852083@qq.com"
-    }
+      "userId": "58852083@qq.com",
+    },
   };
 
   var deviceWithStatus = {
@@ -44,9 +44,9 @@ describe('HelpdeskHuronService', function () {
     "model": "Cisco 8861",
     "ownerUser": {
       "uuid": "74c2ca8d-99ca-4bdf-b6b9-a142d503f024",
-      "userId": "58852083@qq.com"
+      "userId": "58852083@qq.com",
     },
-    "registrationStatus": "registered"
+    "registrationStatus": "registered",
   };
 
   var user = {
@@ -54,22 +54,22 @@ describe('HelpdeskHuronService', function () {
     "userName": "tvasset@cisco.com",
     "name": {
       "givenName": "Tom",
-      "familyName": "Vasset"
+      "familyName": "Vasset",
     },
     "emails": [{
       "value": "tvasset@cisco.com",
       "type": "work",
-      "primary": true
+      "primary": true,
     }],
-    "displayName": "Tom Vasset (tvasset)"
+    "displayName": "Tom Vasset (tvasset)",
   };
 
   var devicesForUser = [{
     "endpoint": {
       "uuid": "c498a32e-8b95-4e38-aa70-2a8c90b1f0f4",
-      "name": "SEP1CDEA7DBF740"
+      "name": "SEP1CDEA7DBF740",
     },
-    "uuid": "3adfb2e8-cb9f-4840-b265-84ee978a7446"
+    "uuid": "3adfb2e8-cb9f-4840-b265-84ee978a7446",
   }];
 
   var huronUserWithNumbers = {
@@ -78,31 +78,31 @@ describe('HelpdeskHuronService', function () {
       "url": "https://cmi.huron-int.com/api/v1/voice/customers/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/users/d2839ea3-6ad8-4d43-bfe7-cccaec09ef6f/directorynumbers/faa07921-6ed8-4e2b-99f9-08c457fe4c18",
       "internal": "1234",
       "external": "+14084744520",
-      "uuid": "faa07921-6ed8-4e2b-99f9-08c457fe4c18"
-    }]
+      "uuid": "faa07921-6ed8-4e2b-99f9-08c457fe4c18",
+    }],
   };
 
   var userDirectoryNumbers = [{
     "directoryNumber": {
       "uuid": "faa07921-6ed8-4e2b-99f9-08c457fe4c18",
-      "pattern": "1234"
+      "pattern": "1234",
     },
     "dnUsage": "Primary",
-    "uuid": "97bba556-0312-42be-aeb8-a4dac8ca1de7"
+    "uuid": "97bba556-0312-42be-aeb8-a4dac8ca1de7",
   }];
 
   var usersUsingNumber = [{
     "user": {
-      "uuid": "b78903e2-39e6-45fa-af0f-5d31de45934f"
+      "uuid": "b78903e2-39e6-45fa-af0f-5d31de45934f",
     },
     "dnUsage": "Primary",
-    "uuid": "f5897251-4c58-43d5-8527-16d36543504a"
+    "uuid": "f5897251-4c58-43d5-8527-16d36543504a",
   }, {
     "user": {
-      "uuid": "943e7651-8646-4c3b-9770-7143c116cce0"
+      "uuid": "943e7651-8646-4c3b-9770-7143c116cce0",
     },
     "dnUsage": "Undefined",
-    "uuid": "3bc624c5-a47e-460d-b8cc-12ee3642cea5"
+    "uuid": "3bc624c5-a47e-460d-b8cc-12ee3642cea5",
   }];
 
   var userId = '74c2ca8d-99ca-4bdf-b6b9-a142d503f024';
@@ -226,7 +226,7 @@ describe('HelpdeskHuronService', function () {
     _.each(devices, function (device) {
       device.organization = {
         id: orgId,
-        displayName: orgId
+        displayName: orgId,
       };
     });
   }

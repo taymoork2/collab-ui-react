@@ -11,6 +11,8 @@
 
   /* @ngInject */
   function Authinfo($rootScope, $translate, Config) {
+    var authData = getNewAuthData();
+
     function ServiceFeature(label, value, name, license) {
       this.label = label;
       this.value = value;
@@ -19,37 +21,37 @@
       this.isCustomerPartner = false;
     }
 
-    // AngularJS will instantiate a singleton by calling "new" on this function
-    var authData = {
-      username: null,
-      userId: null,
-      userOrgId: null,
-      orgName: null,
-      orgId: null,
-      addUserEnabled: null,
-      entitleUserEnabled: null,
-      managedOrgs: [],
-      entitlements: null,
-      services: null,
-      roles: [],
-      isInitialized: false,
-      setupDone: false,
-      licenses: [],
-      subscriptions: [],
-      messageServices: null,
-      conferenceServices: null,
-      communicationServices: null,
-      careServices: [],
-      conferenceServicesWithoutSiteUrl: null,
-      cmrServices: null,
-      hasAccount: false,
-      emails: null,
-      customerType: null,
-      commerceRelation: null,
-      customerAccounts: [],
-    };
+    function getNewAuthData() {
+      return {
+        addUserEnabled: null,
+        careServices: [],
+        cmrServices: null,
+        commerceRelation: null,
+        communicationServices: null,
+        conferenceServices: null,
+        conferenceServicesWithoutSiteUrl: null,
+        customerAccounts: [],
+        customerType: null,
+        emails: null,
+        entitleUserEnabled: null,
+        hasAccount: false,
+        isInitialized: false,
+        licenses: [],
+        managedOrgs: [],
+        messageServices: null,
+        orgId: null,
+        orgName: null,
+        roles: [],
+        services: [],
+        setupDone: false,
+        subscriptions: [],
+        userId: null,
+        userName: null,
+        userOrgId: null,
+      };
+    }
 
-    var isEntitled = function (entitlement) {
+    function isEntitled(entitlement) {
       var services = authData.services;
       if (services) {
         for (var i = 0; i < services.length; i++) {
@@ -60,22 +62,21 @@
         }
       }
       return false;
-    };
+    }
 
     return {
       initialize: function (data) {
         authData.isInDelegatedAdministrationOrg = data.isInDelegatedAdministrationOrg;
-        authData.username = data.name;
+        authData.userName = data.name;
         authData.userId = data.uuid;
         authData.orgName = data.orgName;
         authData.orgId = data.orgId;
         authData.userOrgId = data.userOrgId;
         authData.addUserEnabled = data.addUserEnabled;
         authData.entitleUserEnabled = data.entitleUserEnabled;
-        authData.managedOrgs = data.managedOrgs;
-        authData.entitlements = data.entitlements;
-        authData.services = data.services;
-        authData.roles = data.roles;
+        authData.managedOrgs = data.managedOrgs || [];
+        authData.services = data.services || [];
+        authData.roles = data.roles || [];
         //if Full_Admin or WX2_User and has managedOrgs, add partnerustomers tab as allowed tab
         if (authData.managedOrgs && authData.managedOrgs.length > 0) {
           for (var i = 0; i < authData.roles.length; i++) {
@@ -94,19 +95,7 @@
         $rootScope.$broadcast('AuthinfoUpdated');
       },
       clear: function () {
-        authData.username = null;
-        authData.userId = null;
-        authData.orgName = null;
-        authData.orgId = null;
-        authData.addUserEnabled = null;
-        authData.entitleUserEnabled = null;
-        authData.entitlements = null;
-        authData.services = null;
-        authData.tabs = [];
-        authData.roles = [];
-        authData.isInitialized = false;
-        authData.setupDone = null;
-        authData.emails = null;
+        authData = getNewAuthData();
       },
       setEmails: function (data) {
         authData.emails = data;
@@ -150,8 +139,12 @@
             //If org has subscriptions get the license information from subscriptions, else from licences
             if (_.has(customerAccount, 'licenses')) {
               customerAccountLicenses = _.get(customerAccount, 'licenses');
-            } else if (_.has(customerAccount, 'subscriptions[0].licenses')) {
-              customerAccountLicenses = _.get(customerAccount, 'subscriptions[0].licenses');
+            } else if (customerAccount.subscriptions) {
+              for (var subId = 0; subId < customerAccount.subscriptions.length; subId++) {
+                if (customerAccount.subscriptions[subId].licenses) {
+                  customerAccountLicenses = _.concat(customerAccountLicenses, customerAccount.subscriptions[subId].licenses);
+                }
+              }
             }
 
             for (var l = 0; l < customerAccountLicenses.length; l++) {
@@ -174,7 +167,7 @@
                     authData.roles.push('Site_Admin');
                   }
                   service = new ServiceFeature($translate.instant(Config.confMap[license.offerName], {
-                    capacity: license.capacity
+                    capacity: license.capacity,
                   }), x + 1, 'confRadio', license);
                   if (license.siteUrl) {
                     confLicensesWithoutSiteUrl.push(service);
@@ -247,16 +240,13 @@
       // IMPORTANT: 'username' can possibly reflect a user's display name, use 'getPrimaryEmail()'
       //   if needing the email value that the user logged in with
       getUserName: function () {
-        return authData.username;
+        return authData.userName;
       },
       setUserId: function (id) {
         authData.userId = id;
       },
       getUserId: function () {
         return authData.userId;
-      },
-      getUserEntitlements: function () {
-        return authData.entitlements;
       },
       isAddUserEnabled: function () {
         return authData.addUserEnabled;
@@ -498,6 +488,9 @@
       isCare: function () {
         return isEntitled(Config.entitlements.care);
       },
+      isCareVoice: function () {
+        return isEntitled(Config.entitlements.care_inbound_voice);
+      },
       hasAccount: function () {
         return authData.hasAccount;
       },
@@ -511,7 +504,7 @@
         return isEntitled(entitlement);
       },
       isUserAdmin: function () {
-        return this.getRoles().indexOf(Config.roles.full_admin) > -1;
+        return this.hasRole(Config.roles.full_admin);
       },
       isInDelegatedAdministrationOrg: function () {
         return authData.isInDelegatedAdministrationOrg;
@@ -530,7 +523,7 @@
       },
       isComplianceUser: function () {
         return this.hasRole(Config.roles.compliance_user);
-      }
+      },
     };
   }
 })();

@@ -23,8 +23,10 @@
   <div class="status-block">
     <ul>
       <li>
-        <i class="icon icon-circle status-indicator" ng-class="card.dirsyncEnabled ? 'success' : 'disabled'"></i>
+        <i class="icon icon-spinner" ng-if="card.isUpdating"></i>
+        <i class="icon icon-circle status-indicator" ng-class="{ 'success' : card.dirsyncEnabled, 'danger': !card.dirsyncEnabled }" ng-if="!card.isUpdating"></i>
         <span translate="overview.cards.users.directorySynchronization"></span>
+        <a id="viewDirSyncSettings" class="icon-settings icon" ng-click="card.showDirSyncSettings()"></a>
       </li>
       <li>
         <i class="icon icon-circle status-indicator" ng-class="card.ssoEnabled ? 'success' : 'disabled' "></i>

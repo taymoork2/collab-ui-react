@@ -11,7 +11,7 @@
       controllerAs: 'internationalDialing',
       restrict: 'EA',
       scope: false,
-      templateUrl: 'modules/huron/internationalDialing/internationalDialing.tpl.html'
+      templateUrl: 'modules/huron/internationalDialing/internationalDialing.tpl.html',
     };
 
     return directive;

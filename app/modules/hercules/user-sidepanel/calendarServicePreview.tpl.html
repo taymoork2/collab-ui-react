@@ -63,12 +63,12 @@
         </div>
       </div>
 
-      <div class="row collapse" ng-if="extension.currentUserEntitled && extension.homedConnector">
+      <div class="row collapse" ng-if="extension.currentUserEntitled && extension.homedCluster">
         <div class="columns small-3">
           <span class="cloud-extension-label">{{::'cloudExtensions.cluster' | translate}}:</span>
         </div>
         <div class="columns small-9">
-          <span class="cloud-extension-label">{{extension.homedConnector.cluster_name}}</span>
+          <span class="cloud-extension-label">{{extension.homedCluster.name}}</span>
         </div>
       </div>
 
@@ -78,7 +78,7 @@
         </div>
         <div class="columns small-9">
           <span class="cloud-extension-label">
-            <a href="https://{{extension.homedConnector.host_name}}" target="_blank">{{extension.homedConnector.host_name}}</a>
+            <a href="https://{{extension.homedConnector.hostname}}" target="_blank">{{extension.homedConnector.hostname}}</a>
           </span>
         </div>
       </div>

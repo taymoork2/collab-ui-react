@@ -6,7 +6,6 @@ export interface IClusterV1 {
   connectors: any;
   releaseChannel: string;
   provisioning: any;
-  registered: boolean;
   targetType: string;
   upgradeScheduleUrl: string;
   upgradeSchedule: any;
@@ -20,7 +19,7 @@ export interface IAlarm {
   id: string;
   firstReported: number;
   lastReported: number;
-  severity: string;
+  severity: 'critical' | 'error' | 'warning' | 'alert';
   title: string;
   description: string;
   solution: string;
@@ -41,7 +40,6 @@ export interface IConnector {
   alarms: IAlarm[];
   runningVersion: string;
   packageUrl: string;
-  registered: boolean;
   connectorStatus: {
     operational: boolean;
     services: {

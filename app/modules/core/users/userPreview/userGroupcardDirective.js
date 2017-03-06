@@ -11,7 +11,7 @@ require('./_user-preview.scss');
       restrict: 'EA',
       replace: true,
       templateUrl: 'modules/core/users/userPreview/userGroupCard.tpl.html',
-      link: function () {}
+      link: function () {},
     };
   }
 })();

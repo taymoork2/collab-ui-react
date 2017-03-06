@@ -9,7 +9,13 @@ module.exports = {
   rules: {
     // override (temporarily) some rules from the "airbnb-base/legacy" configuration
     'camelcase': 0,
-    'comma-dangle': 0,
+    'comma-dangle': ['error', {
+      arrays: 'always-multiline',
+      objects: 'always-multiline',
+      imports: 'always-multiline',
+      exports: 'always-multiline',
+      functions: 'never',
+    }],
     'consistent-return': 0,
     'eqeqeq': 0,
     'func-names': 0,

@@ -12,7 +12,7 @@ require('./_user-preview.scss');
       transclude: true,
       replace: true,
       templateUrl: 'modules/core/users/userPreview/userServicesCard.tpl.html',
-      link: function () {}
+      link: function () {},
     };
   }
 })();

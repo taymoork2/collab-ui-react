@@ -11,7 +11,7 @@
     vm.cluster = $stateParams.cluster;
 
     vm.emailSection = {
-      title: 'common.general'
+      title: 'common.general',
     };
 
     vm.deactivateModalOptions = {

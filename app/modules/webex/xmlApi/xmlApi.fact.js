@@ -36,8 +36,8 @@
         method: "POST",
         data: xmlRequest,
         headers: {
-          'Content-Type': 'application/x-www-rform-urlencoded'
-        }
+          'Content-Type': 'application/x-www-rform-urlencoded',
+        },
       }).success(function (data) {
         resolve(data);
       }).error(function (data) {
@@ -377,7 +377,7 @@
           xmlApiUrl: xmlApiUrl,
           wbxSiteName: wbxSiteName,
           webexAdminID: primaryEmail,
-          accessToken: TokenService.getAccessToken()
+          accessToken: TokenService.getAccessToken(),
         };
 
         this.getSessionTicketInfo(xmlApiAccessInfo).then(

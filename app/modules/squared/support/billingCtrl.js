@@ -24,7 +24,7 @@
         } else {
           Log.debug('Failed to retrieve order status. Status: ' + status);
           Notification.error('billingPage.errOrderStatus', {
-            status: status
+            status: status,
           });
         }
       });
@@ -41,7 +41,7 @@
         } else {
           Log.debug('Failed to resend customer email. Status: ' + status);
           Notification.error('billingPage.errCustomerEmail', {
-            status: status
+            status: status,
           });
         }
         angular.element('.open').removeClass('open');
@@ -55,7 +55,7 @@
         } else {
           Log.debug('Failed to resend customer email. Status: ' + status);
           Notification.error('billingPage.errPartnerEmail', {
-            status: status
+            status: status,
           });
         }
         angular.element('.open').removeClass('open');
@@ -94,8 +94,8 @@
         field: 'action',
         displayName: $filter('translate')('billingPage.action'),
         sortable: false,
-        cellTemplate: actionsTemplate
-      }]
+        cellTemplate: actionsTemplate,
+      }],
     };
 
   }

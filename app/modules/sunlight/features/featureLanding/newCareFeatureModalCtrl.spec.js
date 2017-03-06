@@ -7,7 +7,7 @@ describe('Controller: NewCareFeatureModalCtrl', function () {
   var $scope, Authinfo, $q, FeatureToggleService, $timeout;
   var modalFake = {
     close: jasmine.createSpy('modalInstance.close'),
-    dismiss: jasmine.createSpy('modalInstance.dismiss')
+    dismiss: jasmine.createSpy('modalInstance.dismiss'),
   };
 
   beforeEach(inject(function ($rootScope, $controller, $state, _$timeout_, _$q_, _Authinfo_, _FeatureToggleService_) {
@@ -22,7 +22,7 @@ describe('Controller: NewCareFeatureModalCtrl', function () {
     $controller('NewCareFeatureModalCtrl', {
       $scope: $scope,
       $modalInstance: modalFake,
-      $q: $q
+      $q: $q,
     });
   }));
 

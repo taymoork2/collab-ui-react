@@ -21,8 +21,8 @@
         "targetType": 'mf_mgmt',
         "connectors": [{
           state: 'running',
-          hostname: 'doesnothavecalendar.example.org'
-        }]
+          hostname: 'doesnothavecalendar.example.org',
+        }],
       }];
       spyOn(MediaClusterServiceV2, 'getAll').and.returnValue($q.resolve(
         clusters
@@ -35,7 +35,7 @@
       httpBackend.when('POST', "https://hercules-integration.wbx2.com/v1/organizations/orgId/allowedRedirectTargets").respond({});
       spyOn(MediaClusterServiceV2, 'createClusterV2').and.returnValue($q.resolve({
         data: {
-          id: "12345"
+          id: "12345",
         } }));
       AddResourceCommonServiceV2.addRedirectTargetClicked('hostName', 'enteredCluster');
       httpBackend.flush();

@@ -51,7 +51,7 @@ describe('Controller: DeviceUsageCtrl', function () {
         DeviceUsageSplunkMetricsService: DeviceUsageSplunkMetricsService,
         DeviceUsageModelService: DeviceUsageModelService,
         $scope: $scope,
-        $state: $state
+        $state: $state,
       });
 
       splunkService = sinon.stub(DeviceUsageSplunkMetricsService, 'reportOperation');
@@ -62,22 +62,25 @@ describe('Controller: DeviceUsageCtrl', function () {
       sinon.stub(DeviceUsageTotalService, 'getDataForRange');
       var deviceData = {
         reportItems: [
-          { totalDuration: 42 }
+          { totalDuration: 42 },
         ],
-        missingDays: false
+        missingDays: false,
       };
       DeviceUsageTotalService.getDataForRange.returns($q.resolve(deviceData));
-      expect(controller.loading).toBe(true);
+
+      expect(controller.waitingForDeviceMetrics).toBe(true);
       controller.init();
       expect(controller.timeSelected.value).toBe(0);
       $scope.$apply();
+      expect(controller.waitingForDeviceMetrics).toBe(false);
+
       expect(controller.noDataForRange).toBeFalsy();
       expect(controller.reportData).toEqual(deviceData.reportItems);
       done();
     });
 
     it('splunk is reported when date range is selected', function () {
-      controller.timeUpdate();
+      controller.doTimeUpdate();
       expect(splunkService.callCount).toBe(1);
     });
 
@@ -91,19 +94,19 @@ describe('Controller: DeviceUsageCtrl', function () {
             then: function (okCallback, cancelCallback) {
               this.okCallback = okCallback;
               this.cancelCallback = cancelCallback;
-            }
+            },
           },
           opened: {
             then: function (okCallback) {
               okCallback();
-            }
+            },
           },
           close: function (item) {
             this.result.okCallback(item);
           },
           dismiss: function (type) {
             this.result.cancelCallback(type);
-          }
+          },
         };
         spyOn($modal, 'open').and.returnValue(fakeModal);
         spyOn(Notification, 'success');

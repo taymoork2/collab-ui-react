@@ -9,7 +9,7 @@
     var service = {
       getComponents: getComponents,
       modifyComponent: modifyComponent,
-      getIncidents: getIncidents
+      getIncidents: getIncidents,
     };
 
     var baseUrl = UrlConfig.getGssUrl();

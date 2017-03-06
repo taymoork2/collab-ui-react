@@ -77,13 +77,13 @@
         </div>
       </header>
       <section>
-        <div ng-if="helpdeskUserCtrl.hybridServicesCard.cal.entitled">
+        <div ng-if="helpdeskUserCtrl.hybridServicesCard.cal.entitled" class="hybrid-service-section">
           <h5 translate="overview.cards.hybrid.services.squared-fusion-cal"></h5>
           <div class="row collapse">
             <div class="columns small-4 details-heading">
               <span>{{::'cloudExtensions.status' | translate}}:</span>
             </div>
-            <div class="columns small-8 details-value-large">
+            <div class="columns small-8 details-value">
               <span ng-if="!helpdeskUserCtrl.hybridServicesCard.cal.status" translate="common.on"></span>
               <span ng-if="helpdeskUserCtrl.hybridServicesCard.cal.status"
                     ng-class="helpdeskUserCtrl.hybridServicesCard.cal.status.state === 'error' ? 'helpdesk-red' : ''"
@@ -95,12 +95,12 @@
               </div>
             </div>
           </div>
-          <div class="row collapse" ng-if="helpdeskUserCtrl.hybridServicesCard.cal.status.homedConnector">
+          <div class="row collapse" ng-if="helpdeskUserCtrl.hybridServicesCard.cal.status.homedCluster">
             <div class="columns small-4 details-heading">
               <span>{{::'cloudExtensions.cluster' | translate}}:</span>
             </div>
             <div class="columns small-8 details-value">
-              <span>{{helpdeskUserCtrl.hybridServicesCard.cal.status.homedConnector.cluster_name}} ({{helpdeskUserCtrl.hybridServicesCard.cal.status.homedConnector.host_name}})</span>
+              <span>{{helpdeskUserCtrl.hybridServicesCard.cal.status.homedCluster.name}} ({{helpdeskUserCtrl.hybridServicesCard.cal.status.homedConnector.hostname}})</span>
             </div>
           </div>
           <div class="row collapse" ng-if="helpdeskUserCtrl.hybridServicesCard.cal.status.resourceGroup">
@@ -121,13 +121,13 @@
           </div>
         </div>
 
-        <div ng-if="helpdeskUserCtrl.hybridServicesCard.gcal.entitled">
+        <div ng-if="helpdeskUserCtrl.hybridServicesCard.gcal.entitled" class="hybrid-service-section">
           <h5 translate="overview.cards.hybrid.services.squared-fusion-gcal"></h5>
           <div class="row collapse">
             <div class="columns small-4 details-heading">
               <span>{{::'cloudExtensions.status' | translate}}:</span>
             </div>
-            <div class="columns small-8 details-value-large">
+            <div class="columns small-8 details-value">
               <span ng-if="!helpdeskUserCtrl.hybridServicesCard.gcal.status" translate="common.on"></span>
               <span ng-if="helpdeskUserCtrl.hybridServicesCard.gcal.status"
                     ng-class="helpdeskUserCtrl.hybridServicesCard.gcal.status.state === 'error' ? 'helpdesk-red' : ''"
@@ -141,13 +141,13 @@
           </div>
         </div>
 
-        <div ng-if="helpdeskUserCtrl.hybridServicesCard.uc.entitled">
+        <div ng-if="helpdeskUserCtrl.hybridServicesCard.uc.entitled" class="hybrid-service-section">
           <h5 translate="hercules.serviceNames.squared-fusion-uc.full"></h5>
           <div class="row collapse">
             <div class="columns small-4 details-heading">
               <span>{{::'cloudExtensions.status' | translate}}:</span>
             </div>
-            <div class="columns small-8 details-value-large">
+            <div class="columns small-8 details-value">
               <span ng-if="!helpdeskUserCtrl.hybridServicesCard.uc.status" translate="common.on"></span>
               <span ng-if="helpdeskUserCtrl.hybridServicesCard.uc.status"
                     ng-class="helpdeskUserCtrl.hybridServicesCard.uc.status.state === 'error' ? 'helpdesk-red' : ''"
@@ -159,12 +159,12 @@
               </div>
             </div>
           </div>
-          <div class="row collapse" ng-if="helpdeskUserCtrl.hybridServicesCard.uc.status.homedConnector">
+          <div class="row collapse" ng-if="helpdeskUserCtrl.hybridServicesCard.uc.status.homedCluster">
             <div class="columns small-4 details-heading">
               <span>{{::'cloudExtensions.cluster' | translate}}:</span>
             </div>
             <div class="columns small-8 details-value">
-              <span>{{helpdeskUserCtrl.hybridServicesCard.uc.status.homedConnector.cluster_name}} ({{helpdeskUserCtrl.hybridServicesCard.uc.status.homedConnector.host_name}})</span>
+              <span>{{helpdeskUserCtrl.hybridServicesCard.uc.status.homedCluster.name}} ({{helpdeskUserCtrl.hybridServicesCard.uc.status.homedConnector.hostname}})</span>
             </div>
           </div>
           <div class="row collapse" ng-if="helpdeskUserCtrl.hybridServicesCard.uc.status.resourceGroup">
@@ -175,7 +175,7 @@
               <span>{{helpdeskUserCtrl.hybridServicesCard.uc.status.resourceGroup.name}}</span>
             </div>
           </div>
-          <div class="row collapse" ng-if="helpdeskUserCtrl.hybridServicesCard.uc.status.resourceGroup">
+          <div class="row collapse" ng-if="helpdeskUserCtrl.hybridServicesCard.uc.showDirectoryUri">
             <div class="columns small-4 details-heading">
               <span>{{::'cloudExtensions.sipUri' | translate}}:</span>
             </div>
@@ -185,13 +185,13 @@
           </div>
         </div>
 
-        <div ng-if="helpdeskUserCtrl.hybridServicesCard.ec.entitled">
+        <div ng-if="helpdeskUserCtrl.hybridServicesCard.ec.entitled" class="hybrid-service-section">
           <h5 translate="hercules.serviceNames.squared-fusion-ec"></h5>
           <div class="row collapse">
             <div class="columns small-4 details-heading">
               <span>{{::'cloudExtensions.status' | translate}}:</span>
             </div>
-            <div class="columns small-8 details-value-large">
+            <div class="columns small-8 details-value">
               <span ng-if="!helpdeskUserCtrl.hybridServicesCard.ec.status" translate="common.on"></span>
               <span ng-if="helpdeskUserCtrl.hybridServicesCard.ec.status"
                     ng-class="helpdeskUserCtrl.hybridServicesCard.ec.status.state === 'error' ? 'helpdesk-red' : ''"

@@ -1,6 +1,7 @@
 <div class="modal-header">
   <button type="button" class="close" ng-click="$dismiss();"></button>
   <h3 class="modal-title" translate="autoAttendant.queueSettings"></h3>
+  <aa-help content="{{ :: 'autoAttendant.mediaUploadFileInfo'| translate }}<br><br>{{ :: 'autoAttendant.queueMaxMusicSize'| translate }}" metric="Queue-Settings-Modal"></aa-help>
 </div>
 <div class="modal-body">
   <div class="row" ng-if="aaNewTreatmentModalCtrl.showLanguageAndVoiceOptions">
@@ -77,6 +78,7 @@
     </div>
     <div class="large-8 medium-8 small-12 large-offset-4 medium-offset-4 columns">
       <p class="cs-input__help-text" translate="autoAttendant.periodicHelpText"></p>
+      <p class="cs-input__help-text" translate="autoAttendant.periodicRestartMusicHelpText"></p>
     </div>
     <br/>
     <div class="large-8 medium-8 small-12 large-offset-4 medium-offset-4 columns">
@@ -94,7 +96,7 @@
   <hr/>
   <div class="row">
     <div class="large-4 medium-4 small-12 columns">
-      <label class="h4 ng-scope" translate="autoAttendant.fallbackLabel"></label>
+      <label class="h4 ng-scope" translate="autoAttendant.timeoutLabel"></label>
     </div>
     <div class="large-8 medium-8 small-12 columns">
       <p translate="autoAttendant.maxWaitTime"></p>

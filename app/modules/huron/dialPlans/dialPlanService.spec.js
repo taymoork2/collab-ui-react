@@ -10,11 +10,11 @@ describe('Service: DialPlanService', function () {
     extensionGenerated: "false",
     steeringDigitRequired: "true",
     supportSiteCode: "true",
-    supportSiteSteeringDigit: "true"
+    supportSiteSteeringDigit: "true",
   };
 
   var Authinfo = {
-    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
   };
 
   beforeEach(angular.mock.module('Huron'));

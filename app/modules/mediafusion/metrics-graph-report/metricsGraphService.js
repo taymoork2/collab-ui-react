@@ -46,7 +46,7 @@
     return {
       setUtilizationGraph: setUtilizationGraph,
       setCallVolumeGraph: setCallVolumeGraph,
-      setAvailabilityGraph: setAvailabilityGraph
+      setAvailabilityGraph: setAvailabilityGraph,
     };
 
     function getBaseExportForGraph(fields, fileName, columnNames) {
@@ -56,7 +56,7 @@
         'columnNames': columnNames,
         'fileName': fileName,
         'libs': {
-          'autoLoad': false
+          'autoLoad': false,
         },
         'menu': [{
           'class': 'export-main',
@@ -65,7 +65,7 @@
             'label': $translate.instant('reportsPage.saveAs'),
             'title': $translate.instant('reportsPage.saveAs'),
             'class': 'export-list',
-            'menu': ['PNG', 'JPG']
+            'menu': ['PNG', 'JPG'],
           }, {
             'label': $translate.instant('reportsPage.pdf'),
             'title': $translate.instant('reportsPage.pdf'),
@@ -75,14 +75,14 @@
                   $window.open(data, 'amCharts.pdf');
                 });
               });
-            }
+            },
           }, {
             'class': 'export-list',
             'label': $translate.instant('reportsPage.export'),
             'title': $translate.instant('reportsPage.export'),
-            'menu': ['CSV', 'XLSX']
-          }]
-        }]
+            'menu': ['CSV', 'XLSX'],
+          }],
+        }],
       };
       return baseVariables['export'];
     }
@@ -255,7 +255,7 @@
       }
 
       var columnNames = {
-        'time': timeStamp
+        'time': timeStamp,
       };
       var exportFields = [];
       _.forEach(graphs, function (value) {

@@ -321,7 +321,7 @@
 
       newCeActionEntry: function (name, value) {
         return new Action(name, value);
-      }
+      },
 
     };
 
@@ -623,7 +623,7 @@
       pieces[1] = '';
 
       for (var i = 1; i < btwQuotes.length - 1; i += 2) {
-        pieces[1] += btwQuotes[1] + ",";
+        pieces[1] += btwQuotes[i] + ",";
       }
 
       pieces[1] += btwQuotes[btwQuotes.length - 1];
@@ -1026,7 +1026,7 @@
     function addDisconnectAction(actions) {
       actions.push({});
       actions[actions.length - 1]['disconnect'] = {
-        "treatment": "none"
+        "treatment": "none",
       };
     }
 
@@ -1390,7 +1390,7 @@
         var paAction = [];
         var paActionArray = {
           queuePeriodicAnnouncement: queuePeriodicAnnouncement,
-          queuePeriodicAnnouncementInterval: queuePeriodicAnnouncementInterval
+          queuePeriodicAnnouncementInterval: queuePeriodicAnnouncementInterval,
         };
         paAction.push(paActionArray);
         newAction.queuePeriodicAnnouncements = paAction;
@@ -1423,7 +1423,7 @@
             periodicAnnouncementType: 'play',
             periodicAnnouncementDescription: '',
             initialAnnouncementType: 'play',
-            initialAnnouncementDescription: ''
+            initialAnnouncementDescription: '',
           };
         }
         newAction.description = JSON.stringify(action.description);
@@ -1536,8 +1536,8 @@
           newOption.actions[0]['runActionsOnInput'] = _menu;
           newOption.actions[0]['runActionsOnInput']['incompleteInputActions'] = [{
             "repeatActionsOnInput": {
-              "level": -1
-            }
+              "level": -1,
+            },
           }];
           createOptionMenu(_menu, menuEntry);
           newOptionArray.push(newOption);
@@ -1558,7 +1558,7 @@
         //deleteUrl has been configured
         //else it will go to a sayList, blank or otherwise
         //which is used later to trigger play or say
-        if (list[0].deleteUrl) {
+        if (_.get(list, '[0].deleteUrl', undefined)) {
           inputAction.prompts.playList = list;
         } else {
           inputAction.prompts.sayList = list;

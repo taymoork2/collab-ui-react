@@ -28,7 +28,7 @@
     <cs-card-member
       ng-repeat="member in $ctrl.selectedMembers"
       cs-type="simple"
-      cs-member-type="$ctrl.getMemberType(member.member)"
+      cs-member-type="{{$ctrl.getMemberType(member.member)}}"
       cs-id="member.member.uuid"
       cs-title="$ctrl.getDisplayNameOnCard(member.member)"
       cs-subtitle="$ctrl.getUserName(member.member)"

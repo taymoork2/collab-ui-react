@@ -18,12 +18,12 @@ exports.createRouteToQueue = function () {
         url: config.getAutoAttendantQueueUrl(helper.auth['aa-admin'].org),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + bearer
+          'Authorization': 'Bearer ' + bearer,
         },
         body: JSON.stringify({
           'queueName': 'Sunlight 1',
-          'handlerUrl': ['http://127.0.0.1:8202/vmrest1/webresources/user/send2', 'http://sunlight URL2']
-        })
+          'handlerUrl': ['http://127.0.0.1:8202/vmrest1/webresources/user/send2', 'http://sunlight URL2'],
+        }),
       };
       
       return utils.sendRequest(options)

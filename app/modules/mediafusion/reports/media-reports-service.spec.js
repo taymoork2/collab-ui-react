@@ -26,17 +26,17 @@ describe('Service: Media Reports Service', function () {
   beforeEach(angular.mock.module('Mediafusion'));
 
   vm.timeFilter = {
-    value: 0
+    value: 0,
   };
 
   vm.Authinfo = {
-    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
   };
   vm.error = {
     message: 'error',
     data: {
-      trackingId: "id"
-    }
+      trackingId: "id",
+    },
   };
 
   beforeEach(angular.mock.module(function ($provide) {
@@ -59,6 +59,7 @@ describe('Service: Media Reports Service', function () {
     vm.availabilityCard = vm.baseUrl + '/agg_availability/?relativeTime=4h';
     vm.participantDistributionUrl = vm.baseUrl + '/clusters_call_volume_with_insights/?relativeTime=4h';
     vm.clientTypeUrl = vm.baseUrl + '/client_type_trend/?relativeTime=4h';
+    vm.meetingLcationUrl = vm.baseUrl + '/meeting_location_trend/?relativeTime=4h';
 
   }));
 
@@ -85,7 +86,7 @@ describe('Service: Media Reports Service', function () {
 
       vm.MediaReportsService.getCallVolumeData(vm.timeFilter, vm.allClusters).then(function (response) {
         expect(response).toEqual({
-          graphData: vm.responsedata
+          graphData: vm.responsedata,
         });
       });
 
@@ -98,7 +99,7 @@ describe('Service: Media Reports Service', function () {
 
       vm.MediaReportsService.getCallVolumeData(vm.timeFilter, vm.allClusters).then(function (response) {
         expect(response).toEqual({
-          graphData: []
+          graphData: [],
         });
         expect(vm.Notification.errorWithTrackingId).toHaveBeenCalledTimes(1);
       });
@@ -115,7 +116,7 @@ describe('Service: Media Reports Service', function () {
       vm.MediaReportsService.getUtilizationData(vm.timeFilter, vm.allClusters).then(function (response) {
         expect(response).toEqual({
           graphData: [],
-          graphs: []
+          graphs: [],
         });
         expect(vm.Notification.errorWithTrackingId).toHaveBeenCalledTimes(1);
       });
@@ -132,7 +133,7 @@ describe('Service: Media Reports Service', function () {
       vm.MediaReportsService.getParticipantDistributionData(vm.timeFilter, vm.allClusters).then(function (response) {
         expect(response).toEqual({
           graphData: [],
-          graphs: []
+          graphs: [],
         });
         expect(vm.Notification.errorWithTrackingId).toHaveBeenCalledTimes(1);
       });
@@ -149,7 +150,24 @@ describe('Service: Media Reports Service', function () {
       vm.MediaReportsService.getClientTypeData(vm.timeFilter).then(function (response) {
         expect(response).toEqual({
           graphData: [],
-          graphs: []
+          graphs: [],
+        });
+        expect(vm.Notification.errorWithTrackingId).toHaveBeenCalledTimes(1);
+      });
+
+      vm.$httpBackend.flush();
+    });
+  });
+
+  describe('Meeting Location Data:', function () {
+    it('should notify an error for Meeting Location Data call failure', function () {
+      vm.$httpBackend.whenGET(vm.meetingLcationUrl).respond(500, vm.error);
+      expect(vm.Notification.errorWithTrackingId).toHaveBeenCalledTimes(0);
+
+      vm.MediaReportsService.getMeetingLocationData(vm.timeFilter).then(function (response) {
+        expect(response).toEqual({
+          graphData: [],
+          graphs: [],
         });
         expect(vm.Notification.errorWithTrackingId).toHaveBeenCalledTimes(1);
       });

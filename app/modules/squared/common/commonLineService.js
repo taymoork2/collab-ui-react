@@ -30,7 +30,7 @@
       getExternalNumberPool: getExternalNumberPool,
       getNameTemplate: getNameTemplate,
       mapDidToDn: mapDidToDn,
-      isDnNotAvailable: isDnNotAvailable
+      isDnNotAvailable: isDnNotAvailable,
 
     };
 
@@ -88,7 +88,7 @@
       }).catch(function (response) {
         externalNumberPool = [{
           uuid: 'none',
-          pattern: $translate.instant('directoryNumberPanel.none')
+          pattern: $translate.instant('directoryNumberPanel.none'),
         }];
         Notification.errorResponse(response, 'directoryNumberPanel.externalNumberPoolError');
       });

@@ -11,8 +11,8 @@ describe('Controller: CallServiceSettingsController', function () {
     $httpBackend.expectGET('https://uss-integration.wbx2.com/uss/api/v1/orgs/null').respond(500, []);
     $httpBackend.expectGET('https://certs-integration.wbx2.com/certificate/api/v1/certificates?expand=decoded&orgId=null').respond(200, [{
       decoded: {
-        subjectDN: 'O="Cisco Systems, Inc."'
-      }
+        subjectDN: 'O="Cisco Systems, Inc."',
+      },
     }]);
 
     $scope = $rootScope.$new();

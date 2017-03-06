@@ -121,8 +121,8 @@
           },
           userStatusSummary: function () {
             return USSService.extractSummaryForAService(servicesId);
-          }
-        }
+          },
+        },
       });
     }
 
@@ -135,6 +135,7 @@
       $state.go('setupwizardmodal', {
         currentTab: 'enterpriseSettings',
         currentStep: 'enterpriseSipUrl',
+        numberOfSteps: 1,
         onlyShowSingleTab: true,
       });
     }
@@ -152,9 +153,9 @@
       controllerAs: 'notificationController',
       bindToController: true,
       scope: {
-        filterTag: '='
+        filterTag: '=',
       },
-      templateUrl: 'modules/hercules/notifications/hercules-notifications.html'
+      templateUrl: 'modules/hercules/notifications/hercules-notifications.html',
     };
   }
 })();

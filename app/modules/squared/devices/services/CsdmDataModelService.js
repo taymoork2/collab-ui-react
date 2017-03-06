@@ -420,7 +420,7 @@
       createCmiPlace: createCmiPlace,
       updateCloudberryPlace: updateCloudberryPlace,
       subscribeToChanges: subscribeToChanges,
-      notifyDevicesInPlace: notifyDevicesInPlace
+      notifyDevicesInPlace: notifyDevicesInPlace,
     };
   }
 

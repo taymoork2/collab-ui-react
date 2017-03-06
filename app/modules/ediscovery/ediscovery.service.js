@@ -8,7 +8,7 @@
     if (!avalonRoomsUrlCache) {
       avalonRoomsUrlCache = new CacheFactory('avalonRoomsUrlCache', {
         maxAge: 300 * 1000,
-        deleteOnExpire: 'aggressive'
+        deleteOnExpire: 'aggressive',
       });
     }
 
@@ -36,14 +36,22 @@
       return res.data;
     }
 
-    function getArgonautServiceUrl(emailAddress, encryptionKeyUrl, startDate, endDate) {
+    function getArgonautServiceUrl(argonautParam) {
       var url = UrlConfig.getArgonautReportSizeUrl();
+      var emailAddresses = _.get(argonautParam, 'emailAddresses', null);
+      var roomIds = _.get(argonautParam, 'roomIds');
+      var encryptionKeyUrl = _.get(argonautParam, 'encryptionKeyUrl');
+      var startDate = _.get(argonautParam, 'startDate');
+      var endDate = _.get(argonautParam, 'endDate');
+      var query = _.get(argonautParam, 'query', null);
       return $http
         .post(url, {
-          emailAddress: emailAddress,
+          emailAddresses: emailAddresses,
+          roomIds: roomIds,
           encryptionKeyUrl: encryptionKeyUrl,
           startDate: startDate,
-          endDate: endDate
+          endDate: endDate,
+          query: query,
         });
     }
 
@@ -88,51 +96,58 @@
       }
     }
 
-    function createReport(displayName, roomId, startDate, endDate) {
+    function createReport(postParams) {
       var orgId = Authinfo.getOrgId();
+      var displayName = _.get(postParams, 'displayName');
+      var startDate = _.get(postParams, 'startDate');
+      var endDate = _.get(postParams, 'endDate');
+      var keyword = _.get(postParams, 'keyword');
+      var roomIds = _.get(postParams, 'roomIds');
+      var emailAddresses = _.get(postParams, 'emailAddresses');
       var sd = (startDate !== null) ? moment.utc(startDate).toISOString() : null;
       var ed = (endDate !== null) ? moment.utc(endDate).toISOString() : null;
+      var roomParams = {
+        displayName: displayName,
+        roomQuery: {
+          startDate: sd,
+          endDate: ed,
+          keyword: keyword,
+          roomIds: roomIds,
+          emailAddresses: emailAddresses,
+        },
+      };
       return $http
-        .post(urlBase + 'compliance/organizations/' + orgId + '/reports/', {
-          "displayName": displayName,
-          "roomQuery": {
-            "startDate": sd,
-            "endDate": ed,
-            "roomId": roomId
-          }
-        })
+        .post(urlBase + 'compliance/organizations/' + orgId + '/reports/', roomParams)
         .then(extractData);
     }
 
-    //new report generation api using argonaut notes:
+    // new report generation api using argonaut notes:
     // caller must pass an options object with the following properties:
-    // - 'emailAddresses' => a list of email addresses as ...
-    // - 'query' => ...
-    // - 'roomIds' => ...
-    // - 'encryptionKeyUrl' => ...
-    // - 'responseUrl' => ...
-    // - 'startDate' => ...
-    // - 'endDate' => ...
+    // - 'emailAddresses' => an array of email addresses
+    // - 'query' => keyword entered into the search
+    // - 'roomIds' => an array of roomIds
+    // - 'encryptionKeyUrl' => retrieved from the spark sdk plugin encryption
+    // - 'responseUri' => retrieved from createReport
+    // - 'startDate' => start date entered
+    // - 'endDate' => end date entered
     function generateReport(postParams) {
       var url = UrlConfig.getArgonautReportUrl();
       var emailAddresses = _.get(postParams, 'emailAddresses');
-      var query = _.get(postParams, 'query');
+      var query = _.get(postParams, 'query', null);
       var roomIds = _.get(postParams, 'roomIds');
       var encryptionKeyUrl = _.get(postParams, 'encryptionKeyUrl');
-      var responseUrl = _.get(postParams, 'responseUrl');
+      var responseUri = _.get(postParams, 'responseUri');
       var sd = _.get(postParams, 'startDate');
       var ed = _.get(postParams, 'endDate');
-      postParams.startDate = (sd && moment.utc(sd).toISOString()) || null;
-      postParams.endDate = (ed && moment.utc(ed).add(1, 'days').toISOString()) || null;
       return $http
         .post(url, {
           emailAddresses: emailAddresses,
           query: query,
           roomIds: roomIds,
           encryptionKeyUrl: encryptionKeyUrl,
-          responseUri: responseUrl,
+          responseUri: responseUri,
           startDate: sd,
-          endDate: ed
+          endDate: ed,
         });
     }
 
@@ -143,7 +158,7 @@
         "roomId": roomId,
         "responseUrl": responseUrl,
         "startDate": sd,
-        "endDate": ed
+        "endDate": ed,
       });
     }
 
@@ -164,17 +179,17 @@
 
     function setEntitledForCompliance(orgId, userId, entitled) {
       return $http.patch(urlBase + 'compliance/organizations/' + orgId + '/users/' + userId, {
-        entitledForCompliance: entitled
+        entitledForCompliance: entitled,
       });
     }
 
     function downloadReport(report) {
       return $http.get(report.downloadUrl, {
-        responseType: 'arraybuffer'
+        responseType: 'arraybuffer',
       }).success(function (data) {
         var fileName = 'report_' + report.id + '.zip';
         var file = new $window.Blob([data], {
-          type: 'application/zip'
+          type: 'application/zip',
         });
         if ($window.navigator.msSaveOrOpenBlob) {
           // IE
@@ -188,7 +203,7 @@
           downloadLink.attr({
             'href': $window.URL.createObjectURL(file),
             'download': fileName,
-            'target': '_blank'
+            'target': '_blank',
           });
           $document.find('body').append(downloadContainer);
           $timeout(function () {
@@ -212,7 +227,7 @@
       patchReport: patchReport,
       deleteReport: deleteReport,
       setEntitledForCompliance: setEntitledForCompliance,
-      downloadReport: downloadReport
+      downloadReport: downloadReport,
     };
   }
 

@@ -15,7 +15,7 @@
     return {
       responseError: function (response) {
         return $q.reject(responseHandler(response));
-      }
+      },
     };
 
     function responseHandler(response) {

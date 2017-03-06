@@ -16,11 +16,11 @@
         voicemail: '=',
         fromRouteCall: '@aaFromRouteCall',
         fromDecision: '@aaFromDecision',
-        fromFallback: '@aaFromFallback'
+        fromFallback: '@aaFromFallback',
       },
       controller: 'AARouteToUserCtrl',
       controllerAs: 'aaRouteUser',
-      templateUrl: 'modules/huron/features/autoAttendant/routeToUser/aaRouteToUser.tpl.html'
+      templateUrl: 'modules/huron/features/autoAttendant/routeToUser/aaRouteToUser.tpl.html',
     };
   }
 })();

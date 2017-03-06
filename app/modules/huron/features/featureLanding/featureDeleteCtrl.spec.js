@@ -51,14 +51,14 @@ describe('Huron Feature DeleteCtrl for AA', function () {
     $stateParams = {
       deleteFeatureId: 'c16a6027-caef-4429-b3af-9d61ddc7964b',
       deleteFeautureName: 'Oleg\'s Call Experience 1',
-      deleteFeatureType: 'AA'
+      deleteFeatureType: 'AA',
     };
 
     controller = $controller('HuronFeatureDeleteCtrl as vm', {
       $scope: $scope,
       $stateParams: $stateParams,
       Notification: Notification,
-      $timeout: $timeout
+      $timeout: $timeout,
     });
     $scope.$apply();
 
@@ -87,7 +87,7 @@ describe('Huron Feature DeleteCtrl for AA', function () {
 
       var successResponse = {
         'status': 200,
-        'statusText': 'OK'
+        'statusText': 'OK',
       };
 
       expect(aaModel.ceInfos.length).toEqual(2);
@@ -110,7 +110,7 @@ describe('Huron Feature DeleteCtrl for AA', function () {
       var errorResponse = {
         'data': 'Not Found',
         'status': 404,
-        'statusText': 'Not Found'
+        'statusText': 'Not Found',
       };
       expect(aaModel.ceInfos.length).toEqual(2);
       controller.deleteFeature();
@@ -144,16 +144,16 @@ describe('Huron Feature DeleteCtrl for HuntGroup', function () {
 
   var featureDeleteCtrl, rootScope, $scope, $stateParams, $q, $timeout, $translate, huntGroupService, autoAttendantCeService, Notification, Log, featureDelDeferred;
   var spiedAuthinfo = {
-    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
   };
   var successResponse = {
     'status': 200,
-    'statusText': 'OK'
+    'statusText': 'OK',
   };
   var failureResponse = {
     'data': 'Internal Server Error',
     'status': 500,
-    'statusText': 'Internal Server Error'
+    'statusText': 'Internal Server Error',
   };
 
   beforeEach(angular.mock.module('Huron'));
@@ -182,7 +182,7 @@ describe('Huron Feature DeleteCtrl for HuntGroup', function () {
     $stateParams = {
       deleteFeatureId: 123,
       deleteFeatureName: 'Technical Support',
-      deleteFeatureType: 'HG'
+      deleteFeatureType: 'HG',
     };
 
     featureDeleteCtrl = $controller('HuronFeatureDeleteCtrl', {
@@ -195,7 +195,7 @@ describe('Huron Feature DeleteCtrl for HuntGroup', function () {
       HuntGroupService: huntGroupService,
       AutoAttendantCeService: autoAttendantCeService,
       Log: Log,
-      Notification: Notification
+      Notification: Notification,
     });
 
   }));
@@ -219,7 +219,7 @@ describe('Huron Feature DeleteCtrl for HuntGroup', function () {
     $timeout.flush();
     expect(Notification.success).toHaveBeenCalledWith(jasmine.any(String), {
       featureName: $stateParams.deleteFeatureName,
-      featureType: jasmine.any(String)
+      featureType: jasmine.any(String),
     });
   });
 
@@ -237,16 +237,16 @@ describe('Huron Feature DeleteCtrl for PagingGroup', function () {
 
   var featureDeleteCtrl, rootScope, $scope, $stateParams, $q, $timeout, $translate, pagingGroupService, Notification, Log, featureDelDeferred;
   var spiedAuthinfo = {
-    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
   };
   var successResponse = {
     'status': 200,
-    'statusText': 'OK'
+    'statusText': 'OK',
   };
   var failureResponse = {
     'data': 'Internal Server Error',
     'status': 500,
-    'statusText': 'Internal Server Error'
+    'statusText': 'Internal Server Error',
   };
 
   beforeEach(angular.mock.module('Huron'));
@@ -273,7 +273,7 @@ describe('Huron Feature DeleteCtrl for PagingGroup', function () {
     $stateParams = {
       deleteFeatureId: 'aaaa',
       deleteFeatureName: 'aaaa',
-      deleteFeatureType: 'PG'
+      deleteFeatureType: 'PG',
     };
 
     featureDeleteCtrl = $controller('HuronFeatureDeleteCtrl', {
@@ -285,7 +285,7 @@ describe('Huron Feature DeleteCtrl for PagingGroup', function () {
       Authinfo: Authinfo,
       PagingGroupService: pagingGroupService,
       Log: Log,
-      Notification: Notification
+      Notification: Notification,
     });
 
   }));
@@ -305,7 +305,7 @@ describe('Huron Feature DeleteCtrl for PagingGroup', function () {
     $timeout.flush();
     expect(Notification.success).toHaveBeenCalledWith(jasmine.any(String), {
       featureName: $stateParams.deleteFeatureName,
-      featureType: jasmine.any(String)
+      featureType: jasmine.any(String),
     });
   });
 
@@ -323,16 +323,16 @@ describe('Huron Feature DeleteCtrl for PickupGroup', function () {
 
   var featureDeleteCtrl, rootScope, $scope, $stateParams, $q, $timeout, $translate, pickupGroupService, Notification, Log, featureDelDeferred;
   var spiedAuthinfo = {
-    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
   };
   var successResponse = {
     'status': 200,
-    'statusText': 'OK'
+    'statusText': 'OK',
   };
   var failureResponse = {
     'data': 'Internal Server Error',
     'status': 500,
-    'statusText': 'Internal Server Error'
+    'statusText': 'Internal Server Error',
   };
 
   beforeEach(angular.mock.module('Huron'));
@@ -359,7 +359,7 @@ describe('Huron Feature DeleteCtrl for PickupGroup', function () {
     $stateParams = {
       deleteFeatureId: 'aaaa',
       deleteFeatureName: 'aaaa',
-      deleteFeatureType: 'PI'
+      deleteFeatureType: 'PI',
     };
 
     featureDeleteCtrl = $controller('HuronFeatureDeleteCtrl', {
@@ -371,7 +371,7 @@ describe('Huron Feature DeleteCtrl for PickupGroup', function () {
       Authinfo: Authinfo,
       CallPickupGroupService: pickupGroupService,
       Log: Log,
-      Notification: Notification
+      Notification: Notification,
     });
 
   }));
@@ -391,7 +391,7 @@ describe('Huron Feature DeleteCtrl for PickupGroup', function () {
     $timeout.flush();
     expect(Notification.success).toHaveBeenCalledWith(jasmine.any(String), {
       featureName: $stateParams.deleteFeatureName,
-      featureType: jasmine.any(String)
+      featureType: jasmine.any(String),
     });
   });
 

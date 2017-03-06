@@ -21,7 +21,7 @@ describe('Directive Controller: HybridServicesCtrl', function () {
       getOrgId: sinon.stub().returns('dead-beef-123'),
       isEntitled: sinon.stub().returns(true),
       isFusion: sinon.stub().returns(true),
-      getLicenses: sinon.stub().returns([])
+      getLicenses: sinon.stub().returns([]),
     };
 
     sinon.stub(ServiceDescriptor, 'getServices').returns($q.resolve());
@@ -44,7 +44,7 @@ describe('Directive Controller: HybridServicesCtrl', function () {
 
   it('should call ServiceDescriptor.getServices if the org has a license and the user too', function () {
     vm = createController({
-      licenseID: ['MC_f36c1a2c-20d6-460d-9f55-01fc85d52e04_100_t30citest.webex.com']
+      licenseID: ['MC_f36c1a2c-20d6-460d-9f55-01fc85d52e04_100_t30citest.webex.com'],
     }, ['MC']);
     $rootScope.$digest();
     expect(ServiceDescriptor.getServices.called).toBe(true);
@@ -62,18 +62,18 @@ describe('Directive Controller: HybridServicesCtrl', function () {
     var fusionUcNotActivated = {
       "serviceId": "squared-fusion-uc",
       "entitled": true,
-      "state": "notActivated"
+      "state": "notActivated",
     };
 
     vm.extensions = [{
       "id": "squared-fusion-cal",
       "entitled": false,
-      "enabled": true
+      "enabled": true,
     }, {
       "id": "squared-fusion-uc",
       "entitled": true,
       "enabled": true,
-      "status": fusionUcNotActivated
+      "status": fusionUcNotActivated,
     }, {
       "id": "squared-fusion-ec",
       "entitled": true,
@@ -81,8 +81,8 @@ describe('Directive Controller: HybridServicesCtrl', function () {
       "status": {
         "serviceId": "squared-fusion-ec",
         "entitled": true,
-        "state": "error"
-      }
+        "state": "error",
+      },
     }];
     var mostSignificantStatus = vm.getStatus(fusionUcNotActivated);
 
@@ -96,18 +96,18 @@ describe('Directive Controller: HybridServicesCtrl', function () {
     var fusionUcNotActivated = {
       "serviceId": "squared-fusion-uc",
       "entitled": true,
-      "state": "notActivated"
+      "state": "notActivated",
     };
 
     vm.extensions = [{
       "id": "squared-fusion-cal",
       "entitled": false,
-      "enabled": true
+      "enabled": true,
     }, {
       "id": "squared-fusion-uc",
       "entitled": true,
       "enabled": true,
-      "status": fusionUcNotActivated
+      "status": fusionUcNotActivated,
     }, {
       "id": "squared-fusion-ec",
       "entitled": true,
@@ -115,8 +115,8 @@ describe('Directive Controller: HybridServicesCtrl', function () {
       "status": {
         "serviceId": "squared-fusion-ec",
         "entitled": true,
-        "state": "notActivated"
-      }
+        "state": "notActivated",
+      },
     }];
     var mostSignificantStatus = vm.getStatus(fusionUcNotActivated);
 
@@ -130,15 +130,15 @@ describe('Directive Controller: HybridServicesCtrl', function () {
     vm.extensions = [{
       "id": "squared-fusion-cal",
       "entitled": false,
-      "enabled": true
+      "enabled": true,
     }, {
       "id": "squared-fusion-uc",
       "entitled": false,
-      "enabled": true
+      "enabled": true,
     }, {
       "id": "squared-fusion-ec",
       "entitled": false,
-      "enabled": true
+      "enabled": true,
     }];
     var mostSignificantStatus = vm.getStatus(undefined);
 
@@ -156,9 +156,9 @@ describe('Directive Controller: HybridServicesCtrl', function () {
       Authinfo: Authinfo,
       Config: Config,
       USSService: USSService,
-      ServiceDescriptor: ServiceDescriptor
+      ServiceDescriptor: ServiceDescriptor,
     }, {
-      user: user
+      user: user,
     });
   }
 });

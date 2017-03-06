@@ -28,11 +28,7 @@ class PagingGroupMemberCtrl implements ng.IComponentController {
       if (member.type === USER_REAL_USER) {
         this.FeatureMemberService.getUser(member.uuid).then(
           (user) => {
-            memberWithPicture.member.firstName = this.FeatureMemberService.getFirstNameFromUser(user);
-            memberWithPicture.member.lastName = this.FeatureMemberService.getLastNameFromUser(user);
-            memberWithPicture.member.displayName = this.FeatureMemberService.getDisplayNameFromUser(user);
-            memberWithPicture.member.userName = this.FeatureMemberService.getUserNameFromUser(user);
-            memberWithPicture.picturePath = this.FeatureMemberService.getUserPhoto(user);
+            this.FeatureMemberService.populateFeatureMemberInfo(memberWithPicture, user);
           });
       }
       this.selectedMembers.unshift(memberWithPicture);

@@ -17,15 +17,15 @@
         'MX200': ['MX200 G2'],
         'MX300': ['MX300 G2'],
         'MX700': ['MX700', 'MX700ST'],
-        'MX800': ['MX800', 'MX800D', 'MX800ST']
+        'MX800': ['MX800', 'MX800D', 'MX800ST'],
       },
       in: {
         'MX200 G2': 'MX200',
         'MX300 G2': 'MX300',
         'MX700ST': 'MX700',
         'MX800ST': 'MX800',
-        'MX800D': 'MX800'
-      }
+        'MX800D': 'MX800',
+      },
     };
 
     function getModelsForRange(start, end, granularity, deviceCategories, api) {
@@ -52,7 +52,7 @@
     function requestModelsForRange(url) {
       var deferred = $q.defer();
       var timeout = {
-        timeout: deferred.promise
+        timeout: deferred.promise,
       };
       $timeout(function () {
         deferred.resolve();
@@ -72,7 +72,7 @@
       if (reject.status === -1) {
         reject.statusText = 'Operation timed Out';
         reject.data = {
-          message: 'Operation timed out'
+          message: 'Operation timed out',
         };
       }
       return reject;
@@ -98,7 +98,7 @@
             mapped.push({
               label: value,
               value: value,
-              isSelected: item.isSelected
+              isSelected: item.isSelected,
             });
           });
         } else {
@@ -112,7 +112,7 @@
     return {
       getModelsForRange: getModelsForRange,
       mapModelsOut: mapModelsOut,
-      mapModelsIn: mapModelsIn
+      mapModelsIn: mapModelsIn,
     };
   }
 }());

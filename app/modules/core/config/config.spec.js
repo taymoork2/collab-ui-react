@@ -19,7 +19,7 @@ describe('Config', function () {
   }));
 
   afterEach(function () {
-    Storage.put('TEST_ENV_CONFIG', '');
+    Storage.remove('TEST_ENV_CONFIG');
   });
 
   var devHost = 'localhost';

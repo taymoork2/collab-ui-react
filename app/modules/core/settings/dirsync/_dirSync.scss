@@ -1,0 +1,47 @@
+.dir-sync-settings {
+
+  .updating {
+    display: flex;
+    text-align: center;
+
+    .icon-spinner {
+      margin-left: 1rem;
+    }
+  }
+
+  .status-row {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    .title {
+      max-width: 15rem;
+      min-width: 15rem;
+      flex: 1 1 auto;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      padding-right: 1rem;
+    }
+
+    .status {
+      flex: 0 1 auto;
+      display: block;
+      min-width: 5rem;
+
+      .status-indicator {
+        padding-right: 0rem;
+      }
+    }
+
+    .link {
+      flex: 1 1 auto;
+    }
+  }
+
+  .dir-sync .status-row .link {
+    width: 7rem;
+  }
+
+}

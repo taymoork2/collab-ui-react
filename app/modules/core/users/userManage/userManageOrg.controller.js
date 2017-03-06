@@ -53,7 +53,7 @@ require('./_user-manage.scss');
 
         case 'convert':
           $state.go('users.convert', {
-            manageUsers: true
+            manageUsers: true,
           });
           break;
       }

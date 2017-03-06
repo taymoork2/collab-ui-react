@@ -69,50 +69,50 @@
 
       var huron_model_map = {
         "MODEL_CISCO_7811": {
-          displayName: "Cisco 7811"
+          displayName: "Cisco 7811",
         },
         "MODEL_CISCO_7821": {
-          displayName: "Cisco 7821"
+          displayName: "Cisco 7821",
         },
         "MODEL_CISCO_7832": {
-          displayName: "Cisco 7832"
+          displayName: "Cisco 7832",
         },
         "MODEL_CISCO_7841": {
-          displayName: "Cisco 7841"
+          displayName: "Cisco 7841",
         },
         "MODEL_CISCO_7861": {
-          displayName: "Cisco 7861"
+          displayName: "Cisco 7861",
         },
         "MODEL_CISCO_8811": {
-          displayName: "Cisco 8811"
+          displayName: "Cisco 8811",
         },
         "MODEL_CISCO_8831": {
-          displayName: "Cisco 8831"
+          displayName: "Cisco 8831",
         },
         "MODEL_CISCO_8841": {
-          displayName: "Cisco 8841"
+          displayName: "Cisco 8841",
         },
         "MODEL_CISCO_8845": {
-          displayName: "Cisco 8845"
+          displayName: "Cisco 8845",
         },
         "MODEL_CISCO_8851": {
-          displayName: "Cisco 8851"
+          displayName: "Cisco 8851",
         },
         "MODEL_CISCO_8851NR": {
-          displayName: "Cisco 8851NR"
+          displayName: "Cisco 8851NR",
         },
         "MODEL_CISCO_8861": {
-          displayName: "Cisco 8861"
+          displayName: "Cisco 8861",
         },
         "MODEL_CISCO_8865": {
-          displayName: "Cisco 8865"
+          displayName: "Cisco 8865",
         },
         "MODEL_CISCO_8865NR": {
-          displayName: "Cisco 8865NR"
+          displayName: "Cisco 8865NR",
         },
         "MODEL_CISCO_ATA_190": {
-          displayName: "Cisco ATA190-SC Port 1"
-        }
+          displayName: "Cisco ATA190-SC Port 1",
+        },
       };
 
       function Code(obj) {
@@ -215,7 +215,7 @@
         return _.chain(getEvents(obj))
           .filter({
             type: 'software',
-            level: 'INFO'
+            level: 'INFO',
           })
           .map('description')
           .head()
@@ -226,7 +226,7 @@
         var channel = _.chain(getEvents(obj))
           .filter({
             type: 'upgradeChannel',
-            level: 'INFO'
+            level: 'INFO',
           })
           .map('description')
           .head()
@@ -239,7 +239,7 @@
         }
         return {
           label: label,
-          value: channel
+          value: channel,
         };
       }
 
@@ -256,7 +256,7 @@
         return _.chain(getEvents(obj))
           .filter({
             type: 'ip',
-            level: 'INFO'
+            level: 'INFO',
           })
           .map('description')
           .head()
@@ -280,22 +280,22 @@
         if (isTranslatable('CsdmStatus.errorCodes.' + e.type + '.type')) {
           return {
             type: translateOrDefault('CsdmStatus.errorCodes.' + e.type + '.type', e.type),
-            message: translateOrDefault('CsdmStatus.errorCodes.' + e.type + '.message', e.description, e.references)
+            message: translateOrDefault('CsdmStatus.errorCodes.' + e.type + '.message', e.description, e.references),
           };
         } else if (e.description) {
           return {
             type: $translate.instant('CsdmStatus.errorCodes.unknown.type'),
             message: $translate.instant('CsdmStatus.errorCodes.unknown.message_with_description', {
               errorCode: e.type,
-              description: e.description
-            })
+              description: e.description,
+            }),
           };
         } else {
           return {
             type: $translate.instant('CsdmStatus.errorCodes.unknown.type'),
             message: $translate.instant('CsdmStatus.errorCodes.unknown.message', {
-              errorCode: e.type
-            })
+              errorCode: e.type,
+            }),
           };
         }
       }
@@ -342,17 +342,17 @@
             if (hasIssues(obj)) {
               return {
                 readableState: t('CsdmStatus.OnlineWithIssues'),
-                priority: "1"
+                priority: "1",
               };
             }
             return {
               readableState: t('CsdmStatus.Online'),
-              priority: "5"
+              priority: "5",
             };
           default:
             return {
               readableState: t('CsdmStatus.Offline'),
-              priority: "2"
+              priority: "2",
             };
         }
       }
@@ -405,7 +405,7 @@
         convertCloudberryDevice: convertCloudberryDevice,
         convertCloudberryDevices: convertCloudberryDevices,
         convertHuronDevice: convertHuronDevice,
-        convertHuronDevices: convertHuronDevices
+        convertHuronDevices: convertHuronDevices,
       };
 
     }

@@ -1,12 +1,14 @@
 import { IHuronService, IEmergencyAddress, IEmergency, IState, IEmergencyServicesData, IEmergencyServicesStateParams, IDevice } from './index';
 import { MemberService } from 'modules/huron/members';
 import { FeatureMemberService } from 'modules/huron/features/featureMember.service';
+import { HuronCompassService } from 'modules/huron/compass/compass.service';
 
 export class EmergencyServicesService {
   private emergencyDataCopy: IEmergency;
   private currentDevice: IDevice;
   private huronDeviceService: IHuronService;
   private stateOptions: IState[];
+  private locationLabel: string;
 
   /* @ngInject */
   constructor(
@@ -19,9 +21,11 @@ export class EmergencyServicesService {
     private TerminusUserDeviceE911Service,
     private MemberService: MemberService,
     private FeatureMemberService: FeatureMemberService,
+    private HuronCompassService: HuronCompassService,
   ) {
-    this.PstnSetupStatesService.getStateProvinces().then((states) => {
-      this.stateOptions = states;
+    this.PstnSetupStatesService.getLocation(this.HuronCompassService.getCountryCode()).then((location) => {
+      this.locationLabel = location.type;
+      this.stateOptions = location.areas;
     });
   }
 
@@ -37,6 +41,7 @@ export class EmergencyServicesService {
     return {
       emergency: emergencyData,
       currentDevice: this.currentDevice,
+      locationLabel: this.locationLabel,
       stateOptions: this.stateOptions,
       staticNumber: this.$stateParams.staticNumber,
     };
@@ -113,6 +118,8 @@ export class EmergencyServicesService {
   }
 
   public validateAddress(address: IEmergencyAddress): ng.IPromise<any> {
+    // TODO - Need to update this to call /customer/e911/lookup when Terminus supports it
+    // For now just call the V1 API as a workaround
     return this.PstnServiceAddressService.lookupAddress(address, true);
   }
 

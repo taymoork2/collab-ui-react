@@ -33,7 +33,7 @@
     colorLightRedFill: '#FF0000',
     colorLightYellowFill: '#FFA200',
     gray: '#aaa',
-    metricDarkGreen: '#417505'
+    metricDarkGreen: '#417505',
   };
 
   angular

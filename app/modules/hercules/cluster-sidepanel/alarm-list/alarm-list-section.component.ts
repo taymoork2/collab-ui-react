@@ -50,16 +50,16 @@ export class AlarmListSectionComponentCtrl implements ng.IComponentController {
       this.$state.go('hybrid-services-connector-sidepanel.alarm-details', {
         alarm: alarm,
       });
-    } else if (this.connectorType === 'c_mgmt') {
-      this.$state.go('management-connector-details.alarm-details', {
-        alarm: alarm,
-      });
-    } else if (this.connectorType === 'c_cal' || this.connectorType === 'c_ucmc') {
-      this.$state.go('cluster-details.alarm-details', {
+    } else if (this.connectorType === 'c_mgmt' || this.connectorType === 'c_cal' || this.connectorType === 'c_ucmc') {
+      this.$state.go('expressway-cluster-sidepanel.alarm-details', {
         alarm: alarm,
       });
     } else if (this.connectorType === 'hds_app') {
       this.$state.go('hds-cluster-details.alarm-details', {
+        alarm: alarm,
+      });
+    } else if (this.connectorType === 'mf_mgmt') {
+      this.$state.go('media-cluster-details.alarm-details', {
         alarm: alarm,
       });
     }

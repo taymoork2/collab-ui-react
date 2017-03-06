@@ -15,7 +15,7 @@
       taskTimeDrilldownProps: taskTimeDrilldownProps,
       avgCsatDrilldownProps: avgCsatDrilldownProps,
       broadcastRefresh: broadcastRefresh,
-      broadcastReset: broadcastReset
+      broadcastReset: broadcastReset,
     };
 
     return service;
@@ -24,18 +24,18 @@
       return {
         broadcast: {
           refresh: broadcastRefresh,
-          reset: broadcastReset
+          reset: broadcastReset,
         },
         description: function () {
           return $translate.instant('taskIncoming.drilldownDescription', {
-            time: timeSelected().drilldownDescription
+            time: timeSelected().drilldownDescription,
           });
         },
         display: false,
         hasData: true,
         emptyDescription: function () {
           return $translate.instant('taskIncoming.drilldownEmptyDescription', {
-            time: timeSelected().drilldownDescription
+            time: timeSelected().drilldownDescription,
           });
         },
         errorDescription: function () {
@@ -58,7 +58,7 @@
               displayName: $translate.instant('taskIncoming.user'),
               width: '60%',
               sortable: true,
-              sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC]
+              sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
             }, {
               field: 'contactsHandled',
               id: 'contactsHandled',
@@ -67,20 +67,20 @@
               width: '40%',
               sortable: true,
               sort: {
-                direction: uiGridConstants.DESC
+                direction: uiGridConstants.DESC,
               },
-              sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC]
-            }
+              sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
+            },
           ],
           gridOptions: {
-            rowHeight: 42
-          }
+            rowHeight: 42,
+          },
         },
         title: function () {
           return $translate.instant('taskIncoming.drilldownTitle', {
-            time: timeSelected().drilldownTitle
+            time: timeSelected().drilldownTitle,
           });
-        }
+        },
       };
     }
 
@@ -88,18 +88,18 @@
       return {
         broadcast: {
           refresh: broadcastRefresh,
-          reset: broadcastReset
+          reset: broadcastReset,
         },
         description: function () {
           return $translate.instant('averageCsat.drilldownDescription', {
-            time: timeSelected().drilldownDescription
+            time: timeSelected().drilldownDescription,
           });
         },
         display: false,
         hasData: true,
         emptyDescription: function () {
           return $translate.instant('averageCsat.drilldownEmptyDescription', {
-            time: timeSelected().drilldownDescription
+            time: timeSelected().drilldownDescription,
           });
         },
         errorDescription: function () {
@@ -122,7 +122,7 @@
               displayName: $translate.instant('averageCsat.user'),
               width: '60%',
               sortable: true,
-              sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC]
+              sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
             }, {
               field: 'avgCsatScore',
               id: 'averageCsat',
@@ -132,20 +132,20 @@
               width: '40%',
               sortable: true,
               sort: {
-                direction: uiGridConstants.DESC
+                direction: uiGridConstants.DESC,
               },
-              sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC]
-            }
+              sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
+            },
           ],
           gridOptions: {
-            rowHeight: 42
-          }
+            rowHeight: 42,
+          },
         },
         title: function () {
           return $translate.instant('averageCsat.drilldownTitle', {
-            time: timeSelected().drilldownTitle
+            time: timeSelected().drilldownTitle,
           });
-        }
+        },
       };
     }
 
@@ -153,18 +153,18 @@
       return {
         broadcast: {
           refresh: broadcastRefresh,
-          reset: broadcastReset
+          reset: broadcastReset,
         },
         description: function () {
           return $translate.instant('taskTime.drilldownDescription', {
-            time: timeSelected().drilldownDescription
+            time: timeSelected().drilldownDescription,
           });
         },
         display: false,
         hasData: true,
         emptyDescription: function () {
           return $translate.instant('taskTime.drilldownEmptyDescription', {
-            time: timeSelected().drilldownDescription
+            time: timeSelected().drilldownDescription,
           });
         },
         errorDescription: function () {
@@ -187,7 +187,7 @@
               displayName: $translate.instant('taskTime.user'),
               width: '60%',
               sortable: true,
-              sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC]
+              sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
             }, {
               field: 'handleTime',
               id: 'handleTime',
@@ -197,20 +197,20 @@
               width: '40%',
               sortable: true,
               sort: {
-                direction: uiGridConstants.ASC
+                direction: uiGridConstants.ASC,
               },
-              sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC]
-            }
+              sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
+            },
           ],
           gridOptions: {
-            rowHeight: 42
-          }
+            rowHeight: 42,
+          },
         },
         title: function () {
           return $translate.instant('taskTime.drilldownTitle', {
-            time: timeSelected().drilldownTitle
+            time: timeSelected().drilldownTitle,
           });
-        }
+        },
       };
     }
   }

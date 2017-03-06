@@ -16,18 +16,34 @@
     flex-wrap: wrap;
   }
 
-  & .aa-destination-container {
-    width: 100%;
-    & .csSelect-container {
-      @include vr-spacing(pt, 1);
+  h3 {
+    display: inline-block;
+  }
+
+  .aa-help-icon {
+    color: $color-primary-lighter;
+    position: absolute;
+
+    &:hover {
+      color: $white;
+      cursor: pointer;
     }
 
-    & form {
-      @include vr-spacing(mb, 0);
+    &:focus {
+      color: $white;
+      outline: none;
+    }
+  }
 
-      & .form-group {
-        @include vr-spacing(mb, .25);
-      }
+  .aa-help-wrapper {
+    .modal-title {
+      max-width: 900px;
+      margin: 0;
+      padding: 0 0rem 0 1rem;
+    }
+
+    .popover {
+      @include vr-spacing(mt, 0);
     }
   }
 }

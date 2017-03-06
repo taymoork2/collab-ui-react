@@ -29,11 +29,11 @@
       '/meetingsapi/v1/files/',
       '/channels',
       '/api/v1/internals/actions/invalidateUser/invoke',
-      '/releaseChannels'
+      '/releaseChannels',
     ];
 
     return {
-      request: rejectOnNotRead
+      request: rejectOnNotRead,
     };
 
     function rejectOnNotRead(config) {

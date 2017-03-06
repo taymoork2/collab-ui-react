@@ -23,7 +23,7 @@
     vm.placeholder = {
       name: $translate.instant('hercules.fusion.list.all'),
       filterValue: 'all',
-      count: 0
+      count: 0,
     };
     vm.filters = setupFilters();
 
@@ -96,6 +96,11 @@
           display: Authinfo.isEntitled(Config.entitlements.hds),
           unassigned: _.filter(response.unassigned, { targetType: 'hds_app' }),
         },
+        {
+          targetType: 'cs_mgmt',
+          display: Authinfo.isEntitled(Config.entitlements.context),
+          unassigned: _.filter(response.unassigned, { targetType: 'cs_mgmt' }),
+        },
       ];
     }
 
@@ -119,6 +124,13 @@
         filters.push({
           name: $translate.instant('hercules.fusion.list.hds'),
           filterValue: 'hds_app',
+          count: 0,
+        });
+      }
+      if (Authinfo.isEntitled(Config.entitlements.context)) {
+        filters.push({
+          name: $translate.instant('hercules.fusion.list.context'),
+          filterValue: 'cs_mgmt',
           count: 0,
         });
       }
@@ -212,7 +224,7 @@
         } else {
           // Filter on the cluster name only
           vm.displayedClusters = $filter('filter')(clustersCache, {
-            name: searchStr
+            name: searchStr,
           });
         }
       }
@@ -223,7 +235,8 @@
         data: {
           targetType: '',
           expressway: {},
-          mediafusion: {}
+          mediafusion: {},
+          context: {},
         },
         history: [],
         currentStateName: 'add-resource.type-selector',
@@ -231,36 +244,39 @@
           'add-resource.type-selector': {
             nextOptions: {
               expressway: 'add-resource.expressway.service-selector',
-              mediafusion: 'add-resource.mediafusion.hostname'
-            }
+              mediafusion: 'add-resource.mediafusion.hostname',
+              context: 'add-resource.context',
+            },
           },
           // expressway
           'add-resource.expressway.service-selector': {
-            next: 'add-resource.expressway.hostname'
+            next: 'add-resource.expressway.hostname',
           },
           'add-resource.expressway.hostname': {
-            next: 'add-resource.expressway.name'
+            next: 'add-resource.expressway.name',
           },
           'add-resource.expressway.name': {
-            next: 'add-resource.expressway.resource-group'
+            next: 'add-resource.expressway.resource-group',
           },
           'add-resource.expressway.resource-group': {
-            next: 'add-resource.expressway.end'
+            next: 'add-resource.expressway.end',
           },
           'add-resource.expressway.end': {},
           // mediafusion
           'add-resource.mediafusion.hostname': {
-            next: 'add-resource.mediafusion.name'
+            next: 'add-resource.mediafusion.name',
           },
           'add-resource.mediafusion.name': {
-            next: 'add-resource.mediafusion.end'
+            next: 'add-resource.mediafusion.end',
           },
-          'add-resource.mediafusion.end': {}
-        }
+          'add-resource.mediafusion.end': {},
+          // context
+          'add-resource.context': {},
+        },
       };
       var wizard = WizardFactory.create(initialState);
       $state.go(initialState.currentStateName, {
-        wizard: wizard
+        wizard: wizard,
       });
     }
 
@@ -284,7 +300,7 @@
           unassignedClusters: function () {
             return groupsCache[0].unassigned;
           },
-        }
+        },
       }).result
       .then(refreshList);
     }

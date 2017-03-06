@@ -31,11 +31,12 @@
                 </div>
                 <div ng-if="$ctrl.reordering">
                   <a class="icon icon-tables"></a>
-                </div>
+               </div>
               </div>
-              <div ng-if="sd.edit" class="sd-edit-wrapper row">
-                <div class="medium-6 sd-spacing-input">
-                  <input
+            </div>
+            <div ng-if="$ctrl.editing" class="sd-edit-wrapper">
+              <div class="sd-spacing-input row">
+                 <input
                     id="{{'sd-'+sd.index}}"
                     cs-input
                     type="text"
@@ -47,24 +48,24 @@
                     maxlength="30"
                     cs-input-messages="$ctrl.labelMessages"
                     pattern="^((?!<).)*$"/>
-                </div>
-                <div class="medium-6 sd-spacing-input">
-                  <input
-                    cs-input
-                    type="text"
+              </div>
+              <div class="sd-spacing-input row">
+                <cs-call-destination
+                    model="$ctrl.callDest"
+                    size="medium-12"
+                    inputs="$ctrl.callDestInputs"
                     id="number{{$index}}"
                     name="number{{$index}}"
-                    ng-model="$ctrl.newNumber"
-                    cs-input-label="{{:: 'speedDials.number' | translate}}"
-                    ng-required="true"
-                    cs-input-messages="$ctrl.numberMessages"
-                    pattern="(^[A-z0-9._%+-]+@[A-z0-9.-]+\.[A-z]{2,}$)|(^\+?[0-9]+$)"/>
-                </div>
+                    select-type="select"
+                    custom-number-translations="$ctrl.customTranslations"
+                    external-number-region-code-fn="$ctrl.getRegionCode()"
+                    on-change-fn="$ctrl.setSpeedDial(model)">
+                </cs-call-destination>
               </div>
             </div>
           </div>
         </form>
       </div>
-    </cs-sp-section>
+     </cs-sp-section>
   </cs-sp-container>
 </div>

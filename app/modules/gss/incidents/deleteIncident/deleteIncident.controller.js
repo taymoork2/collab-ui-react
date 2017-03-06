@@ -35,14 +35,14 @@
         .deleteIncident(vm.incident.incidentId)
         .then(function () {
           Notification.success('gss.incidentsPage.deleteIncidentSucceed', {
-            incidentName: vm.incident.incidentName
+            incidentName: vm.incident.incidentName,
           });
 
           goBack();
         })
         .catch(function (error) {
           Notification.errorWithTrackingId(error, 'gss.incidentsPage.deleteIncidentFailed', {
-            incidentName: vm.incidentName
+            incidentName: vm.incidentName,
           });
         })
         .finally(function () {

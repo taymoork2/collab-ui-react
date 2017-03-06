@@ -12,7 +12,7 @@
     vm.resourceGroup = resourceGroup;
     vm.originalData = {
       availableClusters: [],
-      clustersInResourceGroup: []
+      clustersInResourceGroup: [],
     };
     vm.newData = angular.copy(vm.originalData);
     vm._helpers = {

@@ -94,7 +94,7 @@
         return;
       }
       var summaryForService = _.find(USSService.getStatusesSummary(), {
-        serviceId: serviceId
+        serviceId: serviceId,
       });
       var noUsersActivatedId = serviceId + ':noUsersActivated';
       var needsUserActivation = summaryForService && summaryForService.activated === 0 && summaryForService.error === 0 && summaryForService.notActivated === 0;
@@ -122,7 +122,7 @@
           // Call Service has two sub-services, need special handling
           var awareStatus = summaryForService;
           var connectStatus = _.find(USSService.getStatusesSummary(), {
-            serviceId: 'squared-fusion-ec'
+            serviceId: 'squared-fusion-ec',
           });
           if ((awareStatus && awareStatus.error > 0) || (connectStatus && connectStatus.error > 0)) {
             var data = [];
@@ -185,9 +185,10 @@
       if (serviceId !== 'squared-fusion-uc') {
         return;
       }
+
       ServiceDescriptor.getServices().then(function (items) {
         var callServiceConnect = _.find(items, {
-          id: 'squared-fusion-ec'
+          id: 'squared-fusion-ec',
         });
         if (callServiceConnect && callServiceConnect.enabled) {
           // we need to clear the notification after admin has setup enabled
@@ -308,7 +309,7 @@
     return {
       checkState: checkState,
       checkUserStatuses: checkUserStatuses,
-      setSipUriNotificationAcknowledgedAndRemoveNotification: setSipUriNotificationAcknowledgedAndRemoveNotification
+      setSipUriNotificationAcknowledgedAndRemoveNotification: setSipUriNotificationAcknowledgedAndRemoveNotification,
     };
   }
 }());

@@ -1,0 +1,64 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="$ctrl.dismissModal()">
+        <span class="sr-only">Close</span>
+    </button>
+    <h3 class="modal-title" translate="sharedMeetingReports.sharedMeetingReport"></h3>
+</div>
+<div class="modal-body shared-report">
+  <div class="row body-spacing">
+    <cs-select class="time-filter pull-right"
+      ng-model="$ctrl.timeSelected"
+      options="$ctrl.timeFilter"
+      on-change-fn="$ctrl.updateReport()">
+    </cs-select>
+  </div>
+  <div class="row row-space body-spacing">
+    <h3 class="column medium-5" translate="sharedMeetingReports.sharedMeetingUsage"></h3>
+    <div ng-if="$ctrl.exportDropdown" class="grid-filter dropdown pull-right">
+      <a ng-click="$ctrl.toggleExportMenu()">
+        <i class='icon icon-three-dots export-dots'></i>
+      </a>
+      <ul class="dropdown-menu dropdown-primary" ng-class="{'export-visible': $ctrl.exportMenu}">
+        <li ng-repeat="object in $ctrl.exportDropdown" class="export-item">
+          <a id="{{object.id}}" ng-click="$ctrl.dropdownSelect(object)">
+            <span translate="{{object.label}}"></span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="row row-space body-spacing">
+    <span class="p report-description" translate="sharedMeetingReports.sharedMeetingDescription"></span>
+  </div>
+  <div class="row body-spacing">
+    <div class="axischart" id="sharedMeetingsChart"></div>
+    <div class="spinner-position" ng-if="$ctrl.isRefresh()">
+      <i class='icon icon-spinner icon-2x'></i>
+    </div>
+    <div class="no-data-center" ng-if="$ctrl.isEmpty()">
+      <h3 class="no-data">
+        <i class='icon icon-warning no-data-warning'></i>
+        <span translate='reportsPage.noCustomerData'></span>
+      </h3>
+    </div>
+  </div>
+  <div class="row" ng-if="$ctrl.isSet()">
+    <div class="center-text">
+      <div cs-loader class="report-loader" ng-if="!$ctrl.isDownloadReady()"></div>
+      <span class="p"
+        ng-if="$ctrl.csvHref && !$ctrl.csvError"
+        translate="sharedMeetingReports.downloadHref"
+        translate-value-href="{{$ctrl.csvHref}}"
+        translate-value-download="{{$ctrl.csvFilename}}"></span>
+      <span class="p"
+        ng-if="$ctrl.csvDownload && !$ctrl.csvError"
+        translate="sharedMeetingReports.downloadClick"
+        translate-value-onclick="$ctrl.csvDownloadForInternetExplorer()"
+        translate-compile></span>
+      <span ng-if="$ctrl.csvError" class="p" translate="sharedMeetingReports.csvPageError"></span>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn--primary" ng-click="$ctrl.dismissModal()" translate="common.done"></button>
+</div>

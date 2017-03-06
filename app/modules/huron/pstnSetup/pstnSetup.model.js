@@ -5,11 +5,11 @@
     .factory('PstnSetup', PstnSetup);
 
   function PstnSetup() {
-    var customerId, customerName, customerFirstName, customerLastName, customerEmail, serviceAddress, customerExists, resellerExists, carrierExists, siteExists, provider, numbers, orders, carriers, singleCarrierReseller, isTrial;
+    var customerId, customerName, customerFirstName, customerLastName, customerEmail, serviceAddress, customerExists, resellerExists, carrierExists, siteExists, provider, numbers, orders, carriers, singleCarrierReseller, isTrial, countryCode;
 
     init();
     var model = {
-      clear: init,
+      clear: clear,
       clearProviderSpecificData: clearProviderSpecificData,
       setCustomerId: setCustomerId,
       getCustomerId: getCustomerId,
@@ -43,12 +43,18 @@
       isSingleCarrierReseller: isSingleCarrierReseller,
       setSingleCarrierReseller: setSingleCarrierReseller,
       setIsTrial: setIsTrial,
-      getIsTrial: getIsTrial
+      getIsTrial: getIsTrial,
+      getCountryCode: getCountryCode,
+      setCountryCode: setCountryCode,
     };
 
     return model;
 
     function init() {
+      clear();
+    }
+
+    function clear() {
       customerId = '';
       customerName = '';
       customerFirstName = '';
@@ -65,14 +71,18 @@
       carriers = [];
       singleCarrierReseller = false;
       isTrial = true;
+      countryCode = 'US';
     }
 
     function clearProviderSpecificData() {
       customerFirstName = '';
       customerLastName = '';
+      serviceAddress = {};
+      siteExists = false;
+      carrierExists = false;
+      carrierExists = [];
       numbers = [];
       orders = [];
-      serviceAddress = {};
     }
 
     function setCustomerId(_customerId) {
@@ -212,5 +222,14 @@
     function getIsTrial() {
       return isTrial;
     }
+
+    function getCountryCode() {
+      return countryCode;
+    }
+
+    function setCountryCode(_countryCode) {
+      countryCode = _countryCode;
+    }
+
   }
 })();

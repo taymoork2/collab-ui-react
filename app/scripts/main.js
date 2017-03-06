@@ -58,6 +58,7 @@
     require('modules/online/digitalRiver').default, // TODO make core.myCompany independent module
     require('modules/online/upgrade').default,
     require('modules/core/trials/regionalSettings').default,
+    require('modules/core/trials/emergencyServices').default,
     require('modules/huron/countries').default,
   ])
     .constant('CryptoJS', require('crypto-js'))
@@ -89,6 +90,7 @@
     require('modules/huron/cos').default,
     require('modules/huron/pstn').default,
     require('modules/huron/pstn/pstnProviders').default,
+    require('modules/huron/overview').default,
   ]);
 
   angular.module('Hercules', ['Core', 'Squared', 'core.onboard', 'ngTagsInput']);
@@ -106,7 +108,7 @@
   angular.module('Sunlight', [
     'Core',
     'CareDetails',
-    'Sunlight.pagination'
+    'Sunlight.pagination',
   ]);
 
   angular.module('Context', ['Core']);
@@ -130,7 +132,7 @@
     'Context',
     'GSS',
     'oc.lazyLoad',
-    'Gemini'
+    'Gemini',
   ]).config(require('./main.config'))
     .run(require('./main.run'))
     .name;

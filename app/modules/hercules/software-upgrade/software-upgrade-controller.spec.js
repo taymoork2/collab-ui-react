@@ -13,13 +13,13 @@ describe('Controller: SoftwareUpgradeController', function () {
     Notification = _Notification_;
 
     ClusterService = {
-      upgradeSoftware: sinon.stub()
+      upgradeSoftware: sinon.stub(),
     };
     FusionClusterService = {
-      getReleaseNotes: sinon.stub()
+      getReleaseNotes: sinon.stub(),
     };
     modalInstance = {
-      close: sinon.stub()
+      close: sinon.stub(),
     };
 
     spyOn($translate, 'instant');
@@ -36,7 +36,7 @@ describe('Controller: SoftwareUpgradeController', function () {
     cluster = {
       "id": "a050fcc7-9ade-4790-a06d-cca596910421",
       "name": "CAL_TEST1",
-      "releaseChannel": "DEV"
+      "releaseChannel": "DEV",
     };
 
     controller = $controller('SoftwareUpgradeController', {
@@ -48,7 +48,7 @@ describe('Controller: SoftwareUpgradeController', function () {
       cluster: cluster,
       ClusterService: ClusterService,
       FusionClusterService: FusionClusterService,
-      Notification: Notification
+      Notification: Notification,
     })
     ;
     $scope.$apply();

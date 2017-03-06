@@ -15,7 +15,7 @@
     deviceOverview.country = "";
     deviceOverview.selectedCountry = "";
     deviceOverview.hideE911Edit = true;
-
+    deviceOverview.faxEnabled = false;
     function init() {
       displayDevice($stateParams.currentDevice);
 
@@ -58,6 +58,10 @@
         }
       }
 
+      if (deviceOverview.currentDevice.isATA) {
+        getT38Settings();
+      }
+
       deviceOverview.deviceHasInformation = deviceOverview.currentDevice.ip || deviceOverview.currentDevice.mac || deviceOverview.currentDevice.serial || deviceOverview.currentDevice.software || deviceOverview.currentDevice.hasRemoteSupport;
 
       deviceOverview.canChangeUpgradeChannel = channels.length > 1 && deviceOverview.currentDevice.isOnline;
@@ -67,6 +71,14 @@
       deviceOverview.upgradeChannelOptions = _.map(channels, getUpgradeChannelObject);
 
       resetSelectedChannel();
+    }
+
+    function getT38Settings() {
+      deviceOverview.updatingT38Settings = true;
+      huronDeviceService.getAtaInfo(deviceOverview.currentDevice).then(function (result) {
+        deviceOverview.faxEnabled = result.t38FaxEnabled;
+        deviceOverview.updatingT38Settings = false;
+      });
     }
 
     function getEmergencyInformation() {
@@ -94,7 +106,7 @@
     function getEmergencyAddress() {
       TerminusUserDeviceE911Service.get({
         customerId: Authinfo.getOrgId(),
-        number: deviceOverview.emergencyCallbackNumber
+        number: deviceOverview.emergencyCallbackNumber,
       }).$promise.then(function (info) {
         deviceOverview.emergencyAddress = info.e911Address;
         deviceOverview.emergencyAddressStatus = info.status;
@@ -181,6 +193,25 @@
       });
     }
 
+    deviceOverview.saveT38Settings = function () {
+      deviceOverview.updatingT38Settings = true;
+      $timeout(function () {
+        var settings = {
+          t38FaxEnabled: deviceOverview.faxEnabled,
+        };
+        huronDeviceService.setSettingsForAta(deviceOverview.currentDevice, settings)
+        .then(function () {
+          Notification.success('ataSettings.savedT38');
+        })
+        .catch(function (error) {
+          Notification.errorResponse(error, 'deviceOverviewPage.failedToSaveChanges');
+        })
+        .finally(function () {
+          deviceOverview.updatingT38Settings = false;
+        });
+      }, 100);
+    };
+
     deviceOverview.saveTimeZoneAndWait = function () {
       var newValue = deviceOverview.selectedTimeZone.id;
       if (newValue !== deviceOverview.timeZone) {
@@ -219,7 +250,7 @@
         currentAddress: deviceOverview.emergencyAddress,
         currentNumber: deviceOverview.emergencyCallbackNumber,
         status: deviceOverview.emergencyAddressStatus,
-        staticNumber: !deviceOverview.currentDevice.isHuronDevice
+        staticNumber: !deviceOverview.currentDevice.isHuronDevice,
       };
 
       if ($state.current.name === 'user-overview.csdmDevice' || $state.current.name === 'place-overview.csdmDevice') {
@@ -381,7 +412,7 @@
       }
       return {
         label: label,
-        value: channel
+        value: channel,
       };
     }
 

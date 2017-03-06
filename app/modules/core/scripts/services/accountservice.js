@@ -10,13 +10,13 @@
       createAccount: function (customerOrgName, customerAdminEmail, partnerAdminEmail, isPartner, beId, begeoId, duration, licenseCount, offersList, startDate) {
         var accountUrl = UrlConfig.getAdminServiceUrl() + 'accounts';
         var accountRequest = {
-          'offers': []
+          'offers': [],
         };
 
         for (var i in offersList) {
           accountRequest.offers.push({
             'id': offersList[i],
-            'licenseCount': licenseCount
+            'licenseCount': licenseCount,
           });
         }
 
@@ -75,7 +75,7 @@
         $http({
           method: 'PATCH',
           url: accountUrl,
-          data: payload
+          data: payload,
         })
           .success(function (data, status) {
             data = _.isObject(data) ? data : {};
@@ -89,7 +89,7 @@
             data.status = status;
             callback(data, status);
           });
-      }
+      },
     };
   }
 })();

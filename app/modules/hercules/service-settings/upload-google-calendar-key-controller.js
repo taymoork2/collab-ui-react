@@ -22,7 +22,7 @@
       CloudConnectorService.updateConfig(vm.data.googleServiceAccount, vm.data.file, 'squared-fusion-gcal')
         .then(function () {
           Notification.success($translate.instant('hercules.settings.googleCalendar.successfullyUploadedKey', {
-            filename: vm.data.fileName
+            filename: vm.data.fileName,
           }));
           $modalInstance.close(vm.data.googleServiceAccount);
         })

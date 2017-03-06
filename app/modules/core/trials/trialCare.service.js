@@ -10,7 +10,7 @@
     var _trialData;
     var service = {
       getData: getData,
-      reset: reset
+      reset: reset,
     };
 
     return service;
@@ -31,11 +31,11 @@
         enabled: false,
         details: {
           enabled: false,
-          quantity: 15
-        }
+          quantity: 15,
+        },
       };
 
-      _trialData = angular.copy(defaults);
+      _trialData = _.clone(defaults);
       return _trialData;
     }
   }

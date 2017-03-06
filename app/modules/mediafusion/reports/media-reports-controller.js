@@ -5,7 +5,7 @@
     .module('Mediafusion')
     .controller('MediaReportsController', MediaReportsController);
   /* @ngInject */
-  function MediaReportsController($q, $scope, $translate, $interval, MediaClusterServiceV2, UtilizationResourceGraphService, ParticipantDistributionResourceGraphService, MediaReportsService, Notification, MediaReportsDummyGraphService, MediaSneekPeekResourceService, CallVolumeResourceGraphService, AvailabilityResourceGraphService, ClientTypeAdoptionGraphService) {
+  function MediaReportsController($q, $scope, $translate, $interval, $timeout, MediaClusterServiceV2, UtilizationResourceGraphService, MeetingLocationAdoptionGraphService, ParticipantDistributionResourceGraphService, NumberOfParticipantGraphService, MediaReportsService, Notification, MediaReportsDummyGraphService, MediaSneekPeekResourceService, CallVolumeResourceGraphService, AvailabilityResourceGraphService, ClientTypeAdoptionGraphService, AdoptionCardService) {
     var vm = this;
     var interval = null;
     var deferred = $q.defer();
@@ -18,8 +18,10 @@
     vm.utilizationStatus = vm.REFRESH;
     vm.callVolumeStatus = vm.REFRESH;
     vm.participantDistributionStatus = vm.REFRESH;
+    vm.numberOfParticipantStatus = vm.REFRESH;
     vm.availabilityStatus = vm.REFRESH;
     vm.clientTypeStatus = vm.REFRESH;
+    vm.meetingLocationStatus = vm.REFRESH;
 
     vm.clusterFilter = null;
     vm.timeFilter = null;
@@ -44,20 +46,24 @@
     vm.total_participants_heading = $translate.instant('mediaFusion.metrics.total_participants');
     vm.on_prem_participants_heading = $translate.instant('mediaFusion.metrics.onprem_participants');
     vm.cloud_participants_heading = $translate.instant('mediaFusion.metrics.cloud_participants');
+    vm.overflow_heading = $translate.instant('mediaFusion.metrics.cloud_calls');
     vm.cloud_calls_heading = $translate.instant('mediaFusion.metrics.cloud_calls');
     vm.redirected_calls_heading = $translate.instant('mediaFusion.metrics.redirectedcalls');
     vm.cluster_availability_heading = $translate.instant('mediaFusion.metrics.overAllAvailability');
     vm.customPlaceholder = $translate.instant('mediaFusion.report.custom');
+    vm.total_cloud_heading = $translate.instant('mediaFusion.metrics.totalCloud');
 
-    vm.hosted_heading = vm.on_prem_calls_heading;
+    vm.second_card_heading = vm.total_cloud_heading;
     vm.redirected_heading = vm.cloud_calls_heading;
+    vm.second_card_value = 0;
     vm.hosted_participants_heading = vm.on_prem_participants_heading;
+    vm.hosted_heading = vm.on_prem_calls_heading;
 
     vm.Map = {};
-    vm.cloudparticipants = {
+    vm.secondCardFooter = {
       isShow: '',
       value: '',
-      footerDesc: vm.cloud_participants_heading
+      footerDesc: vm.overflow_heading,
     };
 
     vm.displayAdoption = false;
@@ -78,25 +84,38 @@
 
     vm.setClientTypeData = setClientTypeData;
     vm.setClientTypeCard = setClientTypeCard;
+    vm.setMeetingLocationData = setMeetingLocationData;
+    vm.setMeetingLocationCard = setMeetingLocationCard;
 
     vm.showAvailabilityTooltip = false;
     vm.showHostedOnPremTooltip = false;
 
+    vm.clientTypeschartOptions = {
+      isShow: true,
+      cardChartDiv: 'clientTypeChartDiv',
+      noData: false,
+    };
+    vm.numberOfMeetsOnPremiseschartOptions = {
+      isShow: true,
+      cardChartDiv: 'numberOfMeetsOnPremisesChartDiv',
+      noData: false,
+    };
+
     vm.timeOptions = [{
       value: 0,
-      label: $translate.instant('mediaFusion.metrics.last4Hours')
+      label: $translate.instant('mediaFusion.metrics.last4Hours'),
     }, {
       value: 1,
-      label: $translate.instant('mediaFusion.metrics.today')
+      label: $translate.instant('mediaFusion.metrics.today'),
     }, {
       value: 2,
-      label: $translate.instant('mediaFusion.metrics.week')
+      label: $translate.instant('mediaFusion.metrics.week'),
     }, {
       value: 3,
-      label: $translate.instant('mediaFusion.metrics.month')
+      label: $translate.instant('mediaFusion.metrics.month'),
     }, {
       value: 4,
-      label: $translate.instant('mediaFusion.metrics.threeMonths')
+      label: $translate.instant('mediaFusion.metrics.threeMonths'),
     }];
     vm.timeSelected = vm.timeOptions[0];
 
@@ -111,6 +130,7 @@
         setClusterAvailability();
         setUtilizationData();
         setParticipantDistributionData();
+        setNumberOfParticipantData();
         setCallVolumeData();
       });
     }
@@ -119,21 +139,27 @@
       //Adoption changes here
       setClientTypeData();
       setClientTypeCard();
+      setMeetingLocationData();
+      setMeetingLocationCard();
     }
 
     function clusterUpdate() {
       if (vm.clusterSelected !== vm.allClusters) {
         vm.clusterId = vm.Map[vm.clusterSelected];
-        vm.hosted_heading = vm.on_prem_calls_heading;
+        vm.second_card_heading = vm.redirected_calls_heading;
         vm.redirected_heading = vm.redirected_calls_heading;
-        vm.hosted_participants_heading = vm.on_prem_participants_heading;
       } else {
         vm.clusterId = vm.allClusters;
-        vm.hosted_heading = vm.on_prem_calls_heading;
+        vm.second_card_heading = vm.total_cloud_heading;
         vm.redirected_heading = vm.cloud_calls_heading;
-        vm.hosted_participants_heading = vm.on_prem_participants_heading;
       }
       loadResourceDatas();
+      $timeout(function () {
+        angular.element('#adoptionReportsLi').triggerHandler('click');
+      }, 0);
+      $timeout(function () {
+        angular.element('#resourceReportsLi').triggerHandler('click');
+      }, 0);
     }
 
     $scope.$on('clusterClickEvent', function (event, data) {
@@ -146,7 +172,7 @@
     $scope.$on('zoomedTime', function (event, data) {
       vm.timeSelected = {
         startTime: data.data.startTime,
-        endTime: data.data.endTime
+        endTime: data.data.endTime,
       };
       vm.timeSelected.label = vm.customPlaceholder;
       timeUpdate();
@@ -235,63 +261,68 @@
             return undefined;
           } else if (_.isUndefined(response.data) || response.data.length === 0) {
             vm.onprem = vm.noData;
-            vm.cloud = vm.noData;
+            vm.cloudOverflow = vm.noData;
             vm.total = vm.noData;
+            vm.cloudcalls = vm.noData;
           } else if (_.isUndefined(response.data.callsOnPremise) && !_.isUndefined(response.data.cloudCalls)) {
             vm.onprem = vm.noData;
-            vm.cloud = response.data.callsOverflow;
+            vm.cloudOverflow = response.data.callsOverflow;
             vm.cloudcalls = response.data.cloudCalls;
-            vm.cloudparticipants.isShow = true;
-            vm.cloudparticipants.value = vm.cloudcalls;
-            vm.total = vm.cloud;
+            vm.secondCardFooter.isShow = true;
+            vm.secondCardFooter.value = vm.cloudOverflow;
+            vm.total = vm.cloudOverflow;
             vm.totalcloudcalls = vm.cloudcalls;
           } else if (!_.isUndefined(response.data.callsOnPremise) && _.isUndefined(response.data.cloudCalls)) {
             vm.onprem = response.data.callsOnPremise;
-            vm.cloud = vm.noData;
+            vm.cloudOverflow = vm.noData;
+            vm.cloudcalls = vm.noData;
             vm.total = vm.onprem;
           } else if (_.isUndefined(response.data.callsOnPremise) && _.isUndefined(response.data.callsOverflow)) {
             vm.onprem = vm.noData;
-            vm.cloud = vm.noData;
+            vm.cloudOverflow = vm.noData;
             vm.total = vm.noData;
+            vm.cloudcalls = vm.noData;
           } else {
             vm.onprem = response.data.callsOnPremise;
-            vm.cloud = response.data.callsOverflow;
+            vm.cloudOverflow = response.data.callsOverflow;
             vm.cloudcalls = response.data.cloudCalls;
-            vm.total = vm.onprem + vm.cloud;
+            vm.total = vm.onprem + vm.cloudOverflow;
             vm.totalcloudcalls = vm.onprem + vm.cloudcalls;
-            vm.cloudparticipants.isShow = true;
-            vm.cloudparticipants.value = vm.cloudcalls;
+            vm.secondCardFooter.isShow = true;
+            vm.secondCardFooter.value = vm.cloudOverflow;
           }
+          vm.second_card_value = vm.cloudcalls;
 
         } else {
           if (response === vm.ABORT) {
             return undefined;
           } else if (_.isUndefined(response.data) || response.data.length === 0) {
             vm.onprem = vm.noData;
-            vm.cloud = vm.noData;
+            vm.cloudOverflow = vm.noData;
             vm.total = vm.noData;
             vm.totalcloudcalls = vm.noData;
           } else if (_.isUndefined(response.data.callsOnPremise) && !_.isUndefined(response.data.callsRedirect)) {
             vm.onprem = vm.noData;
-            vm.cloud = response.data.callsRedirect;
-            vm.total = vm.cloud;
-            vm.totalcloudcalls = vm.cloud;
+            vm.cloudOverflow = response.data.callsRedirect;
+            vm.total = vm.cloudOverflow;
+            vm.totalcloudcalls = vm.cloudOverflow;
           } else if (!_.isUndefined(response.data.callsOnPremise) && _.isUndefined(response.data.callsRedirect)) {
             vm.onprem = response.data.callsOnPremise;
-            vm.cloud = vm.noData;
+            vm.cloudOverflow = vm.noData;
             vm.total = vm.onprem;
             vm.totalcloudcalls = vm.onprem;
           } else if (_.isUndefined(response.data.callsOnPremise) && _.isUndefined(response.data.callsRedirect)) {
             vm.onprem = vm.noData;
-            vm.cloud = vm.noData;
+            vm.cloudOverflow = vm.noData;
             vm.total = vm.noData;
             vm.totalcloudcalls = vm.noData;
           } else {
             vm.onprem = response.data.callsOnPremise;
-            vm.cloud = response.data.callsRedirect;
-            vm.total = vm.onprem + vm.cloud;
-            vm.totalcloudcalls = vm.onprem + vm.cloud;
+            vm.cloudOverflow = response.data.callsRedirect;
+            vm.total = vm.onprem + vm.cloudOverflow;
+            vm.totalcloudcalls = vm.onprem + vm.cloudOverflow;
           }
+          vm.second_card_value = vm.cloudOverflow;
         }
       });
     }
@@ -300,10 +331,33 @@
       MediaReportsService.getClientTypeCardData(vm.timeSelected).then(function (response) {
         if (response === vm.ABORT) {
           return undefined;
-        } else if (_.isUndefined(response.data) || response.data.length === 0) {
-          vm.clientTypeCount = vm.noData;
+        } else if (_.isUndefined(response.data) || response.data.dataProvider.length === 0) {
+          AdoptionCardService.setDummyClientTypePiechart();
+          vm.clientTypeschartOptions.noData = true;
         } else {
-          vm.clientTypeCount = response.data.dataProvider.length;
+          AdoptionCardService.setClientTypePiechart(response.data);
+          vm.clientTypeschartOptions.noData = false;
+        }
+      });
+    }
+
+    function setMeetingLocationCard() {
+      MediaReportsService.getMeetingLocationCardData(vm.timeSelected).then(function (response) {
+        if (response === vm.ABORT) {
+          return undefined;
+        } else if (_.isUndefined(response.data) || response.data.dataProvider.length === 0) {
+          AdoptionCardService.setDummyNumberOfMeetsOnPremisesPiechart();
+          vm.numberOfMeetsOnPremiseschartOptions.noData = true;
+          vm.tot_number_meetings = vm.EMPTY;
+          vm.tot_number_meetings = vm.noData;
+        } else {
+          var total_meets = 0;
+          AdoptionCardService.setNumberOfMeetsOnPremisesPiechart(response.data);
+          vm.numberOfMeetsOnPremiseschartOptions.noData = false;
+          _.forEach(response.data.dataProvider, function (val) {
+            total_meets = total_meets + val.value;
+          });
+          vm.tot_number_meetings = total_meets;
         }
       });
     }
@@ -398,6 +452,50 @@
       });
     }
 
+    function setMeetingLocationData() {
+      MediaReportsService.getMeetingLocationData(vm.timeSelected).then(function (response) {
+        if (_.isUndefined(response.graphData) || _.isUndefined(response.graphs) || response.graphData.length === 0 || response.graphs.length === 0) {
+          setDummyMeetingLocation();
+        } else {
+          deferred.promise.then(function () {
+            //set the client type graphs here
+            if (_.isUndefined(setMeetingLocationGraph(response))) {
+              setDummyMeetingLocation();
+            } else {
+              vm.meetingLocationStatus = vm.SET;
+            }
+          }, function () {
+            //map is nor formed so we shoud show dummy graphs
+            setDummyMeetingLocation();
+          });
+        }
+      }, function () {
+        setDummyMeetingLocation();
+      });
+    }
+
+    function setNumberOfParticipantData() {
+      MediaReportsService.getNumberOfParticipantData(vm.timeSelected).then(function (response) {
+        if (_.isUndefined(response.graphData) || _.isUndefined(response.graphs) || response.graphData.length === 0 || response.graphs.length === 0) {
+          setDummyNumberOfParticipant();
+        } else {
+          deferred.promise.then(function () {
+              //set the number of participants graphs here
+            if (_.isUndefined(setNumberOfParticipantGraph(response))) {
+              setDummyNumberOfParticipant();
+            } else {
+              vm.numberOfParticipantStatus = vm.SET;
+            }
+          }, function () {
+              //map is not formed so we shoud show dummy graphs
+            setDummyNumberOfParticipant();
+          });
+        }
+      }, function () {
+        setDummyNumberOfParticipant();
+      });
+    }
+
     function setAvailabilityData() {
       MediaReportsService.getAvailabilityData(vm.timeSelected, vm.clusterId).then(function (response) {
         if (_.isUndefined(response.data) || !_.isArray(response.data) || response.data.length === 0 || _.isUndefined(response.data[0].clusterCategories) || response.data[0].clusterCategories.length === 0) {
@@ -444,6 +542,15 @@
       vm.clientTypeChart = ClientTypeAdoptionGraphService.setClientTypeGraph(response, vm.clientTypeChart, vm.timeSelected);
       return vm.clientTypeChart;
     }
+    function setNumberOfParticipantGraph(response) {
+      vm.numberOfParticipantChart = NumberOfParticipantGraphService.setNumberOfParticipantGraph(response, vm.numberOfParticipantChart, vm.timeSelected);
+      return vm.numberOfParticipantChart;
+    }
+
+    function setMeetingLocationGraph(response) {
+      vm.meetingLocationChart = MeetingLocationAdoptionGraphService.setMeetingLocationGraph(response, vm.meetingLocationChart, vm.timeSelected);
+      return vm.meetingLocationChart;
+    }
 
     function setCallVolumeGraph(response) {
       vm.callVolumeChart = CallVolumeResourceGraphService.setCallVolumeGraph(response.graphData, vm.callVolumeChart, vm.clusterSelected, vm.timeSelected);
@@ -457,7 +564,7 @@
       vm.utilizationStatus = vm.EMPTY;
       var response = {
         graphData: MediaReportsDummyGraphService.dummyLineChartData(vm.timeSelected),
-        graphs: MediaReportsDummyGraphService.dummyUtilizationGraph()
+        graphs: MediaReportsDummyGraphService.dummyUtilizationGraph(),
       };
       setUtilizationGraph(response);
     }
@@ -466,7 +573,7 @@
       vm.participantDistributionStatus = vm.EMPTY;
       var response = {
         graphData: MediaReportsDummyGraphService.dummyLineChartData(vm.timeSelected),
-        graphs: MediaReportsDummyGraphService.dummyParticipantDistributionGraph()
+        graphs: MediaReportsDummyGraphService.dummyParticipantDistributionGraph(),
       };
       setParticipantDistributionGraph(response);
     }
@@ -475,15 +582,33 @@
       vm.clientTypeStatus = vm.EMPTY;
       var response = {
         graphData: MediaReportsDummyGraphService.dummyLineChartData(vm.timeSelected),
-        graphs: MediaReportsDummyGraphService.dummyClientTypeGraph()
+        graphs: MediaReportsDummyGraphService.dummyClientTypeGraph(),
       };
       setClientTypeGraph(response);
+    }
+
+    function setDummyMeetingLocation() {
+      vm.meetingLocationStatus = vm.EMPTY;
+      var response = {
+        graphData: MediaReportsDummyGraphService.dummyLineChartData(vm.timeSelected),
+        graphs: MediaReportsDummyGraphService.dummyMeetingLocationGraph(),
+      };
+      setMeetingLocationGraph(response);
+    }
+
+    function setDummyNumberOfParticipant() {
+      vm.numberOfParticipantStatus = vm.EMPTY;
+      var response = {
+        graphData: MediaReportsDummyGraphService.dummyLineChartData(vm.timeSelected),
+        graphs: MediaReportsDummyGraphService.dummyNumberOfParticipantGraph(),
+      };
+      setNumberOfParticipantGraph(response);
     }
 
     function setDummyCallVolume() {
       vm.callVolumeStatus = vm.EMPTY;
       var response = {
-        graphData: MediaReportsDummyGraphService.dummyCallVolumeData(vm.timeSelected)
+        graphData: MediaReportsDummyGraphService.dummyCallVolumeData(vm.timeSelected),
       };
       setCallVolumeGraph(response);
     }

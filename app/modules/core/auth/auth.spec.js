@@ -5,13 +5,13 @@ var testModule = require('./auth');
 describe('Auth Service', function () {
   beforeEach(angular.mock.module(testModule));
 
-  var Auth, Authinfo, $httpBackend, SessionStorage, $rootScope, $state, $q, OAuthConfig, UrlConfig, WindowLocation, TokenService;
+  var Auth, Authinfo, $httpBackend, SessionStorage, $rootScope, $state, $q, OAuthConfig, Storage, UrlConfig, WindowLocation, TokenService;
 
   afterEach(function () {
-    Auth = Authinfo = $httpBackend = SessionStorage = $rootScope = $state = $q = OAuthConfig = UrlConfig = WindowLocation = TokenService = undefined;
+    Auth = Authinfo = $httpBackend = SessionStorage = $rootScope = $state = $q = OAuthConfig = Storage = UrlConfig = WindowLocation = TokenService = undefined;
   });
 
-  beforeEach(inject(function (_Auth_, _Authinfo_, _$httpBackend_, _SessionStorage_, _TokenService_, _$rootScope_, _$state_, _$q_, _OAuthConfig_, _UrlConfig_, _WindowLocation_) {
+  beforeEach(inject(function (_Auth_, _Authinfo_, _$httpBackend_, _SessionStorage_, _Storage_, _TokenService_, _$rootScope_, _$state_, _$q_, _OAuthConfig_, _UrlConfig_, _WindowLocation_) {
     $q = _$q_;
     Auth = _Auth_;
     $state = _$state_;
@@ -21,6 +21,7 @@ describe('Auth Service', function () {
     OAuthConfig = _OAuthConfig_;
     $httpBackend = _$httpBackend_;
     SessionStorage = _SessionStorage_;
+    Storage = _Storage_;
     TokenService = _TokenService_;
     WindowLocation = _WindowLocation_;
 
@@ -32,7 +33,7 @@ describe('Auth Service', function () {
         orgSettings: [
           '{"sparkCallBaseDomain":"sparkc-eu.com"}',
         ],
-      }
+      },
     };
 
   }));
@@ -70,7 +71,7 @@ describe('Auth Service', function () {
       $httpBackend
         .expectGET('foo/customers?orgId=bar')
         .respond(200, {
-          foo: 'bar'
+          foo: 'bar',
         });
 
       var promise = Auth.getCustomerAccount('bar');
@@ -96,12 +97,12 @@ describe('Auth Service', function () {
       $httpBackend
         .expectPOST('url', 'data', assertCredentials)
         .respond(200, {
-          access_token: 'accessTokenFromAPI'
+          access_token: 'accessTokenFromAPI',
         });
 
       var promise = Auth.getNewAccessToken({
         code: 'argToGetNewAccessToken',
-        state: '123-abc-456'
+        state: '123-abc-456',
       });
 
       $httpBackend.flush();
@@ -118,7 +119,7 @@ describe('Auth Service', function () {
 
       var promise = Auth.getNewAccessToken({
         code: 'argToGetNewAccessToken',
-        state: '123-abc-456'
+        state: '123-abc-456',
       });
       $httpBackend.flush();
       expect(promise).toBeRejectedWith(mockResponse(500));
@@ -129,7 +130,7 @@ describe('Auth Service', function () {
 
       var promise = Auth.getNewAccessToken({
         code: 'argToGetNewAccessToken',
-        state: '123-abc-456'
+        state: '123-abc-456',
       });
       $rootScope.$apply();
       expect(promise).toBeRejectedWith(undefined);
@@ -149,7 +150,7 @@ describe('Auth Service', function () {
       $httpBackend
         .expectPOST('url', 'accessCodeUrl', assertCredentials)
         .respond(200, {
-          access_token: 'accessTokenFromAPI'
+          access_token: 'accessTokenFromAPI',
         });
 
       var promise = Auth.refreshAccessToken();
@@ -208,7 +209,7 @@ describe('Auth Service', function () {
       $httpBackend
         .expectPOST('access_token_url')
         .respond(200, {
-          access_token: 'new-access-token'
+          access_token: 'new-access-token',
         });
 
       $httpBackend
@@ -216,21 +217,21 @@ describe('Auth Service', function () {
           return headers.Authorization === 'Bearer new-access-token';
         })
         .respond(200, {
-          bar: 'baz'
+          bar: 'baz',
         });
 
       var promise = Auth.refreshAccessTokenAndResendRequest({
         config: {
           method: 'GET',
-          url: 'foo'
-        }
+          url: 'foo',
+        },
       });
 
       $httpBackend.flush();
       expect(promise).toBeResolvedWith(jasmine.objectContaining({
         data: {
-          bar: 'baz'
-        }
+          bar: 'baz',
+        },
       }));
     });
 
@@ -272,8 +273,8 @@ describe('Auth Service', function () {
       Auth.refreshAccessTokenAndResendRequest({
         config: {
           method: 'GET',
-          url: 'foo'
-        }
+          url: 'foo',
+        },
       });
 
       jasmine.clock().tick(durationOfSpan);
@@ -285,8 +286,8 @@ describe('Auth Service', function () {
       Auth.refreshAccessTokenAndResendRequest({
         config: {
           method: 'GET',
-          url: 'bar'
-        }
+          url: 'bar',
+        },
       });
 
       $httpBackend.flush();
@@ -353,7 +354,7 @@ describe('Auth Service', function () {
             user_info: {
               client_session_id: 'testSessionId123',
             },
-          }]
+          }],
         });
 
       $httpBackend
@@ -382,7 +383,7 @@ describe('Auth Service', function () {
             user_info: {
               client_session_id: 'testSessionId123',
             },
-          }]
+          }],
         });
 
       $httpBackend
@@ -411,7 +412,7 @@ describe('Auth Service', function () {
             user_info: {
               client_session_id: 'testSessionId123-not-correct',
             },
-          }]
+          }],
         });
 
       var promise = Auth.logoutAndRedirectTo('customLogoutUrl');
@@ -450,6 +451,15 @@ describe('Auth Service', function () {
       expect(promise).toBeResolved();  // seems unnecessary, but should be the same promise returned from logoutAndRedirectTo()
       expect(Auth.logoutAndRedirectTo.calledWith('logoutUrl')).toBe(true);
       expect(TokenService.triggerGlobalLogout).toHaveBeenCalled(); // should only be called after logout (token revocation)
+    });
+    it('should set the message in the local storage if it has been passed in', function () {
+      TokenService.triggerGlobalLogout.and.callThrough();
+      OAuthConfig.getLogoutUrl = sinon.stub().returns('logoutUrl');
+      Auth.logoutAndRedirectTo = sinon.stub().returns($q.resolve());
+      var promise = Auth.logout('still there');
+      expect(promise).toBeResolved();
+      expect(TokenService.triggerGlobalLogout).toHaveBeenCalled(); // should only be called after logout (token revocation)
+      expect(Storage.get('loginMessage')).toBe('still there');
     });
   });
 
@@ -505,7 +515,7 @@ describe('Auth Service', function () {
           .expectGET('path/userauthinfo')
           .respond(200, {
             orgId: 1337,
-            roles: ['Full_Admin']
+            roles: ['Full_Admin'],
           });
 
         $httpBackend
@@ -527,7 +537,7 @@ describe('Auth Service', function () {
         $httpBackend
           .expectGET('path/organizations/1337/services')
           .respond(200, {
-            entitlements: ['foo']
+            entitlements: ['foo'],
           });
 
         $httpBackend
@@ -558,8 +568,8 @@ describe('Auth Service', function () {
             orgId: 1337,
             services: [{
               ciService: 'foo',
-              sqService: 'bar'
-            }]
+              sqService: 'bar',
+            }],
           });
 
         $httpBackend
@@ -618,8 +628,8 @@ describe('Auth Service', function () {
             orgId: 1337,
             services: [{
               ciService: 'foo',
-              sqService: 'bar'
-            }]
+              sqService: 'bar',
+            }],
           });
 
         $httpBackend
@@ -659,7 +669,7 @@ describe('Auth Service', function () {
         .expectGET('path/userauthinfo')
         .respond(200, {
           orgId: 1337,
-          services: []
+          services: [],
         });
 
       $httpBackend
@@ -670,7 +680,7 @@ describe('Auth Service', function () {
         .expectGET('msn/orgs/1337/cisync/')
         .respond(200, {
           orgID: 'foo',
-          orgName: 'bar'
+          orgName: 'bar',
         });
 
       Auth.authorize().then(function () {
@@ -694,7 +704,7 @@ describe('Auth Service', function () {
         .respond(200, {
           orgId: 1337,
           roles: ['Full_Admin'],
-          services: []
+          services: [],
         });
 
       $httpBackend
@@ -704,14 +714,14 @@ describe('Auth Service', function () {
       $httpBackend
         .expectGET('path/organizations/1337/services')
         .respond(200, {
-          entitlements: ['foo']
+          entitlements: ['foo'],
         });
 
       $httpBackend
         .expectGET('msn/orgs/1337/cisync/')
         .respond(200, {
           orgID: 'foo',
-          orgName: 'bar'
+          orgName: 'bar',
         });
 
       Auth.authorize().then(function () {
@@ -735,7 +745,7 @@ describe('Auth Service', function () {
         .respond(200, {
           orgId: 1337,
           roles: ['Full_Admin'],
-          services: []
+          services: [],
         });
 
       $httpBackend
@@ -745,14 +755,14 @@ describe('Auth Service', function () {
       $httpBackend
         .expectGET('path/organizations/1337/services')
         .respond(200, {
-          entitlements: ['foo']
+          entitlements: ['foo'],
         });
       $httpBackend
         .expectGET('msn/orgs/1337/cisync/')
         .respond(200, {
           orgID: 'foo',
           orgName: 'bar',
-          wapiOrgStatus: 'inactive'
+          wapiOrgStatus: 'inactive',
         });
 
       Auth.authorize().then(function () {
@@ -775,7 +785,7 @@ describe('Auth Service', function () {
         .respond(200, {
           orgId: 1337,
           roles: ['PARTNER_ADMIN'],
-          services: []
+          services: [],
         });
 
       $httpBackend
@@ -785,14 +795,14 @@ describe('Auth Service', function () {
       $httpBackend
         .expectGET('path/organizations/1337/services')
         .respond(200, {
-          entitlements: []
+          entitlements: [],
         });
 
       $httpBackend
         .expectGET('msn/orgs/1337/cisync/')
         .respond(200, {
           orgID: 'foo',
-          orgName: 'bar'
+          orgName: 'bar',
         });
 
       Auth.authorize().then(function () {

@@ -16,7 +16,7 @@
     };
 
     return {
-      isValidEmailCsv: isValidEmailCsv
+      isValidEmailCsv: isValidEmailCsv,
     };
   }
 }());

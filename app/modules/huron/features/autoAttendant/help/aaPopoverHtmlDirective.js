@@ -16,9 +16,9 @@
         content: "@",
         placement: "@",
         animation: "&",
-        isOpen: "&"
+        isOpen: "&",
       },
-      templateUrl: 'modules/huron/features/autoAttendant/help/aaPopoverHtmlPopup.tpl.html'
+      templateUrl: 'modules/huron/features/autoAttendant/help/aaPopoverHtmlPopup.tpl.html',
     };
   }
 

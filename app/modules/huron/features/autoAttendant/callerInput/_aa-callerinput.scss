@@ -33,7 +33,6 @@
     @include vr-spacing(pb, 1);
   }
 
-  .aa-pm-key-select,
   .aa-pm-action-select {
     @extend %aa-menu-select;
   }
@@ -50,7 +49,8 @@
   }
 
   .aa-pm-key-select {
-    @include aa-menu-key-button($color-cta-base, 57);
+    @include aa-menu-toggle-button(0, -0.5);
+    @include aa-menu-key-button($color-cta-base, 56);
   }
 
   .aa-pm-vertical-line {

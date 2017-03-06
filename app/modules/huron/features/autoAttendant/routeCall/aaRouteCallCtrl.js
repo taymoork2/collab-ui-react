@@ -14,24 +14,24 @@
 
     vm.options = [{
       "label": $translate.instant('autoAttendant.phoneMenuRouteUser'),
-      "value": "routeToUser"
+      "value": "routeToUser",
     }, {
       "label": $translate.instant('autoAttendant.phoneMenuRouteVM'),
-      "value": "routeToVoiceMail"
+      "value": "routeToVoiceMail",
     }, {
       "label": $translate.instant('autoAttendant.phoneMenuRouteHunt'),
-      "value": "routeToHuntGroup"
+      "value": "routeToHuntGroup",
     }, {
       "label": $translate.instant('autoAttendant.phoneMenuRouteAA'),
-      "value": "goto"
+      "value": "goto",
     }, {
       "label": $translate.instant('autoAttendant.phoneMenuRouteToExtNum'),
-      "value": "route"
+      "value": "route",
     }];
 
     vm.selected = {
       label: '',
-      value: ''
+      value: '',
     };
 
     vm.setSelects = setSelects;
@@ -47,7 +47,7 @@
 
       _.forEach(vm.options, function (option) {
         val = _.find(vm.menuEntry.actions, {
-          name: option.value
+          name: option.value,
         });
         if (!_.isUndefined(val)) {
           if (val.name === option.value) {
@@ -68,13 +68,13 @@
         if (aaQueueList.length > 0) {
           vm.options.push({
             "label": $translate.instant('autoAttendant.phoneMenuRouteQueue'),
-            "value": 'routeToQueue'
+            "value": 'routeToQueue',
           });
           _.each(aaQueueList, function (aaQueue) {
             var idPos = aaQueue.queueUrl.lastIndexOf("/");
             vm.queues.push({
               description: aaQueue.queueName,
-              id: aaQueue.queueUrl.substr(idPos + 1)
+              id: aaQueue.queueUrl.substr(idPos + 1),
             });
           });
         }
@@ -91,7 +91,7 @@
       if (AACommonService.isRouteSIPAddressToggle()) {
         vm.options.push({
           "label": $translate.instant('autoAttendant.phoneMenuRouteToSipEndpoint'),
-          "value": 'routeToSipEndpoint'
+          "value": 'routeToSipEndpoint',
         });
       }
 

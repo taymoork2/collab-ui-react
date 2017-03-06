@@ -9,7 +9,7 @@
     function show(report) {
       var options = {
         icon: '/images/cisco_logo.png',
-        body: report.displayName + ': ' + $translate.instant('ediscovery.reportStates.' + report.state)
+        body: report.displayName + ': ' + $translate.instant('ediscovery.reportStates.' + report.state),
       };
       var reportNotification = new ReportNotification($translate.instant('ediscovery.browserTabHeaderTitle'), options);
       $timeout(reportNotification.close.bind(reportNotification), 10000);
@@ -33,7 +33,7 @@
 
     return {
       notify: notify,
-      notificationsEnabled: notificationsEnabled
+      notificationsEnabled: notificationsEnabled,
     };
   }
 

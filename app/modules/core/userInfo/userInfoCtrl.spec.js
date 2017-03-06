@@ -15,20 +15,20 @@ describe('UserInfoController', function () {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     Userservice = {
-      getUser: sinon.stub()
+      getUser: sinon.stub(),
     };
     deferred = $q.defer();
     FeedbackService = {
-      getFeedbackUrl: sinon.stub().returns(deferred.promise)
+      getFeedbackUrl: sinon.stub().returns(deferred.promise),
     };
     Utils = {
-      getUUID: sinon.stub().returns('awesome uuid')
+      getUUID: sinon.stub().returns('awesome uuid'),
     };
     $window = {
       open: sinon.stub(),
       navigator: {
-        userAgent: 'some useragent'
-      }
+        userAgent: 'some useragent',
+      },
     };
 
     $controller('UserInfoController', {
@@ -36,7 +36,7 @@ describe('UserInfoController', function () {
       $scope: $scope,
       $window: $window,
       Userservice: Userservice,
-      FeedbackService: FeedbackService
+      FeedbackService: FeedbackService,
     });
   }));
 
@@ -49,8 +49,8 @@ describe('UserInfoController', function () {
 
     deferred.resolve({
       data: {
-        url: 'some url'
-      }
+        url: 'some url',
+      },
     });
 
     $rootScope.$apply();
@@ -77,7 +77,7 @@ describe('UserInfoController WebEx logout', function () {
     $timeout = _$timeout_;
 
     var Userservice = {
-      getUser: sinon.stub()
+      getUser: sinon.stub(),
     };
 
     deferredLogout = $q.defer();
@@ -88,7 +88,7 @@ describe('UserInfoController WebEx logout', function () {
       $scope: $scope,
       Userservice: Userservice,
       Auth: Auth,
-      WebExUtilsFact: WebExUtilsFact
+      WebExUtilsFact: WebExUtilsFact,
     });
 
   }));

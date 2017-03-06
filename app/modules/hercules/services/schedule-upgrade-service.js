@@ -9,7 +9,7 @@
   function ScheduleUpgradeService($http, UrlConfig) {
     var services = {
       get: get,
-      patch: patch
+      patch: patch,
     };
 
     return services;

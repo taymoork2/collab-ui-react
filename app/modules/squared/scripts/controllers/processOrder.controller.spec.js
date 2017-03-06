@@ -10,7 +10,7 @@ describe('Controller: ProcessorderCtrl', function () {
   function dependencies($rootScope, _$controller_, _$q_, _Auth_, _ModalService_, _Orgservice_) {
     $controller = _$controller_;
     $location = {
-      search: function () {}
+      search: function () {},
     };
     $q = _$q_;
     $scope = $rootScope.$new();
@@ -22,7 +22,7 @@ describe('Controller: ProcessorderCtrl', function () {
   function initSpies() {
     spyOn($location, 'search').and.returnValue({
       enc: 'fake-encrypted-payload',
-      call: 'false'
+      call: 'false',
     });
     spyOn(Orgservice, 'createOrg');
     spyOn(Auth, 'logoutAndRedirectTo');
@@ -39,7 +39,7 @@ describe('Controller: ProcessorderCtrl', function () {
     controller = $controller('ProcessorderCtrl', {
       $scope: $scope,
       $location: $location,
-      Orgservice: Orgservice
+      Orgservice: Orgservice,
     });
   }
 
@@ -63,7 +63,7 @@ describe('Controller: ProcessorderCtrl', function () {
       describe('when "Orgservice.createOrg()" resolves:', function () {
         beforeEach(function () {
           Orgservice.createOrg.and.returnValue($q.resolve({
-            redirectUrl: 'fake-redirect-url'
+            redirectUrl: 'fake-redirect-url',
           }));
         });
         beforeEach(initController);

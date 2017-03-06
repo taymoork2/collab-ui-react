@@ -23,7 +23,7 @@ describe('MultipleSubscriptionsCtrl: Ctrl', function () {
 
   function initController() {
     controller = $controller('MultipleSubscriptionsCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
 
     $scope.$apply();

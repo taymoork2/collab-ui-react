@@ -7,10 +7,11 @@ describe('Controller: OverviewCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  var controller, $rootScope, $scope, $q, $state, $translate, Authinfo, Config, FeatureToggleService, Log, Orgservice, PstnSetupService, OverviewNotificationFactory, ReportsService, ServiceDescriptor, ServiceStatusDecriptor, TrialService, FusionClusterService, SunlightReportService;
+  var controller, $rootScope, $scope, $q, $state, $translate, Authinfo, Config, FeatureToggleService, Log, Orgservice, PstnSetupService, OverviewNotificationFactory, ReportsService, ServiceDescriptor, ServiceStatusDecriptor, TrialService, FusionClusterService, SunlightReportService, LicenseService;
   var orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');
   var usageOnlySharedDevicesFixture = getJSONFixture('core/json/organizations/usageOnlySharedDevices.json');
   var services = getJSONFixture('squared/json/services.json');
+  var isCustomerLaunchedFromPartner = true;
 
   afterEach(function () {
     controller = $rootScope = $scope = $q = $state = $translate = Authinfo = Config = FeatureToggleService = Log = Orgservice = PstnSetupService = OverviewNotificationFactory = ReportsService = ServiceDescriptor = ServiceStatusDecriptor = TrialService = FusionClusterService = SunlightReportService = undefined;
@@ -66,8 +67,8 @@ describe('Controller: OverviewCtrl', function () {
         components: [{
           name: 'Spark Call',
           status: 'error',
-          id: 'gfg7cvjszyw0'
-        }]
+          id: 'gfg7cvjszyw0',
+        }],
       });
 
       expect(callCard.healthStatus).toEqual('danger');
@@ -75,7 +76,7 @@ describe('Controller: OverviewCtrl', function () {
   });
 
   describe('Notifications', function () {
-    var TOTAL_NOTIFICATIONS = 8;
+    var TOTAL_NOTIFICATIONS = 9;
     beforeEach(inject(defaultWireUpFunc));
 
     it('should all be shown', function () {
@@ -138,11 +139,40 @@ describe('Controller: OverviewCtrl', function () {
       expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS - 1);
     });
 
+    it('should dismiss the Care License notification', function () {
+      expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS);
+
+      var notification = OverviewNotificationFactory.createCareLicenseNotification();
+      controller.dismissNotification(notification);
+      expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS - 1);
+    });
+
     it('should dismiss the Cloud SIP URI Notification using a rootScope broadcast', function () {
       expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS);
 
       $rootScope.$broadcast('DISMISS_SIP_NOTIFICATION');
       expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS - 1);
+    });
+  });
+
+  describe('Notifications - Login as Partner: ', function () {
+    beforeEach(function () {
+      isCustomerLaunchedFromPartner = true;
+      inject(defaultWireUpFunc);
+    });
+
+    it('should NOT call ToS check if logged in as a Partner', function () {
+      expect(PstnSetupService.getCustomerTrialV2).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Notifications - Login as Customer: ', function () {
+    beforeEach(function () {
+      isCustomerLaunchedFromPartner = false;
+      inject(defaultWireUpFunc);
+    });
+    it('should call ToS check if logged in as a Customer', function () {
+      expect(PstnSetupService.getCustomerTrialV2).toHaveBeenCalled();
     });
   });
 
@@ -174,7 +204,7 @@ describe('Controller: OverviewCtrl', function () {
     FusionClusterService.getAll.and.returnValue($q.resolve());
 
     ServiceDescriptor = {
-      services: function () {}
+      services: function () {},
     };
 
     ServiceStatusDecriptor = {
@@ -182,13 +212,13 @@ describe('Controller: OverviewCtrl', function () {
         var defer = $q.defer();
         defer.resolve(null);
         return defer.promise;
-      }
+      },
     };
     Orgservice = {
       getAdminOrg: function () {},
       getAdminOrgUsage: function () {
         return $q.resolve({
-          data: orgServiceJSONFixture.getLicensesUsage.singleSub
+          data: orgServiceJSONFixture.getLicensesUsage.singleSub,
         });
       },
       getUnlicensedUsers: function () {},
@@ -202,51 +232,55 @@ describe('Controller: OverviewCtrl', function () {
           data: {
             items: [{
               id: Config.entitlements.fusion_cal,
-              acknowledged: false
+              acknowledged: false,
             }, {
               id: Config.entitlements.fusion_uc,
-              acknowledged: false
+              acknowledged: false,
             }, {
               id: Config.entitlements.fusion_ec,
-              acknowledged: false
-            }]
-          }
+              acknowledged: false,
+            }],
+          },
         });
         return defer.promise;
       },
-      setHybridServiceAcknowledged: jasmine.createSpy()
+      setHybridServiceAcknowledged: jasmine.createSpy(),
     };
 
     PstnSetupService = {
       getCustomerV2: function () {
         return $q.resolve({
-          trial: true
+          trial: true,
         });
       },
       getCustomerTrialV2: function () {
         return $q.resolve({
-          acceptedDate: "today"
+          acceptedDate: "today",
         });
-      }
+      },
+    };
+
+    LicenseService = {
+      orgIsEntitledTo: function () {},
     };
 
     ReportsService = {
       getOverviewMetrics: function () {},
-      healthMonitor: function () {}
+      healthMonitor: function () {},
     };
 
     spyOn(Authinfo, 'getConferenceServicesWithoutSiteUrl').and.returnValue([{
       license: {
-        siteUrl: 'fakesite1'
-      }
+        siteUrl: 'fakesite1',
+      },
     }, {
       license: {
-        siteUrl: 'fakesite2'
-      }
+        siteUrl: 'fakesite2',
+      },
     }, {
       license: {
-        siteUrl: 'fakesite3'
-      }
+        siteUrl: 'fakesite3',
+      },
     }]);
     spyOn(Authinfo, 'getOrgId').and.returnValue('1');
     spyOn(Authinfo, 'isPartner').and.returnValue(false);
@@ -256,9 +290,13 @@ describe('Controller: OverviewCtrl', function () {
     spyOn(Authinfo, 'isSetupDone').and.returnValue(false);
     spyOn(Authinfo, 'isCustomerAdmin').and.returnValue(true);
     spyOn(Authinfo, 'isDeviceMgmt').and.returnValue(true);
+    spyOn(Authinfo, 'isCustomerLaunchedFromPartner').and.returnValue(isCustomerLaunchedFromPartner);
+    spyOn(Authinfo, 'isCare').and.returnValue(true);
     spyOn(FeatureToggleService, 'atlasPMRonM2GetStatus').and.returnValue($q.resolve(true));
     spyOn(TrialService, 'getDaysLeftForCurrentUser').and.returnValue($q.resolve(1));
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
+    spyOn(PstnSetupService, 'getCustomerTrialV2').and.callThrough();
+    spyOn(LicenseService, 'orgIsEntitledTo').and.returnValue(false);
 
     controller = $controller('OverviewCtrl', {
       $scope: $scope,
@@ -277,6 +315,7 @@ describe('Controller: OverviewCtrl', function () {
       OverviewNotificationFactory: OverviewNotificationFactory,
       SunlightReportService: SunlightReportService,
       hasGoogleCalendarFeatureToggle: false,
+      LicenseService: LicenseService,
     });
 
     $scope.$apply();

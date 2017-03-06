@@ -40,15 +40,16 @@
       getAlarms: getAlarms,
       getOrgSettings: getOrgSettings,
       setOrgSettings: setOrgSettings,
+      getConnector: getConnector,
     };
 
     return service;
 
     ////////////////
 
-    function get(clusterId) {
+    function get(clusterId, orgId) {
       return $http
-        .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '?fields=@wide')
+        .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + (orgId || Authinfo.getOrgId()) + '/clusters/' + clusterId + '?fields=@wide')
         .then(extractData);
     }
 
@@ -113,7 +114,7 @@
     function postponeUpgradeSchedule(id, upgradeWindow) {
       var orgId = Authinfo.getOrgId();
       return $http.post(UrlConfig.getHerculesUrlV2() + '/organizations/' + orgId + '/clusters/' + id + '/upgradeSchedule/moratoria', {
-        timeWindow: upgradeWindow
+        timeWindow: upgradeWindow,
       });
     }
 
@@ -139,36 +140,36 @@
           cluster.servicesStatuses = [{
             serviceId: 'squared-fusion-mgmt',
             state: FusionClusterStatesService.getMergedStateSeverity(mgmtConnectors),
-            total: mgmtConnectors.length
+            total: mgmtConnectors.length,
           }, {
             serviceId: 'squared-fusion-uc',
             state: FusionClusterStatesService.getMergedStateSeverity(ucmcConnectors),
-            total: ucmcConnectors.length
+            total: ucmcConnectors.length,
           }, {
             serviceId: 'squared-fusion-cal',
             state: FusionClusterStatesService.getMergedStateSeverity(calConnectors),
-            total: calConnectors.length
+            total: calConnectors.length,
           }];
         } else if (cluster.targetType === 'mf_mgmt') {
           var mediaConnectors = _.filter(cluster.connectors, { connectorType: 'mf_mgmt' });
           cluster.servicesStatuses = [{
             serviceId: 'squared-fusion-media',
             state: FusionClusterStatesService.getMergedStateSeverity(mediaConnectors),
-            total: mediaConnectors.length
+            total: mediaConnectors.length,
           }];
         } else if (cluster.targetType === 'hds_app') {
           var hdsConnectors = _.filter(cluster.connectors, { connectorType: 'hds_app' });
           cluster.servicesStatuses = [{
             serviceId: 'spark-hybrid-datasecurity',
             state: FusionClusterStatesService.getMergedStateSeverity(hdsConnectors),
-            total: hdsConnectors.length
+            total: hdsConnectors.length,
           }];
         } else if (cluster.targetType === 'cs_mgmt') {
           var hybridContextConnectors = _.filter(cluster.connectors, { connectorType: 'cs_mgmt' });
           cluster.servicesStatuses = [{
             serviceId: 'contact-center-context',
             state: FusionClusterStatesService.getMergedStateSeverity(hybridContextConnectors),
-            total: hybridContextConnectors.length
+            total: hybridContextConnectors.length,
           }];
         }
         return cluster;
@@ -185,7 +186,7 @@
       return $http.post(url, {
         name: name,
         releaseChannel: releaseChannel,
-        targetType: managementConnectorType
+        targetType: managementConnectorType,
       })
         .then(extractData);
     }
@@ -195,7 +196,7 @@
       return $http.post(url, {
         hostname: hostname,
         ttlInSeconds: ttlInSeconds,
-        clusterId: clusterId
+        clusterId: clusterId,
       });
     }
 
@@ -219,39 +220,36 @@
     }
 
     function buildSidepanelConnectorList(cluster, connectorTypeToKeep) {
-      var sidepanelConnectorList = {};
-      sidepanelConnectorList.hosts = [];
+      // Find and populate hostnames only, and make sure that they are only there once
+      var nodes = _.chain(cluster.connectors)
+        .map(function (connector) {
+          return {
+            hostname: connector.hostname,
+            connectors: [],
+          };
+        })
+        .uniqBy(function (host) {
+          return host.hostname;
+        })
+        .value();
 
-      /* Find and populate hostnames only, and make sure that they are only there once */
+      // Find and add all c_mgmt connectors (always displayed no matter the current service pages we are looking at)
+      // plus the connectors we're really interested in
       _.forEach(cluster.connectors, function (connector) {
-        sidepanelConnectorList.hosts.push({
-          hostname: connector.hostname,
-          connectors: []
-        });
-      });
-      sidepanelConnectorList.hosts = _.uniqBy(sidepanelConnectorList.hosts, function (host) {
-        return host.hostname;
-      });
-
-      /* Find and add all c_mgmt connectors, plus the connectors we're really interested in  */
-      _.forEach(cluster.connectors, function (connector) {
-        if (connector.connectorType === 'c_mgmt' || connector.connectorType === connectorTypeToKeep) {
-          var host = _.find(sidepanelConnectorList.hosts, function (host) {
-            return host.hostname === connector.hostname;
+        if (connector.connectorType === 'c_mgmt' || connector.connectorType === connectorTypeToKeep || connector.connectorType === 'cs_context' || connector.connectorType === 'cs_mgmt') {
+          var node = _.find(nodes, function (node) {
+            return node.hostname === connector.hostname;
           });
-          var index = _.indexOf(sidepanelConnectorList.hosts, host);
-          if (index !== -1) {
-            sidepanelConnectorList.hosts[index].connectors.push(connector);
-          }
+          node.connectors.push(connector);
         }
       });
-      return sidepanelConnectorList.hosts;
+      return nodes;
     }
 
     function setClusterName(clusterId, newClusterName) {
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId;
       return $http.patch(url, {
-        name: newClusterName
+        name: newClusterName,
       })
         .then(extractData);
     }
@@ -379,7 +377,7 @@
       var day;
       if (upgradeSchedule.scheduleDays.length === 7) {
         day = $translate.instant('weekDays.everyDay', {
-          day: $translate.instant('weekDays.day')
+          day: $translate.instant('weekDays.day'),
         });
       } else {
         day = labelForDay(upgradeSchedule.scheduleDays[0]);
@@ -398,7 +396,7 @@
 
     function labelForDay(day) {
       return $translate.instant('weekDays.everyDay', {
-        day: $translate.instant('weekDays.' + day)
+        day: $translate.instant('weekDays.' + day),
       });
     }
 
@@ -427,7 +425,7 @@
               return group;
             }),
             unassigned: response.unassigned,
-            clusters: response.clusters
+            clusters: response.clusters,
           };
         }).catch(function () {
           return {
@@ -436,7 +434,7 @@
               return group;
             }),
             unassigned: response.unassigned,
-            clusters: response.clusters
+            clusters: response.clusters,
           };
         });
     }
@@ -529,6 +527,15 @@
     function setOrgSettings(data, orgId) {
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + (orgId || Authinfo.getOrgId()) + '/settings';
       return $http.patch(url, data).then(extractData);
+    }
+
+    function getConnector(connectorId, orgId) {
+      if (connectorId.search(/@calendar-cloud-connector/i) !== -1) {
+        return $q.reject({ 'data': { 'statusText': 'NotFound', 'status': 404, 'errors': [{ 'message': 'calendar-cloud-connector is not a valid connectorId' }] } });
+      } else {
+        var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + (orgId || Authinfo.getOrgId()) + '/connectors/' + connectorId;
+        return $http.get(url).then(extractData);
+      }
     }
   }
 })();

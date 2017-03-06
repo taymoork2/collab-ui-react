@@ -22,12 +22,12 @@
       limit: 50,
       tokens: [],
       minLength: 9,
-      beautify: false
+      beautify: false,
     };
     vm.tokenmethods = {
       createtoken: createToken,
       createdtoken: createdToken,
-      edittoken: editToken
+      edittoken: editToken,
     };
 
     init();
@@ -61,7 +61,7 @@
       }
 
       var duplicate = _.find(getSwivelNumberTokens(), {
-        value: e.attrs.value
+        value: e.attrs.value,
       });
       if (duplicate) {
         e.attrs.duplicate = true;
@@ -74,7 +74,7 @@
           var tokens = getSwivelNumberTokens();
           tokens = tokens.splice(_.indexOf(tokens, e.attrs), 1);
           Notification.error('pstnSetup.duplicateNumber', {
-            number: e.attrs.label
+            number: e.attrs.label,
           });
           setSwivelNumberTokens(tokens.map(function (token) {
             return token.value;
@@ -97,7 +97,7 @@
     function validateSwivelNumbers() {
       var tokens = getSwivelNumberTokens() || [];
       var invalid = _.find(tokens, {
-        invalid: true
+        invalid: true,
       });
       if (invalid) {
         Notification.error('pstnSetup.invalidNumberPrompt');
@@ -111,10 +111,10 @@
         });
         var swivelOrder = [{
           data: {
-            numbers: numbers
+            numbers: numbers,
           },
           numberType: PstnSetupService.NUMTYPE_DID,
-          orderType: PstnSetupService.SWIVEL_ORDER
+          orderType: PstnSetupService.SWIVEL_ORDER,
         }];
         PstnSetup.setOrders(swivelOrder);
         $state.go('pstnSetup.review');

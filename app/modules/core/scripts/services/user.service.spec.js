@@ -40,7 +40,7 @@ describe('User Service', function () {
   describe('deactivateUser():', function () {
     it('deactivateUser should send DELETE request to specific organization', function () {
       var user = {
-        email: 'testUser'
+        email: 'testUser',
       };
       this.$httpBackend.expectDELETE(this.UrlConfig.getAdminServiceUrl() + 'organization/' + this.Authinfo.getOrgId() + '/user?email=' + user.email).respond(204);
       this.Userservice.deactivateUser(user);
@@ -53,39 +53,39 @@ describe('User Service', function () {
         address: 'dntodid@gmail.com',
         assignedDn: {
           uuid: 'testUUID',
-          pattern: '5000'
+          pattern: '5000',
         },
         externalNumber: {
           uuid: 'testUUID',
-          pattern: '+123423423445'
-        }
+          pattern: '+123423423445',
+        },
       }, {
         address: 'dntodid1@gmail.com',
         assignedDn: {
           uuid: 'testUUID',
-          pattern: '5001'
+          pattern: '5001',
         },
         externalNumber: {
           uuid: 'testUUID',
-          pattern: '+133423423445'
-        }
+          pattern: '+133423423445',
+        },
       }, {
         address: 'dntodid2@gmail.com',
         assignedDn: {
           uuid: 'testUUID',
-          pattern: '5002'
+          pattern: '5002',
         },
         externalNumber: {
           uuid: '',
-          pattern: 'None'
-        }
+          pattern: 'None',
+        },
       }];
       this.$httpBackend.expectPATCH(this.UrlConfig.getAdminServiceUrl() + 'organization/' + this.Authinfo.getOrgId() + '/users').respond(201, {
         status: 201,
         userResponse: [{
           email: 'dntodid@gmail.com',
-          entitled: ['ciscouc']
-        }]
+          entitled: ['ciscouc'],
+        }],
       });
       this.Userservice.updateUsers(users);
       this.$httpBackend.flush();
@@ -138,10 +138,10 @@ describe('User Service', function () {
       var users = [{
         email: 'abc@def.com',
         licenses: [{
-          name: 'license1'
+          name: 'license1',
         }, {
-          name: 'license2'
-        }]
+          name: 'license2',
+        }],
       }];
       var licenses = this.Userservice.getUserLicence(userEmail, users);
       expect(_.isEmpty(licenses)).toBeFalsy();
@@ -167,16 +167,16 @@ describe('User Service', function () {
 
       user.photos = [{
         type: 'photo',
-        value: this.photoUrl
+        value: this.photoUrl,
       }];
       expect(this.Userservice.isValidThumbnail(user)).toBeFalsy();
 
       user.photos = [{
         type: 'photo',
-        value: this.photoUrl
+        value: this.photoUrl,
       }, {
         type: 'thumbnail',
-        value: this.thumbnailUrl
+        value: this.thumbnailUrl,
       }];
 
       expect(this.Userservice.isValidThumbnail(user)).toBeTruthy();
@@ -192,16 +192,16 @@ describe('User Service', function () {
       user = {};
       user.photos = [{
         type: 'photo',
-        value: this.photoUrl
+        value: this.photoUrl,
       }];
       expect(this.Userservice.getUserPhoto(user)).toBeUndefined();
 
       user.photos = [{
         type: 'photo',
-        value: this.photoUrl
+        value: this.photoUrl,
       }, {
         type: 'thumbnail',
-        value: this.thumbnailUrl
+        value: this.thumbnailUrl,
       }];
       expect(this.Userservice.getUserPhoto(user)).toEqual(this.thumbnailUrl);
 
@@ -227,8 +227,8 @@ describe('User Service', function () {
       var user = {
         name: {
           givenName: 'Homer',
-          familyName: 'Simpson'
-        }
+          familyName: 'Simpson',
+        },
       };
       expect(this.Userservice.getFullNameFromUser(user)).toBe('Homer Simpson');
     });
@@ -239,7 +239,7 @@ describe('User Service', function () {
           givenName: 'Bart',
           familyName: '',
         },
-        displayName: 'El Barto'
+        displayName: 'El Barto',
       };
       expect(this.Userservice.getFullNameFromUser(user)).toBe('El Barto');
 
@@ -247,25 +247,25 @@ describe('User Service', function () {
         name: {
           givenName: 'Bart',
         },
-        displayName: 'El Barto'
+        displayName: 'El Barto',
       };
       expect(this.Userservice.getFullNameFromUser(user)).toBe('El Barto');
 
       user = {
         name: {},
-        displayName: 'El Barto'
+        displayName: 'El Barto',
       };
       expect(this.Userservice.getFullNameFromUser(user)).toBe('El Barto');
 
       user = {
-        displayName: 'El Barto'
+        displayName: 'El Barto',
       };
       expect(this.Userservice.getFullNameFromUser(user)).toBe('El Barto');
     });
 
     it('should fallback to "userName" if "name.givenName" and "name.familyName" and "displayName" are all not provided', function () {
       var user = {
-        userName: 'chunkylover53@aol.com'
+        userName: 'chunkylover53@aol.com',
       };
       // like in the above case, any of these properties missing as well will cause the same fallback
       expect(this.Userservice.getFullNameFromUser(user)).toBe('chunkylover53@aol.com');
@@ -281,20 +281,64 @@ describe('User Service', function () {
       var user = {
         emails: [{
           primary: false,
-          value: 'foo-0@example.com'
+          value: 'foo-0@example.com',
         }, {
           primary: true,
-          value: 'foo-1@example.com'
-        }]
+          value: 'foo-1@example.com',
+        }],
       };
       expect(this.Userservice.getPrimaryEmailFromUser(user)).toBe('foo-1@example.com');
     });
 
     it('should fallback to "userName" if there is no "emails" property', function () {
       var user = {
-        userName: 'foo-2@example.com'
+        userName: 'foo-2@example.com',
       };
       expect(this.Userservice.getPrimaryEmailFromUser(user)).toBe('foo-2@example.com');
+    });
+  });
+
+  describe('getAnyDisplayableNameFromUser():', function () {
+    var getAnyDisplayableNameFromUser;
+
+    beforeEach(function () {
+      needsHttpFlush = false;
+      getAnyDisplayableNameFromUser = this.Userservice.getAnyDisplayableNameFromUser;
+    });
+
+    afterEach(function () {
+      getAnyDisplayableNameFromUser = undefined;
+    });
+
+    it('should use either or both of "name.givenName" and "name.familyName" if available', function () {
+      var userObj = {
+        name: {
+          givenName: 'first-name',
+          familyName: 'last-name',
+        },
+      };
+      expect(getAnyDisplayableNameFromUser(userObj)).toBe('first-name last-name');
+
+      userObj.name.givenName = undefined;
+      expect(getAnyDisplayableNameFromUser(userObj)).toBe('last-name');
+
+      userObj.name.givenName = 'first-name';
+      userObj.name.familyName = undefined;
+      expect(getAnyDisplayableNameFromUser(userObj)).toBe('first-name');
+    });
+
+    it('failing "name.*" properties, it should use "displayName" if available', function () {
+      var userObj = {
+        displayName: 'display-name',
+      };
+      expect(getAnyDisplayableNameFromUser(userObj)).toBe('display-name');
+    });
+
+    it('failing "name.*" and "displayName" properties, it should return "userName" property', function () {
+      var userObj = {
+        userName: 'user-name',
+      };
+      expect(getAnyDisplayableNameFromUser(userObj)).toBe('user-name');
     });
   });
 });

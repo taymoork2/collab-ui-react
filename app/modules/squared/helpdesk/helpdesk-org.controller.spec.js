@@ -42,13 +42,13 @@ describe('Controller: HelpdeskOrgController', function () {
         LicenseService: LicenseService,
         Config: Config,
         $stateParams: $stateParams,
-        FusionClusterService: FusionClusterService
+        FusionClusterService: FusionClusterService,
       });
     });
 
     it('is trials if isEFT is true in org settings', function () {
       var orgSetting = {
-        isEFT: true
+        isEFT: true,
       };
       var orgSettings = [JSON.stringify(orgSetting)];
       expect(orgController.isTrials(orgSettings)).toBeTruthy();
@@ -56,7 +56,7 @@ describe('Controller: HelpdeskOrgController', function () {
 
     it('is not trials if isEFT is false in org settings', function () {
       var orgSetting = {
-        isEFT: false
+        isEFT: false,
       };
       var orgSettings = [JSON.stringify(orgSetting)];
       expect(orgController.isTrials(orgSettings)).toBeFalsy();
@@ -79,8 +79,8 @@ describe('Controller: HelpdeskOrgController', function () {
       sinon.stub(HelpdeskService, 'getOrg');
       var rejectData = {
         data: {
-          errorCode: 420000
-        }
+          errorCode: 420000,
+        },
       };
       var promise = q.reject(rejectData);
       HelpdeskService.getOrg.returns(promise);
@@ -89,7 +89,7 @@ describe('Controller: HelpdeskOrgController', function () {
       orgController = $controller('HelpdeskOrgController', {
         HelpdeskService: HelpdeskService,
         $scope: $scope,
-        Notification: Notification
+        Notification: Notification,
       });
       $scope.$apply();
       expect(Notification.errorWithTrackingId).toHaveBeenCalled();
@@ -119,9 +119,9 @@ describe('Controller: HelpdeskOrgController', function () {
         "id": "whatever",
         "displayName": "Marvel",
         "managedBy": [{
-          "orgId": "ce8d17f8-1734-4a54-8510-fae65acc505e"
+          "orgId": "ce8d17f8-1734-4a54-8510-fae65acc505e",
         }],
-        "orgSettings": ['{"isEFT":true, "allowReadOnlyAccess": true}']
+        "orgSettings": ['{"isEFT":true, "allowReadOnlyAccess": true}'],
       }));
 
       orgController = $controller('HelpdeskOrgController', {
@@ -132,7 +132,7 @@ describe('Controller: HelpdeskOrgController', function () {
         LicenseService: LicenseService,
         Config: Config,
         $stateParams: $stateParams,
-        Authinfo: Authinfo
+        Authinfo: Authinfo,
       });
       expect(orgController.cardsAvailable).toBeFalsy();
       expect(orgController.adminUsersAvailable).toBeFalsy();
@@ -148,9 +148,9 @@ describe('Controller: HelpdeskOrgController', function () {
         "id": "whatever",
         "displayName": "Marvel",
         "managedBy": [{
-          "orgId": "ce8d17f8-1734-4a54-8510-fae65acc505e"
+          "orgId": "ce8d17f8-1734-4a54-8510-fae65acc505e",
         }],
-        "orgSettings": ['{"isEFT":true, "allowReadOnlyAccess": true}']
+        "orgSettings": ['{"isEFT":true, "allowReadOnlyAccess": true}'],
       });
       HelpdeskService.getOrg.returns(deferredOrgLookupResult.promise);
 
@@ -167,7 +167,7 @@ describe('Controller: HelpdeskOrgController', function () {
         "siteSteeringDigit": "4",
         "siteCode": "100",
         "mediaTraversalMode": "TURNOnly",
-        "uuid": "7b9ad03e-8c78-4ffa-8680-df50664bcce4"
+        "uuid": "7b9ad03e-8c78-4ffa-8680-df50664bcce4",
       });
       HelpdeskHuronService.getOrgSiteInfo.returns(deferredSiteInfoResult.promise);
 
@@ -176,7 +176,7 @@ describe('Controller: HelpdeskOrgController', function () {
       deferredTenantInfoResult.resolve({
         "name": "SomeTestCustomer",
         "regionCode": "940",
-        "uuid": "7b9ad03e-8c78-4ffa-8680-df50664bcce4"
+        "uuid": "7b9ad03e-8c78-4ffa-8680-df50664bcce4",
       });
       HelpdeskHuronService.getTenantInfo.returns(deferredTenantInfoResult.promise);
 
@@ -188,7 +188,7 @@ describe('Controller: HelpdeskOrgController', function () {
         LicenseService: LicenseService,
         Config: Config,
         $stateParams: $stateParams,
-        Authinfo: Authinfo
+        Authinfo: Authinfo,
       });
       $scope.$apply();
       expect(orgController.callCard.voiceMailPrefix).toBe("4100");
@@ -203,9 +203,9 @@ describe('Controller: HelpdeskOrgController', function () {
         "id": "whatever",
         "displayName": "Marvel",
         "managedBy": [{
-          "orgId": "ce8d17f8-1734-4a54-8510-fae65acc505e"
+          "orgId": "ce8d17f8-1734-4a54-8510-fae65acc505e",
         }],
-        "orgSettings": ['{"isEFT":true, "allowReadOnlyAccess": true}']
+        "orgSettings": ['{"isEFT":true, "allowReadOnlyAccess": true}'],
       });
       HelpdeskService.getOrg.returns(deferredOrgLookupResult.promise);
 
@@ -220,7 +220,7 @@ describe('Controller: HelpdeskOrgController', function () {
       deferredSiteInfoResult.resolve({
         "steeringDigit": "7",
         "siteSteeringDigit": "4",
-        "siteCode": "100"
+        "siteCode": "100",
       });
       HelpdeskHuronService.getOrgSiteInfo.returns(deferredSiteInfoResult.promise);
 
@@ -228,7 +228,7 @@ describe('Controller: HelpdeskOrgController', function () {
       var deferredTenantInfoResult = q.defer();
       deferredTenantInfoResult.resolve({
         "name": "SomeTestCustomer",
-        "regionCode": ""
+        "regionCode": "",
       });
       HelpdeskHuronService.getTenantInfo.returns(deferredTenantInfoResult.promise);
 
@@ -240,7 +240,7 @@ describe('Controller: HelpdeskOrgController', function () {
         LicenseService: LicenseService,
         Config: Config,
         $stateParams: $stateParams,
-        Authinfo: Authinfo
+        Authinfo: Authinfo,
       });
       $scope.$apply();
       expect(orgController.callCard.voiceMailPrefix).toBe("4100");
@@ -255,9 +255,9 @@ describe('Controller: HelpdeskOrgController', function () {
         "id": "whatever",
         "displayName": "Marvel",
         "managedBy": [{
-          "orgId": "ce8d17f8-1734-4a54-8510-fae65acc505e"
+          "orgId": "ce8d17f8-1734-4a54-8510-fae65acc505e",
         }],
-        "orgSettings": ['{"isEFT":true, "allowReadOnlyAccess": true}']
+        "orgSettings": ['{"isEFT":true, "allowReadOnlyAccess": true}'],
       });
       HelpdeskService.getOrg.returns(deferredOrgLookupResult.promise);
 
@@ -269,7 +269,7 @@ describe('Controller: HelpdeskOrgController', function () {
         LicenseService: LicenseService,
         Config: Config,
         $stateParams: $stateParams,
-        Authinfo: Authinfo
+        Authinfo: Authinfo,
       });
       $scope.$apply();
       expect(orgController.supportsExtendedInformation).toBeFalsy();
@@ -282,9 +282,9 @@ describe('Controller: HelpdeskOrgController', function () {
         "id": "whatever",
         "displayName": "Marvel",
         "managedBy": [{
-          "orgId": "ce8d17f8-1734-4a54-8510-fae65acc505e"
+          "orgId": "ce8d17f8-1734-4a54-8510-fae65acc505e",
         }],
-        "orgSettings": ['{"isEFT":true, "allowReadOnlyAccess": true}']
+        "orgSettings": ['{"isEFT":true, "allowReadOnlyAccess": true}'],
       });
       HelpdeskService.getOrg.returns(deferredOrgLookupResult.promise);
 
@@ -299,7 +299,7 @@ describe('Controller: HelpdeskOrgController', function () {
         LicenseService: LicenseService,
         Config: Config,
         $stateParams: $stateParams,
-        Authinfo: Authinfo
+        Authinfo: Authinfo,
       });
       $scope.$apply();
       expect(orgController.supportsExtendedInformation).toBeTruthy();
@@ -312,9 +312,9 @@ describe('Controller: HelpdeskOrgController', function () {
         "id": "whatever",
         "displayName": "Marvel",
         "managedBy": [{
-          "orgId": "ce8d17f8-1734-4a54-8510-fae65acc505e"
+          "orgId": "ce8d17f8-1734-4a54-8510-fae65acc505e",
         }],
-        "orgSettings": ['{"isEFT":true, "allowReadOnlyAccess": true}']
+        "orgSettings": ['{"isEFT":true, "allowReadOnlyAccess": true}'],
       });
       HelpdeskService.getOrg.returns(deferredOrgLookupResult.promise);
 
@@ -325,7 +325,7 @@ describe('Controller: HelpdeskOrgController', function () {
         LicenseService: LicenseService,
         Config: Config,
         $stateParams: $stateParams,
-        Authinfo: Authinfo
+        Authinfo: Authinfo,
       });
       $scope.$apply();
       expect(orgController.allowLaunchAtlas).toBeTruthy();
@@ -338,9 +338,9 @@ describe('Controller: HelpdeskOrgController', function () {
         "id": "whatever",
         "displayName": "Marvel",
         "managedBy": [{
-          "orgId": "ce8d17f8-1734-4a54-8510-fae65acc505e"
+          "orgId": "ce8d17f8-1734-4a54-8510-fae65acc505e",
         }],
-        "orgSettings": ['{"isEFT":true, "allowReadOnlyAccess": false}']
+        "orgSettings": ['{"isEFT":true, "allowReadOnlyAccess": false}'],
       });
       HelpdeskService.getOrg.returns(deferredOrgLookupResult.promise);
 
@@ -363,9 +363,9 @@ describe('Controller: HelpdeskOrgController', function () {
         "id": "whatever",
         "displayName": "Marvel",
         "managedBy": [{
-          "orgId": "d5235404-6637-4050-9978-e3d0f4338c36"
+          "orgId": "d5235404-6637-4050-9978-e3d0f4338c36",
         }],
-        "orgSettings": ['{"isEFT":true, "allowReadOnlyAccess": true}']
+        "orgSettings": ['{"isEFT":true, "allowReadOnlyAccess": true}'],
       });
       HelpdeskService.getOrg.returns(deferredOrgLookupResult.promise);
 
@@ -376,7 +376,7 @@ describe('Controller: HelpdeskOrgController', function () {
         LicenseService: LicenseService,
         Config: Config,
         $stateParams: $stateParams,
-        Authinfo: Authinfo
+        Authinfo: Authinfo,
       });
       $scope.$apply();
       expect(orgController.allowLaunchAtlas).toBeTruthy();
@@ -389,9 +389,9 @@ describe('Controller: HelpdeskOrgController', function () {
         "id": "whatever",
         "displayName": "Marvel",
         "managedBy": [{
-          "orgId": "d5235404-6637-4050-9978-e3d0f4338c36"
+          "orgId": "d5235404-6637-4050-9978-e3d0f4338c36",
         }],
-        "orgSettings": ['{"isEFT":true, "allowReadOnlyAccess": false}']
+        "orgSettings": ['{"isEFT":true, "allowReadOnlyAccess": false}'],
       });
       HelpdeskService.getOrg.returns(deferredOrgLookupResult.promise);
 
@@ -401,7 +401,7 @@ describe('Controller: HelpdeskOrgController', function () {
         $scope: $scope,
         LicenseService: LicenseService,
         Config: Config,
-        $stateParams: $stateParams
+        $stateParams: $stateParams,
       });
       $scope.$apply();
       expect(orgController.allowLaunchAtlas).toBeFalsy();
@@ -425,9 +425,9 @@ describe('Controller: HelpdeskOrgController', function () {
         "id": "whatever",
         "displayName": "Marvel",
         "managedBy": [{
-          "orgId": "ce8d17f8-1734-4a54-8510-fae65acc505e"
+          "orgId": "ce8d17f8-1734-4a54-8510-fae65acc505e",
         }],
-        "orgSettings": ['{}']
+        "orgSettings": ['{}'],
       }));
 
       orgController = $controller('HelpdeskOrgController', {
@@ -436,7 +436,7 @@ describe('Controller: HelpdeskOrgController', function () {
         $scope: $scope,
         LicenseService: LicenseService,
         Config: Config,
-        $stateParams: $stateParams
+        $stateParams: $stateParams,
       });
 
     });

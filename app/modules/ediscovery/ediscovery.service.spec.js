@@ -34,7 +34,7 @@ describe('Service: EdiscoveryService', function () {
       httpBackend
         .whenGET(urlBase + 'compliance/organizations/' + orgId + '/servicelocations')
         .respond({
-          avalonRoomsUrl: avalonRoomsUrl
+          avalonRoomsUrl: avalonRoomsUrl,
         });
     });
     it('provides the avalon service url', function (done) {
@@ -61,11 +61,11 @@ describe('Service: EdiscoveryService', function () {
           'displayName': 'King Kong (kkong)',
           'orgId': 'xyz',
           'emailAddress': 'kingkong@cisco.com',
-          'entryUUID': 'fd4d8ad3-78ab-4242-b37d-269942853b7c'
-        }]
+          'entryUUID': 'fd4d8ad3-78ab-4242-b37d-269942853b7c',
+        }],
       },
       'activities': {
-        'items': []
+        'items': [],
       },
       'tags': [],
       'locusUrl': 'https://locus-a.wbx2.com/locus/api/v1/loci/a85d5d59-95f8-3c65-8d40-14b9e5de30fa',
@@ -83,11 +83,11 @@ describe('Service: EdiscoveryService', function () {
           'displayName': 'Cisco Security',
           'orgId': '1eb65fdf-9643-417f-9974-ad72cae0e10f',
           'emailAddress': 'spark-cisco-it-admin-bot@cisco.com',
-          'entryUUID': 'f2efdf6a-e7f4-43fa-9cb3-0ad291840030'
-        }]
+          'entryUUID': 'f2efdf6a-e7f4-43fa-9cb3-0ad291840030',
+        }],
       },
       'lastReadableActivityDate': '2016-06-08T23:26:21.281Z',
-      'kmsResourceObjectUrl': 'https://encryption-a.wbx2.com/encryption/api/v1/resources/98c490d6-1da2-49e6-9a85-c3a1fdf097ea'
+      'kmsResourceObjectUrl': 'https://encryption-a.wbx2.com/encryption/api/v1/resources/98c490d6-1da2-49e6-9a85-c3a1fdf097ea',
     };
 
     beforeEach(function () {
@@ -124,10 +124,10 @@ describe('Service: EdiscoveryService', function () {
       'roomQuery': {
         'startDate': '2015-11-05T00:00:00.000Z',
         'endDate': '2016-06-08T00:00:00.000Z',
-        'roomId': roomId
+        'roomId': roomId,
       },
       'runUrl': 'https://atlas-integration.wbx2.com/admin/api/v1/compliance/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports/3bab7b32-5f8c-4cf7-924c-8d46c8bc4b21/run',
-      'url': 'https://atlas-integration.wbx2.com/admin/api/v1/compliance/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports/3bab7b32-5f8c-4cf7-924c-8d46c8bc4b21'
+      'url': 'https://atlas-integration.wbx2.com/admin/api/v1/compliance/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports/3bab7b32-5f8c-4cf7-924c-8d46c8bc4b21',
     };
 
     var reports = {
@@ -147,17 +147,17 @@ describe('Service: EdiscoveryService', function () {
         'roomQuery': {
           'startDate': '2016-06-08T00:00:00.000Z',
           'endDate': '2016-06-09T00:00:00.000Z',
-          'roomId': roomId
+          'roomId': roomId,
         },
         'runUrl': 'https://avalon-integration.wbx2.com/avalon/api/v1/compliance/report/room',
-        'url': 'https://atlas-integration.wbx2.com/admin/api/v1/compliance/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports/3d0fb858-9a82-4510-93f6-7ca268e698e8'
+        'url': 'https://atlas-integration.wbx2.com/admin/api/v1/compliance/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports/3d0fb858-9a82-4510-93f6-7ca268e698e8',
       }],
       'paging': {
         'next': 'https://atlas-integration.wbx2.com/admin/api/v1/compliance/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports?limit=10&offset=10',
         'limit': 10,
         'offset': 0,
-        'count': 1
-      }
+        'count': 1,
+      },
     };
 
     var createReport = {
@@ -170,10 +170,10 @@ describe('Service: EdiscoveryService', function () {
       'lastUpdatedTime': '2016-06-10T10:53:13.997Z',
       'type': 'ROOM_QUERY',
       'roomQuery': {
-        'roomId': roomId
+        'roomId': roomId,
       },
       'runUrl': 'https://avalon-integration.wbx2.com/avalon/api/v1/compliance/report/room',
-      'url': 'https://atlas-integration.wbx2.com/admin/api/v1/compliance/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports/2345e3bc-587d-428c-bee1-1081c03c533a'
+      'url': 'https://atlas-integration.wbx2.com/admin/api/v1/compliance/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports/2345e3bc-587d-428c-bee1-1081c03c533a',
     };
 
     beforeEach(function () {
@@ -188,19 +188,21 @@ describe('Service: EdiscoveryService', function () {
         'roomQuery': {
           'startDate': null,
           'endDate': null,
-          'roomId': roomId
-        }
+          'roomIds': roomId,
+          'emailAddresses': null,
+          'keyword': null,
+        },
       }).respond(createReport);
 
       httpBackend.whenPOST(avalonRunUrl, {
         'roomId': roomId,
         'responseUrl': responseUrl,
         'startDate': null,
-        'endDate': null
+        'endDate': null,
       }).respond(202, '');
 
       httpBackend.whenPATCH(urlBase + 'compliance/organizations/' + orgId + '/reports/' + reportId, {
-        state: "ABORTED"
+        state: "ABORTED",
       }).respond();
     });
 
@@ -223,7 +225,15 @@ describe('Service: EdiscoveryService', function () {
     });
 
     it('can create report', function (done) {
-      Service.createReport('King Kong Rules', roomId, null, null).then(function (result) {
+      var params = {
+        displayName: 'King Kong Rules',
+        roomIds: roomId,
+        emailAddresses: null,
+        keyword: null,
+        startDate: null,
+        endDate: null,
+      };
+      Service.createReport(params).then(function (result) {
         expect(result.id).toEqual(reportId);
         expect(result.orgId).toEqual(orgId);
         expect(result.displayName).toEqual('King Kong Rules');
@@ -244,7 +254,7 @@ describe('Service: EdiscoveryService', function () {
 
     it('can patch report', function (done) {
       Service.patchReport(reportId, {
-        state: "ABORTED"
+        state: "ABORTED",
       }).then(function () {
         done();
       });

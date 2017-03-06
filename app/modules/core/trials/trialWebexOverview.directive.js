@@ -10,7 +10,7 @@
       restrict: 'E',
       templateUrl: 'modules/core/trials/trialWebexOverview.tpl.html',
       controller: 'TrialWebexOverviewCtrl',
-      controllerAs: 'trialWebexOverview'
+      controllerAs: 'trialWebexOverview',
     };
 
     return directive;

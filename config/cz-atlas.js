@@ -22,35 +22,35 @@ module.exports = {
       message: 'Select the type of change that you\'re committing:',
       choices: [{
         name: 'feat:     A new feature (100% complete, otherwise it\'s WIP)',
-        value: 'feat'
+        value: 'feat',
       }, {
         name: 'fix:      A bug fix (100% fixed, otherwise it\'s WIP)',
-        value: 'fix'
+        value: 'fix',
       }, {
         name: 'docs:     Documentation only changes',
-        value: 'docs'
+        value: 'docs',
       }, {
         name: 'style:    Changes that do not affect the meaning of the code\n            (white-space, formatting, missing semi-colons, etc)',
-        value: 'style'
+        value: 'style',
       }, {
         name: 'refactor: A code change that neither fixes a bug or adds a feature',
-        value: 'refactor'
+        value: 'refactor',
       }, {
         name: 'perf:     A code change that improves performance',
-        value: 'perf'
+        value: 'perf',
       }, {
         name: 'test:     Changes to automated tests',
-        value: 'test'
+        value: 'test',
       }, {
         name: 'chore:    Changes to the build process or auxiliary tools\n            and libraries such as documentation generation',
-        value: 'chore'
+        value: 'chore',
       }, {
         name: 'revert:   Undo the changes introduced by a previous commit',
-        value: 'revert'
+        value: 'revert',
       }, {
         name: 'WIP:      Work in progress',
-        value: 'WIP'
-      }]
+        value: 'WIP',
+      }],
     }, {
       type: 'list',
       name: 'module',
@@ -73,15 +73,15 @@ module.exports = {
         'webex',
         '*',
         'custom',
-        'CHANGELOG'
-      ]
+        'CHANGELOG',
+      ],
     }, {
       type: 'input',
       name: 'module',
       message: 'Enter text to describe the module:',
       when: function (answers) {
         return answers.module === 'custom';
-      }
+      },
     }, {
       type: 'input',
       name: 'subject',
@@ -92,11 +92,11 @@ module.exports = {
     }, {
       type: 'input',
       name: 'body',
-      message: 'Write a longer description of the change (optional). Use "|" to break new line:\n'
+      message: 'Write a longer description of the change (optional). Use "|" to break new line:\n',
     }, {
       type: 'input',
       name: 'footer',
-      message: 'Provide any helpful links. User story and defect links are mandatory. For Github issues, use "Fixes #123" or equivalent. Use "|" to break new line:\n'
+      message: 'Provide any helpful links. User story and defect links are mandatory. For Github issues, use "Fixes #123" or equivalent. Use "|" to break new line:\n',
     }, {
       type: 'expand',
       name: 'confirmCommit',
@@ -108,17 +108,17 @@ module.exports = {
       choices: [{
         key: 'y',
         name: 'Yes',
-        value: 'yes'
+        value: 'yes',
       }, {
         key: 'n',
         name: 'Abort commit',
-        value: 'no'
+        value: 'no',
       }, {
         key: 'e',
         name: 'Edit message',
-        value: 'edit'
+        value: 'edit',
       }],
-      default: 0
+      default: 0,
     }];
 
     cz.prompt(questions)
@@ -131,7 +131,7 @@ module.exports = {
                 editor(info.path, function (code) {
                   if (code === 0) {
                     var commitStr = fs.readFileSync(info.path, {
-                      encoding: 'utf8'
+                      encoding: 'utf8',
                     });
                     commit(commitStr);
                   } else {
@@ -147,7 +147,7 @@ module.exports = {
           console.log('Commit has been canceled.');
         }
       });
-  }
+  },
 };
 
 function buildCommit(answers) {
@@ -155,7 +155,7 @@ function buildCommit(answers) {
     trim: true,
     newline: '\n',
     indent: '',
-    width: maxLineWidth
+    width: maxLineWidth,
   };
 
   function addModule(module) {

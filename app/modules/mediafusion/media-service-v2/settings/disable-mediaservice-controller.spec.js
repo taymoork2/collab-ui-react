@@ -11,10 +11,10 @@ describe('Controller: DisableMediaServiceController', function () {
   // var serviceId = "squared-fusion-media";
   var modalInstance = {
     dismiss: sinon.stub(),
-    close: sinon.stub()
+    close: sinon.stub(),
   };
   var authInfo = {
-    getOrgId: sinon.stub().returns('5632f806-ad09-4a26-a0c0-a49a13f38873')
+    getOrgId: sinon.stub().returns('5632f806-ad09-4a26-a0c0-a49a13f38873'),
   };
 
   beforeEach(angular.mock.module(function ($provide) {
@@ -38,7 +38,7 @@ describe('Controller: DisableMediaServiceController', function () {
 
       MediaServiceActivationV2: MediaServiceActivationV2,
       Notification: Notification,
-      MediaClusterServiceV2: MediaClusterServiceV2
+      MediaClusterServiceV2: MediaClusterServiceV2,
     });
   }));
 
@@ -57,7 +57,7 @@ describe('Controller: DisableMediaServiceController', function () {
   });
   it('should call the MediaClusterServiceV2 deleteClusterWithConnector for deactivate', function () {
     var respnse = {
-      'status': 204
+      'status': 204,
     };
     spyOn(MediaClusterServiceV2, 'deleteClusterWithConnector').and.returnValue($q.resolve(respnse));
     spyOn(ServiceDescriptor, 'disableService');
@@ -82,7 +82,7 @@ describe('Controller: DisableMediaServiceController', function () {
   });
   it('should notify error when deactivate call fails', function () {
     spyOn(MediaClusterServiceV2, 'deleteClusterWithConnector').and.returnValue($q.resolve({
-      'status': 500
+      'status': 500,
     }));
     spyOn(Notification, 'error');
     spyOn(modalInstance, 'close');

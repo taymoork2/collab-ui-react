@@ -14,7 +14,7 @@
       controller: 'AAScheduleInfoCtrl',
       controllerAs: 'scheduleInfo',
       bindToController: true,
-      templateUrl: 'modules/huron/features/autoAttendant/schedule/aaScheduleInfo.tpl.html'
+      templateUrl: 'modules/huron/features/autoAttendant/schedule/aaScheduleInfo.tpl.html',
     };
   }
 })();

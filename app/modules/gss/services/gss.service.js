@@ -16,7 +16,7 @@
       setServiceId: setServiceId,
       addService: addService,
       deleteService: deleteService,
-      modifyService: modifyService
+      modifyService: modifyService,
     };
 
     return service;
@@ -41,7 +41,7 @@
     function addService(serviceName, description) {
       return $http.post(url, {
         serviceName: serviceName,
-        description: description
+        description: description,
       }).then(extractData);
     }
 
@@ -57,7 +57,7 @@
 
       return $http.put(modifyUrl, {
         serviceName: serviceName,
-        description: description
+        description: description,
       }).then(extractData);
     }
   }

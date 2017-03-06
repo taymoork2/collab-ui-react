@@ -19,26 +19,26 @@ describe('Controller: AddResourceController', function () {
 
   function initController() {
     translateMock = {
-      instant: sinon.stub()
+      instant: sinon.stub(),
     };
 
     modalInstanceMock = {
-      close: sinon.stub()
+      close: sinon.stub(),
     };
 
     windowMock = {
-      open: sinon.stub()
+      open: sinon.stub(),
     };
 
     fusionClusterServiceMock = {
       getOrgSettings: sinon.stub().returns($q.resolve({
-        expresswayClusterReleaseChannel: 'stable'
+        expresswayClusterReleaseChannel: 'stable',
       })),
       provisionConnector: sinon.stub().returns($q.resolve({
-        id: clusterIdOfNewCluster
+        id: clusterIdOfNewCluster,
       })),
       preregisterCluster: sinon.stub().returns($q.resolve({
-        id: clusterIdOfNewCluster
+        id: clusterIdOfNewCluster,
       })),
       addPreregisteredClusterToAllowList: sinon.stub().returns($q.resolve({})),
       getAll: sinon.stub().returns($q.resolve([{
@@ -55,7 +55,7 @@ describe('Controller: AddResourceController', function () {
           hostSerial: '03C36F68',
           alarms: [],
           runningVersion: '8.7-1.0.2966',
-          packageUrl: 'https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_cal'
+          packageUrl: 'https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_cal',
         }, {
           url: 'https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/01deb566-2cac-11e6-847d-005056bf13dd/connectors/c_mgmt@03C36F68',
           id: 'c_mgmt@03C36F68',
@@ -66,14 +66,14 @@ describe('Controller: AddResourceController', function () {
           hostSerial: '03C36F68',
           alarms: [],
           runningVersion: '8.7-1.0.2966',
-          packageUrl: 'https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_mgmt'
+          packageUrl: 'https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_mgmt',
         }],
         state: 'fused',
         releaseChannel: 'stable',
         provisioning: [{
-          connectorType: 'c_mgmt'
+          connectorType: 'c_mgmt',
         }, {
-          connectorType: 'c_ucmc'
+          connectorType: 'c_ucmc',
         }],
         targetType: 'c_mgmt',
         servicesStatuses: [{
@@ -81,9 +81,9 @@ describe('Controller: AddResourceController', function () {
           state: {
             name: 'offline',
             severity: 3,
-            label: 'error'
-          }
-        }]
+            label: 'error',
+          },
+        }],
       }, {
         url: 'https://hercules-integration.wbx2.com/hercules/api/v2/organizations/6f090d26-0d32-11e6-bda1-005056001268',
         id: '6f090d26-0d32-11e6-bda1-005056001268',
@@ -98,14 +98,14 @@ describe('Controller: AddResourceController', function () {
           hostSerial: '0C379CB8',
           alarms: [],
           runningVersion: '8.7-1.0.2966',
-          packageUrl: 'https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_cal'
+          packageUrl: 'https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_cal',
         }],
         state: 'fused',
         releaseChannel: 'stable',
         provisioning: [{
-          connectorType: 'c_cal'
+          connectorType: 'c_cal',
         }, {
-          connectorType: 'c_ucmc'
+          connectorType: 'c_ucmc',
         }],
         targetType: 'c_mgmt',
         servicesStatuses: [{
@@ -113,16 +113,16 @@ describe('Controller: AddResourceController', function () {
           state: {
             name: 'offline',
             severity: 3,
-            label: 'error'
-          }
+            label: 'error',
+          },
         }, {
           serviceId: 'squared-fusion-cal',
           state: {
             name: 'offline',
             severity: 3,
-            label: 'error'
-          }
-        }]
+            label: 'error',
+          },
+        }],
       }, {
         url: 'https://hercules-integration.wbx2.com/hercules/api/v2/organizations/2a394f17-bf73-4f01-a29e-eee22df86615',
         id: '2a394f17-bf73-4f01-a29e-eee22df86615',
@@ -137,14 +137,14 @@ describe('Controller: AddResourceController', function () {
           hostSerial: '55379CB8',
           alarms: [],
           runningVersion: '8.7-1.0.2966',
-          packageUrl: 'https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_cal'
+          packageUrl: 'https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_cal',
         }],
         state: 'fused',
         releaseChannel: 'stable',
         provisioning: [{
-          connectorType: 'c_mgmt'
+          connectorType: 'c_mgmt',
         }, {
-          connectorType: 'c_cal'
+          connectorType: 'c_cal',
         }],
         targetType: 'c_mgmt',
         servicesStatuses: [{
@@ -152,15 +152,15 @@ describe('Controller: AddResourceController', function () {
           state: {
             name: 'offline',
             severity: 3,
-            label: 'error'
-          }
-        }]
-      }]))
+            label: 'error',
+          },
+        }],
+      }])),
     };
 
     FeatureToggleServiceMock = {
       supports: sinon.stub().returns($q.resolve(false)),
-      features: ''
+      features: '',
     };
 
     controller = $controller('AddResourceController', {
@@ -173,7 +173,7 @@ describe('Controller: AddResourceController', function () {
       ClusterService: clusterServiceMock,
       FusionClusterService: fusionClusterServiceMock,
       firstTimeSetup: false,
-      FeatureToggleService: FeatureToggleServiceMock
+      FeatureToggleService: FeatureToggleServiceMock,
     });
     $scope.$apply();
   }
@@ -208,7 +208,7 @@ describe('Controller: AddResourceController', function () {
     it('should provision the new connector, but nothing else', function () {
       spyOn(fusionClusterServiceMock, 'provisionConnector');
       fusionClusterServiceMock.provisionConnector.and.returnValue($q.resolve({
-        id: clusterIdOfNewCluster
+        id: clusterIdOfNewCluster,
       }));
       controller.preregisterAndProvisionExpressway(newConnectorType);
       $scope.$apply();
@@ -218,7 +218,7 @@ describe('Controller: AddResourceController', function () {
 
     it('should add the new cluster to the FMS allow-list exactly once, and with the correct clusterId', function () {
       spyOn(fusionClusterServiceMock, 'addPreregisteredClusterToAllowList').and.returnValue($q.resolve({
-        id: clusterIdOfNewCluster
+        id: clusterIdOfNewCluster,
       }));
       controller.preregisterAndProvisionExpressway(newConnectorType);
       controller.hostname = 'hostnameProvidedByUser';

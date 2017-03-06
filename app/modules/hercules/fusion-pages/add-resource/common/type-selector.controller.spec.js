@@ -11,8 +11,8 @@ describe('Controller: TypeSelectorController', function () {
     $rootScope = _$rootScope_;
     $stateParams = {
       wizard: {
-        next: function () {}
-      }
+        next: function () {},
+      },
     };
     Authinfo = _Authinfo_;
     FusionClusterService = _FusionClusterService_;
@@ -39,6 +39,7 @@ describe('Controller: TypeSelectorController', function () {
       var controller = initController();
       expect(controller.isEntitledTo.expressway).toBe(true);
       expect(controller.isEntitledTo.mediafusion).toBe(true);
+      expect(controller.isEntitledTo.context).toBe(true);
     });
 
     it('should initialize isEntitledTo to false if org is not entitled', function () {
@@ -46,6 +47,7 @@ describe('Controller: TypeSelectorController', function () {
       var controller = initController();
       expect(controller.isEntitledTo.expressway).toBe(false);
       expect(controller.isEntitledTo.mediafusion).toBe(false);
+      expect(controller.isEntitledTo.context).toBe(false);
     });
 
   });
@@ -93,6 +95,7 @@ describe('Controller: TypeSelectorController', function () {
       expect(controller.hasSetup).toEqual({
         expressway: true,
         mediafusion: false,
+        context: true,
       });
     });
 
@@ -100,7 +103,8 @@ describe('Controller: TypeSelectorController', function () {
       FusionClusterService.serviceIsSetUp.and.callFake(serviceIsSetUpMockAlwaysTrue);
       var controller = initController();
       $rootScope.$apply();
-      expect(controller.selectedType).toBe('expressway');
+      // context will be the selected type because services get sorted alphabetically
+      expect(controller.selectedType).toBe('context');
     });
 
     it('should go to the next step if the user had only one service entitled for and it is setup', function () {

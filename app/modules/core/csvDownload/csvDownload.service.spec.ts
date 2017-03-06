@@ -10,6 +10,7 @@ describe('CsvDownloadService', () => {
       '$httpBackend',
       '$window',
       '$q',
+      '$rootScope',
       '$timeout',
       'UserCsvService',
       'CsvDownloadService',
@@ -30,6 +31,7 @@ describe('CsvDownloadService', () => {
 
   function initDependencySpies() {
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('1');
+    spyOn(this.$rootScope, '$emit');
   }
 
   describe('Browser: Firefox, Chrome, and cross-browser tests', () => {
@@ -214,6 +216,7 @@ describe('CsvDownloadService', () => {
       this.$httpBackend.flush();
 
       // respond with a second Running
+      expect(this.$rootScope.$emit).toHaveBeenCalledWith('IDLE_TIMEOUT_KEEP_ALIVE'); //keep from logging out
       this.$httpBackend.expectGET('http://example.com/getUserReport').respond(200, this.getUserReportRUNNING);
       this.$timeout.flush();
       this.$httpBackend.flush();

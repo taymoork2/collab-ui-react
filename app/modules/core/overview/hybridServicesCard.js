@@ -22,7 +22,6 @@
 
         function init() {
           $q.all({
-            hasHDSFeatureToggle: FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity),
             hasContactCenterContextFeatureToggle: FeatureToggleService.supports(FeatureToggleService.features.contactCenterContext),
             hasGoogleCalendarFeatureToggle: FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar),
           }).then(function (featureToggles) {
@@ -44,7 +43,7 @@
             if (Authinfo.isEntitled(Config.entitlements.mediafusion)) {
               card.serviceList.push(FusionClusterService.getStatusForService('squared-fusion-media', response.clusterList));
             }
-            if (response.featureToggles.hasHDSFeatureToggle && Authinfo.isEntitled(Config.entitlements.hds)) {
+            if (Authinfo.isEntitled(Config.entitlements.hds)) {
               card.serviceList.push(FusionClusterService.getStatusForService('spark-hybrid-datasecurity', response.clusterList));
             }
             if (response.featureToggles.hasContactCenterContextFeatureToggle && Authinfo.isEntitled(Config.entitlements.context)) {
@@ -79,7 +78,7 @@
           }
         }
         return card;
-      }
+      },
     };
   }
 })();

@@ -125,10 +125,6 @@
         padding-bottom: 1rem;
       }
 
-      .pointer {
-        cursor: pointer;
-      }
-
       .main-heading {
         padding-top: 2rem;
 
@@ -150,11 +146,11 @@
         }
       }
 
-      .searchWarning {
+      .search-warning {
         color: $color-attention-base;
       }
 
-      .searchByRoom {
+      .ediscovery-advanced-search {
         margin-top: 48px;
         display: inline-block;
         width: 50%;
@@ -167,12 +163,15 @@
           max-width: 100%;
         }
 
-        .searchText {
-          float: left;
-          padding-left: 0.5rem;
+        .cs-datepicker {
+          display: block;
         }
 
-        .searchBox {
+        .search-text {
+          float: left;
+        }
+
+        .search-box {
           padding-left: 0px;
         }
 
@@ -180,24 +179,24 @@
           width: 50%;
         }
 
-        .searchButton {
+        .query-row {
+          padding-right: 0.5rem;
+        }
+
+        .search-button {
           float: left;
           width: 100px;
         }
 
-        #textInput {
-          margin-left: 0.5rem;
-        }
-
-        #smallBreak {
+        .small-gap {
           margin-top: 16px;
         }
 
-        #midBreak{
+        .mid-gap {
           padding-top: 24px;
         }
 
-        #largeBreak {
+        .large-gap {
           margin-top: 36px;
         }
       }
@@ -217,10 +216,6 @@
 
         @media only screen and (max-width: 640px) {
           max-width: 90%;
-        }
-
-        .searchInputForm {
-          margin-bottom: 0;
         }
 
         input {
@@ -340,6 +335,11 @@
           }
         }
 
+        .back-button {
+          padding-left: 16px;
+          padding-top: 24px;
+        }
+
         .result-title {
           font-size: 12px;
           font-family: 'CiscoSansTT Light', 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -358,9 +358,13 @@
 
         .report-parameters {
           padding: 12px 32px;
+
+          .results-spacing {
+            margin-top: 16px;
+          }
         }
 
-        .summaryHeader {
+        .summary-header {
           padding-left: 30px;
         }
 

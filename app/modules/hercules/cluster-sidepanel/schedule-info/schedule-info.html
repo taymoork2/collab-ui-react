@@ -1,6 +1,6 @@
 <cs-sp-section>
 
-  <div ng-if="$ctrl.hasResourceGroupFeatureToggle"
+  <div ng-if="$ctrl.hasResourceGroupFeatureToggle || $ctrl.clusterType === 'mf_mgmt'"
        class="section-title-row feature-inline">
     <span class="section-name"
           translate="common.releaseChannel"></span>
@@ -18,7 +18,8 @@
        class="section-title-row feature-inline">
     <span class="section-name"
           translate="hercules.expresswayClusterSettings.upgradeScheduleSubHeader"></span>
-    <span class="feature-name">{{$ctrl.schedule.dateTime}}, {{$ctrl.schedule.timeZone}}</span>
+    <span ng-if="!$ctrl.isHybridContextCluster()" class="feature-name">{{$ctrl.schedule.dateTime}}, {{$ctrl.schedule.timeZone}}</span>
+    <span ng-if="$ctrl.isHybridContextCluster()" class="feature-name" translate="hercules.softwareUpgrade.upgradesAutomatically"></span>
   </div>
 
   <div ng-if="$ctrl.schedule && $ctrl.hasUrgentUpgradeSchedule()"
@@ -28,7 +29,7 @@
     <span class="feature-name">{{$ctrl.schedule.urgentScheduleTime}}, {{$ctrl.schedule.timeZone}}</span>
   </div>
 
-  <cluster-settings-link cluster-id="$ctrl.cluster.id"
+  <cluster-settings-link ng-if="!$ctrl.isHybridContextCluster()" cluster-id="$ctrl.cluster.id"
                          cluster-type="$ctrl.clusterType"></cluster-settings-link>
 
 </cs-sp-section>

@@ -15,6 +15,7 @@
     vm.average_utilzation = $translate.instant('mediaFusion.metrics.avgutilization');
     vm.allClusters = $translate.instant('mediaFusion.metrics.allclusters');
     vm.utilization = $translate.instant('mediaFusion.metrics.utilization');
+    vm.percentageTitle = $translate.instant('mediaFusion.metrics.percentageTitle');
 
     vm.zoomedEndTime = null;
     vm.zoomedStartTime = null;
@@ -23,7 +24,7 @@
     vm.dateSelected = null;
 
     return {
-      setUtilizationGraph: setUtilizationGraph
+      setUtilizationGraph: setUtilizationGraph,
     };
 
     function setUtilizationGraph(response, utilizationChart, clusterSelected, clusterId, daterange, clusterMap) {
@@ -84,8 +85,9 @@
       valueAxes[0].maximum = 100;
       valueAxes[0].autoGridCount = true;
       valueAxes[0].position = 'left';
-      valueAxes[0].title = '%';
-      valueAxes[0].titleRotation = 180;
+      valueAxes[0].title = vm.percentageTitle;
+      valueAxes[0].titleRotation = 360;
+      valueAxes[0].titleOffset = 50;
       //valueAxes[0].guides.label = 'Utilization High';
 
       var catAxis = CommonReportsGraphService.getBaseVariable(vm.AXIS);
@@ -133,7 +135,7 @@
       }
 
       var columnNames = {
-        'time': vm.timeStamp
+        'time': vm.timeStamp,
       };
       var exportFields = [];
       _.forEach(graphs, function (value) {
@@ -156,7 +158,7 @@
           'bullet': 'square',
           'bulletSize': 10,
           'lineColor': '#000000',
-          'hidden': true
+          'hidden': true,
         });
 
         graphs.push({
@@ -164,7 +166,7 @@
           'id': 'none',
           'bullet': 'square',
           'bulletSize': 10,
-          'lineColor': '#000000'
+          'lineColor': '#000000',
         });
       }
       var chartData = CommonReportsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, CommonReportsGraphService.getBaseExportForGraph(exportFields, ExportFileName, columnNames));
@@ -174,10 +176,10 @@
 
       chartData.legend.listeners = [{
         'event': 'hideItem',
-        "method": legendHandler
+        "method": legendHandler,
       }, {
         'event': 'showItem',
-        'method': legendHandler
+        'method': legendHandler,
       }];
 
 
@@ -192,11 +194,11 @@
       vm.zoomedEndTime = event.endDate;
       var selectedTime = {
         startTime: vm.zoomedStartTime,
-        endTime: vm.zoomedEndTime
+        endTime: vm.zoomedEndTime,
       };
       if ((_.isUndefined(vm.dateSelected.value) && vm.zoomedStartTime !== vm.dateSelected.startTime && vm.zoomedEndTime !== vm.dateSelected.endTime) || (vm.zoomedStartTime !== vm.dateSelected.startTime && vm.zoomedEndTime !== vm.dateSelected.endTime)) {
         $rootScope.$broadcast('zoomedTime', {
-          data: selectedTime
+          data: selectedTime,
         });
       }
     }

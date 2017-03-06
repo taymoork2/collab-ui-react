@@ -5,28 +5,28 @@ describe('Service: Client Type Adoption GraphService', function () {
 
 
   var validateService = {
-    validate: function () {}
+    validate: function () {},
   };
 
   var clientTypeChart = {
     dataProvider: [],
     startDuration: "",
     balloon: {
-      enabled: false
+      enabled: false,
     },
     chartCursor: {
       valueLineBalloonEnabled: false,
       valueLineEnabled: false,
-      categoryBalloonEnabled: false
+      categoryBalloonEnabled: false,
     },
     validateData: function () {
       return true;
-    }
+    },
   };
 
   var daterange = {
     label: "Last 24 Hours",
-    value: "0"
+    value: "0",
   };
   var clientTypeGraphData = getJSONFixture('mediafusion/json/metrics-graph-report/clientTypeGraphData.json');
 

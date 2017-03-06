@@ -5,7 +5,7 @@
     .module('Gemini')
     .component('ccaCard', {
       templateUrl: 'modules/gemini/components/cca-card.html',
-      controller: CcaCardCtrl
+      controller: CcaCardCtrl,
     });
 
   /* @ngInject */

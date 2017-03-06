@@ -14,7 +14,7 @@
       get: get,
       update: update,
       getVoicemailActionEnum: getVoicemailActionEnum,
-      isVoicemailToEmailEnabled: isVoicemailToEmailEnabled
+      isVoicemailToEmailEnabled: isVoicemailToEmailEnabled,
     };
 
     return service;
@@ -25,7 +25,7 @@
 
       return VoicemailMessageActionService.query({
         customerId: Authinfo.getOrgId(),
-        userTemplateId: userTemplateId
+        userTemplateId: userTemplateId,
       })
         .$promise
         .then(function (messageActions) {
@@ -43,7 +43,7 @@
       var messageActionId = _messageActionId;
 
       var data = {
-        voicemailAction: getVoicemailActionEnum(voicemailToEmail)
+        voicemailAction: getVoicemailActionEnum(voicemailToEmail),
       };
 
       if (voicemailToEmail) {
@@ -53,7 +53,7 @@
       return VoicemailMessageActionService.update({
         customerId: Authinfo.getOrgId(),
         userTemplateId: userTemplateId,
-        messageActionId: messageActionId
+        messageActionId: messageActionId,
       }, data).$promise;
     }
 

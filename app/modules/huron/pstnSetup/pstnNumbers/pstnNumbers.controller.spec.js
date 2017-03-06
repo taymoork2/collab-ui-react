@@ -10,82 +10,85 @@ describe('Controller: PstnNumbersCtrl', function () {
 
   var singleOrder = {
     "data": {
-      "numbers": "+12145551000"
+      "numbers": "+12145551000",
     },
     "numberType": "DID",
-    "orderType": "NUMBER_ORDER"
+    "orderType": "NUMBER_ORDER",
   };
   var consecutiveOrder = {
     "data": {
       "numbers": [
         "+12145551000",
-        "+12145551001"
-      ]
+        "+12145551001",
+      ],
     },
     "numberType": "DID",
-    "orderType": "NUMBER_ORDER"
+    "orderType": "NUMBER_ORDER",
   };
   var nonconsecutiveOrder = {
     "data": {
       "numbers": [
         "+12145551234",
-        "+12145551678"
-      ]
+        "+12145551678",
+      ],
     },
     "numberType": "DID",
-    "orderType": "NUMBER_ORDER"
+    "orderType": "NUMBER_ORDER",
   };
   var portOrder = {
     "data": {
       "numbers": [
         "+12145557001",
-        "+12145557002"
-      ]
+        "+12145557002",
+      ],
     },
-    "orderType": "PORT_ORDER"
+    "orderType": "PORT_ORDER",
   };
   var advancedOrder = {
     data: {
       areaCode: 321,
       length: 2,
-      consecutive: false
+      consecutive: false,
     },
     numberType: "DID",
-    orderType: "BLOCK_ORDER"
+    orderType: "BLOCK_ORDER",
   };
   var advancedNxxOrder = {
     data: {
       areaCode: 321,
       length: 2,
       nxx: 201,
-      consecutive: false
+      consecutive: false,
     },
     numberType: "DID",
-    orderType: "BLOCK_ORDER"
+    orderType: "BLOCK_ORDER",
   };
   var advancedTollFreeOrder = {
     data: {
       areaCode: 800,
       length: 3,
-      consecutive: false
+      consecutive: false,
     },
     numberType: "TOLLFREE",
-    orderType: "BLOCK_ORDER"
+    orderType: "BLOCK_ORDER",
   };
 
-  var states = [{
-    name: 'Texas',
-    abbreviation: 'TX'
-  }];
+  var location = {
+    type: 'State',
+    areas: [{
+      name: 'Texas',
+      abbreviation: 'TX',
+    }],
+  };
 
   var response = {
     areaCodes: [{
       code: '123',
-      count: 15
+      count: 15,
     }, {
       code: '456',
-      count: 30
-    }]
+      count: 30,
+    }],
   };
 
   var serviceAddress = {
@@ -93,7 +96,7 @@ describe('Controller: PstnNumbersCtrl', function () {
     address2: '',
     city: 'Sample',
     state: 'TX',
-    zip: '77777'
+    zip: '77777',
   };
 
   afterEach(function () {
@@ -121,6 +124,7 @@ describe('Controller: PstnNumbersCtrl', function () {
     PstnSetup.setCustomerId(customer.uuid);
     PstnSetup.setCustomerName(customer.name);
     PstnSetup.setProvider(customerCarrierList[0]);
+    PstnSetup.setCountryCode('US');
 
     spyOn(PstnSetupService, 'releaseCarrierInventory').and.returnValue($q.resolve());
     spyOn(PstnSetupService, 'releaseCarrierInventoryV2').and.returnValue($q.resolve());
@@ -129,7 +133,7 @@ describe('Controller: PstnNumbersCtrl', function () {
     spyOn(PstnSetup, 'getServiceAddress').and.returnValue(serviceAddress);
     spyOn(Notification, 'error');
     spyOn($state, 'go');
-    spyOn(PstnSetupStatesService, 'getStateProvinces').and.returnValue($q.resolve(states));
+    spyOn(PstnSetupStatesService, 'getLocation').and.returnValue($q.resolve(location));
     spyOn($translate, 'instant').and.callThrough();
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
 
@@ -161,7 +165,6 @@ describe('Controller: PstnNumbersCtrl', function () {
     advancedOrder = undefined;
     advancedNxxOrder = undefined;
     advancedTollFreeOrder = undefined;
-    states = undefined;
     response = undefined;
     serviceAddress = undefined;
   });
@@ -186,7 +189,7 @@ describe('Controller: PstnNumbersCtrl', function () {
     });
 
     it('should have state set through pstnSetupService on first time', function () {
-      expect(controller.model.pstn.state).toEqual(states[0]);
+      expect(controller.model.pstn.state).toEqual(location.areas[0]);
     });
 
     it('should have showTollFreeNumbers set to false if feature toggle returns false', function () {
@@ -307,7 +310,7 @@ describe('Controller: PstnNumbersCtrl', function () {
   describe('addOrders', function () {
     it('should add an advanced PSTN order', function () {
       controller.model.pstn.areaCode = {
-        code: advancedOrder.data.areaCode
+        code: advancedOrder.data.areaCode,
       };
       controller.model.pstn.quantity = advancedOrder.data.length;
       controller.model.pstn.consecutive = advancedOrder.data.consecutive;
@@ -316,16 +319,16 @@ describe('Controller: PstnNumbersCtrl', function () {
         data: {
           areaCode: advancedOrder.data.areaCode,
           length: advancedOrder.data.length,
-          consecutive: advancedOrder.data.consecutive
+          consecutive: advancedOrder.data.consecutive,
         },
         numberType: PstnSetupService.NUMTYPE_DID,
-        orderType: PstnSetupService.BLOCK_ORDER
+        orderType: PstnSetupService.BLOCK_ORDER,
       });
     });
 
     it('should add an advanced toll-free order', function () {
       controller.model.tollFree.areaCode = {
-        code: advancedTollFreeOrder.data.areaCode
+        code: advancedTollFreeOrder.data.areaCode,
       };
       controller.model.tollFree.quantity = advancedTollFreeOrder.data.length;
       controller.model.tollFree.consecutive = advancedTollFreeOrder.data.consecutive;
@@ -334,10 +337,10 @@ describe('Controller: PstnNumbersCtrl', function () {
         data: {
           areaCode: advancedTollFreeOrder.data.areaCode,
           length: advancedTollFreeOrder.data.length,
-          consecutive: advancedTollFreeOrder.data.consecutive
+          consecutive: advancedTollFreeOrder.data.consecutive,
         },
         numberType: PstnSetupService.NUMTYPE_TOLLFREE,
-        orderType: PstnSetupService.BLOCK_ORDER
+        orderType: PstnSetupService.BLOCK_ORDER,
       });
     });
   });

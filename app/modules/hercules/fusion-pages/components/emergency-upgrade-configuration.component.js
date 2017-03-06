@@ -4,7 +4,7 @@
   angular.module('Hercules')
     .component('emergencyUpgradeConfiguration', {
       bindings: {
-        clusterId: '<'
+        clusterId: '<',
       },
       controller: EmergencyUpgradeConfigurationCtrl,
       templateUrl: 'modules/hercules/fusion-pages/components/emergency-upgrade-configuration.html',
@@ -23,7 +23,7 @@
       vm.syncing = false;
       vm.formData = {};
       vm.formOptions = {
-        time: getTimeOptions()
+        time: getTimeOptions(),
       };
     }
 
@@ -59,7 +59,7 @@
       return {
         urgentScheduleTime: {
           label: labelForTime(data.urgentScheduleTime),
-          value: data.urgentScheduleTime
+          value: data.urgentScheduleTime,
         },
       };
     }
@@ -101,7 +101,7 @@
       return _.map(values, function (value) {
         return {
           label: labelForTime(value),
-          value: value
+          value: value,
         };
       });
     }

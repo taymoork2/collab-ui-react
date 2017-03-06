@@ -1,0 +1,24 @@
+<cs-card id='meeting-location-card' class="full media-metrics-report-card">
+  <article class="media-service-card">
+    <graphheader>
+              <h4 class='report-section-header' translate='mediaFusion.metrics.meetingLocationTitle'>
+              </h4>
+    </graphheader>
+    <section>
+      <div class="meeting-location-reports">
+        <div id="meetingLocationdiv" class="barchart" ng-class="{'meeting-location-chart': !$ctrl.parentcntrl.isEmpty($ctrl.parentcntrl.meetingLocationStatus) && !$ctrl.parentcntrl.isRefresh($ctrl.parentcntrl.meetingLocationStatus)}"></div>
+        <div class="spinner-position" ng-if="$ctrl.parentcntrl.isRefresh($ctrl.parentcntrl.meetingLocationStatus)">
+          <i class='icon icon-spinner icon-2x'></i>
+        </div>
+        <div class="no-data-center" ng-if="$ctrl.parentcntrl.isEmpty($ctrl.parentcntrl.meetingLocationStatus)">
+          <p>
+            <h3 class="no-data"> 
+            <i class='icon icon-warning no-data-warning'></i>
+            <span translate='mediaFusion.metrics.nodata'></span>
+          </h3>
+            <p>
+        </div>
+      </div>
+    </section>
+  </article>
+</cs-card>
