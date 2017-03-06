@@ -7,24 +7,19 @@
     //clusterId, connector, MediaClusterServiceV2, $translate, $modalInstance, Notification
 
     vm.upgrade = function () {
-      vm.saving = true;
       HDSService
         .upgradeCluster(clusterId)
         .then(function () {
-          $modalInstance.close();
-          vm.saving = false;
+          $modalInstance.dismiss();
           Notification.success('mediaFusion.upgradeClusters.success');
         }, function (err) {
-          vm.error = $translate.instant('mediaFusion.upgradeClusters.error', {
+          var error = $translate.instant('mediaFusion.upgradeClusters.error', {
             //clusterName: cluster.name
           });
-          Notification.errorWithTrackingId(err, vm.error);
-          vm.saving = false;
+          Notification.errorWithTrackingId(err, error);
         });
       return false;
     };
-
-    vm.close = $modalInstance.close;
 
   }
   angular

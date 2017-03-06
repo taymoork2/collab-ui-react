@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <button class="close" id="convertModalClose" ng-click="hdsUpgradeNowController.close()" type="button">
+  <button class="close" ng-click="$dismiss()" type="button">
     <span class="sr-only" translate="common.close">
     </span>
   </button>
@@ -12,12 +12,12 @@
   </div>
 </div>
 <div class="modal-footer" >
-  <button class="btn btn--primary pull-right" id="convertActionButton" ng-click="hdsUpgradeNowController.upgrade()">
-    <span translate="mediaFusion.upgradeClusters.upgradeNow">
+  <button class="btn btn-default" ng-click="$dismiss()">
+    <span translate="common.cancel">
     </span>
   </button>
-  <button class="btn pull-right" id="convertCancelButton" ng-click="hdsUpgradeNowController.close()" style="margin-right: 10px">
-    <span translate="common.cancel">
+  <button class="btn btn-primary" ng-click="hdsUpgradeNowController.upgrade()">
+    <span translate="mediaFusion.upgradeClusters.upgradeNow">
     </span>
   </button>
 </div>
