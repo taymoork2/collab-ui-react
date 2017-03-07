@@ -3499,7 +3499,7 @@
     "forwardVoicemailDisabled": "Call Forwarding is set to Voicemail, which is currently disabled. Please update the Call Forwarding settings.",
     "directVoicemail": "Forward directly to Voicemail",
     "forwardBusyNoAnswerTimerSeconds": "Seconds",
-    "forwardBusyNoAnswerTimerDescription": "Time before call is forwarded",
+    "forwardBusyNoAnswerTimerDescription": "Time before call is forwarded due to no answer",
     "ringDurationTimer.validation.error": "Must be a number between 1 and 300"
   },
   "multipleCalls": {
