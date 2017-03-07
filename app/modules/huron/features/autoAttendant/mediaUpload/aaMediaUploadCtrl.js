@@ -281,7 +281,7 @@
           AAMediaUploadService.httpDeleteRetry(vm.actionEntry.deleteUrl, 0);
         }
       }
-      if (angular.isDefined(vm.actionCopy)) {
+      if (!_.isUndefined(vm.actionCopy)) {
         revert(vm.actionEntry);
       } else {
         reset(vm.actionEntry);

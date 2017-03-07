@@ -42,7 +42,7 @@ angular.module('Sunlight.paging', [])
           }
 
           $scope.$watch('totalItems', function (newTotal, oldTotal) {
-            if (angular.isDefined(newTotal) || newTotal !== oldTotal) {
+            if (!_.isUndefined(newTotal) || newTotal !== oldTotal) {
               $scope.totalPages = ctrl.calculateTotalPages();
               ctrl.updatePage();
             }
@@ -108,13 +108,13 @@ angular.module('Sunlight.pagination', ['Sunlight.paging', 'Sunlight.tabindex', '
   function ($scope, $attrs, $parse, slPaging, slPaginationConfig) {
     var ctrl = this;
     // Setup configuration parameters
-    var maxSize = angular.isDefined($attrs.maxSize) ? $scope.$parent.$eval($attrs.maxSize) : slPaginationConfig.maxSize;
-    var rotate = angular.isDefined($attrs.rotate) ? $scope.$parent.$eval($attrs.rotate) : slPaginationConfig.rotate;
-    var forceEllipses = angular.isDefined($attrs.forceEllipses) ? $scope.$parent.$eval($attrs.forceEllipses) : slPaginationConfig.forceEllipses;
-    var boundaryLinkNumbers = angular.isDefined($attrs.boundaryLinkNumbers) ? $scope.$parent.$eval($attrs.boundaryLinkNumbers) : slPaginationConfig.boundaryLinkNumbers;
-    var pageLabel = angular.isDefined($attrs.pageLabel) ? function (idx) { return $scope.$parent.$eval($attrs.pageLabel, { $page: idx }); } : _.identity;
-    $scope.boundaryLinks = angular.isDefined($attrs.boundaryLinks) ? $scope.$parent.$eval($attrs.boundaryLinks) : slPaginationConfig.boundaryLinks;
-    $scope.directionLinks = angular.isDefined($attrs.directionLinks) ? $scope.$parent.$eval($attrs.directionLinks) : slPaginationConfig.directionLinks;
+    var maxSize = !_.isUndefined($attrs.maxSize) ? $scope.$parent.$eval($attrs.maxSize) : slPaginationConfig.maxSize;
+    var rotate = !_.isUndefined($attrs.rotate) ? $scope.$parent.$eval($attrs.rotate) : slPaginationConfig.rotate;
+    var forceEllipses = !_.isUndefined($attrs.forceEllipses) ? $scope.$parent.$eval($attrs.forceEllipses) : slPaginationConfig.forceEllipses;
+    var boundaryLinkNumbers = !_.isUndefined($attrs.boundaryLinkNumbers) ? $scope.$parent.$eval($attrs.boundaryLinkNumbers) : slPaginationConfig.boundaryLinkNumbers;
+    var pageLabel = !_.isUndefined($attrs.pageLabel) ? function (idx) { return $scope.$parent.$eval($attrs.pageLabel, { $page: idx }); } : _.identity;
+    $scope.boundaryLinks = !_.isUndefined($attrs.boundaryLinks) ? $scope.$parent.$eval($attrs.boundaryLinks) : slPaginationConfig.boundaryLinks;
+    $scope.directionLinks = !_.isUndefined($attrs.directionLinks) ? $scope.$parent.$eval($attrs.directionLinks) : slPaginationConfig.directionLinks;
 
     slPaging.create(this, $scope, $attrs);
 
@@ -139,7 +139,7 @@ angular.module('Sunlight.pagination', ['Sunlight.paging', 'Sunlight.tabindex', '
 
       // Default page limits
       var startPage = 1, endPage = totalPages;
-      var isMaxSized = angular.isDefined(maxSize) && maxSize < totalPages;
+      var isMaxSized = !_.isUndefined(maxSize) && maxSize < totalPages;
 
       // recompute if maxSize
       if (isMaxSized) {

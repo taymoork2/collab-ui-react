@@ -287,7 +287,7 @@ require('./_hg-edit.scss');
           huntGroupName: vm.model.name,
         });
 
-        if (angular.isDefined(tempExternalNumber)) {
+        if (!_.isUndefined(tempExternalNumber)) {
           updateJSONRequest.fallbackDestination.number = tempExternalNumber;
         }
 
