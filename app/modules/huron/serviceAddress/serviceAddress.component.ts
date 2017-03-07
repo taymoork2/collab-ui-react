@@ -10,11 +10,14 @@ class ServiceAddressCtrl implements ng.IComponentController {
   constructor(private PstnSetupStatesService, private HuronCountryService) { }
 
   public $onInit() {
+    this.locationModel = undefined;
     this.PstnSetupStatesService.getLocation(this.countryCode).then(location => {
       this.areaName = location.type;
+      if (this.address.state) {
+        this.locationModel = location.areas.filter(state => state.abbreviation === this.address.state)[0];
+      }
       this.stateOptions = location.areas;
     });
-    this.locationModel = {};
 
     this.HuronCountryService.getCountryList().then(countries => {
       this.countryOptions = countries;
@@ -22,12 +25,19 @@ class ServiceAddressCtrl implements ng.IComponentController {
     });
   }
 
+  public $onChanges(changes: {[bindings: string]: ng.IChangesObject}) {
+    let { address } = changes;
+    if (address && (address.currentValue['state'] === '' || address.currentValue['state'] === undefined)) {
+      this.locationModel = undefined;
+    }
+  }
+
   public onLocationSelect () {
     this.address.state = this.locationModel.abbreviation;
   }
 
   public onModify = function () {
-    this.locationModel = {};
+    this.locationModel = undefined;
     this.modify();
   };
 }
