@@ -1,4 +1,28 @@
+@import 'styles/toolkit/colors';
+
 verify-sip-destination {
   display: block;
   margin-left: 10px;
+}
+
+.spinner-sip-destination--large {
+  font-size: 4rem;
+  display: inline-block;
+  margin-top: 7rem;
+  width: 100%;
+  text-align: center;
+}
+
+.sip-destination-results-table {
+  .icon-error {
+    color: $color-alerts-base;
+  }
+
+  .icon-warning {
+    color: $color-attention-base;
+  }
+
+  .icon-info {
+    color: $color-primary-base;
+  }
 }
