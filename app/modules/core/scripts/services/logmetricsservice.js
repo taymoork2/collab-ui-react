@@ -72,6 +72,7 @@
         careReports: 'CAREREPORTS',
         careEnabled: 'CAREENABLED',
         careDisabled: 'CAREDISABLED',
+        dirSyncActions: 'DIRSYNCACTIONS',
       },
 
       getEventAction: function (eAction) {

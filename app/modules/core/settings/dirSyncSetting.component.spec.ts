@@ -1,16 +1,29 @@
 import testModule from './dirSyncSetting.component';
+import { DirSyncSettingController } from './dirsync/dirSyncSetting.controller';
 
 describe('DirSyncSettings Component', () => {
 
+  const TEST_USER_ID = 'xxxx_Test_User_Id_xxxx';
+  const TEST_ORG_ID = 'xxxx_Test_Org_Id_xxxx';
+  const TEST_CONNECTOR = { name: 'Test Connector Name', isInService: true, deregister: _.noop };
+
   beforeEach(function () {
     this.initModules(testModule);
-    this.injectDependencies('$scope', '$controller', '$q', 'DirSyncService', 'ModalService', 'Notification');
+    this.injectDependencies('$scope', '$controller', '$q', 'DirSyncService', 'ModalService', 'Notification', 'Authinfo', 'LogMetricsService');
 
     spyOn(this.DirSyncService, 'refreshStatus').and.returnValue(this.$q.resolve());
     spyOn(this.DirSyncService, 'disableSync');
     spyOn(this.DirSyncService, 'deregisterConnector');
     spyOn(this.Notification, 'success').and.callFake(_.noop);
     spyOn(this.Notification, 'errorResponse').and.callFake(_.noop);
+    spyOn(this.Authinfo, 'getUserId').and.returnValue(TEST_USER_ID);
+    spyOn(this.Authinfo, 'getOrgId').and.returnValue(TEST_ORG_ID);
+    spyOn(this.LogMetricsService, 'logMetrics').and.callFake(_.noop);
+
+    this.metricsTypes = {
+      eType: this.LogMetricsService.getEventType('dirSyncActions'),
+      eAction: this.LogMetricsService.getEventAction('buttonClick'),
+    };
 
     this.testConnectors = [
       { name: 'Connector 1', isInService: false },
@@ -71,11 +84,18 @@ describe('DirSyncSettings Component', () => {
 
       expect(this.DirSyncService.disableSync).toHaveBeenCalled();
       expect(this.Notification.success).toHaveBeenCalled();
+
+      expect(this.LogMetricsService.logMetrics).toHaveBeenCalledWith(
+        DirSyncSettingController.DIRSYNC_DISABLED,
+        this.metricsTypes.eType, this.metricsTypes.eAction,
+        200,
+        jasmine.any(Object), 1,
+        { userId: TEST_USER_ID, orgId: TEST_ORG_ID, message: DirSyncSettingController.DIRSYNC_DISABLED });
     });
 
     it('should display error notification if disableSync fails', function () {
       spyOn(this.ModalService, 'open').and.returnValue({ result: this.$q.resolve() });
-      this.DirSyncService.disableSync.and.returnValue(this.$q.reject());
+      this.DirSyncService.disableSync.and.returnValue(this.$q.reject({ status: 401 }));
 
       this.controller.disableDirSync();
       expect(this.ModalService.open).toHaveBeenCalled();
@@ -83,6 +103,14 @@ describe('DirSyncSettings Component', () => {
 
       expect(this.DirSyncService.disableSync).toHaveBeenCalled();
       expect(this.Notification.errorResponse).toHaveBeenCalled();
+
+      expect(this.LogMetricsService.logMetrics).toHaveBeenCalledWith(
+        DirSyncSettingController.DIRSYNC_DISABLED,
+        this.metricsTypes.eType, this.metricsTypes.eAction,
+        401,
+        jasmine.any(Object), 1,
+        { userId: TEST_USER_ID, orgId: TEST_ORG_ID, message: DirSyncSettingController.DIRSYNC_DISABLED });
+
     });
 
   });
@@ -95,14 +123,14 @@ describe('DirSyncSettings Component', () => {
     it('should warn user before allowing deregister', function () {
       spyOn(this.ModalService, 'open').and.returnValue({ result: this.$q.resolve(true) });
 
-      this.controller.deregisterConnector('connectorname');
+      this.controller.deregisterConnector(TEST_CONNECTOR);
       expect(this.ModalService.open).toHaveBeenCalled();
     });
 
     it('should do nothing if user cancels', function () {
       spyOn(this.ModalService, 'open').and.returnValue({ result: this.$q.reject() });
 
-      this.controller.deregisterConnector('connectorname');
+      this.controller.deregisterConnector(TEST_CONNECTOR);
       expect(this.ModalService.open).toHaveBeenCalled();
       expect(this.DirSyncService.deregisterConnector).not.toHaveBeenCalled();
     });
@@ -111,24 +139,38 @@ describe('DirSyncSettings Component', () => {
       spyOn(this.ModalService, 'open').and.returnValue({ result: this.$q.resolve() });
       this.DirSyncService.deregisterConnector.and.returnValue(this.$q.resolve());
 
-      this.controller.deregisterConnector('connectorname');
+      this.controller.deregisterConnector(TEST_CONNECTOR);
       expect(this.ModalService.open).toHaveBeenCalled();
       this.$scope.$apply();
 
       expect(this.DirSyncService.deregisterConnector).toHaveBeenCalled();
       expect(this.Notification.success).toHaveBeenCalled();
+
+      expect(this.LogMetricsService.logMetrics).toHaveBeenCalledWith(
+        DirSyncSettingController.CONNECTOR_DEREGISTERED,
+        this.metricsTypes.eType, this.metricsTypes.eAction,
+        200,
+        jasmine.any(Object), 1,
+        { userId: TEST_USER_ID, orgId: TEST_ORG_ID, connectorName: TEST_CONNECTOR.name, message: DirSyncSettingController.CONNECTOR_DEREGISTERED });
     });
 
     it('should display error notification if deregisterConnector fails', function () {
       spyOn(this.ModalService, 'open').and.returnValue({ result: this.$q.resolve() });
-      this.DirSyncService.deregisterConnector.and.returnValue(this.$q.reject());
+      this.DirSyncService.deregisterConnector.and.returnValue(this.$q.reject({ status: 401 }));
 
-      this.controller.deregisterConnector('connectorname');
+      this.controller.deregisterConnector(TEST_CONNECTOR);
       expect(this.ModalService.open).toHaveBeenCalled();
       this.$scope.$apply();
 
       expect(this.DirSyncService.deregisterConnector).toHaveBeenCalled();
       expect(this.Notification.errorResponse).toHaveBeenCalled();
+
+      expect(this.LogMetricsService.logMetrics).toHaveBeenCalledWith(
+        DirSyncSettingController.CONNECTOR_DEREGISTERED,
+        this.metricsTypes.eType, this.metricsTypes.eAction,
+        401,
+        jasmine.any(Object), 1,
+        { userId: TEST_USER_ID, orgId: TEST_ORG_ID, connectorName: TEST_CONNECTOR.name, message: DirSyncSettingController.CONNECTOR_DEREGISTERED });
     });
 
   });

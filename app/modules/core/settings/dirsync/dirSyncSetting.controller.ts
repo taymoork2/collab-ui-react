@@ -1,7 +1,17 @@
 import { IDirSyncService, IDirectoryConnector } from 'modules/core/featureToggle';
 import { IToolkitModalService, IToolkitModalSettings } from 'modules/core/modal';
 
+interface IMetricsData {
+  userId: string;
+  orgId: string;
+  connectorName?: string;
+}
+
 export class DirSyncSettingController {
+
+  public static readonly CONNECTOR_DEREGISTERED = 'Connector Deregistered';
+  public static readonly DIRSYNC_DISABLED = 'DirSync Disabled';
+
   public updatingStatus: boolean;
   public dirSyncEnabled: boolean;
   public connectors: Array<IDirectoryConnector>;
@@ -12,6 +22,8 @@ export class DirSyncSettingController {
     private $translate: ng.translate.ITranslateService,
     private ModalService: IToolkitModalService,
     private Notification,
+    private LogMetricsService,
+    private Authinfo,
   ) {
   }
 
@@ -29,14 +41,18 @@ export class DirSyncSettingController {
     };
     this.ModalService.open(options).result
       .then(() => {
+        let startTime = moment();
+        let status = 200;
         this.DirSyncService.disableSync()
           .then(() => {
             this.Notification.success('globalSettings.dirsync.disableDirSyncSuccess');
           })
           .catch((response) => {
+            status = response.status;
             this.Notification.errorResponse(response, 'globalSettings.dirsync.disableDirSyncFailed');
           })
           .finally(() => {
+            this.logMetrics(DirSyncSettingController.DIRSYNC_DISABLED, startTime, status, { userId: this.Authinfo.getUserId(), orgId: this.Authinfo.getOrgId() });
             this.refresh();
           });
       });
@@ -52,14 +68,18 @@ export class DirSyncSettingController {
     };
     this.ModalService.open(options).result
       .then(() => {
+        let startTime = moment();
+        let status = 200;
         this.DirSyncService.deregisterConnector(connector)
           .then(() => {
             this.Notification.success('globalSettings.dirsync.deregisterSuccess', { name: connector.name });
           })
           .catch((response) => {
+            status = response.status;
             this.Notification.errorResponse(response, 'globalSettings.dirsync.deregisterFailed', { name: connector.name });
           })
-          .finally(() => {
+          .finally( () => {
+            this.logMetrics(DirSyncSettingController.CONNECTOR_DEREGISTERED, startTime, status, { userId: this.Authinfo.getUserId(), orgId: this.Authinfo.getOrgId(), connectorName: connector.name });
             this.refresh();
           });
       });
@@ -74,6 +94,11 @@ export class DirSyncSettingController {
       this.connectors = this.DirSyncService.getConnectors();
       this.updatingStatus = false;
     });
+  }
+
+  private logMetrics(message: string, startTime: object, status: number, data: IMetricsData): void {
+    let eType = this.LogMetricsService.getEventType('dirSyncActions');
+    this.LogMetricsService.logMetrics(message, eType, this.LogMetricsService.getEventAction('buttonClick'), status, startTime, 1, _.assign({ message: message }, data));
   }
 
 }
