@@ -143,7 +143,7 @@
           count: 0,
         });
       }
-      if (vm.showCucmClusters /* When entitlement returned by Atlas backend: && Authinfo.isEntitled(Config.entitlements.cucm) */) {
+      if (vm.showCucmClusters) {
         filters.push({
           name: $translate.instant('hercules.fusion.list.cucm'),
           filterValue: 'ucm_mgmt',
