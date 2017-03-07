@@ -1828,7 +1828,7 @@
       "squared-fusion-uc": "Expressway",
       "squared-fusion-media": "Hybrid Media",
       "spark-hybrid-datasecurity": "Hybrid Data Security",
-      "spark-fusion-khaos": "Cisco Unified CM"
+      "squared-fusion-khaos": "Cisco Unified CM"
     },
     "serviceDescriptions": {
       "squared-fusion-uc": "Call Service Aware lets your users instantly share their desktops from their Cisco Spark clients while on a call. Call Service Connect lets your users answer calls to their work phones and to place calls to other work phones, on their Cisco Spark client.",
@@ -6108,7 +6108,7 @@
           "squared-fusion-media": "Media",
           "spark-hybrid-datasecurity": "Data Security",
           "contact-center-context": "Context",
-          "spark-fusion-khaos": "Management"
+          "squared-fusion-khaos": "Management"
         }
       },
       "licenses": {

@@ -174,7 +174,7 @@
         } else if (cluster.targetType === 'ucm_mgmt') {
           var ucmConnectors = _.filter(cluster.connectors, { connectorType: 'ucm_mgmt' });
           cluster.servicesStatuses = [{
-            serviceId: 'spark-fusion-khaos',
+            serviceId: 'squared-fusion-khaos',
             state: FusionClusterStatesService.getMergedStateSeverity(ucmConnectors),
             total: ucmConnectors.length,
           }];
