@@ -95,14 +95,14 @@ describe('Component: callPickupMembers', () => {
     beforeEach(function() {
       this.controller.memberList = membersList;
       checkboxesList = getJSONFixture('huron/json/features/callPickup/checkboxesList.json');
-      member1 = angular.copy(this.controller.memberList[0]);
+      member1 = _.cloneDeep(this.controller.memberList[0]);
       memberData = {
         member: member1,
         picturePath: fake_picture_path,
         checkboxes: checkboxesList,
         saveNumbers: [],
       };
-      member2 = angular.copy(this.controller.memberList[1]);
+      member2 = _.cloneDeep(this.controller.memberList[1]);
       allNumbers = getJSONFixture('huron/json/features/callPickup/numbersList.json');
       spyOn(this.CallPickupGroupService, 'createCheckboxes').and.callThrough();
       this.getMemberPictureDefer.resolve(fake_picture_path);
@@ -154,7 +154,7 @@ describe('Component: callPickupMembers', () => {
       this.isLineInPickupGroupDefer.resolve('');
       this.areAllLinesInPickupGroupDefer.resolve(false);
       this.controller.selectedMembers.push(memberData);
-      let mem2 = angular.copy(membersList[1]);
+      let mem2 = _.cloneDeep(membersList[1]);
       expect(this.controller.getMembersPictures(mem2)).toEqual('');
     });
   });
@@ -165,13 +165,13 @@ describe('Component: callPickupMembers', () => {
     beforeEach(function() {
       this.controller.memberList = membersList;
       member1 = {
-        member: angular.copy(this.controller.memberList[0]),
+        member: _.cloneDeep(this.controller.memberList[0]),
         picturePath: fake_picture_path,
         checkboxes: checkboxesList,
         saveNumbers: [],
       };
       member2 = {
-        member: angular.copy(this.controller.memberList[1]),
+        member: _.cloneDeep(this.controller.memberList[1]),
         picturePath: fake_picture_path,
         checkboxes: [{
           label: '3252',
@@ -185,7 +185,7 @@ describe('Component: callPickupMembers', () => {
         }],
       };
       member3 = {
-        member: angular.copy(this.controller.memberList[1]),
+        member: _.cloneDeep(this.controller.memberList[1]),
         picturePath: fake_picture_path,
         checkboxes: [{
           label: '3252',
@@ -238,28 +238,28 @@ describe('Component: callPickupMembers', () => {
     beforeEach(initComponent);
 
     it('Can getDisplayName', function() {
-      let mem5 = angular.copy(membersList[4]);
+      let mem5 = _.cloneDeep(membersList[4]);
       expect(this.controller.getDisplayName(mem5)).toEqual('peter@test.com');
 
-      let mem1 = angular.copy(membersList[0]);
+      let mem1 = _.cloneDeep(membersList[0]);
       expect(this.controller.getDisplayName(mem1)).toEqual('Chuck Norris (chuck.norris@test.com)');
 
-      let mem2 = angular.copy(membersList[1]);
+      let mem2 = _.cloneDeep(membersList[1]);
       expect(this.controller.getDisplayName(mem2)).toEqual('Koala Lounge 1');
 
-      let mem4 = angular.copy(membersList[5]);
+      let mem4 = _.cloneDeep(membersList[5]);
       expect(this.controller.getDisplayName(mem4)).toEqual('');
 
     });
 
     it('Can getDisplayNameOnCard', function() {
-      let mem5 = angular.copy(membersList[4]);
+      let mem5 = _.cloneDeep(membersList[4]);
       expect(this.controller.getDisplayNameOnCard(mem5)).toEqual('');
 
-      let mem1 = angular.copy(membersList[0]);
+      let mem1 = _.cloneDeep(membersList[0]);
       expect(this.controller.getDisplayNameOnCard(mem1)).toEqual('Chuck Norris');
 
-      let mem2 = angular.copy(membersList[1]);
+      let mem2 = _.cloneDeep(membersList[1]);
       expect(this.controller.getDisplayNameOnCard(mem2)).toEqual('Koala Lounge 1');
 
       let mem3 = undefined;
@@ -282,12 +282,12 @@ describe('Component: callPickupMembers', () => {
     beforeEach(initComponent);
 
     it('Can USER_REAL_USER type', function () {
-      let mem1 = angular.copy(membersList[0]);
+      let mem1 = _.cloneDeep(membersList[0]);
       expect(this.controller.getMemberType(mem1)).toEqual('user');
     });
 
     it('Can get USER_PLACE type', function() {
-      let mem2 = angular.copy(membersList[1]);
+      let mem2 = _.cloneDeep(membersList[1]);
       expect(this.controller.getMemberType(mem2)).toEqual('place');
     });
   });

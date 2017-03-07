@@ -26,8 +26,8 @@
 
     $scope.entCount = 0;
     $scope.entitlementStatus = REFRESH;
-    $scope.totalOrgsData = [angular.copy(allCustomers)];
-    $scope.currentSelection = angular.copy(allCustomers);
+    $scope.totalOrgsData = [_.cloneDeep(allCustomers)];
+    $scope.currentSelection = _.cloneDeep(allCustomers);
 
     $scope.getCustomerReports = function () {
       $scope.entitlementStatus = REFRESH;
@@ -41,7 +41,7 @@
     $scope.getCustomerReports();
 
     function getManagedOrgs() {
-      $scope.totalOrgsData = [angular.copy(allCustomers)];
+      $scope.totalOrgsData = [_.cloneDeep(allCustomers)];
       PartnerService.getManagedOrgsList()
         .then(function (reponse) {
           customerList = _.map(_.get(reponse, 'data.organizations'), function (org) {

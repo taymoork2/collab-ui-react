@@ -27,8 +27,8 @@
     });
 
     var debounceTimeout = 2000;
-    vm.currentTrial = ($stateParams.currentTrial) ? angular.copy($stateParams.currentTrial) : {};
-    vm.stateDetails = ($stateParams.details) ? angular.copy($stateParams.details) : {};
+    vm.currentTrial = ($stateParams.currentTrial) ? _.cloneDeep($stateParams.currentTrial) : {};
+    vm.stateDetails = ($stateParams.details) ? _.cloneDeep($stateParams.details) : {};
     var mode = ($stateParams.mode === 'edit') ? 'edit' : 'add';
 
     vm.customerOrgId = undefined;

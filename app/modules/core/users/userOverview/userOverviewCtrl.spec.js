@@ -13,7 +13,7 @@ describe('Controller: UserOverviewCtrl', function () {
   }
 
   function initData() {
-    this.pristineCurrentUser = angular.copy(getJSONFixture('core/json/currentUser.json'));
+    this.pristineCurrentUser = _.cloneDeep(getJSONFixture('core/json/currentUser.json'));
     this.updatedUser = _.cloneDeep(this.pristineCurrentUser);
     this.updatedUser.trainSiteNames = ['testSite'];
     this.invitations = getJSONFixture('core/json/users/invitations.json');

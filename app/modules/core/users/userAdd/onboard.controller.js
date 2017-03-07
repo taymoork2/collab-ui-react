@@ -853,7 +853,7 @@ require('./_user-add.scss');
           licenses: [],
         };
         array.forEach(function (service) {
-          var copy = angular.copy(service);
+          var copy = _.cloneDeep(service);
           copy.licenses = [copy.license];
           delete copy.license;
           _.mergeWith(result, copy, function (left, right) {

@@ -74,7 +74,7 @@
     }
 
     function initializeTabs() {
-      var tabs = angular.copy(tabConfig);
+      var tabs = _.cloneDeep(tabConfig);
       return _.chain(tabs)
         .filter(function (tab) {
           // Remove subPages whose parent tab is hideProd or states that aren't allowed

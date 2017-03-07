@@ -177,14 +177,14 @@ describe('Service: callPickupService', () => {
 
     beforeEach(function () {
       checkboxesList = getJSONFixture('huron/json/features/callPickup/checkboxesList.json');
-      member1 = angular.copy(membersList[0]);
+      member1 = _.cloneDeep(membersList[0]);
       memberData = {
         member: member1,
         picturePath: fake_picture_path,
         checkboxes: checkboxesList,
         saveNumbers: [],
       };
-      member2 = angular.copy(membersList[1]);
+      member2 = _.cloneDeep(membersList[1]);
       allNumbers = getJSONFixture('huron/json/features/callPickup/numbersList.json');
       spyOn(this.CallPickupGroupService, 'createCheckboxes').and.callThrough();
       this.$httpBackend.whenGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/users/0001/numbers').respond(200, allNumbers);

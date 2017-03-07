@@ -43,7 +43,7 @@ describe('sunlightUserOverviewCtrl', function () {
     spyOn(Notification, 'errorWithTrackingId');
 
     $stateParams = {
-      currentUser: angular.copy(getJSONFixture('core/json/currentUser.json')),
+      currentUser: _.cloneDeep(getJSONFixture('core/json/currentUser.json')),
     };
 
     controller = $controller('SunlightUserOverviewCtrl', {

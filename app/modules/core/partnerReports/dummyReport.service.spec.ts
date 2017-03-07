@@ -15,7 +15,7 @@ describe('Service: Dummy Reports', () => {
   };
 
   const dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
-  let endpointData: IEndpointData = angular.copy(_.clone(dummyData.endpoints));
+  let endpointData: IEndpointData = _.cloneDeep(_.clone(dummyData.endpoints));
   endpointData[0][0].splitClasses = undefined;
   endpointData[0][2].splitClasses = undefined;
   endpointData[0][3].splitClasses = undefined;

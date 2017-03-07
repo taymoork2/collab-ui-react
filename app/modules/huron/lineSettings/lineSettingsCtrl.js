@@ -1031,7 +1031,7 @@ require('./_line-settings.scss');
             return SharedLineInfoService.loadSharedLineUserDevices(dnUuid).then(function (devices) {
               if (users.length > 1) {
                 vm.sharedLineEndpoints = devices;
-                vm.devices = angular.copy(vm.sharedLineEndpoints);
+                vm.devices = _.cloneDeep(vm.sharedLineEndpoints);
               }
               return users;
             });

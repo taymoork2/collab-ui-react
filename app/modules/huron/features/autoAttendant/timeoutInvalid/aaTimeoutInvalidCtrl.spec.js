@@ -46,10 +46,10 @@ describe('Controller: AATimeoutInvalidCtrl', function () {
     it('should initialize CeMenu Timeout/Invalid input with Repeat-Menu-3-Times', function () {
       controller.createOptionMenu();
 
-      var expectedActions = angular.copy(controller.timeoutActions[0]);
+      var expectedActions = _.cloneDeep(controller.timeoutActions[0]);
 
-      expectedActions.childOptions = angular.copy(controller.repeatOptions);
-      expectedActions.selectedChild = angular.copy(controller.repeatOptions[2]);
+      expectedActions.childOptions = _.cloneDeep(controller.repeatOptions);
+      expectedActions.selectedChild = _.cloneDeep(controller.repeatOptions[2]);
 
       expect(angular.equals(expectedActions, controller.selectedTimeout)).toEqual(true);
     });
@@ -62,7 +62,7 @@ describe('Controller: AATimeoutInvalidCtrl', function () {
       controller.selectedTimeout = [];
       controller.populateOptionMenu();
 
-      var expectedActions = angular.copy(controller.timeoutActions[0]);
+      var expectedActions = _.cloneDeep(controller.timeoutActions[0]);
 
       expect(angular.equals(expectedActions, controller.selectedTimeout)).toEqual(true);
     });
@@ -72,9 +72,9 @@ describe('Controller: AATimeoutInvalidCtrl', function () {
       controller.selectedTimeout = [];
       controller.populateOptionMenu();
 
-      var expectedActions = angular.copy(controller.timeoutActions[1]);
-      expectedActions.childOptions = angular.copy(controller.repeatOptions);
-      expectedActions.selectedChild = angular.copy(controller.repeatOptions[2]);
+      var expectedActions = _.cloneDeep(controller.timeoutActions[1]);
+      expectedActions.childOptions = _.cloneDeep(controller.repeatOptions);
+      expectedActions.selectedChild = _.cloneDeep(controller.repeatOptions[2]);
 
       expect(angular.equals(expectedActions, controller.selectedTimeout)).toEqual(true);
     });
@@ -84,9 +84,9 @@ describe('Controller: AATimeoutInvalidCtrl', function () {
       controller.selectedTimeout = [];
       controller.populateOptionMenu();
 
-      var expectedActions = angular.copy(controller.timeoutActions[1]);
-      expectedActions.childOptions = angular.copy(controller.repeatOptions);
-      expectedActions.selectedChild = angular.copy(controller.repeatOptions[0]);
+      var expectedActions = _.cloneDeep(controller.timeoutActions[1]);
+      expectedActions.childOptions = _.cloneDeep(controller.repeatOptions);
+      expectedActions.selectedChild = _.cloneDeep(controller.repeatOptions[0]);
 
       expect(angular.equals(expectedActions, controller.selectedTimeout)).toEqual(true);
     });
@@ -95,9 +95,9 @@ describe('Controller: AATimeoutInvalidCtrl', function () {
       controller.selectedTimeout = [];
       controller.populateOptionMenu();
 
-      var expectedActions = angular.copy(controller.timeoutActions[1]);
-      expectedActions.childOptions = angular.copy(controller.repeatOptions);
-      expectedActions.selectedChild = angular.copy(controller.repeatOptions[4]);
+      var expectedActions = _.cloneDeep(controller.timeoutActions[1]);
+      expectedActions.childOptions = _.cloneDeep(controller.repeatOptions);
+      expectedActions.selectedChild = _.cloneDeep(controller.repeatOptions[4]);
 
       expect(angular.equals(expectedActions, controller.selectedTimeout)).toEqual(true);
     });
@@ -115,7 +115,7 @@ describe('Controller: AATimeoutInvalidCtrl', function () {
       }];
       $scope.index = 0;
       controller.menuEntry = controller.uiMenu.entries[$scope.index];
-      controller.selectedTimeout = angular.copy(controller.timeoutActions[0]);
+      controller.selectedTimeout = _.cloneDeep(controller.timeoutActions[0]);
       controller.timeoutInvalidChanged();
       expect(controller.uiMenu.entries[0].attempts).toEqual(1);
     });
@@ -130,9 +130,9 @@ describe('Controller: AATimeoutInvalidCtrl', function () {
       }];
       $scope.index = 0;
       controller.menuEntry = controller.uiMenu.entries[$scope.index];
-      controller.selectedTimeout = angular.copy(controller.timeoutActions[1]);
-      controller.selectedTimeout.childOptions = angular.copy(controller.repeatOptions);
-      controller.selectedTimeout.selectedChild = angular.copy(controller.repeatOptions[0]);
+      controller.selectedTimeout = _.cloneDeep(controller.timeoutActions[1]);
+      controller.selectedTimeout.childOptions = _.cloneDeep(controller.repeatOptions);
+      controller.selectedTimeout.selectedChild = _.cloneDeep(controller.repeatOptions[0]);
 
       controller.timeoutInvalidChanged();
       expect(controller.uiMenu.entries[0].attempts).toEqual(2);
@@ -148,9 +148,9 @@ describe('Controller: AATimeoutInvalidCtrl', function () {
       }];
       $scope.index = 0;
       controller.menuEntry = controller.uiMenu.entries[$scope.index];
-      controller.selectedTimeout = angular.copy(controller.timeoutActions[1]);
-      controller.selectedTimeout.childOptions = angular.copy(controller.repeatOptions);
-      controller.selectedTimeout.selectedChild = angular.copy(controller.repeatOptions[4]);
+      controller.selectedTimeout = _.cloneDeep(controller.timeoutActions[1]);
+      controller.selectedTimeout.childOptions = _.cloneDeep(controller.repeatOptions);
+      controller.selectedTimeout.selectedChild = _.cloneDeep(controller.repeatOptions[4]);
 
       controller.timeoutInvalidChanged();
       expect(controller.uiMenu.entries[0].attempts).toEqual(6);

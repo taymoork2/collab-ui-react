@@ -153,7 +153,7 @@ describe('Service: PstnSetupService', function () {
 
   it('should create a customer with a reseller', function () {
     PstnSetup.setResellerExists(true);
-    var customerResellerPayload = angular.copy(customerPayload);
+    var customerResellerPayload = _.cloneDeep(customerPayload);
     customerResellerPayload.resellerId = suite.partnerId;
 
     $httpBackend.expectPOST(HuronConfig.getTerminusV2Url() + '/customers', customerResellerPayload).respond(201);

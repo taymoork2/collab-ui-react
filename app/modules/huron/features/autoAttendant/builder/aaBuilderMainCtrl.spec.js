@@ -231,7 +231,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       resource.setId("bad");
       resource.setNumber("bad");
 
-      aaModel.aaRecord = angular.copy(aCe);
+      aaModel.aaRecord = _.cloneDeep(aCe);
       aaModel.aaRecord.assignedResources.push(resource);
       aaModel.aaRecordUUID = "uuid";
 
@@ -291,8 +291,8 @@ describe('Controller: AABuilderMainCtrl', function () {
     var aaNameChangedSpy;
 
     beforeEach(function () {
-      createCeSpy = spyOn(AutoAttendantCeService, 'createCe').and.returnValue($q.resolve(angular.copy(rawCeInfo)));
-      updateCeSpy = spyOn(AutoAttendantCeService, 'updateCe').and.returnValue($q.resolve(angular.copy(rawCeInfo)));
+      createCeSpy = spyOn(AutoAttendantCeService, 'createCe').and.returnValue($q.resolve(_.cloneDeep(rawCeInfo)));
+      updateCeSpy = spyOn(AutoAttendantCeService, 'updateCe').and.returnValue($q.resolve(_.cloneDeep(rawCeInfo)));
       spyOn(AANotificationService, 'success');
       spyOn(AANotificationService, 'error');
       spyOn(AANotificationService, 'errorResponse');
@@ -422,7 +422,7 @@ describe('Controller: AABuilderMainCtrl', function () {
     var readCe;
 
     beforeEach(function () {
-      readCe = spyOn(AutoAttendantCeService, 'readCe').and.returnValue($q.resolve(angular.copy(aCe)));
+      readCe = spyOn(AutoAttendantCeService, 'readCe').and.returnValue($q.resolve(_.cloneDeep(aCe)));
       spyOn($scope.vm, 'populateUiModel');
       spyOn(AANotificationService, 'error');
       spyOn(AANotificationService, 'errorResponse');

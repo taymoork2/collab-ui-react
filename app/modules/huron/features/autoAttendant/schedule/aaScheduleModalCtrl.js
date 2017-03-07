@@ -70,7 +70,7 @@
       _.each(openhour.days, function (day) {
         day.label = moment.weekdays(day.index);
       });
-      vm.openhours.push(angular.copy(openhour));
+      vm.openhours.push(_.cloneDeep(openhour));
     }
 
     //check each hours form that exist in the DOM for validity

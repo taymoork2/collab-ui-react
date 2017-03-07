@@ -104,7 +104,7 @@ describe('Service: AutoAttendantCeInfoModelService', function () {
 
   describe('deleteCeInfo', function () {
     it('should delete the associated aaResourceRecord in aaResourceRecords for the given ceInfo', function () {
-      var aaResourceRecords = angular.copy(callExperienceInfos);
+      var aaResourceRecords = _.cloneDeep(callExperienceInfos);
       var length = aaResourceRecords.length;
       AutoAttendantCeInfoModelService.deleteCeInfo(aaResourceRecords, ceInfos[0]);
       expect(aaResourceRecords.length + 1).toBe(length);

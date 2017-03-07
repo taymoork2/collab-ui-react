@@ -194,7 +194,7 @@
     function saveUiModel() {
       if (!_.isUndefined(vm.ui.ceInfo) && !_.isUndefined(vm.ui.ceInfo.getName()) && vm.ui.ceInfo.getName().length > 0) {
         if (!_.isUndefined(vm.ui.builder.ceInfo_name) && (vm.ui.builder.ceInfo_name.length > 0)) {
-          vm.ui.ceInfo.setName(angular.copy(vm.ui.builder.ceInfo_name));
+          vm.ui.ceInfo.setName(_.cloneDeep(vm.ui.builder.ceInfo_name));
         }
         AutoAttendantCeInfoModelService.setCeInfo(vm.aaModel.aaRecord, vm.ui.ceInfo);
       }
@@ -250,7 +250,7 @@
         function () {
           // update successfully
           aaRecords[recNum].callExperienceName = aaRecord.callExperienceName;
-          aaRecords[recNum].assignedResources = angular.copy(aaRecord.assignedResources);
+          aaRecords[recNum].assignedResources = _.cloneDeep(aaRecord.assignedResources);
           vm.aaModel.ceInfos[recNum] = AutoAttendantCeInfoModelService.getCeInfo(aaRecords[recNum]);
 
           AACommonService.resetFormStatus();
@@ -298,7 +298,7 @@
           // create successfully
           var newAaRecord = {};
           newAaRecord.callExperienceName = aaRecord.callExperienceName;
-          newAaRecord.assignedResources = angular.copy(aaRecord.assignedResources);
+          newAaRecord.assignedResources = _.cloneDeep(aaRecord.assignedResources);
           newAaRecord.callExperienceURL = response.callExperienceURL;
           aaRecords.push(newAaRecord);
           vm.aaModel.aaRecordUUID = AutoAttendantCeInfoModelService.extractUUID(response.callExperienceURL);
@@ -664,7 +664,7 @@
       vm.ui.aaTemplate = $stateParams.aaTemplate;
 
       // Define vm.ui.builder.ceInfo_name for editing purpose.
-      vm.ui.builder.ceInfo_name = angular.copy(vm.ui.ceInfo.name);
+      vm.ui.builder.ceInfo_name = _.cloneDeep(vm.ui.ceInfo.name);
 
       AutoAttendantCeInfoModelService.getCeInfosList().then(setUpFeatureToggles).then(getTimeZoneOptions).then(getSystemTimeZone)
       .finally(function () {

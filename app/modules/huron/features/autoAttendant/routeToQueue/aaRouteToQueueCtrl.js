@@ -54,7 +54,7 @@
 
     function openQueueTreatmentModal() {
       // deep copy used to roll back from the modal changes
-      var master = angular.copy(fromRouteCall || fromDecision ? vm.menuEntry.actions[0] : vm.menuKeyEntry.actions[0]);
+      var master = _.cloneDeep(fromRouteCall || fromDecision ? vm.menuEntry.actions[0] : vm.menuKeyEntry.actions[0]);
       var action;
 
       openQueueSettings().result.then(function () {

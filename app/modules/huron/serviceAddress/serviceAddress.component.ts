@@ -73,7 +73,7 @@ export function isolateForm() {
       return;
     }
 
-    let formCtlCopy = angular.copy(formCtrl);
+    let formCtlCopy = _.cloneDeep(formCtrl);
     parentFormCtrl.$removeControl(formCtrl);
 
     // ripped this from an example
