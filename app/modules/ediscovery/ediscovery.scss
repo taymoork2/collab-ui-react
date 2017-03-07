@@ -5,6 +5,11 @@
   overflow-x: hidden; // Remove horizontal IE/Edge scrollbar
   min-height: 100vh;
 
+  .ediscovery-logo {
+    width: 48px;
+    margin-left: 29px;
+  }
+
   a:focus {
     box-shadow: none;
   }
@@ -387,10 +392,6 @@
           .results-spacing {
             margin-top: 16px;
           }
-        }
-
-        .summary-header {
-          padding-left: 30px;
         }
 
         .reportError {
