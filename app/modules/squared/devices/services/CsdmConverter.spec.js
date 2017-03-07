@@ -340,7 +340,7 @@ describe('CsdmConverterSpec', function () {
     });
   });
 
-  describe("remote support user", function () {
+  describe('remote support user', function () {
     it('rsuKey is taken from remoteSupportUser on device', function () {
       var token = 'this_is_a_very_secret_token';
       var arr = [{
@@ -353,6 +353,52 @@ describe('CsdmConverterSpec', function () {
 
     it('no remoteSupportUser means no rsuKey, no nullReferences', function () {
       expect(converter.convertCloudberryDevices([{}]).rsuKey).toBeFalsy();
+    });
+
+    it('remoteSupportUser should only be available for Cloudberry or Darling productFamily', function () {
+      var arr = [{
+        productFamily: 'Cloudberry',
+      }, {
+        productFamily: 'Darling',
+      }, {
+        productFamily: 'Eve',
+      }, {
+        productFamily: 'Huron',
+      }, {
+        productFamily: 'ATA',
+      }, {
+        productFamily: 'Some other weird code name',
+      }];
+      expect(converter.convertCloudberryDevices(arr)[0].hasRemoteSupport).toBe(true);
+      expect(converter.convertCloudberryDevices(arr)[1].hasRemoteSupport).toBe(true);
+      expect(converter.convertCloudberryDevices(arr)[2].hasRemoteSupport).toBe(false);
+      expect(converter.convertCloudberryDevices(arr)[3].hasRemoteSupport).toBe(false);
+      expect(converter.convertCloudberryDevices(arr)[4].hasRemoteSupport).toBe(false);
+      expect(converter.convertCloudberryDevices(arr)[5].hasRemoteSupport).toBe(false);
+    });
+  });
+
+  describe('advanced settings', function () {
+    it('advanced settings should be available for Cloudberry productFamily', function () {
+      var arr = [{
+        productFamily: 'Cloudberry',
+      }, {
+        productFamily: 'Darling',
+      }, {
+        productFamily: 'Eve',
+      }, {
+        productFamily: 'Huron',
+      }, {
+        productFamily: 'ATA',
+      }, {
+        productFamily: 'Some other weird code name',
+      }];
+      expect(converter.convertCloudberryDevices(arr)[0].hasAdvancedSettings).toBe(true);
+      expect(converter.convertCloudberryDevices(arr)[1].hasAdvancedSettings).toBe(false);
+      expect(converter.convertCloudberryDevices(arr)[2].hasAdvancedSettings).toBe(false);
+      expect(converter.convertCloudberryDevices(arr)[3].hasAdvancedSettings).toBe(false);
+      expect(converter.convertCloudberryDevices(arr)[4].hasAdvancedSettings).toBe(false);
+      expect(converter.convertCloudberryDevices(arr)[5].hasAdvancedSettings).toBe(false);
     });
   });
 });
