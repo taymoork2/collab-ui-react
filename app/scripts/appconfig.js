@@ -1067,6 +1067,7 @@
               entitlements: {},
               queryuserslist: {},
               currentUserId: '',
+              orgInfo: {},
             },
             data: {
               displayName: 'Overview',
