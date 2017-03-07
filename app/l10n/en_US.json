@@ -6229,7 +6229,9 @@
       "CMR": "WebEx Collaboration Meeting Rooms",
       "CO": "Spark Call",
       "SD": "DX, MX or SX system",
-      "SB": "Spark Board"
+      "SB": "Spark Board",
+      "CDC": "K1 Spark Care",
+      "CVC": "K2 Spark Care"
     }
   },
   "onlineUpgradeModal": {
