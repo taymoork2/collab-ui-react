@@ -422,7 +422,7 @@
       var promise = null;
       var siteUrl = $rootScope.lastSite;
 
-      if (!!_.isUndefined(siteUrl)) {
+      if (_.isUndefined(siteUrl)) {
         $log.log('No WebEx site visited.');
         var deferred = $q.defer();
         deferred.resolve('OK');
