@@ -691,7 +691,7 @@
     function cesPa(action, inAction) {
       if (action) {
         try {
-          if (angular.isUndefined(action.queueSettings)) {
+          if (_.isUndefined(action.queueSettings)) {
             inAction.description = JSON.parse(inAction.description);
             action.queueSettings = {};
           }
@@ -708,7 +708,7 @@
     function cesFallback(action, inAction) {
       if (action) {
         try {
-          if (angular.isUndefined(action.queueSettings)) {
+          if (_.isUndefined(action.queueSettings)) {
             inAction.description = JSON.parse(inAction.description);
             action.queueSettings = {};
           }
