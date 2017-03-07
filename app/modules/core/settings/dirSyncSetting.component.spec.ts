@@ -21,7 +21,8 @@ describe('DirSyncSettings Component', () => {
     spyOn(this.LogMetricsService, 'logMetrics').and.callFake(_.noop);
 
     this.metricsTypes = {
-      eType: this.LogMetricsService.getEventType('dirSyncActions'),
+      dirSyncEType: this.LogMetricsService.getEventType('dirSyncDisabled'),
+      connectorEType: this.LogMetricsService.getEventType('connectorDeregistered'),
       eAction: this.LogMetricsService.getEventAction('buttonClick'),
     };
 
@@ -87,10 +88,10 @@ describe('DirSyncSettings Component', () => {
 
       expect(this.LogMetricsService.logMetrics).toHaveBeenCalledWith(
         DirSyncSettingController.DIRSYNC_DISABLED,
-        this.metricsTypes.eType, this.metricsTypes.eAction,
+        this.metricsTypes.dirSyncEType, this.metricsTypes.eAction,
         200,
         jasmine.any(Object), 1,
-        { userId: TEST_USER_ID, orgId: TEST_ORG_ID, message: DirSyncSettingController.DIRSYNC_DISABLED });
+        { userId: TEST_USER_ID, orgId: TEST_ORG_ID });
     });
 
     it('should display error notification if disableSync fails', function () {
@@ -106,10 +107,10 @@ describe('DirSyncSettings Component', () => {
 
       expect(this.LogMetricsService.logMetrics).toHaveBeenCalledWith(
         DirSyncSettingController.DIRSYNC_DISABLED,
-        this.metricsTypes.eType, this.metricsTypes.eAction,
+        this.metricsTypes.dirSyncEType, this.metricsTypes.eAction,
         401,
         jasmine.any(Object), 1,
-        { userId: TEST_USER_ID, orgId: TEST_ORG_ID, message: DirSyncSettingController.DIRSYNC_DISABLED });
+        { userId: TEST_USER_ID, orgId: TEST_ORG_ID });
 
     });
 
@@ -148,10 +149,10 @@ describe('DirSyncSettings Component', () => {
 
       expect(this.LogMetricsService.logMetrics).toHaveBeenCalledWith(
         DirSyncSettingController.CONNECTOR_DEREGISTERED,
-        this.metricsTypes.eType, this.metricsTypes.eAction,
+        this.metricsTypes.connectorEType, this.metricsTypes.eAction,
         200,
         jasmine.any(Object), 1,
-        { userId: TEST_USER_ID, orgId: TEST_ORG_ID, connectorName: TEST_CONNECTOR.name, message: DirSyncSettingController.CONNECTOR_DEREGISTERED });
+        { userId: TEST_USER_ID, orgId: TEST_ORG_ID, connectorName: TEST_CONNECTOR.name });
     });
 
     it('should display error notification if deregisterConnector fails', function () {
@@ -167,10 +168,10 @@ describe('DirSyncSettings Component', () => {
 
       expect(this.LogMetricsService.logMetrics).toHaveBeenCalledWith(
         DirSyncSettingController.CONNECTOR_DEREGISTERED,
-        this.metricsTypes.eType, this.metricsTypes.eAction,
+        this.metricsTypes.connectorEType, this.metricsTypes.eAction,
         401,
         jasmine.any(Object), 1,
-        { userId: TEST_USER_ID, orgId: TEST_ORG_ID, connectorName: TEST_CONNECTOR.name, message: DirSyncSettingController.CONNECTOR_DEREGISTERED });
+        { userId: TEST_USER_ID, orgId: TEST_ORG_ID, connectorName: TEST_CONNECTOR.name });
     });
 
   });

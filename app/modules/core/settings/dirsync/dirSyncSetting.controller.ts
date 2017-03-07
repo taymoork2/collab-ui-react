@@ -1,12 +1,6 @@
 import { IDirSyncService, IDirectoryConnector } from 'modules/core/featureToggle';
 import { IToolkitModalService, IToolkitModalSettings } from 'modules/core/modal';
 
-interface IMetricsData {
-  userId: string;
-  orgId: string;
-  connectorName?: string;
-}
-
 export class DirSyncSettingController {
 
   public static readonly CONNECTOR_DEREGISTERED = 'Connector Deregistered';
@@ -52,7 +46,12 @@ export class DirSyncSettingController {
             this.Notification.errorResponse(response, 'globalSettings.dirsync.disableDirSyncFailed');
           })
           .finally(() => {
-            this.logMetrics(DirSyncSettingController.DIRSYNC_DISABLED, startTime, status, { userId: this.Authinfo.getUserId(), orgId: this.Authinfo.getOrgId() });
+            this.LogMetricsService.logMetrics(
+              DirSyncSettingController.DIRSYNC_DISABLED,
+              this.LogMetricsService.getEventType('dirSyncDisabled'),
+              this.LogMetricsService.getEventAction('buttonClick'), status, startTime, 1,
+              { userId: this.Authinfo.getUserId(), orgId: this.Authinfo.getOrgId() });
+
             this.refresh();
           });
       });
@@ -78,8 +77,13 @@ export class DirSyncSettingController {
             status = response.status;
             this.Notification.errorResponse(response, 'globalSettings.dirsync.deregisterFailed', { name: connector.name });
           })
-          .finally( () => {
-            this.logMetrics(DirSyncSettingController.CONNECTOR_DEREGISTERED, startTime, status, { userId: this.Authinfo.getUserId(), orgId: this.Authinfo.getOrgId(), connectorName: connector.name });
+          .finally(() => {
+            this.LogMetricsService.logMetrics(
+              DirSyncSettingController.CONNECTOR_DEREGISTERED,
+              this.LogMetricsService.getEventType('connectorDeregistered'),
+              this.LogMetricsService.getEventAction('buttonClick'), status, startTime, 1,
+              { userId: this.Authinfo.getUserId(), orgId: this.Authinfo.getOrgId(), connectorName: connector.name });
+
             this.refresh();
           });
       });
@@ -94,11 +98,6 @@ export class DirSyncSettingController {
       this.connectors = this.DirSyncService.getConnectors();
       this.updatingStatus = false;
     });
-  }
-
-  private logMetrics(message: string, startTime: object, status: number, data: IMetricsData): void {
-    let eType = this.LogMetricsService.getEventType('dirSyncActions');
-    this.LogMetricsService.logMetrics(message, eType, this.LogMetricsService.getEventAction('buttonClick'), status, startTime, 1, _.assign({ message: message }, data));
   }
 
 }

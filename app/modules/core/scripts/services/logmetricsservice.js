@@ -72,7 +72,8 @@
         careReports: 'CAREREPORTS',
         careEnabled: 'CAREENABLED',
         careDisabled: 'CAREDISABLED',
-        dirSyncActions: 'DIRSYNCACTIONS',
+        dirSyncDisabled: 'DIRSYNCDISABLED',
+        connectorDeregistered: "CONNECTORDEREGISTERED",
       },
 
       getEventAction: function (eAction) {
