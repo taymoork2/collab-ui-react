@@ -100,10 +100,10 @@
       var needsUserActivation = summaryForService && summaryForService.activated === 0 && summaryForService.error === 0 && summaryForService.notActivated === 0;
       if (needsUserActivation) {
         switch (serviceId) {
-          case "squared-fusion-cal":
+          case 'squared-fusion-cal':
             addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_calendar.html');
             break;
-          case "squared-fusion-uc":
+          case 'squared-fusion-uc':
             ServiceDescriptor.isServiceEnabled('squared-fusion-ec').then(function (enabled) {
               if (enabled) {
                 addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_call_connect.html');

@@ -16,14 +16,16 @@
     vm.localizedServiceName = $translate.instant('hercules.serviceNames.squared-fusion-uc');
     vm.localizedConnectorName = $translate.instant('hercules.connectorNames.squared-fusion-uc');
     if (vm.squaredFusionEcEntitled) {
-      ServiceDescriptor.isServiceEnabled('squared-fusion-ec').then(function (response) {
-        vm.squaredFusionEc = response;
-        if (vm.squaredFusionEc) {
-          readCerts();
-        }
-      }).catch(function (response) {
-        this.Notification.errorWithTrackingId(response, 'hercules.genericFailure');
-      });
+      ServiceDescriptor.isServiceEnabled('squared-fusion-ec')
+        .then(function (response) {
+          vm.squaredFusionEc = response;
+          if (vm.squaredFusionEc) {
+            readCerts();
+          }
+        })
+        .catch(function (response) {
+          this.Notification.errorWithTrackingId(response, 'hercules.genericFailure');
+        });
     }
     vm.hasVoicemailFeatureToggle = hasVoicemailFeatureToggle;
     vm.help = {
@@ -57,9 +59,10 @@
           if (hasVoicemailFeatureToggle) {
             vm.disableVoicemail(Authinfo.getOrgId());
           }
-        }).catch(function (response) {
-          Notification.errorWithTrackingId(response, 'hercules.error.failedToDisableConnect');
-        });
+        })
+          .catch(function (response) {
+            Notification.errorWithTrackingId(response, 'hercules.error.failedToDisableConnect');
+          });
       }
     };
 

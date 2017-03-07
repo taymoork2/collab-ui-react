@@ -33,7 +33,6 @@
         $modalInstance.close();
         if (!vm.hadError) {
           ServiceDescriptor.disableService(vm.serviceId);
-          //MediaServiceActivationV2.setServiceEnabled(vm.serviceId, false);
           MediaServiceActivationV2.setisMediaServiceEnabled(false);
           // Why is this called?
           MediaServiceActivationV2.setServiceAcknowledged(vm.serviceId, false);

@@ -106,7 +106,7 @@ describe('ServiceDescriptor', function () {
     expect($httpBackend.flush).not.toThrow();
   });
 
-  it("should return false if service 'squared-fusion-ec' is not enabled", function () {
+  it('should return false if service squared-fusion-ec is not enabled', function () {
     $httpBackend
      .expectGET('https://hercules-integration.wbx2.com/v1/organizations/' + authinfo.getOrgId() + '/services').respond(
        200, {}
@@ -117,7 +117,7 @@ describe('ServiceDescriptor', function () {
     $httpBackend.flush();
   });
 
-  it("should return false if service 'squared-fusion-ec' is enabled", function () {
+  it("should return true if service 'squared-fusion-ec' is enabled", function () {
     $httpBackend
       .expectGET('https://hercules-integration.wbx2.com/v1/organizations/' + authinfo.getOrgId() + '/services').respond(
       200, { items: [{ 'id': 'squared-fusion-ec', 'enabled': true }] }
