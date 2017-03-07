@@ -253,26 +253,65 @@
           </div>
         </div>
       </div>
-      <div ng-if="isCareEnabled" id="care" class="small-4 columns column-paid">
-        <div class="item-mtg-license" translate="onboardModal.contactCenter"></div>
+      <!-- START - CARE SERVICES PANEL -->
+      <div class="small-4 columns column-paid">
+        <div class="item-license" translate="onboardModal.contactCenter"></div>
+
         <div class="entitle-check-grp"
-             ng-repeat="care in careFeatures"
              ng-show="multipleSubscriptions.showLicenses(care.license.billingServiceId, care.license.isTrial)"
              ng-if="care.license.licenseType !== 'freeCareService'">
           <div class="ckbx" id="paidCare">
             <div class="cs-checkbox-group">
+            <div class="under-careradio-reposition">
               <input
                 cs-input
-                type="checkbox"
-                id="{{care.license.licenseId}}"
+                type="radio"
+                name="careFree"
+                id="user-add--care-services--fake-license"
                 ng-model="radioStates.careRadio"
-                cs-input-label="{{::care.label | translate}}"
-                ng-disabled="!enableCareService">
-              <span ng-if="isSharedMeetingsEnabled" class="license-entity under-label-reposition" translate="firstTimeWizard.namedLicense"></span>
+                value="{{careRadioValue.NONE}}"
+                cs-input-label="{{::careRadioValue.NONE}}">
+            </div>
+
+            <div ng-if="isCareAndCDCEnabled" class="under-careradio-reposition">
+              <input
+                cs-input
+                type="radio"
+                name="care"
+                id="{{careFeatures[1].license.licenseId}}"
+                ng-model="radioStates.careRadio"
+                value="{{careRadioValue.K1}}"
+                cs-input-label="{{::careRadioValue.K1}}">
+              <span ng-if="isSharedMeetingsEnabled" class="license-entity under-label-reposition" translate="onboardModal.careServices"></span>
+              <span ng-if="radioStates.careRadio === careRadioValue.K1">
+                <div class="icon icon-warning"></div>
+                <span class="body-smallest care-information-text under-label-caremsg-reposition" translate="
+                  onboardModal.enableCallInfo"></span>
+              </span>
+            </div>
+
+            <div ng-if="isCareAndCVCEnabled" class="under-careradio-reposition">
+              <input
+                cs-input
+                type="radio"
+                name="careVoice"
+                id="{{careFeatures[2].license.licenseId}}"
+                ng-model="radioStates.careRadio"
+                value="{{careRadioValue.K2}}"
+                cs-input-label="{{::careRadioValue.K2}}">
+              <span ng-if="isSharedMeetingsEnabled" class="license-entity under-label-reposition" translate="onboardModal.careVoiceServices"></span>
+              <span ng-if="radioStates.careRadio === careRadioValue.K2">
+                <div class="icon icon-warning"></div>
+                <span class="body-smallest care-information-text under-label-caremsg-reposition" translate="
+                  onboardModal.enableCallInfo"></span>
+              </span>
+            </div>
+
             </div>
           </div>
+          </div>
         </div>
-        <label class="care-information-text" translate="onboardModal.enableCareInformationText"></label>
       </div>
+      <!-- END - CARE SERVICES PANEL -->
     </div>
 </div>
