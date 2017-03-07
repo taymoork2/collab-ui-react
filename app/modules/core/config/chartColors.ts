@@ -36,6 +36,6 @@ export class ChartColors {
   public readonly metricDarkGreen: string = '#417505';
 }
 
-angular
-  .module('Core')
+export default angular
+  .module('core.chartColors', [])
   .service('chartColors', ChartColors);

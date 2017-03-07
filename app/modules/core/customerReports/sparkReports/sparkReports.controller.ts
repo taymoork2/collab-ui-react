@@ -86,7 +86,7 @@ class SparkReportCtrl {
           text: 'mediaQuality.minTooltip',
         };
         this.qualityLabels = [{
-          class: 'good',
+          class: this.ReportConstants.GOOD,
           click: (): void => {
             if (this.charts.media && this.qualityLabels[0].hidden) {
               this.charts.media.showGraph(this.charts.media.graphs[2]);
@@ -100,7 +100,7 @@ class SparkReportCtrl {
           number: 0,
           text: 'mediaQuality.good',
         }, {
-          class: 'fair',
+          class: this.ReportConstants.FAIR,
           click: (): void => {
             if (this.charts.media && this.qualityLabels[1].hidden) {
               this.charts.media.showGraph(this.charts.media.graphs[1]);
@@ -114,7 +114,7 @@ class SparkReportCtrl {
           number: 0,
           text: 'mediaQuality.fair',
         }, {
-          class: 'poor',
+          class: this.ReportConstants.POOR,
           click: (): void => {
             if (this.charts.media && this.qualityLabels[2].hidden) {
               this.charts.media.showGraph(this.charts.media.graphs[0]);

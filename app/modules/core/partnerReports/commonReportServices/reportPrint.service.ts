@@ -34,17 +34,35 @@ export class ReportPrintService {
   private readonly MARGIN: number = 8;
 
   // String Constants
+  private readonly APPLICATION: string = 'application/';
   private readonly BEFORE: string = 'before';
+  private readonly CENTER: string = 'center';
   private readonly DEFAULT: string = 'default';
   private readonly DEFAULT_MARGINS: string = 'defaultMargin';
   private readonly DOUBLE_MARGINS: string = 'doubleMargins';
+  private readonly FILE_NAME: string = 'amCharts.';
+  private readonly FILTER: string = 'filter';
+  private readonly FOOTER: string = 'footer';
+  private readonly FORTY_PERCENT: string = '40%';
+  private readonly GRAY: string = 'gray';
+  private readonly HEADER: string = 'header';
+  private readonly JPG: string = 'jpg';
   private readonly JUSTIFY: string = 'justify';
+  private readonly NO_DATA: string = 'noData';
+  private readonly NUMBER: string = 'number';
+  private readonly PAGE_HEADER: string = 'pageHeader';
+  private readonly PNG: string = 'png';
+  private readonly PDF: string = 'pdf';
   private readonly RIGHT: string = 'right';
+  private readonly SIXTY_PERCENT: string = '60%';
+  private readonly TEN_PERCENT: string = '10%';
+  private readonly TEXT: string = 'Text';
+  private readonly THIRTY_THREE_PERCENT: string = '33%';
 
   private get REPORT_HEADER(): any {
     return {
       text: this.$translate.instant('reportsPage.pageTitle'),
-      style: ['pageHeader', this.DEFAULT_MARGINS],
+      style: [this.PAGE_HEADER, this.DEFAULT_MARGINS],
     };
   }
 
@@ -59,53 +77,66 @@ export class ReportPrintService {
     }],
   };
 
-  private readonly PDF_STYLES: any = {
-    default: {
+  get PDF_STYLES(): any {
+    let pdfStyles: any = {};
+
+    pdfStyles[this.DEFAULT] = {
       fontSize: 10,
-    },
-    defaultMargin: {
+      color: this.chartColors.grayDarkFour,
+    };
+    pdfStyles[this.DEFAULT_MARGINS] = {
       margin: [0, 0, 0, this.MARGIN],
-    },
-    footer: {
+    };
+    pdfStyles[this.DOUBLE_MARGINS] = {
+      margin: [0, this.MARGIN, 0, this.MARGIN],
+    };
+    pdfStyles[this.ReportConstants.FAIR] = {
+      color: this.chartColors.attentionBase,
+    };
+    pdfStyles[this.FILTER] = {
+      fontSize: 10,
+    };
+    pdfStyles[this.FOOTER] = {
       margin: [0, 0, 25, 0],
-    },
-    header: {
+    };
+    pdfStyles[this.GRAY] = {
+      color: this.chartColors.grayLightOne,
+    };
+    pdfStyles[this.ReportConstants.GOOD] = {
+      color: this.chartColors.primaryBase,
+    };
+    pdfStyles[this.HEADER] = {
       fontSize: 18,
       lineHeight: 1,
       margin: [0, this.MARGIN, 0, this.MARGIN],
-    },
-    pageHeader: {
+      color: this.chartColors.grayDarkFour,
+    };
+    pdfStyles['mediaText'] = {
+      fontSize: 12,
+      color: this.chartColors.grayLightOne,
+    };
+    pdfStyles['metricsText'] = {
+      fontSize: 12,
+      color: this.chartColors.grayLightOne,
+    };
+    pdfStyles[this.NO_DATA] = {
+      fontSize: 12,
+      color: this.chartColors.grayDarkFour,
+    };
+    pdfStyles[this.NUMBER] = {
+      fontSize: 18,
+    };
+    pdfStyles[this.PAGE_HEADER] = {
       color: this.chartColors.peopleBase,
       fontSize: 28,
       lineHeight: 1,
-    },
-    good: {
-      color: this.chartColors.primaryBase,
-    },
-    fair: {
-      color: this.chartColors.attentionBase,
-    },
-    poor: {
+    };
+    pdfStyles[this.ReportConstants.POOR] = {
       color: this.chartColors.negativeBase,
-    },
-    gray: {
-      color: this.chartColors.grayLightOne,
-    },
-    mediaText: {
-      fontSize: 12,
-      color: this.chartColors.grayLightOne,
-    },
-    number: {
-      fontSize: 18,
-    },
-    metricsText: {
-      fontSize: 12,
-      color: this.chartColors.grayLightOne,
-    },
-    doubleMargins: {
-      margin: [0, this.MARGIN, 0, this.MARGIN],
-    },
-  };
+    };
+
+    return pdfStyles;
+  }
 
   // Full Page Export Functions
   public printCustomerPage(typeFilter: string, timeFilter: ITimespan, minMax: IMinMax, charts: ICharts, chartData: ICharts, chartFilters: ICharts, chartLabels: ICharts): void {
@@ -115,7 +146,7 @@ export class ReportPrintService {
         return {
           alignment: this.RIGHT,
           text: page.toString(),
-          style: ['footer'],
+          style: [this.FOOTER],
         };
       },
       styles: this.PDF_STYLES,
@@ -124,22 +155,28 @@ export class ReportPrintService {
     let typeFilters: any = {
       columns: [],
       columnGap: this.COLUMN_GAP_SMALL,
-      width: '40%',
+      width: this.FORTY_PERCENT,
     };
     _.forEach(this.REPORT_TYPE_FILTERS, (filter: string): void => {
-      let pageFilter: any = {
-        text: this.$translate.instant('reportsPage.' + filter),
-        style: [this.DEFAULT],
-        width: '40%',
-      };
+      let pageFilter: any;
+
+      if (filter === typeFilter) {
+        pageFilter = {
+          text: this.$translate.instant('reportsPage.' + filter),
+          style: [this.ReportConstants.GOOD, this.FILTER],
+          width: this.FORTY_PERCENT,
+        };
+      } else {{
+        pageFilter = {
+          text: this.$translate.instant('reportsPage.' + filter),
+          style: [this.DEFAULT],
+          width: this.FORTY_PERCENT,
+        };
+      }}
 
       // 'All' requires less space than 'Engagement' or 'Quality'
       if (filter === this.REPORT_TYPE_FILTERS[0]) {
-        pageFilter.width = '10%';
-      }
-
-      if (filter === typeFilter) {
-        pageFilter.style.push('good');
+        pageFilter.width = this.TEN_PERCENT;
       }
 
       typeFilters.columns.push(pageFilter);
@@ -153,16 +190,16 @@ export class ReportPrintService {
     if (timeFilter.value === this.ReportConstants.CUSTOM_FILTER.value) {
       subHeader.columns.push({
         alignment: this.RIGHT,
-        text: this.$translate.instant('reportsPage.timeSelected') + this.getDate(minMax.min) + ' - ' + this.getDate(minMax.max),
-        style: [this.DEFAULT, 'filter'],
-        width: '60%',
+        text: this.$translate.instant('reportsPage.timeSelected') + this.DATE_ARRAY[minMax.min].date + ' - ' + this.DATE_ARRAY[minMax.max].date,
+        style: [this.DEFAULT],
+        width: this.SIXTY_PERCENT,
       });
     } else {
       subHeader.columns.push({
         alignment: this.RIGHT,
         text: this.$translate.instant('reportsPage.timeSelected') + timeFilter.label,
-        style: [this.DEFAULT, 'filter'],
-        width: '60%',
+        style: [this.DEFAULT],
+        width: this.SIXTY_PERCENT,
       });
     }
 
@@ -207,7 +244,7 @@ export class ReportPrintService {
       }
 
       charts.active.export.toPDF(layout, (downloadData: any): void => {
-        charts.active.export.download(downloadData, 'application/pdf', 'amCharts.pdf');
+        charts.active.export.download(downloadData, this.APPLICATION + this.PDF, this.FILE_NAME + this.PDF);
       });
     });
   }
@@ -215,7 +252,7 @@ export class ReportPrintService {
   private createReport(key: string, timeFilter: ITimespan, chart: any, chartData: IReportCard, chartFilter: IReportDropdown | undefined, chartLabels: Array<IReportLabel> | undefined, pagebreaks: ICharts): ng.IPromise<Array<any>> {
     let report: Array<any> = [{
       text: this.$translate.instant(chartData.headerTitle),
-      style: ['header'],
+      style: [this.HEADER],
       pageBreak: pagebreaks[key],
     }];
 
@@ -237,6 +274,13 @@ export class ReportPrintService {
     let captured: ng.IDeferred<{}> = this.$q.defer();
     chart.export.capture({}, (): void => {
       chart.export.toJPG({}, (data: any): void => {
+        if (chartData.state !== this.ReportConstants.SET) {
+          report.push({
+            text: this.$translate.instant('reportsPage.noCustomerData'),
+            alignment: this.CENTER,
+            style: [this.NO_DATA],
+          });
+        }
         report.push({
           image: data,
           fit: [this.REPORT_WIDTH, this.REPORT_HEIGHT],
@@ -258,22 +302,22 @@ export class ReportPrintService {
           if (label.hidden || _.isUndefined(label.class)) {
             numberText = {
               text: label.number.toString(),
-              style: ['number', 'gray'],
+              style: [this.NUMBER, this.GRAY],
             };
           } else {
             numberText = {
               text: label.number.toString(),
-              style: ['number', label.class],
+              style: [this.NUMBER, label.class],
             };
           }
 
           labelColumns.columns.push({
-            width: '33%',
+            width: this.THIRTY_THREE_PERCENT,
             stack: [numberText, {
               text: this.$translate.instant(label.text),
-              style: [key + 'Text'],
+              style: [key + this.TEXT],
             }],
-            alignment: 'center',
+            alignment: this.CENTER,
           });
         });
 
@@ -291,19 +335,19 @@ export class ReportPrintService {
       label: this.$translate.instant('reportsPage.saveAs'),
       click: undefined,
     }, {
-      id: 'jpg',
+      id: this.JPG,
       label: this.$translate.instant('reportsPage.jpg'),
       click: (): void => {
         this.exportJPG(chart);
       },
     }, {
-      id: 'png',
+      id: this.PNG,
       label: this.$translate.instant('reportsPage.png'),
       click: (): void => {
         this.exportPNG(chart);
       },
     }, {
-      id: 'pdf',
+      id: this.PDF,
       label: this.$translate.instant('reportsPage.pdf'),
       click: (): void => {
         this.exportPDF(chart);
@@ -313,10 +357,9 @@ export class ReportPrintService {
 
   private exportJPG(chart: any): void {
     if (chart) {
-      // 'this' is the AmCharts export object
-      chart.export.capture({}, function (): void {
-        this.toJPG({}, function (data: any): void {
-          this.download(data, 'application/jpg', 'amCharts.jpg');
+      chart.export.capture({}, (): void => {
+        chart.export.toJPG({}, (data: any): void => {
+          chart.export.download(data, this.APPLICATION + this.JPG, this.FILE_NAME + this.JPG);
         });
       });
     }
@@ -324,10 +367,9 @@ export class ReportPrintService {
 
   private exportPNG(chart: any): void {
     if (chart) {
-      // 'this' is the AmCharts export object
-      chart.export.capture({}, function (): void {
-        this.toPNG({}, function (data: any): void {
-          this.download(data, 'application/png', 'amCharts.png');
+      chart.export.capture({}, (): void => {
+        chart.export.toPNG({}, (data: any): void => {
+          chart.export.download(data, this.APPLICATION + this.PNG, this.FILE_NAME + this.PNG);
         });
       });
     }
@@ -335,16 +377,15 @@ export class ReportPrintService {
 
   private exportPDF(chart: any): void {
     if (chart) {
-      // 'this' is the AmCharts export object
-      chart.export.capture({}, function (): void {
-        this.toJPG({}, function (data: any): void {
+      chart.export.capture({}, (): void => {
+        chart.export.toJPG({}, (data: any): void => {
           chart.export.toPDF({
             content: [{
               image: data,
               fit: [524, 300],
             }],
-          }, function (downloadData: any): void {
-            this.download(downloadData, 'application/pdf', 'amCharts.pdf');
+          }, (downloadData: any): void => {
+            chart.export.download(downloadData, this.APPLICATION + this.PDF, this.FILE_NAME + this.PDF);
           });
         });
       });
@@ -352,10 +393,6 @@ export class ReportPrintService {
   }
 
   // Helper Functions
-  private getDate(index: number): string {
-    return this.DATE_ARRAY[index].date;
-  }
-
   private getDescription(text: string, timeFilter: ITimespan): string {
     return this.$translate.instant(text, {
       time: timeFilter['description'],
