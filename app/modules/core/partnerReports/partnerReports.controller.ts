@@ -1,5 +1,5 @@
 import './_partner-reports.scss';
-import { CommonReportService } from './commonReportServices/commonReport.service';
+import { ReportPrintService } from './commonReportServices/reportPrint.service';
 import { ReportConstants } from './commonReportServices/reportConstants.service';
 import { DummyReportService } from './dummyReport.service';
 import { GraphService } from './graph.service';
@@ -48,7 +48,7 @@ class PartnerReportCtrl {
     private $translate: ng.translate.ITranslateService,
     private Authinfo,
     private CardUtils: CardUtils,
-    private CommonReportService: CommonReportService,
+    private ReportPrintService: ReportPrintService,
     private ReportConstants: ReportConstants,
     private DummyReportService: DummyReportService,
     private GraphService: GraphService,
@@ -283,7 +283,7 @@ class PartnerReportCtrl {
     let tempactive = this.GraphService.getActiveUsersGraph(data, this.charts.active);
     if (tempactive) {
       this.charts.active = tempactive;
-      this.exportArrays.active = this.CommonReportService.createExportMenu(this.charts.active);
+      this.exportArrays.active = this.ReportPrintService.createExportMenu(this.charts.active);
       this.CardUtils.resize(0);
     }
   }
@@ -293,7 +293,7 @@ class PartnerReportCtrl {
     let tempPopulation = this.GraphService.getActiveUserPopulationGraph(data, this.charts.population);
     if (tempPopulation) {
       this.charts.population = tempPopulation;
-      this.exportArrays.population = this.CommonReportService.createExportMenu(this.charts.population);
+      this.exportArrays.population = this.ReportPrintService.createExportMenu(this.charts.population);
       this.CardUtils.resize(0);
     }
   }
@@ -332,7 +332,7 @@ class PartnerReportCtrl {
     let tempMediaChart = this.GraphService.getMediaQualityGraph(data, this.charts.media);
     if (tempMediaChart) {
       this.charts.media = tempMediaChart;
-      this.exportArrays.media = this.CommonReportService.createExportMenu(this.charts.media);
+      this.exportArrays.media = this.ReportPrintService.createExportMenu(this.charts.media);
       this.CardUtils.resize(0);
     }
   }
@@ -356,7 +356,7 @@ class PartnerReportCtrl {
     let tempMetricsChart = this.GraphService.getCallMetricsDonutChart(data, this.charts.metrics);
     if (tempMetricsChart) {
       this.charts.metrics = tempMetricsChart;
-      this.exportArrays.metrics = this.CommonReportService.createExportMenu(this.charts.metrics);
+      this.exportArrays.metrics = this.ReportPrintService.createExportMenu(this.charts.metrics);
       this.CardUtils.resize(0);
     }
   }
