@@ -147,7 +147,7 @@
 
       /* TODO: Refactor this functions into MultipleSubscriptions Controller */
       vm.selectedSubscriptionHasBasicLicenses = function (subscriptionId) {
-        if (subscriptionId && subscriptionId !== 'Trial') {
+        if (subscriptionId && subscriptionId !== Config.subscriptionState.trial) {
           return _.some(vm.confServices.services, function (service) {
             if (_.get(service, 'license.billingServiceId') === subscriptionId) {
               return !_.has(service, 'license.siteUrl');
@@ -160,11 +160,15 @@
 
       /* TODO: Refactor this functions into MultipleSubscriptions Controller */
       vm.selectedSubscriptionHasAdvancedLicenses = function (subscriptionId) {
-        return _.some(vm.confServices.services, function (service) {
-          if (_.get(service, 'license.billingServiceId') === subscriptionId) {
-            return _.has(service, 'license.siteUrl');
-          }
-        });
+        if (subscriptionId && subscriptionId !== Config.subscriptionState.trial) {
+          return _.some(vm.confServices.services, function (service) {
+            if (_.get(service, 'license.billingServiceId') === subscriptionId) {
+              return _.has(service, 'license.siteUrl');
+            }
+          });
+        } else {
+          return vm.hasAdvancedLicenses();
+        }
       };
 
       vm.commServices.services = Authinfo.getCommunicationServices() || [];

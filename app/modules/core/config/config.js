@@ -183,6 +183,10 @@
         inactive: 'INACTIVE',
       },
 
+      subscriptionState: {
+        trial: 'Trial',
+      },
+
       confMap: {
         MS: 'onboardModal.paidMsg',
         CF: 'onboardModal.paidConf',
