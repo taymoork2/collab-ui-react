@@ -1,11 +1,11 @@
 <div class="field-list">
 
   <div class="row grid">
-    <div class="gridStyle" ui-grid="gridOptions" ui-grid-selection ui-grid-infinite-scroll></div>
-    <div class="grid-refresh" ng-if="gridRefresh">
+    <div class="gridStyle" ui-grid="contextFields.gridOptions" ui-grid-selection ui-grid-infinite-scroll></div>
+    <div class="grid-refresh" ng-if="contextFields.gridRefresh">
       <i class="icon icon-spinner icon-2x"></i>
     </div>
-    <div class="search-noresults" ng-if="noSearchResults">
+    <div class="search-noresults" ng-if="contextFields.noSearchResults">
       <span class="h2" translate="context.dictionary.fieldPage.noSearchResults"></span>
     </div>
   </div>
