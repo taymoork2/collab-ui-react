@@ -5692,6 +5692,7 @@
     "overview": "Template Overview",
     "chatStatusMessages_chat": "Status Messages",
     "chatStatusMessages_chatPlusCallback": "Chat Status Messages",
+    "statusMessage_failureText": "The length of the status messages cannot exceed {{ lengthLimit }} characters.",
     "customerInformation": "Customer Information",
     "customerInfo_chat": "Customer Information for Chat",
     "customerInfo_callback": "Customer Information for Callback",
