@@ -81,10 +81,11 @@
     //closed focuses on the last saved and save focuses on the active
     function cleanResourceFieldIndex(field, index, key) {
       if (key && field) {
-        if (getResources(key)[field]) {
+        var resource = getResources(key);
+        if (resource[field]) {
           clearResourcesExcept(key, index);
         } else {
-          deleteResources(key);
+          deleteResources(resource);
           delete resources[key];
         }
       }
@@ -99,7 +100,7 @@
     }
 
     function notifyField(unqCtrlId, value, field) {
-      if (unqCtrlId && value && field) {
+      if (unqCtrlId && field) {
         getResources(unqCtrlId)[field] = value;
       }
     }
@@ -116,8 +117,15 @@
     }
 
     function resetResources() {
-      _.forEach(resources, function (r, key) {
-        clearResourcesExcept(key, 0);
+      /* make sure any uploaded media files are deleted except for zero
+       * the active one.
+       */
+      _.forEach(resources, function (resource, key) {
+        if (resource.uploads.length > 1) {
+          clearResourcesExcept(key, 0);
+        }
+        resource.uploads = [];
+
       });
 
     }
@@ -137,7 +145,7 @@
     function deleteResources(ctrl) {
       var target = _.get(ctrl, 'uploads', []);
       _.each(target, function (value) {
-        if (_.has(value, 'deleteUrl')) {
+        if (_.has(value, 'deleteUrl') && !_.isEmpty(value.deleteUrl)) {
           httpDeleteRetry(value.deleteUrl, 0);
         }
       });
