@@ -1952,13 +1952,23 @@
             },
             templateUrl: 'modules/gemini/callbackGroup/cbgRequest.tpl.html',
           })
-          .state('gemCbgDetails', {
+          .state('gmTdDetails', {
+            data: {},
+            params: { info: {} },
             parent: 'sidepanel',
             views: {
-              'sidepanel@': { template: '<cbg-details></cbg-details>' },
-            },
-            params: { info: {} },
+              'sidepanel@': { template: '<gm-td-details></gm-td-details>' },
+              'header@gmTdDetails': { templateUrl: 'modules/gemini/telephonyDomain/details/gmTdDetailsHeader.tpl.html' } },
+          })
+          .state('gmTdDetails.sites', {
+            params: { data: {} },
+            template: '<gm-td-sites></gm-td-sites>',
+          })
+          .state('gemCbgDetails', {
             data: {},
+            parent: 'sidepanel',
+            params: { info: {} },
+            views: { 'sidepanel@': { template: '<cbg-details></cbg-details>' } },
           })
           .state('gemCbgDetails.sites', {
             template: '<cbg-sites></cbg-sites>',

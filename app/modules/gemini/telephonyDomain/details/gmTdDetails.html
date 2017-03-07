@@ -1,0 +1,97 @@
+<div class="customer-overview gemini-side-panel">
+  <div ng-if="$ctrl.loading" class="grid-refresh">
+    <i class="icon icon-spinner icon-3x"></i>
+  </div>
+
+  <div ng-if="!$ctrl.loading">
+    <div ui-view="header"></div>
+
+    <cs-sp-container class="gemini-side-panel gm-td-side-panel">
+      <cs-sp-section>
+
+        <div class="row">
+          <div class="pull-left medium-9">
+            <span class="feature-name">{{::'gemini.tds.field.partnerTdName' | translate}}: {{$ctrl.model.customerAttribute}}</span>
+          </div>
+          <div class="columns medium-3">
+          <span class="pull-right" ng-if="$ctrl.model.status">
+            <i class="icon icon-circle status-indicator" ng-class="{'success': $ctrl.model.status === 'A' || $ctrl.model.status === 'P', 'danger': $ctrl.model.status === 'R' || $ctrl.model.status === 'L', 'warning': $ctrl.model.status === 'S', 'disabled': $ctrl.model.status === 'C'}"></i>
+            {{$ctrl.model.status_}}
+          </span>
+          </div>
+        </div>
+
+        <div class="feature-list">
+          <ul>
+            <li class="feature" ng-if="$ctrl.model.totalSites">
+              <a ui-sref="gmTdDetails.sites({data: {cbgs: $ctrl.cbgs, customerId: $ctrl.customerId, currCbg: $ctrl.model}})">
+                <span class="feature-name" translate="gemini.cbgs.field.totalSites"></span>
+                <span class="feature-status">{{$ctrl.model.totalSites}}</span>
+                <i class="feature-arrow"></i>
+              </a>
+            </li>
+            <li class="feature" ng-if="!$ctrl.model.totalSites">
+              <span class="feature-name" translate="gemini.cbgs.field.totalSites"></span>
+              <span class="feature-status">0</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="row">
+          <div class="pull-left medium-12">
+            <span class="feature-name">{{::'gemini.region' | translate}}</span>
+            <span class="pull-right">{{$ctrl.model.regionId}}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="pull-left medium-12">
+            <span class="feature-name">{{::'gemini.tds.noteToCisco' | translate}}</span>
+            <span class="pull-right">{{$ctrl.model.noteToCiscoTeam}}</span>
+          </div>
+        </div>
+      </cs-sp-section>
+
+      <cs-sp-section>
+
+        <div class="section-title-row">
+          <div class="row" ng-if="$ctrl.remedyTicketLoading">
+            <i class="icon icon-spinner"></i>
+          </div>
+
+          <div ng-if="!$ctrl.remedyTicketLoading">
+            <p class="remedyTicket">{{::'gemini.cbgs.remedyTicket' | translate}}: <a ng-click="$ctrl.onOpenRemedyTicket()">{{$ctrl.remedyTicket.remedyTicketId}}</a></p>
+            <p><small>{{::'gemini.cbgs.openedOn' | translate}} {{$ctrl.remedyTicket.createTime}} - {{$ctrl.remedyTicket.status}}</small></p>
+          </div>
+        </div>
+
+        <div class="section-title-row">
+          <span class="section-name" translate="gemini.tds.phoneNumbers"></span>
+          <span class="pull-right" ng-if="$ctrl.model.telephonyNumberList.length"><a translate="gemini.tds.seeAll" class="color-primary-base"><!-- TODO will do next sprint--></a></span>
+        </div>
+
+        <div class="side-panel-defaultToll">
+          <ul>
+            <li ng-if="$ctrl.model.defaultToll">
+              <div class="defaultToll-item-num ellipsis"><span tooltip="{{$ctrl.model.defaultToll.phone}}">{{$ctrl.model.defaultToll.phone}}</span></div>
+              <div class="defaultToll-item-num ellipsis"><span tooltip="{{$ctrl.model.defaultToll.label}}">{{$ctrl.model.defaultToll.label}}</span></div>
+              <div class="defaultToll-item-toll"><span class="badge" translate="gemini.tds.defaultToll"></span></div>
+            </li>
+            <li ng-if="$ctrl.model.defaultTollFree">
+              <div class="defaultToll-item-num ellipsis"><span tooltip="{{$ctrl.model.defaultToll.phone}}">{{$ctrl.model.defaultTollFree.phone}}</span></div>
+              <div class="defaultToll-item-num ellipsis"><span tooltip="{{$ctrl.model.defaultToll.label}}">{{$ctrl.model.defaultTollFree.label}}</span></div>
+              <div class="defaultToll-item-toll"><span class="badge" translate="gemini.tds.defaultTollFree"></span></div>
+            </li>
+          </ul>
+        </div>
+
+      </cs-sp-section>
+
+      <cs-sp-section class="side-panel-history">
+        <div class="section-title-row">
+          <div class="section-name" translate="gemini.cbgs.logs.history"></div>
+        </div>
+      </cs-sp-section>
+    </cs-sp-container>
+  </div>
+
+</div>

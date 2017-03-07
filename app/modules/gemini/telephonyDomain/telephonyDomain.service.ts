@@ -8,14 +8,22 @@ export class TelephonyDomainService {
     private $http: ng.IHttpService,
     private $translate: ng.translate.ITranslateService,
   ) {
-    let gemUrl = this.UrlConfig.getGeminiUrl();
+    let gmUrl = this.UrlConfig.getGeminiUrl();
     this.url = {
-      getTelephonyDomains: gemUrl + 'telephonyDomains/' + 'customerId/',
+      getTelephonyDomains: gmUrl + 'telephonyDomains/' + 'customerId/',
+      getTelephonyDomain: gmUrl + 'telephonydomain/getTelephonyDomainInfoByDomainId/',
     };
   }
 
   public getTelephonyDomains(customerId: string) {
     let url = this.url.getTelephonyDomains + customerId;
+    return this.$http.get(url, {}).then((response) => {
+      return _.get(response, 'data');
+    });
+  }
+
+  public getTelephonyDomain(customerId, ccaDomainId) {
+    let url = this.url.getTelephonyDomain + customerId + '/' + ccaDomainId;
     return this.$http.get(url, {}).then((response) => {
       return _.get(response, 'data');
     });
