@@ -1,0 +1,15 @@
+<cs-sp-container>
+  <cs-sp-section class="side-panel-sites">
+    <div class="section-title-row">
+      <span class="section-name" translate="gemini.cbgs.field.totalSites"></span>
+    </div>
+
+    <div class="feature-list">
+      <ul class="sites-ul">
+        <li class="feature" ng-repeat="val in $ctrl.sites">
+          <span class="feature-name"><a href="{{val.globalSite}}" target="_blank">{{val.siteUrl}}</a></span>
+        </li>
+      </ul>
+    </div>
+  </cs-sp-section>
+</cs-sp-container>

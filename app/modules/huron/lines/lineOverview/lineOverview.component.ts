@@ -33,7 +33,7 @@ class LineOverview implements ng.IComponentController {
 
   // Data from services
   public lineOverviewData: LineOverviewData;
-
+  private userVoicemailEnabled: boolean = false;
   /* @ngInject */
   constructor(
     private LineOverviewService: LineOverviewService,
@@ -74,6 +74,7 @@ class LineOverview implements ng.IComponentController {
         this.LineOverviewService.get(this.consumerType, this.ownerId, this.numberId)
           .then(lineOverviewData => {
             this.lineOverviewData = lineOverviewData;
+            this.userVoicemailEnabled = lineOverviewData.voicemailEnabled;
             this.showActions = this.setShowActionsFlag(this.lineOverviewData.line);
             if (!this.lineOverviewData.line.uuid) { // new line, grab first available internal number
               this.lineOverviewData.line.internal = this.internalNumbers[0];
@@ -286,6 +287,6 @@ export class LineOverviewComponent implements ng.IComponentOptions {
     ownerName: '<',
     ownerPlaceType: '<',
     numberId: '<',
-    voicemailEnabled: '<',
+    userVoicemailEnabled: '<',
   };
 }

@@ -6,7 +6,7 @@
     .service('HDSService', HDSService);
 
   /* @ngInject */
-  function HDSService($http, $q, Orgservice, UrlConfig) {
+  function HDSService($http, $q, Authinfo, Orgservice, UrlConfig) {
     var trialUserGroupId = null;
 
     var service = {
@@ -23,6 +23,7 @@
       replaceHdsTrialUsers: replaceHdsTrialUsers,
       moveToProductionMode: moveToProductionMode,
       refreshEncryptionServerForTrialUsers: refreshEncryptionServerForTrialUsers,
+      upgradeCluster: upgradeCluster,
     };
 
 
@@ -142,6 +143,12 @@
 
     function extractData(response) {
       return response.data;
+    }
+
+    function upgradeCluster(id) {
+      var connectorType = 'hds_app';
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + id + '/provisioning/actions/update/invoke?connectorType=' + connectorType + '&forced=true';
+      return $http.post(url);
     }
   }
 }());

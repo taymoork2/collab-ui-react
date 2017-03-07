@@ -16,11 +16,14 @@
   function uploadPrivateKeyController($translate) {
     var vm = this;
     vm.enterServiceAccountPlaceholder = $translate.instant('hercules.settings.googleCalendar.uploadNewPrivateKeyPlaceholder');
+    vm.enterAclAccountPlaceholder = $translate.instant('hercules.settings.googleCalendar.uploadNewAclAccountPlaceholder');
     vm.serviceAccountName = $translate.instant('hercules.settings.googleCalendar.serviceAccountName');
+    vm.aclAccountName = $translate.instant('hercules.settings.googleCalendar.aclAccountName');
 
     vm.clearFile = function () {
       vm.data = {
         googleServiceAccount: this.data.googleServiceAccount,
+        aclAccount: this.data.aclAccount,
         file: '',
         fileName: '',
       };

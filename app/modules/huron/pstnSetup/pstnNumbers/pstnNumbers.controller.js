@@ -47,8 +47,8 @@
     };
 
     vm.orderNumbersTotal = 0;
+    vm.showTollFreeNumbers = false;
     vm.showPortNumbers = !PstnSetup.getIsTrial();
-    vm.showTollFreeNumbers = !PstnSetup.getIsTrial();
     var BLOCK_ORDER = PstnSetupService.BLOCK_ORDER;
     var PORT_ORDER = PstnSetupService.PORT_ORDER;
     var NUMBER_ORDER = PstnSetupService.NUMBER_ORDER;
@@ -58,6 +58,8 @@
     var NXX_EMPTY = '--';
     var MIN_BLOCK_QUANTITY = 2;
     var MAX_BLOCK_QUANTITY = 100;
+    //carrier capabilities
+    var TOLLFREE_ORDERING_CAPABILITY = 'TOLLFREE_ORDERING';
 
     vm.addToCart = addToCart;
     vm.addAdvancedOrder = addAdvancedOrder;
@@ -69,6 +71,7 @@
     vm.getStateInventory = getStateInventory;
     vm.getAreaNxx = getAreaNxx;
     vm.searchCarrierInventory = searchCarrierInventory;
+    vm.getCapabilities = getCapabilities;
     vm.onBlockClick = onBlockClick;
 
     vm.formatTelephoneNumber = formatTelephoneNumber;
@@ -131,6 +134,7 @@
           getStateInventory();
         }
       });
+      getCapabilities();
     }
 
     vm.tollFreeFields = [{
@@ -274,6 +278,24 @@
         .catch(function (response) {
           Notification.errorResponse(response, 'pstnSetup.errors.tollfree.areacodes');
         });
+    }
+
+    function getCapabilities() {
+      if (!PstnSetup.getIsTrial()) {
+        PstnSetupService.getCarrierCapabilities(PstnSetup.getProviderId())
+          .then(function (response) {
+            var supportedCapabilities = [];
+            for (var x in response) {
+              supportedCapabilities.push(response[x].capability);
+            }
+            if (supportedCapabilities.indexOf(TOLLFREE_ORDERING_CAPABILITY) !== -1) {
+              vm.showTollFreeNumbers = true;
+            }
+          })
+          .catch(function (response) {
+            Notification.errorResponse(response, 'pstnSetup.errors.capabilities');
+          });
+      }
     }
 
     function onBlockClick() {

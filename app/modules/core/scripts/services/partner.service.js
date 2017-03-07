@@ -35,7 +35,7 @@
       calculatePurchaseStatus: _calculatePurchaseStatus,
       calculateTotalLicenses: _calculateTotalLicenses,
       countUniqueServices: _countUniqueServices,
-      isServiceManagedByCurrentPartner: isServiceManagedByCurrentPartner,
+      isServiceNotLicensed: _isServiceNotLicensed,
     };
 
     var factory = {
@@ -57,6 +57,7 @@
       isLicenseTypeAny: isLicenseTypeAny,
       getTrialMeetingServices: getTrialMeetingServices,
       canAdminTrial: canAdminTrial,
+      isServiceManagedByCurrentPartner: isServiceManagedByCurrentPartner,
       helpers: helpers,
     };
 
@@ -495,12 +496,21 @@
 
       var isInCurrentPartnerOrg = serviceObj.partnerOrgId === currentPartnerOrgId;
       var isCurrentPartnerId = serviceObj.partnerEmail === currentPartnerId;
-      var isNotLicensed = serviceObj.volume === undefined && Object.keys(serviceObj).length === 4;
+      var isNotLicensed = _isServiceNotLicensed(serviceObj);
       if (isInCurrentPartnerOrg || isCurrentPartnerId || isNotLicensed) {
         return true;
       }
 
       return false;
+    }
+
+    // Services that are not licensed will not have the usual properties associated with a license. The volume property is a
+    // property associated with a license that we can check for undefined. Also, services that are not licensed will only have
+    // 4 default properties (customerName, daysLeft, sortOrder, and status) in the service object. So, in addition to checking
+    // for the volume property, we'll also check for the number of properties in the service object to be 4.
+    function _isServiceNotLicensed(serviceObj) {
+      var numberOfProperties = Object.keys(serviceObj).length;
+      return serviceObj.volume === undefined && numberOfProperties === 4;
     }
 
     function _calculatePurchaseStatus(customerData) {

@@ -135,7 +135,12 @@
     }
 
     function formatLanguage(language) {
-      return _.replace(language, '-', '_');
+      var userLangSplit = _.split(language, /[-_]+/, 2);
+      if (userLangSplit.length <= 1) {
+        return language;
+      }
+
+      return _.toLower(userLangSplit[0]) + '_' + _.toUpper(userLangSplit[1]);
     }
   }
 

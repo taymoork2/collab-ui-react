@@ -6,7 +6,6 @@ var unparse = require('unparse-args');
 var args = yargs.argv;
 var _ = require('lodash');
 var cp = require('child_process');
-var dotenv = require('dotenv');
 var uuid = require('uuid');
 var tunnelUuid;
 
@@ -87,15 +86,6 @@ function sauceStop() {
 
 function setEnv() {
   if (args.sauce) {
-    process.env.SC_TUNNEL_IDENTIFIER = tunnelUuid || (tunnelUuid = uuid.v4());
-  }
-  if (args.prod) {
-    dotenv.config({
-      path: './test/env/production.properties',
-    });
-  } else if (args.int) {
-    dotenv.config({
-      path: './test/env/integration.properties',
-    });
+    process.env.SAUCE__TUNNEL_ID = tunnelUuid || (tunnelUuid = uuid.v4());
   }
 }

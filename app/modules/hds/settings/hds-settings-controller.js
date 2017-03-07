@@ -6,7 +6,7 @@
     .controller('HDSSettingsController', HDSSettingsController);
 
   /* @ngInject */
-  function HDSSettingsController($modal, $state, $translate, Authinfo, Orgservice, HDSService, FusionClusterService, Notification) {
+  function HDSSettingsController($modal, $state, $translate, Analytics, Authinfo, Orgservice, HDSService, FusionClusterService, Notification) {
     var vm = this;
     vm.PRE_TRIAL = 'pre_trial';    // service status Trial/Production mode
     vm.TRIAL = 'trial';
@@ -24,6 +24,8 @@
     vm.openAddTrialUsersModal = openAddTrialUsersModal;
     vm.openEditTrialUsersModal = openEditTrialUsersModal;
     var localizedHdsModeError = $translate.instant('hds.resources.settings.hdsModeGetError');
+
+    Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_HDS_SETTINGS);
 
     // TODO: below is the jason to recover initial state, remove it when at the very late stage of HDS dev
     var jsonTrialMode = {
@@ -96,9 +98,9 @@
         if (data.success || status === 200) {
           vm.orgSettings = data.orgSettings;
           vm.altHdsServers = data.orgSettings.altHdsServers;
+          vm.prodDomain = vm.orgSettings.kmsServer;
           if (typeof vm.altHdsServers === 'undefined' || vm.altHdsServers.length === 1) {
             // prod info
-            vm.prodDomain = vm.orgSettings.kmsServer;
             if (typeof vm.prodDomain === 'undefined') {
               //vm.model.serviceMode = vm.NA_MODE;
               // TODO: temp relax the condition to keep production mode when no prodDomain in org settings

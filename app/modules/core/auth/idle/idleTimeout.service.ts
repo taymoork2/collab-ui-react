@@ -126,7 +126,7 @@ export class IdleTimeoutService {
             angular.element(this.$document).bind(EventName, throttled);
           });
           //listen to storage
-          this.WindowService.registerEventListener('storage', this.checkActive);
+          this.WindowService.registerEventListener('storage', this.checkActive.bind(this));
         }
       });
     });

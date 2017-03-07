@@ -44,7 +44,6 @@ describe('Controller: Customer Reports Ctrl', function () {
       initReportsObject: function () {},
     };
 
-    spyOn(this.FeatureToggleService, 'atlasDeviceUsageReportV2GetStatus').and.returnValue(this.$q.when(false));
   });
 
   describe('when all featuretoggles return false and there are no webex sites', function () {

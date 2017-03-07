@@ -29,16 +29,24 @@ class HybridServicesClusterPageCtrl implements ng.IComponentController {
     this.FusionClusterService.get(id)
       .then(cluster => {
         this.updateName(cluster.name);
-        let route = '';
-        if (cluster.targetType === 'c_mgmt') {
-          route = 'expressway';
-        } else if (cluster.targetType === 'mf_mgmt') {
-          route = 'mediafusion';
-        } else if (cluster.targetType === 'hds_app') {
-          route = 'hds';
+        let route;
+        switch (cluster.targetType) {
+          case 'c_mgmt':
+            route = 'expressway';
+            break;
+          case 'mf_mgmt':
+            route = 'mediafusion';
+            break;
+          case 'hds_app':
+            route = 'hds';
+            break;
+          case 'ucm_mgmt':
+            route = 'cucm';
+            break;
+          default:
+            route = '';
         }
-        // Don't show any tabs if the "Nodes" one is not available
-        // Only the "Settings" tab would be weird
+        // Don't show any tabs if the "Nodes" one is not available. Only the "Settings" tab would be weird
         if (this.hasNodesViewFeatureToggle) {
           this.tabs = [{
             title: this.$translate.instant('common.nodes'),

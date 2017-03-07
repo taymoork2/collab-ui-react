@@ -5,6 +5,8 @@ import { SharedLine, SharedLineService, SharedLinePhone, SharedLinePhoneListItem
 import { Member } from 'modules/huron/members';
 import { ICallerID, CallerIDService } from 'modules/huron/callerId';
 import { AutoAnswer, AutoAnswerService } from 'modules/huron/autoAnswer';
+import { HuronVoicemailService } from 'modules/huron/voicemail';
+import { HuronUserService } from 'modules/huron/users';
 
 export class LineOverviewData {
   public line: Line;
@@ -13,13 +15,14 @@ export class LineOverviewData {
   public callerId: ICallerID;
   public companyNumbers: any;
   public autoAnswer: AutoAnswer;
+  public voicemailEnabled: boolean;
 }
 
 export class LineOverviewService {
 
   private numberProperties: Array<string> = ['uuid', 'primary', 'shared', 'internal', 'external', 'siteToSite', 'incomingCallMaximum'];
   private callForwardAllProperties: Array<string> = ['destination', 'voicemailEnabled'];
-  private callForwardBusyProperties: Array<string> = ['internalDestination', 'internalVoicemailEnabled', 'externalDestination', 'externalVoicemailEnabled'];
+  private callForwardBusyProperties: Array<string> = ['internalDestination', 'internalVoicemailEnabled', 'externalDestination', 'externalVoicemailEnabled', 'ringDurationTimer'];
   private lineOverviewDataCopy: LineOverviewData;
   private errors: Array<any> = [];
 
@@ -33,6 +36,8 @@ export class LineOverviewService {
     private Notification,
     private $q: ng.IQService,
     private CallerIDService: CallerIDService,
+    private HuronVoicemailService: HuronVoicemailService,
+    private HuronUserService: HuronUserService,
   ) {}
 
   public get(consumerType: LineConsumerType, ownerId: string, numberId: string = ''): ng.IPromise<LineOverviewData> {
@@ -45,6 +50,7 @@ export class LineOverviewService {
     promises.push(this.getCallerId(consumerType, ownerId, numberId));
     promises.push(this.listCompanyNumbers());
     promises.push(this.getAutoAnswerSupportedDeviceAndMember(consumerType, ownerId, numberId));
+    promises.push(this.HuronUserService.getUserServices(ownerId));
     return this.$q.all(promises).then( (data) => {
       if (this.errors.length > 0) {
         this.Notification.notify(this.errors, 'error');
@@ -56,6 +62,8 @@ export class LineOverviewService {
       lineOverviewData.callerId = data[3];
       lineOverviewData.companyNumbers = data[4];
       lineOverviewData.autoAnswer = data[5];
+      let services = data[6];
+      lineOverviewData.voicemailEnabled = this.HuronVoicemailService.isEnabledForUser(services);
       this.lineOverviewDataCopy = this.cloneLineOverviewData(lineOverviewData);
       return lineOverviewData;
     });
@@ -189,8 +197,8 @@ export class LineOverviewService {
           if (callForwardRes.callForwardAll) {
             callForward.callForwardAll = new CallForwardAll(_.pick<CallForwardAll, CallForwardAll>(callForwardRes.callForwardAll, this.callForwardAllProperties));
           }
-          if (callForwardRes.callForwardBusy) {
-            callForward.callForwardBusy = new CallForwardBusy(_.pick<CallForwardBusy, CallForwardBusy>(callForwardRes.callForwardBusy, this.callForwardBusyProperties));
+          if (callForwardRes.callForwardNoAnswer) {
+            callForward.callForwardBusy = new CallForwardBusy(_.pick<CallForwardBusy, CallForwardBusy>(callForwardRes.callForwardNoAnswer, this.callForwardBusyProperties));
           }
           return callForward;
         }).catch(error => {

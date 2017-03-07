@@ -86,9 +86,8 @@
       valueAxes[0].autoGridCount = true;
       valueAxes[0].position = 'left';
       valueAxes[0].title = vm.percentageTitle;
-      valueAxes[0].titleRotation = 360;
-      valueAxes[0].titleOffset = 50;
-      //valueAxes[0].guides.label = 'Utilization High';
+      //valueAxes[0].titleRotation = 0;
+      valueAxes[0].labelOffset = 28;
 
       var catAxis = CommonReportsGraphService.getBaseVariable(vm.AXIS);
       catAxis.gridPosition = 'start';

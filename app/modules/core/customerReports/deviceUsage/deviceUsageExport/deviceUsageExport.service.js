@@ -14,15 +14,13 @@
 
     function exportData(startDate, endDate, api, statusCallback, deviceCategories, version_2) {
       var granularity = "day";
-      var baseUrl = '';
+      var baseUrl = urlBase;
       if (api === 'mock') {
         $log.info("Not implemented export for mock data");
         return;
       }
       if (api === 'local') {
         baseUrl = localUrlBase;
-      } else {
-        baseUrl = urlBase;
       }
 
       //TODO: Fix when releasing V2
@@ -34,16 +32,16 @@
       url = url + '&sendMockData=false';
 
       if (version_2) {
-        url = 'http://berserk.rd.cisco.com:8080/atlas-server/admin/api/v1/organization' + '/' + Authinfo.getOrgId() + '/reports/device/usage/export?';
+        if (api === 'local') {
+          baseUrl = 'http://berserk.rd.cisco.com:8080/atlas-server/admin/api/v1/organization';
+        }
+        url = baseUrl + '/' + Authinfo.getOrgId() + '/reports/device/usage/export?';
         url = url + 'interval=' + granularity;
         url = url + '&from=' + startDate + '&to' + endDate;
         url = url + '&categories=' + deviceCategories.join();
         url = url + '&countryCodes=aggregate';
         url = url + '&models=__';
-        //url = url + '&sendMockData=false';
       }
-
-      $log.info("Trying to export data using url:", url);
       return downloadReport(url, statusCallback);
     }
 

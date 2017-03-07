@@ -33,6 +33,22 @@ describe('Languages', function () {
         this.$window.navigator.languages = ['ja'];
       });
 
+      it('from a language/region code all lower kebab case', function () {
+        this.$window.navigator.languages = ['ja-jp'];
+      });
+
+      it('from a language/region code all lower snake case', function () {
+        this.$window.navigator.languages = ['ja_jp'];
+      });
+
+      it('from a language/region code all upper kebab case', function () {
+        this.$window.navigator.languages = ['JA-JP'];
+      });
+
+      it('from a language/region code all upper snake case', function () {
+        this.$window.navigator.languages = ['JA_JP'];
+      });
+
       it('from a valid language in the languages collection', function () {
         this.$window.navigator.languages = ['not-real', 'not_real', 'ja_JP'];
       });
