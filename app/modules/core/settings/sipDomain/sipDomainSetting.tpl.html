@@ -86,7 +86,7 @@
     </div>
 
     <p ng-if="!vm.sipForm && vm.isSSAReserved" class="domain-space">
-      <a class="redirect-link" translate="firstTimeWizard.editSubdomain" ng-click="vm.toggleSipForm()"></a>
+      <a class="redirect-link" translate="firstTimeWizard.editSubdomain" ng-click="vm.editSubdomain()"></a>
     </p>
 
     <p class="domain domain-space-two" ng-if="vm.sipForm || !vm.isSSAReserved" translate="firstTimeWizard.enterSubdomain"></p>

@@ -56,6 +56,8 @@
     .factory('UserCosRestrictionServiceV2', UserCosRestrictionServiceV2)
     .factory('CustomerCosRestrictionServiceV2', CustomerCosRestrictionServiceV2)
     .factory('PlacesService', PlacesService)
+    .factory('MemberSearchServiceV2', MemberSearchServiceV2)
+    .factory('CustomerDialPlanServiceV2', CustomerDialPlanServiceV2)
     .name;
 
   /* @ngInject */
@@ -562,6 +564,22 @@
       update: {
         method: 'PUT',
       },
+    });
+  }
+
+  /* @ngInject */
+  function MemberSearchServiceV2($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/members', {
+      customerId: '@customerId',
+      name: '@name',
+    });
+  }
+
+  /* @ngInject */
+  function CustomerDialPlanServiceV2($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/dialplans', {
+      customerId: '@customerId',
+      name: '@name',
     });
   }
 

@@ -68,3 +68,15 @@
     padding-top: 0;
   }
 }
+
+.amcharts-export-menu .export-main {
+  overflow: visible;
+
+  ul {
+    padding: 0;
+
+    .export-list {
+      overflow: visible;
+    }
+  }
+}

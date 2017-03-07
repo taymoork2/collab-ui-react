@@ -90,7 +90,6 @@ describe('OnboardCtrl: Ctrl', function () {
     spyOn(this.TelephonyInfoService, 'loadExtPoolWithMapping').and.returnValue(this.$q.when(this.mock.externalNumberPoolMap));
 
     spyOn(this.FeatureToggleService, 'getFeaturesForUser').and.returnValue(this.mock.getMyFeatureToggles);
-    spyOn(this.FeatureToggleService, 'supportsDirSync').and.returnValue(this.$q.when(false));
     spyOn(this.FeatureToggleService, 'atlasSharedMeetingsGetStatus').and.returnValue(this.$q.when(false));
     spyOn(this.TelephonyInfoService, 'getPrimarySiteInfo').and.returnValue(this.$q.when(this.mock.sites));
     spyOn(this.ServiceSetup, 'listSites').and.returnValue(this.$q.when(this.mock.sites));

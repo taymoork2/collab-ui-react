@@ -12,7 +12,7 @@ describe('Controller:MediaReportsController', function () {
   var participantDistributionGraphData = getJSONFixture('mediafusion/json/metrics-graph-report/ParticipantDistributionGraphData.json');
   var clientTypeData = getJSONFixture('mediafusion/json/metrics-graph-report/clientTypeGraphData.json');
   var clientTypeCountData = getJSONFixture('mediafusion/json/metrics-graph-report/clientTypeCountData.json');
-  // var meetingLocationData = getJSONFixture('mediafusion/json/metrics-graph-report/meetingLocationGraphData.json');
+  var meetingLocationData = getJSONFixture('mediafusion/json/metrics-graph-report/meetingLocationGraphData.json');
 
   var timeOptions = [{
     value: 0,
@@ -199,7 +199,7 @@ describe('Controller:MediaReportsController', function () {
       httpMock.verifyNoOutstandingExpectation();
       expect(MediaReportsService.getTotalCallsData).toHaveBeenCalled();
       expect(controller.onprem).toBe(20);
-      expect(controller.cloud).toBe(30);
+      expect(controller.cloudOverflow).toBe(30);
       expect(controller.total).toBe(50);
     });
 
@@ -208,7 +208,13 @@ describe('Controller:MediaReportsController', function () {
       controller.setClientTypeCard();
       httpMock.flush();
       expect(MediaReportsService.getClientTypeCardData).toHaveBeenCalled();
-      expect(controller.clientTypeCount).toBe(8);
+    });
+
+    it('setMeetingLocationCard should invoke getMeetingLocationCardData', function () {
+      spyOn(MediaReportsService, 'getMeetingLocationCardData').and.returnValue($q.resolve(meetingLocationData));
+      controller.setMeetingLocationCard();
+      httpMock.flush();
+      expect(MediaReportsService.getMeetingLocationCardData).toHaveBeenCalled();
     });
 
     it('setClusterAvailability should set the clusterAvailability', function () {

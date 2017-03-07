@@ -18,6 +18,7 @@
             $state.go('setupwizardmodal', {
               currentTab: 'enterpriseSettings',
               currentStep: 'enterpriseSipUrl',
+              numberOfSteps: 1,
               onlyShowSingleTab: true,
             });
           },

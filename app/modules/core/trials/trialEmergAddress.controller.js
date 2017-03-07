@@ -72,7 +72,7 @@
       className: 'medium-8 inline-row left',
       templateOptions: {
         required: true,
-        label: $translate.instant('trialModal.pstn.state'),
+        label: ' ',
         labelfield: 'name',
         valuefield: 'abbreviation',
         inputClass: 'medium-11',
@@ -80,8 +80,9 @@
         filter: true,
       },
       controller: /* @ngInject */ function ($scope) {
-        PstnSetupStatesService.getStateProvinces().then(function (states) {
-          $scope.to.options = states;
+        PstnSetupStatesService.getLocation(vm.trial.details.countryCode).then(function (location) {
+          $scope.to.label = location.type;
+          $scope.to.options = location.areas;
         });
       },
       expressionProperties: {
@@ -116,12 +117,13 @@
         streetAddress: vm.trial.details.emergAddr.streetAddress,
         unit: vm.trial.details.emergAddr.unit,
         city: vm.trial.details.emergAddr.city,
-        state: vm.trial.details.emergAddr.state.abbreviation,
+        state: vm.trial.details.emergAddr.state,
         zip: vm.trial.details.emergAddr.zip,
       }, vm.trial.details.pstnProvider.uuid)
         .then(function (response) {
           if (!_.isUndefined(response)) {
             vm.addressFound = true;
+            vm.readOnly = true;
             _.extend(vm.trial.details.emergAddr, response);
           } else {
             vm.validation = false;
@@ -145,6 +147,7 @@
       TrialPstnService.resetAddress();
       vm.validation = false;
       vm.addressFound = false;
+      vm.readOnly = false;
     }
   }
 })();

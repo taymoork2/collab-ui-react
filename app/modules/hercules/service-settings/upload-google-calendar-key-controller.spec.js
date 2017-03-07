@@ -38,6 +38,7 @@ describe('Controller: UploadGoogleCalendarKeyController', function () {
     controller = $controller('UploadGoogleCalendarKeyController', {
       CloudConnectorService: CloudConnectorServiceMock,
       $modalInstance: modalInstanceMock,
+      aclAccount: 'admin@example.org',
       googleServiceAccount: 'test@example.org',
       Notification: Notification,
     });

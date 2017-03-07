@@ -1,7 +1,8 @@
 import './_mySubscription.scss';
 import { DigitalRiverService } from 'modules/online/digitalRiver/digitalRiver.service';
 import { Notification } from 'modules/core/notifications';
-import { OnlineUpgradeService, IBmmpAttr } from 'modules/online/upgrade/upgrade.service';
+import { OnlineUpgradeService, IBmmpAttr, IProdInst } from 'modules/online/upgrade/upgrade.service';
+import { SharedMeetingsReportService } from './sharedMeetings/sharedMeetingsReport.service';
 
 const baseCategory = {
   label: undefined,
@@ -14,15 +15,16 @@ const messageClass = 'icon-message';
 const meetingRoomClass = 'icon-meeting-room';
 const webexClass = 'icon-webex';
 const callClass = 'icon-calls';
+const careClass = 'icon-headset';
 
-const licenseTypes = ['MS', 'CF', 'MC', 'TC', 'EC', 'EE', 'CMR', 'CO', 'SD', 'SB'];
+const licenseTypes = ['MS', 'CF', 'MC', 'TC', 'EC', 'EE', 'CMR', 'CO', 'SD', 'SB', 'CDC', 'CVC'];
 
 class MySubscriptionCtrl {
   public hybridServices: any[] = [];
   public licenseCategory: any[] = [];
   public subscriptionDetails: any[] = [];
   public visibleSubscriptions = false;
-  public isOnline = false;
+  public hasEnterpriseTrial = false;
   public trialUrlFailed = false;
   public productInstanceFailed = false;
   public loading = false;
@@ -36,7 +38,6 @@ class MySubscriptionCtrl {
   /* @ngInject */
   constructor(
     private $http: ng.IHttpService,
-    private $modal,
     private $rootScope: ng.IRootScopeService,
     private $translate: ng.translate.ITranslateService,
     private Authinfo,
@@ -44,6 +45,7 @@ class MySubscriptionCtrl {
     private FeatureToggleService,
     private DigitalRiverService: DigitalRiverService,
     private OnlineUpgradeService: OnlineUpgradeService,
+    private SharedMeetingsReportService: SharedMeetingsReportService,
     private Notification: Notification,
     private Orgservice,
     private ServiceDescriptor,
@@ -66,7 +68,10 @@ class MySubscriptionCtrl {
     this.licenseCategory[3] = _.cloneDeep(baseCategory);
     this.licenseCategory[3].label = $translate.instant('subscriptions.room');
 
-    this.isOnline = Authinfo.isOnline();
+    //care subscriptions
+    this.licenseCategory[4] = _.cloneDeep(baseCategory);
+    this.licenseCategory[4].label = $translate.instant('subscriptions.care');
+    this.licenseCategory[4].borders = true;
 
     this.hybridServicesRetrieval();
     this.subscriptionRetrieval();
@@ -82,16 +87,7 @@ class MySubscriptionCtrl {
   }
 
   public launchSharedMeetingsLicenseUsageReport(siteUrl: string): void {
-    this.$modal.open({
-      templateUrl: 'modules/core/myCompany/mySubscriptions/sharedMeetings/sharedMeetingsReport.tpl.html',
-      controller: 'SharedMeetingsReportCtrl',
-      controllerAs: 'smrCtrl',
-      resolve: {
-        siteUrl: () => {
-          return siteUrl;
-        },
-      },
-    });
+    this.SharedMeetingsReportService.openModal(siteUrl);
   }
 
   private initFeatures(): void {
@@ -151,6 +147,8 @@ class MySubscriptionCtrl {
       isTrial: subscription.isTrial,
       subId: subscription.internalSubscriptionId,
       productInstanceId: subscription.productInstanceId,
+      changeplanOverride: subscription.changeplanOverride,
+      numSubscriptions: subscription.numSubscriptions,
       upgradeTrialUrl: trialUrl,
     });
   }
@@ -202,17 +200,23 @@ class MySubscriptionCtrl {
           internalSubscriptionId: undefined,
           licenses: [] as any[],
           isTrial: false,
-          isOnline: this.isOnline,
+          isOnline: false,
           viewAll: false,
           upgradeTrialUrl: undefined,
           productInstanceId: undefined,
           changeplanOverride: undefined,
+          name: undefined,
+          quantity: undefined,
+          numSubscriptions: subscriptions.length,
         };
         if (subscription.subscriptionId && (subscription.subscriptionId !== 'unknown')) {
           newSubscription.subscriptionId = subscription.subscriptionId;
         }
         if (subscription.internalSubscriptionId && (subscription.internalSubscriptionId !== 'unknown')) {
           newSubscription.internalSubscriptionId = subscription.internalSubscriptionId;
+          if (subscription.internalSubscriptionId !== 'Trial') {
+            newSubscription.isOnline = true;
+          }
         }
 
         _.forEach(subscription.licenses, (license: any, licenseIndex: number) => {
@@ -222,7 +226,7 @@ class MySubscriptionCtrl {
               licenseType: license.licenseType,
               licenseModel: _.get(license, 'licenseModel', ''),
               offerName: license.offerName,
-              usage: license.usage,
+              usage: license.usage || 0,
               volume: license.volume,
               siteUrl: license.siteUrl,
               id: 'donutId' + subIndex + licenseIndex,
@@ -246,7 +250,26 @@ class MySubscriptionCtrl {
                   case 8:
                   case 9: {
                     offer.class = meetingRoomClass;
+
                     this.addSubscription(3, offer, -1);
+                    break;
+                  }
+                  case 10:
+                  case 11: {
+                    offer.class = careClass;
+                    let existingIndex = _.findIndex(this.licenseCategory[4].subscriptions, (sub: any) => {
+                      return sub.type === 'CARE';
+                    });
+
+
+                    if (existingIndex >= 0) {
+                      this.addSubscription(4, offer, existingIndex);
+                    } else {
+                      this.licenseCategory[4].subscriptions.unshift({
+                        offers: [offer],
+                        type: 'CARE',
+                      });
+                    }
                     break;
                   }
                   default: {
@@ -287,47 +310,62 @@ class MySubscriptionCtrl {
         });
 
         if (newSubscription.licenses.length > 0) {
+          if (newSubscription.isOnline) {
+            newSubscription.quantity = newSubscription.licenses[0].volume;
+          }
           // sort licenses into display order/order for determining subscription name
           newSubscription.licenses.sort((a, b) => {
             return licenseTypes.indexOf(a.offerName) - licenseTypes.indexOf(b.offerName);
           });
-          this.subscriptionDetails.push(newSubscription);
+          if (newSubscription.isOnline) {
+            this.subscriptionDetails.unshift(newSubscription);
+          } else {
+            this.subscriptionDetails.push(newSubscription);
+          }
         }
       });
 
-      _.forEach(this.subscriptionDetails, (subscription: any) => {
-        if (subscription.isOnline) {
+      _.forEach(this.subscriptionDetails, (subscription: any, index: number) => {
+        if (!subscription.isOnline) {
+          if (subscription.isTrial) {
+            this.subscriptionDetails[index].name = this.$translate.instant('customerPage.trial');
+            this.hasEnterpriseTrial = true;
+          }
+        } else {
+          const userId = this.Authinfo.getUserId();
           if (subscription.isTrial) {
             this.upgradeTrialUrl(subscription.internalSubscriptionId).then((response) => {
-              if (response && this.subscriptionDetails.length === 1) {
-                this.OnlineUpgradeService.getProductInstanceId(this.Authinfo.getUserId()).then((prodResponse) => {
+              if (response) {
+                this.OnlineUpgradeService.getProductInstance(userId, subscription.internalSubscriptionId).then((prodResponse: IProdInst) => {
                   if (prodResponse) {
-                    this.subscriptionDetails[0].productInstanceId = prodResponse;
+                    this.subscriptionDetails[index].productInstanceId = prodResponse.productInstanceId;
+                    this.subscriptionDetails[index].name = prodResponse.name;
                     this.bmmpAttr = {
-                      subscriptionId: this.subscriptionDetails[0].internalSubscriptionId,
-                      productInstanceId: this.subscriptionDetails[0].productInstanceId,
+                      subscriptionId: this.subscriptionDetails[index].internalSubscriptionId,
+                      productInstanceId: this.subscriptionDetails[index].productInstanceId,
                       changeplanOverride: '',
                     };
-                    this.broadcastSingleSubscription(this.subscriptionDetails[0], response);
+                    this.broadcastSingleSubscription(this.subscriptionDetails[index], response);
                   }
                 });
               }
               subscription.upgradeTrialUrl = response;
             });
           } else {
-            this.OnlineUpgradeService.getProductInstanceId(this.Authinfo.getUserId()).then((prodResponse) => {
+            this.OnlineUpgradeService.getProductInstance(userId, subscription.internalSubscriptionId).then((prodResponse: IProdInst) => {
               if (prodResponse) {
-                this.subscriptionDetails[0].productInstanceId = prodResponse;
+                this.subscriptionDetails[index].productInstanceId = prodResponse.productInstanceId;
+                this.subscriptionDetails[index].name = prodResponse.name;
                 this.getChangeSubURL().then((urlResponse) => {
                   if (urlResponse) {
-                    this.subscriptionDetails[0].changeplanOverride = urlResponse;
+                    this.subscriptionDetails[index].changeplanOverride = urlResponse;
                     this.bmmpAttr = {
-                      subscriptionId: this.subscriptionDetails[0].internalSubscriptionId,
-                      productInstanceId: this.subscriptionDetails[0].productInstanceId,
+                      subscriptionId: this.subscriptionDetails[index].internalSubscriptionId,
+                      productInstanceId: this.subscriptionDetails[index].productInstanceId,
                       changeplanOverride: urlResponse,
                     };
 
-                    this.broadcastSingleSubscription(this.subscriptionDetails[0], undefined);
+                    this.broadcastSingleSubscription(this.subscriptionDetails[index], undefined);
                   }
                 });
               }

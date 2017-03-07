@@ -161,7 +161,7 @@
     }
 
     function reInstantiateMasonry() {
-      CardUtils.resize();
+      CardUtils.resize(200);
     }
 
     function showReloadPageIfNeeded() {

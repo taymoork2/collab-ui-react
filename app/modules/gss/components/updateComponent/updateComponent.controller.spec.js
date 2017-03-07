@@ -51,7 +51,7 @@ describe('controller: UpdateComponentCtrl', function () {
   it('isValid true, group selected with component name', function () {
     controller.componentName = 'testComponentName';
     controller.selectedGroup = {
-      value: 1,
+      value: '1',
     };
 
     expect(controller.isValid()).toBe(true);

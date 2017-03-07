@@ -650,6 +650,9 @@
             controller: 'SettingsCtrl',
             controllerAs: 'settingsCtrl',
             parent: 'main',
+            params: {
+              showSettings: null,
+            },
           })
           .state('authentication.enable3rdPartyAuth', {
             parent: 'modal',
@@ -730,6 +733,11 @@
                 controller: 'MySubscriptionCtrl',
                 templateUrl: 'modules/core/myCompany/mySubscriptions/mySubscription.tpl.html',
               },
+              'headerRight': {
+                controllerAs: 'subscriptionHeader',
+                controller: 'SubscriptionHeaderCtrl',
+                templateUrl: 'modules/core/myCompany/mySubscriptions/subscriptionHeader.tpl.html',
+              },
             },
           })
           .state('my-company.info', {
@@ -753,13 +761,6 @@
             views: {
               'tabContent': {
                 template: '<my-company-orders></my-company-orders>',
-              },
-            },
-            resolve: {
-              isOnline: /* @ngInject */ function ($q, Authinfo) {
-                if (!Authinfo.isOnline()) {
-                  return $q.reject();
-                }
               },
             },
           })
@@ -874,6 +875,8 @@
           ///////////////////////////
           .state('users.manage.picker', {
             controller: 'UserManageModalPickerController',
+            template: '<div class="center-spinner">' +
+                '<i class="icon icon-spinner icon-2x"></i></div>',
           })
           .state('users.manage', {
             abstract: true,
@@ -1142,9 +1145,20 @@
             },
           })
           .state('user-overview.communication.snr', {
-            template: '<div uc-single-number-reach></div>',
+            template: '<uc-snr owner-id="$resolve.ownerId" ></uc-snr>',
             data: {
               displayName: 'Single Number Reach',
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/snr'], done);
+              }),
+              ownerId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentUser, 'id');
+              },
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('user-overview.communication.snr').data.displayName = $translate.instant('singleNumberReachPanel.title');
+              },
             },
           })
           .state('user-overview.communication.speedDials', {
@@ -1520,16 +1534,6 @@
           })
           .state('reports.device-usage', {
             url: '/reports/device/usage',
-            views: {
-              'tabContent': {
-                controllerAs: 'deviceUsage',
-                controller: 'DeviceUsageCtrl',
-                templateUrl: 'modules/core/customerReports/deviceUsage/total.tpl.html',
-              },
-            },
-          })
-          .state('reports.device-usage-v2', {
-            url: '/reports/device/usagev2',
             views: {
               'tabContent': {
                 controllerAs: 'deviceUsage',
@@ -2029,7 +2033,7 @@
           })
           .state('customer-overview.customerSubscriptions', {
             controller: 'CustomerSubscriptionsDetailCtrl',
-            controllerAs: 'customerSubscriptions',
+            controllerAs: '$ctrl',
             templateUrl: 'modules/core/customers/customerSubscriptions/customerSubscriptionsDetail.tpl.html',
             resolve: {
               data: /* @ngInject */ function ($state, $translate) {
@@ -2149,6 +2153,7 @@
               currentTab: {},
               currentSubTab: '',
               currentStep: '',
+              numberOfSteps: undefined,
               onlyShowSingleTab: false,
             },
             data: {
@@ -2760,7 +2765,7 @@
           .state('context', {
             templateUrl: 'modules/context/container/hybrid-context-container.html',
             controller: 'HybridContextContainerController',
-            controllerAs: 'vm',
+            controllerAs: 'hybridContextContainerController',
             parent: 'main',
             params: {
               backState: null,
@@ -2775,8 +2780,22 @@
             url: '/services/context',
             parent: 'context',
             views: {
+              'subHeader': {
+                templateUrl: 'modules/context/resources/hybrid-context-resources-header.html',
+              },
               'contextServiceView': {
-                templateUrl: 'modules/context/resources/hybrid-context-resources.html',
+                template: '<hybrid-service-cluster-list service-id="\'contact-center-context\'"></hybrid-service-cluster-list>',
+                controller: /* @ngInject */ function (Analytics) {
+                  return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CONTEXT_LIST);
+                },
+              },
+            },
+            params: {
+              clusterId: null,
+            },
+            resolve: {
+              hasContactCenterContextFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.contactCenterContext);
               },
             },
           })
@@ -2786,7 +2805,7 @@
             views: {
               'contextServiceView': {
                 templateUrl: 'modules/context/fields/hybrid-context-fields.html',
-                controller: 'HybridContextFieldsController',
+                controller: 'HybridContextFieldsCtrl',
                 controllerAs: 'contextFields',
               },
             },
@@ -2797,9 +2816,46 @@
             views: {
               'contextServiceView': {
                 templateUrl: 'modules/context/fieldsets/hybrid-context-fieldsets.html',
-                controller: 'HybridContextFieldsetsController',
+                controller: 'HybridContextFieldsetsCtrl',
                 controllerAs: 'contextFieldsets',
               },
+            },
+          })
+          .state('context-cluster-sidepanel', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                template: '<cluster-sidepanel-overview cluster-type="\'cs_mgmt\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType"></cluster-sidepanel-overview>',
+              },
+              'header@context-cluster-sidepanel': {
+                templateUrl: 'modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html',
+              },
+            },
+            // If data not present, $state.current.data.displayName can't be changed
+            data: {},
+            params: {
+              clusterId: null,
+              connectorType: null,
+            },
+            resolve: {
+              id: /* @ngInject */ function ($stateParams) {
+                return $stateParams.clusterId;
+              },
+              connectorType: /* @ngInject */ function ($stateParams) {
+                return $stateParams.connectorType;
+              },
+            },
+          })
+          .state('context-cluster-sidepanel.host-details', {
+            templateUrl: 'modules/hercules/cluster-sidepanel/host-details/host-details.html',
+            controller: 'HybridServicesHostDetailsController',
+            controllerAs: 'hostDetailsCtrl',
+            data: {
+              displayName: 'Node',
+            },
+            params: {
+              host: null,
+              hostSerial: null,
             },
           })
           // Cluster settings and nodes
@@ -2840,7 +2896,7 @@
                 templateUrl: 'modules/hercules/hybrid-services-connector-sidepanel/hybrid-services-connector-sidepanel-header.html',
               },
             },
-            // If data not present, $state.current.data.displayName inside the component has no effect
+            // If data not present, $state.current.data.displayName can't be changed
             data: {},
             params: {
               connector: null,
@@ -2853,7 +2909,7 @@
           })
           .state('hybrid-services-connector-sidepanel.alarm-details', {
             template: '<alarm-details-sidepanel alarm="$resolve.alarm"></alarm-details-sidepanel>',
-            // If data not present, $state.current.data.displayName inside the component has no effect
+            // If data not present, $state.current.data.displayName can't be changed
             data: {},
             params: {
               alarm: null,
@@ -2869,26 +2925,21 @@
             controller: 'HDSServiceController',
             controllerAs: 'hdsServiceController',
             parent: 'main',
-            resolve: {
-              hasHDSFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity);
-              },
-            },
           })
           .state('hds.list', {
             url: '/hds/resources',
             views: {
               'fullPane': {
                 template: '<hybrid-service-cluster-list service-id="\'spark-hybrid-datasecurity\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>',
+                controller: /* @ngInject */ function (Analytics) {
+                  return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_HDS_LIST);
+                },
               },
             },
             params: {
               clusterId: null,
             },
             resolve: {
-              hasHDSFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity);
-              },
               clusterId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.clusterId;
               },
@@ -2901,11 +2952,6 @@
                 controller: 'HDSSettingsController',
                 controllerAs: 'hdsSettings',
                 templateUrl: 'modules/hds/settings/hds-settings.html',
-              },
-            },
-            resolve: {
-              hasHDSFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity);
               },
             },
           })
@@ -2951,13 +2997,11 @@
             params: {
               host: null,
               hostSerial: null,
-              clusterId: null,
-              connectorType: null,
             },
           })
           .state('hds-cluster-details.alarm-details', {
             template: '<alarm-details-sidepanel alarm="$resolve.alarm"></alarm-details-sidepanel>',
-            // If data not present, $state.current.data.displayName inside the component has no effect
+            // If data not present, $state.current.data.displayName can't be changed
             data: {},
             params: {
               alarm: null,
@@ -3176,6 +3220,9 @@
             views: {
               calendarServiceView: {
                 templateUrl: 'modules/hercules/service-specific-pages/calendar-service-pages/calendar-service-resources.html',
+                controller: /* @ngInject */ function (Analytics) {
+                  return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CAL_EXC_LIST);
+                },
               },
             },
             params: {
@@ -3205,6 +3252,9 @@
           .state('google-calendar-service.settings', {
             url: '/services/google-calendar/settings',
             template: '<google-calendar-settings-page ng-if="$resolve.hasGoogleCalendarFeatureToggle"></google-calendar-settings-page>',
+            controller: /* @ngInject */ function (Analytics) {
+              return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CAL_GOOG_SETTINGS);
+            },
           })
           .state('call-service', {
             templateUrl: 'modules/hercules/service-specific-pages/call-service-pages/call-service-container.html',
@@ -3220,6 +3270,9 @@
             views: {
               callServiceView: {
                 templateUrl: 'modules/hercules/service-specific-pages/call-service-pages/call-service-resources.html',
+              },
+              controller: /* @ngInject */ function (Analytics) {
+                return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CALL_LIST);
               },
             },
             params: {
@@ -3241,19 +3294,18 @@
               },
             },
           })
-          .state('cluster-details', {
+          .state('expressway-cluster-sidepanel', {
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
                 template: '<cluster-sidepanel-overview cluster-type="\'c_mgmt\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType" has-resource-group-feature-toggle="$resolve.hasResourceGroupFeatureToggle" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></cluster-sidepanel-overview>',
               },
-              'header@cluster-details': {
+              'header@expressway-cluster-sidepanel': {
                 templateUrl: 'modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html',
               },
             },
-            data: {
-              displayName: 'Overview',
-            },
+            // If data not present, $state.current.data.displayName can't be changed
+            data: {},
             params: {
               clusterId: null,
               connectorType: null,
@@ -3273,63 +3325,31 @@
               },
             },
           })
-          .state('management-connector-details', {
-            parent: 'sidepanel',
-            views: {
-              'sidepanel@': {
-                templateUrl: 'modules/hercules/cluster-sidepanel/host-details/management-connector-details.html',
-                controller: 'HybridServicesHostDetailsController',
-                controllerAs: 'hostDetailsCtrl',
-              },
-            },
-            data: {
-              displayName: 'Management Connector',
-            },
-            params: {
-              host: null,
-              hostSerial: null,
-              clusterId: null,
-              connectorType: 'c_mgmt',
-            },
-          })
-          .state('management-connector-details.alarm-details', {
-            template: '<alarm-details-sidepanel alarm="$resolve.alarm"></alarm-details-sidepanel>',
-            // If data not present, $state.current.data.displayName inside the component has no effect
-            data: {},
-            params: {
-              alarm: null,
-            },
-            resolve: {
-              alarm: /* @ngInject */ function ($stateParams) {
-                return $stateParams.alarm;
-              },
-            },
-          })
-          .state('cluster-details.alarm-details', {
-            template: '<alarm-details-sidepanel alarm="$resolve.alarm"></alarm-details-sidepanel>',
-            // If data not present, $state.current.data.displayName inside the component has no effect
-            data: {},
-            params: {
-              alarm: null,
-            },
-            resolve: {
-              alarm: /* @ngInject */ function ($stateParams) {
-                return $stateParams.alarm;
-              },
-            },
-          })
-          .state('cluster-details.host-details', {
+          .state('expressway-cluster-sidepanel.host-details', {
             templateUrl: 'modules/hercules/cluster-sidepanel/host-details/host-details.html',
             controller: 'HybridServicesHostDetailsController',
             controllerAs: 'hostDetailsCtrl',
-            data: {
-              displayName: 'Node',
-            },
+            // If data not present, $state.current.data.displayName can't be changed
+            data: {},
             params: {
               host: null,
               hostSerial: null,
-              clusterId: null,
-              connectorType: null,
+              // we inherit params from the parent, and because of management connectors we shouldn't override
+              // the parent connectorType param…
+              specificType: null,
+            },
+          })
+          .state('expressway-cluster-sidepanel.alarm-details', {
+            template: '<alarm-details-sidepanel alarm="$resolve.alarm"></alarm-details-sidepanel>',
+            // If data not present, $state.current.data.displayName can't be changed
+            data: {},
+            params: {
+              alarm: null,
+            },
+            resolve: {
+              alarm: /* @ngInject */ function ($stateParams) {
+                return $stateParams.alarm;
+              },
             },
           })
           .state('resource-group-settings', {
@@ -3383,13 +3403,11 @@
             params: {
               host: null,
               hostSerial: null,
-              clusterId: null,
-              connectorType: null,
             },
           })
           .state('media-cluster-details.alarm-details', {
             template: '<alarm-details-sidepanel alarm="$resolve.alarm"></alarm-details-sidepanel>',
-            // If data not present, $state.current.data.displayName inside the component has no effect
+            // If data not present, $state.current.data.displayName can't be changed
             data: {},
             params: {
               alarm: null,
@@ -3411,6 +3429,9 @@
             views: {
               'fullPane': {
                 template: '<hybrid-service-cluster-list service-id="\'squared-fusion-media\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>',
+                controller: /* @ngInject */ function (Analytics) {
+                  return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_MEDIA_LIST);
+                },
               },
             },
             params: {
@@ -3430,6 +3451,9 @@
                 controller: 'MediaServiceSettingsControllerV2',
                 templateUrl: 'modules/mediafusion/media-service-v2/settings/media-service-settings.html',
               },
+            },
+            controller: /* @ngInject */ function (Analytics) {
+              return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_MEDIA_SETTINGS);
             },
           });
 

@@ -2,7 +2,8 @@ describe('Component: pgSetupAssistant', () => {
 
   let saveFailureResp = getJSONFixture('huron/json/features/pagingGroup/errorResponse.json');
   let pg = getJSONFixture('huron/json/features/pagingGroup/pg.json');
-  let pgWithMembers = getJSONFixture('huron/json/features/pagingGroup/pgWithMembers.json');
+  let pgWithEmptyInit = getJSONFixture('huron/json/features/pagingGroup/pgWithEmptyInitiators.json');
+  let pgWithMembersAndInitiators = getJSONFixture('huron/json/features/pagingGroup/pgWithMembersAndInitiators.json');
   let members = getJSONFixture('huron/json/features/pagingGroup/membersList2.json');
 
   beforeEach(function () {
@@ -14,6 +15,7 @@ describe('Component: pgSetupAssistant', () => {
       '$translate',
       '$q',
       'PagingGroupService',
+      'FeatureToggleService',
       'HuronConfig',
       'Authinfo',
       'Notification',
@@ -27,6 +29,7 @@ describe('Component: pgSetupAssistant', () => {
 
     this.savePagingGroupDefer = this.$q.defer();
     spyOn(this.PagingGroupService, 'savePagingGroup').and.returnValue(this.savePagingGroupDefer.promise);
+    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
   });
 
   function initComponent() {
@@ -36,8 +39,8 @@ describe('Component: pgSetupAssistant', () => {
   describe('lastIndex', () => {
     beforeEach(initComponent);
 
-    it('should return 2', function () {
-      expect(this.controller.lastIndex).toEqual(2);
+    it('should return 3', function () {
+      expect(this.controller.lastIndex).toEqual(3);
     });
   });
 
@@ -180,7 +183,6 @@ describe('Component: pgSetupAssistant', () => {
       expect(this.controller.animation).toEqual('slide-left');
       expect(this.controller.index).toEqual(1);
     });
-
   });
 
   describe('nextText', () => {
@@ -269,22 +271,51 @@ describe('Component: pgSetupAssistant', () => {
     });
   });
 
+  describe('onUpdateInitiator', () => {
+    beforeEach(initComponent);
+
+    it('should change selectedInitiators', function () {
+      this.controller.onUpdateInitiator('CUSTOM', members);
+      expect(this.controller.selectedInitiators).toEqual(members);
+    });
+  });
+
   describe('savePagingGroup', () => {
     beforeEach(initComponent);
 
-    it('should save with error', function () {
+    it('should save with error if partial members saved', function () {
       let mem1 = angular.copy(members[0]);
       let memWithPic = {
         member: mem1,
         picturePath: '',
       };
-      this.savePagingGroupDefer.resolve(pg);
+      this.savePagingGroupDefer.resolve(_.cloneDeep(pg));
       this.controller.name = pg.name;
       this.controller.number = pg.extension;
       this.controller.selectedMembers.push(memWithPic);
+      this.controller.initiatorType = 'PUBLIC';
+      this.controller.selectedInitiators = [];
       this.controller.savePagingGroup();
       this.$timeout.flush();
-      expect(this.Notification.error).toHaveBeenCalledWith('pagingGroup.errorSavePartial', { pagingGroupName: pg.name, message: [ '0001' ] });
+      expect(this.Notification.error).toHaveBeenCalledWith('pagingGroup.errorSaveMemberPartial', { pagingGroupName: pg.name, message: [ '0001' ] });
+      expect(this.$state.go).toHaveBeenCalledWith('huronfeatures');
+    });
+
+    it('should save with error if partial initiators saved', function () {
+      let mem1 = angular.copy(members[0]);
+      let memWithPic = {
+        member: mem1,
+        picturePath: '',
+      };
+      this.savePagingGroupDefer.resolve(_.cloneDeep(pgWithEmptyInit));
+      this.controller.name = pg.name;
+      this.controller.number = pg.extension;
+      this.controller.selectedMembers = [];
+      this.controller.initiatorType = 'CUSTOM';
+      this.controller.selectedInitiators.push(memWithPic);
+      this.controller.savePagingGroup();
+      this.$timeout.flush();
+      expect(this.Notification.error).toHaveBeenCalledWith('pagingGroup.errorSaveInitiatorPartial', { pagingGroupName: pg.name, message: [ '0001' ] });
       expect(this.$state.go).toHaveBeenCalledWith('huronfeatures');
     });
 
@@ -299,14 +330,17 @@ describe('Component: pgSetupAssistant', () => {
         member: mem2,
         picturePath: '',
       };
-      this.savePagingGroupDefer.resolve(pgWithMembers);
-      this.controller.name = pgWithMembers.name;
-      this.controller.number = pgWithMembers.extension;
+      this.savePagingGroupDefer.resolve(_.cloneDeep(pgWithMembersAndInitiators));
+      this.controller.name = pgWithMembersAndInitiators.name;
+      this.controller.number = pgWithMembersAndInitiators.extension;
       this.controller.selectedMembers.push(memWithPic1);
       this.controller.selectedMembers.push(memWithPic2);
+      this.controller.initiatorType = 'CUSTOM';
+      this.controller.selectedInitiators.push(memWithPic1);
+      this.controller.selectedInitiators.push(memWithPic2);
       this.controller.savePagingGroup();
       this.$timeout.flush();
-      expect(this.Notification.success).toHaveBeenCalledWith('pagingGroup.successSave', { pagingGroupName: pgWithMembers.name });
+      expect(this.Notification.success).toHaveBeenCalledWith('pagingGroup.successSave', { pagingGroupName: pgWithMembersAndInitiators.name });
       expect(this.$state.go).toHaveBeenCalledWith('huronfeatures');
     });
 

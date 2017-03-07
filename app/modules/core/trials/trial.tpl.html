@@ -19,9 +19,11 @@
         <input cs-input type="text" disabled="disabled" ng-model="trial.currentTrial.customerName">
         <label class="sub-section__label" translate="partnerHomePage.customerEmail"></label>
         <input cs-input type="text" disabled="disabled" ng-model="trial.currentTrial.customerEmail">
+        <formly-form model="trial.details" fields="trial.validLocationField"></formly-form>
       </div>
       <div class="section__content" ng-if="!trial.isExistingOrg()">
         <formly-form model="trial.details" fields="trial.custInfoFields"></formly-form>
+        <formly-form model="trial.details" fields="trial.validLocationField"></formly-form>
       </div>
     </div>
     <!-- regional settings -->
@@ -35,7 +37,7 @@
     </trial-regional-settings>
 
     <trial-regional-settings
-      cr-feature-toggle feature-show="huron-support-for-thinktel-i1423"
+      cr-feature-toggle feature-show="huron-support-for-thinktel"
       ng-if="trial.isNewTrial()"
       filter-country-list="true"
       default-country="trial.details.country"
@@ -46,7 +48,6 @@
     <div class="cs-form__section">
       <div class="section__info">
         <h4  translate="partnerHomePage.trialServices"></h4>
-        <p class="cs-input__help-text" translate="trials.supportSelectLocations"></p>
       </div>
       <!-- paid services: TODO: refactor as a component -->
       <div class="section__content">
@@ -67,9 +68,33 @@
             <formly-form model="trial.trialData.trials" fields="trial.callFields" hide-directive="ng-show">
             </formly-form>
         </div>
-        <div class="sub-section" ng-if="trial.showCare && !trial.careFields[0].data.paid">
+        <div class="sub-section" ng-if="trial.showCare && (!trial.careTrial.paid || !trial.advanceCareTrial.paid)">
           <h5 class="sub-section__label" translate="subscriptions.care"></h5>
-          <formly-form model="trial.trialData.trials" fields="trial.careFields" hide-directive="ng-show">
+          <input
+                  cs-input
+                  type="checkbox"
+                  id="careTrial"
+                  name="careTrial"
+                  ng-if="trial.showBasicCare"
+                  ng-model="trial.careTrial.enabled"
+                  ng-disabled="trial._helpers.messageOfferDisabledExpression() || trial._helpers.callOfferDisabledExpression() || trial.preset.care"
+                  cs-input-label="{{::'trials.care' | translate}}"
+                  cs-input-help-text="{{::'trials.careHelp' | translate}}"
+          >
+          <formly-form model="trial.trialData.trials" fields="trial.careFields" hide-directive="ng-show" ng-if="trial.showBasicCare">
+          </formly-form>
+          <input
+                  cs-input
+                  type="checkbox"
+                  id="advanceCareTrial"
+                  name="advanceCareTrial"
+                  ng-if="trial.showAdvanceCare"
+                  ng-model="trial.advanceCareTrial.enabled"
+                  ng-disabled="trial._helpers.messageOfferDisabledExpression() || trial._helpers.callOfferDisabledExpression() || trial.preset.advanceCare"
+                  cs-input-label="{{::'trials.advanceCare' | translate}}"
+                  cs-input-help-text="{{::'trials.advanceCareHelp' | translate}}"
+          >
+          <formly-form model="trial.trialData.trials" fields="trial.advanceCareFields" hide-directive="ng-show" ng-if="trial.showAdvanceCare" >
           </formly-form>
         </div>
         <div class="sub-section" ng-if="trial.showRoomSystems">

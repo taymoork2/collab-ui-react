@@ -1,19 +1,20 @@
 'use strict';
 
 describe('SetupWizardCtrl', function () {
+
   beforeEach(function () {
-    this.initModules(
-      'Core'
-    );
+    this.initModules('Core');
 
     this.injectDependencies(
       '$controller',
       '$q',
       '$scope',
       '$state',
+      '$stateParams',
       'Authinfo',
       'FeatureToggleService',
-      'Orgservice'
+      'Orgservice',
+      'DirSyncService'
     );
 
     this.usageFixture = getJSONFixture('core/json/organizations/usage.json');
@@ -28,11 +29,12 @@ describe('SetupWizardCtrl', function () {
       licenseType: 'SHARED_DEVICES',
     }]);
 
+    spyOn(this.DirSyncService, 'requiresRefresh').and.returnValue(false);
+    spyOn(this.DirSyncService, 'refreshStatus').and.returnValue(this.$q.resolve());
+
     spyOn(this.FeatureToggleService, 'supports').and.callFake(function (feature) {
       return this.$q.resolve(_.includes(this.enabledFeatureToggles, feature));
     }.bind(this));
-    spyOn(this.FeatureToggleService, 'supportsDirSync').and.returnValue(this.$q.resolve(false));
-    spyOn(this.FeatureToggleService, 'atlasPMRonM2GetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.Orgservice, 'getAdminOrgUsage').and.returnValue(this.$q.resolve(this.usageFixture));
 
     this._expectStepIndex = _expectStepIndex;
@@ -143,7 +145,7 @@ describe('SetupWizardCtrl', function () {
 
   describe('When dirsync is enabled', function () {
     beforeEach(function () {
-      this.FeatureToggleService.supportsDirSync.and.returnValue(this.$q.resolve(true));
+      spyOn(this.DirSyncService, 'isDirSyncEnabled').and.returnValue(true);
       this.initController();
     });
 
@@ -226,7 +228,7 @@ describe('SetupWizardCtrl', function () {
       this.Authinfo.isCare.and.returnValue(true);
 
       this.FeatureToggleService.supports.and.returnValue(this.$q.resolve(true));
-      this.FeatureToggleService.supportsDirSync.and.returnValue(this.$q.resolve(true));
+      spyOn(this.DirSyncService, 'isDirSyncEnabled').and.returnValue(true);
 
       this.initController();
     });
@@ -236,7 +238,7 @@ describe('SetupWizardCtrl', function () {
       this.expectSubStepOrder('planReview', ['init']);
       this.expectSubStepOrder('serviceSetup', ['init']);
       this.expectSubStepOrder('messagingSetup', ['setup']);
-      this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
+      this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'enterprisePmrSetup', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
       this.expectSubStepOrder('careSettings', ['csonboard']);
     });
   });
@@ -337,6 +339,29 @@ describe('SetupWizardCtrl', function () {
           this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl']);
         });
       });
+    });
+  });
+
+  describe('stateParams with onlyShowSingleTab and numberOfSteps', function () {
+    it('should only contain a single tab and specific steps if numberOfSteps is set', function () {
+      _.set(this.$stateParams, 'onlyShowSingleTab', true);
+      _.set(this.$stateParams, 'currentTab', 'enterpriseSettings');
+      _.set(this.$stateParams, 'currentStep', 'init');
+      _.set(this.$stateParams, 'numberOfSteps', 1);
+      this.initController();
+
+      this.expectStepOrder(['enterpriseSettings']);
+      this.expectSubStepOrder('enterpriseSettings', ['init']);
+    });
+
+    it('should only contain a single tab and remaining steps if numberOfSteps is not set', function () {
+      _.set(this.$stateParams, 'onlyShowSingleTab', true);
+      _.set(this.$stateParams, 'currentTab', 'enterpriseSettings');
+      _.set(this.$stateParams, 'currentStep', 'init');
+      this.initController();
+
+      this.expectStepOrder(['enterpriseSettings']);
+      this.expectSubStepOrder('enterpriseSettings', ['init', 'exportMetadata', 'importIdp', 'testSSO']);
     });
   });
 });

@@ -1,0 +1,11 @@
+<div id="dirsync-settings" class="dir-sync-settings">
+  <div class="updating" ng-if="$ctrl.updatingStatus">
+    <span translate="globalSettings.dirsync.loading"></span>
+    <i class="space icon icon-spinner"></i>
+  </div>
+  <div ng-if="!$ctrl.updatingStatus">
+    <dir-sync-config enabled="$ctrl.dirSyncEnabled" on-disable-dirsync="$ctrl.disableDirSync()"></dir-sync-config>
+    <br>
+    <dir-connectors-config connectors="$ctrl.connectors" on-deregister="$ctrl.deregisterConnector(connector)"></dir-connectors-config>
+  </div>
+</div>

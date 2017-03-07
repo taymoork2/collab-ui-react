@@ -21,7 +21,7 @@ export class AlarmDetailsSidepanelCtrl implements ng.IComponentController {
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }) {
-    let alarm = changes['alarm'];
+    const { alarm } = changes;
     if (alarm && alarm.currentValue) {
       this.init(alarm.currentValue);
     }
@@ -30,7 +30,10 @@ export class AlarmDetailsSidepanelCtrl implements ng.IComponentController {
   public getAlarmSeverityCssClass = this.FusionClusterStatesService.getAlarmSeverityCssClass;
 
   // This hack should be removed once FMS starts using the correct format for alarm timestamps.
-  public parseDate = timestamp => moment(timestamp).isValid() ? moment(timestamp).format() : moment.unix(timestamp).format();
+  public parseDate = timestamp => {
+    const unix = moment.unix(timestamp);
+    return unix.isValid() ? unix.format() : moment(timestamp).format();
+  }
 
   private init(alarm: IAlarmModified) {
     if (alarm.solution) {

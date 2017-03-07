@@ -8,7 +8,6 @@ describe('Service: AAMediaUploadService', function () {
   var Config;
   var $http;
   var $q;
-  var $rootScope;
 
   var validFileByName = 'validFile.wav';
   var invalidFileByName = 'validFile.invalid';
@@ -75,7 +74,7 @@ describe('Service: AAMediaUploadService', function () {
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function (_Upload_, _Config_, _AACommonService_, _AAMediaUploadService_, _AACtrlResourcesService_, _$http_, _$q_, _$rootScope_) {
+  beforeEach(inject(function (_Upload_, _Config_, _AACommonService_, _AAMediaUploadService_, _AACtrlResourcesService_, _$http_, _$q_) {
     Upload = _Upload_;
     AAMediaUploadService = _AAMediaUploadService_;
     AACommonService = _AACommonService_;
@@ -83,7 +82,6 @@ describe('Service: AAMediaUploadService', function () {
     Config = _Config_;
     $http = _$http_;
     $q = _$q_;
-    $rootScope = _$rootScope_;
   }));
 
   afterEach(function () {
@@ -164,47 +162,65 @@ describe('Service: AAMediaUploadService', function () {
     });
   });
 
-  describe('broadcasts', function () {
+  describe('AA Save', function () {
     beforeEach(function () {
       spyOn(AAMediaUploadService, 'cleanResourceFieldIndex').and.callFake(function (field, index, key) {
         return key && index && field;
       });
-      spyOn($rootScope, '$broadcast').and.callThrough();
       spyOn(AACtrlResourcesService, 'getCtrlKeys').and.returnValue(['mediaUploadCtrlN']);
     });
 
-    describe('AA Save', function () {
-      beforeEach(function () {
-      });
-
-      it('should delete the field information on aa save if not active', function () {
-        spyOn(AAMediaUploadService, 'getResources').and.returnValue({
-          mediaUploadCtrlN: {
-            active: false,
-            saved: '',
-            uploads: ['value'],
-          },
-        });
-        $rootScope.$broadcast('CE Saved');
-        expect(AAMediaUploadService.cleanResourceFieldIndex).not.toHaveBeenCalled();
-      });
-    });
-
-    describe('AA Close', function () {
-      beforeEach(function () {
-      });
-
-      it('should delete out the resources on aa close if not saved', function () {
-        spyOn(AAMediaUploadService, 'getResources').and.returnValue({
-          active: '',
-          saved: false,
+    it('should delete the field information on aa save if not active', function () {
+      spyOn(AAMediaUploadService, 'getResources').and.returnValue({
+        mediaUploadCtrlN: {
+          active: false,
+          saved: '',
           uploads: ['value'],
-        });
-        $rootScope.$broadcast('CE Closed');
-        expect(AAMediaUploadService.cleanResourceFieldIndex).not.toHaveBeenCalled();
+        },
       });
+      AAMediaUploadService.saveResources();
+      expect(AAMediaUploadService.cleanResourceFieldIndex).not.toHaveBeenCalled();
     });
   });
+
+  describe('AA Close', function () {
+    it('should delete out the resources on aa close if not saved', function () {
+      var resources = AAMediaUploadService.getResources('someId');
+      resources.uploads.push({
+        deleteUrl: 'keeper',
+        myUrl: 'keeper URL',
+      });
+      resources.uploads.push({
+        deleteUrl: 'should not be here',
+        myUrl: 'deleted URL',
+      });
+
+      AAMediaUploadService.resetResources();
+
+      expect(resources.uploads.length).toEqual(1);
+      expect(resources.uploads[0].myUrl).toEqual('keeper URL');
+
+    });
+  });
+  describe('Notify', function () {
+    it('should moved saved to true', function () {
+      var resources = AAMediaUploadService.getResources('someId');
+
+      AAMediaUploadService.notifyAsSaved('someId', true);
+
+      expect(resources.saved).toEqual(true);
+
+    });
+    it('should moved active to true', function () {
+      var resources = AAMediaUploadService.getResources('someId');
+
+      AAMediaUploadService.notifyAsActive('someId', true);
+
+      expect(resources.active).toEqual(true);
+
+    });
+  });
+
 
   describe('getRecordingUrl', function () {
     beforeEach(function () {

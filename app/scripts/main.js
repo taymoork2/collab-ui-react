@@ -58,6 +58,7 @@
     require('modules/online/digitalRiver').default, // TODO make core.myCompany independent module
     require('modules/online/upgrade').default,
     require('modules/core/trials/regionalSettings').default,
+    require('modules/core/trials/emergencyServices').default,
     require('modules/huron/countries').default,
   ])
     .constant('CryptoJS', require('crypto-js'))
@@ -94,7 +95,7 @@
 
   angular.module('Hercules', ['Core', 'Squared', 'core.onboard', 'ngTagsInput']);
 
-  angular.module('HDS', ['Core']);
+  angular.module('HDS', ['Core', 'Hercules']);
 
   angular.module('Ediscovery', ['Core']);
 

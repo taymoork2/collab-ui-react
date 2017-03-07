@@ -10,8 +10,7 @@
       "usage": 7,
       "volume": 100
     }],
-    "subscriptionId": "subID",
-    "internalSubscriptionId": "intSubID"
+    "subscriptionId": "subID"
   }],
   "trialLicenseData": [{
     "label": "subscriptions.message",
@@ -39,10 +38,13 @@
     "label": "subscriptions.room",
     "subscriptions": [],
     "borders": false
+  }, {
+    "label": "subscriptions.care",
+    "subscriptions": [],
+    "borders": true
   }],
   "trialSubscriptionData": [{
     "subscriptionId": "subID",
-    "internalSubscriptionId": "intSubID",
     "licenses": [{
       "licenseId": "MS_aa250b26-56d6-4e3c-8244-127d2cb49006",
       "licenseType": "MESSAGING",
@@ -56,7 +58,8 @@
     }],
     "isTrial": true,
     "isOnline": false,
-    "viewAll": false
+    "viewAll": false,
+    "numSubscriptions": 1
   }],
   "subscriptionsResponse": [{
     "licenses": [{
@@ -145,9 +148,26 @@
       "status": "ACTIVE",
       "usage": 3,
       "volume": 100
+    }, {
+      "features": ["cloud-contact-center"],
+      "isTrial": false,
+      "licenseId": "CDC_21770613-64d6-4658-a1f2-4a63ea819af2",
+      "licenseType": "CARE",
+      "offerName": "CDC",
+      "status": "ACTIVE",
+      "usage": 3,
+      "volume": 100
+    },{
+      "features": ["cloud-contact-center", "cloud-contact-center-inbound-voice"],
+      "isTrial": false,
+      "licenseId": "CVC_21770613-64d6-4658-a1f2-4a63ea819af2",
+      "licenseType": "CARE",
+      "offerName": "CVC",
+      "status": "ACTIVE",
+      "usage": 3,
+      "volume": 100
     }],
-    "subscriptionId": "subID",
-    "internalSubscriptionId": "intSubID"
+    "subscriptionId": "subID"
   }],
   "licensesFormatted": [{
     "label": "subscriptions.message",
@@ -268,10 +288,41 @@
       "tooltip": "subscriptions.licenseTypes.SD<br>subscriptions.usage3/100",
       "class": "icon-meeting-room"
     }]
+  }, {
+    "label":"subscriptions.care",
+    "subscriptions":[
+      {
+        "offers":[
+          {
+            "licenseId":"CDC_21770613-64d6-4658-a1f2-4a63ea819af2",
+            "licenseType":"CARE",
+            "licenseModel":"",
+            "offerName":"CDC",
+            "usage":3,
+            "volume":100,
+            "id":"donutId09",
+            "tooltip":"subscriptions.licenseTypes.CDC<br>subscriptions.usage3/100",
+            "class":"icon-headset"
+          },
+          {
+            "licenseId":"CVC_21770613-64d6-4658-a1f2-4a63ea819af2",
+            "licenseType":"CARE",
+            "licenseModel":"",
+            "offerName":"CVC",
+            "usage":3,
+            "volume":100,
+            "id":"donutId010",
+            "tooltip":"subscriptions.licenseTypes.CVC<br>subscriptions.usage3/100",
+            "class":"icon-headset"
+          }
+        ],
+        "type":"CARE"
+      }
+    ],
+    "borders":true
   }],
   "subscriptionsFormatted": [{
     "subscriptionId": "subID",
-    "internalSubscriptionId": "intSubID",
     "licenses": [{
       "licenseId": "MS_aa250b26-56d6-4e3c-8244-127d2cb49006",
       "licenseType": "MESSAGING",
@@ -367,10 +418,31 @@
       "id": "donutId08",
       "tooltip": "subscriptions.licenseTypes.SD<br>subscriptions.usage3/100",
       "class": "icon-meeting-room"
+    }, {
+      "licenseId": "CDC_21770613-64d6-4658-a1f2-4a63ea819af2",
+      "licenseType": "CARE",
+      "licenseModel": "",
+      "offerName": "CDC",
+      "usage": 3,
+      "volume": 100,
+      "id": "donutId09",
+      "tooltip": "subscriptions.licenseTypes.CDC<br>subscriptions.usage3/100",
+      "class": "icon-headset"
+    }, {
+      "licenseId": "CVC_21770613-64d6-4658-a1f2-4a63ea819af2",
+      "licenseType": "CARE",
+      "licenseModel": "",
+      "offerName": "CVC",
+      "usage": 3,
+      "volume": 100,
+      "id": "donutId010",
+      "tooltip": "subscriptions.licenseTypes.CVC<br>subscriptions.usage3/100",
+      "class": "icon-headset"
     }],
     "isTrial": false,
     "isOnline": false,
-    "viewAll": false
+    "viewAll": false,
+    "numSubscriptions": 1
   }],
   "servicesResponse": [{
     "id": "squared-fusion-mgmt",

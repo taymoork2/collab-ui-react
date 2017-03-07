@@ -125,10 +125,6 @@
         padding-bottom: 1rem;
       }
 
-      .pointer {
-        cursor: pointer;
-      }
-
       .main-heading {
         padding-top: 2rem;
 
@@ -150,11 +146,11 @@
         }
       }
 
-      .searchWarning {
+      .search-warning {
         color: $color-attention-base;
       }
 
-      .searchByRoom {
+      .ediscovery-advanced-search {
         margin-top: 48px;
         display: inline-block;
         width: 50%;
@@ -167,16 +163,15 @@
           max-width: 100%;
         }
 
-        #searchBy {
-          padding-left: 0;
+        .cs-datepicker {
+          display: block;
         }
 
-        .searchText {
+        .search-text {
           float: left;
-          padding-left: 0.5rem;
         }
 
-        .searchBox {
+        .search-box {
           padding-left: 0px;
         }
 
@@ -184,24 +179,24 @@
           width: 50%;
         }
 
-        .searchButton {
+        .query-row {
+          padding-right: 0.5rem;
+        }
+
+        .search-button {
           float: left;
           width: 100px;
         }
 
-        #textInput {
-          margin-left: 0.5rem;
-        }
-
-        #smallBreak {
+        .small-gap {
           margin-top: 16px;
         }
 
-        #midBreak{
+        .mid-gap {
           padding-top: 24px;
         }
 
-        #largeBreak {
+        .large-gap {
           margin-top: 36px;
         }
       }
@@ -221,10 +216,6 @@
 
         @media only screen and (max-width: 640px) {
           max-width: 90%;
-        }
-
-        .searchInputForm {
-          margin-bottom: 0;
         }
 
         input {
@@ -344,9 +335,15 @@
           }
         }
 
+        .back-button {
+          padding-left: 16px;
+          padding-top: 24px;
+        }
+
         .result-title {
           font-size: 12px;
           font-family: 'CiscoSansTT Light', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+          padding-bottom: 4px;
         }
 
         .result-info {
@@ -355,6 +352,30 @@
           padding-top: 0px;
           padding-bottom: 0px;
         }
+        
+        .report-title {
+          font-family: 'CiscoSans';
+          font-size: 16px;
+          font-weight: 200;
+          font-style: normal;
+          font-stretch: normal;
+          line-height: 1.5;
+          letter-spacing: normal;
+          text-align: center;
+          color: #6a6b6c;
+        }
+
+        .report-info {
+          font-family: 'CiscoSans';
+          font-size: 26px;
+          font-weight: 200;
+          font-style: normal;
+          font-stretch: normal;
+          line-height: 1.23;
+          letter-spacing: normal;
+          text-align: center;
+          color: #049fd9;
+        }
 
         .report-header {
           padding: 14px 18px;
@@ -362,9 +383,13 @@
 
         .report-parameters {
           padding: 12px 32px;
+
+          .results-spacing {
+            margin-top: 16px;
+          }
         }
 
-        .summaryHeader {
+        .summary-header {
           padding-left: 30px;
         }
 

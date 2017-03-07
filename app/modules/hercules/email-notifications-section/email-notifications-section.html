@@ -24,7 +24,30 @@
     </cs-toggle-switch>
   </div>
 
-  <div class="sub-section" ng-show="$ctrl.hasCalsvcOneButtonToPushIntervalFeatureToggle && $ctrl.isCalendarService()">
+  <div class="sub-section" ng-if="$ctrl.isCalendarService() && $ctrl.hasCalsvcSetOrgLevelDefaultSiteNameFeatureToggle">
+  <h5 class="sub-section__label" translate="hercules.settings.defaultWebExSiteOrgLevelHeading"></h5>
+    <p class="sub-section__description" translate="hercules.settings.setDefaultWebExSiteOrgLevel"></p>
+    <form id="defaultWebExSiteSettingOrgLevelForm">
+      <div class="row remove-margins">
+        <div class="large-6 columns">
+          <cs-select
+            ng-model="$ctrl.defaultWebExSiteOrgLevel"
+            placeholder="$ctrl.defaultWebExSiteOrgLevelSelectPlaceholder"
+            combo="true"
+          >
+          </cs-select>
+          <button
+            class="btn btn--cta"
+            ng-click="$ctrl.setDefaultWebExSiteOrgLevel()"
+            translate="common.save">
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+
+  <div class="sub-section" ng-if="$ctrl.isCalendarService() && $ctrl.hasCalsvcOneButtonToPushIntervalFeatureToggle">
     <h5 class="sub-section__label" translate="hercules.settings.oneButtonToPushIntervalHeading"></h5>
     <p class="sub-section__description" translate="hercules.settings.oneButtonToPushInterval"></p>
     <div class="row remove-margins">

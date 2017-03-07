@@ -623,7 +623,7 @@
       pieces[1] = '';
 
       for (var i = 1; i < btwQuotes.length - 1; i += 2) {
-        pieces[1] += btwQuotes[1] + ",";
+        pieces[1] += btwQuotes[i] + ",";
       }
 
       pieces[1] += btwQuotes[btwQuotes.length - 1];
@@ -1558,7 +1558,7 @@
         //deleteUrl has been configured
         //else it will go to a sayList, blank or otherwise
         //which is used later to trigger play or say
-        if (list[0].deleteUrl) {
+        if (_.get(list, '[0].deleteUrl', undefined)) {
           inputAction.prompts.playList = list;
         } else {
           inputAction.prompts.sayList = list;

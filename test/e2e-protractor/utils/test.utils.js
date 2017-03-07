@@ -386,7 +386,9 @@ exports.click = function (elem, maxRetry) {
     } else {
       return elem.click().then(_.noop, function (e) {
         log('Failed to click element: ' + elem.locator() + ' Error: ' + ((e && e.message) || e));
-        return exports.click(elem, --maxRetry);
+        return notifications.clearNotifications().then(function () {
+          return exports.click(elem, --maxRetry);
+        });
       });
     }
   });

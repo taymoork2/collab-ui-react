@@ -13,6 +13,8 @@
       c_cal: {},
       mf_mgmt: {},
       hds_app: {},
+      cs_mgmt: {},
+      cs_context: {},
     };
     var hub = CsdmHubFactory.create();
     var poller = CsdmPoller.create(fetch, hub);
@@ -59,9 +61,15 @@
     }
 
     function mergeAllAlarms(connectors) {
-      return _.chain(connectors)
+
+      var allAlarms = _.chain(connectors)
         .reduce(function (acc, connector) {
-          return acc.concat(connector.alarms);
+          var modifiedAlarms = _.map(connector.alarms, function (alarm) {
+            alarm.hostname = connector.hostname;
+            alarm.affectedNodes = [connector.hostname];
+            return alarm;
+          });
+          return acc.concat(modifiedAlarms);
         }, [])
         // This sort must happen before the uniqWith so that we keep the oldest alarm when
         // finding duplicates (the order is preserved when running uniqWith, that is, the
@@ -69,6 +77,9 @@
         .sortBy(function (e) {
           return e.firstReported;
         })
+        .value();
+
+      var deduplicatedAlarms = _.chain(allAlarms)
         .uniqWith(function (e1, e2) {
           return e1.id === e2.id
             && e1.title === e2.title
@@ -85,6 +96,27 @@
           return e.id;
         })
         .value();
+
+      if (allAlarms.length > deduplicatedAlarms.length) {
+        var removedAlarms = _.differenceWith(allAlarms, deduplicatedAlarms, _.isEqual);
+        _.forEach(removedAlarms, function (removedAlarm) {
+          var alarmSiblings = _.filter(allAlarms, function (a) {
+            return removedAlarm.id === a.id
+              && removedAlarm.title === a.title
+              && removedAlarm.description === a.description
+              && removedAlarm.severity === a.severity
+              && removedAlarm.solution === a.solution
+              && _.isEqual(removedAlarm.solutionReplacementValues, a.solutionReplacementValues);
+          });
+          _.forEach(alarmSiblings, function (alarm) {
+            alarm.affectedNodes = _.flatMap(alarmSiblings, function (a) {
+              return a.hostname;
+            });
+            alarm.affectedNodes.sort();
+          });
+        });
+      }
+      return deduplicatedAlarms;
     }
 
     function getUpgradeState(connectors) {
@@ -93,7 +125,8 @@
     }
 
     function mergeRunningState(connectors, type) {
-      if (_.size(connectors) === 0 && (type === 'hds_app' || type === 'mf_mgmt')) {
+      if (_.size(connectors) === 0 &&
+          (type === 'hds_app' || type === 'mf_mgmt')) {
         return {
           state: 'no_nodes_registered',
           stateSeverity: 'neutral',
@@ -190,6 +223,8 @@
             c_cal: clusterType('c_cal', clusters),
             mf_mgmt: clusterType('mf_mgmt', clusters),
             hds_app: clusterType('hds_app', clusters),
+            cs_mgmt: clusterType('cs_mgmt', clusters),
+            cs_context: clusterType('cs_context', clusters),
           };
         })
         .then(function (clusters) {
@@ -199,6 +234,8 @@
             c_cal: addAggregatedData('c_cal', clusters.c_cal),
             mf_mgmt: addAggregatedData('mf_mgmt', clusters.mf_mgmt),
             hds_app: addAggregatedData('hds_app', clusters.hds_app),
+            cs_mgmt: addAggregatedData('cs_mgmt', clusters.cs_mgmt),
+            cs_context: addAggregatedData('cs_context', clusters.cs_context),
           };
           return result;
         })
@@ -209,6 +246,8 @@
             c_cal: _.keyBy(clusters.c_cal, 'id'),
             mf_mgmt: _.keyBy(clusters.mf_mgmt, 'id'),
             hds_app: _.keyBy(clusters.hds_app, 'id'),
+            cs_mgmt: _.keyBy(clusters.cs_mgmt, 'id'),
+            cs_context: _.keyBy(clusters.cs_context, 'id'),
           };
           return result;
         })
@@ -218,6 +257,8 @@
           CsdmCacheUpdater.update(clusterCache.c_cal, clusters.c_cal);
           CsdmCacheUpdater.update(clusterCache.mf_mgmt, clusters.mf_mgmt);
           CsdmCacheUpdater.update(clusterCache.hds_app, clusters.hds_app);
+          CsdmCacheUpdater.update(clusterCache.cs_mgmt, clusters.cs_mgmt);
+          CsdmCacheUpdater.update(clusterCache.cs_context, clusters.cs_context);
           return clusterCache;
         });
     }

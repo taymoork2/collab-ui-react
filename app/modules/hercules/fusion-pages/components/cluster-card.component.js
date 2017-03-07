@@ -83,6 +83,7 @@
       } else if (serviceId === 'contact-center-context') {
         $state.go('context-resources', {
           backState: 'cluster-list',
+          clusterId: clusterId,
         });
       }
     }

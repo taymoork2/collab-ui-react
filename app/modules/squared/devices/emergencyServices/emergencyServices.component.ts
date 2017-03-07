@@ -20,6 +20,7 @@ export class EmergencyServicesCtrl {
   public impactedUsers: any[];
   public staticNumber: boolean;
   public addressFound: boolean;
+  public locationLabel: string;
 
   /* @ngInject */
   constructor(
@@ -35,6 +36,7 @@ export class EmergencyServicesCtrl {
     let data = this.EmergencyServicesService.getInitialData();
     this.emergency = data.emergency;
     this.currentDevice = data.currentDevice;
+    this.locationLabel = data.locationLabel;
     this.stateOptions = data.stateOptions;
     this.staticNumber = data.staticNumber;
     this.EmergencyServicesService.getOptions().then(options => this.options = options);

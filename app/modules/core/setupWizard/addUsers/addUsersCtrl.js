@@ -5,8 +5,8 @@
     .controller('AddUserCtrl', AddUserCtrl);
 
   /* @ngInject */
-  function AddUserCtrl($filter, $location, $q, $rootScope, $scope, $translate, addressparser, Analytics, DirSyncService, Log, Notification,
-    UserListService, Userservice, LogMetricsService, Config, FeatureToggleService) {
+  function AddUserCtrl($filter, $location, $q, $rootScope, $scope, $translate, addressparser, Analytics, DirSyncServiceOld, Log, Notification,
+    UserListService, Userservice, LogMetricsService, Config) {
     $scope.maxUsers = 1100;
     var getStatusCount = 0;
     var invalidcount = 0;
@@ -14,8 +14,9 @@
       addUsers: 0,
     };
 
-    FeatureToggleService.supportsDirSync().then(function (dirSyncEnabled) {
-      if (dirSyncEnabled) {
+    DirSyncServiceOld.getDirSyncStatus(function (data) {
+      if (data.success) {
+        // todo - what is the actual data value to determine if DirSync is enabled?
         $scope.options.addUsers = 2;
       }
     });
@@ -241,7 +242,7 @@
 
     //*********************************************DIRSYNC*********************************************//
     $scope.getDefaultDomain = function () {
-      DirSyncService.getDirSyncDomain(function (data, status) {
+      DirSyncServiceOld.getDirSyncDomain(function (data, status) {
         if (data.success) {
           Log.debug('Retrieved DirSync domain name. Status: ' + status);
           if (data && data.domains[0]) {
@@ -264,7 +265,7 @@
 
     $scope.setDomain = function () {
       if (($scope.domain.length > 0) && ($scope.domainExists !== true)) {
-        DirSyncService.postDomainName($scope.domain, function (data, status) {
+        DirSyncServiceOld.postDomainName($scope.domain, function (data, status) {
           if (data.success) {
             Log.debug('Created DirSync domain. Status: ' + status);
           } else {
@@ -294,7 +295,7 @@
       $rootScope.$emit('add-user-dirsync-started');
       getStatusCount += 1;
 
-      DirSyncService.getDirSyncStatus(function (data, status) {
+      DirSyncServiceOld.getDirSyncStatus(function (data, status) {
         if (data.success) {
           Log.debug('Retrieved DirSync status successfully. Status: ' + status);
           if (data) {
@@ -343,7 +344,7 @@
 
     $scope.syncNow = function () {
       $scope.syncNowLoad = true;
-      DirSyncService.syncUsers(500, function (data, status) {
+      DirSyncServiceOld.syncUsers(500, function (data, status) {
         if (data.success) {
           $scope.syncNowLoad = false;
           Log.debug('DirSync started successfully. Status: ' + status);

@@ -13,5 +13,16 @@
     "deviceIds": [], 
     "type": "USER"
   }
+  ],
+  "initiatorType": "CUSTOM",
+  "initiators": [
+    { 
+      "initiatorId": "0001",
+      "type": "USER" 
+    },
+    { 
+      "initiatorId": "0002", 
+      "type": "PLACE" 
+    }
   ]
 }

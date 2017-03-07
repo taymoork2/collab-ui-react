@@ -1,16 +1,13 @@
-<cs-page-sub-header>
+<div class="field-list">
 
-  <cs-page-sub-header-left>
-    <cs-searchfilter filters="" search-item-fn="" placeholder-text="Search fields">
-    </cs-searchfilter>
-  </cs-page-sub-header-left>
+  <div class="row grid">
+    <div class="gridStyle" ui-grid="gridOptions" ui-grid-selection ui-grid-infinite-scroll></div>
+    <div class="grid-refresh" ng-if="gridRefresh">
+      <i class="icon icon-spinner icon-2x"></i>
+    </div>
+    <div class="search-noresults" ng-if="noSearchResults">
+      <span class="h2" translate="context.dictionary.fieldPage.noSearchResults"></span>
+    </div>
+  </div>
 
-  <cs-page-sub-header-right>
-    <new-button modal-window-options=""></new-button>
-  </cs-page-sub-header-right>
-
-</cs-page-sub-header>
-
-<div class="centered-info-pane">
-  <h3 translate="context.dictionary.welcome"></h3>
 </div>

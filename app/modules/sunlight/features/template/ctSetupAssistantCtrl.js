@@ -901,6 +901,14 @@
       return (fieldDisplayText.length <= maxCharLimit);
     }
 
+    function statusPageNotifier() {
+      var notifyMessage = $translate.instant('careChatTpl.statusMessage_failureText', {
+        lengthLimit: vm.lengthConstants.singleLineMaxCharLimit25 });
+      if (!isStatusMessagesPageValid() && $stateParams.isEditFeature) {
+        Notification.error(notifyMessage);
+      }
+    }
+
     function isAgentUnavailablePageValid() {
       return isValidField(vm.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText, vm.lengthConstants.multiLineMaxCharLimit);
     }
@@ -1027,11 +1035,12 @@
       }
     }
 
-    function resetActiveItem() {
+    function navigationHandler() {
       switch (vm.currentState) {
         case 'customerInformation':
         case 'customerInformationCallback':
-        case 'customerInformationChat': vm.activeItem = undefined;
+        case 'customerInformationChat': vm.activeItem = undefined; break;
+        case 'chatStatusMessages': statusPageNotifier(); break;
       }
     }
 
@@ -1039,16 +1048,16 @@
       vm.animation = 'slide-left';
       $timeout(function () {
         vm.currentState = getAdjacentEnabledState(getPageIndex(), 1);
+        navigationHandler();
       }, vm.animationTimeout);
-      resetActiveItem();
     }
 
     function previousPage() {
       vm.animation = 'slide-right';
       $timeout(function () {
         vm.currentState = getAdjacentEnabledState(getPageIndex(), -1);
+        navigationHandler();
       }, vm.animationTimeout);
-      resetActiveItem();
     }
 
     vm.activeItem = undefined;

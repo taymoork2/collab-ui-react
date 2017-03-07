@@ -11,7 +11,7 @@
     var LEGEND = 'legend';
 
     var timeStamp = $translate.instant('mediaFusion.metrics.timeStamp');
-    var numberOfParticipantTitle = $translate.instant('mediaFusion.metrics.numberOfParticipantTitle');
+    var participantsTitle = $translate.instant('mediaFusion.metrics.participants');
 
     var zoomedEndTime = null;
     var zoomedStartTime = null;
@@ -73,8 +73,9 @@
       valueAxes[0].minimum = 0;
       valueAxes[0].autoGridCount = true;
       valueAxes[0].position = 'left';
-      valueAxes[0].title = numberOfParticipantTitle;
-      valueAxes[0].titleRotation = 270;
+      valueAxes[0].title = participantsTitle;
+      //valueAxes[0].titleRotation = 0;
+      valueAxes[0].labelOffset = 28;
 
       var catAxis = CommonReportsGraphService.getBaseVariable(AXIS);
       catAxis.gridPosition = 'start';

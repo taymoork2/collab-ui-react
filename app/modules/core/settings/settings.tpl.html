@@ -19,6 +19,10 @@
       <sipdomain-setting show-save-button="true"></sipdomain-setting>
     </setting-section>
 
+    <setting-section setting="settingsCtrl.dirsync" ng-if="settingsCtrl.dirsync">
+      <dirsync-setting></dirsync-setting>
+    </setting-section>
+
     <setting-section setting="settingsCtrl.authentication" ng-if="settingsCtrl.authentication">
       <authentication-setting></authentication-setting>
     </setting-section>

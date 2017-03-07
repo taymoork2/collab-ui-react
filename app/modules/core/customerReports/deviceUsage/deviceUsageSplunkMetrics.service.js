@@ -6,7 +6,7 @@
     .service('DeviceUsageSplunkMetricsService', DeviceUsageSplunkMetricsService);
 
   /* @ngInject */
-  function DeviceUsageSplunkMetricsService($log, LogMetricsService) {
+  function DeviceUsageSplunkMetricsService(LogMetricsService) {
 
     var eventTypes = {
       fullReportDownload: 'FULLREPORTDOWNLOAD',
@@ -19,8 +19,6 @@
         operation: operation,
         data: data,
       };
-      $log.info('reportOperation', json);
-
       LogMetricsService.logMetrics(
         'deviceUsageReports',
         LogMetricsService.eventType.deviceUsageReportOperation,

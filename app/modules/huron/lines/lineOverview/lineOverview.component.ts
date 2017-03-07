@@ -21,7 +21,6 @@ class LineOverview implements ng.IComponentController {
   public showActions: boolean = false;
   public deleteConfirmation: string;
   public deleteSharedLineMessage: string;
-  public autoAnswerFeatureToggleEnabled: boolean = false;
 
   // Directory Number properties
   public esnPrefix: string;
@@ -34,7 +33,7 @@ class LineOverview implements ng.IComponentController {
 
   // Data from services
   public lineOverviewData: LineOverviewData;
-
+  private userVoicemailEnabled: boolean = false;
   /* @ngInject */
   constructor(
     private LineOverviewService: LineOverviewService,
@@ -49,7 +48,6 @@ class LineOverview implements ng.IComponentController {
     private SharedLineService: SharedLineService,
     private CsdmDataModelService,
     private AutoAnswerService: AutoAnswerService,
-    private FeatureToggleService,
     private $q,
   ) { }
 
@@ -76,6 +74,7 @@ class LineOverview implements ng.IComponentController {
         this.LineOverviewService.get(this.consumerType, this.ownerId, this.numberId)
           .then(lineOverviewData => {
             this.lineOverviewData = lineOverviewData;
+            this.userVoicemailEnabled = lineOverviewData.voicemailEnabled;
             this.showActions = this.setShowActionsFlag(this.lineOverviewData.line);
             if (!this.lineOverviewData.line.uuid) { // new line, grab first available internal number
               this.lineOverviewData.line.internal = this.internalNumbers[0];
@@ -90,10 +89,6 @@ class LineOverview implements ng.IComponentController {
       Availability.UNASSIGNED,  // Only get unassigned numbers
       ExternalNumberType.DID,   // Only get standard PSTN numbers. No toll free.
       ).then(numbers => this.externalNumbers = numbers);
-
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.autoAnswer).then((autoAnswerEnabled) => {
-      this.autoAnswerFeatureToggleEnabled = autoAnswerEnabled;
-    });
   }
 
   public setDirectoryNumbers(internalNumber: string, externalNumber: string): void {
@@ -292,6 +287,6 @@ export class LineOverviewComponent implements ng.IComponentOptions {
     ownerName: '<',
     ownerPlaceType: '<',
     numberId: '<',
-    voicemailEnabled: '<',
+    userVoicemailEnabled: '<',
   };
 }

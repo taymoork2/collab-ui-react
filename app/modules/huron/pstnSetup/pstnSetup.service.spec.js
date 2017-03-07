@@ -37,7 +37,6 @@ describe('Service: PstnSetupService', function () {
     lastName: "myLastName",
     email: "myEmail",
     pstnCarrierId: suite.carrierId,
-    numbers: numbers,
     trial: true,
   };
 
@@ -133,24 +132,23 @@ describe('Service: PstnSetupService', function () {
     Authinfo = undefined;
   });
 
-  function createCustomer() {
-    PstnSetupService.createCustomer(
+  function createCustomerV2() {
+    PstnSetupService.createCustomerV2(
       customerPayload.uuid,
       customerPayload.name,
       customerPayload.firstName,
       customerPayload.lastName,
       customerPayload.email,
       customerPayload.pstnCarrierId,
-      customerPayload.numbers,
       customerPayload.trial
     );
     $httpBackend.flush();
   }
 
   it('should create a customer', function () {
-    $httpBackend.expectPOST(HuronConfig.getTerminusUrl() + '/customers', customerPayload).respond(201);
+    $httpBackend.expectPOST(HuronConfig.getTerminusV2Url() + '/customers', customerPayload).respond(201);
 
-    createCustomer();
+    createCustomerV2();
   });
 
   it('should create a customer with a reseller', function () {
@@ -158,9 +156,9 @@ describe('Service: PstnSetupService', function () {
     var customerResellerPayload = angular.copy(customerPayload);
     customerResellerPayload.resellerId = suite.partnerId;
 
-    $httpBackend.expectPOST(HuronConfig.getTerminusUrl() + '/customers', customerResellerPayload).respond(201);
+    $httpBackend.expectPOST(HuronConfig.getTerminusV2Url() + '/customers', customerResellerPayload).respond(201);
 
-    createCustomer();
+    createCustomerV2();
   });
 
   it('should update a customer\'s carrier', function () {

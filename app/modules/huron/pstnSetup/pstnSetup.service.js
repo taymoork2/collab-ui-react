@@ -5,13 +5,16 @@
     .factory('PstnSetupService', PstnSetupService);
 
   /* @ngInject */
-  function PstnSetupService($q, $translate, Authinfo, Notification, PstnSetup, TerminusCarrierService,
-    TerminusCustomerService, TerminusCustomerV2Service, TerminusCustomerTrialV2Service,
-    TerminusCustomerCarrierService, TerminusOrderV2Service,
+  function PstnSetupService($q, $translate, Authinfo, Notification, PstnSetup,
+    TerminusCustomerService, TerminusCustomerCarrierService,
+    TerminusCustomerV2Service, TerminusCustomerTrialV2Service,
+    TerminusCarrierService, TerminusCarrierV2Service,
+    TerminusOrderV2Service,
     TerminusCarrierInventoryCount, TerminusNumberService, TerminusCarrierInventorySearch,
     TerminusCarrierInventoryReserve, TerminusCarrierInventoryRelease,
     TerminusCustomerCarrierInventoryReserve, TerminusCustomerCarrierInventoryRelease,
-    TerminusCustomerCarrierDidService, TerminusCustomerPortService, TerminusResellerCarrierService,
+    TerminusCustomerCarrierDidService, TerminusCustomerPortService,
+    TerminusResellerCarrierService, TerminusResellerCarrierV2Service,
     TerminusV2ResellerService,
     TerminusV2CarrierNumberCountService, TerminusV2CarrierNumberService,
     TerminusV2ResellerNumberReservationService, TerminusV2ResellerCarrierNumberReservationService,
@@ -51,7 +54,6 @@
     var NXX = 'nxx';
 
     var service = {
-      createCustomer: createCustomer,
       createCustomerV2: createCustomerV2,
       updateCustomerCarrier: updateCustomerCarrier,
       getCustomer: getCustomer,
@@ -74,7 +76,9 @@
       createResellerV2: createResellerV2,
       listCustomerCarriers: listCustomerCarriers,
       listResellerCarriers: listResellerCarriers,
+      listResellerCarriersV2: listResellerCarriersV2,
       listDefaultCarriers: listDefaultCarriers,
+      listDefaultCarriersV2: listDefaultCarriersV2,
       orderBlock: orderBlock,
       orderTollFreeBlock: orderTollFreeBlock,
       orderNumbers: orderNumbers,
@@ -88,6 +92,8 @@
       listPendingNumbers: listPendingNumbers,
       deleteNumber: deleteNumber,
       getAreaCode: getAreaCode,
+      getCountryCode: getCountryCode,
+      setCountryCode: setCountryCode,
       INTELEPEER: INTELEPEER,
       TATA: TATA,
       TELSTRA: TELSTRA,
@@ -106,24 +112,6 @@
     };
 
     return service;
-
-    function createCustomer(uuid, name, firstName, lastName, email, pstnCarrierId, numbers, trial) {
-      var payload = {
-        uuid: uuid,
-        name: name,
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        pstnCarrierId: pstnCarrierId,
-        numbers: numbers,
-        trial: trial,
-      };
-
-      if (PstnSetup.isResellerExists()) {
-        payload.resellerId = Authinfo.getOrgId();
-      }
-      return TerminusCustomerService.save({}, payload).$promise;
-    }
 
     function createCustomerV2(uuid, name, firstName, lastName, email, pstnCarrierId, trial) {
       var payload = {
@@ -201,9 +189,24 @@
       }).$promise.then(getCarrierDetails);
     }
 
+    function listDefaultCarriersV2() {
+      return TerminusCarrierV2Service.query({
+        service: PSTN,
+        defaultOffer: true,
+        country: PstnSetup.getCountryCode(),
+      }).$promise.then(getCarrierDetails);
+    }
+
     function listResellerCarriers() {
       return TerminusResellerCarrierService.query({
         resellerId: Authinfo.getOrgId(),
+      }).$promise.then(getCarrierDetails);
+    }
+
+    function listResellerCarriersV2() {
+      return TerminusResellerCarrierV2Service.query({
+        resellerId: Authinfo.getOrgId(),
+        country: PstnSetup.getCountryCode(),
       }).$promise.then(getCarrierDetails);
     }
 
@@ -784,6 +787,16 @@
         .slice(-3)
         .join('')
         .value();
+    }
+
+    function setCountryCode(countryCode) {
+      PstnSetup.setCountryCode(countryCode);
+      //reset carriers
+      PstnSetup.setCarriers([]);
+    }
+
+    function getCountryCode() {
+      return PstnSetup.getCountryCode();
     }
 
   }

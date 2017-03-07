@@ -31,8 +31,9 @@ export class PstnProvidersCtrl implements ng.IComponentController {
   public $onInit() {
     this.pstnCarriers = new Array<PstnCarrier>();
     this.pstnCarrierStatics = new Array<IPstnCarrierStatic>();
-    this.getCarriersStatic();
-    this.getCarriersNetwork();
+    this.getCarriersStatic().then(() => {
+      this.getCarriersNetwork();
+    });
   }
 
   public onSetProvider(carrier: PstnCarrier) {
@@ -53,8 +54,8 @@ export class PstnProvidersCtrl implements ng.IComponentController {
   }
 
   //Get static carrier informantion from JSON file
-  private getCarriersStatic() {
-    this.getCarriersJson().query().$promise.then(carriers => {
+  private getCarriersStatic(): any {
+    return this.getCarriersJson().query().$promise.then(carriers => {
       carriers.forEach((carrier: IPstnCarrierStatic) => {
         //translate the feature strings
         for (let i: number = 0; i < carrier.features.length; i++) {
@@ -81,10 +82,6 @@ export class PstnProvidersCtrl implements ng.IComponentController {
     //Are carriers already loaded
     if (this.PstnSetup.isCarrierExists()) {
       this.pstnCarriers = this.PstnSetup.getCarriers();
-      //reset any selected carriers.
-      this.pstnCarriers.forEach((carrier: PstnCarrier) => {
-        carrier.selected = false;
-      });
       this.onReady();
       return;
     }
@@ -107,7 +104,7 @@ export class PstnProvidersCtrl implements ng.IComponentController {
       });
     } else {
       //Get Reseller Carriers
-      this.PstnSetupService.listResellerCarriers().then(carriers => {
+      this.PstnSetupService.listResellerCarriersV2().then(carriers => {
         if (_.isArray(carriers) && carriers.length > 0) {
           carriers.forEach(carrier => {
             this.addCarrier(<IPstnCarrierGet> carrier);
@@ -125,7 +122,7 @@ export class PstnProvidersCtrl implements ng.IComponentController {
   }
 
   private getCarriersNetworkDefault() {
-    this.PstnSetupService.listDefaultCarriers().then ( carriers => {
+    this.PstnSetupService.listDefaultCarriersV2().then ( carriers => {
       carriers.forEach(carrier => {
         this.addCarrier(<IPstnCarrierGet> carrier);
       });

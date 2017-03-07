@@ -2,13 +2,13 @@
 
 describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Member Lookup', function () {
 
-  var $httpBackend, filter, controller, $scope, Notification;
+  var $httpBackend, filter, controller, $scope, Notification, HuntGroupMemberDataService, HuntGroupService;
 
   var user1 = getJSONFixture('huron/json/features/huntGroup/user1.json');
   var user2 = getJSONFixture('huron/json/features/huntGroup/user2.json');
 
   var successResponse = {
-    "users": [user1, user2],
+    "members": [user1, user2],
   };
 
   var member1 = {
@@ -25,6 +25,8 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Member Lookup', functio
     selectableNumber: user2.numbers[0],
   };
 
+  var member3 = getJSONFixture('huron/json/features/huntGroup/member3.json');
+
   function listContains(someList, item) {
     return (someList.filter(function (elem) {
       return (elem.uuid == item.uuid);
@@ -40,7 +42,6 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Member Lookup', functio
     $provide.value("Authinfo", spiedAuthinfo);
   }));
 
-  var MemberLookupUrl = new RegExp(".*/customers/1/users.*");
   var GetMember = new RegExp(".*/customers/1/users/.*");
 
   afterEach(function () {
@@ -48,31 +49,28 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Member Lookup', functio
     $httpBackend.verifyNoOutstandingRequest();
   });
 
-  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$filter_, _Notification_) {
+  afterAll(function () {
+    $httpBackend = filter = controller = $scope = Notification = HuntGroupMemberDataService = HuntGroupService = user1 = user2 = successResponse = member1 = member2 = member3 = spiedAuthinfo = GetMember = undefined;
+  });
+
+  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$filter_, _Notification_, _HuntGroupMemberDataService_, _HuntGroupService_) {
     $scope = $rootScope.$new();
     Notification = _Notification_;
     $httpBackend = _$httpBackend_;
     filter = _$filter_('huntMemberTelephone');
+    HuntGroupService = _HuntGroupService_;
+    HuntGroupMemberDataService = _HuntGroupMemberDataService_;
 
     controller = $controller('HuntGroupSetupAssistantCtrl', {
       $scope: $scope,
       Notification: Notification,
     });
 
+    spyOn(HuntGroupMemberDataService, 'fetchHuntMembers');
+    spyOn(HuntGroupService, 'suggestionsNeeded');
   }));
 
-  it("notifies with error response when member fetch fails.", function () {
-    spyOn(Notification, 'errorResponse');
-    $httpBackend.expectGET(MemberLookupUrl).respond(500);
-    controller.fetchHuntMembers("sun").then(function () {
-      expect(Notification.errorResponse).toHaveBeenCalledWith(jasmine.anything(),
-        'huronHuntGroup.memberFetchFailure');
-    });
-    $httpBackend.flush();
-  });
-
   it("calls the backend only after 3 key strokes.", function () {
-    $httpBackend.expectGET(MemberLookupUrl).respond(200, successResponse);
     controller.fetchHuntMembers("s");
     $scope.$apply();
     $httpBackend.verifyNoOutstandingRequest(); // No request made.
@@ -81,71 +79,66 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Member Lookup', functio
     $scope.$apply();
     $httpBackend.verifyNoOutstandingRequest(); // No request made.
 
+    HuntGroupMemberDataService.fetchHuntMembers.and.returnValue(member3);
     controller.fetchHuntMembers("sun");
-    $httpBackend.flush(); // Request made.
+    expect(HuntGroupMemberDataService.fetchHuntMembers).toHaveBeenCalled();
   });
 
-  it("on selecting & toggling a member, the member is added into selectedHuntMembers " +
-    "list with email id retrieved from backend.",
-    function () {
-      user1.email = "sumuthur@cisco.com";
-      user2.email = undefined;
+  it("on selecting & toggling a member, the member is added into selectedHuntMembers list with email id retrieved from backend.", function () {
+    user1.email = "sumuthur@cisco.com";
+    user2.email = undefined;
 
-      controller.selectHuntGroupMember(member2);
+    controller.selectHuntGroupMember(member2);
 
-      $httpBackend.expectGET(GetMember).respond(200, user1);
-      controller.toggleMemberPanel(member2.user);
-      $httpBackend.flush();
+    $httpBackend.expectGET(GetMember).respond(200, user1);
+    controller.toggleMemberPanel(member2.user);
+    $httpBackend.flush();
 
-      expect(member2.user.email).toEqual(user1.email);
-      expect(listContains(controller.selectedHuntMembers, member2)).toBeTruthy();
-    });
+    expect(member2.user.email).toEqual(user1.email);
+    expect(listContains(controller.selectedHuntMembers, member2)).toBeTruthy();
+  });
 
   it("filters the selected members from showing in the drop down.", function () {
     // UI selected a member pill.
     controller.selectHuntGroupMember(member2);
 
     // Backend returns a list.
-    $httpBackend.expectGET(MemberLookupUrl).respond(200, successResponse);
+    var noSuggestion = [];
+    HuntGroupMemberDataService.fetchHuntMembers.and.returnValue(noSuggestion);
 
     // UI must filter and show only the list that is not already selected.
     controller.fetchHuntMembers(user2.firstName).then(function (dropdownList) {
       expect(listContains(dropdownList, member2)).toBeFalsy();
+      expect(HuntGroupMemberDataService.fetchHuntMembers).toHaveBeenCalled();
     });
-    $httpBackend.flush();
   });
 
-  it("on deselecting a member, the list is updated and drop down starts showing the deselected member.",
-    function () {
+  it("on deselecting a member, the list is updated and drop down starts showing the deselected member.", function () {
+    controller.selectHuntGroupMember(member1);
+    controller.selectHuntGroupMember(member2);
 
-      controller.selectHuntGroupMember(member1);
-      controller.selectHuntGroupMember(member2);
+    // Backend returns a list.
+    HuntGroupMemberDataService.fetchHuntMembers.and.returnValue([]);
 
-      // Backend returns a list.
-      $httpBackend.expectGET(MemberLookupUrl).respond(200, successResponse);
-
-      // UI types in name of user1
-      controller.fetchHuntMembers(user1.firstName).then(function (dropdownList) {
-        expect(listContains(dropdownList, member1)).toBeFalsy(); // drop down must not show it.
-      });
-      $httpBackend.flush();
-
-      controller.unSelectHuntGroupMember(member1); // used 1 is removed.
-
-      // Backend returns a list.
-      $httpBackend.expectGET(MemberLookupUrl).respond(200, successResponse);
-
-      // UI types in number of user1 again.
-      controller.fetchHuntMembers(user1.firstName).then(function (dropdownList) {
-        expect(listContains(dropdownList, member1)).toBeTruthy(); // drop down must show this time.
-      });
-      $httpBackend.flush();
-
+    // UI types in name of user1
+    controller.fetchHuntMembers(user1.firstName).then(function (dropdownList) {
+      expect(listContains(dropdownList, member1)).toBeFalsy(); // drop down must not show it.
     });
+
+    controller.unSelectHuntGroupMember(member1); // used 1 is removed.
+
+    // Backend returns a list.
+    HuntGroupMemberDataService.fetchHuntMembers.and.returnValue([member1]);
+
+    // UI types in number of user1 again.
+    controller.fetchHuntMembers(user1.firstName).then(function (dropdownList) {
+      expect(listContains(dropdownList, member1)).toBeTruthy(); // drop down must show this time.
+    });
+  });
 
   it("huntMemberTelephone filter concatenates 'and' between int & ext number if both are present.",
     function () {
-      expect(filter(user1.numbers[0])).toBe("(972) 510-4001 and 4001");
+      expect(filter(user1.numbers[0])).toBe("972-510-4001 and 4001");
       expect(filter(user1.numbers[1])).toBe("1236");
     });
 
@@ -201,31 +194,26 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Member Lookup', functio
 
   it("shows danger indicator when input typed is >= 3 and no valid suggestions.", function () {
     controller.selectHuntGroupMember(member1);
-    var noSuggestion = {
-      "users": [],
-    };
-    $httpBackend.expectGET(MemberLookupUrl).respond(200, noSuggestion);
+
+    HuntGroupMemberDataService.fetchHuntMembers.and.returnValue([]);
+    HuntGroupService.suggestionsNeeded.and.returnValue(true);
     controller.fetchHuntMembers("sun");
     $scope.$apply();
-    $httpBackend.flush(); // Request made.
     expect(controller.errorMemberInput).toBeTruthy();
 
-    $httpBackend.expectGET(MemberLookupUrl).respond(200, successResponse);
+    HuntGroupMemberDataService.fetchHuntMembers.and.returnValue(successResponse);
     controller.fetchHuntMembers("sun");
     $scope.$apply();
-    $httpBackend.flush(); // Request made.
     expect(controller.errorMemberInput).toBeFalsy();
   });
 
   it("does not search on the number api when looking for members", function () {
     controller.selectHuntGroupMember(member1);
-    var noSuggestion = {
-      "users": [],
-    };
-    $httpBackend.expectGET(MemberLookupUrl).respond(200, noSuggestion);
+
+    HuntGroupMemberDataService.fetchHuntMembers.and.returnValue([]);
+    HuntGroupService.suggestionsNeeded.and.returnValue(true);
     controller.fetchHuntMembers("123");
     $scope.$apply();
-    $httpBackend.flush(); // Request made.
     expect(controller.errorMemberInput).toBeTruthy();
   });
 });

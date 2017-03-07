@@ -94,6 +94,7 @@
         sparkBoard: 'SPARKBOARDS',
         pstn: 'PSTN',
         care: 'CARE',
+        advanceCare: 'CAREVOICE',
         context: 'CONTEXT',
       },
 
@@ -102,6 +103,7 @@
         'messaging',
         'communications',
         'care',
+        'advanceCare',
         'roomSystems',
         'conferencing',
         'webexCMR',
@@ -221,6 +223,7 @@
         SHARED_DEVICES: 'SHARED_DEVICES',
         CMR: 'CMR',
         CARE: 'CARE',
+        ADVANCE_CARE: 'ADVANCE_CARE',
       },
 
       messageErrors: {
@@ -437,8 +440,7 @@
         'services-overview',
       ],
       'squared-fusion-mgmt': [
-        'cluster-details',
-        'management-connector-details',
+        'expressway-cluster-sidepanel',
         'services-overview',
         'resource-group-settings',
         'cluster-list',
@@ -512,6 +514,7 @@
         'context-fields',
         'context-fieldsets',
         'context-resources',
+        'context-cluster-sidepanel',
         'add-resource',
       ],
     };

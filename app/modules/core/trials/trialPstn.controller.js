@@ -34,6 +34,7 @@
     vm._getCarriers = _getCarriers;
     vm.onProviderChange = onProviderChange;
     vm.onProviderReady = onProviderReady;
+    vm.location = '';
 
     vm.pstn = {
       stateOptions: [],
@@ -155,9 +156,7 @@
         vm.ftHuronSupportThinktel = results;
       });
 
-      PstnSetupStatesService.getStateProvinces().then(function (states) {
-        vm.pstn.stateOptions = states;
-      });
+      PstnSetupStatesService.getLocation(vm.trialData.details.countryCode).then(loadLocations);
 
       Analytics.trackTrialSteps(Analytics.eventNames.ENTER_SCREEN, vm.parentTrialData);
       if (_.has(vm.trialData, 'details.pstnNumberInfo.state.abbreviation')) {
@@ -181,6 +180,11 @@
       }, 100);
     }
 
+    function loadLocations(location) {
+      vm.location = location.type;
+      vm.pstn.stateOptions = location.areas;
+    }
+
     function onProviderChange() {
       vm.trialData.details.pstnProvider = PstnSetup.getProvider();
       vm.providerImplementation = vm.trialData.details.pstnProvider.apiImplementation;
@@ -190,8 +194,9 @@
 
     function onProviderReady() {
       if (PstnSetup.getCarriers().length === 1) {
-        vm.trialData.details.pstnProvider = PstnSetup.getCarriers()[0];
-        vm.providerImplementation = vm.trialData.details.pstnProvider.apiImplementation;
+        PstnSetup.getCarriers()[0].selected = true;
+        PstnSetup.setProvider(PstnSetup.getCarriers()[0]);
+        onProviderChange();
       } else {
         PstnSetup.getCarriers().forEach(function (pstnCarrier) {
           if (pstnCarrier.selected) {

@@ -170,6 +170,38 @@ describe('ClusterService', function () {
       var result = ClusterService._mergeAllAlarms(connectors);
       expect(result.length).toBe(2);
     });
+
+    it('should add sorted hostnames to the results when alarms are duplicates', function () {
+      var connectors = [
+        {
+          hostname: 'aachen.de',
+          alarms: [_.merge({}, templateAlarm, { firstReported: '1' })],
+        },
+        {
+          hostname: 'zagreb.hr',
+          alarms: [_.merge({}, templateAlarm, { firstReported: '2' })],
+        },
+      ];
+      var result = ClusterService._mergeAllAlarms(connectors);
+      expect(result[0].affectedNodes).toEqual(['aachen.de', 'zagreb.hr']);
+    });
+
+    it('should populate the affectedNodes list with only a single hostname when there are no duplicate alarms', function () {
+      var connectors = [
+        {
+          hostname: 'aachen.de',
+          alarms: [_.merge({}, templateAlarm, { id: 1 })],
+        },
+        {
+          hostname: 'zagreb.hr',
+          alarms: [_.merge({}, templateAlarm, { id: 2 })],
+        },
+      ];
+      var result = ClusterService._mergeAllAlarms(connectors);
+      expect(result[0].affectedNodes).toEqual(['aachen.de']);
+      expect(result[1].affectedNodes).toEqual(['zagreb.hr']);
+    });
+
   });
 
   describe('.fetch', function () {

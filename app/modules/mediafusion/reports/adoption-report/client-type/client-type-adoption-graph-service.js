@@ -16,7 +16,7 @@
     vm.zoomedStartTime = null;
 
     vm.timeStamp = $translate.instant('mediaFusion.metrics.timeStamp');
-    vm.clientType = $translate.instant('mediaFusion.metrics.clientType');
+    vm.clients = $translate.instant('mediaFusion.metrics.clients');
 
     return {
       setClientTypeGraph: setClientTypeGraph,
@@ -72,8 +72,9 @@
       valueAxes[0].autoGridCount = true;
       valueAxes[0].position = 'left';
       //Change to i10n
-      valueAxes[0].title = vm.clientType;
-      valueAxes[0].titleRotation = 0;
+      valueAxes[0].title = vm.clients;
+      //valueAxes[0].titleRotation = 0;
+      valueAxes[0].labelOffset = 28;
 
       var catAxis = CommonReportsGraphService.getBaseVariable(vm.AXIS);
       catAxis.gridPosition = 'start';

@@ -213,7 +213,6 @@ describe('Controller: AABuilderMainCtrl', function () {
       $scope.$apply();
       expect($state.go).toHaveBeenCalled();
       expect(AutoAttendantCeMenuModelService.clearCeMenuMap).toHaveBeenCalled();
-      expect($rootScope.$broadcast).toHaveBeenCalledWith('CE Closed');
     });
 
     it('should warn on CMI assignment failure on close', function () {

@@ -167,7 +167,7 @@
     }
 
     function isLoggedInToPartnerPortal() {
-      return Authinfo.getRoles().indexOf('PARTNER_ADMIN') > -1;
+      return Authinfo.hasRole('PARTNER_ADMIN');
     }
 
     function isOrgManager() {

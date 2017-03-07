@@ -9,7 +9,7 @@ class HybridDataSecurityClusterSettingsPageCtrl implements ng.IComponentControll
   ) {}
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }) {
-    let clusterId = changes['clusterId'];
+    const { clusterId } = changes;
     if (clusterId && clusterId.currentValue) {
       this.loadCluster(clusterId.currentValue);
     }

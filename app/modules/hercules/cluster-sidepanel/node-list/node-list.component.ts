@@ -9,6 +9,8 @@ export class NodeListComponentCtrl implements ng.IComponentController {
   public getSeverity = this.FusionClusterStatesService.getSeverity;
   public localizedManagementConnectorName = this.$translate.instant('hercules.connectorNameFromConnectorType.c_mgmt');
   public localizedConnectorName = this.$translate.instant(`hercules.connectorNameFromConnectorType.${this.connectorType}`);
+  public localizedContextManagementConnectorName = this.$translate.instant('hercules.connectorNameFromConnectorType.cs_mgmt');
+  public localizedContextConnectorName = this.$translate.instant('hercules.connectorNameFromConnectorType.cs_context');
   public loading: boolean = true;
 
   /* @ngInject */
@@ -34,8 +36,8 @@ export class NodeListComponentCtrl implements ng.IComponentController {
     }
   }
 
-  public sortConnectors(connector1): number {
-    if (connector1.connectorType === 'c_mgmt') {
+  public sortConnectors(connector): number {
+    if (connector.connectorType === 'c_mgmt') {
       return -1;
     } else {
       return 1;

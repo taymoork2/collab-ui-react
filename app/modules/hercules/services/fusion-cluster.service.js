@@ -220,33 +220,30 @@
     }
 
     function buildSidepanelConnectorList(cluster, connectorTypeToKeep) {
-      var sidepanelConnectorList = {};
-      sidepanelConnectorList.hosts = [];
+      // Find and populate hostnames only, and make sure that they are only there once
+      var nodes = _.chain(cluster.connectors)
+        .map(function (connector) {
+          return {
+            hostname: connector.hostname,
+            connectors: [],
+          };
+        })
+        .uniqBy(function (host) {
+          return host.hostname;
+        })
+        .value();
 
-      /* Find and populate hostnames only, and make sure that they are only there once */
+      // Find and add all c_mgmt connectors (always displayed no matter the current service pages we are looking at)
+      // plus the connectors we're really interested in
       _.forEach(cluster.connectors, function (connector) {
-        sidepanelConnectorList.hosts.push({
-          hostname: connector.hostname,
-          connectors: [],
-        });
-      });
-      sidepanelConnectorList.hosts = _.uniqBy(sidepanelConnectorList.hosts, function (host) {
-        return host.hostname;
-      });
-
-      /* Find and add all c_mgmt connectors, plus the connectors we're really interested in  */
-      _.forEach(cluster.connectors, function (connector) {
-        if (connector.connectorType === 'c_mgmt' || connector.connectorType === connectorTypeToKeep) {
-          var host = _.find(sidepanelConnectorList.hosts, function (host) {
-            return host.hostname === connector.hostname;
+        if (connector.connectorType === 'c_mgmt' || connector.connectorType === connectorTypeToKeep || connector.connectorType === 'cs_context' || connector.connectorType === 'cs_mgmt') {
+          var node = _.find(nodes, function (node) {
+            return node.hostname === connector.hostname;
           });
-          var index = _.indexOf(sidepanelConnectorList.hosts, host);
-          if (index !== -1) {
-            sidepanelConnectorList.hosts[index].connectors.push(connector);
-          }
+          node.connectors.push(connector);
         }
       });
-      return sidepanelConnectorList.hosts;
+      return nodes;
     }
 
     function setClusterName(clusterId, newClusterName) {

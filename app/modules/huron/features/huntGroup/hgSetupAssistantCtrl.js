@@ -266,7 +266,7 @@ require('./_hunt-group.scss');
     // Fallback destination presentation controller functions.
 
     function selectFallback($item) {
-      vm.selectedFallbackNumber = undefined;
+      vm.selectedFallbackNumber = {};
       vm.selectedFallbackMember = HuntGroupFallbackDataService.setFallbackMember($item);
       HuntGroupFallbackDataService.isVoicemailDisabled(customerId, _.get($item, 'selectableNumber.uuid')).then(function (isVoicemailDisabled) {
         vm.disableVoicemail = isVoicemailDisabled;

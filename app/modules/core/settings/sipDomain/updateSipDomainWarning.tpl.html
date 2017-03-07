@@ -1,0 +1,18 @@
+<div class="modal-header subdomain-modal">
+  <h3 class="modal-title" translate="firstTimeWizard.saveSipDomainTitle"></h3>
+</div>
+<div class="modal-body subdomain-modal">
+  <div class="subdomain-modal-warning" ng-if="subdomain.isCsc">
+    <div><i class="icon icon-warning subdomain-warning-icon"></i></div>
+    <p translate="firstTimeWizard.cscWarningMessage"
+      translate-value-onclick="subdomain.openDocumentation()"
+      translate-compile></p>
+  </div>
+  <p ng-if="subdomain.isCsc" class="modal-space" translate="firstTimeWizard.cscUpdateSubdomainMessage"></p>
+  <p ng-if="!subdomain.isCsc" translate="firstTimeWizard.updateSubdomainMessage"></p>
+  <p class="modal-space" translate="firstTimeWizard.subdomainUpdateConfirmation"></p>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-default" ng-click="$dismiss()" translate="common.no"></button>
+  <button class="btn btn-primary" ng-click="$close()" translate="common.yes"></button>
+</div>

@@ -1,11 +1,14 @@
-import { IUserCos, IRestriction } from './userCos';
+import { IUserCos, IRestriction, IDialPlan } from './userCos';
 
 interface IUserCosResource extends ng.resource.IResourceClass<ng.resource.IResource<IUserCos>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;
 }
 
+interface IDialPlanResource extends ng.resource.IResourceClass<ng.resource.IResource<IDialPlan>> {}
+
 export class UserCosService {
   private userCosService: IUserCosResource;
+  private dialPlanService: IDialPlanResource;
 
   /* @ngInject */
   constructor(
@@ -21,6 +24,8 @@ export class UserCosService {
       {
         update: updateAction,
       });
+
+    this.dialPlanService = <IDialPlanResource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/dialplans', {}, {});
   }
 
   public getUserCos(memberType: string, memberId: string): ng.IPromise<IUserCos> {
@@ -54,6 +59,12 @@ export class UserCosService {
       memberType: memberType,
       memberId: memberId,
       cosId: cosId,
+    }).$promise;
+  }
+
+  public getPremiumNumbers(): ng.IPromise<IDialPlan> {
+    return this.dialPlanService.get({
+      customerId: this.Authinfo.getOrgId(),
     }).$promise;
   }
 
