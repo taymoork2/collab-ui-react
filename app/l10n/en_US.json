@@ -2485,7 +2485,7 @@
       "registrationTimeout": "Registration timeout"
     },
     "softwareUpgrade": {
-      "explanation": "You are about to upgrade {{connectorType}} to version {{newVersion}} on all nodes in your Hybrid Data Security cluster"
+      "text1": "During upgrade, this Hybrid Data Security Node will enter maintenance mode. After 2 hours, this node will be upgraded and any new calls will be redirected to an available node or the cloud."
     },
     "resources": {
       "settings": {
@@ -5696,6 +5696,7 @@
     "overview": "Template Overview",
     "chatStatusMessages_chat": "Status Messages",
     "chatStatusMessages_chatPlusCallback": "Chat Status Messages",
+    "statusMessage_failureText": "The length of the status messages cannot exceed {{ lengthLimit }} characters.",
     "customerInformation": "Customer Information",
     "customerInfo_chat": "Customer Information for Chat",
     "customerInfo_callback": "Customer Information for Callback",
@@ -6233,7 +6234,9 @@
       "CMR": "WebEx Collaboration Meeting Rooms",
       "CO": "Spark Call",
       "SD": "DX, MX or SX system",
-      "SB": "Spark Board"
+      "SB": "Spark Board",
+      "CDC": "K1 Spark Care",
+      "CVC": "K2 Spark Care"
     }
   },
   "onlineUpgradeModal": {

@@ -47,7 +47,7 @@ exports.config = {
     browserName: 'chrome',
     screenResolution: '1680x1050',
     platform: process.env.SAUCE__USERNAME ? 'Windows 7' : undefined,
-    tunnelIdentifier: process.env.SC_TUNNEL_IDENTIFIER,
+    tunnelIdentifier: process.env.SAUCE__TUNNEL_ID,
     name: 'wx2-admin-web-client',
     build: process.env.BUILD_NUMBER,
 
@@ -82,7 +82,7 @@ exports.config = {
 
   // A base URL for your application under test. Calls to protractor.get()
   // with relative paths will be prepended with this.
-  baseUrl: process.env.LAUNCH_URL || 'http://127.0.0.1:8000',
+  baseUrl: getLaunchUrl(args),
 
   onPrepare: function () {
     global._ = require('lodash');
@@ -304,10 +304,19 @@ function Logger() {
   return log;
 }
 
-// TODO: rip this out if no longer needed
 function mkProxyAgent() {
   if (process.env.SAUCE__ENABLE_WEB_PROXY === 'false') {
     return;
   }
   return new HttpsProxyAgent(process.env.http_proxy || 'http://proxy.esl.cisco.com:80');
+}
+
+function getLaunchUrl(args) {
+  if (args.prod) {
+    return 'https://admin.ciscospark.com';
+  }
+  if (args.int) {
+    return 'https://int-admin.ciscospark.com';
+  }
+  return 'http://127.0.0.1:8000';
 }

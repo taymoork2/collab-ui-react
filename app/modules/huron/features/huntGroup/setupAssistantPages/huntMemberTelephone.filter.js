@@ -11,11 +11,11 @@
     function filter(number) {
 
       if (isNotEmpty(number.external) && isNotEmpty(number.internal)) {
-        return format(number.external) + " and " + format(number.internal);
+        return number.external + " and " + format(number.internal);
       }
 
       if (isNotEmpty(number.external)) {
-        return format(number.external);
+        return number.external;
       }
 
       if (isNotEmpty(number.internal)) {
