@@ -8,8 +8,8 @@
   /*@ngInject*/
   function FusionUtils($translate) {
     // Visual order to respect accross Atlas UI
-    var orderedConnectors = ['c_mgmt', 'c_cal', 'c_ucmc', 'mf_mgmt', 'hds_app'];
-    var orderedServices = ['squared-fusion-mgmt', 'squared-fusion-cal', 'squared-fusion-gcal', 'squared-fusion-uc', 'squared-fusion-ec', 'squared-fusion-media', 'spark-hybrid-datasecurity'];
+    var orderedConnectors = ['c_mgmt', 'c_cal', 'c_ucmc', 'mf_mgmt', 'hds_app', 'ucm_mgmt'];
+    var orderedServices = ['squared-fusion-mgmt', 'squared-fusion-cal', 'squared-fusion-gcal', 'squared-fusion-uc', 'squared-fusion-ec', 'squared-fusion-media', 'spark-hybrid-datasecurity', 'spark-fusion-khaos'];
 
     return {
       connectorType2RouteName: connectorType2RouteName,

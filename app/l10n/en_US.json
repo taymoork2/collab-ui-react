@@ -1809,21 +1809,26 @@
       "mf_mgmt": "Media Service",
       "hds_app": "Hybrid Data Security",
       "cs_mgmt": "Management Connector",
-      "cs_context": "Context Connector"
+      "cs_context": "Context Connector",
+      "ucm_mgmt": "Management Connector",
+      "c_serab": "Serviceability Connector"
     },
     "serviceNameFromConnectorType": {
       "c_cal": "Calendar Service",
       "c_ucmc": "Call Service",
       "c_mgmt": "Management Service",
       "cs_mgmt": "Management Connector",
-      "cs_context": "Context Connector"
+      "cs_context": "Context Connector",
+      "ucm_mgmt": "Management Connector",
+      "c_serab": "Serviceability Connector"
     },
     "clusterTypeFromServiceId": {
       "squared-fusion-mgmt": "Expressway",
       "squared-fusion-cal": "Expressway",
       "squared-fusion-uc": "Expressway",
       "squared-fusion-media": "Hybrid Media",
-      "spark-hybrid-datasecurity": "Hybrid Data Security"
+      "spark-hybrid-datasecurity": "Hybrid Data Security",
+      "spark-fusion-khaos": "Cisco Unified CM"
     },
     "serviceDescriptions": {
       "squared-fusion-uc": "Call Service Aware lets your users instantly share their desktops from their Cisco Spark clients while on a call. Call Service Connect lets your users answer calls to their work phones and to place calls to other work phones, on their Cisco Spark client.",
@@ -2192,6 +2197,7 @@
         "expressway": "Expressway",
         "mediafusion": "Media",
         "hds": "Data Security",
+        "cucm": "Cisco Unified CM",
         "no-services": "No services",
         "missing-clusters": "<a ng-click=\"{{onclick}}\">Assign clusters</a> and users to complete this group",
         "missing-users": "<a ng-click=\"{{onclick}}\">Assign users</a> to complete this group",
@@ -6101,7 +6107,8 @@
           "squared-fusion-mgmt": "Management",
           "squared-fusion-media": "Media",
           "spark-hybrid-datasecurity": "Data Security",
-          "contact-center-context": "Context"
+          "contact-center-context": "Context",
+          "spark-fusion-khaos": "Management"
         }
       },
       "licenses": {

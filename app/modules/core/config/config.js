@@ -74,6 +74,7 @@
         care_inbound_voice: 'cloud-contact-center-inbound-voice',
         context: 'contact-center-context',
         fusion_google_cal: 'squared-fusion-gcal',
+        cucm: 'squared-fusion-khaos',
       },
 
       licenseModel: {
@@ -451,6 +452,7 @@
         'hds.list',
         'hds-cluster-details',
         'hds-cluster',
+        'cucm-cluster', // Remove when squared-fusion-khaos entitlement is returned by Atlas backend
       ],
       'spark-room-system': [
         'addDeviceFlow',
@@ -516,6 +518,9 @@
         'context-resources',
         'context-cluster-sidepanel',
         'add-resource',
+      ],
+      'squared-fusion-khaos': [
+        'cucm-cluster',
       ],
     };
 
