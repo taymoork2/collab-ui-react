@@ -399,7 +399,7 @@ var Spark = require('@ciscospark/spark-core').default;
 
     function searchButtonDisabled() {
       var disable = !vm.searchCriteria.roomId || vm.searchCriteria.roomId === '' || vm.searchingForRoom === true;
-      return vm.ediscoveryToggle ? (disable && vm.searchModel === '') : disable;
+      return vm.ediscoveryToggle ? false : disable;
     }
 
     function pollAvalonReport() {
