@@ -12,7 +12,7 @@ export abstract class ExpresswayContainerController {
               private $state: ng.ui.IStateService,
               private Authinfo,
               private ClusterService,
-              private Notification: Notification,
+              protected Notification: Notification,
               protected ServiceDescriptor,
               private ServiceStateChecker,
               protected USSService,

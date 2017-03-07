@@ -45,18 +45,17 @@ export class CallServiceContainerController extends ExpresswayContainerControlle
   private addConnectIfEnabled() {
     this.ServiceDescriptor.isServiceEnabled('squared-fusion-ec')
       .then((enabled) => {
-      if (enabled) {
-        this.servicesId.push('squared-fusion-ec');
-        this.subscribeStatusesSummary.cancel();
-        this.extractSummary();
-        this.subscribeStatusesSummary = this.USSService.subscribeStatusesSummary('data', this.extractSummary.bind(this));
-      }
-    })
+        if (enabled) {
+          this.servicesId.push('squared-fusion-ec');
+          this.subscribeStatusesSummary.cancel();
+          this.extractSummary();
+          this.subscribeStatusesSummary = this.USSService.subscribeStatusesSummary('data', this.extractSummary.bind(this));
+        }
+      })
       .catch((response) => {
-      this.Notification.errorWithTrackingId(response, 'hercules.genericFailure');
-    });
+        this.Notification.errorWithTrackingId(response, 'hercules.genericFailure');
+      });
   }
-
 }
 
 angular
