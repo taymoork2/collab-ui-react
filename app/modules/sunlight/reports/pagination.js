@@ -112,7 +112,7 @@ angular.module('Sunlight.pagination', ['Sunlight.paging', 'Sunlight.tabindex', '
     var rotate = angular.isDefined($attrs.rotate) ? $scope.$parent.$eval($attrs.rotate) : slPaginationConfig.rotate;
     var forceEllipses = angular.isDefined($attrs.forceEllipses) ? $scope.$parent.$eval($attrs.forceEllipses) : slPaginationConfig.forceEllipses;
     var boundaryLinkNumbers = angular.isDefined($attrs.boundaryLinkNumbers) ? $scope.$parent.$eval($attrs.boundaryLinkNumbers) : slPaginationConfig.boundaryLinkNumbers;
-    var pageLabel = angular.isDefined($attrs.pageLabel) ? function (idx) { return $scope.$parent.$eval($attrs.pageLabel, { $page: idx }); } : angular.identity;
+    var pageLabel = angular.isDefined($attrs.pageLabel) ? function (idx) { return $scope.$parent.$eval($attrs.pageLabel, { $page: idx }); } : _.identity;
     $scope.boundaryLinks = angular.isDefined($attrs.boundaryLinks) ? $scope.$parent.$eval($attrs.boundaryLinks) : slPaginationConfig.boundaryLinks;
     $scope.directionLinks = angular.isDefined($attrs.directionLinks) ? $scope.$parent.$eval($attrs.directionLinks) : slPaginationConfig.directionLinks;
 
