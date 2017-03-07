@@ -19,8 +19,8 @@ angular.module('Sunlight.paging', [])
   .factory('slPaging', function ($parse) {
     return {
       create: function (ctrl, $scope, $attrs) {
-        ctrl.setNumPages = $attrs.numPages ? $parse($attrs.numPages).assign : angular.noop;
-        ctrl.ngModelCtrl = { $setViewValue: angular.noop }; // nullModelCtrl
+        ctrl.setNumPages = $attrs.numPages ? $parse($attrs.numPages).assign : _.noop;
+        ctrl.ngModelCtrl = { $setViewValue: _.noop }; // nullModelCtrl
         ctrl._watchers = [];
 
         ctrl.init = function (ngModelCtrl, config) {
