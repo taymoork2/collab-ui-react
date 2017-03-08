@@ -2653,7 +2653,8 @@
       "expiryInfo": "Generated reports will expire after 10 days. Any reports older than 10 days will automatically be deleted by the system."
     },
     "searchErrors": {
-      "queryLimit": "query must be 200 characters or less"
+      "queryLimit": "query must be 200 characters or less",
+      "invalidLimit": "search must be limited to less than 100 emails or room id's"
     },
     "searchParameters": {
       "searchBy": "Search By",

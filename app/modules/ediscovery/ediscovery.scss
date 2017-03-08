@@ -164,8 +164,12 @@
           width: 100%;
         }
 
-        .query-validation {
+        .input-validation {
           margin-top: 0;
+        }
+
+        .query-error-msg {
+          width: 250px;
         }
 
         .cs-datapicker-normal {
@@ -182,10 +186,6 @@
 
         .search-box {
           padding-left: 0px;
-        }
-
-        .selectList {
-          width: 50%;
         }
 
         .query-row {
