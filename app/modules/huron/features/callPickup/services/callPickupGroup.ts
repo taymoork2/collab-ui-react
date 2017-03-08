@@ -22,6 +22,7 @@ export interface IMemberNumber extends ng.resource.IResource<IMemberNumber> {
   primary: boolean | undefined;
   shared: boolean;
   url: string;
+  disabled?: boolean | false;
 }
 
 export interface IMember {

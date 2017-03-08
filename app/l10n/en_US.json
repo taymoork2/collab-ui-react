@@ -3371,7 +3371,8 @@
     "notificationTimerSeconds": "Seconds",
     "calledParty": "Display called party's information",
     "callingParty": "Display calling party's information",
-    "playSound": "Play Sound"
+    "playSound": "Play Sound",
+    "assignmentMsg": "Assigned to "
   },
   "pagingGroup": {
     "title": "Paging Group",
