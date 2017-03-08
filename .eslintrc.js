@@ -35,8 +35,9 @@ module.exports = {
     'no-use-before-define': 0,
     'operator-assignment': 0,
     'padded-blocks': 0,
-    'quote-props': [2, 'consistent-as-needed'],
-    'quotes': [2, 'single', { avoidEscape: true }],
+    'quote-props': 0,
+    'quotes': 0,
+    'spaced-comment': 0,
     'vars-on-top': 0,
     // activate rules from the lodash plugin
     'lodash/callback-binding': 2,
