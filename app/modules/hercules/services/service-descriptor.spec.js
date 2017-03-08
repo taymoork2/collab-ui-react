@@ -12,7 +12,7 @@ describe('ServiceDescriptor', function () {
       authinfo = {
         getOrgId: sinon.stub(),
       };
-      authinfo.getOrgId.returns("12345");
+      authinfo.getOrgId.returns('12345');
       $provide.value('Authinfo', authinfo);
     });
   });
@@ -34,12 +34,12 @@ describe('ServiceDescriptor', function () {
           id: 'squared-fusion-cal',
           enabled: true,
           acknowledged: false,
-          emailSubscribers: "aalto@example.org",
+          emailSubscribers: 'aalto@example.org',
         }, {
           id: 'squared-fusion-uc',
           enabled: true,
           acknowledged: false,
-          emailSubscribers: "alvar@example.org",
+          emailSubscribers: 'alvar@example.org',
         }],
       });
 
@@ -52,7 +52,7 @@ describe('ServiceDescriptor', function () {
     $httpBackend.flush();
   });
 
-  it("should read out the email subscribers for a given service using a GET request", function () {
+  it('should read out the email subscribers for a given service using a GET request', function () {
     $httpBackend
       .expectGET('https://hercules-integration.wbx2.com/v1/organizations/12345/services')
       .respond({
@@ -60,23 +60,23 @@ describe('ServiceDescriptor', function () {
           id: 'squared-fusion-cal',
           enabled: true,
           acknowledged: false,
-          emailSubscribers: "aalto@example.org",
+          emailSubscribers: 'aalto@example.org',
         }],
       });
-    Service.getEmailSubscribers("squared-fusion-cal").then(function (emailSubscribers) {
-      expect(emailSubscribers).toEqual(["aalto@example.org"]);
+    Service.getEmailSubscribers('squared-fusion-cal').then(function (emailSubscribers) {
+      expect(emailSubscribers).toEqual(['aalto@example.org']);
     });
     $httpBackend.flush();
   });
 
-  it("should set the email subscribers for a given service using a PATCH request", function () {
+  it('should set the email subscribers for a given service using a PATCH request', function () {
     $httpBackend
       .expectPATCH(
         'https://hercules-integration.wbx2.com/v1/organizations/12345/services/squared-fusion-mgmt', {
-          emailSubscribers: "alvar@example.org",
+          emailSubscribers: 'alvar@example.org',
         })
       .respond(204, '');
-    Service.setEmailSubscribers("squared-fusion-mgmt", "alvar@example.org").then(function (response) {
+    Service.setEmailSubscribers('squared-fusion-mgmt', 'alvar@example.org').then(function (response) {
       expect(response.status).toBe(204);
     });
     $httpBackend.flush();
@@ -84,7 +84,7 @@ describe('ServiceDescriptor', function () {
 
   it('should GET DisableEmailSendingToUser', function () {
     var data = {
-      "orgSettings": ["{\"calSvcDisableEmailSendingToEndUser\":true}"],
+      'orgSettings': ['{"calSvcDisableEmailSendingToEndUser":true}'],
     };
     $httpBackend.expectGET('https://identity.webex.com/organization/scim/v1/Orgs/' + authinfo.getOrgId() + '?disableCache=true')
       .respond(200, data);
@@ -96,7 +96,7 @@ describe('ServiceDescriptor', function () {
 
   it('should PATCH DisableEmailSendingToUser', function () {
     var data = {
-      "calSvcDisableEmailSendingToEndUser": true,
+      'calSvcDisableEmailSendingToEndUser': true,
     };
     $httpBackend.expectGET('https://identity.webex.com/organization/scim/v1/Orgs/' + authinfo.getOrgId() + '?disableCache=true')
       .respond(200, {});
@@ -117,7 +117,7 @@ describe('ServiceDescriptor', function () {
     $httpBackend.flush();
   });
 
-  it("should return true if service 'squared-fusion-ec' is enabled", function () {
+  it('should return true if service "squared-fusion-ec" is enabled', function () {
     $httpBackend
       .expectGET('https://hercules-integration.wbx2.com/v1/organizations/' + authinfo.getOrgId() + '/services').respond(
       200, { items: [{ 'id': 'squared-fusion-ec', 'enabled': true }] }
