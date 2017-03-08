@@ -9,7 +9,7 @@
             <h5 class="sub-section__label" translate="hds.resources.settings.servicePreTrialModeTitle"></h5>
             <p class="sub-section__description" translate="hds.resources.settings.serviceNodeDesc"
                 translate-values="{nodes : hdsSettings.numTrialUsers}"
-                translate-value-onclick="hdsSettings.openEditTrialUsersModal()"
+                translate-value-onclick="hdsSettings.addResource()"
                 translate-compile>
             </p>
             <button class="btn btn--people"
@@ -58,7 +58,9 @@
       </div>
     </setting-section>
 
+    <!-- temp disable this for MVO in 3/2017
     <deactivate-section service-id="'spark-hybrid-datasecurity'"></deactivate-section>
+    -->
     <documentation-section service-id="'spark-hybrid-datasecurity'"></documentation-section>
   </div>
 </div>
