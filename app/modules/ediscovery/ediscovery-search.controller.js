@@ -397,9 +397,10 @@ var Spark = require('@ciscospark/spark-core').default;
       $timeout.cancel(avalonPoller);
     }
 
-    function searchButtonDisabled() {
+    function searchButtonDisabled(_error) {
+      var error = !_.isUndefined(_error) ? _error : false;
       var disable = !vm.searchCriteria.roomId || vm.searchCriteria.roomId === '' || vm.searchingForRoom === true;
-      return vm.ediscoveryToggle ? false : disable;
+      return vm.ediscoveryToggle ? error : disable;
     }
 
     function pollAvalonReport() {

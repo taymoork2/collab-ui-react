@@ -2621,6 +2621,9 @@
       "generatedAt": "Generated Today at {{time}}",
       "expiryInfo": "Generated reports will expire after 10 days. Any reports older than 10 days will automatically be deleted by the system."
     },
+    "searchErrors": {
+      "queryLimit": "query must be 200 characters or less"
+    },
     "searchParameters": {
       "searchBy": "Search By",
       "searchByPlaceholder": "Email ID",
