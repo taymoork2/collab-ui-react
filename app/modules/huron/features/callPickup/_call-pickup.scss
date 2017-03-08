@@ -78,7 +78,7 @@ $overlay-panel-height: 93px;
   }
 }
 
-#memberInput {
+#pickup-typeahead {
   .dropdown-menu {
     span {
       &.disabled {
@@ -89,7 +89,6 @@ $overlay-panel-height: 93px;
       a {
         &.disabled {
           color: $gray-light-1;
-          background: $color-white;
           cursor: default;
         }
       }
