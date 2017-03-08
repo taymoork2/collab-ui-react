@@ -12,7 +12,7 @@ export class ServicesOverviewPrivateTrunkCard extends ServicesOverviewHybridCard
     buttonClass: 'btn-link',
   }, {
     name: 'servicesOverview.genericButtons.setup',
-    routerState: 'test',
+    routerState: 'private-trunk-overview',
     buttonClass: 'btn btn--primary',
   }];
 
@@ -30,14 +30,14 @@ export class ServicesOverviewPrivateTrunkCard extends ServicesOverviewHybridCard
     FusionClusterStatesService,
   ) {
     super({
+      name: 'servicesOverview.cards.privateTrunk.title',
+      description: 'servicesOverview.cards.privateTrunk.description',
       active: true,
       cardClass: 'private-trunk',
       cardType: CardType.hybrid,
-      description: 'servicesOverview.cards.privateTrunk.description',
       display : true,
-      name: 'servicesOverview.cards.privateTrunk.title',
-      routerState: 'media-service-v2.list',
-      service: 'squared-fusion-media',
+      routerState: 'private-trunk-overview',
+      service: 'cisco-uc',
     }, FusionClusterStatesService);
   }
 }

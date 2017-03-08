@@ -445,6 +445,7 @@
         'place-overview',
         'places',
         'services-overview',
+        'private-trunk-overview',
       ],
       'squared-fusion-mgmt': [
         'expressway-cluster-sidepanel',

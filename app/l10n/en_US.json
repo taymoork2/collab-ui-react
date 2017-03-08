@@ -6769,7 +6769,20 @@
         "description": "Extends Your organization.",
         "buttons": {
           "verify": "Verify prerequisites"
-        }
+        },
+        "setupTitle": "Set up Private Trunking ",
+        "setupDescription": "You are about to set up Enterprise Private Trunking. Before you begin, verify that you have completed the prerequisites",
+        "domainVerification": "Domain verification",
+        "domainVerificationDescription": "You don't have any verified domain. You need at least one verified domain for setting up Enterprise Private Trunking.",
+        "verifyADomain": "Verify a domain",
+        "basicConnectivity": "Basic connectivity",
+        "certificateHelp": "The Spark Call certificate authority are in the Expresssway-E trust store. See ",
+        "help": "help",
+        "dNSzoneHelp": "The DNS zone has been created on the Expressway-E to accept the inbound connection from the cloud. See ",
+        "defaultTrustHelp": "Use Certificates provided from the Cisco Collaboration default trust list or upload your own. If you use your own, make sure that the host names are on a verified domain. See ",
+        "fullService": "Full service: in and outbound calling",
+        "allZonesHelp": "All zones and rules must be set up on Expressway-E. See ",
+        "routingHelp": "The correct routing must be configured on CUCM. See "
       }
     },
     "showMore": "View all",
@@ -6875,7 +6888,7 @@
       "cancelSubmissionMsg": "The associated remedy ticket will be deleted from the system.",
       "declineDialogNote": "Note: Explanation appears as a comment in the Callback Group history",
       "approveMsg": "If you proceed, the system will automatically updates the callback group with the selected countries",
-      "cancelSubmissionMsg": "A request has been submitted.",
+      "submissionMsg": "A request has been submitted.",
       "cancelSubmissionLink": "Cancel request",
       "rejectSubmissionMsg": "A request has been rejected.",
       "field": {

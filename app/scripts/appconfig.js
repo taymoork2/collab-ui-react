@@ -2886,6 +2886,16 @@
               },
             },
           })
+          .state('private-trunk-overview', {
+            url: '/privateTrunkOverview',
+            parent: 'main',
+            template: '<private-trunk-overview></private-trunk-overview>',
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/hercules/privateTrunk/privateTrunkOverview'], done);
+              }),
+            },
+          })
           .state('context-cluster-sidepanel.host-details', {
             templateUrl: 'modules/hercules/cluster-sidepanel/host-details/host-details.html',
             controller: 'HybridServicesHostDetailsController',

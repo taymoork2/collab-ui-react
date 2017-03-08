@@ -73,7 +73,7 @@ export class ServicesOverviewCtrl {
         this.forwardEvent('googleCalendarFeatureToggleEventHandler', supports);
       });
 
-    this.FeatureToggleService.supports(FeatureToggleService.features.enterprisePrivateTrunk)
+    this.FeatureToggleService.supports(FeatureToggleService.features.huronEnterprisePrivateTrunking)
       .then(supports => {
         this.forwardEvent('privateTrunkFeatureToggleEventHandler', supports);
       });
