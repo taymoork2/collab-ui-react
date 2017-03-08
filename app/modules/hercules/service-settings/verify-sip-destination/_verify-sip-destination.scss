@@ -2,7 +2,6 @@
 
 verify-sip-destination {
   display: block;
-  margin-left: 10px;
 }
 
 .spinner-sip-destination--large {
@@ -22,7 +21,12 @@ verify-sip-destination {
     color: $color-attention-base;
   }
 
-  .icon-info {
-    color: $color-primary-base;
+  .icon-checkbox {
+    color: $color-cta-base;
+  }
+
+  th.result, td.result {
+    text-align: center;
+    vertical-align: middle;
   }
 }

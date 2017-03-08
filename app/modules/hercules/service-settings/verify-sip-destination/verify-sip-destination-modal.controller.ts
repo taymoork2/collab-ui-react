@@ -1,30 +1,33 @@
 import { L2SipService } from 'modules/hercules/services/l2sip-service';
 
-type CurrentStep = 'input' | 'loading' | 'error' | 'result';
+type CurrentStep = 'loading' | 'error' | 'result';
+type Severity = 'Info' | 'Warning' | 'Error';
+type VerificationStep = {
+  type: string,
+  description?: string,
+  severity: Severity,
+};
 
 class VerifySipDestinationModalController {
 
-  public result;
+  public result: {
+    step: VerificationStep,
+  };
   public error;
-  private originalDestinationUrl;
-  public validateTls = true;
-  public validateTlsCheckbox = true;
 
-  public currentStep: CurrentStep = 'input';
+  public currentStep: CurrentStep = 'loading';
 
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
     private L2SipService: L2SipService,
-    private USSService,
     public destinationUrl: string,
   ) {
-    this.originalDestinationUrl = destinationUrl;
+    this. verifySipDestination();
   }
 
   public verifySipDestination(): void {
-    this.currentStep = 'loading';
-    this.L2SipService.verifySipDestination(this.destinationUrl, this.validateTls)
+    this.L2SipService.verifySipDestination(this.destinationUrl, true)
       .then((result) => {
         this.result =  result.steps;
         this.currentStep = 'result';
@@ -35,25 +38,23 @@ class VerifySipDestinationModalController {
       });
   }
 
-  public changeTlsSetting(enabled: boolean): void {
-    this.validateTls = enabled;
+  public hasWarningOrError(): boolean {
+    return _.some(this.result, (step: VerificationStep) => step.severity === 'Warning' || step.severity === 'Error');
   }
 
   public severityToIcon(severity): string {
-    return this.USSService.getMessageIconClass(severity.toLowerCase());
+    switch (severity) {
+      case 'Error':
+        return 'icon-error';
+      case 'Warning':
+        return 'icon-warning';
+      default:
+        return 'icon-checkbox';
+    }
   }
 
   public localizeType(type: string): string {
     return this.$translate.instant(`hercules.settings.verifySipDestination.types.${type}`);
-  }
-
-  public resetForm(): void {
-    this.currentStep = 'input';
-    this.destinationUrl = this.originalDestinationUrl;
-    this.validateTls = true;
-    this.validateTlsCheckbox = true;
-    this.result = undefined;
-    this.error = undefined;
   }
 
 }

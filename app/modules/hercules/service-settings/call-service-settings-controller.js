@@ -144,5 +144,16 @@
           Notification.errorWithTrackingId(error, 'hercules.settings.call.certificatesCannotRead');
         });
     }
+
+    /* Callback from the verify-sip-destination component  */
+    vm.onDestinationSave = function () {
+      vm.updateSipDomain();
+    };
+
+    /* Callback from the verify-sip-destination component  */
+    vm.onDestinationClear = function () {
+      vm.org.sipDomain = '';
+    };
+
   }
 }());

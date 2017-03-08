@@ -2,33 +2,6 @@
   <div class="modal-title" translate="hercules.settings.verifySipDestination.title"></div>
 </div>
 <div class="modal-body verify-sip-destination-modal">
-    <div ng-if="vm.currentStep === 'input'">
-      <div class="row">
-        <input
-            cs-input
-            type="text"
-            placeholder="{{'hercules.settings.call.sipDomainPlaceholder' | translate }}"
-            ng-model="vm.destinationUrl"
-            cs-input-group-size="medium-6"
-            cs-input-label="{{'hercules.settings.call.sipDomainPlaceholder' | translate }}">
-      </div>
-      <div class="row">
-        <input cs-input
-               cs-input-label="{{'hercules.settings.verifySipDestination.validateTLS' | translate}}"
-               type="checkbox"
-               id="verifySipDestinationCheckbox"
-               ng-model="vm.validateTlsCheckbox"
-               ng-change="vm.changeTlsSetting(vm.validateTlsCheckbox)"/>
-      </div>
-      <div class="row">
-        <button type="button"
-                class="btn btn--primary"
-                ng-disabled="!vm.destinationUrl"
-                ng-click="vm.verifySipDestination()">
-          <span translate="hercules.settings.verifySipDestination.verify"></span>
-        </button>
-      </div>
-    </div>
 
   <div ng-if="vm.currentStep === 'loading'">
     <span class="spinner-sip-destination--large">
@@ -49,16 +22,16 @@
     <table class="table table-striped sip-destination-results-table">
       <thead>
       <tr>
-        <td>&nbsp;</td>
         <td translate="hercules.settings.verifySipDestination.step"></td>
         <td translate="hercules.settings.verifySipDestination.details"></td>
+        <td translate="hercules.settings.verifySipDestination.result" class="result"></td>
       </tr>
       </thead>
       <tbody>
       <tr ng-repeat="step in vm.result track by $index">
-        <td><i class="icon" ng-class="vm.severityToIcon(step.severity)"></i></td>
         <td>{{vm.localizeType(step.type)}}</td>
         <td>{{step.description}}</td>
+        <td class="result"><i class="icon" ng-class="vm.severityToIcon(step.severity)"></i></td>
       </tr>
       </tbody>
     </table>
@@ -66,9 +39,11 @@
 
 </div>
 <div class="modal-footer">
-  <button ng-click="vm.resetForm()"
-          ng-class="vm.currentStep === 'input' || vm.currentStep === 'loading' ? 'disabled' : ''"
+  <button ng-click="$dismiss(vm.hasWarningOrError())"
           class="btn"
-          translate="common.reset"></button>
-  <button ng-click="$close()" class="btn--primary" translate="common.close"></button>
+          translate="common.close"></button>
+  <button ng-click="$close()"
+          ng-disabled="vm.currentStep === 'loading' || vm.hasWarningOrError()"
+          class="btn--primary"
+          translate="common.save"></button>
 </div>

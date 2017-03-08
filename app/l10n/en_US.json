@@ -2083,8 +2083,6 @@
         "errorFromServer": "Could not verify SIP destination. The server returned the following error message:",
         "verify": "Verify",
         "title": "Verify SIP Destination",
-        "test": "Test…",
-        "validateTLS": "Validate TLS",
         "step": "Step",
         "types": {
           "Answered": "Answered",
@@ -2115,7 +2113,8 @@
           "TestUsers": "Test Users",
           "UnexpectedError": "Unexpected Error",
           "UnexpectedException": "Unexpected Exception"
-        }
+        },
+        "result": "Result"
       },
       "googleCalendar": {
         "title": "Google Calendar",

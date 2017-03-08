@@ -13,9 +13,9 @@ export class L2SipService {
     return res.data;
   }
 
-  public verifySipDestination(expresswayUrl: string, verifyTls: boolean): ng.IPromise<any> {
+  public verifySipDestination(expresswayUrl: string, verifyTls?: boolean): ng.IPromise<any> {
     if (_.isUndefined(verifyTls)) {
-      verifyTls = false;
+      verifyTls = true;
     }
     return this.$http
       .get(`${this.l2sipUrl}/test/dns?name=${expresswayUrl}&validateTls=${verifyTls}`)

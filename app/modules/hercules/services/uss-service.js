@@ -32,7 +32,6 @@
       getUserJournal: getUserJournal,
       notifyReadOnlyLaunch: notifyReadOnlyLaunch,
       getAllStatuses: getAllStatuses,
-      getMessageIconClass: getMessageIconClass,
     };
 
     CsdmPoller.create(fetchStatusesSummary, hub);

@@ -1,6 +1,10 @@
+type CallbackFunction = () => void;
+
 class VerifySipDestinationComponentCtrl implements ng.IComponentController {
 
   public destinationUrl: string;
+  private onDestinationSave: CallbackFunction;
+  private onDestinationClear: CallbackFunction;
 
   /* @ngInject */
   constructor(
@@ -17,15 +21,22 @@ class VerifySipDestinationComponentCtrl implements ng.IComponentController {
   public openVerificationModal(): void {
     this.$modal.open({
       resolve: {
-        destinationUrl: () => {
-          return this.destinationUrl;
-        },
+        destinationUrl: () => this.destinationUrl,
       },
       controller: 'VerifySipDestinationModalController',
       controllerAs: 'vm',
       templateUrl: 'modules/hercules/service-settings/verify-sip-destination/verify-sip-destination-modal.html',
       type: 'full',
-    });
+    })
+      .result
+      .then(() => {
+        this.onDestinationSave();
+      })
+      .catch((error) => {
+        if (error) {
+          this.onDestinationClear();
+        }
+      });
   }
 }
 
@@ -34,5 +45,7 @@ export class VerifySipDestinationComponent implements ng.IComponentOptions {
   public templateUrl = 'modules/hercules/service-settings/verify-sip-destination/verify-sip-destination.html';
   public bindings = {
     destinationUrl: '<',
+    onDestinationSave: '&',
+    onDestinationClear: '&',
   };
 }
