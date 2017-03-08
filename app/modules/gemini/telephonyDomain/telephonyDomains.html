@@ -10,7 +10,7 @@
            tooltip-placement="top"
            tooltip-trigger="mouseenter">
         <a class="export-users" ng-csv="$ctrl.exportCSV()" filename="{{::'gemini.tds.export.csvFilename' | translate}}">
-          <button class="btn--none"><i class="icon icon-download-contain icon-lg"></i></button>
+          <button class="btn--none"><i class="icon icon-download icon-lg"></i></button>
         </a>
       </div>
       <div ng-if="$ctrl.exportLoading" class="btn btn-none"

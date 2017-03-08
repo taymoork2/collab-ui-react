@@ -1965,6 +1965,10 @@
             params: { data: {} },
             template: '<gm-td-sites></gm-td-sites>',
           })
+          .state('gmTdDetails.notes', {
+            template: '<gm-td-notes></gm-td-notes>',
+            params: { obj: {} },
+          })
           .state('gemCbgDetails', {
             data: {},
             parent: 'sidepanel',
