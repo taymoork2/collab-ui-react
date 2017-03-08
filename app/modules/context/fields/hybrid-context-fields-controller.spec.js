@@ -18,6 +18,10 @@ describe('HybridContextFieldsCtrl', function () {
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
+  afterAll(function () {
+    $controller = $scope = $state = $q = controller = ContextFieldsService = Log = Notification = fakeGridApi = undefined;
+  });
+
   function dependencies($rootScope, _$controller_, _$q_, _$state_, _ContextFieldsService_, _Log_, _Notification_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
