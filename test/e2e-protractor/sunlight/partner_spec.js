@@ -14,6 +14,7 @@ describe('Spark Care Partner flow', function () {
 
     it('should add a new care trial', function () {
       //utils.click(partner.trialFilter);
+      browser.pause();
       utils.click(partner.addButton);
 
       if (featureToggle.features.atlasStartTrialForPaid) {

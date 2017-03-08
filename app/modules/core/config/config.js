@@ -410,6 +410,7 @@
       Application: ['organizations', 'organization-overview'],
       Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org', 'helpdesklaunch'],
       Compliance_User: ['ediscovery', 'ediscovery.search', 'ediscovery.reports'],
+      Partner_Management: ['partnerManagement'],
     };
 
     config.roleStates.Readonly_Admin = _.clone(config.roleStates.Full_Admin);

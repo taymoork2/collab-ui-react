@@ -1,0 +1,21 @@
+<div class="partner-main centered" tabindex="0">
+    <div class="main-heading">
+        <h2 class="results-header" translate="partnerManagement.searchResults.heading"></h2>
+        <div class="search-form">
+            <div>
+            	<span translate="partnerManagement.search.name"></span>
+            	<input cs-input class="form-control" ng-model="vm.searchName">
+            </div>
+            <div>
+            	<span translate="partnerManagement.search.email"></span>
+            	<input cs-input class="form-control" ng-model="vm.searchEmail">
+            </div>
+        <button id="btnSearchResults" type="submit" tabindex="-1"
+            class="btn btn--circle btn--primary icon icon-search"
+            ng-click="search()"
+            ng-disabled="(vm.searchEmail === '')">
+        </button>
+        </div>
+    </div>
+    <button id="next" ng-click="onResultsNext()" class="btn btn--medium pm-next" translate="partnerManagement.next"></button>
+</div>

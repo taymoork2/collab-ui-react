@@ -52,7 +52,7 @@ require('./_support.scss');
     }
 
     function gotoPartnerManagement() {
-      var url = $state.href('partnerManagement');
+      var url = $state.href('partnerManagement.search');
       $window.open(url, '_blank');
     }
 

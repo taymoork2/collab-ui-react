@@ -3757,6 +3757,37 @@
           });
 
         $stateProvider
+          .state('partnerManagement-main', {
+            parent: 'mainLazyLoad',
+            views: {
+              'main@': {
+                templateUrl: 'modules/squared/partnerManagement/pm-main.html',
+              },
+            },
+            abstract: true,
+          })
+          .state('partnerManagement', {
+            url: '/partnerManagement',
+            template: '<div ui-view></div>',
+            controller: 'PartnerManagementController',
+            controllerAs: 'ctrl',
+            parent: 'partnerManagement-main',
+          })
+          .state('partnerManagement.search', {
+            url: '/',
+            templateUrl: 'modules/squared/partnerManagement/pm-search.html',
+          })
+          .state('partnerManagement.searchResults', {
+            templateUrl: 'modules/squared/partnerManagement/pm-searchResults.html',
+          })
+          .state('partnerManagement.create', {
+            templateUrl: 'modules/squared/partnerManagement/pm-create.html',
+          })
+          .state('partnerManagement.createSuccess', {
+            templateUrl: 'modules/squared/partnerManagement/pm-createSuccess.html',
+          });
+
+        $stateProvider
           .state('messenger', {
             parent: 'main',
             url: '/messenger',

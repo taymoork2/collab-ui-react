@@ -1,0 +1,87 @@
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/fonts';
+@import '~collab-ui/scss/settings/typography';
+@import '~collab-ui/scss/tools/placeholders/page-layout';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+
+.partner-main {
+  padding-top: 1rem;
+  text-align: center;
+  outline: none;
+
+  .main-heading {
+    padding-top: 74px;
+    display: inline-block;
+    text-align: left;
+    height: 560px;
+
+    .results-header {
+      float: left;
+      padding-right: 40px;
+    }
+
+    .search-form {
+      float: right;
+      width: 310px;
+    }
+
+    .desc-panel {
+      padding-top: 17px;
+      padding-bottom: 3px;
+    }
+
+    .desc-text {
+      font-family: $brand-font-cisco-TT-Extra-Light;
+      font-size: 26px;
+      color: $gray-light-1;
+    }
+
+    .input-checked {
+      float: left;
+    }
+
+    #email-label {
+      margin-bottom: -0.875rem;
+    }
+
+    #check-glyph {
+      padding-left: 10px;
+    }
+
+    #lifeCycle {
+      padding-top: 10px;
+    }
+
+    @media only screen and (max-width: 500px) {
+      .help {
+        font-size: 0.7rem;
+      }
+    }
+  }
+
+  h2 {
+    color: $color-primary-base;
+  }
+
+  #btnSearch {
+    float: right;
+    padding-top: 4px;
+  }
+
+  #noMatchText {
+    color: $color-primary-base;
+    text-align: left;
+    padding-left: 86px;
+    width: 420px;
+  }
+
+  .pm-step {
+    text-align: left;
+    color: $gray-light-1;
+  }
+
+  .pm-next {
+    float: right;
+    width: 127px;
+  }
+}
