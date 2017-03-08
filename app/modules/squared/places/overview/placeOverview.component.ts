@@ -27,8 +27,8 @@ class PlaceOverview implements ng.IComponentController {
   private atlasHerculesGoogleCalendarFeatureToggle = false;
   private atlasF237ResourceGroups = false;
   public generateCodeIsDisabled = true;
-  private static fusionCal = 'squared-fusion-cal';
-  private static fusionGCal = 'squared-fusion-gcal';
+  // private static fusionCal = 'squared-fusion-cal';
+  // private static fusionGCal = 'squared-fusion-gcal';
 
   private currentPlace: IPlace = <IPlace>{ devices: {} };
   private csdmHuronUserDeviceService;
@@ -84,16 +84,6 @@ class PlaceOverview implements ng.IComponentController {
     }
     this.services = [];
     this.services.push(service);
-    if (this.hasEntitlement(PlaceOverview.fusionGCal) || this.hasEntitlement(PlaceOverview.fusionCal)) {
-      service = {
-        name: this.$translate.instant('hercules.serviceNames.squared-fusion-cal'),
-        icon: 'icon-circle-calendar',
-        state: 'communication',
-        detail: this.$translate.instant('placesPage.sparkCalendar'),
-        actionAvailable: true,
-      };
-      this.services.push(service);
-    }
   }
 
   private fetchAsyncSettings() {

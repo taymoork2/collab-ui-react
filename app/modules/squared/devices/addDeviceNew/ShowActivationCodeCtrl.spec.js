@@ -511,11 +511,11 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
               recipient: {
                 organizationId: userOrgId,
                 cisUuid: userCisUuid,
-                email: userEmail
-              }
-            }
+                email: userEmail,
+              },
+            },
           };
-        }
+        },
       };
 
       cloudberryExistingPlace = {
@@ -697,7 +697,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
           spyOn(CsdmDataModelService, 'createCsdmPlace').and.returnValue($q.resolve({ cisUuid: cisUuid }));
           spyOn(CsdmDataModelService, 'createCodeForExisting').and.returnValue($q.resolve({
             activationCode: activationCode,
-            expiryTime: expiryTime
+            expiryTime: expiryTime,
           }));
           initController();
           $scope.$digest();

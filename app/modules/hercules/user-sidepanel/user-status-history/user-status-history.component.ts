@@ -24,7 +24,7 @@ class UserStatusHistoryCtrl implements ng.IComponentController {
     private FusionClusterService,
     private ResourceGroupService,
   ) {
-    this.userId = this.$stateParams.currentUser.id;
+    this.userId = (this.$stateParams.currentUser && this.$stateParams.currentUser.id) || this.$stateParams.currentPlace.cisUuid;
     this.historyEntries = [];
   }
 
