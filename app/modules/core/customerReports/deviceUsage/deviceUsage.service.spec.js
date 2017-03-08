@@ -214,12 +214,12 @@ describe('DeviceUsageService', function () {
       var csdmRequest = UrlConfig.getCsdmServiceUrl() + '/organization/1234/places/1111';
       $httpBackend
         .when('GET', csdmRequest)
-        .respond($q.resolve({ displayName: "oneoneoneone", whatever: "whatever"}));
+        .respond($q.resolve({ displayName: "oneoneoneone", whatever: "whatever" }));
 
-      var csdmRequest = UrlConfig.getCsdmServiceUrl() + '/organization/1234/places/2222';
+      csdmRequest = UrlConfig.getCsdmServiceUrl() + '/organization/1234/places/2222';
       $httpBackend
         .when('GET', csdmRequest)
-        .respond($q.resolve({ displayName: "twotwotwotwo", whatever: "whatever"}));
+        .respond($q.resolve({ displayName: "twotwotwotwo", whatever: "whatever" }));
 
       var result;
       DeviceUsageService.resolveDeviceData(devices).then(function (data) {
@@ -228,9 +228,9 @@ describe('DeviceUsageService', function () {
       $httpBackend.flush();
 
       expect(result).toEqual([
-        { displayName: "oneoneoneone", whatever: "whatever"},
-        { displayName: "twotwotwotwo", whatever: "whatever"}
-        ]);
+        { displayName: "oneoneoneone", whatever: "whatever" },
+        { displayName: "twotwotwotwo", whatever: "whatever" },
+      ]);
     });
   });
 });
