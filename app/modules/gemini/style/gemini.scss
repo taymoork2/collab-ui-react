@@ -182,6 +182,7 @@
       padding: $base-rem 0;
 
       .defaultToll-item-num {
+        position: relative;
         flex-grow: 2;
         width: 1%;
         color: $gray-base;
@@ -189,6 +190,7 @@
       }
 
       .defaultToll-item-toll {
+        position: relative;
         width: 110px;
         text-align: right;
       }

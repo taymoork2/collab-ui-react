@@ -8,7 +8,8 @@ cr-convert-users-modal {
     // 100% - header - footer
     height: calc(100% - 160px);
 
-    .ui-grid-cell, .ui-grid-header-cell {
+    .ui-grid-cell,
+    .ui-grid-header-cell {
       min-width: vr-adjust(400);
     }
   }

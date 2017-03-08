@@ -2,12 +2,12 @@
   .select-options {
     overflow-y: scroll;
   }
-  .syncContent{
+  .syncContent {
     width: 100%;
-    article{
+    article {
       @include vr-spacing(p, 5);
     }
-    section{
+    section {
       text-align: center;
     }
   }

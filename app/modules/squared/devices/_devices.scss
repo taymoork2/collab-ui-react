@@ -16,8 +16,8 @@
     }
   }
   .export-button {
-    font-size:1.5rem;
-    padding-right:2rem;
+    font-size: 1.5rem;
+    padding-right: 2rem;
   }
   .export-button:hover {
     cursor: pointer;
@@ -67,13 +67,15 @@
   }
 }
 
-sq-places-page-overview, .sq-devices-page-overview {
+sq-places-page-overview,
+.sq-devices-page-overview {
   label {
     cursor: auto;
   }
 }
 
-.sq-devices-page-overview, .sq-devices-emergency-services {
+.sq-devices-page-overview,
+.sq-devices-emergency-services {
   .internal-link {
     color: $gray-dark-1;
   }
@@ -150,7 +152,8 @@ sq-places-page-overview, .sq-devices-page-overview {
     padding-bottom: 10px;
   }
 
-  .timeZoneSelector, .countrySelector {
+  .timeZoneSelector,
+  .countrySelector {
     width: 280px;
   }
 
@@ -318,7 +321,8 @@ sq-places-page-overview, .sq-devices-page-overview {
     max-width: 580px;
   }
 
-  .errorBox, .noSparkCallWarning {
+  .errorBox,
+  .noSparkCallWarning {
     max-width: 580px;
   }
 
@@ -620,29 +624,30 @@ sq-places-page-overview, .sq-devices-page-overview {
 }
 
 .ataDeviceModal {
-  button{
+  button {
     width: auto !important;
   }
-  .rzSliderStyle{
-    .rz-bubble{
+  .rzSliderStyle {
+    .rz-bubble {
       display: none;
     }
-    .rz-bar{
+    .rz-bar {
       background-color: $gray-light-2;
       height: 2px;
     }
-    .rz-bar.rz-selection, .rz-selection{
+    .rz-bar.rz-selection,
+    .rz-selection {
       background-color: $brand-primary;
     }
   }
-  .rangeSliderWrap{
+  .rangeSliderWrap {
     position: relative;
     width: 100%;
     max-width: 600px !important;
     margin-top: 0.75em;
     margin-bottom: 1.5em;
 
-    .rzSliderStyle{
+    .rzSliderStyle {
       display: block;
       width: 80%;
       width: calc(100% - 60px);
@@ -651,19 +656,20 @@ sq-places-page-overview, .sq-devices-page-overview {
       margin-top: -2em;
       margin-left: 0.5em;
       margin-right: 0.7em;
-      .rz-pointer{
+      .rz-pointer {
         left: 389px;
         top: -11px;
         width: 22px;
         height: 22px;
         background-color: white;
         border: 1px solid $gray-light-2;
-        &::after{
+        &::after {
           display: none;
         }
       }
     }
-    .rzSliderStyle,.icon{
+    .rzSliderStyle,
+    .icon {
       float: left;
     }
     input[type=range] {
@@ -672,10 +678,7 @@ sq-places-page-overview, .sq-devices-page-overview {
       width: calc(100% - 60px);
       background: transparent;
       background-color: rgba(255, 255, 255, 0);
-      margin-bottom: 3em;
-      margin-top: 1em;
-      margin-left: 1.5em;
-      margin-right: 0.65em;
+      margin: 1em 0.65em 3em 1.5em;
       height: 2px;
       border-radius: 1px;
       border-color: $brand-primary;
@@ -684,20 +687,20 @@ sq-places-page-overview, .sq-devices-page-overview {
       z-index: 1 !important;
       position: relative;
       &::-moz-range-track {
-        background-color:rgba(255, 255, 255, 0);
+        background-color: rgba(255, 255, 255, 0);
         opacity: 0;
       }
       &::-ms-track {
-        background-color:rgba(255, 255, 255, 0);
+        background-color: rgba(255, 255, 255, 0);
         opacity: 0;
       }
 
       &::-ms-fill-lower {
-        background-color:rgba(255, 255, 255, 0);
+        background-color: rgba(255, 255, 255, 0);
         opacity: 0;
       }
       &::-ms-fill-upper {
-        background-color:rgba(255, 255, 255, 0);
+        background-color: rgba(255, 255, 255, 0);
         opacity: 0;
       }
     }

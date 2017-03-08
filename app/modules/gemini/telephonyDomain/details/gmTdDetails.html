@@ -10,7 +10,7 @@
       <cs-sp-section>
 
         <div class="row">
-          <div class="pull-left medium-9">
+          <div class="pull-left medium-9 ellipsis">
             <span class="feature-name">{{::'gemini.tds.field.partnerTdName' | translate}}: {{$ctrl.model.customerAttribute}}</span>
           </div>
           <div class="columns medium-3">
@@ -38,15 +38,17 @@
         </div>
 
         <div class="row">
-          <div class="pull-left medium-12">
+          <div class="medium-12">
             <span class="feature-name">{{::'gemini.region' | translate}}</span>
             <span class="pull-right">{{$ctrl.model.regionId}}</span>
           </div>
         </div>
         <div class="row">
-          <div class="pull-left medium-12">
+          <div class="pull-left medium-4">
             <span class="feature-name">{{::'gemini.tds.noteToCisco' | translate}}</span>
-            <span class="pull-right">{{$ctrl.model.noteToCiscoTeam}}</span>
+          </div>
+          <div class="pull-right medium-8 ellipsis">
+            <span>{{$ctrl.model.noteToCiscoTeam}}</span>
           </div>
         </div>
       </cs-sp-section>
@@ -72,24 +74,53 @@
         <div class="side-panel-defaultToll">
           <ul>
             <li ng-if="$ctrl.model.defaultToll">
-              <div class="defaultToll-item-num ellipsis"><span tooltip="{{$ctrl.model.defaultToll.phone}}">{{$ctrl.model.defaultToll.phone}}</span></div>
-              <div class="defaultToll-item-num ellipsis"><span tooltip="{{$ctrl.model.defaultToll.label}}">{{$ctrl.model.defaultToll.label}}</span></div>
-              <div class="defaultToll-item-toll"><span class="badge" translate="gemini.tds.defaultToll"></span></div>
+              <div class="defaultToll-item-num"><div class="ellipsis" tooltip="{{$ctrl.model.defaultToll.phone}}">{{$ctrl.model.defaultToll.phone}}</div></div>
+              <div class="defaultToll-item-num"><div class="ellipsis" tooltip="{{$ctrl.model.defaultToll.label}}">{{$ctrl.model.defaultToll.label}}</div></div>
+              <div class="defaultToll-item-toll"><div class="badge" translate="gemini.tds.defaultToll"></div></div>
             </li>
             <li ng-if="$ctrl.model.defaultTollFree">
-              <div class="defaultToll-item-num ellipsis"><span tooltip="{{$ctrl.model.defaultToll.phone}}">{{$ctrl.model.defaultTollFree.phone}}</span></div>
-              <div class="defaultToll-item-num ellipsis"><span tooltip="{{$ctrl.model.defaultToll.label}}">{{$ctrl.model.defaultTollFree.label}}</span></div>
-              <div class="defaultToll-item-toll"><span class="badge" translate="gemini.tds.defaultTollFree"></span></div>
+              <div class="defaultToll-item-num"><div class="ellipsis" tooltip="{{$ctrl.model.defaultToll.phone}}">{{$ctrl.model.defaultTollFree.phone}}</div></div>
+              <div class="defaultToll-item-num"><div class="ellipsis" tooltip="{{$ctrl.model.defaultToll.label}}">{{$ctrl.model.defaultTollFree.label}}</div></div>
+              <div class="defaultToll-item-toll"><div class="badge" translate="gemini.tds.defaultTollFree"></div></div>
             </li>
           </ul>
         </div>
 
       </cs-sp-section>
 
+      <cs-sp-section class="side-panel-note">
+        <div class="feature-list note-title">
+          <ul>
+            <li class="feature">
+              <a ui-sref="gmTdDetails.notes({obj: {notes: $ctrl.notes, customerId: $ctrl.customerId, ccaDomainId: $ctrl.ccaDomainId}})">
+                <span class="feature-name" translate="gemini.cbgs.notes.notes"></span>
+                <span ng-if="!$ctrl.notes.length" class="feature-status" translate="gemini.cbgs.notes.noNotes"></span>
+                <span ng-if="$ctrl.notes.length" class="feature-status">{{$ctrl.notes.length}}</span>
+                <i class="feature-arrow"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </cs-sp-section>
+
       <cs-sp-section class="side-panel-history">
         <div class="section-title-row">
           <div class="section-name" translate="gemini.cbgs.logs.history"></div>
         </div>
+        <ul class="history-ul" ng-if="!$ctrl.hisLoading">
+          <li ng-repeat="log in $ctrl.histories">
+            <h6>{{log.action}}</h6>
+            <h6 ng-if="log.objectName">{{log.objectName}}</h6>
+            <p><small>{{log.createdDate}} {{log.actionTime}} {{::'gemini.cbgs.by' | translate}} {{log.userName}} {{!log.email ? '' : '(' + log.email + ')'}}</small></p>
+            <p><small ng-if="log.moveSiteMsg">{{log.moveSiteMsg}}</small></p>
+          </li>
+        </ul>
+        <div ng-if="$ctrl.hisLoading">
+          <i class="icon icon-spinner"></i>
+        </div>
+        <p ng-if="$ctrl.isShowAllHistories" class="show-more">
+          <a class="primary-color" href ng-click="$ctrl.onShowAllHistories()" translate="gemini.cbgs.showMore"></a>
+        </p>
       </cs-sp-section>
     </cs-sp-container>
   </div>

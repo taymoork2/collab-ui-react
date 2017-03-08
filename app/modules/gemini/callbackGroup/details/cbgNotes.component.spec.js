@@ -77,7 +77,7 @@ describe('Component: cbgNotes', function () {
     it('should add a new data in onSave', function () {
       var getNotesResponse = preData.common;
       ctrl.model = {};
-      ctrl.notes = preData.getNotes;
+      ctrl.allNotes = preData.getNotes;
       ctrl.model.postData = 'Add another note';
       getNotesResponse.content.data.body = {};
       cbgService.postNote.and.returnValue($q.resolve(getNotesResponse));

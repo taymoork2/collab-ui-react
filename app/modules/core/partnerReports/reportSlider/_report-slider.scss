@@ -1,7 +1,8 @@
 @import 'styles/toolkit/colors';
 @import 'styles/toolkit/spacing';
 
-report-slider, .report-slider {
+report-slider,
+.report-slider {
   width: 100%;
 }
 .report-slider {
@@ -13,7 +14,8 @@ report-slider, .report-slider {
     @include vr-spacing(mr, 2);
     position: relative;
     top: vr-adjust(8);
-    .insidebar, .sliderPointer {
+    .insidebar,
+    .sliderPointer {
       background-color: $color-primary-base;
     }
     .sliderLabel {

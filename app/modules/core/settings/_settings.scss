@@ -60,7 +60,7 @@
     @include vr-spacing(ph, 2);
     @include vr-spacing(pv, 1);
     .save-cancel-buttons {
-      @include vr-spacing(ml, 0.5)
+      @include vr-spacing(ml, 0.5);
     }
   }
 }

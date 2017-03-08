@@ -9,7 +9,7 @@ module.exports = {
   rules: {
     // override (temporarily) some rules from the "airbnb-base/legacy" configuration
     'camelcase': 0,
-    'comma-dangle': ['error', {
+    'comma-dangle': [2, {
       arrays: 'always-multiline',
       objects: 'always-multiline',
       imports: 'always-multiline',
@@ -20,7 +20,7 @@ module.exports = {
     'eqeqeq': 0,
     'func-names': 0,
     'global-require': 0,
-    'linebreak-style': ['error', process.platform === 'win32' ? 'windows' : 'unix'],
+    'linebreak-style': [2, process.platform === 'win32' ? 'windows' : 'unix'],
     'max-len': 0,
     'no-bitwise': 0,
     'no-console': 0,
