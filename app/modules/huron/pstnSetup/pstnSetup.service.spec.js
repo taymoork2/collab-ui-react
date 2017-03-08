@@ -21,6 +21,7 @@ describe('Service: PstnSetupService', function () {
   var orders = getJSONFixture('huron/json/orderManagement/orderManagement.json');
   var pstnNumberOrder = getJSONFixture('huron/json/orderManagement/pstnNumberOrder.json');
   var pstnBlockOrder = getJSONFixture('huron/json/orderManagement/pstnBlockOrder.json');
+  var pstnPortOrder = getJSONFixture('huron/json/orderManagement/pstnPortOrder.json');
   var acceptedOrder = getJSONFixture('huron/json/orderManagement/acceptedOrders.json');
   var pendingOrder = _.cloneDeep(getJSONFixture('huron/json/lines/pendingNumbers.json'));
 
@@ -276,6 +277,7 @@ describe('Service: PstnSetupService', function () {
     $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders').respond(orders);
     $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/' + 'f950f0d4-bde8-4b0d-8762-d306655f24ed').respond(pstnNumberOrder);
     $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/' + '8b443bec-c535-4c2d-bebb-6293122d825a').respond(pstnBlockOrder);
+    $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/' + '62afd8be-087c-4987-b459-badc33cf964f').respond(pstnPortOrder);
     var promise = PstnSetupService.getFormattedNumberOrders(suite.customerId);
     promise.then(function (numbers) {
       expect(numbers).toContain(jasmine.objectContaining(acceptedOrder[0]));
@@ -299,6 +301,11 @@ describe('Service: PstnSetupService', function () {
   it('should not get translated order status message since status is None', function () {
     var translated = PstnSetupService.translateStatusMessage(orders[3]);
     expect(translated).toEqual(undefined);
+  });
+
+  it('should displayBatchIdOnly order status message since status includes Batch id = None', function () {
+    var translated = PstnSetupService.translateStatusMessage(orders[5]);
+    expect(translated).toEqual("370827,370829");
   });
 
   describe('getCarrierTollFreeInventory', function () {

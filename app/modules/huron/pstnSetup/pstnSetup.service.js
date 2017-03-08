@@ -731,9 +731,25 @@
 
       if (!_.isUndefined(translations[order.statusMessage])) {
         return translations[order.statusMessage];
-      } else if (order.statusMessage !== 'None') {
-        return order.statusMessage;
+      } else if (order.statusMessage && order.statusMessage !== 'None') {
+        return displayBatchIdOnly(order.statusMessage);
       }
+    }
+
+    function displayBatchIdOnly(statusMessage) {
+      if (statusMessage.indexOf('Batch') >= 0) {
+        if (statusMessage.indexOf(',') >= 0) {
+          var batchStatus = statusMessage.split(',');
+          var batchIdOnlyStatusMessage = [];
+          _.forEach(batchStatus, function (batchOnly) {
+            var batchId = (batchOnly.replace(/\D+/g, ''));
+            batchIdOnlyStatusMessage.push(batchId);
+          });
+          return batchIdOnlyStatusMessage.toString();
+        }
+        return statusMessage.replace(/\D+/g, '');
+      }
+      return statusMessage;
     }
 
     function listPendingNumbers(customerId) {
