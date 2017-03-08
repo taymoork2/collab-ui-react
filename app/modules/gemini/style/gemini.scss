@@ -166,3 +166,34 @@
     }
   }
 }
+
+.gm-td-side-panel {
+  .side-panel-defaultToll {
+    ul {
+      display: block;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    li {
+      display: flex;
+      flex: wrap;
+      padding: $base-rem 0;
+
+      .defaultToll-item-num {
+        position: relative;
+        flex-grow: 2;
+        width: 1%;
+        color: $gray-base;
+        padding-right: $base-rem;
+      }
+
+      .defaultToll-item-toll {
+        position: relative;
+        width: 110px;
+        text-align: right;
+      }
+    }
+  }
+}

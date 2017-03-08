@@ -21,7 +21,7 @@
           <div class="col-md-6 mid-gap">
           <input cs-input type="text" ng-model="ediscoverySearchCtrl.searchModel" autofocus="true"
           ng-keyup="ediscoverySearchCtrl.keyPressHandler($event)" placeholder="{{ediscoverySearchCtrl.searchPlaceholder}}"
-          ng-minlength="5" ng-required="true">
+          ng-minlength="5">
           </div>
         </div>
         <!-- Date Range Row -->
@@ -30,13 +30,11 @@
         </div>
         <div class="row">
           <div class="col-md-5 search-box">
-            <cs-datepicker required ng-model="ediscoverySearchCtrl.searchCriteria.startDate" view-format="YYYY-MM-DD"
-              placeholder="{{ediscoverySearchCtrl.startDatePlaceholder}}" required>
+            <cs-datepicker required ng-model="ediscoverySearchCtrl.searchCriteria.startDate" view-format="YYYY-MM-DD">
             </cs-datepicker>
           </div>
           <span class="col-md-1" translate="common.to"></span>
-          <cs-datepicker required class="col-md-6" ng-model="ediscoverySearchCtrl.searchCriteria.endDate" view-format="YYYY-MM-DD"
-            placeholder="{{ediscoverySearchCtrl.endDatePlaceholder}}" required>
+          <cs-datepicker required class="col-md-6" ng-model="ediscoverySearchCtrl.searchCriteria.endDate" view-format="YYYY-MM-DD">
           </cs-datepicker>
         </div>
         <!-- Text Message and File Name Row -->
@@ -44,9 +42,18 @@
           <span class="search-text large-gap" translate="ediscovery.searchParameters.textAndFileName"></span>
         </div>
         <div class="row query-row">
-        <input class="cs-input" type="text" ng-model="ediscoverySearchCtrl.queryModel" 
-          placeholder="{{'ediscovery.searchParameters.textAndFileNamePlaceholder' | translate}}"
-          ng-keyup="ediscoverySearchCtrl.keyPressHandler($event)">
+          <div class="cs-input-group search-box" ng-class="{'error': qForm.qInput.$invalid && qForm.qInput.$touched}">
+            <form name="qForm" class="query-validation" novalidate>
+              <input class="cs-input" type="text" name="qInput" ng-model="ediscoverySearchCtrl.queryModel" 
+              placeholder="{{'ediscovery.searchParameters.textAndFileNamePlaceholder' | translate}}"
+              ng-keyup="ediscoverySearchCtrl.keyPressHandler($event)" ng-maxlength="200">
+              <div class="cs-input__messages" ng-messages="qForm.qInput.$error" role="alert">
+                <div ng-message="maxlength" translate="ediscovery.searchErrors.queryLimit" 
+                ng-if="ediscoverySearchCtrl.searchButtonDisabled(qForm.qInput.$touched)">
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
         <div class="row mid-gap">
           <button type="submit" class="btn btn--primary search-button" 

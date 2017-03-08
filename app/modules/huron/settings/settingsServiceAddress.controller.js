@@ -33,7 +33,7 @@
       return PstnServiceAddressService.getAddress(Authinfo.getOrgId())
         .then(function (address) {
           if (address) {
-            origAddress = angular.copy(address);
+            origAddress = _.cloneDeep(address);
             initAddress(address, true);
           }
         })
@@ -50,7 +50,7 @@
 
     // Set the address with a copy and compute if it's valid
     function initAddress(address, isValid) {
-      vm.address = angular.copy(address);
+      vm.address = _.cloneDeep(address);
       vm.isValid = isValid || !_.isEmpty(vm.address);
     }
 
@@ -94,7 +94,7 @@
         .then(function () {
           Notification.success('settingsServiceAddress.saveSuccess');
           vm.addressStatus = "PENDING";
-          origAddress = angular.copy(vm.address);
+          origAddress = _.cloneDeep(vm.address);
           vm.addressFound = false;
         })
         .catch(function (response) {

@@ -465,6 +465,39 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.validateType({ id: 'name' })).toEqual(false);
     });
 
+    it("next button should be enabled when required option is selected for category and category is not empty", function () {
+      controller.currentState = 'customerInformation';
+      controller.selectedMediaType = 'chat';
+      (controller.template.configuration.pages.customerInformation.fields['field3']).attributes[0].value = 'required';
+      (controller.template.configuration.pages.customerInformation.fields['field3']).attributes[4].categoryOptions = 'testcategory';
+      expect(controller.nextButton()).toEqual(true);
+    });
+
+    it("next button should be enabled when optional is selected for category and category is not empty", function () {
+      controller.currentState = 'customerInformation';
+      controller.selectedMediaType = 'chat';
+      (controller.template.configuration.pages.customerInformation.fields['field3']).attributes[0].value = 'optional';
+      (controller.template.configuration.pages.customerInformation.fields['field3']).attributes[4].categoryOptions = 'testcategory';
+      expect(controller.nextButton()).toEqual(true);
+    });
+
+    it("next button should be disabled when required option is selected for category and category is empty", function () {
+      controller.currentState = 'customerInformation';
+      controller.selectedMediaType = 'chat';
+      (controller.template.configuration.pages.customerInformation.fields['field3']).attributes[0].value = 'required';
+      (controller.template.configuration.pages.customerInformation.fields['field3']).attributes[4].categoryOptions = '';
+      expect(controller.nextButton()).toEqual(false);
+    });
+
+    it("next button should be enabled when optional is selected for category and category is empty", function () {
+      controller.currentState = 'customerInformation';
+      controller.selectedMediaType = 'chat';
+      (controller.template.configuration.pages.customerInformation.fields['field3']).attributes[0].value = 'optional';
+      (controller.template.configuration.pages.customerInformation.fields['field3']).attributes[4].categoryOptions = '';
+      expect(controller.nextButton()).toEqual(true);
+    });
+
+
     it("next button should get disabled when duplicate types are configured in customerInfo page", function () {
       controller.template.configuration.pages.customerInformation.fields = duplicateFieldTypeData;
       expect(controller.nextButton()).toEqual(false);

@@ -30,7 +30,7 @@ describe('Service: Participant Distribution Resource GraphService', function () 
     value: "0",
   };
   var participantDistributionGraphData = getJSONFixture('mediafusion/json/metrics-graph-report/ParticipantDistributionGraphData.json');
-  var IdMap = angular.copy(participantDistributionGraphData.clusterIdToNameMap);
+  var IdMap = _.cloneDeep(participantDistributionGraphData.clusterIdToNameMap);
 
   beforeEach(angular.mock.module('Mediafusion'));
 

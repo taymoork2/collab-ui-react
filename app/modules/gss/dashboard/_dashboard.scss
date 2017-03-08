@@ -19,7 +19,8 @@
         > div:first-child {
           height: 40px;
 
-          &.none, &.maintenance {
+          &.none,
+          &.maintenance {
             background-color: $gray-dark-3;
           }
           &.minor {
@@ -57,7 +58,8 @@
 
         > div:last-child {
           border: 1px solid;
-          &.none, &.maintenance {
+          &.none,
+          &.maintenance {
             border-color: $gray-dark-3;
           }
           &.minor {

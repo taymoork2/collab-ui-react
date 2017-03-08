@@ -1,7 +1,8 @@
 {
   "rulesDirectory": ["node_modules/tslint-eslint-rules/dist/rules"],
   "rules": {
-    "align": [true,
+    "align": [
+      true,
       "parameters",
       "statements"
     ],
@@ -10,16 +11,19 @@
     "curly": true,
     "eofline": true,
     "forin": true,
-    "indent": [true,
+    "indent": [
+      true,
       "spaces"
     ],
-    "interface-name": [true,
+    "interface-name": [
+      true,
       "always-prefix"
     ],
     "member-access": true,
     "no-arg": true,
     "no-bitwise": true,
-    "no-console": [true,
+    "no-console": [
+      true,
       "assert",
       "count",
       "dir",
@@ -54,23 +58,29 @@
     "no-unused-expression": true,
     "no-use-before-declare": true,
     "no-var-keyword": true,
-    "object-curly-spacing": [true,
+    "object-curly-spacing": [
+      true,
       "always"
     ],
-    "object-literal-key-quotes": [true,
+    "object-literal-key-quotes": [
+      true,
       "as-needed"
     ],
-    "one-line": [true,
+    "one-line": [
+      true,
       "check-open-brace",
       "check-catch",
       "check-else",
       "check-whitespace"
     ],
-    "quotemark": [true,
-      "single"
+    "quotemark": [
+      true,
+      "single",
+      "avoid-escape"
     ],
     "radix": true,
-    "semicolon": [true,
+    "semicolon": [
+      true,
       "always"
     ],
     "ter-indent": [
@@ -80,16 +90,19 @@
         "SwitchCase": 1
       }
     ],
-    "trailing-comma": [true,
+    "trailing-comma": [
+      true,
       {
         "multiline": "always",
         "singleline": "never"
       }
     ],
-    "triple-equals": [true,
+    "triple-equals": [
+      true,
       "allow-null-check"
     ],
-    "typedef-whitespace": [true,
+    "typedef-whitespace": [
+      true,
       {
         "call-signature": "nospace",
         "index-signature": "nospace",
@@ -105,7 +118,8 @@
       }
     ],
     "variable-name": false,
-    "whitespace": [true,
+    "whitespace": [
+      true,
       "check-branch",
       "check-decl",
       "check-operator",

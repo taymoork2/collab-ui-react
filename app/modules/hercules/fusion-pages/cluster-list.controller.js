@@ -6,7 +6,7 @@
     .controller('FusionClusterListController', FusionClusterListController);
 
   /* @ngInject */
-  function FusionClusterListController($filter, $modal, $state, $translate, Analytics, Authinfo, Config, hasResourceGroupFeatureToggle, FusionClusterService, Notification, WizardFactory) {
+  function FusionClusterListController($filter, $modal, $state, $translate, Analytics, Authinfo, Config, hasResourceGroupFeatureToggle, FusionClusterService, Notification, WizardFactory, hasCucmSupportFeatureToggle) {
     var vm = this;
     if (hasResourceGroupFeatureToggle) {
       var groupsCache = [];
@@ -20,6 +20,7 @@
     });
 
     vm.showResourceGroups = hasResourceGroupFeatureToggle;
+    vm.showCucmClusters = hasCucmSupportFeatureToggle; // TODO: When entitlement returned by Atlas backend, add => && Authinfo.isEntitled(Config.entitlements.cucm)
     vm.loading = true;
     vm.backState = 'services-overview';
     vm.openAllGroups = false;
@@ -104,6 +105,11 @@
           display: Authinfo.isEntitled(Config.entitlements.context),
           unassigned: _.filter(response.unassigned, { targetType: 'cs_mgmt' }),
         },
+        {
+          targetType: 'ucm_mgmt',
+          display: vm.showCucmClusters,
+          unassigned: _.filter(response.unassigned, { targetType: 'ucm_mgmt' }),
+        },
       ];
     }
 
@@ -134,6 +140,13 @@
         filters.push({
           name: $translate.instant('hercules.fusion.list.context'),
           filterValue: 'cs_mgmt',
+          count: 0,
+        });
+      }
+      if (vm.showCucmClusters) {
+        filters.push({
+          name: $translate.instant('hercules.fusion.list.cucm'),
+          filterValue: 'ucm_mgmt',
           count: 0,
         });
       }
@@ -218,6 +231,12 @@
             }),
             _.assign({}, vm.displayedGroups[2], {
               unassigned: $filter('filter')(vm.displayedGroups[2].unassigned, { name: searchStr }),
+            }),
+            _.assign({}, vm.displayedGroups[3], {
+              unassigned: $filter('filter')(vm.displayedGroups[3].unassigned, { name: searchStr }),
+            }),
+            _.assign({}, vm.displayedGroups[4], {
+              unassigned: $filter('filter')(vm.displayedGroups[4].unassigned, { name: searchStr }),
             }),
           ];
         }

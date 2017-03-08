@@ -3,7 +3,7 @@
 describe('Controller: SettingsServiceAddressCtrl', function () {
   var controller, $controller, $scope, $q, $timeout, PstnServiceAddressService, Notification;
   var address = getJSONFixture('huron/json/pstnSetup/huronServiceAddress.json');
-  var updatedAddress = angular.copy(address);
+  var updatedAddress = _.cloneDeep(address);
   updatedAddress.streetAddress += 'updated';
 
   beforeEach(angular.mock.module('Huron'));

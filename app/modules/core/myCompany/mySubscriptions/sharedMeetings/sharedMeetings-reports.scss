@@ -11,7 +11,8 @@
       margin-left: 5%;
       margin-right: auto;
       z-index: 50;
-      .graph-text, .graph-meetings {
+      .graph-text,
+      .graph-meetings {
         font-family: $brand-font-cisco-TT-Regular;
         font-size: rem-calc(16);
         color: $gray-darkest;
@@ -33,7 +34,7 @@
     .row-space {
       @include vr-spacing(mt, 1);
     }
-    .time-filter{
+    .time-filter {
       width: rem-calc(200);
     }
     .no-data-center {

@@ -19,6 +19,7 @@
     vm.aaNameFocus = false;
     vm.canSave = false;
     vm.isAANameDefined = undefined;
+    vm.loading = true;
 
     vm.setAANameFocus = setAANameFocus;
     vm.close = closePanel;
@@ -33,7 +34,6 @@
     vm.templateName = $stateParams.aaTemplate;
     vm.saveAANumberAssignmentWithErrorDetail = saveAANumberAssignmentWithErrorDetail;
     vm.areAssignedResourcesDifferent = areAssignedResourcesDifferent;
-    vm.setLoadingDone = setLoadingDone;
 
     vm.getSystemTimeZone = getSystemTimeZone;
     vm.getTimeZoneOptions = getTimeZoneOptions;
@@ -70,13 +70,7 @@
       label: $translate.instant('timeZones.America/Los_Angeles'),
     };
 
-    setLoadingStarted();
-
     /////////////////////
-
-    function setLoadingStarted() {
-      vm.loading = true;
-    }
 
     function setLoadingDone() {
       vm.loading = false;
@@ -194,7 +188,7 @@
     function saveUiModel() {
       if (!_.isUndefined(vm.ui.ceInfo) && !_.isUndefined(vm.ui.ceInfo.getName()) && vm.ui.ceInfo.getName().length > 0) {
         if (!_.isUndefined(vm.ui.builder.ceInfo_name) && (vm.ui.builder.ceInfo_name.length > 0)) {
-          vm.ui.ceInfo.setName(angular.copy(vm.ui.builder.ceInfo_name));
+          vm.ui.ceInfo.setName(_.cloneDeep(vm.ui.builder.ceInfo_name));
         }
         AutoAttendantCeInfoModelService.setCeInfo(vm.aaModel.aaRecord, vm.ui.ceInfo);
       }
@@ -250,7 +244,7 @@
         function () {
           // update successfully
           aaRecords[recNum].callExperienceName = aaRecord.callExperienceName;
-          aaRecords[recNum].assignedResources = angular.copy(aaRecord.assignedResources);
+          aaRecords[recNum].assignedResources = _.cloneDeep(aaRecord.assignedResources);
           vm.aaModel.ceInfos[recNum] = AutoAttendantCeInfoModelService.getCeInfo(aaRecords[recNum]);
 
           AACommonService.resetFormStatus();
@@ -298,7 +292,7 @@
           // create successfully
           var newAaRecord = {};
           newAaRecord.callExperienceName = aaRecord.callExperienceName;
-          newAaRecord.assignedResources = angular.copy(aaRecord.assignedResources);
+          newAaRecord.assignedResources = _.cloneDeep(aaRecord.assignedResources);
           newAaRecord.callExperienceURL = response.callExperienceURL;
           aaRecords.push(newAaRecord);
           vm.aaModel.aaRecordUUID = AutoAttendantCeInfoModelService.extractUUID(response.callExperienceURL);
@@ -621,38 +615,42 @@
       }
     });
 
-    //load the feature toggle prior to creating the elements
-    function setUpFeatureToggles() {
-      var featureToggleDefault = false;
+    function setUpFeatureToggles(featureToggleDefault) {
       AACommonService.setMediaUploadToggle(featureToggleDefault);
       AACommonService.setCallerInputToggle(featureToggleDefault);
-      FeatureToggleService.supports(FeatureToggleService.features.huronAACallerInput).then(function (result) {
-        AACommonService.setCallerInputToggle(result);
-      });
-      FeatureToggleService.supports(FeatureToggleService.features.huronAADecision).then(function (result) {
-        AACommonService.setDecisionToggle(result);
-      });
-
+      AACommonService.setDecisionToggle(featureToggleDefault);
       AACommonService.setClioToggle(featureToggleDefault);
       AACommonService.setRouteQueueToggle(featureToggleDefault);
       AACommonService.setRouteSIPAddressToggle(featureToggleDefault);
-      return function () {
-        FeatureToggleService.supports(FeatureToggleService.features.huronAAMediaUpload).then(function (result) {
-          AACommonService.setMediaUploadToggle(result);
-        });
-        FeatureToggleService.supports(FeatureToggleService.features.huronAACallQueue).then(function (result) {
-          AACommonService.setRouteQueueToggle(result);
-        });
-        FeatureToggleService.supports(FeatureToggleService.features.huronAAClioMedia).then(function (result) {
-          AACommonService.setClioToggle(result);
-        });
-        FeatureToggleService.supports(FeatureToggleService.features.huronAARouteRoom).then(function (result) {
-          AACommonService.setRouteSIPAddressToggle(result);
-        });
-      }();
+      return checkFeatureToggles();
     }
 
+    function checkFeatureToggles() {
+      return $q.all({
+        hasCallerinput: FeatureToggleService.supports(FeatureToggleService.features.huronAACallerInput),
+        hasDecision: FeatureToggleService.supports(FeatureToggleService.features.huronAADecision),
+        hasMediaUpload: FeatureToggleService.supports(FeatureToggleService.features.huronAAMediaUpload),
+        hasRouteQueue: FeatureToggleService.supports(FeatureToggleService.features.huronAACallQueue),
+        hasClioMedia: FeatureToggleService.supports(FeatureToggleService.features.huronAAClioMedia),
+        hasRouteRoom: FeatureToggleService.supports(FeatureToggleService.features.huronAARouteRoom),
+      });
+    }
+
+    function assignFeatureToggles(featureToggles) {
+      AACommonService.setCallerInputToggle(featureToggles.hasCallerinput);
+      AACommonService.setDecisionToggle(featureToggles.hasDecision);
+      AACommonService.setMediaUploadToggle(featureToggles.hasMediaUpload);
+      AACommonService.setRouteQueueToggle(featureToggles.hasRouteQueue);
+      AACommonService.setClioToggle(featureToggles.hasClioMedia);
+      AACommonService.setRouteSIPAddressToggle(featureToggles.hasRouteRoom);
+    }
+
+    //load the feature toggle prior to creating the elements
     function activate() {
+      setUpFeatureToggles(false).then(assignFeatureToggles).finally(init);
+    }
+
+    function init() {
       var aaName = $stateParams.aaName;
       AAUiModelService.initUiModel();
       AACommonService.resetFormStatus();
@@ -664,14 +662,15 @@
       vm.ui.aaTemplate = $stateParams.aaTemplate;
 
       // Define vm.ui.builder.ceInfo_name for editing purpose.
-      vm.ui.builder.ceInfo_name = angular.copy(vm.ui.ceInfo.name);
+      vm.ui.builder.ceInfo_name = _.cloneDeep(vm.ui.ceInfo.name);
 
-      AutoAttendantCeInfoModelService.getCeInfosList().then(setUpFeatureToggles).then(getTimeZoneOptions).then(getSystemTimeZone)
+      AutoAttendantCeInfoModelService.getCeInfosList().then(getTimeZoneOptions).then(getSystemTimeZone)
       .finally(function () {
         AutoAttendantCeMenuModelService.clearCeMenuMap();
         vm.aaModel = AAModelService.getAAModel();
         vm.aaModel.aaRecord = undefined;
         vm.selectAA(aaName);
+        setLoadingDone();
       });
     }
 

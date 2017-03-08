@@ -14,6 +14,7 @@
     require('modules/core/auth/token.service'),
     require('modules/core/modal').default,
     'core.body',
+    'core.chartColors',
     'core.languages',
     'core.localize',
     'core.logmetricsservice',

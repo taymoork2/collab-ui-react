@@ -27,7 +27,7 @@
 
     vm.tokenfieldid = 'didAddField';
     vm.tokenplaceholder = $translate.instant('didManageModal.inputPlacehoder');
-    vm.currentTrial = angular.copy($stateParams.currentTrial);
+    vm.currentTrial = _.cloneDeep($stateParams.currentTrial);
     vm.getExampleNumbers = TelephoneNumberService.getExampleNumbers;
 
     vm.tokenoptions = {

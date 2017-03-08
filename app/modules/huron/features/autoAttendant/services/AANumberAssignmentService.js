@@ -96,7 +96,7 @@
 
     function formatAAE164Resource(res, extNum) {
       if (res.getType() === service.EXTERNAL_NUMBER) {
-        var fmtRes = angular.copy(res);
+        var fmtRes = _.cloneDeep(res);
         if (extNum instanceof Array) {
           var num = res.id ? _.replace(res.id, /\D/g, '') : _.replace(res.number, /\D/g, '');
           extNum = _.find(extNum, function (obj) {
@@ -282,7 +282,7 @@
         //   saved the successful ones recursively.
 
         // get a copy of the list...
-        var myResourceList = angular.copy(resources);
+        var myResourceList = _.cloneDeep(resources);
         // Take one off
         var myResource = myResourceList.pop();
 
@@ -290,7 +290,7 @@
         return setAANumberAssignmentWithErrorDetail(customerId, cesId, myResourceList).then(
           function (restOfListResponse) {
             // and when it's done, try to save with the element we popped, but without the failed ones
-            myResourceList = angular.copy(restOfListResponse.workingResources);
+            myResourceList = _.cloneDeep(restOfListResponse.workingResources);
             myResourceList.push(myResource);
             return setAANumberAssignment(customerId, cesId, myResourceList).then(
               function () {

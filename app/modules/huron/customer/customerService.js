@@ -23,7 +23,7 @@
     return service;
 
     function createCustomer(uuid, name, country) {
-      var customer = angular.copy(customerPayload);
+      var customer = _.cloneDeep(customerPayload);
       customer.uuid = uuid;
       customer.name = name;
       customer.countryCode = _.get(country, 'id');
@@ -87,7 +87,7 @@
     }
 
     function putCustomer(name, uuid) {
-      var customer = angular.copy(customerPayload);
+      var customer = _.cloneDeep(customerPayload);
       customer.uuid = undefined;
       customer.name = name;
       customer.voicemail = undefined;

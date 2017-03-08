@@ -531,7 +531,7 @@
      */
     function buildUserSpecificProperties(user, entitlementOrLicenseList) {
       return _.map(entitlementOrLicenseList, function (_entitlementOrLicense) {
-        var entitlementOrLicense = angular.copy(_entitlementOrLicense);
+        var entitlementOrLicense = _.cloneDeep(_entitlementOrLicense);
         if (!_.has(entitlementOrLicense, 'properties')) {
           entitlementOrLicense.properties = {};
         }

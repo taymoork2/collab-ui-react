@@ -310,7 +310,7 @@
       };
 
       _trialData = {
-        details: angular.copy(defaults),
+        details: _.cloneDeep(defaults),
         trials: {
           messageTrial: TrialMessageService.getData(),
           meetingTrial: TrialMeetingService.getData(),

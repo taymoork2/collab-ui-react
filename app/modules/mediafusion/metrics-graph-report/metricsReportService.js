@@ -148,7 +148,7 @@
       };
       activeData.unshift(startDate);
       for (var i = 0; i < activeData.length; i++) {
-        var tmpItem = angular.copy(graphItem);
+        var tmpItem = _.cloneDeep(graphItem);
         tmpItem.call_reject = activeData[i].call_reject;
         tmpItem.active_calls = activeData[i].active_calls;
         tmpItem.timestamp = activeData[i].timestamp;

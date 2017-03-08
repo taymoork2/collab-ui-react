@@ -39,6 +39,7 @@
     vm.getLocalisedText = getLocalisedText;
     vm.getCustomerInformationBtnClass = getCustomerInformationBtnClass;
     vm.getTitle = getTitle;
+    vm.isCategoryWarningRequired = isCategoryWarningRequired;
 
     // Setup Assistant pages with index
     vm.states = {};
@@ -75,8 +76,15 @@
     vm.logoFile = '';
     vm.logoUploaded = false;
     vm.logoUrl = undefined;
+    vm.categoryField = 'category';
+    vm.FieldValue = 'value';
+    vm.idField = 'id';
+    vm.optionalValue = 'optional';
+    vm.requiredValue = 'required';
+    vm.categoryOptions = 'categoryOptions';
     vm.categoryTokensId = 'categoryTokensElement';
     vm.categoryOptionTag = '';
+    vm.typeIndexInField = 4;
     vm.saveCTErrorOccurred = false;
     vm.creatingChatTemplate = false;
     vm.days = CTService.getDays();
@@ -901,6 +909,14 @@
       return (fieldDisplayText.length <= maxCharLimit);
     }
 
+    function statusPageNotifier() {
+      var notifyMessage = $translate.instant('careChatTpl.statusMessage_failureText', {
+        lengthLimit: vm.lengthConstants.singleLineMaxCharLimit25 });
+      if (!isStatusMessagesPageValid() && $stateParams.isEditFeature) {
+        Notification.error(notifyMessage);
+      }
+    }
+
     function isAgentUnavailablePageValid() {
       return isValidField(vm.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText, vm.lengthConstants.multiLineMaxCharLimit);
     }
@@ -973,8 +989,87 @@
       return !(selectedType && isSelectedTypeDuplicate(selectedType));
     };
 
+    function getCustomerInformationText() {
+      if (vm.selectedMediaType !== vm.mediaTypes.chatPlusCallback) {
+        return 'customerInformation';
+      }
+      var type = vm.cardMode || vm.selectedMediaType;
+      switch (type) {
+        case 'callback': return 'customerInformationCallback';
+        default: return 'customerInformationChat';
+      }
+    }
+
+    function getFieldWithType(type) {
+      var models = vm.template.configuration.pages;
+      var model = _.get(models, getCustomerInformationText());
+      var fields = model.fields;
+      if (fields != null) {
+        // Iterating from field1-4 to figure out the field with type ( eg category  type)
+        for (var fieldName in fields) {
+          if (fieldName !== undefined && (fieldName.indexOf('field') === 0)) {
+            var field = _.get(fields, fieldName);
+            if (field !== undefined && field.attributes !== undefined && field.attributes instanceof Array) {
+              if (field.attributes[vm.typeIndexInField] !== undefined && (field.attributes[vm.typeIndexInField].value)[vm.idField] === type) {
+                return fieldName;
+              }
+            }
+          }
+        }
+      }
+
+    }
+
+    function getCategoryOptions() {
+      var fieldName = getFieldWithType(vm.categoryField);
+      //Categories fetched from field with 'type' as category
+      return vm.getAttributeValue(vm.categoryOptions, fieldName, getCustomerInformationText(), 4);
+    }
+
+    function isCategoryWarningRequired() {
+      var fieldName = getFieldWithType(vm.categoryField);
+      //Checking whether category is required or optional
+      if (fieldName !== undefined) {
+        var requiredField = vm.getAttributeValue(vm.FieldValue, fieldName, getCustomerInformationText(), 0);
+
+        if (requiredField === vm.requiredValue && getCategoryOptions() === '') {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    function isCategoryValid() {
+      var fieldName = getFieldWithType(vm.categoryField);
+      //No category in list of fields when category is not added in the template
+      if (fieldName === undefined) {
+        return true;
+      }
+      var customerInfoPage = getCustomerInformationText();
+      if ((vm.getAttributeValue(vm.FieldValue, fieldName, customerInfoPage, 4))[vm.idField] !== vm.categoryField) {
+        return true;
+      }
+
+      //Checking  whether category is required or optional
+      var requiredField = vm.getAttributeValue(vm.FieldValue, fieldName, customerInfoPage, 0);
+
+      if (requiredField === vm.optionalValue) {
+        var categoryTxtContent = vm.categoryOptionTag;
+        if (categoryTxtContent === undefined ||
+          (categoryTxtContent.length <= vm.lengthConstants.singleLineMaxCharLimit50)) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+      if (getCategoryOptions()) {
+        return true;
+      }
+      return false;
+    }
+
     function isCustomerInformationPageValid() {
-      return areAllTypesUnique() && areAllFixedFieldsValid() && areAllDynamicFieldsValid();
+      return areAllTypesUnique() && areAllFixedFieldsValid() && areAllDynamicFieldsValid() && isCategoryValid();
     }
 
     vm.isTemplateNameValid = function () {
@@ -1027,11 +1122,12 @@
       }
     }
 
-    function resetActiveItem() {
+    function navigationHandler() {
       switch (vm.currentState) {
         case 'customerInformation':
         case 'customerInformationCallback':
-        case 'customerInformationChat': vm.activeItem = undefined;
+        case 'customerInformationChat': vm.activeItem = undefined; break;
+        case 'chatStatusMessages': statusPageNotifier(); break;
       }
     }
 
@@ -1039,16 +1135,16 @@
       vm.animation = 'slide-left';
       $timeout(function () {
         vm.currentState = getAdjacentEnabledState(getPageIndex(), 1);
+        navigationHandler();
       }, vm.animationTimeout);
-      resetActiveItem();
     }
 
     function previousPage() {
       vm.animation = 'slide-right';
       $timeout(function () {
         vm.currentState = getAdjacentEnabledState(getPageIndex(), -1);
+        navigationHandler();
       }, vm.animationTimeout);
-      resetActiveItem();
     }
 
     vm.activeItem = undefined;
@@ -1091,9 +1187,10 @@
       var fields = model.fields;
       var field = _.get(fields, fieldName);
 
-      if (field instanceof Array) {
-        field = field[i];
+      if (field.attributes instanceof Array) {
+        field = field.attributes[i];
       }
+
       if (field) {
         return _.get(field, attributeName);
       }

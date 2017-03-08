@@ -23,24 +23,24 @@
 				</section>
 			</article>
 		</cs-card>
-		<cs-card class="large">
+		<cs-card ng-if="ediscoverySearchCtrl.isReport" class="large">
 			<article>
-				<header class="summary-header"><h4 translate="ediscovery.searchResults.reportSummary"></h4></header>
+				<header><h4 translate="ediscovery.searchResults.reportSummary"></h4></header>
 				<section class="row">
 					<div class="col-md-2">
 						<p translate="ediscovery.searchResults.rooms"></p>
 					</div>
-					<div class="col-md-2">
-						<p translate="ediscovery.searchResults.messages"></p>
-						<p>{{ediscoverySearchCtrl.searchResults.numMessages}}</p>
+					<div class="col-md-3">
+						<p class="report-title" translate="ediscovery.searchResults.messages"></p>
+						<p class="report-info">{{ediscoverySearchCtrl.searchResults.numMessages}}</p>
 					</div>
 					<div class="col-md-2">
-						<p translate="ediscovery.searchResults.files"></p>
-						<p>{{ediscoverySearchCtrl.searchResults.numFiles}}</p>
+						<p class="report-title" translate="ediscovery.searchResults.files"></p>
+						<p class="report-info">{{ediscoverySearchCtrl.searchResults.numFiles}}</p>
 					</div>
-					<div class="col-md-6">
-						<p translate="ediscovery.searchResults.estReport"></p>
-						<p>{{ediscoverySearchCtrl.searchResults.totalSize}}</p>
+					<div class="col-md-5">
+						<p class="report-title" translate="ediscovery.searchResults.estReport"></p>
+						<p class="report-info">{{ediscoverySearchCtrl.searchResults.totalSize}}</p>
 					</div>
 				</section>
 			</article>

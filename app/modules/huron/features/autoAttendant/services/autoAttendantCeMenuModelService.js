@@ -366,7 +366,7 @@
       }
       action.description = menuEntry.description;
 
-      if (angular.isDefined(inObject.voice)) {
+      if (!_.isUndefined(inObject.voice)) {
         action.setVoice(inObject.voice);
       }
       menuEntry.addAction(action);
@@ -381,7 +381,7 @@
     function parsePlayObject(menuEntry, inObject) {
       var action;
       action = new Action('play', decodeUtf8(inObject.url));
-      if (angular.isDefined(inObject.voice)) {
+      if (!_.isUndefined(inObject.voice)) {
         action.setVoice(inObject.voice);
       }
       action.deleteUrl = inObject.deleteUrl;
@@ -691,7 +691,7 @@
     function cesPa(action, inAction) {
       if (action) {
         try {
-          if (angular.isUndefined(action.queueSettings)) {
+          if (_.isUndefined(action.queueSettings)) {
             inAction.description = JSON.parse(inAction.description);
             action.queueSettings = {};
           }
@@ -708,7 +708,7 @@
     function cesFallback(action, inAction) {
       if (action) {
         try {
-          if (angular.isUndefined(action.queueSettings)) {
+          if (_.isUndefined(action.queueSettings)) {
             inAction.description = JSON.parse(inAction.description);
             action.queueSettings = {};
           }

@@ -195,7 +195,7 @@
     function clusterType(type, clusters) {
       return _.chain(clusters)
         .map(function (cluster) {
-          cluster = angular.copy(cluster);
+          cluster = _.cloneDeep(cluster);
           cluster.connectors = _.filter(cluster.connectors, { connectorType: type });
           return cluster;
         })

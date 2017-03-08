@@ -8,48 +8,40 @@ require('./_fields-list.scss');
 
   /* @ngInject */
   function HybridContextFieldsCtrl($scope, $rootScope, $filter, $state, $translate, Log, $q, ContextFieldsService, Notification) {
-    //Initialize variables
     var vm = this;
+    var eventListeners = [];
 
-    vm.init = init;
-    vm.initializeGrid = initializeGrid;
-
-    $scope.$on('$destroy', onDestroy);
-
-    $scope.load = true;
-    $scope.currentDataPosition = 0;
-
-    $scope.gridRefresh = false;
-    $scope.noSearchesYet = true;
-    $scope.noSearchResults = false;
-    $scope.fieldsList = {
+    vm.load = true;
+    vm.currentDataPosition = 0;
+    vm.gridRefresh = false;
+    vm.noSearchesYet = true;
+    vm.noSearchResults = false;
+    vm.fieldsList = {
       allFields: [],
     };
 
-    // Functions
-    $scope.getFieldList = getFieldList;
-
-    var eventListeners = [];
+    $scope.$on('$destroy', onDestroy);
 
     init();
 
     function init() {
       var promises = {
-        initializeGrid: vm.initializeGrid(),
+        initializeGrid: initializeGrid(),
       };
 
-      $q.all(promises).then(function () {
-        initializeListeners();
-        getFieldList();
-      });
+      $q.all(promises)
+        .then(function () {
+          initializeListeners();
+          return getFieldList();
+        });
     }
 
     function initializeListeners() {
       // if the side panel is closing unselect the entry
       eventListeners.push($rootScope.$on('$stateChangeSuccess', function () {
         if ($state.includes('fields')) {
-          if ($scope.gridApi && $scope.gridApi.selection) {
-            $scope.gridApi.selection.clearSelectedRows();
+          if (vm.gridApi && vm.gridApi.selection) {
+            vm.gridApi.selection.clearSelectedRows();
           }
         }
       }));
@@ -90,20 +82,20 @@ require('./_fields-list.scss');
     }
 
     function getFieldList() {
-      if (!$scope.load) {
+      if (!vm.load) {
         return $q.resolve();
       }
-      $scope.gridRefresh = true;
-      $scope.noSearchesYet = false;
-      $scope.fieldsList.allFields = [];
+      vm.gridRefresh = true;
+      vm.noSearchesYet = false;
+      vm.fieldsList.allFields = [];
       var getAndProcessFieldsPromise = ContextFieldsService.getFields()
         .then(function (fields) {
           return processFieldList(fields);
         })
         .then(function (processedFields) {
-          $scope.gridData = processedFields;
-          $scope.noSearchResults = processedFields.length === 0;
-          $scope.fieldsList.allFields = $scope.gridData;
+          vm.gridOptions.data = processedFields;
+          vm.fieldsList.allFields = processedFields;
+          vm.noSearchResults = processedFields.length === 0;
           return $q.resolve();
         })
         .catch(function (err) {
@@ -117,13 +109,13 @@ require('./_fields-list.scss');
       };
 
       return $q.all(promises)
-          .then(function () {
-            $scope.gridApi.infiniteScroll.dataLoaded();
-          })
-          .finally(function () {
-            $scope.gridRefresh = false;
-            $scope.load = false;
-          });
+        .then(function () {
+          vm.gridApi.infiniteScroll.dataLoaded();
+        })
+        .finally(function () {
+          vm.gridRefresh = false;
+          vm.load = false;
+        });
 
     }
 
@@ -131,19 +123,19 @@ require('./_fields-list.scss');
       var deferred = $q.defer();
 
       function onRegisterApi(gridApi) {
-        $scope.gridApi = gridApi;
+        vm.gridApi = gridApi;
         gridApi.infiniteScroll.on.needLoadMoreData($scope, function () {
-          if ($scope.load) {
-            $scope.currentDataPosition++;
-            //Server side pagination is to be implemented
+          if (vm.load) {
+            vm.currentDataPosition++;
+            // Server side pagination is to be implemented
             getFieldList();
           }
         });
         deferred.resolve();
       }
 
-      $scope.gridOptions = {
-        data: 'gridData',
+      vm.gridOptions = {
+        // data: [], // is populated directly by the functions supplying the data.
         multiSelect: false,
         rowHeight: 44,
         enableColumnResize: true,

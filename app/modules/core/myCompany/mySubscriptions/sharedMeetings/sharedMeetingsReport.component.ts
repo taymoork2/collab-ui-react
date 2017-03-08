@@ -1,6 +1,6 @@
 import './sharedMeetings-reports.scss';
 import { IExportMenu } from '../../../partnerReports/partnerReportInterfaces';
-import { CommonReportService } from '../../../partnerReports/commonReportServices/commonReport.service';
+import { ReportPrintService } from '../../../partnerReports/commonReportServices/reportPrint.service';
 import { ReportConstants } from '../../../partnerReports/commonReportServices/reportConstants.service';
 import { SharedMeetingsReportService } from './sharedMeetingsReport.service';
 import { Notification } from '../../../notifications/notification.service';
@@ -22,7 +22,7 @@ class SharedMeetingsReportCtrl {
   constructor(
     private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
-    private CommonReportService: CommonReportService,
+    private ReportPrintService: ReportPrintService,
     private ReportConstants: ReportConstants,
     private Notification: Notification,
     private SharedMeetingsReportService: SharedMeetingsReportService,
@@ -113,7 +113,7 @@ class SharedMeetingsReportCtrl {
           this.getDetailedReport();
         }
         if (_.isUndefined(this.exportDropdown)) {
-          this.exportDropdown = this.CommonReportService.createExportMenu(this.chart);
+          this.exportDropdown = this.ReportPrintService.createExportMenu(this.chart);
         }
       })
       .catch((error: any) => {

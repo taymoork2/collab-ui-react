@@ -63,7 +63,7 @@
               serviceId: serviceId,
             });
             if (!found) {
-              var newSummary = angular.copy(emptySummary);
+              var newSummary = _.cloneDeep(emptySummary);
               newSummary.serviceId = serviceId;
               summary.push(newSummary);
             }

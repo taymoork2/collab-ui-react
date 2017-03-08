@@ -88,7 +88,7 @@ describe('Component: clusterCard', function () {
       });
 
       it('should return false otherwise', function () {
-        ['c_mgmt', 'mf_mgmt', 'hds_app'].forEach(function (type) {
+        ['c_mgmt', 'mf_mgmt', 'hds_app', 'ucm_mgmt'].forEach(function (type) {
           var cluster = { targetType: type };
           expect(controller.upgradesAutomatically(cluster)).toBe(false);
         });
@@ -104,7 +104,7 @@ describe('Component: clusterCard', function () {
       });
 
       it('should return false otherwise', function () {
-        ['c_mgmt', 'mf_mgmt', 'hds_app'].forEach(function (type) {
+        ['c_mgmt', 'mf_mgmt', 'hds_app', 'ucm_mgmt'].forEach(function (type) {
           var cluster = { targetType: type };
           expect(controller.hideFooter(cluster)).toBe(false);
         });
