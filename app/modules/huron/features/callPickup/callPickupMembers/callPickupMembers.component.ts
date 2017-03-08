@@ -29,7 +29,7 @@ class CallPickupMembersCtrl implements ng.IComponentController {
       .then(
         (members: Member[]) => {
           this.memberList = _.reject(members, mem => _.some(this.selectedMembers, member =>
-           member.member.uuid === mem.uuid ));
+          member.member.uuid === mem.uuid ));
           this.errorMemberInput = (this.memberList && this.memberList.length === 0);
           let scope = this;
           _.forEach(members, function(member) {
