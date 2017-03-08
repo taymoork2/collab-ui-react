@@ -101,6 +101,10 @@
         $state.go('hds-cluster.nodes', {
           id: id,
         });
+      } else if (type === 'ucm_mgmt') {
+        $state.go('cucm-cluster.nodes', {
+          id: id,
+        });
       }
     }
 
@@ -115,6 +119,10 @@
         });
       } else if (type === 'hds_app') {
         $state.go('hds-cluster.settings', {
+          id: id,
+        });
+      } else if (type === 'ucm_mgmt') {
+        $state.go('cucm-cluster.settings', {
           id: id,
         });
       }

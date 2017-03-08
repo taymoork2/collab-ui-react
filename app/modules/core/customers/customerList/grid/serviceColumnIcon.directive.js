@@ -60,7 +60,7 @@
       function getNonWebexTooltip(rowData, type) {
         var tooltip = scope.TOOLTIP_TEMPLATE.clone();
         var serviceStatus = getServiceStatus(rowData, type);
-        var serviceManagedByAnotherPartner = !PartnerService.helpers.isServiceManagedByCurrentPartner(rowData[type]);
+        var serviceManagedByAnotherPartner = !PartnerService.isServiceManagedByCurrentPartner(rowData[type]);
         var tooltipDataObj = {
           statusClass: serviceStatus,
         };
@@ -118,7 +118,7 @@
       function createWebexTooltipBlock(rowData, licenseType, licenseData) {
         var tooltipBlock = scope.TOOLTIP_TEMPLATE_BLOCK.clone();
         var serviceStatus = getServiceStatus(rowData, licenseType);
-        var serviceManagedByAnotherPartner = !PartnerService.helpers.isServiceManagedByCurrentPartner(rowData[licenseType]);
+        var serviceManagedByAnotherPartner = !PartnerService.isServiceManagedByCurrentPartner(rowData[licenseType]);
         var tooltipDataObj = {
           url: licenseData.siteUrl,
           qty: $translate.instant('customerPage.quantityWithValue', {

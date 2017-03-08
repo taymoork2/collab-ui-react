@@ -19,7 +19,6 @@
     @include vr-spacing(m, 0);
 
     min-width: vr-adjust(1200);
-    width: 100%;
 
     .row {
       border-bottom: rem-calc(1) solid $gray-light-3;
@@ -77,9 +76,13 @@
 
     .subscription-column,
     .subscription-item,
-    .subscription-header,
     .subscription-upgrade,
     .license-item {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .subscription-header {
       display: flex;
     }
 
@@ -137,8 +140,9 @@
       .subscription-item {
         @include vr-spacing(p, 1.5);
 
-        width: 50%;
+        width: 100%;
       }
+
 
       .subscription-item:nth-child(1),
       .subscription-item:nth-child(2) {
@@ -152,7 +156,7 @@
 
       .subscription-item.item-with-borders {
         @include vr-spacing(p, 1.5);
-        width: 50%;
+        width: 100%;
         display: block;
         border-right: rem-calc(1) solid $gray-light-3;
         border-bottom: rem-calc(1) solid $gray-light-3;
@@ -169,7 +173,7 @@
       }
 
       .subscription-site {
-        color: $gray-dark-2;
+        color: $color-primary-base;
       }
 
       .hybrid-ul span,
@@ -213,6 +217,18 @@
 
       .subscription-item:last-of-type .subscription-description {
         @include vr-spacing(mb, 0);
+      }
+
+      .subscription-detail {
+        margin-right: 8rem;
+      }
+
+      .license-detail {
+        color: $gray-dark-2;
+      }
+
+      .subscription-advanced-detail {
+        margin-left: 0rem;
       }
     }
   }

@@ -18,8 +18,8 @@
       getSpData: getSpData,
       setStorage: setStorage,
       getStorage: getStorage,
+      getRemedyTicket: getRemedyTicket,
       isServicePartner: isServicePartner,
-      getCbgRemedyTicket: getCbgRemedyTicket,
     };
     return service;
 
@@ -27,8 +27,8 @@
       return $http.get(URL.spData).then(extractData);
     }
 
-    function getCbgRemedyTicket(customerId) {
-      var url = URL.remedyTicket + customerId + '/siteId/0/type/9';
+    function getRemedyTicket(customerId, type) {
+      var url = URL.remedyTicket + customerId + '/siteId/0/type/' + type;
       return $http.get(url).then(extractData);
     }
 

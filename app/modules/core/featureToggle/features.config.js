@@ -38,7 +38,6 @@ module.exports = {
   atlasSubdomainUpdate: 'atlas-subdomain-update',
   atlasSuppressOnboardingEmail: 'atlas-suppress-onboarding-email',
   atlasTrialsShipDevices: 'atlasTrialsShipDevices',
-  atlasDeviceUsageReportV2: 'atlas-device-usage-report-v2',
   atlasStartTrialForPaid: 'atlas-start-trial-for-paid',
   androidAddGuestRelease: 'android-add-guest-release',
   androidDirectUpload: 'android-direct-upload',
@@ -188,4 +187,6 @@ module.exports = {
   huronNetworkLocaleIE: 'huron-l10n-network-locale-ie',
   huronNetworkLocaleMX: 'huron-l10n-network-locale-mx',
   enterprisePrivateTrunk: 'enterprise-private-trunk',
+  huroncfnatimer: 'huron-cfna-timer',
+  atlasHybridCucmSupport: 'atlas-hybrid-cucm-support',
 };

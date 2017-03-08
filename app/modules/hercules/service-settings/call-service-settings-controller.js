@@ -6,7 +6,7 @@
     .controller('CallServiceSettingsController', CallServiceSettingsController);
 
   /* @ngInject */
-  function CallServiceSettingsController($modal, ServiceDescriptor, Authinfo, USSService, CertService, Notification, CertificateFormatterService, $translate, hasVoicemailFeatureToggle, UCCService) {
+  function CallServiceSettingsController($modal, Analytics, ServiceDescriptor, Authinfo, USSService, CertService, Notification, CertificateFormatterService, $translate, hasVoicemailFeatureToggle, UCCService) {
     var vm = this;
     vm.formattedCertificateList = [];
     vm.readCerts = readCerts;
@@ -41,6 +41,8 @@
     vm.callServiceConnect = {
       title: 'hercules.serviceNames.squared-fusion-ec',
     };
+
+    Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CALL_SETTINGS);
 
     vm.storeEc = function (toggleConnect) {
       if (!toggleConnect) {

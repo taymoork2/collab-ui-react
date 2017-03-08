@@ -40,6 +40,7 @@ describe('Component: lineOverview', () => {
       'LineOverviewService',
       'DirectoryNumberOptionsService',
       'CallerIDService',
+      'FeatureToggleService',
     );
 
     this.existingLinePrimary = existingLinePrimary;
@@ -50,7 +51,6 @@ describe('Component: lineOverview', () => {
 
     this.$scope.ownerName = 'Bond James Bond';
     this.$scope.ownerId = '007';
-
     this.getLineOverviewDataDefer = this.$q.defer();
     spyOn(this.LineOverviewService, 'get').and.returnValue(this.getLineOverviewDataDefer.promise);
 
@@ -65,6 +65,8 @@ describe('Component: lineOverview', () => {
 
     this.saveDefer = this.$q.defer();
     spyOn(this.LineOverviewService, 'save').and.returnValue(this.saveDefer.promise);
+
+    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.when(true));
   });
 
   function initComponent() {

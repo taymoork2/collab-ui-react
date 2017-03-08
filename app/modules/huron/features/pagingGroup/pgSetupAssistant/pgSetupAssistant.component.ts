@@ -200,13 +200,15 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
     });
 
     //populate the paging group initiators
-    _.forEach(this.selectedInitiators, function (mem) {
-      let initiator: IInitiatorData = <IInitiatorData> {
-        initiatorId: mem.member.uuid,
-        type: (mem.member.type === USER_REAL_USER) ? USER : PLACE,
-      };
-      initiators.push(initiator);
-    });
+    if (this.initiatorType === CUSTOM) {
+      _.forEach(this.selectedInitiators, function (mem) {
+        let initiator: IInitiatorData = <IInitiatorData> {
+          initiatorId: mem.member.uuid,
+          type: (mem.member.type === USER_REAL_USER) ? USER : PLACE,
+        };
+        initiators.push(initiator);
+      });
+    }
 
     let pg: IPagingGroup = <IPagingGroup>{
       name: this.name,

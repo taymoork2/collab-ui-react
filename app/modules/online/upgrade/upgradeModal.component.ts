@@ -18,7 +18,7 @@ class OnlineUpgrade {
   ) {}
 
   public $onInit(): void {
-    this.OnlineUpgradeService.getProductInstance(this.Authinfo.getUserId()).then((prodResponse: IProdInst) => {
+    this.OnlineUpgradeService.getProductInstance(this.Authinfo.getUserId(), this.OnlineUpgradeService.getSubscriptionId()).then((prodResponse: IProdInst) => {
       this.bmmpAttr = {
         subscriptionId: this.OnlineUpgradeService.getSubscriptionId(),
         productInstanceId: prodResponse.productInstanceId,

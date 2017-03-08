@@ -13,7 +13,6 @@
     vm.selectedSubscription = '';
     vm.subscriptionOptions = [];
     vm.roomSystemsExist = false;
-
     vm.showLicenses = showLicenses;
 
     init();

@@ -5,17 +5,27 @@
      class="medium-8"></p>
 </div>
 
-<div class="row hercules-upload-key-section">
+<div class="row">
   <input
     cs-input
     type="text"
     placeholder="{{uploadKey.enterServiceAccountPlaceholder}}"
     ng-model="uploadKey.data.googleServiceAccount"
-    cs-input-group-size="medium-4"
+    cs-input-group-size="medium-6"
     cs-input-label="{{uploadKey.serviceAccountName}}"
   >
 </div>
 
+<div class="row">
+  <input
+    cs-input
+    type="text"
+    placeholder="{{uploadKey.enterAclAccountPlaceholder}}"
+    ng-model="uploadKey.data.aclAccount"
+    cs-input-group-size="medium-6"
+    cs-input-label="{{uploadKey.aclAccountName}}"
+  >
+</div>
 
 <div
   ng-if="!uploadKey.data.file"

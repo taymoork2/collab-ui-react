@@ -38,8 +38,6 @@ var Spark = require('@ciscospark/spark-core').default;
 
     /* initial search variables page */
     vm.searchPlaceholder = $translate.instant('ediscovery.searchParameters.searchByEmailPlaceholder');
-    vm.startDatePlaceholder = moment().subtract(30, 'days').format('YYYY-MM-DD');
-    vm.endDatePlaceholder = moment().format('YYYY-MM-DD');
     vm.searchByOptions = ['Email ID', 'Room ID'];
     vm.searchBySelected = '' || vm.searchByOptions[0];
     vm.searchModel = null;
@@ -100,7 +98,10 @@ var Spark = require('@ciscospark/spark-core').default;
           enableAvalonPolling();
         }
       } else {
-        vm.searchCriteria = {};
+        vm.searchCriteria = {
+          startDate: moment().subtract(30, 'days').format('YYYY-MM-DD'),
+          endDate: moment().format('YYYY-MM-DD'),
+        };
         vm.roomInfo = null;
       }
     }
@@ -203,10 +204,13 @@ var Spark = require('@ciscospark/spark-core').default;
 
     function createEncryptedEmails(_emails) {
       var emails = splitWords(_emails);
-      var promises = emails.map(function (s) {
-        return spark.encryption.encryptText(vm.encryptedResult, s);
-      });
-      return $q.all(promises);
+      if (emails) {
+        var promises = emails.map(function (s) {
+          return spark.encryption.encryptText(vm.encryptedResult, s);
+        });
+        return $q.all(promises);
+      }
+      return null;
     }
 
     function convertBytesToGB(bytes) {
@@ -395,7 +399,7 @@ var Spark = require('@ciscospark/spark-core').default;
 
     function searchButtonDisabled() {
       var disable = !vm.searchCriteria.roomId || vm.searchCriteria.roomId === '' || vm.searchingForRoom === true;
-      return vm.ediscoveryToggle ? (disable && vm.searchModel === '') : disable;
+      return vm.ediscoveryToggle ? false : disable;
     }
 
     function pollAvalonReport() {

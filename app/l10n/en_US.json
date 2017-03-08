@@ -367,7 +367,9 @@
     "enabledBetaFeatures": "Enabled Beta Features",
     "otpShareButton": "Share",
     "userDetails": "User Details",
-    "userPreferredLanguageError": "Failed to fetch user preferred language. Reason:"
+    "userPreferredLanguageError": "Failed to fetch user preferred language. Reason:",
+    "notConfigured": "Not Configured",
+    "dirsyncToolTip": "Use DirSync to update the user's preferred language."
   },
   "tabs": {
     "overviewTab": "Overview",
@@ -560,7 +562,6 @@
       "distribution": "Distribution",
       "timeline": "Timeline",
       "overview": "Overview",
-      "all": "All",
       "deviceMetrics": "Room Device Metrics",
       "downloadFullReport": "Download Full Report",
       "mostUsed": "Most Used",
@@ -579,7 +580,7 @@
       "last7Days": "Last 7 Days",
       "last4Weeks": "Weekly Last 4 weeks ",
       "last3Months": "Monthly Last 3 Months",
-      "missingDays": " (data missing for {{nbrOfMissingDays}} days)",
+      "missingDays": "no data available for {{nbrOfMissingDays}} days",
       "nameNotFoundFor": "Name not found for",
       "selectModelsToFilterOn": "Select models to filter on",
       "deviceOptions": {
@@ -599,8 +600,10 @@
     }
   },
   "sharedMeetingReports": {
-    "title": "Shared Meeting Usage",
+    "title": "SHARED MEETING USAGE",
     "link": "View Report",
+    "hostsSharingLicenses": "{{usage}} hosts using {{volume}} shared licenses",
+    "availableSharedLicenses": "Available Shared Licenses: ",
     "sharedMeetingReport": "Shared Meeting Report",
     "sharedMeetingUsage": "Shared Meetings Usage",
     "sharedMeetingDescription": "This graph shows the number of concurrent meetings per month.",
@@ -1259,11 +1262,10 @@
     "getStarted": "Get Started",
     "urgentUpgrade": "An urgent upgrade is available for <a ui-sref='{{link}}'>{{connector}}</a> and it will upgrade during the next scheduled upgrade.",
     "setUpHybridDataSecurity": "Use premises-based Data Security for encryption.",
-    "careLicenseMsgMissingText": "Message is mandatory for chat and voice interaction.",
-    "careLicenseCallMissingText": "Call is mandatory for voice interaction.",
-    "careLicenseMsgAndCallMissingText": "Message and Call are mandatory for chat and voice interaction respectively.",
-    "careLicenseLinkText1": "Go here to contact your partner or Cisco Sales to enable this service.",
-    "careLicenseLinkText2": "Go here to contact your partner or Cisco Sales to enable these services."
+    "careLicenseMsgMissingText": "Message is mandatory for Care services. To enable Message,",
+    "careLicenseCallMissingText": "Call is mandatory for voice-based Care services. To enable Call,",
+    "careLicenseMsgAndCallMissingText": "Message and Call are mandatory for Care services like chat and voice interaction respectively. To enable Message and Call,",
+    "careLicenseLinkText": "contact your partner or Cisco sales."
   },
   "inviteModal": {
     "title": "Service Entitlement",
@@ -1809,21 +1811,26 @@
       "mf_mgmt": "Media Service",
       "hds_app": "Hybrid Data Security",
       "cs_mgmt": "Management Connector",
-      "cs_context": "Context Connector"
+      "cs_context": "Context Connector",
+      "ucm_mgmt": "Management Connector",
+      "c_serab": "Serviceability Connector"
     },
     "serviceNameFromConnectorType": {
       "c_cal": "Calendar Service",
       "c_ucmc": "Call Service",
       "c_mgmt": "Management Service",
       "cs_mgmt": "Management Connector",
-      "cs_context": "Context Connector"
+      "cs_context": "Context Connector",
+      "ucm_mgmt": "Management Connector",
+      "c_serab": "Serviceability Connector"
     },
     "clusterTypeFromServiceId": {
       "squared-fusion-mgmt": "Expressway",
       "squared-fusion-cal": "Expressway",
       "squared-fusion-uc": "Expressway",
       "squared-fusion-media": "Hybrid Media",
-      "spark-hybrid-datasecurity": "Hybrid Data Security"
+      "spark-hybrid-datasecurity": "Hybrid Data Security",
+      "squared-fusion-khaos": "Cisco Unified CM"
     },
     "serviceDescriptions": {
       "squared-fusion-uc": "Call Service Aware lets your users instantly share their desktops from their Cisco Spark clients while on a call. Call Service Connect lets your users answer calls to their work phones and to place calls to other work phones, on their Cisco Spark client.",
@@ -1868,6 +1875,7 @@
       "sinceTime": "since {{timestamp}}"
     },
     "alarms": {
+      "affectedNodes": "Affected Nodes",
       "alarms": "Alarms",
       "critical": "Critical",
       "error": "Error",
@@ -1986,7 +1994,7 @@
       "defaultWebExSiteOrgLevelSavingSuccess": "Default WebEx site for organization level was successfully saved.",
       "defaultWebExSiteOrgLevelSavingError": "Could not save the change to default WebEx site for organization level. Try again later.",
       "oneButtonToPushIntervalHeading": "Early Join Time",
-      "oneButtonToPushInterval": "Before the start of a meeting, a \"Join\" button appears on Spark devices and clients. Choose how long before meeting start time this button appears. The default is 5 mins if not set.",
+      "oneButtonToPushInterval": "Before the start of a meeting, a \"Join\" button appears on Spark devices and clients. Choose how long before meeting start time this button appears. The default is 1 minute if not set.",
       "oneButtonToPushIntervalSecondaryLabel": "minutes before the meeting",
       "oneButtonToPushIntervalMinutesSavingSuccess": "Early join time was successfully saved.",
       "oneButtonToPushIntervalMinutesSavingError": "Could not save the change to early join time. Try again later.",
@@ -2041,6 +2049,8 @@
         "serviceAccountHeader": "Service Account",
         "serviceAccountText": "The service account used for connecting from Cisco Collaboration Cloud to your Google Calendar organization.",
         "serviceAccountHelpText": "To change the service account, upload a new private key in the section below",
+        "aclAccountHeader": "ACL Admin Account (optional)",
+        "aclAccountText": "If using room resources, ACL changes to their calendars may be required. To enable Hybrid Calendar Services to perform this change automatically, you may provide the name of an authorized account for this purpose.",
         "privateKeyHeader": "Private Key",
         "privateKeyText": "Upload a new private key.",
         "deactivateHeader": "Deactivate Google Calendar",
@@ -2048,7 +2058,9 @@
         "googleCalendarConfigWillBeWiped": "This action will delete all Google Calendar settings from Cisco Collaboration Cloud.",
         "uploadNewPrivateKey": "Upload Private Key",
         "uploadNewPrivateKeyPlaceholder": "Enter service account name",
+        "uploadNewAclAccountPlaceholder": "Enter ACL admin account name (optional)",
         "serviceAccountName": "Service Account Name",
+        "aclAccountName": "ACL Admin Account Name",
         "uploadNewPrivateKeyExplanation": "Enter your service account name and upload the private key you downloaded from Google Developer Console.",
         "dragAndDropKeyFileHere": "Drag and drop the file containing the private key here or",
         "clickToBrowse": "click to browse",
@@ -2188,6 +2200,7 @@
         "expressway": "Expressway",
         "mediafusion": "Media",
         "hds": "Data Security",
+        "cucm": "Cisco Unified CM",
         "no-services": "No services",
         "missing-clusters": "<a ng-click=\"{{onclick}}\">Assign clusters</a> and users to complete this group",
         "missing-users": "<a ng-click=\"{{onclick}}\">Assign users</a> to complete this group",
@@ -2481,7 +2494,7 @@
       "registrationTimeout": "Registration timeout"
     },
     "softwareUpgrade": {
-      "explanation": "You are about to upgrade {{connectorType}} to version {{newVersion}} on all nodes in your Hybrid Data Security cluster"
+      "text1": "During upgrade, this Hybrid Data Security Node will enter maintenance mode. After 2 hours, this node will be upgraded and any new calls will be redirected to an available node or the cloud."
     },
     "resources": {
       "settings": {
@@ -2631,7 +2644,7 @@
       "generateText": "Enter report information to generate a report. Generation time will depend on estimated report size.",
       "description": "Description",
       "exportFormat": "Export Format",
-      "totalResultSize": "Total Result Size",
+      "totalReportSize": "Total Report Size",
       "downloadContent": "Download content such as documents, images and media associated with this report.",
       "reportSizeTooBig": "Report Size Too Big",
       "reportSizeErrorSummary": "The estimated report size is over the 3 GB maximum size allowed for report generation. Go back to search and refine your results.",
@@ -3485,7 +3498,10 @@
     "forwardExternal": "Forward external calls differently",
     "addNew": "Add New",
     "forwardVoicemailDisabled": "Call Forwarding is set to Voicemail, which is currently disabled. Please update the Call Forwarding settings.",
-    "directVoicemail": "Forward directly to Voicemail"
+    "directVoicemail": "Forward directly to Voicemail",
+    "forwardBusyNoAnswerTimerSeconds": "Seconds",
+    "forwardBusyNoAnswerTimerDescription": "Time before call is forwarded due to no answer",
+    "ringDurationTimer.validation.error": "Must be a number between 1 and 300"
   },
   "multipleCalls": {
     "title": "Simultaneous Calls",
@@ -3695,6 +3711,7 @@
     "errors": {
       "states": "Failed to retrieve states",
       "inventory": "Failed to get PSTN inventory",
+      "capabilities": "Failed to retrieve carrier capabilities.",
       "orders": {
         "missingNumber": "Number Missing in Order {{orderNumber}}"
       },
@@ -4293,9 +4310,8 @@
     "newDevice": "New Device",
     "newCode": "New Code",
     "confirmRoomDeviceOnly": {
-      "roomDeviceOnly": "Room Device activation only",
-      "noSparkCallService": "This user doesn't have Spark Call service.",
-      "noSparkCallWarning": "They can still activate a room device and make calls using Spark or SIP addresses. However, for phone dialling and desk phones, you need to give them the Spark Call service from the Users page."
+      "roomDeviceOnly": "Room device activation only",
+      "noSparkCallWarning": "This user can only activate Cisco Spark room devices. Before they can activate a desk phone, you must enable the Cisco Spark call service for them from the Users page."
     },
     "chooseDeviceType": {
       "deviceType": "What kind of device do you want to set up?",
@@ -4329,8 +4345,7 @@
       "lastNameExample": "e.g. Smith",
       "emailExample": "e.g. johnsmith@example.com",
       "invalidEmailAddress": "Invalid Email Address",
-      "noUserFound": "No users found with Cisco Spark Call service",
-      "noSparkCallWarning": "This user doesn't have Spark Call service. They can still activate a room device and make calls using Spark or SIP addresses. However, for phone dialling and desk phones, you need to give them the Spark Call service from the Users page."
+      "noUserFound": "No users found with Cisco Spark Call service"
     },
     "chooseSharedSpace": {
       "existingOrNewPlace": "Assign to an existing place or a new place?",
@@ -4640,16 +4655,19 @@
       "lowAvailableClusters": "Low availability clusters",
       "clusterTakingMoreCalls": "Clusters hosting more no of calls",
       "totalMeetings": "Total Number of Meetings",
-      "meetOnPrem": "Meetings Location",
+      "meetOnPrem": "Meeting Host Type",
       "clientTypes": "Client Types",
       "clientType": "Client Type",
       "clients": "Clients",
       "noOfMeet": "Number of Meetings",
-      "meetingLocationTitle": "Total Meetings by Location",
+      "meetingLocationTitle": "Total Meetings by Host Type",
       "meetings": "Meetings",
       "location": "Location",
       "totalCloud": "Total Cloud Participants",
-      "clientTypeHeading": "Client Type Distribution Across Calls"
+      "clientTypeHeading": "Client Type Distribution",
+      "onPremisesHeading": "On-Premises",
+      "cloudHeading": "Cloud",
+      "hybridHeading": "Hybrid"
     },
     "deleteGroup": {
       "message": "Are you sure you want to delete {{groupName}} from Cisco Collaboration Cloud?",
@@ -5682,6 +5700,7 @@
     "overview": "Template Overview",
     "chatStatusMessages_chat": "Status Messages",
     "chatStatusMessages_chatPlusCallback": "Chat Status Messages",
+    "statusMessage_failureText": "The length of the status messages cannot exceed {{ lengthLimit }} characters.",
     "customerInformation": "Customer Information",
     "customerInfo_chat": "Customer Information for Chat",
     "customerInfo_callback": "Customer Information for Callback",
@@ -6090,7 +6109,8 @@
           "squared-fusion-mgmt": "Management",
           "squared-fusion-media": "Media",
           "spark-hybrid-datasecurity": "Data Security",
-          "contact-center-context": "Context"
+          "contact-center-context": "Context",
+          "squared-fusion-khaos": "Management"
         }
       },
       "licenses": {
@@ -6210,7 +6230,7 @@
     "loadError": "An error occurred while loading subscriptions.",
     "licenseTypes": {
       "MS": "Standard Team Spaces",
-      "CF": "Meeting 25 Party",
+      "CF": "Spark 25 Party Meetings",
       "MC": "WebEx Meeting Center",
       "SC": "WebEx Support Center",
       "TC": "WebEx Training Center",
@@ -6219,7 +6239,9 @@
       "CMR": "WebEx Collaboration Meeting Rooms",
       "CO": "Spark Call",
       "SD": "DX, MX or SX system",
-      "SB": "Spark Board"
+      "SB": "Spark Board",
+      "CDC": "K1 Spark Care",
+      "CVC": "K2 Spark Care"
     }
   },
   "onlineUpgradeModal": {
@@ -6717,6 +6739,7 @@
     "msg": {
       "splsResponseErr": "No partner organization found, please contact ccaportal@cisco.com for help."
     },
+    "region": "Region",
     "cbgTitle": "Callback Groups",
     "tdTitle": "Telephony Domain",
     "button": {
@@ -6739,6 +6762,11 @@
       "genericError": "An unexpected error occurred. Please try again later."
     },
     "tds": {
+      "seeAll": "See All",
+      "phoneNumbers": "Phone Numbers",
+      "noteToCisco": "Note to Cisco Team",
+      "defaultToll": "Default Toll",
+      "defaultTollFree": "Default Toll Free",
       "export": {
         "csvFilename": "exported_telephonyDomain.csv",
         "result": {
@@ -6751,8 +6779,8 @@
         "sites": "Site URL",
         "bridgeSet": "Bridge Set",
         "webDomain": "Web Domain",
-        "description": "Partner TD Name",
         "totalSites": "Sites Assigned",
+        "partnerTdName": "Partner TD Name",
         "telephonyDomains": "Telephony Domains"
       }
     },
@@ -7377,7 +7405,11 @@
       "partialOutage": "Partial Outage",
       "majorOutage": "Major Outage",
       "underMaintenance": "Under Maintenance"
-    }
+    },
+    "syncBtn": "Sync up",
+    "syncMessage": "Please sync up the data before start.",
+    "syncSucceed": "Sync up succeed.",
+    "syncError": "Error occurred when try to sync up the data, please try again."
   },
   "machineTypes": {
     "bot": "Bot",

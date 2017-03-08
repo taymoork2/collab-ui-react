@@ -4,8 +4,10 @@ class GoogleCalendarConfigSectionCtrl implements ng.IComponentController {
   public calendarSectionTexts = {
     title: 'hercules.settings.googleCalendar.title',
   };
+  public aclAdminAccount;
   public googleServiceAccount;
   public localizedGoogleServiceAccountHelpText = this.$translate.instant('hercules.settings.googleCalendar.serviceAccountHelpText');
+  public localizedAclAccountHelpText = this.$translate.instant('hercules.settings.googleCalendar.aclAccountHelpText');
 
   private serviceId = 'squared-fusion-gcal';
 
@@ -22,6 +24,7 @@ class GoogleCalendarConfigSectionCtrl implements ng.IComponentController {
       .then(service => {
         if (service.setup) {
           this.googleServiceAccount = service.serviceAccountId;
+          this.aclAdminAccount = service.aclAdminAccount;
         }
       })
       .catch(error => {
@@ -36,11 +39,13 @@ class GoogleCalendarConfigSectionCtrl implements ng.IComponentController {
       controllerAs: 'uploadKey',
       resolve: {
         googleServiceAccount: () => this.googleServiceAccount,
+        aclAccount: () => this.aclAdminAccount,
       },
     })
     .result
-    .then(newServiceAccount => {
-      this.googleServiceAccount = newServiceAccount;
+    .then(newAccounts => {
+      this.googleServiceAccount = newAccounts.googleServiceAccount;
+      this.aclAdminAccount = newAccounts.aclAccount;
     });
   }
 

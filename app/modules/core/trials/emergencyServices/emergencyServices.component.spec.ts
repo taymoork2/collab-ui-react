@@ -36,7 +36,7 @@ describe('Component: EmergencyServicesCtrl', () => {
     beforeEach(initComponent);
 
     it('check whether the address is displayed', function () {
-      expect(this.view.find(FORM_SECTION).get(1)).toContainText(address.city);
+      expect(this.view.find(FORM_SECTION).get(0)).toContainText(address.city);
     });
 
     it('show the spinner when address loads', function () {

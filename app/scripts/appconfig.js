@@ -763,13 +763,6 @@
                 template: '<my-company-orders></my-company-orders>',
               },
             },
-            resolve: {
-              isOnline: /* @ngInject */ function ($q, Authinfo) {
-                if (!Authinfo.isOnline()) {
-                  return $q.reject();
-                }
-              },
-            },
           })
           .state('users', {
             abstract: true,
@@ -1074,6 +1067,7 @@
               entitlements: {},
               queryuserslist: {},
               currentUserId: '',
+              orgInfo: {},
             },
             data: {
               displayName: 'Overview',
@@ -1549,16 +1543,6 @@
               },
             },
           })
-          .state('reports.device-usage-v2', {
-            url: '/reports/device/usagev2',
-            views: {
-              'tabContent': {
-                controllerAs: 'deviceUsage',
-                controller: 'DeviceUsageCtrl',
-                templateUrl: 'modules/core/customerReports/deviceUsage/total.tpl.html',
-              },
-            },
-          })
           .state('reports.webex', {
             url: '/reports/webex',
             views: {
@@ -1969,13 +1953,23 @@
             },
             templateUrl: 'modules/gemini/callbackGroup/cbgRequest.tpl.html',
           })
-          .state('gemCbgDetails', {
+          .state('gmTdDetails', {
+            data: {},
+            params: { info: {} },
             parent: 'sidepanel',
             views: {
-              'sidepanel@': { template: '<cbg-details></cbg-details>' },
-            },
-            params: { info: {} },
+              'sidepanel@': { template: '<gm-td-details></gm-td-details>' },
+              'header@gmTdDetails': { templateUrl: 'modules/gemini/telephonyDomain/details/gmTdDetailsHeader.tpl.html' } },
+          })
+          .state('gmTdDetails.sites', {
+            params: { data: {} },
+            template: '<gm-td-sites></gm-td-sites>',
+          })
+          .state('gemCbgDetails', {
             data: {},
+            parent: 'sidepanel',
+            params: { info: {} },
+            views: { 'sidepanel@': { template: '<cbg-details></cbg-details>' } },
           })
           .state('gemCbgDetails.sites', {
             template: '<cbg-sites></cbg-sites>',
@@ -2776,6 +2770,9 @@
               hasResourceGroupFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
               },
+              hasCucmSupportFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCucmSupport);
+              },
             },
           })
           // hybrid context
@@ -2802,6 +2799,9 @@
               },
               'contextServiceView': {
                 template: '<hybrid-service-cluster-list service-id="\'contact-center-context\'"></hybrid-service-cluster-list>',
+                controller: /* @ngInject */ function (Analytics) {
+                  return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CONTEXT_LIST);
+                },
               },
             },
             params: {
@@ -2945,6 +2945,9 @@
             views: {
               'fullPane': {
                 template: '<hybrid-service-cluster-list service-id="\'spark-hybrid-datasecurity\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>',
+                controller: /* @ngInject */ function (Analytics) {
+                  return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_HDS_LIST);
+                },
               },
             },
             params: {
@@ -3073,6 +3076,28 @@
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServicePhaseTwo);
               },
             },
+          })
+          .state('cucm-cluster', {
+            abstract: true,
+            url: '/services/cluster/cucm/:id',
+            parent: 'main',
+            template: '<hybrid-services-cluster-page cluster-id="$resolve.id" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></hybrid-services-cluster-page>',
+            resolve: {
+              id: /* @ngInject */ function ($stateParams) {
+                return $stateParams.id;
+              },
+              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
+              },
+            },
+          })
+          .state('cucm-cluster.nodes', {
+            url: '/nodes',
+            template: '<hybrid-services-nodes-page cluster-id="$resolve.id"></hybrid-services-nodes-page>',
+          })
+          .state('cucm-cluster.settings', {
+            url: '/settings',
+            template: '<cucm-cluster-settings cluster-id="$resolve.id"></cucm-cluster-settings>',
           })
           // Add Resource modal
           .state('add-resource', {
@@ -3231,6 +3256,9 @@
             views: {
               calendarServiceView: {
                 templateUrl: 'modules/hercules/service-specific-pages/calendar-service-pages/calendar-service-resources.html',
+                controller: /* @ngInject */ function (Analytics) {
+                  return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CAL_EXC_LIST);
+                },
               },
             },
             params: {
@@ -3260,6 +3288,9 @@
           .state('google-calendar-service.settings', {
             url: '/services/google-calendar/settings',
             template: '<google-calendar-settings-page ng-if="$resolve.hasGoogleCalendarFeatureToggle"></google-calendar-settings-page>',
+            controller: /* @ngInject */ function (Analytics) {
+              return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CAL_GOOG_SETTINGS);
+            },
           })
           .state('call-service', {
             templateUrl: 'modules/hercules/service-specific-pages/call-service-pages/call-service-container.html',
@@ -3275,6 +3306,9 @@
             views: {
               callServiceView: {
                 templateUrl: 'modules/hercules/service-specific-pages/call-service-pages/call-service-resources.html',
+              },
+              controller: /* @ngInject */ function (Analytics) {
+                return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CALL_LIST);
               },
             },
             params: {
@@ -3431,6 +3465,9 @@
             views: {
               'fullPane': {
                 template: '<hybrid-service-cluster-list service-id="\'squared-fusion-media\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>',
+                controller: /* @ngInject */ function (Analytics) {
+                  return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_MEDIA_LIST);
+                },
               },
             },
             params: {
@@ -3450,6 +3487,9 @@
                 controller: 'MediaServiceSettingsControllerV2',
                 templateUrl: 'modules/mediafusion/media-service-v2/settings/media-service-settings.html',
               },
+            },
+            controller: /* @ngInject */ function (Analytics) {
+              return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_MEDIA_SETTINGS);
             },
           });
 

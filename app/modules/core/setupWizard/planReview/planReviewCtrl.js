@@ -141,26 +141,34 @@
 
       vm.hasBasicLicenses = function () {
         return _.some(vm.confServices.services, function (service) {
-          return !_.has(service, 'license.siteUrl');
+          return _.get(service, 'license.offerName') === 'CF';
         });
       };
 
       /* TODO: Refactor this functions into MultipleSubscriptions Controller */
       vm.selectedSubscriptionHasBasicLicenses = function (subscriptionId) {
-        return _.some(vm.confServices.services, function (service) {
-          if (_.get(service, 'license.billingServiceId') === subscriptionId) {
-            return !_.has(service, 'license.siteUrl');
-          }
-        });
+        if (subscriptionId && subscriptionId !== Config.subscriptionState.trial) {
+          return _.some(vm.confServices.services, function (service) {
+            if (_.get(service, 'license.billingServiceId') === subscriptionId) {
+              return !_.has(service, 'license.siteUrl');
+            }
+          });
+        } else {
+          return vm.hasBasicLicenses();
+        }
       };
 
       /* TODO: Refactor this functions into MultipleSubscriptions Controller */
       vm.selectedSubscriptionHasAdvancedLicenses = function (subscriptionId) {
-        return _.some(vm.confServices.services, function (service) {
-          if (_.get(service, 'license.billingServiceId') === subscriptionId) {
-            return _.has(service, 'license.siteUrl');
-          }
-        });
+        if (subscriptionId && subscriptionId !== Config.subscriptionState.trial) {
+          return _.some(vm.confServices.services, function (service) {
+            if (_.get(service, 'license.billingServiceId') === subscriptionId) {
+              return _.has(service, 'license.siteUrl');
+            }
+          });
+        } else {
+          return vm.hasAdvancedLicenses();
+        }
       };
 
       vm.commServices.services = Authinfo.getCommunicationServices() || [];

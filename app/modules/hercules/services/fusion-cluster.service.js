@@ -171,6 +171,13 @@
             state: FusionClusterStatesService.getMergedStateSeverity(hybridContextConnectors),
             total: hybridContextConnectors.length,
           }];
+        } else if (cluster.targetType === 'ucm_mgmt') {
+          var ucmConnectors = _.filter(cluster.connectors, { connectorType: 'ucm_mgmt' });
+          cluster.servicesStatuses = [{
+            serviceId: 'squared-fusion-khaos',
+            state: FusionClusterStatesService.getMergedStateSeverity(ucmConnectors),
+            total: ucmConnectors.length,
+          }];
         }
         return cluster;
       });

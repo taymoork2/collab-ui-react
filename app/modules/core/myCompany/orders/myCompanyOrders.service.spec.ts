@@ -1,6 +1,8 @@
 import { IOrderDetail, IOrderList } from './myCompanyOrders.service';
 
 describe('Service: MyCompanyOrdersService', () => {
+  const onlineCustId: string = '98765';
+  const orderUrl: string = 'https://atlas-integration.wbx2.com/admin/api/v1/commerce/purchaseorders/customer/' + onlineCustId;
   beforeEach(function () {
     this.initModules('Core');
     this.injectDependencies(
@@ -10,6 +12,15 @@ describe('Service: MyCompanyOrdersService', () => {
       'UrlConfig',
     );
     spyOn(this.Authinfo, 'getCustomerId').and.returnValue('12345');
+    spyOn(this.Authinfo, 'getCustomerAccounts').and.returnValue([{
+      customerId: '12345',
+      customerType: 'Enterprise',
+    },
+    {
+      customerId: onlineCustId,
+      customerType: 'Online',
+    } ],
+    );
 
     let purchaseOrdersList: IOrderDetail[] = [{
       externalOrderId: '123',
@@ -33,7 +44,7 @@ describe('Service: MyCompanyOrdersService', () => {
   });
 
   it('should get order list from purchase response', function () {
-    this.$httpBackend.expectGET(this.UrlConfig.getAdminServiceUrl() + 'commerce/purchaseorders/customer/' + this.Authinfo.getCustomerId()).respond(200, this.purchaseOrdersResponse);
+    this.$httpBackend.expectGET(orderUrl).respond(200, this.purchaseOrdersResponse);
     this.MyCompanyOrdersService.getOrderDetails().then(response => {
       expect(response).toEqual(this.purchaseOrdersList);
     });
@@ -41,7 +52,7 @@ describe('Service: MyCompanyOrdersService', () => {
   });
 
   it('should reject the promise on a failed response', function () {
-    this.$httpBackend.expectGET(this.UrlConfig.getAdminServiceUrl() + 'commerce/purchaseorders/customer/' + this.Authinfo.getCustomerId()).respond(500);
+    this.$httpBackend.expectGET(orderUrl).respond(500);
     this.MyCompanyOrdersService.getOrderDetails().catch(response => {
       expect(response.data).toBeUndefined();
       expect(response.status).toEqual(500);

@@ -39,6 +39,7 @@ export class SipDomainSettingController {
   private readonly SAVE_BROADCAST: string = 'settings-control-save';
   private readonly CANCEL_BROADCAST: string = 'settings-control-cancel';
   private readonly WIZARD_BROADCAST: string = 'wizard-enterprise-sip-url-event';
+  private readonly WIZARD_EMIT: string = 'wizard-enterprise-sip-save';
   private readonly DISMISS_BROADCAST: string = 'DISMISS_SIP_NOTIFICATION';
   private readonly DISMISS_DISABLE: string = 'wizardNextButtonDisable';
 
@@ -74,7 +75,10 @@ export class SipDomainSettingController {
 
         let onSaveEventDeregister = this.$rootScope.$on(this.WIZARD_BROADCAST, (): void => {
           if (this.inputValue === this.currentDisplayName) {
+            this.$rootScope.$emit(this.WIZARD_EMIT);
             return;
+          } else if (this.isSSAReserved) {
+            this.updateSubdomain();
           } else {
             this.saveSubdomain();
           }
@@ -95,7 +99,10 @@ export class SipDomainSettingController {
         this.loadSubdomains();
       } else {
         this.errorMsg = $translate.instant('firstTimeWizard.setSipDomainErrorMessage');
-        let onSaveEventDeregister = $rootScope.$on(this.WIZARD_BROADCAST, this.saveDomain.bind(this));
+        let onSaveEventDeregister = $rootScope.$on(this.WIZARD_BROADCAST, (): void => {
+          this.$rootScope.$emit(this.WIZARD_EMIT);
+          this.saveDomain();
+        });
         $scope.$on('$destroy', onSaveEventDeregister);
 
         this.loadSipDomain();
@@ -264,6 +271,7 @@ export class SipDomainSettingController {
   }
 
   private saveSubdomain(): void {
+    this.$rootScope.$emit(this.WIZARD_EMIT);
     this.saving = true;
     this.SparkDomainManagementService.addSipDomain(this.inputValue).then((response: any): void => {
       this.verified = false;
@@ -324,11 +332,12 @@ export class SipDomainSettingController {
 
   private checkRoomLicense() {
     this.Orgservice.getLicensesUsage().then((response) => {
-      let licenses: any = _.get(response, '[0].licenses');
-      let roomLicensed = _.find(licenses, {
-        offerName: 'SD',
+      this.isRoomLicensed = _.some(response, function (subscription) {
+        let licenses = _.get(subscription, 'licenses');
+        return _.some(licenses, function (license) {
+          return _.get(license, 'offerName') === 'SD' || _.get(license, 'offerName') === 'SB';
+        });
       });
-      this.isRoomLicensed = !_.isUndefined(roomLicensed);
       this.subdomainCount++;
     });
   }

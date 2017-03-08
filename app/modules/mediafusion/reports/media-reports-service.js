@@ -10,6 +10,9 @@
 
     vm.urlBase = MediaConfigServiceV2.getAthenaUrl() + '/organizations/' + Authinfo.getOrgId();
     vm.allClusters = $translate.instant('mediaFusion.metrics.allclusters');
+    vm.onPremisesHeading = $translate.instant('mediaFusion.metrics.onPremisesHeading');
+    vm.cloudHeading = $translate.instant('mediaFusion.metrics.cloudHeading');
+    vm.hybridHeading = $translate.instant('mediaFusion.metrics.hybridHeading');
 
     function adjustLineGraphData(activeData, returnData, startTime, endTime, graphs) {
       var returnDataArray = [];
@@ -64,6 +67,22 @@
       returnDataArray.push(endDate);
       returnData.graphData = returnDataArray;
       return returnData;
+    }
+
+    function addColorForMeetingsCard(response) {
+      _.forEach(response.data.dataProvider, function (val) {
+        if (val.name === 'ON_PREM') {
+          val.color = '#67b7dc';
+          val.name = vm.onPremisesHeading;
+        } else if (val.name === 'CLOUD') {
+          val.color = '#fdd400';
+          val.name = vm.cloudHeading;
+        } else if (val.name === 'HYBRID') {
+          val.color = '#84b761';
+          val.name = vm.hybridHeading;
+        }
+      });
+      return response;
     }
 
     function getQuerys(link, cluster, time) {
@@ -280,7 +299,7 @@
       var returnData = [];
       return $http.get(vm.urlBase + getQuerys(vm.meetingLocationCardUrl, vm.allClusters, time)).then(function (response) {
         if (!_.isUndefined(response) && !_.isUndefined(response.data)) {
-          return response;
+          return addColorForMeetingsCard(response);
         } else {
           return returnData;
         }

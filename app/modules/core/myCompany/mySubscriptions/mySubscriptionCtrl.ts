@@ -15,8 +15,9 @@ const messageClass = 'icon-message';
 const meetingRoomClass = 'icon-meeting-room';
 const webexClass = 'icon-webex';
 const callClass = 'icon-calls';
+const careClass = 'icon-headset';
 
-const licenseTypes = ['MS', 'CF', 'MC', 'TC', 'EC', 'EE', 'CMR', 'CO', 'SD', 'SB'];
+const licenseTypes = ['MS', 'CF', 'MC', 'TC', 'EC', 'EE', 'CMR', 'CO', 'SD', 'SB', 'CDC', 'CVC'];
 
 class MySubscriptionCtrl {
   public hybridServices: any[] = [];
@@ -66,6 +67,11 @@ class MySubscriptionCtrl {
     // room system subscriptions
     this.licenseCategory[3] = _.cloneDeep(baseCategory);
     this.licenseCategory[3].label = $translate.instant('subscriptions.room');
+
+    //care subscriptions
+    this.licenseCategory[4] = _.cloneDeep(baseCategory);
+    this.licenseCategory[4].label = $translate.instant('subscriptions.care');
+    this.licenseCategory[4].borders = true;
 
     this.hybridServicesRetrieval();
     this.subscriptionRetrieval();
@@ -220,7 +226,7 @@ class MySubscriptionCtrl {
               licenseType: license.licenseType,
               licenseModel: _.get(license, 'licenseModel', ''),
               offerName: license.offerName,
-              usage: license.usage,
+              usage: license.usage || 0,
               volume: license.volume,
               siteUrl: license.siteUrl,
               id: 'donutId' + subIndex + licenseIndex,
@@ -244,7 +250,26 @@ class MySubscriptionCtrl {
                   case 8:
                   case 9: {
                     offer.class = meetingRoomClass;
+
                     this.addSubscription(3, offer, -1);
+                    break;
+                  }
+                  case 10:
+                  case 11: {
+                    offer.class = careClass;
+                    let existingIndex = _.findIndex(this.licenseCategory[4].subscriptions, (sub: any) => {
+                      return sub.type === 'CARE';
+                    });
+
+
+                    if (existingIndex >= 0) {
+                      this.addSubscription(4, offer, existingIndex);
+                    } else {
+                      this.licenseCategory[4].subscriptions.unshift({
+                        offers: [offer],
+                        type: 'CARE',
+                      });
+                    }
                     break;
                   }
                   default: {
@@ -307,10 +332,11 @@ class MySubscriptionCtrl {
             this.hasEnterpriseTrial = true;
           }
         } else {
+          const userId = this.Authinfo.getUserId();
           if (subscription.isTrial) {
             this.upgradeTrialUrl(subscription.internalSubscriptionId).then((response) => {
               if (response) {
-                this.OnlineUpgradeService.getProductInstance(this.Authinfo.getUserId()).then((prodResponse: IProdInst) => {
+                this.OnlineUpgradeService.getProductInstance(userId, subscription.internalSubscriptionId).then((prodResponse: IProdInst) => {
                   if (prodResponse) {
                     this.subscriptionDetails[index].productInstanceId = prodResponse.productInstanceId;
                     this.subscriptionDetails[index].name = prodResponse.name;
@@ -326,7 +352,7 @@ class MySubscriptionCtrl {
               subscription.upgradeTrialUrl = response;
             });
           } else {
-            this.OnlineUpgradeService.getProductInstance(this.Authinfo.getUserId()).then((prodResponse: IProdInst) => {
+            this.OnlineUpgradeService.getProductInstance(userId, subscription.internalSubscriptionId).then((prodResponse: IProdInst) => {
               if (prodResponse) {
                 this.subscriptionDetails[index].productInstanceId = prodResponse.productInstanceId;
                 this.subscriptionDetails[index].name = prodResponse.name;

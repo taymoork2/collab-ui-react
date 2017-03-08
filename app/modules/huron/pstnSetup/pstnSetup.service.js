@@ -17,6 +17,7 @@
     TerminusResellerCarrierService, TerminusResellerCarrierV2Service,
     TerminusV2ResellerService,
     TerminusV2CarrierNumberCountService, TerminusV2CarrierNumberService,
+    TerminusV2CarrierCapabilitiesService,
     TerminusV2ResellerNumberReservationService, TerminusV2ResellerCarrierNumberReservationService,
     TerminusV2CustomerNumberReservationService,
     TerminusV2CustomerNumberOrderBlockService, TelephoneNumberService) {
@@ -62,6 +63,7 @@
       setCustomerTrialV2: setCustomerTrialV2,
       getCarrierInventory: getCarrierInventory,
       getCarrierTollFreeInventory: getCarrierTollFreeInventory,
+      getCarrierCapabilities: getCarrierCapabilities,
       getCarrierDetails: getCarrierDetails,
       searchCarrierInventory: searchCarrierInventory,
       searchCarrierTollFreeInventory: searchCarrierTollFreeInventory,
@@ -245,6 +247,12 @@
       return TerminusV2CarrierNumberCountService.get({
         carrierId: carrierId,
         numberType: NUMTYPE_TOLLFREE,
+      }).$promise;
+    }
+
+    function getCarrierCapabilities(carrierId) {
+      return TerminusV2CarrierCapabilitiesService.query({
+        carrierId: carrierId,
       }).$promise;
     }
 

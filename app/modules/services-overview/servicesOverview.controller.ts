@@ -21,6 +21,7 @@ export class ServicesOverviewCtrl {
     private $state: ng.IQService,
     private $q: ng.IQService,
     private $modal: ng.IQService,
+    private Analytics,
     private Auth,
     private Authinfo,
     private Config,
@@ -112,6 +113,21 @@ export class ServicesOverviewCtrl {
         ];
         this.forwardEvent('hybridStatusEventHandler', servicesStatuses);
         this.forwardEvent('hybridClustersEventHandler', clusterList);
+        this.Analytics.trackEvent(this.Analytics.sections.HS_NAVIGATION.eventNames.VISIT_SERVICES_OVERVIEW, {
+          'All Clusters is clickable': clusterList.length > 0,
+          'Management is setup': servicesStatuses[0].setup,
+          'Management status': servicesStatuses[0].status,
+          'Calendar is setup': servicesStatuses[1].setup,
+          'Calendar status': servicesStatuses[1].status,
+          'Call is setup': servicesStatuses[2].setup,
+          'Call status': servicesStatuses[2].status,
+          'Media is setup': servicesStatuses[3].setup,
+          'Media status': servicesStatuses[3].status,
+          'Data Security is setup': servicesStatuses[4].setup,
+          'Data Security status': servicesStatuses[4].status,
+          'Context is setup': servicesStatuses[5].setup,
+          'Context status': servicesStatuses[5].status,
+        });
       });
   }
 

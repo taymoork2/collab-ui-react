@@ -17,6 +17,7 @@
         this.createTime = obj.createTime;
         this.cisUuid = obj.cisUuid;
         this.product = getProduct(obj);
+        this.productFamily = obj.productFamily;
         this.hasIssues = hasIssues(obj);
         this.software = getSoftware(obj);
         this.isOnline = getIsOnline(obj);
@@ -33,8 +34,8 @@
         this.rsuKey = obj.remoteSupportUser && obj.remoteSupportUser.token;
         this.canDelete = true;
         this.canReportProblem = true;
-        this.hasRemoteSupport = true;
-        this.hasAdvancedSettings = true;
+        this.hasRemoteSupport = obj.productFamily === 'Cloudberry' || obj.productFamily === 'Darling';
+        this.hasAdvancedSettings = obj.productFamily === 'Cloudberry';
         this.supportsCustomTags = true;
         this.update = function (updated) {
           this.displayName = updated.displayName;
@@ -62,6 +63,7 @@
         this.photos = _.isEmpty(obj.photos) ? null : obj.photos;
         this.isHuronDevice = true;
         this.product = obj.product in huron_model_map ? huron_model_map[obj.product].displayName : getProduct(obj);
+        this.productFamily = obj.productFamily;
         this.image = "images/devices-hi/" + (obj.imageFilename || 'unknown.png');
         this.huronId = getHuronId(obj);
         this.addOnModuleCount = obj.addOnModuleCount;

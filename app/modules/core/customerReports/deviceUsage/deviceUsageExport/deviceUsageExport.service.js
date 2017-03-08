@@ -42,8 +42,6 @@
         url = url + '&countryCodes=aggregate';
         url = url + '&models=__';
       }
-
-      $log.info("Trying to export data using url:", url);
       return downloadReport(url, statusCallback);
     }
 
