@@ -27,7 +27,6 @@
     @include vr-spacing(pt, 0);
   }
 
-
   .aa-pm-add-text {
     @extend %aa-menu-add-text;
     @include vr-spacing(pb, 1);
@@ -42,10 +41,10 @@
   }
 
   .aa-pm-action-input {
-   max-width: $aa-pm-action-max-width;
-   @include vr-spacing(pl, 1);
-   @include vr-spacing(ml, .5);
-   width: vr-adjust(240);
+    max-width: $aa-pm-action-max-width;
+    @include vr-spacing(pl, 1);
+    @include vr-spacing(ml, .5);
+    width: vr-adjust(240);
   }
 
   .aa-pm-key-select {
@@ -118,7 +117,7 @@
 
   .aa-select-min {
     @extend .aa-caller-input-message-select-list;
-    width : 6rem;
+    width: 6rem;
     @include vr-spacing(mb, .3);
   }
 
@@ -130,7 +129,7 @@
     @extend .aa-message-subtext;
     @include vr-spacing(pl, 0);
   }
-  .aa-name-variable{
+  .aa-name-variable {
     @include vr-spacing(pl, 0);
     @include vr-spacing(mb, 0);
   }
@@ -148,5 +147,4 @@
     @include vr-spacing(ml, 0);
     @include vr-spacing(pl, 0);
   }
-
 }

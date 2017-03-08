@@ -1,172 +1,170 @@
 @import '../../../../styles/common';
 
 .no-animate {
-   -webkit-transition: none !important;
-   transition: none !important;
+  transition: none !important;
 }
 
 .enable-progress {
-   display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    .csv-process-content {
-      @include vr-spacing(mt, 1);
-
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-      width: 55%;
-
-      .progressbar {
-        @include vr-spacing(mb, 2.25);
-
-        width: 100%;
-      }
-
-      .csv-filename {
-        @include vr-spacing(mt, 0.25);
-
-        font-size: small;
-      }
-
-      .close-button {
-        @include vr-spacing(ml, 1);
-        @include vr-spacing(mt, -1.5);
-
-        font-size: medium;
-
-        a {
-          color: $gray-light-1;
-
-          &:hover {
-            color: $color-primary-base;
-          }
-        }
-      }
-
-    }
-}
-
-.enable-stats {
-    @include vr-spacing(mb, 1);
+  .csv-process-content {
+    @include vr-spacing(mt, 1);
 
     display: flex;
     flex-direction: row;
+    align-items: center;
     justify-content: center;
-    height: 5rem;
+    width: 55%;
 
-    .stat {
-      flex: 1 1 auto;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      background-color: $gray-light-4;
-      position: relative;
+    .progressbar {
+      @include vr-spacing(mb, 2.25);
 
-      + .stat {
-        @include vr-spacing(ml, 1);
-      }
-
-      .total {
-        font-size: 2rem;
-        line-height: 1;
-        font-family: 'CiscoSansTT Thin';
-      }
-
-      .total-title {
-        @include vr-spacing(mb, 0.1);
-
-        font-size: 0.75rem;
-      }
-
-      &.disabled {
-        color: $gray-light-1;
-      }
-
-      &.new-users:not(.disabled) .total {
-        color: $color-cta-base;
-      }
-
-      &.updated-users:not(.disabled) .total {
-        color: $color-primary-base;
-      }
-
-      &.error-users:not(.disabled) .total {
-        color: $color-negative-light;
-      }
-
-      &.retry-users:not(.disabled) .total {
-        color: $brand-warning;
-      }
-    }
-  }
-
-   // Error display
-  .enabled-errors {
-    background-color: transparent;
-
-    .error-download {
-      display: flex;
-      justify-content: flex-end;
-      flex-direction: row;
+      width: 100%;
     }
 
-    .csv-download {
+    .csv-filename {
+      @include vr-spacing(mt, 0.25);
+
       font-size: small;
-      margin: 0;
     }
 
-    p {
-      .icon {
+    .close-button {
+      @include vr-spacing(ml, 1);
+      @include vr-spacing(mt, -1.5);
+
+      font-size: medium;
+
+      a {
         color: $gray-light-1;
-        top: 0.1rem;
 
         &:hover {
           color: $color-primary-base;
         }
       }
     }
+  }
+}
 
-    .row {
-      border-color: $gray-dark;
-      border-style: solid;
-      border-width: thin thin 0;
-      display: flex;
+.enable-stats {
+  @include vr-spacing(mb, 1);
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  height: 5rem;
+
+  .stat {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: $gray-light-4;
+    position: relative;
+
+    + .stat {
+      @include vr-spacing(ml, 1);
     }
 
-    div.row:last-child {
-      border-bottom-width: thin;
+    .total {
+      font-size: 2rem;
+      line-height: 1;
+      font-family: 'CiscoSansTT Thin';
     }
 
-    .error-row {
-      padding: 0.5rem 1rem;
-      overflow-x: hidden;
+    .total-title {
+      @include vr-spacing(mb, 0.1);
+
+      font-size: 0.75rem;
     }
 
-    .error-desc {
-      border-color: $gray-dark;
-      border-style: solid;
-      border-width: 0 0 0 thin;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
-      padding: 0.5rem 1rem;
+    &.disabled {
+      color: $gray-light-1;
     }
 
-    .table-header {
-      background-color: $gray-light-4;
-      color: $gray-dark;
-      text-align: left;
-      font-weight: bold;
+    &.new-users:not(.disabled) .total {
+      color: $color-cta-base;
     }
 
-    .table-body {
-      color: $gray-base;
+    &.updated-users:not(.disabled) .total {
+      color: $color-primary-base;
+    }
+
+    &.error-users:not(.disabled) .total {
+      color: $color-negative-light;
+    }
+
+    &.retry-users:not(.disabled) .total {
+      color: $brand-warning;
     }
   }
+}
+
+// Error display
+.enabled-errors {
+  background-color: transparent;
+
+  .error-download {
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: row;
+  }
+
+  .csv-download {
+    font-size: small;
+    margin: 0;
+  }
+
+  p {
+    .icon {
+      color: $gray-light-1;
+      top: 0.1rem;
+
+      &:hover {
+        color: $color-primary-base;
+      }
+    }
+  }
+
+  .row {
+    border-color: $gray-dark;
+    border-style: solid;
+    border-width: thin thin 0;
+    display: flex;
+  }
+
+  div.row:last-child {
+    border-bottom-width: thin;
+  }
+
+  .error-row {
+    padding: 0.5rem 1rem;
+    overflow-x: hidden;
+  }
+
+  .error-desc {
+    border-color: $gray-dark;
+    border-style: solid;
+    border-width: 0 0 0 thin;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    padding: 0.5rem 1rem;
+  }
+
+  .table-header {
+    background-color: $gray-light-4;
+    color: $gray-dark;
+    text-align: left;
+    font-weight: bold;
+  }
+
+  .table-body {
+    color: $gray-base;
+  }
+}
 
 .success-page {
   text-align: center;

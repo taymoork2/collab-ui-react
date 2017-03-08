@@ -119,8 +119,9 @@ a[href='http://www.amcharts.com/javascript-charts/'] {
   }
 }
 
-.messagebox-backdrop__footer, .messagebox-backdrop__footer > div > a {
-    color: $gray-light-1;
+.messagebox-backdrop__footer,
+.messagebox-backdrop__footer > div > a {
+  color: $gray-light-1;
 }
 
 .actions-menu.open .dropdown-menu,

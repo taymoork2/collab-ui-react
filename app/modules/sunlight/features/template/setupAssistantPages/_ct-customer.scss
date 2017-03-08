@@ -291,12 +291,12 @@
 
     .ct-customer-info-category-input {
       @include vr-spacing(mt, 0.25);
-      .icon-warning:before {
+      .icon-warning::before {
         color: $color-attention-base;
       }
       .category-validation-warning {
-       font-family: 'CiscoSansLight';
-       padding-top: 0rem;
+        font-family: 'CiscoSansLight';
+        padding-top: 0rem;
       }
     }
   }
@@ -409,7 +409,7 @@
     @include vr-spacing(mb, 1);
   }
 
-  .block-display{
+  .block-display {
     display: flex;
   }
 
