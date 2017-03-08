@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function DisableMediaServiceController(MediaClusterServiceV2, $modalInstance, $q, $state, MediaServiceActivationV2, Notification) {
+  function DisableMediaServiceController(MediaClusterServiceV2, $modalInstance, $q, $state, MediaServiceActivationV2, Notification, ServiceDescriptor) {
     var vm = this;
     vm.step = '1';
     vm.checkboxModel = false;
@@ -32,9 +32,11 @@
         });
         $modalInstance.close();
         if (!vm.hadError) {
-          MediaServiceActivationV2.setServiceEnabled(vm.serviceId, false);
+          ServiceDescriptor.disableService(vm.serviceId);
           MediaServiceActivationV2.setisMediaServiceEnabled(false);
+          // Why is this called?
           MediaServiceActivationV2.setServiceAcknowledged(vm.serviceId, false);
+
           MediaServiceActivationV2.disableOrpheusForMediaFusion();
           MediaServiceActivationV2.deactivateHybridMedia();
           $state.go('overview');

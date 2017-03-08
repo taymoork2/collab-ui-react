@@ -7,19 +7,21 @@ export abstract class ExpresswayContainerController {
   protected subscribeStatusesSummary: any;
 
   /* @ngInject */
+
   constructor(
     private $modal,
     private $scope: ng.IScope,
     private $state: ng.ui.IStateService,
     private Authinfo,
     private ClusterService,
-    private Notification: Notification,
+    protected Notification: Notification,
     protected ServiceDescriptor,
     private ServiceStateChecker,
     protected USSService,
     protected servicesId: string[],
     private connectorType: string,
   ) {
+
     this.firstTimeSetup();
     this.extractSummary();
     this.subscribeStatusesSummary = this.USSService.subscribeStatusesSummary('data', this.extractSummary.bind(this));
@@ -38,11 +40,7 @@ export abstract class ExpresswayContainerController {
   }
 
   protected firstTimeSetup(): void {
-    this.ServiceDescriptor.isServiceEnabled(this.servicesId[0], (error, enabled) => {
-      if (error) {
-        this.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
-        return;
-      }
+    this.ServiceDescriptor.isServiceEnabled(this.servicesId[0]).then((enabled) => {
       if (enabled) {
         return;
       }
@@ -68,7 +66,8 @@ export abstract class ExpresswayContainerController {
         .catch(() => {
           this.$state.go('services-overview');
         });
-
+    }).catch((response) => {
+      this.Notification.errorWithTrackingId(response, 'hercules.genericFailure');
     });
   }
 
