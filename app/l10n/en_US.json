@@ -582,6 +582,8 @@
       "last3Months": "Monthly Last 3 Months",
       "missingDays": "no data available for {{nbrOfMissingDays}} days",
       "nameNotFoundFor": "Name not found for",
+      "nameNotResolvedFor": "Name not resolved for",
+      "timeoutWhenTryingToResolveNameFor": "Timeout when trying to resolve name for",
       "selectModelsToFilterOn": "Select models to filter on",
       "deviceOptions": {
         "all": "All",

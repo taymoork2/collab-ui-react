@@ -6,6 +6,9 @@ describe('DeviceUsageService', function () {
 
   var DeviceUsageService;
   var $httpBackend;
+  var UrlConfig;
+  var Authinfo;
+  var $q;
   var now = moment('2016-10-27T00:00:00.000Z').toDate(); // Fri, Oct, 2016
 
   // TODO: Swap when production ready
@@ -18,9 +21,12 @@ describe('DeviceUsageService', function () {
     DeviceUsageService = undefined;
   });
 
-  beforeEach(inject(function (_$httpBackend_, _DeviceUsageService_) {
+  beforeEach(inject(function (_$httpBackend_, _DeviceUsageService_, _UrlConfig_, _Authinfo_, _$q_) {
     DeviceUsageService = _DeviceUsageService_;
     $httpBackend = _$httpBackend_;
+    UrlConfig = _UrlConfig_;
+    Authinfo = _Authinfo_;
+    $q = _$q_;
     moment.tz.setDefault('Europe/London');
     jasmine.clock().install();
     var baseTime = now;
@@ -191,6 +197,40 @@ describe('DeviceUsageService', function () {
       expect(dataResponse.reportItems).toEqual(expectedResult);
       expect(dataResponse.missingDays).toEqual({ missingDays: true, count: 1 });
 
+    });
+
+    it('resolves name from accoundId', function () {
+      sinon.stub(Authinfo, 'getOrgId');
+      Authinfo.getOrgId.returns("1234");
+
+      var devices = [
+        {
+          accountId: "1111",
+        }, {
+          accountId: "2222",
+        },
+      ];
+
+      var csdmRequest = UrlConfig.getCsdmServiceUrl() + '/organization/1234/places/1111';
+      $httpBackend
+        .when('GET', csdmRequest)
+        .respond($q.resolve({ displayName: "oneoneoneone", whatever: "whatever"}));
+
+      var csdmRequest = UrlConfig.getCsdmServiceUrl() + '/organization/1234/places/2222';
+      $httpBackend
+        .when('GET', csdmRequest)
+        .respond($q.resolve({ displayName: "twotwotwotwo", whatever: "whatever"}));
+
+      var result;
+      DeviceUsageService.resolveDeviceData(devices).then(function (data) {
+        result = data;
+      });
+      $httpBackend.flush();
+
+      expect(result).toEqual([
+        { displayName: "oneoneoneone", whatever: "whatever"},
+        { displayName: "twotwotwotwo", whatever: "whatever"}
+        ]);
     });
   });
 });

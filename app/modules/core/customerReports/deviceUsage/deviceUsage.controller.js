@@ -33,7 +33,8 @@ require('modules/core/reports/amcharts-export.scss');
     vm.noOfCalls = "-";
     vm.noOfDevices = "-";
 
-    vm.waitForLeastMost = true;
+    vm.waitForLeast = true;
+    vm.waitForMost = true;
     vm.waitingForDeviceMetrics = true;
     vm.exporting = false;
     vm.noDataForRange = false;
@@ -176,8 +177,8 @@ require('modules/core/reports/amcharts-export.scss');
         return;
       }
       vm.waitingForDeviceMetrics = false;
-      vm.waitForLeastMost = false;
-
+      vm.waitForLeast = false;
+      vm.waitForMost = false;
       var errors = [];
       if (reject.data && reject.data.message) {
         errors.push(reject.data.message);
@@ -231,7 +232,8 @@ require('modules/core/reports/amcharts-export.scss');
 
     function loadLastWeek(dates, models) {
       vm.waitingForDeviceMetrics = true;
-      vm.waitForLeastMost = true;
+      vm.waitForLeast = true;
+      vm.waitForMost = true;
       DeviceUsageService.getDataForRange(dates.start, dates.end, 'day', allDeviceCategories, models, apiToUse).then(function (data) {
         loadChartData(data, $translate.instant('reportsPage.usageReports.last7Days'), models);
         if (vm.v2 === true) {
@@ -244,7 +246,8 @@ require('modules/core/reports/amcharts-export.scss');
 
     function loadLastMonth(dates, models) {
       vm.waitingForDeviceMetrics = true;
-      vm.waitForLeastMost = true;
+      vm.waitForLeast = true;
+      vm.waitForMost = true;
       DeviceUsageService.getDataForRange(dates.start, dates.end, 'week', allDeviceCategories, models, apiToUse).then(function (data) {
         loadChartData(data, $translate.instant('reportsPage.usageReports.last4Weeks'), models);
         if (vm.v2 === true) {
@@ -257,7 +260,8 @@ require('modules/core/reports/amcharts-export.scss');
 
     function loadLast3Months(dates, models) {
       vm.waitingForDeviceMetrics = true;
-      vm.waitForLeastMost = true;
+      vm.waitForLeast = true;
+      vm.waitForMost = true;
       DeviceUsageService.getDataForRange(dates.start, dates.end, 'month', allDeviceCategories, models, apiToUse).then(function (data) {
         loadChartData(data, $translate.instant('reportsPage.usageReports.last3Months'), models);
         if (vm.v2 === true) {
@@ -288,9 +292,12 @@ require('modules/core/reports/amcharts-export.scss');
         vm.mostUsedDevices = [];
         vm.leastUsedDevices = [];
         resolveDeviceData(stats.most, vm.mostUsedDevices)
-          .then(resolveDeviceData(stats.least, vm.leastUsedDevices))
           .then(function () {
-            vm.waitForLeastMost = false;
+            vm.waitForMost = false;
+          });
+        resolveDeviceData(stats.least, vm.leastUsedDevices)
+          .then(function () {
+            vm.waitForLeast = false;
           });
       });
     }

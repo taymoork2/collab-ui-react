@@ -33,6 +33,15 @@
       color:#770000;
       cursor:help;
     }
+    &.name {
+      width:60%;
+    }
+    &.time {
+      width:20%;
+    }
+    &.calls {
+      width:20%;
+    }
   }
 
   //.extreme-table-entry.missing {
