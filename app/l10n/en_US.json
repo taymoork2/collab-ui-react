@@ -5802,6 +5802,8 @@
     "typePhone": "Phone",
     "typeCustom": "Custom",
     "typeReason": "Reason",
+    "categoryHintText": "Add category options like Queries, Billing...",
+    "categoryWarningText": "Add at least one category option.",
     "ctValidation": {
       "errorChar250": "Character length cannot be more than 250.",
       "errorChar50": "Character length cannot be more than 50.",

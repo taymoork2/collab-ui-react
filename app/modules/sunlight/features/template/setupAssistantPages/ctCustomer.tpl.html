@@ -131,7 +131,14 @@
                         ng-model="careSetupAssistant.categoryOptionTag"
                         cs-input-messages="careSetupAssistant.singleLineValidationMessage50"
                         ng-maxlength="careSetupAssistant.lengthConstants.singleLineMaxCharLimit50"
+                        placeholder="{{:: 'careChatTpl.categoryHintText' | translate}}"
+                        ng-model-options="{ allowInvalid: true }"
                 />
+
+                <label class="ct-attribute-field-label category-validation-warning" ng-if="careSetupAssistant.isCategoryWarningRequired()">
+                  <span class="icon icon-warning no-data-warning"></span>
+                  {{:: 'careChatTpl.categoryWarningText' | translate}}
+                </label>
                 <div class="category-tokens">
                   <cs-token-field
                           tokenfieldid="careSetupAssistant.categoryTokensId"

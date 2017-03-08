@@ -291,6 +291,13 @@
 
     .ct-customer-info-category-input {
       @include vr-spacing(mt, 0.25);
+      .icon-warning:before {
+        color: $color-attention-base;
+      }
+      .category-validation-warning {
+       font-family: 'CiscoSansLight';
+       padding-top: 0rem;
+      }
     }
   }
 
