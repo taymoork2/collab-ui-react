@@ -26,6 +26,7 @@ describe('Controller: TypeSelectorController', function () {
   function initController() {
     return $controller('TypeSelectorController', {
       $stateParams: $stateParams,
+      hasCucmSupportFeatureToggle: true,
     });
   }
 
@@ -40,6 +41,7 @@ describe('Controller: TypeSelectorController', function () {
       expect(controller.isEntitledTo.expressway).toBe(true);
       expect(controller.isEntitledTo.mediafusion).toBe(true);
       expect(controller.isEntitledTo.context).toBe(true);
+      expect(controller.isEntitledTo.cucm).toBe(true);
     });
 
     it('should initialize isEntitledTo to false if org is not entitled', function () {
@@ -48,6 +50,7 @@ describe('Controller: TypeSelectorController', function () {
       expect(controller.isEntitledTo.expressway).toBe(false);
       expect(controller.isEntitledTo.mediafusion).toBe(false);
       expect(controller.isEntitledTo.context).toBe(false);
+      expect(controller.isEntitledTo.cucm).toBe(false);
     });
 
   });

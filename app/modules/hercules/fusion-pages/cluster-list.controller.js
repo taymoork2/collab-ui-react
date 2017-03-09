@@ -268,6 +268,7 @@
               expressway: 'add-resource.expressway.service-selector',
               mediafusion: 'add-resource.mediafusion.hostname',
               context: 'add-resource.context',
+              cucm: 'add-resource.cucm.hostname',
             },
           },
           // expressway
@@ -294,6 +295,14 @@
           'add-resource.mediafusion.end': {},
           // context
           'add-resource.context': {},
+          // cucm
+          'add-resource.cucm.hostname': {
+            next: 'add-resource.cucm.name',
+          },
+          'add-resource.cucm.name': {
+            next: 'add-resource.cucm.end',
+          },
+          'add-resource.cucm.end': {},
         },
       };
       var wizard = WizardFactory.create(initialState);
