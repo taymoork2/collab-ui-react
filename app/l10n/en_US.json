@@ -2282,7 +2282,8 @@
           "end": {}
         },
         "context": {
-          "register": "Register for Context Service through your on-premises application. Click \"Learn How\" for more information.",
+          "register-title": "Register a new Context cluster",
+          "register-description": "Register for Context Service through your on-premises application. Click \"Learn How\" for more information.",
           "learn-how": "Learn How"
         },
         "cucm": {
