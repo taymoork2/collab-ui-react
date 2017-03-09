@@ -9,9 +9,9 @@ describe('Service: Metrics Graph Service', function () {
   };
 
   var callVolumeData = getJSONFixture('mediafusion/json/metrics-graph-report/callVolumeGraphData.json');
-  //var callVolumeData = angular.copy(callVolumeData.graphData);
+  //var callVolumeData = _.cloneDeep(callVolumeData.graphData);
   var clusteravailabilityData = getJSONFixture('mediafusion/json/metrics-graph-report/clusterAvailabilityGraphData.json');
-  //var clusteravailabilityData = angular.copy(clusteravailabilityData.data);
+  //var clusteravailabilityData = _.cloneDeep(clusteravailabilityData.data);
 
   beforeEach(angular.mock.module('Mediafusion'));
 

@@ -367,7 +367,9 @@
     "enabledBetaFeatures": "Enabled Beta Features",
     "otpShareButton": "Share",
     "userDetails": "User Details",
-    "userPreferredLanguageError": "Failed to fetch user preferred language. Reason:"
+    "userPreferredLanguageError": "Failed to fetch user preferred language. Reason:",
+    "notConfigured": "Not Configured",
+    "dirsyncToolTip": "Use DirSync to update the user's preferred language."
   },
   "tabs": {
     "overviewTab": "Overview",
@@ -513,6 +515,8 @@
     "quality": "Quality",
     "noData": "No Data",
     "noCustomerData": "No Data Available",
+    "timeSelected": "Selected Time Period: ",
+    "selectedReportFilter": "Selected Report Filter: ",
     "today": "Today",
     "today2": "today",
     "yesterday": "Yesterday",
@@ -546,7 +550,7 @@
     "pdf": "PDF",
     "png": "PNG",
     "export": "Export",
-    "print": "Print",
+    "downloadPage": "Download Page",
     "allCalls": "All Calls",
     "videoCalls": "Video Calls",
     "audioCalls": "Audio Only Calls",
@@ -580,6 +584,8 @@
       "last3Months": "Monthly Last 3 Months",
       "missingDays": "no data available for {{nbrOfMissingDays}} days",
       "nameNotFoundFor": "Name not found for",
+      "nameNotResolvedFor": "Name not resolved for",
+      "timeoutWhenTryingToResolveNameFor": "Timeout when trying to resolve name for",
       "selectModelsToFilterOn": "Select models to filter on",
       "deviceOptions": {
         "all": "All",
@@ -1848,7 +1854,8 @@
       "failedToDisableConnect": "Could not disable Call Service Connect.",
       "sipDomainSaved": "SIP Destination saved successfully.",
       "sipDomainInvalid": "Could not save SIP Destination. Try again later.",
-      "invalidEmail": "Please enter a list of comma-separated email addresses"
+      "invalidEmail": "Please enter a list of comma-separated email addresses",
+      "couldNotGetServices": "Could not get services."
     },
     "cloudExtensions": {
       "serviceNames": {
@@ -2616,6 +2623,9 @@
       "generatedAt": "Generated Today at {{time}}",
       "expiryInfo": "Generated reports will expire after 10 days. Any reports older than 10 days will automatically be deleted by the system."
     },
+    "searchErrors": {
+      "queryLimit": "query must be 200 characters or less"
+    },
     "searchParameters": {
       "searchBy": "Search By",
       "searchByPlaceholder": "Email ID",
@@ -2641,7 +2651,7 @@
       "generateText": "Enter report information to generate a report. Generation time will depend on estimated report size.",
       "description": "Description",
       "exportFormat": "Export Format",
-      "totalResultSize": "Total Result Size",
+      "totalReportSize": "Total Report Size",
       "downloadContent": "Download content such as documents, images and media associated with this report.",
       "reportSizeTooBig": "Report Size Too Big",
       "reportSizeErrorSummary": "The estimated report size is over the 3 GB maximum size allowed for report generation. Go back to search and refine your results.",
@@ -3366,7 +3376,8 @@
     "notificationTimerSeconds": "Seconds",
     "calledParty": "Display called party's information",
     "callingParty": "Display calling party's information",
-    "playSound": "Play Sound"
+    "playSound": "Play Sound",
+    "assignmentMsg": "Assigned to "
   },
   "pagingGroup": {
     "title": "Paging Group",
@@ -3497,7 +3508,7 @@
     "forwardVoicemailDisabled": "Call Forwarding is set to Voicemail, which is currently disabled. Please update the Call Forwarding settings.",
     "directVoicemail": "Forward directly to Voicemail",
     "forwardBusyNoAnswerTimerSeconds": "Seconds",
-    "forwardBusyNoAnswerTimerDescription": "Time before call is forwarded",
+    "forwardBusyNoAnswerTimerDescription": "Time before call is forwarded due to no answer",
     "ringDurationTimer.validation.error": "Must be a number between 1 and 300"
   },
   "multipleCalls": {
@@ -5800,6 +5811,8 @@
     "typePhone": "Phone",
     "typeCustom": "Custom",
     "typeReason": "Reason",
+    "categoryHintText": "Add category options like Queries, Billing...",
+    "categoryWarningText": "Add at least one category option.",
     "ctValidation": {
       "errorChar250": "Character length cannot be more than 250.",
       "errorChar50": "Character length cannot be more than 50.",
@@ -6787,7 +6800,7 @@
       "moveSite": "Move Site",
       "moveFrom": "move from",
       "siteMoved": "Site Moved",
-      "placeholder-text": "All",
+      "placeholder-text": "Search",
       "importCsv": "Import CSV",
       "title": "Callback Groups",
       "exportToCsv": "Export to CSV",

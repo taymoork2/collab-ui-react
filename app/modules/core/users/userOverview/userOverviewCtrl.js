@@ -12,6 +12,7 @@
     vm.currentUser = $stateParams.currentUser;
     vm.entitlements = $stateParams.entitlements;
     vm.queryuserslist = $stateParams.queryuserslist;
+    vm.orgInfo = $stateParams.orgInfo;
 
     vm.services = [];
     vm.userDetailList = [];
@@ -64,7 +65,8 @@
     };
     var preferredLanguageState = {
       name: $translate.instant('preferredLanguage.title'),
-      detail: $translate.instant('languages.englishAmerican'),
+      detail: "",
+      dirsyncEnabled: false,
     };
 
     init();
@@ -278,12 +280,16 @@
 
     function initUserDetails() {
       var ciLanguageCode = _.get(vm.currentUser, 'preferredLanguage');
+      var ciDirsyncEnabled = _.get(vm.orgInfo, 'dirsyncEnabled');
       if (ciLanguageCode) {
         UserOverviewService.getUserPreferredLanguage(ciLanguageCode).then(function (userPreferredLanguage) {
           preferredLanguageState.detail = userPreferredLanguage ? _.get(userPreferredLanguage, 'label') : ciLanguageCode;
         }).catch(function (error) {
           Notification.errorResponse(error, 'usersPreview.userPreferredLanguageError');
         });
+      }
+      if (ciDirsyncEnabled) {
+        preferredLanguageState.dirsyncEnabled = ciDirsyncEnabled;
       }
       vm.userDetailList.push(preferredLanguageState);
     }

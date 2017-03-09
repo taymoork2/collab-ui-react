@@ -14,7 +14,7 @@
       availableClusters: [],
       clustersInResourceGroup: [],
     };
-    vm.newData = angular.copy(vm.originalData);
+    vm.newData = _.cloneDeep(vm.originalData);
     vm._helpers = {
       hasServices: hasServices,
       stateLabelToStatusClass: stateLabelToStatusClass,
@@ -32,7 +32,7 @@
           var group = _.find(response.groups, { id: resourceGroup.id });
           vm.originalData.availableClusters = filterNonExpresswayClusters(response.unassigned);
           vm.originalData.clustersInResourceGroup = group.clusters;
-          vm.newData = angular.copy(vm.originalData);
+          vm.newData = _.cloneDeep(vm.originalData);
           vm.loadingState = false;
         })
         .catch(function (error) {

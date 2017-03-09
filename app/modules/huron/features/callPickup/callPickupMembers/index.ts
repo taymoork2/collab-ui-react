@@ -4,6 +4,8 @@ import notifications from 'modules/core/notifications';
 import featureMemberService from 'modules/huron/features';
 import callPickupGroupService from 'modules/huron/features/callPickup/services/';
 
+import { DisableEnterKeyHook } from './disableEnterKeyHook.directive.ts';
+
 export default angular
   .module('huron.call-pickup.members', [
     'atlas.templates',
@@ -18,4 +20,5 @@ export default angular
     require('modules/core/scripts/services/authinfo'),
   ])
   .component('callPickupMembers',  new CallPickupMembersComponent())
+  .directive('disableEnterKeyHook', DisableEnterKeyHook.factory)
   .name;

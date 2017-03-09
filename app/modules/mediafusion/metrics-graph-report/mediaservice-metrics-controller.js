@@ -240,7 +240,7 @@ require('modules/core/reports/amcharts-export.scss');
     }
 
     function setAvailabilityGraph(data) {
-      var tempData = angular.copy(data);
+      var tempData = _.cloneDeep(data);
       if (_.isUndefined(data.data[0].isDummy)) {
         var availabilityData = [];
         if (vm.clusterId === vm.allClusters) {

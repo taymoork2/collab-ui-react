@@ -1095,6 +1095,12 @@ describe('OnboardCtrl: Ctrl', function () {
       var result = this.$scope.selectedSubscriptionHasBasicLicenses(billingServiceId);
       expect(result).toEqual(true);
     });
+
+    it('should return true for a subscription that is a Trial and has basic licenses', function () {
+      var billingServiceId = 'Trial';
+      var result = this.$scope.selectedSubscriptionHasBasicLicenses(billingServiceId);
+      expect(result).toEqual(true);
+    });
   });
 
   describe('selectedSubscriptionHasAdvancedLicenses function ', function () {
@@ -1113,6 +1119,12 @@ describe('OnboardCtrl: Ctrl', function () {
 
     it('should return true for a subscriptions that have advanced licenses', function () {
       var billingServiceId = 'SubCt31test20161222111';
+      var result = this.$scope.selectedSubscriptionHasAdvancedLicenses(billingServiceId);
+      expect(result).toEqual(true);
+    });
+
+    it('should return true for a subscriptions that are Trial and have advanced licenses', function () {
+      var billingServiceId = 'Trial';
       var result = this.$scope.selectedSubscriptionHasAdvancedLicenses(billingServiceId);
       expect(result).toEqual(true);
     });

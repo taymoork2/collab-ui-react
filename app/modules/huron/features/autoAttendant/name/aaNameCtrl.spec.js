@@ -58,7 +58,7 @@ describe('Controller: aaBuilderNameCtrl', function () {
 
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
 
-    spyOn(AutoAttendantCeService, 'listCes').and.returnValue($q.resolve(angular.copy(ces)));
+    spyOn(AutoAttendantCeService, 'listCes').and.returnValue($q.resolve(_.cloneDeep(ces)));
     spyOn($rootScope, '$broadcast').and.callThrough();
 
     controller = $controller('aaBuilderNameCtrl', {
@@ -74,8 +74,8 @@ describe('Controller: aaBuilderNameCtrl', function () {
   describe('saveAARecord', function () {
 
     beforeEach(function () {
-      spyOn(AutoAttendantCeService, 'createCe').and.returnValue($q.resolve(angular.copy(rawCeInfo)));
-      spyOn(AutoAttendantCeService, 'updateCe').and.returnValue($q.resolve(angular.copy(rawCeInfo)));
+      spyOn(AutoAttendantCeService, 'createCe').and.returnValue($q.resolve(_.cloneDeep(rawCeInfo)));
+      spyOn(AutoAttendantCeService, 'updateCe').and.returnValue($q.resolve(_.cloneDeep(rawCeInfo)));
       spyOn(AANotificationService, 'error');
       spyOn(AANotificationService, 'success');
       spyOn(AutoAttendantCeInfoModelService, 'setCeInfo');

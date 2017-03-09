@@ -41,7 +41,6 @@
   }
 }
 
-
 /**
  Work around the extra col-md-12 class in views/main.tpl.html
  */
@@ -51,7 +50,6 @@
     left: -0.5rem;
   }
 }
-
 
 .hds-service {
   @extend %grid-subheader;

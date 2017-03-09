@@ -4,13 +4,12 @@ require('./helpdesk.scss');
   'use strict';
 
   /* @ngInject */
-  function HelpdeskController($modal, $q, $scope, $state, $translate, $window, Authinfo, Config, HelpdeskHuronService, HelpdeskSearchHistoryService, HelpdeskService, HelpdeskSplunkReporterService, LicenseService, SessionStorage) {
+  function HelpdeskController($modal, $q, $scope, $state, $translate, $window, Authinfo, Config, HelpdeskHuronService, HelpdeskSearchHistoryService, HelpdeskService, HelpdeskSplunkReporterService, LicenseService) {
     $scope.$on('$viewContentLoaded', function () {
       setSearchFieldFocus();
       $window.document.title = $translate.instant("helpdesk.browserTabHeaderTitle");
     });
     var vm = this;
-    SessionStorage.put('storedState', $state.$current.name);
     vm.search = search;
     vm.searchResultsPageSize = 5;
     vm.searchResultsLimit = 20;

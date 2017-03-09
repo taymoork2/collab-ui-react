@@ -7,7 +7,8 @@
   .toggle-switch {
     float: right;
   }
-  .icon-info, .icon-warning {
+  .icon-info,
+  .icon-warning {
     top: 0.1rem;
     margin-right: 0.25rem;
     float: left;
@@ -18,7 +19,8 @@
   .icon-warning {
     color: $brand-warning;
   }
-  #sharedline-member-warning, #multi-device-info,
+  #sharedline-member-warning,
+  #multi-device-info,
   #no-supported-device-warning {
     width: 90%;
     float: left;

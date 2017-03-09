@@ -83,7 +83,7 @@
         return;
       }
       // Filter out extensions that are not enabled in FMS
-      ServiceDescriptor.services(function (error, services) {
+      ServiceDescriptor.getServices().then(function (services) {
         if (services) {
           _.forEach(vm.extensions, function (extension) {
             extension.enabled = ServiceDescriptor.filterEnabledServices(services).some(function (service) {

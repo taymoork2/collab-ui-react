@@ -1067,6 +1067,7 @@
               entitlements: {},
               queryuserslist: {},
               currentUserId: '',
+              orgInfo: {},
             },
             data: {
               displayName: 'Overview',
@@ -1963,6 +1964,10 @@
           .state('gmTdDetails.sites', {
             params: { data: {} },
             template: '<gm-td-sites></gm-td-sites>',
+          })
+          .state('gmTdDetails.notes', {
+            template: '<gm-td-notes></gm-td-notes>',
+            params: { obj: {} },
           })
           .state('gemCbgDetails', {
             data: {},

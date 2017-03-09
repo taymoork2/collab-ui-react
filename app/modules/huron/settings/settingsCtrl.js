@@ -1816,7 +1816,7 @@
               if (hasNewInternalNumberRange) {
                 loadInternalNumbers()
                   .then(function () {
-                    savedModel = angular.copy(vm.model);
+                    savedModel = _.cloneDeep(vm.model);
                   });
               }
             });
@@ -2070,7 +2070,7 @@
             Notification.notify(errors, 'error');
           }
           vm.loading = false;
-          savedModel = angular.copy(vm.model);
+          savedModel = _.cloneDeep(vm.model);
         });
     }
 
@@ -2109,7 +2109,7 @@
           vm.processing = false;
           vm.previousModel.companyVoicemail.companyVoicemailEnabled = vm.model.companyVoicemail.companyVoicemailEnabled;
           var existingCompanyVoicemailEnabled = savedModel.companyVoicemail.companyVoicemailEnabled;
-          savedModel = angular.copy(vm.model);
+          savedModel = _.cloneDeep(vm.model);
           if (!existingCompanyVoicemailEnabled &&
             savedModel.companyVoicemail.companyVoicemailEnabled) {
             $state.go('users.enableVoicemail');
@@ -2145,8 +2145,8 @@
       vm.model.site.uuid = savedModel.site.uuid;
       vm.model.site.extensionLength = savedModel.site.extensionLength;
 
-      angular.copy(savedModel.numberRanges, vm.model.numberRanges);
-      angular.copy(savedModel.displayNumberRanges, vm.model.displayNumberRanges);
+      _.cloneDeep(savedModel.numberRanges, vm.model.numberRanges);
+      _.cloneDeep(savedModel.displayNumberRanges, vm.model.displayNumberRanges);
 
       vm.model.callerId.callerIdEnabled = savedModel.callerId.callerIdEnabled;
       vm.model.callerId.uuid = savedModel.callerId.uuid;

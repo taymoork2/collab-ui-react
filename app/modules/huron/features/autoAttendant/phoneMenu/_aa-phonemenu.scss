@@ -89,11 +89,11 @@
     position: relative;
     z-index: 1;
     > i {
-        @include vr-spacing(mr, $right);
-        @include vr-spacing(ml, $left);
-      }
+      @include vr-spacing(mr, $right);
+      @include vr-spacing(ml, $left);
     }
   }
+}
 
 @mixin aa-menu-key-button($background_color, $width) {
   .select-toggle {
@@ -199,7 +199,7 @@
   }
 
   .aa-pm-key-select {
-    @include aa-menu-toggle-button(0, -0.5)
+    @include aa-menu-toggle-button(0, -0.5);
     @include aa-menu-key-button($color-cta-base, 56);
   }
 

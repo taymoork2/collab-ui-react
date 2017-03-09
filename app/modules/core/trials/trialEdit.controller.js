@@ -8,9 +8,9 @@
   function TrialEditCtrl($q, $state, $scope, $stateParams, $translate, $window, Analytics, Authinfo, Config, HuronCustomer, FeatureToggleService, Notification, Orgservice, TrialContextService, TrialDeviceService, TrialPstnService, TrialService, ValidationService) {
     var vm = this;
 
-    vm.currentTrial = angular.copy($stateParams.currentTrial);
+    vm.currentTrial = _.cloneDeep($stateParams.currentTrial);
     vm.trialDetails = {};
-    vm.stateDetails = angular.copy($stateParams.details);
+    vm.stateDetails = _.cloneDeep($stateParams.details);
 
     vm.customerOrgId = undefined;
     vm.licenseCountChanged = false;

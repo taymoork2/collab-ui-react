@@ -53,7 +53,7 @@
     }
 
     function resetForm() {
-      vm.toggles = angular.copy(vm.defaults);
+      vm.toggles = _.cloneDeep(vm.defaults);
     }
 
     function updateToggles(toggle) {

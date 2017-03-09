@@ -9,7 +9,7 @@
     });
 
   /* @ngInject */
-  function CbgDetailsCtrl($state, $modal, $rootScope, $stateParams, $translate, $window, Notification, PreviousState, cbgService, gemService) {
+  function CbgDetailsCtrl($state, $modal, $scope, $rootScope, $stateParams, $translate, $window, Notification, PreviousState, cbgService, gemService) {
     var vm = this;
     var showHistoriesNum = 5;
     var groupId = _.get($stateParams, 'info.groupId', '');
@@ -30,8 +30,12 @@
     vm.groupId = _.get($stateParams, 'info.groupId', '');
     vm.customerId = _.get($stateParams, 'info.customerId', '');
 
-
     function $onInit() {
+      var deregister = $rootScope.$on('refreshNotes', function (event, data) {
+        vm.notes = data || event;
+      });
+      $scope.$on('$destroy', deregister);
+
       getNotes();
       getRemedyTicket();
       getCurrentCallbackGroup();
@@ -153,7 +157,9 @@
           vm.hisLoading = false;
           vm.allHistories = resJson.body;
           _.forEach(vm.allHistories, function (item) {
-            if (item.action === 'submit_cg_move_site') {
+            item.action = _.upperFirst(item.action);
+
+            if (item.action === 'Submit_cg_move_site') {
               var moveSiteMsg = item.siteID + ' ' + $translate.instant('gemini.cbgs.moveFrom') + ' ' + item.objectName + ' to ' + item.objectID;
               item.objectName = '';
               item.moveSiteMsg = moveSiteMsg;

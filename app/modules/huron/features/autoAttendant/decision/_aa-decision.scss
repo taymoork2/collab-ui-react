@@ -27,8 +27,8 @@
   .select-list {
     @include vr-spacing(pr, 1.75);
     .dropdown-menu {
-        min-width: 100%;
-        width: auto;
+      min-width: 100%;
+      width: auto;
     }
   }
 

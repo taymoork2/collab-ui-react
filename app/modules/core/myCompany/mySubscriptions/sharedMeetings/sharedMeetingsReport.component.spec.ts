@@ -6,7 +6,15 @@ import {
 describe('Component: sharedMeetingReport', function () {
   beforeEach(function () {
     this.initModules('Core');
-    this.injectDependencies('$componentController', '$timeout', '$scope', '$q', 'CommonReportService', 'Notification', 'ReportConstants', 'SharedMeetingsReportService');
+    this.injectDependencies('$componentController',
+      '$timeout',
+      '$scope',
+      '$q',
+      'CommonReportService',
+      'Notification',
+      'ReportConstants',
+      'SharedMeetingsReportService',
+      'ReportPrintService');
 
     this.data = getJSONFixture('core/json/myCompany/sharedMeetingReport.json');
     this.timeFilter = _.cloneDeep(this.data.timeFilter);
@@ -15,7 +23,7 @@ describe('Component: sharedMeetingReport', function () {
       status: 500,
     };
 
-    spyOn(this.CommonReportService, 'createExportMenu').and.returnValue([]);
+    spyOn(this.ReportPrintService, 'createExportMenu').and.returnValue([]);
     spyOn(this.SharedMeetingsReportService, 'setChartData').and.returnValue(undefined);
     spyOn(this.SharedMeetingsReportService, 'getDownloadCSV').and.returnValue(this.siteUrl);
     spyOn(this.SharedMeetingsReportService, 'dismissModal');
@@ -118,7 +126,7 @@ describe('Component: sharedMeetingReport', function () {
       expect(this.controller.isSet()).toBeTruthy();
       expect(this.controller.isDownloadReady()).toBeTruthy();
 
-      expect(this.CommonReportService.createExportMenu).toHaveBeenCalledTimes(1);
+      expect(this.ReportPrintService.createExportMenu).toHaveBeenCalledTimes(1);
       expect(this.SharedMeetingsReportService.getMaxConcurrentMeetingsData).toHaveBeenCalledTimes(1);
       expect(this.SharedMeetingsReportService.getMaxConcurrentMeetingsData).toHaveBeenCalledWith(this.siteUrl, this.getMonth(0), this.getMonth(this.controller.timeSelected.value));
       expect(this.SharedMeetingsReportService.getDetailedReportData).toHaveBeenCalledTimes(1);
@@ -199,7 +207,7 @@ describe('Component: sharedMeetingReport', function () {
       expect(this.controller.isSet()).toBeFalsy();
       expect(this.controller.isDownloadReady()).toBeTruthy();
 
-      expect(this.CommonReportService.createExportMenu).not.toHaveBeenCalled();
+      expect(this.ReportPrintService.createExportMenu).not.toHaveBeenCalled();
       expect(this.SharedMeetingsReportService.getMaxConcurrentMeetingsData).toHaveBeenCalledTimes(1);
       expect(this.SharedMeetingsReportService.getMaxConcurrentMeetingsData).toHaveBeenCalledWith(this.siteUrl, this.getMonth(0), this.getMonth(this.controller.timeSelected.value));
       expect(this.SharedMeetingsReportService.getDetailedReportData).not.toHaveBeenCalled();
@@ -238,7 +246,7 @@ describe('Component: sharedMeetingReport', function () {
       expect(this.controller.isSet()).toBeTruthy();
       expect(this.controller.isDownloadReady()).toBeFalsy();
 
-      expect(this.CommonReportService.createExportMenu).toHaveBeenCalledTimes(1);
+      expect(this.ReportPrintService.createExportMenu).toHaveBeenCalledTimes(1);
       expect(this.SharedMeetingsReportService.getMaxConcurrentMeetingsData).toHaveBeenCalledTimes(1);
       expect(this.SharedMeetingsReportService.getMaxConcurrentMeetingsData).toHaveBeenCalledWith(this.siteUrl, this.getMonth(0), this.getMonth(this.controller.timeSelected.value));
       expect(this.SharedMeetingsReportService.getDetailedReportData).toHaveBeenCalledTimes(1);

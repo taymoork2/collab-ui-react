@@ -118,14 +118,14 @@
 
     function getBaseVariable(key) {
       if (baseVariables[key] !== null && !_.isUndefined(baseVariables[key])) {
-        return angular.copy(baseVariables[key]);
+        return _.cloneDeep(baseVariables[key]);
       } else {
         return {};
       }
     }
 
     function getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, categoryField, catAxis, exportData) {
-      return angular.copy({
+      return _.cloneDeep({
         'type': 'serial',
         'pathToImages': amchartsImages,
         'startEffect': 'easeOutSine',
@@ -177,7 +177,7 @@
     }
 
     function getGanttGraph(data, valueAxis, exportData) {
-      return angular.copy({
+      return _.cloneDeep({
         'type': 'gantt',
         'pathToImages': amchartsImages,
         'theme': 'light',
@@ -222,7 +222,7 @@
     }
 
     function getBasePieChart(data, chartOptions) {
-      return angular.copy({
+      return _.cloneDeep({
         'type': 'pie',
         'startDuration': 0,
         'balloonText': chartOptions.balloonText,
@@ -255,7 +255,7 @@
     }
 
     function getDummyPieChart() {
-      return angular.copy({
+      return _.cloneDeep({
         'type': 'pie',
         'startDuration': 0,
         'labelRadius': 1,

@@ -6,7 +6,7 @@
     .controller('TrialEmergAddressCtrl', TrialEmergAddressCtrl);
 
   /* @ngInject */
-  function TrialEmergAddressCtrl($scope, $translate, Analytics, Notification, PstnServiceAddressService, PstnSetupStatesService, TrialPstnService) {
+  function TrialEmergAddressCtrl($scope, $translate, Analytics, Notification, PstnServiceAddressService, TrialPstnService) {
     var vm = this;
 
     vm.trial = TrialPstnService.getData();
@@ -19,94 +19,13 @@
     vm.validateAddress = validateAddress;
     vm.resetAddress = resetAddress;
     vm.skip = skip;
+    vm.previousStep = previousStep;
 
-    vm.emergencyAddressFields = [{
-      model: vm.trial.details.emergAddr,
-      key: 'streetAddress',
-      type: 'input',
-      className: 'medium-9 inline-row left',
-      templateOptions: {
-        required: true,
-        labelfield: 'label',
-        label: $translate.instant('trialModal.pstn.address'),
-        inputClass: 'medium-11',
-      },
-      expressionProperties: {
-        'templateOptions.disabled': function () {
-          return vm.addressFound;
-        },
-      },
-    }, {
-      model: vm.trial.details.emergAddr,
-      key: 'unit',
-      type: 'input',
-      className: 'medium-3 inline-row left',
-      templateOptions: {
-        labelfield: 'label',
-        label: $translate.instant('trialModal.pstn.unit'),
-      },
-      expressionProperties: {
-        'templateOptions.disabled': function () {
-          return vm.addressFound;
-        },
-      },
-    }, {
-      model: vm.trial.details.emergAddr,
-      key: 'city',
-      type: 'input',
-      className: 'medium-12',
-      templateOptions: {
-        required: true,
-        labelfield: 'label',
-        label: $translate.instant('trialModal.pstn.city'),
-      },
-      expressionProperties: {
-        'templateOptions.disabled': function () {
-          return vm.addressFound;
-        },
-      },
-    }, {
-      model: vm.trial.details.emergAddr,
-      key: 'state',
-      type: 'select',
-      className: 'medium-8 inline-row left',
-      templateOptions: {
-        required: true,
-        label: ' ',
-        labelfield: 'name',
-        valuefield: 'abbreviation',
-        inputClass: 'medium-11',
-        options: [],
-        filter: true,
-      },
-      controller: /* @ngInject */ function ($scope) {
-        PstnSetupStatesService.getLocation(vm.trial.details.countryCode).then(function (location) {
-          $scope.to.label = location.type;
-          $scope.to.options = location.areas;
-        });
-      },
-      expressionProperties: {
-        'templateOptions.disabled': function () {
-          return vm.addressFound;
-        },
-      },
-    }, {
-      model: vm.trial.details.emergAddr,
-      key: 'zip',
-      type: 'input',
-      className: 'medium-4 inline-row left',
-      templateOptions: {
-        required: true,
-        labelfield: 'label',
-        label: $translate.instant('trialModal.pstn.zip'),
-        onBlur: validateAddress,
-      },
-      expressionProperties: {
-        'templateOptions.disabled': function () {
-          return vm.addressFound;
-        },
-      },
-    }];
+    if (!_.isEmpty(vm.trial.details.emergAddr.state)) {
+      vm.validation = true;
+      vm.addressFound = true;
+      vm.addressLoading = false;
+    }
 
     Analytics.trackTrialSteps(Analytics.eventNames.ENTER, vm.parentTrialData);
 
@@ -141,6 +60,13 @@
       Analytics.trackTrialSteps(Analytics.eventNames.SKIP, vm.parentTrialData);
       vm.trial.enabled = !skipped;
       vm.trial.skipped = skipped;
+    }
+
+    function previousStep() {
+      if (!vm.addressFound) {
+        TrialPstnService.resetAddress();
+      }
+      $scope.$parent.trial.previousStep();
     }
 
     function resetAddress() {

@@ -88,7 +88,7 @@
 
     function getBaseVariable(key) {
       if (baseVariables[key] !== null && !_.isUndefined(baseVariables[key])) {
-        return angular.copy(baseVariables[key]);
+        return _.cloneDeep(baseVariables[key]);
       } else {
         return {};
       }
@@ -117,7 +117,7 @@
         valueAxes: valueAxes,
         export: exportReport,
       };
-      return angular.copy(_.defaults(chartConfig, baseChartConfig));
+      return _.cloneDeep(_.defaults(chartConfig, baseChartConfig));
     }
 
     var service = {

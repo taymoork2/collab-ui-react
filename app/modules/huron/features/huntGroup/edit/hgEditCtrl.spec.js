@@ -120,7 +120,7 @@ describe('Hunt Group EditCtrl Controller', function () {
   });
 
   it('on resetting the form, the model has pristine data from edit service', function () {
-    var newHgFeature = angular.copy(hgFeature);
+    var newHgFeature = _.cloneDeep(hgFeature);
     newHgFeature.name = "Test Model";
     expect(hgEditCtrl.model.name).not.toEqual(newHgFeature.name);
     expect(hgEditCtrl.model.name).toEqual(hgFeature.name); // Existing model.
@@ -167,7 +167,7 @@ describe('Hunt Group EditCtrl Controller', function () {
   });
 
   it('on adding a new hunt member the form is marked dirty', function () {
-    var newUser = angular.copy(hgEditCtrl.selectedHuntMembers[0]);
+    var newUser = _.cloneDeep(hgEditCtrl.selectedHuntMembers[0]);
     newUser.uuid = "test";
     newUser.user.uuid = "test";
     var initMembersCount = hgEditCtrl.selectedHuntMembers.length;
@@ -242,7 +242,7 @@ describe('Hunt Group EditCtrl Controller', function () {
   it('on toggle hunt member panel, openMemberPanelUuid is updated correctly', function () {
     expect(hgEditCtrl.openMemberPanelUuid).toBeUndefined();
 
-    var newUser = angular.copy(user1);
+    var newUser = _.cloneDeep(user1);
     newUser.email = "test@cisco.com";
     member1ResponseHandler.respond(200, newUser);
     hgEditCtrl.toggleMemberPanel(hgEditCtrl.selectedHuntMembers[0].user);
@@ -254,7 +254,7 @@ describe('Hunt Group EditCtrl Controller', function () {
     $scope.$apply();
     expect(hgEditCtrl.openMemberPanelUuid).toBeUndefined();
 
-    newUser = angular.copy(user2);
+    newUser = _.cloneDeep(user2);
     newUser.email = "test@cisco.com";
     member2ResponseHandler.respond(200, newUser);
     hgEditCtrl.toggleMemberPanel(hgEditCtrl.selectedHuntMembers[1].user);
@@ -278,7 +278,7 @@ describe('Hunt Group EditCtrl Controller', function () {
     $scope.$apply();
     expect(hgEditCtrl.selectedFallbackMember.openPanel).toBeFalsy();
 
-    var newUser = angular.copy(user1);
+    var newUser = _.cloneDeep(user1);
     newUser.email = "test@cisco.com";
     member1ResponseHandler.respond(200, newUser);
 
