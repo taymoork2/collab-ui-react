@@ -34,21 +34,21 @@
 .flip .card .back {
   transform: rotatey(-180deg);
   position:relative;
-	width: 100%;
+  width: 100%;
   min-height: 206px;
-	background-color: #fff;
-	border-radius: 2px;
-	box-shadow: 0 1px 2px 1px rgba(52,53,55,.18);
-	color: #6a6b6c;
-	display: -ms-flexbox;
-	display: flex;
-	flex-direction: column;
-	vertical-align: top;
-	outline: none;
+  background-color: #fff;
+  border-radius: 2px;
+  box-shadow: 0 1px 2px 1px rgba(52,53,55,.18);
+  color: #6a6b6c;
+  display: -ms-flexbox;
+  display: flex;
+  flex-direction: column;
+  vertical-align: top;
+  outline: none;
 }
 .media-flip-icon {
-	outline: none;
-	cursor: pointer;
+  outline: none;
+  cursor: pointer;
   position: absolute;
   right: 0;
   bottom: 23px;
