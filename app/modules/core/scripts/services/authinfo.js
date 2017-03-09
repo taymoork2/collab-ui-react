@@ -12,6 +12,8 @@
   /* @ngInject */
   function Authinfo($rootScope, $translate, Config) {
     var authData = getNewAuthData();
+    var hasCDCOffer = false;
+    var hasCVCOffer = false;
 
     function ServiceFeature(label, value, name, license) {
       this.label = label;
@@ -186,7 +188,13 @@
                   commLicenses.push(service);
                   break;
                 case Config.licenseTypes.CARE:
-                  service = new ServiceFeature($translate.instant('onboardModal.paidCare'), x + 1, 'careRadio', license);
+                  if (license.offerName === Config.offerCodes.CDC) {
+                    service = new ServiceFeature($translate.instant('onboardModal.paidCDC'), x + 1, 'careRadio', license);
+                    hasCDCOffer = true;
+                  } else if (license.offerName === Config.offerCodes.CVC) {
+                    service = new ServiceFeature($translate.instant('onboardModal.paidCVC'), x + 1, 'careRadio', license);
+                    hasCVCOffer = true;
+                  }
                   careLicenses.push(service);
                   break;
                 case Config.licenseTypes.CMR:
@@ -488,8 +496,12 @@
       isCare: function () {
         return isEntitled(Config.entitlements.care);
       },
-      isCareVoice: function () {
-        return isEntitled(Config.entitlements.care_inbound_voice);
+      // TODO: refactor isCareAndCDC() and isCareVoiceAndCVC() when ccc-digital is getting implemented
+      isCareAndCDC: function () {
+        return isEntitled(Config.entitlements.care) && hasCDCOffer;
+      },
+      isCareVoiceAndCVC: function () {
+        return isEntitled(Config.entitlements.care_inbound_voice) && hasCVCOffer;
       },
       hasAccount: function () {
         return authData.hasAccount;

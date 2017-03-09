@@ -233,7 +233,7 @@ describe('Service: UserOverviewService', () => {
 
       it('should set invitations object from Casandra effectiveLicenses', function () {
         this.updatedUser.entitlements = [];
-        this.updatedUser.roles = [this.Config.backend_roles.spark_synckms];
+        this.updatedUser.roles = [this.Config.backend_roles.spark_synckms, this.Config.backend_roles.ciscouc_ces];
         let promise = this.UserOverviewService.getUser('userid')
           .then((userData) => {
             expect(userData.user.entitlements).toHaveLength(0);

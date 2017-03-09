@@ -148,6 +148,7 @@
     "telstraAppRedirect": "Connecting to Telstra Apps Marketplace",
     "careAddUserError": "Failed to add user to Care.",
     "careAddUserRoleError": "Error adding roles to user.",
+    "careDeleteCESRoleError": "Error deleting CES role from user",
     "loadError": "An error while loading the users list."
   },
   "userManage": {
@@ -308,8 +309,14 @@
     "paidAdvancedConferencing": "Advanced Meetings",
     "paidComm": "Call",
     "paidSparkCall": "Cisco Spark Call",
+    "paidNone": "None",
+    "paidCDC": "K1",
+    "paidCVC": "K2",
     "paidCare": "Care Digital Channel",
-    "paidContactCenter": "Chat",
+    "careServices": "Chat and Callback",
+    "careVoiceServices": "Chat, Callback and Inbound Call",
+    "enableCallInfo": "Message is mandatory for Care services. Enable Call if you want the user to handle calls from customers.",
+    "paidContactCenter": "Care",
     "enterpriseEdition": "Enterprise Edition {{capacity}}",
     "meetingCenter": "Meeting Center {{capacity}}",
     "supportCenter": "Support Center {{capacity}}",
@@ -327,6 +334,7 @@
     "proceedFreeMessage": "If you run out of licenses for a Cisco Spark service, any remaining users are assigned a free license for that service.",
     "reviewPlanButton": "Review your plan",
     "proceedFreeButton": "Proceed with Free",
+    "getCareEntitlementsErrorForuser": "Failed to get care entitlements for user",
     "result": {
       "200": "entitled successfully",
       "404": "does not exist",
