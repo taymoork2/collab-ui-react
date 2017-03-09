@@ -74,7 +74,7 @@
         care_inbound_voice: 'cloud-contact-center-inbound-voice',
         context: 'contact-center-context',
         fusion_google_cal: 'squared-fusion-gcal',
-        cucm: 'squared-fusion-khaos',
+        fusion_khaos: 'squared-fusion-khaos',
       },
 
       licenseModel: {

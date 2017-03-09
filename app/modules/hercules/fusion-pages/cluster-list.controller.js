@@ -20,7 +20,7 @@
     });
 
     vm.showResourceGroups = hasResourceGroupFeatureToggle;
-    vm.showCucmClusters = hasCucmSupportFeatureToggle; // TODO: When entitlement returned by Atlas backend, add => && Authinfo.isEntitled(Config.entitlements.cucm)
+    vm.showCucmClusters = hasCucmSupportFeatureToggle && Authinfo.isEntitled(Config.entitlements.fusion_khaos);
     vm.loading = true;
     vm.backState = 'services-overview';
     vm.openAllGroups = false;
