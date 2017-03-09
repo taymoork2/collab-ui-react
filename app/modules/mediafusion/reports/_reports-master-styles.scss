@@ -6,10 +6,15 @@
 @import 'adoption-report/client-type/_client-type-styles';
 @import 'adoption-report/meeting-location/_meeting-location-styles';
 @import 'media-report-card/_media_report_card';
+@import 'media-report-flip-chart-card/_media_report_flip_chart_card';
 
 .media-reports {
   @extend %content-subheader;
   @extend %page-content-padding;
+
+  .media-reports-container {
+    padding: 0.55rem 0.9rem !important;
+  }
 
   .reports-select-filter {
     width: rem-calc(220);
