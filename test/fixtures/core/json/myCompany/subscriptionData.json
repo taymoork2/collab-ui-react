@@ -38,6 +38,10 @@
     "label": "subscriptions.room",
     "subscriptions": [],
     "borders": false
+  }, {
+    "label": "subscriptions.care",
+    "subscriptions": [],
+    "borders": true
   }],
   "trialSubscriptionData": [{
     "subscriptionId": "subID",
@@ -141,6 +145,24 @@
       "licenseId": "SD_21770613-64d6-4658-a1f2-4a63ea819af2",
       "licenseType": "ROOMS",
       "offerName": "SD",
+      "status": "ACTIVE",
+      "usage": 3,
+      "volume": 100
+    }, {
+      "features": ["cloud-contact-center"],
+      "isTrial": false,
+      "licenseId": "CDC_21770613-64d6-4658-a1f2-4a63ea819af2",
+      "licenseType": "CARE",
+      "offerName": "CDC",
+      "status": "ACTIVE",
+      "usage": 3,
+      "volume": 100
+    },{
+      "features": ["cloud-contact-center", "cloud-contact-center-inbound-voice"],
+      "isTrial": false,
+      "licenseId": "CVC_21770613-64d6-4658-a1f2-4a63ea819af2",
+      "licenseType": "CARE",
+      "offerName": "CVC",
       "status": "ACTIVE",
       "usage": 3,
       "volume": 100
@@ -266,6 +288,38 @@
       "tooltip": "subscriptions.licenseTypes.SD<br>subscriptions.usage3/100",
       "class": "icon-meeting-room"
     }]
+  }, {
+    "label":"subscriptions.care",
+    "subscriptions":[
+      {
+        "offers":[
+          {
+            "licenseId":"CDC_21770613-64d6-4658-a1f2-4a63ea819af2",
+            "licenseType":"CARE",
+            "licenseModel":"",
+            "offerName":"CDC",
+            "usage":3,
+            "volume":100,
+            "id":"donutId09",
+            "tooltip":"subscriptions.licenseTypes.CDC<br>subscriptions.usage3/100",
+            "class":"icon-headset"
+          },
+          {
+            "licenseId":"CVC_21770613-64d6-4658-a1f2-4a63ea819af2",
+            "licenseType":"CARE",
+            "licenseModel":"",
+            "offerName":"CVC",
+            "usage":3,
+            "volume":100,
+            "id":"donutId010",
+            "tooltip":"subscriptions.licenseTypes.CVC<br>subscriptions.usage3/100",
+            "class":"icon-headset"
+          }
+        ],
+        "type":"CARE"
+      }
+    ],
+    "borders":true
   }],
   "subscriptionsFormatted": [{
     "subscriptionId": "subID",
@@ -364,6 +418,26 @@
       "id": "donutId08",
       "tooltip": "subscriptions.licenseTypes.SD<br>subscriptions.usage3/100",
       "class": "icon-meeting-room"
+    }, {
+      "licenseId": "CDC_21770613-64d6-4658-a1f2-4a63ea819af2",
+      "licenseType": "CARE",
+      "licenseModel": "",
+      "offerName": "CDC",
+      "usage": 3,
+      "volume": 100,
+      "id": "donutId09",
+      "tooltip": "subscriptions.licenseTypes.CDC<br>subscriptions.usage3/100",
+      "class": "icon-headset"
+    }, {
+      "licenseId": "CVC_21770613-64d6-4658-a1f2-4a63ea819af2",
+      "licenseType": "CARE",
+      "licenseModel": "",
+      "offerName": "CVC",
+      "usage": 3,
+      "volume": 100,
+      "id": "donutId010",
+      "tooltip": "subscriptions.licenseTypes.CVC<br>subscriptions.usage3/100",
+      "class": "icon-headset"
     }],
     "isTrial": false,
     "isOnline": false,

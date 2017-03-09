@@ -99,6 +99,10 @@ describe('Controller: PstnNumbersCtrl', function () {
     zip: '77777',
   };
 
+  var capabilityWithTollFree = [
+    { capability: "TOLLFREE_ORDERING" },
+  ];
+
   afterEach(function () {
     if (element) {
       element.remove();
@@ -130,6 +134,7 @@ describe('Controller: PstnNumbersCtrl', function () {
     spyOn(PstnSetupService, 'releaseCarrierInventoryV2').and.returnValue($q.resolve());
     spyOn(PstnSetupService, 'getCarrierInventory').and.returnValue($q.resolve(response));
     spyOn(PstnSetupService, 'getCarrierTollFreeInventory').and.returnValue($q.resolve(response));
+    spyOn(PstnSetupService, 'getCarrierCapabilities').and.returnValue($q.resolve());
     spyOn(PstnSetup, 'getServiceAddress').and.returnValue(serviceAddress);
     spyOn(Notification, 'error');
     spyOn($state, 'go');
@@ -215,6 +220,28 @@ describe('Controller: PstnNumbersCtrl', function () {
       expect(controller.orderNumbersTotal).toEqual(6);
       controller.goToReview();
       expect($state.go).toHaveBeenCalledWith('pstnSetup.review');
+    });
+  });
+
+  describe('getCapabilities', function () {
+    it('should not show toll-free tabs if trial', function () {
+      PstnSetup.setIsTrial(true);
+      expect(controller.showTollFreeNumbers).toBe(false);
+    });
+
+    it('should not show toll-free tab in paid if not supported', function () {
+      PstnSetup.setIsTrial(false);
+      controller.getCapabilities();
+      $scope.$apply();
+      expect(controller.showTollFreeNumbers).toBe(false);
+    });
+
+    it('should show toll-free tab in paid if supported', function () {
+      PstnSetup.setIsTrial(false);
+      PstnSetupService.getCarrierCapabilities = jasmine.createSpy().and.returnValue($q.resolve(capabilityWithTollFree));
+      controller.getCapabilities();
+      $scope.$apply();
+      expect(controller.showTollFreeNumbers).toBe(true);
     });
   });
 

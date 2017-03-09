@@ -12,6 +12,7 @@
     vm.currentUser = $stateParams.currentUser;
     vm.entitlements = $stateParams.entitlements;
     vm.queryuserslist = $stateParams.queryuserslist;
+    vm.orgInfo = $stateParams.orgInfo;
 
     vm.services = [];
     vm.userDetailList = [];
@@ -64,7 +65,8 @@
     };
     var preferredLanguageState = {
       name: $translate.instant('preferredLanguage.title'),
-      detail: $translate.instant('languages.englishAmerican'),
+      detail: "",
+      dirsyncEnabled: false,
     };
 
     init();
@@ -258,16 +260,13 @@
       vm.services.push(commState);
 
       if (vm.currentUser.hasEntitlement('cloud-contact-center')) {
-        if (hasLicense('CD')) {
+        if (hasLicense('CD') || hasLicense('CV')) {
           SunlightConfigService.getUserInfo(vm.currentUser.id)
             .then(function () {
-              var hasSyncKms = _.find(vm.currentUser.roles, function (r) {
-                return r === Config.backend_roles.spark_synckms;
-              });
-              var hasContextServiceEntitlement = _.find(vm.currentUser.entitlements, function (r) {
-                return r === Config.entitlements.context;
-              });
-              if (hasSyncKms && hasContextServiceEntitlement) {
+              var hasSyncKms = _.includes(vm.currentUser.roles, Config.backend_roles.spark_synckms);
+              var hasCiscoucCES = _.includes(vm.currentUser.roles, Config.backend_roles.ciscouc_ces);
+              var hasContextServiceEntitlement = _.includes(vm.currentUser.entitlements, Config.entitlements.context);
+              if ((hasSyncKms && hasContextServiceEntitlement) || hasCiscoucCES) {
                 contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
                 vm.services.push(contactCenterState);
               }
@@ -278,12 +277,16 @@
 
     function initUserDetails() {
       var ciLanguageCode = _.get(vm.currentUser, 'preferredLanguage');
+      var ciDirsyncEnabled = _.get(vm.orgInfo, 'dirsyncEnabled');
       if (ciLanguageCode) {
         UserOverviewService.getUserPreferredLanguage(ciLanguageCode).then(function (userPreferredLanguage) {
           preferredLanguageState.detail = userPreferredLanguage ? _.get(userPreferredLanguage, 'label') : ciLanguageCode;
         }).catch(function (error) {
           Notification.errorResponse(error, 'usersPreview.userPreferredLanguageError');
         });
+      }
+      if (ciDirsyncEnabled) {
+        preferredLanguageState.dirsyncEnabled = ciDirsyncEnabled;
       }
       vm.userDetailList.push(preferredLanguageState);
     }

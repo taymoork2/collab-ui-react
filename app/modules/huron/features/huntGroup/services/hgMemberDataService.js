@@ -37,7 +37,7 @@
     ////////////////
 
     function setAsPristine() {
-      pristineSelectedHuntMembers = angular.copy(selectedHuntMembers);
+      pristineSelectedHuntMembers = _.cloneDeep(selectedHuntMembers);
     }
 
     function isMemberDirty(pristineMember) {
@@ -65,7 +65,7 @@
     }
 
     function rearrangeResponsesInSequence(users) {
-      var tempArray = angular.copy(selectedHuntMembers);
+      var tempArray = _.cloneDeep(selectedHuntMembers);
       selectedHuntMembers.splice(0, selectedHuntMembers.length);
 
       users.forEach(function (user) {
@@ -104,12 +104,12 @@
            * aligned.
            */
           rearrangeResponsesInSequence(users);
-          pristineSelectedHuntMembers = angular.copy(selectedHuntMembers);
+          pristineSelectedHuntMembers = _.cloneDeep(selectedHuntMembers);
           asyncTask.resolve(selectedHuntMembers);
         }, memberFailureResponse(asyncTask));
 
       } else {
-        selectedHuntMembers = angular.copy(pristineSelectedHuntMembers);
+        selectedHuntMembers = _.cloneDeep(pristineSelectedHuntMembers);
         asyncTask.resolve(selectedHuntMembers);
       }
       return asyncTask.promise;

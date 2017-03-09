@@ -40,7 +40,8 @@
 
   .section__content {
     .sub-section {
-      input, textarea {
+      input,
+      textarea {
         width: 100%;
       }
     }
@@ -52,7 +53,8 @@
 
   @include vr_spacing(p, 3);
 
-  p, input {
+  p,
+  input {
     font-size: 1rem;
     @include vr_spacing(mb, 1.25);
   }
@@ -70,7 +72,8 @@
         }
       }
 
-      .none, .maintenance {
+      .none,
+      .maintenance {
         color: $gray-dark-3;
       }
       .minor {
@@ -88,7 +91,8 @@
       > .csSelect-container {
         width: 30%;
       }
-      > input, > .csSelect-container {
+      > input,
+      > .csSelect-container {
         float: left;
         margin-right: 10px;
       }
@@ -101,7 +105,7 @@
 
     > .sub-section {
       margin-bottom: 1.5rem;
-      & > :first-child {
+      > :first-child {
         margin-bottom: 0.5rem;
       }
 

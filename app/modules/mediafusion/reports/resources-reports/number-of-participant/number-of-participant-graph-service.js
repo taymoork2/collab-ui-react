@@ -12,6 +12,8 @@
 
     var timeStamp = $translate.instant('mediaFusion.metrics.timeStamp');
     var participantsTitle = $translate.instant('mediaFusion.metrics.participants');
+    var onPremisesHeading = $translate.instant('mediaFusion.metrics.onPremisesHeading');
+    var cloudHeading = $translate.instant('mediaFusion.metrics.cloudHeading');
 
     var zoomedEndTime = null;
     var zoomedStartTime = null;
@@ -126,9 +128,11 @@
       };
       _.forEach(graphs, function (value) {
         if (value.title !== 'cloud') {
-          columnNames[value.valueField] = value.title + ' ' + 'on-premises';
+          value.title = onPremisesHeading;
+          columnNames[value.valueField] = value.title;
         } else {
-          columnNames[value.valueField] = value.title + ' ' + 'cloud';
+          value.title = cloudHeading;
+          columnNames[value.valueField] = value.title;
         }
       });
       var exportFields = [];
@@ -165,7 +169,11 @@
     function formatGraph(graphs) {
       var tempData = [];
       _.forEach(graphs, function (value) {
-        value.balloonText = '<span class="graph-text">' + value.title + ' <span class="graph-number">[[value]]</span></span>';
+        if (value.title === 'cloud') {
+          value.balloonText = '<span class="graph-text">' + cloudHeading + ' <span class="graph-number">[[value]]</span></span>';
+        } else {
+          value.balloonText = '<span class="graph-text">' + onPremisesHeading + ' <span class="graph-number">[[value]]</span></span>';
+        }
         value.lineThickness = 2;
         value.connect = true;
         tempData.push(value);

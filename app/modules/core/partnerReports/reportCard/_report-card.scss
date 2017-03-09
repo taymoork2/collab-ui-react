@@ -491,7 +491,8 @@
     text-align: center;
     position: relative;
     top: rem-calc(98);
-    .tooltip-title, .tooltip-icon {
+    .tooltip-title,
+    .tooltip-icon {
       color: $gray-light-1;
     }
     .tooltip-icon {
@@ -506,7 +507,9 @@
   }
 
   // !important necessary to override AmCharts putting css directly on the divs
-  .amcharts-main-div, .amcharts-chart-div, .amcharts-balloon-div {
+  .amcharts-main-div,
+  .amcharts-chart-div,
+  .amcharts-balloon-div {
     overflow: visible !important;
   }
   .amcharts-main-div {

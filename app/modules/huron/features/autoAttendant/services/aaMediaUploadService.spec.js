@@ -184,22 +184,46 @@ describe('Service: AAMediaUploadService', function () {
   });
 
   describe('AA Close', function () {
+    var ceMenuModelService;
+
+    beforeEach(inject(function (_AutoAttendantCeMenuModelService_) {
+      spyOn($http, 'delete');
+
+      ceMenuModelService = _AutoAttendantCeMenuModelService_;
+    }));
+
     it('should delete out the resources on aa close if not saved', function () {
+
       var resources = AAMediaUploadService.getResources('someId');
-      resources.uploads.push({
-        deleteUrl: 'keeper',
-        myUrl: 'keeper URL',
-      });
-      resources.uploads.push({
-        deleteUrl: 'should not be here',
-        myUrl: 'deleted URL',
-      });
+      var keeper = ceMenuModelService.newCeActionEntry('say massage', '');
+      keeper.deleteUrl = 'keeper';
+      keeper.myUrl = 'keeper URL';
+      var nokeeper = ceMenuModelService.newCeActionEntry('say massage', '');
+      nokeeper.deleteUrl = 'http:should not be here';
+      nokeeper.myUrl = 'deletedURL';
+
+      resources.uploads.push(keeper);
+      resources.uploads.push(nokeeper);
 
       AAMediaUploadService.resetResources();
 
-      expect(resources.uploads.length).toEqual(1);
-      expect(resources.uploads[0].myUrl).toEqual('keeper URL');
+      expect($http.delete).toHaveBeenCalledWith('http:should not be here');
+    });
+    it('should delete out the resources on aa save if are marked active as false', function () {
 
+      var resources = AAMediaUploadService.getResources('someId');
+
+      var nokeeper = ceMenuModelService.newCeActionEntry('say massage', '');
+      nokeeper.deleteUrl = 'http:should not be here';
+      nokeeper.myUrl = 'deletedURL';
+
+      resources.active = false;
+
+      resources.uploads.push(nokeeper);
+
+      AAMediaUploadService.saveResources();
+
+      expect($http.delete).toHaveBeenCalledWith('http:should not be here');
     });
   });
   describe('Notify', function () {

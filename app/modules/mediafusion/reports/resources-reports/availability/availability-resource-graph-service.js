@@ -41,7 +41,7 @@
     }
 
     function setAvailabilityGraph(data, availabilityChart, selectedCluster, cluster, daterange, Idmap) {
-      var tempData = angular.copy(data);
+      var tempData = _.cloneDeep(data);
       if (_.isUndefined(data.data[0].isDummy)) {
         var availabilityData = [];
         if (selectedCluster === vm.allClusters) {
@@ -82,9 +82,9 @@
       var legend;
       vm.dateSelected = daterange;
       if (selectedCluster === vm.allClusters) {
-        legend = angular.copy(vm.availabilityLegendAllcluster);
+        legend = _.cloneDeep(vm.availabilityLegendAllcluster);
       } else {
-        legend = angular.copy(vm.availabilityLegendCluster);
+        legend = _.cloneDeep(vm.availabilityLegendCluster);
       }
       if (!_.isUndefined(data.data[0].isDummy) && data.data[0].isDummy) {
         _.forEach(legend, function (value, key) {

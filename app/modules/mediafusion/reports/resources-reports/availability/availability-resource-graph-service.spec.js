@@ -21,7 +21,7 @@ describe('Service: Availability Resource GraphService', function () {
   var clusteravailabilityGraphData = getJSONFixture('mediafusion/json/metrics-graph-report/clusterAvailabilityGraphData.json');
   var clusteravailabilityData = getJSONFixture('mediafusion/json/metrics-graph-report/clusterAvailabilityData.json');
   var clusterNameMapping = getJSONFixture('mediafusion/json/metrics-graph-report/ParticipantDistributionGraphData.json');
-  var IdMap = angular.copy(clusterNameMapping.clusterIdToNameMap);
+  var IdMap = _.cloneDeep(clusterNameMapping.clusterIdToNameMap);
 
   beforeEach(angular.mock.module('Mediafusion'));
 

@@ -162,7 +162,7 @@
     }
 
     function updateSnr(snr) {
-      telephonyInfo.snrInfo = angular.copy(snr);
+      telephonyInfo.snrInfo = _.cloneDeep(snr);
       telephonyInfo.singleNumberReach = (telephonyInfo.snrInfo.singleNumberReachEnabled === true) ? 'On' : 'Off';
       $rootScope.$broadcast(broadcastEvent);
     }
@@ -194,7 +194,7 @@
         userId: user.id,
       }).$promise
         .then(function (remoteDestinationInfo) {
-          var snrInfo = angular.copy(telephonyInfo.snrInfo);
+          var snrInfo = _.cloneDeep(telephonyInfo.snrInfo);
           snrInfo.remoteDestinations = null;
           snrInfo.singleNumberReachEnabled = false;
           if (remoteDestinationInfo) {
@@ -306,7 +306,7 @@
     }
 
     function getInternalNumberPool() {
-      return angular.copy(internalNumberPool);
+      return _.cloneDeep(internalNumberPool);
     }
 
     function loadInternalNumberPool(pattern, limit) {
@@ -330,7 +330,7 @@
           }
           internalNumberPool = intNumPool;
 
-          return angular.copy(internalNumberPool);
+          return _.cloneDeep(internalNumberPool);
         }).catch(function (response) {
           internalNumberPool = [];
           return $q.reject(response);
@@ -338,7 +338,7 @@
     }
 
     function getExternalNumberPool() {
-      return angular.copy(externalNumberPool);
+      return _.cloneDeep(externalNumberPool);
     }
 
     function loadExternalNumberPool(pattern, numberType) {
@@ -368,7 +368,7 @@
           if (telephonyInfo.alternateDirectoryNumber.uuid !== 'none') {
             externalNumberPool.push(telephonyInfo.alternateDirectoryNumber);
           }
-          return angular.copy(externalNumberPool);
+          return _.cloneDeep(externalNumberPool);
         }).catch(function (response) {
           externalNumberPool = [];
           return $q.reject(response);
@@ -397,7 +397,7 @@
           return dn;
         });
         externalNumberPool = extNumPool;
-        return angular.copy(externalNumberPool);
+        return _.cloneDeep(externalNumberPool);
       }).catch(function (response) {
         externalNumberPool = [];
         return $q.reject(response);

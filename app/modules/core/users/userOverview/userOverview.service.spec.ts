@@ -16,13 +16,13 @@ describe('Service: UserOverviewService', () => {
       'ServiceSetup',
     );
 
-    this.pristineUser = angular.copy(getJSONFixture('core/json/currentUser.json'));
+    this.pristineUser = _.cloneDeep(getJSONFixture('core/json/currentUser.json'));
     this.updatedUser = _.cloneDeep(this.pristineUser);
-    this.$rootScope.services = angular.copy(getJSONFixture('squared/json/services.json'));
+    this.$rootScope.services = _.cloneDeep(getJSONFixture('squared/json/services.json'));
     this.isCIEnabledSiteSpy = spyOn(this.WebExUtilsFact, 'isCIEnabledSite').and.returnValue(true);
     this.isOnlineOrgSpy = spyOn(this.Auth, 'isOnlineOrg').and.returnValue(this.$q.resolve(false));
     this.SunlightConfigServiceSpy = spyOn(this.SunlightConfigService, 'getUserInfo').and.returnValue(this.$q.resolve());
-    this.languages = angular.copy(getJSONFixture('huron/json/settings/languages.json'));
+    this.languages = _.cloneDeep(getJSONFixture('huron/json/settings/languages.json'));
     this.ServiceSetupSpy = spyOn(this.ServiceSetup, 'getAllLanguages').and.returnValue(this.$q.resolve(this.languages));
 
     installPromiseMatchers();
@@ -233,7 +233,7 @@ describe('Service: UserOverviewService', () => {
 
       it('should set invitations object from Casandra effectiveLicenses', function () {
         this.updatedUser.entitlements = [];
-        this.updatedUser.roles = [this.Config.backend_roles.spark_synckms];
+        this.updatedUser.roles = [this.Config.backend_roles.spark_synckms, this.Config.backend_roles.ciscouc_ces];
         let promise = this.UserOverviewService.getUser('userid')
           .then((userData) => {
             expect(userData.user.entitlements).toHaveLength(0);

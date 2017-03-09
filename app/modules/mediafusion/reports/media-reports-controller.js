@@ -87,6 +87,8 @@
     vm.setMeetingLocationData = setMeetingLocationData;
     vm.setMeetingLocationCard = setMeetingLocationCard;
 
+    vm.cardFlipHandler = cardFlipHandler;
+
     vm.showAvailabilityTooltip = false;
     vm.showHostedOnPremTooltip = false;
 
@@ -98,6 +100,11 @@
     vm.numberOfMeetsOnPremiseschartOptions = {
       isShow: true,
       cardChartDiv: 'numberOfMeetsOnPremisesChartDiv',
+      noData: false,
+    };
+    vm.cloudParticipantschartOptions = {
+      isShow: true,
+      cardChartDiv: 'cloudParticipantsChartDiv',
       noData: false,
     };
 
@@ -118,6 +125,8 @@
       label: $translate.instant('mediaFusion.metrics.threeMonths'),
     }];
     vm.timeSelected = vm.timeOptions[0];
+
+    vm.isFlipped = false;
 
     setRefreshInterval();
     getCluster();
@@ -626,5 +635,14 @@
       vm.clusterSelected = selectedCluster;
       clusterUpdate();
     }
+
+    function cardFlipHandler() {
+      if (vm.isFlipped) {
+        vm.isFlipped = false;
+      } else {
+        vm.isFlipped = true;
+      }
+    }
+
   }
 })();

@@ -18,6 +18,15 @@ export interface IAvgRoomData extends IGraphBase {
   avgRooms: number | string;
 }
 
+export interface ICharts {
+  active: any | undefined;
+  rooms: any | undefined;
+  files: any | undefined;
+  media: any | undefined;
+  device: any | undefined;
+  metrics: any | undefined;
+}
+
 export interface IEndpointWrapper {
   deviceType: string;
   graph: Array<IEndpointData>;
@@ -86,4 +95,9 @@ export interface IMediaData extends IMediaQualityData {
   fairVideoQualityDurationSum: number;
   poorVideoQualityDurationSum: number;
   partialVideoSum: number;
+}
+
+export interface IMinMax {
+  min: number;
+  max: number;
 }

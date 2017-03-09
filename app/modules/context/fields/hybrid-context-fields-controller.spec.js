@@ -2,70 +2,67 @@
 
 describe('HybridContextFieldsCtrl', function () {
 
-  function initExternalDependencies() {
-    this.initModules('Context');
-    this.injectDependencies(
-      '$controller',
-      '$rootScope',
-      '$state',
-      '$q',
-      'ContextFieldsService',
-      'Notification',
-      'Log'
-    );
-    initDependencySpies.apply(this);
+  var $controller, $scope, $state, $q, controller, ContextFieldsService, Log, Notification;
+  var fakeGridApi = {
+    infiniteScroll: {
+      dataLoaded: jasmine.createSpy('dataLoaded'),
+      on: {
+        needLoadMoreData: jasmine.createSpy('needLoadMoreData'),
+      },
+    },
+    selection: {
+      on: {
+        rowSelectionChanged: function () {},
+      },
+    },
+  };
+
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Context'));
+
+  beforeEach(inject(dependencies));
+  beforeEach(initSpies);
+
+  afterAll(function () {
+    $controller = $scope = $state = $q = controller = ContextFieldsService = Log = Notification = fakeGridApi = undefined;
+  });
+
+  function dependencies($rootScope, _$controller_, _$q_, _$state_, _ContextFieldsService_, _Log_, _Notification_) {
+    $scope = $rootScope.$new();
+    $controller = _$controller_;
+    $q = _$q_;
+    $state = _$state_;
+    ContextFieldsService = _ContextFieldsService_;
+    Log = _Log_;
+    Notification = _Notification_;
   }
 
-  function initDependencySpies() {
-    spyOn(this.$state, 'go');
-    this.getFieldsSpy = spyOn(this.ContextFieldsService, 'getFields');
-    spyOn(this.Notification, 'error');
-    spyOn(this.Log, 'debug');
-
-    installPromiseMatchers();
+  function initSpies() {
+    spyOn($state, 'go');
+    spyOn(ContextFieldsService, 'getFields');
+    spyOn(Log, 'debug');
+    spyOn(Notification, 'error');
   }
 
   function initController() {
-    var _this = this;
-
-    this.$scope = this.$rootScope.$new();
-
-    this.ctrl = this.$controller('HybridContextFieldsCtrl', {
-      $scope: this.$scope,
-      $state: this.$state,
-      ContextFieldsService: this.ContextFieldsService,
+    var ctrl = $controller('HybridContextFieldsCtrl', {
+      $scope: $scope,
     });
-
-    spyOn(this.ctrl, 'initializeGrid').and.callFake(function () {
-       // mock gridApi
-      _this.$scope.gridApi = {
-        infiniteScroll: {
-          dataLoaded: jasmine.createSpy().and.returnValue(),
-        },
-      };
-      return _this.$q.resolve();
-    });
-
-    this.ctrl.init();
-    expect(this.$scope.load).toBeTruthy('load is not set as true initially');
-    this.$scope.$apply();
+    ctrl.gridOptions.onRegisterApi(fakeGridApi);
+    return ctrl;
   }
-
-  beforeEach(initExternalDependencies);
 
   describe('init controller', function () {
     it('should set the default value', function () {
-      this.getFieldsSpy.and.returnValue(this.$q.resolve([]));
-      initController.apply(this);
-      expect(this.$scope.load).toEqual(false);
+      ContextFieldsService.getFields.and.returnValue($q.resolve([]));
+      controller = initController();
+      expect(controller.load).toEqual(true);
     });
   });
 
-  describe('get field list options', function () {
+  describe('getFields()', function () {
     it('should set the gridOptions data correctly when one field list is resolved', function () {
-      var _this = this;
-
-      this.getFieldsSpy.and.returnValue(this.$q.resolve([{
+      ContextFieldsService.getFields.and.returnValue($q.resolve([{
         'classification': 'PII Encrypted',
         'dataType': 'String',
         'searchable': 'Yes',
@@ -76,74 +73,62 @@ describe('HybridContextFieldsCtrl', function () {
         'id': 'Agent_ID',
         'lastUpdated': '01/23/2017',
       }]));
-      initController.apply(this);
+      controller = initController();
+      $scope.$apply();
 
-      expect(this.$scope.load).toEqual(false);
-      var promise = this.$scope.getFieldList()
-        .then(function () {
-          expect(_this.$scope.fieldsList.allFields.length).toBe(1);
-        });
-      expect(promise).toBeResolved();
-      expect(this.$scope.load).toEqual(false);
-      expect(this.$scope.noSearchResults).toBeFalsy('noSearchResults is not false');
+      expect(controller.load).toEqual(false);
+      expect(controller.fieldsList.allFields.length).toBe(1);
+      expect(controller.noSearchResults).toBeFalsy('noSearchResults is not false');
     });
 
     it('should call Notification error and log debug message when the field list call fails', function () {
       var err = 'server error';
-      this.getFieldsSpy.and.returnValue(this.$q.reject(err));
-      initController.apply(this);
-      expect(this.Log.debug).toHaveBeenCalledWith('CS fields search failed. Status: ' + err);
-      expect(this.Notification.error).toHaveBeenCalledWith('context.dictionary.fieldPage.fieldReadFailed');
+      ContextFieldsService.getFields.and.returnValue($q.reject(err));
+      initController();
+      $scope.$apply();
+      expect(Log.debug).toHaveBeenCalledWith('CS fields search failed. Status: ' + err);
+      expect(Notification.error).toHaveBeenCalledWith('context.dictionary.fieldPage.fieldReadFailed');
     });
   });
 
-  describe('process fields', function () {
+  describe('processFieldList()', function () {
     it('should process field data when data returned is missing dataType', function () {
-      var _this = this;
-      this.getFieldsSpy.and.returnValue(this.$q.resolve([{
+      ContextFieldsService.getFields.and.returnValue($q.resolve([{
         'publiclyAccessible': false,
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'refUrl': '/dictionary/field/v1/id/NoDataType',
         'id': 'NoDataType',
         'lastUpdated': '2017-01-26T18:42:42.124Z',
       }]));
-      initController.apply(this);
-      var promise = this.$scope.getFieldList()
-        .then(function () {
-          expect(_this.$scope.fieldsList.allFields.length).toBe(1);
-          expect(_this.$scope.fieldsList.allFields[0].classification).toEqual('context.dictionary.fieldPage.unencrypted');
-          expect(_this.$scope.fieldsList.allFields[0].searchable).toEqual('common.yes');
-          expect(_this.$scope.fieldsList.allFields[0].publiclyAccessible).toEqual(false);
-          expect(_this.$scope.fieldsList.allFields[0].dataType).not.toExist();
-          expect(_this.$scope.fieldsList.allFields[0].lastUpdated).not.toBeNull();
-        });
-      expect(promise).toBeResolved();
+      controller = initController();
+      $scope.$apply();
+      expect(controller.fieldsList.allFields.length).toBe(1);
+      expect(controller.fieldsList.allFields[0].classification).toEqual('context.dictionary.fieldPage.unencrypted');
+      expect(controller.fieldsList.allFields[0].searchable).toEqual('common.yes');
+      expect(controller.fieldsList.allFields[0].publiclyAccessible).toEqual(false);
+      expect(controller.fieldsList.allFields[0].dataType).not.toExist();
+      expect(controller.fieldsList.allFields[0].lastUpdated).not.toBeNull();
     });
 
     it('should process field data when data returned is missing lastUpdated', function () {
-      var _this = this;
-      this.getFieldsSpy.and.returnValue(this.$q.resolve([{
+      ContextFieldsService.getFields.and.returnValue($q.resolve([{
         'publiclyAccessible': false,
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'refUrl': '/dictionary/field/v1/id/NoDataType',
         'id': 'NoDataType',
         'dataType': 'integer',
       }]));
-      initController.apply(this);
-      var promise = this.$scope.getFieldList()
-         .then(function () {
-           expect(_this.$scope.fieldsList.allFields.length).toBe(1);
-           expect(_this.$scope.fieldsList.allFields[0].classification).toEqual('context.dictionary.fieldPage.unencrypted');
-           expect(_this.$scope.fieldsList.allFields[0].searchable).toEqual('common.yes');
-           expect(_this.$scope.fieldsList.allFields[0].dataType).toEqual('Integer');
-           expect(_this.$scope.fieldsList.allFields[0].lastUpdated).not.toExist();
-         });
-      expect(promise).toBeResolved();
+      controller = initController();
+      $scope.$apply();
+      expect(controller.fieldsList.allFields.length).toBe(1);
+      expect(controller.fieldsList.allFields[0].classification).toEqual('context.dictionary.fieldPage.unencrypted');
+      expect(controller.fieldsList.allFields[0].searchable).toEqual('common.yes');
+      expect(controller.fieldsList.allFields[0].dataType).toEqual('Integer');
+      expect(controller.fieldsList.allFields[0].lastUpdated).not.toExist();
     });
 
     it('should process when data is encrypted, integer, searchable', function () {
-      var _this = this;
-      this.getFieldsSpy.and.returnValue(this.$q.resolve([{
+      ContextFieldsService.getFields.and.returnValue($q.resolve([{
         'description': 'Some description added for Test Integer',
         'classification': 'ENCRYPTED',
         'publiclyAccessible': false,
@@ -153,21 +138,17 @@ describe('HybridContextFieldsCtrl', function () {
         'id': 'TestInteger',
         'dataType': 'integer',
       }]));
-      initController.apply(this);
-      var promise = this.$scope.getFieldList()
-         .then(function () {
-           expect(_this.$scope.fieldsList.allFields.length).toBe(1);
-           expect(_this.$scope.fieldsList.allFields[0].classification).toEqual('context.dictionary.fieldPage.encrypted');
-           expect(_this.$scope.fieldsList.allFields[0].searchable).toEqual('common.yes');
-           expect(_this.$scope.fieldsList.allFields[0].dataType).toEqual('Integer');
-           expect(_this.$scope.fieldsList.allFields[0].lastUpdated).not.toExist();
-         });
-      expect(promise).toBeResolved();
+      controller = initController();
+      $scope.$apply();
+      expect(controller.fieldsList.allFields.length).toBe(1);
+      expect(controller.fieldsList.allFields[0].classification).toEqual('context.dictionary.fieldPage.encrypted');
+      expect(controller.fieldsList.allFields[0].searchable).toEqual('common.yes');
+      expect(controller.fieldsList.allFields[0].dataType).toEqual('Integer');
+      expect(controller.fieldsList.allFields[0].lastUpdated).not.toExist();
     });
 
     it('should process when data is unencrypted, boolean, missing searchable', function () {
-      var _this = this;
-      this.getFieldsSpy.and.returnValue(this.$q.resolve([{
+      ContextFieldsService.getFields.and.returnValue($q.resolve([{
         'description': 'Field for TestBoolean',
         'classification': 'UNENCRYPTED',
         'publiclyAccessible': false,
@@ -176,22 +157,18 @@ describe('HybridContextFieldsCtrl', function () {
         'id': 'TestBoolean',
         'dataType': 'boolean',
       }]));
-      initController.apply(this);
-      var promise = this.$scope.getFieldList()
-         .then(function () {
-           expect(_this.$scope.fieldsList.allFields.length).toBe(1);
-           expect(_this.$scope.fieldsList.allFields[0].classification).toEqual('context.dictionary.fieldPage.unencrypted');
-           expect(_this.$scope.fieldsList.allFields[0].searchable).toEqual('common.yes');
-           expect(_this.$scope.fieldsList.allFields[0].dataType).toEqual('Boolean');
-           expect(_this.$scope.fieldsList.allFields[0].description).toEqual('Field for TestBoolean');
-           expect(_this.$scope.fieldsList.allFields[0].lastUpdated).not.toExist();
-         });
-      expect(promise).toBeResolved();
+      controller = initController();
+      $scope.$apply();
+      expect(controller.fieldsList.allFields.length).toBe(1);
+      expect(controller.fieldsList.allFields[0].classification).toEqual('context.dictionary.fieldPage.unencrypted');
+      expect(controller.fieldsList.allFields[0].searchable).toEqual('common.yes');
+      expect(controller.fieldsList.allFields[0].dataType).toEqual('Boolean');
+      expect(controller.fieldsList.allFields[0].description).toEqual('Field for TestBoolean');
+      expect(controller.fieldsList.allFields[0].lastUpdated).not.toExist();
     });
 
     it('should process when data is PII, double', function () {
-      var _this = this;
-      this.getFieldsSpy.and.returnValue(this.$q.resolve([{
+      ContextFieldsService.getFields.and.returnValue($q.resolve([{
         'description': 'Field for TestDouble',
         'classification': 'PII',
         'publiclyAccessible': false,
@@ -201,21 +178,17 @@ describe('HybridContextFieldsCtrl', function () {
         'id': 'TestDouble',
         'dataType': 'double',
       }]));
-      initController.apply(this);
-      var promise = this.$scope.getFieldList()
-         .then(function () {
-           expect(_this.$scope.fieldsList.allFields.length).toBe(1);
-           expect(_this.$scope.fieldsList.allFields[0].classification).toEqual('context.dictionary.fieldPage.piiEncrypted');
-           expect(_this.$scope.fieldsList.allFields[0].searchable).toEqual('common.no');
-           expect(_this.$scope.fieldsList.allFields[0].dataType).toEqual('Double');
-           expect(_this.$scope.fieldsList.allFields[0].lastUpdated).not.toExist();
-         });
-      expect(promise).toBeResolved();
+      controller = initController();
+      $scope.$apply();
+      expect(controller.fieldsList.allFields.length).toBe(1);
+      expect(controller.fieldsList.allFields[0].classification).toEqual('context.dictionary.fieldPage.piiEncrypted');
+      expect(controller.fieldsList.allFields[0].searchable).toEqual('common.no');
+      expect(controller.fieldsList.allFields[0].dataType).toEqual('Double');
+      expect(controller.fieldsList.allFields[0].lastUpdated).not.toExist();
     });
 
     it('should process when data is missing classification, boolean, missing searchable', function () {
-      var _this = this;
-      this.getFieldsSpy.and.returnValue(this.$q.resolve([{
+      ContextFieldsService.getFields.and.returnValue($q.resolve([{
         'description': 'Field for NoClassification',
         'publiclyAccessible': false,
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
@@ -223,16 +196,13 @@ describe('HybridContextFieldsCtrl', function () {
         'id': 'NoClassification',
         'dataType': 'boolean',
       }]));
-      initController.apply(this);
-      var promise = this.$scope.getFieldList()
-         .then(function () {
-           expect(_this.$scope.fieldsList.allFields.length).toBe(1);
-           expect(_this.$scope.fieldsList.allFields[0].classification).toEqual('context.dictionary.fieldPage.unencrypted');
-           expect(_this.$scope.fieldsList.allFields[0].searchable).toEqual('common.yes');
-           expect(_this.$scope.fieldsList.allFields[0].dataType).toEqual('Boolean');
-           expect(_this.$scope.fieldsList.allFields[0].lastUpdated).not.toExist();
-         });
-      expect(promise).toBeResolved();
+      controller = initController();
+      $scope.$apply();
+      expect(controller.fieldsList.allFields.length).toBe(1);
+      expect(controller.fieldsList.allFields[0].classification).toEqual('context.dictionary.fieldPage.unencrypted');
+      expect(controller.fieldsList.allFields[0].searchable).toEqual('common.yes');
+      expect(controller.fieldsList.allFields[0].dataType).toEqual('Boolean');
+      expect(controller.fieldsList.allFields[0].lastUpdated).not.toExist();
     });
   });
 });

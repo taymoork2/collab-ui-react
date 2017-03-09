@@ -282,7 +282,7 @@
         function (response) {
           if (response.hits.hits.length > 0) {
             vm.events = formatEventsResponse(response);
-            vm.huronEvents = angular.copy(vm.events);
+            vm.huronEvents = _.cloneDeep(vm.events);
             $rootScope.$broadcast('event-query-resolved');
           } else {
             vm.error = 'Response was undefined';

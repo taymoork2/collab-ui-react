@@ -45,7 +45,7 @@
 
     function formatServiceAddress(_address) {
       // copy address for manipulation
-      var address = angular.copy(_address);
+      var address = _.cloneDeep(_address);
       var streetAddressArray = _.get(address, 'streetAddress', '').split(/\s+/);
       address.number = _.head(streetAddressArray);
       address.street = _.tail(streetAddressArray).join(' ');

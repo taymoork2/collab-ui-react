@@ -36,7 +36,7 @@ describe('Directive: aaScheduleInfo', function () {
 
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
     spyOn(AACalendarService, 'readCalendar').and.returnValue($q.resolve());
-    spyOn(AAICalService, 'getHoursRanges').and.returnValue($q.resolve(angular.copy(openHours)));
+    spyOn(AAICalService, 'getHoursRanges').and.returnValue($q.resolve(_.cloneDeep(openHours)));
     $scope.schedule = schedule;
   }));
 

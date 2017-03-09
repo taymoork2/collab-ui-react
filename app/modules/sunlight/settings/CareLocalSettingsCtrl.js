@@ -6,32 +6,45 @@
     .controller('CareLocalSettingsCtrl', CareLocalSettingsCtrl);
 
   /* @ngInject */
-  function CareLocalSettingsCtrl($interval, $scope, $translate, Authinfo, Log, Notification, SunlightConfigService) {
+  function CareLocalSettingsCtrl($interval, $q, $scope, $translate, Authinfo, Log, Notification, SunlightConfigService) {
     var vm = this;
 
     vm.ONBOARDED = 'onboarded';
     vm.NOT_ONBOARDED = 'notOnboarded';
     vm.IN_PROGRESS = 'inProgress';
 
-    vm.ONBOARD_STATUS_UNKNOWN = 'Unknown';
-    vm.ONBOARD_STATUS_PENDING = 'Pending';
-    vm.ONBOARD_STATUS_SUCCESS = 'Success';
-    vm.ONBOARD_STATUS_FAILURE = 'Failure';
-    vm.csOnboardingStatus = vm.ONBOARD_STATUS_UNKNOWN;
-    vm.aaOnboardingStatus = vm.ONBOARD_STATUS_UNKNOWN;
+    vm.status = {
+      UNKNOWN: 'Unknown',
+      PENDING: 'Pending',
+      SUCCESS: 'Success',
+      FAILURE: 'Failure',
+    };
+
+    vm.csOnboardingStatus = vm.status.UNKNOWN;
+    vm.aaOnboardingStatus = vm.status.UNKNOWN;
 
     vm.state = vm.ONBOARDED;
     vm.errorCount = 0;
 
     vm.onboardToCare = function () {
-      if (vm.csOnboardingStatus !== vm.ONBOARD_STATUS_SUCCESS) {
-        SunlightConfigService.onBoardCare();
-      }
-      if (Authinfo.isCareVoice() && vm.aaOnboardingStatus !== vm.ONBOARD_STATUS_SUCCESS) {
-        SunlightConfigService.aaOnboard();
-      }
       vm.state = vm.IN_PROGRESS;
-      startPolling();
+
+      var promises = {};
+      if (vm.csOnboardingStatus !== vm.status.SUCCESS) {
+        promises.onBoardCS = SunlightConfigService.onBoardCare();
+      }
+      if (Authinfo.isCareVoice() && vm.aaOnboardingStatus !== vm.status.SUCCESS) {
+        promises.onBoardAA = SunlightConfigService.aaOnboard();
+      }
+
+      $q.all(promises).then(function (results) {
+        Log.debug('Care onboarding is success', results);
+        startPolling();
+      }, function (error) {
+        vm.state = vm.NOT_ONBOARDED;
+        Log.error('Care onboarding failed with error', error);
+        Notification.errorWithTrackingId(error, $translate.instant('firstTimeWizard.setUpCareFailure'));
+      });
     };
 
     var poller;
@@ -62,12 +75,12 @@
       SunlightConfigService.getChatConfig().then(function (result) {
         var onboardingStatus = getOnboardingStatus(result);
         switch (onboardingStatus) {
-          case vm.ONBOARD_STATUS_SUCCESS:
+          case vm.status.SUCCESS:
             Notification.success($translate.instant('sunlightDetails.settings.setUpCareSuccess'));
             vm.state = vm.ONBOARDED;
             stopPolling();
             break;
-          case vm.ONBOARD_STATUS_FAILURE:
+          case vm.status.FAILURE:
             Notification.errorWithTrackingId(result, $translate.instant('sunlightDetails.settings.setUpCareFailure'));
             vm.state = vm.NOT_ONBOARDED;
             stopPolling();
@@ -100,9 +113,9 @@
       var onboardingStatus = vm.csOnboardingStatus;
       if (Authinfo.isCareVoice()) {
         // to give priority to pending status
-        if (vm.aaOnboardingStatus == vm.ONBOARD_STATUS_PENDING) {
-          onboardingStatus = vm.ONBOARD_STATUS_PENDING;
-        } else if (onboardingStatus === vm.ONBOARD_STATUS_SUCCESS) {
+        if (vm.aaOnboardingStatus == vm.status.PENDING) {
+          onboardingStatus = vm.status.PENDING;
+        } else if (onboardingStatus === vm.status.SUCCESS) {
           onboardingStatus = vm.aaOnboardingStatus;
         }
       }
@@ -113,11 +126,11 @@
       SunlightConfigService.getChatConfig().then(function (result) {
         var onboardingStatus = getOnboardingStatus(result);
         switch (onboardingStatus) {
-          case vm.ONBOARD_STATUS_PENDING:
+          case vm.status.PENDING:
             vm.state = vm.IN_PROGRESS;
             startPolling();
             break;
-          case vm.ONBOARD_STATUS_SUCCESS:
+          case vm.status.SUCCESS:
             vm.state = vm.ONBOARDED;
             break;
           default:

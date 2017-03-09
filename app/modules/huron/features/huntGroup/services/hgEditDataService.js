@@ -63,7 +63,7 @@
 
     function setPristine(updatedHG) {
       updateAllTimeoutFields(updatedHG);
-      pristineHGData = angular.copy(updatedHG);
+      pristineHGData = _.cloneDeep(updatedHG);
     }
 
     function updateAllTimeoutFields(updatedHG) {
@@ -101,7 +101,7 @@
     }
 
     function getPristine() {
-      return angular.copy(pristineHGData);
+      return _.cloneDeep(pristineHGData);
     }
 
     function isFallbackDirty() {

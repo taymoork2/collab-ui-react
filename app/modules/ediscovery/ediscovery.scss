@@ -5,6 +5,11 @@
   overflow-x: hidden; // Remove horizontal IE/Edge scrollbar
   min-height: 100vh;
 
+  .ediscovery-logo {
+    width: 48px;
+    margin-left: 29px;
+  }
+
   a:focus {
     box-shadow: none;
   }
@@ -157,6 +162,10 @@
 
         .cs-input {
           width: 100%;
+        }
+
+        .query-validation {
+          margin-top: 0;
         }
 
         .cs-datapicker-normal {
@@ -352,7 +361,7 @@
           padding-top: 0px;
           padding-bottom: 0px;
         }
-        
+
         .report-title {
           font-family: 'CiscoSans';
           font-size: 16px;
@@ -387,10 +396,6 @@
           .results-spacing {
             margin-top: 16px;
           }
-        }
-
-        .summary-header {
-          padding-left: 30px;
         }
 
         .reportError {

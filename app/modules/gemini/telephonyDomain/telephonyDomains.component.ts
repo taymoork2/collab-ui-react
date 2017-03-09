@@ -72,6 +72,16 @@ class TelephonyDomains implements ng.IComponentController {
     });
   }
 
+  public showDetail(item) {
+    let info = {
+      tds: this.gridData_,
+      customerId: this.customerId,
+      ccaDomainId: item.ccaDomainId,
+      domainName: item.domainName,
+    };
+    this.$state.go('gmTdDetails', { info: info });
+  }
+
   private initParameters(): void {
     if (!this.customerId) {
       let customerId = this.gemService.getStorage('gmCustomerId');
@@ -142,7 +152,7 @@ class TelephonyDomains implements ng.IComponentController {
     }, {
       field: 'customerAttribute',
       cellTooltip: true,
-      displayName: this.$translate.instant('gemini.tds.field.description'),
+      displayName: this.$translate.instant('gemini.tds.field.partnerTdName'),
     }];
 
     this.gridOptions = {
@@ -155,6 +165,9 @@ class TelephonyDomains implements ng.IComponentController {
       enableRowHeaderSelection: false,
       onRegisterApi: (gridApi) => {
         this.$scope.gridApi = gridApi;
+        gridApi.selection.on.rowSelectionChanged(this.$scope, (row) => {
+          this.showDetail(row.entity);
+        });
       },
     };
   }

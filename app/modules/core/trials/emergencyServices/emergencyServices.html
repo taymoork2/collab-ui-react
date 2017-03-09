@@ -3,20 +3,18 @@
     <h4 class="section__title" translate="trialModal.pstn.esa"></h4>
     <h6 class="section__description" translate="trialModal.pstn.esaDesc"></h6>
   </div>
-  <div class="section__content">
-      <hr-service-address hide-search="true" country-code="$ctrl.countryCode" hide-address="true" class="columns row full large-form" address="$ctrl.address" country-code="$ctrl.countryCode" read-only="$ctrl.readOnly"></hr-service-address>
-  </div>
-</div>
-<div class="cs-form__section center">
-  <div class="cs-form__content" ng-show="$ctrl.validation === true">
-    <div class="text-center" ng-show="$ctrl.addressLoading">
-      <i class="icon icon-spinner icon-2x text-center"></i>
-    </div>
-    <div ng-show="$ctrl.addressFound">
-      <h6 translate="trialModal.pstn.addrFound"></h6>
-      <h5>{{$ctrl.address.streetAddress}} {{$ctrl.address.unit}}</h5>
-      <h5>{{$ctrl.address.city}}, {{$ctrl.address.state}}, {{$ctrl.address.zip}}</h5>
-      <a href="" class="primary" ng-click="$ctrl.resetAddr()" translate="trialModal.pstn.addrRetry"></a>
+  <div class="section__content" >
+    <hr-service-address ng-show="$ctrl.validation !== true" hide-search="true" country-code="$ctrl.countryCode" hide-address="true" class="columns row full large-form" address="$ctrl.address" country-code="$ctrl.countryCode" read-only="$ctrl.readOnly"></hr-service-address>
+    <div ng-show="$ctrl.validation === true">
+      <div class="text-center" ng-show="$ctrl.addressLoading">
+        <i class="icon icon-spinner icon-2x text-center"></i>
+      </div>
+      <div ng-show="$ctrl.addressFound">
+        <h6 translate="trialModal.pstn.addrFound"></h6>
+        <h5>{{$ctrl.address.streetAddress}} {{$ctrl.address.unit}}</h5>
+        <h5>{{$ctrl.address.city}}, {{$ctrl.address.state}}, {{$ctrl.address.zip}}</h5>
+        <a href="" class="primary" ng-click="$ctrl.resetAddr()" translate="trialModal.pstn.addrRetry"></a>
+      </div>
     </div>
   </div>
 </div>

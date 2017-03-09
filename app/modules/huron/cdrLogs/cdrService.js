@@ -102,7 +102,7 @@
       }
       cancelPromise = $q.defer();
       currentJob = Math.random();
-      var thisJob = angular.copy(currentJob);
+      var thisJob = _.cloneDeep(currentJob);
 
       var startTimeUtc = formDate(model.startDate, model.startTime);
       var endTimeUtc = formDate(model.endDate, model.endTime);
@@ -157,7 +157,7 @@
           jsQuery += '}}} },"size": ' + model.hitSize + ',"sort": [{"@timestamp": {"order": "desc"}}]}';
           var results = [];
 
-          var callingPromise = proxy(jsQuery, angular.copy(thisJob)).then(function (response) {
+          var callingPromise = proxy(jsQuery, _.cloneDeep(thisJob)).then(function (response) {
             if (!_.isUndefined(response.hits.hits) && (response.hits.hits.length > 0)) {
               for (var i = 0; i < response.hits.hits.length; i++) {
                 results.push(response.hits.hits[i]._source);

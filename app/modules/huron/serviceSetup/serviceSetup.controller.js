@@ -1241,7 +1241,7 @@
           delete vm.model.site.voicemailPilotNumber;
         }
 
-        var currentSite = angular.copy(site);
+        var currentSite = _.cloneDeep(site);
         currentSite.timeZone = currentSite.timeZone.id;
         currentSite.preferredLanguage = currentSite.preferredLanguage.value;
         currentSite.country = currentSite.country.value;

@@ -188,4 +188,5 @@ module.exports = {
   huronNetworkLocaleMX: 'huron-l10n-network-locale-mx',
   enterprisePrivateTrunk: 'enterprise-private-trunk',
   huroncfnatimer: 'huron-cfna-timer',
+  atlasHybridCucmSupport: 'atlas-hybrid-cucm-support',
 };

@@ -9,7 +9,8 @@
   background-color: $brand-white;
   overflow-x: hidden; // Remove horizontal IE/Edge scrollbar
   .top-bar {
-    .btn--history, .btn--sparkstatus {
+    .btn--history,
+    .btn--sparkstatus {
       border-left: 1px solid $gray-light !important;
     }
 
@@ -52,7 +53,8 @@
   }
 
   .helpdesk-details {
-    h3, .h3 {
+    h3,
+    .h3 {
       color: $gray-dark-4;
       margin-bottom: 1rem;
       word-wrap: break-word;
@@ -632,7 +634,7 @@
 
   .hybrid-service-section {
     border-bottom: 1px solid $gray-light-2;
-    margin-top: 1.0rem;
+    margin-top: 1rem;
     &:last-child {
       border-bottom: 0;
     }

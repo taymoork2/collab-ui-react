@@ -142,8 +142,8 @@ describe('Controller: AASubmenuCtrl', function () {
 
   describe('deleteKeyAction', function () {
     it('should delete an existing keyAction object from the selectedActions array', function () {
-      controller.selectedActions = angular.copy(data.selectedActions);
-      controller.menuEntry = angular.copy(data.ceMenu);
+      controller.selectedActions = _.cloneDeep(data.selectedActions);
+      controller.menuEntry = _.cloneDeep(data.ceMenu);
       controller.deleteKeyAction(0);
       expect(controller.selectedActions.length).toEqual(1);
       expect(controller.selectedActions[0]).toEqual(data.oneSelectedAction);
@@ -152,8 +152,8 @@ describe('Controller: AASubmenuCtrl', function () {
 
   describe('keyChanged', function () {
     it('should change the key for an existing action', function () {
-      controller.menuEntry = angular.copy(data.ceMenu);
-      controller.selectedActions = angular.copy(data.selectedActions);
+      controller.menuEntry = _.cloneDeep(data.ceMenu);
+      controller.selectedActions = _.cloneDeep(data.selectedActions);
       var newKey = '3';
       controller.keyChanged(0, newKey);
       expect(controller.selectedActions[0].key).toEqual(newKey);
@@ -162,7 +162,7 @@ describe('Controller: AASubmenuCtrl', function () {
 
   describe('keyActionChanged', function () {
     it('should write Repeat-this-Menu action to the model', function () {
-      var ceMenu = angular.copy(data.ceMenu);
+      var ceMenu = _.cloneDeep(data.ceMenu);
       var expectEntry = raw2MenuEntry(ceMenu.entries[0]);
       var phoneMenu = {
         "type": "MENU_OPTION",
@@ -180,7 +180,7 @@ describe('Controller: AASubmenuCtrl', function () {
     });
 
     it('should change Repeat-Menu to Dial-by-Extension action in the model', function () {
-      var ceMenu = angular.copy(data.ceMenu);
+      var ceMenu = _.cloneDeep(data.ceMenu);
       var expectEntry = raw2MenuEntry(ceMenu.entries[0]);
       var expectEntry2 = raw2MenuEntry(ceMenu.entries[1]);
       var phoneMenu = {
@@ -202,7 +202,7 @@ describe('Controller: AASubmenuCtrl', function () {
     });
 
     it('should change Repeat-Menu to Go Back action in the model', function () {
-      var ceMenu = angular.copy(data.ceMenu);
+      var ceMenu = _.cloneDeep(data.ceMenu);
       var expectEntry = raw2MenuEntry(ceMenu.entries[0]);
       var expectEntry2 = raw2MenuEntry(ceMenu.entries[0]);
       expectEntry2.actions[0].level = -1;
@@ -226,8 +226,8 @@ describe('Controller: AASubmenuCtrl', function () {
     });
 
     it('should successfully change a Say-Message button to a Route-To-User button', function () {
-      var ceMenuWithSay = angular.copy(data.ceMenuWithSay);
-      var ceMenuWithRouteToUser = angular.copy(data.ceMenuWithRouteToUser);
+      var ceMenuWithSay = _.cloneDeep(data.ceMenuWithSay);
+      var ceMenuWithRouteToUser = _.cloneDeep(data.ceMenuWithRouteToUser);
       var phoneMenuEntry = raw2MenuEntry(ceMenuWithSay.entries[0]);
       var expectEntry = raw2MenuEntry(ceMenuWithRouteToUser.entries[0]);
       var phoneMenu = {

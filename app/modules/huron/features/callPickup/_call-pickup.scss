@@ -26,7 +26,7 @@ $overlay-panel-height: 93px;
   }
 }
 
-.callpickup .overlay-panel .cs-card-layout{
+.callpickup .overlay-panel .cs-card-layout {
   height: 16rem !important;
   @include vr-spacing(ml, 28.5, 0px, true);
   @include vr-spacing(pb, 1);
@@ -76,11 +76,13 @@ $overlay-panel-height: 93px;
       border-top: solid rem(1px) $color-negative-base;
     }
   }
+}
 
+#memberInput {
   .dropdown-menu {
     span {
       &.disabled {
-          color: $gray-light-1;
+        color: $gray-light-1;
       }
     }
     .active {

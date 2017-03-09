@@ -292,7 +292,7 @@ describe('Service: AAValidationService', function () {
       aaModel.aaRecords = [];
       ui = {};
       ui.isOpenHours = true;
-      ui.openHours = angular.copy(data.combinedMenu);
+      ui.openHours = _.cloneDeep(data.combinedMenu);
 
     });
 
@@ -598,7 +598,7 @@ describe('Service: AAValidationService', function () {
 
     it('report validation error for an empty Route to Phone Number target Closed Hours', function () {
       ui.isClosedHours = true;
-      ui.closedHours = angular.copy(data.combinedMenu);
+      ui.closedHours = _.cloneDeep(data.combinedMenu);
 
       var uiPhoneMenu = ui.closedHours.entries[0];
       var uiKey2 = uiPhoneMenu.entries[5];
@@ -623,7 +623,7 @@ describe('Service: AAValidationService', function () {
       expect(valid).toEqual(true);
       expect(AANotificationService.error).not.toHaveBeenCalled();
 
-      /* var uiCombinedMenu = angular.copy(data.combinedMenu);
+      /* var uiCombinedMenu = _.cloneDeep(data.combinedMenu);
        var uiPhoneMenu = uiCombinedMenu.entries[0];
        var uiKey2 = uiPhoneMenu.entries[6];
        uiKey2.actions[0].value = "Test Queue";
@@ -634,7 +634,7 @@ describe('Service: AAValidationService', function () {
 
     it('report 2 validation error for an empty Route to Phone Number target Closed/Open Hours', function () {
       ui.isClosedHours = true;
-      ui.closedHours = angular.copy(data.combinedMenu);
+      ui.closedHours = _.cloneDeep(data.combinedMenu);
 
       var uiPhoneMenu = ui.closedHours.entries[0];
       var uiKey2 = uiPhoneMenu.entries[5];
@@ -671,7 +671,7 @@ describe('Service: AAValidationService', function () {
 
     it('report 3 validation error for an empty Route to Phone Number target Closed/Open/Holiday Hours', function () {
       ui.isClosedHours = true;
-      ui.closedHours = angular.copy(data.combinedMenu);
+      ui.closedHours = _.cloneDeep(data.combinedMenu);
 
       var uiPhoneMenu = ui.closedHours.entries[0];
       var uiKey2 = uiPhoneMenu.entries[5];
@@ -682,7 +682,7 @@ describe('Service: AAValidationService', function () {
       uiKey2.actions[0].value = "";
 
       ui.isHolidays = true;
-      ui.holidays = angular.copy(data.combinedMenu);
+      ui.holidays = _.cloneDeep(data.combinedMenu);
 
       spyOn(AACommonService, 'getInvalid').and.returnValue(false);
 
@@ -705,13 +705,13 @@ describe('Service: AAValidationService', function () {
       aaModel.aaRecords = [];
       ui = {};
       ui.isOpenHours = true;
-      ui.openHours = angular.copy(data.combinedMenu);
+      ui.openHours = _.cloneDeep(data.combinedMenu);
 
     });
 
     it('report success for a Route Call Route with a VoiceMail target', function () {
       ui.isOpenHours = true;
-      ui.openHours = angular.copy(welcomeMenu.welcomeMenu);
+      ui.openHours = _.cloneDeep(welcomeMenu.welcomeMenu);
 
       var routeTo = _.find(ui.openHours.entries, function (entry) {
         return entry.actions[0].name === 'routeToVoiceMail';
@@ -728,7 +728,7 @@ describe('Service: AAValidationService', function () {
 
     it('report success and ignore Say Message without a value', function () {
       ui.isOpenHours = true;
-      ui.openHours = angular.copy(welcomeMenu.welcomeMenu);
+      ui.openHours = _.cloneDeep(welcomeMenu.welcomeMenu);
 
       var sayMsg = _.find(ui.openHours.entries, function (entry) {
         return entry.actions[0].name === 'say';
@@ -745,7 +745,7 @@ describe('Service: AAValidationService', function () {
 
     it('report 1 validation error for an empty Route Call Route to VoiceMail target', function () {
       ui.isOpenHours = true;
-      ui.openHours = angular.copy(welcomeMenu.welcomeMenu);
+      ui.openHours = _.cloneDeep(welcomeMenu.welcomeMenu);
 
       var routeTo = _.find(ui.openHours.entries, function (entry) {
         return entry.actions[0].name === 'routeToVoiceMail';
@@ -763,7 +763,7 @@ describe('Service: AAValidationService', function () {
 
     it('report 1 validation error for an empty Route Call Route to User target', function () {
       ui.isOpenHours = true;
-      ui.openHours = angular.copy(welcomeMenu.welcomeMenu);
+      ui.openHours = _.cloneDeep(welcomeMenu.welcomeMenu);
 
       var routeTo = _.find(ui.openHours.entries, function (entry) {
         return entry.actions[0].name === 'routeToUser';
@@ -782,7 +782,7 @@ describe('Service: AAValidationService', function () {
 
     it('report 1 validation error for an empty Route Call Route to Hunt Group target', function () {
       ui.isOpenHours = true;
-      ui.openHours = angular.copy(welcomeMenu.welcomeMenu);
+      ui.openHours = _.cloneDeep(welcomeMenu.welcomeMenu);
 
       var routeTo = _.find(ui.openHours.entries, function (entry) {
         return entry.actions[0].name === 'routeToHuntGroup';
@@ -800,7 +800,7 @@ describe('Service: AAValidationService', function () {
 
     it('report 1 validation error for an empty Route Call Route to Auto Attendant target', function () {
       ui.isOpenHours = true;
-      ui.openHours = angular.copy(welcomeMenu.welcomeMenu);
+      ui.openHours = _.cloneDeep(welcomeMenu.welcomeMenu);
 
       var routeTo = _.find(ui.openHours.entries, function (entry) {
         return entry.actions[0].name === 'goto';
@@ -818,7 +818,7 @@ describe('Service: AAValidationService', function () {
 
     it('report 1 validation error for an empty Route Call Route to Phone Number target', function () {
       ui.isOpenHours = true;
-      ui.openHours = angular.copy(welcomeMenu.welcomeMenu);
+      ui.openHours = _.cloneDeep(welcomeMenu.welcomeMenu);
 
       var routeTo = _.find(ui.openHours.entries, function (entry) {
         return entry.actions[0].name === 'route';
@@ -840,7 +840,7 @@ describe('Service: AAValidationService', function () {
       spyOn(AACommonService, 'getInvalid').and.returnValue(false);
 
       ui.isOpenHours = true;
-      ui.openHours = angular.copy(welcomeMenu.welcomeMenu);
+      ui.openHours = _.cloneDeep(welcomeMenu.welcomeMenu);
 
       var routeTo = _.find(ui.openHours.entries, function (entry) {
         return entry.actions[0].name === 'route';
@@ -857,7 +857,7 @@ describe('Service: AAValidationService', function () {
 
     it('report 5 validation error for an empty Route Call target', function () {
       ui.isOpenHours = true;
-      ui.openHours = angular.copy(welcomeMenu.welcomeMenu);
+      ui.openHours = _.cloneDeep(welcomeMenu.welcomeMenu);
 
       var routeTo = _.find(ui.openHours.entries, function (entry) {
         return entry.actions[0].name === 'route';

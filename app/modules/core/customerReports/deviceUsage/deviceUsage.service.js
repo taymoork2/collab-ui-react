@@ -12,7 +12,6 @@
     var localUrlBase = 'http://berserk.rd.cisco.com:8080/atlas-server/admin/api/v1/organization';
 
     var csdmUrlBase = UrlConfig.getCsdmServiceUrl() + '/organization';
-    var csdmUrl = csdmUrlBase + '/' + Authinfo.getOrgId() + '/places/';
 
     function getDataForRange(start, end, granularity, deviceCategories, models, api) {
       var startDate = moment(start);
@@ -279,16 +278,24 @@
 
     function resolveDeviceData(devices) {
       var promises = [];
+
       _.each(devices, function (device) {
-        promises.push(cancelableHttpGET(csdmUrl + device.accountId)
+        var csdmUrl = csdmUrlBase + '/' + Authinfo.getOrgId() + '/places/';
+        promises.push(cancelableHttpGET(csdmUrl + device.accountId + '?shallow=true')
           .then(function (res) {
             return res.data;
           })
-          .catch(function () {
+          .catch(function (err) {
             //$log.info("Problems resolving device", err);
+            var infoText = "";
+            if (err.status === -1) {
+              infoText = $translate.instant('reportsPage.usageReports.timeoutWhenTryingToResolveNameFor') + " device id=" + device.accountId;
+            } else {
+              infoText = $translate.instant('reportsPage.usageReports.nameNotFoundFor') + " device id=" + device.accountId;
+            }
             return {
-              "displayName": $translate.instant('reportsPage.usageReports.nameNotFoundFor') + " id=" + device.accountId,
-              "info": $translate.instant('reportsPage.usageReports.nameNotFoundFor') + " device id=" + device.accountId,
+              "displayName": $translate.instant('reportsPage.usageReports.nameNotResolvedFor') + " id=" + device.accountId,
+              "info": infoText,
             };
           })
         );
