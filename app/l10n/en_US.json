@@ -4698,7 +4698,8 @@
         "uc": "UC",
         "unknown": "Unknown",
         "windows": "Windows Mobile"
-      }
+      },
+      "clientTypeCardDesc": "Summary of the type of clients that are in use at an Organization"
     },
     "deleteGroup": {
       "message": "Are you sure you want to delete {{groupName}} from Cisco Collaboration Cloud?",

@@ -208,7 +208,7 @@
         } else if (value.title === 'CLOUD') {
           value.balloonText = '<span class="graph-text">' + vm.cloudHeading + ' ' + '<span class="graph-number">[[value]]</span></span>';
         } else if (value.title === 'HYBRID') {
-          value.balloonText = '<span class="graph-text">' + value.hybridHeading + ' ' + '<span class="graph-number">[[value]]</span></span>';
+          value.balloonText = '<span class="graph-text">' + vm.hybridHeading + ' ' + '<span class="graph-number">[[value]]</span></span>';
         } else {
           value.balloonText = '<span class="graph-text">' + value.title + ' ' + '<span class="graph-number">[[value]]</span></span>';
         }
