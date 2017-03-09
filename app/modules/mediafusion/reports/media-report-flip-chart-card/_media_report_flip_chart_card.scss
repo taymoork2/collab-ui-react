@@ -1,5 +1,5 @@
 .flip .card.flipped {
-  transform: rotatey(-180deg);
+  transform: rotateY(-180deg);
 }
 .flip .card {
   width: 100%;
@@ -18,12 +18,11 @@
 }
 .flip .card .front {
   z-index: 1;
-  position:relative;
+  position: relative;
   width: 100%;
   min-height: 206px;
   background-color: #fff;
   border-radius: 2px;
-  box-shadow: 0 1px 2px 1px rgba(52,53,55,.18);
   color: #6a6b6c;
   display: -ms-flexbox;
   display: flex;
@@ -32,13 +31,12 @@
   outline: none;
 }
 .flip .card .back {
-  transform: rotatey(-180deg);
-  position:relative;
+  transform: rotateY(-180deg);
+  position: relative;
   width: 100%;
   min-height: 206px;
   background-color: #fff;
   border-radius: 2px;
-  box-shadow: 0 1px 2px 1px rgba(52,53,55,.18);
   color: #6a6b6c;
   display: -ms-flexbox;
   display: flex;

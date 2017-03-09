@@ -11,11 +11,9 @@
 .media-reports {
   @extend %content-subheader;
   @extend %page-content-padding;
-
   .media-reports-container {
     padding: 0.55rem 0.9rem !important;
   }
-
   .reports-select-filter {
     width: rem-calc(220);
     margin-left: 30px;
