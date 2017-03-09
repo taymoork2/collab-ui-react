@@ -1,0 +1,61 @@
+@import 'styles/toolkit/colors';
+@import 'styles/toolkit/fonts';
+@import 'styles/toolkit/spacing';
+
+.context-fields-sidepanel {
+  .section-wrapper {
+    margin-top: 24px;
+  }
+
+  textarea {
+    resize: none;
+  }
+
+  .token {
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-family: $brand-font-cisco-TT-Light;
+    background-color: $gray-light-3;
+    padding: 0px 7px;
+    border-radius: 4px;
+  }
+
+  .associated-fieldsets {
+    i {
+      font-size: 18px;
+      margin-right: 5px;
+      vertical-align: middle;
+      color: $color-negative-base;
+    }
+    .failure-message {
+      font-family: $brand-font-cisco-TT-Light-Oblique;
+      font-style: italic;
+      font-size: 14px;
+      color: $color-negative-base;
+    }
+    .retry-action {
+      font-family: $brand-font-cisco-TT-Regular-Oblique;
+      font-style: italic;
+      font-size: 14px;
+      color: $color-primary-base;
+      background: none;
+      padding: 0;
+      min-width: 0;
+    }
+    .retry-action:focus {
+      outline: none;
+      box-shadow: none;
+    }
+    .retry-action:disabled {
+      color: $gray-base;
+    }
+  }
+
+  .tooltip[popup-class="cluster-name"] .c-nub {
+    font-size: small;
+    white-space: normal;
+    max-width: 300px;
+  }
+}

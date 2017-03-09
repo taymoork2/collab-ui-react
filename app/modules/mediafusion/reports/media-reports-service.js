@@ -13,6 +13,21 @@
     vm.onPremisesHeading = $translate.instant('mediaFusion.metrics.onPremisesHeading');
     vm.cloudHeading = $translate.instant('mediaFusion.metrics.cloudHeading');
     vm.hybridHeading = $translate.instant('mediaFusion.metrics.hybridHeading');
+    vm.clientTypeTranMap = {
+      'ANDRIOID': $translate.instant('mediaFusion.metrics.clientType.android'),
+      'BLACKBERRY': $translate.instant('mediaFusion.metrics.clientType.blackberry'),
+      'DESKTOP': $translate.instant('mediaFusion.metrics.clientType.desktop'),
+      'IPAD': $translate.instant('mediaFusion.metrics.clientType.ipad'),
+      'IPHONE': $translate.instant('mediaFusion.metrics.clientType.iphone'),
+      'JABBER': $translate.instant('mediaFusion.metrics.clientType.jabber'),
+      'SIP': $translate.instant('mediaFusion.metrics.clientType.sip'),
+      'SPARK_BOARD': $translate.instant('mediaFusion.metrics.clientType.board'),
+      'TEST': $translate.instant('mediaFusion.metrics.clientType.test'),
+      'TP_ENDPOINT': $translate.instant('mediaFusion.metrics.clientType.tp'),
+      'UC': $translate.instant('mediaFusion.metrics.clientType.uc'),
+      'UNKNOWN': $translate.instant('mediaFusion.metrics.clientType.unknown'),
+      'WINDOWS_MOBILE': $translate.instant('mediaFusion.metrics.clientType.windows'),
+    };
 
     function adjustLineGraphData(activeData, returnData, startTime, endTime, graphs) {
       var returnDataArray = [];
@@ -81,6 +96,13 @@
           val.color = '#84b761';
           val.name = vm.hybridHeading;
         }
+      });
+      return response;
+    }
+
+    function translateClientTypeData(response) {
+      _.forEach(response.data.dataProvider, function (val) {
+        val.name = vm.clientTypeTranMap[val.name];
       });
       return response;
     }
@@ -285,7 +307,7 @@
       var returnData = [];
       return $http.get(vm.urlBase + getQuerys(vm.total_calls, vm.allClusters, time)).then(function (response) {
         if (!_.isUndefined(response) && !_.isUndefined(response.data)) {
-          return response;
+          return translateClientTypeData(response);
         } else {
           return returnData;
         }

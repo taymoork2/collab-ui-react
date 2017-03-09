@@ -10,6 +10,11 @@ describe('HybridContextFieldsCtrl', function () {
         needLoadMoreData: jasmine.createSpy('needLoadMoreData'),
       },
     },
+    selection: {
+      on: {
+        rowSelectionChanged: function () {},
+      },
+    },
   };
 
   beforeEach(angular.mock.module('Core'));

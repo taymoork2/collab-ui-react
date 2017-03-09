@@ -260,16 +260,13 @@
       vm.services.push(commState);
 
       if (vm.currentUser.hasEntitlement('cloud-contact-center')) {
-        if (hasLicense('CD')) {
+        if (hasLicense('CD') || hasLicense('CV')) {
           SunlightConfigService.getUserInfo(vm.currentUser.id)
             .then(function () {
-              var hasSyncKms = _.find(vm.currentUser.roles, function (r) {
-                return r === Config.backend_roles.spark_synckms;
-              });
-              var hasContextServiceEntitlement = _.find(vm.currentUser.entitlements, function (r) {
-                return r === Config.entitlements.context;
-              });
-              if (hasSyncKms && hasContextServiceEntitlement) {
+              var hasSyncKms = _.includes(vm.currentUser.roles, Config.backend_roles.spark_synckms);
+              var hasCiscoucCES = _.includes(vm.currentUser.roles, Config.backend_roles.ciscouc_ces);
+              var hasContextServiceEntitlement = _.includes(vm.currentUser.entitlements, Config.entitlements.context);
+              if ((hasSyncKms && hasContextServiceEntitlement) || hasCiscoucCES) {
                 contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
                 vm.services.push(contactCenterState);
               }

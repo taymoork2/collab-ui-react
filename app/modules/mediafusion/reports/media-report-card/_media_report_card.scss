@@ -2,7 +2,7 @@
   visibility: hidden;
 }
 .no-display {
-  display: none;
+  display: none !important;
 }
 .footer-section {
   min-height: 40px;

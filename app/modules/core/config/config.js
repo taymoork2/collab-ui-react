@@ -157,6 +157,7 @@
         orderadmin: 'atlas-portal.partner.orderadmin',
         partner_management: 'atlas-portal.cisco.partnermgmt',
         spark_synckms: 'spark.synckms',
+        ciscouc_ces: 'ciscouc.ces',
         readonly_admin: 'id_readonly_admin',
         tech_support: 'atlas-portal.cisco.techsupport',
       },
@@ -211,6 +212,7 @@
         SB: 'SB', // Spark Board
         CMR: 'CMR', // Collaboration Meeting Room (WebEx)
         CDC: 'CDC', // Care Digital Channel
+        CVC: 'CVC', // Care Voice Channel
       },
 
       licenseStatus: {
@@ -522,6 +524,7 @@
         'context-resources',
         'context-cluster-sidepanel',
         'add-resource',
+        'context-fields-sidepanel',
       ],
       'squared-fusion-khaos': [
         'cucm-cluster',
