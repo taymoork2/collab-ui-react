@@ -281,7 +281,7 @@
 
       _.each(devices, function (device) {
         var csdmUrl = csdmUrlBase + '/' + Authinfo.getOrgId() + '/places/';
-        promises.push(cancelableHttpGET(csdmUrl + device.accountId)
+        promises.push(cancelableHttpGET(csdmUrl + device.accountId + '?shallow=true')
           .then(function (res) {
             return res.data;
           })
