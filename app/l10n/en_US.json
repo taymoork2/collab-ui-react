@@ -3789,6 +3789,7 @@
       "invalidSig": "Invalid Signature in Letter of Authorization for number porting.",
       "loaNotSigned": "Customer needs to sign Letter of Authorization for number porting.",
       "msaNotSigned": "Customer needs to sign PSTN Contract.",
+      "tosNotSigned": "The Customer must accept the trial Terms of Service.",
       "pendingVendor": "Scheduled transfer date requested from previous carrier for number porting.",
       "rejected": "Order has been rejected. Contact Intelepeer."
     },
