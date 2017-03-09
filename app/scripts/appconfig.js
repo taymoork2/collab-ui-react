@@ -2828,6 +2828,28 @@
               },
             },
           })
+          .state('context-fields-sidepanel', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                template: '<context-fields-sidepanel field="$resolve.field"></context-fields-sidepanel>',
+              },
+              'header@context-fields-sidepanel': {
+                templateUrl: 'modules/context/fields/sidepanel/hybrid-context-fields-sidepanel-header.html',
+              },
+            },
+            data: {
+              displayName: 'Overview',
+            },
+            params: {
+              field: {},
+            },
+            resolve: {
+              field: /* @ngInject */ function ($stateParams) {
+                return $stateParams.field;
+              },
+            },
+          })
           .state('context-fieldsets', {
             url: '/services/context/fieldsets',
             parent: 'context',
