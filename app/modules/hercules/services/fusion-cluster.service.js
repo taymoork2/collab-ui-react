@@ -8,7 +8,7 @@
     .factory('FusionClusterService', FusionClusterService);
 
   /* @ngInject */
-  function FusionClusterService($http, $q, $translate, Authinfo, FusionClusterStatesService, FusionUtils, UrlConfig, USSService, Notification) {
+  function FusionClusterService($http, $q, $translate, Authinfo, FusionClusterStatesService, HybridServicesUtils, UrlConfig, USSService, Notification) {
     var service = {
       preregisterCluster: preregisterCluster,
       addPreregisteredClusterToAllowList: addPreregisteredClusterToAllowList,
@@ -359,7 +359,7 @@
     }
 
     function processClustersToSeeIfServiceIsSetup(serviceId, clusterList) {
-      var connectorType = FusionUtils.serviceId2ConnectorType(serviceId);
+      var connectorType = HybridServicesUtils.serviceId2ConnectorType(serviceId);
       if (connectorType === '') {
         return false; // Cannot recognize service, default to *not* enabled
       }
@@ -508,7 +508,7 @@
 
     function convertToTranslateReplacements(alarmReplacementValues) {
       return _.reduce(alarmReplacementValues, function (translateReplacements, replacementValue) {
-        translateReplacements[replacementValue.key] = replacementValue.type === 'timestamp' ? FusionUtils.getLocalTimestamp(replacementValue.value) : replacementValue.value;
+        translateReplacements[replacementValue.key] = replacementValue.type === 'timestamp' ? HybridServicesUtils.getLocalTimestamp(replacementValue.value) : replacementValue.value;
         return translateReplacements;
       }, {});
     }

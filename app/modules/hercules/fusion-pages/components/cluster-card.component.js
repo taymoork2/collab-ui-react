@@ -11,7 +11,7 @@
     });
 
   /* @ngInject */
-  function ClusterCardController($state, FusionClusterService, FeatureToggleService, FusionUtils, $window, $modal) {
+  function ClusterCardController($state, FusionClusterService, FeatureToggleService, HybridServicesUtils, $window, $modal) {
     var ctrl = this;
 
     ctrl.countHosts = countHosts;
@@ -25,8 +25,8 @@
     ctrl.formatTimeAndDate = FusionClusterService.formatTimeAndDate;
     ctrl.hasResourceGroupFeatureToggle = false;
     ctrl.hasNodesViewFeatureToggle = false;
-    ctrl.getLocalizedReleaseChannel = FusionUtils.getLocalizedReleaseChannel;
-    ctrl.hybridServicesComparator = FusionUtils.hybridServicesComparator;
+    ctrl.getLocalizedReleaseChannel = HybridServicesUtils.getLocalizedReleaseChannel;
+    ctrl.hybridServicesComparator = HybridServicesUtils.hybridServicesComparator;
     ctrl.upgradesAutomatically = upgradesAutomatically;
     ctrl.hideFooter = hideFooter;
 

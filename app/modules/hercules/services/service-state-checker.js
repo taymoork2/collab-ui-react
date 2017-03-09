@@ -6,7 +6,7 @@
     .service('ServiceStateChecker', ServiceStateChecker);
 
   /*@ngInject*/
-  function ServiceStateChecker($q, $translate, Authinfo, ClusterService, DomainManagementService, FeatureToggleService, FusionClusterService, FusionUtils, NotificationService, Orgservice, ServiceDescriptor, USSService, Notification) {
+  function ServiceStateChecker($q, $translate, Authinfo, ClusterService, DomainManagementService, FeatureToggleService, FusionClusterService, HybridServicesUtils, NotificationService, Orgservice, ServiceDescriptor, USSService, Notification) {
     var vm = this;
     vm.isSipUriAcknowledged = false;
     vm.hasSipUriDomainConfigured = false;
@@ -240,7 +240,7 @@
             _.forEach(anomalies, function (cluster) {
               var serviceIds = _.chain(cluster.provisioning)
                 .map(function (p) {
-                  return FusionUtils.connectorType2ServicesId(p.connectorType);
+                  return HybridServicesUtils.connectorType2ServicesId(p.connectorType);
                 })
                 .flatten()
                 .uniq()
