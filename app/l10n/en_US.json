@@ -4633,7 +4633,7 @@
       "partialTitle": "Partially Available",
       "utilizationTitle": "Resource Utilization",
       "participantDistributionTitle": "Participant Distribution",
-      "numberOfParticipantTitle": "Participants Activity",
+      "numberOfParticipantTitle": "Participant Activity",
       "clusteravailability": "Cluster Availability",
       "overallUtilizationGraphError": "There was an error while loading detailed utilization data",
       "overallParticipantDistributionGraphError": "There was an error while loading detailed participant distribution data",
