@@ -26,9 +26,9 @@
     "convertUsers": "Convertir des utilisateurs",
     "errorWarningMessages": "Avertissements et erreurs",
     "skipErrorsAndFinish": "Ignorer les erreurs et terminer",
-    "newUsers": "{newusers, plural, one{# nouvel utilisateur} other{# nouveaux utilisateurs}}",
-    "updatedUsers": "{updatedusers, plural, one{# utilisateur mis à jour} other{# utilisateurs mis à jour}}",
-    "errors": "{errors, plural, one{# erreur} other{# erreurs}}",
+    "newUsers": "{newusers, plural, =1{# nouvel utilisateur} other{# nouveaux utilisateurs}}",
+    "updatedUsers": "{updatedusers, plural, =1{# utilisateur mis à jour} other{# utilisateurs mis à jour}}",
+    "errors": "{errors, plural, =1{# erreur} other{# erreurs}}",
     "pageTitle": "Utilisateurs",
     "subTitleAdd": "Gestion des utilisateurs",
     "subTitleEnable": "Autoriser les utilisateurs",
@@ -246,7 +246,7 @@
       "retryUsers": "Réessayer",
       "retrying": "Nouvel essai...",
       "retryingIn": "nouvel essai dans :",
-      "retryingUsers": "{users, plural, one{# utilisateur} other{# utilisateurs}}",
+      "retryingUsers": "{users, plural, =1{# utilisateur} other{# utilisateurs}}",
       "exportUserList": "Exporter la liste des utilisateurs."
     },
     "advanced": {
@@ -1140,15 +1140,15 @@
   "notifications": {
     "success": "Notifications de réussite",
     "error": "Notifications d'erreur",
-    "successTotal": "{total, plural, one{# réussite} other{# réussites}}",
-    "errorTotal": "{total, plural, one{# erreur} other{# erreurs}}",
+    "successTotal": "{total, plural, =1{# réussite} other{# réussites}}",
+    "errorTotal": "{total, plural, =1{# erreur} other{# erreurs}}",
     "successDelete": "{{item}} supprimé avec succès.",
     "errorDelete": "Échec de la suppression de {{item}}."
   },
   "time": {
-    "seconds": "{time, plural, one{# seconde} other{# secondes}}",
-    "minutes": "{time, plural, one{# minute} other{# minutes}}",
-    "hours": "{time, plural, one{# heure} other{# heures}}"
+    "seconds": "{time, plural, =1{# seconde} other{# secondes}}",
+    "minutes": "{time, plural, =1{# minute} other{# minutes}}",
+    "hours": "{time, plural, =1{# heure} other{# heures}}"
   },
   "callDestination": {
     "numberFormat": "Format des nombres",
@@ -2083,7 +2083,7 @@
       "heading": "Inscription"
     },
     "notificationDropdown": {
-      "label": "{number, plural, one{# notification} other{# notifications}}"
+      "label": "{number, plural, =1{# notification} other{# notifications}}"
     },
     "fusion": {
       "types": {
@@ -2100,7 +2100,7 @@
         "clusters": "Clusters",
         "users": "Utilisateurs",
         "release-channel": "Chaine de distribution",
-        "nodes": "{count, plural, one{Nombre nœud} other{Nombre nœuds}}",
+        "nodes": "{count, plural, =1{Nombre nœud} other{Nombre nœuds}}",
         "nodesBtn": "Nœuds",
         "settings": "Paramètres",
         "all": "Tout",
@@ -2634,8 +2634,8 @@
     "setSipDomainLink": "Qu'est-ce qu'une adresse SIP Spark ?",
     "setSipDomainMsg": "Saisissez un sous-domaine",
     "setSipDomainTitle": "Adresse SIP de Spark",
-    "setSipDomainCompNames": "{count, plural, one{Ce sous-domaine} other{Ces sous-domaines}} seront réservés pour vous :",
-    "setSipDomainAsssignedNames": "{count, plural, one{Ce sous-domaine} other{Ces sous-domaines sont}} réservés pour vous",
+    "setSipDomainCompNames": "{count, plural, =1{Ce sous-domaine} other{Ces sous-domaines}} seront réservés pour vous :",
+    "setSipDomainAsssignedNames": "{count, plural, =1{Ce sous-domaine} other{Ces sous-domaines sont}} réservés pour vous",
     "setSipDomainCheckAvailability": "Vérifier la disponibilité",
     "setSipDomainPlaceholder": "saisir un sous-domaine",
     "setSipDomainErrorMessage": "Non disponible. Veuillez essayer un autre nom",
@@ -3374,10 +3374,10 @@
     "deleteNumber": "Supprimer le numéro",
     "deleteConfirmation": "Êtes-vous sûr(e) de vouloir supprimer {{pattern}} ?",
     "deleteWarning": "Cette action est irréversible. Vous perdrez ce numéro de manière définitive.",
-    "allNumbers": "{count, plural, one{# Numéro} other{# Numéros}}",
-    "pendingNumbers": "{count, plural, one{# Numéro en attente} other{# Numéros en attente}}",
-    "unassignedNumbers": "{count, plural, one{# Numéro non attribué} other{# Numéros non attribués}}",
-    "searchResults": "{count, plural, one{# résultat de recherche} other{# résultats de recherche}}",
+    "allNumbers": "{count, plural, =1{# Numéro} other{# Numéros}}",
+    "pendingNumbers": "{count, plural, =1{# Numéro en attente} other{# Numéros en attente}}",
+    "unassignedNumbers": "{count, plural, =1{# Numéro non attribué} other{# Numéros non attribués}}",
+    "searchResults": "{count, plural, =1{# résultat de recherche} other{# résultats de recherche}}",
     "findNumber": "Rechercher un numéro..."
   },
   "pstnOrderOverview": {
@@ -3394,7 +3394,7 @@
   },
   "pstnOrderDetail": {
     "orderNumber": "N° de commande {{order}}",
-    "pendingNumbers": "{count, plural, one{Il y a # numéro} other{Il y a # numéros}} en attente pour cette commande",
+    "pendingNumbers": "{count, plural, =1{Il y a # numéro} other{Il y a # numéros}} en attente pour cette commande",
     "searchPlaceholder": "Rechercher des numéros de téléphone",
     "waitOnTOSAcceptance": "En attente de l'acceptation des Conditions d'utilisation du client"
   },
@@ -3434,7 +3434,7 @@
     "package": "Pack",
     "adding": "Ajout en cours",
     "numbersTitle": "Numéros",
-    "numbers": "{count, plural, one{# numéro} other{# numéros}}",
+    "numbers": "{count, plural, =1{# numéro} other{# numéros}}",
     "newNumbers": "{count} Nouveau(x)",
     "portNumbers": "{{count}} Port",
     "thankYou": "Merci",
@@ -3794,9 +3794,9 @@
     "notes": "Remarques",
     "active": "Actif(s)",
     "free": "Gratuit",
-    "daysRemaining": "{count, plural, one{Nombre jour} other{Nombre jours}} restant(s)",
-    "daysLeftToPurchase": "{count, plural, one{nombre jour} other{nombre jours}} restant(s) pour acheter",
-    "daysLeftToRenew": "{count, plural, one{nombre jour} other{nombre jours}} restant(s) pour le renouvellement",
+    "daysRemaining": "{count, plural, =1{Nombre jour} other{Nombre jours}} restant(s)",
+    "daysLeftToPurchase": "{count, plural, =1{nombre jour} other{nombre jours}} restant(s) pour acheter",
+    "daysLeftToRenew": "{count, plural, =1{nombre jour} other{nombre jours}} restant(s) pour le renouvellement",
     "expiringToday": "Failed to retrieve trial {{user}}. Message: {{message}}",
     "expired": "Expiré",
     "expiredWithGracePeriod": "A expiré. Acheter maintenant",
@@ -3830,7 +3830,7 @@
     "trialTerms": "Conditions de la période d'essai",
     "trialOverview": "Essai",
     "webexOverview": "WebEx",
-    "webexSiteCount": "{count, plural, one{# Organisateur} other{# Organisateurs}}",
+    "webexSiteCount": "{count, plural, =1{# Organisateur} other{# Organisateurs}}",
     "licenses": "Nombre de licences",
     "totalQuantity": "Quantité totale",
     "totalLicenses": "Total des licences",
@@ -3880,7 +3880,7 @@
     "accountStatus": "Statut du compte",
     "totalUsers": "Total des utilisateurs",
     "purchased": "Acheté(s)",
-    "domain": "{count, plural, one{Domaine} other{Domaines}}",
+    "domain": "{count, plural, =1{Domaine} other{Domaines}}",
     "domains": "Domaines",
     "quantityWithValue": "Qté : {{quantity}}",
     "anotherPartner": "(Un autre partenaire)",
