@@ -162,6 +162,7 @@ describe('Controller: DevicesCtrl', function () {
       spyOn(FeatureToggleService, 'atlasDeviceExportGetStatus').and.returnValue($q.resolve(true));
       spyOn(FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue($q.resolve(true));
       spyOn(FeatureToggleService, 'csdmPlaceCalendarGetStatus').and.returnValue($q.resolve(true));
+      spyOn(FeatureToggleService, 'atlasF237ResourceGroupGetStatus').and.returnValue($q.resolve(true));
     });
 
     it('should resolve toggle loading', function () {

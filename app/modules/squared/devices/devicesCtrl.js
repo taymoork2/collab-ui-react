@@ -45,7 +45,10 @@ require('./_devices.scss');
               return service.id === 'squared-fusion-gcal' || service.id === 'squared-fusion-cal';
             }).some().value();
           });
-          $q.all([ataPromise, hybridPromise, personalPromise, placeCalendarPromise, anyCalendarEnabledPromise, fetchDetailsForLoggedInUser()]).finally(function () {
+          var atlasF237ResourceGroupsPromise = FeatureToggleService.atlasF237ResourceGroupGetStatus().then(function (feature) {
+            vm.atlasF237ResourceGroups = feature;
+          });
+          $q.all([ataPromise, hybridPromise, personalPromise, placeCalendarPromise, anyCalendarEnabledPromise, atlasF237ResourceGroupsPromise, fetchDetailsForLoggedInUser()]).finally(function () {
             vm.addDeviceIsDisabled = false;
           });
 
@@ -208,6 +211,7 @@ require('./_devices.scss');
               csdmHybridCallFeature: vm.csdmHybridCallFeature,
               csdmHybridCalendarFeature: vm.csdmHybridCalendarFeature,
               hybridCalendarEnabledOnOrg: vm.hybridCalendarEnabledOnOrg,
+              atlasF237ResourceGroups: vm.atlasF237ResourceGroups,
               title: "addDeviceWizard.newDevice",
               isEntitledToHuron: vm.isOrgEntitledToHuron(),
               isEntitledToRoomSystem: vm.isOrgEntitledToRoomSystem(),
@@ -253,6 +257,7 @@ require('./_devices.scss');
                   sparkCall: 'addDeviceFlow.addLines',
                   sparkCallConnect: 'addDeviceFlow.callConnectOptions',
                   sparkOnly: 'addDeviceFlow.showActivationCode',
+                  sparkOnlyAndCalendar: 'addDeviceFlow.editCalendarService',
                 },
               },
               'addDeviceFlow.addLines': {
@@ -276,6 +281,7 @@ require('./_devices.scss');
               csdmHybridCallFeature: vm.csdmHybridCallFeature,
               csdmHybridCalendarFeature: vm.csdmHybridCalendarFeature,
               hybridCalendarEnabledOnOrg: vm.hybridCalendarEnabledOnOrg,
+              atlasF237ResourceGroups: vm.atlasF237ResourceGroups,
               title: "addDeviceWizard.newDevice",
               isEntitledToHuron: vm.isOrgEntitledToHuron(),
               isEntitledToRoomSystem: vm.isOrgEntitledToRoomSystem(),
@@ -319,6 +325,7 @@ require('./_devices.scss');
                   sparkCall: 'addDeviceFlow.addLines',
                   sparkCallConnect: 'addDeviceFlow.callConnectOptions',
                   sparkOnly: 'addDeviceFlow.showActivationCode',
+                  sparkOnlyAndCalendar: 'addDeviceFlow.editCalendarService',
                 },
               },
               'addDeviceFlow.addLines': {
