@@ -33,13 +33,13 @@
           <i class="feature-icon" ng-class="hybridServicesCtrl.extensionIcon(extension.id)"></i>
           <span class="feature-name" translate="hercules.serviceNames.{{extension.id}}"></span>
           <span class="feature-status" ng-class="extension.status ? 'status-' + hybridServicesCtrl.getStatus(extension.status) : ''"
-                ng-show="extension.status && extension.entitled && !hybridServicesCtrl.isInvitePending"
+                ng-show="extension.status && extension.entitled"
 
                 translate="hercules.activationStatus.{{hybridServicesCtrl.getStatus(extension.status)}}"></span>
           <span class="feature-status" ng-if="!extension.entitled" translate="common.off"></span>
 
-          <span class="feature-status" ng-if="!extension.status && extension.entitled && hybridServicesCtrl.userStatusLoaded && !hybridServicesCtrl.isInvitePending" translate="hercules.activationStatus.notFound"></span>
-          <span cs-loader class="feature-list-loader" ng-if="!hybridServicesCtrl.isInvitePending && !extension.status && extension.entitled && !hybridServicesCtrl.userStatusLoaded"></span>
+          <span class="feature-status" ng-if="!extension.status && extension.entitled && hybridServicesCtrl.userStatusLoaded" translate="hercules.activationStatus.notFound"></span>
+          <span cs-loader class="feature-list-loader" ng-if="!extension.status && extension.entitled && !hybridServicesCtrl.userStatusLoaded"></span>
           <i class="feature-arrow"></i>
         </a>
       </li>

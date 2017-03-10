@@ -2,7 +2,7 @@
 
 describe('Controller: DevicesCtrl', function () {
   var $scope, $state, $controller, controller, $httpBackend, $timeout, $q;
-  var CsdmConfigService, AccountOrgService, Authinfo, FeatureToggleService, Userservice;
+  var CsdmConfigService, AccountOrgService, Authinfo, FeatureToggleService, Userservice, ServiceDescriptor;
 
   beforeEach(angular.mock.module('Squared'));
   beforeEach(angular.mock.module('Huron'));
@@ -13,7 +13,7 @@ describe('Controller: DevicesCtrl', function () {
   beforeEach(initSpies);
   beforeEach(initController);
 
-  function dependencies($rootScope, _$state_, _$timeout_, _$controller_, _$httpBackend_, _$q_, _CsdmConfigService_, _AccountOrgService_, _Authinfo_, _FeatureToggleService_, _Userservice_) {
+  function dependencies($rootScope, _$state_, _$timeout_, _$controller_, _$httpBackend_, _$q_, _CsdmConfigService_, _AccountOrgService_, _Authinfo_, _FeatureToggleService_, _Userservice_, _ServiceDescriptor_) {
     $scope = $rootScope.$new();
     $state = _$state_;
     $controller = _$controller_;
@@ -25,6 +25,7 @@ describe('Controller: DevicesCtrl', function () {
     Authinfo = _Authinfo_;
     FeatureToggleService = _FeatureToggleService_;
     Userservice = _Userservice_;
+    ServiceDescriptor = _ServiceDescriptor_;
   }
 
   function initSpies() {
@@ -48,6 +49,8 @@ describe('Controller: DevicesCtrl', function () {
     spyOn(AccountOrgService, 'getAccount').and.returnValue({
       success: _.noop,
     });
+
+    spyOn(ServiceDescriptor, 'getServices').and.returnValue($q.resolve([]));
   }
 
   function initController() {
@@ -158,6 +161,7 @@ describe('Controller: DevicesCtrl', function () {
       spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.resolve(true));
       spyOn(FeatureToggleService, 'atlasDeviceExportGetStatus').and.returnValue($q.resolve(true));
       spyOn(FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue($q.resolve(true));
+      spyOn(FeatureToggleService, 'csdmPlaceCalendarGetStatus').and.returnValue($q.resolve(true));
     });
 
     it('should resolve toggle loading', function () {

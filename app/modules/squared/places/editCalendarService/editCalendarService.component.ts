@@ -41,23 +41,19 @@ class EditCalendarService implements ng.IComponentController {
     options: [],
     shouldWarn: false,
   };
-  public resourceGroupPlaceHolder = 'Select resource group';
-  // public availResourceGroups = [];
-  // public noAvailResourceGroups = true;
   private showGCalService = false;
   private showExchangeService = false;
 
   public $onInit(): void {
     this.wizardData = this.$stateParams.wizard.state().data;
     this.resourceGroup.init();
-    this.title = 'T e s t 1';
     this.title = this.wizardData.title;
     this.initialCalService = this.getCalServiceEnabled(this.wizardData.account.entitlements);
     this.fetchResourceGroups();
   }
 
   /* @ngInject */
-  constructor(private CsdmDataModelService, private $stateParams, private $translate, ServiceDescriptor, private ResourceGroupService, private USSService) {
+  constructor(private CsdmDataModelService, private $stateParams, private $translate, ServiceDescriptor, private ResourceGroupService) {
     ServiceDescriptor.getServices()
       .then((services) => {
         let enabledServices: Array<{ id: string }> = ServiceDescriptor.filterEnabledServices(services);
@@ -95,10 +91,6 @@ class EditCalendarService implements ng.IComponentController {
     return entitlements;
   }
 
-  public updateResourceGroup() {
-    this.resourceGroup = this.resourceGroup;
-  }
-
   public getShowGCalService() {
     return this.showGCalService;
   }
@@ -120,19 +112,15 @@ class EditCalendarService implements ng.IComponentController {
       this.ResourceGroupService.getAllAsOptions().then((options) => {
         if (options.length > 0) {
           this.resourceGroup.options = this.resourceGroup.options.concat(options);
-          // if (this.extension.status && this.extension.status.resourceGroupId) {
-          //   this.setSelectedResourceGroup(this.extension.status.resourceGroupId);
-          // } else {
-          if (this.wizardData.account.cisUuid) {
-            this.USSService.getUserProps(this.wizardData.account.cisUuid).then((props) => {
-              if (props.resourceGroups && props.resourceGroups['']) { //this.extension.id]) {
-                //this.setSelectedResourceGroup(props.resourceGroups['']) { //this.extension.id]);
-              } else {
-                // this.resourceGroup.displayWarningIfNecessary();
-              }
-            });
-            // }
-          }
+          // if (this.wizardData.account.cisUuid) {
+          //   this.USSService.getUserProps(this.wizardData.account.cisUuid).then((props) => {
+          //     if (props.resourceGroups && props.resourceGroups[this.initialCalService]) {
+          //       // this.resourceGroup.setSelectedResourceGroup(props.resourceGroups[this.initialCalService]);
+          //     } else {
+          //       // this.resourceGroup.displayWarningIfNecessary();
+          //     }
+          //   });
+          // }
           //this.resourceGroup.updateShow();
         }
       });
@@ -168,7 +156,10 @@ class EditCalendarService implements ng.IComponentController {
   }
 
   public isNextDisabled() {
-    return !(this.calService && this.emailOfMailbox && (this.resourceGroup.selected || !this.resourceGroup.options || this.resourceGroup.options.length === 0));
+    return !(
+      this.calService
+      && this.emailOfMailbox
+      && (this.resourceGroup.selected || !this.resourceGroup.options || this.resourceGroup.options.length === 0));
   }
 
   public close() {

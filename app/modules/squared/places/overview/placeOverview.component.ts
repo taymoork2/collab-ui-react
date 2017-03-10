@@ -27,8 +27,6 @@ class PlaceOverview implements ng.IComponentController {
   private atlasHerculesGoogleCalendarFeatureToggle = false;
   private atlasF237ResourceGroups = false;
   public generateCodeIsDisabled = true;
-  // private static fusionCal = 'squared-fusion-cal';
-  // private static fusionGCal = 'squared-fusion-gcal';
 
   private currentPlace: IPlace = <IPlace>{ devices: {} };
   private csdmHuronUserDeviceService;

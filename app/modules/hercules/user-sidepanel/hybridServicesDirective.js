@@ -19,7 +19,7 @@
     vm.extensions = getExtensions();
     vm.isEnabled = false;
     vm.userStatusLoaded = false;
-    vm.isPlace = vm.user.accountType === 'MACHINE';
+    vm.isPlace = vm.user && vm.user.accountType === 'MACHINE';
     vm.isUser = !vm.isPlace;
     vm.isInvitePending = vm.user && vm.isUser ? Userservice.isInvitePending(vm.user) : false;
 
