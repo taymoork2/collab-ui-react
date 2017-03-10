@@ -515,17 +515,10 @@ describe('Controller: Customer Reports Ctrl', function () {
         metrics: controller.metricsOptions,
       }, {
         active: controller.activeDropdown,
-        rooms: undefined,
-        files: undefined,
         media: controller.mediaDropdown,
         device: controller.deviceDropdown,
-        metrics: undefined,
       }, {
-        active: undefined,
-        rooms: undefined,
-        files: undefined,
         media: controller.qualityLabels,
-        device: undefined,
         metrics: controller.metricsLabels,
       });
     });

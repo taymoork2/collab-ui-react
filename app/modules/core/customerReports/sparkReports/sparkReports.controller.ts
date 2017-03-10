@@ -182,17 +182,10 @@ class SparkReportCtrl {
       metrics: this.metricsOptions,
     }, {
       active: this.activeDropdown,
-      rooms: undefined,
-      files: undefined,
       media: this.mediaDropdown,
       device: this.deviceDropdown,
-      metrics: undefined,
     }, {
-      active: undefined,
-      rooms: undefined,
-      files: undefined,
       media: this.qualityLabels,
-      device: undefined,
       metrics: this.metricsLabels,
     });
   }

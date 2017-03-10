@@ -19,12 +19,12 @@ export interface IAvgRoomData extends IGraphBase {
 }
 
 export interface ICharts {
-  active: any | undefined;
-  rooms: any | undefined;
-  files: any | undefined;
-  media: any | undefined;
-  device: any | undefined;
-  metrics: any | undefined;
+  active?: any;
+  rooms?: any;
+  files?: any;
+  media?: any;
+  device?: any;
+  metrics?: any;
 }
 
 export interface IEndpointWrapper {

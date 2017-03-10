@@ -7,10 +7,14 @@ import {
 export class ReportConstants {
   public readonly ABORT: string = 'ABORT';
 
-  // Media Quality type classes
+  // Media Quality and Registered Endpoint type classes
+  public readonly CUSTOMER_DATA: string = 'customer-data';
   public readonly GOOD: string = 'good';
+  public readonly HORIZONTAL_CENTER: string = 'horizontal-center';
   public readonly FAIR: string = 'fair';
   public readonly POOR: string = 'poor';
+  public readonly POSITIVE: string = 'positive';
+  public readonly NEGATIVE: string = 'negative';
 
   // Numerical Constants
   public readonly DAYS: number = 6;

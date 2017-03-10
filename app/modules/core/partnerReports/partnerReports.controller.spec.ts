@@ -1,87 +1,73 @@
 import {
   IExportMenu,
   IFilterObject,
-  IReportCard,
-  IReportCardTable,
-  ITimespan,
-  ISecondaryReport,
 } from './partnerReportInterfaces';
 
 describe('Controller: Partner Reports', () => {
-  let controller, $scope;
+  beforeEach(function () {
+    this.initModules('Core', 'Huron');
+    this.injectDependencies('$rootScope',
+      '$scope',
+      '$controller',
+      '$q',
+      '$timeout',
+      'CardUtils',
+      'ReportService',
+      'GraphService',
+      'DummyReportService',
+      'FeatureToggleService');
 
-  let activeUserData = getJSONFixture('core/json/partnerReports/activeUserData.json');
-  let callMetricsData = getJSONFixture('core/json/partnerReports/callMetricsData.json');
-  let ctrlData = getJSONFixture('core/json/partnerReports/ctrl.json');
-  let customerData = getJSONFixture('core/json/partnerReports/customerResponse.json');
-  let defaults = getJSONFixture('core/json/partnerReports/commonReportService.json');
-  let dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
-  let endpointsData = getJSONFixture('core/json/partnerReports/registeredEndpointData.json');
-  let mediaQualityData = getJSONFixture('core/json/partnerReports/mediaQualityData.json');
+    this.activeUserData = getJSONFixture('core/json/partnerReports/activeUserData.json');
+    this.callMetricsData = getJSONFixture('core/json/partnerReports/callMetricsData.json');
+    this.ctrlData = getJSONFixture('core/json/partnerReports/ctrl.json');
+    this.customerData = getJSONFixture('core/json/partnerReports/customerResponse.json');
+    this.defaults = getJSONFixture('core/json/partnerReports/commonReportService.json');
+    this.dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
+    this.endpointsData = getJSONFixture('core/json/partnerReports/registeredEndpointData.json');
+    this.mediaQualityData = getJSONFixture('core/json/partnerReports/mediaQualityData.json');
 
-  let timeOptions: Array<ITimespan> = _.cloneDeep(defaults.timeFilter);
-  let Authinfo = {
-    getOrgId: jasmine.createSpy('getOrgId').and.returnValue(customerData.customerOptions[3].value),
-    getOrgName: jasmine.createSpy('getOrgName').and.returnValue(customerData.customerOptions[3].label),
-  };
+    this.activeUserOptions = _.cloneDeep(this.ctrlData.activeUserOptions);
+    this.activeUserSecondaryOptions = _.cloneDeep(this.ctrlData.activeUserSecondaryOptions);
+    this.populationOptions = _.cloneDeep(this.ctrlData.populationOptions);
+    this.mediaOptions = _.cloneDeep(this.ctrlData.mediaOptions);
+    this.endpointOptions = _.cloneDeep(this.ctrlData.endpointOptions);
+    this.callOptions = _.cloneDeep(this.ctrlData.callOptions);
+    this.reportFilter = _.cloneDeep(this.ctrlData.reportFilter);
 
-  describe('PartnerReportCtrl - Expected Responses', function () {
-    let activeUserOptions: IReportCard = _.cloneDeep(ctrlData.activeUserOptions);
-    let activeUserSecondaryOptions: ISecondaryReport = _.cloneDeep(ctrlData.activeUserSecondaryOptions);
-    let populationOptions: IReportCard = _.cloneDeep(ctrlData.populationOptions);
-    let mediaOptions: IReportCard = _.cloneDeep(ctrlData.mediaOptions);
-    let endpointOptions: IReportCardTable = _.cloneDeep(ctrlData.endpointOptions);
-    let callOptions: IReportCard = _.cloneDeep(ctrlData.callOptions);
-    let reportFilter: Array<IFilterObject> = _.cloneDeep(ctrlData.reportFilter);
-    activeUserOptions.table = undefined;
-    activeUserSecondaryOptions.table.data = _.cloneDeep(activeUserData.mostActiveResponse);
-    populationOptions.table = undefined;
-    mediaOptions.table = undefined;
-    endpointOptions.table.data = _.cloneDeep(endpointsData.registeredEndpointResponse);
-    callOptions.table = undefined;
+    let Authinfo = {
+      getOrgId: jasmine.createSpy('getOrgId').and.returnValue(this.customerData.customerOptions[3].value),
+      getOrgName: jasmine.createSpy('getOrgName').and.returnValue(this.customerData.customerOptions[3].label),
+    };
 
-    beforeEach(function () {
-      this.initModules('Core', 'Huron');
-      this.injectDependencies('$rootScope', '$controller', '$q', '$timeout', 'CardUtils', 'ReportService', 'GraphService', 'DummyReportService');
-      $scope = this.$rootScope.$new();
-      spyOn(this.$rootScope, '$broadcast').and.returnValue({});
-      spyOn(this, '$timeout').and.callThrough();
-      spyOn(this.ReportService, 'getOverallActiveUserData').and.returnValue(this.$q.when({}));
-      spyOn(this.ReportService, 'getActiveUserData').and.returnValue(this.$q.when({
-        graphData: _.cloneDeep(activeUserData.detailedResponse),
-        isActiveUsers: true,
-        popData: _.cloneDeep(activeUserData.activePopResponse),
-        overallPopulation: 33,
-      }));
-      spyOn(this.ReportService, 'getActiveTableData').and.returnValue(this.$q.when(_.cloneDeep(activeUserData.mostActiveResponse)));
-      spyOn(this.ReportService, 'getCustomerList').and.returnValue(this.$q.when(_.cloneDeep(customerData.customerResponse)));
-      spyOn(this.ReportService, 'getMediaQualityMetrics').and.returnValue(this.$q.when(_.cloneDeep(mediaQualityData.mediaQualityResponse)));
-      spyOn(this.ReportService, 'getCallMetricsData').and.returnValue(this.$q.when(_.cloneDeep(callMetricsData.callMetricsResponse)));
-      spyOn(this.ReportService, 'getRegisteredEndpoints').and.returnValue(this.$q.when(_.cloneDeep(endpointsData.registeredEndpointResponse)));
+    spyOn(this.CardUtils, 'resize');
+    spyOn(this.FeatureToggleService, 'atlasReportsUpdateGetStatus').and.returnValue(this.$q.when(true));
+    spyOn(this.$rootScope, '$broadcast').and.returnValue({});
+    spyOn(this, '$timeout').and.callThrough();
 
-      spyOn(this.GraphService, 'getActiveUsersGraph').and.returnValue({
-        dataProvider: _.cloneDeep(activeUserData.detailedResponse),
-      });
-      spyOn(this.GraphService, 'getMediaQualityGraph').and.returnValue({
-        dataProvider: _.cloneDeep(mediaQualityData.mediaQualityResponse),
-      });
-      spyOn(this.GraphService, 'getActiveUserPopulationGraph').and.returnValue({
-        dataProvider: _.cloneDeep(activeUserData.activePopResponse),
-      });
-      spyOn(this.GraphService, 'getCallMetricsDonutChart').and.returnValue({
-        dataProvider: _.cloneDeep(callMetricsData.callMetricsResponse),
-      });
+    spyOn(this.ReportService, 'getOverallActiveUserData').and.returnValue(this.$q.when({}));
 
-      spyOn(this.DummyReportService, 'dummyActiveUserData').and.returnValue(_.cloneDeep(dummyData.activeUser.one));
-      spyOn(this.DummyReportService, 'dummyActivePopulationData').and.returnValue(_.cloneDeep(dummyData.activeUserPopulation));
-      spyOn(this.DummyReportService, 'dummyMediaQualityData').and.returnValue(_.cloneDeep(dummyData.mediaQuality.one));
-      spyOn(this.DummyReportService, 'dummyCallMetricsData').and.returnValue(_.cloneDeep(dummyData.callMetrics));
-      spyOn(this.DummyReportService, 'dummyEndpointData').and.returnValue(_.cloneDeep(dummyData.endpoints));
+    spyOn(this.GraphService, 'getActiveUsersGraph').and.returnValue({
+      dataProvider: _.cloneDeep(this.activeUserData.detailedResponse),
+    });
+    spyOn(this.GraphService, 'getMediaQualityGraph').and.returnValue({
+      dataProvider: _.cloneDeep(this.mediaQualityData.mediaQualityResponse),
+    });
+    spyOn(this.GraphService, 'getActiveUserPopulationGraph').and.returnValue({
+      dataProvider: _.cloneDeep(this.activeUserData.activePopResponse),
+    });
+    spyOn(this.GraphService, 'getCallMetricsDonutChart').and.returnValue({
+      dataProvider: _.cloneDeep(this.callMetricsData.callMetricsResponse),
+    });
 
-      spyOn(this.CardUtils, 'resize');
+    spyOn(this.DummyReportService, 'dummyActiveUserData').and.returnValue(_.cloneDeep(this.dummyData.activeUser.one));
+    spyOn(this.DummyReportService, 'dummyActivePopulationData').and.returnValue(_.cloneDeep(this.dummyData.activeUserPopulation));
+    spyOn(this.DummyReportService, 'dummyMediaQualityData').and.returnValue(_.cloneDeep(this.dummyData.mediaQuality.one));
+    spyOn(this.DummyReportService, 'dummyCallMetricsData').and.returnValue(_.cloneDeep(this.dummyData.callMetrics));
+    spyOn(this.DummyReportService, 'dummyEndpointData').and.returnValue(_.cloneDeep(this.dummyData.endpoints));
 
-      controller = this.$controller('PartnerReportCtrl', {
-        $scope: $scope,
+    this.initController = (): void => {
+      this.controller = this.$controller('PartnerReportCtrl', {
+        $scope: this.$scope,
         $timeout: this.$timeout,
         $q: this.$q,
         ReportService: this.ReportService,
@@ -89,7 +75,29 @@ describe('Controller: Partner Reports', () => {
         DummyReportService: this.DummyReportService,
         Authinfo: Authinfo,
       });
-      $scope.$apply();
+      this.$scope.$apply();
+    };
+  });
+
+  describe('PartnerReportCtrl - Expected Responses', function () {
+
+    beforeEach(function () {
+      this.activeUserSecondaryOptions.table.data = _.cloneDeep(this.activeUserData.mostActiveResponse);
+      this.endpointOptions.table.data = _.cloneDeep(this.endpointsData.registeredEndpointResponse);
+
+      spyOn(this.ReportService, 'getActiveUserData').and.returnValue(this.$q.when({
+        graphData: _.cloneDeep(this.activeUserData.detailedResponse),
+        isActiveUsers: true,
+        popData: _.cloneDeep(this.activeUserData.activePopResponse),
+        overallPopulation: 33,
+      }));
+      spyOn(this.ReportService, 'getActiveTableData').and.returnValue(this.$q.when(_.cloneDeep(this.activeUserData.mostActiveResponse)));
+      spyOn(this.ReportService, 'getCustomerList').and.returnValue(this.$q.when(_.cloneDeep(this.customerData.customerResponse)));
+      spyOn(this.ReportService, 'getMediaQualityMetrics').and.returnValue(this.$q.when(_.cloneDeep(this.mediaQualityData.mediaQualityResponse)));
+      spyOn(this.ReportService, 'getCallMetricsData').and.returnValue(this.$q.when(_.cloneDeep(this.callMetricsData.callMetricsResponse)));
+      spyOn(this.ReportService, 'getRegisteredEndpoints').and.returnValue(this.$q.when(_.cloneDeep(this.endpointsData.registeredEndpointResponse)));
+
+      this.initController();
     });
 
     it('should be created successfully and all expected calls completed', function () {
@@ -111,103 +119,87 @@ describe('Controller: Partner Reports', () => {
       expect(this.GraphService.getActiveUserPopulationGraph).toHaveBeenCalled();
       expect(this.GraphService.getCallMetricsDonutChart).toHaveBeenCalled();
 
-      expect(this.$rootScope.$broadcast).toHaveBeenCalledWith(ctrlData.activeUserSecondaryOptions.broadcast);
+      expect(this.$rootScope.$broadcast).toHaveBeenCalledWith(this.ctrlData.activeUserSecondaryOptions.broadcast);
     });
 
     it('should set all page variables', function () {
-      expect(controller.showEngagement).toEqual(true);
-      expect(controller.showQuality).toEqual(true);
-      expect(controller.ALL).toEqual(ctrlData.ALL);
-      expect(controller.ENGAGEMENT).toEqual(ctrlData.ENGAGEMENT);
-      expect(controller.QUALITY).toEqual(ctrlData.QUALITY);
+      expect(this.controller.showEngagement).toEqual(true);
+      expect(this.controller.showQuality).toEqual(true);
+      expect(this.controller.ALL).toEqual(this.ctrlData.ALL);
+      expect(this.controller.ENGAGEMENT).toEqual(this.ctrlData.ENGAGEMENT);
+      expect(this.controller.QUALITY).toEqual(this.ctrlData.QUALITY);
 
-      _.forEach(controller.exportArrays, (array: Array<IExportMenu>): void => {
+      _.forEach(this.controller.exportArrays, (array: Array<IExportMenu>): void => {
         expect(array.length).toBe(4);
       });
 
-      expect(controller.customerPlaceholder).toEqual('reportsPage.customerSelect');
-      expect(controller.customerSingular).toEqual('reportsPage.customer');
-      expect(controller.customerPlural).toEqual('reportsPage.customers');
-      expect(controller.customerMax).toEqual(5);
-      expect(controller.customerOptions).toEqual(customerData.customerOptions);
-      expect(controller.customerSelected).toEqual(customerData.customerOptions);
+      expect(this.controller.customerPlaceholder).toEqual('reportsPage.customerSelect');
+      expect(this.controller.customerSingular).toEqual('reportsPage.customer');
+      expect(this.controller.customerPlural).toEqual('reportsPage.customers');
+      expect(this.controller.customerMax).toEqual(5);
+      expect(this.controller.customerOptions).toEqual(this.customerData.customerOptions);
+      expect(this.controller.customerSelected).toEqual(this.customerData.customerOptions);
 
-      expect(controller.activeUserReportOptions).toEqual(activeUserOptions);
-      expect(controller.activeUserSecondaryReportOptions).toEqual(activeUserSecondaryOptions);
-      expect(controller.populationReportOptions).toEqual(populationOptions);
-      expect(controller.mediaReportOptions).toEqual(mediaOptions);
-      expect(controller.endpointReportOptions).toEqual(endpointOptions);
-      expect(controller.callMetricsReportOptions).toEqual(callOptions);
+      expect(this.controller.activeUserReportOptions).toEqual(this.activeUserOptions);
+      expect(this.controller.activeUserSecondaryReportOptions).toEqual(this.activeUserSecondaryOptions);
+      expect(this.controller.populationReportOptions).toEqual(this.populationOptions);
+      expect(this.controller.mediaReportOptions).toEqual(this.mediaOptions);
+      expect(this.controller.endpointReportOptions).toEqual(this.endpointOptions);
+      expect(this.controller.callMetricsReportOptions).toEqual(this.callOptions);
 
-      expect(controller.timeOptions).toEqual(timeOptions);
-      expect(controller.timeSelected).toEqual(timeOptions[0]);
+      expect(this.controller.timeOptions).toEqual(this.defaults.timeFilter);
+      expect(this.controller.timeSelected).toEqual(this.defaults.timeFilter[0]);
 
-      _.forEach(controller.filterArray, function (filter: IFilterObject, index: number): void {
-        expect(filter.label).toEqual(reportFilter[index].label);
-        expect(filter.id).toEqual(reportFilter[index].id);
-        expect(filter.selected).toEqual(reportFilter[index].selected);
+      _.forEach(this.controller.filterArray, (filter: IFilterObject, index: number): void => {
+        expect(filter.label).toEqual(this.reportFilter[index].label);
+        expect(filter.id).toEqual(this.reportFilter[index].id);
+        expect(filter.selected).toEqual(this.reportFilter[index].selected);
       });
     });
 
     it('should resize page when resizeMostActive is called', function () {
-      controller.resizeMostActive();
-
+      this.controller.resizeMostActive();
       expect(this.CardUtils.resize).toHaveBeenCalled();
     });
 
     it('should update all graphs when updateReports is called', function () {
-      controller.updateReports();
-      $scope.$apply();
+      this.controller.updateReports();
+      this.$scope.$apply();
 
-      expect(this.GraphService.getActiveUsersGraph.calls.mostRecent().args[0]).toEqual(_.cloneDeep(activeUserData.detailedResponse));
-      expect(this.GraphService.getMediaQualityGraph.calls.mostRecent().args[0]).toEqual(_.cloneDeep(mediaQualityData.mediaQualityResponse));
-      expect(this.GraphService.getActiveUserPopulationGraph.calls.mostRecent().args[0]).toEqual(_.cloneDeep(activeUserData.activePopResponse));
-      expect(this.GraphService.getCallMetricsDonutChart.calls.mostRecent().args[0]).toEqual(_.cloneDeep(callMetricsData.callMetricsResponse));
+      expect(this.GraphService.getActiveUsersGraph.calls.mostRecent().args[0]).toEqual(_.cloneDeep(this.activeUserData.detailedResponse));
+      expect(this.GraphService.getMediaQualityGraph.calls.mostRecent().args[0]).toEqual(_.cloneDeep(this.mediaQualityData.mediaQualityResponse));
+      expect(this.GraphService.getActiveUserPopulationGraph.calls.mostRecent().args[0]).toEqual(_.cloneDeep(this.activeUserData.activePopResponse));
+      expect(this.GraphService.getCallMetricsDonutChart.calls.mostRecent().args[0]).toEqual(_.cloneDeep(this.callMetricsData.callMetricsResponse));
     });
 
     it('should change visible cards when filterArray[x].toggle is used', function () {
-      controller.filterArray[1].toggle();
-      expect(controller.showEngagement).toEqual(true);
-      expect(controller.showQuality).toEqual(false);
+      this.controller.filterArray[1].toggle();
+      expect(this.controller.showEngagement).toEqual(true);
+      expect(this.controller.showQuality).toEqual(false);
 
-      controller.filterArray[2].toggle();
-      expect(controller.showEngagement).toEqual(false);
-      expect(controller.showQuality).toEqual(true);
+      this.controller.filterArray[2].toggle();
+      expect(this.controller.showEngagement).toEqual(false);
+      expect(this.controller.showQuality).toEqual(true);
 
-      controller.filterArray[0].toggle();
-      expect(controller.showEngagement).toEqual(true);
-      expect(controller.showQuality).toEqual(true);
+      this.controller.filterArray[0].toggle();
+      expect(this.controller.showEngagement).toEqual(true);
+      expect(this.controller.showQuality).toEqual(true);
     });
   });
 
   describe('PartnerReportCtrl - Expected Empty Responses', function () {
-    let activeUserOptions: IReportCard = _.cloneDeep(ctrlData.activeUserOptions);
-    let activeUserSecondaryOptions: ISecondaryReport = _.cloneDeep(ctrlData.activeUserSecondaryOptions);
-    let populationOptions: IReportCard = _.cloneDeep(ctrlData.populationOptions);
-    let mediaOptions: IReportCard = _.cloneDeep(ctrlData.mediaOptions);
-    let endpointOptions: IReportCardTable = _.cloneDeep(ctrlData.endpointOptions);
-    let callOptions: IReportCard = _.cloneDeep(ctrlData.callOptions);
-    activeUserOptions.state = ctrlData.EMPTY;
-    activeUserOptions.table = undefined;
-    activeUserSecondaryOptions.display = false;
-    activeUserSecondaryOptions.state = ctrlData.EMPTY;
-    activeUserSecondaryOptions.table.data = [];
-    populationOptions.state = ctrlData.EMPTY;
-    populationOptions.table = undefined;
-    mediaOptions.state = ctrlData.EMPTY;
-    mediaOptions.table = undefined;
-    endpointOptions.state = ctrlData.EMPTY;
-    endpointOptions.table.data = _.cloneDeep(dummyData.endpoints);
-    endpointOptions.table.dummy = true;
-    callOptions.state = ctrlData.EMPTY;
-    callOptions.table = undefined;
-
     beforeEach(function () {
-      this.initModules('Core', 'Huron');
-      this.injectDependencies('$rootScope', '$controller', '$q', '$timeout', 'ReportService', 'GraphService', 'DummyReportService');
-      $scope = this.$rootScope.$new();
+      this.activeUserOptions.state = this.ctrlData.EMPTY;
+      this.activeUserSecondaryOptions.display = false;
+      this.activeUserSecondaryOptions.state = this.ctrlData.EMPTY;
+      this.activeUserSecondaryOptions.table.data = [];
+      this.populationOptions.state = this.ctrlData.EMPTY;
+      this.mediaOptions.state = this.ctrlData.EMPTY;
+      this.endpointOptions.state = this.ctrlData.EMPTY;
+      this.endpointOptions.table.data = _.cloneDeep(this.dummyData.endpoints);
+      this.endpointOptions.table.dummy = true;
+      this.callOptions.state = this.ctrlData.EMPTY;
 
-      spyOn(this.ReportService, 'getOverallActiveUserData').and.returnValue(this.$q.when({}));
       spyOn(this.ReportService, 'getActiveUserData').and.returnValue(this.$q.when({
         graphData: [],
         isActiveUsers: false,
@@ -223,39 +215,11 @@ describe('Controller: Partner Reports', () => {
       }));
       spyOn(this.ReportService, 'getRegisteredEndpoints').and.returnValue(this.$q.when([]));
 
-      spyOn(this.GraphService, 'getActiveUsersGraph').and.returnValue({
-        dataProvider: _.cloneDeep(dummyData.activeUser.one),
-      });
-      spyOn(this.GraphService, 'getMediaQualityGraph').and.returnValue({
-        dataProvider: _.cloneDeep(dummyData.mediaQuality.one),
-      });
-      spyOn(this.GraphService, 'getActiveUserPopulationGraph').and.returnValue({
-        dataProvider: _.cloneDeep(dummyData.activeUserPopulation),
-      });
-      spyOn(this.GraphService, 'getCallMetricsDonutChart').and.returnValue({
-        dataProvider: _.cloneDeep(dummyData.callMetrics),
-      });
-
-      spyOn(this.DummyReportService, 'dummyActiveUserData').and.returnValue(_.cloneDeep(dummyData.activeUser.one));
-      spyOn(this.DummyReportService, 'dummyActivePopulationData').and.returnValue(_.cloneDeep(dummyData.activeUserPopulation));
-      spyOn(this.DummyReportService, 'dummyMediaQualityData').and.returnValue(_.cloneDeep(dummyData.mediaQuality.one));
-      spyOn(this.DummyReportService, 'dummyCallMetricsData').and.returnValue(_.cloneDeep(dummyData.callMetrics));
-      spyOn(this.DummyReportService, 'dummyEndpointData').and.returnValue(_.cloneDeep(dummyData.endpoints));
-
-      controller = this.$controller('PartnerReportCtrl', {
-        $scope: $scope,
-        $timeout: this.$timeout,
-        $q: this.$q,
-        ReportService: this.ReportService,
-        GraphService: this.GraphService,
-        DummyReportService: this.DummyReportService,
-        Authinfo: Authinfo,
-      });
-      $scope.$apply();
+      this.initController();
     });
 
     it('should be created successfully and all expected calls completed', function () {
-      expect(controller).toBeDefined();
+      expect(this.controller).toBeDefined();
 
       expect(this.DummyReportService.dummyActiveUserData).toHaveBeenCalled();
       expect(this.DummyReportService.dummyActivePopulationData).toHaveBeenCalled();
@@ -277,12 +241,12 @@ describe('Controller: Partner Reports', () => {
     });
 
     it('should set all page variables', function () {
-      expect(controller.activeUserReportOptions).toEqual(activeUserOptions);
-      expect(controller.activeUserSecondaryReportOptions).toEqual(activeUserSecondaryOptions);
-      expect(controller.populationReportOptions).toEqual(populationOptions);
-      expect(controller.mediaReportOptions).toEqual(mediaOptions);
-      expect(controller.endpointReportOptions).toEqual(endpointOptions);
-      expect(controller.callMetricsReportOptions).toEqual(callOptions);
+      expect(this.controller.activeUserReportOptions).toEqual(this.activeUserOptions);
+      expect(this.controller.activeUserSecondaryReportOptions).toEqual(this.activeUserSecondaryOptions);
+      expect(this.controller.populationReportOptions).toEqual(this.populationOptions);
+      expect(this.controller.mediaReportOptions).toEqual(this.mediaOptions);
+      expect(this.controller.endpointReportOptions).toEqual(this.endpointOptions);
+      expect(this.controller.callMetricsReportOptions).toEqual(this.callOptions);
     });
   });
 });

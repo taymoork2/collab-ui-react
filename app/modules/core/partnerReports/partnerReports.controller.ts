@@ -18,15 +18,9 @@ import {
   IReportsCustomer,
   ITimespan,
   ISecondaryReport,
+  IPartnerCharts,
 } from './partnerReportInterfaces';
 import { CardUtils } from 'modules/core/cards';
-
-interface ICharts {
-  active: any | null;
-  metrics: any | null;
-  media: any | null;
-  population: any | null;
-}
 
 class PartnerReportCtrl {
   // tracking when initialization has completed
@@ -53,7 +47,12 @@ class PartnerReportCtrl {
     private DummyReportService: DummyReportService,
     private GraphService: GraphService,
     private ReportService: ReportService,
+    private FeatureToggleService,
   ) {
+    this.FeatureToggleService.atlasReportsUpdateGetStatus().then((toggle: boolean): void => {
+      this.downloadToggle = toggle;
+    });
+
     this.ALL = this.ReportConstants.ALL;
     this.ENGAGEMENT = this.ReportConstants.ENGAGEMENT;
     this.QUALITY = this.ReportConstants.QUALITY;
@@ -87,18 +86,34 @@ class PartnerReportCtrl {
     });
   }
 
+  // full page download toggle and controls
+  public downloadToggle: boolean = false;
+  public exportFullPage() {
+    this.ReportPrintService.printPartnerPage(this.currentFilter, this.timeSelected, this.charts, {
+      active: this.activeUserReportOptions,
+      devices: this.endpointReportOptions,
+      metrics: this.callMetricsReportOptions,
+      media: this.mediaReportOptions,
+      population: this.populationReportOptions,
+    });
+  }
+
+  public isSubHeaderDisabled(): boolean {
+    return this.customerOptions.length < 1;
+  }
+
   // charts and export tracking
-  private charts: ICharts = {
-    active: null,
-    metrics: null,
-    media: null,
-    population: null,
+  private charts: IPartnerCharts = {
+    active: undefined,
+    metrics: undefined,
+    media: undefined,
+    population: undefined,
   };
-  public exportArrays: ICharts = {
-    active: null,
-    metrics: null,
-    media: null,
-    population: null,
+  public exportArrays: IPartnerCharts = {
+    active: undefined,
+    metrics: undefined,
+    media: undefined,
+    population: undefined,
   };
 
   // Active User Options
@@ -109,7 +124,6 @@ class PartnerReportCtrl {
     id: 'activeUsers',
     reportType: this.ReportConstants.BARCHART,
     state: this.ReportConstants.REFRESH,
-    table: undefined,
     titlePopover: this.ReportConstants.UNDEF,
   };
 
@@ -147,10 +161,10 @@ class PartnerReportCtrl {
         class: 'col-md-4 pointer',
       }, {
         title: 'activeUsers.calls',
-        class: 'horizontal-center col-md-2 pointer',
+        class:  this.ReportConstants.HORIZONTAL_CENTER + ' col-md-2 pointer',
       }, {
         title: 'activeUsers.sparkMessages',
-        class: 'horizontal-center col-md-2 pointer',
+        class: this.ReportConstants.HORIZONTAL_CENTER + ' col-md-2 pointer',
       }],
       data: [],
       dummy: false,
@@ -165,7 +179,6 @@ class PartnerReportCtrl {
     id: 'userPopulation',
     reportType: this.ReportConstants.BARCHART,
     state: this.ReportConstants.REFRESH,
-    table: undefined,
     titlePopover: this.ReportConstants.UNDEF,
   };
 
@@ -177,7 +190,6 @@ class PartnerReportCtrl {
     id: 'mediaQuality',
     reportType: this.ReportConstants.BARCHART,
     state: this.ReportConstants.REFRESH,
-    table: undefined,
     titlePopover: 'mediaQuality.packetLossDefinition',
   };
 
@@ -192,16 +204,16 @@ class PartnerReportCtrl {
     table: {
       headers: [{
         title: 'registeredEndpoints.company',
-        class: 'customer-data col-md-4',
+        class: this.ReportConstants.CUSTOMER_DATA + ' col-md-4',
       }, {
         title: 'registeredEndpoints.maxRegisteredDevices',
-        class: 'horizontal-center col-md-2',
+        class: this.ReportConstants.HORIZONTAL_CENTER + ' col-md-2',
       }, {
         title: 'registeredEndpoints.trend',
-        class: 'horizontal-center col-md-2',
+        class: this.ReportConstants.HORIZONTAL_CENTER + ' col-md-2',
       }, {
         title: 'registeredEndpoints.totalRegistered',
-        class: 'horizontal-center col-md-2',
+        class: this.ReportConstants.HORIZONTAL_CENTER + ' col-md-2',
       }],
       data: [],
       dummy: true,
@@ -217,7 +229,6 @@ class PartnerReportCtrl {
     id: 'callMetrics',
     reportType: this.ReportConstants.DONUT,
     state: this.ReportConstants.REFRESH,
-    table: undefined,
     titlePopover: this.ReportConstants.UNDEF,
   };
 
