@@ -46,8 +46,6 @@
   .ct-left-cs-input {
     @include vr-spacing(ml, 1);
 
-    @extend .cs-input;
-
     border-color: $gray-light-3;
     cursor: default;
     color: $gray-dark-1;

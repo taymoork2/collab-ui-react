@@ -136,8 +136,6 @@
     @include vr-spacing(ml, 1);
     @include vr-spacing(mb, .5);
 
-    @extend .cs-input;
-
     border-color: $gray-light-3;
     cursor: default;
     color: $gray-dark-1;
