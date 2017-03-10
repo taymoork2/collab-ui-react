@@ -101,7 +101,7 @@
         if (data.success || status === 200) {
           vm.orgSettings = data.orgSettings;
           vm.altHdsServers = data.orgSettings.altHdsServers;
-          //vm.prodDomain = vm.orgSettings.kmsServer;  // TODO: temp disable this to workaround Atlas backend bug
+          vm.prodDomain = vm.orgSettings.kmsServer;
           if (typeof vm.altHdsServers === 'undefined' || vm.altHdsServers.length === 1) {
             // prod info
             if (typeof vm.prodDomain === 'undefined') {
@@ -165,13 +165,9 @@
           });
         }
         var myJSON = {
-          'kmsServer': trialKmsServer,
-          'kmsServerMachineUUID': trialKmsServerMachineUUID,
-          'adrServer': trialAdrServer,
-          'securityService': trialSecurityService,
           'altHdsServers': vm.altHdsServers,
         };
-        Orgservice.setOrgSettings(Authinfo.getOrgId(), myJSON)
+        Orgservice.setOrgAltHdsServersHds(Authinfo.getOrgId(), myJSON)
           .then(function () {
             vm.model.serviceMode = vm.TRIAL;
           }).catch(function (error) {
@@ -187,10 +183,11 @@
           type: 'dialog',
         })
           .result.then(function () {
-            HDSService.moveToProductionMode(Authinfo.getOrgId())
+            HDSService.moveToProductionMode(trialKmsServer, trialKmsServerMachineUUID, trialAdrServer, trialSecurityService)
               .then(function () {
                 vm.model.serviceMode = vm.PRODUCTION;
                 // TODO: add remove the CI Group for Trial Users after MVO or finish up e2e test
+                Notification.success('hds.resources.settings.succeedMoveToProductionMode');
               }).catch(function (error) {
                 Notification.errorWithTrackingId(error, localizedHdsModeError);
               });

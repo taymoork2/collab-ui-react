@@ -75,6 +75,7 @@ describe('Controller: HDSSettingsController', function () {
       expect(controller).toBeDefined();
       expect(controller.model.serviceMode).toBe(controller.TRIAL);
       expect(controller.trialDomain).toBe('customer.com');
+      expect(controller.prodDomain).toBe('partner.com');
       expect(controller.trialUserGroupId).toBe('755d989a-feef-404a-8669-085eb054afef');
     });
   });
@@ -97,6 +98,7 @@ describe('Controller: HDSSettingsController', function () {
 
     it('controller should parse the right values from org settings with HDS production mode', function () {
       expect(controller.model.serviceMode).toBe(controller.PRODUCTION);
+      expect(controller.prodDomain).toBe('partner.com');
     });
   });
 });
