@@ -6,7 +6,7 @@
     .service('HDSService', HDSService);
 
   /* @ngInject */
-  function HDSService($http, $q, Authinfo, Orgservice, UrlConfig) {
+  function HDSService($http, $q, $timeout, Authinfo, Orgservice, UrlConfig) {
     var trialUserGroupId = null;
 
     var service = {
@@ -134,51 +134,33 @@
     function moveToProductionMode(kmsServer, kmsServerMachineUUID, adrServer, securityService) {
       // copy altHdsServers info to upper layer under org settings
       // delete altHdsServers undr org settings
-      var deferred = $q.defer();
-      updateOrgsettingsHdsInfo(kmsServer, kmsServerMachineUUID, adrServer, securityService)
+      return updateOrgsettingsHdsInfo(kmsServer, kmsServerMachineUUID, adrServer, securityService)
         .then(function () {
-          deleteAtlHdsServers()
-            .then(function () {
-              deferred.resolve();
-            }).catch(function (error) {
-              deferred.reject(error);
-            });
-        }).catch(function (error) {
-          deferred.reject(error);
+          return deleteAtlHdsServers();
         });
-      return deferred.promise;
     }
     function updateOrgsettingsHdsInfo(kmsServer, kmsServerMachineUUID, adrServer, securityService) {
-      var deferred = $q.defer();
-      var myJSON = {
+      var data = {
         'kmsServer': kmsServer,
         'kmsServerMachineUUID': kmsServerMachineUUID,
         'adrServer': adrServer,
         'securityService': securityService,
       };
-      Orgservice.setOrgSettings(Authinfo.getOrgId(), myJSON)
+      return Orgservice.setOrgSettings(Authinfo.getOrgId(), data)
         .then(function () {
           // Atlas API has a bug that values not set while returns OK of status 204
-          checkSetOrgServiceRersults(kmsServer, kmsServerMachineUUID, adrServer, securityService, 1000)
-            .then(function () {
-              deferred.resolve();
-            }).catch(function () {
+          return checkSetOrgServiceRersults(kmsServer, kmsServerMachineUUID, adrServer, securityService, 1000)
+            .catch(function () {
               // check one more time with increased delay to check
-              checkSetOrgServiceRersults(kmsServer, kmsServerMachineUUID, adrServer, securityService, 2000)
-                .then(function () {
-                  deferred.resolve();
-                }).catch(function () {
-                  deferred.reject('Failed to save Org Settings due to the Atlas API bug');
-                });
+              return checkSetOrgServiceRersults(kmsServer, kmsServerMachineUUID, adrServer, securityService, 2000);
             });
-        }).catch(function (error) {
-          deferred.reject(error);
+        })
+        .catch(function () {
+          return $q.reject('Failed to save Org Settings due to the Atlas API bug');
         });
-      return deferred.promise;
     }
     function checkSetOrgServiceRersults(kmsServer, kmsServerMachineUUID, adrServer, securityService, msDelay) {
-      var deferred = $q.defer();
-      setTimeout(function () {
+      return $timeout(function () {
         Orgservice.getOrg(function (data, status) {
           if (data.success || status === 200) {
             var orgSettings = data.orgSettings;
@@ -187,18 +169,13 @@
             var adrServer_org = orgSettings.adrServer;
             var securityService_org = orgSettings.securityService;
             if (kmsServer_org === kmsServer && kmsServerMachineUUID_org === kmsServerMachineUUID && adrServer_org === adrServer && securityService_org === securityService) {
-              deferred.resolve();
+              return $q.resolve();
             }
-          } else {
-            deferred.reject(status);
           }
-        }).catch(function (error) {
-          deferred.reject(error);
+          return $q.reject(status);
         });
       }, msDelay);
-      return deferred.promise;
     }
-
     function deleteAtlHdsServers() {
       var serviceUrl = UrlConfig.getAdminServiceUrl() + '/organizations/' + Authinfo.getOrgId() + '/settings/altHdsServers';
       return $http.delete(serviceUrl);
