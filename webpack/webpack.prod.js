@@ -5,6 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const loaders = require('./loaders');
 const _ = require('lodash');
+const sortOrder = require('../utils/sortOrder');
 
 function webpackConfig(env) {
   const commonWebpackConfig = commonWebpack(env);
@@ -40,6 +41,7 @@ function webpackConfig(env) {
         inject: 'body',
         ngStrictDi: '',
         loadAdobeScripts: true,
+        chunksSortMode: sortOrder,
       }),
       new ExtractTextPlugin({
         filename: 'styles/[name].[hash].css',

@@ -6,6 +6,7 @@ const dllDepsConfig = require('./dll-deps.config');
 const commonWebpack = require('./webpack.common');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const lsMostRecentFile = require('../utils/lsMostRecentFile');
+const sortOrder = require('../utils/sortOrder');
 const processEnvUtil = require('../utils/processEnvUtil')();
 
 const hotMiddlewareScript = 'webpack-hot-middleware/client?timeout=30000';
@@ -25,6 +26,7 @@ function webpackConfig(env) {
         inject: 'body',
         ngStrictDi: 'ng-strict-di',
         loadAdobeScripts: false,
+        chunksSortMode: sortOrder,
       }),
       new webpack.HotModuleReplacementPlugin(),
     ],
