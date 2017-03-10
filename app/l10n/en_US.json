@@ -1411,7 +1411,7 @@
     "messageWaitingIndicatorText": "The Message Waiting Indicator (MWI) continues to blink until users access their voicemails from their phones.",
     "voicemailToEmailHelpText": "Warning: Voicemail attachments sent via email are not secure.",
     "voicemailToEmailAttachmentText": "Voicemail attachments sent via email are not secure.",
-    "voicemailNumberCostHelpText" : "Using this number incurs a usage cost",
+    "voicemailNumberCostHelpText": "Using this number incurs a usage cost",
     "voicemailToEmailGetError": "Failed to get voicemail to email settings.",
     "voicemailToEmailUpdateError": "Failed to update voicemail to email settings.",
     "voicemailTimeZoneGetError": "Failed to get voicemail time zone.",
@@ -2414,11 +2414,11 @@
         "associatedFieldsets": "Associated Fieldsets",
         "associatedFieldsetsError": "Unable to load associated fieldsets.",
         "fieldId": "Field ID",
-        "dataType":"Data Type",
+        "dataType": "Data Type",
         "classification": "Data Privacy",
         "searchable": "Searchable",
         "searchableHelpText": "Make data in this field searchable.",
-        "lastUpdated":"Date Updated",
+        "lastUpdated": "Date Updated",
         "startSearching": "To begin, search for a field",
         "noSearchResults": "Search yielded no results",
         "fieldReadFailed": "Unable to retrieve fields. Refresh your browser to try again.",
@@ -2501,7 +2501,7 @@
       },
       "upgradeScheduleSubHeader": "Upgrade Schedule"
     },
-    "serviceName" : "Hybrid Data Security",
+    "serviceName": "Hybrid Data Security",
     "serviceStatus": {
       "unknown": "Status unknown",
       "not_configured": "Not configured",
@@ -2586,8 +2586,8 @@
         "goToHost": "Go to Host",
         "hosts": "Hosts",
         "nodes": "Nodes"
+      }
     }
-   }
   },
   "ediscovery": {
     "browserTabHeaderTitle": "Spark Activity Reports",
@@ -3815,7 +3815,7 @@
     "feature5": "Basic 911 included",
     "feature6": "Taxes additional"
   },
-    "partnerHomePage": {
+  "partnerHomePage": {
     "trialsHeading": "Trials",
     "onboardingTitle": "Onboarding",
     "activity-title": "Activity",
@@ -4605,7 +4605,13 @@
       "placeholder": "Enter the SIP trunk address...",
       "example": "Example: sips://203.0.113.0:5062"
     },
-    "report" : {
+    "videoQuality": {
+      "title": "Video Quality",
+      "description": "Enable 1080P HD video for all participants hosted on on-premises media nodes.",
+      "success": "Video quality setting was set successfully.",
+      "error": "Error in saving video quality setting. Please revert the change and try again later."
+    },
+    "report": {
       "title": "Hybrid Media",
       "adoption-title": "Adoption",
       "resources-title": "Resources",
@@ -5907,7 +5913,7 @@
     "summaryDesc": "You have configured the template. Click Finish to save the configuration and generate embed code so you can start using this template on your organization website.",
     "editSummaryDesc": "You have edited the template. Click Finish to save the configuration so you can start using the new version of this template on your organization website.",
     "editCodeWarnMsg2Line1": "It can take up to 15 minutes for the template changes to be reflected.",
-    "editCodeWarnMsg2Line2":"Open the template in a new browser tab after this time to view the changes.",
+    "editCodeWarnMsg2Line2": "Open the template in a new browser tab after this time to view the changes.",
     "summaryDesc_callback": "You have configured the callback template. Click Finish to save the configuration and generate embed code so you can start using this callback template on your organization website.",
     "editSummaryDesc_callback": "You have edited the callback template. Click Finish to save the configuration so you can start using the new version of this callback template on your organization website.",
     "copyEmbedCode": "Copy Embed Code",
@@ -5928,14 +5934,14 @@
     "chattingMessage": "Chatting with an Agent",
     "downloadEmbedCode": "Download Embed Code",
     "embed-code": {
-      "no-verified-domains" : {
+      "no-verified-domains": {
         "warn": "There are no verified domains for your organization. Care templates work on any domains by default. Go to Settings page to add and verify domains in order to restrict them to work only for your organization's domains."
       },
       "verified-domains": {
         "info": "These are the verified domains for your organization:",
         "warn": "Care templates will not appear on unverified domains. Go to Settings page to add and verify domains."
       },
-      "domain-fetch-error" : {
+      "domain-fetch-error": {
         "info": "There was an error while loading the verified domains for your organization. Please try again.",
         "warn": "Care templates work on any domains by default. Go to Settings page to add and verify domains in order to restrict them to work only for your organization's domains."
       }
@@ -6233,7 +6239,7 @@
       "helpSiteLabel": "Help Site",
       "useCustomHelpSite": "Use a custom help site"
     },
-    "dirsync" : {
+    "dirsync": {
       "loading": "Updating Status",
       "title": "Directory Synchronization",
       "syncTitle": "Directory Synchronization",
