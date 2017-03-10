@@ -4691,7 +4691,7 @@
       "cloudHeading": "Cloud",
       "hybridHeading": "Hybrid",
       "clientType": {
-        "andriod": "Android",
+        "android": "Android",
         "blackberry": "BlackBerry",
         "desktop": "Desktop",
         "ipad": "iPad",

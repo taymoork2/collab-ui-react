@@ -20,12 +20,14 @@
 
     function setClientTypePiechart(data) {
       var chartData = CommonReportsGraphService.getBasePieChart(data);
+      chartData.labelText = '[[name]]';
       var chart = AmCharts.makeChart(vm.clientTypeChartDiv, chartData, 0);
       return chart;
     }
 
     function setNumberOfMeetsOnPremisesPiechart(data) {
       var chartData = CommonReportsGraphService.getBasePieChart(data);
+      chartData.labelText = '[[name]]: [[percents]]% ([[value]])';
       var chart = AmCharts.makeChart(vm.numberOfMeetsOnPremisesChartDiv, chartData, 0);
       return chart;
     }

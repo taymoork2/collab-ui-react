@@ -14,7 +14,7 @@
     vm.cloudHeading = $translate.instant('mediaFusion.metrics.cloudHeading');
     vm.hybridHeading = $translate.instant('mediaFusion.metrics.hybridHeading');
     vm.clientTypeTranMap = {
-      'ANDRIOID': $translate.instant('mediaFusion.metrics.clientType.android'),
+      'ANDROID': $translate.instant('mediaFusion.metrics.clientType.android'),
       'BLACKBERRY': $translate.instant('mediaFusion.metrics.clientType.blackberry'),
       'DESKTOP': $translate.instant('mediaFusion.metrics.clientType.desktop'),
       'IPAD': $translate.instant('mediaFusion.metrics.clientType.ipad'),
