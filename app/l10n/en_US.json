@@ -1688,10 +1688,10 @@
       "selectExisting": "Select an existing Expressway clusters",
       "selectClusterPlaceholder": "Select an Expressway cluster…",
       "selectClusterPlaceholderNoneFound": "No eligible clusters found",
-      "enterDisplayName": "Enter a name for the Expressway cluster:",
+      "enterDisplayName": "Enter a name for the Expressway cluster",
       "nameHelptext": "The cluster name is used for display purposes in Cloud Collaboration Management.",
       "clusternameWatermark": "Enter cluster name…",
-      "cannotCreateCluster": "Could not create cluster. Try again later.",
+      "cannotCreateCluster": "Could not create cluster. Please try again later.",
       "cannotProvisionConnector": "Could not provision {{ConnectorName}}. Try again later.",
       "cannotFinalizeAllowlisting": "Could not finalize cluster provisioning. Try again later, or contact your Cisco technical support representative if the problem persists.",
       "connectorIsProvisioned": "The Expressway cluster {{ClusterName}} has been successfully provisioned with the following Hybrid Service:",
@@ -2189,7 +2189,8 @@
       "types": {
         "expressway": "Expressway",
         "mediafusion": "Media",
-        "context": "Context"
+        "context": "Context",
+        "cucm": "CUCM"
       },
       "urgentUpgrade": {
         "title": "Urgent Upgrade Schedule"
@@ -2213,7 +2214,7 @@
         "expressway": "Expressway",
         "mediafusion": "Media",
         "hds": "Data Security",
-        "cucm": "Cisco Unified CM",
+        "cucm": "CUCM",
         "no-services": "No services",
         "missing-clusters": "<a ng-click=\"{{onclick}}\">Assign clusters</a> and users to complete this group",
         "missing-users": "<a ng-click=\"{{onclick}}\">Assign users</a> to complete this group",
@@ -2233,7 +2234,8 @@
           "mediafusion-description": "Can run Hybrid Media Service",
           "mediafusion-not-setup": "Media Service not set up",
           "context-description": "Can run Hybrid Context",
-          "context-not-setup": "Context not set up"
+          "context-not-setup": "Context not set up",
+          "cucm-description": "Cisco Unified Communications Manager"
         },
         "expressway": {
           "services": {
@@ -2258,6 +2260,18 @@
         "context": {
           "register": "Register for Context Service through your on-premises application. Click \"Learn How\" for more information.",
           "learn-how": "Learn How"
+        },
+        "cucm": {
+          "enter-hostname": {
+            "heading": "Register a new Cisco Unified Call Manager with its Fully Qualified Domain Name (FQDN)",
+            "hostnamePlaceholder": "Enter CUCM FQDN"
+          },
+          "enter-cluster-name":  "Enter a name for the Cisco Unified Call Manager cluster",
+          "end": {
+            "line1": "You may now register the Cisco Unified Call Mnanager with Cisco Collaboration Cloud.",
+            "line2": "Go to your CUCM to complete the registration.",
+            "finish": "Go to CUCM"
+          }
         }
       },
       "add-resource-group": {
