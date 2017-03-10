@@ -5,6 +5,6 @@ export default angular
   .module('core.storage', [])
   .service('Storage', StorageService)
   .service('SessionStorage', SessionStorageService)
-  .service('StorageKeys', StorageKeys)
+  .constant('StorageKeys', StorageKeys)
   .name;
 
