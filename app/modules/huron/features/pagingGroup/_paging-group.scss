@@ -132,13 +132,15 @@
 
 .paging-initiator-select {
   text-align: center;
-  top: -3.5rem;
+  position: relative;
+
+  @include vr-spacing(mt, 6, 0px, true);
 
   .paging-group-initiator-title {
     .title {
       color: $gray-light-1;
       font-family: $brand-font-thin;
-      font-size: $font-size-h3;
+      font-size: $font-size-h2;
     }
 
     .desc {
@@ -163,27 +165,30 @@
 
     .warning .pg-init-cs-input__messages {
       margin-top: -1rem;
-      margin-bottom: 1rem;
       visibility: visible;
     }
   }
 
-  position: relative;
-
   .cs-radio-group {
     text-align: center;
     margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
 
     .cs-input-group {
       display: inline;
       padding-right: 1rem;
 
       .cs-input {
-        position: inherit;
         display: inline;
         padding-right: 1rem;
       }
     }
+  }
+
+  .cs-input {
+    width: 20rem;
+    text-align: left;
+    margin: auto;
   }
 
   .dropdown-menu {
@@ -208,20 +213,12 @@
     }
   }
 
-  .typeahead-large-init {
-    input {
-      height: 49px;
-      font-size: 36px;
-    }
-  }
-
   .cs-card-layout {
     @include vr-spacing(ml, 28.5, 0px, true);
-    @include vr-spacing(mt, 3.5, 0px, true);
     @include vr-spacing(pb, 1);
 
     position: fixed !important;
-    height: 14rem !important;
+    height: 16rem !important;
     width: 58rem;
     left: 50%;
     margin-right: auto;

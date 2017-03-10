@@ -13,7 +13,7 @@
     });
 
   /* @ngInject */
-  function ResourceGroupCardController($state, FusionClusterStatesService, FusionUtils) {
+  function ResourceGroupCardController($state, FusionClusterStatesService, HybridServicesUtils) {
     var ctrl = this;
 
     ctrl.showDetails = false;
@@ -22,7 +22,7 @@
     ctrl.hasZeroClusters = hasZeroClusters;
     ctrl.hasUsers = hasUsers;
     ctrl.$onChanges = $onChanges;
-    ctrl.getLocalizedReleaseChannel = FusionUtils.getLocalizedReleaseChannel;
+    ctrl.getLocalizedReleaseChannel = HybridServicesUtils.getLocalizedReleaseChannel;
     ctrl.getStatusCssClass = getStatusCssClass;
 
     function toggleDetails() {

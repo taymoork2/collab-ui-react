@@ -74,7 +74,7 @@
         care_inbound_voice: 'cloud-contact-center-inbound-voice',
         context: 'contact-center-context',
         fusion_google_cal: 'squared-fusion-gcal',
-        cucm: 'squared-fusion-khaos',
+        fusion_khaos: 'squared-fusion-khaos',
       },
 
       licenseModel: {
@@ -157,6 +157,7 @@
         orderadmin: 'atlas-portal.partner.orderadmin',
         partner_management: 'atlas-portal.cisco.partnermgmt',
         spark_synckms: 'spark.synckms',
+        ciscouc_ces: 'ciscouc.ces',
         readonly_admin: 'id_readonly_admin',
         tech_support: 'atlas-portal.cisco.techsupport',
       },
@@ -211,6 +212,7 @@
         SB: 'SB', // Spark Board
         CMR: 'CMR', // Collaboration Meeting Room (WebEx)
         CDC: 'CDC', // Care Digital Channel
+        CVC: 'CVC', // Care Voice Channel
       },
 
       licenseStatus: {
@@ -451,11 +453,6 @@
         'cluster-list',
         'expressway-cluster',
         'hybrid-services-connector-sidepanel',
-        'hds.settings', // Temporary  entitlement until updated in org setting
-        'hds',
-        'hds.list',
-        'hds-cluster-details',
-        'hds-cluster',
         'cucm-cluster', // Remove when squared-fusion-khaos entitlement is returned by Atlas backend
       ],
       'spark-room-system': [
@@ -493,7 +490,10 @@
         'organization',
       ],
       'spark-hybrid-datasecurity': [
+        'hds',
+        'hds.list',
         'hds.settings',
+        'hds-cluster-details',
         'hds-cluster',
       ],
       'squared-fusion-media': [
@@ -522,6 +522,7 @@
         'context-resources',
         'context-cluster-sidepanel',
         'add-resource',
+        'context-fields-sidepanel',
       ],
       'squared-fusion-khaos': [
         'cucm-cluster',

@@ -2828,6 +2828,28 @@
               },
             },
           })
+          .state('context-fields-sidepanel', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                template: '<context-fields-sidepanel field="$resolve.field"></context-fields-sidepanel>',
+              },
+              'header@context-fields-sidepanel': {
+                templateUrl: 'modules/context/fields/sidepanel/hybrid-context-fields-sidepanel-header.html',
+              },
+            },
+            data: {
+              displayName: 'Overview',
+            },
+            params: {
+              field: {},
+            },
+            resolve: {
+              field: /* @ngInject */ function ($stateParams) {
+                return $stateParams.field;
+              },
+            },
+          })
           .state('context-fieldsets', {
             url: '/services/context/fieldsets',
             parent: 'context',
@@ -3119,6 +3141,11 @@
             params: {
               wizard: null,
             },
+            resolve: {
+              hasCucmSupportFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCucmSupport);
+              },
+            },
           })
           .state('add-resource.expressway', {
             abstract: true,
@@ -3239,6 +3266,48 @@
             views: {
               'modal@': {
                 templateUrl: 'modules/hercules/fusion-pages/add-resource/context/context.html',
+              },
+            },
+            params: {
+              wizard: null,
+            },
+          })
+          .state('add-resource.cucm', {
+            abstract: true,
+          })
+          .state('add-resource.cucm.hostname', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'CucmHostnameController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/hercules/fusion-pages/add-resource/cucm/cucm-hostname.html',
+              },
+            },
+            params: {
+              wizard: null,
+            },
+          })
+          .state('add-resource.cucm.name', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'CucmClusterNameController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/hercules/fusion-pages/add-resource/cucm/cucm-cluster-name.html',
+              },
+            },
+            params: {
+              wizard: null,
+            },
+          })
+          .state('add-resource.cucm.end', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'CucmEndController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/hercules/fusion-pages/add-resource/cucm/cucm-end.html',
               },
             },
             params: {

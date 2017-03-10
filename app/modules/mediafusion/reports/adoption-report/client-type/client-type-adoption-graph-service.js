@@ -17,6 +17,22 @@
 
     vm.timeStamp = $translate.instant('mediaFusion.metrics.timeStamp');
     vm.clients = $translate.instant('mediaFusion.metrics.clients');
+    vm.clientTypeTranMap = {
+      'ANDROID': $translate.instant('mediaFusion.metrics.clientType.android'),
+      'BLACKBERRY': $translate.instant('mediaFusion.metrics.clientType.blackberry'),
+      'DESKTOP': $translate.instant('mediaFusion.metrics.clientType.desktop'),
+      'IPAD': $translate.instant('mediaFusion.metrics.clientType.ipad'),
+      'IPHONE': $translate.instant('mediaFusion.metrics.clientType.iphone'),
+      'JABBER': $translate.instant('mediaFusion.metrics.clientType.jabber'),
+      'SIP': $translate.instant('mediaFusion.metrics.clientType.sip'),
+      'SPARK_BOARD': $translate.instant('mediaFusion.metrics.clientType.board'),
+      'TEST': $translate.instant('mediaFusion.metrics.clientType.test'),
+      'TP_ENDPOINT': $translate.instant('mediaFusion.metrics.clientType.tp'),
+      'UC': $translate.instant('mediaFusion.metrics.clientType.uc'),
+      'UNKNOWN': $translate.instant('mediaFusion.metrics.clientType.unknown'),
+      'WINDOWS_MOBILE': $translate.instant('mediaFusion.metrics.clientType.windows'),
+      'Total': $translate.instant('mediaFusion.metrics.clientType.total'),
+    };
 
     return {
       setClientTypeGraph: setClientTypeGraph,
@@ -125,6 +141,7 @@
       };
       var exportFields = [];
       _.forEach(graphs, function (value) {
+        value.title = vm.clientTypeTranMap[value.title];
         columnNames[value.valueField] = value.title + ' ' + vm.clientType;
       });
       for (var key in columnNames) {
@@ -190,7 +207,7 @@
     function getClusterName(graphs) {
       var tempData = [];
       _.forEach(graphs, function (value) {
-        value.balloonText = '<span class="graph-text">' + value.title + ' ' + '<span class="graph-number">[[value]]</span></span>';
+        value.balloonText = '<span class="graph-text">' + vm.clientTypeTranMap[value.title] + ' ' + '<span class="graph-number">[[value]]</span></span>';
         value.lineThickness = 2;
         tempData.push(value);
       });

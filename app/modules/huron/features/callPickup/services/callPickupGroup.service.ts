@@ -110,11 +110,12 @@ export class CallPickupGroupService {
         customerId: this.Authinfo.getOrgId(),
         internalPoolId: number[0].uuid,
       }).$promise.then(response => {
-        let features = _.get(response, 'features');
-        if (_.isEmpty(features)) {
-          return '';
+        let features: any = _.get(response, 'features');
+        let pickupName = _.find(features, function(feature: any) { return feature.type === 'CALL_FEATURE_PICKUP_GROUP'; });
+        if (pickupName) {
+          return pickupName.name;
         } else {
-          return features[0].name;
+          return '';
         }
       });
     });

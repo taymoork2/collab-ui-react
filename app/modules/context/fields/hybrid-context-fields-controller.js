@@ -3,7 +3,8 @@ require('./_fields-list.scss');
 (function () {
   'use strict';
 
-  angular.module('Context')
+  angular
+    .module('Context')
     .controller('HybridContextFieldsCtrl', HybridContextFieldsCtrl);
 
   /* @ngInject */
@@ -18,6 +19,15 @@ require('./_fields-list.scss');
     vm.noSearchResults = false;
     vm.fieldsList = {
       allFields: [],
+    };
+
+    vm.filterBySearchStr = filterBySearchStr;
+    vm.filterList = filterList;
+
+    vm.placeholder = {
+      name: $translate.instant('common.search'),
+      filterValue: '',
+      count: 0,
     };
 
     $scope.$on('$destroy', onDestroy);
@@ -116,7 +126,6 @@ require('./_fields-list.scss');
           vm.gridRefresh = false;
           vm.load = false;
         });
-
     }
 
     function initializeGrid() {
@@ -124,10 +133,15 @@ require('./_fields-list.scss');
 
       function onRegisterApi(gridApi) {
         vm.gridApi = gridApi;
+        gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+          $state.go('context-fields-sidepanel', {
+            field: row.entity,
+          });
+        });
         gridApi.infiniteScroll.on.needLoadMoreData($scope, function () {
           if (vm.load) {
             vm.currentDataPosition++;
-            // Server side pagination is to be implemented
+            //Server side pagination is to be implemented
             getFieldList();
           }
         });
@@ -135,7 +149,7 @@ require('./_fields-list.scss');
       }
 
       vm.gridOptions = {
-        // data: [], // is populated directly by the functions supplying the data.
+       // data: [], // is populated directly by the functions supplying the data.
         multiSelect: false,
         rowHeight: 44,
         enableColumnResize: true,
@@ -169,6 +183,33 @@ require('./_fields-list.scss');
       };
       return deferred.promise;
     }
-  }
 
+    // On click, wait for typing to stop and run search
+    function filterList(str) {
+
+      return filterBySearchStr(vm.fieldsList.allFields, str)
+        .then(function (processedFields) {
+          vm.gridOptions.data = processedFields;
+          vm.noSearchResults = processedFields.length === 0;
+          vm.placeholder.count = processedFields.length;
+        });
+    }
+
+    //filter out the list by the searchStr
+    function filterBySearchStr(fieldList, str) {
+      if (!str) {
+        return $q.resolve(fieldList);
+      }
+
+      var lowerStr = str.toLowerCase();
+      return $q.resolve(fieldList.filter(function (field) {
+        return (_.has(field, 'id') ? (field.id.toLowerCase().indexOf(lowerStr) !== -1) : false) ||
+          (_.has(field, 'description') ? (field.description.toLowerCase().indexOf(lowerStr) !== -1) : false) ||
+          (_.has(field, 'dataType') ? (field.dataType.toLowerCase().indexOf(lowerStr) !== -1) : false) ||
+          (_.has(field, 'searchable') ? (field.searchable.toLowerCase().indexOf(lowerStr) !== -1) : false) ||
+          (_.has(field, 'classification') ? (field.classification.toLowerCase().indexOf(lowerStr) !== -1) : false) ||
+          (_.has(field, 'lastUpdated') ? (field.lastUpdated.toLowerCase().indexOf(lowerStr) !== -1) : false);
+      }));
+    }
+  }
 }());

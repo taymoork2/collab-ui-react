@@ -23,7 +23,6 @@
     .factory('TerminusCustomerCarrierInventoryReserve', TerminusCustomerCarrierInventoryReserve)
     .factory('TerminusCustomerCarrierInventoryRelease', TerminusCustomerCarrierInventoryRelease)
     .factory('TerminusStateService', TerminusStateService)
-    .factory('TerminusLookupE911Service', TerminusLookupE911Service)
     .factory('TerminusV2LookupE911Service', TerminusV2LookupE911Service)
     .factory('TerminusUserDeviceE911Service', TerminusUserDeviceE911Service)
     .factory('TerminusV2CarrierNumberService', TerminusV2CarrierNumberService)
@@ -164,11 +163,6 @@
         cache: true,
       },
     });
-  }
-
-  /* @ngInject */
-  function TerminusLookupE911Service($resource, HuronConfig) {
-    return $resource(HuronConfig.getTerminusUrl() + '/lookup/e911');
   }
 
     /* @ngInject */

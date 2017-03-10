@@ -12,7 +12,7 @@
     });
 
   /* @ngInject */
-  function expresswayUpgradeSectionCtrl($modal, $scope, $timeout, $translate, ClusterService, FusionUtils) {
+  function expresswayUpgradeSectionCtrl($modal, $scope, $timeout, $translate, ClusterService, HybridServicesUtils) {
     var vm = this;
     var promise = null;
     vm.clusterId = '';
@@ -21,7 +21,7 @@
     vm.localizedManagementConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.c_mgmt');
     vm.localizedCCCName = $translate.instant('common.ciscoCollaborationCloud');
     vm.localizedConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.' + vm.connectorType);
-    vm.servicesId = FusionUtils.connectorType2ServicesId(vm.connectorType);
+    vm.servicesId = HybridServicesUtils.connectorType2ServicesId(vm.connectorType);
 
     vm.showUpgradeDialog = showUpgradeDialog;
     vm.$onInit = $onInit;
@@ -107,7 +107,7 @@
       if (changes.connectorType) {
         vm.connectorType = changes.connectorType.currentValue;
         vm.localizedConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.' + vm.connectorType);
-        vm.servicesId = FusionUtils.connectorType2ServicesId(vm.connectorType);
+        vm.servicesId = HybridServicesUtils.connectorType2ServicesId(vm.connectorType);
       }
     }
 

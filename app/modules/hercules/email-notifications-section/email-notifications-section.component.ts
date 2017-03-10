@@ -6,7 +6,7 @@ class EmailNotificationsSectionCtrl implements ng.IComponentController {
   };
   public localizedAddEmailWatermark = this.$translate.instant('hercules.settings.emailNotificationsWatermark');
   public emailSubscribers: { text: string }[] = [];
-  public enableEmailSendingToUser = false;
+  public enableEmailSendingToUser = true;
   public savingEmail = false;
   public hasCalsvcSetOrgLevelDefaultSiteNameFeatureToggle = false;
   public defaultWebExSiteOrgLevel = '';

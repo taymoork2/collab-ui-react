@@ -72,6 +72,8 @@
         careReports: 'CAREREPORTS',
         careEnabled: 'CAREENABLED',
         careDisabled: 'CAREDISABLED',
+        careVoiceEnabled: 'CAREVOICEENABLED',
+        careVoiceDisabled: 'CAREVOICEDISABLED',
         dirSyncDisabled: 'DIRSYNCDISABLED',
         connectorDeregistered: "CONNECTORDEREGISTERED",
       },

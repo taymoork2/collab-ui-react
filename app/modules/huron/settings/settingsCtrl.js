@@ -1338,6 +1338,7 @@
       return PstnSetupService.listCustomerCarriers(Authinfo.getOrgId())
         .then(function (carriers) {
           if (_.get(carriers, '[0].apiImplementation') !== "SWIVEL") {
+            PstnSetup.setProvider(_.get(carriers, '[0]'));
             showServiceAddress();
           }
         })

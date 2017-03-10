@@ -211,12 +211,12 @@ describe('DeviceUsageService', function () {
         },
       ];
 
-      var csdmRequest = UrlConfig.getCsdmServiceUrl() + '/organization/1234/places/1111';
+      var csdmRequest = UrlConfig.getCsdmServiceUrl() + '/organization/1234/places/1111?shallow=true';
       $httpBackend
         .when('GET', csdmRequest)
         .respond($q.resolve({ displayName: "oneoneoneone", whatever: "whatever" }));
 
-      csdmRequest = UrlConfig.getCsdmServiceUrl() + '/organization/1234/places/2222';
+      csdmRequest = UrlConfig.getCsdmServiceUrl() + '/organization/1234/places/2222?shallow=true';
       $httpBackend
         .when('GET', csdmRequest)
         .respond($q.resolve({ displayName: "twotwotwotwo", whatever: "whatever" }));

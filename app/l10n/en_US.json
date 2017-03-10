@@ -148,6 +148,7 @@
     "telstraAppRedirect": "Connecting to Telstra Apps Marketplace",
     "careAddUserError": "Failed to add user to Care.",
     "careAddUserRoleError": "Error adding roles to user.",
+    "careDeleteCESRoleError": "Error deleting CES role from user",
     "loadError": "An error while loading the users list."
   },
   "userManage": {
@@ -308,8 +309,14 @@
     "paidAdvancedConferencing": "Advanced Meetings",
     "paidComm": "Call",
     "paidSparkCall": "Cisco Spark Call",
+    "paidNone": "None",
+    "paidCDC": "K1",
+    "paidCVC": "K2",
     "paidCare": "Care Digital Channel",
-    "paidContactCenter": "Chat",
+    "careServices": "Chat and Callback",
+    "careVoiceServices": "Chat, Callback and Inbound Call",
+    "enableCallInfo": "Message is mandatory for Care services. Enable Call if you want the user to handle calls from customers.",
+    "paidContactCenter": "Care",
     "enterpriseEdition": "Enterprise Edition {{capacity}}",
     "meetingCenter": "Meeting Center {{capacity}}",
     "supportCenter": "Support Center {{capacity}}",
@@ -327,6 +334,7 @@
     "proceedFreeMessage": "If you run out of licenses for a Cisco Spark service, any remaining users are assigned a free license for that service.",
     "reviewPlanButton": "Review your plan",
     "proceedFreeButton": "Proceed with Free",
+    "getCareEntitlementsErrorForuser": "Failed to get care entitlements for user",
     "result": {
       "200": "entitled successfully",
       "404": "does not exist",
@@ -1164,6 +1172,7 @@
     "to": "to",
     "trackingId": "Tracking Id: {{trackingId}}.",
     "tryAgain": "Try Again",
+    "trySearchAgain": "Try another search.",
     "turnOff": "Turn Off",
     "type": "Type",
     "unassigned": "Unassigned",
@@ -1402,7 +1411,7 @@
     "messageWaitingIndicatorText": "The Message Waiting Indicator (MWI) continues to blink until users access their voicemails from their phones.",
     "voicemailToEmailHelpText": "Warning: Voicemail attachments sent via email are not secure.",
     "voicemailToEmailAttachmentText": "Voicemail attachments sent via email are not secure.",
-    "voicemailNumberCostHelpText" : "Using this number incurs a usage cost",
+    "voicemailNumberCostHelpText": "Using this number incurs a usage cost",
     "voicemailToEmailGetError": "Failed to get voicemail to email settings.",
     "voicemailToEmailUpdateError": "Failed to update voicemail to email settings.",
     "voicemailTimeZoneGetError": "Failed to get voicemail time zone.",
@@ -1679,10 +1688,10 @@
       "selectExisting": "Select an existing Expressway clusters",
       "selectClusterPlaceholder": "Select an Expressway cluster…",
       "selectClusterPlaceholderNoneFound": "No eligible clusters found",
-      "enterDisplayName": "Enter a name for the Expressway cluster:",
+      "enterDisplayName": "Enter a name for the Expressway cluster",
       "nameHelptext": "The cluster name is used for display purposes in Cloud Collaboration Management.",
       "clusternameWatermark": "Enter cluster name…",
-      "cannotCreateCluster": "Could not create cluster. Try again later.",
+      "cannotCreateCluster": "Could not create cluster. Please try again later.",
       "cannotProvisionConnector": "Could not provision {{ConnectorName}}. Try again later.",
       "cannotFinalizeAllowlisting": "Could not finalize cluster provisioning. Try again later, or contact your Cisco technical support representative if the problem persists.",
       "connectorIsProvisioned": "The Expressway cluster {{ClusterName}} has been successfully provisioned with the following Hybrid Service:",
@@ -1788,7 +1797,7 @@
       "contact-center-context": "Context Center Service",
       "squared-fusion-ec": "Call Service Connect",
       "squared-fusion-ec.full": "Call Service Connect",
-      "squared-fusion-mgmt": "Expressway Management Service  "
+      "squared-fusion-mgmt": "Expressway Management Service"
     },
     "hybridServiceNames": {
       "squared-fusion-mgmt": "Hybrid Management Service",
@@ -2180,7 +2189,8 @@
       "types": {
         "expressway": "Expressway",
         "mediafusion": "Media",
-        "context": "Context"
+        "context": "Context",
+        "cucm": "CUCM"
       },
       "urgentUpgrade": {
         "title": "Urgent Upgrade Schedule"
@@ -2204,7 +2214,7 @@
         "expressway": "Expressway",
         "mediafusion": "Media",
         "hds": "Data Security",
-        "cucm": "Cisco Unified CM",
+        "cucm": "CUCM",
         "no-services": "No services",
         "missing-clusters": "<a ng-click=\"{{onclick}}\">Assign clusters</a> and users to complete this group",
         "missing-users": "<a ng-click=\"{{onclick}}\">Assign users</a> to complete this group",
@@ -2224,7 +2234,8 @@
           "mediafusion-description": "Can run Hybrid Media Service",
           "mediafusion-not-setup": "Media Service not set up",
           "context-description": "Can run Hybrid Context",
-          "context-not-setup": "Context not set up"
+          "context-not-setup": "Context not set up",
+          "cucm-description": "Cisco Unified Communications Manager"
         },
         "expressway": {
           "services": {
@@ -2249,6 +2260,18 @@
         "context": {
           "register": "Register for Context Service through your on-premises application. Click \"Learn How\" for more information.",
           "learn-how": "Learn How"
+        },
+        "cucm": {
+          "enter-hostname": {
+            "heading": "Register a new Cisco Unified Call Manager with its Fully Qualified Domain Name (FQDN)",
+            "hostnamePlaceholder": "Enter CUCM FQDN"
+          },
+          "enter-cluster-name":  "Enter a name for the Cisco Unified Call Manager cluster",
+          "end": {
+            "line1": "You may now register the Cisco Unified Call Mnanager with Cisco Collaboration Cloud.",
+            "line2": "Go to your CUCM to complete the registration.",
+            "finish": "Go to CUCM"
+          }
         }
       },
       "add-resource-group": {
@@ -2388,23 +2411,28 @@
     "dictionary": {
       "welcome": "Welcome to the Context Dictionary",
       "fieldPage": {
+        "associatedFieldsets": "Associated Fieldsets",
+        "associatedFieldsetsError": "Unable to load associated fieldsets.",
         "fieldId": "Field ID",
-        "dataType":"Data Type",
+        "dataType": "Data Type",
         "classification": "Data Privacy",
         "searchable": "Searchable",
-        "lastUpdated":"Date Updated",
+        "searchableHelpText": "Make data in this field searchable.",
+        "lastUpdated": "Date Updated",
         "startSearching": "To begin, search for a field",
         "noSearchResults": "Search yielded no results",
         "fieldReadFailed": "Unable to retrieve fields. Refresh your browser to try again.",
         "piiEncrypted": "PII Encrypted",
         "encrypted": "Non-PII Encrypted",
         "unencrypted": "Unencrypted",
-        "dateFormat": "MM/dd/yyyy"
+        "dateFormat": "MM/dd/yyyy",
+        "noneFound": "No fields found"
       },
       "fieldsetPage": {
         "fieldsetId": "Fieldset ID",
         "numOfFields": "No. of Fields",
-        "fieldsetReadFailed": "Unable to retrieve fieldsets. Refresh your browser to try again."
+        "fieldsetReadFailed": "Unable to retrieve fieldsets. Refresh your browser to try again.",
+        "noneFound": "No fieldsets found"
       }
     }
   },
@@ -2473,7 +2501,7 @@
       },
       "upgradeScheduleSubHeader": "Upgrade Schedule"
     },
-    "serviceName" : "Hybrid Data Security",
+    "serviceName": "Hybrid Data Security",
     "serviceStatus": {
       "unknown": "Status unknown",
       "not_configured": "Not configured",
@@ -2559,8 +2587,8 @@
         "goToHost": "Go to Host",
         "hosts": "Hosts",
         "nodes": "Nodes"
+      }
     }
-   }
   },
   "ediscovery": {
     "browserTabHeaderTitle": "Spark Activity Reports",
@@ -3027,7 +3055,7 @@
     "callerReturnedOneMonth": "1 Month",
     "callerReturnedWhen": "Within the last",
     "callerNumberInfo": "Enter one or more numbers here; separate multiple entries with commas. Example: +12065551212, +11115551212",
-    "callerNameInfo": "Enter one or more caller names here; separate multiple entries with commas. Example: John Smith, Jane Doe",
+    "callerNameInfo": "Enter one or more caller names here; separate multiple entries with commas. Example: John Doe, \"Doe, Jane\"",
     "countryCodeInfo": "Enter one or more numbers here; separate multiple entries with commas. Example: 1, 20",
     "areaCodeInfo": "Enter one or more numbers here; separate multiple entries with commas. Example: 206, 425",
     "actionRouteCall": "Route Call",
@@ -3084,6 +3112,7 @@
     "callerInputMenuErrorVariableNameMissing": "{{schedule}} schedule at Caller Input Menu {{at}} is missing a variable name ",
     "conditionalThenTargetMissing": "{{schedule}} schedule at Decision Menu {{at}} is missing a target for the 'Then' entry",
     "conditionalIsEntryVariableMissing": "{{schedule}} schedule at Decision Menu {{at}} is missing an entry for 'Is'",
+    "conditionalIsEntryVariableUnevenQouotes": "{{schedule}} schedule at Decision Menu {{at}} has unclosed quotes for 'Is'",
     "conditionalIfEntryVariableMissing": "{{schedule}} schedule at Decision Menu {{at}} is missing an entry for 'If'",
     "phoneMenuMenuErrorNoInputValuesEntered": "{{schedule}} schedule at Phone Menu {{at}} has no input values entered",
     "subMenuErrorNoInputValuesEntered": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}}: SubMenu has no input values entered",
@@ -3788,7 +3817,7 @@
     "feature5": "Basic 911 included",
     "feature6": "Taxes additional"
   },
-    "partnerHomePage": {
+  "partnerHomePage": {
     "trialsHeading": "Trials",
     "onboardingTitle": "Onboarding",
     "activity-title": "Activity",
@@ -4578,7 +4607,13 @@
       "placeholder": "Enter the SIP trunk address...",
       "example": "Example: sips://203.0.113.0:5062"
     },
-    "report" : {
+    "videoQuality": {
+      "title": "Video Quality",
+      "description": "Enable 1080P HD video for all participants hosted on on-premises media nodes.",
+      "success": "Video quality setting was set successfully.",
+      "error": "Error in saving video quality setting. Please revert the change and try again later."
+    },
+    "report": {
       "title": "Hybrid Media",
       "adoption-title": "Adoption",
       "resources-title": "Resources",
@@ -4626,7 +4661,7 @@
       "partialTitle": "Partially Available",
       "utilizationTitle": "Resource Utilization",
       "participantDistributionTitle": "Participant Distribution",
-      "numberOfParticipantTitle": "Participants Activity",
+      "numberOfParticipantTitle": "Participant Activity",
       "clusteravailability": "Cluster Availability",
       "overallUtilizationGraphError": "There was an error while loading detailed utilization data",
       "overallParticipantDistributionGraphError": "There was an error while loading detailed participant distribution data",
@@ -4676,7 +4711,24 @@
       "clientTypeHeading": "Client Type Distribution",
       "onPremisesHeading": "On-Premises",
       "cloudHeading": "Cloud",
-      "hybridHeading": "Hybrid"
+      "hybridHeading": "Hybrid",
+      "clientType": {
+        "android": "Android",
+        "blackberry": "BlackBerry",
+        "desktop": "Desktop",
+        "ipad": "iPad",
+        "iphone": "iPhone",
+        "jabber": "Jabber",
+        "sip": "SIP",
+        "board": "Spark Board",
+        "test": "Test",
+        "tp": "Tele Presence",
+        "uc": "UC",
+        "unknown": "Unknown",
+        "windows": "Windows Mobile",
+        "total": "Total"
+      },
+      "clientTypeCardDesc": "Summary of the type of clients that are in use at an Organization"
     },
     "deleteGroup": {
       "message": "Are you sure you want to delete {{groupName}} from Cisco Collaboration Cloud?",
@@ -5863,7 +5915,7 @@
     "summaryDesc": "You have configured the template. Click Finish to save the configuration and generate embed code so you can start using this template on your organization website.",
     "editSummaryDesc": "You have edited the template. Click Finish to save the configuration so you can start using the new version of this template on your organization website.",
     "editCodeWarnMsg2Line1": "It can take up to 15 minutes for the template changes to be reflected.",
-    "editCodeWarnMsg2Line2":"Open the template in a new browser tab after this time to view the changes.",
+    "editCodeWarnMsg2Line2": "Open the template in a new browser tab after this time to view the changes.",
     "summaryDesc_callback": "You have configured the callback template. Click Finish to save the configuration and generate embed code so you can start using this callback template on your organization website.",
     "editSummaryDesc_callback": "You have edited the callback template. Click Finish to save the configuration so you can start using the new version of this callback template on your organization website.",
     "copyEmbedCode": "Copy Embed Code",
@@ -5884,14 +5936,14 @@
     "chattingMessage": "Chatting with an Agent",
     "downloadEmbedCode": "Download Embed Code",
     "embed-code": {
-      "no-verified-domains" : {
+      "no-verified-domains": {
         "warn": "There are no verified domains for your organization. Care templates work on any domains by default. Go to Settings page to add and verify domains in order to restrict them to work only for your organization's domains."
       },
       "verified-domains": {
         "info": "These are the verified domains for your organization:",
         "warn": "Care templates will not appear on unverified domains. Go to Settings page to add and verify domains."
       },
-      "domain-fetch-error" : {
+      "domain-fetch-error": {
         "info": "There was an error while loading the verified domains for your organization. Please try again.",
         "warn": "Care templates work on any domains by default. Go to Settings page to add and verify domains in order to restrict them to work only for your organization's domains."
       }
@@ -6189,7 +6241,7 @@
       "helpSiteLabel": "Help Site",
       "useCustomHelpSite": "Use a custom help site"
     },
-    "dirsync" : {
+    "dirsync": {
       "loading": "Updating Status",
       "title": "Directory Synchronization",
       "syncTitle": "Directory Synchronization",
