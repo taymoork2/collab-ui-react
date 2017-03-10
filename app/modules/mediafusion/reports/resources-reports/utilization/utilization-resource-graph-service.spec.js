@@ -30,7 +30,7 @@ describe('Service: Utilization Resource GraphService', function () {
     value: "0",
   };
   var clusterNameMapping = getJSONFixture('mediafusion/json/metrics-graph-report/ParticipantDistributionGraphData.json');
-  var IdMap = angular.copy(clusterNameMapping.clusterIdToNameMap);
+  var IdMap = _.cloneDeep(clusterNameMapping.clusterIdToNameMap);
   var UtilizationGraphData = getJSONFixture('mediafusion/json/metrics-graph-report/UtilizationGraphData.json');
   var UtilizationData = getJSONFixture('mediafusion/json/metrics-graph-report/UtilizationData.json');
 

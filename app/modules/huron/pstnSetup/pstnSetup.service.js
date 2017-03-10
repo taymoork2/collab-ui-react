@@ -17,6 +17,7 @@
     TerminusResellerCarrierService, TerminusResellerCarrierV2Service,
     TerminusV2ResellerService,
     TerminusV2CarrierNumberCountService, TerminusV2CarrierNumberService,
+    TerminusV2CarrierCapabilitiesService,
     TerminusV2ResellerNumberReservationService, TerminusV2ResellerCarrierNumberReservationService,
     TerminusV2CustomerNumberReservationService,
     TerminusV2CustomerNumberOrderBlockService, TelephoneNumberService) {
@@ -62,6 +63,7 @@
       setCustomerTrialV2: setCustomerTrialV2,
       getCarrierInventory: getCarrierInventory,
       getCarrierTollFreeInventory: getCarrierTollFreeInventory,
+      getCarrierCapabilities: getCarrierCapabilities,
       getCarrierDetails: getCarrierDetails,
       searchCarrierInventory: searchCarrierInventory,
       searchCarrierTollFreeInventory: searchCarrierTollFreeInventory,
@@ -245,6 +247,12 @@
       return TerminusV2CarrierNumberCountService.get({
         carrierId: carrierId,
         numberType: NUMTYPE_TOLLFREE,
+      }).$promise;
+    }
+
+    function getCarrierCapabilities(carrierId) {
+      return TerminusV2CarrierCapabilitiesService.query({
+        carrierId: carrierId,
       }).$promise;
     }
 
@@ -723,9 +731,25 @@
 
       if (!_.isUndefined(translations[order.statusMessage])) {
         return translations[order.statusMessage];
-      } else if (order.statusMessage !== 'None') {
-        return order.statusMessage;
+      } else if (order.statusMessage && order.statusMessage !== 'None') {
+        return displayBatchIdOnly(order.statusMessage);
       }
+    }
+
+    function displayBatchIdOnly(statusMessage) {
+      if (statusMessage.indexOf('Batch') >= 0) {
+        if (statusMessage.indexOf(',') >= 0) {
+          var batchStatus = statusMessage.split(',');
+          var batchIdOnlyStatusMessage = [];
+          _.forEach(batchStatus, function (batchOnly) {
+            var batchId = (batchOnly.replace(/\D+/g, ''));
+            batchIdOnlyStatusMessage.push(batchId);
+          });
+          return batchIdOnlyStatusMessage.toString();
+        }
+        return statusMessage.replace(/\D+/g, '');
+      }
+      return statusMessage;
     }
 
     function listPendingNumbers(customerId) {

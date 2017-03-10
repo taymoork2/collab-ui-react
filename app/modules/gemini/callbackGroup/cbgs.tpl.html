@@ -6,7 +6,7 @@
     <div class="page-option-buttons">
       <div ng-if="!cbgsCtrl.exportLoading">
         <a class="export-users" ng-csv="cbgsCtrl.exportCSV()" filename="{{'gemini.cbgs.csvFilename' | translate}}">
-          <button class="btn--none"><i class="icon icon-download-contain icon-lg"></i></button>
+          <button class="btn--none"><i class="icon icon-download icon-lg"></i></button>
         </a>
       </div>
       <div ng-if="cbgsCtrl.exportLoading" class="btn btn-none">

@@ -1067,6 +1067,7 @@
               entitlements: {},
               queryuserslist: {},
               currentUserId: '',
+              orgInfo: {},
             },
             data: {
               displayName: 'Overview',
@@ -1952,13 +1953,27 @@
             },
             templateUrl: 'modules/gemini/callbackGroup/cbgRequest.tpl.html',
           })
-          .state('gemCbgDetails', {
+          .state('gmTdDetails', {
+            data: {},
+            params: { info: {} },
             parent: 'sidepanel',
             views: {
-              'sidepanel@': { template: '<cbg-details></cbg-details>' },
-            },
-            params: { info: {} },
+              'sidepanel@': { template: '<gm-td-details></gm-td-details>' },
+              'header@gmTdDetails': { templateUrl: 'modules/gemini/telephonyDomain/details/gmTdDetailsHeader.tpl.html' } },
+          })
+          .state('gmTdDetails.sites', {
+            params: { data: {} },
+            template: '<gm-td-sites></gm-td-sites>',
+          })
+          .state('gmTdDetails.notes', {
+            template: '<gm-td-notes></gm-td-notes>',
+            params: { obj: {} },
+          })
+          .state('gemCbgDetails', {
             data: {},
+            parent: 'sidepanel',
+            params: { info: {} },
+            views: { 'sidepanel@': { template: '<cbg-details></cbg-details>' } },
           })
           .state('gemCbgDetails.sites', {
             template: '<cbg-sites></cbg-sites>',
@@ -2759,6 +2774,9 @@
               hasResourceGroupFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
               },
+              hasCucmSupportFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCucmSupport);
+              },
             },
           })
           // hybrid context
@@ -2807,6 +2825,28 @@
                 templateUrl: 'modules/context/fields/hybrid-context-fields.html',
                 controller: 'HybridContextFieldsCtrl',
                 controllerAs: 'contextFields',
+              },
+            },
+          })
+          .state('context-fields-sidepanel', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                template: '<context-fields-sidepanel field="$resolve.field"></context-fields-sidepanel>',
+              },
+              'header@context-fields-sidepanel': {
+                templateUrl: 'modules/context/fields/sidepanel/hybrid-context-fields-sidepanel-header.html',
+              },
+            },
+            data: {
+              displayName: 'Overview',
+            },
+            params: {
+              field: {},
+            },
+            resolve: {
+              field: /* @ngInject */ function ($stateParams) {
+                return $stateParams.field;
               },
             },
           })
@@ -3062,6 +3102,28 @@
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServicePhaseTwo);
               },
             },
+          })
+          .state('cucm-cluster', {
+            abstract: true,
+            url: '/services/cluster/cucm/:id',
+            parent: 'main',
+            template: '<hybrid-services-cluster-page cluster-id="$resolve.id" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></hybrid-services-cluster-page>',
+            resolve: {
+              id: /* @ngInject */ function ($stateParams) {
+                return $stateParams.id;
+              },
+              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
+              },
+            },
+          })
+          .state('cucm-cluster.nodes', {
+            url: '/nodes',
+            template: '<hybrid-services-nodes-page cluster-id="$resolve.id"></hybrid-services-nodes-page>',
+          })
+          .state('cucm-cluster.settings', {
+            url: '/settings',
+            template: '<cucm-cluster-settings cluster-id="$resolve.id"></cucm-cluster-settings>',
           })
           // Add Resource modal
           .state('add-resource', {

@@ -148,6 +148,7 @@
     "telstraAppRedirect": "Connecting to Telstra Apps Marketplace",
     "careAddUserError": "Failed to add user to Care.",
     "careAddUserRoleError": "Error adding roles to user.",
+    "careDeleteCESRoleError": "Error deleting CES role from user",
     "loadError": "An error while loading the users list."
   },
   "userManage": {
@@ -308,8 +309,14 @@
     "paidAdvancedConferencing": "Advanced Meetings",
     "paidComm": "Call",
     "paidSparkCall": "Cisco Spark Call",
+    "paidNone": "None",
+    "paidCDC": "K1",
+    "paidCVC": "K2",
     "paidCare": "Care Digital Channel",
-    "paidContactCenter": "Chat",
+    "careServices": "Chat and Callback",
+    "careVoiceServices": "Chat, Callback and Inbound Call",
+    "enableCallInfo": "Message is mandatory for Care services. Enable Call if you want the user to handle calls from customers.",
+    "paidContactCenter": "Care",
     "enterpriseEdition": "Enterprise Edition {{capacity}}",
     "meetingCenter": "Meeting Center {{capacity}}",
     "supportCenter": "Support Center {{capacity}}",
@@ -327,6 +334,7 @@
     "proceedFreeMessage": "If you run out of licenses for a Cisco Spark service, any remaining users are assigned a free license for that service.",
     "reviewPlanButton": "Review your plan",
     "proceedFreeButton": "Proceed with Free",
+    "getCareEntitlementsErrorForuser": "Failed to get care entitlements for user",
     "result": {
       "200": "entitled successfully",
       "404": "does not exist",
@@ -367,7 +375,9 @@
     "enabledBetaFeatures": "Enabled Beta Features",
     "otpShareButton": "Share",
     "userDetails": "User Details",
-    "userPreferredLanguageError": "Failed to fetch user preferred language. Reason:"
+    "userPreferredLanguageError": "Failed to fetch user preferred language. Reason:",
+    "notConfigured": "Not Configured",
+    "dirsyncToolTip": "Use DirSync to update the user's preferred language."
   },
   "tabs": {
     "overviewTab": "Overview",
@@ -513,6 +523,8 @@
     "quality": "Quality",
     "noData": "No Data",
     "noCustomerData": "No Data Available",
+    "timeSelected": "Selected Time Period: ",
+    "selectedReportFilter": "Selected Report Filter: ",
     "today": "Today",
     "today2": "today",
     "yesterday": "Yesterday",
@@ -546,7 +558,7 @@
     "pdf": "PDF",
     "png": "PNG",
     "export": "Export",
-    "print": "Print",
+    "downloadPage": "Download Page",
     "allCalls": "All Calls",
     "videoCalls": "Video Calls",
     "audioCalls": "Audio Only Calls",
@@ -580,6 +592,8 @@
       "last3Months": "Monthly Last 3 Months",
       "missingDays": "no data available for {{nbrOfMissingDays}} days",
       "nameNotFoundFor": "Name not found for",
+      "nameNotResolvedFor": "Name not resolved for",
+      "timeoutWhenTryingToResolveNameFor": "Timeout when trying to resolve name for",
       "selectModelsToFilterOn": "Select models to filter on",
       "deviceOptions": {
         "all": "All",
@@ -1158,6 +1172,7 @@
     "to": "to",
     "trackingId": "Tracking Id: {{trackingId}}.",
     "tryAgain": "Try Again",
+    "trySearchAgain": "Try another search.",
     "turnOff": "Turn Off",
     "type": "Type",
     "unassigned": "Unassigned",
@@ -1809,21 +1824,26 @@
       "mf_mgmt": "Media Service",
       "hds_app": "Hybrid Data Security",
       "cs_mgmt": "Management Connector",
-      "cs_context": "Context Connector"
+      "cs_context": "Context Connector",
+      "ucm_mgmt": "Management Connector",
+      "c_serab": "Serviceability Connector"
     },
     "serviceNameFromConnectorType": {
       "c_cal": "Calendar Service",
       "c_ucmc": "Call Service",
       "c_mgmt": "Management Service",
       "cs_mgmt": "Management Connector",
-      "cs_context": "Context Connector"
+      "cs_context": "Context Connector",
+      "ucm_mgmt": "Management Connector",
+      "c_serab": "Serviceability Connector"
     },
     "clusterTypeFromServiceId": {
       "squared-fusion-mgmt": "Expressway",
       "squared-fusion-cal": "Expressway",
       "squared-fusion-uc": "Expressway",
       "squared-fusion-media": "Hybrid Media",
-      "spark-hybrid-datasecurity": "Hybrid Data Security"
+      "spark-hybrid-datasecurity": "Hybrid Data Security",
+      "squared-fusion-khaos": "Cisco Unified CM"
     },
     "serviceDescriptions": {
       "squared-fusion-uc": "Call Service Aware lets your users instantly share their desktops from their Cisco Spark clients while on a call. Call Service Connect lets your users answer calls to their work phones and to place calls to other work phones, on their Cisco Spark client.",
@@ -1843,7 +1863,8 @@
       "failedToDisableConnect": "Could not disable Call Service Connect.",
       "sipDomainSaved": "SIP Destination saved successfully.",
       "sipDomainInvalid": "Could not save SIP Destination. Try again later.",
-      "invalidEmail": "Please enter a list of comma-separated email addresses"
+      "invalidEmail": "Please enter a list of comma-separated email addresses",
+      "couldNotGetServices": "Could not get services."
     },
     "cloudExtensions": {
       "serviceNames": {
@@ -2192,6 +2213,7 @@
         "expressway": "Expressway",
         "mediafusion": "Media",
         "hds": "Data Security",
+        "cucm": "Cisco Unified CM",
         "no-services": "No services",
         "missing-clusters": "<a ng-click=\"{{onclick}}\">Assign clusters</a> and users to complete this group",
         "missing-users": "<a ng-click=\"{{onclick}}\">Assign users</a> to complete this group",
@@ -2375,10 +2397,13 @@
     "dictionary": {
       "welcome": "Welcome to the Context Dictionary",
       "fieldPage": {
+        "associatedFieldsets": "Associated Fieldsets",
+        "associatedFieldsetsError": "Unable to load associated fieldsets.",
         "fieldId": "Field ID",
         "dataType":"Data Type",
         "classification": "Data Privacy",
         "searchable": "Searchable",
+        "searchableHelpText": "Make data in this field searchable.",
         "lastUpdated":"Date Updated",
         "startSearching": "To begin, search for a field",
         "noSearchResults": "Search yielded no results",
@@ -2386,12 +2411,14 @@
         "piiEncrypted": "PII Encrypted",
         "encrypted": "Non-PII Encrypted",
         "unencrypted": "Unencrypted",
-        "dateFormat": "MM/dd/yyyy"
+        "dateFormat": "MM/dd/yyyy",
+        "noneFound": "No fields found"
       },
       "fieldsetPage": {
         "fieldsetId": "Fieldset ID",
         "numOfFields": "No. of Fields",
-        "fieldsetReadFailed": "Unable to retrieve fieldsets. Refresh your browser to try again."
+        "fieldsetReadFailed": "Unable to retrieve fieldsets. Refresh your browser to try again.",
+        "noneFound": "No fieldsets found"
       }
     }
   },
@@ -2610,6 +2637,9 @@
       "generatedAt": "Generated Today at {{time}}",
       "expiryInfo": "Generated reports will expire after 10 days. Any reports older than 10 days will automatically be deleted by the system."
     },
+    "searchErrors": {
+      "queryLimit": "query must be 200 characters or less"
+    },
     "searchParameters": {
       "searchBy": "Search By",
       "searchByPlaceholder": "Email ID",
@@ -2635,7 +2665,7 @@
       "generateText": "Enter report information to generate a report. Generation time will depend on estimated report size.",
       "description": "Description",
       "exportFormat": "Export Format",
-      "totalResultSize": "Total Result Size",
+      "totalReportSize": "Total Report Size",
       "downloadContent": "Download content such as documents, images and media associated with this report.",
       "reportSizeTooBig": "Report Size Too Big",
       "reportSizeErrorSummary": "The estimated report size is over the 3 GB maximum size allowed for report generation. Go back to search and refine your results.",
@@ -3360,7 +3390,8 @@
     "notificationTimerSeconds": "Seconds",
     "calledParty": "Display called party's information",
     "callingParty": "Display calling party's information",
-    "playSound": "Play Sound"
+    "playSound": "Play Sound",
+    "assignmentMsg": "Assigned to "
   },
   "pagingGroup": {
     "title": "Paging Group",
@@ -3491,7 +3522,7 @@
     "forwardVoicemailDisabled": "Call Forwarding is set to Voicemail, which is currently disabled. Please update the Call Forwarding settings.",
     "directVoicemail": "Forward directly to Voicemail",
     "forwardBusyNoAnswerTimerSeconds": "Seconds",
-    "forwardBusyNoAnswerTimerDescription": "Time before call is forwarded",
+    "forwardBusyNoAnswerTimerDescription": "Time before call is forwarded due to no answer",
     "ringDurationTimer.validation.error": "Must be a number between 1 and 300"
   },
   "multipleCalls": {
@@ -3702,6 +3733,7 @@
     "errors": {
       "states": "Failed to retrieve states",
       "inventory": "Failed to get PSTN inventory",
+      "capabilities": "Failed to retrieve carrier capabilities.",
       "orders": {
         "missingNumber": "Number Missing in Order {{orderNumber}}"
       },
@@ -4300,9 +4332,8 @@
     "newDevice": "New Device",
     "newCode": "New Code",
     "confirmRoomDeviceOnly": {
-      "roomDeviceOnly": "Room Device activation only",
-      "noSparkCallService": "This user doesn't have Spark Call service.",
-      "noSparkCallWarning": "They can still activate a room device and make calls using Spark or SIP addresses. However, for phone dialling and desk phones, you need to give them the Spark Call service from the Users page."
+      "roomDeviceOnly": "Room device activation only",
+      "noSparkCallWarning": "This user can only activate Cisco Spark room devices. Before they can activate a desk phone, you must enable the Cisco Spark call service for them from the Users page."
     },
     "chooseDeviceType": {
       "deviceType": "What kind of device do you want to set up?",
@@ -4336,8 +4367,7 @@
       "lastNameExample": "e.g. Smith",
       "emailExample": "e.g. johnsmith@example.com",
       "invalidEmailAddress": "Invalid Email Address",
-      "noUserFound": "No users found with Cisco Spark Call service",
-      "noSparkCallWarning": "This user doesn't have Spark Call service. They can still activate a room device and make calls using Spark or SIP addresses. However, for phone dialling and desk phones, you need to give them the Spark Call service from the Users page."
+      "noUserFound": "No users found with Cisco Spark Call service"
     },
     "chooseSharedSpace": {
       "existingOrNewPlace": "Assign to an existing place or a new place?",
@@ -4613,7 +4643,7 @@
       "partialTitle": "Partially Available",
       "utilizationTitle": "Resource Utilization",
       "participantDistributionTitle": "Participant Distribution",
-      "numberOfParticipantTitle": "Participants Activity",
+      "numberOfParticipantTitle": "Participant Activity",
       "clusteravailability": "Cluster Availability",
       "overallUtilizationGraphError": "There was an error while loading detailed utilization data",
       "overallParticipantDistributionGraphError": "There was an error while loading detailed participant distribution data",
@@ -4663,7 +4693,23 @@
       "clientTypeHeading": "Client Type Distribution",
       "onPremisesHeading": "On-Premises",
       "cloudHeading": "Cloud",
-      "hybridHeading": "Hybrid"
+      "hybridHeading": "Hybrid",
+      "clientType": {
+        "andriod": "Android",
+        "blackberry": "BlackBerry",
+        "desktop": "Desktop",
+        "ipad": "iPad",
+        "iphone": "iPhone",
+        "jabber": "Jabber",
+        "sip": "SIP",
+        "board": "Spark Board",
+        "test": "Test",
+        "tp": "Tele Presence",
+        "uc": "UC",
+        "unknown": "Unknown",
+        "windows": "Windows Mobile"
+      },
+      "clientTypeCardDesc": "Summary of the type of clients that are in use at an Organization"
     },
     "deleteGroup": {
       "message": "Are you sure you want to delete {{groupName}} from Cisco Collaboration Cloud?",
@@ -5799,6 +5845,8 @@
     "typePhone": "Phone",
     "typeCustom": "Custom",
     "typeReason": "Reason",
+    "categoryHintText": "Add category options like Queries, Billing...",
+    "categoryWarningText": "Add at least one category option.",
     "ctValidation": {
       "errorChar250": "Character length cannot be more than 250.",
       "errorChar50": "Character length cannot be more than 50.",
@@ -6105,7 +6153,8 @@
           "squared-fusion-mgmt": "Management",
           "squared-fusion-media": "Media",
           "spark-hybrid-datasecurity": "Data Security",
-          "contact-center-context": "Context"
+          "contact-center-context": "Context",
+          "squared-fusion-khaos": "Management"
         }
       },
       "licenses": {
@@ -6734,6 +6783,7 @@
     "msg": {
       "splsResponseErr": "No partner organization found, please contact ccaportal@cisco.com for help."
     },
+    "region": "Region",
     "cbgTitle": "Callback Groups",
     "tdTitle": "Telephony Domain",
     "button": {
@@ -6756,6 +6806,11 @@
       "genericError": "An unexpected error occurred. Please try again later."
     },
     "tds": {
+      "seeAll": "See All",
+      "phoneNumbers": "Phone Numbers",
+      "noteToCisco": "Note to Cisco Team",
+      "defaultToll": "Default Toll",
+      "defaultTollFree": "Default Toll Free",
       "export": {
         "csvFilename": "exported_telephonyDomain.csv",
         "result": {
@@ -6768,8 +6823,8 @@
         "sites": "Site URL",
         "bridgeSet": "Bridge Set",
         "webDomain": "Web Domain",
-        "description": "Partner TD Name",
         "totalSites": "Sites Assigned",
+        "partnerTdName": "Partner TD Name",
         "telephonyDomains": "Telephony Domains"
       }
     },
@@ -6779,7 +6834,7 @@
       "moveSite": "Move Site",
       "moveFrom": "move from",
       "siteMoved": "Site Moved",
-      "placeholder-text": "All",
+      "placeholder-text": "Search",
       "importCsv": "Import CSV",
       "title": "Callback Groups",
       "exportToCsv": "Export to CSV",

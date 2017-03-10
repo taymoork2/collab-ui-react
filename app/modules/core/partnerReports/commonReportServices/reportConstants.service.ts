@@ -7,6 +7,11 @@ import {
 export class ReportConstants {
   public readonly ABORT: string = 'ABORT';
 
+  // Media Quality type classes
+  public readonly GOOD: string = 'good';
+  public readonly FAIR: string = 'fair';
+  public readonly POOR: string = 'poor';
+
   // Numerical Constants
   public readonly DAYS: number = 6;
   public readonly FIXED: number = 2;

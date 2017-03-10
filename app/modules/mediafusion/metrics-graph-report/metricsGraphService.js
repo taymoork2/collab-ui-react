@@ -360,9 +360,9 @@
       }
       var legend;
       if (selectedCluster === allClusters) {
-        legend = angular.copy(availabilityLegendAllcluster);
+        legend = _.cloneDeep(availabilityLegendAllcluster);
       } else {
-        legend = angular.copy(availabilityLegendCluster);
+        legend = _.cloneDeep(availabilityLegendCluster);
       }
       if (!_.isUndefined(data.data[0].isDummy) && data.data[0].isDummy) {
         _.forEach(legend, function (value, key) {

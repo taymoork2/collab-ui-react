@@ -380,7 +380,7 @@ describe('Component: pgEdit', () => {
 
     it('should be able to select and unselect a member and initiator', function () {
       this.controller.availableMembers = membersList;
-      let mem1 = angular.copy(this.controller.availableMembers[0]);
+      let mem1 = _.cloneDeep(this.controller.availableMembers[0]);
       this.getUserDefer.resolve(userResponse);
       this.controller.selectMembers(mem1);
       this.$scope.$apply();
@@ -390,7 +390,7 @@ describe('Component: pgEdit', () => {
       expect(this.controller.members[0].picturePath).toEqual(fake_picture_path);
 
       this.controller.availableInitiators = membersList;
-      let initiator1 = angular.copy(this.controller.availableInitiators[0]);
+      let initiator1 = _.cloneDeep(this.controller.availableInitiators[0]);
       this.getUserDefer.resolve(userResponse);
       this.controller.selectInitiators(initiator1);
       this.$scope.$apply();
@@ -514,12 +514,12 @@ describe('Component: pgEdit', () => {
     it('incrementCount test', function () {
       this.controller.userCount = 0;
       this.controller.placeCount = 0;
-      let mem = angular.copy(membersList[0]);
+      let mem = _.cloneDeep(membersList[0]);
       this.controller.incrementCount(mem);
       expect(this.controller.getUserCount()).toEqual(1);
       expect(this.controller.getPlaceCount()).toEqual(0);
 
-      let mem1 = angular.copy(membersList[1]);
+      let mem1 = _.cloneDeep(membersList[1]);
       this.controller.incrementCount(mem1);
       expect(this.controller.getUserCount()).toEqual(1);
       expect(this.controller.getPlaceCount()).toEqual(1);
@@ -528,12 +528,12 @@ describe('Component: pgEdit', () => {
     it('decreaseCount test', function () {
       this.controller.userCount = 1;
       this.controller.placeCount = 1;
-      let mem = angular.copy(membersList[0]);
+      let mem = _.cloneDeep(membersList[0]);
       this.controller.decreaseCount(mem);
       expect(this.controller.getUserCount()).toEqual(0);
       expect(this.controller.getPlaceCount()).toEqual(1);
 
-      let mem1 = angular.copy(membersList[1]);
+      let mem1 = _.cloneDeep(membersList[1]);
       this.controller.decreaseCount(mem1);
       expect(this.controller.getUserCount()).toEqual(0);
       expect(this.controller.getPlaceCount()).toEqual(0);

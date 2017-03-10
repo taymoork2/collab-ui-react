@@ -284,7 +284,7 @@ describe('Component: pgSetupAssistant', () => {
     beforeEach(initComponent);
 
     it('should save with error if partial members saved', function () {
-      let mem1 = angular.copy(members[0]);
+      let mem1 = _.cloneDeep(members[0]);
       let memWithPic = {
         member: mem1,
         picturePath: '',
@@ -302,7 +302,7 @@ describe('Component: pgSetupAssistant', () => {
     });
 
     it('should save with error if partial initiators saved', function () {
-      let mem1 = angular.copy(members[0]);
+      let mem1 = _.cloneDeep(members[0]);
       let memWithPic = {
         member: mem1,
         picturePath: '',
@@ -320,12 +320,12 @@ describe('Component: pgSetupAssistant', () => {
     });
 
     it('should save with success', function () {
-      let mem1 = angular.copy(members[0]);
+      let mem1 = _.cloneDeep(members[0]);
       let memWithPic1 = {
         member: mem1,
         picturePath: '',
       };
-      let mem2 = angular.copy(members[1]);
+      let mem2 = _.cloneDeep(members[1]);
       let memWithPic2 = {
         member: mem2,
         picturePath: '',

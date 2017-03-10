@@ -8,7 +8,7 @@
       controller: CbgNotesCtrl,
     });
   /* @ngInject */
-  function CbgNotesCtrl($state, $stateParams, $translate, cbgService, Notification, PreviousState, gemService) {
+  function CbgNotesCtrl($state, $scope, $stateParams, $translate, cbgService, Notification, PreviousState, gemService) {
     var vm = this;
     var showNotesNum = 5;
     var customerId = _.get($stateParams, 'obj.customerId', '');
@@ -40,15 +40,17 @@
       }
       cbgService.postNote(postData).then(function (res) {
         var resJson = _.get(res.content, 'data.body');
-        var arr = [];
         vm.loading = false;
         if (resJson.returnCode) {
           Notification.notify(gemService.showError(resJson.returnCode));
           return;
         }
-        arr.push(resJson);
-        vm.notes = arr.concat(vm.notes);
+        vm.allNotes.unshift(resJson);
+        vm.isShowAll = (_.size(vm.allNotes) > showNotesNum);
+        vm.notes = (_.size(vm.allNotes) <= showNotesNum ? vm.allNotes : vm.allNotes.slice(0, showNotesNum));
         vm.model.postData = '';
+
+        $scope.$emit('refreshNotes', vm.allNotes);
       });
     }
 

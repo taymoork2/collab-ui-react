@@ -11,7 +11,7 @@
     text-align: center;
   }
 
- .ui-grid-viewport {
+  .ui-grid-viewport {
     height: auto !important;
   }
 
@@ -58,7 +58,7 @@
     border-right: rem-calc(1) solid $gray-light-2;
   }
 
-  .ui-grid-filter-container { display: none!important; }
+  .ui-grid-filter-container { display: none !important; }
 
   #paginator {
     float: right;

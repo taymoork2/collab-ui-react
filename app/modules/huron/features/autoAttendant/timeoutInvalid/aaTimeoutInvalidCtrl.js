@@ -115,16 +115,16 @@
         // both timeout options have the same action name so
         // we distinguish by the number of attempts allowed
         if (entry.attempts === 1) {
-          vm.selectedTimeout = angular.copy(vm.timeoutActions[0]);
+          vm.selectedTimeout = _.cloneDeep(vm.timeoutActions[0]);
         } else {
-          vm.selectedTimeout = angular.copy(vm.timeoutActions[1]);
-          vm.selectedTimeout.childOptions = angular.copy(vm.repeatOptions);
+          vm.selectedTimeout = _.cloneDeep(vm.timeoutActions[1]);
+          vm.selectedTimeout.childOptions = _.cloneDeep(vm.repeatOptions);
           if (entry.attempts >= 2 && entry.attempts <= 6) {
-            vm.selectedTimeout.selectedChild = angular.copy(vm.repeatOptions[entry.attempts - 2]);
+            vm.selectedTimeout.selectedChild = _.cloneDeep(vm.repeatOptions[entry.attempts - 2]);
 
           } else {
             // this case should never happens.
-            vm.selectedTimeout.selectedChild = angular.copy(vm.repeatOptions[0]);
+            vm.selectedTimeout.selectedChild = _.cloneDeep(vm.repeatOptions[0]);
           }
         }
       } else {
@@ -139,9 +139,9 @@
     }
 
     function createOptionMenu() {
-      vm.selectedTimeout = angular.copy(vm.timeoutActions[0]);
-      vm.selectedTimeout.childOptions = angular.copy(vm.repeatOptions);
-      vm.selectedTimeout.selectedChild = angular.copy(vm.repeatOptions[2]);
+      vm.selectedTimeout = _.cloneDeep(vm.timeoutActions[0]);
+      vm.selectedTimeout.childOptions = _.cloneDeep(vm.repeatOptions);
+      vm.selectedTimeout.selectedChild = _.cloneDeep(vm.repeatOptions[2]);
     }
 
     function setPhonemenuFormDirty() {

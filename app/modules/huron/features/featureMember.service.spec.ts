@@ -158,22 +158,22 @@ describe('Service: FeatureService', () => {
   describe('member name display test', () => {
 
     it('Can get First and Last Name', function () {
-      let mem1 = angular.copy(membersList[0]);
+      let mem1 = _.cloneDeep(membersList[0]);
       expect(this.FeatureMemberService.getFirstLastName(mem1)).toEqual('Chuck Norris');
     });
 
     it('Can return empty string if no first and last name', function() {
-      let mem2 = angular.copy(membersList[1]);
+      let mem2 = _.cloneDeep(membersList[1]);
       expect(this.FeatureMemberService.getFirstLastName(mem2)).toEqual('');
     });
 
     it('Can only get firstname if no last name', function() {
-      let mem3 = angular.copy(membersList[2]);
+      let mem3 = _.cloneDeep(membersList[2]);
       expect(this.FeatureMemberService.getFirstLastName(mem3)).toEqual('Tom');
     });
 
     it('Can only get lastname if no first name', function() {
-      let mem4 = angular.copy(membersList[3]);
+      let mem4 = _.cloneDeep(membersList[3]);
       expect(this.FeatureMemberService.getFirstLastName(mem4)).toEqual('Smith');
     });
 
@@ -191,12 +191,12 @@ describe('Service: FeatureService', () => {
     });
 
     it('Can getFullNameFromMember for USER test', function () {
-      let mem = angular.copy(membersList[0]);
+      let mem = _.cloneDeep(membersList[0]);
       expect(this.FeatureMemberService.getFullNameFromMember(mem)).toEqual('Chuck Norris (chuck.norris@kickyourbutt.com)');
     });
 
     it('Can getFullNameFromMember for PLACE test', function () {
-      let mem = angular.copy(membersList[1]);
+      let mem = _.cloneDeep(membersList[1]);
       expect(this.FeatureMemberService.getFullNameFromMember(mem)).toEqual('Koala Lounge');
     });
 
@@ -232,12 +232,12 @@ describe('Service: FeatureService', () => {
     });
 
     it('Can getDisplayNameFromMember for USER test', function () {
-      let mem = angular.copy(membersList[0]);
+      let mem = _.cloneDeep(membersList[0]);
       expect(this.FeatureMemberService.getDisplayNameFromMember(mem)).toEqual('Chuck Norris');
     });
 
     it('Can getDisplayNameFromMember for PLACE test', function () {
-      let mem = angular.copy(membersList[1]);
+      let mem = _.cloneDeep(membersList[1]);
       expect(this.FeatureMemberService.getDisplayNameFromMember(mem)).toEqual('Koala Lounge');
     });
 
@@ -276,7 +276,7 @@ describe('Service: FeatureService', () => {
   describe('getMemberType test', () => {
 
     it('can getMemberType for place', function () {
-      let mem = angular.copy(membersList[1]);
+      let mem = _.cloneDeep(membersList[1]);
       expect(this.FeatureMemberService.getMemberType(mem)).toEqual('place');
     });
 

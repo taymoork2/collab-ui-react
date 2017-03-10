@@ -209,14 +209,14 @@
       Orgservice.getOrg(function (data) {
         if (data.countryCode) {
           PstnSetup.setCountryCode(data.countryCode);
-          PstnSetupService.getCustomerV2(PstnSetup.getCustomerId())
-          .then(function () {
-            PstnSetup.setCustomerExists(true);
-          })
-          .finally(function () {
-            vm.enableCarriers = true;
-          });
         }
+        PstnSetupService.getCustomerV2(PstnSetup.getCustomerId())
+        .then(function () {
+          PstnSetup.setCustomerExists(true);
+        })
+        .finally(function () {
+          vm.enableCarriers = true;
+        });
       }, PstnSetup.getCustomerId());
     }
 

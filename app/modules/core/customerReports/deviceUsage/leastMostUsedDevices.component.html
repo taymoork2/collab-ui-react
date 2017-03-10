@@ -2,15 +2,15 @@
   <h4 class="header" translate="{{$ctrl.displayTitle}}"></h4>
   <table class="table least-most-table">
     <thead>
-      <th class="extreme-table-entry" translate="reportsPage.usageReports.deviceName"></th>
-      <th class="extreme-table-entry right-aligned" translate="reportsPage.usageReports.hoursUsed"></th>
-      <th class="extreme-table-entry right-aligned" translate="reportsPage.usageReports.callCount"></th>
+      <th class="extreme-table-entry name" translate="reportsPage.usageReports.deviceName"></th>
+      <th class="extreme-table-entry time right-aligned" translate="reportsPage.usageReports.hoursUsed"></th>
+      <th class="extreme-table-entry calls right-aligned" translate="reportsPage.usageReports.callCount"></th>
     </thead>
     <tr ng-show="$ctrl.waitingStats === false" class="no-border" ng-repeat="device in $ctrl.usedDevices">
-      <td ng-show="device.info" class="extreme-table-entry missing" title="{{device.info}}">{{device.name}}</td>
-      <td ng-hide="device.info" class="extreme-table-entry" >{{device.name}}</td>
-      <td class="extreme-table-entry right-aligned">{{device.duration}}</td>
-      <td class="extreme-table-entry right-aligned">{{device.calls}}</td>
+      <td ng-show="device.info" class="extreme-table-entry name missing" title="{{device.info}}">{{device.name}}</td>
+      <td ng-hide="device.info" class="extreme-table-entry name" >{{device.name}}</td>
+      <td class="extreme-table-entry time right-aligned">{{device.duration}}</td>
+      <td class="extreme-table-entry calls right-aligned">{{device.calls}}</td>
     </tr>
     <tr ng-show="$ctrl.waitingStats === true" class="no-border">
       <td colspan = "3" width="100%">

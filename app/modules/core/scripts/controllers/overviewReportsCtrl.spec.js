@@ -54,7 +54,7 @@ describe('Controller: Overview Reports', function () {
         getManagedOrgsList: jasmine.createSpy('getManagedOrgsList').and.callFake(function () {
           return q.when({
             data: {
-              organizations: angular.copy(customerData.customerResponse),
+              organizations: _.cloneDeep(customerData.customerResponse),
             },
           });
         }),

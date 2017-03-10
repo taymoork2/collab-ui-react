@@ -337,7 +337,7 @@ require('./_cdr-logs.scss');
 
     function selectCDR(selectedCDR, call) {
       vm.selectedCDR = selectedCDR;
-      var callCopy = angular.copy(call);
+      var callCopy = _.cloneDeep(call);
 
       _.forEach(callCopy, function (item) {
         _.forEach(item, function (cdr) {

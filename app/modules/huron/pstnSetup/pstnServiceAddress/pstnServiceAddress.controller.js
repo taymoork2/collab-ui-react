@@ -19,7 +19,7 @@
     init();
 
     function init() {
-      vm.address = angular.copy(PstnSetup.getServiceAddress());
+      vm.address = _.cloneDeep(PstnSetup.getServiceAddress());
       vm.countryCode = PstnSetup.getCountryCode();
       // If address has been set in the model, set it as valid
       if (!_.isEmpty(vm.address)) {

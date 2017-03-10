@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Component: CbgDetails', function () {
-  var $q, $state, $modal, $scope, $window, $componentCtrl;
+  var $q, $state, $modal, $scope, $stateParams, $window, $componentCtrl;
   var obj, ctrl, cbgService, gemService, Notification;
   var preData = getJSONFixture('gemini/common.json');
 
@@ -12,13 +12,13 @@ describe('Component: CbgDetails', function () {
   beforeEach(initController);
 
   afterEach(function () {
-    $q = $state = $modal = $scope = $window = $componentCtrl = obj = ctrl = cbgService = gemService = Notification = undefined;
+    $q = $state = $modal = $scope = $stateParams = $window = $componentCtrl = obj = ctrl = cbgService = gemService = Notification = undefined;
   });
   afterAll(function () {
     preData = undefined;
   });
 
-  function dependencies(_$q_, _$state_, _$modal_, _$window_, _$rootScope_, _$componentController_, _Notification_, _cbgService_, _gemService_) {
+  function dependencies(_$q_, _$state_, _$modal_, _$window_, _$rootScope_, _$stateParams_, _$componentController_, _Notification_, _cbgService_, _gemService_) {
     $q = _$q_;
     $state = _$state_;
     $modal = _$modal_;
@@ -27,6 +27,7 @@ describe('Component: CbgDetails', function () {
     gemService = _gemService_;
     $scope = _$rootScope_.$new();
     Notification = _Notification_;
+    $stateParams = _$stateParams_;
     $componentCtrl = _$componentController_;
   }
 
@@ -41,13 +42,16 @@ describe('Component: CbgDetails', function () {
     spyOn(cbgService, 'getNotes').and.returnValue($q.resolve());
     spyOn($modal, 'open').and.returnValue({ result: $q.resolve() });
     spyOn(cbgService, 'getHistories').and.returnValue($q.resolve());
-    spyOn(gemService, 'getCbgRemedyTicket').and.returnValue($q.resolve());
+    spyOn(gemService, 'getRemedyTicket').and.returnValue($q.resolve());
     spyOn(cbgService, 'getOneCallbackGroup').and.returnValue($q.resolve());
     spyOn(cbgService, 'updateCallbackGroupStatus').and.returnValue($q.resolve());
   }
 
   function initController() {
     $state.current.data = {};
+    $stateParams.info = {
+      groupId: 'ff808081582992dd01589a5b232410bb',
+    };
     ctrl = $componentCtrl('cbgDetails', { $scope: $scope, $state: $state });
   }
 
@@ -81,7 +85,7 @@ describe('Component: CbgDetails', function () {
 
       cbgService.getNotes.and.returnValue($q.resolve(obj.Notes));
       cbgService.getHistories.and.returnValue($q.resolve(obj.Histories));
-      gemService.getCbgRemedyTicket.and.returnValue($q.resolve(obj.RemedyTicket));
+      gemService.getRemedyTicket.and.returnValue($q.resolve(obj.RemedyTicket));
       if (catchStatus) {
         cbgService.getOneCallbackGroup.and.returnValue($q.reject({ 'status': 404 }));
       } else {

@@ -182,9 +182,8 @@ export class UserOverviewService {
 
     if (_.isEmpty(userData.user.entitlements)) {
 
-      let hasSyncKms = _.find(userData.user.roles, (r) => {
-        return r === this.Config.backend_roles.spark_synckms;
-      });
+      let hasSyncKms = _.includes(userData.user.roles, this.Config.backend_roles.ciscouc_ces);
+      let hasCiscoucCES = _.includes(userData.user.roles, this.Config.backend_roles.ciscouc_ces);
 
       promise = this.getInvitationsForUser(userData.user.id)
         .then((inviteResponse) => {
@@ -208,6 +207,14 @@ export class UserOverviewService {
               return this.SunlightConfigService.getUserInfo(userData.user.id)
                 .then(() => {
                   if (hasSyncKms && userData.user.invitations) {
+                    userData.user.invitations.cc = true;
+                  }
+                });
+            } else if (this.getInvitationDetails(inviteResponse.effectiveLicenses, 'CV')) {
+              // check if this user exists in Sunlight config, and if so, update the Care Voice invitation
+              return this.SunlightConfigService.getUserInfo(userData.user.id)
+                .then(() => {
+                  if (hasSyncKms && hasCiscoucCES && userData.user.invitations) {
                     userData.user.invitations.cc = true;
                   }
                 });

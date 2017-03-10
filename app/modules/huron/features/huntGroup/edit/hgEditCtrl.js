@@ -131,11 +131,11 @@ require('./_hg-edit.scss');
     }
 
     function updatePilotNumbers(pristineData) {
-      vm.allPilotOptions = angular.copy(vm.allUnassignedPilotNumbers);
+      vm.allPilotOptions = _.cloneDeep(vm.allUnassignedPilotNumbers);
       pristineData.numbers.forEach(function (n) {
         n.isSelected = true;
       });
-      vm.selectedPilotNumbers = angular.copy(pristineData.numbers);
+      vm.selectedPilotNumbers = _.cloneDeep(pristineData.numbers);
       vm.allPilotOptions = vm.allPilotOptions.concat(pristineData.numbers);
     }
 
@@ -287,7 +287,7 @@ require('./_hg-edit.scss');
           huntGroupName: vm.model.name,
         });
 
-        if (angular.isDefined(tempExternalNumber)) {
+        if (!_.isUndefined(tempExternalNumber)) {
           updateJSONRequest.fallbackDestination.number = tempExternalNumber;
         }
 
@@ -346,7 +346,7 @@ require('./_hg-edit.scss');
           $scope.to.options = vm.allPilotOptions;
           $scope.$watchCollection('model.numbers', function (value) {
             if (angular.equals(value, vm.selectedPilotNumbers)) {
-              $scope.to.options = angular.copy(vm.allPilotOptions);
+              $scope.to.options = _.cloneDeep(vm.allPilotOptions);
               $scope.to.placeholder = vm.selectedPilotNumbers.length + ' ' + $translate.instant('huronHuntGroup.numberSingular') + ' Selected';
             }
             if (angular.equals(value, [])) {

@@ -25,7 +25,7 @@ describe('csvDownload', function () {
   function initDependencySpies() {
     spyOn(this.FeatureToggleService, 'atlasNewUserExportGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.Analytics, 'trackCsv').and.returnValue(this.$q.when());
-    spyOn(this.$state, 'go').and.callFake(angular.noop);
+    spyOn(this.$state, 'go').and.callFake(_.noop);
   }
 
   function initController() {

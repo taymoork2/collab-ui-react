@@ -136,7 +136,7 @@ describe('Controller: AACallerInputCtrl', function () {
       // inputActions should hold three elements entering
       var keys = ['0', '1', '2', '4', '5', '6', '7', '8', '9', '#', '*'];
 
-      controller.inputActions = angular.copy(inputActions);
+      controller.inputActions = _.cloneDeep(inputActions);
       controller.deleteKeyAction(0);
       expect(controller.inputActions.length).toEqual(2);
       expect(controller.inputActions[0].keys.join()).toEqual(keys.join());
@@ -147,7 +147,7 @@ describe('Controller: AACallerInputCtrl', function () {
 
   describe('keyChanged', function () {
     it('should change the key for an existing action', function () {
-      controller.inputActions = angular.copy(inputActions);
+      controller.inputActions = _.cloneDeep(inputActions);
       var newKey = '4';
       controller.keyChanged(0, newKey);
       expect(controller.inputActions[0].key).toEqual(newKey);
@@ -160,7 +160,7 @@ describe('Controller: AACallerInputCtrl', function () {
       var whichKey = {};
       whichKey.value = 'X';
 
-      controller.inputActions = angular.copy(inputActions);
+      controller.inputActions = _.cloneDeep(inputActions);
       controller.keyInputChanged(0, whichKey);
       expect(controller.inputActions[0].value).toEqual('X');
       expect(aaCommonService.isFormDirty()).toEqual(true);

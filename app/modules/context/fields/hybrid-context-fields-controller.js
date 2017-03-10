@@ -3,53 +3,55 @@ require('./_fields-list.scss');
 (function () {
   'use strict';
 
-  angular.module('Context')
+  angular
+    .module('Context')
     .controller('HybridContextFieldsCtrl', HybridContextFieldsCtrl);
 
   /* @ngInject */
   function HybridContextFieldsCtrl($scope, $rootScope, $filter, $state, $translate, Log, $q, ContextFieldsService, Notification) {
-    //Initialize variables
     var vm = this;
+    var eventListeners = [];
 
-    vm.init = init;
-    vm.initializeGrid = initializeGrid;
-
-    $scope.$on('$destroy', onDestroy);
-
-    $scope.load = true;
-    $scope.currentDataPosition = 0;
-
-    $scope.gridRefresh = false;
-    $scope.noSearchesYet = true;
-    $scope.noSearchResults = false;
-    $scope.fieldsList = {
+    vm.load = true;
+    vm.currentDataPosition = 0;
+    vm.gridRefresh = false;
+    vm.noSearchesYet = true;
+    vm.noSearchResults = false;
+    vm.fieldsList = {
       allFields: [],
     };
 
-    // Functions
-    $scope.getFieldList = getFieldList;
+    vm.filterBySearchStr = filterBySearchStr;
+    vm.filterList = filterList;
 
-    var eventListeners = [];
+    vm.placeholder = {
+      name: $translate.instant('common.search'),
+      filterValue: '',
+      count: 0,
+    };
+
+    $scope.$on('$destroy', onDestroy);
 
     init();
 
     function init() {
       var promises = {
-        initializeGrid: vm.initializeGrid(),
+        initializeGrid: initializeGrid(),
       };
 
-      $q.all(promises).then(function () {
-        initializeListeners();
-        getFieldList();
-      });
+      $q.all(promises)
+        .then(function () {
+          initializeListeners();
+          return getFieldList();
+        });
     }
 
     function initializeListeners() {
       // if the side panel is closing unselect the entry
       eventListeners.push($rootScope.$on('$stateChangeSuccess', function () {
         if ($state.includes('fields')) {
-          if ($scope.gridApi && $scope.gridApi.selection) {
-            $scope.gridApi.selection.clearSelectedRows();
+          if (vm.gridApi && vm.gridApi.selection) {
+            vm.gridApi.selection.clearSelectedRows();
           }
         }
       }));
@@ -90,20 +92,20 @@ require('./_fields-list.scss');
     }
 
     function getFieldList() {
-      if (!$scope.load) {
+      if (!vm.load) {
         return $q.resolve();
       }
-      $scope.gridRefresh = true;
-      $scope.noSearchesYet = false;
-      $scope.fieldsList.allFields = [];
+      vm.gridRefresh = true;
+      vm.noSearchesYet = false;
+      vm.fieldsList.allFields = [];
       var getAndProcessFieldsPromise = ContextFieldsService.getFields()
         .then(function (fields) {
           return processFieldList(fields);
         })
         .then(function (processedFields) {
-          $scope.gridData = processedFields;
-          $scope.noSearchResults = processedFields.length === 0;
-          $scope.fieldsList.allFields = $scope.gridData;
+          vm.gridOptions.data = processedFields;
+          vm.fieldsList.allFields = processedFields;
+          vm.noSearchResults = processedFields.length === 0;
           return $q.resolve();
         })
         .catch(function (err) {
@@ -117,24 +119,28 @@ require('./_fields-list.scss');
       };
 
       return $q.all(promises)
-          .then(function () {
-            $scope.gridApi.infiniteScroll.dataLoaded();
-          })
-          .finally(function () {
-            $scope.gridRefresh = false;
-            $scope.load = false;
-          });
-
+        .then(function () {
+          vm.gridApi.infiniteScroll.dataLoaded();
+        })
+        .finally(function () {
+          vm.gridRefresh = false;
+          vm.load = false;
+        });
     }
 
     function initializeGrid() {
       var deferred = $q.defer();
 
       function onRegisterApi(gridApi) {
-        $scope.gridApi = gridApi;
+        vm.gridApi = gridApi;
+        gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+          $state.go('context-fields-sidepanel', {
+            field: row.entity,
+          });
+        });
         gridApi.infiniteScroll.on.needLoadMoreData($scope, function () {
-          if ($scope.load) {
-            $scope.currentDataPosition++;
+          if (vm.load) {
+            vm.currentDataPosition++;
             //Server side pagination is to be implemented
             getFieldList();
           }
@@ -142,8 +148,8 @@ require('./_fields-list.scss');
         deferred.resolve();
       }
 
-      $scope.gridOptions = {
-        data: 'gridData',
+      vm.gridOptions = {
+       // data: [], // is populated directly by the functions supplying the data.
         multiSelect: false,
         rowHeight: 44,
         enableColumnResize: true,
@@ -177,6 +183,33 @@ require('./_fields-list.scss');
       };
       return deferred.promise;
     }
-  }
 
+    // On click, wait for typing to stop and run search
+    function filterList(str) {
+
+      return filterBySearchStr(vm.fieldsList.allFields, str)
+        .then(function (processedFields) {
+          vm.gridOptions.data = processedFields;
+          vm.noSearchResults = processedFields.length === 0;
+          vm.placeholder.count = processedFields.length;
+        });
+    }
+
+    //filter out the list by the searchStr
+    function filterBySearchStr(fieldList, str) {
+      if (!str) {
+        return $q.resolve(fieldList);
+      }
+
+      var lowerStr = str.toLowerCase();
+      return $q.resolve(fieldList.filter(function (field) {
+        return (_.has(field, 'id') ? (field.id.toLowerCase().indexOf(lowerStr) !== -1) : false) ||
+          (_.has(field, 'description') ? (field.description.toLowerCase().indexOf(lowerStr) !== -1) : false) ||
+          (_.has(field, 'dataType') ? (field.dataType.toLowerCase().indexOf(lowerStr) !== -1) : false) ||
+          (_.has(field, 'searchable') ? (field.searchable.toLowerCase().indexOf(lowerStr) !== -1) : false) ||
+          (_.has(field, 'classification') ? (field.classification.toLowerCase().indexOf(lowerStr) !== -1) : false) ||
+          (_.has(field, 'lastUpdated') ? (field.lastUpdated.toLowerCase().indexOf(lowerStr) !== -1) : false);
+      }));
+    }
+  }
 }());

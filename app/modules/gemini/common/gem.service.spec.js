@@ -53,13 +53,14 @@ describe('Service: gemService', function () {
       $httpBackend.flush();
     });
 
-    it('should return RemedyTicket info in getCbgRemedyTicket', function () {
+    it('should return RemedyTicket info in getRemedyTicket', function () {
+      var type = 9;
       var remedyTicket = preData.common;
       remedyTicket.content.data = preData.getRemedyTicket;
-      var remedyTicketUrl = UrlConfig.getGeminiUrl() + 'remedyTicket/customers/' + customerId + '/siteId/0/type/9';
+      var remedyTicketUrl = UrlConfig.getGeminiUrl() + 'remedyTicket/customers/' + customerId + '/siteId/0/type/' + type;
 
       $httpBackend.expectGET(remedyTicketUrl).respond(200, remedyTicket);
-      gemservice.getCbgRemedyTicket(customerId).then(function (res) {
+      gemservice.getRemedyTicket(customerId, type).then(function (res) {
         expect(res.content.data.length).toBe(2);
       });
       $httpBackend.flush();

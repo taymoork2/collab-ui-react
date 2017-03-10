@@ -28,6 +28,7 @@
     .factory('TerminusUserDeviceE911Service', TerminusUserDeviceE911Service)
     .factory('TerminusV2CarrierNumberService', TerminusV2CarrierNumberService)
     .factory('TerminusV2CarrierNumberCountService', TerminusV2CarrierNumberCountService)
+    .factory('TerminusV2CarrierCapabilitiesService', TerminusV2CarrierCapabilitiesService)
     .factory('TerminusV2CustomerService', TerminusV2CustomerService)
     .factory('TerminusV2CustomerNumberOrderBlockService', TerminusV2CustomerNumberOrderBlockService)
     .factory('TerminusV2CustomerNumberOrderPortService', TerminusV2CustomerNumberOrderPortService)
@@ -192,6 +193,17 @@
   /* @ngInject */
   function TerminusV2CarrierNumberCountService($resource, HuronConfig) {
     return $resource(HuronConfig.getTerminusV2Url() + '/carriers/:carrierId/numbers/count');
+  }
+
+  /* @ngInject */
+  function TerminusV2CarrierCapabilitiesService($resource, HuronConfig) {
+    return $resource(HuronConfig.getTerminusV2Url() + '/carriers/:carrierId/capabilities', {}, {
+      query: {
+        method: 'GET',
+        isArray: true,
+        cache: true,
+      },
+    });
   }
 
   /* @ngInject */
