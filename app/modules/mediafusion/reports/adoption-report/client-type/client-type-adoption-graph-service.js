@@ -18,7 +18,7 @@
     vm.timeStamp = $translate.instant('mediaFusion.metrics.timeStamp');
     vm.clients = $translate.instant('mediaFusion.metrics.clients');
     vm.clientTypeTranMap = {
-      'ANDRIOID': $translate.instant('mediaFusion.metrics.clientType.android'),
+      'ANDROID': $translate.instant('mediaFusion.metrics.clientType.android'),
       'BLACKBERRY': $translate.instant('mediaFusion.metrics.clientType.blackberry'),
       'DESKTOP': $translate.instant('mediaFusion.metrics.clientType.desktop'),
       'IPAD': $translate.instant('mediaFusion.metrics.clientType.ipad'),
@@ -31,6 +31,7 @@
       'UC': $translate.instant('mediaFusion.metrics.clientType.uc'),
       'UNKNOWN': $translate.instant('mediaFusion.metrics.clientType.unknown'),
       'WINDOWS_MOBILE': $translate.instant('mediaFusion.metrics.clientType.windows'),
+      'Total': $translate.instant('mediaFusion.metrics.clientType.total'),
     };
 
     return {
