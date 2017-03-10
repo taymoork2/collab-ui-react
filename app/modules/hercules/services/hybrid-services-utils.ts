@@ -127,7 +127,7 @@ export class HybridServicesUtils {
   }
 
   // TODO: Move to another service, like ReleaseChannel (yet to be created)
-  public getLocalizedReleaseChannel(channel) {
+  public getLocalizedReleaseChannel = (channel) => {
     return this.$translate.instant('hercules.fusion.add-resource-group.release-channel.' + channel);
   }
 
