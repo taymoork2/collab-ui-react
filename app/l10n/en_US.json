@@ -4703,7 +4703,8 @@
         "tp": "Tele Presence",
         "uc": "UC",
         "unknown": "Unknown",
-        "windows": "Windows Mobile"
+        "windows": "Windows Mobile",
+        "total": "Total"
       },
       "clientTypeCardDesc": "Summary of the type of clients that are in use at an Organization"
     },
