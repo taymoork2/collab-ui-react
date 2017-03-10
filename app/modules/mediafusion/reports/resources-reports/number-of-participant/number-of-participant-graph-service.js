@@ -127,10 +127,10 @@
         'time': timeStamp,
       };
       _.forEach(graphs, function (value) {
-        if (value.title !== 'cloud') {
+        if (value.title === 'onPremParticipants') {
           value.title = onPremisesHeading;
           columnNames[value.valueField] = value.title;
-        } else {
+        } else if (value.title === 'cloudParticipants') {
           value.title = cloudHeading;
           columnNames[value.valueField] = value.title;
         }
@@ -169,10 +169,10 @@
     function formatGraph(graphs) {
       var tempData = [];
       _.forEach(graphs, function (value) {
-        if (value.title === 'cloud') {
-          value.balloonText = '<span class="graph-text">' + cloudHeading + ' <span class="graph-number">[[value]]</span></span>';
-        } else {
-          value.balloonText = '<span class="graph-text">' + onPremisesHeading + ' <span class="graph-number">[[value]]</span></span>';
+        if (value.title === 'cloudParticipants') {
+          value.balloonText = '<span class="graph-text">' + cloudHeading + ' ' + ' <span class="graph-number">[[value]]</span></span>' + ' <span class="graph-text">[[' + value.descriptionField + ']]</span></span>';
+        } else if (value.title === 'onPremParticipants') {
+          value.balloonText = '<span class="graph-text">' + onPremisesHeading + ' ' + ' <span class="graph-number">[[value]]</span></span>' + ' <span class="graph-text">[[' + value.descriptionField + ']]</span></span>';
         }
         value.lineThickness = 2;
         value.connect = true;
