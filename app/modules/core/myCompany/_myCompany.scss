@@ -9,6 +9,10 @@
     @extend %page-background-white;
   }
 
+  .content-container {
+    height: 100%;
+  }
+
   iframe {
     display: block;
     width: 100%;

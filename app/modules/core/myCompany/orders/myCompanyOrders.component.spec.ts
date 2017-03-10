@@ -21,7 +21,7 @@ describe('Component: myCompanyOrders', () => {
     }, {
       externalOrderId: '456',
       orderDate: new Date(),
-      status: 'COMPLETED',
+      status: 'PROVISIONING',
       total: 15.95,
       productDescriptionList: [
         'fourth description',
@@ -83,6 +83,8 @@ describe('Component: myCompanyOrders', () => {
       expect(this.controller.orderDetailList.length).toBeGreaterThan(0);
       expect(this.controller.orderDetailList[0].productDescriptionList).toEqual('first description');
       expect(this.controller.orderDetailList[1].productDescriptionList).toEqual('fourth description, fifth description');
+      expect(this.controller.orderDetailList[0].status).toEqual('myCompanyOrders.completed');
+      expect(this.controller.orderDetailList[1].status).toEqual('myCompanyOrders.pending');
     });
 
     it('should have a data row and no loading icon', function () {

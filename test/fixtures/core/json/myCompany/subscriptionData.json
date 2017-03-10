@@ -59,6 +59,7 @@
     "isTrial": true,
     "isOnline": false,
     "viewAll": false,
+    "name": "subscriptions.enterpriseTrial",
     "numSubscriptions": 1
   }],
   "subscriptionsResponse": [{
@@ -442,6 +443,7 @@
     "isTrial": false,
     "isOnline": false,
     "viewAll": false,
+    "name": "subscriptions.numberedName",
     "numSubscriptions": 1
   }],
   "servicesResponse": [{

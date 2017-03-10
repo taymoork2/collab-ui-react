@@ -132,8 +132,8 @@ class MySubscriptionCtrl {
     return undefined;
   }
 
-  private getChangeSubURL(): ng.IPromise<string> {
-    return this.DigitalRiverService.getSubscriptionsUrl().then((subscriptionsUrl) => {
+  private getChangeSubURL(env: string): ng.IPromise<string> {
+    return this.DigitalRiverService.getSubscriptionsUrl(env).then((subscriptionsUrl) => {
       return subscriptionsUrl;
     }).catch((error) => {
       this.loading = false;
@@ -325,11 +325,15 @@ class MySubscriptionCtrl {
         }
       });
 
+      let enterpriseSubs = 1;
+      let enterpriseTrials = 1;
       _.forEach(this.subscriptionDetails, (subscription: any, index: number) => {
         if (!subscription.isOnline) {
           if (subscription.isTrial) {
-            this.subscriptionDetails[index].name = this.$translate.instant('customerPage.trial');
+            this.subscriptionDetails[index].name = this.$translate.instant('subscriptions.enterpriseTrial', { number: enterpriseTrials++ });
             this.hasEnterpriseTrial = true;
+          } else {
+            this.subscriptionDetails[index].name = this.$translate.instant('subscriptions.numberedName', { number: enterpriseSubs++ });
           }
         } else {
           const userId = this.Authinfo.getUserId();
@@ -356,7 +360,8 @@ class MySubscriptionCtrl {
               if (prodResponse) {
                 this.subscriptionDetails[index].productInstanceId = prodResponse.productInstanceId;
                 this.subscriptionDetails[index].name = prodResponse.name;
-                this.getChangeSubURL().then((urlResponse) => {
+                const env = _.includes(prodResponse.name, 'Spark') ? 'spark' : 'webex';
+                this.getChangeSubURL(env).then((urlResponse) => {
                   if (urlResponse) {
                     this.subscriptionDetails[index].changeplanOverride = urlResponse;
                     this.bmmpAttr = {
