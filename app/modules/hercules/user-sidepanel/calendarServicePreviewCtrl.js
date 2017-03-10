@@ -6,7 +6,7 @@
     .controller('CalendarServicePreviewCtrl', CalendarServicePreviewCtrl);
 
   /*@ngInject*/
-  function CalendarServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Orgservice, Notification, USSService, FusionClusterService, $translate, ResourceGroupService, FeatureToggleService, FusionUtils) {
+  function CalendarServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Orgservice, Notification, USSService, FusionClusterService, $translate, ResourceGroupService, FeatureToggleService, HybridServicesUtils) {
     $scope.entitlementNames = {
       'squared-fusion-cal': 'squaredFusionCal',
       'squared-fusion-gcal': 'squaredFusionGCal',
@@ -129,7 +129,7 @@
           });
         }
         if ($scope.extension.status && $scope.extension.status.lastStateChange) {
-          $scope.extension.status.lastStateChangeText = FusionUtils.getTimeSinceText($scope.extension.status.lastStateChange);
+          $scope.extension.status.lastStateChangeText = HybridServicesUtils.getTimeSinceText($scope.extension.status.lastStateChange);
         }
 
         // If we find no status in USS and the service is entitled, we try to refresh the user in USS and reload the statuses
