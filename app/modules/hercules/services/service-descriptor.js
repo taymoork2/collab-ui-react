@@ -68,6 +68,15 @@
       return Orgservice.setOrgSettings(Authinfo.getOrgId(), settings);
     };
 
+    var getAllWebExSiteOrgLevel = function () {
+      var conferenceServices = Authinfo.getConferenceServicesWithoutSiteUrl() || [];
+      var webexSiteUrls = _.map(conferenceServices, function (conferenceService) {
+        return conferenceService.license.siteUrl;
+      });
+
+      return _.uniq(webexSiteUrls);
+    };
+
     var setDefaultWebExSiteOrgLevel = function (defaultWebExSiteOrgLevel) {
       var settings = {
         calSvcDefaultWebExSite: defaultWebExSiteOrgLevel,
@@ -127,6 +136,7 @@
       setEmailSubscribers: setEmailSubscribers,
       getOrgSettings: getOrgSettings,
       setDisableEmailSendingToUser: setDisableEmailSendingToUser,
+      getAllWebExSiteOrgLevel: getAllWebExSiteOrgLevel,
       setDefaultWebExSiteOrgLevel: setDefaultWebExSiteOrgLevel,
       setOneButtonToPushIntervalMinutes: setOneButtonToPushIntervalMinutes,
       enableService: enableService,
