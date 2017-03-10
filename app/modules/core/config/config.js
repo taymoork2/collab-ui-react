@@ -453,11 +453,6 @@
         'cluster-list',
         'expressway-cluster',
         'hybrid-services-connector-sidepanel',
-        'hds.settings', // Temporary  entitlement until updated in org setting
-        'hds',
-        'hds.list',
-        'hds-cluster-details',
-        'hds-cluster',
         'cucm-cluster', // Remove when squared-fusion-khaos entitlement is returned by Atlas backend
       ],
       'spark-room-system': [
@@ -495,7 +490,10 @@
         'organization',
       ],
       'spark-hybrid-datasecurity': [
+        'hds',
+        'hds.list',
         'hds.settings',
+        'hds-cluster-details',
         'hds-cluster',
       ],
       'squared-fusion-media': [

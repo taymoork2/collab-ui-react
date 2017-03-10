@@ -7,7 +7,7 @@
 
 
   /* @ngInject */
-  function AddResourceController($modalInstance, $window, $translate, connectorType, serviceId, firstTimeSetup, Notification, FusionClusterService, FusionUtils, $modal, $state, ResourceGroupService, FeatureToggleService) {
+  function AddResourceController($modalInstance, $window, $translate, connectorType, serviceId, firstTimeSetup, Notification, FusionClusterService, HybridServicesUtils, $modal, $state, ResourceGroupService, FeatureToggleService) {
     var vm = this;
     vm.connectors = [];
     vm.warning = warning;
@@ -233,7 +233,7 @@
     }
 
     function getIconClassForService() {
-      return FusionUtils.serviceId2Icon(vm.serviceId);
+      return HybridServicesUtils.serviceId2Icon(vm.serviceId);
     }
 
     function closeSetupModal() {

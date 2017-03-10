@@ -205,4 +205,216 @@ describe('HybridContextFieldsCtrl', function () {
       expect(controller.fieldsList.allFields[0].lastUpdated).not.toExist();
     });
   });
+
+  describe('filterList()', function () {
+    it('should update grid data', function () {
+      ContextFieldsService.getFields.and.returnValue($q.resolve([{
+        'description': 'Field for abcd',
+        'classification': 'PII',
+        'publiclyAccessible': false,
+        'searchable': 'false',
+        'translations': { 'english': 'First Name', 'french': 'Prénom' },
+        'refUrl': '/dictionary/field/v1/id/FieldContainsSearchStr',
+        'id': 'FieldContainsSearchStr',
+        'dataType': 'double',
+      }, {
+        'description': 'Field for xyz',
+        'classification': 'PII',
+        'publiclyAccessible': false,
+        'searchable': 'false',
+        'translations': { 'english': 'First Name', 'french': 'Prénom' },
+        'refUrl': '/dictionary/field/v1/id/FieldNotContainSearchStr',
+        'id': 'FieldNotContainSearchStr',
+        'dataType': 'double',
+      }]));
+      controller = initController();
+      $scope.$apply();
+
+      expect(controller.fieldsList.allFields.length).toBe(2);
+      expect(controller.gridOptions.data.length).toBe(2);
+      expect(controller.fieldsList.allFields[0].id).toEqual('FieldContainsSearchStr');
+      expect(controller.fieldsList.allFields[1].id).toEqual('FieldNotContainSearchStr');
+
+      controller.filterList('abcd');
+      $scope.$apply();
+      expect(controller.fieldsList.allFields.length).toBe(2);
+      expect(controller.gridOptions.data.length).toBe(1);
+      expect(controller.gridOptions.data[0].id).toEqual('FieldContainsSearchStr');
+
+      controller.filterList('');
+      $scope.$apply();
+      expect(controller.fieldsList.allFields.length).toBe(2);
+      expect(controller.gridOptions.data.length).toBe(2);
+    });
+  });
+
+  describe('filterListBySearchStr()', function () {
+    it('should filter out the correct number of fields when the search string as number and is found in some columns', function (done) {
+      ContextFieldsService.getFields.and.returnValue($q.resolve([]));
+      controller = initController();
+      $scope.$apply();
+
+      var fieldList = [{
+        'description': 'Field for NoClassification',
+        'publiclyAccessible': false,
+        'translations': { 'english': 'First Name', 'french': 'Prénom' },
+        'id': '2017Field',
+        'dataType': 'boolean',
+        'lastUpdated': '2017-01-26T18:42:42.124Z',
+      }, {
+        'description': 'Field for NoClassification',
+        'publiclyAccessible': false,
+        'translations': { 'english': 'First Name', 'french': 'Prénom' },
+        'id': '2016Field',
+        'dataType': 'boolean',
+        'lastUpdated': '2016-01-26T18:42:42.124Z',
+      }, {
+        'description': 'Field for NoClassification',
+        'publiclyAccessible': false,
+        'translations': { 'english': 'First Name', 'french': 'Prénom' },
+        'id': '2015Field',
+        'dataType': 'boolean',
+        'lastUpdated': '2015-01-26T18:42:42.124Z',
+      }, {
+        'description': 'Field for abc3',
+        'publiclyAccessible': false,
+        'translations': { 'english': 'First Name', 'french': 'Prénom' },
+        'id': '2014FieldWithDateMatch',
+        'dataType': 'boolean',
+        'lastUpdated': '2014-02-15T18:42:42.124Z',
+      }];
+
+      controller.filterBySearchStr(fieldList, '15')
+        .then(function (filteredList) {
+          expect(filteredList.length).toBe(2);
+          expect(filteredList[0].id).toEqual('2015Field');
+          expect(filteredList[1].id).toEqual('2014FieldWithDateMatch');
+          done();
+        });
+      $scope.$apply();
+    });
+
+    it('should filter only when the search string is found case insensitive in the specified columns but not in unsearchable columns', function (done) {
+      ContextFieldsService.getFields.and.returnValue($q.resolve([]));
+      controller = initController();
+      $scope.$apply();
+
+      var fieldList = [{
+        'publiclyAccessible': false,
+        'translations': { 'english': 'First Name', 'french': 'Prénom' },
+        'id': 'First',
+        'lastUpdated': '2017-01-26T18:42:42.124Z',
+      }, {
+        'publiclyAccessible': false,
+        'translations': { 'english': 'First Name', 'french': 'Prénom' },
+        'id': 'SearchStrInTranslation',
+        'lastUpdated': '2017-01-26T18:42:42.124Z',
+      }, {
+        'publiclyAccessible': false,
+        'translations': { 'english': 'First Name', 'french': 'Prénom' },
+        'id': 'SearchStrInClassification',
+        'classification': 'first',
+        'lastUpdated': '2017-01-26T18:42:42.124Z',
+      }, {
+        'publiclyAccessible': false,
+        'translations': { 'english': 'First Name', 'french': 'Prénom' },
+        'id': 'SearchStrInDescription',
+        'description': 'First in description',
+        'lastUpdated': '2017-01-26T18:42:42.124Z',
+      }, {
+        'publiclyAccessible': false,
+        'translations': { 'english': 'First Name', 'french': 'Prénom' },
+        'id': 'SearchStrLowerCaseInLastUpdatedDate',
+        'lastUpdated': 'first in date',
+      }, {
+        'publiclyAccessible': false,
+        'translations': { 'english': 'First Name', 'french': 'Prénom' },
+        'id': 'SearchStrInDataType',
+        'dataType': '$$first in datatype',
+      }, {
+        'otherKey1': 'First',
+        'OhterKey2': 'first',
+        'otherKey3': 'anyOtherFirst',
+      }, {
+        'publiclyAccessible': false,
+        'translations': { 'english': 'First Name', 'french': 'Prénom' },
+        'id': 'SearchStrInSearchable',
+        'dataType': 'String',
+        'searchable': 'somethingfirstabce',
+      }];
+      controller.filterBySearchStr(fieldList, 'first')
+        .then(function (filteredList) {
+          expect(filteredList.length).toBe(6);
+          expect(filteredList[0].id).toEqual('First');
+          expect(filteredList[1].id).toEqual('SearchStrInClassification');
+          expect(filteredList[2].id).toEqual('SearchStrInDescription');
+          expect(filteredList[3].id).toEqual('SearchStrLowerCaseInLastUpdatedDate');
+          expect(filteredList[4].id).toEqual('SearchStrInDataType');
+          expect(filteredList[5].id).toEqual('SearchStrInSearchable');
+          done();
+        });
+      $scope.$apply();
+    });
+
+    it('should filter by exact match with the search string despite the list contains the same text with different delimiters', function (done) {
+      ContextFieldsService.getFields.and.returnValue($q.resolve([]));
+      controller = initController();
+      $scope.$apply();
+
+      var fieldList = [{
+        'publiclyAccessible': false,
+        'translations': { 'english': 'First Name', 'french': 'Prénom' },
+        'id': 'aaa_test',
+        'lastUpdated': '2017-01-26T18:42:42.124Z',
+      }, {
+        'publiclyAccessible': false,
+        'translations': { 'english': 'First Name', 'french': 'Prénom' },
+        'id': 'aaa.test',
+        'lastUpdated': '2017-01-26T18:42:42.124Z',
+      }, {
+        'publiclyAccessible': false,
+        'translations': { 'english': 'First Name', 'french': 'Prénom' },
+        'id': 'SearchStrInClassificationUpperCase',
+        'classification': 'ContainsAAA_Test',
+        'lastUpdated': '2017-01-26T18:42:42.124Z',
+      }, {
+        'publiclyAccessible': false,
+        'translations': { 'english': 'First Name', 'french': 'Prénom' },
+        'id': 'aaa test',
+        'description': 'First in description',
+        'lastUpdated': '2017-01-26T18:42:42.124Z',
+      }, {
+        'publiclyAccessible': false,
+        'translations': { 'english': 'First Name', 'french': 'Prénom' },
+        'id': 'AAA test!',
+        'lastUpdated': 'first in date',
+      }, {
+        'publiclyAccessible': false,
+        'translations': { 'english': 'First Name', 'french': 'Prénom' },
+        'id': 'SearchStrInDataType',
+        'dataType': 'aaa_TEST',
+      }, {
+        'otherKey1': 'aaa-test',
+        'OhterKey2': 'aaa_test',
+        'otherKey3': 'anyOtherFirst',
+        'id': 'SearchStrInOtherFields',
+      }, {
+        'publiclyAccessible': false,
+        'translations': { 'english': 'First Name', 'french': 'Prénom' },
+        'id': 'SearchStrInSearchable',
+        'dataType': 'String',
+        'searchable': 'aaa_TEST',
+      }];
+      controller.filterBySearchStr(fieldList, 'aaa_test')
+        .then(function (filteredList) {
+          expect(filteredList.length).toBe(4);
+          expect(filteredList[0].id).toEqual('aaa_test');
+          expect(filteredList[1].id).toEqual('SearchStrInClassificationUpperCase');
+          expect(filteredList[2].id).toEqual('SearchStrInDataType');
+          expect(filteredList[3].id).toEqual('SearchStrInSearchable');
+          done();
+        });
+      $scope.$apply();
+    });
+  });
 });

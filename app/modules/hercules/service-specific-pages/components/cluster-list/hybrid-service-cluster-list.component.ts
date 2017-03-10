@@ -20,13 +20,13 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
     private ClusterService,
     private FusionClusterService,
     private FusionClusterStatesService,
-    private FusionUtils,
+    private HybridServicesUtils,
   ) {
     this.updateClusters = this.updateClusters.bind(this);
   }
 
   public $onInit() {
-    this.connectorType = this.FusionUtils.serviceId2ConnectorType(this.serviceId);
+    this.connectorType = this.HybridServicesUtils.serviceId2ConnectorType(this.serviceId);
     this.clusterList = this.ClusterService.getClustersByConnectorType(this.connectorType);
     this.clusterListGridOptions = {
       data: '$ctrl.clusterList',

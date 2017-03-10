@@ -4,7 +4,7 @@ describe('Service: USSService', function () {
   beforeEach(angular.mock.module('Squared')); // because we use CsdmPoller
   beforeEach(angular.mock.module('Hercules'));
 
-  var $httpBackend, Authinfo, CsdmHubFactory, USSService, hubOn, $translate, FusionUtils;
+  var $httpBackend, Authinfo, CsdmHubFactory, USSService, hubOn, $translate, HybridServicesUtils;
   var rootPath = 'https://uss-integration.wbx2.com/uss/api/v1/';
   var translations = {};
 
@@ -19,15 +19,15 @@ describe('Service: USSService', function () {
     });
     $provide.value('CsdmHubFactory', CsdmHubFactory);
   }));
-  beforeEach(inject(function (_$httpBackend_, _USSService_, _Authinfo_, _$translate_, _FusionUtils_) {
+  beforeEach(inject(function (_$httpBackend_, _USSService_, _Authinfo_, _$translate_, _HybridServicesUtils_) {
     Authinfo = _Authinfo_;
     Authinfo.getOrgId = sinon.stub().returns('456');
     $translate = _$translate_;
     spyOn($translate, 'instant').and.callFake(function (key) {
       return translations[key] || key;
     });
-    FusionUtils = _FusionUtils_;
-    spyOn(FusionUtils, 'getLocalTimestamp').and.callThrough();
+    HybridServicesUtils = _HybridServicesUtils_;
+    spyOn(HybridServicesUtils, 'getLocalTimestamp');
     $httpBackend = _$httpBackend_;
     USSService = _USSService_;
   }));
@@ -115,7 +115,7 @@ describe('Service: USSService', function () {
           expect(status.messages[1].key).toBe('c_cal.warn');
           expect(status.messages[1].title).toBe('warn title');
           expect(status.messages[1].description).toBe('warn description');
-          expect(FusionUtils.getLocalTimestamp).toHaveBeenCalledWith('2017-01-31T14:05:34.069Z');
+          expect(HybridServicesUtils.getLocalTimestamp).toHaveBeenCalledWith('2017-01-31T14:05:34.069Z');
         });
       $httpBackend.flush();
     });
