@@ -8,7 +8,7 @@
   </a>
 </script>
 
-<div class="typeahead-large" ng-if="$ctrl.isNew">
+<div id="pickup-typeahead" class="typeahead-large" ng-if="$ctrl.isNew">
 
   <input
     id="memberInput"
@@ -32,7 +32,7 @@
     </div>
   </div>
 </div>
-<div ng-if="!$ctrl.isNew" class="typeahead">
+<div id="pickup-typeahead" ng-if="!$ctrl.isNew" class="typeahead">
   <input
     cs-input
     id="memberInput"
