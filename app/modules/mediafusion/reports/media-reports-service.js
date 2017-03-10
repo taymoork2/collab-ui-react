@@ -218,7 +218,7 @@
     }
 
     function getNumberOfParticipantData(time) {
-      vm.numberOfParticipantUrl = '/participants_distribution';
+      vm.numberOfParticipantUrl = '/participants_activity_with_insights';
       var returnData = {
         graphData: [],
         graphs: [],
