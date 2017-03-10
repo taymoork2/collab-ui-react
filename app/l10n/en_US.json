@@ -6671,6 +6671,8 @@
     "hybridServices": "Hybrid Services",
     "showAllCards": "Show all cards",
     "showActiveCards": "Show active cards only",
+    "noActiveHybridCards": "No Hybrid Services cards found.",
+    "userIsMissingEntitlements": "The current user has no Hybrid Services entitlements.",
     "cards": {
       "message": {
         "title": "Message",
