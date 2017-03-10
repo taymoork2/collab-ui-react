@@ -99,6 +99,7 @@ describe('Controller: TypeSelectorController', function () {
         expressway: true,
         mediafusion: false,
         context: true,
+        cucm: true,
       });
     });
 
