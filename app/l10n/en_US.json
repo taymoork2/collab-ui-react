@@ -316,7 +316,8 @@
     "careServices": "Chat and Callback",
     "careVoiceServices": "Chat, Callback and Inbound Call",
     "enableCallInfo": "Message is mandatory for Care services. Enable Call if you want the user to handle calls from customers.",
-    "paidContactCenter": "Care",
+    "paidContactCenterVoice": "Chat, Callback and Inbound Call (K2)",
+    "paidContactCenter": "Chat and Callback (K1)",
     "enterpriseEdition": "Enterprise Edition {{capacity}}",
     "meetingCenter": "Meeting Center {{capacity}}",
     "supportCenter": "Support Center {{capacity}}",
@@ -6301,8 +6302,8 @@
       "CO": "Spark Call",
       "SD": "DX, MX or SX system",
       "SB": "Spark Board",
-      "CDC": "K1 Spark Care",
-      "CVC": "K2 Spark Care"
+      "CDC": "Chat and Callback (K1)",
+      "CVC": "Chat, Callback and Inbound Call (K2)"
     }
   },
   "onlineUpgradeModal": {

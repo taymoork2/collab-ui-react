@@ -267,7 +267,11 @@
               var hasCiscoucCES = _.includes(vm.currentUser.roles, Config.backend_roles.ciscouc_ces);
               var hasContextServiceEntitlement = _.includes(vm.currentUser.entitlements, Config.entitlements.context);
               if ((hasSyncKms && hasContextServiceEntitlement) || hasCiscoucCES) {
-                contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
+                if (hasLicense('CD')) {
+                  contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
+                } else if (hasLicense('CV')) {
+                  contactCenterState.detail = $translate.instant('onboardModal.paidContactCenterVoice');
+                }
                 vm.services.push(contactCenterState);
               }
             });

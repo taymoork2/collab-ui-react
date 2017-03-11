@@ -192,6 +192,14 @@ class MySubscriptionCtrl {
     }
   }
 
+  private sortSubscription(index, existingSite) {
+    if (existingSite >= 0) {
+      this.licenseCategory[index].subscriptions[existingSite].offers = _.sortBy(this.licenseCategory[index].subscriptions[existingSite].offers, 'offerName');
+    } else {
+      this.licenseCategory[index].subscriptions = _.sortBy(this.licenseCategory[index].subscriptions.offers, 'offerName');
+    }
+  }
+
   private subscriptionRetrieval() {
     this.Orgservice.getLicensesUsage().then((subscriptions) => {
       _.forEach(subscriptions, (subscription: any, subIndex: number) => {
@@ -264,6 +272,7 @@ class MySubscriptionCtrl {
 
                     if (existingIndex >= 0) {
                       this.addSubscription(4, offer, existingIndex);
+                      this.sortSubscription(4, existingIndex);
                     } else {
                       this.licenseCategory[4].subscriptions.unshift({
                         offers: [offer],
