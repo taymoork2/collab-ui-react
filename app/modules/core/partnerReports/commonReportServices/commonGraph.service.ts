@@ -1,5 +1,6 @@
 export class CommonGraphService {
   public readonly AXIS: string = 'axis';
+  public readonly CENTER: string = 'center';
   public readonly COLOR: string = 'color';
   public readonly COLUMN: string = 'column';
   public readonly CURSOR: string = 'cursor';
@@ -60,7 +61,7 @@ export class CommonGraphService {
     },
     legend: {
       color: this.chartColors.grayDarkThree,
-      align: 'center',
+      align: this.CENTER,
       switchable: false,
       fontSize: 13,
       markerLabelGap: 10,
@@ -74,7 +75,7 @@ export class CommonGraphService {
       verticalGap: 20,
     },
     line: {
-      type: 'line',
+      type: this.LINE,
       bullet: 'none',
       fillAlphas: 0.5,
       lineAlpha: 0.5,
@@ -82,7 +83,7 @@ export class CommonGraphService {
       hidden: false,
     },
     singleLine: {
-      type: 'line',
+      type: this.LINE,
       bullet: 'round',
       bulletBorderAlpha: 1,
       bulletColor: this.chartColors.brandWhite,

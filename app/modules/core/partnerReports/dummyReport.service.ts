@@ -151,19 +151,19 @@ export class DummyReportService {
 
   public dummyEndpointData(): Array<Array<IEndpointData>> {
     return [[{
-      class: 'vertical-center customer-data',
+      class: 'vertical-center ' + this.ReportConstants.CUSTOMER_DATA,
       output: [this.$translate.instant('activeUserPopulation.loadingCustomer')],
       splitClasses: undefined,
     }, {
       class: 'table-data',
       output: ['0', '0'],
-      splitClasses: 'table-half vertical-center horizontal-center',
+      splitClasses: 'table-half vertical-center ' + this.ReportConstants.HORIZONTAL_CENTER,
     }, {
-      class: 'vertical-center horizontal-center',
+      class: 'vertical-center ' + this.ReportConstants.HORIZONTAL_CENTER,
       output: ['0'],
       splitClasses: undefined,
     }, {
-      class: 'vertical-center horizontal-center',
+      class: 'vertical-center ' + this.ReportConstants.HORIZONTAL_CENTER,
       output: ['0'],
       splitClasses: undefined,
     }]];

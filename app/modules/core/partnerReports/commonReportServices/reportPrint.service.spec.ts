@@ -1,8 +1,8 @@
-import { IExportMenu } from '../partnerReportInterfaces';
+import {
+  IExportMenu,
+} from '../partnerReportInterfaces';
 
 describe('Service: Report Print Service', () => {
-  const ctrlData = getJSONFixture('core/json/partnerReports/ctrl.json');
-
   beforeEach(function () {
     this.initModules('Core');
     this.injectDependencies('$scope', 'ReportPrintService', 'Notification');
@@ -12,23 +12,27 @@ describe('Service: Report Print Service', () => {
     this.ctrlData = getJSONFixture('core/json/partnerReports/ctrl.json');
     this.mediaData = getJSONFixture('core/json/customerReports/mediaQuality.json');
     this.devicesJson = getJSONFixture('core/json/customerReports/devices.json');
+    this.endpointsData = getJSONFixture('core/json/partnerReports/registeredEndpointData.json');
 
-    let responseFunction: Function = (_layout, callResponse: Function): void => {
+    this.responseFunction = (_layout, callResponse: Function): void => {
       callResponse('fake data');
-    };
-    let noResponseFunction: Function = (_item, callResponse: Function): void => {
-      callResponse();
     };
 
     this.dummyChart = {
       export: {
-        capture: jasmine.createSpy('capture').and.callFake(noResponseFunction),
-        toJPG: jasmine.createSpy('toJPG').and.callFake(responseFunction),
-        toPDF: jasmine.createSpy('toPDF').and.callFake(responseFunction),
+        capture: jasmine.createSpy('capture').and.callFake((_item, callResponse: Function): void => {
+          callResponse();
+        }),
+        toJPG: jasmine.createSpy('toJPG').and.callFake(this.responseFunction),
+        toPDF: jasmine.createSpy('toPDF').and.callFake(this.responseFunction),
         download: jasmine.createSpy('downlaod'),
       },
     };
 
+    spyOn(this.Notification, 'errorWithTrackingId');
+  });
+
+  it(' - printCustomerPage should print charts to pdf using Amcharts calls', function () {
     this.activeOptions = _.cloneDeep(this.ctrlData.activeUserOptions);
     this.avgRoomsCard = _.cloneDeep(this.ctrlData.avgRoomsOptions);
     this.deviceCard = _.cloneDeep(this.ctrlData.deviceOptions);
@@ -37,6 +41,10 @@ describe('Service: Report Print Service', () => {
     this.metricsOptions = _.cloneDeep(this.ctrlData.callOptions);
     this.metricsLabels = _.cloneDeep(this.ctrlData.metricsLabels);
     this.qualityLabels = _.cloneDeep(this.ctrlData.qualityLabels);
+
+    this.activeOptions.description = 'activeUsers.customerPortalDescription';
+    this.mediaOptions.description = 'mediaQuality.descriptionCustomer';
+    this.metricsOptions.description = 'callMetrics.customerDescription';
 
     this.activeDropdown = {
       array: this.activeData.dropdownOptions,
@@ -58,15 +66,6 @@ describe('Service: Report Print Service', () => {
       selected: this.mediaData.dropdownFilter[0],
       click: (): void => {},
     };
-
-    this.activeOptions.description = 'activeUsers.customerPortalDescription';
-    this.mediaOptions.description = 'mediaQuality.descriptionCustomer';
-    this.metricsOptions.description = 'callMetrics.customerDescription';
-
-    spyOn(this.Notification, 'errorWithTrackingId');
-  });
-
-  it('should print charts to pdf using Amcharts calls', function () {
     this.ReportPrintService.printCustomerPage('all', this.defaults.timeFilter[0], {
       min: 0,
       max: 0,
@@ -86,17 +85,10 @@ describe('Service: Report Print Service', () => {
       metrics: this.metricsOptions,
     }, {
       active: this.activeDropdown,
-      rooms: undefined,
-      files: undefined,
       media: this.mediaDropdown,
       device: this.deviceDropdown,
-      metrics: undefined,
     }, {
-      active: undefined,
-      rooms: undefined,
-      files: undefined,
       media: this.qualityLabels,
-      device: undefined,
       metrics: this.metricsLabels,
     });
 
@@ -107,12 +99,40 @@ describe('Service: Report Print Service', () => {
     expect(this.dummyChart.export.download).toHaveBeenCalledTimes(1);
   });
 
+  it(' - printPartnerPage should print charts to pdf using Amcharts calls', function () {
+    this.activeUserOptions = _.cloneDeep(this.ctrlData.activeUserOptions);
+    this.populationOptions = _.cloneDeep(this.ctrlData.populationOptions);
+    this.mediaOptions = _.cloneDeep(this.ctrlData.mediaOptions);
+    this.endpointOptions = _.cloneDeep(this.ctrlData.endpointOptions);
+    this.callOptions = _.cloneDeep(this.ctrlData.callOptions);
+    this.endpointOptions.table.data = _.cloneDeep(this.endpointsData.registeredEndpointResponse);
+
+    this.ReportPrintService.printPartnerPage('all', this.defaults.timeFilter[0], {
+      active: this.dummyChart,
+      population: this.dummyChart,
+      media: this.dummyChart,
+      metrics: this.dummyChart,
+    }, {
+      active: this.activeUserOptions,
+      population: this.populationOptions,
+      media: this.mediaOptions,
+      device: this.endpointOptions,
+      metrics: this.callOptions,
+    });
+
+    expect(this.dummyChart.export.capture).toHaveBeenCalledTimes(4);
+    expect(this.dummyChart.export.toJPG).toHaveBeenCalledTimes(4);
+    this.$scope.$apply();
+    expect(this.dummyChart.export.toPDF).toHaveBeenCalledTimes(1);
+    expect(this.dummyChart.export.download).toHaveBeenCalledTimes(1);
+  });
+
   it('should return the export menu', function () {
-    let exportMenu: Array<IExportMenu> = this.ReportPrintService.createExportMenu({});
-    expect(exportMenu.length).toBe(4);
-    _.forEach(exportMenu, (exportItem: IExportMenu, index: number): void => {
-      expect(exportItem.id).toEqual(ctrlData.exportMenu[index].id);
-      expect(exportItem.label).toEqual(ctrlData.exportMenu[index].label);
+    this.exportMenu = this.ReportPrintService.createExportMenu({});
+    expect(this.exportMenu.length).toBe(4);
+    _.forEach(this.exportMenu, (exportItem: IExportMenu, index: number): void => {
+      expect(exportItem.id).toEqual(this.ctrlData.exportMenu[index].id);
+      expect(exportItem.label).toEqual(this.ctrlData.exportMenu[index].label);
       if (index > 0) {
         expect(exportItem.click).toEqual(jasmine.any(Function));
       } else {

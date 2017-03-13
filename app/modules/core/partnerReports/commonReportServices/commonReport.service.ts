@@ -60,7 +60,7 @@ export class CommonReportService {
     return url;
   }
 
-  public getPartnerReport(options: IIntervalQuery, customers: Array<IReportsCustomer>, cancelPromise: ng.IDeferred<any>): ng.IHttpPromise<any> {
+  public getPartnerReport(options: IIntervalQuery, customers: Array<IReportsCustomer> | undefined, cancelPromise: ng.IDeferred<any>): ng.IHttpPromise<any> {
     let url = this.urlBase + options.action + '/managedOrgs/' + options.type + '?' + this.getQuery(options);
     if (customers) {
       url += this.getCustomerQuery(customers);
