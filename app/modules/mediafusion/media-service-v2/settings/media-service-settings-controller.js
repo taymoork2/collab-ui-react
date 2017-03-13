@@ -2,11 +2,12 @@
   'use strict';
 
   /* @ngInject */
-  function MediaServiceSettingsControllerV2($stateParams, Analytics, FusionClusterService, MediaClusterServiceV2, Notification) {
+  function MediaServiceSettingsControllerV2($stateParams, Analytics, FusionClusterService, MediaClusterServiceV2, Notification, hasMFVIdeoFeatureToggle) {
     var vm = this;
     vm.config = "";
     vm.wx2users = "";
     vm.serviceType = "mf_mgmt";
+    vm.hasMFVIdeoFeatureToggle = hasMFVIdeoFeatureToggle;
     vm.serviceId = "squared-fusion-media";
     vm.cluster = $stateParams.cluster;
     vm.enableVideoQuality = false;
