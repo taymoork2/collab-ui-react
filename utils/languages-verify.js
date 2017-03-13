@@ -2,10 +2,13 @@ var fs = require('fs');
 var _ = require('lodash');
 
 var L10N_DIR = 'app/l10n';
-var L10N_SOURCE_REGEX = /[a-z]{2}_[A-Z]{2}/g;
+var L10N_SOURCE_VALUE_REGEX = /(value:\s'[a-z]{2}_[A-Z]{2}')/g;
+var L10N_SOURCE_REGEX = /[a-z]{2}_[A-Z]{2}/;
 var L10N_SOURCE = 'app/modules/core/l10n/languages.js';
 
-var languages = fs.readFileSync(L10N_SOURCE, 'utf8').match(L10N_SOURCE_REGEX);
+var languages = fs.readFileSync(L10N_SOURCE, 'utf8').match(L10N_SOURCE_VALUE_REGEX).map(function (language) {
+  return language.match(L10N_SOURCE_REGEX)[0];
+});
 
 var files = fs.readdirSync(L10N_DIR).map(function (file) {
   return file.replace('.json', '');

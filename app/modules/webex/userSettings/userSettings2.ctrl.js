@@ -26,7 +26,7 @@
     $scope.userEmailParam = $stateParams.currentUser.userName;
 
     var locale = $translate.use();
-    if (locale == "es_LA") { //latin american spanish
+    if (locale == "es_CO") { //latin american spanish
       locale = "es_MX"; //mexican spanish
     }
     $scope.localeParam = locale;
