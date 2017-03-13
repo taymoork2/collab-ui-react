@@ -1,17 +1,12 @@
 import directiveModule from './index';
 
 describe('Directive: disabledEnterKeyHook', () => {
-  let dropdown;
   let ENTER_KEY = 13;
 
   beforeEach(function() {
     this.initModules(directiveModule);
-    this.injectDependencies(
-      '$scope',
-      '$compile',
-    );
     let dropdown_template = '<input disable-enter-key-hook> <ul class="dropdown-menu ng-isolate-scope"> </ul> </input>';
-    dropdown = this.$compile(angular.element(dropdown_template))(this.$scope);
+    this.compileTemplate(dropdown_template);
   });
 
   describe('Test keydown events', () => {
@@ -38,7 +33,7 @@ describe('Directive: disabledEnterKeyHook', () => {
       spyOn(angular, 'element').and.callFake(typeaheadFakeScope);
       let e = $.Event('keydown', { keyCode: ENTER_KEY });
       let spy = spyOn(e, 'preventDefault');
-      $(dropdown).trigger(e);
+      $(this.view).trigger(e);
       expect(spy).toHaveBeenCalled();
     });
 
@@ -65,7 +60,7 @@ describe('Directive: disabledEnterKeyHook', () => {
       spyOn(angular, 'element').and.callFake(element);
       let e = $.Event('keydown', { keyCode: ENTER_KEY });
       let spy = spyOn(e, 'preventDefault');
-      $(dropdown).trigger(e);
+      $(this.view).trigger(e);
       expect(spy).not.toHaveBeenCalled();
     });
   });
