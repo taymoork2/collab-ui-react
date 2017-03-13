@@ -7,7 +7,7 @@
     .controller('HybridServicesCtrl', HybridServicesCtrl);
 
   /* @ngInject */
-  function HybridServicesCtrl($scope, $rootScope, $timeout, Authinfo, USSService, FusionUtils, ServiceDescriptor, Notification, Userservice, CloudConnectorService, FeatureToggleService) {
+  function HybridServicesCtrl($scope, $rootScope, $timeout, Authinfo, USSService, HybridServicesUtils, ServiceDescriptor, Notification, Userservice, CloudConnectorService, FeatureToggleService) {
     if (!Authinfo.isFusion()) {
       return;
     }
@@ -66,7 +66,7 @@
     }
 
     vm.extensionIcon = function (id) {
-      return FusionUtils.serviceId2Icon(id);
+      return HybridServicesUtils.serviceId2Icon(id);
     };
 
     if (extensionEntitlements.every(function (extensionEntitlement) {
@@ -83,7 +83,7 @@
         return;
       }
       // Filter out extensions that are not enabled in FMS
-      ServiceDescriptor.services(function (error, services) {
+      ServiceDescriptor.getServices().then(function (services) {
         if (services) {
           _.forEach(vm.extensions, function (extension) {
             extension.enabled = ServiceDescriptor.filterEnabledServices(services).some(function (service) {

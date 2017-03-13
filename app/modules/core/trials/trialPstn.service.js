@@ -63,7 +63,7 @@
         },
       };
 
-      _trialData = angular.copy(defaults);
+      _trialData = _.cloneDeep(defaults);
       return _trialData;
     }
 
@@ -173,11 +173,13 @@
     }
 
     function resetAddress() {
-      _trialData.details.emergAddr.streetAddress = '';
-      _trialData.details.emergAddr.unit = '';
-      _trialData.details.emergAddr.city = '';
-      _trialData.details.emergAddr.state = '';
-      _trialData.details.emergAddr.zip = '';
+      _trialData.details.emergAddr = {
+        streetAddress: '',
+        unit: '',
+        city: '',
+        state: '',
+        zip: '',
+      };
     }
 
     function setCountryCode(countryCode) {

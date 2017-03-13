@@ -281,21 +281,32 @@ require('./_wizard.scss');
             $rootScope.$broadcast('wizard-enterprise-sip-url-event');
           } else if (getStep().name === 'enterprisePmrSetup') {
             $rootScope.$broadcast('wizard-enterprise-pmr-event');
+            nextStepSuccessful();
+          } else {
+            nextStepSuccessful();
           }
-        }
-
-        var steps = getSteps();
-        if (_.isArray(steps)) {
-          var index = steps.indexOf(getStep());
-          if (index + 1 < steps.length) {
-            setStep(steps[index + 1]);
-          } else if (index + 1 === steps.length) {
-            nextTab();
-          }
+        } else {
+          nextStepSuccessful();
         }
       }).finally(function () {
         vm.wizardNextLoad = false;
       });
+    }
+
+    $rootScope.$on('wizard-enterprise-sip-save', function () {
+      nextStepSuccessful();
+    });
+
+    function nextStepSuccessful() {
+      var steps = getSteps();
+      if (_.isArray(steps)) {
+        var index = steps.indexOf(getStep());
+        if (index + 1 < steps.length) {
+          setStep(steps[index + 1]);
+        } else if (index + 1 === steps.length) {
+          nextTab();
+        }
+      }
     }
 
     function goToStep(requestedStep) {

@@ -13,6 +13,7 @@
 
     vm.data = {
       googleServiceAccount: '',
+      aclAccount: '',
       fileName: '',
       file: '',
     };
@@ -23,7 +24,7 @@
 
     vm.uploadKey = function () {
       vm.loading = true;
-      CloudConnectorService.updateConfig(vm.data.googleServiceAccount, vm.data.file, 'squared-fusion-gcal')
+      CloudConnectorService.updateConfig(vm.data.googleServiceAccount, vm.data.aclAccount, vm.data.file, 'squared-fusion-gcal')
         .then(function () {
           vm.step = 'final';
         })

@@ -13,10 +13,13 @@ describe('Controller: TrialPstnCtrl', function () {
     uuid: '23453-235sdfaf-3245a-asdfa4',
   };
 
-  var states = [{
-    name: 'Texas',
-    abbreviation: 'TX',
-  }];
+  var location = {
+    type: 'State',
+    areas: [{
+      name: 'Texas',
+      abbreviation: 'TX',
+    }],
+  };
 
   var numberInfo = {
     state: {
@@ -83,7 +86,7 @@ describe('Controller: TrialPstnCtrl', function () {
   });
 
   afterAll(function () {
-    customerName = customerEmail = carrier = states = numberInfo = carrierId = stateSearch = areaCodeResponse = newAreaCodes = exchangesResponse = numbersResponse = contractInfo = undefined;
+    customerName = customerEmail = carrier = numberInfo = carrierId = stateSearch = areaCodeResponse = newAreaCodes = exchangesResponse = numbersResponse = contractInfo = undefined;
   });
 
   beforeEach(angular.mock.module('core.trial'));
@@ -106,8 +109,7 @@ describe('Controller: TrialPstnCtrl', function () {
     $q = _$q_;
 
     spyOn(TrialService, 'getDeviceTrialsLimit');
-    spyOn(PstnSetupStatesService, 'getStates').and.returnValue($q.resolve(states));
-    spyOn(PstnSetupStatesService, 'getProvinces').and.returnValue($q.resolve(states));
+    spyOn(PstnSetupStatesService, 'getLocation').and.returnValue($q.resolve(location));
 
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
     spyOn(Orgservice, 'getOrg');
@@ -145,7 +147,7 @@ describe('Controller: TrialPstnCtrl', function () {
     var areaCode = areaCodeResponse.areaCodes[0];
 
     controller.trialData.details.pstnProvider.uuid = carrierId;
-    controller.trialData.details.pstnNumberInfo.state = states[0];
+    controller.trialData.details.pstnNumberInfo.state = location.areas[0];
 
     $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/inventory/carriers/' + carrierId + '/did/count?groupBy=nxx&npa=' + areaCode.code + '&state=' + stateSearch).respond(exchangesResponse);
 

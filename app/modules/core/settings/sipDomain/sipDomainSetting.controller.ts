@@ -16,7 +16,6 @@ export class SipDomainSettingController {
   public saving: boolean;
   public toggle: boolean;
   public showSaveButton: boolean;
-  private _inputValue: string = '';
   public currentDisplayName: string;
   public domainSuffix: string;
   public isRoomLicensed: boolean = false;
@@ -32,11 +31,15 @@ export class SipDomainSettingController {
     subdomainUnavailable: this.$translate.instant('firstTimeWizard.subdomainUnavailable'),
   };
 
+  private isCsc: boolean = false;
+  private _inputValue: string = '';
+
   private readonly ACTIVATE_SAVE_BUTTONS: string = 'settings-control-activate-footer';
   private readonly REMOVE_SAVE_BUTTONS: string = 'settings-control-remove-footer';
   private readonly SAVE_BROADCAST: string = 'settings-control-save';
   private readonly CANCEL_BROADCAST: string = 'settings-control-cancel';
   private readonly WIZARD_BROADCAST: string = 'wizard-enterprise-sip-url-event';
+  private readonly WIZARD_EMIT: string = 'wizard-enterprise-sip-save';
   private readonly DISMISS_BROADCAST: string = 'DISMISS_SIP_NOTIFICATION';
   private readonly DISMISS_DISABLE: string = 'wizardNextButtonDisable';
 
@@ -52,7 +55,8 @@ export class SipDomainSettingController {
     private $translate: ng.translate.ITranslateService,
     private $window,
     private UrlConfig,
-    private ModalService,
+    private $modal,
+    private ServiceDescriptor,
   ) {
     this.FeatureToggleService.atlasSubdomainUpdateGetStatus().then((status: boolean): void => {
       this.toggle = status;
@@ -63,9 +67,18 @@ export class SipDomainSettingController {
       this.checkRoomLicense();
 
       if (this.toggle) {
+        this.ServiceDescriptor.isServiceEnabled('squared-fusion-ec', (error: any, enabled: boolean): void => {
+          if (!error) {
+            this.isCsc = enabled;
+          }
+        });
+
         let onSaveEventDeregister = this.$rootScope.$on(this.WIZARD_BROADCAST, (): void => {
           if (this.inputValue === this.currentDisplayName) {
+            this.$rootScope.$emit(this.WIZARD_EMIT);
             return;
+          } else if (this.isSSAReserved) {
+            this.updateSubdomain();
           } else {
             this.saveSubdomain();
           }
@@ -82,10 +95,14 @@ export class SipDomainSettingController {
         $scope.$on('$destroy', onSaveEventDeregister);
         $scope.$on('$destroy', onSettingsSaveEventDeregister);
         $scope.$on('$destroy', onSettingsCancelEventDeregister);
+
         this.loadSubdomains();
       } else {
         this.errorMsg = $translate.instant('firstTimeWizard.setSipDomainErrorMessage');
-        let onSaveEventDeregister = $rootScope.$on(this.WIZARD_BROADCAST, this.saveDomain.bind(this));
+        let onSaveEventDeregister = $rootScope.$on(this.WIZARD_BROADCAST, (): void => {
+          this.$rootScope.$emit(this.WIZARD_EMIT);
+          this.saveDomain();
+        });
         $scope.$on('$destroy', onSaveEventDeregister);
 
         this.loadSipDomain();
@@ -195,6 +212,14 @@ export class SipDomainSettingController {
   }
 
   // Used in New Feature
+  public editSubdomain() {
+    if (this.isCsc) {
+      this.cscWarning();
+    } else {
+      this.toggleSipForm();
+    }
+  }
+
   public emptyOrUnchangedInput(): boolean {
     return this.inputValue === '' || _.isUndefined(this.inputValue) || _.isNull(this.inputValue) || this.inputValue === this.currentDisplayName;
   }
@@ -246,6 +271,7 @@ export class SipDomainSettingController {
   }
 
   private saveSubdomain(): void {
+    this.$rootScope.$emit(this.WIZARD_EMIT);
     this.saving = true;
     this.SparkDomainManagementService.addSipDomain(this.inputValue).then((response: any): void => {
       this.verified = false;
@@ -271,13 +297,16 @@ export class SipDomainSettingController {
   }
 
   private updateSubdomain(): void {
+    let vm = this;
     this.saving = true;
-    this.ModalService.open({
-      title: this.$translate.instant('firstTimeWizard.setSipDomainTitle'),
-      message: this.$translate.instant('firstTimeWizard.updateSubdomainMessage'),
-      close: this.$translate.instant('common.yes'),
-      dismiss: this.$translate.instant('common.no'),
-      btnType: 'negative',
+    this.$modal.open({
+      templateUrl: 'modules/core/settings/sipDomain/updateSipDomainWarning.tpl.html',
+      controller: function () {
+        this.isCsc = vm.isCsc;
+        this.openDocumentation = vm.openSipHelpWiki;
+      },
+      controllerAs: 'subdomain',
+      type: 'dialog',
     }).result.then((): void => {
       this.saveSubdomain();
     }).catch((): void => {
@@ -286,13 +315,29 @@ export class SipDomainSettingController {
     });
   }
 
+  private cscWarning(): void {
+    let vm = this;
+    this.saving = true;
+    this.$modal.open({
+      templateUrl: 'modules/core/settings/sipDomain/editCSCWarning.tpl.html',
+      controller: function () {
+        this.openDocumentation = vm.openSipHelpWiki;
+      },
+      controllerAs: 'subdomain',
+      type: 'dialog',
+    }).result.then((): void => {
+      this.toggleSipForm();
+    });
+  }
+
   private checkRoomLicense() {
     this.Orgservice.getLicensesUsage().then((response) => {
-      let licenses: any = _.get(response, '[0].licenses');
-      let roomLicensed = _.find(licenses, {
-        offerName: 'SD',
+      this.isRoomLicensed = _.some(response, function (subscription) {
+        let licenses = _.get(subscription, 'licenses');
+        return _.some(licenses, function (license) {
+          return _.get(license, 'offerName') === 'SD' || _.get(license, 'offerName') === 'SB';
+        });
       });
-      this.isRoomLicensed = !_.isUndefined(roomLicensed);
       this.subdomainCount++;
     });
   }

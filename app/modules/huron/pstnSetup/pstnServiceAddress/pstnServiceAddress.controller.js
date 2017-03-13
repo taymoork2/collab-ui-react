@@ -9,7 +9,8 @@
     var vm = this;
     vm.validateAddress = validateAddress;
     vm.hasBackButton = hasBackButton;
-    vm.validateNext = validateNext;
+    vm.resetAddress = resetAddress;
+    vm.next = next;
     vm.modify = modify;
     vm.goBack = goBack;
     vm.loading = false;
@@ -18,7 +19,8 @@
     init();
 
     function init() {
-      vm.address = angular.copy(PstnSetup.getServiceAddress());
+      vm.address = _.cloneDeep(PstnSetup.getServiceAddress());
+      vm.countryCode = PstnSetup.getCountryCode();
       // If address has been set in the model, set it as valid
       if (!_.isEmpty(vm.address)) {
         vm.isValid = true;
@@ -30,9 +32,11 @@
       vm.isValid = false;
     }
 
-    function validateNext() {
+    function next() {
       if (vm.isValid) {
         goToOrderNumbers();
+      } else {
+        validateAddress();
       }
     }
 
@@ -62,6 +66,12 @@
 
     function hasBackButton() {
       return (!PstnSetup.isCarrierExists() && !PstnSetup.isSingleCarrierReseller()) || !PstnSetup.isCustomerExists();
+    }
+
+    function resetAddress() {
+      vm.address = {};
+      PstnSetup.setServiceAddress(vm.address);
+      vm.isValid = false;
     }
 
     function goBack() {

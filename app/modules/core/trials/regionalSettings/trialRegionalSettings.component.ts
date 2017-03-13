@@ -17,9 +17,9 @@ class TrialRegionalSettingsCtrl implements ng.IComponentController {
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
-    let countryListChanges = changes['defaultCountryList'];
-    if (countryListChanges && countryListChanges.currentValue) {
-      this.processDefaultCountryListChanges(countryListChanges);
+    const { defaultCountryList } = changes;
+    if (defaultCountryList && defaultCountryList.currentValue) {
+      this.processDefaultCountryListChanges(defaultCountryList);
     }
   }
 

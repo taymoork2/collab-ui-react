@@ -58,7 +58,7 @@
     /////////////////////
 
     function getNewDirectoryNumber() {
-      return angular.copy(directoryNumberPayload);
+      return _.cloneDeep(directoryNumberPayload);
     }
 
     function getDirectoryNumberESN(uuid) {
@@ -82,7 +82,7 @@
         directoryNumberId: uuid,
       }).$promise
         .then(function (data) {
-          var dn = angular.copy(directoryNumberPayload);
+          var dn = _.cloneDeep(directoryNumberPayload);
           dn.uuid = data.uuid;
           dn.pattern = data.pattern;
           dn.alertingName = data.alertingName;
@@ -144,7 +144,7 @@
     }
 
     function updateDirectoryNumber(dnUuid, dnSettings) {
-      var dnPayload = angular.copy(dnSettings);
+      var dnPayload = _.cloneDeep(dnSettings);
       delete dnPayload.uuid; // causes 500 error if present for PUT
       return DirectoryNumberService.update({
         customerId: Authinfo.getOrgId(),

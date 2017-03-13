@@ -6,7 +6,7 @@
     .controller('CallServiceSettingsController', CallServiceSettingsController);
 
   /* @ngInject */
-  function CallServiceSettingsController($modal, ServiceDescriptor, Authinfo, USSService, CertService, Notification, CertificateFormatterService, $translate, hasVoicemailFeatureToggle, UCCService) {
+  function CallServiceSettingsController($modal, Analytics, ServiceDescriptor, Authinfo, USSService, CertService, Notification, CertificateFormatterService, $translate, hasVoicemailFeatureToggle, UCCService) {
     var vm = this;
     vm.formattedCertificateList = [];
     vm.readCerts = readCerts;
@@ -16,12 +16,16 @@
     vm.localizedServiceName = $translate.instant('hercules.serviceNames.squared-fusion-uc');
     vm.localizedConnectorName = $translate.instant('hercules.connectorNames.squared-fusion-uc');
     if (vm.squaredFusionEcEntitled) {
-      ServiceDescriptor.isServiceEnabled('squared-fusion-ec', function (a, b) {
-        vm.squaredFusionEc = b;
-        if (vm.squaredFusionEc) {
-          readCerts();
-        }
-      });
+      ServiceDescriptor.isServiceEnabled('squared-fusion-ec')
+        .then(function (response) {
+          vm.squaredFusionEc = response;
+          if (vm.squaredFusionEc) {
+            readCerts();
+          }
+        })
+        .catch(function (response) {
+          this.Notification.errorWithTrackingId(response, 'hercules.genericFailure');
+        });
     }
     vm.hasVoicemailFeatureToggle = hasVoicemailFeatureToggle;
     vm.help = {
@@ -37,6 +41,8 @@
     vm.callServiceConnect = {
       title: 'hercules.serviceNames.squared-fusion-ec',
     };
+
+    Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CALL_SETTINGS);
 
     vm.storeEc = function (toggleConnect) {
       if (!toggleConnect) {
@@ -55,9 +61,10 @@
           if (hasVoicemailFeatureToggle) {
             vm.disableVoicemail(Authinfo.getOrgId());
           }
-        }).catch(function (response) {
-          Notification.errorWithTrackingId(response, 'hercules.error.failedToDisableConnect');
-        });
+        })
+          .catch(function (response) {
+            Notification.errorWithTrackingId(response, 'hercules.error.failedToDisableConnect');
+          });
       }
     };
 

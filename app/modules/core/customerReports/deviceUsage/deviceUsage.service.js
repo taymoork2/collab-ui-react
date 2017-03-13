@@ -8,18 +8,16 @@
   /* @ngInject */
   function DeviceUsageService($log, $q, $http, UrlConfig, Authinfo, $translate, HttpRequestCanceller) {
 
-    // TODO: Swap when V2 backend is ready
-    //var urlBase = UrlConfig.getAdminServiceUrl() + 'organization';
-    var urlBase = 'http://berserk.rd.cisco.com:8080/atlas-server/admin/api/v1/organization';
+    var urlBase = UrlConfig.getAdminServiceUrl() + 'organization';
+    var localUrlBase = 'http://berserk.rd.cisco.com:8080/atlas-server/admin/api/v1/organization';
 
     var csdmUrlBase = UrlConfig.getCsdmServiceUrl() + '/organization';
-    var csdmUrl = csdmUrlBase + '/' + Authinfo.getOrgId() + '/places/';
 
-    function getDataForRange(start, end, granularity, deviceCategories, models) {
+    function getDataForRange(start, end, granularity, deviceCategories, models, api) {
       var startDate = moment(start);
       var endDate = moment(end);
 
-      $log.info("categories parameter ignored in V2:", deviceCategories);
+      //$log.info("categories parameter ignored in V2:", deviceCategories);
 
       if (_.isEmpty(models)) {
         models = 'aggregate';
@@ -27,6 +25,9 @@
         models = models.join();
       }
       if (startDate.isValid() && endDate.isValid() && startDate.isBefore(endDate) /*&& endDate.isBefore(now)*/) {
+        if (api === 'local') {
+          urlBase = localUrlBase;
+        }
         var url = urlBase + '/' + Authinfo.getOrgId() + '/reports/device/usage?';
         url = url + 'interval=day'; // As long week and month is not implemented
         url = url + '&from=' + start + '&to=' + end;
@@ -277,17 +278,24 @@
 
     function resolveDeviceData(devices) {
       var promises = [];
+
       _.each(devices, function (device) {
-        promises.push(cancelableHttpGET(csdmUrl + device.accountId)
+        var csdmUrl = csdmUrlBase + '/' + Authinfo.getOrgId() + '/places/';
+        promises.push(cancelableHttpGET(csdmUrl + device.accountId + '?shallow=true')
           .then(function (res) {
-            //$log.info("resolving", res);
             return res.data;
           })
-          .catch(function () {
+          .catch(function (err) {
             //$log.info("Problems resolving device", err);
+            var infoText = "";
+            if (err.status === -1) {
+              infoText = $translate.instant('reportsPage.usageReports.timeoutWhenTryingToResolveNameFor') + " device id=" + device.accountId;
+            } else {
+              infoText = $translate.instant('reportsPage.usageReports.nameNotFoundFor') + " device id=" + device.accountId;
+            }
             return {
-              "displayName": $translate.instant('reportsPage.usageReports.nameNotFoundFor') + " id=" + device.accountId,
-              "info": $translate.instant('reportsPage.usageReports.nameNotFoundFor') + " device id=" + device.accountId,
+              "displayName": $translate.instant('reportsPage.usageReports.nameNotResolvedFor') + " id=" + device.accountId,
+              "info": infoText,
             };
           })
         );

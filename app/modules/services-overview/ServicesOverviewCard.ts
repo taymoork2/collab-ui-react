@@ -41,6 +41,10 @@ export abstract class ServicesOverviewCard {
   public status: ICardStatus;
   public setupMode: boolean;
 
+  public getCardType() {
+    return this.cardType;
+  }
+
   public showStatus() {
     return !this.loading && this.active && !!(this.status && this.status.status);
   }

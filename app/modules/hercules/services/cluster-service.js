@@ -61,9 +61,15 @@
     }
 
     function mergeAllAlarms(connectors) {
-      return _.chain(connectors)
+
+      var allAlarms = _.chain(connectors)
         .reduce(function (acc, connector) {
-          return acc.concat(connector.alarms);
+          var modifiedAlarms = _.map(connector.alarms, function (alarm) {
+            alarm.hostname = connector.hostname;
+            alarm.affectedNodes = [connector.hostname];
+            return alarm;
+          });
+          return acc.concat(modifiedAlarms);
         }, [])
         // This sort must happen before the uniqWith so that we keep the oldest alarm when
         // finding duplicates (the order is preserved when running uniqWith, that is, the
@@ -71,6 +77,9 @@
         .sortBy(function (e) {
           return e.firstReported;
         })
+        .value();
+
+      var deduplicatedAlarms = _.chain(allAlarms)
         .uniqWith(function (e1, e2) {
           return e1.id === e2.id
             && e1.title === e2.title
@@ -87,6 +96,27 @@
           return e.id;
         })
         .value();
+
+      if (allAlarms.length > deduplicatedAlarms.length) {
+        var removedAlarms = _.differenceWith(allAlarms, deduplicatedAlarms, _.isEqual);
+        _.forEach(removedAlarms, function (removedAlarm) {
+          var alarmSiblings = _.filter(allAlarms, function (a) {
+            return removedAlarm.id === a.id
+              && removedAlarm.title === a.title
+              && removedAlarm.description === a.description
+              && removedAlarm.severity === a.severity
+              && removedAlarm.solution === a.solution
+              && _.isEqual(removedAlarm.solutionReplacementValues, a.solutionReplacementValues);
+          });
+          _.forEach(alarmSiblings, function (alarm) {
+            alarm.affectedNodes = _.flatMap(alarmSiblings, function (a) {
+              return a.hostname;
+            });
+            alarm.affectedNodes.sort();
+          });
+        });
+      }
+      return deduplicatedAlarms;
     }
 
     function getUpgradeState(connectors) {
@@ -165,7 +195,7 @@
     function clusterType(type, clusters) {
       return _.chain(clusters)
         .map(function (cluster) {
-          cluster = angular.copy(cluster);
+          cluster = _.cloneDeep(cluster);
           cluster.connectors = _.filter(cluster.connectors, { connectorType: type });
           return cluster;
         })

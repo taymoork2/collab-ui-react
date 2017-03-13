@@ -121,58 +121,59 @@
   div {
     @include vr-spacing(pt, 1);
   }
-}.care-new-feature-modal {
-   // The modal body.
-   display: flex;
-   flex-direction: row;
-   flex-wrap: wrap;
+}
+.care-new-feature-modal {
+  // The modal body.
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 
-   @include vr-spacing(pt, 0);
-   @include vr-spacing(pr, 2);
-   @include vr-spacing(pb, 2);
-   @include vr-spacing(pl, 2);
+  @include vr-spacing(pt, 0);
+  @include vr-spacing(pr, 2);
+  @include vr-spacing(pb, 2);
+  @include vr-spacing(pl, 2);
 
-   button {
-     // The button options in the body.
-     display: flex;
-     flex-direction: column;
-     align-items: stretch;
-     flex: 1 1 rem-calc(200);
-     color: $gray-darkest;
-     background-color: $gray-lightest;
-     border-style: hidden;
+  button {
+    // The button options in the body.
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    flex: 1 1 rem-calc(200);
+    color: $gray-darkest;
+    background-color: $gray-lightest;
+    border-style: hidden;
 
-     @include vr-spacing(mr, 0.125);
-     @include vr-spacing(ml, 0.5);
-     @include vr-spacing(mb, 1);
-     @include vr-spacing(p, 0);
+    @include vr-spacing(mr, 0.125);
+    @include vr-spacing(ml, 0.5);
+    @include vr-spacing(mb, 1);
+    @include vr-spacing(p, 0);
 
-     &:hover {
-       background-color: $gray-light;
-     }
+    &:hover {
+      background-color: $gray-light;
+    }
 
-     &:first-child:nth-last-child(4),
-     &:first-child:nth-last-child(4) ~ button {
-       flex: 1 1 48%;
-     }
-   }
-   
-   .feature-icon-container {
-      @include vr-spacing(pt, 2.5);
+    &:first-child:nth-last-child(4),
+    &:first-child:nth-last-child(4) ~ button {
+      flex: 1 1 48%;
+    }
+  }
 
-      display:flex;
-      flex-direction:row;
-      justify-content: center;
-      .icon {
-        font-size: rem-calc(24);
-        flex-basis: 50%;
+  .feature-icon-container {
+    @include vr-spacing(pt, 2.5);
 
-        &:first-child {
-          flex-basis: 100%;
-          padding-bottom: rem-calc(26);
-        }
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    .icon {
+      font-size: rem-calc(24);
+      flex-basis: 50%;
+
+      &:first-child {
+        flex-basis: 100%;
+        padding-bottom: rem-calc(26);
       }
     }
+  }
 
   .feature-icon-circle {      // Icon in the option.
     font-family: $brand-font-extra-light;

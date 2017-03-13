@@ -6,10 +6,13 @@ describe('Controller: DeviceOverviewCtrl', function () {
   var RemoteSupportModal, HuronConfig, FeatureToggleService, Userservice;
   var PstnSetupStatesService, CsdmHuronDeviceService;
 
-  var states = [{
-    name: 'Texas',
-    abbreviation: 'TX',
-  }];
+  var location = {
+    type: 'State',
+    areas: [{
+      name: 'Texas',
+      abbreviation: 'TX',
+    }],
+  };
 
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module('Squared'));
@@ -43,11 +46,10 @@ describe('Controller: DeviceOverviewCtrl', function () {
     $httpBackend.whenGET('http://thedeviceurl').respond(200);
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200);
     $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/sipendpoints/3/addonmodules').respond(200);
-    $httpBackend.whenGET('modules/huron/pstnSetup/states.json').respond(states);
     $httpBackend.whenGET('https://cmi.huron-int.com/api/v1/voice/customers/sites').respond([]);
     spyOn(CsdmHuronDeviceService, 'getLinesForDevice').and.returnValue($q.resolve([]));
     spyOn(CsdmHuronDeviceService, 'getDeviceInfo').and.returnValue($q.resolve({}));
-    spyOn(PstnSetupStatesService, 'getStateProvinces').and.returnValue($q.resolve(states));
+    spyOn(PstnSetupStatesService, 'getLocation').and.returnValue($q.resolve(location));
   }
 
   CsdmHuronDeviceService = {

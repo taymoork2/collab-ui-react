@@ -31,16 +31,18 @@ class PreferredLanguage implements ng.IComponentController {
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
-    let preferredLanguageOptionsChange = changes['preferredLanguageOptions'];
-    if (preferredLanguageOptionsChange) {
-      if (preferredLanguageOptionsChange.currentValue && _.isArray(preferredLanguageOptionsChange.currentValue)) {
-        this.options = <IPreferredLanugageOption[]> preferredLanguageOptionsChange.currentValue;
+    const {
+      preferredLanguage,
+      preferredLanguageOptions,
+    } = changes;
+    if (preferredLanguageOptions) {
+      if (preferredLanguageOptions.currentValue && _.isArray(preferredLanguageOptions.currentValue)) {
+        this.options = <IPreferredLanugageOption[]> preferredLanguageOptions.currentValue;
       }
     }
-    let preferredLanguageChange = changes['preferredLanguage'];
-    if (preferredLanguageChange) {
-      if (preferredLanguageChange.currentValue) {
-        this.optionSelected = <IPreferredLanugageOption> preferredLanguageChange.currentValue;
+    if (preferredLanguage) {
+      if (preferredLanguage.currentValue) {
+        this.optionSelected = <IPreferredLanugageOption> preferredLanguage.currentValue;
       } else {
         this.optionSelected = this.noneOption;
       }

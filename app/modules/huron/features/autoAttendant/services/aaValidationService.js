@@ -6,7 +6,7 @@
     .factory('AAValidationService', AAValidationService);
 
   /* @ngInject */
-  function AAValidationService(AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AANotificationService, AACommonService, $translate) {
+  function AAValidationService(AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AANotificationService, AACommonService, $translate, AAUtilityService) {
 
     var routeToCalls = [{
       'name': 'goto',
@@ -47,6 +47,8 @@
     var errCallerInputNoInputValuesEnteredMsg = 'autoAttendant.callerInputMenuErrorNoInputValuesEntered';
     var errPhoneMenuNoInputValuesEnteredMsg = 'autoAttendant.phoneMenuMenuErrorNoInputValuesEntered';
     var errSubMenuNoInputValuesEnteredMsg = 'autoAttendant.subMenuErrorNoInputValuesEntered';
+    var errMissingIsVariableMsg = 'autoAttendant.conditionalIsEntryVariableMissing';
+    var errUnevenQuotesIsVariableMsg = 'autoAttendant.conditionalIsEntryVariableUnevenQouotes';
     var errMissingIfVariableMsg = 'autoAttendant.conditionalIfEntryVariableMissing';
     var errMissingThenVariableMsg = 'autoAttendant.conditionalThenTargetMissing';
 
@@ -213,10 +215,21 @@
       if (_.get(action, 'name', '') !== 'conditional') {
         return true;
       }
-
-      if (_.isEmpty(action.if.rightCondition)) {
+      if (_.isEmpty(action.if.leftCondition)) {
         validAction = false;
         AANotificationService.error(errMissingIfVariableMsg, {
+          schedule: translatedLabel,
+          at: _.indexOf(conditionalMenus, conditionalMenu) + 1,
+        });
+      } else if (_.isEmpty(action.if.rightCondition)) {
+        validAction = false;
+        AANotificationService.error(errMissingIsVariableMsg, {
+          schedule: translatedLabel,
+          at: _.indexOf(conditionalMenus, conditionalMenu) + 1,
+        });
+      } else if (isUnclosedQuotesConditional(action.if.rightCondition)) {
+        validAction = false;
+        AANotificationService.error(errUnevenQuotesIsVariableMsg, {
           schedule: translatedLabel,
           at: _.indexOf(conditionalMenus, conditionalMenu) + 1,
         });
@@ -231,6 +244,10 @@
 
       return validAction;
 
+    }
+
+    function isUnclosedQuotesConditional(rightCondition) {
+      return AAUtilityService.countOccurences(rightCondition, '"') % 2 !== 0;
     }
 
     function checkForValidCallerInputs(callerInputMenu, callerInputMenus, fromLane, translatedLabel) {

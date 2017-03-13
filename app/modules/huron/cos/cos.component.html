@@ -5,7 +5,7 @@
     for="{{restriction.restriction}}" 
     translate="{{$ctrl.getTitle(restriction.restriction)}}">
   </label>
-  <p class="description-block" translate="{{$ctrl.getDescription(restriction.restriction)}}"></p>
+  <p class="description-block" translate="{{$ctrl.getDescription(restriction.restriction)}}" translate-values="{premiumNumbers: $ctrl.premiumNumbers}"></p>
   <cs-toggle-switch
     class="switch-bottom-margin"
     ng-model="restriction.blocked"

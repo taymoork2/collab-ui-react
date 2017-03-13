@@ -21,7 +21,7 @@ export class AlarmDetailsSidepanelCtrl implements ng.IComponentController {
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }) {
-    let alarm = changes['alarm'];
+    const { alarm } = changes;
     if (alarm && alarm.currentValue) {
       this.init(alarm.currentValue);
     }

@@ -74,7 +74,7 @@ while [ "$i" -lt 3 ]; do
     --logfile "sauce_connect.log" \
     --pidfile "$PID_FILE" \
     --readyfile "$READY_FILE" \
-    --tunnel-identifier "$SC_TUNNEL_IDENTIFIER" \
+    --tunnel-identifier "$SAUCE__TUNNEL_ID" \
     > /dev/null 2>&1 \
     &
 

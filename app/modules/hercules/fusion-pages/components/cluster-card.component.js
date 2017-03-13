@@ -11,7 +11,7 @@
     });
 
   /* @ngInject */
-  function ClusterCardController($state, FusionClusterService, FeatureToggleService, FusionUtils, $window, $modal) {
+  function ClusterCardController($state, FusionClusterService, FeatureToggleService, HybridServicesUtils, $window, $modal) {
     var ctrl = this;
 
     ctrl.countHosts = countHosts;
@@ -25,8 +25,8 @@
     ctrl.formatTimeAndDate = FusionClusterService.formatTimeAndDate;
     ctrl.hasResourceGroupFeatureToggle = false;
     ctrl.hasNodesViewFeatureToggle = false;
-    ctrl.getLocalizedReleaseChannel = FusionUtils.getLocalizedReleaseChannel;
-    ctrl.hybridServicesComparator = FusionUtils.hybridServicesComparator;
+    ctrl.getLocalizedReleaseChannel = HybridServicesUtils.getLocalizedReleaseChannel;
+    ctrl.hybridServicesComparator = HybridServicesUtils.hybridServicesComparator;
     ctrl.upgradesAutomatically = upgradesAutomatically;
     ctrl.hideFooter = hideFooter;
 
@@ -83,6 +83,7 @@
       } else if (serviceId === 'contact-center-context') {
         $state.go('context-resources', {
           backState: 'cluster-list',
+          clusterId: clusterId,
         });
       }
     }
@@ -100,6 +101,10 @@
         $state.go('hds-cluster.nodes', {
           id: id,
         });
+      } else if (type === 'ucm_mgmt') {
+        $state.go('cucm-cluster.nodes', {
+          id: id,
+        });
       }
     }
 
@@ -114,6 +119,10 @@
         });
       } else if (type === 'hds_app') {
         $state.go('hds-cluster.settings', {
+          id: id,
+        });
+      } else if (type === 'ucm_mgmt') {
+        $state.go('cucm-cluster.settings', {
           id: id,
         });
       }

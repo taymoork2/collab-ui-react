@@ -11,3 +11,7 @@ export interface IUserCos {
   place?: Array<IRestriction>;
   customer: Array<IRestriction>;
 }
+
+export interface IDialPlan {
+  premiumNumbers: Array<string>;
+}

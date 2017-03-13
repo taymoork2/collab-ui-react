@@ -5,16 +5,31 @@
                   tabs="gssIframeCtrl.headerTabs">
   </cs-page-header>
 
-  <cs-select
-    id="serviceSelector"
-    ng-model="gssIframeCtrl.selected"
-    options="gssIframeCtrl.options"
-    placeholder="::'gss.servicesPlaceholder' | translate"
-    on-change-fn="gssIframeCtrl.onServiceSelectionChanged()"
-    nested="false"
-    class="service-selector"
-    icon="icon-chevron-down">
-  </cs-select>
+  <div ng-if="!gssIframeCtrl.isEqualVersion" class="cs-card syncContent">
+    <div class="spinner-loading" ng-show="gssIframeCtrl.isCompareVersionLoading">
+      <i class="icon icon-spinner"></i>
+    </div>
+    <article ng-if="!gssIframeCtrl.isCompareVersionLoading">
+      <section>{{ 'common.warning' | translate }}! {{ 'gss.syncMessage' | translate}}
+      <button cs-btn class="btn btn--primary"
+              loading="gssIframeCtrl.isLoading" ng-click="gssIframeCtrl.syncUp()">
+          <span translate="gss.syncBtn"></span>
+      </button>
+      </section>
+    </article>
+  </div>
+  <div ng-if="gssIframeCtrl.isEqualVersion">
+    <cs-select
+      id="serviceSelector"
+      ng-model="gssIframeCtrl.selected"
+      options="gssIframeCtrl.options"
+      placeholder="::'gss.servicesPlaceholder' | translate"
+      on-change-fn="gssIframeCtrl.onServiceSelectionChanged()"
+      nested="false"
+      class="service-selector"
+      icon="icon-chevron-down">
+    </cs-select>
 
-  <div class="gss-page-wrapper" ui-view></div>
+    <div class="gss-page-wrapper" ui-view></div>
+  </div>
 </div>

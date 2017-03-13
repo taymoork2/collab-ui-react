@@ -6,7 +6,7 @@
     .service('HDSService', HDSService);
 
   /* @ngInject */
-  function HDSService($http, $q, Orgservice, UrlConfig) {
+  function HDSService($http, $q, $timeout, Authinfo, Orgservice, UrlConfig) {
     var trialUserGroupId = null;
 
     var service = {
@@ -21,7 +21,9 @@
       addHdsTrialUsers: addHdsTrialUsers,
       removeHdsTrialUsers: removeHdsTrialUsers,
       replaceHdsTrialUsers: replaceHdsTrialUsers,
+      moveToProductionMode: moveToProductionMode,
       refreshEncryptionServerForTrialUsers: refreshEncryptionServerForTrialUsers,
+      upgradeCluster: upgradeCluster,
     };
 
 
@@ -129,6 +131,56 @@
       return $http.patch(serviceUrl, jsonMembers).then(extractData);
     }
 
+    function moveToProductionMode(kmsServer, kmsServerMachineUUID, adrServer, securityService) {
+      // copy altHdsServers info to upper layer under org settings
+      // delete altHdsServers undr org settings
+      return updateOrgsettingsHdsInfo(kmsServer, kmsServerMachineUUID, adrServer, securityService)
+        .then(function () {
+          return deleteAtlHdsServers();
+        });
+    }
+    function updateOrgsettingsHdsInfo(kmsServer, kmsServerMachineUUID, adrServer, securityService) {
+      var data = {
+        'kmsServer': kmsServer,
+        'kmsServerMachineUUID': kmsServerMachineUUID,
+        'adrServer': adrServer,
+        'securityService': securityService,
+      };
+      return Orgservice.setOrgSettings(Authinfo.getOrgId(), data)
+        .then(function () {
+          // Atlas API has a bug that values not set while returns OK of status 204
+          return checkSetOrgServiceRersults(kmsServer, kmsServerMachineUUID, adrServer, securityService, 1000)
+            .catch(function () {
+              // check one more time with increased delay to check
+              return checkSetOrgServiceRersults(kmsServer, kmsServerMachineUUID, adrServer, securityService, 2000);
+            });
+        })
+        .catch(function () {
+          return $q.reject('Failed to save Org Settings due to the Atlas API bug');
+        });
+    }
+    function checkSetOrgServiceRersults(kmsServer, kmsServerMachineUUID, adrServer, securityService, msDelay) {
+      return $timeout(function () {
+        Orgservice.getOrg(function (data, status) {
+          if (data.success || status === 200) {
+            var orgSettings = data.orgSettings;
+            var kmsServer_org = orgSettings.kmsServer;
+            var kmsServerMachineUUID_org = orgSettings.kmsServerMachineUUID;
+            var adrServer_org = orgSettings.adrServer;
+            var securityService_org = orgSettings.securityService;
+            if (kmsServer_org === kmsServer && kmsServerMachineUUID_org === kmsServerMachineUUID && adrServer_org === adrServer && securityService_org === securityService) {
+              return $q.resolve();
+            }
+          }
+          return $q.reject(status);
+        });
+      }, msDelay);
+    }
+    function deleteAtlHdsServers() {
+      var serviceUrl = UrlConfig.getAdminServiceUrl() + '/organizations/' + Authinfo.getOrgId() + '/settings/altHdsServers';
+      return $http.delete(serviceUrl);
+    }
+
     function refreshEncryptionServerForTrialUsers(gid) {
       var serviceUrl = UrlConfig.getHybridEncryptionServiceUrl() + '/flushTrialUserGroupCache/' + gid;
       return $http.post(serviceUrl).then(extractData);
@@ -136,6 +188,12 @@
 
     function extractData(response) {
       return response.data;
+    }
+
+    function upgradeCluster(id) {
+      var connectorType = 'hds_app';
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + id + '/provisioning/actions/update/invoke?connectorType=' + connectorType + '&forced=true';
+      return $http.post(url);
     }
   }
 }());

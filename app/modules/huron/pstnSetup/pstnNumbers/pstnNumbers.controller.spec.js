@@ -73,10 +73,13 @@ describe('Controller: PstnNumbersCtrl', function () {
     orderType: "BLOCK_ORDER",
   };
 
-  var states = [{
-    name: 'Texas',
-    abbreviation: 'TX',
-  }];
+  var location = {
+    type: 'State',
+    areas: [{
+      name: 'Texas',
+      abbreviation: 'TX',
+    }],
+  };
 
   var response = {
     areaCodes: [{
@@ -95,6 +98,10 @@ describe('Controller: PstnNumbersCtrl', function () {
     state: 'TX',
     zip: '77777',
   };
+
+  var capabilityWithTollFree = [
+    { capability: "TOLLFREE_ORDERING" },
+  ];
 
   afterEach(function () {
     if (element) {
@@ -121,16 +128,17 @@ describe('Controller: PstnNumbersCtrl', function () {
     PstnSetup.setCustomerId(customer.uuid);
     PstnSetup.setCustomerName(customer.name);
     PstnSetup.setProvider(customerCarrierList[0]);
+    PstnSetup.setCountryCode('US');
 
     spyOn(PstnSetupService, 'releaseCarrierInventory').and.returnValue($q.resolve());
     spyOn(PstnSetupService, 'releaseCarrierInventoryV2').and.returnValue($q.resolve());
     spyOn(PstnSetupService, 'getCarrierInventory').and.returnValue($q.resolve(response));
     spyOn(PstnSetupService, 'getCarrierTollFreeInventory').and.returnValue($q.resolve(response));
+    spyOn(PstnSetupService, 'getCarrierCapabilities').and.returnValue($q.resolve());
     spyOn(PstnSetup, 'getServiceAddress').and.returnValue(serviceAddress);
     spyOn(Notification, 'error');
     spyOn($state, 'go');
-    spyOn(PstnSetupStatesService, 'getProvinces').and.returnValue($q.resolve(states));
-    spyOn(PstnSetupStatesService, 'getStates').and.returnValue($q.resolve(states));
+    spyOn(PstnSetupStatesService, 'getLocation').and.returnValue($q.resolve(location));
     spyOn($translate, 'instant').and.callThrough();
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
 
@@ -162,7 +170,6 @@ describe('Controller: PstnNumbersCtrl', function () {
     advancedOrder = undefined;
     advancedNxxOrder = undefined;
     advancedTollFreeOrder = undefined;
-    states = undefined;
     response = undefined;
     serviceAddress = undefined;
   });
@@ -187,7 +194,7 @@ describe('Controller: PstnNumbersCtrl', function () {
     });
 
     it('should have state set through pstnSetupService on first time', function () {
-      expect(controller.model.pstn.state).toEqual(states[0]);
+      expect(controller.model.pstn.state).toEqual(location.areas[0]);
     });
 
     it('should have showTollFreeNumbers set to false if feature toggle returns false', function () {
@@ -213,6 +220,28 @@ describe('Controller: PstnNumbersCtrl', function () {
       expect(controller.orderNumbersTotal).toEqual(6);
       controller.goToReview();
       expect($state.go).toHaveBeenCalledWith('pstnSetup.review');
+    });
+  });
+
+  describe('getCapabilities', function () {
+    it('should not show toll-free tabs if trial', function () {
+      PstnSetup.setIsTrial(true);
+      expect(controller.showTollFreeNumbers).toBe(false);
+    });
+
+    it('should not show toll-free tab in paid if not supported', function () {
+      PstnSetup.setIsTrial(false);
+      controller.getCapabilities();
+      $scope.$apply();
+      expect(controller.showTollFreeNumbers).toBe(false);
+    });
+
+    it('should show toll-free tab in paid if supported', function () {
+      PstnSetup.setIsTrial(false);
+      PstnSetupService.getCarrierCapabilities = jasmine.createSpy().and.returnValue($q.resolve(capabilityWithTollFree));
+      controller.getCapabilities();
+      $scope.$apply();
+      expect(controller.showTollFreeNumbers).toBe(true);
     });
   });
 

@@ -6,14 +6,18 @@
     .module('GSS')
     .controller('GssIframeCtrl', GssIframeCtrl);
 
-  function GssIframeCtrl($modal, $scope, $state, $translate, GSSService) {
+  function GssIframeCtrl($modal, $scope, $state, $translate, GSSService, Notification) {
     var vm = this;
     var addServiceOptionValue = 'addService';
 
     vm.addService = addService;
     vm.onServiceSelectionChanged = onServiceSelectionChanged;
+    vm.isLoading = false;
+    vm.isCompareVersionLoading = true;
+    vm.syncUp = syncUp;
+    vm.init = init;
 
-    init();
+    syncCheck();
 
     function addService() {
       $modal.open({
@@ -68,6 +72,31 @@
         vm.lastSelectd = vm.selected;
         GSSService.setServiceId(vm.selected.value);
       }
+    }
+
+    function syncCheck() {
+      GSSService.syncCheck().then(function (syncResult) {
+        vm.isCompareVersionLoading = false;
+        vm.isEqualVersion = syncResult;
+        if (vm.isEqualVersion) {
+          init();
+        }
+      });
+    }
+
+    function syncUp() {
+      vm.isLoading = true;
+      GSSService.syncUp().then(function () {
+        vm.isEqualVersion = true;
+        Notification.success('gss.syncSucceed');
+        init();
+      })
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'gss.syncError');
+        })
+        .finally(function () {
+          vm.isLoading = false;
+        });
     }
 
     function init() {

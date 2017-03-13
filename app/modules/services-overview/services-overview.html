@@ -13,6 +13,12 @@
     </cs-card-layout>
 
     <h5><span translate="servicesOverview.hybridServices"></span></h5>
+    <p class="no-hybrid-cards-found"
+       ng-if="!servicesOverviewCtrl.hasActiveHybridCards()">
+      <span translate="servicesOverview.noActiveHybridCards"></span>
+      <span translate="servicesOverview.userIsMissingEntitlements"
+            ng-if="!servicesOverviewCtrl.hasOneOrMoreHybridEntitlements()"></span>
+    </p>
     <cs-card-layout>
       <cs-card class="small header-bar gray-light"
                ng-class="card.cardClass"

@@ -37,12 +37,6 @@ class CustomerReportsHeaderCtrl {
         title: $translate.instant('reportsPage.usageReports.usageReportTitle'),
         state: 'reports.device-usage',
       });
-      if (features.deviceUsageV2) {
-        this.headerTabs.push({
-          title: 'Device Usage V2',
-          state: 'reports.device-usage-v2',
-        });
-      }
     });
     this.checkWebex();
   }
@@ -58,7 +52,6 @@ class CustomerReportsHeaderCtrl {
     mf: this.FeatureToggleService.atlasMediaServiceMetricsMilestoneOneGetStatus(),
     mfMilestoneTwo: this.FeatureToggleService.atlasMediaServiceMetricsMilestoneTwoGetStatus(),
     isMfEnabled: this.MediaServiceActivationV2.getMediaServiceState(),
-    deviceUsageV2: this.FeatureToggleService.atlasDeviceUsageReportV2GetStatus(),
   };
 
   private checkWebex (): void {

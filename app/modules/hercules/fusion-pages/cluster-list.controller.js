@@ -6,7 +6,7 @@
     .controller('FusionClusterListController', FusionClusterListController);
 
   /* @ngInject */
-  function FusionClusterListController($filter, $modal, $state, $translate, Authinfo, Config, hasResourceGroupFeatureToggle, FusionClusterService, Notification, WizardFactory) {
+  function FusionClusterListController($filter, $modal, $state, $translate, Analytics, Authinfo, Config, hasResourceGroupFeatureToggle, FusionClusterService, Notification, WizardFactory, hasCucmSupportFeatureToggle) {
     var vm = this;
     if (hasResourceGroupFeatureToggle) {
       var groupsCache = [];
@@ -15,8 +15,12 @@
       var clustersCache = [];
       vm.displayedClusters = clustersCache;
     }
+    Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CLUSTER_LIST, {
+      hasResourceGroupFeatureToggle: hasResourceGroupFeatureToggle,
+    });
 
     vm.showResourceGroups = hasResourceGroupFeatureToggle;
+    vm.showCucmClusters = hasCucmSupportFeatureToggle && Authinfo.isEntitled(Config.entitlements.fusion_khaos);
     vm.loading = true;
     vm.backState = 'services-overview';
     vm.openAllGroups = false;
@@ -101,6 +105,11 @@
           display: Authinfo.isEntitled(Config.entitlements.context),
           unassigned: _.filter(response.unassigned, { targetType: 'cs_mgmt' }),
         },
+        {
+          targetType: 'ucm_mgmt',
+          display: vm.showCucmClusters,
+          unassigned: _.filter(response.unassigned, { targetType: 'ucm_mgmt' }),
+        },
       ];
     }
 
@@ -131,6 +140,13 @@
         filters.push({
           name: $translate.instant('hercules.fusion.list.context'),
           filterValue: 'cs_mgmt',
+          count: 0,
+        });
+      }
+      if (vm.showCucmClusters) {
+        filters.push({
+          name: $translate.instant('hercules.fusion.list.cucm'),
+          filterValue: 'ucm_mgmt',
           count: 0,
         });
       }
@@ -216,6 +232,12 @@
             _.assign({}, vm.displayedGroups[2], {
               unassigned: $filter('filter')(vm.displayedGroups[2].unassigned, { name: searchStr }),
             }),
+            _.assign({}, vm.displayedGroups[3], {
+              unassigned: $filter('filter')(vm.displayedGroups[3].unassigned, { name: searchStr }),
+            }),
+            _.assign({}, vm.displayedGroups[4], {
+              unassigned: $filter('filter')(vm.displayedGroups[4].unassigned, { name: searchStr }),
+            }),
           ];
         }
       } else {
@@ -246,6 +268,7 @@
               expressway: 'add-resource.expressway.service-selector',
               mediafusion: 'add-resource.mediafusion.hostname',
               context: 'add-resource.context',
+              cucm: 'add-resource.cucm.hostname',
             },
           },
           // expressway
@@ -272,6 +295,14 @@
           'add-resource.mediafusion.end': {},
           // context
           'add-resource.context': {},
+          // cucm
+          'add-resource.cucm.hostname': {
+            next: 'add-resource.cucm.name',
+          },
+          'add-resource.cucm.name': {
+            next: 'add-resource.cucm.end',
+          },
+          'add-resource.cucm.end': {},
         },
       };
       var wizard = WizardFactory.create(initialState);

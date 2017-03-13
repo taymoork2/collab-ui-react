@@ -2,6 +2,7 @@ import {
   IExportMenu,
   IFilterObject,
   IReportCard,
+  IReportCardTable,
   ITimespan,
   ISecondaryReport,
 } from './partnerReportInterfaces';
@@ -29,7 +30,7 @@ describe('Controller: Partner Reports', () => {
     let activeUserSecondaryOptions: ISecondaryReport = _.cloneDeep(ctrlData.activeUserSecondaryOptions);
     let populationOptions: IReportCard = _.cloneDeep(ctrlData.populationOptions);
     let mediaOptions: IReportCard = _.cloneDeep(ctrlData.mediaOptions);
-    let endpointOptions: IReportCard = _.cloneDeep(ctrlData.endpointOptions);
+    let endpointOptions: IReportCardTable = _.cloneDeep(ctrlData.endpointOptions);
     let callOptions: IReportCard = _.cloneDeep(ctrlData.callOptions);
     let reportFilter: Array<IFilterObject> = _.cloneDeep(ctrlData.reportFilter);
     activeUserOptions.table = undefined;
@@ -184,7 +185,7 @@ describe('Controller: Partner Reports', () => {
     let activeUserSecondaryOptions: ISecondaryReport = _.cloneDeep(ctrlData.activeUserSecondaryOptions);
     let populationOptions: IReportCard = _.cloneDeep(ctrlData.populationOptions);
     let mediaOptions: IReportCard = _.cloneDeep(ctrlData.mediaOptions);
-    let endpointOptions: IReportCard = _.cloneDeep(ctrlData.endpointOptions);
+    let endpointOptions: IReportCardTable = _.cloneDeep(ctrlData.endpointOptions);
     let callOptions: IReportCard = _.cloneDeep(ctrlData.callOptions);
     activeUserOptions.state = ctrlData.EMPTY;
     activeUserOptions.table = undefined;

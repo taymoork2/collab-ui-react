@@ -6,7 +6,9 @@ import {
 
 export class HuronCompassService {
   public baseDomain: string;
+  private countryCode: string;
   private static readonly SPARK_CALL_BASE_DOMAIN: string = 'sparkCallBaseDomain';
+  private static readonly DEFAULT_COUNTRY_CODE = 'US';
 
   /* @ngInject */
   constructor(
@@ -14,7 +16,9 @@ export class HuronCompassService {
     private UrlConfig,
     private $http,
     private $rootScope: ng.IScope,
-  ) {}
+  ) {
+    this.countryCode = HuronCompassService.DEFAULT_COUNTRY_CODE;
+  }
 
   public defaultDomain() {
     if (this.Config.isProd()) {
@@ -31,12 +35,19 @@ export class HuronCompassService {
     return this.baseDomain;
   }
 
+  public getCountryCode(): string {
+    return this.countryCode;
+  }
+
   public fetchDomain(authData): string {
     return this.$http({
       method: 'GET',
       url: `${this.UrlConfig.getAdminServiceUrl()}organizations/${authData.orgId}?disableCache=true`,
     })
       .then((res) => {
+        if (res.data.countryCode) {
+          this.countryCode = res.data.countryCode;
+        }
         if (isEmpty(res.data.orgSettings)) {
           this.baseDomain = this.defaultDomain();
         } else {

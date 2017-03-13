@@ -4,7 +4,7 @@ require('./helpdesk.scss');
   'use strict';
 
   /* @ngInject */
-  function HelpdeskController(HelpdeskSplunkReporterService, $q, HelpdeskService, $translate, $scope, $state, $modal, HelpdeskSearchHistoryService, HelpdeskHuronService, LicenseService, Config, $window, Authinfo) {
+  function HelpdeskController($modal, $q, $scope, $state, $translate, $window, Authinfo, Config, HelpdeskHuronService, HelpdeskSearchHistoryService, HelpdeskService, HelpdeskSplunkReporterService, LicenseService) {
     $scope.$on('$viewContentLoaded', function () {
       setSearchFieldFocus();
       $window.document.title = $translate.instant("helpdesk.browserTabHeaderTitle");

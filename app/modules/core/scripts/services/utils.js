@@ -128,7 +128,7 @@
       return res;
     };
 
-    return {
+    var service = {
       Base64: Base64,
       getDeepKeyValues: getDeepKeyValues,
 
@@ -280,12 +280,28 @@
 
       checkForIeWorkaround: function () {
         if (this.isIe()) {
-          return "vertical-ie-workaround";
+          return 'vertical-ie-workaround';
         } else {
-          return "";
+          return '';
         }
       },
 
+      mailTo: mailTo,
+      toUriString: toUriString,
     };
+
+    return service;
+
+    //////////
+
+    function mailTo(params) {
+      var uri = service.toUriString(params);
+      $window.location.href = 'mailto:?' + uri;
+    }
+
+    function toUriString(params) {
+      /* eslint no-undef:0 */
+      return jQuery.param(params);
+    }
   }
 })();

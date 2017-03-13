@@ -14,8 +14,6 @@
     var MAX_CARRIER_CNT = 50;
     var pstnTokenLimit = 10;
     var SELECT = '';
-    var UNITED_STATES = 'US';
-    var CANADA = 'CA';
 
     vm.parentTrialData = $scope.$parent.trialData;
     vm.trialData = TrialPstnService.getData();
@@ -158,7 +156,7 @@
         vm.ftHuronSupportThinktel = results;
       });
 
-      initLocations();
+      PstnSetupStatesService.getLocation(vm.trialData.details.countryCode).then(loadLocations);
 
       Analytics.trackTrialSteps(Analytics.eventNames.ENTER_SCREEN, vm.parentTrialData);
       if (_.has(vm.trialData, 'details.pstnNumberInfo.state.abbreviation')) {
@@ -182,22 +180,9 @@
       }, 100);
     }
 
-    function initLocations() {
-      switch (vm.trialData.details.countryCode) {
-        case CANADA:
-          vm.location = $translate.instant('pstnSetup.province');
-          PstnSetupStatesService.getProvinces().then(loadLocations);
-          break;
-        case UNITED_STATES:
-        default:
-          vm.location = $translate.instant('pstnSetup.state');
-          PstnSetupStatesService.getStates().then(loadLocations);
-          break;
-      }
-    }
-
-    function loadLocations(locations) {
-      vm.pstn.stateOptions = locations.data;
+    function loadLocations(location) {
+      vm.location = location.type;
+      vm.pstn.stateOptions = location.areas;
     }
 
     function onProviderChange() {

@@ -6,7 +6,7 @@
     .controller('HDSSettingsController', HDSSettingsController);
 
   /* @ngInject */
-  function HDSSettingsController($modal, $state, $translate, Authinfo, Orgservice, HDSService, Notification) {
+  function HDSSettingsController($modal, $state, $translate, Analytics, Authinfo, Orgservice, HDSService, FusionClusterService, Notification) {
     var vm = this;
     vm.PRE_TRIAL = 'pre_trial';    // service status Trial/Production mode
     vm.TRIAL = 'trial';
@@ -14,7 +14,7 @@
     vm.NA_MODE = 'na_mode';
     vm.trialUserGroupId = null;
     vm.trialDomain = '';
-    vm.prodDomain = '';
+    vm.prodDomain = 'Spark Default KMS';
     vm.numResourceNodes = 1;              // # of resource nodes, TODO: from backend when APIs ready
     vm.numTrialUsers = 10;
     vm.recoverPreTrial = recoverPreTrial; // set to trial mode, TODO: remove this when at the very late stage of HDS dev
@@ -24,6 +24,12 @@
     vm.openAddTrialUsersModal = openAddTrialUsersModal;
     vm.openEditTrialUsersModal = openEditTrialUsersModal;
     var localizedHdsModeError = $translate.instant('hds.resources.settings.hdsModeGetError');
+    var trialKmsServer = '';
+    var trialKmsServerMachineUUID = '';
+    var trialAdrServer = '';
+    var trialSecurityService = '';
+
+    Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_HDS_SETTINGS);
 
     // TODO: below is the jason to recover initial state, remove it when at the very late stage of HDS dev
     var jsonTrialMode = {
@@ -45,14 +51,6 @@
           "type": "sec",
           "securityService": "2d2bdeaf-3e63-4561-be2f-4ecc1a48dcd4",
           "groupId": "755d989a-feef-404a-8669-085eb054afef",
-          "active": false,
-        },
-      ],
-    };
-    var jsonProductionMode = {
-      "altHdsServers": [
-        {
-          "type": "none",
           "active": false,
         },
       ],
@@ -84,14 +82,28 @@
         });
     }
 
+    function getResourceInfo() {
+      FusionClusterService.getAll()
+        .then(function (clusters) {
+          vm.numResourceNodes = _.reduce(clusters, function (total, cluster) {
+            if (cluster.targetType === 'hds_app') {
+              // TODO: we may need to check if the status is active
+              return total + cluster.connectors.length;
+            }
+            return total;
+          }, 0);
+        }).catch(function (error) {
+          Notification.errorWithTrackingId(error, localizedHdsModeError);
+        });
+    }
     function getOrgHdsInfo() {
       Orgservice.getOrg(function (data, status) {
         if (data.success || status === 200) {
           vm.orgSettings = data.orgSettings;
           vm.altHdsServers = data.orgSettings.altHdsServers;
+          vm.prodDomain = vm.orgSettings.kmsServer;
           if (typeof vm.altHdsServers === 'undefined' || vm.altHdsServers.length === 1) {
             // prod info
-            vm.prodDomain = vm.orgSettings.kmsServer;
             if (typeof vm.prodDomain === 'undefined') {
               vm.model.serviceMode = vm.NA_MODE;
             } else {
@@ -111,6 +123,14 @@
                 if (server.kmsServer) {
                   vm.trialDomain = server.kmsServer;
                   vm.trialUserGroupId = server.groupId;
+                  trialKmsServer = server.kmsServer;
+                  trialKmsServerMachineUUID = server.kmsServerMachineUUID;
+                }
+                if (server.adrServer) {
+                  trialAdrServer = server.adrServer;
+                }
+                if (server.securityService) {
+                  trialSecurityService = server.securityService;
                 }
               });
               getTrialUsersInfo();
@@ -118,6 +138,7 @@
               vm.model.serviceMode = vm.NA_MODE;
             }
           }
+          getResourceInfo();
         } else {
           vm.model.serviceMode = vm.NA_MODE;
           Notification.error(localizedHdsModeError + status);
@@ -144,7 +165,7 @@
           });
         }
         var myJSON = {
-          "altHdsServers": vm.altHdsServers,
+          'altHdsServers': vm.altHdsServers,
         };
         Orgservice.setOrgAltHdsServersHds(Authinfo.getOrgId(), myJSON)
           .then(function () {
@@ -157,11 +178,19 @@
 
     function moveToProduction() {
       if (vm.model.serviceMode === vm.TRIAL) {
-        Orgservice.setOrgAltHdsServersHds(Authinfo.getOrgId(), jsonProductionMode)
-          .then(function () {
-            vm.model.serviceMode = vm.PRODUCTION;
-          }).catch(function (error) {
-            Notification.errorWithTrackingId(error, localizedHdsModeError);
+        $modal.open({
+          templateUrl: 'modules/hds/settings/confirm-move-to-production-dialog.html',
+          type: 'dialog',
+        })
+          .result.then(function () {
+            HDSService.moveToProductionMode(trialKmsServer, trialKmsServerMachineUUID, trialAdrServer, trialSecurityService)
+              .then(function () {
+                vm.model.serviceMode = vm.PRODUCTION;
+                // TODO: add remove the CI Group for Trial Users after MVO or finish up e2e test
+                Notification.success('hds.resources.settings.succeedMoveToProductionMode');
+              }).catch(function (error) {
+                Notification.errorWithTrackingId(error, localizedHdsModeError);
+              });
           });
       }
     }
@@ -176,7 +205,10 @@
         controllerAs: 'addTrialUsersCtrl',
         templateUrl: 'modules/hds/settings/addtrialusers_modal/add-trial-users.html',
         type: 'small',
-      });
+      })
+        .result.then(function () {
+          getTrialUsersInfo();
+        });
     }
 
     function openEditTrialUsersModal() {
@@ -185,7 +217,10 @@
         controllerAs: 'editTrialUsersCtrl',
         templateUrl: 'modules/hds/settings/edittrialusers_modal/edit-trial-users.html',
         type: 'small',
-      });
+      })
+        .result.then(function () {
+          getTrialUsersInfo();
+        });
     }
   }
 }());

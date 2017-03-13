@@ -5,9 +5,8 @@
     .factory('PstnServiceAddressService', PstnServiceAddressService);
 
   /* @ngInject */
-  function PstnServiceAddressService($q, TerminusLookupE911Service, TerminusV2LookupE911Service, TerminusCustomerSiteService, FeatureToggleService) {
+  function PstnServiceAddressService($q, TerminusV2LookupE911Service, TerminusCustomerSiteService) {
     var service = {
-      lookupAddress: lookupAddress,
       lookupAddressV2: lookupAddressV2,
       getAddress: getAddress,
       updateAddress: updateAddress,
@@ -45,7 +44,7 @@
 
     function formatServiceAddress(_address) {
       // copy address for manipulation
-      var address = angular.copy(_address);
+      var address = _.cloneDeep(_address);
       var streetAddressArray = _.get(address, 'streetAddress', '').split(/\s+/);
       address.number = _.head(streetAddressArray);
       address.street = _.tail(streetAddressArray).join(' ');
@@ -87,15 +86,6 @@
       return mapKeys(address, addressMapping);
     }
 
-    function lookupAddress(address, noMap) {
-      // format terminus payload and omit empty strings
-      var searchPayload = address;
-      if (!noMap) {
-        searchPayload = getTerminusAddress(_.omitBy(searchPayload, _.isEmpty));
-      }
-      return lookupAddressV1(searchPayload, noMap);
-    }
-
     function lookupAddressV2(address, carrierId, noMap) {
       // format terminus payload and omit empty strings
       var searchPayload = address;
@@ -103,22 +93,7 @@
         searchPayload = getTerminusAddress(_.omitBy(searchPayload, _.isEmpty));
       }
 
-      return FeatureToggleService.supports(
-        FeatureToggleService.features.huronSupportThinktel
-      ).then(function (hasFeatureToggle) {
-        if (hasFeatureToggle) {
-          return TerminusV2LookupE911Service.save({ carrierId: carrierId }, searchPayload).$promise
-            .then(function (response) {
-              return getFormattedAddressFromLookupResponse(response, noMap);
-            });
-        } else {
-          return lookupAddressV1(searchPayload, noMap);
-        }
-      });
-    }
-
-    function lookupAddressV1(searchPayload, noMap) {
-      return TerminusLookupE911Service.save({}, searchPayload).$promise
+      return TerminusV2LookupE911Service.save({ carrierId: carrierId }, searchPayload).$promise
         .then(function (response) {
           return getFormattedAddressFromLookupResponse(response, noMap);
         });

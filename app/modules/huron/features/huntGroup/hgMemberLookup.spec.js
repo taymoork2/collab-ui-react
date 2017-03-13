@@ -138,7 +138,7 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Member Lookup', functio
 
   it("huntMemberTelephone filter concatenates 'and' between int & ext number if both are present.",
     function () {
-      expect(filter(user1.numbers[0])).toBe("(972) 510-4001 and 4001");
+      expect(filter(user1.numbers[0])).toBe("972-510-4001 and 4001");
       expect(filter(user1.numbers[1])).toBe("1236");
     });
 

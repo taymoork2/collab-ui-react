@@ -443,6 +443,10 @@
   margin-left: 32px;
 }
 
+.product-entity-reposition {
+  margin-left: 16px;
+}
+
 .license-entity-tooltip {
   color: $color-primary-base;
   font-size: 12px;
@@ -649,7 +653,22 @@
 }
 
 .care-information-text {
-  cursor: default;
-  font-size: 12px;
-  width: auto;
+  display: block;
+}
+
+.under-careradio-reposition {
+  @include vr-spacing(mb, 0.8);
+}
+
+.entitle-check-grp {
+  .icon-warning {
+    color: $color-attention-base;
+    @include vr-spacing(mt, 0.6);
+    @include vr-spacing(ml, 0.15);
+  }
+
+  .under-label-caremsg-reposition {
+    @include vr-spacing(mt, -0.9);
+    @include vr-spacing(ml, 2);
+  }
 }

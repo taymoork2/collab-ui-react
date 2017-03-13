@@ -83,7 +83,7 @@ class CallPickupSetupAssistantCtrl implements ng.IComponentController {
     scope.$q.all(promises).then((memberNumbers: Array<IMemberNumber[]>) => {
       let index = 0;
       _.forEach(scope.selectedMembers, function (member: IMember) {
-        member.checkboxes = scope.CallPickupGroupService.createCheckBoxes(member, memberNumbers[index]);
+        member.checkboxes = scope.CallPickupGroupService.createCheckBoxesForEdit(member, memberNumbers[index], scope.title);
         index++;
       });
       _.forEach(callPickup.numbers, function (number: any) {

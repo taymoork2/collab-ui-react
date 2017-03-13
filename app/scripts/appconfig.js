@@ -763,13 +763,6 @@
                 template: '<my-company-orders></my-company-orders>',
               },
             },
-            resolve: {
-              isOnline: /* @ngInject */ function ($q, Authinfo) {
-                if (!Authinfo.isOnline()) {
-                  return $q.reject();
-                }
-              },
-            },
           })
           .state('users', {
             abstract: true,
@@ -1074,6 +1067,7 @@
               entitlements: {},
               queryuserslist: {},
               currentUserId: '',
+              orgInfo: {},
             },
             data: {
               displayName: 'Overview',
@@ -1152,9 +1146,20 @@
             },
           })
           .state('user-overview.communication.snr', {
-            template: '<div uc-single-number-reach></div>',
+            template: '<uc-snr owner-id="$resolve.ownerId" ></uc-snr>',
             data: {
               displayName: 'Single Number Reach',
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/snr'], done);
+              }),
+              ownerId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentUser, 'id');
+              },
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('user-overview.communication.snr').data.displayName = $translate.instant('singleNumberReachPanel.title');
+              },
             },
           })
           .state('user-overview.communication.speedDials', {
@@ -1530,16 +1535,6 @@
           })
           .state('reports.device-usage', {
             url: '/reports/device/usage',
-            views: {
-              'tabContent': {
-                controllerAs: 'deviceUsage',
-                controller: 'DeviceUsageCtrl',
-                templateUrl: 'modules/core/customerReports/deviceUsage/total.tpl.html',
-              },
-            },
-          })
-          .state('reports.device-usage-v2', {
-            url: '/reports/device/usagev2',
             views: {
               'tabContent': {
                 controllerAs: 'deviceUsage',
@@ -1958,13 +1953,27 @@
             },
             templateUrl: 'modules/gemini/callbackGroup/cbgRequest.tpl.html',
           })
-          .state('gemCbgDetails', {
+          .state('gmTdDetails', {
+            data: {},
+            params: { info: {} },
             parent: 'sidepanel',
             views: {
-              'sidepanel@': { template: '<cbg-details></cbg-details>' },
-            },
-            params: { info: {} },
+              'sidepanel@': { template: '<gm-td-details></gm-td-details>' },
+              'header@gmTdDetails': { templateUrl: 'modules/gemini/telephonyDomain/details/gmTdDetailsHeader.tpl.html' } },
+          })
+          .state('gmTdDetails.sites', {
+            params: { data: {} },
+            template: '<gm-td-sites></gm-td-sites>',
+          })
+          .state('gmTdDetails.notes', {
+            template: '<gm-td-notes></gm-td-notes>',
+            params: { obj: {} },
+          })
+          .state('gemCbgDetails', {
             data: {},
+            parent: 'sidepanel',
+            params: { info: {} },
+            views: { 'sidepanel@': { template: '<cbg-details></cbg-details>' } },
           })
           .state('gemCbgDetails.sites', {
             template: '<cbg-sites></cbg-sites>',
@@ -2039,7 +2048,7 @@
           })
           .state('customer-overview.customerSubscriptions', {
             controller: 'CustomerSubscriptionsDetailCtrl',
-            controllerAs: 'customerSubscriptions',
+            controllerAs: '$ctrl',
             templateUrl: 'modules/core/customers/customerSubscriptions/customerSubscriptionsDetail.tpl.html',
             resolve: {
               data: /* @ngInject */ function ($state, $translate) {
@@ -2765,6 +2774,9 @@
               hasResourceGroupFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
               },
+              hasCucmSupportFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCucmSupport);
+              },
             },
           })
           // hybrid context
@@ -2786,8 +2798,14 @@
             url: '/services/context',
             parent: 'context',
             views: {
+              'subHeader': {
+                templateUrl: 'modules/context/resources/hybrid-context-resources-header.html',
+              },
               'contextServiceView': {
                 template: '<hybrid-service-cluster-list service-id="\'contact-center-context\'"></hybrid-service-cluster-list>',
+                controller: /* @ngInject */ function (Analytics) {
+                  return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CONTEXT_LIST);
+                },
               },
             },
             params: {
@@ -2810,6 +2828,28 @@
               },
             },
           })
+          .state('context-fields-sidepanel', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                template: '<context-fields-sidepanel field="$resolve.field"></context-fields-sidepanel>',
+              },
+              'header@context-fields-sidepanel': {
+                templateUrl: 'modules/context/fields/sidepanel/hybrid-context-fields-sidepanel-header.html',
+              },
+            },
+            data: {
+              displayName: 'Overview',
+            },
+            params: {
+              field: {},
+            },
+            resolve: {
+              field: /* @ngInject */ function ($stateParams) {
+                return $stateParams.field;
+              },
+            },
+          })
           .state('context-fieldsets', {
             url: '/services/context/fieldsets',
             parent: 'context',
@@ -2819,6 +2859,53 @@
                 controller: 'HybridContextFieldsetsCtrl',
                 controllerAs: 'contextFieldsets',
               },
+            },
+          })
+          .state('context-cluster-sidepanel', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                template: '<cluster-sidepanel-overview cluster-type="\'cs_mgmt\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType"></cluster-sidepanel-overview>',
+              },
+              'header@context-cluster-sidepanel': {
+                templateUrl: 'modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html',
+              },
+            },
+            // If data not present, $state.current.data.displayName can't be changed
+            data: {},
+            params: {
+              clusterId: null,
+              connectorType: null,
+            },
+            resolve: {
+              id: /* @ngInject */ function ($stateParams) {
+                return $stateParams.clusterId;
+              },
+              connectorType: /* @ngInject */ function ($stateParams) {
+                return $stateParams.connectorType;
+              },
+            },
+          })
+          .state('private-trunk-overview', {
+            url: '/privateTrunkOverview',
+            parent: 'main',
+            template: '<private-trunk-overview></private-trunk-overview>',
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/hercules/privateTrunk/privateTrunkOverview'], done);
+              }),
+            },
+          })
+          .state('context-cluster-sidepanel.host-details', {
+            templateUrl: 'modules/hercules/cluster-sidepanel/host-details/host-details.html',
+            controller: 'HybridServicesHostDetailsController',
+            controllerAs: 'hostDetailsCtrl',
+            data: {
+              displayName: 'Node',
+            },
+            params: {
+              host: null,
+              hostSerial: null,
             },
           })
           // Cluster settings and nodes
@@ -2888,26 +2975,21 @@
             controller: 'HDSServiceController',
             controllerAs: 'hdsServiceController',
             parent: 'main',
-            resolve: {
-              hasHDSFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity);
-              },
-            },
           })
           .state('hds.list', {
             url: '/hds/resources',
             views: {
               'fullPane': {
                 template: '<hybrid-service-cluster-list service-id="\'spark-hybrid-datasecurity\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>',
+                controller: /* @ngInject */ function (Analytics) {
+                  return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_HDS_LIST);
+                },
               },
             },
             params: {
               clusterId: null,
             },
             resolve: {
-              hasHDSFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity);
-              },
               clusterId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.clusterId;
               },
@@ -2920,11 +3002,6 @@
                 controller: 'HDSSettingsController',
                 controllerAs: 'hdsSettings',
                 templateUrl: 'modules/hds/settings/hds-settings.html',
-              },
-            },
-            resolve: {
-              hasHDSFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity);
               },
             },
           })
@@ -3036,6 +3113,28 @@
               },
             },
           })
+          .state('cucm-cluster', {
+            abstract: true,
+            url: '/services/cluster/cucm/:id',
+            parent: 'main',
+            template: '<hybrid-services-cluster-page cluster-id="$resolve.id" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></hybrid-services-cluster-page>',
+            resolve: {
+              id: /* @ngInject */ function ($stateParams) {
+                return $stateParams.id;
+              },
+              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
+              },
+            },
+          })
+          .state('cucm-cluster.nodes', {
+            url: '/nodes',
+            template: '<hybrid-services-nodes-page cluster-id="$resolve.id"></hybrid-services-nodes-page>',
+          })
+          .state('cucm-cluster.settings', {
+            url: '/settings',
+            template: '<cucm-cluster-settings cluster-id="$resolve.id"></cucm-cluster-settings>',
+          })
           // Add Resource modal
           .state('add-resource', {
             abstract: true,
@@ -3051,6 +3150,11 @@
             },
             params: {
               wizard: null,
+            },
+            resolve: {
+              hasCucmSupportFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCucmSupport);
+              },
             },
           })
           .state('add-resource.expressway', {
@@ -3178,6 +3282,48 @@
               wizard: null,
             },
           })
+          .state('add-resource.cucm', {
+            abstract: true,
+          })
+          .state('add-resource.cucm.hostname', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'CucmHostnameController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/hercules/fusion-pages/add-resource/cucm/cucm-hostname.html',
+              },
+            },
+            params: {
+              wizard: null,
+            },
+          })
+          .state('add-resource.cucm.name', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'CucmClusterNameController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/hercules/fusion-pages/add-resource/cucm/cucm-cluster-name.html',
+              },
+            },
+            params: {
+              wizard: null,
+            },
+          })
+          .state('add-resource.cucm.end', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'CucmEndController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/hercules/fusion-pages/add-resource/cucm/cucm-end.html',
+              },
+            },
+            params: {
+              wizard: null,
+            },
+          })
           .state('calendar-service', {
             templateUrl: 'modules/hercules/service-specific-pages/calendar-service-pages/calendar-service-container.html',
             controller: 'CalendarServiceContainerController',
@@ -3193,6 +3339,9 @@
             views: {
               calendarServiceView: {
                 templateUrl: 'modules/hercules/service-specific-pages/calendar-service-pages/calendar-service-resources.html',
+                controller: /* @ngInject */ function (Analytics) {
+                  return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CAL_EXC_LIST);
+                },
               },
             },
             params: {
@@ -3222,6 +3371,9 @@
           .state('google-calendar-service.settings', {
             url: '/services/google-calendar/settings',
             template: '<google-calendar-settings-page ng-if="$resolve.hasGoogleCalendarFeatureToggle"></google-calendar-settings-page>',
+            controller: /* @ngInject */ function (Analytics) {
+              return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CAL_GOOG_SETTINGS);
+            },
           })
           .state('call-service', {
             templateUrl: 'modules/hercules/service-specific-pages/call-service-pages/call-service-container.html',
@@ -3237,6 +3389,9 @@
             views: {
               callServiceView: {
                 templateUrl: 'modules/hercules/service-specific-pages/call-service-pages/call-service-resources.html',
+              },
+              controller: /* @ngInject */ function (Analytics) {
+                return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CALL_LIST);
               },
             },
             params: {
@@ -3393,6 +3548,9 @@
             views: {
               'fullPane': {
                 template: '<hybrid-service-cluster-list service-id="\'squared-fusion-media\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>',
+                controller: /* @ngInject */ function (Analytics) {
+                  return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_MEDIA_LIST);
+                },
               },
             },
             params: {
@@ -3412,6 +3570,9 @@
                 controller: 'MediaServiceSettingsControllerV2',
                 templateUrl: 'modules/mediafusion/media-service-v2/settings/media-service-settings.html',
               },
+            },
+            controller: /* @ngInject */ function (Analytics) {
+              return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_MEDIA_SETTINGS);
             },
           });
 

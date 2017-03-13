@@ -8,7 +8,7 @@ require('./_overview.scss');
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($rootScope, $modal, $state, $scope, $translate, Authinfo, CardUtils, Config, FeatureToggleService, FusionClusterService, hasGoogleCalendarFeatureToggle, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, SunlightReportService, TrialService, UrlConfig, PstnSetupService) {
+  function OverviewCtrl($modal, $rootScope, $state, $scope, $translate, Authinfo, CardUtils, Config, FeatureToggleService, FusionClusterService, hasGoogleCalendarFeatureToggle, Log, LicenseService, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, SunlightReportService, TrialService, UrlConfig, PstnSetupService) {
     var vm = this;
 
     var PSTN_TOS_ACCEPT = 'pstn-tos-accept-event';
@@ -32,12 +32,6 @@ require('./_overview.scss');
     vm.pstnToSNotification = null;
     vm.trialDaysLeft = undefined;
     vm.dismissNotification = dismissNotification;
-
-    vm.hasHDSFeatureToggle = false;
-    FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity)
-      .then(function (reply) {
-        vm.hasHDSFeatureToggle = reply;
-      });
 
     // for smaller screens where the notifications are on top, the layout needs to resize after the notifications are loaded
     function resizeNotifications() {
@@ -66,7 +60,7 @@ require('./_overview.scss');
                 vm.notifications.push(OverviewNotificationFactory.createCallConnectNotification());
               } else if (item.id === Config.entitlements.mediafusion) {
                 vm.notifications.push(OverviewNotificationFactory.createHybridMediaNotification());
-              } else if (item.id === Config.entitlements.hds && vm.hasHDSFeatureToggle) {
+              } else if (item.id === Config.entitlements.hds) {
                 vm.notifications.push(OverviewNotificationFactory.createHybridDataSecurityNotification());
               }
             }
@@ -86,6 +80,20 @@ require('./_overview.scss');
           }
           if (vm.isDeviceManagement && _.isUndefined(data.orgSettings.allowCrashLogUpload)) {
             vm.notifications.push(OverviewNotificationFactory.createCrashLogNotification());
+          }
+          if (Authinfo.isCare() || Authinfo.isCareVoice()) {
+            var hasMessage = LicenseService.orgIsEntitledTo(data, 'squared-room-moderation');
+            var hasCall = LicenseService.orgIsEntitledTo(data, 'ciscouc');
+            if (!hasMessage && !hasCall) {
+              vm.notifications.push(OverviewNotificationFactory
+                .createCareLicenseNotification('homePage.careLicenseMsgAndCallMissingText', 'homePage.careLicenseLinkText'));
+            } else if (!hasMessage) {
+              vm.notifications.push(OverviewNotificationFactory
+                .createCareLicenseNotification('homePage.careLicenseMsgMissingText', 'homePage.careLicenseLinkText'));
+            } else if (!hasCall) {
+              vm.notifications.push(OverviewNotificationFactory
+                .createCareLicenseNotification('homePage.careLicenseCallMissingText', 'homePage.careLicenseLinkText'));
+            }
           }
         } else {
           Log.debug('Get existing org failed. Status: ' + status);

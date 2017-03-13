@@ -20,13 +20,13 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
     private ClusterService,
     private FusionClusterService,
     private FusionClusterStatesService,
-    private FusionUtils,
+    private HybridServicesUtils,
   ) {
     this.updateClusters = this.updateClusters.bind(this);
   }
 
   public $onInit() {
-    this.connectorType = this.FusionUtils.serviceId2ConnectorType(this.serviceId);
+    this.connectorType = this.HybridServicesUtils.serviceId2ConnectorType(this.serviceId);
     this.clusterList = this.ClusterService.getClustersByConnectorType(this.connectorType);
     this.clusterListGridOptions = {
       data: '$ctrl.clusterList',
@@ -84,6 +84,7 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
       'squared-fusion-uc': 'expressway-cluster-sidepanel',
       'squared-fusion-media': 'media-cluster-details',
       'spark-hybrid-datasecurity': 'hds-cluster-details',
+      'contact-center-context': 'context-cluster-sidepanel',
     };
 
     this.$state.go(routeMap[this.serviceId], {

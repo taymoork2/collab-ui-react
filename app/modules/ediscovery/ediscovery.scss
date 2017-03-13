@@ -5,6 +5,11 @@
   overflow-x: hidden; // Remove horizontal IE/Edge scrollbar
   min-height: 100vh;
 
+  .ediscovery-logo {
+    width: 48px;
+    margin-left: 29px;
+  }
+
   a:focus {
     box-shadow: none;
   }
@@ -159,6 +164,14 @@
           width: 100%;
         }
 
+        .input-validation {
+          margin-top: 0;
+        }
+
+        .query-error-msg {
+          width: 250px;
+        }
+
         .cs-datapicker-normal {
           max-width: 100%;
         }
@@ -173,10 +186,6 @@
 
         .search-box {
           padding-left: 0px;
-        }
-
-        .selectList {
-          width: 50%;
         }
 
         .query-row {
@@ -335,9 +344,15 @@
           }
         }
 
+        .back-button {
+          padding-left: 16px;
+          padding-top: 24px;
+        }
+
         .result-title {
           font-size: 12px;
           font-family: 'CiscoSansTT Light', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+          padding-bottom: 4px;
         }
 
         .result-info {
@@ -345,6 +360,30 @@
           font-family: 'CiscoSansTT Light', 'Helvetica Neue', Helvetica, Arial, sans-serif;
           padding-top: 0px;
           padding-bottom: 0px;
+        }
+
+        .report-title {
+          font-family: 'CiscoSans';
+          font-size: 16px;
+          font-weight: 200;
+          font-style: normal;
+          font-stretch: normal;
+          line-height: 1.5;
+          letter-spacing: normal;
+          text-align: center;
+          color: #6a6b6c;
+        }
+
+        .report-info {
+          font-family: 'CiscoSans';
+          font-size: 26px;
+          font-weight: 200;
+          font-style: normal;
+          font-stretch: normal;
+          line-height: 1.23;
+          letter-spacing: normal;
+          text-align: center;
+          color: #049fd9;
         }
 
         .report-header {
@@ -357,10 +396,6 @@
           .results-spacing {
             margin-top: 16px;
           }
-        }
-
-        .summary-header {
-          padding-left: 30px;
         }
 
         .reportError {

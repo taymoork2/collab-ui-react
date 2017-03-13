@@ -7,6 +7,11 @@
     color: $gray-dark-2;
   }
 
+  p.no-hybrid-cards-found {
+    margin-left: 8px;
+    margin-top: 10px;
+  }
+
   .icon-spinner {
     display: block;
     margin-left: auto;
@@ -30,6 +35,24 @@
 
       span {
         font-size: 1rem;
+      }
+    }
+
+    .private-trunk {
+      .description {
+        flex: none !important;
+      }
+      .card-button {
+        text-align: left;
+        div:nth-child(1) {
+          margin-left: -1.5rem;
+          margin-top: -1rem;
+        }
+        div:nth-child(2) {
+          position: absolute;
+          bottom: 1.5rem;
+          width: calc(100% - 3rem);
+        }
       }
     }
 
@@ -149,7 +172,6 @@
           }
         }
       }
-
       .cs-card.header-bar.cta-bar header::after {
         border-top-color: $color-cta-base !important;
       }

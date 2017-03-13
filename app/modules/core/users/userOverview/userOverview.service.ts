@@ -133,6 +133,8 @@ export class UserOverviewService {
     private WebExUtilsFact,
     private Config,
     private SunlightConfigService,
+    private ServiceSetup,
+    private $translate,
   ) {
     this.invitationResource = this.$resource(this.UrlConfig.getAdminServiceUrl() + 'organization/:customerId/invitations/:userId', {
       customerId: '@customerId',
@@ -180,9 +182,8 @@ export class UserOverviewService {
 
     if (_.isEmpty(userData.user.entitlements)) {
 
-      let hasSyncKms = _.find(userData.user.roles, (r) => {
-        return r === this.Config.backend_roles.spark_synckms;
-      });
+      let hasSyncKms = _.includes(userData.user.roles, this.Config.backend_roles.ciscouc_ces);
+      let hasCiscoucCES = _.includes(userData.user.roles, this.Config.backend_roles.ciscouc_ces);
 
       promise = this.getInvitationsForUser(userData.user.id)
         .then((inviteResponse) => {
@@ -206,6 +207,14 @@ export class UserOverviewService {
               return this.SunlightConfigService.getUserInfo(userData.user.id)
                 .then(() => {
                   if (hasSyncKms && userData.user.invitations) {
+                    userData.user.invitations.cc = true;
+                  }
+                });
+            } else if (this.getInvitationDetails(inviteResponse.effectiveLicenses, 'CV')) {
+              // check if this user exists in Sunlight config, and if so, update the Care Voice invitation
+              return this.SunlightConfigService.getUserInfo(userData.user.id)
+                .then(() => {
+                  if (hasSyncKms && hasCiscoucCES && userData.user.invitations) {
                     userData.user.invitations.cc = true;
                   }
                 });
@@ -275,5 +284,26 @@ export class UserOverviewService {
         userData.user.pendingStatus = !isActiveUser;
         return userData;
       });
+  }
+
+  public getUserPreferredLanguage(languageCode) {
+    return this.ServiceSetup.getAllLanguages().then(languages => {
+      if (_.isEmpty(languages)) { return this.DEFAULT_LANG; }
+      let translatedLanguages =  this.ServiceSetup.getTranslatedSiteLanguages(languages);
+      return this.findPreferredLanguageByCode(translatedLanguages, languageCode);
+    });
+  }
+
+  private findPreferredLanguageByCode(languages, language_code): any {
+    return _.find(languages, {
+      value: language_code,
+    });
+  }
+
+  private get DEFAULT_LANG() {
+    return {
+      label: this.$translate.instant('languages.englishAmerican'),
+      value: 'en_US',
+    };
   }
 }

@@ -10,6 +10,25 @@
 
     vm.urlBase = MediaConfigServiceV2.getAthenaUrl() + '/organizations/' + Authinfo.getOrgId();
     vm.allClusters = $translate.instant('mediaFusion.metrics.allclusters');
+    vm.onPremisesHeading = $translate.instant('mediaFusion.metrics.onPremisesHeading');
+    vm.cloudHeading = $translate.instant('mediaFusion.metrics.cloudHeading');
+    vm.hybridHeading = $translate.instant('mediaFusion.metrics.hybridHeading');
+    vm.clientTypeTranMap = {
+      'ANDROID': $translate.instant('mediaFusion.metrics.clientType.android'),
+      'BLACKBERRY': $translate.instant('mediaFusion.metrics.clientType.blackberry'),
+      'DESKTOP': $translate.instant('mediaFusion.metrics.clientType.desktop'),
+      'IPAD': $translate.instant('mediaFusion.metrics.clientType.ipad'),
+      'IPHONE': $translate.instant('mediaFusion.metrics.clientType.iphone'),
+      'JABBER': $translate.instant('mediaFusion.metrics.clientType.jabber'),
+      'SIP': $translate.instant('mediaFusion.metrics.clientType.sip'),
+      'SPARK_BOARD': $translate.instant('mediaFusion.metrics.clientType.board'),
+      'TEST': $translate.instant('mediaFusion.metrics.clientType.test'),
+      'TP_ENDPOINT': $translate.instant('mediaFusion.metrics.clientType.tp'),
+      'UC': $translate.instant('mediaFusion.metrics.clientType.uc'),
+      'UNKNOWN': $translate.instant('mediaFusion.metrics.clientType.unknown'),
+      'WINDOWS_MOBILE': $translate.instant('mediaFusion.metrics.clientType.windows'),
+      'Total': $translate.instant('mediaFusion.metrics.clientType.total'),
+    };
 
     function adjustLineGraphData(activeData, returnData, startTime, endTime, graphs) {
       var returnDataArray = [];
@@ -50,7 +69,7 @@
       };
       activeData.unshift(startDate);
       for (var i = 0; i < activeData.length; i++) {
-        var tmpItem = angular.copy(graphItem);
+        var tmpItem = _.cloneDeep(graphItem);
         tmpItem.call_reject = activeData[i].call_reject;
         tmpItem.active_calls = activeData[i].active_calls;
         tmpItem.timestamp = activeData[i].timestamp;
@@ -64,6 +83,29 @@
       returnDataArray.push(endDate);
       returnData.graphData = returnDataArray;
       return returnData;
+    }
+
+    function addColorForMeetingsCard(response) {
+      _.forEach(response.data.dataProvider, function (val) {
+        if (val.name === 'ON_PREM') {
+          val.color = '#67b7dc';
+          val.name = vm.onPremisesHeading;
+        } else if (val.name === 'CLOUD') {
+          val.color = '#fdd400';
+          val.name = vm.cloudHeading;
+        } else if (val.name === 'HYBRID') {
+          val.color = '#84b761';
+          val.name = vm.hybridHeading;
+        }
+      });
+      return response;
+    }
+
+    function translateClientTypeData(response) {
+      _.forEach(response.data.dataProvider, function (val) {
+        val.name = vm.clientTypeTranMap[val.name];
+      });
+      return response;
     }
 
     function getQuerys(link, cluster, time) {
@@ -176,7 +218,7 @@
     }
 
     function getNumberOfParticipantData(time) {
-      vm.numberOfParticipantUrl = '/participants_distribution';
+      vm.numberOfParticipantUrl = '/participants_activity_with_insights';
       var returnData = {
         graphData: [],
         graphs: [],
@@ -266,7 +308,21 @@
       var returnData = [];
       return $http.get(vm.urlBase + getQuerys(vm.total_calls, vm.allClusters, time)).then(function (response) {
         if (!_.isUndefined(response) && !_.isUndefined(response.data)) {
-          return response;
+          return translateClientTypeData(response);
+        } else {
+          return returnData;
+        }
+      }, function (error) {
+        return returnErrorCheck(error, $translate.instant('mediaFusion.metrics.overallTotalNumberOfCallsError'), returnData);
+      });
+    }
+
+    function getMeetingLocationCardData(time) {
+      vm.meetingLocationCardUrl = '/meeting_location_count';
+      var returnData = [];
+      return $http.get(vm.urlBase + getQuerys(vm.meetingLocationCardUrl, vm.allClusters, time)).then(function (response) {
+        if (!_.isUndefined(response) && !_.isUndefined(response.data)) {
+          return addColorForMeetingsCard(response);
         } else {
           return returnData;
         }
@@ -298,6 +354,7 @@
       getClientTypeCardData: getClientTypeCardData,
       getMeetingLocationData: getMeetingLocationData,
       getNumberOfParticipantData: getNumberOfParticipantData,
+      getMeetingLocationCardData: getMeetingLocationCardData,
     };
 
   }

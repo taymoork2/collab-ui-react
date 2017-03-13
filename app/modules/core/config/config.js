@@ -74,6 +74,7 @@
         care_inbound_voice: 'cloud-contact-center-inbound-voice',
         context: 'contact-center-context',
         fusion_google_cal: 'squared-fusion-gcal',
+        fusion_khaos: 'squared-fusion-khaos',
       },
 
       licenseModel: {
@@ -156,6 +157,7 @@
         orderadmin: 'atlas-portal.partner.orderadmin',
         partner_management: 'atlas-portal.cisco.partnermgmt',
         spark_synckms: 'spark.synckms',
+        ciscouc_ces: 'ciscouc.ces',
         readonly_admin: 'id_readonly_admin',
         tech_support: 'atlas-portal.cisco.techsupport',
       },
@@ -182,6 +184,10 @@
         inactive: 'INACTIVE',
       },
 
+      subscriptionState: {
+        trial: 'Trial',
+      },
+
       confMap: {
         MS: 'onboardModal.paidMsg',
         CF: 'onboardModal.paidConf',
@@ -206,6 +212,7 @@
         SB: 'SB', // Spark Board
         CMR: 'CMR', // Collaboration Meeting Room (WebEx)
         CDC: 'CDC', // Care Digital Channel
+        CVC: 'CVC', // Care Voice Channel
       },
 
       licenseStatus: {
@@ -384,7 +391,7 @@
       WX2_User: ['overview', 'support', 'activateProduct'],
       WX2_Support: ['overview', 'reports', 'support'],
       WX2_SquaredInviter: [],
-      PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'gem', 'gemOverview', 'gemCbgDetails', 'customer-overview', 'partnerreports', 'trial', 'trialAdd', 'trialEdit', 'profile', 'pstn', 'pstnSetup', 'video', 'settings'],
+      PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'gem', 'gemOverview', 'gemCbgDetails', 'gmTdDetails', 'customer-overview', 'partnerreports', 'trial', 'trialAdd', 'trialEdit', 'profile', 'pstn', 'pstnSetup', 'video', 'settings'],
       PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trial', 'trialAdd', 'trialEdit', 'pstn', 'pstnSetup', 'video', 'settings'],
       CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
       //TODO User role is used by Online Ordering UI. The dr* states will be removed once the Online UI is separated from Atlas.
@@ -438,6 +445,7 @@
         'place-overview',
         'places',
         'services-overview',
+        'private-trunk-overview',
       ],
       'squared-fusion-mgmt': [
         'expressway-cluster-sidepanel',
@@ -446,11 +454,7 @@
         'cluster-list',
         'expressway-cluster',
         'hybrid-services-connector-sidepanel',
-        'hds.settings', // Temporary  entitlement until updated in org setting
-        'hds',
-        'hds.list',
-        'hds-cluster-details',
-        'hds-cluster',
+        'cucm-cluster', // Remove when squared-fusion-khaos entitlement is returned by Atlas backend
       ],
       'spark-room-system': [
         'addDeviceFlow',
@@ -487,7 +491,10 @@
         'organization',
       ],
       'spark-hybrid-datasecurity': [
+        'hds',
+        'hds.list',
         'hds.settings',
+        'hds-cluster-details',
         'hds-cluster',
       ],
       'squared-fusion-media': [
@@ -514,7 +521,12 @@
         'context-fields',
         'context-fieldsets',
         'context-resources',
+        'context-cluster-sidepanel',
         'add-resource',
+        'context-fields-sidepanel',
+      ],
+      'squared-fusion-khaos': [
+        'cucm-cluster',
       ],
     };
 

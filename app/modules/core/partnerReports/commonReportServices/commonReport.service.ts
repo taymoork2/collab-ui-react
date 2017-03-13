@@ -1,6 +1,5 @@
 import { ReportConstants } from './reportConstants.service';
 import {
-  IExportMenu,
   ITimespan,
   IIntervalQuery,
   ICustomerIntervalQuery,
@@ -28,7 +27,6 @@ export class CommonReportService {
   /* @ngInject */
   constructor(
     private $http: ng.IHttpService,
-    private $translate: ng.translate.ITranslateService,
     private Authinfo,
     private Notification: Notification,
     private ReportConstants: ReportConstants,
@@ -336,73 +334,6 @@ export class CommonReportService {
 
   public getPercentage(numberOne: number, numberTwo: number): number {
     return Math.round((numberOne / numberTwo) * this.ReportConstants.PERCENTAGE_MULTIPLIER);
-  }
-
-  // export functions
-  public createExportMenu(chart: any): Array<IExportMenu> {
-    return [{
-      id: 'saveAs',
-      label: this.$translate.instant('reportsPage.saveAs'),
-      click: undefined,
-    }, {
-      id: 'jpg',
-      label: this.$translate.instant('reportsPage.jpg'),
-      click: (): void => {
-        this.exportJPG(chart);
-      },
-    }, {
-      id: 'png',
-      label: this.$translate.instant('reportsPage.png'),
-      click: (): void => {
-        this.exportPNG(chart);
-      },
-    }, {
-      id: 'pdf',
-      label: this.$translate.instant('reportsPage.pdf'),
-      click: (): void => {
-        this.exportPDF(chart);
-      },
-    }];
-  }
-
-  private exportJPG(chart: any): void {
-    if (chart) {
-      // 'this' is the AmCharts export object
-      chart.export.capture({}, function (): void {
-        this.toJPG({}, function (data: any): void {
-          this.download(data, 'application/jpg', 'amCharts.jpg');
-        });
-      });
-    }
-  }
-
-  private exportPNG(chart: any): void {
-    if (chart) {
-      // 'this' is the AmCharts export object
-      chart.export.capture({}, function (): void {
-        this.toPNG({}, function (data: any): void {
-          this.download(data, 'application/png', 'amCharts.png');
-        });
-      });
-    }
-  }
-
-  private exportPDF(chart: any): void {
-    if (chart) {
-      // 'this' is the AmCharts export object
-      chart.export.capture({}, function (): void {
-        this.toJPG({}, function (data: any): void {
-          chart.export.toPDF({
-            content: [{
-              image: data,
-              fit: [523, 300],
-            }],
-          }, function (downloadData: any): void {
-            this.download(downloadData, 'application/pdf', 'amCharts.pdf');
-          });
-        });
-      });
-    }
   }
 }
 

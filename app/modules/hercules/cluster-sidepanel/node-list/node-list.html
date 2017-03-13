@@ -36,6 +36,22 @@
             <span class="feature-status">{{connector.runningVersion}}</span>
             <i class="feature-status feature-arrow"></i>
           </a>
+          <a ng-if="connector.connectorType === 'cs_mgmt'"
+             ui-sref="context-cluster-sidepanel.host-details({host: host.hostname, hostSerial: connector.hostSerial, clusterId: $ctrl.cluster.id, connectorType: connector.connectorType})"
+          >
+            <i class="icon icon-circle status-indicator" ng-class="$ctrl.getSeverity(connector).cssClass"></i>
+            <span class="feature-name">{{$ctrl.localizedContextManagementConnectorName}}</span>
+            <span class="feature-status">{{connector.runningVersion}}</span>
+            <i class="feature-status feature-arrow"></i>
+          </a>
+          <a ng-if="connector.connectorType === 'cs_context'"
+             ui-sref="context-cluster-sidepanel.host-details({host: host.hostname, hostSerial: connector.hostSerial, clusterId: $ctrl.cluster.id, connectorType: connector.connectorType})"
+          >
+            <i class="icon icon-circle status-indicator" ng-class="$ctrl.getSeverity(connector).cssClass"></i>
+            <span class="feature-name">{{$ctrl.localizedContextConnectorName}}</span>
+            <span class="feature-status">{{connector.runningVersion}}</span>
+            <i class="feature-status feature-arrow"></i>
+          </a>
         </li>
       </ul>
     </div>

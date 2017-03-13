@@ -9,7 +9,7 @@
   function ServiceSetupCtrl($q, $state, $scope, ServiceSetup, Notification, Authinfo, $translate, HuronCustomer,
     ValidationService, DialPlanService, TelephoneNumberService, ExternalNumberService,
     CeService, HuntGroupServiceV2, ModalService, DirectoryNumberService, VoicemailMessageAction,
-    PstnSetupService, Orgservice, FeatureToggleService, Config, CustomerCosRestrictionServiceV2) {
+    PstnSetupService, Orgservice, FeatureToggleService, Config, CustomerCosRestrictionServiceV2, CustomerDialPlanServiceV2) {
     var vm = this;
     vm.isTimezoneAndVoicemail = function () {
       return Authinfo.getLicenses().filter(function (license) {
@@ -748,6 +748,9 @@
         return initClassOfService();
       })
       .then(function () {
+        return initDialPlan();
+      })
+      .then(function () {
         // TODO BLUE-1221 - make /customer requests synchronous until fixed
         return listInternalExtensionRanges();
       })
@@ -790,6 +793,7 @@
 
               vm.previousTimeZone = vm.model.site.timeZone;
               vm.model.site.voicemailPilotNumberGenerated = (site.voicemailPilotNumberGenerated !== null) ? site.voicemailPilotNumberGenerated : 'false';
+              loadVoicemailPilotNumber(site);
             });
           } else if (vm.model.numberRanges.length !== 0) {
             vm.model.site.extensionLength = vm.model.numberRanges[0].endNumber.length;
@@ -797,35 +801,7 @@
         });
       })
       .then(function () {
-        if (vm.hasVoicemailService) {
-          return ServiceSetup.getVoicemailPilotNumber().then(function (voicemail) {
-            if (vm.model.site.voicemailPilotNumberGenerated === 'false' &&
-                  (voicemail.pilotNumber.length < 40)) {
-              vm.model.ftswCompanyVoicemail.ftswExternalVoicemail = true;
-            } else {
-              vm.model.ftswCompanyVoicemail.ftswExternalVoicemail = false;
-            }
-            if (voicemail.pilotNumber === Authinfo.getOrgId()) {
-              // There may be existing customers who have yet to set the company
-              // voicemail number; likely they have it set to orgId.
-              // Remove this logic once we can confirm no existing customers are configured
-              // this way.
-              vm.model.site.voicemailPilotNumber = undefined;
-            } else if (voicemail.pilotNumber) {
-              vm.model.site.voicemailPilotNumber = voicemail.pilotNumber;
-              vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
-
-              if (vm.model.ftswCompanyVoicemail.ftswExternalVoicemail) {
-                vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = {
-                  pattern: voicemail.pilotNumber,
-                  label: TelephoneNumberService.getDIDLabel(voicemail.pilotNumber),
-                };
-              }
-            }
-          }).catch(function (response) {
-            Notification.errorResponse(response, 'serviceSetupModal.voicemailGetError');
-          });
-        } else if (!Authinfo.isSetupDone()) {
+        if (!Authinfo.isSetupDone() && !vm.hasVoicemailService) {
           // set voicemail toggle to enabled when non-test customer runs FTSW for the very first time
           return checkIfTestOrg().then(function (isTestOrg) {
             if (isTestOrg) {
@@ -837,8 +813,6 @@
             }
           });
         }
-      })
-      .then(function () {
         return loadExternalNumberPool();
       });
     }
@@ -856,6 +830,32 @@
         });
       });
       return isTestOrg;
+    }
+
+    function loadVoicemailPilotNumber(site) {
+      if (vm.model.site.voicemailPilotNumberGenerated === 'false' &&
+            (site.voicemailPilotNumber.length < 40)) {
+        vm.model.ftswCompanyVoicemail.ftswExternalVoicemail = true;
+      } else {
+        vm.model.ftswCompanyVoicemail.ftswExternalVoicemail = false;
+      }
+      if (site.voicemailPilotNumber === Authinfo.getOrgId()) {
+        // There may be existing customers who have yet to set the company
+        // voicemail number; likely they have it set to orgId.
+        // Remove this logic once we can confirm no existing customers are configured
+        // this way.
+        vm.model.site.voicemailPilotNumber = undefined;
+      } else if (site.voicemailPilotNumber) {
+        vm.model.site.voicemailPilotNumber = site.voicemailPilotNumber;
+        vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
+
+        if (vm.model.ftswCompanyVoicemail.ftswExternalVoicemail) {
+          vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = {
+            pattern: site.voicemailPilotNumber,
+            label: TelephoneNumberService.getDIDLabel(site.voicemailPilotNumber),
+          };
+        }
+      }
     }
 
     function loadExternalNumberPool() {
@@ -909,6 +909,14 @@
             });
           }
         });
+    }
+
+    function initDialPlan() {
+      return CustomerDialPlanServiceV2.get({
+        customerId: Authinfo.getOrgId(),
+      }).$promise.then(function (dialPlan) {
+        vm.premiumNumbers = _.get(dialPlan, 'premiumNumbers', []).toString();
+      });
     }
 
     function testForExtensions() {
@@ -1233,7 +1241,7 @@
           delete vm.model.site.voicemailPilotNumber;
         }
 
-        var currentSite = angular.copy(site);
+        var currentSite = _.cloneDeep(site);
         currentSite.timeZone = currentSite.timeZone.id;
         currentSite.preferredLanguage = currentSite.preferredLanguage.value;
         currentSite.country = currentSite.country.value;

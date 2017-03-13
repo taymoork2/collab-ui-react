@@ -8,7 +8,7 @@ require('./_user-add.scss');
     .controller('OnboardCtrl', OnboardCtrl);
 
   /*@ngInject*/
-  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Analytics, Authinfo, chartColors, Config, DialPlanService, FeatureToggleService, Log, LogMetricsService, NAME_DELIMITER, Notification, OnboardService, Orgservice, SunlightConfigService, TelephonyInfoService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact, ServiceSetup, ExternalNumberPool, DirSyncService) {
+  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Analytics, Authinfo, chartColors, Config, DialPlanService, FeatureToggleService, Log, LogMetricsService, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact, ServiceSetup, ExternalNumberPool, DirSyncService) {
     var vm = this;
 
     $scope.hasAccount = Authinfo.hasAccount();
@@ -50,10 +50,26 @@ require('./_user-add.scss');
     $scope.dirSyncConnectorDownload = "https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/DirectoryConnector.zip";
 
     var isFTW = false;
+    $scope.msgCheckedDueToCare = false;
     $scope.isSharedMeetingsEnabled = false;
     $scope.isReset = false;
     $scope.showExtensions = true;
     $scope.isResetEnabled = false;
+
+    $scope.careRadioValue = {
+      NONE: $translate.instant('onboardModal.paidNone'),
+      K1: $translate.instant('onboardModal.paidCDC'),
+      K2: $translate.instant('onboardModal.paidCVC'),
+    };
+
+    $scope.radioStates = {
+      commRadio: false,
+      msgRadio: false,
+      careRadio: $scope.careRadioValue.NONE,
+      initialCareRadioState: $scope.careRadioValue.NONE, // For generating Metrics
+    };
+
+    $scope.radioStates.careRadio = $scope.careRadioValue.NONE;
 
     $scope.convertUsersFlow = false;
     $scope.editServicesFlow = false;
@@ -89,8 +105,9 @@ require('./_user-add.scss');
     $scope.cancelModal = cancelModal;
     var currentUserHasCall = false;
 
-    $scope.isCareEnabled = Authinfo.isCare();
-    $scope.enableCareService = true;
+    $scope.isCareAndCDCEnabled = Authinfo.isCareAndCDC();
+    $scope.isCareAndCVCEnabled = Authinfo.isCareVoiceAndCVC();
+    $scope.isCareEnabled = $scope.isCareAndCDCEnabled || $scope.isCareAndCVCEnabled;
 
     $scope.sharedMeetingsFeatureDefaultToggle = { default: true, defaultValue: true };
     if (_.get($scope, 'sharedMeetingsFeatureDefaultToggle.default')) {
@@ -102,6 +119,7 @@ require('./_user-add.scss');
     }
 
     $scope.controlCare = controlCare;
+    $scope.controlMsg = controlMsg;
 
     initController();
 
@@ -300,7 +318,6 @@ require('./_user-add.scss');
     }
 
     function assignMapUserList(count, externalNumberMappings) {
-
       for (var i = 0; i < $scope.usrlist.length; i++) {
         if (i <= externalNumberMappings.length - 1) {
           if (externalNumberMappings[i].directoryNumber !== null) {
@@ -382,7 +399,6 @@ require('./_user-add.scss');
       } else {
         $scope.updateUserLicense();
       }
-
     };
 
     function toggleShowExtensions() {
@@ -490,6 +506,7 @@ require('./_user-add.scss');
     $scope.disableCheckbox = disableCheckbox;
     $scope.populateConfInvitations = populateConfInvitations;
     $scope.getAccountLicenses = getAccountLicenses;
+    $scope.setCareService = setCareService;
     $scope.checkMessageVisibility = checkMessageVisibility;
     var convertUsersCount = 0;
     var convertStartTime = 0;
@@ -584,13 +601,6 @@ require('./_user-add.scss');
       }
     }
 
-    $scope.radioStates = {
-      commRadio: false,
-      msgRadio: false,
-      careRadio: false,
-      initialCareRadioState: false, // For generating Metrics
-    };
-
     function getSelectedKeys(obj) {
       var result = _.reduce(obj, function (result, v, k) {
         if (v === true) {
@@ -619,7 +629,7 @@ require('./_user-add.scss');
         } else if (userEnts[x] === 'squared-room-moderation') {
           $scope.radioStates.msgRadio = true;
         } else if (userEnts[x] === 'cloud-contact-center') {
-          setCareSevice();
+          setCareService();
         }
       }
     }
@@ -629,43 +639,25 @@ require('./_user-add.scss');
         $scope.radioStates.msgRadio = true;
       }
       if (userInvites.cc) {
-        setCareSevice();
+        setCareService();
       }
     }
 
-    function setCareSevice() {
-      if (getServiceDetails('CD')) {
-        SunlightConfigService.getUserInfo($scope.currentUser.id)
-          .then(function () {
-            Userservice.getUser($scope.currentUser.id, true, function (data) {
-              if (data.success) {
-                var hasSyncKms = _.find(data.roles, function (r) {
-                  return r === Config.backend_roles.spark_synckms;
-                });
-                var hasContextServiceEntitlement = _.find(data.entitlements, function (r) {
-                  return r === Config.entitlements.context;
-                });
-                if (hasSyncKms && hasContextServiceEntitlement) {
-                  $scope.radioStates.careRadio = true;
-                  $scope.radioStates.initialCareRadioState = true;
-                  $scope.enableCareService = true;
-                }
-              }
-            });
-          },
-          function () {
-            $scope.radioStates.careRadio = false;
-          });
+    function setCareService() {
+      if (hasLicense('CD')) {
+        $scope.radioStates.initialCareRadioState = $scope.radioStates.careRadio = $scope.careRadioValue.K1;
+      } else if (hasLicense('CV')) {
+        $scope.radioStates.initialCareRadioState = $scope.radioStates.careRadio = $scope.careRadioValue.K2;
+      } else {
+        $scope.radioStates.initialCareRadioState = $scope.radioStates.careRadio = $scope.careRadioValue.NONE;
       }
     }
 
-    function getServiceDetails(licensePrefix) {
-      var hasLicense = _.find($scope.currentUser.licenseID, function (userLicense) {
+    function hasLicense(licensePrefix) {
+      return _.find($scope.currentUser.licenseID, function (userLicense) {
         return (userLicense.substring(0, 2) === licensePrefix);
       });
-      return hasLicense;
     }
-
 
     function shouldAddCallService() {
       return !currentUserHasCall && ($scope.radioStates.commRadio || $scope.entitlements.ciscoUC);
@@ -791,19 +783,27 @@ require('./_user-add.scss');
 
     /* TODO: Refactor this functions into MultipleSubscriptions Controller */
     $scope.selectedSubscriptionHasBasicLicenses = function (subscriptionId) {
-      return _.some($scope.basicLicenses, function (service) {
-        if (_.get(service, 'billing') === subscriptionId) {
-          return !_.has(service, 'site');
-        }
-      });
+      if (subscriptionId && subscriptionId !== Config.subscriptionState.trial) {
+        return _.some($scope.basicLicenses, function (service) {
+          if (_.get(service, 'billing') === subscriptionId) {
+            return !_.has(service, 'site');
+          }
+        });
+      } else {
+        return $scope.hasBasicLicenses;
+      }
     };
 
     /* TODO: Refactor this functions into MultipleSubscriptions Controller */
     $scope.selectedSubscriptionHasAdvancedLicenses = function (subscriptionId) {
       var advancedLicensesInSubscription = _.filter($scope.advancedLicenses, { confLic: [{ billing: subscriptionId }] });
-      return _.some(advancedLicensesInSubscription, function (service) {
-        return _.has(service, 'site');
-      });
+      if (subscriptionId && subscriptionId !== Config.subscriptionState.trial) {
+        return _.some(advancedLicensesInSubscription, function (service) {
+          return _.has(service, 'site');
+        });
+      } else {
+        return $scope.hasAdvancedLicenses;
+      }
     };
 
     $scope.isSharedMeetingsLicense = function (license) {
@@ -827,7 +827,6 @@ require('./_user-add.scss');
 
     // [Services] -> [Services] (merges Service[s] w/ same license)
     var mergeMultipleLicenseSubscriptions = function (fetched) {
-
       // Construct a mapping from License to (array of) Service object(s)
       var services = fetched.reduce(function (object, service) {
         var key = service.license.licenseType;
@@ -845,7 +844,7 @@ require('./_user-add.scss');
           licenses: [],
         };
         array.forEach(function (service) {
-          var copy = angular.copy(service);
+          var copy = _.cloneDeep(service);
           copy.licenses = [copy.license];
           delete copy.license;
           _.mergeWith(result, copy, function (left, right) {
@@ -887,6 +886,10 @@ require('./_user-add.scss');
       }
       if (services.care) {
         $scope.careFeatures = $scope.careFeatures.concat(services.care);
+        if (!$scope.isCareAndCDCEnabled && $scope.isCareAndCVCEnabled) {
+          $scope.careFeatures = $scope.careFeatures.concat($scope.careFeatures[1]);
+          $scope.careFeatures[1] = [];
+        }
       }
     };
 
@@ -990,8 +993,6 @@ require('./_user-add.scss');
           }
         }
       }
-      // Control Care behavior
-      $scope.controlCare();
     });
 
     $scope.$watch('wizard.current.step', function () {
@@ -1013,7 +1014,10 @@ require('./_user-add.scss');
     });
 
     $scope.$watch('radioStates.msgRadio', function () {
-      // Control Care behavior
+      $scope.controlMsg();
+    });
+
+    $scope.$watch('radioStates.careRadio', function () {
       $scope.controlCare();
     });
 
@@ -1168,14 +1172,35 @@ require('./_user-add.scss');
           licenseList.push(new LicenseFeature($scope.communicationFeatures[1].license.licenseId, false));
         }
 
-        // Care: straightforward license, for now
-        var careIndex = $scope.radioStates.careRadio ? 1 : 0;
-        var selCareService = $scope.careFeatures[careIndex];
+        var selCareService = {};
+        if ($scope.radioStates.careRadio === $scope.careRadioValue.K1) {
+          selCareService = $scope.careFeatures[1];
+        } else if ($scope.radioStates.careRadio === $scope.careRadioValue.K2) {
+          selCareService = $scope.careFeatures[2];
+        } else if ($scope.radioStates.careRadio === $scope.careRadioValue.NONE) {
+          selCareService = $scope.careFeatures[0];
+        }
+
         var licenseId = _.get(selCareService, 'license.licenseId', null);
         if (licenseId) {
           licenseList.push(new LicenseFeature(licenseId, true));
-        } else if (action === 'patch') {
+          if (_.startsWith(licenseId, Config.offerCodes.CDC)) {
+            licenseId = _.get($scope, 'careFeatures[2].license.licenseId', null);
+            if (licenseId) {
+              licenseList.push(new LicenseFeature(licenseId, false));
+            }
+          } else if (_.startsWith(licenseId, Config.offerCodes.CVC)) {
+            licenseId = _.get($scope, 'careFeatures[1].license.licenseId', null);
+            if (licenseId) {
+              licenseList.push(new LicenseFeature(licenseId, false));
+            }
+          }
+        } else if (action === 'patch') { // will get invoked when None is selected in care radio
           licenseId = _.get($scope, 'careFeatures[1].license.licenseId', null);
+          if (licenseId) {
+            licenseList.push(new LicenseFeature(licenseId, false));
+          }
+          licenseId = _.get($scope, 'careFeatures[2].license.licenseId', null);
           if (licenseId) {
             licenseList.push(new LicenseFeature(licenseId, false));
           }
@@ -1183,14 +1208,19 @@ require('./_user-add.scss');
 
         // Metrics for care entitlement for users
         if ($scope.radioStates.careRadio !== $scope.radioStates.initialCareRadioState) {
-          if ($scope.radioStates.careRadio) {
+          if ($scope.radioStates.careRadio === $scope.careRadioValue.K1) {
             LogMetricsService.logMetrics('Enabling care for user', LogMetricsService.getEventType('careEnabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
-          } else {
+          } else if ($scope.radioStates.careRadio === $scope.careRadioValue.K2) {
+            LogMetricsService.logMetrics('Enabling care for user', LogMetricsService.getEventType('careVoiceEnabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
+          }
+          if ($scope.radioStates.initialCareRadioState === $scope.careRadioValue.K1) {
             LogMetricsService.logMetrics('Disabling care for user', LogMetricsService.getEventType('careDisabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
+          }
+          if ($scope.radioStates.initialCareRadioState === $scope.careRadioValue.K2) {
+            LogMetricsService.logMetrics('Disabling careVoice for user', LogMetricsService.getEventType('careVoiceDisabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
           }
         }
       }
-
       return licenseList.length === 0 ? null : licenseList;
     }
 
@@ -1261,7 +1291,6 @@ require('./_user-add.scss');
         rdata.status = response.status || false;
         entitleUserCallback(rdata, response.status, 'updateUserLicense', response.headers);
       }
-
     };
 
     //****************MODAL INIT FUNCTION FOR INVITE AND ADD***************
@@ -2573,12 +2602,22 @@ require('./_user-add.scss');
       $state.modal.dismiss();
     }
 
+    function controlMsg() {
+      if (!$scope.radioStates.msgRadio) {
+        $scope.radioStates.careRadio = $scope.careRadioValue.NONE;
+        $scope.msgCheckedDueToCare = false;
+      }
+    }
+
     function controlCare() {
-      if ($scope.radioStates.msgRadio) {
-        $scope.enableCareService = true;
-      } else {
-        $scope.enableCareService = false;
-        $scope.radioStates.careRadio = false;
+      if ($scope.radioStates.careRadio !== $scope.careRadioValue.NONE) {
+        if (!$scope.radioStates.msgRadio) {
+          $scope.msgCheckedDueToCare = true;
+          $scope.radioStates.msgRadio = true;
+        }
+      } else if ($scope.msgCheckedDueToCare) {
+        $scope.msgCheckedDueToCare = false;
+        $scope.radioStates.msgRadio = false;
       }
     }
 

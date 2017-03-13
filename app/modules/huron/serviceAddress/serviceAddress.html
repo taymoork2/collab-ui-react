@@ -1,0 +1,63 @@
+<div class="address-validation-container">
+  <div class="flex-address">
+    <div class="row full">
+      <div class="columns medium-9">
+        <label for="streetAddress" translate="serviceAddress.streetAddress"></label>
+        <input type="text" id="streetAddress" ng-model="$ctrl.address.streetAddress" required ng-disabled="$ctrl.readOnly">
+      </div>
+      <div class="columns medium-3">
+        <label for="unit" translate="serviceAddress.unit"></label>
+        <input type="text" id="unit" ng-model="$ctrl.address.unit" ng-disabled="$ctrl.readOnly">
+      </div>
+    </div>
+    <div class="row full">
+      <div class="columns medium-12">
+        <label for="city" translate="serviceAddress.city"></label>
+        <input type="text" id="city" ng-model="$ctrl.address.city" required ng-disabled="$ctrl.readOnly">
+      </div>
+    </div>
+    <div class="row full">
+      <div class="columns medium-7">
+        <label for="state">{{$ctrl.areaName}}</label>
+        <cs-select
+          ng-model="$ctrl.locationModel"
+          options="$ctrl.stateOptions"
+          labelfield="name"
+          valuefield="abbreviation"
+          required="true"
+          on-change-fn="$ctrl.onLocationSelect()"
+          is-disabled="$ctrl.readOnly">
+      </div>
+      <div class="columns medium-5">
+        <label for="zip" translate="serviceAddress.zipCode"></label>
+        <input type="text" id="zip" ng-model="$ctrl.address.zip" required ng-disabled="$ctrl.readOnly">
+      </div>
+    </div>
+    <div class="row full" ng-if="$ctrl.countryCode">
+      <div class="columns medium-12">
+        <label for="country" translate="serviceAddress.country"></label>
+        <cs-select ng-model="$ctrl.countryCode" options="$ctrl.countryOptions" labelfield="name" valuefield="id" required="true" is-disabled="true"></cs-select>
+      </div>
+    </div>
+      <button class="btn--primary search-custom" type="submit" ng-click="$ctrl.addressValidate()" translate="organizationsPage.search" ng-disabled="$ctrl.formName.$invalid || $ctrl.readOnly" ng-hide="$ctrl.hideSearch" ></button>
+  </div>
+  <div class="flex-address validation-padding text-center">
+    <div ng-if="$ctrl.readOnly && !$ctrl.hideAddress">
+      <h6 translate="trialModal.pstn.addrFound"></h6>
+      <div class="row collapse full">
+        <div class="columns medium-12">
+          {{$ctrl.address.streetAddress | uppercase}} {{$ctrl.address.unit | uppercase}}
+        </div>
+      </div>
+      <div class="row collapse full">
+        <div class="columns medium-12">
+          {{$ctrl.address.city | uppercase}}<span ng-if="$ctrl.address.state">, {{$ctrl.address.state}}</span>  {{$ctrl.address.zip}}
+        </div>
+      </div>
+      <div>
+        <p><a href ng-click="$ctrl.onModify()" translate="trialModal.pstn.addrRetry"></a></p>
+        <br>
+      </div>
+    </div>
+  </div>
+</div>

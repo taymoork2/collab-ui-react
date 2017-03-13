@@ -23,21 +23,21 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
     private $state: ng.ui.IStateService,
     private FusionClusterService,
     private FusionClusterStatesService,
-    private FusionUtils,
+    private HybridServicesUtils,
     private Notification: Notification,
   ) {
     this.hybridConnectorsComparator = this.hybridConnectorsComparator.bind(this);
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }) {
-    let clusterId = changes['clusterId'];
+    const { clusterId } = changes;
     if (clusterId && clusterId.currentValue) {
       this.loadCluster(clusterId.currentValue);
     }
   }
 
   public hybridConnectorsComparator(a, b) {
-    return this.FusionUtils.hybridConnectorsComparator(a.value, b.value);
+    return this.HybridServicesUtils.hybridConnectorsComparator(a.value, b.value);
   }
 
   public openSidepanel(connector: ISimplifiedConnector) {

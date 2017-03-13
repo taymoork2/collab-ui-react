@@ -26,13 +26,13 @@ export class AutoAnswerCtrl implements ng.IComponentController {
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
-    let autoAnswerChanges = changes['autoAnswer'];
-    if (autoAnswerChanges) {
-      this.processPhoneListChange(autoAnswerChanges);
+    const { autoAnswer } = changes;
+    if (autoAnswer) {
+      this.processPhoneListChange(autoAnswer);
 
       if (!this.autoAnswerNoSupportedPhone) {
-        this.processAutoAnswerSelectionChange(autoAnswerChanges);
-        this.setCustomSharedLineMemberWarningMsg(autoAnswerChanges);
+        this.processAutoAnswerSelectionChange(autoAnswer);
+        this.setCustomSharedLineMemberWarningMsg(autoAnswer);
       }
     }
   }

@@ -1,16 +1,24 @@
-<cs-page-sub-header>
-
-  <cs-page-sub-header-left>
-    <cs-searchfilter filters="" search-item-fn="" placeholder-text="Search fieldsets">
-    </cs-searchfilter>
-  </cs-page-sub-header-left>
-
-  <cs-page-sub-header-right>
-    <new-button modal-window-options=""></new-button>
-  </cs-page-sub-header-right>
-
-</cs-page-sub-header>
-
-<div class="centered-info-pane">
-  <h3 translate="context.dictionary.welcome"></h3>
+<div class="field-list">
+  <cs-page-sub-header>
+    <cs-page-sub-header-left>
+      <cs-searchfilter
+        ng-model="contextFieldsets.placeholder.count" search-item-fn="contextFieldsets.filterList(searchStr)" placeholder-text="{{contextFieldsets.placeholder.name}}">
+      </cs-searchfilter>
+    </cs-page-sub-header-left>
+  </cs-page-sub-header>
+  <div class="row grid">
+    <div ng-if="!contextFieldsets.noSearchResults">
+      <div class="gridStyle" ui-grid="contextFieldsets.gridOptions" ui-grid-selection ui-grid-infinite-scroll></div>
+      <div class="grid-refresh" ng-if="contextFieldsets.gridRefresh">
+        <i class="icon icon-spinner icon-2x"></i>
+      </div>
+    </div>
+    <div class="search-noresults" ng-if="contextFieldsets.noSearchResults">
+      <div class="none_found">
+        <i class="icon icon-circle-comp-negative" />
+        <span class="h2" translate="context.dictionary.fieldsetPage.noneFound"></span>
+        <span class="h5" translate="common.trySearchAgain"></span>
+      </div>
+    </div>
+  </div>
 </div>

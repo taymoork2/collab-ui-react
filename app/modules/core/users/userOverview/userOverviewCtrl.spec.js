@@ -6,18 +6,19 @@ describe('Controller: UserOverviewCtrl', function () {
 
   function init() {
     this.initModules(testModule, 'WebExApp', 'Sunlight', 'Huron');
-    this.injectDependencies('$scope', '$controller', '$q', 'UserOverviewService', 'Utils', 'FeatureToggleService', 'Config', 'Authinfo', 'Userservice', 'UrlConfig', 'Notification');
+    this.injectDependencies('$scope', '$controller', '$q', 'UserOverviewService', 'Utils', 'FeatureToggleService', 'Config', 'Authinfo', 'Userservice', 'UrlConfig', 'Notification', 'ServiceSetup');
     initData.apply(this);
     initDependencySpies.apply(this);
     initStateParams.apply(this);
   }
 
   function initData() {
-    this.pristineCurrentUser = angular.copy(getJSONFixture('core/json/currentUser.json'));
+    this.pristineCurrentUser = _.cloneDeep(getJSONFixture('core/json/currentUser.json'));
     this.updatedUser = _.cloneDeep(this.pristineCurrentUser);
     this.updatedUser.trainSiteNames = ['testSite'];
     this.invitations = getJSONFixture('core/json/users/invitations.json');
     this.featureToggles = getJSONFixture('core/json/users/me/featureToggles.json');
+    this.languages = getJSONFixture('huron/json/settings/languages.json');
   }
 
   function initDependencySpies() {
@@ -49,6 +50,7 @@ describe('Controller: UserOverviewCtrl', function () {
 
     spyOn(this.Notification, 'success');
     spyOn(this.Authinfo, 'isSquaredTeamMember').and.returnValue(false);
+    spyOn(this.ServiceSetup, 'getAllLanguages').and.returnValue(this.$q.resolve(this.languages));
   }
 
   function initStateParams() {

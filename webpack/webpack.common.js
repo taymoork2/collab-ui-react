@@ -3,7 +3,7 @@ const _ = require('lodash');
 const args = require('yargs').argv;
 const path = require('path');
 const loaders = require('./loaders');
-// const StyleLintPlugin = require('stylelint-webpack-plugin');
+const StyleLintPlugin = require('stylelint-webpack-plugin');
 
 const host = args.host || '127.0.0.1';
 const port = args.port || '8000';
@@ -69,12 +69,12 @@ function webpackConfig(env) {
   ];
 
   // Activate once IntelliJ / WebStorm supports stylelint
-  // if (!env.nolint) {
-  //   config.plugins.push(new StyleLintPlugin({
-  //     configFile: '.stylelintrc.js',
-  //     failOnError: true,
-  //   }));
-  // }
+  if (!env.nolint) {
+    config.plugins.push(new StyleLintPlugin({
+      configFile: '.stylelintrc.js',
+      failOnError: true,
+    }));
+  }
 
   config.resolve = {
     extensions: ['.ts', '.js', '.json', '.css', '.scss', '.html'],

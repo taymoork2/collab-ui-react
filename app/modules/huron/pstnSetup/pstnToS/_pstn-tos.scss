@@ -1,57 +1,62 @@
 .pstn-tos {
+  display: flex;
+  flex-direction: row;
+  flex: 1 1 auto;
+
+  .intelepeer {
+    border-right: 1px;
+    border-right-style: solid;
+    border-right-color: $gray-light;
+    min-height: 100%;
+  }
+
+  .logo {
+    width: 100%;
+    padding-bottom: 3.5rem;
+  }
+
+  .noticeTitle,
+  .notice,
+  .confirm,
+  .viewTos,
+  .copyright,
+  .description {
+    padding-bottom: 1.5rem;
+  }
+
+  .name {
     display: flex;
     flex-direction: row;
-    flex: 1 1 auto;
-
-    .intelepeer {
-        border-right: 1px;
-        border-right-style: solid;
-        border-right-color: $gray-light;
-        min-height: 100%;
+    justify-content: space-between;
+    div {
+      width: 49%;
     }
+  }
 
-    .logo {
-        width: 100%;
-        padding-bottom: 3.5rem;
-    }
-
-    .noticeTitle, .notice, .confirm, .viewTos, .copyright, .description {
-        padding-bottom: 1.5rem;
-    }
-
-    .name {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        div {
-            width: 49%;
-        }
-    }
-
-    .agree {
-        padding-top: 1.5rem;
-    }
+  .agree {
+    padding-top: 1.5rem;
+  }
 }
 
 .pstn-tos-loading {
-    width: 100%;
-    text-align: center;
-    margin: 40px auto;
+  width: 100%;
+  text-align: center;
+  margin: 40px auto;
 
-    &.ng-enter,
-    &.ng-leave {
-        transition: none;
-    }
+  &.ng-enter,
+  &.ng-leave {
+    transition: none;
+  }
 
-    .icon {
-        font-size: 75px;
-    }
+  .icon {
+    font-size: 75px;
+  }
 }
 
 .pstn-tos input {
-    width: 100%;
+  width: 100%;
 }
 
 .pstn-tos > div {
-    padding: 1.5rem;
+  padding: 1.5rem;
 }

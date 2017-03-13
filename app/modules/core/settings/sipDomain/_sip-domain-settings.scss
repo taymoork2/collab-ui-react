@@ -1,6 +1,21 @@
 @import 'styles/toolkit/colors';
 @import 'styles/toolkit/spacing';
 
+.reveal-modal.dialog .modal-body.subdomain-modal,
+.subdomain-modal {
+  @include vr-spacing(ph, 3);
+  margin: 0;
+  .modal-space {
+    @include vr-spacing(mt, 0.75);
+  }
+  .subdomain-modal-warning {
+    display: inline-flex;
+    .subdomain-warning-icon {
+      color: $color-attention-base;
+    }
+  }
+}
+
 .domain-page {
   .domain {
     color: $gray-dark-4;

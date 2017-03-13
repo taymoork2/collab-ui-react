@@ -8,7 +8,6 @@ describe('Service: AAMediaUploadService', function () {
   var Config;
   var $http;
   var $q;
-  var $rootScope;
 
   var validFileByName = 'validFile.wav';
   var invalidFileByName = 'validFile.invalid';
@@ -75,7 +74,7 @@ describe('Service: AAMediaUploadService', function () {
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function (_Upload_, _Config_, _AACommonService_, _AAMediaUploadService_, _AACtrlResourcesService_, _$http_, _$q_, _$rootScope_) {
+  beforeEach(inject(function (_Upload_, _Config_, _AACommonService_, _AAMediaUploadService_, _AACtrlResourcesService_, _$http_, _$q_) {
     Upload = _Upload_;
     AAMediaUploadService = _AAMediaUploadService_;
     AACommonService = _AACommonService_;
@@ -83,7 +82,6 @@ describe('Service: AAMediaUploadService', function () {
     Config = _Config_;
     $http = _$http_;
     $q = _$q_;
-    $rootScope = _$rootScope_;
   }));
 
   afterEach(function () {
@@ -164,47 +162,89 @@ describe('Service: AAMediaUploadService', function () {
     });
   });
 
-  describe('broadcasts', function () {
+  describe('AA Save', function () {
     beforeEach(function () {
       spyOn(AAMediaUploadService, 'cleanResourceFieldIndex').and.callFake(function (field, index, key) {
         return key && index && field;
       });
-      spyOn($rootScope, '$broadcast').and.callThrough();
       spyOn(AACtrlResourcesService, 'getCtrlKeys').and.returnValue(['mediaUploadCtrlN']);
     });
 
-    describe('AA Save', function () {
-      beforeEach(function () {
-      });
-
-      it('should delete the field information on aa save if not active', function () {
-        spyOn(AAMediaUploadService, 'getResources').and.returnValue({
-          mediaUploadCtrlN: {
-            active: false,
-            saved: '',
-            uploads: ['value'],
-          },
-        });
-        $rootScope.$broadcast('CE Saved');
-        expect(AAMediaUploadService.cleanResourceFieldIndex).not.toHaveBeenCalled();
-      });
-    });
-
-    describe('AA Close', function () {
-      beforeEach(function () {
-      });
-
-      it('should delete out the resources on aa close if not saved', function () {
-        spyOn(AAMediaUploadService, 'getResources').and.returnValue({
-          active: '',
-          saved: false,
+    it('should delete the field information on aa save if not active', function () {
+      spyOn(AAMediaUploadService, 'getResources').and.returnValue({
+        mediaUploadCtrlN: {
+          active: false,
+          saved: '',
           uploads: ['value'],
-        });
-        $rootScope.$broadcast('CE Closed');
-        expect(AAMediaUploadService.cleanResourceFieldIndex).not.toHaveBeenCalled();
+        },
       });
+      AAMediaUploadService.saveResources();
+      expect(AAMediaUploadService.cleanResourceFieldIndex).not.toHaveBeenCalled();
     });
   });
+
+  describe('AA Close', function () {
+    var ceMenuModelService;
+
+    beforeEach(inject(function (_AutoAttendantCeMenuModelService_) {
+      spyOn($http, 'delete');
+
+      ceMenuModelService = _AutoAttendantCeMenuModelService_;
+    }));
+
+    it('should delete out the resources on aa close if not saved', function () {
+
+      var resources = AAMediaUploadService.getResources('someId');
+      var keeper = ceMenuModelService.newCeActionEntry('say massage', '');
+      keeper.deleteUrl = 'keeper';
+      keeper.myUrl = 'keeper URL';
+      var nokeeper = ceMenuModelService.newCeActionEntry('say massage', '');
+      nokeeper.deleteUrl = 'http:should not be here';
+      nokeeper.myUrl = 'deletedURL';
+
+      resources.uploads.push(keeper);
+      resources.uploads.push(nokeeper);
+
+      AAMediaUploadService.resetResources();
+
+      expect($http.delete).toHaveBeenCalledWith('http:should not be here');
+    });
+    it('should delete out the resources on aa save if are marked active as false', function () {
+
+      var resources = AAMediaUploadService.getResources('someId');
+
+      var nokeeper = ceMenuModelService.newCeActionEntry('say massage', '');
+      nokeeper.deleteUrl = 'http:should not be here';
+      nokeeper.myUrl = 'deletedURL';
+
+      resources.active = false;
+
+      resources.uploads.push(nokeeper);
+
+      AAMediaUploadService.saveResources();
+
+      expect($http.delete).toHaveBeenCalledWith('http:should not be here');
+    });
+  });
+  describe('Notify', function () {
+    it('should moved saved to true', function () {
+      var resources = AAMediaUploadService.getResources('someId');
+
+      AAMediaUploadService.notifyAsSaved('someId', true);
+
+      expect(resources.saved).toEqual(true);
+
+    });
+    it('should moved active to true', function () {
+      var resources = AAMediaUploadService.getResources('someId');
+
+      AAMediaUploadService.notifyAsActive('someId', true);
+
+      expect(resources.active).toEqual(true);
+
+    });
+  });
+
 
   describe('getRecordingUrl', function () {
     beforeEach(function () {

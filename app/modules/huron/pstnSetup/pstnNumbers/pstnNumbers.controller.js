@@ -47,8 +47,8 @@
     };
 
     vm.orderNumbersTotal = 0;
+    vm.showTollFreeNumbers = false;
     vm.showPortNumbers = !PstnSetup.getIsTrial();
-    vm.showTollFreeNumbers = !PstnSetup.getIsTrial();
     var BLOCK_ORDER = PstnSetupService.BLOCK_ORDER;
     var PORT_ORDER = PstnSetupService.PORT_ORDER;
     var NUMBER_ORDER = PstnSetupService.NUMBER_ORDER;
@@ -58,8 +58,8 @@
     var NXX_EMPTY = '--';
     var MIN_BLOCK_QUANTITY = 2;
     var MAX_BLOCK_QUANTITY = 100;
-    var UNITED_STATES = 'US';
-    var CANADA = 'CA';
+    //carrier capabilities
+    var TOLLFREE_ORDERING_CAPABILITY = 'TOLLFREE_ORDERING';
 
     vm.addToCart = addToCart;
     vm.addAdvancedOrder = addAdvancedOrder;
@@ -71,12 +71,13 @@
     vm.getStateInventory = getStateInventory;
     vm.getAreaNxx = getAreaNxx;
     vm.searchCarrierInventory = searchCarrierInventory;
+    vm.getCapabilities = getCapabilities;
     vm.onBlockClick = onBlockClick;
 
     vm.formatTelephoneNumber = formatTelephoneNumber;
     vm.showOrderQuantity = showOrderQuantity;
     vm.searchResults = [];
-    vm.location = '';
+    vm.locationLabel = '';
 
     vm.model.pstn.paginateOptions = {
       currentPage: 0,
@@ -119,34 +120,21 @@
     init();
 
     function init() {
-      var provider = PstnSetup.getProvider();
-      if (provider) {
-        switch (provider.country) {
-          case CANADA:
-            vm.location = $translate.instant('pstnSetup.province');
-            PstnSetupStatesService.getProvinces().then(loadLocations);
-            break;
-          case UNITED_STATES:
-          default:
-            vm.location = $translate.instant('pstnSetup.state');
-            PstnSetupStatesService.getStates().then(loadLocations);
-            break;
+      PstnSetupStatesService.getLocation(PstnSetup.getCountryCode()).then(function (location) {
+        vm.model.pstn.quantity = null;
+        vm.locationLabel = location.type;
+        vm.model.pstn.states = location.areas;
+        if (_.get(PstnSetup.getServiceAddress(), 'state')) {
+          vm.model.pstn.state = {
+            abbreviation: PstnSetup.getServiceAddress().state,
+            name: _.result(_.find(vm.model.pstn.states, {
+              'abbreviation': PstnSetup.getServiceAddress().state,
+            }), 'name'),
+          };
+          getStateInventory();
         }
-      }
-    }
-
-    function loadLocations(locations) {
-      vm.model.pstn.quantity = null;
-      vm.model.pstn.states = locations.data;
-      if (_.get(PstnSetup.getServiceAddress(), 'state')) {
-        vm.model.pstn.state = {
-          abbreviation: PstnSetup.getServiceAddress().state,
-          name: _.result(_.find(locations, {
-            'abbreviation': PstnSetup.getServiceAddress().state,
-          }), 'name'),
-        };
-        getStateInventory();
-      }
+      });
+      getCapabilities();
     }
 
     vm.tollFreeFields = [{
@@ -290,6 +278,24 @@
         .catch(function (response) {
           Notification.errorResponse(response, 'pstnSetup.errors.tollfree.areacodes');
         });
+    }
+
+    function getCapabilities() {
+      if (!PstnSetup.getIsTrial()) {
+        PstnSetupService.getCarrierCapabilities(PstnSetup.getProviderId())
+          .then(function (response) {
+            var supportedCapabilities = [];
+            for (var x in response) {
+              supportedCapabilities.push(response[x].capability);
+            }
+            if (supportedCapabilities.indexOf(TOLLFREE_ORDERING_CAPABILITY) !== -1) {
+              vm.showTollFreeNumbers = true;
+            }
+          })
+          .catch(function (response) {
+            Notification.errorResponse(response, 'pstnSetup.errors.capabilities');
+          });
+      }
     }
 
     function onBlockClick() {

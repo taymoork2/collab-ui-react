@@ -5,8 +5,7 @@
     .module('Mediafusion')
     .controller('MediaReportsController', MediaReportsController);
   /* @ngInject */
-  function MediaReportsController($q, $scope, $translate, $interval, MediaClusterServiceV2, UtilizationResourceGraphService, MeetingLocationAdoptionGraphService, ParticipantDistributionResourceGraphService, NumberOfParticipantGraphService, MediaReportsService, Notification, MediaReportsDummyGraphService, MediaSneekPeekResourceService, CallVolumeResourceGraphService, AvailabilityResourceGraphService, ClientTypeAdoptionGraphService) {
-
+  function MediaReportsController($q, $scope, $translate, $interval, $timeout, MediaClusterServiceV2, UtilizationResourceGraphService, MeetingLocationAdoptionGraphService, ParticipantDistributionResourceGraphService, NumberOfParticipantGraphService, MediaReportsService, Notification, MediaReportsDummyGraphService, MediaSneekPeekResourceService, CallVolumeResourceGraphService, AvailabilityResourceGraphService, ClientTypeAdoptionGraphService, AdoptionCardService) {
     var vm = this;
     var interval = null;
     var deferred = $q.defer();
@@ -86,9 +85,28 @@
     vm.setClientTypeData = setClientTypeData;
     vm.setClientTypeCard = setClientTypeCard;
     vm.setMeetingLocationData = setMeetingLocationData;
+    vm.setMeetingLocationCard = setMeetingLocationCard;
+
+    vm.cardFlipHandler = cardFlipHandler;
 
     vm.showAvailabilityTooltip = false;
     vm.showHostedOnPremTooltip = false;
+
+    vm.clientTypeschartOptions = {
+      isShow: true,
+      cardChartDiv: 'clientTypeChartDiv',
+      noData: false,
+    };
+    vm.numberOfMeetsOnPremiseschartOptions = {
+      isShow: true,
+      cardChartDiv: 'numberOfMeetsOnPremisesChartDiv',
+      noData: false,
+    };
+    vm.cloudParticipantschartOptions = {
+      isShow: true,
+      cardChartDiv: 'cloudParticipantsChartDiv',
+      noData: false,
+    };
 
     vm.timeOptions = [{
       value: 0,
@@ -107,6 +125,8 @@
       label: $translate.instant('mediaFusion.metrics.threeMonths'),
     }];
     vm.timeSelected = vm.timeOptions[0];
+
+    vm.isFlipped = false;
 
     setRefreshInterval();
     getCluster();
@@ -129,6 +149,7 @@
       setClientTypeData();
       setClientTypeCard();
       setMeetingLocationData();
+      setMeetingLocationCard();
     }
 
     function clusterUpdate() {
@@ -142,6 +163,12 @@
         vm.redirected_heading = vm.cloud_calls_heading;
       }
       loadResourceDatas();
+      $timeout(function () {
+        angular.element('#adoptionReportsLi').triggerHandler('click');
+      }, 0);
+      $timeout(function () {
+        angular.element('#resourceReportsLi').triggerHandler('click');
+      }, 0);
     }
 
     $scope.$on('clusterClickEvent', function (event, data) {
@@ -313,10 +340,33 @@
       MediaReportsService.getClientTypeCardData(vm.timeSelected).then(function (response) {
         if (response === vm.ABORT) {
           return undefined;
-        } else if (_.isUndefined(response.data) || response.data.length === 0) {
-          vm.clientTypeCount = vm.noData;
+        } else if (_.isUndefined(response.data) || response.data.dataProvider.length === 0) {
+          AdoptionCardService.setDummyClientTypePiechart();
+          vm.clientTypeschartOptions.noData = true;
         } else {
-          vm.clientTypeCount = response.data.dataProvider.length;
+          AdoptionCardService.setClientTypePiechart(response.data);
+          vm.clientTypeschartOptions.noData = false;
+        }
+      });
+    }
+
+    function setMeetingLocationCard() {
+      MediaReportsService.getMeetingLocationCardData(vm.timeSelected).then(function (response) {
+        if (response === vm.ABORT) {
+          return undefined;
+        } else if (_.isUndefined(response.data) || response.data.dataProvider.length === 0) {
+          AdoptionCardService.setDummyNumberOfMeetsOnPremisesPiechart();
+          vm.numberOfMeetsOnPremiseschartOptions.noData = true;
+          vm.tot_number_meetings = vm.EMPTY;
+          vm.tot_number_meetings = vm.noData;
+        } else {
+          var total_meets = 0;
+          AdoptionCardService.setNumberOfMeetsOnPremisesPiechart(response.data);
+          vm.numberOfMeetsOnPremiseschartOptions.noData = false;
+          _.forEach(response.data.dataProvider, function (val) {
+            total_meets = total_meets + val.value;
+          });
+          vm.tot_number_meetings = total_meets;
         }
       });
     }
@@ -585,5 +635,14 @@
       vm.clusterSelected = selectedCluster;
       clusterUpdate();
     }
+
+    function cardFlipHandler() {
+      if (vm.isFlipped) {
+        vm.isFlipped = false;
+      } else {
+        vm.isFlipped = true;
+      }
+    }
+
   }
 })();

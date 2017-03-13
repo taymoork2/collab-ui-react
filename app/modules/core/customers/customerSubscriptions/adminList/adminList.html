@@ -1,0 +1,21 @@
+<div class="sub-section admin-list">
+  <div>
+    <span class="title list-title">{{$ctrl.title}}</span>
+    <span class="title toggle-link" ng-show="$ctrl.showToggleLink()">
+      <a
+        ng-show="!$ctrl.isExpanded"
+        ng-click="$ctrl.toggleList()"
+        translate="common.showAllAdminUsers"
+        translate-values="{ numUsers: $ctrl.members.length }"></a>
+      <a
+        ng-show="$ctrl.isExpanded"
+        ng-click="$ctrl.toggleList()"
+        translate="common.hideAllAdminUsers"></a>
+    </span>
+  </div>
+  <div
+    class="admin-list-item"
+    ng-repeat="admin in $ctrl.members | orderBy:$ctrl.orderBy | limitTo:$ctrl.displayLimit">
+    {{::admin.email}} <span ng-show="$ctrl.showDisplayName(admin)"> - {{::admin.displayName}}</span>
+  </div>
+</div>

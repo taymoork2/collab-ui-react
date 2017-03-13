@@ -28,7 +28,7 @@
     }
 
     function isGroupSelected() {
-      return _.isNumber(vm.selectedGroup.value);
+      return !_.isEmpty(vm.selectedGroup.value) && vm.selectedGroup.value !== creatingGroupOptionValue;
     }
 
     function hasComponentName() {

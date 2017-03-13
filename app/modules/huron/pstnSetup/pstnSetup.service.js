@@ -5,15 +5,19 @@
     .factory('PstnSetupService', PstnSetupService);
 
   /* @ngInject */
-  function PstnSetupService($q, $translate, Authinfo, Notification, PstnSetup, TerminusCarrierService,
-    TerminusCustomerService, TerminusCustomerV2Service, TerminusCustomerTrialV2Service,
-    TerminusCarrierV2Service, TerminusCustomerCarrierV2Service, TerminusOrderV2Service,
+  function PstnSetupService($q, $translate, Authinfo, Notification, PstnSetup,
+    TerminusCustomerService, TerminusCustomerCarrierService,
+    TerminusCustomerV2Service, TerminusCustomerTrialV2Service,
+    TerminusCarrierService, TerminusCarrierV2Service,
+    TerminusOrderV2Service,
     TerminusCarrierInventoryCount, TerminusNumberService, TerminusCarrierInventorySearch,
     TerminusCarrierInventoryReserve, TerminusCarrierInventoryRelease,
     TerminusCustomerCarrierInventoryReserve, TerminusCustomerCarrierInventoryRelease,
-    TerminusCustomerCarrierDidService, TerminusCustomerPortService, TerminusResellerCarrierV2Service,
+    TerminusCustomerCarrierDidService, TerminusCustomerPortService,
+    TerminusResellerCarrierService, TerminusResellerCarrierV2Service,
     TerminusV2ResellerService,
     TerminusV2CarrierNumberCountService, TerminusV2CarrierNumberService,
+    TerminusV2CarrierCapabilitiesService,
     TerminusV2ResellerNumberReservationService, TerminusV2ResellerCarrierNumberReservationService,
     TerminusV2CustomerNumberReservationService,
     TerminusV2CustomerNumberOrderBlockService, TelephoneNumberService) {
@@ -59,6 +63,7 @@
       setCustomerTrialV2: setCustomerTrialV2,
       getCarrierInventory: getCarrierInventory,
       getCarrierTollFreeInventory: getCarrierTollFreeInventory,
+      getCarrierCapabilities: getCarrierCapabilities,
       getCarrierDetails: getCarrierDetails,
       searchCarrierInventory: searchCarrierInventory,
       searchCarrierTollFreeInventory: searchCarrierTollFreeInventory,
@@ -73,7 +78,9 @@
       createResellerV2: createResellerV2,
       listCustomerCarriers: listCustomerCarriers,
       listResellerCarriers: listResellerCarriers,
+      listResellerCarriersV2: listResellerCarriersV2,
       listDefaultCarriers: listDefaultCarriers,
+      listDefaultCarriersV2: listDefaultCarriersV2,
       orderBlock: orderBlock,
       orderTollFreeBlock: orderTollFreeBlock,
       orderNumbers: orderNumbers,
@@ -178,6 +185,13 @@
     }
 
     function listDefaultCarriers() {
+      return TerminusCarrierService.query({
+        service: PSTN,
+        defaultOffer: true,
+      }).$promise.then(getCarrierDetails);
+    }
+
+    function listDefaultCarriersV2() {
       return TerminusCarrierV2Service.query({
         service: PSTN,
         defaultOffer: true,
@@ -186,6 +200,12 @@
     }
 
     function listResellerCarriers() {
+      return TerminusResellerCarrierService.query({
+        resellerId: Authinfo.getOrgId(),
+      }).$promise.then(getCarrierDetails);
+    }
+
+    function listResellerCarriersV2() {
       return TerminusResellerCarrierV2Service.query({
         resellerId: Authinfo.getOrgId(),
         country: PstnSetup.getCountryCode(),
@@ -193,7 +213,7 @@
     }
 
     function listCustomerCarriers(customerId) {
-      return TerminusCustomerCarrierV2Service.query({
+      return TerminusCustomerCarrierService.query({
         customerId: customerId,
       }).$promise.then(getCarrierDetails);
     }
@@ -227,6 +247,12 @@
       return TerminusV2CarrierNumberCountService.get({
         carrierId: carrierId,
         numberType: NUMTYPE_TOLLFREE,
+      }).$promise;
+    }
+
+    function getCarrierCapabilities(carrierId) {
+      return TerminusV2CarrierCapabilitiesService.query({
+        carrierId: carrierId,
       }).$promise;
     }
 
@@ -705,9 +731,25 @@
 
       if (!_.isUndefined(translations[order.statusMessage])) {
         return translations[order.statusMessage];
-      } else if (order.statusMessage !== 'None') {
-        return order.statusMessage;
+      } else if (order.statusMessage && order.statusMessage !== 'None') {
+        return displayBatchIdOnly(order.statusMessage);
       }
+    }
+
+    function displayBatchIdOnly(statusMessage) {
+      if (statusMessage.indexOf('Batch') >= 0) {
+        if (statusMessage.indexOf(',') >= 0) {
+          var batchStatus = statusMessage.split(',');
+          var batchIdOnlyStatusMessage = [];
+          _.forEach(batchStatus, function (batchOnly) {
+            var batchId = (batchOnly.replace(/\D+/g, ''));
+            batchIdOnlyStatusMessage.push(batchId);
+          });
+          return batchIdOnlyStatusMessage.toString();
+        }
+        return statusMessage.replace(/\D+/g, '');
+      }
+      return statusMessage;
     }
 
     function listPendingNumbers(customerId) {

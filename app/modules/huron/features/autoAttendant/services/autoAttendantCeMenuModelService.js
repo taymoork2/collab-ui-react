@@ -285,7 +285,7 @@
 
 
   /* @ngInject */
-  function AutoAttendantCeMenuModelService() {
+  function AutoAttendantCeMenuModelService(AAUtilityService) {
 
     // cannot use aaCommon's defined variables because of circular dependency.
     // aaCommonService shou not have this service, need to refactor it out.
@@ -366,7 +366,7 @@
       }
       action.description = menuEntry.description;
 
-      if (angular.isDefined(inObject.voice)) {
+      if (!_.isUndefined(inObject.voice)) {
         action.setVoice(inObject.voice);
       }
       menuEntry.addAction(action);
@@ -381,7 +381,7 @@
     function parsePlayObject(menuEntry, inObject) {
       var action;
       action = new Action('play', decodeUtf8(inObject.url));
-      if (angular.isDefined(inObject.voice)) {
+      if (!_.isUndefined(inObject.voice)) {
         action.setVoice(inObject.voice);
       }
       action.deleteUrl = inObject.deleteUrl;
@@ -603,35 +603,7 @@
       }
     }
     function parseLeftRightExpression(expression) {
-      /* expression looks like: var func=function() {if(this['Original-Caller-Number'] === 'Seattle Phone2' || this['Original-Caller-Number'] === 'Seattle Phone1') {return true;} return false;};"
-       *
-       * grab the stuff btw the brackets
-       */
-
-      var inBrackets = expression.match(/\[([^\]]+)\]/g);
-
-      var pieces = [];
-
-      /* remove brackets and single quotes Only save one bracketed item*/
-      pieces[0] = inBrackets[0].replace(/[[\]']/g, '');
-
-      var btwQuotes = expression.match(/'[^']+'/g);
-
-      if (btwQuotes.length < 2) {
-        return pieces;
-      }
-      pieces[1] = '';
-
-      for (var i = 1; i < btwQuotes.length - 1; i += 2) {
-        pieces[1] += btwQuotes[i] + ",";
-      }
-
-      pieces[1] += btwQuotes[btwQuotes.length - 1];
-
-      pieces[1] = pieces[1].replace(/[[\]']/g, '');
-
-      return pieces;
-
+      return AAUtilityService.pullJSPieces(expression);
     }
 
 
@@ -691,7 +663,7 @@
     function cesPa(action, inAction) {
       if (action) {
         try {
-          if (angular.isUndefined(action.queueSettings)) {
+          if (_.isUndefined(action.queueSettings)) {
             inAction.description = JSON.parse(inAction.description);
             action.queueSettings = {};
           }
@@ -708,7 +680,7 @@
     function cesFallback(action, inAction) {
       if (action) {
         try {
-          if (angular.isUndefined(action.queueSettings)) {
+          if (_.isUndefined(action.queueSettings)) {
             inAction.description = JSON.parse(inAction.description);
             action.queueSettings = {};
           }
@@ -1227,36 +1199,9 @@
       return newActionArray;
     }
     function createInListObj(action) {
-      var out;
-      var list;
-
-      // right condition looks like: 'Seattle Phone2, Seattle Phone1'
-
-      var pieces = action.if.rightCondition.split(",");
-
-      if (pieces.length === 0) {
-        return {};
-      }
-
-      pieces = _.compact(pieces);
-
-      // leftCondition looks like: 'Original-Caller-Number'
-
-      list = "this['" + action.if.leftCondition + "'] === '" + pieces[0].trim() + "'";
-
-      if (pieces.length > 1) {
-        for (var i = 1; i < pieces.length - 1; i++) {
-          list = list + " || this['" + action.if.leftCondition + "'] === '" + pieces[i].trim() + "'";
-        }
-        list = list + " || this['" + action.if.leftCondition + "'] === '" + pieces[pieces.length - 1].trim() + "'";
-      }
-
-      out = "var func=function() {if(" + list + ") {return true;} return false;};";
-      // out will look like: var func=function() {if(this['Original-Caller-Number'] === 'Seattle Phone2' || this['Original-Caller-Number'] === ' Seattle Phone1') {return true;} return false;};
-
-      return out;
-
+      return AAUtilityService.generateFunction(action.if.leftCondition, AAUtilityService.splitOnCommas(action.if.rightCondition));
     }
+
     function createObj(tag, action) {
       var out = {};
       var destObj = {};

@@ -47,7 +47,7 @@
 
     function setAsPristine() {
       if (fallbackMember) {
-        pristineFallbackMember = angular.copy(fallbackMember.member);
+        pristineFallbackMember = _.cloneDeep(fallbackMember.member);
       }
     }
 
@@ -98,14 +98,14 @@
       if (resetFromBackend) {
         HuntGroupService.getHuntMemberWithSelectedNumber(fallbackJSON).then(function (m) {
           pristineFallbackMember = m;
-          fallbackMember.member = angular.copy(pristineFallbackMember);
+          fallbackMember.member = _.cloneDeep(pristineFallbackMember);
           asyncTask.resolve();
         }, function (error) {
           Notification.errorResponse(error, 'huronHuntGroup.memberFetchFailure');
           asyncTask.reject();
         });
       } else {
-        fallbackMember.member = angular.copy(pristineFallbackMember);
+        fallbackMember.member = _.cloneDeep(pristineFallbackMember);
         asyncTask.resolve();
       }
     }

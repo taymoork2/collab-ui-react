@@ -155,6 +155,12 @@ cluster-card {
       }
     }
 
+    &.card-ucm_mgmt {
+      header::after {
+        border-top-color: $color-people-base;
+      }
+    }
+
     .no-connectors {
       opacity: 0.6;
     }

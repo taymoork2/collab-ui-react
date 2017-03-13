@@ -7,12 +7,12 @@
   @extend %page-content-padding;
 
   .customer-report-filter {
-    width: rem-calc(200);
-    padding-left: rem-calc(19);
+    width: vr-adjust(200);
+    @include vr-spacing(pl, 1.25);
   }
 
   .cs-card-layout {
-    margin-bottom: rem-calc(15);
+    @include vr-spacing(mb, 1);
   }
 
   .report-card,
@@ -23,12 +23,18 @@
     }
 
     .areachart {
-      font-size: rem-calc(11);
+      font-size: vr-adjust(12);
       height: vr-adjust(375);
       width: 85%;
       margin-left: auto;
       margin-right: auto;
       z-index: 50;
     }
+  }
+
+  .download-page {
+    @include vr-spacing(mh, 0.75);
+    min-width: vr-adjust(150);
+    width: 15%;
   }
 }

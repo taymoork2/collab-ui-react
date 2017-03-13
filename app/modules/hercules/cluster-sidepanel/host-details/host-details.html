@@ -43,9 +43,14 @@
           <span translate="hercules.connectors.deregisterNode"></span>
         </a>
       </li>
+      <li ng-if="hostDetailsCtrl.showDeleteNodeAction()">
+        <a ng-click="hostDetailsCtrl.deleteExpresswayOrHDSNode()">
+          <span translate="hercules.connectors.removeNode"></span>
+        </a>
+      </li>
     </ul>
   </cs-sp-section>
 
-  <alarm-list-section alarms="hostDetailsCtrl.host.alarms" connector-type="hostDetailsCtrl.host.connectorType"></alarm-list-section>
+  <alarm-list-section ng-if="!hostDetailsCtrl.isHybridContextCluster" alarms="hostDetailsCtrl.host.alarms" connector-type="hostDetailsCtrl.host.connectorType"></alarm-list-section>
 
 </cs-sp-container>
