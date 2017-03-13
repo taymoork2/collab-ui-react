@@ -1876,6 +1876,7 @@
       "serviceDescriptions": {
         "squared-fusion-uc": "Users can share content from the Cisco Spark app during a call from their work phones and view their call history in the app.",
         "squared-fusion-cal": "Add @spark to an invitation to create a Cisco Spark room for your meeting. Add @webex to attach your WebEx Personal Room.",
+        "squared-fusion-cal-place": "Calendar Service enables One Button To Push (OBTP) capabilities for meetings in a place",
         "squared-fusion-gcal": "Add @spark to an invitation to create a Cisco Spark room for your meeting. Add @webex to attach your WebEx Personal Room.",
         "squared-fusion-ec": "Users' incoming calls will ring their work phones and the Cisco Spark app. Users can call their colleagues from either their phones or the app, too."
       },
@@ -2308,6 +2309,7 @@
     "resourceGroups": {
       "resourceGroupHeading": "Resource Group",
       "setDescription": "Select the Resource Group the user is assigned to for this service.",
+      "setPlaceDescription": "Select the Resource Group the place is assigned to for this service.",
       "noGroupSelected": "None",
       "failedToSetGroup": "Failed to set Resource Group.",
       "resourceGroupSaved": "Resource Group saved.",
@@ -4427,7 +4429,15 @@
       "sparkCallHelp": "In addition to calling with Spark and SIP addresses, if you have set up your organization’s PSTN provider this place will be able to call to/from landlines and mobile phones.",
       "sparkCallConnect": "Spark + Call Service Connect (Hybrid)",
       "sparkCallConnectHelp": "This place will be connected to your existing on-premises phone infrastructure. Therefore, it can call on-premises devices directly and leverage any existing PSTN services, if they are available",
-      "servicesSaved": "Services updated successfully"
+      "servicesSaved": "Services updated successfully",
+      "calendar": "Calendar",
+      "toggleCalendar": "Turn on calendar service to enable One Button To Push for this place",
+      "calendarStatusOn": "Status: on",
+      "exchangeTitle": "Exchange calendar",
+      "exchangeHelp": "This is enabling exchange calendar",
+      "googleTitle": "Google calendar",
+      "googleHelp": "This is enabling google calendar",
+      "calendarEmail": "Email address of the calendar mailbox"
     },
     "sparkCallConnect": {
       "editSettingsTitle": "Edit the settings for Hybrid Call Service Connect"

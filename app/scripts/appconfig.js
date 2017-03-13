@@ -512,6 +512,17 @@
               },
             },
           })
+          .state('addDeviceFlow.editCalendarService', {
+            parent: 'modal',
+            params: {
+              wizard: null,
+            },
+            views: {
+              'modal@': {
+                template: '<edit-calendar-service id="edit-calendar-modal" class="modal-content" dismiss="$dismiss()"></edit-calendar-service>',
+              },
+            },
+          })
           .state('addDeviceFlow.callConnectOptions', {
             parent: 'modal',
             params: {
@@ -1790,6 +1801,67 @@
               numberId: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams, 'numberId', '');
               },
+            },
+          })
+          .state('place-overview.hybrid-services-squared-fusion-cal', {
+            templateUrl: 'modules/hercules/user-sidepanel/calendarServicePreview.tpl.html',
+            controller: 'CalendarServicePreviewCtrl',
+            data: {
+              displayName: 'Calendar Service',
+            },
+            params: {
+              extensionId: {},
+              extensions: {},
+              parentState: 'place-overview',
+            },
+          })
+          .state('place-overview.hybrid-services-squared-fusion-cal.history', {
+            template: '<user-status-history service-id="\'squared-fusion-cal\'"></user-status-history>',
+            data: {
+              displayName: 'Status History',
+            },
+            params: {
+              serviceId: {},
+            },
+          })
+          .state('place-overview.hybrid-services-squared-fusion-gcal', {
+            templateUrl: 'modules/hercules/user-sidepanel/calendarServicePreview.tpl.html',
+            controller: 'CalendarServicePreviewCtrl',
+            data: {
+              displayName: 'Calendar Service',
+            },
+            params: {
+              extensionId: {},
+              extensions: {},
+            },
+          })
+          .state('place-overview.hybrid-services-squared-fusion-gcal.history', {
+            template: '<user-status-history service-id="\'squared-fusion-gcal\'"></user-status-history>',
+            data: {
+              displayName: 'Status History',
+            },
+            params: {
+              serviceId: {},
+            },
+          })
+          .state('place-overview.hybrid-services-squared-fusion-uc', {
+            templateUrl: 'modules/hercules/user-sidepanel/callServicePreview.tpl.html',
+            controller: 'CallServicePreviewCtrl',
+            data: {
+              displayName: 'Call Service',
+            },
+            params: {
+              extensionId: {},
+              extensions: {},
+            },
+          })
+          .state('place-overview.hybrid-services-squared-fusion-uc.uc-history', {
+            template: '<user-status-history service-id="\'squared-fusion-uc\'"></user-status-history>',
+            data: {
+              displayName: 'Aware Status History',
+            },
+            params: {
+              serviceId: {},
             },
           })
           .state('devices', {

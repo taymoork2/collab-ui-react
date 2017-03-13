@@ -1,0 +1,112 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="editCalendarService.close()">
+  </button>
+  <h3 class="modal-title" translate="{{editCalendarService.title}}"></h3>
+</div>
+<div class="modal-body">
+  <form name="placesEditCalServices" class="chooseServiceForm" onsubmit="$('#next-button').click()">
+    <div class="callServiceRow">
+      <div class="callServiceTitle">
+        <i class="icon icon-circle-call modal-icon-flex-row icon-lg"></i>
+        <h3 translate="addDeviceWizard.editServices.calendar"></h3>
+      </div>
+      <div>
+        <div class="callServiceRow rightColumn" ng-if="editCalendarService.getShowServiceOptions()">
+          <div class="cs-radio-group calendarServiceControls">
+            <div class="section-title-row">
+              <span class="section-name" translate="Which calendar provider do you want to use?"></span>
+            </div>
+            <input
+              ng-if="editCalendarService.getShowCalService()"
+              cs-input
+              type="radio"
+              ng-model="editCalendarService.calService"
+              id="service1"
+              name="service"
+              value="squared-fusion-cal"
+              cs-input-label="{{'addDeviceWizard.editServices.exchangeTitle' | translate}}"
+              cs-input-help-text="{{'addDeviceWizard.editServices.exchangeHelp' | translate}}">
+            <input
+              ng-if="editCalendarService.getShowGCalService()"
+              cs-input
+              type="radio"
+              ng-model="editCalendarService.calService"
+              id="service2"
+              name="service"
+              value="squared-fusion-gcal"
+              cs-input-label="{{'addDeviceWizard.editServices.googleTitle' | translate}}"
+              cs-input-help-text="{{'addDeviceWizard.editServices.googleHelp' | translate}}">
+          </div>
+
+        </div>
+        <div class="callServiceRow">
+          <div class="cs-radio-group calendarServiceControls emailControls">
+            <label for="email" translate="addDeviceWizard.editServices.calendarEmail"></label>
+            <input id="email" type="email" ng-model="editCalendarService.emailOfMailbox">
+          </div>
+        </div>
+
+
+        <div class="calenderResourcesRow" ng-if="editCalendarService.getResourceGroupShow()">
+          <div class="section-title-row">
+            <span class="section-name" translate="hercules.resourceGroups.resourceGroupHeading"></span>
+          </div>
+          <div ng-if="!editCalendarService.resourceGroup.cannotFindResouceGroup">
+            <p translate="hercules.resourceGroups.setPlaceDescription"></p>
+            <cs-select
+              class="selectResourceGroup"
+              ng-model="editCalendarService.resourceGroup.selected"
+              options="editCalendarService.resourceGroup.options"
+              on-change-fn="editCalendarService.selectedResourceGroupChanged()">
+            </cs-select>
+            <div class="warning-message" ng-if="editCalendarService.resourceGroup.shouldWarn">
+              <i class="icon icon-warning"></i>
+              <p class="message"
+                 translate="hercules.resourceGroups.groupIsEmptyWarning"
+                 translate-values="{ConnectorName: localizedConnectorName}">
+              </p>
+            </div>
+          </div>
+          <div ng-if="editCalendarService.resourceGroup.cannotFindResouceGroup" class="error-message">
+            <i class="icon icon-error"></i>
+            <p class="message"
+               translate="hercules.resourceGroups.groupHasBeenDeleted"></p>
+            <form>
+              <button class="btn" type="submit" ng-click="editCalendarService.setResourceGroupOnUser('')">
+                <span translate="common.remove"></span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="modal-footer">
+
+  <button
+    id="back-button"
+    class="btn"
+    sq-click-promise="editCalendarService.back()"
+    translate="common.back">
+  </button>
+  <button
+    cs-btn
+    id="save-button"
+    loading="editCalendarService.isLoading"
+    class="btn btn--primary"
+    ng-class="{'ng-hide':editCalendarService.hasNextStep()}"
+    ng-click="editCalendarService.save()">
+    <span translate="common.save"></span>
+  </button>
+  <button
+    cs-btn
+    id="next-button"
+    class="btn btn--primary"
+    ng-class="{'ng-hide':!editCalendarService.hasNextStep()}"
+    ng-disabled="editCalendarService.isNextDisabled()"
+    ng-click="editCalendarService.next()">
+    <span translate="common.next"></span>
+  </button>
+</div>

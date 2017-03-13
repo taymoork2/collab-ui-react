@@ -8,7 +8,7 @@ require('../devices/_devices.scss');
     .controller('PlacesCtrl',
 
       /* @ngInject */
-      function ($q, $scope, $state, $templateCache, $translate, CsdmDataModelService, Userservice, PlaceFilter, Authinfo, WizardFactory, RemPlaceModal, FeatureToggleService) {
+      function ($q, $scope, $state, $templateCache, $translate, CsdmDataModelService, Userservice, PlaceFilter, Authinfo, WizardFactory, RemPlaceModal, FeatureToggleService, ServiceDescriptor) {
         var vm = this;
 
         vm.data = [];
@@ -31,7 +31,21 @@ require('../devices/_devices.scss');
           var hybridPromise = FeatureToggleService.csdmHybridCallGetStatus().then(function (feature) {
             vm.csdmHybridCallFeature = feature;
           });
-          $q.all([ataPromise, hybridPromise, fetchDisplayNameForLoggedInUser()]).finally(function () {
+          var placeCalendarPromise = FeatureToggleService.csdmPlaceCalendarGetStatus().then(function (feature) {
+            vm.csdmHybridCalendarFeature = feature;
+          });
+          var gcalFeaturePromise = FeatureToggleService.atlasHerculesGoogleCalendarGetStatus().then(function (feature) {
+            vm.atlasHerculesGoogleCalendarFeatureToggle = feature;
+          });
+          var anyCalendarEnabledPromise = ServiceDescriptor.getServices().then(function (services) {
+            vm.hybridCalendarEnabledOnOrg = _.chain(ServiceDescriptor.filterEnabledServices(services)).filter(function (service) {
+              return service.id === 'squared-fusion-gcal' || service.id === 'squared-fusion-cal';
+            }).some().value();
+          });
+          var atlasF237ResourceGroupsPromise = FeatureToggleService.atlasF237ResourceGroupGetStatus().then(function (feature) {
+            vm.atlasF237ResourceGroups = feature;
+          });
+          $q.all([ataPromise, hybridPromise, placeCalendarPromise, gcalFeaturePromise, atlasF237ResourceGroupsPromise, anyCalendarEnabledPromise, fetchDisplayNameForLoggedInUser()]).finally(function () {
             vm.addPlaceIsDisabled = false;
           });
         }
@@ -167,6 +181,10 @@ require('../devices/_devices.scss');
               showATA: vm.showATA,
               admin: vm.adminUserDetails,
               csdmHybridCallFeature: vm.csdmHybridCallFeature,
+              csdmHybridCalendarFeature: vm.csdmHybridCalendarFeature,
+              hybridCalendarEnabledOnOrg: vm.hybridCalendarEnabledOnOrg,
+              atlasHerculesGoogleCalendarFeatureToggle: vm.atlasHerculesGoogleCalendarFeatureToggle,
+              atlasF237ResourceGroups: vm.atlasF237ResourceGroups,
               title: 'addDeviceWizard.newSharedSpace.title',
               isEntitledToHuron: vm.isOrgEntitledToHuron(),
               isEntitledToRoomSystem: vm.isOrgEntitledToRoomSystem(),
@@ -198,12 +216,18 @@ require('../devices/_devices.scss');
                   sparkCall: 'addDeviceFlow.addLines',
                   sparkCallConnect: 'addDeviceFlow.callConnectOptions',
                   sparkOnly: 'addDeviceFlow.showActivationCode',
+                  sparkOnlyAndCalendar: 'addDeviceFlow.editCalendarService',
                 },
               },
               'addDeviceFlow.callConnectOptions': {
                 next: 'addDeviceFlow.showActivationCode',
+                calendar: 'addDeviceFlow.editCalendarService',
               },
               'addDeviceFlow.addLines': {
+                next: 'addDeviceFlow.showActivationCode',
+                calendar: 'addDeviceFlow.editCalendarService',
+              },
+              'addDeviceFlow.editCalendarService': {
                 next: 'addDeviceFlow.showActivationCode',
               },
             },

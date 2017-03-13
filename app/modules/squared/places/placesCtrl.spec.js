@@ -2,7 +2,7 @@
 
 describe('Controller: PlacesCtrl', function () {
   var $scope, $controller, $state, $q, controller;
-  var CsdmDataModelService, Userservice, Authinfo, FeatureToggleService;
+  var CsdmDataModelService, Userservice, Authinfo, FeatureToggleService, ServiceDescriptor;
 
   beforeEach(angular.mock.module('Squared'));
   beforeEach(angular.mock.module('Core'));
@@ -11,7 +11,7 @@ describe('Controller: PlacesCtrl', function () {
   beforeEach(initSpies);
   beforeEach(initController);
 
-  function dependencies($rootScope, _$controller_, _$state_, _$q_, _CsdmDataModelService_, _Userservice_, _Authinfo_, _FeatureToggleService_) {
+  function dependencies($rootScope, _$controller_, _$state_, _$q_, _CsdmDataModelService_, _Userservice_, _Authinfo_, _FeatureToggleService_, _ServiceDescriptor_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $state = _$state_;
@@ -20,13 +20,18 @@ describe('Controller: PlacesCtrl', function () {
     Userservice = _Userservice_;
     Authinfo = _Authinfo_;
     FeatureToggleService = _FeatureToggleService_;
+    ServiceDescriptor = _ServiceDescriptor_;
   }
 
   function initSpies() {
     spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.resolve({}));
     spyOn(Userservice, 'getUser');
     spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.resolve());
-    spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.resolve());
+    spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.resolve(true));
+    spyOn(FeatureToggleService, 'csdmPlaceCalendarGetStatus').and.returnValue($q.resolve(true));
+    spyOn(FeatureToggleService, 'atlasF237ResourceGroupGetStatus').and.returnValue($q.resolve(true));
+    spyOn(FeatureToggleService, 'atlasHerculesGoogleCalendarGetStatus').and.returnValue($q.resolve(true));
+    spyOn(ServiceDescriptor, 'getServices').and.returnValue($q.resolve([]));
   }
 
   function initController() {
@@ -91,6 +96,9 @@ describe('Controller: PlacesCtrl', function () {
       expect(wizardState.title).toBe('addDeviceWizard.newSharedSpace.title');
       expect(wizardState.function).toBe('addPlace');
       expect(wizardState.showATA).toBe(true);
+      expect(wizardState.atlasHerculesGoogleCalendarFeatureToggle).toBe(true);
+      expect(wizardState.csdmHybridCalendarFeature).toBe(true);
+      expect(wizardState.csdmHybridCallFeature).toBe(true);
       expect(wizardState.admin.firstName).toBe(adminFirstName);
       expect(wizardState.admin.lastName).toBe(adminLastName);
       expect(wizardState.admin.displayName).toBe(adminDisplayName);
