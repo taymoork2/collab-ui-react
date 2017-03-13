@@ -161,7 +161,7 @@
     BmmpUrl: {
       dev: 'https://bmmp.dmz.ciscospark.com/api/v1',
       cfe: 'https://bmmp.ciscospark.com/api/v1',
-      integration: 'https://bmmp.dmz.ciscospark.com/api/v1',
+      integration: 'https://bmmpbts.webex.com/api/v1',
       prod: 'https://bmmp.ciscospark.com/api/v1',
     },
     GeminiUrl: {
