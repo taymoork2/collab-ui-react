@@ -5,8 +5,7 @@
     .module('core.auth.token', [
       require('angular-cookies'),
       require('modules/core/config/config'),
-      require('modules/core/scripts/services/storage'),
-      require('modules/core/scripts/services/sessionstorage'),
+      require('modules/core/storage').default,
       require('modules/core/config/oauthConfig'),
       require('modules/core/window').default,
     ])
