@@ -66,21 +66,25 @@ export class SipDomainSettingController {
       this.subdomainCount++;
       this.checkRoomLicense();
 
-      if (this.toggle) {
-        this.ServiceDescriptor.isServiceEnabled('squared-fusion-ec', (error: any, enabled: boolean): void => {
-          if (!error) {
-            this.isCsc = enabled;
-          }
-        });
-
-        let onSaveEventDeregister = this.$rootScope.$on(this.WIZARD_BROADCAST, (): void => {
+      let onSaveEventDeregister = this.$rootScope.$on(this.WIZARD_BROADCAST, (): void => {
+        if (this.toggle) {
           if (this.inputValue === this.currentDisplayName) {
             this.$rootScope.$emit(this.WIZARD_EMIT);
-            return;
           } else if (this.isSSAReserved) {
             this.updateSubdomain();
           } else {
             this.saveSubdomain();
+          }
+        } else {
+          this.saveDomain();
+        }
+      });
+      $scope.$on('$destroy', onSaveEventDeregister);
+
+      if (this.toggle) {
+        this.ServiceDescriptor.isServiceEnabled('squared-fusion-ec', (error: any, enabled: boolean): void => {
+          if (!error) {
+            this.isCsc = enabled;
           }
         });
 
@@ -92,19 +96,11 @@ export class SipDomainSettingController {
           this.toggleSipForm();
         });
 
-        $scope.$on('$destroy', onSaveEventDeregister);
         $scope.$on('$destroy', onSettingsSaveEventDeregister);
         $scope.$on('$destroy', onSettingsCancelEventDeregister);
-
         this.loadSubdomains();
       } else {
         this.errorMsg = $translate.instant('firstTimeWizard.setSipDomainErrorMessage');
-        let onSaveEventDeregister = $rootScope.$on(this.WIZARD_BROADCAST, (): void => {
-          this.$rootScope.$emit(this.WIZARD_EMIT);
-          this.saveDomain();
-        });
-        $scope.$on('$destroy', onSaveEventDeregister);
-
         this.loadSipDomain();
         this.checkSSAReservation();
       }
@@ -145,6 +141,7 @@ export class SipDomainSettingController {
   }
 
   public saveDomain() {
+    this.$rootScope.$emit(this.WIZARD_EMIT);
     if (this.isUrlAvailable && this.isConfirmed) {
       this.SparkDomainManagementService.addSipDomain(this._validatedValue)
         .then((response) => {
