@@ -56,7 +56,7 @@ class PlaceOverview implements ng.IComponentController {
 
   private displayPlace(newPlace) {
     this.currentPlace = newPlace;
-    this.currentPlace.id =  this.currentPlace.cisUuid;
+    this.currentPlace.id = this.currentPlace.cisUuid;
     this.loadServices();
     this.loadActions();
   }
@@ -171,8 +171,21 @@ class PlaceOverview implements ng.IComponentController {
             sparkOnlyAndCalendar: 'addDeviceFlow.editCalendarService',
           },
         },
-        'addDeviceFlow.addLines': {},
-        'addDeviceFlow.callConnectOptions': {},
+        'addDeviceFlow.addLines': {
+          nextOptions: {
+            calendar: 'addDeviceFlow.editCalendarService',
+          },
+        },
+        'addDeviceFlow.callConnectOptions': {
+          nextOptions: {
+            calendar: 'addDeviceFlow.editCalendarService',
+          },
+        },
+        'addDeviceFlow.editCalendarService': {
+          nextOptions: {
+            calendar: 'addDeviceFlow.editCalendarService',
+          },
+        },
       },
     };
     let wizard = this.WizardFactory.create(wizardState);

@@ -33,7 +33,7 @@
     $scope.checkDnOverlapsSteeringDigit = CommonLineService.checkDnOverlapsSteeringDigit;
 
     vm.hasNextStep = function () {
-      return wizardData.function !== 'editServices';
+      return wizardData.function !== 'editServices' || wizardData.account.enableCalService;
     };
 
     vm.next = function () {
@@ -43,7 +43,7 @@
           directoryNumber: numbers.directoryNumber,
           externalNumber: numbers.externalNumber,
         },
-      });
+      }, wizardData.account.enableCalService ? 'calendar' : 'next');
     };
 
     vm.save = function () {

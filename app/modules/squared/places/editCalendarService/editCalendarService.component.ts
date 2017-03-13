@@ -10,8 +10,11 @@ class EditCalendarService implements ng.IComponentController {
     title: string,
     function: string,
     account: {
-      entitlements, externalLinkedAccounts: IExternalLinkedAccount[],
+      entitlements,
+      externalLinkedAccounts: IExternalLinkedAccount[],
       cisUuid,
+      externalNumber,
+      directoryNumber,
     },
     atlasHerculesGoogleCalendarFeatureToggle: boolean,
     atlasF237ResourceGroups: boolean,
@@ -53,7 +56,7 @@ class EditCalendarService implements ng.IComponentController {
   }
 
   /* @ngInject */
-  constructor(private CsdmDataModelService, private $stateParams, private $translate, ServiceDescriptor, private ResourceGroupService) {
+  constructor(private CsdmDataModelService, private $stateParams, private $translate, ServiceDescriptor, private ResourceGroupService, private Notification) {
     ServiceDescriptor.getServices()
       .then((services) => {
         let enabledServices: Array<{ id: string }> = ServiceDescriptor.filterEnabledServices(services);
@@ -129,7 +132,7 @@ class EditCalendarService implements ng.IComponentController {
 
   public getCalServiceEnabled(entitlements) {
     let serviceEnabled = false;
-    _.intersection(entitlements || [], [EditCalendarService.fusionCal, EditCalendarService.fusionGCal]).forEach(function (entitlement) {
+    _.intersection(entitlements || [], [EditCalendarService.fusionCal, EditCalendarService.fusionGCal]).forEach((entitlement) => {
       switch (entitlement) {
         case EditCalendarService.fusionGCal:
         case EditCalendarService.fusionCal:
@@ -159,7 +162,12 @@ class EditCalendarService implements ng.IComponentController {
     return !(
       this.calService
       && this.emailOfMailbox
-      && (this.resourceGroup.selected || !this.resourceGroup.options || this.resourceGroup.options.length === 0));
+      && (this.resourceGroup.selected || !this.resourceGroup.options || this.resourceGroup.options.length === 0)
+    );
+  }
+
+  public isSaveDisabled() {
+    return this.isNextDisabled();
   }
 
   public close() {
@@ -176,23 +184,36 @@ class EditCalendarService implements ng.IComponentController {
 
   public save() {
     this.isLoading = true;
+    let directoryNumber = this.wizardData.account.directoryNumber || null;
+    let externalNumber = this.wizardData.account.externalNumber || null;
+
     if (this.calService !== this.initialCalService) {
-      this.CsdmDataModelService.getPlacesMap().then(function (list) {
+      this.CsdmDataModelService.getPlacesMap().then((list) => {
         let place = _.find(_.values(list), { cisUuid: this.wizardData.account.cisUuid });
         if (place) {
-          this.CsdmDataModelService.updateCloudberryPlace(place, this.getUpdatedEntitlements())
-            .then(function () {
-              //TODO save email
+          this.CsdmDataModelService.updateCloudberryPlace(
+            place,
+            this.getUpdatedEntitlements(),
+            directoryNumber,
+            externalNumber,
+            [{
+              providerID: this.calService,
+              accountGUID: this.emailOfMailbox,
+              status: 'unconfirmed-email',
+            }],
+            this.getUssProps() || null)
+            .then(() => {
               this.dismiss();
               this.Notification.success('addDeviceWizard.editServices.servicesSaved');
-            }, function (error) {
+            }, (error) => {
+              this.isLoading = false;
               this.Notification.errorResponse(error, 'addDeviceWizard.assignPhoneNumber.placeEditError');
             });
         } else {
           this.isLoading = false;
           this.Notification.warning('addDeviceWizard.assignPhoneNumber.placeNotFound');
         }
-      }, function (error) {
+      }, (error) => {
         this.Notification.errorResponse(error, 'addDeviceWizard.assignPhoneNumber.placeEditError');
       });
     } else {

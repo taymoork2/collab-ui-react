@@ -62,11 +62,13 @@
       });
     }
 
-    function updatePlace(placeUrl, entitlements, directoryNumber, externalNumber) {
+    function updatePlace(placeUrl, entitlements, directoryNumber, externalNumber, externalLinkedAccounts, ussProps) {
       return $http.patch(placeUrl, {
         directoryNumber: directoryNumber,
         externalNumber: externalNumber,
         entitlements: entitlements,
+        extLinkedAccts: externalLinkedAccounts,
+        ussProps: ussProps,
       }).then(function (res) {
         return CsdmConverter.convertPlace(res.data);
       });
