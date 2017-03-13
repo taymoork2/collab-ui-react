@@ -9,6 +9,7 @@ export class EmergencyServicesService {
   private huronDeviceService: IHuronService;
   private stateOptions: IState[];
   private locationLabel: string;
+  private zipLabel: string;
 
   /* @ngInject */
   constructor(
@@ -26,6 +27,7 @@ export class EmergencyServicesService {
     private HuronCompassService: HuronCompassService,
   ) {
     this.PstnSetupStatesService.getLocation(this.HuronCompassService.getCountryCode()).then((location) => {
+      this.zipLabel = location.zip;
       this.locationLabel = location.type;
       this.stateOptions = location.areas;
     });
@@ -44,6 +46,7 @@ export class EmergencyServicesService {
       emergency: emergencyData,
       currentDevice: this.currentDevice,
       locationLabel: this.locationLabel,
+      zipLabel: this.zipLabel,
       stateOptions: this.stateOptions,
       staticNumber: this.$stateParams.staticNumber,
     };

@@ -2,7 +2,8 @@ class ServiceAddressCtrl implements ng.IComponentController {
   public stateOptions;
   public countryOptions;
   public countryCode: string;
-  public areaName: string;
+  public stateLabel: string;
+  public zipLabel: string;
   public locationModel;
   public address;
 
@@ -12,7 +13,8 @@ class ServiceAddressCtrl implements ng.IComponentController {
   public $onInit() {
     this.locationModel = undefined;
     this.PstnSetupStatesService.getLocation(this.countryCode).then(location => {
-      this.areaName = location.type;
+      this.zipLabel = location.zip;
+      this.stateLabel = location.type;
       if (this.address.state) {
         this.locationModel = location.areas.filter(state => state.abbreviation === this.address.state)[0];
       }

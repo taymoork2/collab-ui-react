@@ -3692,6 +3692,8 @@
     "manualAdd": "Manually Add New Numbers",
     "state": "State",
     "province": "Province",
+    "zip": "Zip Code",
+    "postal": "Postal Code",
     "selectState": "Select state",
     "searchStates": "Search states",
     "areaCode": "Area Code",
