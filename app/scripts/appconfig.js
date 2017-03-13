@@ -2861,6 +2861,44 @@
               },
             },
           })
+          .state('context-fieldsets-sidepanel', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                template: '<context-fieldsets-sidepanel fieldset="$resolve.fieldset"></context-fieldsets-sidepanel>',
+              },
+              'header@context-fieldsets-sidepanel': {
+                templateUrl: 'modules/context/fieldsets/sidepanel/hybrid-context-fieldsets-sidepanel-header.html',
+              },
+            },
+            data: {
+              displayName: 'Overview',
+            },
+            params: {
+              fieldset: {},
+            },
+            resolve: {
+              fieldset: /* @ngInject */ function ($stateParams) {
+                return $stateParams.fieldset;
+              },
+            },
+          })
+          .state('context-fieldsets-sidepanel.fields', {
+            templateUrl: 'modules/context/fieldsets/sidepanel/fieldList/hybrid-context-fieldsets-field-list.html',
+            controller: 'ContextFieldsetsSidepanelFieldListCtrl',
+            controllerAs: 'contextFieldsetsSidepanelFieldListCtrl',
+            data: {
+              displayName: 'Fields',
+            },
+            params: {
+              fields: {},
+            },
+            resolve: {
+              fields: /* @ngInject */ function ($stateParams) {
+                return $stateParams.fields;
+              },
+            },
+          })
           .state('context-cluster-sidepanel', {
             parent: 'sidepanel',
             views: {

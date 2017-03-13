@@ -1,0 +1,20 @@
+<!-- main side panel body -->
+<cs-sp-container>
+  <div class="section-wrapper">
+    <div class="cs-input-group">
+      <div class="section-name" translate="context.dictionary.fieldsetPage.fields"></div>
+      <div class="feature-name" translate="context.dictionary.fieldsetPage.listOfFields"></div>
+    </div>
+  </div>
+
+  <div class="section-wrapper">
+    <div ng-repeat="field in contextFieldsetsSidepanelFieldListCtrl.fields | orderBy: 'id'">
+      <div class="btn btn--primary btn--expand field-list-item" disabled>
+        <span class="column-one" tooltip-class="context-tooltip" tooltip-trigger="mouseenter" tooltip-placement="bottom"
+              tooltip-animation="true" tooltip="{{field.id}}">{{field.id}}</span>
+        <span class="column-two">{{field.fieldInfo}}</span>
+      </div>
+    </div>
+  </div>
+
+</cs-sp-container>

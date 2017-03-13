@@ -73,5 +73,10 @@
       <div ng-if="$ctrl.associatedFieldsets.length > 0" class="token" ng-repeat="id in $ctrl.associatedFieldsets">{{id}}</div>
     </div>
 
+    <div class="cs-input-group">
+      <div class="feature-name" translate="context.dictionary.fieldPage.lastUpdated"></div>
+      <div class="feature-status">{{$ctrl.lastUpdated}}</div>
+    </div>
+
   </cs-sp-container>
 </span>
