@@ -19,9 +19,15 @@
             </cs-select>
           </div>
           <div class="col-md-6 mid-gap">
-          <input cs-input type="text" ng-model="ediscoverySearchCtrl.searchModel" autofocus="true"
-          ng-keyup="ediscoverySearchCtrl.keyPressHandler($event)" placeholder="{{ediscoverySearchCtrl.searchPlaceholder}}"
-          ng-minlength="5">
+            <div class="cs-input-group search-box" ng-class="{'error': ediscoverySearchCtrl.limitError}">
+              <form class="input-validation" novalidate>
+                <input class="cs-input" type="text" ng-model="ediscoverySearchCtrl.searchModel" autofocus="true"
+                 ng-keyup="ediscoverySearchCtrl.keyPressHandler($event)" placeholder="{{ediscoverySearchCtrl.searchPlaceholder}}">
+                <div class="cs-input__messages" ng-if="ediscoverySearchCtrl.limitError" role="alert">
+                  <div translate="ediscovery.searchErrors.invalidLimit"></div>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
         <!-- Date Range Row -->
@@ -43,22 +49,20 @@
         </div>
         <div class="row query-row">
           <div class="cs-input-group search-box" ng-class="{'error': qForm.qInput.$invalid && qForm.qInput.$touched}">
-            <form name="qForm" class="query-validation" novalidate>
+            <form name="qForm" class="input-validation" novalidate>
               <input class="cs-input" type="text" name="qInput" ng-model="ediscoverySearchCtrl.queryModel" 
               placeholder="{{'ediscovery.searchParameters.textAndFileNamePlaceholder' | translate}}"
               ng-keyup="ediscoverySearchCtrl.keyPressHandler($event)" ng-maxlength="200">
               <div class="cs-input__messages" ng-messages="qForm.qInput.$error" role="alert">
-                <div ng-message="maxlength" translate="ediscovery.searchErrors.queryLimit" 
-                ng-if="ediscoverySearchCtrl.searchButtonDisabled(qForm.qInput.$touched)">
-                </div>
+                <div ng-message="maxlength" class="query-error-msg" translate="ediscovery.searchErrors.queryLimit"></div>
               </div>
             </form>
           </div>
         </div>
         <div class="row mid-gap">
           <button type="submit" class="btn btn--primary search-button" 
-          translate="common.search" ng-click="ediscoverySearchCtrl.advancedSearch()"
-          ng-disabled="ediscoverySearchCtrl.searchButtonDisabled()"></button>
+          translate="common.search" ng-click="ediscoverySearchCtrl.searchByLimit()"
+          ng-disabled="ediscoverySearchCtrl.searchButtonDisabled(qForm.qInput.$invalid && qForm.qInput.$touched)"></button>
           <div ng-if="ediscoverySearchCtrl.error">
             <i class="icon icon-warning search-warning"></i>
             <span translate="ediscovery.searchParameters.noMatchesFound"></span>

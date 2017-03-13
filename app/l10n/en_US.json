@@ -1411,7 +1411,7 @@
     "messageWaitingIndicatorText": "The Message Waiting Indicator (MWI) continues to blink until users access their voicemails from their phones.",
     "voicemailToEmailHelpText": "Warning: Voicemail attachments sent via email are not secure.",
     "voicemailToEmailAttachmentText": "Voicemail attachments sent via email are not secure.",
-    "voicemailNumberCostHelpText" : "Using this number incurs a usage cost",
+    "voicemailNumberCostHelpText": "Using this number incurs a usage cost",
     "voicemailToEmailGetError": "Failed to get voicemail to email settings.",
     "voicemailToEmailUpdateError": "Failed to update voicemail to email settings.",
     "voicemailTimeZoneGetError": "Failed to get voicemail time zone.",
@@ -2414,11 +2414,11 @@
         "associatedFieldsets": "Associated Fieldsets",
         "associatedFieldsetsError": "Unable to load associated fieldsets.",
         "fieldId": "Field ID",
-        "dataType":"Data Type",
+        "dataType": "Data Type",
         "classification": "Data Privacy",
         "searchable": "Searchable",
         "searchableHelpText": "Make data in this field searchable.",
-        "lastUpdated":"Date Updated",
+        "lastUpdated": "Date Updated",
         "startSearching": "To begin, search for a field",
         "noSearchResults": "Search yielded no results",
         "fieldReadFailed": "Unable to retrieve fields. Refresh your browser to try again.",
@@ -2501,7 +2501,7 @@
       },
       "upgradeScheduleSubHeader": "Upgrade Schedule"
     },
-    "serviceName" : "Hybrid Data Security",
+    "serviceName": "Hybrid Data Security",
     "serviceStatus": {
       "unknown": "Status unknown",
       "not_configured": "Not configured",
@@ -2547,6 +2547,7 @@
         "confirmProdMoveDialogHeader": "Move to Production Mode?",
         "confirmProdMoveDialogBody": "It is not possible to undo this action or return to Trial mode. For various reasons this is a one-way street.",
         "confirmProdMoveDialogButton": "Production Mode",
+        "succeedMoveToProductionMode": "Succeeded to Move to Production Mode",
         "hdsModeGetError": "Failed to get HDS mode: "
       },
       "addTrialUsers": {
@@ -2586,8 +2587,8 @@
         "goToHost": "Go to Host",
         "hosts": "Hosts",
         "nodes": "Nodes"
+      }
     }
-   }
   },
   "ediscovery": {
     "browserTabHeaderTitle": "Spark Activity Reports",
@@ -2652,7 +2653,8 @@
       "expiryInfo": "Generated reports will expire after 10 days. Any reports older than 10 days will automatically be deleted by the system."
     },
     "searchErrors": {
-      "queryLimit": "query must be 200 characters or less"
+      "queryLimit": "query must be 200 characters or less",
+      "invalidLimit": "search must be limited to less than 100 emails or room id's"
     },
     "searchParameters": {
       "searchBy": "Search By",
@@ -3054,7 +3056,7 @@
     "callerReturnedOneMonth": "1 Month",
     "callerReturnedWhen": "Within the last",
     "callerNumberInfo": "Enter one or more numbers here; separate multiple entries with commas. Example: +12065551212, +11115551212",
-    "callerNameInfo": "Enter one or more caller names here; separate multiple entries with commas. Example: John Smith, Jane Doe",
+    "callerNameInfo": "Enter one or more caller names here; separate multiple entries with commas. Example: John Doe, \"Doe, Jane\"",
     "countryCodeInfo": "Enter one or more numbers here; separate multiple entries with commas. Example: 1, 20",
     "areaCodeInfo": "Enter one or more numbers here; separate multiple entries with commas. Example: 206, 425",
     "actionRouteCall": "Route Call",
@@ -3111,6 +3113,7 @@
     "callerInputMenuErrorVariableNameMissing": "{{schedule}} schedule at Caller Input Menu {{at}} is missing a variable name ",
     "conditionalThenTargetMissing": "{{schedule}} schedule at Decision Menu {{at}} is missing a target for the 'Then' entry",
     "conditionalIsEntryVariableMissing": "{{schedule}} schedule at Decision Menu {{at}} is missing an entry for 'Is'",
+    "conditionalIsEntryVariableUnevenQouotes": "{{schedule}} schedule at Decision Menu {{at}} has unclosed quotes for 'Is'",
     "conditionalIfEntryVariableMissing": "{{schedule}} schedule at Decision Menu {{at}} is missing an entry for 'If'",
     "phoneMenuMenuErrorNoInputValuesEntered": "{{schedule}} schedule at Phone Menu {{at}} has no input values entered",
     "subMenuErrorNoInputValuesEntered": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}}: SubMenu has no input values entered",
@@ -3815,7 +3818,7 @@
     "feature5": "Basic 911 included",
     "feature6": "Taxes additional"
   },
-    "partnerHomePage": {
+  "partnerHomePage": {
     "trialsHeading": "Trials",
     "onboardingTitle": "Onboarding",
     "activity-title": "Activity",
@@ -4605,7 +4608,13 @@
       "placeholder": "Enter the SIP trunk address...",
       "example": "Example: sips://203.0.113.0:5062"
     },
-    "report" : {
+    "videoQuality": {
+      "title": "Video Quality",
+      "description": "Enable 1080P HD video for all participants hosted on on-premises media nodes.",
+      "success": "Video quality setting was set successfully.",
+      "error": "Error in saving video quality setting. Please revert the change and try again later."
+    },
+    "report": {
       "title": "Hybrid Media",
       "adoption-title": "Adoption",
       "resources-title": "Resources",
@@ -4705,7 +4714,7 @@
       "cloudHeading": "Cloud",
       "hybridHeading": "Hybrid",
       "clientType": {
-        "andriod": "Android",
+        "android": "Android",
         "blackberry": "BlackBerry",
         "desktop": "Desktop",
         "ipad": "iPad",
@@ -4717,7 +4726,8 @@
         "tp": "Tele Presence",
         "uc": "UC",
         "unknown": "Unknown",
-        "windows": "Windows Mobile"
+        "windows": "Windows Mobile",
+        "total": "Total"
       },
       "clientTypeCardDesc": "Summary of the type of clients that are in use at an Organization"
     },
@@ -5906,7 +5916,7 @@
     "summaryDesc": "You have configured the template. Click Finish to save the configuration and generate embed code so you can start using this template on your organization website.",
     "editSummaryDesc": "You have edited the template. Click Finish to save the configuration so you can start using the new version of this template on your organization website.",
     "editCodeWarnMsg2Line1": "It can take up to 15 minutes for the template changes to be reflected.",
-    "editCodeWarnMsg2Line2":"Open the template in a new browser tab after this time to view the changes.",
+    "editCodeWarnMsg2Line2": "Open the template in a new browser tab after this time to view the changes.",
     "summaryDesc_callback": "You have configured the callback template. Click Finish to save the configuration and generate embed code so you can start using this callback template on your organization website.",
     "editSummaryDesc_callback": "You have edited the callback template. Click Finish to save the configuration so you can start using the new version of this callback template on your organization website.",
     "copyEmbedCode": "Copy Embed Code",
@@ -5927,14 +5937,14 @@
     "chattingMessage": "Chatting with an Agent",
     "downloadEmbedCode": "Download Embed Code",
     "embed-code": {
-      "no-verified-domains" : {
+      "no-verified-domains": {
         "warn": "There are no verified domains for your organization. Care templates work on any domains by default. Go to Settings page to add and verify domains in order to restrict them to work only for your organization's domains."
       },
       "verified-domains": {
         "info": "These are the verified domains for your organization:",
         "warn": "Care templates will not appear on unverified domains. Go to Settings page to add and verify domains."
       },
-      "domain-fetch-error" : {
+      "domain-fetch-error": {
         "info": "There was an error while loading the verified domains for your organization. Please try again.",
         "warn": "Care templates work on any domains by default. Go to Settings page to add and verify domains in order to restrict them to work only for your organization's domains."
       }
@@ -6232,7 +6242,7 @@
       "helpSiteLabel": "Help Site",
       "useCustomHelpSite": "Use a custom help site"
     },
-    "dirsync" : {
+    "dirsync": {
       "loading": "Updating Status",
       "title": "Directory Synchronization",
       "syncTitle": "Directory Synchronization",
@@ -6670,6 +6680,8 @@
     "hybridServices": "Hybrid Services",
     "showAllCards": "Show all cards",
     "showActiveCards": "Show active cards only",
+    "noActiveHybridCards": "No Hybrid Services cards found.",
+    "userIsMissingEntitlements": "The current user has no Hybrid Services entitlements.",
     "cards": {
       "message": {
         "title": "Message",
@@ -6760,7 +6772,20 @@
         "description": "Extends Your organization.",
         "buttons": {
           "verify": "Verify prerequisites"
-        }
+        },
+        "setupTitle": "Set up Private Trunking ",
+        "setupDescription": "You are about to set up Enterprise Private Trunking. Before you begin, verify that you have completed the prerequisites",
+        "domainVerification": "Domain verification",
+        "domainVerificationDescription": "You don't have any verified domain. You need at least one verified domain for setting up Enterprise Private Trunking.",
+        "verifyADomain": "Verify a domain",
+        "basicConnectivity": "Basic connectivity",
+        "certificateHelp": "The Spark Call certificate authority are in the Expresssway-E trust store. See ",
+        "help": "help",
+        "dNSzoneHelp": "The DNS zone has been created on the Expressway-E to accept the inbound connection from the cloud. See ",
+        "defaultTrustHelp": "Use Certificates provided from the Cisco Collaboration default trust list or upload your own. If you use your own, make sure that the host names are on a verified domain. See ",
+        "fullService": "Full service: in and outbound calling",
+        "allZonesHelp": "All zones and rules must be set up on Expressway-E. See ",
+        "routingHelp": "The correct routing must be configured on CUCM. See "
       }
     },
     "showMore": "View all",
@@ -6866,7 +6891,7 @@
       "cancelSubmissionMsg": "The associated remedy ticket will be deleted from the system.",
       "declineDialogNote": "Note: Explanation appears as a comment in the Callback Group history",
       "approveMsg": "If you proceed, the system will automatically updates the callback group with the selected countries",
-      "cancelSubmissionMsg": "A request has been submitted.",
+      "submissionMsg": "A request has been submitted.",
       "cancelSubmissionLink": "Cancel request",
       "rejectSubmissionMsg": "A request has been rejected.",
       "field": {

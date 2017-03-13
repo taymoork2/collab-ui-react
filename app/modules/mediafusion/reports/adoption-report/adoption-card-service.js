@@ -20,6 +20,7 @@
 
     function setClientTypePiechart(data) {
       var chartData = CommonReportsGraphService.getBasePieChart(data);
+      chartData.labelText = '[[name]]';
       var chart = AmCharts.makeChart(vm.clientTypeChartDiv, chartData, 0);
       return chart;
     }

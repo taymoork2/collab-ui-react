@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Service: PstnServiceAddressService', function () {
-  var $httpBackend, $q, HuronConfig, PstnServiceAddressService, FeatureToggleService;
+  var $httpBackend, HuronConfig, PstnServiceAddressService;
 
   var customerId = '744d58c5-9205-47d6-b7de-a176e3ca431f';
   var siteId = '29c63c1f-83b0-42b9-98ee-85624e4c9234';
@@ -14,12 +14,10 @@ describe('Service: PstnServiceAddressService', function () {
 
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function (_$httpBackend_, _$q_, _HuronConfig_, _PstnServiceAddressService_, _FeatureToggleService_) {
+  beforeEach(inject(function (_$httpBackend_, _HuronConfig_, _PstnServiceAddressService_) {
     $httpBackend = _$httpBackend_;
-    $q = _$q_;
     HuronConfig = _HuronConfig_;
     PstnServiceAddressService = _PstnServiceAddressService_;
-    FeatureToggleService = _FeatureToggleService_;
 
     address = {
       streetAddress: '123 My Street Drive',
@@ -55,32 +53,9 @@ describe('Service: PstnServiceAddressService', function () {
     $httpBackend.verifyNoOutstandingRequest();
   });
 
-  it('should lookup an address through terminus using V1 API and find a match', function () {
-    $httpBackend.expectPOST(HuronConfig.getTerminusUrl() + '/lookup/e911', terminusAddress).respond({
-      addresses: [terminusAddress],
-    });
-    PstnServiceAddressService.lookupAddress(address).then(function (response) {
-      expect(response).toEqual(jasmine.objectContaining(address));
-    });
-    $httpBackend.flush();
-  });
-
-  it('should lookup an address through terminus using V2 API as feature toggle is True, and find a match', function () {
-    FeatureToggleService.supports = jasmine.createSpy().and.returnValue($q.resolve(true));
+  it('should lookup an address through terminus using V2 API', function () {
 
     $httpBackend.expectPOST(HuronConfig.getTerminusV2Url() + '/carriers/' + carrierId + '/e911/lookup').respond({
-      addresses: [terminusAddress],
-    });
-    PstnServiceAddressService.lookupAddressV2(address, carrierId).then(function (response) {
-      expect(response).toEqual(jasmine.objectContaining(address));
-    });
-    $httpBackend.flush();
-  });
-
-  it('should lookup an address through terminus using V1 API as feature toggle is False, and find a match', function () {
-    FeatureToggleService.supports = jasmine.createSpy().and.returnValue($q.resolve(false));
-
-    $httpBackend.expectPOST(HuronConfig.getTerminusUrl() + '/lookup/e911', terminusAddress).respond({
       addresses: [terminusAddress],
     });
     PstnServiceAddressService.lookupAddressV2(address, carrierId).then(function (response) {

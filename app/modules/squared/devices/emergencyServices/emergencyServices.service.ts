@@ -18,6 +18,8 @@ export class EmergencyServicesService {
     private Authinfo,
     private PstnServiceAddressService,
     private PstnSetupStatesService,
+    private PstnSetup,
+    private PstnSetupService,
     private TerminusUserDeviceE911Service,
     private MemberService: MemberService,
     private FeatureMemberService: FeatureMemberService,
@@ -118,9 +120,20 @@ export class EmergencyServicesService {
   }
 
   public validateAddress(address: IEmergencyAddress): ng.IPromise<any> {
-    // TODO - Need to update this to call /customer/e911/lookup when Terminus supports it
-    // For now just call the V1 API as a workaround
-    return this.PstnServiceAddressService.lookupAddress(address, true);
+    //Make a request if we can't get the carrierId from the model
+    if (this.PstnSetup.getProviderId() === undefined) {
+      return this.PstnSetupService.getCustomer(this.Authinfo.getOrgId()).then((customer) => {
+        // update our model
+        this.PstnSetup.setCustomerId(customer.uuid);
+        this.PstnSetup.setCustomerName(customer.name);
+        this.PstnSetup.setCustomerFirstName(customer.firstName);
+        this.PstnSetup.setCustomerLastName(customer.lastName);
+        this.PstnSetup.setCustomerEmail(customer.email);
+        return this.PstnServiceAddressService.lookupAddressV2(address, customer.pstnCarrierId, true);
+      });
+    } else {
+      return this.PstnServiceAddressService.lookupAddressV2(address, this.PstnSetup.getProviderId(), true);
+    }
   }
 
   public saveAddress(emergency: IEmergency, address: IEmergencyAddress, useCompanyAddress: boolean): ng.IPromise<any> {

@@ -14,7 +14,7 @@
     vm.cloudHeading = $translate.instant('mediaFusion.metrics.cloudHeading');
     vm.hybridHeading = $translate.instant('mediaFusion.metrics.hybridHeading');
     vm.clientTypeTranMap = {
-      'ANDRIOID': $translate.instant('mediaFusion.metrics.clientType.android'),
+      'ANDROID': $translate.instant('mediaFusion.metrics.clientType.android'),
       'BLACKBERRY': $translate.instant('mediaFusion.metrics.clientType.blackberry'),
       'DESKTOP': $translate.instant('mediaFusion.metrics.clientType.desktop'),
       'IPAD': $translate.instant('mediaFusion.metrics.clientType.ipad'),
@@ -27,6 +27,7 @@
       'UC': $translate.instant('mediaFusion.metrics.clientType.uc'),
       'UNKNOWN': $translate.instant('mediaFusion.metrics.clientType.unknown'),
       'WINDOWS_MOBILE': $translate.instant('mediaFusion.metrics.clientType.windows'),
+      'Total': $translate.instant('mediaFusion.metrics.clientType.total'),
     };
 
     function adjustLineGraphData(activeData, returnData, startTime, endTime, graphs) {
@@ -217,7 +218,7 @@
     }
 
     function getNumberOfParticipantData(time) {
-      vm.numberOfParticipantUrl = '/participants_distribution';
+      vm.numberOfParticipantUrl = '/participants_activity_with_insights';
       var returnData = {
         graphData: [],
         graphs: [],

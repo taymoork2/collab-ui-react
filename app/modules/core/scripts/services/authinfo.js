@@ -496,7 +496,10 @@
       isCare: function () {
         return isEntitled(Config.entitlements.care);
       },
-      // TODO: refactor isCareAndCDC() and isCareVoiceAndCVC() when ccc-digital is getting implemented
+      // TODO: refactor isCareVoice(), isCareAndCDC() and isCareVoiceAndCVC() when ccc-digital is getting implemented
+      isCareVoice: function () {
+        return isEntitled(Config.entitlements.care_inbound_voice);
+      },
       isCareAndCDC: function () {
         return isEntitled(Config.entitlements.care) && hasCDCOffer;
       },

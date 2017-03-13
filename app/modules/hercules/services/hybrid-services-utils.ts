@@ -1,3 +1,5 @@
+import * as jstz from 'jstimezonedetect';
+
 export type HybridConnectors = 'c_mgmt' | 'c_cal' | 'c_ucmc' | 'mf_mgmt' | 'hds_app' | 'cs_mgmt' | 'cs_context' | 'ucm_mgmt' | 'c_serab';
 export type HybridServiceIds = 'squared-fusion-mgmt' | 'squared-fusion-cal' | 'squared-fusion-gcal' | 'squared-fusion-uc' | 'squared-fusion-ec' | 'squared-fusion-media' | 'spark-hybrid-datasecurity' | 'contact-center-context' | 'squared-fusion-khaos' | 'squared-fusion-servicability';
 
@@ -30,7 +32,6 @@ export class HybridServicesUtils {
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
-    private $window: ng.IWindowService,
   ) {}
 
   public connectorType2ServicesId(connectorType): HybridServiceIds[] {
@@ -126,7 +127,7 @@ export class HybridServicesUtils {
   }
 
   // TODO: Move to another service, like ReleaseChannel (yet to be created)
-  public getLocalizedReleaseChannel(channel) {
+  public getLocalizedReleaseChannel = (channel) => {
     return this.$translate.instant('hercules.fusion.add-resource-group.release-channel.' + channel);
   }
 
@@ -145,7 +146,7 @@ export class HybridServicesUtils {
   }
 
   public getLocalTimestamp(timestamp, format) {
-    let timezone = this.$window.jstz.determine().name();
+    let timezone = jstz.determine().name();
     if (timezone === null || _.isUndefined(timezone)) {
       timezone = 'UTC';
     }
