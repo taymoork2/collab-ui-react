@@ -5,10 +5,10 @@
     .module('Mediafusion')
     .service('MediaReportsService', MediaReportsService);
 
-  function MediaReportsService($http, $translate, Authinfo, Notification, MediaConfigServiceV2, chartColors) {
+  function MediaReportsService($http, $translate, Authinfo, Notification, UrlConfig, chartColors) {
     var vm = this;
 
-    vm.urlBase = MediaConfigServiceV2.getAthenaUrl() + '/organizations/' + Authinfo.getOrgId();
+    vm.urlBase = UrlConfig.getAthenaServiceUrl() + '/organizations/' + Authinfo.getOrgId();
     vm.allClusters = $translate.instant('mediaFusion.metrics.allclusters');
     vm.onPremisesHeading = $translate.instant('mediaFusion.metrics.onPremisesHeading');
     vm.cloudHeading = $translate.instant('mediaFusion.metrics.cloudHeading');
