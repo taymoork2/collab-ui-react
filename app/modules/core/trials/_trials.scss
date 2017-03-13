@@ -194,6 +194,23 @@
     padding-bottom: 6px;
   }
 
+  .input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .cs-input-group .cs-input__secondary-label {
+    padding-top: 0.5625rem;
+    padding-bottom: 0.5625rem;
+  }
+  .cs-form-group.row {
+    margin-bottom: 0.5rem;
+    .row {
+      margin: 0;
+    }
+  }
+
   .padding-l {
     padding-left: 0.5rem;
   }
