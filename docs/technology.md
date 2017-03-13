@@ -1,4 +1,4 @@
-## Technology
+# Technology
 
 * UI is developed using [Angular JS](https://angularjs.org)
 * ES6(ES2015) JavaScript is transpiled with [TypeScript](http://www.typescriptlang.org)
