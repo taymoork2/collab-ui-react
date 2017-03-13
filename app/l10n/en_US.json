@@ -2263,12 +2263,12 @@
         },
         "cucm": {
           "enter-hostname": {
-            "heading": "Register a new Cisco Unified Call Manager with its Fully Qualified Domain Name (FQDN)",
+            "heading": "Register a new Cisco Unified Communications Manager with its Fully Qualified Domain Name (FQDN)",
             "hostnamePlaceholder": "Enter CUCM FQDN"
           },
-          "enter-cluster-name":  "Enter a name for the Cisco Unified Call Manager cluster",
+          "enter-cluster-name":  "Enter a name for the Cisco Unified Communications Manager cluster",
           "end": {
-            "line1": "You may now register the Cisco Unified Call Mnanager with Cisco Collaboration Cloud.",
+            "line1": "You may now register the Cisco Unified Communications Manager with Cisco Collaboration Cloud.",
             "line2": "Go to your CUCM to complete the registration.",
             "finish": "Go to CUCM"
           }
