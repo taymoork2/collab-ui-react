@@ -132,7 +132,7 @@
           value.lineColor = '#67b7dc';
           value.title = vm.onPremisesHeading;
         } else if (value.valueField === 'CLOUD') {
-          value.lineColor = '#fdd400';
+          value.lineColor = '#f0a378';
           value.title = vm.cloudHeading;
         } else if (value.valueField === 'HYBRID') {
           value.lineColor = '#84b761';
