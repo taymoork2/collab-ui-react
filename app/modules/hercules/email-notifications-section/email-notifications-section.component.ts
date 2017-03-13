@@ -9,6 +9,7 @@ class EmailNotificationsSectionCtrl implements ng.IComponentController {
   public enableEmailSendingToUser = true;
   public savingEmail = false;
   public hasCalsvcSetOrgLevelDefaultSiteNameFeatureToggle = false;
+  public defaultWebExSiteOrgLevelOptions = [];
   public defaultWebExSiteOrgLevel = '';
   public defaultWebExSiteOrgLevelSelectPlaceholder = this.$translate.instant('hercules.settings.defaultWebExSiteOrgLevelSelectPlaceholder');
   public searchable = true;
@@ -50,6 +51,7 @@ class EmailNotificationsSectionCtrl implements ng.IComponentController {
           this.oneButtonToPushIntervalMinutes = orgSettings.bgbIntervalMinutes;
         }
       });
+    this.defaultWebExSiteOrgLevelOptions = this.ServiceDescriptor.getAllWebExSiteOrgLevel();
     this.FeatureToggleService.calsvcSetOrgLevelDefaultSiteNameGetStatus()
       .then(support => {
         this.hasCalsvcSetOrgLevelDefaultSiteNameFeatureToggle = support;
