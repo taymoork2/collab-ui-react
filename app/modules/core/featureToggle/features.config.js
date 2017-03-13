@@ -19,6 +19,7 @@ module.exports = {
   atlasMediaServiceMetrics: 'atlas-media-service-metrics',
   atlasMediaServiceMetricsMilestoneOne: 'atlas-media-service-metrics-milestone-one',
   atlasMediaServiceMetricsMilestoneTwo: 'atlas-media-service-metrics-milestone-two',
+  atlasMediaServiceVideo: 'atlas-media-service-video',
   atlasMediaServicePhaseTwo: 'atlas-media-service-phase-two',
   atlasNewCiDataModel: 'atlas-new-ci-data-model',
   atlasNewRoomSystems: 'atlas-new-roomSystems',

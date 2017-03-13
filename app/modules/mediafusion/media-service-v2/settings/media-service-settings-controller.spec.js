@@ -39,6 +39,7 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
       Notification: Notification,
       Analytics: Analytics,
       $q: $q,
+      hasMFVIdeoFeatureToggle: false,
     });
   }));
 

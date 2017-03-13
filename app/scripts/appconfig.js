@@ -3646,6 +3646,11 @@
             controller: /* @ngInject */ function (Analytics) {
               return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_MEDIA_SETTINGS);
             },
+            resolve: {
+              hasMFVIdeoFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceVideo);
+              },
+            },
           });
 
         $stateProvider
