@@ -129,9 +129,11 @@
       _.forEach(graphs, function (value) {
         if (value.title === 'onPremParticipants') {
           value.title = onPremisesHeading;
+          value.lineColor = '#67b7dc';
           columnNames[value.valueField] = value.title;
         } else if (value.title === 'cloudParticipants') {
           value.title = cloudHeading;
+          value.lineColor = '#f0a378';
           columnNames[value.valueField] = value.title;
         }
       });

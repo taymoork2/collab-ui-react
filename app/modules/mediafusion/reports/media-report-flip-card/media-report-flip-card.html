@@ -26,18 +26,20 @@
   
   <article class="face back" ng-class="{'no-display': !isFlipped}">
     <header>
-      <div class="metrics-header"> {{$ctrl.headername}} </div>
     </header>
     <section>
-      <div class="metrics-info">
-        <div id="{{$ctrl.chartOptions.cardChartDiv}}" class="chartContainer" ng-class="{'no-display': $ctrl.chartOptions.isShow==false || $ctrl.chartOptions.isShow==undefined}"></div>
+      <div class="metrics-info" ng-class="{'no-display': $ctrl.chartOptions.isShow==false || $ctrl.chartOptions.isShow==undefined}">
+        <div id="{{$ctrl.chartOptions.cardChartDiv}}" class="chartContainer"></div>
         <div class="no-data-center-card" ng-if="$ctrl.chartOptions.noData">
           <p>
-            <h3 class="no-data-card"> 
+            <h3 class="no-data-card">
             <i class='icon icon-warning no-data-warning-card'></i>
             <span translate='mediaFusion.metrics.nodata'></span></h3>
           <p>
         </div>
+      </div>
+      <div class="metrics-info" ng-class="{'no-display': $ctrl.chartOptions.isShow==true}">
+        <div class="card-desc-small"><b translate="mediaFusion.metrics.totalCloud"></b><span translate="mediaFusion.metrics.cardDescription.cloudParticipants1"></span><br><b translate="mediaFusion.metrics.cloudcalls"></b><span translate="mediaFusion.metrics.cardDescription.cloudParticipants2"></span></div>
       </div>
     </section>
     <i class='icon icon-back icon-large media-flip-icon' ng-click="isFlipped=false"></i>

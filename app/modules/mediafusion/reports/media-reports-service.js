@@ -91,7 +91,7 @@
           val.color = '#67b7dc';
           val.name = vm.onPremisesHeading;
         } else if (val.name === 'CLOUD') {
-          val.color = '#fdd400';
+          val.color = '#f0a378';
           val.name = vm.cloudHeading;
         } else if (val.name === 'HYBRID') {
           val.color = '#84b761';

@@ -4718,7 +4718,7 @@
       "meetingLocationTitle": "Total Meetings by Host Type",
       "meetings": "Meetings",
       "location": "Location",
-      "totalCloud": "Total Cloud Participants",
+      "totalCloud": "Cloud Participants",
       "clientTypeHeading": "Client Type Distribution",
       "onPremisesHeading": "On-Premises",
       "cloudHeading": "Cloud",
@@ -4739,7 +4739,12 @@
         "windows": "Windows Mobile",
         "total": "Total"
       },
-      "clientTypeCardDesc": "Summary of the type of clients that are in use at an Organization"
+      "cardDescription": {
+        "clientType": "Summary of the type of clients that are in use at an Organization",
+        "cloudParticipants2": ": Number of participants who were within an enterprise when a call was made but overflowed to a cloud cluster.",
+        "cloudParticipants1": ": Number of participants who were outside the enterprise network when a call was made and hence landed on a cloud cluster.",
+        "meetsHostType": "A breakdown of the no of  meetings based on where the calls were hosted"
+      }
     },
     "deleteGroup": {
       "message": "Are you sure you want to delete {{groupName}} from Cisco Collaboration Cloud?",
