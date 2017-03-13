@@ -86,6 +86,14 @@ export class ServicesOverviewCtrl {
     });
   }
 
+  public hasActiveHybridCards() {
+    return !!_.find(this.cards, card => card.display && card.getCardType() === CardType.hybrid);
+  }
+
+  public hasOneOrMoreHybridEntitlements() {
+    return this.Authinfo.isFusion() || this.Authinfo.isFusionMedia() || this.Authinfo.isFusionUC() || this.Authinfo.isFusionCal() || this.Authinfo.isFusionHDS();
+  }
+
   public getCloudCards() {
     return _.filter(this.cards, {
       cardType: CardType.cloud,
