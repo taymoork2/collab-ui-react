@@ -1,6 +1,6 @@
 import { StorageBase } from './storage.base';
 
-export class StorageService extends StorageBase {
+export class LocalStorageService extends StorageBase {
 
   /* @ngInject */
   constructor( private $window: ng.IWindowService, private $log: ng.ILogService ) {
