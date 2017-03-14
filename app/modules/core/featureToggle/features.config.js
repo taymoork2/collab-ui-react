@@ -4,6 +4,7 @@ module.exports = {
   atlasCareTrials: 'atlas-care-trials',
   atlasCareInboundTrials: 'atlas-care-inbound-trials',
   atlasContextServiceTrials: 'atlas-context-service-trials',
+  atlasContextDictionaryEdit: 'atlas-context-dictionary-edit',
   atlasDarling: 'atlas-darling',
   atlasDataRetentionSettings: 'atlas-data-retention-settings',
   atlasDevicesAdvancedSettings: 'atlas-devices-advanced-settings',
