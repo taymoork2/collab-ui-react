@@ -13,7 +13,7 @@
     $q,
     $rootScope,
     Authinfo,
-    Storage,
+    LocalStorage,
     WebExXmlApiConstsSvc,
     Auth,
     SessionStorage,
@@ -284,7 +284,7 @@
             "Found session tickets in $rootScope";
           // $log.log(logMsg);
         } else {
-          var storedSessionTicketsJson = Storage.get('sessionTickets');
+          var storedSessionTicketsJson = LocalStorage.get('sessionTickets');
           if (storedSessionTicketsJson !== null) {
             logMsg = funcName + ": " + "wbxSiteUrl" + wbxSiteUrl + "\n" +
               "Found session tickets in Storage";
@@ -414,7 +414,7 @@
                   $rootScope.sessionTickets = {};
                 }
                 $rootScope.sessionTickets[wbxSiteName] = ticket;
-                Storage.put('sessionTickets', JSON.stringify($rootScope.sessionTickets));
+                LocalStorage.put('sessionTickets', JSON.stringify($rootScope.sessionTickets));
                 logMsg = funcName + ".success()" + ": " + "\n" + "Generated a new ticket for site=" + wbxSiteName;
                 $log.log(logMsg);
                 defer.resolve(ticket.sessionTik);

@@ -6,7 +6,7 @@
     .controller('WebexReportsCtrl', WebexReportsCtrl);
 
   /* @ngInject */
-  function WebexReportsCtrl($stateParams, $q, Log, Authinfo, WebexReportService, Userservice, WebExApiGatewayService, Storage) {
+  function WebexReportsCtrl($q, $stateParams, Authinfo, LocalStorage, Log, Userservice, WebExApiGatewayService, WebexReportService) {
     var vm = this;
 
     vm.webexReportsObject = {};
@@ -57,7 +57,7 @@
           var stateParamsSiteUrl = $stateParams.siteUrl;
           var stateParamsSiteUrlIndex = vm.webexOptions.indexOf(stateParamsSiteUrl);
 
-          var storageReportsSiteUrl = Storage.get('webexReportsSiteUrl');
+          var storageReportsSiteUrl = LocalStorage.get('webexReportsSiteUrl');
           var storageReportsSiteUrlIndex = vm.webexOptions.indexOf(storageReportsSiteUrl);
 
           // initialize the site that the webex reports index page will display
@@ -104,7 +104,7 @@
       var funcName = "updateWebexReports()";
       var logMsg = "";
 
-      var storageReportsSiteUrl = Storage.get('webexReportsSiteUrl');
+      var storageReportsSiteUrl = LocalStorage.get('webexReportsSiteUrl');
       var webexSelected = vm.webexSelected;
 
       logMsg = funcName + "\n" +
@@ -115,7 +115,7 @@
       vm.webexReportsObject = WebexReportService.initReportsObject(webexSelected);
 
       if (webexSelected !== storageReportsSiteUrl) {
-        Storage.put('webexReportsSiteUrl', webexSelected);
+        LocalStorage.put('webexReportsSiteUrl', webexSelected);
       }
     }
   }
