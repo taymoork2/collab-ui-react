@@ -34,6 +34,11 @@ class ComapnyVoicemailCtrl implements ng.IComponentController {
 
     if (externalNumberOptions) {
       if (externalNumberOptions.currentValue && _.isArray(externalNumberOptions.currentValue)) {
+        if (externalNumberOptions.currentValue.length === 0) {
+          this.missingDirectNumbers = true;
+        } else {
+          this.missingDirectNumbers = false;
+        }
       }
     }
 
