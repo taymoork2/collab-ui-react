@@ -26,9 +26,9 @@
     "convertUsers": "Gebruikers converteren",
     "errorWarningMessages": "Waarschuwingen en fouten",
     "skipErrorsAndFinish": "De fouten overslaan en afronden",
-    "newUsers": "{newsusers, plural, one{# nieuwe gebruiker} other{# nieuwe gebruikers}}",
-    "updatedUsers": "{updatedusers, plural, one{# bijgewerkte gebruiker} other{# bijgewerkte gebruikers}}",
-    "errors": "{errors, plural, one{# fout} other{# fouten}}",
+    "newUsers": "{newsusers, plural, =1{# nieuwe gebruiker} other{# nieuwe gebruikers}}",
+    "updatedUsers": "{updatedusers, plural, =1{# bijgewerkte gebruiker} other{# bijgewerkte gebruikers}}",
+    "errors": "{errors, plural, =1{# fout} other{# fouten}}",
     "pageTitle": "Gebruikers",
     "subTitleAdd": "Gebruikers beheren",
     "subTitleEnable": "Gebruikers machtigen",
@@ -246,7 +246,7 @@
       "retryUsers": "Opnieuw proberen",
       "retrying": "Opnieuw proberen...",
       "retryingIn": "opnieuw proberen in:",
-      "retryingUsers": "{users, plural, one{# gebruiker} other{# gebruikers}}",
+      "retryingUsers": "{users, plural, =1{# gebruiker} other{# gebruikers}}",
       "exportUserList": "Exporteer de gebruikerslijst."
     },
     "advanced": {
@@ -1140,15 +1140,15 @@
   "notifications": {
     "success": "Succesmeldingen",
     "error": "Foutmeldingen",
-    "successTotal": "{total, plural, one{# geslaagd} other{# geslaagd}}",
-    "errorTotal": "{total, plural, one{# fout} other{# fouten}}",
+    "successTotal": "{total, plural, =1{# geslaagd} other{# geslaagd}}",
+    "errorTotal": "{total, plural, =1{# fout} other{# fouten}}",
     "successDelete": "{{item}} verwijderd.",
     "errorDelete": "{{item}} verwijderen is mislukt."
   },
   "time": {
-    "seconds": "{time, plural, one{# seconde} other{# seconden}}",
-    "minutes": "{time, plural, one{# minuut} other{# minuten}}",
-    "hours": "{time, plural, one{# uur} other{# uur}}"
+    "seconds": "{time, plural, =1{# seconde} other{# seconden}}",
+    "minutes": "{time, plural, =1{# minuut} other{# minuten}}",
+    "hours": "{time, plural, =1{# uur} other{# uur}}"
   },
   "callDestination": {
     "numberFormat": "Nummerindeling",
@@ -2083,7 +2083,7 @@
       "heading": "Registratie"
     },
     "notificationDropdown": {
-      "label": "{number, plural, one{# notification} other{# notifications}}"
+      "label": "{number, plural, =1{# notification} other{# notifications}}"
     },
     "fusion": {
       "types": {
@@ -2100,7 +2100,7 @@
         "clusters": "Clusters",
         "users": "Gebruikers",
         "release-channel": "Releasekanaal",
-        "nodes": "{count, plural, one{# knooppunt} other{# knooppunten}}",
+        "nodes": "{count, plural, =1{# knooppunt} other{# knooppunten}}",
         "nodesBtn": "Knooppunten",
         "settings": "Instellingen",
         "all": "Alles",
@@ -2634,8 +2634,8 @@
     "setSipDomainLink": "Wat is een SIP-adres van Spark?",
     "setSipDomainMsg": "Een subdomein invoeren",
     "setSipDomainTitle": "SIP-adres Spark",
-    "setSipDomainCompNames": "{count, plural, one{Dit subdomein wordt} other{Deze subdomeinen worden}} voor u gereserveerd:",
-    "setSipDomainAsssignedNames": "{count, plural, one{Dit subdomein is} other{Deze subdomeinen zijn}} voor u gereserveerd:",
+    "setSipDomainCompNames": "{count, plural, =1{Dit subdomein wordt} other{Deze subdomeinen worden}} voor u gereserveerd:",
+    "setSipDomainAsssignedNames": "{count, plural, =1{Dit subdomein is} other{Deze subdomeinen zijn}} voor u gereserveerd:",
     "setSipDomainCheckAvailability": "Beschikbaarheid controleren",
     "setSipDomainPlaceholder": "een subdomein invoeren",
     "setSipDomainErrorMessage": "Niet beschikbaar. Probeer een andere naam",
@@ -3374,10 +3374,10 @@
     "deleteNumber": "Nummer verwijderen",
     "deleteConfirmation": "Weet u zeker dat u {{pattern}} wilt verwijderen?",
     "deleteWarning": "Dit kan niet ongedaan worden gemaakt. U verliest het nummer definitief.",
-    "allNumbers": "{count, plural, one{# item} other{# items}}",
-    "pendingNumbers": "{count, plural, one{# item in behandeling} other{# items in behandeling}}",
-    "unassignedNumbers": "{count, plural, one{# item niet toegewezen} other{# items niet toegewezen}}",
-    "searchResults": "{count, plural, one{# zoekresultaat} other{# zoekresultaten}}",
+    "allNumbers": "{count, plural, =1{# item} other{# items}}",
+    "pendingNumbers": "{count, plural, =1{# item in behandeling} other{# items in behandeling}}",
+    "unassignedNumbers": "{count, plural, =1{# item niet toegewezen} other{# items niet toegewezen}}",
+    "searchResults": "{count, plural, =1{# zoekresultaat} other{# zoekresultaten}}",
     "findNumber": "Een nummer zoeken..."
   },
   "pstnOrderOverview": {
@@ -3394,7 +3394,7 @@
   },
   "pstnOrderDetail": {
     "orderNumber": "Bestelling #{{orderId}}",
-    "pendingNumbers": "{count, plural, one{Er is # item} other{Er zijn # items}} in behandeling voor deze bestelling",
+    "pendingNumbers": "{count, plural, =1{Er is # item} other{Er zijn # items}} in behandeling voor deze bestelling",
     "searchPlaceholder": "Telefoonnummers zoeken",
     "waitOnTOSAcceptance": "Wachten tot klant ToS accepteert"
   },
@@ -3434,7 +3434,7 @@
     "package": "Pakket",
     "adding": "Toevoeging",
     "numbersTitle": "Nummers",
-    "numbers": "{count, plural, one{# item} other{# items}}",
+    "numbers": "{count, plural, =1{# item} other{# items}}",
     "newNumbers": "{{count}} nieuw",
     "portNumbers": "{{count}} poort",
     "thankYou": "Hartelijk dank",
@@ -3794,9 +3794,9 @@
     "notes": "Aantekeningen",
     "active": "Actief",
     "free": "Gratis",
-    "daysRemaining": "{count, plural, one{# dag} other{#dagen}} resterend",
-    "daysLeftToPurchase": "Nog {count, plural, one{# dag} other{# dagen}} te koop",
-    "daysLeftToRenew": "Nog {count, plural, one{# dag} other{# dagen}} te vernieuwen",
+    "daysRemaining": "{count, plural, =1{# dag} other{#dagen}} resterend",
+    "daysLeftToPurchase": "Nog {count, plural, =1{# dag} other{# dagen}} te koop",
+    "daysLeftToRenew": "Nog {count, plural, =1{# dag} other{# dagen}} te vernieuwen",
     "expiringToday": "Verloopt vandaag",
     "expired": "Vervallen",
     "expiredWithGracePeriod": "Vervallen. Nu kopen",
@@ -3830,7 +3830,7 @@
     "trialTerms": "Voorwaarden voor de proefperiode",
     "trialOverview": "Proefperiode",
     "webexOverview": "WebEx",
-    "webexSiteCount": "{count, plural, one{nog # site} other{nog # sites}}",
+    "webexSiteCount": "{count, plural, =1{nog # site} other{nog # sites}}",
     "licenses": "Aantal licenties",
     "totalQuantity": "Totale hoeveelheid",
     "totalLicenses": "Totaal aantal licenties",
@@ -3880,7 +3880,7 @@
     "accountStatus": "Accountstatus",
     "totalUsers": "Totaal aantal gebruikers",
     "purchased": "Aangeschaft",
-    "domain": "{count, plural, one{Domein} other{Domeinen}}",
+    "domain": "{count, plural, =1{Domein} other{Domeinen}}",
     "domains": "Domeinen",
     "quantityWithValue": "Aantal: {{quantity}}",
     "anotherPartner": "(Een andere partner)",

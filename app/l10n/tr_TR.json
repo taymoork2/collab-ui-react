@@ -26,9 +26,9 @@
     "convertUsers": "Kullanıcıları Dönüştür",
     "errorWarningMessages": "Uyarılar ve Hatalar",
     "skipErrorsAndFinish": "Hataları Atla ve Bitir",
-    "newUsers": "{newusers, plural, one{# Yeni kullanıcı} other{# Yeni kullanıcı}}",
-    "updatedUsers": "{updatedusers, plural, one{# Güncellenen kullanıcı} other{# Güncellenen kullanıcı}}",
-    "errors": "{errors, plural, one{# Hata} other{# Hata}}",
+    "newUsers": "{newusers, plural, =1{# Yeni kullanıcı} other{# Yeni kullanıcı}}",
+    "updatedUsers": "{updatedusers, plural, =1{# Güncellenen kullanıcı} other{# Güncellenen kullanıcı}}",
+    "errors": "{errors, plural, =1{# Hata} other{# Hata}}",
     "pageTitle": "Kullanıcılar",
     "subTitleAdd": "Kullanıcıları yönet",
     "subTitleEnable": "Kullanıcılara yetki ver",
@@ -246,7 +246,7 @@
       "retryUsers": "Tekrar Dene",
       "retrying": "Yeniden deneniyor...",
       "retryingIn": "şurada yeniden deneniyor:",
-      "retryingUsers": "{users, plural, one{# User} other{# Users}}",
+      "retryingUsers": "{users, plural, =1{# User} other{# Users}}",
       "exportUserList": "Kullanıcı listesini dışa aktarın."
     },
     "advanced": {
@@ -1140,15 +1140,15 @@
   "notifications": {
     "success": "Başarı bildirimleri",
     "error": "Hata bildirimleri",
-    "successTotal": "{total, plural, one{# başarı} other{# başarılar}}",
-    "errorTotal": "{total, plural, one{# hata} other{# hataları}}",
+    "successTotal": "{total, plural, =1{# başarı} other{# başarılar}}",
+    "errorTotal": "{total, plural, =1{# hata} other{# hataları}}",
     "successDelete": "{{item}} başarıyla silindi.",
     "errorDelete": "{{item}} silinemedi."
   },
   "time": {
-    "seconds": "{time, plural, one{# İkinci} other{# saniye}}",
-    "minutes": "{time, plural, one{# dakika} other{# dakika}}",
-    "hours": "{time, plural, one{# Saat} other{# Saat}}"
+    "seconds": "{time, plural, =1{# İkinci} other{# saniye}}",
+    "minutes": "{time, plural, =1{# dakika} other{# dakika}}",
+    "hours": "{time, plural, =1{# Saat} other{# Saat}}"
   },
   "callDestination": {
     "numberFormat": "Sayı Biçimi",
@@ -2083,7 +2083,7 @@
       "heading": "Kayıt"
     },
     "notificationDropdown": {
-      "label": "{number, plural, bir{# bildirim} diğer{# bildirim}}"
+      "label": "{number, plural, =1{# bildirim} other{# bildirim}}"
     },
     "fusion": {
       "types": {
@@ -2100,7 +2100,7 @@
         "clusters": "Kümeler",
         "users": "Kullanıcılar",
         "release-channel": "Sürüm Kanalı",
-        "nodes": "{count, plural, one{# Düğüm} other{# Düğüm}}",
+        "nodes": "{count, plural, =1{# Düğüm} other{# Düğüm}}",
         "nodesBtn": "Düğümler",
         "settings": "Ayarlar",
         "all": "Tümü",
@@ -2634,8 +2634,8 @@
     "setSipDomainLink": "Spark SIP Adresi nedir?",
     "setSipDomainMsg": "Alt etki alanı girin",
     "setSipDomainTitle": "Spark SIP Adresi",
-    "setSipDomainCompNames": "{count, plural, one{This subdomain} other{These subdomains}} size ayrılacak:",
-    "setSipDomainAsssignedNames": "{count, plural, one{This subdomain is} other{These subdomains are}} size ayrıldı",
+    "setSipDomainCompNames": "{count, plural, =1{This subdomain} other{These subdomains}} size ayrılacak:",
+    "setSipDomainAsssignedNames": "{count, plural, =1{This subdomain is} other{These subdomains are}} size ayrıldı",
     "setSipDomainCheckAvailability": "Erişilebilirliği Ayarla",
     "setSipDomainPlaceholder": "alt etki alanı girin",
     "setSipDomainErrorMessage": "Uygun değil. Lütfen başka bir ad girin",
@@ -3374,10 +3374,10 @@
     "deleteNumber": "Numarayı Sil",
     "deleteConfirmation": "{{pattern}} şablonunu silmek istediğinizden emin misiniz?",
     "deleteWarning": "Bu işlem geri alınamaz. Bu numarayı geri dönüşü olmayan bir şekilde kaybedeceksiniz.",
-    "allNumbers": "{count, plural, one{# numara} other{# numaraları}}",
-    "pendingNumbers": "{count, plural, one{# Bekleyen numarası} other{# Bekleyen numaraları}}",
-    "unassignedNumbers": "{count, plural, one{# Atanmamış numarası} other{# Atanmamış numaraları}}",
-    "searchResults": "{count, plural, one{# arama sonucu} other{# Arama sonucu}}",
+    "allNumbers": "{count, plural, =1{# numara} other{# numaraları}}",
+    "pendingNumbers": "{count, plural, =1{# Bekleyen numarası} other{# Bekleyen numaraları}}",
+    "unassignedNumbers": "{count, plural, =1{# Atanmamış numarası} other{# Atanmamış numaraları}}",
+    "searchResults": "{count, plural, =1{# arama sonucu} other{# Arama sonucu}}",
     "findNumber": "Bir numara bulun..."
   },
   "pstnOrderOverview": {
@@ -3394,7 +3394,7 @@
   },
   "pstnOrderDetail": {
     "orderNumber": "Sipariş #{{orderId}}",
-    "pendingNumbers": "Bu sipariş için bekleyen {count, plural, one{# numara var} other{# numara var}}",
+    "pendingNumbers": "Bu sipariş için bekleyen {count, plural, =1{# numara var} other{# numara var}}",
     "searchPlaceholder": "Telefon Numaralarını Ara",
     "waitOnTOSAcceptance": "Müşterinin Hizmet Koşullarını kabul etmesi bekleniyor"
   },
@@ -3434,7 +3434,7 @@
     "package": "Paket",
     "adding": "Ekleme",
     "numbersTitle": "Numaralar",
-    "numbers": "{count, plural, one{# numara} other{# numaraları}}",
+    "numbers": "{count, plural, =1{# numara} other{# numaraları}}",
     "newNumbers": "{{count}} Yeni",
     "portNumbers": "{{count}} Bağlantı Noktası",
     "thankYou": "Teşekkürler",
@@ -3794,9 +3794,9 @@
     "notes": "Notlar",
     "active": "Etkin",
     "free": "Ücretsiz",
-    "daysRemaining": "{count, plural, one{# day} other{# gün}} kaldı",
-    "daysLeftToPurchase": "Satın almak için {count, plural, one{# day} other{# gün}} kaldı",
-    "daysLeftToRenew": "Yenilemek için {count, plural, one{# day} other{# gün}} kaldı",
+    "daysRemaining": "{count, plural, =1{# day} other{# gün}} kaldı",
+    "daysLeftToPurchase": "Satın almak için {count, plural, =1{# day} other{# gün}} kaldı",
+    "daysLeftToRenew": "Yenilemek için {count, plural, =1{# day} other{# gün}} kaldı",
     "expiringToday": "Bugün sona erecek",
     "expired": "Sona Erdi",
     "expiredWithGracePeriod": "Sona erdi. Şimdi satın alın",
@@ -3830,7 +3830,7 @@
     "trialTerms": "Deneme Sürümünün Koşulları",
     "trialOverview": "Deneme Sürümü",
     "webexOverview": "WebEx",
-    "webexSiteCount": "{count, plural, one{# site daha} other{# site daha}}",
+    "webexSiteCount": "{count, plural, =1{# site daha} other{# site daha}}",
     "licenses": "Lisans Sayısı",
     "totalQuantity": "Toplam Miktar",
     "totalLicenses": "Toplam Lisans Sayısı",
@@ -3880,7 +3880,7 @@
     "accountStatus": "Hesap Durumu",
     "totalUsers": "Toplam Kullanıcı Sayısı",
     "purchased": "Satın alındı",
-    "domain": "{count, plural, one{Etki alanı} other{Etki alanı}}",
+    "domain": "{count, plural, =1{Etki alanı} other{Etki alanı}}",
     "domains": "Etki Alanları",
     "quantityWithValue": "Miktar: {{quantity}}",
     "anotherPartner": "(Başka Bir İş Ortağı)",
