@@ -239,19 +239,19 @@ class MySubscriptionCtrl {
                 switch (index) {
                   case 0: {
                     offer.class = messageClass;
-                    this.addSubscription(0, offer, -1);
+                    this.addSubscription(0, _.cloneDeep(offer), -1);
                     break;
                   }
                   case 7: {
                     offer.class = callClass;
-                    this.addSubscription(2, offer, -1);
+                    this.addSubscription(2, _.cloneDeep(offer), -1);
                     break;
                   }
                   case 8:
                   case 9: {
                     offer.class = meetingRoomClass;
 
-                    this.addSubscription(3, offer, -1);
+                    this.addSubscription(3, _.cloneDeep(offer), -1);
                     break;
                   }
                   case 10:
@@ -263,10 +263,10 @@ class MySubscriptionCtrl {
 
 
                     if (existingIndex >= 0) {
-                      this.addSubscription(4, offer, existingIndex);
+                      this.addSubscription(4, _.cloneDeep(offer), existingIndex);
                     } else {
                       this.licenseCategory[4].subscriptions.unshift({
-                        offers: [offer],
+                        offers: [_.cloneDeep(offer)],
                         type: 'CARE',
                       });
                     }
@@ -284,16 +284,16 @@ class MySubscriptionCtrl {
                     });
 
                     if (existingSite >= 0) {
-                      this.addSubscription(1, offer, existingSite);
+                      this.addSubscription(1, _.cloneDeep(offer), existingSite);
                     } else if (offer.siteUrl) {
                       this.licenseCategory[1].subscriptions.push({
                         siteUrl: offer.siteUrl,
-                        offers: [offer],
+                        offers: [_.cloneDeep(offer)],
                       });
                     } else { // Meeting licenses not attached to a siteUrl should be grouped together at the front of the list
                       this.licenseCategory[1].subscriptions.unshift({
                         siteUrl: offer.siteUrl,
-                        offers: [offer],
+                        offers: [_.cloneDeep(offer)],
                       });
                     }
                     break;
