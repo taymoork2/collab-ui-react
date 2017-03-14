@@ -93,12 +93,16 @@
 
     function queryUsers(oid, emails) {
       var serviceUrl = UrlConfig.getScimUrl(oid);
-      serviceUrl += '?filter=' + _.chain(emails)
+      var emailFilter = _.chain(emails)
         .map(function (email) {
           return 'username eq "' + email.text + '"';
         })
         .join(' or ')
         .value();
+      if (emails.length < 1) {
+        emailFilter = 'username eq ' + '" "';
+      }
+      serviceUrl += '?filter=' + emailFilter;
       return $http.get(serviceUrl).then(extractData);
     }
 
