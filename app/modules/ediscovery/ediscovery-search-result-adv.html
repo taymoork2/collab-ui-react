@@ -45,7 +45,18 @@
 				</section>
 			</article>
 		</cs-card>
-		<cs-card class="large">
+		<cs-card ng-if="ediscoverySearchCtrl.isReportMaxRooms" class="large">
+			<article>
+				<header><h4 translate="ediscovery.searchResults.maxRoomsReached"></h4></header>
+				<div class="report-error">
+					<i class="icon icon-warning report-warning"></i>
+					<span translate="ediscovery.searchResults.maxRoomsReachedSummary"></span>
+					<br>
+					<button type="submit" class="btn btn--primary" translate="ediscovery.searchResults.reportSizeErrorButton"></button>
+					</div>
+			</article>
+		</cs-card>
+		<cs-card ng-if="!ediscoverySearchCtrl.isReportMaxRooms" class="large">
 			<article>
 				<section>
 					<!-- Generate Report Section -->

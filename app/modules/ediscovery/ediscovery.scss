@@ -156,6 +156,10 @@
         color: $color-attention-base;
       }
 
+      .date-error {
+        color: $color-negative-base;
+      }
+
       .ediscovery-advanced-search {
         margin-top: 48px;
         display: inline-block;
@@ -388,7 +392,7 @@
         }
 
         .report-header {
-          padding: 14px 18px;
+          padding: 8px 18px;
         }
 
         .report-parameters {
@@ -399,10 +403,10 @@
           }
         }
 
-        .reportError {
+        .report-error {
           padding: 1.5rem;
 
-          .reportWarning {
+          .report-warning {
             color: $color-attention-base;
           }
         }

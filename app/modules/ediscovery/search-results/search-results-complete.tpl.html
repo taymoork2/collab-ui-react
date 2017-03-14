@@ -16,6 +16,10 @@
               ng-click="ediscoverySearchCtrl.downloadReport(ediscoverySearchCtrl.report)">
         <span translate="ediscovery.search.downloadReport"></span>
       </button>
+      <button ng-cloak type="button" class="btn"
+                translate="ediscovery.search.viewReportsList"
+                ui-sref="ediscovery.reports">
+      </button>
       <div>
         <span translate="ediscovery.searchResults.downloadContent"></span>
       </div>
@@ -23,13 +27,6 @@
         <i class="icon icon-warning"></i>
         <span translate="ediscovery.search.expiryInfo"></span>
       </div>
-    </div>
-  </div>
-  <div class="row" ng-if="ediscoverySearchCtrl.report && ediscoverySearchCtrl.report.canBeCancelled">
-    <div class="columns small-12 medium-6 large-6">
-      <button ng-cloak type="button" class="btn btn--primary"
-                translate="ediscovery.search.takeMeToReports"
-                ui-sref="ediscovery.reports"></button>
     </div>
   </div>
 </div>

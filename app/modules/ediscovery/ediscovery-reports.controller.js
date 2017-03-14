@@ -126,12 +126,6 @@ require('./ediscovery.scss');
         cellTemplate: 'modules/ediscovery/cell-template-name.html',
         width: '*',
       }, {
-        field: 'roomQuery.roomId',
-        displayName: $translate.instant("ediscovery.reportsList.roomId"),
-        sortable: false,
-        cellTemplate: 'modules/ediscovery/cell-template-room-id.html',
-        width: '*',
-      }, {
         field: 'createdTime',
         displayName: $translate.instant("ediscovery.reportsList.dateGenerated"),
         sortable: false,
@@ -145,7 +139,7 @@ require('./ediscovery.scss');
         width: '110',
       }, {
         field: 'state',
-        displayName: $translate.instant("ediscovery.reportsList.state"),
+        displayName: $translate.instant("ediscovery.reportsList.status"),
         sortable: false,
         cellTemplate: 'modules/ediscovery/cell-template-state.html',
         width: '*',

@@ -43,6 +43,12 @@
           <cs-datepicker required class="col-md-6" ng-model="ediscoverySearchCtrl.searchCriteria.endDate" view-format="YYYY-MM-DD">
           </cs-datepicker>
         </div>
+        <div class="row" ng-if="ediscoverySearchCtrl.dateValidationError">
+          <i class="icon icon-error date-error"></i>
+          <span ng-repeat="error in ediscoverySearchCtrl.dateValidationError.errors">
+            {{error}}
+          </span>
+        </div>
         <!-- Text Message and File Name Row -->
         <div class="row">
           <span class="search-text large-gap" translate="ediscovery.searchParameters.textAndFileName"></span>
