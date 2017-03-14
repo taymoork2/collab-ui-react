@@ -64,7 +64,7 @@ export class CloudConnectorService {
       });
   }
 
-  private getStatusCss(service: IService): string {
+  private getStatusCss(service: IService): 'default' | 'success' | 'danger' | 'warning' {
     if (!service || !service.provisioned || !service.status) {
       return 'default';
     }
@@ -80,7 +80,7 @@ export class CloudConnectorService {
     }
   }
 
-  private translateStatus(service: IService): string {
+  private translateStatus(service: IService): 'setupNotComplete' | 'operational' | 'outage' | 'impaired' | 'unknown' {
     if (!service || !service.provisioned || !service.status) {
       return 'setupNotComplete';
     }
