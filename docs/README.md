@@ -10,11 +10,13 @@ The CCM portal allows Cisco's customers and partners to do … all sort of thing
 
 ## Technologies Overview
 
-This project is built using [AngularJS](https://angularjs.org) (1.x), [ui-router](https://github.com/angular-ui/ui-router), [lodash](https://lodash.com) and [Cisco's Collab UI Toolkit](http://collab-ui.cisco.com). New code is written in [TypeScript](https://www.typescriptlang.org), but most of the code is still written in [EcmaScript 5 (ES5)](https://en.wikipedia.org/wiki/ECMAScript#5th_Edition). The styling is written using [SCSS](http://sass-lang.com/guide) and the [ITCSS](https://github.com/ahmadajmi/awesome-itcss) methodology. Finally, the code is bundled using [webpack](https://webpack.github.io).
+This project is built using [AngularJS](https://angularjs.org) (1.x), [ui-router](https://github.com/angular-ui/ui-router), [lodash](https://lodash.com) and [Cisco's Collab UI Toolkit](http://collab-ui.cisco.com). New code is written in [TypeScript](https://www.typescriptlang.org), but most of the existing code is in [EcmaScript 5 (ES5)](https://en.wikipedia.org/wiki/ECMAScript#5th_Edition). The styling is written using [SCSS](http://sass-lang.com/guide) and the [ITCSS](https://github.com/ahmadajmi/awesome-itcss) methodology. Finally, the code is bundled using [webpack](https://webpack.github.io).
 
-A migration to [Angular](https://angular.io) (2+) is mentioned from time to time, but there is no official schedule yet. It won't happened until more code is converted to TypeScript + components anyway.
+A migration to [Angular](https://angular.io) (2+) is mentioned from time to time, but there is no official schedule yet. It can't happen until more code is converted to TypeScript + components anyway.
 
-[More details](./technology.md)
+* :arrow_right: [More details about the current technology](./technology.md)
+* :star: [Short read about the transition to TypeScript and components](./transition-why.md)
+* :hammer: [TypeScript overview](./typescript-overview.md)
 
 ## Relevant Spark Spaces
 

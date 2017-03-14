@@ -5,8 +5,8 @@
 * UI is composed of a core module and service modules for different functional groups
 * Modules are developed using directives, here is a good read on the topic: http://briantford.com/blog/angular-bower
 * The backend of the application are written in Java Web Services, the ui services call the REST APIs
-* Styling the application is done using [SASS](http://sass-lang.com/)
-* Styling is based on Bootstrap CSS, a custom Cisco Bootstrap CSS is used for the portal: http://collab-lib.cisco.com/dist/#/overview
+* Styling the application is done using [SCSS](http://sass-lang.com/)
+* Styling is based on [Cisco's Collab UI Toolkit](http://collab-ui.cisco.com)
 * Localization is done using angular translation
 * Unit testing is written using Jasmine with Karma
 * End to end testing is based on the JS Selenium framework: Protractor
