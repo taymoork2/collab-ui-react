@@ -2098,7 +2098,6 @@
         "certificateWarning": "Warning: {{fileName}} does not appear to be a valid PKCS-12 file.",
         "successfullyUploadedKey": "Service account saved successfully, and private key file {{filename}} uploaded.",
         "failedToUploadKey": "Could not save service account name and/or certificate file.",
-        "failedToActivateService": "Could not enable Hybrid Calendar.",
         "couldNotReadGoogleCalendarStatus": "Could not read Google Calendar status.",
         "generateAPrivateKeyHeader": "Generate a Private Key",
         "generateAPrivateKeyExplanation": "To enable Hybrid Calendar for your users, you need to generate a private key for Google Calendar. You can generate the key with the <a href=\"https://console.developers.google.com/\" target=\"_blank\">Google Developer Console</a>. Follow <a href=\"https://example.org/\" target=\"_blank\">documentation</a> to learn how to generate a key.",
@@ -2108,7 +2107,16 @@
         "toEnableUsers": "To enable users, you can:",
         "enableIndividually": "Enable them individually from the <a ng-click=\"{{onclick}}\">users</a> page.",
         "enableInBulk": "Enable them in bulk using the <a ng-click=\"{{onclick}}\">CSV template</a>.",
-        "referToDocumentation": "Refer to <a href=\"https://example.org/\" target=\"_blank\">documentation</a> if you need help enabling users."
+        "referToDocumentation": "Refer to <a href=\"https://example.org/\" target=\"_blank\">documentation</a> if you need help enabling users.",
+        "provisioningResults": {
+          "OK": "Provisioning succeeded.",
+          "BAD_API_ACCESS_SETTINGS": "Site Verification API not enabled.",
+          "DATABASE_ERROR": "Internal database failure.",
+          "SITE_VERIFICATION_FAILURE": "Site verification failure.",
+          "SECURITY_FAILURE": "Security failure.",
+          "INPUT_PARSING_FAILURE": "Private Key data is unparsable.",
+          "GENERAL_ERROR": "Bad request."
+        }
       },
       "hybridCalendarCommon": {
         "hybridCalendarSetUp": "Hybrid Calendar setup",
