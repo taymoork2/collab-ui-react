@@ -11,6 +11,7 @@ describe('EditCalendarService component:', () => {
       '$rootScope',
       '$httpBackend',
       'ServiceDescriptor',
+      'CsdmDataModelService',
       '$q',
     );
     test = this;
@@ -20,6 +21,10 @@ describe('EditCalendarService component:', () => {
   let state: any = defaultState();
   afterEach(function () {
     state = {};
+    test.controller = null;
+    jasmine.getJSONFixtures().clearCache();
+    test.$rootScope.$digest();
+    test.$rootScope = undefined;
   });
 
   function defaultState() {
@@ -135,6 +140,65 @@ describe('EditCalendarService component:', () => {
     });
   });
 
+  describe('nextEnabled function', () => {
+
+    describe('with editServices as given wizard function', () => {
+      beforeEach(() => {
+        spyOn(test.ServiceDescriptor, 'getServices').and.returnValue(test.$q.resolve([{
+          id: FUSION_GCAL_ENTITLEMENT,
+          enabled: true,
+        }, {
+          id: FUSION_CAL_ENTITLEMENT,
+          enabled: true,
+        }]));
+        state.wizardData = {
+          state: () => {
+            return { data: { function: 'editServices', account: { entitlements: ['webex-squared'] } } };
+          },
+          next: () => {
+          },
+        };
+        state.controller = test.$componentController('editCalendarService', {
+          $stateParams: {
+            wizard: state.wizardData,
+          },
+        });
+        state.controller.$onInit();
+      });
+      it('then next should be disabled', () => {
+        expect(state.controller.hasNextStep()).toBe(false);
+      });
+    });
+
+    describe('with normal add place function for wizard', () => {
+      beforeEach(() => {
+        spyOn(test.ServiceDescriptor, 'getServices').and.returnValue(test.$q.resolve([{
+          id: FUSION_GCAL_ENTITLEMENT,
+          enabled: true,
+        }, {
+          id: FUSION_CAL_ENTITLEMENT,
+          enabled: true,
+        }]));
+        state.wizardData = {
+          state: () => {
+            return { data: { function: 'addPlace', account: { entitlements: ['webex-squared'] } } };
+          },
+          next: () => {
+          },
+        };
+        state.controller = test.$componentController('editCalendarService', {
+          $stateParams: {
+            wizard: state.wizardData,
+          },
+        });
+        state.controller.$onInit();
+      });
+      it('then next should be enabled', () => {
+        expect(state.controller.hasNextStep()).toBe(true);
+      });
+    });
+  });
+
   describe('next', () => {
     beforeEach(() => {
       spyOn(test.ServiceDescriptor, 'getServices').and.returnValue(test.$q.resolve([{
@@ -178,7 +242,7 @@ describe('EditCalendarService component:', () => {
     });
 
     describe('with google selected', () => {
-      let email = 'test@example.com';
+      let email = 'test2@example.com';
       beforeEach(() => {
         state.controller.calService = FUSION_GCAL_ENTITLEMENT;
         state.controller.emailOfMailbox = email;
@@ -206,6 +270,100 @@ describe('EditCalendarService component:', () => {
       });
       it('next should be disabled', () => {
         expect(state.controller.isNextDisabled()).toBeTruthy();
+      });
+    });
+
+  });
+
+  describe('save 2', () => {
+    beforeEach(() => {
+      let id = 'asvawoei0a';
+      spyOn(test.ServiceDescriptor, 'getServices').and.returnValue(test.$q.resolve([{
+        id: FUSION_GCAL_ENTITLEMENT,
+        enabled: true,
+      }, {
+        id: FUSION_CAL_ENTITLEMENT,
+        enabled: true,
+      }]));
+      spyOn(test.CsdmDataModelService, 'getPlacesMap').and.returnValue(test.$q.resolve({ 'https://csdm/place.url': { cisUuid: id } }));
+      state.wizardData = {
+        state: () => {
+          return {
+            data: {
+              account: { entitlements: ['webex-squared'], cisUuid: id },
+              atlasHerculesGoogleCalendarFeatureToggle: true,
+            },
+          };
+        },
+        next: () => {
+        },
+      };
+      state.controller = test.$componentController('editCalendarService', {
+        $stateParams: {
+          wizard: state.wizardData,
+        },
+      });
+      state.controller.$onInit();
+      state.controller.dismiss = () => {
+      };
+    });
+
+    describe('with exchange selected', () => {
+      let email = 'test@example.com';
+      beforeEach(() => {
+
+      });
+      it('should set externalIdentifier to exchange', () => {
+        test.$rootScope.$digest();
+        state.controller.calService = FUSION_CAL_ENTITLEMENT;
+        state.controller.emailOfMailbox = email;
+        spyOn(test.CsdmDataModelService, 'updateCloudberryPlace').and.returnValue(test.$q.resolve());
+        state.controller.save();
+        test.$rootScope.$digest();
+
+        expect(test.CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalled();
+        let wizardState = test.CsdmDataModelService.updateCloudberryPlace.calls.mostRecent().args;
+
+        expect(wizardState[1]).toEqual(['webex-squared', FUSION_CAL_ENTITLEMENT]);
+        expect(wizardState[4][0].accountGUID).toEqual(email);
+        expect(wizardState[4][0].providerID).toEqual(FUSION_CAL_ENTITLEMENT);
+      });
+    });
+
+    describe('with google selected', () => {
+      let email = 'test2@example.com';
+      beforeEach(() => {
+
+      });
+      it('should set externalIdentifier to exchange', () => {
+        test.$rootScope.$digest();
+        state.controller.calService = FUSION_GCAL_ENTITLEMENT;
+        state.controller.emailOfMailbox = email;
+        spyOn(test.CsdmDataModelService, 'updateCloudberryPlace').and.returnValue(test.$q.resolve());
+        state.controller.save();
+        test.$rootScope.$digest();
+
+        expect(test.CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalled();
+        let wizardState = test.CsdmDataModelService.updateCloudberryPlace.calls.mostRecent().args;
+        expect(wizardState[1]).toEqual(['webex-squared', FUSION_GCAL_ENTITLEMENT]);
+        expect(wizardState[4][0].accountGUID).toEqual(email);
+        expect(wizardState[4][0].providerID).toEqual(FUSION_GCAL_ENTITLEMENT);
+      });
+      it('save should be enabled', () => {
+        test.$rootScope.$digest();
+        state.controller.calService = FUSION_GCAL_ENTITLEMENT;
+        state.controller.emailOfMailbox = email;
+        expect(state.controller.isSaveDisabled()).toBeFalsy();
+      });
+    });
+
+    describe('with none selected', () => {
+      beforeEach(() => {
+        state.controller.calService = '';
+        state.controller.emailOfMailbox = 'test@example.com';
+      });
+      it('save should be disabled', () => {
+        expect(state.controller.isSaveDisabled()).toBeTruthy();
       });
     });
 

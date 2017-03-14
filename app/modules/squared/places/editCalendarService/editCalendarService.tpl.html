@@ -97,6 +97,7 @@
     loading="editCalendarService.isLoading"
     class="btn btn--primary"
     ng-class="{'ng-hide':editCalendarService.hasNextStep()}"
+    ng-disabled="editCalendarService.isSaveDisabled()"
     ng-click="editCalendarService.save()">
     <span translate="common.save"></span>
   </button>

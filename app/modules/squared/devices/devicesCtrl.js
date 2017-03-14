@@ -261,9 +261,18 @@ require('./_devices.scss');
                 },
               },
               'addDeviceFlow.addLines': {
-                next: 'addDeviceFlow.showActivationCode',
+                nextOptions: {
+                  next: 'addDeviceFlow.showActivationCode',
+                  calendar: 'addDeviceFlow.editCalendarService',
+                },
               },
               'addDeviceFlow.callConnectOptions': {
+                nextOptions: {
+                  next: 'addDeviceFlow.showActivationCode',
+                  calendar: 'addDeviceFlow.editCalendarService',
+                },
+              },
+              'addDeviceFlow.editCalendarService': {
                 next: 'addDeviceFlow.showActivationCode',
               },
               'addDeviceFlow.showActivationCode': {},
@@ -329,9 +338,18 @@ require('./_devices.scss');
                 },
               },
               'addDeviceFlow.addLines': {
-                next: 'addDeviceFlow.showActivationCode',
+                nextOptions: {
+                  next: 'addDeviceFlow.showActivationCode',
+                  calendar: 'addDeviceFlow.editCalendarService',
+                },
               },
               'addDeviceFlow.callConnectOptions': {
+                nextOptions: {
+                  next: 'addDeviceFlow.showActivationCode',
+                  calendar: 'addDeviceFlow.editCalendarService',
+                },
+              },
+              'addDeviceFlow.editCalendarService': {
                 next: 'addDeviceFlow.showActivationCode',
               },
               'addDeviceFlow.showActivationCode': {},

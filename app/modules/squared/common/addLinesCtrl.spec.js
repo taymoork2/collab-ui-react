@@ -62,6 +62,7 @@ describe('AddLinesCtrl: Ctrl', function () {
     function isLastStep() {
       return false;
     }
+
     $scope.wizard.isLastStep = isLastStep;
 
     spyOn($state, 'go');
@@ -152,6 +153,57 @@ describe('AddLinesCtrl: Ctrl', function () {
       entitlements = ['something', 'else'];
     });
 
+    describe('has next', function () {
+      describe('with enableCalService', function () {
+        beforeEach(function () {
+          $stateParams.wizard = {
+            state: function () {
+              return {
+                data: {
+                  account: {
+                    cisUuid: deviceCisUuid,
+                    enableCalService: true,
+                  },
+                },
+              };
+            },
+            next: function () {
+            },
+          };
+          spyOn($stateParams.wizard, 'next');
+          initController();
+        });
+        it('should evaluate hasNext to true', function () {
+          expect(controller.hasNextStep()).toBe(true);
+        });
+      });
+      describe('with enableCalService false and it is editServices', function () {
+        beforeEach(function () {
+          $stateParams.wizard = {
+            state: function () {
+              return {
+                data: {
+                  function: "editServices",
+                  account: {
+                    cisUuid: deviceCisUuid,
+                    enableCalService: false,
+                  },
+                },
+              };
+            },
+            next: function () {
+            },
+          };
+          spyOn($stateParams.wizard, 'next');
+          initController();
+        });
+
+        it('should evaluate hasNext to false', function () {
+          expect(controller.hasNextStep()).toBe(false);
+        });
+      });
+    });
+
     describe('next', function () {
       beforeEach(function () {
         $stateParams.wizard = {
@@ -164,7 +216,8 @@ describe('AddLinesCtrl: Ctrl', function () {
               },
             };
           },
-          next: function () {},
+          next: function () {
+          },
         };
         spyOn($stateParams.wizard, 'next');
         initController();
@@ -209,7 +262,8 @@ describe('AddLinesCtrl: Ctrl', function () {
         };
         spyOn($stateParams.wizard, 'save');
         initController();
-        $scope.$dismiss = function () {};
+        $scope.$dismiss = function () {
+        };
         spyOn($scope, '$dismiss');
         spyOn(Notification, 'success');
         spyOn(Notification, 'errorResponse');
