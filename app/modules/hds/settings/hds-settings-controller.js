@@ -70,14 +70,13 @@
 
     function init() {
       getOrgHdsInfo();
-      //recoverPreTrial();
     }
 
     function getTrialUsersInfo() {
       HDSService.getHdsTrialUsers(Authinfo.getOrgId(), vm.trialUserGroupId)
         .then(function (data) {
           var trialUsers = _.isObject(data.members) ? data.members : {};
-          vm.numTrialUsers = trialUsers.length > 0 ? trialUsers.length : 0;
+          vm.numTrialUsers = _.size(trialUsers);
         }).catch(function (error) {
           Notification.errorWithTrackingId(error, localizedHdsModeError);
         });

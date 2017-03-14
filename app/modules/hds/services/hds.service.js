@@ -92,17 +92,18 @@
     }
 
     function queryUsers(oid, emails) {
-      var serviceUrl = UrlConfig.getScimUrl(oid);
-      var emailFilter = _.chain(emails)
-        .map(function (email) {
-          return 'username eq "' + email.text + '"';
-        })
-        .join(' or ')
-        .value();
-      if (emails.length < 1) {
-        emailFilter = 'username eq ' + '" "';
+      var emailFilter = '';
+      if (_.size(emails) === 0) {
+        emailFilter = 'username eq " "';
+      } else {
+        emailFilter = _.chain(emails)
+          .map(function (email) {
+            return 'username eq "' + email.text + '"';
+          })
+          .join(' or ')
+          .value();
       }
-      serviceUrl += '?filter=' + emailFilter;
+      var serviceUrl = UrlConfig.getScimUrl(oid) + '?filter=' + emailFilter;
       return $http.get(serviceUrl).then(extractData);
     }
 
