@@ -66,7 +66,7 @@ export class SipDomainSettingController {
       this.subdomainCount++;
       this.checkRoomLicense();
 
-      let onSaveEventDeregister = this.$rootScope.$on(this.WIZARD_BROADCAST, (): void => {
+      let onSaveEventDeregister = this.$scope.$on(this.WIZARD_BROADCAST, (): void => {
         if (this.toggle) {
           if (this.inputValue === this.currentDisplayName) {
             this.$rootScope.$emit(this.WIZARD_EMIT);
