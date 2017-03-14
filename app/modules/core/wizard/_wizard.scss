@@ -1,6 +1,6 @@
-@import 'styles/toolkit/colors';
-@import 'styles/toolkit/fonts';
-@import 'styles/toolkit/spacing';
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/typography';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
 
 .wizard {
   display: flex;
@@ -93,7 +93,7 @@ cr-wizard-nav {
   }
 
   .wizard-menu-title {
-    font-family: $brand-font-cisco-TT-Light;
+    font-family: $brand-font-light;
     font-size: 20px;
     color: $brand-white;
   }
@@ -133,8 +133,8 @@ cr-wizard-nav {
   }
 
   .icon {
-    background-color: $component-active-bg;
-    color: $component-active-color;
+    background-color: $color-primary;
+    color: $white;
     border-radius: 50%;
     width: 50px;
     height: 50px;
@@ -160,14 +160,14 @@ cr-wizard-main,
   color: $gray-darker;
   padding: 2rem;
   float: left;
-  font-family: $brand-font-cisco-TT-Light;
+  font-family: $brand-font-light;
   overflow: hidden;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
 
   p {
-    font-family: $brand-font-cisco-TT-Light;
+    font-family: $brand-font-light;
   }
 
   label {
@@ -175,7 +175,7 @@ cr-wizard-main,
   }
 
   .wizard-main-title span {
-    font-family: $brand-font-cisco-TT-Extra-Light;
+    font-family: $brand-font-extra-light;
     font-size: 36px;
   }
 

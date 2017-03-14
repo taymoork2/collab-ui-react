@@ -1,6 +1,7 @@
-@import 'styles/toolkit/colors';
-@import 'styles/toolkit/fonts';
-@import 'styles/toolkit/spacing';
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/typography';
+@import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
 
 // TODO: rip this out once confirmed no longer needed
 .trial-modal.form-horizontal {

@@ -1,7 +1,7 @@
-@import 'styles/toolkit/colors';
-@import 'styles/toolkit/fonts';
-@import 'styles/toolkit/spacing';
-@import 'styles/toolkit/layout';
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/typography';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~collab-ui/scss/tools/placeholders/page-layout';
 
 .features-loading {
   font-size: 3rem;
@@ -77,7 +77,7 @@
     display: block;
     color: $gray-base;
     font-family: $brand-font-light;
-    font-size: $font-size-large;
+    font-size: $base-font-size;
     line-height: rem-calc(24);
 
     span {
@@ -88,7 +88,7 @@
   .card-members {
     color: $gray-dark;
     font-family: $brand-font-light;
-    font-size: $font-size-base;
+    font-size: $h6-font-size;
   }
 
   .card-footer {

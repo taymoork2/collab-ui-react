@@ -1,4 +1,5 @@
-@import 'styles/toolkit/colors';
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/typography';
 
 .device-usage-report-pages {
   @import 'least-most.scss';
@@ -31,7 +32,7 @@
     padding-bottom: 0.3rem;
     padding-top: 0.3rem;
     &.missing {
-      color: #770000;
+      color: $color-negative-darker;
       cursor: help;
     }
     &.name {
@@ -60,7 +61,7 @@
 
   .total-usage-table {
     .digit {
-      font-family: 'CiscoSansTT Thin';
+      font-family: $brand-font-thin;
       font-size: 3rem;
       color: $brand-primary;
       min-height: 4.5rem;
@@ -78,12 +79,12 @@
   .card-look {
     margin: 1rem;
     border-radius: 2px;
-    background-color: #FFF;
+    background-color: $white;
     box-shadow: 0px 1px 2px 1px rgba(52, 53, 55, 0.18);
 
     .header {
       padding: 1rem;
-      border-bottom: 1px solid #d7d7d8;
+      border-bottom: 1px solid $gray-light-2;
     }
 
     .corrected {
@@ -103,8 +104,8 @@
       }
 
       .amcharts-main-div {
-        font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
-        color: #4F5051;
+        font-family: $brand-font-light;
+        color: $gray-dark-2;
         font-weight: normal;
       }
 

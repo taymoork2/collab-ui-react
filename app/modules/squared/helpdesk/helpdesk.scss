@@ -1,5 +1,7 @@
-@import 'styles/toolkit/colors';
-@import 'styles/toolkit/layout';
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/typography';
+@import '~collab-ui/scss/tools/placeholders/page-layout';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
 
 .helpdesklaunch-state {
   @extend %page-background-white;

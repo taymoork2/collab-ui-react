@@ -73,7 +73,7 @@
     "bootstrap-tokenfield": "~0.12.0",
     "clipboard": "~1.5.5",
     "collab-amcharts": "~3.19.4",
-    "collab-ui": "~2.41.0",
+    "collab-ui": "~3.0.0",
     "collab-ui-formly": "~2.0.3",
     "collab-ui-ng": "~3.6.0",
     "collab-ui-stickyfill": "~1.1.5",

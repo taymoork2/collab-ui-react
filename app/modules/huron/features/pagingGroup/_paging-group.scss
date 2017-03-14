@@ -1,6 +1,7 @@
-@import 'styles/toolkit/colors';
-@import 'styles/toolkit/spacing';
-@import 'styles/toolkit/layout';
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/typography';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~collab-ui/scss/tools/placeholders/page-layout';
 
 .paging-group-member-lookup {
   .cs-card-layout {
@@ -140,7 +141,7 @@
     .title {
       color: $gray-light-1;
       font-family: $brand-font-thin;
-      font-size: $font-size-h2;
+      font-size: $h2-font-size;
     }
 
     .desc {
@@ -149,7 +150,7 @@
       color: $gray-base;
       font-family: $brand-font-light;
       font-style: italic;
-      font-size: $font-size-h5;
+      font-size: $h5-font-size;
     }
 
     .initiator-warning {
