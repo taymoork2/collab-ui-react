@@ -82,10 +82,8 @@ export class SipDomainSettingController {
       $scope.$on('$destroy', onSaveEventDeregister);
 
       if (this.toggle) {
-        this.ServiceDescriptor.isServiceEnabled('squared-fusion-ec', (error: any, enabled: boolean): void => {
-          if (!error) {
-            this.isCsc = enabled;
-          }
+        this.ServiceDescriptor.isServiceEnabled('squared-fusion-ec').then((enabled: boolean): void => {
+          this.isCsc = enabled;
         });
 
         let onSettingsSaveEventDeregister = this.$rootScope.$on(this.SAVE_BROADCAST, (): void => {
