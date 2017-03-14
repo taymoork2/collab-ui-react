@@ -89,7 +89,6 @@
     require('modules/huron/telephony/telephonyConfig'),
     require('modules/huron/telephony/cmiServices'),
     require('modules/huron/autoAnswer').default,
-    require('modules/huron/settings').default,
     require('modules/huron/pstn').default,
     require('modules/huron/pstn/pstnProviders').default,
     require('modules/huron/overview').default,

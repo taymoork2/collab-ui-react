@@ -1,10 +1,13 @@
 (function () {
   'use strict';
 
-  angular
-    .module('uc.autoattendant')
+  module.exports = angular
+    .module('uc.autoattendant.ce-service', [
+      require('angular-resource'),
+    ])
     .factory('CeService', CeService)
-    .factory('CeSiteService', CeSiteService);
+    .factory('CeSiteService', CeSiteService)
+    .name;
 
   /* @ngInject */
   function CeService($resource, HuronConfig) {

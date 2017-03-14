@@ -1,9 +1,10 @@
   (function () {
     'use strict';
 
-    angular
-      .module('Huron')
-      .factory('ExternalNumberPool', ExternalNumberPool);
+    module.exports = angular
+      .module('huron.external-number-pool', [])
+      .factory('ExternalNumberPool', ExternalNumberPool)
+      .name;
 
     /* @ngInject */
     function ExternalNumberPool($q, ExternalNumberPoolService) {

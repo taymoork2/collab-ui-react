@@ -17,8 +17,11 @@
       ng-change="$ctrl.onExternalVoicemailAccessChanged()"
       cs-input-label="{{::'serviceSetupModal.externalVoicemailAccessLabel' | translate}}">
     <div ng-if="$ctrl.externalVoicemailAccess" class="indent-area-code">
-      <p class="description-block" translate="serviceSetupModal.externalNumberDescriptionText"></p>
-      <div class="medium-5 save-popup-margin">
+      <p
+        class="description-block"
+        translate="serviceSetupModal.externalNumberDescriptionText">
+      </p>
+      <div class="medium-5 external-voicemail-number">
         <cs-select
           name="companyVoicemailNumber"
           ng-model="$ctrl.selectedNumber"
@@ -31,6 +34,11 @@
           filter="true"
           refresh-data-fn="$ctrl.getNumbers(filter)">
         </cs-select>
+        <p
+          class="help-block"
+          ng-if="!$ctrl.missingDirectNumbers"
+          translate="serviceSetupModal.voicemailPilotHelpText">
+        </p>
       </div>
     </div>
     <input
