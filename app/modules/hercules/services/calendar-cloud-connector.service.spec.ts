@@ -1,29 +1,26 @@
-'use strict';
+describe('CloudConnectorService', () => {
 
-describe('Service: CloudConnectorService', function () {
-
-  var $httpBackend, CloudConnectorService;
+  let $httpBackend, CloudConnectorService;
 
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module(mockDependencies));
-  beforeEach(inject(dependencies));
 
-  function dependencies(_CloudConnectorService_, _$httpBackend_) {
+  beforeEach(inject((_CloudConnectorService_, _$httpBackend_) => {
     CloudConnectorService = _CloudConnectorService_;
     $httpBackend = _$httpBackend_;
-  }
+  }));
 
   function mockDependencies($provide) {
-    var Authinfo = {
+    let Authinfo = {
       getOrgId: sinon.stub().returns('myOrgId'),
       isFusionGoogleCal: sinon.stub().returns(true),
     };
     $provide.value('Authinfo', Authinfo);
   }
 
-  describe('.getStatusCss()', function () {
+  describe('.getStatusCss()', () => {
 
-    it('should just work', function () {
+    it('should just work', () => {
       expect(CloudConnectorService.getStatusCss(null)).toBe('default');
       expect(CloudConnectorService.getStatusCss({})).toBe('default');
       expect(CloudConnectorService.getStatusCss({ provisioned: false, status: 'OK' })).toBe('default');
@@ -35,21 +32,25 @@ describe('Service: CloudConnectorService', function () {
 
   describe('.updateConfig()', function () {
 
-    var serviceId = 'squared';
-
-    afterEach(function () {
+    afterEach(() => {
       $httpBackend.verifyNoOutstandingExpectation();
       $httpBackend.verifyNoOutstandingRequest();
     });
 
-    it('should post the service account, ACL account, and private key to the correct API', function () {
-      var inputData = {
+    afterAll(() => {
+      CloudConnectorService = $httpBackend = undefined;
+    });
+
+    let serviceId = 'squared';
+
+    it('should post the service account, ACL account, and private key to the correct API', () => {
+      let inputData = {
         newServiceAccountId: 'test@example.org',
         newAclAccount: 'acl@example.org',
         privateKey: 'header,actualKeyData',
         serviceId: serviceId,
       };
-      var dataToBeSentToServer = {
+      let dataToBeSentToServer = {
         serviceAccountId: 'test@example.org',
         aclAdminAccount: 'acl@example.org',
         privateKeyData: 'actualKeyData',
@@ -60,14 +61,14 @@ describe('Service: CloudConnectorService', function () {
       $httpBackend.flush();
     });
 
-    it('should post an empty ACL account if an empty string is provided, because doing so is supposed to clear it server-side', function () {
-      var inputData = {
+    it('should post an empty ACL account if an empty string is provided, because doing so is supposed to clear it server-side', () => {
+      let inputData = {
         newServiceAccountId: 'test@example.org',
         newAclAccount: '',
         privateKey: 'header,actualKeyData',
         serviceId: serviceId,
       };
-      var dataToBeSentToServer = {
+      let dataToBeSentToServer = {
         serviceAccountId: 'test@example.org',
         aclAdminAccount: '',
         privateKeyData: 'actualKeyData',
@@ -79,4 +80,5 @@ describe('Service: CloudConnectorService', function () {
     });
 
   });
+
 });
