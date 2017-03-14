@@ -76,7 +76,7 @@
       HDSService.getHdsTrialUsers(Authinfo.getOrgId(), vm.trialUserGroupId)
         .then(function (data) {
           var trialUsers = _.isObject(data.members) ? data.members : {};
-          vm.numTrialUsers = trialUsers.length;
+          vm.numTrialUsers = _.size(trialUsers);
         }).catch(function (error) {
           Notification.errorWithTrackingId(error, localizedHdsModeError);
         });
