@@ -1,9 +1,9 @@
-import { IClusterV1 } from 'modules/hercules/herculesInterfaces';
+import { ICluster } from 'modules/hercules/hybrid-services.types';
 import { Notification } from 'modules/core/notifications/notification.service';
 
 export class NodeListComponentCtrl implements ng.IComponentController {
 
-  private cluster: IClusterV1;
+  private cluster: ICluster;
   private hosts;
   public connectorType;
   public getSeverity = this.FusionClusterStatesService.getSeverity;
