@@ -5,7 +5,7 @@
     .module('Core')
     .controller('SettingsMenuCtrl', SettingsMenuCtrl);
 
-  function SettingsMenuCtrl($rootScope, $state, $translate, languages, Storage) {
+  function SettingsMenuCtrl($location, $rootScope, $state, $stateParams, $translate, languages, SessionStorage, Storage, StorageKeys) {
     var vm = this;
 
     vm.options = _.map(languages, function (lang) {
@@ -26,6 +26,9 @@
       $translate.use(vm.selected.value).then(function () {
         moment.locale(vm.selected.value);
         Storage.put('language', vm.selected.value);
+        SessionStorage.put(StorageKeys.REQUESTED_STATE_NAME, $state.current.name);
+        SessionStorage.putObject(StorageKeys.REQUESTED_STATE_PARAMS, $stateParams);
+        SessionStorage.putObject(StorageKeys.REQUESTED_QUERY_PARAMS, $location.search());
         $state.go('login');
         $rootScope.$broadcast('TABS_UPDATED');
       });
