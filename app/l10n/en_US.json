@@ -2448,6 +2448,8 @@
       "fieldsetPage": {
         "fieldsetId": "Fieldset ID",
         "numOfFields": "No. of Fields",
+        "fields": "Fields",
+        "listOfFields": "List of fields in this fieldset",
         "fieldsetReadFailed": "Unable to retrieve fieldsets. Refresh your browser to try again.",
         "noneFound": "No fieldsets found"
       }

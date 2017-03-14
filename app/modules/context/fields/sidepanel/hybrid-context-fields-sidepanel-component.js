@@ -13,13 +13,14 @@ require('./_fields-sidepanel.scss');
     });
 
     /* @ngInject */
-  function ContextFieldsSidepanelCtrl(ContextFieldsetsService) {
+  function ContextFieldsSidepanelCtrl(ContextFieldsetsService, $filter, $translate) {
 
     var vm = this;
     vm.associatedFieldsets = [];
     vm.fetchFailure = false;
     vm.fetchInProgress = false;
     vm.searchable = true;
+    vm.lastUpdated = $filter('date')(vm.field.lastUpdated, $translate.instant('context.dictionary.fieldPage.dateFormat'));
 
     vm.getLabelLength = function () {
       return _.isObject(vm.field.translations)

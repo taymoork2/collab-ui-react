@@ -521,6 +521,7 @@
         'context-settings',
         'context-fields',
         'context-fieldsets',
+        'context-fieldsets-sidepanel',
         'context-resources',
         'context-cluster-sidepanel',
         'add-resource',
