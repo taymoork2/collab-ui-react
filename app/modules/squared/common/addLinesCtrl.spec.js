@@ -228,7 +228,6 @@ describe('AddLinesCtrl: Ctrl', function () {
           assignedDn: { pattern: directoryNumber },
           externalNumber: { pattern: 'Ingen', uuid: 'none' },
         }];
-        // spyOn(controller, 'getSelectedNumbers').and.returnValue({ directoryNumber: directoryNumber });
         controller.next();
         $scope.$apply();
         expect($stateParams.wizard.next).toHaveBeenCalled();
