@@ -14,7 +14,7 @@ function webpackConfig(env) {
 
   config.entry = {
     preload: ['scripts/preload'],
-    app: ['bootstrap'],
+    app: ['polyfills', 'bootstrap'],
     styles: ['styles/app'],
   };
 
