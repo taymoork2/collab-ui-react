@@ -2575,7 +2575,10 @@
         "confirmProdMoveDialogHeader": "Move to Production Mode?",
         "confirmProdMoveDialogBody": "It is not possible to undo this action or return to Trial mode. For various reasons this is a one-way street.",
         "confirmProdMoveDialogButton": "Production Mode",
+        "confirmDeactivateTrialDialogHeader": "Deactivate Service?",
+        "confirmDeactivateTrialDialogBody": "WARNING!: If you deactivate this service, your users will no longer have access to decrypt content. Because you are in Trial Mode you will need to start a new trial after you deactivate.",
         "succeedMoveToProductionMode": "Succeeded to Move to Production Mode",
+        "deavtivateTrialModeDesc": "Deactivating Hybrid Data Security Service removes all service-related features for users.",
         "hdsModeGetError": "Failed to get HDS mode: "
       },
       "addTrialUsers": {
