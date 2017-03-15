@@ -82,7 +82,7 @@
         directoryNumber = entity.assignedDn.pattern;
       }
       var externalNumber;
-      if (entity.externalNumber && entity.externalNumber.pattern !== 'None') {
+      if (entity.externalNumber && entity.externalNumber.uuid !== 'none') {
         externalNumber = entity.externalNumber.pattern;
       }
       return {
