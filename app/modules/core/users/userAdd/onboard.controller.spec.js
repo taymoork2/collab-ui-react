@@ -75,7 +75,6 @@ describe('OnboardCtrl: Ctrl', function () {
 
     spyOn(this.Notification, 'notify');
 
-    spyOn(this.Orgservice, 'getHybridServiceAcknowledged').and.returnValue(this.$q.when(this.mock.fusionServices));
     spyOn(this.Orgservice, 'getUnlicensedUsers').and.callFake(function (callback) {
       callback(this.mock.unlicensedUsers, 200);
     }.bind(this));

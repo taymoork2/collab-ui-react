@@ -6,7 +6,7 @@
     .factory('OverviewHybridMediaNotification', OverviewHybridMediaNotification);
 
   /* @ngInject */
-  function OverviewHybridMediaNotification($state, Orgservice) {
+  function OverviewHybridMediaNotification($state, ServiceDescriptor) {
     return {
       createNotification: function createNotification() {
         var notification = {
@@ -14,7 +14,8 @@
           badgeType: 'success',
           canDismiss: true,
           dismiss: function () {
-            Orgservice.setHybridServiceAcknowledged('squared-fusion-media');
+
+            ServiceDescriptor.acknowledgeService('squared-fusion-media');
           },
           link: function () {
             $state.go('media-service-v2.list');

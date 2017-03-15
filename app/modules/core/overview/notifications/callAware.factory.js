@@ -6,7 +6,7 @@
     .factory('OverviewCallAwareNotification', OverviewCallAwareNotification);
 
   /* @ngInject */
-  function OverviewCallAwareNotification($state, Orgservice) {
+  function OverviewCallAwareNotification($state, ServiceDescriptor) {
     return {
       createNotification: function createNotification() {
         var notification = {
@@ -14,7 +14,7 @@
           badgeType: 'success',
           canDismiss: true,
           dismiss: function () {
-            Orgservice.setHybridServiceAcknowledged('call-aware-service');
+            ServiceDescriptor.acknowledgeService('call-aware-service');
           },
           link: function () {
             $state.go('call-service.list');

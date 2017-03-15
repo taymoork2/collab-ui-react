@@ -6,7 +6,7 @@
     .factory('OverviewCalendarNotification', OverviewCalendarNotification);
 
   /* @ngInject */
-  function OverviewCalendarNotification($state, Orgservice) {
+  function OverviewCalendarNotification($state, ServiceDescriptor) {
     return {
       createNotification: function createNotification() {
         var notification = {
@@ -14,7 +14,7 @@
           badgeType: 'success',
           canDismiss: true,
           dismiss: function () {
-            Orgservice.setHybridServiceAcknowledged('calendar-service');
+            ServiceDescriptor.acknowledgeService('calendar-service');
           },
           link: function () {
             $state.go('calendar-service.list');
