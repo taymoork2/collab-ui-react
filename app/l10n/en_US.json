@@ -2568,7 +2568,7 @@
         "serviceTrialModeTitle": "Trial Mode",
         "serviceTrialModeDesc": "Trial Started Month DD, YYYY at HH:MM PM",
         "serviceProductionModeTitle": "Production Mode",
-        "serviceProductionModeDesc": "In this mode all users in your org will use this service",
+        "serviceProductionModeDesc": "Production Domain: {{prod}}<br/>All users of this organization are using this HDS cluster.",
         "moveToProduction": "Move to Production",
         "addTrialUsers": "Add Trial Users",
         "editTrialUsers": "Edit Users in Trial",
