@@ -3716,6 +3716,7 @@
     "placeOrder": "Place Order",
     "orderBlock": "Order Block Numbers",
     "newNumbersTab": "Standard Numbers",
+    "newNumbersTabDesc": "Enter the phone number you want to add starting with the area code. For US and Canada, enter the area code and NXX of the number. For all other countries, enter the area code and first 3 to 4 digits of the number.",
     "newTollFreeTab": "Toll-Free Numbers",
     "portNumbersTab": "Porting Numbers",
     "portNumbersPrompt": "Copy and paste customer's numbers that need to be ported.",
@@ -3774,6 +3775,11 @@
     "serviceAddressConfirmation": "Is this the address?",
     "serviceAddressNotFound": "Unable to find address. Please update and try again.",
     "orderNumber": "Order Number",
+    "pstnSelector": {
+      "searchPlaceholder": "Enter area code and/or number prefix",
+      "searchDesc": "e.g. 972 or 972867",
+      "noResults": "No Numbers Found"
+    },
     "advancedOrder": {
       "noResults": "No search results but we have a solution.",
       "detail": "Though we don’t have any numbers to show in the search results, we can still put in a special order to get {{areaCode}} area code numbers. It could take about 5 days to fullfill the order by the provider.",
@@ -3794,7 +3800,8 @@
         "inventory": "Failed to retrieve toll-free number inventory."
       },
       "unsupportedNumberType": "The number type {{type}} for phone number {{number}} is currently not supported yet.",
-      "unsupportedOrderType": "Error while adding your order to the order cart. The order type {{type}} is currently not supported yet."
+      "unsupportedOrderType": "Error while adding your order to the order cart. The order type {{type}} is currently not supported yet.",
+      "phoneNumbers": "You can only add up to 10 phone numbers."
     },
     "orderStatus": {
       "pinRequired": "Customer needs to sign PSTN Contract.",

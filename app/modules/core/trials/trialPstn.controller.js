@@ -13,6 +13,7 @@
     var NXX_EMPTY = '--';
     var MAX_CARRIER_CNT = 50;
     var pstnTokenLimit = 10;
+    var pageSize = 15;
     var SELECT = '';
 
     vm.parentTrialData = $scope.$parent.trialData;
@@ -34,7 +35,25 @@
     vm._getCarriers = _getCarriers;
     vm.onProviderChange = onProviderChange;
     vm.onProviderReady = onProviderReady;
+    vm.addToCart = addToCart;
+    vm.removeOrder = removeOrder;
+    vm.maxSelection = pstnTokenLimit;
     vm.location = '';
+    vm.paginateOptions = {
+      currentPage: 0,
+      pageSize: pageSize,
+      numberOfPages: function () {
+        return Math.ceil(vm.searchResults.length / this.pageSize);
+      },
+      previousPage: function () {
+        vm.searchResultsModel = {};
+        this.currentPage--;
+      },
+      nextPage: function () {
+        vm.searchResultsModel = {};
+        this.currentPage++;
+      },
+    };
 
     vm.pstn = {
       stateOptions: [],
@@ -154,6 +173,11 @@
       FeatureToggleService.supports(FeatureToggleService.features.huronSupportThinktel)
       .then(function (results) {
         vm.ftHuronSupportThinktel = results;
+      });
+
+      FeatureToggleService.supports(FeatureToggleService.features.huronFederatedSparkCall)
+      .then(function (results) {
+        vm.ftHuronFederatedSparkCall = results;
       });
 
       PstnSetupStatesService.getLocation(vm.trialData.details.countryCode).then(loadLocations);
@@ -301,11 +325,36 @@
       return null;
     }
 
-    function searchCarrierInventory() {
-      vm.trialData.details.pstnNumberInfo.numbers = [];
+    function removeOrder(order) {
+      vm.trialData.details.pstnNumberInfo.numbers.splice(vm.trialData.details.pstnNumberInfo.numbers.indexOf(order), 1);
+      vm.maxSelection = 10 - vm.trialData.details.pstnNumberInfo.numbers.length;
+    }
+
+    function addToCart(searchResultsModel) {
+      _.forIn(searchResultsModel, function (value, _key) {
+        if (value) {
+          var key = _.parseInt(_key);
+          var searchResultsIndex = (vm.paginateOptions.currentPage * vm.paginateOptions.pageSize) + key;
+          if (searchResultsIndex < vm.searchResults.length && !vm.trialData.details.pstnNumberInfo.numbers.includes(vm.searchResults[searchResultsIndex])) {
+            vm.trialData.details.pstnNumberInfo.numbers.push(vm.searchResults[searchResultsIndex]);
+          }
+        }
+      });
+      vm.maxSelection = 10 - vm.trialData.details.pstnNumberInfo.numbers.length;
+      vm.searchResults = [];
+    }
+
+    function searchCarrierInventory(value) {
+      if (value) {
+        vm.trialData.details.pstnNumberInfo.areaCode = {
+          code: ('' + value).slice(0, 3),
+        };
+      } else {
+        vm.trialData.details.pstnNumberInfo.numbers = [];
+      }
       var params = {
         npa: vm.trialData.details.pstnNumberInfo.areaCode.code,
-        count: pstnTokenLimit.toString(),
+        count: '1',
         sequential: false,
       };
 
@@ -316,8 +365,12 @@
 
       PstnSetupService.searchCarrierInventory(vm.trialData.details.pstnProvider.uuid, params)
         .then(function (numberRanges) {
-          for (var index = 0; index < pstnTokenLimit; index++) {
-            vm.trialData.details.pstnNumberInfo.numbers.push(numberRanges[0][index]);
+          vm.searchResults = _.flatten(numberRanges);
+          vm.showNoResult = vm.searchResults.length === 0;
+          if (!value) {
+            for (var index = 0; index < pstnTokenLimit; index++) {
+              vm.trialData.details.pstnNumberInfo.numbers.push(numberRanges[0][index]);
+            }
           }
           $('#didAddField').tokenfield('setTokens', vm.trialData.details.pstnNumberInfo.numbers.toString());
         })

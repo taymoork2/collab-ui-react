@@ -232,13 +232,14 @@
     function getCarrierInventory(carrierId, state, npa) {
       var config = {
         carrierId: carrierId,
-        state: state,
       };
       if (_.isString(npa)) {
         if (npa.length > 0) {
           config[NPA] = npa;
           config[GROUP_BY] = NXX;
         }
+      } else {
+        config.state = state;
       }
       return TerminusCarrierInventoryCount.get(config).$promise;
     }

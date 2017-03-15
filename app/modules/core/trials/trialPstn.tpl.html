@@ -61,8 +61,34 @@
         </div>
       </div>
 
+      <div class="cs-form__section flex-container pstn-selector-container" ng-if="!(!pstnTrial.ftHuronFederatedSparkCall || pstnTrial.providerImplementation === pstnTrial.SWIVEL || pstnTrial.trialData.details.pstnProvider.apiImplementation === pstnTrial.SWIVEL)">
+        <div class="flex-2">
+          <h4 translate="trialModal.pstn.phoneNumbers"></h4>
+          <h6 class="section__description" translate="pstnSetup.newNumbersTabDesc"></h6>
+          <pstn-selector
+           search="pstnTrial.searchCarrierInventory(value)"
+           search-results="pstnTrial.searchResults"
+           paginate-options="pstnTrial.paginateOptions"
+           add-to-cart="pstnTrial.addToCart(searchResultModel)"
+           simple="true"
+           max-selection="pstnTrial.maxSelection"
+           error-message="{{'pstnSetup.error.phoneNumbers' | translate}}"
+           show-no-result="pstnTrial.showNoResult">
+          </pstn-selector>
+        </div>
+        <div class="flex-1">
+          <div class="provider-flex"><h1 class="h4">{{::pstnTrial.trialData.details.pstnProvider.title}}</h1><h1 class="h4"><span class="badge">{{pstnTrial.trialData.details.pstnNumberInfo.numbers.length}}</span></h1></div>
+          <ul class="list-group">
+             <li class="list-group-item list-token" ng-repeat="order in pstnTrial.trialData.details.pstnNumberInfo.numbers">
+              <span>{{::order}}</span>
+              <button type="button" class="close" ng-click="pstnTrial.removeOrder(order)"><span class="sr-only" translate="common.delete"></span></button>
+            </li>
+          </ul>
+        </div>
+      </div>
+
       <!-- provider numbers -->
-      <div class="cs-form__section" ng-hide="pstnTrial.providerImplementation === pstnTrial.SWIVEL || pstnTrial.trialData.details.pstnProvider.apiImplementation === pstnTrial.SWIVEL">
+      <div class="cs-form__section" ng-hide="pstnTrial.ftHuronFederatedSparkCall || pstnTrial.providerImplementation === pstnTrial.SWIVEL || pstnTrial.trialData.details.pstnProvider.apiImplementation === pstnTrial.SWIVEL">
         <div class="section__info">
           <h4 translate="trialModal.pstn.phoneNumbers"></h4>
           <h6 class="section__description" translate="trialModal.pstn.pleaseAdd10"></h6>
