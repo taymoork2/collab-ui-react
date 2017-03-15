@@ -49,10 +49,8 @@
         </div>
         <div ng-if="hdsSettings.model.serviceMode === hdsSettings.PRODUCTION">
             <h5 class="sub-section__label" translate="hds.resources.settings.serviceProductionModeTitle"></h5>
-            <p class="sub-section__description" translate="hds.resources.settings.serviceNodeDesc"
-                translate-values="{nodes : hdsSettings.numResourceNodes}"
-                translate-value-onclick="hdsSettings.addResource()"
-                translate-compile>
+            <p class="sub-section__description" translate="hds.resources.settings.serviceProductionModeDesc"
+                translate-values="{prod : hdsSettings.prodDomain}">
             </p>
         </div>
       </div>
