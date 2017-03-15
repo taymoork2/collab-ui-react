@@ -114,7 +114,9 @@
     }
 
     div.search-error {
-      padding-top: 2rem;
+      padding-top: 0.5rem;
+      float: left;
+      padding-left: 20px;
     }
 
     .search-spinner {
@@ -427,6 +429,10 @@
             padding-bottom: 0.25rem;
             color: $gray-dark-2;
           }
+        }
+
+        .report-section {
+          overflow: hidden;
         }
 
         .result-section {

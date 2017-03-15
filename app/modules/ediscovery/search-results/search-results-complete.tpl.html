@@ -9,7 +9,7 @@
   <br>
   <span>{{ediscoverySearchCtrl.searchResults.totalSize}}</span>
   <div class="row" ng-if="ediscoverySearchCtrl.report && ediscoverySearchCtrl.report.canBeDownloaded">
-    <div class="columns small-12 medium-12 large-10">
+    <div class="columns small-12 medium-12 large-12 results-spacing">
       <button cs-btn
               class="btn btn--primary"
               loading="ediscoverySearchCtrl.downloadingReport"
@@ -20,9 +20,10 @@
                 translate="ediscovery.search.viewReportsList"
                 ui-sref="ediscovery.reports">
       </button>
-      <div>
+      <!-- To be added when download content link is present -->
+      <!-- <div>
         <span translate="ediscovery.searchResults.downloadContent"></span>
-      </div>
+      </div> -->
       <div class="expiry-info">
         <i class="icon icon-warning"></i>
         <span translate="ediscovery.search.expiryInfo"></span>

@@ -10,7 +10,7 @@
       <div class="ediscovery-advanced-search">
         <!-- Search By Row-->
         <div class="row">
-          <div class="col-md-6 large-3 search-box">
+          <div class="col-md-6 search-box">
             <span class="search-text" translate="ediscovery.searchParameters.searchBy"></span>
             <cs-select ng-model="ediscoverySearchCtrl.searchBySelected"
               ng-change="ediscoverySearchCtrl.searchByParameters()"
@@ -69,7 +69,7 @@
           <button type="submit" class="btn btn--primary search-button" 
           translate="common.search" ng-click="ediscoverySearchCtrl.searchByLimit()"
           ng-disabled="ediscoverySearchCtrl.searchButtonDisabled(qForm.qInput.$invalid && qForm.qInput.$touched)"></button>
-          <div ng-if="ediscoverySearchCtrl.error">
+          <div ng-if="ediscoverySearchCtrl.error" class="search-error">
             <i class="icon icon-warning search-warning"></i>
             <span translate="ediscovery.searchParameters.noMatchesFound"></span>
           </div>
