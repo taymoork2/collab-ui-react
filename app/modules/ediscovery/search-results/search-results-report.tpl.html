@@ -18,9 +18,11 @@
       <h6 translate="ediscovery.searchResults.description"></h6>
       <input id="displayName" class="cs-input report-name" ng-model="ediscoverySearchCtrl.generateDescription">
       <h6 translate="ediscovery.searchResults.exportFormat"></h6>
-      <cs-select ng-model="ediscoverySearchCtrl.exportSelected" 
+      <!-- Will just be JSON until new export formats are used, the rest is stubbed out until then -->
+      <h7>JSON</h7>
+      <!-- <cs-select ng-model="ediscoverySearchCtrl.exportSelected" 
         options="ediscoverySearchCtrl.exportOptions"
-        placeholder="ediscoverySearchCtrl.exportOptions[0]"></cs-select>
+        placeholder="ediscoverySearchCtrl.exportOptions[0]"></cs-select> -->
     </div>
   </div>
   <div ng-show="!ediscoverySearchCtrl.report || (ediscoverySearchCtrl.report.state === 'FAILED' || ediscoverySearchCtrl.report.state === 'ABORTED')">

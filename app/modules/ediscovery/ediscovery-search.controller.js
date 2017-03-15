@@ -41,7 +41,7 @@ var Spark = require('@ciscospark/spark-core').default;
 
     /* initial search variables page */
     vm.searchPlaceholder = $translate.instant('ediscovery.searchParameters.searchByEmailPlaceholder');
-    vm.searchByOptions = ['Email ID', 'Room ID'];
+    vm.searchByOptions = ['Email ID', 'Space ID'];
     vm.searchBySelected = '' || vm.searchByOptions[0];
     vm.searchModel = null;
     vm.queryModel = null;
@@ -201,11 +201,12 @@ var Spark = require('@ciscospark/spark-core').default;
       vm.searchResults = {
         keywords: keywords,
         queries: queries,
+        numRooms: result.data.numRooms,
         numFiles: result.data.numFiles,
         numMessages: result.data.numMessages,
         totalSize: convertBytesToGB(result.data.totalSizeInBytes),
       };
-      vm.searchResultsHeader = _.eq(vm.searchByOptions[0], vm.searchBySelected) ? $translate.instant('ediscovery.searchResults.emailId') : $translate.instant('ediscovery.searchResults.roomId');
+      vm.searchResultsHeader = _.eq(vm.searchByOptions[0], vm.searchBySelected) ? $translate.instant('ediscovery.searchResults.emailId') : $translate.instant('ediscovery.searchResults.spaceId');
     }
 
     function advancedSearch() {
