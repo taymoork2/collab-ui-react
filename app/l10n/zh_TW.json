@@ -6,7 +6,8 @@
     "license": "使用 Cisco Spark 服務，即表示您接受「服務條款」和「隱私權聲明」。",
     "tos": "服務條款",
     "privacy": "隱私權聲明",
-    "copyright": "Cisco 及/或子公司。保留所有權利。"
+    "copyright": "Cisco 及/或子公司。保留所有權利。",
+    "expired": "階段作業由於處於非使用中狀態而過期。"
   },
   "termsOfService": {
     "title": "服務條款",
@@ -14,7 +15,7 @@
     "agree": "接受 ",
     "ciscoSpark": "Cisco Spark",
     "version": "版本：{{version}}",
-    "copyright1": "Copyright © 2016 Cisco Systems。",
+    "copyright1": "Copyright © 2017 Cisco Systems。",
     "copyright2": "保留所有權利。",
     "description": "Cisco Spark 是提供傳訊 (IM)、語音和視訊通話功能的協作應用程式。",
     "loggingOut": "正在登出..."
@@ -26,9 +27,9 @@
     "convertUsers": "轉換使用者",
     "errorWarningMessages": "警告與錯誤",
     "skipErrorsAndFinish": "跳過錯誤並完成",
-    "newUsers": "{newusers, plural, =1{# 個新使用者} other{# 個新使用者}}",
-    "updatedUsers": "{updatedusers, plural, =1{# 個已更新的使用者} other{# 個已更新的使用者}}",
-    "errors": "{errors, plural, =1{# 個錯誤} other{# 個錯誤}}",
+    "newUsers": "{newusers, plural, other{# 個新使用者}}",
+    "updatedUsers": "{updatedusers, plural, other{# 個已更新的使用者}}",
+    "errors": "{errors, plural, other{# 個錯誤}}",
     "pageTitle": "使用者",
     "subTitleAdd": "管理使用者",
     "subTitleEnable": "將權限授與使用者",
@@ -146,7 +147,8 @@
     "insufficientEntitlementsError": "無法新增 {{email}}。授權數目不足以建立此使用者。",
     "telstraAppRedirect": "正在連接 Telstra Apps Marketplace",
     "careAddUserError": "無法將使用者新增至「服務」。",
-    "careAddUserRoleError": "新增角色至使用者時發生錯誤。"
+    "careAddUserRoleError": "新增角色至使用者時發生錯誤。",
+    "loadError": "載入使用者清單時發生錯誤。"
   },
   "userManage": {
     "org": {
@@ -246,7 +248,7 @@
       "retryUsers": "重試",
       "retrying": "正在重試...",
       "retryingIn": "重試之前所經歷的時間：",
-      "retryingUsers": "{users, plural, =1{# 個使用者} other{# 個使用者}}",
+      "retryingUsers": "{users, plural, other{# 個使用者}}",
       "exportUserList": "匯出使用者清單。"
     },
     "advanced": {
@@ -363,7 +365,9 @@
     "spark": "Spark",
     "calling": "正在呼叫",
     "enabledBetaFeatures": "已啟用的 Beta 版功能",
-    "otpShareButton": "共用"
+    "otpShareButton": "共用",
+    "userDetails": "使用者詳細資料",
+    "userPreferredLanguageError": "無法擷取使用者偏好的語言。原因："
   },
   "tabs": {
     "overviewTab": "概觀",
@@ -466,7 +470,7 @@
     "customerOrgName": "公司/合作夥伴名稱",
     "customerAdminEmail": "管理員電子郵件",
     "partnerAdminEmail": "合作夥伴管理員電子郵件",
-    "collab": "標準團隊協作室 + 25 人會議",
+    "collab": "標準團隊空間 + 25 人會議",
     "squaredUC": "進階 Spark Call",
     "duration": "試用持續時間（天）",
     "ninetyDays": "90",
@@ -503,7 +507,6 @@
     "title": "管理範本"
   },
   "reportsPage": {
-    "title": "組織報告",
     "pageTitle": "報告",
     "all": "全部",
     "engagement": "參與度",
@@ -518,6 +521,7 @@
     "week2": "最近 7 天",
     "month": "最近 4 週",
     "month2": "最近 4 週",
+    "oneMonth": "上個月",
     "threeMonths": "最近 3 個月",
     "threeMonths2": "最近 3 個月",
     "lastTwelveWeeks": "最近 12 週",
@@ -556,7 +560,6 @@
       "distribution": "分佈",
       "timeline": "時間軸",
       "overview": "概觀",
-      "all": "全部",
       "deviceMetrics": "協作室裝置度量值",
       "downloadFullReport": "下載完整報告",
       "mostUsed": "最常使用",
@@ -575,7 +578,9 @@
       "last7Days": "最近 7 天",
       "last4Weeks": "每週（最近 4 週） ",
       "last3Months": "每月（最近 3 個月）",
-      "missingDays": " （遺漏了 {{nbrOfMissingDays}} 天的資料）",
+      "missingDays": "無可用資料的期間為 {{nbrOfMissingDays}} 天",
+      "nameNotFoundFor": "找不到下列項目的名稱：",
+      "selectModelsToFilterOn": "選取要過濾的型號",
       "deviceOptions": {
         "all": "全部",
         "roomSystems": "DX、MX 及 SX 裝置",
@@ -591,6 +596,32 @@
         "deviceUsageExportFailedOrCancelled": "裝置使用匯出失敗或已取消。"
       }
     }
+  },
+  "sharedMeetingReports": {
+    "title": "共用會議使用情況",
+    "link": "檢視報告",
+    "hostsSharingLicenses": "{{usage}} 個主持人使用 {{volume}} 個共用授權",
+    "availableSharedLicenses": "可用的共用授權： ",
+    "sharedMeetingReport": "共用會議報告",
+    "sharedMeetingUsage": "共用會議使用情況",
+    "sharedMeetingDescription": "此圖顯示每個月的並行會議數。",
+    "concurrentMeetingsTitle": "實際舉行的並行會議數",
+    "concurrentMeetings": "並行會議",
+    "maxMeetingsTitle": "允許的並行會議數上限",
+    "errorLoadingSharedMeetingData": "載入「共用會議報告」資料時發生問題。",
+    "errorLoadingSharedMeetingDetails": "載入「共用會議報告」詳細資料時發生問題。",
+    "siteUrlError": "網站 URL 未定義。無法擷取共用會議報告。",
+    "csvPageError": "無法擷取詳細報告進行下載。",
+    "downloadHref": "下載共用會議使用情況的<a href=\"{{href}}\" download=\"{{download}}\">詳細報告</a>。",
+    "downloadClick": "下載共用會議使用情況的<a ng-click=\"{{onclick}}\">詳細報告</a>。",
+    "csvMeetingTopic": "會議主題",
+    "csvStartTime": "開始時間",
+    "csvEndTime": "結束時間",
+    "csvConfId": "會議 ID",
+    "csvDuration": "會議持續時間（秒）",
+    "csvMeetingType": "會議類型",
+    "csvHostId": "主持人 ID",
+    "csvHostName": "主機名稱"
   },
   "careReportsPage": {
     "tasks": "聯絡人",
@@ -1036,21 +1067,23 @@
   },
   "common": {
     "add": "新增",
+    "agree": "同意",
     "alert": "警示",
     "all": "全部",
     "and": "及",
     "apply": "套用",
     "assign": "指派",
-    "agree": "同意",
+    "assigned": "指定",
     "back": "返回",
     "begin": "開始",
     "cancel": "取消",
     "ciscoCollaborationCloud": "Cisco Collaboration Cloud",
-    "cluster": "叢集",
     "close": "關閉",
+    "cluster": "叢集",
     "confirm": "確認",
     "continue": "繼續",
     "dateRange": "日期範圍",
+    "deactivate": "停用",
     "delete": "刪除",
     "description": "說明",
     "devices": "裝置",
@@ -1066,9 +1099,10 @@
     "firstName": "名字",
     "general": "一般",
     "help": "說明",
+    "hideAllAdminUsers": "隱藏管理員",
     "id": "ID",
-    "deactivate": "停用",
     "incorrectFormat": "格式不正確",
+    "info": "INFO",
     "invalidEmail": "這不是有效的電子郵件地址。",
     "invalidMax": "最大值為 {{max}}。",
     "invalidMaxLength": "字元長度不能超過 {{max}} 個。",
@@ -1084,7 +1118,6 @@
     "metrics": "度量",
     "modal": "模式",
     "modify": "修改",
-    "info": "INFO",
     "new": "新增",
     "next": "下一步",
     "no": "否",
@@ -1105,8 +1138,8 @@
     "postpone": "延遲",
     "proceed": "繼續",
     "quantity": "數量",
-    "remove": "移除",
     "releaseChannel": "發行通道",
+    "remove": "移除",
     "rename": "重新命名",
     "required": "必要",
     "reset": "重設",
@@ -1117,14 +1150,16 @@
     "search": "搜尋",
     "select": "選取",
     "selectLanguage": "請選取語言",
+    "service": "服務",
     "settings": "設定",
+    "showAllAdminUsers": "顯示所有 {{numUsers}} 個管理員",
     "status": "狀態",
     "submit": "提交",
     "to": "收件者",
     "trackingId": "追蹤 ID：{{trackingId}}。",
     "tryAgain": "請再試一次",
     "turnOff": "關閉",
-    "assigned": "指定",
+    "type": "類型",
     "unassigned": "未指派",
     "unknown": "不明",
     "update": "更新",
@@ -1133,22 +1168,21 @@
     "users": "使用者",
     "voice": "語音",
     "warning": "警告",
-    "yes": "是",
-    "type": "類型",
-    "service": "服務"
+    "yes": "是"
   },
   "notifications": {
     "success": "成功通知數",
     "error": "錯誤通知數",
-    "successTotal": "{total, plural, =1{# 個成功} other{# 個成功}}",
-    "errorTotal": "{total, plural, =1{# 個錯誤} other{# 個錯誤}}",
+    "successTotal": "{total, plural, other{# 個成功}}",
+    "errorTotal": "{total, plural, other{# 個錯誤}}",
     "successDelete": "已成功刪除 {{item}}。",
-    "errorDelete": "無法刪除 {{item}}。"
+    "errorDelete": "無法刪除 {{item}}。",
+    "genericError": "發生非預期的錯誤。請稍後再試一次。"
   },
   "time": {
-    "seconds": "{time, plural, =1{# 秒} other{# 秒}}",
-    "minutes": "{time, plural, =1{# 分} other{# 分}}",
-    "hours": "{time, plural, =1{# 小時} other{# 小時}}"
+    "seconds": "{time, plural, other{# 秒}}",
+    "minutes": "{time, plural, other{# 分}}",
+    "hours": "{time, plural, other{# 小時}}"
   },
   "callDestination": {
     "numberFormat": "號碼格式",
@@ -1225,7 +1259,11 @@
     "setUpHybridMediaService": "可以使用「混合媒體服務」。延伸雲端媒體，以將內部部署資源用於通話和會議。",
     "getStarted": "入門",
     "urgentUpgrade": "<a ui-sref='{{link}}'>{{connector}}</a> 有緊急升級可用，將在下一次排定的升級期間升級。",
-    "setUpHybridDataSecurity": "使用內部部署資料安全進行加密。"
+    "setUpHybridDataSecurity": "使用內部部署資料安全進行加密。",
+    "careLicenseMsgMissingText": "「訊息」對於「服務」而言是必要的。若要啟用「訊息」，請執行下列動作：",
+    "careLicenseCallMissingText": "「通話」對於語音型「服務」而言是必要的。若要啟用「通話」，請執行下列動作：",
+    "careLicenseMsgAndCallMissingText": "「訊息」和「通話」分別對於聊天和語音互動等「服務」而言是必要的。若要啟用「訊息」和「通話」，請執行下列動作：",
+    "careLicenseLinkText": "請聯絡合作夥伴或 Cisco 銷售代表。"
   },
   "inviteModal": {
     "title": "服務授權",
@@ -1374,6 +1412,23 @@
     "localDialingTitle": "本地撥號",
     "localDialingDesc": "在電話呼叫前面自動加上國碼和區碼以簡化本地撥號程序。不建議用於使用多區碼的地點。",
     "localDialingNumberTitle": "加在前面的區碼",
+    "cos": {
+      "title": "撥號限制",
+      "desc": "限制整個組織使用某些撥號功能。您可以針對個別使用者覆寫每個設定。",
+      "nationalTitle": "國內撥號",
+      "nationalDesc": "選擇是否允許使用者撥打國內號碼及免付費號碼。",
+      "mobileTitle": "行動裝置撥號",
+      "mobileDesc": "選擇是否允許使用者撥打行動裝置號碼",
+      "internationalTitle": "國際撥號",
+      "internationalDesc": "選擇是否允許使用者撥打國際號碼。依預設，使用 Spark Call 的使用者及位置會繼承此設定。",
+      "premiumTitle": "高級撥號",
+      "premiumDesc": "選擇是否允許使用者撥入及撥出需要付費的號碼。這些號碼包括以 {{premiumNumbers}} 開頭的號碼。",
+      "neverAllow": "永不允許",
+      "alwaysAllow": "一律允許",
+      "orgSetting": "組織設定（{{state}}）",
+      "success": "「撥號限制」設定已成功儲存。",
+      "error": "「撥號限制」更新失敗"
+    },
     "error": {
       "siteSteering": "「語音郵件存取字首」的第一個數字與所選的「外撥數字」衝突。",
       "outboundDialDigit": "「外撥數字」與「語音郵件存取字首」的第一個數字衝突。",
@@ -1475,7 +1530,7 @@
     "statusError": "請求失敗，狀態為：{{status}}。",
     "csvError": "匯出失敗。",
     "videoError": "您嘗試播放的視訊有問題。",
-    "runtimeTitle": "啊!",
+    "runtimeTitle": "啊！",
     "runtime": "發生非預期的錯誤。我們的工程師正在處理。如果您需要協助才能繼續作業，請<a href='https://support.ciscospark.com' target='_blank'>聯絡技術支援</a>。"
   },
   "spacesPage": {
@@ -1504,11 +1559,11 @@
     "reset": "重設",
     "rsuKeyWasReset": "已重設遠端支援金鑰。現在，您可能與 Cisco 支援人員共用的任何金鑰都無法再使用。",
     "rsuKeyResetFailed": "重設遠端支援金鑰失敗，裝置未及時傳回新金鑰。",
-    "nothingHere": "尚無裝置。",
-    "nothingHerePlaces": "尚無位置。",
-    "noDevices": "讓我們啟用裝置",
+    "nothingHere": "尚無裝置",
+    "nothingHerePlaces": "尚無位置",
+    "noDevices": "啟動 Cisco 桌面電話及協作室裝置後，您將看到它們會列在這裡。",
     "noneFound": "找不到裝置",
-    "tryAgain": "嘗試其他搜尋",
+    "tryAgain": "嘗試其他搜尋。",
     "licenseWarningTitle": "授權",
     "licenseWarningHeader": "此服務的授權有問題。",
     "licenseSuspendedWarning": "您的協作室裝置授權已暫停。",
@@ -1569,11 +1624,12 @@
       "alarms": "警報",
       "hosts": "節點",
       "goToHost": "前往節點",
-      "removeButton": "移除",
-      "removeSectionHeader": "移除",
-      "removeSectionBody": "將此節點從 Cisco Collaboration Cloud 中移除。",
+      "moveNode": "移動節點",
+      "deregisterNode": "取消註冊節點",
+      "removeNode": "移除節點",
       "localizedConnectorAndHostHeader": "{{hostname}} 上的 {{connectorName}}",
-      "actions": "動作"
+      "actions": "動作",
+      "no_nodes": "未註冊節點。"
     },
     "export": {
       "modalTitle": "使用者狀態報告",
@@ -1604,7 +1660,7 @@
       "confirmationDialogBody": "確定要移除此節點嗎？",
       "successNodeRemoval": "已成功移除節點。",
       "failedNodeRemoval": "無法移除節點。"
-  },
+    },
     "addResourceDialog": {
       "title": "{{ServiceName}} 設定",
       "alreadyBeenSetupTitle": "新增 Expressway 叢集",
@@ -1641,7 +1697,8 @@
       "selectGroup": "選取...",
       "couldNotReadResourceGroups": "無法讀取資源群組。",
       "CouldNotSaveResourceGroup": "無法儲存資源群組。繼續進行註冊程序，稍後再次嘗試指定資源群組。",
-      "hostnameRegistered": "此 FQDN 屬於已向 Cisco Collaboration Cloud 註冊的 Expressway 叢集。如果您要向它新增更多服務，則無需將它註冊為新資源。"
+      "hostnameRegistered": "此 FQDN 屬於已向 Cisco Collaboration Cloud 註冊的 Expressway 叢集。如果您要向它新增更多服務，則無需將它註冊為新資源。",
+      "partnersCannotConfigureClusters": "檢視客戶組織時，夥伴管理員可能無法設定 Hybrid Services 或新增叢集。"
     },
     "activateService": {
       "ingress": "將雲端延伸至您的內部部署環境",
@@ -1665,7 +1722,7 @@
     },
     "clusters": {
       "listing": {
-        "no_clusters_heading": "未註冊任何 Cisco Expressway 叢集",
+        "no_clusters_heading": "未註冊叢集",
         "no_clusters_text": "若要開始作業，請參閱上面的必要動作及文件。"
       }
     },
@@ -1690,6 +1747,7 @@
       "initializing": "正在初始化",
       "not_operational": "無法運作",
       "not_registered": "未完成註冊",
+      "no_nodes_registered": "未註冊節點",
       "urgentUpgradeAvailable": "有緊急升級可用",
       "registrationTimeout": "註冊逾時"
     },
@@ -1732,14 +1790,15 @@
       "squared-fusion-cal": "混合行事曆服務",
       "squared-fusion-gcal": "混合行事曆 (Google)",
       "spark-hybrid-datasecurity": "混合資料安全",
-      "squared-fusion-media": "混合媒體服務"
+      "squared-fusion-media": "混合媒體服務",
+      "hybrid-context": "混合內容服務"
     },
     "connectorNames": {
       "squared-fusion-uc": "Call Connector",
       "squared-fusion-uc.full": "Call Connector",
       "squared-fusion-cal": "Calendar Connector",
       "squared-fusion-media": "媒體服務",
-      "contact-center-context": "環境中心服務",
+      "contact-center-context": "Context Connector",
       "squared-fusion-ec": "Call Connector",
       "squared-fusion-mgmt": "Management Connector"
     },
@@ -1747,12 +1806,17 @@
       "c_cal": "Calendar Connector",
       "c_ucmc": "Call Connector",
       "c_mgmt": "Management Connector",
-      "hds_app": "混合資料安全連接器"
+      "mf_mgmt": "媒體服務",
+      "hds_app": "混合資料安全",
+      "cs_mgmt": "Management Connector",
+      "cs_context": "Context Connector"
     },
     "serviceNameFromConnectorType": {
       "c_cal": "行事曆服務",
       "c_ucmc": "通話服務",
-      "c_mgmt": "管理服務"
+      "c_mgmt": "管理服務",
+      "cs_mgmt": "Management Connector",
+      "cs_context": "Context Connector"
     },
     "clusterTypeFromServiceId": {
       "squared-fusion-mgmt": "Expressway",
@@ -1803,6 +1867,7 @@
       "sinceTime": "自 {{timestamp}} 以來"
     },
     "alarms": {
+      "affectedNodes": "受影響的節點",
       "alarms": "警報",
       "critical": "嚴重",
       "error": "錯誤",
@@ -1813,7 +1878,10 @@
       "lastReported": "最後一次報告時間",
       "description": "說明",
       "noAlarms": "未報告警報",
-      "action": "動作"
+      "action": "動作",
+      "info": "INFO",
+      "new": "新增",
+      "todo": "待辦事項"
     },
     "softwareUpgrade": {
       "editSettingsLink": "編輯叢集設定",
@@ -1826,6 +1894,7 @@
       "pending": "擱置",
       "upgrade": "升級",
       "upgradeNow": "立即升級",
+      "upgradesAutomatically": "自動升級",
       "upgradeProcessInitiating": "正在起始升級至 {{version}} 版...",
       "upgradingHost": "正在將 {{host}} 升級至 {{version}}",
       "upgradeDone": "升級完成！",
@@ -1885,6 +1954,7 @@
       "clusters-title-squared-fusion-uc": "Expressway 叢集",
       "clusters-title-squared-fusion-media": "媒體叢集",
       "clusters-title-spark-hybrid-datasecurity": "HDS 叢集",
+      "clusters-title-contact-center-context": "內容叢集",
       "status-title": "服務狀態"
     },
     "hybridVoicemailUserSection": {
@@ -1910,8 +1980,13 @@
       "emailNotificationsSavingError": "無法儲存您對電子郵件訂閱者清單所做的變更。請稍後重試。",
       "emailUserNotificationsSavingSuccess": "已成功儲存使用者電子郵件通知切換。",
       "emailUserNotificationsSavingError": "無法儲存使用者電子郵件通知的變更。請稍後重試。",
+      "defaultWebExSiteOrgLevelHeading": "預設 WebEx 網站",
+      "setDefaultWebExSiteOrgLevel": "選取或鍵入組織的預設 WebEx 網站（格式為「site.domain.com」）。當使用者新增 @webex 至會議邀請時，將使用此預設網站。",
+      "defaultWebExSiteOrgLevelSelectPlaceholder": "選取或鍵入預設 WebEx 網站",
+      "defaultWebExSiteOrgLevelSavingSuccess": "已成功儲存組織層級的預設 WebEx 網站。",
+      "defaultWebExSiteOrgLevelSavingError": "無法儲存對組織層級預設 WebEx 網站的變更。請稍後再試一次。",
       "oneButtonToPushIntervalHeading": "提早加入時間",
-      "oneButtonToPushInterval": "開始會議之前，Spark 裝置及用戶端上會出現一個「加入」按鈕。請選擇在會議開始時間之前多久出現此按鈕。如果未設定，預設值為 5 分鐘。",
+      "oneButtonToPushInterval": "開始會議之前，Spark 裝置及用戶端上會出現一個「加入」按鈕。請選擇在會議開始時間之前多久出現此按鈕。如果未設定，預設值為 1 分鐘。",
       "oneButtonToPushIntervalSecondaryLabel": "會議開始之前的分鐘數",
       "oneButtonToPushIntervalMinutesSavingSuccess": "已成功儲存提早加入時間。",
       "oneButtonToPushIntervalMinutesSavingError": "無法儲存對提早加入時間所做的變更。請稍後重試。",
@@ -1966,6 +2041,8 @@
         "serviceAccountHeader": "服務帳戶",
         "serviceAccountText": "此服務帳戶用於從 Cisco Collaboration Cloud 連線至您的 Google Calendar 組織。",
         "serviceAccountHelpText": "若要變更服務帳戶，請在下一節中上傳新的私密金鑰",
+        "aclAccountHeader": "ACL 管理帳戶（可選）",
+        "aclAccountText": "如果是使用協作室資源，則可能需要對其行事曆進行 ACL 變更。若要讓「混合行事曆服務」自動執行此變更，則可以提供獲授權帳戶的名稱以達成此目的。",
         "privateKeyHeader": "私密金鑰",
         "privateKeyText": "上傳新的私密金鑰。",
         "deactivateHeader": "停用 Google Calendar",
@@ -1973,7 +2050,9 @@
         "googleCalendarConfigWillBeWiped": "此動作會從 Cisco Collaboration Cloud 中刪除所有 Google Calendar 設定。",
         "uploadNewPrivateKey": "上傳私密金鑰",
         "uploadNewPrivateKeyPlaceholder": "輸入服務帳戶名稱",
+        "uploadNewAclAccountPlaceholder": "輸入 ACL 管理帳戶名稱（可選）",
         "serviceAccountName": "服務帳戶名稱",
+        "aclAccountName": "ACL 管理帳戶名稱",
         "uploadNewPrivateKeyExplanation": "輸入您的服務帳戶名稱，然後上傳您從 Google Developer Console 下載的私密金鑰。",
         "dragAndDropKeyFileHere": "將包含私密金鑰的檔案拖放在這裡，或",
         "clickToBrowse": "按一下瀏覽",
@@ -2027,15 +2106,15 @@
       "no-notifications": "無通知。",
       "callAware": {
         "title": "針對使用者啟用通話服務感知",
-        "navigateToUsers": "移至<a ng-click=\"{{onclick}}\">使用者和群組管理</a>以針對使用者啟用「通話服務感知」。"
+        "navigateToUsers": "移至<a ng-click=\"{{onclick}}\">使用者</a>頁面以針對使用者啟用「通話服務感知」。"
       },
       "calendar": {
         "title": "針對使用者啟用行事曆服務",
-        "navigateToUsers": "移至<a ng-click=\"{{onclick}}\">使用者和群組管理</a>以針對使用者啟用「行事曆服務」。"
+        "navigateToUsers": "移至<a ng-click=\"{{onclick}}\">使用者</a>頁面以針對使用者啟用「行事曆服務」。"
       },
       "connect": {
         "title": "針對使用者啟用通話服務連線",
-        "navigateToUsers": "您已成功配置「通話服務連線」。移至<a ng-click=\"{{onclick}}\">使用者和群組管理</a>以針對使用者啟用「通話服務連線」。請確保在 Expressway 中選取適用的方法，以給使用者建立 CTI 遠端裝置。 ",
+        "navigateToUsers": "您已成功設定「通話服務連線」。移至<a ng-click=\"{{onclick}}\">使用者</a>頁面以針對使用者啟用「通話服務連線」。請確保在 Expressway 中選取適用的方法，以給使用者建立 CTI 遠端裝置。 ",
         "connectEnabled": "已啟用「通話服務連線」",
         "connectDisabled": "已停用「通話服務連線」"
       },
@@ -2083,12 +2162,13 @@
       "heading": "註冊"
     },
     "notificationDropdown": {
-      "label": "{number, plural, =1{# 個通知} other{# 個通知}}"
+      "label": "{number, plural, other{# 個通知}}"
     },
     "fusion": {
       "types": {
         "expressway": "Expressway",
-        "mediafusion": "媒體"
+        "mediafusion": "媒體",
+        "context": "內容"
       },
       "urgentUpgrade": {
         "title": "緊急升級排程"
@@ -2097,10 +2177,12 @@
         "title": "叢集",
         "empty": "找不到叢集。",
         "upgrade-schedule": "升級排程",
+        "upgrades-automatically": "自動升級",
         "clusters": "叢集",
+        "context": "內容",
         "users": "使用者",
         "release-channel": "發行通道",
-        "nodes": "{count, plural, =1{# 個節點} other{# 個節點}}",
+        "nodes": "{count, plural, other{# 個節點}}",
         "nodesBtn": "節點",
         "settings": "設定",
         "all": "全部",
@@ -2127,7 +2209,9 @@
           "expressway-description": "可以執行 「混合通話服務」或「混合行事曆服務」",
           "expressway-not-setup": "未設定 Expressway",
           "mediafusion-description": "可以執行「混合媒體服務」",
-          "mediafusion-not-setup": "未設定媒體服務"
+          "mediafusion-not-setup": "未設定媒體服務",
+          "context-description": "可以執行混合內容",
+          "context-not-setup": "未設定內容"
         },
         "expressway": {
           "services": {
@@ -2148,6 +2232,10 @@
             "help": "叢集名稱僅供顯示之用。"
           },
           "end": {}
+        },
+        "context": {
+          "register": "透過內部部署應用程式來註冊內容服務。如需相關資訊，請按一下「瞭解如何操作」。",
+          "learn-how": "瞭解如何操作"
         }
       },
       "add-resource-group": {
@@ -2267,7 +2355,44 @@
       "status": "狀態",
       "serial": "序列",
       "version": "版本",
-      "loadingError": "無法載入叢集資料"
+      "noNodes": "找不到節點",
+      "loadingError": "無法載入叢集資料",
+      "viewList": "檢視清單"
+    },
+    "hybridServicesConnectorSidepanel": {
+      "alarmDetails": "警報詳細資料"
+    }
+  },
+  "context": {
+    "pageTitle": "混合內容服務",
+    "clusters": {
+      "listing": {
+        "no_clusters_heading": "尚未註冊內容叢集",
+        "no_clusters_text": "透過內部部署應用程式來註冊內容服務。",
+        "learn_how": "瞭解如何操作。"
+      }
+    },
+    "dictionary": {
+      "welcome": "歡迎使用內容字典",
+      "fieldPage": {
+        "fieldId": "欄位 ID",
+        "dataType":"資料類型",
+        "classification": "資料隱私權",
+        "searchable": "可搜尋",
+        "lastUpdated":"更新日期",
+        "startSearching": "若要開始，請搜尋欄位",
+        "noSearchResults": "搜尋找不到結果",
+        "fieldReadFailed": "無法擷取欄位。請重新整理瀏覽器以再試一次。",
+        "piiEncrypted": "PII 加密",
+        "encrypted": "非 PII 加密",
+        "unencrypted": "未加密",
+        "dateFormat": "年/月/日"
+      },
+      "fieldsetPage": {
+        "fieldsetId": "欄位集 ID",
+        "numOfFields": "欄位數",
+        "fieldsetReadFailed": "無法擷取欄位集。請重新整理瀏覽器以再試一次。"
+      }
     }
   },
   "hds": {
@@ -2365,12 +2490,23 @@
     "resources": {
       "settings": {
         "servicestatusTitle": "服務狀態",
+        "servicePreTrialModeTitle": "開始試用",
+        "serviceNodeDesc": "目前為「混合資料安全服務」註冊了 <strong>{{nodes}} 個節點</strong>。<br/>組織中的每 100 個人建議至少使用 3 個節點。<br/>使用<a ng-click=\"{{onclick}}\">新增資源</a>流程來新增更多節點。",
+        "serviceDomainDesc": "試用網域：{{trial}}<br/>生產網域：{{prod}}",
+        "serviceUserDesc": "「混合資料安全服務」試用服務目前有 <strong>{{users}} 個使用者</strong>。<br/><a ng-click=\"{{onclick}}\">新增使用者</a>至試用服務或者<a ng-click=\"{{onclick1}}\">檢視及編輯</a>試用使用者。",
+        "serviceUser0Desc": "「混合資料安全服務」試用服務目前有 <strong>{{users}} 個使用者</strong>。<br/><a ng-click=\"{{onclick}}\">新增使用者</a>至試用服務。",
+        "serviceProdMoveDesc": "一旦將「混合資料安全服務」移至生產，就無法還原為「試用模式」。",
         "serviceTrialModeTitle": "試用模式",
         "serviceTrialModeDesc": "試用開始時間（YYYY/Month/DD 下午 HH:MM）",
         "serviceProductionModeTitle": "生產模式",
         "serviceProductionModeDesc": "在此模式中，組織中的所有使用者都將使用此服務",
+        "moveToProduction": "移至生產",
         "addTrialUsers": "新增試用使用者",
-        "editTrialUsers": "編輯試用使用者"
+        "editTrialUsers": "編輯試用使用者",
+        "confirmProdMoveDialogHeader": "移至生產模式？",
+        "confirmProdMoveDialogBody": "無法復原此動作或回到試用模式。基於多種原因，這是單向動作。",
+        "confirmProdMoveDialogButton": "生產模式",
+        "hdsModeGetError": "無法取得 HDS 模式： "
       },
       "addTrialUsers": {
         "modalTitle": "將使用者新增至試用模式",
@@ -2378,6 +2514,7 @@
         "modalDesc": "輸入將指定給「混合資料安全服務」之使用者的電子郵件地址。",
         "emailNotificationsWatermark": "電子郵件地址",
         "emailExample": "例如：john.doe@example.com",
+        "refreshOtherServices": "重新整理其他服務以避免 24 小時延遲。",
         "modalSST": "新增使用者"
       },
       "editTrialUsers": {
@@ -2385,6 +2522,7 @@
         "modalHeading": "編輯使用者",
         "emailNotificationsWatermark": "新增...",
         "tooManyUsers": "<i class='icon icon-error'></i> 已達到使用者數上限，請刪除現有使用者以新增更多使用者。",
+        "invalidUsers": " 不是此組織中的有效使用者，將不會儲存。",
         "modalDesc": "若要移除使用者，請按一下使用者欄位中的 X，這樣便會將使用者從「混合資料安全服務」中移除。"
       },
       "page_title": "混合資料安全服務",
@@ -2485,9 +2623,9 @@
       "backToSearch": "回到搜尋",
       "searchInfo": "搜尋資訊",
       "emailId": "電子郵件 ID",
+      "roomId": "協作室 ID",
       "dateRange": "日期範圍",
-      "textMessage": "文字訊息包含",
-      "fileName": "檔名包含",
+      "textAndFileName": "文字訊息或檔名包含",
       "reportSummary": "報告摘要",
       "rooms": "個協作室",
       "messages": "訊息",
@@ -2527,6 +2665,7 @@
     }
   },
   "firstTimeWizard": {
+    "required": "這是必填欄位。",
     "termsAndConditions": "條款與條件",
     "simple": "手動新增使用者",
     "manualEntryStep": "手動",
@@ -2634,15 +2773,36 @@
     "setSipDomainLink": "什麼是 Spark SIP 位址？",
     "setSipDomainMsg": "輸入子網域",
     "setSipDomainTitle": "Spark SIP 位址",
-    "setSipDomainCompNames": "將為您保留{count, plural, =1{此子網域} other{這些子網域}}：",
-    "setSipDomainAsssignedNames": "已為您保留{count, plural, =1{此子網域} other{這些子網域}}",
+    "saveSipDomainTitle": "儲存 Spark SIP 位址",
+    "editSipDomainTitle": "編輯 Spark SIP 位址",
+    "setSipDomainCompNames": "將為您保留{count, plural, other{這些子網域}}：",
+    "setSipDomainAsssignedNames": "已為您保留{count, plural, other{這些子網域}}",
     "setSipDomainCheckAvailability": "檢查可用性",
     "setSipDomainPlaceholder": "輸入子網域",
-    "setSipDomainErrorMessage": "不可用。請嘗試其他名稱",
+    "setSipDomainErrorMessage": "不可用。請嘗試其他名稱。",
     "setSipDomainErrorMessageInvalidDomain": "網域無效，請嘗試其他名稱",
     "setSipDomainSuccessMessage": "Spark SIP 位址已成功儲存",
     "setSipDomainConfirmText": "我確認這是一次性設定，稍後無法變更。",
     "sparkDomainManagementServiceErrorMessage": "無法存取 Spark 網域管理服務",
+    "currentSubdomainDescription": "下面的{count, plural, other{子網域}}要用於公司 Spark SIP {count, plural, other{位址}}。",
+    "subdomainChangesDescription": "子網域變更可能需要長達幾小時才能完成。",
+    "subdomainDescription": "選取用來識別公司的子網域。此子網域將用來建立 {count, plural, other{Spark SIP 位址}}。您稍後可以在帳戶設定中變更子網域名稱。",
+    "updateSubdomainMessage": "子網域變更可能需要長達幾小時才能完成。完成變更後，使用者將無法再使用先前的 Spark SIP 位址進行通話。",
+    "cscUpdateSubdomainMessage": "子網域變更可能需要長達幾小時才能完成。變更後，先前的 Spark SIP 位址將不再適用於「通話服務連線」通話。",
+    "subdomainUpdateConfirmation": "我們建議您在非工作時間執行此步驟。確定要儲存您的變更嗎？",
+    "cscWarningMessage": "變更您的 Spark SIP 位址將會導致「通話服務連線」中斷。請參閱<a ng-click=\"{{onclick}}\">文件以取得指引</a>。",
+    "editCSCPartOne": "若要使 SIP 網域變更生效，則必須停用 Expressway-C 中的所有使用中 Call Connector，然後重新啟用。",
+    "editCSCPartTwo": "我們建議您在非工作時間執行這些步驟。請參閱<a ng-click=\"{{onclick}}\">文件以取得指引</a>。",
+    "editCSCPartThree": "仍然要編輯您的 Spark SIP 位址嗎？",
+    "enterSubdomain": "輸入子網域",
+    "subdomainInvalid": "子網域名稱無效。",
+    "longSubdomain": "子網域太長。請輸入長度等於或小於 40 個字元的子網域。",
+    "subdomainUnavailable": "子網域名稱不可用。",
+    "reservedSubdomains": "保留的子網域",
+    "subdomain401And403Error": "使用者無權修改子網域。",
+    "subdomainSaveError": "儲存新的子網域時發生錯誤。請重新檢查可用性並再試一次。",
+    "subdomainSaveSuccess": "Spark SIP 位址已成功更新。",
+    "editSubdomain": "編輯子網域",
     "messageSettings": "訊息設定",
     "callSettings": "通話設定",
     "enterpriseSettings": "企業設定",
@@ -2711,7 +2871,7 @@
     "messengerSetupDesc": "WebEx 信差 (Jabber) 使用者可以將訊息傳送至組織中的 Spark 使用者。",
     "messengerSetupLabel": "啟用 WebEx 信差整合",
     "dataRetentionTitle": "資料保留（刪除組織後）",
-    "dataRetentionDesc": "將使用者（試用版）從系統中刪除時，系統應該保留使用者團隊協作室多長時間？",
+    "dataRetentionDesc": "將使用者（或試用使用者）從系統中刪除時，系統應該保留使用者團隊空間多長時間？",
     "dataShareTitle": "將使用資料傳送至 Cisco 合作夥伴",
     "dataShareLabel": "與 Cisco 合作夥伴分享服務和參與度資料的品質，以實現更高層次的合作夥伴支援。",
     "appSecurity": "應用程式安全",
@@ -2724,7 +2884,7 @@
     "domainSubDesc": "請輸入 Acive Directory 網域：",
     "connectorSteps": "請遵循這些步驟以安裝 Directory Connector：",
     "readyToGo": "您已準備好開始！",
-    "finishDesc": "您已完成設定精靈。如果已跳過步驟或者需要變更任何設定，請按一下頁面右上角的齒輪圖示以再次存取這個面板。",
+    "finishDesc": "您已完成設定精靈。如果您需要修改您做出的任何選擇，請造訪「設定」或「服務」標籤。",
     "finish": "完成",
     "finishSub": "完成設定",
     "completeRequired": "必須填寫 {{name}}。",
@@ -2817,24 +2977,48 @@
     "actionSayMessage": "說訊息",
     "actionSayMessageHint": "播放不可岔斷的訊息。",
     "actionCallerInput": "呼叫者輸入",
-    "actionCallerInputHint": "收集呼叫者輸入",
-    "actionCallerInputHelp": "設定 AA 以擷取呼叫者輸入",
-    "callerInputCnvtDigit": "將數位輸入轉換為文字字串值",
+    "actionCallerInputHint": "儲存呼叫者提供的資訊。",
+    "actionCallerInputHelp": "儲存呼叫者提供的資訊。",
+    "callerInputCnvtDigit": "將數位輸入轉換為文字字串值。",
     "callerInputMaxLenStr": "字串長度上限",
     "callerInputVariableTooLongMsg": "已超出輸入變數的長度上限",
     "callerInputValue": "輸入值",
     "callerInputLabel": "名稱",
     "callerInputNamePlaceHolder": "名稱變數",
-    "callerNameInputHelpText": "所傳遞的標籤名稱",
+    "callerNameInputHelpText": "所提供變數的名稱",
     "callerInputMaxLength": "# 用作長度小於上限之字串的結束字元",
     "actionPhoneMenu": "電話功能表",
     "actionPhoneMenuHint": "播放訊息並根據呼叫者的輸入來採取動作。",
+    "actionDecision": "決策",
+    "actionDecisionHint": "根據呼叫者屬性設定通話路由。",
+    "actionDecisionHelp": "根據呼叫者屬性設定通話路由。",
+    "actionIfDecision": "如果",
+    "actionIs": "是",
+    "thenDecision": "則",
+    "selectConditionPlaceholder": "選取條件",
+    "selectActionPlaceholder": "選取動作",
+    "decisionCallerReturned": "呼叫者已返回",
+    "decisionNumberDialed": "已撥打的號碼",
+    "decisionCallerNumber": "呼叫者的號碼",
+    "decisionCallerName": "呼叫者的姓名",
+    "decisionCallerCountryCode": "呼叫者的國碼",
+    "decisionCallerAreaCode": "呼叫者的區碼",
+    "callerReturned5Mins": "5 分鐘",
+    "callerReturnedOneDay": "1 天",
+    "callerReturnedOneWeek": "1 週",
+    "callerReturnedTwoWeeks": "2 週",
+    "callerReturnedOneMonth": "1 個月",
+    "callerReturnedWhen": "最近：",
+    "callerNumberInfo": "在這裡輸入一或多個號碼；用逗號分隔多個項目。範例：+12065551212, +11115551212",
+    "callerNameInfo": "在這裡輸入一或多個呼叫者姓名；用逗號分隔多個項目。範例：John Smith, Jane Doe",
+    "countryCodeInfo": "在這裡輸入一或多個號碼；用逗號分隔多個項目。範例：1, 20",
+    "areaCodeInfo": "在這裡輸入一或多個號碼；用逗號分隔多個項目。範例：206, 425",
     "actionRouteCall": "路由通話",
     "actionRouteCallHint": "將呼叫路由至群組搜尋、自動語音應答或分機等目的地。",
     "actionDialByExtensionHint": "向呼叫者提示內部分機並路由通話。",
     "actionDialByExtensionHelp": "輸入用來提示呼叫者輸入所要撥打分機的訊息。選取此片語的語言和語音。",
     "actionEndCall": "中斷連線",
-    "schedule": "排程",
+    "schedule": "排定",
     "scheduleAllDay": "開啟 24 小時制",
     "scheduleOpen": "開啟小時數",
     "scheduleClosed": "關閉小時數",
@@ -2868,7 +3052,7 @@
     "phoneMenuRouteVM": "路由至語音郵件",
     "phoneMenuRouteAA": "路由至自動語音應答",
     "phoneMenuGoBack": "返回",
-    "phoneMenuRouteQueue": "佇列來電",
+    "phoneMenuRouteQueue": "路由至 Spark 服務",
     "phoneMenuRouteToSipEndpoint": "路由至 SIP 端點",
     "phoneMenuListening": "接聽下列使用者輸入時",
     "phoneMenuRepeatOnce": "一次",
@@ -2881,6 +3065,9 @@
     "phoneMenuSubmenuErrorRouteToQueueTargetMissing": "電話功能表 {{at}} 的 {{schedule}} 排程：輸入數字 {{key}}：子功能表輸入數字 {{subkey}} 遺漏路由至佇列目標。",
     "phoneMenuErrorRouteToAATargetMissing": "電話功能表 {{at}} 的 {{schedule}} 排程：輸入數字 {{key}} 遺漏路由至自動語音應答目標。",
     "callerInputMenuErrorVariableNameMissing": "呼叫者輸入功能表 {{at}} 的 {{schedule}} 排程遺漏變數名稱 ",
+    "conditionalThenTargetMissing": "決策功能表 {{at}} 的 {{schedule}} 排程遺漏「則」項目的目標",
+    "conditionalIsEntryVariableMissing": "決策功能表 {{at}} 的 {{schedule}} 排程遺漏「是」的項目",
+    "conditionalIfEntryVariableMissing": "決策功能表 {{at}} 的 {{schedule}} 排程遺漏「如果」的項目",
     "phoneMenuMenuErrorNoInputValuesEntered": "電話功能表 {{at}} 的 {{schedule}} 排程尚未輸入輸入值",
     "subMenuErrorNoInputValuesEntered": "電話功能表 {{at}} 的 {{schedule}} 排程：輸入數字 {{key}}：子功能表尚未輸入輸入值",
     "callerInputMenuErrorNoInputValuesEntered": "呼叫者輸入功能表 {{at}} 的 {{schedule}} 排程尚未輸入輸入值",
@@ -2903,7 +3090,10 @@
     "routeCallPopover": "選取呼叫路由方式。",
     "selectPlaceHolder": "搜尋或選取",
     "validSip": "輸入有效的 SIP 位址",
-    "routeToSipPlaceHolder": "例如：x-x-xxx-xxxx@voip-provider.eg.net",
+    "routeToSipInputShort": "輸入太短，無法成為有效的 SIP URI。範例「sip:x-x-xxx-xxxx@voip-provider.eg.net」",
+    "routeToSipInputLong": "輸入太長，無法成為有效的 SIP URI。範例「sip:x-x-xxx-xxxx@voip-provider.eg.net」",
+    "routeToSipInputInvalid": "輸入不是有效的 SIP URI。範例「sip:x-x-xxx-xxxx@voip-provider.eg.net」",
+    "routeToSipPlaceHolder": "sip:x-xx-xxxx@voip-provider.eg.net",
     "selectNumberPlaceHolder": "搜尋或選取號碼",
     "inputPlaceHolder": "開始在這裡輸入文字",
     "sayMessage": "訊息",
@@ -2926,9 +3116,12 @@
     "languageAndVoice": "語言及語音",
     "langaugeAndVoiceHelp": "這些選項適用於朗讀訊息和錯誤訊息。",
     "initialAnnouncement": "初始公告",
+    "mediaUploadFileInfo": "音訊檔案必須是 .wav 格式。建議格式為 8 位元，8Khz u-law。訊息檔案大小上限為 5 MB。",
+    "queueMaxMusicSize": "音樂檔案大小上限是 120 MB。",
     "initialHelpText": "指定在呼叫者進入佇列時播放的訊息。",
     "periodicHelpText": "指定呼叫者在佇列中等待時播放的訊息及其播放頻率。",
-    "fallbackLabel": "撤回",
+    "periodicRestartMusicHelpText": "在此公告後，音樂將從頭開始。",
+    "timeoutLabel": "逾時",
     "periodicAnnouncement": "定期公告",
     "uploadedFile": "上傳檔案",
     "uploadFailed": "檔案上傳失敗，無法連線。請再試一次。",
@@ -2936,10 +3129,10 @@
     "import": "匯入",
     "sayAndError": "這些選項適用於朗讀訊息和錯誤訊息",
     "callAssociatedAAPreview": "待預覽且與此自動語音應答關聯的通話號碼。",
-    "holdMusic": "保留音樂",
+    "holdMusic": "音樂",
     "standardTransferMusic": "使用 Cisco 預設值",
     "uploadYourOwn": "上傳您自己的檔案",
-    "fileUploadSizeIncorrect": "上傳小於 5 MB 的檔案。",
+    "fileUploadSizeIncorrect": "上傳小於 {{fileSize}} MB 的檔案。",
     "musicOnHoldHelp": "選擇通話保留時呼叫者聽到的音訊。",
     "cancelUpload": "確定要取消此上傳嗎？",
     "deleteUpload": "確定要刪除現行檔案嗎？",
@@ -3180,7 +3373,7 @@
     "numberHint": "呼叫此號碼時，將呼叫傳呼群組。",
     "memberPlaceholder": "選取成員",
     "memberHint": "選取將傳呼的使用者或位置。",
-    "memberWarning": "裝置必須位於相同的多點傳送群組中，傳呼才能工作。",
+    "memberWarning": "成員具有的桌面電話必須位於相同的多點傳送群組中，傳呼才能工作。",
     "cancelHeader": "取消傳呼群組建立作業",
     "cancelDialog": "確定要取消傳呼群組建立作業嗎？將不會儲存此傳呼群組。",
     "confirmButton": "取消建立",
@@ -3188,20 +3381,34 @@
     "createHelpText": "建立",
     "numberFetchFailure": "無法取得號碼。",
     "memberFetchFailure": "無法取得成員。",
+    "initiatorFetchFailure": "無法取得發起方。",
     "pagingGroupName": "傳呼群組名稱",
     "pagingGroupNumber": "傳呼群組號碼",
     "pagingGroupMembers": "傳呼群組成員",
-    "memberEditHint": "選取將傳呼的使用者或位置。裝置必須位於相同的多點傳送群組中，傳呼才能工作。",
+    "memberEditHint": "選取將傳呼的使用者或位置。成員具有的桌面電話必須位於相同的多點傳送群組中，傳呼才能工作。",
     "editMemberPlaceholder": "新增成員",
+    "pagingGroupInitiator": "傳呼群組發起方",
+    "initiatorEditHint": "這些是獲准傳呼此群組的裝置。裝置必須位於相同的多點傳送群組中，傳呼才能工作。",
+    "editInitiatorPlaceholder": "新增發起方",
     "users": " 使用者",
     "places": " 位置",
+    "initiators": " 發起方",
     "search": "搜尋成員",
+    "searchInitiators": "搜尋發起方",
+    "initiatorTitle": "選取發起方",
+    "initiatorHint": "選取可以發起傳呼的使用者或位置。",
+    "initiatorWarning": "發起方具有的桌面電話必須位於相同的多點傳送群組中，傳呼才能工作。",
+    "all": "所有使用者和位置",
+    "allMembers": "所有傳呼群組成員",
+    "custom": "自訂",
+    "addInitiatorPlaceholder": "新增發起方",
     "saveLabel": "要儲存變更嗎？",
     "successUpdate": "已成功更新「{{pagingGroupName}}」傳呼群組",
     "successSave": "已成功建立「{{pagingGroupName}}」傳呼群組",
     "errorUpdate": "無法更新傳呼群組：「{{message}}」",
     "errorSave": "無法建立傳呼群組：「{{message}}」",
-    "errorSavePartial": "已成功建立「{{pagingGroupName}}」傳呼群組，但未新增下列成員 ID：「{{message}}」"
+    "errorSaveMemeberPartial": "已成功建立「{{pagingGroupName}}」傳呼群組，但未新增下列成員 ID：「{{message}}」",
+    "errorSaveInitiatorPartial": "已成功建立「{{pagingGroupName}}」傳呼群組，但未新增下列發起方 ID：「{{message}}」"
   },
   "telephonyPreview": {
     "lines": "線路",
@@ -3214,6 +3421,18 @@
     "showMore": "顯示更多",
     "showLess": "顯示更少",
     "localDialing": "本地撥號"
+  },
+  "preferredLanguage": {
+    "title": "偏好的語言",
+    "description": "選擇此位置的偏好語言。這將覆寫預設組織設定。",
+    "placeholder": "選取語言",
+    "organizationSettingLabel": "組織設定 - ",
+    "descriptionForCloudberryDevice": "在協作室的裝置頁面上設定偏好語言。",
+    "placesCallOverviewSaveSuccess": "偏好語言已成功儲存",
+    "failedToSaveChanges": "無法儲存偏好語言。原因：",
+    "failedToFetchCmiPlacesInfo": "無法擷取位置資訊。原因：",
+    "failedToFetchSiteLanguages": "無法擷取語言。原因：",
+    "failedToFetchSiteLevelLanguage": "無法擷取網站層級語言。原因："
   },
   "directoryNumberPanel": {
     "title": "線路設定",
@@ -3270,7 +3489,10 @@
     "forwardExternal": "以不同方式轉接外部來電",
     "addNew": "新增",
     "forwardVoicemailDisabled": "呼叫轉接已設為語音郵件，但語音郵件目前已停用。請更新「呼叫轉接」設定。",
-    "directVoicemail": "直接轉接至語音郵件"
+    "directVoicemail": "直接轉接至語音郵件",
+    "forwardBusyNoAnswerTimerSeconds": "秒",
+    "forwardBusyNoAnswerTimerDescription": "轉接呼叫前的時間",
+    "ringDurationTimer.validation.error": "必須是一個介於 1 和 300 之間的數字"
   },
   "multipleCalls": {
     "title": "同時呼叫數",
@@ -3296,8 +3518,8 @@
   "autoAnswerPanel": {
     "title": "自動接聽",
     "description": "啟用此選項以選擇自動接聽此線路來電的裝置。",
-    "userSharedLineDescription": "此線路已共用，為此 {{ownerType}} 設定自動接聽，將會為 {{type}} {{name}} 關閉自動接聽",
-    "multiDeviceLineDescription": "如果設定了自動接聽，則呼叫將由所選電話接聽。其他電話將不會響鈴。",
+    "userSharedLineDescription": "此線路已共用。將此 {{ownerType}} 的自動接聽設為開啟，將會為 {{type}} {{name}} 關閉自動接聽",
+    "multiDeviceLineDescription": "呼叫將由所選人員應答。",
     "speaker": "喇叭",
     "headset": "耳機",
     "noSupportedDevices": "無支援的裝置"
@@ -3374,10 +3596,10 @@
     "deleteNumber": "刪除號碼",
     "deleteConfirmation": "確定要刪除 {{pattern}} 嗎？",
     "deleteWarning": "此動作無法撤銷。您將無限期地遺失此號碼。",
-    "allNumbers": "{count, plural, =1{# 個號碼} other{# 個號碼}}",
-    "pendingNumbers": "{count, plural, =1{# 個待定號碼} other{# 個待定號碼}}",
-    "unassignedNumbers": "{count, plural, =1{# 個未指派的號碼} other{# 個未指派的號碼}}",
-    "searchResults": "{count, plural, =1{# 個搜尋結果} other{# 個搜尋結果}}",
+    "allNumbers": "{count, plural, other{# 個號碼}}",
+    "pendingNumbers": "{count, plural, other{# 個待定號碼}}",
+    "unassignedNumbers": "{count, plural, other{# 個未指派的號碼}}",
+    "searchResults": "{count, plural, other{# 個搜尋結果}}",
     "findNumber": "尋找號碼..."
   },
   "pstnOrderOverview": {
@@ -3394,16 +3616,16 @@
   },
   "pstnOrderDetail": {
     "orderNumber": "訂單 #{{orderId}}",
-    "pendingNumbers": "此訂單{count, plural, =1{有 # 個號碼} other{有 # 個號碼}} 擱置中",
+    "pendingNumbers": "此訂單{count, plural, other{有 # 個號碼}} 擱置中",
     "searchPlaceholder": "搜尋電話號碼",
     "waitOnTOSAcceptance": "等待客戶接受 ToS"
   },
   "serviceAddress": {
-    "streetAddress": "街道地址",
-    "unit": "單位",
-    "city": "縣/市",
-    "state": "狀態",
+    "streetAddress": "地址行 1",
+    "unit": "地址行 2",
+    "city": "市/鎮",
     "zipCode": "郵遞區號",
+    "country": "國家/地區",
     "pending": "緊急服務地址擱置驗證。"
   },
   "pstnSetup": {
@@ -3419,6 +3641,7 @@
     "portNumbersLabel": "移轉號碼",
     "manualAdd": "手動新增新號碼",
     "state": "狀態",
+    "province": "省/市",
     "selectState": "選取狀態",
     "searchStates": "搜尋狀態",
     "areaCode": "區碼",
@@ -3434,7 +3657,7 @@
     "package": "封裝",
     "adding": "新增",
     "numbersTitle": "號碼",
-    "numbers": "{count, plural, =1{# 個號碼} other{# 個號碼}}",
+    "numbers": "{count, plural, other{# 個號碼}}",
     "newNumbers": "{{count}} 個新號碼",
     "portNumbers": "{{count}} 個埠",
     "thankYou": "感謝",
@@ -3506,13 +3729,14 @@
       "textLink": "立即接受"
     },
     "tos": {
-      "titleIntelepeer": "Intelepeer 服務條款",
-      "copyright": "Copyright 2016 Cisco Systems。保留所有權利。",
+      "title": "服務條款",
+      "copyright": "Copyright 2017 Cisco Systems。保留所有權利。",
       "info": "Cisco Spark 是提供傳訊 (IM)、語音和視訊通話功能的協作應用程式。",
       "noticeTitle": "重要注意事項與免責聲明",
       "notice": "請重新導向到下列頁面並閱讀電訊廠商的條款。閱讀並同意這些條款之後，將會向您發放 PSTN 號碼。",
       "confirmHeading": "請確認接受此條款的法律聯絡人。",
       "agreeInstructions": "按一下「同意」，即表示您已閱讀並同意遵循條款和條件。",
+      "agreeInstructionsCanadaThinkTel": "按一下「同意」，即表示您已閱讀、瞭解、接受並同意遵循條款和條件，具體說來，包括條款和條件附錄 1 中說明的對 ThinkTel VoIP 9-1-1 緊急撥號服務的限制。",
       "viewTos": "檢視服務條款"
     }
   },
@@ -3537,7 +3761,15 @@
     "feature4": "呼叫者 ID 姓名遞送及註冊",
     "feature5": "E911"
   },
-  "partnerHomePage": {
+  "thinktelFeatures": {
+    "feature1": "每個使用者 1 個電話號碼",
+    "feature2": "服務在所有省/市/地區都可用",
+    "feature3": "本地及加拿大/美國長途通話",
+    "feature4": "併入號碼移轉/轉接費用",
+    "feature5": "併入基本 911",
+    "feature6": "附加稅"
+  },
+    "partnerHomePage": {
     "trialsHeading": "試用客戶",
     "onboardingTitle": "加入",
     "activity-title": "活動",
@@ -3590,7 +3822,7 @@
     "invalidTrialLicenseCount": "授權數應該大於 0 小於 1000。",
     "invalidTrialRoomSystemQuantity": "授權數應該介於 1 和 20 之間。",
     "invalidTrialSparkBoardQuantity": "授權數應該介於 1 和 20 之間。",
-    "invalidTrialCareQuantity": "授權數必須介於 1 和訊息授權數量或最多 50 之間。",
+    "invalidTrialCareQuantity": "K1 和 K2 授權數應該分別介於 1 和 50 之間，而且不應該超過授權總數。",
     "careLicenseCountExceedsTotalCount": "要求的服務授權大於訊息授權數量。",
     "individualUserServices": "個別使用者服務",
     "roomSystems": "協作室裝置",
@@ -3664,7 +3896,7 @@
       "address": "街道地址",
       "unit": "單位",
       "city": "縣/市",
-      "state": "狀態",
+      "state": "省/市/地區",
       "zip": "郵遞區號",
       "province": "省/市/地區",
       "dealId": "交易 ID（僅限美國）",
@@ -3684,7 +3916,7 @@
       "pleaseAdd": "請為客戶新增電話號碼",
       "pleaseAdd10": "請最多為客戶新增 10 個電話號碼",
       "pleaseAdd5": "請最多為客戶新增 5 個電話號碼",
-      "state": "狀態",
+      "state": "省/地區",
       "areaCode": "區碼",
       "numbers": "號碼",
       "contract": "PSTN 合約資訊",
@@ -3694,14 +3926,14 @@
       "email": "簽署人電子郵件地址",
       "esa": "緊急服務地址",
       "esaDesc": "發生緊急呼叫時，當地緊急回應人員會使用此地址來找到呼叫者。",
-      "address": "地址",
+      "address": "街道地址",
       "unit": "單位",
-      "city": "縣/市",
+      "city": "市/鎮",
       "zip": "郵遞區號",
       "skip": "跳過",
       "popover": "請提供可以簽署合約之法律聯絡人的相關資訊",
       "addrRetry": "使用其他地址",
-      "addrFound": "這是在系統中找到的地址。",
+      "addrFound": "我們已將提供的地址驗證為：",
       "error": {
         "areaCodes": "無法取得所選州/省的區碼",
         "numbers": "無法取得所選區碼的號碼",
@@ -3738,7 +3970,7 @@
     "errorInvalidName": "輸入的名稱包含無效字元。"
   },
   "trials": {
-    "collab": "標準團隊協作室 + 25 人會議",
+    "collab": "標準團隊空間 + 25 人會議",
     "squaredUC": "進階 Spark Call",
     "licenses": "授權",
     "licenseQuantity": "授權數量",
@@ -3748,9 +3980,15 @@
     "meeting": "25 人會議",
     "webex": "含 CMR/TNU+ 的 WebEx 企業版 200",
     "call": "呼叫",
-    "care": "服務",
+    "care": "K1",
+    "careHelp": "透過聊天和回撥來提供客戶服務",
+    "advanceCareHelp": "透過聊天、回撥和撥入呼叫來提供客戶服務",
+    "advanceCare": "K2",
     "callUsOnly": "呼叫（目前僅限美國）",
     "supportSelectLocations": "所選位置支援 Cisco Spark。<a href='http://www.cisco.com/go/spark-availability' target='_blank' ng-click='{{click}}'>進一步瞭解</a>",
+    "supportedLocationsCertification1": "我證明此客戶位於 ",
+    "supportedLocationsCertification2": " 用於 Cisco Spark",
+    "supportedLocationsCertificationLinkText": "支援位置",
     "context": "啟用 Context Service for Cisco Unified 聯絡中心。",
     "roomSystem": "DX、MX 或 SX 系統",
     "sparkBoardSystem": "Cisco Spark 公告牌",
@@ -3794,9 +4032,9 @@
     "notes": "附註",
     "active": "使用中",
     "free": "免費",
-    "daysRemaining": "還剩 {count, plural, =1{# 天} other{# 天}}",
-    "daysLeftToPurchase": "還剩 {count, plural, =1{# 天} other{# 天}}可購買",
-    "daysLeftToRenew": "還剩 {count, plural, =1{# 天} other{# 天}}可續訂",
+    "daysRemaining": "還剩 {count, plural, other{# 天}}",
+    "daysLeftToPurchase": "還剩 {count, plural, other{# 天}}可購買",
+    "daysLeftToRenew": "還剩 {count, plural, other{# 天}}可續訂",
     "expiringToday": "將於今天到期",
     "expired": "已過期",
     "expiredWithGracePeriod": "已過期。請立即購買",
@@ -3830,7 +4068,7 @@
     "trialTerms": "試用條款",
     "trialOverview": "試用客戶",
     "webexOverview": "WebEx",
-    "webexSiteCount": "{count, plural, =1{另 # 個站點} other{另 # 個站點}}",
+    "webexSiteCount": "{count, plural, other{另 # 個站點}}",
     "licenses": "授權數目",
     "totalQuantity": "總數量",
     "totalLicenses": "授權總數",
@@ -3880,7 +4118,7 @@
     "accountStatus": "帳戶狀態",
     "totalUsers": "使用者總數",
     "purchased": "已購買",
-    "domain": "{count, plural, =1{網域} other{網域}}",
+    "domain": "{count, plural, other{網域}}",
     "domains": "網域",
     "quantityWithValue": "數量：{{quantity}}",
     "anotherPartner": "（另一個合作夥伴）",
@@ -3908,16 +4146,17 @@
     "tooManyResultsError": "搜尋傳回了太多的結果。請精簡使用者尋找條件"
   },
   "customerSubscriptions": {
-    "customerAdmin": "客戶管理員",
-    "subscriptionInfo": "{{name}} 訂閱資訊",
-    "partnerAdmin": "合作夥伴管理",
-    "webexSubscriptions": "Webex 訂閱",
+    "copyToClipboard": "複製到剪貼簿",
+    "customerAdmin": "客戶管理員：",
+    "emailSubscriptionInfoDetail1": "使用此頁面上的客戶訂閱資訊，以針對 Cisco Spark 服務開始試用轉換或下其他訂單。",
+    "emailSubscriptionInfoDetail2": "若要開始試用轉換或下訂單，請使用電子郵件用戶端傳送訂單請求。您也可以將客戶訂閱資訊複製到剪貼簿。",
     "noWebexSubscriptions": "無 Webex 訂閱",
     "orderRequest": "訂單請求",
+    "partnerAdmin": "合作夥伴管理員：",
     "sendOrderRequest": "傳送訂單請求",
-    "copyToClipboard": "複製到剪貼簿",
-    "emailSubscriptionInfoDetail1": "使用此頁面上的客戶訂閱資訊，以針對 Cisco Spark 服務開始試用轉換或下其他訂單。",
-    "emailSubscriptionInfoDetail2": "若要開始試用轉換或下訂單，請使用電子郵件用戶端傳送訂單請求。您也可以將客戶訂閱資訊複製到剪貼簿。"
+    "subscriptionInfo": "訂閱資訊：",
+    "subscriptionInfoFor": "{{name}} 訂閱資訊：",
+    "webexSubscriptions": "Webex 訂閱"
   },
   "didAddModal": {
     "title": "新增電話號碼（選用）"
@@ -4052,14 +4291,18 @@
     "impedanceDescr": "調整聲音品質的頻率回應層級。",
     "input": "輸入音量",
     "output": "輸出音量",
-    "saved": "已儲存設定。您必須重新啟動裝置，變更才會生效"
+    "saved": "已儲存設定。您必須重新啟動裝置，變更才會生效",
+    "t38Warning": "警告：T.38 傳真將不會加密",
+    "t38Label": "T.38 傳真通訊協定",
+    "savedT38": "T.38 設定已更新"
   },
   "addDeviceWizard": {
     "newDevice": "新增裝置",
     "newCode": "新代碼",
     "confirmRoomDeviceOnly": {
       "roomDeviceOnly": "僅限「協作室裝置」啟動",
-      "noSparkCallService": "此使用者沒有 Spark Call 服務。"
+      "noSparkCallService": "此使用者沒有 Spark Call 服務。",
+      "noSparkCallWarning": "此使用者仍可以啟動協作室裝置並使用 Spark 或 SIP 位址進行呼叫。但是，如果是電話撥號及桌面電話，則需要從「使用者」頁面，向此使用者提供 Spark Call 服務。"
     },
     "chooseDeviceType": {
       "deviceType": "您想要設定何種裝置？",
@@ -4174,7 +4417,6 @@
     "clipboardFallback": "CMD+C 以複製下面的文字。",
     "emailSuccessTitle": "電子郵件已傳送",
     "emailSuccess": "啟用代碼已傳送至 {{address}}",
-    "emailErrorTitle": "電子郵件未送出",
     "emailError": "無法將啟用代碼傳送至 {{address}}",
     "clipboardSuccessTitle": "已複製到剪貼簿",
     "clipboardSuccess": "已將啟用代碼複製到剪貼簿。",
@@ -4312,12 +4554,6 @@
     "report_title": "混合媒體服務報告",
     "add-resource-button": "新增資源",
     "genericError": "發生非預期的錯誤。請稍後再試一次。",
-    "connectors": {
-      "status": "狀態",
-      "alarms": "警報",
-      "software": "軟體",
-      "nodes": "節點"
-    },
     "sipconfiguration": {
       "success": "已成功儲存 Unified CM SIP 主幹。",
       "title": "Unified CM SIP 主幹",
@@ -4330,14 +4566,6 @@
       "adoption-title": "採用",
       "resources-title": "資源",
       "custom": "自訂"
-    },
-    "settings": {
-      "deactivateBody_1": "您將移除組織的下列混合服務：",
-      "deactivateBody_2": "停用服務將從使用者移除與任何服務相關的活動。需要執行其他步驟，才能將服務從內部部署資源中移除。",
-      "removeCluster": "移除叢集",
-      "schedule": "設定排程",
-      "softwareUpgrade": "軟體升級",
-      "scheduleText": "選擇要用來更新此叢集的發行通道："
     },
     "deregister": {
       "header": "取消註冊節點",
@@ -4379,8 +4607,9 @@
       "availableTitle": "可用",
       "unavailableTitle": "離開",
       "partialTitle": "部分可用",
-      "utilizationTitle": "百分比使用率",
+      "utilizationTitle": "資源使用率",
       "participantDistributionTitle": "參加者分佈",
+      "numberOfParticipantTitle": "參加者活動",
       "clusteravailability": "叢集可用性",
       "overallUtilizationGraphError": "載入詳細使用率資料時發生錯誤",
       "overallParticipantDistributionGraphError": "載入詳細參加者分佈資料時發生錯誤",
@@ -4389,6 +4618,8 @@
       "overallAverageUtilizationGraphError": "載入平均/尖峰使用率資料時發生錯誤",
       "overallClusterAvailabilityGraphError": "載入叢集可用性資料時發生錯誤",
       "overallTotalNumberOfCallsError": "載入呼叫總數時發生錯誤",
+      "overallClientTypeGraphError": "載入用戶端類型資料時發生錯誤",
+      "overallMeetingLocationGraphError": "載入會議位置資料時發生錯誤",
       "total_calls": "通話總數",
       "onpremcalls": "內部部署託管",
       "cloudcalls": "溢位至雲端",
@@ -4398,9 +4629,11 @@
       "cloud_calls": "溢位至雲端",
       "cloud_participants": "雲端參加者",
       "onprem_participants": "內部部署參加者",
+      "participants": "參加者",
       "nodata": "資料不可用",
       "allclusters": "所有叢集",
       "percentage": "%",
+      "percentageTitle": "百分比",
       "utilization": "使用率",
       "avgutilization": "平均使用率",
       "errordata": "擷取資料時發生錯誤",
@@ -4412,32 +4645,21 @@
       "availabilityStatus": "可用性狀態",
       "clusterTitle": "叢集",
       "lowAvailableClusters": "低可用性叢集",
-      "clusterTakingMoreCalls": "託管更多通話數的叢集"
-    },
-    "serviceStatus": {
-      "unknown": "狀態不明",
-      "not_configured": "未設定",
-      "installing": "安裝中",
-      "disabled": "停用",
-      "not_installed": "未安裝",
-      "stopped": "已停止",
-      "offline": "離線",
-      "registered": "已註冊",
-      "downloading": "下載中",
-      "uninstalling": "解除安裝",
-      "running": "執行中",
-      "needs_attention": "需要注意",
-      "alarm": "警報",
-      "Unknown": "註冊",
-      "nohosts": "未註冊主機",
-      "no_hosts": "未註冊主機",
-      "has_alarms": "警報",
-      "upgrading": "升級中",
-      "upgraded": "已升級",
-      "pending": "擱置",
-      "initializing": "正在初始化",
-      "not_operational": "無法運作",
-      "nonodes": "未註冊節點"
+      "clusterTakingMoreCalls": "託管更多通話數的叢集",
+      "totalMeetings": "會議總數",
+      "meetOnPrem": "會議主持人類型",
+      "clientTypes": "用戶端類型",
+      "clientType": "用戶端類型",
+      "clients": "用戶端",
+      "noOfMeet": "會議數",
+      "meetingLocationTitle": "依主持人類型的會議總數",
+      "meetings": "會議",
+      "location": "位置",
+      "totalCloud": "雲端參加者總人數",
+      "clientTypeHeading": "用戶端類型分佈",
+      "onPremisesHeading": "内部部署",
+      "cloudHeading": "雲端",
+      "hybridHeading": "混合"
     },
     "deleteGroup": {
       "message": "確定要將 {{groupName}} 從 Cisco Collaboration Cloud 刪除嗎？",
@@ -4445,10 +4667,6 @@
       "errorMessage": "無法刪除 {{groupName}}。"
     },
     "clusters": {
-      "listing": {
-        "no_clusters_heading": "未註冊任何媒體服務叢集",
-        "no_clusters_text": "若要開始作業，請參閱上面的必要動作及文件。"
-      },
       "deregisterCancel": "取消",
       "deregisterConfirm": "確認",
       "deregisterErrorHeader": "非預期的錯誤",
@@ -4505,22 +4723,6 @@
       "deregister_host": "取消註冊主機",
       "moveNode": "移動節點",
       "deregister_node": "取消註冊節點"
-    },
-    "alarms": {
-      "alarms": "警報",
-      "critical": "嚴重",
-      "error": "錯誤",
-      "warning": "警告",
-      "alert": "警示",
-      "severity": "嚴重性",
-      "firstReported": "第一次報告時間",
-      "lastReported": "最後一次報告時間",
-      "description": "說明",
-      "noAlarms": "未報告警報",
-      "hostImpact": "受影響的主持人",
-      "nodeImpact": "受影響的節點",
-      "nodesImpact": "受影響的節點",
-      "raised": "舉手"
     },
     "deactivate": {
       "areYou": "確定要停用「混合媒體服務」嗎？",
@@ -4938,14 +5140,14 @@
     "licenseUsage": "授權使用情況",
     "lastSynced": "前次同步時間：",
     "messagingTitle": "訊息",
-    "messagingSubtitle": "標準團隊協作室",
-    "messagingDesc": "具有內容儲存體的團隊協作室可讓您輕鬆地從任何裝置，與組織內部或外部的任何使用者進行協作。",
+    "messagingSubtitle": "標準團隊空間",
+    "messagingDesc": "具有內容儲存體的團隊空間可讓您輕鬆地從任何裝置，與組織內部或外部的任何使用者進行協作。",
     "communicationTitle": "呼叫",
     "communicationSubtitle": "進階 Spark Call",
     "communicationDesc": "組織啟用了基本外部呼叫和呼叫路由功能。",
     "conferencingTitle": "會議",
     "conferencingSubtitle": "Meeting Center",
-    "conferencingDesc": "團隊協作室同步中最多可以加入 25 位同事，而 WebEx Meeting Center 中可以加入更多同事。",
+    "conferencingDesc": "團隊空間同步中最多可以加入 25 位同事，而 WebEx Meeting Center 中可以加入更多同事。",
     "shared_devicesTitle": "協作室裝置",
     "shared_devicesSubtitle": "共用裝置",
     "MS": "訊息",
@@ -5087,13 +5289,29 @@
   "processOrderPage": {
     "errOrgCreation": "正在處理您的訂單。請在 24 小時之後重新檢查。",
     "info": "狀態",
-    "wait": "正在重新導向，請稍候"
+    "wait": "正在重新導向，請稍候",
+    "modalTitle": "PSTN 通話服務的位置",
+    "modalDesc": "請輸入 Spark Call 服務的大部分電話所在的國家或地區。",
+    "countrySelectLabel": "請輸入 PSTN 服務所在的國家或地區",
+    "countrySelectPlaceholder": "選取國家或地區"
   },
   "countries": {
     "greatBritain": "英國",
     "unitedStates": "美國",
     "canada": "加拿大",
-    "colombia": "哥倫比亞"
+    "colombia": "哥倫比亞",
+    "austria": "奧地利",
+    "belgium": "比利時",
+    "france": "法國",
+    "germany": "德國",
+    "italy": "義大利",
+    "netherlands": "荷蘭",
+    "portugal": "葡萄牙",
+    "spain": "西班牙",
+    "sweden": "瑞典",
+    "switzerland": "瑞士",
+    "ireland": "愛爾蘭",
+    "mexico": "墨西哥"
   },
   "languages": {
     "danish": "Dansk",
@@ -5374,7 +5592,7 @@
     "sparkOnly": "僅限 Spark",
     "placeAdd": "新增位置",
     "placesDefinition": "位置表示未由特定使用者擁有之裝置所在的實體位置，例如具有協作室裝置的會議室或者具有共用電話的接待區。",
-    "placesUses": "您將可以在這裡檢視您的位置 - 以及屬於這些位置的裝置和設定。",
+    "placesUses": "位置可以包含共用裝置。您將可以在這裡檢視您的位置 - 以及屬於這些位置的裝置和設定。",
     "deletePlace": "刪除位置",
     "deletePlaceConfText": "確定要刪除 {{ placeName }} 嗎？",
     "failedToSaveChanges": "無法儲存對位置所做的變更。原因：",
@@ -5472,7 +5690,8 @@
     "profile_callback": "自訂和身分",
     "profile_chatPlusCallback": "聊天自訂和身分",
     "overview": "範本概觀",
-    "chatStatusMessages": "狀態訊息",
+    "chatStatusMessages_chat": "狀態訊息",
+    "chatStatusMessages_chatPlusCallback": "聊天狀態訊息",
     "customerInformation": "客戶資訊",
     "customerInfo_chat": "用於聊天的客戶資訊",
     "customerInfo_callback": "用於回撥的客戶資訊",
@@ -5561,7 +5780,7 @@
     "agentMsgTime": "上午 10:10",
     "customerMsg": "好的，我將協助您。",
     "customerMsgTime": "上午 10:11",
-    "agentEnteredStatus": "客服人員已進入聊天室",
+    "agentEnteredStatus": "正在與客服人員聊天",
     "typeNewMsg": "輸入您的訊息並按 Enter 鍵。",
     "feedbackQuery": "請評價對聊天的感受",
     "ratingHintText": "提示文字",
@@ -5623,8 +5842,8 @@
     "summary": "摘要",
     "summaryDesc": "您已設定範本。請按一下「完成」來儲存設定，並產生內嵌程式碼，以便您能開始在組織網站上使用此範本。",
     "editSummaryDesc": "您已編輯範本。請按一下「完成」來儲存設定，以便您能開始在組織網站上使用此範本的新版本。",
-    "editCodeWarnMsg2Line1": "聊天範本變更生效最多可能需要 15 分鐘。",
-    "editCodeWarnMsg2Line2":"在此時間之後，請在新的瀏覽器標籤中開啟聊天範本來檢視變更。",
+    "editCodeWarnMsg2Line1": "範本變更生效最多可能需要 15 分鐘。",
+    "editCodeWarnMsg2Line2":"在此時間之後，請在新的瀏覽器標籤中開啟範本來檢視變更。",
     "summaryDesc_callback": "您已設定回撥範本。請按一下「完成」來儲存設定，並產生內嵌程式碼，使得您可以開始在組織網站上使用此回撥範本。",
     "editSummaryDesc_callback": "您已編輯回撥範本。請按一下「完成」來儲存設定，因此您可以開始在組織網站上使用此回撥範本的新版本。",
     "copyEmbedCode": "複製內嵌程式碼",
@@ -5846,13 +6065,13 @@
       },
       "message": {
         "title": "訊息",
-        "notEnabledText": " 使用具有內容儲存體的小組協作室，可以輕鬆地從任何裝置，與組織內部或外部的任何使用者進行協作。",
-        "currentTitle": "本週的新協作室",
+        "notEnabledText": " 使用具有內容儲存體的團隊空間，可以輕鬆地從任何裝置，與組織內部或外部的任何使用者進行協作。",
+        "currentTitle": "本週的新空間",
         "previousTitle": "上週："
       },
       "meeting": {
         "title": "會議",
-        "notEnabledText": "團隊協作室同步中最多可以加入 25 位同事，而 WebEx Meeting Center 中可以加入更多同事。"
+        "notEnabledText": "團隊空間同步中最多可以加入 25 位同事，而 WebEx Meeting Center 中可以加入更多同事。"
       },
       "call": {
         "title": "呼叫",
@@ -5880,7 +6099,8 @@
           "squared-fusion-uc": "呼叫",
           "squared-fusion-mgmt": "管理",
           "squared-fusion-media": "媒體",
-          "spark-hybrid-datasecurity": "資料安全"
+          "spark-hybrid-datasecurity": "資料安全",
+          "contact-center-context": "內容"
         }
       },
       "licenses": {
@@ -5947,6 +6167,27 @@
       "problemReportsTextPlaceholder": "在這裡輸入其他支援聯絡資訊，如電話號碼或電子郵件地址",
       "helpSiteLabel": "協助網站",
       "useCustomHelpSite": "使用自訂說明網站"
+    },
+    "dirsync" : {
+      "loading": "正在更新狀態",
+      "title": "目錄同步",
+      "syncTitle": "目錄同步",
+      "status": "狀態",
+      "enabled": "啟用",
+      "disabled": "停用",
+      "turnOffDirSync": "關閉目錄同步",
+      "turnOnDirSync": "如何開啟目錄同步",
+      "connectorsTitle": "Directory Connector",
+      "deregister": "取消註冊",
+      "register": "註冊",
+      "emailNotifications": "電子郵件通知",
+      "manageNotifications": "管理通知",
+      "turnOffDirSyncWarning": "您確定要關閉目錄同步嗎？您只能從 Cisco Directory Connector 重新啟用目錄同步。關閉目錄同步之後，您必須手動新增使用者。",
+      "disableDirSyncSuccess": "目錄同步已關閉。",
+      "disableDirSyncFailed": "關閉目錄同步時發生錯誤",
+      "deregisterWarning": "取消註冊前請解除安裝 Directory Connector。",
+      "deregisterSuccess": "已成功取消註冊 Directory Connector「{{name}}」。",
+      "deregisterFailed": "無法取消註冊 Directory Connector「{{name}}」。"
     }
   },
   "my-company": {
@@ -5967,19 +6208,19 @@
     "numberedName": "訂閱 {{number}}",
     "usage": "使用情況： ",
     "licenseUsageReport": "授權使用情況報告",
-    "smpLicenseReportPeriod": "最近 3 個月",
     "more": "更多",
     "less": "更少",
     "quantity": "數量： ",
     "upgrade": "升級",
     "purchase": "購買",
     "changePlan": "變更計劃",
+    "contact": "請聯絡客戶代表",
     "onlineTrialUpgradeUrlError": "無法擷取試用版 {{trialId}} 的購買 URL。若要購買付費訂閱，請透過電子郵件聯絡您的合作夥伴，或使用試用版橫幅上的購買按鈕來傳送一份給您。",
     "onlineProductInstanceError": "無法擷取試用服務 {{trialId}} 的產品實例。若要購買付費訂閱，請透過電子郵件聯絡您的合作夥伴，或使用試用服務橫幅上的購買按鈕來傳送一份給您。",
     "loadError": "載入訂閱時發生錯誤。",
     "licenseTypes": {
-      "MS": "標準團隊協作室",
-      "CF": "25 人會議",
+      "MS": "標準團隊空間",
+      "CF": "Spark 25 人會議",
       "MC": "WebEx Meeting Center",
       "SC": "WebEx Support Center",
       "TC": "WebEx Training Center",
@@ -6001,17 +6242,21 @@
   },
   "myCompanyOrders": {
     "numberHeader": "訂單編號",
-    "descriptionHeader": "訂單詳細資料",
+    "descriptionHeader": "產品名稱",
     "priceHeader": "價格",
     "dateHeader": "訂單日期",
     "actionsHeader": "動作",
+    "statusHeader": "狀態",
     "downloadPdf": "下載 PDF",
+    "overview": "此表格僅顯示透過 Cisco Online Marketplace 所支付發票的付款記錄。這裡未列出 Cisco 及 Cisco 夥伴發票。",
     "loadError": "載入訂單歷史記錄時發生錯誤。"
   },
   "ciRoles": {
     "atlas-portal.support": "支援",
     "atlas-portal.reports": "報告",
     "atlas-portal.billing": "帳單",
+    "atlas-portal.cisco.partnermgmt": "夥伴管理",
+    "atlas-portal.cisco.partnermgmtTooltip": "存取夥伴管理",
     "atlas-portal.partner.helpdesk": "技術支援人員",
     "atlas-portal.partner.helpdeskTooltip": "存取技術支援",
     "atlas-portal.partner.orderadmin": "訂單管理支援",
@@ -6103,7 +6348,7 @@
       "webex-squared": "免費 Spark 傳訊",
       "squared-syncup.paid": "25 人會議",
       "squared-syncup.free": "三方 Spark 會議免費",
-      "squared-room-moderation.paid": "標準團隊協作室",
+      "squared-room-moderation.paid": "標準團隊空間",
       "squared-room-moderation.free": "免費 Spark 傳訊",
       "ciscouc.paid": "進階 Spark Call",
       "ciscouc.free": "一對一 Spark Call 免費",
@@ -6139,7 +6384,7 @@
     "licenseDisplayNames": {
       "MC": "Meeting Center {{capacity}}",
       "TC": "Training Center {{capacity}}",
-      "MS": "標準團隊協作室",
+      "MS": "標準團隊空間",
       "CF": "25 人會議",
       "EE": "企業版 {{capacity}}",
       "SC": "Support Center {{capacity}}",
@@ -6153,8 +6398,6 @@
     },
     "trial": "試用客戶",
     "adminUsers": "管理員",
-    "showAllAdminUsers": "顯示所有 {{numUsers}} 個管理員",
-    "hideAllAdminUsers": "隱藏管理員",
     "numDaysLeft": "還剩 {{days}} 天",
     "licenseStatus": {
       "active": "使用中",
@@ -6438,10 +6681,19 @@
         }
       },
       "hybridContext": {
-        "title": "內容",
-        "description": "啟用儲存體服務，為 Cisco 聯絡中心客戶提供客戶歷程資料的儲存庫。",
+        "title": "混合內容",
+        "description": "將「Cisco 客戶服務」客戶行程資料儲存於雲端。",
         "buttons": {
-          "settings": "設定"
+          "resources": "資源",
+          "fields": "欄位",
+          "fieldsets": "欄位集"
+        }
+      },
+      "privateTrunk": {
+        "title": "企業私人主幹 ",
+        "description": "擴展您的組織。",
+        "buttons": {
+          "verify": "驗證必要條件"
         }
       }
     },
@@ -6495,6 +6747,24 @@
       "3008": "無法檢查回撥群組名稱",
       "3009": "回撥群組名稱重複",
       "genericError": "發生非預期的錯誤。請稍後再試一次。"
+    },
+    "tds": {
+      "export": {
+        "csvFilename": "exported_telephonyDomain.csv",
+        "result": {
+          "success": "已成功匯出電話區域清單。",
+          "failed": "匯出電話區域清單時發生錯誤。"
+        }
+      },
+      "field": {
+        "status": "狀態",
+        "sites": "網站 URL",
+        "bridgeSet": "橋接器集",
+        "webDomain": "網路網域",
+        "description": "合作夥伴 TD 名稱",
+        "totalSites": "已指定網站",
+        "telephonyDomains": "電話區域"
+      }
     },
     "cbgs": {
       "overview": "概觀",
@@ -7117,7 +7387,11 @@
       "partialOutage": "部分中斷",
       "majorOutage": "重大中斷",
       "underMaintenance": "維護中"
-    }
+    },
+    "syncBtn": "同步",
+    "syncMessage": "開始前請同步資料。",
+    "syncSucceed": "同步成功。",
+    "syncError": "嘗試同步資料時發生錯誤，請稍後再試一次。"
   },
   "machineTypes": {
     "bot": "機器人",
