@@ -23,6 +23,7 @@
     vm.addResource = addResource;
     vm.openAddTrialUsersModal = openAddTrialUsersModal;
     vm.openEditTrialUsersModal = openEditTrialUsersModal;
+    vm.deactivateTrialMode = deactivateTrialMode;
     var localizedHdsModeError = $translate.instant('hds.resources.settings.hdsModeGetError');
     var trialKmsServer = '';
     var trialKmsServerMachineUUID = '';
@@ -58,6 +59,9 @@
 
     vm.servicestatus = {
       title: 'hds.resources.settings.servicestatusTitle',
+    };
+    vm.deactivate = {
+      title: 'common.deactivate',
     };
 
     var DEFAULT_SERVICE_MODE = vm.NA_MODE;
@@ -221,6 +225,32 @@
         .result.then(function () {
           getTrialUsersInfo();
         });
+    }
+    function deactivateTrialMode() {
+      if (vm.model.serviceMode === vm.TRIAL) {
+        $modal.open({
+          templateUrl: 'modules/hds/settings/confirm-deactivate-trialmode-dialog.html',
+          type: 'dialog',
+        })
+          .result.then(function () {
+            if (typeof vm.altHdsServers !== 'undefined' || vm.altHdsServers.length > 0) {
+              _.forEach(vm.altHdsServers, function (server) {
+                if (typeof server.active !== 'undefined') {
+                  server['active'] = false;
+                }
+              });
+            }
+            var myJSON = {
+              'altHdsServers': vm.altHdsServers,
+            };
+            Orgservice.setOrgAltHdsServersHds(Authinfo.getOrgId(), myJSON)
+              .then(function () {
+                vm.model.serviceMode = vm.PRE_TRIAL;
+              }).catch(function (error) {
+                Notification.errorWithTrackingId(error, localizedHdsModeError);
+              });
+          });
+      }
     }
   }
 }());
