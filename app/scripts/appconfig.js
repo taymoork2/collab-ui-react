@@ -2883,9 +2883,11 @@
             views: {
               'subHeader': {
                 templateUrl: 'modules/context/resources/hybrid-context-resources-header.html',
+                controller: 'HybridContextResourcesCtrl',
+                controllerAs: 'contextResources',
               },
               'contextServiceView': {
-                template: '<hybrid-service-cluster-list service-id="\'contact-center-context\'"></hybrid-service-cluster-list>',
+                template: '<hybrid-service-cluster-list service-id="\'contact-center-context\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>',
                 controller: /* @ngInject */ function (Analytics) {
                   return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CONTEXT_LIST);
                 },
@@ -2897,6 +2899,9 @@
             resolve: {
               hasContactCenterContextFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.contactCenterContext);
+              },
+              clusterId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.clusterId;
               },
             },
           })

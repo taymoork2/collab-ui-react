@@ -1,3 +1,5 @@
+require('../resources/_resources.scss');
+
 (function () {
   'use strict';
 
