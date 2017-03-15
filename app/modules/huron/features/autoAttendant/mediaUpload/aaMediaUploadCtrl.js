@@ -329,7 +329,9 @@
         modalCanceled = true;
         uploadServProm.abort();
       }
-      AAMediaUploadService.notifyAsActive(uniqueCtrlIdentifier, false);
+      if (sourceType !== messageType.ROUTE_TO_QUEUE) {
+        AAMediaUploadService.notifyAsActive(uniqueCtrlIdentifier, false);
+      }
     });
 
     //if user cancels upload & previously uploaded media -> re-init/revert copy
