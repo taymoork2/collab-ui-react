@@ -60,18 +60,20 @@ require('./_customer-overview.scss');
     var QTY = _.toUpper($translate.instant('common.quantity'));
     var FREE = _.toUpper($translate.instant('customerPage.free'));
 
-    FeatureToggleService.atlasCareTrialsGetStatus()
-      .then(function (result) {
+    $q.all([FeatureToggleService.atlasCareTrialsGetStatus(), FeatureToggleService.atlasCareInboundTrialsGetStatus()])
+      .then(function (results) {
         if (_.find(vm.currentCustomer.offers, { id: Config.offerTypes.roomSystems })) {
           vm.showRoomSystems = true;
         }
-        var isCareEnabled = result;
-        setOffers(isCareEnabled);
+        var isCareEnabled = results[0];
+        var isAdvanceCareEnabled = results[1];
+        setOffers(isCareEnabled, isAdvanceCareEnabled);
       });
 
 
-    function setOffers(isCareEnabled) {
+    function setOffers(isCareEnabled, isAdvanceCareEnabled) {
       var licAndOffers = PartnerService.parseLicensesAndOffers(vm.currentCustomer, { isCareEnabled: isCareEnabled,
+        isAdvanceCareEnabled: isAdvanceCareEnabled,
         isTrial: true });
       vm.offer = vm.currentCustomer.offer = _.get(licAndOffers, 'offer');
       vm.trialServices = _.chain(vm.currentCustomer.offer)
@@ -327,8 +329,8 @@ require('./_customer-overview.scss');
     }
 
     function hasSubview(service) {
-      var hasWebexOrMultMeeting = (service.hasWebex === true || service.isMeeting);
-      return hasWebexOrMultMeeting || service.isRoom;
+      var hasWebexOrMultMeeting = (service.hasWebex === true || service.isMeeting || service.isSparkCare);
+      return hasWebexOrMultMeeting || service.isRoom || service.isSparkCare;
     }
 
     function goToSubview(service, options) {
@@ -338,6 +340,8 @@ require('./_customer-overview.scss');
         $state.go('customer-overview.meetingDetail', { meetingLicenses: services });
       } else if (service.isRoom) {
         $state.go('customer-overview.sharedDeviceDetail', { sharedDeviceLicenses: service.sub });
+      } else if (service.isSparkCare) {
+        $state.go('customer-overview.careLicenseDetail', { careLicense: service.sub });
       }
     }
 

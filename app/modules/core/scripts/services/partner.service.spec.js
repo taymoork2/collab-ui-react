@@ -193,7 +193,7 @@ describe('Partner Service -', function () {
   });
 
   it('should successfully return an array of customers with additional properties from calling loadRetrievedDataToList', function () {
-    var returnList = PartnerService.loadRetrievedDataToList(_.get(testData, 'managedOrgsResponse.data.organizations', []), true, true);
+    var returnList = PartnerService.loadRetrievedDataToList(_.get(testData, 'managedOrgsResponse.data.organizations', []), true, true, true);
     var activeList = _.filter(returnList, {
       state: "ACTIVE",
     });
@@ -206,7 +206,7 @@ describe('Partner Service -', function () {
     expect(expiredList.length).toBe(2);
 
     // Three licenses converted to License List. First license has four entitlements
-    expect(returnList[0].licenseList.length).toBe(3);
+    expect(returnList[0].licenseList.length).toBe(4);
     expect(returnList[0].licenseList[0].features.length).toBe(4);
     expect(returnList[0].licenseList[0].features).toEqual(testData.managedOrgsResponse.data.organizations[0].licenses[0].features);
 
@@ -214,6 +214,7 @@ describe('Partner Service -', function () {
     expect(activeList[1].conferencing.features.length).toBe(3);
     expect(activeList[1].messaging.features.length).toBe(4);
     expect(activeList[1].care.features.length).toBe(4);
+    expect(activeList[1].advanceCare.features.length).toBe(5);
   });
 
   it('should successfully return an object containing email, orgid, and orgname from getAdminOrg', function () {
@@ -239,7 +240,7 @@ describe('Partner Service -', function () {
   it('should successfully return a list customer orgs with orderedServices property from calling loadRetrievedDataToList with isCareEnabled being true', function () {
     spyOn(Authinfo, 'getPrimaryEmail').and.returnValue('partner@company.com');
 
-    var returnList = PartnerService.loadRetrievedDataToList(_.get(testData, 'managedOrgsResponse.data.organizations', []), true, true);
+    var returnList = PartnerService.loadRetrievedDataToList(_.get(testData, 'managedOrgsResponse.data.organizations', []), true, true, true);
     var expectedServices = ['messaging', 'communications', 'webex', 'roomSystems', 'sparkBoard', 'care'];
     var expectedServicesManagedByOthers = ['conferencing'];
 
@@ -253,7 +254,7 @@ describe('Partner Service -', function () {
   it('should successfully return a list customer orgs with orderedServices property from calling loadRetrievedDataToList with isCareEnabled being false', function () {
     spyOn(Authinfo, 'getPrimaryEmail').and.returnValue('partner@company.com');
 
-    var returnList = PartnerService.loadRetrievedDataToList(_.get(testData, 'managedOrgsResponse.data.organizations', []), true, false);
+    var returnList = PartnerService.loadRetrievedDataToList(_.get(testData, 'managedOrgsResponse.data.organizations', []), true, false, true);
     var expectedServices = ['messaging', 'communications', 'webex', 'roomSystems', 'sparkBoard'];
     var expectedServicesManagedByOthers = ['conferencing'];
 
@@ -406,6 +407,10 @@ describe('Partner Service -', function () {
       it('should return false for care service (licensed and without partnerOrgId or partnerEmail properties)', function () {
         expect(PartnerService.isServiceManagedByCurrentPartner(services.care)).toBe(false);
       });
+
+      it('should return false for advance care service (licensed and without partnerOrgId or partnerEmail properties)', function () {
+        expect(PartnerService.isServiceManagedByCurrentPartner(services.advanceCare)).toBe(false);
+      });
     });
   });
 
@@ -462,7 +467,7 @@ describe('Partner Service -', function () {
           offers: [{
             usageCount: 1,
           }],
-        }, { isCareEnabled: true });
+        }, { isCareEnabled: true, isAdvanceCareEnabled: true });
         expect(data.usage).toBe(1);
       });
 
@@ -482,7 +487,7 @@ describe('Partner Service -', function () {
           }, {
             licenseCount: 20,
           }],
-        }, { isCareEnabled: true });
+        }, { isCareEnabled: true, isAdvanceCareEnabled: true });
         expect(data.licenses).toBe(20);
       });
 
@@ -492,7 +497,7 @@ describe('Partner Service -', function () {
             id: Config.offerTypes.roomSystems,
             licenseCount: 10,
           }],
-        }, { isCareEnabled: true });
+        }, { isCareEnabled: true, isAdvanceCareEnabled: true });
         expect(data.deviceLicenses).toBe(10);
       });
 
@@ -502,7 +507,7 @@ describe('Partner Service -', function () {
             id: Config.offerTypes.sparkBoard,
             licenseCount: 10,
           }],
-        }, { isCareEnabled: true });
+        }, { isCareEnabled: true, isAdvanceCareEnabled: true });
         expect(data.deviceLicenses).toBe(10);
       });
 
@@ -512,7 +517,7 @@ describe('Partner Service -', function () {
             id: Config.offerTypes.call,
             licenseCount: 10,
           }],
-        }, { isCareEnabled: true });
+        }, { isCareEnabled: true, isAdvanceCareEnabled: true });
         expect(data.deviceLicenses).toBe(0);
       });
 
@@ -525,7 +530,7 @@ describe('Partner Service -', function () {
             id: Config.offerTypes.sparkBoard,
             licenseCount: 15,
           }],
-        }, { isCareEnabled: true });
+        }, { isCareEnabled: true, isAdvanceCareEnabled: true });
         expect(data.deviceLicenses).toBe(25);
       });
 
@@ -549,7 +554,7 @@ describe('Partner Service -', function () {
             id: Config.offerTypes.sparkBoard,
             licenseCount: 15,
           }],
-        }, { isCareEnabled: true });
+        }, { isCareEnabled: true, isAdvanceCareEnabled: true });
         expect(data.deviceLicenses).toBe(25);
       });
 
@@ -558,14 +563,14 @@ describe('Partner Service -', function () {
           offers: [{
             id: Config.offerTypes.spark1,
           }],
-        }, { isCareEnabled: true });
+        }, { isCareEnabled: true, isAdvanceCareEnabled: true });
         expect(_.map(data.offer.trialServices, function (o) { return o.name; })).toContain($translate.instant('trials.message'));
 
         data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.message,
           }],
-        }, { isCareEnabled: true });
+        }, { isCareEnabled: true, isAdvanceCareEnabled: true });
         expect(_.map(data.offer.trialServices, function (o) { return o.name; })).toContain($translate.instant('trials.message'));
       });
 
@@ -574,8 +579,8 @@ describe('Partner Service -', function () {
           offers: [{
             id: Config.offerTypes.care,
           }],
-        }, { isCareEnabled: true });
-        expect(_.map(data.offer.trialServices, function (o) { return o.name; })).toContain($translate.instant('trials.care'));
+        }, { isCareEnabled: true, isAdvanceCareEnabled: false });
+        expect(_.map(data.offer.trialServices, function (o) { return o.name; })).toContain($translate.instant('customerPage.care'));
       });
 
       it('should return an object with its "offer.trialServices" array empty and without the translated "trials.care" l10n key, if atlasCareTrials feature is disabled for the org', function () {
@@ -583,7 +588,25 @@ describe('Partner Service -', function () {
           offers: [{
             id: Config.offerTypes.care,
           }],
-        }, { isCareEnabled: false });
+        }, { isCareEnabled: false, isAdvanceCareEnabled: false });
+        expect(data.offer.trialServices.length).toEqual(0);
+      });
+
+      it('should return an object with its "offer.trialServices" array containing object with the name translated "trials.advanceCare" l10n key, if the offers "id" property matches `Config.offerTypes.advanceCare` and atlasCareTrials feature is enabled for the org', function () {
+        var data = PartnerService.parseLicensesAndOffers({
+          offers: [{
+            id: Config.offerTypes.advanceCare,
+          }],
+        }, { isCareEnabled: false, isAdvanceCareEnabled: true });
+        expect(_.map(data.offer.trialServices, function (o) { return o.name; })).toContain($translate.instant('customerPage.care'));
+      });
+
+      it('should return an object with its "offer.trialServices" array empty and without the translated "trials.advanceCare" l10n key, if atlasCareTrials feature is disabled for the org', function () {
+        var data = PartnerService.parseLicensesAndOffers({
+          offers: [{
+            id: Config.offerTypes.advanceCare,
+          }],
+        }, { isCareEnabled: false, isAdvanceCareEnabled: false });
         expect(data.offer.trialServices.length).toEqual(0);
       });
 
@@ -592,7 +615,7 @@ describe('Partner Service -', function () {
           offers: [{
             id: Config.offerTypes.collab,
           }],
-        }, { isCareEnabled: true });
+        }, { isCareEnabled: true, isAdvanceCareEnabled: true });
         expect(_.map(data.offer.trialServices, function (o) { return o.name; })).toContain($translate.instant('trials.message'));
       });
 
@@ -601,14 +624,14 @@ describe('Partner Service -', function () {
           offers: [{
             id: Config.offerTypes.call,
           }],
-        }, { isCareEnabled: true });
+        }, { isCareEnabled: true, isAdvanceCareEnabled: true });
         expect(_.map(data.offer.trialServices, function (o) { return o.name; })).toContain($translate.instant('trials.call'));
 
         data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.squaredUC,
           }],
-        }, { isCareEnabled: true });
+        }, { isCareEnabled: true, isAdvanceCareEnabled: true });
         expect(_.map(data.offer.trialServices, function (o) { return o.name; })).toContain($translate.instant('trials.call'));
       });
 
@@ -617,14 +640,14 @@ describe('Partner Service -', function () {
           offers: [{
             id: Config.offerTypes.call,
           }],
-        }, { isCareEnabled: true });
+        }, { isCareEnabled: true, isAdvanceCareEnabled: true });
         expect(data.isSquaredUcOffer).toBe(true);
 
         data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.squaredUC,
           }],
-        }, { isCareEnabled: true });
+        }, { isCareEnabled: true, isAdvanceCareEnabled: true });
         expect(data.isSquaredUcOffer).toBe(true);
 
         data = PartnerService.parseLicensesAndOffers({
@@ -637,7 +660,7 @@ describe('Partner Service -', function () {
             id: Config.offerTypes.collab,
           },
           ],
-        }, { isCareEnabled: true });
+        }, { isCareEnabled: true, isAdvanceCareEnabled: true });
         expect(data.isSquaredUcOffer).toBe(true);
       });
 
@@ -646,7 +669,7 @@ describe('Partner Service -', function () {
           licenses: [{
             licenseType: Config.licenseTypes.COMMUNICATION,
           }],
-        }, { isCareEnabled: true });
+        }, { isCareEnabled: true, isAdvanceCareEnabled: true });
         expect(data.isSquaredUcOffer).toBe(true);
 
         data = PartnerService.parseLicensesAndOffers({
@@ -659,7 +682,7 @@ describe('Partner Service -', function () {
             licenseType: Config.licenseTypes.CONFERENCING,
           },
           ],
-        }, { isCareEnabled: true });
+        }, { isCareEnabled: true, isAdvanceCareEnabled: true });
         expect(data.isSquaredUcOffer).toBe(true);
 
         data = PartnerService.parseLicensesAndOffers({
@@ -668,7 +691,7 @@ describe('Partner Service -', function () {
           }, {
             licenseType: Config.licenseTypes.CONFERENCING,
           }],
-        }, { isCareEnabled: true });
+        }, { isCareEnabled: true, isAdvanceCareEnabled: true });
         expect(data.isSquaredUcOffer).toBe(false);
       });
 
@@ -679,7 +702,7 @@ describe('Partner Service -', function () {
               licenseType: undefined,
             },
           ],
-        }, { isCareEnabled: true });
+        }, { isCareEnabled: true, isAdvanceCareEnabled: true });
         expect(data.isSquaredUcOffer).toBe(false);
 
         data = PartnerService.parseLicensesAndOffers({
@@ -699,14 +722,14 @@ describe('Partner Service -', function () {
           offers: [{
             id: Config.offerTypes.webex,
           }],
-        }, { isCareEnabled: true });
+        }, { isCareEnabled: true, isAdvanceCareEnabled: true });
         expect(_.map(data.offer.trialServices, function (o) { return o.name; })).toContain($translate.instant('customerPage.EE'));
 
         data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.meetings,
           }],
-        }, { isCareEnabled: true });
+        }, { isCareEnabled: true, isAdvanceCareEnabled: true });
         expect(_.map(data.offer.trialServices, function (o) { return o.name; })).toContain($translate.instant('customerPage.EE'));
       });
 
@@ -715,7 +738,7 @@ describe('Partner Service -', function () {
           offers: [{
             id: Config.offerTypes.roomSystems,
           }],
-        }, { isCareEnabled: true });
+        }, { isCareEnabled: true, isAdvanceCareEnabled: true });
         expect(data.isRoomSystems).toBe(true);
         expect(_.map(data.offer.trialServices, function (o) { return o.name; })).toContain($translate.instant('subscriptions.room'));
       });
@@ -754,7 +777,7 @@ describe('Partner Service -', function () {
           isTrial: true,
         };
         var isTrial = true;
-        expect(PartnerService.helpers.isDisplayableService(licenseInfo, true, isTrial)).toBe(true);
+        expect(PartnerService.helpers.isDisplayableService(licenseInfo, isTrial)).toBe(true);
       });
 
       it('should return FALSE from isDisplayableService for trial license if NOT looking for trials', function () {
@@ -772,7 +795,7 @@ describe('Partner Service -', function () {
           licenseType: Config.licenseTypes.STORAGE,
           volume: 10,
         };
-        var options = { isTrial: false, isCareEnabled: true };
+        var options = { isTrial: false, isCareEnabled: true, isAdvanceCareEnabled: true };
         expect(PartnerService.helpers.isDisplayableService(licenseInfo, options)).toBe(false);
       });
 
@@ -781,9 +804,34 @@ describe('Partner Service -', function () {
           licenseType: Config.licenseTypes.CARE,
           volume: 10,
         };
-        var options = { isTrial: false, isCareEnabled: false };
+        var options = { isTrial: false, isCareEnabled: false, isAdvanceCareEnabled: false };
         expect(PartnerService.helpers.isDisplayableService(licenseInfo, options)).toBe(false);
         options.isCareEnabled = true;
+        options.isAdvanceCareEnabled = false;
+        expect(PartnerService.helpers.isDisplayableService(licenseInfo, options)).toBe(true);
+        options.isCareEnabled = false;
+        options.isAdvanceCareEnabled = true;
+        expect(PartnerService.helpers.isDisplayableService(licenseInfo, options)).toBe(false);
+        options.isCareEnabled = true;
+        options.isAdvanceCareEnabled = true;
+        expect(PartnerService.helpers.isDisplayableService(licenseInfo, options)).toBe(true);
+      });
+
+      it('should return the value of the toggle  from isDisplayableService for Advance Care license', function () {
+        var licenseInfo = {
+          licenseType: Config.licenseTypes.ADVANCE_CARE,
+          volume: 10,
+        };
+        var options = { isTrial: false, isCareEnabled: false, isAdvanceCareEnabled: false };
+        expect(PartnerService.helpers.isDisplayableService(licenseInfo, options)).toBe(false);
+        options.isCareEnabled = false;
+        options.isAdvanceCareEnabled = true;
+        expect(PartnerService.helpers.isDisplayableService(licenseInfo, options)).toBe(true);
+        options.isCareEnabled = true;
+        options.isAdvanceCareEnabled = false;
+        expect(PartnerService.helpers.isDisplayableService(licenseInfo, options)).toBe(false);
+        options.isCareEnabled = true;
+        options.isAdvanceCareEnabled = true;
         expect(PartnerService.helpers.isDisplayableService(licenseInfo, options)).toBe(true);
       });
 
@@ -792,7 +840,7 @@ describe('Partner Service -', function () {
           licenseType: Config.licenseTypes.CONFERENCING,
           volume: 10,
         };
-        var options = { isTrial: false, isCareEnabled: true };
+        var options = { isTrial: false, isCareEnabled: true, isAdvanceCareEnabled: true };
         expect(PartnerService.helpers.isDisplayableService(licenseInfo, options)).toBe(true);
       });
 
@@ -972,7 +1020,7 @@ describe('Partner Service -', function () {
       });
 
       it('should set the service count properly', function () {
-        var dataPurchased = testData.customers[6];
+        var dataPurchased = testData.customers[5];
         dataPurchased.purchased = true;//this would be calculated in calculatePurchaseStatus
         expect(PartnerService.helpers.calculateTotalLicenses(dataPurchased)).toBe(200);
 

@@ -2083,6 +2083,20 @@
               sharedDeviceLicenses: {},
             },
           })
+          .state('customer-overview.careLicenseDetail', {
+            controller: 'CareLicenseDetailCtrl',
+            controllerAs: 'careLicenseDetail',
+            templateUrl: 'modules/core/customers/customerOverview/careLicenseDetail.tpl.html',
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.careLicenseDetail').data.displayName = $translate.instant('customerPage.careLicenses');
+              },
+            },
+            data: {},
+            params: {
+              careLicense: {},
+            },
+          })
           .state('customer-overview.externalNumbers', {
             controller: 'ExternalNumberDetailCtrl',
             controllerAs: 'externalNumbers',
