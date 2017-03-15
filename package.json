@@ -82,6 +82,7 @@
     "draggable.js": "git+https://github.com/gtramontina/draggable.js.git#v1.0.1",
     "dragular": "~4.2.0",
     "emailjs-addressparser": "~1.0.1",
+    "es6-promise": "^4.1.0",
     "foundation-sites": "5.5.2",
     "google-libphonenumber": "^1.1.0",
     "ical.js": "~1.2.1",
