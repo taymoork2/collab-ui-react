@@ -2109,13 +2109,13 @@
         "enableInBulk": "Enable them in bulk using the <a ng-click=\"{{onclick}}\">CSV template</a>.",
         "referToDocumentation": "Refer to <a href=\"https://example.org/\" target=\"_blank\">documentation</a> if you need help enabling users.",
         "provisioningResults": {
-          "OK": "Provisioning succeeded.",
-          "BAD_API_ACCESS_SETTINGS": "Site Verification API not enabled.",
-          "DATABASE_ERROR": "Internal database failure.",
-          "SITE_VERIFICATION_FAILURE": "Site verification failure.",
+          "OK": "Google Calendar is integrated with Hybrid Calendar Service.",
+          "BAD_API_ACCESS_SETTINGS": "The site verification API is not enabled. Go to console.developers.google.com to enable it.",
+          "DATABASE_ERROR": "Can't connect to the internal database. Try again later.",
+          "SITE_VERIFICATION_FAILURE": "The domain verification step failed. Make sure you followed the domain verification steps in the documentation.",
           "SECURITY_FAILURE": "Security failure.",
-          "INPUT_PARSING_FAILURE": "Private Key data is unparsable.",
-          "GENERAL_ERROR": "Bad request."
+          "INPUT_PARSING_FAILURE": "The private data key cannot be parsed. Regenerate one for your project at console.developers.google.com and try again.",
+          "GENERAL_ERROR": "An unexpected error occurred. Contact support if this error recurs."
         }
       },
       "hybridCalendarCommon": {
