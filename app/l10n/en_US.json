@@ -2122,7 +2122,7 @@
         },
         "result": "Result",
         "saveAnyway": "Save Anyway",
-        "warningsOrErrors": "You may still save the SIP Destination, byt Hybrid Call Service Connect might not function correctly."
+        "warningsOrErrors": "You may still save the SIP Destination, but Hybrid Call Service Connect might not function correctly."
       },
       "googleCalendar": {
         "title": "Google Calendar",
