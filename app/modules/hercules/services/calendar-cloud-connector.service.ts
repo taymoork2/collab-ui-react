@@ -1,11 +1,23 @@
 interface IService {
-  errorCode: number; // TODO: implement support for https://sqbu-github.cisco.com/WebExSquared/calendar-cloud-connector/issues/390
+  errorCode: ProvisioningResult;
   provisioned: boolean;
   serviceAccountId: string;
   serviceId: string;
   setup?: boolean;
   status?: string;
   statusCss?: string;
+}
+
+/* List of error codes from https://sqbu-github.cisco.com/WebExSquared/calendar-cloud-connector/issues/390 */
+enum ProvisioningResult {
+  'OK' = 0, // All good
+  'BAD_API_ACCESS_SETTINGS' = 1, // bad site verification token, need api access settings
+  'DATABASE_ERROR' = 2, // Database error
+  'SITE_VERIFICATION_FAILURE' = 3, // Site verification failure
+  'SECURITY_FAILURE' = 4, // Some kind of security issue
+  'INPUT_PARSING_FAILURE' = 5, // Some kind of issue parsing input
+  'GENERAL_ERROR' = 6, // Default error
+  'INVALID_CREDENTIALS' = 7, // Invalid service account credentials
 }
 
 export class CloudConnectorService {
@@ -62,6 +74,15 @@ export class CloudConnectorService {
       .then(() => {
         return this.ServiceDescriptor.disableService(serviceId);
       });
+  }
+
+  public getProvisioningResultTranslationKey(provisioningResultCode: number): string {
+
+    if (_.isUndefined(ProvisioningResult[provisioningResultCode])) {
+      provisioningResultCode = 6;
+    }
+
+    return `hercules.settings.googleCalendar.provisioningResults.${ProvisioningResult[provisioningResultCode]}`;
   }
 
   private getStatusCss(service: IService): 'default' | 'success' | 'danger' | 'warning' {
