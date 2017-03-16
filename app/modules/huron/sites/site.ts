@@ -11,7 +11,6 @@ export class Site {
   public uuid?: string;
   public siteIndex: string;
   public steeringDigit: string;
-  public siteSteeringDigit: string;
   public siteCode: string;
   public timeZone: string;
   public voicemailPilotNumber: string | undefined;

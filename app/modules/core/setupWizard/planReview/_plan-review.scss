@@ -1,5 +1,6 @@
 @import 'plan-container';
-@import 'styles/toolkit/spacing';
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
 
 .wizard-plan-review {
   @extend %plan-container;

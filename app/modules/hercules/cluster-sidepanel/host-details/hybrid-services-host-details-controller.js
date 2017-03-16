@@ -102,6 +102,10 @@
         });
     }
 
+    vm.showAction = function () {
+      return vm.host.connectorType !== 'cs_mgmt' && vm.host.connectorType !== 'cs_context';
+    };
+
     vm.showGoToHostAction = function () {
       return vm.host.connectorType !== 'mf_mgmt';
     };

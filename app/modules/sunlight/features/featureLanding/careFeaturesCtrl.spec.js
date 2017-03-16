@@ -2,8 +2,8 @@
 
 describe('Care Feature Ctrl should ', function () {
 
-  var controller, $filter, $q, $rootScope, $state, $scope, $timeout, Authinfo, CareFeatureList,
-    Log, Notification, deferred, callbackDeferred, chatPlusCallbackDeferred, $translate, FeatureToggleService;
+  var controller, $filter, $q, $rootScope, $state, $scope, Authinfo, CareFeatureList,
+    Log, Notification, deferred, callbackDeferred, chatPlusCallbackDeferred, $translate;
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('Test-Org-Id'),
   };
@@ -31,19 +31,17 @@ describe('Care Feature Ctrl should ', function () {
     $provide.value("Authinfo", spiedAuthinfo);
   }));
 
-  beforeEach(inject(function (_$rootScope_, $controller, _$filter_, _$state_, _$q_, _$timeout_, _Authinfo_, _CareFeatureList_, _Notification_, _Log_, _$translate_, _FeatureToggleService_) {
+  beforeEach(inject(function (_$rootScope_, $controller, _$filter_, _$state_, _$q_, _Authinfo_, _CareFeatureList_, _Notification_, _Log_, _$translate_) {
     $rootScope = _$rootScope_;
     $filter = _$filter_;
     $q = _$q_;
     $state = _$state_;
-    $timeout = _$timeout_;
     $scope = _$rootScope_.$new();
     Authinfo = _Authinfo_;
     $translate = _$translate_;
     CareFeatureList = _CareFeatureList_;
     Log = _Log_;
     Notification = _Notification_;
-    FeatureToggleService = _FeatureToggleService_;
 
     //create mock deferred object which will be used to return promises
     deferred = $q.defer();
@@ -52,21 +50,17 @@ describe('Care Feature Ctrl should ', function () {
     spyOn(CareFeatureList, 'getChatTemplates').and.returnValue(deferred.promise);
     spyOn(CareFeatureList, 'getCallbackTemplates').and.returnValue(callbackDeferred.promise);
     spyOn(CareFeatureList, 'getChatPlusCallbackTemplates').and.returnValue(chatPlusCallbackDeferred.promise);
-    FeatureToggleService.atlasCareChatPlusCallbackTrialsGetStatus =
-      jasmine.createSpy('atlasCareChatPlusCallbackTrialsGetStatus').and.returnValue($q.resolve(true));
     spyOn($state, 'go');
 
     controller = $controller('CareFeaturesCtrl', {
       $scope: $scope,
       $state: $state,
-      $timeout: $timeout,
       $filter: $filter,
       Authinfo: Authinfo,
       CareFeatureList: CareFeatureList,
       Log: Log,
       Notification: Notification,
       $translate: $translate,
-      FeatureToggleService: FeatureToggleService,
     });
   }));
 
@@ -76,7 +70,6 @@ describe('Care Feature Ctrl should ', function () {
     callbackDeferred.resolve(getTemplatesSuccess('callback', templateList));
     chatPlusCallbackDeferred.resolve(getTemplatesSuccess('chatPlusCallback', templateList));
     $scope.$apply();
-    $timeout.flush();
     expect(controller.pageState).toEqual('ShowFeatures');
   });
 
@@ -84,7 +77,6 @@ describe('Care Feature Ctrl should ', function () {
     expect(controller.pageState).toEqual('Loading');
     deferred.reject(getTemplateFailure);
     $scope.$apply();
-    $timeout.flush();
     expect(controller.pageState).toEqual('Error');
   });
 
@@ -94,7 +86,6 @@ describe('Care Feature Ctrl should ', function () {
     callbackDeferred.resolve(getTemplatesSuccess('callback', emptyListOfCTs));
     chatPlusCallbackDeferred.resolve(getTemplatesSuccess('chatPlusCallback', emptyListOfCTs));
     $scope.$apply();
-    $timeout.flush();
     expect(controller.pageState).toEqual('NewFeature');
   });
 
@@ -103,7 +94,6 @@ describe('Care Feature Ctrl should ', function () {
     callbackDeferred.resolve(getTemplatesSuccess('callback', templateList));
     chatPlusCallbackDeferred.resolve(getTemplatesSuccess('chatPlusCallback', templateList));
     $scope.$apply();
-    $timeout.flush();
     var featureTobBeDeleted = templateList[0];
     controller.deleteCareFeature(featureTobBeDeleted);
     expect($state.go).toHaveBeenCalledWith('care.Features.DeleteFeature', {
@@ -118,7 +108,6 @@ describe('Care Feature Ctrl should ', function () {
     callbackDeferred.resolve(getTemplatesSuccess('callback', templateList));
     chatPlusCallbackDeferred.resolve(getTemplatesSuccess('chatPlusCallback', templateList));
     $scope.$apply();
-    $timeout.flush();
     var featureTobBeDeleted = templateList[0];
     controller.deleteCareFeature(featureTobBeDeleted);
     $rootScope.$broadcast('CARE_FEATURE_DELETED', {
@@ -134,7 +123,6 @@ describe('Care Feature Ctrl should ', function () {
     callbackDeferred.resolve(getTemplatesSuccess('callback', emptyListOfCTs));
     chatPlusCallbackDeferred.resolve(getTemplatesSuccess('chatPlusCallback', emptyListOfCTs));
     $scope.$apply();
-    $timeout.flush();
     var featureTobBeDeleted = justOneChatTemplate;
     controller.deleteCareFeature(featureTobBeDeleted);
     $rootScope.$broadcast('CARE_FEATURE_DELETED', {
@@ -151,7 +139,6 @@ describe('Care Feature Ctrl should ', function () {
     callbackDeferred.resolve(getTemplatesSuccess('callback', templateList));
     chatPlusCallbackDeferred.resolve(getTemplatesSuccess('chatPlusCallback', templateList));
     $scope.$apply();
-    $timeout.flush();
     controller.setFilter('chat');
     expect(controller.filteredListOfFeatures.length).toEqual(3);
     expect(controller.filteredListOfFeatures[0].name).toEqual('Sunlight Dev Template');
@@ -162,7 +149,6 @@ describe('Care Feature Ctrl should ', function () {
     callbackDeferred.resolve(getTemplatesSuccess('callback', templateList));
     chatPlusCallbackDeferred.resolve(getTemplatesSuccess('chatPlusCallback', templateList));
     $scope.$apply();
-    $timeout.flush();
     controller.setFilter('callback');
     expect(controller.filteredListOfFeatures.length).toEqual(3);
     expect(controller.filteredListOfFeatures[0].name).toEqual('Sunlight Callback Dev Template');
@@ -173,7 +159,6 @@ describe('Care Feature Ctrl should ', function () {
     callbackDeferred.resolve(getTemplatesSuccess('callback', templateList));
     chatPlusCallbackDeferred.resolve(getTemplatesSuccess('chatPlusCallback', templateList));
     $scope.$apply();
-    $timeout.flush();
     controller.setFilter('chatPlusCallback');
     expect(controller.filteredListOfFeatures.length).toEqual(3);
     expect(controller.filteredListOfFeatures[0].name).toEqual('Sunlight Chat+Callback Dev Template');
@@ -184,7 +169,6 @@ describe('Care Feature Ctrl should ', function () {
     callbackDeferred.resolve(getTemplatesSuccess('callback', templateList));
     chatPlusCallbackDeferred.resolve(getTemplatesSuccess('chatPlusCallback', templateList));
     $scope.$apply();
-    $timeout.flush();
     controller.setFilter('all');
     expect(controller.filteredListOfFeatures.length).toEqual(templateList.length);
   });
@@ -194,7 +178,6 @@ describe('Care Feature Ctrl should ', function () {
     callbackDeferred.resolve(getTemplatesSuccess('callback', templateList));
     chatPlusCallbackDeferred.resolve(getTemplatesSuccess('chatPlusCallback', templateList));
     $scope.$apply();
-    $timeout.flush();
     controller.setFilter('XX');
     expect(controller.filteredListOfFeatures.length).toEqual(0);
   });
@@ -204,7 +187,6 @@ describe('Care Feature Ctrl should ', function () {
     callbackDeferred.resolve(getTemplatesSuccess('callback', templateList));
     chatPlusCallbackDeferred.resolve(getTemplatesSuccess('chatPlusCallback', templateList));
     $scope.$apply();
-    $timeout.flush();
     controller.searchData('Dev');
     expect(controller.filteredListOfFeatures.length).toEqual(3);
     expect(controller.filteredListOfFeatures[0].name).toEqual('Sunlight Dev Template');
@@ -217,7 +199,6 @@ describe('Care Feature Ctrl should ', function () {
     callbackDeferred.resolve(getTemplatesSuccess('callback', templateList));
     chatPlusCallbackDeferred.resolve(getTemplatesSuccess('chatPlusCallback', templateList));
     $scope.$apply();
-    $timeout.flush();
     controller.searchData('Dev');
     expect(controller.filteredListOfFeatures.length).toEqual(3);
     expect(controller.filteredListOfFeatures[0].name).toEqual('Sunlight Dev Template');
@@ -235,7 +216,6 @@ describe('Care Feature Ctrl should ', function () {
     callbackDeferred.resolve(getTemplatesSuccess('callback', templateList));
     chatPlusCallbackDeferred.resolve(getTemplatesSuccess('chatPlusCallback', templateList));
     $scope.$apply();
-    $timeout.flush();
     controller.searchData('Dev');
     controller.setFilter('chat');
     expect(controller.filteredListOfFeatures.length).toEqual(1);
@@ -247,7 +227,6 @@ describe('Care Feature Ctrl should ', function () {
     callbackDeferred.resolve(getTemplatesSuccess('callback', templateList));
     chatPlusCallbackDeferred.resolve(getTemplatesSuccess('chatPlusCallback', templateList));
     $scope.$apply();
-    $timeout.flush();
     controller.searchData('Dev');
     controller.setFilter('callback');
     expect(controller.filteredListOfFeatures.length).toEqual(1);
@@ -259,7 +238,6 @@ describe('Care Feature Ctrl should ', function () {
     callbackDeferred.resolve(getTemplatesSuccess('callback', templateList));
     chatPlusCallbackDeferred.resolve(getTemplatesSuccess('chatPlusCallback', templateList));
     $scope.$apply();
-    $timeout.flush();
     controller.searchData('Dev');
     controller.setFilter('chatPlusCallback');
     expect(controller.filteredListOfFeatures.length).toEqual(1);

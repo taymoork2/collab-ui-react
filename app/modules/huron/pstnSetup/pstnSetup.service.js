@@ -724,6 +724,7 @@
         'FOC Received': $translate.instant('pstnSetup.orderStatus.focReceived'),
         'Invalid Authorization Signature': $translate.instant('pstnSetup.orderStatus.invalidSig'),
         'LOA Not Signed': $translate.instant('pstnSetup.orderStatus.loaNotSigned'),
+        'Terms of Service has not yet been accepted': $translate.instant('pstnSetup.orderStatus.tosNotSigned'),
         'Master Service Agreement not signed': $translate.instant('pstnSetup.orderStatus.msaNotSigned'),
         'Pending FOC from Vendor': $translate.instant('pstnSetup.orderStatus.pendingVendor'),
         'Rejected': $translate.instant('pstnSetup.orderStatus.rejected'),

@@ -1,6 +1,6 @@
-@import 'styles/toolkit/colors';
-@import 'styles/toolkit/fonts';
-@import 'styles/toolkit/spacing';
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/fonts';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
 
 .context-fields-sidepanel {
   .section-wrapper {

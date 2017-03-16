@@ -132,8 +132,8 @@ class MySubscriptionCtrl {
     return undefined;
   }
 
-  private getChangeSubURL(): ng.IPromise<string> {
-    return this.DigitalRiverService.getSubscriptionsUrl().then((subscriptionsUrl) => {
+  private getChangeSubURL(env: string): ng.IPromise<string> {
+    return this.DigitalRiverService.getSubscriptionsUrl(env).then((subscriptionsUrl) => {
       return subscriptionsUrl;
     }).catch((error) => {
       this.loading = false;
@@ -239,19 +239,19 @@ class MySubscriptionCtrl {
                 switch (index) {
                   case 0: {
                     offer.class = messageClass;
-                    this.addSubscription(0, offer, -1);
+                    this.addSubscription(0, _.cloneDeep(offer), -1);
                     break;
                   }
                   case 7: {
                     offer.class = callClass;
-                    this.addSubscription(2, offer, -1);
+                    this.addSubscription(2, _.cloneDeep(offer), -1);
                     break;
                   }
                   case 8:
                   case 9: {
                     offer.class = meetingRoomClass;
 
-                    this.addSubscription(3, offer, -1);
+                    this.addSubscription(3, _.cloneDeep(offer), -1);
                     break;
                   }
                   case 10:
@@ -263,10 +263,10 @@ class MySubscriptionCtrl {
 
 
                     if (existingIndex >= 0) {
-                      this.addSubscription(4, offer, existingIndex);
+                      this.addSubscription(4, _.cloneDeep(offer), existingIndex);
                     } else {
                       this.licenseCategory[4].subscriptions.unshift({
-                        offers: [offer],
+                        offers: [_.cloneDeep(offer)],
                         type: 'CARE',
                       });
                     }
@@ -284,16 +284,16 @@ class MySubscriptionCtrl {
                     });
 
                     if (existingSite >= 0) {
-                      this.addSubscription(1, offer, existingSite);
+                      this.addSubscription(1, _.cloneDeep(offer), existingSite);
                     } else if (offer.siteUrl) {
                       this.licenseCategory[1].subscriptions.push({
                         siteUrl: offer.siteUrl,
-                        offers: [offer],
+                        offers: [_.cloneDeep(offer)],
                       });
                     } else { // Meeting licenses not attached to a siteUrl should be grouped together at the front of the list
                       this.licenseCategory[1].subscriptions.unshift({
                         siteUrl: offer.siteUrl,
-                        offers: [offer],
+                        offers: [_.cloneDeep(offer)],
                       });
                     }
                     break;
@@ -325,11 +325,15 @@ class MySubscriptionCtrl {
         }
       });
 
+      let enterpriseSubs = 1;
+      let enterpriseTrials = 1;
       _.forEach(this.subscriptionDetails, (subscription: any, index: number) => {
         if (!subscription.isOnline) {
           if (subscription.isTrial) {
-            this.subscriptionDetails[index].name = this.$translate.instant('customerPage.trial');
+            this.subscriptionDetails[index].name = this.$translate.instant('subscriptions.enterpriseTrial', { number: enterpriseTrials++ });
             this.hasEnterpriseTrial = true;
+          } else {
+            this.subscriptionDetails[index].name = this.$translate.instant('subscriptions.numberedName', { number: enterpriseSubs++ });
           }
         } else {
           const userId = this.Authinfo.getUserId();
@@ -356,7 +360,8 @@ class MySubscriptionCtrl {
               if (prodResponse) {
                 this.subscriptionDetails[index].productInstanceId = prodResponse.productInstanceId;
                 this.subscriptionDetails[index].name = prodResponse.name;
-                this.getChangeSubURL().then((urlResponse) => {
+                const env = _.includes(prodResponse.name, 'Spark') ? 'spark' : 'webex';
+                this.getChangeSubURL(env).then((urlResponse) => {
                   if (urlResponse) {
                     this.subscriptionDetails[index].changeplanOverride = urlResponse;
                     this.bmmpAttr = {

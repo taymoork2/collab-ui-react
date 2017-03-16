@@ -2,9 +2,11 @@
 @import 'reportFilter/_report-filter';
 @import 'reportSlider/_report-slider';
 
-@import 'styles/toolkit/fonts';
-@import 'styles/toolkit/layout';
-@import 'styles/toolkit/spacing';
+@import '~collab-ui/scss/settings/fonts';
+@import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
+@import '~collab-ui/scss/tools/placeholders/page-layout';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+
 .partner-reports {
   @extend %content-subheader;
   @extend %page-content-padding;

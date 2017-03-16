@@ -66,7 +66,7 @@ export class SipDomainSettingController {
       this.subdomainCount++;
       this.checkRoomLicense();
 
-      let onSaveEventDeregister = this.$rootScope.$on(this.WIZARD_BROADCAST, (): void => {
+      let onSaveEventDeregister = this.$scope.$on(this.WIZARD_BROADCAST, (): void => {
         if (this.toggle) {
           if (this.inputValue === this.currentDisplayName) {
             this.$rootScope.$emit(this.WIZARD_EMIT);
@@ -82,10 +82,8 @@ export class SipDomainSettingController {
       $scope.$on('$destroy', onSaveEventDeregister);
 
       if (this.toggle) {
-        this.ServiceDescriptor.isServiceEnabled('squared-fusion-ec', (error: any, enabled: boolean): void => {
-          if (!error) {
-            this.isCsc = enabled;
-          }
+        this.ServiceDescriptor.isServiceEnabled('squared-fusion-ec').then((enabled: boolean): void => {
+          this.isCsc = enabled;
         });
 
         let onSettingsSaveEventDeregister = this.$rootScope.$on(this.SAVE_BROADCAST, (): void => {

@@ -1,5 +1,5 @@
-@import 'styles/toolkit/colors';
-@import 'styles/toolkit/spacing';
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
 
 .callpark.overlay-panel .cs-card-layout {
   @include vr-spacing(ml, 24, 0px, true);

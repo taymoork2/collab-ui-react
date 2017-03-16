@@ -1,3 +1,31 @@
+# Hybrid Services Atlas Devguide
+
+<!-- toc -->
+
+- [About this document](#about-this-document)
+- [High-level principles for Hybrid Services code in Atlas](#high-level-principles-for-hybrid-services-code-in-atlas)
+  * [Folder structure and AngularJS modules](#folder-structure-and-angularjs-modules)
+  * [TypeScript](#typescript)
+  * [Creating Reusable Components](#creating-reusable-components)
+    + [Tweaking an Existing Component or Creating Another?](#tweaking-an-existing-component-or-creating-another)
+  * [AngularJS Services](#angularjs-services)
+    + [FusionClusterService (FMS)](#fusionclusterservice-fms)
+    + [ClusterService (FMS) (:warning:deprecated)](#clusterservice-fms-warning-deprecated)
+    + [USSService (USS)](#ussservice-uss)
+    + [(Other Services we should mention?)](#other-services-we-should-mention)
+  * [Data Manipulation: Use Lodash](#data-manipulation-use-lodash)
+  * [Asynchronous programming](#asynchronous-programming)
+  * [Visual Guidelines and Overall UX Design Principles](#visual-guidelines-and-overall-ux-design-principles)
+  * [Testing Strategies](#testing-strategies)
+  * [Server-side Architectures](#server-side-architectures)
+- [Communication and Coordination](#communication-and-coordination)
+  * [Inter-team Communication](#inter-team-communication)
+  * [Bug Reports](#bug-reports)
+  * [Pull Requests](#pull-requests)
+- [Appendix 1: The Hybrid Services Management team](#appendix-1-the-hybrid-services-management-team)
+
+<!-- tocstop -->
+
 ## About this document
 
 This document describes how to use and how to contribute to the hybrid services front-end code in Atlas. It is targeted at anyone who wants to work on a new or existing hybrid service in Atlas. 
@@ -79,17 +107,17 @@ The Hybrid Services Management team maintains some AngularJS services that are r
  
 #### FusionClusterService (FMS)
 
-(description here)
+`FusionClusterService` is the most important AngularJS service for Hybrid Services. It communicates with the FMS backend to exchange information about the organization, the clusters, the services and the resource groups.
 
-#### ClusterService (FMS)
+It's main method is `.getAll()` which calls the "one size fits all" endpoint `/organizations/{orgId}?fields=@wide`. Other methods call `getAll()` internally.
 
-(description here)
+#### ClusterService (FMS) (:warning:deprecated)
 
-Note: Deprecated!
+`ClusterService` usage is deprecated even though it is still used in some places. It's main advantage over `FusionClusterService` is its caching and pubsub capabilities. `ClusterService` automatically polls data from FMS every 30 seconds and caches it. It also exposes a` .subscribe()` method for controllers and components to receive up-to-date data after each poll.
 
 #### USSService (USS)
 
-(description here)
+`USSService` should be used for everything related to users. A bit like `ClusterService`, it has a cache and a subscribe function (`.subscribeStatusesSummary()`) for everything related to user statuses summary.
 
 #### (Other Services we should mention?)
 

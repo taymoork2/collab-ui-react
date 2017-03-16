@@ -1,6 +1,6 @@
-@import 'styles/toolkit/colors';
-@import 'styles/toolkit/fonts';
-@import 'styles/toolkit/spacing';
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/typography';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
 
 %plan-container {
   display: flex;
@@ -333,7 +333,7 @@
   }
 
   .sub-line {
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid $gray-light-2;
     padding-top: 5px;
     margin-bottom: 20px;
   }

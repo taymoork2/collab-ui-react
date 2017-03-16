@@ -6,7 +6,7 @@
   /* @ngInject */
   function wx2AdminWebClientApp($animate, $interval, $location, $rootScope, $state, $translate, $window, Auth, Authinfo, Config,
     HealthService, IdleTimeoutService, Localize, Log, LogMetricsService, OnlineUpgradeService, PreviousState, SessionStorage,
-    TokenService, TrackingId, Utils, TOSService) {
+    StorageKeys, TokenService, TrackingId, Utils, TOSService) {
     //Expose the localize service globally.
     $rootScope.Localize = Localize;
     $rootScope.Utils = Utils;
@@ -20,10 +20,6 @@
     $window.$state = $state;
     //Enable logging
     $rootScope.debug = false;
-
-    var storedState = 'storedState';
-    var storedParams = 'storedParams';
-    var queryParams = 'queryParams';
 
     TokenService.init();
     TokenService.setAuthorizationHeader();
@@ -59,9 +55,9 @@
             });
         } else {
           e.preventDefault();
-          SessionStorage.put(storedState, to.name);
-          SessionStorage.putObject(storedParams, toParams);
-          SessionStorage.putObject(queryParams, $location.search());
+          SessionStorage.put(StorageKeys.REQUESTED_STATE_NAME, to.name);
+          SessionStorage.putObject(StorageKeys.REQUESTED_STATE_PARAMS, toParams);
+          SessionStorage.putObject(StorageKeys.REQUESTED_QUERY_PARAMS, $location.search());
           HealthService.getHealthStatus()
             .then(function () {
               $state.go('login');

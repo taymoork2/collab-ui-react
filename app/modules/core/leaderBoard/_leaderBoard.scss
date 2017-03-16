@@ -1,5 +1,5 @@
-@import 'styles/toolkit/colors';
-@import 'styles/toolkit/fonts';
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/typography';
 
 .bucket {
   height: 125px;
@@ -62,7 +62,7 @@
 }
 
 .leader-board-title {
-  font-family: $brand-font-cisco-TT-Extra-Light;
+  font-family: $brand-font-extra-light;
   font-size: 21px;
   margin-right: 15px;
 }
