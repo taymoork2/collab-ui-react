@@ -360,7 +360,7 @@
           AdoptionCardService.setDummyTotalParticipantsPiechart();
           vm.totalParticipantschartOptions.noData = true;
         } else {
-          AdoptionCardService.setTotalParticipantsPiechart(callsOnPremise, callsOverflow, cloudCalls, vm.total);
+          AdoptionCardService.setTotalParticipantsPiechart(callsOnPremise, callsOverflow, cloudCalls);
           vm.totalParticipantschartOptions.noData = false;
         }
       });
