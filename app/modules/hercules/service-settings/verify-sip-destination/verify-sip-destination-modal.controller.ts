@@ -1,7 +1,7 @@
 import { L2SipService } from 'modules/hercules/services/l2sip-service';
 
 type CurrentStep = 'loading' | 'error' | 'result';
-type Severity = 'Info' | 'Warning' | 'Error';
+type Severity = 'Info' | 'Warn' | 'Error';
 type VerificationStep = {
   type: string,
   description?: string,
@@ -38,15 +38,22 @@ class VerifySipDestinationModalController {
       });
   }
 
+  public getNumberOfSteps(level: Severity): number {
+    return _.chain(this.result)
+      .filter((step: VerificationStep) => step.severity === level)
+      .size()
+      .value();
+  }
+
   public hasWarningOrError(): boolean {
-    return _.some(this.result, (step: VerificationStep) => step.severity === 'Warning' || step.severity === 'Error');
+    return _.some(this.result, (step: VerificationStep) => step.severity === 'Warn' || step.severity === 'Error');
   }
 
   public severityToIcon(severity): string {
     switch (severity) {
       case 'Error':
         return 'icon-error';
-      case 'Warning':
+      case 'Warn':
         return 'icon-warning';
       default:
         return 'icon-checkbox';

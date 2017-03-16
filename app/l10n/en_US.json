@@ -2081,9 +2081,15 @@
         "contactCiscoSupport": "Please try again later, or contact your Cisco Support representative if the problem persists.",
         "details": "Details",
         "errorFromServer": "Could not verify SIP destination. The server returned the following error message:",
-        "verify": "Verify",
+        "verify": "Verify and Save",
         "title": "Verify SIP Destination",
         "step": "Step",
+        "testResultsHeader": "Test Results",
+        "testResults": {
+          "successful": "Successful",
+          "issues": "Issues",
+          "failed": "Failed"
+        },
         "types": {
           "Answered": "Answered",
           "CallerDoesntHaveEmail": "Caller Doesn't Have Email",
@@ -2114,7 +2120,9 @@
           "UnexpectedError": "Unexpected Error",
           "UnexpectedException": "Unexpected Exception"
         },
-        "result": "Result"
+        "result": "Result",
+        "saveAnyway": "Save Anyway",
+        "warningsOrErrors": "You may still save the SIP Destination, byt Hybrid Call Service Connect might not function correctly."
       },
       "googleCalendar": {
         "title": "Google Calendar",

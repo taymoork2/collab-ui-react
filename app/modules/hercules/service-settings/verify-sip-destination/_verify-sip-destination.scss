@@ -4,15 +4,28 @@ verify-sip-destination {
   display: block;
 }
 
-.spinner-sip-destination--large {
-  font-size: 4rem;
-  display: inline-block;
-  margin-top: 7rem;
-  width: 100%;
-  text-align: center;
-}
+.verify-sip-destination-modal {
 
-.sip-destination-results-table {
+  .sip-verification-modal-section {
+    margin-bottom: 15px;
+  }
+
+  .warning-message {
+    margin-top: 10px;
+
+    span {
+      margin-left: 20px;
+    }
+  }
+
+  .spinner-sip-destination--large {
+    font-size: 4rem;
+    display: inline-block;
+    margin-top: 7rem;
+    width: 100%;
+    text-align: center;
+  }
+
   .icon-error {
     color: $color-alerts-base;
   }
@@ -25,8 +38,12 @@ verify-sip-destination {
     color: $color-cta-base;
   }
 
-  th.result, td.result {
-    text-align: center;
-    vertical-align: middle;
+  .sip-destination-results-table {
+
+    th.result, td.result {
+      text-align: center;
+      vertical-align: middle;
+    }
   }
 }
+

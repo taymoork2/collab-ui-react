@@ -19,22 +19,38 @@
   </div>
 
   <div ng-if="vm.currentStep === 'result'">
-    <table class="table table-striped sip-destination-results-table">
-      <thead>
-      <tr>
-        <td translate="hercules.settings.verifySipDestination.step"></td>
-        <td translate="hercules.settings.verifySipDestination.details"></td>
-        <td translate="hercules.settings.verifySipDestination.result" class="result"></td>
-      </tr>
-      </thead>
-      <tbody>
-      <tr ng-repeat="step in vm.result track by $index">
-        <td>{{vm.localizeType(step.type)}}</td>
-        <td>{{step.description}}</td>
-        <td class="result"><i class="icon" ng-class="vm.severityToIcon(step.severity)"></i></td>
-      </tr>
-      </tbody>
-    </table>
+
+    <div class="sip-verification-modal-section">
+      <h6 translate="hercules.settings.verifySipDestination.testResultsHeader"></h6>
+      <hs-sip-destination-test-results test-result-numbers="{successful: vm.getNumberOfSteps('Info'),
+                                                             issues: vm.getNumberOfSteps('Warn'),
+                                                             failed: vm.getNumberOfSteps('Error')}"></hs-sip-destination-test-results>
+
+      <p ng-if="vm.hasWarningOrError()" class="warning-message">
+        <i class="icon icon-error"></i>
+        <span translate="hercules.settings.verifySipDestination.warningsOrErrors"></span>
+      </p>
+    </div>
+
+    <div class="sip-verification-modal-section">
+      <h6 translate="hercules.settings.verifySipDestination.details"></h6>
+      <table class="table table-striped sip-destination-results-table">
+        <thead>
+        <tr>
+          <td translate="hercules.settings.verifySipDestination.step"></td>
+          <td translate="hercules.settings.verifySipDestination.details"></td>
+          <td translate="hercules.settings.verifySipDestination.result" class="result"></td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="step in vm.result track by $index">
+          <td>{{vm.localizeType(step.type)}}</td>
+          <td>{{step.description}}</td>
+          <td class="result"><i class="icon" ng-class="vm.severityToIcon(step.severity)"></i></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
 </div>
@@ -43,7 +59,11 @@
           class="btn"
           translate="common.close"></button>
   <button ng-click="$close()"
-          ng-disabled="vm.currentStep === 'loading' || vm.hasWarningOrError()"
+          ng-if="!vm.hasWarningOrError() && vm.currentStep === 'result'"
           class="btn--primary"
           translate="common.save"></button>
+  <button ng-click="$close()"
+          ng-if="vm.hasWarningOrError() && vm.currentStep === 'result'"
+          class="btn--primary"
+          translate="hercules.settings.verifySipDestination.saveAnyway"></button>
 </div>
