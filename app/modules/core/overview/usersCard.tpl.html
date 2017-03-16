@@ -12,7 +12,8 @@
         <span translate="overview.cards.users.convertText" id="convertText"></span>
       </div>
       <div ng-if="card.showLicenseCard">
-        <span>You have <span class="convert-nr h4">{{card.licenseNumber}}</span> unassigned {{card.licenseType}} licenses</span>
+        <span translate="overview.cards.users.unassignedLicenses"
+          translate-values="{licenseNumber: card.licenseNumber, licenseType: card.licenseType}"></span>
       </div>
     </div>
     <button ng-if="!card.showLicenseCard" id="convertButton" class="btn btn--cta" translate="overview.cards.users.convertButton" ng-click="card.openConvertModal()" ng-disabled="!card.usersToConvert">
