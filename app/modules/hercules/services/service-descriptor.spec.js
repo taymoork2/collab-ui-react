@@ -86,7 +86,7 @@ describe('ServiceDescriptor', function () {
     var data = {
       'orgSettings': ['{"calSvcDisableEmailSendingToEndUser":true}'],
     };
-    $httpBackend.expectGET('https://identity.webex.com/organization/scim/v1/Orgs/' + authinfo.getOrgId() + '?disableCache=true')
+    $httpBackend.expectGET('https://identity.webex.com/organization/scim/v1/Orgs/' + authinfo.getOrgId() + '?basicInfo=true&disableCache=true')
       .respond(200, data);
     Service.getOrgSettings().then(function (orgSettings) {
       expect(orgSettings.calSvcDisableEmailSendingToEndUser).toBe(true);

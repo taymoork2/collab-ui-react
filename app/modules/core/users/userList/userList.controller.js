@@ -381,6 +381,9 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
 
     function getOrg() {
       var deferred = $q.defer();
+      var params = {
+        basicInfo: true,
+      };
       if ($scope.obtainedOrgs) {
         deferred.resolve();
       } else {
@@ -394,7 +397,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
             Log.debug('Get existing org failed. Status: ' + status);
             deferred.reject(data);
           }
-        });
+        }, null, params);
       }
       return deferred.promise;
     }

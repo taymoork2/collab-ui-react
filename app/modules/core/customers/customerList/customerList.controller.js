@@ -283,13 +283,18 @@ require('./_customer-list.scss');
         resetLists();
       });
 
+      // TODO: Clean out this Expensive operation and point to authinfo for isTestOrg flag
+      var params = {
+        basicInfo: true,
+      };
+
       Orgservice.getOrg(function (data, status) {
         if (data.success) {
           vm.isTestOrg = data.isTestOrg;
         } else {
           Log.error('Query org info failed. Status: ' + status);
         }
-      });
+      }, null, params);
     }
 
     function getSubfields(entry, name) {
@@ -498,6 +503,9 @@ require('./_customer-list.scss');
         var accountId = Authinfo.getOrgId();
         var custName = Authinfo.getOrgName();
         var licenses = Authinfo.getLicenses();
+        var params = {
+          basicInfo: true,
+        };
         Orgservice.getAdminOrg(function (data, status) {
           if (status === 200) {
             var myOrg = PartnerService.loadRetrievedDataToList([data], false, vm.isCareEnabled);
@@ -530,7 +538,7 @@ require('./_customer-list.scss');
             reject('Unable to query for signed-in users org');
             Log.debug('Failed to retrieve partner org information. Status: ' + status);
           }
-        }, accountId);
+        }, accountId, params);
       });
     }
 

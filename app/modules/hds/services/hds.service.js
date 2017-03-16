@@ -65,6 +65,9 @@
 
     function getHdsTrialUserGroupID() {
       var deferred = $q.defer();
+      var params = {
+        basicInfo: true,
+      };
       Orgservice.getOrg(function (data, status) {
         if (data.success || status === 200) {
           var altHdsServers = data.orgSettings.altHdsServers;
@@ -82,7 +85,7 @@
         } else {
           deferred.reject(data);
         }
-      });
+      }, null, params);
       return deferred.promise;
     }
 

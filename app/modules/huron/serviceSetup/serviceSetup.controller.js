@@ -825,9 +825,12 @@
 
     function checkIfTestOrg() {
       var isTestOrg = $q(function (resolve) {
+        var params = {
+          basicInfo: true,
+        };
         Orgservice.getOrg(function (response) {
           resolve(response.isTestOrg);
-        });
+        }, null, params);
       });
       return isTestOrg;
     }
