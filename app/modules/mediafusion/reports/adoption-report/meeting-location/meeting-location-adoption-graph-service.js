@@ -129,13 +129,13 @@
       var exportFields = [];
       _.forEach(graphs, function (value) {
         if (value.valueField === 'ON_PREM') {
-          value.lineColor = '#67b7dc';
+          value.lineColor = '#ff7133';
           value.title = vm.onPremisesHeading;
         } else if (value.valueField === 'CLOUD') {
-          value.lineColor = '#f0a378';
+          value.lineColor = '#30d557';
           value.title = vm.cloudHeading;
         } else if (value.valueField === 'HYBRID') {
-          value.lineColor = '#84b761';
+          value.lineColor = '#02bbcc';
           value.title = vm.hybridHeading;
         }
         columnNames[value.valueField] = value.title + ' ' + vm.meetingLocation;

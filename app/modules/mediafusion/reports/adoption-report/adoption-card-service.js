@@ -42,6 +42,7 @@
     function setTotalParticipantsPiechart(callsOnPremise, callsOverflow, cloudCalls, total) {
       var data = {};
       var dataProvider = [];
+      cloudCalls = cloudCalls - callsOverflow;
       dataProvider = [{
         'name': vm.total_cloud_title,
         'color': '#22D5A3',
