@@ -330,6 +330,19 @@ describe('Huron Device', function () {
 
     spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.resolve(timeZone));
     spyOn(ServiceSetup, 'getSiteCountries').and.returnValue($q.resolve(countries));
+    var sites = [{
+      uuid: '777-888-666',
+      steeringDigit: '5',
+      siteSteeringDigit: '6',
+    }];
+    var site = {
+      uuid: '1234567890',
+      steeringDigit: '5',
+      siteSteeringDigit: '6',
+      country: 'US',
+    };
+    spyOn(ServiceSetup, 'listSites').and.returnValue($q.resolve(sites));
+    spyOn(ServiceSetup, 'getSite').and.returnValue($q.resolve(site));
     spyOn($stateParams.huronDeviceService, 'setTimezoneForDevice').and.returnValue($q.resolve(true));
     spyOn($stateParams.huronDeviceService, 'setCountryForDevice').and.returnValue($q.resolve(true));
     spyOn($stateParams.huronDeviceService, 'setSettingsForAta').and.returnValue($q.resolve(true));

@@ -4429,7 +4429,8 @@
     "failedToUploadLogs": "Failed to upload logs. Reason:",
     "deleteATAConfText": "Are you sure you want to delete Port 1?",
     "deleteDeviceType": "Delete {{deviceType}}",
-    "analog": "Analog Telephone"
+    "analog": "Analog Telephone",
+    "failedToFetchCountries": "Failed to fetch countries. Reason:"
   },
   "ataSettings": {
     "analog": "Analog Telephone",
