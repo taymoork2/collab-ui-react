@@ -190,7 +190,7 @@ describe('DeviceUsageService', function () {
 
       var dataResponse;
 
-      DeviceUsageService.getDataForRange("2010-10-25", "2016-10-28", 'day', ['cs', 'SparkBoard'], [], 'local').then(function (result) {
+      DeviceUsageService.getDataForRange("2010-10-25", "2016-10-28", 'day', [], 'local').then(function (result) {
         dataResponse = result;
       });
       $httpBackend.flush();
