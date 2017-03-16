@@ -7538,8 +7538,8 @@
     "componentStatus": {
       "operational": "Operational",
       "degradedPerformance": "Degraded Performance",
-      "partialOutage": "Partial Outage",
-      "majorOutage": "Major Outage",
+      "partialOutage": "Partial Impact",
+      "majorOutage": "Major Impact",
       "underMaintenance": "Under Maintenance"
     },
     "syncBtn": "Sync up",
