@@ -211,6 +211,19 @@ describe('Controller:MediaReportsController', function () {
       expect(MediaReportsService.getClientTypeCardData).toHaveBeenCalled();
     });
 
+    it('setTotalCallsPie should invoke getTotalCallsData', function () {
+      var response = {
+        'data': {
+          'callsOnPremise': 10,
+          'callsRedirect': 6,
+        },
+      };
+      spyOn(MediaReportsService, 'getTotalCallsData').and.returnValue($q.resolve(response));
+      controller.setTotalCallsPie();
+      httpMock.flush();
+      expect(MediaReportsService.getTotalCallsData).toHaveBeenCalled();
+    });
+
     it('setMeetingLocationCard should invoke getMeetingLocationCardData', function () {
       spyOn(MediaReportsService, 'getMeetingLocationCardData').and.returnValue($q.resolve(meetingLocationData));
       controller.setMeetingLocationCard();

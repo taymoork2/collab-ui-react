@@ -78,6 +78,7 @@
 
     vm.setClusterAvailability = setClusterAvailability;
     vm.setTotalCallsData = setTotalCallsData;
+    vm.setTotalCallsPie = setTotalCallsPie;
     vm.setSneekPeekData = setSneekPeekData;
     vm.setAvailabilityData = setAvailabilityData;
     vm.setCallVolumeData = setCallVolumeData;
@@ -105,6 +106,11 @@
     vm.cloudParticipantschartOptions = {
       isShow: true,
       cardChartDiv: 'cloudParticipantsChartDiv',
+      noData: false,
+    };
+    vm.totalParticipantschartOptions = {
+      isShow: true,
+      cardChartDiv: 'totalParticipantsChartDiv',
       noData: false,
     };
 
@@ -138,6 +144,7 @@
     function loadResourceDatas() {
       deferred.promise.then(function () {
         setTotalCallsData();
+        setTotalCallsPie();
         setAvailabilityData();
         setClusterAvailability();
         setUtilizationData();
@@ -335,6 +342,23 @@
             vm.totalcloudcalls = vm.onprem + vm.cloudOverflow;
           }
           vm.second_card_value = vm.cloudOverflow;
+        }
+      });
+    }
+
+    function setTotalCallsPie() {
+      MediaReportsService.getTotalCallsData(vm.timeSelected, vm.clusterSelected).then(function (response) {
+        var callsOnPremise = _.isUndefined(response.data.callsOnPremise) ? 0 : response.data.callsOnPremise;
+        var callsOverflow = _.isUndefined(response.data.callsOverflow) ? 0 : response.data.callsOverflow;
+        var cloudCalls = _.isUndefined(response.data.cloudCalls) ? 0 : response.data.cloudCalls;
+        if (response === vm.ABORT) {
+          return undefined;
+        } else if (_.isUndefined(response.data) || (callsOnPremise == 0 && callsOverflow == 0 && cloudCalls == 0)) {
+          AdoptionCardService.setDummyTotalParticipantsPiechart();
+          vm.totalParticipantschartOptions.noData = true;
+        } else {
+          AdoptionCardService.setTotalParticipantsPiechart(callsOnPremise, callsOverflow, cloudCalls, vm.total);
+          vm.totalParticipantschartOptions.noData = false;
         }
       });
     }
