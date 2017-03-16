@@ -29,7 +29,7 @@
           vm.step = 'final';
         })
         .catch(function (error) {
-          Notification.errorWithTrackingId(error, 'hercules.settings.googleCalendar.failedToActivateService');
+          Notification.errorWithTrackingId(error, CloudConnectorService.getProvisioningResultTranslationKey(error.data.errorCode));
           vm.loading = false;
         });
     };

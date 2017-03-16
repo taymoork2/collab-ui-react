@@ -54,6 +54,17 @@
           ng-keypress="vm.handleKeypress($event)"
           cs-input-label="{{vm._translation.mediafusion}}"
           cs-input-help-text="{{vm._translation.mediafusionHelpText}}">
+        <input
+          cs-input
+          type="radio"
+          ng-model="vm.selectedType"
+          name="selectedType"
+          value="cucm"
+          id="selectedType_cucm"
+          ng-show="vm.isEntitledTo.cucm"
+          ng-keypress="vm.handleKeypress($event)"
+          cs-input-label="{{vm._translation.cucm}}"
+          cs-input-help-text="{{vm._translation.cucmHelpText}}">
       </div>
     </form>
   </div>

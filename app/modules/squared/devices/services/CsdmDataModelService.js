@@ -198,8 +198,8 @@
       return placesUrl + device.cisUuid;
     }
 
-    function createCsdmPlace(name, entitlements, directoryNumber, externalNumber) {
-      return CsdmPlaceService.createCsdmPlace(name, entitlements, directoryNumber, externalNumber)
+    function createCsdmPlace(name, entitlements, directoryNumber, externalNumber, externalLinkedAccounts, ussProps) {
+      return CsdmPlaceService.createCsdmPlace(name, entitlements, directoryNumber, externalNumber, externalLinkedAccounts, ussProps)
         .then(addPlaceToDataModel);
     }
 
@@ -208,9 +208,9 @@
         .then(addPlaceToDataModel);
     }
 
-    function updateCloudberryPlace(objectToUpdate, entitlements, directoryNumber, externalNumber) {
+    function updateCloudberryPlace(objectToUpdate, entitlements, directoryNumber, externalNumber, externalLinkedAccounts, ussProps) {
       var placeUrl = getPlaceUrl(objectToUpdate);
-      return CsdmPlaceService.updatePlace(placeUrl, entitlements, directoryNumber, externalNumber)
+      return CsdmPlaceService.updatePlace(placeUrl, entitlements, directoryNumber, externalNumber, externalLinkedAccounts, ussProps)
         .then(function (place) {
           addOrUpdatePlaceInDataModel(place);
           notifyListeners();

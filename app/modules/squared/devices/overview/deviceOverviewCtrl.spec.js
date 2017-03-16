@@ -249,7 +249,6 @@ describe('Huron Device', function () {
   var $q, CsdmConfigService;
   var $stateParams, ServiceSetup, timeZone, newTimeZone, countries, newCountry, HuronConfig;
   var usStatesList = getJSONFixture('../../app/modules/huron/pstnSetup/states.json');
-  var usCanStatesList = getJSONFixture('../../app/modules/huron/pstnSetup/states_plus_canada.json');
   var $timeout;
 
   beforeEach(angular.mock.module('Hercules'));
@@ -326,7 +325,6 @@ describe('Huron Device', function () {
     $httpBackend.whenGET('http://thedeviceurl').respond(200);
     $httpBackend.whenGET(HuronConfig.getTerminusV2Url() + '/customers/numbers/e911').respond(200);
     $httpBackend.whenGET('modules/huron/pstnSetup/states.json').respond(usStatesList);
-    $httpBackend.whenGET('modules/huron/pstnSetup/states_plus_canada.json').respond(usCanStatesList);
 
     countries = getJSONFixture('huron/json/settings/countries.json');
 

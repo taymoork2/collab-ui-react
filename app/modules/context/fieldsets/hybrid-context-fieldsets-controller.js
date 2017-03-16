@@ -11,37 +11,38 @@ require('../fields/_fields-list.scss');
   function HybridContextFieldsetsCtrl($scope, $rootScope, $filter, $state, $translate, Log, $q, ContextFieldsetsService, Notification) {
     //Initialize variables
     var vm = this;
+    var eventListeners = [];
 
-    vm.init = init;
-    vm.initializeGrid = initializeGrid;
-
-    $scope.$on('$destroy', onDestroy);
-
-    $scope.load = true;
-    $scope.currentDataPosition = 0;
-
-    $scope.gridRefresh = false;
-    $scope.noSearchesYet = true;
-    $scope.noSearchResults = false;
-    $scope.fieldsetsList = {
-      allFields: [],
+    vm.load = true;
+    vm.currentDataPosition = 0;
+    vm.gridRefresh = false;
+    vm.noSearchesYet = true;
+    vm.noSearchResults = false;
+    vm.fieldsetsList = {
+      allFieldsets: [],
     };
 
-    // Functions
-    $scope.getFieldsetsList = getFieldsetsList;
+    vm.filterBySearchStr = filterBySearchStr;
+    vm.filterList = filterList;
 
-    var eventListeners = [];
+    vm.placeholder = {
+      name: $translate.instant('common.search'),
+      filterValue: '',
+      count: 0,
+    };
+
+    $scope.$on('$destroy', onDestroy);
 
     init();
 
     function init() {
       var promises = {
-        initializeGrid: vm.initializeGrid(),
+        initializeGrid: initializeGrid(),
       };
 
       $q.all(promises).then(function () {
         initializeListeners();
-        getFieldsetsList();
+        return getFieldsetsList();
       });
     }
 
@@ -49,8 +50,8 @@ require('../fields/_fields-list.scss');
       // if the side panel is closing unselect the entry
       eventListeners.push($rootScope.$on('$stateChangeSuccess', function () {
         if ($state.includes('fieldsets')) {
-          if ($scope.gridApi && $scope.gridApi.selection) {
-            $scope.gridApi.selection.clearSelectedRows();
+          if (vm.gridApi && vm.gridApi.selection) {
+            vm.gridApi.selection.clearSelectedRows();
           }
         }
       }));
@@ -77,21 +78,20 @@ require('../fields/_fields-list.scss');
     }
 
     function getFieldsetsList() {
-      if (!$scope.load) {
+      if (!vm.load) {
         return $q.resolve();
       }
-      $scope.gridRefresh = true;
-      $scope.noSearchesYet = false;
-      $scope.fieldsetsList.allFields = [];
+      vm.gridRefresh = true;
+      vm.noSearchesYet = false;
+      vm.fieldsetsList.allFields = [];
       var getAndProcessFieldsetsPromise = ContextFieldsetsService.getFieldsets()
         .then(function (fieldsets) {
           return processFieldsetsList(fieldsets);
         })
         .then(function (processedFieldsets) {
-          $scope.gridData = processedFieldsets;
-          $scope.noSearchResults = processedFieldsets.length === 0;
-          $scope.fieldsetsList.allFields = $scope.gridData;
-          $scope.load = false;
+          vm.gridOptions.data = processedFieldsets;
+          vm.fieldsetsList.allFields = processedFieldsets;
+          vm.noSearchResults = processedFieldsets.length === 0;
           return $q.resolve();
         })
         .catch(function (err) {
@@ -106,10 +106,11 @@ require('../fields/_fields-list.scss');
 
       return $q.all(promises)
         .then(function () {
-          $scope.gridApi.infiniteScroll.dataLoaded();
+          vm.gridApi.infiniteScroll.dataLoaded();
         })
         .finally(function () {
-          $scope.gridRefresh = false;
+          vm.gridRefresh = false;
+          vm.load = false;
         });
 
     }
@@ -118,11 +119,15 @@ require('../fields/_fields-list.scss');
       var deferred = $q.defer();
 
       function onRegisterApi(gridApi) {
-        $scope.gridApi = gridApi;
+        vm.gridApi = gridApi;
+        gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+          $state.go('context-fieldsets-sidepanel', {
+            fieldset: row.entity,
+          });
+        });
         gridApi.infiniteScroll.on.needLoadMoreData($scope, function () {
-          if ($scope.load) {
-            $scope.currentDataPosition++;
-            $scope.load = false;
+          if (vm.load) {
+            vm.currentDataPosition++;
             //Server side pagination is to be implemented
             getFieldsetsList();
           }
@@ -130,8 +135,8 @@ require('../fields/_fields-list.scss');
         deferred.resolve();
       }
 
-      $scope.gridOptions = {
-        data: 'gridData',
+      vm.gridOptions = {
+        //data: [],
         multiSelect: false,
         rowHeight: 44,
         enableColumnResize: true,
@@ -158,5 +163,32 @@ require('../fields/_fields-list.scss');
       };
       return deferred.promise;
     }
+
+    // On click, wait for typing to stop and run search
+    function filterList(str) {
+
+      return filterBySearchStr(vm.fieldsetsList.allFields, str)
+        .then(function (processedFieldsets) {
+          vm.gridOptions.data = processedFieldsets;
+          vm.noSearchResults = processedFieldsets.length === 0;
+          vm.placeholder.count = processedFieldsets.length;
+        });
+    }
+
+    //filter out the list by the searchStr
+    function filterBySearchStr(fieldsetList, str) {
+      if (!str) {
+        return $q.resolve(fieldsetList);
+      }
+
+      var lowerStr = str.toLowerCase();
+      return $q.resolve(fieldsetList.filter(function (fieldset) {
+        return (_.has(fieldset, 'id') ? (fieldset.id.toLowerCase().indexOf(lowerStr) !== -1) : false) ||
+          (_.has(fieldset, 'description') ? (fieldset.description.toLowerCase().indexOf(lowerStr) !== -1) : false) ||
+          (_.has(fieldset, 'numOfFields') ? (fieldset.numOfFields.toString().indexOf(lowerStr) !== -1) : false) ||
+          (_.has(fieldset, 'lastUpdated') ? (fieldset.lastUpdated.toLowerCase().indexOf(lowerStr) !== -1) : false);
+      }));
+    }
+
   }
 }());

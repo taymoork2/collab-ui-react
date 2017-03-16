@@ -1,0 +1,35 @@
+<div ng-form="companyCallerIdForm">
+  <label class="control-label" translate="companyCallerId.companyCallerId"></label>
+  <cs-toggle-switch
+    ng-model="$ctrl.companyCallerIdEnabled"
+    toggle-id="companyCallerIdToggle"
+    name="companyCallerIdToggle"
+    size="small"
+    cs-change="$ctrl.onCompanyCallerIdToggled(toggleValue)">
+  </cs-toggle-switch>
+  <div ng-if="$ctrl.companyCallerIdEnabled">
+    <input
+      cs-input
+      type="text"
+      id="callerIdName"
+      name="callerIdName"
+      ng-model="$ctrl.companyCallerId.name"
+      ng-change="$ctrl.onCompanyCallerIdNameChanged()"
+      cs-input-label="{{::'companyCallerId.callerIdName'|translate}}"
+      cs-input-group-size="medium-5">
+    <div class="medium-5">
+      <label class="control-label" translate="companyCallerId.callerIdNumber"></label>
+      <cs-select
+        name="companyCallerIdNumber"
+        ng-model="$ctrl.selectedNumber"
+        options="$ctrl.externalNumbers"
+        input-placeholder="$ctrl.filterPlaceholder"
+        on-change-fn="$ctrl.onCompanyCallerIdNumberChanged()"
+        required="true"
+        combo="true"
+        filter="true"
+        refresh-data-fn="$ctrl.getNumbers(filter)">
+      </cs-select>
+    </div>
+  </div>
+</div>

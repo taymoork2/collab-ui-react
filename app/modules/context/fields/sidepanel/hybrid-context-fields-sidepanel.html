@@ -1,0 +1,82 @@
+<span class="context-fields-sidepanel">
+  <!-- header for the side panel -->
+  <div ui-view="header"></div>
+
+  <!-- main side panel body -->
+  <cs-sp-container>
+    <div class="section-wrapper">
+      <input
+          cs-input
+          type="text"
+          id="fieldId"
+          ng-model="$ctrl.field.id"
+          cs-input-group-size="medium-12"
+          cs-input-label="{{'context.dictionary.fieldPage.fieldId' | translate}}"
+          readonly="true">
+    </div>
+
+    <div class="cs-input-group">
+      <p translate="common.description"></p>
+      <textarea
+        rows="4"
+        id="fieldDescription"
+        class="form-control"
+        disabled
+        ng-model="$ctrl.field.description"/>
+    </div>
+
+    <div class="cs-input-group">
+      <p translate="context.dictionary.fieldPage.dataType"></p>
+      <div class="row">
+        <div class="small-6 medium-6 large-6">
+          <cs-select
+            ng-model="$ctrl.field.dataType"
+            is-disabled="true">
+          </cs-select>
+        </div>
+      </div>
+    </div>
+
+    <div class="cs-input-group">
+      <p translate="context.dictionary.fieldPage.classification"></p>
+      <div class="row">
+        <div class="small-6 medium-6 large-6">
+          <cs-select
+            ng-model="$ctrl.field.classification"
+            is-disabled="true">
+          </cs-select>
+        </div>
+      </div>
+    </div>
+
+    <input
+      cs-input
+      type="checkbox"
+      ng-model="$ctrl.searchable"
+      id="searchableInput"
+      name="searchableInput"
+      disabled
+      cs-input-label="{{'context.dictionary.fieldPage.searchable' | translate}}"
+      cs-input-help-text="{{'context.dictionary.fieldPage.searchableHelpText' | translate}}">
+
+    <div class="cs-input-group">
+      <p translate="context.dictionary.fieldPage.associatedFieldsets"></p>
+      <!-- show if no fieldsets are returned -->
+      <span ng-if="$ctrl.associatedFieldsets.length === 0 && !$ctrl.fetchFailure" translate="common.none" class="no-fieldsets"></span>
+      <!-- show if failed to retrieve list of fieldsets -->
+      <div ng-if="$ctrl.associatedFieldsets.length === 0 && $ctrl.fetchFailure" class="associated-fieldsets">
+        <i class="icon icon-error"></i>
+        <span translate="context.dictionary.fieldPage.associatedFieldsetsError" class="failure-message"></span>
+        <button translate="common.retry" class="retry-action" ng-click="$ctrl.getAssociatedFieldsets()" ng-disabled="$ctrl.fetchInProgress"></button>
+      </div>
+      <!-- show if successfully retrieved list of associated fieldsets -->
+      <div ng-if="$ctrl.associatedFieldsets.length > 0" class="token" ng-repeat="id in $ctrl.associatedFieldsets">{{id}}</div>
+    </div>
+
+    <div class="cs-input-group">
+      <div class="feature-name" translate="context.dictionary.fieldPage.lastUpdated"></div>
+      <div class="feature-status">{{$ctrl.lastUpdated}}</div>
+    </div>
+
+  </cs-sp-container>
+</span>

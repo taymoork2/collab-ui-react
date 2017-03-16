@@ -16,6 +16,8 @@ var Spark = require('@ciscospark/spark-core').default;
     });
     var vm = this;
     var spark;
+    vm.searchByLimit = searchByLimit;
+    vm.searchByErrors = searchByErrors;
     vm.searchByParameters = searchByParameters;
     vm.goToSearchPage = goToSearchPage;
     vm.advancedSearch = advancedSearch;
@@ -35,10 +37,11 @@ var Spark = require('@ciscospark/spark-core').default;
     vm.searchInProgress = false;
     vm.currentReportId = null;
     vm.ongoingSearch = false;
+    vm.limitError = false;
 
     /* initial search variables page */
     vm.searchPlaceholder = $translate.instant('ediscovery.searchParameters.searchByEmailPlaceholder');
-    vm.searchByOptions = ['Email ID', 'Room ID'];
+    vm.searchByOptions = ['Email ID', 'Space ID'];
     vm.searchBySelected = '' || vm.searchByOptions[0];
     vm.searchModel = null;
     vm.queryModel = null;
@@ -106,18 +109,7 @@ var Spark = require('@ciscospark/spark-core').default;
       }
     }
 
-    function splitWords(_words) {
-      var words = _words ? (_words).split(',').map(
-        function (s) {
-          return s.trim();
-        }) : null;
-      return words;
-    }
-
-    function goToSearchPage() {
-      vm.roomInfo = false;
-    }
-
+    /* Date Section */
     function getStartDate() {
       return vm.searchCriteria.startDate;
     }
@@ -174,6 +166,20 @@ var Spark = require('@ciscospark/spark-core').default;
       validateDate();
     });
 
+    function searchByLimit() {
+      var limit = !_.isNull(vm.searchModel) ? splitWords(vm.searchModel) : null;
+      if (_.isArray(limit) && _.isLength(limit.length) > 100) {
+        vm.limitError = true;
+      } else {
+        advancedSearch();
+      }
+    }
+
+    function searchByErrors(_queryError) {
+      var queryError = !_.isUndefined(_queryError) ? _queryError : false;
+      return queryError;
+    }
+
     function searchByParameters() {
       if (_.eq(vm.searchByOptions[0], vm.searchBySelected)) {
         vm.searchPlaceholder = $translate.instant('ediscovery.searchParameters.searchByEmailPlaceholder');
@@ -182,46 +188,11 @@ var Spark = require('@ciscospark/spark-core').default;
       }
     }
 
-    function searchSetup() {
-      disableAvalonPolling();
-      vm.ongoingSearch = true;
-      vm.roomInfo = null;
-      vm.report = null;
-      vm.error = null;
-      vm.searchingForRoom = true;
-      vm.searchResults.keywords = [];
-    }
-
     //advanced search section
-    function sparkSetup() {
-      vm.accessToken = TokenService.getAccessToken();
-      spark = new Spark({
-        credentials: {
-          access_token: vm.accessToken,
-        },
-      });
-    }
-
-    function createEncryptedEmails(_emails) {
-      var emails = splitWords(_emails);
-      if (emails) {
-        var promises = emails.map(function (s) {
-          return spark.encryption.encryptText(vm.encryptedResult, s);
-        });
-        return $q.all(promises);
-      }
-      return null;
-    }
-
-    function convertBytesToGB(bytes) {
-      var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-      var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10);
-      return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
-    }
-
     function searchResults(result) {
       var keywords = _.eq(vm.searchByOptions[0], vm.searchBySelected) ? vm.unencryptedEmails : vm.unencryptedRoomIds;
-      var queries = splitWords(vm.queryModel);
+      keywords = keywords || [$translate.instant('ediscovery.searchResults.notApplicable')];
+      var queries = vm.queryModel ? splitWords(vm.queryModel) : [$translate.instant('ediscovery.searchResults.notApplicable')];
       vm.roomInfo = result;
       vm.searchCriteria = {
         startDate: formatDate('display', getStartDate()),
@@ -230,11 +201,12 @@ var Spark = require('@ciscospark/spark-core').default;
       vm.searchResults = {
         keywords: keywords,
         queries: queries,
+        numRooms: result.data.numRooms,
         numFiles: result.data.numFiles,
         numMessages: result.data.numMessages,
         totalSize: convertBytesToGB(result.data.totalSizeInBytes),
       };
-      vm.searchResultsHeader = _.eq(vm.searchByOptions[0], vm.searchBySelected) ? $translate.instant('ediscovery.searchResults.emailId') : $translate.instant('ediscovery.searchResults.roomId');
+      vm.searchResultsHeader = _.eq(vm.searchByOptions[0], vm.searchBySelected) ? $translate.instant('ediscovery.searchResults.emailId') : $translate.instant('ediscovery.searchResults.spaceId');
     }
 
     function advancedSearch() {
@@ -279,6 +251,10 @@ var Spark = require('@ciscospark/spark-core').default;
           return EdiscoveryService.getArgonautServiceUrl(argonautParam)
             .then(function (result) {
               searchResults(result);
+              if (result.data.numRooms > 2500) {
+                vm.isReportMaxRooms = true;
+                vm.isReport = false;
+              }
             })
             .catch(function (err) {
               vm.error = _.get(err, 'data.message', $translate.instant('ediscovery.search.roomLookupError'));
@@ -397,9 +373,10 @@ var Spark = require('@ciscospark/spark-core').default;
       $timeout.cancel(avalonPoller);
     }
 
-    function searchButtonDisabled() {
+    function searchButtonDisabled(_error) {
+      var error = !_.isUndefined(_error) ? _error : false;
       var disable = !vm.searchCriteria.roomId || vm.searchCriteria.roomId === '' || vm.searchingForRoom === true;
-      return vm.ediscoveryToggle ? (disable && vm.searchModel === '') : disable;
+      return vm.ediscoveryToggle ? (error || vm.dateValidationError) : disable;
     }
 
     function pollAvalonReport() {
@@ -493,6 +470,57 @@ var Spark = require('@ciscospark/spark-core').default;
     function retrySearch() {
       vm.report = null;
     }
+
+    function goToSearchPage() {
+      vm.roomInfo = false;
+      vm.limitError = false;
+    }
+
+    /* Helper Functions */
+    function splitWords(_words) {
+      var words = _words ? (_words).split(',').map(
+        function (s) {
+          return s.trim();
+        }) : null;
+      return words;
+    }
+
+    function convertBytesToGB(bytes) {
+      var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+      var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10);
+      return _.isNaN(i) ? 0 : Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
+    }
+
+    function searchSetup() {
+      disableAvalonPolling();
+      vm.ongoingSearch = true;
+      vm.roomInfo = null;
+      vm.report = null;
+      vm.error = null;
+      vm.searchingForRoom = true;
+      vm.searchResults.keywords = [];
+    }
+
+    function sparkSetup() {
+      vm.accessToken = TokenService.getAccessToken();
+      spark = new Spark({
+        credentials: {
+          access_token: vm.accessToken,
+        },
+      });
+    }
+
+    function createEncryptedEmails(_emails) {
+      var emails = splitWords(_emails);
+      if (emails) {
+        var promises = emails.map(function (s) {
+          return spark.encryption.encryptText(vm.encryptedResult, s);
+        });
+        return $q.all(promises);
+      }
+      return null;
+    }
+
   }
   angular
     .module('Ediscovery')

@@ -105,14 +105,22 @@
     function saveCompanyNumber(data) {
       return CompanyNumberService.save({
         customerId: Authinfo.getOrgId(),
-      }, data).$promise;
+      }, {
+        name: _.get(data, 'name'),
+        pattern: _.get(data, 'pattern'),
+        externalCallerIdType: _.get(data, 'externalCallerIdType'),
+      }).$promise;
     }
 
     function updateCompanyNumber(companyNumberId, data) {
       return CompanyNumberService.update({
         customerId: Authinfo.getOrgId(),
         companyNumberId: companyNumberId,
-      }, data).$promise;
+      }, {
+        name: _.get(data, 'name'),
+        pattern: _.get(data, 'pattern'),
+        externalCallerIdType: _.get(data, 'externalCallerIdType'),
+      }).$promise;
     }
 
     function deleteCompanyNumber(companyNumberId) {

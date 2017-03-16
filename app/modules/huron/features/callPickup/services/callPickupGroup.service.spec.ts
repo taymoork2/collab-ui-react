@@ -24,6 +24,8 @@ describe('Service: callPickupService', () => {
     this.$scope.$apply();
     successSpy = jasmine.createSpy('success');
     failureSpy = jasmine.createSpy('failure');
+    this.isLineInPickupGroupDefer = this.$q.defer();
+    spyOn(this.CallPickupGroupService, 'isLineInPickupGroup').and.returnValue(this.isLineInPickupGroupDefer.promise);
 
   });
 
@@ -175,39 +177,42 @@ describe('Service: callPickupService', () => {
 
     beforeEach(function () {
       checkboxesList = getJSONFixture('huron/json/features/callPickup/checkboxesList.json');
-      member1 = angular.copy(membersList[0]);
+      member1 = _.cloneDeep(membersList[0]);
       memberData = {
         member: member1,
         picturePath: fake_picture_path,
         checkboxes: checkboxesList,
         saveNumbers: [],
       };
-      member2 = angular.copy(membersList[1]);
+      member2 = _.cloneDeep(membersList[1]);
       allNumbers = getJSONFixture('huron/json/features/callPickup/numbersList.json');
-      spyOn(this.CallPickupGroupService, 'createCheckBoxes').and.callThrough();
+      spyOn(this.CallPickupGroupService, 'createCheckboxes').and.callThrough();
       this.$httpBackend.whenGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/users/0001/numbers').respond(200, allNumbers);
       this.$scope.$digest();
+
     });
 
     it('should create a disabled checkbox numbers', function () {
-      this.CallPickupGroupService.createCheckBox(memberData, numbersArray[0], 0, '', false, true);
-      expect(memberData.checkboxes[0].label).toEqual('3081');
-      expect(memberData.checkboxes[0].value).toEqual(false);
-      expect(memberData.checkboxes[0].sublabel).toEqual('');
-      expect(memberData.checkboxes[0].numberUuid).toEqual('920b3f0f-fb6d-406c-b5b3-58c1bd390478');
-      expect(memberData.checkboxes[0].disabled).toEqual(true);
+      this.isLineInPickupGroupDefer.resolve('helpdesk');
+      this.CallPickupGroupService.createCheckboxes(memberData, numbersArray).then(() => {
+        expect(memberData.checkboxes[0].label).toEqual('3081');
+        expect(memberData.checkboxes[0].value).toEqual(false);
+        expect(memberData.checkboxes[0].sublabel).toMatch('helpdesk');
+        expect(memberData.checkboxes[0].numberUuid).toEqual('920b3f0f-fb6d-406c-b5b3-58c1bd390478');
+        expect(memberData.checkboxes[0].disabled).toEqual(true);
+      });
     });
 
     it('should create checkboxes for all numbers', function () {
-      this.CallPickupGroupService.createCheckBoxes(memberData, numbersArray);
+      this.isLineInPickupGroupDefer.resolve('');
+      this.CallPickupGroupService.createCheckboxes(memberData, numbersArray);
       expect(memberData.checkboxes[0].label).toEqual('3081');
-      expect(memberData.checkboxes[0].value).toEqual(true);
-      expect(memberData.checkboxes[0].sublabel).toEqual('');
       expect(memberData.checkboxes[0].numberUuid).toEqual('920b3f0f-fb6d-406c-b5b3-58c1bd390478');
     });
 
     it('should create checkboxes for all numbers and mark only primary number as true', function () {
-      this.CallPickupGroupService.createCheckBoxes(memberData, numbersArray);
+      this.isLineInPickupGroupDefer.resolve('');
+      this.CallPickupGroupService.createCheckboxes(memberData, numbersArray);
       expect(memberData.checkboxes[1].label).toEqual('2142');
       expect(memberData.checkboxes[1].value).toEqual(false);
       expect(memberData.checkboxes[1].sublabel).toEqual('');
@@ -229,135 +234,53 @@ describe('Service: callPickupService', () => {
 
   describe('get pickup', () => {
 
-    it('should return true if line is in a pickup group', function () {
+    it('should return group name if line is in a pickup group', function () {
 
       let lineInPickupGroup = getJSONFixture('huron/json/features/callPickup/lineInPickupGroup.json');
       let lineFeaturesInPickupGroup = getJSONFixture('huron/json/features/callPickup/lineFeaturesInPickupGroup.json');
-
-      this.$httpBackend.expectGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() +
-                                  '/numbers?number=' + lineInPickupGroup.numbers[0].internal +
-                                  '&wide=true')
-                                  .respond(200, lineInPickupGroup);
-
-      this.$httpBackend.expectGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() +
-                                  '/numbers/' + lineInPickupGroup.numbers[0].uuid +
-                                  '?features=CALL_FEATURE_PICKUP_GROUP&wide=true')
-                                  .respond(200, lineFeaturesInPickupGroup);
-
-      this.CallPickupGroupService.isLineInPickupGroup(lineInPickupGroup.numbers[0].internal)
-      .then(function
-      (response: boolean) {
-        expect(response).toEqual(true);
+      this.$httpBackend.whenGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/numbers?number=3081&wide=true').respond(200, lineInPickupGroup);
+      this.$httpBackend.whenGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/numbers/29812608-555c-4e41-92dc-409555ab93cd?wide=true').respond(200, lineFeaturesInPickupGroup);
+      this.$scope.$digest();
+      this.CallPickupGroupService.isLineInPickupGroup('3081')
+      .then((response: string) => {
+        expect(response).toMatch('helpdesk');
       });
-
-      this.$httpBackend.flush();
     });
 
     it('should return false if line is not in a pickup group', function () {
-
       let lineNotInPickupGroup = getJSONFixture('huron/json/features/callPickup/lineNotInPickupGroup.json');
       let lineFeaturesNotInPickupGroup = getJSONFixture('huron/json/features/callPickup/lineFeaturesNotInPickupGroup.json');
-
-      this.$httpBackend.expectGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() +
-                                  '/numbers?number=2064&wide=true')
-                                  .respond(200, lineNotInPickupGroup);
-
-      this.$httpBackend.expectGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() +
-                                  '/numbers/' + lineNotInPickupGroup.numbers[0].uuid +
-                                  '?features=CALL_FEATURE_PICKUP_GROUP&wide=true')
-                                  .respond(200, lineFeaturesNotInPickupGroup);
-
-      this.CallPickupGroupService.isLineInPickupGroup('2064').then(function
-      (response: boolean) {
-        expect(response).toEqual(false);
+      this.$httpBackend.whenGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/numbers?number=2064&wide=true').respond(200, lineNotInPickupGroup);
+      this.$httpBackend.whenGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/numbers/b9c3e94b-3399-4ab4-8e39-7367f77c12f?wide=true').respond(200, lineFeaturesNotInPickupGroup);
+      this.CallPickupGroupService.isLineInPickupGroup('2064')
+      .then((response: string) => {
+        expect(response).toEqual('');
       });
-
-      this.$httpBackend.flush();
     });
 
     it('should return true if ALL lines are in a pickup group', function () {
-      let memberWithAllLinesInPickupGroup = getJSONFixture('huron/json/features/callPickup/memberWithAllLinesInPickupGroup.json');
-      let memberWithAllLinesInPickupGroupNumbers = getJSONFixture('huron/json/features/callPickup/memberWithAllLinesInPickupGroupNumbers.json');
+      let member = getJSONFixture('huron/json/features/callPickup/memberWithAllLinesInPickupGroup.json');
+      let memberNumbers = getJSONFixture('huron/json/features/callPickup/memberWithAllLinesInPickupGroupNumbers.json');
+
       let memberWithAllLinesInPickupGroupNumber1 = getJSONFixture('huron/json/features/callPickup/memberWithAllLinesInPickupGroupNumber1.json');
-      let memberWithAllLinesInPickupGroupNumber2 = getJSONFixture('huron/json/features/callPickup/memberWithAllLinesInPickupGroupNumber2.json');
       let memberWithAllLinesInPickupGroupNumber1Features = getJSONFixture('huron/json/features/callPickup/memberWithAllLinesInPickupGroupNumber1Features.json');
+
+      let memberWithAllLinesInPickupGroupNumber2 = getJSONFixture('huron/json/features/callPickup/memberWithAllLinesInPickupGroupNumber2.json');
       let memberWithAllLinesInPickupGroupNumber2Features = getJSONFixture('huron/json/features/callPickup/memberWithAllLinesInPickupGroupNumber2Features.json');
 
-      this.$httpBackend.expectGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() +
-                                  '/users/' + memberWithAllLinesInPickupGroup.uuid + '/numbers')
-                                  .respond(200, memberWithAllLinesInPickupGroupNumbers);
+      //all numbers of member
+      this.$httpBackend.whenGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/users/ccf6f31f-b87c-4a0f-8ddf-bd3e489eeaed/numbers').respond(200, memberNumbers);
+      //calls for first number
+      this.$httpBackend.whenGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/numbers?number=2176&wide=true').respond(200, memberWithAllLinesInPickupGroupNumber1);
+      this.$httpBackend.whenGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/numbers/29812608-555c-4e41-92dc-409555ab93cd?wide=true').respond(200, memberWithAllLinesInPickupGroupNumber1Features);
+      //calls for second number
+      this.$httpBackend.whenGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/numbers?number=3081&wide=true').respond(200, memberWithAllLinesInPickupGroupNumber2);
+      this.$httpBackend.whenGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/numbers/29812608-555c-4e41-92dc-409555ab93cd?wide=true').respond(200, memberWithAllLinesInPickupGroupNumber2Features);
 
-      this.$httpBackend.expectGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() +
-                                  '/numbers?number=' + memberWithAllLinesInPickupGroupNumbers.numbers[0].internal + '&wide=true')
-                                  .respond(200, memberWithAllLinesInPickupGroupNumber1);
-
-      this.$httpBackend.expectGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() +
-                                  '/numbers?number=' + memberWithAllLinesInPickupGroupNumbers.numbers[1].internal + '&wide=true')
-                                  .respond(200, memberWithAllLinesInPickupGroupNumber2);
-
-      this.$httpBackend.expectGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() +
-                                  '/numbers/' + memberWithAllLinesInPickupGroupNumber1.numbers[0].uuid +
-                                  '?features=CALL_FEATURE_PICKUP_GROUP&wide=true')
-                                  .respond(200, memberWithAllLinesInPickupGroupNumber1Features)
-;
-      this.$httpBackend.expectGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() +
-                                  '/numbers/' + memberWithAllLinesInPickupGroupNumber2.numbers[0].uuid +
-                                  '?features=CALL_FEATURE_PICKUP_GROUP&wide=true')
-                                  .respond(200, memberWithAllLinesInPickupGroupNumber2Features);
-
-      this.CallPickupGroupService.areAllLinesInPickupGroup(memberWithAllLinesInPickupGroup).then(function
-      (response: boolean) {
+      this.CallPickupGroupService.areAllLinesInPickupGroup(member).then((response: boolean) => {
         expect(response).toEqual(true);
       });
       this.$httpBackend.flush();
     });
-
-    it('should return the pickup group name if line is in a pickup group', function () {
-
-      let lineInPickupGroup = getJSONFixture('huron/json/features/callPickup/lineInPickupGroup.json');
-      let lineFeaturesInPickupGroup = getJSONFixture('huron/json/features/callPickup/lineFeaturesInPickupGroup.json');
-
-      this.$httpBackend.expectGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() +
-                                  '/numbers?number=' + lineInPickupGroup.numbers[0].internal +
-                                  '&wide=true')
-                                  .respond(200, lineInPickupGroup);
-
-      this.$httpBackend.expectGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() +
-                                  '/numbers/' + lineInPickupGroup.numbers[0].uuid +
-                                  '?features=CALL_FEATURE_PICKUP_GROUP&wide=true')
-                                  .respond(200, lineFeaturesInPickupGroup);
-
-      this.CallPickupGroupService.getPickupGroupNameByLine(lineInPickupGroup.numbers[0].internal)
-      .then(function
-      (response: string) {
-        expect(response).toEqual('helpdesk');
-      });
-
-      this.$httpBackend.flush();
-    });
-
-    it('should return empty if line has no pickup group', function () {
-
-      let lineNotInPickupGroup = getJSONFixture('huron/json/features/callPickup/lineNotInPickupGroup.json');
-      let lineFeaturesNotInPickupGroup = getJSONFixture('huron/json/features/callPickup/lineFeaturesNotInPickupGroup.json');
-
-      this.$httpBackend.expectGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() +
-                                  '/numbers?number=2064&wide=true')
-                                  .respond(200, lineNotInPickupGroup);
-
-      this.$httpBackend.expectGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() +
-                                  '/numbers/' + lineNotInPickupGroup.numbers[0].uuid +
-                                  '?features=CALL_FEATURE_PICKUP_GROUP&wide=true')
-                                  .respond(200, lineFeaturesNotInPickupGroup);
-
-      this.CallPickupGroupService.getPickupGroupNameByLine('2064').then(function
-      (response: boolean) {
-        expect(response).toEqual('');
-      });
-
-      this.$httpBackend.flush();
-    });
-
   });
-
 });

@@ -1,6 +1,7 @@
 import { HuronSiteService } from './site.service';
 
 export * from './site.service';
+export * from './site';
 
 export default angular
   .module('huron.site-service', [

@@ -1,5 +1,8 @@
-@import 'styles/toolkit/fonts';
-@import 'styles/toolkit/spacing';
+@import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/fonts';
+@import '~collab-ui/scss/tools/placeholders/page-layout';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
 
 .reveal-modal.full shared-meeting-report.modal-content {
   margin: 0;
@@ -11,7 +14,8 @@
       margin-left: 5%;
       margin-right: auto;
       z-index: 50;
-      .graph-text, .graph-meetings {
+      .graph-text,
+      .graph-meetings {
         font-family: $brand-font-cisco-TT-Regular;
         font-size: rem-calc(16);
         color: $gray-darkest;
@@ -33,7 +37,7 @@
     .row-space {
       @include vr-spacing(mt, 1);
     }
-    .time-filter{
+    .time-filter {
       width: rem-calc(200);
     }
     .no-data-center {

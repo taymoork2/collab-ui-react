@@ -1,8 +1,7 @@
 'use strict';
 
 describe('Controller: Care Local Settings', function () {
-  var controller, sunlightChatConfigUrl, sunlightConfigService, $httpBackend, Notification, orgId, $interval, $intervalSpy, $scope,
-    sunlightCSOnboardUrl;
+  var controller, sunlightChatConfigUrl, sunlightConfigService, $httpBackend, Notification, orgId, $interval, $intervalSpy, $scope;
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
     getOrgName: jasmine.createSpy('getOrgName').and.returnValue('SunlightConfigService test org'),
@@ -20,17 +19,19 @@ describe('Controller: Care Local Settings', function () {
       $scope = _$rootScope_.$new();
       $interval = _$interval_;
       $intervalSpy = jasmine.createSpy('$interval', $interval).and.callThrough();
-      $scope.wizard = {};
-      $scope.wizard.isNextDisabled = false;
       orgId = 'deba1221-ab12-cd34-de56-abcdef123456';
       sunlightChatConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + orgId + '/chat';
-      sunlightCSOnboardUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + orgId + '/csonboard';
       controller = $controller('CareLocalSettingsCtrl', {
         $scope: $scope,
         $interval: $intervalSpy,
         Notification: Notification,
       });
       spyOn(sunlightConfigService, 'updateChatConfig').and.callFake(function () {
+        var deferred = $q.defer();
+        deferred.resolve('fake update response');
+        return deferred.promise;
+      });
+      spyOn(sunlightConfigService, 'onBoardCare').and.callFake(function () {
         var deferred = $q.defer();
         deferred.resolve('fake update response');
         return deferred.promise;
@@ -85,8 +86,8 @@ describe('Controller: Care Local Settings', function () {
       $httpBackend.expectGET(sunlightChatConfigUrl).respond(404, {});
       $httpBackend.flush();
       expect(controller.state).toBe(controller.NOT_ONBOARDED);
-      $httpBackend.expectPUT(sunlightCSOnboardUrl).respond(200, {});
       controller.onboardToCare();
+      $scope.$apply();
       $httpBackend.expectGET(sunlightChatConfigUrl).respond(404, {});
       expect(controller.state).toBe(controller.IN_PROGRESS);
     });
@@ -98,8 +99,8 @@ describe('Controller: Care Local Settings', function () {
       $httpBackend.expectGET(sunlightChatConfigUrl).respond(404, {});
       $httpBackend.flush();
       expect(controller.state).toBe(controller.NOT_ONBOARDED);
-      $httpBackend.expectPUT(sunlightCSOnboardUrl).respond(200, {});
       controller.onboardToCare();
+      $scope.$apply();
       $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { csOnboardingStatus: 'Success' });
       $interval.flush(10001);
       $httpBackend.flush();
@@ -114,8 +115,8 @@ describe('Controller: Care Local Settings', function () {
         return true;
       });
       $httpBackend.whenGET(sunlightChatConfigUrl).respond(404, {});
-      $httpBackend.expectPUT(sunlightCSOnboardUrl).respond(200, {});
       controller.onboardToCare();
+      $scope.$apply();
       for (var i = 30; i >= 0; i--) {
         $httpBackend.whenGET(sunlightChatConfigUrl).respond(404, {});
         $interval.flush(10000);
@@ -130,8 +131,8 @@ describe('Controller: Care Local Settings', function () {
         return true;
       });
       $httpBackend.whenGET(sunlightChatConfigUrl).respond(500, {});
-      $httpBackend.expectPUT(sunlightCSOnboardUrl).respond(200, {});
       controller.onboardToCare();
+      $scope.$apply();
       for (var i = 3; i >= 0; i--) {
         $httpBackend.whenGET(sunlightChatConfigUrl).respond(500, {});
         $interval.flush(10000);
@@ -151,8 +152,8 @@ describe('Controller: Care Local Settings', function () {
 });
 
 describe('Care Settings - when org has K2 entitlement', function () {
-  var controller, sunlightChatConfigUrl, sunlightConfigService, $httpBackend, Notification, orgId, $interval, $intervalSpy, $scope,
-    sunlightCSOnboardUrl, sunlightAAOnboardUrl;
+  var controller, sunlightChatConfigUrl, sunlightConfigService, $httpBackend, Notification, orgId, $interval, $intervalSpy,
+    $scope, q;
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
     getOrgName: jasmine.createSpy('getOrgName').and.returnValue('SunlightConfigService test org'),
@@ -164,25 +165,27 @@ describe('Care Settings - when org has K2 entitlement', function () {
   }));
   beforeEach(
     inject(function ($controller, _$rootScope_, _$httpBackend_, _Notification_, _SunlightConfigService_, _$interval_, UrlConfig, $q) {
+      q = $q;
       sunlightConfigService = _SunlightConfigService_;
       $httpBackend = _$httpBackend_;
       Notification = _Notification_;
       $scope = _$rootScope_.$new();
       $interval = _$interval_;
       $intervalSpy = jasmine.createSpy('$interval', $interval).and.callThrough();
-      $scope.wizard = {};
-      $scope.wizard.isNextDisabled = false;
       orgId = 'deba1221-ab12-cd34-de56-abcdef123456';
       sunlightChatConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + orgId + '/chat';
-      sunlightCSOnboardUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + orgId + '/csonboard';
-      sunlightAAOnboardUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + orgId + '/aaonboard';
       controller = $controller('CareLocalSettingsCtrl', {
         $scope: $scope,
         $interval: $intervalSpy,
         Notification: Notification,
       });
       spyOn(sunlightConfigService, 'updateChatConfig').and.callFake(function () {
-        var deferred = $q.defer();
+        var deferred = q.defer();
+        deferred.resolve('fake update response');
+        return deferred.promise;
+      });
+      spyOn(sunlightConfigService, 'onBoardCare').and.callFake(function () {
+        var deferred = q.defer();
         deferred.resolve('fake update response');
         return deferred.promise;
       });
@@ -244,15 +247,19 @@ describe('Care Settings - when org has K2 entitlement', function () {
   });
 
   it('should disable setup care button, after onboarding is complete', function () {
+    spyOn(sunlightConfigService, 'aaOnboard').and.callFake(function () {
+      var deferred = q.defer();
+      deferred.resolve('fake update response');
+      return deferred.promise;
+    });
     spyOn(Notification, 'success').and.callFake(function () {
       return true;
     });
     $httpBackend.expectGET(sunlightChatConfigUrl).respond(404, {});
     $httpBackend.flush();
     expect(controller.state).toBe(controller.NOT_ONBOARDED);
-    $httpBackend.expectPUT(sunlightCSOnboardUrl).respond(200, {});
-    $httpBackend.expectPOST(sunlightAAOnboardUrl).respond(204, {});
     controller.onboardToCare();
+    $scope.$apply();
     $httpBackend.expectGET(sunlightChatConfigUrl)
       .respond(200, {
         csOnboardingStatus: 'Success',
@@ -262,5 +269,25 @@ describe('Care Settings - when org has K2 entitlement', function () {
     $httpBackend.flush();
     expect(controller.state).toBe(controller.ONBOARDED);
     expect(Notification.success).toHaveBeenCalled();
+  });
+
+  it('should show error notification, if any of the onboarding promises fail', function () {
+    spyOn(sunlightConfigService, 'aaOnboard').and.callFake(function () {
+      var deferred = q.defer();
+      deferred.reject('fake update response');
+      return deferred.promise;
+    });
+    spyOn(Notification, 'errorWithTrackingId').and.callFake(function () {
+      return true;
+    });
+    $httpBackend.expectGET(sunlightChatConfigUrl).respond(404, {});
+    $httpBackend.flush();
+    expect(controller.state).toBe(controller.NOT_ONBOARDED);
+    controller.onboardToCare();
+    $scope.$apply();
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+    expect(controller.state).toBe(controller.NOT_ONBOARDED);
+    expect(Notification.errorWithTrackingId).toHaveBeenCalled();
   });
 });

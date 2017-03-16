@@ -40,14 +40,12 @@ describe('Controller: MySubscriptionCtrl', function () {
     this.data.subscriptionsFormatted[0].productInstanceId = undefined;
     this.data.subscriptionsFormatted[0].changeplanOverride = undefined;
     this.data.subscriptionsFormatted[0].quantity = undefined;
-    this.data.subscriptionsFormatted[0].name = undefined;
     this.data.trialSubscriptionData[0].licenses[0].siteUrl = undefined;
     this.data.trialSubscriptionData[0].upgradeTrialUrl = undefined;
     this.data.trialSubscriptionData[0].productInstanceId = undefined;
     this.data.trialSubscriptionData[0].changeplanOverride = undefined;
     this.data.trialSubscriptionData[0].internalSubscriptionId = undefined;
     this.data.trialSubscriptionData[0].quantity = undefined;
-    this.data.trialSubscriptionData[0].name = undefined;
 
     this.initModules('Core', 'Hercules', 'Sunlight');
     this.injectDependencies('$controller', '$httpBackend', '$rootScope', '$scope', '$q', 'Authinfo', 'DigitalRiverService', 'FeatureToggleService', 'OnlineUpgradeService', 'Orgservice', 'ServiceDescriptor', 'SharedMeetingsReportService');
@@ -111,7 +109,7 @@ describe('Controller: MySubscriptionCtrl', function () {
   it('should initialize with expected data for ccw trial orgs', function () {
     this.data.subscriptionsTrialResponse[0].internalSubscriptionId = ccwTrialSubId;
     spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.when(this.data.subscriptionsTrialResponse));
-    this.data.trialSubscriptionData[0].name = 'customerPage.trial';
+    this.data.trialSubscriptionData[0].name = 'subscriptions.enterpriseTrial';
     this.data.trialSubscriptionData[0].internalSubscriptionId = ccwTrialSubId;
     this.startController();
 

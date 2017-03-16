@@ -37,7 +37,7 @@ require('./_user-csv.scss');
     var NO_RESOURCE_GROUP = '**no resource group**';
 
     CsvDownloadService.getCsv('headers').then(function (csvData) {
-      orgHeaders = angular.copy(csvData.columns || []);
+      orgHeaders = _.cloneDeep(csvData.columns || []);
     }).catch(function (response) {
       Notification.errorResponse(response, 'firstTimeWizard.downloadHeadersError');
     });

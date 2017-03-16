@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function MediaClusterServiceV2($http, CsdmPoller, CsdmCacheUpdater, CsdmHubFactory, UrlConfig, Authinfo, MediaConfigServiceV2) {
+  function MediaClusterServiceV2($http, CsdmPoller, CsdmCacheUpdater, CsdmHubFactory, UrlConfig, Authinfo) {
     var clusterCache = {
       mf_mgmt: {},
     };
@@ -21,7 +21,9 @@
         .then(extractClustersFromResponse)
         .then(function (clusters) {
           // start modeling the response to match how the UI uses it
-          var onlyMfMgmt = _.filter(clusters, { targetType: 'mf_mgmt' });
+          var onlyMfMgmt = _.filter(clusters, {
+            targetType: 'mf_mgmt',
+          });
           return {
             mf_mgmt: onlyMfMgmt,
           };
@@ -111,7 +113,9 @@
     }
 
     function getUpgradeState(connectors) {
-      var allAreUpgraded = _.every(connectors, { upgradeState: 'upgraded' });
+      var allAreUpgraded = _.every(connectors, {
+        upgradeState: 'upgraded',
+      });
       return allAreUpgraded ? 'upgraded' : 'upgrading';
     }
 
@@ -132,7 +136,9 @@
 
     function buildAggregates(type, cluster) {
       var connectors = cluster.connectors;
-      var provisioning = _.find(cluster.provisioning, { connectorType: type });
+      var provisioning = _.find(cluster.provisioning, {
+        connectorType: type,
+      });
       var upgradeAvailable = provisioning && _.some(cluster.connectors, function (connector) {
         return connector.runningVersion !== provisioning.availableVersion;
       });
@@ -146,11 +152,17 @@
         upgradeState: getUpgradeState(connectors),
         provisioning: provisioning,
         upgradeAvailable: upgradeAvailable,
-        upgradePossible: upgradeAvailable && !_.some(cluster.connectors, { state: 'not_configured' }),
-        upgradeWarning: upgradeAvailable && !_.some(cluster.connectors, { state: 'offline' }),
+        upgradePossible: upgradeAvailable && !_.some(cluster.connectors, {
+          state: 'not_configured',
+        }),
+        upgradeWarning: upgradeAvailable && !_.some(cluster.connectors, {
+          state: 'offline',
+        }),
         hosts: _.map(hosts, function (host) {
           // 1 host = 1 connector (for a given type)
-          var connector = _.find(connectors, { hostname: host });
+          var connector = _.find(connectors, {
+            hostname: host,
+          });
           return {
             alarms: connector.alarms,
             hostname: host,
@@ -195,7 +207,7 @@
     };
 
     var getClustersV2 = function () {
-      var url = MediaConfigServiceV2.getV2Url() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide';
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide';
 
       return $http.get(url).then(extractDataFromResponse);
     };
@@ -207,7 +219,7 @@
         "targetType": "mf_mgmt",
       };
 
-      var url = MediaConfigServiceV2.getV2Url() + '/organizations/' + Authinfo.getOrgId() + '/clusters';
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters';
       return $http
         .post(url, payLoad);
     };
@@ -219,7 +231,7 @@
         ttlInSeconds: 60 * 60,
       };
 
-      var url = MediaConfigServiceV2.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/allowedRedirectTargets';
+      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/allowedRedirectTargets';
       return $http
         .post(url, payLoad);
     };
@@ -290,6 +302,14 @@
         .post(url, payLoad);
     }
 
+    function getV1Clusters() {
+      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/';
+      return $http
+        .get(url)
+        .then(extractDataFromResponse);
+
+    }
+
     function getClustersByConnectorType(type) {
       var clusters = _.chain(clusterCache[type])
         .values() // turn them to an array
@@ -337,6 +357,7 @@
       mergeAllAlarms: mergeAllAlarms,
       getMostSevereRunningState: getMostSevereRunningState,
       buildAggregates: buildAggregates,
+      getV1Clusters: getV1Clusters,
     };
   }
 

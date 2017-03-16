@@ -12,6 +12,7 @@ export class TelephonyDomainService {
     this.url = {
       getTelephonyDomains: gmUrl + 'telephonyDomains/' + 'customerId/',
       getTelephonyDomain: gmUrl + 'telephonydomain/getTelephonyDomainInfoByDomainId/',
+      getActivityLogs: gmUrl + 'activityLogs',
     };
   }
 
@@ -92,8 +93,7 @@ export class TelephonyDomainService {
   }
 
   private transformCSVNumber(value: any) {
-    let result = (_.isNumber(value) ? '=' + value + '' : value);
-    return result;
+    return (value == null ? '' : value + '\t');
   }
 
   private transformBridgeSet(v1: string, v2: string) {
@@ -101,5 +101,26 @@ export class TelephonyDomainService {
     v2 = !v2 ? 'N/A' : this.transformCSVNumber(v2);
 
     return (v1 === 'N/A' && v2 === 'N/A') ? 'N/A' : (v1 + '+' + v2);
+  }
+
+  public getNotes(customerId: string, ccaDomainId: string) {
+    let url = this.url.getActivityLogs + '/' + customerId + '/' + ccaDomainId + '/add_note';
+    return this.$http.get(url, {}).then((response) => {
+      return _.get(response, 'data');
+    });
+  }
+
+  public postNotes(data: any) {
+    let url = this.url.getActivityLogs;
+    return this.$http.post(url, data).then((response) => {
+      return _.get(response, 'data');
+    });
+  }
+
+  public getHistories(customerId: string, ccaDomainId: string, domainName: string) {
+    let url = this.url.getActivityLogs + '/' + customerId + '/' + ccaDomainId + '/Telephony%20Domain/' + domainName;
+    return this.$http.get(url, {}).then((response) => {
+      return _.get(response, 'data');
+    });
   }
 }

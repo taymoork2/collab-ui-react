@@ -7,7 +7,7 @@
     .controller('HybridServicesCtrl', HybridServicesCtrl);
 
   /* @ngInject */
-  function HybridServicesCtrl($scope, $rootScope, $timeout, Authinfo, USSService, FusionUtils, ServiceDescriptor, Notification, Userservice, CloudConnectorService, FeatureToggleService) {
+  function HybridServicesCtrl($scope, $rootScope, $timeout, Authinfo, USSService, HybridServicesUtils, ServiceDescriptor, Notification, Userservice, CloudConnectorService, FeatureToggleService) {
     if (!Authinfo.isFusion()) {
       return;
     }
@@ -19,7 +19,9 @@
     vm.extensions = getExtensions();
     vm.isEnabled = false;
     vm.userStatusLoaded = false;
-    vm.isInvitePending = vm.user ? Userservice.isInvitePending(vm.user) : false;
+    vm.isPlace = vm.user && vm.user.accountType === 'MACHINE';
+    vm.isUser = !vm.isPlace;
+    vm.isInvitePending = vm.user && vm.isUser ? Userservice.isInvitePending(vm.user) : false;
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar)
       .then(function (supported) {
@@ -28,6 +30,10 @@
 
     vm.allExceptUcFilter = function (item) {
       return item && item.enabled === true && item.id !== 'squared-fusion-ec';
+    };
+
+    vm.placeFilter = function (item) {
+      return item && item.enabled === true && item.entitled === true;
     };
 
     vm.getStatus = function (status) {
@@ -66,7 +72,7 @@
     }
 
     vm.extensionIcon = function (id) {
-      return FusionUtils.serviceId2Icon(id);
+      return HybridServicesUtils.serviceId2Icon(id);
     };
 
     if (extensionEntitlements.every(function (extensionEntitlement) {
@@ -75,7 +81,7 @@
       return;
     }
 
-    var enforceLicenseCheck = _.size(Authinfo.getLicenses()) > 0;
+    var enforceLicenseCheck = vm.isUser && _.size(Authinfo.getLicenses()) > 0;
     checkEntitlements(enforceLicenseCheck);
 
     function checkEntitlements(enforceLicenseCheck) {
@@ -83,7 +89,7 @@
         return;
       }
       // Filter out extensions that are not enabled in FMS
-      ServiceDescriptor.services(function (error, services) {
+      ServiceDescriptor.getServices().then(function (services) {
         if (services) {
           _.forEach(vm.extensions, function (extension) {
             extension.enabled = ServiceDescriptor.filterEnabledServices(services).some(function (service) {
@@ -130,7 +136,7 @@
     // Periodically update the user statuses from USS
     function updateStatusForUser() {
       if (!_.isUndefined(vm.user)) {
-        USSService.getStatusesForUser(vm.user.id)
+        USSService.getStatusesForUser(vm.user.id || vm.user.cisUuid)
           .then(function (userStatuses) {
             _.forEach(vm.extensions, function (extension) {
               extension.status = _.find(userStatuses, function (status) {

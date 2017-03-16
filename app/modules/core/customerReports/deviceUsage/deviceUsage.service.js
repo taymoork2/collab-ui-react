@@ -12,13 +12,10 @@
     var localUrlBase = 'http://berserk.rd.cisco.com:8080/atlas-server/admin/api/v1/organization';
 
     var csdmUrlBase = UrlConfig.getCsdmServiceUrl() + '/organization';
-    var csdmUrl = csdmUrlBase + '/' + Authinfo.getOrgId() + '/places/';
 
-    function getDataForRange(start, end, granularity, deviceCategories, models, api) {
+    function getDataForRange(start, end, granularity, models, api) {
       var startDate = moment(start);
       var endDate = moment(end);
-
-      //$log.info("categories parameter ignored in V2:", deviceCategories);
 
       if (_.isEmpty(models)) {
         models = 'aggregate';
@@ -32,7 +29,6 @@
         var url = urlBase + '/' + Authinfo.getOrgId() + '/reports/device/usage?';
         url = url + 'interval=day'; // As long week and month is not implemented
         url = url + '&from=' + start + '&to=' + end;
-        //url = url + '&categories=' + deviceCategories;
         url = url + '&categories=aggregate';
         url = url + '&countryCodes=aggregate';
         url = url + '&accounts=aggregate';
@@ -108,7 +104,7 @@
     function getMissingDays(start, end) {
       var url = getBaseOrgUrl() + "reports/device/data_availability?interval=day&from=" + start + "&to=" + end;
       return cancelableHttpGET(url).then(function (response) {
-        var items = response.data.items; // .available
+        var items = response.data.items;
         var missingDays = _.filter(items, (function (item) {
           return (item.available === false);
         }));
@@ -204,7 +200,6 @@
         "reports/device/usage/count?interval=day&from="
         + start + "&to=" + end
         + "&models=" + models
-        //+ "&excludeUnused=false";
         + "&excludeUnused=true";
 
       return cancelableHttpGET(url).then(function (response) {
@@ -230,17 +225,10 @@
       } else {
         models = models.join();
       }
-
-      //TODO: Include model when backend supports it
-
       var url = getBaseOrgUrl() + "reports/device/usage/aggregate?interval=day&from=" + start
         + "&to=" + end
-        //+ "&accounts=__&categories=__&models=" + models
         + "&countryCodes=aggregate&models=" + models
-
         + "&orderBy=callDuration&descending=false&limit=" + limit;
-        //+ "&orderBy=callDuration&descending=false&excludeUnused=true&limit=" + limit;
-
       return cancelableHttpGET(url).then(function (response) {
         return response.data.items;
       });
@@ -252,12 +240,9 @@
       } else {
         models = models.join();
       }
-      //&countryCodes=aggregate&orderBy=callDuration&descending=true&limit=20
       var url = getBaseOrgUrl() + "reports/device/usage/aggregate?interval=day&from=" + start
         + "&to=" + end
-        //+ "&accounts=__&categories=__&models=" + models
         + "&countryCodes=aggregate&models=" + models
-
         + "&orderBy=callDuration&descending=true&limit=" + limit;
       return cancelableHttpGET(url).then(function (response) {
         return response.data.items;
@@ -270,7 +255,6 @@
         case 'day':
           return date.format('YYYYMMDD');
         case 'week':
-          //return moment(formattedDate).startOf('isoWeek').format('YYYYMMDD');
           return moment(item.date).startOf('isoWeek').format('YYYYMMDD');
         case 'month':
           return date.format('YYYYMMDD');
@@ -279,16 +263,24 @@
 
     function resolveDeviceData(devices) {
       var promises = [];
+
       _.each(devices, function (device) {
-        promises.push(cancelableHttpGET(csdmUrl + device.accountId)
+        var csdmUrl = csdmUrlBase + '/' + Authinfo.getOrgId() + '/places/';
+        promises.push(cancelableHttpGET(csdmUrl + device.accountId + '?shallow=true')
           .then(function (res) {
             return res.data;
           })
-          .catch(function () {
+          .catch(function (err) {
             //$log.info("Problems resolving device", err);
+            var infoText = "";
+            if (err.status === -1) {
+              infoText = $translate.instant('reportsPage.usageReports.timeoutWhenTryingToResolveNameFor') + " device id=" + device.accountId;
+            } else {
+              infoText = $translate.instant('reportsPage.usageReports.nameNotFoundFor') + " device id=" + device.accountId;
+            }
             return {
-              "displayName": $translate.instant('reportsPage.usageReports.nameNotFoundFor') + " id=" + device.accountId,
-              "info": $translate.instant('reportsPage.usageReports.nameNotFoundFor') + " device id=" + device.accountId,
+              "displayName": $translate.instant('reportsPage.usageReports.nameNotResolvedFor') + " id=" + device.accountId,
+              "info": infoText,
             };
           })
         );

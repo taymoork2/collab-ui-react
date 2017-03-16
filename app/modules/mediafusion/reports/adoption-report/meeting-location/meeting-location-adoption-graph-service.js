@@ -17,6 +17,9 @@
 
     vm.timeStamp = $translate.instant('mediaFusion.metrics.timeStamp');
     vm.meetingLocation = $translate.instant('mediaFusion.metrics.meetings');
+    vm.onPremisesHeading = $translate.instant('mediaFusion.metrics.onPremisesHeading');
+    vm.cloudHeading = $translate.instant('mediaFusion.metrics.cloudHeading');
+    vm.hybridHeading = $translate.instant('mediaFusion.metrics.hybridHeading');
 
     return {
       setMeetingLocationGraph: setMeetingLocationGraph,
@@ -125,14 +128,17 @@
       };
       var exportFields = [];
       _.forEach(graphs, function (value) {
-        columnNames[value.valueField] = value.title + ' ' + vm.meetingLocation;
         if (value.valueField === 'ON_PREM') {
-          value.lineColor = '#67b7dc';
+          value.lineColor = '#ff7133';
+          value.title = vm.onPremisesHeading;
         } else if (value.valueField === 'CLOUD') {
-          value.lineColor = '#fdd400';
+          value.lineColor = '#30d557';
+          value.title = vm.cloudHeading;
         } else if (value.valueField === 'HYBRID') {
-          value.lineColor = '#84b761';
+          value.lineColor = '#02bbcc';
+          value.title = vm.hybridHeading;
         }
+        columnNames[value.valueField] = value.title + ' ' + vm.meetingLocation;
       });
       _.forEach(columnNames, function (key) {
         exportFields.push(key);
@@ -197,7 +203,15 @@
     function getClusterName(graphs) {
       var tempData = [];
       _.forEach(graphs, function (value) {
-        value.balloonText = '<span class="graph-text">' + value.title + ' ' + '<span class="graph-number">[[value]]</span></span>';
+        if (value.title === 'ON_PREM') {
+          value.balloonText = '<span class="graph-text">' + vm.onPremisesHeading + ' ' + '<span class="graph-number">[[value]]</span></span>';
+        } else if (value.title === 'CLOUD') {
+          value.balloonText = '<span class="graph-text">' + vm.cloudHeading + ' ' + '<span class="graph-number">[[value]]</span></span>';
+        } else if (value.title === 'HYBRID') {
+          value.balloonText = '<span class="graph-text">' + vm.hybridHeading + ' ' + '<span class="graph-number">[[value]]</span></span>';
+        } else {
+          value.balloonText = '<span class="graph-text">' + value.title + ' ' + '<span class="graph-number">[[value]]</span></span>';
+        }
         value.lineThickness = 2;
         tempData.push(value);
       });

@@ -20,11 +20,11 @@ class UserStatusHistoryCtrl implements ng.IComponentController {
     private $stateParams,
     private Authinfo,
     private Notification: Notification,
-    private FusionUtils,
+    private HybridServicesUtils,
     private FusionClusterService,
     private ResourceGroupService,
   ) {
-    this.userId = this.$stateParams.currentUser.id;
+    this.userId = (this.$stateParams.currentUser && this.$stateParams.currentUser.id) || this.$stateParams.currentPlace.cisUuid;
     this.historyEntries = [];
   }
 
@@ -44,7 +44,7 @@ class UserStatusHistoryCtrl implements ng.IComponentController {
 
   private decorateEntry(e) {
     let entry = e.entry;
-    entry.timestamp = this.FusionUtils.getLocalTimestamp(e.time, 'lll (z)');
+    entry.timestamp = this.HybridServicesUtils.getLocalTimestamp(e.time, 'lll (z)');
     if (entry.type === 'SetUserStatus') {
       entry.payload.entitled = true;
       entry.status = this.USSService.decorateWithStatus(entry.payload);

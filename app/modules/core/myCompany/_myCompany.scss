@@ -1,4 +1,4 @@
-@import 'styles/toolkit/layout';
+@import '~collab-ui/scss/tools/placeholders/page-layout';
 
 .my-company-page {
   @extend %grid-subheader;
@@ -7,6 +7,10 @@
   .my-company-info-state &,
   .my-company-orders-state & {
     @extend %page-background-white;
+  }
+
+  .content-container {
+    height: 100%;
   }
 
   iframe {

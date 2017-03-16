@@ -165,6 +165,12 @@ describe('Controller: PlanReviewCtrl', function () {
       var result = controller.selectedSubscriptionHasBasicLicenses(billingServiceId);
       expect(result).toEqual(true);
     });
+
+    it('should return true for a subscription that is a Trial and has basic licenses', function () {
+      var billingServiceId = 'Trial';
+      var result = controller.selectedSubscriptionHasBasicLicenses(billingServiceId);
+      expect(result).toEqual(true);
+    });
   });
 
   describe('selectedSubscriptionHasAdvancedLicenses function ', function () {
@@ -176,6 +182,12 @@ describe('Controller: PlanReviewCtrl', function () {
 
     it('should return true for a subscriptions that have advanced licenses', function () {
       var billingServiceId = 'SubCt31test20161222111';
+      var result = controller.selectedSubscriptionHasAdvancedLicenses(billingServiceId);
+      expect(result).toEqual(true);
+    });
+
+    it('should return true for a subscriptions that are Trial and have advanced licenses', function () {
+      var billingServiceId = 'Trial';
       var result = controller.selectedSubscriptionHasAdvancedLicenses(billingServiceId);
       expect(result).toEqual(true);
     });

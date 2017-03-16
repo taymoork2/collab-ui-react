@@ -6,7 +6,7 @@
     .service('ServiceStateChecker', ServiceStateChecker);
 
   /*@ngInject*/
-  function ServiceStateChecker($q, $translate, Authinfo, ClusterService, DomainManagementService, FeatureToggleService, FusionClusterService, FusionUtils, NotificationService, Orgservice, ServiceDescriptor, USSService) {
+  function ServiceStateChecker($q, $translate, Authinfo, ClusterService, DomainManagementService, FeatureToggleService, FusionClusterService, HybridServicesUtils, NotificationService, Orgservice, ServiceDescriptor, USSService, Notification) {
     var vm = this;
     vm.isSipUriAcknowledged = false;
     vm.hasSipUriDomainConfigured = false;
@@ -100,17 +100,15 @@
       var needsUserActivation = summaryForService && summaryForService.activated === 0 && summaryForService.error === 0 && summaryForService.notActivated === 0;
       if (needsUserActivation) {
         switch (serviceId) {
-          case "squared-fusion-cal":
+          case 'squared-fusion-cal':
             addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_calendar.html');
             break;
-          case "squared-fusion-uc":
-            ServiceDescriptor.isServiceEnabled("squared-fusion-ec", function (error, enabled) {
-              if (!error) {
-                if (enabled) {
-                  addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_call_connect.html');
-                } else {
-                  addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_call_aware.html');
-                }
+          case 'squared-fusion-uc':
+            ServiceDescriptor.isServiceEnabled('squared-fusion-ec').then(function (enabled) {
+              if (enabled) {
+                addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_call_connect.html');
+              } else {
+                addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_call_aware.html');
               }
             });
             break;
@@ -187,39 +185,40 @@
       if (serviceId !== 'squared-fusion-uc') {
         return;
       }
-      ServiceDescriptor.services(function (error, services) {
-        if (!error) {
-          var callServiceConnect = _.find(services || {}, {
-            id: 'squared-fusion-ec',
-          });
-          if (callServiceConnect && callServiceConnect.enabled) {
-            // we need to clear the notification after admin has setup enabled
-            NotificationService.removeNotification('callServiceConnectAvailable');
-            handleAtlasSipUriDomainEnterpriseNotification(serviceId);
-            USSService.getOrg(Authinfo.getOrgId()).then(function (org) {
-              if (!org || !org.sipDomain || org.sipDomain === '') {
-                NotificationService.addNotification(
-                  NotificationService.types.TODO,
-                  'sipDomainNotConfigured',
-                  5,
-                  'modules/hercules/notifications/sip_domain_not_configured.html', [serviceId]);
-              } else {
-                NotificationService.removeNotification('sipDomainNotConfigured');
-              }
-            });
-          } else {
-            NotificationService.removeNotification('sipDomainNotConfigured');
-            if (callServiceConnect && !callServiceConnect.enabled && !callServiceConnect.acknowledged) {
+
+      ServiceDescriptor.getServices().then(function (items) {
+        var callServiceConnect = _.find(items, {
+          id: 'squared-fusion-ec',
+        });
+        if (callServiceConnect && callServiceConnect.enabled) {
+          // we need to clear the notification after admin has setup enabled
+          NotificationService.removeNotification('callServiceConnectAvailable');
+          handleAtlasSipUriDomainEnterpriseNotification(serviceId);
+          USSService.getOrg(Authinfo.getOrgId()).then(function (org) {
+            if (!org || !org.sipDomain || org.sipDomain === '') {
               NotificationService.addNotification(
-                NotificationService.types.NEW,
-                'callServiceConnectAvailable',
+                NotificationService.types.TODO,
+                'sipDomainNotConfigured',
                 5,
-                'modules/hercules/notifications/connect_available.html', [serviceId]);
+                'modules/hercules/notifications/sip_domain_not_configured.html', [serviceId]);
             } else {
-              NotificationService.removeNotification('callServiceConnectAvailable');
+              NotificationService.removeNotification('sipDomainNotConfigured');
             }
+          });
+        } else {
+          NotificationService.removeNotification('sipDomainNotConfigured');
+          if (callServiceConnect && !callServiceConnect.enabled && !callServiceConnect.acknowledged) {
+            NotificationService.addNotification(
+              NotificationService.types.NEW,
+              'callServiceConnectAvailable',
+              5,
+              'modules/hercules/notifications/connect_available.html', [serviceId]);
+          } else {
+            NotificationService.removeNotification('callServiceConnectAvailable');
           }
         }
+      }).catch(function (error) {
+        Notification.errorWithTrackingId(error, 'hercules.error.couldNotGetServices');
       });
     }
 
@@ -241,7 +240,7 @@
             _.forEach(anomalies, function (cluster) {
               var serviceIds = _.chain(cluster.provisioning)
                 .map(function (p) {
-                  return FusionUtils.connectorType2ServicesId(p.connectorType);
+                  return HybridServicesUtils.connectorType2ServicesId(p.connectorType);
                 })
                 .flatten()
                 .uniq()

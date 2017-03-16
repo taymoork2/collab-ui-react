@@ -23,7 +23,7 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
     private $state: ng.ui.IStateService,
     private FusionClusterService,
     private FusionClusterStatesService,
-    private FusionUtils,
+    private HybridServicesUtils,
     private Notification: Notification,
   ) {
     this.hybridConnectorsComparator = this.hybridConnectorsComparator.bind(this);
@@ -37,7 +37,7 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
   }
 
   public hybridConnectorsComparator(a, b) {
-    return this.FusionUtils.hybridConnectorsComparator(a.value, b.value);
+    return this.HybridServicesUtils.hybridConnectorsComparator(a.value, b.value);
   }
 
   public openSidepanel(connector: ISimplifiedConnector) {

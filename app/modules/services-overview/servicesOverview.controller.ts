@@ -73,17 +73,29 @@ export class ServicesOverviewCtrl {
         this.forwardEvent('googleCalendarFeatureToggleEventHandler', supports);
       });
 
-    this.FeatureToggleService.supports(FeatureToggleService.features.enterprisePrivateTrunk)
+    this.FeatureToggleService.supports(FeatureToggleService.features.huronEnterprisePrivateTrunking)
       .then(supports => {
         this.forwardEvent('privateTrunkFeatureToggleEventHandler', supports);
       });
 
+    this.FeatureToggleService.supports(FeatureToggleService.features.sparkCallTenDigitExt)
+      .then(supports => {
+        this.forwardEvent('sparkCallTenDigitExtFeatureToggleEventhandler', supports);
+      });
   }
 
   public getHybridCards() {
     return _.filter(this.cards, {
       cardType: CardType.hybrid,
     });
+  }
+
+  public hasActiveHybridCards() {
+    return !!_.find(this.cards, card => card.display && card.getCardType() === CardType.hybrid);
+  }
+
+  public hasOneOrMoreHybridEntitlements() {
+    return this.Authinfo.isFusion() || this.Authinfo.isFusionMedia() || this.Authinfo.isFusionUC() || this.Authinfo.isFusionCal() || this.Authinfo.isFusionHDS();
   }
 
   public getCloudCards() {

@@ -3,7 +3,7 @@
 describe('Service: AutoAttendantCeMenuModelService', function () {
   var AutoAttendantCeMenuModelService;
   // require('jasmine-collection-matchers');
-
+  var AAUtilityService;
   var ceInfos = getJSONFixture('huron/json/autoAttendant/rawCeInfos.json');
 
   // Welcome menu
@@ -59,8 +59,9 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function (_AutoAttendantCeMenuModelService_) {
+  beforeEach(inject(function (_AutoAttendantCeMenuModelService_, _AAUtilityService_) {
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
+    AAUtilityService = _AAUtilityService_;
     AutoAttendantCeMenuModelService.clearCeMenuMap();
     wmenu = getJSONFixture('huron/json/autoAttendant/welcomeMenu.json');
     ceWelcome = wmenu.ceWelcome;
@@ -68,6 +69,8 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
     ceWelcomeNoDescriptionTemp = wmenu.ceWelcomeNoDescriptionTemp;
     welcomeMenu = wmenu.welcomeMenu;
     ceMenuFull = wmenu.ceMenuFull;
+    spyOn(AAUtilityService, 'splitOnCommas').and.returnValue([]);
+    spyOn(AAUtilityService, 'addQuotesAroundCommadQuotedValues').and.returnValue('');
   }));
 
   afterEach(function () {
@@ -108,7 +111,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
 
   describe('updateCombinedMenu', function () {
     it('should be able to update a ceRecord with combinedMenu', function () {
-      var _ceRecord = angular.copy(ceInfos[0]);
+      var _ceRecord = _.cloneDeep(ceInfos[0]);
       _ceRecord.callExperienceName = 'AA Combined';
       var _combinedMenu = AutoAttendantCeMenuModelService.getCombinedMenu(ceCombined, 'openHours');
       AutoAttendantCeMenuModelService.updateCombinedMenu(_ceRecord, 'openHours', _combinedMenu);
@@ -116,7 +119,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
     });
 
     it('should be able to update a ceRecord with submenu that has a Go Back', function () {
-      var _ceRecord = angular.copy(ceInfos[0]);
+      var _ceRecord = _.cloneDeep(ceInfos[0]);
       _ceRecord.callExperienceName = 'AA Combined';
       _ceRecord.assignedResources[0]['id'] = "81005005";
       _ceRecord.assignedResources[0]['number'] = "5005";
@@ -128,7 +131,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
     });
 
     it('should be able to update a ceRecord with submenu that has a DialByExt', function () {
-      var _ceRecord = angular.copy(ceInfos[0]);
+      var _ceRecord = _.cloneDeep(ceInfos[0]);
       _ceRecord.callExperienceName = 'AA Combined';
       _ceRecord.assignedResources[0]['id'] = "81005005";
       _ceRecord.assignedResources[0]['number'] = "5005";
@@ -142,7 +145,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
 
   describe('updateMenu', function () {
     it('should be able to update an ceRecord with welcomeMenu (no description in goto case)', function () {
-      var _ceRecord = angular.copy(ceInfos[0]);
+      var _ceRecord = _.cloneDeep(ceInfos[0]);
 
       _ceRecord.defaultActionSet = "openHours";
       _ceRecord.scheduleEventTypeMap = {
@@ -161,7 +164,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
 
   describe('updateMenu', function () {
     it('should be able to update an ceRecord with customMenu', function () {
-      var _ceRecord = angular.copy(ceInfos[0]);
+      var _ceRecord = _.cloneDeep(ceInfos[0]);
       _ceRecord.defaultActionSet = "openHours";
       _ceRecord.scheduleEventTypeMap = {
         open: "openHours",
@@ -184,7 +187,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
     });
 
     it('should be able to update an ceRecord with ceWelcomeMenu', function () {
-      var _ceRecord = angular.copy(ceInfos[0]);
+      var _ceRecord = _.cloneDeep(ceInfos[0]);
       _ceRecord.defaultActionSet = "openHours";
       _ceRecord.scheduleEventTypeMap = {
         open: "openHours",
@@ -210,7 +213,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
 
   describe('updateMenu', function () {
     it('should be able to update an ceRecord with optionMenu', function () {
-      var _ceRecord = angular.copy(ceInfos[0]);
+      var _ceRecord = _.cloneDeep(ceInfos[0]);
       _ceRecord.defaultActionSet = "openHours";
       _ceRecord.scheduleEventTypeMap = {
         open: "openHours",
@@ -231,7 +234,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
 
   describe('updateMenu', function () {
     it('should be able to update a ceRecord with sorted keys in optionMenu', function () {
-      var _ceRecord = angular.copy(ceInfos[0]);
+      var _ceRecord = _.cloneDeep(ceInfos[0]);
       _ceRecord.defaultActionSet = "openHours";
       _ceRecord.scheduleEventTypeMap = {
         open: "openHours",
@@ -253,7 +256,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
   describe('deleteMenu', function () {
     it('should be able to delete custom menu from a given ceRecord', function () {
       ceWelcome2.callExperienceName = 'AA Custom';
-      var _ceRecord = angular.copy(ceCustom);
+      var _ceRecord = _.cloneDeep(ceCustom);
       var deleteSuccess = AutoAttendantCeMenuModelService.deleteMenu(_ceRecord, 'openHours', 'MENU_CUSTOM');
       expect(deleteSuccess).toBe(true);
       expect(angular.equals(_ceRecord, ceWelcome2)).toBe(true);
@@ -263,7 +266,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
   describe('deleteMenu', function () {
     it('should be able to delete option menu from a given ceRecord', function () {
       ceWelcome2.callExperienceName = 'AA Option';
-      var _ceRecord = angular.copy(ceOption);
+      var _ceRecord = _.cloneDeep(ceOption);
       var deleteSuccess = AutoAttendantCeMenuModelService.deleteMenu(_ceRecord, 'openHours', 'MENU_OPTION');
       expect(deleteSuccess).toBe(true);
       expect(angular.equals(_ceRecord, ceWelcome2)).toBe(true);
@@ -273,7 +276,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
   describe('deleteMenu', function () {
     it('should not succeed if 1st param is null', function () {
       ceWelcome2.callExperienceName = 'AA Option';
-      var _ceRecord = angular.copy(ceOption);
+      var _ceRecord = _.cloneDeep(ceOption);
       var deleteSuccess = AutoAttendantCeMenuModelService.deleteMenu(null, 'openHours', 'MENU_OPTION');
       expect(deleteSuccess).toBe(false);
       expect(angular.equals(_ceRecord, ceWelcome2)).toBe(false);
@@ -283,7 +286,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
   describe('deleteMenu', function () {
     it('should not succeed if 1st param is undefined', function () {
       ceWelcome2.callExperienceName = 'AA Option';
-      var _ceRecord = angular.copy(ceOption);
+      var _ceRecord = _.cloneDeep(ceOption);
       var deleteSuccess = AutoAttendantCeMenuModelService.deleteMenu(undefined, 'openHours', 'MENU_OPTION');
       expect(deleteSuccess).toBe(false);
       expect(angular.equals(_ceRecord, ceWelcome2)).toBe(false);
@@ -293,7 +296,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
   describe('deleteMenu', function () {
     it('should not succeed if 2nd param is null', function () {
       ceWelcome2.callExperienceName = 'AA Option';
-      var _ceRecord = angular.copy(ceOption);
+      var _ceRecord = _.cloneDeep(ceOption);
       var deleteSuccess = AutoAttendantCeMenuModelService.deleteMenu(_ceRecord, null, 'MENU_OPTION');
       expect(deleteSuccess).toBe(false);
       expect(angular.equals(_ceRecord, ceWelcome2)).toBe(false);
@@ -303,7 +306,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
   describe('deleteMenu', function () {
     it('should not succeed if 2nd param is undefined', function () {
       ceWelcome2.callExperienceName = 'AA Option';
-      var _ceRecord = angular.copy(ceOption);
+      var _ceRecord = _.cloneDeep(ceOption);
       var deleteSuccess = AutoAttendantCeMenuModelService.deleteMenu(_ceRecord, undefined, 'MENU_OPTION');
       expect(deleteSuccess).toBe(false);
       expect(angular.equals(_ceRecord, ceWelcome2)).toBe(false);
@@ -313,7 +316,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
   describe('deleteMenu', function () {
     it('should not succeed if 3rd param is null', function () {
       ceWelcome2.callExperienceName = 'AA Option';
-      var _ceRecord = angular.copy(ceOption);
+      var _ceRecord = _.cloneDeep(ceOption);
       var deleteSuccess = AutoAttendantCeMenuModelService.deleteMenu(_ceRecord, 'openHours', null);
       expect(deleteSuccess).toBe(false);
       expect(angular.equals(_ceRecord, ceWelcome2)).toBe(false);
@@ -323,7 +326,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
   describe('deleteMenu', function () {
     it('should not succeed if 3rd param is undefined', function () {
       ceWelcome2.callExperienceName = 'AA Option';
-      var _ceRecord = angular.copy(ceOption);
+      var _ceRecord = _.cloneDeep(ceOption);
       var deleteSuccess = AutoAttendantCeMenuModelService.deleteMenu(_ceRecord, 'openHours', undefined);
       expect(deleteSuccess).toBe(false);
       expect(angular.equals(_ceRecord, ceWelcome2)).toBe(false);
@@ -333,7 +336,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
   describe('deleteCombinedMenu', function () {
     it('should delete associated actionSet in a given ceRecord', function () {
       ceWelcome2.callExperienceName = 'AA Option';
-      var _ceRecord = angular.copy(ceOption);
+      var _ceRecord = _.cloneDeep(ceOption);
       var deleteSuccess = AutoAttendantCeMenuModelService.deleteCombinedMenu(_ceRecord, 'openHours');
       expect(deleteSuccess).toBe(true);
       expect(_ceRecord.actionSets.length).toEqual(0);

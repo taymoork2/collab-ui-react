@@ -156,7 +156,7 @@ class SpeedDialCtrl implements ng.IComponentController {
       this.callDest = 'undefined';
     } else if (this.reordering) {
       this.speedDialList.length = 0;
-      Array.prototype.push.apply(this.speedDialList, angular.copy(this.copyList));
+      Array.prototype.push.apply(this.speedDialList, _.cloneDeep(this.copyList));
     }
     this.editing = false;
     this.reordering = false;
@@ -166,7 +166,7 @@ class SpeedDialCtrl implements ng.IComponentController {
   public setReorder(): void {
     this.reordering = true;
     this.actionList = [];
-    this.copyList = angular.copy(this.speedDialList);
+    this.copyList = _.cloneDeep(this.speedDialList);
     if (this.firstReordering) {
       this.firstReordering = false;
       this.dragularService('#speedDialsContainer', {

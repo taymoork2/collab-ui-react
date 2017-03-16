@@ -77,6 +77,7 @@ class TelephonyDomains implements ng.IComponentController {
       tds: this.gridData_,
       customerId: this.customerId,
       ccaDomainId: item.ccaDomainId,
+      domainName: item.domainName,
     };
     this.$state.go('gmTdDetails', { info: info });
   }

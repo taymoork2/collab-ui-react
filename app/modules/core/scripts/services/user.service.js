@@ -8,7 +8,6 @@
   /* @ngInject */
   function Userservice($http, $q, $rootScope, Authinfo, Config, HuronUser, Log, NAME_DELIMITER, Notification, SunlightConfigService, TelephoneNumberService, UrlConfig) {
     var userUrl = UrlConfig.getAdminServiceUrl();
-
     var service = {
       updateUsers: updateUsers,
       addUsers: addUsers,
@@ -36,8 +35,10 @@
       getPreferredWebExSiteForCalendaring: getPreferredWebExSiteForCalendaring,
     };
 
+    // TODO: migrate these helpers to 'SunlightUserService'
     var _helpers = {
-      isSunlightUserUpdateRequired: isSunlightUserUpdateRequired,
+      licenseUpdateRequired: licenseUpdateRequired,
+      removeCESRoleforUser: removeCESRoleforUser,
       getUserLicence: getUserLicence,
       createUserData: createUserData,
     };
@@ -445,7 +446,7 @@
           timeout: cancelPromise,
         });
         onboardUsersPromise.then(function (response) {
-          checkAndOnboardSunlightUser(response.data.userResponse, userPayload.users);
+          checkAndUpdateSunlightUser(response.data.userResponse, userPayload.users);
         });
         return onboardUsersPromise;
       } else {
@@ -453,51 +454,90 @@
       }
     }
 
-    function checkAndOnboardSunlightUser(userResponse, users) {
+    // TODO: migrate these sunlight specific logic to 'SunlightUserService'
+    function removeCESRoleforUser(userId) {
+      var userRoleData = {
+        schemas: Config.scimSchemas,
+        roles: [],
+      };
+      userRoleData.roles.push({ value: Config.backend_roles.ciscouc_ces, operation: 'delete' });
+      return updateUserProfile(userId, userRoleData)
+        .catch(function (response) {
+          Notification.errorWithTrackingId(response, 'usersPage.careDeleteCESRoleError');
+        });
+    }
+
+    function checkRolesAndOnboardSunlightUser(userId, ciUserData, sunlightUserData, checkCesRole) {
+      var needSyncKms = !_.includes(ciUserData.roles, Config.backend_roles.spark_synckms);
+      var needCiscoucCES = checkCesRole ? !_.includes(ciUserData.roles, Config.backend_roles.ciscouc_ces) : false;
+      var needContextServiceEntitlement = !_.includes(ciUserData.entitlements, Config.entitlements.context);
+
+      onboardSunlightUser(userId, needSyncKms, needContextServiceEntitlement, needCiscoucCES, sunlightUserData);
+    }
+
+    function onboardSunlightUser(userId, needSyncKms, needContextServiceEntitlement, needCiscoucCES, sunlightUserData) {
+      return patchSunlightRolesAndEntitlements(userId, needSyncKms, needContextServiceEntitlement, needCiscoucCES)
+        .then(function () {
+          SunlightConfigService.updateUserInfo(sunlightUserData, userId)
+            .catch(function (response) {
+              Notification.errorWithTrackingId(response, 'usersPage.careAddUserError');
+            });
+        })
+        .catch(function (response) {
+          Notification.errorWithTrackingId(response, 'usersPage.careAddUserRoleError');
+        });
+    }
+
+    function checkAndUpdateSunlightUser(userResponse, users) {
       var userResponseSuccess = _.filter(userResponse, function (response) {
         return response.status === 200;
       });
       _.each(userResponseSuccess, function (userResponseSuccess) {
         var userLicenses = _helpers.getUserLicence(userResponseSuccess.email, users);
-        if (_helpers.isSunlightUserUpdateRequired(userLicenses)) {
-          var userData = _helpers.createUserData();
-          var userId = userResponseSuccess.uuid;
+        var userId = userResponseSuccess.uuid;
+        if ((_helpers.licenseUpdateRequired(userLicenses, Config.offerCodes.CO, 'REMOVE')) || (_helpers.licenseUpdateRequired(userLicenses, Config.offerCodes.CVC, 'REMOVE'))) {
+          _helpers.removeCESRoleforUser(userId);
+        }
+        if ((_helpers.licenseUpdateRequired(userLicenses, Config.offerCodes.CDC, 'ADD')) || (_helpers.licenseUpdateRequired(userLicenses, Config.offerCodes.CVC, 'ADD'))) {
+          var sunlightUserData = _helpers.createUserData();
           // Get user to check for roles and entitlements
-          getUser(userId, function (data) {
-            if (data.success) {
-              var hasSyncKms = _.find(data.roles, function (r) {
-                return r === Config.backend_roles.spark_synckms;
-              });
-              var hasContextServiceEntitlement = _.find(data.entitlements, function (r) {
-                return r === Config.entitlements.context;
-              });
-              checkAndPatchSunlightRolesAndEntitlements(userId, hasSyncKms, hasContextServiceEntitlement)
-                .then(function () {
-                  SunlightConfigService.updateUserInfo(userData, userId)
-                    .catch(function (response) {
-                      Notification.errorResponse(response, 'usersPage.careAddUserError');
-                    });
-                })
-                .catch(function (response) {
-                  Notification.errorResponse(response, 'usersPage.careAddUserRoleError');
-                });
+          getUserAsPromise(userId)
+          .then(function (ciUserData) {
+            if (ciUserData.status === 200) {
+              var checkCesRole = licenseUpdateRequired(userLicenses, Config.offerCodes.CVC, 'ADD') &&
+              licenseUpdateRequired(userLicenses, Config.offerCodes.CO, 'ADD');
+              checkRolesAndOnboardSunlightUser(userId, ciUserData, sunlightUserData, checkCesRole);
             }
           });
         }
       });
     }
 
-    function checkAndPatchSunlightRolesAndEntitlements(userId, hasSyncKms, hasContextServiceEntitlement) {
+    function licenseUpdateRequired(licenses, offerCode, idOperation) {
+      return _.some(licenses, function (license) {
+        if (license.idOperation === idOperation) {
+          return _.includes(license.id, offerCode);
+        }
+      });
+    }
+
+    function patchSunlightRolesAndEntitlements(userId, needSyncKms, needContextServiceEntitlement, needCiscoucCES) {
       var userRoleData = {
         schemas: Config.scimSchemas,
+        roles: [],
       };
-      if (!hasSyncKms) {
-        userRoleData.roles = [Config.backend_roles.spark_synckms];
+      if (needSyncKms) {
+        userRoleData.roles.push(Config.backend_roles.spark_synckms);
       }
-      if (!hasContextServiceEntitlement) {
+
+      if (needCiscoucCES) {
+        userRoleData.roles.push(Config.backend_roles.ciscouc_ces);
+      }
+
+      if (needContextServiceEntitlement) {
         userRoleData.entitlements = [Config.entitlements.context];
       }
-      if (!hasSyncKms || !hasContextServiceEntitlement) {
+      if (needSyncKms || needCiscoucCES || needContextServiceEntitlement) {
         return updateUserProfile(userId, userRoleData);
       } else {
         var defer = $q.defer();
@@ -526,12 +566,13 @@
         return [];
       }
     }
+
     /*
      * Modifies a license or entitlement array with properties specific for the user
      */
     function buildUserSpecificProperties(user, entitlementOrLicenseList) {
       return _.map(entitlementOrLicenseList, function (_entitlementOrLicense) {
-        var entitlementOrLicense = angular.copy(_entitlementOrLicense);
+        var entitlementOrLicense = _.cloneDeep(_entitlementOrLicense);
         if (!_.has(entitlementOrLicense, 'properties')) {
           entitlementOrLicense.properties = {};
         }
@@ -548,13 +589,6 @@
 
         return entitlementOrLicense;
       });
-    }
-
-    function isSunlightUserUpdateRequired(licenses) {
-      var addedSunlightLicense = _.find(licenses, function (license) {
-        return license.id.indexOf(Config.offerCodes.CDC) >= 0 && license.idOperation === 'ADD';
-      });
-      return typeof addedSunlightLicense !== 'undefined';
     }
 
     function isHuronUser(allEntitlements) {

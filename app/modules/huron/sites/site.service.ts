@@ -1,28 +1,13 @@
+import { Site } from './site';
+
 export class EmergencyCallBackNumber {
   public uuid: string;
   public pattern: string;
 }
 
-export class Site {
-  public uuid: string;
-  public siteIndex: string;
-  public siteCode: string;
-  public steeringDigit: string;
-  public siteSteeringDigit: string;
-  public timeZone: string;
-  public voicemailPilotNumber: string;
-  public mediaTraversalMode: string;
-  public siteDescription: string;
-  public vmCluster: string;
-  public allowInternationalDialing: string;
-  public extensionLength: string;
-  public voicemailPilotNumberGenerated: string;
-  public emergencyCallBackNumber: EmergencyCallBackNumber;
-  public preferredLanguage: string;
-  public country: string;
+interface ISiteResource extends ng.resource.IResourceClass<ng.resource.IResource<Site>> {
+  update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;
 }
-
-interface ISiteResource extends ng.resource.IResourceClass<ng.resource.IResource<Site>> {}
 
 export class HuronSiteService {
   private huronSiteService: ISiteResource;
@@ -43,6 +28,9 @@ export class HuronSiteService {
     'emergencyCallBackNumber',
     'preferredLanguage',
     'country',
+    'dateFormat',
+    'timeFormat',
+    'routingPrefix',
   ];
 
   /* @ngInject */
@@ -51,13 +39,79 @@ export class HuronSiteService {
     private Authinfo,
     private HuronConfig,
   ) {
-    this.huronSiteService = <ISiteResource>this.$resource(this.HuronConfig.getCmiUrl() + '/voice/customers/:customerId/sites/:siteId');
+
+    let updateAction: ng.resource.IActionDescriptor = {
+      method: 'PUT',
+    };
+
+    let saveAction: ng.resource.IActionDescriptor = {
+      method: 'POST',
+      headers: {
+        'Access-Control-Expose-Headers': 'Location',
+      },
+    };
+
+    this.huronSiteService = <ISiteResource>this.$resource(this.HuronConfig.getCmiUrl() + '/voice/customers/:customerId/sites/:siteId', {},
+      {
+        update: updateAction,
+        save: saveAction,
+      });
   }
 
   public getSite(siteId: string): ng.IPromise<Site> {
     return this.huronSiteService.get({
       customerId: this.Authinfo.getOrgId(),
       siteId: siteId,
+    }).$promise;
+  }
+
+  public getTheOnlySite(): ng.IPromise<Site> {
+    return this.huronSiteService.query({
+      customerId: this.Authinfo.getOrgId(),
+    }).$promise
+    .then(sites => {
+      if (sites.length > 0) {
+        return this.getSite(_.get<string>(sites[0], 'uuid'))
+          .then(site => {
+            return _.pick(site, this.sitePickList);
+          });
+      } else {
+        return new Site();
+      }
+    });
+  }
+
+  public createSite(site: Site): ng.IPromise<string> {
+    let location: string;
+    // TODO (jlowery): remove after 'i751-10d-ext' toggle is removed.
+    _.set(site, 'toggleEnabled', true);
+    return this.huronSiteService.save({
+      customerId: this.Authinfo.getOrgId(),
+    }, site,
+    (_response, headers) => {
+      location = headers('Location');
+    }).$promise
+    .then( () => location);
+  }
+
+  public updateSite(site: Site): ng.IPromise<void> {
+    return this.huronSiteService.update({
+      customerId: this.Authinfo.getOrgId(),
+      siteId: site.uuid,
+    }, {
+      steeringDigit: site.steeringDigit,
+      timeZone: site.timeZone,
+      disableVoicemail: site.disableVoicemail,
+      voicemailPilotNumber: site.voicemailPilotNumber,
+      voicemailPilotNumberGenerated: site.voicemailPilotNumberGenerated,
+      siteDescription: site.siteDescription,
+      extensionLength: site.extensionLength,
+      preferredLanguage: site.preferredLanguage,
+      country: site.country,
+      dateFormat: site.dateFormat,
+      timeFormat: site.timeFormat,
+      routingPrefix: site.routingPrefix,
+      toggleEnabled: true, // TODO (jlowery): remove after 'i751-10d-ext' toggle is removed.
     }).$promise;
   }
 

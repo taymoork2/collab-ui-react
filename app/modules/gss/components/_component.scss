@@ -46,6 +46,10 @@
     .icon {
       margin: auto 10px;
     }
+
+    .icon-li {
+      position: absolute;
+    }
   }
 
   .component-status-operational {
@@ -95,6 +99,6 @@
   height: 320px;
 }
 
-.add-component-page .dropdown-menu .select-options{
+.add-component-page .dropdown-menu .select-options {
   max-height: 160px;
 }

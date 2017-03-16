@@ -52,6 +52,7 @@
     vm.cluster_availability_heading = $translate.instant('mediaFusion.metrics.overAllAvailability');
     vm.customPlaceholder = $translate.instant('mediaFusion.report.custom');
     vm.total_cloud_heading = $translate.instant('mediaFusion.metrics.totalCloud');
+    vm.participants = $translate.instant('mediaFusion.metrics.participants');
 
     vm.second_card_heading = vm.total_cloud_heading;
     vm.redirected_heading = vm.cloud_calls_heading;
@@ -78,6 +79,7 @@
 
     vm.setClusterAvailability = setClusterAvailability;
     vm.setTotalCallsData = setTotalCallsData;
+    vm.setTotalCallsPie = setTotalCallsPie;
     vm.setSneekPeekData = setSneekPeekData;
     vm.setAvailabilityData = setAvailabilityData;
     vm.setCallVolumeData = setCallVolumeData;
@@ -87,6 +89,8 @@
     vm.setMeetingLocationData = setMeetingLocationData;
     vm.setMeetingLocationCard = setMeetingLocationCard;
 
+    vm.cardFlipHandler = cardFlipHandler;
+
     vm.showAvailabilityTooltip = false;
     vm.showHostedOnPremTooltip = false;
 
@@ -95,9 +99,19 @@
       cardChartDiv: 'clientTypeChartDiv',
       noData: false,
     };
-    vm.numberOfMeetsOnPremiseschartOptions = {
+    vm.meetsHostedchartOptions = {
       isShow: true,
       cardChartDiv: 'numberOfMeetsOnPremisesChartDiv',
+      noData: false,
+    };
+    vm.cloudParticipantschartOptions = {
+      isShow: true,
+      cardChartDiv: 'cloudParticipantsChartDiv',
+      noData: false,
+    };
+    vm.totalParticipantschartOptions = {
+      isShow: true,
+      cardChartDiv: 'totalParticipantsChartDiv',
       noData: false,
     };
 
@@ -119,6 +133,11 @@
     }];
     vm.timeSelected = vm.timeOptions[0];
 
+    vm.isFlipped = false;
+    vm.clientTypeDesc = $translate.instant('mediaFusion.metrics.cardDescription.clientType');
+    vm.cloudParticipantsDesc = $translate.instant('mediaFusion.metrics.cardDescription.cloudParticipants');
+    vm.meetsHostTypeDesc = $translate.instant('mediaFusion.metrics.cardDescription.meetsHostType');
+
     setRefreshInterval();
     getCluster();
     timeUpdate();
@@ -126,6 +145,7 @@
     function loadResourceDatas() {
       deferred.promise.then(function () {
         setTotalCallsData();
+        setTotalCallsPie();
         setAvailabilityData();
         setClusterAvailability();
         setUtilizationData();
@@ -291,7 +311,7 @@
             vm.secondCardFooter.isShow = true;
             vm.secondCardFooter.value = vm.cloudOverflow;
           }
-          vm.second_card_value = vm.cloudcalls;
+          vm.second_card_value = (vm.cloudcalls - vm.cloudOverflow) < 0 ? 0 : (vm.cloudcalls - vm.cloudOverflow);
 
         } else {
           if (response === vm.ABORT) {
@@ -327,6 +347,25 @@
       });
     }
 
+    function setTotalCallsPie() {
+      MediaReportsService.getTotalCallsData(vm.timeSelected, vm.clusterSelected).then(function (response) {
+        if (!_.isUndefined(response.data)) {
+          var callsOnPremise = _.isUndefined(response.data.callsOnPremise) ? 0 : response.data.callsOnPremise;
+          var callsOverflow = _.isUndefined(response.data.callsOverflow) ? 0 : response.data.callsOverflow;
+          var cloudCalls = _.isUndefined(response.data.cloudCalls) ? 0 : response.data.cloudCalls;
+        }
+        if (response === vm.ABORT) {
+          return undefined;
+        } else if (_.isUndefined(response.data) || (callsOnPremise == 0 && callsOverflow == 0 && cloudCalls == 0)) {
+          AdoptionCardService.setDummyTotalParticipantsPiechart();
+          vm.totalParticipantschartOptions.noData = true;
+        } else {
+          AdoptionCardService.setTotalParticipantsPiechart(callsOnPremise, callsOverflow, cloudCalls);
+          vm.totalParticipantschartOptions.noData = false;
+        }
+      });
+    }
+
     function setClientTypeCard() {
       MediaReportsService.getClientTypeCardData(vm.timeSelected).then(function (response) {
         if (response === vm.ABORT) {
@@ -347,13 +386,13 @@
           return undefined;
         } else if (_.isUndefined(response.data) || response.data.dataProvider.length === 0) {
           AdoptionCardService.setDummyNumberOfMeetsOnPremisesPiechart();
-          vm.numberOfMeetsOnPremiseschartOptions.noData = true;
+          vm.meetsHostedchartOptions.noData = true;
           vm.tot_number_meetings = vm.EMPTY;
           vm.tot_number_meetings = vm.noData;
         } else {
           var total_meets = 0;
           AdoptionCardService.setNumberOfMeetsOnPremisesPiechart(response.data);
-          vm.numberOfMeetsOnPremiseschartOptions.noData = false;
+          vm.meetsHostedchartOptions.noData = false;
           _.forEach(response.data.dataProvider, function (val) {
             total_meets = total_meets + val.value;
           });
@@ -626,5 +665,14 @@
       vm.clusterSelected = selectedCluster;
       clusterUpdate();
     }
+
+    function cardFlipHandler() {
+      if (vm.isFlipped) {
+        vm.isFlipped = false;
+      } else {
+        vm.isFlipped = true;
+      }
+    }
+
   }
 })();

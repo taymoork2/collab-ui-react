@@ -1,0 +1,85 @@
+<div class="loading" ng-if="$ctrl.loading">
+  <i class="icon icon-spinner"></i>
+</div>
+
+<form name="$ctrl.form" novalidate  ng-if="!$ctrl.loading">
+  <div class="container-fluid service-setup-container">
+    <div ng-if="$ctrl.showRegionAndVoicemail" class="row full service-setup service-setup-regional-settings bottom-margin">
+      <uc-time-zone
+        time-zone="$ctrl.huronSettingsData.site.timeZone"
+        time-zone-options="$ctrl.settingsOptions.timeZoneOptions"
+        on-change-fn="$ctrl.onTimeZoneChanged(timeZone)">
+      </uc-time-zone>
+    </div>
+    <div ng-if="$ctrl.showRegionAndVoicemail" class="row full service-setup service-setup-regional-settings bottom-margin">
+      <uc-preferred-language
+        preferred-language="$ctrl.huronSettingsData.site.preferredLanguage"
+        preferred-language-options="$ctrl.settingsOptions.preferredLanguageOptions"
+        on-change-fn="$ctrl.onPreferredLanguageChanged(preferredLanguage)">
+      </uc-preferred-language>
+    </div>
+    <div class="row full service-setup service-setup-regional-settings bottom-margin" cr-feature-toggle feature-show="huron-l10n-network-locale">
+      <uc-default-country
+        default-country="$ctrl.huronSettingsData.site.country"
+        default-country-options="$ctrl.settingsOptions.defaultCountryOptions"
+        on-change-fn="$ctrl.onDefaultCountryChanged(defaultCountry)">
+      </uc-default-country>
+    </div>
+    <h4 class="title-margin-bottom"translate="serviceSetupModal.internalDialing"></h4>
+    <div class="row full service-setup service-setup-regional-settings bottom-margin">
+      <uc-routing-prefix
+        routing-prefix="$ctrl.huronSettingsData.site.routingPrefix"
+        on-change-fn="$ctrl.onRoutingPrefixChanged(routingPrefix)">
+      </uc-routing-prefix>
+    </div>
+    <div class="row full service-setup service-setup-regional-settings bottom-margin">
+      <uc-extension-length
+        extension-length="$ctrl.huronSettingsData.site.extensionLength"
+        on-change-fn="$ctrl.onExtensionLengthChanged(extensionLength)">
+      </uc-extension-length>
+    </div>
+    <div class="row full service-setup service-setup-regional-settings bottom-margin">
+      <uc-extension-range
+        number-ranges="$ctrl.huronSettingsData.internalNumberRanges"
+        site="$ctrl.huronSettingsData.site"
+        first-time-setup="$ctrl.ftsw"
+        on-change-fn="$ctrl.onExtensionRangeChanged(extensionRanges)">
+      </uc-extension-range>
+    </div>
+    <h4 class="title-margin-bottom" translate="serviceSetupModal.externalDialing"></h4>
+    <div class="row full service-setup service-setup-regional-settings bottom-margin">
+      <uc-outbound-dial-digit
+        steering-digit="$ctrl.huronSettingsData.site.steeringDigit"
+        internal-number-ranges="$ctrl.huronSettingsData.internalNumberRanges"
+        is-terminus-customer="$ctrl.isTerminusCustomer"
+        on-change-fn="$ctrl.onSteeringDigitChanged(steeringDigit)">
+      </uc-outbound-dial-digit>
+    </div>
+    <div class="row full columns warning bottom-margin" ng-if="!$ctrl.isTerminusCustomer">
+      <p class="row full columns warning terminus-warning indent-area-code"><i class="icon icon-warning"></i>{{::'serviceSetupModal.warning.outboundDialing' | translate}}</p>
+    </div>
+    <div class="row full service-setup service-setup-regional-settings bottom-margin">
+      <uc-dialing-setup
+        is-terminus-customer="$ctrl.isTerminusCustomer">
+      </uc-dialing-setup>
+    </div>
+    <uc-cos-form
+      env="ftsw"
+      cos-restrictions="$ctrl.huronSettingsData.cosRestrictions"
+      premium-numbers="$ctrl.settingsOptions.premiumNumbers"
+      on-change-fn="$ctrl.onCustomerCosRestrictionsChanged(restrictions)">
+    </uc-cos-form>
+    <div class="row full service-setup service-setup-regional-settings bottom-margin">
+      <uc-company-voicemail
+        site="$ctrl.huronSettingsData.site"
+        customer-voice="$ctrl.huronSettingsData.customerVoice"
+        external-number-options="$ctrl.settingsOptions.companyVoicemailOptions"
+        company-voicemail-enabled="$ctrl.huronSettingsData.customer.hasVoicemailService"
+        voicemail-to-email="$ctrl.huronSettingsData.voicemailToEmailSettings.voicemailToEmail"
+        on-change-fn="$ctrl.onCompanyVoicemailChanged(voicemailPilotNumber, voicemailPilotNumberGenerated, companyVoicemailEnabled)"
+        on-number-filter="$ctrl.onCompanyVoicemailFilter(filter)"
+        on-voicemail-to-email-changed-fn="$ctrl.onVoicemailToEmailChanged(voicemailToEmail)">
+      </uc-company-voicemail>
+    </div>
+  </div>
+</form>

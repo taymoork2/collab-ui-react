@@ -1,4 +1,4 @@
-@import 'styles/toolkit/layout';
+@import '~collab-ui/scss/tools/placeholders/page-layout';
 
 .sq-places-page {
   @extend %grid-subheader;
@@ -21,7 +21,50 @@
 
   .callServiceTitle {
     flex-basis: 30%;
+    width: 60%;
     display: flex;
     align-items: baseline;
   }
+  .callServiceControls {
+    flex-basis: 100%;
+  }
+  .calendarServiceControls.emailControls {
+    width: 100%;
+    margin-top: -1.5em;
+    #email {
+      min-width: 310px;
+      width: 50%;
+    }
+  }
+  @media screen and (max-width: 640px) {
+    display: block;
+    .calendarServiceControls.emailControls {
+      #email {
+        min-width: 100%;
+        width: 100%;
+      }
+    }
+  }
+}
+
+.rightColumn {
+  padding-top: 5px;
+}
+
+.calenderResourcesRow {
+  padding: 30px 30px 15px 15px;
+  width: 100%;
+  .selectResourceGroup {
+    min-width: 310px;
+    width: 50%;
+    @media screen and (max-width: 640px) {
+      min-width: 100%;
+      width: 100%;
+    }
+  }
+}
+
+.modal-content #edit-calendar-modal {
+  margin-left: 0;
+  margin-right: 0;
 }

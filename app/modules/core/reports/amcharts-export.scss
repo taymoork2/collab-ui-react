@@ -1,5 +1,6 @@
 @import '~collab-amcharts/amcharts/plugins/export/export';
-@import 'styles/toolkit/spacing';
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
 
 .amcharts-export-menu .export-main > a,
 .amcharts-export-menu .export-delayed-capturing > a {
@@ -16,8 +17,8 @@
 }
 
 .amcharts-export-menu li:hover > a {
-  background-color: #ebebec;
-  color: #4f5051;
+  background-color: $gray-light-3;
+  color: $gray-dark-2;
 }
 
 .amcharts-export-menu > ul > li:hover > a {

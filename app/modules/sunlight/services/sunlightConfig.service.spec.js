@@ -71,7 +71,7 @@ describe(' sunlightConfigService', function () {
   });
 
   it('should update userInfo in sunlight config service', function () {
-    var userInfo = angular.copy(getJSONFixture('sunlight/json/sunlightTestUser.json'));
+    var userInfo = _.cloneDeep(getJSONFixture('sunlight/json/sunlightTestUser.json'));
 
     $httpBackend.whenPUT(sunlightUserConfigUrl + '/' + userId).respond(200, {});
 
@@ -82,7 +82,7 @@ describe(' sunlightConfigService', function () {
   });
 
   it('should fail to update userInfo in sunlight config service when there is an http error', function () {
-    var userInfo = angular.copy(getJSONFixture('sunlight/json/sunlightTestUser.json'));
+    var userInfo = _.cloneDeep(getJSONFixture('sunlight/json/sunlightTestUser.json'));
     $httpBackend.whenPUT(sunlightUserConfigUrl + '/' + userId).respond(500, errorData);
     sunlightConfigService.updateUserInfo(userInfo, userId).then(function () {}, function (response) {
       expect(response.data).toEqual(errorData);
@@ -92,7 +92,7 @@ describe(' sunlightConfigService', function () {
   });
 
   it('should update chatConfig in sunlight config service', function () {
-    var chatConfig = angular.copy(getJSONFixture('sunlight/json/features/config/sunlightTestChatConfig.json'));
+    var chatConfig = _.cloneDeep(getJSONFixture('sunlight/json/features/config/sunlightTestChatConfig.json'));
     $httpBackend.whenPUT(sunlightChatConfigUrl).respond(200, {});
     sunlightConfigService.updateChatConfig(chatConfig).then(function (response) {
       expect(response.status).toBe(200);
@@ -101,7 +101,7 @@ describe(' sunlightConfigService', function () {
   });
 
   it('should fail to update chatConfig in sunlight config service when there is an http error', function () {
-    var chatConfig = angular.copy(getJSONFixture('sunlight/json/features/config/sunlightTestChatConfig.json'));
+    var chatConfig = _.cloneDeep(getJSONFixture('sunlight/json/features/config/sunlightTestChatConfig.json'));
     $httpBackend.whenPUT(sunlightChatConfigUrl).respond(500, errorData);
     sunlightConfigService.updateChatConfig(chatConfig).then(function () {}, function (response) {
       expect(response.data).toEqual(errorData);
@@ -111,7 +111,7 @@ describe(' sunlightConfigService', function () {
   });
 
   it('should create chat template in sunlight config service', function () {
-    var chatTemplate = angular.copy(getJSONFixture('sunlight/json/sunlightTestTemplate.json'));
+    var chatTemplate = _.cloneDeep(getJSONFixture('sunlight/json/sunlightTestTemplate.json'));
     $httpBackend.whenPOST(sunlightChatTemplateUrl).respond(201, {});
     sunlightConfigService.createChatTemplate(chatTemplate).then(function (response) {
       expect(response.status).toBe(201);
@@ -121,7 +121,7 @@ describe(' sunlightConfigService', function () {
 
 
   it('should fail to create chat template in sunlight config service when there is a service error', function () {
-    var chatTemplate = angular.copy(getJSONFixture('sunlight/json/sunlightTestTemplate.json'));
+    var chatTemplate = _.cloneDeep(getJSONFixture('sunlight/json/sunlightTestTemplate.json'));
     $httpBackend.whenPOST(sunlightChatTemplateUrl).respond(500, errorData);
     sunlightConfigService.createChatTemplate(chatTemplate).then(function (response) {
       expect(response.data).toEqual(errorData);
@@ -131,7 +131,7 @@ describe(' sunlightConfigService', function () {
   });
 
   it('should update chat template in sunlight config service', function () {
-    var chatTemplate = angular.copy(getJSONFixture('sunlight/json/sunlightTestTemplate.json'));
+    var chatTemplate = _.cloneDeep(getJSONFixture('sunlight/json/sunlightTestTemplate.json'));
     $httpBackend.whenPUT(sunlightChatTemplateUrl + "/" + templateId).respond(200, {});
     sunlightConfigService.editChatTemplate(chatTemplate, templateId).then(function (response) {
       expect(response.status).toBe(200);
@@ -140,7 +140,7 @@ describe(' sunlightConfigService', function () {
   });
 
   it('should fail to edit chat template in sunlight config service when there is a service error', function () {
-    var chatTemplate = angular.copy(getJSONFixture('sunlight/json/sunlightTestTemplate.json'));
+    var chatTemplate = _.cloneDeep(getJSONFixture('sunlight/json/sunlightTestTemplate.json'));
     $httpBackend.whenPUT(sunlightChatTemplateUrl + "/" + templateId).respond(500, errorData);
     sunlightConfigService.editChatTemplate(chatTemplate, templateId).then(function (response) {
       expect(response.data).toEqual(errorData);

@@ -26,9 +26,9 @@
     "convertUsers": "Преобразовать пользователей",
     "errorWarningMessages": "Предупреждения и ошибки",
     "skipErrorsAndFinish": "Пропустить ошибки и завершить",
-    "newUsers": "{newusers, plural, one{# новый пользователь} other{Новых пользователей: #}}",
-    "updatedUsers": "{updatedusers, plural, one{# пользователь обновлен} other{Обновлено пользователей: #}}",
-    "errors": "{errors, plural, one{# ошибка} other{Ошибок: #}}",
+    "newUsers": "{newusers, plural, =1{# новый пользователь} other{Новых пользователей: #}}",
+    "updatedUsers": "{updatedusers, plural, =1{# пользователь обновлен} other{Обновлено пользователей: #}}",
+    "errors": "{errors, plural, =1{# ошибка} other{Ошибок: #}}",
     "pageTitle": "Пользователи",
     "subTitleAdd": "Управление пользователями",
     "subTitleEnable": "Предоставить права пользователям",
@@ -246,7 +246,7 @@
       "retryUsers": "Повторить попытку",
       "retrying": "Выполняется повторная попытка...",
       "retryingIn": "повторная попытка через:",
-      "retryingUsers": "{users, plural, one{# пользователь} other{Пользователей: #}}",
+      "retryingUsers": "{users, plural, =1{# пользователь} other{Пользователей: #}}",
       "exportUserList": "Экспортируйте список пользователей."
     },
     "advanced": {
@@ -1140,15 +1140,15 @@
   "notifications": {
     "success": "Уведомления об удачном выполнении",
     "error": "Уведомления об ошибках",
-    "successTotal": "{total, plural, one{# удачная попытка} other{Удачные попытки: #}}",
-    "errorTotal": "{total, plural, one{# ошибка} other{Ошибки: #}}",
+    "successTotal": "{total, plural, =1{# удачная попытка} other{Удачные попытки: #}}",
+    "errorTotal": "{total, plural, =1{# ошибка} other{Ошибки: #}}",
     "successDelete": "Элемент {{item}} успешно удален.",
     "errorDelete": "Не удалось удалить {{item}}."
   },
   "time": {
-    "seconds": "{time, plural, one{# секунда} other{# с}}",
-    "minutes": "{time, plural, one{# минута} other{# мин}}",
-    "hours": "{time, plural, one{# час} other{# ч}}"
+    "seconds": "{time, plural, =1{# секунда} other{# с}}",
+    "minutes": "{time, plural, =1{# минута} other{# мин}}",
+    "hours": "{time, plural, =1{# час} other{# ч}}"
   },
   "callDestination": {
     "numberFormat": "Числовой формат",
@@ -2083,7 +2083,7 @@
       "heading": "Регистрация"
     },
     "notificationDropdown": {
-      "label": "{number, plural, one{# уведомление} other{Уведомлений: #}}"
+      "label": "{number, plural, =1{# уведомление} other{Уведомлений: #}}"
     },
     "fusion": {
       "types": {
@@ -2100,7 +2100,7 @@
         "clusters": "Кластеры",
         "users": "Пользователи",
         "release-channel": "Канал выпуска",
-        "nodes": "{count, plural, one{# узел} other{Узлов: #}}",
+        "nodes": "{count, plural, =1{# узел} other{Узлов: #}}",
         "nodesBtn": "Узлы",
         "settings": "Настройки",
         "all": "Все",
@@ -2634,8 +2634,8 @@
     "setSipDomainLink": "Что такое SIP-адрес Spark?",
     "setSipDomainMsg": "Введите поддомен",
     "setSipDomainTitle": "SIP-адрес Spark",
-    "setSipDomainCompNames": "{count, plural, one{Этот поддомен будет сохранен} other{Эти поддомены будут сохранены}} для вас:",
-    "setSipDomainAsssignedNames": "{count, plural, one{Этот поддомен сохранен} other{Эти поддомены сохранены}} для вас",
+    "setSipDomainCompNames": "{count, plural, =1{Этот поддомен будет сохранен} other{Эти поддомены будут сохранены}} для вас:",
+    "setSipDomainAsssignedNames": "{count, plural, =1{Этот поддомен сохранен} other{Эти поддомены сохранены}} для вас",
     "setSipDomainCheckAvailability": "Проверить доступность",
     "setSipDomainPlaceholder": "введите поддомен",
     "setSipDomainErrorMessage": "Недоступно. Попробуйте ввести другое имя",
@@ -3374,10 +3374,10 @@
     "deleteNumber": "Удалить номер",
     "deleteConfirmation": "Действительно удалить {{pattern}}?",
     "deleteWarning": "Это действие нельзя отменить. Номер будет удален навсегда.",
-    "allNumbers": "{count, plural, one{# номер} other{Номера: #}}",
-    "pendingNumbers": "{count, plural, one{# ожидающий номер} other{Ожидающие номера: #}}",
-    "unassignedNumbers": "{count, plural, one{# неназначенный номер} other{Неназначенные номера: #}}",
-    "searchResults": "{count, plural, one{# результат поиска} other{Результаты поиска: #}}",
+    "allNumbers": "{count, plural, =1{# номер} other{Номера: #}}",
+    "pendingNumbers": "{count, plural, =1{# ожидающий номер} other{Ожидающие номера: #}}",
+    "unassignedNumbers": "{count, plural, =1{# неназначенный номер} other{Неназначенные номера: #}}",
+    "searchResults": "{count, plural, =1{# результат поиска} other{Результаты поиска: #}}",
     "findNumber": "Найти номер..."
   },
   "pstnOrderOverview": {
@@ -3394,7 +3394,7 @@
   },
   "pstnOrderDetail": {
     "orderNumber": "Заказ № {{orderId}}",
-    "pendingNumbers": "Для этого заказа ожидается {count, plural, one{# номер} other{такое количество номеров: #}}",
+    "pendingNumbers": "Для этого заказа ожидается {count, plural, =1{# номер} other{такое количество номеров: #}}",
     "searchPlaceholder": "Поиск номеров телефона",
     "waitOnTOSAcceptance": "Ожидание согласия клиента с условиями предоставления услуг"
   },
@@ -3434,7 +3434,7 @@
     "package": "Пакет",
     "adding": "Добавление",
     "numbersTitle": "Номера",
-    "numbers": "{count, plural, one{# номер} other{Номера: #}}",
+    "numbers": "{count, plural, =1{# номер} other{Номера: #}}",
     "newNumbers": "Новые: {{count}}",
     "portNumbers": "Перенесено: {{count}}",
     "thankYou": "Спасибо",
@@ -3794,9 +3794,9 @@
     "notes": "Примечания",
     "active": "Активен",
     "free": "Бесплатно",
-    "daysRemaining": "{count, plural, one{Остался # день} other{Осталось дней: #}}",
-    "daysLeftToPurchase": "{count, plural, one{Остался # день для приобретения} other{Осталось дней для приобретения: #}}",
-    "daysLeftToRenew": "{count, plural, one{Остался # день для продления} other{Осталось дней для продления: #}}",
+    "daysRemaining": "{count, plural, =1{Остался # день} other{Осталось дней: #}}",
+    "daysLeftToPurchase": "{count, plural, =1{Остался # день для приобретения} other{Осталось дней для приобретения: #}}",
+    "daysLeftToRenew": "{count, plural, =1{Остался # день для продления} other{Осталось дней для продления: #}}",
     "expiringToday": "Срок действия истекает сегодня",
     "expired": "Срок действия истек",
     "expiredWithGracePeriod": "Срок действия истек. Приобретите сейчас",
@@ -3830,7 +3830,7 @@
     "trialTerms": "Условия использования пробной версии",
     "trialOverview": "Пробная версия",
     "webexOverview": "WebEx",
-    "webexSiteCount": "{count, plural, one{Еще # веб-сайт} other{Еще веб-сайтов: #}}",
+    "webexSiteCount": "{count, plural, =1{Еще # веб-сайт} other{Еще веб-сайтов: #}}",
     "licenses": "количество лицензий",
     "totalQuantity": "Общее количество",
     "totalLicenses": "Всего лицензий",
@@ -3880,7 +3880,7 @@
     "accountStatus": "Состояние учетной записи",
     "totalUsers": "Всего пользователей",
     "purchased": "Приобретено",
-    "domain": "{count, plural, one{Домен} other{Доменов}}",
+    "domain": "{count, plural, =1{Домен} other{Доменов}}",
     "domains": "Домены",
     "quantityWithValue": "Кол-во: {{quantity}}",
     "anotherPartner": "(Другой партнер)",

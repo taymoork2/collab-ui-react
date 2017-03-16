@@ -1,5 +1,6 @@
-@import 'styles/toolkit/spacing';
-@import 'styles/toolkit/colors';
+@import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
 
 cr-convert-users-modal {
   height: 100%;
@@ -8,7 +9,8 @@ cr-convert-users-modal {
     // 100% - header - footer
     height: calc(100% - 160px);
 
-    .ui-grid-cell, .ui-grid-header-cell {
+    .ui-grid-cell,
+    .ui-grid-header-cell {
       min-width: vr-adjust(400);
     }
   }

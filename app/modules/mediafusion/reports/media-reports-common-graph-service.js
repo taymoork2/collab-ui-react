@@ -119,7 +119,7 @@
 
     function getBaseVariable(key) {
       if (baseVariables[key] !== null && !_.isUndefined(baseVariables[key])) {
-        return angular.copy(baseVariables[key]);
+        return _.cloneDeep(baseVariables[key]);
       } else {
         return {};
       }
@@ -164,7 +164,7 @@
     }
 
     function getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, categoryField, catAxis, exportData) {
-      return angular.copy({
+      return _.cloneDeep({
         'type': 'serial',
         'pathToImages': amchartsImages,
         'startEffect': 'easeOutSine',
@@ -204,7 +204,7 @@
           'scrollbarHeight': 2,
           'backgroundAlpha': 0,
           'selectedBackgroundAlpha': 0.4,
-          'selectedBackgroundColor': '#48b7ea',
+          'selectedBackgroundColor': '#a6a6a6',
           'dragIcon': 'dragIconRoundSmall',
           'dragIconHeight': 25,
           'dragIconWidth': 25,
@@ -223,7 +223,7 @@
           'backgroundAlpha': 1,
           'oppositeAxis': false,
           'selectedBackgroundAlpha': 0.4,
-          'selectedBackgroundColor': '#48b7ea',
+          'selectedBackgroundColor': '#a6a6a6',
           'dragIcon': 'dragIconRoundSmall',
           'dragIconHeight': 25,
           'dragIconWidth': 25,
@@ -233,7 +233,7 @@
     }
 
     function getGanttGraph(data, valueAxis, exportData, catAxis) {
-      return angular.copy({
+      return _.cloneDeep({
         'type': 'gantt',
         'pathToImages': amchartsImages,
         'theme': 'light',
@@ -267,7 +267,7 @@
           'backgroundAlpha': 1,
           'updateOnReleaseOnly': true,
           'selectedBackgroundAlpha': 0.4,
-          'selectedBackgroundColor': '#48b7ea',
+          'selectedBackgroundColor': '#a6a6a6',
           'dragIcon': 'dragIconRoundSmall',
           'dragIconHeight': 25,
           'dragIconWidth': 25,
@@ -288,7 +288,7 @@
     }
 
     function getBasePieChart(data) {
-      return angular.copy({
+      return _.cloneDeep({
         'type': 'pie',
         'theme': 'light',
         'titleField': 'name',
@@ -296,7 +296,7 @@
         'startDuration': 0,
         'labelRadius': 5,
         'radius': '42%',
-        'innerRadius': '40%',
+        'innerRadius': '60%',
         'colorField': 'color',
         'labelText': '[[name]]: [[percents]]% ([[value]])',
         'dataProvider': data.dataProvider,
@@ -316,7 +316,7 @@
     }
 
     function getDummyPieChart() {
-      return angular.copy({
+      return _.cloneDeep({
         'type': 'pie',
         'theme': 'light',
         'titleField': 'name',
@@ -324,7 +324,7 @@
         'startDuration': 0,
         'labelRadius': 5,
         'radius': '42%',
-        'innerRadius': '40%',
+        'innerRadius': '60%',
         'labelText': '[[title]]',
         'marginBottom': 5,
         'marginLeft': 5,

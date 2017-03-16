@@ -26,9 +26,9 @@
     "convertUsers": "Konvertera användare",
     "errorWarningMessages": "Varningar och fel",
     "skipErrorsAndFinish": "Ignorera fel och avsluta",
-    "newUsers": "{newusers, plural, one{# Ny användare} other{# Nya användare}}",
-    "updatedUsers": "{updatedusers, plural, one{# Uppdaterad användare} other{# Uppdaterade användare}}",
-    "errors": "{errors, plural, one{# Fel} other{# Fel}}",
+    "newUsers": "{newusers, plural, =1{# Ny användare} other{# Nya användare}}",
+    "updatedUsers": "{updatedusers, plural, =1{# Uppdaterad användare} other{# Uppdaterade användare}}",
+    "errors": "{errors, plural, =1{# Fel} other{# Fel}}",
     "pageTitle": "Användare",
     "subTitleAdd": "Hantera användare",
     "subTitleEnable": "Berättiga användare",
@@ -246,7 +246,7 @@
       "retryUsers": "Försök igen",
       "retrying": "Försöker igen ...",
       "retryingIn": "försöker igen om:",
-      "retryingUsers": "{users, plural, one{# användare} otherannan{# användare}}",
+      "retryingUsers": "{users, plural, =1{# användare} other{# användare}}",
       "exportUserList": "Exportera användarlista."
     },
     "advanced": {
@@ -1140,15 +1140,15 @@
   "notifications": {
     "success": "Aviseringar om slutförda åtgärder",
     "error": "Felaviseringar",
-    "successTotal": "{total, plural, one{# framgång} other{# framgångar}}",
-    "errorTotal": "{total, plural, one{# fel} other{# fel}}",
+    "successTotal": "{total, plural, =1{# framgång} other{# framgångar}}",
+    "errorTotal": "{total, plural, =1{# fel} other{# fel}}",
     "successDelete": "Tog bort {{item}}.",
     "errorDelete": "Kunde inte ta bort {{item}}."
   },
   "time": {
-    "seconds": "{time, plural, one{# sekund} other{# sekunder}}",
-    "minutes": "{time, plural, one{# minut} other{# minuter}}",
-    "hours": "{time, plural, one{# timme} other{# timmar}}"
+    "seconds": "{time, plural, =1{# sekund} other{# sekunder}}",
+    "minutes": "{time, plural, =1{# minut} other{# minuter}}",
+    "hours": "{time, plural, =1{# timme} other{# timmar}}"
   },
   "callDestination": {
     "numberFormat": "Nummerformat",
@@ -2083,7 +2083,7 @@
       "heading": "Registrering"
     },
     "notificationDropdown": {
-      "label": "{number, plural, one{# avisering} other{# aviseringar}}"
+      "label": "{number, plural, =1{# avisering} other{# aviseringar}}"
     },
     "fusion": {
       "types": {
@@ -2100,7 +2100,7 @@
         "clusters": "Kluster",
         "users": "Användare",
         "release-channel": "Kanal för offentliggörande",
-        "nodes": "{count, plural, one{# Nod} other{# Noder}}",
+        "nodes": "{count, plural, =1{# Nod} other{# Noder}}",
         "nodesBtn": "Noder",
         "settings": "Inställningar",
         "all": "Alla",
@@ -2634,8 +2634,8 @@
     "setSipDomainLink": "Vad är en Spark SIP-adress?",
     "setSipDomainMsg": "Ange en underdomän",
     "setSipDomainTitle": "Spark SIP-adress",
-    "setSipDomainCompNames": "{count, plural, one{Denna underdomän} other{Dessa underdomäner}} kommer att reserveras för dig:",
-    "setSipDomainAsssignedNames": "{count, plural, one{Denna underdomän är} other{Dessa underdomäner är}} reserverad(e) för dig",
+    "setSipDomainCompNames": "{count, plural, =1{Denna underdomän} other{Dessa underdomäner}} kommer att reserveras för dig:",
+    "setSipDomainAsssignedNames": "{count, plural, =1{Denna underdomän är} other{Dessa underdomäner är}} reserverad(e) för dig",
     "setSipDomainCheckAvailability": "Kontrollera tillgänglighet",
     "setSipDomainPlaceholder": "ange en underdomän",
     "setSipDomainErrorMessage": "Inte tillgänglig. Prova ett annat namn",
@@ -3374,10 +3374,10 @@
     "deleteNumber": "Ta bort nummer",
     "deleteConfirmation": "Är du säker på att du vill ta bort {{pattern}}?",
     "deleteWarning": "Detta kan inte ångras. Du kommer att förlora detta nummer för alltid.",
-    "allNumbers": "{count, plural, one{# Number} other{# Numbers}}",
-    "pendingNumbers": "{count, plural, one{# Pending Number} other{# Pending Numbers}}",
-    "unassignedNumbers": "{count, plural, one{# Unassigned Number} other{# Unassigned Numbers}}",
-    "searchResults": "{count, plural, one{# search result} other{# search results}}",
+    "allNumbers": "{count, plural, =1{# Number} other{# Numbers}}",
+    "pendingNumbers": "{count, plural, =1{# Pending Number} other{# Pending Numbers}}",
+    "unassignedNumbers": "{count, plural, =1{# Unassigned Number} other{# Unassigned Numbers}}",
+    "searchResults": "{count, plural, =1{# search result} other{# search results}}",
     "findNumber": "Hitta ett nummer ..."
   },
   "pstnOrderOverview": {
@@ -3394,7 +3394,7 @@
   },
   "pstnOrderDetail": {
     "orderNumber": "Order #{{orderId}}",
-    "pendingNumbers": "{count, plural, one{Det finns # nummer} other{Det finns # nummer}} är under behandling för denna order",
+    "pendingNumbers": "{count, plural, =1{Det finns # nummer} other{Det finns # nummer}} är under behandling för denna order",
     "searchPlaceholder": "Sök telefonnummer",
     "waitOnTOSAcceptance": "Väntar på kundens godkännande av servicevillkor"
   },
@@ -3434,7 +3434,7 @@
     "package": "Paket",
     "adding": "Lägga till",
     "numbersTitle": "Nummer",
-    "numbers": "{count, plural, one{# nummer} other{# nummer}}",
+    "numbers": "{count, plural, =1{# nummer} other{# nummer}}",
     "newNumbers": "{{count}} ny",
     "portNumbers": "{{count}} port",
     "thankYou": "Tack",
@@ -3794,9 +3794,9 @@
     "notes": "Anteckningar",
     "active": "Aktiv",
     "free": "Gratis",
-    "daysRemaining": "{count, plural, one{# dag} other{# dagar}} kvar",
-    "daysLeftToPurchase": "{count, plural, one{# dag} other{# dagar}} kvar att köpa",
-    "daysLeftToRenew": "{count, plural, one{# dag} other{# dagar}} kvar att förnya",
+    "daysRemaining": "{count, plural, =1{# dag} other{# dagar}} kvar",
+    "daysLeftToPurchase": "{count, plural, =1{# dag} other{# dagar}} kvar att köpa",
+    "daysLeftToRenew": "{count, plural, =1{# dag} other{# dagar}} kvar att förnya",
     "expiringToday": "Upphör idag",
     "expired": "Upphört",
     "expiredWithGracePeriod": "Upphört. Köp nu",
@@ -3830,7 +3830,7 @@
     "trialTerms": "Villkor för provperiod",
     "trialOverview": "Provperiod",
     "webexOverview": "WebEx",
-    "webexSiteCount": "{count, plural, one{# annan plats} other{# andra platser}}",
+    "webexSiteCount": "{count, plural, =1{# annan plats} other{# andra platser}}",
     "licenses": "Antal licenser",
     "totalQuantity": "Totalt antal",
     "totalLicenses": "Totalt antal licenser",
@@ -3880,7 +3880,7 @@
     "accountStatus": "Kontostatus",
     "totalUsers": "Totalt antal användare",
     "purchased": "Köpt",
-    "domain": "{count, plural, one{Domän} other{Domäner}}",
+    "domain": "{count, plural, =1{Domän} other{Domäner}}",
     "domains": "Domäner",
     "quantityWithValue": "Kvantitet: {{quantity}}",
     "anotherPartner": "(Annan partner)",

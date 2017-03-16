@@ -7,7 +7,7 @@ require('./_devices.scss');
     .controller('DevicesCtrl',
 
       /* @ngInject */
-      function ($q, $scope, $state, $translate, $templateCache, Userservice, DeviceFilter, CsdmHuronOrgDeviceService, CsdmDataModelService, Authinfo, AccountOrgService, WizardFactory, FeatureToggleService, $modal, Notification, DeviceExportService) {
+      function ($q, $scope, $state, $translate, $templateCache, Userservice, DeviceFilter, CsdmHuronOrgDeviceService, CsdmDataModelService, Authinfo, AccountOrgService, WizardFactory, FeatureToggleService, $modal, Notification, DeviceExportService, ServiceDescriptor) {
         var vm = this;
         var filteredDevices = [];
         var exportProgressDialog = undefined;
@@ -37,7 +37,18 @@ require('./_devices.scss');
           var personalPromise = FeatureToggleService.cloudberryPersonalModeGetStatus().then(function (result) {
             vm.showPersonal = result;
           });
-          $q.all([ataPromise, hybridPromise, personalPromise, fetchDetailsForLoggedInUser()]).finally(function () {
+          var placeCalendarPromise = FeatureToggleService.csdmPlaceCalendarGetStatus().then(function (feature) {
+            vm.csdmHybridCalendarFeature = feature;
+          });
+          var anyCalendarEnabledPromise = ServiceDescriptor.getServices().then(function (services) {
+            vm.hybridCalendarEnabledOnOrg = _.chain(ServiceDescriptor.filterEnabledServices(services)).filter(function (service) {
+              return service.id === 'squared-fusion-gcal' || service.id === 'squared-fusion-cal';
+            }).some().value();
+          });
+          var atlasF237ResourceGroupsPromise = FeatureToggleService.atlasF237ResourceGroupGetStatus().then(function (feature) {
+            vm.atlasF237ResourceGroups = feature;
+          });
+          $q.all([ataPromise, hybridPromise, personalPromise, placeCalendarPromise, anyCalendarEnabledPromise, atlasF237ResourceGroupsPromise, fetchDetailsForLoggedInUser()]).finally(function () {
             vm.addDeviceIsDisabled = false;
           });
 
@@ -115,9 +126,7 @@ require('./_devices.scss');
         };
 
         vm.isOrgEntitledToHuron = function () {
-          return _.filter(Authinfo.getLicenses(), function (l) {
-            return l.licenseType === 'COMMUNICATION';
-          }).length > 0;
+          return _.filter(Authinfo.getLicenses(), function (l) { return l.licenseType === 'COMMUNICATION'; }).length > 0;
         };
 
         vm.isEntitled = function () {
@@ -200,6 +209,9 @@ require('./_devices.scss');
               showPersonal: false,
               admin: vm.adminUserDetails,
               csdmHybridCallFeature: vm.csdmHybridCallFeature,
+              csdmHybridCalendarFeature: vm.csdmHybridCalendarFeature,
+              hybridCalendarEnabledOnOrg: vm.hybridCalendarEnabledOnOrg,
+              atlasF237ResourceGroups: vm.atlasF237ResourceGroups,
               title: "addDeviceWizard.newDevice",
               isEntitledToHuron: vm.isOrgEntitledToHuron(),
               isEntitledToRoomSystem: vm.isOrgEntitledToRoomSystem(),
@@ -245,12 +257,22 @@ require('./_devices.scss');
                   sparkCall: 'addDeviceFlow.addLines',
                   sparkCallConnect: 'addDeviceFlow.callConnectOptions',
                   sparkOnly: 'addDeviceFlow.showActivationCode',
+                  sparkOnlyAndCalendar: 'addDeviceFlow.editCalendarService',
                 },
               },
               'addDeviceFlow.addLines': {
-                next: 'addDeviceFlow.showActivationCode',
+                nextOptions: {
+                  next: 'addDeviceFlow.showActivationCode',
+                  calendar: 'addDeviceFlow.editCalendarService',
+                },
               },
               'addDeviceFlow.callConnectOptions': {
+                nextOptions: {
+                  next: 'addDeviceFlow.showActivationCode',
+                  calendar: 'addDeviceFlow.editCalendarService',
+                },
+              },
+              'addDeviceFlow.editCalendarService': {
                 next: 'addDeviceFlow.showActivationCode',
               },
               'addDeviceFlow.showActivationCode': {},
@@ -266,6 +288,9 @@ require('./_devices.scss');
               showPersonal: true,
               admin: vm.adminUserDetails,
               csdmHybridCallFeature: vm.csdmHybridCallFeature,
+              csdmHybridCalendarFeature: vm.csdmHybridCalendarFeature,
+              hybridCalendarEnabledOnOrg: vm.hybridCalendarEnabledOnOrg,
+              atlasF237ResourceGroups: vm.atlasF237ResourceGroups,
               title: "addDeviceWizard.newDevice",
               isEntitledToHuron: vm.isOrgEntitledToHuron(),
               isEntitledToRoomSystem: vm.isOrgEntitledToRoomSystem(),
@@ -309,12 +334,22 @@ require('./_devices.scss');
                   sparkCall: 'addDeviceFlow.addLines',
                   sparkCallConnect: 'addDeviceFlow.callConnectOptions',
                   sparkOnly: 'addDeviceFlow.showActivationCode',
+                  sparkOnlyAndCalendar: 'addDeviceFlow.editCalendarService',
                 },
               },
               'addDeviceFlow.addLines': {
-                next: 'addDeviceFlow.showActivationCode',
+                nextOptions: {
+                  next: 'addDeviceFlow.showActivationCode',
+                  calendar: 'addDeviceFlow.editCalendarService',
+                },
               },
               'addDeviceFlow.callConnectOptions': {
+                nextOptions: {
+                  next: 'addDeviceFlow.showActivationCode',
+                  calendar: 'addDeviceFlow.editCalendarService',
+                },
+              },
+              'addDeviceFlow.editCalendarService': {
                 next: 'addDeviceFlow.showActivationCode',
               },
               'addDeviceFlow.showActivationCode': {},

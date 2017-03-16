@@ -71,6 +71,8 @@ describe('Controller: Customer Reports Ctrl', function () {
                             '$controller',
                             'CardUtils',
                             'CommonReportService',
+                            'ReportPrintService',
+                            'ReportConstants',
                             'SparkGraphService',
                             'SparkReportService',
                             'SparkLineReportService',
@@ -78,7 +80,8 @@ describe('Controller: Customer Reports Ctrl', function () {
                             'FeatureToggleService');
 
     spyOn(this.CardUtils, 'resize');
-    spyOn(this.CommonReportService, 'createExportMenu').and.callThrough();
+    spyOn(this.ReportPrintService, 'printCustomerPage');
+    spyOn(this.ReportPrintService, 'createExportMenu').and.callThrough();
   });
 
   describe('FeatureToggleService returns false', function () {
@@ -158,7 +161,7 @@ describe('Controller: Customer Reports Ctrl', function () {
         expect(this.SparkGraphService.setMetricsGraph).toHaveBeenCalled();
         expect(this.SparkGraphService.setDeviceGraph).toHaveBeenCalled();
 
-        expect(this.CommonReportService.createExportMenu).toHaveBeenCalledTimes(12);
+        expect(this.ReportPrintService.createExportMenu).toHaveBeenCalledTimes(12);
         expect(this.CardUtils.resize).toHaveBeenCalledTimes(2);
       });
 
@@ -375,7 +378,7 @@ describe('Controller: Customer Reports Ctrl', function () {
 
         expect(zoomFunction).not.toHaveBeenCalled();
 
-        expect(this.CommonReportService.createExportMenu).toHaveBeenCalledTimes(12);
+        expect(this.ReportPrintService.createExportMenu).toHaveBeenCalledTimes(12);
         expect(this.SparkGraphService.showHideActiveLineGraph).toHaveBeenCalledTimes(2);
         expect(this.CardUtils.resize).toHaveBeenCalledTimes(1);
       });
@@ -495,6 +498,28 @@ describe('Controller: Customer Reports Ctrl', function () {
         expect(this.SparkGraphService.setDeviceLineGraph).toHaveBeenCalledTimes(2);
         controller.deviceDropdown.click();
         expect(this.SparkGraphService.setDeviceLineGraph).toHaveBeenCalledTimes(3);
+      });
+    });
+
+    it('should call the resport print service when the download page option is triggered', function () {
+      controller.exportFullPage();
+      expect(this.ReportPrintService.printCustomerPage).toHaveBeenCalledWith(this.ReportConstants.ALL, controller.timeSelected, {
+        min: controller.timeSelected.min,
+        max: controller.timeSelected.max,
+      }, jasmine.any(Object), {
+        active: controller.activeOptions,
+        rooms: controller.avgRoomOptions,
+        files: controller.filesSharedOptions,
+        media: controller.mediaOptions,
+        device: controller.deviceOptions,
+        metrics: controller.metricsOptions,
+      }, {
+        active: controller.activeDropdown,
+        media: controller.mediaDropdown,
+        device: controller.deviceDropdown,
+      }, {
+        media: controller.qualityLabels,
+        metrics: controller.metricsLabels,
       });
     });
   });

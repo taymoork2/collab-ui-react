@@ -1,0 +1,15 @@
+<label class="control-label" translate="serviceSetupModal.preferredLanguage"></label>
+<p class="description-block" translate="serviceSetupModal.preferredLanguageDescription"></p>
+<div class="medium-5">
+  <cs-select
+    name="preferredLanguage"
+    ng-model="$ctrl.selected"
+    options="$ctrl.preferredLanguageOptions"
+    labelfield="label"
+    valuefield="value"
+    on-change-fn="$ctrl.onPreferredLanguageChanged()"
+    placeholder="$ctrl.preferredLanguagePlaceholder"
+    filter="false"
+    required="true"
+  ></cs-select>
+</div>

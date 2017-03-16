@@ -3,12 +3,12 @@
 
   module.exports = angular
     .module('core.config', [
-      require('modules/core/scripts/services/storage'),
+      require('modules/core/storage').default,
     ])
     .factory('Config', Config)
     .name;
 
-  function Config($location, $window, Storage) {
+  function Config($location, $window, LocalStorage) {
     var TEST_ENV_CONFIG = 'TEST_ENV_CONFIG';
 
     var getCurrentHostname = function () {
@@ -74,7 +74,7 @@
         care_inbound_voice: 'cloud-contact-center-inbound-voice',
         context: 'contact-center-context',
         fusion_google_cal: 'squared-fusion-gcal',
-        cucm: 'squared-fusion-khaos',
+        fusion_khaos: 'squared-fusion-khaos',
       },
 
       licenseModel: {
@@ -157,6 +157,7 @@
         orderadmin: 'atlas-portal.partner.orderadmin',
         partner_management: 'atlas-portal.cisco.partnermgmt',
         spark_synckms: 'spark.synckms',
+        ciscouc_ces: 'ciscouc.ces',
         readonly_admin: 'id_readonly_admin',
         tech_support: 'atlas-portal.cisco.techsupport',
       },
@@ -183,6 +184,10 @@
         inactive: 'INACTIVE',
       },
 
+      subscriptionState: {
+        trial: 'Trial',
+      },
+
       confMap: {
         MS: 'onboardModal.paidMsg',
         CF: 'onboardModal.paidConf',
@@ -207,6 +212,7 @@
         SB: 'SB', // Spark Board
         CMR: 'CMR', // Collaboration Meeting Room (WebEx)
         CDC: 'CDC', // Care Digital Channel
+        CVC: 'CVC', // Care Voice Channel
       },
 
       licenseStatus: {
@@ -337,12 +343,12 @@
 
     config.setTestEnvConfig = function (testEnv) {
       if (testEnv) {
-        Storage.put(TEST_ENV_CONFIG, testEnv); // Store in localStorage so new windows pick up the value, will be cleared on logout
+        LocalStorage.put(TEST_ENV_CONFIG, testEnv); // Store in localStorage so new windows pick up the value, will be cleared on logout
       }
     };
 
     config.isE2E = function () {
-      return _.includes(Storage.get(TEST_ENV_CONFIG), 'e2e');
+      return _.includes(LocalStorage.get(TEST_ENV_CONFIG), 'e2e');
     };
 
     config.isUserAgent = function (userAgentString) {
@@ -350,7 +356,7 @@
     };
 
     config.forceProdForE2E = function () {
-      return Storage.get(TEST_ENV_CONFIG) === 'e2e-prod';
+      return LocalStorage.get(TEST_ENV_CONFIG) === 'e2e-prod';
     };
 
     config.roleStates = {
@@ -431,6 +437,7 @@
         'huronlines',
         'huronnewfeature',
         'huronsettings',
+        'huronsettingsnew',
         'huntgroupedit',
         'intercomgroups',
         'mediaonhold',
@@ -439,6 +446,7 @@
         'place-overview',
         'places',
         'services-overview',
+        'private-trunk-overview',
       ],
       'squared-fusion-mgmt': [
         'expressway-cluster-sidepanel',
@@ -447,11 +455,6 @@
         'cluster-list',
         'expressway-cluster',
         'hybrid-services-connector-sidepanel',
-        'hds.settings', // Temporary  entitlement until updated in org setting
-        'hds',
-        'hds.list',
-        'hds-cluster-details',
-        'hds-cluster',
         'cucm-cluster', // Remove when squared-fusion-khaos entitlement is returned by Atlas backend
       ],
       'spark-room-system': [
@@ -489,7 +492,10 @@
         'organization',
       ],
       'spark-hybrid-datasecurity': [
+        'hds',
+        'hds.list',
         'hds.settings',
+        'hds-cluster-details',
         'hds-cluster',
       ],
       'squared-fusion-media': [
@@ -515,9 +521,11 @@
         'context-settings',
         'context-fields',
         'context-fieldsets',
+        'context-fieldsets-sidepanel',
         'context-resources',
         'context-cluster-sidepanel',
         'add-resource',
+        'context-fields-sidepanel',
       ],
       'squared-fusion-khaos': [
         'cucm-cluster',

@@ -1,0 +1,38 @@
+<div ng-form="routingPrefixForm">
+  <label class="control-label" translate="serviceSetupModal.routingPrefix.title"></label>
+  <div class="cs-radio-group">
+    <input
+      cs-input
+      type="radio"
+      ng-model="$ctrl.prefixRadio"
+      id="routingPrefixNone"
+      name="routingPrefix"
+      value="none"
+      ng-click="$ctrl.onNoneClicked()"
+      cs-input-label="{{::'common.none'|translate}}">
+    <input
+      cs-input
+      type="radio"
+      ng-model="$ctrl.prefixRadio"
+      id="routingPrefixReserve"
+      name="routingPrefix"
+      value="reserve"
+      cs-input-label="{{::'serviceSetupModal.routingPrefix.radioReserve'|translate}}">
+    <div ng-if="$ctrl.prefixRadio === 'reserve'" class="indent-area-code row">
+      <input
+        cs-input
+        type="text"
+        id="dialingPrefix"
+        name="dialingPrefix"
+        placeholder="8100"
+        ng-pattern="/^[0-9]*$/"
+        ng-maxlength="7"
+        ng-minlength="1"
+        ng-model="$ctrl.routingPrefix"
+        ng-change="$ctrl.onRoutingPrefixChanged()"
+        cs-input-messages="$ctrl.messages"
+        cs-input-group-size="medium-5"
+        cs-input-help-text="{{::'serviceSetupModal.routingPrefix.exampleHelpText'|translate}}">
+    </div>
+  </div>
+</div>

@@ -1,6 +1,6 @@
-@import 'styles/toolkit/colors';
-@import 'styles/toolkit/fonts';
-@import 'styles/toolkit/spacing';
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/typography';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
 
 @import 'sipDomain/_sip-domain-settings';
 @import 'dirsync/_dirSync';
@@ -60,7 +60,7 @@
     @include vr-spacing(ph, 2);
     @include vr-spacing(pv, 1);
     .save-cancel-buttons {
-      @include vr-spacing(ml, 0.5)
+      @include vr-spacing(ml, 0.5);
     }
   }
 }

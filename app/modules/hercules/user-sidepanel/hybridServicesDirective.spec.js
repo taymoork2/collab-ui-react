@@ -24,7 +24,7 @@ describe('Directive Controller: HybridServicesCtrl', function () {
       getLicenses: sinon.stub().returns([]),
     };
 
-    sinon.stub(ServiceDescriptor, 'services').returns({});
+    sinon.stub(ServiceDescriptor, 'getServices').returns($q.resolve());
     sinon.stub(Userservice, 'isInvitePending').returns(false);
     sinon.stub(CloudConnectorService, 'getService').returns($q.resolve({ setup: false }));
     sinon.stub(FeatureToggleService, 'supports').returns($q.resolve(false));
@@ -36,24 +36,24 @@ describe('Directive Controller: HybridServicesCtrl', function () {
     expect(vm.isEnabled).toBe(false);
   });
 
-  it('should call ServiceDescriptor.services if the org has no license', function () {
+  it('should call ServiceDescriptor.getServices if the org has no license', function () {
     vm = createController({});
     $rootScope.$digest();
-    expect(ServiceDescriptor.services.called).toBe(true);
+    expect(ServiceDescriptor.getServices.called).toBe(true);
   });
 
-  it('should call ServiceDescriptor.services if the org has a license and the user too', function () {
+  it('should call ServiceDescriptor.getServices if the org has a license and the user too', function () {
     vm = createController({
       licenseID: ['MC_f36c1a2c-20d6-460d-9f55-01fc85d52e04_100_t30citest.webex.com'],
     }, ['MC']);
     $rootScope.$digest();
-    expect(ServiceDescriptor.services.called).toBe(true);
+    expect(ServiceDescriptor.getServices.called).toBe(true);
   });
 
-  it('should NOT call ServiceDescriptor.services if the org has a license and but NOT the user', function () {
+  it('should NOT call ServiceDescriptor.getServices if the org has a license and but NOT the user', function () {
     vm = createController({}, ['MC']);
     $rootScope.$digest();
-    expect(ServiceDescriptor.services.called).toBe(false);
+    expect(ServiceDescriptor.getServices.called).toBe(false);
   });
 
   it('should show aggregated status as error when Aware and Connects is entitled and Aware is activated but Connect is error', function () {

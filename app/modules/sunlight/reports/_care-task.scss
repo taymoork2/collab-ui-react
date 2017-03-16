@@ -1,4 +1,4 @@
-@import 'styles/toolkit/colors';
+@import '~collab-ui/scss/settings/colors';
 @import 'modules/sunlight/reports/_pagination';
 
 .care-card-report {
@@ -11,7 +11,7 @@
     text-align: center;
   }
 
- .ui-grid-viewport {
+  .ui-grid-viewport {
     height: auto !important;
   }
 
@@ -58,7 +58,7 @@
     border-right: rem-calc(1) solid $gray-light-2;
   }
 
-  .ui-grid-filter-container { display: none!important; }
+  .ui-grid-filter-container { display: none !important; }
 
   #paginator {
     float: right;

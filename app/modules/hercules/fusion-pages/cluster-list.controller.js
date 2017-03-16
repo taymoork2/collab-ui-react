@@ -20,7 +20,7 @@
     });
 
     vm.showResourceGroups = hasResourceGroupFeatureToggle;
-    vm.showCucmClusters = hasCucmSupportFeatureToggle; // TODO: When entitlement returned by Atlas backend, add => && Authinfo.isEntitled(Config.entitlements.cucm)
+    vm.showCucmClusters = hasCucmSupportFeatureToggle && Authinfo.isEntitled(Config.entitlements.fusion_khaos);
     vm.loading = true;
     vm.backState = 'services-overview';
     vm.openAllGroups = false;
@@ -268,6 +268,7 @@
               expressway: 'add-resource.expressway.service-selector',
               mediafusion: 'add-resource.mediafusion.hostname',
               context: 'add-resource.context',
+              cucm: 'add-resource.cucm.hostname',
             },
           },
           // expressway
@@ -294,6 +295,14 @@
           'add-resource.mediafusion.end': {},
           // context
           'add-resource.context': {},
+          // cucm
+          'add-resource.cucm.hostname': {
+            next: 'add-resource.cucm.name',
+          },
+          'add-resource.cucm.name': {
+            next: 'add-resource.cucm.end',
+          },
+          'add-resource.cucm.end': {},
         },
       };
       var wizard = WizardFactory.create(initialState);

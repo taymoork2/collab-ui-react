@@ -3,7 +3,7 @@
 
   module.exports = angular.module('core.localize', [
     require('modules/core/scripts/services/utils'),
-    require('modules/core/scripts/services/sessionstorage'),
+    require('modules/core/storage').default,
   ])
     .factory('Localize', Localize)
     .name;

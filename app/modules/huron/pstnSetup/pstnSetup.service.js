@@ -724,6 +724,7 @@
         'FOC Received': $translate.instant('pstnSetup.orderStatus.focReceived'),
         'Invalid Authorization Signature': $translate.instant('pstnSetup.orderStatus.invalidSig'),
         'LOA Not Signed': $translate.instant('pstnSetup.orderStatus.loaNotSigned'),
+        'Terms of Service has not yet been accepted': $translate.instant('pstnSetup.orderStatus.tosNotSigned'),
         'Master Service Agreement not signed': $translate.instant('pstnSetup.orderStatus.msaNotSigned'),
         'Pending FOC from Vendor': $translate.instant('pstnSetup.orderStatus.pendingVendor'),
         'Rejected': $translate.instant('pstnSetup.orderStatus.rejected'),
@@ -731,9 +732,25 @@
 
       if (!_.isUndefined(translations[order.statusMessage])) {
         return translations[order.statusMessage];
-      } else if (order.statusMessage !== 'None') {
-        return order.statusMessage;
+      } else if (order.statusMessage && order.statusMessage !== 'None') {
+        return displayBatchIdOnly(order.statusMessage);
       }
+    }
+
+    function displayBatchIdOnly(statusMessage) {
+      if (statusMessage.indexOf('Batch') >= 0) {
+        if (statusMessage.indexOf(',') >= 0) {
+          var batchStatus = statusMessage.split(',');
+          var batchIdOnlyStatusMessage = [];
+          _.forEach(batchStatus, function (batchOnly) {
+            var batchId = (batchOnly.replace(/\D+/g, ''));
+            batchIdOnlyStatusMessage.push(batchId);
+          });
+          return batchIdOnlyStatusMessage.toString();
+        }
+        return statusMessage.replace(/\D+/g, '');
+      }
+      return statusMessage;
     }
 
     function listPendingNumbers(customerId) {

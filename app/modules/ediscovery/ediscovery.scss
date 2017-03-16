@@ -1,9 +1,15 @@
-@import 'styles/toolkit/colors';
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/page';
 
 .ediscovery-app-container {
   background-color: $brand-white;
   overflow-x: hidden; // Remove horizontal IE/Edge scrollbar
   min-height: 100vh;
+
+  .ediscovery-logo {
+    width: 48px;
+    margin-left: 29px;
+  }
 
   a:focus {
     box-shadow: none;
@@ -33,7 +39,7 @@
           margin-right: 1rem;
 
           a {
-            color: #aeaeaf;
+            color: $gray-light-1;
             font-size: 1.0625rem;
             //border-bottom: 3px solid transparent;
             //padding-bottom: 0.5rem;
@@ -45,7 +51,7 @@
           }
 
           a:hover {
-            //border-bottom-color: #AEAEAF;
+            //border-bottom-color: $gray-light-1;
           }
         }
       }
@@ -108,7 +114,9 @@
     }
 
     div.search-error {
-      padding-top: 2rem;
+      padding-top: 0.5rem;
+      float: left;
+      padding-left: 20px;
     }
 
     .search-spinner {
@@ -150,6 +158,10 @@
         color: $color-attention-base;
       }
 
+      .date-error {
+        color: $color-negative-base;
+      }
+
       .ediscovery-advanced-search {
         margin-top: 48px;
         display: inline-block;
@@ -157,6 +169,14 @@
 
         .cs-input {
           width: 100%;
+        }
+
+        .input-validation {
+          margin-top: 0;
+        }
+
+        .query-error-msg {
+          width: 250px;
         }
 
         .cs-datapicker-normal {
@@ -173,10 +193,6 @@
 
         .search-box {
           padding-left: 0px;
-        }
-
-        .selectList {
-          width: 50%;
         }
 
         .query-row {
@@ -352,7 +368,7 @@
           padding-top: 0px;
           padding-bottom: 0px;
         }
-        
+
         .report-title {
           font-family: 'CiscoSans';
           font-size: 16px;
@@ -378,7 +394,7 @@
         }
 
         .report-header {
-          padding: 14px 18px;
+          padding: 8px 18px;
         }
 
         .report-parameters {
@@ -389,14 +405,10 @@
           }
         }
 
-        .summary-header {
-          padding-left: 30px;
-        }
-
-        .reportError {
+        .report-error {
           padding: 1.5rem;
 
-          .reportWarning {
+          .report-warning {
             color: $color-attention-base;
           }
         }
@@ -417,6 +429,10 @@
             padding-bottom: 0.25rem;
             color: $gray-dark-2;
           }
+        }
+
+        .report-section {
+          overflow: hidden;
         }
 
         .result-section {

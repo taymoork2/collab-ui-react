@@ -1,4 +1,4 @@
-@import 'styles/toolkit/colors';
+@import '~collab-ui/scss/settings/colors';
 
 cluster-settings-link {
 
@@ -9,5 +9,4 @@ cluster-settings-link {
   a {
     color: $color-primary-base !important;
   }
-
 }

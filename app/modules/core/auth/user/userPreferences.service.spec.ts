@@ -57,7 +57,7 @@ describe('UserPreferencesService Service', () => {
       this.$httpBackend.expect('PATCH', this.User.meta.location)
         .respond((method, url, data) => {
 
-          let patchData = angular.fromJson(data);
+          let patchData = JSON.parse(data);
           expect(patchData.schemas).toBeDefined();
           expect(patchData.userPreferences).toBeDefined();
           expect(patchData.userPreferences[0].value).toEqual(UserPreferencesService.USER_PREF_TOS);

@@ -1,10 +1,13 @@
-@import 'styles/toolkit/colors';
-@import 'styles/toolkit/spacing';
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
 
-report-slider, .report-slider {
-  width: 100%;
+report-slider {
+  margin-top: 4px;
+  width: 85%;
 }
 .report-slider {
+  width: 100%;
   .report-filter {
     width: vr-adjust(160);
   }
@@ -13,7 +16,8 @@ report-slider, .report-slider {
     @include vr-spacing(mr, 2);
     position: relative;
     top: vr-adjust(8);
-    .insidebar, .sliderPointer {
+    .insidebar,
+    .sliderPointer {
       background-color: $color-primary-base;
     }
     .sliderLabel {

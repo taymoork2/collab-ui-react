@@ -1,4 +1,6 @@
-@import 'styles/toolkit/layout';
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/tools/placeholders/page-layout';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
 
 .field-list {
   @extend %grid-subheader;
@@ -22,13 +24,13 @@
       top: 70%;
     }
   }
+  overflow-x: hidden;
+}
 
-  .search-noresults {
-    position: absolute;
-    top: 150px;
-    left: 0;
-    right: 0;
-    text-align: center;
-    color: $gray-darker;
-  }
+.context-fields-state {
+  background-color: $gray-lightest;
+}
+
+.context-fieldsets-state {
+  background-color: $gray-lightest;
 }

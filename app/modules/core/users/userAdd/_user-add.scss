@@ -1,7 +1,7 @@
 @import 'modules/core/setupWizard/planReview/plan-container';
 
-@import 'styles/toolkit/colors';
-@import 'styles/toolkit/fonts';
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/typography';
 
 .modal-useradd-dialog {
   width: 900px;
@@ -653,7 +653,22 @@
 }
 
 .care-information-text {
-  cursor: default;
-  font-size: 12px;
-  width: auto;
+  display: block;
+}
+
+.under-careradio-reposition {
+  @include vr-spacing(mb, 0.8);
+}
+
+.entitle-check-grp {
+  .icon-warning {
+    color: $color-attention-base;
+    @include vr-spacing(mt, 0.6);
+    @include vr-spacing(ml, 0.15);
+  }
+
+  .under-label-caremsg-reposition {
+    @include vr-spacing(mt, -0.9);
+    @include vr-spacing(ml, 2);
+  }
 }

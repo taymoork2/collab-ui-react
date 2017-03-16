@@ -184,7 +184,7 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Fallback Destination', funct
   });
 
   it("should have the openPanel flag for fallback member and toggleFallback works.", function () {
-    var member1 = angular.copy(huntGroupMember1);
+    var member1 = _.cloneDeep(huntGroupMember1);
     controller.selectFallback(member1);
     expect(controller.selectedFallbackMember.openPanel).toBeFalsy();
     expect(controller.selectedFallbackMember.member.user.email).toBeUndefined();

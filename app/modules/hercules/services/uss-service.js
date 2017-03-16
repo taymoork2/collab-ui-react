@@ -6,7 +6,7 @@
     .service('USSService', USSService);
 
   /* @ngInject */
-  function USSService($http, UrlConfig, Authinfo, CsdmPoller, CsdmHubFactory, $translate, FusionUtils) {
+  function USSService($http, UrlConfig, Authinfo, CsdmPoller, CsdmHubFactory, $translate, HybridServicesUtils) {
     var cachedUserStatusSummary = [];
 
     var USSUrl = UrlConfig.getUssUrl() + 'uss/api/v1';
@@ -63,7 +63,7 @@
               serviceId: serviceId,
             });
             if (!found) {
-              var newSummary = angular.copy(emptySummary);
+              var newSummary = _.cloneDeep(emptySummary);
               newSummary.serviceId = serviceId;
               summary.push(newSummary);
             }
@@ -253,7 +253,7 @@
 
     function convertToTranslateReplacements(messageReplacementValues) {
       return _.reduce(messageReplacementValues, function (translateReplacements, replacementValue) {
-        translateReplacements[replacementValue.key] = replacementValue.type === 'timestamp' ? FusionUtils.getLocalTimestamp(replacementValue.value) : replacementValue.value;
+        translateReplacements[replacementValue.key] = replacementValue.type === 'timestamp' ? HybridServicesUtils.getLocalTimestamp(replacementValue.value) : replacementValue.value;
         return translateReplacements;
       }, {});
     }

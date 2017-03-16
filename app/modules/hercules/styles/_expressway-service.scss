@@ -1,13 +1,14 @@
 .management-service-list-state,
 .call-service-list-state,
-.calendar-service-list-state,
-.context-resources-state,
-.context-settings-state,
-.context-fields-state,
-.context-fieldsets-state, {
+.calendar-service-list-state {
   @extend %page-background-white;
 }
 $user-statuses-bar-height: 7.25rem;
+
+.context-resources-state {
+  @extend %page-background-white;
+  overflow: hidden;
+}
 
 .expressway-service {
   @extend %grid-subheader;
@@ -360,5 +361,4 @@ Special stuff currently used for out own mail input field...
   .file-drop-content > input {
     display: none;
   }
-
 }

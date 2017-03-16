@@ -5,7 +5,7 @@
     require('modules/core/scripts/services/authinfo'),
     require('modules/core/config/config'),
     require('modules/core/scripts/services/log'),
-    require('modules/core/scripts/services/storage'),
+    require('modules/core/storage').default,
     require('modules/core/auth/auth'),
     require('modules/core/config/urlConfig'),
   ]).service('LogMetricsService', LogMetricsService)
@@ -72,6 +72,10 @@
         careReports: 'CAREREPORTS',
         careEnabled: 'CAREENABLED',
         careDisabled: 'CAREDISABLED',
+        careVoiceEnabled: 'CAREVOICEENABLED',
+        careVoiceDisabled: 'CAREVOICEDISABLED',
+        dirSyncDisabled: 'DIRSYNCDISABLED',
+        connectorDeregistered: "CONNECTORDEREGISTERED",
       },
 
       getEventAction: function (eAction) {

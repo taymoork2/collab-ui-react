@@ -14,7 +14,7 @@
     vm.NA_MODE = 'na_mode';
     vm.trialUserGroupId = null;
     vm.trialDomain = '';
-    vm.prodDomain = '';
+    vm.prodDomain = 'Spark Default KMS';
     vm.numResourceNodes = 1;              // # of resource nodes, TODO: from backend when APIs ready
     vm.numTrialUsers = 10;
     vm.recoverPreTrial = recoverPreTrial; // set to trial mode, TODO: remove this when at the very late stage of HDS dev
@@ -23,7 +23,12 @@
     vm.addResource = addResource;
     vm.openAddTrialUsersModal = openAddTrialUsersModal;
     vm.openEditTrialUsersModal = openEditTrialUsersModal;
+    vm.deactivateTrialMode = deactivateTrialMode;
     var localizedHdsModeError = $translate.instant('hds.resources.settings.hdsModeGetError');
+    var trialKmsServer = '';
+    var trialKmsServerMachineUUID = '';
+    var trialAdrServer = '';
+    var trialSecurityService = '';
 
     Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_HDS_SETTINGS);
 
@@ -55,6 +60,9 @@
     vm.servicestatus = {
       title: 'hds.resources.settings.servicestatusTitle',
     };
+    vm.deactivate = {
+      title: 'common.deactivate',
+    };
 
     var DEFAULT_SERVICE_MODE = vm.NA_MODE;
 
@@ -72,7 +80,7 @@
       HDSService.getHdsTrialUsers(Authinfo.getOrgId(), vm.trialUserGroupId)
         .then(function (data) {
           var trialUsers = _.isObject(data.members) ? data.members : {};
-          vm.numTrialUsers = trialUsers.length;
+          vm.numTrialUsers = _.size(trialUsers);
         }).catch(function (error) {
           Notification.errorWithTrackingId(error, localizedHdsModeError);
         });
@@ -92,7 +100,6 @@
           Notification.errorWithTrackingId(error, localizedHdsModeError);
         });
     }
-
     function getOrgHdsInfo() {
       Orgservice.getOrg(function (data, status) {
         if (data.success || status === 200) {
@@ -102,16 +109,13 @@
           if (typeof vm.altHdsServers === 'undefined' || vm.altHdsServers.length === 1) {
             // prod info
             if (typeof vm.prodDomain === 'undefined') {
-              //vm.model.serviceMode = vm.NA_MODE;
-              // TODO: temp relax the condition to keep production mode when no prodDomain in org settings
-              //        remove this when LA testing done
-              vm.model.serviceMode = vm.PRODUCTION;
+              vm.model.serviceMode = vm.NA_MODE;
             } else {
               vm.model.serviceMode = vm.PRODUCTION;
             }
           } else {
             // trial info
-            if (typeof vm.altHdsServers !== 'undefined' || vm.altHdsServers.length > 0) {
+            if (_.size(vm.altHdsServers) > 0) {
               if (_.every(vm.altHdsServers, function (server) {
                 return server.active;
               })) {
@@ -123,6 +127,14 @@
                 if (server.kmsServer) {
                   vm.trialDomain = server.kmsServer;
                   vm.trialUserGroupId = server.groupId;
+                  trialKmsServer = server.kmsServer;
+                  trialKmsServerMachineUUID = server.kmsServerMachineUUID;
+                }
+                if (server.adrServer) {
+                  trialAdrServer = server.adrServer;
+                }
+                if (server.securityService) {
+                  trialSecurityService = server.securityService;
                 }
               });
               getTrialUsersInfo();
@@ -157,7 +169,7 @@
           });
         }
         var myJSON = {
-          "altHdsServers": vm.altHdsServers,
+          'altHdsServers': vm.altHdsServers,
         };
         Orgservice.setOrgAltHdsServersHds(Authinfo.getOrgId(), myJSON)
           .then(function () {
@@ -175,9 +187,11 @@
           type: 'dialog',
         })
           .result.then(function () {
-            HDSService.moveToProductionMode(Authinfo.getOrgId())
+            HDSService.moveToProductionMode(trialKmsServer, trialKmsServerMachineUUID, trialAdrServer, trialSecurityService)
               .then(function () {
                 vm.model.serviceMode = vm.PRODUCTION;
+                // TODO: add remove the CI Group for Trial Users after MVO or finish up e2e test
+                Notification.success('hds.resources.settings.succeedMoveToProductionMode');
               }).catch(function (error) {
                 Notification.errorWithTrackingId(error, localizedHdsModeError);
               });
@@ -211,6 +225,32 @@
         .result.then(function () {
           getTrialUsersInfo();
         });
+    }
+    function deactivateTrialMode() {
+      if (vm.model.serviceMode === vm.TRIAL) {
+        $modal.open({
+          templateUrl: 'modules/hds/settings/confirm-deactivate-trialmode-dialog.html',
+          type: 'dialog',
+        })
+          .result.then(function () {
+            if (_.size(vm.altHdsServers) > 0) {
+              _.forEach(vm.altHdsServers, function (server) {
+                if (typeof server.active !== 'undefined') {
+                  server['active'] = false;
+                }
+              });
+            }
+            var myJSON = {
+              'altHdsServers': vm.altHdsServers,
+            };
+            Orgservice.setOrgAltHdsServersHds(Authinfo.getOrgId(), myJSON)
+              .then(function () {
+                vm.model.serviceMode = vm.PRE_TRIAL;
+              }).catch(function (error) {
+                Notification.errorWithTrackingId(error, localizedHdsModeError);
+              });
+          });
+      }
     }
   }
 }());

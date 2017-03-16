@@ -1,0 +1,11 @@
+<label class="control-label" for="timeFormatSelect" translate="serviceSetupModal.timeFormat"></label>
+<p class="description-block" translate="serviceSetupModal.tfDescription"></p>
+<div class="medium-5">
+  <cs-select
+    name="timeFormatSelect"
+    ng-model="$ctrl.selected"
+    options="$ctrl.timeFormatOptions"
+    on-change-fn="$ctrl.onTimeFormatChanged()"
+    filter="false">
+  </cs-select>
+</div>

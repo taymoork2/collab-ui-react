@@ -6,7 +6,7 @@
     .controller('CallServicePreviewCtrl', CallServicePreviewCtrl);
 
   /*@ngInject*/
-  function CallServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, FusionClusterService, UriVerificationService, DomainManagementService, $translate, FeatureToggleService, ResourceGroupService, UCCService, FusionUtils) {
+  function CallServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, FusionClusterService, UriVerificationService, DomainManagementService, $translate, FeatureToggleService, ResourceGroupService, UCCService, HybridServicesUtils) {
     $scope.saveLoading = false;
     $scope.domainVerificationError = false;
     $scope.currentUser = $stateParams.currentUser;
@@ -119,10 +119,10 @@
           });
         }
         if ($scope.callServiceAware.status && $scope.callServiceAware.status.lastStateChange) {
-          $scope.callServiceAware.status.lastStateChangeText = FusionUtils.getTimeSinceText($scope.callServiceAware.status.lastStateChange);
+          $scope.callServiceAware.status.lastStateChangeText = HybridServicesUtils.getTimeSinceText($scope.callServiceAware.status.lastStateChange);
         }
         if ($scope.callServiceConnect.status && $scope.callServiceConnect.status.lastStateChange) {
-          $scope.callServiceConnect.status.lastStateChangeText = FusionUtils.getTimeSinceText($scope.callServiceConnect.status.lastStateChange);
+          $scope.callServiceConnect.status.lastStateChangeText = HybridServicesUtils.getTimeSinceText($scope.callServiceConnect.status.lastStateChange);
         }
         if ($scope.callServiceAware.entitled && $scope.callServiceAware.status) {
           UCCService.getUserDiscovery($scope.currentUser.id).then(function (userDiscovery) {

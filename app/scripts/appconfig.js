@@ -512,6 +512,17 @@
               },
             },
           })
+          .state('addDeviceFlow.editCalendarService', {
+            parent: 'modal',
+            params: {
+              wizard: null,
+            },
+            views: {
+              'modal@': {
+                template: '<edit-calendar-service id="edit-calendar-modal" class="modal-content" dismiss="$dismiss()"></edit-calendar-service>',
+              },
+            },
+          })
           .state('addDeviceFlow.callConnectOptions', {
             parent: 'modal',
             params: {
@@ -1792,6 +1803,67 @@
               },
             },
           })
+          .state('place-overview.hybrid-services-squared-fusion-cal', {
+            templateUrl: 'modules/hercules/user-sidepanel/calendarServicePreview.tpl.html',
+            controller: 'CalendarServicePreviewCtrl',
+            data: {
+              displayName: 'Calendar Service',
+            },
+            params: {
+              extensionId: {},
+              extensions: {},
+              parentState: 'place-overview',
+            },
+          })
+          .state('place-overview.hybrid-services-squared-fusion-cal.history', {
+            template: '<user-status-history service-id="\'squared-fusion-cal\'"></user-status-history>',
+            data: {
+              displayName: 'Status History',
+            },
+            params: {
+              serviceId: {},
+            },
+          })
+          .state('place-overview.hybrid-services-squared-fusion-gcal', {
+            templateUrl: 'modules/hercules/user-sidepanel/calendarServicePreview.tpl.html',
+            controller: 'CalendarServicePreviewCtrl',
+            data: {
+              displayName: 'Calendar Service',
+            },
+            params: {
+              extensionId: {},
+              extensions: {},
+            },
+          })
+          .state('place-overview.hybrid-services-squared-fusion-gcal.history', {
+            template: '<user-status-history service-id="\'squared-fusion-gcal\'"></user-status-history>',
+            data: {
+              displayName: 'Status History',
+            },
+            params: {
+              serviceId: {},
+            },
+          })
+          .state('place-overview.hybrid-services-squared-fusion-uc', {
+            templateUrl: 'modules/hercules/user-sidepanel/callServicePreview.tpl.html',
+            controller: 'CallServicePreviewCtrl',
+            data: {
+              displayName: 'Call Service',
+            },
+            params: {
+              extensionId: {},
+              extensions: {},
+            },
+          })
+          .state('place-overview.hybrid-services-squared-fusion-uc.uc-history', {
+            template: '<user-status-history service-id="\'squared-fusion-uc\'"></user-status-history>',
+            data: {
+              displayName: 'Aware Status History',
+            },
+            params: {
+              serviceId: {},
+            },
+          })
           .state('devices', {
             url: '/devices',
             templateUrl: 'modules/squared/devices/devices.html',
@@ -1964,6 +2036,10 @@
           .state('gmTdDetails.sites', {
             params: { data: {} },
             template: '<gm-td-sites></gm-td-sites>',
+          })
+          .state('gmTdDetails.notes', {
+            template: '<gm-td-notes></gm-td-notes>',
+            params: { obj: {} },
           })
           .state('gemCbgDetails', {
             data: {},
@@ -2598,6 +2674,17 @@
             controller: 'HuronSettingsCtrl',
             controllerAs: 'settings',
           })
+          // TODO (jlowery): rename the huronsettingsnew to huronsettings state when sparkCallTenDigitExt is removed.
+          .state('huronsettingsnew', {
+            url: '/settingsnew',
+            parent: 'hurondetails',
+            template: '<uc-settings ftsw="false"></uc-settings>',
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/settings'], done);
+              }),
+            },
+          })
           .state('users.enableVoicemail', {
             parent: 'modal',
             views: {
@@ -2796,9 +2883,11 @@
             views: {
               'subHeader': {
                 templateUrl: 'modules/context/resources/hybrid-context-resources-header.html',
+                controller: 'HybridContextResourcesCtrl',
+                controllerAs: 'contextResources',
               },
               'contextServiceView': {
-                template: '<hybrid-service-cluster-list service-id="\'contact-center-context\'"></hybrid-service-cluster-list>',
+                template: '<hybrid-service-cluster-list service-id="\'contact-center-context\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>',
                 controller: /* @ngInject */ function (Analytics) {
                   return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CONTEXT_LIST);
                 },
@@ -2810,6 +2899,9 @@
             resolve: {
               hasContactCenterContextFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.contactCenterContext);
+              },
+              clusterId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.clusterId;
               },
             },
           })
@@ -2824,6 +2916,28 @@
               },
             },
           })
+          .state('context-fields-sidepanel', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                template: '<context-fields-sidepanel field="$resolve.field"></context-fields-sidepanel>',
+              },
+              'header@context-fields-sidepanel': {
+                templateUrl: 'modules/context/fields/sidepanel/hybrid-context-fields-sidepanel-header.html',
+              },
+            },
+            data: {
+              displayName: 'Overview',
+            },
+            params: {
+              field: {},
+            },
+            resolve: {
+              field: /* @ngInject */ function ($stateParams) {
+                return $stateParams.field;
+              },
+            },
+          })
           .state('context-fieldsets', {
             url: '/services/context/fieldsets',
             parent: 'context',
@@ -2832,6 +2946,44 @@
                 templateUrl: 'modules/context/fieldsets/hybrid-context-fieldsets.html',
                 controller: 'HybridContextFieldsetsCtrl',
                 controllerAs: 'contextFieldsets',
+              },
+            },
+          })
+          .state('context-fieldsets-sidepanel', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                template: '<context-fieldsets-sidepanel fieldset="$resolve.fieldset"></context-fieldsets-sidepanel>',
+              },
+              'header@context-fieldsets-sidepanel': {
+                templateUrl: 'modules/context/fieldsets/sidepanel/hybrid-context-fieldsets-sidepanel-header.html',
+              },
+            },
+            data: {
+              displayName: 'Overview',
+            },
+            params: {
+              fieldset: {},
+            },
+            resolve: {
+              fieldset: /* @ngInject */ function ($stateParams) {
+                return $stateParams.fieldset;
+              },
+            },
+          })
+          .state('context-fieldsets-sidepanel.fields', {
+            templateUrl: 'modules/context/fieldsets/sidepanel/fieldList/hybrid-context-fieldsets-field-list.html',
+            controller: 'ContextFieldsetsSidepanelFieldListCtrl',
+            controllerAs: 'contextFieldsetsSidepanelFieldListCtrl',
+            data: {
+              displayName: 'Fields',
+            },
+            params: {
+              fields: {},
+            },
+            resolve: {
+              fields: /* @ngInject */ function ($stateParams) {
+                return $stateParams.fields;
               },
             },
           })
@@ -2858,6 +3010,16 @@
               connectorType: /* @ngInject */ function ($stateParams) {
                 return $stateParams.connectorType;
               },
+            },
+          })
+          .state('private-trunk-overview', {
+            url: '/privateTrunkOverview',
+            parent: 'main',
+            template: '<private-trunk-overview></private-trunk-overview>',
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/hercules/privateTrunk/privateTrunkOverview'], done);
+              }),
             },
           })
           .state('context-cluster-sidepanel.host-details', {
@@ -3115,6 +3277,11 @@
             params: {
               wizard: null,
             },
+            resolve: {
+              hasCucmSupportFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCucmSupport);
+              },
+            },
           })
           .state('add-resource.expressway', {
             abstract: true,
@@ -3235,6 +3402,48 @@
             views: {
               'modal@': {
                 templateUrl: 'modules/hercules/fusion-pages/add-resource/context/context.html',
+              },
+            },
+            params: {
+              wizard: null,
+            },
+          })
+          .state('add-resource.cucm', {
+            abstract: true,
+          })
+          .state('add-resource.cucm.hostname', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'CucmHostnameController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/hercules/fusion-pages/add-resource/cucm/cucm-hostname.html',
+              },
+            },
+            params: {
+              wizard: null,
+            },
+          })
+          .state('add-resource.cucm.name', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'CucmClusterNameController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/hercules/fusion-pages/add-resource/cucm/cucm-cluster-name.html',
+              },
+            },
+            params: {
+              wizard: null,
+            },
+          })
+          .state('add-resource.cucm.end', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'CucmEndController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/hercules/fusion-pages/add-resource/cucm/cucm-end.html',
               },
             },
             params: {
@@ -3490,6 +3699,11 @@
             },
             controller: /* @ngInject */ function (Analytics) {
               return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_MEDIA_SETTINGS);
+            },
+            resolve: {
+              hasMFVIdeoFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceVideo);
+              },
             },
           });
 

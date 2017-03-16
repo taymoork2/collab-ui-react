@@ -5,8 +5,9 @@
 @import 'enterpriseSettings/enterprise-settings';
 @import 'finish/finish';
 
-@import 'styles/toolkit/colors';
-@import 'styles/toolkit/spacing';
+@import '~collab-ui/scss/settings/settings';
+@import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
+@import '~collab-ui/scss/tools/placeholders/page-layout';
 
 .wizard-main-wrapper {
   .row {
@@ -132,6 +133,10 @@
 
   .cs-radio-group {
     margin-bottom: 1rem;
+  }
+
+  .cs-checkbox-group {
+    margin-top: 1rem;
   }
 
   .title-margin-bottom {

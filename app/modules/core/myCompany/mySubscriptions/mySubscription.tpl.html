@@ -7,8 +7,7 @@
           <div class="icon-container" ng-click="subscription.viewAll = !subscription.viewAll" ng-class="{'icon-container-down': subscription.viewAll}">
             <i class="icon icon-right-arrow-contained"></i>
           </div>
-          <h4 ng-if="subscription.name" class="sub-name">{{::subscription.name}}</h4>
-          <h4 ng-if="!subscription.name" class="sub-name" translate="subscriptions.numberedName" translate-values="{number: $index + 1}"></h4>
+          <h4 class="sub-name">{{::subscription.name}}</h4>
         </div>
         <div class="columns medium-8 subscription-column">
           <div ng-repeat="license in subscription.licenses" class="detail" ng-if="($index < 3) || subscription.viewAll" ng-class="{'tooltip-present': !subscription.viewAll}" tooltip-html-unsafe="{{::license.tooltip}}" tooltip-enable="!subscription.viewAll && license.tooltip" tooltip-placement="top-left" tooltip-class="subscription-tooltip" tooltip-append-to-body="true">

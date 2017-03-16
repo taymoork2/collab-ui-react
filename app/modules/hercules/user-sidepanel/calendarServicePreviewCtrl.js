@@ -6,14 +6,17 @@
     .controller('CalendarServicePreviewCtrl', CalendarServicePreviewCtrl);
 
   /*@ngInject*/
-  function CalendarServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Orgservice, Notification, USSService, FusionClusterService, $translate, ResourceGroupService, FeatureToggleService, FusionUtils) {
+  function CalendarServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Orgservice, Notification, USSService, FusionClusterService, $translate, ResourceGroupService, FeatureToggleService, HybridServicesUtils) {
     $scope.entitlementNames = {
       'squared-fusion-cal': 'squaredFusionCal',
       'squared-fusion-gcal': 'squaredFusionGCal',
     };
 
-    $scope.currentUser = $stateParams.currentUser;
-    $scope.isInvitePending = Userservice.isInvitePending($scope.currentUser);
+    $scope.currentUser = $stateParams.currentUser || $stateParams.currentPlace;
+    $scope.isPlace = $scope.currentUser.accountType === 'MACHINE';
+    $scope.isUser = !$scope.isPlace;
+    $scope.currentStateName = $state.current.name;
+    $scope.isInvitePending = $scope.isUser && Userservice.isInvitePending($scope.currentUser);
     $scope.localizedServiceName = $translate.instant('hercules.serviceNames.squared-fusion-cal');
     $scope.localizedConnectorName = $translate.instant('hercules.connectorNames.squared-fusion-cal');
     $scope.localizedOnboardingWarning = $translate.instant('hercules.userSidepanel.warningInvitePending', {
@@ -21,10 +24,10 @@
     });
     $scope.extension = {
       id: $stateParams.extensionId,
-      entitled: $stateParams.currentUser.entitlements && $stateParams.currentUser.entitlements.indexOf($stateParams.extensionId) > -1, // Tracks the entitlement as set in the UI (toggle)
+      entitled: $scope.currentUser.entitlements && $scope.currentUser.entitlements.indexOf($stateParams.extensionId) > -1, // Tracks the entitlement as set in the UI (toggle)
       hasShowPreferredWebExSiteNameFeatureToggle: false,
       preferredWebExSiteName: $translate.instant('hercules.cloudExtensions.preferredWebExSiteDefault'),
-      currentUserEntitled: $stateParams.currentUser.entitlements && $stateParams.currentUser.entitlements.indexOf($stateParams.extensionId) > -1, // Tracks the actual entitlement on the user
+      currentUserEntitled: $scope.currentUser.entitlements && $scope.currentUser.entitlements.indexOf($stateParams.extensionId) > -1, // Tracks the actual entitlement on the user
       isExchange: function () {
         return this.id === 'squared-fusion-cal';
       },
@@ -61,7 +64,7 @@
     $scope.resourceGroup.init();
 
     var isEntitled = function () {
-      return $stateParams.currentUser.entitlements && $stateParams.currentUser.entitlements.indexOf($scope.extension.id) > -1;
+      return $scope.currentUser.entitlements && $scope.currentUser.entitlements.indexOf($scope.extension.id) > -1;
     };
 
     var isSetup = function (id) {
@@ -129,7 +132,7 @@
           });
         }
         if ($scope.extension.status && $scope.extension.status.lastStateChange) {
-          $scope.extension.status.lastStateChangeText = FusionUtils.getTimeSinceText($scope.extension.status.lastStateChange);
+          $scope.extension.status.lastStateChangeText = HybridServicesUtils.getTimeSinceText($scope.extension.status.lastStateChange);
         }
 
         // If we find no status in USS and the service is entitled, we try to refresh the user in USS and reload the statuses
@@ -218,13 +221,13 @@
               // Reset the status which will give the status loader icon
               $scope.extension.status = null;
             }
-            if (!$stateParams.currentUser.entitlements) {
-              $stateParams.currentUser.entitlements = [];
+            if (!$scope.currentUser.entitlements) {
+              $scope.currentUser.entitlements = [];
             }
             if (entitled) {
-              $stateParams.currentUser.entitlements.push($scope.extension.id);
+              $scope.currentUser.entitlements.push($scope.extension.id);
             } else {
-              _.remove($stateParams.currentUser.entitlements, function (entitlement) {
+              _.remove($scope.currentUser.entitlements, function (entitlement) {
                 return entitlement === $scope.extension.id;
               });
             }

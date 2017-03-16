@@ -1,5 +1,6 @@
-@import 'styles/toolkit/colors';
-@import 'styles/toolkit/spacing';
+@import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
 
 .iframe-container {
   display: inline;
@@ -143,7 +144,6 @@
         width: 100%;
       }
 
-
       .subscription-item:nth-child(1),
       .subscription-item:nth-child(2) {
         @include vr-spacing(pt, 1.5);
@@ -257,7 +257,7 @@
       .license-quantity {
         @include vr-spacing(pt, 0.5);
         @include vr-spacing(pb, 0.25);
-       }
+      }
 
       .subscription-id {
         right: vr-adjust(24);

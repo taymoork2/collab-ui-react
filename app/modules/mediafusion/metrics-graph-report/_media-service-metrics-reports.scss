@@ -1,3 +1,5 @@
+@import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
+
 @import 'callVolume/_call-volume';
 @import 'availability/_availability';
 @import 'utilization/_utilization';
@@ -202,7 +204,7 @@
       animation: graphAxisFade 2s ease-in-out 1 forwards;
     }
     .media-service-card {
-      min-height: auto!important;
+      min-height: auto !important;
     }
   }
 }
