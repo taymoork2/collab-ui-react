@@ -1,0 +1,5 @@
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+
+.external-voicemail-number {
+  @include vr-spacing(mb, 2.5);
+}
