@@ -115,7 +115,7 @@
             }
           } else {
             // trial info
-            if (typeof vm.altHdsServers !== 'undefined' || vm.altHdsServers.length > 0) {
+            if (_.size(vm.altHdsServers) > 0) {
               if (_.every(vm.altHdsServers, function (server) {
                 return server.active;
               })) {
@@ -233,7 +233,7 @@
           type: 'dialog',
         })
           .result.then(function () {
-            if (typeof vm.altHdsServers !== 'undefined' || vm.altHdsServers.length > 0) {
+            if (_.size(vm.altHdsServers) > 0) {
               _.forEach(vm.altHdsServers, function (server) {
                 if (typeof server.active !== 'undefined') {
                   server['active'] = false;
