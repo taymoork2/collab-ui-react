@@ -2115,7 +2115,8 @@
           "SITE_VERIFICATION_FAILURE": "The domain verification step failed. Make sure you followed the domain verification steps in the documentation.",
           "SECURITY_FAILURE": "Security failure.",
           "INPUT_PARSING_FAILURE": "The private data key cannot be parsed. Regenerate one for your project at console.developers.google.com and try again.",
-          "GENERAL_ERROR": "An unexpected error occurred. Contact support if this error recurs."
+          "GENERAL_ERROR": "An unexpected error occurred. Contact support if this error recurs.",
+          "INVALID_CREDENTIALS": "The service account credentials are invalid."
         }
       },
       "hybridCalendarCommon": {

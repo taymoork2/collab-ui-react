@@ -17,6 +17,7 @@ enum ProvisioningResult {
   'SECURITY_FAILURE' = 4, // Some kind of security issue
   'INPUT_PARSING_FAILURE' = 5, // Some kind of issue parsing input
   'GENERAL_ERROR' = 6, // Default error
+  'INVALID_CREDENTIALS' = 7, // Invalid service account credentials
 }
 
 export class CloudConnectorService {
