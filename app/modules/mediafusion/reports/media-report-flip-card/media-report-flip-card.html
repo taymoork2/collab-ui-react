@@ -21,11 +21,12 @@
         {{$ctrl.footerOptions.footerDesc}} <span class="footer-value">{{$ctrl.footerOptions.value}}</span>
       </div>
     </div>
-    <i class='icon icon-right-arrow-outline icon-large media-flip-icon' ng-click="isFlipped=true"></i>
+    <i class='icon icon-right-arrow-outline icon-large media-flip-icon' ng-click="isFlipped=true" ng-class="{'no-display': $ctrl.parentcntrl.clusterSelected !== $ctrl.parentcntrl.allClusters && $ctrl.parentcntrl.clusterSelected !== undefined}"></i>
   </article>
   
   <article class="face back" ng-class="{'no-display': !isFlipped}">
     <header>
+      <div class="metrics-header" ng-class="{'no-display': $ctrl.chartOptions.isShow==false || $ctrl.chartOptions.isShow==undefined}"> {{$ctrl.headername}} </div>
     </header>
     <section>
       <div class="metrics-info" ng-class="{'no-display': $ctrl.chartOptions.isShow==false || $ctrl.chartOptions.isShow==undefined}">
