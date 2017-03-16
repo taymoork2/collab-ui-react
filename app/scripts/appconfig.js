@@ -530,9 +530,7 @@
             },
             views: {
               'modal@': {
-                templateUrl: 'modules/squared/places/callConnect/CallConnectOptions.tpl.html',
-                controller: 'CallConnectOptionsCtrl',
-                controllerAs: 'callConnectOptions',
+                template: '<call-connect-options id="call-connect-options-modal" class="modal-content" dismiss="$dismiss()"></call-connect-options>',
               },
             },
           })

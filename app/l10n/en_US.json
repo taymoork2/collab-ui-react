@@ -4444,15 +4444,15 @@
     },
     "editServices": {
       "whichServices": "Which service is needed in this place?",
-      "sparkOnly": "Spark only (default)",
-      "sparkOnlyHelp": "Calling to/from this place will only work through Cisco Spark or using SIP addresses.",
-      "sparkCall": "Spark + Spark Call (phone numbers)",
-      "sparkCallHelp": "In addition to calling with Spark and SIP addresses, if you have set up your organization’s PSTN provider this place will be able to call to/from landlines and mobile phones.",
-      "sparkCallConnect": "Spark + Call Service Connect (Hybrid)",
-      "sparkCallConnectHelp": "This place will be connected to your existing on-premises phone infrastructure. Therefore, it can call on-premises devices directly and leverage any existing PSTN services, if they are available",
+      "sparkOnly": "Cisco Spark only (default)",
+      "sparkOnlyHelp": "Call to and from this place through Cisco Spark or using SIP addresses.",
+      "sparkCall": "Cisco Spark + Spark Call (Cloud PSTN)",
+      "sparkCallHelp": "Call to and from PSTN destinations (landlines and mobile phones), if you configured your organization’s PSTN provider.",
+      "sparkCallConnect": "Cisco Spark + Call Service Connect (Hybrid)",
+      "sparkCallConnectHelp": "Connect this place to Cisco Unified Communications Manager. Call on-premises devices directly and reuse any existing PSTN services.",
       "servicesSaved": "Services updated successfully",
       "calendar": "Calendar",
-      "toggleCalendar": "Turn on calendar service to enable One Button To Push for this place",
+      "toggleCalendar": "Calendar service enables One Button To Push for this place.",
       "calendarStatusOn": "Status: on",
       "exchangeTitle": "Exchange calendar",
       "exchangeHelp": "This is enabling exchange calendar",
@@ -4461,7 +4461,7 @@
       "calendarEmail": "Email address of the calendar mailbox"
     },
     "sparkCallConnect": {
-      "editSettingsTitle": "Edit the settings for Hybrid Call Service Connect"
+      "editSettingsTitle": "Set up Hybrid Call Service Connect"
     },
     "showActivationCode": {
       "activationCode": "Activation Code",
@@ -5696,8 +5696,9 @@
     "noneFound": "No places found",
     "actionHeader": "Actions",
     "servicesHeader": "Services",
-    "sparkCall": "Spark + Spark Call",
-    "sparkOnly": "Spark only",
+    "sparkCall": "Cisco Spark + Spark Call",
+    "sparkOnly": "Cisco Spark only",
+    "sparkCallConnect": "Cisco Spark + Call Service Connect",
     "placeAdd": "Add Place",
     "placesDefinition": "A place represents a physical location containing a device not owned by a specific user, such as a meeting room with a room device or a reception with shared phones.",
     "placesUses": "Places can contain shared devices. You'll be able to view your places here - and the devices and configurations that belong to them.",

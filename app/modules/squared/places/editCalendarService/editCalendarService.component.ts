@@ -1,7 +1,4 @@
-interface IExternalLinkedAccount {
-  providerID: string;
-  accountGUID: string;
-}
+import { IExternalLinkedAccount } from '../../common/ExternalLinkedAccount';
 
 class EditCalendarService implements ng.IComponentController {
   private dismiss: Function;

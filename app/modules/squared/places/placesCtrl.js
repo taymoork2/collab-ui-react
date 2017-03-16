@@ -41,6 +41,9 @@ require('../devices/_devices.scss');
             vm.hybridCalendarEnabledOnOrg = _.chain(ServiceDescriptor.filterEnabledServices(services)).filter(function (service) {
               return service.id === 'squared-fusion-gcal' || service.id === 'squared-fusion-cal';
             }).some().value();
+            vm.hybridCallEnabledOnOrg = _.chain(ServiceDescriptor.filterEnabledServices(services)).filter(function (service) {
+              return service.id === 'squared-fusion-uc';
+            }).some().value();
           });
           var atlasF237ResourceGroupsPromise = FeatureToggleService.atlasF237ResourceGroupGetStatus().then(function (feature) {
             vm.atlasF237ResourceGroups = feature;
@@ -183,6 +186,7 @@ require('../devices/_devices.scss');
               csdmHybridCallFeature: vm.csdmHybridCallFeature,
               csdmHybridCalendarFeature: vm.csdmHybridCalendarFeature,
               hybridCalendarEnabledOnOrg: vm.hybridCalendarEnabledOnOrg,
+              hybridCallEnabledOnOrg: vm.hybridCallEnabledOnOrg,
               atlasHerculesGoogleCalendarFeatureToggle: vm.atlasHerculesGoogleCalendarFeatureToggle,
               atlasF237ResourceGroups: vm.atlasF237ResourceGroups,
               title: 'addDeviceWizard.newSharedSpace.title',
@@ -220,12 +224,16 @@ require('../devices/_devices.scss');
                 },
               },
               'addDeviceFlow.callConnectOptions': {
-                next: 'addDeviceFlow.showActivationCode',
-                calendar: 'addDeviceFlow.editCalendarService',
+                nextOptions: {
+                  next: 'addDeviceFlow.showActivationCode',
+                  calendar: 'addDeviceFlow.editCalendarService',
+                },
               },
               'addDeviceFlow.addLines': {
-                next: 'addDeviceFlow.showActivationCode',
-                calendar: 'addDeviceFlow.editCalendarService',
+                nextOptions: {
+                  next: 'addDeviceFlow.showActivationCode',
+                  calendar: 'addDeviceFlow.editCalendarService',
+                },
               },
               'addDeviceFlow.editCalendarService': {
                 next: 'addDeviceFlow.showActivationCode',

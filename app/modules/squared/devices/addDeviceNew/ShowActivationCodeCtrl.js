@@ -79,7 +79,7 @@
             createCodeForCloudberryAccount(vm.account.cisUuid).then(success, error);
           } else { // New place
             createCloudberryPlace(vm.account.name, wizardData.account.entitlements, wizardData.account.directoryNumber,
-              wizardData.account.externalNumber, wizardData.account.externalCalendarIdentifier ? [wizardData.account.externalCalendarIdentifier] : null,
+              wizardData.account.externalNumber, getExternalLinkedAccounts(),
               wizardData.account.ussProps || null)
               .then(function (place) {
                 vm.account.cisUuid = place.cisUuid;
@@ -122,6 +122,17 @@
         margin: 5,
       }).toString('base64');
       vm.isLoading = false;
+    }
+
+    function getExternalLinkedAccounts() {
+      var extLinkedAcc = [];
+      if (wizardData.account.externalCalendarIdentifier) {
+        extLinkedAcc.push(wizardData.account.externalCalendarIdentifier);
+      }
+      if (wizardData.account.externalHybridCallIdentifier) {
+        extLinkedAcc.push(wizardData.account.externalHybridCallIdentifier);
+      }
+      return extLinkedAcc.length > 0 ? extLinkedAcc : null;
     }
 
     function createHuronPlace(name, entitlements, directoryNumber, externalNumber) {
