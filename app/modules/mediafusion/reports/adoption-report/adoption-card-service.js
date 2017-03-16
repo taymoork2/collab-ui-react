@@ -43,25 +43,25 @@
       var data = {};
       var dataProvider = [];
       dataProvider = [{
-        "name": vm.total_cloud_title,
-        "color": "#22D5A3",
-        "value": callsOnPremise,
+        'name': vm.total_cloud_title,
+        'color': '#22D5A3',
+        'value': callsOnPremise,
       }, {
-        "name": vm.overflow_title,
-        "color": "#1CA0AE",
-        "value": callsOverflow,
+        'name': vm.overflow_title,
+        'color': '#1CA0AE',
+        'value': callsOverflow,
       }, {
-        "name": vm.cloud_calls_title,
-        "color": "#1FBBCB",
-        "value": cloudCalls,
+        'name': vm.cloud_calls_title,
+        'color': '#1FBBCB',
+        'value': cloudCalls,
       }];
       data['dataProvider'] = dataProvider;
       var chartData = CommonReportsGraphService.getBasePieChart(data);
       chartData.labelText = '[[name]]';
       chartData.allLabels = [{
-        "text": vm.totalHeader + " " + total,
-        "align": "center",
-        "y": 63,
+        'text': vm.totalHeader + ' ' + total,
+        'align': 'center',
+        'y': 63,
       }];
       var chart = AmCharts.makeChart(vm.totalParticipantsChartDiv, chartData, 0);
       return chart;
