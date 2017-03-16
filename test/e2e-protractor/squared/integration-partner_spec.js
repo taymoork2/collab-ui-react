@@ -51,12 +51,7 @@ describe('Partner flow', function () {
       //utils.click(partner.trialFilter);
       utils.click(partner.addButton);
 
-      if (featureToggle.features.atlasStartTrialForPaid) {
-        utils.expectIsDisplayed(partner.editTrialForm);
-      } else {
-        // TODO: remove when feature toggle is removed
-        utils.expectIsDisplayed(partner.addTrialForm);
-      }
+      utils.expectIsDisplayed(partner.editTrialForm);
       utils.expectIsDisabled(partner.startTrialButton);
 
       utils.expectInputCheckbox(partner.squaredUCTrialCheckbox, true);

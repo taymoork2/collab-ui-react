@@ -1950,11 +1950,6 @@
             url: '/overview',
             templateUrl: 'modules/core/partnerHome/partnerHome.tpl.html',
             controller: 'PartnerHomeCtrl',
-            resolve: {
-              trialForPaid: function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasStartTrialForPaid);
-              },
-            },
           })
           .state('partnerreports', {
             parent: 'partner',
@@ -2077,11 +2072,6 @@
             params: {
               filter: null,
             },
-            resolve: {
-              trialForPaid: function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasStartTrialForPaid);
-              },
-            },
           })
           .state('customer-overview', {
             parent: 'sidepanel',
@@ -2107,9 +2097,6 @@
                 function orgCallback(data) {
                   defer.resolve(data);
                 }
-              },
-              trialForPaid: function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasStartTrialForPaid);
               },
               data: /* @ngInject */ function ($state, $translate) {
                 $state.get('customer-overview').data.displayName = $translate.instant('common.overview');

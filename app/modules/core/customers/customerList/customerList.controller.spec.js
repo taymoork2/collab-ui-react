@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: CustomerListCtrl', function () {
-  var $httpBackend, $q, $controller, $state, $scope, Authinfo, Config, HuronConfig, FeatureToggleService, Notification, Orgservice, PartnerService, trialForPaid, TrialService;
+  var $httpBackend, $q, $controller, $state, $scope, Authinfo, Config, HuronConfig, FeatureToggleService, Notification, Orgservice, PartnerService, TrialService;
   var controller;
 
   var adminJSONFixture = getJSONFixture('core/json/organizations/adminServices.json');
@@ -55,8 +55,6 @@ describe('Controller: CustomerListCtrl', function () {
       CUSTOMER: 2,
     };
 
-    trialForPaid = false;
-
     spyOn($state, 'go');
     spyOn(Notification, 'error');
 
@@ -91,7 +89,6 @@ describe('Controller: CustomerListCtrl', function () {
       $state: $state,
       Authinfo: Authinfo,
       Config: Config,
-      trialForPaid: trialForPaid,
     });
 
     $scope.$apply();
