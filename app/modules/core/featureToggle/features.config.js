@@ -164,6 +164,7 @@ module.exports = {
   atlasF237ResourceGroup: 'atlas-f237-resource-group',
   atlasHybridNodesView: 'atlas-hybrid-nodes-view',
   atlasHybridVoicemail: 'atlas-hybrid-voicemail',
+  atlasHybridCallDiagnosticTool: 'atlas-hybrid-call-diagnostic-tool',
   gemServicesTab: 'gem-services-tab',
   gemCCA: 'gem-cloud-connected-audio',
   atlasHerculesGoogleCalendar: 'atlas-hercules-google-calendar',
