@@ -7,7 +7,7 @@
     <cs-page-sub-header-right>
       <cs-select class="report-subheader time-filter" id="timeFilter" name="timeFilter" ng-model="nav.timeSelected" options="nav.timeOptions" on-change-fn="nav.updateReports()" is-disabled="nav.isSubHeaderDisabled()"></cs-select>
       <cs-select class="report-subheader customer-filter" id="customerFilter" name="customerFilter" ng-model="nav.customerSelected" options="nav.customerOptions" on-change-fn="nav.updateReports()" filter="true" placeholder="nav.customerPlaceholder" multi="true" max="nav.customerMax" singular="{{::nav.customerSingular}}" plural="{{::nav.customerPlural}}" is-disabled="nav.isSubHeaderDisabled()"></cs-select>
-      <button ng-if="nav.downloadToggle" type="button" class="btn btn--primary report-download" translate="reportsPage.downloadPage" ng-click="nav.exportFullPage()" ng-disabled="nav.isSubHeaderDisabled()"></button>
+      <button type="button" class="btn btn--primary report-download" translate="reportsPage.downloadPage" ng-click="nav.exportFullPage()" ng-disabled="nav.isSubHeaderDisabled()"></button>
     </cs-page-sub-header-right>
   </cs-page-sub-header>
   <div class="content-container">

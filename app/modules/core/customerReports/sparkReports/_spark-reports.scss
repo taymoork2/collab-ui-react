@@ -33,9 +33,12 @@
     }
   }
 
+  report-slider {
+    width: calc(100% - 135px); // subtracting the width and margin of the download button
+  }
+
   .download-page {
     @include vr-spacing(mh, 0.75);
-    min-width: vr-adjust(150);
-    width: 15%;
+    width: vr-adjust(125);
   }
 }

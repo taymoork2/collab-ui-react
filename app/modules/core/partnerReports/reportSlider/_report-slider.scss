@@ -2,13 +2,10 @@
 @import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
 @import '~collab-ui/scss/tools/mixins/spacing-responsive';
 
-report-slider {
-  margin-top: 4px;
-  width: 85%;
-}
 .report-slider {
   width: 100%;
   .report-filter {
+    @include vr-spacing(mt, 0.25);
     width: vr-adjust(160);
   }
   .slider {
