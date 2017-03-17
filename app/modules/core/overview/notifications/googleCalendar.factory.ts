@@ -6,7 +6,7 @@ export class OverviewGoogleCalendarNotification {
       badgeType: 'success',
       canDismiss: true,
       dismiss: () => {
-        ServiceDescriptor.acknowledgeService('google-calendar-service');
+        ServiceDescriptor.acknowledgeService('squared-fusion-gcal');
       },
       link: () => {
         $modal.open({

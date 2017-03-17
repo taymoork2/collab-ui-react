@@ -14,7 +14,6 @@
           badgeType: 'success',
           canDismiss: true,
           dismiss: function () {
-
             ServiceDescriptor.acknowledgeService('squared-fusion-media');
           },
           link: function () {

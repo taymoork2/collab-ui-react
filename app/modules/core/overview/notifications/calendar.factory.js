@@ -14,7 +14,7 @@
           badgeType: 'success',
           canDismiss: true,
           dismiss: function () {
-            ServiceDescriptor.acknowledgeService('calendar-service');
+            ServiceDescriptor.acknowledgeService('squared-fusion-cal');
           },
           link: function () {
             $state.go('calendar-service.list');

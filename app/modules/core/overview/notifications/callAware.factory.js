@@ -14,7 +14,7 @@
           badgeType: 'success',
           canDismiss: true,
           dismiss: function () {
-            ServiceDescriptor.acknowledgeService('call-aware-service');
+            ServiceDescriptor.acknowledgeService('squared-fusion-uc');
           },
           link: function () {
             $state.go('call-service.list');
