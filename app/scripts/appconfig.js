@@ -3042,11 +3042,14 @@
           .state('private-trunk-overview', {
             url: '/privateTrunkOverview',
             parent: 'main',
-            template: '<private-trunk-overview></private-trunk-overview>',
+            template: '<private-trunk-overview has-private-trunk-feature-toggle="$resolve.hasPrivateTrunkFeatureToggle"></private-trunk-overview>',
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require(['modules/hercules/privateTrunk/privateTrunkOverview'], done);
               }),
+              hasPrivateTrunkFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.huronEnterprisePrivateTrunking);
+              },
             },
           })
           .state('context-cluster-sidepanel.host-details', {
