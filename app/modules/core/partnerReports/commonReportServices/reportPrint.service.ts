@@ -573,6 +573,3 @@ export class ReportPrintService {
     }
   }
 }
-
-angular.module('Core')
-  .service('ReportPrintService', ReportPrintService);

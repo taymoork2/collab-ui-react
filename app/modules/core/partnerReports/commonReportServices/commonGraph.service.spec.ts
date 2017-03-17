@@ -1,54 +1,40 @@
-describe('Service: Common Graph Service', () => {
-  let responseData = getJSONFixture('core/json/partnerReports/commonGraphService.json');
-  const CURSOR: string = 'cursor';
-  const COLUMN: string = 'column';
-  const LINE: string = 'line';
-  const SINGLE_LINE: string = 'singleLine';
-  const AXIS: string = 'axis';
-  const LEGEND: string = 'legend';
-  const NUMFORMAT: string = 'numFormat';
-  const BALLOON: string = 'balloon';
-  const EXPORT: string = 'export';
-  const PREFIXES: string = 'prefixesOfBigNumbers';
-  const dummyData: string = 'dummyData';
+import reportServices from './index';
 
+describe('Service: Common Graph Service', () => {
   beforeEach(function () {
-    this.initModules('Core');
+    this.initModules(reportServices);
     this.injectDependencies('CommonGraphService');
+
+    this.json = _.cloneDeep(getJSONFixture('core/json/partnerReports/commonGraphService.json'));
+    this.dummyData = 'dummyData';
+    _.forEach(this.json.keys, (key: string): void => {
+      this[key] = key;
+    });
   });
 
   it('getBaseVariable should return expected responses based on the key', function () {
     // correct key responses
-    expect(this.CommonGraphService.getBaseVariable(CURSOR)).toEqual(responseData.baseVariables[CURSOR]);
-    expect(this.CommonGraphService.getBaseVariable(COLUMN)).toEqual(responseData.baseVariables[COLUMN]);
-    expect(this.CommonGraphService.getBaseVariable(LINE)).toEqual(responseData.baseVariables[LINE]);
-    expect(this.CommonGraphService.getBaseVariable(AXIS)).toEqual(responseData.baseVariables[AXIS]);
-    expect(this.CommonGraphService.getBaseVariable(LEGEND)).toEqual(responseData.baseVariables[LEGEND]);
-    expect(this.CommonGraphService.getBaseVariable(NUMFORMAT)).toEqual(responseData.baseVariables[NUMFORMAT]);
-    expect(this.CommonGraphService.getBaseVariable(BALLOON)).toEqual(responseData.baseVariables[BALLOON]);
-    expect(this.CommonGraphService.getBaseVariable(PREFIXES)).toEqual(responseData.baseVariables[PREFIXES]);
-    expect(this.CommonGraphService.getBaseVariable(SINGLE_LINE)).toEqual(responseData.baseVariables[SINGLE_LINE]);
-
-    let exportVariable = this.CommonGraphService.getBaseVariable(EXPORT);
-    expect(exportVariable).toEqual(responseData.baseVariables[EXPORT]);
+    _.forEach(this.json.keys, (key: string): void => {
+      expect(this.CommonGraphService.getBaseVariable(key)).toEqual(this.json.baseVariables[key]);
+    });
 
     // incorrect key response
     expect(this.CommonGraphService.getBaseVariable('col')).toEqual(undefined);
   });
 
   it('getBaseSerialGraph should return expected defaults for a column graph', function () {
-    responseData.getBaseSerialGraph[BALLOON] = responseData.baseVariables[BALLOON];
-    responseData.getBaseSerialGraph[EXPORT] = responseData.baseVariables[EXPORT];
+    this.json.getBaseSerialGraph[this.balloon] = this.json.baseVariables[this.balloon];
+    this.json.getBaseSerialGraph[this.export] = this.json.baseVariables[this.export];
 
-    let baseSerialGraph = this.CommonGraphService.getBaseSerialGraph(dummyData, dummyData, dummyData, dummyData, dummyData, dummyData);
-    expect(baseSerialGraph).toEqual(responseData.getBaseSerialGraph);
+    let baseSerialGraph = this.CommonGraphService.getBaseSerialGraph(this.dummyData, this.dummyData, this.dummyData, this.dummyData, this.dummyData, this.dummyData);
+    expect(baseSerialGraph).toEqual(this.json.getBaseSerialGraph);
   });
 
   it('getBasePieChart should return expected defaults for a pie chart', function () {
-    responseData.getBasePieChart[BALLOON] = responseData.baseVariables[BALLOON];
-    responseData.getBasePieChart[EXPORT] = responseData.baseVariables[EXPORT];
+    this.json.getBasePieChart[this.balloon] = this.json.baseVariables[this.balloon];
+    this.json.getBasePieChart[this.export] = this.json.baseVariables[this.export];
 
-    let basePiechart = this.CommonGraphService.getBasePieChart(dummyData, dummyData, dummyData, dummyData, dummyData, dummyData, dummyData, dummyData, dummyData, dummyData);
-    expect(basePiechart).toEqual(responseData.getBasePieChart);
+    let basePiechart = this.CommonGraphService.getBasePieChart(this.dummyData, this.dummyData, this.dummyData, this.dummyData, this.dummyData, this.dummyData, this.dummyData, this.dummyData, this.dummyData, this.dummyData);
+    expect(basePiechart).toEqual(this.json.getBasePieChart);
   });
 });
