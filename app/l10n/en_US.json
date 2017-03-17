@@ -609,6 +609,9 @@
         "deviceUsageListReadyForDownload": "Your device usage list has been compiled and is ready to download.",
         "deviceUsageExportFailedOrCancelled": "Device Usage Export failed or was cancelled."
       }
+    },
+    "webexMetrics": {
+      "title": "WebEx Metrics"
     }
   },
   "sharedMeetingReports": {

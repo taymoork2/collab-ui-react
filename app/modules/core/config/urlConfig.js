@@ -225,6 +225,7 @@
     LogMetricsUrl: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
     SSOTestUrl: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
     SSOSetupUrl: 'https://idbroker.webex.com/idb/idbconfig/',
+    WebexMetricsUrl: 'https://ds2-qlikdemo.cisco.com/single/?appid=28697d05-07e5-4d57-b217-302b036568c2&sheet=wWJuDnE',
   };
 
   module.exports = angular

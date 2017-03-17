@@ -1514,6 +1514,16 @@
               },
             },
           })
+          .state('reports.webex-metrics', {
+            url: '/reports/webexMetrics',
+            views: {
+              'tabContent': {
+                controllerAs: 'nav',
+                controller: 'WebExMetricsCtrl',
+                templateUrl: 'modules/core/customerReports/webexMetrics/webexMetrics.tpl.html',
+              },
+            },
+          })
           .state('reports.media', {
             url: '/reports/media',
             views: {
