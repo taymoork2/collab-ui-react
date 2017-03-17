@@ -205,6 +205,18 @@ describe('Controller: OverviewCtrl', function () {
 
     ServiceDescriptor = {
       services: function () {},
+      getServices: function () {
+        return $q.resolve([{
+          id: Config.entitlements.fusion_cal,
+          acknowledged: false,
+        }, {
+          id: Config.entitlements.fusion_uc,
+          acknowledged: false,
+        }, {
+          id: Config.entitlements.fusion_ec,
+          acknowledged: false,
+        }]);
+      },
     };
 
     ServiceStatusDecriptor = {
@@ -225,26 +237,6 @@ describe('Controller: OverviewCtrl', function () {
       getOrg: jasmine.createSpy().and.callFake(function (callback) {
         callback(orgServiceJSONFixture.getOrgNoSip, 200);
       }),
-      getHybridServiceAcknowledged: function () {
-        var defer = $q.defer();
-        defer.resolve({
-          status: 200,
-          data: {
-            items: [{
-              id: Config.entitlements.fusion_cal,
-              acknowledged: false,
-            }, {
-              id: Config.entitlements.fusion_uc,
-              acknowledged: false,
-            }, {
-              id: Config.entitlements.fusion_ec,
-              acknowledged: false,
-            }],
-          },
-        });
-        return defer.promise;
-      },
-      setHybridServiceAcknowledged: jasmine.createSpy(),
     };
 
     PstnSetupService = {

@@ -8,7 +8,7 @@ require('./_overview.scss');
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($modal, $rootScope, $state, $scope, $translate, Authinfo, CardUtils, Config, FeatureToggleService, FusionClusterService, hasGoogleCalendarFeatureToggle, Log, LicenseService, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, SunlightReportService, TrialService, UrlConfig, PstnSetupService) {
+  function OverviewCtrl($modal, $rootScope, $state, $scope, $translate, Authinfo, CardUtils, Config, FeatureToggleService, FusionClusterService, hasGoogleCalendarFeatureToggle, Log, LicenseService, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, ServiceDescriptor, SunlightReportService, TrialService, UrlConfig, PstnSetupService) {
     var vm = this;
 
     var PSTN_TOS_ACCEPT = 'pstn-tos-accept-event';
@@ -46,34 +46,36 @@ require('./_overview.scss');
         resizeNotifications();
       }
 
-      Orgservice.getHybridServiceAcknowledged().then(function (response) {
-        if (response.status === 200) {
-          _.forEach(response.data.items, function (item) {
-            if (!item.acknowledged) {
-              if (item.id === Config.entitlements.fusion_cal) {
+      ServiceDescriptor.getServices()
+        .then(function (services) {
+          _.forEach(services, function (service) {
+            if (!service.acknowledged) {
+              if (service.id === Config.entitlements.fusion_cal) {
                 vm.notifications.push(OverviewNotificationFactory.createCalendarNotification());
-              } else if (item.id === Config.entitlements.fusion_gcal && hasGoogleCalendarFeatureToggle) {
+              } else if (service.id === Config.entitlements.fusion_gcal && hasGoogleCalendarFeatureToggle) {
                 vm.notifications.push(OverviewNotificationFactory.createGoogleCalendarNotification($modal, $state, Orgservice));
-              } else if (item.id === Config.entitlements.fusion_uc) {
+              } else if (service.id === Config.entitlements.fusion_uc) {
                 vm.notifications.push(OverviewNotificationFactory.createCallAwareNotification());
-              } else if (item.id === Config.entitlements.fusion_ec) {
+              } else if (service.id === Config.entitlements.fusion_ec) {
                 vm.notifications.push(OverviewNotificationFactory.createCallConnectNotification());
-              } else if (item.id === Config.entitlements.mediafusion) {
+              } else if (service.id === Config.entitlements.mediafusion) {
                 vm.notifications.push(OverviewNotificationFactory.createHybridMediaNotification());
-              } else if (item.id === Config.entitlements.hds) {
+              } else if (service.id === Config.entitlements.hds) {
                 vm.notifications.push(OverviewNotificationFactory.createHybridDataSecurityNotification());
               }
             }
           });
           resizeNotifications();
-        } else {
+        })
+        .catch(function () {
           Log.error('Error in GET service acknowledged status');
-        }
-      });
+        });
+
       var params = {
         basicInfo: true,
         disableCache: true,
       };
+
       Orgservice.getOrg(function (data, status) {
         if (status === 200) {
           vm.orgData = data;

@@ -25,7 +25,7 @@
     .name;
 
   /* @ngInject */
-  function Orgservice($http, $q, $resource, $translate, Auth, Authinfo, Config, Log, UrlConfig, Utils) {
+  function Orgservice($http, $q, $resource, $translate, Auth, Authinfo, Log, UrlConfig, Utils) {
     var service = {
       getOrg: getOrg,
       getAdminOrg: getAdminOrg,
@@ -41,8 +41,6 @@
       deleteOrg: deleteOrg,
       listOrgs: listOrgs,
       getOrgCacheOption: getOrgCacheOption,
-      getHybridServiceAcknowledged: getHybridServiceAcknowledged,
-      setHybridServiceAcknowledged: setHybridServiceAcknowledged,
       getEftSetting: getEftSetting,
       setEftSetting: setEftSetting,
       setOrgAltHdsServersHds: setOrgAltHdsServersHds,
@@ -364,44 +362,6 @@
           data.status = status;
           callback(data, status);
         });
-    }
-
-    function getHybridServiceAcknowledged() {
-      var serviceUrl = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services';
-      return $http({
-        method: 'GET',
-        url: serviceUrl,
-      });
-    }
-
-    function setHybridServiceAcknowledged(serviceName) {
-      var serviceUrl = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/';
-      if (serviceName === 'calendar-service') {
-        serviceUrl = serviceUrl.concat(Config.entitlements.fusion_cal);
-      } else if (serviceName === 'google-calendar-service') {
-        serviceUrl = serviceUrl.concat(Config.entitlements.fusion_gcal);
-      } else if (serviceName === 'call-aware-service') {
-        serviceUrl = serviceUrl.concat(Config.entitlements.fusion_uc);
-      } else if (serviceName === 'call-connect-service') {
-        serviceUrl = serviceUrl.concat(Config.entitlements.fusion_ec);
-      } else if (serviceName === 'squared-fusion-media') {
-        serviceUrl = serviceUrl.concat(Config.entitlements.mediafusion);
-      } else if (serviceName === 'spark-hybrid-datasecurity') {
-        serviceUrl = serviceUrl.concat(Config.entitlements.hds);
-      } else {
-        return $q(function (resolve, reject) {
-          reject('serviceName is invalid: ' + serviceName);
-        });
-      }
-      return $http({
-        method: 'PATCH',
-        url: serviceUrl,
-        data: {
-          "acknowledged": true,
-        },
-      }).error(function () {
-        Log.error("Error in PATCH acknowledge status to " + serviceUrl);
-      });
     }
 
     function getEftSetting(currentOrgId) {
