@@ -1,10 +1,8 @@
-type CallbackFunction = () => void;
-
 class VerifySipDestinationComponentCtrl implements ng.IComponentController {
 
   public destinationUrl: string;
-  private onDestinationSave: CallbackFunction;
-  private onDestinationClear: CallbackFunction;
+  private onDestinationSave: Function;
+  private onDestinationClear: Function;
 
   /* @ngInject */
   constructor(
@@ -29,8 +27,8 @@ class VerifySipDestinationComponentCtrl implements ng.IComponentController {
       type: 'full',
     })
       .result
-      .then(() => {
-        this.onDestinationSave();
+      .then((savedDespiteWarnings: boolean) => {
+        this.onDestinationSave({ warn: savedDespiteWarnings });
       })
       .catch((error) => {
         if (error) {

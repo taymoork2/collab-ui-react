@@ -209,7 +209,7 @@
     L2sipUrl: {
       dev: 'https://l2sip-cfa-web.wbx2.com/l2sip/api/v1',
       cfe: 'https://l2sip-integration-web.wbx2.com/l2sip/api/v1',
-      integration: 'https://l2sip-cfa-web.wbx2.com/l2sip/api/v1', // https://l2sip-integration-web.wbx2.com/l2sip/api/v1
+      integration: 'https://l2sip-cfa-web.wbx2.com/l2sip/api/v1', // Tool is not working in integration, we need to point to prod for now.
       prod: 'https://l2sip-cfa-web.wbx2.com/l2sip/api/v1',
     },
 

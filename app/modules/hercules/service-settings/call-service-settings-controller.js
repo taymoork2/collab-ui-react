@@ -94,13 +94,17 @@
       //  if (err) return notification.notify(err);
       });
 
-    vm.updateSipDomain = function () {
+    vm.updateSipDomain = function (savedDespiteWarnings) {
       vm.savingSip = true;
 
       USSService.updateOrg(vm.org)
         .then(function () {
           vm.savingSip = false;
-          Notification.success('hercules.errors.sipDomainSaved');
+          if (savedDespiteWarnings) {
+            Notification.warning('hercules.errors.sipDomainSavedDespiteWarnings');
+          } else {
+            Notification.success('hercules.errors.sipDomainSaved');
+          }
         })
         .catch(function (error) {
           vm.savingSip = false;
@@ -146,8 +150,8 @@
     }
 
     /* Callback from the verify-sip-destination component  */
-    vm.onDestinationSave = function () {
-      vm.updateSipDomain();
+    vm.onDestinationSave = function (warn) {
+      vm.updateSipDomain(warn);
     };
 
     /* Callback from the verify-sip-destination component  */

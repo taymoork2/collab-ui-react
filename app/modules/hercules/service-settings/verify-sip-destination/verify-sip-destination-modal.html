@@ -33,13 +33,13 @@
     </div>
 
     <div class="sip-verification-modal-section">
-      <h6 translate="hercules.settings.verifySipDestination.details"></h6>
+      <h6 translate="common.details"></h6>
       <table class="table table-striped sip-destination-results-table">
         <thead>
         <tr>
-          <td translate="hercules.settings.verifySipDestination.step"></td>
-          <td translate="hercules.settings.verifySipDestination.details"></td>
-          <td translate="hercules.settings.verifySipDestination.result" class="result"></td>
+          <td translate="common.step"></td>
+          <td translate="common.details"></td>
+          <td translate="common.result" class="result"></td>
         </tr>
         </thead>
         <tbody>
@@ -58,11 +58,11 @@
   <button ng-click="$dismiss(vm.hasWarningOrError())"
           class="btn"
           translate="common.close"></button>
-  <button ng-click="$close()"
+  <button ng-click="$close(false)"
           ng-if="!vm.hasWarningOrError() && vm.currentStep === 'result'"
           class="btn--primary"
           translate="common.save"></button>
-  <button ng-click="$close()"
+  <button ng-click="$close(true)"
           ng-if="vm.hasWarningOrError() && vm.currentStep === 'result'"
           class="btn--primary"
           translate="hercules.settings.verifySipDestination.saveAnyway"></button>

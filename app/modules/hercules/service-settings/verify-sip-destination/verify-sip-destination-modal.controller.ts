@@ -1,18 +1,10 @@
-import { L2SipService } from 'modules/hercules/services/l2sip-service';
+import { L2SipService, ISipDestinationSteps, VerificationStep, Severity } from 'modules/hercules/services/l2sip-service';
 
 type CurrentStep = 'loading' | 'error' | 'result';
-type Severity = 'Info' | 'Warn' | 'Error';
-type VerificationStep = {
-  type: string,
-  description?: string,
-  severity: Severity,
-};
 
 class VerifySipDestinationModalController {
 
-  public result: {
-    step: VerificationStep,
-  };
+  public result: VerificationStep[];
   public error;
 
   public currentStep: CurrentStep = 'loading';
@@ -28,7 +20,7 @@ class VerifySipDestinationModalController {
 
   public verifySipDestination(): void {
     this.L2SipService.verifySipDestination(this.destinationUrl, true)
-      .then((result) => {
+      .then((result: ISipDestinationSteps) => {
         this.result =  result.steps;
         this.currentStep = 'result';
       })

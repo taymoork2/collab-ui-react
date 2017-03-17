@@ -54,7 +54,7 @@
               </button>
               <verify-sip-destination ng-if="callServiceSettings.hasAtlasHybridCallDiagnosticTool"
                                       destination-url="callServiceSettings.org.sipDomain"
-                                      on-destination-save="callServiceSettings.onDestinationSave()"
+                                      on-destination-save="callServiceSettings.onDestinationSave(warn)"
                                       on-destination-clear="callServiceSettings.onDestinationClear()"></verify-sip-destination>
               <span class=right ng-show="callServiceSettings.savingSip">
                 <i class="icon icon-spinner"/>

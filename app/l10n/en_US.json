@@ -1103,6 +1103,7 @@
     "deactivate": "Deactivate",
     "delete": "Delete",
     "description": "Description",
+    "details": "Details",
     "devices": "Devices",
     "disable": "Disable",
     "disabled": "Disabled",
@@ -1161,6 +1162,7 @@
     "required": "Required",
     "reset": "Reset",
     "resources": "Resources",
+    "result": "Result",
     "retry": "Retry",
     "save": "Save",
     "saveLabel": "Do you want to save your changes?",
@@ -1171,6 +1173,7 @@
     "settings": "Settings",
     "showAllAdminUsers": "Show all {{numUsers}} administrators",
     "status": "Status",
+    "step": "Step",
     "submit": "Submit",
     "test": "Test",
     "to": "to",
@@ -1881,6 +1884,7 @@
       "failedToEnableConnect": "Could not enable Call Service Connect.",
       "failedToDisableConnect": "Could not disable Call Service Connect.",
       "sipDomainSaved": "SIP Destination saved successfully.",
+      "sipDomainSavedDespiteWarnings": "SIP Destination saved, with warnings.",
       "sipDomainInvalid": "Could not save SIP Destination. Try again later.",
       "invalidEmail": "Please enter a list of comma-separated email addresses",
       "couldNotGetServices": "Could not get services."
@@ -2079,11 +2083,9 @@
       },
       "verifySipDestination": {
         "contactCiscoSupport": "Please try again later, or contact your Cisco Support representative if the problem persists.",
-        "details": "Details",
         "errorFromServer": "Could not verify SIP destination. The server returned the following error message:",
         "verify": "Verify and Save",
         "title": "Verify SIP Destination",
-        "step": "Step",
         "testResultsHeader": "Test Results",
         "testResults": {
           "successful": "Successful",
@@ -2120,7 +2122,6 @@
           "UnexpectedError": "Unexpected Error",
           "UnexpectedException": "Unexpected Exception"
         },
-        "result": "Result",
         "saveAnyway": "Save Anyway",
         "warningsOrErrors": "You may still save the SIP Destination, but Hybrid Call Service Connect might not function correctly."
       },
