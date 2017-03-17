@@ -108,8 +108,10 @@ class TelephonyDomains implements ng.IComponentController {
           let text = 'N/A';
           let text_ = (item.backupBridgeName || 'N/A') + ' + ' + (item.primaryBridgeName || 'N/A');
 
+          item.domainName = item.telephonyDomainName || item.domainName;
           item.totalSites = item.telephonyDomainSites.length;
           item.bridgeSet = (!item.primaryBridgeName && !item.backupBridgeName) ? text : text_;
+          item.webDomainName = !item.webDomainName ? text : item.webDomainName;
           item.status_ = (item.status ? this.$translate.instant('gemini.cbgs.field.status.' + item.status) : '');
         });
         this.gridData = this.gridData_ =  data;

@@ -55,6 +55,7 @@ class GmtdDetails implements ng.IComponentController {
         }
 
         this.model = _.get(res, 'content.data.body');
+        this.model.domainName = this.model.telephonyDomainName || this.model.domainName;
         this.model.totalSites = this.model.telephonyDomainSites.length;
         this.model.status_ = (this.model.status ? this.$translate.instant('gemini.cbgs.field.status.' + this.model.status) : '');
         _.forEach(this.model.telephonyNumberList, (item) => {
@@ -76,10 +77,12 @@ class GmtdDetails implements ng.IComponentController {
           return item.description === this.ccaDomainId;
         });
         let remedyTicket: any = _.first(resArr);
-        remedyTicket.createTime = moment(remedyTicket.createTime).toDate().toString();
+        if (remedyTicket) {
+          remedyTicket.createTime = moment(remedyTicket.createTime).toDate().toString();
 
-        this.remedyTicket = remedyTicket;
-        this.remedyTicketLoading = false;
+          this.remedyTicket = remedyTicket;
+          this.remedyTicketLoading = false;
+        }
       })
       .catch((err) => {
         this.Notification.errorResponse(err, 'errors.statusError', { status: err.status });

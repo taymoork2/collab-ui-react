@@ -140,8 +140,10 @@
           });
 
           vm.remedyTicket = _.first(resArr);
-          vm.remedyTicket.createTime = moment(vm.remedyTicket.createTime).toDate().toString();
-          vm.remedyTicketLoading = false;
+          if (vm.remedyTicket) {
+            vm.remedyTicket.createTime = moment(vm.remedyTicket.createTime).toDate().toString();
+            vm.remedyTicketLoading = false;
+          }
         });
 
     }
