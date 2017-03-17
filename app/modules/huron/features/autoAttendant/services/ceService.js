@@ -7,6 +7,7 @@
     ])
     .factory('CeService', CeService)
     .factory('CeSiteService', CeSiteService)
+    .factory('CeCustomVariableService', CeCustomVariableService)
     .name;
 
   /* @ngInject */
@@ -25,6 +26,18 @@
   function CeSiteService($resource, HuronConfig) {
     return $resource(HuronConfig.getCesUrl() + '/customers/:customerId/sites', {
       customerId: '@customerId',
+    }, {
+      'update': {
+        method: 'PUT',
+        isArray: false,
+      },
+    });
+  }
+
+  function CeCustomVariableService($resource, HuronConfig) {
+    return $resource(HuronConfig.getCesUrl() + '/customers/:customerId/callExperiences/:ceId/customVariables', {
+      customerId: '@customerId',
+      ceId: '@ceId',
     }, {
       'update': {
         method: 'PUT',
