@@ -274,18 +274,18 @@ require('./_customer-list.scss');
       setNotesTextOrder();
       initColumns();
 
-      FeatureToggleService.atlasCareTrialsGetStatus().then(function (result) {
-        vm.isCareEnabled = result;
+      $q.all([
+        FeatureToggleService.atlasCareTrialsGetStatus(),
+        FeatureToggleService.atlasCareInboundTrialsGetStatus(),
+      ]).then(function (toggles) {
+        vm.isCareEnabled = toggles[0];
+        vm.isAdvanceCareEnabled = toggles[1];
+
         if (!vm.isCareEnabled) {
           _.remove(vm.filter.options, { value: 'care' });
         }
-      })
-      .finally(function () {
+      }).finally(function () {
         resetLists();
-      });
-
-      FeatureToggleService.atlasCareInboundTrialsGetStatus().then(function (result) {
-        vm.isAdvanceCareEnabled = result;
       });
 
       Orgservice.getOrg(function (data, status) {
