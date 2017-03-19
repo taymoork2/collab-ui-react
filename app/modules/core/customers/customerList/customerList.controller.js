@@ -505,7 +505,11 @@ require('./_customer-list.scss');
         var licenses = Authinfo.getLicenses();
         Orgservice.getAdminOrg(function (data, status) {
           if (status === 200) {
-            var myOrg = PartnerService.loadRetrievedDataToList([data], false, vm.isCareEnabled, vm.isAdvanceCareEnabled);
+            var myOrg = PartnerService.loadRetrievedDataToList([data], {
+              isTrialData: false,
+              isCareEnabled: vm.isCareEnabled,
+              isAdvanceCareEnabled: vm.isAdvanceCareEnabled,
+            });
             // Not sure why this is set again, afaik it is the same as myOrg
             //AG 9/27 getAdminOrg returns licenses without offerCodes so services are not populated therefore this is needed
             myOrg[0].customerName = custName;
@@ -554,8 +558,11 @@ require('./_customer-list.scss');
         .then(function (results) {
           if (results) {
             var orgList = _.get(results, 'managedOrgs.data.organizations', []);
-            var managed = PartnerService.loadRetrievedDataToList(orgList, false,
-              vm.isCareEnabled, vm.isAdvanceCareEnabled);
+            var managed = PartnerService.loadRetrievedDataToList(orgList, {
+              isTrialData: false,
+              isCareEnabled: vm.isCareEnabled,
+              isAdvanceCareEnabled: vm.isAdvanceCareEnabled,
+            });
             var indexMyOwnOrg = _.findIndex(managed, {
               customerOrgId: Authinfo.getOrgId(),
             });

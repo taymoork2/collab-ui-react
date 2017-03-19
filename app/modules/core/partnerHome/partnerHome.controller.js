@@ -76,7 +76,7 @@ require('./_partner-landing-trials.scss');
           Notification.errorResponse(response, 'partnerHomePage.errGetTrialsQuery');
         })
         .then(function (response) {
-          return PartnerService.loadRetrievedDataToList(_.get(response, 'data.trials', []), true);
+          return PartnerService.loadRetrievedDataToList(_.get(response, 'data.trials', []), { isTrialData: true });
         })
         .then(function (trialsList) {
           $scope.activeList = _.filter(trialsList, {
