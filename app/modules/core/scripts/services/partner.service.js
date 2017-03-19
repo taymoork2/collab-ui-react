@@ -364,13 +364,13 @@
       rowData.notes = notes;
     }
 
-    function loadRetrievedDataToList(list, isTrialData, isCareEnabled, isAdvanceCareEnabled) {
+    function loadRetrievedDataToList(list, options) {
       return _.map(list, function (customer) {
-        return massageDataForCustomer(customer, isTrialData, isCareEnabled, isAdvanceCareEnabled);
+        return massageDataForCustomer(customer, options);
       });
     }
 
-    function massageDataForCustomer(customer, isTrialData, isCareEnabled, isAdvanceCareEnabled) {
+    function massageDataForCustomer(customer, options) {
       var edate = moment(customer.startDate).add(customer.trialPeriod, 'days').format('MMM D, YYYY');
       var dataObj = {
         trialId: customer.trialId,
@@ -408,13 +408,13 @@
         isSquaredUcOffer: false,
         notes: {},
         isPartner: false,
-        isTrialData: isTrialData,
+        isTrialData: _.get(options, 'isTrialData', false),
       };
 
-      var licensesAndOffersData = parseLicensesAndOffers(customer, { isCareEnabled: isCareEnabled, isAdvanceCareEnabled: isAdvanceCareEnabled });
+      var licensesAndOffersData = parseLicensesAndOffers(customer, options);
       _.assign(dataObj, licensesAndOffersData);
 
-      dataObj.isAllowedToManage = isTrialData || customer.isAllowedToManage;
+      dataObj.isAllowedToManage = dataObj.isTrialData || customer.isAllowedToManage;
       dataObj.isPartner = _.get(customer, 'isPartner', false);
       dataObj.unmodifiedLicenses = _.cloneDeep(customer.licenses);
       dataObj.licenseList = customer.licenses;
@@ -425,7 +425,7 @@
 
       var daysLeft = TrialService.calcDaysLeft(customer.startDate, customer.trialPeriod);
       dataObj.daysLeft = daysLeft;
-      if (isTrialData) {
+      if (dataObj.isTrialData) {
         if (daysLeft < 0) {
           dataObj.status = $translate.instant('customerPage.expired');
           dataObj.state = 'EXPIRED';
@@ -460,17 +460,17 @@
 
       dataObj.purchased = _calculatePurchaseStatus(dataObj);
 
-      dataObj.totalLicenses = _calculateTotalLicenses(dataObj, isCareEnabled, isAdvanceCareEnabled);
+      dataObj.totalLicenses = _calculateTotalLicenses(dataObj, options);
       dataObj.uniqueServiceCount = _countUniqueServices(dataObj);
 
-      dataObj.orderedServices = _getOrderedServices(dataObj, isCareEnabled);
+      dataObj.orderedServices = _getOrderedServices(dataObj, options);
 
       setNotesSortOrder(dataObj);
       return dataObj;
     }
 
     // The information provided by this function will be used in displaying the service icons on the customer list page.
-    function _getOrderedServices(data, isCareEnabled) {
+    function _getOrderedServices(data, options) {
       var servicesToProcess = ['messaging', 'conferencing', 'communications', 'webexEEConferencing',
         'roomSystems', 'sparkBoard', 'care'];
       var servicesManagedByCurrentPartner = [];
@@ -481,7 +481,7 @@
         if (service === 'webexEEConferencing') {
           serviceToAdd = 'webex';
         }
-        if (service !== 'care' || (service === 'care' && isCareEnabled)) {
+        if (service !== 'care' || (service === 'care' && _.get(options, 'isCareEnabled', true))) {
           if (isServiceManagedByCurrentPartner(data[service])) {
             servicesManagedByCurrentPartner.push(serviceToAdd);
           } else {
@@ -526,10 +526,10 @@
     }
 
 
-    function _calculateTotalLicenses(customerData, isCareEnabled, isAdvanceCareEnabled) {
+    function _calculateTotalLicenses(customerData, options) {
       if (customerData.purchased || customerData.isPartner) {
         return _.sumBy(customerData.licenseList, function (license) {
-          if (!helpers.isDisplayableService(license, { isTrial: undefined, isShowCMR: false, isCareEnabled: isCareEnabled, isAdvanceCareEnabled: isAdvanceCareEnabled })) {
+          if (!helpers.isDisplayableService(license, _.assign({ isTrial: undefined, isShowCMR: false }, options))) {
             return 0;
           } else {
             return license.volume || 0;
@@ -539,7 +539,7 @@
         // device and care licenses can be undefined
         return customerData.licenses +
               (customerData.deviceLicenses || 0) +
-              (isCareEnabled ? (customerData.careLicenses || 0) : 0);
+              (_.get(options, 'isCareEnabled', false) ? (customerData.careLicenses || 0) : 0);
       }
     }
 

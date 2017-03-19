@@ -193,7 +193,11 @@ describe('Partner Service -', function () {
   });
 
   it('should successfully return an array of customers with additional properties from calling loadRetrievedDataToList', function () {
-    var returnList = PartnerService.loadRetrievedDataToList(_.get(testData, 'managedOrgsResponse.data.organizations', []), true, true, true);
+    var returnList = PartnerService.loadRetrievedDataToList(_.get(testData, 'managedOrgsResponse.data.organizations', []), {
+      isTrialData: true,
+      isCareEnabled: true,
+      isAdvanceCareEnabled: true,
+    });
     var activeList = _.filter(returnList, {
       state: "ACTIVE",
     });
@@ -240,7 +244,11 @@ describe('Partner Service -', function () {
   it('should successfully return a list customer orgs with orderedServices property from calling loadRetrievedDataToList with isCareEnabled being true', function () {
     spyOn(Authinfo, 'getPrimaryEmail').and.returnValue('partner@company.com');
 
-    var returnList = PartnerService.loadRetrievedDataToList(_.get(testData, 'managedOrgsResponse.data.organizations', []), true, true, true);
+    var returnList = PartnerService.loadRetrievedDataToList(_.get(testData, 'managedOrgsResponse.data.organizations', []), {
+      isTrialData: true,
+      isCareEnabled: true,
+      isAdvanceCareEnabled: true,
+    });
     var expectedServices = ['messaging', 'communications', 'webex', 'roomSystems', 'sparkBoard', 'care'];
     var expectedServicesManagedByOthers = ['conferencing'];
 
@@ -254,7 +262,11 @@ describe('Partner Service -', function () {
   it('should successfully return a list customer orgs with orderedServices property from calling loadRetrievedDataToList with isCareEnabled being false', function () {
     spyOn(Authinfo, 'getPrimaryEmail').and.returnValue('partner@company.com');
 
-    var returnList = PartnerService.loadRetrievedDataToList(_.get(testData, 'managedOrgsResponse.data.organizations', []), true, false, true);
+    var returnList = PartnerService.loadRetrievedDataToList(_.get(testData, 'managedOrgsResponse.data.organizations', []), {
+      isTrialData: true,
+      isCareEnabled: false,
+      isAdvanceCareEnabled: false,
+    });
     var expectedServices = ['messaging', 'communications', 'webex', 'roomSystems', 'sparkBoard'];
     var expectedServicesManagedByOthers = ['conferencing'];
 
