@@ -192,4 +192,5 @@ module.exports = {
   atlasHybridCucmSupport: 'atlas-hybrid-cucm-support',
   huronEnterprisePrivateTrunking: 'huron-i387-enterprise-private-trunking',
   webexMetrics: 'webex-metrics',
+  huronSupportForPortEmails: 'huron-support-for-port-emails',
 };
