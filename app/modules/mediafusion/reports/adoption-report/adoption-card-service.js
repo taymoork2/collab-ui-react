@@ -11,9 +11,9 @@
     vm.numberOfMeetsOnPremisesChartDiv = 'numberOfMeetsOnPremisesChartDiv';
     vm.totalParticipantsChartDiv = 'totalParticipantsChartDiv';
     vm.totalHeader = $translate.instant('mediaFusion.metrics.clientType.total');
-    vm.total_cloud_title = $translate.instant('mediaFusion.metrics.totalCloud');
-    vm.overflow_title = $translate.instant('mediaFusion.metrics.cloud_calls');
-    vm.cloud_calls_title = $translate.instant('mediaFusion.metrics.totalCloud');
+    vm.onPremiseHeading = $translate.instant('mediaFusion.metrics.onPremisesHeading');
+    vm.overflowHeading = $translate.instant('mediaFusion.metrics.cloud_calls');
+    vm.cloudCallHeading = $translate.instant('mediaFusion.metrics.totalCloud');
 
 
     return {
@@ -45,15 +45,15 @@
       cloudCalls = (cloudCalls - callsOverflow) < 0 ? 0 : (cloudCalls - callsOverflow);
       var total = cloudCalls + callsOverflow + callsOnPremise;
       dataProvider = [{
-        'name': vm.total_cloud_title,
+        'name': vm.onPremiseHeading,
         'color': '#22D5A3',
         'value': callsOnPremise,
       }, {
-        'name': vm.overflow_title,
+        'name': vm.overflowHeading,
         'color': '#1CA0AE',
         'value': callsOverflow,
       }, {
-        'name': vm.cloud_calls_title,
+        'name': vm.cloudCallHeading,
         'color': '#1FBBCB',
         'value': cloudCalls,
       }];
