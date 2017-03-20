@@ -8,7 +8,7 @@ require('./_customer-overview.scss');
     .controller('CustomerOverviewCtrl', CustomerOverviewCtrl);
 
   /* @ngInject */
-  function CustomerOverviewCtrl($modal, $q, $state, $stateParams, $translate, $window, AccountOrgService, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, trialForPaid, TrialService, Userservice) {
+  function CustomerOverviewCtrl($modal, $q, $state, $stateParams, $translate, $window, AccountOrgService, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, trialForPaid, TrialService, TrialPstnService, Userservice) {
     var vm = this;
 
     vm.currentCustomer = $stateParams.currentCustomer;
@@ -36,6 +36,7 @@ require('./_customer-overview.scss');
     vm.allowCustomerLogos = false;
     vm.allowCustomerLogoOrig = false;
     vm.isTest = false;
+    vm.countryCode = 'US';
     vm.isDeleting = false;
     vm.isOrgSetup = false;
     vm.isUpdateStatusEnabled = true;
@@ -269,6 +270,7 @@ require('./_customer-overview.scss');
 
     function openEditTrialModal() {
       //var isAddTrial = options.isAddTrial;
+      TrialPstnService.setCountryCode(vm.countryCode);
       TrialService.getTrial(vm.currentCustomer.trialId).then(function (response) {
         var route = TrialService.getEditTrialRoute(vm.featureTrialForPaid, vm.currentCustomer, response);
         $state.go(route.path, route.params).then(function () {
@@ -378,6 +380,9 @@ require('./_customer-overview.scss');
       Orgservice.getOrg(function (data, status) {
         if (data.success) {
           vm.isTest = data.isTestOrg;
+          if (data.countryCode) {
+            vm.countryCode = data.countryCode;
+          }
         } else {
           Log.error('Query org info failed. Status: ' + status);
         }

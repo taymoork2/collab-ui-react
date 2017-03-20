@@ -37,7 +37,7 @@
         reseller: false,
         details: {
           isTrial: true,
-          countryCode: 'US',
+          countryCode: PstnSetupService.getCountryCode(),
           pstnProvider: {},
           swivelNumbers: [],
           pstnContractInfo: {
