@@ -246,4 +246,26 @@ describe('Service: TelephonyDomainService', () => {
     });
     this.$scope.$apply();
   });
+
+  it('should move site for Telephony Domain', function () {
+    spyOn(this.GmHttpService, 'httpPut').and.returnValue(this.$q.resolve());
+
+    let mockData = this.preData;
+    let mockHttpResponse = {
+      data: mockData,
+    };
+    mockData.content.data.body = {
+      body: {
+        siteId: 858622,
+        siteName: 'xiaoyuantest2',
+        siteUrl: 'xiaoyuantest2.webex.com',
+      },
+    };
+
+    this.GmHttpService.httpPut.and.returnValue(this.$q.resolve(mockHttpResponse));
+    this.TelephonyDomainService.moveSite({}).then((res) => {
+      expect(res.content.data.body.body.siteId).toEqual(858622);
+    });
+    this.$scope.$apply();
+  });
 });
