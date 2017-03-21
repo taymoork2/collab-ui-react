@@ -19,11 +19,11 @@
     <div class="sub-section">
       <p class="sub-section__label" translate="hercules.serviceNames.squared-fusion-ec"></p>
       <p translate="hercules.settings.call.connect"></p>
-      <cs-toggle-switch ng-model="callServiceSettings.squaredFusionEc"
-                        toggle-id="squaredFusionEc-toggler"
-                        cs-change="callServiceSettings.storeEc(callServiceSettings.squaredFusionEc)"
-                        size="small">
-      </cs-toggle-switch>
+
+      <hs-enable-disable-call-service-connect service-is-enabled="callServiceSettings.squaredFusionEc"
+                                              on-call-service-connect-enabled="callServiceSettings.onCallServiceConnectEnabled()"
+                                              on-call-service-connect-disabled="callServiceSettings.onCallServiceConnectDisabled()"></hs-enable-disable-call-service-connect>
+
     </div>
     <div class="sub-section" ng-if="callServiceSettings.squaredFusionEc">
       <div class="hercules-sip-settings">
