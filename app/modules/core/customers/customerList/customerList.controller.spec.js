@@ -70,6 +70,9 @@ describe('Controller: CustomerListCtrl', function () {
     spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
       $q.resolve(false)
     );
+    spyOn(FeatureToggleService, 'atlasCareInboundTrialsGetStatus').and.returnValue(
+      $q.resolve(false)
+    );
     spyOn(Orgservice, 'getAdminOrg').and.callFake(function (callback) {
       callback(adminJSONFixture.getAdminOrg, 200);
     });

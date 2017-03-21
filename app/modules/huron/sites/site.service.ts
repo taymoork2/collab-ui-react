@@ -83,6 +83,8 @@ export class HuronSiteService {
 
   public createSite(site: Site): ng.IPromise<string> {
     let location: string;
+    // TODO (jlowery): remove after 'i751-10d-ext' toggle is removed.
+    _.set(site, 'toggleEnabled', true);
     return this.huronSiteService.save({
       customerId: this.Authinfo.getOrgId(),
     }, site,
@@ -109,7 +111,7 @@ export class HuronSiteService {
       dateFormat: site.dateFormat,
       timeFormat: site.timeFormat,
       routingPrefix: site.routingPrefix,
-      toggleEnabled: true,
+      toggleEnabled: true, // TODO (jlowery): remove after 'i751-10d-ext' toggle is removed.
     }).$promise;
   }
 

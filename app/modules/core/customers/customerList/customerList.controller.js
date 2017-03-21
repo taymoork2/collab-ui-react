@@ -16,6 +16,7 @@ require('./_customer-list.scss');
     vm.searchStr = '';
     vm.timeoutVal = 1000;
     vm.isCareEnabled = false;
+    vm.isAdvanceCareEnabled = false;
     vm.isOrgSetup = isOrgSetup;
     vm.isPartnerAdminWithCallOrRooms = isPartnerAdminWithCallOrRooms;
     vm.isOwnOrg = isOwnOrg;
@@ -273,15 +274,24 @@ require('./_customer-list.scss');
       setNotesTextOrder();
       initColumns();
 
-      FeatureToggleService.atlasCareTrialsGetStatus().then(function (result) {
-        vm.isCareEnabled = result;
+      $q.all([
+        FeatureToggleService.atlasCareTrialsGetStatus(),
+        FeatureToggleService.atlasCareInboundTrialsGetStatus(),
+      ]).then(function (toggles) {
+        vm.isCareEnabled = toggles[0];
+        vm.isAdvanceCareEnabled = toggles[1];
+
         if (!vm.isCareEnabled) {
           _.remove(vm.filter.options, { value: 'care' });
         }
-      })
-      .finally(function () {
+      }).finally(function () {
         resetLists();
       });
+
+      // TODO: Clean out this Expensive operation and point to authinfo for isTestOrg flag
+      var params = {
+        basicInfo: true,
+      };
 
       Orgservice.getOrg(function (data, status) {
         if (data.success) {
@@ -289,7 +299,7 @@ require('./_customer-list.scss');
         } else {
           Log.error('Query org info failed. Status: ' + status);
         }
-      });
+      }, null, params);
     }
 
     function getSubfields(entry, name) {
@@ -498,9 +508,16 @@ require('./_customer-list.scss');
         var accountId = Authinfo.getOrgId();
         var custName = Authinfo.getOrgName();
         var licenses = Authinfo.getLicenses();
+        var params = {
+          basicInfo: true,
+        };
         Orgservice.getAdminOrg(function (data, status) {
           if (status === 200) {
-            var myOrg = PartnerService.loadRetrievedDataToList([data], false, vm.isCareEnabled);
+            var myOrg = PartnerService.loadRetrievedDataToList([data], {
+              isTrialData: false,
+              isCareEnabled: vm.isCareEnabled,
+              isAdvanceCareEnabled: vm.isAdvanceCareEnabled,
+            });
             // Not sure why this is set again, afaik it is the same as myOrg
             //AG 9/27 getAdminOrg returns licenses without offerCodes so services are not populated therefore this is needed
             myOrg[0].customerName = custName;
@@ -530,7 +547,7 @@ require('./_customer-list.scss');
             reject('Unable to query for signed-in users org');
             Log.debug('Failed to retrieve partner org information. Status: ' + status);
           }
-        }, accountId);
+        }, accountId, params);
       });
     }
 
@@ -549,8 +566,11 @@ require('./_customer-list.scss');
         .then(function (results) {
           if (results) {
             var orgList = _.get(results, 'managedOrgs.data.organizations', []);
-            var managed = PartnerService.loadRetrievedDataToList(orgList, false,
-              vm.isCareEnabled);
+            var managed = PartnerService.loadRetrievedDataToList(orgList, {
+              isTrialData: false,
+              isCareEnabled: vm.isCareEnabled,
+              isAdvanceCareEnabled: vm.isAdvanceCareEnabled,
+            });
             var indexMyOwnOrg = _.findIndex(managed, {
               customerOrgId: Authinfo.getOrgId(),
             });

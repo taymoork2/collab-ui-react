@@ -164,6 +164,9 @@
               if (vm.hasSipUriDomainConfigured) {
                 return;
               }
+              var params = {
+                basicInfo: true,
+              };
               Orgservice.getOrg(function (data, status) {
                 if (status === 200) {
                   if (data && data.orgSettings && data.orgSettings.sipCloudDomain) {
@@ -173,7 +176,7 @@
                     addNotification('sipUriDomainEnterpriseNotConfigured', [serviceId], 'modules/hercules/notifications/sip_uri_domain_enterprise_not_set.html');
                   }
                 }
-              });
+              }, null, params);
             } else {
               NotificationService.removeNotification('sipUriDomainEnterpriseNotConfigured');
             }

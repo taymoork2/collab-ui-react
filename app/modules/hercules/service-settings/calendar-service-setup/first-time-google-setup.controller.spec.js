@@ -16,7 +16,12 @@ describe('Controller: FirstTimeGoogleSetupController', function () {
 
   CloudConnectorServiceMock = {
     updateConfig: function () {
-      return $q.reject();
+      return $q.reject({
+        data: 'VERY_VERY_BAD_ERROR',
+      });
+    },
+    getProvisioningResultTranslationKey: function () {
+      return 'hercules.some.translation.key';
     },
   };
 

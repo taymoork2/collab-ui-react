@@ -1,6 +1,8 @@
-@import 'styles/toolkit/fonts';
-@import 'styles/toolkit/colors';
-@import 'styles/toolkit/spacing';
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/typography';
+@import '~collab-ui/scss/settings/page';
+@import '~collab-ui/scss/settings/cards';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
 
 .hg-edit {
   height: calc(100vh - #{($top-bar-height + $page-header-height)}) !important;
@@ -52,19 +54,19 @@
   .hg-name .formly-input-wrapper {
     width: 20rem;
     font-family: $brand-font-light;
-    font-size: $font-size-base;
+    font-size: $h6-font-size;
   }
 
   .hg-num .formly-input-wrapper {
     width: 13rem;
     font-family: $brand-font-light;
-    font-size: $font-size-base;
+    font-size: $h6-font-size;
   }
 
   .hg-time .formly-input-wrapper {
     width: 8.5rem;
     font-family: $brand-font-light;
-    font-size: $font-size-base;
+    font-size: $h6-font-size;
   }
 
   .hg-num .formly-input-wrapper,
@@ -78,8 +80,8 @@
     }
 
     span {
-      font-size: $font-size-h4;
-      font-family: $brand-font-cisco-TT-Light;
+      font-size: $h4-font-size;
+      font-family: $brand-font-light;
       color: $gray-dark-2;
     }
 

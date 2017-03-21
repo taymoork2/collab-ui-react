@@ -70,9 +70,8 @@
                   name="careTrial"
                   ng-if="trial.showBasicCare"
                   ng-model="trial.careTrial.enabled"
-                  ng-disabled="trial._helpers.messageOfferDisabledExpression() || trial._helpers.callOfferDisabledExpression()"
+                  ng-disabled="trial._helpers.messageOfferDisabledExpression() "
                   cs-input-label="{{::'trials.care' | translate}}"
-                  cs-input-help-text="{{::'trials.careHelp' | translate}}"
           >
           <formly-form model="trial.trialData.trials" fields="trial.careFields" ng-if="trial.showBasicCare"></formly-form>
           <input
@@ -82,9 +81,8 @@
                   name="advanceCareTrial"
                   ng-if="trial.showAdvanceCare"
                   ng-model="trial.advanceCareTrial.enabled"
-                  ng-disabled="trial._helpers.messageOfferDisabledExpression() || trial._helpers.callOfferDisabledExpression()"
+                  ng-disabled="trial._helpers.messageOfferDisabledExpression() "
                   cs-input-label="{{::'trials.advanceCare' | translate}}"
-                  cs-input-help-text="{{::'trials.advanceCareHelp' | translate}}"
           >
           <formly-form model="trial.trialData.trials" fields="trial.advanceCareFields" ng-if="trial.showAdvanceCare"></formly-form>
         </div>

@@ -161,7 +161,7 @@
     BmmpUrl: {
       dev: 'https://bmmp.dmz.ciscospark.com/api/v1',
       cfe: 'https://bmmp.ciscospark.com/api/v1',
-      integration: 'https://bmmpbts.webex.com/api/v1',
+      integration: 'https://bmmp.dmz.ciscospark.com/api/v1',
       prod: 'https://bmmp.ciscospark.com/api/v1',
     },
     GeminiUrl: {
@@ -206,6 +206,12 @@
       integration: 'https://encryption-integration.wbx2.com/encryption/api/v1',
       prod: 'https://encryption-a.wbx2.com/encryption/api/v1',
     },
+    L2sipUrl: {
+      dev: 'https://l2sip-cfa-web.wbx2.com/l2sip/api/v1',
+      cfe: 'https://l2sip-integration-web.wbx2.com/l2sip/api/v1',
+      integration: 'https://l2sip-cfa-web.wbx2.com/l2sip/api/v1', // Tool is not working in integration, we need to point to prod for now.
+      prod: 'https://l2sip-cfa-web.wbx2.com/l2sip/api/v1',
+    },
 
     // urls same for all environments
 
@@ -225,6 +231,7 @@
     LogMetricsUrl: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
     SSOTestUrl: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
     SSOSetupUrl: 'https://idbroker.webex.com/idb/idbconfig/',
+    WebexMetricsUrl: 'https://ds2-qlikdemo.cisco.com/single/?appid=28697d05-07e5-4d57-b217-302b036568c2&sheet=wWJuDnE',
   };
 
   module.exports = angular

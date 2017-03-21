@@ -8,40 +8,24 @@
   /* @ngInject */
   function DeviceUsageExportService($q, $document, $window, $log, $timeout, $http, Authinfo, UrlConfig) {
 
-    var localUrlBase = 'http://localhost:8080/atlas-server/admin/api/v1/organization';
-
     var urlBase = UrlConfig.getAdminServiceUrl() + 'organization';
 
-    function exportData(startDate, endDate, api, statusCallback, deviceCategories, version_2) {
+    //TODO: Remove deviceCategories and use aggregate ????
+    function exportData(startDate, endDate, api, statusCallback, deviceCategories) {
       var granularity = "day";
       var baseUrl = urlBase;
       if (api === 'mock') {
         $log.info("Not implemented export for mock data");
         return;
+      } else if (api === 'local') {
+        baseUrl = 'http://berserk.rd.cisco.com:8080/atlas-server/admin/api/v1/organization';
       }
-      if (api === 'local') {
-        baseUrl = localUrlBase;
-      }
-
-      //TODO: Fix when releasing V2
-      var url = baseUrl + '/' + Authinfo.getOrgId() + '/reports/device/call/export?';
-      url = url + 'intervalType=' + granularity;
-      url = url + '&rangeStart=' + startDate + '&rangeEnd' + endDate;
-      url = url + '&deviceCategories=' + deviceCategories.join();
-      url = url + '&accounts=__';
-      url = url + '&sendMockData=false';
-
-      if (version_2) {
-        if (api === 'local') {
-          baseUrl = 'http://berserk.rd.cisco.com:8080/atlas-server/admin/api/v1/organization';
-        }
-        url = baseUrl + '/' + Authinfo.getOrgId() + '/reports/device/usage/export?';
-        url = url + 'interval=' + granularity;
-        url = url + '&from=' + startDate + '&to' + endDate;
-        url = url + '&categories=' + deviceCategories.join();
-        url = url + '&countryCodes=aggregate';
-        url = url + '&models=__';
-      }
+      var url = baseUrl + '/' + Authinfo.getOrgId() + '/reports/device/usage/export?';
+      url = url + 'interval=' + granularity;
+      url = url + '&from=' + startDate + '&to' + endDate;
+      url = url + '&categories=' + deviceCategories.join();
+      url = url + '&countryCodes=aggregate';
+      url = url + '&models=__';
       return downloadReport(url, statusCallback);
     }
 

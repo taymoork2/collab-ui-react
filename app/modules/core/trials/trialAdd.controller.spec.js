@@ -55,7 +55,7 @@ describe('Controller: TrialAddCtrl', function () {
     spyOn(HuronCountryService, 'getCountryList').and.returnValue($q.resolve(countryList));
 
     $httpBackend
-      .when('GET', 'https://atlas-integration.wbx2.com/admin/api/v1/organizations/null?disableCache=false')
+      .when('GET', 'https://atlas-integration.wbx2.com/admin/api/v1/organizations/null?basicInfo=true&disableCache=false')
       .respond({});
 
     controller = $controller('TrialAddCtrl', {

@@ -120,6 +120,11 @@ require('../fields/_fields-list.scss');
 
       function onRegisterApi(gridApi) {
         vm.gridApi = gridApi;
+        gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+          $state.go('context-fieldsets-sidepanel', {
+            fieldset: row.entity,
+          });
+        });
         gridApi.infiniteScroll.on.needLoadMoreData($scope, function () {
           if (vm.load) {
             vm.currentDataPosition++;

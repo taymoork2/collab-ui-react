@@ -9,27 +9,25 @@
   <br>
   <span>{{ediscoverySearchCtrl.searchResults.totalSize}}</span>
   <div class="row" ng-if="ediscoverySearchCtrl.report && ediscoverySearchCtrl.report.canBeDownloaded">
-    <div class="columns small-12 medium-12 large-10">
+    <div class="columns small-12 medium-12 large-12 results-spacing">
       <button cs-btn
               class="btn btn--primary"
               loading="ediscoverySearchCtrl.downloadingReport"
               ng-click="ediscoverySearchCtrl.downloadReport(ediscoverySearchCtrl.report)">
         <span translate="ediscovery.search.downloadReport"></span>
       </button>
-      <div>
+      <button ng-cloak type="button" class="btn"
+                translate="ediscovery.search.viewReportsList"
+                ui-sref="ediscovery.reports">
+      </button>
+      <!-- To be added when download content link is present -->
+      <!-- <div>
         <span translate="ediscovery.searchResults.downloadContent"></span>
-      </div>
+      </div> -->
       <div class="expiry-info">
         <i class="icon icon-warning"></i>
         <span translate="ediscovery.search.expiryInfo"></span>
       </div>
-    </div>
-  </div>
-  <div class="row" ng-if="ediscoverySearchCtrl.report && ediscoverySearchCtrl.report.canBeCancelled">
-    <div class="columns small-12 medium-6 large-6">
-      <button ng-cloak type="button" class="btn btn--primary"
-                translate="ediscovery.search.takeMeToReports"
-                ui-sref="ediscovery.reports"></button>
     </div>
   </div>
 </div>

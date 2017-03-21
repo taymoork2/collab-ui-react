@@ -205,7 +205,10 @@
     }
 
     function initPstnCustomer() {
-       //Get and save organization/customer information
+      //Get and save organization/customer information
+      var params = {
+        basicInfo: true,
+      };
       Orgservice.getOrg(function (data) {
         if (data.countryCode) {
           PstnSetup.setCountryCode(data.countryCode);
@@ -217,7 +220,7 @@
         .finally(function () {
           vm.enableCarriers = true;
         });
-      }, PstnSetup.getCustomerId());
+      }, PstnSetup.getCustomerId(), params);
     }
 
     function onProviderReady() {

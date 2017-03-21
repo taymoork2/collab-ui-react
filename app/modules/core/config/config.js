@@ -8,7 +8,7 @@
     .factory('Config', Config)
     .name;
 
-  function Config($location, $window, Storage) {
+  function Config($location, $window, LocalStorage) {
     var TEST_ENV_CONFIG = 'TEST_ENV_CONFIG';
 
     var getCurrentHostname = function () {
@@ -343,12 +343,12 @@
 
     config.setTestEnvConfig = function (testEnv) {
       if (testEnv) {
-        Storage.put(TEST_ENV_CONFIG, testEnv); // Store in localStorage so new windows pick up the value, will be cleared on logout
+        LocalStorage.put(TEST_ENV_CONFIG, testEnv); // Store in localStorage so new windows pick up the value, will be cleared on logout
       }
     };
 
     config.isE2E = function () {
-      return _.includes(Storage.get(TEST_ENV_CONFIG), 'e2e');
+      return _.includes(LocalStorage.get(TEST_ENV_CONFIG), 'e2e');
     };
 
     config.isUserAgent = function (userAgentString) {
@@ -356,7 +356,7 @@
     };
 
     config.forceProdForE2E = function () {
-      return Storage.get(TEST_ENV_CONFIG) === 'e2e-prod';
+      return LocalStorage.get(TEST_ENV_CONFIG) === 'e2e-prod';
     };
 
     config.roleStates = {
@@ -521,6 +521,7 @@
         'context-settings',
         'context-fields',
         'context-fieldsets',
+        'context-fieldsets-sidepanel',
         'context-resources',
         'context-cluster-sidepanel',
         'add-resource',

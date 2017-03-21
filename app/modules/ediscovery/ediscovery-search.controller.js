@@ -41,7 +41,7 @@ var Spark = require('@ciscospark/spark-core').default;
 
     /* initial search variables page */
     vm.searchPlaceholder = $translate.instant('ediscovery.searchParameters.searchByEmailPlaceholder');
-    vm.searchByOptions = ['Email ID', 'Room ID'];
+    vm.searchByOptions = ['Email ID', 'Space ID'];
     vm.searchBySelected = '' || vm.searchByOptions[0];
     vm.searchModel = null;
     vm.queryModel = null;
@@ -177,10 +177,7 @@ var Spark = require('@ciscospark/spark-core').default;
 
     function searchByErrors(_queryError) {
       var queryError = !_.isUndefined(_queryError) ? _queryError : false;
-      if (queryError) {
-        return true;
-      }
-      return false;
+      return queryError;
     }
 
     function searchByParameters() {
@@ -194,7 +191,8 @@ var Spark = require('@ciscospark/spark-core').default;
     //advanced search section
     function searchResults(result) {
       var keywords = _.eq(vm.searchByOptions[0], vm.searchBySelected) ? vm.unencryptedEmails : vm.unencryptedRoomIds;
-      var queries = splitWords(vm.queryModel);
+      keywords = keywords || [$translate.instant('ediscovery.searchResults.notApplicable')];
+      var queries = vm.queryModel ? splitWords(vm.queryModel) : [$translate.instant('ediscovery.searchResults.notApplicable')];
       vm.roomInfo = result;
       vm.searchCriteria = {
         startDate: formatDate('display', getStartDate()),
@@ -203,11 +201,12 @@ var Spark = require('@ciscospark/spark-core').default;
       vm.searchResults = {
         keywords: keywords,
         queries: queries,
+        numRooms: result.data.numRooms,
         numFiles: result.data.numFiles,
         numMessages: result.data.numMessages,
         totalSize: convertBytesToGB(result.data.totalSizeInBytes),
       };
-      vm.searchResultsHeader = _.eq(vm.searchByOptions[0], vm.searchBySelected) ? $translate.instant('ediscovery.searchResults.emailId') : $translate.instant('ediscovery.searchResults.roomId');
+      vm.searchResultsHeader = _.eq(vm.searchByOptions[0], vm.searchBySelected) ? $translate.instant('ediscovery.searchResults.emailId') : $translate.instant('ediscovery.searchResults.spaceId');
     }
 
     function advancedSearch() {
@@ -252,6 +251,10 @@ var Spark = require('@ciscospark/spark-core').default;
           return EdiscoveryService.getArgonautServiceUrl(argonautParam)
             .then(function (result) {
               searchResults(result);
+              if (result.data.numRooms > 2500) {
+                vm.isReportMaxRooms = true;
+                vm.isReport = false;
+              }
             })
             .catch(function (err) {
               vm.error = _.get(err, 'data.message', $translate.instant('ediscovery.search.roomLookupError'));
@@ -373,7 +376,7 @@ var Spark = require('@ciscospark/spark-core').default;
     function searchButtonDisabled(_error) {
       var error = !_.isUndefined(_error) ? _error : false;
       var disable = !vm.searchCriteria.roomId || vm.searchCriteria.roomId === '' || vm.searchingForRoom === true;
-      return vm.ediscoveryToggle ? error : disable;
+      return vm.ediscoveryToggle ? (error || vm.dateValidationError) : disable;
     }
 
     function pollAvalonReport() {
@@ -485,7 +488,7 @@ var Spark = require('@ciscospark/spark-core').default;
     function convertBytesToGB(bytes) {
       var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
       var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10);
-      return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
+      return _.isNaN(i) ? 0 : Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
     }
 
     function searchSetup() {

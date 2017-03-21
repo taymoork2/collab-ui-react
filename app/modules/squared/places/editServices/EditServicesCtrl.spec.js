@@ -212,6 +212,29 @@ describe('EditServicesCtrl: Ctrl', function () {
         expect(controller.hasNextStep()).toBe(true);
       });
 
+      it('should be true when service is sparkOnly and it is the previous service and calendar is selected', function () {
+        var state = function () {
+          return {
+            data: {
+              account: {
+                entitlements: ['ciscouc'],
+              },
+              function: 'editServices',
+            },
+          };
+        };
+        $stateParams.wizard = {
+          state: state,
+          next: function () {
+          },
+        };
+        initController();
+        controller.service = 'sparkOnly';
+        controller.enableCalService = true;
+
+        expect(controller.hasNextStep()).toBe(true);
+      });
+
       it('should be false when editService is set and it is the previous service', function () {
         var state = function () {
           return {
@@ -257,6 +280,33 @@ describe('EditServicesCtrl: Ctrl', function () {
         expect($stateParams.wizard.next).toHaveBeenCalled();
         var wizardState = $stateParams.wizard.next.calls.mostRecent().args[0];
         expect(wizardState.account.entitlements).toEqual(['something', 'ciscouc']);
+      });
+
+      it('selecting sparkCall and Calendar should pass on all fields required by the next step including cicouc entitlement', function () {
+        state = function () {
+          return {
+            data: {
+              account: {
+                entitlements: ['something'],
+              },
+            },
+          };
+        };
+        $stateParams.wizard = {
+          state: state,
+          next: function () {
+          },
+        };
+        spyOn($stateParams.wizard, 'next');
+        initController();
+        controller.service = 'sparkCall';
+        controller.enableCalService = true;
+
+        controller.next();
+        expect($stateParams.wizard.next).toHaveBeenCalled();
+        var wizardState = $stateParams.wizard.next.calls.mostRecent().args[0];
+        expect(wizardState.account.entitlements).toEqual(['something', 'ciscouc']);
+        expect(wizardState.account.enableCalService).toEqual(true);
       });
 
       it('selecting sparkCallConnect should pass on all fields required by the next step including fusionec entitlement', function () {

@@ -110,6 +110,9 @@
       animation: graphAxisFade 2s ease-in-out 1 forwards;
     }
   }
+  .low-z-index {
+    z-index: 0;
+  }
 }
 .availabilityCursor {
   .amcharts-category-axis .amcharts-axis-label {

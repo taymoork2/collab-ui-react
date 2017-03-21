@@ -97,7 +97,11 @@
         $scope.extension.preferredWebExSiteName = Userservice.getPreferredWebExSiteForCalendaring($scope.currentUser);
         if (!$scope.extension.preferredWebExSiteName) {
           // Read org settings preference...
-          Orgservice.getOrg(_.noop, Authinfo.getOrgId(), true)
+          var params = {
+            basicInfo: true,
+            disableCache: true,
+          };
+          Orgservice.getOrg(_.noop, Authinfo.getOrgId(), params)
             .then(function (response) {
               if (_.get(response, 'data.orgSettings.calSvcpreferredWebExSite')) {
                 $scope.extension.preferredWebExSiteName = response.data.orgSettings.calSvcDefaultWebExSite;

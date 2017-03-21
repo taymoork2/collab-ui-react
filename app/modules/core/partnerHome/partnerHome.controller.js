@@ -36,14 +36,16 @@ require('./_partner-landing-trials.scss');
       if ($scope.activeList) {
         $scope.activeCount = $scope.activeList.length;
       }
-
+      var params = {
+        basicInfo: true,
+      };
       Orgservice.getOrg(function (data, status) {
         if (data.success) {
           $scope.isTestOrg = data.isTestOrg;
         } else {
           Log.error('Query org info failed. Status: ' + status);
         }
-      });
+      }, null, params);
     }
 
     function openAddTrialModal() {
@@ -76,7 +78,7 @@ require('./_partner-landing-trials.scss');
           Notification.errorResponse(response, 'partnerHomePage.errGetTrialsQuery');
         })
         .then(function (response) {
-          return PartnerService.loadRetrievedDataToList(_.get(response, 'data.trials', []), true);
+          return PartnerService.loadRetrievedDataToList(_.get(response, 'data.trials', []), { isTrialData: true });
         })
         .then(function (trialsList) {
           $scope.activeList = _.filter(trialsList, {

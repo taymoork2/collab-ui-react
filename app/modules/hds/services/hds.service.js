@@ -65,6 +65,9 @@
 
     function getHdsTrialUserGroupID() {
       var deferred = $q.defer();
+      var params = {
+        basicInfo: true,
+      };
       Orgservice.getOrg(function (data, status) {
         if (data.success || status === 200) {
           var altHdsServers = data.orgSettings.altHdsServers;
@@ -82,7 +85,7 @@
         } else {
           deferred.reject(data);
         }
-      });
+      }, null, params);
       return deferred.promise;
     }
 
@@ -92,13 +95,18 @@
     }
 
     function queryUsers(oid, emails) {
-      var serviceUrl = UrlConfig.getScimUrl(oid);
-      serviceUrl += '?filter=' + _.chain(emails)
-        .map(function (email) {
-          return 'username eq "' + email.text + '"';
-        })
-        .join(' or ')
-        .value();
+      var emailFilter = '';
+      if (_.size(emails) === 0) {
+        emailFilter = 'username eq " "';
+      } else {
+        emailFilter = _.chain(emails)
+          .map(function (email) {
+            return 'username eq "' + email.text + '"';
+          })
+          .join(' or ')
+          .value();
+      }
+      var serviceUrl = UrlConfig.getScimUrl(oid) + '?filter=' + emailFilter;
       return $http.get(serviceUrl).then(extractData);
     }
 

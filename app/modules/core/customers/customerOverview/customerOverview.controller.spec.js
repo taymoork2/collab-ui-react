@@ -93,6 +93,9 @@ describe('Controller: CustomerOverviewCtrl', function () {
     spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
       $q.resolve(true)
     );
+    spyOn(FeatureToggleService, 'atlasCareInboundTrialsGetStatus').and.returnValue(
+      $q.resolve(true)
+    );
     spyOn(modal, 'open').and.callThrough();
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
 
@@ -243,6 +246,12 @@ describe('Controller: CustomerOverviewCtrl', function () {
   describe('atlasCareTrialsGetStatus should be called', function () {
     it('should have called FeatureToggleService.atlasCareTrialsGetStatus', function () {
       expect(FeatureToggleService.atlasCareTrialsGetStatus).toHaveBeenCalled();
+    });
+  });
+
+  describe('atlasCareTrialsGetStatus should be called', function () {
+    it('should have called FeatureToggleService.atlasCareTrialsGetStatus', function () {
+      expect(FeatureToggleService.atlasCareInboundTrialsGetStatus).toHaveBeenCalled();
     });
   });
 

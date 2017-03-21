@@ -6,7 +6,9 @@
     .controller('DeviceOverviewCtrl', DeviceOverviewCtrl);
 
   /* @ngInject */
-  function DeviceOverviewCtrl($q, $state, $scope, $interval, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, channels, RemoteSupportModal, LaunchAdvancedSettingsModal, ServiceSetup, KemService, TerminusUserDeviceE911Service, EmergencyServicesService, AtaDeviceModal) {
+  function DeviceOverviewCtrl($q, $state, $scope, $interval, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService,
+    CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, channels, RemoteSupportModal,
+    LaunchAdvancedSettingsModal, ServiceSetup, KemService, TerminusUserDeviceE911Service, EmergencyServicesService, AtaDeviceModal, DeviceOverviewService) {
     var deviceOverview = this;
     var huronDeviceService = $stateParams.huronDeviceService;
     deviceOverview.linesAreLoaded = false;
@@ -131,12 +133,10 @@
 
     function initCountryOptions() {
       deviceOverview.countryPlaceholder = $translate.instant('deviceOverviewPage.countryPlaceholder');
-
       if (!deviceOverview.countryOptions) {
-        return ServiceSetup.getSiteCountries()
-          .then(function (countries) {
-            deviceOverview.countryOptions = _.sortBy(ServiceSetup.getTranslatedSiteCountries(countries), 'label');
-          });
+        return DeviceOverviewService.getCountryOptions().then(function (countries) {
+          deviceOverview.countryOptions = countries;
+        });
       } else {
         return $q.resolve();
       }
@@ -148,10 +148,8 @@
         deviceOverview.emergencyCallbackNumber = result.emergencyCallbackNumber;
         deviceOverview.selectedTimeZone = getTimeZoneFromId(result);
         deviceOverview.tzIsLoaded = true;
-        if (result.country) {
-          deviceOverview.country = result.country;
-          deviceOverview.selectedCountry = getCountryFromId(result.country);
-        }
+        deviceOverview.country = result.country;
+        deviceOverview.selectedCountry = DeviceOverviewService.findCountryByCode(deviceOverview.countryOptions, result.country);
         deviceOverview.countryIsLoaded = true;
       }).then(getEmergencyInformation);
     }
@@ -162,12 +160,6 @@
           return o.id === timeZone.timeZone;
         });
       }
-    }
-
-    function getCountryFromId(country) {
-      return _.find(deviceOverview.countryOptions, function (o) {
-        return o.value === country;
-      });
     }
 
     function pollLines() {
@@ -240,7 +232,7 @@
           })
           .finally(function () {
             deviceOverview.updatingCountry = false;
-            deviceOverview.selectedCountry = getCountryFromId(newValue);
+            deviceOverview.selectedCountry = DeviceOverviewService.findCountryByCode(deviceOverview.countryOptions, newValue);
           });
       }
     };

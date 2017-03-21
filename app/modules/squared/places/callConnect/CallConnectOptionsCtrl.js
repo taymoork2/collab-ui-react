@@ -10,11 +10,11 @@
     vm.title = wizardData.title;
 
     vm.next = function () {
-      $stateParams.wizard.next({}, vm.service);
+      $stateParams.wizard.next({}, wizardData.account.enableCalService ? 'calendar' : vm.service);
     };
 
     vm.hasNextStep = function () {
-      return wizardData.function !== 'editServices';
+      return wizardData.function !== 'editServices' || wizardData.account.enableCalService;
     };
 
     vm.back = function () {

@@ -6,7 +6,7 @@
     .controller('CallServiceSettingsController', CallServiceSettingsController);
 
   /* @ngInject */
-  function CallServiceSettingsController($modal, Analytics, ServiceDescriptor, Authinfo, USSService, CertService, Notification, CertificateFormatterService, $translate, hasVoicemailFeatureToggle, UCCService) {
+  function CallServiceSettingsController($modal, Analytics, ServiceDescriptor, Authinfo, USSService, CertService, Notification, CertificateFormatterService, $translate, hasAtlasHybridCallDiagnosticTool, hasVoicemailFeatureToggle, UCCService) {
     var vm = this;
     vm.formattedCertificateList = [];
     vm.readCerts = readCerts;
@@ -27,6 +27,7 @@
           this.Notification.errorWithTrackingId(response, 'hercules.genericFailure');
         });
     }
+    vm.hasAtlasHybridCallDiagnosticTool = hasAtlasHybridCallDiagnosticTool;
     vm.hasVoicemailFeatureToggle = hasVoicemailFeatureToggle;
     vm.help = {
       title: 'common.help',
@@ -93,13 +94,17 @@
       //  if (err) return notification.notify(err);
       });
 
-    vm.updateSipDomain = function () {
+    vm.updateSipDomain = function (savedDespiteWarnings) {
       vm.savingSip = true;
 
       USSService.updateOrg(vm.org)
         .then(function () {
           vm.savingSip = false;
-          Notification.success('hercules.errors.sipDomainSaved');
+          if (savedDespiteWarnings) {
+            Notification.warning('hercules.errors.sipDomainSavedDespiteWarnings');
+          } else {
+            Notification.success('hercules.errors.sipDomainSaved');
+          }
         })
         .catch(function (error) {
           vm.savingSip = false;
@@ -143,5 +148,16 @@
           Notification.errorWithTrackingId(error, 'hercules.settings.call.certificatesCannotRead');
         });
     }
+
+    /* Callback from the verify-sip-destination component  */
+    vm.onDestinationSave = function (warn) {
+      vm.updateSipDomain(warn);
+    };
+
+    /* Callback from the verify-sip-destination component  */
+    vm.onDestinationClear = function () {
+      vm.org.sipDomain = '';
+    };
+
   }
 }());

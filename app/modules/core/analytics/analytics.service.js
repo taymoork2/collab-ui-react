@@ -166,11 +166,14 @@
      * Determines if it's a Test Org or not.
      */
     function checkIfTestOrg() {
+      var params = {
+        basicInfo: true,
+      };
       if (!isTestOrgPromise) {
         isTestOrgPromise = $q(function (resolve) {
           Orgservice.getOrg(function (response) {
             resolve(_.get(response, 'isTestOrg'));
-          });
+          }, null, params);
         });
       }
       return isTestOrgPromise;
@@ -380,9 +383,12 @@
         role: Authinfo.getRoles(),
         section: sections[sectionName].name,
       };
+      var params = {
+        basicInfo: true,
+      };
       var promises = {
         listUsers: UserListService.listUsers(0, 1, null, null, _.noop),
-        getOrg: Orgservice.getAdminOrgAsPromise().catch(function (err) {
+        getOrg: Orgservice.getAdminOrgAsPromise(null, params).catch(function (err) {
           return err;
         }),
         trialDaysLeft: TrialService.getDaysLeftForCurrentUser(),

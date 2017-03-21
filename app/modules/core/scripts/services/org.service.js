@@ -25,7 +25,7 @@
     .name;
 
   /* @ngInject */
-  function Orgservice($http, $q, $resource, $translate, Auth, Authinfo, Config, Log, UrlConfig, Utils) {
+  function Orgservice($http, $q, $resource, $translate, Auth, Authinfo, Log, UrlConfig, Utils) {
     var service = {
       getOrg: getOrg,
       getAdminOrg: getAdminOrg,
@@ -41,8 +41,6 @@
       deleteOrg: deleteOrg,
       listOrgs: listOrgs,
       getOrgCacheOption: getOrgCacheOption,
-      getHybridServiceAcknowledged: getHybridServiceAcknowledged,
-      setHybridServiceAcknowledged: setHybridServiceAcknowledged,
       getEftSetting: getEftSetting,
       setEftSetting: setEftSetting,
       setOrgAltHdsServersHds: setOrgAltHdsServersHds,
@@ -56,16 +54,22 @@
 
     return service;
 
-    function getOrg(callback, orgId, disableCache) {
+    function getOrg(callback, orgId, params) {
       if (!orgId) {
         orgId = Authinfo.getOrgId();
       }
-      var scomUrl = UrlConfig.getScomUrl() + '/' + orgId;
 
-      if (disableCache) {
-        scomUrl = scomUrl + '?disableCache=true';
+      if ((!_.isUndefined(params) && !_.isObject(params)) || !_.isFunction(callback)) {
+        return $q.reject('Invalid parameters passed into getOrg service call');
       }
-      return $http.get(scomUrl)
+
+      var scomUrl = UrlConfig.getScomUrl() + '/' + orgId;
+      var config = {};
+      if (_.isObject(params)) {
+        config.params = params;
+      }
+
+      return $http.get(scomUrl, config)
         .success(function (data, status) {
           data = _.isObject(data) ? data : {};
           data.success = true;
@@ -88,7 +92,7 @@
         });
     }
 
-    function getAdminOrg(callback, oid, disableCache) {
+    function getAdminOrg(callback, oid, params) {
       var adminUrl = null;
       if (oid) {
         adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + oid;
@@ -96,12 +100,17 @@
         adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId();
       }
 
-      var cacheDisabled = !!disableCache;
-      return $http.get(adminUrl, {
-        params: {
-          disableCache: cacheDisabled,
-        },
-      })
+      var config = {};
+      var defaultParams = {
+        disableCache: false,
+      };
+      config.params = _.extend(defaultParams, params);
+
+      if ((!_.isUndefined(params) && !_.isObject(params)) || !_.isFunction(callback)) {
+        return $q.reject('Invalid parameters passed into getOrg service call');
+      }
+
+      return $http.get(adminUrl, config)
         .success(function (data, status) {
           data = _.isObject(data) ? data : {};
           data.success = true;
@@ -117,8 +126,8 @@
         });
     }
 
-    function getAdminOrgAsPromise(oid, disableCache) {
-      return getAdminOrg(_.noop, oid, disableCache)
+    function getAdminOrgAsPromise(oid, params) {
+      return getAdminOrg(_.noop, oid, params)
         .catch(function (data, status) {
           data = _.extend({}, data, {
             success: false,
@@ -266,7 +275,10 @@
         propertySaveTimeStamp: new Date(),
         setting: _.clone(settings),
       });
-      return getOrg(_.noop, orgId, true) //get retrieves the pushed value above, no need to re assign to orgSettings
+      var params = {
+        disableCache: true,
+      };
+      return getOrg(_.noop, orgId, params) //get retrieves the pushed value above, no need to re assign to orgSettings
         .then(function (response) {
           var orgSettings = _.get(response, 'data.orgSettings', {});
 
@@ -350,44 +362,6 @@
           data.status = status;
           callback(data, status);
         });
-    }
-
-    function getHybridServiceAcknowledged() {
-      var serviceUrl = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services';
-      return $http({
-        method: 'GET',
-        url: serviceUrl,
-      });
-    }
-
-    function setHybridServiceAcknowledged(serviceName) {
-      var serviceUrl = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/';
-      if (serviceName === 'calendar-service') {
-        serviceUrl = serviceUrl.concat(Config.entitlements.fusion_cal);
-      } else if (serviceName === 'google-calendar-service') {
-        serviceUrl = serviceUrl.concat(Config.entitlements.fusion_gcal);
-      } else if (serviceName === 'call-aware-service') {
-        serviceUrl = serviceUrl.concat(Config.entitlements.fusion_uc);
-      } else if (serviceName === 'call-connect-service') {
-        serviceUrl = serviceUrl.concat(Config.entitlements.fusion_ec);
-      } else if (serviceName === 'squared-fusion-media') {
-        serviceUrl = serviceUrl.concat(Config.entitlements.mediafusion);
-      } else if (serviceName === 'spark-hybrid-datasecurity') {
-        serviceUrl = serviceUrl.concat(Config.entitlements.hds);
-      } else {
-        return $q(function (resolve, reject) {
-          reject('serviceName is invalid: ' + serviceName);
-        });
-      }
-      return $http({
-        method: 'PATCH',
-        url: serviceUrl,
-        data: {
-          "acknowledged": true,
-        },
-      }).error(function () {
-        Log.error("Error in PATCH acknowledge status to " + serviceUrl);
-      });
     }
 
     function getEftSetting(currentOrgId) {

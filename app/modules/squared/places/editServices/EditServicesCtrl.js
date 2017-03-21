@@ -32,20 +32,25 @@
     vm.hasNextStep = function () {
       return wizardData.function !== 'editServices'
         || ((vm.service === 'sparkCall' || vm.service === 'sparkCallConnect') && vm.service !== initialService)
-        || (vm.enableCalService && vm.calService !== initialEnableCalService);
+        || (vm.enableCalService && vm.enableCalService !== initialEnableCalService);
     };
 
     vm.hasBackStep = function () {
       return wizardData.function !== 'editServices';
     };
 
-    function getUpdatedEntitlements() {
+    function getUpdatedEntitlements(forSave) {
       var entitlements = (wizardData.account.entitlements || ['webex-squared']);
       entitlements = _.difference(entitlements, [ciscouc, fusionec, fusionCal, fusionGCal]);
       if (vm.service === 'sparkCall') {
         entitlements.push(ciscouc);
       } else if (vm.service === 'sparkCallConnect') {
         entitlements.push(fusionec);
+      }
+      if (forSave && vm.enableCalService) {
+        _.intersection(wizardData.account.entitlements || [], [fusionCal, fusionGCal]).forEach(function (calEntitlement) {
+          entitlements.push(calEntitlement);
+        });
       }
       return entitlements;
     }
@@ -82,13 +87,13 @@
     }
 
     vm.save = function () {
-      if (vm.service === 'sparkOnly') {
+      if (vm.service === 'sparkOnly' || vm.enableCalService != initialEnableCalService) {
         vm.isLoading = true;
-        if (vm.service !== initialService) {
+        if (vm.service !== initialService || vm.enableCalService != initialEnableCalService) {
           CsdmDataModelService.getPlacesMap().then(function (list) {
             var place = _.find(_.values(list), { 'cisUuid': wizardData.account.cisUuid });
             if (place) {
-              CsdmDataModelService.updateCloudberryPlace(place, getUpdatedEntitlements())
+              CsdmDataModelService.updateCloudberryPlace(place, getUpdatedEntitlements(true))
                 .then(function () {
                   $scope.$dismiss();
                   Notification.success("addDeviceWizard.editServices.servicesSaved");

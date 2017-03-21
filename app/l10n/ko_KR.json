@@ -26,9 +26,9 @@
     "convertUsers": "사용자 변환",
     "errorWarningMessages": "경고 및 오류",
     "skipErrorsAndFinish": "오류 건너뛰기 및 마침",
-    "newUsers": "{newusers, plural, one{새 사용자 #명} other{새 사용자 #명}}",
-    "updatedUsers": "{updatedusers, plural, one{업데이트된 사용자 #명} other{업데이트된 사용자 #명}}",
-    "errors": "{errors, plural, one{오류 #개} other{오류 #개}}",
+    "newUsers": "{newusers, plural, =1{새 사용자 #명} other{새 사용자 #명}}",
+    "updatedUsers": "{updatedusers, plural, =1{업데이트된 사용자 #명} other{업데이트된 사용자 #명}}",
+    "errors": "{errors, plural, =1{오류 #개} other{오류 #개}}",
     "pageTitle": "사용자",
     "subTitleAdd": "사용자 관리",
     "subTitleEnable": "사용자에게 자격 부여",
@@ -246,7 +246,7 @@
       "retryUsers": "다시 시도",
       "retrying": "다시 시도 중...",
       "retryingIn": "재시도:",
-      "retryingUsers": "{users, plural, one{사용자 #명} other{사용자 #명}}",
+      "retryingUsers": "{users, plural, =1{사용자 #명} other{사용자 #명}}",
       "exportUserList": "사용자 목록 내보내기."
     },
     "advanced": {
@@ -1140,15 +1140,15 @@
   "notifications": {
     "success": "알림 성공",
     "error": "오류 알림",
-    "successTotal": "{total, plural, one{# 성공} other{# 성공}}",
-    "errorTotal": "{total, plural, one{# 오류} other{# 오류}}",
+    "successTotal": "{total, plural, =1{# 성공} other{# 성공}}",
+    "errorTotal": "{total, plural, =1{# 오류} other{# 오류}}",
     "successDelete": "{{item}}을(를) 성공적으로 삭제함.",
     "errorDelete": "{{item}}을(를) 삭제하지 못함."
   },
   "time": {
-    "seconds": "{time, plural, one{# 초} other{# 초}}",
-    "minutes": "{time, plural, one{# 분} other{# 분}}",
-    "hours": "{time, plural, one{# 시간} other{# 시간}}"
+    "seconds": "{time, plural, =1{# 초} other{# 초}}",
+    "minutes": "{time, plural, =1{# 분} other{# 분}}",
+    "hours": "{time, plural, =1{# 시간} other{# 시간}}"
   },
   "callDestination": {
     "numberFormat": "번호 형식",
@@ -2083,7 +2083,7 @@
       "heading": "등록"
     },
     "notificationDropdown": {
-      "label": "{number, plural, one{알림 #개} other{알림 #개}}"
+      "label": "{number, plural, =1{알림 #개} other{알림 #개}}"
     },
     "fusion": {
       "types": {
@@ -2100,7 +2100,7 @@
         "clusters": "클러스터",
         "users": "사용자",
         "release-channel": "릴리즈 채널",
-        "nodes": "{count, plural, one{노드 #개} other{노드 #개}}",
+        "nodes": "{count, plural, =1{노드 #개} other{노드 #개}}",
         "nodesBtn": "노드",
         "settings": "설정",
         "all": "모두",
@@ -2634,8 +2634,8 @@
     "setSipDomainLink": "Spark SIP 주소란 무엇입니까?",
     "setSipDomainMsg": "하위 도메인 입력",
     "setSipDomainTitle": "Spark SIP 주소",
-    "setSipDomainCompNames": "{count, plural, one{This subdomain} other{These subdomains}}이(가) 예약될 예정입니다.",
-    "setSipDomainAsssignedNames": "{count, plural, one{This subdomain is} other{These subdomains are}}이(가) 예약되었습니다.",
+    "setSipDomainCompNames": "{count, plural, =1{This subdomain} other{These subdomains}}이(가) 예약될 예정입니다.",
+    "setSipDomainAsssignedNames": "{count, plural, =1{This subdomain is} other{These subdomains are}}이(가) 예약되었습니다.",
     "setSipDomainCheckAvailability": "가용성 확인",
     "setSipDomainPlaceholder": "하위 도메인 입력",
     "setSipDomainErrorMessage": "사용할 수 없음. 다른 이름을 시도하십시오",
@@ -3374,10 +3374,10 @@
     "deleteNumber": "번호 삭제",
     "deleteConfirmation": "{{pattern}}을 삭제하시겠습니까?",
     "deleteWarning": "이는 실행 취소될 수 없습니다. 이 번호는 영원히 잃게 됩니다.",
-    "allNumbers": "{count, plural, one{# 번호} other{# 번호}}",
-    "pendingNumbers": "{count, plural, one{# 보류 중인 번호} other{# 보류 중인 번호}}",
-    "unassignedNumbers": "{count, plural, one{# 지정되지 않은 번호} other{# 지정되지 않은 번호}}",
-    "searchResults": "{count, plural, one{# 검색 결과} other{# 검색 결과}}",
+    "allNumbers": "{count, plural, =1{# 번호} other{# 번호}}",
+    "pendingNumbers": "{count, plural, =1{# 보류 중인 번호} other{# 보류 중인 번호}}",
+    "unassignedNumbers": "{count, plural, =1{# 지정되지 않은 번호} other{# 지정되지 않은 번호}}",
+    "searchResults": "{count, plural, =1{# 검색 결과} other{# 검색 결과}}",
     "findNumber": "번호 찾기..."
   },
   "pstnOrderOverview": {
@@ -3394,7 +3394,7 @@
   },
   "pstnOrderDetail": {
     "orderNumber": "주문 #{{orderId}}",
-    "pendingNumbers": "이 주문에 대해 {count, plural, one{#개의 번호} other{#개의 번호}}가 보류 중입니다.",
+    "pendingNumbers": "이 주문에 대해 {count, plural, =1{#개의 번호} other{#개의 번호}}가 보류 중입니다.",
     "searchPlaceholder": "전화 번호 검색",
     "waitOnTOSAcceptance": "고객이 서비스 약관을 수락할 때까지 기다리는 중"
   },
@@ -3434,7 +3434,7 @@
     "package": "패키지",
     "adding": "추가하기",
     "numbersTitle": "번호",
-    "numbers": "{count, plural, one{# 번호} other{# 번호}}",
+    "numbers": "{count, plural, =1{# 번호} other{# 번호}}",
     "newNumbers": "{{count}} 새 번호",
     "portNumbers": "{{count}} 포트",
     "thankYou": "감사합니다",
@@ -3794,9 +3794,9 @@
     "notes": "참고",
     "active": "활동",
     "free": "무료",
-    "daysRemaining": "{count, plural, one{#일} other{#일}} 남음",
-    "daysLeftToPurchase": "구입까지 {count, plural, one{#일} other{#일}} 남음",
-    "daysLeftToRenew": "갱신까지 {count, plural, one{#일} other{#일}} 남음",
+    "daysRemaining": "{count, plural, =1{#일} other{#일}} 남음",
+    "daysLeftToPurchase": "구입까지 {count, plural, =1{#일} other{#일}} 남음",
+    "daysLeftToRenew": "갱신까지 {count, plural, =1{#일} other{#일}} 남음",
     "expiringToday": "오늘 만료",
     "expired": "만료됨",
     "expiredWithGracePeriod": "만료됨. 지금 구입하십시오",
@@ -3830,7 +3830,7 @@
     "trialTerms": "평가판 약관",
     "trialOverview": "평가판",
     "webexOverview": "WebEx",
-    "webexSiteCount": "{count, plural, one{추가 사이트 #개} other{추가 사이트 #개}}",
+    "webexSiteCount": "{count, plural, =1{추가 사이트 #개} other{추가 사이트 #개}}",
     "licenses": "라이센스 수",
     "totalQuantity": "총 수량",
     "totalLicenses": "총 라이센스",
@@ -3880,7 +3880,7 @@
     "accountStatus": "계정 상태",
     "totalUsers": "총 사용자",
     "purchased": "구입함",
-    "domain": "{count, plural, one{도메인} other{도메인}}",
+    "domain": "{count, plural, =1{도메인} other{도메인}}",
     "domains": "도메인",
     "quantityWithValue": "양: {{quantity}}",
     "anotherPartner": "(다른 파트너)",

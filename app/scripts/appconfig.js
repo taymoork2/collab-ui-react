@@ -1514,6 +1514,16 @@
               },
             },
           })
+          .state('reports.webex-metrics', {
+            url: '/reports/webexMetrics',
+            views: {
+              'tabContent': {
+                controllerAs: 'nav',
+                controller: 'WebExMetricsCtrl',
+                templateUrl: 'modules/core/customerReports/webexMetrics/webexMetrics.tpl.html',
+              },
+            },
+          })
           .state('reports.media', {
             url: '/reports/media',
             views: {
@@ -2086,7 +2096,10 @@
               identityCustomer: /* @ngInject */ function ($stateParams, $q, Orgservice) {
                 var defer = $q.defer();
                 if ($stateParams.currentCustomer) {
-                  Orgservice.getOrg(orgCallback, $stateParams.currentCustomer.customerOrgId);
+                  var params = {
+                    basicInfo: true,
+                  };
+                  Orgservice.getOrg(orgCallback, $stateParams.currentCustomer.customerOrgId, params);
                 }
 
                 return defer.promise;
@@ -2168,6 +2181,20 @@
             data: {},
             params: {
               sharedDeviceLicenses: {},
+            },
+          })
+          .state('customer-overview.careLicenseDetail', {
+            controller: 'CareLicenseDetailCtrl',
+            controllerAs: 'careLicenseDetail',
+            templateUrl: 'modules/core/customers/customerOverview/careLicenseDetail.tpl.html',
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.careLicenseDetail').data.displayName = $translate.instant('customerPage.careLicenses');
+              },
+            },
+            data: {},
+            params: {
+              careLicense: {},
             },
           })
           .state('customer-overview.externalNumbers', {
@@ -2883,9 +2910,11 @@
             views: {
               'subHeader': {
                 templateUrl: 'modules/context/resources/hybrid-context-resources-header.html',
+                controller: 'HybridContextResourcesCtrl',
+                controllerAs: 'contextResources',
               },
               'contextServiceView': {
-                template: '<hybrid-service-cluster-list service-id="\'contact-center-context\'"></hybrid-service-cluster-list>',
+                template: '<hybrid-service-cluster-list service-id="\'contact-center-context\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>',
                 controller: /* @ngInject */ function (Analytics) {
                   return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CONTEXT_LIST);
                 },
@@ -2897,6 +2926,9 @@
             resolve: {
               hasContactCenterContextFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.contactCenterContext);
+              },
+              clusterId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.clusterId;
               },
             },
           })
@@ -2941,6 +2973,44 @@
                 templateUrl: 'modules/context/fieldsets/hybrid-context-fieldsets.html',
                 controller: 'HybridContextFieldsetsCtrl',
                 controllerAs: 'contextFieldsets',
+              },
+            },
+          })
+          .state('context-fieldsets-sidepanel', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                template: '<context-fieldsets-sidepanel fieldset="$resolve.fieldset"></context-fieldsets-sidepanel>',
+              },
+              'header@context-fieldsets-sidepanel': {
+                templateUrl: 'modules/context/fieldsets/sidepanel/hybrid-context-fieldsets-sidepanel-header.html',
+              },
+            },
+            data: {
+              displayName: 'Overview',
+            },
+            params: {
+              fieldset: {},
+            },
+            resolve: {
+              fieldset: /* @ngInject */ function ($stateParams) {
+                return $stateParams.fieldset;
+              },
+            },
+          })
+          .state('context-fieldsets-sidepanel.fields', {
+            templateUrl: 'modules/context/fieldsets/sidepanel/fieldList/hybrid-context-fieldsets-field-list.html',
+            controller: 'ContextFieldsetsSidepanelFieldListCtrl',
+            controllerAs: 'contextFieldsetsSidepanelFieldListCtrl',
+            data: {
+              displayName: 'Fields',
+            },
+            params: {
+              fields: {},
+            },
+            resolve: {
+              fields: /* @ngInject */ function ($stateParams) {
+                return $stateParams.fields;
               },
             },
           })
@@ -3493,6 +3563,9 @@
             resolve: {
               hasVoicemailFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridVoicemail);
+              },
+              hasAtlasHybridCallDiagnosticTool: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCallDiagnosticTool);
               },
             },
           })

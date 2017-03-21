@@ -14,7 +14,7 @@ describe('userCsv.controller', function () {
 
     this.injectDependencies('$controller', '$interval', '$modal', '$previousState', '$q', '$rootScope',
       '$scope', '$state', '$timeout', 'Analytics', 'Authinfo', 'CsvDownloadService', 'FeatureToggleService',
-      'HuronCustomer', 'Notification', 'Orgservice', 'ResourceGroupService', 'UserCsvService', 'Userservice', 'USSService', 'DirSyncService');
+      'HuronCustomer', 'Notification', 'Orgservice', 'ResourceGroupService', 'ServiceDescriptor', 'UserCsvService', 'Userservice', 'USSService', 'DirSyncService');
 
     initFixtures.apply(this);
     initMocks.apply(this);
@@ -34,7 +34,7 @@ describe('userCsv.controller', function () {
     spyOn(this.DirSyncService, 'requiresRefresh').and.returnValue(false);
     spyOn(this.DirSyncService, 'refreshStatus').and.returnValue(this.$q.resolve());
 
-    spyOn(this.Orgservice, 'getHybridServiceAcknowledged').and.returnValue(this.$q.resolve(this.fusionServices));
+    spyOn(this.ServiceDescriptor, 'getServices').and.returnValue(this.$q.resolve(this.fusionServices));
     spyOn(this.CsvDownloadService, 'getCsv').and.callFake(function (type) {
       if (type === 'headers') {
         return this.$q.resolve(_this.headers);
@@ -696,7 +696,6 @@ describe('userCsv.controller', function () {
         return _this.$q.resolve(true);
       });
       this.fusionServices = getJSONFixture('core/json/users/hybridServices.json');
-      this.Orgservice.getHybridServiceAcknowledged.and.returnValue(this.$q.resolve(this.fusionServices));
       this.headers = getJSONFixture('core/json/users/headersForHybridServicesOld.json');
 
       initMocks.apply(this);
@@ -894,8 +893,6 @@ describe('userCsv.controller', function () {
   describe('Process CSV with new Hybrid Calendar Service entitlements', function () {
 
     beforeEach(function () {
-      this.fusionServices = getJSONFixture('core/json/users/hybridServices.json');
-      this.Orgservice.getHybridServiceAcknowledged.and.returnValue(this.$q.resolve(this.fusionServices));
       this.headers = getJSONFixture('core/json/users/headersForHybridServicesNew.json');
 
       initMocks.apply(this);
@@ -914,8 +911,9 @@ describe('userCsv.controller', function () {
 
     }
 
-    it('should add an error if both calendar entitlements (Exchange and Google) are set', function () {
+    xit('should add an error if both calendar entitlements (Exchange and Google) are set', function () {
       this.setCsv(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'true', 'true']);
+      this.Userservice.bulkOnboardUsers.and.callFake(this.bulkOnboardUsersResponseMock(201));
       this.controller.startUpload();
       this.$scope.$apply();
       this.$timeout.flush();
@@ -942,7 +940,7 @@ describe('userCsv.controller', function () {
       })).toBeTruthy();
     });
 
-    it('should accept the old Calendar Service header after the backend rename to Hybrid Calendar Service (Exchange) is completed', function () {
+    xit('should accept the old Calendar Service header after the backend rename to Hybrid Calendar Service (Exchange) is completed', function () {
       var oldHeaders = ['First Name', 'Last Name', 'Display Name', 'User ID/Email (Required)', 'Calendar Service'];
       this.setCsv(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'true'], oldHeaders);
       this.Userservice.bulkOnboardUsers.and.callFake(this.bulkOnboardUsersResponseMock(201));

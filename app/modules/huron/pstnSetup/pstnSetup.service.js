@@ -20,7 +20,7 @@
     TerminusV2CarrierCapabilitiesService,
     TerminusV2ResellerNumberReservationService, TerminusV2ResellerCarrierNumberReservationService,
     TerminusV2CustomerNumberReservationService,
-    TerminusV2CustomerNumberOrderBlockService, TelephoneNumberService) {
+    TerminusV2CustomerNumberOrderBlockService, TelephoneNumberService, FeatureToggleService) {
     //Providers
     var INTELEPEER = "INTELEPEER";
     var TATA = "TATA";
@@ -232,13 +232,14 @@
     function getCarrierInventory(carrierId, state, npa) {
       var config = {
         carrierId: carrierId,
-        state: state,
       };
       if (_.isString(npa)) {
         if (npa.length > 0) {
           config[NPA] = npa;
           config[GROUP_BY] = NXX;
         }
+      } else {
+        config.state = state;
       }
       return TerminusCarrierInventoryCount.get(config).$promise;
     }
@@ -532,6 +533,14 @@
     }
 
     function portNumbers(customerId, carrierId, numbers) {
+      return FeatureToggleService.supports(
+        FeatureToggleService.features.huronSupportForPortEmails
+        ).then(function (isHuronSupportForPortEmails) {
+          return _portNumbers(customerId, carrierId, numbers, isHuronSupportForPortEmails);
+        });
+    }
+
+    function _portNumbers(customerId, carrierId, numbers, isHuronSupportForPortEmails) {
       var promises = [];
       var tfnNumbers = [];
 
@@ -548,12 +557,23 @@
         numbers: numbers,
       };
 
+      var didPayload = {
+        numbers: numbers,
+        numberType: NUMTYPE_DID,
+      };
+
       if (numbers.length > 0) {
-        promises.push(TerminusCustomerCarrierDidService.save({
-          customerId: customerId,
-          carrierId: carrierId,
-          type: PORT,
-        }, payload).$promise);
+        if (isHuronSupportForPortEmails) {
+          promises.push(TerminusCustomerPortService.save({
+            customerId: customerId,
+          }, didPayload).$promise);
+        } else {
+          promises.push(TerminusCustomerCarrierDidService.save({
+            customerId: customerId,
+            carrierId: carrierId,
+            type: PORT,
+          }, payload).$promise);
+        }
       }
       if (tfnNumbers.length > 0) {
         promises.push(TerminusCustomerPortService.save({
@@ -724,6 +744,7 @@
         'FOC Received': $translate.instant('pstnSetup.orderStatus.focReceived'),
         'Invalid Authorization Signature': $translate.instant('pstnSetup.orderStatus.invalidSig'),
         'LOA Not Signed': $translate.instant('pstnSetup.orderStatus.loaNotSigned'),
+        'Terms of Service has not yet been accepted': $translate.instant('pstnSetup.orderStatus.tosNotSigned'),
         'Master Service Agreement not signed': $translate.instant('pstnSetup.orderStatus.msaNotSigned'),
         'Pending FOC from Vendor': $translate.instant('pstnSetup.orderStatus.pendingVendor'),
         'Rejected': $translate.instant('pstnSetup.orderStatus.rejected'),

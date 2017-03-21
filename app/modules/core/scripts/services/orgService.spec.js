@@ -135,10 +135,12 @@ describe('orgService', function () {
   });
 
   it('should successfully get an admin organization for a given orgId with disableCache', function () {
-    var disableCache = true;
+    var params = {
+      disableCache: true,
+    };
     var callback = sinon.stub();
     httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "?disableCache=true").respond(200, {});
-    Orgservice.getAdminOrg(callback, Authinfo.getOrgId(), disableCache);
+    Orgservice.getAdminOrg(callback, Authinfo.getOrgId(), params);
     httpBackend.flush();
     expect(callback.callCount).toBe(1);
     expect(callback.args[0][0].success).toBe(true);
@@ -469,60 +471,6 @@ describe('orgService', function () {
     var promise = Orgservice.setOrgSettings(Authinfo.getOrgId(), settings, callback);
     httpBackend.flush();
     expect(promise).toBeResolved();
-  });
-
-  it('should get Acknowledged', function () {
-    var items = [{
-      "id": "squared-fusion-cal",
-      "enabled": true,
-      "acknowledged": true,
-    }, {
-      "id": "squared-fusion-mgmt",
-      "enabled": true,
-      "acknowledged": true,
-    }, {
-      "id": "squared-fusion-uc",
-      "enabled": true,
-      "acknowledged": false,
-    }, {
-      "id": "squared-fusion-media",
-      "enabled": false,
-      "acknowledged": false,
-    }, {
-      "id": "squared-fusion-ec",
-      "enabled": true,
-      "acknowledged": true,
-    }];
-    httpBackend.when('GET', UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services').respond(200, items);
-    var response = Orgservice.getHybridServiceAcknowledged();
-    httpBackend.flush();
-    _.forEach(response.items, function (items) {
-      if (items.id === Config.entitlements.fusion_cal) {
-        expect(items.acknowledged).toBe(true);
-      } else if (items.id === Config.entitlements.fusion_uc) {
-        expect(items.acknowledged).toBe(false);
-      } else if (items.id === Config.entitlements.fusion_ec) {
-        expect(items.acknowledged).toBe(true);
-      }
-    });
-  });
-
-  it('should set Acknowledged', function () {
-    var data = {
-      "acknowledged": true,
-    };
-    httpBackend.when('PATCH', UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + Config.entitlements.fusion_cal, data).respond(200, {});
-    Orgservice.setHybridServiceAcknowledged('calendar-service');
-    expect(httpBackend.flush).not.toThrow();
-  });
-
-  it('should set Acknowledged for media service', function () {
-    var data = {
-      "acknowledged": true,
-    };
-    httpBackend.when('PATCH', UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + Config.entitlements.mediafusion, data).respond(200, {});
-    Orgservice.setHybridServiceAcknowledged('squared-fusion-media');
-    expect(httpBackend.flush).not.toThrow();
   });
 
   it('should verify that a proper setting is passed to setEftSetting call', function () {

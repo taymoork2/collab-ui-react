@@ -164,6 +164,7 @@ module.exports = {
   atlasF237ResourceGroup: 'atlas-f237-resource-group',
   atlasHybridNodesView: 'atlas-hybrid-nodes-view',
   atlasHybridVoicemail: 'atlas-hybrid-voicemail',
+  atlasHybridCallDiagnosticTool: 'atlas-hybrid-call-diagnostic-tool',
   gemServicesTab: 'gem-services-tab',
   gemCCA: 'gem-cloud-connected-audio',
   atlasHerculesGoogleCalendar: 'atlas-hercules-google-calendar',
@@ -190,4 +191,6 @@ module.exports = {
   huroncfnatimer: 'huron-cfna-timer',
   atlasHybridCucmSupport: 'atlas-hybrid-cucm-support',
   huronEnterprisePrivateTrunking: 'huron-i387-enterprise-private-trunking',
+  webexMetrics: 'webex-metrics',
+  huronSupportForPortEmails: 'huron-support-for-port-emails',
 };
