@@ -153,7 +153,6 @@
         if (!_.isUndefined(response) && !_.isUndefined(response.data) && !_.isUndefined(response.data.chartData) && _.isArray(response.data.chartData) && !_.isUndefined(response.data)) {
           returnData.graphData.push(response.data.chartData);
           return adjustLineGraphData(response.data.chartData, returnData, response.data.startTime, response.data.endTime, response.data.graphs);
-
         } else {
           return returnData;
         }
@@ -191,7 +190,7 @@
         if (!_.isUndefined(response) && !_.isUndefined(response.data) && !_.isUndefined(response.data.chartData) && _.isArray(response.data.chartData) && !_.isUndefined(response.data)) {
           returnData.graphData.push(response.data.chartData);
           var adjustedData = adjustLineGraphData(response.data.chartData, returnData, response.data.startTime, response.data.endTime, response.data.graphs);
-          return InsightGraphService.getParticipantDistributionInsightData(adjustedData);
+          return InsightGraphService.getAdjustedInsightData(adjustedData);
         } else {
           return returnData;
         }
@@ -229,7 +228,7 @@
         if (!_.isUndefined(response) && !_.isUndefined(response.data) && !_.isUndefined(response.data.chartData) && _.isArray(response.data.chartData) && !_.isUndefined(response.data)) {
           returnData.graphData.push(response.data.chartData);
           var adjustedData = adjustLineGraphData(response.data.chartData, returnData, response.data.startTime, response.data.endTime, response.data.graphs);
-          return InsightGraphService.getParticipantActivityInsightData(adjustedData);
+          return InsightGraphService.getAdjustedInsightData(adjustedData);
         } else {
           return returnData;
         }

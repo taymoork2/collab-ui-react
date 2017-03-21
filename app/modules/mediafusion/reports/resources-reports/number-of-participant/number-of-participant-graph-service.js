@@ -153,7 +153,6 @@
       return chart;
     }
 
-
     // this method is called each time the selected period of the chart is changed
     function handleZoom(event) {
       zoomedStartTime = event.startDate;

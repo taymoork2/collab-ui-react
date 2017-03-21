@@ -14,57 +14,41 @@
     };
     //vm.insightImage = "images/star-2.png";
 
-    function getParticipantDistributionInsightData(response) {
+    function getAdjustedInsightData(response) {
+
       _.forEach(response.graphData, function (value) {
+        var finalinsight = '';
         _.map(value, function (res, key) {
           if (_.includes(key, 'bullet')) {
             res = 'round';//vm.insightImage;
             value[key] = res;
           }
           if (_.includes(key, 'insight')) {
-            var insightData = res.split(/(\d+)/);
-            insightData[0] = insightData[0].replace(/\s+$/, '');
-            insightData[0] = vm.insightTranMap[insightData[0]];
-            res = insightData[0] + ' ' + insightData[1];
-            value[key] = res;
+            if (_.includes(res, ',')) {
+              res = res.split(',');
+              _.forEach(res, function (insight1) {
+                insight1 = insight1.split(/(\d+)/);
+                insight1[0] = insight1[0].replace(/\s+$/, '');
+                insight1[0] = vm.insightTranMap[insight1[0]];
+                insight1 = insight1[0] + ' ' + insight1[1] + '<br>';
+                finalinsight += insight1;
+                value[key] = finalinsight;
+              });
+            } else {
+              res = res.split(/(\d+)/);
+              res[0] = res[0].replace(/\s+$/, '');
+              res[0] = vm.insightTranMap[res[0]];
+              res = res[0] + ' ' + res[1];
+              value[key] = res;
+            }
           }
         });
       });
       return response;
     }
 
-    function getParticipantActivityInsightData(response) {
-      _.forEach(response.graphData, function (value) {
-        var finalinsight = '';
-        if (!_.isUndefined(value.insight_cloudParticipants)) {
-          var intialinsight = value[response.graphs[0]['descriptionField']];
-          if (_.includes(intialinsight, ',')) {
-            intialinsight = intialinsight.split(',');
-            _.forEach(intialinsight, function (insight1) {
-              insight1 = insight1.split(/(\d+)/);
-              insight1[0] = insight1[0].replace(/\s+$/, '');
-              insight1[0] = vm.insightTranMap[insight1[0]];
-              insight1 = insight1[0] + ' ' + insight1[1] + '<br>';
-              finalinsight += insight1;
-            });
-          } else {
-            intialinsight = intialinsight.split(/(\d+)/);
-            intialinsight[0] = intialinsight[0].replace(/\s+$/, '');
-            intialinsight[0] = vm.insightTranMap[intialinsight[0]];
-            intialinsight = intialinsight[0] + ' ' + intialinsight[1];
-            finalinsight = intialinsight;
-          }
-          value.insight_cloudParticipants = finalinsight;
-          value.bullet_cloudParticipants = 'round';//vm.insightImage;
-        }
-      });
-
-      return response;
-    }
-
     return {
-      getParticipantDistributionInsightData: getParticipantDistributionInsightData,
-      getParticipantActivityInsightData: getParticipantActivityInsightData,
+      getAdjustedInsightData: getAdjustedInsightData,
     };
   }
 })();
