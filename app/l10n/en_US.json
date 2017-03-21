@@ -4130,8 +4130,8 @@
     "webex": "WebEx Enterprise Edition 200 with CMR/TNU+",
     "call": "Call",
     "sparkCare": "Care",
-    "care": "Chat and Callback (K1)",
-    "advanceCare": "Chat, Callback and Inbound Call (K2)",
+    "care": "Chat and Callback",
+    "advanceCare": "Chat, Callback and Inbound Call",
     "callUsOnly": "Call (Currently U.S. only)",
     "supportSelectLocations": "Cisco Spark is supported in selected locations.  <a href='http://www.cisco.com/go/spark-availability' target='_blank' ng-click='{{click}}'>Learn more</a>",
     "supportedLocationsCertification1": "I certify that this customer is in a ",
@@ -6422,8 +6422,8 @@
       "CO": "Spark Call",
       "SD": "DX, MX or SX system",
       "SB": "Spark Board",
-      "CDC": "Chat and Callback (K1)",
-      "CVC": "Chat, Callback and Inbound Call (K2)"
+      "CDC": "Chat and Callback",
+      "CVC": "Chat, Callback and Inbound Call"
     }
   },
   "onlineUpgradeModal": {
