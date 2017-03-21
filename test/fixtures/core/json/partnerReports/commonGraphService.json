@@ -1,4 +1,5 @@
 {
+  "keys": ["cursor", "column", "line", "singleLine", "axis", "legend", "numFormat", "balloon", "export", "prefixesOfBigNumbers"],
   "baseVariables": {
     "cursor": {
       "cursorAlpha": 0,
