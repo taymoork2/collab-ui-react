@@ -8,6 +8,8 @@ class GmtdDetails implements ng.IComponentController {
   public customerId: string;
   public ccaDomainId: string;
   public domainName: string;
+  public totalSites: number;
+  public tds: any[] = [];
   public notes: any[] = [];
   public allHistories: any[] = [];
   public histories: any[] = [];
@@ -27,23 +29,39 @@ class GmtdDetails implements ng.IComponentController {
     private $stateParams: ng.ui.IStateParamsService,
     private $translate: ng.translate.ITranslateService,
     private TelephonyDomainService: TelephonyDomainService,
+    private $modal,
   ) {
     this.customerId = _.get(this.$stateParams, 'info.customerId', '');
     this.ccaDomainId = _.get(this.$stateParams, 'info.ccaDomainId', '');
     this.domainName = _.get(this.$stateParams, 'info.domainName', '');
+    this.tds = _.get(this.$stateParams, 'info.tds', []);
   }
 
   public $onInit(): void {
-    let deregister = this.$rootScope.$on('refreshNotes', (event, data) => {
-      this.notes = data || event;
-    });
-    this.$scope.$on('$destroy', deregister);
+    this.listenNotesUpdated();
+    this.listenSitesUpdated();
 
     this.getDetails();
     this.getNotes();
     this.getHistories();
     this.getRemedyTicket();
     this.$state.current.data.displayName = this.$translate.instant('gemini.cbgs.overview');
+  }
+
+  private listenNotesUpdated(): void {
+    let deregister = this.$rootScope.$on('tdNotesUpdated', (event, data) => {
+      event.preventDefault();
+      this.notes = data;
+    });
+    this.$scope.$on('$destroy', deregister);
+  }
+
+  private listenSitesUpdated(): void {
+    let deregister = this.$rootScope.$on('tdSitesUpdated', (event, data) => {
+      event.preventDefault();
+      this.totalSites = data.length;
+    });
+    this.$scope.$on('$destroy', deregister);
   }
 
   private getDetails() {
@@ -56,11 +74,15 @@ class GmtdDetails implements ng.IComponentController {
 
         this.model = _.get(res, 'content.data.body');
         this.model.domainName = this.model.telephonyDomainName || this.model.domainName;
-        this.model.totalSites = this.model.telephonyDomainSites.length;
+        this.totalSites = this.model.telephonyDomainSites.length;
         this.model.status_ = (this.model.status ? this.$translate.instant('gemini.cbgs.field.status.' + this.model.status) : '');
         _.forEach(this.model.telephonyNumberList, (item) => {
           this.getToll(item);
         });
+
+        let status = this.model.status;
+        this.model.isShowReject = status === 'R';
+        this.model.isShowCancelSubmission = (this.gemService.isServicePartner() && (status === 'S'));
 
         this.loading = false;
       })
@@ -101,8 +123,6 @@ class GmtdDetails implements ng.IComponentController {
   private getNotes() {
     this.TelephonyDomainService.getNotes(this.customerId, this.ccaDomainId)
       .then((res) => {
-        this.loading = false;
-
         if (_.get(res, 'content.data.returnCode')) {
           this.Notification.error('error'); //TODO Wording
           return;
@@ -126,8 +146,8 @@ class GmtdDetails implements ng.IComponentController {
         _.forEach(this.allHistories, (item) => {
           item.action = _.upperFirst(item.action);
 
-          if (item.action === 'Submit_td_move_site') {
-            let moveSiteMsg = item.siteID + ' ' + this.$translate.instant('gemini.cbgs.moveFrom') + ' ' + item.objectName + ' to ' + item.objectID;
+          if (item.action === 'Edit_td_move_site') {
+            let moveSiteMsg = item.siteID + ' ' + this.$translate.instant('gemini.cbgs.moveFrom') + ' ' + item.objectID + ' to ' + item.objectName;
             item.objectName = '';
             item.moveSiteMsg = moveSiteMsg;
             item.action = this.$translate.instant('gemini.cbgs.siteMoved');
@@ -154,6 +174,47 @@ class GmtdDetails implements ng.IComponentController {
         label: item.label,
       };
     }
+  }
+
+  public setButtonStatus(name) {
+    this.model['btn' + name + 'Loading'] = !this.model['btn' + name + 'Loading'];
+    this.model['btn' + name + 'Disable'] = !this.model['btn' + name + 'Disable'];
+  }
+
+  public updateTelephonyDomainStatus(operation: string) {
+    let telephonyDomainId: any = null;
+    if (this.model) {
+      telephonyDomainId = this.model.telephonyDomainId;
+    }
+    this.TelephonyDomainService.updateTelephonyDomainStatus(this.customerId, this.ccaDomainId, telephonyDomainId, operation)
+      .then((res) => {
+        let resJson: any = _.get(res, 'content.data');
+        if (resJson.returnCode) {
+          this.Notification.error('error'); //TODO wording
+          this.setButtonStatus('CancelSubmission');
+          return;
+        }
+        this.$state.go('gmTdDetails', { info: {
+          customerId: this.customerId,
+          ccaDomainId: this.ccaDomainId,
+          domainName: this.domainName,
+        }});
+        this.$rootScope.$emit('tdUpdated');
+      })
+      .catch((err) => {
+        this.Notification.errorResponse(err, 'errors.statusError', { status: err.status });
+        this.setButtonStatus('CancelSubmission');
+      });
+  }
+
+  public onCancelSubmission() {
+    this.$modal.open({
+      type: 'dialog',
+      templateUrl: 'modules/gemini/telephonyDomain/details/cancelSubmissionConfirm.tpl.html',
+    }).result.then(() => {
+      this.setButtonStatus('CancelSubmission');
+      this.updateTelephonyDomainStatus('cancel');
+    });
   }
 }
 

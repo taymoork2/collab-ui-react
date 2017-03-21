@@ -10,9 +10,11 @@ export class TelephonyDomainService {
     private $translate: ng.translate.ITranslateService,
   ) {
     this.url = {
-      getTelephonyDomains: 'telephonyDomains/' + 'customerId/',
+      getTelephonyDomains: 'telephonyDomains/customerId/',
       getTelephonyDomain: 'telephonydomain/getTelephonyDomainInfoByDomainId/',
       getActivityLogs: 'activityLogs',
+      moveSite: 'telephonydomain/moveSite',
+      cancelSubmission: 'telephonydomain/cancelSubmission',
     };
   }
 
@@ -120,6 +122,28 @@ export class TelephonyDomainService {
   public getHistories(customerId: string, ccaDomainId: string, domainName: string) {
     let url = this.url.getActivityLogs + '/' + customerId + '/' + ccaDomainId + '/Telephony%20Domain/' + domainName;
     return this.GmHttpService.httpGet(url).then((response) => {
+      return _.get(response, 'data');
+    });
+  }
+
+  public moveSite(data: any) {
+    let url = this.url.moveSite;
+    return this.GmHttpService.httpPut(url, null, null, data).then((response) => {
+      return _.get(response, 'data');
+    });
+  }
+
+  public updateTelephonyDomainStatus(customerId: string, ccaDomainId: string, telephonyDomainId: number, operation: string) {
+    let url: string = '';
+    let postData: any = {
+      ccaDomainId: ccaDomainId,
+      customerId: customerId,
+      TelephonyDomainId: telephonyDomainId,
+    };
+    if (operation === 'cancel') {
+      url = this.url.cancelSubmission;
+    }
+    return this.GmHttpService.httpPost(url, null, null, postData).then((response) => {
       return _.get(response, 'data');
     });
   }

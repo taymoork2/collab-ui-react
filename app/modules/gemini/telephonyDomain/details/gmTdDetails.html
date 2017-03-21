@@ -7,8 +7,17 @@
     <div ui-view="header"></div>
 
     <cs-sp-container class="gemini-side-panel gm-td-side-panel">
-      <cs-sp-section>
 
+      <cs-alert-banner ng-if="$ctrl.model.isShowCancelSubmission" type="warning">
+        {{::'gemini.cbgs.cancelSubmissionMsg' | translate}}
+        <a ng-click="$ctrl.onCancelSubmission()">{{::'gemini.cbgs.cancelSubmissionLink' | translate}}</a>
+      </cs-alert-banner>
+
+      <cs-alert-banner ng-if="$ctrl.model.isShowReject" type="danger">
+        {{::'gemini.cbgs.rejectSubmissionMsg' | translate}}
+      </cs-alert-banner>
+
+      <cs-sp-section>
         <div class="row">
           <div class="pull-left medium-9 ellipsis">
             <span class="feature-name">{{::'gemini.tds.field.partnerTdName' | translate}}: {{$ctrl.model.customerAttribute}}</span>
@@ -23,14 +32,14 @@
 
         <div class="feature-list">
           <ul>
-            <li class="feature" ng-if="$ctrl.model.totalSites">
-              <a ui-sref="gmTdDetails.sites({data: {cbgs: $ctrl.cbgs, customerId: $ctrl.customerId, currCbg: $ctrl.model}})">
+            <li class="feature" ng-if="$ctrl.totalSites">
+              <a ui-sref="gmTdDetails.sites({data: {tds: $ctrl.tds, customerId: $ctrl.customerId, curTd: $ctrl.model}})">
                 <span class="feature-name" translate="gemini.cbgs.field.totalSites"></span>
-                <span class="feature-status">{{$ctrl.model.totalSites}}</span>
+                <span class="feature-status">{{$ctrl.totalSites}}</span>
                 <i class="feature-arrow"></i>
               </a>
             </li>
-            <li class="feature" ng-if="!$ctrl.model.totalSites">
+            <li class="feature" ng-if="!$ctrl.totalSites">
               <span class="feature-name" translate="gemini.cbgs.field.totalSites"></span>
               <span class="feature-status">0</span>
             </li>
@@ -122,6 +131,12 @@
           <a class="primary-color" href ng-click="$ctrl.onShowAllHistories()" translate="gemini.cbgs.showMore"></a>
         </p>
       </cs-sp-section>
+
+      <cs-sp-buttons>
+        <button type="button" class="btn btn--primary" cs-btn loading="$ctrl.model.btnCancelSubmissionLoading" ng-click="$ctrl.onCancelSubmission()" ng-if="$ctrl.model.isShowCancelSubmission" ng-disabled="$ctrl.model.btnCancelSubmissionDisable">
+          <span translate="gemini.button.cancelSubmission"></span>
+        </button>
+      </cs-sp-buttons>
     </cs-sp-container>
   </div>
 

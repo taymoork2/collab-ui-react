@@ -22,6 +22,7 @@ class TelephonyDomains implements ng.IComponentController {
     private gemService,
     private $stateParams,
     private $scope: IGridApiScope,
+    private $rootScope: ng.IRootScopeService,
     private Notification: Notification,
     private $filter: ng.IFilterService,
     private $state: ng.ui.IStateService,
@@ -36,10 +37,21 @@ class TelephonyDomains implements ng.IComponentController {
   }
 
   public $onInit(): void {
+    this.listenTdUpdated();
 
     this.initParameters();
     this.setGridOptions();
     this.$scope.$emit('headerTitle', this.companyName);
+  }
+
+  private listenTdUpdated(): void {
+    let deregister = this.$rootScope.$on('tdUpdated', () => {
+      this.gridData = [];
+      this.gridRefresh = true;
+      this.setGridData();
+      this.setGridOptions();
+    });
+    this.$scope.$on('$destroy', deregister);
   }
 
   public filterList(searchStr: string) {
