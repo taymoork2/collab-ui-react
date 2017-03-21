@@ -1,4 +1,4 @@
-import { IClusterV1 } from 'modules/hercules/herculesInterfaces';
+import { ICluster } from 'modules/hercules/hybrid-services.types';
 
 interface ISchedule {
   dateTime: string;
@@ -8,7 +8,7 @@ interface ISchedule {
 
 export class ScheduleInfoSectionComponentCtrl implements ng.IComponentController {
 
-  private cluster: IClusterV1;
+  private cluster: ICluster;
   public clusterType: string;
 
   public hasResourceGroupFeatureToggle: boolean = false;
