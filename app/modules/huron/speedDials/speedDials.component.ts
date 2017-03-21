@@ -27,10 +27,15 @@ class SpeedDialCtrl implements ng.IComponentController {
   private customTranslations: ITranslationMessages;
   private actionList: IActionItem[];
   private actionListCopy: IActionItem[] = [];
+  public ownerName: string = '';
+  public isValid: boolean = false;
+  public extension: string = '';
+  public inputType: any;
  // private
   private callDest: any;
   private callDestInputs: string[];
   public form: ng.IFormController;
+  private optionSelected: string = '';
 
   /* @ngInject */
   constructor(
@@ -42,13 +47,19 @@ class SpeedDialCtrl implements ng.IComponentController {
     private TelephoneNumberService,
     private $timeout,
     private HuronCustomerService: HuronCustomerService,
-
+    private BlfInternalExtValidation,
+    private Authinfo,
+    private FeatureMemberService,
+    private BlfURIValidation,
   ) {
     this.callDestInputs = inputs;
     this.firstReordering = true;
     this.editing = false;
     this.reordering = false;
-
+    this.SpeedDialService.getUserName(this.ownerId)
+    .then((user) => {
+      this.ownerName = this.FeatureMemberService.getFirstLastName(user);
+    });
     this.SpeedDialService.getSpeedDials(this.ownerType, this.ownerId).then((data) => {
       this.speedDialList = data.speedDials;
     }).catch(() => {
@@ -80,6 +91,34 @@ class SpeedDialCtrl implements ng.IComponentController {
     this.actionList = _.cloneDeep(this.actionListCopy);
   }
 
+  public extensionOwned() {
+    this.$timeout(() => {
+      this.extension = this.callDest.phoneNumber;
+      if (this.form['$ctrl.callDestinationForm']) {
+        this.optionSelected = this.form['$ctrl.callDestinationForm'].CallDestTypeSelect.$viewValue.input;
+      }
+      if (this.optionSelected.toLowerCase() === 'custom') {
+        return this.BlfInternalExtValidation.get({
+          customerId: this.Authinfo.getOrgId(),
+          value: this.extension,
+        }).$promise.then(() => {
+          this.isValid = true;
+        }).catch(() => {
+          this.isValid = false;
+        });
+      } else if (this.optionSelected.toLowerCase() === 'uri') {
+        return this.BlfURIValidation.get({
+          customerId: this.Authinfo.getOrgId(),
+          value: this.extension,
+        }).$promise.then(() => {
+          this.isValid = true;
+        }).catch(() => {
+          this.isValid = false;
+        });
+      }
+    });
+  }
+
   public reachSpeedDialLimit() {
     return this.speedDialList.length >= SPEED_DIAL_LIMIT;
   }
@@ -100,6 +139,7 @@ class SpeedDialCtrl implements ng.IComponentController {
 
   public setSpeedDial(model) {
     this.callDest = model;
+    this.extensionOwned();
   }
 
   public save(): void {

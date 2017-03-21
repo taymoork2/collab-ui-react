@@ -3701,7 +3701,8 @@
     "retrieveSpeedDialsFail": "Failed to retrieve speed dials.",
     "speedDialChangesFailed": "Failed to save speed dial changes.",
     "labelIncorrectCharacter": "Speed Dial Labels can not include < or >",
-    "limitSpeedDialsReach": "You reached the limit of 125 speed dial entries."
+    "limitSpeedDialsReach": "You reached the limit of 125 speed dial entries.",
+    "blfPickup": "{{username}} can see and pickup ringing calls for ext. {{extension}}"
   },
   "internationalDialingPanel": {
     "success": "International Dialing configuration saved successfully",
