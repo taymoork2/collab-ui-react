@@ -252,12 +252,14 @@ require('./_overview.scss');
       });
     });
 
-    $rootScope.$watch('ssoEnabled', function () {
-      var params = {
-        disableCache: true,
-        basicInfo: true,
-      };
-      Orgservice.getAdminOrg(_.partial(forwardEvent, 'orgEventHandler'), false, params);
+    $rootScope.$watch('ssoEnabled', function (newValue, oldValue) {
+      if (newValue !== oldValue) {
+        var params = {
+          disableCache: true,
+          basicInfo: true,
+        };
+        Orgservice.getAdminOrg(_.partial(forwardEvent, 'orgEventHandler'), false, params);
+      }
     });
   }
 })();
