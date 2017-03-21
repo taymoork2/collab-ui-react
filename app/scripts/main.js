@@ -95,7 +95,13 @@
     require('modules/huron/overview').default,
   ]);
 
-  angular.module('Hercules', ['Core', 'Squared', 'core.onboard', 'ngTagsInput']);
+  angular.module('Hercules', [
+    'Core',
+    'Squared',
+    'core.onboard',
+    'ngTagsInput',
+    require('modules/hercules/privateTrunk/privateTrunkDomain').default,
+  ]);
 
   angular.module('HDS', ['Core', 'Hercules']);
 

@@ -447,6 +447,8 @@
         'places',
         'services-overview',
         'private-trunk-overview',
+        'private-trunk-domain',
+        'private-trunk-redirect',
       ],
       'squared-fusion-mgmt': [
         'expressway-cluster-sidepanel',
