@@ -2490,6 +2490,7 @@
     },
     "dictionary": {
       "welcome": "Welcome to the Context Dictionary",
+      "unavailable": "Unavailable",
       "fieldPage": {
         "associatedFieldsets": "Associated Fieldsets",
         "associatedFieldsetsError": "Unable to load associated fieldsets.",

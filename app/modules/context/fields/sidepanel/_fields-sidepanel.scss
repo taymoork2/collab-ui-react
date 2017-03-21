@@ -1,15 +1,6 @@
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/settings/fonts';
-@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import 'modules/context/styles/_hybrid-context.scss';
 
 .context-fields-sidepanel {
-  .section-wrapper {
-    margin-top: 24px;
-  }
-
-  textarea {
-    resize: none;
-  }
 
   .token {
     display: inline-block;
@@ -51,11 +42,5 @@
     .retry-action:disabled {
       color: $gray-base;
     }
-  }
-
-  .tooltip[popup-class="cluster-name"] .c-nub {
-    font-size: small;
-    white-space: normal;
-    max-width: 300px;
   }
 }

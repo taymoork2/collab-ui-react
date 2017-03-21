@@ -2909,9 +2909,7 @@
             parent: 'context',
             views: {
               'subHeader': {
-                templateUrl: 'modules/context/resources/hybrid-context-resources-header.html',
-                controller: 'HybridContextResourcesCtrl',
-                controllerAs: 'contextResources',
+                template: '<context-resources-sub-header></context-resources-sub-header>',
               },
               'contextServiceView': {
                 template: '<hybrid-service-cluster-list service-id="\'contact-center-context\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>',
