@@ -192,6 +192,22 @@ class MySubscriptionCtrl {
     }
   }
 
+  private sortSubscription(index, existingSite) {
+    if (existingSite >= 0) {
+      this.licenseCategory[index].subscriptions[existingSite].offers = _.sortBy(this.licenseCategory[index].subscriptions[existingSite].offers, this.sortFunction);
+    } else {
+      this.licenseCategory[index].subscriptions.offers = _.sortBy(this.licenseCategory[index].subscriptions.offers, this.sortFunction);
+    }
+  }
+
+  private sortFunction(element) {
+    const rank = {
+      CDC: 1,
+      CVC: 2,
+    };
+    return rank[element.offerName];
+  }
+
   private subscriptionRetrieval() {
     this.Orgservice.getLicensesUsage().then((subscriptions) => {
       _.forEach(subscriptions, (subscription: any, subIndex: number) => {
@@ -264,6 +280,7 @@ class MySubscriptionCtrl {
 
                     if (existingIndex >= 0) {
                       this.addSubscription(4, _.cloneDeep(offer), existingIndex);
+                      this.sortSubscription(4, existingIndex);
                     } else {
                       this.licenseCategory[4].subscriptions.unshift({
                         offers: [_.cloneDeep(offer)],
