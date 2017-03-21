@@ -10,6 +10,11 @@ export class HuronSettingsOptions {
   public premiumNumbers: string;
   public companyCallerIdOptions: Array<IOption>;
   public companyVoicemailOptions: Array<IOption>;
+  public emergencyServiceNumberOptions: Array<IEmergencyNumberOption>;
+}
+
+export interface IEmergencyNumberOption extends IOption {
+  pattern: string;
 }
 
 export class HuronSettingsOptionsService {
@@ -32,6 +37,7 @@ export class HuronSettingsOptionsService {
       timeZoneOptions: this.loadTimeZoneOptions(),
       companyCallerIdOptions: this.loadCompanyCallerIdNumbers(undefined),
       companyVoicemailOptions: this.loadCompanyVoicemailNumbers(undefined),
+      emergencyServiceNumbers: this.loadEmergencyServiceNumbers(undefined),
     }).then(response => {
       settingsOptions.dateFormatOptions = _.get<Array<IOption>>(response, 'dateFormatOptions');
       settingsOptions.timeFormatOptions = _.get<Array<IOption>>(response, 'timeFormatOptions');
@@ -41,6 +47,7 @@ export class HuronSettingsOptionsService {
       settingsOptions.premiumNumbers = _.get<string>(response, 'premiumNumbers');
       settingsOptions.companyCallerIdOptions = _.get<Array<IOption>>(response, 'companyCallerIdOptions');
       settingsOptions.companyVoicemailOptions = _.get<Array<IOption>>(response, 'companyVoicemailOptions');
+      settingsOptions.emergencyServiceNumberOptions = _.get<Array<IEmergencyNumberOption>>(response, 'emergencyServiceNumbers');
       return settingsOptions;
     });
   }
@@ -95,6 +102,19 @@ export class HuronSettingsOptionsService {
     return this.ServiceSetup.getTimeZones().then(timezones => {
       return this.ServiceSetup.getTranslatedTimeZones(timezones);
     });
+  }
+
+  public loadEmergencyServiceNumbers(filter: string | undefined): ng.IPromise<Array<IEmergencyNumberOption>> {
+    return this.NumberService.getNumberList(filter, NumberType.EXTERNAL, true)
+      .then(externalNumbers => {
+        return _.map(externalNumbers, externalNumber => {
+          return <IEmergencyNumberOption> {
+            value: externalNumber.uuid,
+            pattern: externalNumber.number,
+            label: this.TelephoneNumberService.getDIDLabel(externalNumber.number),
+          };
+        });
+      });
   }
 
 }

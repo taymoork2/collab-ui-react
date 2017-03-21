@@ -130,6 +130,38 @@
       </div>
     </div>
 
+    <!-- emergency service address selection -->
+    <div class="cs-form__section" ng-show="$ctrl.showEmergencyServiceAddress">
+      <div class="section__info">
+        <div cs-sticky>
+          <h4 class="section__title" translate="settingsServiceAddress.label"></h4>
+          <h6 class="section__description" translate="serviceSetupModal.emergencyAddressDescription"></h6>
+        </div>
+      </div>
+      <div class="section__content">
+        <uc-emergency-service-address></uc-emergency-service-address>
+      </div>
+    </div>
+
+    <!-- emergency service number selection -->
+    <div class="cs-form__section" ng-if="$ctrl.showEmergencyServiceAddress">
+      <div class="section__info">
+        <div cs-sticky>
+          <h4 class="section__title" translate="settingsServiceNumber.label"></h4>
+          <h6 class="section__description" translate="settingsServiceNumber.description"></h6>
+        </div>
+      </div>
+      <div class="section__content">
+        <uc-emergency-service-number
+          site="$ctrl.huronSettingsData.site"
+          emergency-callback-number="$ctrl.huronSettingsData.site.emergencyCallBackNumber"
+          external-number-options="$ctrl.settingsOptions.emergencyServiceNumberOptions"
+          on-number-filter-fn="$ctrl.onEmergencyServiceNumberFilter(filter)"
+          on-change-fn="$ctrl.onEmergencyServiceNumberChanged(emergencyCallbackNumber)">
+        </uc-emergency-service-number>
+      </div>
+    </div>
+
     <!-- company caller id selection -->
     <div class="cs-form__section">
       <div class="section__info">
@@ -140,8 +172,9 @@
       </div>
       <div class="section__content">
         <uc-company-caller-id
+          site="$ctrl.huronSettingsData.site"
           company-caller-id="$ctrl.huronSettingsData.companyCallerId"
-          external-numbers="$ctrl.settingsOptions.companyCallerIdOptions"
+          external-number-options="$ctrl.settingsOptions.companyCallerIdOptions"
           customer-name="$ctrl.huronSettingsData.customer.name"
           on-number-filter="$ctrl.onCompanyCallerIdFilter(filter)"
           on-change-fn="$ctrl.onCompanyCallerIdChanged(companyCallerId)">

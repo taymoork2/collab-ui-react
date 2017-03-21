@@ -100,14 +100,14 @@ class ComapnyVoicemailCtrl implements ng.IComponentController {
     });
   }
 
-  private setCurrentOption(currentValue: string, existionOptions: Array<IOption>) {
-    let existingOption: IOption = _.find(existionOptions, { value: currentValue });
+  private setCurrentOption(currentValue: string, existingOptions: Array<IOption>): IOption {
+    let existingOption: IOption = _.find(existingOptions, { value: currentValue });
     if (!existingOption) {
       let currentExternalNumberOption: IOption = {
         value: currentValue,
         label: this.TelephoneNumberService.getDIDLabel(currentValue),
       };
-      existionOptions.unshift(currentExternalNumberOption);
+      existingOptions.unshift(currentExternalNumberOption);
       return currentExternalNumberOption;
     } else {
       return existingOption;

@@ -17,7 +17,7 @@ export class Site {
   public mediaTraversalMode: string | undefined;
   public siteDescription: string | undefined;
   public allowInternationalDialing: string | undefined;
-  public emergencyCallbackNumber: EmergencyCallbackNumber | undefined;
+  public emergencyCallBackNumber: EmergencyCallbackNumber | undefined;
   public extensionLength: string;
   public voicemailPilotNumberGenerated: string;
   public preferredLanguage: string;
@@ -36,7 +36,7 @@ export class Site {
     mediaTraversalMode?: string,
     siteDescription?: string,
     allowInternationalDialing?: string,
-    emergencyCallbackNumber?: EmergencyCallbackNumber,
+    emergencyCallBackNumber?: EmergencyCallbackNumber,
     extensionLength: string,
     voicemailPilotNumberGenerated: string,
     preferredLanguage: string,
@@ -54,7 +54,7 @@ export class Site {
     mediaTraversalMode: undefined,
     siteDescription: undefined,
     allowInternationalDialing: undefined,
-    emergencyCallbackNumber: undefined,
+    emergencyCallBackNumber: undefined,
     extensionLength: DEFAULT_EXTENSION_LENGTH,
     voicemailPilotNumberGenerated: 'false',
     preferredLanguage: DEFAULT_LANGUAGE,
@@ -72,7 +72,7 @@ export class Site {
     this.mediaTraversalMode = obj.mediaTraversalMode;
     this.siteDescription = obj.siteDescription;
     this.allowInternationalDialing = obj.allowInternationalDialing;
-    this.emergencyCallbackNumber = obj.emergencyCallbackNumber;
+    this.emergencyCallBackNumber = obj.emergencyCallBackNumber;
     this.extensionLength = obj.extensionLength;
     this.voicemailPilotNumberGenerated = obj.voicemailPilotNumberGenerated;
     this.preferredLanguage = obj.preferredLanguage;

@@ -65,6 +65,7 @@ export class HuronSettingsService {
     private CustomerCosRestrictionServiceV2,
     private CallerId,
     private VoicemailMessageAction,
+    private TerminusUserDeviceE911Service,
   ) { }
 
   public get(siteId: string): ng.IPromise<HuronSettingsData> {
@@ -489,6 +490,16 @@ export class HuronSettingsService {
       this.Notification.notify(this.errors, 'error');
       return this.$q.reject();
     }
+  }
+
+  public getE911State(pattern: string): ng.IPromise<string> {
+    return this.TerminusUserDeviceE911Service.get({
+      customerId: this.Authinfo.getOrgId(),
+      number: pattern,
+    }).$promise
+    .then(e911Status => {
+      return _.get(e911Status, 'status', '');
+    });
   }
 
 }
