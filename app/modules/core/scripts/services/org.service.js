@@ -36,6 +36,7 @@
       getUnlicensedUsers: getUnlicensedUsers,
       isSetupDone: isSetupDone,
       setSetupDone: setSetupDone,
+      isTestOrg: isTestOrg,
       setOrgSettings: setOrgSettings,
       createOrg: createOrg,
       deleteOrg: deleteOrg,
@@ -249,6 +250,13 @@
         method: 'PATCH',
         url: adminUrl,
       });
+    }
+
+    function isTestOrg(orgId) {
+      return getAdminOrgAsPromise(orgId, { basicInfo: true })
+        .then(function (org) {
+          return org.data.isTestOrg || false;
+        });
     }
 
     function getCachedOrgSettings(orgId) {

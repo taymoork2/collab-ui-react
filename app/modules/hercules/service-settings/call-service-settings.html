@@ -45,14 +45,14 @@
                      ng-model="callServiceSettings.org.sipDomain"
                      required/>
               <button type="button"
-                      ng-hide="callServiceSettings.hasAtlasHybridCallDiagnosticTool"
+                      ng-hide="callServiceSettings.hasAtlasHybridCallDiagnosticTool || callServiceSettings.isTestOrg"
                       class="btn btn--primary"
                       id="updateSipDomain"
                       ng-click="callServiceSettings.updateSipDomain()"
                       ng-disabled="inputSipDestinationForm.$invalid || callServiceSettings.savingSip">
                 <span translate="common.save"></span>
               </button>
-              <verify-sip-destination ng-if="callServiceSettings.hasAtlasHybridCallDiagnosticTool"
+              <verify-sip-destination ng-if="callServiceSettings.hasAtlasHybridCallDiagnosticTool || callServiceSettings.isTestOrg"
                                       destination-url="callServiceSettings.org.sipDomain"
                                       on-destination-save="callServiceSettings.onDestinationSave(warn)"
                                       on-destination-clear="callServiceSettings.onDestinationClear()"></verify-sip-destination>
