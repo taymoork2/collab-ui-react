@@ -1,9 +1,15 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Hercules')
-    .directive('herculesNotifications', herculesNotificationsDirective);
+  angular.module('Hercules')
+    .component('hybridServicesNotifications', {
+      bindings: {
+        filterTag: '<',
+      },
+      controller: HerculesNotificationsController,
+      controllerAs: 'notificationController',
+      templateUrl: 'modules/hercules/notifications/hybrid-services-notifications/hybrid-services-notifications.html',
+    });
 
   /* @ngInject */
   function HerculesNotificationsController($q, $modal, $scope, $state, $translate, FusionClusterService, Notification, NotificationService, ServiceDescriptor, ServiceStateChecker, USSService) {
@@ -145,17 +151,4 @@
     }
   }
 
-  function herculesNotificationsDirective() {
-    return {
-      restrict: 'E',
-      replace: true,
-      controller: HerculesNotificationsController,
-      controllerAs: 'notificationController',
-      bindToController: true,
-      scope: {
-        filterTag: '=',
-      },
-      templateUrl: 'modules/hercules/notifications/hercules-notifications.html',
-    };
-  }
 })();
