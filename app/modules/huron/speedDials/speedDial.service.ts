@@ -15,6 +15,7 @@ export class SpeedDialService {
   constructor(
     private Authinfo,
     private $resource: ng.resource.IResourceService,
+    private UserServiceCommon,
     private HuronConfig) {
 
     let updateAction: ng.resource.IActionDescriptor = {
@@ -31,6 +32,16 @@ export class SpeedDialService {
       customerId: this.Authinfo.getOrgId(),
       userId: _id,
     }).$promise;
+  }
+
+  public getUserName(userId: string): ng.IPromise<string> {
+    return this.UserServiceCommon.get({
+      customerId: this.Authinfo.getOrgId(),
+      userId: userId,
+    }).$promise
+      .then((user) => {
+        return user;
+      });
   }
 
   public updateSpeedDials(_type: string, _id: string, _list: ISpeedDial[]): ng.IPromise<boolean> {
