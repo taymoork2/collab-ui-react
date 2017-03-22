@@ -19,7 +19,7 @@ var Spark = require('@ciscospark/spark-core').default;
     vm.searchByLimit = searchByLimit;
     vm.searchByErrors = searchByErrors;
     vm.searchByParameters = searchByParameters;
-    vm.goToSearchPage = goToSearchPage;
+    vm.resetSearchPageToInitialState = resetSearchPageToInitialState;
     vm.advancedSearch = advancedSearch;
     vm.searchForRoom = searchForRoom;
     vm.createReport = createReport;
@@ -67,7 +67,7 @@ var Spark = require('@ciscospark/spark-core').default;
     vm.isReportTooBig = false;
     vm.isReportMaxRooms = false;
 
-    vm.generateDescription = '';
+    vm.generateDescription = null;
     vm.exportOptions = ['JSON'];
     vm.exportSelected = '' || vm.exportOptions[0];
 
@@ -103,7 +103,7 @@ var Spark = require('@ciscospark/spark-core').default;
       } else {
         vm.searchCriteria = {
           startDate: moment().subtract(30, 'days').format('YYYY-MM-DD'),
-          endDate: moment().format('YYYY-MM-DD'),
+          endDate: moment().endOf('day').format('YYYY-MM-DD'),
         };
         vm.roomInfo = null;
       }
@@ -115,6 +115,7 @@ var Spark = require('@ciscospark/spark-core').default;
     }
 
     function getEndDate() {
+      vm.searchCriteria.endDate = moment().endOf('day').format('YYYY-MM-DD');
       return vm.searchCriteria.endDate;
     }
 
@@ -471,9 +472,16 @@ var Spark = require('@ciscospark/spark-core').default;
       vm.report = null;
     }
 
-    function goToSearchPage() {
+    function resetSearchPageToInitialState() {
       vm.roomInfo = false;
       vm.limitError = false;
+      vm.queryModel = null;
+      vm.generateDescription = null;
+      vm.isReport = true;
+      vm.isReportGenerating = false;
+      vm.isReportComplete = false;
+      vm.isReportTooBig = false;
+      vm.isReportMaxRooms = false;
     }
 
     /* Helper Functions */

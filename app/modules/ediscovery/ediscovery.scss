@@ -95,8 +95,16 @@
 
   .ediscovery-search {
     height: 100vh;
-    background-color: $brand-white;
-    padding-top: 9rem;
+
+    .basic-search {
+      background-color: $brand-white;
+      padding-top: 9rem;
+    }
+
+    .advanced-search {
+      background-color: $gray-light-4;
+      padding-top: 9rem;
+    }
 
     @media only screen and (max-height: 950px) {
       padding-top: 7rem;
@@ -104,7 +112,7 @@
 
     div.search-result-area {
       background-color: $gray-light-4;
-      min-height: calc(100% - 145px);
+      min-height: calc(100% - 200px);
       padding-top: 2.25rem;
 
       @media only screen and (max-height: 950px) {

@@ -37,7 +37,7 @@
     }
 
     function getArgonautServiceUrl(argonautParam) {
-      var url = UrlConfig.getArgonautReportSizeUrl();
+      var url = UrlConfig.getArgonautReportUrl() + '/size';
       var emailAddresses = _.get(argonautParam, 'emailAddresses', null);
       var roomIds = _.get(argonautParam, 'roomIds');
       var encryptionKeyUrl = _.get(argonautParam, 'encryptionKeyUrl');

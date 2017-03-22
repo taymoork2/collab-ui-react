@@ -218,6 +218,12 @@
       integration: 'https://l2sip-cfa-web.wbx2.com/l2sip/api/v1', // Tool is not working in integration, we need to point to prod for now.
       prod: 'https://l2sip-cfa-web.wbx2.com/l2sip/api/v1',
     },
+    ArgonautReportUrl: {
+      dev: 'https://argonaut-integration.wbx2.com/argonaut/api/v1/compliance/report',
+      cfe: 'https://argonaut-e.wbx2.com/argonaut/api/v1/compliance/report',
+      integration: 'https://argonaut-integration.wbx2.com/argonaut/api/v1/compliance/report',
+      prod: 'https://argonaut-a.wbx2.com/argonaut/api/v1/compliance/report',
+    },
 
     // urls same for all environments
 
@@ -227,8 +233,6 @@
     WebexMaxConcurrentMeetings: 'https://%s/meetingsapi/v1/report/MonthlyMaxConcurrentMeetings',
     WebexConcurrentMeetings: 'https://%s/meetingsapi/v1/report/ConcurrentMeetingsDetailByMonth',
     WebClientUrl: 'https://web.ciscospark.com/',
-    ArgonautReportSizeUrl: 'https://argonaut-a.wbx2.com/argonaut/api/v1/compliance/report/size',
-    ArgonautReportUrl: 'https://argonaut-a.wbx2.com/argonaut/api/v1/compliance/report',
     AndroidStoreUrl: 'http://cs.co/sqandroid',
     ItunesStoreUrl: 'http://cs.co/sqios',
     SquaredAppUrl: 'squared://',
