@@ -286,18 +286,11 @@ require('./_customer-list.scss');
         resetLists();
       });
 
-      // TODO: Clean out this Expensive operation and point to authinfo for isTestOrg flag
-      var params = {
-        basicInfo: true,
-      };
+      Orgservice.isTestOrg()
+        .then(function (isTestOrg) {
+          vm.isTestOrg = isTestOrg;
+        });
 
-      Orgservice.getOrg(function (data, status) {
-        if (data.success) {
-          vm.isTestOrg = data.isTestOrg;
-        } else {
-          Log.error('Query org info failed. Status: ' + status);
-        }
-      }, null, params);
     }
 
     function getSubfields(entry, name) {
