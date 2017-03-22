@@ -178,6 +178,144 @@
         "capacity": 15,
         "usage": 0
       }]
-    }]
+    }],
+    "careK1K2TrialSub": [
+  {
+    "label": "Care Free",
+    "value": 0,
+    "name": "careRadio",
+    "license": {
+      "licenseType": "freeCareService",
+      "features": [
+        "webex-squared",
+        "squared-call-initiation"
+      ]
+    }
+  },
+  {
+    "label": "Chat and Callback",
+    "value": 1,
+    "name": "careRadio",
+    "license": {
+      "licenseId": "CDC_ff9406ba-c9e1-4def-b4e3-e33fdcadea32",
+      "offerName": "CDC",
+      "licenseType": "CARE",
+      "features": [
+        "cloud-contact-center"
+      ],
+      "volume": 50,
+      "isTrial": true,
+      "trialId": "a8ef58a7-8c5d-4674-93e4-08d2b36f4f95",
+      "status": "ACTIVE",
+      "partnerOrgId": "0025ba5f-96bc-4d00-bb7d-22406f62af17",
+      "partnerEmail": "admin@fancy-lawyer.com"
+    },
+    "isCustomerPartner": false
+  },
+  {
+    "label": "Chat, Callback and Inbound Call",
+    "value": 1,
+    "name": "careRadio",
+    "license": {
+      "licenseId": "CVC_7a6b498b-e699-4e12-bd74-8a0b156ede38",
+      "offerName": "CVC",
+      "licenseType": "CARE",
+      "features": [
+        "cloud-contact-center-inbound-voice",
+        "cloud-contact-center"
+      ],
+      "volume": 50,
+      "isTrial": true,
+      "trialId": "a8ef58a7-8c5d-4674-93e4-08d2b36f4f95",
+      "status": "ACTIVE",
+      "partnerOrgId": "0025ba5f-96bc-4d00-bb7d-22406f62af17",
+      "partnerEmail": "admin@fancy-lawyer.com"
+    },
+    "isCustomerPartner": false
+  }], 
+      "careK1TrialSub": [
+  {
+    "label": "Care Free",
+    "value": 0,
+    "name": "careRadio",
+    "license": {
+      "licenseType": "freeCareService",
+      "features": [
+        "webex-squared",
+        "squared-call-initiation"
+      ]
+    }
+  },
+  {
+    "label": "Chat and Callback",
+    "value": 1,
+    "name": "careRadio",
+    "license": {
+      "licenseId": "CDC_ff9406ba-c9e1-4def-b4e3-e33fdcadea32",
+      "offerName": "CDC",
+      "licenseType": "CARE",
+      "features": [
+        "cloud-contact-center"
+      ],
+      "volume": 50,
+      "isTrial": true,
+      "trialId": "a8ef58a7-8c5d-4674-93e4-08d2b36f4f95",
+      "status": "ACTIVE",
+      "partnerOrgId": "0025ba5f-96bc-4d00-bb7d-22406f62af17",
+      "partnerEmail": "admin@fancy-lawyer.com"
+    },
+    "isCustomerPartner": false
+  }
+],
+  "careK2TrialSub": [
+  {
+    "label": "Care Free",
+    "value": 0,
+    "name": "careRadio",
+    "license": {
+      "licenseType": "freeCareService",
+      "features": [
+        "webex-squared",
+        "squared-call-initiation"
+      ]
+    }
+  },
+  {},
+  {
+    "label": "Chat, Callback and Inbound Call",
+    "value": 1,
+    "name": "careRadio",
+    "license": {
+      "licenseId": "CVC_7a6b498b-e699-4e12-bd74-8a0b156ede38",
+      "offerName": "CVC",
+      "licenseType": "CARE",
+      "features": [
+        "cloud-contact-center-inbound-voice",
+        "cloud-contact-center"
+      ],
+      "volume": 50,
+      "isTrial": true,
+      "trialId": "a8ef58a7-8c5d-4674-93e4-08d2b36f4f95",
+      "status": "ACTIVE",
+      "partnerOrgId": "0025ba5f-96bc-4d00-bb7d-22406f62af17",
+      "partnerEmail": "admin@fancy-lawyer.com"
+    },
+    "isCustomerPartner": false
+  }
+], 
+"careFakeTrialSub": [
+  {
+    "label": "Care Free",
+    "value": 0,
+    "name": "careRadio",
+    "license": {
+      "licenseType": "freeCareService",
+      "features": [
+        "webex-squared",
+        "squared-call-initiation"
+      ]
+    }
+  }
+]
   }
 }
