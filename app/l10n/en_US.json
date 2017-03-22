@@ -315,7 +315,7 @@
     "paidCare": "Care Digital Channel",
     "careServices": "Chat and Callback",
     "careVoiceServices": "Chat, Callback and Inbound Call",
-    "enableCallInfo": "Message is mandatory for Care services. Enable Call if you want the user to handle calls from customers.",
+    "enableCallInfo": "Cisco Spark Call is required for voice-based interactions.",
     "paidContactCenterVoice": "Chat, Callback and Inbound Call",
     "paidContactCenter": "Chat and Callback",
     "enterpriseEdition": "Enterprise Edition {{capacity}}",
