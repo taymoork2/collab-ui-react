@@ -64,6 +64,12 @@
       color: $gray-dark-1;
       text-align: left;
       float: left;
+      .graph-text-color {
+        font-size: rem-calc(15);
+        color: #f0a378;
+        text-align: left;
+        float: left;
+      }
       .graph-number {
         font-size: rem-calc(18);
         color: $brand-success;
@@ -72,6 +78,11 @@
       .graph-media {
         font-size: rem-calc(18);
       }
+    }
+    .insight-padding {
+      padding-left: 0px;
+      padding-top: 0px;
+      padding-bottom: 0px;
     }
     .spinner-position {
       position: absolute;

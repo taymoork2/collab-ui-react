@@ -272,6 +272,15 @@ describe('UrlConfigSpec', function () {
     });
   });
 
+  it('should return correct flag service url', function () {
+    whenCalling('getFlagServiceUrl').expectUrlToBe({
+      dev: 'https://hercules-integration.wbx2.com/fls/api/v1',
+      cfe: 'https://hercules-e.wbx2.com/fls/api/v1',
+      integration: 'https://hercules-integration.wbx2.com/fls/api/v1',
+      prod: 'https://hercules-a.wbx2.com/fls/api/v1',
+    });
+  });
+
   it('should return correct cdr url', function () {
     whenCalling('getCdrUrl').expectUrlToBe({
       dev: 'https://hades.huron-int.com/api/v1/elasticsearch/',
