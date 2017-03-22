@@ -10,6 +10,11 @@
     var vm = $scope;
 
     vm.features = [];
+    vm.hasCall = Authinfo.isSquaredUC();
+    vm.CallbackServiceDescription = vm.hasCall ? 'sunlightDetails.newFeatures.selectCADesc'
+                                                : 'sunlightDetails.featuresNotYetConfiguredPage.CallLicenseMissing';
+    vm.ChatCallbackServiceDescription = vm.hasCall ? 'sunlightDetails.newFeatures.selectCHCADesc'
+                                                : 'sunlightDetails.featuresNotYetConfiguredPage.CallLicenseMissing';
 
     var careChatService = {
       id: 'Ch',
@@ -17,22 +22,25 @@
       label: 'sunlightDetails.newFeatures.chatType',
       description: 'sunlightDetails.newFeatures.selectCHDesc',
       icons: ['icon-message'],
+      disabled: false,
     };
 
     var careCallbackService = {
       id: 'Ca',
       code: 'sunlightDetails.callbackTemplateCode',
       label: 'sunlightDetails.newFeatures.callbackType',
-      description: 'sunlightDetails.newFeatures.selectCADesc',
+      description: vm.CallbackServiceDescription,
       icons: ['icon-calls'],
+      disabled: !vm.hasCall,
     };
 
     var careChatCallbackService = {
       id: 'ChCa',
       code: 'sunlightDetails.chatTemplateCode',
       label: 'sunlightDetails.newFeatures.chatPlusCallbackType',
-      description: 'sunlightDetails.newFeatures.selectCHCADesc',
+      description: vm.ChatCallbackServiceDescription,
       icons: ['icon-message', 'icon-calls'],
+      disabled: !vm.hasCall,
     };
 
     if (Authinfo.isCare()) {
@@ -43,6 +51,7 @@
 
     vm.ok = ok;
     vm.cancel = cancel;
+    vm.purchaseLink = purchaseLink;
 
     function ok(featureId) {
       if (featureId === 'Ch') {
@@ -63,6 +72,11 @@
 
     function cancel() {
       $modalInstance.dismiss('cancel');
+    }
+
+    function purchaseLink() {
+      cancel();
+      $state.go('my-company.subscriptions');
     }
   }
 })();
