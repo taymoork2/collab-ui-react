@@ -32,8 +32,10 @@
         });
     }
 
-    function searchLogs(searchInput, callback) {
-      var logsUrl = UrlConfig.getAdminServiceUrl() + 'logs?search=' + $window.encodeURIComponent(searchInput);
+    function searchLogs(searchInput, timeSortOrder, limit, callback) {
+      var logsUrl = UrlConfig.getAdminServiceUrl() + 'logs?search=' + $window.encodeURIComponent(searchInput)
+        + '&timeSortOrder=' + timeSortOrder
+        + '&limit=' + limit;
 
       $http.get(logsUrl)
         .success(function (data, status) {

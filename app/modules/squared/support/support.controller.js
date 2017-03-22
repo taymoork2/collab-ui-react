@@ -278,7 +278,8 @@ require('./_support.scss');
 
     function searchLogs(searchInput) {
       $scope.closeCallInfo();
-      LogService.searchLogs(searchInput, function (data, status) {
+      // request most recent 300 logs (also backend default).  backend has a limit of 1000, so this is somewhat arbitrary.
+      LogService.searchLogs(searchInput, 'descending', 300, function (data, status) {
         if (data.success) {
           //parse the data
           $scope.userLogs = [];
