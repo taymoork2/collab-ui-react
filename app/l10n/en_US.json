@@ -3858,10 +3858,14 @@
     "serviceAddressConfirmation": "Is this the address?",
     "serviceAddressNotFound": "Unable to find address. Please update and try again.",
     "orderNumber": "Order Number",
+    "numberCart": "Number Cart",
+    "tollFreeTitle": "Search and add toll-free phone numbers by entering a valid area code. Valid toll-free area codes include {{areaCodes}}",
     "pstnSelector": {
       "searchPlaceholder": "Enter area code and/or number prefix",
       "searchDesc": "e.g. 972 or 972867",
-      "noResults": "No Numbers Found"
+      "noResults": "No Numbers Found",
+      "invalidFormat": "Invalid number format.",
+      "unavailableNPA": "Invalid area code."
     },
     "advancedOrder": {
       "noResults": "No search results but we have a solution.",
