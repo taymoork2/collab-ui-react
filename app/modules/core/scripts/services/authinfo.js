@@ -493,6 +493,9 @@
       isContactCenterContext: function () {
         return isEntitled(Config.entitlements.context);
       },
+      isMessageEntitled: function () {
+        return isEntitled(Config.entitlements.message);
+      },
       isCare: function () {
         return isEntitled(Config.entitlements.care);
       },
