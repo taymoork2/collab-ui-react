@@ -1,4 +1,4 @@
-<form  name="$ctrl.form" novalidate>
+<form  name="$ctrl.form" isolate-form novalidate>
   <div class="flex-search" ng-class="{error: $ctrl.form.search.$error.pattern && $ctrl.form.search.$touched}">
     <input type="text" name="search" ng-model="$ctrl.searchVal" placeholder="{{::'pstnSetup.pstnSelector.searchPlaceholder' | translate}}" pattern="^\d{3}(\d{3})?$" ng-maxlength="$ctrl.maxLength" maxlength="{{$ctrl.maxLength}}" required>
     <button ng-disabled="$ctrl.form.$invalid" class="btn-primary" ng-click="$ctrl.lookup()">

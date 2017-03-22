@@ -69,7 +69,7 @@ export function isolateForm() {
   return directive;
 
   function isolateFormLink(scope, elm, attrs, formCtrl) {
-    let parentFormCtrl = scope.$eval(attrs.isolateForm) || scope.form;
+    let parentFormCtrl = scope.$eval(attrs.isolateForm) || formCtrl.$$parentForm || scope.form;
 
     if (!formCtrl || !parentFormCtrl) {
       return;
