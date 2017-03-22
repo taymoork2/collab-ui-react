@@ -15,6 +15,7 @@
       resetAddress: resetAddress,
       checkForPstnSetup: checkForPstnSetup,
       setCountryCode: setCountryCode,
+      getCountryCode: getCountryCode,
     };
 
     return service;
@@ -187,6 +188,10 @@
         state: '',
         zip: '',
       };
+    }
+
+    function getCountryCode() {
+      return PstnSetupService.getCountryCode();
     }
 
     function setCountryCode(countryCode) {
