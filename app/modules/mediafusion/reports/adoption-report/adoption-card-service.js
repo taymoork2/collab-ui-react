@@ -26,15 +26,19 @@
     };
 
     function setClientTypePiechart(data) {
+      data = formatDecimal(data);
       var chartData = CommonReportsGraphService.getBasePieChart(data);
       chartData.labelText = '[[name]]';
+      chartData.balloonText = '[[name]]: [[percentage]]% ([[value]])';
       var chart = AmCharts.makeChart(vm.clientTypeChartDiv, chartData, 0);
       return chart;
     }
 
     function setNumberOfMeetsOnPremisesPiechart(data) {
+      data = formatDecimal(data);
       var chartData = CommonReportsGraphService.getBasePieChart(data);
       chartData.labelText = '[[name]]';
+      chartData.balloonText = '[[name]]: [[percentage]]% ([[value]])';
       var chart = AmCharts.makeChart(vm.numberOfMeetsOnPremisesChartDiv, chartData, 0);
       return chart;
     }
@@ -58,8 +62,10 @@
         'value': cloudCalls,
       }];
       data['dataProvider'] = dataProvider;
+      data = formatDecimal(data);
       var chartData = CommonReportsGraphService.getBasePieChart(data);
       chartData.labelText = '[[name]]';
+      chartData.balloonText = '[[name]]: [[percentage]]% ([[value]])';
       chartData.allLabels = [{
         'text': vm.totalHeader + ' ' + total,
         'align': 'center',
@@ -86,6 +92,17 @@
       chartData.labelText = '[[name]]';
       var chart = AmCharts.makeChart(vm.totalParticipantsChartDiv, chartData, 0);
       return chart;
+    }
+
+    function formatDecimal(data) {
+      var totalValue = 0;
+      _.forEach(data.dataProvider, function (type) {
+        totalValue = totalValue + type.value;
+      });
+      _.forEach(data.dataProvider, function (type) {
+        type.percentage = _.round(100 * (type.value / totalValue));
+      });
+      return data;
     }
 
   }

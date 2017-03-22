@@ -11,6 +11,18 @@
 .media-reports {
   @extend %content-subheader;
   @extend %page-content-padding;
+  .utilization-reports,
+  .participant-distribution-reports,
+  .number-of-participant-reports,
+  .availability-reports,
+  .client-type-reports,
+  .meeting-location-reports {
+    z-index: 1;
+  }
+  .amcharts-export-menu {
+    opacity: 1 !important;
+    z-index: 100;
+  }
   .media-reports-container {
     padding: 0.55rem 0.9rem !important;
   }
@@ -119,7 +131,6 @@
     cursor: pointer;
   }
 }
-
 @keyframes scaleUpMediaCards {
   0% {
     transform: scale(0, 0);
