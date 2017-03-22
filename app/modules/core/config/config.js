@@ -75,6 +75,7 @@
         context: 'contact-center-context',
         fusion_google_cal: 'squared-fusion-gcal',
         fusion_khaos: 'squared-fusion-khaos',
+        message: 'squared-room-moderation',
       },
 
       licenseModel: {

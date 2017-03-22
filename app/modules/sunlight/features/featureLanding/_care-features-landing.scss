@@ -111,7 +111,7 @@
   }
 
   .ct-desc {
-    max-width: rem-calc(330);
+    max-width: rem-calc(460);
   }
 
   .new-btn {
@@ -192,7 +192,12 @@
   }
 
   .feature-icon-color-care {
+    color: $color-people-base;
+  }
+
+  .greyed {
     color: $gray-base;
+    background: $gray-light-3;
   }
 
   .feature-label-container {
@@ -238,4 +243,3 @@
   font-size: 3rem;
   text-align: center;
 }
-

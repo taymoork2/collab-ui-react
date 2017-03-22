@@ -30,6 +30,10 @@
     vm.template = null;
     vm.openNewCareFeatureModal = openNewCareFeatureModal;
     vm.setFilter = setFilter;
+    vm.hasMessage = Authinfo.isMessageEntitled();
+    vm.hasCall = Authinfo.isSquaredUC();
+    vm.purchaseLink = purchaseLink;
+
     /* LIST OF FEATURES
      *
      *  To add a New Feature (like Voice Templates)
@@ -218,6 +222,10 @@
       }
 
     });
+
+    function purchaseLink() {
+      $state.go('my-company.subscriptions');
+    }
   }
 
 })();
