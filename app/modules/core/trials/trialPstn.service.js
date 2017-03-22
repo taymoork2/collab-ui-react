@@ -92,25 +92,32 @@
 
     function reserveNumbersWithCustomerV2(customerOrgId) {
       if (_trialData.details.pstnProvider.apiImplementation !== "SWIVEL") {
-        return PstnSetupService.reserveCarrierInventoryV2(
-          customerOrgId,
-          _trialData.details.pstnProvider.uuid,
-          _trialData.details.pstnNumberInfo.numbers,
-          true
-        ).then(function (reservationData) {
-          var order = {
-            data: {
-              numbers: reservationData.numbers,
-            },
-            numberType: PstnSetupService.NUMTYPE_DID,
-            orderType: PstnSetupService.NUMBER_ORDER,
-            reservationId: reservationData.uuid,
-          };
-          _trialData.details.pstnOrderData.push(order);
-        }).catch(function (response) {
-          Notification.errorResponse(response, 'trialModal.pstn.error.reserveFail');
-          return $q.reject(response);
-        });
+        if (angular.isString(_trialData.details.pstnNumberInfo.numbers[0])) {
+          return PstnSetupService.reserveCarrierInventoryV2(
+            customerOrgId,
+            _trialData.details.pstnProvider.uuid,
+            _trialData.details.pstnNumberInfo.numbers,
+            true
+          ).then(function (reservationData) {
+            var order = {
+              data: {
+                numbers: reservationData.numbers,
+              },
+              numberType: PstnSetupService.NUMTYPE_DID,
+              orderType: PstnSetupService.NUMBER_ORDER,
+              reservationId: reservationData.uuid,
+            };
+            _trialData.details.pstnOrderData.push(order);
+          }).catch(function (response) {
+            Notification.errorResponse(response, 'trialModal.pstn.error.reserveFail');
+            return $q.reject(response);
+          });
+        } else {
+          for (var i = 0; i < _trialData.details.pstnNumberInfo.numbers.length; i++) {
+            _trialData.details.pstnOrderData.push(_trialData.details.pstnNumberInfo.numbers[i]);
+          }
+          return $q.resolve();
+        }
       } else {
         return $q.resolve();
       }
