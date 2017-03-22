@@ -110,8 +110,12 @@ require('./_customer-overview.scss');
       initCustomer();
       initTrialActions();
       getLogoSettings();
-      getIsTestOrg();
       getIsSetupDone();
+      getCountryCode();
+      Orgservice.isTestOrg()
+        .then(function (isTestOrg) {
+          vm.isTest = isTestOrg;
+        });
     }
 
     function initTrialActions() {
@@ -369,15 +373,14 @@ require('./_customer-overview.scss');
       return vm.customerName === Authinfo.getOrgName();
     }
 
-    // Refactor this out; we have multiple places where we are making getOrg calls for this same 'isTestOrg' flag.
+    // Refactor this out.
     // Preferably call another service for this, or call once and store into universal data object
-    function getIsTestOrg() {
+    function getCountryCode() {
       var params = {
         basicInfo: true,
       };
       Orgservice.getOrg(function (data, status) {
         if (data.success) {
-          vm.isTest = data.isTestOrg;
           if (data.countryCode) {
             vm.countryCode = data.countryCode;
           }

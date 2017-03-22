@@ -87,6 +87,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
       callback(getJSONFixture('core/json/organizations/Orgservice.json').getOrg, 200);
     });
     spyOn(Orgservice, 'isSetupDone').and.returnValue($q.resolve(false));
+    spyOn(Orgservice, 'isTestOrg').and.returnValue($q.resolve(true));
     spyOn(PartnerService, 'modifyManagedOrgs').and.returnValue($q.resolve({}));
     spyOn($window, 'confirm').and.returnValue(true);
     spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
@@ -211,12 +212,6 @@ describe('Controller: CustomerOverviewCtrl', function () {
 
     it('should cause a Notification if modifyManagedOrgs returns 400', function () {
       expect(Notification.errorWithTrackingId).toHaveBeenCalled();
-    });
-  });
-
-  describe('should call isTestOrg successfully', function () {
-    it('should identify as a test org', function () {
-      expect(controller.isTest).toBe(true);
     });
   });
 

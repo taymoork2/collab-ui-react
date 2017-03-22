@@ -52,6 +52,7 @@
     };
 
     var savedOrgSettingsCache = [];
+    var isTestOrgCache = {};
 
     return service;
 
@@ -253,9 +254,16 @@
     }
 
     function isTestOrg(orgId) {
+      if (_.isUndefined(orgId)) {
+        orgId = Authinfo.getOrgId();
+      }
+      if (_.isBoolean(isTestOrgCache[orgId])) {
+        return $q.resolve(isTestOrgCache[orgId]);
+      }
       return getAdminOrgAsPromise(orgId, { basicInfo: true })
         .then(function (org) {
-          return org.data.isTestOrg || false;
+          isTestOrgCache[orgId] = _.get(org, 'data.isTestOrg', false);
+          return isTestOrgCache[orgId];
         });
     }
 
