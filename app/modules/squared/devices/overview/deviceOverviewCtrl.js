@@ -281,7 +281,8 @@
 
     function pollDeviceForNewCountry(newValue, endTime, deferred) {
       huronDeviceService.getDeviceInfo(deviceOverview.currentDevice).then(function (result) {
-        if (result.country === newValue) {
+        //Temporary workaround to handle null reset until CMI Device API returns null.
+        if (result.country === newValue || newValue === null) {
           Notification.success('deviceOverviewPage.countryUpdated');
           return deferred.resolve();
         }
