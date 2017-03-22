@@ -23,9 +23,9 @@ class CallPickupMembersCtrl implements ng.IComponentController {
     private CallPickupGroupService: CallPickupGroupService,
   ) { }
 
-  public fetchMembers(): void {
-    if (this.memberName) {
-      this.FeatureMemberService.getMemberSuggestionsByLimit(this.memberName, this.suggestionLimit)
+  public fetchMembers(memberName: String): void {
+    if (memberName) {
+      return this.FeatureMemberService.getMemberSuggestionsByLimit(memberName, this.suggestionLimit)
       .then(
         (members: Member[]) => {
           this.memberList = _.reject(members, mem => _.some(this.selectedMembers, member =>
@@ -39,6 +39,7 @@ class CallPickupMembersCtrl implements ng.IComponentController {
                 member['disabled'] = disabled;
               });
           });
+          return this.memberList;
         });
     }
   }
