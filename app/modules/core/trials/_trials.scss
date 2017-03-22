@@ -182,6 +182,10 @@
       color: $color-primary-base;
     }
   }
+
+  .message {
+    max-width: 100%;
+  }
 }
 
 .trials {
