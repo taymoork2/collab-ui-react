@@ -34,8 +34,6 @@
         if (!vm.hadError) {
           ServiceDescriptor.disableService(vm.serviceId);
           MediaServiceActivationV2.setisMediaServiceEnabled(false);
-          // Why is this called?
-          MediaServiceActivationV2.setServiceAcknowledged(vm.serviceId, false);
 
           MediaServiceActivationV2.disableOrpheusForMediaFusion();
           MediaServiceActivationV2.deactivateHybridMedia();

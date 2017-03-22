@@ -459,32 +459,22 @@
   "servicesResponse": [{
     "id": "squared-fusion-mgmt",
     "enabled": true,
-    "acknowledged": true,
-    "status": "warn",
     "emailSubscribers": ""
   }, {
     "id": "squared-fusion-uc",
     "enabled": true,
-    "acknowledged": true,
-    "status": "warn",
     "emailSubscribers": ""
   }, {
     "id": "squared-fusion-ec",
     "enabled": false,
-    "acknowledged": false,
-    "status": "warn",
     "emailSubscribers": ""
   }, {
     "id": "squared-fusion-media",
     "enabled": false,
-    "acknowledged": false,
-    "status": "warn",
     "emailSubscribers": ""
   }, {
     "id": "squared-fusion-cal",
     "enabled": true,
-    "acknowledged": true,
-    "status": "warn",
     "emailSubscribers": "kjetil@example.org"
   }],
   "servicesFormatted": ["hercules.serviceNames.squared-fusion-uc.full", "hercules.serviceNames.squared-fusion-cal"]

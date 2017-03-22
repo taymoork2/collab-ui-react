@@ -179,27 +179,22 @@ describe('HelpdeskService', function () {
 
   it("get list of hybrid services relevant services in an org", function () {
     var serviceDescriptionsMock = [{
-      "acknowledged": false,
       "emailSubscribers": "",
       "enabled": false,
       "id": "squared-not-fusion",
     }, {
-      "acknowledged": false,
       "emailSubscribers": "",
       "enabled": false,
       "id": "squared-fusion-uc",
     }, {
-      "acknowledged": false,
       "emailSubscribers": "",
       "enabled": false,
       "id": "squared-fusion-cal",
     }, {
-      "acknowledged": false,
       "emailSubscribers": "",
       "enabled": false,
       "id": "squared-fusion-mgmt",
     }, {
-      "acknowledged": false,
       "emailSubscribers": "",
       "enabled": false,
       "id": "squared-a-cool-service",

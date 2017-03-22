@@ -33,12 +33,10 @@ describe('ServiceDescriptor', function () {
         items: [{
           id: 'squared-fusion-cal',
           enabled: true,
-          acknowledged: false,
           emailSubscribers: 'aalto@example.org',
         }, {
           id: 'squared-fusion-uc',
           enabled: true,
-          acknowledged: false,
           emailSubscribers: 'alvar@example.org',
         }],
       });
@@ -59,7 +57,6 @@ describe('ServiceDescriptor', function () {
         items: [{
           id: 'squared-fusion-cal',
           enabled: true,
-          acknowledged: false,
           emailSubscribers: 'aalto@example.org',
         }],
       });

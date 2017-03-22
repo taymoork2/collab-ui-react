@@ -123,18 +123,10 @@
         });
     };
 
-    var acknowledgeService = function (serviceId) {
-      return $http
-        .patch(UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId, {
-          acknowledged: true,
-        });
-    };
-
     return {
       filterEnabledServices: filterEnabledServices,
       filterAllExceptManagement: filterAllExceptManagement,
       isServiceEnabled: isServiceEnabled,
-      acknowledgeService: acknowledgeService,
       getServices: getServices,
       getEmailSubscribers: getEmailSubscribers,
       setEmailSubscribers: setEmailSubscribers,

@@ -150,6 +150,10 @@ export class HybridServicesUtils {
     }
     return moment(timestamp).local().tz(timezone).format(format || 'LLL (z)');
   }
+
+  public getAckFlagForHybridServiceId(entitlement: HybridServiceId): string {
+    return `fms.services.${entitlement}.acknowledged`;
+  }
 }
 
 angular
