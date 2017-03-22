@@ -315,8 +315,9 @@
     "paidCare": "Care Digital Channel",
     "careServices": "Chat and Callback",
     "careVoiceServices": "Chat, Callback and Inbound Call",
-    "enableCallInfo": "Cisco Spark Call is required for voice-based interactions.",
-    "paidContactCenter": "Care",
+    "enableCallInfo": "Message is mandatory for Care services. Enable Call if you want the user to handle calls from customers.",
+    "paidContactCenterVoice": "Chat, Callback and Inbound Call",
+    "paidContactCenter": "Chat and Callback",
     "enterpriseEdition": "Enterprise Edition {{capacity}}",
     "meetingCenter": "Meeting Center {{capacity}}",
     "supportCenter": "Support Center {{capacity}}",
@@ -2489,6 +2490,7 @@
     },
     "dictionary": {
       "welcome": "Welcome to the Context Dictionary",
+      "unavailable": "Unavailable",
       "fieldPage": {
         "associatedFieldsets": "Associated Fieldsets",
         "associatedFieldsetsError": "Unable to load associated fieldsets.",
@@ -3700,7 +3702,8 @@
     "retrieveSpeedDialsFail": "Failed to retrieve speed dials.",
     "speedDialChangesFailed": "Failed to save speed dial changes.",
     "labelIncorrectCharacter": "Speed Dial Labels can not include < or >",
-    "limitSpeedDialsReach": "You reached the limit of 125 speed dial entries."
+    "limitSpeedDialsReach": "You reached the limit of 125 speed dial entries.",
+    "blfPickup": "{{username}} can see and pickup ringing calls for ext. {{extension}}"
   },
   "internationalDialingPanel": {
     "success": "International Dialing configuration saved successfully",
@@ -4129,13 +4132,11 @@
     "webex": "WebEx Enterprise Edition 200 with CMR/TNU+",
     "call": "Call",
     "sparkCare": "Care",
-    "care": "Chat and Callback (K1)",
-    "advanceCare": "Chat, Callback and Inbound Call (K2)",
+    "care": "Chat and Callback",
+    "advanceCare": "Chat, Callback and Inbound Call",
     "callUsOnly": "Call (Currently U.S. only)",
     "supportSelectLocations": "Cisco Spark is supported in selected locations.  <a href='http://www.cisco.com/go/spark-availability' target='_blank' ng-click='{{click}}'>Learn more</a>",
-    "supportedLocationsCertification1": "I certify that this customer is in a ",
-    "supportedLocationsCertification2": " for Cisco Spark",
-    "supportedLocationsCertificationLinkText": "supported location",
+    "supportedLocationsCertification": "I certify that this customer is in a <a href=\"https://support.ciscospark.com/customer/portal/articles/1940194-where-is-cisco-spark-available\" target=\"_blank\">supported location</a> for Cisco Spark",
     "context": "Enable Context Service for Cisco Unified Contact Center.",
     "roomSystem": "DX, MX or SX system",
     "sparkBoardSystem": "Cisco Spark Board",
@@ -6424,8 +6425,8 @@
       "CO": "Spark Call",
       "SD": "DX, MX or SX system",
       "SB": "Spark Board",
-      "CDC": "K1 Spark Care",
-      "CVC": "K2 Spark Care"
+      "CDC": "Chat and Callback",
+      "CVC": "Chat, Callback and Inbound Call"
     }
   },
   "onlineUpgradeModal": {
@@ -6893,23 +6894,30 @@
       },
       "privateTrunk": {
         "title": "Enterprise Private Trunking ",
-        "description": "Extends Your organization.",
+        "description": "Extends your organization lorem ipsum dolor sit amet consectetur adipiscing elit cras ut imperdiet augue.",
         "buttons": {
-          "verify": "Verify prerequisites"
+          "verify": "Verify prerequisites",
+          "view": "View prerequisites"
         },
+        "prereqTitle": "Private Trunking Prerequisites",
         "setupTitle": "Set up Private Trunking ",
-        "setupDescription": "You are about to set up Enterprise Private Trunking. Before you begin, verify that you have completed the prerequisites",
+        "setupDescription": "Before you set up Private Trunking, complete the following prerequisites. See the <a ng-click=\"{{onclick}}\">documentation</a> for guidance.",
         "domainVerification": "Domain verification",
-        "domainVerificationDescription": "You don't have any verified domain. You need at least one verified domain for setting up Enterprise Private Trunking.",
+        "domainError": "You don't have any verified domain. You need at least one verified domain for setting up Enterprise Private Trunking. ",
         "verifyADomain": "Verify a domain",
-        "basicConnectivity": "Basic connectivity",
+        "verifiedDomain": "You have multiple verified domains.",
+        "aVerifiedDomain": "is a verfied domain",
+        "basicConnectivity": "Basic connectivity between the cloud and on-premises",
         "certificateHelp": "The Spark Call certificate authority are in the Expresssway-E trust store. See ",
-        "help": "help",
+        "help": "<a ng-click=\"{{onclick}}\">help</a>.",
         "dNSzoneHelp": "The DNS zone has been created on the Expressway-E to accept the inbound connection from the cloud. See ",
         "defaultTrustHelp": "Use Certificates provided from the Cisco Collaboration default trust list or upload your own. If you use your own, make sure that the host names are on a verified domain. See ",
         "fullService": "Full service: in and outbound calling",
         "allZonesHelp": "All zones and rules must be set up on Expressway-E. See ",
-        "routingHelp": "The correct routing must be configured on CUCM. See "
+        "routingHelp": "The correct routing must be configured on CUCM. See ",
+        "redirectMsg": "Verified Domain Not found",
+        "redirect": "Redirect to Settings Domain",
+        "addDomain": "Add Domain"
       }
     },
     "showMore": "View all",

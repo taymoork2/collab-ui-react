@@ -8,9 +8,9 @@ require('./_customer-overview.scss');
     .controller('CustomerOverviewCtrl', CustomerOverviewCtrl);
 
   /* @ngInject */
-  function CustomerOverviewCtrl($modal, $q, $state, $stateParams, $translate, $window, AccountOrgService, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, trialForPaid, TrialService, Userservice) {
-    var vm = this;
+  function CustomerOverviewCtrl($modal, $q, $state, $stateParams, $translate, $window, AccountOrgService, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, TrialPstnService, TrialService, Userservice) {
 
+    var vm = this;
     vm.currentCustomer = $stateParams.currentCustomer;
     vm.customerName = vm.currentCustomer.customerName;
     vm.customerOrgId = vm.currentCustomer.customerOrgId;
@@ -36,6 +36,7 @@ require('./_customer-overview.scss');
     vm.allowCustomerLogos = false;
     vm.allowCustomerLogoOrig = false;
     vm.isTest = false;
+    vm.countryCode = 'US';
     vm.isDeleting = false;
     vm.isOrgSetup = false;
     vm.isUpdateStatusEnabled = true;
@@ -54,8 +55,6 @@ require('./_customer-overview.scss');
       updateUsers: updateUsers,
     };
 
-    vm.featureTrialForPaid = trialForPaid;
-    //vm.featureTrialForPaid = true;
 
     var QTY = _.toUpper($translate.instant('common.quantity'));
     var FREE = _.toUpper($translate.instant('customerPage.free'));
@@ -122,7 +121,7 @@ require('./_customer-overview.scss');
           actionFunction: openEditTrialModal,
         });
       } else {
-        if (vm.featureTrialForPaid && !vm.currentCustomer.trialId) {
+        if (!vm.currentCustomer.trialId) {
           vm.trialActions.push({
             actionKey: 'customerPage.addTrial',
             actionFunction: openAddTrialModal,
@@ -269,8 +268,9 @@ require('./_customer-overview.scss');
 
     function openEditTrialModal() {
       //var isAddTrial = options.isAddTrial;
+      TrialPstnService.setCountryCode(vm.countryCode);
       TrialService.getTrial(vm.currentCustomer.trialId).then(function (response) {
-        var route = TrialService.getEditTrialRoute(vm.featureTrialForPaid, vm.currentCustomer, response);
+        var route = TrialService.getEditTrialRoute(vm.currentCustomer, response);
         $state.go(route.path, route.params).then(function () {
           $state.modal.result.then(function () {
             $state.go('partnercustomers.list', {}, {
@@ -282,7 +282,7 @@ require('./_customer-overview.scss');
     }
 
     function openAddTrialModal() {
-      var route = TrialService.getAddTrialRoute(vm.featureTrialForPaid, vm.currentCustomer);
+      var route = TrialService.getAddTrialRoute(vm.currentCustomer);
       $state.go(route.path, route.params).then(function () {
         $state.modal.result.then(function () {
           $state.go('partnercustomers.list', {}, {
@@ -378,6 +378,9 @@ require('./_customer-overview.scss');
       Orgservice.getOrg(function (data, status) {
         if (data.success) {
           vm.isTest = data.isTestOrg;
+          if (data.countryCode) {
+            vm.countryCode = data.countryCode;
+          }
         } else {
           Log.error('Query org info failed. Status: ' + status);
         }

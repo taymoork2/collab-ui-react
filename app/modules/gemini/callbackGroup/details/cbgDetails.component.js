@@ -31,15 +31,19 @@
     vm.customerId = _.get($stateParams, 'info.customerId', '');
 
     function $onInit() {
-      var deregister = $rootScope.$on('refreshNotes', function (event, data) {
-        vm.notes = data || event;
-      });
-      $scope.$on('$destroy', deregister);
-
+      listenNotesUpdated();
       getNotes();
       getRemedyTicket();
       getCurrentCallbackGroup();
       $state.current.data.displayName = $translate.instant('gemini.cbgs.overview');
+    }
+
+    function listenNotesUpdated() {
+      var deregister = $rootScope.$on('cbgNotesUpdated', function (event, data) {
+        event.preventDefault();
+        vm.notes = data;
+      });
+      $scope.$on('$destroy', deregister);
     }
 
     function onCancelSubmission() {
@@ -140,8 +144,10 @@
           });
 
           vm.remedyTicket = _.first(resArr);
-          vm.remedyTicket.createTime = moment(vm.remedyTicket.createTime).toDate().toString();
-          vm.remedyTicketLoading = false;
+          if (vm.remedyTicket) {
+            vm.remedyTicket.createTime = moment(vm.remedyTicket.createTime).toDate().toString();
+            vm.remedyTicketLoading = false;
+          }
         });
 
     }

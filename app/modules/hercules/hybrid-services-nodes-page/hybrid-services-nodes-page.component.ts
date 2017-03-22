@@ -1,9 +1,10 @@
 import { Notification } from 'modules/core/notifications';
-import { IAlarm, IConnector } from 'modules/hercules/herculesInterfaces';
+import { IConnectorAlarm, IExtendedConnector } from 'modules/hercules/hybrid-services.types';
+import { HybridServicesUtils } from 'modules/hercules/services/hybrid-services-utils';
 
 interface ISimplifiedConnector {
   id: string;
-  alarms: IAlarm[];
+  alarms: IConnectorAlarm[];
   connectorType: string;
   service: string;
   statusName: string;
@@ -23,7 +24,7 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
     private $state: ng.ui.IStateService,
     private FusionClusterService,
     private FusionClusterStatesService,
-    private HybridServicesUtils,
+    private HybridServicesUtils: HybridServicesUtils,
     private Notification: Notification,
   ) {
     this.hybridConnectorsComparator = this.hybridConnectorsComparator.bind(this);
@@ -69,7 +70,7 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
     const result = {
       name: cluster.name,
       nodes: _.chain(cluster.connectors)
-        .reduce((acc, connector: IConnector) => {
+        .reduce((acc, connector: IExtendedConnector) => {
           const hostname = connector.hostname;
           const mergedStatus = this.FusionClusterStatesService.getMergedStateSeverity([connector]);
           const simplifiedConnector: ISimplifiedConnector = {

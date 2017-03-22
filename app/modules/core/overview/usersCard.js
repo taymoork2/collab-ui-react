@@ -6,7 +6,7 @@
     .factory('OverviewUsersCard', OverviewUsersCard);
 
   /* @ngInject */
-  function OverviewUsersCard($rootScope, $state, Config, Orgservice) {
+  function OverviewUsersCard($rootScope, $state, Config, Orgservice, DirSyncService) {
     return {
       createCard: function createCard() {
         var card = {};
@@ -71,15 +71,18 @@
         }
 
         card.orgEventHandler = function (data) {
-          card.isUpdating = false;
           if (data.success) {
             card.ssoEnabled = data.ssoEnabled || false;
-            card.dirsyncEnabled = data.dirsyncEnabled || false;
             //ssoEnabled is used in enterpriseSettingsCtrl so share through rootScope
             if (data.ssoEnabled) {
               $rootScope.ssoEnabled = true;
             }
           }
+          DirSyncService.refreshStatus()
+            .finally(function () {
+              card.dirsyncEnabled = DirSyncService.isDirSyncEnabled();
+              card.isUpdating = false;
+            });
         };
 
         card.openConvertModal = function () {

@@ -3,7 +3,7 @@
 
   describe('Template: customerList.tpl.html', function () {
     var $scope, $compile, $templateCache, $q, $controller, controller, view;
-    var Authinfo, Orgservice, PartnerService, FeatureToggleService, trialForPaid;
+    var Authinfo, Orgservice, PartnerService, FeatureToggleService;
     var ADD_BUTTON = '#addTrial';
     var SEARCH_FILTER = '#searchFilter';
 
@@ -33,9 +33,6 @@
         USER: 1,
         CUSTOMER: 2,
       };
-
-      trialForPaid = false;
-
 
       spyOn(PartnerService, 'getManagedOrgsList').and.returnValue($q.resolve({
         data: {},
@@ -78,7 +75,6 @@
     function initAndCompile() {
       controller = $controller('CustomerListCtrl', {
         $scope: $scope,
-        trialForPaid: trialForPaid,
       });
       $scope.customerList = controller;
       var template = $templateCache.get('modules/core/customers/customerList/customerList.tpl.html');

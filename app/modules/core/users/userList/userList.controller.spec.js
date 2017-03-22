@@ -5,7 +5,7 @@ describe('UserListCtrl: Ctrl', function () {
   function init() {
     this.initModules('Core', 'Huron', 'Sunlight');
     this.injectDependencies('$rootScope', '$state', '$controller', '$q', '$httpBackend', 'Userservice', 'UserListService',
-      'Orgservice', 'Authinfo', 'Auth', 'Config', 'Notification', 'FeatureToggleService');
+      'Orgservice', 'Authinfo', 'Auth', 'Config', 'Notification', 'FeatureToggleService', 'DirSyncService');
     initFixtures.apply(this);
     initDependencySpies.apply(this);
   }
@@ -67,6 +67,9 @@ describe('UserListCtrl: Ctrl', function () {
     spyOn(this.FeatureToggleService, 'atlasEmailStatusGetStatus').and.returnValue(this.$q.resolve(false));
 
     this.$httpBackend.whenGET(/.*\/v1\/Users\/me.*/g).respond(200);
+
+    spyOn(this.DirSyncService, 'refreshStatus').and.returnValue(this.$q.resolve());
+    spyOn(this.DirSyncService, 'isDirSyncEnabled').and.returnValue(false);
 
     installPromiseMatchers();
   }

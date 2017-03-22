@@ -1,0 +1,32 @@
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/fonts';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+
+.context-fields-state {
+  background-color: $gray-lightest;
+  overflow: hidden;
+}
+
+.context-fieldsets-state {
+  background-color: $gray-lightest;
+  overflow: hidden;
+}
+
+.context-sidepanel-title {
+  max-width: 90% !important;
+}
+
+.tooltip[popup-class="context-tooltip"] .c-nub {
+  font-size: small;
+  white-space: normal;
+  word-wrap: break-word;
+  max-width: 300px;
+}
+
+.section-wrapper {
+  margin-top: 24px;
+}
+
+textarea {
+  resize: none;
+}

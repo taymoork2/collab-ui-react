@@ -7,7 +7,7 @@ describe('Component: gmTdNotes', () => {
 
   beforeEach(function () {
     this.initModules(testModule);
-    this.injectDependencies('UrlConfig', '$scope', '$state', '$stateParams', '$q', 'Notification', 'TelephonyDomainService', 'PreviousState');
+    this.injectDependencies('$scope', '$state', '$stateParams', '$q', 'Notification', 'TelephonyDomainService', 'PreviousState');
     initSpies.apply(this);
     initComponent.apply(this);
   });

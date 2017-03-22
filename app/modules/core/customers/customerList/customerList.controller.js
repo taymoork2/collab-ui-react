@@ -7,7 +7,7 @@ require('./_customer-list.scss');
     .controller('CustomerListCtrl', CustomerListCtrl);
 
   /* @ngInject */
-  function CustomerListCtrl($q, $rootScope, $scope, $state, $templateCache, $translate, $window, Analytics, Authinfo, Config, ExternalNumberService, FeatureToggleService, Log, Notification, Orgservice, PartnerService, trialForPaid, TrialService) {
+  function CustomerListCtrl($q, $rootScope, $scope, $state, $templateCache, $translate, $window, Analytics, Authinfo, Config, ExternalNumberService, FeatureToggleService, Log, Notification, Orgservice, PartnerService, TrialService) {
     var vm = this;
     vm.isCustomerPartner = !!Authinfo.isCustomerPartner;
     vm.isPartnerAdmin = Authinfo.isPartnerAdmin();
@@ -48,8 +48,6 @@ require('./_customer-list.scss');
     vm.exportType = $rootScope.typeOfExport.CUSTOMER;
     vm.activeFilter = 'all';
     vm.filterList = _.debounce(filterAction, vm.timeoutVal);
-
-    vm.featureTrialForPaid = trialForPaid;
 
     vm.filter = {
       selected: [],
@@ -620,7 +618,7 @@ require('./_customer-list.scss');
 
     function openAddTrialModal() {
       Analytics.trackTrialSteps(Analytics.sections.TRIAL.eventNames.START_SETUP, $state.current.name, Authinfo.getOrgId());
-      var route = TrialService.getAddTrialRoute(vm.featureTrialForPaid);
+      var route = TrialService.getAddTrialRoute();
       $state.go(route.path, route.params).then(function () {
         $state.modal.result.finally(resetLists);
       });

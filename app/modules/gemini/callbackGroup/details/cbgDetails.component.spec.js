@@ -97,6 +97,7 @@ describe('Component: CbgDetails', function () {
       initReturnValue();
       ctrl.$onInit();
       $scope.$apply();
+      $scope.$emit('cbgNotesUpdated', obj.Notes);
       expect(ctrl.model).toBeDefined();
     });
 

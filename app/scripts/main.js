@@ -55,6 +55,7 @@
     require('modules/core/scripts/services/userlist.service'),
     require('modules/core/users/userCsv/userCsv.service'),
     require('modules/core/cards').default,
+    require('modules/core/partnerReports/commonReportServices').default,
     require('modules/core/window').default,
     require('modules/online/digitalRiver').default, // TODO make core.myCompany independent module
     require('modules/online/upgrade').default,
@@ -95,7 +96,13 @@
     require('modules/huron/overview').default,
   ]);
 
-  angular.module('Hercules', ['Core', 'Squared', 'core.onboard', 'ngTagsInput']);
+  angular.module('Hercules', [
+    'Core',
+    'Squared',
+    'core.onboard',
+    'ngTagsInput',
+    require('modules/hercules/privateTrunk/privateTrunkDomain').default,
+  ]);
 
   angular.module('HDS', ['Core', 'Hercules']);
 

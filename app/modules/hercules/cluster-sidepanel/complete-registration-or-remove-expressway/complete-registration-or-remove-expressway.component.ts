@@ -1,13 +1,13 @@
-import { IClusterV1 } from 'modules/hercules/herculesInterfaces';
+import { ICluster } from 'modules/hercules/hybrid-services.types';
 import { Notification } from 'modules/core/notifications';
 
-interface IClusterV1withAllowedredirectTarget extends IClusterV1 {
+interface IClusterWithAllowedredirectTarget extends ICluster {
   allowedRedirectTarget: any;
 }
 
 export class CompleteregistrationOrRemoveExpresswayCtrl implements ng.IComponentController {
 
-  private cluster: IClusterV1withAllowedredirectTarget;
+  private cluster: IClusterWithAllowedredirectTarget;
   private connectorType: string;
 
   /* @ngInject */

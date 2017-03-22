@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: CustomerOverviewCtrl', function () {
-  var $controller, $scope, $stateParams, $state, $window, $q, modal, Authinfo, BrandService, controller, currentCustomer, FeatureToggleService, identityCustomer, Orgservice, PartnerService, trialForPaid, TrialService, Userservice, Notification;
+  var $controller, $scope, $stateParams, $state, $window, $q, modal, Authinfo, BrandService, controller, currentCustomer, FeatureToggleService, identityCustomer, Orgservice, PartnerService, TrialService, Userservice, Notification;
 
   var licenseString = 'MC_cfb817d0-ddfe-403d-a976-ada57d32a3d7_100_t30citest.webex.com';
 
@@ -29,7 +29,6 @@ describe('Controller: CustomerOverviewCtrl', function () {
       services: ['webex-squared', 'ciscouc'],
     };
 
-    $scope.trialForPaid = trialForPaid;
     Userservice = {
       updateUsers: function () {},
     };
@@ -102,8 +101,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
     initController();
   }));
 
-  function initController(options) {
-    var trialForPaid = _.get(options, 'hasTrialForPaidFT', false);
+  function initController() {
     controller = $controller('CustomerOverviewCtrl', {
       $scope: $scope,
       identityCustomer: identityCustomer,
@@ -112,7 +110,6 @@ describe('Controller: CustomerOverviewCtrl', function () {
       BrandService: BrandService,
       FeatureToggleService: FeatureToggleService,
       $modal: modal,
-      trialForPaid: trialForPaid,
     });
 
     $scope.$apply();
@@ -133,19 +130,6 @@ describe('Controller: CustomerOverviewCtrl', function () {
     $scope.$apply(); // modal is closed and promise is resolved
     expect($state.go).toHaveBeenCalled();
     expect($state.go.calls.mostRecent().args[0]).toEqual('partnercustomers.list');
-  });
-
-  describe('Trial for Paid  Customer feature toggle Trial Actions', function () {
-    it('should be empty for paid customer without feature toggle', function () {
-      initController({ hasTrialForPaidFT: false });
-      expect(controller.trialActions.length).toBe(0);
-    });
-
-    it('should have \'add\' action for paid customer with feature toggle', function () {
-      initController({ hasTrialForPaidFT: true });
-      expect(controller.trialActions.length).toBe(1);
-      expect(controller.trialActions[0].actionKey).toBe('customerPage.addTrial');
-    });
   });
 
   it('should display correct customer portal launch button via var isOrgSetup', function () {
