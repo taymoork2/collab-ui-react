@@ -4,6 +4,8 @@
 
 "use strict";
 
+var testModule = require('./index').default;
+
 describe(' sunlightConfigService', function () {
   var sunlightConfigService, $httpBackend, sunlightUserConfigUrl, sunlightCSOnboardUrl,
     sunlightChatConfigUrl, sunlightChatTemplateUrl, chatConfig, userData, userId, orgId, csConnString, templateId;
@@ -15,7 +17,7 @@ describe(' sunlightConfigService', function () {
     'errorType': 'Internal Server Error',
   };
 
-  beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module(testModule));
   beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", spiedAuthinfo);
   }));

@@ -1,11 +1,9 @@
-/**
- *
- */
-
 'use strict';
 
+var testModule = require('./index').default;
+
 describe('WebExUtilsFact: isCIEnabledSite() test', function () {
-  beforeEach(angular.mock.module('WebExApp'));
+  beforeEach(angular.mock.module(testModule));
 
   var WebExUtilsFact;
   var Authinfo;
@@ -131,7 +129,7 @@ describe('WebExUtilsFact: isCIEnabledSite() test', function () {
 }); // describe()
 
 describe('WebExUtilsFact: utf8ToUtf16le() test', function () {
-  beforeEach(angular.mock.module('WebExApp'));
+  beforeEach(angular.mock.module(testModule));
 
   var WebExUtilsFact;
 
@@ -157,7 +155,7 @@ describe('WebExUtilsFact: utf8ToUtf16le() test', function () {
 }); // describe()
 
 describe('WebExUtilsFact: getSiteName() test', function () {
-  beforeEach(angular.mock.module('WebExApp'));
+  beforeEach(angular.mock.module(testModule));
 
   var WebExUtilsFact;
   var siteName;
@@ -336,8 +334,7 @@ describe('WebExUtilsFact', function () {
     },
   };
 
-  beforeEach(angular.mock.module('Core'));
-  beforeEach(angular.mock.module('WebExApp'));
+  beforeEach(angular.mock.module(testModule));
 
   beforeEach(inject(function (_$q_, _$rootScope_, _WebExUtilsFact_, _Auth_, _Authinfo_) {
     $q = _$q_;

@@ -3,7 +3,7 @@ import testModule from './index';
 describe('Service: UserOverviewService', () => {
 
   beforeEach(function () {
-    this.initModules(testModule, 'WebExApp', 'Sunlight', 'Huron');
+    this.initModules(testModule, 'WebExApp', 'Huron');
     this.injectDependencies(
       '$httpBackend',
       'UserOverviewService',

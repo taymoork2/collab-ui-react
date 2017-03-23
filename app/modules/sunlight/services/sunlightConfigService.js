@@ -5,9 +5,6 @@
 (function () {
   'use strict';
 
-  angular.module('Sunlight')
-    .service('SunlightConfigService', sunlightConfigService);
-
   /* @ngInject */
   function sunlightConfigService($http, UrlConfig, Authinfo) {
     var sunlightUserConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/user';
@@ -73,4 +70,6 @@
       return $http.post(sunlightChatConfigBase + '/' + Authinfo.getOrgId() + '/aaonboard', onboardPayload);
     }
   }
+
+  module.exports = sunlightConfigService;
 })();
