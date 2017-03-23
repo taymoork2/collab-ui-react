@@ -27,6 +27,7 @@
               res = res.split(',');
               _.each(res, function (insight1) {
                 insight1 = insight1.split(/(\d+)/);
+                insight1 = insight1.filter(Boolean);
                 insight1[0] = insight1[0].replace(/\s+$/, '');
                 insight1[0] = translateInsightType(insight1[0]);
                 insight1 = insight1[0] + ' ' + insight1[1] + '<br>';
@@ -35,6 +36,7 @@
               });
             } else {
               res = res.split(/(\d+)/);
+              res = res.filter(Boolean);
               res[0] = res[0].replace(/\s+$/, '');
               res[0] = translateInsightType(res[0]);
               res = res[0] + ' ' + res[1];
