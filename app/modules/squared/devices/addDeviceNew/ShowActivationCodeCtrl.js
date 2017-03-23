@@ -4,7 +4,7 @@
   angular.module('Core')
     .controller('ShowActivationCodeCtrl', ShowActivationCodeCtrl);
   /* @ngInject */
-  function ShowActivationCodeCtrl($q, UserListService, OtpService, CsdmDataModelService, CsdmHuronPlaceService, $stateParams, ActivationCodeEmailService, $translate, Notification, CsdmEmailService) {
+  function ShowActivationCodeCtrl($q, UserListService, OtpService, CsdmDataModelService, CsdmHuronPlaceService, $stateParams, ActivationCodeEmailService, $translate, Notification, CsdmEmailService, USSService) {
     var vm = this;
     var wizardData = $stateParams.wizard.state().data;
     vm.title = wizardData.title;
@@ -17,6 +17,7 @@
       deviceType: wizardData.account.deviceType,
       cisUuid: wizardData.account.cisUuid,
       isEntitledToHuron: wizardData.account.isEntitledToHuron,
+      ussProps: wizardData.account.ussProps,
     };
 
     vm.hideBackButton = wizardData.function === 'showCode';
@@ -83,7 +84,23 @@
               wizardData.account.ussProps || null)
               .then(function (place) {
                 vm.account.cisUuid = place.cisUuid;
-                createCodeForCloudberryAccount(vm.account.cisUuid).then(success, error);
+                $q.all({
+                  createCode: createCodeForCloudberryAccount(vm.account.cisUuid),
+                  saveRGroup: updateResourceGroup(vm.account.cisUuid, vm.account.ussProps),
+                }).then(function (s) {
+                  if (s && s.createCode) {
+                    success(s.createCode);
+                  } else {
+                    error(s);
+                  }
+                }, function (e) {
+                  if (e && e.createCode) {
+                    success(e);
+                  } else {
+                    error(e);
+                  }
+                });
+
               }, error);
           }
         } else { // Personal (never create new)
@@ -158,6 +175,14 @@
 
     function createCodeForCloudberryAccount(cisUuid) {
       return CsdmDataModelService.createCodeForExisting(cisUuid);
+    }
+
+    function updateResourceGroup(cisUuid, ussProps) {
+      if (!ussProps) {
+        return $q.resolve({});
+      }
+      ussProps.userId = cisUuid;
+      return USSService.updateUserProps(ussProps);
     }
 
     function success(code) {

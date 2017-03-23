@@ -2324,8 +2324,9 @@
     "resourceGroups": {
       "resourceGroupHeading": "Resource Group",
       "setDescription": "Select the Resource Group the user is assigned to for this service.",
-      "setPlaceDescription": "Select the Resource Group the place is assigned to for this service.",
+      "setPlaceDescription": "Select the Resource Group the place is assigned to for this service. (optional)",
       "noGroupSelected": "None",
+      "noGroupSelectedOnPlace": "No resource group (default)",
       "failedToSetGroup": "Failed to set Resource Group.",
       "resourceGroupSaved": "Resource Group saved.",
       "groupHasBeenDeleted": "The user is assigned to a resource group that could not be found. Remove the assignment from the resource group to restore service.",
@@ -4453,7 +4454,6 @@
       "servicesSaved": "Services updated successfully",
       "calendar": "Calendar",
       "toggleCalendar": "Calendar service enables One Button To Push for this place.",
-      "calendarStatusOn": "Status: on",
       "exchangeTitle": "Exchange calendar",
       "exchangeHelp": "This is enabling exchange calendar",
       "googleTitle": "Google calendar",

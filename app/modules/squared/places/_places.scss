@@ -14,6 +14,7 @@
     }
   }
 }
+
 .callServiceRow {
   padding: 25px 30px 5px 15px;
   display: flex;
@@ -48,10 +49,9 @@
   }
   .calendarServiceControls.emailControls {
     width: 100%;
-    margin-top: -1.5em;
     #email {
       min-width: 310px;
-      width: 50%;
+      width: 45%;
     }
   }
   .emailControlsParent {
@@ -65,6 +65,9 @@
     min-width: 300px;
     margin-top: 15px;
     input {
+      width: 45%;
+    }
+    .csSelect-container {
       width: 45%;
     }
   }
@@ -83,12 +86,22 @@
   padding-top: 5px;
 }
 
+.callServiceControls {
+  .selectResourceGroup {
+    min-width: 310px;
+    width: 45%;
+    @media screen and (max-width: 640px) {
+      min-width: 100%;
+      width: 100%;
+    }
+  }
+}
 .calenderResourcesRow {
   padding: 30px 30px 15px 15px;
   width: 100%;
   .selectResourceGroup {
     min-width: 310px;
-    width: 50%;
+    width: 45%;
     @media screen and (max-width: 640px) {
       min-width: 100%;
       width: 100%;

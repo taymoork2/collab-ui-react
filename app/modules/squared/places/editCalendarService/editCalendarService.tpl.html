@@ -5,13 +5,8 @@
 </div>
 <div class="modal-body">
   <form name="placesEditCalServices" class="chooseServiceForm" onsubmit="$('#next-button').click()">
-    <div class="callServiceRow">
-      <div class="callServiceTitle">
-        <i class="icon icon-circle-call modal-icon-flex-row icon-lg"></i>
-        <h3 translate="addDeviceWizard.editServices.calendar"></h3>
-      </div>
-      <div>
-        <div class="callServiceRow rightColumn" ng-if="editCalendarService.getShowServiceOptions()">
+    <h4 translate="Set up Hybrid Calendar Service"></h4>
+        <div class="callServiceRow" ng-if="editCalendarService.getShowServiceOptions()">
           <div class="cs-radio-group calendarServiceControls">
             <div class="section-title-row">
               <span class="section-name" translate="Which calendar provider do you want to use?"></span>
@@ -24,8 +19,7 @@
               id="service1"
               name="service"
               value="squared-fusion-cal"
-              cs-input-label="{{'addDeviceWizard.editServices.exchangeTitle' | translate}}"
-              cs-input-help-text="{{'addDeviceWizard.editServices.exchangeHelp' | translate}}">
+              cs-input-label="{{'addDeviceWizard.editServices.exchangeTitle' | translate}}">
             <input
               ng-if="editCalendarService.getShowGCalService()"
               cs-input
@@ -34,12 +28,11 @@
               id="service2"
               name="service"
               value="squared-fusion-gcal"
-              cs-input-label="{{'addDeviceWizard.editServices.googleTitle' | translate}}"
-              cs-input-help-text="{{'addDeviceWizard.editServices.googleHelp' | translate}}">
+              cs-input-label="{{'addDeviceWizard.editServices.googleTitle' | translate}}">
           </div>
-
         </div>
-        <div class="callServiceRow">
+
+        <div class="callServiceRow emailsControlsParent">
           <div class="cs-radio-group calendarServiceControls emailControls">
             <label for="email" translate="addDeviceWizard.editServices.calendarEmail"></label>
             <input id="email" type="email" autocomplete="off" ng-model="editCalendarService.emailOfMailbox">
@@ -48,11 +41,8 @@
 
 
         <div class="calenderResourcesRow" ng-if="editCalendarService.getResourceGroupShow()">
-          <div class="section-title-row">
-            <span class="section-name" translate="hercules.resourceGroups.resourceGroupHeading"></span>
-          </div>
           <div ng-if="!editCalendarService.resourceGroup.cannotFindResouceGroup">
-            <p translate="hercules.resourceGroups.setPlaceDescription"></p>
+            <label translate="hercules.resourceGroups.setPlaceDescription"></label>
             <cs-select
               class="selectResourceGroup"
               ng-model="editCalendarService.resourceGroup.selected"
@@ -78,8 +68,7 @@
             </form>
           </div>
         </div>
-      </div>
-    </div>
+
   </form>
 </div>
 

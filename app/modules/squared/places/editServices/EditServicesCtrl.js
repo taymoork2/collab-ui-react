@@ -40,7 +40,7 @@
       return wizardData.function !== 'editServices';
     };
 
-    function getUpdatedEntitlements(forSave) {
+    function getUpdatedEntitlements() {
       var entitlements = (wizardData.account.entitlements || ['webex-squared']);
       entitlements = _.difference(entitlements, [ciscouc, fusionec, fusionuc, fusionCal, fusionGCal]);
       if (vm.service === 'sparkCall') {
@@ -49,7 +49,7 @@
         entitlements.push(fusionec);
         entitlements.push(fusionuc);
       }
-      if (forSave && vm.enableCalService) {
+      if (vm.enableCalService) {
         _.intersection(wizardData.account.entitlements || [], [fusionCal, fusionGCal]).forEach(function (calEntitlement) {
           entitlements.push(calEntitlement);
         });
@@ -95,7 +95,7 @@
           CsdmDataModelService.getPlacesMap().then(function (list) {
             var place = _.find(_.values(list), { 'cisUuid': wizardData.account.cisUuid });
             if (place) {
-              CsdmDataModelService.updateCloudberryPlace(place, getUpdatedEntitlements(true))
+              CsdmDataModelService.updateCloudberryPlace(place, getUpdatedEntitlements())
                 .then(function () {
                   $scope.$dismiss();
                   Notification.success("addDeviceWizard.editServices.servicesSaved");

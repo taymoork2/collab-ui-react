@@ -23,11 +23,12 @@ export class CallConnectOptions implements ng.IComponentController {
     current?: { label: string, value: string },
     options: { label: string, value: string }[],
     shouldWarn: boolean,
+    show: boolean,
     init: () => void,
   } = {
     init: () => {
       this.resourceGroup.options = [{
-        label: this.$translate.instant('hercules.resourceGroups.noGroupSelected'),
+        label: this.$translate.instant('hercules.resourceGroups.noGroupSelectedOnPlace'),
         value: '',
       }];
       this.resourceGroup.selected = this.resourceGroup.current = this.resourceGroup.options[0];
@@ -35,6 +36,7 @@ export class CallConnectOptions implements ng.IComponentController {
     },
     options: [],
     shouldWarn: false,
+    show: false,
   };
 
   /* @ngInject */
@@ -71,7 +73,7 @@ export class CallConnectOptions implements ng.IComponentController {
   }
 
   public getResourceGroupShow() {
-    return this.wizardData.atlasF237ResourceGroups && this.resourceGroup && this.resourceGroup.options.length > 0;
+    return this.wizardData.atlasF237ResourceGroups && this.resourceGroup && this.resourceGroup.show;
   }
 
   public next() {
@@ -144,22 +146,38 @@ export class CallConnectOptions implements ng.IComponentController {
       this.ResourceGroupService.getAllAsOptions().then((options) => {
         if (options.length > 0) {
           this.resourceGroup.options = this.resourceGroup.options.concat(options);
-          // if (this.wizardData.account.cisUuid) {
-          //   this.USSService.getUserProps(this.wizardData.account.cisUuid).then((props) => {
-          //     if (props.resourceGroups && props.resourceGroups[this.initialCalService]) {
-          //       // this.resourceGroup.setSelectedResourceGroup(props.resourceGroups[this.initialCalService]);
-          //     } else {
-          //       // this.resourceGroup.displayWarningIfNecessary();
-          //     }
-          //   });
-          // }
-          //this.resourceGroup.updateShow();
+          if (this.wizardData.account.cisUuid) {
+            this.USSService.getUserProps(this.wizardData.account.cisUuid).then((props) => {
+              if (props.resourceGroups && props.resourceGroups[CallConnectOptions.hybridCalluc]) {
+                let selectedGroup = _.find(this.resourceGroup.options, (group) => {
+                  return group.value === props.resourceGroups[CallConnectOptions.hybridCalluc];
+                });
+                if (selectedGroup) {
+                  this.resourceGroup.selected = selectedGroup;
+                  this.resourceGroup.current = selectedGroup;
+                }
+              } else {
+              }
+            });
+          }
+          this.resourceGroup.show = true;
         }
       });
     }
   }
 
-  private getUssProps(): {}|null {
+  public setResourceGroup(group: string) {
+    if (group === '') {
+      let selectedGroup = _.find(this.resourceGroup.options, (rgroup) => {
+        return rgroup.value === group;
+      });
+      if (selectedGroup) {
+        this.resourceGroup.selected = selectedGroup;
+      }
+    }
+  }
+
+  private getUssProps(): {} | null {
     if (this.resourceGroup.selected) {
       return {
         userId: this.wizardData.account.cisUuid,
