@@ -1,8 +1,11 @@
-import { HuronSettingsService, HuronSettingsOptionsService, HuronSettingsOptions, HuronSettingsData } from 'modules/huron/settings';
+import { HuronSettingsService, HuronSettingsOptionsService, HuronSettingsOptions, HuronSettingsData, IEmergencyNumberOption } from 'modules/huron/settings';
 import { Notification } from 'modules/core/notifications';
 import { IExtensionRange } from 'modules/huron/settings/extensionRange';
 import { CompanyNumber } from 'modules/huron/settings/companyCallerId';
 import { IOption } from 'modules/huron/dialing/dialing.service';
+import { EmergencyCallbackNumber } from 'modules/huron/sites';
+
+const API_IMPL_SWIVEL = 'SWIVEL';
 
 interface IVoicemailTimeZone {
   enum: string;
@@ -21,6 +24,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
   public isTerminusCustomer: boolean = false;
   public loading: boolean = false;
   public processing: boolean = false;
+  public showEmergencyServiceAddress: boolean = false;
   public errors: Array<string> = [];
   public voicemailTimeZone: IVoicemailTimeZone;
   public voicemailMessageAction;
@@ -40,8 +44,10 @@ class HuronSettingsCtrl implements ng.IComponentController {
     private $translate: ng.translate.ITranslateService,
     private ModalService,
     private PstnSetupService,
+    private PstnSetup,
     private Authinfo,
     private Config,
+    private Orgservice,
   ) { }
 
   public $onInit(): void {
@@ -51,8 +57,25 @@ class HuronSettingsCtrl implements ng.IComponentController {
       return license.licenseType === this.Config.licenseTypes.COMMUNICATION;
     }).length > 0;
 
+    let params = {
+      basicInfo: true,
+    };
+    this.Orgservice.getOrg(data => {
+      if (data.countryCode) {
+        this.PstnSetup.setCountryCode(data.countryCode);
+      }
+    }, null, params);
+
+
     this.PstnSetupService.getCustomer(this.Authinfo.getOrgId()).then(() => {
       this.isTerminusCustomer = true;
+    });
+
+    this.PstnSetupService.listCustomerCarriers(this.Authinfo.getOrgId()).then(carriers => {
+      if (_.get(carriers, '[0].apiImplementation') !== API_IMPL_SWIVEL) {
+        this.PstnSetup.setProvider(_.get(carriers, '[0]'));
+        this.showEmergencyServiceAddress = true;
+      }
     });
 
     this.$q.resolve(this.initSettingsComponent()).finally( () => this.loading = false);
@@ -174,6 +197,11 @@ class HuronSettingsCtrl implements ng.IComponentController {
     this.checkForChanges();
   }
 
+  public onEmergencyServiceNumberChanged(emergencyCallbackNumber: EmergencyCallbackNumber): void {
+    this.huronSettingsData.site.emergencyCallBackNumber = emergencyCallbackNumber;
+    this.checkForChanges();
+  }
+
   public onCompanyCallerIdChanged(companyCallerId: CompanyNumber): void {
     this.huronSettingsData.companyCallerId = companyCallerId;
     this.checkForChanges();
@@ -187,6 +215,11 @@ class HuronSettingsCtrl implements ng.IComponentController {
   public onCompanyVoicemailFilter(filter: string): ng.IPromise<Array<IOption>> {
     return this.HuronSettingsOptionsService.loadCompanyVoicemailNumbers(filter)
       .then(numbers => this.settingsOptions.companyVoicemailOptions = numbers);
+  }
+
+  public onEmergencyServiceNumberFilter(filter: string): ng.IPromise<Array<IEmergencyNumberOption>> {
+    return this.HuronSettingsOptionsService.loadEmergencyServiceNumbers(filter)
+      .then(numbers => this.settingsOptions.emergencyServiceNumberOptions = numbers);
   }
 
   public checkForChanges(): void {

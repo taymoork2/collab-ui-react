@@ -8,7 +8,7 @@ require('./_overview.scss');
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($modal, $rootScope, $state, $scope, $translate, Authinfo, CardUtils, Config, FeatureToggleService, FusionClusterService, hasGoogleCalendarFeatureToggle, Log, LicenseService, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, ServiceDescriptor, SunlightReportService, TrialService, UrlConfig, PstnSetupService) {
+  function OverviewCtrl($modal, $rootScope, $state, $scope, $translate, Authinfo, CardUtils, Config, FeatureToggleService, FusionClusterService, hasGoogleCalendarFeatureToggle, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, ServiceDescriptor, SunlightReportService, TrialService, UrlConfig, PstnSetupService) {
     var vm = this;
 
     var PSTN_TOS_ACCEPT = 'pstn-tos-accept-event';
@@ -88,8 +88,8 @@ require('./_overview.scss');
             vm.notifications.push(OverviewNotificationFactory.createCrashLogNotification());
           }
           if (Authinfo.isCare() || Authinfo.isCareVoice()) {
-            var hasMessage = LicenseService.orgIsEntitledTo(data, 'squared-room-moderation');
-            var hasCall = LicenseService.orgIsEntitledTo(data, 'ciscouc');
+            var hasMessage = Authinfo.isMessageEntitled();
+            var hasCall = Authinfo.isSquaredUC();
             if (!hasMessage && !hasCall) {
               vm.notifications.push(OverviewNotificationFactory
                 .createCareLicenseNotification('homePage.careLicenseMsgAndCallMissingText', 'homePage.careLicenseLinkText'));

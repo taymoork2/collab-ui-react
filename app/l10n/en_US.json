@@ -315,7 +315,7 @@
     "paidCare": "Care Digital Channel",
     "careServices": "Chat and Callback",
     "careVoiceServices": "Chat, Callback and Inbound Call",
-    "enableCallInfo": "Message is mandatory for Care services. Enable Call if you want the user to handle calls from customers.",
+    "enableCallInfo": "Cisco Spark Call is required for voice-based interactions.",
     "paidContactCenterVoice": "Chat, Callback and Inbound Call",
     "paidContactCenter": "Chat and Callback",
     "enterpriseEdition": "Enterprise Edition {{capacity}}",
@@ -1084,6 +1084,7 @@
     "last": "Last"
   },
   "common": {
+    "activate": "Activate",
     "add": "Add",
     "agree": "Agree",
     "alert": "Alert",
@@ -1112,6 +1113,7 @@
     "download": "Download",
     "edit": "Edit",
     "email": "Email",
+    "enable": "Enable",
     "enabled": "Enabled",
     "error": "Error",
     "finish": "Finish",
@@ -1993,7 +1995,8 @@
       "noClustersWillBeDeregistered": "Clusters will not be deregistered from Cisco Collaboration Cloud.",
       "deactivateServiceConfirmationButton": "Confirm Deactivation",
       "deactivateServiceConfirmationText": "You are about to deactivate {{serviceName}} from your Cisco Spark organization.",
-      "serviceWasDeactivated": "{{serviceName}} successfully deactivated."
+      "serviceWasDeactivated": "{{serviceName}} successfully deactivated.",
+      "connectWarning": "You are about to deactivate Hybrid Call Service Connect. Be aware that this action deletes all Cisco Spark remote device configuration and disables the service for all users."
     },
     "clusterListComponent": {
       "clusters-title-squared-fusion-cal": "Expressway Clusters",
@@ -4137,6 +4140,7 @@
     "callUsOnly": "Call (Currently U.S. only)",
     "supportSelectLocations": "Cisco Spark is supported in selected locations.  <a href='http://www.cisco.com/go/spark-availability' target='_blank' ng-click='{{click}}'>Learn more</a>",
     "supportedLocationsCertification": "I certify that this customer is in a <a href=\"https://support.ciscospark.com/customer/portal/articles/1940194-where-is-cisco-spark-available\" target=\"_blank\">supported location</a> for Cisco Spark",
+    "supportedLocationWarning": "Please check the box above to certify that this customer is in a supported location for Cisco Spark",
     "context": "Enable Context Service for Cisco Unified Contact Center.",
     "roomSystem": "DX, MX or SX system",
     "sparkBoardSystem": "Cisco Spark Board",
@@ -4766,6 +4770,9 @@
       "legendcallReject": "Overflowed to Cloud",
       "legendcallLocalCluster": "Hosted On This Cluster",
       "legendcallRedirectedCluster": "Redirected to Another Cluster or Cloud",
+      "redirectedCluster": "Redirected by Cluster",
+      "nodesAdded": "Nodes Added",
+      "nodesUnavailable": "Nodes Unavailable",
       "availableTitle": "Available",
       "unavailableTitle": "Unavailable",
       "partialTitle": "Partially Available",
@@ -5731,6 +5738,9 @@
     "featuresNotYetConfiguredPage": {
       "createCareTemplate": "Create a Care Template",
       "createCareTemplateDesc": "A Care template is what your customer uses to contact customer care.",
+      "MessageLicenseMissing": "Message is mandatory for Care templates. To enable Message, <a ng-click=\"{{onclick}}\">contact your partner or Cisco sales</a>",
+      "CallLicenseMissing": "Call is mandatory for voice-based templates. To enable Call, <a ng-click=\"{{onclick}}\">contact your partner or Cisco sales</a>",
+      "MessageAndCallLicenseMissing": "Message and Call are mandatory for chat-based and voice-based templates respectively. To enable Message and Call, <a ng-click=\"{{onclick}}\">contact your partner or Cisco sales</a>",
       "new": "New"
     }
   },

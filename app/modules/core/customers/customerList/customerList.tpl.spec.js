@@ -51,6 +51,11 @@
     }));
 
     describe('Add trial button', function () {
+
+      beforeEach(function () {
+        spyOn(Orgservice, 'isTestOrg').and.returnValue($q.resolve(true));
+      });
+
       it('should show by default', function () {
         initAndCompile();
         expect(view.find(ADD_BUTTON).length).toEqual(1);
@@ -64,6 +69,11 @@
     });
 
     describe('Customer name Search filter', function () {
+
+      beforeEach(function () {
+        spyOn(Orgservice, 'isTestOrg').and.returnValue($q.resolve(true));
+      });
+
       it('clicking search box should call filterList', function () {
         initAndCompile();
         spyOn(controller, 'filterList').and.callFake(function () {});

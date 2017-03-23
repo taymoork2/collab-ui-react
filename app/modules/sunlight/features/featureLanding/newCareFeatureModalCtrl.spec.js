@@ -16,6 +16,7 @@ describe('Controller: NewCareFeatureModalCtrl', function () {
     Authinfo = _Authinfo_;
     spyOn($state, 'go');
     spyOn(Authinfo, 'isCare').and.returnValue(true);
+    spyOn(Authinfo, 'isSquaredUC').and.returnValue(true);
 
     $controller('NewCareFeatureModalCtrl', {
       $scope: $scope,

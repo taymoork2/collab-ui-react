@@ -1,5 +1,6 @@
 import { isolateForm, HRServiceAddressComponent } from './serviceAddress.component';
 
-angular.module('Core')
+export default angular.module('huron.service-address', [])
   .directive('isolateForm', isolateForm)
-  .component('hrServiceAddress', new HRServiceAddressComponent());
+  .component('hrServiceAddress', new HRServiceAddressComponent())
+  .name;

@@ -50,6 +50,7 @@
         this.mac = obj.mac;
         this.ip = getIp(obj);
         this.cisUuid = obj.cisUuid;
+        this.sipUrl = obj.sipUrl;
         this.isOnline = getIsOnline(obj);
         this.canReset = true;
         this.canDelete = true;

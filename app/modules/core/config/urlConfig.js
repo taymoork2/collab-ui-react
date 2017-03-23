@@ -104,6 +104,12 @@
       integration: 'https://hercules-integration.wbx2.com/hercules/api/v2',
       prod: 'https://hercules-a.wbx2.com/hercules/api/v2',
     },
+    FlagServiceUrl: {
+      dev: 'https://hercules-integration.wbx2.com/fls/api/v1',
+      cfe: 'https://hercules-e.wbx2.com/fls/api/v1',
+      integration: 'https://hercules-integration.wbx2.com/fls/api/v1',
+      prod: 'https://hercules-a.wbx2.com/fls/api/v1',
+    },
     UssUrl: {
       dev: 'https://uss-integration.wbx2.com/',
       cfe: 'https://uss-e.wbx2.com/',

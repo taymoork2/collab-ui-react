@@ -290,6 +290,12 @@
   </form>
 </div>
 <div class="modal-footer trials">
+  <!-- TODO: rip this out when @aprcic gives the green light -->
+  <div class="warning" ng-if="!trial.details.validLocation && trial.isEditTrial()">
+    <div class="cs-input__messages">
+      <div class="message" translate="trials.supportedLocationWarning"></div>
+    </div>
+  </div>
   <button id="cancelTrialButton" class="btn" ng-click="$dismiss()" ng-disabled="trial.loading">
     <span translate="partnerHomePage.cancel"></span>
   </button>

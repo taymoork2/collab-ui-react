@@ -36,6 +36,7 @@
       getUnlicensedUsers: getUnlicensedUsers,
       isSetupDone: isSetupDone,
       setSetupDone: setSetupDone,
+      isTestOrg: isTestOrg,
       setOrgSettings: setOrgSettings,
       createOrg: createOrg,
       deleteOrg: deleteOrg,
@@ -51,6 +52,7 @@
     };
 
     var savedOrgSettingsCache = [];
+    var isTestOrgCache = {};
 
     return service;
 
@@ -249,6 +251,20 @@
         method: 'PATCH',
         url: adminUrl,
       });
+    }
+
+    function isTestOrg(orgId) {
+      if (_.isUndefined(orgId)) {
+        orgId = Authinfo.getOrgId();
+      }
+      if (_.isBoolean(isTestOrgCache[orgId])) {
+        return $q.resolve(isTestOrgCache[orgId]);
+      }
+      return getAdminOrgAsPromise(orgId, { basicInfo: true })
+        .then(function (org) {
+          isTestOrgCache[orgId] = _.get(org, 'data.isTestOrg', false);
+          return isTestOrgCache[orgId];
+        });
     }
 
     function getCachedOrgSettings(orgId) {

@@ -45,7 +45,7 @@
     vm.loadExternalNumberPool = loadExternalNumberPool;
     vm.initServiceSetup = initServiceSetup;
     vm.initNext = initNext;
-    vm.checkIfTestOrg = checkIfTestOrg;
+    vm.checkIfTestOrg = Orgservice.isTestOrg;
     vm.setCustomerCosRestrictions = setCustomerCosRestrictions;
     vm.processing = true;
     vm.externalNumberPool = [];
@@ -803,7 +803,7 @@
       .then(function () {
         if (!Authinfo.isSetupDone() && !vm.hasVoicemailService) {
           // set voicemail toggle to enabled when non-test customer runs FTSW for the very first time
-          return checkIfTestOrg().then(function (isTestOrg) {
+          return Orgservice.isTestOrg().then(function (isTestOrg) {
             if (isTestOrg) {
               vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = false;
             } else {
@@ -821,18 +821,6 @@
       var length = parseInt(vm.model.site.extensionLength, 10);
 
       return (length < range.length) ? range.slice(0, length) : _.padEnd(range, length, char);
-    }
-
-    function checkIfTestOrg() {
-      var isTestOrg = $q(function (resolve) {
-        var params = {
-          basicInfo: true,
-        };
-        Orgservice.getOrg(function (response) {
-          resolve(response.isTestOrg);
-        }, null, params);
-      });
-      return isTestOrg;
     }
 
     function loadVoicemailPilotNumber(site) {
