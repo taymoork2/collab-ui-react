@@ -2,13 +2,13 @@
   'use strict';
 
   angular.module('Hercules')
-    .component('upgradeScheduleConfiguration', {
+    .component('hsUpgradeScheduleConfiguration', {
       bindings: {
         clusterId: '<',
         onlyDaily: '<',
       },
       controller: UpgradeScheduleConfigurationCtrl,
-      templateUrl: 'modules/hercules/fusion-pages/components/upgrade-schedule-configuration.html',
+      templateUrl: 'modules/hercules/upgrade-schedule-configuration/hs-upgrade-schedule-configuration.component.html',
     });
 
   /* @ngInject */

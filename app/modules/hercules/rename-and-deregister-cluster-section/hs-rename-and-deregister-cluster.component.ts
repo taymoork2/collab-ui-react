@@ -96,7 +96,7 @@ class RenameAndDeregisterClusterSectionCtrl implements ng.IComponentController {
 
 export class RenameAndDeregisterClusterSectionComponent implements ng.IComponentOptions {
   public controller = RenameAndDeregisterClusterSectionCtrl;
-  public templateUrl = 'modules/hercules/fusion-pages/components/rename-and-deregister-cluster-section/rename-and-deregister-cluster.html';
+  public templateUrl = 'modules/hercules/rename-and-deregister-cluster-section/hs-rename-and-deregister-cluster.component.html';
   public bindings = {
     serviceId: '<',
     cluster: '<',

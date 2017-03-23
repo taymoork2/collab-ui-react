@@ -4,19 +4,19 @@
           <div class="sub-section">
             <h5 class="sub-section__label" translate="hercules.settings.scheduleUpgrade.title"></h5>
             <p class="sub-section__description" translate="hercules.settings.scheduleUpgrade.description"></p>
-            <upgrade-schedule-configuration only-daily="true" cluster-id="$ctrl.cluster.id"></upgrade-schedule-configuration>
+            <hs-upgrade-schedule-configuration only-daily="true" cluster-id="$ctrl.cluster.id"></hs-upgrade-schedule-configuration>
             <div class="emergency-upgrade-section">
                 <h5 class="sub-section__label" translate="hercules.settings.emergencyUpgrade.mediafusion.title"></h5>
                 <p class="sub-section__description" translate="hercules.settings.emergencyUpgrade.mediafusion.description"></p>
                 </div>
             </div>
         </setting-section>
-      <rename-and-deregister-cluster-section
+      <hs-rename-and-deregister-cluster-section
         service-id="'squared-fusion-khaos'"
         cluster="$ctrl.cluster"
         show-rename-section="true"
         on-name-update="$ctrl.nameUpdated(name)">
-      </rename-and-deregister-cluster-section>
+      </hs-rename-and-deregister-cluster-section>
     </div>
     <div>
       <release-channel-section cluster="$ctrl.cluster"></release-channel-section>

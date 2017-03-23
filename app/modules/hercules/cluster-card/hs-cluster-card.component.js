@@ -2,11 +2,11 @@
   'use strict';
 
   angular.module('Hercules')
-    .component('clusterCard', {
+    .component('hsClusterCard', {
       bindings: {
         cluster: '<',
       },
-      templateUrl: 'modules/hercules/fusion-pages/components/cluster-card.html',
+      templateUrl: 'modules/hercules/cluster-card/hs-cluster-card.component.html',
       controller: ClusterCardController,
     });
 
@@ -137,7 +137,7 @@
         },
         controller: 'ClusterDeregisterController',
         controllerAs: 'clusterDeregister',
-        templateUrl: 'modules/hercules/fusion-pages/components/rename-and-deregister-cluster-section/deregister-dialog.html',
+        templateUrl: 'modules/hercules/rename-and-deregister-cluster-section/deregister-dialog.html',
         type: 'dialog',
       }).result.then(function () {
         $state.go('cluster-list', {}, { reload: true });

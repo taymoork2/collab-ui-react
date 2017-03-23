@@ -1,6 +1,6 @@
 import renameAndDeregisterClusterSection from './index';
 
-describe('Component: RenameAndDeregisterClusterSection ', () => {
+describe('Component: hsRenameAndDeregisterClusterSection ', () => {
 
   let $componentController, $scope, $q, Notification;
 
@@ -21,14 +21,14 @@ describe('Component: RenameAndDeregisterClusterSection ', () => {
     });
 
     it ('should contain a rename section if the showRenameSection attribute is true', function() {
-      this.compileComponent('renameAndDeregisterClusterSection', {
+      this.compileComponent('hsRenameAndDeregisterClusterSection', {
         showRenameSection: true,
       });
       expect(this.view).toContainElement('#renameSection');
     });
 
     it ('should NOT contain a rename section if the showRenameSection attribute is not set', function() {
-      this.compileComponent('renameAndDeregisterClusterSection');
+      this.compileComponent('hsRenameAndDeregisterClusterSection');
       expect(this.view).not.toContainElement('#renameSection');
     });
 
@@ -62,7 +62,7 @@ describe('Component: RenameAndDeregisterClusterSection ', () => {
 
     it ('should show an error when trying to save an empty cluster name', function() {
       spyOn(Notification, 'error');
-      let ctrl = $componentController('renameAndDeregisterClusterSection', null, bindings);
+      let ctrl = $componentController('hsRenameAndDeregisterClusterSection', null, bindings);
       ctrl.saveClusterName('');
       expect(Notification.error.calls.count()).toBe(1);
     });
@@ -75,7 +75,7 @@ describe('Component: RenameAndDeregisterClusterSection ', () => {
         },
       };
 
-      let ctrl = $componentController('renameAndDeregisterClusterSection', {
+      let ctrl = $componentController('hsRenameAndDeregisterClusterSection', {
         FusionClusterService: MockFusionClusterService,
       }, bindings);
       ctrl.clusterName = 'This is a new cluster name';
@@ -85,12 +85,12 @@ describe('Component: RenameAndDeregisterClusterSection ', () => {
     });
 
     it ('should warn when c_cal is provisioned', function () {
-      let ctrl = $componentController('renameAndDeregisterClusterSection', null, bindings);
+      let ctrl = $componentController('hsRenameAndDeregisterClusterSection', null, bindings);
       expect(ctrl.blockDeregistration()).toBe(true);
     });
 
     it ('should NOT warn when only c_mgmt is provisioned', function () {
-      let ctrl = $componentController('renameAndDeregisterClusterSection', null, {
+      let ctrl = $componentController('hsRenameAndDeregisterClusterSection', null, {
         cluster: {
           provisioning: [{
             connectorType: 'c_mgmt',

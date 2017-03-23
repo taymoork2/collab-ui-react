@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Component: upgradeScheduleConfiguration', function () {
+describe('Component: hsUpgradeScheduleConfiguration', function () {
   var $scope, $q, $compile, $rootScope, FusionClusterService, view;
 
   afterEach(function () {
@@ -134,11 +134,11 @@ describe('Component: upgradeScheduleConfiguration', function () {
 
   function initController($scope) {
     var element = compileComponent($scope);
-    return element.controller('upgradeScheduleConfiguration');
+    return element.controller('hsUpgradeScheduleConfiguration');
   }
 
   function compileComponent($scope) {
-    var template = '<upgrade-schedule-configuration cluster-id="clusterId"></upgrade-schedule-configuration>';
+    var template = '<hs-upgrade-schedule-configuration cluster-id="clusterId"></hs-upgrade-schedule-configuration>';
     view = $compile(angular.element(template))($scope);
     $scope.$apply();
     return view;

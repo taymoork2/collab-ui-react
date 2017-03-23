@@ -2,10 +2,10 @@
 @import '../service-specific-pages/common-expressway-based/add-resource';
 @import '../fusion-pages/add-resource-group/add-resource-group-modal';
 @import '../fusion-pages/add-resource/add-resource-modal';
-@import '../fusion-pages/components/cluster-card';
-@import '../fusion-pages/components/resource-group-card';
-@import '../fusion-pages/components/upgrade-schedule-configuration';
-@import '../fusion-pages/components/emergency-upgrade-configuration';
+@import '../cluster-card/hs-cluster-card';
+@import '../resource-group-card/hs-resource-group-card';
+@import '../upgrade-schedule-configuration/hs-upgrade-schedule-configuration';
+@import '../emergency-upgrade-configuration/ew-emergency-upgrade-configuration';
 @import '../fusion-pages/fusion-cluster-list';
 @import '../fusion-pages/fusion-cluster-settings';
 @import '../fusion-pages/resource-group-settings/assign-clusters';
