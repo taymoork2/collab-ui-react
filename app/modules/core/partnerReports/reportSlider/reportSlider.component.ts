@@ -111,13 +111,12 @@ class ReportSliderCtrl {
   }
 }
 
-angular.module('Core')
-  .component('reportSlider', {
-    templateUrl: 'modules/core/partnerReports/reportSlider/reportSlider.tpl.html',
-    controller: ReportSliderCtrl,
-    bindings: {
-      selected: '=',
-      options: '<',
-      updateFunctions: '<',
-    },
-  });
+export class ReportSliderComponent implements ng.IComponentOptions {
+  public templateUrl = 'modules/core/partnerReports/reportSlider/reportSlider.tpl.html';
+  public controller = ReportSliderCtrl;
+  public bindings = {
+    selected: '=',
+    options: '<',
+    updateFunctions: '<',
+  };
+}
