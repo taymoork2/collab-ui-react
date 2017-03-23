@@ -71,10 +71,11 @@ class ComapnyVoicemailCtrl implements ng.IComponentController {
       let pilotNumber: string = '';
       if (this.selectedNumber && this.selectedNumber.value) {
         pilotNumber = this.selectedNumber.value;
+        this.onChange(pilotNumber, 'false', value);
       } else {
         pilotNumber = this.ServiceSetup.generateVoiceMailNumber(this.Authinfo.getOrgId(), this.customerVoice.dialPlanDetails.countryCode);
+        this.onChange(pilotNumber, 'true', value);
       }
-      this.onChange(pilotNumber, 'true', value);
     } else {
       this.onChange(null, null, value);
     }

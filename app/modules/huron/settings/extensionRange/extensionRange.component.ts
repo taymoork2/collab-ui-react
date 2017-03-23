@@ -79,6 +79,10 @@ class ExtensionRangeCtrl implements ng.IComponentController {
     return true;
   }
 
+  public isDisabled(numberRange: IExtensionRange): boolean {
+    return !this.firstTimeSetup && !_.isEmpty(numberRange.uuid);
+  }
+
 }
 
 export class ExtensionRangeComponent implements ng.IComponentOptions {

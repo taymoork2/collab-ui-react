@@ -31,6 +31,8 @@ class HuronSettingsCtrl implements ng.IComponentController {
   public voicemailToEmail;
   public showRegionAndVoicemail: boolean = false;
   public callDateTimeFormat: boolean = true;
+  public showDialPlanChangedDialog: boolean = false;
+  public showVoiceMailDisableDialog: boolean = false;
 
   public huronSettingsData: HuronSettingsData;
 
@@ -116,15 +118,40 @@ class HuronSettingsCtrl implements ng.IComponentController {
     });
   }
 
-  public openDialPlanChangeModal() {
+  public showSaveDialogs(): void {
+    if (this.showDialPlanChangedDialog && this.showVoiceMailDisableDialog) {
+      this.openDialPlanChangeDialog()
+      .then(() => this.openDisableVoicemailWarningDialog()
+      .then(() => this.saveHuronSettings()));
+    } else if (this.showDialPlanChangedDialog) {
+      this.openDialPlanChangeDialog()
+        .then(() => this.saveHuronSettings());
+    } else if (this.showVoiceMailDisableDialog) {
+      this.openDisableVoicemailWarningDialog()
+        .then(() => this.saveHuronSettings());
+    } else {
+      this.saveHuronSettings();
+    }
+  }
+
+  public openDialPlanChangeDialog() {
     return this.ModalService.open({
       title: this.$translate.instant('serviceSetupModal.saveModal.title'),
       message: this.$translate.instant('serviceSetupModal.saveModal.message1') + '<br/><br/>'
         + this.$translate.instant('serviceSetupModal.saveModal.message2'),
       close: this.$translate.instant('common.yes'),
       dismiss: this.$translate.instant('common.no'),
-    })
-      .result.then(() => this.saveHuronSettings());
+    }).result;
+  }
+
+  public openDisableVoicemailWarningDialog() {
+    return this.ModalService.open({
+      title: this.$translate.instant('huronSettings.disableCompanyVoicemailTitle'),
+      message: this.$translate.instant('huronSettings.disableCompanyVoicemailMessage'),
+      close: this.$translate.instant('common.disable'),
+      dismiss: this.$translate.instant('common.cancel'),
+      btnType: 'negative',
+    }).result;
   }
 
   public onTimeZoneChanged(timeZone: string): void {
@@ -139,11 +166,13 @@ class HuronSettingsCtrl implements ng.IComponentController {
 
   public onExtensionLengthChanged(extensionLength: string): void {
     this.huronSettingsData.site.extensionLength = extensionLength;
+    this.setShowDialPlanChangedDialogFlag();
     this.checkForChanges();
   }
 
   public onSteeringDigitChanged(steeringDigit: string): void {
     this.huronSettingsData.site.steeringDigit = steeringDigit;
+    this.setShowDialPlanChangedDialogFlag();
     this.checkForChanges();
   }
 
@@ -164,6 +193,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
 
   public onRoutingPrefixChanged(routingPrefix: string): void {
     this.huronSettingsData.site.routingPrefix = routingPrefix;
+    this.setShowDialPlanChangedDialogFlag();
     this.checkForChanges();
   }
 
@@ -174,6 +204,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
 
   public onRegionCodeChanged(regionCode: string): void {
     this.huronSettingsData.customerVoice.regionCode = regionCode;
+    this.setShowDialPlanChangedDialogFlag();
     this.checkForChanges();
   }
 
@@ -181,9 +212,12 @@ class HuronSettingsCtrl implements ng.IComponentController {
     _.set(this.huronSettingsData.customer, 'hasVoicemailService', companyVoicemailEnabled);
     if (!companyVoicemailEnabled) {
       this.huronSettingsData.site.disableVoicemail = true;
+    } else {
+      delete this.huronSettingsData.site['disableVoicemail'];
     }
     this.huronSettingsData.site.voicemailPilotNumber = voicemailPilotNumber;
     this.huronSettingsData.site.voicemailPilotNumberGenerated = voicemailPilotNumberGenerated;
+    this.setShowVoiceMailDisableDialogFlag();
     this.checkForChanges();
   }
 
@@ -234,8 +268,31 @@ class HuronSettingsCtrl implements ng.IComponentController {
   }
 
   private resetForm(): void {
+    this.showDialPlanChangedDialog = false;
+    this.showVoiceMailDisableDialog = false;
     this.form.$setPristine();
     this.form.$setUntouched();
+  }
+
+  private setShowDialPlanChangedDialogFlag(): void {
+    let originalConfig = this.HuronSettingsService.getOriginalConfig();
+    if (this.huronSettingsData.site.extensionLength !== originalConfig.site.extensionLength
+      || this.huronSettingsData.site.steeringDigit !== originalConfig.site.steeringDigit
+      || this.huronSettingsData.site.routingPrefix !== originalConfig.site.routingPrefix
+      || this.huronSettingsData.customerVoice.regionCode !== originalConfig.customerVoice.regionCode) {
+      this.showDialPlanChangedDialog = true;
+    } else {
+      this.showDialPlanChangedDialog = false;
+    }
+  }
+
+  private setShowVoiceMailDisableDialogFlag(): void {
+    if (!this.huronSettingsData.customer.hasVoicemailService &&
+      this.huronSettingsData.customer.hasVoicemailService !== this.HuronSettingsService.getOriginalConfig().customer.hasVoicemailService) {
+      this.showVoiceMailDisableDialog = true;
+    } else {
+      this.showVoiceMailDisableDialog = false;
+    }
   }
 
 }
