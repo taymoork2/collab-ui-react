@@ -88,13 +88,13 @@
     function addColorForMeetingsCard(response) {
       _.forEach(response.data.dataProvider, function (val) {
         if (val.name === 'ON_PREM') {
-          val.color = '#ff7133';
+          val.color = '#02bbcc';
           val.name = vm.onPremisesHeading;
         } else if (val.name === 'CLOUD') {
           val.color = '#30d557';
           val.name = vm.cloudHeading;
         } else if (val.name === 'HYBRID') {
-          val.color = '#02bbcc';
+          val.color = '#ff7133';
           val.name = vm.hybridHeading;
         }
       });

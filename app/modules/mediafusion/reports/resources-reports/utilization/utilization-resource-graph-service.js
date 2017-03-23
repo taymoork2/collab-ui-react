@@ -7,6 +7,7 @@
 
     var vm = this;
     vm.utilizationdiv = 'utilizationdiv';
+    vm.exportDiv = 'utilization-export-div';
     vm.GUIDEAXIS = 'guideaxis';
     vm.AXIS = 'axis';
     vm.LEGEND = 'legend';
@@ -168,7 +169,7 @@
           'lineColor': '#000000',
         });
       }
-      var chartData = CommonReportsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, CommonReportsGraphService.getBaseExportForGraph(exportFields, ExportFileName, columnNames));
+      var chartData = CommonReportsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, CommonReportsGraphService.getBaseExportForGraph(exportFields, ExportFileName, columnNames, vm.exportDiv));
       chartData.legend = CommonReportsGraphService.getBaseVariable(vm.LEGEND);
       chartData.legend.labelText = '[[title]]';
       chartData.legend.useGraphSettings = true;
@@ -226,6 +227,8 @@
         }
       });
       tempData = _.sortBy(tempData, 'title');
+      var avgLegend = tempData.shift();
+      tempData.push(avgLegend);
       return tempData;
     }
 
