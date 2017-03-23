@@ -2492,7 +2492,7 @@
       "noProceed": "No, I need to install and configure the software.",
       "noProceed-helptext": "(Software will automatically download)",
       "noInfo": "Install and configure the software on your server and return to Cisco Cloud Collaboration Management to register your Hybrid Data Security Node.",
-      "noRetryInfo": "Software did not automatically download? <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/Media-Fusion-Management-Connector/mfusion.ova'>Try Again.</a>",
+      "noRetryInfo": "Software did not automatically download? <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/HybridDataSecurityProduction/hds.ova'>Try Again.</a>",
       "noDesc1": "For details on installation and configuration, visit ",
       "noDesc2": "Help Central.",
       "yesInfo1": "Assign your Hybrid Data Security Node to a cluster and enter the ",
