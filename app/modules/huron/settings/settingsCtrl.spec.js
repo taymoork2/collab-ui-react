@@ -73,7 +73,6 @@ describe('Controller: HuronSettingsCtrl', function () {
     spyOn(DialPlanService, 'getCustomerVoice').and.returnValue($q.resolve({
       dialPlanDetails: {
         extensionGenerated: 'false',
-        countryCode: '+1',
       },
     }));
     spyOn(DialPlanService, 'updateCustomerVoice').and.returnValue($q.resolve());
@@ -120,6 +119,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     $httpBackend
       .expectGET(HuronConfig.getCmiV2Url() + '/customers/' + customer.uuid + '/dialplans')
       .respond({
+        countryCode: '+13',
         premiumNumbers: ['800', '900'],
       });
   }));
@@ -1188,7 +1188,7 @@ describe('Controller: HuronSettingsCtrl', function () {
       controller.model.companyVoicemail.externalVoicemail = false;
       controller.model.site.voicemailPilotNumber = undefined;
       $scope.$apply();
-      expect(controller.customerCountryCode).toEqual('+1');
+      expect(controller.countryCode).toEqual('+13');
       expect(ServiceSetup.generateVoiceMailNumber).toHaveBeenCalled();
     });
 
