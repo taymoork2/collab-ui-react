@@ -77,7 +77,7 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
             id: connector.id,
             alarms: connector.alarms,
             connectorType: connector.connectorType,
-            service: this.$translate.instant(`hercules.connectorNameFromConnectorType.${connector.connectorType}`),
+            service: this.$translate.instant(`hercules.shortConnectorNameFromConnectorType.${connector.connectorType}`),
             statusName: this.$translate.instant(`hercules.status.${mergedStatus.name}`),
             status: mergedStatus,
             version: connector.runningVersion,
@@ -87,6 +87,7 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
           } else {
             acc[hostname] = {
               name: hostname,
+              serial: connector.hostSerial,
               connectors: [simplifiedConnector],
             };
           }

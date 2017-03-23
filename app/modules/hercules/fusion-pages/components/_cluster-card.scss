@@ -3,14 +3,16 @@ cluster-card {
 
   .cs-card {
     header {
-      display: flex;
       position: relative;
       padding: 1.25rem 1rem 0.9375rem !important;
-      align-items: baseline;
+
+      &.one-liner {
+        display: flex;
+        align-items: baseline;
+      }
 
       h4 {
         @include text-overflow;
-
         margin-right: 0.625rem;
       }
 
@@ -22,6 +24,10 @@ cluster-card {
         font-size: 0.75rem;
         background-color: $gray-base;
         padding: 1px 5px;
+      }
+
+      .cluster-nodes-link {
+        font-size: 14px;
       }
     }
 
@@ -127,18 +133,6 @@ cluster-card {
 
         &:focus {
           box-shadow: none;
-        }
-      }
-    }
-
-    .double-footer {
-      display: flex;
-
-      a {
-        flex: 1 0 50%;
-
-        &:first-child {
-          border-right: 1px solid $gray-light-3;
         }
       }
     }
