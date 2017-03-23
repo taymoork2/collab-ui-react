@@ -2927,6 +2927,31 @@
                 controllerAs: 'contextFields',
               },
             },
+            resolve: {
+              hasContextDictionaryEditFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasContextDictionaryEdit);
+              },
+            },
+          })
+          .state('context-new-field', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                template: '<context-new-field-modal existing-field-ids="$resolve.existingFieldIds" create-callback="$resolve.createCallback" dismiss="$dismiss()" class="new-field-modal"></context-new-field-modal>',
+              },
+            },
+            params: {
+              existingFieldIds: [],
+              createCallback: function () {},
+            },
+            resolve: {
+              existingFieldIds: /* @ngInject */ function ($stateParams) {
+                return $stateParams.existingFieldIds;
+              },
+              createCallback: /* @ngInject */ function ($stateParams) {
+                return $stateParams.createCallback;
+              },
+            },
           })
           .state('context-fields-sidepanel', {
             parent: 'sidepanel',

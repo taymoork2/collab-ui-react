@@ -5,6 +5,13 @@
         ng-model="contextFields.placeholder.count" search-item-fn="contextFields.filterList(searchStr)" placeholder-text="{{contextFields.placeholder.name}}">
       </cs-searchfilter>
     </cs-page-sub-header-left>
+    <cs-page-sub-header-right>
+      <button class="btn btn--primary"
+        ng-click="contextFields.createField()"
+        ng-disabled="contextFields.fetchFailed"
+        ng-if="contextFields.hasContextDictionaryEditFeatureToggle"
+        translate="common.new"></button>
+    </cs-page-sub-header-right>
   </cs-page-sub-header>
   <div class="row grid">
     <div ng-if="!contextFields.noSearchResults">

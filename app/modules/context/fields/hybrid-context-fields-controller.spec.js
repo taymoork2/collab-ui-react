@@ -2,7 +2,7 @@
 
 describe('HybridContextFieldsCtrl', function () {
 
-  var $controller, $scope, $state, $q, controller, ContextFieldsService, Log, Notification;
+  var $controller, $scope, $state, $q, controller, ContextFieldsService, Log, Notification, LogMetricsService;
   var fakeGridApi = {
     infiniteScroll: {
       dataLoaded: jasmine.createSpy('dataLoaded'),
@@ -24,10 +24,10 @@ describe('HybridContextFieldsCtrl', function () {
   beforeEach(initSpies);
 
   afterAll(function () {
-    $controller = $scope = $state = $q = controller = ContextFieldsService = Log = Notification = fakeGridApi = undefined;
+    $controller = $scope = $state = $q = controller = ContextFieldsService = Log = Notification = fakeGridApi = LogMetricsService = undefined;
   });
 
-  function dependencies($rootScope, _$controller_, _$q_, _$state_, _ContextFieldsService_, _Log_, _Notification_) {
+  function dependencies($rootScope, _$controller_, _$q_, _$state_, _ContextFieldsService_, _Log_, _Notification_, _LogMetricsService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
@@ -35,6 +35,7 @@ describe('HybridContextFieldsCtrl', function () {
     ContextFieldsService = _ContextFieldsService_;
     Log = _Log_;
     Notification = _Notification_;
+    LogMetricsService = _LogMetricsService_;
   }
 
   function initSpies() {
@@ -42,11 +43,13 @@ describe('HybridContextFieldsCtrl', function () {
     spyOn(ContextFieldsService, 'getFields');
     spyOn(Log, 'debug');
     spyOn(Notification, 'error');
+    spyOn(LogMetricsService, 'logMetrics');
   }
 
   function initController() {
     var ctrl = $controller('HybridContextFieldsCtrl', {
       $scope: $scope,
+      hasContextDictionaryEditFeatureToggle: false,
     });
     ctrl.gridOptions.onRegisterApi(fakeGridApi);
     return ctrl;
@@ -57,6 +60,15 @@ describe('HybridContextFieldsCtrl', function () {
       ContextFieldsService.getFields.and.returnValue($q.resolve([]));
       controller = initController();
       expect(controller.load).toEqual(true);
+    });
+  });
+
+  describe('createField', function () {
+    it('should correctly log metrics and transition to the next state', function () {
+      var controller = initController();
+      controller.createField();
+      expect(LogMetricsService.logMetrics).toHaveBeenCalled();
+      expect($state.go).toHaveBeenCalledWith('context-new-field', jasmine.any(Object));
     });
   });
 

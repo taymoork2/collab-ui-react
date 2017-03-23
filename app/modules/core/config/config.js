@@ -529,6 +529,7 @@
         'context-cluster-sidepanel',
         'add-resource',
         'context-fields-sidepanel',
+        'context-new-field',
       ],
       'squared-fusion-khaos': [
         'cucm-cluster',

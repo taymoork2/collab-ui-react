@@ -1,0 +1,94 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$ctrl.dismiss()">
+    <span class="sr-only" translate="common.close"></span>
+  </button>
+  <h3 class="modal-title" translate="context.dictionary.fieldPage.createNew"></h3>
+</div>
+<div class="modal-body new-field-modal-body">
+  <form name="newFieldForm">
+    <!-- ID -->
+    <div class="cs-input-group">
+      <p class="cs-input-label" translate="context.dictionary.fieldPage.fieldId"></p>
+      <input
+        cs-input
+        type="text"
+        id="fieldId"
+        name="fieldId"
+        placeholder="{{::'context.dictionary.fieldPage.fieldIdPlaceholder' | translate}}"
+        ng-model="$ctrl.fieldData.id"
+        cs-input-group-size="medium-12"
+        cs-input-messages="$ctrl.validationMessages"
+        cs-input-validators="$ctrl.validators">
+    </div>
+
+    <!-- EN_US LABEL -->
+    <div class="cs-input-group">
+      <p class="cs-input-label" translate="context.dictionary.fieldPage.label"></p>
+      <input
+        cs-input
+        type="text"
+        id="fieldLabel"
+        placeholder="{{::'context.dictionary.fieldPage.labelPlaceholder' | translate}}"
+        ng-model="$ctrl.fieldData.translations.en_US"
+        cs-input-group-size="medium-12"
+        cs-input-help-text="{{::'context.dictionary.fieldPage.labelHelpText' | translate}}">
+    </div>
+
+    <!-- DESCRIPTION -->
+    <div class="cs-input-group">
+      <p translate="common.description"></p>
+      <textarea
+        rows="4"
+        id="fieldDescription"
+        class="form-control"
+        placeholder="{{::'context.dictionary.fieldPage.descriptionPlaceholder' | translate}}"
+        ng-model="$ctrl.fieldData.description"/>
+    </div>
+
+    <!-- DATA TYPE -->
+    <div class="cs-input-group">
+      <p translate="context.dictionary.fieldPage.dataType"></p>
+      <div class="row">
+        <div class="small-6 medium-6 large-6">
+          <cs-select
+            ng-model="$ctrl.fieldData.dataType"
+            options="$ctrl.dataTypeOptions"
+            placeholder="$ctrl.dataTypePlaceholder">
+          </cs-select>
+        </div>
+      </div>
+    </div>
+
+    <!-- DATA PRIVACY -->
+    <div class="cs-input-group">
+      <p translate="context.dictionary.fieldPage.classification"></p>
+      <div class="row">
+        <div class="small-6 medium-6 large-6">
+          <cs-select
+            ng-model="$ctrl.fieldData.classification"
+            options="$ctrl.classificationOptions"
+            on-change-fn="$ctrl.classificationOnChange()">
+          </cs-select>
+        </div>
+      </div>
+      <p class="cs-input__help-text">{{$ctrl.classificationHelpText}}</p>
+    </div>
+
+    <!-- SEARCHABLE -->
+    <input
+      cs-input
+      type="checkbox"
+      ng-model="$ctrl.fieldData.searchable"
+      id="fieldSearchable"
+      name="fieldSearchable"
+      cs-input-label="{{'context.dictionary.fieldPage.searchable' | translate}}"
+      cs-input-help-text="{{::'context.dictionary.fieldPage.searchableHelpText' | translate}}">
+  </form>
+</div>
+<div class="modal-footer">
+  <button
+    class="btn btn-primary"
+    translate="common.create"
+    ng-click="$ctrl.create()"
+    ng-disabled="!$ctrl.createEnabled()"></button>
+</div>
