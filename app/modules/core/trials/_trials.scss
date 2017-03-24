@@ -335,7 +335,7 @@
 }
 
 .get-bottom-margin {
-  margin-bottom: 1rem;
+  @include vr-spacing(mb, 1);
 }
 
 .banner-msg {
