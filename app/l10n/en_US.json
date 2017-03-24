@@ -4855,6 +4855,7 @@
       "onPremisesHeading": "On-Premises",
       "cloudHeading": "Cloud",
       "hybridHeading": "Hybrid",
+      "othersHeading": "Others",
       "clientType": {
         "android": "Android",
         "blackberry": "BlackBerry",

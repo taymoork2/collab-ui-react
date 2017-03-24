@@ -14,6 +14,7 @@
     vm.onPremiseHeading = $translate.instant('mediaFusion.metrics.onPremisesHeading');
     vm.overflowHeading = $translate.instant('mediaFusion.metrics.cloud_calls');
     vm.cloudCallHeading = $translate.instant('mediaFusion.metrics.totalCloud');
+    vm.othersHeading = $translate.instant('mediaFusion.metrics.othersHeading');
 
 
     return {
@@ -26,7 +27,7 @@
     };
 
     function setClientTypePiechart(data) {
-      data = formatDecimal(data);
+      data = formatDecimal(data.dataProvider);
       var chartData = CommonReportsGraphService.getBasePieChart(data);
       chartData.labelText = '[[name]]';
       chartData.balloonText = '[[name]]: [[percentage]]% ([[value]])';
@@ -35,7 +36,7 @@
     }
 
     function setNumberOfMeetsOnPremisesPiechart(data) {
-      data = formatDecimal(data);
+      data = formatDecimal(data.dataProvider);
       var chartData = CommonReportsGraphService.getBasePieChart(data);
       chartData.labelText = '[[name]]';
       chartData.balloonText = '[[name]]: [[percentage]]% ([[value]])';
@@ -62,7 +63,7 @@
         'value': cloudCalls,
       }];
       data['dataProvider'] = dataProvider;
-      data = formatDecimal(data);
+      data = formatDecimal(data.dataProvider);
       var chartData = CommonReportsGraphService.getBasePieChart(data);
       chartData.labelText = '[[name]]';
       chartData.balloonText = '[[name]]: [[percentage]]% ([[value]])';
@@ -96,12 +97,24 @@
 
     function formatDecimal(data) {
       var totalValue = 0;
-      _.forEach(data.dataProvider, function (type) {
+      var sumPercentage = 0;
+      var sumValue = 0;
+      _.forEach(data, function (type) {
         totalValue = totalValue + type.value;
       });
-      _.forEach(data.dataProvider, function (type) {
+      _.forEach(data, function (type) {
         type.percentage = _.round(100 * (type.value / totalValue));
       });
+      if (data.length > 4) {
+        data = _.sortBy(data, 'percentage').reverse();
+        for (var i = data.length - 1; i > 3; i--) {
+          sumPercentage = sumPercentage + data[i].percentage;
+          sumValue = sumValue + data[i].value;
+        }
+        data = _.dropRight(data, data.length - 4);
+        data = _.shuffle(data);
+        data.push({ 'name': vm.othersHeading, 'value': sumValue, 'percentage': sumPercentage });
+      }
       return data;
     }
 
