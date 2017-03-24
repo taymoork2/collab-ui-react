@@ -97,6 +97,7 @@
 
     function formatDecimal(data) {
       var totalValue = 0;
+      var newData = [];
       var sumPercentage = 0;
       var sumValue = 0;
       _.forEach(data, function (type) {
@@ -105,18 +106,22 @@
       _.forEach(data, function (type) {
         type.percentage = _.round(100 * (type.value / totalValue));
       });
-      if (data.length > 4) {
-        data = _.sortBy(data, 'percentage').reverse();
-        for (var i = data.length - 1; i > 3; i--) {
-          sumPercentage = sumPercentage + data[i].percentage;
-          sumValue = sumValue + data[i].value;
-        }
-        data = _.dropRight(data, data.length - 4);
-        data = _.shuffle(data);
-        data.push({ 'name': vm.othersHeading, 'value': sumValue, 'percentage': sumPercentage });
+      if (data.length > 5) {
+        data = _.sortBy(data, 'percentage');
+        _.forEach(data, function (point) {
+          if (point.percentage < 5) {
+            sumPercentage += point.percentage;
+            sumValue += point.value;
+          } else {
+            newData.push(point);
+          }
+        });
+        newData = _.shuffle(newData);
+        newData.push({ 'name': vm.othersHeading, 'value': sumValue, 'percentage': sumPercentage });
+      } else {
+        newData = data;
       }
-      return data;
+      return newData;
     }
-
   }
 })();

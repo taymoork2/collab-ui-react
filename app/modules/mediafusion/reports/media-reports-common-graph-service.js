@@ -182,7 +182,7 @@
         'prefixesOfBigNumbers': baseVariables['prefixesOfBigNumbers'],
         'export': exportData,
         'startDuration': startDuration,
-        'dataProvider': data.dataProvider,
+        'dataProvider': data,
         'valueAxes': valueAxes,
         'graphs': graphs,
         'gridAboveGraphs': true,
