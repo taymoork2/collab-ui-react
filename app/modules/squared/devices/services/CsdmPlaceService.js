@@ -17,6 +17,13 @@
         });
     }
 
+    function getSearchPlacesList(searchStr) { // need to support huron as well - but not supported by the backend yet...
+      return $http.get(csdmPlacesUrl + "?type=all&query=" + searchStr)
+        .then(function (res) {
+          return CsdmConverter.convertPlaces(res.data);
+        });
+    }
+
     function updateItemName(place, name) {
       return $http.patch(place.url, {
         name: name,
@@ -84,6 +91,7 @@
       updateItemName: updateItemName,
       getPlacesUrl: getPlacesUrl,
       updatePlace: updatePlace,
+      getSearchPlacesList: getSearchPlacesList,
     };
   }
 

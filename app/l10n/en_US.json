@@ -5812,6 +5812,8 @@
     "typeHeader": "Type",
     "deviceHeader": "No. of Devices",
     "noneFound": "No places found",
+    "bigOrgSearchHeader": "Search for a place",
+    "bigOrgSearchText": "The place list is not displayed because there are more than 1000 places",
     "actionHeader": "Actions",
     "servicesHeader": "Services",
     "sparkCall": "Spark + Spark Call",
