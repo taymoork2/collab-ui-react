@@ -40,7 +40,7 @@
     };
 
     function getUpdatedEntitlements(forSave) {
-      var entitlements = (wizardData.account.entitlements || ['webex-squared']);
+      var entitlements = (wizardData.account.entitlements || ['webex-squared', 'spark']);
       entitlements = _.difference(entitlements, [ciscouc, fusionec, fusionCal, fusionGCal]);
       if (vm.service === 'sparkCall') {
         entitlements.push(ciscouc);

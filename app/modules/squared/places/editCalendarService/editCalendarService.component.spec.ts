@@ -47,7 +47,7 @@ describe('EditCalendarService component:', () => {
               state: () => {
                 return {
                   data: {
-                    account: { entitlements: ['webex-squared'] },
+                    account: { entitlements: ['webex-squared', 'spark'] },
                     atlasHerculesGoogleCalendarFeatureToggle: true,
                   },
                 };
@@ -82,7 +82,7 @@ describe('EditCalendarService component:', () => {
               state: () => {
                 return {
                   data: {
-                    account: { entitlements: ['webex-squared'] },
+                    account: { entitlements: ['webex-squared', 'spark'] },
                     atlasHerculesGoogleCalendarFeatureToggle: true,
                   },
                 };
@@ -117,7 +117,7 @@ describe('EditCalendarService component:', () => {
               state: () => {
                 return {
                   data: {
-                    account: { entitlements: ['webex-squared'] },
+                    account: { entitlements: ['webex-squared', 'spark'] },
                     atlasHerculesGoogleCalendarFeatureToggle: true,
                   },
                 };
@@ -153,7 +153,7 @@ describe('EditCalendarService component:', () => {
         }]));
         state.wizardData = {
           state: () => {
-            return { data: { function: 'editServices', account: { entitlements: ['webex-squared'] } } };
+            return { data: { function: 'editServices', account: { entitlements: ['webex-squared', 'spark'] } } };
           },
           next: () => {
           },
@@ -181,7 +181,7 @@ describe('EditCalendarService component:', () => {
         }]));
         state.wizardData = {
           state: () => {
-            return { data: { function: 'addPlace', account: { entitlements: ['webex-squared'] } } };
+            return { data: { function: 'addPlace', account: { entitlements: ['webex-squared', 'spark'] } } };
           },
           next: () => {
           },
@@ -210,7 +210,7 @@ describe('EditCalendarService component:', () => {
       }]));
       state.wizardData = {
         state: () => {
-          return { data: { account: { entitlements: ['webex-squared'] } } };
+          return { data: { account: { entitlements: ['webex-squared', 'spark'] } } };
         },
         next: () => {
         },
@@ -235,7 +235,7 @@ describe('EditCalendarService component:', () => {
         expect(state.wizardData.next).toHaveBeenCalled();
         let wizardState = state.wizardData.next.calls.mostRecent().args[0];
 
-        expect(wizardState.account.entitlements).toEqual(['webex-squared', FUSION_CAL_ENTITLEMENT]);
+        expect(wizardState.account.entitlements).toEqual(['webex-squared', 'spark', FUSION_CAL_ENTITLEMENT]);
         expect(wizardState.account.externalCalendarIdentifier.accountGUID).toEqual(email);
         expect(wizardState.account.externalCalendarIdentifier.providerID).toEqual(FUSION_CAL_ENTITLEMENT);
       });
@@ -254,7 +254,7 @@ describe('EditCalendarService component:', () => {
         expect(state.wizardData.next).toHaveBeenCalled();
         let wizardState = state.wizardData.next.calls.mostRecent().args[0];
 
-        expect(wizardState.account.entitlements).toEqual(['webex-squared', FUSION_GCAL_ENTITLEMENT]);
+        expect(wizardState.account.entitlements).toEqual(['webex-squared', 'spark', FUSION_GCAL_ENTITLEMENT]);
         expect(wizardState.account.externalCalendarIdentifier.accountGUID).toEqual(email);
         expect(wizardState.account.externalCalendarIdentifier.providerID).toEqual(FUSION_GCAL_ENTITLEMENT);
       });
@@ -290,7 +290,7 @@ describe('EditCalendarService component:', () => {
         state: () => {
           return {
             data: {
-              account: { entitlements: ['webex-squared'], cisUuid: id },
+              account: { entitlements: ['webex-squared', 'spark'], cisUuid: id },
               atlasHerculesGoogleCalendarFeatureToggle: true,
             },
           };
@@ -324,7 +324,7 @@ describe('EditCalendarService component:', () => {
         expect(test.CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalled();
         let wizardState = test.CsdmDataModelService.updateCloudberryPlace.calls.mostRecent().args;
 
-        expect(wizardState[1]).toEqual(['webex-squared', FUSION_CAL_ENTITLEMENT]);
+        expect(wizardState[1]).toEqual(['webex-squared', 'spark', FUSION_CAL_ENTITLEMENT]);
         expect(wizardState[4][0].accountGUID).toEqual(email);
         expect(wizardState[4][0].providerID).toEqual(FUSION_CAL_ENTITLEMENT);
       });
@@ -345,7 +345,7 @@ describe('EditCalendarService component:', () => {
 
         expect(test.CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalled();
         let wizardState = test.CsdmDataModelService.updateCloudberryPlace.calls.mostRecent().args;
-        expect(wizardState[1]).toEqual(['webex-squared', FUSION_GCAL_ENTITLEMENT]);
+        expect(wizardState[1]).toEqual(['webex-squared', 'spark', FUSION_GCAL_ENTITLEMENT]);
         expect(wizardState[4][0].accountGUID).toEqual(email);
         expect(wizardState[4][0].providerID).toEqual(FUSION_GCAL_ENTITLEMENT);
       });

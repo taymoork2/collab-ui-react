@@ -37,7 +37,7 @@
     }
 
     function createCsdmPlace(name, entitlements, directoryNumber, externalNumber, externalLinkedAccounts, ussProps) {
-      return createPlace(name, entitlements || ['webex-squared'], directoryNumber, externalNumber, 'lyra_space', externalLinkedAccounts, ussProps);
+      return createPlace(name, entitlements || ['webex-squared', 'spark'], directoryNumber, externalNumber, 'lyra_space', externalLinkedAccounts, ussProps);
     }
 
     function createCmiPlace(name, entitlements, directoryNumber, externalNumber) {

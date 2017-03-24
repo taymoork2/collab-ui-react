@@ -84,7 +84,7 @@ class EditCalendarService implements ng.IComponentController {
   }
 
   private getUpdatedEntitlements() {
-    let entitlements = (this.wizardData.account.entitlements || ['webex-squared']);
+    let entitlements = (this.wizardData.account.entitlements || ['webex-squared', 'spark']);
     entitlements = _.difference(entitlements, [EditCalendarService.fusionCal, EditCalendarService.fusionGCal]);
     if (this.calService === EditCalendarService.fusionCal) {
       entitlements.push(EditCalendarService.fusionCal);
