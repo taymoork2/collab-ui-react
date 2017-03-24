@@ -1232,8 +1232,16 @@
       }
     };
 
+    function isCategoryOptionTagValid() {
+      if (vm.categoryOptionTag && vm.categoryOptionTag.length > vm.lengthConstants.singleLineMaxCharLimit50) {
+        return false;
+      } else {
+        return true;
+      }
+    }
     vm.addCategoryOption = function () {
       if (vm.categoryOptionTag) {
+        if (!isCategoryOptionTagValid()) return;
         angular.element('#categoryTokensElement').tokenfield('createToken', vm.categoryOptionTag);
         vm.categoryOptionTag = '';
       }
