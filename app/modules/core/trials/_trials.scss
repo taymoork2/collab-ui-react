@@ -334,6 +334,10 @@
   margin-bottom: 0;
 }
 
+.get-bottom-margin {
+  @include vr-spacing(mb, 1);
+}
+
 .banner-msg {
   display: table;
   margin: 0 auto 3px;

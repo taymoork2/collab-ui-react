@@ -4159,6 +4159,7 @@
     "meeting": "Meeting 25 Party",
     "webex": "WebEx Enterprise Edition 200 with CMR/TNU+",
     "call": "Call",
+    "careDescription" : "Care services require Message as a prerequisite.<br>Additionally, Call is required for voice-based interactions.",
     "sparkCare": "Care",
     "care": "Chat and Callback",
     "advanceCare": "Chat, Callback and Inbound Call",
