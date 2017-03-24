@@ -1,5 +1,4 @@
 import { Site } from 'modules/huron/sites';
-import { CustomerVoice } from 'modules/huron/customer';
 import { IOption } from 'modules/huron/dialing/dialing.service';
 
 class ComapnyVoicemailCtrl implements ng.IComponentController {
@@ -11,7 +10,7 @@ class ComapnyVoicemailCtrl implements ng.IComponentController {
   public missingDirectNumbers: boolean;
   public filterPlaceholder: string;
   public externalNumberOptions: Array<IOption>;
-  public customerVoice: CustomerVoice;
+  public dialPlanCountryCode: string;
   public onChangeFn: Function;
   public onVoicemailToEmailChangedFn: Function;
   public onNumberFilter: Function;
@@ -61,7 +60,7 @@ class ComapnyVoicemailCtrl implements ng.IComponentController {
     if (this.externalVoicemailAccess) {
       this.onChange(_.get<string>(this.selectedNumber, 'value'), 'false', true);
     } else {
-      let pilotNumber = this.ServiceSetup.generateVoiceMailNumber(this.Authinfo.getOrgId(), this.customerVoice.dialPlanDetails.countryCode);
+      let pilotNumber = this.ServiceSetup.generateVoiceMailNumber(this.Authinfo.getOrgId(), this.dialPlanCountryCode);
       this.onChange(pilotNumber, 'true', true);
     }
   }
@@ -73,7 +72,7 @@ class ComapnyVoicemailCtrl implements ng.IComponentController {
         pilotNumber = this.selectedNumber.value;
         this.onChange(pilotNumber, 'false', value);
       } else {
-        pilotNumber = this.ServiceSetup.generateVoiceMailNumber(this.Authinfo.getOrgId(), this.customerVoice.dialPlanDetails.countryCode);
+        pilotNumber = this.ServiceSetup.generateVoiceMailNumber(this.Authinfo.getOrgId(), this.dialPlanCountryCode);
         this.onChange(pilotNumber, 'true', value);
       }
     } else {
@@ -122,7 +121,7 @@ export class CompanyVoicemailComponent implements ng.IComponentOptions {
   public templateUrl = 'modules/huron/settings/companyVoicemail/companyVoicemail.html';
   public bindings = {
     site: '<',
-    customerVoice: '<',
+    dialPlanCountryCode: '<',
     companyVoicemailEnabled: '<',
     voicemailToEmail: '<',
     externalNumberOptions: '<',

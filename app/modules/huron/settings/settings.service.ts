@@ -209,10 +209,6 @@ export class HuronSettingsService {
   private getCustomerVoice(): ng.IPromise<CustomerVoice | void> {
     return this.HuronCustomerService.getVoiceCustomer()
       .then(customerVoice => {
-        if (_.isNull(customerVoice.dialPlan)) {
-          // TODO (jlowery): remove when dial plan is created for us automatically
-          _.set(customerVoice, 'dialPlanDetails.countryCode', '+1');
-        }
         return customerVoice;
       })
       .catch(error => {

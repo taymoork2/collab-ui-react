@@ -7,6 +7,7 @@ export class HuronSettingsOptions {
   public timeFormatOptions: Array<IOption>;
   public defaultCountryOptions: Array<IOption>;
   public timeZoneOptions: Array<IOption>;
+  public countryCode: string;
   public premiumNumbers: string;
   public companyCallerIdOptions: Array<IOption>;
   public companyVoicemailOptions: Array<IOption>;
@@ -25,9 +26,10 @@ export class HuronSettingsOptionsService {
     private ServiceSetup,
     private NumberService: NumberService,
     private TelephoneNumberService,
+    private CustomerDialPlanServiceV2,
   ) { }
 
-  public getOptions(): ng.IPromise<HuronSettingsOptions> {
+  public getOptions(customerId: string): ng.IPromise<HuronSettingsOptions> {
     let settingsOptions = new HuronSettingsOptions();
     return this.$q.all({
       dateFormatOptions: this.loadDateFormatOptions(),
@@ -38,13 +40,17 @@ export class HuronSettingsOptionsService {
       companyCallerIdOptions: this.loadCompanyCallerIdNumbers(undefined),
       companyVoicemailOptions: this.loadCompanyVoicemailNumbers(undefined),
       emergencyServiceNumbers: this.loadEmergencyServiceNumbers(undefined),
+      dialPlan: this.loadDialPlan(customerId)
+        .then(dialPlan => {
+          settingsOptions.countryCode = _.get<string>(dialPlan, 'countryCode');
+          settingsOptions.premiumNumbers = _.toString(_.get<Array<string>>(dialPlan, 'premiumNumbers', []));
+        }),
     }).then(response => {
       settingsOptions.dateFormatOptions = _.get<Array<IOption>>(response, 'dateFormatOptions');
       settingsOptions.timeFormatOptions = _.get<Array<IOption>>(response, 'timeFormatOptions');
       settingsOptions.defaultCountryOptions = _.get<Array<IOption>>(response, 'defaultCountryOptions');
       settingsOptions.preferredLanguageOptions = _.get<Array<IOption>>(response, 'preferredLanguageOptions');
       settingsOptions.timeZoneOptions = _.get<Array<IOption>>(response, 'timeZoneOptions');
-      settingsOptions.premiumNumbers = _.get<string>(response, 'premiumNumbers');
       settingsOptions.companyCallerIdOptions = _.get<Array<IOption>>(response, 'companyCallerIdOptions');
       settingsOptions.companyVoicemailOptions = _.get<Array<IOption>>(response, 'companyVoicemailOptions');
       settingsOptions.emergencyServiceNumberOptions = _.get<Array<IEmergencyNumberOption>>(response, 'emergencyServiceNumbers');
@@ -115,6 +121,12 @@ export class HuronSettingsOptionsService {
           };
         });
       });
+  }
+
+  public loadDialPlan(customerId: string): ng.IPromise<any> {
+    return this.CustomerDialPlanServiceV2.get({
+      customerId: customerId,
+    }).$promise;
   }
 
 }
