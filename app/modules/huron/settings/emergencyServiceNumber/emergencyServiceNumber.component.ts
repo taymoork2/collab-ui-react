@@ -12,7 +12,7 @@ class EmergencyServiceNumberCtrl implements ng.IComponentController {
 
   public emergencyServiceNumberForm: ng.IFormController;
   public filterPlaceholder: string;
-  public missingEmergencyCallbackNumber: boolean;
+  public showMissingEmergencyCallbackNumber: boolean;
   public e911PendingError: boolean;
 
   /* @ngInject */
@@ -39,10 +39,14 @@ class EmergencyServiceNumberCtrl implements ng.IComponentController {
 
     if (emergencyCallbackNumber) {
       if (!_.isNull(emergencyCallbackNumber.currentValue)) {
-        this.missingEmergencyCallbackNumber = false;
-        this.selectedNumber = this.setCurrentOption(emergencyCallbackNumber.currentValue, this.externalNumberOptions);
+        this.showMissingEmergencyCallbackNumber = this.checkNumberIsAssigned(emergencyCallbackNumber.currentValue, this.externalNumberOptions) ? false : true;
+        this.selectedNumber = {
+          value: emergencyCallbackNumber.currentValue.uuid,
+          pattern: emergencyCallbackNumber.currentValue.pattern,
+          label: this.TelephoneNumberService.getDIDLabel(emergencyCallbackNumber.currentValue.pattern),
+        };
       } else {
-        this.missingEmergencyCallbackNumber = true;
+        this.showMissingEmergencyCallbackNumber = true;
         this.selectedNumber = null;
       }
 
@@ -84,19 +88,8 @@ class EmergencyServiceNumberCtrl implements ng.IComponentController {
     });
   }
 
-  private setCurrentOption(currentValue: EmergencyCallbackNumber, existingOptions: Array<IEmergencyNumberOption>): IEmergencyNumberOption {
-    let existingOption: IEmergencyNumberOption = _.find(existingOptions, { value: currentValue.uuid });
-    if (!existingOption) {
-      let currentExternalNumberOption: IEmergencyNumberOption = {
-        value: currentValue.uuid,
-        pattern: currentValue.pattern,
-        label: this.TelephoneNumberService.getDIDLabel(currentValue),
-      };
-      existingOptions.unshift(currentExternalNumberOption);
-      return currentExternalNumberOption;
-    } else {
-      return existingOption;
-    }
+  private checkNumberIsAssigned(currentValue: EmergencyCallbackNumber, existingOptions: Array<IEmergencyNumberOption>): Boolean {
+    return Boolean(_.find(existingOptions, { value: currentValue.uuid }));
   }
 
 }

@@ -96,7 +96,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
   }
 
   private initSettingsComponent(): ng.IPromise<any> {
-    return this.HuronSettingsOptionsService.getOptions().then(options => this.settingsOptions = options)
+    return this.HuronSettingsOptionsService.getOptions(this.Authinfo.getOrgId()).then(options => this.settingsOptions = options)
     .then( () => {
       return this.HuronSettingsService.get(this.siteId).then(huronSettingsData => this.huronSettingsData = huronSettingsData);
     });
