@@ -47,6 +47,7 @@
     'toaster',
     'rzModule',
     'dragularModule',
+    require('modules/core/users/userOverview').default,
     require('modules/core/analytics'),
     require('modules/core/featureToggle').default,
     require('modules/core/focus').default,
