@@ -17,7 +17,7 @@
         });
     }
 
-    function getSearchPlacesList(searchStr) { // need to support huron as well - but not supported by the backend yet...
+    function getSearchPlacesList(searchStr) {
       return $http.get(csdmPlacesUrl + "?type=all&query=" + searchStr)
         .then(function (res) {
           return CsdmConverter.convertPlaces(res.data);
