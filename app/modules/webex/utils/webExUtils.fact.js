@@ -1,10 +1,6 @@
 (function () {
   'use strict';
 
-  angular
-    .module('WebExApp')
-    .factory('WebExUtilsFact', WebExUtilsFact);
-
   /* @ngInject */
   function WebExUtilsFact(
     $q,
@@ -492,4 +488,7 @@
 
     return obj;
   } // webexUtilsFact()
+
+  module.exports = WebExUtilsFact;
+
 })();
