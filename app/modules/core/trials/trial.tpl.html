@@ -127,7 +127,8 @@
             cs-input-label="{{::'trials.call' | translate}}">
         </div>
         <div class="sub-section" ng-if="trial.showCare && (!trial.careTrial.paid || !trial.advanceCareTrial.paid)">
-          <h5 class="sub-section__label" translate="subscriptions.care"></h5>
+          <h5 translate="subscriptions.care"></h5>
+          <p class="body-small get-bottom-margin" translate="trials.careDescription"></p>
           <div class="cs-form-group row" ng-if="trial.showBasicCare" >
             <input cs-input type="checkbox"
               id="careTrial" name="careTrial"
