@@ -63,6 +63,7 @@ describe('Component: gmTelephonyDomains', () => {
       mockData.content.data.body = this.telephonyDomains;
       this.TelephonyDomainService.getTelephonyDomains.and.returnValue(this.$q.resolve(mockData));
       initComponent.call(this);
+      this.$scope.$emit('tdUpdated', true);
       expect(this.controller.gridOptions).toBeDefined();
     });
 
@@ -87,6 +88,16 @@ describe('Component: gmTelephonyDomains', () => {
 
       this.TelephonyDomainService.getTelephonyDomains.and.returnValue(this.$q.resolve());
       initComponent.call(this);
+      expect(this.$state.go).toHaveBeenCalled();
+    });
+
+    it('should call $state.go when show TD detail', function () {
+      let item = {
+        ccaDomainId: 'ccaDomainId',
+        domainName: 'domainName',
+      };
+      initComponent.call(this);
+      this.controller.showDetail(item);
       expect(this.$state.go).toHaveBeenCalled();
     });
   });

@@ -6,7 +6,7 @@
     .controller('TrialPstnCtrl', TrialPstnCtrl);
 
   /* @ngInject */
-  function TrialPstnCtrl($scope, $timeout, $translate, Analytics, Authinfo, Notification, PstnSetup, PstnSetupService, TelephoneNumberService, TrialPstnService, PstnSetupStatesService, FeatureToggleService) {
+  function TrialPstnCtrl($scope, $timeout, $translate, Analytics, Authinfo, Notification, PstnSetup, PstnSetupService, TelephoneNumberService, TrialPstnService, PstnSetupStatesService, FeatureToggleService, $q) {
     var vm = this;
 
     var NXX = 'nxx';
@@ -209,10 +209,10 @@
       vm.pstn.stateOptions = location.areas;
     }
 
-    function onProviderChange() {
+    function onProviderChange(reset) {
       vm.trialData.details.pstnProvider = PstnSetup.getProvider();
       vm.providerImplementation = vm.trialData.details.pstnProvider.apiImplementation;
-      resetNumberSearch();
+      resetNumberSearch(reset);
       vm.providerSelected = true;
     }
 
@@ -325,19 +325,55 @@
       return null;
     }
 
-    function removeOrder(order) {
-      vm.trialData.details.pstnNumberInfo.numbers.splice(vm.trialData.details.pstnNumberInfo.numbers.indexOf(order), 1);
+    function removeOrderFromCart(order) {
+      _.pull(vm.trialData.details.pstnNumberInfo.numbers, order);
       vm.maxSelection = 10 - vm.trialData.details.pstnNumberInfo.numbers.length;
     }
 
+    function removeOrder(order) {
+      PstnSetupService.releaseCarrierInventoryV2(PstnSetup.getCustomerId(), order.reservationId, order.data.numbers, PstnSetup.isCustomerExists())
+          .then(_.partial(removeOrderFromCart, order));
+    }
+
     function addToCart(searchResultsModel) {
+      var reservation;
+      var promises = [];
       _.forIn(searchResultsModel, function (value, _key) {
         if (value) {
           var key = _.parseInt(_key);
           var searchResultsIndex = (vm.paginateOptions.currentPage * vm.paginateOptions.pageSize) + key;
           if (searchResultsIndex < vm.searchResults.length && !vm.trialData.details.pstnNumberInfo.numbers.includes(vm.searchResults[searchResultsIndex])) {
-            vm.trialData.details.pstnNumberInfo.numbers.push(vm.searchResults[searchResultsIndex]);
+            var numbers = vm.searchResults[searchResultsIndex];
+            reservation = PstnSetupService.reserveCarrierInventoryV2(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), numbers, PstnSetup.isCustomerExists());
+            var promise = reservation
+              .then(function (reservationData) {
+                var order = {
+                  data: {
+                    numbers: numbers,
+                  },
+                  numberType: 'DID',
+                  orderType: 'NUMBER_ORDER',
+                  reservationId: reservationData.uuid,
+                };
+                vm.trialData.details.pstnNumberInfo.numbers.push(order);
+                // return the index to be used in the promise callback
+                return {
+                  searchResultsIndex: searchResultsIndex,
+                  searchResultsModelIndex: key,
+                };
+              }).catch(function (response) {
+                Notification.errorResponse(response);
+              });
+            promises.push(promise);
           }
+        }
+      });
+
+      $q.all(promises).finally(function () {
+        vm.addLoading = false;
+        // check if we need to decrement current page
+        if (vm.paginateOptions.currentPage >= vm.paginateOptions.numberOfPages()) {
+          vm.paginateOptions.currentPage--;
         }
       });
       vm.maxSelection = 10 - vm.trialData.details.pstnNumberInfo.numbers.length;
@@ -345,6 +381,7 @@
     }
 
     function searchCarrierInventory(value) {
+      vm.paginateOptions.currentPage = 0;
       if (value) {
         vm.trialData.details.pstnNumberInfo.areaCode = {
           code: ('' + value).slice(0, 3),
@@ -531,13 +568,15 @@
       $('#didAddField').tokenfield('setTokens', ',');
     }
 
-    function resetNumberSearch() {
+    function resetNumberSearch(reset) {
       vm.trialData.details.pstnNumberInfo.state = SELECT;
       vm.trialData.details.pstnNumberInfo.areaCode = SELECT;
       vm.pstn.areaCodeEnable = false;
       vm.trialData.details.pstnNumberInfo.nxx = '--';
       vm.pstn.nxxEnable = false;
-      resetNumbers();
+      if (reset) {
+        resetNumbers();
+      }
     }
 
   }

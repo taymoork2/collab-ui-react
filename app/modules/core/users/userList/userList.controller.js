@@ -10,7 +10,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
 
   /* @ngInject */
   function UserListCtrl($q, $rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Auth, Config, FeatureToggleService,
-    Log, LogMetricsService, Notification, Orgservice, Userservice, UserListService, Utils) {
+    Log, LogMetricsService, Notification, Orgservice, Userservice, UserListService, Utils, DirSyncService) {
 
     var vm = this;
 
@@ -189,6 +189,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
         getUsers: getUsers(startIndex),
         getPartners: getPartners(),
         getOrg: getOrg(),
+        getDirSyncStatus: getDirSyncStatus(),
       };
 
       return $q.all(promises)
@@ -380,26 +381,29 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     }
 
     function getOrg() {
-      var deferred = $q.defer();
-      var params = {
-        basicInfo: true,
-      };
-      if ($scope.obtainedOrgs) {
-        deferred.resolve();
-      } else {
-        Orgservice.getOrg(function (data, status) {
-          if (data.success) {
-            $scope.org = data;
-            $scope.dirsyncEnabled = !!data.dirsyncEnabled;
-            $scope.obtainedOrgs = true;
-            deferred.resolve();
-          } else {
-            Log.debug('Get existing org failed. Status: ' + status);
-            deferred.reject(data);
-          }
-        }, null, params);
-      }
-      return deferred.promise;
+      return $q(function (resolve, reject) {
+        if ($scope.obtainedOrgs) {
+          resolve();
+        } else {
+          Orgservice.getOrg(function (data, status) {
+            if (data.success) {
+              $scope.org = data;
+              $scope.obtainedOrgs = true;
+              resolve();
+            } else {
+              Log.debug('Get existing org failed. Status: ' + status);
+              reject(data);
+            }
+          }, null, { basicInfo: true });
+        }
+      });
+    }
+
+    function getDirSyncStatus() {
+      return DirSyncService.refreshStatus()
+        .finally(function () {
+          $scope.dirsyncEnabled = DirSyncService.isDirSyncEnabled();
+        });
     }
 
     function getUserLicenses(user) {

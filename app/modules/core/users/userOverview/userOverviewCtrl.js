@@ -160,7 +160,7 @@
       var userLicenses = vm.currentUser.licenseID;
       if (userLicenses) {
         for (var l = userLicenses.length - 1; l >= 0; l--) {
-          var licensePrefix = userLicenses[l].substring(0, 2);
+          var licensePrefix = userLicenses[l].substring(0, license.length);
           if (licensePrefix === license) {
             return true;
           }
@@ -260,14 +260,18 @@
       vm.services.push(commState);
 
       if (vm.currentUser.hasEntitlement('cloud-contact-center')) {
-        if (hasLicense('CD') || hasLicense('CV')) {
+        if (hasLicense('CDC') || hasLicense('CVC')) {
           SunlightConfigService.getUserInfo(vm.currentUser.id)
             .then(function () {
               var hasSyncKms = _.includes(vm.currentUser.roles, Config.backend_roles.spark_synckms);
               var hasCiscoucCES = _.includes(vm.currentUser.roles, Config.backend_roles.ciscouc_ces);
               var hasContextServiceEntitlement = _.includes(vm.currentUser.entitlements, Config.entitlements.context);
               if ((hasSyncKms && hasContextServiceEntitlement) || hasCiscoucCES) {
-                contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
+                if (hasLicense('CDC')) {
+                  contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
+                } else if (hasLicense('CVC')) {
+                  contactCenterState.detail = $translate.instant('onboardModal.paidContactCenterVoice');
+                }
                 vm.services.push(contactCenterState);
               }
             });

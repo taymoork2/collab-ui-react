@@ -34,6 +34,7 @@
 
   .block {
     margin-top: 1rem;
+    display: flex;
   }
 
   .block-child {
@@ -54,6 +55,14 @@
     justify-content: space-between;
     align-items: center;
 
+    &.center {
+      justify-content: center;
+
+      h1 {
+        padding-right: .5rem;
+      }
+    }
+
     .badge {
       margin-bottom: 0;
     }
@@ -61,5 +70,9 @@
 
   .search-results {
     margin-top: rem-calc(15);
+  }
+
+  .search-options {
+    margin-top: .5rem;
   }
 }

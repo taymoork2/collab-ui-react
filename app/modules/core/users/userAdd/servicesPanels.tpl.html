@@ -261,9 +261,7 @@
           tooltip-html-unsafe="{{careTooltip()}}">
           </i>
         </span>
-        <div class="entitle-check-grp"
-             ng-show="multipleSubscriptions.showLicenses(care.license.billingServiceId, care.license.isTrial)"
-             ng-if="care.license.licenseType !== 'freeCareService'">
+        <div class="entitle-check-grp" ng-show="multipleSubscriptions.showCareLicenses(careFeatures)" >
           <div class="ckbx" id="paidCare">
             <div class="cs-checkbox-group">
               <fieldset ng-disabled="!radioStates.msgRadio">

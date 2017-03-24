@@ -5,12 +5,16 @@
     @include vr-spacing(mt, .5);
     @include vr-spacing(mb, .5);
   }
-  p {
-    @include vr-spacing(mt, .25);
-    @include vr-spacing(mb, .25);
-    &::after {
-      position: absolute;
-      content: '.';
+  .help {
+    p {
+      @include vr-spacing(mt, .25);
+      @include vr-spacing(mb, .25);
+    }
+  }
+  .domainlist {
+    li {
+      list-style-position: inside;
+      @include vr-spacing(pl, 0);
     }
   }
   .icon {

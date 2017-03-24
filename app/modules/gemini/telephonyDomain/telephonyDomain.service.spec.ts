@@ -21,16 +21,16 @@ describe('Service: TelephonyDomainService', () => {
 
   beforeEach(function () {
     this.initModules(testModule);
-    this.injectDependencies('$httpBackend', 'UrlConfig', '$q', 'TelephonyDomainService');
-  });
-
-  afterEach(function () {
-    this.$httpBackend.verifyNoOutstandingExpectation();
-    this.$httpBackend.verifyNoOutstandingRequest();
+    this.injectDependencies('GmHttpService', '$scope', '$q', 'TelephonyDomainService');
   });
 
   it('should get correct data for getTelephonyDomains', function () {
+    spyOn(this.GmHttpService, 'httpGet').and.returnValue(this.$q.resolve());
+
     let mockData = this.preData;
+    let mockHttpResponse = {
+      data: mockData,
+    };
     mockData.content.data.body = [
       {
         domainName: 'Test12',
@@ -39,14 +39,35 @@ describe('Service: TelephonyDomainService', () => {
         status: '',
         webDomainName: 'TestWebDomaindHQrq',
       }];
-    let url = this.UrlConfig.getGeminiUrl() + 'telephonyDomains/' + 'customerId/' + this.customerId;
 
-    this.$httpBackend.expectGET(url).respond(200, mockData);
-    this.TelephonyDomainService.getTelephonyDomains(this.customerId)
-      .then((res) => {
-        expect(res.content.data.body.length).toBe(1);
-      });
-    this.$httpBackend.flush();
+    this.GmHttpService.httpGet.and.returnValue(this.$q.resolve(mockHttpResponse));
+    this.TelephonyDomainService.getTelephonyDomains(this.customerId).then((res) => {
+      expect(res.content.data.body.length).toBe(1);
+    });
+    this.$scope.$apply();
+  });
+
+  it('should get correct data for getTelephonyDomain', function () {
+    spyOn(this.GmHttpService, 'httpGet').and.returnValue(this.$q.resolve());
+
+    let mockData = this.preData;
+    let mockHttpResponse = {
+      data: mockData,
+    };
+    mockData.content.data.body = [
+      {
+        domainName: 'Test12',
+        primaryBridgeName: null,
+        backupBridgeName: null,
+        status: '',
+        webDomainName: 'TestWebDomaindHQrq',
+      }];
+
+    this.GmHttpService.httpGet.and.returnValue(this.$q.resolve(mockHttpResponse));
+    this.TelephonyDomainService.getTelephonyDomain(this.customerId, this.ccaDomainId).then((res) => {
+      expect(res.content.data.body.length).toBe(1);
+    });
+    this.$scope.$apply();
   });
 
   it('only generate header when export Telephony Domains list', function () {
@@ -58,6 +79,7 @@ describe('Service: TelephonyDomainService', () => {
     this.TelephonyDomainService.telephonyDomainsExportCSV(this.customerId).then((res) => {
       expect(res.length).toBe(1);
     });
+    this.$scope.$apply();
   });
 
   it('generate correct data with no primaryBridge when export Telephony Domains list', function () {
@@ -78,6 +100,7 @@ describe('Service: TelephonyDomainService', () => {
     this.TelephonyDomainService.telephonyDomainsExportCSV(this.customerId).then((res) => {
       expect(res[1].bridgeSet).toContain('N/A+');
     });
+    this.$scope.$apply();
   });
 
   it('generate correct data with no backupBridgeName when export Telephony Domains list', function () {
@@ -98,6 +121,7 @@ describe('Service: TelephonyDomainService', () => {
     this.TelephonyDomainService.telephonyDomainsExportCSV(this.customerId).then((res) => {
       expect(res[1].bridgeSet).toContain('+N/A');
     });
+    this.$scope.$apply();
   });
 
   it('generate correct data with no site when export Telephony Domains list', function () {
@@ -118,6 +142,7 @@ describe('Service: TelephonyDomainService', () => {
     this.TelephonyDomainService.telephonyDomainsExportCSV(this.customerId).then((res) => {
       expect(res.length).toBe(2);
     });
+    this.$scope.$apply();
   });
 
   it('generate correct data with multiple sites when export Telephony Domains list', function () {
@@ -144,10 +169,16 @@ describe('Service: TelephonyDomainService', () => {
     this.TelephonyDomainService.telephonyDomainsExportCSV(this.customerId).then((res) => {
       expect(res[2].domainName).toBe('');
     });
+    this.$scope.$apply();
   });
 
   it('should get notes for Telephony Domain', function () {
+    spyOn(this.GmHttpService, 'httpGet').and.returnValue(this.$q.resolve());
+
     let mockData = this.preData;
+    let mockHttpResponse = {
+      data: mockData,
+    };
     mockData.content.data.body = [
       {
         id: '9ce78fcf-1dff-499c-9bae-57ccef22e660',
@@ -163,29 +194,36 @@ describe('Service: TelephonyDomainService', () => {
         actionFor: 'Telephony Domain',
         email: 'feng5@mailinator.com',
       }];
-    let url = this.UrlConfig.getGeminiUrl() + 'activityLogs/' + this.customerId + '/' + this.ccaDomainId + '/add_note';
 
-    this.$httpBackend.expectGET(url).respond(200, mockData);
-    this.TelephonyDomainService.getNotes(this.customerId, this.ccaDomainId)
-      .then((res) => {
-        expect(res.content.data.body[0].objectName).toEqual('note');
-      });
-    this.$httpBackend.flush();
+    this.GmHttpService.httpGet.and.returnValue(this.$q.resolve(mockHttpResponse));
+    this.TelephonyDomainService.getNotes(this.customerId, this.ccaDomainId).then((res) => {
+      expect(res.content.data.body[0].objectName).toEqual('note');
+    });
+    this.$scope.$apply();
   });
 
   it('add new note for Telephony Domain', function () {
-    let url = this.UrlConfig.getGeminiUrl() + 'activityLogs';
+    spyOn(this.GmHttpService, 'httpPost').and.returnValue(this.$q.resolve());
 
-    this.$httpBackend.expectPOST(url).respond(200, this.preData);
-    this.TelephonyDomainService.postNotes()
-      .then((res) => {
-        expect(res.content.data.returnCode).toBe(0);
-      });
-    this.$httpBackend.flush();
+    let mockData = this.preData;
+    let mockHttpResponse = {
+      data: mockData,
+    };
+
+    this.GmHttpService.httpPost.and.returnValue(this.$q.resolve(mockHttpResponse));
+    this.TelephonyDomainService.postNotes().then((res) => {
+      expect(res.content.data.returnCode).toBe(0);
+    });
+    this.$scope.$apply();
   });
 
   it('should get histories for Telephony Domain', function () {
+    spyOn(this.GmHttpService, 'httpGet').and.returnValue(this.$q.resolve());
+
     let mockData = this.preData;
+    let mockHttpResponse = {
+      data: mockData,
+    };
     mockData.content.data.body = [
       {
         id: '9ce78fcf-1dff-499c-9bae-57ccef22e660',
@@ -201,13 +239,33 @@ describe('Service: TelephonyDomainService', () => {
         actionFor: 'Telephony Domain',
         email: 'feng5@mailinator.com',
       }];
-    let url = this.UrlConfig.getGeminiUrl() + 'activityLogs/' + this.customerId + '/' + this.ccaDomainId + '/Telephony%20Domain/' + this.domainName;
 
-    this.$httpBackend.expectGET(url).respond(200, mockData);
-    this.TelephonyDomainService.getHistories(this.customerId, this.ccaDomainId, this.domainName)
-      .then((res) => {
-        expect(res.content.data.body[0].objectName).toEqual('comment');
-      });
-    this.$httpBackend.flush();
+    this.GmHttpService.httpGet.and.returnValue(this.$q.resolve(mockHttpResponse));
+    this.TelephonyDomainService.getHistories(this.customerId, this.ccaDomainId, this.domainName).then((res) => {
+      expect(res.content.data.body[0].objectName).toEqual('comment');
+    });
+    this.$scope.$apply();
+  });
+
+  it('should move site for Telephony Domain', function () {
+    spyOn(this.GmHttpService, 'httpPut').and.returnValue(this.$q.resolve());
+
+    let mockData = this.preData;
+    let mockHttpResponse = {
+      data: mockData,
+    };
+    mockData.content.data.body = {
+      body: {
+        siteId: 858622,
+        siteName: 'xiaoyuantest2',
+        siteUrl: 'xiaoyuantest2.webex.com',
+      },
+    };
+
+    this.GmHttpService.httpPut.and.returnValue(this.$q.resolve(mockHttpResponse));
+    this.TelephonyDomainService.moveSite({}).then((res) => {
+      expect(res.content.data.body.body.siteId).toEqual(858622);
+    });
+    this.$scope.$apply();
   });
 });

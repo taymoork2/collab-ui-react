@@ -182,6 +182,10 @@
       color: $color-primary-base;
     }
   }
+
+  .message {
+    max-width: 100%;
+  }
 }
 
 .trials {
@@ -192,6 +196,23 @@
 
   .formly-field {
     padding-bottom: 6px;
+  }
+
+  .input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .cs-input-group .cs-input__secondary-label {
+    padding-top: 0.5625rem;
+    padding-bottom: 0.5625rem;
+  }
+  .cs-form-group.row {
+    margin-bottom: 0.5rem;
+    .row {
+      margin: 0;
+    }
   }
 
   .padding-l {
@@ -311,6 +332,10 @@
 
 .progress {
   margin-bottom: 0;
+}
+
+.get-bottom-margin {
+  @include vr-spacing(mb, 1);
 }
 
 .banner-msg {

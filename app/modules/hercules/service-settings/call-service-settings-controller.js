@@ -6,7 +6,7 @@
     .controller('CallServiceSettingsController', CallServiceSettingsController);
 
   /* @ngInject */
-  function CallServiceSettingsController($modal, Analytics, ServiceDescriptor, Authinfo, USSService, CertService, Notification, CertificateFormatterService, $translate, hasAtlasHybridCallDiagnosticTool, hasVoicemailFeatureToggle, UCCService) {
+  function CallServiceSettingsController($modal, Analytics, ServiceDescriptor, Authinfo, USSService, CertService, Notification, CertificateFormatterService, $translate, hasAtlasHybridCallDiagnosticTool, hasVoicemailFeatureToggle, Orgservice, UCCService) {
     var vm = this;
     vm.formattedCertificateList = [];
     vm.readCerts = readCerts;
@@ -42,32 +42,14 @@
     vm.callServiceConnect = {
       title: 'hercules.serviceNames.squared-fusion-ec',
     };
+    vm.isTestOrg = false;
+
+    Orgservice.isTestOrg()
+      .then(function (isTestOrg) {
+        vm.isTestOrg = isTestOrg;
+      });
 
     Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CALL_SETTINGS);
-
-    vm.storeEc = function (toggleConnect) {
-      if (!toggleConnect) {
-        ServiceDescriptor.enableService('squared-fusion-ec')
-          .then(function () {
-            readCerts();
-            Notification.success('hercules.notifications.connect.connectEnabled');
-          })
-          .catch(function (response) {
-            vm.squaredFusionEc = false;
-            Notification.errorWithTrackingId(response, 'hercules.errors.failedToEnableConnect');
-          });
-      } else {
-        ServiceDescriptor.disableService('squared-fusion-ec').then(function () {
-          Notification.success('hercules.notifications.connect.connectDisabled');
-          if (hasVoicemailFeatureToggle) {
-            vm.disableVoicemail(Authinfo.getOrgId());
-          }
-        })
-          .catch(function (response) {
-            Notification.errorWithTrackingId(response, 'hercules.error.failedToDisableConnect');
-          });
-      }
-    };
 
     vm.disableVoicemail = function (orgId) {
       UCCService.getOrgVoicemailConfiguration(orgId)
@@ -149,6 +131,20 @@
         });
     }
 
+    /* Callback from the hs-enable-disable-call-service-connect component  */
+    vm.onCallServiceConnectEnabled = function () {
+      vm.squaredFusionEc = true;
+      readCerts();
+    };
+
+    /* Callback from the hs-enable-disable-call-service-connect component  */
+    vm.onCallServiceConnectDisabled = function () {
+      vm.squaredFusionEc = false;
+      if (hasVoicemailFeatureToggle) {
+        vm.disableVoicemail(Authinfo.getOrgId());
+      }
+    };
+
     /* Callback from the verify-sip-destination component  */
     vm.onDestinationSave = function (warn) {
       vm.updateSipDomain(warn);
@@ -158,6 +154,7 @@
     vm.onDestinationClear = function () {
       vm.org.sipDomain = '';
     };
+
 
   }
 }());

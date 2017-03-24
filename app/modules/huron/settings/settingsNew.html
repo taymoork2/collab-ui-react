@@ -34,6 +34,7 @@
     </div>
     <div class="row full service-setup service-setup-regional-settings bottom-margin">
       <uc-extension-length
+        first-time-setup="$ctrl.ftsw"
         extension-length="$ctrl.huronSettingsData.site.extensionLength"
         on-change-fn="$ctrl.onExtensionLengthChanged(extensionLength)">
       </uc-extension-length>

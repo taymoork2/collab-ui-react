@@ -40,4 +40,17 @@ describe('Service: SpeedDialService', () => {
     });
     this.$httpBackend.flush();
   });
+
+  it('getUserName', function () {
+    let successSpy = jasmine.createSpy('success');
+    let failureSpy = jasmine.createSpy('failure');
+    this.$httpBackend.expectGET(this.HuronConfig.getCmiUrl() + '/common/customers/' + this.Authinfo.getOrgId() + '/users/1').respond(200);
+    this.SpeedDialService.getUserName(1).then(
+      successSpy,
+      failureSpy,
+    );
+    this.$httpBackend.flush();
+    expect(successSpy).toHaveBeenCalled();
+    expect(failureSpy).not.toHaveBeenCalled();
+  });
 });

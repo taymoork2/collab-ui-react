@@ -1950,11 +1950,6 @@
             url: '/overview',
             templateUrl: 'modules/core/partnerHome/partnerHome.tpl.html',
             controller: 'PartnerHomeCtrl',
-            resolve: {
-              trialForPaid: function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasStartTrialForPaid);
-              },
-            },
           })
           .state('partnerreports', {
             parent: 'partner',
@@ -2077,11 +2072,6 @@
             params: {
               filter: null,
             },
-            resolve: {
-              trialForPaid: function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasStartTrialForPaid);
-              },
-            },
           })
           .state('customer-overview', {
             parent: 'sidepanel',
@@ -2107,9 +2097,6 @@
                 function orgCallback(data) {
                   defer.resolve(data);
                 }
-              },
-              trialForPaid: function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasStartTrialForPaid);
               },
               data: /* @ngInject */ function ($state, $translate) {
                 $state.get('customer-overview').data.displayName = $translate.instant('common.overview');
@@ -2909,9 +2896,7 @@
             parent: 'context',
             views: {
               'subHeader': {
-                templateUrl: 'modules/context/resources/hybrid-context-resources-header.html',
-                controller: 'HybridContextResourcesCtrl',
-                controllerAs: 'contextResources',
+                template: '<context-resources-sub-header></context-resources-sub-header>',
               },
               'contextServiceView': {
                 template: '<hybrid-service-cluster-list service-id="\'contact-center-context\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>',
@@ -2940,6 +2925,31 @@
                 templateUrl: 'modules/context/fields/hybrid-context-fields.html',
                 controller: 'HybridContextFieldsCtrl',
                 controllerAs: 'contextFields',
+              },
+            },
+            resolve: {
+              hasContextDictionaryEditFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasContextDictionaryEdit);
+              },
+            },
+          })
+          .state('context-new-field', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                template: '<context-new-field-modal existing-field-ids="$resolve.existingFieldIds" create-callback="$resolve.createCallback" dismiss="$dismiss()" class="new-field-modal"></context-new-field-modal>',
+              },
+            },
+            params: {
+              existingFieldIds: [],
+              createCallback: function () {},
+            },
+            resolve: {
+              existingFieldIds: /* @ngInject */ function ($stateParams) {
+                return $stateParams.existingFieldIds;
+              },
+              createCallback: /* @ngInject */ function ($stateParams) {
+                return $stateParams.createCallback;
               },
             },
           })
@@ -3042,11 +3052,14 @@
           .state('private-trunk-overview', {
             url: '/privateTrunkOverview',
             parent: 'main',
-            template: '<private-trunk-overview></private-trunk-overview>',
+            template: '<private-trunk-overview has-private-trunk-feature-toggle="$resolve.hasPrivateTrunkFeatureToggle"></private-trunk-overview>',
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require(['modules/hercules/privateTrunk/privateTrunkOverview'], done);
               }),
+              hasPrivateTrunkFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.huronEnterprisePrivateTrunking);
+              },
             },
           })
           .state('context-cluster-sidepanel.host-details', {

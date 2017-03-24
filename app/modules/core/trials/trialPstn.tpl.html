@@ -25,7 +25,7 @@
     </div>
     <div ng-if="pstnTrial.ftHuronSupportThinktel">
       <uc-pstn-providers
-        on-change-fn="pstnTrial.onProviderChange()"
+        on-change-fn="pstnTrial.onProviderChange(true)"
         on-ready-fn="pstnTrial.onProviderReady()">
       </uc-pstn-providers>
       <hr>
@@ -77,10 +77,10 @@
           </pstn-selector>
         </div>
         <div class="flex-1">
-          <div class="provider-flex"><h1 class="h4">{{::pstnTrial.trialData.details.pstnProvider.title}}</h1><h1 class="h4"><span class="badge">{{pstnTrial.trialData.details.pstnNumberInfo.numbers.length}}</span></h1></div>
+          <div class="provider-flex center"><h1 class="h5" translate="pstnSetup.numberCart"></h1><h1 class="h4"><span class="badge badge--round info">{{pstnTrial.trialData.details.pstnNumberInfo.numbers.length}}</span></h1></div>
           <ul class="list-group">
-             <li class="list-group-item list-token" ng-repeat="order in pstnTrial.trialData.details.pstnNumberInfo.numbers">
-              <span>{{::order}}</span>
+             <li class="list-group-item list-token info" ng-repeat="order in pstnTrial.trialData.details.pstnNumberInfo.numbers">
+              <span>{{::order.data.numbers}}</span>
               <button type="button" class="close" ng-click="pstnTrial.removeOrder(order)"><span class="sr-only" translate="common.delete"></span></button>
             </li>
           </ul>

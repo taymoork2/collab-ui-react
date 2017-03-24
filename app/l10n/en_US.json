@@ -316,7 +316,8 @@
     "careServices": "Chat and Callback",
     "careVoiceServices": "Chat, Callback and Inbound Call",
     "enableCallInfo": "Cisco Spark Call is required for voice-based interactions.",
-    "paidContactCenter": "Care",
+    "paidContactCenterVoice": "Chat, Callback and Inbound Call",
+    "paidContactCenter": "Chat and Callback",
     "enterpriseEdition": "Enterprise Edition {{capacity}}",
     "meetingCenter": "Meeting Center {{capacity}}",
     "supportCenter": "Support Center {{capacity}}",
@@ -1083,6 +1084,7 @@
     "last": "Last"
   },
   "common": {
+    "activate": "Activate",
     "add": "Add",
     "agree": "Agree",
     "alert": "Alert",
@@ -1099,6 +1101,7 @@
     "cluster": "Cluster",
     "confirm": "Confirm",
     "continue": "Continue",
+    "create": "Create",
     "dateRange": "Date Range",
     "deactivate": "Deactivate",
     "delete": "Delete",
@@ -1111,6 +1114,7 @@
     "download": "Download",
     "edit": "Edit",
     "email": "Email",
+    "enable": "Enable",
     "enabled": "Enabled",
     "error": "Error",
     "finish": "Finish",
@@ -1992,7 +1996,8 @@
       "noClustersWillBeDeregistered": "Clusters will not be deregistered from Cisco Collaboration Cloud.",
       "deactivateServiceConfirmationButton": "Confirm Deactivation",
       "deactivateServiceConfirmationText": "You are about to deactivate {{serviceName}} from your Cisco Spark organization.",
-      "serviceWasDeactivated": "{{serviceName}} successfully deactivated."
+      "serviceWasDeactivated": "{{serviceName}} successfully deactivated.",
+      "connectWarning": "You are about to deactivate Hybrid Call Service Connect. Be aware that this action deletes all Cisco Spark remote device configuration and disables the service for all users."
     },
     "clusterListComponent": {
       "clusters-title-squared-fusion-cal": "Expressway Clusters",
@@ -2489,21 +2494,42 @@
     },
     "dictionary": {
       "welcome": "Welcome to the Context Dictionary",
+      "unavailable": "Unavailable",
+      "dataTypes": {
+        "boolean": "Boolean",
+        "double": "Double",
+        "integer": "Integer",
+        "string": "String"
+      },
       "fieldPage": {
         "associatedFieldsets": "Associated Fieldsets",
         "associatedFieldsetsError": "Unable to load associated fieldsets.",
+        "createNew": "Create New Field",
+        "fieldCreateSuccess": "Field created successfully! Add field to a fieldset to use in your application.",
+        "fieldCreateFailure": "Unable to create field. Try again or contact customer support.",
         "fieldId": "Field ID",
+        "fieldIdPlaceholder": "For eg. Invoice_Number",
+        "fieldIdInvalidCharactersError": "Only alpha-numeric characters, hyphen(-) or underscore (_) allowed",
+        "fieldIdUniqueError": "Field ID exists. Enter a different ID",
         "dataType": "Data Type",
+        "dataTypePlaceholder": "Select Data Type",
+        "descriptionPlaceholder": "Enter field details",
         "classification": "Data Privacy",
         "searchable": "Searchable",
         "searchableHelpText": "Make data in this field searchable.",
+        "label": "Label",
+        "labelHelpText": "Name of the field displayed in the application",
+        "labelPlaceholder": "Enter Label",
         "lastUpdated": "Date Updated",
         "startSearching": "To begin, search for a field",
         "noSearchResults": "Search yielded no results",
         "fieldReadFailed": "Unable to retrieve fields. Refresh your browser to try again.",
         "piiEncrypted": "PII Encrypted",
+        "PiiEncryptedHelpText": "Is encrypted and contains personally identifiable information",
         "encrypted": "Non-PII Encrypted",
+        "encryptedHelpText": "Is encrypted and contains no personally identifiable information",
         "unencrypted": "Unencrypted",
+        "unencryptedHelpText": "Is not encrypted and contains no personally identifiable information",
         "dateFormat": "MM/dd/yyyy",
         "noneFound": "No fields found"
       },
@@ -2553,7 +2579,7 @@
       "noProceed": "No, I need to install and configure the software.",
       "noProceed-helptext": "(Software will automatically download)",
       "noInfo": "Install and configure the software on your server and return to Cisco Cloud Collaboration Management to register your Hybrid Data Security Node.",
-      "noRetryInfo": "Software did not automatically download? <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/Media-Fusion-Management-Connector/mfusion.ova'>Try Again.</a>",
+      "noRetryInfo": "Software did not automatically download? <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/HybridDataSecurityProduction/hds.ova'>Try Again.</a>",
       "noDesc1": "For details on installation and configuration, visit ",
       "noDesc2": "Help Central.",
       "yesInfo1": "Assign your Hybrid Data Security Node to a cluster and enter the ",
@@ -3700,7 +3726,8 @@
     "retrieveSpeedDialsFail": "Failed to retrieve speed dials.",
     "speedDialChangesFailed": "Failed to save speed dial changes.",
     "labelIncorrectCharacter": "Speed Dial Labels can not include < or >",
-    "limitSpeedDialsReach": "You reached the limit of 125 speed dial entries."
+    "limitSpeedDialsReach": "You reached the limit of 125 speed dial entries.",
+    "blfPickup": "{{username}} can see and pickup ringing calls for ext. {{extension}}"
   },
   "internationalDialingPanel": {
     "success": "International Dialing configuration saved successfully",
@@ -3831,10 +3858,14 @@
     "serviceAddressConfirmation": "Is this the address?",
     "serviceAddressNotFound": "Unable to find address. Please update and try again.",
     "orderNumber": "Order Number",
+    "numberCart": "Number Cart",
+    "tollFreeTitle": "Search and add toll-free phone numbers by entering a valid area code. Valid toll-free area codes include {{areaCodes}}",
     "pstnSelector": {
       "searchPlaceholder": "Enter area code and/or number prefix",
       "searchDesc": "e.g. 972 or 972867",
-      "noResults": "No Numbers Found"
+      "noResults": "No Numbers Found",
+      "invalidFormat": "Invalid number format.",
+      "unavailableNPA": "Invalid area code."
     },
     "advancedOrder": {
       "noResults": "No search results but we have a solution.",
@@ -4128,14 +4159,14 @@
     "meeting": "Meeting 25 Party",
     "webex": "WebEx Enterprise Edition 200 with CMR/TNU+",
     "call": "Call",
+    "careDescription" : "Care services require Message as a prerequisite.<br>Additionally, Call is required for voice-based interactions.",
     "sparkCare": "Care",
-    "care": "Chat and Callback (K1)",
-    "advanceCare": "Chat, Callback and Inbound Call (K2)",
+    "care": "Chat and Callback",
+    "advanceCare": "Chat, Callback and Inbound Call",
     "callUsOnly": "Call (Currently U.S. only)",
     "supportSelectLocations": "Cisco Spark is supported in selected locations.  <a href='http://www.cisco.com/go/spark-availability' target='_blank' ng-click='{{click}}'>Learn more</a>",
-    "supportedLocationsCertification1": "I certify that this customer is in a ",
-    "supportedLocationsCertification2": " for Cisco Spark",
-    "supportedLocationsCertificationLinkText": "supported location",
+    "supportedLocationsCertification": "I certify that this customer is in a <a href=\"https://support.ciscospark.com/customer/portal/articles/1940194-where-is-cisco-spark-available\" target=\"_blank\">supported location</a> for Cisco Spark",
+    "supportedLocationWarning": "Please check the box above to certify that this customer is in a supported location for Cisco Spark",
     "context": "Enable Context Service for Cisco Unified Contact Center.",
     "roomSystem": "DX, MX or SX system",
     "sparkBoardSystem": "Cisco Spark Board",
@@ -4765,6 +4796,9 @@
       "legendcallReject": "Overflowed to Cloud",
       "legendcallLocalCluster": "Hosted On This Cluster",
       "legendcallRedirectedCluster": "Redirected to Another Cluster or Cloud",
+      "redirectedCluster": "Redirected by Cluster",
+      "nodesAdded": "Nodes Added",
+      "nodesUnavailable": "Nodes Unavailable",
       "availableTitle": "Available",
       "unavailableTitle": "Unavailable",
       "partialTitle": "Partially Available",
@@ -5730,7 +5764,14 @@
     "featuresNotYetConfiguredPage": {
       "createCareTemplate": "Create a Care Template",
       "createCareTemplateDesc": "A Care template is what your customer uses to contact customer care.",
+      "MessageLicenseMissing": "Message is mandatory for Care templates. To enable Message, <a ng-click=\"{{onclick}}\">contact your partner or Cisco sales</a>",
+      "CallLicenseMissing": "Call is mandatory for voice-based templates. To enable Call, <a ng-click=\"{{onclick}}\">contact your partner or Cisco sales</a>",
+      "MessageAndCallLicenseMissing": "Message and Call are mandatory for chat-based and voice-based templates respectively. To enable Message and Call, <a ng-click=\"{{onclick}}\">contact your partner or Cisco sales</a>",
       "new": "New"
+    },
+    "licensesMissing": {
+      "messageOnly": "Message is mandatory for Care templates. To enable Message, contact your partner or Cisco sales.",
+      "messageAndCall": "Message and Call are mandatory for chat-based and voice-based templates respectively. To enable Message and Call, contact your partner or Cisco sales."
     }
   },
   "huronDetails": {
@@ -6421,8 +6462,8 @@
       "CO": "Spark Call",
       "SD": "DX, MX or SX system",
       "SB": "Spark Board",
-      "CDC": "K1 Spark Care",
-      "CVC": "K2 Spark Care"
+      "CDC": "Chat and Callback",
+      "CVC": "Chat, Callback and Inbound Call"
     }
   },
   "onlineUpgradeModal": {
@@ -6890,23 +6931,30 @@
       },
       "privateTrunk": {
         "title": "Enterprise Private Trunking ",
-        "description": "Extends Your organization.",
+        "description": "Extends your organization lorem ipsum dolor sit amet consectetur adipiscing elit cras ut imperdiet augue.",
         "buttons": {
-          "verify": "Verify prerequisites"
+          "verify": "Verify prerequisites",
+          "view": "View prerequisites"
         },
+        "prereqTitle": "Private Trunking Prerequisites",
         "setupTitle": "Set up Private Trunking ",
-        "setupDescription": "You are about to set up Enterprise Private Trunking. Before you begin, verify that you have completed the prerequisites",
+        "setupDescription": "Before you set up Private Trunking, complete the following prerequisites. See the <a ng-click=\"{{onclick}}\">documentation</a> for guidance.",
         "domainVerification": "Domain verification",
-        "domainVerificationDescription": "You don't have any verified domain. You need at least one verified domain for setting up Enterprise Private Trunking.",
+        "domainError": "You don't have any verified domain. You need at least one verified domain for setting up Enterprise Private Trunking. ",
         "verifyADomain": "Verify a domain",
-        "basicConnectivity": "Basic connectivity",
+        "verifiedDomain": "You have multiple verified domains.",
+        "aVerifiedDomain": "is a verfied domain",
+        "basicConnectivity": "Basic connectivity between the cloud and on-premises",
         "certificateHelp": "The Spark Call certificate authority are in the Expresssway-E trust store. See ",
-        "help": "help",
+        "help": "<a ng-click=\"{{onclick}}\">help</a>.",
         "dNSzoneHelp": "The DNS zone has been created on the Expressway-E to accept the inbound connection from the cloud. See ",
         "defaultTrustHelp": "Use Certificates provided from the Cisco Collaboration default trust list or upload your own. If you use your own, make sure that the host names are on a verified domain. See ",
         "fullService": "Full service: in and outbound calling",
         "allZonesHelp": "All zones and rules must be set up on Expressway-E. See ",
-        "routingHelp": "The correct routing must be configured on CUCM. See "
+        "routingHelp": "The correct routing must be configured on CUCM. See ",
+        "redirectMsg": "Verified Domain Not found",
+        "redirect": "Redirect to Settings Domain",
+        "addDomain": "Add Domain"
       }
     },
     "showMore": "View all",

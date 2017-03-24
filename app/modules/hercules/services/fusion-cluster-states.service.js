@@ -136,10 +136,11 @@
       return getSeverity(mostSevereConnector);
     }
 
-    function getSeverity(connectorOrState) {
+    function getSeverity(connectorOrState, property) {
+      property = property || 'state';
       var stateSeverity = getStateSeverity(connectorOrState);
       return {
-        name: connectorOrState ? (connectorOrState.state || connectorOrState) : '',
+        name: _.isString(connectorOrState) ? connectorOrState : connectorOrState[property],
         severity: stateSeverity,
         label: getSeverityLabel(stateSeverity),
         cssClass: getSeverityCssClass(stateSeverity),

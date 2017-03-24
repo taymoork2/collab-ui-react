@@ -8,6 +8,8 @@ describe('orgService', function () {
   var httpBackend, Orgservice, Auth, Authinfo, Config, Log, UrlConfig;
   var eftSettingRegex = /.*\/settings\/eft\.*/;
 
+  var currentOrgId = 'bar';
+
   beforeEach(function () {
     angular.mock.module(function ($provide) {
       Auth = {
@@ -15,7 +17,7 @@ describe('orgService', function () {
       };
 
       Authinfo = {
-        getOrgId: jasmine.createSpy().and.returnValue('bar'),
+        getOrgId: jasmine.createSpy().and.returnValue(currentOrgId),
       };
 
       UrlConfig = {
@@ -604,6 +606,46 @@ describe('orgService', function () {
 
       expect(promise).toBeRejected();
     });
+  });
+
+  describe('isTestOrg ', function () {
+
+    it('should call the correct adminService URL', function () {
+
+      var orgId = 'JoseM';
+      httpBackend.expectGET(UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '?basicInfo=true&disableCache=false').respond(200, {});
+      Orgservice.isTestOrg(orgId);
+      httpBackend.flush();
+    });
+
+    it('should default to the current orgId if none is provided', function () {
+
+      httpBackend.expectGET(UrlConfig.getAdminServiceUrl() + 'organizations/' + currentOrgId + '?basicInfo=true&disableCache=false').respond(200, {});
+      Orgservice.isTestOrg();
+      httpBackend.flush();
+    });
+
+    it('should hit the cache if you check the same org twice', function () {
+      httpBackend.expectGET(UrlConfig.getAdminServiceUrl() + 'organizations/' + currentOrgId + '?basicInfo=true&disableCache=false').respond(200, {});
+      Orgservice.isTestOrg();
+      httpBackend.flush();
+      Orgservice.isTestOrg();
+      httpBackend.verifyNoOutstandingExpectation();
+      httpBackend.verifyNoOutstandingRequest();
+    });
+
+    it('should not hit the cache when you check two different orgs', function () {
+      var org1 = 'Man United';
+      var org2 = 'Man City';
+      httpBackend.expectGET(UrlConfig.getAdminServiceUrl() + 'organizations/' + org1 + '?basicInfo=true&disableCache=false').respond(200, {});
+      httpBackend.expectGET(UrlConfig.getAdminServiceUrl() + 'organizations/' + org2 + '?basicInfo=true&disableCache=false').respond(200, {});
+      Orgservice.isTestOrg(org1);
+      Orgservice.isTestOrg(org2);
+      httpBackend.flush();
+      httpBackend.verifyNoOutstandingExpectation();
+      httpBackend.verifyNoOutstandingRequest();
+    });
+
   });
 
 });
