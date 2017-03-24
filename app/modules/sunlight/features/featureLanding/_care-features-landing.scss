@@ -94,6 +94,16 @@
       color: $gray-darker;
     }
   }
+
+  .tooltip {
+    .c-nub {
+      max-width: 250px;
+    }
+  }
+
+  .tooltip-wrapper-div {
+    display: inline-block;
+  }
 }
 
 .no-features {
