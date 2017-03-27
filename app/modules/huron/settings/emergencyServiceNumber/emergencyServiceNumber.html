@@ -9,7 +9,6 @@
     is-error="{{$ctrl.pendingError}}"
     is-warn="{{$ctrl.showMissingEmergencyCallbackNumber}}"
     warn-msg="{{::'settingsServiceNumber.warning' | translate}}"
-    required="true"
     filter="true"
     refresh-data-fn="$ctrl.getNumbers(filter)">
   </cs-select>

@@ -45,7 +45,7 @@ class CompanyCallerId implements ng.IComponentController {
 
   public onCompanyCallerIdToggled(toggleValue: boolean): void {
     if (toggleValue) {
-      this.selectedNumber = this.externalNumberOptions[0].value;
+      this.selectedNumber = _.get<string>(this.externalNumberOptions, '[0].value');
       let companyNumber = new CompanyNumber({
         name: this.customerName,
         pattern: this.selectedNumber,

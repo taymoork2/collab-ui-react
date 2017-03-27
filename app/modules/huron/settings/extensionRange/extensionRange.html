@@ -12,6 +12,7 @@
         updateOn: 'default blur',
         debounce: { 'default': 600, 'blur': 0 }
       }"
+      ng-change="$ctrl.onExtensionRangeChange()"
       ng-pattern="/^[0-9]*$/"
       ng-maxlength="$ctrl.site.extensionLength"
       ng-minlength="$ctrl.site.extensionLength"
@@ -35,6 +36,7 @@
         updateOn: 'default blur',
         debounce: { 'default': 600, 'blur': 0 }
       }"
+      ng-change="$ctrl.onExtensionRangeChange()"
       ng-pattern="/^[0-9]*$/"
       ng-maxlength="$ctrl.site.extensionLength"
       ng-minlength="$ctrl.site.extensionLength"
