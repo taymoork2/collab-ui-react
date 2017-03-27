@@ -205,14 +205,18 @@
     color: $color-people-base;
   }
 
-  .greyed {
-    color: $gray-base;
+  .feature-icon-disabled {
+    color: $gray-light-1;
     background: $gray-light-3;
   }
 
   .feature-label-container {
     @include vr-spacing(pt, 2);
     color: $color-people-base;
+  }
+
+  .feature-label-disabled {
+    color: $gray-base;
   }
 
   .feature-description-container {
