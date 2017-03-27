@@ -7,10 +7,9 @@
 
   /*@ngInject*/
   function ServiceStateChecker($q, $translate, Authinfo, ClusterService, DomainManagementService, FeatureToggleService, FusionClusterService, HybridServicesUtils, NotificationService, Orgservice, ServiceDescriptor, USSService, Notification) {
-    var vm = this;
-    vm.isSipUriAcknowledged = false;
-    vm.hasSipUriDomainConfigured = false;
-    vm.hasVerifiedDomains = false;
+    var isSipUriAcknowledged = false;
+    var hasSipUriDomainConfigured = false;
+    var hasVerifiedDomains = false;
     var allExpresswayServices = ['squared-fusion-uc', 'squared-fusion-ec', 'squared-fusion-cal', 'squared-fusion-mgmt'];
     var servicesWithUserAssignments = ['squared-fusion-uc', 'squared-fusion-ec', 'squared-fusion-cal', 'squared-fusion-gcal'];
 
@@ -30,7 +29,7 @@
       if (serviceId !== 'squared-fusion-uc' && serviceId !== 'squared-fusion-ec') {
         return;
       }
-      if (vm.hasVerifiedDomains) {
+      if (hasVerifiedDomains) {
         return;
       }
       DomainManagementService.getVerifiedDomains()
@@ -44,7 +43,7 @@
             );
           } else {
             NotificationService.removeNotification('noDomains');
-            vm.hasVerifiedDomains = true;
+            hasVerifiedDomains = true;
           }
         });
     }
@@ -78,7 +77,7 @@
 
     function setSipUriNotificationAcknowledgedAndRemoveNotification() {
       NotificationService.removeNotification('sipUriDomainEnterpriseNotConfigured');
-      vm.isSipUriAcknowledged = true;
+      isSipUriAcknowledged = true;
     }
 
     function addNotification(notificationId, serviceId, notification) {
@@ -157,27 +156,25 @@
     }
 
     function handleAtlasSipUriDomainEnterpriseNotification(serviceId) {
-      if (!vm.isSipUriAcknowledged) {
-        FeatureToggleService.supports(FeatureToggleService.features.atlasSipUriDomainEnterprise)
-          .then(function (support) {
-            if (support) {
-              if (vm.hasSipUriDomainConfigured) {
-                return;
-              }
-              Orgservice.getOrg(function (data, status) {
-                if (status === 200) {
-                  if (data && data.orgSettings && data.orgSettings.sipCloudDomain) {
-                    NotificationService.removeNotification('sipUriDomainEnterpriseNotConfigured');
-                    vm.hasSipUriDomainConfigured = true;
-                  } else {
-                    addNotification('sipUriDomainEnterpriseNotConfigured', [serviceId], 'modules/hercules/notifications/sip_uri_domain_enterprise_not_set.html');
-                  }
-                }
-              });
-            } else {
+      if (!isSipUriAcknowledged) {
+
+        if (hasSipUriDomainConfigured) {
+          return;
+        }
+        var params = {
+          basicInfo: true,
+        };
+        Orgservice.getOrg(function (data, status) {
+          if (status === 200) {
+            if (data && data.orgSettings && data.orgSettings.sipCloudDomain) {
               NotificationService.removeNotification('sipUriDomainEnterpriseNotConfigured');
+              hasSipUriDomainConfigured = true;
+            } else {
+              addNotification('sipUriDomainEnterpriseNotConfigured', [serviceId], 'modules/hercules/notifications/sip_uri_domain_enterprise_not_set.html');
             }
-          });
+          }
+        }, null, params);
+
       }
     }
 
@@ -264,19 +261,19 @@
     }
 
     // Do not show these alarms as the checkUserStatuses() notifications already covers the fact that your have users in the error state
-    vm.alarmsKeysToIgnore = ['uss.thresholdAlarmTriggered', 'uss.groupThresholdAlarmTriggered'];
-    vm.serviceAlarmPrefix = 'serviceAlarm_';
+    var alarmsKeysToIgnore = ['uss.thresholdAlarmTriggered', 'uss.groupThresholdAlarmTriggered'];
+    var serviceAlarmPrefix = 'serviceAlarm_';
     function checkServiceAlarms(serviceId) {
       FusionClusterService.getAlarms(serviceId)
         .then(function (alarms) {
           var alarmsWeCareAbout = _.filter(alarms, function (alarm) {
-            return !_.includes(vm.alarmsKeysToIgnore, alarm.key);
+            return !_.includes(alarmsKeysToIgnore, alarm.key);
           });
 
           // Find the notifications raised for previous alarms
           var existingServiceAlarmIds = _.chain(NotificationService.getNotifications())
             .filter(function (notification) {
-              return _.startsWith(notification.id, vm.serviceAlarmPrefix);
+              return _.startsWith(notification.id, serviceAlarmPrefix);
             })
             .map(function (notification) {
               return notification.id;
@@ -285,7 +282,7 @@
 
           // Raise notifications for the current alarms
           _.forEach(alarmsWeCareAbout, function (alarm) {
-            var notificationId = vm.serviceAlarmPrefix + alarm.key + '_' + alarm.alarmId;
+            var notificationId = serviceAlarmPrefix + alarm.key + '_' + alarm.alarmId;
             NotificationService.addNotification(
               alarm.severity,
               notificationId,

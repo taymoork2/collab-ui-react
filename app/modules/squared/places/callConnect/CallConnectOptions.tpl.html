@@ -1,23 +1,72 @@
 <div class="modal-header">
-  <button type="button" class="close" ng-click="$dismiss()">
+  <button type="button" class="close" ng-click="callConnectOptions.close()">
   </button>
   <h3 class="modal-title" translate="{{callConnectOptions.title}}"></h3>
 </div>
 <div class="modal-body">
-  <div>
-    <form name="placesEditServices" class="chooseServiceForm" onsubmit="$('#next-button').click()">
-      <h4 translate="addDeviceWizard.sparkCallConnect.editSettingsTitle"></h4>
-      <div class="callServiceRow">
-        <div class="callServiceTitle">
-          <i class="icon icon-circle-call modal-icon-flex-row icon-lg"></i>
-          <h3 translate="onboardModal.call"></h3>
-        </div>
-        <div>
-          This is the options for the Call Service Connect
+
+  <form name="placesEditServices" class="chooseServiceForm" onsubmit="callConnectOptions.submitForm()">
+    <h4 translate="addDeviceWizard.sparkCallConnect.editSettingsTitle"></h4>
+    <div class="callServiceRow">
+      <span class="circle">1</span>
+      <label>In Cisco Unified Communications Manager, create a user account and an associated line. These items will
+        represent this place.
+        <a href="https://www.cisco.com/go/hybrid-services">See the documentation for help.<a/>
+      </label>
+    </div>
+    <div class="callServiceRow">
+      <span class="circle">2</span>
+      <label>Find the Mail ID for the user account.
+        a) Sign into Cisco Unified CM Administration
+        b) Choose User Management > End User, and then find and click the account.
+        The Mail ID is under ‘User Information’.</label>
+    </div>
+    <div class="callServiceRow emailControlsParent">
+      <span class="circle">3</span>
+      <div class="callServiceControls">
+        <label>
+          Enter the Mail ID below to connect this place to the existing Unified CM account.
+          This Mail ID ensures that the correct user account is connected with this place for hybrid calling.
+        </label>
+        <div class="cs-radio-group callServiceControls emailControls">
+          <label for="email" translate="Mail ID"></label>
+          <input id="email" type="email" autocomplete="off" ng-model="callConnectOptions.mailID">
         </div>
       </div>
-    </form>
-  </div>
+
+    </div>
+    <div class="callServiceRow" ng-if="callConnectOptions.getResourceGroupShow()">
+      <span class="circle">4</span>
+      <div class="callServiceControls">
+        <div class="callServiceControls" ng-if="!callConnectOptions.resourceGroup.cannotFindResouceGroup">
+          <label translate="hercules.resourceGroups.setPlaceDescription"></label>
+          <cs-select
+            class="selectResourceGroup"
+            ng-model="callConnectOptions.resourceGroup.selected"
+            options="callConnectOptions.resourceGroup.options"
+            on-change-fn="callConnectOptions.selectedResourceGroupChanged()">
+          </cs-select>
+          <div class="warning-message" ng-if="callConnectOptions.resourceGroup.shouldWarn">
+            <i class="icon icon-warning"></i>
+            <p class="message"
+               translate="hercules.resourceGroups.groupIsEmptyWarning"
+               translate-values="{ConnectorName: localizedConnectorName}">
+            </p>
+          </div>
+        </div>
+        <div ng-if="callConnectOptions.resourceGroup.cannotFindResouceGroup" class="error-message">
+          <i class="icon icon-error"></i>
+          <p class="message"
+             translate="hercules.resourceGroups.groupHasBeenDeleted"></p>
+          <form>
+            <button class="btn" type="submit" ng-click="callConnectOptions.setResourceGroup('')">
+              <span translate="common.remove"></span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </form>
 </div>
 <div class="modal-footer">
 
@@ -33,7 +82,8 @@
     loading="callConnectOptions.isLoading"
     class="btn btn--primary"
     ng-class="{'ng-hide':callConnectOptions.hasNextStep()}"
-    ng-click="callConnectOptions.save()">
+    ng-click="callConnectOptions.save()"
+    ng-disabled="callConnectOptions.isSaveDisabled()">
     <span translate="common.save"></span>
   </button>
   <button
@@ -41,7 +91,8 @@
     id="next-button"
     class="btn btn--primary"
     ng-class="{'ng-hide':!callConnectOptions.hasNextStep()}"
-    ng-click="callConnectOptions.next()">
+    ng-click="callConnectOptions.next()"
+    ng-disabled="callConnectOptions.isNextDisabled()">
     <span translate="common.next"></span>
   </button>
 </div>

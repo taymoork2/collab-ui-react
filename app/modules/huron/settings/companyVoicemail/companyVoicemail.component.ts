@@ -1,5 +1,4 @@
 import { Site } from 'modules/huron/sites';
-import { CustomerVoice } from 'modules/huron/customer';
 import { IOption } from 'modules/huron/dialing/dialing.service';
 
 class ComapnyVoicemailCtrl implements ng.IComponentController {
@@ -11,7 +10,7 @@ class ComapnyVoicemailCtrl implements ng.IComponentController {
   public missingDirectNumbers: boolean;
   public filterPlaceholder: string;
   public externalNumberOptions: Array<IOption>;
-  public customerVoice: CustomerVoice;
+  public dialPlanCountryCode: string;
   public onChangeFn: Function;
   public onVoicemailToEmailChangedFn: Function;
   public onNumberFilter: Function;
@@ -34,6 +33,11 @@ class ComapnyVoicemailCtrl implements ng.IComponentController {
 
     if (externalNumberOptions) {
       if (externalNumberOptions.currentValue && _.isArray(externalNumberOptions.currentValue)) {
+        if (externalNumberOptions.currentValue.length === 0) {
+          this.missingDirectNumbers = true;
+        } else {
+          this.missingDirectNumbers = false;
+        }
       }
     }
 
@@ -56,7 +60,7 @@ class ComapnyVoicemailCtrl implements ng.IComponentController {
     if (this.externalVoicemailAccess) {
       this.onChange(_.get<string>(this.selectedNumber, 'value'), 'false', true);
     } else {
-      let pilotNumber = this.ServiceSetup.generateVoiceMailNumber(this.Authinfo.getOrgId(), this.customerVoice.dialPlanDetails.countryCode);
+      let pilotNumber = this.ServiceSetup.generateVoiceMailNumber(this.Authinfo.getOrgId(), this.dialPlanCountryCode);
       this.onChange(pilotNumber, 'true', true);
     }
   }
@@ -66,10 +70,11 @@ class ComapnyVoicemailCtrl implements ng.IComponentController {
       let pilotNumber: string = '';
       if (this.selectedNumber && this.selectedNumber.value) {
         pilotNumber = this.selectedNumber.value;
+        this.onChange(pilotNumber, 'false', value);
       } else {
-        pilotNumber = this.ServiceSetup.generateVoiceMailNumber(this.Authinfo.getOrgId(), this.customerVoice.dialPlanDetails.countryCode);
+        pilotNumber = this.ServiceSetup.generateVoiceMailNumber(this.Authinfo.getOrgId(), this.dialPlanCountryCode);
+        this.onChange(pilotNumber, 'true', value);
       }
-      this.onChange(pilotNumber, 'true', value);
     } else {
       this.onChange(null, null, value);
     }
@@ -95,14 +100,14 @@ class ComapnyVoicemailCtrl implements ng.IComponentController {
     });
   }
 
-  private setCurrentOption(currentValue: string, existionOptions: Array<IOption>) {
-    let existingOption: IOption = _.find(existionOptions, { value: currentValue });
+  private setCurrentOption(currentValue: string, existingOptions: Array<IOption>): IOption {
+    let existingOption: IOption = _.find(existingOptions, { value: currentValue });
     if (!existingOption) {
       let currentExternalNumberOption: IOption = {
         value: currentValue,
         label: this.TelephoneNumberService.getDIDLabel(currentValue),
       };
-      existionOptions.unshift(currentExternalNumberOption);
+      existingOptions.unshift(currentExternalNumberOption);
       return currentExternalNumberOption;
     } else {
       return existingOption;
@@ -116,7 +121,7 @@ export class CompanyVoicemailComponent implements ng.IComponentOptions {
   public templateUrl = 'modules/huron/settings/companyVoicemail/companyVoicemail.html';
   public bindings = {
     site: '<',
-    customerVoice: '<',
+    dialPlanCountryCode: '<',
     companyVoicemailEnabled: '<',
     voicemailToEmail: '<',
     externalNumberOptions: '<',

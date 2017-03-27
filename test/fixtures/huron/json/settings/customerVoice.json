@@ -1,0 +1,62 @@
+{
+  "name": "jeff is awesome",
+  "callManagerGroupServiceAddress": "cms-vip-a-01-internal.na-int1.huron-int.com",
+  "callManagerGroup": {
+    "uuid": "c9368db2-9003-4a35-8e62-23b5522ce025",
+    "name": "CMG-1-2",
+    "clusterId": "2eb94e1b-cd6d-4212-9f26-76943a26c3a3"
+  },
+  "callManagerGroupMembers": {
+    "callManagerGroupMember": [
+      {
+        "callManager": {
+          "uuid": "70f974f5-c7eb-477a-ac63-344741e9fb8f",
+          "name": "CM_cms-01-internal.na-int1.huron-int.com",
+          "processNode": {
+            "uuid": "f4d525a4-c449-48db-ae3e-3bc7888e296e",
+            "name": "cms-01-internal.na-int1.huron-int.com"
+          }
+        },
+        "priority": "0",
+        "uuid": "14cb409e-40ee-4b04-b494-1e8cdaa6ce8a"
+      },
+      {
+        "callManager": {
+          "uuid": "407e11b0-c3bc-4e47-b591-cb20ca249994",
+          "name": "CM_cms-02-internal.na-int1.huron-int.com",
+          "processNode": {
+            "uuid": "67daa8de-3fe7-4c1b-8261-6db0fb6297c6",
+            "name": "cms-02-internal.na-int1.huron-int.com"
+          }
+        },
+        "priority": "1",
+        "uuid": "8afcbe92-442d-42fa-9e8d-9f066c9a1a4a"
+      }
+    ]
+  },
+  "mediaTraversalMode": "TURNOnly",
+  "carrier": null,
+  "carrierIdCode": null,
+  "countryIsoCode": "US",
+  "regionCode": "",
+  "dialPlan": null,
+  "dialPlanDetails": {
+    "regionCodeRequired": null,
+    "steeringDigitRequired": null,
+    "callingSearchSpace": null,
+    "supportMultipleRegions": null,
+    "steeringDigitPattern": null,
+    "supportSiteCode": null,
+    "supportSiteSteeringDigit": null,
+    "extensionGenerated": null,
+    "countryCode": "+1"
+  },
+  "uuid": "5787a49e-e8db-4d05-a08f-b62c10b37f30",
+  "url": "https://cmi.huron-int.com/api/v1/voice/customers/5787a49e-e8db-4d05-a08f-b62c10b37f30",
+  "links": [
+    {
+      "rel": "voice",
+      "href": "/api/v1/voice/customers/5787a49e-e8db-4d05-a08f-b62c10b37f30"
+    }
+  ]
+}

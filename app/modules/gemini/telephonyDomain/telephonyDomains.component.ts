@@ -22,6 +22,7 @@ class TelephonyDomains implements ng.IComponentController {
     private gemService,
     private $stateParams,
     private $scope: IGridApiScope,
+    private $rootScope: ng.IRootScopeService,
     private Notification: Notification,
     private $filter: ng.IFilterService,
     private $state: ng.ui.IStateService,
@@ -36,10 +37,21 @@ class TelephonyDomains implements ng.IComponentController {
   }
 
   public $onInit(): void {
+    this.listenTdUpdated();
 
     this.initParameters();
     this.setGridOptions();
     this.$scope.$emit('headerTitle', this.companyName);
+  }
+
+  private listenTdUpdated(): void {
+    let deregister = this.$rootScope.$on('tdUpdated', () => {
+      this.gridData = [];
+      this.gridRefresh = true;
+      this.setGridData();
+      this.setGridOptions();
+    });
+    this.$scope.$on('$destroy', deregister);
   }
 
   public filterList(searchStr: string) {
@@ -108,8 +120,10 @@ class TelephonyDomains implements ng.IComponentController {
           let text = 'N/A';
           let text_ = (item.backupBridgeName || 'N/A') + ' + ' + (item.primaryBridgeName || 'N/A');
 
+          item.domainName = item.telephonyDomainName || item.domainName;
           item.totalSites = item.telephonyDomainSites.length;
           item.bridgeSet = (!item.primaryBridgeName && !item.backupBridgeName) ? text : text_;
+          item.webDomainName = !item.webDomainName ? text : item.webDomainName;
           item.status_ = (item.status ? this.$translate.instant('gemini.cbgs.field.status.' + item.status) : '');
         });
         this.gridData = this.gridData_ =  data;

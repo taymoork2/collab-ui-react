@@ -75,7 +75,6 @@ describe('OnboardCtrl: Ctrl', function () {
 
     spyOn(this.Notification, 'notify');
 
-    spyOn(this.Orgservice, 'getHybridServiceAcknowledged').and.returnValue(this.$q.when(this.mock.fusionServices));
     spyOn(this.Orgservice, 'getUnlicensedUsers').and.callFake(function (callback) {
       callback(this.mock.unlicensedUsers, 200);
     }.bind(this));
@@ -806,93 +805,10 @@ describe('OnboardCtrl: Ctrl', function () {
         };
       });
       beforeEach(initController);
-      it('should enable message when either K1 is selected', function () {
-        this.$scope.radioStates.careRadio = this.$scope.careRadioValue.K1;
-        this.$scope.controlCare();
-        expect(this.$scope.msgCheckedDueToCare).toBe(true);
-        expect(this.$scope.radioStates.msgRadio).toBe(true);
-      });
-      it('should enable message when either K2 is selected', function () {
-        this.$scope.radioStates.careRadio = this.$scope.careRadioValue.K1;
-        this.$scope.controlCare();
-        expect(this.$scope.msgCheckedDueToCare).toBe(true);
-        expect(this.$scope.radioStates.msgRadio).toBe(true);
-      });
-      it('should select None radio button in care column whenever message is unchecked, if K1 was selected', function () {
-        this.$scope.radioStates.careRadio = this.$scope.careRadioValue.K1;
-        this.$scope.controlCare();
-        this.$scope.radioStates.msgRadio = false;
-        this.$scope.controlMsg();
-        expect(this.$scope.msgCheckedDueToCare).toBe(false);
-        expect(this.$scope.radioStates.careRadio).toBe(this.$scope.careRadioValue.NONE);
-      });
-      it('should select None radio button in care column whenever message is unchecked, if K2 was selected', function () {
-        this.$scope.radioStates.careRadio = this.$scope.careRadioValue.K2;
-        this.$scope.controlCare();
-        this.$scope.radioStates.msgRadio = false;
-        this.$scope.controlMsg();
-        expect(this.$scope.msgCheckedDueToCare).toBe(false);
-        expect(this.$scope.radioStates.careRadio).toBe(this.$scope.careRadioValue.NONE);
-      });
-      it('should uncheck message if it was checked due to selecting K1 and then selecting None', function () {
-        this.$scope.radioStates.careRadio = this.$scope.careRadioValue.K1;
-        this.$scope.controlCare();
-        expect(this.$scope.msgCheckedDueToCare).toBe(true);
-        expect(this.$scope.radioStates.msgRadio).toBe(true);
-
-        // now select None in care radio button, message should be unchecked
-        this.$scope.radioStates.careRadio = this.$scope.careRadioValue.NONE;
-        this.$scope.controlCare();
-        expect(this.$scope.msgCheckedDueToCare).toBe(false);
-        expect(this.$scope.radioStates.msgRadio).toBe(false);
-      });
-      it('should uncheck message if it was checked due to selecting K2 and then selecting None', function () {
-        this.$scope.radioStates.careRadio = this.$scope.careRadioValue.K2;
-        this.$scope.controlCare();
-        expect(this.$scope.msgCheckedDueToCare).toBe(true);
-        expect(this.$scope.radioStates.msgRadio).toBe(true);
-
-        // now select None in care radio button, message should be unchecked
-        this.$scope.radioStates.careRadio = this.$scope.careRadioValue.NONE;
-        this.$scope.controlCare();
-        expect(this.$scope.msgCheckedDueToCare).toBe(false);
-        expect(this.$scope.radioStates.msgRadio).toBe(false);
-      });
-      it('should not uncheck message if it was not checked due to K1 and then selecting None, either from K1 or K2', function () {
+      it('should select None radio button when message is unchecked', function () {
         this.$scope.radioStates.msgRadio = true;
-        this.$scope.controlMsg();
-        expect(this.$scope.msgCheckedDueToCare).toBe(false);
-        expect(this.$scope.radioStates.msgRadio).toBe(true);
-        // now select K1 or K2
         this.$scope.radioStates.careRadio = this.$scope.careRadioValue.K1;
-        this.$scope.controlCare();
-        expect(this.$scope.msgCheckedDueToCare).toBe(false);
-        // now select None, message should remain checked
-        this.$scope.radioStates.careRadio = this.$scope.careRadioValue.NONE;
-        this.$scope.controlCare();
-        expect(this.$scope.msgCheckedDueToCare).toBe(false);
-        expect(this.$scope.radioStates.msgRadio).toBe(true);
-      });
-      it('should not uncheck message if it was not checked due to K2 and then selecting None, either from K1 or K2', function () {
-        this.$scope.radioStates.msgRadio = true;
         this.$scope.controlMsg();
-        expect(this.$scope.radioStates.msgRadio).toBe(true);
-        // now select K1 or K2
-        this.$scope.radioStates.careRadio = this.$scope.careRadioValue.K2;
-        this.$scope.controlCare();
-        // now select None, message should remain checked
-        this.$scope.radioStates.careRadio = this.$scope.careRadioValue.NONE;
-        this.$scope.controlCare();
-        expect(this.$scope.radioStates.msgRadio).toBe(true);
-      });
-      it('should select None radio button always, if message was explicitly checked', function () {
-        this.$scope.radioStates.msgRadio = true;
-        this.$scope.controlMsg();
-        expect(this.$scope.radioStates.msgRadio).toBe(true);
-        // now select K1 or K2
-        this.$scope.radioStates.careRadio = this.$scope.careRadioValue.K1;
-        this.$scope.controlCare();
-        // now select None, message should remain checked
         this.$scope.radioStates.msgRadio = false;
         this.$scope.controlMsg();
         expect(this.$scope.radioStates.careRadio).toBe(this.$scope.careRadioValue.NONE);
@@ -997,6 +913,7 @@ describe('OnboardCtrl: Ctrl', function () {
         this.userId = 'dbca1001-ab12-cd34-de56-abcdef123454';
         spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
         spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
+        spyOn(this.Authinfo, 'getMessageServices').and.returnValue(this.mock.getMessageServices.singleLicense);
         spyOn(this.Authinfo, 'getCareServices').and.returnValue(this.mock.getCareServices.careLicense);
         spyOn(this.LogMetricsService, 'logMetrics').and.callFake(function () {});
         this.$stateParams.currentUser = {
@@ -1012,6 +929,7 @@ describe('OnboardCtrl: Ctrl', function () {
       beforeEach(initController);
 
       it('should call getAccountLicenses correctly', function () {
+        this.$scope.radioStates.msgRadio = true;
         this.$scope.radioStates.careRadio = this.$scope.careRadioValue.K1;
         this.$scope.getAccountLicenses();
         expect(this.$scope.radioStates.careRadio).toBe(this.$scope.careRadioValue.K1);
@@ -1025,6 +943,7 @@ describe('OnboardCtrl: Ctrl', function () {
         this.userId = 'dbca1001-ab12-cd34-de56-abcdef123454';
         spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
         spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
+        spyOn(this.Authinfo, 'getMessageServices').and.returnValue(this.mock.getMessageServices.singleLicense);
         spyOn(this.Authinfo, 'getCareServices').and.returnValue(this.mock.getCareServices.careLicense);
         spyOn(this.LogMetricsService, 'logMetrics').and.callFake(function () {});
         this.$stateParams.currentUser = {
@@ -1040,6 +959,7 @@ describe('OnboardCtrl: Ctrl', function () {
       beforeEach(initController);
 
       it('should call getAccountLicenses correctly', function () {
+        this.$scope.radioStates.msgRadio = true;
         this.$scope.radioStates.careRadio = this.$scope.careRadioValue.K1;
         this.$scope.getAccountLicenses();
         expect(this.$scope.radioStates.careRadio).toBe(this.$scope.careRadioValue.K1);
@@ -1053,6 +973,7 @@ describe('OnboardCtrl: Ctrl', function () {
         this.userId = 'dbca1001-ab12-cd34-de56-abcdef123454';
         spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
         spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
+        spyOn(this.Authinfo, 'getMessageServices').and.returnValue(this.mock.getMessageServices.singleLicense);
         spyOn(this.Authinfo, 'getCareServices').and.returnValue(this.mock.getCareVoiceServices.careVoiceLicense);
         spyOn(this.LogMetricsService, 'logMetrics').and.callFake(function () {});
         this.$stateParams.currentUser = {
@@ -1068,6 +989,7 @@ describe('OnboardCtrl: Ctrl', function () {
       beforeEach(initController);
 
       it('should call getAccountLicenses correctly', function () {
+        this.$scope.radioStates.msgRadio = true;
         this.$scope.radioStates.careRadio = this.$scope.careRadioValue.K2;
         this.$scope.getAccountLicenses();
         this.$scope.setCareService();
@@ -1082,6 +1004,7 @@ describe('OnboardCtrl: Ctrl', function () {
         this.userId = 'dbca1001-ab12-cd34-de56-abcdef123454';
         spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
         spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
+        spyOn(this.Authinfo, 'getMessageServices').and.returnValue(this.mock.getMessageServices.singleLicense);
         spyOn(this.Authinfo, 'getCareServices').and.returnValue(this.mock.getCareVoiceServices.careVoiceLicense);
         spyOn(this.LogMetricsService, 'logMetrics').and.callFake(function () {});
         this.$stateParams.currentUser = {
@@ -1097,6 +1020,7 @@ describe('OnboardCtrl: Ctrl', function () {
       beforeEach(initController);
 
       it('should call getAccountLicenses correctly', function () {
+        this.$scope.radioStates.msgRadio = true;
         this.$scope.radioStates.careRadio = this.$scope.careRadioValue.K2;
         this.$scope.getAccountLicenses();
         this.$scope.setCareService();
@@ -1132,7 +1056,7 @@ describe('OnboardCtrl: Ctrl', function () {
         this.$scope.controlMsg();
         this.$scope.radioStates.initialCareRadioState = this.$scope.careRadioValue.NONE;
         this.$scope.radioStates.careRadio = this.$scope.careRadioValue.K1;
-        this.$scope.controlCare();
+
         var licenseFeatures = this.$scope.getAccountLicenses();
         this.$scope.setCareService();
         expect(licenseFeatures[0].id).toBe('MS_07bbaaf5-735d-4878-a6ea-d67d69feb1c0');
@@ -1145,6 +1069,7 @@ describe('OnboardCtrl: Ctrl', function () {
       });
 
       it('should call LogMetrics service when care None radio button is selected', function () {
+        this.$scope.radioStates.msgRadio = true;
         this.$scope.radioStates.initialCareRadioState = this.$scope.careRadioValue.K1;
         this.$scope.radioStates.careRadio = this.$scope.careRadioValue.NONE;
         this.$scope.getAccountLicenses();

@@ -12,6 +12,7 @@ describe('EditCalendarService component:', () => {
       '$httpBackend',
       'ServiceDescriptor',
       'CsdmDataModelService',
+      'USSService',
       '$q',
     );
     test = this;
@@ -275,7 +276,7 @@ describe('EditCalendarService component:', () => {
 
   });
 
-  describe('save 2', () => {
+  describe('save', () => {
     beforeEach(() => {
       let id = 'asvawoei0a';
       spyOn(test.ServiceDescriptor, 'getServices').and.returnValue(test.$q.resolve([{
@@ -318,6 +319,7 @@ describe('EditCalendarService component:', () => {
         state.controller.calService = FUSION_CAL_ENTITLEMENT;
         state.controller.emailOfMailbox = email;
         spyOn(test.CsdmDataModelService, 'updateCloudberryPlace').and.returnValue(test.$q.resolve());
+        spyOn(test.USSService, 'updateUserProps').and.returnValue(test.$q.resolve({}));
         state.controller.save();
         test.$rootScope.$digest();
 
@@ -340,6 +342,7 @@ describe('EditCalendarService component:', () => {
         state.controller.calService = FUSION_GCAL_ENTITLEMENT;
         state.controller.emailOfMailbox = email;
         spyOn(test.CsdmDataModelService, 'updateCloudberryPlace').and.returnValue(test.$q.resolve());
+        spyOn(test.USSService, 'updateUserProps').and.returnValue(test.$q.resolve({}));
         state.controller.save();
         test.$rootScope.$digest();
 

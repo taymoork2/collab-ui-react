@@ -5,14 +5,16 @@
   <!-- main side panel body -->
   <cs-sp-container>
     <div class="section-wrapper">
-      <input
-          cs-input
-          type="text"
-          id="fieldId"
-          ng-model="$ctrl.field.id"
-          cs-input-group-size="medium-12"
-          cs-input-label="{{'context.dictionary.fieldPage.fieldId' | translate}}"
-          readonly="true">
+      <div class="cs-input-group">
+        <p class="cs-input-label" translate="context.dictionary.fieldPage.fieldId"></p>
+        <input
+            cs-input
+            type="text"
+            id="fieldId"
+            ng-model="$ctrl.field.id"
+            cs-input-group-size="medium-12"
+            disabled>
+      </div>
     </div>
 
     <div class="cs-input-group">
@@ -74,8 +76,9 @@
     </div>
 
     <div class="cs-input-group">
-      <div class="feature-name" translate="context.dictionary.fieldPage.lastUpdated"></div>
-      <div class="feature-status">{{$ctrl.lastUpdated}}</div>
+      <p class="cs-input-label"  translate="context.dictionary.fieldPage.lastUpdated"></p>
+      <div class="feature-status" ng-if="$ctrl.lastUpdated">{{$ctrl.lastUpdated}}</div>
+      <div class="feature-status" ng-if="!$ctrl.lastUpdated" translate="context.dictionary.unavailable"></div>
     </div>
 
   </cs-sp-container>

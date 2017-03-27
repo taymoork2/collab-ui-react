@@ -14,8 +14,7 @@ describe('Controller: Partner Reports', () => {
       'CardUtils',
       'ReportService',
       'GraphService',
-      'DummyReportService',
-      'FeatureToggleService');
+      'DummyReportService');
 
     this.activeUserData = getJSONFixture('core/json/partnerReports/activeUserData.json');
     this.callMetricsData = getJSONFixture('core/json/partnerReports/callMetricsData.json');
@@ -40,7 +39,6 @@ describe('Controller: Partner Reports', () => {
     };
 
     spyOn(this.CardUtils, 'resize');
-    spyOn(this.FeatureToggleService, 'atlasReportsUpdateGetStatus').and.returnValue(this.$q.when(true));
     spyOn(this.$rootScope, '$broadcast').and.returnValue({});
     spyOn(this, '$timeout').and.callThrough();
 

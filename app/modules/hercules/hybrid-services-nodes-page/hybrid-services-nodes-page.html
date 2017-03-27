@@ -12,12 +12,27 @@
   </thead>
   <tbody ng-repeat="node in $ctrl.data.nodes | orderBy:'name'">
     <tr class="hostname">
-      <td colspan="4">{{node.name}}</td>
+      <td colspan="4">
+        {{::node.name}}
+        <div class="pull-right">
+          <span translate="hercules.nodesPage.serial" translate-value-serial="{{::node.serial}}"></span>
+          <span cs-dropdown>
+            <button cs-dropdown-toggle class="actions-button btn--link dropdown-toggle" translate="common.actions"></button>
+            <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
+              <li>
+                <a target="_blank" ng-href="https://{{::node.name}}/">
+                  <span translate="hercules.nodesPage.goToNode"></span>
+                </a>
+              </li>
+            </ul>
+          </span>
+        </div>
+      </td>
     </tr>
     <tr class="connector-row" ng-repeat="connector in node.connectors | orderBy:'connectorType':false:$ctrl.hybridConnectorsComparator" ng-click="$ctrl.openSidepanel(connector)" ng-class="{'active': $ctrl.isSidepanelOpen(connector)}">
-      <td>{{connector.service}}</td>
-      <td><span class="icon icon-circle status-indicator" ng-class="connector.status.cssClass"></span> {{connector.statusName}}</td>
-      <td>{{connector.version}}</td>
+      <td>{{::connector.service}}</td>
+      <td><span class="icon icon-circle status-indicator" ng-class="connector.status.cssClass"></span> {{::connector.statusName}}</td>
+      <td>{{::connector.version}}</td>
     </tr>
   </tbody>
 </table>

@@ -4,7 +4,7 @@
   angular.module('Core')
     .controller('ShowActivationCodeCtrl', ShowActivationCodeCtrl);
   /* @ngInject */
-  function ShowActivationCodeCtrl($q, UserListService, OtpService, CsdmDataModelService, CsdmHuronPlaceService, $stateParams, ActivationCodeEmailService, $translate, Notification, CsdmEmailService) {
+  function ShowActivationCodeCtrl($q, UserListService, OtpService, CsdmDataModelService, CsdmHuronPlaceService, $stateParams, ActivationCodeEmailService, $translate, Notification, CsdmEmailService, USSService) {
     var vm = this;
     var wizardData = $stateParams.wizard.state().data;
     vm.title = wizardData.title;
@@ -17,6 +17,7 @@
       deviceType: wizardData.account.deviceType,
       cisUuid: wizardData.account.cisUuid,
       isEntitledToHuron: wizardData.account.isEntitledToHuron,
+      ussProps: wizardData.account.ussProps,
     };
 
     vm.hideBackButton = wizardData.function === 'showCode';
@@ -79,11 +80,23 @@
             createCodeForCloudberryAccount(vm.account.cisUuid).then(success, error);
           } else { // New place
             createCloudberryPlace(vm.account.name, wizardData.account.entitlements, wizardData.account.directoryNumber,
-              wizardData.account.externalNumber, wizardData.account.externalCalendarIdentifier ? [wizardData.account.externalCalendarIdentifier] : null,
+              wizardData.account.externalNumber, getExternalLinkedAccounts(),
               wizardData.account.ussProps || null)
               .then(function (place) {
                 vm.account.cisUuid = place.cisUuid;
-                createCodeForCloudberryAccount(vm.account.cisUuid).then(success, error);
+                $q.all({
+                  createCode: createCodeForCloudberryAccount(vm.account.cisUuid),
+                  saveRGroup: updateResourceGroup(vm.account.cisUuid, vm.account.ussProps),
+                }).then(function (s) {
+                  if (s && s.createCode) {
+                    success(s.createCode);
+                  } else {
+                    error(s);
+                  }
+                }, function (e) {
+                  error(e);
+                });
+
               }, error);
           }
         } else { // Personal (never create new)
@@ -124,6 +137,17 @@
       vm.isLoading = false;
     }
 
+    function getExternalLinkedAccounts() {
+      var extLinkedAcc = [];
+      if (wizardData.account.externalCalendarIdentifier) {
+        extLinkedAcc.push(wizardData.account.externalCalendarIdentifier);
+      }
+      if (wizardData.account.externalHybridCallIdentifier) {
+        extLinkedAcc.push(wizardData.account.externalHybridCallIdentifier);
+      }
+      return extLinkedAcc.length > 0 ? extLinkedAcc : null;
+    }
+
     function createHuronPlace(name, entitlements, directoryNumber, externalNumber) {
       return CsdmDataModelService.createCmiPlace(name, entitlements, directoryNumber, externalNumber);
     }
@@ -147,6 +171,19 @@
 
     function createCodeForCloudberryAccount(cisUuid) {
       return CsdmDataModelService.createCodeForExisting(cisUuid);
+    }
+
+    function updateResourceGroup(cisUuid, ussProps) {
+      if (!ussProps) {
+        return $q.resolve({});
+      }
+      ussProps.userId = cisUuid;
+      USSService.updateUserProps(ussProps).then(function (s) {
+        return s;
+      }, function (e) {
+        Notification.errorResponse(e, 'addDeviceWizard.showActivationCode.failedResourceGroup');
+        return e;
+      });
     }
 
     function success(code) {

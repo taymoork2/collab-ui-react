@@ -3,7 +3,7 @@ import testModule from '../index';
 describe('Component: gmTdDetails', () => {
   beforeEach(function () {
     this.initModules(testModule);
-    this.injectDependencies('$q', '$scope', '$state', '$stateParams', 'gemService', 'Notification', 'TelephonyDomainService');
+    this.injectDependencies('$q', '$scope', '$state', '$stateParams', 'gemService', 'Notification', 'TelephonyDomainService', '$modal');
 
     initSpies.apply(this);
     this.$stateParams.info = {
@@ -77,6 +77,19 @@ describe('Component: gmTdDetails', () => {
         actionFor: 'Telephony Domain',
         email: 'feng5@mailinator.com',
       }];
+    this.sites = [
+      {
+        ccaDomainid: '8a607bdb59baadf5015aaba2d1731b48',
+        ccaDomainName: 'CCA_E_Atlas-Test-5_hmwd_00000',
+        siteId: 858622,
+        siteName: 'xiaoyuantest2',
+        siteUrl: 'xiaoyuantest2.webex.com',
+        mappingStatus: 4,
+        completeTime: '2017-03-17 08:41:14',
+        remedyTicketId: null,
+        oldCcaDomainId: '8a607bdb59baadf5015a650a2003157e',
+        oldCcaDomainName: 'CCA_E_Atlas-Test-5_hmwd_0520_Bing_TD_02',
+      }];
 
     this.histories = [
       {
@@ -89,7 +102,7 @@ describe('Component: gmTdDetails', () => {
         objectName: null,
         siteID: '8a607bdb59baadf5015a650a2003157e',
         customerID: 'ff808081527ccb3f0153116a3531041e',
-        action: 'submit_td_move_site',
+        action: 'edit_td_move_site',
         actionFor: 'Telephony Domain',
         email: 'liqing@qa.webex.com',
       }];
@@ -102,6 +115,9 @@ describe('Component: gmTdDetails', () => {
     spyOn(this.TelephonyDomainService, 'getTelephonyDomain').and.returnValue(this.$q.resolve());
     spyOn(this.TelephonyDomainService, 'getNotes').and.returnValue(this.$q.resolve());
     spyOn(this.TelephonyDomainService, 'getHistories').and.returnValue(this.$q.resolve());
+    spyOn(this.TelephonyDomainService, 'updateTelephonyDomainStatus').and.returnValue(this.$q.resolve());
+    spyOn(this.$modal, 'open').and.returnValue({ result: this.$q.resolve() });
+    spyOn(this.$state, 'go');
   }
 
   function initComponent() {
@@ -119,7 +135,8 @@ describe('Component: gmTdDetails', () => {
       this.TelephonyDomainService.getHistories.and.returnValue(this.$q.reject({ status: 404 }));
 
       initComponent.call(this);
-      this.$scope.$emit('refreshNotes', this.notes);
+      this.$scope.$emit('tdNotesUpdated', this.notes);
+      this.$scope.$emit('tdSitesUpdated', this.sites);
       expect(this.Notification.errorResponse).toHaveBeenCalled();
     });
 
@@ -211,4 +228,66 @@ describe('Component: gmTdDetails', () => {
     });
   });
 
+  describe('TD status', () => {
+    it('Should call Notification.errorResponse for submission cancellation when request or response error occurred', function () {
+      this.gemService.getRemedyTicket.and.returnValue(this.$q.reject({ status: 404 }));
+      this.TelephonyDomainService.getTelephonyDomain.and.returnValue(this.$q.reject({ status: 404 }));
+      this.TelephonyDomainService.updateTelephonyDomainStatus.and.returnValue(this.$q.reject( { status: 404 } ));
+      initComponent.call(this);
+      this.controller.model = {
+        telephonyDomainId: 'mockTelephonyDomainId',
+        btnCancelLoading: true,
+        btnCancelDisable: false,
+      };
+      this.controller.updateTelephonyDomainStatus('cancel');
+      this.$scope.$apply();
+      expect(this.Notification.errorResponse).toHaveBeenCalled();
+    });
+
+    it('Should call Notification.error for submission cancellation when the returnCode is not 0', function () {
+      this.preData.content.data.body = this.telephonyDomain;
+      this.gemService.getRemedyTicket.and.returnValue(this.$q.reject({ status: 404 }));
+      this.TelephonyDomainService.getTelephonyDomain.and.returnValue(this.$q.resolve( this.preData ));
+      this.preData.content.data.returnCode = 100;
+      this.TelephonyDomainService.updateTelephonyDomainStatus.and.returnValue(this.$q.resolve( this.preData ));
+      initComponent.call(this);
+      this.controller.model = {
+        telephonyDomainId: 'mockTelephonyDomainId',
+        btnCancelLoading: true,
+        btnCancelDisable: false,
+      };
+      this.controller.updateTelephonyDomainStatus('cancel');
+      this.$scope.$apply();
+      expect(this.Notification.error).toHaveBeenCalled();
+    });
+
+    it('Should cancel submission successfully', function () {
+      this.preData.content.data.body = this.telephonyDomain;
+      this.gemService.getRemedyTicket.and.returnValue(this.$q.reject({ status: 404 }));
+      this.TelephonyDomainService.getTelephonyDomain.and.returnValue(this.$q.resolve( this.preData ));
+      this.preData.content.data.returnCode = 0;
+      this.TelephonyDomainService.updateTelephonyDomainStatus.and.returnValue(this.$q.resolve( this.preData ));
+      initComponent.call(this);
+      this.controller.model = {
+        telephonyDomainId: 'mockTelephonyDomainId',
+        btnCancelLoading: true,
+        btnCancelDisable: false,
+      };
+      this.controller.updateTelephonyDomainStatus('cancel');
+      this.$scope.$apply();
+      expect(this.$state.go).toHaveBeenCalled();
+    });
+
+    it('Should open the modal dialog to confirm submission cancellation when cancel request', function () {
+      this.preData.content.data.body = this.telephonyDomain;
+      this.gemService.getRemedyTicket.and.returnValue(this.$q.reject({ status: 404 }));
+      this.TelephonyDomainService.getTelephonyDomain.and.returnValue(this.$q.resolve( this.preData ));
+      this.preData.content.data.returnCode = 0;
+      this.TelephonyDomainService.updateTelephonyDomainStatus.and.returnValue(this.$q.resolve( this.preData ));
+      initComponent.call(this);
+      this.controller.onCancelSubmission();
+      this.$scope.$apply();
+      expect(this.$modal.open).toHaveBeenCalled();
+    });
+  });
 });

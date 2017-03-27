@@ -17,8 +17,8 @@ class PreferredLanguageCtrl implements ng.IComponentController {
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
-    let preferredLanguageChanges = changes['preferredLanguage'];
-    if (preferredLanguageChanges && preferredLanguageChanges.currentValue) {
+    const { preferredLanguage } = changes;
+    if (preferredLanguage && preferredLanguage.currentValue) {
       this.selected = _.find(this.preferredLanguageOptions, { value: this.preferredLanguage });
     }
   }

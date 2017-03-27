@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: CustomerListCtrl', function () {
-  var $httpBackend, $q, $controller, $state, $scope, Authinfo, Config, HuronConfig, FeatureToggleService, Notification, Orgservice, PartnerService, trialForPaid, TrialService;
+  var $httpBackend, $q, $controller, $state, $scope, Authinfo, Config, HuronConfig, FeatureToggleService, Notification, Orgservice, PartnerService, TrialService;
   var controller;
 
   var adminJSONFixture = getJSONFixture('core/json/organizations/adminServices.json');
@@ -55,8 +55,6 @@ describe('Controller: CustomerListCtrl', function () {
       CUSTOMER: 2,
     };
 
-    trialForPaid = false;
-
     spyOn($state, 'go');
     spyOn(Notification, 'error');
 
@@ -70,12 +68,16 @@ describe('Controller: CustomerListCtrl', function () {
     spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
       $q.resolve(false)
     );
+    spyOn(FeatureToggleService, 'atlasCareInboundTrialsGetStatus').and.returnValue(
+      $q.resolve(false)
+    );
     spyOn(Orgservice, 'getAdminOrg').and.callFake(function (callback) {
       callback(adminJSONFixture.getAdminOrg, 200);
     });
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
       callback(getJSONFixture('core/json/organizations/Orgservice.json').getOrg, 200);
     });
+    spyOn(Orgservice, 'isTestOrg').and.returnValue($q.resolve(true));
 
     spyOn(TrialService, 'getTrial').and.returnValue($q.resolve());
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
@@ -88,7 +90,6 @@ describe('Controller: CustomerListCtrl', function () {
       $state: $state,
       Authinfo: Authinfo,
       Config: Config,
-      trialForPaid: trialForPaid,
     });
 
     $scope.$apply();

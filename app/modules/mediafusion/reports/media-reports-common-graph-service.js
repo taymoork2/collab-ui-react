@@ -125,9 +125,10 @@
       }
     }
 
-    function getBaseExportForGraph(fields, fileName, columnNames) {
+    function getBaseExportForGraph(fields, fileName, columnNames, iconDiv) {
       baseVariables['export'] = {
         'enabled': true,
+        'divId': iconDiv,
         'exportFields': fields,
         'columnNames': columnNames,
         'fileName': fileName,
@@ -295,11 +296,12 @@
         'valueField': 'value',
         'startDuration': 0,
         'labelRadius': 5,
-        'radius': '42%',
-        'innerRadius': '40%',
+        'radius': '36%',
+        'innerRadius': '55%',
         'colorField': 'color',
-        'labelText': '[[name]]: [[percents]]% ([[value]])',
-        'dataProvider': data.dataProvider,
+        'labelText': '[[name]]',
+        'balloonText': '[[name]]: [[percents]]% ([[value]])',
+        'dataProvider': data,
         'outlineThickness': 0,
         'hoverAlpha': 0.5,
         'marginBottom': 5,
@@ -324,7 +326,7 @@
         'startDuration': 0,
         'labelRadius': 5,
         'radius': '42%',
-        'innerRadius': '40%',
+        'innerRadius': '60%',
         'labelText': '[[title]]',
         'marginBottom': 5,
         'marginLeft': 5,

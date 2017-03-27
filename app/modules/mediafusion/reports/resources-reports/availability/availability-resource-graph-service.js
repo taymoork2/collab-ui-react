@@ -7,6 +7,7 @@
 
     var vm = this;
     vm.availabilitydiv = 'availabilitydiv';
+    vm.exportDiv = 'availability-div';
     vm.AXIS = 'axis';
     vm.LEGEND = 'legend';
 
@@ -130,7 +131,7 @@
       cluster = _.replace(cluster, /\s/g, '_');
       daterange = _.replace(daterange, /\s/g, '_');
       var ExportFileName = 'MediaService_Availability_' + cluster + '_' + daterange + '_' + new Date();
-      var chartData = CommonReportsGraphService.getGanttGraph(data.data[0].clusterCategories, valueAxis, CommonReportsGraphService.getBaseExportForGraph(exportFields, ExportFileName, columnNames), catAxes);
+      var chartData = CommonReportsGraphService.getGanttGraph(data.data[0].clusterCategories, valueAxis, CommonReportsGraphService.getBaseExportForGraph(exportFields, ExportFileName, columnNames, vm.exportDiv), catAxes);
       chartData.legend = CommonReportsGraphService.getBaseVariable(vm.LEGEND);
       chartData.legend.labelText = '[[title]]';
       chartData.legend.data = legend;

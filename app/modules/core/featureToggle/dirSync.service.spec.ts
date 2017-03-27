@@ -6,6 +6,7 @@ describe('DirSyncService', () => {
   const DIR_SYNC_REGEX = /.*\/organization\/.*\/dirsync$/;
   const DIR_SYNC_MODE_REGEX = /.*\/organization\/.*\/dirsync\/mode?.*/;
   const DIR_SYNC_CONNECTORS_REGEX = /.*\/organization\/.*\/dirsync\/connector/;
+  const ORG_REGEX = /.*\/scim\/.*\/Orgs\/.*/;
 
   function init() {
     this.initModules(testModule);
@@ -13,9 +14,11 @@ describe('DirSyncService', () => {
       '$injector',
       '$httpBackend',
       'Authinfo',
+      'Orgservice',
     );
 
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('xxxx');
+    spyOn(this.Authinfo, 'isAdmin').and.returnValue(true);
 
     // inject DirSyncService after we spy on Authinfo so the orgId is set
     this.DirSyncService = this.$injector.get('DirSyncService');
@@ -54,9 +57,19 @@ describe('DirSyncService', () => {
       expect(this.DirSyncService.getConnectors()).toEqual([]);
     });
 
-    it('should use default properties for cnnectors if GET on /dirsync/connector fails', function () {
+    it('should use default properties for connectors if GET on /dirsync/connector fails', function () {
       this.$httpBackend.expectGET(DIR_SYNC_REGEX).respond(200, { serviceMode: 'ENABLED' });
       this.$httpBackend.expectGET(DIR_SYNC_CONNECTORS_REGEX).respond(403);
+
+      expect(this.DirSyncService.refreshStatus()).toBeResolved();
+      expect(this.DirSyncService.isDirSyncEnabled()).toBeTruthy();
+      expect(this.DirSyncService.getConnectors()).toEqual([]);
+    });
+
+    it('should fetch DirSync status from Org if NOT a full admin user', function () {
+      this.Authinfo.isAdmin.and.returnValue(false);
+      this.$httpBackend.expectGET(ORG_REGEX).respond(200, { dirsyncEnabled: true });
+      this.$httpBackend.expectGET(DIR_SYNC_CONNECTORS_REGEX).respond(400);
 
       expect(this.DirSyncService.refreshStatus()).toBeResolved();
       expect(this.DirSyncService.isDirSyncEnabled()).toBeTruthy();
@@ -137,6 +150,7 @@ describe('DirSyncService', () => {
       let promise = this.DirSyncService.disableSync();
       expect(promise).toBeRejected();
     });
+
   });
 
 });

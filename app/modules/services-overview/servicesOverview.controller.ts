@@ -11,6 +11,7 @@ import { ServicesOverviewHybridMediaCard } from './hybridMediaCard';
 import { ServicesOverviewHybridDataSecurityCard } from './hybridDataSecurityCard';
 import { ServicesOverviewHybridContextCard } from './hybridContextCard';
 import { ServicesOverviewPrivateTrunkCard } from './privateTrunkCard';
+import { PrivateTrunkDomainService } from 'modules/hercules/privateTrunk/privateTrunkDomain';
 
 export class ServicesOverviewCtrl {
 
@@ -29,6 +30,7 @@ export class ServicesOverviewCtrl {
     private FusionClusterService,
     private FusionClusterStatesService,
     private CloudConnectorService,
+    private PrivateTrunkDomainService: PrivateTrunkDomainService,
   ) {
     this.cards = [
       new ServicesOverviewMessageCard(this.Authinfo),
@@ -42,7 +44,7 @@ export class ServicesOverviewCtrl {
       new ServicesOverviewHybridMediaCard(this.Authinfo, this.Config, this.FusionClusterStatesService),
       new ServicesOverviewHybridDataSecurityCard(this.Authinfo, this.Config, this.FusionClusterStatesService),
       new ServicesOverviewHybridContextCard(this.FusionClusterStatesService),
-      new ServicesOverviewPrivateTrunkCard(this.FusionClusterStatesService),
+      new ServicesOverviewPrivateTrunkCard( this.PrivateTrunkDomainService, this.FusionClusterStatesService),
     ];
 
     this.loadWebexSiteList();

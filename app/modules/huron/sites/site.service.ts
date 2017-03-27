@@ -111,6 +111,7 @@ export class HuronSiteService {
       dateFormat: site.dateFormat,
       timeFormat: site.timeFormat,
       routingPrefix: site.routingPrefix,
+      emergencyCallBackNumber: site.emergencyCallBackNumber,
       toggleEnabled: true, // TODO (jlowery): remove after 'i751-10d-ext' toggle is removed.
     }).$promise;
   }

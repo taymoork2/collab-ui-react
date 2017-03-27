@@ -6,6 +6,8 @@ describe('Care Feature Ctrl should ', function () {
     Log, Notification, deferred, callbackDeferred, chatPlusCallbackDeferred, $translate;
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('Test-Org-Id'),
+    isMessageEntitled: jasmine.createSpy('isMessageEntitled').and.returnValue(true),
+    isSquaredUC: jasmine.createSpy('isSquaredUC').and.returnValue(true),
   };
 
   var templateList = getJSONFixture('sunlight/json/features/chatTemplates/chatTemplateList.json');

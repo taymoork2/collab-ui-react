@@ -1,3 +1,133 @@
+<a name="1.1.0"></a>
+# [1.1.0](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/compare/v1.0.9...v1.1.0) (2017-03-27)
+
+
+### Bug Fixes
+
+* **care:** do not add invalid category ([98258e6](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/98258e6))
+* **Care:** Care not getting displayed for User add with care trial ([07936a0](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/07936a0))
+* **Care:** Care not getting displayed for User add with care trial and valid msg license. ([317a6db](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/317a6db))
+* **core:** Addressing code review feedback ([4cb19ab](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/4cb19ab))
+* **core:** ATLAS-1501 - Incorrect license usage displayed on Overview page ([db18e77](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/db18e77))
+* **core:** Handle DirSync settings in Read-only mode ([32ea336](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/32ea336))
+* **core:** Ignore IsOnline org for Pending User status ([bb00121](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/bb00121))
+* **core:** Merge conflict cleanup. ([c2fca9c](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/c2fca9c))
+* **cos:** improve premium desc text ([fad23f8](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/fad23f8))
+* **devices:** Converting SIP URI for Huron devices ([1501c97](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/1501c97))
+* **devices:** Warning on Launch Advanced Settings for read only admins ([7a998f8](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/7a998f8))
+* **ediscovery:** reset states after report was generated, removed white bars after initial search ([25a1b00](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/25a1b00))
+* **hercules:** CSC string review ([0dd1a6e](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/0dd1a6e))
+* **hercules:** Moving inline styling to component ([246f652](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/246f652))
+* **hercules:** Moving to buttons for enabling and disabling CSC. ([1d89123](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/1d89123))
+* **huron:** AUTOATTN1018. ([865fde6](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/865fde6))
+* **huron:** Only show Dial Plan change warning dialog when changing dial plan related fields. ([b34d64a](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/b34d64a))
+* **login:** revert toolkit updates ([c0e6011](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/c0e6011))
+* **mediafusion:** Resources graph pie text ([ae4b48a](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/ae4b48a))
+* **sunglight:** US272868 	Never ending care template creation wizard #CSCvd55526 ([8056529](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/8056529))
+* **sunlight:** Care offer description ([e05c442](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/e05c442))
+* **sunlight:** Removing Offer Code Name ([69d90e5](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/69d90e5))
+* **sunlight:** string change for call info warning while adding care ([742fc28](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/742fc28))
+* **sunlight:** String changes for K1 and K2 ([fd89bfe](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/fd89bfe))
+* **trials:** Add a warning message for user to click 'location valid' checkbox ([7a0af83](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/7a0af83))
+
+
+### Features
+
+* **analytics:** Remove id hashing per Adnan ([064c980](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/064c980))
+* **blfPickup:** Added blf for internal ext and uri ([d137d58](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/d137d58))
+* **context:** User can now create a field in the context dictionary ([2314ea8](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/2314ea8))
+* **core:** Adding an isTestOrg function to Orgservice. ([9f8f59c](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/9f8f59c))
+* **devices:** Remove old Spark Board 55 image ([8b68c93](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/8b68c93))
+* **gemini:** fix Content-Type bug in http request & fix remedy ticket issue ([d47cb5d](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/d47cb5d))
+* **gemini:** move TD site & cancel TD submission ([9b3c391](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/9b3c391))
+* **hercules:** add organization flag service ([2dfcbea](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/2dfcbea))
+* **hercules:** change the nodes link to the nodes view ([a81f2e9](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/a81f2e9))
+* **hercules:** rewrite ClusterService in TypeScript ([6cd6519](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/6cd6519))
+* **hercules:** US271031 -Private SIP Trunk set up prerequisites ([fefe42c](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/fefe42c))
+* **huron:** Creating Feature Toggles for Media on Hold in Atlas ([4bd4e9c](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/4bd4e9c))
+* **sunlight:** Allow templates for media channels that have base license available ([3235d8b](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/3235d8b))
+* **sunlight:** dependency check on base licensing ([440a6de](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/440a6de))
+* **sunlight:** fix new care template feature card css ([3990686](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/3990686))
+* **sunlight:** show tooltip info abt missing care licenses ([237f32a](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/237f32a))
+* **trials:** Offer the complete list of time zones for Webex US13580 ([41c9d06](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/41c9d06))
+* **WebEx Metrics:** Add Qlik report to WebEx Metrics. ([9fbb231](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/9fbb231))
+
+
+
+<a name="1.0.9"></a>
+## [1.0.9](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/compare/v1.0.8...v1.0.9) (2017-03-17)
+
+
+### Bug Fixes
+
+* **context:** US271655 - Fix Atlas GT issues ([92e779e](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/92e779e))
+* **context:** US271655 - Fix Atlas GT issues ([90412f4](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/90412f4))
+* **core:** ATLAS-1662 - Incorrect license count for customers with multiple subscriptions ([cf26239](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/cf26239))
+* **core:** ATLAS-1859 - rootscope.$on firing twice in SipDomainSettings.Controller ([26cf636](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/26cf636))
+* **core:** Change BMMP integration environment URL ([fa72d9c](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/fa72d9c))
+* **core:** fix IE with Promise polyfills ([d5ed90b](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/d5ed90b))
+* **core:** fix IE with Promise polyfills ([44ba123](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/44ba123))
+* **core:** Prevent sip save event from firing twice. ([af9952d](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/af9952d))
+* **ediscovery:** change rooms to spaces ([94df222](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/94df222))
+* **ediscovery:** change rooms to spaces ([16458c5](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/16458c5))
+* **ediscovery:** disabled the search button if query is over 200 characters ([5fd9a27](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/5fd9a27))
+* **ediscovery:** show error message if numRooms > 2500, show view reports list button, get rid of room id in reports section, fix tooltip showing up ([189656f](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/189656f))
+* **ediscovery:** updated css on generate report card (no scroll bar, more spacing between sections ([a8d737b](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/a8d737b))
+* **ediscovery:** updated css on generate report card (no scroll bar, more spacing between sections ([a3cabde](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/a3cabde))
+* **Global Service Status:** adjust components margin, “Outage” changes to “Impact”. ([fa10685](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/fa10685))
+* **Global Service Status:** adjust components margin, “Outage” changes to “Impact”. ([8407f5e](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/8407f5e))
+* **Global Service Status:** style for incident update button ([e3c51e1](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/e3c51e1))
+* **Global Service Status:** style for incident update button ([8b84b60](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/8b84b60))
+* **hercules:** Changing return types in calendar-cloud-connector.service.ts ([8473a21](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/8473a21))
+* **hercules:** Correcting entitlement names in notifications ([8cfd2c6](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/8cfd2c6))
+* **hercules:** Minor text changes ([76a9f6e](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/76a9f6e))
+* **hercules:** Proofreading strings ([7b42676](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/7b42676))
+* **hercules:** Showing message in the Services overview page if no hybrid services cards are visible. ([78cb3e6](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/78cb3e6))
+* **hercules:** SIP Destination test tool ([a303d70](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/a303d70))
+* **hercules:** SIP Destination tool: css linting ([1d00db9](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/1d00db9))
+* **hercules:** Updating scss syntax. ([20071f8](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/20071f8))
+* **huron:** AUTOATTN-1043 - uploadedMedia from Queue Settings are being deleted upon save ([131e428](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/131e428))
+* **huron:** AUTOATTN-1043 - uploadedMedia from Queue Settings are being deleted upon save ([896d039](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/896d039))
+* **huron:** fix addLInes where no External number and Language is not English ([541caa1](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/541caa1))
+* **huron:** fix addLInes where no External number and Language is not English ([cb78696](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/cb78696))
+* **language:** keep current state when changing language ([770fa20](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/770fa20))
+* **languages:** validate plural messageformat syntax ([e9061d4](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/e9061d4))
+* **mediaservice:** enable featre toggle for 1080P ([c50dcfe](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/c50dcfe))
+* **pickup:**  Change pickup directive test to clean up code correctly ([fbba367](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/fbba367))
+* **pstn:** TERMINUS-18 ([05e2b75](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/05e2b75))
+* **sunlight:** Allowing organisation to buy without call ([5cd3eb5](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/5cd3eb5))
+* **sunlight:** Allowing organisation to buy without call ([179f4ff](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/179f4ff))
+* **test:** temporarily workaround timeout flushing in focus tests ([198f868](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/198f868))
+* **test:** temporarily workaround timeout flushing in focus tests ([9ac100f](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/9ac100f))
+
+
+### Features
+
+* **care:** remove care chatPlusCallback feature flag ([e0365ee](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/e0365ee))
+* **core:** update webpack loaders and node-sass ([abce4bd](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/abce4bd))
+* **core:** update webpack loaders and node-sass ([efda698](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/efda698))
+* **core:** US13116 - Updating CSC check in sipDomainSettings.controller ([741c644](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/741c644))
+* **core:** US13498 - Adding Full Page Print option to Partner Spark Reports ([78f3eeb](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/78f3eeb))
+* **core:** US13498 - Making Partner and Customer Spark Report downloads accessible. ([74b7cb8](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/74b7cb8))
+* **core:** UX changes for Order History page ([26818ce](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/26818ce))
+* **devices:** Updating device image files ([941ec61](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/941ec61))
+* **devices:** Updating device image files ([8265552](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/8265552))
+* **hercules:** Adding error code for 'INVALID_CREDENTIALS' for Google Calendar. ([5b8d058](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/5b8d058))
+* **hercules:** Adding error code for 'INVALID_CREDENTIALS' for Google Calendar. ([2eba569](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/2eba569))
+* **hercules:** Adding localizable error messages for Google Calendar provisioning. ([96a6423](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/96a6423))
+* **hercules:** Adding localizable error messages for Google Calendar provisioning. ([524157f](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/524157f))
+* **hercules:** Redesigning the CSC SIP Destination tool, following Jacopo's design. ([cbfc1d7](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/cbfc1d7))
+* **Hercules:** More mature SIP destination test tool. ([6dc2f3a](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/6dc2f3a))
+* **huron:** "US264464 Populate drop downs for conditionals " ([084da0c](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/084da0c))
+* **huron:** "US264464 Populate drop downs for conditionals " ([745c247](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/745c247))
+* **huron:** Company Voicemail component tweaks and unit tests ([85861aa](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/85861aa))
+* **huron:** Company Voicemail component tweaks and unit tests ([b00ac8a](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/b00ac8a))
+* **huron:** Routing Prefix changes to site that effect esn display ([e6d3d9d](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/e6d3d9d))
+* **huron:** Routing prefix settings ([55c643b](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/55c643b))
+* **l10n:** rename es_LA to es_CO; support multiple browser codes ([192d38c](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/192d38c))
+
+
+
 <a name="1.0.8"></a>
 ## [1.0.8](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/compare/v1.0.7...v1.0.8) (2017-03-11)
 

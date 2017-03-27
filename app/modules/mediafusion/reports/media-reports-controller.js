@@ -52,6 +52,7 @@
     vm.cluster_availability_heading = $translate.instant('mediaFusion.metrics.overAllAvailability');
     vm.customPlaceholder = $translate.instant('mediaFusion.report.custom');
     vm.total_cloud_heading = $translate.instant('mediaFusion.metrics.totalCloud');
+    vm.participants = $translate.instant('mediaFusion.metrics.participants');
 
     vm.second_card_heading = vm.total_cloud_heading;
     vm.redirected_heading = vm.cloud_calls_heading;
@@ -78,6 +79,7 @@
 
     vm.setClusterAvailability = setClusterAvailability;
     vm.setTotalCallsData = setTotalCallsData;
+    vm.setTotalCallsPie = setTotalCallsPie;
     vm.setSneekPeekData = setSneekPeekData;
     vm.setAvailabilityData = setAvailabilityData;
     vm.setCallVolumeData = setCallVolumeData;
@@ -105,6 +107,11 @@
     vm.cloudParticipantschartOptions = {
       isShow: true,
       cardChartDiv: 'cloudParticipantsChartDiv',
+      noData: false,
+    };
+    vm.totalParticipantschartOptions = {
+      isShow: true,
+      cardChartDiv: 'totalParticipantsChartDiv',
       noData: false,
     };
 
@@ -138,6 +145,7 @@
     function loadResourceDatas() {
       deferred.promise.then(function () {
         setTotalCallsData();
+        setTotalCallsPie();
         setAvailabilityData();
         setClusterAvailability();
         setUtilizationData();
@@ -335,6 +343,25 @@
             vm.totalcloudcalls = vm.onprem + vm.cloudOverflow;
           }
           vm.second_card_value = vm.cloudOverflow;
+        }
+      });
+    }
+
+    function setTotalCallsPie() {
+      MediaReportsService.getTotalCallsData(vm.timeSelected, vm.clusterSelected).then(function (response) {
+        if (!_.isUndefined(response.data)) {
+          var callsOnPremise = _.isUndefined(response.data.callsOnPremise) ? 0 : response.data.callsOnPremise;
+          var callsOverflow = _.isUndefined(response.data.callsOverflow) ? 0 : response.data.callsOverflow;
+          var cloudCalls = _.isUndefined(response.data.cloudCalls) ? 0 : response.data.cloudCalls;
+        }
+        if (response === vm.ABORT) {
+          return undefined;
+        } else if (_.isUndefined(response.data) || (callsOnPremise == 0 && callsOverflow == 0 && cloudCalls == 0)) {
+          AdoptionCardService.setDummyTotalParticipantsPiechart();
+          vm.totalParticipantschartOptions.noData = true;
+        } else {
+          AdoptionCardService.setTotalParticipantsPiechart(callsOnPremise, callsOverflow, cloudCalls);
+          vm.totalParticipantschartOptions.noData = false;
         }
       });
     }

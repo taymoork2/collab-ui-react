@@ -94,6 +94,16 @@
       color: $gray-darker;
     }
   }
+
+  .tooltip {
+    .c-nub {
+      max-width: 250px;
+    }
+  }
+
+  .tooltip-wrapper-div {
+    display: inline-block;
+  }
 }
 
 .no-features {
@@ -111,7 +121,7 @@
   }
 
   .ct-desc {
-    max-width: rem-calc(330);
+    max-width: rem-calc(460);
   }
 
   .new-btn {
@@ -192,12 +202,21 @@
   }
 
   .feature-icon-color-care {
-    color: $gray-base;
+    color: $color-people-base;
+  }
+
+  .feature-icon-disabled {
+    color: $gray-light-1;
+    background: $gray-light-3;
   }
 
   .feature-label-container {
     @include vr-spacing(pt, 2);
     color: $color-people-base;
+  }
+
+  .feature-label-disabled {
+    color: $gray-base;
   }
 
   .feature-description-container {
@@ -238,4 +257,3 @@
   font-size: 3rem;
   text-align: center;
 }
-

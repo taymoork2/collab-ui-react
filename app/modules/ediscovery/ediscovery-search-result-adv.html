@@ -3,7 +3,7 @@
 		<cs-card class="medium">
 			<article>
 				<div class="back-button">
-		      <a ng-click="ediscoverySearchCtrl.goToSearchPage()">
+		      <a ng-click="ediscoverySearchCtrl.resetSearchPageToInitialState()">
 		        <i class="icon icon-back icon-lg"></i>
 		        <span translate="ediscovery.searchResults.backToSearch"></span>
 		      </a>
@@ -28,7 +28,8 @@
 				<header><h4 translate="ediscovery.searchResults.reportSummary"></h4></header>
 				<section class="row">
 					<div class="col-md-2">
-						<p class="report-title" translate="ediscovery.searchResults.rooms"></p>
+						<p class="report-title" translate="ediscovery.searchResults.spaces"></p>
+						<p class="report-info">{{ediscoverySearchCtrl.searchResults.numRooms}}</p>
 					</div>
 					<div class="col-md-3">
 						<p class="report-title" translate="ediscovery.searchResults.messages"></p>
@@ -58,7 +59,7 @@
 		</cs-card>
 		<cs-card ng-if="!ediscoverySearchCtrl.isReportMaxRooms" class="large">
 			<article>
-				<section>
+				<section class="report-section">
 					<!-- Generate Report Section -->
 		      <search-results-report ng-if="ediscoverySearchCtrl.isReport"></search-results-report>
 		      <search-results-generate ng-if="ediscoverySearchCtrl.isReportGenerating"></search-results-generate>

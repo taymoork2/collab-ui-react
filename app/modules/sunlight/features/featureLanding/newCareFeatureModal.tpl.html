@@ -6,18 +6,20 @@
 </div>
 <div class="modal-body">
   <div class="care-new-feature-modal" ng-if="!loading">
-    <button ng-repeat="feature in features" ng-click="ok((feature.id))" ng-if="features.length !== 0">
+    <button ng-repeat="feature in features" ng-click="ok((feature.id))"
+            ng-disabled="{{feature.disabled}}" ng-if="features.length !== 0">
         <div class="feature-icon-container">
-          <label class="feature-icon-circle feature-icon-color-care" ng-repeat="ftIcon in feature.icons">
+          <label class="feature-icon-circle feature-icon-color-care"
+                 ng-class="{'feature-icon-disabled': feature.disabled}" ng-repeat="ftIcon in feature.icons">
               <i class="icon {{ftIcon}}"></i>
           </label>
         </div>
-      <h4 class="feature-label-container">
+      <h4 class="feature-label-container" ng-class="{'feature-label-disabled': feature.disabled}">
         <strong>{{feature.label | translate}}</strong>
       </h4>
 
       <p class="feature-description-container text-left">
-        {{feature.description | translate}}
+        <span translate="{{feature.description}}" translate-value-onclick="purchaseLink()" translate-compile />
       </p>
     </button>
     <div ng-if="features.length === 0">

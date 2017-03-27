@@ -47,6 +47,7 @@
     'toaster',
     'rzModule',
     'dragularModule',
+    require('modules/core/users/userOverview').default,
     require('modules/core/analytics'),
     require('modules/core/featureToggle').default,
     require('modules/core/focus').default,
@@ -55,6 +56,7 @@
     require('modules/core/scripts/services/userlist.service'),
     require('modules/core/users/userCsv/userCsv.service'),
     require('modules/core/cards').default,
+    require('modules/core/partnerReports/commonReportServices').default,
     require('modules/core/window').default,
     require('modules/online/digitalRiver').default, // TODO make core.myCompany independent module
     require('modules/online/upgrade').default,
@@ -62,6 +64,7 @@
     require('modules/core/trials/emergencyServices').default,
     require('modules/huron/countries').default,
     require('modules/huron/settings').default,
+    require('modules/huron/dialPlans').default,
   ])
     .constant('CryptoJS', require('crypto-js'))
     .constant('phone', require('google-libphonenumber'))
@@ -89,13 +92,19 @@
     require('modules/huron/telephony/telephonyConfig'),
     require('modules/huron/telephony/cmiServices'),
     require('modules/huron/autoAnswer').default,
-    require('modules/huron/settings').default,
     require('modules/huron/pstn').default,
     require('modules/huron/pstn/pstnProviders').default,
+    require('modules/huron/pstnSetup/pstnSelector').default,
     require('modules/huron/overview').default,
   ]);
 
-  angular.module('Hercules', ['Core', 'Squared', 'core.onboard', 'ngTagsInput']);
+  angular.module('Hercules', [
+    'Core',
+    'Squared',
+    'core.onboard',
+    'ngTagsInput',
+    require('modules/hercules/privateTrunk/privateTrunkDomain').default,
+  ]);
 
   angular.module('HDS', ['Core', 'Hercules']);
 
@@ -103,7 +112,11 @@
 
   angular.module('Mediafusion', ['Core', 'Hercules', 'Squared']);
 
-  angular.module('WebExApp', ['Core']);
+  angular.module('WebExApp', [
+    'Core',
+    require('modules/webex/utils').default,
+    require('modules/webex/xmlApi').default,
+  ]);
 
   angular.module('Messenger', ['Core']);
 
@@ -111,6 +124,7 @@
     'Core',
     'CareDetails',
     'Sunlight.pagination',
+    require('modules/sunlight/services').default,
   ]);
 
   angular.module('Context', ['Core']);

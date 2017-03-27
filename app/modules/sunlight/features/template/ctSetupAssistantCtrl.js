@@ -1082,6 +1082,10 @@
 
     function nextButton() {
       switch (vm.currentState) {
+        case 'summary':
+          return 'hidden';
+        case 'offHours':
+          return isOffHoursPageValid();
         case 'name':
           return vm.isNamePageValid();
         case 'customerInformation':
@@ -1092,16 +1096,15 @@
           return isProfilePageValid();
         case 'agentUnavailable':
           return isAgentUnavailablePageValid();
-        case 'offHours':
-          return isOffHoursPageValid();
+
         case 'feedback':
           return isFeedbackPageValid();
         case 'chatStatusMessages':
           return isStatusMessagesPageValid();
-        case 'summary':
-          return 'hidden';
-        default:
+        case 'overview':
           return true;
+        default:
+          return 'hidden';
       }
     }
 
@@ -1114,6 +1117,10 @@
 
     function getAdjacentEnabledState(current, jump) {
       var next = current + jump;
+      var last = vm.states.length - 1;
+      if (next > last) {
+        return vm.states[last];
+      }
       var nextPage = vm.template.configuration.pages[vm.states[next]];
       if (nextPage && !nextPage.enabled) {
         return getAdjacentEnabledState(next, jump);
@@ -1225,8 +1232,16 @@
       }
     };
 
+    function isCategoryOptionTagValid() {
+      if (vm.categoryOptionTag && vm.categoryOptionTag.length > vm.lengthConstants.singleLineMaxCharLimit50) {
+        return false;
+      } else {
+        return true;
+      }
+    }
     vm.addCategoryOption = function () {
       if (vm.categoryOptionTag) {
+        if (!isCategoryOptionTagValid()) return;
         angular.element('#categoryTokensElement').tokenfield('createToken', vm.categoryOptionTag);
         vm.categoryOptionTag = '';
       }

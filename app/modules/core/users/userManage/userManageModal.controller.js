@@ -42,7 +42,7 @@ require('./_user-manage.scss');
     //////////////////
     function onInit() {
       var promise = (DirSyncService.requiresRefresh() ? DirSyncService.refreshStatus() : $q.resolve());
-      promise.then(function () {
+      promise.finally(function () {
         if (DirSyncService.isDirSyncEnabled()) {
           $state.go('users.manage.activedir');
         } else {

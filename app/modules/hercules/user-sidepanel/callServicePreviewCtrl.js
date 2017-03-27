@@ -9,9 +9,11 @@
   function CallServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, FusionClusterService, UriVerificationService, DomainManagementService, $translate, FeatureToggleService, ResourceGroupService, UCCService, HybridServicesUtils) {
     $scope.saveLoading = false;
     $scope.domainVerificationError = false;
-    $scope.currentUser = $stateParams.currentUser;
+    $scope.currentUser = $stateParams.currentUser || $stateParams.currentPlace;
+    $scope.isPlace = $scope.currentUser.accountType === 'MACHINE';
+    $scope.isUser = !$scope.isPlace;
     var isEntitled = function (ent) {
-      return $stateParams.currentUser.entitlements && $stateParams.currentUser.entitlements.indexOf(ent) > -1;
+      return $scope.currentUser.entitlements && $scope.currentUser.entitlements.indexOf(ent) > -1;
     };
     var isSetup = function (id) {
       var extension = _.find($stateParams.extensions, { id: id });
@@ -212,15 +214,15 @@
     readResourceGroups();
 
     var addEntitlementToCurrentUser = function (entitlement) {
-      if (!_.includes($stateParams.currentUser.entitlements, entitlement)) {
-        $stateParams.currentUser.entitlements.push(entitlement);
+      if (!_.includes($scope.currentUser.entitlements, entitlement)) {
+        $scope.currentUser.entitlements.push(entitlement);
       }
       $scope.callServiceAware.currentUserEntitled = isEntitled($scope.callServiceAware.id);
       $scope.callServiceConnect.currentUserEntitled = isEntitled($scope.callServiceConnect.id);
     };
 
     var removeEntitlementFromCurrentUser = function (entitlement) {
-      _.remove($stateParams.currentUser.entitlements, function (e) {
+      _.remove($scope.currentUser.entitlements, function (e) {
         return e === entitlement;
       });
       $scope.callServiceAware.currentUserEntitled = isEntitled($scope.callServiceAware.id);
@@ -254,8 +256,8 @@
           var userStatus = data.userResponse[0].status;
           if (userStatus === 200) {
             resetStatusesIfEntitlementChanged();
-            if (!$stateParams.currentUser.entitlements) {
-              $stateParams.currentUser.entitlements = [];
+            if (!$scope.currentUser.entitlements) {
+              $scope.currentUser.entitlements = [];
             }
             if ($scope.callServiceAware.entitled) {
               addEntitlementToCurrentUser($scope.callServiceAware.id);

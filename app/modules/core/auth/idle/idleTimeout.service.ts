@@ -24,7 +24,7 @@ export class IdleTimeoutService {
     private Config,
     private FeatureToggleService,
     private Log,
-    private Storage,
+    private LocalStorage,
     private WindowService: WindowService,
   ) {
     this.logoutEvent = 'logout' + this.Config.getEnv();
@@ -62,10 +62,10 @@ export class IdleTimeoutService {
   private broadcastActiveTab() {
     this.Log.debug('IDLE TIMEOUT SERVICE: broadcasting to keep alive');
     //only want to write to LS once 60 secs
-    let lastUpdated = this.Storage.get(StorageKeys.ACTIVE_TABS);
+    let lastUpdated = this.LocalStorage.get(StorageKeys.ACTIVE_TABS);
     if (!lastUpdated || (moment(lastUpdated, moment.ISO_8601).isBefore(moment().subtract(IdleTimeoutService.LOCAL_STORAGE_DEBOUNCE_INTERVAL, 'seconds')))) {
-      this.Storage.remove(StorageKeys.ACTIVE_TABS);
-      this.Storage.put(StorageKeys.ACTIVE_TABS, moment().toISOString());
+      this.LocalStorage.remove(StorageKeys.ACTIVE_TABS);
+      this.LocalStorage.put(StorageKeys.ACTIVE_TABS, moment().toISOString());
     }
   }
 
@@ -83,7 +83,7 @@ export class IdleTimeoutService {
 
   private quit() {
     this.Log.debug('IDLE TIMEOUT SERVICE: quitting');
-    this.Storage.remove(StorageKeys.ACTIVE_TABS);
+    this.LocalStorage.remove(StorageKeys.ACTIVE_TABS);
     this.keepAliveDeregistrer();
     _.forEach(IdleTimeoutService.IDLE_RESET_EVENTS, EventName => {
       angular.element(this.$document).unbind(EventName);
@@ -102,7 +102,7 @@ export class IdleTimeoutService {
     this.Log.debug('IDLE TIMEOUT SERVICE: Starting Tab Timer');
     //start the timer
     this.$rootScope.$on(IdleTimeoutService.LOGIN_EVENT, () => {
-      this.Storage.remove(StorageKeys.LOGIN_MESSAGE);
+      this.LocalStorage.remove(StorageKeys.LOGIN_MESSAGE);
 
       return this.FeatureToggleService.atlasIdleLogoutGetStatus()
       .then(result => {

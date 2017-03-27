@@ -8,11 +8,13 @@ require('./_fields-list.scss');
     .controller('HybridContextFieldsCtrl', HybridContextFieldsCtrl);
 
   /* @ngInject */
-  function HybridContextFieldsCtrl($scope, $rootScope, $filter, $state, $translate, Log, $q, ContextFieldsService, Notification) {
+  function HybridContextFieldsCtrl($scope, $rootScope, $filter, $state, $translate, Log, LogMetricsService, $q, ContextFieldsService, Notification, hasContextDictionaryEditFeatureToggle) {
     var vm = this;
     var eventListeners = [];
 
+    vm.hasContextDictionaryEditFeatureToggle = hasContextDictionaryEditFeatureToggle;
     vm.load = true;
+    vm.fetchFailed = false;
     vm.currentDataPosition = 0;
     vm.gridRefresh = false;
     vm.noSearchesYet = true;
@@ -28,6 +30,22 @@ require('./_fields-list.scss');
       name: $translate.instant('common.search'),
       filterValue: '',
       count: 0,
+    };
+
+    vm.searchStr = '';
+
+    vm.createField = function () {
+      LogMetricsService.logMetrics('Opened create field modal', LogMetricsService.getEventType('contextNewField'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1);
+      $state.go('context-new-field', {
+        existingFieldIds: _.map(vm.fieldsList.allFields, function (field) {
+          return field.id;
+        }),
+        createCallback: function (newField) {
+          var fieldCopy = _.cloneDeep(newField);
+          vm.fieldsList.allFields.unshift(processField(fieldCopy));
+          filterList(vm.searchStr);
+        },
+      });
     };
 
     $scope.$on('$destroy', onDestroy);
@@ -63,7 +81,7 @@ require('./_fields-list.scss');
       }
     }
 
-    function processFieldList(fieldList) {
+    function processField(field) {
       var searchableMap = {
         true: $translate.instant('common.yes'),
         false: $translate.instant('common.no'),
@@ -74,21 +92,24 @@ require('./_fields-list.scss');
         UNENCRYPTED: $translate.instant('context.dictionary.fieldPage.unencrypted'),
         PII: $translate.instant('context.dictionary.fieldPage.piiEncrypted'),
       };
-      _.forEach(fieldList, function (field) {
 
-        field.searchable = searchableMap[field.searchable] || $translate.instant('common.yes');
+      field.searchable = searchableMap[field.searchable] || $translate.instant('common.yes');
 
-        if (field.dataType) {
-          field.dataType = _.upperFirst(field.dataType.trim());
-        }
+      if (field.dataType) {
+        field.dataType = _.upperFirst(field.dataType.trim());
+      }
 
-        field.classification = classificationMap[field.classification] || $translate.instant('context.dictionary.fieldPage.unencrypted');
+      field.classification = classificationMap[field.classification] || $translate.instant('context.dictionary.fieldPage.unencrypted');
 
-        if (field.lastUpdated) {
-          field.lastUpdated = $filter('date')(field.lastUpdated, $translate.instant('context.dictionary.fieldPage.dateFormat'));
-        }
-      });
-      return $q.resolve(fieldList);
+      if (field.lastUpdated) {
+        field.lastUpdated = $filter('date')(field.lastUpdated, $translate.instant('context.dictionary.fieldPage.dateFormat'));
+      }
+
+      return field;
+    }
+
+    function processFieldList(fieldList) {
+      return _.map(fieldList, processField);
     }
 
     function getFieldList() {
@@ -99,18 +120,16 @@ require('./_fields-list.scss');
       vm.noSearchesYet = false;
       vm.fieldsList.allFields = [];
       var getAndProcessFieldsPromise = ContextFieldsService.getFields()
-        .then(function (fields) {
-          return processFieldList(fields);
-        })
+        .then(processFieldList)
         .then(function (processedFields) {
           vm.gridOptions.data = processedFields;
           vm.fieldsList.allFields = processedFields;
           vm.noSearchResults = processedFields.length === 0;
-          return $q.resolve();
         })
         .catch(function (err) {
           Log.debug('CS fields search failed. Status: ' + err);
           Notification.error('context.dictionary.fieldPage.fieldReadFailed');
+          vm.fetchFailed = true;
           return $q.reject(err);
         });
 
@@ -186,7 +205,7 @@ require('./_fields-list.scss');
 
     // On click, wait for typing to stop and run search
     function filterList(str) {
-
+      vm.searchStr = str;
       return filterBySearchStr(vm.fieldsList.allFields, str)
         .then(function (processedFields) {
           vm.gridOptions.data = processedFields;

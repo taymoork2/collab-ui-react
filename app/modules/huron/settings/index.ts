@@ -14,9 +14,13 @@ import dateFormatModule from 'modules/huron/settings/dateFormat';
 import defaultCountryModule from 'modules/huron/settings/defaultCountry';
 import cosRestrictionModule from 'modules/huron/settings/cos';
 import companyCallerIdModule from 'modules/huron/settings/companyCallerId';
+import emergencyServiceNumberModule from 'modules/huron/settings/emergencyServiceNumber';
+import emergencyServiceAddressModule from 'modules/huron/settings/emergencyServiceAddress';
 
 export * from './settings.service';
 export * from './settingsOptions.service';
+
+export const E911_ADDRESS_PENDING: string = 'PENDING';
 
 export default angular
   .module('huron.settings', [
@@ -36,6 +40,8 @@ export default angular
     defaultCountryModule,
     cosRestrictionModule,
     companyCallerIdModule,
+    emergencyServiceNumberModule,
+    emergencyServiceAddressModule,
   ])
   .component('ucSettings', new HuronSettingsComponent())
   .service('HuronSettingsService', HuronSettingsService)

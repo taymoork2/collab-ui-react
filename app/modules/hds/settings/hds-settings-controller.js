@@ -103,6 +103,9 @@
         });
     }
     function getOrgHdsInfo() {
+      var params = {
+        basicInfo: true,
+      };
       Orgservice.getOrg(function (data, status) {
         if (data.success || status === 200) {
           vm.orgSettings = data.orgSettings;
@@ -152,7 +155,7 @@
           vm.model.serviceMode = vm.NA_MODE;
           Notification.error(localizedHdsModeError + status);
         }
-      });
+      }, null, params);
     }
 
     function recoverPreTrial() {

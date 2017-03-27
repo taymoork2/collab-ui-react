@@ -7,6 +7,7 @@
 
     var vm = this;
     vm.meetingLocationdiv = 'meetingLocationdiv';
+    vm.exportDiv = 'meeting-location-div';
     vm.GUIDEAXIS = 'guideaxis';
     vm.AXIS = 'axis';
     vm.LEGEND = 'legend';
@@ -129,13 +130,13 @@
       var exportFields = [];
       _.forEach(graphs, function (value) {
         if (value.valueField === 'ON_PREM') {
-          value.lineColor = '#67b7dc';
+          value.lineColor = '#02bbcc';
           value.title = vm.onPremisesHeading;
         } else if (value.valueField === 'CLOUD') {
-          value.lineColor = '#f0a378';
+          value.lineColor = '#30d557';
           value.title = vm.cloudHeading;
         } else if (value.valueField === 'HYBRID') {
-          value.lineColor = '#84b761';
+          value.lineColor = '#ff7133';
           value.title = vm.hybridHeading;
         }
         columnNames[value.valueField] = value.title + ' ' + vm.meetingLocation;
@@ -165,7 +166,7 @@
         });
       }
 
-      var chartData = CommonReportsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, CommonReportsGraphService.getBaseExportForGraph(exportFields, ExportFileName, columnNames));
+      var chartData = CommonReportsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, CommonReportsGraphService.getBaseExportForGraph(exportFields, ExportFileName, columnNames, vm.exportDiv));
       chartData.legend = CommonReportsGraphService.getBaseVariable(vm.LEGEND);
       chartData.legend.labelText = '[[title]]';
       chartData.legend.useGraphSettings = true;
