@@ -1848,8 +1848,8 @@
       "c_cal": "Calendar Connector",
       "c_ucmc": "Call Connector",
       "c_mgmt": "Management Connector",
-      "mf_mgmt": "Media Service Connector",
-      "hds_app": "Hybrid Data Security Connector",
+      "mf_mgmt": "Media Service",
+      "hds_app": "Hybrid Data Security",
       "cs_mgmt": "Management Connector",
       "cs_context": "Context Connector",
       "ucm_mgmt": "Management Connector",
@@ -2316,7 +2316,11 @@
         "complete-registration": "Go to your Expressway to complete the registration.",
         "registration-timeout": "The registration timed out. Please remove this cluster and register the Expressway again.",
         "registration-timeout-extended": "The registration timed out. Please remove this cluster and register the Expressway again in the Add Resource dialog.",
-        "go-to-expressway": "Go to Expressway"
+        "go-to-expressway": "Go to Expressway",
+        "upgrade": "Upgrade available",
+        "alarms": "Alarms",
+        "maintenance": "Maintenance",
+        "pendingMaintenance": "Pending maintenance"
       },
       "add-resource": {
         "title": "Add Resource",
@@ -2491,7 +2495,17 @@
       "noNodes": "No nodes found",
       "loadingError": "Could not load cluster data",
       "viewList": "View list",
-      "goToNode": "Go to node"
+      "enableMaintenanceMode": "Enable maintenance mode",
+      "disableMaintenanceMode": "Disable maintenance mode",
+      "goToNode": "Go to node",
+      "enableMaintenanceModeModal": {
+        "title": "Enable maintenance mode",
+        "message": "Are you sure you want to enable maintenance mode for this node?"
+      },
+      "disableMaintenanceModeModal": {
+        "title": "Disable maintenance mode",
+        "message": "Are you sure you want to disable maintenance mode for this node?"
+      }
     },
     "hybridServicesConnectorSidepanel": {
       "alarmDetails": "Alarm Details"

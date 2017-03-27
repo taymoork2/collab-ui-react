@@ -6,7 +6,12 @@
         <div translate="hercules.fusion.list.nodes" translate-values="{count: $ctrl.countHosts($ctrl.cluster)}" translate-interpolation="messageformat"></div>
       </div>
       <div ng-if="!$ctrl.cluster.isEmptyExpresswayCluster && $ctrl.hasNodesViewFeatureToggle" class="cluster-nodes-link">
-        <a ng-click="$ctrl.openNodes($ctrl.cluster.targetType, $ctrl.cluster.id)" translate="hercules.fusion.list.nodes" translate-values="{count: $ctrl.countHosts($ctrl.cluster)}" translate-interpolation="messageformat"></a>
+        <a ng-click="$ctrl.openNodes($ctrl.cluster.targetType, $ctrl.cluster.id)">
+          <span translate="hercules.fusion.list.nodes" translate-values="{count: $ctrl.countHosts($ctrl.cluster)}" translate-interpolation="messageformat"></span>
+          <span class="badge alert" ng-if="$ctrl.hasAlarms($ctrl.cluster)" translate="hercules.fusion.list.alarms"></span>
+          <span class="badge warning" ng-if="$ctrl.isInMaintenance($ctrl.cluster)" translate="hercules.fusion.list.maintenance"></span>
+          <span class="badge info" ng-if="$ctrl.hasUpgradeAvailable($ctrl.cluster)" translate="hercules.fusion.list.upgrade"></span>
+        </a>
       </div>
     </header>
     <div class="row cluster-list-body" ng-if="!$ctrl.cluster.isEmptyExpresswayCluster">
@@ -62,7 +67,6 @@
     <footer ng-if="!$ctrl.cluster.isEmptyExpresswayCluster">
       <a ng-if="!$ctrl.hideFooter($ctrl.cluster)" ng-click="$ctrl.openSettings($ctrl.cluster.targetType, $ctrl.cluster.id)" translate="hercules.fusion.list.settings"></a>
     </footer>
-    <!--<footer class="double-footer" ng-if="!$ctrl.cluster.isEmptyExpresswayCluster && $ctrl.hasNodesViewFeatureToggle">-->
 
     <div class="row cluster-list-body empty-cluster-body" ng-if="$ctrl.cluster.isEmptyExpresswayCluster">
       <div class="medium-12" ng-if="$ctrl.cluster.allowedRedirectTarget">
