@@ -1,9 +1,12 @@
 <cs-card class="cluster-card medium header-bar {{'card-' + $ctrl.cluster.targetType}}">
   <article>
-    <header>
+    <header ng-class="{'one-liner': !$ctrl.hasNodesViewFeatureToggle}">
       <h4>{{::$ctrl.cluster.name}}</h4>
       <div ng-if="!$ctrl.cluster.isEmptyExpresswayCluster && !$ctrl.hasNodesViewFeatureToggle" class="cluster-list-hosts" tooltip-html-unsafe="{{$ctrl.getHostnames($ctrl.cluster)}}" tooltip-trigger="mouseenter" tooltip-placement="bottom">
         <div translate="hercules.fusion.list.nodes" translate-values="{count: $ctrl.countHosts($ctrl.cluster)}" translate-interpolation="messageformat"></div>
+      </div>
+      <div ng-if="!$ctrl.cluster.isEmptyExpresswayCluster && $ctrl.hasNodesViewFeatureToggle" class="cluster-nodes-link">
+        <a ng-click="$ctrl.openNodes($ctrl.cluster.targetType, $ctrl.cluster.id)" translate="hercules.fusion.list.nodes" translate-values="{count: $ctrl.countHosts($ctrl.cluster)}" translate-interpolation="messageformat"></a>
       </div>
     </header>
     <div class="row cluster-list-body" ng-if="!$ctrl.cluster.isEmptyExpresswayCluster">
@@ -56,15 +59,10 @@
         </div>
       </div>
     </div>
-    <footer ng-if="!$ctrl.cluster.isEmptyExpresswayCluster && !$ctrl.hasNodesViewFeatureToggle">
+    <footer ng-if="!$ctrl.cluster.isEmptyExpresswayCluster">
       <a ng-if="!$ctrl.hideFooter($ctrl.cluster)" ng-click="$ctrl.openSettings($ctrl.cluster.targetType, $ctrl.cluster.id)" translate="hercules.fusion.list.settings"></a>
     </footer>
-    <footer class="double-footer" ng-if="!$ctrl.cluster.isEmptyExpresswayCluster && $ctrl.hasNodesViewFeatureToggle">
-      <a ng-if="!$ctrl.hideFooter($ctrl.cluster)"
-      ng-click="$ctrl.openNodes($ctrl.cluster.targetType, $ctrl.cluster.id)" translate="hercules.fusion.list.nodesBtn"></a>
-      <a ng-if="!$ctrl.hideFooter($ctrl.cluster)"
-      ng-click="$ctrl.openSettings($ctrl.cluster.targetType, $ctrl.cluster.id)" translate="hercules.fusion.list.settings"></a>
-    </footer>
+    <!--<footer class="double-footer" ng-if="!$ctrl.cluster.isEmptyExpresswayCluster && $ctrl.hasNodesViewFeatureToggle">-->
 
     <div class="row cluster-list-body empty-cluster-body" ng-if="$ctrl.cluster.isEmptyExpresswayCluster">
       <div class="medium-12" ng-if="$ctrl.cluster.allowedRedirectTarget">
