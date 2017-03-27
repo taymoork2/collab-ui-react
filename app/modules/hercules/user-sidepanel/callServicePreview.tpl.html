@@ -11,7 +11,7 @@
   <cs-sp-section class="cloud-extensions">
     <div class="section-title-row">
       <span class="section-name" translate="hercules.cloudExtensions.serviceNames.squared-fusion-uc"></span>
-      <cs-toggle-switch ng-if="isUser" toggle-id="callServiceAwareEntitledToggle" ng-model="callServiceAware.entitled"
+      <cs-toggle-switch toggle-id="callServiceAwareEntitledToggle" ng-model="callServiceAware.entitled"
                         size="small" ng-click="checkIfDomainIsVerified(callServiceAware.entitled)"></cs-toggle-switch>
     </div>
     <div>
@@ -98,7 +98,7 @@
   <cs-sp-section class="cloud-extensions" ng-if="callServiceAware.currentUserEntitled && callServiceConnect.orgEntitled && callServiceConnect.enabledInFMS">
     <div class="section-title-row">
       <span class="section-name" translate="hercules.cloudExtensions.serviceNames.squared-fusion-ec"></span>
-      <cs-toggle-switch toggle-id="callServiceConnectEntitledToggle" ng-if="isUser" ng-model="callServiceConnect.entitled" size="small"></cs-toggle-switch>
+      <cs-toggle-switch toggle-id="callServiceConnectEntitledToggle" ng-model="callServiceConnect.entitled" size="small"></cs-toggle-switch>
     </div>
 
     <p class="extension-description" translate="hercules.cloudExtensions.serviceDescriptions.squared-fusion-ec"></p>

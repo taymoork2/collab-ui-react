@@ -107,7 +107,7 @@ class PlaceOverview implements ng.IComponentController {
         return service.id === 'squared-fusion-gcal' || service.id === 'squared-fusion-cal';
       }).some().value();
       this.hybridCallEnabledOnOrg = _.chain(this.ServiceDescriptor.filterEnabledServices(services)).filter(service => {
-        return service.id === 'squared-fusion-uc'; // || service.id === 'squared-fusion-ec';
+        return service.id === 'squared-fusion-uc';
       }).some().value();
     });
     let atlasF237ResourceGroupsPromise = this.FeatureToggleService.atlasF237ResourceGroupGetStatus().then(feature => {

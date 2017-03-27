@@ -4474,6 +4474,7 @@
       "expires": "Expires {{expiryDate}}",
       "searchAnotherUser": "Or search for another user",
       "failedToGenerateActivationCode": "Failed to generate activation code. Reason:",
+      "failedResourceGroup": "Failed to set the resource group on the service(s). Please set in from the service setting on the place. It failed with the following reason:",
       "problemGeneratingCode": "There was a problem generating your activation code.",
       "pressRetry": "Please press Retry to try again."
     }

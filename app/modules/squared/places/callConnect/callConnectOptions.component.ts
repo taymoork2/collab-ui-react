@@ -76,6 +76,16 @@ export class CallConnectOptions implements ng.IComponentController {
     return this.wizardData.atlasF237ResourceGroups && this.resourceGroup && this.resourceGroup.show;
   }
 
+  public submitForm() {
+    if (this.hasNextStep()) {
+      if (!this.isNextDisabled()) {
+        this.next();
+      }
+    } else if (!this.isSaveDisabled()) {
+      this.save();
+    }
+  }
+
   public next() {
     this.$stateParams.wizard.next({
       account: {
@@ -156,7 +166,6 @@ export class CallConnectOptions implements ng.IComponentController {
                   this.resourceGroup.selected = selectedGroup;
                   this.resourceGroup.current = selectedGroup;
                 }
-              } else {
               }
             });
           }
@@ -167,9 +176,9 @@ export class CallConnectOptions implements ng.IComponentController {
   }
 
   public setResourceGroup(group: string) {
-    if (group === '') {
+    if (!group) {
       let selectedGroup = _.find(this.resourceGroup.options, (rgroup) => {
-        return rgroup.value === group;
+        return rgroup.value === '';
       });
       if (selectedGroup) {
         this.resourceGroup.selected = selectedGroup;
@@ -177,7 +186,7 @@ export class CallConnectOptions implements ng.IComponentController {
     }
   }
 
-  private getUssProps(): {} | null {
+  private getUssProps(): { userId: string, resourceGroups: { 'squared-fusion-uc': string } }| null {
     if (this.resourceGroup.selected) {
       return {
         userId: this.wizardData.account.cisUuid,

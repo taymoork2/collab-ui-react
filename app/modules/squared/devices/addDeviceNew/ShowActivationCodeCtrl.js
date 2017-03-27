@@ -94,11 +94,7 @@
                     error(s);
                   }
                 }, function (e) {
-                  if (e && e.createCode) {
-                    success(e);
-                  } else {
-                    error(e);
-                  }
+                  error(e);
                 });
 
               }, error);
@@ -182,7 +178,12 @@
         return $q.resolve({});
       }
       ussProps.userId = cisUuid;
-      return USSService.updateUserProps(ussProps);
+      USSService.updateUserProps(ussProps).then(function (s) {
+        return s;
+      }, function (e) {
+        Notification.errorResponse(e, 'addDeviceWizard.showActivationCode.failedResourceGroup');
+        return e;
+      });
     }
 
     function success(code) {
