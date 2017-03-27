@@ -451,7 +451,7 @@
         "DCName": "IAD",
         "DCID": "VA",
       }, {
-        "label": "(GMT  -03:00) Nuuk",
+        "label": "(GMT -03:00) Nuuk",
         "timeZoneId": "138",
         "timeZoneName": "Nuuk",
         "DCName": "IAD",
