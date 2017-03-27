@@ -748,7 +748,7 @@
             },
             views: {
               'tabContent': {
-                controllerAs: 'mcpSubscription',
+                controllerAs: 'mcpSub',
                 controller: 'MySubscriptionCtrl',
                 templateUrl: 'modules/core/myCompany/mySubscriptions/mySubscription.tpl.html',
               },
