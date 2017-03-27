@@ -47,64 +47,33 @@
       </div>
     </div>
     <!--end uploading state-->
-    <div ng-if="!aaMediaUpload.clioDelete">
-      <div ng-switch-when="UPLOADED" class="aa-box aa-drop-box large-12 small-12 columns" ng-class="{'aa-tall-box' : fromSubMenu}" ngf-drop="aaMediaUpload.upload($file)" ngf-select="aaMediaUpload.upload($file)" ngf-drag-over-class="'dragover'" ng-multiple="false" name="mediaUploadSend">
-        <div class="row">
-          <div class="small-11 columns">
-            <div class="aa-progress">
-              <span class="spread-light" translate="autoAttendant.uploadedFile"></span>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="small-11 columns">
-            <!-- if sub menu header say message (no menukey and not a menuheader then move margin up a little to fit (aa-upload-squish) -->
-            <div class="aa-top-bottom-push" ng-class="{'aa-upload-squish' : aaMediaUpload.isSquishable()}">
-              <span>{{ aaMediaUpload.uploadFile | limitTo: aaMediaUpload.fileLengthLowerLimit }}{{ aaMediaUpload.uploadFile.length > aaMediaUpload.fileLengthUpperLimit ? '...' : '' }}</span>
-              <span>{{ aaMediaUpload.uploadDuration }}</span>
-              <span>{{ aaMediaUpload.uploadDate }}</span>
-            </div>
-          </div>
-          <div class="small-1 columns">
-            <!-- delete will be added here -->
-          </div>
-        </div>
-        <div class="row">
-          <div class="small-11 columns">
-            <div class="spread-light aa-center-small aa-text-info aa-progress" translate="autoAttendant.callAssociatedAAPreview"></div>
+    <div ng-switch-when="UPLOADED" class="aa-box aa-drop-box large-12 small-12 columns" ngf-drop="aaMediaUpload.upload($file)" ngf-drag-over-class="'dragover'" ng-multiple="false" name="mediaUploadSend">
+      <div class="row">
+        <div class="small-11 columns" ngf-select="aaMediaUpload.upload($file)">
+          <div class="aa-progress">
+            <span class="spread-light" translate="autoAttendant.uploadedFile"></span>
           </div>
         </div>
       </div>
-    </div>
-    <div ng-if="aaMediaUpload.clioDelete">
-      <div ng-switch-when="UPLOADED" class="aa-box aa-drop-box large-12 small-12 columns" ngf-drop="aaMediaUpload.upload($file)" ngf-drag-over-class="'dragover'" ng-multiple="false" name="mediaUploadSend">
-        <div class="row">
-          <div class="small-11 columns" ngf-select="aaMediaUpload.upload($file)">
-            <div class="aa-progress">
-              <span class="spread-light" translate="autoAttendant.uploadedFile"></span>
-            </div>
+      <div class="row">
+        <div class="small-11 columns" ngf-select="aaMediaUpload.upload($file)">
+          <div class="aa-top-bottom-push" ng-class="{'aa-upload-squish' : aaMediaUpload.isSquishable()}">
+            <span>{{ aaMediaUpload.uploadFile | limitTo: aaMediaUpload.fileLengthLowerLimit }}{{ aaMediaUpload.uploadFile.length > aaMediaUpload.fileLengthUpperLimit ? '...' : '' }}</span>
+            <span>{{ aaMediaUpload.uploadDuration }}</span>
+            <span>{{ aaMediaUpload.uploadDate }}</span>
           </div>
         </div>
-        <div class="row">
-          <div class="small-11 columns" ngf-select="aaMediaUpload.upload($file)">
-            <div class="aa-top-bottom-push" ng-class="{'aa-upload-squish' : aaMediaUpload.isSquishable()}">
-              <span>{{ aaMediaUpload.uploadFile | limitTo: aaMediaUpload.fileLengthLowerLimit }}{{ aaMediaUpload.uploadFile.length > aaMediaUpload.fileLengthUpperLimit ? '...' : '' }}</span>
-              <span>{{ aaMediaUpload.uploadDuration }}</span>
-              <span>{{ aaMediaUpload.uploadDate }}</span>
-            </div>
-          </div>
-          <div class="small-1 columns">
-            <div class="delete-media">
-              <a ng-click="aaMediaUpload.openModal(aaMediaUpload.dialogModalTypes.delete)">
-                <span class="icon icon-trash trash-media-icon" aria-label="common.delete"></span>
-              </a>
-            </div>
+        <div class="small-1 columns">
+          <div class="delete-media">
+            <a ng-click="aaMediaUpload.openModal(aaMediaUpload.dialogModalTypes.delete)">
+              <span class="icon icon-trash trash-media-icon" aria-label="common.delete"></span>
+            </a>
           </div>
         </div>
-        <div class="row">
-          <div class="small-11 columns" ngf-select="aaMediaUpload.upload($file)">
-            <div class="spread-light aa-center-small aa-text-info aa-progress" translate="autoAttendant.callAssociatedAAPreview"></div>
-          </div>
+      </div>
+      <div class="row">
+        <div class="small-11 columns" ngf-select="aaMediaUpload.upload($file)">
+          <div class="spread-light aa-center-small aa-text-info aa-progress" translate="autoAttendant.callAssociatedAAPreview"></div>
         </div>
       </div>
     </div>
