@@ -56,7 +56,7 @@
       </div>
     </setting-section>
 
-    <setting-section setting="hdsSettings.deactivate" class="needs-border-top" ng-if="hdsSettings.model.serviceMode === hdsSettings.TRIAL">
+    <setting-section setting="hdsSettings.deactivate" class="needs-border-top" ng-if="hdsSettings.model.serviceMode === hdsSettings.TRIAL || hdsSettings.model.serviceMode === hdsSettings.PRODUCTION">
       <div class="sub-section">
         <div ng-if="hdsSettings.model.serviceMode === hdsSettings.TRIAL">
             <h5 class="sub-section__label" translate="common.deactivate"></h5>
@@ -64,6 +64,15 @@
             </p>
             <button class="btn"
                     ng-click="hdsSettings.deactivateTrialMode()"
+                    translate="common.deactivate">
+            </button>
+        </div>
+        <div ng-if="hdsSettings.model.serviceMode === hdsSettings.PRODUCTION">
+            <h5 class="sub-section__label" translate="common.deactivate"></h5>
+            <p class="sub-section__description" translate="hds.resources.settings.deavtivateTrialModeDesc">
+            </p>
+            <button class="btn"
+                    ng-click="hdsSettings.deactivateProductionMode()"
                     translate="common.deactivate">
             </button>
         </div>

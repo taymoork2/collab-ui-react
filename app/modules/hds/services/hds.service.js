@@ -13,7 +13,8 @@
       getServiceStatus: getServiceStatus,
       getOrgSettings: getOrgSettings,
       getHdsTrialUsersGroup: getHdsTrialUsersGroup,
-      createHdsTrialUsersTestGroup: createHdsTrialUsersTestGroup,
+      createHdsTrialUsersGroup: createHdsTrialUsersGroup,
+      deleteCIGroup: deleteCIGroup,
       getHdsTrialUserGroupID: getHdsTrialUserGroupID,
       queryUser: queryUser,
       queryUsers: queryUsers,
@@ -22,8 +23,11 @@
       removeHdsTrialUsers: removeHdsTrialUsers,
       replaceHdsTrialUsers: replaceHdsTrialUsers,
       moveToProductionMode: moveToProductionMode,
+      deleteHdsServerInfo: deleteHdsServerInfo,
+      setOrgAltHdsServersHds: setOrgAltHdsServersHds,
       refreshEncryptionServerForTrialUsers: refreshEncryptionServerForTrialUsers,
       upgradeCluster: upgradeCluster,
+      getHDSInfo: getHDSInfo,
     };
 
 
@@ -43,21 +47,26 @@
       });
     }
 
-    // TODO: the below 2 functions could be removed when HDS is stable
-    function getHdsTrialUsersGroup(oid) {
-      var serviceUrl = _.replace(UrlConfig.getScimUrl(oid), 'Users', 'Groups');
+    function getHDSInfo() {
+      var serviceUrl = 'https://encryption-integration.wbx2.com/encryption/api/v1/kms';
       return $http.get(serviceUrl).then(extractData);
     }
 
-    function createHdsTrialUsersTestGroup(oid) {
+    function getHdsTrialUsersGroup(oid) {
+      var serviceUrl = _.replace(UrlConfig.getScimUrl(oid) + '?filter=displayName eq "HDS Trial Users"', 'Users', 'Groups');
+      return $http.get(serviceUrl).then(extractData);
+    }
+    function deleteCIGroup(oid, gid) {
+      var serviceUrl = _.replace(UrlConfig.getScimUrl(oid) + '/' + gid, 'Users', 'Groups');
+      return $http.delete(serviceUrl);
+    }
+    function createHdsTrialUsersGroup(oid) {
       var serviceUrl = _.replace(UrlConfig.getScimUrl(oid), 'Users', 'Groups');
       var json = {
         "schemas": ["urn:scim:schemas:core:1.0", "urn:scim:schemas:extension:cisco:commonidentity:1.0"],
-        "displayName": "HDS Test Group",
+        "displayName": "HDS Trial Users",
         "members": [
-          {
-            "value": "4c93e416-ad47-4d3b-b63e-1a4bfa40a2a2",
-          },
+          {},
         ],
       };
       return $http.post(serviceUrl, json).then(extractData);
@@ -182,8 +191,75 @@
       }, msDelay);
     }
     function deleteAtlHdsServers() {
-      var serviceUrl = UrlConfig.getAdminServiceUrl() + '/organizations/' + Authinfo.getOrgId() + '/settings/altHdsServers';
-      return $http.delete(serviceUrl);
+      var serviceUrl = UrlConfig.getAdminServiceUrl() + '/organizations/' + Authinfo.getOrgId() + '/settings';
+      return deleteWithConfirmation(serviceUrl, 'altHdsServers');
+    }
+
+    function deleteHdsServerInfo() {
+      var serviceUrl = UrlConfig.getAdminServiceUrl() + '/organizations/' + Authinfo.getOrgId() + '/settings';
+      return deleteWithConfirmation(serviceUrl, 'kmsServer')
+        .then(function () {
+          return deleteWithConfirmation(serviceUrl, 'kmsServerMachineUUID')
+            .then(function () {
+              return deleteWithConfirmation(serviceUrl, 'adrServer')
+                .then(function () {
+                  return deleteWithConfirmation(serviceUrl, 'securityService');
+                });
+            });
+        });
+    }
+    function deleteWithConfirmation(orgServiceUrl, item) {
+      var serviceUrl = orgServiceUrl + '/' + item;
+      return $http.delete(serviceUrl)
+        .then(function () {
+          return confirmDelete(orgServiceUrl, item, 1000)
+            .catch(function () {
+              return confirmDelete(orgServiceUrl, item, 2000);
+            });
+        })
+        .catch(function () {
+          return $q.reject('Failed to delete : ' + serviceUrl);
+        });
+    }
+    function confirmDelete(orgServiceUrl, item, msDelay) {
+      return $timeout(function () {
+        Orgservice.getOrg(function (data, status) {
+          if (data.success || status === 200) {
+            var orgSettings = data.orgSettings;
+            if (_.size(orgSettings[item]) <= 0) {
+              return $q.resolve();
+            }
+          }
+          return $q.reject(status);
+        });
+      }, msDelay);
+    }
+
+    function setOrgAltHdsServersHds(orgId, altHdsServers) {
+      var serviceUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '/settings/altHdsServers';
+      return $http.put(serviceUrl, altHdsServers)
+        .then(function () {
+          return checkSetOrgAltHdsServersHds(1000)
+            .catch(function () {
+              return checkSetOrgAltHdsServersHds(2000);
+            });
+        })
+        .catch(function () {
+          return $q.reject('Failed to setOrgAltHdsServersHds');
+        });
+    }
+    function checkSetOrgAltHdsServersHds(msDelay) {
+      return $timeout(function () {
+        Orgservice.getOrg(function (data, status) {
+          if (data.success || status === 200) {
+            var orgSettings = data.orgSettings;
+            if (_.size(orgSettings.altHdsServers) <= 0) {
+              return $q.resolve();
+            }
+          }
+          return $q.reject(status);
+        });
+      }, msDelay);
     }
 
     function refreshEncryptionServerForTrialUsers(gid) {
