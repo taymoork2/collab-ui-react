@@ -50,7 +50,7 @@
         vm.notes = (_.size(vm.allNotes) <= showNotesNum ? vm.allNotes : vm.allNotes.slice(0, showNotesNum));
         vm.model.postData = '';
 
-        $scope.$emit('refreshNotes', vm.allNotes);
+        $scope.$emit('cbgNotesUpdated', vm.allNotes);
       });
     }
 

@@ -1,6 +1,7 @@
 @import '~collab-ui/scss/settings/colors';
 @import '~collab-ui/scss/tools/placeholders/page-layout';
 @import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import 'modules/context/styles/_hybrid-context.scss';
 
 .field-list {
   @extend %grid-subheader;
@@ -24,12 +25,5 @@
       top: 70%;
     }
   }
-}
-
-.context-fields-state {
-  background-color: $gray-lightest;
-}
-
-.context-fieldsets-state {
-  background-color: $gray-lightest;
+  overflow-x: hidden;
 }

@@ -2,11 +2,11 @@
   'use strict';
 
   /* @ngInject */
-  function LoginCtrl($location, $rootScope, $scope, $state, $stateParams, $translate, Auth, Authinfo, Config, Log, LogMetricsService, PageParam, SessionStorage, Storage, StorageKeys, TokenService, Utils) {
+  function LoginCtrl($location, $rootScope, $scope, $state, $stateParams, $translate, Auth, Authinfo, Config, Log, LocalStorage, LogMetricsService, PageParam, SessionStorage, StorageKeys, TokenService, Utils) {
     var queryParams = SessionStorage.popObject(StorageKeys.REQUESTED_QUERY_PARAMS);
-    var language = Storage.get('language');
+    var language = LocalStorage.get('language');
 
-    $scope.message = Storage.get('loginMessage');
+    $scope.message = LocalStorage.get('loginMessage');
 
     if (language) {
       $translate.use(language).then(function () {

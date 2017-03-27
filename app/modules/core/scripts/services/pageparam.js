@@ -8,7 +8,7 @@
     .name;
 
   /* @ngInject */
-  function PageParam(Storage) {
+  function PageParam(LocalStorage) {
 
     var pageParamKey = 'pageParam';
 
@@ -18,7 +18,7 @@
     };
 
     var parseParam = function () {
-      var paramString = Storage.get(pageParamKey);
+      var paramString = LocalStorage.get(pageParamKey);
       if (paramString) {
         var rerouteData = paramString.split('_');
         paramData.route = rerouteData[0];
@@ -34,7 +34,7 @@
     return {
       set: function (paramString) {
         if (paramString) {
-          Storage.put(pageParamKey, paramString);
+          LocalStorage.put(pageParamKey, paramString);
           parseParam();
         }
       },
@@ -48,7 +48,7 @@
       },
 
       clear: function () {
-        Storage.remove(pageParamKey);
+        LocalStorage.remove(pageParamKey);
         paramData.route = null;
         paramData.param = {};
       },

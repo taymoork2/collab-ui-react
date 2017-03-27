@@ -293,8 +293,14 @@
         color: $color-attention-base;
       }
       .category-validation-warning {
-        font-family: 'CiscoSansLight';
-        padding-top: 0rem;
+        font-family: 'CiscoSansTT Regular';
+        padding-top: 0;
+        margin-left: 1rem;
+      }
+      .no-data-warning {
+        font-size: 1.13rem;
+        vertical-align: -12%;
+        padding-right: .2rem;
       }
     }
   }
@@ -379,6 +385,7 @@
 
   .ct-add-contain {
     cursor: pointer;
+    outline: none;
   }
 
   .cs-input-group {

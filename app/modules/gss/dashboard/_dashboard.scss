@@ -49,9 +49,10 @@
           > a {
             @include vr_spacing(mr, 0.75, 2px);
             @include vr_spacing(mt, 0.5, 2px);
-
-            font-size: 1rem;
-            border: 2px solid $white;
+            @include vr_spacing(pv, 0.1);
+            @include vr_spacing(ph, 0.5);
+            font-size: 0.875rem;
+            border: 1px solid $white;
             color: $white;
           }
         }

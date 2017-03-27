@@ -27,6 +27,7 @@ module.exports = csp({
     ],
     frameSrc: [
       'https://buy.ciscospark.com', // Digital River
+      'https://ds2-qlikdemo.cisco.com',
     ],
     objectSrc: [
       'http://www.cisco.com', // Terms of Service

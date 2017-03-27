@@ -1,5 +1,7 @@
 "use strict";
 
+var testModule = require('./index').default;
+
 describe(' sunlightReportService', function () {
   var sunlightReportService, $httpBackend, scope, q;
   var dummyStats = getJSONFixture('sunlight/json/features/careReport/sunlightReportStats.json');
@@ -19,7 +21,7 @@ describe(' sunlightReportService', function () {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('676a82cd-64e9-4ebd-933c-4dce087a02bd'),
   };
 
-  beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module(testModule));
   beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", spiedAuthinfo);
   }));

@@ -10,7 +10,7 @@ require('./_user-csv.scss');
   /* @ngInject */
   function UserCsvCtrl($interval, $modal, $q, $rootScope, $scope, $state, $timeout, $translate, $previousState,
     Analytics, Authinfo, Config, CsvDownloadService, FeatureToggleService, HuronCustomer, LogMetricsService, NAME_DELIMITER,
-    Notification, Orgservice, TelephoneNumberService, UserCsvService, Userservice, ResourceGroupService, USSService, DirSyncService) {
+    Notification, ServiceDescriptor, TelephoneNumberService, UserCsvService, Userservice, ResourceGroupService, USSService, DirSyncService) {
     // variables
     var vm = this;
     vm.licenseUnavailable = false;
@@ -60,19 +60,20 @@ require('./_user-csv.scss');
     var idIndex;
     var isCalendarServiceEnabled = false;
     var isCalendarOrCallServiceEntitled = false;
-    Orgservice.getHybridServiceAcknowledged().then(function (response) {
-      if (response.status === 200) {
-        _.forEach(response.data.items, function (item) {
-          if (item.id === Config.entitlements.fusion_cal) {
-            isCalendarServiceEnabled = item.enabled;
+
+    ServiceDescriptor.getServices()
+      .then(function (services) {
+        _.forEach(services, function (service) {
+          if (service.id === Config.entitlements.fusion_cal) {
+            isCalendarServiceEnabled = service.enabled;
             isCalendarOrCallServiceEntitled = true;
-          } else if (item.id === Config.entitlements.fusion_uc) {
+          } else if (service.id === Config.entitlements.fusion_uc) {
             isCalendarOrCallServiceEntitled = true;
           }
         });
         vm.handleHybridServicesResourceGroups = isCalendarOrCallServiceEntitled && vm.hasResourceGroupFeatureToggle;
-      }
-    });
+      });
+
     var bulkStartLog = null;
     var hasVoicemailService = false;
     vm.model = {

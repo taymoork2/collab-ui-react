@@ -224,7 +224,10 @@ describe('AddLinesCtrl: Ctrl', function () {
       });
 
       it('with only directoryNumber specified should set the wizardState with correct fields for show activation code modal', function () {
-        spyOn(controller, 'getSelectedNumbers').and.returnValue({ directoryNumber: directoryNumber });
+        $scope.entitylist = [{
+          assignedDn: { pattern: directoryNumber },
+          externalNumber: { pattern: 'Ingen', uuid: 'none' },
+        }];
         controller.next();
         $scope.$apply();
         expect($stateParams.wizard.next).toHaveBeenCalled();

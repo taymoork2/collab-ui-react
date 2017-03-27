@@ -456,6 +456,20 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.categoryOptionTag).toEqual('');
     });
 
+    it("should not add invalid category", function () {
+      var ENTER_KEYPRESS_EVENT = {
+        which: 13,
+      };
+      var errorString = 'Agent has left the chat room Waiting for an Agent to join You are chatting with our agent Agent has left the chat room Waiting for an Agent to join You are chatting with our agent Agent has left the chat room Waiting for an Agent to join You are chatting with our agent ';
+      controller.categoryOptionTag = errorString;
+      spyOn(controller, 'addCategoryOption').and.callThrough();
+
+      controller.onEnterKey(ENTER_KEYPRESS_EVENT);
+
+      expect(controller.addCategoryOption).toHaveBeenCalled();
+      expect(controller.categoryOptionTag).toEqual(errorString);
+    });
+
     it("should validate type for a unique field", function () {
       expect(controller.validateType({ id: 'name' })).toEqual(true);
     });

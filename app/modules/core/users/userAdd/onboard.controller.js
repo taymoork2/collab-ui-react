@@ -50,7 +50,6 @@ require('./_user-add.scss');
     $scope.dirSyncConnectorDownload = "https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/DirectoryConnector.zip";
 
     var isFTW = false;
-    $scope.msgCheckedDueToCare = false;
     $scope.isSharedMeetingsEnabled = false;
     $scope.isReset = false;
     $scope.showExtensions = true;
@@ -118,7 +117,6 @@ require('./_user-add.scss');
       });
     }
 
-    $scope.controlCare = controlCare;
     $scope.controlMsg = controlMsg;
 
     initController();
@@ -818,6 +816,10 @@ require('./_user-add.scss');
       return $scope.isSharedMeetingsLicense(license) ? '<div class="license-tooltip-html">' + $translate.instant('firstTimeWizard.sharedLicenseTooltip') + '</div>' : '<div class="license-tooltip-html">' + $translate.instant('firstTimeWizard.namedLicenseTooltip') + '</div>';
     };
 
+    $scope.careTooltip = function () {
+      return '<div class="license-tooltip-html">' + $translate.instant('firstTimeWizard.careTooltip') + '</div>';
+    };
+
     $scope.isSubscribeable = function (license) {
       if (license.status === 'ACTIVE' || license.status === 'PENDING') {
         return (license.volume > 0);
@@ -1015,10 +1017,6 @@ require('./_user-add.scss');
 
     $scope.$watch('radioStates.msgRadio', function () {
       $scope.controlMsg();
-    });
-
-    $scope.$watch('radioStates.careRadio', function () {
-      $scope.controlCare();
     });
 
     $scope.validateDnForUser = function () {
@@ -2605,19 +2603,6 @@ require('./_user-add.scss');
     function controlMsg() {
       if (!$scope.radioStates.msgRadio) {
         $scope.radioStates.careRadio = $scope.careRadioValue.NONE;
-        $scope.msgCheckedDueToCare = false;
-      }
-    }
-
-    function controlCare() {
-      if ($scope.radioStates.careRadio !== $scope.careRadioValue.NONE) {
-        if (!$scope.radioStates.msgRadio) {
-          $scope.msgCheckedDueToCare = true;
-          $scope.radioStates.msgRadio = true;
-        }
-      } else if ($scope.msgCheckedDueToCare) {
-        $scope.msgCheckedDueToCare = false;
-        $scope.radioStates.msgRadio = false;
       }
     }
 

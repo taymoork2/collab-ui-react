@@ -8,7 +8,7 @@
         <div ng-if="hdsSettings.model.serviceMode === hdsSettings.PRE_TRIAL">
             <h5 class="sub-section__label" translate="hds.resources.settings.servicePreTrialModeTitle"></h5>
             <p class="sub-section__description" translate="hds.resources.settings.serviceNodeDesc"
-                translate-values="{nodes : hdsSettings.numTrialUsers}"
+                translate-values="{nodes : hdsSettings.numResourceNodes}"
                 translate-value-onclick="hdsSettings.addResource()"
                 translate-compile>
             </p>
@@ -49,18 +49,27 @@
         </div>
         <div ng-if="hdsSettings.model.serviceMode === hdsSettings.PRODUCTION">
             <h5 class="sub-section__label" translate="hds.resources.settings.serviceProductionModeTitle"></h5>
-            <p class="sub-section__description" translate="hds.resources.settings.serviceNodeDesc"
-                translate-values="{nodes : hdsSettings.numResourceNodes}"
-                translate-value-onclick="hdsSettings.addResource()"
-                translate-compile>
+            <p class="sub-section__description" translate="hds.resources.settings.serviceProductionModeDesc"
+                translate-values="{prod : hdsSettings.prodDomain}">
             </p>
         </div>
       </div>
     </setting-section>
 
-    <!-- temp disable this for MVO in 3/2017
-    <deactivate-section service-id="'spark-hybrid-datasecurity'"></deactivate-section>
-    -->
+    <setting-section setting="hdsSettings.deactivate" class="needs-border-top" ng-if="hdsSettings.model.serviceMode === hdsSettings.TRIAL">
+      <div class="sub-section">
+        <div ng-if="hdsSettings.model.serviceMode === hdsSettings.TRIAL">
+            <h5 class="sub-section__label" translate="common.deactivate"></h5>
+            <p class="sub-section__description" translate="hds.resources.settings.deavtivateTrialModeDesc">
+            </p>
+            <button class="btn"
+                    ng-click="hdsSettings.deactivateTrialMode()"
+                    translate="common.deactivate">
+            </button>
+        </div>
+      </div>
+    </setting-section>
+
     <documentation-section service-id="'spark-hybrid-datasecurity'"></documentation-section>
   </div>
 </div>

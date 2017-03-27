@@ -1,31 +1,33 @@
+import { GmHttpService } from '../common/gem.http.service';
+
 export class TelephonyDomainService {
 
   private url;
 
   /* @ngInject */
   constructor(
-    private UrlConfig,
-    private $http: ng.IHttpService,
+    private GmHttpService: GmHttpService,
     private $translate: ng.translate.ITranslateService,
   ) {
-    let gmUrl = this.UrlConfig.getGeminiUrl();
     this.url = {
-      getTelephonyDomains: gmUrl + 'telephonyDomains/' + 'customerId/',
-      getTelephonyDomain: gmUrl + 'telephonydomain/getTelephonyDomainInfoByDomainId/',
-      getActivityLogs: gmUrl + 'activityLogs',
+      getTelephonyDomains: 'telephonyDomains/customerId/',
+      getTelephonyDomain: 'telephonydomain/getTelephonyDomainInfoByDomainId/',
+      getActivityLogs: 'activityLogs',
+      moveSite: 'telephonydomain/moveSite',
+      cancelSubmission: 'telephonydomain/cancelSubmission',
     };
   }
 
   public getTelephonyDomains(customerId: string) {
     let url = this.url.getTelephonyDomains + customerId;
-    return this.$http.get(url, {}).then((response) => {
+    return this.GmHttpService.httpGet(url).then((response) => {
       return _.get(response, 'data');
     });
   }
 
   public getTelephonyDomain(customerId, ccaDomainId) {
     let url = this.url.getTelephonyDomain + customerId + '/' + ccaDomainId;
-    return this.$http.get(url, {}).then((response) => {
+    return this.GmHttpService.httpGet(url).then((response) => {
       return _.get(response, 'data');
     });
   }
@@ -59,10 +61,10 @@ export class TelephonyDomainService {
   private formatCsvData(data: any) {
     let newData: any [] = [];
     let oneLine = {
-      domainName: this.transformCSVNumber(data.domainName),
+      domainName: this.transformCSVNumber(data.telephonyDomainName || data.domainName),
       totalSites: this.transformCSVNumber(data.telephonyDomainSites.length),
       bridgeSet: this.transformBridgeSet(data.primaryBridgeName, data.backupBridgeName),
-      webDomain: this.transformCSVNumber(data.webDomainName),
+      webDomain: this.transformCSVNumber(data.webDomainName || 'N/A'),
       status: data.status ? this.$translate.instant('gemini.cbgs.field.status.' + data.status) : '',
       description: this.transformCSVNumber(data.customerAttribute),
       siteUrl: '',
@@ -105,21 +107,43 @@ export class TelephonyDomainService {
 
   public getNotes(customerId: string, ccaDomainId: string) {
     let url = this.url.getActivityLogs + '/' + customerId + '/' + ccaDomainId + '/add_note';
-    return this.$http.get(url, {}).then((response) => {
+    return this.GmHttpService.httpGet(url).then((response) => {
       return _.get(response, 'data');
     });
   }
 
   public postNotes(data: any) {
     let url = this.url.getActivityLogs;
-    return this.$http.post(url, data).then((response) => {
+    return this.GmHttpService.httpPost(url, null, null, data).then((response) => {
       return _.get(response, 'data');
     });
   }
 
   public getHistories(customerId: string, ccaDomainId: string, domainName: string) {
     let url = this.url.getActivityLogs + '/' + customerId + '/' + ccaDomainId + '/Telephony%20Domain/' + domainName;
-    return this.$http.get(url, {}).then((response) => {
+    return this.GmHttpService.httpGet(url).then((response) => {
+      return _.get(response, 'data');
+    });
+  }
+
+  public moveSite(data: any) {
+    let url = this.url.moveSite;
+    return this.GmHttpService.httpPut(url, null, null, data).then((response) => {
+      return _.get(response, 'data');
+    });
+  }
+
+  public updateTelephonyDomainStatus(customerId: string, ccaDomainId: string, telephonyDomainId: number, operation: string) {
+    let url: string = '';
+    let postData: any = {
+      ccaDomainId: ccaDomainId,
+      customerId: customerId,
+      TelephonyDomainId: telephonyDomainId,
+    };
+    if (operation === 'cancel') {
+      url = this.url.cancelSubmission;
+    }
+    return this.GmHttpService.httpPost(url, null, null, postData).then((response) => {
       return _.get(response, 'data');
     });
   }

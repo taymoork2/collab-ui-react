@@ -81,4 +81,20 @@ describe('CloudConnectorService', () => {
 
   });
 
+  describe(' error handling ', () => {
+
+    it('should map a valid error code to a translation key', () => {
+      let errorCode = 1;
+      let returnedTranslationKey = CloudConnectorService.getProvisioningResultTranslationKey(errorCode);
+      expect(returnedTranslationKey).toBe('hercules.settings.googleCalendar.provisioningResults.BAD_API_ACCESS_SETTINGS');
+    });
+
+    it('should default to the general error if the error code is not in the enum', () => {
+      let errorCode = 1913;
+      let returnedTranslationKey = CloudConnectorService.getProvisioningResultTranslationKey(errorCode);
+      expect(returnedTranslationKey).toBe('hercules.settings.googleCalendar.provisioningResults.GENERAL_ERROR');
+    });
+
+  });
+
 });

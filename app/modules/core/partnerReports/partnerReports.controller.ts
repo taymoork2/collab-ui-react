@@ -47,12 +47,7 @@ class PartnerReportCtrl {
     private DummyReportService: DummyReportService,
     private GraphService: GraphService,
     private ReportService: ReportService,
-    private FeatureToggleService,
   ) {
-    this.FeatureToggleService.atlasReportsUpdateGetStatus().then((toggle: boolean): void => {
-      this.downloadToggle = toggle;
-    });
-
     this.ALL = this.ReportConstants.ALL;
     this.ENGAGEMENT = this.ReportConstants.ENGAGEMENT;
     this.QUALITY = this.ReportConstants.QUALITY;

@@ -336,6 +336,3 @@ export class CommonReportService {
     return Math.round((numberOne / numberTwo) * this.ReportConstants.PERCENTAGE_MULTIPLIER);
   }
 }
-
-angular.module('Core')
-  .service('CommonReportService', CommonReportService);

@@ -1,0 +1,58 @@
+<div ng-if="$ctrl.loadingInit" class="loading-container">
+  <i class="icon icon-spinner"></i>
+</div>
+<div ng-if="!$ctrl.loadingInit">
+  <div ng-if="!$ctrl.isValid || ($ctrl.isValid && $ctrl.addressFound)">
+    <hr-service-address
+      class="large-form"
+      ng-form="$ctrl.emergencyAddressForm"
+      isolate-form
+      address="$ctrl.address"
+      country-code="$ctrl.countryCode"
+      read-only="$ctrl.isValid"
+      ::hide-search="true"
+      address-validate="$ctrl.validate()"
+      modify="$ctrl.modify()">
+    </hr-service-address>
+  </div>
+  <div ng-if="$ctrl.isValid && !$ctrl.addressFound">
+    <div class="row collapse full">
+      <div class="columns medium-12">
+        {{$ctrl.address.streetAddress | uppercase}} {{$ctrl.address.unit | uppercase}}
+      </div>
+    </div>
+    <div class="row collapse full">
+        <div class="columns medium-12">
+          {{$ctrl.address.city | uppercase}}<span ng-if="$ctrl.address.state">, {{$ctrl.address.state}}</span>  {{$ctrl.address.zip}}
+        </div>
+      </div>
+  </div>
+  <a ng-if="$ctrl.hasModify()" href ng-click="$ctrl.modify()" translate="common.modify"></a>
+  <div ng-class="{warning: $ctrl.addressStatus === 'PENDING'}">
+    <div class="cs-input__messages">
+      <div class="message">{{::'serviceAddress.pending' | translate}}</div>
+    </div>
+  </div>
+  <div ng-if="$ctrl.hasValidate()" class="service-address-buttons">
+    <button
+      cs-btn
+      ng-click="$ctrl.validate()"
+      ng-disabled="$ctrl.emergencyAddressForm.$invalid"
+      class="btn--primary"
+      loading="$ctrl.loadingValidate">
+      <span translate="common.submit"></span>
+    </button>
+    <button ng-click="$ctrl.cancelEdit()"><span translate="common.cancel"></span></button>
+  </div>
+  <div ng-if="$ctrl.hasSave()" class="service-address-buttons">
+    <p translate="settingsServiceAddress.savePrompt"></p>
+    <button
+      cs-btn
+      ng-click="$ctrl.save()"
+      class="btn--primary"
+      loading="$ctrl.loadingSave">
+      <span translate="common.save"></span>
+    </button>
+    <button ng-click="$ctrl.cancelSave()"><span translate="common.cancel"></span></button>
+  </div>
+</div>

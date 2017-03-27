@@ -1512,6 +1512,16 @@
               },
             },
           })
+          .state('reports.webex-metrics', {
+            url: '/reports/webexMetrics',
+            views: {
+              'tabContent': {
+                controllerAs: 'nav',
+                controller: 'WebExMetricsCtrl',
+                templateUrl: 'modules/core/customerReports/webexMetrics/webexMetrics.tpl.html',
+              },
+            },
+          })
           .state('reports.media', {
             url: '/reports/media',
             views: {
@@ -1938,11 +1948,6 @@
             url: '/overview',
             templateUrl: 'modules/core/partnerHome/partnerHome.tpl.html',
             controller: 'PartnerHomeCtrl',
-            resolve: {
-              trialForPaid: function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasStartTrialForPaid);
-              },
-            },
           })
           .state('partnerreports', {
             parent: 'partner',
@@ -2065,11 +2070,6 @@
             params: {
               filter: null,
             },
-            resolve: {
-              trialForPaid: function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasStartTrialForPaid);
-              },
-            },
           })
           .state('customer-overview', {
             parent: 'sidepanel',
@@ -2084,7 +2084,10 @@
               identityCustomer: /* @ngInject */ function ($stateParams, $q, Orgservice) {
                 var defer = $q.defer();
                 if ($stateParams.currentCustomer) {
-                  Orgservice.getOrg(orgCallback, $stateParams.currentCustomer.customerOrgId);
+                  var params = {
+                    basicInfo: true,
+                  };
+                  Orgservice.getOrg(orgCallback, $stateParams.currentCustomer.customerOrgId, params);
                 }
 
                 return defer.promise;
@@ -2092,9 +2095,6 @@
                 function orgCallback(data) {
                   defer.resolve(data);
                 }
-              },
-              trialForPaid: function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasStartTrialForPaid);
               },
               data: /* @ngInject */ function ($state, $translate) {
                 $state.get('customer-overview').data.displayName = $translate.instant('common.overview');
@@ -2166,6 +2166,20 @@
             data: {},
             params: {
               sharedDeviceLicenses: {},
+            },
+          })
+          .state('customer-overview.careLicenseDetail', {
+            controller: 'CareLicenseDetailCtrl',
+            controllerAs: 'careLicenseDetail',
+            templateUrl: 'modules/core/customers/customerOverview/careLicenseDetail.tpl.html',
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.careLicenseDetail').data.displayName = $translate.instant('customerPage.careLicenses');
+              },
+            },
+            data: {},
+            params: {
+              careLicense: {},
             },
           })
           .state('customer-overview.externalNumbers', {
@@ -2880,10 +2894,10 @@
             parent: 'context',
             views: {
               'subHeader': {
-                templateUrl: 'modules/context/resources/hybrid-context-resources-header.html',
+                template: '<context-resources-sub-header></context-resources-sub-header>',
               },
               'contextServiceView': {
-                template: '<hybrid-service-cluster-list service-id="\'contact-center-context\'"></hybrid-service-cluster-list>',
+                template: '<hybrid-service-cluster-list service-id="\'contact-center-context\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>',
                 controller: /* @ngInject */ function (Analytics) {
                   return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CONTEXT_LIST);
                 },
@@ -2896,6 +2910,9 @@
               hasContactCenterContextFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.contactCenterContext);
               },
+              clusterId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.clusterId;
+              },
             },
           })
           .state('context-fields', {
@@ -2906,6 +2923,31 @@
                 templateUrl: 'modules/context/fields/hybrid-context-fields.html',
                 controller: 'HybridContextFieldsCtrl',
                 controllerAs: 'contextFields',
+              },
+            },
+            resolve: {
+              hasContextDictionaryEditFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasContextDictionaryEdit);
+              },
+            },
+          })
+          .state('context-new-field', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                template: '<context-new-field-modal existing-field-ids="$resolve.existingFieldIds" create-callback="$resolve.createCallback" dismiss="$dismiss()" class="new-field-modal"></context-new-field-modal>',
+              },
+            },
+            params: {
+              existingFieldIds: [],
+              createCallback: function () {},
+            },
+            resolve: {
+              existingFieldIds: /* @ngInject */ function ($stateParams) {
+                return $stateParams.existingFieldIds;
+              },
+              createCallback: /* @ngInject */ function ($stateParams) {
+                return $stateParams.createCallback;
               },
             },
           })
@@ -3008,11 +3050,14 @@
           .state('private-trunk-overview', {
             url: '/privateTrunkOverview',
             parent: 'main',
-            template: '<private-trunk-overview></private-trunk-overview>',
+            template: '<private-trunk-overview has-private-trunk-feature-toggle="$resolve.hasPrivateTrunkFeatureToggle"></private-trunk-overview>',
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require(['modules/hercules/privateTrunk/privateTrunkOverview'], done);
               }),
+              hasPrivateTrunkFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.huronEnterprisePrivateTrunking);
+              },
             },
           })
           .state('context-cluster-sidepanel.host-details', {
@@ -3529,6 +3574,9 @@
             resolve: {
               hasVoicemailFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridVoicemail);
+              },
+              hasAtlasHybridCallDiagnosticTool: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCallDiagnosticTool);
               },
             },
           })

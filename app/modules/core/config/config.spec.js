@@ -4,22 +4,22 @@ describe('Config', function () {
 
   beforeEach(angular.mock.module('Core'));
 
-  var Config, $location, tabConfig, Storage;
+  var Config, $location, tabConfig, LocalStorage;
 
   afterEach(function () {
-    Config = $location = tabConfig = Storage = undefined;
+    Config = $location = tabConfig = LocalStorage = undefined;
   });
 
-  beforeEach(inject(function (_$location_, _Config_, _tabConfig_, _Storage_) {
+  beforeEach(inject(function (_$location_, _Config_, _tabConfig_, _LocalStorage_) {
     Config = _Config_;
-    Storage = _Storage_;
+    LocalStorage = _LocalStorage_;
     tabConfig = _tabConfig_;
     $location = _$location_;
     spyOn($location, 'host');
   }));
 
   afterEach(function () {
-    Storage.remove('TEST_ENV_CONFIG');
+    LocalStorage.remove('TEST_ENV_CONFIG');
   });
 
   var devHost = 'localhost';

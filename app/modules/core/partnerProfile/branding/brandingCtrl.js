@@ -55,6 +55,10 @@ require('./_brandingUpload.scss');
         }
       });
 
+      var params = {
+        disableCache: true,
+        basicInfo: true,
+      };
       Orgservice.getOrg(function (data, status) {
         if (data.success) {
           var settings = data.orgSettings;
@@ -74,7 +78,7 @@ require('./_brandingUpload.scss');
           Log.debug('Get existing org failed. Status: ' + status);
         }
 
-      }, orgId, true);
+      }, orgId, params);
 
       BrandService.getLogoUrl(orgId).then(function (logoUrl) {
         brand.tempLogoUrl = logoUrl;

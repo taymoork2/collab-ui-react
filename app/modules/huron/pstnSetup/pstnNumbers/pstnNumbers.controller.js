@@ -14,7 +14,7 @@
   }
 
   /* @ngInject */
-  function PstnNumbersCtrl($q, $scope, $state, $timeout, $translate, DidService, Notification, PstnSetup, PstnSetupService, TelephoneNumberService, PstnSetupStatesService, ValidationService) {
+  function PstnNumbersCtrl($q, $scope, $state, $timeout, $translate, DidService, Notification, PstnSetup, PstnSetupService, TelephoneNumberService, PstnSetupStatesService, ValidationService, FeatureToggleService) {
     var vm = this;
 
     vm.provider = PstnSetup.getProvider();
@@ -47,8 +47,12 @@
     };
 
     vm.orderNumbersTotal = 0;
+    vm.tollFreeTitle = $translate.instant('pstnSetup.tollFreeTitle', {
+      areaCodes: '',
+    });
     vm.showTollFreeNumbers = false;
-    vm.showPortNumbers = !PstnSetup.getIsTrial();
+    vm.isTrial = PstnSetup.getIsTrial();
+    vm.showPortNumbers = !vm.isTrial;
     var BLOCK_ORDER = PstnSetupService.BLOCK_ORDER;
     var PORT_ORDER = PstnSetupService.PORT_ORDER;
     var NUMBER_ORDER = PstnSetupService.NUMBER_ORDER;
@@ -58,6 +62,8 @@
     var NXX_EMPTY = '--';
     var MIN_BLOCK_QUANTITY = 2;
     var MAX_BLOCK_QUANTITY = 100;
+    var MIN_VALID_CODE = 3;
+    var MAX_VALID_CODE = 6;
     //carrier capabilities
     var TOLLFREE_ORDERING_CAPABILITY = 'TOLLFREE_ORDERING';
 
@@ -71,8 +77,10 @@
     vm.getStateInventory = getStateInventory;
     vm.getAreaNxx = getAreaNxx;
     vm.searchCarrierInventory = searchCarrierInventory;
+    vm.searchCarrierTollFreeInventory = searchCarrierTollFreeInventory;
     vm.getCapabilities = getCapabilities;
     vm.onBlockClick = onBlockClick;
+    vm.resultChange = resultChange;
 
     vm.formatTelephoneNumber = formatTelephoneNumber;
     vm.showOrderQuantity = showOrderQuantity;
@@ -131,10 +139,24 @@
               'abbreviation': PstnSetup.getServiceAddress().state,
             }), 'name'),
           };
-          getStateInventory();
         }
       });
       getCapabilities();
+      FeatureToggleService.supports(FeatureToggleService.features.huronFederatedSparkCall)
+      .then(function (results) {
+        results = true;
+        vm.ftHuronFederatedSparkCall = results;
+        if (!results) {
+          $scope.$watchCollection(function () {
+            return vm.model.tollFree.searchResultsModel;
+          }, function (searchResultsModel) {
+            // set disabled in next digest because of cs-btn
+            $timeout(function () {
+              vm.model.tollFree.addDisabled = !_.includes(searchResultsModel, true);
+            });
+          });
+        }
+      });
     }
 
     vm.tollFreeFields = [{
@@ -273,6 +295,19 @@
       PstnSetupService.getCarrierTollFreeInventory(PstnSetup.getProviderId())
         .then(function (response) {
           vm.model.tollFree.areaCodeOptions = response.areaCodes;
+          var areaCodes = '';
+          response.areaCodes.map(function (areaCode, index, array) {
+            areaCodes += areaCode.code;
+            if (array.length !== index + 1) {
+              areaCodes += ', ';
+            } else {
+              areaCodes += '.';
+            }
+            return areaCode;
+          });
+          vm.tollFreeTitle = $translate.instant('pstnSetup.tollFreeTitle', {
+            areaCodes: areaCodes,
+          });
           vm.model.tollFree.areaCode = '';
         })
         .catch(function (response) {
@@ -281,7 +316,7 @@
     }
 
     function getCapabilities() {
-      if (!PstnSetup.getIsTrial()) {
+      if (!vm.isTrial) {
         PstnSetupService.getCarrierCapabilities(PstnSetup.getProviderId())
           .then(function (response) {
             var supportedCapabilities = [];
@@ -310,6 +345,10 @@
       }
     }
 
+    function resultChange(change) {
+      vm.model.pstn.searchResultsModel = change;
+    }
+
     function isSingleResult() {
       if (!vm.model.pstn.block) {
         return true;
@@ -336,7 +375,26 @@
       return null;
     }
 
-    function searchCarrierInventory() {
+    function searchCarrierInventory(areaCode, block, quantity, consecutive) {
+      if (areaCode) {
+        vm.model.pstn.showNoResult = false;
+        areaCode = '' + areaCode;
+        vm.model.pstn.areaCode = {
+          code: areaCode.slice(0, MIN_VALID_CODE),
+        };
+        vm.model.pstn.block = block;
+        vm.model.pstn.quantity = quantity;
+        vm.model.pstn.consecutive = consecutive;
+        if (areaCode.length === MAX_VALID_CODE) {
+          vm.model.pstn.nxx = {
+            code: areaCode.slice(MIN_VALID_CODE, areaCode.length),
+          };
+        } else {
+          vm.model.pstn.nxx = {
+            code: null,
+          };
+        }
+      }
       vm.model.pstn.showAdvancedOrder = false;
       var field = this;
       var params = {
@@ -359,9 +417,27 @@
       PstnSetupService.searchCarrierInventory(PstnSetup.getProviderId(), params)
         .then(function (numberRanges) {
           if (numberRanges.length === 0) {
-            vm.model.pstn.showAdvancedOrder = true;
+            if (vm.isTrial) {
+              vm.model.pstn.showNoResult = true;
+            } else {
+              vm.model.pstn.showAdvancedOrder = true;
+            }
+
           } else if (vm.model.pstn.isSingleResult) {
-            vm.model.pstn.searchResults = _.flatten(numberRanges);
+            if (areaCode && areaCode.length > MIN_VALID_CODE) {
+              vm.model.pstn.searchResults = _.flatten(numberRanges).filter(function (number) {
+                return number.includes(areaCode);
+              });
+              if (vm.model.pstn.searchResults.length === 0) {
+                if (vm.isTrial) {
+                  vm.model.pstn.showNoResult = true;
+                } else {
+                  vm.model.pstn.showAdvancedOrder = true;
+                }
+              }
+            } else {
+              vm.model.pstn.searchResults = _.flatten(numberRanges);
+            }
           } else {
             vm.model.pstn.searchResults = numberRanges;
           }
@@ -374,9 +450,21 @@
         });
     }
 
-    function searchCarrierTollFreeInventory() {
+    function searchCarrierTollFreeInventory(areaCode, block, quantity, consecutive) {
       vm.model.tollFree.showAdvancedOrder = false;
       var field = this;
+      if (angular.isString(areaCode)) {
+        vm.model.tollFree.block = block;
+        vm.model.tollFree.quantity = quantity;
+        vm.model.tollFree.consecutive = consecutive;
+        if (areaCode) {
+          areaCode = '' + areaCode;
+          vm.model.tollFree.areaCode = {
+            code: areaCode.slice(0, MIN_VALID_CODE),
+          };
+        }
+        vm.model.tollFree.isSingleResult = !block;
+      }
       var params = {
         npa: vm.model.tollFree.areaCode.code,
         count: vm.model.tollFree.quantity === 1 ? undefined : vm.model.tollFree.quantity,
@@ -384,7 +472,9 @@
       vm.model.tollFree.searchResults = [];
       vm.model.tollFree.searchResultsModel = {};
       vm.model.tollFree.paginateOptions.currentPage = 0;
-      vm.model.tollFree.isSingleResult = vm.model.tollFree.quantity == 1;
+      if (!angular.isString(areaCode)) {
+        vm.model.tollFree.isSingleResult = vm.model.tollFree.quantity == 1;
+      }
       field.loading = true;
 
       PstnSetupService.searchCarrierTollFreeInventory(PstnSetup.getProviderId(), params)
@@ -405,7 +495,22 @@
         });
     }
 
-    function addToCart(orderType, numberType) {
+    function addToCart(orderType, numberType, quantity, searchResultsModel) {
+      if (quantity) {
+        if (numberType === NUMTYPE_DID) {
+          vm.model.pstn.quantity = quantity;
+        } else if (numberType === NUMTYPE_TOLLFREE) {
+          vm.model.tollFree.quantity = quantity;
+        }
+      }
+      if (searchResultsModel) {
+        if (numberType === NUMTYPE_DID) {
+          vm.model.pstn.searchResultsModel = searchResultsModel;
+        } else if (numberType === NUMTYPE_TOLLFREE) {
+          vm.model.tollFree.searchResultsModel = searchResultsModel;
+        }
+      }
+
       switch (orderType) {
         case NUMBER_ORDER:
           addToOrder(numberType);
@@ -743,15 +848,6 @@
       // set disabled in next digest because of cs-btn
       $timeout(function () {
         vm.model.pstn.addDisabled = !_.includes(searchResultsModel, true);
-      });
-    });
-
-    $scope.$watchCollection(function () {
-      return vm.model.tollFree.searchResultsModel;
-    }, function (searchResultsModel) {
-      // set disabled in next digest because of cs-btn
-      $timeout(function () {
-        vm.model.tollFree.addDisabled = !_.includes(searchResultsModel, true);
       });
     });
 

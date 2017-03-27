@@ -88,6 +88,9 @@
 
     function setPMRSiteUrlFromSipDomain() {
       var pmrSiteUrl = '';
+      var params = {
+        basicInfo: true,
+      };
       Orgservice.getOrg(function (data, status) {
         if (status === 200) {
           var sparkDomainStr = UrlConfig.getSparkDomainCheckUrl();
@@ -104,7 +107,7 @@
             }
           });
         }
-      });
+      }, null, params);
     }
 
     vm.checkPMRSiteUrlAvailability = function () {

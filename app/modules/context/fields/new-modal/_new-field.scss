@@ -1,0 +1,13 @@
+.new-field-modal {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.new-field-modal-body {
+
+  textarea {
+    resize: none;
+    height: 100px;
+  }
+}

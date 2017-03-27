@@ -51,6 +51,21 @@
           "isTrial": true,
           "trialId": "a592abe4-0fc7-4dff-9ab8-1ad5642c4ac9",
           "status": "PENDING"
+        }, {
+          "licenseId": "CVC_237397c1-7aa0-4f46-8803-98a3a80a81e2",
+          "offerName": "CVC",
+          "licenseType": "CAREVOICE",
+          "features": [
+            "contact-center-context",
+            "spark",
+            "cloud-contact-center",
+            "cloud-contact-center-inbound-voice",
+            "webex-squared"
+          ],
+          "volume": 100,
+          "isTrial": true,
+          "trialId": "a592abe4-0fc7-4dff-9ab8-1ad5642c4ac9",
+          "status": "PENDING"
         }],
         "state": "ACTIVE",
         "createdBy": "17256dc8-db74-41b5-8a7c-e20e4f594a0a",
@@ -216,6 +231,22 @@
           "trialId": "7db0f7c1-a961-41dd-995e-ef4eb204cc72",
           "status": "PENDING",
           "partnerEmail": "partner@company.com"
+        }, {
+          "licenseId": "CVC_237397c1-7aa0-4f46-8803-98a3a80a81e2",
+          "offerName": "CVC",
+          "licenseType": "CAREVOICE",
+          "features": [
+            "contact-center-context",
+            "spark",
+            "cloud-contact-center",
+            "cloud-contact-center-inbound-voice",
+            "webex-squared"
+          ],
+          "volume": 100,
+          "isTrial": true,
+          "trialId": "7db0f7c1-a961-41dd-995e-ef4eb204cc72",
+          "status": "PENDING",
+          "partnerEmail": "partner@company.com"
         }],
         "state": "ACTIVE",
         "createdBy": "17256dc8-db74-41b5-8a7c-e20e4f594a0a",
@@ -274,6 +305,21 @@
           "isTrial": true,
           "trialId": "f4c2397f-75a3-4a00-8e93-fe6aa2b9890f",
           "status": "PENDING"
+        }, {
+          "licenseId": "CVC_237397c1-7aa0-4f46-8803-98a3a80a81e2",
+          "offerName": "CVC",
+          "licenseType": "ADVANCE_CARE",
+          "features": [
+            "contact-center-context",
+            "spark",
+            "cloud-contact-center",
+            "cloud-contact-center-inbound-voice",
+            "webex-squared"
+          ],
+          "volume": 100,
+          "isTrial": true,
+          "trialId": "f4c2397f-75a3-4a00-8e93-fe6aa2b9890f",
+          "status": "PENDING"
         }],
         "state": "ACTIVE",
         "createdBy": "17256dc8-db74-41b5-8a7c-e20e4f594a0a",
@@ -326,6 +372,21 @@
             "contact-center-context",
             "spark",
             "cloud-contact-center",
+            "webex-squared"
+          ],
+          "volume": 100,
+          "isTrial": true,
+          "trialId": "16c3c2e9-d114-43c0-841d-b2b19de6989c",
+          "status": "PENDING"
+        }, {
+          "licenseId": "CVC_237397c1-7aa0-4f46-8803-98a3a80a81e2",
+          "offerName": "CVC",
+          "licenseType": "CAREVOICE",
+          "features": [
+            "contact-center-context",
+            "spark",
+            "cloud-contact-center",
+            "cloud-contact-center-inbound-voice",
             "webex-squared"
           ],
           "volume": 100,
@@ -494,6 +555,21 @@
       "contact-center-context",
       "spark",
       "cloud-contact-center",
+      "webex-squared"
+    ],
+    "volume": 100,
+    "isTrial": true,
+    "trialId": "16c3c2e9-d114-43c0-841d-b2b19de6989c",
+    "status": "PENDING"
+  }, {
+    "licenseId": "CVC_237397c1-7aa0-4f46-8803-98a3a80a81e2",
+    "offerName": "CVC",
+    "licenseType": "CAREVOICE",
+    "features": [
+      "contact-center-context",
+      "spark",
+      "cloud-contact-center",
+      "cloud-contact-center-inbound-voice",
       "webex-squared"
     ],
     "volume": 100,
@@ -1076,6 +1152,22 @@
       "licenseType": "CARE",
       "features": [
         "cloud-contact-center"
+      ],
+      "volume": 15,
+      "isTrial": true,
+      "trialId": "f76198f1-a393-405b-aa6f-4be9ef9be025",
+      "status": "ACTIVE",
+      "daysLeft": 46,
+      "sortOrder": 1
+    },
+    "advanceCare": {
+      "customerName": "Atlas_Test_MikeM193",
+      "licenseId": "CVC_f5a25631-e605-4004-9440-31f37fb4aa28",
+      "offerName": "CVC",
+      "licenseType": "ADVANCE_CARE",
+      "features": [
+        "cloud-contact-center",
+        "cloud-contact-center-inbound-voice"
       ],
       "volume": 15,
       "isTrial": true,

@@ -1,0 +1,16 @@
+<p class="description-block" translate="settingsServiceNumber.label"></p>
+<div ng-form="$ctrl.emergencyServiceNumberForm" class="medium-5">
+  <cs-select
+    name="emergencyServiceNumber"
+    ng-model="$ctrl.selectedNumber"
+    options="$ctrl.externalNumberOptions"
+    input-placeholder="$ctrl.filterPlaceholder"
+    on-change-fn="$ctrl.onEmergencyServiceNumberChanged()"
+    is-error="{{$ctrl.pendingError}}"
+    is-warn="{{$ctrl.showMissingEmergencyCallbackNumber}}"
+    warn-msg="{{::'settingsServiceNumber.warning' | translate}}"
+    required="true"
+    filter="true"
+    refresh-data-fn="$ctrl.getNumbers(filter)">
+  </cs-select>
+</div>

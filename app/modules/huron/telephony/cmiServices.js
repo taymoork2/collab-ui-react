@@ -20,6 +20,8 @@
     .factory('UserServiceCommonV2', UserServiceCommonV2)
     .factory('UserSearchServiceV2', UserSearchServiceV2)
     .factory('UserNumberService', UserNumberService)
+    .factory('BlfInternalExtValidation', BlfInternalExtValidation)
+    .factory('BlfURIValidation', BlfURIValidation)
     .factory('NumberSearchServiceV2', NumberSearchServiceV2)
     .factory('HuntGroupServiceV2', HuntGroupServiceV2)
     .factory('AssignAutoAttendantService', AssignAutoAttendantService)
@@ -153,6 +155,22 @@
   /* @ngInject */
   function UserNumberService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/users/:userId/numbers');
+  }
+
+  /* @ngInject */
+  function BlfInternalExtValidation($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/validate/internalextension', {
+      customerId: '@customerId',
+      value: '@internalNumber',
+    });
+  }
+
+  /* @ngInject */
+  function BlfURIValidation($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/validate/uri', {
+      customerId: '@customerId',
+      value: '@uri',
+    });
   }
 
   /* @ngInject */
@@ -579,7 +597,6 @@
   function CustomerDialPlanServiceV2($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/dialplans', {
       customerId: '@customerId',
-      name: '@name',
     });
   }
 

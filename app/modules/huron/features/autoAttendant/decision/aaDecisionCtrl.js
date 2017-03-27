@@ -6,7 +6,7 @@
   .controller('AADecisionCtrl', AADecisionCtrl);
 
   /* @ngInject */
-  function AADecisionCtrl($scope, $translate/* , QueueHelperService */, AACommonService, AAUiModelService, AutoAttendantCeMenuModelService) {
+  function AADecisionCtrl($scope, $translate /*, QueueHelperService*/, AACommonService, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, CustomVariableService) {
 
     var vm = this;
 
@@ -18,11 +18,16 @@
 
     vm.selectConditionPlaceholder = $translate.instant('autoAttendant.selectConditionPlaceholder');
     vm.selectActionPlaceholder = $translate.instant('autoAttendant.selectActionPlaceholder');
+    vm.selectVariablePlaceholder = $translate.instant('autoAttendant.selectVariablePlaceholder');
 
     vm.ifOption = {
       label: '',
       value: '',
     };
+
+    vm.sessionVarOption = '';
+
+    vm.sessionVarOptions = [];
 
     vm.ifOptions = [{
       /* caller returned not implemented yet */
@@ -123,8 +128,11 @@
 
     }
     function setIfDecision() {
-      vm.actionEntry.if.leftCondition = vm.ifOption.value;
-
+      if (vm.ifOption.value == 'sessionVariable') {
+        vm.actionEntry.if.leftCondition = vm.sessionVarOption;
+      } else {
+        vm.actionEntry.if.leftCondition = vm.ifOption.value;
+      }
       var option = _.find(vm.ifOptions, { 'value': vm.ifOption.value });
       vm.actionEntry.if.rightCondition = option.buffer;
 
@@ -145,6 +153,21 @@
 
     }
 
+    function getSessionVariables(ceId) {
+      return CustomVariableService.listCustomVariables(ceId).then(function (data) {
+        if (data.length != 0) {
+          _.each(data[0].var_name, function (customVar) {
+            vm.sessionVarOptions.push(customVar);
+          });
+          vm.ifOptions.push({
+            label: $translate.instant('autoAttendant.decisionSessionVariable'),
+            value: 'sessionVariable',
+            buffer: '',
+          });
+        }
+      });
+    }
+
     function setActionEntry() {
       var ui = AAUiModelService.getUiModel();
       var uiMenu = ui[$scope.schedule];
@@ -161,6 +184,10 @@
     function populateMenu() {
       if (!_.isEmpty(vm.actionEntry.if.leftCondition)) {
         vm.ifOption = _.find(vm.ifOptions, { 'value': vm.actionEntry.if.leftCondition });
+        if (_.isEmpty(vm.ifOption)) {
+          vm.ifOption = _.find(vm.ifOptions, { 'value': 'sessionVariable' });
+          vm.sessionVarOption = vm.actionEntry.if.leftCondition;
+        }
         vm.ifOption.buffer = vm.actionEntry.if.rightCondition;
       }
       if (_.has(vm.actionEntry, 'then.name')) {
@@ -206,14 +233,16 @@
     }
 
     function init() {
-      /* no support for Queues as of this story.
-       * if (AACommonService.isRouteQueueToggle()) {
-       *
-       * getQueues().finally(activate);
-       * } else {
-       */
-      activate();
-      /* } */
+      getSessionVariables(AAModelService.getAAModel().aaRecordUUID).finally(function () {
+        /* no support for Queues as of this story.
+         * if (AACommonService.isRouteQueueToggle()) {
+         *
+         * getQueues().finally(activate);
+         * } else {
+         */
+        activate();
+        /* } */
+      });
     }
 
     init();

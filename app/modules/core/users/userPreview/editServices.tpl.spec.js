@@ -29,7 +29,6 @@ describe('Template: editServices', function () {
     }.bind(this));
     spyOn(this.FeatureToggleService, 'atlasSharedMeetingsGetStatus').and.returnValue(this.$q.when(false));
     spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
-    spyOn(this.Orgservice, 'getHybridServiceAcknowledged').and.returnValue(this.$q.resolve(this.mock.fusionServices));
     spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.mock.getLicensesUsage));
     spyOn(this.Orgservice, 'getUnlicensedUsers');
     spyOn(this.$previousState, 'get').and.returnValue({
