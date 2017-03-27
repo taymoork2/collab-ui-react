@@ -74,7 +74,6 @@ module.exports = {
   huronAACallQueue: 'huronAACallQueue',
   huronAAMediaUpload: 'huron-aa-mediaupload',
   huronAACallerInput: 'huron-aa-callerinput',
-  huronAAClioMedia: 'huron-aa-cliomedia',
   huronAADecision: 'huron-aa-decision',
   huronAARouteRoom: 'huron-aa-routeroom',
   huronClassOfService: 'COS',
