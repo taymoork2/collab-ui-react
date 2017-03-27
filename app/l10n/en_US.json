@@ -633,7 +633,11 @@
       }
     },
     "webexMetrics": {
-      "title": "WebEx Metrics"
+      "title": "WebEx Metrics",
+      "meetingUsage": "Meeting Usage",
+      "joinMeetingTime": "Join Meeting Time",
+      "webexReportInMashup": "CHP Reports",
+      "webexReportInQlikApp": "Qlik app"
     }
   },
   "sharedMeetingReports": {
