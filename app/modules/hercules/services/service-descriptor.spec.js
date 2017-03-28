@@ -100,7 +100,7 @@ describe('ServiceDescriptor', function () {
     };
     $httpBackend.expectGET('https://identity.webex.com/organization/scim/v1/Orgs/' + authinfo.getOrgId() + '?disableCache=true')
       .respond(200, {});
-    $httpBackend.expectPATCH('https://atlas-integration.wbx2.com/admin/api/v1/organizations/' + authinfo.getOrgId() + '/settings', data)
+    $httpBackend.expectPATCH('https://atlas-intb.ciscospark.com/admin/api/v1/organizations/' + authinfo.getOrgId() + '/settings', data)
       .respond(200, {});
     Service.setDisableEmailSendingToUser(true);
     expect($httpBackend.flush).not.toThrow();

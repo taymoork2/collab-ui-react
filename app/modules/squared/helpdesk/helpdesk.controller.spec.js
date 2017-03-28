@@ -81,7 +81,7 @@ describe('Controller: HelpdeskController', function () {
     }];
 
     var orgSearchResult = [{
-      "url": "https://atlas-integration.wbx2.com/admin/api/v1/helpdesk/organizations/e6ac8f0b-6cea-492d-875d-8edf159a844c",
+      "url": "https://atlas-intb.ciscospark.com/admin/api/v1/helpdesk/organizations/e6ac8f0b-6cea-492d-875d-8edf159a844c",
       "id": "e6ac8f0b-6cea-492d-875d-8edf159a844c",
       "displayName": "Bill Gates Foundation",
       "isPartner": false,

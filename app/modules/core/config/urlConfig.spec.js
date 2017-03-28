@@ -85,9 +85,9 @@ describe('UrlConfigSpec', function () {
 
   it('should return correct admin service url', function () {
     whenCalling('getAdminServiceUrl').expectUrlToBe({
-      dev: 'https://atlas-integration.wbx2.com/admin/api/v1/',
+      dev: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
       cfe: 'https://atlas-e.wbx2.com/admin/api/v1/',
-      integration: 'https://atlas-integration.wbx2.com/admin/api/v1/',
+      integration: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
       prod: 'https://atlas-a.wbx2.com/admin/api/v1/',
     });
   });
@@ -148,9 +148,9 @@ describe('UrlConfigSpec', function () {
 
   it('should return correct spark domain mgmt url', function () {
     whenCalling('getSparkDomainManagementUrl').expectUrlToBe({
-      dev: 'https://atlas-integration.wbx2.com/admin/api/v1/',
-      cfe: 'https://atlas-integration.wbx2.com/admin/api/v1/',
-      integration: 'https://atlas-integration.wbx2.com/admin/api/v1/',
+      dev: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
+      cfe: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
+      integration: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
       prod: 'https://atlas-a.wbx2.com/admin/api/v1/',
     });
   });

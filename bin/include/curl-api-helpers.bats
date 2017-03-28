@@ -90,7 +90,7 @@ source ./curl-api-helpers
 }
 
 @test "get_url_endpoint_prefix - should output appropriate endpoint url prefixes given the script-name" {
-    run get_url_endpoint_prefix "curl-atlas" && [ "$output" = "https://atlas-integration.wbx2.com/admin/api/v1" ]
+    run get_url_endpoint_prefix "curl-atlas" && [ "$output" = "https://atlas-intb.ciscospark.com/admin/api/v1" ]
     run get_url_endpoint_prefix "curl-wdm"   && [ "$output" = "https://wdm-integration.wbx2.com/wdm/api/v1" ]
     run get_url_endpoint_prefix "curl-ci"    && [ "$output" = "https://identity.webex.com/organization/scim/v1" ]
 }
