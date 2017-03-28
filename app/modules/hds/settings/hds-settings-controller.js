@@ -263,6 +263,7 @@
             HDSService.setOrgAltHdsServersHds(Authinfo.getOrgId(), myJSON)
               .then(function () {
                 vm.model.serviceMode = vm.PRE_TRIAL;
+                Notification.success('hds.resources.settings.succeedDeactivateTrialMode');
               }).catch(function (error) {
                 Notification.errorWithTrackingId(error, localizedHdsModeError);
               }).finally(function () {
@@ -290,6 +291,7 @@
         });
     }
     function manageHdsServersInfo(newGroupID) {
+      var defer = $q.defer();
       var jsonAltHdsServers = {
         altHdsServers: [
           {
@@ -318,15 +320,18 @@
           HDSService.setOrgAltHdsServersHds(Authinfo.getOrgId(), jsonAltHdsServers)
             .then(function () {
               getOrgHdsInfo();
-              vm.lock = false;
+              defer.resolve();
             })
-            .catch(function (error) {
-              Notification.errorWithTrackingId(error, localizedHdsModeError);
+            .catch(function () {
               HDSService.moveToProductionMode(trialKmsServer, trialKmsServerMachineUUID, trialAdrServer, trialSecurityService);
               HDSService.deleteCIGroup(Authinfo.getOrgId(), newGroupID);
-              vm.lock = false;
+              defer.reject();
             });
+        }).catch(function () {
+          defer.reject();
         });
+
+      return defer.promise;
     }
     function deactivateProductionMode() {
       // create CI Group for Trial Users
@@ -343,7 +348,14 @@
               .then(function () {
                 createTrialUserGroup()
                   .then(function (newGroupID) {
-                    manageHdsServersInfo(newGroupID);
+                    manageHdsServersInfo(newGroupID)
+                      .then(function () {
+                        Notification.success('hds.resources.settings.succeedDeactivateProductionMode');
+                      }).catch(function (error) {
+                        Notification.errorWithTrackingId(error, localizedHdsModeError);
+                      }).finally(function () {
+                        vm.lock = false;
+                      });
                   }).catch(function (error) {
                     throw error;
                   });
@@ -352,6 +364,7 @@
                 vm.lock = false;
               });
           }).catch(function () {
+            // user clicked Cancle Button, no need for a notification.
             vm.lock = false;
           });
       }

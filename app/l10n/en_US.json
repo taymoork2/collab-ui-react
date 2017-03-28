@@ -2671,6 +2671,8 @@
         "confirmDeactivateTrialDialogHeader": "Deactivate Service?",
         "confirmDeactivateTrialDialogBody": "WARNING!: If you deactivate this service, your users will no longer have access to decrypt content. Because you are in Trial Mode you will need to start a new trial after you deactivate.",
         "succeedMoveToProductionMode": "Succeeded to Move to Production Mode",
+        "succeedDeactivateProductionMode": "Succeeded to Deactivate Production Mode",
+        "succeedDeactivateTrialMode": "Succeeded to Deactivate Trial Mode",
         "deavtivateTrialModeDesc": "Deactivating Hybrid Data Security Service removes all service-related features for users.",
         "hdsModeGetError": "Failed to get HDS mode: "
       },
