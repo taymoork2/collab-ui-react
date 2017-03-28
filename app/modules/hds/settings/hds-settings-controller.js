@@ -227,7 +227,9 @@
         type: 'small',
       })
         .result.then(function () {
-          getTrialUsersInfo();
+          setTimeout(function () {
+            getTrialUsersInfo();
+          }, 3000);
         });
     }
 
@@ -239,7 +241,9 @@
         type: 'small',
       })
         .result.then(function () {
-          getTrialUsersInfo();
+          setTimeout(function () {
+            getTrialUsersInfo();
+          }, 3000);
         });
     }
     function deactivateTrialMode() {
