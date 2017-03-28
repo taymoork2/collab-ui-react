@@ -124,7 +124,7 @@
       model: vm.sx10,
       key: 'quantity',
       type: 'input',
-      className: 'pull-left medium-6',
+      className: 'pull-left medium-5',
       templateOptions: {
         labelfield: 'label',
         label: $translate.instant('trialModal.call.quantity'),
@@ -160,9 +160,9 @@
       model: vm.dx80,
       key: 'enabled',
       type: 'checkbox',
-      className: 'pull-left medium-5 medium-offset-1',
+      className: 'pull-left medium-6 medium-offset-1',
       templateOptions: {
-        label: $translate.instant('trialModal.call.dx80'),
+        label: $translate.instant('trialModal.call.dx80') + $translate.instant('trialModal.call.dx80Delay'),
         id: 'cameraDX80',
         labelClass: 'medium-offset-1',
       },
@@ -176,7 +176,7 @@
       model: vm.dx80,
       key: 'quantity',
       type: 'input',
-      className: 'pull-left medium-6',
+      className: 'pull-left medium-5',
       templateOptions: {
         labelfield: 'label',
         label: $translate.instant('trialModal.call.quantity'),
@@ -211,7 +211,7 @@
       model: vm.mx300,
       key: 'enabled',
       type: 'checkbox',
-      className: 'pull-left medium-5 medium-offset-1',
+      className: 'pull-left medium-6 medium-offset-1',
       templateOptions: {
         label: $translate.instant('trialModal.call.mx300', { max: vm.deviceLimit.CISCO_MX300.max }),
         id: 'cameraMX300',
@@ -231,7 +231,7 @@
       model: vm.mx300,
       key: 'quantity',
       type: 'input',
-      className: 'pull-left medium-6',
+      className: 'pull-left medium-5',
       templateOptions: {
         labelfield: 'label',
         label: $translate.instant('trialModal.call.quantity'),
@@ -271,7 +271,7 @@
       model: vm.phone8865,
       key: 'enabled',
       type: 'checkbox',
-      className: 'pull-left medium-5 medium-offset-1',
+      className: 'pull-left medium-6 medium-offset-1',
       templateOptions: {
         label: $translate.instant('trialModal.call.phone8865'),
         id: 'phone8865',
@@ -287,7 +287,7 @@
       model: vm.phone8865,
       key: 'quantity',
       type: 'input',
-      className: 'pull-left medium-6',
+      className: 'pull-left medium-5',
       templateOptions: {
         labelfield: 'label',
         label: $translate.instant('trialModal.call.quantity'),
@@ -321,7 +321,7 @@
       model: vm.phone8845,
       key: 'enabled',
       type: 'checkbox',
-      className: 'pull-left medium-5 medium-offset-1',
+      className: 'pull-left medium-6 medium-offset-1',
       templateOptions: {
         label: $translate.instant('trialModal.call.phone8845'),
         id: 'phone8845',
@@ -337,7 +337,7 @@
       model: vm.phone8845,
       key: 'quantity',
       type: 'input',
-      className: 'pull-left medium-6',
+      className: 'pull-left medium-5',
       templateOptions: {
         labelfield: 'label',
         label: $translate.instant('trialModal.call.quantity'),
@@ -372,7 +372,7 @@
       model: vm.phone8841,
       key: 'enabled',
       type: 'checkbox',
-      className: 'pull-left medium-5 medium-offset-1',
+      className: 'pull-left medium-6 medium-offset-1',
       templateOptions: {
         label: $translate.instant('trialModal.call.phone8841'),
         id: 'phone8841',
@@ -388,7 +388,7 @@
       model: vm.phone8841,
       key: 'quantity',
       type: 'input',
-      className: 'pull-left medium-6',
+      className: 'pull-left medium-5',
       templateOptions: {
         labelfield: 'label',
         label: $translate.instant('trialModal.call.quantity'),
@@ -422,7 +422,7 @@
       model: vm.phone7841,
       key: 'enabled',
       type: 'checkbox',
-      className: 'pull-left medium-5 medium-offset-1',
+      className: 'pull-left medium-6 medium-offset-1',
       templateOptions: {
         label: $translate.instant('trialModal.call.phone7841'),
         id: 'phone7841',
@@ -438,7 +438,7 @@
       model: vm.phone7841,
       key: 'quantity',
       type: 'input',
-      className: 'pull-left medium-6',
+      className: 'pull-left medium-5',
       templateOptions: {
         labelfield: 'label',
         label: $translate.instant('trialModal.call.quantity'),
