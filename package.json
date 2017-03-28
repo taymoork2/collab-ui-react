@@ -11,6 +11,7 @@
     "url": "git@sqbu-github.cisco.com:WebExSquared/wx2-admin-web-client.git"
   },
   "scripts": {
+    "analyze": "npm run build -- --env.analyze",
     "build": "npm run clean && webpack --bail --progress --profile",
     "clean-install": "npm cache clean && rimraf node_modules && npm install",
     "clean-test": "rimraf ./test/results ./test/coverage && npm test",
@@ -36,7 +37,7 @@
     "serve-dist": "./bin/start-lite-server.sh dist",
     "serve": "./bin/start-lite-server.sh dev",
     "start": "npm run serve --",
-    "stats": "webpack --progress --profile --json > stats.json",
+    "stats": "npm run clean && webpack --progress --profile --json > stats.json",
     "stylelint": "stylelint './app/**/**/*.scss'",
     "test": "npm run ktest-all",
     "ts-spec-delete": "node ./utils/ts-spec-delete.js",
@@ -209,6 +210,7 @@
     "unparse-args": "^1.1.0",
     "uuid": "^2.0.2",
     "webpack": "^2.2.1",
+    "webpack-bundle-analyzer": "^2.3.1",
     "webpack-dev-middleware": "^1.6.1",
     "webpack-dev-server": "^1.14.1",
     "webpack-hot-middleware": "^2.12.1",
