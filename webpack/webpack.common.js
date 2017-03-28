@@ -55,6 +55,7 @@ function webpackConfig(env) {
   }
 
   config.plugins = [
+    new webpack.ProgressPlugin(),
     new webpack.ProvidePlugin({
       $: 'jquery',
       _: 'lodash',
