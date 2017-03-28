@@ -399,10 +399,11 @@
           letter-spacing: normal;
           text-align: center;
           color: #049fd9;
+          padding-bottom: 20px;
         }
 
         .report-header {
-          padding: 8px 18px;
+          padding: 0px 18px;
         }
 
         .report-parameters {
@@ -426,6 +427,7 @@
 
           .report-name {
             width: 100%;
+            margin-bottom: 15px;
           }
 
           .date-error {
