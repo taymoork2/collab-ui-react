@@ -39,6 +39,7 @@
     this.trigger = '';
     this.type = '';
     this.number = '';
+    this.uuid = '';
   }
 
   CeInfoResource.prototype.setId = function (id) {
@@ -47,6 +48,14 @@
 
   CeInfoResource.prototype.getId = function () {
     return this.id;
+  };
+
+  CeInfoResource.prototype.setUUID = function (uuid) {
+    this.uuid = uuid;
+  };
+
+  CeInfoResource.prototype.getUUID = function () {
+    return this.uuid;
   };
 
   CeInfoResource.prototype.setTrigger = function (trigger) {
@@ -196,6 +205,7 @@
           resource.setTrigger(iResource.trigger);
           resource.setId(iResource.id);
           resource.setType(iResource.type);
+          resource.setUUID(iResource.uuid);
           if (!_.isUndefined(iResource.number)) {
             resource.setNumber(iResource.number);
           }
@@ -217,6 +227,7 @@
         resource.type = ceInfoResources[i].getType();
         resource.id = ceInfoResources[i].getId();
         resource.number = ceInfoResources[i].getNumber();
+        resource.uuid = ceInfoResources[i].getUUID();
         resources.push(resource);
       }
       aaRecord.assignedResources = resources;
