@@ -67,7 +67,8 @@
                   cs-input
                   type="checkbox"
                   id="validInput"
-                  cs-input-label="{{$ctrl.ownerName}} {{:: 'speedDials.blfPickup' | translate}} {{$ctrl.extension}}">
+                  ng-model="$ctrl.callPickupEnabled"
+                  cs-input-label="{{$ctrl.ownerName}} {{:: 'speedDials.blfPickup' | translate}} {{$ctrl.extension}}"/>
               </div>
             </div>
           </div>
