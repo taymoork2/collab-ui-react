@@ -48,7 +48,7 @@
     }
 
     function getHDSInfo() {
-      var serviceUrl = 'https://encryption-integration.wbx2.com/encryption/api/v1/kms';
+      var serviceUrl = UrlConfig.getHybridEncryptionServiceUrl() + '/kms';
       return $http.get(serviceUrl).then(extractData);
     }
 
@@ -63,9 +63,9 @@
     function createHdsTrialUsersGroup(oid) {
       var serviceUrl = _.replace(UrlConfig.getScimUrl(oid), 'Users', 'Groups');
       var json = {
-        "schemas": ["urn:scim:schemas:core:1.0", "urn:scim:schemas:extension:cisco:commonidentity:1.0"],
-        "displayName": "HDS Trial Users",
-        "members": [
+        schemas: ['urn:scim:schemas:core:1.0', 'urn:scim:schemas:extension:cisco:commonidentity:1.0'],
+        displayName: 'HDS Trial Users',
+        members: [
           {},
         ],
       };
@@ -202,13 +202,13 @@
       var serviceUrl = UrlConfig.getAdminServiceUrl() + '/organizations/' + Authinfo.getOrgId() + '/settings';
       return deleteWithConfirmation(serviceUrl, 'kmsServer')
         .then(function () {
-          return deleteWithConfirmation(serviceUrl, 'kmsServerMachineUUID')
-            .then(function () {
-              return deleteWithConfirmation(serviceUrl, 'adrServer')
-                .then(function () {
-                  return deleteWithConfirmation(serviceUrl, 'securityService');
-                });
-            });
+          return deleteWithConfirmation(serviceUrl, 'kmsServerMachineUUID');
+        })
+        .then(function () {
+          return deleteWithConfirmation(serviceUrl, 'adrServer');
+        })
+        .then(function () {
+          return deleteWithConfirmation(serviceUrl, 'securityService');
         });
     }
     function deleteWithConfirmation(orgServiceUrl, item) {
