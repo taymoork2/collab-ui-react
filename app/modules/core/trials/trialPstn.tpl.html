@@ -56,8 +56,9 @@
             <h6 class="section__description" translate="trialModal.pstn.popover"></h6>
         </div>
         <div class="section__content">
-          <formly-form class="collapse-both" model="pstnTrial.contractInfo" fields="pstnTrial.contractInfoFields" class="columns indent">
+          <formly-form ng-if="!pstnTrial.ftHuronFederatedSparkCall" class="collapse-both" model="pstnTrial.contractInfo" fields="pstnTrial.contractInfoFields" class="columns indent">
             </formly-form>
+          <uc-pstn-contact-info ng-if="pstnTrial.ftHuronFederatedSparkCall" contact="pstnTrial.trialData.details.pstnContractInfo"></uc-pstn-contact-info>
         </div>
       </div>
 

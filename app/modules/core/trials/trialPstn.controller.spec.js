@@ -141,7 +141,7 @@ describe('Controller: TrialPstnCtrl', function () {
 
   it('should initialize with the company name and email', function () {
     expect(controller.trialData.details.pstnContractInfo.companyName).toEqual(customerName);
-    expect(controller.trialData.details.pstnContractInfo.email).toEqual(customerEmail);
+    expect(controller.trialData.details.pstnContractInfo.emailAddress).toEqual(customerEmail);
   });
 
   it('should set the nxx params', function () {

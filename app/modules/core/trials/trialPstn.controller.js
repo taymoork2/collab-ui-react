@@ -133,7 +133,7 @@
       },
     }, {
       model: vm.trialData.details.pstnContractInfo,
-      key: 'signeeFirstName',
+      key: 'firstName',
       type: 'cs-input',
       className: 'medium-12',
       templateOptions: {
@@ -144,7 +144,7 @@
       },
     }, {
       model: vm.trialData.details.pstnContractInfo,
-      key: 'signeeLastName',
+      key: 'lastName',
       type: 'cs-input',
       className: 'medium-12',
       templateOptions: {
@@ -155,7 +155,7 @@
       },
     }, {
       model: vm.trialData.details.pstnContractInfo,
-      key: 'email',
+      key: 'emailAddress',
       type: 'cs-input',
       className: 'medium-12',
       templateOptions: {
@@ -193,8 +193,8 @@
         vm.trialData.details.pstnContractInfo.companyName = $scope.trial.details.customerName;
       }
 
-      if (_.has($scope, 'trial.details.customerEmail') && _.get(vm, 'trialData.details.pstnContractInfo.email') === '') {
-        vm.trialData.details.pstnContractInfo.email = $scope.trial.details.customerEmail;
+      if (_.has($scope, 'trial.details.customerEmail') && _.get(vm, 'trialData.details.pstnContractInfo.emailAddress') === '') {
+        vm.trialData.details.pstnContractInfo.emailAddress = $scope.trial.details.customerEmail;
       }
 
       $timeout(function () {
@@ -377,9 +377,9 @@
         if (vm.paginateOptions.currentPage >= vm.paginateOptions.numberOfPages()) {
           vm.paginateOptions.currentPage--;
         }
+        vm.maxSelection = 10 - vm.trialData.details.pstnNumberInfo.numbers.length;
+        vm.searchResults = [];
       });
-      vm.maxSelection = 10 - vm.trialData.details.pstnNumberInfo.numbers.length;
-      vm.searchResults = [];
     }
 
     function searchCarrierInventory(value) {
