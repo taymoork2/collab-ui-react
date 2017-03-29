@@ -13,13 +13,13 @@ class OutboundDialDigitCtrl implements ng.IComponentController {
   constructor() { }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
-    let internalNumberRangesChanges = changes['internalNumberRanges'];
-    if (internalNumberRangesChanges && internalNumberRangesChanges.currentValue) {
+    const { internalNumberRanges } = changes;
+    if (internalNumberRanges && internalNumberRanges.currentValue) {
       this.steeringDigitConflict();
     }
 
-    let steeringDigitChanges = changes['steeringDigit'];
-    if (steeringDigitChanges && steeringDigitChanges.currentValue) {
+    const { steeringDigit } = changes;
+    if (steeringDigit && steeringDigit.currentValue) {
       this.steeringDigitConflict();
     }
   }

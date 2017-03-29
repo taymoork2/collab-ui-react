@@ -41,6 +41,8 @@
       getOrgSettings: getOrgSettings,
       setOrgSettings: setOrgSettings,
       getConnector: getConnector,
+      getHost: getHost,
+      updateHost: updateHost,
     };
 
     return service;
@@ -531,9 +533,9 @@
       return $http.get(url).then(extractData);
     }
 
-    function setOrgSettings(data, orgId) {
+    function setOrgSettings(params, orgId) {
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + (orgId || Authinfo.getOrgId()) + '/settings';
-      return $http.patch(url, data).then(extractData);
+      return $http.patch(url, params).then(extractData);
     }
 
     function getConnector(connectorId, orgId) {
@@ -543,6 +545,16 @@
         var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + (orgId || Authinfo.getOrgId()) + '/connectors/' + connectorId;
         return $http.get(url).then(extractData);
       }
+    }
+
+    function getHost(serial, orgId) {
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + (orgId || Authinfo.getOrgId()) + '/hosts/' + serial;
+      return $http.get(url).then(extractData);
+    }
+
+    function updateHost(serial, params, orgId) {
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + (orgId || Authinfo.getOrgId()) + '/hosts/' + serial;
+      return $http.patch(url, params).then(extractData);
     }
   }
 })();

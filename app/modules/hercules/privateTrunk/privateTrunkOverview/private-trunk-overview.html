@@ -1,0 +1,16 @@
+<div ng-if="$ctrl.hasPrivateTrunkFeatureToggle">
+  <div class="expressway-service hercules hercules-fix-paragraphs">
+    <cs-page-header title="servicesOverview.cards.privateTrunk.title" tabs="$ctrl.tabs" back="true"
+                    back-url="$ctrl.backState"></cs-page-header>
+    <cs-page-sub-header>
+      <cs-page-sub-header-left>
+        <hybrid-services-notifications filter-tag="'private-trunk-uc'"></hybrid-services-notifications>
+      </cs-page-sub-header-left>
+      <cs-page-sub-header-right>
+        <add-hybrid-resource-button></add-hybrid-resource-button>
+      </cs-page-sub-header-right>
+    </cs-page-sub-header>
+      <div ui-view="callServiceView" class="content-container"></div>
+
+    </div>
+</div>

@@ -1464,7 +1464,7 @@
       "internationalTitle": "International Dialing",
       "internationalDesc": "Choose whether users are allowed to dial international numbers. Users and Places with Spark Call inherit this setting by default.",
       "premiumTitle": "Premium Dialing",
-      "premiumDesc": "Choose whether users are allowed to dial numbers that are charged for dial in and dial out. These include numbers starting with {{premiumNumbers}}.",
+      "premiumDesc": "Choose whether users are allowed to dial numbers that are charged for dialing out. These include numbers starting with {{premiumNumbers}}.",
       "neverAllow": "Never Allow",
       "alwaysAllow": "Always Allow",
       "orgSetting": "Organization Settings ({{state}})",
@@ -1848,8 +1848,8 @@
       "c_cal": "Calendar Connector",
       "c_ucmc": "Call Connector",
       "c_mgmt": "Management Connector",
-      "mf_mgmt": "Media Service Connector",
-      "hds_app": "Hybrid Data Security Connector",
+      "mf_mgmt": "Media Service",
+      "hds_app": "Hybrid Data Security",
       "cs_mgmt": "Management Connector",
       "cs_context": "Context Connector",
       "ucm_mgmt": "Management Connector",
@@ -2048,7 +2048,7 @@
       "defaultWebExSiteOrgLevelSavingSuccess": "Default WebEx site for organization level was successfully saved.",
       "defaultWebExSiteOrgLevelSavingError": "Could not save the change to default WebEx site for organization level. Try again later.",
       "oneButtonToPushIntervalHeading": "Early Join Time",
-      "oneButtonToPushInterval": "Before the start of a meeting, a \"Join\" button appears on Spark devices and clients. Choose how long before meeting start time this button appears. The default is 1 minute if not set.",
+      "oneButtonToPushInterval": "Before the start of a meeting, a \"Join\" button appears on Spark devices and clients. Choose how long before meeting start time this button appears. The default is 5 minutes if not set.",
       "oneButtonToPushIntervalSecondaryLabel": "minutes before the meeting",
       "oneButtonToPushIntervalMinutesSavingSuccess": "Early join time was successfully saved.",
       "oneButtonToPushIntervalMinutesSavingError": "Could not save the change to early join time. Try again later.",
@@ -2316,7 +2316,11 @@
         "complete-registration": "Go to your Expressway to complete the registration.",
         "registration-timeout": "The registration timed out. Please remove this cluster and register the Expressway again.",
         "registration-timeout-extended": "The registration timed out. Please remove this cluster and register the Expressway again in the Add Resource dialog.",
-        "go-to-expressway": "Go to Expressway"
+        "go-to-expressway": "Go to Expressway",
+        "upgrade": "Upgrade available",
+        "alarms": "Alarms",
+        "maintenance": "Maintenance",
+        "pendingMaintenance": "Pending maintenance"
       },
       "add-resource": {
         "title": "Add Resource",
@@ -2491,7 +2495,17 @@
       "noNodes": "No nodes found",
       "loadingError": "Could not load cluster data",
       "viewList": "View list",
-      "goToNode": "Go to node"
+      "enableMaintenanceMode": "Enable maintenance mode",
+      "disableMaintenanceMode": "Disable maintenance mode",
+      "goToNode": "Go to node",
+      "enableMaintenanceModeModal": {
+        "title": "Enable maintenance mode",
+        "message": "Are you sure you want to enable maintenance mode for this node?"
+      },
+      "disableMaintenanceModeModal": {
+        "title": "Disable maintenance mode",
+        "message": "Are you sure you want to disable maintenance mode for this node?"
+      }
     },
     "hybridServicesConnectorSidepanel": {
       "alarmDetails": "Alarm Details"
@@ -5827,6 +5841,8 @@
     "typeHeader": "Type",
     "deviceHeader": "No. of Devices",
     "noneFound": "No places found",
+    "bigOrgSearchHeader": "Search for a place",
+    "bigOrgSearchText": "The place list is not displayed because there are more than 1000 places",
     "actionHeader": "Actions",
     "servicesHeader": "Services",
     "sparkCall": "Cisco Spark + Spark Call",
@@ -6952,8 +6968,8 @@
           "verify": "Verify prerequisites",
           "view": "View prerequisites"
         },
-        "prereqTitle": "Private Trunking Prerequisites",
-        "setupTitle": "Set up Private Trunking ",
+        "prereqTitle": "Enterprise Private Trunking prerequisites",
+        "setupTitle": "Set up Enterprise Private Trunking ",
         "setupDescription": "Before you set up Private Trunking, complete the following prerequisites. See the <a ng-click=\"{{onclick}}\">documentation</a> for guidance.",
         "domainVerification": "Domain verification",
         "domainError": "You don't have any verified domain. You need at least one verified domain for setting up Enterprise Private Trunking. ",
@@ -6968,9 +6984,23 @@
         "fullService": "Full service: in and outbound calling",
         "allZonesHelp": "All zones and rules must be set up on Expressway-E. See ",
         "routingHelp": "The correct routing must be configured on CUCM. See ",
-        "redirectMsg": "Verified Domain Not found",
-        "redirect": "Redirect to Settings Domain",
-        "addDomain": "Add Domain"
+        "select": "Select verified domain",
+        "selectDomain": "Select domain",
+        "selectDomains": "Select domains",
+        "selectDomainDesc": "Select the verified domains that you want to route over the enterprise trunk. If you do not select any options, calls route as normal URI dialing over the internet. See the documentation for more help",
+        "radioSelect1": "I want to use a verified domain for Private Trunking",
+        "radioSelect2": "I don’t want to use a verified domain for Private Trunking",
+        "connectorTitle": "Connect Expressway-E",
+        "connector": "Enter the SIP destination of the on-premises Expressway-E that you want to use for Private Trunking",
+        "connectorHelp": "Enter an SRV domain, hostname:port, or IP address:port that resolves to your Expressway-E for mutual TLS. If your SRV record is \"_sips._tcp.sipmtls.example.com\", then enter \"sipmtls.example.com\" here.",
+        "sipLabel": "Sip destination",
+        "sip": "Enter Sip destination",
+        "displayLabel": "Display name",
+        "displayName": "Enter display name",
+        "nextSip": "Add another SIP destination",
+        "hybridConnector": "Use one or more Expressway-E configured for Hybrid Call Connect ",
+        "cancelHeader": "Cancel Enterprise Private Trunking Setup.",
+        "cancelBody": "Are you sure you want to cancel?"
       }
     },
     "showMore": "View all",

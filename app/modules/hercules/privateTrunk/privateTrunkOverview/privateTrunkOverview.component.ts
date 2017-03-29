@@ -1,10 +1,9 @@
-import { PrivateTrunkDomainService } from 'modules/hercules/privateTrunk/privateTrunkDomain';
+import { PrivateTrunkPrereqService } from 'modules/hercules/privateTrunk/privateTrunkPrereq';
 
 export class PrivateTrunkOverviewCtrl implements ng.IComponentController {
   public back: boolean = true;
   public backState = 'services-overview';
   public hasPrivateTrunkFeatureToggle: boolean;
-
   public tabs = [{
     title: 'Resources',
     state: 'private-trunk-setup',
@@ -15,18 +14,20 @@ export class PrivateTrunkOverviewCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
-   private PrivateTrunkDomainService: PrivateTrunkDomainService,
+    private PrivateTrunkPrereqService: PrivateTrunkPrereqService,
   ) {
   }
 
   public $onInit(): void {
-    this.PrivateTrunkDomainService.openModal();
+    if (this.hasPrivateTrunkFeatureToggle) {
+      this.PrivateTrunkPrereqService.openSetupModal();
+    }
   }
 }
 
 export class PrivateTrunkOverviewComponent implements ng.IComponentOptions {
   public controller = PrivateTrunkOverviewCtrl;
-  public templateUrl = 'modules/hercules/privateTrunk/privateTrunkOverview/privateTrunkOverview.html';
+  public templateUrl = 'modules/hercules/privateTrunk/privateTrunkOverview/private-trunk-overview.html';
   public bindings = {
     hasPrivateTrunkFeatureToggle: '<',
   };

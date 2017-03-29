@@ -65,6 +65,7 @@
     require('modules/huron/countries').default,
     require('modules/huron/settings').default,
     require('modules/huron/dialPlans').default,
+    require('modules/core/domainManagement').default,
   ])
     .constant('CryptoJS', require('crypto-js'))
     .constant('phone', require('google-libphonenumber'))
@@ -103,7 +104,8 @@
     'Squared',
     'core.onboard',
     'ngTagsInput',
-    require('modules/hercules/privateTrunk/privateTrunkDomain').default,
+    require('modules/hercules/privateTrunk/privateTrunkPrereq').default,
+    require('modules/hercules/privateTrunk/privateTrunkSetup').default,
   ]);
 
   angular.module('HDS', ['Core', 'Hercules']);
