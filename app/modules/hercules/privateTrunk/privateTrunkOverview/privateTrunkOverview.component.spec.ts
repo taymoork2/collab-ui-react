@@ -9,7 +9,10 @@ describe('Component: PrivateTrunkOverview component', () => {
       '$q',
     );
     spyOn(this.$modal, 'open').and.returnValue({ result: this.$q.resolve() });
-    this.compileComponent('privateTrunkOverview', {});
+    this.hasPrivateTrunkFeatureToggle = true;
+    this.compileComponent('privateTrunkOverview', {
+      hasPrivateTrunkFeatureToggle: true,
+    });
   });
   it('should open privateTrunkSetup modal', function () {
     expect(this.$modal.open).toHaveBeenCalled();

@@ -2,10 +2,10 @@
   <button type="button" class="close" ng-click="$ctrl.dismiss()">
     <span class="sr-only" translate="common.close"></span>
   </button>
-  <h3 class="modal-title">{{$ctrl.title}}</h5>
+  <div id="prereqTitle" h4 class="modal-title" translate="servicesOverview.cards.privateTrunk.prereqTitle"></h5></div>
 </div>
-<div class="modal-body private-trunk">
-  <p translate="servicesOverview.cards.privateTrunk.setupDescription" translate-value-click=""></p>
+<div class="modal-body">
+  <p id="prereqDesc" translate="servicesOverview.cards.privateTrunk.setupDescription" translate-value-click=""></p>
     <h5 translate="servicesOverview.cards.privateTrunk.domainVerification"></h5>
   <p ng-if=!$ctrl.hasVerifiedDomain>
     <i class="icon icon-error red-error-icon"></i>
@@ -13,16 +13,16 @@
     <a href="" translate="servicesOverview.cards.privateTrunk.verifyADomain" ng-click="$ctrl.gotoSettings()"></a>
   </p>
   <p ng-if=$ctrl.hasVerifiedDomain>
-    <p ng-if="$ctrl.domain.length == 1">
+    <p ng-if="$ctrl.domains.length === 1">
       <i class="icon icon-check"></i>
       <span>{{$ctrl.domain[0]}}</span>
       <span translate="servicesOverview.cards.privateTrunk.aVerifiedDomain"></span>
     </p>
-    <p ng-if="$ctrl.domain.length > 1">
+    <p ng-if="$ctrl.domains.length > 1">
       <i class="icon icon-check"></i>
       <span translate="servicesOverview.cards.privateTrunk.verifiedDomain"></span>
-      <ul class="domainlist" ng-if="$ctrl.domain.length > 1">
-        <li ng-repeat="domain in $ctrl.domain">
+      <ul class="domainlist" ng-if="$ctrl.domains.length > 1">
+        <li ng-repeat="domain in $ctrl.domains">
           <span>{{::domain}}</span>
         </li>
       </ul>
@@ -48,7 +48,7 @@
   </ul>
 </div>
 
-<div class="modal-footer">
+<div class="modal-footer private-trunk">
   <button cs-btn class="btn btn-primary" ng-click="$ctrl.dismiss()">
     <span translate="common.close"></span>
   </button>
