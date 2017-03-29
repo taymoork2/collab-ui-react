@@ -61,8 +61,12 @@ class CompanyCallerId implements ng.IComponentController {
     this.onChange(this.companyCallerId);
   }
 
-  public onCompanyCallerIdNumberChanged(): void {
-    this.companyCallerId.pattern = _.get<string>(this.selectedNumber, 'value');
+  public onCompanyCallerIdNumberChanged(value): void {
+    if (_.isObject(value)) {
+      this.companyCallerId.pattern = _.get<string>(value, 'value');
+    } else {
+      this.companyCallerId.pattern = value;
+    }
     this.onChange(this.companyCallerId);
   }
 
@@ -84,6 +88,7 @@ export class CompanyCallerIdComponent implements ng.IComponentOptions {
   public controller = CompanyCallerId;
   public templateUrl = 'modules/huron/settings/companyCallerId/companyCallerId.html';
   public bindings = {
+    site: '<',
     customerName: '<',
     companyCallerId: '<',
     externalNumberOptions: '<',

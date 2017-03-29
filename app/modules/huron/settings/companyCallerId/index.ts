@@ -1,4 +1,5 @@
 import { CompanyCallerIdComponent } from './companyCallerId.component';
+import { CallerIdPhoneNumberValidator } from './companyCallerIdValidatePhoneNumber.directive';
 
 export * from './companyNumber';
 
@@ -10,4 +11,5 @@ export default angular
     'huron.telephoneNumber',
   ])
   .component('ucCompanyCallerId', new CompanyCallerIdComponent())
+  .directive('validateCallerIdPhoneNumber', CallerIdPhoneNumberValidator.factory)
   .name;

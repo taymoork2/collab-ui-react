@@ -24,11 +24,11 @@
         ng-model="$ctrl.selectedNumber"
         options="$ctrl.externalNumberOptions"
         input-placeholder="$ctrl.filterPlaceholder"
-        on-change-fn="$ctrl.onCompanyCallerIdNumberChanged()"
+        on-change-fn="$ctrl.onCompanyCallerIdNumberChanged(value)"
         required="true"
         combo="true"
-        filter="true"
-        refresh-data-fn="$ctrl.getNumbers(filter)">
+        searchable-combo="true"
+        validate-caller-id-phone-number>
       </cs-select>
     </div>
   </div>
