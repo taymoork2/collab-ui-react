@@ -11,7 +11,7 @@ require('./_customer-list.scss');
     var vm = this;
     vm.isCustomerPartner = !!Authinfo.isCustomerPartner;
     vm.isPartnerAdmin = Authinfo.isPartnerAdmin();
-    vm.activeBadge = false;
+    vm.activeBadge = false; // What is this used for?
     vm.isTestOrg = false;
     vm.searchStr = '';
     vm.timeoutVal = 1000;
@@ -30,7 +30,7 @@ require('./_customer-list.scss');
     vm.isLicenseTypeActive = isLicenseTypeActive;
     vm.isLicenseTypeFree = isLicenseTypeFree;
     vm.isNoLicense = isNoLicense;
-    vm.partnerClicked = partnerClicked;
+    vm.partnerClicked = partnerClicked; // What is this used for?
     vm.isPartnerOrg = isPartnerOrg;
     vm.setTrial = setTrial;
     vm.showCustomerDetails = showCustomerDetails;
@@ -208,12 +208,14 @@ require('./_customer-list.scss');
       multiSelect: false,
       rowHeight: 56,
       enableRowHeaderSelection: false,
+      enableRowSelection: true,
       enableColumnMenus: false,
       enableColumnResizing: true,
       enableHorizontalScrollbar: 0,
       onRegisterApi: function (gridApi) {
         vm.gridApi = gridApi;
         vm.gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+          vm.partnerClicked(_.get(row, 'entity.customerOrgId', -1));
           vm.showCustomerDetails(row.entity);
         });
         vm.gridApi.infiniteScroll.on.needLoadMoreData($scope, function () {
