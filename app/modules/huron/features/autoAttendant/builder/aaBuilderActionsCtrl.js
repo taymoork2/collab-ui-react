@@ -60,7 +60,6 @@
     vm.getSelectHint = getSelectHint;
     vm.removeAction = removeAction;
 
-
     var PHONE_MENU_INDEX = 1;
 
     /////////////////////

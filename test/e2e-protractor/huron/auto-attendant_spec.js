@@ -614,15 +614,12 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsDisplayed(autoattendant.scheduleInfoHolidayHours);
     }, 60000);
 
-    it('should update a AA Schedule', function () {
+    it('should dismiss schedule modal on browser back button', function () {
       utils.wait(autoattendant.schedule, 12000);
       utils.click(autoattendant.schedule);
-      // utils.wait(autoattendant.starttime);
-      utils.click(autoattendant.starttime);
-      utils.sendKeys(autoattendant.starttime, '2:30AM');
-      utils.expectIsEnabled(autoattendant.modalsave);
-      utils.click(autoattendant.modalsave);
-      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
+      utils.expectIsDisplayed(autoattendant.modalsave);
+      browser.driver.navigate().back();
+      utils.expectIsNotDisplayed(autoattendant.modalsave);
     }, 60000);
 
     it('should be able to change time zone for AA', function () {
