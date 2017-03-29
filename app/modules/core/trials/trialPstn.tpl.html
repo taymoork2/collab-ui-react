@@ -13,7 +13,7 @@
   <form id="callTrialForm" class="trial-modal" name="trialForm" novalidate>
 
     <!-- provider selection -->
-    <div ng-if="!pstnTrial.ftHuronSupportThinktel">
+    <div ng-if="!(pstnTrial.ftHuronSupportThinktel || pstnTrial.ftHuronFederatedSparkCall)">
       <div class="cs-form__section">
         <div class="section__info">
           <h4 class="section__title" translate="trialModal.pstn.pstnProvider"></h4>
@@ -23,7 +23,7 @@
         </div>
       </div>
     </div>
-    <div ng-if="pstnTrial.ftHuronSupportThinktel">
+    <div ng-if="pstnTrial.ftHuronSupportThinktel || pstnTrial.ftHuronFederatedSparkCall">
       <uc-pstn-providers
         on-change-fn="pstnTrial.onProviderChange(true)"
         on-ready-fn="pstnTrial.onProviderReady()">

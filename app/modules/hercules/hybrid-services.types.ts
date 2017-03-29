@@ -1,5 +1,6 @@
 export type ClusterTargetType = 'c_mgmt' | 'mf_mgmt' | 'hds_app' | 'ucm_mgmt' | 'cs_mgmt' | 'unknown';
 export type ConnectorAlarmSeverity = 'critical' | 'error' | 'warning' | 'alert';
+export type ConnectorMaintenanceMode = 'on' | 'off' | 'pending';
 export type ConnectorState = 'running' | 'not_installed' | 'disabled' | 'downloading' | 'installing' | 'not_configured' | 'uninstalling' | 'registered' | 'initializing' | 'offline' | 'stopped' | 'not_operational' | 'unknown';
 export type ConnectorType = 'c_mgmt' | 'c_cal' | 'c_ucmc' | 'mf_mgmt' | 'hds_app' | 'cs_mgmt' | 'cs_context' | 'ucm_mgmt' | 'c_serab';
 export type ConnectorUpgradeState = 'upgraded' | 'upgrading' | 'pending';
@@ -43,6 +44,14 @@ export interface ICluster {
   url: string;
 }
 
+export interface IHost {
+  connectors: IConnector[];
+  hostname: string;
+  maintenanceMode: ConnectorMaintenanceMode;
+  serial: string;
+  url: string;
+}
+
 export interface IClusterAggregate {
   alarms: IExtendedConnectorAlarm[];
   state: ExtendedConnectorState;
@@ -50,7 +59,7 @@ export interface IClusterAggregate {
   provisioning: IConnectorProvisioning;
   upgradeAvailable: boolean;
   upgradeWarning: boolean;
-  hosts: IHost[];
+  hosts: IHostAggregate[];
 }
 
 export interface IExtendedCluster extends ICluster {
@@ -81,6 +90,7 @@ export interface IConnector {
   alarms: IConnectorAlarm[];
   clusterId: string;
   clusterUrl: string;
+  connectorStatus?: IConnectorStatus;
   connectorType: ConnectorType;
   createdAt: string;
   hostSerial: string;
@@ -94,11 +104,39 @@ export interface IConnector {
   url: string;
 }
 
+export interface IConnectorStatus {
+  clusterSerials?: any[];
+  initialized?: boolean;
+  maintenanceMode?: ConnectorMaintenanceMode;
+  operational: boolean;
+  userCapacity?: number;
+  services: {
+    onprem: {
+      address: string;
+      type: 'uc_service' | 'cal_service' | 'mercury' | 'common_identity' | 'encryption_service' | 'cmr' | 'ebex_files' | 'fms';
+      httpProxy: string;
+      state: 'ok' | 'error';
+      stateDescription: string;
+      mercury?: {
+        route: string;
+        dataCenter: string;
+      };
+    }[];
+    cloud: {
+      address: string;
+      type: 'ucm_cti' | 'ucm_axl' | 'exchange' | 'kms';
+      version: string;
+      state: 'ok' | 'error';
+      stateDescription: string;
+    }[];
+  };
+}
+
 export interface IExtendedConnector extends IConnector {
   extendedState: ExtendedConnectorState;
 }
 
-interface IHost {
+export interface IHostAggregate {
   alarms: IConnectorAlarm[];
   hostname: string;
   state: ConnectorState;
@@ -124,4 +162,19 @@ export interface IConnectorAlarm {
 export interface IExtendedConnectorAlarm extends IConnectorAlarm {
   hostname: string;
   affectedNodes: string[];
+}
+
+export interface IResourceGroup {
+  id: string;
+  name: string;
+  releaseChannel: string;
+}
+
+export interface IReleaseChannelsResponse {
+  releaseChannels: IReleaseChannelEntitlement[];
+}
+
+export interface IReleaseChannelEntitlement {
+  channel: string;
+  entitled: boolean;
 }

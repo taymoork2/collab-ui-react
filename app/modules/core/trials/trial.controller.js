@@ -933,11 +933,22 @@
       var newOrgCondition = vm.callTrial.enabled || vm.roomSystemTrial.enabled || vm.sparkBoardTrial.enabled;
       var existingOrgCondition = ((vm.callTrial.enabled && !vm.preset.call) || (vm.roomSystemTrial.enabled && !vm.preset.roomSystems));
       var hasValueChanged = !isExistingOrg() ? newOrgCondition : existingOrgCondition;
+      var countryCode;
 
       if (!hasValueChanged) {
         return;
       }
-      return HuronCustomer.create(customerOrgId, customerName, country, customerEmail)
+
+      //During 'Edit Trial', setDefaultCountry method is not called
+      //However, the TrialPstnService may have the country code set prior to
+      //trial code being instantiated
+      if (country) {
+        countryCode = country.id;
+      } else {
+        countryCode = TrialPstnService.getCountryCode();
+      }
+
+      return HuronCustomer.create(customerOrgId, customerName, countryCode, customerEmail)
         .catch(function (response) {
           Notification.errorResponse(response, 'trialModal.squareducError');
           return $q.reject(response);

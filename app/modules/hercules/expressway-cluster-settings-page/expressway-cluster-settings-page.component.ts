@@ -219,7 +219,7 @@ class ExpresswayClusterSettingsPageCtrl implements ng.IComponentController {
     return this.$translate.instant('hercules.serviceNameFromConnectorType.' + connector);
   }
 
-  /* Callback function used by <rename-and-deregister-cluster-section>  */
+  /* Callback function used by <hs-rename-and-deregister-cluster-section>  */
   public nameUpdated(name) {
     this.$rootScope.$emit('cluster-name-update', name);
   }

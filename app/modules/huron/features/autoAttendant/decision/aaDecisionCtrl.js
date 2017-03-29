@@ -156,9 +156,13 @@
     function getSessionVariables(ceId) {
       return CustomVariableService.listCustomVariables(ceId).then(function (data) {
         if (data.length != 0) {
-          _.each(data[0].var_name, function (customVar) {
-            vm.sessionVarOptions.push(customVar);
+          _.each(data, function (entry) {
+            _.each(entry.var_name, function (customVar) {
+              vm.sessionVarOptions.push(customVar);
+            });
           });
+
+          vm.sessionVarOptions.sort();
           vm.ifOptions.push({
             label: $translate.instant('autoAttendant.decisionSessionVariable'),
             value: 'sessionVariable',

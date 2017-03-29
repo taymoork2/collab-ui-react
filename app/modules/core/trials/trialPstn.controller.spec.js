@@ -123,6 +123,7 @@ describe('Controller: TrialPstnCtrl', function () {
     spyOn(PstnSetupService, 'getResellerV2').and.returnValue($q.resolve());
     spyOn(PstnSetupService, 'listResellerCarriers');
     spyOn(PstnSetupService, 'listDefaultCarriers');
+    spyOn(PstnSetupService, 'searchCarrierInventory').and.returnValue($q.resolve());
 
     controller = $controller('TrialPstnCtrl', {
       $scope: $scope,
@@ -141,6 +142,11 @@ describe('Controller: TrialPstnCtrl', function () {
   it('should initialize with the company name and email', function () {
     expect(controller.trialData.details.pstnContractInfo.companyName).toEqual(customerName);
     expect(controller.trialData.details.pstnContractInfo.email).toEqual(customerEmail);
+  });
+
+  it('should set the nxx params', function () {
+    controller.searchCarrierInventory('817932');
+    expect(controller.trialData.details.pstnNumberInfo.areaCode.code).toBe('817');
   });
 
   it('should reset NXX value when Area Code changes', function () {

@@ -15,6 +15,8 @@
     var pstnTokenLimit = 10;
     var pageSize = 15;
     var SELECT = '';
+    var MIN_VALID_CODE = 3;
+    var MAX_VALID_CODE = 6;
 
     vm.parentTrialData = $scope.$parent.trialData;
     vm.trialData = TrialPstnService.getData();
@@ -384,7 +386,7 @@
       vm.paginateOptions.currentPage = 0;
       if (value) {
         vm.trialData.details.pstnNumberInfo.areaCode = {
-          code: ('' + value).slice(0, 3),
+          code: ('' + value).slice(0, MIN_VALID_CODE),
         };
       } else {
         vm.trialData.details.pstnNumberInfo.numbers = [];
@@ -398,6 +400,14 @@
       var nxx = getNxxValue();
       if (nxx !== null) {
         params[NXX] = nxx;
+      }
+
+      if (value) {
+        if (value.length === MAX_VALID_CODE) {
+          params[NXX] = value.slice(MIN_VALID_CODE, value.length);
+        } else {
+          params[NXX] = null;
+        }
       }
 
       PstnSetupService.searchCarrierInventory(vm.trialData.details.pstnProvider.uuid, params)

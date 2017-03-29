@@ -31,6 +31,7 @@ class SpeedDialCtrl implements ng.IComponentController {
   public isValid: boolean = false;
   public extension: string = '';
   public inputType: any;
+  public callPickupEnabled: boolean = false;
  // private
   private callDest: any;
   private callDestInputs: string[];
@@ -129,6 +130,7 @@ class SpeedDialCtrl implements ng.IComponentController {
       label: '',
       number: '',
       callDest: undefined,
+      callPickupEnabled: this.callPickupEnabled,
     };
     this.speedDialList.push(sd);
     this.setEdit(sd);
@@ -139,6 +141,8 @@ class SpeedDialCtrl implements ng.IComponentController {
 
   public setSpeedDial(model) {
     this.callDest = model;
+    this.isValid = false;
+    this.callPickupEnabled = false;
     this.extensionOwned();
   }
 
@@ -149,6 +153,7 @@ class SpeedDialCtrl implements ng.IComponentController {
       });
       sd.edit = false;
       sd.label = this.newLabel;
+      sd.callPickupEnabled = this.callPickupEnabled;
       this.newNumber = this.callDest.phoneNumber;
       if (this.TelephoneNumberService.validateDID(this.callDest.phoneNumber)) {
         this.newNumber = this.TelephoneNumberService.getDIDValue(this.callDest.phoneNumber);
@@ -160,7 +165,10 @@ class SpeedDialCtrl implements ng.IComponentController {
       this.updateIndex();
       this.copyList = undefined;
     }
+
     this.SpeedDialService.updateSpeedDials(this.ownerType, this.ownerId, this.speedDialList).then(() => {
+      this.callDest = 'undefined';
+      this.isValid = false;
       this.reordering = false;
       this.editing = false;
       this.actionList = _.cloneDeep(this.actionListCopy);
@@ -194,6 +202,8 @@ class SpeedDialCtrl implements ng.IComponentController {
       this.newLabel = '';
       this.newNumber = '';
       this.callDest = 'undefined';
+      this.callPickupEnabled = false;
+      this.isValid = false;
     } else if (this.reordering) {
       this.speedDialList.length = 0;
       Array.prototype.push.apply(this.speedDialList, _.cloneDeep(this.copyList));
@@ -226,8 +236,10 @@ class SpeedDialCtrl implements ng.IComponentController {
       this.editing = true;
       sd.edit = true;
       this.newLabel = sd.label;
+      this.callPickupEnabled = <boolean>sd.callPickupEnabled;
       if (sd.number) {
         this.callDest = this.TelephoneNumberService.getDestinationObject(sd.number);
+        this.extensionOwned();
       }
     }
   }

@@ -42,7 +42,7 @@ export class CompleteregistrationOrRemoveExpresswayCtrl implements ng.IComponent
       },
       controller: 'ClusterDeregisterController',
       controllerAs: 'clusterDeregister',
-      templateUrl: 'modules/hercules/fusion-pages/components/rename-and-deregister-cluster-section/deregister-dialog.html',
+      templateUrl: 'modules/hercules/rename-and-deregister-cluster-section/deregister-dialog.html',
       type: 'dialog',
     }).result
     .then(() => {

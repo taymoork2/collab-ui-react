@@ -6,6 +6,7 @@ export default angular
     'atlas.templates',
     'collab.ui',
     'pascalprecht.translate',
+    'huron.telephoneNumber',
   ])
   .component('ucDialingSetup', new DialingSetupComponent())
   .directive('validateDialingAreaCode', DialingAreaCodeValidator.factory)

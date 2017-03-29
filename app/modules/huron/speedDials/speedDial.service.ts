@@ -3,6 +3,7 @@ export interface ISpeedDial {
   label: string;
   number: string;
   index: number;
+  callPickupEnabled?: boolean;
 }
 
 interface IDialResource extends ng.resource.IResourceClass<ng.resource.IResource<{speedDials: ISpeedDial[]}>> {
@@ -53,6 +54,7 @@ export class SpeedDialService {
         index: sd.index,
         number: sd.number,
         label: sd.label,
+        callPickupEnabled: sd.callPickupEnabled,
       });
     });
     return this.dialService.update({

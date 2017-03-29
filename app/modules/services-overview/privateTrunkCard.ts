@@ -28,17 +28,31 @@ export class ServicesOverviewPrivateTrunkCard extends ServicesOverviewHybridCard
     return this.hasDomain ? this._verifyDomain_buttons : this._buttons;
   }
 
-  public privateTrunkFeatureToggleEventHandler(hasFeature: boolean) {
+  public privateTrunkFeatureToggleEventHandler(hasFeature: boolean): void {
     this.display = hasFeature;
   }
 
+  public privateTrunkDomainEventHandler(hasDomain: boolean): void {
+    this.hasDomain = hasDomain;
+  }
+
   public openModal(): void {
-    this.PrivateTrunkDomainService.openModal();
+    this.PrivateTrunkPrereqService.openModal();
+  }
+
+  public hasVerifiedDomain(): boolean {
+    return this.PrivateTrunkPrereqService.getVerifiedDomains().then(response => {
+      this.hasDomain = response.length > 0;
+    });
+  }
+
+  public $onInit() {
+    this.hasVerifiedDomain();
   }
 
   /* @ngInject */
   public constructor(
-    private PrivateTrunkDomainService,
+    private PrivateTrunkPrereqService,
     FusionClusterStatesService,
 
   ) {
@@ -51,7 +65,7 @@ export class ServicesOverviewPrivateTrunkCard extends ServicesOverviewHybridCard
       display : true,
       routerState: 'private-trunk-overview',
       service: 'cisco-uc',
-      template: 'modules/services-overview/privateTrunk.html',
+      template: 'modules/services-overview/privateTrunkCard.html',
     }, FusionClusterStatesService);
     this.hasDomain = false;
   }
