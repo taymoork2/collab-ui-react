@@ -17,6 +17,13 @@
         });
     }
 
+    function getSearchPlacesList(searchStr) {
+      return $http.get(csdmPlacesUrl + "?type=all&query=" + searchStr)
+        .then(function (res) {
+          return CsdmConverter.convertPlaces(res.data);
+        });
+    }
+
     function updateItemName(place, name) {
       return $http.patch(place.url, {
         name: name,
@@ -83,6 +90,7 @@
       updateItemName: updateItemName,
       getPlacesUrl: getPlacesUrl,
       updatePlace: updatePlace,
+      getSearchPlacesList: getSearchPlacesList,
     };
   }
 
