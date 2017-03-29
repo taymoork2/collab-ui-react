@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Component: resourceGroupCard', function () {
+describe('Component: hsResourceGroupCard', function () {
   beforeEach(angular.mock.module('Hercules'));
 
   describe('Controller', function () {
@@ -16,7 +16,7 @@ describe('Component: resourceGroupCard', function () {
 
     beforeEach(inject(function ($injector) {
       $componentController = $injector.get('$componentController');
-      controller = $componentController('resourceGroupCard', {
+      controller = $componentController('hsResourceGroupCard', {
         $scope: {},
       }, {
         group: mockGroup,

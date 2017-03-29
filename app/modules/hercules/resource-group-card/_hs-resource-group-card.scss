@@ -1,4 +1,4 @@
-resource-group-card {
+hs-resource-group-card {
   display: block;
   width: 100%;
 
@@ -110,7 +110,7 @@ resource-group-card {
   }
 
   // override the cluster-card design
-  cluster-card {
+  hs-cluster-card {
     position: relative;
 
     &::after {

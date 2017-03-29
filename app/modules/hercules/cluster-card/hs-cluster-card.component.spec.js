@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Component: clusterCard', function () {
+describe('Component: hsClusterCard', function () {
   beforeEach(angular.mock.module('Hercules'));
 
   describe('Controller', function () {
@@ -50,7 +50,7 @@ describe('Component: clusterCard', function () {
 
     beforeEach(inject(function ($injector) {
       $componentController = $injector.get('$componentController');
-      controller = $componentController('clusterCard', {
+      controller = $componentController('hsClusterCard', {
         $scope: {},
       }, {
         cluster: mockCluster,

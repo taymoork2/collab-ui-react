@@ -2,11 +2,11 @@
   'use strict';
 
   angular.module('Hercules')
-    .component('clusterCard', {
+    .component('hsClusterCard', {
       bindings: {
         cluster: '<',
       },
-      templateUrl: 'modules/hercules/fusion-pages/components/cluster-card.html',
+      templateUrl: 'modules/hercules/cluster-card/hs-cluster-card.component.html',
       controller: ClusterCardController,
     });
 
@@ -15,20 +15,23 @@
     var ctrl = this;
 
     ctrl.countHosts = countHosts;
+    ctrl.formatTimeAndDate = FusionClusterService.formatTimeAndDate;
     ctrl.getHostnames = getHostnames;
+    ctrl.getLocalizedReleaseChannel = HybridServicesUtils.getLocalizedReleaseChannel;
+    ctrl.goToExpressway = goToExpressway;
+    ctrl.hasAlarms = hasAlarms;
+    ctrl.hasNodesViewFeatureToggle = false;
+    ctrl.hasResourceGroupFeatureToggle = false;
+    ctrl.hasServices = hasServices;
+    ctrl.hideFooter = hideFooter;
+    ctrl.hybridServicesComparator = HybridServicesUtils.hybridServicesComparator;
+    ctrl.isInMaintenance = isInMaintenance;
+    ctrl.hasUpgradeAvailable = hasUpgradeAvailable;
+    ctrl.openDeleteConfirm = openDeleteConfirm;
     ctrl.openNodes = openNodes;
     ctrl.openService = openService;
     ctrl.openSettings = openSettings;
-    ctrl.hasServices = hasServices;
-    ctrl.goToExpressway = goToExpressway;
-    ctrl.openDeleteConfirm = openDeleteConfirm;
-    ctrl.formatTimeAndDate = FusionClusterService.formatTimeAndDate;
-    ctrl.hasResourceGroupFeatureToggle = false;
-    ctrl.hasNodesViewFeatureToggle = false;
-    ctrl.getLocalizedReleaseChannel = HybridServicesUtils.getLocalizedReleaseChannel;
-    ctrl.hybridServicesComparator = HybridServicesUtils.hybridServicesComparator;
     ctrl.upgradesAutomatically = upgradesAutomatically;
-    ctrl.hideFooter = hideFooter;
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup)
       .then(function (supported) {
@@ -137,7 +140,7 @@
         },
         controller: 'ClusterDeregisterController',
         controllerAs: 'clusterDeregister',
-        templateUrl: 'modules/hercules/fusion-pages/components/rename-and-deregister-cluster-section/deregister-dialog.html',
+        templateUrl: 'modules/hercules/rename-and-deregister-cluster-section/deregister-dialog.html',
         type: 'dialog',
       }).result.then(function () {
         $state.go('cluster-list', {}, { reload: true });
@@ -152,13 +155,33 @@
     function upgradesAutomatically(cluster) {
       // these target types don't follow an upgrade
       // schedule but instead upgrade automatically
-      return ['cs_mgmt'].indexOf(cluster.targetType) > -1;
+      return _.includes(['cs_mgmt'], cluster.targetType);
     }
 
     function hideFooter(cluster) {
       // these target types don't have setting/nodes,
       // so hide the links in the footer
-      return ['cs_mgmt'].indexOf(cluster.targetType) > -1;
+      return _.includes(['cs_mgmt'], cluster.targetType);
+    }
+
+    function isInMaintenance(cluster) {
+      return _.some(cluster.connectors, function (connector) {
+        return connector.maintenanceMode === 'on';
+      });
+    }
+
+    function hasUpgradeAvailable(cluster) {
+      return _.some(cluster.provisioning, function (provisioning) {
+        return _.some(cluster.connectors, function (connector) {
+          return provisioning.availableVersion && connector.runningVersion !== provisioning.availableVersion;
+        });
+      });
+    }
+
+    function hasAlarms(cluster) {
+      return _.some(cluster.connectors, function (connector) {
+        return connector.alarms.length > 0;
+      });
     }
   }
 })();

@@ -2,13 +2,13 @@
   'use strict';
 
   angular.module('Hercules')
-    .component('resourceGroupCard', {
+    .component('hsResourceGroupCard', {
       bindings: {
         group: '<resourceGroup',
         onChange: '&',
         forceOpen: '<',
       },
-      templateUrl: 'modules/hercules/fusion-pages/components/resource-group-card.html',
+      templateUrl: 'modules/hercules/resource-group-card/hs-resource-group-card.component.html',
       controller: ResourceGroupCardController,
     });
 

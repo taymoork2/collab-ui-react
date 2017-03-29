@@ -2,12 +2,12 @@
   'use strict';
 
   angular.module('Hercules')
-    .component('emergencyUpgradeConfiguration', {
+    .component('ewEmergencyUpgradeConfiguration', {
       bindings: {
         clusterId: '<',
       },
       controller: EmergencyUpgradeConfigurationCtrl,
-      templateUrl: 'modules/hercules/fusion-pages/components/emergency-upgrade-configuration.html',
+      templateUrl: 'modules/hercules/emergency-upgrade-configuration/ew-emergency-upgrade-configuration.component.html',
     });
 
   /* @ngInject */

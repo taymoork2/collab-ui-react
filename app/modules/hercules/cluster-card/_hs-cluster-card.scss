@@ -1,4 +1,4 @@
-cluster-card {
+hs-cluster-card {
   display: block;
 
   .cs-card {
@@ -175,7 +175,7 @@ cluster-card {
 }
 
 @media only screen and (max-width: 470px) {
-  cluster-card .cs-card .cluster-list-body {
+  hs-cluster-card .cs-card .cluster-list-body {
     flex-direction: column;
 
     .connection-status {
@@ -186,7 +186,7 @@ cluster-card {
 
 // override:
 // simulating .cs-card widths with cluster-card
-cluster-card {
+hs-cluster-card {
   width: 100%;
 
   .cs-card.medium {
@@ -195,13 +195,13 @@ cluster-card {
 }
 
 @media only screen and (min-width: 40.063em) {
-  cluster-card {
+  hs-cluster-card {
     width: 50%;
   }
 }
 
 @media only screen and (min-width: 64.063em) {
-  cluster-card {
+  hs-cluster-card {
     width: 33.3334%;
   }
 }
