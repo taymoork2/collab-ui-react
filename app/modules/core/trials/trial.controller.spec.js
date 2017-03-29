@@ -81,7 +81,7 @@ describe('Controller: TrialCtrl:', function () {
     spyOn(HuronCountryService, 'getCountryList').and.returnValue($q.resolve(countryList));
 
     $httpBackend
-      .when('GET', 'https://atlas-integration.wbx2.com/admin/api/v1/organizations/null?disableCache=false')
+      .when('GET', 'https://atlas-intb.ciscospark.com/admin/api/v1/organizations/null?disableCache=false')
       .respond({});
   }));
 

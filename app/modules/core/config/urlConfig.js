@@ -3,9 +3,9 @@
 
   var serviceUrlMapping = {
     AdminServiceUrl: {
-      dev: 'https://atlas-integration.wbx2.com/admin/api/v1/',
+      dev: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
       cfe: 'https://atlas-e.wbx2.com/admin/api/v1/',
-      integration: 'https://atlas-integration.wbx2.com/admin/api/v1/',
+      integration: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
       prod: 'https://atlas-a.wbx2.com/admin/api/v1/',
     },
     LocusServiceUrl: {
@@ -75,9 +75,9 @@
       prod: 'https://identity.webex.com/organization/%s/v1/',
     },
     SparkDomainManagementUrl: {
-      dev: 'https://atlas-integration.wbx2.com/admin/api/v1/',
-      cfe: 'https://atlas-integration.wbx2.com/admin/api/v1/',
-      integration: 'https://atlas-integration.wbx2.com/admin/api/v1/',
+      dev: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
+      cfe: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
+      integration: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
       prod: 'https://atlas-a.wbx2.com/admin/api/v1/',
     },
     SparkDomainCheckUrl: {
