@@ -1006,20 +1006,6 @@ describe('Controller: HuronSettingsCtrl', function () {
     });
 
     describe('Voicemail prefix', function () {
-      it('should change the extension length and change site code', function () {
-        $scope.to = {};
-        controller._buildVoicemailPrefixOptions($scope);
-        controller.model.site.extensionLength = '5';
-        $scope.$apply();
-        expect(controller.model.site.siteCode).toEqual(10);
-      });
-
-      it('should handle $scope.to being undefined', function () {
-        controller._buildVoicemailPrefixOptions($scope);
-        controller.model.site.extensionLength = '5';
-        $scope.$apply();
-        expect(controller.model.site.siteCode).toEqual(10);
-      });
 
       it('should set voicemail prefix to intersect with extension range and trigger warning', function () {
         controller.model.site.siteSteeringDigit.voicemailPrefixLabel = '1100';
