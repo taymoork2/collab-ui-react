@@ -279,7 +279,20 @@ require('./_support.scss');
     function searchLogs(searchInput) {
       $scope.closeCallInfo();
       // request most recent 300 logs (also backend default).  backend has a limit of 1000, so this is somewhat arbitrary.
-      LogService.searchLogs(searchInput, 'descending', 300, function (data, status) {
+      LogService.searchLogs(searchInput, {
+        timeSortOrder: 'descending',
+        limit: 300,
+      }).then(function (data, status) {
+        data = _.isObject(data) ? data : {};
+        data.success = true;
+        data.status = status;
+        return data;
+      }).catch(function (data, status) {
+        data = _.isObject(data) ? data : {};
+        data.success = false;
+        data.status = status;
+        return data;
+      }).then(function (data) {
         if (data.success) {
           //parse the data
           $scope.userLogs = [];
@@ -341,9 +354,9 @@ require('./_support.scss');
           $('#logs-panel').show();
           $scope.logSearchBtnLoad = false;
           $scope.gridRefresh = false;
-          Log.debug('Failed to retrieve user logs. Status: ' + status);
+          Log.debug('Failed to retrieve user logs. Status: ' + data.status);
           Notification.error('supportPage.errLogQuery', {
-            status: status,
+            status: data.status,
           });
         }
       });

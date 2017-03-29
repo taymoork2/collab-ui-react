@@ -10,7 +10,20 @@
       }
       var deferred = $q.defer();
       // request backend to return logs sorted by descending timestamp, and only one
-      LogService.searchLogs(term, 'descending', 1, function (data) {
+      LogService.searchLogs(term, {
+        timeSortOrder: 'descending',
+        limit: 1,
+      }).then(function (data, status) {
+        data = _.isObject(data) ? data : {};
+        data.success = true;
+        data.status = status;
+        return data;
+      }).catch(function (data, status) {
+        data = _.isObject(data) ? data : {};
+        data.success = false;
+        data.status = status;
+        return data;
+      }).then(function (data) {
         if (data.success) {
           if (data.metadataList && data.metadataList.length > 0) {
             deferred.resolve(cleanLogMetadata(data.metadataList[0]));

@@ -13,30 +13,30 @@ describe('Service: HelpdeskLogService', function () {
     var lastPushedLog = {
       success: true,
       metadataList: [{
-        filename: "lastLogFile",
-        timestamp: "2016-02-08T09:18:54.238Z",
-        platform: "0-1-2",
+        filename: 'lastLogFile',
+        timestamp: '2016-02-08T09:18:54.238Z',
+        platform: '0-1-2',
       }],
     };
 
     var logs = {
       success: true,
       metadataList: [{
-        filename: "logFile1",
-        timestamp: "2016-01-25T11:46:24.757Z",
-        platform: "a-b-c",
+        filename: 'logFile1',
+        timestamp: '2016-01-25T11:46:24.757Z',
+        platform: 'a-b-c',
       }, {
-        filename: "logFile2",
-        timestamp: "2016-02-04T11:02:48.354Z",
-        platform: "d-e-f",
+        filename: 'logFile2',
+        timestamp: '2016-02-04T11:02:48.354Z',
+        platform: 'd-e-f',
       }, {
-        filename: "logFile3",
-        timestamp: "2016-02-08T09:18:54.238Z",
-        platform: "g-h-i",
+        filename: 'logFile3',
+        timestamp: '2016-02-08T09:18:54.238Z',
+        platform: 'g-h-i',
       }, {
-        filename: "logFile4",
-        timestamp: "2016-01-25T11:19:19.443Z",
-        platform: "j-k-l",
+        filename: 'logFile4',
+        timestamp: '2016-01-25T11:19:19.443Z',
+        platform: 'j-k-l',
       }],
     };
 
@@ -55,8 +55,8 @@ describe('Service: HelpdeskLogService', function () {
 
   it('fetches the last log on search', function (done) {
     Service.searchForLastPushedLog('searchterm').then(function (log) {
-      expect(log.filename).toEqual("lastLogFile");
-      expect(log.platform).toEqual("2");
+      expect(log.filename).toEqual('lastLogFile');
+      expect(log.platform).toEqual('2');
       done();
     }, function (reason) {
       fail(reason);
@@ -66,8 +66,8 @@ describe('Service: HelpdeskLogService', function () {
 
   it('fetches the last log on user id', function (done) {
     Service.getLastPushedLogForUser('userid').then(function (log) {
-      expect(log.filename).toEqual("logFile3");
-      expect(log.platform).toEqual("i");
+      expect(log.filename).toEqual('logFile3');
+      expect(log.platform).toEqual('i');
       done();
     }, function (reason) {
       fail(reason);
