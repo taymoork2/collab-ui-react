@@ -98,7 +98,7 @@ export interface IExtendedConnector extends IConnector {
   extendedState: ExtendedConnectorState;
 }
 
-interface IHost {
+export interface IHost {
   alarms: IConnectorAlarm[];
   hostname: string;
   state: ConnectorState;
@@ -124,4 +124,19 @@ export interface IConnectorAlarm {
 export interface IExtendedConnectorAlarm extends IConnectorAlarm {
   hostname: string;
   affectedNodes: string[];
+}
+
+export interface IResourceGroup {
+  id: string;
+  name: string;
+  releaseChannel: string;
+}
+
+export interface IReleaseChannelsResponse {
+  releaseChannels: IReleaseChannelEntitlement[];
+}
+
+export interface IReleaseChannelEntitlement {
+  channel: string;
+  entitled: boolean;
 }
