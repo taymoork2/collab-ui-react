@@ -3,7 +3,6 @@
 describe('Service: AAMediaUploadService', function () {
   var Upload;
   var AAMediaUploadService;
-  var AACommonService;
   var AACtrlResourcesService;
   var Config;
   var $http;
@@ -74,10 +73,9 @@ describe('Service: AAMediaUploadService', function () {
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function (_Upload_, _Config_, _AACommonService_, _AAMediaUploadService_, _AACtrlResourcesService_, _$http_, _$q_) {
+  beforeEach(inject(function (_Upload_, _Config_, _AAMediaUploadService_, _AACtrlResourcesService_, _$http_, _$q_) {
     Upload = _Upload_;
     AAMediaUploadService = _AAMediaUploadService_;
-    AACommonService = _AACommonService_;
     AACtrlResourcesService = _AACtrlResourcesService_;
     Config = _Config_;
     $http = _$http_;
@@ -284,10 +282,6 @@ describe('Service: AAMediaUploadService', function () {
   });
 
   describe('retrieve', function () {
-    beforeEach(function () {
-      spyOn(AACommonService, 'isClioToggle').and.returnValue(true);
-    });
-
     describe('production', function () {
       beforeEach(function () {
         spyOn(Config, 'isProd').and.returnValue(true);
