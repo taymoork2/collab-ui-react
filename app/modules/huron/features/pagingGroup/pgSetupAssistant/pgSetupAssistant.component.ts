@@ -1,4 +1,4 @@
-import { IPagingGroup, IMemberData, IInitiatorData, IMemberWithPicture, PLACE, USER, PUBLIC, CUSTOM } from 'modules/huron/features/pagingGroup/pagingGroup';
+import { IPagingGroup, IMemberData, INumberData, IInitiatorData, IMemberWithPicture, PLACE, USER, PUBLIC, CUSTOM } from 'modules/huron/features/pagingGroup/pagingGroup';
 import { PagingGroupService } from 'modules/huron/features/pagingGroup/pagingGroup.service';
 import { USER_REAL_USER } from 'modules/huron/members';
 import { IToolkitModalService } from 'modules/core/modal';
@@ -10,7 +10,7 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
   private isNameValid: boolean = false;
 
   //Paging group number
-  public number: string;
+  public number: INumberData;
   private isNumberValid: boolean = false;
 
   //Paging group members with picture
@@ -173,7 +173,7 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
     this.isNameValid = isValid;
   }
 
-  public onUpdateNumber(number: string, isValid: boolean): void {
+  public onUpdateNumber(number: INumberData, isValid: boolean): void {
     this.number = number;
     this.isNumberValid = isValid;
   }
@@ -212,7 +212,8 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
 
     let pg: IPagingGroup = <IPagingGroup>{
       name: this.name,
-      extension: this.number,
+      extension: this.number.extension,
+      extensionUUID: this.number.extensionUUID,
       members: members,
       initiatorType: this.initiatorType,
       initiators: initiators,

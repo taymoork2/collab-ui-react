@@ -1,6 +1,6 @@
 describe('Component: pgEdit', () => {
 
-  const NUMBER_SELECT = '.csSelect-container[labelfield="number"]';
+  const NUMBER_SELECT = '.csSelect-container[labelfield="extension"]';
   const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
   const NAME_INPUT = 'input#paging-group-name';
   const SAVE_BUTTON = 'button.btn.btn--primary.ng-isolate-scope';
@@ -16,6 +16,7 @@ describe('Component: pgEdit', () => {
   let pg = getJSONFixture('huron/json/features/pagingGroup/pgWithMembersAndInitiators.json');
   let pg2 = getJSONFixture('huron/json/features/pagingGroup/pgWithEmptyInitiators.json');
   let pgUpdated = getJSONFixture('huron/json/features/pagingGroup/pgUpdated.json');
+  let pgUpdate = getJSONFixture('huron/json/features/pagingGroup/pgUpdate.json');
   let invalidName = 'Invalid <>';
   let pilotNumbers = getJSONFixture('huron/json/features/pagingGroup/numberList.json');
   let updateFailureResp = getJSONFixture('huron/json/features/pagingGroup/errorResponse.json');
@@ -82,6 +83,11 @@ describe('Component: pgEdit', () => {
     meta: {},
   };
 
+  let numberData = {
+    extension: '2222',
+    extensionUUID: '8e33e338-0caa-4579-86df-38ef7590f432',
+  };
+
   beforeEach(function () {
     this.initModules('huron.paging-group.edit');
     this.injectDependencies(
@@ -113,6 +119,9 @@ describe('Component: pgEdit', () => {
 
     this.getNumberSuggestionsDefer = this.$q.defer();
     spyOn(this.PagingNumberService, 'getNumberSuggestions').and.returnValue(this.getNumberSuggestionsDefer.promise);
+
+    this.getNumberExtensionDefer = this.$q.defer();
+    spyOn(this.PagingNumberService, 'getNumberExtension').and.returnValue(this.getNumberExtensionDefer.promise);
 
     this.getUserDefer = this.$q.defer();
     spyOn(this.FeatureMemberService, 'getUser').and.returnValue(this.getUserDefer.promise);
@@ -149,6 +158,7 @@ describe('Component: pgEdit', () => {
 
     it('should initialize all the Paging Group data', function () {
       this.getNumberSuggestionsDefer.resolve(pilotNumbers);
+      this.getNumberExtensionDefer.resolve(numberData);
       this.getPagingGroupDefer.resolve(pg);
       this.getUserDefer.resolve(userResponse);
       this.getPlaceDefer.resolve(placeResponse);
@@ -156,7 +166,7 @@ describe('Component: pgEdit', () => {
       this.$scope.$apply();
       expect(this.PagingGroupService.getPagingGroup).toHaveBeenCalledWith(this.pg.groupId);
       expect(this.controller.name).toEqual(this.pg.name);
-      expect(this.controller.number).toEqual(this.pg.extension);
+      expect(this.controller.number).toEqual(numberData);
       expect(this.controller.members[0].member.displayName).toEqual('peter desk');
       expect(this.controller.members[1].member.firstName).toEqual('rtp2');
       expect(this.controller.loading).toBeFalsy();
@@ -167,10 +177,10 @@ describe('Component: pgEdit', () => {
       this.getNumberSuggestionsDefer.resolve(pilotNumbers);
       this.getPagingGroupDefer.resolve(pg);
       this.$scope.$apply();
-      expect(this.view.find(DROPDOWN_OPTIONS).get(0)).toHaveText(pilotNumbers[0]);
-      expect(this.view.find(DROPDOWN_OPTIONS).get(1)).toHaveText(pilotNumbers[1]);
-      expect(this.view.find(DROPDOWN_OPTIONS).get(2)).toHaveText(pilotNumbers[2]);
-      expect(this.view.find(DROPDOWN_OPTIONS).get(3)).toHaveText(pilotNumbers[3]);
+      expect(this.view.find(DROPDOWN_OPTIONS).get(0)).toHaveText(pilotNumbers[0].extension);
+      expect(this.view.find(DROPDOWN_OPTIONS).get(1)).toHaveText(pilotNumbers[1].extension);
+      expect(this.view.find(DROPDOWN_OPTIONS).get(2)).toHaveText(pilotNumbers[2].extension);
+      expect(this.view.find(DROPDOWN_OPTIONS).get(3)).toHaveText(pilotNumbers[3].extension);
     });
 
     it('should invoke onChange with number on option click', function () {
@@ -186,6 +196,7 @@ describe('Component: pgEdit', () => {
 
     it('should invoke onChange with name change', function () {
       this.getNumberSuggestionsDefer.resolve(pilotNumbers);
+      this.getNumberExtensionDefer.resolve(numberData);
       this.getPagingGroupDefer.resolve(pg);
       this.getUserDefer.resolve(userResponse);
       this.getPlaceDefer.resolve(placeResponse);
@@ -208,6 +219,7 @@ describe('Component: pgEdit', () => {
 
     it('should notify with error response when number fetch fails', function () {
       this.getPagingGroupDefer.resolve(pg);
+      this.getNumberExtensionDefer.resolve(numberData);
       this.getNumberSuggestionsDefer.reject(getNumberSuggestionsFailureResp);
       this.$scope.$apply();
       expect(this.Notification.errorResponse).toHaveBeenCalledWith(jasmine.anything(),
@@ -229,6 +241,7 @@ describe('Component: pgEdit', () => {
     it('should disable show Save button', function () {
       this.getPagingGroupDefer.resolve(pg);
       this.getNumberSuggestionsDefer.resolve(pilotNumbers);
+      this.getNumberExtensionDefer.resolve(numberData);
       this.getPlaceDefer.resolve(placeResponse);
       this.$scope.$apply();
       this.view.find(NAME_INPUT).val(invalidName).change();
@@ -240,15 +253,15 @@ describe('Component: pgEdit', () => {
   describe('saveForm', () => {
     beforeEach(initComponent);
     it('should be able to cancel updatePagingGroup', function () {
-      this.getPagingGroupDefer.resolve(pg);
-      this.getNumberSuggestionsDefer.resolve(pilotNumbers);
-      this.getPlaceDefer.resolve(placeResponse);
+      this.getPagingGroupDefer.resolve(_.cloneDeep(pg));
+      this.getNumberSuggestionsDefer.resolve(_.cloneDeep(pilotNumbers));
+      this.getNumberExtensionDefer.resolve(_.cloneDeep(numberData));
+      this.getPlaceDefer.resolve(_.cloneDeep(placeResponse));
       this.$scope.$apply();
       this.view.find(NAME_INPUT).val(pgUpdated.name).change();
       expect(this.view.find(CANCEL_BUTTON)).toExist();
       this.view.find(CANCEL_BUTTON).click();
       expect(this.controller.name).toEqual(pg.name);
-      expect(this.controller.number).toEqual(pg.extension);
       expect(this.controller.errorNameInput).toBeFalsy();
       expect(this.controller.formChanged).toBeFalsy();
     });
@@ -257,14 +270,15 @@ describe('Component: pgEdit', () => {
       this.getPagingGroupDefer.resolve(_.cloneDeep(pg));
       this.updatePagingGroupDefer.resolve(_.cloneDeep(pgUpdated));
       this.getNumberSuggestionsDefer.resolve(_.cloneDeep(pilotNumbers));
+      this.getNumberExtensionDefer.resolve(numberData);
       this.getPlaceDefer.resolve(placeResponse);
       this.getUserDefer.resolve(userResponse);
       this.$scope.$apply();
       this.controller.name = pgUpdated.name;
-      this.controller.number = pgUpdated.extension;
+      this.controller.number = numberData;
       this.controller.saveForm();
       this.$scope.$apply();
-      expect(this.PagingGroupService.updatePagingGroup).toHaveBeenCalledWith(pgUpdated);
+      expect(this.PagingGroupService.updatePagingGroup).toHaveBeenCalledWith(pgUpdate);
       expect(this.Notification.success).toHaveBeenCalledWith('pagingGroup.successUpdate');
       expect(this.$state.go).toHaveBeenCalledWith('huronfeatures');
     });
@@ -273,14 +287,15 @@ describe('Component: pgEdit', () => {
       this.getPagingGroupDefer.resolve(_.cloneDeep(pg));
       this.updatePagingGroupDefer.reject(updateFailureResp);
       this.getNumberSuggestionsDefer.resolve(_.cloneDeep(pilotNumbers));
+      this.getNumberExtensionDefer.resolve(_.cloneDeep(numberData));
       this.getPlaceDefer.resolve(_.cloneDeep(placeResponse));
       this.getUserDefer.resolve(_.cloneDeep(userResponse));
       this.$scope.$apply();
       this.controller.name = pgUpdated.name;
-      this.controller.number = pgUpdated.extension;
+      this.controller.number = numberData;
       this.controller.saveForm();
       this.$scope.$apply();
-      expect(this.PagingGroupService.updatePagingGroup).toHaveBeenCalledWith(pgUpdated);
+      expect(this.PagingGroupService.updatePagingGroup).toHaveBeenCalledWith(pgUpdate);
       expect(this.Notification.error).toHaveBeenCalledWith('pagingGroup.errorUpdate', { message: 'A group with this name already exists.' });
       expect(this.$state.go).not.toHaveBeenCalledWith('huronfeatures');
     });
@@ -289,14 +304,15 @@ describe('Component: pgEdit', () => {
       this.getPagingGroupDefer.resolve(_.cloneDeep(pg));
       this.updatePagingGroupDefer.reject();
       this.getNumberSuggestionsDefer.resolve(_.cloneDeep(pilotNumbers));
+      this.getNumberExtensionDefer.resolve(_.cloneDeep(numberData));
       this.getPlaceDefer.resolve(_.cloneDeep(placeResponse));
       this.getUserDefer.resolve(_.cloneDeep(userResponse));
       this.$scope.$apply();
       this.controller.name = pgUpdated.name;
-      this.controller.number = pgUpdated.extension;
+      this.controller.number = numberData;
       this.controller.saveForm();
       this.$scope.$apply();
-      expect(this.PagingGroupService.updatePagingGroup).toHaveBeenCalledWith(pgUpdated);
+      expect(this.PagingGroupService.updatePagingGroup).toHaveBeenCalledWith(pgUpdate);
       expect(this.Notification.error).toHaveBeenCalledWith('pagingGroup.errorUpdate', { message: '' });
       expect(this.$state.go).not.toHaveBeenCalledWith('huronfeatures');
     });
@@ -307,6 +323,7 @@ describe('Component: pgEdit', () => {
 
     it('should fetch a list of members or initiators', function () {
       this.getNumberSuggestionsDefer.resolve(pilotNumbers);
+      this.getNumberExtensionDefer.resolve(numberData);
       this.getPagingGroupDefer.resolve(pg);
       this.getUserDefer.resolve(userResponse);
       this.getPlaceDefer.resolve(placeResponse);
@@ -343,6 +360,11 @@ describe('Component: pgEdit', () => {
 
     it('should only display subset of fetched initiators if place phone is room device', function () {
       this.getNumberSuggestionsDefer.resolve(pilotNumbers);
+      let numberData2 = {
+        extension: '5002',
+        extensionUUID: '8e33e338-0caa-4579-86df-38ef7590f430',
+      };
+      this.getNumberExtensionDefer.resolve(numberData2);
       this.getPagingGroupDefer.resolve(_.cloneDeep(pg2));
       this.getUserDefer.resolve(_.cloneDeep(userResponse));
       this.getPlaceDefer.resolve(_.cloneDeep(placeResponse));
@@ -362,6 +384,11 @@ describe('Component: pgEdit', () => {
 
     it('should only display subset of fetched initiators if getMachineAcct failed', function () {
       this.getNumberSuggestionsDefer.resolve(pilotNumbers);
+      let numberData2 = {
+        extension: '5002',
+        extensionUUID: '8e33e338-0caa-4579-86df-38ef7590f430',
+      };
+      this.getNumberExtensionDefer.resolve(numberData2);
       this.getPagingGroupDefer.resolve(_.cloneDeep(pg2));
       this.getUserDefer.resolve(userResponse);
       this.getPlaceDefer.resolve(placeResponse);
@@ -417,6 +444,7 @@ describe('Component: pgEdit', () => {
 
     it('should search firstname of members', function () {
       this.getNumberSuggestionsDefer.resolve(pilotNumbers);
+      this.getNumberExtensionDefer.resolve(numberData);
       this.getPagingGroupDefer.resolve(pg);
       this.getUserDefer.resolve(userResponse);
       this.getPlaceDefer.resolve(placeResponse);
@@ -430,6 +458,7 @@ describe('Component: pgEdit', () => {
 
     it('should search lastname of members', function () {
       this.getNumberSuggestionsDefer.resolve(pilotNumbers);
+      this.getNumberExtensionDefer.resolve(numberData);
       this.getPagingGroupDefer.resolve(pg);
       this.getUserDefer.resolve(userResponse);
       this.getPlaceDefer.resolve(placeResponse);
@@ -443,6 +472,7 @@ describe('Component: pgEdit', () => {
 
     it('should search username of members', function () {
       this.getNumberSuggestionsDefer.resolve(pilotNumbers);
+      this.getNumberExtensionDefer.resolve(numberData);
       this.getPagingGroupDefer.resolve(pg);
       this.getUserDefer.resolve(userResponse);
       this.getPlaceDefer.resolve(placeResponse);
@@ -456,6 +486,7 @@ describe('Component: pgEdit', () => {
 
     it('should search displayname of members', function () {
       this.getNumberSuggestionsDefer.resolve(pilotNumbers);
+      this.getNumberExtensionDefer.resolve(numberData);
       this.getPagingGroupDefer.resolve(pg);
       this.getUserDefer.resolve(userResponse);
       this.getPlaceDefer.resolve(placeResponse);
@@ -469,6 +500,7 @@ describe('Component: pgEdit', () => {
 
     it('should find no members', function () {
       this.getNumberSuggestionsDefer.resolve(pilotNumbers);
+      this.getNumberExtensionDefer.resolve(numberData);
       this.getPagingGroupDefer.resolve(pg);
       this.getUserDefer.resolve(userResponse);
       this.getPlaceDefer.resolve(placeResponse);
@@ -545,6 +577,7 @@ describe('Component: pgEdit', () => {
 
     it('should update pg to clear out outOfSync if not find an user in UPDM', function () {
       this.getNumberSuggestionsDefer.resolve(_.cloneDeep(pilotNumbers));
+      this.getNumberExtensionDefer.resolve(_.cloneDeep(numberData));
       this.getPagingGroupDefer.resolve(_.cloneDeep(pg));
       this.getUserDefer.reject(memberFailureResp);
       this.getPlaceDefer.reject(memberFailureResp);
@@ -552,7 +585,7 @@ describe('Component: pgEdit', () => {
       this.$scope.$apply();
       expect(this.PagingGroupService.getPagingGroup).toHaveBeenCalledWith(this.pg.groupId);
       expect(this.controller.name).toEqual(this.pg.name);
-      expect(this.controller.number).toEqual(this.pg.extension);
+      expect(this.controller.number).toEqual(numberData);
       expect(this.controller.loading).toBeFalsy();
       expect(this.PagingGroupService.updatePagingGroup).toHaveBeenCalled();
       expect(this.PagingNumberService.getNumberSuggestions).toHaveBeenCalled();

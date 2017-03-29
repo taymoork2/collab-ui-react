@@ -109,21 +109,33 @@ describe('Component: pgSetupAssistant', () => {
 
     it('index = 1, number defined, isValid undefined should return false', function () {
       this.controller.index = 1;
-      this.controller.number = pg.extension;
+      let numberData = {
+        extension: pg.extension,
+        extensionUUID: pg.extensionUUID,
+      };
+      this.controller.number = numberData;
       this.controller.isNumberValid = undefined;
       expect(this.controller.nextButton()).toBeFalsy();
     });
 
     it('index = 1, number defined, isValid false should return false', function () {
       this.controller.index = 1;
-      this.controller.number = pg.extension;
+      let numberData = {
+        extension: pg.extension,
+        extensionUUID: pg.extensionUUID,
+      };
+      this.controller.number = numberData;
       this.controller.isNumberValid = false;
       expect(this.controller.nextButton()).toBeFalsy();
     });
 
     it('index = 1, number defined, isValid true should return true', function () {
       this.controller.index = 1;
-      this.controller.number = pg.extension;
+      let numberData = {
+        extension: pg.extension,
+        extensionUUID: pg.extensionUUID,
+      };
+      this.controller.number = numberData;
       this.controller.isNumberValid = true;
       expect(this.controller.nextButton()).toBeTruthy();
     });
@@ -291,7 +303,11 @@ describe('Component: pgSetupAssistant', () => {
       };
       this.savePagingGroupDefer.resolve(_.cloneDeep(pg));
       this.controller.name = pg.name;
-      this.controller.number = pg.extension;
+      let numberData = {
+        extension: pg.extension,
+        extensionUUID: pg.extensionUUID,
+      };
+      this.controller.number = numberData;
       this.controller.selectedMembers.push(memWithPic);
       this.controller.initiatorType = 'PUBLIC';
       this.controller.selectedInitiators = [];
@@ -309,7 +325,11 @@ describe('Component: pgSetupAssistant', () => {
       };
       this.savePagingGroupDefer.resolve(_.cloneDeep(pgWithEmptyInit));
       this.controller.name = pg.name;
-      this.controller.number = pg.extension;
+      let numberData = {
+        extension: pg.extension,
+        extensionUUID: pg.extensionUUID,
+      };
+      this.controller.number = numberData;
       this.controller.selectedMembers = [];
       this.controller.initiatorType = 'CUSTOM';
       this.controller.selectedInitiators.push(memWithPic);
@@ -332,7 +352,11 @@ describe('Component: pgSetupAssistant', () => {
       };
       this.savePagingGroupDefer.resolve(_.cloneDeep(pgWithMembersAndInitiators));
       this.controller.name = pgWithMembersAndInitiators.name;
-      this.controller.number = pgWithMembersAndInitiators.extension;
+      let numberData = {
+        extension: undefined,
+        extensionUUID: pgWithMembersAndInitiators.extensionUUID,
+      };
+      this.controller.number = numberData;
       this.controller.selectedMembers.push(memWithPic1);
       this.controller.selectedMembers.push(memWithPic2);
       this.controller.initiatorType = 'CUSTOM';
@@ -347,7 +371,11 @@ describe('Component: pgSetupAssistant', () => {
     it('should save with failure', function () {
       this.savePagingGroupDefer.reject(saveFailureResp);
       this.controller.name = pg.name;
-      this.controller.number = pg.extension;
+      let numberData = {
+        extension: pg.extension,
+        extensionUUID: pg.extensionUUID,
+      };
+      this.controller.number = numberData;
       this.controller.savePagingGroup();
       this.$timeout.flush();
       expect(this.Notification.error).toHaveBeenCalledWith('pagingGroup.errorSave', { message: 'A group with this name already exists.' });
@@ -357,7 +385,11 @@ describe('Component: pgSetupAssistant', () => {
     it('should save with failure no error', function () {
       this.savePagingGroupDefer.reject();
       this.controller.name = pg.name;
-      this.controller.number = pg.extension;
+      let numberData = {
+        extension: pg.extension,
+        extensionUUID: pg.extensionUUID,
+      };
+      this.controller.number = numberData;
       this.controller.savePagingGroup();
       this.$timeout.flush();
       expect(this.Notification.error).toHaveBeenCalledWith('pagingGroup.errorSave', { message: '' });
