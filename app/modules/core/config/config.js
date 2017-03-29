@@ -524,6 +524,7 @@
         'context-settings',
         'context-fields',
         'context-fieldsets',
+        'context-fieldset-modal',
         'context-fieldsets-sidepanel',
         'context-resources',
         'context-cluster-sidepanel',

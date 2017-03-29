@@ -2568,6 +2568,13 @@
         "fields": "Fields",
         "listOfFields": "List of fields in this fieldset",
         "fieldsetReadFailed": "Unable to retrieve fieldsets. Refresh your browser to try again.",
+        "fieldsetIdPlaceholder": "For eg. sales.shoppingcart",
+        "descriptionPlaceholder": "What is this fieldset for?",
+        "createNew": "Create New Fieldset",
+        "fieldsetCreateSuccess": "Fieldset created successfully!",
+        "fieldsetCreateFailure": "Unable to create fieldset. Try again or contact customer support.",
+        "fieldsetIdUniqueError": "Fieldset ID exists. Enter a different ID",
+        "fieldsetIdInvalidCharactersError": "Only alpha-numeric characters, period(.), hyphen(-) or underscore (_) allowed",
         "noneFound": "No fieldsets found"
       }
     }

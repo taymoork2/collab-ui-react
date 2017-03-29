@@ -47,6 +47,7 @@ describe('HybridContextFieldsetsCtrl', function () {
   function initController() {
     var ctrl = $controller('HybridContextFieldsetsCtrl', {
       $scope: $scope,
+      hasContextDictionaryEditFeatureToggle: false,
     });
     ctrl.gridOptions.onRegisterApi(fakeGridApi);
     return ctrl;
@@ -57,6 +58,14 @@ describe('HybridContextFieldsetsCtrl', function () {
       ContextFieldsetsService.getFieldsets.and.returnValue($q.resolve([]));
       controller = initController();
       expect(controller.load).toEqual(true);
+    });
+  });
+
+  describe('createFieldset', function () {
+    it('should correctly transition to the next state', function () {
+      var controller = initController();
+      controller.createFieldset();
+      expect($state.go).toHaveBeenCalledWith('context-fieldset-modal', jasmine.any(Object));
     });
   });
 
@@ -114,7 +123,7 @@ describe('HybridContextFieldsetsCtrl', function () {
       $scope.$apply();
 
       expect(controller.load).toEqual(false);
-      expect(controller.fieldsetsList.allFields.length).toBe(2);
+      expect(controller.fieldsetsList.allFieldsets.length).toBe(2);
       expect(controller.noSearchResults).toBeFalsy('noSearchResults is not false');
     });
 
@@ -150,9 +159,9 @@ describe('HybridContextFieldsetsCtrl', function () {
       controller = initController();
       $scope.$apply();
 
-      expect(controller.fieldsetsList.allFields.length).toBe(1);
-      expect(controller.fieldsetsList.allFields[0].numOfFields).toBe(1);
-      expect(controller.fieldsetsList.allFields[0].lastUpdated).not.toExist();
+      expect(controller.fieldsetsList.allFieldsets.length).toBe(1);
+      expect(controller.fieldsetsList.allFieldsets[0].numOfFields).toBe(1);
+      expect(controller.fieldsetsList.allFieldsets[0].lastUpdated).not.toExist();
     });
 
     it('should process fieldset data when data returned has multiple fields', function () {
@@ -196,9 +205,9 @@ describe('HybridContextFieldsetsCtrl', function () {
       controller = initController();
       $scope.$apply();
 
-      expect(controller.fieldsetsList.allFields.length).toBe(1);
-      expect(controller.fieldsetsList.allFields[0].numOfFields).toBe(5);
-      expect(controller.fieldsetsList.allFields[0].lastUpdated).not.toBeNull();
+      expect(controller.fieldsetsList.allFieldsets.length).toBe(1);
+      expect(controller.fieldsetsList.allFieldsets[0].numOfFields).toBe(5);
+      expect(controller.fieldsetsList.allFieldsets[0].lastUpdated).not.toBeNull();
     });
 
     it('should process fieldset data when data returned is missing field definition', function () {
@@ -213,9 +222,9 @@ describe('HybridContextFieldsetsCtrl', function () {
       controller = initController();
       $scope.$apply();
 
-      expect(controller.fieldsetsList.allFields.length).toBe(1);
-      expect(controller.fieldsetsList.allFields[0].numOfFields).toBe(0);
-      expect(controller.fieldsetsList.allFields[0].lastUpdated).not.toBeNull();
+      expect(controller.fieldsetsList.allFieldsets.length).toBe(1);
+      expect(controller.fieldsetsList.allFieldsets[0].numOfFields).toBe(0);
+      expect(controller.fieldsetsList.allFieldsets[0].lastUpdated).not.toBeNull();
     });
 
   });
@@ -718,7 +727,7 @@ describe('HybridContextFieldsetsCtrl', function () {
 
       controller.filterList('bbb');
       $scope.$apply();
-      expect(controller.fieldsetsList.allFields.length).toBe(3);
+      expect(controller.fieldsetsList.allFieldsets.length).toBe(3);
       expect(controller.noSearchResults).toBe(false);
       expect(controller.gridOptions.data[0].id).toEqual('bbb_custom_fieldset');
       expect(controller.gridOptions.data[1].id).toEqual('ccc_custom_fieldset');
