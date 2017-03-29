@@ -11,7 +11,7 @@ import { ServicesOverviewHybridMediaCard } from './hybridMediaCard';
 import { ServicesOverviewHybridDataSecurityCard } from './hybridDataSecurityCard';
 import { ServicesOverviewHybridContextCard } from './hybridContextCard';
 import { ServicesOverviewPrivateTrunkCard } from './privateTrunkCard';
-import { PrivateTrunkPrereqService } from 'modules/hercules/privateTrunk/privateTrunkPrereq';
+import { PrivateTrunkPrereqService } from 'modules/hercules/private-trunk/prereq';
 
 export class ServicesOverviewCtrl {
 

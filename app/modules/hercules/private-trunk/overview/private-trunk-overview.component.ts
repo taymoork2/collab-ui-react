@@ -1,4 +1,4 @@
-import { PrivateTrunkPrereqService } from 'modules/hercules/privateTrunk/privateTrunkPrereq';
+import { PrivateTrunkPrereqService } from 'modules/hercules/private-trunk/prereq';
 
 export class PrivateTrunkOverviewCtrl implements ng.IComponentController {
   public back: boolean = true;
@@ -27,7 +27,7 @@ export class PrivateTrunkOverviewCtrl implements ng.IComponentController {
 
 export class PrivateTrunkOverviewComponent implements ng.IComponentOptions {
   public controller = PrivateTrunkOverviewCtrl;
-  public templateUrl = 'modules/hercules/privateTrunk/privateTrunkOverview/private-trunk-overview.html';
+  public templateUrl = 'modules/hercules/private-trunk/overview/private-trunk-overview.html';
   public bindings = {
     hasPrivateTrunkFeatureToggle: '<',
   };

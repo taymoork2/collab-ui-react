@@ -108,8 +108,8 @@
     'Squared',
     'core.onboard',
     'ngTagsInput',
-    require('modules/hercules/privateTrunk/privateTrunkPrereq').default,
-    require('modules/hercules/privateTrunk/privateTrunkSetup').default,
+    require('modules/hercules/private-trunk/prereq').default,
+    require('modules/hercules/private-trunk/setup').default,
   ]);
 
   angular.module('HDS', ['Core', 'Hercules']);

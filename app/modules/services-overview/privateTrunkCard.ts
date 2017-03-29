@@ -10,22 +10,16 @@ export class ServicesOverviewPrivateTrunkCard extends ServicesOverviewHybridCard
   private _buttons: Array<ICardButton> = [{
     name: 'servicesOverview.cards.privateTrunk.buttons.view',
     buttonClass: 'btn btn--link btn--expand',
+    buttonState: 'prereq',
   }, {
     name: 'servicesOverview.genericButtons.setup',
     buttonClass: 'btn btn--primary',
-  }];
-
-  private _verifyDomain_buttons: Array<ICardButton> = [{
-    name: 'servicesOverview.cards.privateTrunk.buttons.verify',
-    buttonClass: 'btn btn--link btn--expand',
-  }, {
-    name: 'servicesOverview.genericButtons.setup',
-    routerState: 'private-trunk-overview',
-    buttonClass: 'btn btn--primary',
+    buttonState: 'prereq',
   }];
 
   public getButtons(): Array<ICardButton> {
-    return this.hasDomain ? this._verifyDomain_buttons : this._buttons;
+    this._buttons[1].buttonState = this.hasDomain ? 'setup' : 'prereq';
+    return this._buttons;
   }
 
   public privateTrunkFeatureToggleEventHandler(hasFeature: boolean): void {
@@ -38,6 +32,14 @@ export class ServicesOverviewPrivateTrunkCard extends ServicesOverviewHybridCard
 
   public openModal(): void {
     this.PrivateTrunkPrereqService.openModal();
+  }
+
+  public openSetupModal(): void {
+    if (this.hasDomain) {
+      this.PrivateTrunkPrereqService.openSetupModal();
+    } else {
+      this.PrivateTrunkPrereqService.openModal();
+    }
   }
 
   public hasVerifiedDomain(): boolean {

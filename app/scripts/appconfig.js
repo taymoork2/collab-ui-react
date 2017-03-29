@@ -3097,13 +3097,13 @@
             },
           })
           .state('private-trunk-overview', {
-            url: '/privateTrunkOverview',
+            url: '/private-trunk-overview',
             parent: 'main',
             template: '<private-trunk-overview has-private-trunk-feature-toggle="$resolve.hasPrivateTrunkFeatureToggle"></private-trunk-overview>',
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/hercules/privateTrunk/privateTrunkOverview'));
+                  done(require('modules/hercules/private-trunk/overview'));
                 }, 'private-trunk');
               }),
               hasPrivateTrunkFeatureToggle: /* @ngInject */ function (FeatureToggleService) {

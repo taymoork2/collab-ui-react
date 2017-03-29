@@ -1,4 +1,4 @@
-import { PrivateTrunkPrereqService } from 'modules/hercules/privateTrunk/privateTrunkPrereq/privateTrunkPrereq.service';
+import { PrivateTrunkPrereqService } from 'modules/hercules/private-trunk/prereq';
 
 export interface IOption {
   value: string;
@@ -11,7 +11,7 @@ export enum DomainRadioType {
   NONE = <any>'none',
 }
 
-export class PrivateTrunkSetupDomainCtrl implements ng.IComponentController {
+export class PrivateTrunkDomainCtrl implements ng.IComponentController {
   public domainOptions: Array<IOption> = [];
   public domains: Array<string>;
   public domainSelected: Array<IOption> = [];
@@ -20,8 +20,6 @@ export class PrivateTrunkSetupDomainCtrl implements ng.IComponentController {
   public onChangeFn: Function;
   public isNext: boolean = false;
   public currentStepIndex: number;
-  public nextStepIndex: number;
-  public combo: boolean = true;
   /* @ngInject */
   constructor(
     private PrivateTrunkPrereqService: PrivateTrunkPrereqService,
@@ -82,9 +80,9 @@ export class PrivateTrunkSetupDomainCtrl implements ng.IComponentController {
   }
 }
 
-export class PrivateTrunkSetupDomainComponent implements ng.IComponentOptions {
-  public controller = PrivateTrunkSetupDomainCtrl;
-  public templateUrl = 'modules/hercules/privateTrunk/privateTrunkSetup/private-trunk-setup-domain.html';
+export class PrivateTrunkDomainComponent implements ng.IComponentOptions {
+  public controller = PrivateTrunkDomainCtrl;
+  public templateUrl = 'modules/hercules/private-trunk/setup/private-trunk-domain.html';
   public bindings = {
     selected: '<',
     onChangeFn: '&',

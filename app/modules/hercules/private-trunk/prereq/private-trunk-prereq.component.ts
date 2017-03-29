@@ -1,4 +1,4 @@
-import { PrivateTrunkPrereqService } from './privateTrunkPrereq.service';
+import { PrivateTrunkPrereqService } from './private-trunk-prereq.service';
 interface IDomain {
   text: string;
 }
@@ -56,7 +56,7 @@ export class PrivateTrunkPrereqCtrl implements ng.IComponentController {
 }
 export class PrivateTrunkPrereqComponent implements ng.IComponentOptions {
   public controller = PrivateTrunkPrereqCtrl;
-  public templateUrl = 'modules/hercules/privateTrunk/privateTrunkPrereq/private-trunk-prereq.html';
+  public templateUrl = 'modules/hercules/private-trunk/prereq/private-trunk-prereq.html';
   public bindings = {
   };
 }
