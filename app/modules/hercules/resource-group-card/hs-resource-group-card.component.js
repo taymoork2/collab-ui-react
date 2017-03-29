@@ -13,7 +13,7 @@
     });
 
   /* @ngInject */
-  function ResourceGroupCardController($state, FusionClusterStatesService, HybridServicesUtils) {
+  function ResourceGroupCardController($state, HybridServicesClusterStatesService, HybridServicesUtils) {
     var ctrl = this;
 
     ctrl.showDetails = false;
@@ -52,7 +52,7 @@
         .map('connectors')
         .flatten()
         .value();
-      return FusionClusterStatesService.getMergedStateSeverity(connectors).cssClass;
+      return HybridServicesClusterStatesService.getMergedStateSeverity(connectors).cssClass;
     }
   }
 })();
