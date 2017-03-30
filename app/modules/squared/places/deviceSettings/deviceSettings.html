@@ -1,0 +1,19 @@
+<section-title
+  title-key="deviceSettings.title">
+</section-title>
+<div class="form-group">
+  <label class="col-sm-4 control-label" translate="deviceSettings.softwareUpgradeChannel"></label>
+  <div class="col-sm-7" >
+    <cs-select
+      ng-model="$ctrl.selectedUpgradeChannel"
+      options="$ctrl.upgradeChannelOptions"
+      is-disabled="$ctrl.updatingUpgradeChannel"
+      labelfield="label"
+      valuefield="value"
+      on-change-fn="$ctrl.onSaveUpgradeChannel()"
+    >
+    </cs-select>
+    <p class="form-control-static settingsWarning" ng-show="$ctrl.unsupportedDeviceType"
+       translate="deviceSettings.deviceNotSupported" translate-values="{ deviceType: $ctrl.unsupportedDeviceType }"></p>
+  </div>
+</div>
