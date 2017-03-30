@@ -20,13 +20,13 @@ class TelephonyDomains implements ng.IComponentController {
   /* @ngInject */
   public constructor(
     private gemService,
-    private $stateParams,
     private $scope: IGridApiScope,
-    private $rootScope: ng.IRootScopeService,
     private Notification: Notification,
     private $filter: ng.IFilterService,
     private $state: ng.ui.IStateService,
     private $timeout: ng.ITimeoutService,
+    private $rootScope: ng.IRootScopeService,
+    private $stateParams: ng.ui.IStateParamsService,
     private $templateCache: ng.ITemplateCacheService,
     private $translate: ng.translate.ITranslateService,
     private TelephonyDomainService: TelephonyDomainService,
@@ -67,7 +67,7 @@ class TelephonyDomains implements ng.IComponentController {
   }
 
   public onRequest() {
-    // TODO DO in next sprint
+    this.$state.go('gem.modal.tdRequest', { customerId: this.customerId });
   }
 
   public exportCSV() {

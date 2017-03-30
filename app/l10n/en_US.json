@@ -7071,6 +7071,20 @@
           "failed": "There was an error exporting Telephony Domain list."
         }
       },
+      "request": {
+        "names": "Names",
+        "region": "Region",
+        "notePlaceholder": "Text here",
+        "regionNote": "Region and Note",
+        "selectPlaceholder": "Select ...",
+        "labelCustomerName": "Customer Name",
+        "partnerName": "Parter Name(optional)",
+        "modalTitle": "Request Telephony Domain",
+        "noteText": "Note to Cisco Team(optional)",
+        "customerPlaceholder": "Who is the Telephony Domain for",
+        "partnerPlaceholder": "Enter a nickname for this Telephony Domain",
+        "customerHelpText": "Once approved by Cisco team, this name can note be changed"
+      },
       "field": {
         "status": "Status",
         "sites": "Site URL",

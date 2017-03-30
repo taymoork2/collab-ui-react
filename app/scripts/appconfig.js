@@ -2060,6 +2060,9 @@
             },
             templateUrl: 'modules/gemini/callbackGroup/cbgRequest.tpl.html',
           })
+          .state('gem.modal.tdRequest', {
+            template: '<gm-td-modal-request dismiss="$dismiss()" class="new-field-modal"></gm-td-modal-request>',
+          })
           .state('gmTdDetails', {
             data: {},
             params: { info: {} },
