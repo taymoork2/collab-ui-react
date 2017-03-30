@@ -2,7 +2,7 @@
 
 describe('Controller: DevicesCtrl', function () {
   var $scope, $state, $controller, controller, $httpBackend, $timeout, $q;
-  var CsdmConfigService, AccountOrgService, Authinfo, FeatureToggleService, Userservice, ServiceDescriptor;
+  var UrlConfig, AccountOrgService, Authinfo, FeatureToggleService, Userservice, ServiceDescriptor;
 
   beforeEach(angular.mock.module('Squared'));
   beforeEach(angular.mock.module('Huron'));
@@ -13,14 +13,14 @@ describe('Controller: DevicesCtrl', function () {
   beforeEach(initSpies);
   beforeEach(initController);
 
-  function dependencies($rootScope, _$state_, _$timeout_, _$controller_, _$httpBackend_, _$q_, _CsdmConfigService_, _AccountOrgService_, _Authinfo_, _FeatureToggleService_, _Userservice_, _ServiceDescriptor_) {
+  function dependencies($rootScope, _$state_, _$timeout_, _$controller_, _$httpBackend_, _$q_, _UrlConfig_, _AccountOrgService_, _Authinfo_, _FeatureToggleService_, _Userservice_, _ServiceDescriptor_) {
     $scope = $rootScope.$new();
     $state = _$state_;
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
     $timeout = _$timeout_;
     $q = _$q_;
-    CsdmConfigService = _CsdmConfigService_;
+    UrlConfig = _UrlConfig_;
     AccountOrgService = _AccountOrgService_;
     Authinfo = _Authinfo_;
     FeatureToggleService = _FeatureToggleService_;
@@ -31,11 +31,11 @@ describe('Controller: DevicesCtrl', function () {
   function initSpies() {
     // TODO - eww this is wrong - Just make this init right now
     $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/null/devices/?type=huron').respond([]);
-    $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/nonExistingDevices').respond(200);
-    $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/devices?checkDisplayName=false&checkOnline=false').respond(200);
-    $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/devices').respond(200);
-    $httpBackend.expectGET(CsdmConfigService.getUrl() + '/organization/null/devices?checkDisplayName=false&checkOnline=false');
-    $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/codes').respond(200);
+    $httpBackend.whenGET(UrlConfig.getCsdmServiceUrl() + '/organization/null/nonExistingDevices').respond(200);
+    $httpBackend.whenGET(UrlConfig.getCsdmServiceUrl() + '/organization/null/devices?checkDisplayName=false&checkOnline=false').respond(200);
+    $httpBackend.whenGET(UrlConfig.getCsdmServiceUrl() + '/organization/null/devices').respond(200);
+    $httpBackend.expectGET(UrlConfig.getCsdmServiceUrl() + '/organization/null/devices?checkDisplayName=false&checkOnline=false');
+    $httpBackend.whenGET(UrlConfig.getCsdmServiceUrl() + '/organization/null/codes').respond(200);
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200);
 
     spyOn(Userservice, 'getUser').and.callFake(function (userId, callback) {
@@ -72,7 +72,7 @@ describe('Controller: DevicesCtrl', function () {
     $httpBackend.flush();
     $httpBackend.verifyNoOutstandingRequest();
     $httpBackend.verifyNoOutstandingExpectation();
-    $httpBackend.expectGET(CsdmConfigService.getUrl() + '/organization/null/devices');
+    $httpBackend.expectGET(UrlConfig.getCsdmServiceUrl() + '/organization/null/devices');
     $timeout.flush(30500);
     //$timeout.verifyNoPendingTasks();
     //$scope.$digest();
