@@ -86,9 +86,34 @@ for arg in $@; do
     ls -1 "$fname" >> "$flist" 2>/dev/null
 done
 
+# args length after removing pass_through_opts
+args_length="${#args[@]}"
+
+# only run modular if we specify arguments
+if [ "${KTEST__MODULAR}" = "true" -a "${args_length}" -gt "0" ]; then
+  karma_shim_tpl="karma.shim.modular.tpl.js"
+else
+  if [ "${args_length}" -gt "0" ]; then
+    printf "\r\n"
+    printf "********************** ATTENTION **********************"
+    printf "\r\n\r\n"
+    printf "You should use modular testing for quicker unit tests."
+    printf "\r\n"
+    printf "Requires angular module to be self-contained (modular)."
+    printf "\r\n"
+    printf "\`export KTEST__MODULAR=true\`"
+    printf "\r\n\r\n"
+    printf "Read more: https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/blob/master/docs/modular-unit-testing.md"
+    printf "\r\n\r\n"
+    printf "*******************************************************"
+    printf "\r\n\r\n\r\n"
+  fi
+  karma_shim_tpl="karma.shim.tpl.js"
+fi
+
 # ----------
 # split the raw file list
-shim_tpl="${WX2_ADMIN_WEB_CLIENT_HOME}/karma/karma.shim.tpl.js"
+shim_tpl="${WX2_ADMIN_WEB_CLIENT_HOME}/karma/${karma_shim_tpl}"
 total_specs=$(wc -l "$flist" | awk '{print $1;}')
 
 # num cores is used to determine num spec files to include / shim file
@@ -129,7 +154,7 @@ export npm_lifecycle_event=${npm_lifecycle_event=test}
 # run 'karma' at the project root dir
 pushd "${WX2_ADMIN_WEB_CLIENT_HOME}" > /dev/null
 # set old generation heap limit to 2GB since we're currently hovering around the 1.4GB default
-karma_process="node --max-old-space-size=2048 ${WX2_ADMIN_WEB_CLIENT_HOME}/node_modules/karma/bin/karma start"
+karma_process="node --max-old-space-size=2560 ${WX2_ADMIN_WEB_CLIENT_HOME}/node_modules/karma/bin/karma start"
 
 set -x
 # shellcheck disable=SC2086

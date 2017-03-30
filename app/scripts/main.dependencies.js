@@ -57,5 +57,5 @@ require('collab-ui-stickyfill/dist/stickyfill.js');
 require('expose-loader?_!lodash'); // expose current lodash as a global since `pdfmake` is overwriting the previous global to custom 3.1.0
 
 function requireAll(requireContext) {
-  return requireContext.keys().forEach(requireContext);
+  return requireContext.keys().map(requireContext);
 }

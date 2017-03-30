@@ -84,7 +84,10 @@ function webpackConfig(env) {
   }
 
   config.resolve = {
-    extensions: ['.ts', '.js', '.json', '.css', '.scss', '.html'],
+    // For npm link - don't resolve path to a local directory outside of node_modules
+    symlinks: false,
+    // Resolve .js before .ts
+    extensions: ['.js', '.ts', '.json', '.css', '.scss', '.html'],
     alias: {
       // App aliases (used by ProvidePlugin)
       clipboard: 'clipboard/dist/clipboard.js',
@@ -101,6 +104,8 @@ function webpackConfig(env) {
     modules: [
       path.resolve('./app'),
       path.resolve('./test'),
+      // load external modules from our project dependencies first
+      path.resolve('./node_modules'),
       'node_modules',
     ],
   };
