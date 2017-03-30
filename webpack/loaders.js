@@ -52,6 +52,9 @@ exports.ts = {
     },
     {
       loader: 'ts-loader',
+      options: {
+        logLevel: 'warn',
+      },
     },
   ],
   exclude: [/node_modules/],
