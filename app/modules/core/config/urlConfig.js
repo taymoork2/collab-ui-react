@@ -3,9 +3,9 @@
 
   var serviceUrlMapping = {
     AdminServiceUrl: {
-      dev: 'https://atlas-integration.wbx2.com/admin/api/v1/',
+      dev: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
       cfe: 'https://atlas-e.wbx2.com/admin/api/v1/',
-      integration: 'https://atlas-integration.wbx2.com/admin/api/v1/',
+      integration: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
       prod: 'https://atlas-a.wbx2.com/admin/api/v1/',
     },
     LocusServiceUrl: {
@@ -19,12 +19,6 @@
       cfe: 'https://locus-e.wbx2.com',
       integration: 'https://locus-a.wbx2.com',
       prod: 'https://locus-a.wbx2.com',
-    },
-    EnrollmentServiceUrl: {
-      dev: 'https://locus-integration.wbx2.com/locus/api/v1',
-      cfe: 'https://locus-e.wbx2.com/locus/api/v1',
-      integration: 'https://locus-integration.wbx2.com/locus/api/v1',
-      prod: 'https://locus-a.wbx2.com/locus/api/v1',
     },
     AthenaServiceUrl: {
       dev: 'https://athena-integration.wbx2.com/athena/api/v1',
@@ -75,9 +69,9 @@
       prod: 'https://identity.webex.com/organization/%s/v1/',
     },
     SparkDomainManagementUrl: {
-      dev: 'https://atlas-integration.wbx2.com/admin/api/v1/',
-      cfe: 'https://atlas-integration.wbx2.com/admin/api/v1/',
-      integration: 'https://atlas-integration.wbx2.com/admin/api/v1/',
+      dev: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
+      cfe: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
+      integration: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
       prod: 'https://atlas-a.wbx2.com/admin/api/v1/',
     },
     SparkDomainCheckUrl: {
@@ -223,6 +217,12 @@
       cfe: 'https://argonaut-e.wbx2.com/argonaut/api/v1/compliance/report',
       integration: 'https://argonaut-integration.wbx2.com/argonaut/api/v1/compliance/report',
       prod: 'https://argonaut-a.wbx2.com/argonaut/api/v1/compliance/report',
+    },
+    LyraServiceUrl: {
+      dev: 'https://lyra-integration.wbx2.com/lyra/api/v1',
+      cfe: 'https://lyra-e.wbx2.com/lyra/api/v1',
+      integration: 'https://lyra-integration.wbx2.com/lyra/api/v1',
+      prod: 'https://lyra-a.wbx2.com/lyra/api/v1',
     },
 
     // urls same for all environments

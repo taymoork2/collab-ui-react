@@ -232,7 +232,9 @@
             },
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['./main'], done);
+                require.ensure([], function () {
+                  done(require('./main'));
+                }, 'modules');
               }),
             },
             abstract: true,
@@ -245,7 +247,9 @@
             },
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/core/login'], done);
+                require.ensure([], function () {
+                  done(require('modules/core/login'));
+                }, 'login');
               }),
             },
             abstract: true,
@@ -258,7 +262,9 @@
             },
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/core/stateRedirect/stateRedirect.controller'], done);
+                require.ensure([], function () {
+                  done(require('modules/core/stateRedirect/stateRedirect.controller'));
+                }, 'state-redirect');
               }),
             },
             abstract: true,
@@ -272,7 +278,9 @@
             abstract: true,
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['./main'], done);
+                require.ensure([], function () {
+                  done(require('./main'));
+                }, 'modules');
               }),
             },
             sticky: true,
@@ -544,7 +552,9 @@
             },
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/squared/scripts/controllers/activate'], done);
+                require.ensure([], function () {
+                  done(require('modules/squared/scripts/controllers/activate'));
+                }, 'activate');
               }),
             },
             authenticate: false,
@@ -1092,7 +1102,9 @@
             },
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/overview'], done);
+                require.ensure([], function () {
+                  done(require('modules/huron/overview'));
+                }, 'user-call-overview');
               }),
             },
           })
@@ -1147,7 +1159,9 @@
             },
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/voicemail'], done);
+                require.ensure([], function () {
+                  done(require('modules/huron/voicemail'));
+                }, 'user-call-voicemail');
               }),
               ownerId: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams.currentUser, 'id');
@@ -1161,7 +1175,9 @@
             },
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/snr'], done);
+                require.ensure([], function () {
+                  done(require('modules/huron/snr'));
+                }, 'user-call-snr');
               }),
               ownerId: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams.currentUser, 'id');
@@ -1178,7 +1194,9 @@
             },
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/speedDials'], done);
+                require.ensure([], function () {
+                  done(require('modules/huron/speedDials'));
+                }, 'user-call-speed-dials');
               }),
               ownerId: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams.currentUser, 'id');
@@ -1189,7 +1207,9 @@
             template: '<uc-user-cos-form member-type="users" member-id="$resolve.ownerId"></uc-user-cos-form>',
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/cos/user'], done);
+                require.ensure([], function () {
+                  done(require('modules/huron/cos/user'));
+                }, 'user-call-cos');
               }),
               ownerId: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams.currentUser, 'id');
@@ -1245,7 +1265,9 @@
             },
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/lines/lineOverview'], done);
+                require.ensure([], function () {
+                  done(require('modules/huron/lines/lineOverview'));
+                }, 'user-call-line');
               }),
               ownerId: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams.currentUser, 'id');
@@ -1717,7 +1739,9 @@
             },
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/squared/places/callOverview'], done);
+                require.ensure([], function () {
+                  done(require('modules/squared/places/callOverview'));
+                }, 'place-call-overview');
               }),
             },
           })
@@ -1728,7 +1752,9 @@
             },
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/speedDials'], done);
+                require.ensure([], function () {
+                  done(require('modules/huron/speedDials'));
+                }, 'place-call-speed-dials');
               }),
               ownerId: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams.currentPlace, 'cisUuid');
@@ -1739,7 +1765,9 @@
             template: '<uc-user-cos-form member-type="places" member-id="$resolve.ownerId"></uc-user-cos-form>',
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/cos/user'], done);
+                require.ensure([], function () {
+                  done(require('modules/huron/cos/user'));
+                }, 'place-call-cos');
               }),
               ownerId: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams.currentPlace, 'cisUuid');
@@ -1795,7 +1823,9 @@
             },
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/lines/lineOverview'], done);
+                require.ensure([], function () {
+                  done(require('modules/huron/lines/lineOverview'));
+                }, 'place-call-line');
               }),
               ownerId: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams.currentPlace, 'cisUuid');
@@ -1939,7 +1969,9 @@
             },
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/core/video'], done);
+                require.ensure([], function () {
+                  done(require('modules/core/video'));
+                }, 'video');
               }),
             },
           })
@@ -2027,6 +2059,9 @@
               customerId: null,
             },
             templateUrl: 'modules/gemini/callbackGroup/cbgRequest.tpl.html',
+          })
+          .state('gem.modal.tdRequest', {
+            template: '<gm-td-modal-request dismiss="$dismiss()" class="new-field-modal"></gm-td-modal-request>',
           })
           .state('gmTdDetails', {
             data: {},
@@ -2393,113 +2428,6 @@
               logstashPath: '',
             },
           })
-          .state('trialAdd', {
-            abstract: true,
-            parent: 'modal',
-            views: {
-              'modal@': {
-                template: '<div ui-view></div>',
-                controller: 'TrialAddCtrl',
-                controllerAs: 'trial',
-              },
-            },
-            params: {
-              isEditing: false,
-              currentTrial: {},
-              details: {},
-            },
-          })
-          .state('trialAdd.info', {
-            templateUrl: 'modules/core/trials/trialAdd.tpl.html',
-          })
-          .state('trialAdd.finishSetup', {
-            templateUrl: 'modules/core/trials/trialFinishSetup.tpl.html',
-          })
-          .state('trialAdd.webex', {
-            templateUrl: 'modules/core/trials/trialWebex.tpl.html',
-            controller: 'TrialWebexCtrl',
-            controllerAs: 'webexTrial',
-          })
-          .state('trialAdd.call', {
-            templateUrl: 'modules/core/trials/trialDevice.tpl.html',
-            controller: 'TrialDeviceController',
-            controllerAs: 'callTrial',
-          })
-          .state('trialAdd.pstn', {
-            templateUrl: 'modules/core/trials/trialPstn.tpl.html',
-            controller: 'TrialPstnCtrl',
-            controllerAs: 'pstnTrial',
-          })
-          .state('trialAdd.emergAddress', {
-            templateUrl: 'modules/core/trials/trialEmergAddress.tpl.html',
-            controller: 'TrialEmergAddressCtrl',
-            controllerAs: 'eAddressTrial',
-          })
-          .state('trialAdd.addNumbers', {
-            templateUrl: 'modules/core/trials/addNumbers.tpl.html',
-            controller: 'DidAddCtrl',
-            controllerAs: 'didAdd',
-            params: {
-              currentTrial: {},
-              currentOrg: {},
-            },
-          })
-          .state('trialEdit', {
-            abstract: true,
-            parent: 'modal',
-            views: {
-              'modal@': {
-                template: '<div ui-view></div>',
-                controller: 'TrialEditCtrl',
-                controllerAs: 'trial',
-              },
-            },
-            params: {
-              isEditing: true,
-              currentTrial: {},
-              details: {},
-            },
-          })
-          .state('trialEdit.addNumbers', {
-            templateUrl: 'modules/core/trials/addNumbers.tpl.html',
-            controller: 'DidAddCtrl',
-            controllerAs: 'didAdd',
-            resolve: {
-              modalInfo: function ($state) {
-                $state.params.modalClass = 'add-did-numbers-modal';
-                $state.params.modalId = 'didAddModal add-numbers';
-              },
-            },
-            params: {
-              currentOrg: {},
-            },
-          })
-          .state('trialEdit.info', {
-            templateUrl: 'modules/core/trials/trialEdit.tpl.html',
-          })
-          .state('trialEdit.finishSetup', {
-            templateUrl: 'modules/core/trials/trialFinishSetup.tpl.html',
-          })
-          .state('trialEdit.webex', {
-            templateUrl: 'modules/core/trials/trialWebex.tpl.html',
-            controller: 'TrialWebexCtrl',
-            controllerAs: 'webexTrial',
-          })
-          .state('trialEdit.call', {
-            templateUrl: 'modules/core/trials/trialDevice.tpl.html',
-            controller: 'TrialDeviceController',
-            controllerAs: 'callTrial',
-          })
-          .state('trialEdit.pstn', {
-            templateUrl: 'modules/core/trials/trialPstn.tpl.html',
-            controller: 'TrialPstnCtrl',
-            controllerAs: 'pstnTrial',
-          })
-          .state('trialEdit.emergAddress', {
-            templateUrl: 'modules/core/trials/trialEmergAddress.tpl.html',
-            controller: 'TrialEmergAddressCtrl',
-            controllerAs: 'eAddressTrial',
-          })
           .state('trial', {
             abstract: true,
             parent: 'modal',
@@ -2693,7 +2621,9 @@
             template: '<uc-settings ftsw="false"></uc-settings>',
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/settings'], done);
+                require.ensure([], function () {
+                  done(require('modules/huron/settings'));
+                }, 'call-settings');
               }),
             },
           })
@@ -2766,7 +2696,9 @@
             template: '<call-pickup-setup-assistant></call-pickup-setup-assistant>',
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/features/callPickup/callPickupSetupAssistant'], done);
+                require.ensure([], function () {
+                  done(require('modules/huron/features/callPickup/callPickupSetupAssistant'));
+                }, 'call-pickup');
               }),
             },
           })
@@ -2779,7 +2711,9 @@
             },
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/features/callPickup/callPickupSetupAssistant'], done);
+                require.ensure([], function () {
+                  done(require('modules/huron/features/callPickup/callPickupSetupAssistant'));
+                }, 'call-pickup');
               }),
             },
           })
@@ -2789,7 +2723,9 @@
             template: '<uc-call-park></uc-call-park>',
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/features/callPark/callPark'], done);
+                require.ensure([], function () {
+                  done(require('modules/huron/features/callPark/callPark'));
+                }, 'call-park');
               }),
             },
           })
@@ -2802,7 +2738,9 @@
             },
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/features/callPark/callPark'], done);
+                require.ensure([], function () {
+                  done(require('modules/huron/features/callPark/callPark'));
+                }, 'call-park');
               }),
             },
           })
@@ -2829,7 +2767,9 @@
             template: '<pg-setup-assistant></pg-setup-assistant>',
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/features/pagingGroup/pgSetupAssistant'], done);
+                require.ensure([], function () {
+                  done(require('modules/huron/features/pagingGroup/pgSetupAssistant'));
+                }, 'call-paging');
               }),
             },
           })
@@ -2839,7 +2779,9 @@
             template: '<pg-edit pg-id="$resolve.pgId"></pg-edit>',
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/features/pagingGroup/edit'], done);
+                require.ensure([], function () {
+                  done(require('modules/huron/features/pagingGroup/edit'));
+                }, 'call-paging');
               }),
               pgId: /* @ngInject */ function pgId($stateParams) {
                 var id = _.get($stateParams.feature, 'id');
@@ -3048,12 +2990,14 @@
             },
           })
           .state('private-trunk-overview', {
-            url: '/privateTrunkOverview',
+            url: '/private-trunk-overview',
             parent: 'main',
             template: '<private-trunk-overview has-private-trunk-feature-toggle="$resolve.hasPrivateTrunkFeatureToggle"></private-trunk-overview>',
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/hercules/privateTrunk/privateTrunkOverview'], done);
+                require.ensure([], function () {
+                  done(require('modules/hercules/private-trunk/overview'));
+                }, 'private-trunk');
               }),
               hasPrivateTrunkFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.huronEnterprisePrivateTrunking);

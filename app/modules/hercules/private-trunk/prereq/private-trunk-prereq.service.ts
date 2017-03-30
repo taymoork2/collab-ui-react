@@ -14,7 +14,7 @@ export class PrivateTrunkPrereqService {
   public openModal(): void {
     this.dismissModal();
     this.domainModal = this.$modal.open({
-      template: '<private-trunk-prereq></private-trunk-prereq>',
+      template: '<private-trunk-prereq class="modal-content"></private-trunk-prereq>',
       type: 'small',
     });
   }
@@ -37,7 +37,7 @@ export class PrivateTrunkPrereqService {
   public getVerifiedDomains(): ng.IPromise<Array<any>> {
     return this.DomainManagementService.getVerifiedDomains().then(domains => {
       return _.chain(domains)
-        .filter({ status : 'pending' })
+        .filter({ status : 'verified' })
         .map('text')
         .value();
     });

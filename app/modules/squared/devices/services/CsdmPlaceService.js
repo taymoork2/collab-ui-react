@@ -2,9 +2,9 @@
   'use strict';
 
   /* @ngInject  */
-  function CsdmPlaceService($http, Authinfo, CsdmConfigService, CsdmConverter) {
+  function CsdmPlaceService($http, Authinfo, UrlConfig, CsdmConverter) {
 
-    var csdmPlacesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/places/';
+    var csdmPlacesUrl = UrlConfig.getCsdmServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/places/';
 
     function getPlacesUrl() {
       return csdmPlacesUrl;
@@ -44,7 +44,7 @@
     }
 
     function createCsdmPlace(name, entitlements, directoryNumber, externalNumber, externalLinkedAccounts, ussProps) {
-      return createPlace(name, entitlements || ['webex-squared'], directoryNumber, externalNumber, 'lyra_space', externalLinkedAccounts, ussProps);
+      return createPlace(name, entitlements || ['webex-squared', 'spark'], directoryNumber, externalNumber, 'lyra_space', externalLinkedAccounts, ussProps);
     }
 
     function createCmiPlace(name, entitlements, directoryNumber, externalNumber) {

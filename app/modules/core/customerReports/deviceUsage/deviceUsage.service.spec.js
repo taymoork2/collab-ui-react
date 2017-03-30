@@ -12,7 +12,7 @@ describe('DeviceUsageService', function () {
   var now = moment('2016-10-27T00:00:00.000Z').toDate(); // Fri, Oct, 2016
 
   // TODO: Swap when production ready
-  //var urlBase = 'https://atlas-integration.wbx2.com/admin/api/v1/organization';
+  //var urlBase = 'https://atlas-intb.ciscospark.com/admin/api/v1/organization';
   var urlBase = 'http://berserk.rd.cisco.com:8080/atlas-server/admin/api/v1/organization';
 
   var baseOrgUrl = urlBase + '/null/reports/device'; // orgid not relevant for test

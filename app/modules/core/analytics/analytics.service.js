@@ -220,10 +220,6 @@
           properties.servicesArray = _buildTrialServicesArray(trialData.trials);
           properties.duration = _.get(trialData, 'details.licenseDuration');
           properties.licenseQty = _.get(trialData, 'details.licenseCount');
-          /* TODO: add this once we have a clear strategy
-          if (properties.from === 'trialAdd.call' || properties.from === 'trialEdit.call') {
-            properties.devicesArray = _buildTrialDevicesArray(trialData.trials);
-          }*/
         }
         _.extend(properties, additionalPayload);
         return trackEvent(eventName, properties);

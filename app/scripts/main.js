@@ -57,6 +57,9 @@
     require('modules/core/users/userCsv/userCsv.service'),
     require('modules/core/cards').default,
     require('modules/core/partnerReports/commonReportServices').default,
+    require('modules/core/partnerReports/reportCard').default,
+    require('modules/core/partnerReports/reportFilter').default,
+    require('modules/core/partnerReports/reportSlider').default,
     require('modules/core/window').default,
     require('modules/online/digitalRiver').default, // TODO make core.myCompany independent module
     require('modules/online/upgrade').default,
@@ -95,6 +98,7 @@
     require('modules/huron/autoAnswer').default,
     require('modules/huron/pstn').default,
     require('modules/huron/pstn/pstnProviders').default,
+    require('modules/huron/pstn/pstnContactInfo').default,
     require('modules/huron/pstnSetup/pstnSelector').default,
     require('modules/huron/overview').default,
   ]);
@@ -104,8 +108,8 @@
     'Squared',
     'core.onboard',
     'ngTagsInput',
-    require('modules/hercules/privateTrunk/privateTrunkPrereq').default,
-    require('modules/hercules/privateTrunk/privateTrunkSetup').default,
+    require('modules/hercules/private-trunk/prereq').default,
+    require('modules/hercules/private-trunk/setup').default,
   ]);
 
   angular.module('HDS', ['Core', 'Hercules']);

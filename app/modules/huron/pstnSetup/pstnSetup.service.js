@@ -96,6 +96,7 @@
       getAreaCode: getAreaCode,
       getCountryCode: getCountryCode,
       setCountryCode: setCountryCode,
+      getProvider: getProvider,
       INTELEPEER: INTELEPEER,
       TATA: TATA,
       TELSTRA: TELSTRA,
@@ -844,5 +845,8 @@
       return PstnSetup.getCountryCode();
     }
 
+    function getProvider() {
+      return PstnSetup.getProvider();
+    }
   }
 })();

@@ -17,6 +17,11 @@
     vm.validateSiteUrl = validateSiteUrl;
     vm.parentTrialData = $scope.trialData;
 
+    vm.getTimeZones = getTimeZones;
+    vm._helpers = {
+      getNumericPortion: getNumericPortion,
+      sortTimeZones: sortTimeZones,
+    };
     vm.siteUrlFields = [{
       model: vm.details,
       key: 'siteUrl',
@@ -65,8 +70,7 @@
       },
       expressionProperties: {
         'templateOptions.options': function () {
-          var timeZones = TrialTimeZoneService.getTimeZones();
-          return timeZones;
+          return getTimeZones();
         },
       },
       validators: {
@@ -82,6 +86,28 @@
     ////////////////
 
     Analytics.trackTrialSteps(Analytics.eventNames.ENTER_SCREEN, vm.parentTrialData);
+
+    function getNumericPortion(gmtLabel) {
+      // match offset component
+      var offset = /[+-]\d\d:\d\d/.exec(gmtLabel);
+      // use matched value, or default to '0'
+      var gmtOffset = _.get(offset, 0, '0');
+      // remove the ':', and convert to int
+      gmtOffset = gmtOffset.replace(':', '');
+      return _.parseInt(gmtOffset);
+    }
+
+    function sortTimeZones(x, y) {
+      //sort in assending order
+      var x_numeric = getNumericPortion(x.label);
+      var y_numeric = getNumericPortion(y.label);
+      return x_numeric - y_numeric;
+    }
+
+    function getTimeZones() {
+      var timeZones = TrialTimeZoneService.getTimeZones().sort(sortTimeZones);
+      return timeZones;
+    }
 
     function validateSiteUrl($viewValue, $modelValue) {
       var siteUrl = $modelValue || $viewValue;

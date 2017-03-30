@@ -158,8 +158,13 @@
     @include vr-spacing(mb, 1);
     @include vr-spacing(p, 0);
 
-    &:hover {
+    &:hover:enabled {
       background-color: $gray-light;
+    }
+
+    &:hover:disabled {
+      background-color: $gray-lightest;
+      color: $gray-darkest;
     }
 
     &:first-child:nth-last-child(4),
@@ -208,6 +213,7 @@
   .feature-icon-disabled {
     color: $gray-light-1;
     background: $gray-light-3;
+    cursor: default;
   }
 
   .feature-label-container {

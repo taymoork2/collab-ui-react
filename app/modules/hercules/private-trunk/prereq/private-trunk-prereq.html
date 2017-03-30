@@ -13,15 +13,15 @@
     <a href="" translate="servicesOverview.cards.privateTrunk.verifyADomain" ng-click="$ctrl.gotoSettings()"></a>
   </p>
   <p ng-if=$ctrl.hasVerifiedDomain>
-    <p ng-if="$ctrl.domains.length === 1">
+    <p ng-if="$ctrl.domains.length===1">
       <i class="icon icon-check"></i>
-      <span>{{$ctrl.domain[0]}}</span>
+      <span>{{$ctrl.domains[0]}}</span>
       <span translate="servicesOverview.cards.privateTrunk.aVerifiedDomain"></span>
     </p>
     <p ng-if="$ctrl.domains.length > 1">
       <i class="icon icon-check"></i>
       <span translate="servicesOverview.cards.privateTrunk.verifiedDomain"></span>
-      <ul class="domainlist" ng-if="$ctrl.domains.length > 1">
+      <ul class="domainlist" ng-if="$ctrl.domains.length > 1" >
         <li ng-repeat="domain in $ctrl.domains">
           <span>{{::domain}}</span>
         </li>

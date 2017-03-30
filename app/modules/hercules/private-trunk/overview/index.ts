@@ -1,5 +1,5 @@
-import { PrivateTrunkOverviewComponent } from './privateTrunkOverview.component';
-import privateTrunkPrereq from 'modules/hercules/privateTrunk/privateTrunkPrereq';
+import { PrivateTrunkOverviewComponent } from './private-trunk-overview.component';
+import privateTrunkPrereq from 'modules/hercules/private-trunk/prereq';
 
 export default angular
   .module('hercules.private-trunk-overview', [

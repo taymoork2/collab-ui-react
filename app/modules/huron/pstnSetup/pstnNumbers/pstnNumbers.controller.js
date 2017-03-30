@@ -144,7 +144,6 @@
       getCapabilities();
       FeatureToggleService.supports(FeatureToggleService.features.huronFederatedSparkCall)
       .then(function (results) {
-        results = true;
         vm.ftHuronFederatedSparkCall = results;
         if (!results) {
           $scope.$watchCollection(function () {

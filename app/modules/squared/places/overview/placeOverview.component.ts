@@ -32,6 +32,7 @@ class PlaceOverview implements ng.IComponentController {
   private currentPlace: IPlace = <IPlace>{ devices: {} };
   private csdmHuronUserDeviceService;
   private adminUserDetails;
+  private showDeviceSettings = false;
 
   /* @ngInject */
   constructor(private $q: ng.IQService,
@@ -90,10 +91,10 @@ class PlaceOverview implements ng.IComponentController {
   }
 
   private fetchAsyncSettings() {
-    let ataPromise = this.FeatureToggleService.csdmATAGetStatus().then((result) => {
-      this.showATA = result;
+    let ataPromise = this.FeatureToggleService.csdmATAGetStatus().then(feature => {
+      this.showATA = feature;
     });
-    let hybridPromise = this.FeatureToggleService.csdmHybridCallGetStatus().then((feature) => {
+    let hybridPromise = this.FeatureToggleService.csdmHybridCallGetStatus().then(feature => {
       this.csdmHybridCallFeature = feature;
     });
     let placeCalendarPromise = this.FeatureToggleService.csdmPlaceCalendarGetStatus().then(feature => {
@@ -116,6 +117,10 @@ class PlaceOverview implements ng.IComponentController {
 
     this.$q.all([ataPromise, hybridPromise, placeCalendarPromise, gcalFeaturePromise, anyCalendarEnabledPromise, atlasF237ResourceGroupsPromise, this.fetchDetailsForLoggedInUser()]).finally(() => {
       this.generateCodeIsDisabled = false;
+    });
+
+    this.FeatureToggleService.cloudberryLyraConfigGetStatus().then(feature => {
+      this.showDeviceSettings = feature && this.currentPlace.type === 'cloudberry';
     });
   }
 

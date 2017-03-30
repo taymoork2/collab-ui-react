@@ -1,7 +1,7 @@
-import privateTrunkSetupDomainModule from './index';
-describe('Component: PrivateTrunkSetupDomain component', () => {
-  const RADIO_OPTION1 = '#privateTrunkRadio1';
-  const RADIO_OPTION2 = '#privateTrunkRadio2';
+import privateTrunkDomainModule from './index';
+describe('Component: PrivateTrunkDomain component', () => {
+  const RADIO_OPTION1 = '#domainRadio1';
+  const RADIO_OPTION2 = '#domainRadio2';
   const MULTI_SELECT = 'a.form-control';
   const CHECK_BOX = 'cs-checkbox';
 
@@ -9,7 +9,7 @@ describe('Component: PrivateTrunkSetupDomain component', () => {
   let selected: Array<string> = ['verified1.ept.org'];
 
   beforeEach(function() {
-    this.initModules(privateTrunkSetupDomainModule);
+    this.initModules(privateTrunkDomainModule);
     this.injectDependencies(
       '$scope',
       '$q',
@@ -18,7 +18,7 @@ describe('Component: PrivateTrunkSetupDomain component', () => {
     );
     this.getVerifiedDomainsDefer = this.$q.defer();
     spyOn(this.PrivateTrunkPrereqService, 'getVerifiedDomains').and.returnValue(this.getVerifiedDomainsDefer.promise);
-    this.compileComponent('privateTrunkSetupDomain', {
+    this.compileComponent('privateTrunkDomain', {
       selected: selected,
       onChangeFn: 'onChangeFn(selected)',
     });

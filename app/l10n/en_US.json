@@ -4084,6 +4084,7 @@
       "sx10": "SX10",
       "dx80": "DX80",
       "mx300": "MX300 (Limit {{max}})",
+      "dx80Delay": " (will ship on April 15th)",
       "phone8865": "8865",
       "phone8845": "8845",
       "phone8841": "8841",
@@ -4485,7 +4486,7 @@
     },
     "deviceRebooting": "Device rebooting",
     "deviceRebootingDetails": "The device is now rebooting and will be offline for a few moments.",
-    "failedToSaveChanges": "Failed to save changes to device. Reason:",
+    "failedToSaveChanges": "Failed to save changes. Reason:",
     "failedToUploadLogs": "Failed to upload logs. Reason:",
     "deleteATAConfText": "Are you sure you want to delete Port 1?",
     "deleteDeviceType": "Delete {{deviceType}}",
@@ -6992,15 +6993,15 @@
         "selectDomainDesc": "Select the verified domains that you want to route over the enterprise trunk. If you do not select any options, calls route as normal URI dialing over the internet. See the documentation for more help",
         "radioSelect1": "I want to use a verified domain for Private Trunking",
         "radioSelect2": "I don’t want to use a verified domain for Private Trunking",
-        "connectorTitle": "Connect Expressway-E",
-        "connector": "Enter the SIP destination of the on-premises Expressway-E that you want to use for Private Trunking",
-        "connectorHelp": "Enter an SRV domain, hostname:port, or IP address:port that resolves to your Expressway-E for mutual TLS. If your SRV record is \"_sips._tcp.sipmtls.example.com\", then enter \"sipmtls.example.com\" here.",
+        "destinationTitle": "Add SIP Destination",
+        "destination": "Enter the SIP destination of the on-premises Expressway-E that you want to use for Private Trunking",
+        "destinationHelp": "Enter an SRV domain, hostname:port, or IP address:port that resolves to your Expressway-E for mutual TLS. If your SRV record is \"_sips._tcp.sipmtls.example.com\", then enter \"sipmtls.example.com\" here.",
         "sipLabel": "Sip destination",
         "sip": "Enter Sip destination",
         "displayLabel": "Display name",
         "displayName": "Enter display name",
         "nextSip": "Add another SIP destination",
-        "hybridConnector": "Use one or more Expressway-E configured for Hybrid Call Connect ",
+        "hybridDestination": "Use one or more Expressway-E configured for Hybrid Call Connect ",
         "cancelHeader": "Cancel Enterprise Private Trunking Setup.",
         "cancelBody": "Are you sure you want to cancel?"
       }
@@ -7069,6 +7070,20 @@
           "success": "Telephony Domain list has been successfully exported.",
           "failed": "There was an error exporting Telephony Domain list."
         }
+      },
+      "request": {
+        "names": "Names",
+        "region": "Region",
+        "notePlaceholder": "Text here",
+        "regionNote": "Region and Note",
+        "selectPlaceholder": "Select ...",
+        "labelCustomerName": "Customer Name",
+        "partnerName": "Parter Name(optional)",
+        "modalTitle": "Request Telephony Domain",
+        "noteText": "Note to Cisco Team(optional)",
+        "customerPlaceholder": "Who is the Telephony Domain for",
+        "partnerPlaceholder": "Enter a nickname for this Telephony Domain",
+        "customerHelpText": "Once approved by Cisco team, this name can note be changed"
       },
       "field": {
         "status": "Status",
@@ -7713,5 +7728,10 @@
     "robot": "Robot",
     "spark_integration": "Spark Integration",
     "room": "Desk Phone Place"
+  },
+  "deviceSettings": {
+    "title": "Device Settings",
+    "softwareUpgradeChannel": "Software Upgrade Channel",
+    "deviceNotSupported": "The {{deviceType}} is not yet able to observe this setting."
   }
 }

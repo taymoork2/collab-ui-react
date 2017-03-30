@@ -9,11 +9,11 @@
   "timezone": "Etc/GMT",
   "unauthorized": "reportsPage.unauthorizedError",
   "dummyUrls": [
-    "https://atlas-integration.wbx2.com/admin/api/v1/organization/null/reports/action/managedOrgs/type?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache={{cache}}&orgId=a7cba512-7b62-4f0a-a869-725b413680e4&orgId=1896f9dc-c5a4-4041-8257-b3adfe3cf9a4&orgId=b7e25333-6750-4b17-841c-ce5124f8ddbb&orgId=1",
-    "https://atlas-integration.wbx2.com/admin/api/v1/organization/null/reports/action/managedOrgs/type?type=reportType&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache={{cache}}&orgId=a7cba512-7b62-4f0a-a869-725b413680e4&orgId=1896f9dc-c5a4-4041-8257-b3adfe3cf9a4&orgId=b7e25333-6750-4b17-841c-ce5124f8ddbb&orgId=1",
-    "https://atlas-integration.wbx2.com/admin/api/v1/organization/null/reports/action/type?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache={{cache}}&isCustomerView=true",
-    "https://atlas-integration.wbx2.com/admin/api/v1/organization/null/reports/name?type=type&cache={{cache}}",
-    "https://atlas-integration.wbx2.com/admin/api/v1/organization/null/reports/name/type?&cache={{cache}}"
+    "https://atlas-intb.ciscospark.com/admin/api/v1/organization/null/reports/action/managedOrgs/type?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache={{cache}}&orgId=a7cba512-7b62-4f0a-a869-725b413680e4&orgId=1896f9dc-c5a4-4041-8257-b3adfe3cf9a4&orgId=b7e25333-6750-4b17-841c-ce5124f8ddbb&orgId=1",
+    "https://atlas-intb.ciscospark.com/admin/api/v1/organization/null/reports/action/managedOrgs/type?type=reportType&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache={{cache}}&orgId=a7cba512-7b62-4f0a-a869-725b413680e4&orgId=1896f9dc-c5a4-4041-8257-b3adfe3cf9a4&orgId=b7e25333-6750-4b17-841c-ce5124f8ddbb&orgId=1",
+    "https://atlas-intb.ciscospark.com/admin/api/v1/organization/null/reports/action/type?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache={{cache}}&isCustomerView=true",
+    "https://atlas-intb.ciscospark.com/admin/api/v1/organization/null/reports/name?type=type&cache={{cache}}",
+    "https://atlas-intb.ciscospark.com/admin/api/v1/organization/null/reports/name/type?&cache={{cache}}"
   ],
   "timeFilter": [{
     "value": 0,

@@ -1,22 +1,25 @@
 'use strict';
 
 describe('Controller: PstnContractInfoCtrl', function () {
-  var controller, $controller, $scope, $state, PstnSetup;
+  var controller, $controller, $scope, $state, PstnSetup, FeatureToggleService, $q;
   var customer = getJSONFixture('huron/json/pstnSetup/customer.json');
 
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$state_, _PstnSetup_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$state_, _PstnSetup_, _FeatureToggleService_, _$q_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $state = _$state_;
     PstnSetup = _PstnSetup_;
+    FeatureToggleService = _FeatureToggleService_;
+    $q = _$q_;
 
     PstnSetup.setCustomerId(customer.uuid);
     PstnSetup.setCustomerName(customer.name);
     PstnSetup.setCustomerEmail(customer.email);
 
     spyOn($state, 'go');
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
 
     controller = $controller('PstnContractInfoCtrl', {
       $scope: $scope,

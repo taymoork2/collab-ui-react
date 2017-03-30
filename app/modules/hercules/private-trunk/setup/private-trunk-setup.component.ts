@@ -1,13 +1,13 @@
-import { PrivateTrunkPrereqService } from 'modules/hercules/privateTrunk/privateTrunkPrereq/privateTrunkPrereq.service';
+import { PrivateTrunkPrereqService } from 'modules/hercules/private-trunk/prereq/private-trunk-prereq.service';
 import { IToolkitModalService } from 'modules/core/modal';
 
 export class PrivateTrunkSetupCtrl implements ng.IComponentController {
-  private static readonly MAX_INDEX: number = 3;
+  private static readonly MAX_INDEX: number = 4;
+  private static readonly MIN_INDEX: number = 1;
   public domainSelected: Array<string> = [];
   public onChangeFn: Function;
   public isNext: boolean = false;
   public currentStepIndex: number;
-  public nextStepIndex: number;
   public isNextButton: boolean = false;
   public domains: Array<string>;
 
@@ -27,12 +27,13 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
   }
 
   public nextStep(): void {
-    this.nextStepIndex = (this.currentStepIndex <= PrivateTrunkSetupCtrl.MAX_INDEX) ? this.currentStepIndex++ : this.currentStepIndex;
+    this.currentStepIndex = (this.currentStepIndex < PrivateTrunkSetupCtrl.MAX_INDEX) ? ++this.currentStepIndex : this.currentStepIndex;
   }
 
   public previousStep(): void {
-    this.nextStepIndex = (this.currentStepIndex >= PrivateTrunkSetupCtrl.MAX_INDEX - 1 ) ? this.currentStepIndex-- : this.currentStepIndex;
+    this.currentStepIndex = (this.currentStepIndex > PrivateTrunkSetupCtrl.MIN_INDEX) ? --this.currentStepIndex : this.currentStepIndex;
   }
+
   public setSelectedDomain(nextButton: boolean, domains: Array<string>): void {
     this.domainSelected = domains;
     this.isNextButton = nextButton;
@@ -40,7 +41,7 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
 
   public dismiss(): void {
     this.$modal.open({
-      templateUrl: 'modules/hercules/privateTrunk/privateTrunkSetup/private-trunk-cancel-confirm.html',
+      templateUrl: 'modules/hercules/private-trunk/setup/private-trunk-cancel-confirm.html',
       type: 'dialog',
     })
       .result.then(() => {
@@ -50,9 +51,10 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
   }
 
 }
+
 export class PrivateTrunkSetupComponent implements ng.IComponentOptions {
   public controller = PrivateTrunkSetupCtrl;
-  public templateUrl = 'modules/hercules/privateTrunk/privateTrunkSetup/private-trunk-setup.html';
+  public templateUrl = 'modules/hercules/private-trunk/setup/private-trunk-setup.html';
   public bindings = {
     domains: '<',
   };

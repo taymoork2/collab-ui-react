@@ -30,7 +30,6 @@
     vm.progress = 0;
     vm.actionCopy = undefined;
     vm.isSquishable = isSquishable;
-    vm.clioDelete = AAMediaUploadService.isClioEnabled();
 
     var maxLanes = 3;
 

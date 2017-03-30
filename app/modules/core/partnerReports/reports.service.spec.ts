@@ -201,7 +201,7 @@ describe('Service: Report Service', () => {
   });
 
   describe('Helper Services', function () {
-    let managedOrgsUrl = 'https://atlas-integration.wbx2.com/admin/api/v1/organizations/null/managedOrgs';
+    let managedOrgsUrl = 'https://atlas-intb.ciscospark.com/admin/api/v1/organizations/null/managedOrgs';
 
     it('getCustomerList should return a list of customers', function () {
       this.$httpBackend.whenGET(managedOrgsUrl).respond({

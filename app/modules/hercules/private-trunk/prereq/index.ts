@@ -1,7 +1,7 @@
-import { PrivateTrunkPrereqComponent } from './privateTrunkPrereq.component';
-import { PrivateTrunkPrereqService } from './privateTrunkPrereq.service';
+import { PrivateTrunkPrereqComponent } from './private-trunk-prereq.component';
+import { PrivateTrunkPrereqService } from './private-trunk-prereq.service';
 import domainManagementService from 'modules/core/domainManagement';
-export * from './privateTrunkPrereq.service';
+export * from './private-trunk-prereq.service';
 
 export default angular
   .module('hercules.private-trunk-prereq', [

@@ -4,7 +4,7 @@ if [ -z "$WX2_ADMIN_WEB_CLIENT_HOME" ]; then
 fi
 
 # TODO: get these static urls from common source that can be shared with other nodejs scripts
-atlas_api_url=${atlas_api_url:-https://atlas-integration.wbx2.com/admin/api/v1}
+atlas_api_url=${atlas_api_url:-https://atlas-intb.ciscospark.com/admin/api/v1}
 wdm_api_url=${wdm_api_url:-https://wdm-integration.wbx2.com/wdm/api/v1}
 huron_api_url=${huron_api_url:-https://cmi.huron-int.com/api/v1}
 ci_scim_api_url=${ci_scim_api_url:-https://identity.webex.com/organization/scim/v1}
