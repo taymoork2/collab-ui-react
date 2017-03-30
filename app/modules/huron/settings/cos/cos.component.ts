@@ -18,7 +18,7 @@ class ClassOfService implements ng.IComponentController {
     this.disableCos();
   }
 
-  public trialToggle: boolean;
+  public cosTrialToggle: boolean;
   public callTrial: boolean;
   public roomSystemsTrial: boolean;
   public disableControl: boolean = true;
@@ -53,12 +53,12 @@ class ClassOfService implements ng.IComponentController {
     }
   }
 
-  public disableCos() {
-    this.trialToggle = this.FeatureToggleService.supports('h-cos-trial');
+  public disableCos(): void {
+    this.cosTrialToggle = this.FeatureToggleService.supports('h-cos-trial');
     this.callTrial = this.Authinfo.getLicenseIsTrial('COMMUNICATION', 'ciscouc');
     this.roomSystemsTrial = this.Authinfo.getLicenseIsTrial('SHARED_DEVICES');
-    if ((this.callTrial && this.roomSystemsTrial) || (this.callTrial && !this.roomSystemsTrial) || (!this.callTrial && this.roomSystemsTrial)) {
-      this.$q.when(this.trialToggle)
+    if (this.callTrial || this.roomSystemsTrial) {
+      this.$q.when(this.cosTrialToggle)
         .then((response) => {
           if (response) {
             this.disableControl = false;
