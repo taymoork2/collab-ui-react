@@ -201,7 +201,11 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
     // `connector.maintenanceMode` should reflect the status it should be in (maps `maintenanceMode` on the node)
     // `connector.connectorStatus.maintenanceMode` is the latest mode received via an heartbeat
     const fromHeartbeat = _.get<IConnector, ConnectorMaintenanceMode>(connector, 'connectorStatus.maintenanceMode');
-    if (fromHeartbeat !== connector.maintenanceMode) {
+    if (connector.maintenanceMode === 'off') {
+      return 'off';
+    } else if (connector.maintenanceMode === 'on' && _.includes(['stopped', 'disabled', 'offline'], connector.state)) {
+      return 'on';
+    } else if (connector.maintenanceMode === 'on' && fromHeartbeat === 'off') {
       return 'pending';
     } else {
       return fromHeartbeat;
