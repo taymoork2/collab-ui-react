@@ -12,7 +12,7 @@ class RenameAndDeregisterClusterSectionCtrl implements ng.IComponentController {
     },
     controller: 'ClusterDeregisterController',
     controllerAs: 'clusterDeregister',
-    templateUrl: 'modules/hercules/fusion-pages/components/rename-and-deregister-cluster-section/deregister-dialog.html',
+    templateUrl: 'modules/hercules/rename-and-deregister-cluster-section/deregister-dialog.html',
     type: 'dialog',
   };
 
