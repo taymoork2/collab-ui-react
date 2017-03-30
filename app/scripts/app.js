@@ -105,7 +105,7 @@
     'ngResource',
     'ngSanitize',
     'oc.lazyLoad',
-    'pascalprecht.translate',
+    require('angular-translate'),
     'ui.router',
   ]).run(require('./apprun'))
     .config(require('./app.exceptions.config').default);

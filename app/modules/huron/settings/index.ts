@@ -27,7 +27,7 @@ export default angular
   .module('huron.settings', [
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
-    'pascalprecht.translate',
+    require('angular-translate'),
     preferredLanguageModule,
     extensionRangeModule,
     extensionLengthModule,

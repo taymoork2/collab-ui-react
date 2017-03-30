@@ -8,7 +8,7 @@ export default angular
   .module('huron.call-park-number', [
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
-    'pascalprecht.translate',
+    require('angular-translate'),
   ])
   .component('ucCallParkNumber', new CallParkNumberComponent())
   .directive('validateRange', CallParkRangeValidator.factory)

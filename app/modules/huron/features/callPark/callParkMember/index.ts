@@ -11,7 +11,7 @@ export default angular
   .module('huron.call-park-member', [
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
-    'pascalprecht.translate',
+    require('angular-translate'),
     memberService,
     featureMemberService,
     callParkService,

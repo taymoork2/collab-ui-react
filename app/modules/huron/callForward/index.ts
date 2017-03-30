@@ -9,7 +9,7 @@ export default angular
   .module('huron.call-forward', [
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
-    'pascalprecht.translate',
+    require('angular-translate'),
     customerServiceModule,
     'huron.telephoneNumber',
     'huron.telephoneNumberService',

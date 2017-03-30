@@ -6,7 +6,7 @@ export default angular
   .module('trial.regionalSettings', [
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
-    'pascalprecht.translate',
+    require('angular-translate'),
     HuronCountryService,
     FeatureToggleServices,
   ])

@@ -10,7 +10,7 @@ export default angular
     'huron.telephoneNumber',
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
-    'pascalprecht.translate',
+    require('angular-translate'),
     'dragularModule',
     'Core',
     'huron.telephoneNumberService',

@@ -7,7 +7,7 @@ export default angular
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
     'huron.paging-group',
-    'pascalprecht.translate',
+    require('angular-translate'),
     require('modules/core/config/urlConfig'),
     featureMemberService,
     notifications,

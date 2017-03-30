@@ -4,7 +4,7 @@ export default angular
   .module('reports.reportSlider', [
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
-    'pascalprecht.translate',
+    require('angular-translate'),
     require('../commonReportServices').default,
   ])
   .component('reportSlider', new ReportSliderComponent())

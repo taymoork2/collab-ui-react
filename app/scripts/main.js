@@ -35,7 +35,7 @@
     'ngMessages',
     'ngFileUpload',
     'ngCsv',
-    'pascalprecht.translate',
+    require('angular-translate'),
     'ui.router',
     'ui.grid',
     'ui.grid.selection',

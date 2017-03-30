@@ -5,7 +5,7 @@ export default angular
   .module('huron.call-pickup.notificationtimer', [
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
-    'pascalprecht.translate',
+    require('angular-translate'),
     callPickupGroupService,
   ])
   .component('callPickupNotificationTimer',  new CallPickupNotificationTimerComponent())

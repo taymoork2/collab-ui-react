@@ -4,7 +4,7 @@ export default angular
   .module('huron.preferred-language', [
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
-    'pascalprecht.translate',
+    require('angular-translate'),
     require('modules/core/config/config'),
   ])
   .component('ucPreferredLanguage', new PreferredLanguageComponent())

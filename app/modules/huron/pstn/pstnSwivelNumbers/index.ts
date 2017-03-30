@@ -6,7 +6,7 @@ export default angular
   .module('huron.pstn-swivelNumbers', [
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
-    'pascalprecht.translate',
+    require('angular-translate'),
     'huron.telephoneNumberService',
     notifications,
   ])

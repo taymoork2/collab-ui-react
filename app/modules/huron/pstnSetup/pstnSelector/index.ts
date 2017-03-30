@@ -13,7 +13,7 @@ export default angular
     require('collab-ui-ng').default,
     'huron.telephoneNumber',
     'huron.telephoneNumberService',
-    'pascalprecht.translate',
+    require('angular-translate'),
   ])
   .component('pstnSelector', new PstnSelectorComponent())
   .name;

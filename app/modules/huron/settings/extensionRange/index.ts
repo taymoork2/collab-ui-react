@@ -14,7 +14,7 @@ export default angular
   .module('huron.settings.extension-range', [
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
-    'pascalprecht.translate',
+    require('angular-translate'),
   ])
   .component('ucExtensionRange', new ExtensionRangeComponent())
   .directive('validateExtensionRangeLength', ExtensionRangeLengthValidator.factory)

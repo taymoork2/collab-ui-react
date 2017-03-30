@@ -11,7 +11,7 @@ export default angular
   .module('huron.paging-group.setup-assistant', [
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
-    'pascalprecht.translate',
+    require('angular-translate'),
     pgName,
     pgNumber,
     pgMember,

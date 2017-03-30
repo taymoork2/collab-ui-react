@@ -9,7 +9,7 @@ export default angular
   .module('hercules.private-trunk-setup', [
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
-    'pascalprecht.translate',
+    require('angular-translate'),
     privateTrunkPrereq,
     require('modules/hercules/services/uss-service'),
   ])

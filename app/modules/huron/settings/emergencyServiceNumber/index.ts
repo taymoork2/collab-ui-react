@@ -4,7 +4,7 @@ export default angular
   .module('huron.settings.emergency-service-number', [
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
-    'pascalprecht.translate',
+    require('angular-translate'),
   ])
   .component('ucEmergencyServiceNumber', new EmergencyServiceNumberComponent())
   .name;

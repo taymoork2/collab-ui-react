@@ -9,7 +9,7 @@ export default angular
   .module('huron.call-pickup.members', [
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
-    'pascalprecht.translate',
+    require('angular-translate'),
     memberService,
     callPickupGroupService,
     require('modules/core/config/urlConfig'),

@@ -6,7 +6,7 @@ export default angular
   .module('huron.settings.emergency-service-address', [
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
-    'pascalprecht.translate',
+    require('angular-translate'),
     notifications,
     serviceAddressModule,
   ])

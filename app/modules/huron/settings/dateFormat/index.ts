@@ -4,7 +4,7 @@ export default angular
   .module('huron.settings.date-format', [
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
-    'pascalprecht.translate',
+    require('angular-translate'),
   ])
   .component('ucDateFormat', new HuronDateFormatComponent())
   .name;

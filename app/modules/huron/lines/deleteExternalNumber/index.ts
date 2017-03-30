@@ -5,7 +5,7 @@ export default angular
   .module('huron.delete-external-number', [
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
-    'pascalprecht.translate',
+    require('angular-translate'),
     'huron.telephoneNumber',
     notifications,
     require('modules/huron/telephony/cmiServices'),

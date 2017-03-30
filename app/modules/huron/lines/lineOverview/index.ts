@@ -18,7 +18,7 @@ export default angular
   .module('huron.line-overview', [
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
-    'pascalprecht.translate',
+    require('angular-translate'),
     directoryNumber,
     callForward,
     simultaneousCalls,

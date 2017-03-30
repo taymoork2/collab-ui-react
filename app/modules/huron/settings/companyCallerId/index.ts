@@ -7,7 +7,7 @@ export default angular
   .module('huron.settings.company-caller-id', [
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
-    'pascalprecht.translate',
+    require('angular-translate'),
     'huron.telephoneNumber',
     'huron.telephoneNumberService',
   ])

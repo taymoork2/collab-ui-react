@@ -12,7 +12,7 @@ export default angular
   .module('huron.call-pickup.setup-assistant', [
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
-    'pascalprecht.translate',
+    require('angular-translate'),
     callPickupName,
     callPickupMembers,
     callPickupGroupService,

@@ -6,7 +6,7 @@ export default angular
   .module('huron.call-park-reversion-timer', [
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
-    'pascalprecht.translate',
+    require('angular-translate'),
   ])
   .component('ucCallParkReversionTimer', new CallParkReversionTimerComponent())
   .name;

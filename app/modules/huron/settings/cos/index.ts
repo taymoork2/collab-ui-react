@@ -5,7 +5,7 @@ export default angular
   .module('huron.class-of-service', [
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
-    'pascalprecht.translate',
+    require('angular-translate'),
     FeatureToggleService,
     require('modules/core/scripts/services/authinfo'),
   ])

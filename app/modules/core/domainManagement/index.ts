@@ -7,7 +7,7 @@ export default angular.module('core.domain-management', [
   require('modules/core/scripts/services/log'),
   require('modules/core/config/urlConfig'),
   require('modules/core/notifications').default,
-  'pascalprecht.translate',
+  require('angular-translate'),
 ])
   .service('DomainManagementService', DomainManagementService)
   .name;

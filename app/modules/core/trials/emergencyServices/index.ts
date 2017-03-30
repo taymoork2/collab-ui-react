@@ -4,7 +4,7 @@ export default angular
   .module('trial.emergencyServices', [
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
-    'pascalprecht.translate',
+    require('angular-translate'),
   ])
   .component('emergencyServices', new EmergencyServicesComponent())
   .name;

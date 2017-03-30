@@ -11,7 +11,7 @@ export default angular
   .module('huron.pstn-trialSetup', [
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
-    'pascalprecht.translate',
+    require('angular-translate'),
     'huron.telephoneNumber',
     'huron.pstnsetupservice',
     'huron.PstnSetup',

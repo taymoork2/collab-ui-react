@@ -4,7 +4,7 @@ export default angular
   .module('huron.paging-group.name', [
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
-    'pascalprecht.translate',
+    require('angular-translate'),
   ])
   .component('pgName',  new PgNameComponent())
   .name;

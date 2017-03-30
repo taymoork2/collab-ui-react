@@ -23,7 +23,7 @@ export default angular
     reportSlider,
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
-    'pascalprecht.translate',
+    require('angular-translate'),
     require('modules/core/config/chartColors'),
     require('modules/core/config/urlConfig'),
     require('modules/core/scripts/services/authinfo'),

@@ -8,7 +8,7 @@ export default angular
   .module('huron.paging-group.edit', [
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
-    'pascalprecht.translate',
+    require('angular-translate'),
     require('modules/core/notifications').default,
     pagingGroupService,
     featureMemberService,

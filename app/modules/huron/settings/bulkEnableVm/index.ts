@@ -8,7 +8,7 @@ export default angular
   .module('huron.bulk-enable-vm', [
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
-    'pascalprecht.translate',
+    require('angular-translate'),
     featureToggleModule,
     require('modules/core/scripts/services/authinfo'),
     require('modules/core/scripts/services/userlist.service'),
