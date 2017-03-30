@@ -58,7 +58,7 @@ describe('Service: TrialTimeZoneService:', function () {
       }
 
       it('should return a list of predefined timezone info objects', function () {
-        expect(timeZones.length).toBe(91);
+        expect(timeZones.length).toBe(92);
       });
 
       it('each timezone info object should have a \'label\' property', function () {
