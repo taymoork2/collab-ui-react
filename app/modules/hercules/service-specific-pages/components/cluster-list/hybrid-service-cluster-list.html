@@ -1,9 +1,9 @@
 <div class="hercules-clusters-list">
   <div ng-if="$ctrl.clusterList.length !== 0" class="gridStyle" ui-grid="$ctrl.clusterListGridOptions" ui-grid-selection></div>
   <div ng-if="$ctrl.clusterList.length === 0">
-    <div ng-if="$ctrl.serviceId !== 'contact-center-context'" class="centered-info-pane">
-      <h3 translate="{{'hercules.clusters.listing.no_clusters_heading'}}"></h3>
-      <p translate="{{'hercules.clusters.listing.no_clusters_text'}}"></p>
+    <div ng-if="$ctrl.serviceId !== 'contact-center-context' && $ctrl.serviceId !== 'ciscouc'" class="centered-info-pane">
+      <h3 translate="hercules.clusters.listing.no_clusters_heading"></h3>
+      <p translate="hercules.clusters.listing.no_clusters_text"></p>
     </div>
     <div ng-if="$ctrl.serviceId === 'contact-center-context'" class="centered-info-pane">
       <h3 translate="context.clusters.listing.no_clusters_heading"></h3>
@@ -11,6 +11,9 @@
         <span translate="context.clusters.listing.no_clusters_text"></span>
         <a href="http://www.cisco.com/web/go/hybrid-services-context" translate="context.clusters.listing.learn_how" target="_blank"></a>
       </p>
+    </div>
+    <div ng-if="$ctrl.serviceId === 'ciscouc'" class="centered-info-pane">
+      <h3 translate="hercules.sip_destination.listing.no_destinations_heading"></h3>
     </div>
   </div>
 </div>
