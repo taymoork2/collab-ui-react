@@ -5,7 +5,7 @@ import serviceSetup from 'modules/huron/serviceSetup';
 
 export default angular
   .module('huron.settings.company-voicemail', [
-    'atlas.templates',
+    require('scripts/app.templates'),
     'collab.ui',
     'pascalprecht.translate',
     'huron.telephoneNumber',

@@ -7,7 +7,7 @@ export * from './callForward.service';
 
 export default angular
   .module('huron.call-forward', [
-    'atlas.templates',
+    require('scripts/app.templates'),
     'collab.ui',
     'pascalprecht.translate',
     customerServiceModule,

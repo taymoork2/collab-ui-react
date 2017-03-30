@@ -3,7 +3,7 @@ import loadEventModule from '../../core/loadEvent';
 
 export default angular
   .module('online.digital-river', [
-    'atlas.templates',
+    require('scripts/app.templates'),
     loadEventModule,
     require('modules/core/config/urlConfig'),
   ])

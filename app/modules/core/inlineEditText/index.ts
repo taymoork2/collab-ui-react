@@ -5,7 +5,7 @@ import { InlineEditTextComponent } from './inlineEditText.component';
 
 export default angular
   .module('core.inline-edit-text', [
-    'atlas.templates',
+    require('scripts/app.templates'),
     'collab.ui',
     focusModule,
   ])

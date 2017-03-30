@@ -3,7 +3,7 @@ import notifications from 'modules/core/notifications';
 
 export default angular
   .module('huron.delete-external-number', [
-    'atlas.templates',
+    require('scripts/app.templates'),
     'collab.ui',
     'pascalprecht.translate',
     'huron.telephoneNumber',

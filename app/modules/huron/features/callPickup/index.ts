@@ -10,7 +10,7 @@ import featureMemberService from 'modules/huron/features';
 
 export default angular
   .module('huron.call-pickup.setup-assistant', [
-    'atlas.templates',
+    require('scripts/app.templates'),
     'collab.ui',
     'pascalprecht.translate',
     callPickupName,

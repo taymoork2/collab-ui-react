@@ -2,7 +2,7 @@ import { RoutingPrefixComponent } from './routingPrefix.component';
 
 export default angular
   .module('huron.settings.routing-prefix', [
-    'atlas.templates',
+    require('scripts/app.templates'),
     'collab.ui',
     'pascalprecht.translate',
   ])

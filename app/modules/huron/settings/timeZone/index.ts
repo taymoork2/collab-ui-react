@@ -4,7 +4,7 @@ export * from './timeZone.component';
 
 export default angular
   .module('huron.settings.time-zone', [
-    'atlas.templates',
+    require('scripts/app.templates'),
     'collab.ui',
     'pascalprecht.translate',
   ])

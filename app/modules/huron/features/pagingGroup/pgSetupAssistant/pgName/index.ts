@@ -2,7 +2,7 @@ import { PgNameComponent } from './pgName.component';
 
 export default angular
   .module('huron.paging-group.name', [
-    'atlas.templates',
+    require('scripts/app.templates'),
     'collab.ui',
     'pascalprecht.translate',
   ])

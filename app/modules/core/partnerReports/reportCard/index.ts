@@ -2,7 +2,7 @@ import { ReportCardComponent } from './reportCard.component';
 
 export default angular
   .module('reports.reportCard', [
-    'atlas.templates',
+    require('scripts/app.templates'),
     'collab.ui',
     'pascalprecht.translate',
     require('../commonReportServices').default,

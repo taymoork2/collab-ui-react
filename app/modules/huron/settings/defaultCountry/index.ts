@@ -2,7 +2,7 @@ import { HuronDefaultCountryComponent } from './defaultCountry.component';
 
 export default angular
   .module('huron.settings.default-country', [
-    'atlas.templates',
+    require('scripts/app.templates'),
     'collab.ui',
     'pascalprecht.translate',
   ])

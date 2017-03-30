@@ -2,7 +2,7 @@ import { EmergencyServiceNumberComponent } from './emergencyServiceNumber.compon
 
 export default angular
   .module('huron.settings.emergency-service-number', [
-    'atlas.templates',
+    require('scripts/app.templates'),
     'collab.ui',
     'pascalprecht.translate',
   ])

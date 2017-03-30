@@ -9,7 +9,7 @@ export * from './upgrade.service';
 
 export default angular
   .module('online.upgrade', [
-    'atlas.templates',
+    require('scripts/app.templates'),
     'collab.ui',
     subscriptionUpgradeButtonModule,
     require('angular-resource'),

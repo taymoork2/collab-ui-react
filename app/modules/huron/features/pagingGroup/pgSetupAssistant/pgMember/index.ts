@@ -4,7 +4,7 @@ import featureMemberService from 'modules/huron/features';
 
 export default angular
   .module('huron.paging-group.member', [
-    'atlas.templates',
+    require('scripts/app.templates'),
     'collab.ui',
     'pascalprecht.translate',
     require('modules/core/config/urlConfig'),

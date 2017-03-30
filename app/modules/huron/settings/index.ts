@@ -25,7 +25,7 @@ export const E911_ADDRESS_PENDING: string = 'PENDING';
 
 export default angular
   .module('huron.settings', [
-    'atlas.templates',
+    require('scripts/app.templates'),
     'collab.ui',
     'pascalprecht.translate',
     preferredLanguageModule,

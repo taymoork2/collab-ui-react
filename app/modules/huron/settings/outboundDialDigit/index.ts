@@ -2,7 +2,7 @@ import { OutboundDialDigitComponent } from './outboundDialDigit.component';
 
 export default angular
   .module('huron.settings.outbound-dial-digit', [
-    'atlas.templates',
+    require('scripts/app.templates'),
     'collab.ui',
     'pascalprecht.translate',
   ])

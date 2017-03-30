@@ -21,7 +21,7 @@ export default angular
     reportFilter,
     reportServices,
     reportSlider,
-    'atlas.templates',
+    require('scripts/app.templates'),
     'collab.ui',
     'pascalprecht.translate',
     require('modules/core/config/chartColors'),

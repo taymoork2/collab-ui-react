@@ -1,7 +1,7 @@
 import { DomainManagementService } from './domainmanagement.service';
 
 export default angular.module('core.domain-management', [
-  'atlas.templates',
+  require('scripts/app.templates'),
   require('modules/core/config/config'),
   require('modules/core/scripts/services/authinfo'),
   require('modules/core/scripts/services/log'),

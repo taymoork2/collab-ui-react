@@ -9,7 +9,7 @@ export * from './callerId.service';
 
 export default angular
   .module('huron.caller-id', [
-    'atlas.templates',
+    require('scripts/app.templates'),
     'collab.ui',
     'pascalprecht.translate',
     'huron.telephoneNumber',

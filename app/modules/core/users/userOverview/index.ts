@@ -13,7 +13,7 @@ import './_user-overview.scss';
 
 export default angular
   .module('core.users.userOverview', [
-    'atlas.templates',
+    require('scripts/app.templates'),
     'collab.ui',
     sunlightServiceModule,
     ngResourceModule,

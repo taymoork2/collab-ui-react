@@ -9,7 +9,7 @@ export const NXX = 'nxx';
 export const MAX_DID_QUANTITY = 100;
 export default angular
   .module('huron.pstn-trialSetup', [
-    'atlas.templates',
+    require('scripts/app.templates'),
     'collab.ui',
     'pascalprecht.translate',
     'huron.telephoneNumber',

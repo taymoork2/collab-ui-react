@@ -3,7 +3,7 @@ import FeatureToggleService from 'modules/core/featureToggle';
 
 export default angular
   .module('huron.class-of-service', [
-    'atlas.templates',
+    require('scripts/app.templates'),
     'collab.ui',
     'pascalprecht.translate',
     FeatureToggleService,

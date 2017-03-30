@@ -4,7 +4,7 @@ export * from './extensionLength.component';
 
 export default angular
   .module('huron.settings.extension-length', [
-    'atlas.templates',
+    require('scripts/app.templates'),
     'collab.ui',
     'pascalprecht.translate',
   ])

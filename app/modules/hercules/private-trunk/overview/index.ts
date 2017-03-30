@@ -3,7 +3,7 @@ import privateTrunkPrereq from 'modules/hercules/private-trunk/prereq';
 
 export default angular
   .module('hercules.private-trunk-overview', [
-    'atlas.templates',
+    require('scripts/app.templates'),
     'collab.ui',
     'pascalprecht.translate',
     privateTrunkPrereq,

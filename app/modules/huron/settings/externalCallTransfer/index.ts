@@ -2,7 +2,7 @@ import { ExternalCallTransferComponent } from './externalCallTransfer.component'
 
 export default angular
   .module('huron.settings.external-transfer', [
-    'atlas.templates',
+    require('scripts/app.templates'),
     'collab.ui',
   ])
   .component('ucExtTransferOrg', new ExternalCallTransferComponent())

@@ -15,7 +15,7 @@ export { CsvDownloadService, CsvDownloadTypes, ExtractTarService };
 export default angular
   .module('core.csvDownload', [
     'ngResource',
-    'atlas.templates',
+    require('scripts/app.templates'),
     'collab.ui',
     analyticsModule,
     config,

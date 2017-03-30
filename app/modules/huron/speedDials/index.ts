@@ -8,7 +8,7 @@ import featureMemberService from 'modules/huron/features';
 export default angular
   .module('huron.speed-dial', [
     'huron.telephoneNumber',
-    'atlas.templates',
+    require('scripts/app.templates'),
     'collab.ui',
     'pascalprecht.translate',
     'dragularModule',

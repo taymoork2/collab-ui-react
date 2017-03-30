@@ -9,7 +9,7 @@ export const MAX_BLOCK_QUANTITY: number = 100;
 
 export default angular
   .module('huron.pstn-selector', [
-    'atlas.templates',
+    require('scripts/app.templates'),
     'collab.ui',
     'huron.telephoneNumber',
     'huron.telephoneNumberService',

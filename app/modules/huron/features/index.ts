@@ -5,7 +5,7 @@ export * from './featureMember.service';
 
 export default angular
   .module('huron.feature-member-service', [
-    'atlas.templates',
+    require('scripts/app.templates'),
     'collab.ui',
     require('angular-resource'),
     require('modules/core/scripts/services/authinfo'),

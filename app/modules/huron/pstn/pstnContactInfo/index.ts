@@ -2,7 +2,7 @@ import { PstnContactInfoComponent } from './pstnContactInfo.component';
 
 export default angular
   .module('huron.pstn-contactInfo', [
-    'atlas.templates',
+    require('scripts/app.templates'),
   ])
   .component('ucPstnContactInfo', new PstnContactInfoComponent())
   .name;

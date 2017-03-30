@@ -4,7 +4,7 @@ import serviceAddressModule from 'modules/huron/serviceAddress';
 
 export default angular
   .module('huron.settings.emergency-service-address', [
-    'atlas.templates',
+    require('scripts/app.templates'),
     'collab.ui',
     'pascalprecht.translate',
     notifications,

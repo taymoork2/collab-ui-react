@@ -6,7 +6,7 @@ import './_user-csv.scss';
 
 export default angular
   .module('core.users.userCsv', [
-    'atlas.templates',
+    require('scripts/app.templates'),
     'collab.ui',
     csvDownloadModule,
     // TODO - This is NOT a complete set of dependencies! Must detangle from csvDownload module first.

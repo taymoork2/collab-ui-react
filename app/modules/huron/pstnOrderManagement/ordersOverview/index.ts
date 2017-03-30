@@ -2,7 +2,7 @@ import { OrdersOverviewComponent } from './ordersOverview.component';
 
 export default angular
   .module('huron.orders-overview', [
-    'atlas.templates',
+    require('scripts/app.templates'),
     'collab.ui',
     'huron.order-detail',
     'huron.telephoneNumber',

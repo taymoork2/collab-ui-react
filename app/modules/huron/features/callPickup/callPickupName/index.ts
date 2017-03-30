@@ -3,7 +3,7 @@ import callPickupGroupService from 'modules/huron/features/callPickup/services/'
 
 export default angular
   .module('huron.call-pickup.name', [
-    'atlas.templates',
+    require('scripts/app.templates'),
     'collab.ui',
     'pascalprecht.translate',
     callPickupGroupService,

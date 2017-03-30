@@ -7,7 +7,7 @@ export * from './private-trunk-setup';
 
 export default angular
   .module('hercules.private-trunk-setup', [
-    'atlas.templates',
+    require('scripts/app.templates'),
     'collab.ui',
     'pascalprecht.translate',
     privateTrunkPrereq,

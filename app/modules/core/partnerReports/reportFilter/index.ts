@@ -2,7 +2,7 @@ import { ReportFilterComponent } from './reportFilter.component';
 
 export default angular
   .module('reports.reportFilter', [
-    'atlas.templates',
+    require('scripts/app.templates'),
     'collab.ui',
     'pascalprecht.translate',
   ])

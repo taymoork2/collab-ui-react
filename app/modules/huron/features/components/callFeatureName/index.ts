@@ -2,7 +2,7 @@ import { CallFeatureNameComponent } from './callFeatureName.component';
 
 export default angular
   .module('huron.call-feature-name', [
-    'atlas.templates',
+    require('scripts/app.templates'),
     'collab.ui',
     'pascalprecht.translate',
   ])

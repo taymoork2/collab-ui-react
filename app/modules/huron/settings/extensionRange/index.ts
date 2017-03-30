@@ -12,7 +12,7 @@ export * from './extensionRange';
 
 export default angular
   .module('huron.settings.extension-range', [
-    'atlas.templates',
+    require('scripts/app.templates'),
     'collab.ui',
     'pascalprecht.translate',
   ])

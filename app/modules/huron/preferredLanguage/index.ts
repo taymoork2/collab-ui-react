@@ -2,7 +2,7 @@ import { PreferredLanguageComponent } from './preferredLanguage.component';
 
 export default angular
   .module('huron.preferred-language', [
-    'atlas.templates',
+    require('scripts/app.templates'),
     'collab.ui',
     'pascalprecht.translate',
     require('modules/core/config/config'),

@@ -6,7 +6,7 @@ export * from './dialing.service';
 
 export default angular
   .module('huron.dialing', [
-    'atlas.templates',
+    require('scripts/app.templates'),
     'collab.ui',
     'pascalprecht.translate',
     require('angular-resource'),
