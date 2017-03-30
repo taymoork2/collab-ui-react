@@ -7,7 +7,8 @@
   <p translate="pstnContractInformation.prompt"></p>
   <br>
   <form class="row collapse" name="pstnContractInfo.form">
-    <div class="columns medium-6">
+    <uc-pstn-contact-info class="columns medium-6" ng-if="pstnContractInfo.ftHuronFederatedSparkCall" contact="pstnContractInfo"></uc-pstn-contact-info>
+    <div class="columns medium-6" ng-if="!pstnContractInfo.ftHuronFederatedSparkCall">
       <div class="row full">
         <div class="columns medium-12">
           <label for="companyName" translate="pstnContractInformation.companyName"></label>

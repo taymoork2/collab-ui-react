@@ -60,4 +60,10 @@ describe('Service: Utilization Resource GraphService', function () {
     expect(setUtilizationGraphResponse.dataProvider).toEqual(UtilizationData.utilizationresponse);
   });
 
+  it('Avg Utilization legend should follow rest of the clusters', function () {
+
+    var setUtilizationGraphResponse = UtilizationResourceGraphService.setUtilizationGraph(UtilizationGraphData, utilizationChart, allClusters, clusterId, daterange, IdMap);
+    expect(setUtilizationGraphResponse.graphs[0].valueField).not.toEqual('average_util');
+  });
+
 });

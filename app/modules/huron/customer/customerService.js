@@ -22,11 +22,11 @@
 
     return service;
 
-    function createCustomer(uuid, name, country) {
+    function createCustomer(uuid, name, countryCode) {
       var customer = _.cloneDeep(customerPayload);
       customer.uuid = uuid;
       customer.name = name;
-      customer.countryCode = _.get(country, 'id');
+      customer.countryCode = countryCode;
 
       return CustomerCommonService.save({}, customer).$promise
         .catch(function (response) {

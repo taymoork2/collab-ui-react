@@ -85,9 +85,9 @@ describe('UrlConfigSpec', function () {
 
   it('should return correct admin service url', function () {
     whenCalling('getAdminServiceUrl').expectUrlToBe({
-      dev: 'https://atlas-integration.wbx2.com/admin/api/v1/',
+      dev: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
       cfe: 'https://atlas-e.wbx2.com/admin/api/v1/',
-      integration: 'https://atlas-integration.wbx2.com/admin/api/v1/',
+      integration: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
       prod: 'https://atlas-a.wbx2.com/admin/api/v1/',
     });
   });
@@ -148,9 +148,9 @@ describe('UrlConfigSpec', function () {
 
   it('should return correct spark domain mgmt url', function () {
     whenCalling('getSparkDomainManagementUrl').expectUrlToBe({
-      dev: 'https://atlas-integration.wbx2.com/admin/api/v1/',
-      cfe: 'https://atlas-integration.wbx2.com/admin/api/v1/',
-      integration: 'https://atlas-integration.wbx2.com/admin/api/v1/',
+      dev: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
+      cfe: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
+      integration: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
       prod: 'https://atlas-a.wbx2.com/admin/api/v1/',
     });
   });
@@ -269,6 +269,15 @@ describe('UrlConfigSpec', function () {
       cfe: 'https://hercules-e.wbx2.com/hercules/api/v2',
       integration: 'https://hercules-integration.wbx2.com/hercules/api/v2',
       prod: 'https://hercules-a.wbx2.com/hercules/api/v2',
+    });
+  });
+
+  it('should return correct flag service url', function () {
+    whenCalling('getFlagServiceUrl').expectUrlToBe({
+      dev: 'https://hercules-integration.wbx2.com/fls/api/v1',
+      cfe: 'https://hercules-e.wbx2.com/fls/api/v1',
+      integration: 'https://hercules-integration.wbx2.com/fls/api/v1',
+      prod: 'https://hercules-a.wbx2.com/fls/api/v1',
     });
   });
 

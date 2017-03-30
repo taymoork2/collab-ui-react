@@ -3,11 +3,11 @@
     <div class="sub-section">
       <h5 class="sub-section__label" translate="hercules.settings.scheduleUpgrade.title"></h5>
       <p class="sub-section__description" translate="hercules.settings.scheduleUpgrade.description"></p>
-      <upgrade-schedule-configuration cluster-id="$ctrl.cluster.id"></upgrade-schedule-configuration>
+      <hs-upgrade-schedule-configuration cluster-id="$ctrl.cluster.id"></hs-upgrade-schedule-configuration>
       <div class="emergency-upgrade-section">
         <h5 class="sub-section__label" translate="hercules.settings.emergencyUpgrade.expressway.title"></h5>
         <p class="sub-section__description" translate="hercules.settings.emergencyUpgrade.expressway.description"></p>
-        <emergency-upgrade-configuration cluster-id="$ctrl.cluster.id"></emergency-upgrade-configuration>
+        <ew-emergency-upgrade-configuration cluster-id="$ctrl.cluster.id"></ew-emergency-upgrade-configuration>
       </div>
     </div>
   </setting-section>
@@ -50,10 +50,10 @@
     </div>
   </setting-section>
 
-  <rename-and-deregister-cluster-section
+  <hs-rename-and-deregister-cluster-section
     service-id="'squared-fusion-cal'"
     cluster="$ctrl.cluster"
     show-rename-section="true"
     on-name-update="$ctrl.nameUpdated(name)">
-  </rename-and-deregister-cluster-section>
+  </hs-rename-and-deregister-cluster-section>
 </div>

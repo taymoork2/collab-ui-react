@@ -10,7 +10,6 @@
 
     var theDeviceMap = {};
     var placesDataModel = {};
-
     var cloudBerryDevicesLoaded = false;
     var huronDevicesLoaded = false;
     var placesLoaded = false;
@@ -21,6 +20,16 @@
     var placesMapReadyDeferred;
     var accountsFetchedDeferred;
     var slowResolved;
+
+    function isBigOrg() {
+      return CsdmPlaceService.getSearchPlacesList("xy")//This method/hack was adapted from the users pages
+        .then(function () {
+          return $q.resolve(false);
+        })
+        .catch(function () {
+          return $q.resolve(true);
+        });
+    }
 
     function fetchDevices() {
       devicesFetchedDeferred = devicesFetchedDeferred || $q.defer();
@@ -198,8 +207,8 @@
       return placesUrl + device.cisUuid;
     }
 
-    function createCsdmPlace(name, entitlements, directoryNumber, externalNumber, externalLinkedAccounts, ussProps) {
-      return CsdmPlaceService.createCsdmPlace(name, entitlements, directoryNumber, externalNumber, externalLinkedAccounts, ussProps)
+    function createCsdmPlace(name, entitlements, directoryNumber, externalNumber, externalLinkedAccounts) {
+      return CsdmPlaceService.createCsdmPlace(name, entitlements, directoryNumber, externalNumber, externalLinkedAccounts)
         .then(addPlaceToDataModel);
     }
 
@@ -208,9 +217,9 @@
         .then(addPlaceToDataModel);
     }
 
-    function updateCloudberryPlace(objectToUpdate, entitlements, directoryNumber, externalNumber, externalLinkedAccounts, ussProps) {
+    function updateCloudberryPlace(objectToUpdate, entitlements, directoryNumber, externalNumber, externalLinkedAccounts) {
       var placeUrl = getPlaceUrl(objectToUpdate);
-      return CsdmPlaceService.updatePlace(placeUrl, entitlements, directoryNumber, externalNumber, externalLinkedAccounts, ussProps)
+      return CsdmPlaceService.updatePlace(placeUrl, entitlements, directoryNumber, externalNumber, externalLinkedAccounts)
         .then(function (place) {
           addOrUpdatePlaceInDataModel(place);
           notifyListeners();
@@ -399,6 +408,10 @@
       return placesMapReadyDeferred.promise;
     }
 
+    function getSearchPlacesMap(searchString) {
+      return CsdmPlaceService.getSearchPlacesList(searchString);
+    }
+
     function devicePollerOn(event, listener, opts) {
       var hub = CsdmHubFactory.create();
       CsdmPoller.create(fetchDevices, hub);
@@ -408,6 +421,7 @@
     return {
       devicePollerOn: devicePollerOn,
       getPlacesMap: getPlacesMap,
+      getSearchPlacesMap: getSearchPlacesMap,
       getDevicesMap: getDevicesMap,
       deleteItem: deleteItem,
       updateItemName: updateItemName,
@@ -421,6 +435,7 @@
       updateCloudberryPlace: updateCloudberryPlace,
       subscribeToChanges: subscribeToChanges,
       notifyDevicesInPlace: notifyDevicesInPlace,
+      isBigOrg: isBigOrg,
     };
   }
 

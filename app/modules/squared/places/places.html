@@ -1,8 +1,9 @@
 <div class="sq-places-page">
   <cs-page-header title="{{::'tabs.placeTab' | translate}}"></cs-page-header>
-  <cs-page-sub-header ng-show="sc.existsDevices()">
+  <cs-page-sub-header>
     <cs-page-sub-header-left>
-      <cs-searchfilter filters="sc.placeFilter.getFilters()" search-item-fn="sc.setCurrentSearch(searchStr)" set-filter-fn="sc.setCurrentFilter(filter.filterValue)">{}
+      <cs-searchfilter filters="sc.placeFilter.getFilters()" search-item-fn="sc.setCurrentSearch(searchStr)"
+                       set-filter-fn="sc.setCurrentFilter(filter.filterValue)">{}
       </cs-searchfilter>
     </cs-page-sub-header-left>
     <cs-page-sub-header-right>
@@ -15,7 +16,7 @@
     </cs-page-sub-header-right>
   </cs-page-sub-header>
   <div class="content-container">
-    <div ng-if="!sc.shouldShowList()">
+    <div ng-if="sc.listState == sc.listStates.searching">
       <div class="message-container">
         <div class="empty-devices-content">
           <div class="grid-refresh">
@@ -24,28 +25,31 @@
         </div>
       </div>
     </div>
-    <div ng-if="sc.shouldShowList()">
-      <div ng-if="sc.existsDevices() && sc.placeList().length > 0" id="roomsListPanel" class="row">
-        <div class="gridStyle" ui-grid="sc.gridOptions" ui-grid-selection></div>
-      </div>
-      <div ng-if="sc.placeList().length === 0 && sc.existsDevices()">
-        <div class="none_found">
-          <i class="icon icon-circle-comp-negative" />
-          <span class="h2" translate="placesPage.noneFound"></span>
-          <span class="h5" translate="spacesPage.tryAgain"></span>
-        </div>
-      </div>
-      <div ng-if="!sc.existsDevices()">
-        <div class="none_found">
-          <i class="icon icon-circle-location" />
-          <span class="h2" translate="spacesPage.nothingHerePlaces"></span>
-          <span class="h5" translate="placesPage.placesUses"></span>
-          <button class="btn btn--people btn--large add-button" ng-click="sc.startAddPlaceFlow()">
-            <span translate="spacesPage.addPlaceBtn"></span>
-          </button>
-        </div>
+    <div ng-if="sc.listState == sc.listStates.showresult" id="roomsListPanel" class="row">
+      <div class="gridStyle" ui-grid="sc.gridOptions" ui-grid-selection></div>
+    </div>
+    <div ng-if="sc.listState == sc.listStates.emptyresult">
+      <div class="none_found">
+        <i class="icon icon-circle-comp-negative"/>
+        <span class="h2" translate="placesPage.noneFound"></span>
+        <span class="h5" translate="spacesPage.tryAgain"></span>
       </div>
     </div>
-    <squared-add-device></squared-add-device>
+    <div ng-if="sc.listState == sc.listStates.noplaces">
+      <div class="none_found">
+        <i class="icon icon-circle-location"/>
+        <span class="h2" translate="spacesPage.nothingHerePlaces"></span>
+        <span class="h5" translate="placesPage.placesUses"></span>
+        <button class="btn btn--people btn--large add-button" ng-click="sc.startAddPlaceFlow()">
+          <span translate="spacesPage.addPlaceBtn"></span>
+        </button>
+      </div>
+    </div>
+    <div ng-if="sc.listState == sc.listStates.bigorg">
+      <div class="none_found">
+        <span class="h2" translate="placesPage.bigOrgSearchHeader"></span>
+        <span class="h5" translate="placesPage.bigOrgSearchText"></span>
+      </div>
+    </div>
   </div>
 </div>

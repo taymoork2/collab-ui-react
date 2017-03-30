@@ -1,6 +1,6 @@
-import { IAlarm } from 'modules/hercules/herculesInterfaces';
+import { IExtendedConnectorAlarm } from 'modules/hercules/hybrid-services.types';
 
-interface IAlarmModified extends IAlarm {
+interface IAlarmModified extends IExtendedConnectorAlarm {
   alarmSolutionElements: any[];
 }
 

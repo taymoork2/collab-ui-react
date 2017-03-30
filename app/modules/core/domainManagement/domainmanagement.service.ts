@@ -1,4 +1,5 @@
-class DomainManagementService {
+import { Notification } from 'modules/core/notifications';
+export class DomainManagementService {
 
   private _domainList: Array<{
     text: string,
@@ -31,7 +32,7 @@ class DomainManagementService {
     private Authinfo,
     private Log,
     private UrlConfig,
-    private Notification,
+    private Notification: Notification,
   ) {
 
     let orgId = this.Authinfo.getOrgId();
@@ -262,5 +263,3 @@ class DomainManagementService {
     });
   }
 }
-angular.module('Core')
-  .service('DomainManagementService', DomainManagementService);

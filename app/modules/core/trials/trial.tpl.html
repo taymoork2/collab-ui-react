@@ -4,8 +4,8 @@
   <button type="button" class="close" ng-click="trial.cancelModal()">
     <span class="sr-only" translate="common.close"></span>
   </button>
- <h3 class="modal-title modal-title-wrap" ng-if="trial.isEditTrial()">{{trial.currentTrial.customerName}}</h3>
- <h3 class="modal-title" translate="trialModal.addTrial.title" ng-if="trial.isNewTrial()"></h3>
+  <h3 class="modal-title modal-title-wrap" ng-if="trial.isEditTrial()">{{trial.currentTrial.customerName}}</h3>
+  <h3 class="modal-title" translate="trialModal.addTrial.title" ng-if="trial.isNewTrial()"></h3>
 </div>
 <div class="modal-body trials">
   <form novalidate name="trialForm" id="editTrialForm" class="cs-form trial-modal">
@@ -14,16 +14,60 @@
       <div class="section__info">
         <h4 translate="partnerHomePage.customerInformation"></h4>
       </div>
-      <div class="section__content" ng-if="trial.isExistingOrg()">
-        <label class="sub-section__label" translate="partnerHomePage.customerName"></label>
-        <input cs-input type="text" disabled="disabled" ng-model="trial.currentTrial.customerName">
-        <label class="sub-section__label" translate="partnerHomePage.customerEmail"></label>
-        <input cs-input type="text" disabled="disabled" ng-model="trial.currentTrial.customerEmail">
-        <formly-form model="trial.details" fields="trial.validLocationField"></formly-form>
-      </div>
-      <div class="section__content" ng-if="!trial.isExistingOrg()">
-        <formly-form model="trial.details" fields="trial.custInfoFields"></formly-form>
-        <formly-form model="trial.details" fields="trial.validLocationField"></formly-form>
+      <div class="section__content">
+        <!-- existing customer -->
+        <div ng-if="trial.isExistingOrg()" class="cs-input-group">
+          <label class="sub-section__label" translate="partnerHomePage.customerName"></label>
+          <input cs-input type="text" disabled="disabled" ng-model="trial.currentTrial.customerName">
+          <label class="sub-section__label" translate="partnerHomePage.customerEmail"></label>
+          <input cs-input type="text" disabled="disabled" ng-model="trial.currentTrial.customerEmail">
+        </div>
+        <!-- new customer -->
+        <div ng-if="!trial.isExistingOrg()" class="cs-input-group">
+
+          <div class="cs-input-group" ng-class="{'error': trialForm.customerName.$invalid && trialForm.customerName.$touched}">
+            <label for="customerName" translate="partnerHomePage.customerName"></label>
+            <input id="customerName" name="customerName"
+              type="text" messages="trial.validationMessages.general" ng-model="trial.details.customerName"
+              trial-unique-async-validator="{key: 'organizationName'}"
+              ng-model-options="{updateOn: 'default blur', debounce: { default: 2000, blur: 0 } }"
+              required>
+            <div class="cs-input__messages" ng-messages="trialForm.customerName.$error" role="alert">
+              <div ng-repeat="(key, value) in trial.validationMessages.general" class="message">
+                <span ng-message="{{key}}">{{value}}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="cs-input-group" ng-class="{'error': trialForm.customerEmail.$invalid && trialForm.customerEmail.$touched}">
+            <label for="customerEmail" translate="partnerHomePage.customerEmail"></label>
+            <input id="customerEmail" name="customerEmail"
+              type="email" ng-change="trialForm.isValidLocation.$validate()"
+              messages="trial.validationMessages.general"
+              ng-model="trial.details.customerEmail"
+              trial-unique-async-validator="{key: 'endCustomerEmail'}"
+              ng-model-options="{updateOn: 'default blur', debounce: { default: 2000, blur: 0 } }"
+              required>
+            <div class="cs-input__messages" ng-messages="trialForm.customerEmail.$error" role="alert">
+              <div class="message" ng-message="required">{{::trial.validationMessages.general.required}}</div>
+              <div class="message" ng-message="email">{{::trial.validationMessages.general.email}}</div>
+              <div class="message" ng-message="trialUniqueAsyncValidator">{{::trial.validationMessages.general.trialUniqueAsyncValidator}}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cs-input-group cs-input-checkbox location-check" ng-class="{'error': trialForm.isValidLocation.$invalid && (trialForm.customerEmail.$touched || trialForm.isValidLocation.$touched)}">
+          <input id="isValidLocation" name="isValidLocation"
+            ng-false-value="null"
+            ng-model="trial.details.validLocation"
+            required type="checkbox"
+            value="true">
+          <label class="cs-checkbox" for="isValidLocation"><span translate="trials.supportedLocationsCertification"></span></label>
+          <div class="cs-input__messages" ng-messages="trialForm.isValidLocation.$error" role="alert">
+            <div class="message" translate="common.invalidRequired"></div>
+          </div>
+        </div>
+
       </div>
     </div>
     <!-- regional settings -->
@@ -44,74 +88,125 @@
       default-country-list="trial.defaultCountryList"
       on-change-fn="trial.setDefaultCountry(country)">
     </trial-regional-settings>
-     <!-- trial services -->
+    <!-- trial services -->
     <div class="cs-form__section">
       <div class="section__info">
-        <h4  translate="partnerHomePage.trialServices"></h4>
+        <h4 translate="partnerHomePage.trialServices"></h4>
       </div>
       <!-- paid services: TODO: refactor as a component -->
       <div class="section__content">
-        <div class="sub-section" ng-show="!trial.messageFields[0].data.paid">
+        <div class="sub-section" ng-show="!trial.messageTrial.paid">
           <h5 class="sub-section__label" translate="subscriptions.message"></h5>
-            <formly-form model="trial.trialData.trials" fields="trial.messageFields" hide-directive="ng-show">
-            </formly-form>
+          <input type="checkbox" cs-input
+            ng-model="trial.messageTrial.enabled"
+            id="messageTrial" name="messageTrial"
+            ng-disabled="trial.preset.message"
+            cs-input-label="{{::'trials.message' | translate}}">
         </div>
-        <div class="sub-section" ng-show="!trial.meetingFields[0].data.paid || !trial.webexFields[0].data.paid">
+        <div class="sub-section" ng-show="!trial.meetingTrial.paid || !trial.webexTrial.paid">
           <h5 class="sub-section__label" translate="subscriptions.meeting"></h5>
-            <formly-form model="trial.trialData.trials" fields="trial.meetingFields" ng-if="!trial.meetingFields[0].data.paid" hide-directive="ng-show" >
-            </formly-form>
-            <formly-form model="trial.trialData.trials" fields="trial.webexFields"  ng-if="!trial.webexFields[0].data.paid" hide-directive="ng-show">
-            </formly-form>
+          <input type="checkbox" cs-input
+            ng-if="!trial.meetingTrial.paid"
+            ng-model="trial.meetingTrial.enabled"
+            id="meetingTrial" name="meetingTrial"
+            ng-disabled="trial.preset.meeting"
+            cs-input-label="{{::'trials.meeting' | translate}}">
+          <input type="checkbox" cs-input
+            ng-if="!trial.webexTrial.paid"
+            ng-model="trial.webexTrial.enabled"
+            id="webexTrial" name="webexTrial"
+            ng-disabled="trial.preset.webex"
+            cs-input-label="{{::'trials.webex' | translate}}">
         </div>
-        <div class="sub-section" ng-show="!trial.callFields[0].data.paid">
+        <div class="sub-section" ng-show="!trial.callTrial.paid && trial.hasCallEntitlement">
           <h5 class="sub-section__label" translate="subscriptions.call"></h5>
-            <formly-form model="trial.trialData.trials" fields="trial.callFields" hide-directive="ng-show">
-            </formly-form>
+          <input type="checkbox" cs-input
+            ng-model="trial.callTrial.enabled"
+            id="callTrial" name="callTrial"
+            ng-disabled="trial.preset.call"
+            cs-input-label="{{::'trials.call' | translate}}">
         </div>
         <div class="sub-section" ng-if="trial.showCare && (!trial.careTrial.paid || !trial.advanceCareTrial.paid)">
-          <h5 class="sub-section__label" translate="subscriptions.care"></h5>
-          <input
-                  cs-input
-                  type="checkbox"
-                  id="careTrial"
-                  name="careTrial"
-                  ng-if="trial.showBasicCare"
-                  ng-model="trial.careTrial.enabled"
-                  ng-disabled="trial._helpers.messageOfferDisabledExpression() || trial.preset.care"
-                  cs-input-label="{{::'trials.care' | translate}}"
-          >
-          <formly-form model="trial.trialData.trials" fields="trial.careFields" hide-directive="ng-show" ng-if="trial.showBasicCare">
-          </formly-form>
-          <input
-                  cs-input
-                  type="checkbox"
-                  id="advanceCareTrial"
-                  name="advanceCareTrial"
-                  ng-if="trial.showAdvanceCare"
-                  ng-model="trial.advanceCareTrial.enabled"
-                  ng-disabled="trial._helpers.messageOfferDisabledExpression() || trial.preset.advanceCare"
-                  cs-input-label="{{::'trials.advanceCare' | translate}}"
-          >
-          <formly-form model="trial.trialData.trials" fields="trial.advanceCareFields" hide-directive="ng-show" ng-if="trial.showAdvanceCare" >
-          </formly-form>
+          <h5 translate="subscriptions.care"></h5>
+          <p class="body-small get-bottom-margin" translate="trials.careDescription"></p>
+          <div class="cs-form-group row" ng-if="trial.showBasicCare" >
+            <input cs-input type="checkbox"
+              id="careTrial" name="careTrial"
+              ng-model="trial.careTrial.enabled"
+              ng-disabled="trial._helpers.messageOfferDisabledExpression() || trial.preset.care"
+              cs-input-label="{{::'trials.care' | translate}}">
+
+            <input cs-input type="number"
+              id="trialCareLicenseCount" name="trialCareLicenseCount"
+              ng-model="trial.careTrial.details.quantity"
+              cs-input-group-size="medium-8" cs-input-nested="1"
+              cs-input-secondary-label="{{::'trials.licenses' | translate}}"
+              cs-input-size="medium-4"
+              cs-input-messages="trial.validationMessages.care"
+              ng-min="0" ng-max="{{trial._helpers.getCareMaxLicenseCount(vm.careTypes.K1)}}"
+              ng-required="trial.careTrial.enabled;"
+              ng-disabled="trial._helpers.careLicenseInputDisabledExpression()"
+              ng-model-options="{'allowInvalid': true}">
+          </div>
+          <div class="cs-form-group row" ng-if="trial.showAdvanceCare">
+            <input cs-input type="checkbox"
+              id="advanceCareTrial" name="advanceCareTrial"
+              ng-model="trial.advanceCareTrial.enabled"
+              ng-disabled="trial._helpers.messageOfferDisabledExpression() || trial.preset.advanceCare"
+              cs-input-label="{{::'trials.advanceCare' | translate}}">
+            <input cs-input type="number"
+              id="trialAdvanceCareLicenseCount" name="trialAdvanceCareLicenseCount"
+              ng-model="trial.advanceCareTrial.details.quantity"
+              cs-input-group-size="medium-8" cs-input-nested="1" cs-input-size="medium-4"
+              cs-input-secondary-label="{{::'trials.licenses' | translate}}"
+              cs-input-messages="trial.validationMessages.care"
+              ng-min="0" ng-max="{{trial._helpers.getCareMaxLicenseCount(vm.careTypes.K2)}}"
+              ng-required="trial.advanceCareTrial.enabled;"
+              ng-disabled="trial._helpers.advanceCareLicenseInputDisabledExpression()"
+              ng-model-options="{'allowInvalid': true}">
+          </div>
         </div>
         <div class="sub-section" ng-if="trial.showRoomSystems">
-          <div ng-if="!trial.roomSystemFields[0].data.paid">
+          <div ng-if="!trial.roomSystemTrial.paid" class="cs-form-group row">
             <h5 class="sub-section__label" translate="subscriptions.room"></h5>
-            <formly-form model="trial.roomSystemTrial" fields="trial.roomSystemFields" hide-directive="ng-show">
-            </formly-form>
+            <input type="checkbox" cs-input
+              ng-model="trial.roomSystemTrial.enabled"
+              id="roomSystemsTrial" name="roomSystemsTrial"
+              ng-disabled="trial.preset.roomSystems"
+              cs-input-label="{{::'trials.roomSystem' | translate}}">
+            <input cs-input type="number"
+              id="trialRoomSystemsAmount" name="trialRoomSystemsAmount"
+              ng-model="trial.roomSystemTrial.details.quantity"
+              ng-model-options="{'allowInvalid': true}"
+              cs-input-group-size="medium-8" cs-input-nested="1" cs-input-size="medium-4"
+              cs-input-secondary-label="{{::'trials.licenses' | translate}}"
+              cs-input-messages="trial.validationMessages.roomSystem"
+              ng-min="0" ng-max="{{::trial.validationData.roomSystemMax}}"
+              ng-required="trial.roomSystemTrial.enabled">
           </div>
-          <div ng-if="!trial.sparkBoardFields[0].data.paid && trial.sbTrial">
-            <formly-form model="trial.sparkBoardTrial" fields="trial.sparkBoardFields" hide-directive="ng-show" >
-            </formly-form>
+          <div ng-if="!trial.sparkBoardTrial.paid && trial.sbTrial" class="cs-form-group row">
+            <input type="checkbox" cs-input
+              ng-model="trial.sparkBoardTrial.enabled"
+              id="sparkBoardTrial" name="sparkBoardTrial"
+              ng-disabled="trial.preset.sparkBoard"
+              ng-model-options="{allowInvalid: true }"
+              cs-input-label="{{::'trials.sparkBoardSystem' | translate}}">
+            <input cs-input type="number"
+              id="trialSparkBoardAmount" name="trialSparkBoardAmount"
+              ng-model="trial.sparkBoardTrial.details.quantity"
+              cs-input-group-size="medium-8" cs-input-nested="1" cs-input-size="medium-4"
+              cs-input-secondary-label="{{::'trials.licenses' | translate}}"
+              cs-input-messages="trial.validationMessages.roomSystem"
+              ng-min="0" ng-max="{{trial.validationData.roomSystemMax}}"
+              ng-required="trial.sparkBoardTrial.enabled">
           </div>
         </div>
       </div>
     </div>
-      <!-- paid services: TODO: refactor as a component -->
+    <!-- paid services: TODO: refactor as a component -->
     <div class="cs-form__section" ng-if="trial.paidServicesForDisplay.length">
       <div class="section__info">
-        <h4  translate="partnerHomePage.activeServices"></h4>
+        <h4 translate="partnerHomePage.activeServices"></h4>
         <p class="cs-input__help-text" translate="partnerHomePage.activeServicesInformation"></p>
       </div>
       <!-- paid services: TODO: refactor as a component -->
@@ -119,7 +214,7 @@
         <div class="sub-section" ng-repeat="item in trial.paidServicesForDisplay">
           <h5 class="sub-section__label" translate="trials.managedBy" translate-values="{ org: item.org }"></h5>
           <div class="sub-section" ng-repeat="paidService in item.services">
-            <input type="checkbox" checked  disabled="disabled">
+            <input type="checkbox" checked disabled="disabled">
             <label class="cs-checkbox disabled" for="messageTrial" ng-class="{disabled: disabledBool}">
               <span >{{::paidService.label}} </span>&nbsp;&nbsp;&nbsp;<span translate="common.quantity"></span>: {{::paidService.qty}}
             </label>
@@ -130,32 +225,50 @@
     <!-- license quantity -->
     <div class="cs-form__section">
       <div class="section__info">
-        <h4 translate="trials.licenseQuantity"></h5>
+        <h4 translate="trials.licenseQuantity">
+        </h4>
       </div>
       <div class="section__content">
-        <formly-form model="trial.trialData.trials" fields="trial.licenseCountFields"></formly-form>
+
+        <input cs-input type="number"
+          name="licenseCount" id="licenseCount"
+          ng-model="trial.details.licenseCount"
+          cs-input-secondary-label="{{::'trials.users' | translate}}"
+          cs-input-group-size="medium-8" cs-input-size="medium-4"
+          cs-input-label="{{::'trials.licenseQuantity' | translate}}"
+          ng-model-options="{allowInvalid: true}"
+          cs-input-messages="trial.validationMessages.licenseNumber"
+          ng-required="trial.hasUserServices()"
+          ng-disabled="!trial.hasUserServices()"
+          ng-min="{{trial._helpers.getMinTotalCare()}}" ng-max="{{ trial.validationData.trialLicenseMax }}">
       </div>
     </div>
     <!-- trial duration edit-->
-    <div class="cs-form__section" ng-if="trial.isEditTrial()">
+    <div class="cs-form__section">
       <div class="section__info">
-        <h4 translate="partnerHomePage.termsOfTrial"></h4>
+        <h4 translate="partnerHomePage.termsOfTrial" ng-if="trial.isEditTrial()"></h4>
+        <h4 translate="trials.trialDuration" ng-if="trial.isNewTrial()"></h4>
       </div>
       <div class="section__content">
         <div class="sub-section">
-          <formly-form model="trial.model" fields="trial.trialTermsFields">
-          </formly-form>
+
+          <div class="medium-5">
+            <cs-select ng-model="trial.details.licenseDuration"
+              name="licenseDuration" id="licenseDuraiton"
+              options="trial.licenseDurationOptions"
+              label="{{::'partnerHomePage.duration' | translate}}"
+              secondary-label="{{::'partnerHomePage.durationHelp' | translate}}" ng-change="trials.onTrialTermsChanged()">
+            </cs-select>
+          </div>
         </div>
 
-        <div class="sub-section">
+        <div class="sub-section" ng-if="trial.isEditTrial()">
           <div class="end progress-section">
             <div class="progress">
-            <div class="progress-bar" ng-class="{'danger-bar': trial.currentTrial.daysLeft <= 5, 'warning-bar': (trial.currentTrial.daysLeft < trial.currentTrial.duration/2), 'success-bar': (trial.currentTrial.daysLeft>= trial.currentTrial.duration/2)}" role="progressbar" aria-valuenow="{{trial.currentTrial.daysUsed}}" aria-valuemin="0" aria-valuemax="{{trial.currentTrial.duration}}" style="width: {{trial.currentTrial.percentUsed}}%;">
-            </div>
-        <!-- TO DO: Why does this not work in the modal? -->
-            <!-- <div class="modal-bar">
-            <progressbar max="currentTrial.duration" value="currentTrial.daysUsed" type="{{getProgressStatus(currentTrial)}}"></progressbar>
-          </div> -->
+              <div class="progress-bar" ng-class="{'danger-bar': trial.currentTrial.daysLeft <= 5, 'warning-bar': (trial.currentTrial.daysLeft < trial.currentTrial.duration/2), 'success-bar': (trial.currentTrial.daysLeft>= trial.currentTrial.duration/2)}"
+                role="progressbar" aria-valuenow="{{trial.currentTrial.daysUsed}}" aria-valuemin="0" aria-valuemax="{{trial.currentTrial.duration}}"
+                style="width: {{trial.currentTrial.percentUsed}}%;">
+              </div>
             </div>
             <div class="days-left">
               <span class="small" ng-class="{'trial-danger-text': trial.currentTrial.daysLeft <= 5}">{{trial.getDaysLeft(trial.currentTrial.daysLeft)}}</span>
@@ -163,15 +276,6 @@
             </div>
           </div>
         </div>
-      </div>
-    </div>
-    <!-- trial duration add-->
-    <div class="cs-form__section" ng-if="trial.isNewTrial()">
-      <div class="section__info">
-        <h4 translate="trials.trialDuration"></h5>
-      </div>
-      <div class="section__content">
-        <formly-form model="trial.details" fields="trial.trialTermsFields"></formly-form>
       </div>
     </div>
 
@@ -187,25 +291,31 @@
   </form>
 </div>
 <div class="modal-footer trials">
+  <!-- TODO: rip this out when @aprcic gives the green light -->
+  <div class="warning" ng-if="!trial.details.validLocation && trial.isEditTrial()">
+    <div class="cs-input__messages">
+      <div class="message" translate="trials.supportedLocationWarning"></div>
+    </div>
+  </div>
   <button id="cancelTrialButton" class="btn" ng-click="$dismiss()" ng-disabled="trial.loading">
     <span translate="partnerHomePage.cancel"></span>
   </button>
   <!-- edit trial -->
-  <button id="saveUpdateButton" class="btn btn--primary" type="button" cs-btn loading="trial.loading"
-    ng-click="trialForm.$setPristine(true); trial.nextStep()" ng-disabled="trial.isProceedDisabled() || trialForm.$invalid" ng-if="trial.isEditTrial()">
+  <button id="saveUpdateButton" class="btn btn--primary" type="button" cs-btn loading="trial.loading" ng-click="trialForm.$setPristine(true); trial.nextStep()"
+    ng-disabled="trial.isProceedDisabled() || trialForm.$invalid" ng-if="trial.isEditTrial()">
       <span ng-if="!trial.hasNextStep()" translate="common.save"></span>
       <span ng-if="trial.hasNextStep()" translate="common.next"></span>
   </button>
   <!-- add for purchased customer -->
-  <button id="saveUpdateButton" class="btn btn--primary" type="button" cs-btn loading="trial.loading"
-    ng-click="trialForm.$setPristine(true); trial.nextStep()" ng-disabled="trial.isProceedDisabled() || trialForm.$invalid" ng-if="trial.isNewTrial() && trial.isExistingOrg()">
+  <button id="saveUpdateButton" class="btn btn--primary" type="button" cs-btn loading="trial.loading" ng-click="trialForm.$setPristine(true); trial.nextStep()"
+    ng-disabled="trial.isProceedDisabled() || trialForm.$invalid" ng-if="trial.isNewTrial() && trial.isExistingOrg()">
       <span ng-if="!trial.hasNextStep()" translate="partnerHomePage.startTrial"></span>
       <span ng-if="trial.hasNextStep()" translate="common.next"></span>
   </button>
   <!-- add for new customer -->
-  <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn loading="trial.loading"
-    ng-click="trialForm.$setPristine(true); trial.nextStep()" ng-disabled="!trial.isAddTrialValid(trialForm.$valid)"
-    ng-if="trial.isNewTrial() && !trial.isExistingOrg()">
+
+  <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn loading="trial.isLoading(trialForm)" ng-click="trialForm.$setPristine(true); trial.nextStep()"
+    ng-disabled="!trial.isAddTrialValid(trialForm.$valid)" ng-if="trial.isNewTrial() && !trial.isExistingOrg()">
       <span ng-if="!trial.hasNextStep()" translate="partnerHomePage.startTrial"></span>
       <span ng-if="trial.hasNextStep()" translate="common.next"></span>
   </button>

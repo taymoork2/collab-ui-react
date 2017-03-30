@@ -7,6 +7,7 @@ export default angular
     'atlas.templates',
     'collab.ui',
     'pascalprecht.translate',
+    'huron.telephoneNumber',
   ])
   .component('ucCompanyCallerId', new CompanyCallerIdComponent())
   .name;

@@ -10,7 +10,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
 
   /* @ngInject */
   function UserListCtrl($q, $rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Auth, Config, FeatureToggleService,
-    Log, LogMetricsService, Notification, Orgservice, Userservice, UserListService, Utils) {
+    Log, LogMetricsService, Notification, Orgservice, Userservice, UserListService, Utils, DirSyncService, UserOverviewService) {
 
     var vm = this;
 
@@ -98,7 +98,6 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
 
     ////////////////
     var eventListeners = [];
-    var isOnlineOrg;
 
     function onInit() {
 
@@ -110,7 +109,6 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
 
       $q.all(promises).then(function (results) {
         $scope.isEmailStatusToggled = results.atlasEmailStatus;
-        isOnlineOrg = results.isOnlineOrg;
 
         bind();
         getUserList();
@@ -189,6 +187,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
         getUsers: getUsers(startIndex),
         getPartners: getPartners(),
         getOrg: getOrg(),
+        getDirSyncStatus: getDirSyncStatus(),
       };
 
       return $q.all(promises)
@@ -274,15 +273,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
                 // todo - why are we looping through ALL users here, and not just the new ones?
                 _.forEach($scope.userList.allUsers, function (user) {
                   // user status
-                  var userHasSignedUp = _.some(user.userSettings, function (userSetting) {
-                    return userSetting.indexOf('spark.signUpDate') > 0;
-                  });
-                  var index = _.findIndex(user.entitlements, function (ent) {
-                    return ent === 'ciscouc';
-                  });
-                  var hasCiscoUC = index > -1;
-                  var isActiveUser = !_.isEmpty(user.entitlements) &&
-                    (userHasSignedUp || isOnlineOrg || hasCiscoUC);
+                  var isActiveUser = UserOverviewService.getAccountActiveStatus(user);
                   user.userStatus = isActiveUser ? 'active' : 'pending';
 
                   // email status
@@ -380,26 +371,29 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     }
 
     function getOrg() {
-      var deferred = $q.defer();
-      var params = {
-        basicInfo: true,
-      };
-      if ($scope.obtainedOrgs) {
-        deferred.resolve();
-      } else {
-        Orgservice.getOrg(function (data, status) {
-          if (data.success) {
-            $scope.org = data;
-            $scope.dirsyncEnabled = !!data.dirsyncEnabled;
-            $scope.obtainedOrgs = true;
-            deferred.resolve();
-          } else {
-            Log.debug('Get existing org failed. Status: ' + status);
-            deferred.reject(data);
-          }
-        }, null, params);
-      }
-      return deferred.promise;
+      return $q(function (resolve, reject) {
+        if ($scope.obtainedOrgs) {
+          resolve();
+        } else {
+          Orgservice.getOrg(function (data, status) {
+            if (data.success) {
+              $scope.org = data;
+              $scope.obtainedOrgs = true;
+              resolve();
+            } else {
+              Log.debug('Get existing org failed. Status: ' + status);
+              reject(data);
+            }
+          }, null, { basicInfo: true });
+        }
+      });
+    }
+
+    function getDirSyncStatus() {
+      return DirSyncService.refreshStatus()
+        .finally(function () {
+          $scope.dirsyncEnabled = DirSyncService.isDirSyncEnabled();
+        });
     }
 
     function getUserLicenses(user) {

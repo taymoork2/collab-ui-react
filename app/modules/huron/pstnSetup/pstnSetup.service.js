@@ -20,7 +20,7 @@
     TerminusV2CarrierCapabilitiesService,
     TerminusV2ResellerNumberReservationService, TerminusV2ResellerCarrierNumberReservationService,
     TerminusV2CustomerNumberReservationService,
-    TerminusV2CustomerNumberOrderBlockService, TelephoneNumberService) {
+    TerminusV2CustomerNumberOrderBlockService, TelephoneNumberService, FeatureToggleService) {
     //Providers
     var INTELEPEER = "INTELEPEER";
     var TATA = "TATA";
@@ -96,6 +96,7 @@
       getAreaCode: getAreaCode,
       getCountryCode: getCountryCode,
       setCountryCode: setCountryCode,
+      getProvider: getProvider,
       INTELEPEER: INTELEPEER,
       TATA: TATA,
       TELSTRA: TELSTRA,
@@ -533,6 +534,14 @@
     }
 
     function portNumbers(customerId, carrierId, numbers) {
+      return FeatureToggleService.supports(
+        FeatureToggleService.features.huronSupportForPortEmails
+        ).then(function (isHuronSupportForPortEmails) {
+          return _portNumbers(customerId, carrierId, numbers, isHuronSupportForPortEmails);
+        });
+    }
+
+    function _portNumbers(customerId, carrierId, numbers, isHuronSupportForPortEmails) {
       var promises = [];
       var tfnNumbers = [];
 
@@ -549,12 +558,23 @@
         numbers: numbers,
       };
 
+      var didPayload = {
+        numbers: numbers,
+        numberType: NUMTYPE_DID,
+      };
+
       if (numbers.length > 0) {
-        promises.push(TerminusCustomerCarrierDidService.save({
-          customerId: customerId,
-          carrierId: carrierId,
-          type: PORT,
-        }, payload).$promise);
+        if (isHuronSupportForPortEmails) {
+          promises.push(TerminusCustomerPortService.save({
+            customerId: customerId,
+          }, didPayload).$promise);
+        } else {
+          promises.push(TerminusCustomerCarrierDidService.save({
+            customerId: customerId,
+            carrierId: carrierId,
+            type: PORT,
+          }, payload).$promise);
+        }
       }
       if (tfnNumbers.length > 0) {
         promises.push(TerminusCustomerPortService.save({
@@ -825,5 +845,8 @@
       return PstnSetup.getCountryCode();
     }
 
+    function getProvider() {
+      return PstnSetup.getProvider();
+    }
   }
 })();

@@ -1,4 +1,8 @@
-<cs-sp-container>
+<cs-sp-container class="gemini-side-panel">
+  <div ng-if="$ctrl.showLoading" class="grid-refresh">
+    <i class="icon icon-spinner icon-3x"></i>
+  </div>
+
   <cs-sp-section class="side-panel-sites">
     <div class="section-title-row">
       <span class="section-name" translate="gemini.cbgs.field.totalSites"></span>
@@ -8,8 +12,19 @@
       <ul class="sites-ul">
         <li class="feature" ng-repeat="val in $ctrl.sites">
           <span class="feature-name"><a href="{{val.globalSite}}" target="_blank">{{val.siteUrl}}</a></span>
+          <span ng-if="!$ctrl.showLoading" class="action-menu dropdown pull-right action-movesite" cs-dropdown>
+            <a class="dropdown-toggle small" cs-dropdown-toggle translate="gemini.cbgs.moveSite"></a>
+            <ul class="dropdown-menu dropdown-primary actions-services" cs-dropdown-menu>
+              <li ng-repeat="td in $ctrl.tds" ng-click="$ctrl.onClick(val, { targetCcaDomainId: td.ccaDomainId, targetDomainName: td.telephonyDomainName })">
+                <small class="ellipsis">{{td.telephonyDomainName}}</small>
+              </li>
+            </ul>
+          </span>
         </li>
       </ul>
     </div>
   </cs-sp-section>
+  <cs-sp-buttons>
+    <button type="button" class="btn btn-default" ng-click="$ctrl.onCancel()"><span translate="common.cancel"></span></button>
+  </cs-sp-buttons>
 </cs-sp-container>

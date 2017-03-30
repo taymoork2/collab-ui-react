@@ -45,7 +45,7 @@
     vm.loadExternalNumberPool = loadExternalNumberPool;
     vm.initServiceSetup = initServiceSetup;
     vm.initNext = initNext;
-    vm.checkIfTestOrg = checkIfTestOrg;
+    vm.checkIfTestOrg = Orgservice.isTestOrg;
     vm.setCustomerCosRestrictions = setCustomerCosRestrictions;
     vm.processing = true;
     vm.externalNumberPool = [];
@@ -803,7 +803,7 @@
       .then(function () {
         if (!Authinfo.isSetupDone() && !vm.hasVoicemailService) {
           // set voicemail toggle to enabled when non-test customer runs FTSW for the very first time
-          return checkIfTestOrg().then(function (isTestOrg) {
+          return Orgservice.isTestOrg().then(function (isTestOrg) {
             if (isTestOrg) {
               vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = false;
             } else {
@@ -821,18 +821,6 @@
       var length = parseInt(vm.model.site.extensionLength, 10);
 
       return (length < range.length) ? range.slice(0, length) : _.padEnd(range, length, char);
-    }
-
-    function checkIfTestOrg() {
-      var isTestOrg = $q(function (resolve) {
-        var params = {
-          basicInfo: true,
-        };
-        Orgservice.getOrg(function (response) {
-          resolve(response.isTestOrg);
-        }, null, params);
-      });
-      return isTestOrg;
     }
 
     function loadVoicemailPilotNumber(site) {
@@ -919,6 +907,11 @@
         customerId: Authinfo.getOrgId(),
       }).$promise.then(function (dialPlan) {
         vm.premiumNumbers = _.get(dialPlan, 'premiumNumbers', []).toString();
+        vm.countryCode = _.get(dialPlan, 'countryCode');
+        if (vm.countryCode !== null) {
+          TelephoneNumberService.setCountryCode(vm.countryCode);
+          vm.generatedVoicemailNumber = ServiceSetup.generateVoiceMailNumber(Authinfo.getOrgId(), vm.countryCode);
+        }
       });
     }
 
@@ -1097,7 +1090,6 @@
           // if customer's dialPlan attribute is defined but null, assume the customer is on the
           // North American Dial Plan. Look up uuid for NANP and insert it into customer dialPlan.
           response.dialPlanDetails = {
-            countryCode: "+1",
             extensionGenerated: "false",
             steeringDigitRequired: "true",
             supportSiteCode: "true",
@@ -1129,10 +1121,6 @@
         }
         if (response.dialPlanDetails.supportSiteCode !== 'true') {
           vm.model.site.siteCode = undefined;
-        }
-        if (response.dialPlanDetails.countryCode !== null) {
-          TelephoneNumberService.setCountryCode(response.dialPlanDetails.countryCode);
-          vm.generatedVoicemailNumber = ServiceSetup.generateVoiceMailNumber(Authinfo.getOrgId(), response.dialPlanDetails.countryCode);
         }
       }).catch(function (response) {
         vm.hideFieldInternalNumberRange = false;

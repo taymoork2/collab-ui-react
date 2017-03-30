@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Service: PstnSetupService', function () {
-  var $httpBackend, HuronConfig, PstnSetupService, PstnSetup;
+  var $httpBackend, HuronConfig, PstnSetupService, PstnSetup, FeatureToggleService, $q;
 
   var suite = {};
   suite.customerId = '744d58c5-9205-47d6-b7de-a176e3ca431f';
@@ -69,6 +69,11 @@ describe('Service: PstnSetupService', function () {
     numbers: ['+19726579867'],
   };
 
+  var portOrderV2PstnPayload = {
+    numbers: ['+19726579867'],
+    numberType: "DID",
+  };
+
   var portOrderTfnPayload = {
     numbers: ['+18004321010'],
     numberType: "TOLLFREE",
@@ -89,11 +94,15 @@ describe('Service: PstnSetupService', function () {
     $provide.value("Authinfo", Authinfo);
   }));
 
-  beforeEach(inject(function (_$httpBackend_, _HuronConfig_, _PstnSetupService_, _PstnSetup_) {
+
+  beforeEach(inject(function (_$httpBackend_, _HuronConfig_, _PstnSetupService_, _PstnSetup_, _FeatureToggleService_, _$q_) {
     $httpBackend = _$httpBackend_;
     HuronConfig = _HuronConfig_;
     PstnSetupService = _PstnSetupService_;
     PstnSetup = _PstnSetup_;
+    FeatureToggleService = _FeatureToggleService_;
+    $q = _$q_;
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve());
   }));
 
   afterEach(function () {
@@ -128,6 +137,7 @@ describe('Service: PstnSetupService', function () {
     orderPayload = undefined;
     portOrderPayload = undefined;
     portOrderPstnPayload = undefined;
+    portOrderV2PstnPayload = undefined;
     portOrderTfnPayload = undefined;
     pstnOrderPayload = undefined;
     Authinfo = undefined;
@@ -208,12 +218,27 @@ describe('Service: PstnSetupService', function () {
   });
 
   it('should make different types of port order', function () {
+    FeatureToggleService.supports.and.returnValue($q.resolve(false));
     $httpBackend.expectPOST(HuronConfig.getTerminusUrl() + '/customers/' + suite.customerId + '/carriers/' + suite.carrierId + '/did/port', portOrderPstnPayload).respond(201);
     $httpBackend.expectPOST(HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/ports', portOrderTfnPayload).respond(201);
-    var promise = PstnSetupService.portNumbers(suite.customerId, suite.carrierId, portOrderPayload.numbers);
+    var portOrderData = _.cloneDeep(portOrderPayload);
+    var promise = PstnSetupService.portNumbers(suite.customerId, suite.carrierId, portOrderData.numbers);
     //verify the logic to split the ports
     promise.then(function () {
-      expect(portOrderPayload.numbers.length).toEqual(1);
+      expect(portOrderData.numbers.length).toEqual(1);
+    });
+    $httpBackend.flush();
+  });
+
+  it('feature toggle should make V2 DId port API call', function () {
+    FeatureToggleService.supports.and.returnValue($q.resolve(true));
+    $httpBackend.expectPOST(HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/ports', portOrderV2PstnPayload).respond(201);
+    $httpBackend.expectPOST(HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/ports', portOrderTfnPayload).respond(201);
+    var portOrderData = _.cloneDeep(portOrderPayload);
+    var promise = PstnSetupService.portNumbers(suite.customerId, suite.carrierId, portOrderData.numbers);
+    //verify the logic to split the ports
+    promise.then(function () {
+      expect(portOrderData.numbers.length).toEqual(1);
     });
     $httpBackend.flush();
   });

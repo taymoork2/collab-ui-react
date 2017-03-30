@@ -8,7 +8,7 @@ require('./_partner-landing-trials.scss');
     .controller('PartnerHomeCtrl', PartnerHomeCtrl);
 
   /* @ngInject */
-  function PartnerHomeCtrl($scope, $state, $window, Analytics, Authinfo, CardUtils, Log, Notification, Orgservice, PartnerService, trialForPaid, TrialService) {
+  function PartnerHomeCtrl($scope, $state, $window, Analytics, Authinfo, CardUtils, Log, Notification, Orgservice, PartnerService, TrialService) {
     $scope.currentDataPosition = 0;
 
     $scope.daysExpired = 5;
@@ -23,8 +23,6 @@ require('./_partner-landing-trials.scss');
     $scope.getProgressStatus = getProgressStatus;
     $scope.getDaysAgo = getDaysAgo;
 
-    $scope.featureTrialForPaid = trialForPaid;
-
     init();
 
     function init() {
@@ -36,22 +34,18 @@ require('./_partner-landing-trials.scss');
       if ($scope.activeList) {
         $scope.activeCount = $scope.activeList.length;
       }
-      var params = {
-        basicInfo: true,
-      };
-      Orgservice.getOrg(function (data, status) {
-        if (data.success) {
-          $scope.isTestOrg = data.isTestOrg;
-        } else {
-          Log.error('Query org info failed. Status: ' + status);
-        }
-      }, null, params);
+
+      Orgservice.isTestOrg()
+        .then(function (isTestOrg) {
+          $scope.isTestOrg = isTestOrg;
+        });
+
     }
 
     function openAddTrialModal() {
       Analytics.trackTrialSteps(Analytics.sections.TRIAL.eventNames.START_SETUP);
 
-      var route = TrialService.getAddTrialRoute($scope.featureTrialForPaid);
+      var route = TrialService.getAddTrialRoute();
       $state.go(route.path, route.params).then(function () {
         $state.modal.result.finally(getTrialsList);
       });

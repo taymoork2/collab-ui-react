@@ -75,7 +75,7 @@ class GmTdNotesCtrl implements ng.IComponentController {
       this.notes = _.size(this.allNotes) > this.showNotesNum ? _.slice(this.allNotes, 0, this.showNotesNum) : this.allNotes;
       this.newNote = '';
 
-      this.$scope.$emit('refreshNotes', this.allNotes);
+      this.$scope.$emit('tdNotesUpdated', this.allNotes);
     });
   }
 

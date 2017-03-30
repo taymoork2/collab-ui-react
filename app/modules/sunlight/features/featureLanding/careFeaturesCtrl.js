@@ -30,6 +30,11 @@
     vm.template = null;
     vm.openNewCareFeatureModal = openNewCareFeatureModal;
     vm.setFilter = setFilter;
+    vm.hasMessage = Authinfo.isMessageEntitled();
+    vm.hasCall = Authinfo.isSquaredUC();
+    vm.tooltip = '';
+    vm.purchaseLink = purchaseLink;
+
     /* LIST OF FEATURES
      *
      *  To add a New Feature (like Voice Templates)
@@ -101,6 +106,12 @@
           vm.pageState = pageStates.showFeatures;
         }
       });
+
+      if (!vm.hasMessage && !vm.hasCall) {
+        vm.tooltip = $translate.instant('sunlightDetails.licensesMissing.messageAndCall');
+      } else if (!vm.hasMessage) {
+        vm.tooltip = $translate.instant('sunlightDetails.licensesMissing.messageOnly');
+      }
     }
 
     function handleFeaturePromises(promises) {
@@ -218,6 +229,10 @@
       }
 
     });
+
+    function purchaseLink() {
+      $state.go('my-company.subscriptions');
+    }
   }
 
 })();

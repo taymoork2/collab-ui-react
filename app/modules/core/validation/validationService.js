@@ -11,9 +11,9 @@
   function ValidationService(phone) {
 
     var factory = {
-      trialLicenseCount: trialLicenseCount,
-      trialRoomSystemQuantity: trialRoomSystemQuantity,
-      trialCareQuantity: trialCareQuantity,
+      trialLicenseCount: trialLicenseCount, //AG TODO: Remove once TrialAdd and TrialEdit are gone
+      trialRoomSystemQuantity: trialRoomSystemQuantity, //AG TODO: Remove once TrialAdd and TrialEdit are gone
+      trialCareQuantity: trialCareQuantity, //AG TODO: Remove once TrialAdd and TrialEdit are gone
       nonPrintable: nonPrintable,
       alertingName: alertingName,
       callForward: callForward,

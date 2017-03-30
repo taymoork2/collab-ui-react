@@ -4,7 +4,7 @@ import { IProdInst } from 'modules/online/upgrade/upgrade.service';
 
 describe('Controller: MySubscriptionCtrl', function () {
   const onlineIntSubId: string = 'intSubId';
-  const trialUrl: string = 'https://atlas-integration.wbx2.com/admin/api/v1/commerce/online/' + onlineIntSubId;
+  const trialUrl: string = 'https://atlas-intb.ciscospark.com/admin/api/v1/commerce/online/' + onlineIntSubId;
   const trialUrlResponse: string = 'trialUrlResponse';
   const drUrlResponse: string = 'drUrlResponse';
   const ccwTrialSubId: string = 'Trial';

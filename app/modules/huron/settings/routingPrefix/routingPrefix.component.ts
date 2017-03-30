@@ -11,6 +11,7 @@ class RoutingPrefixCtrl implements ng.IComponentController {
 
   public $onInit(): void {
     this.messages = {
+      required: this.$translate.instant('validation.required'),
       pattern: this.$translate.instant('serviceSetupModal.routingPrefix.numericOnlyError'),
       minlength: this.$translate.instant('serviceSetupModal.routingPrefix.tooShortError'),
       maxlength: this.$translate.instant('serviceSetupModal.routingPrefix.tooLongError'),
@@ -18,9 +19,13 @@ class RoutingPrefixCtrl implements ng.IComponentController {
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
-    let routingPrefixChanges = changes['routingPrefix'];
-    if (routingPrefixChanges && routingPrefixChanges.currentValue) {
-      this.prefixRadio = 'reserve';
+    const { routingPrefix } = changes;
+    if (routingPrefix) {
+      if (_.isNull(routingPrefix.currentValue) || _.isUndefined(routingPrefix.currentValue)) {
+        this.prefixRadio = 'none';
+      } else {
+        this.prefixRadio = 'reserve';
+      }
     }
   }
 

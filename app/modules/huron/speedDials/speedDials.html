@@ -62,6 +62,14 @@
                     on-change-fn="$ctrl.setSpeedDial(model)">
                 </cs-call-destination>
               </div>
+              <div cr-feature-toggle feature-show="huronBlfPickup" ng-if="$ctrl.isValid">
+                <input
+                  cs-input
+                  type="checkbox"
+                  id="validInput"
+                  ng-model="$ctrl.callPickupEnabled"
+                  cs-input-label="{{$ctrl.ownerName}} {{:: 'speedDials.blfPickup' | translate}} {{$ctrl.extension}}"/>
+              </div>
             </div>
           </div>
         </form>

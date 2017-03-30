@@ -1,52 +1,22 @@
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/settings/fonts';
-@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import 'modules/context/styles/_hybrid-context.scss';
 
 .context-fieldsets-sidepanel {
-  .section-wrapper {
-    margin-top: 24px;
-  }
-
-  textarea {
-    resize: none;
-  }
-
-  .token {
-    display: inline-block;
-    margin-right: 10px;
-    margin-bottom: 10px;
-    font-size: 14px;
-    font-family: $brand-font-cisco-TT-Light;
-    background-color: $gray-light-3;
-    padding: 0px 7px;
-    border-radius: 4px;
-  }
-
-  .no-fields {
-    font-family: $brand-font-cisco-TT-Light;
-  }
-
-  .fieldset-title {
-    max-width: 90% !important;
-  }
-
-  .tooltip[popup-class="context-tooltip"] .c-nub {
-    font-size: small;
-    white-space: normal;
-    text-overflow: ellipsis;
-    max-width: 400px;
-  }
 
   .field-list-item {
     text-align: left;
     padding: 10px 0px;
   }
 
+  .field-label {
+    font-family: inherit;
+  }
+
   .field-list-item .column-one {
     float: left;
-    width: 60%;
+    width: 55%;
     line-height: 100%;
     font-size: 0.875rem;
+    color: #6A6B6C;
     text-overflow: ellipsis;
     padding-left: 2%;
     white-space: nowrap;
@@ -55,7 +25,7 @@
 
   .field-list-item .column-two {
     float: left;
-    width: 40%;
+    width: 45%;
     line-height: 100%;
     font-size: 0.875rem;
     text-overflow: ellipsis;

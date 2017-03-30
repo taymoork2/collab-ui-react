@@ -5,7 +5,7 @@
     .module('Mediafusion')
     .service('MediaReportsService', MediaReportsService);
 
-  function MediaReportsService($http, $translate, Authinfo, Notification, UrlConfig, chartColors) {
+  function MediaReportsService($http, $translate, Authinfo, Notification, UrlConfig, chartColors, InsightGraphService) {
     var vm = this;
 
     vm.urlBase = UrlConfig.getAthenaServiceUrl() + '/organizations/' + Authinfo.getOrgId();
@@ -88,13 +88,13 @@
     function addColorForMeetingsCard(response) {
       _.forEach(response.data.dataProvider, function (val) {
         if (val.name === 'ON_PREM') {
-          val.color = '#ff7133';
+          val.color = '#02bbcc';
           val.name = vm.onPremisesHeading;
         } else if (val.name === 'CLOUD') {
           val.color = '#30d557';
           val.name = vm.cloudHeading;
         } else if (val.name === 'HYBRID') {
-          val.color = '#02bbcc';
+          val.color = '#ff7133';
           val.name = vm.hybridHeading;
         }
       });
@@ -189,7 +189,8 @@
       return $http.get(vm.urlBase + getQuerys(vm.callDistributionUrl, cluster, time)).then(function (response) {
         if (!_.isUndefined(response) && !_.isUndefined(response.data) && !_.isUndefined(response.data.chartData) && _.isArray(response.data.chartData) && !_.isUndefined(response.data)) {
           returnData.graphData.push(response.data.chartData);
-          return adjustLineGraphData(response.data.chartData, returnData, response.data.startTime, response.data.endTime, response.data.graphs);
+          var adjustedData = adjustLineGraphData(response.data.chartData, returnData, response.data.startTime, response.data.endTime, response.data.graphs);
+          return InsightGraphService.getAdjustedInsightData(adjustedData);
         } else {
           return returnData;
         }
@@ -226,7 +227,8 @@
       return $http.get(vm.urlBase + getQuerys(vm.numberOfParticipantUrl, vm.allClusters, time)).then(function (response) {
         if (!_.isUndefined(response) && !_.isUndefined(response.data) && !_.isUndefined(response.data.chartData) && _.isArray(response.data.chartData) && !_.isUndefined(response.data)) {
           returnData.graphData.push(response.data.chartData);
-          return adjustLineGraphData(response.data.chartData, returnData, response.data.startTime, response.data.endTime, response.data.graphs);
+          var adjustedData = adjustLineGraphData(response.data.chartData, returnData, response.data.startTime, response.data.endTime, response.data.graphs);
+          return InsightGraphService.getAdjustedInsightData(adjustedData);
         } else {
           return returnData;
         }

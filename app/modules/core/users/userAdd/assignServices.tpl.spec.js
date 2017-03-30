@@ -173,7 +173,7 @@ describe('assignServices', function () {
       .respond({});
 
     $httpBackend
-      .when('GET', 'https://atlas-integration.wbx2.com/admin/api/v1/customers/' + orgid + '/usage')
+      .when('GET', 'https://atlas-intb.ciscospark.com/admin/api/v1/customers/' + orgid + '/usage')
       .respond({});
 
     $controller('OnboardCtrl', {

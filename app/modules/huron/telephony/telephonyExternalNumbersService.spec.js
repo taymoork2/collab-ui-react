@@ -1,9 +1,11 @@
 'use strict';
 
+var testModule = require('./telephonyExternalNumbersService');
+
 describe('Service: ExternalNumberPool', function () {
   var $httpBackend, ExternalNumberPool, HuronConfig;
 
-  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module(testModule));
 
   var authInfo = {
     getOrgId: sinon.stub().returns('1'),

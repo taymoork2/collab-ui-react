@@ -11,6 +11,7 @@ import { ServicesOverviewHybridMediaCard } from './hybridMediaCard';
 import { ServicesOverviewHybridDataSecurityCard } from './hybridDataSecurityCard';
 import { ServicesOverviewHybridContextCard } from './hybridContextCard';
 import { ServicesOverviewPrivateTrunkCard } from './privateTrunkCard';
+import { PrivateTrunkPrereqService } from 'modules/hercules/private-trunk/prereq';
 
 export class ServicesOverviewCtrl {
 
@@ -29,6 +30,7 @@ export class ServicesOverviewCtrl {
     private FusionClusterService,
     private FusionClusterStatesService,
     private CloudConnectorService,
+    private PrivateTrunkPrereqService: PrivateTrunkPrereqService,
   ) {
     this.cards = [
       new ServicesOverviewMessageCard(this.Authinfo),
@@ -42,7 +44,7 @@ export class ServicesOverviewCtrl {
       new ServicesOverviewHybridMediaCard(this.Authinfo, this.Config, this.FusionClusterStatesService),
       new ServicesOverviewHybridDataSecurityCard(this.Authinfo, this.Config, this.FusionClusterStatesService),
       new ServicesOverviewHybridContextCard(this.FusionClusterStatesService),
-      new ServicesOverviewPrivateTrunkCard(this.FusionClusterStatesService),
+      new ServicesOverviewPrivateTrunkCard( this.PrivateTrunkPrereqService, this.FusionClusterStatesService),
     ];
 
     this.loadWebexSiteList();
@@ -76,12 +78,18 @@ export class ServicesOverviewCtrl {
     this.FeatureToggleService.supports(FeatureToggleService.features.huronEnterprisePrivateTrunking)
       .then(supports => {
         this.forwardEvent('privateTrunkFeatureToggleEventHandler', supports);
+        if (supports) {
+          this.PrivateTrunkPrereqService.getVerifiedDomains().then(response => {
+            this.forwardEvent('privateTrunkDomainEventHandler', response.length);
+          });
+        }
       });
 
     this.FeatureToggleService.supports(FeatureToggleService.features.sparkCallTenDigitExt)
       .then(supports => {
         this.forwardEvent('sparkCallTenDigitExtFeatureToggleEventhandler', supports);
       });
+
   }
 
   public getHybridCards() {

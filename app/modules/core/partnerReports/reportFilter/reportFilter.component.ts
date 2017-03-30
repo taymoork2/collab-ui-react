@@ -1,6 +1,4 @@
-import {
-  IFilterObject,
-} from '../partnerReportInterfaces';
+import { IFilterObject } from '../partnerReportInterfaces';
 
 class ReportFilterCtrl {
   public filterArray: Array<IFilterObject>;
@@ -27,7 +25,7 @@ class ReportFilterCtrl {
   public select(filterObject: IFilterObject): void {
     let location = _.findIndex(this.filterArray, filterObject);
     if (location > -1) {
-      _.forEach(this.filterArray, (object, index) => {
+      _.forEach(this.filterArray, (object: IFilterObject, index: number): void => {
         if (index === location) {
           object.selected = true;
         } else {
@@ -42,11 +40,10 @@ class ReportFilterCtrl {
   }
 }
 
-angular.module('Core')
-  .component('reportFilter', {
-    templateUrl: 'modules/core/partnerReports/reportFilter/reportFilter.tpl.html',
-    controller: ReportFilterCtrl,
-    bindings: {
-      filterArray: '<',
-    },
-  });
+export class ReportFilterComponent implements ng.IComponentOptions {
+  public templateUrl = 'modules/core/partnerReports/reportFilter/reportFilter.tpl.html';
+  public controller = ReportFilterCtrl;
+  public bindings = {
+    filterArray: '<',
+  };
+}

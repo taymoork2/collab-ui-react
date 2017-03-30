@@ -10,7 +10,6 @@ describe('Component: companyVoicemail', () => {
   const DROPDOWN_FILTER = '.dropdown-menu input.select-filter';
   const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
   const GENERATED_VM_PILOT_NUMBER = '+150708071004091414081311041300051000081';
-  const customerVoice = getJSONFixture('huron/json/settings/customerVoice.json');
   const externalNumberOptions = getJSONFixture('huron/json/settings/externalNumbersOptions.json');
 
   beforeEach(function() {
@@ -31,7 +30,7 @@ describe('Component: companyVoicemail', () => {
       site: 'site',
       voicemailToEmail: 'voicemailToEmail',
       companyVoicemailEnabled: 'companyVoicemailEnabled',
-      customerVoice: 'customerVoice',
+      dialPlanCountryCode: 'dialPlanCountryCode',
       externalNumberOptions: 'externalNumberOptions',
       onVoicemailToEmailChangedFn: 'onVoicemailToEmailChangedFn(voicemailToEmail)',
       onNumberFilter: 'onNumberFilter(filter)',
@@ -39,14 +38,7 @@ describe('Component: companyVoicemail', () => {
     });
   });
 
-  function initComponent() {
-    this.$scope.customerVoice = _.cloneDeep(customerVoice);
-    this.$scope.$apply();
-  }
-
   describe('Initial state: Voicemail disabled', () => {
-    beforeEach(initComponent);
-
     it('should have a toggle switch', function() {
       expect(this.view).toContainElement(VOICEMAIL_TOGGLE);
     });
@@ -62,8 +54,6 @@ describe('Component: companyVoicemail', () => {
   });
 
   describe('Enable Voicemail: with 0 external numbers available', () => {
-    beforeEach(initComponent);
-
     it('should call onChangeFn when voicemail is toggled', function() {
       this.view.find(VOICEMAIL_TOGGLE).click();
       expect(this.$scope.onChangeFn).toHaveBeenCalledWith(GENERATED_VM_PILOT_NUMBER, 'true', true);
@@ -85,7 +75,6 @@ describe('Component: companyVoicemail', () => {
   });
 
   describe('Enable Voicemail: with 3 external numbers available', () => {
-    beforeEach(initComponent);
     beforeEach(function() {
       this.$scope.externalNumberOptions = externalNumberOptions;
       this.$scope.$apply();
@@ -111,8 +100,6 @@ describe('Component: companyVoicemail', () => {
   });
 
   describe('Enable Voicemail: enable Voicemail to Email', () => {
-    beforeEach(initComponent);
-
     it('should call onVoicemailToEmailChangedFn when Voicemail to Email is unchecked', function() {
       this.view.find(VOICEMAIL_TOGGLE).click();
       expect(this.view).toContainElement(VOICEMAIL_TO_EMAIL_CHECKBOX);
@@ -122,7 +109,6 @@ describe('Component: companyVoicemail', () => {
   });
 
   describe('Voicemail Enabled: disable voicemail', () => {
-    beforeEach(initComponent);
     beforeEach(function() {
       this.$scope.externalNumberOptions = externalNumberOptions;
       this.$scope.companyVoicemailEnabled = true;
@@ -140,10 +126,10 @@ describe('Component: companyVoicemail', () => {
   });
 
   describe('Voicemail Enabled: External Voicemail Access', () => {
-    beforeEach(initComponent);
     beforeEach(function() {
       this.$scope.externalNumberOptions = externalNumberOptions;
       this.$scope.companyVoicemailEnabled = true;
+      this.$scope.dialPlanCountryCode = '+1';
       this.$scope.site = {
         voicemailPilotNumberGenerated: 'false',
         voicemailPilotNumber: '+19725551212',
@@ -169,7 +155,6 @@ describe('Component: companyVoicemail', () => {
   });
 
   describe('Voicemail Enabled: Voicemail to Email', () => {
-    beforeEach(initComponent);
     beforeEach(function() {
       this.$scope.companyVoicemailEnabled = true;
       this.$scope.voicemailToEmail = true;

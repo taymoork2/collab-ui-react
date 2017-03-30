@@ -1,11 +1,6 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Sunlight')
-    .factory('ConfigTemplateService', ConfigTemplateService)
-    .factory('ConfigUserService', ConfigUserService);
-
   /* @ngInject */
   function ConfigTemplateService($resource, UrlConfig) {
     var baseUrl = UrlConfig.getSunlightConfigServiceUrl();
@@ -33,4 +28,8 @@
       },
     });
   }
+
+  module.exports.ConfigTemplateService = ConfigTemplateService;
+  module.exports.ConfigUserService = ConfigUserService;
+
 })();

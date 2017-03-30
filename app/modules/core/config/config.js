@@ -75,6 +75,7 @@
         context: 'contact-center-context',
         fusion_google_cal: 'squared-fusion-gcal',
         fusion_khaos: 'squared-fusion-khaos',
+        message: 'squared-room-moderation',
       },
 
       licenseModel: {
@@ -447,6 +448,8 @@
         'places',
         'services-overview',
         'private-trunk-overview',
+        'private-trunk-domain',
+        'private-trunk-redirect',
       ],
       'squared-fusion-mgmt': [
         'expressway-cluster-sidepanel',
@@ -526,6 +529,7 @@
         'context-cluster-sidepanel',
         'add-resource',
         'context-fields-sidepanel',
+        'context-new-field',
       ],
       'squared-fusion-khaos': [
         'cucm-cluster',

@@ -3,12 +3,13 @@
 describe('ShowActivationCodeCtrl: Ctrl', function () {
   var controller, stateParams, $q, state, $scope, CsdmDataModelService, CsdmHuronPlaceService;
   var OtpService, CsdmEmailService, Notification, ActivationCodeEmailService, UserListService;
+  var USSService;
   var $controller;
 
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Squared'));
 
-  beforeEach(inject(function (_$controller_, _$q_, $rootScope, _CsdmDataModelService_, _CsdmHuronPlaceService_, _OtpService_, _CsdmEmailService_, _ActivationCodeEmailService_, _Notification_, _UserListService_) {
+  beforeEach(inject(function (_$controller_, _$q_, $rootScope, _CsdmDataModelService_, _CsdmHuronPlaceService_, _OtpService_, _CsdmEmailService_, _ActivationCodeEmailService_, _Notification_, _UserListService_, _USSService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
@@ -21,6 +22,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
     Notification = _Notification_;
     ActivationCodeEmailService = _ActivationCodeEmailService_;
     UserListService = _UserListService_;
+    USSService = _USSService_;
   }));
 
   function initController() {
@@ -656,6 +658,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
             activationCode: activationCode,
             expiryTime: expiryTime,
           }));
+          spyOn(USSService, 'updateUserProps').and.returnValue($q.resolve({}));
           initController();
           $scope.$digest();
         });

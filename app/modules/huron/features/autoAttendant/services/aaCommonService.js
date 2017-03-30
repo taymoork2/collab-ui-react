@@ -20,7 +20,6 @@
     var mediaUploadToggle = false;
     var callerInputToggle = false;
     var decisionToggle = false;
-    var clioToggle = false;
     var routeSIPAddressToggle = false;
     var uniqueId = 0;
 
@@ -41,12 +40,10 @@
       setCallerInputToggle: setCallerInputToggle,
       setRouteQueueToggle: setRouteQueueToggle,
       setRouteSIPAddressToggle: setRouteSIPAddressToggle,
-      setClioToggle: setClioToggle,
       isRouteQueueToggle: isRouteQueueToggle,
       isCallerInputToggle: isCallerInputToggle,
       isDecisionToggle: isDecisionToggle,
       isMediaUploadToggle: isMediaUploadToggle,
-      isClioToggle: isClioToggle,
       isRouteSIPAddressToggle: isRouteSIPAddressToggle,
       isValid: isValid,
       setIsValid: setIsValid,
@@ -146,10 +143,6 @@
       aaQueueSettingsStatus = status;
     }
 
-    function setClioToggle(status) {
-      clioToggle = status;
-    }
-
     function setMediaUploadToggle(status) {
       mediaUploadToggle = status;
     }
@@ -163,13 +156,6 @@
 
     function setRouteSIPAddressToggle(status) {
       routeSIPAddressToggle = status;
-    }
-
-    /**
-     * Will check the toggle status for clio enabled upload
-     */
-    function isClioToggle() {
-      return clioToggle;
     }
 
     /**

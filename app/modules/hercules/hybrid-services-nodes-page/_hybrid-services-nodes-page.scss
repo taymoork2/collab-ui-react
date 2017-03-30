@@ -7,6 +7,10 @@ hybrid-services-nodes-page {
     padding: 2rem 0;
   }
 
+  table {
+    border-collapse: collapse;
+  }
+
   table thead tr {
     border-bottom: 1px solid transparent;
   }
@@ -49,5 +53,16 @@ hybrid-services-nodes-page {
         color: #fff;
       }
     }
+  }
+
+  [cs-dropdown-toggle] {
+    margin-left: 1.5rem;
+    font-size: 14px;
+    padding: 0.3rem;
+  }
+
+  .open [cs-dropdown-menu] {
+    left: auto;
+    right: 0;
   }
 }

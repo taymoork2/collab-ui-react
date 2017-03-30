@@ -24,6 +24,7 @@ class PlaceOverview implements ng.IComponentController {
   public csdmHybridCallFeature: boolean = false;
   private csdmHybridCalendarFeature = false;
   private hybridCalendarEnabledOnOrg = false;
+  private hybridCallEnabledOnOrg = false;
   private atlasHerculesGoogleCalendarFeatureToggle = false;
   private atlasF237ResourceGroups = false;
   public generateCodeIsDisabled = true;
@@ -71,6 +72,10 @@ class PlaceOverview implements ng.IComponentController {
         detail: this.$translate.instant('placesPage.sparkCall'),
         actionAvailable: true,
       };
+    } else if (this.hasEntitlement('squared-fusion-uc')) {
+      //dont add call services, it will be handled by hercules-cloud-extensions
+      this.services = [];
+      return;
     } else {
       service = {
         name: this.$translate.instant('onboardModal.call'),
@@ -100,6 +105,9 @@ class PlaceOverview implements ng.IComponentController {
     let anyCalendarEnabledPromise = this.ServiceDescriptor.getServices().then(services => {
       this.hybridCalendarEnabledOnOrg = _.chain(this.ServiceDescriptor.filterEnabledServices(services)).filter(service => {
         return service.id === 'squared-fusion-gcal' || service.id === 'squared-fusion-cal';
+      }).some().value();
+      this.hybridCallEnabledOnOrg = _.chain(this.ServiceDescriptor.filterEnabledServices(services)).filter(service => {
+        return service.id === 'squared-fusion-uc';
       }).some().value();
     });
     let atlasF237ResourceGroupsPromise = this.FeatureToggleService.atlasF237ResourceGroupGetStatus().then(feature => {
@@ -150,6 +158,7 @@ class PlaceOverview implements ng.IComponentController {
         csdmHybridCallFeature: this.csdmHybridCallFeature,
         csdmHybridCalendarFeature: this.csdmHybridCalendarFeature,
         hybridCalendarEnabledOnOrg: this.hybridCalendarEnabledOnOrg,
+        hybridCallEnabledOnOrg: this.hybridCallEnabledOnOrg,
         atlasHerculesGoogleCalendarFeatureToggle: this.atlasHerculesGoogleCalendarFeatureToggle,
         atlasF237ResourceGroups: this.atlasF237ResourceGroups,
         account: {
@@ -235,6 +244,7 @@ class PlaceOverview implements ng.IComponentController {
         csdmHybridCallFeature: this.csdmHybridCallFeature,
         csdmHybridCalendarFeature: this.csdmHybridCalendarFeature,
         hybridCalendarEnabledOnOrg: this.hybridCalendarEnabledOnOrg,
+        hybridCallEnabledOnOrg: this.hybridCallEnabledOnOrg,
         atlasHerculesGoogleCalendarFeatureToggle: this.atlasHerculesGoogleCalendarFeatureToggle,
         atlasF237ResourceGroups: this.atlasF237ResourceGroups,
         admin: this.adminUserDetails,

@@ -60,4 +60,9 @@ describe('Service: AdoptionCardService', function () {
     expect(chart.innerRadius).toBe('60%');
   });
 
+  it('formatDecimal should round up decimal values when setClientTypePiechart is called', function () {
+    var chart = AdoptionCardService.setClientTypePiechart(dummyData);
+    expect(chart.dataProvider[0].percentage).toBe(34);
+  });
+
 });

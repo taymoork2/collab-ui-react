@@ -1,0 +1,38 @@
+<div>
+  <h5 translate="servicesOverview.cards.privateTrunk.select"></h5>
+  <p translate="servicesOverview.cards.privateTrunk.selectDomainDesc"></p>
+   <form name="privateTrunkDomain">
+    <div class="cs-radio-group">
+      <input
+        cs-input
+        type="radio"
+        ng-model="$ctrl.domainOptionRadio"
+        id="domainRadio1"
+        name="domainRadio"
+        ng-value="'domain'"
+        ng-change="$ctrl.changeRadio()"
+        cs-input-label="{{'servicesOverview.cards.privateTrunk.radioSelect1' | translate}}">
+        <div ng-if="$ctrl.domainOptionRadio==='domain'" class="small-6 medium-6 large-6 cs-input-group cs-input--nested-1">
+          <cs-select
+            ng-model="$ctrl.domainSelected"
+            options="$ctrl.domainOptions"
+            placeholder="$ctrl.selectPlaceHolder"
+            multi="true"
+            singular="Domain"
+            plural="Domains"
+            on-change-fn="$ctrl.changeSelected()"
+            is-disabled= "$ctrl.domainOptionRadio=='none'">
+          </cs-select>
+        </div>
+      <input
+        cs-input
+        type="radio"
+        ng-model="$ctrl.domainOptionRadio"
+        id="domainRadio2"
+        name="domainRadio"
+        ng-value="'none'"
+        cs-input-label="{{'servicesOverview.cards.privateTrunk.radioSelect2' | translate}}"
+        ng-change="$ctrl.changeRadio()">
+    </div>
+  </form>
+</div>

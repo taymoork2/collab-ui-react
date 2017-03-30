@@ -1,15 +1,16 @@
-import { IClusterV1 } from 'modules/hercules/herculesInterfaces';
+import { ClusterService } from 'modules/hercules/services/cluster-service';
+import { IExtendedCluster, ConnectorType, ClusterTargetType } from 'modules/hercules/hybrid-services.types';
 
 class ClusterSidepanelOverviewCtrl implements ng.IComponentController {
 
   private clusterId: string;
 
-  private cluster: IClusterV1;
+  private cluster: IExtendedCluster;
   public hasNodesViewFeatureToggle: boolean;
   public hasResourceGroupFeatureToggle: boolean;
 
-  public clusterType: string;
-  public connectorType: string;
+  public clusterType: ClusterTargetType;
+  public connectorType: ConnectorType;
 
   /* @ngInject */
   constructor(
@@ -17,7 +18,7 @@ class ClusterSidepanelOverviewCtrl implements ng.IComponentController {
     private $scope: ng.IScope,
     private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
-    private ClusterService,
+    private ClusterService: ClusterService,
   ) {}
 
   public $onInit() {

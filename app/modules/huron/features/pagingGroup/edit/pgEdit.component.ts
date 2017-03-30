@@ -52,9 +52,6 @@ class PgEditComponentCtrl implements ng.IComponentController {
   public numberOfCardsPlaces: number | undefined = this.cardThreshold;
   public numberOfCardsInitiators: number | undefined = this.cardThreshold;
 
-  //Remove later
-  public initiatorFeature: boolean = false;
-
   /* @ngInject */
   constructor(private $state: ng.ui.IStateService,
               private $translate: ng.translate.ITranslateService,
@@ -62,15 +59,7 @@ class PgEditComponentCtrl implements ng.IComponentController {
               private PagingGroupService: PagingGroupService,
               private PagingNumberService: PagingNumberService,
               private FeatureMemberService: FeatureMemberService,
-              private $q: ng.IQService,
-              private FeatureToggleService) {
-
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.huronPagingInitiator).then(supports => {
-      if (supports) {
-        this.initiatorFeature = true;
-      }
-    });
-  }
+              private $q: ng.IQService) {}
 
   public $onInit(): void {
     if (this.pgId) {

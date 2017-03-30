@@ -17,6 +17,13 @@
         });
     }
 
+    function getSearchPlacesList(searchStr) {
+      return $http.get(csdmPlacesUrl + "?type=all&query=" + searchStr)
+        .then(function (res) {
+          return CsdmConverter.convertPlaces(res.data);
+        });
+    }
+
     function updateItemName(place, name) {
       return $http.patch(place.url, {
         name: name,
@@ -62,13 +69,12 @@
       });
     }
 
-    function updatePlace(placeUrl, entitlements, directoryNumber, externalNumber, externalLinkedAccounts, ussProps) {
+    function updatePlace(placeUrl, entitlements, directoryNumber, externalNumber, externalLinkedAccounts) {
       return $http.patch(placeUrl, {
         directoryNumber: directoryNumber,
         externalNumber: externalNumber,
         entitlements: entitlements,
         extLinkedAccts: externalLinkedAccounts,
-        ussProps: ussProps,
       }).then(function (res) {
         return CsdmConverter.convertPlace(res.data);
       });
@@ -84,6 +90,7 @@
       updateItemName: updateItemName,
       getPlacesUrl: getPlacesUrl,
       updatePlace: updatePlace,
+      getSearchPlacesList: getSearchPlacesList,
     };
   }
 

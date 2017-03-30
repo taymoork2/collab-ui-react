@@ -246,6 +246,7 @@ describe('placeOverview component', () => {
             csdmHybridCallFeature: false,
             csdmHybridCalendarFeature: false,
             hybridCalendarEnabledOnOrg: false,
+            hybridCallEnabledOnOrg: false,
             atlasHerculesGoogleCalendarFeatureToggle: false,
             atlasF237ResourceGroups: false,
             account: {
