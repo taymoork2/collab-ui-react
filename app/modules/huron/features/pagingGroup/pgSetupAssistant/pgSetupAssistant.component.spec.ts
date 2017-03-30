@@ -15,7 +15,6 @@ describe('Component: pgSetupAssistant', () => {
       '$translate',
       '$q',
       'PagingGroupService',
-      'FeatureToggleService',
       'HuronConfig',
       'Authinfo',
       'Notification',
@@ -29,7 +28,6 @@ describe('Component: pgSetupAssistant', () => {
 
     this.savePagingGroupDefer = this.$q.defer();
     spyOn(this.PagingGroupService, 'savePagingGroup').and.returnValue(this.savePagingGroupDefer.promise);
-    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
   });
 
   function initComponent() {

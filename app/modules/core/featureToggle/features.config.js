@@ -52,7 +52,6 @@ module.exports = {
   callMultiDevice: 'call-multi-device',
   calliopeDiscovery: 'calliope-discovery',
   huronCallPickup: 'huronCallPickup',
-  huronPagingInitiator: 'huronPagingInitiator',
   huronBlfPickup: 'huronBlfPickup',
   calsvcDetectCmrLoc: 'calsvc_detect_cmr_loc',
   calsvcWebexMeetingRegistries: 'calsvc_webex_meeting_registries',
