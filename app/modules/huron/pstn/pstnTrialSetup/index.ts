@@ -10,7 +10,7 @@ export const MAX_DID_QUANTITY = 100;
 export default angular
   .module('huron.pstn-trialSetup', [
     require('scripts/app.templates'),
-    'collab.ui',
+    require('collab-ui-ng').default,
     'pascalprecht.translate',
     'huron.telephoneNumber',
     'huron.pstnsetupservice',

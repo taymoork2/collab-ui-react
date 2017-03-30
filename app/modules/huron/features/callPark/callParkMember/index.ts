@@ -10,7 +10,7 @@ import callParkService from 'modules/huron/features/callPark/services';
 export default angular
   .module('huron.call-park-member', [
     require('scripts/app.templates'),
-    'collab.ui',
+    require('collab-ui-ng').default,
     'pascalprecht.translate',
     memberService,
     featureMemberService,

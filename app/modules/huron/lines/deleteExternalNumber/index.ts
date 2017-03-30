@@ -4,7 +4,7 @@ import notifications from 'modules/core/notifications';
 export default angular
   .module('huron.delete-external-number', [
     require('scripts/app.templates'),
-    'collab.ui',
+    require('collab-ui-ng').default,
     'pascalprecht.translate',
     'huron.telephoneNumber',
     notifications,

@@ -16,7 +16,7 @@ export default angular
   .module('core.csvDownload', [
     'ngResource',
     require('scripts/app.templates'),
-    'collab.ui',
+    require('collab-ui-ng').default,
     analyticsModule,
     config,
     featureToggleModule,

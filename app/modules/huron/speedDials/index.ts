@@ -9,7 +9,7 @@ export default angular
   .module('huron.speed-dial', [
     'huron.telephoneNumber',
     require('scripts/app.templates'),
-    'collab.ui',
+    require('collab-ui-ng').default,
     'pascalprecht.translate',
     'dragularModule',
     'Core',

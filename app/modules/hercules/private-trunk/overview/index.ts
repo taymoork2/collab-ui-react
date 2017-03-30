@@ -4,7 +4,7 @@ import privateTrunkPrereq from 'modules/hercules/private-trunk/prereq';
 export default angular
   .module('hercules.private-trunk-overview', [
     require('scripts/app.templates'),
-    'collab.ui',
+    require('collab-ui-ng').default,
     'pascalprecht.translate',
     privateTrunkPrereq,
   ])

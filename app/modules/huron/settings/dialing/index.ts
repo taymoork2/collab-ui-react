@@ -4,7 +4,7 @@ import { DialingAreaCodeValidator } from './dialingValidateAreaCode.directive';
 export default angular
   .module('huron.settings.dialing', [
     require('scripts/app.templates'),
-    'collab.ui',
+    require('collab-ui-ng').default,
     'pascalprecht.translate',
     'huron.telephoneNumber',
     'huron.telephoneNumberService',

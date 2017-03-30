@@ -6,7 +6,7 @@
   angular.module('Core', [
     'angular-cache',
     require('scripts/app.templates'),
-    'collab.ui',
+    require('collab-ui-ng').default,
     'cisco.formly',
     require('modules/core/auth/tos').default,
     require('modules/core/auth/user').default,

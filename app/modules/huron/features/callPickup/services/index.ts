@@ -7,7 +7,7 @@ export * from './callPickupGroup.service';
 export default angular
   .module('huron.call-pickup', [
     require('scripts/app.templates'),
-    'collab.ui',
+    require('collab-ui-ng').default,
     require('angular-resource'),
     memberService,
     require('modules/core/scripts/services/authinfo'),

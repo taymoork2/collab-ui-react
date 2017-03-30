@@ -13,7 +13,7 @@ export * from './extensionRange';
 export default angular
   .module('huron.settings.extension-range', [
     require('scripts/app.templates'),
-    'collab.ui',
+    require('collab-ui-ng').default,
     'pascalprecht.translate',
   ])
   .component('ucExtensionRange', new ExtensionRangeComponent())

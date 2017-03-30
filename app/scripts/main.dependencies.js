@@ -23,7 +23,6 @@ require('ng-csv/build/ng-csv.js');
 
 require('api-check/dist/api-check.js');
 require('angular-formly/dist/formly.js');
-require('collab-ui-ng/dist/collab-ui-ng');
 require('collab-ui-formly/dist/collab-formly.js');
 
 require('angular-ui-grid/ui-grid.js');

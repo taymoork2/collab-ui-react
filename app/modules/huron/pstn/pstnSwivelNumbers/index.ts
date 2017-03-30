@@ -5,7 +5,7 @@ export const TIMEOUT = 100;
 export default angular
   .module('huron.pstn-swivelNumbers', [
     require('scripts/app.templates'),
-    'collab.ui',
+    require('collab-ui-ng').default,
     'pascalprecht.translate',
     'huron.telephoneNumberService',
     notifications,

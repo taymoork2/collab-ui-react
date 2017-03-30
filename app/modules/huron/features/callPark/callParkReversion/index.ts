@@ -9,7 +9,7 @@ import callParkService from 'modules/huron/features/callPark/services';
 export default angular
   .module('huron.call-park-reversion', [
     require('scripts/app.templates'),
-    'collab.ui',
+    require('collab-ui-ng').default,
     'pascalprecht.translate',
     'huron.telephoneNumber',
     'huron.telephoneNumberService',

@@ -32,7 +32,7 @@ export { IToolkitModalService, IToolkitModalSettings, IToolkitModalServiceInstan
 
 export default angular
   .module('core.modal', [
-    'collab.ui',
+    require('collab-ui-ng').default,
     'pascalprecht.translate',
   ])
   .service('ModalService', ModalService)

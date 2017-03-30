@@ -10,7 +10,7 @@ export * from './callerId.service';
 export default angular
   .module('huron.caller-id', [
     require('scripts/app.templates'),
-    'collab.ui',
+    require('collab-ui-ng').default,
     'pascalprecht.translate',
     'huron.telephoneNumber',
     'huron.telephoneNumberService',

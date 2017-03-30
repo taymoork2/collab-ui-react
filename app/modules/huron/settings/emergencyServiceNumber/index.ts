@@ -3,7 +3,7 @@ import { EmergencyServiceNumberComponent } from './emergencyServiceNumber.compon
 export default angular
   .module('huron.settings.emergency-service-number', [
     require('scripts/app.templates'),
-    'collab.ui',
+    require('collab-ui-ng').default,
     'pascalprecht.translate',
   ])
   .component('ucEmergencyServiceNumber', new EmergencyServiceNumberComponent())

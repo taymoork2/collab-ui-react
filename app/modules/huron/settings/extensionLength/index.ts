@@ -5,7 +5,7 @@ export * from './extensionLength.component';
 export default angular
   .module('huron.settings.extension-length', [
     require('scripts/app.templates'),
-    'collab.ui',
+    require('collab-ui-ng').default,
     'pascalprecht.translate',
   ])
   .component('ucExtensionLength', new ExtensionLengthComponent())

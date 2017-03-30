@@ -96,7 +96,7 @@
     require('modules/core/trackingId/trackingId.module'),
     require('modules/online/analytics').default,
     require('modules/online/upgrade').default,
-    'collab.ui',
+    require('collab-ui-ng').default,
     'ct.ui.router.extras.sticky',
     'ct.ui.router.extras.previous',
     'ngAnimate',

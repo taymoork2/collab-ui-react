@@ -5,7 +5,7 @@ import featureMemberService from 'modules/huron/features';
 export default angular
   .module('huron.paging-group.member', [
     require('scripts/app.templates'),
-    'collab.ui',
+    require('collab-ui-ng').default,
     'pascalprecht.translate',
     require('modules/core/config/urlConfig'),
     featureMemberService,

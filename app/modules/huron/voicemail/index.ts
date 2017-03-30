@@ -9,7 +9,7 @@ export * from './voicemail.service';
 export default angular
   .module('huron.voicemail', [
     require('scripts/app.templates'),
-    'collab.ui',
+    require('collab-ui-ng').default,
     'pascalprecht.translate',
     customerServiceModule,
     userServiceModule,

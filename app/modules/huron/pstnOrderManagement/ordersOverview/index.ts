@@ -3,7 +3,7 @@ import { OrdersOverviewComponent } from './ordersOverview.component';
 export default angular
   .module('huron.orders-overview', [
     require('scripts/app.templates'),
-    'collab.ui',
+    require('collab-ui-ng').default,
     'huron.order-detail',
     'huron.telephoneNumber',
     require('modules/huron/pstnSetup/pstnSetup.service'),

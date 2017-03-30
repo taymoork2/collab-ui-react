@@ -4,7 +4,7 @@ import callPickupGroupService from 'modules/huron/features/callPickup/services/'
 export default angular
   .module('huron.call-pickup.notificationtimer', [
     require('scripts/app.templates'),
-    'collab.ui',
+    require('collab-ui-ng').default,
     'pascalprecht.translate',
     callPickupGroupService,
   ])

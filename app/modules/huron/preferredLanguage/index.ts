@@ -3,7 +3,7 @@ import { PreferredLanguageComponent } from './preferredLanguage.component';
 export default angular
   .module('huron.preferred-language', [
     require('scripts/app.templates'),
-    'collab.ui',
+    require('collab-ui-ng').default,
     'pascalprecht.translate',
     require('modules/core/config/config'),
   ])

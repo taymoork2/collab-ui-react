@@ -8,7 +8,7 @@ export * from './private-trunk-setup';
 export default angular
   .module('hercules.private-trunk-setup', [
     require('scripts/app.templates'),
-    'collab.ui',
+    require('collab-ui-ng').default,
     'pascalprecht.translate',
     privateTrunkPrereq,
     require('modules/hercules/services/uss-service'),
