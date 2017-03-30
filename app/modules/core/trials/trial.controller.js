@@ -226,6 +226,8 @@
         ftCareTrials: FeatureToggleService.atlasCareTrialsGetStatus(),
         ftAdvanceCareTrials: FeatureToggleService.atlasCareInboundTrialsGetStatus(),
         ftShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus(),  //TODO add true for shipping testing.
+        ftSupportThinktel: FeatureToggleService.huronSupportThinktelGetStatus(),
+        ftFederatedSparkCall: FeatureToggleService.huronFederatedSparkCallGetStatus(),
         adminOrg: Orgservice.getAdminOrgAsPromise().catch(function () { return false; }),
         huronCountryList: getCountryList(),
       };
@@ -249,6 +251,9 @@
           vm.canSeeDevicePage = !isTestOrg || overrideTestOrg;
           vm.devicesModal.enabled = vm.canSeeDevicePage;
           vm.defaultCountryList = results.huronCountryList;
+          vm.ftSupportThinktel = results.ftSupportThinktel;
+          vm.ftFederatedSparkCall = results.ftFederatedSparkCall;
+
           var initResults = (vm.isExistingOrg()) ? getExistingOrgInitResults(results, vm.hasCallEntitlement, vm.preset, vm.paidServices) : getNewOrgInitResults(results, vm.hasCallEntitlement, vm.stateDefaults);
           _.merge(vm, initResults);
           // TODO: algendel
@@ -332,7 +337,12 @@
       setViewState('trial.call', canAddDevice());
       setViewState('trial.webex', hasEnabledWebexTrial());
       setViewState('trial.pstn', isPstn());
-      setViewState('trial.emergAddress', isPstn());
+      if (vm.ftSupportThinktel || vm.ftFederatedSparkCall) {
+        setViewState('trial.emergAddress', TrialPstnService.getCarrierCapability('E911'));
+      } else {
+        setViewState('trial.emergAddress', isPstn());
+      }
+
 
       addRemoveStates();
     }

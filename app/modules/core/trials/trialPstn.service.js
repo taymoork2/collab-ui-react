@@ -16,6 +16,7 @@
       checkForPstnSetup: checkForPstnSetup,
       setCountryCode: setCountryCode,
       getCountryCode: getCountryCode,
+      getCarrierCapability: getCarrierCapability,
     };
 
     return service;
@@ -198,6 +199,14 @@
       getData();
       _trialData.details.countryCode = countryCode;
       PstnSetupService.setCountryCode(countryCode);
+    }
+
+    function getCarrierCapability(capability) {
+      var carrier = PstnSetupService.getProvider();
+      if (!carrier) {
+        return false;
+      }
+      return carrier.getCapability(capability);
     }
 
   }

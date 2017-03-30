@@ -54,6 +54,11 @@ export interface IPstnCarrierStatic {
   features: Array<any>;
 }
 
+export interface IPstnCarrierCapability {
+  capability: String;
+  url: String;
+}
+
 export class PstnCarrier {
   public apiImplementation: String;
   public country: String;
@@ -74,6 +79,7 @@ export class PstnCarrier {
   public features: Array<any>;
   public title: String;
   public selected: boolean;
+  private capabilities: Array<IPstnCarrierCapability>;
 
   constructor() {
     this.logoSrc = '';
@@ -84,6 +90,7 @@ export class PstnCarrier {
     this.features = new Array<any>();
     this.title = '';
     this.selected = false;
+    this.capabilities = [];
   }
 
   public setPstnCarrierGet(carrier: IPstnCarrierGet): void {
@@ -121,5 +128,26 @@ export class PstnCarrier {
     carrier.features.forEach(feature => {
       this.features.push(feature);
     });
+  }
+
+  public setCapabilities(capablities: Array<IPstnCarrierCapability>): void {
+    if (_.isArray(capablities)) {
+      this.capabilities = capablities;
+    }
+  }
+
+  public getCapabilities(): Array<IPstnCarrierCapability> {
+    return this.capabilities;
+  }
+
+  public getCapability(capability: String): Boolean {
+    if (_.isString(capability) && capability.length > 0) {
+      for (let i: number = 0; i < this.capabilities.length; i++) {
+        if (this.capabilities[i].capability === capability) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 }
