@@ -14,6 +14,7 @@ describe('Component: UserClassOfService', () => {
       '$resource',
       'Authinfo',
       'HuronConfig',
+      'FeatureToggleService',
     );
     initDependencySpies.apply(this);
     initComponent.apply(this);
@@ -25,6 +26,8 @@ describe('Component: UserClassOfService', () => {
     spyOn(this.UserCosService, 'getUserCos').and.returnValue(this.$q.when(restrictions));
     spyOn(this.UserCosService, 'updateUserCos').and.returnValue(this.$q.when(204));
     spyOn(this.UserCosService, 'getPremiumNumbers').and.returnValue(this.$q.when(['800', '900']));
+    spyOn(this.Authinfo, 'getLicenseIsTrial').and.returnValue(true);
+    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.when(true));
   }
 
   function initComponent() {
