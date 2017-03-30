@@ -32,6 +32,7 @@ class PlaceOverview implements ng.IComponentController {
   private currentPlace: IPlace = <IPlace>{ devices: {} };
   private csdmHuronUserDeviceService;
   private adminUserDetails;
+  public editPlaceState;
 
   /* @ngInject */
   constructor(private $q: ng.IQService,
@@ -90,9 +91,10 @@ class PlaceOverview implements ng.IComponentController {
   }
 
   private fetchAsyncSettings() {
-    let ataPromise = this.FeatureToggleService.csdmATAGetStatus().then((result) => {
-      this.showATA = result;
-    });
+    let ataPromise = this.FeatureToggleService.csdmATAGetStatus()
+      .then((result) => {
+        this.showATA = result;
+      });
     let hybridPromise = this.FeatureToggleService.csdmHybridCallGetStatus().then((feature) => {
       this.csdmHybridCallFeature = feature;
     });
@@ -150,7 +152,15 @@ class PlaceOverview implements ng.IComponentController {
     }
   }
 
-  public editCloudberryServices(): void {
+  private startStateMap = {
+    'squared-fusion-uc': 'addDeviceFlow.callConnectOptions',
+    'squared-fusion-cal': 'addDeviceFlow.editCalendarService',
+    'squared-fusion-gcal': 'addDeviceFlow.editCalendarService',
+  };
+
+  public editCloudberryServices = (startAtService?): void => {
+
+    let startState = startAtService && this.startStateMap[startAtService] || 'addDeviceFlow.editServices';
     let wizardState = {
       data: {
         function: 'editServices',
@@ -171,7 +181,7 @@ class PlaceOverview implements ng.IComponentController {
         },
       },
       history: [],
-      currentStateName: 'addDeviceFlow.editServices',
+      currentStateName: startState,
       wizardState: {
         'addDeviceFlow.editServices': {
           nextOptions: {

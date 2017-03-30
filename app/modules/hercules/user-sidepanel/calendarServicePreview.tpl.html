@@ -101,6 +101,15 @@
     </div>
   </cs-sp-section>
 
+  <cs-sp-section class="cloud-extensions" ng-if="isPlace">
+    <div class="row collapse cloud-extension-label normal-line-height mailid">
+      <div class="columns small-12"><span translate="addDeviceWizard.editServices.calendarEmail"></span><span>: {{emailOfMailbox}}</span></div>
+    </div>
+    <div class="row collapse cloud-extension-label normal-line-height">{{'hercules.placeSidepanel.email-calendar-explanation-part1' | translate}}
+      <a ng-click="editCloudberryServices(extension.id)">{{'hercules.placeSidepanel.email-calendar-explanation-part2' | translate}}</a>
+    </div>
+  </cs-sp-section>
+
   <cs-sp-section class="cloud-extensions" ng-if="resourceGroup.show">
     <div class="section-title-row">
       <span class="section-name" translate="hercules.resourceGroups.resourceGroupHeading"></span>

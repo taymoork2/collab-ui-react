@@ -121,6 +121,15 @@
       return $scope.extension.entitled !== isEntitled();
     };
 
+    if ($scope.isPlace && $scope.currentUser.externalLinkedAccounts) {
+      var existingHybridCallLink = _.head(_.filter($scope.currentUser.externalLinkedAccounts, function (linkedAccount) {
+        return linkedAccount && (linkedAccount.providerID === $scope.extension.id);
+      }));
+      if (existingHybridCallLink) {
+        $scope.emailOfMailbox = existingHybridCallLink.accountGUID;
+      }
+    }
+
     var updateStatus = function (userIsRefreshed) {
       if ($scope.isInvitePending) {
         return;
@@ -306,6 +315,10 @@
       $scope.extension.entitled = $scope.currentUser.entitlements.indexOf($scope.extension.id) > -1;
       $scope.resourceGroup.reset();
       $scope.showButtons = false;
+    };
+
+    $scope.editCloudberryServices = function (service) {
+      $stateParams.editService(service);
     };
 
     $scope.closePreview = function () {

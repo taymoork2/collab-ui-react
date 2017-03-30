@@ -140,12 +140,15 @@
     function getExternalLinkedAccounts() {
       var extLinkedAcc = [];
       if (wizardData.account.externalCalendarIdentifier) {
-        extLinkedAcc.push(wizardData.account.externalCalendarIdentifier);
+        _.merge(extLinkedAcc, wizardData.account.externalCalendarIdentifier);
       }
       if (wizardData.account.externalHybridCallIdentifier) {
-        extLinkedAcc.push(wizardData.account.externalHybridCallIdentifier);
+        _.merge(extLinkedAcc, wizardData.account.externalHybridCallIdentifier);
       }
-      return extLinkedAcc.length > 0 ? extLinkedAcc : null;
+      if (extLinkedAcc.length === 0) {
+        return null;
+      }
+      return _.sortBy(extLinkedAcc, ['operation']);
     }
 
     function createHuronPlace(name, entitlements, directoryNumber, externalNumber) {

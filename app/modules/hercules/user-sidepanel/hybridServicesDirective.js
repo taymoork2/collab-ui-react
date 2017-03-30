@@ -75,11 +75,18 @@
       return HybridServicesUtils.serviceId2Icon(id);
     };
 
-    if (extensionEntitlements.every(function (extensionEntitlement) {
-      return !Authinfo.isEntitled(extensionEntitlement);
-    })) {
+    if (extensionEntitlements.every(
+        function (extensionEntitlement) {
+          return !Authinfo.isEntitled(extensionEntitlement);
+        })) {
       return;
     }
+
+    vm.editService = function (service) {
+      if (vm.eservice) {
+        vm.eservice(service);
+      }
+    };
 
     var enforceLicenseCheck = vm.isUser && _.size(Authinfo.getLicenses()) > 0;
     checkEntitlements(enforceLicenseCheck);
@@ -234,6 +241,7 @@
       controllerAs: 'hybridServicesCtrl',
       bindToController: {
         user: '=',
+        eservice: '=',
       },
       templateUrl: 'modules/hercules/user-sidepanel/hybridServices.tpl.html',
     };

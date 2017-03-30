@@ -484,7 +484,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
                 entitlements: entitlements,
                 directoryNumber: directoryNumber,
                 externalNumber: externalNumber,
-                externalCalendarIdentifier: externalIdentifiers[0],
+                externalCalendarIdentifier: [externalIdentifiers[0]],
                 ussProps: ussProps,
               },
               recipient: {

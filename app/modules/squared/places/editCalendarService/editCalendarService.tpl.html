@@ -5,11 +5,11 @@
 </div>
 <div class="modal-body">
   <form name="placesEditCalServices" class="chooseServiceForm" onsubmit="$('#next-button').click()">
-    <h4 translate="Set up Hybrid Calendar Service"></h4>
+    <h4 translate="addDeviceWizard.editCalendarService.title"></h4>
         <div class="callServiceRow" ng-if="editCalendarService.getShowServiceOptions()">
           <div class="cs-radio-group calendarServiceControls">
             <div class="section-title-row">
-              <span class="section-name" translate="Which calendar provider do you want to use?"></span>
+              <span class="section-name" translate="addDeviceWizard.editCalendarService.whichCalendar"></span>
             </div>
             <input
               ng-if="editCalendarService.getShowCalService()"
@@ -78,7 +78,15 @@
     id="back-button"
     class="btn"
     sq-click-promise="editCalendarService.back()"
+    ng-class="{'ng-hide':!editCalendarService.hasBackStep()}"
     translate="common.back">
+  </button>
+  <button
+    type="button"
+    class="btn"
+    ng-click="editCalendarService.close()"
+    ng-class="{'ng-hide':editCalendarService.hasBackStep()}"
+    translate="common.cancel">
   </button>
   <button
     cs-btn
