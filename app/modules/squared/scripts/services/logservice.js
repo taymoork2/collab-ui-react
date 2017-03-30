@@ -5,7 +5,7 @@
     .service('LogService', LogService);
 
   /* @ngInject */
-  function LogService($http, UrlConfig, Log, $window) {
+  function LogService($http, UrlConfig, Log) {
     var service = {
       listLogs: listLogs,
       searchLogs: searchLogs,
@@ -32,23 +32,18 @@
         });
     }
 
-    function searchLogs(searchInput, callback) {
-      var logsUrl = UrlConfig.getAdminServiceUrl() + 'logs?search=' + $window.encodeURIComponent(searchInput);
+    function searchLogs(searchInput, optionalGetParams) {
+      // make an object with only 'timeSortOrder' and 'limit' properties, if present
+      var whitelistedParams = _.pickBy(optionalGetParams, function (value, key) {
+        return _.includes(['timeSortOrder', 'limit'], key);
+      });
 
-      $http.get(logsUrl)
-        .success(function (data, status) {
-          data = _.isObject(data) ? data : {};
-          data.success = true;
-          Log.debug('Retrieved logs for search term: ' + searchInput);
-          callback(data, status);
-        })
-        .error(function (data, status) {
-          data = _.isObject(data) ? data : {};
-          data.success = false;
-          data.status = status;
-          callback(data, status);
-        });
+      _.set(whitelistedParams, 'search', searchInput);
+      return $http.get(UrlConfig.getAdminServiceUrl() + 'logs', {
+        params: whitelistedParams,
+      });
     }
+
 
     function downloadLog(filename, callback) {
       var logsUrl = UrlConfig.getAdminServiceUrl() + 'logs/';
