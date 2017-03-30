@@ -10,8 +10,8 @@ class HuronDefaultCountryCtrl implements ng.IComponentController {
   constructor() {}
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
-    let defaultCountryChanges = changes['defaultCountry'];
-    if (defaultCountryChanges && defaultCountryChanges.currentValue) {
+    const { defaultCountry } = changes;
+    if (defaultCountry && defaultCountry.currentValue) {
       this.selected = _.find(this.defaultCountryOptions, { value: this.defaultCountry });
     }
   }

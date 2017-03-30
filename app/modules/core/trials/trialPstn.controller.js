@@ -15,6 +15,8 @@
     var pstnTokenLimit = 10;
     var pageSize = 15;
     var SELECT = '';
+    var MIN_VALID_CODE = 3;
+    var MAX_VALID_CODE = 6;
 
     vm.parentTrialData = $scope.$parent.trialData;
     vm.trialData = TrialPstnService.getData();
@@ -131,7 +133,7 @@
       },
     }, {
       model: vm.trialData.details.pstnContractInfo,
-      key: 'signeeFirstName',
+      key: 'firstName',
       type: 'cs-input',
       className: 'medium-12',
       templateOptions: {
@@ -142,7 +144,7 @@
       },
     }, {
       model: vm.trialData.details.pstnContractInfo,
-      key: 'signeeLastName',
+      key: 'lastName',
       type: 'cs-input',
       className: 'medium-12',
       templateOptions: {
@@ -153,7 +155,7 @@
       },
     }, {
       model: vm.trialData.details.pstnContractInfo,
-      key: 'email',
+      key: 'emailAddress',
       type: 'cs-input',
       className: 'medium-12',
       templateOptions: {
@@ -191,8 +193,8 @@
         vm.trialData.details.pstnContractInfo.companyName = $scope.trial.details.customerName;
       }
 
-      if (_.has($scope, 'trial.details.customerEmail') && _.get(vm, 'trialData.details.pstnContractInfo.email') === '') {
-        vm.trialData.details.pstnContractInfo.email = $scope.trial.details.customerEmail;
+      if (_.has($scope, 'trial.details.customerEmail') && _.get(vm, 'trialData.details.pstnContractInfo.emailAddress') === '') {
+        vm.trialData.details.pstnContractInfo.emailAddress = $scope.trial.details.customerEmail;
       }
 
       $timeout(function () {
@@ -375,16 +377,16 @@
         if (vm.paginateOptions.currentPage >= vm.paginateOptions.numberOfPages()) {
           vm.paginateOptions.currentPage--;
         }
+        vm.maxSelection = 10 - vm.trialData.details.pstnNumberInfo.numbers.length;
+        vm.searchResults = [];
       });
-      vm.maxSelection = 10 - vm.trialData.details.pstnNumberInfo.numbers.length;
-      vm.searchResults = [];
     }
 
     function searchCarrierInventory(value) {
       vm.paginateOptions.currentPage = 0;
       if (value) {
         vm.trialData.details.pstnNumberInfo.areaCode = {
-          code: ('' + value).slice(0, 3),
+          code: ('' + value).slice(0, MIN_VALID_CODE),
         };
       } else {
         vm.trialData.details.pstnNumberInfo.numbers = [];
@@ -398,6 +400,14 @@
       var nxx = getNxxValue();
       if (nxx !== null) {
         params[NXX] = nxx;
+      }
+
+      if (value) {
+        if (value.length === MAX_VALID_CODE) {
+          params[NXX] = value.slice(MIN_VALID_CODE, value.length);
+        } else {
+          params[NXX] = null;
+        }
       }
 
       PstnSetupService.searchCarrierInventory(vm.trialData.details.pstnProvider.uuid, params)

@@ -1626,6 +1626,11 @@
         customerId: Authinfo.getOrgId(),
       }).$promise.then(function (dialPlan) {
         vm.premiumNumbers = _.get(dialPlan, 'premiumNumbers', []).toString();
+        vm.countryCode = _.get(dialPlan, 'countryCode');
+        if (vm.countryCode !== null) {
+          TelephoneNumberService.setCountryCode(vm.countryCode);
+          vm.generatedVoicemailNumber = ServiceSetup.generateVoiceMailNumber(Authinfo.getOrgId(), vm.countryCode);
+        }
       }).catch(function (error) {
         Notification.errorResponse(error, 'serviceSetupModal.customerDialPlanDetailsGetError');
       });
@@ -1649,7 +1654,6 @@
           // if customer's dialPlan attribute is defined but null, assume the customer is on the
           // North American Dial Plan. Look up uuid for NANP and insert it into customer dialPlan.
           response.dialPlanDetails = {
-            countryCode: "+1",
             extensionGenerated: "false",
             steeringDigitRequired: "true",
             supportSiteCode: "true",
@@ -1674,11 +1678,6 @@
           vm.hideFieldSteeringDigit = false;
         } else {
           vm.hideFieldSteeringDigit = true;
-        }
-        if (response.dialPlanDetails.countryCode !== null) {
-          vm.customerCountryCode = response.dialPlanDetails.countryCode;
-          TelephoneNumberService.setCountryCode(response.dialPlanDetails.countryCode);
-          vm.generatedVoicemailNumber = ServiceSetup.generateVoiceMailNumber(Authinfo.getOrgId(), vm.customerCountryCode);
         }
       }).catch(function (response) {
         vm.hideFieldInternalNumberRange = false;
@@ -2381,22 +2380,18 @@
         var extensionLength0, extensionLength9;
         switch (vm.model.site.extensionLength) {
           case '3':
-            vm.model.site.siteCode = 100;
             extensionLength0 = '00';
             extensionLength9 = '99';
             break;
           case '4':
-            vm.model.site.siteCode = 100;
             extensionLength0 = '000';
             extensionLength9 = '999';
             break;
           case '5':
-            vm.model.site.siteCode = 10;
             extensionLength0 = '0000';
             extensionLength9 = '9999';
             break;
           default:
-            vm.model.site.siteCode = 100;
             extensionLength0 = '000';
             extensionLength9 = '999';
             break;

@@ -13,7 +13,7 @@
   <form id="callTrialForm" class="trial-modal" name="trialForm" novalidate>
 
     <!-- provider selection -->
-    <div ng-if="!pstnTrial.ftHuronSupportThinktel">
+    <div ng-if="!(pstnTrial.ftHuronSupportThinktel || pstnTrial.ftHuronFederatedSparkCall)">
       <div class="cs-form__section">
         <div class="section__info">
           <h4 class="section__title" translate="trialModal.pstn.pstnProvider"></h4>
@@ -23,7 +23,7 @@
         </div>
       </div>
     </div>
-    <div ng-if="pstnTrial.ftHuronSupportThinktel">
+    <div ng-if="pstnTrial.ftHuronSupportThinktel || pstnTrial.ftHuronFederatedSparkCall">
       <uc-pstn-providers
         on-change-fn="pstnTrial.onProviderChange(true)"
         on-ready-fn="pstnTrial.onProviderReady()">
@@ -56,8 +56,9 @@
             <h6 class="section__description" translate="trialModal.pstn.popover"></h6>
         </div>
         <div class="section__content">
-          <formly-form class="collapse-both" model="pstnTrial.contractInfo" fields="pstnTrial.contractInfoFields" class="columns indent">
+          <formly-form ng-if="!pstnTrial.ftHuronFederatedSparkCall" class="collapse-both" model="pstnTrial.contractInfo" fields="pstnTrial.contractInfoFields" class="columns indent">
             </formly-form>
+          <uc-pstn-contact-info ng-if="pstnTrial.ftHuronFederatedSparkCall" contact="pstnTrial.trialData.details.pstnContractInfo"></uc-pstn-contact-info>
         </div>
       </div>
 

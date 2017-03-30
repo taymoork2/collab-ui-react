@@ -1,11 +1,12 @@
 import { PrivateTrunkOverviewComponent } from './privateTrunkOverview.component';
-import privateTrunkDomain from '../privateTrunkDomain';
+import privateTrunkPrereq from 'modules/hercules/privateTrunk/privateTrunkPrereq';
+
 export default angular
   .module('hercules.private-trunk-overview', [
     'atlas.templates',
     'collab.ui',
     'pascalprecht.translate',
-    privateTrunkDomain,
+    privateTrunkPrereq,
   ])
   .component('privateTrunkOverview', new PrivateTrunkOverviewComponent())
   .name;

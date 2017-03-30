@@ -46,7 +46,7 @@
             on-change-fn="$ctrl.onPreferredLanguageChanged(preferredLanguage)">
           </uc-preferred-language>
         </div>
-        <div class="sub-section service-setup service-setup-regional-settings" cr-feature-toggle feature-show="huron-l10n-network-locale">
+        <div class="sub-section service-setup service-setup-regional-settings">
           <uc-default-country
             default-country="$ctrl.huronSettingsData.site.country"
             default-country-options="$ctrl.settingsOptions.defaultCountryOptions"
@@ -193,7 +193,7 @@
       <div class="section__content">
         <uc-company-voicemail
           site="$ctrl.huronSettingsData.site"
-          customer-voice="$ctrl.huronSettingsData.customerVoice"
+          dial-plan-country-code="$ctrl.settingsOptions.countryCode"
           external-number-options="$ctrl.settingsOptions.companyVoicemailOptions"
           company-voicemail-enabled="$ctrl.huronSettingsData.customer.hasVoicemailService"
           voicemail-to-email="$ctrl.huronSettingsData.voicemailToEmailSettings.voicemailToEmail"

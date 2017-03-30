@@ -597,7 +597,6 @@
   function CustomerDialPlanServiceV2($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/dialplans', {
       customerId: '@customerId',
-      name: '@name',
     });
   }
 

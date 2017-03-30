@@ -34,6 +34,7 @@ class ExtensionRangeCtrl implements ng.IComponentController {
         beginNumber: this.DEFAULT_START_RANGE,
         endNumber: this.DEFAULT_END_RANGE,
       }];
+      this.onExtensionRangeChange();
     }
   }
 

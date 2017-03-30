@@ -61,14 +61,12 @@
         labelProp: 'label',
         valueProp: 'timeZoneId',
         label: $translate.instant('trialModal.meeting.timezone'),
+        filter: true,
       },
       expressionProperties: {
         'templateOptions.options': function () {
-          var validTimeZoneIds = ['4', '7', '11', '17', '45', '41', '25', '28'];
           var timeZones = TrialTimeZoneService.getTimeZones();
-          return _.filter(timeZones, function (timeZone) {
-            return _.includes(validTimeZoneIds, timeZone.timeZoneId);
-          });
+          return timeZones;
         },
       },
       validators: {

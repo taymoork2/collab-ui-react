@@ -1,105 +1,107 @@
 <div class="ediscovery-search">
-  <div class="ediscovery-search-bar">
+  <div ng-class="(ediscoverySearchCtrl.roomInfo && ediscoverySearchCtrl.ediscoveryToggle) ? 'advanced-search' : 'basic-search'">
+    <div class="ediscovery-search-bar">
 
-    <!-- Updated Search -->
-    <div ng-if="!ediscoverySearchCtrl.roomInfo && ediscoverySearchCtrl.ediscoveryToggle && !ediscoverySearchCtrl.searchingForRoom">
-      <div class="main-heading">
-        <h1 translate="ediscovery.heading"></h1>
-        <span translate="ediscovery.subheading"></span>
-      </div>
-      <div class="ediscovery-advanced-search">
-        <!-- Search By Row-->
-        <div class="row">
-          <div class="col-md-6 search-box">
-            <span class="search-text" translate="ediscovery.searchParameters.searchBy"></span>
-            <cs-select ng-model="ediscoverySearchCtrl.searchBySelected"
-              ng-change="ediscoverySearchCtrl.searchByParameters()"
-              options="ediscoverySearchCtrl.searchByOptions"
-              placeholder="ediscoverySearchCtrl.searchByOptions[0]">
-            </cs-select>
+      <!-- Updated Search -->
+      <div ng-if="!ediscoverySearchCtrl.roomInfo && ediscoverySearchCtrl.ediscoveryToggle && !ediscoverySearchCtrl.searchingForRoom">
+        <div class="main-heading">
+          <h1 translate="ediscovery.heading"></h1>
+          <span translate="ediscovery.subheading"></span>
+        </div>
+        <div class="ediscovery-advanced-search">
+          <!-- Search By Row-->
+          <div class="row">
+            <div class="col-md-6 search-box">
+              <span class="search-text" translate="ediscovery.searchParameters.searchBy"></span>
+              <cs-select ng-model="ediscoverySearchCtrl.searchBySelected"
+                ng-change="ediscoverySearchCtrl.searchByParameters()"
+                options="ediscoverySearchCtrl.searchByOptions"
+                placeholder="ediscoverySearchCtrl.searchByOptions[0]">
+              </cs-select>
+            </div>
+            <div class="col-md-6 mid-gap">
+              <div class="cs-input-group search-box" ng-class="{'error': ediscoverySearchCtrl.limitError}">
+                <form class="input-validation" novalidate>
+                  <input class="cs-input" type="text" ng-model="ediscoverySearchCtrl.searchModel" autofocus="true"
+                   ng-keyup="ediscoverySearchCtrl.keyPressHandler($event)" placeholder="{{ediscoverySearchCtrl.searchPlaceholder}}">
+                  <div class="cs-input__messages" ng-if="ediscoverySearchCtrl.limitError" role="alert">
+                    <div translate="ediscovery.searchErrors.invalidLimit"></div>
+                  </div>
+                </form>
+              </div>
+            </div>
           </div>
-          <div class="col-md-6 mid-gap">
-            <div class="cs-input-group search-box" ng-class="{'error': ediscoverySearchCtrl.limitError}">
-              <form class="input-validation" novalidate>
-                <input class="cs-input" type="text" ng-model="ediscoverySearchCtrl.searchModel" autofocus="true"
-                 ng-keyup="ediscoverySearchCtrl.keyPressHandler($event)" placeholder="{{ediscoverySearchCtrl.searchPlaceholder}}">
-                <div class="cs-input__messages" ng-if="ediscoverySearchCtrl.limitError" role="alert">
-                  <div translate="ediscovery.searchErrors.invalidLimit"></div>
+          <!-- Date Range Row -->
+          <div class="row">
+            <span class="search-text small-gap" translate="common.dateRange"></span>
+          </div>
+          <div class="row">
+            <div class="col-md-5 search-box">
+              <cs-datepicker required ng-model="ediscoverySearchCtrl.searchCriteria.startDate" view-format="YYYY-MM-DD">
+              </cs-datepicker>
+            </div>
+            <span class="col-md-1" translate="common.to"></span>
+            <cs-datepicker required class="col-md-6" ng-model="ediscoverySearchCtrl.searchCriteria.endDate" view-format="YYYY-MM-DD">
+            </cs-datepicker>
+          </div>
+          <div class="row" ng-if="ediscoverySearchCtrl.dateValidationError">
+            <i class="icon icon-error date-error"></i>
+            <span ng-repeat="error in ediscoverySearchCtrl.dateValidationError.errors">
+              {{error}}
+            </span>
+          </div>
+          <!-- Text Message and File Name Row -->
+          <div class="row">
+            <span class="search-text large-gap" translate="ediscovery.searchParameters.textAndFileName"></span>
+          </div>
+          <div class="row query-row">
+            <div class="cs-input-group search-box" ng-class="{'error': qForm.qInput.$invalid && qForm.qInput.$touched}">
+              <form name="qForm" class="input-validation" novalidate>
+                <input class="cs-input" type="text" name="qInput" ng-model="ediscoverySearchCtrl.queryModel" 
+                placeholder="{{'ediscovery.searchParameters.textAndFileNamePlaceholder' | translate}}"
+                ng-keyup="ediscoverySearchCtrl.keyPressHandler($event)" ng-maxlength="200">
+                <div class="cs-input__messages" ng-messages="qForm.qInput.$error" role="alert">
+                  <div ng-message="maxlength" class="query-error-msg" translate="ediscovery.searchErrors.queryLimit"></div>
                 </div>
               </form>
             </div>
           </div>
-        </div>
-        <!-- Date Range Row -->
-        <div class="row">
-          <span class="search-text small-gap" translate="common.dateRange"></span>
-        </div>
-        <div class="row">
-          <div class="col-md-5 search-box">
-            <cs-datepicker required ng-model="ediscoverySearchCtrl.searchCriteria.startDate" view-format="YYYY-MM-DD">
-            </cs-datepicker>
-          </div>
-          <span class="col-md-1" translate="common.to"></span>
-          <cs-datepicker required class="col-md-6" ng-model="ediscoverySearchCtrl.searchCriteria.endDate" view-format="YYYY-MM-DD">
-          </cs-datepicker>
-        </div>
-        <div class="row" ng-if="ediscoverySearchCtrl.dateValidationError">
-          <i class="icon icon-error date-error"></i>
-          <span ng-repeat="error in ediscoverySearchCtrl.dateValidationError.errors">
-            {{error}}
-          </span>
-        </div>
-        <!-- Text Message and File Name Row -->
-        <div class="row">
-          <span class="search-text large-gap" translate="ediscovery.searchParameters.textAndFileName"></span>
-        </div>
-        <div class="row query-row">
-          <div class="cs-input-group search-box" ng-class="{'error': qForm.qInput.$invalid && qForm.qInput.$touched}">
-            <form name="qForm" class="input-validation" novalidate>
-              <input class="cs-input" type="text" name="qInput" ng-model="ediscoverySearchCtrl.queryModel" 
-              placeholder="{{'ediscovery.searchParameters.textAndFileNamePlaceholder' | translate}}"
-              ng-keyup="ediscoverySearchCtrl.keyPressHandler($event)" ng-maxlength="200">
-              <div class="cs-input__messages" ng-messages="qForm.qInput.$error" role="alert">
-                <div ng-message="maxlength" class="query-error-msg" translate="ediscovery.searchErrors.queryLimit"></div>
-              </div>
-            </form>
-          </div>
-        </div>
-        <div class="row mid-gap">
-          <button type="submit" class="btn btn--primary search-button" 
-          translate="common.search" ng-click="ediscoverySearchCtrl.searchByLimit()"
-          ng-disabled="ediscoverySearchCtrl.searchButtonDisabled(qForm.qInput.$invalid && qForm.qInput.$touched)"></button>
-          <div ng-if="ediscoverySearchCtrl.error" class="search-error">
-            <i class="icon icon-warning search-warning"></i>
-            <span translate="ediscovery.searchParameters.noMatchesFound"></span>
+          <div class="row mid-gap">
+            <button type="submit" class="btn btn--primary search-button" 
+            translate="common.search" ng-click="ediscoverySearchCtrl.searchByLimit()"
+            ng-disabled="ediscoverySearchCtrl.searchButtonDisabled(qForm.qInput.$invalid && qForm.qInput.$touched)"></button>
+            <div ng-if="ediscoverySearchCtrl.error" class="search-error">
+              <i class="icon icon-warning search-warning"></i>
+              <span translate="ediscovery.searchParameters.noMatchesFound"></span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Original Search -->
-    <div ng-if="!ediscoverySearchCtrl.ediscoveryToggle">
-      <div class="main-heading">
-        <h1 translate="ediscovery.heading"></h1>
-        <span translate="ediscovery.subheading"></span>
+      <!-- Original Search -->
+      <div ng-if="!ediscoverySearchCtrl.ediscoveryToggle">
+        <div class="main-heading">
+          <h1 translate="ediscovery.heading"></h1>
+          <span translate="ediscovery.subheading"></span>
+        </div>
+        <div class="typeahead-large">
+          <input maxlength="50" spellcheck="false" class="fit" type="search" tabindex="1" autocomplete="off" ng-model="ediscoverySearchCtrl.searchCriteria.roomId" autofocus="true" ng-keyup="ediscoverySearchCtrl.keyPressHandler($event)"/>
+          <button type="submit" class="btn btn--circle btn--primary icon icon-search" ng-click="ediscoverySearchCtrl.searchForRoom(ediscoverySearchCtrl.searchCriteria.roomId);" ng-disabled="ediscoverySearchCtrl.searchButtonDisabled()"></button>
+          <div class="input-description"></div>
+        </div>
+
+        <p class="search-tip" translate="ediscovery.searchTip"></p>
+
+        <div class="search-error" ng-if="ediscoverySearchCtrl.error">
+          <span>{{ediscoverySearchCtrl.error}}</span>
+        </div>
       </div>
-      <div class="typeahead-large">
-        <input maxlength="50" spellcheck="false" class="fit" type="search" tabindex="1" autocomplete="off" ng-model="ediscoverySearchCtrl.searchCriteria.roomId" autofocus="true" ng-keyup="ediscoverySearchCtrl.keyPressHandler($event)"/>
-        <button type="submit" class="btn btn--circle btn--primary icon icon-search" ng-click="ediscoverySearchCtrl.searchForRoom(ediscoverySearchCtrl.searchCriteria.roomId);" ng-disabled="ediscoverySearchCtrl.searchButtonDisabled()"></button>
-        <div class="input-description"></div>
+
+      <div ng-show="ediscoverySearchCtrl.searchingForRoom">
+        <span class="search-spinner">
+          <i class="icon icon-spinner"></i>
+        </span>
       </div>
-
-      <p class="search-tip" translate="ediscovery.searchTip"></p>
-
-      <div class="search-error" ng-if="ediscoverySearchCtrl.error">
-        <span>{{ediscoverySearchCtrl.error}}</span>
-      </div>
-    </div>
-
-    <div ng-show="ediscoverySearchCtrl.searchingForRoom">
-      <span class="search-spinner">
-        <i class="icon icon-spinner"></i>
-      </span>
     </div>
   </div>
 

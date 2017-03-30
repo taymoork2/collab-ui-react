@@ -6,7 +6,8 @@
   /* @ngInject */
   function EditServicesCtrl($stateParams, $scope, Notification, CsdmDataModelService) {
     var ciscouc = 'ciscouc';
-    var fusionec = 'fusionec';
+    var fusionec = 'squared-fusion-ec';
+    var fusionuc = 'squared-fusion-uc';
     var fusionCal = 'squared-fusion-cal';
     var fusionGCal = 'squared-fusion-gcal';
 
@@ -16,7 +17,7 @@
     var initialService = getService(wizardData.account.entitlements);
     vm.service = initialService;
     var initialEnableCalService = getCalServiceEnabled(wizardData.account.entitlements);
-    vm.sparkCallConnectEnabled = !!wizardData.csdmHybridCallFeature || vm.service === 'sparkCallConnect';
+    vm.sparkCallConnectEnabled = !!wizardData.csdmHybridCallFeature && wizardData.hybridCallEnabledOnOrg;
     vm.sparkCalendarPlaceEnabled = !!wizardData.csdmHybridCalendarFeature && wizardData.hybridCalendarEnabledOnOrg;
     vm.enableCalService = wizardData.account.enableCalService || initialEnableCalService;
 
@@ -39,15 +40,16 @@
       return wizardData.function !== 'editServices';
     };
 
-    function getUpdatedEntitlements(forSave) {
+    function getUpdatedEntitlements() {
       var entitlements = (wizardData.account.entitlements || ['webex-squared', 'spark']);
-      entitlements = _.difference(entitlements, [ciscouc, fusionec, fusionCal, fusionGCal]);
+      entitlements = _.difference(entitlements, [ciscouc, fusionec, fusionuc, fusionCal, fusionGCal]);
       if (vm.service === 'sparkCall') {
         entitlements.push(ciscouc);
       } else if (vm.service === 'sparkCallConnect') {
         entitlements.push(fusionec);
+        entitlements.push(fusionuc);
       }
-      if (forSave && vm.enableCalService) {
+      if (vm.enableCalService) {
         _.intersection(wizardData.account.entitlements || [], [fusionCal, fusionGCal]).forEach(function (calEntitlement) {
           entitlements.push(calEntitlement);
         });
@@ -93,7 +95,7 @@
           CsdmDataModelService.getPlacesMap().then(function (list) {
             var place = _.find(_.values(list), { 'cisUuid': wizardData.account.cisUuid });
             if (place) {
-              CsdmDataModelService.updateCloudberryPlace(place, getUpdatedEntitlements(true))
+              CsdmDataModelService.updateCloudberryPlace(place, getUpdatedEntitlements())
                 .then(function () {
                   $scope.$dismiss();
                   Notification.success("addDeviceWizard.editServices.servicesSaved");

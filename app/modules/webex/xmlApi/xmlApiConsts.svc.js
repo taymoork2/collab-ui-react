@@ -1,9 +1,6 @@
 (function () {
   'use strict';
 
-  angular.module('WebExApp').service(
-    'WebExXmlApiConstsSvc', WebExXmlApiConstsSvc);
-
   function WebExXmlApiConstsSvc() {
     return {
       siteVersionRequest: "" +
@@ -215,4 +212,6 @@
       }], // replaceSets[]
     }; // return
   } // XmlApiConstants
+
+  module.exports = WebExXmlApiConstsSvc;
 })();

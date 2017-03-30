@@ -16,9 +16,23 @@
 }
 
 .callServiceRow {
-  padding: 30px 30px 15px 15px;
+  padding: 25px 30px 5px 15px;
   display: flex;
+  font-weight: 200;
 
+  .circle {
+    display: block;
+    flex: 0 0 30px;
+    box-sizing: border-box;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    padding: 4px 0px 0px 10px;
+    border: 1px solid $gray-light-2;
+    margin-right: 1.5em;
+    color: $gray-dark-3;
+    font-size: 0.85em;
+  }
   .callServiceTitle {
     flex-basis: 30%;
     width: 60%;
@@ -27,13 +41,34 @@
   }
   .callServiceControls {
     flex-basis: 100%;
+    .help-toggle-calendar {
+      font-style: italic;
+      font-size: 0.75rem;
+      color: #AEAEAF;
+    }
   }
   .calendarServiceControls.emailControls {
     width: 100%;
-    margin-top: -1.5em;
     #email {
       min-width: 310px;
-      width: 50%;
+      width: 45%;
+    }
+  }
+  .emailControlsParent {
+    flex-wrap: wrap;
+    p {
+      flex-basis: 80%;
+    }
+  }
+  .callServiceControls.emailControls {
+    align-self: flex-start;
+    min-width: 300px;
+    margin-top: 15px;
+    input {
+      width: 45%;
+    }
+    .csSelect-container {
+      width: 45%;
     }
   }
   @media screen and (max-width: 640px) {
@@ -51,12 +86,22 @@
   padding-top: 5px;
 }
 
+.callServiceControls {
+  .selectResourceGroup {
+    min-width: 310px;
+    width: 45%;
+    @media screen and (max-width: 640px) {
+      min-width: 100%;
+      width: 100%;
+    }
+  }
+}
 .calenderResourcesRow {
   padding: 30px 30px 15px 15px;
   width: 100%;
   .selectResourceGroup {
     min-width: 310px;
-    width: 50%;
+    width: 45%;
     @media screen and (max-width: 640px) {
       min-width: 100%;
       width: 100%;

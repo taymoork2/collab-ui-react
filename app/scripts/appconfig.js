@@ -232,7 +232,9 @@
             },
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['./main'], done);
+                require.ensure([], function () {
+                  done(require('./main'));
+                }, 'modules');
               }),
             },
             abstract: true,
@@ -245,7 +247,9 @@
             },
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/core/login'], done);
+                require.ensure([], function () {
+                  done(require('modules/core/login'));
+                }, 'login');
               }),
             },
             abstract: true,
@@ -258,7 +262,9 @@
             },
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/core/stateRedirect/stateRedirect.controller'], done);
+                require.ensure([], function () {
+                  done(require('modules/core/stateRedirect/stateRedirect.controller'));
+                }, 'state-redirect');
               }),
             },
             abstract: true,
@@ -272,7 +278,9 @@
             abstract: true,
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['./main'], done);
+                require.ensure([], function () {
+                  done(require('./main'));
+                }, 'modules');
               }),
             },
             sticky: true,
@@ -530,9 +538,7 @@
             },
             views: {
               'modal@': {
-                templateUrl: 'modules/squared/places/callConnect/CallConnectOptions.tpl.html',
-                controller: 'CallConnectOptionsCtrl',
-                controllerAs: 'callConnectOptions',
+                template: '<call-connect-options id="call-connect-options-modal" class="modal-content" dismiss="$dismiss()"></call-connect-options>',
               },
             },
           })
@@ -546,7 +552,9 @@
             },
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/squared/scripts/controllers/activate'], done);
+                require.ensure([], function () {
+                  done(require('modules/squared/scripts/controllers/activate'));
+                }, 'activate');
               }),
             },
             authenticate: false,
@@ -1094,7 +1102,9 @@
             },
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/overview'], done);
+                require.ensure([], function () {
+                  done(require('modules/huron/overview'));
+                }, 'user-call-overview');
               }),
             },
           })
@@ -1149,7 +1159,9 @@
             },
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/voicemail'], done);
+                require.ensure([], function () {
+                  done(require('modules/huron/voicemail'));
+                }, 'user-call-voicemail');
               }),
               ownerId: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams.currentUser, 'id');
@@ -1163,7 +1175,9 @@
             },
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/snr'], done);
+                require.ensure([], function () {
+                  done(require('modules/huron/snr'));
+                }, 'user-call-snr');
               }),
               ownerId: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams.currentUser, 'id');
@@ -1180,7 +1194,9 @@
             },
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/speedDials'], done);
+                require.ensure([], function () {
+                  done(require('modules/huron/speedDials'));
+                }, 'user-call-speed-dials');
               }),
               ownerId: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams.currentUser, 'id');
@@ -1191,7 +1207,9 @@
             template: '<uc-user-cos-form member-type="users" member-id="$resolve.ownerId"></uc-user-cos-form>',
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/cos/user'], done);
+                require.ensure([], function () {
+                  done(require('modules/huron/cos/user'));
+                }, 'user-call-cos');
               }),
               ownerId: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams.currentUser, 'id');
@@ -1247,7 +1265,9 @@
             },
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/lines/lineOverview'], done);
+                require.ensure([], function () {
+                  done(require('modules/huron/lines/lineOverview'));
+                }, 'user-call-line');
               }),
               ownerId: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams.currentUser, 'id');
@@ -1719,7 +1739,9 @@
             },
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/squared/places/callOverview'], done);
+                require.ensure([], function () {
+                  done(require('modules/squared/places/callOverview'));
+                }, 'place-call-overview');
               }),
             },
           })
@@ -1730,7 +1752,9 @@
             },
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/speedDials'], done);
+                require.ensure([], function () {
+                  done(require('modules/huron/speedDials'));
+                }, 'place-call-speed-dials');
               }),
               ownerId: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams.currentPlace, 'cisUuid');
@@ -1741,7 +1765,9 @@
             template: '<uc-user-cos-form member-type="places" member-id="$resolve.ownerId"></uc-user-cos-form>',
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/cos/user'], done);
+                require.ensure([], function () {
+                  done(require('modules/huron/cos/user'));
+                }, 'place-call-cos');
               }),
               ownerId: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams.currentPlace, 'cisUuid');
@@ -1797,7 +1823,9 @@
             },
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/lines/lineOverview'], done);
+                require.ensure([], function () {
+                  done(require('modules/huron/lines/lineOverview'));
+                }, 'place-call-line');
               }),
               ownerId: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams.currentPlace, 'cisUuid');
@@ -1941,7 +1969,9 @@
             },
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/core/video'], done);
+                require.ensure([], function () {
+                  done(require('modules/core/video'));
+                }, 'video');
               }),
             },
           })
@@ -2695,7 +2725,9 @@
             template: '<uc-settings ftsw="false"></uc-settings>',
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/settings'], done);
+                require.ensure([], function () {
+                  done(require('modules/huron/settings'));
+                }, 'call-settings');
               }),
             },
           })
@@ -2768,7 +2800,9 @@
             template: '<call-pickup-setup-assistant></call-pickup-setup-assistant>',
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/features/callPickup/callPickupSetupAssistant'], done);
+                require.ensure([], function () {
+                  done(require('modules/huron/features/callPickup/callPickupSetupAssistant'));
+                }, 'call-pickup');
               }),
             },
           })
@@ -2781,7 +2815,9 @@
             },
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/features/callPickup/callPickupSetupAssistant'], done);
+                require.ensure([], function () {
+                  done(require('modules/huron/features/callPickup/callPickupSetupAssistant'));
+                }, 'call-pickup');
               }),
             },
           })
@@ -2791,7 +2827,9 @@
             template: '<uc-call-park></uc-call-park>',
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/features/callPark/callPark'], done);
+                require.ensure([], function () {
+                  done(require('modules/huron/features/callPark/callPark'));
+                }, 'call-park');
               }),
             },
           })
@@ -2804,7 +2842,9 @@
             },
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/features/callPark/callPark'], done);
+                require.ensure([], function () {
+                  done(require('modules/huron/features/callPark/callPark'));
+                }, 'call-park');
               }),
             },
           })
@@ -2831,7 +2871,9 @@
             template: '<pg-setup-assistant></pg-setup-assistant>',
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/features/pagingGroup/pgSetupAssistant'], done);
+                require.ensure([], function () {
+                  done(require('modules/huron/features/pagingGroup/pgSetupAssistant'));
+                }, 'call-paging');
               }),
             },
           })
@@ -2841,7 +2883,9 @@
             template: '<pg-edit pg-id="$resolve.pgId"></pg-edit>',
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/huron/features/pagingGroup/edit'], done);
+                require.ensure([], function () {
+                  done(require('modules/huron/features/pagingGroup/edit'));
+                }, 'call-paging');
               }),
               pgId: /* @ngInject */ function pgId($stateParams) {
                 var id = _.get($stateParams.feature, 'id');
@@ -3055,7 +3099,9 @@
             template: '<private-trunk-overview has-private-trunk-feature-toggle="$resolve.hasPrivateTrunkFeatureToggle"></private-trunk-overview>',
             resolve: {
               lazy: resolveLazyLoad(function (done) {
-                require(['modules/hercules/privateTrunk/privateTrunkOverview'], done);
+                require.ensure([], function () {
+                  done(require('modules/hercules/privateTrunk/privateTrunkOverview'));
+                }, 'private-trunk');
               }),
               hasPrivateTrunkFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.huronEnterprisePrivateTrunking);

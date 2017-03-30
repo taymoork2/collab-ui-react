@@ -95,8 +95,16 @@
 
   .ediscovery-search {
     height: 100vh;
-    background-color: $brand-white;
-    padding-top: 9rem;
+
+    .basic-search {
+      background-color: $brand-white;
+      padding-top: 9rem;
+    }
+
+    .advanced-search {
+      background-color: $gray-light-4;
+      padding-top: 9rem;
+    }
 
     @media only screen and (max-height: 950px) {
       padding-top: 7rem;
@@ -104,7 +112,7 @@
 
     div.search-result-area {
       background-color: $gray-light-4;
-      min-height: calc(100% - 145px);
+      min-height: calc(100% - 200px);
       padding-top: 2.25rem;
 
       @media only screen and (max-height: 950px) {
@@ -391,10 +399,11 @@
           letter-spacing: normal;
           text-align: center;
           color: #049fd9;
+          padding-bottom: 20px;
         }
 
         .report-header {
-          padding: 8px 18px;
+          padding: 0px 18px;
         }
 
         .report-parameters {
@@ -418,6 +427,7 @@
 
           .report-name {
             width: 100%;
+            margin-bottom: 15px;
           }
 
           .date-error {

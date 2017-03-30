@@ -907,6 +907,11 @@
         customerId: Authinfo.getOrgId(),
       }).$promise.then(function (dialPlan) {
         vm.premiumNumbers = _.get(dialPlan, 'premiumNumbers', []).toString();
+        vm.countryCode = _.get(dialPlan, 'countryCode');
+        if (vm.countryCode !== null) {
+          TelephoneNumberService.setCountryCode(vm.countryCode);
+          vm.generatedVoicemailNumber = ServiceSetup.generateVoiceMailNumber(Authinfo.getOrgId(), vm.countryCode);
+        }
       });
     }
 
@@ -1085,7 +1090,6 @@
           // if customer's dialPlan attribute is defined but null, assume the customer is on the
           // North American Dial Plan. Look up uuid for NANP and insert it into customer dialPlan.
           response.dialPlanDetails = {
-            countryCode: "+1",
             extensionGenerated: "false",
             steeringDigitRequired: "true",
             supportSiteCode: "true",
@@ -1117,10 +1121,6 @@
         }
         if (response.dialPlanDetails.supportSiteCode !== 'true') {
           vm.model.site.siteCode = undefined;
-        }
-        if (response.dialPlanDetails.countryCode !== null) {
-          TelephoneNumberService.setCountryCode(response.dialPlanDetails.countryCode);
-          vm.generatedVoicemailNumber = ServiceSetup.generateVoiceMailNumber(Authinfo.getOrgId(), response.dialPlanDetails.countryCode);
         }
       }).catch(function (response) {
         vm.hideFieldInternalNumberRange = false;

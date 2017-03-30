@@ -1,9 +1,7 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Huron')
-    .factory('DialPlanService', DialPlanService);
+  module.exports = DialPlanService;
 
   /* @ngInject */
   function DialPlanService(Authinfo, CustomerVoiceCmiService) {

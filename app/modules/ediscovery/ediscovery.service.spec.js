@@ -126,8 +126,8 @@ describe('Service: EdiscoveryService', function () {
         'endDate': '2016-06-08T00:00:00.000Z',
         'roomId': roomId,
       },
-      'runUrl': 'https://atlas-integration.wbx2.com/admin/api/v1/compliance/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports/3bab7b32-5f8c-4cf7-924c-8d46c8bc4b21/run',
-      'url': 'https://atlas-integration.wbx2.com/admin/api/v1/compliance/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports/3bab7b32-5f8c-4cf7-924c-8d46c8bc4b21',
+      'runUrl': 'https://atlas-intb.ciscospark.com/admin/api/v1/compliance/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports/3bab7b32-5f8c-4cf7-924c-8d46c8bc4b21/run',
+      'url': 'https://atlas-intb.ciscospark.com/admin/api/v1/compliance/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports/3bab7b32-5f8c-4cf7-924c-8d46c8bc4b21',
     };
 
     var reports = {
@@ -150,10 +150,10 @@ describe('Service: EdiscoveryService', function () {
           'roomId': roomId,
         },
         'runUrl': 'https://avalon-integration.wbx2.com/avalon/api/v1/compliance/report/room',
-        'url': 'https://atlas-integration.wbx2.com/admin/api/v1/compliance/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports/3d0fb858-9a82-4510-93f6-7ca268e698e8',
+        'url': 'https://atlas-intb.ciscospark.com/admin/api/v1/compliance/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports/3d0fb858-9a82-4510-93f6-7ca268e698e8',
       }],
       'paging': {
-        'next': 'https://atlas-integration.wbx2.com/admin/api/v1/compliance/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports?limit=10&offset=10',
+        'next': 'https://atlas-intb.ciscospark.com/admin/api/v1/compliance/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports?limit=10&offset=10',
         'limit': 10,
         'offset': 0,
         'count': 1,
@@ -173,7 +173,7 @@ describe('Service: EdiscoveryService', function () {
         'roomId': roomId,
       },
       'runUrl': 'https://avalon-integration.wbx2.com/avalon/api/v1/compliance/report/room',
-      'url': 'https://atlas-integration.wbx2.com/admin/api/v1/compliance/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports/2345e3bc-587d-428c-bee1-1081c03c533a',
+      'url': 'https://atlas-intb.ciscospark.com/admin/api/v1/compliance/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports/2345e3bc-587d-428c-bee1-1081c03c533a',
     };
 
     beforeEach(function () {

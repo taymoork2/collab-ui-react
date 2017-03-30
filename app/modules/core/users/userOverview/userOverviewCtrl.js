@@ -231,7 +231,7 @@
     // this uses the entitlements returned from the getUser CI call.
     function initServices() {
 
-      if (vm.currentUser.hasEntitlement('squared-room-moderation') || !vm.hasAccount) {
+      if (UserOverviewService.userHasEntitlement(vm.currentUser, 'squared-room-moderation') || !vm.hasAccount) {
         if (hasLicense('MS')) {
           msgState.detail = $translate.instant('onboardModal.paidMsg');
           msgState.actionAvailable = getDisplayableServices('MESSAGING');
@@ -239,19 +239,19 @@
       }
       vm.services.push(msgState);
 
-      if (vm.currentUser.hasEntitlement('cloudmeetings')) {
+      if (UserOverviewService.userHasEntitlement(vm.currentUser, 'cloudmeetings')) {
         confState.actionAvailable = getDisplayableServices('CONFERENCING') || _.isArray(vm.currentUser.trainSiteNames);
         if (vm.currentUser.trainSiteNames) {
           confState.detail = vm.isSharedMeetingsEnabled ? $translate.instant('onboardModal.paidAdvancedConferencing') : $translate.instant('onboardModal.paidConfWebEx');
         }
-      } else if (vm.currentUser.hasEntitlement('squared-syncup')) {
+      } else if (UserOverviewService.userHasEntitlement(vm.currentUser, 'squared-syncup')) {
         if (hasLicense('CF')) {
           confState.detail = $translate.instant('onboardModal.paidConf');
         }
       }
       vm.services.push(confState);
 
-      if (vm.currentUser.hasEntitlement('ciscouc')) {
+      if (UserOverviewService.userHasEntitlement(vm.currentUser, 'ciscouc')) {
         if (hasLicense('CO')) {
           commState.detail = $translate.instant('onboardModal.paidComm');
           commState.actionAvailable = true;
@@ -259,7 +259,7 @@
       }
       vm.services.push(commState);
 
-      if (vm.currentUser.hasEntitlement('cloud-contact-center')) {
+      if (UserOverviewService.userHasEntitlement(vm.currentUser, 'cloud-contact-center')) {
         if (hasLicense('CDC') || hasLicense('CVC')) {
           SunlightConfigService.getUserInfo(vm.currentUser.id)
             .then(function () {

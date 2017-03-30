@@ -9,7 +9,7 @@
       <cs-select ng-model="submenuKeyAction.key" options="submenuKeyAction.keys" placeholder="aaSubmenu.selectPlaceholder" on-change-fn="aaSubmenu.keyChanged($index, submenuKeyAction.key)" class="aa-sm-key-select" icon="icon-chevron-down" ng-class="{'not-selected':!submenuKeyAction.key}">
       </cs-select>
     </div>
-    <div class="small-9 columns">
+    <div class="small-9 columns aa-sm-right">
       <cs-select ng-model="submenuKeyAction.action" valuefield="name" labelfield="label" options="aaSubmenu.keyActions" placeholder="aaSubmenu.actionPlaceholder" on-change-fn="aaSubmenu.keyActionChanged($index, submenuKeyAction.action)" class="aa-sm-action-select" icon="icon-chevron-down">
       </cs-select>
        <div ng-switch="submenuKeyAction.action.name" class="aa-sm-action">

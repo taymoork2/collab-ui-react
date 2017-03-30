@@ -24,7 +24,7 @@
         "roomId": "396dbfb0-3238-11e6-9f82-c97e9d5e622d",
       },
       "runUrl": "https://avalon-integration.wbx2.com/avalon/api/v1/compliance/report/room",
-      "url": "https://atlas-integration.wbx2.com/admin/api/v1/compliance/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports/e882dd0e-b86c-4d93-9246-dd6d11ac3452",
+      "url": "https://atlas-intb.ciscospark.com/admin/api/v1/compliance/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports/e882dd0e-b86c-4d93-9246-dd6d11ac3452",
       "timeoutDetected": false,
     };
 

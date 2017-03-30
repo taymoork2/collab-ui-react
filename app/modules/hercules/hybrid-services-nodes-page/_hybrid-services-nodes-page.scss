@@ -54,4 +54,15 @@ hybrid-services-nodes-page {
       }
     }
   }
+
+  [cs-dropdown-toggle] {
+    margin-left: 1.5rem;
+    font-size: 14px;
+    padding: 0.3rem;
+  }
+
+  .open [cs-dropdown-menu] {
+    left: auto;
+    right: 0;
+  }
 }

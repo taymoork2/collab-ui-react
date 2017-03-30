@@ -33,7 +33,7 @@
     };
 
     vm.placeFilter = function (item) {
-      return item && item.enabled === true && item.entitled === true;
+      return item && item.enabled === true && item.entitled === true && item.id != 'squared-fusion-ec';
     };
 
     vm.getStatus = function (status) {
