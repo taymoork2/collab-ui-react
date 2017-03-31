@@ -17,7 +17,8 @@ describe('Component: pgEdit', () => {
   let pg2 = getJSONFixture('huron/json/features/pagingGroup/pgWithEmptyInitiators.json');
   let pgUpdated = getJSONFixture('huron/json/features/pagingGroup/pgUpdated.json');
   let pgUpdate = getJSONFixture('huron/json/features/pagingGroup/pgUpdate.json');
-  let invalidName = 'Invalid <>';
+  let invalidName = 'Invalid &<>';
+  let validName = 'Valid$#@';
   let pilotNumbers = getJSONFixture('huron/json/features/pagingGroup/numberList.json');
   let updateFailureResp = getJSONFixture('huron/json/features/pagingGroup/errorResponse.json');
   let membersList = getJSONFixture('huron/json/features/pagingGroup/membersList2.json');
@@ -274,6 +275,8 @@ describe('Component: pgEdit', () => {
       this.getPlaceDefer.resolve(placeResponse);
       this.getUserDefer.resolve(userResponse);
       this.$scope.$apply();
+      this.view.find(NAME_INPUT).val(validName).change();
+      expect(this.controller.errorNameInput).toBeFalsy();
       this.controller.name = pgUpdated.name;
       this.controller.number = numberData;
       this.controller.saveForm();

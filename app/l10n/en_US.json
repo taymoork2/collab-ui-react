@@ -3600,7 +3600,6 @@
     "modalDescription": "Paging groups allows a one-way voice path to the phones in the group without waiting for an answer. These phones must all be in the same Multicast group.",
     "createTitle": "Create Paging Group",
     "namePlaceholder": "Name the Paging Group",
-    "nameHint": "Paging group names may only contain alphanumeric characters (letters, numbers, underscores, hyphens, and spaces).",
     "numberPlaceholder": "Select Paging Group Number",
     "numberHint": "When this number is called, the Paging Group will be called.",
     "memberPlaceholder": "Select Members",
@@ -3640,7 +3639,8 @@
     "errorUpdate": "Failed to update the paging group: '{{message}}'",
     "errorSave": "Failed to create the paging group: '{{message}}'",
     "errorSaveMemeberPartial": "'{{pagingGroupName}}' paging group has been created successfully but following members ids did not get added: '{{message}}'",
-    "errorSaveInitiatorPartial": "'{{pagingGroupName}}' paging group has been created successfully but following initiators ids did not get added: '{{message}}'"
+    "errorSaveInitiatorPartial": "'{{pagingGroupName}}' paging group has been created successfully but following initiators ids did not get added: '{{message}}'",
+    "sayInvalidChar": "Invalid character. {{char}} is not allowed."
   },
   "telephonyPreview": {
     "lines": "Lines",

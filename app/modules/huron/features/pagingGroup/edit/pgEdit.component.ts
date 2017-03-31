@@ -13,6 +13,7 @@ class PgEditComponentCtrl implements ng.IComponentController {
   public name: string = '';
   public errorNameInput: boolean = false;
   public formChanged: boolean = false;
+  public pgNameErrorMassage: string;
 
   //Paging group number
   private number: INumberData;
@@ -451,8 +452,12 @@ class PgEditComponentCtrl implements ng.IComponentController {
 
   public onChange(): void {
     this.errorNoIntiators = false;
-    let reg = /^[A-Za-z\-\_\d\s]+$/;
-    this.errorNameInput = !reg.test(this.name);
+    const reg = /[;"'&^></\\]/;
+    let invalidChar: Array<string> | null = this.name.match(reg);
+    this.errorNameInput = reg.test(this.name);
+    if (this.errorNameInput) {
+      this.pgNameErrorMassage = this.$translate.instant('pagingGroup.sayInvalidChar', { char: invalidChar }).replace('\\', '');
+    }
     if (this.initiatorType === CUSTOM && this.initiators.length === 0) {
       this.errorNoIntiators = true;
     }
