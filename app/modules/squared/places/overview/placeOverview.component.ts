@@ -46,7 +46,8 @@ class PlaceOverview implements ng.IComponentController {
               private ServiceDescriptor,
               private Notification,
               private Userservice,
-              private WizardFactory) {
+              private WizardFactory,
+              private CsdmUpgradeChannelService) {
     this.csdmHuronUserDeviceService = this.CsdmHuronUserDeviceService.create(this.$stateParams.currentPlace.cisUuid);
     CsdmDataModelService.reloadItem(this.$stateParams.currentPlace).then((updatedPlace) => this.displayPlace(updatedPlace));
   }
@@ -120,7 +121,11 @@ class PlaceOverview implements ng.IComponentController {
     });
 
     this.FeatureToggleService.cloudberryLyraConfigGetStatus().then(feature => {
-      this.showDeviceSettings = feature && this.currentPlace.type === 'cloudberry';
+      if (feature) {
+        this.CsdmUpgradeChannelService.getUpgradeChannelsPromise().then(channels => {
+          this.showDeviceSettings = channels.length > 1 && this.currentPlace.type === 'cloudberry';
+        });
+      }
     });
   }
 
