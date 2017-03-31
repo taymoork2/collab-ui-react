@@ -7,7 +7,7 @@ describe('Service: CsdmPlacesService', function () {
   var $rootScope;
 
   var CsdmPlaceService;
-  var placesUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/null/places/?shallow=true&type=all';
+  var placesUrl = 'https://csdm-intb.ciscospark.com/csdm/api/v1/organization/null/places/?shallow=true&type=all';
   var accounts = getJSONFixture('squared/json/accounts.json');
 
   beforeEach(inject(function (_CsdmPlaceService_, _$httpBackend_, _$rootScope_) {
@@ -30,8 +30,8 @@ describe('Service: CsdmPlacesService', function () {
       var promiseExecuted;
       CsdmPlaceService.getPlacesList().then(function (placeList) {
         expect(_.keys(placeList).length).toBe(5);
-        expect(placeList["https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/a19b308a-Place1WithHuronDevice-71898e423bec"].type).toBe('huron');
-        expect(placeList["https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/a19b308a-PlaceWithDevice-71898e423bec"].type).toBe('cloudberry');
+        expect(placeList["https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/places/a19b308a-Place1WithHuronDevice-71898e423bec"].type).toBe('huron');
+        expect(placeList["https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/places/a19b308a-PlaceWithDevice-71898e423bec"].type).toBe('cloudberry');
         promiseExecuted = true;
       });
 

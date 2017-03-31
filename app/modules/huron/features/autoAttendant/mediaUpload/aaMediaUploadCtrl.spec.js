@@ -62,7 +62,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
     size: fileSizeInvalid,
   };
   var variantUrlPlayback = 'recordingPlayBackUrl';
-  var uploadUrl = 'https://clio-manager-integration.wbx2.com/clio-manager/api/v1/recordings/media';
+  var uploadUrl = 'https://clio-manager-intb.ciscospark.com/clio-manager/api/v1/recordings/media';
   var voice = "Vanessa";
   var fileDuration = '(00:39)';
   var fileDescription = {

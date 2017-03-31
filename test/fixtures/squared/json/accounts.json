@@ -1,37 +1,37 @@
 {
-  "https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/a19b308a-PlaceWithDevice-71898e423bec": {
+  "https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/places/a19b308a-PlaceWithDevice-71898e423bec": {
     "orgId": "584cf4cd-eea7-4c8c-83ee-67d88fc6eab5",
     "cisUuid": "a19b308a-PlaceWithDevice-71898e423bec",
     "displayName": "PlaceWithDevice",
-    "url": "https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/a19b308a-PlaceWithDevice-71898e423bec",
+    "url": "https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/places/a19b308a-PlaceWithDevice-71898e423bec",
     "sipUrl": "foodelete1@trialorg.room.ciscospark.com",
     "machineType": "lyra_space"
   },
-  "https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/938d9c32-placeWithoutDevice-88d7c1a7f63e": {
+  "https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/places/938d9c32-placeWithoutDevice-88d7c1a7f63e": {
     "orgId": "584cf4cd-eea7-4c8c-83ee-67d88fc6eab5",
     "cisUuid": "938d9c32-placeWithoutDevice-88d7c1a7f63e",
     "displayName": "PlaceWithoutMissingNonExistingDevice",
-    "url": "https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/938d9c32-placeWithoutDevice-88d7c1a7f63e",
+    "url": "https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/places/938d9c32-placeWithoutDevice-88d7c1a7f63e",
     "sipUrl": "foodelete2@trialorg.room.ciscospark.com",
     "machineType": "lyra_space"
   },
-  "https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/938d9c32-huronPlaceWithoutDevice-88d7c1a7f63ev": {
+  "https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/places/938d9c32-huronPlaceWithoutDevice-88d7c1a7f63ev": {
     "orgId": "584cf4cd-eea7-4c8c-83ee-67d88fc6eab5",
     "cisUuid":"938d9c32-huronPlaceWithoutDevice-88d7c1a7f63ev",
     "displayName":"HuronPlaceWithoutDevices",
-    "url":"https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/938d9c32-huronPlaceWithoutDevice-88d7c1a7f63ev",
+    "url":"https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/places/938d9c32-huronPlaceWithoutDevice-88d7c1a7f63ev",
     "machineType": "room"
   },
-  "https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/a19b308a-Place1WithHuronDevice-71898e423bec": {
+  "https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/places/a19b308a-Place1WithHuronDevice-71898e423bec": {
     "cisUuid":"a19b308a-Place1WithHuronDevice-71898e423bec",
     "displayName":"Place1WithHuronDevice",
-    "url": "https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/a19b308a-Place1WithHuronDevice-71898e423bec",
+    "url": "https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/places/a19b308a-Place1WithHuronDevice-71898e423bec",
     "machineType": "room"
   },
-  "https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/68351854-Place2WithHuronDevice-c9c844421ec2": {
+  "https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/places/68351854-Place2WithHuronDevice-c9c844421ec2": {
     "cisUuid":"68351854-Place2WithHuronDevice-c9c844421ec2",
     "displayName":"Place2WithHuronDevice",
-    "url":"https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/68351854-Place2WithHuronDevice-c9c844421ec2",
+    "url":"https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/places/68351854-Place2WithHuronDevice-c9c844421ec2",
     "machineType": "room"
   }
 }

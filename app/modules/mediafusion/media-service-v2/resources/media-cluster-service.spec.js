@@ -130,7 +130,7 @@ describe('Service: MediaClusterServiceV2', function () {
 
   it('should merge the alarms', function () {
     var connectors = [{
-      "url": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/2c3c9f9…-9062-069343e8241d/connectors/mf_mgmt@d2ed6f11-5a53-4011-9062-069343e8241d",
+      "url": "https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/2c3c9f9…-9062-069343e8241d/connectors/mf_mgmt@d2ed6f11-5a53-4011-9062-069343e8241d",
       "id": "mf_mgmt@d2ed6f11-5a53-4011-9062-069343e8241d",
       "connectorType": "mf_mgmt",
       "upgradeState": "upgraded",
@@ -146,7 +146,7 @@ describe('Service: MediaClusterServiceV2', function () {
         "description": "The call switching process lost connectivity with the cloud.",
       }],
       "runningVersion": "2016.06.29.146",
-      "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/2c3c9f9e-73d9-4460-a668-047162ff1bac/channels/DEV/packages/mf_mgmt",
+      "packageUrl": "https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/2c3c9f9e-73d9-4460-a668-047162ff1bac/channels/DEV/packages/mf_mgmt",
     }];
 
     var object = Service.mergeAllAlarms(connectors);
@@ -167,7 +167,7 @@ describe('Service: MediaClusterServiceV2', function () {
       "stateSeverityValue": -1,
     };
     var connector = {
-      "url": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/2c3c9f9…-b436-d1805bfc9c0c/connectors/mf_mgmt@b286c14a-6637-46ad-b436-d1805bfc9c0c",
+      "url": "https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/2c3c9f9…-b436-d1805bfc9c0c/connectors/mf_mgmt@b286c14a-6637-46ad-b436-d1805bfc9c0c",
       "id": "mf_mgmt@b286c14a-6637-46ad-b436-d1805bfc9c0c",
       "connectorType": "mf_mgmt",
       "upgradeState": "upgraded",
@@ -176,7 +176,7 @@ describe('Service: MediaClusterServiceV2', function () {
       "hostSerial": "b286c14a-6637-46ad-b436-d1805bfc9c0c",
       "alarms": [],
       "runningVersion": "2016.06.29.146",
-      "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/2c3c9f9e-73d9-4460-a668-047162ff1bac/channels/DEV/packages/mf_mgmt",
+      "packageUrl": "https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/2c3c9f9e-73d9-4460-a668-047162ff1bac/channels/DEV/packages/mf_mgmt",
     };
     var object = Service.getMostSevereRunningState(previous, connector);
 

@@ -94,9 +94,9 @@ describe('UrlConfigSpec', function () {
 
   it('should return correct csdm service url', function () {
     whenCalling('getCsdmServiceUrl').expectUrlToBe({
-      dev: 'https://csdm-integration.wbx2.com/csdm/api/v1',
+      dev: 'https://csdm-intb.ciscospark.com/csdm/api/v1',
       cfe: 'https://csdm-e.wbx2.com/csdm/api/v1',
-      integration: 'https://csdm-integration.wbx2.com/csdm/api/v1',
+      integration: 'https://csdm-intb.ciscospark.com/csdm/api/v1',
       prod: 'https://csdm-a.wbx2.com/csdm/api/v1',
     });
   });
@@ -121,9 +121,9 @@ describe('UrlConfigSpec', function () {
 
   it('should return correct athena service url', function () {
     whenCalling('getAthenaServiceUrl').expectUrlToBe({
-      dev: 'https://athena-integration.wbx2.com/athena/api/v1',
+      dev: 'https://athena-intb.ciscospark.com/athena/api/v1',
       cfe: 'https://athena-e.wbx2.com/athena/api/v1',
-      integration: 'https://athena-integration.wbx2.com/athena/api/v1',
+      integration: 'https://athena-intb.ciscospark.com/athena/api/v1',
       prod: 'https://athena-a.wbx2.com/athena/api/v1',
     });
   });
@@ -256,27 +256,27 @@ describe('UrlConfigSpec', function () {
 
   it('should return correct hercules url', function () {
     whenCalling('getHerculesUrl').expectUrlToBe({
-      dev: 'https://hercules-integration.wbx2.com/v1',
+      dev: 'https://hercules-intb.ciscospark.com/v1',
       cfe: 'https://hercules-e.wbx2.com/v1',
-      integration: 'https://hercules-integration.wbx2.com/v1',
+      integration: 'https://hercules-intb.ciscospark.com/v1',
       prod: 'https://hercules-a.wbx2.com/v1',
     });
   });
 
   it('should return correct hercules url v2', function () {
     whenCalling('getHerculesUrlV2').expectUrlToBe({
-      dev: 'https://hercules-integration.wbx2.com/hercules/api/v2',
+      dev: 'https://hercules-intb.ciscospark.com/hercules/api/v2',
       cfe: 'https://hercules-e.wbx2.com/hercules/api/v2',
-      integration: 'https://hercules-integration.wbx2.com/hercules/api/v2',
+      integration: 'https://hercules-intb.ciscospark.com/hercules/api/v2',
       prod: 'https://hercules-a.wbx2.com/hercules/api/v2',
     });
   });
 
   it('should return correct flag service url', function () {
     whenCalling('getFlagServiceUrl').expectUrlToBe({
-      dev: 'https://hercules-integration.wbx2.com/fls/api/v1',
+      dev: 'https://hercules-intb.ciscospark.com/fls/api/v1',
       cfe: 'https://hercules-e.wbx2.com/fls/api/v1',
-      integration: 'https://hercules-integration.wbx2.com/fls/api/v1',
+      integration: 'https://hercules-intb.ciscospark.com/fls/api/v1',
       prod: 'https://hercules-a.wbx2.com/fls/api/v1',
     });
   });
@@ -292,27 +292,27 @@ describe('UrlConfigSpec', function () {
 
   it('should return correct USS url', function () {
     whenCalling('getUssUrl').expectUrlToBe({
-      dev: 'https://uss-integration.wbx2.com/',
+      dev: 'https://uss-intb.ciscospark.com/',
       cfe: 'https://uss-e.wbx2.com/',
-      integration: 'https://uss-integration.wbx2.com/',
+      integration: 'https://uss-intb.ciscospark.com/',
       prod: 'https://uss-a.wbx2.com/',
     });
   });
 
   it('should return correct calliope url', function () {
     whenCalling('getCalliopeUrl').expectUrlToBe({
-      dev: 'https://calliope-integration.wbx2.com/calliope/api/authorization/v1',
+      dev: 'https://calliope-intb.ciscospark.com/calliope/api/authorization/v1',
       cfe: 'https://calliope-e.wbx2.com/calliope/api/authorization/v1',
-      integration: 'https://calliope-integration.wbx2.com/calliope/api/authorization/v1',
+      integration: 'https://calliope-intb.ciscospark.com/calliope/api/authorization/v1',
       prod: 'https://calliope-a.wbx2.com/calliope/api/authorization/v1',
     });
   });
 
   it('should return correct certs url', function () {
     whenCalling('getCertsUrl').expectUrlToBe({
-      dev: 'https://certs-integration.wbx2.com/',
+      dev: 'https://certs-intb.ciscospark.com/',
       cfe: 'https://certs-e.wbx2.com/',
-      integration: 'https://certs-integration.wbx2.com/',
+      integration: 'https://certs-intb.ciscospark.com/',
       prod: 'https://certs-a.wbx2.com/',
     });
   });

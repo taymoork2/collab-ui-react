@@ -13,7 +13,7 @@ describe('CsdmHuronOrgDeviceService', function () {
     Authinfo = _Authinfo_;
     $httpBackend = _$httpBackend_;
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond({});
-    $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/null/devices/?type=huron&checkDisplayName=false').respond([]);
+    $httpBackend.whenGET('https://csdm-intb.ciscospark.com/csdm/api/v1/organization/null/devices/?type=huron&checkDisplayName=false').respond([]);
   }));
 
   afterEach(function () {

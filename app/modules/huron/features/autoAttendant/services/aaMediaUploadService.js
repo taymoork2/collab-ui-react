@@ -25,7 +25,7 @@
     };
 
     var clioProdBase = 'https://clio-manager-a.wbx2.com/clio-manager/api/v1/';
-    var clioIntBase = 'https://clio-manager-integration.wbx2.com/clio-manager/api/v1/';
+    var clioIntBase = 'https://clio-manager-intb.ciscospark.com/clio-manager/api/v1/';
     var clioUploadRecordingUrlSuffix = 'recordings/media';
     var clioDeleteRecordingUrlSuffix = 'recordings/';
     var clioUploadBaseUrlInt = clioIntBase + clioUploadRecordingUrlSuffix;
