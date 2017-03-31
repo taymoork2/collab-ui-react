@@ -10,7 +10,7 @@ interface IVoicemailOrgEnableInfo {
     orgId: string,                       // OrgID (UUID)
     orgHybridVoicemailEnabled: boolean,  // Voicemail Enable Setting for Hybrid Users (true, false)
     orgSparkVoicemailEnabled: boolean,   // Voicemail Enable Setting for Spark-Call Users (true, false)
-    orgVoicemailStatus: HybridVoicemailStatus,          // Optional Message Back to Admin (max size 80 char)
+    orgVoicemailStatus?: HybridVoicemailStatus,          // Optional Message Back to Admin (max size 80 char)
   };
 }
 

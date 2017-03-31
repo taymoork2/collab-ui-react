@@ -12,7 +12,7 @@ class HybridVoicemailCtrl implements ng.IComponentController {
   private voicemailToggle: boolean;
   private orgId: string;
   private voicemailStatus: string;
-  private cssColor: string;
+  private status: string;
   private isLoading: boolean;
 
   /* @ngInject */
@@ -45,23 +45,23 @@ class HybridVoicemailCtrl implements ng.IComponentController {
   private setVoiceMailStatus = (status: HybridVoicemailStatus) => {
     switch (status) {
       case 'NOT_CONFIGURED':
-        this.cssColor = 'disabled';
+        this.status = 'disabled';
         this.voicemailStatus = this.$translate.instant('hercules.settings.voicemail.voicemailStatusNotConfigured');
         break;
       case 'REQUESTED':
-        this.cssColor = 'disabled';
+        this.status = 'disabled';
         this.voicemailStatus = this.$translate.instant('hercules.settings.voicemail.voicemailStatusRequested');
         break;
       case 'HYBRID_SUCCESS':
-        this.cssColor = 'success';
+        this.status = 'success';
         this.voicemailStatus = this.$translate.instant('hercules.settings.voicemail.voicemailStatusHybridSuccess');
         break;
       case 'HYBRID_FAILED':
-        this.cssColor = 'warning';
+        this.status = 'warning';
         this.voicemailStatus = this.$translate.instant('hercules.settings.voicemail.voicemailStatusHybridFailed');
         break;
       case 'HYBRID_PARTIAL':
-        this.cssColor = 'danger';
+        this.status = 'danger';
         this.voicemailStatus = this.$translate.instant('hercules.settings.voicemail.voicemailStatusHybridPartial');
         break;
     }
