@@ -1,9 +1,20 @@
+const exampleDialingStringBase = '555-1212';
+const exampleDialingStringWithAreaCode = '972-' + exampleDialingStringBase;
+const exampleDialingStringWithOne = '1-' + exampleDialingStringWithAreaCode;
+
 class DialingSetupCtrl implements ng.IComponentController {
+  public steeringDigit: string;
   public regionCode: string;
+  public useSimplifiedNationalDialing: boolean;
+  public supportsSimplifiedNationalDialing: boolean;
   public isTerminusCustomer: boolean;
   public onChangeFn: Function;
   public dialingHabit: string = 'national';
   public messages: any = {};
+
+  public exampleDialingString: string = '';
+  public exampleDialingWithOneString: string = '';
+  public exampleDialingBaseString: string = '';
 
   /* @ngInject */
   constructor (
@@ -18,13 +29,27 @@ class DialingSetupCtrl implements ng.IComponentController {
 
   public $onInit(): void {
     this.processDialingHabitChanges(this.regionCode);
+    this.exampleDialingBaseString = this.$translate.instant('serviceSetupModal.exampleDialing', { dialingExample: exampleDialingStringBase });
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
-    const { regionCode } = changes;
+    const {
+      regionCode,
+      steeringDigit,
+      useSimplifiedNationalDialing,
+    } = changes;
 
     if (regionCode && regionCode.currentValue) {
       this.processDialingHabitChanges(regionCode.currentValue);
+    }
+
+    if (steeringDigit && steeringDigit.currentValue) {
+      this.exampleDialingString = this.getExampleDialingString();
+      this.exampleDialingWithOneString = this.getExampleDialingWithOneString();
+    }
+
+    if (useSimplifiedNationalDialing && useSimplifiedNationalDialing.currentValue) {
+      this.dialingHabit = 'national';
     }
   }
 
@@ -33,20 +58,44 @@ class DialingSetupCtrl implements ng.IComponentController {
       this.dialingHabit = 'national';
     } else {
       this.dialingHabit = 'local';
+      this.useSimplifiedNationalDialing = false;
     }
   }
 
   public onDialingHabitChanged(): void {
     if (this.dialingHabit === 'national') {
       this.regionCode = '';
+    } else {
+      this.useSimplifiedNationalDialing = false;
     }
     this.onRegionCodeChanged();
   }
 
-  public onRegionCodeChanged() {
+  public onRegionCodeChanged(): void {
     this.onChangeFn({
       regionCode: this.regionCode,
+      useSimplifiedNationalDialing: this.useSimplifiedNationalDialing,
     });
+  }
+
+  private getExampleDialingString(): string {
+    let dialString;
+    if (!_.isEqual(this.steeringDigit, 'null')) {
+      dialString = this.steeringDigit + '-' + exampleDialingStringWithAreaCode;
+    } else {
+      dialString = exampleDialingStringWithAreaCode;
+    }
+    return this.$translate.instant('serviceSetupModal.exampleDialing', { dialingExample: dialString });
+  }
+
+  private getExampleDialingWithOneString(): string {
+    let dialString;
+    if (!_.isEqual(this.steeringDigit, 'null')) {
+      dialString = this.steeringDigit + '-' + exampleDialingStringWithOne;
+    } else {
+      dialString = exampleDialingStringWithOne;
+    }
+    return this.$translate.instant('serviceSetupModal.exampleDialing', { dialingExample: dialString });
   }
 }
 
@@ -54,6 +103,9 @@ export class DialingSetupComponent {
   public controller = DialingSetupCtrl;
   public templateUrl = 'modules/huron/settings/dialing/dialing.html';
   public bindings = {
+    steeringDigit: '<',
+    useSimplifiedNationalDialing: '<',
+    supportsSimplifiedNationalDialing: '<',
     regionCode: '<',
     isTerminusCustomer: '<',
     onChangeFn: '&',

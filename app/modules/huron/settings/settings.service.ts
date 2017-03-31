@@ -1,4 +1,4 @@
-import { Customer, CustomerVoice, Link, HuronCustomerService } from 'modules/huron/customer';
+import { Customer, Link, HuronCustomerService } from 'modules/huron/customer';
 import { Site, HuronSiteService } from 'modules/huron/sites';
 import { IExtensionRange } from 'modules/huron/settings/extensionRange';
 import { Notification } from 'modules/core/notifications';
@@ -6,7 +6,6 @@ import { CompanyNumber, ExternalCallerIdType } from 'modules/huron/settings/comp
 
 export class HuronSettingsData {
   public customer: CustomerSettings;
-  public customerVoice: CustomerVoice;
   public site: Site;
   public internalNumberRanges: Array<IExtensionRange>;
   public cosRestrictions: any;
@@ -86,7 +85,6 @@ export class HuronSettingsService {
           }
           return customer;
         }),
-      customerVoice: this.getCustomerVoice(),
       site: this.getSite(siteId),
       internalNumberRanges: this.getInternalNumberRanges(),
       cosRestrictions: this.getCosRestrictions(),
@@ -94,12 +92,10 @@ export class HuronSettingsService {
     }).then(response => {
       this.rejectAndNotifyPossibleErrors();
       huronSettingsData.customer = _.get<CustomerSettings>(response, 'customer');
-      huronSettingsData.customerVoice = _.get<CustomerVoice>(response, 'customerVoice');
       huronSettingsData.site = _.get<Site>(response, 'site');
       huronSettingsData.internalNumberRanges = _.get<Array<IExtensionRange>>(response, 'internalNumberRanges');
       huronSettingsData.cosRestrictions = _.get(response, 'cosRestrictions');
       huronSettingsData.companyCallerId = _.get<CompanyNumber>(response, 'companyCallerId');
-      huronSettingsData.site.allowExternalTransfer = <boolean>(response.site.allowExternalTransfer === 'true');
       this.huronSettingsDataCopy = this.cloneSettingsData(huronSettingsData);
       return huronSettingsData;
     });
@@ -175,10 +171,6 @@ export class HuronSettingsService {
     if (!_.isEqual(data.companyCallerId, this.huronSettingsDataCopy.companyCallerId)) {
       promises.push(this.saveCompanyCallerId(data.companyCallerId));
     }
-
-    if (!_.isEqual(data.customerVoice, this.huronSettingsDataCopy.customerVoice)) {
-      promises.push(this.updateCustomerVoice(data.customerVoice));
-    }
     return promises;
   }
 
@@ -204,23 +196,6 @@ export class HuronSettingsService {
         });
       }).catch(error => {
         this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.customerGetError'));
-      });
-  }
-
-  private getCustomerVoice(): ng.IPromise<CustomerVoice | void> {
-    return this.HuronCustomerService.getVoiceCustomer()
-      .then(customerVoice => {
-        return customerVoice;
-      })
-      .catch(error => {
-        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.customerGetError'));
-      });
-  }
-
-  private updateCustomerVoice(customerData: CustomerVoice): ng.IPromise<void> {
-    return this.HuronCustomerService.updateVoiceCustomer(customerData)
-      .catch(error => {
-        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.error.updateCustomerVoice'));
       });
   }
 

@@ -7,6 +7,12 @@ class ClassOfService implements ng.IComponentController {
   private PREMIUM_CALLS = 'DIALINGCOSTAG_PREMIUM';
   public onChangeFn: Function;
 
+  public cosTrialToggle: boolean;
+  public callTrial: boolean;
+  public roomSystemsTrial: boolean;
+  public disableControl: boolean = true;
+  public premiumNumbersString: string = '';
+
   /* @ngInject */
   constructor(
     private FeatureToggleService,
@@ -18,10 +24,13 @@ class ClassOfService implements ng.IComponentController {
     this.disableCos();
   }
 
-  public cosTrialToggle: boolean;
-  public callTrial: boolean;
-  public roomSystemsTrial: boolean;
-  public disableControl: boolean = true;
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+    const { premiumNumbers } = changes;
+
+    if (premiumNumbers && premiumNumbers.currentValue) {
+      this.premiumNumbersString = _.toString(premiumNumbers.currentValue);
+    }
+  }
 
   public getTitle(restriction): string {
     switch (restriction) {

@@ -106,9 +106,12 @@
         </div>
         <div class="sub-section">
           <uc-dialing-setup
-            region-code="$ctrl.huronSettingsData.customerVoice.regionCode"
+            steering-digit="$ctrl.huronSettingsData.site.steeringDigit"
+            use-simplified-national-dialing="$ctrl.huronSettingsData.site.regionCodeDialing.useSimplifiedNationalDialing"
+            supports-simplified-national-dialing="$ctrl.settingsOptions.dialPlan.supportsSimplifiedNationalDialing"
+            region-code="$ctrl.huronSettingsData.site.regionCodeDialing.regionCode"
             is-terminus-customer="$ctrl.isTerminusCustomer"
-            on-change-fn="$ctrl.onRegionCodeChanged(regionCode)">
+            on-change-fn="$ctrl.onRegionCodeChanged(regionCode, useSimplifiedNationalDialing)">
           </uc-dialing-setup>
         </div>
       </div>
@@ -125,7 +128,7 @@
       <div class="section__content">
         <uc-cos-form
           cos-restrictions="$ctrl.huronSettingsData.cosRestrictions"
-          premium-numbers="$ctrl.settingsOptions.premiumNumbers"
+          premium-numbers="$ctrl.settingsOptions.dialPlan.premiumNumbers"
           on-change-fn="$ctrl.onCustomerCosRestrictionsChanged(restrictions)">
         </uc-cos-form>
       </div>
@@ -208,7 +211,7 @@
       <div class="section__content">
         <uc-company-voicemail
           site="$ctrl.huronSettingsData.site"
-          dial-plan-country-code="$ctrl.settingsOptions.countryCode"
+          dial-plan-country-code="$ctrl.settingsOptions.dialPlan.countryCode"
           external-number-options="$ctrl.settingsOptions.companyVoicemailOptions"
           company-voicemail-enabled="$ctrl.huronSettingsData.customer.hasVoicemailService"
           voicemail-to-email="$ctrl.huronSettingsData.voicemailToEmailSettings.voicemailToEmail"

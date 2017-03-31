@@ -9,7 +9,7 @@ require('./_hg-edit.scss');
   /* @ngInject */
   function HuntGroupEditCtrl($state, $q, $stateParams, $translate,
     Authinfo, HuntGroupService, Notification, HuntGroupFallbackDataService,
-    HuntGroupMemberDataService, HuntGroupEditDataService, DialPlanService,
+    HuntGroupMemberDataService, HuntGroupEditDataService, HuronCustomerService,
     TelephoneNumberService, CardUtils) {
     var vm = this;
     vm.selectHuntMethod = selectHuntMethod;
@@ -103,7 +103,7 @@ require('./_hg-edit.scss');
     }
 
     function getRegionCode() {
-      return DialPlanService.getCustomerVoice(Authinfo.getOrgId());
+      return HuronCustomerService.getVoiceCustomer();
     }
 
     function updateModal(pristineData, resetFromBackend) {
