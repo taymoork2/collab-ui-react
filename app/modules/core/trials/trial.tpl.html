@@ -275,7 +275,7 @@
     <trial-regional-settings
       cr-feature-toggle feature-show="huron-support-for-thinktel"
       required="false"
-      ng-if="trial.isNewTrial() && (trial.roomSystemTrial.enabled || trial.callTrial.enabled)"
+      ng-if="!trial.preset.call && (trial.roomSystemTrial.enabled || trial.callTrial.enabled)"
       filter-country-list="true"
       default-country="trial.details.country"
       default-country-list="trial.defaultCountryList"

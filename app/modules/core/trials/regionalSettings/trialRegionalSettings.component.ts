@@ -34,9 +34,8 @@ class TrialRegionalSettingsCtrl implements ng.IComponentController {
   private getCountryList(list) {
     if (this.filterCountryList) {
       return _.filter(list, country => {
-        if (_.get(country, 'id') === 'US' || _.get(country, 'id') === 'CA') {
-          return true;
-        }
+        const countryId = _.get(country, 'id');
+        return _.includes(['US', 'CA', 'N/A'], countryId);
       });
     } else {
       return list;

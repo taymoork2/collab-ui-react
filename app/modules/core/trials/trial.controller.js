@@ -287,7 +287,7 @@
     }
 
     function getCountryList() {
-      return HuronCountryService.getCountryList()
+      return HuronCountryService.getHardCodedCountryList()
         .catch(function () {
           return [];
         });
@@ -336,11 +336,11 @@
 
       setViewState('trial.call', canAddDevice());
       setViewState('trial.webex', hasEnabledWebexTrial());
-      setViewState('trial.pstn', isPstn());
+      setViewState('trial.pstn', isPstn() && (_.get(vm.details.country, 'id') !== 'N/A'));
       if (vm.ftSupportThinktel || vm.ftFederatedSparkCall) {
         setViewState('trial.emergAddress', TrialPstnService.getCarrierCapability('E911'));
       } else {
-        setViewState('trial.emergAddress', isPstn());
+        setViewState('trial.emergAddress', isPstn() && (_.get(vm.details.country, 'id') !== 'N/A'));
       }
 
 
@@ -952,7 +952,7 @@
       //During 'Edit Trial', setDefaultCountry method is not called
       //However, the TrialPstnService may have the country code set prior to
       //trial code being instantiated
-      if (country) {
+      if (country && (_.get(country, 'id') !== 'N/A')) {
         countryCode = country.id;
       } else {
         countryCode = TrialPstnService.getCountryCode();
