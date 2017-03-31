@@ -1,5 +1,3 @@
-'use strict';
-
 import { IProdInst } from 'modules/online/upgrade/upgrade.service';
 
 describe('Controller: MySubscriptionCtrl', function () {
@@ -16,39 +14,24 @@ describe('Controller: MySubscriptionCtrl', function () {
   };
 
   beforeEach(function () {
+    this.initModules('Core', 'Hercules', 'Sunlight', 'WebExApp');
+    this.injectDependencies('$controller',
+      '$httpBackend',
+      '$rootScope',
+      '$scope',
+      '$window',
+      '$q',
+      'Authinfo',
+      'DigitalRiverService',
+      'FeatureToggleService',
+      'OnlineUpgradeService',
+      'Orgservice',
+      'ServiceDescriptor',
+      'SharedMeetingsReportService',
+      'WebExUtilsFact');
+
     this.data = _.cloneDeep(getJSONFixture('core/json/myCompany/subscriptionData.json'));
-    this.data.licensesFormatted.forEach(function (item){
-      if (item.label !== 'subscriptions.care') {
-        item.subscriptions[0].siteUrl = undefined;
-      }
-    });
-
-    this.data.licensesFormatted[4].subscriptions[0].offers[0].siteUrl = undefined;
-    this.data.licensesFormatted[4].subscriptions[0].offers[1].siteUrl = undefined;
-    this.data.licensesFormatted[1].subscriptions[0].offers[0].siteUrl = undefined;
-
-    this.data.trialLicenseData[0].subscriptions[0].siteUrl = undefined;
-
-    this.data.subscriptionsFormatted[0].licenses[0].siteUrl = undefined;
-    this.data.subscriptionsFormatted[0].licenses[1].siteUrl = undefined;
-    this.data.subscriptionsFormatted[0].licenses[7].siteUrl = undefined;
-    this.data.subscriptionsFormatted[0].licenses[8].siteUrl = undefined;
-    this.data.subscriptionsFormatted[0].licenses[9].siteUrl = undefined;
-    this.data.subscriptionsFormatted[0].licenses[10].siteUrl = undefined;
-    this.data.subscriptionsFormatted[0].internalSubscriptionId = undefined;
-    this.data.subscriptionsFormatted[0].upgradeTrialUrl = undefined;
-    this.data.subscriptionsFormatted[0].productInstanceId = undefined;
-    this.data.subscriptionsFormatted[0].changeplanOverride = undefined;
-    this.data.subscriptionsFormatted[0].quantity = undefined;
-    this.data.trialSubscriptionData[0].licenses[0].siteUrl = undefined;
-    this.data.trialSubscriptionData[0].upgradeTrialUrl = undefined;
-    this.data.trialSubscriptionData[0].productInstanceId = undefined;
-    this.data.trialSubscriptionData[0].changeplanOverride = undefined;
-    this.data.trialSubscriptionData[0].internalSubscriptionId = undefined;
-    this.data.trialSubscriptionData[0].quantity = undefined;
-
-    this.initModules('Core', 'Hercules', 'Sunlight');
-    this.injectDependencies('$controller', '$httpBackend', '$rootScope', '$scope', '$q', 'Authinfo', 'DigitalRiverService', 'FeatureToggleService', 'OnlineUpgradeService', 'Orgservice', 'ServiceDescriptor', 'SharedMeetingsReportService');
+    this.siteUrl = 'siteUrl';
 
     spyOn(this.ServiceDescriptor, 'getServices').and.returnValue(this.$q.when(this.data.servicesResponse));
     spyOn(this.FeatureToggleService, 'atlasSharedMeetingsGetStatus').and.returnValue(this.$q.when(false));
@@ -59,14 +42,18 @@ describe('Controller: MySubscriptionCtrl', function () {
     spyOn(this.$rootScope, '$broadcast').and.callThrough();
 
     spyOn(this.SharedMeetingsReportService, 'openModal');
+    spyOn(this.WebExUtilsFact, 'getSiteAdminUrl').and.returnValue(this.siteUrl);
+    spyOn(this.$window, 'open');
 
     this.startController = (): void => {
       this.controller = this.$controller('MySubscriptionCtrl', {
         $scope: this.$scope,
         $rootScope: this.$rootScope,
+        $window: this.$window,
         Orgservice: this.Orgservice,
         ServiceDescriptor: this.ServiceDescriptor,
         Authinfo: this.Authinfo,
+        WebExUtilsFact: this.WebExUtilsFact,
       });
       this.$scope.$apply();
     };
@@ -102,6 +89,7 @@ describe('Controller: MySubscriptionCtrl', function () {
     expect(this.controller.hybridServices).toEqual(this.data.servicesFormatted);
     expect(this.controller.licenseCategory).toEqual(this.data.licensesFormatted);
     expect(this.controller.subscriptionDetails).toEqual(this.data.subscriptionsFormatted);
+
     expect(this.controller.visibleSubscriptions).toBeTruthy();
     expect(this.$rootScope.$broadcast).toHaveBeenCalled();
   });
@@ -149,11 +137,11 @@ describe('Controller: MySubscriptionCtrl', function () {
     });
 
     it('The isSharedMeetingsLicense() function should return false for a service that does not have shared Licenses ', function () {
-      expect(this.controller.isSharedMeetingsLicense(dataWithNamedUserLicense)).toEqual(false);
+      expect(this.controller.isSharedMeetingsLicense(dataWithNamedUserLicense.offers[0])).toEqual(false);
     });
 
     it('The determineLicenseType() function should return licenseType Named User License string', function () {
-      let result = this.controller.determineLicenseType(dataWithNamedUserLicense);
+      let result = this.controller.determineLicenseType(dataWithNamedUserLicense.offers[0]);
       expect(result).toEqual('firstTimeWizard.namedLicenses');
     });
   });
@@ -166,24 +154,53 @@ describe('Controller: MySubscriptionCtrl', function () {
     });
 
     it('The isSharedMeetingsLicense() function should return true for a service that has shared licenses', function () {
-      expect(this.controller.isSharedMeetingsLicense(dataWithSharedMeetingsLicense)).toEqual(true);
+      expect(this.controller.isSharedMeetingsLicense(dataWithSharedMeetingsLicense.offers[0])).toEqual(true);
     });
 
     it('The determineLicenseType() function should return licenseType Shared Meeting License string', function () {
-      let result = this.controller.determineLicenseType(dataWithSharedMeetingsLicense);
+      let result = this.controller.determineLicenseType(dataWithSharedMeetingsLicense.offers[0]);
       expect(result).toEqual('firstTimeWizard.sharedLicenses');
     });
   });
 
-  describe('Shared Meeting Report: ', function () {
-    const siteUrl: string = 'siteUrl';
-
-    it('should open a modal when the shared meeting report is launched', function () {
+  describe('Helper Functions - ', function () {
+    beforeEach(function () {
       spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.when(this.data.subscriptionsTrialResponse));
       this.startController();
+    });
 
-      this.controller.launchSharedMeetingsLicenseUsageReport(siteUrl);
-      expect(this.SharedMeetingsReportService.openModal).toHaveBeenCalledWith(siteUrl);
+    it('launchSharedMeetingsLicenseUsageReport - should open a modal when the shared meeting report is launched', function () {
+      this.controller.launchSharedMeetingsLicenseUsageReport(this.siteUrl);
+      expect(this.SharedMeetingsReportService.openModal).toHaveBeenCalledWith(this.siteUrl);
+    });
+
+    it('hideUsage - should return true only if isCI is defined and false', function () {
+      expect(this.controller.hideUsage({ isCI: false })).toBeTruthy();
+      expect(this.controller.hideUsage({ isCI: true })).toBeFalsy();
+      expect(this.controller.hideUsage({})).toBeFalsy();
+    });
+
+    it('nonCISignIn - should open new page', function () {
+      this.controller.nonCISignIn({ siteUrl: this.siteUrl });
+      expect(this.$window.open).toHaveBeenCalledWith(this.siteUrl, '_blank');
+      expect(this.WebExUtilsFact.getSiteAdminUrl).toHaveBeenCalledWith(this.siteUrl);
+    });
+
+    it('showCategory - should only display a licenseCategory that has offers', function () {
+      expect(this.controller.showCategory(this.data.trialLicenseData[0])).toBeTruthy();
+      expect(this.controller.showCategory(this.data.licensesFormatted[1])).toBeTruthy();
+      expect(this.controller.showCategory(this.data.trialLicenseData[1])).toBeFalsy();
+    });
+
+    it('getWarning - should return true when usage exceeds volume', function () {
+      expect(this.controller.getWarning({
+        usage: 50,
+        volume: 20,
+      })).toBeTruthy();
+      expect(this.controller.getWarning({
+        usage: 50,
+        volume: 200,
+      })).toBeFalsy();
     });
   });
 });

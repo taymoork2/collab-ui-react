@@ -140,23 +140,16 @@
 
       .subscription-item {
         @include vr-spacing(p, 1.5);
-
         width: 100%;
+        border-bottom: rem-calc(1) solid $gray-light-3;
       }
 
-      .subscription-item:nth-child(1),
-      .subscription-item:nth-child(2) {
-        @include vr-spacing(pt, 1.5);
-      }
-
-      .subscription-item:nth-child(odd):nth-last-of-type(2),
       .subscription-item:last-of-type {
-        @include vr-spacing(pb, 1.5);
+        border-bottom: none;
       }
 
       .subscription-item.item-with-borders {
-        @include vr-spacing(p, 1.5);
-        width: 100%;
+        width: 50%;
         display: block;
         border-right: rem-calc(1) solid $gray-light-3;
         border-bottom: rem-calc(1) solid $gray-light-3;
