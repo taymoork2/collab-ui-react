@@ -80,20 +80,8 @@ $overlay-panel-height: 93px;
 }
 
 #pickup-typeahead {
-  .dropdown-menu {
-    span {
-      &.disabled {
-        color: $gray-light-1;
-      }
-    }
-    .active {
-      a {
-        &.disabled {
-          color: $gray-light-1;
-          cursor: default;
-        }
-      }
-    }
+  .disabled {
+    color: $gray-light-1;
   }
 }
 

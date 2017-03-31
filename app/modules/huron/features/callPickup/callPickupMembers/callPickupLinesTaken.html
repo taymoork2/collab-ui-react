@@ -1,0 +1,19 @@
+<div class="modal-header">
+  <h3 class="modal-title" translate="callPickup.linesTaken"></h3>
+</div>
+<div class="modal-body">
+  <h5> {{member}} </h5>
+  <span translate="callPickup.linesTakenDesc"></span>
+  <ul>
+    <div ng-repeat="line in lines">
+        {{line}} - {{names[$index]}}
+    </div>
+  </ul>
+  <span translate="callPickup.linesTakenHelp"></span>
+</div>
+<div class="modal-footer">
+  <button class="btn btn--primary"
+    ng-click="$dismiss(); $event.stopPropagation()"
+    translate="callPickup.okButton" focus-on>
+  </button>
+</div>
