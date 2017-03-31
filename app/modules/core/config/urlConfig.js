@@ -27,9 +27,9 @@
       prod: 'https://athena-a.wbx2.com/athena/api/v1',
     },
     CsdmServiceUrl: {
-      dev: 'https://csdm-integration.wbx2.com/csdm/api/v1',
+      dev: 'https://csdm-intb.ciscospark.com/csdm/api/v1',
       cfe: 'https://csdm-e.wbx2.com/csdm/api/v1',
-      integration: 'https://csdm-integration.wbx2.com/csdm/api/v1',
+      integration: 'https://csdm-intb.ciscospark.com/csdm/api/v1',
       prod: 'https://csdm-a.wbx2.com/csdm/api/v1',
     },
     MessengerServiceUrl: {

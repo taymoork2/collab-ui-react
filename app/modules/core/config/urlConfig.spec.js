@@ -94,9 +94,9 @@ describe('UrlConfigSpec', function () {
 
   it('should return correct csdm service url', function () {
     whenCalling('getCsdmServiceUrl').expectUrlToBe({
-      dev: 'https://csdm-integration.wbx2.com/csdm/api/v1',
+      dev: 'https://csdm-intb.ciscospark.com/csdm/api/v1',
       cfe: 'https://csdm-e.wbx2.com/csdm/api/v1',
-      integration: 'https://csdm-integration.wbx2.com/csdm/api/v1',
+      integration: 'https://csdm-intb.ciscospark.com/csdm/api/v1',
       prod: 'https://csdm-a.wbx2.com/csdm/api/v1',
     });
   });
