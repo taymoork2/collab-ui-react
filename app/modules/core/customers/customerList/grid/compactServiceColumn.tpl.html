@@ -1,4 +1,4 @@
-<div class="ui-grid-cell-contents align-left icon-column" ng-click="grid.appScope.partnerClicked(row.entity.customerOrgId)" ng-class="{'selected' : row.isSelected}">
+<div class="ui-grid-cell-contents align-left icon-column" ng-class="{'selected' : row.isSelected}">
   <div ng-if="grid.appScope.isLicenseInfoAvailable(row.entity.licenseList)">
     <ng-repeat ng-repeat="type in row.entity.orderedServices.servicesManagedByCurrentPartner">
       <cr-service-column-icon row="row.entity" type={{type}}></cr-service-column-icon>
