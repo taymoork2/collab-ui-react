@@ -2086,7 +2086,12 @@
         "voicemailDisabled": "To enable voicemail Call Service Connect needs to be turned on.",
         "voicemailStatusError": "Unable to get voicemail status",
         "voicemailEnableError": "Could not enable voicemail",
-        "voicemailDisableError": "Could not disable voicemail"
+        "voicemailDisableError": "Could not disable voicemail",
+        "voicemailStatusNotConfigured": "Voicemail service not configured",
+        "voicemailStatusRequested": "Voicemail service activation pending",
+        "voicemailStatusHybridSuccess": "Voicemail service operational",
+        "voicemailStatusHybridFailed": "Voicemail service impaired (see clusters for alarms)",
+        "voicemailStatusHybridPartial": "Voicemail service outage (see cluster for alarms)"
       },
       "documentation": {
         "heading": "Documentation and Software",
