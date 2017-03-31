@@ -79,7 +79,7 @@ describe('Controller: TrialCtrl:', function () {
       callback(getJSONFixture('core/json/organizations/Orgservice.json').getOrg, 200);
     });
 
-    spyOn(HuronCountryService, 'getCountryList').and.returnValue($q.resolve(countryList));
+    spyOn(HuronCountryService, 'getHardCodedCountryList').and.returnValue($q.resolve(countryList));
 
     $httpBackend
       .when('GET', 'https://atlas-intb.ciscospark.com/admin/api/v1/organizations/null?disableCache=false')

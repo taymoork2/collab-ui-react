@@ -4042,7 +4042,8 @@
     "regionalSettings": "Regional Settings",
     "defaultCountry": "Default Country",
     "defaultCountryDesc": "Specify the country to set the correct dial tone on user devices.",
-    "defaultCountryPlaceholder": "Select your country"
+    "defaultCountryPlaceholder": "Select your country",
+    "pstnCountry": "Choose the country where calling services (including PSTN) will be provisioned."
   },
   "trialModal": {
     "addTrial": {
