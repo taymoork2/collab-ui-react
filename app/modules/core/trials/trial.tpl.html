@@ -70,24 +70,7 @@
 
       </div>
     </div>
-    <!-- regional settings -->
-    <trial-regional-settings
-      cr-feature-toggle feature-show="huron-federated-spark-call"
-      ng-if="trial.isNewTrial()"
-      filter-country-list="false"
-      default-country="trial.details.country"
-      default-country-list="trial.defaultCountryList"
-      on-change-fn="trial.setDefaultCountry(country)">
-    </trial-regional-settings>
 
-    <trial-regional-settings
-      cr-feature-toggle feature-show="huron-support-for-thinktel"
-      ng-if="trial.isNewTrial()"
-      filter-country-list="true"
-      default-country="trial.details.country"
-      default-country-list="trial.defaultCountryList"
-      on-change-fn="trial.setDefaultCountry(country)">
-    </trial-regional-settings>
     <!-- trial services -->
     <div class="cs-form__section">
       <div class="section__info">
@@ -278,6 +261,26 @@
         </div>
       </div>
     </div>
+
+    <!-- regional settings -->
+    <trial-regional-settings
+      cr-feature-toggle feature-show="huron-federated-spark-call"
+      ng-if="trial.isNewTrial() && (trial.roomSystemTrial.enabled || trial.callTrial.enabled)"
+      filter-country-list="false"
+      default-country="trial.details.country"
+      default-country-list="trial.defaultCountryList"
+      on-change-fn="trial.setDefaultCountry(country)">
+    </trial-regional-settings>
+
+    <trial-regional-settings
+      cr-feature-toggle feature-show="huron-support-for-thinktel"
+      required="false"
+      ng-if="trial.isNewTrial() && (trial.roomSystemTrial.enabled || trial.callTrial.enabled)"
+      filter-country-list="true"
+      default-country="trial.details.country"
+      default-country-list="trial.defaultCountryList"
+      on-change-fn="trial.setDefaultCountry(country)">
+    </trial-regional-settings>
 
     <!-- context service trial -->
     <div class="cs-form__section" ng-if="trial.showContextServiceTrial">
