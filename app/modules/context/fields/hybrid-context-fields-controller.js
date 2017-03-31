@@ -36,11 +36,11 @@ require('./_fields-list.scss');
 
     vm.createField = function () {
       LogMetricsService.logMetrics('Opened create field modal', LogMetricsService.getEventType('contextNewField'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1);
-      $state.go('context-new-field', {
+      $state.go('context-field-modal', {
         existingFieldIds: _.map(vm.fieldsList.allFields, function (field) {
           return field.id;
         }),
-        createCallback: function (newField) {
+        callback: function (newField) {
           var fieldCopy = _.cloneDeep(newField);
           vm.fieldsList.allFields.unshift(processField(fieldCopy));
           filterList(vm.searchStr);
