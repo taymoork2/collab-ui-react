@@ -136,7 +136,7 @@ describe('Service: EdiscoveryService', function () {
         'orgId': orgId,
         'createdByUserId': 'c12145c3-0aad-43f9-9f9d-5cfc3b890ab0',
         'state': 'COMPLETED',
-        'downloadUrl': 'https://avalon-integration.wbx2.com/avalon/api/v1/compliance/report/file/room/1eb65fdf-9643-417f-9974-ad72cae0e10f_465d5ac0-2d22-11e6-9b09-cfdd271e09dd.zip',
+        'downloadUrl': 'https://avalon-intb.ciscospark.com/avalon/api/v1/compliance/report/file/room/1eb65fdf-9643-417f-9974-ad72cae0e10f_465d5ac0-2d22-11e6-9b09-cfdd271e09dd.zip',
         'createdTime': '2016-06-10T09:05:24.791Z',
         'expiryTime': '2016-06-10T09:05:25.270Z',
         'sizeInBytes': 1024,
@@ -149,7 +149,7 @@ describe('Service: EdiscoveryService', function () {
           'endDate': '2016-06-09T00:00:00.000Z',
           'roomId': roomId,
         },
-        'runUrl': 'https://avalon-integration.wbx2.com/avalon/api/v1/compliance/report/room',
+        'runUrl': 'https://avalon-intb.ciscospark.com/avalon/api/v1/compliance/report/room',
         'url': 'https://atlas-intb.ciscospark.com/admin/api/v1/compliance/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports/3d0fb858-9a82-4510-93f6-7ca268e698e8',
       }],
       'paging': {
@@ -172,7 +172,7 @@ describe('Service: EdiscoveryService', function () {
       'roomQuery': {
         'roomId': roomId,
       },
-      'runUrl': 'https://avalon-integration.wbx2.com/avalon/api/v1/compliance/report/room',
+      'runUrl': 'https://avalon-intb.ciscospark.com/avalon/api/v1/compliance/report/room',
       'url': 'https://atlas-intb.ciscospark.com/admin/api/v1/compliance/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports/2345e3bc-587d-428c-bee1-1081c03c533a',
     };
 

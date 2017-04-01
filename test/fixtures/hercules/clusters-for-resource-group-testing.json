@@ -1,11 +1,11 @@
 [
   {
-    "url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/ba410ee1-1dfe-48dd-9e7c-cf4851680689",
+    "url":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/ba410ee1-1dfe-48dd-9e7c-cf4851680689",
     "id":"ba410ee1-1dfe-48dd-9e7c-cf4851680689",
     "name":"Newly Fused Cluster",
     "connectors":[
       {
-        "url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/ba410ee1-1dfe-48dd-9e7c-cf4851680689/connectors/c_mgmt@070EC9D0",
+        "url":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/ba410ee1-1dfe-48dd-9e7c-cf4851680689/connectors/c_mgmt@070EC9D0",
         "id":"c_mgmt@070EC9D0",
         "connectorType":"c_mgmt",
         "upgradeState":"upgraded",
@@ -30,11 +30,11 @@
           }
         ],
         "runningVersion":"8.7-1.0.321148",
-        "packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/latest/packages/c_mgmt",
+        "packageUrl":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/latest/packages/c_mgmt",
         "registered":true
       },
       {
-        "url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/ba410ee1-1dfe-48dd-9e7c-cf4851680689/connectors/c_cal@070EC9D0",
+        "url":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/ba410ee1-1dfe-48dd-9e7c-cf4851680689/connectors/c_cal@070EC9D0",
         "id":"c_cal@070EC9D0",
         "connectorType":"c_cal",
         "upgradeState":"upgraded",
@@ -45,11 +45,11 @@
 
         ],
         "runningVersion":"8.7-1.0.3402",
-        "packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/latest/packages/c_cal",
+        "packageUrl":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/latest/packages/c_cal",
         "registered":true
       },
       {
-        "url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/ba410ee1-1dfe-48dd-9e7c-cf4851680689/connectors/c_ucmc@070EC9D0",
+        "url":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/ba410ee1-1dfe-48dd-9e7c-cf4851680689/connectors/c_ucmc@070EC9D0",
         "id":"c_ucmc@070EC9D0",
         "connectorType":"c_ucmc",
         "upgradeState":"upgraded",
@@ -83,36 +83,36 @@
           }
         ],
         "runningVersion":"8.7-1.2723",
-        "packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/latest/packages/c_ucmc",
+        "packageUrl":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/latest/packages/c_ucmc",
         "registered":true
       }
     ],
     "releaseChannel":"latest",
     "provisioning":[
       {
-        "url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/ba410ee1-1dfe-48dd-9e7c-cf4851680689/provisioning/c_ucmc",
+        "url":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/ba410ee1-1dfe-48dd-9e7c-cf4851680689/provisioning/c_ucmc",
         "connectorType":"c_ucmc",
         "provisionedVersion":"8.7-1.2723",
         "availableVersion":"8.7-1.2723",
-        "packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/latest/packages/c_ucmc"
+        "packageUrl":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/latest/packages/c_ucmc"
       },
       {
-        "url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/ba410ee1-1dfe-48dd-9e7c-cf4851680689/provisioning/c_cal",
+        "url":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/ba410ee1-1dfe-48dd-9e7c-cf4851680689/provisioning/c_cal",
         "connectorType":"c_cal",
         "provisionedVersion":"8.7-1.0.3402",
-        "packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/latest/packages/c_cal"
+        "packageUrl":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/latest/packages/c_cal"
       },
       {
-        "url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/ba410ee1-1dfe-48dd-9e7c-cf4851680689/provisioning/c_mgmt",
+        "url":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/ba410ee1-1dfe-48dd-9e7c-cf4851680689/provisioning/c_mgmt",
         "connectorType":"c_mgmt",
         "provisionedVersion":"8.7-1.0.321148",
         "availableVersion":"8.7-1.0.321148",
-        "packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/latest/packages/c_mgmt"
+        "packageUrl":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/latest/packages/c_mgmt"
       }
     ],
     "registered":true,
     "targetType":"c_mgmt",
-    "upgradeScheduleUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/ba410ee1-1dfe-48dd-9e7c-cf4851680689/upgradeSchedule",
+    "upgradeScheduleUrl":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/ba410ee1-1dfe-48dd-9e7c-cf4851680689/upgradeSchedule",
     "upgradeSchedule":{
       "scheduleDays":[
         "sunday"
@@ -126,7 +126,7 @@
         "startTime":"2016-09-25T10:00:54.568Z",
         "endTime":"2016-09-25T11:00:54.568Z"
       },
-      "url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/ba410ee1-1dfe-48dd-9e7c-cf4851680689/upgradeSchedule"
+      "url":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/ba410ee1-1dfe-48dd-9e7c-cf4851680689/upgradeSchedule"
     },
     "servicesStatuses":[
       {
@@ -159,12 +159,12 @@
     ]
   },
   {
-    "url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/84096df2-b45c-4dee-acad-e0b4896f9572",
+    "url":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/84096df2-b45c-4dee-acad-e0b4896f9572",
     "id":"84096df2-b45c-4dee-acad-e0b4896f9572",
     "name":"Vaudeville",
     "connectors":[
       {
-        "url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/84096df2-b45c-4dee-acad-e0b4896f9572/connectors/c_ucmc@0D09EDC5",
+        "url":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/84096df2-b45c-4dee-acad-e0b4896f9572/connectors/c_ucmc@0D09EDC5",
         "id":"c_ucmc@0D09EDC5",
         "connectorType":"c_ucmc",
         "upgradeState":"upgraded",
@@ -198,11 +198,11 @@
           }
         ],
         "runningVersion":"8.7-1.2707",
-        "packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_ucmc",
+        "packageUrl":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_ucmc",
         "registered":true
       },
       {
-        "url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/84096df2-b45c-4dee-acad-e0b4896f9572/connectors/c_mgmt@0D09EDC5",
+        "url":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/84096df2-b45c-4dee-acad-e0b4896f9572/connectors/c_mgmt@0D09EDC5",
         "id":"c_mgmt@0D09EDC5",
         "connectorType":"c_mgmt",
         "upgradeState":"upgraded",
@@ -213,11 +213,11 @@
 
         ],
         "runningVersion":"8.7-1.0.321148",
-        "packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_mgmt",
+        "packageUrl":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_mgmt",
         "registered":true
       },
       {
-        "url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/84096df2-b45c-4dee-acad-e0b4896f9572/connectors/c_mgmt@07A00089",
+        "url":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/84096df2-b45c-4dee-acad-e0b4896f9572/connectors/c_mgmt@07A00089",
         "id":"c_mgmt@07A00089",
         "connectorType":"c_mgmt",
         "upgradeState":"upgraded",
@@ -228,11 +228,11 @@
 
         ],
         "runningVersion":"8.7-1.0.321148",
-        "packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_mgmt",
+        "packageUrl":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_mgmt",
         "registered":true
       },
       {
-        "url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/84096df2-b45c-4dee-acad-e0b4896f9572/connectors/c_mgmt@0D10F849",
+        "url":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/84096df2-b45c-4dee-acad-e0b4896f9572/connectors/c_mgmt@0D10F849",
         "id":"c_mgmt@0D10F849",
         "connectorType":"c_mgmt",
         "upgradeState":"upgraded",
@@ -243,11 +243,11 @@
 
         ],
         "runningVersion":"8.7-1.0.321148",
-        "packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_mgmt",
+        "packageUrl":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_mgmt",
         "registered":true
       },
       {
-        "url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/84096df2-b45c-4dee-acad-e0b4896f9572/connectors/c_ucmc@0D10F849",
+        "url":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/84096df2-b45c-4dee-acad-e0b4896f9572/connectors/c_ucmc@0D10F849",
         "id":"c_ucmc@0D10F849",
         "connectorType":"c_ucmc",
         "upgradeState":"upgraded",
@@ -281,11 +281,11 @@
           }
         ],
         "runningVersion":"8.7-1.2707",
-        "packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_ucmc",
+        "packageUrl":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_ucmc",
         "registered":true
       },
       {
-        "url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/84096df2-b45c-4dee-acad-e0b4896f9572/connectors/c_ucmc@07A00089",
+        "url":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/84096df2-b45c-4dee-acad-e0b4896f9572/connectors/c_ucmc@07A00089",
         "id":"c_ucmc@07A00089",
         "connectorType":"c_ucmc",
         "upgradeState":"upgraded",
@@ -319,11 +319,11 @@
           }
         ],
         "runningVersion":"8.7-1.2707",
-        "packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_ucmc",
+        "packageUrl":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_ucmc",
         "registered":true
       },
       {
-        "url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/84096df2-b45c-4dee-acad-e0b4896f9572/connectors/c_ucmc@0379F08E",
+        "url":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/84096df2-b45c-4dee-acad-e0b4896f9572/connectors/c_ucmc@0379F08E",
         "id":"c_ucmc@0379F08E",
         "connectorType":"c_ucmc",
         "upgradeState":"upgraded",
@@ -357,11 +357,11 @@
           }
         ],
         "runningVersion":"8.7-1.2707",
-        "packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_ucmc",
+        "packageUrl":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_ucmc",
         "registered":true
       },
       {
-        "url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/84096df2-b45c-4dee-acad-e0b4896f9572/connectors/c_cal@0D09EDC5",
+        "url":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/84096df2-b45c-4dee-acad-e0b4896f9572/connectors/c_cal@0D09EDC5",
         "id":"c_cal@0D09EDC5",
         "connectorType":"c_cal",
         "upgradeState":"upgraded",
@@ -372,11 +372,11 @@
 
         ],
         "runningVersion":"8.7-1.0.3402",
-        "packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_cal",
+        "packageUrl":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_cal",
         "registered":true
       },
       {
-        "url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/84096df2-b45c-4dee-acad-e0b4896f9572/connectors/c_mgmt@0379F08E",
+        "url":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/84096df2-b45c-4dee-acad-e0b4896f9572/connectors/c_mgmt@0379F08E",
         "id":"c_mgmt@0379F08E",
         "connectorType":"c_mgmt",
         "upgradeState":"upgraded",
@@ -387,11 +387,11 @@
 
         ],
         "runningVersion":"8.7-1.0.321148",
-        "packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_mgmt",
+        "packageUrl":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_mgmt",
         "registered":true
       },
       {
-        "url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/84096df2-b45c-4dee-acad-e0b4896f9572/connectors/c_cal@07A00089",
+        "url":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/84096df2-b45c-4dee-acad-e0b4896f9572/connectors/c_cal@07A00089",
         "id":"c_cal@07A00089",
         "connectorType":"c_cal",
         "upgradeState":"upgraded",
@@ -402,11 +402,11 @@
 
         ],
         "runningVersion":"8.7-1.0.3402",
-        "packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_cal",
+        "packageUrl":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_cal",
         "registered":true
       },
       {
-        "url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/84096df2-b45c-4dee-acad-e0b4896f9572/connectors/c_cal@0379F08E",
+        "url":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/84096df2-b45c-4dee-acad-e0b4896f9572/connectors/c_cal@0379F08E",
         "id":"c_cal@0379F08E",
         "connectorType":"c_cal",
         "upgradeState":"upgraded",
@@ -417,11 +417,11 @@
 
         ],
         "runningVersion":"8.7-1.0.3402",
-        "packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_cal",
+        "packageUrl":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_cal",
         "registered":true
       },
       {
-        "url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/84096df2-b45c-4dee-acad-e0b4896f9572/connectors/c_cal@0D10F849",
+        "url":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/84096df2-b45c-4dee-acad-e0b4896f9572/connectors/c_cal@0D10F849",
         "id":"c_cal@0D10F849",
         "connectorType":"c_cal",
         "upgradeState":"upgraded",
@@ -432,37 +432,37 @@
 
         ],
         "runningVersion":"8.7-1.0.3402",
-        "packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_cal",
+        "packageUrl":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_cal",
         "registered":true
       }
     ],
     "releaseChannel":"stable",
     "provisioning":[
       {
-        "url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/84096df2-b45c-4dee-acad-e0b4896f9572/provisioning/c_cal",
+        "url":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/84096df2-b45c-4dee-acad-e0b4896f9572/provisioning/c_cal",
         "connectorType":"c_cal",
         "provisionedVersion":"8.7-1.0.3402",
         "availableVersion":"8.7-1.0.3402",
-        "packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_cal"
+        "packageUrl":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_cal"
       },
       {
-        "url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/84096df2-b45c-4dee-acad-e0b4896f9572/provisioning/c_mgmt",
+        "url":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/84096df2-b45c-4dee-acad-e0b4896f9572/provisioning/c_mgmt",
         "connectorType":"c_mgmt",
         "provisionedVersion":"8.7-1.0.321148",
         "availableVersion":"8.7-1.0.321191",
-        "packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_mgmt"
+        "packageUrl":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_mgmt"
       },
       {
-        "url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/84096df2-b45c-4dee-acad-e0b4896f9572/provisioning/c_ucmc",
+        "url":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/84096df2-b45c-4dee-acad-e0b4896f9572/provisioning/c_ucmc",
         "connectorType":"c_ucmc",
         "provisionedVersion":"8.7-1.2707",
         "availableVersion":"8.7-1.2723",
-        "packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_ucmc"
+        "packageUrl":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_ucmc"
       }
     ],
     "registered":true,
     "targetType":"c_mgmt",
-    "upgradeScheduleUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/84096df2-b45c-4dee-acad-e0b4896f9572/upgradeSchedule",
+    "upgradeScheduleUrl":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/84096df2-b45c-4dee-acad-e0b4896f9572/upgradeSchedule",
     "upgradeSchedule":{
       "scheduleDays":[
         "sunday"
@@ -476,7 +476,7 @@
         "startTime":"2016-09-25T10:00:54.573Z",
         "endTime":"2016-09-25T11:00:54.573Z"
       },
-      "url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/84096df2-b45c-4dee-acad-e0b4896f9572/upgradeSchedule"
+      "url":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/84096df2-b45c-4dee-acad-e0b4896f9572/upgradeSchedule"
     },
     "resourceGroupId":"2c2bdd6d-8149-4090-bbb6-fd87edd5416f",
     "servicesStatuses":[
@@ -510,12 +510,12 @@
     ]
   },
   {
-    "url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/40b4cc27-e058-40b2-8102-595d9eb33d5a",
+    "url":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/40b4cc27-e058-40b2-8102-595d9eb33d5a",
     "id":"40b4cc27-e058-40b2-8102-595d9eb33d5a",
     "name":"👹 Mean Tom",
     "connectors":[
       {
-        "url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/40b4cc27-e058-40b2-8102-595d9eb33d5a/connectors/c_mgmt@006A3AE5",
+        "url":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/40b4cc27-e058-40b2-8102-595d9eb33d5a/connectors/c_mgmt@006A3AE5",
         "id":"c_mgmt@006A3AE5",
         "connectorType":"c_mgmt",
         "upgradeState":"upgraded",
@@ -529,7 +529,7 @@
             "lastReported":"1470403481",
             "severity":"error",
             "title":"[Hybrid services] Connectivity error",
-            "description":"Could not reach Cisco Collaboration Cloud address: https://hercules-integration.wbx2.com/v1/connectors",
+            "description":"Could not reach Cisco Collaboration Cloud address: https://hercules-intb.ciscospark.com/v1/connectors",
             "solution":"Check %s, or %s, or use network utilities %s, to verify this address",
             "solutionReplacementValues":[
               {
@@ -548,23 +548,23 @@
           }
         ],
         "runningVersion":"8.7-1.0.321171",
-        "packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_mgmt",
+        "packageUrl":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_mgmt",
         "registered":true
       }
     ],
     "releaseChannel":"stable",
     "provisioning":[
       {
-        "url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/40b4cc27-e058-40b2-8102-595d9eb33d5a/provisioning/c_mgmt",
+        "url":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/40b4cc27-e058-40b2-8102-595d9eb33d5a/provisioning/c_mgmt",
         "connectorType":"c_mgmt",
         "provisionedVersion":"8.7-1.0.321171",
         "availableVersion":"8.7-1.0.321191",
-        "packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_mgmt"
+        "packageUrl":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_mgmt"
       }
     ],
     "registered":true,
     "targetType":"c_mgmt",
-    "upgradeScheduleUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/40b4cc27-e058-40b2-8102-595d9eb33d5a/upgradeSchedule",
+    "upgradeScheduleUrl":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/40b4cc27-e058-40b2-8102-595d9eb33d5a/upgradeSchedule",
     "upgradeSchedule":{
       "scheduleDays":[
         "sunday"
@@ -578,7 +578,7 @@
         "startTime":"2016-09-25T10:00:54.577Z",
         "endTime":"2016-09-25T11:00:54.577Z"
       },
-      "url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/40b4cc27-e058-40b2-8102-595d9eb33d5a/upgradeSchedule"
+      "url":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/40b4cc27-e058-40b2-8102-595d9eb33d5a/upgradeSchedule"
     },
     "resourceGroupId":"2c2bdd6d-8149-4090-bbb6-fd87edd5416f",
     "servicesStatuses":[
@@ -612,12 +612,12 @@
     ]
   },
   {
-    "url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/5076af59-64f1-48ad-be15-5abb69123c89",
+    "url":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/5076af59-64f1-48ad-be15-5abb69123c89",
     "id":"5076af59-64f1-48ad-be15-5abb69123c89",
     "name":"Cisco Oppsal",
     "connectors":[
       {
-        "url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/5076af59-64f1-48ad-be15-5abb69123c89/connectors/mf_mgmt@0BA28333",
+        "url":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/5076af59-64f1-48ad-be15-5abb69123c89/connectors/mf_mgmt@0BA28333",
         "id":"mf_mgmt@0BA28333",
         "connectorType":"mf_mgmt",
         "upgradeState":"upgraded",
@@ -628,23 +628,23 @@
 
         ],
         "runningVersion":"None",
-        "packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/mf_mgmt",
+        "packageUrl":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/mf_mgmt",
         "registered":true
       }
     ],
     "releaseChannel":"stable",
     "provisioning":[
       {
-        "url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/5076af59-64f1-48ad-be15-5abb69123c89/provisioning/mf_mgmt",
+        "url":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/5076af59-64f1-48ad-be15-5abb69123c89/provisioning/mf_mgmt",
         "connectorType":"mf_mgmt",
         "provisionedVersion":"2016.09.06.253",
         "availableVersion":"2016.09.09.268",
-        "packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/mf_mgmt"
+        "packageUrl":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/mf_mgmt"
       }
     ],
     "registered":true,
     "targetType":"mf_mgmt",
-    "upgradeScheduleUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/5076af59-64f1-48ad-be15-5abb69123c89/upgradeSchedule",
+    "upgradeScheduleUrl":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/5076af59-64f1-48ad-be15-5abb69123c89/upgradeSchedule",
     "upgradeSchedule":{
       "scheduleDays":[
         "sunday",
@@ -664,7 +664,7 @@
         "startTime":"2016-09-21T21:30:54.575Z",
         "endTime":"2016-09-21T22:30:54.575Z"
       },
-      "url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/5076af59-64f1-48ad-be15-5abb69123c89/upgradeSchedule"
+      "url":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/5076af59-64f1-48ad-be15-5abb69123c89/upgradeSchedule"
     },
     "servicesStatuses":[
       {
@@ -679,7 +679,7 @@
     ]
   },
   {
-    "url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/73e3477b-3006-40fd-bd8d-1ca69e6964ae",
+    "url":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/73e3477b-3006-40fd-bd8d-1ca69e6964ae",
     "id":"73e3477b-3006-40fd-bd8d-1ca69e6964ae",
     "name":"Tom's Diner",
     "connectors":[
@@ -688,16 +688,16 @@
     "releaseChannel":"stable",
     "provisioning":[
       {
-        "url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/73e3477b-3006-40fd-bd8d-1ca69e6964ae/provisioning/mf_mgmt",
+        "url":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/73e3477b-3006-40fd-bd8d-1ca69e6964ae/provisioning/mf_mgmt",
         "connectorType":"mf_mgmt",
         "provisionedVersion":"2016.09.01.247",
         "availableVersion":"2016.09.09.268",
-        "packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/mf_mgmt"
+        "packageUrl":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/mf_mgmt"
       }
     ],
     "registered":true,
     "targetType":"mf_mgmt",
-    "upgradeScheduleUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/73e3477b-3006-40fd-bd8d-1ca69e6964ae/upgradeSchedule",
+    "upgradeScheduleUrl":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/73e3477b-3006-40fd-bd8d-1ca69e6964ae/upgradeSchedule",
     "upgradeSchedule":{
       "scheduleDays":[
         "sunday",
@@ -717,7 +717,7 @@
         "startTime":"2016-09-22T10:00:54.576Z",
         "endTime":"2016-09-22T11:00:54.576Z"
       },
-      "url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/73e3477b-3006-40fd-bd8d-1ca69e6964ae/upgradeSchedule"
+      "url":"https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/73e3477b-3006-40fd-bd8d-1ca69e6964ae/upgradeSchedule"
     },
     "servicesStatuses":[
       {

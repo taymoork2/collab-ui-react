@@ -150,7 +150,7 @@ describe('assignServices', function () {
       .respond({});
 
     $httpBackend
-      .when('GET', 'https://hercules-integration.wbx2.com/v1/organizations/' + orgid + '/services')
+      .when('GET', 'https://hercules-intb.ciscospark.com/v1/organizations/' + orgid + '/services')
       .respond({
         items: [{
           id: ENT.cal,

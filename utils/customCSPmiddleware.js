@@ -51,7 +51,7 @@ module.exports = csp({
       'https://cdn.mxpnl.com',
       'http://54.183.25.170:8001',
       'https://clio-manager-a.wbx2.com',
-      'https://clio-manager-integration.wbx2.com',
+      'https://clio-manager-intb.ciscospark.com',
       // manual DNS entry for local dev:
       'http://dev-admin.ciscospark.com:8000',
       'ws://dev-admin.ciscospark.com:8000',
