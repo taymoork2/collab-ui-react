@@ -1,4 +1,5 @@
 import { IExtendedConnectorAlarm } from 'modules/hercules/hybrid-services.types';
+import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 
 interface IAlarmModified extends IExtendedConnectorAlarm {
   alarmSolutionElements: any[];
@@ -12,7 +13,7 @@ export class AlarmDetailsSidepanelCtrl implements ng.IComponentController {
     private $rootScope: ng.IRootScopeService,
     private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
-    private FusionClusterStatesService,
+    private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
   ) {}
 
   public $onInit() {
@@ -27,7 +28,7 @@ export class AlarmDetailsSidepanelCtrl implements ng.IComponentController {
     }
   }
 
-  public getAlarmSeverityCssClass = this.FusionClusterStatesService.getAlarmSeverityCssClass;
+  public getAlarmSeverityCssClass = this.HybridServicesClusterStatesService.getAlarmSeverityCssClass;
 
   // This hack should be removed once FMS starts using the correct format for alarm timestamps.
   public parseDate = timestamp => {

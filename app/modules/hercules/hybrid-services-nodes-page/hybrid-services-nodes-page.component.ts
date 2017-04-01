@@ -1,6 +1,7 @@
 import { Notification } from 'modules/core/notifications';
 import { IConnectorAlarm, ICluster, ConnectorMaintenanceMode, ConnectorType, IHost, IConnector, ClusterTargetType } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesUtils } from 'modules/hercules/services/hybrid-services-utils';
+import { HybridServicesClusterStatesService, IMergedStateSeverity } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 
 interface ISimplifiedConnector {
   alarms: IConnectorAlarm[];
@@ -9,7 +10,7 @@ interface ISimplifiedConnector {
   id: string;
   maintenanceMode: ConnectorMaintenanceMode;
   service: string;
-  status: string;
+  status: IMergedStateSeverity;
   statusName: string;
   version: string;
 }
@@ -40,7 +41,7 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
     private $translate: ng.translate.ITranslateService,
     private $state: ng.ui.IStateService,
     private FusionClusterService,
-    private FusionClusterStatesService,
+    private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
     private HybridServicesUtils: HybridServicesUtils,
     private ModalService,
     private Notification: Notification,
@@ -75,6 +76,10 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
 
   public displayMaintenanceModeMenuItem(targetType: ClusterTargetType): boolean {
     return _.includes(<ConnectorType[]>['c_mgmt', 'mf_mgmt'], targetType);
+  }
+
+  public displayGoToNodeMenuItem(targetType: ClusterTargetType): boolean {
+    return !_.includes(<ConnectorType[]>['mf_mgmt'], targetType);
   }
 
   public enableMaintenanceMode(node: ISimplifiedNode): void {
@@ -168,7 +173,7 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
           let connectors = _.chain(cluster.connectors)
             .filter({ hostSerial: node.serial })
             .map(connector => {
-              const mergedStatus = this.FusionClusterStatesService.getMergedStateSeverity([connector]);
+              const mergedStatus = this.HybridServicesClusterStatesService.getMergedStateSeverity([connector]);
               const provisioning = _.find(cluster.provisioning, { connectorType: connector.connectorType });
               const simplifiedConnector: ISimplifiedConnector = {
                 alarms: connector.alarms,

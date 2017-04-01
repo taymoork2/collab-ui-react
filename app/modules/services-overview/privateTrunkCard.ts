@@ -55,8 +55,7 @@ export class ServicesOverviewPrivateTrunkCard extends ServicesOverviewHybridCard
   /* @ngInject */
   public constructor(
     private PrivateTrunkPrereqService,
-    FusionClusterStatesService,
-
+    HybridServicesClusterStatesService,
   ) {
     super({
       name: 'servicesOverview.cards.privateTrunk.title',
@@ -68,7 +67,7 @@ export class ServicesOverviewPrivateTrunkCard extends ServicesOverviewHybridCard
       routerState: 'private-trunk-overview',
       service: 'cisco-uc',
       template: 'modules/services-overview/privateTrunkCard.html',
-    }, FusionClusterStatesService);
+    }, HybridServicesClusterStatesService);
     this.hasDomain = false;
   }
 }

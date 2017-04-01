@@ -1,8 +1,9 @@
 import { ServicesOverviewHybridCallCard } from './hybridCallCard';
+import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 
 describe('ServicesOverviewHybridCallCard', () => {
 
-  let Authinfo, FusionClusterStatesService;
+  let Authinfo, HybridServicesClusterStatesService: HybridServicesClusterStatesService;
   let card: ServicesOverviewHybridCallCard;
 
   beforeEach(angular.mock.module('Core'));
@@ -10,9 +11,9 @@ describe('ServicesOverviewHybridCallCard', () => {
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
-  function dependencies(_Authinfo_, _FusionClusterStatesService_) {
+  function dependencies(_Authinfo_, _HybridServicesClusterStatesService_) {
     Authinfo = _Authinfo_;
-    FusionClusterStatesService = _FusionClusterStatesService_;
+    HybridServicesClusterStatesService = _HybridServicesClusterStatesService_;
   }
 
   function initSpies() {
@@ -21,7 +22,7 @@ describe('ServicesOverviewHybridCallCard', () => {
 
   it('should have sane defaults', () => {
     Authinfo.isFusionUC.and.returnValue(false); // used for .display
-    card = new ServicesOverviewHybridCallCard(Authinfo, FusionClusterStatesService);
+    card = new ServicesOverviewHybridCallCard(Authinfo, HybridServicesClusterStatesService);
     expect(card.active).toBe(false);
     expect(card.display).toBe(false);
     expect(card.loading).toBe(true);
@@ -29,24 +30,24 @@ describe('ServicesOverviewHybridCallCard', () => {
 
   it('should be displayed if the user has the hybrid call entitlement', () => {
     Authinfo.isFusionUC.and.returnValue(true);
-    card = new ServicesOverviewHybridCallCard(Authinfo, FusionClusterStatesService);
+    card = new ServicesOverviewHybridCallCard(Authinfo, HybridServicesClusterStatesService);
     expect(card.display).toBe(true);
   });
 
   it('should stay not active if services statuses do not say it is setup', () => {
-    card = new ServicesOverviewHybridCallCard(Authinfo, FusionClusterStatesService);
+    card = new ServicesOverviewHybridCallCard(Authinfo, HybridServicesClusterStatesService);
     card.hybridStatusEventHandler([{ serviceId: 'squared-fusion-uc', setup: false, status: 'yolo' }]);
     expect(card.active).toBe(false);
   });
 
   it('should be active if services statuses say it is setup', () => {
-    card = new ServicesOverviewHybridCallCard(Authinfo, FusionClusterStatesService);
+    card = new ServicesOverviewHybridCallCard(Authinfo, HybridServicesClusterStatesService);
     card.hybridStatusEventHandler([{ serviceId: 'squared-fusion-uc', setup: true, status: 'yolo' }]);
     expect(card.active).toBe(true);
   });
 
   it('should stop loading once it received the hybrid statuses event', () => {
-    card = new ServicesOverviewHybridCallCard(Authinfo, FusionClusterStatesService);
+    card = new ServicesOverviewHybridCallCard(Authinfo, HybridServicesClusterStatesService);
     card.hybridStatusEventHandler([]);
     expect(card.loading).toBe(false);
   });
