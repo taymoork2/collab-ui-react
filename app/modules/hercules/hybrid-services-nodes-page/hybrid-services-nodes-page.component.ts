@@ -78,6 +78,10 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
     return _.includes(<ConnectorType[]>['c_mgmt', 'mf_mgmt'], targetType);
   }
 
+  public displayGoToNodeMenuItem(targetType: ClusterTargetType): boolean {
+    return !_.includes(<ConnectorType[]>['mf_mgmt'], targetType);
+  }
+
   public enableMaintenanceMode(node: ISimplifiedNode): void {
     this.ModalService.open({
       title: this.$translate.instant('hercules.nodesPage.enableMaintenanceModeModal.title'),
