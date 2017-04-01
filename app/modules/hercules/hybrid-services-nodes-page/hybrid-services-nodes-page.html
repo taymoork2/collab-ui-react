@@ -29,7 +29,7 @@
                   <span translate="hercules.nodesPage.disableMaintenanceMode"></span>
                 </a>
               </li>
-              <li>
+              <li ng-if="$ctrl.displayGoToNodeMenuItem($ctrl.data.targetType)">
                 <a target="_blank" ng-href="https://{{::node.name}}/">
                   <span translate="hercules.nodesPage.goToNode"></span>
                 </a>

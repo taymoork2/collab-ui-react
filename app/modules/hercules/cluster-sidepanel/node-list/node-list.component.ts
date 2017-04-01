@@ -1,12 +1,13 @@
 import { ICluster } from 'modules/hercules/hybrid-services.types';
 import { Notification } from 'modules/core/notifications/notification.service';
+import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 
 export class NodeListComponentCtrl implements ng.IComponentController {
 
   private cluster: ICluster;
   private hosts;
   public connectorType;
-  public getSeverity = this.FusionClusterStatesService.getSeverity;
+  public getSeverity = this.HybridServicesClusterStatesService.getSeverity;
   public localizedManagementConnectorName = this.$translate.instant('hercules.connectorNameFromConnectorType.c_mgmt');
   public localizedConnectorName = this.$translate.instant(`hercules.connectorNameFromConnectorType.${this.connectorType}`);
   public localizedContextManagementConnectorName = this.$translate.instant('hercules.connectorNameFromConnectorType.cs_mgmt');
@@ -17,7 +18,7 @@ export class NodeListComponentCtrl implements ng.IComponentController {
   constructor(
     private $translate: ng.translate.ITranslateService,
     private FusionClusterService,
-    private FusionClusterStatesService,
+    private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
     private Notification: Notification,
   ) {}
 

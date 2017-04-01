@@ -1,5 +1,6 @@
 import { ClusterService } from 'modules/hercules/services/cluster-service';
 import { ConnectorType } from 'modules/hercules/hybrid-services.types';
+import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 
 export interface IGridApiScope extends ng.IScope {
   gridApi?: any;
@@ -9,7 +10,7 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
 
   public clusterList: any = {};
   public clusterListGridOptions = {};
-  public getSeverity = this.FusionClusterStatesService.getSeverity;
+  public getSeverity = this.HybridServicesClusterStatesService.getSeverity;
 
   private serviceId: string;
   private connectorType: ConnectorType;
@@ -22,7 +23,7 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
     private $translate: ng.translate.ITranslateService,
     private ClusterService: ClusterService,
     private FusionClusterService,
-    private FusionClusterStatesService,
+    private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
     private HybridServicesUtils,
   ) {
     this.updateClusters = this.updateClusters.bind(this);
