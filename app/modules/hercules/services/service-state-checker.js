@@ -6,7 +6,7 @@
     .service('ServiceStateChecker', ServiceStateChecker);
 
   /*@ngInject*/
-  function ServiceStateChecker($q, $translate, Authinfo, ClusterService, DomainManagementService, FeatureToggleService, FusionClusterService, HybridServicesUtils, NotificationService, Orgservice, ServiceDescriptor, USSService, Notification) {
+  function ServiceStateChecker($q, $translate, Authinfo, ClusterService, DomainManagementService, FeatureToggleService, FmsOrgSettings, HybridServicesExtrasService, HybridServicesUtilsService, NotificationService, Orgservice, ServiceDescriptor, USSService, Notification) {
     var isSipUriAcknowledged = false;
     var hasSipUriDomainConfigured = false;
     var hasVerifiedDomains = false;
@@ -220,7 +220,7 @@
     }
 
     function checkUnassignedClusterReleaseChannels() {
-      var defaultReleaseChannelPromise = FusionClusterService.getOrgSettings()
+      var defaultReleaseChannelPromise = FmsOrgSettings.get()
         .then(function (data) {
           return data.expresswayClusterReleaseChannel;
         });
@@ -237,7 +237,7 @@
             _.forEach(anomalies, function (cluster) {
               var serviceIds = _.chain(cluster.provisioning)
                 .map(function (p) {
-                  return HybridServicesUtils.connectorType2ServicesId(p.connectorType);
+                  return HybridServicesUtilsService.connectorType2ServicesId(p.connectorType);
                 })
                 .flatten()
                 .uniq()
@@ -264,7 +264,7 @@
     var alarmsKeysToIgnore = ['uss.thresholdAlarmTriggered', 'uss.groupThresholdAlarmTriggered'];
     var serviceAlarmPrefix = 'serviceAlarm_';
     function checkServiceAlarms(serviceId) {
-      FusionClusterService.getAlarms(serviceId)
+      HybridServicesExtrasService.getAlarms(serviceId)
         .then(function (alarms) {
           var alarmsWeCareAbout = _.filter(alarms, function (alarm) {
             return !_.includes(alarmsKeysToIgnore, alarm.key);

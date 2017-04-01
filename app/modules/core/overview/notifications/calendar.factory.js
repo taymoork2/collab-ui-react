@@ -6,7 +6,7 @@
     .factory('OverviewCalendarNotification', OverviewCalendarNotification);
 
   /* @ngInject */
-  function OverviewCalendarNotification($state, HybridServicesFlagService, HybridServicesUtils) {
+  function OverviewCalendarNotification($state, HybridServicesFlagService, HybridServicesUtilsService) {
     return {
       createNotification: function createNotification() {
         var notification = {
@@ -14,7 +14,7 @@
           badgeType: 'success',
           canDismiss: true,
           dismiss: function () {
-            HybridServicesFlagService.raiseFlag(HybridServicesUtils.getAckFlagForHybridServiceId('squared-fusion-cal'));
+            HybridServicesFlagService.raiseFlag(HybridServicesUtilsService.getAckFlagForHybridServiceId('squared-fusion-cal'));
           },
           link: function () {
             $state.go('calendar-service.list');

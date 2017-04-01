@@ -11,20 +11,20 @@
     });
 
   /* @ngInject */
-  function ClusterCardController($state, FusionClusterService, FeatureToggleService, HybridServicesUtils, $window, $modal) {
+  function ClusterCardController($state, FeatureToggleService, HybridServicesI18NService, HybridServicesUtilsService, $window, $modal) {
     var ctrl = this;
 
     ctrl.countHosts = countHosts;
-    ctrl.formatTimeAndDate = FusionClusterService.formatTimeAndDate;
+    ctrl.formatTimeAndDate = HybridServicesI18NService.formatTimeAndDate;
     ctrl.getHostnames = getHostnames;
-    ctrl.getLocalizedReleaseChannel = HybridServicesUtils.getLocalizedReleaseChannel;
+    ctrl.getLocalizedReleaseChannel = HybridServicesI18NService.getLocalizedReleaseChannel;
     ctrl.goToExpressway = goToExpressway;
     ctrl.hasAlarms = hasAlarms;
     ctrl.hasNodesViewFeatureToggle = false;
     ctrl.hasResourceGroupFeatureToggle = false;
     ctrl.hasServices = hasServices;
     ctrl.hideFooter = hideFooter;
-    ctrl.hybridServicesComparator = HybridServicesUtils.hybridServicesComparator;
+    ctrl.hybridServicesComparator = HybridServicesUtilsService.hybridServicesComparator;
     ctrl.isInMaintenance = isInMaintenance;
     ctrl.hasUpgradeAvailable = hasUpgradeAvailable;
     ctrl.openDeleteConfirm = openDeleteConfirm;

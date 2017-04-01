@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: AddResourceController', function () {
-  var controller, $scope, $controller, $q, modalInstanceMock, translateMock, windowMock, clusterServiceMock, fusionClusterServiceMock, FeatureToggleServiceMock;
+  var controller, $scope, $controller, $q, modalInstanceMock, translateMock, windowMock, clusterServiceMock, fusionClusterServiceMock, hybridServicesExtrasServiceMock, FmsOrgSettingsMock, FeatureToggleServiceMock;
 
   var clusterIdOfNewCluster = 'c6b4d8f1-6d34-465c-8d6d-b541058fc15e';
   var newConnectorType = 'c_cal';
@@ -30,17 +30,23 @@ describe('Controller: AddResourceController', function () {
       open: sinon.stub(),
     };
 
-    fusionClusterServiceMock = {
-      getOrgSettings: sinon.stub().returns($q.resolve({
+    hybridServicesExtrasServiceMock = {
+      addPreregisteredClusterToAllowList: sinon.stub().returns($q.resolve({})),
+    };
+
+    FmsOrgSettingsMock = {
+      get: sinon.stub().returns($q.resolve({
         expresswayClusterReleaseChannel: 'stable',
       })),
+    };
+
+    fusionClusterServiceMock = {
       provisionConnector: sinon.stub().returns($q.resolve({
         id: clusterIdOfNewCluster,
       })),
       preregisterCluster: sinon.stub().returns($q.resolve({
         id: clusterIdOfNewCluster,
       })),
-      addPreregisteredClusterToAllowList: sinon.stub().returns($q.resolve({})),
       getAll: sinon.stub().returns($q.resolve([{
         url: 'https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d',
         id: 'fe5acf7a-6246-484f-8f43-3e8c910fc50d',
@@ -172,6 +178,8 @@ describe('Controller: AddResourceController', function () {
       serviceId: 'squared-fusion-cal',
       ClusterService: clusterServiceMock,
       FusionClusterService: fusionClusterServiceMock,
+      FmsOrgSettings: FmsOrgSettingsMock,
+      HybridServicesExtrasService: hybridServicesExtrasServiceMock,
       firstTimeSetup: false,
       FeatureToggleService: FeatureToggleServiceMock,
     });
@@ -217,14 +225,14 @@ describe('Controller: AddResourceController', function () {
     });
 
     it('should add the new cluster to the FMS allow-list exactly once, and with the correct clusterId', function () {
-      spyOn(fusionClusterServiceMock, 'addPreregisteredClusterToAllowList').and.returnValue($q.resolve({
+      spyOn(hybridServicesExtrasServiceMock, 'addPreregisteredClusterToAllowList').and.returnValue($q.resolve({
         id: clusterIdOfNewCluster,
       }));
       controller.preregisterAndProvisionExpressway(newConnectorType);
       controller.hostname = 'hostnameProvidedByUser';
       $scope.$apply();
-      expect(fusionClusterServiceMock.addPreregisteredClusterToAllowList).toHaveBeenCalledTimes(1);
-      expect(fusionClusterServiceMock.addPreregisteredClusterToAllowList).toHaveBeenCalledWith('hostnameProvidedByUser', 3600, clusterIdOfNewCluster);
+      expect(hybridServicesExtrasServiceMock.addPreregisteredClusterToAllowList).toHaveBeenCalledTimes(1);
+      expect(hybridServicesExtrasServiceMock.addPreregisteredClusterToAllowList).toHaveBeenCalledWith('hostnameProvidedByUser', 3600, clusterIdOfNewCluster);
     });
 
     it('should not show the Resource Group step unless you are feature toggled', function () {
