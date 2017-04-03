@@ -108,7 +108,7 @@
       model: vm.sx10,
       key: 'enabled',
       type: 'checkbox',
-      className: 'pull-left medium-5 medium-offset-1',
+      className: 'pull-left medium-6 medium-offset-1',
       templateOptions: {
         label: $translate.instant('trialModal.call.sx10'),
         id: 'cameraSX10',
