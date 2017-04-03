@@ -3,6 +3,7 @@ describe('Service: PagingGroupService', () => {
   let successSpy;
   let failureSpy;
   let pg = getJSONFixture('huron/json/features/pagingGroup/pg.json');
+  let listOfPGs = getJSONFixture('huron/json/features/pagingGroup/pgListWithUUID.json');
 
   beforeEach(function () {
     this.initModules('huron.paging-group');
@@ -24,7 +25,9 @@ describe('Service: PagingGroupService', () => {
 
   describe('getListOfPagingGroups: ', () => {
     it('should call successSpy', function () {
-      this.$httpBackend.expectGET(this.HuronConfig.getPgUrl() + '/customers/' + this.Authinfo.getOrgId() + '/pagingGroups').respond(200);
+      this.$httpBackend.expectGET(this.HuronConfig.getPgUrl() + '/customers/' + this.Authinfo.getOrgId() + '/pagingGroups').respond(200, listOfPGs);
+      this.$httpBackend.expectGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/numbers/a431a167-30a5-4b44-8694-ad9025851111').respond(200);
+      this.$httpBackend.expectGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/numbers/a431a167-30a5-4b44-8694-ad9025852222').respond(200);
       this.PagingGroupService.getListOfPagingGroups().then(
         successSpy,
         failureSpy,
