@@ -1,8 +1,8 @@
 describe('Component: pgNumber setup', () => {
 
   let successResponse = [{
-    uuid: '22a2dc30-041f-4d25-9351-325eb1db7f79',
-    pattern: '2222',
+    extension: '2222',
+    extensionUUID: '22a2dc30-041f-4d25-9351-325eb1db7f79',
   }];
 
   beforeEach(function () {
@@ -10,6 +10,7 @@ describe('Component: pgNumber setup', () => {
     this.injectDependencies(
       '$httpBackend',
       'Notification',
+      '$q',
       'Authinfo',
       'HuronConfig',
       'PagingNumberService',
@@ -19,6 +20,9 @@ describe('Component: pgNumber setup', () => {
       onUpdate: 'onUpdate(number, isValid)',
     });
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
+
+    this.getNumberListDefer = this.$q.defer();
+    spyOn(this.PagingNumberService, 'getNumberSuggestions').and.returnValue(this.getNumberListDefer.promise);
   });
 
   afterEach(function () {
@@ -27,31 +31,38 @@ describe('Component: pgNumber setup', () => {
   });
 
   it('should select a number', function () {
-    this.controller.selectNumber('2222');
-    expect(this.controller.pagingGroupNumber).toEqual('2222');
+    let numberData = {
+      extension: '2222',
+      extensionUUID: '22a2dc30-041f-4d25-9351-325eb1db7f79',
+    };
+    this.controller.selectNumber(numberData);
+    expect(this.controller.pagingGroupNumber).toEqual(numberData);
   });
 
   it('fetch number success', function () {
-    this.$httpBackend.whenGET(this.HuronConfig.getCmiUrl() + '/voice/customers/' + this.Authinfo.getOrgId() + '/internalnumberpools?directorynumber=&order=pattern&pattern=%25222%25').respond(200, successResponse);
-    this.controller.pagingGroupNumber = '222';
+    let numberData = {
+      extension: '2222',
+      extensionUUID: '22a2dc30-041f-4d25-9351-325eb1db7f79',
+    };
+
+    this.getNumberListDefer.resolve(successResponse);
+    this.controller.queryString = '222';
 
     this.controller.fetchNumbers().then(
       (data) => {
-        expect(data).toEqual([ '2222' ]);
+        expect(data).toEqual([ numberData ]);
       }, (response) => {
       expect(this.Notification.errorResponse).toHaveBeenCalledWith(response, 'pagingGroup.numberFetchFailure');
     });
-    this.$httpBackend.flush();
   });
 
   it('fetch number failure', function () {
-    this.$httpBackend.whenGET(this.HuronConfig.getCmiUrl() + '/voice/customers/' + this.Authinfo.getOrgId() + '/internalnumberpools?directorynumber=&order=pattern&pattern=%25222%25').respond(500);
-    this.controller.pagingGroupNumber = '222';
+    this.getNumberListDefer.reject();
+    this.controller.queryString = '222';
     this.controller.fetchNumbers().then(
       (data) => {
         expect(data).toEqual([]);
       });
-    this.$httpBackend.flush();
   });
 
 });
