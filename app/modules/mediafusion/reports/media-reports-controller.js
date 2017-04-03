@@ -406,7 +406,7 @@
           });
           vm.tot_number_meetings = total_meets;
           vm.totMeetingsShort = abbreviateNumber(vm.tot_number_meetings);
-          vm.totMeetingsTooltip = vm.tot_number_meetings;
+          vm.totMeetingsTooltip = checkForTooltip(vm.totMeetingsShort) ? vm.tot_number_meetings : "";
         }
       });
     }

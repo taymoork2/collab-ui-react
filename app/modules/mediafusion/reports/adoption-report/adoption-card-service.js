@@ -100,15 +100,15 @@
       var newData = [];
       var sumPercentage = 0;
       var sumValue = 0;
-      _.forEach(data, function (type) {
+      _.each(data, function (type) {
         totalValue = totalValue + type.value;
       });
-      _.forEach(data, function (type) {
+      _.each(data, function (type) {
         type.percentage = 100 * (type.value / totalValue);
       });
-      if (data.length > 5) {
+      if (data.length > 6) {
         data = _.sortBy(data, 'percentage');
-        _.forEach(data, function (point) {
+        _.each(data, function (point) {
           if (point.percentage < 5) {
             sumPercentage += point.percentage;
             sumValue += point.value;
@@ -121,7 +121,7 @@
       } else {
         newData = data;
       }
-      _.forEach(newData, function (type) {
+      _.each(newData, function (type) {
         type.percentage = _.round(type.percentage, 2);
       });
       return newData;

@@ -79,8 +79,8 @@ describe('Service: AdoptionCardService', function () {
   it('formatOthersData should create "others" tag by aggregate the values less than 5%, when setClientTypePiechart is called', function () {
     var chart = AdoptionCardService.setClientTypePiechart(dummyData);
     var totalPercentage = 0;
-    expect(chart.dataProvider[4].percentage).toBe(7.22);
-    expect(chart.dataProvider[4].name).toBe(othersHeading);
+    expect(chart.dataProvider[5].percentage).toBe(7.22);
+    expect(chart.dataProvider[5].name).toBe(othersHeading);
     _.each(chart.dataProvider, function (type) {
       totalPercentage += type.percentage;
     });
