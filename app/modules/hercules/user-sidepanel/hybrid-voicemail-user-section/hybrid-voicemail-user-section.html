@@ -8,39 +8,42 @@
                       ng-model="$ctrl.voicemailEnabledForUser"></cs-toggle-switch>
   </div>
   <div class="extension-description"
-       translate="hercules.hybridVoicemailUserSection.description"></div>
-
+       translate="hercules.hybridVoicemailUserSection.description">
+  </div>
   <div ng-if="$ctrl.isEnabledOrgWide && $ctrl.callServiceConnectEnabledForUser">
     <div>
       <span class="cloud-extension-label"
             translate="cloudExtensions.status"></span><span>:</span>
       <span translate="hercules.hybridVoicemailUserSection.on"></span>
     </div>
-    <div>
-      <span class="cloud-extension-label"
+  </div>
+  <div ng-if="$ctrl.pilotNumber.length !== 0">
+      <div>
+        <span class="cloud-extension-label"
             translate="hercules.hybridVoicemailUserSection.pilot"></span><span>: </span>
-      <span>{{$ctrl.pilotNumber}}</span>
-    </div>
+        <span ng-if="$ctrl.pilotNumber.length !== 0">{{$ctrl.pilotNumber}}</span>
+        <span ng-if="$ctrl.pilotNumber.length === 0 " translate="hercules.hybridVoicemailUserSection.pilotNotConfigured"></span>
+      </div>
     <div>
-      <!--Testing-->
       <span class="cloud-extension-label"
             translate="hercules.hybridVoicemailUserSection.mwi"></span><span>: </span>
       <span ng-if="$ctrl.mwiStatus !== true" translate="hercules.hybridVoicemailUserSection.off"></span>
       <span ng-if="$ctrl.mwiStatus === true" translate="hercules.hybridVoicemailUserSection.on"></span>
     </div>
-
+    </div>
+  <div ng-if="$ctrl.pilotNumber.length === 0">
+    <span class="cloud-extension-label"
+          translate="hercules.hybridVoicemailUserSection.pilotNotConfigured">
+    </span>
   </div>
-
   <div ng-if="!$ctrl.callServiceConnectEnabledForUser">
     <p translate="hercules.hybridVoicemailUserSection.automaticallyEnabled"
        class="helptext small"></p>
   </div>
-
   <div ng-if="!$ctrl.isEnabledOrgWide && $ctrl.callServiceConnectEnabledForUser">
     <p translate="hercules.hybridVoicemailUserSection.toTurnOn"
        translate-value-onclick="$ctrl.navigateToCallServiceSettings()"
        translate-compile
        class="helptext"></p>
   </div>
-
 </cs-sp-section>
