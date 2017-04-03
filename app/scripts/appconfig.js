@@ -2990,7 +2990,6 @@
             },
           })
           .state('private-trunk-overview', {
-            url: '/private-trunk-overview',
             parent: 'main',
             template: '<private-trunk-overview has-private-trunk-feature-toggle="$resolve.hasPrivateTrunkFeatureToggle"></private-trunk-overview>',
             resolve: {
@@ -3001,6 +3000,14 @@
               }),
               hasPrivateTrunkFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.huronEnterprisePrivateTrunking);
+              },
+            },
+          })
+          .state('private-trunk-overview.list', {
+            url: '/private-trunk-overview/list',
+            views: {
+              sipDestinationList: {
+                template: '<hybrid-service-cluster-list service-id="\'ciscouc\'"></hybrid-service-cluster-list>',
               },
             },
           })
@@ -3521,6 +3528,17 @@
               },
               hasAtlasHybridCallDiagnosticTool: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCallDiagnosticTool);
+              },
+            },
+          })
+          .state('private-trunk-sidepanel', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                template: '<div ui-view="header"></div>',
+              },
+              'header@private-trunk-sidepanel': {
+                template: 'Private Trunk Header',
               },
             },
           })

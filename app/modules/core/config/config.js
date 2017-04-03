@@ -449,6 +449,7 @@
         'services-overview',
         'private-trunk-overview',
         'private-trunk-domain',
+        'private-trunk-sidepanel',
         'private-trunk-redirect',
       ],
       'squared-fusion-mgmt': [

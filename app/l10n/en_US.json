@@ -1769,6 +1769,11 @@
         "no_clusters_text": "See required actions above and documentation to get started."
       }
     },
+    "sip_destination": {
+      "listing": {
+        "no_destinations_heading": "No SIP Destinations registered"
+      }
+    },
     "status": {
       "unknown": "Status unknown",
       "not_configured": "Not configured",
@@ -1792,7 +1797,8 @@
       "not_registered": "Registration not completed",
       "no_nodes_registered": "No Nodes Registered",
       "urgentUpgradeAvailable": "Urgent upgrade available",
-      "registrationTimeout": "Registration timeout"
+      "registrationTimeout": "Registration timeout",
+      "connected": "Connected"
     },
     "userSidepanel": {
       "warningInvitePending": "This user has not yet accepted the invitation to join Cisco Spark. You can still enable {{ServiceName}}, but activation will not succeed until the user signs in.",
@@ -2018,6 +2024,7 @@
       "clusters-title-squared-fusion-media": "Media Clusters",
       "clusters-title-spark-hybrid-datasecurity": "HDS Clusters",
       "clusters-title-contact-center-context": "Context Clusters",
+      "clusters-title-ciscouc": "SIP Destination",
       "status-title": "Service Status"
     },
     "hybridVoicemailUserSection": {

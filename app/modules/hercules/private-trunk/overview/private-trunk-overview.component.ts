@@ -6,7 +6,7 @@ export class PrivateTrunkOverviewCtrl implements ng.IComponentController {
   public hasPrivateTrunkFeatureToggle: boolean;
   public tabs = [{
     title: 'Resources',
-    state: 'private-trunk-setup',
+    state: 'private-trunk-overview.list',
   }, {
     title: 'Settings',
     state: 'test',
