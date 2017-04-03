@@ -21,6 +21,14 @@
             translate="hercules.hybridVoicemailUserSection.pilot"></span><span>: </span>
       <span>{{$ctrl.pilotNumber}}</span>
     </div>
+    <div>
+      <!--Testing-->
+      <span class="cloud-extension-label"
+            translate="hercules.hybridVoicemailUserSection.mwi"></span><span>: </span>
+      <span ng-if="$ctrl.mwiStatus !== true" translate="hercules.hybridVoicemailUserSection.off"></span>
+      <span ng-if="$ctrl.mwiStatus === true" translate="hercules.hybridVoicemailUserSection.on"></span>
+    </div>
+
   </div>
 
   <div ng-if="!$ctrl.callServiceConnectEnabledForUser">

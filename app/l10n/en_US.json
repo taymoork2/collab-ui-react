@@ -2025,7 +2025,9 @@
       "description": "Users can check their voicemail directly from Cisco Spark.",
       "header": "Voicemail",
       "on": "On",
+      "off": "Off",
       "pilot": "Pilot",
+      "mwi": "Mwi",
       "toTurnOn": "To turn on voicemail for your users, enable voicemail in <a ng-click=\"{{onclick}}\">Hybrid Call Settings</a>."
     },
     "settings": {
