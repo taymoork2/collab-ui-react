@@ -99,7 +99,7 @@
     "messageformat": "^1.0.2",
     "moment": "^2.10.6",
     "moment-range": "~2.2.0",
-    "moment-timezone": "^0.5.7",
+    "moment-timezone": "0.5.11",
     "ng-csv": "~0.3.1",
     "ng-file-upload": "~7.2.1",
     "ng-tags-input": "^3.1.1",
