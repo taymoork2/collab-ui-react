@@ -26,7 +26,7 @@
               <i class="icon icon-cog"></i>
             </button>
             <ul cs-dropdown-menu class="dropdown-menu dropdown-primary">
-              <li><a ng-click="resourceList.setDefaultReleaseChannel()" translate="hercules.fusion.list.set-default-release-channel"></a></li>
+              <li ng-if="resourceList.hasMultipleReleaseChannelOptions"><a ng-click="resourceList.setDefaultReleaseChannel()" translate="hercules.fusion.list.set-default-release-channel"></a></li>
               <li><a ng-click="resourceList.addResourceGroup()" translate="hercules.fusion.list.add-resource-group"></a></li>
             </ul>
           </span></h5>

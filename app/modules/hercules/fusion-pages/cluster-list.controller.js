@@ -6,7 +6,7 @@
     .controller('FusionClusterListController', FusionClusterListController);
 
   /* @ngInject */
-  function FusionClusterListController($filter, $modal, $state, $translate, Analytics, Authinfo, Config, hasResourceGroupFeatureToggle, FusionClusterService, Notification, WizardFactory, hasCucmSupportFeatureToggle) {
+  function FusionClusterListController($filter, $modal, $state, $translate, Analytics, Authinfo, Config, hasResourceGroupFeatureToggle, FusionClusterService, Notification, ResourceGroupService, WizardFactory, hasCucmSupportFeatureToggle) {
     var vm = this;
     if (hasResourceGroupFeatureToggle) {
       var groupsCache = [];
@@ -33,6 +33,7 @@
 
     vm.addResource = addResource;
     vm.addResourceGroup = addResourceGroup;
+    vm.hasMultipleReleaseChannelOptions = false;
     vm.refreshList = refreshList;
     vm.searchData = searchData;
     vm.setDefaultReleaseChannel = setDefaultReleaseChannel;
@@ -79,6 +80,12 @@
         })
         .finally(function () {
           vm.loading = false;
+        });
+      ResourceGroupService.getAllowedChannels()
+        .then(function (channels) {
+          if (channels && channels.length > 1) {
+            vm.hasMultipleReleaseChannelOptions = true;
+          }
         });
     }
 
