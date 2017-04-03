@@ -26,6 +26,7 @@ export class Site {
   public timeFormat: string;
   public routingPrefix?: string;
   public disableVoicemail?: boolean;
+  public allowExternalTransfer?: boolean;
 
   constructor(obj: {
     uuid?: string,
@@ -45,6 +46,7 @@ export class Site {
     timeFormat: string,
     routingPrefix?: string,
     disableVoicemail?: boolean,
+    allowExternalTransfer?: boolean,
   } = {
     uuid: undefined,
     siteIndex: DEFAULT_SITE_INDEX,
@@ -63,6 +65,7 @@ export class Site {
     timeFormat: DEFAULT_TIME_FORMAT,
     routingPrefix: undefined,
     disableVoicemail: undefined,
+    allowExternalTransfer: undefined,
   }) {
     this.uuid = obj.uuid;
     this.siteIndex = obj.siteIndex;
@@ -81,6 +84,7 @@ export class Site {
     this.timeFormat = obj.timeFormat;
     this.routingPrefix = obj.routingPrefix;
     this.disableVoicemail = obj.disableVoicemail;
+    this.allowExternalTransfer = obj.allowExternalTransfer;
   }
 }
 

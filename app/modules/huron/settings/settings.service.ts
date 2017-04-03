@@ -99,6 +99,7 @@ export class HuronSettingsService {
       huronSettingsData.internalNumberRanges = _.get<Array<IExtensionRange>>(response, 'internalNumberRanges');
       huronSettingsData.cosRestrictions = _.get(response, 'cosRestrictions');
       huronSettingsData.companyCallerId = _.get<CompanyNumber>(response, 'companyCallerId');
+      huronSettingsData.site.allowExternalTransfer = <boolean>(response.site.allowExternalTransfer === 'true');
       this.huronSettingsDataCopy = this.cloneSettingsData(huronSettingsData);
       return huronSettingsData;
     });
