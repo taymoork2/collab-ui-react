@@ -29,9 +29,9 @@
   <div class="content-container media-reports-container">
     <div class="row" >
       <cs-card-layout ng-if="nav.displayResources">
-        <uc-media-report-flip-card parentcntrl="nav" headername="nav.total_participants_heading" value="nav.totalcloudcalls" headercolor="'grey'" chart-options="nav.totalParticipantschartOptions"></uc-media-report-flip-card>
-        <uc-media-report-flip-card parentcntrl="nav" headername="nav.second_card_heading" value="nav.second_card_value" headercolor="'orange'" footer-options="nav.secondCardFooter" card-desc="nav.cloudParticipantsDesc"></uc-media-report-flip-card>
-        <uc-media-report-card parentcntrl="nav" headername="nav.hosted_participants_heading" value="nav.onprem" headercolor="'green'"></uc-media-report-card>
+        <uc-media-report-flip-card parentcntrl="nav" headername="nav.total_participants_heading" value="nav.totalcloudShort" tooltip-value="nav.totalcloudTooltip" headercolor="'grey'" chart-options="nav.totalParticipantschartOptions"></uc-media-report-flip-card>
+        <uc-media-report-flip-card parentcntrl="nav" headername="nav.second_card_heading" value="nav.secondCardShort" tooltip-value="nav.secondCardTooltip" headercolor="'orange'" footer-options="nav.secondCardFooter" card-desc="nav.cloudParticipantsDesc"></uc-media-report-flip-card>
+        <uc-media-report-card parentcntrl="nav" headername="nav.hosted_participants_heading" value="nav.onpremShort" tooltip-value="nav.onpremTooltip" headercolor="'green'"></uc-media-report-card>
         <uc-media-report-card parentcntrl="nav" headername="nav.cluster_availability_heading" value="nav.clusterAvailability" headercolor="'blue'" tooltip-options="nav.availabilityTooltipOptions"></uc-media-report-card>
         <uc-media-utilization parentcntrl="nav"></uc-media-utilization>
         <uc-number-of-participant parentcntrl="nav" ng-class="{'no-display': nav.clusterSelected !== nav.allClusters && nav.clusterSelected !== undefined}"></uc-number-of-participant>
@@ -39,7 +39,7 @@
         <uc-media-availability parentcntrl="nav"></uc-media-availability>
       </cs-card-layout>
       <cs-card-layout ng-if="nav.displayAdoption">
-        <uc-media-report-card parentcntrl="nav" headername="nav.total_meetings" value="nav.tot_number_meetings" headercolor="'grey'" chart-options="'none'" card-class="'three-cards'"></uc-media-report-card>
+        <uc-media-report-card parentcntrl="nav" headername="nav.total_meetings" value="nav.totMeetingsShort" tooltip-value="nav.totMeetingsTooltip" headercolor="'grey'" chart-options="'none'" card-class="'three-cards'"></uc-media-report-card>
         <uc-media-report-flip-chart-card parentcntrl="nav" headername="nav.meeting_premises" headercolor="'orange'" chart-options="nav.meetsHostedchartOptions" card-class="'three-cards'" card-desc="nav.meetsHostTypeDesc"></uc-media-report-flip-chart-card>
         <uc-media-report-flip-chart-card parentcntrl="nav" headername="nav.client_types" headercolor="'green'" chart-options="nav.clientTypeschartOptions" card-class="'three-cards'" card-desc="nav.clientTypeDesc"></uc-media-report-flip-chart-card>
         <uc-media-meeting-location parentcntrl="nav"></uc-media-meeting-location>

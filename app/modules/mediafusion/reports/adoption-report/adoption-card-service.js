@@ -27,7 +27,7 @@
     };
 
     function setClientTypePiechart(data) {
-      data = formatDecimal(data.dataProvider);
+      data = formatOthersData(data.dataProvider);
       var chartData = CommonReportsGraphService.getBasePieChart(data);
       chartData.labelText = '[[name]]';
       chartData.balloonText = '[[name]]: [[percentage]]% ([[value]])';
@@ -36,7 +36,7 @@
     }
 
     function setNumberOfMeetsOnPremisesPiechart(data) {
-      data = formatDecimal(data.dataProvider);
+      data = formatOthersData(data.dataProvider);
       var chartData = CommonReportsGraphService.getBasePieChart(data);
       chartData.labelText = '[[name]]';
       chartData.balloonText = '[[name]]: [[percentage]]% ([[value]])';
@@ -63,7 +63,7 @@
         'value': cloudCalls,
       }];
       data['dataProvider'] = dataProvider;
-      data = formatDecimal(data.dataProvider);
+      data = formatOthersData(data.dataProvider);
       var chartData = CommonReportsGraphService.getBasePieChart(data);
       chartData.labelText = '[[name]]';
       chartData.balloonText = '[[name]]: [[percentage]]% ([[value]])';
@@ -95,7 +95,7 @@
       return chart;
     }
 
-    function formatDecimal(data) {
+    function formatOthersData(data) {
       var totalValue = 0;
       var newData = [];
       var sumPercentage = 0;
@@ -104,7 +104,7 @@
         totalValue = totalValue + type.value;
       });
       _.forEach(data, function (type) {
-        type.percentage = _.round(100 * (type.value / totalValue));
+        type.percentage = 100 * (type.value / totalValue);
       });
       if (data.length > 5) {
         data = _.sortBy(data, 'percentage');
@@ -121,6 +121,9 @@
       } else {
         newData = data;
       }
+      _.forEach(newData, function (type) {
+        type.percentage = _.round(type.percentage, 2);
+      });
       return newData;
     }
   }
