@@ -222,7 +222,7 @@
     function legendHandler(evt) {
       if (evt.dataItem.title === 'None') {
         evt.dataItem.title = 'All';
-        _.forEach(evt.chart.graphs, function (graph) {
+        _.each(evt.chart.graphs, function (graph) {
           if (graph.title != 'All') {
             evt.chart.hideGraph(graph);
           } else {
@@ -231,7 +231,7 @@
         });
       } else if (evt.dataItem.title === 'All') {
         evt.dataItem.title = 'None';
-        _.forEach(evt.chart.graphs, function (graph) {
+        _.each(evt.chart.graphs, function (graph) {
           evt.chart.showGraph(graph);
         });
       }
