@@ -5,6 +5,7 @@
 
   angular
     .module('Sunlight')
+    .directive('validateCharacters', validateCharactersDirective)
     .controller('CareSetupAssistantCtrl', CareSetupAssistantCtrl);
 
   /* @ngInject */
@@ -98,6 +99,8 @@
     vm.ChatTemplateButtonText = $translate.instant('common.finish');
     vm.lengthConstants = CTService.getLengthValidationConstants();
     vm.isBusinessDaySelected = true;
+
+    vm.InvalidCharacters = /[<>]/i; // add your invalid character to this regex
 
     /**
      * Type enumerations
@@ -894,7 +897,7 @@
     };
 
     vm.isNamePageValid = function () {
-      return (vm.template.name !== '' && vm.validateNameLength() && vm.isTemplateNameValid());
+      return (vm.template.name !== '' && vm.validateNameLength() && vm.isInputValid(vm.template.name));
     };
 
     function isProfilePageValid() {
@@ -918,12 +921,14 @@
     }
 
     function isAgentUnavailablePageValid() {
-      return isValidField(vm.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText, vm.lengthConstants.multiLineMaxCharLimit);
+      return isValidField(vm.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText, vm.lengthConstants.multiLineMaxCharLimit) &&
+        vm.isInputValid(vm.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText);
     }
 
     function isOffHoursPageValid() {
       setOffHoursWarning();
-      if (isValidField(vm.template.configuration.pages.offHours.message, vm.lengthConstants.multiLineMaxCharLimit) && vm.isBusinessDaySelected) {
+      if (isValidField(vm.template.configuration.pages.offHours.message, vm.lengthConstants.multiLineMaxCharLimit) && vm.isBusinessDaySelected &&
+        vm.isInputValid(vm.template.configuration.pages.offHours.message)) {
         setOffHoursData();
         return true;
       }
@@ -932,14 +937,19 @@
 
     function isFeedbackPageValid() {
       return (isValidField(vm.template.configuration.pages.feedback.fields.feedbackQuery.displayText, vm.lengthConstants.multiLineMaxCharLimit)
-      && isValidField(vm.template.configuration.pages.feedback.fields.comment.displayText, vm.lengthConstants.singleLineMaxCharLimit50));
+      && isValidField(vm.template.configuration.pages.feedback.fields.comment.displayText, vm.lengthConstants.singleLineMaxCharLimit50)
+      && vm.isInputValid(vm.template.configuration.pages.feedback.fields.feedbackQuery.displayText)
+      && vm.isInputValid(vm.template.configuration.pages.feedback.fields.comment.displayText));
     }
 
     function isStatusMessagesPageValid() {
       var chatStatusMessagesObj = vm.template.configuration.chatStatusMessages.messages;
       return isValidField(chatStatusMessagesObj.waitingMessage.displayText, vm.lengthConstants.singleLineMaxCharLimit25)
       && isValidField(chatStatusMessagesObj.leaveRoomMessage.displayText, vm.lengthConstants.singleLineMaxCharLimit25)
-      && isValidField(chatStatusMessagesObj.chattingMessage.displayText, vm.lengthConstants.singleLineMaxCharLimit25);
+      && isValidField(chatStatusMessagesObj.chattingMessage.displayText, vm.lengthConstants.singleLineMaxCharLimit25)
+      && vm.isInputValid(chatStatusMessagesObj.waitingMessage.displayText)
+      && vm.isInputValid(chatStatusMessagesObj.leaveRoomMessage.displayText)
+      && vm.isInputValid(chatStatusMessagesObj.chattingMessage.displayText);
     }
 
     vm.isTypeDuplicate = false;
@@ -975,8 +985,14 @@
 
     function areAllFixedFieldsValid() {
       return isValidField(vm.getAttributeParam('value', 'header', 'welcomeHeader'), vm.lengthConstants.singleLineMaxCharLimit50)
-          && isValidField(vm.getAttributeParam('value', 'organization', 'welcomeHeader'), vm.lengthConstants.singleLineMaxCharLimit50);
+          && isValidField(vm.getAttributeParam('value', 'organization', 'welcomeHeader'), vm.lengthConstants.singleLineMaxCharLimit50)
+          && vm.isFixedFieldInputValid();
     }
+
+    vm.isFixedFieldInputValid = function () {
+      return vm.isInputValid(vm.getAttributeParam('value', 'header', 'welcomeHeader'))
+        && vm.isInputValid(vm.getAttributeParam('value', 'organization', 'welcomeHeader'));
+    };
 
     function areAllDynamicFieldsValid() {
       return _.reduce(_.map(nonHeaderFieldNames, function (fieldName) {
@@ -984,6 +1000,13 @@
                 && isValidField(vm.getAttributeParam('value', 'hintText', fieldName), vm.lengthConstants.singleLineMaxCharLimit50);
       }), function (x, y) { return x && y; }, true);
     }
+
+    vm.isDynamicFieldInputValid = function () {
+      return _.reduce(_.map(nonHeaderFieldNames, function (fieldName) {
+        return vm.isInputValid(vm.getAttributeParam('value', 'label', fieldName))
+          && vm.isInputValid(vm.getAttributeParam('value', 'hintText', fieldName));
+      }), function (x, y) { return x && y; }, true);
+    };
 
     vm.validateType = function (selectedType) {
       return !(selectedType && isSelectedTypeDuplicate(selectedType));
@@ -1069,15 +1092,12 @@
     }
 
     function isCustomerInformationPageValid() {
-      return areAllTypesUnique() && areAllFixedFieldsValid() && areAllDynamicFieldsValid() && isCategoryValid();
+      return areAllTypesUnique() && areAllFixedFieldsValid() && areAllDynamicFieldsValid() && isCategoryValid()
+        && vm.isDynamicFieldInputValid() && vm.isInputValid(vm.categoryOptionTag);
     }
 
-    vm.isTemplateNameValid = function () {
-      var templateName = vm.template.name;
-      if (templateName.indexOf('>') > -1 || templateName.indexOf('<') > -1) {
-        return false;
-      }
-      return true;
+    vm.isInputValid = function (input) {
+      return !(vm.InvalidCharacters.test(input));
     };
 
     function nextButton() {
@@ -1233,7 +1253,9 @@
     };
 
     function isCategoryOptionTagValid() {
-      if (vm.categoryOptionTag && vm.categoryOptionTag.length > vm.lengthConstants.singleLineMaxCharLimit50) {
+      var categoyValue = vm.categoryOptionTag;
+      if (vm.categoryOptionTag && (vm.categoryOptionTag.length > vm.lengthConstants.singleLineMaxCharLimit50 ||
+        !vm.isInputValid(categoyValue))) {
         return false;
       } else {
         return true;
@@ -1408,5 +1430,25 @@
       }
     }
 
+  }
+
+  /**
+   * Validate characters directive:
+   */
+  function validateCharactersDirective($parse) {
+    return {
+      require: 'ngModel',
+      restrict: 'A',
+      link: function (scope, elem, attrs, ngModelCtrl) {
+        var InvalidCharacters = $parse(attrs.validateCharacters)(scope);
+        ngModelCtrl.$validators.invalidInput = function (value) {
+          if (value) {
+            var input = value.trim().toLowerCase();
+            return !(InvalidCharacters.test(input));
+          }
+          return true;
+        };
+      },
+    };
   }
 })();

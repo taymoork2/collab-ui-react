@@ -224,6 +224,7 @@
         maxlength: $translate.instant('common.invalidMaxLength', {
           'max': maxLength,
         }),
+        invalidInput: $translate.instant('careChatTpl.ctValidation.invalidCharacters'),
       };
     }
 
