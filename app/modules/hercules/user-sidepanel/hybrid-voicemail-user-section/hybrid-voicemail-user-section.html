@@ -21,13 +21,13 @@
       <div>
         <span class="cloud-extension-label"
             translate="hercules.hybridVoicemailUserSection.pilot"></span><span>: </span>
-        <span ng-if="$ctrl.pilotNumber !== ''">{{$ctrl.pilotNumber}}</span>
+        <span>{{$ctrl.pilotNumber}}</span>
       </div>
     <div>
       <span class="cloud-extension-label"
             translate="hercules.hybridVoicemailUserSection.mwi"></span><span>: </span>
-      <span ng-if="$ctrl.mwiStatus !== true" translate="hercules.hybridVoicemailUserSection.off"></span>
-      <span ng-if="$ctrl.mwiStatus === true" translate="hercules.hybridVoicemailUserSection.on"></span>
+      <span ng-if="!$ctrl.mwiStatus" translate="hercules.hybridVoicemailUserSection.off"></span>
+      <span ng-if="$ctrl.mwiStatus" translate="hercules.hybridVoicemailUserSection.on"></span>
     </div>
     </div>
   <div ng-if="$ctrl.pilotNumber === ''">
