@@ -265,4 +265,28 @@ describe('Service: MediaClusterServiceV2', function () {
     $httpBackend.flush();
     expect(callback.callCount).toBe(1);
   });
+  it('MediaClusterServiceV2 getV1Clusters successfully should return the data', function () {
+    $httpBackend.when('GET', /^\w+.*/).respond({});
+    Service.getV1Clusters();
+    expect($httpBackend.flush).not.toThrow();
+  });
+  it('MediaClusterServiceV2 getPropertySets successfully should return the data', function () {
+    $httpBackend.when('GET', /^\w+.*/).respond({});
+    Service.getPropertySets();
+    expect($httpBackend.flush).not.toThrow();
+  });
+  it('should createPropertySet', function () {
+    $httpBackend.when('POST', /^\w+.*/).respond(204);
+    var callback = sinon.stub();
+    Service.createPropertySet('payLoad').then(callback);
+    $httpBackend.flush();
+    expect(callback.callCount).toBe(1);
+  });
+  it('should updatePropertySetById', function () {
+    $httpBackend.when('POST', /^\w+.*/).respond(204);
+    var callback = sinon.stub();
+    Service.updatePropertySetById('clusterId', 'payLoad').then(callback);
+    $httpBackend.flush();
+    expect(callback.callCount).toBe(1);
+  });
 });

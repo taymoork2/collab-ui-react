@@ -36,10 +36,17 @@
       spyOn(MediaClusterServiceV2, 'createClusterV2').and.returnValue($q.resolve({
         data: {
           id: "12345",
-        } }));
+        },
+      }));
+      spyOn(MediaClusterServiceV2, 'getPropertySets').and.returnValue($q.resolve({
+        data: {
+          propertySets: [],
+        },
+      }));
       AddResourceCommonServiceV2.addRedirectTargetClicked('hostName', 'enteredCluster');
       httpBackend.flush();
       expect(MediaClusterServiceV2.createClusterV2).toHaveBeenCalled();
+      expect(MediaClusterServiceV2.getPropertySets).toHaveBeenCalled();
     });
     it('should notify error when the createClusterV2 call fails for addRedirectTargetClicked', function () {
       spyOn(Notification, 'errorWithTrackingId');
