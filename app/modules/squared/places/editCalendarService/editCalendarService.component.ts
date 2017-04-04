@@ -24,6 +24,7 @@ class EditCalendarService implements ng.IComponentController {
   private initialCalService: string;
   private isLoading: boolean;
   public externalCalendarIdentifier: string;
+  private isFirstStep: boolean = false;
   public title: string;
   public resourceGroup: {
     selected?: { label: string, value: string },
@@ -49,11 +50,13 @@ class EditCalendarService implements ng.IComponentController {
   private showExchangeService = false;
 
   public $onInit(): void {
-    this.wizardData = this.$stateParams.wizard.state().data;
+    let state = this.$stateParams.wizard.state();
+    this.wizardData = state.data;
     this.resourceGroup.init();
     this.title = this.wizardData.title;
     this.initialCalService = this.getCalService(this.wizardData.account.entitlements);
     this.fetchResourceGroups();
+    this.isFirstStep = _.get(state, 'history.length') === 0;
   }
 
   /* @ngInject */
@@ -145,11 +148,7 @@ class EditCalendarService implements ng.IComponentController {
     this.$stateParams.wizard.next({
       account: {
         entitlements: this.getUpdatedEntitlements(),
-        externalCalendarIdentifier: {
-          providerID: this.calService,
-          accountGUID: this.emailOfMailbox,
-          status: 'unconfirmed-email',
-        },
+        externalCalendarIdentifier: this.getExtLinkedAccount(),
         ussProps: this.getUssProps(),
       },
     });
@@ -175,8 +174,31 @@ class EditCalendarService implements ng.IComponentController {
     return this.wizardData.function !== 'editServices';
   }
 
+  public hasBackStep() {
+    return !this.isFirstStep;
+  }
+
   public back() {
     this.$stateParams.wizard.back();
+  }
+
+  private getExtLinkedAccount(): IExternalLinkedAccount[] {
+    let newExtLink = {
+      providerID: this.calService,
+      accountGUID: this.emailOfMailbox,
+      status: 'unconfirmed-email',
+    };
+    let links: IExternalLinkedAccount[] = [];
+
+    _.map(_.filter(this.wizardData.account.externalLinkedAccounts, (linkedAccount) => {
+      return linkedAccount && (linkedAccount.providerID === this.calService);
+    }), (link) => {
+      link.operation = 'delete';
+      links.push(link);
+    });
+    links.push(newExtLink);
+
+    return links;
   }
 
   public save() {
@@ -192,11 +214,8 @@ class EditCalendarService implements ng.IComponentController {
           this.getUpdatedEntitlements(),
           directoryNumber,
           externalNumber,
-          [{
-            providerID: this.calService,
-            accountGUID: this.emailOfMailbox,
-            status: 'unconfirmed-email',
-          }])
+          this.getExtLinkedAccount(),
+        )
           .then(() => {
             let props = this.getUssProps();
             if (props) {
@@ -229,7 +248,10 @@ class EditCalendarService implements ng.IComponentController {
     let props = this.wizardData.account.ussProps || null;
     if (this.resourceGroup.selected) {
       let resourceGroups = (props && props.resourceGroups) || {};
-      _.merge(resourceGroups, { 'squared-fusion-cal': this.resourceGroup.selected.value });
+      let isExistingPlaceOrNonEmptyRGroup = this.wizardData.account.cisUuid || this.resourceGroup.selected.value;
+      if (isExistingPlaceOrNonEmptyRGroup) {
+        _.merge(resourceGroups, { 'squared-fusion-cal': this.resourceGroup.selected.value });
+      }
       return {
         userId: this.wizardData.account.cisUuid,
         resourceGroups: resourceGroups,

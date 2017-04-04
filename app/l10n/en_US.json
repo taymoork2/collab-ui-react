@@ -1824,6 +1824,13 @@
       "refreshUserFailed": "Unable to refresh the user status. Please try again later.",
       "refreshUserDidNoGood": "Unable to get the user status. Please contact support if the problem persists."
     },
+    "placeSidepanel": {
+      "hybridCallNotActivated": "Cloud Collaboration management is currently checking for the corresponding user account in Cisco Uni ed Communications Manager to connect to. This could take up to half an hour. Check back later.",
+      "mail-id-explanation-part1": "- If the Mail ID you entered here is incorrect,",
+      "mail-id-explanation-part2": "then try entering a different Mail ID.",
+      "email-calendar-explanation-part1": "- If the email you entered here is incorrect,",
+      "email-calendar-explanation-part2": "then try entering a different email address."
+    },
     "setup": {
       "label": "Connector Management",
       "title": "Connector Management",
@@ -1932,7 +1939,8 @@
         "squared-fusion-uc": "Aware",
         "squared-fusion-cal": "Calendar",
         "squared-fusion-gcal": "Calendar",
-        "squared-fusion-ec": "Connect"
+        "squared-fusion-ec": "Connect",
+        "squared-fusion-ec-place": "Hybrid Call Service Connect"
       },
       "serviceDescriptions": {
         "squared-fusion-uc": "Users can share content from the Cisco Spark app during a call from their work phones and view their call history in the app.",
@@ -4625,8 +4633,16 @@
       "googleHelp": "This is enabling google calendar",
       "calendarEmail": "Email address of the calendar mailbox"
     },
+    "editCalendarService": {
+      "title": "Set up Hybrid Calendar Service",
+      "whichCalendar": "Which calendar provider do you want to use?"
+    },
     "sparkCallConnect": {
-      "editSettingsTitle": "Set up Hybrid Call Service Connect"
+      "editSettingsTitle": "Set up Hybrid Call Service Connect",
+      "step1":"In Cisco Unified Communications Manager, create a user account and an associated line. These items will represent this place. <a href='https://www.cisco.com/go/hybrid-services'>See the documentation for help.<a/>",
+      "step2": "Find the Mail ID for the user account.<br>a) Sign into Cisco Unified CM Administration<br>b) Choose User Management > End User, and then find and click the account.<br>The Mail ID is under ‘User Information’.",
+      "step3": "Enter the Mail ID below to connect this place to the existing Unified CM account.<br>This Mail ID ensures that the correct user account is connected with this place for hybrid calling.",
+      "mailId": "Mail ID"
     },
     "showActivationCode": {
       "activationCode": "Activation Code",

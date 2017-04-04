@@ -17,6 +17,7 @@ export class CallConnectOptions implements ng.IComponentController {
   public mailID: string;
   public title: string;
   public isLoading: boolean = false;
+  private isFirstStep: boolean = false;
 
   public resourceGroup: {
     selected?: { label: string, value: string },
@@ -44,7 +45,8 @@ export class CallConnectOptions implements ng.IComponentController {
   }
 
   public $onInit() {
-    this.wizardData = this.$stateParams.wizard.state().data;
+    let state = this.$stateParams.wizard.state();
+    this.wizardData = state.data;
     this.resourceGroup.init();
     this.title = this.wizardData.title;
 
@@ -56,10 +58,16 @@ export class CallConnectOptions implements ng.IComponentController {
     }
 
     this.fetchResourceGroups();
+
+    this.isFirstStep = _.get(state, 'history.length') === 0;
   }
 
   public hasNextStep() {
     return this.wizardData.function !== 'editServices' || this.wizardData.account.enableCalService;
+  }
+
+  public hasBackStep() {
+    return !this.isFirstStep;
   }
 
   public isNextDisabled() {
@@ -87,17 +95,34 @@ export class CallConnectOptions implements ng.IComponentController {
   }
 
   public next() {
-    this.$stateParams.wizard.next({
-      account: {
-        externalHybridCallIdentifier: {
-          providerID: CallConnectOptions.hybridCalluc,
-          accountGUID: this.mailID,
-          status: 'unconfirmed-email',
+    this.$stateParams.wizard.next(
+      {
+        account: {
+          externalHybridCallIdentifier: this.getExtLinkedAccount(),
+          ussProps: this.getUssProps(),
         },
-        ussProps: this.getUssProps(),
       },
-    }, this.wizardData.account.enableCalService ? 'calendar' : 'next');
+      this.wizardData.account.enableCalService ? 'calendar' : 'next');
 
+  }
+
+  private getExtLinkedAccount(): IExternalLinkedAccount[] {
+    let newExtLink = {
+      providerID: CallConnectOptions.hybridCalluc,
+      accountGUID: this.mailID,
+      status: 'unconfirmed-email',
+    };
+    let links: IExternalLinkedAccount[] = [];
+
+    _.map(_.filter(this.wizardData.account.externalLinkedAccounts, (linkedAccount) => {
+      return linkedAccount && (linkedAccount.providerID === CallConnectOptions.hybridCalluc);
+    }), (link) => {
+      link.operation = 'delete';
+      links.push(link);
+    });
+    links.push(newExtLink);
+
+    return links;
   }
 
   public save() {
@@ -110,11 +135,7 @@ export class CallConnectOptions implements ng.IComponentController {
           this.wizardData.account.entitlements,
           null,
           null,
-          [{
-            providerID: CallConnectOptions.hybridCalluc,
-            accountGUID: this.mailID,
-            status: 'unconfirmed-mailid',
-          }],
+          this.getExtLinkedAccount(),
           null)
           .then(() => {
             let props = this.getUssProps();
@@ -186,8 +207,9 @@ export class CallConnectOptions implements ng.IComponentController {
     }
   }
 
-  private getUssProps(): { userId: string, resourceGroups: { 'squared-fusion-uc': string } }| null {
-    if (this.resourceGroup.selected) {
+  private getUssProps(): { userId: string, resourceGroups: { 'squared-fusion-uc': string } } | null {
+    let isExistingPlaceOrNonEmptyRGroup = this.wizardData.account.cisUuid || (this.resourceGroup.selected && this.resourceGroup.selected.value);
+    if (this.resourceGroup.selected && isExistingPlaceOrNonEmptyRGroup) {
       return {
         userId: this.wizardData.account.cisUuid,
         resourceGroups: { 'squared-fusion-uc': this.resourceGroup.selected.value },

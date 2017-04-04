@@ -1864,6 +1864,7 @@
               extensionId: {},
               extensions: {},
               parentState: 'place-overview',
+              editService: {},
             },
           })
           .state('place-overview.hybrid-services-squared-fusion-cal.history', {
@@ -1884,6 +1885,7 @@
             params: {
               extensionId: {},
               extensions: {},
+              editService: {},
             },
           })
           .state('place-overview.hybrid-services-squared-fusion-gcal.history', {
@@ -1904,6 +1906,7 @@
             params: {
               extensionId: {},
               extensions: {},
+              editService: {},
             },
           })
           .state('place-overview.hybrid-services-squared-fusion-uc.uc-history', {

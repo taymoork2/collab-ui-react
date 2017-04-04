@@ -237,8 +237,10 @@ describe('EditCalendarService component:', () => {
         let wizardState = state.wizardData.next.calls.mostRecent().args[0];
 
         expect(wizardState.account.entitlements).toEqual(['webex-squared', 'spark', FUSION_CAL_ENTITLEMENT]);
-        expect(wizardState.account.externalCalendarIdentifier.accountGUID).toEqual(email);
-        expect(wizardState.account.externalCalendarIdentifier.providerID).toEqual(FUSION_CAL_ENTITLEMENT);
+        expect(wizardState.account.externalCalendarIdentifier).toBeDefined();
+        expect(wizardState.account.externalCalendarIdentifier.length).toEqual(1);
+        expect(wizardState.account.externalCalendarIdentifier[0].accountGUID).toEqual(email);
+        expect(wizardState.account.externalCalendarIdentifier[0].providerID).toEqual(FUSION_CAL_ENTITLEMENT);
       });
     });
 
@@ -256,8 +258,10 @@ describe('EditCalendarService component:', () => {
         let wizardState = state.wizardData.next.calls.mostRecent().args[0];
 
         expect(wizardState.account.entitlements).toEqual(['webex-squared', 'spark', FUSION_GCAL_ENTITLEMENT]);
-        expect(wizardState.account.externalCalendarIdentifier.accountGUID).toEqual(email);
-        expect(wizardState.account.externalCalendarIdentifier.providerID).toEqual(FUSION_GCAL_ENTITLEMENT);
+        expect(wizardState.account.externalCalendarIdentifier).toBeDefined();
+        expect(wizardState.account.externalCalendarIdentifier.length).toEqual(1);
+        expect(wizardState.account.externalCalendarIdentifier[0].accountGUID).toEqual(email);
+        expect(wizardState.account.externalCalendarIdentifier[0].providerID).toEqual(FUSION_GCAL_ENTITLEMENT);
       });
       it('next should be enabled', () => {
         expect(state.controller.isNextDisabled()).toBeFalsy();

@@ -87,6 +87,15 @@
       }
     });
 
+    if ($scope.isPlace && $scope.currentUser.externalLinkedAccounts) {
+      var existingHybridCallLink = _.head(_.filter($scope.currentUser.externalLinkedAccounts, function (linkedAccount) {
+        return linkedAccount && (linkedAccount.providerID === 'squared-fusion-uc');
+      }));
+      if (existingHybridCallLink) {
+        $scope.mailID = existingHybridCallLink.accountGUID;
+      }
+    }
+
     var entitlementHasChanged = function () {
       return $scope.callServiceConnect.entitled !== isEntitled($scope.callServiceConnect.id) || $scope.callServiceAware.entitled !== isEntitled($scope.callServiceAware.id);
     };
@@ -339,6 +348,10 @@
       $scope.callServiceConnect.entitled = isEntitled($scope.callServiceConnect.id);
       $scope.resourceGroup.reset();
       $scope.showButtons = false;
+    };
+
+    $scope.editCloudberryServices = function (service) {
+      $stateParams.editService(service);
     };
 
     $scope.closePreview = function () {
