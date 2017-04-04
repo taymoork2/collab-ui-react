@@ -168,8 +168,9 @@ describe('CallConnectOptions component:', () => {
       expect(nextParam[0]).toBeTruthy();
       expect(nextParam[0].account).toBeTruthy();
       expect(nextParam[0].account.externalHybridCallIdentifier).toBeTruthy();
-      expect(nextParam[0].account.externalHybridCallIdentifier.providerID).toBe(FUSION_HYBRID_UC);
-      expect(nextParam[0].account.externalHybridCallIdentifier.accountGUID).toBe(mailId);
+      expect(nextParam[0].account.externalHybridCallIdentifier.length).toBe(1);
+      expect(nextParam[0].account.externalHybridCallIdentifier[0].providerID).toBe(FUSION_HYBRID_UC);
+      expect(nextParam[0].account.externalHybridCallIdentifier[0].accountGUID).toBe(mailId);
 
       expect(nextParam[0].account.ussProps).toEqual({ userId: uid, resourceGroups: { 'squared-fusion-uc': '' } });
     });

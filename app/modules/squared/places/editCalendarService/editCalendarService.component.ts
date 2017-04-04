@@ -24,6 +24,7 @@ class EditCalendarService implements ng.IComponentController {
   private initialCalService: string;
   private isLoading: boolean;
   public externalCalendarIdentifier: string;
+  private isFirstStep: boolean = false;
   public title: string;
   public resourceGroup: {
     selected?: { label: string, value: string },
@@ -49,11 +50,13 @@ class EditCalendarService implements ng.IComponentController {
   private showExchangeService = false;
 
   public $onInit(): void {
-    this.wizardData = this.$stateParams.wizard.state().data;
+    let state = this.$stateParams.wizard.state();
+    this.wizardData = state.data;
     this.resourceGroup.init();
     this.title = this.wizardData.title;
     this.initialCalService = this.getCalService(this.wizardData.account.entitlements);
     this.fetchResourceGroups();
+    this.isFirstStep = _.get(state, 'history.length') === 0;
   }
 
   /* @ngInject */
@@ -171,6 +174,10 @@ class EditCalendarService implements ng.IComponentController {
     return this.wizardData.function !== 'editServices';
   }
 
+  public hasBackStep() {
+    return !this.isFirstStep;
+  }
+
   public back() {
     this.$stateParams.wizard.back();
   }
@@ -189,15 +196,6 @@ class EditCalendarService implements ng.IComponentController {
       link.operation = 'delete';
       links.push(link);
     });
-    // _.map(
-    //   _.filter(
-    //     existingEntries,
-    //     (eService: IExternalLinkedAccount) => {
-    //       return service === eService.providerID;
-    //     }),
-    //   (serv: IExternalLinkedAccount) => {
-    //     serv.operation = 'delete';
-    //   });
     links.push(newExtLink);
 
     return links;

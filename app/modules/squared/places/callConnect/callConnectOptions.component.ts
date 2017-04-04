@@ -17,6 +17,7 @@ export class CallConnectOptions implements ng.IComponentController {
   public mailID: string;
   public title: string;
   public isLoading: boolean = false;
+  private isFirstStep: boolean = false;
 
   public resourceGroup: {
     selected?: { label: string, value: string },
@@ -44,7 +45,8 @@ export class CallConnectOptions implements ng.IComponentController {
   }
 
   public $onInit() {
-    this.wizardData = this.$stateParams.wizard.state().data;
+    let state = this.$stateParams.wizard.state();
+    this.wizardData = state.data;
     this.resourceGroup.init();
     this.title = this.wizardData.title;
 
@@ -56,10 +58,16 @@ export class CallConnectOptions implements ng.IComponentController {
     }
 
     this.fetchResourceGroups();
+
+    this.isFirstStep = _.get(state, 'history.length') === 0;
   }
 
   public hasNextStep() {
     return this.wizardData.function !== 'editServices' || this.wizardData.account.enableCalService;
+  }
+
+  public hasBackStep() {
+    return !this.isFirstStep;
   }
 
   public isNextDisabled() {
