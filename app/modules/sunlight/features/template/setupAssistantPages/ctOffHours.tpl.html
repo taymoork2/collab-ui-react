@@ -34,14 +34,18 @@
           <section>
             <div class="offhours-message">
               <div class="h4 message-label" translate="careChatTpl.offHoursMessage"></div>
-              <textarea cs-input class="h6 message-area" type="text"
+              <textarea cs-input
+                        class="h6 message-area"
+                        type="text"
                         ng-maxlength="careSetupAssistant.lengthConstants.multiLineMaxCharLimit"
+                        validate-characters="careSetupAssistant.InvalidCharacters"
                         cs-input-messages="careSetupAssistant.multiLineValidationMessage"
                         ng-model="careSetupAssistant.template.configuration.pages.offHours.message"
                         ng-model-options="{ allowInvalid: true }" name="offHoursMessage"
                         ng-class="{'no-message': !careSetupAssistant.isOffHoursMessageValid}"/>
               </textarea>
             </div>
+
             <div>
               <div class="h4 business-hours-message" translate="careChatTpl.businessHours"></div>
               <div class="day-picker">

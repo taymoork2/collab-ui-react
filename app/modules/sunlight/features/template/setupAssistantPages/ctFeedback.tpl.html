@@ -40,7 +40,9 @@
                       <input id="label" cs-input name="feedbackLabelInput"
                              class="h5 inputField ct-attribute-field-textbox large-11"
                              cs-input-messages="careSetupAssistant.multiLineValidationMessage"
-                             type="text" ng-maxlength="careSetupAssistant.lengthConstants.multiLineMaxCharLimit"
+                             type="text"
+                             ng-maxlength="careSetupAssistant.lengthConstants.multiLineMaxCharLimit"
+                             validate-characters="careSetupAssistant.InvalidCharacters"
                              ng-model="careSetupAssistant.template.configuration.pages.feedback.fields.feedbackQuery.displayText"
                              ng-model-options="{ allowInvalid: true }"/>
                     </div>
@@ -51,7 +53,9 @@
                       <input id="hintText" cs-input name="hintTextInput"
                              class="h5 inputField ct-attribute-field-textbox large-11"
                              cs-input-messages="careSetupAssistant.singleLineValidationMessage50"
-                             type="text" ng-maxlength="careSetupAssistant.lengthConstants.singleLineMaxCharLimit50"
+                             type="text"
+                             ng-maxlength="careSetupAssistant.lengthConstants.singleLineMaxCharLimit50"
+                             validate-characters="careSetupAssistant.InvalidCharacters"
                              ng-model="careSetupAssistant.template.configuration.pages.feedback.fields.comment.displayText"
                              ng-model-options="{ allowInvalid: true }"/>
                     </div>

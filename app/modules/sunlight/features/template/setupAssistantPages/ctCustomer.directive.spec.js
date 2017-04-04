@@ -9,13 +9,13 @@ describe('Directive: ct-customer Customer Information Page', function () {
       value: 'optional',
     }, {
       name: 'category',
-      value: {},
+      value: '',
     }, {
       name: 'label',
-      value: {},
+      value: '',
     }, {
       name: 'hintText',
-      value: {},
+      value: '',
     }, {
       name: 'type',
       value: {

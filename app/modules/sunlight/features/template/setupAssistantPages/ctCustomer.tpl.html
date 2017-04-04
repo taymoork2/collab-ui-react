@@ -34,8 +34,8 @@
           </section>
 
           <div>
-            <a href="" class="btn btn--medium disabled ct-flex-center" 
-            ng-class="careSetupAssistant.getCustomerInformationBtnClass()" 
+            <a href="" class="btn btn--medium disabled ct-flex-center"
+            ng-class="careSetupAssistant.getCustomerInformationBtnClass()"
             translate="{{careSetupAssistant.getLocalisedText('careChatTpl.customerInfoBtnText')}}">
             </a>
           </div>
@@ -78,10 +78,10 @@
                 name="{{attribute.name }}"
                 cs-input-messages="careSetupAssistant.singleLineValidationMessage50"
                 ng-maxlength="careSetupAssistant.lengthConstants.singleLineMaxCharLimit50"
+                validate-characters="careSetupAssistant.InvalidCharacters"
                 ng-model-options="{ allowInvalid: true }"
                 ng-disabled="careSetupAssistant.isSecondFieldForCallBack() && attribute.name === 'hintText'"
               />
-
               <div ng-if="attribute.name === 'required'" class="h6 cs-radio-group ct-attribute-field-radio">
                 <input
                   cs-input
@@ -131,6 +131,7 @@
                         ng-model="careSetupAssistant.categoryOptionTag"
                         cs-input-messages="careSetupAssistant.singleLineValidationMessage50"
                         ng-maxlength="careSetupAssistant.lengthConstants.singleLineMaxCharLimit50"
+                        validate-characters="careSetupAssistant.InvalidCharacters"
                         placeholder="{{:: 'careChatTpl.categoryHintText' | translate}}"
                         ng-model-options="{ allowInvalid: true }"
                 />
@@ -159,6 +160,7 @@
                       name="orgText"
                       cs-input-messages="careSetupAssistant.singleLineValidationMessage50"
                       ng-maxlength="careSetupAssistant.lengthConstants.singleLineMaxCharLimit50"
+                      validate-characters="careSetupAssistant.InvalidCharacters"
                       ng-model-options="{ allowInvalid: true }"
                 />
               </div>
