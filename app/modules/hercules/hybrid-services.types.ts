@@ -4,10 +4,11 @@ export type ConnectorMaintenanceMode = 'on' | 'off' | 'pending';
 export type ConnectorState = 'running' | 'not_installed' | 'disabled' | 'downloading' | 'installing' | 'not_configured' | 'uninstalling' | 'registered' | 'initializing' | 'offline' | 'stopped' | 'not_operational' | 'unknown';
 export type ConnectorType = 'c_mgmt' | 'c_cal' | 'c_ucmc' | 'mf_mgmt' | 'hds_app' | 'cs_mgmt' | 'cs_context' | 'ucm_mgmt' | 'c_serab';
 export type ConnectorUpgradeState = 'upgraded' | 'upgrading' | 'pending';
-export type DayOfWeek = 'sunday' | 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday';
+export type DayOfWeek = 'sunday' | 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday';
 export type ExtendedConnectorState = ConnectorState | 'has_warning_alarms' | 'has_error_alarms' | 'not_registered' | 'no_nodes_registered';
 export type HybridServiceId = 'squared-fusion-mgmt' | 'squared-fusion-cal' | 'squared-fusion-gcal' | 'squared-fusion-uc' | 'squared-fusion-ec' | 'squared-fusion-media' | 'spark-hybrid-datasecurity' | 'contact-center-context' | 'squared-fusion-khaos' | 'squared-fusion-servicability';
 export type TimeOfDay = '00:00' | '01:00' | '02:00' | '03:00' | '04:00' | '05:00' | '06:00' | '07:00' | '08:00' | '09:00' | '10:00' | '11:00' | '12:00' | '13:00' | '14:00' | '15:00' | '16:00' | '17:00' | '18:00' | '19:00' | '20:00' | '21:00' | '22:00' | '23:00';
+export type HybridVoicemailStatus = 'NOT_CONFIGURED' | 'REQUESTED' | 'HYBRID_SUCCESS' | 'HYBRID_FAILED' | 'HYBRID_PARTIAL' | undefined ;
 
 export interface IFMSOrganization {
   alarmsUrl: string;
@@ -178,3 +179,4 @@ export interface IReleaseChannelEntitlement {
   channel: string;
   entitled: boolean;
 }
+

@@ -3,6 +3,12 @@
     <h5 class="sub-section__label" translate="hercules.settings.voicemail.heading"></h5>
     <p class="sub-section__description" translate="hercules.settings.voicemail.description">
     </p>
+    <p ng-if="$ctrl.voicemailToggle && !$ctrl.isLoading">
+      <span>
+      <cs-statusindicator ng-model="$ctrl.status"></cs-statusindicator>
+      {{$ctrl.voicemailStatus}}
+      </span>
+    </p>
     <cs-toggle-switch ng-model="$ctrl.voicemailToggle"
                       toggle-id="voicemail-toggle"
                       is-disabled="{{!$ctrl.isCallServiceConnectEnabled}}"
@@ -10,7 +16,6 @@
                       size="small">
     </cs-toggle-switch>
     <p class="body-small" ng-if= "!$ctrl.isCallServiceConnectEnabled" translate="hercules.settings.voicemail.voicemailDisabled"></p>
-
   </div>
 </setting-section>
 
