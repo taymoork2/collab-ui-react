@@ -30,9 +30,6 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
     $q = _$q_;
     httpBackend = $httpBackend;
     httpBackend.when('GET', /^\w+.*/).respond({});
-    // spyOn(MediaClusterServiceV2, 'getV1Clusters').and.returnValue({
-    //   then: _.noop,
-    // });
     controller = $controller('MediaServiceSettingsControllerV2', {
       $stateParams: $stateParams,
       FusionClusterService: FusionClusterService,

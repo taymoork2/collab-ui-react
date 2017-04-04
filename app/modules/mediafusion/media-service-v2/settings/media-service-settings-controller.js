@@ -41,7 +41,7 @@
         .then(function (propertySets) {
           if (propertySets.length > 0) {
             vm.videoPropertySet = _.filter(propertySets, {
-              name: 'test2',
+              name: 'videoQualityPropertySet',
             });
             // If there is no property set with name mfVideoPropertycreate one
             if (vm.videoPropertySet.length === 0) {
@@ -63,7 +63,7 @@
           });
           var payLoad = {
             'type': 'mf.group',
-            'name': 'test2',
+            'name': 'videoQualityPropertySet',
             'properties': {
               'mf.videoQuality': 'false',
             },

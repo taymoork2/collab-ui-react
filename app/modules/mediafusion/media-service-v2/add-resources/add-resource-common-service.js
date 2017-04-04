@@ -74,7 +74,7 @@
               .then(function (propertySets) {
                 if (propertySets.length > 0) {
                   vm.videoPropertySet = _.filter(propertySets, {
-                    name: 'test2',
+                    name: 'videoQualityPropertySet',
                   });
                   if (vm.videoPropertySet.length > 0) {
                     var clusterPayload = {
