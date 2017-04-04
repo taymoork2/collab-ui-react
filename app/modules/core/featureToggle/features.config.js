@@ -15,6 +15,8 @@ module.exports = {
   atlasHelpDeskExt: 'atlas-helpdesk-extended-information',
   atlasHelpDeskOrderSearch: 'atlas-helpdesk-order-search',
   atlasHybridServicesResourceList: 'atlas-hybrid-services-resource-list',
+  atlasITProPack: 'atlas-it-pro-pack',
+  atlasITProPackPurchased: 'atlas-it-pro-pack-purchased',
   atlasIdleLogout: 'atlas-idle-logout',
   atlasMediaServiceMetrics: 'atlas-media-service-metrics',
   atlasMediaServiceMetricsMilestoneOne: 'atlas-media-service-metrics-milestone-one',
