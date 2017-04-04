@@ -320,6 +320,16 @@
       }
     }
 
+    function reloadDevicesForUser(cisUuid) {
+      return CsdmDeviceService.fetchDevicesForUser(cisUuid).then(function (devices) {
+        _.each(devices, function (device) {
+          CsdmCacheUpdater.updateOne(theDeviceMap, device.url, device);
+        });
+        notifyListeners();
+        return devices;
+      });
+    }
+
     function hasDevices() {
       return theDeviceMap && Object.keys(theDeviceMap).length > 0;
     }
@@ -427,6 +437,7 @@
       updateItemName: updateItemName,
       updateTags: updateTags,
       reloadItem: reloadItem,
+      reloadDevicesForUser: reloadDevicesForUser,
       hasDevices: hasDevices,
       hasLoadedAllDeviceSources: hasLoadedAllDeviceSources,
       createCodeForExisting: createCodeForExisting,
