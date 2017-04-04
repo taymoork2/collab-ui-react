@@ -12,6 +12,7 @@ export default angular
     'collab.ui',
     'pascalprecht.translate',
     'huron.telephoneNumber',
+    'huron.telephoneNumberService',
     require('modules/huron/telephony/cmiServices'),
     require('modules/core/scripts/services/authinfo'),
     memberService,

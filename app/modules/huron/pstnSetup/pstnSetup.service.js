@@ -1,8 +1,19 @@
 (function () {
   'use strict';
 
-  angular.module('Huron')
-    .factory('PstnSetupService', PstnSetupService);
+  module.exports = angular.module('huron.pstnsetupservice', [
+    require('angular-resource'),
+    'huron.telephoneNumber',
+    require('modules/core/scripts/services/authinfo'),
+    require('modules/core/notifications').default,
+    require('./pstnSetup.model'),
+    require('./terminusServices'),
+    require('modules/huron/telephony/telephonyConfig'),
+    require('modules/huron/telephony/telephoneNumber.service'),
+    require('modules/core/featureToggle').default,
+  ])
+    .service('PstnSetupService', PstnSetupService)
+    .name;
 
   /* @ngInject */
   function PstnSetupService($q, $translate, Authinfo, Notification, PstnSetup,

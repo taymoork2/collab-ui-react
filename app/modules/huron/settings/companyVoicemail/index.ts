@@ -9,6 +9,7 @@ export default angular
     'collab.ui',
     'pascalprecht.translate',
     'huron.telephoneNumber',
+    'huron.telephoneNumberService',
     serviceSetup,
   ])
   .component('ucCompanyVoicemail', new CompanyVoicemailComponent())

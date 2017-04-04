@@ -9,6 +9,7 @@ export default angular
     'collab.ui',
     'pascalprecht.translate',
     'huron.telephoneNumber',
+    'huron.telephoneNumberService',
   ])
   .component('ucCompanyCallerId', new CompanyCallerIdComponent())
   .directive('validateCallerIdPhoneNumber', CallerIdPhoneNumberValidator.factory)

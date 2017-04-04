@@ -1,7 +1,10 @@
 (function () {
   'use strict';
 
-  angular.module('Huron')
+  module.exports = angular.module('huron.TerminusServices', [
+    require('angular-resource'),
+    require('modules/core/config/config'),
+  ])
     .factory('TerminusCustomerService', TerminusCustomerService)
     .factory('TerminusCustomerV2Service', TerminusCustomerV2Service)
     .factory('TerminusCustomerTrialV2Service', TerminusCustomerTrialV2Service)
@@ -36,7 +39,7 @@
     .factory('TerminusV2ResellerService', TerminusV2ResellerService)
     .factory('TerminusV2ResellerCarrierNumberReservationService', TerminusV2ResellerCarrierNumberReservationService)
     .factory('TerminusV2ResellerNumberReservationService', TerminusV2ResellerNumberReservationService)
-  ;
+    .name;
 
   /* @ngInject */
   function TerminusCustomerService($resource, HuronConfig) {

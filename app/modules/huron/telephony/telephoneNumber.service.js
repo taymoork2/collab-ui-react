@@ -2,8 +2,12 @@
 (function () {
   'use strict';
 
-  angular.module('huron.telephoneNumber')
-    .factory('TelephoneNumberService', TelephoneNumberService);
+  module.exports = angular.module('huron.telephoneNumberService', [
+    require('angular-resource'),
+    'collab.ui',
+  ])
+    .factory('TelephoneNumberService', TelephoneNumberService)
+    .name;
 
   /* @ngInject */
   function TelephoneNumberService(CountryCodes) {

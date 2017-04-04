@@ -12,6 +12,7 @@ export default angular
     'atlas.templates',
     'collab.ui',
     'huron.telephoneNumber',
+    'huron.telephoneNumberService',
     'pascalprecht.translate',
   ])
   .component('pstnSelector', new PstnSelectorComponent())

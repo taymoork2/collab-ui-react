@@ -13,6 +13,7 @@ export default angular
     'pascalprecht.translate',
     'dragularModule',
     'Core',
+    'huron.telephoneNumberService',
     customerServiceModule,
     notifications,
     featureMemberService,

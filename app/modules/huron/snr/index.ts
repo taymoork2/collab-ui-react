@@ -10,6 +10,7 @@ export default angular
     'collab.ui',
     'pascalprecht.translate',
     'huron.telephoneNumber',
+    'huron.telephoneNumberService',
     customerServiceModule,
     notifications,
   ])
