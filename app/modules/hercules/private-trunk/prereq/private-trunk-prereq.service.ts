@@ -23,7 +23,7 @@ export class PrivateTrunkPrereqService {
     this.dismissModal();
     this.domainModal = this.$modal.open({
       template: '<private-trunk-setup class="modal-content"></private-trunk-setup>',
-      type: 'small',
+      type: 'default',
     });
   }
 
