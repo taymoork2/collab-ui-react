@@ -17,7 +17,7 @@ interface IVmInfo {
   vmInfo: {
     userId: string,                 // UserID (UUID)
     mwiStatus: boolean,             // Whether message waiting indicator should be on/off
-    voicemailPilot: number,         // Dial-able primary extension voicemail pilot number
+    voicemailPilot: string,         // Dial-able primary extension voicemail pilot number presented as as string in the API
     countUnread: number,            // Number of unread messages in mailbox (excluded for unknown count)
     countRead: number,              // Number of read messages in mailbox   (excluded for unknown count)
   };
