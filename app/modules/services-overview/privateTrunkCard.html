@@ -8,8 +8,8 @@
   <p class="description">{{::card.description | translate}}</p>
   <div class="card-button">
     <div ng-repeat="button in card.getButtons()">
-      <a ng-if="!button.routerState" ng-class="button.buttonClass" ng-click="card.openModal()">{{::button.name | translate}}</a>
-      <a ng-if="button.routerState" ui-sref="{{button.routerState}}" ng-class="button.buttonClass">{{::button.name | translate}}</a>
+      <a ng-if="!button.routerState && button.buttonState==='prereq'" ng-class="button.buttonClass" ng-click="card.openModal()">{{::button.name | translate}}</a>
+      <a ng-if="!button.routerState && button.buttonState==='setup'" ng-class="button.buttonClass" ng-click="card.openSetupModal()">{{::button.name | translate}}</a>
     </div>
     <div ng-if="card.getShowMoreButton()">
       <a ui-sref="{{card.getShowMoreButton().routerState}}" ng-class="button.buttonClass" class="btn-link">{{::card.getShowMoreButton().name | translate}}</a>

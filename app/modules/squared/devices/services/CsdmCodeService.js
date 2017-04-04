@@ -2,9 +2,9 @@
   'use strict';
 
   /* @ngInject  */
-  function CsdmCodeService($http, Authinfo, CsdmConfigService, CsdmConverter) {
+  function CsdmCodeService($http, Authinfo, UrlConfig, CsdmConverter) {
 
-    var codesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/codes';
+    var codesUrl = UrlConfig.getCsdmServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/codes';
 
     function createCodeForExisting(cisUuid) {
       return $http.post(codesUrl, {

@@ -1,7 +1,9 @@
 import { PagingNumberService } from 'modules/huron/features/pagingGroup/pgNumber.service';
+import { INumberData } from 'modules/huron/features/pagingGroup/pagingGroup';
 
 class PagingNumberCtrl implements ng.IComponentController {
-  public pagingGroupNumber: string;
+  public pagingGroupNumber: INumberData;
+  public queryString: string;
   public errorNumberInput: boolean = false;
   private onUpdate: Function;
 
@@ -11,9 +13,10 @@ class PagingNumberCtrl implements ng.IComponentController {
     private Notification,
   ) {}
 
-  public selectNumber(number: string): void {
+  public selectNumber(number: INumberData): void {
     if (number) {
       this.pagingGroupNumber = number;
+      this.queryString = number.extension;
       this.onUpdate({
         number: number,
         isValid: true,
@@ -21,8 +24,8 @@ class PagingNumberCtrl implements ng.IComponentController {
     }
   }
 
-  public fetchNumbers(): ng.IPromise<String []> {
-    return this.PagingNumberService.getNumberSuggestions(this.pagingGroupNumber).then(
+  public fetchNumbers(): ng.IPromise<INumberData []> {
+    return this.PagingNumberService.getNumberSuggestions(this.queryString).then(
       numberList => {
         this.errorNumberInput = (numberList && numberList.length === 0);
         this.onUpdate({

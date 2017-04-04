@@ -120,6 +120,7 @@
         name: _.get(data, 'name'),
         pattern: _.get(data, 'pattern'),
         externalCallerIdType: _.get(data, 'externalCallerIdType'),
+        externalNumber: null,
       }).$promise;
     }
 

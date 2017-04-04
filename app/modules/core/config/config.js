@@ -413,6 +413,11 @@
       Compliance_User: ['ediscovery', 'ediscovery.search', 'ediscovery.reports'],
     };
 
+    if (config.isDev()) {
+      // only allow feature toggle editor in Development mode
+      config.roleStates.Full_Admin.push('edit-featuretoggles');
+    }
+
     config.roleStates.Readonly_Admin = _.clone(config.roleStates.Full_Admin);
     config.roleStates.PARTNER_READ_ONLY_ADMIN = _.clone(config.roleStates.PARTNER_ADMIN);
 
@@ -449,6 +454,7 @@
         'services-overview',
         'private-trunk-overview',
         'private-trunk-domain',
+        'private-trunk-sidepanel',
         'private-trunk-redirect',
       ],
       'squared-fusion-mgmt': [

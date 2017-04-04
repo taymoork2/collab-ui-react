@@ -4,6 +4,8 @@ const args = require('yargs').argv;
 const path = require('path');
 const loaders = require('./loaders');
 const StyleLintPlugin = require('stylelint-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+
 
 const host = args.host || '127.0.0.1';
 const port = args.port || '8000';
@@ -14,7 +16,7 @@ function webpackConfig(env) {
 
   config.entry = {
     preload: ['scripts/preload'],
-    app: ['polyfills', 'bootstrap'],
+    bootstrap: ['polyfills', 'bootstrap'],
     styles: ['styles/app'],
   };
 
@@ -67,6 +69,10 @@ function webpackConfig(env) {
       X2JS: 'x2js',
     }),
   ];
+
+  if (env.analyze) {
+    config.plugins.push(new BundleAnalyzerPlugin());
+  }
 
   // Activate once IntelliJ / WebStorm supports stylelint
   if (!env.nolint) {

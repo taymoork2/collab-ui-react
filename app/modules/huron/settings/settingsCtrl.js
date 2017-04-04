@@ -2380,22 +2380,18 @@
         var extensionLength0, extensionLength9;
         switch (vm.model.site.extensionLength) {
           case '3':
-            vm.model.site.siteCode = 100;
             extensionLength0 = '00';
             extensionLength9 = '99';
             break;
           case '4':
-            vm.model.site.siteCode = 100;
             extensionLength0 = '000';
             extensionLength9 = '999';
             break;
           case '5':
-            vm.model.site.siteCode = 10;
             extensionLength0 = '0000';
             extensionLength9 = '9999';
             break;
           default:
-            vm.model.site.siteCode = 100;
             extensionLength0 = '000';
             extensionLength9 = '999';
             break;

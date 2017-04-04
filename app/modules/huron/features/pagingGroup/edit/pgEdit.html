@@ -35,7 +35,7 @@
         <h6 class="section__description" translate="pagingGroup.numberHint"></h6>
       </div>
       <div class="section__content">
-        <cs-select ng-model="$ctrl.number" options="$ctrl.availableNumbers" labelfield="number" filter="true" refresh-data-fn="$ctrl.fetchNumbers(filter)"
+        <cs-select ng-model="$ctrl.number" options="$ctrl.availableNumbers" labelfield="extension" filter="true" refresh-data-fn="$ctrl.fetchNumbers(filter)"
           ng-change="$ctrl.onChange()">
         </cs-select>
       </div>
@@ -111,7 +111,7 @@
         </div>
       </div>
     </div>
-    <div class="cs-form__section cs-form__section--member" ng-if="$ctrl.initiatorFeature">
+    <div class="cs-form__section cs-form__section--member">
       <div class="section__info">
         <h4 class="section__title" translate="pagingGroup.pagingGroupInitiator"></h4>
         <h6 class="section__description" translate="pagingGroup.initiatorEditHint"></h6>

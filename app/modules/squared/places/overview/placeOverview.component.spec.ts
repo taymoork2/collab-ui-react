@@ -1,5 +1,5 @@
 describe('placeOverview component', () => {
-  let Authinfo, FeatureToggleService, CsdmDataModelService, CsdmCodeService, WizardFactory, $state, $scope, $q, Userservice, ServiceDescriptor;
+  let Authinfo, FeatureToggleService, CsdmDataModelService, CsdmCodeService, WizardFactory, $httpBackend, UrlConfig, $state, $scope, $q, Userservice, ServiceDescriptor;
 
   let $stateParams;
   let $componentController;
@@ -12,6 +12,8 @@ describe('placeOverview component', () => {
                      _Authinfo_,
                      _CsdmDataModelService_,
                      _WizardFactory_,
+                     _$httpBackend_,
+                     _UrlConfig_,
                      _$state_,
                      _$stateParams_,
                      $rootScope,
@@ -24,6 +26,8 @@ describe('placeOverview component', () => {
     Authinfo = _Authinfo_;
     CsdmDataModelService = _CsdmDataModelService_;
     WizardFactory = _WizardFactory_;
+    $httpBackend = _$httpBackend_;
+    UrlConfig = _UrlConfig_;
     $state = _$state_;
     $stateParams = _$stateParams_;
     $componentController = _$componentController_;
@@ -218,6 +222,8 @@ describe('placeOverview component', () => {
         goStateName = stateName;
         goStateData = stateData;
       });
+      $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200);
+      $httpBackend.whenGET(UrlConfig.getCsdmServiceUrl() + '/organization/null/upgradeChannels').respond(200);
 
       $stateParams = {
         currentPlace: {

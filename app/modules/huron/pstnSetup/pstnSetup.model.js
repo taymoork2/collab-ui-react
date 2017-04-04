@@ -65,7 +65,7 @@
       resellerExists = false;
       carrierExists = false;
       siteExists = false;
-      provider = {};
+      provider = undefined;
       numbers = [];
       orders = [];
       carriers = [];

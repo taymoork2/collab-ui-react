@@ -55,8 +55,8 @@ describe('CloudConnectorService', () => {
         aclAdminAccount: 'acl@example.org',
         privateKeyData: 'actualKeyData',
       };
-      $httpBackend.expectPOST('https://calendar-cloud-connector-integration.wbx2.com/api/v1/orgs/myOrgId/services/squared', dataToBeSentToServer).respond({});
-      $httpBackend.expectPATCH('https://hercules-integration.wbx2.com/v1/organizations/myOrgId/services/squared').respond({});
+      $httpBackend.expectPOST('https://calendar-cloud-connector-intb.ciscospark.com/api/v1/orgs/myOrgId/services/squared', dataToBeSentToServer).respond({});
+      $httpBackend.expectPATCH('https://hercules-intb.ciscospark.com/v1/organizations/myOrgId/services/squared').respond({});
       CloudConnectorService.updateConfig(inputData.newServiceAccountId, inputData.newAclAccount, inputData.privateKey, inputData.serviceId);
       $httpBackend.flush();
     });
@@ -73,8 +73,8 @@ describe('CloudConnectorService', () => {
         aclAdminAccount: '',
         privateKeyData: 'actualKeyData',
       };
-      $httpBackend.expectPOST('https://calendar-cloud-connector-integration.wbx2.com/api/v1/orgs/myOrgId/services/squared', dataToBeSentToServer).respond({});
-      $httpBackend.expectPATCH('https://hercules-integration.wbx2.com/v1/organizations/myOrgId/services/squared').respond({});
+      $httpBackend.expectPOST('https://calendar-cloud-connector-intb.ciscospark.com/api/v1/orgs/myOrgId/services/squared', dataToBeSentToServer).respond({});
+      $httpBackend.expectPATCH('https://hercules-intb.ciscospark.com/v1/organizations/myOrgId/services/squared').respond({});
       CloudConnectorService.updateConfig(inputData.newServiceAccountId, inputData.newAclAccount, inputData.privateKey, inputData.serviceId);
       $httpBackend.flush();
     });

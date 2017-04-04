@@ -7,7 +7,8 @@
     "tos": "Terms of Service",
     "privacy": "Privacy Statement",
     "copyright": "Cisco and/or affiliates. All rights reserved.",
-    "expired": "Your session has expired due to inactivity."
+    "expired": "Your session has expired due to inactivity.",
+    "email": "Enter your email address"
   },
   "termsOfService": {
     "title": "Terms of Service",
@@ -19,6 +20,24 @@
     "copyright2": "All rights reserved.",
     "description": "Cisco Spark is a collaboration application that provides messaging(IM), voice, and video calling capabilities.",
     "loggingOut": "Logging off..."
+  },
+  "editFeatureToggles": {
+    "title": "Feature Toggles and User Info for {{name}}",
+    "toggleId": "Feature Toggle ID",
+    "enabled": "Enabled",
+    "search": "Filter by...",
+    "loading": "Loading Feature Toggle Data...",
+    "placeholder": "Enter New Feature Toggle",
+    "failure": "Failed to update Feature Toggle '{{toggleId}}':",
+    "removeToggleTitle": "Remove Feature Toggle",
+    "removeToggleMessage": "Are you SURE you want to remove Feature toggle named '{{toggleId}}'?",
+    "addToggleTitle" : "Add New Feature Toggle",
+    "addToggleMessage": "Are you sure you want to add a new Feature toggle named '{{toggleId}}'?",
+    "toggleAlreadyExists": "Feature Toggle with name '{{toggleId}}' already exists.",
+    "toggleUpdateSuccess": "Toggle '{{toggleId}}' set to {{value}}",
+    "toggleAddSuccess": "Toggle '{{toggleId}}' added with {{value}}",
+    "userPrefsSaved": "User Preferences Updated",
+    "initError": "There was an error refreshing page: ${error}"
   },
   "usersPage": {
     "assignServices": "Assign Services",
@@ -424,7 +443,8 @@
     "gssTab": "Status",
     "gssTabDesc": "Global Service Status Management",
     "careTab": "Care",
-    "careTabDesc": "Cloud Contact Center"
+    "careTabDesc": "Cloud Contact Center",
+    "editFeatureToggles": "Edit Feature Toggles"
   },
   "index": {
     "welcome": "Welcome!",
@@ -792,10 +812,6 @@
     "averageLabel": "Average Engagement",
     "acrossCustomers": "Across All Customers",
     "loadingCustomer": "Sample Customer"
-  },
-  "taskIncoming": {
-    "title": "Total Completed Contacts",
-    "description": "The graph depicts the total number of customer contacts completed {{time}}. Hover over the area chart for a breakdown of {{taskStatus}} contacts during a {{interval}}."
   },
   "taskIncoming": {
     "title": "Total Completed Contacts",
@@ -1768,6 +1784,11 @@
         "no_clusters_text": "See required actions above and documentation to get started."
       }
     },
+    "sip_destination": {
+      "listing": {
+        "no_destinations_heading": "No SIP Destinations registered"
+      }
+    },
     "status": {
       "unknown": "Status unknown",
       "not_configured": "Not configured",
@@ -1791,7 +1812,8 @@
       "not_registered": "Registration not completed",
       "no_nodes_registered": "No Nodes Registered",
       "urgentUpgradeAvailable": "Urgent upgrade available",
-      "registrationTimeout": "Registration timeout"
+      "registrationTimeout": "Registration timeout",
+      "connected": "Connected"
     },
     "userSidepanel": {
       "warningInvitePending": "This user has not yet accepted the invitation to join Cisco Spark. You can still enable {{ServiceName}}, but activation will not succeed until the user signs in.",
@@ -1855,8 +1877,8 @@
       "c_cal": "Calendar Connector",
       "c_ucmc": "Call Connector",
       "c_mgmt": "Management Connector",
-      "mf_mgmt": "Media Service Connector",
-      "hds_app": "Hybrid Data Security Connector",
+      "mf_mgmt": "Media Service",
+      "hds_app": "Hybrid Data Security",
       "cs_mgmt": "Management Connector",
       "cs_context": "Context Connector",
       "ucm_mgmt": "Management Connector",
@@ -2025,6 +2047,7 @@
       "clusters-title-squared-fusion-media": "Media Clusters",
       "clusters-title-spark-hybrid-datasecurity": "HDS Clusters",
       "clusters-title-contact-center-context": "Context Clusters",
+      "clusters-title-ciscouc": "SIP Destination",
       "status-title": "Service Status"
     },
     "hybridVoicemailUserSection": {
@@ -2311,8 +2334,8 @@
         "settings": "Settings",
         "all": "All",
         "add-resource": "Add Resource",
-        "set-default-release-channel": "Set default Release Channel",
-        "add-resource-group": "Create new Resource Group",
+        "set-default-release-channel": "Set default release channel",
+        "add-resource-group": "Create new resource group",
         "expressway": "Expressway",
         "mediafusion": "Media",
         "hds": "Data Security",
@@ -2324,7 +2347,11 @@
         "complete-registration": "Go to your Expressway to complete the registration.",
         "registration-timeout": "The registration timed out. Please remove this cluster and register the Expressway again.",
         "registration-timeout-extended": "The registration timed out. Please remove this cluster and register the Expressway again in the Add Resource dialog.",
-        "go-to-expressway": "Go to Expressway"
+        "go-to-expressway": "Go to Expressway",
+        "upgrade": "Upgrade available",
+        "alarms": "Alarms",
+        "maintenance": "Maintenance",
+        "pendingMaintenance": "Pending maintenance"
       },
       "add-resource": {
         "title": "Add Resource",
@@ -2499,7 +2526,17 @@
       "noNodes": "No nodes found",
       "loadingError": "Could not load cluster data",
       "viewList": "View list",
-      "goToNode": "Go to node"
+      "enableMaintenanceMode": "Enable maintenance mode",
+      "disableMaintenanceMode": "Disable maintenance mode",
+      "goToNode": "Go to node",
+      "enableMaintenanceModeModal": {
+        "title": "Enable maintenance mode",
+        "message": "Are you sure you want to enable maintenance mode for this node?"
+      },
+      "disableMaintenanceModeModal": {
+        "title": "Disable maintenance mode",
+        "message": "Are you sure you want to disable maintenance mode for this node?"
+      }
     },
     "hybridServicesConnectorSidepanel": {
       "alarmDetails": "Alarm Details"
@@ -2661,11 +2698,11 @@
       "settings": {
         "servicestatusTitle": "Service Status",
         "servicePreTrialModeTitle": "Start Trial",
-        "serviceNodeDesc": "There are currently <strong>{{nodes}} nodes</strong> registered for your Hybrid Data Security Service.<br/>The minimum suggested number of nodes is 3 for every 100 people in your orginization.<br/>Use the <a ng-click=\"{{onclick}}\">Add Resource</a> flow to add more nodes.",
+        "serviceNodeDesc": "Your Hybrid Data Security Service has {{nodes}} registered node(s).<br/>You need at least two nodes. We recommend three to five.<br/>Use the <a ng-click=\"{{onclick}}\">Add Resource</a> flow to add more nodes. Once you start your trial, you can quickly see who's in it by downloading the User Status Report.",
         "serviceDomainDesc": "Trial Domain: {{trial}}<br/>Production Domain: {{prod}}",
-        "serviceUserDesc": "There are currently <strong>{{users}} users</strong> in your trial of Hybrid Data Security Service.<br/><a ng-click=\"{{onclick}}\">Add Users</a> to your trial or <a ng-click=\"{{onclick1}}\">view and edit</a> your trial users.",
-        "serviceUser0Desc": "There are currently <strong>{{users}} users</strong> in your trial of Hybrid Data Security Service.<br/><a ng-click=\"{{onclick}}\">Add Users</a> to your trial.",
-        "serviceProdMoveDesc": "Once your Hybrid Data Security Service is moved to production it is not possible to revert back to Trial Mode.",
+        "serviceUserDesc": "There are currently {{users}} users in your trial of Hybrid Data Security Service.<br/><a ng-click=\"{{onclick}}\">Add Users</a> to your trial or <a ng-click=\"{{onclick1}}\">view and edit</a> your trial users.",
+        "serviceUser0Desc": "There are currently {{users}} users in your trial of Hybrid Data Security Service.<br/><a ng-click=\"{{onclick}}\">Add Users</a> to your trial.",
+        "serviceProdMoveDesc": "When you are satisfied that the trial was successful, you can move to production. This makes Hybrid Data Security active for all users in your organization. You can't revert to trial mode without deactivating the service and losing user access to data.",
         "serviceTrialModeTitle": "Trial Mode",
         "serviceTrialModeDesc": "Trial Started Month DD, YYYY at HH:MM PM",
         "serviceProductionModeTitle": "Production Mode",
@@ -2674,18 +2711,20 @@
         "addTrialUsers": "Add Trial Users",
         "editTrialUsers": "Edit Users in Trial",
         "confirmProdMoveDialogHeader": "Move to Production Mode?",
-        "confirmProdMoveDialogBody": "It is not possible to undo this action or return to Trial mode. For various reasons this is a one-way street.",
+        "confirmProdMoveDialogBody": "All users in your organization will move to Hybrid Data Security. It is not possible to undo this action or return to this trial.",
         "confirmProdMoveDialogButton": "Production Mode",
         "confirmDeactivateTrialDialogHeader": "Deactivate Service?",
-        "confirmDeactivateTrialDialogBody": "WARNING!: If you deactivate this service, your users will no longer have access to decrypt content. Because you are in Trial Mode you will need to start a new trial after you deactivate.",
+        "confirmDeactivateTrialDialogBody": "WARNING!: If you deactivate this service, your users will no longer have access to keys to decrypt content that was created during the trial. If you later reactivate the service, you will need to start a new trial.",
         "succeedMoveToProductionMode": "Succeeded to Move to Production Mode",
-        "deavtivateTrialModeDesc": "Deactivating Hybrid Data Security Service removes all service-related features for users.",
+        "succeedDeactivateProductionMode": "Succeeded to Deactivate Production Mode",
+        "succeedDeactivateTrialMode": "Succeeded to Deactivate Trial Mode",
+        "deavtivateTrialModeDesc": "Deactivating Hybrid Data Security Service moves encryption key management and other security-related features to the cloud. Deactivating impacts user access to existing data.",
         "hdsModeGetError": "Failed to get HDS mode: "
       },
       "addTrialUsers": {
         "modalTitle": "Add Users to Trial Mode",
         "modalHeading": "Add Users",
-        "modalDesc": "Enter the email addresses of the users that will be assigned to the Hybrid Data Security Service.",
+        "modalDesc": "Enter the email addresses of the users that will initially test using the Hybrid Data Security Service for encryption keys and other security realm features.",
         "emailNotificationsWatermark": "Email addresses",
         "emailExample": "For example: john.doe@example.com",
         "refreshOtherServices": "Refresh other services to avoid a 24 hours delay.",
@@ -2697,7 +2736,7 @@
         "emailNotificationsWatermark": "add new ...",
         "tooManyUsers": "<i class='icon icon-error'></i> Max number of users reached, delete existing users to add more.",
         "invalidUsers": " not valid user(s) in this org won't be saved.",
-        "modalDesc": "To remove a user click the X in the user's field and they will be removed from the Hybrid Data Security Service."
+        "modalDesc": "Click the X by a user ID to remove the user from the Hybrid Data Security Service trial."
       },
       "page_title": "Hybrid Data Security Service",
       "genericError": "An unexpected error occurred. Please try again later.",
@@ -4034,7 +4073,8 @@
     "regionalSettings": "Regional Settings",
     "defaultCountry": "Default Country",
     "defaultCountryDesc": "Specify the country to set the correct dial tone on user devices.",
-    "defaultCountryPlaceholder": "Select your country"
+    "defaultCountryPlaceholder": "Select your country",
+    "pstnCountry": "Choose the country where calling services (including PSTN) will be provisioned."
   },
   "trialModal": {
     "addTrial": {
@@ -4076,6 +4116,7 @@
       "sx10": "SX10",
       "dx80": "DX80",
       "mx300": "MX300 (Limit {{max}})",
+      "dx80Delay": " (will ship on April 15th)",
       "phone8865": "8865",
       "phone8845": "8845",
       "phone8841": "8841",
@@ -4477,7 +4518,7 @@
     },
     "deviceRebooting": "Device rebooting",
     "deviceRebootingDetails": "The device is now rebooting and will be offline for a few moments.",
-    "failedToSaveChanges": "Failed to save changes to device. Reason:",
+    "failedToSaveChanges": "Failed to save changes. Reason:",
     "failedToUploadLogs": "Failed to upload logs. Reason:",
     "deleteATAConfText": "Are you sure you want to delete Port 1?",
     "deleteDeviceType": "Delete {{deviceType}}",
@@ -6480,6 +6521,7 @@
     "upgrade": "Upgrade",
     "purchase": "Purchase",
     "changePlan": "Change Plan",
+    "signIn": "Sign-in to manage",
     "contact": "Contact Account Rep",
     "onlineTrialUpgradeUrlError": "Unable to retrieve purchase url for trial {{trialId}}.  To purchase a paid subscription, contact your partner via email or use the purchase button on the trial banner to have one sent for you.",
     "onlineProductInstanceError": "Unable to retrieve product instance for trial {{trialId}}.  To purchase a paid subscription, contact your partner via email or use the purchase button on the trial banner to have one sent for you.",
@@ -6992,15 +7034,15 @@
         "selectDomainDesc": "Select the verified domains that you want to route over the enterprise trunk. If you do not select any options, calls route as normal URI dialing over the internet. See the documentation for more help",
         "radioSelect1": "I want to use a verified domain for Private Trunking",
         "radioSelect2": "I don’t want to use a verified domain for Private Trunking",
-        "connectorTitle": "Connect Expressway-E",
-        "connector": "Enter the SIP destination of the on-premises Expressway-E that you want to use for Private Trunking",
-        "connectorHelp": "Enter an SRV domain, hostname:port, or IP address:port that resolves to your Expressway-E for mutual TLS. If your SRV record is \"_sips._tcp.sipmtls.example.com\", then enter \"sipmtls.example.com\" here.",
+        "destinationTitle": "Add SIP Destination",
+        "destination": "Enter the SIP destination of the on-premises Expressway-E that you want to use for Private Trunking",
+        "destinationHelp": "Enter an SRV domain, hostname:port, or IP address:port that resolves to your Expressway-E for mutual TLS. If your SRV record is \"_sips._tcp.sipmtls.example.com\", then enter \"sipmtls.example.com\" here.",
         "sipLabel": "Sip destination",
         "sip": "Enter Sip destination",
         "displayLabel": "Display name",
         "displayName": "Enter display name",
         "nextSip": "Add another SIP destination",
-        "hybridConnector": "Use one or more Expressway-E configured for Hybrid Call Connect ",
+        "hybridDestination": "Use one or more Expressway-E configured for Hybrid Call Connect ",
         "cancelHeader": "Cancel Enterprise Private Trunking Setup.",
         "cancelBody": "Are you sure you want to cancel?"
       }
@@ -7069,6 +7111,20 @@
           "success": "Telephony Domain list has been successfully exported.",
           "failed": "There was an error exporting Telephony Domain list."
         }
+      },
+      "request": {
+        "names": "Names",
+        "region": "Region",
+        "notePlaceholder": "Text here",
+        "regionNote": "Region and Note",
+        "selectPlaceholder": "Select ...",
+        "labelCustomerName": "Customer Name",
+        "partnerName": "Parter Name(optional)",
+        "modalTitle": "Request Telephony Domain",
+        "noteText": "Note to Cisco Team(optional)",
+        "customerPlaceholder": "Who is the Telephony Domain for",
+        "partnerPlaceholder": "Enter a nickname for this Telephony Domain",
+        "customerHelpText": "Once approved by Cisco team, this name can note be changed"
       },
       "field": {
         "status": "Status",
@@ -7713,5 +7769,10 @@
     "robot": "Robot",
     "spark_integration": "Spark Integration",
     "room": "Desk Phone Place"
+  },
+  "deviceSettings": {
+    "title": "Device Settings",
+    "softwareUpgradeChannel": "Software Upgrade Channel",
+    "deviceNotSupported": "The {{deviceType}} is not yet able to observe this setting."
   }
 }

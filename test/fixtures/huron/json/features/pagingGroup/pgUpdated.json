@@ -1,7 +1,7 @@
 {
   "groupId": "bbcd1234-abcd-abcd-abcddef123456",
   "name": "Test2",
-  "extension": "5000",
+  "extensionUUID": "8e33e338-0caa-4579-86df-38ef7590f432",
   "members": [ 
   {
     "memberId": "0002", 

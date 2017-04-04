@@ -11,7 +11,6 @@ require('./_customer-list.scss');
     var vm = this;
     vm.isCustomerPartner = !!Authinfo.isCustomerPartner;
     vm.isPartnerAdmin = Authinfo.isPartnerAdmin();
-    vm.activeBadge = false;
     vm.isTestOrg = false;
     vm.searchStr = '';
     vm.timeoutVal = 1000;
@@ -30,7 +29,6 @@ require('./_customer-list.scss');
     vm.isLicenseTypeActive = isLicenseTypeActive;
     vm.isLicenseTypeFree = isLicenseTypeFree;
     vm.isNoLicense = isNoLicense;
-    vm.partnerClicked = partnerClicked;
     vm.isPartnerOrg = isPartnerOrg;
     vm.setTrial = setTrial;
     vm.showCustomerDetails = showCustomerDetails;
@@ -208,6 +206,7 @@ require('./_customer-list.scss');
       multiSelect: false,
       rowHeight: 56,
       enableRowHeaderSelection: false,
+      enableRowSelection: true,
       enableColumnMenus: false,
       enableColumnResizing: true,
       enableHorizontalScrollbar: 0,
@@ -695,10 +694,6 @@ require('./_customer-list.scss');
       } else {
         return rowData.activeUsers + ' / ' + rowData.numUsers;
       }
-    }
-
-    function partnerClicked(rowData) {
-      vm.activeBadge = isPartnerOrg(rowData);
     }
 
     function isPartnerOrg(rowData) {

@@ -4,7 +4,7 @@
       <i class="message-box__icon icon-circle-comp-negative"></i>
       <h3 class="message-box__title message-box__title--alert" translate="404Page.title"></h3>
       <h5 class="message-box__details" translate="404Page.text"></h5>
-      <button cs-btn class="btn btn--people btn--large btn--expand message-box__btn" role="button" ng-click="stateRedirect.performRedirect()" loading="stateRedirect.loading">
+      <button cs-btn class="btn btn--people btn--large message-box__btn" role="button" ng-click="stateRedirect.performRedirect()" loading="stateRedirect.loading">
         <span ng-if="::stateRedirect.hasPreviousState" translate="stateRedirect.goBackButton"></span>
         <span ng-if="::!stateRedirect.hasPreviousState" translate="stateRedirect.signInButton"></span>
       </button>

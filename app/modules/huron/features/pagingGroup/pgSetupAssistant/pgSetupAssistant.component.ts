@@ -1,4 +1,4 @@
-import { IPagingGroup, IMemberData, IInitiatorData, IMemberWithPicture, PLACE, USER, PUBLIC, CUSTOM } from 'modules/huron/features/pagingGroup/pagingGroup';
+import { IPagingGroup, IMemberData, INumberData, IInitiatorData, IMemberWithPicture, PLACE, USER, PUBLIC, CUSTOM } from 'modules/huron/features/pagingGroup/pagingGroup';
 import { PagingGroupService } from 'modules/huron/features/pagingGroup/pagingGroup.service';
 import { USER_REAL_USER } from 'modules/huron/members';
 import { IToolkitModalService } from 'modules/core/modal';
@@ -10,7 +10,7 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
   private isNameValid: boolean = false;
 
   //Paging group number
-  public number: string;
+  public number: INumberData;
   private isNumberValid: boolean = false;
 
   //Paging group members with picture
@@ -24,9 +24,6 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
   private index: number = 0;
   private createLabel: string = '';
 
-  //Remove later
-  public initiatorFeature: boolean = false;
-
   /* @ngInject */
   constructor(private $timeout: ng.ITimeoutService,
               private $modal: IToolkitModalService,
@@ -34,23 +31,13 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
               private $state: ng.ui.IStateService,
               private $translate: ng.translate.ITranslateService,
               private PagingGroupService: PagingGroupService,
-              private Notification,
-              private FeatureToggleService) {
+              private Notification) {
     this.createLabel = this.$translate.instant('pagingGroup.createHelpText');
 
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.huronPagingInitiator).then(supports => {
-      if (supports) {
-        this.initiatorFeature = true;
-      }
-    });
   }
 
   public get lastIndex(): number {
-    if (this.initiatorFeature) {
-      return 3;
-    } else {
-      return 2;
-    }
+    return 3;
   }
 
   public getPageIndex(): number {
@@ -72,20 +59,7 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
         return !(this.number === undefined) && this.isNumberValid;
       case 2:
         let memberDefined: boolean = this.selectedMembers && this.selectedMembers.length !== 0;
-        if (this.initiatorFeature) {
-          return memberDefined;
-        } else {
-          let helpText = this.$element.find('div.btn-helptext.helptext-btn--right');
-          if (memberDefined) {
-            //Show helpText
-            helpText.addClass('active');
-            helpText.addClass('enabled');
-          } else {
-            //Hide helpText
-            helpText.removeClass('active');
-            helpText.removeClass('enabled');
-          }
-        }
+        return memberDefined;
       case 3:
         let initiatorDefined: boolean = (this.initiatorType === CUSTOM) ? (this.selectedInitiators.length > 0) : (this.initiatorType !== null);
         let helpText = this.$element.find('div.btn-helptext.helptext-btn--right');
@@ -173,7 +147,7 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
     this.isNameValid = isValid;
   }
 
-  public onUpdateNumber(number: string, isValid: boolean): void {
+  public onUpdateNumber(number: INumberData, isValid: boolean): void {
     this.number = number;
     this.isNumberValid = isValid;
   }
@@ -212,7 +186,8 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
 
     let pg: IPagingGroup = <IPagingGroup>{
       name: this.name,
-      extension: this.number,
+      extension: this.number.extension,
+      extensionUUID: this.number.extensionUUID,
       members: members,
       initiatorType: this.initiatorType,
       initiators: initiators,

@@ -1,4 +1,4 @@
-import { IPagingGroup, IMemberData, IInitiatorData, IMemberWithPicture, USER, PLACE, PUBLIC, CUSTOM } from 'modules/huron/features/pagingGroup/pagingGroup';
+import { IPagingGroup, IMemberData, INumberData, IInitiatorData, IMemberWithPicture, USER, PLACE, PUBLIC, CUSTOM } from 'modules/huron/features/pagingGroup/pagingGroup';
 import { PagingNumberService } from 'modules/huron/features/pagingGroup/pgNumber.service';
 import { PagingGroupService } from 'modules/huron/features/pagingGroup/pagingGroup.service';
 import { FeatureMemberService } from 'modules/huron/features/featureMember.service';
@@ -15,8 +15,8 @@ class PgEditComponentCtrl implements ng.IComponentController {
   public formChanged: boolean = false;
 
   //Paging group number
-  public number: string;
-  private availableNumbers: string[] = [];
+  private number: INumberData;
+  private availableNumbers: INumberData[] = [];
 
   //Paging group members
   public members: IMemberWithPicture[] = [];
@@ -52,9 +52,6 @@ class PgEditComponentCtrl implements ng.IComponentController {
   public numberOfCardsPlaces: number | undefined = this.cardThreshold;
   public numberOfCardsInitiators: number | undefined = this.cardThreshold;
 
-  //Remove later
-  public initiatorFeature: boolean = false;
-
   /* @ngInject */
   constructor(private $state: ng.ui.IStateService,
               private $translate: ng.translate.ITranslateService,
@@ -62,15 +59,7 @@ class PgEditComponentCtrl implements ng.IComponentController {
               private PagingGroupService: PagingGroupService,
               private PagingNumberService: PagingNumberService,
               private FeatureMemberService: FeatureMemberService,
-              private $q: ng.IQService,
-              private FeatureToggleService) {
-
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.huronPagingInitiator).then(supports => {
-      if (supports) {
-        this.initiatorFeature = true;
-      }
-    });
-  }
+              private $q: ng.IQService) {}
 
   public $onInit(): void {
     if (this.pgId) {
@@ -78,7 +67,18 @@ class PgEditComponentCtrl implements ng.IComponentController {
         (data) => {
           this.pg = data;
           this.name = this.pg.name;
-          this.number = this.pg.extension;
+          let numberData: INumberData = <INumberData> {
+            extension: this.pg.extension,
+            extensionUUID: this.pg.extensionUUID,
+          };
+
+          if (this.pg.extension === undefined && this.pg.extensionUUID) {
+            this.PagingNumberService.getNumberExtension(this.pg.extensionUUID).then(
+              (data: INumberData) => {
+                numberData.extension = data.extension;
+              });
+          }
+          this.number = numberData;
           this.userCount = _.get(_.countBy(this.pg.members, 'type'), USER, 0);
           this.placeCount = _.get(_.countBy(this.pg.members, 'type'), PLACE, 0);
           this.getMembers(this.pg.members);
@@ -250,7 +250,7 @@ class PgEditComponentCtrl implements ng.IComponentController {
 
   public fetchNumbers(filter?: string): void {
     this.PagingNumberService.getNumberSuggestions(filter).then(
-      (data: string[]) => {
+      (data: INumberData []) => {
         this.availableNumbers = data;
       }, (response) => {
       this.Notification.errorResponse(response, 'pagingGroup.numberFetchFailure');
@@ -421,7 +421,8 @@ class PgEditComponentCtrl implements ng.IComponentController {
 
   public onCancel(): void {
     this.name = this.pg.name;
-    this.number = this.pg.extension;
+    this.number.extension = this.pg.extension;
+    this.number.extensionUUID = undefined; //This will be updated later
     if (this.pg.initiatorType !== undefined) {
       this.initiatorType = this.pg.initiatorType;
     }
@@ -486,7 +487,8 @@ class PgEditComponentCtrl implements ng.IComponentController {
     }
     let pg: IPagingGroup = <IPagingGroup>{
       name: this.name,
-      extension: this.number,
+      extension: this.number.extension,
+      extensionUUID: this.number.extensionUUID,
       members: members,
       initiatorType: this.initiatorType,
       initiators: initiators,

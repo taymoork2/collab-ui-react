@@ -21,6 +21,10 @@ class UserClassOfService implements ng.IComponentController {
   public saveInProcess: boolean = false;
   private changedRestrictions = new Array<any>();
   private currentRestrictions = new Array<any>();
+  private callTrial: boolean;
+  private roomSystemsTrial: boolean;
+  private cosTrialToggle;
+  private disableControl: boolean = true;
 
   /* @ngInject */
   constructor(
@@ -29,9 +33,11 @@ class UserClassOfService implements ng.IComponentController {
     private $timeout: ng.ITimeoutService,
     private Notification: Notification,
     private $q: ng.IQService,
+    private FeatureToggleService,
+    private Authinfo,
   ) {}
 
-  public $onInit() {
+  public $onInit(): void {
     this.alwaysAllow = this.$translate.instant('serviceSetupModal.cos.alwaysAllow');
     this.neverAllow = this.$translate.instant('serviceSetupModal.cos.neverAllow');
     this.on = this.$translate.instant('common.on');
@@ -41,6 +47,7 @@ class UserClassOfService implements ng.IComponentController {
       this.premiumNumbers = _.get(dialPlan, 'premiumNumbers', []).toString();
     });
 
+    this.disableCos();
     this.loadRestrictions();
   }
 
@@ -135,7 +142,25 @@ class UserClassOfService implements ng.IComponentController {
     }
   }
 
-  public save() {
+  public disableCos(): void {
+    this.cosTrialToggle = this.FeatureToggleService.supports('h-cos-trial');
+    this.callTrial = this.Authinfo.getLicenseIsTrial('COMMUNICATION', 'ciscouc');
+    this.roomSystemsTrial = this.Authinfo.getLicenseIsTrial('SHARED_DEVICES');
+    if (this.callTrial || this.roomSystemsTrial) {
+      this.$q.when(this.cosTrialToggle)
+        .then((response) => {
+          if (response) {
+            this.disableControl = false;
+          } else {
+            this.disableControl = true;
+          }
+        });
+    } else {
+      this.disableControl = false;
+    }
+  }
+
+  public save(): void {
     this.saveInProcess = true;
     let promises: any = [];
     _.forEach(this.changedRestrictions, (restriction) => {

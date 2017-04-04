@@ -1,0 +1,54 @@
+.feature-toggles-editor {
+
+  .userData form {
+    margin: 1rem;
+    border-top: thin solid #EBEBEC;
+    border-left: thin solid #EBEBEC;
+    border-right: thin solid #EBEBEC;
+
+    .data-row {
+      margin-bottom: .2rem;
+      display: flex;
+      border-bottom: thin solid #EBEBEC;
+
+      .title {
+        min-width: 10rem;
+        text-align: right;
+        font-weight: bold;
+        margin-left: 1rem;
+        padding-right: 1rem;
+        display: inline-block;
+        border-right: solid thin#EBEBEC;
+      }
+
+      .data {
+        display: inline-flex;
+        margin-left: 1rem;
+
+        .cs-input-group {
+          padding-top: .3rem;
+          margin-right: 2rem;
+        }
+      }
+    }
+  }
+
+  .toggle-list {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    max-width: 40rem;
+    min-width: 35rem;
+    margin: auto;
+
+    .cs-input-group {
+      margin-bottom: 0;
+      margin-right: .5rem;
+      margin-top: .3rem;
+
+      .cs-input {
+        width: 15rem;
+      }
+    }
+  }
+}

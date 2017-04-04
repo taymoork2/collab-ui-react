@@ -32,7 +32,7 @@ class PlaceOverview implements ng.IComponentController {
   private currentPlace: IPlace = <IPlace>{ devices: {} };
   private csdmHuronUserDeviceService;
   private adminUserDetails;
-  public editPlaceState;
+  private showDeviceSettings = false;
 
   /* @ngInject */
   constructor(private $q: ng.IQService,
@@ -46,7 +46,8 @@ class PlaceOverview implements ng.IComponentController {
               private ServiceDescriptor,
               private Notification,
               private Userservice,
-              private WizardFactory) {
+              private WizardFactory,
+              private CsdmUpgradeChannelService) {
     this.csdmHuronUserDeviceService = this.CsdmHuronUserDeviceService.create(this.$stateParams.currentPlace.cisUuid);
     CsdmDataModelService.reloadItem(this.$stateParams.currentPlace).then((updatedPlace) => this.displayPlace(updatedPlace));
   }
@@ -91,11 +92,10 @@ class PlaceOverview implements ng.IComponentController {
   }
 
   private fetchAsyncSettings() {
-    let ataPromise = this.FeatureToggleService.csdmATAGetStatus()
-      .then((result) => {
-        this.showATA = result;
-      });
-    let hybridPromise = this.FeatureToggleService.csdmHybridCallGetStatus().then((feature) => {
+    let ataPromise = this.FeatureToggleService.csdmATAGetStatus().then(feature => {
+      this.showATA = feature;
+    });
+    let hybridPromise = this.FeatureToggleService.csdmHybridCallGetStatus().then(feature => {
       this.csdmHybridCallFeature = feature;
     });
     let placeCalendarPromise = this.FeatureToggleService.csdmPlaceCalendarGetStatus().then(feature => {
@@ -118,6 +118,14 @@ class PlaceOverview implements ng.IComponentController {
 
     this.$q.all([ataPromise, hybridPromise, placeCalendarPromise, gcalFeaturePromise, anyCalendarEnabledPromise, atlasF237ResourceGroupsPromise, this.fetchDetailsForLoggedInUser()]).finally(() => {
       this.generateCodeIsDisabled = false;
+    });
+
+    this.FeatureToggleService.cloudberryLyraConfigGetStatus().then(feature => {
+      if (feature) {
+        this.CsdmUpgradeChannelService.getUpgradeChannelsPromise().then(channels => {
+          this.showDeviceSettings = channels.length > 1 && this.currentPlace.type === 'cloudberry';
+        });
+      }
     });
   }
 

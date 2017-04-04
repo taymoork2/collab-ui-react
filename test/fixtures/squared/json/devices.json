@@ -1,10 +1,10 @@
 {
-  "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/c528e32d-ed35-4e00-a20d-d4d3519efb4f":
+  "https://csdm-intb.ciscospark.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/c528e32d-ed35-4e00-a20d-d4d3519efb4f":
   {
     "displayName":"test device 1",
     "cisUuid":"a19b308a-PlaceWithDevice-71898e423bec",
     "accountType":"MACHINE",
-    "url":"https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/c528e32d-ed35-4e00-a20d-d4d3519efb4f",
+    "url":"https://csdm-intb.ciscospark.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/c528e32d-ed35-4e00-a20d-d4d3519efb4f",
     "createTime":"2016-09-15T01:12:01.105Z",
     "description": "[\"one\", \"two\", \"three\"]",
     "product":"SX10",
@@ -21,12 +21,12 @@
       "duration":14400
     }
   },
-  "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f":
+  "https://csdm-intb.ciscospark.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f":
   {
     "displayName":"test device 2",
     "cisUuid":"a19b308a-PlaceWithDevice-71898e423bec",
     "accountType":"MACHINE",
-    "url":"https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f",
+    "url":"https://csdm-intb.ciscospark.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f",
     "createTime":"2016-09-15T01:12:01.105Z",
     "description": "[\"two\", \"two\", \"three\"]",
     "product":"SX10",
@@ -43,12 +43,12 @@
       "duration":14400
     }
   },
-  "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/6ae09bec-c0f0-58af-b490-60ed6a695a89":
+  "https://csdm-intb.ciscospark.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/6ae09bec-c0f0-58af-b490-60ed6a695a89":
   {
     "displayName":"Tangram_rD8Jz5LZVv",
     "cisUuid":"a19b308a-PlaceWithDevice-71898e423bec",
     "accountType":"MACHINE",
-    "url":"https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/6ae09bec-c0f0-58af-b490-60ed6a695a89",
+    "url":"https://csdm-intb.ciscospark.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/6ae09bec-c0f0-58af-b490-60ed6a695a89",
     "createTime":"2016-09-15T07:44:30.446Z",
     "description": "[\"three\", \"two\", \"three\"]",
     "serial":"FTT1944010V",
@@ -62,8 +62,8 @@
     },
     "status": {
       "cisUuid":"a19b308a-PlaceWithDevice-71898e423bec",
-      "wdmUrl":"https://locus-integration.wbx2.com/locus/api/v1/devices/4af683e0-2794-4771-bb65-84a5c31e9e1b",
-      "webSocketUrl":"wss://mercury-connection-integration.wbx2.com/v1/apps/wx2/registrations/a0860b86-bfe3-471e-86ca-019062e91ca6/messages",
+      "wdmUrl":"https://locus-intb.ciscospark.com/locus/api/v1/devices/4af683e0-2794-4771-bb65-84a5c31e9e1b",
+      "webSocketUrl":"wss://mercury-connection-intb.ciscospark.com/v1/apps/wx2/registrations/a0860b86-bfe3-471e-86ca-019062e91ca6/messages",
       "serial":"FTT1944010V",
       "macAddress":"70:E4:22:F2:3C:7C",
       "deviceIdentifier":"6ae09bec-c0f0-58af-b490-60ed6a695a89",

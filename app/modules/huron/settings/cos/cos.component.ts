@@ -8,7 +8,20 @@ class ClassOfService implements ng.IComponentController {
   public onChangeFn: Function;
 
   /* @ngInject */
-  constructor() {}
+  constructor(
+    private FeatureToggleService,
+    private Authinfo,
+    private $q: ng.IQService,
+  ) {}
+
+  public $onInit(): void {
+    this.disableCos();
+  }
+
+  public cosTrialToggle: boolean;
+  public callTrial: boolean;
+  public roomSystemsTrial: boolean;
+  public disableControl: boolean = true;
 
   public getTitle(restriction): string {
     switch (restriction) {
@@ -37,6 +50,24 @@ class ClassOfService implements ng.IComponentController {
         return 'serviceSetupModal.cos.premiumDesc';
       default:
         return restriction;
+    }
+  }
+
+  public disableCos(): void {
+    this.cosTrialToggle = this.FeatureToggleService.supports('h-cos-trial');
+    this.callTrial = this.Authinfo.getLicenseIsTrial('COMMUNICATION', 'ciscouc');
+    this.roomSystemsTrial = this.Authinfo.getLicenseIsTrial('SHARED_DEVICES');
+    if (this.callTrial || this.roomSystemsTrial) {
+      this.$q.when(this.cosTrialToggle)
+        .then((response) => {
+          if (response) {
+            this.disableControl = false;
+          } else {
+            this.disableControl = true;
+          }
+        });
+    } else {
+      this.disableControl = false;
     }
   }
 

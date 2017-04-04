@@ -16,6 +16,7 @@
       checkForPstnSetup: checkForPstnSetup,
       setCountryCode: setCountryCode,
       getCountryCode: getCountryCode,
+      getCarrierCapability: getCarrierCapability,
     };
 
     return service;
@@ -43,9 +44,9 @@
           swivelNumbers: [],
           pstnContractInfo: {
             companyName: '',
-            signeeFirstName: '',
-            signeeLastName: '',
-            email: '',
+            firstName: '',
+            lastName: '',
+            emailAddress: '',
           },
           pstnNumberInfo: {
             state: {},
@@ -128,9 +129,9 @@
       return PstnSetupService.createCustomerV2(
         customerOrgId,
         _trialData.details.pstnContractInfo.companyName,
-        _trialData.details.pstnContractInfo.signeeFirstName,
-        _trialData.details.pstnContractInfo.signeeLastName,
-        _trialData.details.pstnContractInfo.email,
+        _trialData.details.pstnContractInfo.firstName,
+        _trialData.details.pstnContractInfo.lastName,
+        _trialData.details.pstnContractInfo.emailAddress,
         _trialData.details.pstnProvider.uuid,
         _trialData.details.isTrial
       ).catch(function (response) {
@@ -198,6 +199,14 @@
       getData();
       _trialData.details.countryCode = countryCode;
       PstnSetupService.setCountryCode(countryCode);
+    }
+
+    function getCarrierCapability(capability) {
+      var carrier = PstnSetupService.getProvider();
+      if (!carrier) {
+        return false;
+      }
+      return carrier.getCapability(capability);
     }
 
   }
