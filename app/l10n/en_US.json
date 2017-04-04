@@ -21,6 +21,24 @@
     "description": "Cisco Spark is a collaboration application that provides messaging(IM), voice, and video calling capabilities.",
     "loggingOut": "Logging off..."
   },
+  "editFeatureToggles": {
+    "title": "Feature Toggles and User Info for {{name}}",
+    "toggleId": "Feature Toggle ID",
+    "enabled": "Enabled",
+    "search": "Filter by...",
+    "loading": "Loading Feature Toggle Data...",
+    "placeholder": "Enter New Feature Toggle",
+    "failure": "Failed to update Feature Toggle '{{toggleId}}':",
+    "removeToggleTitle": "Remove Feature Toggle",
+    "removeToggleMessage": "Are you SURE you want to remove Feature toggle named '{{toggleId}}'?",
+    "addToggleTitle" : "Add New Feature Toggle",
+    "addToggleMessage": "Are you sure you want to add a new Feature toggle named '{{toggleId}}'?",
+    "toggleAlreadyExists": "Feature Toggle with name '{{toggleId}}' already exists.",
+    "toggleUpdateSuccess": "Toggle '{{toggleId}}' set to {{value}}",
+    "toggleAddSuccess": "Toggle '{{toggleId}}' added with {{value}}",
+    "userPrefsSaved": "User Preferences Updated",
+    "initError": "There was an error refreshing page: ${error}"
+  },
   "usersPage": {
     "assignServices": "Assign Services",
     "assignDnAndDirectLines": "Assign Numbers",
@@ -425,7 +443,8 @@
     "gssTab": "Status",
     "gssTabDesc": "Global Service Status Management",
     "careTab": "Care",
-    "careTabDesc": "Cloud Contact Center"
+    "careTabDesc": "Cloud Contact Center",
+    "editFeatureToggles": "Edit Feature Toggles"
   },
   "index": {
     "welcome": "Welcome!",
@@ -793,10 +812,6 @@
     "averageLabel": "Average Engagement",
     "acrossCustomers": "Across All Customers",
     "loadingCustomer": "Sample Customer"
-  },
-  "taskIncoming": {
-    "title": "Total Completed Contacts",
-    "description": "The graph depicts the total number of customer contacts completed {{time}}. Hover over the area chart for a breakdown of {{taskStatus}} contacts during a {{interval}}."
   },
   "taskIncoming": {
     "title": "Total Completed Contacts",

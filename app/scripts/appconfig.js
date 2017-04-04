@@ -90,10 +90,10 @@
                 controller: 'ModalWizardCtrl',
                 // TODO(pajeter): remove inline template when cs-modal is updated
                 windowTemplate: '<div modal-render="{{$isRendered}}" tabindex="-1" role="dialog" class="modal-alt"' +
-                    'modal-animation-class="fade"' +
-                    'modal-in-class="in"' +
-                    'ng-style="{\'z-index\': 1051, display: \'block\', visibility: \'visible\', position: \'relative\'}">' +
-                    '<div class="modal-content" modal-transclude></div>' +
+                'modal-animation-class="fade"' +
+                'modal-in-class="in"' +
+                'ng-style="{\'z-index\': 1051, display: \'block\', visibility: \'visible\', position: \'relative\'}">' +
+                '<div class="modal-content" modal-transclude></div>' +
                 '</div>',
                 backdrop: 'static',
               });
@@ -303,11 +303,11 @@
                 template: '<cs-sidepanel></cs-sidepanel>',
                 // TODO(pajeter): remove inline template when cs-modal is updated
                 windowTemplate: '<div modal-render="{{$isRendered}}" tabindex="-1" role="dialog" class="sidepanel-modal"' +
-                      'modal-animation-class="fade"' +
-                      'modal-in-class="in"' +
-                      'ng-style="{\'z-index\': 1051, display: \'block\', visibility: \'visible\'}">' +
-                      '<div class="modal-content" modal-transclude></div>' +
-                 ' </div>',
+                'modal-animation-class="fade"' +
+                'modal-in-class="in"' +
+                'ng-style="{\'z-index\': 1051, display: \'block\', visibility: \'visible\'}">' +
+                '<div class="modal-content" modal-transclude></div>' +
+                ' </div>',
                 backdrop: false,
                 keyboard: false,
               });
@@ -1410,6 +1410,19 @@
               displayName: 'Roles',
             },
           })
+
+          // FOR Development: allow editing of user's feature toggles
+          .state('edit-featuretoggles', {
+            url: '/editfeaturetoggles',
+            template: '<feature-toggles-editor></feature-toggles-editor>',
+            parent: 'main',
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/core/featureToggle/editor'], done);
+              }),
+            },
+          })
+
           .state('organizations', {
             url: '/organizations',
             templateUrl: 'modules/core/organizations/organizationList/organizationList.tpl.html',
@@ -3614,6 +3627,7 @@
           });
 
         $stateProvider
+
         //V2 API changes
           .state('media-cluster-details', {
             parent: 'sidepanel',
@@ -3666,6 +3680,7 @@
               },
             },
           })
+
           .state('media-service-v2', {
             templateUrl: 'modules/mediafusion/media-service-v2/media-service-overview.html',
             controller: 'MediaServiceControllerV2',
