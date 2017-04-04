@@ -283,7 +283,13 @@ require('./_support.scss');
         timeSortOrder: 'descending',
         limit: 300,
       }).then(function (data, status) {
-        data = _.isObject(data) ? data : {};
+        if (_.isObject(data)) {
+          if (_.has(data, 'data')) {
+            data = data.data;
+          }
+        } else {
+          data = {};
+        }
         data.success = true;
         data.status = status;
         return data;
