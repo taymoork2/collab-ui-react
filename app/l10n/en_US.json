@@ -4947,10 +4947,10 @@
         "total": "Total"
       },
       "cardDescription": {
-        "clientType": "Summary of the type of clients that are in use at an Organization",
+        "clientType": "Summary of the types of meeting clients that are in use at an organization",
         "cloudParticipants2": ": Number of participants who were within an enterprise when a call was made but overflowed to a cloud cluster.",
-        "cloudParticipants1": ": Number of participants who were outside the enterprise network when a call was made and hence landed on a cloud cluster.",
-        "meetsHostType": "A breakdown of the no of  meetings based on where the calls were hosted"
+        "cloudParticipants1": ": Number of participants who were outside the enterprise network when a call was made and landed on a cloud cluster.",
+        "meetsHostType": "A breakdown of the number of meetings based on where the calls were hosted"
       }
     },
     "deleteGroup": {

@@ -27,7 +27,7 @@
     };
 
     function setClientTypePiechart(data) {
-      data = formatDecimal(data.dataProvider);
+      data = formatOthersData(data.dataProvider);
       var chartData = CommonReportsGraphService.getBasePieChart(data);
       chartData.labelText = '[[name]]';
       chartData.balloonText = '[[name]]: [[percentage]]% ([[value]])';
@@ -36,7 +36,7 @@
     }
 
     function setNumberOfMeetsOnPremisesPiechart(data) {
-      data = formatDecimal(data.dataProvider);
+      data = formatOthersData(data.dataProvider);
       var chartData = CommonReportsGraphService.getBasePieChart(data);
       chartData.labelText = '[[name]]';
       chartData.balloonText = '[[name]]: [[percentage]]% ([[value]])';
@@ -63,7 +63,7 @@
         'value': cloudCalls,
       }];
       data['dataProvider'] = dataProvider;
-      data = formatDecimal(data.dataProvider);
+      data = formatOthersData(data.dataProvider);
       var chartData = CommonReportsGraphService.getBasePieChart(data);
       chartData.labelText = '[[name]]';
       chartData.balloonText = '[[name]]: [[percentage]]% ([[value]])';
@@ -95,20 +95,20 @@
       return chart;
     }
 
-    function formatDecimal(data) {
+    function formatOthersData(data) {
       var totalValue = 0;
       var newData = [];
       var sumPercentage = 0;
       var sumValue = 0;
-      _.forEach(data, function (type) {
+      _.each(data, function (type) {
         totalValue = totalValue + type.value;
       });
-      _.forEach(data, function (type) {
-        type.percentage = _.round(100 * (type.value / totalValue));
+      _.each(data, function (type) {
+        type.percentage = 100 * (type.value / totalValue);
       });
-      if (data.length > 5) {
+      if (data.length > 6) {
         data = _.sortBy(data, 'percentage');
-        _.forEach(data, function (point) {
+        _.each(data, function (point) {
           if (point.percentage < 5) {
             sumPercentage += point.percentage;
             sumValue += point.value;
@@ -121,6 +121,9 @@
       } else {
         newData = data;
       }
+      _.each(newData, function (type) {
+        type.percentage = _.round(type.percentage, 2);
+      });
       return newData;
     }
   }
