@@ -17,12 +17,11 @@
       <span translate="hercules.hybridVoicemailUserSection.on"></span>
     </div>
   </div>
-  <div ng-if="$ctrl.pilotNumber.length !== 0">
+  <div ng-if="$ctrl.pilotNumber !== ''">
       <div>
         <span class="cloud-extension-label"
             translate="hercules.hybridVoicemailUserSection.pilot"></span><span>: </span>
-        <span ng-if="$ctrl.pilotNumber.length !== 0">{{$ctrl.pilotNumber}}</span>
-        <span ng-if="$ctrl.pilotNumber.length === 0 " translate="hercules.hybridVoicemailUserSection.pilotNotConfigured"></span>
+        <span ng-if="$ctrl.pilotNumber !== ''">{{$ctrl.pilotNumber}}</span>
       </div>
     <div>
       <span class="cloud-extension-label"
@@ -31,7 +30,7 @@
       <span ng-if="$ctrl.mwiStatus === true" translate="hercules.hybridVoicemailUserSection.on"></span>
     </div>
     </div>
-  <div ng-if="$ctrl.pilotNumber.length === 0">
+  <div ng-if="$ctrl.pilotNumber === ''">
     <span class="cloud-extension-label"
           translate="hercules.hybridVoicemailUserSection.pilotNotConfigured">
     </span>
