@@ -310,6 +310,25 @@
 
     }
 
+    function getPropertySets() {
+      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/property_sets?type=mf.group';
+      return $http
+        .get(url)
+        .then(extractDataFromResponse);
+    }
+
+    function createPropertySet(payLoad) {
+      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/property_sets';
+      return $http
+        .post(url, payLoad);
+    }
+
+    function updatePropertySetById(id, payLoad) {
+      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/property_sets/' + id;
+      return $http
+        .post(url, payLoad);
+    }
+
     function getClustersByConnectorType(type) {
       var clusters = _.chain(clusterCache[type])
         .values() // turn them to an array
@@ -358,6 +377,9 @@
       getMostSevereRunningState: getMostSevereRunningState,
       buildAggregates: buildAggregates,
       getV1Clusters: getV1Clusters,
+      getPropertySets: getPropertySets,
+      createPropertySet: createPropertySet,
+      updatePropertySetById: updatePropertySetById,
     };
   }
 

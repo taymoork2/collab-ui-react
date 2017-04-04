@@ -20,7 +20,9 @@
       var deferred = $q.defer();
       MediaClusterServiceV2.getAll()
         .then(function (clusters) {
-          vm.clusters = _.filter(clusters, { targetType: 'mf_mgmt' });
+          vm.clusters = _.filter(clusters, {
+            targetType: 'mf_mgmt',
+          });
           _.each(clusters, function (cluster) {
             if (cluster.targetType === 'mf_mgmt') {
               vm.clusterList.push(cluster.name);
@@ -65,16 +67,33 @@
       if (vm.clusterDetail == null) {
         var deferred = $q.defer();
         MediaClusterServiceV2.createClusterV2(enteredCluster, 'stable')
-        .then(function (resp) {
-          vm.selectedClusterId = resp.data.id;
-          deferred.resolve(whiteListHost(hostName, vm.selectedClusterId));
-        })
-        .catch(function (error) {
-          var errorMessage = $translate.instant('mediaFusion.clusters.clusterCreationFailed', {
-            enteredCluster: enteredCluster,
+          .then(function (resp) {
+            vm.selectedClusterId = resp.data.id;
+            // Add the created cluster to property set
+            MediaClusterServiceV2.getPropertySets()
+              .then(function (propertySets) {
+                if (propertySets.length > 0) {
+                  vm.videoPropertySet = _.filter(propertySets, {
+                    name: 'test2',
+                  });
+                  if (vm.videoPropertySet.length > 0) {
+                    var clusterPayload = {
+                      'assignedClusters': vm.selectedClusterId,
+                    };
+                    // Assign it the property set with cluster list
+                    MediaClusterServiceV2.updatePropertySetById(vm.videoPropertySet[0].id, clusterPayload);
+                  }
+                }
+              });
+
+            deferred.resolve(whiteListHost(hostName, vm.selectedClusterId));
+          })
+          .catch(function (error) {
+            var errorMessage = $translate.instant('mediaFusion.clusters.clusterCreationFailed', {
+              enteredCluster: enteredCluster,
+            });
+            Notification.errorWithTrackingId(error, errorMessage);
           });
-          Notification.errorWithTrackingId(error, errorMessage);
-        });
         return deferred.promise;
       } else {
         vm.selectedClusterId = vm.clusterDetail.id;
