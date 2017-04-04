@@ -1302,7 +1302,7 @@
     "setUpHybridMediaService": "Hybrid Media Service is available. Extend cloud media to use premises-based resources for calls and meetings.",
     "getStarted": "Get Started",
     "urgentUpgrade": "An urgent upgrade is available for <a ui-sref='{{link}}'>{{connector}}</a> and it will upgrade during the next scheduled upgrade.",
-    "setUpHybridDataSecurity": "Use premises-based Data Security for encryption.",
+    "setUpHybridDataSecurity": "Create an on-premises security realm with Hybrid Data Security.",
     "careLicenseMsgMissingText": "Message is mandatory for Care services. To enable Message,",
     "careLicenseCallMissingText": "Call is mandatory for voice-based Care services. To enable Call,",
     "careLicenseMsgAndCallMissingText": "Message and Call are mandatory for Care services like chat and voice interaction respectively. To enable Message and Call,",
@@ -6998,7 +6998,7 @@
       },
       "hybridDataSecurity": {
         "title": "Hybrid Data Security",
-        "description": "Storage Node Setup in Progress",
+        "description": "Creates an on-premises security realm.",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
