@@ -2663,6 +2663,7 @@
       "yesInfo1": "Assign your Hybrid Data Security Node to a cluster and enter the ",
       "yesInfo2": "FQDN ",
       "yesInfo3": "or IP address.",
+      "countryInfo": "Data Security deployment is limited by country. <a href='https://help.webex.com/docs/DOC-8266' target='_blank'>Check to see whether your country is supported.</a>",
       "confirmationDialogHeader": "Cancel Setup",
       "confirmationDialogBody": "Are you sure you want to cancel service setup?"
     },
