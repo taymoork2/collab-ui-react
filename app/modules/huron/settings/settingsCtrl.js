@@ -1233,6 +1233,7 @@
 
       if (_.get(vm, 'model.site.extensionLength') && (vm.model.site.extensionLength !== savedModel.site.extensionLength)) {
         siteData.extensionLength = vm.model.site.extensionLength;
+        vm.avrilDialPlanUpdated = true;
       }
 
       if (_.get(vm, 'model.site.siteSteeringDigit.siteDialDigit') && (vm.model.site.siteSteeringDigit.siteDialDigit !== savedModel.site.siteSteeringDigit.siteDialDigit)) {

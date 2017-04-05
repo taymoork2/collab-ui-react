@@ -1238,6 +1238,19 @@
         currentSite.country = currentSite.country.value;
 
         return ServiceSetup.createSite(currentSite)
+            .then(function () {
+              if (vm.voicemailAvrilCustomer && (isAvrilVoiceEnabled || vm.customer.servicePackage === VOICE_VOICEMAIL_AVRIL)) {
+                ServiceSetup.listSites().then(function () {
+                  if (ServiceSetup.sites.length !== 0) {
+                    var siteUuid = ServiceSetup.sites[0].uuid;
+                    ServiceSetup.createAvrilSite(siteUuid, currentSite.siteSteeringDigit,
+                     currentSite.siteCode, currentSite.preferredLanguage.value, currentSite.timeZone.id,
+                     currentSite.extensionLength, currentSite.voicemailPilotNumber, currentSite);
+                  }
+                });
+
+              }
+            })
           .then(function () {
             if (voicemailToggleEnabled && currentSite.voicemailPilotNumber) {
               return updateVoicemailSettings();
