@@ -4417,6 +4417,10 @@
     "callerIdName": "Caller ID Name",
     "callerIdNumber": "Caller ID Number"
   },
+  "externalTransfer": {
+    "title": "External Call Transfers/Conference",
+    "desc": "Choose whether external users are allowed to do external call transfers and conferences. This setting affects the entire organization; afterward you can override this setting for individual users."
+  },
   "internationalDialing": {
     "internationalDialing": "International Dialing",
     "internationalDialingPlacesDesc": "Users and Places with Spark Call inherit this setting by default. Exception can be made at the individual user's or place's settings."
