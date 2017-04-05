@@ -2642,10 +2642,10 @@
     "add-resource-dialog": {
       "cluster": "Create or select cluster",
       "hostname": "Enter FQDN or IP address",
-      "grant-registration-success-part-1": "You can now register your Hybrid Data Security Node to Cisco Collaboration Cloud.",
+      "grant-registration-success-part-1": "You may now register your Hybrid Data Security Node to the Cisco Collaboration Cloud.",
       "grant-registration-success-part-2": "Node IP Address/FQDN: {{hostname}}",
       "grant-registration-success-part-3": "Cluster: {{clustername}}",
-      "grant-success-information": "Go to your Hybrid Data Security Node within one hour to finish registration.",
+      "grant-success-information": "Go to your Hybrid Data Security Node within one hour to finish registration.<br>After one hour you will need to start the process again.",
       "title": "Register Hybrid Data Security Node",
       "text1": "Create a new or select an existing Hybrid Data Security Cluster where you want to add the Hybrid Data Security Node.",
       "text3": "Enter the",
@@ -2663,6 +2663,7 @@
       "yesInfo1": "Assign your Hybrid Data Security Node to a cluster and enter the ",
       "yesInfo2": "FQDN ",
       "yesInfo3": "or IP address.",
+      "countryInfo": "Data Security deployment is limited by country. <a href='https://help.webex.com/docs/DOC-8266' target='_blank'>Check to see whether your country is supported.</a>",
       "confirmationDialogHeader": "Cancel Setup",
       "confirmationDialogBody": "Are you sure you want to cancel service setup?"
     },
