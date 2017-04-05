@@ -15,7 +15,9 @@ type SeverityLabel = 'ok' | 'unknown' | 'warning' | 'error';
 
 export class HybridServicesClusterStatesService {
   /* @ngInject */
-  constructor() { }
+  constructor() {
+    this.getSeverity = this.getSeverity.bind(this);
+  }
 
   public getAlarmSeverityCssClass(alarmSeverity: ConnectorAlarmSeverity): AlarmCSSClass {
     if (alarmSeverity === 'critical' || alarmSeverity === 'error') {
