@@ -1,7 +1,7 @@
 import { ClusterService } from 'modules/hercules/services/cluster-service';
 import { ConnectorType } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
-import { EnterprisePrivateTrunkService } from 'modules/hercules/services/enterprise-private-trunk-service.ts';
+import { EnterprisePrivateTrunkService } from 'modules/hercules/services/enterprise-private-trunk-service';
 
 export interface IGridApiScope extends ng.IScope {
   gridApi?: any;
