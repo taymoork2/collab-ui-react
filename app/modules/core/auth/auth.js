@@ -11,9 +11,9 @@
       require('modules/core/config/urlConfig'),
       require('modules/core/scripts/services/authinfo'),
       require('modules/core/scripts/services/log'),
-      require('modules/core/scripts/services/sessionstorage'),
       require('modules/core/scripts/services/utils'),
       require('modules/core/window').default,
+      require('modules/core/storage').default,
       require('modules/huron/compass').default,
     ])
     .factory('Auth', Auth)

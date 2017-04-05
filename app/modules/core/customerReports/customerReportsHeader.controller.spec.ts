@@ -16,6 +16,9 @@ describe('Controller: Customer Reports Ctrl', function () {
   }, {
     title: 'reportsPage.usageReports.usageReportTitle',
     state: 'reports.device-usage',
+  }, {
+    title: 'reportsPage.webexMetrics.title',
+    state: 'reports.webex-metrics',
   }];
 
   afterAll(function () {
@@ -51,6 +54,7 @@ describe('Controller: Customer Reports Ctrl', function () {
       spyOn(this.FeatureToggleService, 'atlasMediaServiceMetricsMilestoneOneGetStatus').and.returnValue(this.$q.when(false));
       spyOn(this.FeatureToggleService, 'atlasMediaServiceMetricsMilestoneTwoGetStatus').and.returnValue(this.$q.when(false));
       spyOn(this.MediaServiceActivationV2, 'getMediaServiceState').and.returnValue(this.$q.resolve(false));
+      spyOn(this.FeatureToggleService, 'webexMetricsGetStatus').and.returnValue(this.$q.when(false));
 
       let WebExApiGatewayService: any = {
         siteFunctions: (url: string): any => {
@@ -87,6 +91,7 @@ describe('Controller: Customer Reports Ctrl', function () {
       spyOn(this.FeatureToggleService, 'atlasMediaServiceMetricsMilestoneOneGetStatus').and.returnValue(this.$q.when(true));
       spyOn(this.FeatureToggleService, 'atlasMediaServiceMetricsMilestoneTwoGetStatus').and.returnValue(this.$q.when(false));
       spyOn(this.MediaServiceActivationV2, 'getMediaServiceState').and.returnValue(this.$q.resolve(true));
+      spyOn(this.FeatureToggleService, 'webexMetricsGetStatus').and.returnValue(this.$q.when(true));
 
       let WebExApiGatewayService = {
         siteFunctions: (url: string): any => {

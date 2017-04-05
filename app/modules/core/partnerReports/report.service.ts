@@ -12,11 +12,12 @@ import {
   IIntervalQuery,
   IReportTypeQuery,
 } from './partnerReportInterfaces';
-import { Notification } from 'modules/core/notifications';
+import { CommonReportService } from './commonReportServices/commonReport.service';
+import { ReportConstants } from './commonReportServices/reportConstants.service';
+import { ChartColors } from '../config/chartColors';
+import { Notification } from '../notifications';
 
 export class ReportService {
-  private readonly POSITIVE: string = 'positive';
-  private readonly NEGATIVE: string = 'negative';
   private readonly ACTIVE_USERS: string = 'activeUsers';
   private readonly TOPN: string = 'topn';
 
@@ -38,9 +39,10 @@ export class ReportService {
   constructor(
     private $translate: ng.translate.ITranslateService,
     private $q: ng.IQService,
-    private CommonReportService,
-    private chartColors,
+    private CommonReportService: CommonReportService,
+    private chartColors: ChartColors,
     private Notification: Notification,
+    private ReportConstants: ReportConstants,
     private PartnerService,
   ) {}
 
@@ -67,7 +69,7 @@ export class ReportService {
     this.activeUserCancelPromise = this.$q.defer();
 
     let reportOptions: IIntervalQuery = this.CommonReportService.getOptions(filter, this.ACTIVE_USERS, this.CommonReportService.DETAILED);
-    this.activeUserDetailedPromise = this.CommonReportService.getPartnerReport(reportOptions, null, this.activeUserCancelPromise).then((response) => {
+    this.activeUserDetailedPromise = this.CommonReportService.getPartnerReport(reportOptions, undefined, this.activeUserCancelPromise).then((response) => {
       let data = _.get(response, 'data.data');
       if (data) {
         let overallActive = 0;
@@ -357,7 +359,7 @@ export class ReportService {
         let fairSum = _.toInteger(details.fairQualityDurationSum);
         let poorSum = _.toInteger(details.poorQualityDurationSum);
         let partialSum = fairSum + poorSum;
-        let date = _.get(item, 'date');
+        let date = _.get(item, 'date', '');
 
         if (totalSum > 0 && date) {
           graph.push({
@@ -466,14 +468,14 @@ export class ReportService {
           let details: any = _.get(item, 'details');
           if (details) {
             let customerName: string = this.getCustomerName(customers, details.orgId);
-            let direction: string = this.NEGATIVE;
+            let direction: string = this.ReportConstants.NEGATIVE;
             let registeredDevicesTrend: string = details.registeredDevicesTrend;
 
             if (registeredDevicesTrend === 'NaN') {
-              direction = this.POSITIVE;
+              direction = this.ReportConstants.POSITIVE;
               registeredDevicesTrend = '+0.0';
             } else if (registeredDevicesTrend >= '0') {
-              direction = this.POSITIVE;
+              direction = this.ReportConstants.POSITIVE;
               registeredDevicesTrend = '+' + registeredDevicesTrend;
             }
 
@@ -516,19 +518,19 @@ export class ReportService {
 
   private createEndpointTableEntry(customerName: string, min: string, max: string, direction: string, trend: string, yesterday: string): Array<IEndpointData> {
     return [{
-      class: 'vertical-center customer-data',
+      class: 'vertical-center ' + this.ReportConstants.CUSTOMER_DATA,
       output: [customerName],
       splitClasses: undefined,
     }, {
       class: 'table-data',
       output: [min, max],
-      splitClasses: 'table-half vertical-center horizontal-center',
+      splitClasses: 'table-half vertical-center ' + this.ReportConstants.HORIZONTAL_CENTER,
     }, {
-      class: 'vertical-center horizontal-center ' + direction,
+      class: 'vertical-center ' + this.ReportConstants.HORIZONTAL_CENTER + ' ' + direction,
       output: [trend],
       splitClasses: undefined,
     }, {
-      class: 'vertical-center horizontal-center',
+      class: 'vertical-center ' + this.ReportConstants.HORIZONTAL_CENTER,
       output: [yesterday],
       splitClasses: undefined,
     }];

@@ -10,6 +10,7 @@
         features="$ctrl.services"
         on-feature-click="$ctrl.clickService(feature)">
       </feature-list>
+      <hercules-cloud-extensions user="$ctrl.currentPlace" eservice="$ctrl.editCloudberryServices" ng-if="$ctrl.csdmHybridCalendarFeature"></hercules-cloud-extensions>
     </cs-sp-section>
 
     <cs-sp-section>
@@ -20,6 +21,14 @@
         on-generate-fn="$ctrl.onGenerateOtpFn()"
         on-show-device-detail-fn="$ctrl.showDeviceDetails(device)">
       </uc-device-list>
+    </cs-sp-section>
+
+    <cs-sp-section ng-if="$ctrl.showDeviceSettings">
+      <uc-device-settings
+        owner-type="place"
+        owner-id="$ctrl.currentPlace.id"
+        device-list="$ctrl.currentPlace.devices">
+      </uc-device-settings>
     </cs-sp-section>
   </cs-sp-container>
 </div>

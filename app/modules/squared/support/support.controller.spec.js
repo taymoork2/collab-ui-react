@@ -65,7 +65,7 @@ describe('Controller: SupportCtrl', function () {
 
       // something is requiring these urls to succeed
       $httpBackend.whenGET('https://ciscospark.statuspage.io/index.json').respond(200, {});
-      $httpBackend.whenGET('https://identity.webex.com/organization/scim/v1/Orgs/null').respond(200, {});
+      $httpBackend.whenGET('https://identity.webex.com/organization/scim/v1/Orgs/null?basicInfo=true').respond(200, {});
 
       expectedUrl = UrlConfig.getCallflowServiceUrl() +
         'callflow/logs' +

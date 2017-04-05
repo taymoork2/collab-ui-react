@@ -8,20 +8,37 @@ require('../devices/_devices.scss');
     .controller('PlacesCtrl',
 
       /* @ngInject */
-      function ($q, $scope, $state, $templateCache, $translate, CsdmDataModelService, Userservice, PlaceFilter, Authinfo, WizardFactory, RemPlaceModal, FeatureToggleService) {
+      function ($q, $timeout, $scope, $state, $templateCache, $translate, CsdmDataModelService, Userservice, PlaceFilter, Authinfo, WizardFactory, RemPlaceModal, FeatureToggleService, ServiceDescriptor) {
         var vm = this;
 
         vm.data = [];
-        vm.placesLoaded = false;
         vm.addPlaceIsDisabled = true;
         vm.placeFilter = PlaceFilter;
         vm.placeFilter.resetFilters();
+        vm.bigOrg = false;
+        vm.serverSearchString = '';
+        vm.timeoutVal = 1000;
+        vm.timer = 0;
         var filteredPlaces;
         var placesList;
 
+        vm.listStates = {
+          searching: "searching",
+          noplaces: "noplaces",
+          bigorg: "bigorg",
+          showresult: "showresult",
+          emptyresult: "emptyresult",
+        };
+
+        vm.listState = vm.listStates.searching;
+
         function init() {
           fetchAsyncSettings();
-          loadList();
+          CsdmDataModelService.isBigOrg().then(function (res) {
+            vm.bigOrg = res;
+            loadList(vm.bigOrg);
+            CsdmDataModelService.subscribeToChanges($scope, vm.updateListAndFilter.bind(this));
+          });
         }
 
         function fetchAsyncSettings() {
@@ -31,17 +48,42 @@ require('../devices/_devices.scss');
           var hybridPromise = FeatureToggleService.csdmHybridCallGetStatus().then(function (feature) {
             vm.csdmHybridCallFeature = feature;
           });
-          $q.all([ataPromise, hybridPromise, fetchDisplayNameForLoggedInUser()]).finally(function () {
+          var placeCalendarPromise = FeatureToggleService.csdmPlaceCalendarGetStatus().then(function (feature) {
+            vm.csdmHybridCalendarFeature = feature;
+          });
+          var gcalFeaturePromise = FeatureToggleService.atlasHerculesGoogleCalendarGetStatus().then(function (feature) {
+            vm.atlasHerculesGoogleCalendarFeatureToggle = feature;
+          });
+          var anyCalendarEnabledPromise = ServiceDescriptor.getServices().then(function (services) {
+            vm.hybridCalendarEnabledOnOrg = _.chain(ServiceDescriptor.filterEnabledServices(services)).filter(function (service) {
+              return service.id === 'squared-fusion-gcal' || service.id === 'squared-fusion-cal';
+            }).some().value();
+            vm.hybridCallEnabledOnOrg = _.chain(ServiceDescriptor.filterEnabledServices(services)).filter(function (service) {
+              return service.id === 'squared-fusion-uc';
+            }).some().value();
+          });
+          var atlasF237ResourceGroupsPromise = FeatureToggleService.atlasF237ResourceGroupGetStatus().then(function (feature) {
+            vm.atlasF237ResourceGroups = feature;
+          });
+          $q.all([ataPromise, hybridPromise, placeCalendarPromise, gcalFeaturePromise, atlasF237ResourceGroupsPromise, anyCalendarEnabledPromise, fetchDisplayNameForLoggedInUser()]).finally(function () {
             vm.addPlaceIsDisabled = false;
           });
         }
 
-        function loadList() {
-          CsdmDataModelService.getPlacesMap(true).then(function (list) {
-            placesList = list;
-            vm.placesLoaded = true;
-            vm.updateListAndFilter();
-          });
+        function loadList(isBigOrg) {
+          if (isBigOrg) {
+            placesList = [];
+            vm.listState = vm.listStates.bigorg;
+          } else {
+            CsdmDataModelService.getPlacesMap(true).then(function (list) {
+              placesList = list;
+              if (Object.keys(placesList).length === 0) {
+                vm.listState = vm.listStates.noplaces;
+              } else {
+                vm.updateListAndFilter();
+              }
+            });
+          }
         }
 
         function fetchDisplayNameForLoggedInUser() {
@@ -64,22 +106,16 @@ require('../devices/_devices.scss');
 
         init();
 
-        vm.existsDevices = function () {
-          return (vm.shouldShowList() && (Object.keys(placesList).length > 0));
-        };
-
-        vm.shouldShowList = function () {
-          return vm.placesLoaded;
-        };
-
         vm.isOrgEntitledToRoomSystem = function () {
           return Authinfo.isDeviceMgmt();
         };
 
         vm.isOrgEntitledToHuron = function () {
-          return _.filter(Authinfo.getLicenses(), function (l) {
-            return l.licenseType === 'COMMUNICATION';
-          }).length > 0;
+          return _.filter(
+              Authinfo.getLicenses(),
+              function (l) {
+                return l.licenseType === 'COMMUNICATION';
+              }).length > 0;
         };
 
         vm.setCurrentSearch = function (searchStr) {
@@ -97,11 +133,45 @@ require('../devices/_devices.scss');
         };
 
         vm.updateListAndFilter = function () {
-          filteredPlaces = PlaceFilter.getFilteredList(_.values(placesList));
-          return filteredPlaces;
-        };
 
-        CsdmDataModelService.subscribeToChanges($scope, vm.updateListAndFilter.bind(this));
+          if (vm.timer) {
+            $timeout.cancel(vm.timer);
+            vm.timer = 0;
+          }
+          var searchStr = vm.placeFilter.getCurrentSearch();
+          var doServerSideSearch = vm.bigOrg && (searchStr && searchStr.length > 2) && (!(vm.serverSearchString.length > 2 && _.startsWith(searchStr, vm.serverSearchString)));
+
+          vm.timer = $timeout(function () {
+
+            if (!vm.bigOrg || (searchStr && searchStr.length > 2)) {
+              if (doServerSideSearch) {
+                vm.listState = vm.listStates.searching;
+                CsdmDataModelService.getSearchPlacesMap(searchStr).then(function (list) {
+                  vm.serverSearchString = searchStr;
+                  placesList = list;
+                  filteredPlaces = PlaceFilter.getFilteredList(_.values(placesList));
+                  vm.listState = filteredPlaces.length > 0 ? vm.listStates.showresult : vm.listStates.emptyresult;
+                }, function () {
+                  vm.listState = vm.listStates.emptyresult;
+                  vm.serverSearchString = '';
+                  placesList = {};
+                  filteredPlaces = [];
+                  return [];
+                });
+              } else {
+                //Client-side search only. Not big-org or data already loaded
+                filteredPlaces = PlaceFilter.getFilteredList(_.values(placesList));
+                vm.listState = filteredPlaces.length > 0 ? vm.listStates.showresult : vm.listStates.emptyresult;
+              }
+            } else {
+              vm.listState = vm.listStates.bigorg;
+              vm.serverSearchString = '';
+              placesList = {};
+              filteredPlaces = [];
+              return [];
+            }
+          }, doServerSideSearch ? vm.timeoutVal : 0);
+        };
 
         vm.numDevices = function (place) {
           return _.size(place.devices);
@@ -167,6 +237,11 @@ require('../devices/_devices.scss');
               showATA: vm.showATA,
               admin: vm.adminUserDetails,
               csdmHybridCallFeature: vm.csdmHybridCallFeature,
+              csdmHybridCalendarFeature: vm.csdmHybridCalendarFeature,
+              hybridCalendarEnabledOnOrg: vm.hybridCalendarEnabledOnOrg,
+              hybridCallEnabledOnOrg: vm.hybridCallEnabledOnOrg,
+              atlasHerculesGoogleCalendarFeatureToggle: vm.atlasHerculesGoogleCalendarFeatureToggle,
+              atlasF237ResourceGroups: vm.atlasF237ResourceGroups,
               title: 'addDeviceWizard.newSharedSpace.title',
               isEntitledToHuron: vm.isOrgEntitledToHuron(),
               isEntitledToRoomSystem: vm.isOrgEntitledToRoomSystem(),
@@ -198,12 +273,22 @@ require('../devices/_devices.scss');
                   sparkCall: 'addDeviceFlow.addLines',
                   sparkCallConnect: 'addDeviceFlow.callConnectOptions',
                   sparkOnly: 'addDeviceFlow.showActivationCode',
+                  sparkOnlyAndCalendar: 'addDeviceFlow.editCalendarService',
                 },
               },
               'addDeviceFlow.callConnectOptions': {
-                next: 'addDeviceFlow.showActivationCode',
+                nextOptions: {
+                  next: 'addDeviceFlow.showActivationCode',
+                  calendar: 'addDeviceFlow.editCalendarService',
+                },
               },
               'addDeviceFlow.addLines': {
+                nextOptions: {
+                  next: 'addDeviceFlow.showActivationCode',
+                  calendar: 'addDeviceFlow.editCalendarService',
+                },
+              },
+              'addDeviceFlow.editCalendarService': {
                 next: 'addDeviceFlow.showActivationCode',
               },
             },

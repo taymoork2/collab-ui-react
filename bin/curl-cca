@@ -41,7 +41,7 @@ function ex_usage {
             echo "  ${cmd_basename} partner-admin GET https://cmi.huron-int.com/api/v1/common/customers/{org_id}"
             echo ""
             echo "ex. GET info of an organization (from Atlas)"
-            echo "  ${cmd_basename} partner-admin GET https://atlas-integration.wbx2.com/admin/api/v1/organizations/{org_id}"
+            echo "  ${cmd_basename} partner-admin GET https://atlas-intb.ciscospark.com/admin/api/v1/organizations/{org_id}"
             echo ""
             ;;
     esac

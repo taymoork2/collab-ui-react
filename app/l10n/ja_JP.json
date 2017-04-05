@@ -26,9 +26,9 @@
     "convertUsers": "ユーザーの変換",
     "errorWarningMessages": "警告とエラー",
     "skipErrorsAndFinish": "エラーをスキップして完了する",
-    "newUsers": "{newusers, plural, one {# New user} other {# New users}}",
-    "updatedUsers": "{updatedusers, plural, one{# Updated user} other{# Updated users}}",
-    "errors": "{errors, plural, one {# Error} other{# Errors}}",
+    "newUsers": "{newusers, plural, other {# New users}}",
+    "updatedUsers": "{updatedusers, plural, other{# Updated users}}",
+    "errors": "{errors, plural, other{# Errors}}",
     "pageTitle": "ユーザー",
     "subTitleAdd": "ユーザーの管理",
     "subTitleEnable": "ユーザーのエンタイトルメント",
@@ -246,7 +246,7 @@
       "retryUsers": "再試行",
       "retrying": "再試行中...",
       "retryingIn": "再試行待ち時間:",
-      "retryingUsers": "{users, plural, one{# User} other{# Users}}",
+      "retryingUsers": "{users, plural, other{# Users}}",
       "exportUserList": "ユーザー リストをエクスポートします。"
     },
     "advanced": {
@@ -1140,15 +1140,15 @@
   "notifications": {
     "success": "成功通知",
     "error": "エラー通知",
-    "successTotal": "{total, plural, one{# success} other{# successes}}",
-    "errorTotal": "{total, plural, one{# error} other{# errors}}",
+    "successTotal": "{total, plural, other{# successes}}",
+    "errorTotal": "{total, plural, other{# errors}}",
     "successDelete": "正常に {{item}} を削除しました。",
     "errorDelete": "{{item}} の削除に失敗しました。"
   },
   "time": {
-    "seconds": "{time, plural, one{# second} other{# seconds}}",
-    "minutes": "{time, plural, one{# minute} other{# minutes}}",
-    "hours": "{time, plural, one{# hour} other{# hours}}"
+    "seconds": "{time, plural, other{# seconds}}",
+    "minutes": "{time, plural, other{# minutes}}",
+    "hours": "{time, plural, other{# hours}}"
   },
   "callDestination": {
     "numberFormat": "番号の形式",
@@ -2083,7 +2083,7 @@
       "heading": "登録"
     },
     "notificationDropdown": {
-      "label": "{number, plural, one{# notification} other{# notifications}}"
+      "label": "{number, plural, other{# notifications}}"
     },
     "fusion": {
       "types": {
@@ -2100,7 +2100,7 @@
         "clusters": "クラスター",
         "users": "ユーザー",
         "release-channel": "リリース チャネル",
-        "nodes": "{count, plural, one{# Node} other{# Nodes}}",
+        "nodes": "{count, plural, other{# Nodes}}",
         "nodesBtn": "ノード",
         "settings": "設定",
         "all": "すべて",
@@ -2634,8 +2634,8 @@
     "setSipDomainLink": "Spark SIP アドレスとは?",
     "setSipDomainMsg": "サブドメインを入力します",
     "setSipDomainTitle": "Spark SIP アドレス",
-    "setSipDomainCompNames": "{count, plural, one{This subdomain} other{These subdomains}} が予約されます:",
-    "setSipDomainAsssignedNames": "{count, plural, one{This subdomain} other{These subdomains}} が予約されました",
+    "setSipDomainCompNames": "{count, plural, other{These subdomains}} が予約されます:",
+    "setSipDomainAsssignedNames": "{count, plural, other{These subdomains}} が予約されました",
     "setSipDomainCheckAvailability": "利用できるかどうか確認する",
     "setSipDomainPlaceholder": "サブドメインを入力します",
     "setSipDomainErrorMessage": "利用できません。別の名前を試してください",
@@ -3374,10 +3374,10 @@
     "deleteNumber": "番号の削除",
     "deleteConfirmation": "{{pattern}} を削除しますか?",
     "deleteWarning": "この操作は取り消すことができません。この番号は完全に削除されます。",
-    "allNumbers": "{count, plural, one{# Number} other{# Numbers}}",
-    "pendingNumbers": "{count, plural, one{# Pending Number} other{# Pending Numbers}}",
-    "unassignedNumbers": "{count, plural, one{# Unassigned Number} other{# Unassigned Numbers}}",
-    "searchResults": "{count, plural, one{# search result} other{# search results}}",
+    "allNumbers": "{count, plural, other{# Numbers}}",
+    "pendingNumbers": "{count, plural, other{# Pending Numbers}}",
+    "unassignedNumbers": "{count, plural, other{# Unassigned Numbers}}",
+    "searchResults": "{count, plural, other{# search results}}",
     "findNumber": "番号を探す..."
   },
   "pstnOrderOverview": {
@@ -3394,7 +3394,7 @@
   },
   "pstnOrderDetail": {
     "orderNumber": "オーダー番号 {{orderId}}",
-    "pendingNumbers": "このオーダーについて、{count, plural, one{There is # number} other{There are # numbers}} 保留中",
+    "pendingNumbers": "このオーダーについて、{count, plural, other{There are # numbers}} 保留中",
     "searchPlaceholder": "電話番号の検索",
     "waitOnTOSAcceptance": "顧客からのサービス利用規約の承認待ち"
   },
@@ -3434,7 +3434,7 @@
     "package": "パッケージ",
     "adding": "追加中",
     "numbersTitle": "番号",
-    "numbers": "{count, plural, one{# number} other{# numbers}}",
+    "numbers": "{count, plural, other{# numbers}}",
     "newNumbers": "{{count}} 新規",
     "portNumbers": "{{Count}} ポート",
     "thankYou": "ありがとうございます",
@@ -3794,9 +3794,9 @@
     "notes": "メモ",
     "active": "アクティブ",
     "free": "無料",
-    "daysRemaining": "{count, plural, one{# day} other{# days}} 残存",
-    "daysLeftToPurchase": "{count, plural, one{# day} other{# days}} 未購入",
-    "daysLeftToRenew": "{count, plural, one{# day} other{# days}} 未更新",
+    "daysRemaining": "{count, plural, other{# days}} 残存",
+    "daysLeftToPurchase": "{count, plural, other{# days}} 未購入",
+    "daysLeftToRenew": "{count, plural, other{# days}} 未更新",
     "expiringToday": "本日終了します",
     "expired": "有効期限切れ",
     "expiredWithGracePeriod": "有効期限切れ。今すぐ購入",
@@ -3830,7 +3830,7 @@
     "trialTerms": "トライアルの使用条件",
     "trialOverview": "トライアル",
     "webexOverview": "WebEx",
-    "webexSiteCount": "{count, plural, one{# more site} other{# more sites}}",
+    "webexSiteCount": "{count, plural, other{# more sites}}",
     "licenses": "ライセンス数",
     "totalQuantity": "合計数",
     "totalLicenses": "総ライセンス数",
@@ -3880,7 +3880,7 @@
     "accountStatus": "アカウント ステータス",
     "totalUsers": "合計ユーザー数",
     "purchased": "購入済み",
-    "domain": "{count, plural, one{Domain} other{Domains}}",
+    "domain": "{count, plural, other{Domains}}",
     "domains": "ドメイン",
     "quantityWithValue": "数量: {{quantity}}",
     "anotherPartner": "(別のパートナー)",

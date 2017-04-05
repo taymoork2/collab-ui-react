@@ -3,6 +3,7 @@ cluster-sidepanel-overview {
 }
 .tooltip[popup-class="cluster-name"] .c-nub {
   font-size: small;
-  text-overflow: ellipsis;
+  white-space: normal;
+  word-wrap: break-word;
   max-width: 300px;
 }

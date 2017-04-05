@@ -29,13 +29,16 @@
     init();
 
     function init() {
+      var params = {
+        basicInfo: true,
+      };
       getCarriersStatic();
       Orgservice.getOrg(function (data, status) {
         if (status === 200) {
           vm.orgData = data;
           getToSInfo();
         }
-      });
+      }, null, params);
     }
 
     function getCarriersStatic() {

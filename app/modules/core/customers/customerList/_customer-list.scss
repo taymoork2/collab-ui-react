@@ -1,8 +1,8 @@
-@import 'styles/toolkit/colors';
-@import 'styles/toolkit/layout';
-@import 'styles/toolkit/spacing';
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~collab-ui/scss/tools/placeholders/page-layout';
 
-@import '~collab-ui/scss/foundation-trumps/labels';
+@import '~collab-ui/scss/objects/labels';
 
 .customer-list {
   @extend %grid-subheader;

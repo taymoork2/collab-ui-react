@@ -9,9 +9,12 @@ namespace globalsettings {
     constructor(private Orgservice, Authinfo, private Notification) {
       this.orgId = Authinfo.getOrgId();
       this._showCrashLogSetting = Authinfo.isDeviceMgmt();
+      let params = {
+        basicInfo: true,
+      };
       Orgservice.getOrg((data) => {
         this.orgDataLoaded(data);
-      }, this.orgId, false);
+      }, this.orgId, params);
     }
 
     public orgDataLoaded({ success = false, orgSettings = undefined }: { success: boolean; orgSettings: any } = {

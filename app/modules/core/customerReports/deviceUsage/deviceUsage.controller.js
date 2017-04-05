@@ -10,7 +10,7 @@ require('modules/core/reports/amcharts-export.scss');
 
   /* @ngInject */
   function DeviceUsageCtrl($log, $translate, $scope,
-    DeviceUsageService, DeviceUsageTotalService, DeviceUsageGraphService,
+    DeviceUsageService, DeviceUsageGraphService,
     DeviceUsageDateService, DeviceUsageExportService, Notification,
     DeviceUsageSplunkMetricsService, ReportConstants, $modal, DeviceUsageModelService) {
     var vm = this;
@@ -42,14 +42,6 @@ require('modules/core/reports/amcharts-export.scss');
     vm.init = init;
     vm.timeUpdate = timeUpdate;
     vm.doTimeUpdate = doTimeUpdate;
-
-    // Switch between V1 and V2.
-    // TODO: Remove when V2 has been verified in production !
-    vm.v2 = true; // set to false to use V1
-
-    if (vm.v2 === false) {
-      DeviceUsageService = DeviceUsageTotalService;
-    }
 
     vm.timeOptions = _.cloneDeep(ReportConstants.TIME_FILTER);
     vm.timeSelected = vm.timeOptions[0];
@@ -234,12 +226,10 @@ require('modules/core/reports/amcharts-export.scss');
       vm.waitingForDeviceMetrics = true;
       vm.waitForLeast = true;
       vm.waitForMost = true;
-      DeviceUsageService.getDataForRange(dates.start, dates.end, 'day', allDeviceCategories, models, apiToUse).then(function (data) {
+      DeviceUsageService.getDataForRange(dates.start, dates.end, 'day', models, apiToUse).then(function (data) {
         loadChartData(data, $translate.instant('reportsPage.usageReports.last7Days'), models);
-        if (vm.v2 === true) {
-          if (!models) {
-            getModelsForRange(dates.start, dates.end).then(modelsForRange);
-          }
+        if (!models) {
+          getModelsForRange(dates.start, dates.end).then(modelsForRange);
         }
       }, handleReject);
     }
@@ -248,12 +238,10 @@ require('modules/core/reports/amcharts-export.scss');
       vm.waitingForDeviceMetrics = true;
       vm.waitForLeast = true;
       vm.waitForMost = true;
-      DeviceUsageService.getDataForRange(dates.start, dates.end, 'week', allDeviceCategories, models, apiToUse).then(function (data) {
+      DeviceUsageService.getDataForRange(dates.start, dates.end, 'week', models, apiToUse).then(function (data) {
         loadChartData(data, $translate.instant('reportsPage.usageReports.last4Weeks'), models);
-        if (vm.v2 === true) {
-          if (!models) {
-            getModelsForRange(dates.start, dates.end).then(modelsForRange);
-          }
+        if (!models) {
+          getModelsForRange(dates.start, dates.end).then(modelsForRange);
         }
       }, handleReject);
     }
@@ -262,12 +250,10 @@ require('modules/core/reports/amcharts-export.scss');
       vm.waitingForDeviceMetrics = true;
       vm.waitForLeast = true;
       vm.waitForMost = true;
-      DeviceUsageService.getDataForRange(dates.start, dates.end, 'month', allDeviceCategories, models, apiToUse).then(function (data) {
+      DeviceUsageService.getDataForRange(dates.start, dates.end, 'month', models, apiToUse).then(function (data) {
         loadChartData(data, $translate.instant('reportsPage.usageReports.last3Months'), models);
-        if (vm.v2 === true) {
-          if (!models) {
-            getModelsForRange(dates.start, dates.end).then(modelsForRange);
-          }
+        if (!models) {
+          getModelsForRange(dates.start, dates.end).then(modelsForRange);
         }
       }, handleReject);
     }
@@ -349,7 +335,7 @@ require('modules/core/reports/amcharts-export.scss');
       exportProgressDialog.opened.then(function () {
         vm.exporting = true;
         exportStarted = moment();
-        DeviceUsageExportService.exportData(dateRange.start, dateRange.end, apiToUse, vm.exportStatus, allDeviceCategories, vm.v2);
+        DeviceUsageExportService.exportData(dateRange.start, dateRange.end, apiToUse, vm.exportStatus, allDeviceCategories);
       });
     };
 

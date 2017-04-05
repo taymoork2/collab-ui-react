@@ -182,7 +182,7 @@ describe('HelpdeskCardsService', function () {
       expect(card.services[2].serviceId).toEqual("squared-fusion-media");
       expect(card.services[2].status).toEqual('setupNotComplete');
       expect(card.services[2].setup).toBeFalsy();
-      expect(card.services[2].statusCss).toEqual('default');
+      expect(card.services[2].statusCss).toEqual('disabled');
 
     });
 

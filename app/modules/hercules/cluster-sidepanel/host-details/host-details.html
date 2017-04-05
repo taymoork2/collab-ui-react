@@ -1,4 +1,4 @@
-<cs-sp-container class="hercules-settings-table">
+<cs-sp-container class="hercules-settings-table" ng-if="hostDetailsCtrl.host">
   <cs-sp-section>
     <div class="section-title-row section-name">
       {{hostDetailsCtrl.localizedConnectorSectionHeader}}
@@ -25,7 +25,7 @@
     </table>
   </cs-sp-section>
 
-  <cs-sp-section>
+  <cs-sp-section ng-if="hostDetailsCtrl.showAction()">
     <div class="section-title-row section-name" translate="hercules.connectors.actions"></div>
     <ul>
       <li ng-if="hostDetailsCtrl.showGoToHostAction()">

@@ -106,7 +106,7 @@ time_start=$(date +"%s")
 
 # Install dependecies
 echo "Install all dependencies..."
-npm install || exit $?
+npm install --loglevel=verbose || exit $?
 
 # npm install succeeded
 # - make a tar archive of the npm deps, and rm older versions

@@ -218,3 +218,11 @@ export interface ICustomerIntervalQuery {
   cache: boolean;
   customerView?: boolean;
 }
+
+export interface IPartnerCharts {
+  active?: any;
+  devices?: any;
+  metrics?: any;
+  media?: any;
+  population?: any;
+}

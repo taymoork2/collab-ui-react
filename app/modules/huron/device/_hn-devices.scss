@@ -1,6 +1,6 @@
-@import 'styles/toolkit/colors';
-@import 'styles/toolkit/fonts';
-@import 'styles/toolkit/spacing';
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/typography';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
 
 .device-header-icon {
   img {
@@ -35,7 +35,7 @@
   width: 10px;
   height: 10px;
   display: inline-block;
-  background-color: $brand-default;
+  background-color: $gray-dark-1;
   border-radius: 50%;
 }
 

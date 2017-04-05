@@ -33,7 +33,7 @@
       <div class="panel">
         <div ng-if="aaCallerInput.inputActions.length" class="row aa-pm-vertical-line" ng-repeat="keyAction in aaCallerInput.inputActions">
           <div class="row">
-            <form name="nameKeyedInputForm" novalidate>
+            <ng-form name="nameKeyedInputForm">
               <div class="small-2 columns">
                 <cs-select ng-model="keyAction.key" options="keyAction.keys" placeholder="aaCallerInput.selectPlaceholder" on-change-fn="aaCallerInput.keyChanged($index, keyAction.key)" class="aa-pm-key-select" icon="icon-chevron-down" ng-class="{'not-selected':!keyAction.key}">
                 </cs-select>
@@ -45,7 +45,7 @@
               <div class="small-1 columns">
                 <i ng-if="aaCallerInput.inputActions.length > 1" class="icon icon-trash aa-trash-icon" aria-label="common.delete" ng-click="aaCallerInput.deleteKeyAction($index); $event.stopPropagation();"></i>
               </div>
-            </form>
+            </ng-form>
           </div>
         </div>
         <div class="row" ng-if="aaCallerInput.inputActions.length < 12">

@@ -1,9 +1,9 @@
 import { IBmmpAttr } from 'modules/online/upgrade/upgrade.service';
 
 class SubscriptionHeaderCtrl {
-  public isTrial = false;
-  public isOnline = false;
-  public numSubscriptions = 0;
+  public isTrial: boolean = false;
+  public isOnline: boolean = false;
+  public numSubscriptions: number = 0;
   public productInstanceId: string;
   public upgradeTrialUrl: string;
   public bmmpAttr: IBmmpAttr;

@@ -1,22 +1,9 @@
 <cs-card id='availability-card' class="full media-metrics-report-card">
   <article class="media-service-card">
     <graphheader>
-      <div class="legendDiv" >
-        <table class="headerTable" ng-if="$ctrl.parentcntrl.clusterSelected == $ctrl.parentcntrl.allClusters">
-          <tr>
-            <td>
-              <h4 class='report-section-header' translate='mediaFusion.metrics.availabilityOfCluster'></h4>
-            </td>
-          </tr>
-        </table>
-        <table class="headerTable" ng-if="$ctrl.parentcntrl.clusterSelected != $ctrl.parentcntrl.allClusters">
-          <tr>
-            <td>
-              <h4 class='report-section-header' translate='mediaFusion.metrics.availabilityOfHost'></h4>
-            </td>
-          </tr>  
-        </table>
-      </div>
+      <h4 class='report-section-header' translate='mediaFusion.metrics.availabilityOfCluster' ng-if="$ctrl.parentcntrl.clusterSelected == $ctrl.parentcntrl.allClusters"></h4>
+      <h4 class='report-section-header' translate='mediaFusion.metrics.availabilityOfHost' ng-if="$ctrl.parentcntrl.clusterSelected != $ctrl.parentcntrl.allClusters"></h4>
+      <div id="availability-div"></div>
     </graphheader>
     <section>
       <div class="availability-reports" ng-class="{'availabilityCursor': $ctrl.parentcntrl.clusterSelected == $ctrl.parentcntrl.allClusters}">

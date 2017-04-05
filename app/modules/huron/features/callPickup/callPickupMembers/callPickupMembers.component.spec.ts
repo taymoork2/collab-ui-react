@@ -76,14 +76,15 @@ describe('Component: callPickupMembers', () => {
       let mockMembersList = membersList.slice(1, 4);
       let linesTaken = true;
       this.view.find(MEMBER_INPUT).val('doe').change();
+      this.controller.fetchMembers('doe').then(function (mockMembersList) {
+        for (let i = 0; i < mockMembersList.length; i++) {
+          expect(mockMembersList[i].disabled).toEqual(true);
+        }
+      });
       this.getMemberSuggestionsByLimitDefer.resolve(mockMembersList);
       this.areAllLinesInPickupGroupDefer.resolve(linesTaken);
       this.$scope.$apply();
       expect(mockMembersList.length).toEqual(suggestedMembersCount);
-
-      for (let i = 0; i < mockMembersList.length; i++) {
-        expect(mockMembersList[i].disabled).toEqual(true);
-      }
     });
   });
 

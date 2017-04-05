@@ -6,7 +6,7 @@
     .controller('CallServiceSettingsController', CallServiceSettingsController);
 
   /* @ngInject */
-  function CallServiceSettingsController($modal, Analytics, ServiceDescriptor, Authinfo, USSService, CertService, Notification, CertificateFormatterService, $translate, hasVoicemailFeatureToggle, UCCService) {
+  function CallServiceSettingsController($modal, Analytics, ServiceDescriptor, Authinfo, USSService, CertService, Notification, CertificateFormatterService, $translate, hasAtlasHybridCallDiagnosticTool, hasVoicemailFeatureToggle, Orgservice, UCCService) {
     var vm = this;
     vm.formattedCertificateList = [];
     vm.readCerts = readCerts;
@@ -27,6 +27,7 @@
           this.Notification.errorWithTrackingId(response, 'hercules.genericFailure');
         });
     }
+    vm.hasAtlasHybridCallDiagnosticTool = hasAtlasHybridCallDiagnosticTool;
     vm.hasVoicemailFeatureToggle = hasVoicemailFeatureToggle;
     vm.help = {
       title: 'common.help',
@@ -41,32 +42,14 @@
     vm.callServiceConnect = {
       title: 'hercules.serviceNames.squared-fusion-ec',
     };
+    vm.isTestOrg = false;
+
+    Orgservice.isTestOrg()
+      .then(function (isTestOrg) {
+        vm.isTestOrg = isTestOrg;
+      });
 
     Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CALL_SETTINGS);
-
-    vm.storeEc = function (toggleConnect) {
-      if (!toggleConnect) {
-        ServiceDescriptor.enableService('squared-fusion-ec')
-          .then(function () {
-            readCerts();
-            Notification.success('hercules.notifications.connect.connectEnabled');
-          })
-          .catch(function (response) {
-            vm.squaredFusionEc = false;
-            Notification.errorWithTrackingId(response, 'hercules.errors.failedToEnableConnect');
-          });
-      } else {
-        ServiceDescriptor.disableService('squared-fusion-ec').then(function () {
-          Notification.success('hercules.notifications.connect.connectDisabled');
-          if (hasVoicemailFeatureToggle) {
-            vm.disableVoicemail(Authinfo.getOrgId());
-          }
-        })
-          .catch(function (response) {
-            Notification.errorWithTrackingId(response, 'hercules.error.failedToDisableConnect');
-          });
-      }
-    };
 
     vm.disableVoicemail = function (orgId) {
       UCCService.getOrgVoicemailConfiguration(orgId)
@@ -93,13 +76,17 @@
       //  if (err) return notification.notify(err);
       });
 
-    vm.updateSipDomain = function () {
+    vm.updateSipDomain = function (savedDespiteWarnings) {
       vm.savingSip = true;
 
       USSService.updateOrg(vm.org)
         .then(function () {
           vm.savingSip = false;
-          Notification.success('hercules.errors.sipDomainSaved');
+          if (savedDespiteWarnings) {
+            Notification.warning('hercules.errors.sipDomainSavedDespiteWarnings');
+          } else {
+            Notification.success('hercules.errors.sipDomainSaved');
+          }
         })
         .catch(function (error) {
           vm.savingSip = false;
@@ -143,5 +130,31 @@
           Notification.errorWithTrackingId(error, 'hercules.settings.call.certificatesCannotRead');
         });
     }
+
+    /* Callback from the hs-enable-disable-call-service-connect component  */
+    vm.onCallServiceConnectEnabled = function () {
+      vm.squaredFusionEc = true;
+      readCerts();
+    };
+
+    /* Callback from the hs-enable-disable-call-service-connect component  */
+    vm.onCallServiceConnectDisabled = function () {
+      vm.squaredFusionEc = false;
+      if (hasVoicemailFeatureToggle) {
+        vm.disableVoicemail(Authinfo.getOrgId());
+      }
+    };
+
+    /* Callback from the verify-sip-destination component  */
+    vm.onDestinationSave = function (warn) {
+      vm.updateSipDomain(warn);
+    };
+
+    /* Callback from the verify-sip-destination component  */
+    vm.onDestinationClear = function () {
+      vm.org.sipDomain = '';
+    };
+
+
   }
 }());

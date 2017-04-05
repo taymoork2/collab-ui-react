@@ -11,8 +11,7 @@ require('./_login.scss');
     require('modules/core/scripts/services/log'),
     require('modules/core/scripts/services/logmetricsservice'),
     require('modules/core/scripts/services/pageparam'),
-    require('modules/core/scripts/services/sessionstorage'),
-    require('modules/core/scripts/services/storage'),
+    require('modules/core/storage').default,
     require('modules/core/scripts/services/utils'),
   ]).directive('login', require('./login.directive'))
     .name;

@@ -107,7 +107,7 @@
                 type="text"
                 ng-model="$ctrl.emergency.emergencyAddress.zip"
                 cs-input-group-size="medium-4"
-                cs-input-label="{{::'serviceAddress.zipCode' | translate}}"
+                cs-input-label="{{$ctrl.zipLabel}}"
                 ng-disabled="$ctrl.useCompanyAddress"
                 ng-required="!$ctrl.useCompanyAddress"
                 maxlength="7">

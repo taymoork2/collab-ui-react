@@ -1,4 +1,14 @@
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~collab-ui/scss/tools/placeholders/page-layout';
+
 .huronsettings-state {
+  @extend %page-background-white;
+}
+
+// TODO (jlowery): remove when sparkCallTenDigitExt feature toggle is removed.
+.huronsettingsnew-state {
   @extend %page-background-white;
 }
 
@@ -153,11 +163,6 @@
     }
   }
 
-  .alert {
-    margin-right: 0;
-    margin-left: 0;
-  }
-
   .save-popup-margin {
     margin-bottom: vr-adjust(60px);
   }
@@ -168,6 +173,10 @@
 
   .cs-radio-group {
     margin-bottom: 1rem;
+  }
+
+  .cs-checkbox-group {
+    margin-top: 1rem;
   }
 
   .warning-color {

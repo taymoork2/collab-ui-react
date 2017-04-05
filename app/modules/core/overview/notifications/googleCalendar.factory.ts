@@ -1,12 +1,12 @@
 export class OverviewGoogleCalendarNotification {
 
-  public createNotification($modal, $state, Orgservice) {
+  public createNotification($modal, $state, ServiceDescriptor) {
     return {
       badgeText: 'common.new',
       badgeType: 'success',
       canDismiss: true,
       dismiss: () => {
-        Orgservice.setHybridServiceAcknowledged('google-calendar-service');
+        ServiceDescriptor.acknowledgeService('squared-fusion-gcal');
       },
       link: () => {
         $modal.open({

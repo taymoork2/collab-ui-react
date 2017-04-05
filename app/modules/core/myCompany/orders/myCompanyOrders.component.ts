@@ -2,6 +2,9 @@ import { IOrderDetail } from './myCompanyOrders.service';
 import { Notification } from 'modules/core/notifications';
 import { MyCompanyOrdersService } from './myCompanyOrders.service';
 
+const COMPLETED = 'COMPLETED';
+const ERROR = 'ERROR';
+
 class MyCompanyOrdersCtrl implements ng.IComponentController {
 
   public gridOptions: uiGrid.IGridOptions;
@@ -28,7 +31,22 @@ class MyCompanyOrdersCtrl implements ng.IComponentController {
           orderDetail.productDescriptionList =
               this.formatProductDescriptionList(orderDetail.productDescriptionList);
         }
+        if (COMPLETED === orderDetail.status) {
+          orderDetail.status = this.$translate.instant('myCompanyOrders.completed');
+        } else if (ERROR === orderDetail.status) {
+          orderDetail.status = this.$translate.instant('myCompanyOrders.error');
+        } else {
+          orderDetail.status = this.$translate.instant('myCompanyOrders.pending');
+        }
         return orderDetail;
+      });
+      // sort orders with newest in top
+      this.orderDetailList.sort((a: IOrderDetail, b: IOrderDetail): number => {
+        if (a.orderDate < b.orderDate) {
+          return 1;
+        } else {
+          return 0;
+        }
       });
     }).catch((response) => {
       this.Notification.errorWithTrackingId(response, 'myCompanyOrders.loadError');

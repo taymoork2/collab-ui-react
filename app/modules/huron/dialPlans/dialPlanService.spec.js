@@ -1,5 +1,7 @@
 'use strict';
 
+var testModule = require('./index').default;
+
 describe('Service: DialPlanService', function () {
   var $httpBackend, HuronConfig, DialPlanService;
 
@@ -17,7 +19,7 @@ describe('Service: DialPlanService', function () {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
   };
 
-  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module(testModule));
 
   var authInfo = {
     getOrgId: sinon.stub().returns('1'),

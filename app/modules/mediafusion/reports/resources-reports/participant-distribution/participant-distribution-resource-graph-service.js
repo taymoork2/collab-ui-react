@@ -7,6 +7,7 @@
 
     var vm = this;
     vm.participantDistributiondiv = 'participantDistributiondiv';
+    vm.exportDiv = 'participant-export-div';
     vm.GUIDEAXIS = 'guideaxis';
     vm.AXIS = 'axis';
     vm.LEGEND = 'legend';
@@ -146,15 +147,6 @@
 
       if (!isDummy && clusterSelected === vm.allClusters) {
         graphs.push({
-          'title': 'All',
-          'id': 'all',
-          'bullet': 'square',
-          'bulletSize': 10,
-          'lineColor': '#000000',
-          'hidden': true,
-        });
-
-        graphs.push({
           'title': 'None',
           'id': 'none',
           'bullet': 'square',
@@ -162,7 +154,8 @@
           'lineColor': '#000000',
         });
       }
-      var chartData = CommonReportsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, CommonReportsGraphService.getBaseExportForGraph(exportFields, ExportFileName, columnNames));
+      var chartData = CommonReportsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, CommonReportsGraphService.getBaseExportForGraph(exportFields, ExportFileName, columnNames, vm.exportDiv));
+      chartData.chartCursor.balloonPointerOrientation = 'vertical';
       chartData.legend = CommonReportsGraphService.getBaseVariable(vm.LEGEND);
       chartData.legend.labelText = '[[title]]';
       chartData.legend.useGraphSettings = true;
@@ -214,7 +207,7 @@
         });
         if (!_.isUndefined(clusterName)) {
           value.title = clusterName;
-          value.balloonText = '<span class="graph-text">' + value.title + ' ' + ' <span class="graph-number">[[value]]</span></span>' + ' <span class="graph-text">[[' + value.descriptionField + ']]</span></span>';
+          value.balloonText = '<span class="graph-text">' + value.title + ' ' + ' <span class="graph-number">[[value]]</span></span>' + ' <p class="graph-text insight-padding"><span class="graph-text-color">[[' + value.descriptionField + ']]</span></p>';
           value.lineThickness = 2;
         }
         if (value.title !== value.valueField) {
@@ -227,22 +220,19 @@
     }
 
     function legendHandler(evt) {
-      if (evt.dataItem.id === 'all') {
-        _.forEach(evt.chart.graphs, function (graph) {
-          if (graph.id != 'all') {
-            evt.chart.showGraph(graph);
-          } else if (graph.id === 'all') {
+      if (evt.dataItem.title === 'None') {
+        evt.dataItem.title = 'All';
+        _.each(evt.chart.graphs, function (graph) {
+          if (graph.title != 'All') {
             evt.chart.hideGraph(graph);
+          } else {
+            evt.chart.showGraph(graph);
           }
-
         });
-      } else if (evt.dataItem.id === 'none') {
-        _.forEach(evt.chart.graphs, function (graph) {
-          if (graph.id != 'all') {
-            evt.chart.hideGraph(graph);
-          } else if (graph.id === 'all') {
-            evt.chart.showGraph(graph);
-          }
+      } else if (evt.dataItem.title === 'All') {
+        evt.dataItem.title = 'None';
+        _.each(evt.chart.graphs, function (graph) {
+          evt.chart.showGraph(graph);
         });
       }
     }

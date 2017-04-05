@@ -5,7 +5,7 @@
     require('modules/core/scripts/services/authinfo'),
     require('modules/core/config/config'),
     require('modules/core/scripts/services/log'),
-    require('modules/core/scripts/services/storage'),
+    require('modules/core/storage').default,
     require('modules/core/auth/auth'),
     require('modules/core/config/urlConfig'),
   ]).service('LogMetricsService', LogMetricsService)
@@ -34,6 +34,12 @@
       },
 
       eventType: {
+        contextCreateFieldSuccess: 'CONTEXTCREATEFIELDSUCCESS',
+        contextCreateFieldFailure: 'CONTEXTCREATEFIELDFAILURE',
+        contextNewField: 'CONTEXTNEWFIELD',
+        contextCreateFieldsetSuccess: 'CONTEXTCREATEFIELDSETSUCCESS',
+        contextCreateFieldsetFailure: 'CONTEXTCREATEFIELDSETFAILURE',
+        contextNewFieldset: 'CONTEXTNEWFIELDSET',
         contextServiceEnabled: 'CONTEXTSERVICEENABLED',
         contextServiceDisabled: 'CONTEXTSERVICEDISABLED',
         inviteUsers: 'INVITEUSERS',
@@ -114,11 +120,11 @@
         var stateFound = true;
 
         switch (state.name) {
-          case 'trialAdd.info':
+          case 'trial.info':
             msg = "In trial page";
             eType = this.getEventType('trialPage');
             break;
-          case 'trialAdd.addNumbers':
+          case 'trial.addNumbers':
             msg = "In trial DID page";
             eType = this.getEventType('trialDidPage');
             break;

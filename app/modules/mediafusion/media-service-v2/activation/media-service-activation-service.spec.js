@@ -36,7 +36,7 @@ describe('MediaServiceActivationV2', function () {
     var data = {
       "acknowledged": true,
     };
-    $httpBackend.when('PATCH', 'https://hercules-integration.wbx2.com/v1/organizations/12345/services/' + extensionEntitlements[0], data).respond(200, {});
+    $httpBackend.when('PATCH', 'https://hercules-intb.ciscospark.com/v1/organizations/12345/services/' + extensionEntitlements[0], data).respond(200, {});
     Service.setServiceAcknowledged(extensionEntitlements[0], true);
     expect($httpBackend.flush).not.toThrow();
   });
@@ -46,7 +46,7 @@ describe('MediaServiceActivationV2', function () {
       "identityOrgId": "12345",
       "mediaAgentOrgIds": mediaAgentOrgIds,
     };
-    $httpBackend.when('PUT', 'https://calliope-integration.wbx2.com/calliope/api/authorization/v1/identity2agent', data).respond(204, {});
+    $httpBackend.when('PUT', 'https://calliope-intb.ciscospark.com/calliope/api/authorization/v1/identity2agent', data).respond(204, {});
     Service.setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIds);
     expect($httpBackend.flush).not.toThrow();
   });
@@ -54,7 +54,7 @@ describe('MediaServiceActivationV2', function () {
   it('should return the user identity org to media agent org id mapping', function (done) {
 
     $httpBackend
-      .expect('GET', 'https://calliope-integration.wbx2.com/calliope/api/authorization/v1/identity2agent/' + authinfo.getOrgId())
+      .expect('GET', 'https://calliope-intb.ciscospark.com/calliope/api/authorization/v1/identity2agent/' + authinfo.getOrgId())
       .respond(200, {
         statusCode: 0,
         identityOrgId: authinfo.getOrgId(),
@@ -65,7 +65,7 @@ describe('MediaServiceActivationV2', function () {
   });
 
   it('MediaServiceActivationV2 setServiceEnabled should be called for enableMediaService', function () {
-    $httpBackend.when('GET', 'https://calliope-integration.wbx2.com/calliope/api/authorization/v1/identity2agent/12345').respond({
+    $httpBackend.when('GET', 'https://calliope-intb.ciscospark.com/calliope/api/authorization/v1/identity2agent/12345').respond({
       statusCode: 0,
       identityOrgId: "5632f806-ad09-4a26-a0c0-a49a13f38873",
       mediaAgentOrgIds: ["5632f806-ad09-4a26-a0c0-a49a13f38873", "mocked"],
@@ -107,7 +107,7 @@ describe('MediaServiceActivationV2', function () {
     expect(FusionClusterService.serviceIsSetUp).not.toHaveBeenCalled();
   });
   it('MediaServiceActivationV2 deleteUserIdentityOrgToMediaAgentOrgMapping should successfully delete the OrgMapping', function () {
-    $httpBackend.when('DELETE', 'https://calliope-integration.wbx2.com/calliope/api/authorization/v1/identity2agent').respond(204);
+    $httpBackend.when('DELETE', 'https://calliope-intb.ciscospark.com/calliope/api/authorization/v1/identity2agent').respond(204);
     Service.deleteUserIdentityOrgToMediaAgentOrgMapping();
   });
   it('Should notify about activation failure when enableMediaService fails', function () {

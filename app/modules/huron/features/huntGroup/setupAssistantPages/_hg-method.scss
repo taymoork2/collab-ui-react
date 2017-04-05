@@ -1,6 +1,6 @@
-@import 'styles/toolkit/fonts';
-@import 'styles/toolkit/colors';
-@import 'styles/toolkit/spacing';
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/typography';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
 
 .hgmethods {
   &.large {
@@ -19,7 +19,7 @@
   .title {
     color: $color-primary-base;
     font-family: $brand-font-thin;
-    font-size: $font-size-h1;
+    font-size: $h1-font-size;
 
     @include vr-spacing(pt, 3);
   }
@@ -30,7 +30,7 @@
 
     color: $gray-dark-1;
     font-family: $brand-font-light;
-    font-size: $font-size-h4;
+    font-size: $h4-font-size;
   }
 
   .select-method {
@@ -58,7 +58,7 @@
       > div {
         color: $color-people-base;
         font-family: $brand-font-extra-light;
-        font-size: $font-size-h3;
+        font-size: $h3-font-size;
 
         @include vr-spacing(pt, 2);
       }
@@ -66,7 +66,7 @@
       > p {
         color: $gray-dark-2;
         font-family: $brand-font-light;
-        font-size: $font-size-base;
+        font-size: $h6-font-size;
         text-align: left;
 
         @include vr-spacing(pt, 2.1);

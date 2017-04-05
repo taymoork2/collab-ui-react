@@ -5,8 +5,8 @@
 
     /* @ngInject  */
     function ($translate) {
-      var currentSearch, currentFilter, arr = [];
-
+      var currentSearch, currentSearchRaw, currentFilter;
+      var arr = [];
       var filters = [];
       var resetFilters = function () {
         filters = [{
@@ -45,7 +45,12 @@
       }
 
       function setCurrentSearch(search) {
+        currentSearchRaw = search;
         currentSearch = (search || '').toLowerCase();
+      }
+
+      function getCurrentSearch() {
+        return currentSearchRaw;
       }
 
       function setCurrentFilter(filter) {
@@ -83,13 +88,11 @@
       function termMatchesAnyFieldOfItem(term, item) {
         return ['displayName'].some(function (field) {
           return item && (item[field] || '').toLowerCase().indexOf(term || '') != -1;
-        })
-          || ['readableType'].some(function (field) {
-            return item && (item[field] || '').toLowerCase().indexOf(term || '') != -1;
-          })
-          || ['sipUrl'].some(function (field) {
-            return item && (item[field] || '').toLowerCase().indexOf(term || '') != -1;
-          });
+        }) || ['readableType'].some(function (field) {
+          return item && (item[field] || '').toLowerCase().indexOf(term || '') != -1;
+        }) || ['sipUrl'].some(function (field) {
+          return item && (item[field] || '').toLowerCase().indexOf(term || '') != -1;
+        });
       }
 
       function matchesFilter(item) {
@@ -105,6 +108,7 @@
 
       return {
         getFilters: getFilters,
+        getCurrentSearch: getCurrentSearch,
         getFilteredList: getFilteredList,
         resetFilters: resetFilters,
         setCurrentFilter: setCurrentFilter,

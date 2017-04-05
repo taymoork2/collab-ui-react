@@ -1,8 +1,8 @@
-import { IAlarm } from 'modules/hercules/herculesInterfaces';
+import { IConnectorAlarm } from 'modules/hercules/hybrid-services.types';
 
 export class AlarmListSectionComponentCtrl implements ng.IComponentController {
 
-  public alarms: Array<IAlarm>;
+  public alarms: IConnectorAlarm[];
   private connectorType: string;
   private newLink: string;
 
@@ -25,7 +25,7 @@ export class AlarmListSectionComponentCtrl implements ng.IComponentController {
     }
   }
 
-  public sortAlarmsBySeverity(alarms: Array<IAlarm>): Array<IAlarm> {
+  public sortAlarmsBySeverity(alarms: IConnectorAlarm[]): IConnectorAlarm[] {
     enum SortOrder {
       'critical' = 0,
       'error' = 1,
@@ -33,7 +33,7 @@ export class AlarmListSectionComponentCtrl implements ng.IComponentController {
       'alert' = 3,
     }
 
-    return _.sortBy(alarms, (alarm: IAlarm) => {
+    return _.sortBy(alarms, alarm => {
       return SortOrder[alarm.severity];
     });
   }
@@ -64,7 +64,6 @@ export class AlarmListSectionComponentCtrl implements ng.IComponentController {
       });
     }
   }
-
 }
 
 export class AlarmListSectionComponent implements ng.IComponentOptions {

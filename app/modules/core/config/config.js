@@ -3,12 +3,12 @@
 
   module.exports = angular
     .module('core.config', [
-      require('modules/core/scripts/services/storage'),
+      require('modules/core/storage').default,
     ])
     .factory('Config', Config)
     .name;
 
-  function Config($location, $window, Storage) {
+  function Config($location, $window, LocalStorage) {
     var TEST_ENV_CONFIG = 'TEST_ENV_CONFIG';
 
     var getCurrentHostname = function () {
@@ -75,6 +75,7 @@
         context: 'contact-center-context',
         fusion_google_cal: 'squared-fusion-gcal',
         fusion_khaos: 'squared-fusion-khaos',
+        message: 'squared-room-moderation',
       },
 
       licenseModel: {
@@ -343,12 +344,12 @@
 
     config.setTestEnvConfig = function (testEnv) {
       if (testEnv) {
-        Storage.put(TEST_ENV_CONFIG, testEnv); // Store in localStorage so new windows pick up the value, will be cleared on logout
+        LocalStorage.put(TEST_ENV_CONFIG, testEnv); // Store in localStorage so new windows pick up the value, will be cleared on logout
       }
     };
 
     config.isE2E = function () {
-      return _.includes(Storage.get(TEST_ENV_CONFIG), 'e2e');
+      return _.includes(LocalStorage.get(TEST_ENV_CONFIG), 'e2e');
     };
 
     config.isUserAgent = function (userAgentString) {
@@ -356,7 +357,7 @@
     };
 
     config.forceProdForE2E = function () {
-      return Storage.get(TEST_ENV_CONFIG) === 'e2e-prod';
+      return LocalStorage.get(TEST_ENV_CONFIG) === 'e2e-prod';
     };
 
     config.roleStates = {
@@ -412,6 +413,11 @@
       Compliance_User: ['ediscovery', 'ediscovery.search', 'ediscovery.reports'],
     };
 
+    if (config.isDev()) {
+      // only allow feature toggle editor in Development mode
+      config.roleStates.Full_Admin.push('edit-featuretoggles');
+    }
+
     config.roleStates.Readonly_Admin = _.clone(config.roleStates.Full_Admin);
     config.roleStates.PARTNER_READ_ONLY_ADMIN = _.clone(config.roleStates.PARTNER_ADMIN);
 
@@ -437,6 +443,7 @@
         'huronlines',
         'huronnewfeature',
         'huronsettings',
+        'huronsettingsnew',
         'huntgroupedit',
         'intercomgroups',
         'mediaonhold',
@@ -446,6 +453,9 @@
         'places',
         'services-overview',
         'private-trunk-overview',
+        'private-trunk-domain',
+        'private-trunk-sidepanel',
+        'private-trunk-redirect',
       ],
       'squared-fusion-mgmt': [
         'expressway-cluster-sidepanel',
@@ -520,10 +530,13 @@
         'context-settings',
         'context-fields',
         'context-fieldsets',
+        'context-fieldset-modal',
+        'context-fieldsets-sidepanel',
         'context-resources',
         'context-cluster-sidepanel',
         'add-resource',
         'context-fields-sidepanel',
+        'context-new-field',
       ],
       'squared-fusion-khaos': [
         'cucm-cluster',

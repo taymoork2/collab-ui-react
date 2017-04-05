@@ -1,0 +1,16 @@
+<label class="control-label" translate="serviceSetupModal.timeZone"></label>
+<p class="description-block" translate="serviceSetupModal.tzDescription"></p>
+<div class="medium-5">
+  <cs-select
+    name="timeZone"
+    ng-model="$ctrl.selected"
+    options="$ctrl.timeZoneOptions"
+    labelfield="label"
+    valuefield="value"
+    on-change-fn="$ctrl.onChangeTimeZone()"
+    placeholder="$ctrl.timeZonePlaceholder"
+    input-placeholder="$ctrl.filterPlaceholder"
+    filter="true"
+    required="true"
+  ></cs-select>
+</div>

@@ -77,9 +77,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
       callback(this.orgServiceJSONFixture.getOrg, 200);
     });
 
-    spyOn(this.ServiceDescriptor, 'isServiceEnabled').and.callFake((_type, callFunction: Function): void => {
-      callFunction(false, true);
-    });
+    spyOn(this.ServiceDescriptor, 'isServiceEnabled').and.returnValue(this.$q.when(true));
 
     this.initController = (): void => {
       this.controller = this.$controller('SipDomainSettingController', {
@@ -108,6 +106,14 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
           isDomainReserved: false,
         },
       }));
+    });
+
+    it('getOrg call on initialization should be called with correct parameters', function () {
+      let params = {
+        basicInfo: true,
+      };
+      this.initController();
+      expect(this.Orgservice.getOrg).toHaveBeenCalledWith(jasmine.any(Function), false, params);
     });
 
     it('initialization should gracefully error', function () {
@@ -493,9 +499,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
       });
 
       it('should only call toggleSipForm', function () {
-        this.ServiceDescriptor.isServiceEnabled.and.callFake((_type, callFunction: Function): void => {
-          callFunction(false, false);
-        });
+        this.ServiceDescriptor.isServiceEnabled.and.returnValue(this.$q.when(false));
         spyOn(this.$modal, 'open').and.returnValue({
           result: this.$q.reject(false),
         });

@@ -1,16 +1,12 @@
-{
-  "status": 200,
-  "data": {
-    "items": [{
-      "id": "squared-fusion-mgmt",
-      "enabled": true,
-      "acknowledged": true,
-      "emailSubscribers": ""
-    }, {
-      "id": "squared-fusion-cal",
-      "enabled": false,
-      "acknowledged": true,
-      "emailSubscribers": ""
-    }]
-  }
-}
+[{
+  "id": "squared-fusion-mgmt",
+  "enabled": true,
+  "acknowledged": true,
+  "emailSubscribers": ""
+}, {
+  "id": "squared-fusion-cal",
+  "enabled": false,
+  "acknowledged": true,
+  "emailSubscribers": ""
+}]
+

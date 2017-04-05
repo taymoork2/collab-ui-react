@@ -1,5 +1,7 @@
-@import 'styles/toolkit/fonts';
-@import 'styles/toolkit/spacing';
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/fonts';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
 
 @keyframes graphAxisFade {
   0% {
@@ -302,6 +304,8 @@
       width: 95%;
       margin-left: auto;
       margin-right: auto;
+      border: 1px solid $gray-light-1;
+      border-collapse: collapse;
     }
 
     .no-data {
@@ -328,12 +332,11 @@
 
     td,
     th {
-      border-color: $gray-light-1;
       border: 1px solid $gray-light-1;
       color: $gray-dark;
 
       .table-half:first-of-type {
-        border-right: 1px solid$gray-light-1;
+        border-right: 1px solid $gray-light-1;
       }
 
       .positive {
@@ -357,9 +360,7 @@
 
       td,
       th {
-        border-color: $gray-light-2;
-        border-right: 1px solid$gray-light-2;
-        border-top: 1px solid $gray-light-2;
+        border: 1px solid $gray-light-2;
         color: $gray-light-2;
 
         .table-half:first-of-type {

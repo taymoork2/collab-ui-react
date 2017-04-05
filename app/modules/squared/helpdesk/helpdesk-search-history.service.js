@@ -2,11 +2,11 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskSearchHistoryService(Storage) {
+  function HelpdeskSearchHistoryService(LocalStorage) {
     var self = this;
     self.limit = 10;
     self.searchHistoryStorageKey = 'helpdesk.search-history';
-    self.searchHistory = Storage.getObject(self.searchHistoryStorageKey) || [];
+    self.searchHistory = LocalStorage.getObject(self.searchHistoryStorageKey) || [];
 
     function removeSearch(search) {
       _.remove(self.searchHistory, function (s) {
@@ -22,7 +22,7 @@
           self.searchHistory.pop();
         }
         self.searchHistory.splice(0, 0, search);
-        Storage.putObject(self.searchHistoryStorageKey, self.searchHistory);
+        LocalStorage.putObject(self.searchHistoryStorageKey, self.searchHistory);
       }
     }
 
@@ -32,7 +32,7 @@
 
     function clearSearchHistory() {
       self.searchHistory = [];
-      Storage.remove(self.searchHistoryStorageKey);
+      LocalStorage.remove(self.searchHistoryStorageKey);
     }
 
     return {

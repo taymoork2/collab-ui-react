@@ -3,12 +3,13 @@
 describe('ShowActivationCodeCtrl: Ctrl', function () {
   var controller, stateParams, $q, state, $scope, CsdmDataModelService, CsdmHuronPlaceService;
   var OtpService, CsdmEmailService, Notification, ActivationCodeEmailService, UserListService;
+  var USSService;
   var $controller;
 
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Squared'));
 
-  beforeEach(inject(function (_$controller_, _$q_, $rootScope, _CsdmDataModelService_, _CsdmHuronPlaceService_, _OtpService_, _CsdmEmailService_, _ActivationCodeEmailService_, _Notification_, _UserListService_) {
+  beforeEach(inject(function (_$controller_, _$q_, $rootScope, _CsdmDataModelService_, _CsdmHuronPlaceService_, _OtpService_, _CsdmEmailService_, _ActivationCodeEmailService_, _Notification_, _UserListService_, _USSService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
@@ -21,6 +22,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
     Notification = _Notification_;
     ActivationCodeEmailService = _ActivationCodeEmailService_;
     UserListService = _UserListService_;
+    USSService = _USSService_;
   }));
 
   function initController() {
@@ -443,6 +445,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
     var userFirstName;
     var cloudberryNewPlace;
     var cloudberryExistingPlace;
+    var cloudberryNewPlaceWithoutCalendar;
     var huronNewPlace;
     var huronExistingPlace;
     var huronExistingUser;
@@ -450,6 +453,8 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
     var noTypeExistingUserUnentitled;
     var expectedEmailInfo;
     var entitlements;
+    var externalIdentifiers;
+    var ussProps;
 
     beforeEach(function () {
       cisUuid = 'testId';
@@ -464,8 +469,35 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
       userEmail = 'user@example.org';
       userFirstName = 'userFirstName';
       entitlements = ['something', 'else'];
+      externalIdentifiers = [{ type: 'squared-fusion-cal', GUID: 'test@example.com' }];
+      ussProps = [{ resourceGroup: '' }];
 
       cloudberryNewPlace = {
+        state: function () {
+          return {
+            data: {
+              account: {
+                deviceType: 'cloudberry',
+                type: 'shared',
+                name: deviceName,
+                organizationId: deviceOrgId,
+                entitlements: entitlements,
+                directoryNumber: directoryNumber,
+                externalNumber: externalNumber,
+                externalCalendarIdentifier: [externalIdentifiers[0]],
+                ussProps: ussProps,
+              },
+              recipient: {
+                organizationId: userOrgId,
+                cisUuid: userCisUuid,
+                email: userEmail,
+              },
+            },
+          };
+        },
+      };
+
+      cloudberryNewPlaceWithoutCalendar = {
         state: function () {
           return {
             data: {
@@ -626,12 +658,13 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
             activationCode: activationCode,
             expiryTime: expiryTime,
           }));
+          spyOn(USSService, 'updateUserProps').and.returnValue($q.resolve({}));
           initController();
           $scope.$digest();
         });
 
         it('creates a new place and otp', function () {
-          expect(CsdmDataModelService.createCsdmPlace).toHaveBeenCalledWith(deviceName, entitlements, directoryNumber, externalNumber);
+          expect(CsdmDataModelService.createCsdmPlace).toHaveBeenCalledWith(deviceName, entitlements, directoryNumber, externalNumber, externalIdentifiers, ussProps);
           expect(CsdmDataModelService.createCodeForExisting).toHaveBeenCalledWith(cisUuid);
           expect(controller.qrCode).toBeTruthy();
           expect(controller.activationCode).toBe(activationCode);
@@ -658,6 +691,27 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
             $scope.$digest();
             expect(Notification.notify).toHaveBeenCalledTimes(1);
           });
+        });
+      });
+
+      describe('with new place without calendar', function () {
+        beforeEach(function () {
+          stateParams.wizard = cloudberryNewPlaceWithoutCalendar;
+          spyOn(CsdmDataModelService, 'createCsdmPlace').and.returnValue($q.resolve({ cisUuid: cisUuid }));
+          spyOn(CsdmDataModelService, 'createCodeForExisting').and.returnValue($q.resolve({
+            activationCode: activationCode,
+            expiryTime: expiryTime,
+          }));
+          initController();
+          $scope.$digest();
+        });
+
+        it('creates a new place and otp', function () {
+          expect(CsdmDataModelService.createCsdmPlace).toHaveBeenCalledWith(deviceName, entitlements, directoryNumber, externalNumber, null, null);
+          expect(CsdmDataModelService.createCodeForExisting).toHaveBeenCalledWith(cisUuid);
+          expect(controller.qrCode).toBeTruthy();
+          expect(controller.activationCode).toBe(activationCode);
+          expect(controller.expiryTime).toBe(expiryTime);
         });
       });
 

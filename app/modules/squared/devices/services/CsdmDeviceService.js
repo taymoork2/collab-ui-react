@@ -2,8 +2,8 @@
   'use strict';
 
   /* @ngInject  */
-  function CsdmDeviceService($http, Authinfo, CsdmConfigService, CsdmConverter, Utils) {
-    var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/devices';
+  function CsdmDeviceService($http, Authinfo, UrlConfig, CsdmConverter, Utils) {
+    var devicesUrl = UrlConfig.getCsdmServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/devices';
     var devicesFastUrlPostFix = "?checkDisplayName=false&checkOnline=false";
 
     function fetchDevices(requestFullData) {

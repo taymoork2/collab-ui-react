@@ -5,8 +5,7 @@
     .module('core.auth.token', [
       require('angular-cookies'),
       require('modules/core/config/config'),
-      require('modules/core/scripts/services/storage'),
-      require('modules/core/scripts/services/sessionstorage'),
+      require('modules/core/storage').default,
       require('modules/core/config/oauthConfig'),
       require('modules/core/window').default,
     ])
@@ -14,7 +13,7 @@
     .name;
 
   /* @ngInject */
-  function TokenService($cookies, $injector, $rootScope, $window, OAuthConfig, Config, Storage, SessionStorage, WindowLocation, WindowService) {
+  function TokenService($cookies, $injector, $rootScope, $window, OAuthConfig, Config, LocalStorage, SessionStorage, WindowLocation, WindowService) {
     var respondSessionStorageEvent = 'sessionStorage' + Config.getEnv();
     var requestSessionStorageEvent = 'getSessionStorage' + Config.getEnv();
     var logoutEvent = 'logout' + Config.getEnv();
@@ -50,8 +49,8 @@
 
       // If no sessionStorage tokens and the tab was not logged out, ask other tabs for the sessionStorage
       if (!$window.sessionStorage.length && !$window.sessionStorage.getItem(LOGOUT)) {
-        Storage.put(requestSessionStorageEvent, FOOBAR);
-        Storage.remove(requestSessionStorageEvent, FOOBAR);
+        LocalStorage.put(requestSessionStorageEvent, FOOBAR);
+        LocalStorage.remove(requestSessionStorageEvent, FOOBAR);
       }
     }
 
@@ -97,23 +96,23 @@
     }
 
     function completeLogout(redirectUrl, loginMessage) {
-      loginMessage = loginMessage || Storage.get(LOGIN_MESSAGE);
+      loginMessage = loginMessage || LocalStorage.get(LOGIN_MESSAGE);
       clearStorage();
       // We store a key value in sessionStorage to
       // prevent a login when multiple tabs are open
       SessionStorage.put(LOGOUT, LOGOUT);
       WindowLocation.set(redirectUrl);
-      Storage.put(LOGIN_MESSAGE, loginMessage);
+      LocalStorage.put(LOGIN_MESSAGE, loginMessage);
     }
 
     function triggerGlobalLogout(loginMessage) {
-      Storage.put(logoutEvent, LOGOUT);
-      Storage.remove(logoutEvent, LOGOUT);
-      Storage.put(LOGIN_MESSAGE, loginMessage);
+      LocalStorage.put(logoutEvent, LOGOUT);
+      LocalStorage.remove(logoutEvent, LOGOUT);
+      LocalStorage.put(LOGIN_MESSAGE, loginMessage);
     }
 
     function clearStorage() {
-      Storage.clear();
+      LocalStorage.clear();
       SessionStorage.clear();
     }
 
@@ -122,8 +121,8 @@
       if (!event.newValue) return;
       if (event.key === requestSessionStorageEvent) {
         // a tab asked for the sessionStorage, so send it
-        Storage.putObject(respondSessionStorageEvent, $window.sessionStorage);
-        Storage.remove(respondSessionStorageEvent);
+        LocalStorage.putObject(respondSessionStorageEvent, $window.sessionStorage);
+        LocalStorage.remove(respondSessionStorageEvent);
       } else if (event.key === logoutEvent) {
         completeLogout(OAuthConfig.getLogoutUrl());
       } else if (event.key === respondSessionStorageEvent && !$window.sessionStorage.length) {

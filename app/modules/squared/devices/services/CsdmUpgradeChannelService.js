@@ -2,9 +2,9 @@
   'use strict';
 
   /* @ngInject  */
-  function CsdmUpgradeChannelService($http, Authinfo, CsdmConfigService) {
+  function CsdmUpgradeChannelService($http, Authinfo, UrlConfig) {
+    var channelsUrl = UrlConfig.getCsdmServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/upgradeChannels';
 
-    var channelsUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/upgradeChannels';
     var channelsPromise = $http.get(channelsUrl).then(function (res) {
       return res.data;
     });

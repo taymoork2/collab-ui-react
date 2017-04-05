@@ -1,6 +1,6 @@
-@import 'styles/toolkit/fonts';
-@import 'styles/toolkit/colors';
-@import 'styles/toolkit/spacing';
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/typography';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
 
 .typeahead-large .dropdown-menu,
 .typeahead .dropdown-menu {
@@ -18,8 +18,8 @@
     @include vr-spacing(pv, 0.25);
 
     span {
-      font-size: $font-size-h4;
-      font-family: $brand-font-cisco-TT-Extra-Light;
+      font-size: $h4-font-size;
+      font-family: $brand-font-extra-light;
       color: $gray-dark-1;
     }
   }

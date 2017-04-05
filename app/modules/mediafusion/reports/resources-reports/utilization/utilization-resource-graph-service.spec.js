@@ -49,15 +49,21 @@ describe('Service: Utilization Resource GraphService', function () {
   it('setUtilizationGraph should return an amchart object successfully', function () {
 
     var setUtilizationGraphResponse = UtilizationResourceGraphService.setUtilizationGraph(UtilizationGraphData, utilizationChart, allClusters, allClusters, daterange, IdMap);
-    expect(setUtilizationGraphResponse.graphs.length).toBe(11);
+    expect(setUtilizationGraphResponse.graphs.length).toBe(10);
     expect(setUtilizationGraphResponse.dataProvider).toEqual(UtilizationData.utilizationresponse);
   });
 
   it('setUtilizationGraph should return an amchart object successfully when particular cluster is selected', function () {
 
     var setUtilizationGraphResponse = UtilizationResourceGraphService.setUtilizationGraph(UtilizationGraphData, utilizationChart, allClusters, clusterId, daterange, IdMap);
-    expect(setUtilizationGraphResponse.graphs.length).toBe(11);
+    expect(setUtilizationGraphResponse.graphs.length).toBe(10);
     expect(setUtilizationGraphResponse.dataProvider).toEqual(UtilizationData.utilizationresponse);
+  });
+
+  it('Avg Utilization legend should follow rest of the clusters', function () {
+
+    var setUtilizationGraphResponse = UtilizationResourceGraphService.setUtilizationGraph(UtilizationGraphData, utilizationChart, allClusters, clusterId, daterange, IdMap);
+    expect(setUtilizationGraphResponse.graphs[0].valueField).not.toEqual('average_util');
   });
 
 });

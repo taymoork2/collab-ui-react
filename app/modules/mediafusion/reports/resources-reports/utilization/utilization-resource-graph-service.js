@@ -7,6 +7,7 @@
 
     var vm = this;
     vm.utilizationdiv = 'utilizationdiv';
+    vm.exportDiv = 'utilization-export-div';
     vm.GUIDEAXIS = 'guideaxis';
     vm.AXIS = 'axis';
     vm.LEGEND = 'legend';
@@ -152,15 +153,6 @@
       var ExportFileName = 'MediaService_Utilization_' + cluster + '_' + dateLabel + '_' + new Date();
       if (!isDummy && clusterSelected === vm.allClusters) {
         graphs.push({
-          'title': 'All',
-          'id': 'all',
-          'bullet': 'square',
-          'bulletSize': 10,
-          'lineColor': '#000000',
-          'hidden': true,
-        });
-
-        graphs.push({
           'title': 'None',
           'id': 'none',
           'bullet': 'square',
@@ -168,7 +160,7 @@
           'lineColor': '#000000',
         });
       }
-      var chartData = CommonReportsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, CommonReportsGraphService.getBaseExportForGraph(exportFields, ExportFileName, columnNames));
+      var chartData = CommonReportsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, CommonReportsGraphService.getBaseExportForGraph(exportFields, ExportFileName, columnNames, vm.exportDiv));
       chartData.legend = CommonReportsGraphService.getBaseVariable(vm.LEGEND);
       chartData.legend.labelText = '[[title]]';
       chartData.legend.useGraphSettings = true;
@@ -226,26 +218,25 @@
         }
       });
       tempData = _.sortBy(tempData, 'title');
+      var avgLegend = tempData.shift();
+      tempData.push(avgLegend);
       return tempData;
     }
 
     function legendHandler(evt) {
-      if (evt.dataItem.id === 'all') {
-        _.forEach(evt.chart.graphs, function (graph) {
-          if (graph.id != 'all') {
-            evt.chart.showGraph(graph);
-          } else if (graph.id === 'all') {
+      if (evt.dataItem.title === 'None') {
+        evt.dataItem.title = 'All';
+        _.each(evt.chart.graphs, function (graph) {
+          if (graph.title != 'All') {
             evt.chart.hideGraph(graph);
+          } else {
+            evt.chart.showGraph(graph);
           }
-
         });
-      } else if (evt.dataItem.id === 'none') {
-        _.forEach(evt.chart.graphs, function (graph) {
-          if (graph.id != 'all') {
-            evt.chart.hideGraph(graph);
-          } else if (graph.id === 'all') {
-            evt.chart.showGraph(graph);
-          }
+      } else if (evt.dataItem.title === 'All') {
+        evt.dataItem.title = 'None';
+        _.each(evt.chart.graphs, function (graph) {
+          evt.chart.showGraph(graph);
         });
       }
     }

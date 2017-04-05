@@ -18,7 +18,7 @@
     </div>
     <div class="row full">
       <div class="columns medium-7">
-        <label for="state">{{$ctrl.areaName}}</label>
+        <label for="state">{{$ctrl.stateLabel}}</label>
         <cs-select
           ng-model="$ctrl.locationModel"
           options="$ctrl.stateOptions"
@@ -29,7 +29,7 @@
           is-disabled="$ctrl.readOnly">
       </div>
       <div class="columns medium-5">
-        <label for="zip" translate="serviceAddress.zipCode"></label>
+        <label for="zip">{{$ctrl.zipLabel}}</label>
         <input type="text" id="zip" ng-model="$ctrl.address.zip" required ng-disabled="$ctrl.readOnly">
       </div>
     </div>

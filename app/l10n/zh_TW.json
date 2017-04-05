@@ -26,9 +26,9 @@
     "convertUsers": "轉換使用者",
     "errorWarningMessages": "警告與錯誤",
     "skipErrorsAndFinish": "跳過錯誤並完成",
-    "newUsers": "{newusers, plural, one{# 個新使用者} other{# 個新使用者}}",
-    "updatedUsers": "{updatedusers, plural, one{# 個已更新的使用者} other{# 個已更新的使用者}}",
-    "errors": "{errors, plural, one{# 個錯誤} other{# 個錯誤}}",
+    "newUsers": "{newusers, plural, =1{# 個新使用者} other{# 個新使用者}}",
+    "updatedUsers": "{updatedusers, plural, =1{# 個已更新的使用者} other{# 個已更新的使用者}}",
+    "errors": "{errors, plural, =1{# 個錯誤} other{# 個錯誤}}",
     "pageTitle": "使用者",
     "subTitleAdd": "管理使用者",
     "subTitleEnable": "將權限授與使用者",
@@ -246,7 +246,7 @@
       "retryUsers": "重試",
       "retrying": "正在重試...",
       "retryingIn": "重試之前所經歷的時間：",
-      "retryingUsers": "{users, plural, one{# 個使用者} other{# 個使用者}}",
+      "retryingUsers": "{users, plural, =1{# 個使用者} other{# 個使用者}}",
       "exportUserList": "匯出使用者清單。"
     },
     "advanced": {
@@ -1140,15 +1140,15 @@
   "notifications": {
     "success": "成功通知數",
     "error": "錯誤通知數",
-    "successTotal": "{total, plural, one{# 個成功} other{# 個成功}}",
-    "errorTotal": "{total, plural, one{# 個錯誤} other{# 個錯誤}}",
+    "successTotal": "{total, plural, =1{# 個成功} other{# 個成功}}",
+    "errorTotal": "{total, plural, =1{# 個錯誤} other{# 個錯誤}}",
     "successDelete": "已成功刪除 {{item}}。",
     "errorDelete": "無法刪除 {{item}}。"
   },
   "time": {
-    "seconds": "{time, plural, one{# 秒} other{# 秒}}",
-    "minutes": "{time, plural, one{# 分} other{# 分}}",
-    "hours": "{time, plural, one{# 小時} other{# 小時}}"
+    "seconds": "{time, plural, =1{# 秒} other{# 秒}}",
+    "minutes": "{time, plural, =1{# 分} other{# 分}}",
+    "hours": "{time, plural, =1{# 小時} other{# 小時}}"
   },
   "callDestination": {
     "numberFormat": "號碼格式",
@@ -2083,7 +2083,7 @@
       "heading": "註冊"
     },
     "notificationDropdown": {
-      "label": "{number, plural, one{# 個通知} other{# 個通知}}"
+      "label": "{number, plural, =1{# 個通知} other{# 個通知}}"
     },
     "fusion": {
       "types": {
@@ -2100,7 +2100,7 @@
         "clusters": "叢集",
         "users": "使用者",
         "release-channel": "發行通道",
-        "nodes": "{count, plural, one{# 個節點} other{# 個節點}}",
+        "nodes": "{count, plural, =1{# 個節點} other{# 個節點}}",
         "nodesBtn": "節點",
         "settings": "設定",
         "all": "全部",
@@ -2634,8 +2634,8 @@
     "setSipDomainLink": "什麼是 Spark SIP 位址？",
     "setSipDomainMsg": "輸入子網域",
     "setSipDomainTitle": "Spark SIP 位址",
-    "setSipDomainCompNames": "將為您保留{count, plural, one{此子網域} other{這些子網域}}：",
-    "setSipDomainAsssignedNames": "已為您保留{count, plural, one{此子網域} other{這些子網域}}",
+    "setSipDomainCompNames": "將為您保留{count, plural, =1{此子網域} other{這些子網域}}：",
+    "setSipDomainAsssignedNames": "已為您保留{count, plural, =1{此子網域} other{這些子網域}}",
     "setSipDomainCheckAvailability": "檢查可用性",
     "setSipDomainPlaceholder": "輸入子網域",
     "setSipDomainErrorMessage": "不可用。請嘗試其他名稱",
@@ -3374,10 +3374,10 @@
     "deleteNumber": "刪除號碼",
     "deleteConfirmation": "確定要刪除 {{pattern}} 嗎？",
     "deleteWarning": "此動作無法撤銷。您將無限期地遺失此號碼。",
-    "allNumbers": "{count, plural, one{# 個號碼} other{# 個號碼}}",
-    "pendingNumbers": "{count, plural, one{# 個待定號碼} other{# 個待定號碼}}",
-    "unassignedNumbers": "{count, plural, one{# 個未指派的號碼} other{# 個未指派的號碼}}",
-    "searchResults": "{count, plural, one{# 個搜尋結果} other{# 個搜尋結果}}",
+    "allNumbers": "{count, plural, =1{# 個號碼} other{# 個號碼}}",
+    "pendingNumbers": "{count, plural, =1{# 個待定號碼} other{# 個待定號碼}}",
+    "unassignedNumbers": "{count, plural, =1{# 個未指派的號碼} other{# 個未指派的號碼}}",
+    "searchResults": "{count, plural, =1{# 個搜尋結果} other{# 個搜尋結果}}",
     "findNumber": "尋找號碼..."
   },
   "pstnOrderOverview": {
@@ -3394,7 +3394,7 @@
   },
   "pstnOrderDetail": {
     "orderNumber": "訂單 #{{orderId}}",
-    "pendingNumbers": "此訂單{count, plural, one{有 # 個號碼} other{有 # 個號碼}} 擱置中",
+    "pendingNumbers": "此訂單{count, plural, =1{有 # 個號碼} other{有 # 個號碼}} 擱置中",
     "searchPlaceholder": "搜尋電話號碼",
     "waitOnTOSAcceptance": "等待客戶接受 ToS"
   },
@@ -3434,7 +3434,7 @@
     "package": "封裝",
     "adding": "新增",
     "numbersTitle": "號碼",
-    "numbers": "{count, plural, one{# 個號碼} other{# 個號碼}}",
+    "numbers": "{count, plural, =1{# 個號碼} other{# 個號碼}}",
     "newNumbers": "{{count}} 個新號碼",
     "portNumbers": "{{count}} 個埠",
     "thankYou": "感謝",
@@ -3794,9 +3794,9 @@
     "notes": "附註",
     "active": "使用中",
     "free": "免費",
-    "daysRemaining": "還剩 {count, plural, one{# 天} other{# 天}}",
-    "daysLeftToPurchase": "還剩 {count, plural, one{# 天} other{# 天}}可購買",
-    "daysLeftToRenew": "還剩 {count, plural, one{# 天} other{# 天}}可續訂",
+    "daysRemaining": "還剩 {count, plural, =1{# 天} other{# 天}}",
+    "daysLeftToPurchase": "還剩 {count, plural, =1{# 天} other{# 天}}可購買",
+    "daysLeftToRenew": "還剩 {count, plural, =1{# 天} other{# 天}}可續訂",
     "expiringToday": "將於今天到期",
     "expired": "已過期",
     "expiredWithGracePeriod": "已過期。請立即購買",
@@ -3830,7 +3830,7 @@
     "trialTerms": "試用條款",
     "trialOverview": "試用客戶",
     "webexOverview": "WebEx",
-    "webexSiteCount": "{count, plural, one{另 # 個站點} other{另 # 個站點}}",
+    "webexSiteCount": "{count, plural, =1{另 # 個站點} other{另 # 個站點}}",
     "licenses": "授權數目",
     "totalQuantity": "總數量",
     "totalLicenses": "授權總數",
@@ -3880,7 +3880,7 @@
     "accountStatus": "帳戶狀態",
     "totalUsers": "使用者總數",
     "purchased": "已購買",
-    "domain": "{count, plural, one{網域} other{網域}}",
+    "domain": "{count, plural, =1{網域} other{網域}}",
     "domains": "網域",
     "quantityWithValue": "數量：{{quantity}}",
     "anotherPartner": "（另一個合作夥伴）",

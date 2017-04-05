@@ -51,24 +51,19 @@ describe('Partner flow', function () {
       //utils.click(partner.trialFilter);
       utils.click(partner.addButton);
 
-      if (featureToggle.features.atlasStartTrialForPaid) {
-        utils.expectIsDisplayed(partner.editTrialForm);
-      } else {
-        // TODO: remove when feature toggle is removed
-        utils.expectIsDisplayed(partner.addTrialForm);
-      }
+      utils.expectIsDisplayed(partner.editTrialForm);
       utils.expectIsDisabled(partner.startTrialButton);
 
-      utils.expectCheckbox(partner.squaredUCTrialCheckbox, true);
-      utils.expectCheckbox(partner.roomSystemsTrialCheckbox, true);
+      utils.expectInputCheckbox(partner.squaredUCTrialCheckbox, true);
+      utils.expectInputCheckbox(partner.roomSystemsTrialCheckbox, true);
       utils.click(partner.squaredUCTrialCheckbox); // no PSTN on this trial
       utils.click(partner.roomSystemsTrialCheckbox); // no room systems on this trial
       utils.click(partner.sparkBoardTrialCheckbox); // no spark board system on this trial
       utils.click(partner.careTrialCheckbox); // no care on this trial
       utils.click(partner.validLocationCheckbox); // valid location checked
-      utils.expectCheckbox(partner.squaredUCTrialCheckbox, false);
-      utils.expectCheckbox(partner.roomSystemsTrialCheckbox, false);
-      utils.expectCheckbox(partner.sparkBoardTrialCheckbox, false);
+      utils.expectInputCheckbox(partner.squaredUCTrialCheckbox, false);
+      utils.expectInputCheckbox(partner.roomSystemsTrialCheckbox, false);
+      utils.expectInputCheckbox(partner.sparkBoardTrialCheckbox, false);
       utils.setCheckboxIfDisplayed(partner.webexTrialCheckbox, false, 100);
 
       utils.sendKeys(partner.customerNameInput, partner.newTrial.customerName);

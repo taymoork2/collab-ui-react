@@ -22,6 +22,22 @@ export class ServicesOverviewCallCard extends ServicesOverviewCard {
     return [];
   }
 
+  // TODO (jlowery): remove when sparkCallTenDigitExt feature toggle is removed.
+  public sparkCallTenDigitExtFeatureToggleEventhandler(hasFeature: boolean) {
+    if (hasFeature) {
+      let routeToNewSettings = {
+        name: 'servicesOverview.cards.call.buttons.settings',
+        routerState: 'huronsettingsnew',
+        buttonClass: 'btn-link',
+      };
+      let match = _.find(this._buttons, { name: 'servicesOverview.cards.call.buttons.settings' });
+      if (match) {
+        let index = _.indexOf(this._buttons, match);
+        this._buttons.splice(index, 1, routeToNewSettings);
+      }
+    }
+  }
+
   private showFeatureTab() {
     return this.Authinfo.getLicenses()
       .filter((license) => {

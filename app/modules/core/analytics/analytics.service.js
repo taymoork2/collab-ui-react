@@ -108,6 +108,13 @@
         },
         persistentProperties: null,
       },
+      CONTEXT: {
+        name: 'Context Service related operations',
+        eventNames: {
+          CONTEXT_CREATE_FIELDSET_SUCCESS: 'Successfully created a new fieldset',
+          CONTEXT_CREATE_FIELDSET_FAILURE: 'Failed to create a new fieldset',
+        },
+      },
     };
 
     var service = {
@@ -166,11 +173,14 @@
      * Determines if it's a Test Org or not.
      */
     function checkIfTestOrg() {
+      var params = {
+        basicInfo: true,
+      };
       if (!isTestOrgPromise) {
         isTestOrgPromise = $q(function (resolve) {
           Orgservice.getOrg(function (response) {
             resolve(_.get(response, 'isTestOrg'));
-          });
+          }, null, params);
         });
       }
       return isTestOrgPromise;
@@ -217,10 +227,6 @@
           properties.servicesArray = _buildTrialServicesArray(trialData.trials);
           properties.duration = _.get(trialData, 'details.licenseDuration');
           properties.licenseQty = _.get(trialData, 'details.licenseCount');
-          /* TODO: add this once we have a clear strategy
-          if (properties.from === 'trialAdd.call' || properties.from === 'trialEdit.call') {
-            properties.devicesArray = _buildTrialDevicesArray(trialData.trials);
-          }*/
         }
         _.extend(properties, additionalPayload);
         return trackEvent(eventName, properties);
@@ -236,8 +242,8 @@
         return $q.reject('eventName, uuid or orgId not passed');
       }
       var properties = {
-        uuid: _hashSha256(UUID),
-        orgId: _hashSha256(orgId),
+        uuid: UUID,
+        orgId: orgId,
         section: sections.PARTNER.name,
       };
       return trackEvent(eventName, properties);
@@ -254,7 +260,7 @@
 
       var properties = {
         from: name,
-        orgId: _hashSha256(orgId),
+        orgId: orgId,
         section: sections.USER_ONBOARDING.name,
       };
 
@@ -309,8 +315,8 @@
       }
 
       var properties = _.extend({
-        userId: _hashSha256(Authinfo.getUserId()),
-        orgId: _hashSha256(Authinfo.getOrgId()),
+        userId: Authinfo.getUserId(),
+        orgId: Authinfo.getOrgId(),
       }, payload);
       return trackEvent(eventName, properties);
     }
@@ -331,8 +337,8 @@
         stack: stack,
         error: error,
         cause: cause,
-        userId: _hashSha256(Authinfo.getUserId()),
-        orgId: _hashSha256(Authinfo.getOrgId()),
+        userId: Authinfo.getUserId(),
+        orgId: Authinfo.getOrgId(),
         domain: _getDomainFromEmail(Authinfo.getPrimaryEmail()),
         state: _.get($state, '$current.name'),
       });
@@ -374,15 +380,18 @@
       sections[sectionName].persistentProperties = {
         licenses: _.map(licenses, 'licenseType'),
         realOrgId: Authinfo.getOrgId(),
-        orgId: _hashSha256(Authinfo.getOrgId()),
+        orgId: Authinfo.getOrgId(),
         domain: _getDomainFromEmail(Authinfo.getPrimaryEmail()),
-        uuid: _hashSha256(Authinfo.getUserId()),
+        uuid: Authinfo.getUserId(),
         role: Authinfo.getRoles(),
         section: sections[sectionName].name,
       };
+      var params = {
+        basicInfo: true,
+      };
       var promises = {
         listUsers: UserListService.listUsers(0, 1, null, null, _.noop),
-        getOrg: Orgservice.getAdminOrgAsPromise().catch(function (err) {
+        getOrg: Orgservice.getAdminOrgAsPromise(null, params).catch(function (err) {
           return err;
         }),
         trialDaysLeft: TrialService.getDaysLeftForCurrentUser(),
@@ -405,13 +414,6 @@
 
       });
       return isTrial ? 'trial' : 'active';
-    }
-
-    function _hashSha256(id) {
-      if (!id) {
-        return null;
-      }
-      return CryptoJS.SHA256(id).toString(CryptoJS.enc.Base64);
     }
 
     function _getDomainFromEmail(email) {

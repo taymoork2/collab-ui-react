@@ -5,7 +5,8 @@
     "id": "1111",
     "type": "directoryNumber",
     "trigger": "incomingCall",
-    "number": "1111"
+    "number": "1111",
+    "uuid": "1111"
   }]
 }, {
   "callExperienceName": "AA2",
@@ -14,6 +15,7 @@
     "id": "1112",
     "type": "directoryNumber",
     "trigger": "incomingCall",
-    "number": "1112"
+    "number": "1112",
+    "uuid": "1112"
   }]
 }]

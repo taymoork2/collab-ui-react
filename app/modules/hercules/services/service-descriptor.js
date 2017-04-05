@@ -52,7 +52,11 @@
     };
 
     var getOrgSettings = function () {
-      return Orgservice.getOrg(_.noop, Authinfo.getOrgId(), true)
+      var params = {
+        basicInfo: true,
+        disableCache: true,
+      };
+      return Orgservice.getOrg(_.noop, Authinfo.getOrgId(), params)
         .then(function (response) {
           if (!_.isEmpty(response.data.orgSettings)) {
             return response.data.orgSettings;
@@ -66,6 +70,15 @@
       };
 
       return Orgservice.setOrgSettings(Authinfo.getOrgId(), settings);
+    };
+
+    var getAllWebExSiteOrgLevel = function () {
+      var conferenceServices = Authinfo.getConferenceServicesWithoutSiteUrl() || [];
+      var webexSiteUrls = _.map(conferenceServices, function (conferenceService) {
+        return conferenceService.license.siteUrl;
+      });
+
+      return _.uniq(webexSiteUrls);
     };
 
     var setDefaultWebExSiteOrgLevel = function (defaultWebExSiteOrgLevel) {
@@ -127,6 +140,7 @@
       setEmailSubscribers: setEmailSubscribers,
       getOrgSettings: getOrgSettings,
       setDisableEmailSendingToUser: setDisableEmailSendingToUser,
+      getAllWebExSiteOrgLevel: getAllWebExSiteOrgLevel,
       setDefaultWebExSiteOrgLevel: setDefaultWebExSiteOrgLevel,
       setOneButtonToPushIntervalMinutes: setOneButtonToPushIntervalMinutes,
       enableService: enableService,

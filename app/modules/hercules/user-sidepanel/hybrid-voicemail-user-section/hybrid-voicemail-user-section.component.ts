@@ -5,7 +5,8 @@ class HybridVoicemailUserSectionCtrl implements ng.IComponentController {
   public isFeatureToggled: boolean = false;
   public callServiceConnectEnabledForUser: boolean;
   public voicemailEnabledForUser: boolean;
-  public pilotNumber: number;
+  public pilotNumber: string;
+  public mwiStatus: boolean;
   private isEnabledOrgWide: boolean;
   private userId: string;
 
@@ -40,6 +41,7 @@ class HybridVoicemailUserSectionCtrl implements ng.IComponentController {
           this.UCCService.getUserVoicemailInfo(this.userId)
             .then((data) => {
               this.pilotNumber = data.vmInfo.voicemailPilot;
+              this.mwiStatus = data.vmInfo.mwiStatus;
             });
           this.voicemailEnabledForUser = this.callServiceConnectEnabledForUser;
         }

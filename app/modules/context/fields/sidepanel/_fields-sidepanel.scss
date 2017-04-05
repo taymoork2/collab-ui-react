@@ -1,15 +1,6 @@
-@import 'styles/toolkit/colors';
-@import 'styles/toolkit/fonts';
-@import 'styles/toolkit/spacing';
+@import 'modules/context/styles/_hybrid-context.scss';
 
 .context-fields-sidepanel {
-  .section-wrapper {
-    margin-top: 24px;
-  }
-
-  textarea {
-    resize: none;
-  }
 
   .token {
     display: inline-block;
@@ -53,9 +44,8 @@
     }
   }
 
-  .tooltip[popup-class="cluster-name"] .c-nub {
-    font-size: small;
-    white-space: normal;
-    max-width: 300px;
+  .cs-input-group {
+    margin-bottom: 1rem;
+    margin-top: 0.6rem;
   }
 }

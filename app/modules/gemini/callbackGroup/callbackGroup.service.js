@@ -6,14 +6,13 @@
     .service('cbgService', cbgService);
 
   /* @ngInject */
-  function cbgService($http, $translate, UrlConfig) {
-    var geminURL = UrlConfig.getGeminiUrl();
+  function cbgService(GmHttpService, $translate) {
     var URL = {
-      coutries: geminURL + 'countries',
-      updateCallbackGroup: geminURL + 'callbackgroup/',
-      downloadCountryUrl: geminURL + 'callbackgroup/countryRegionTemplate',
-      callbackGroup: geminURL + 'callbackgroup/customerId/',
-      activityLogs: geminURL + 'activityLogs',
+      coutries: 'countries',
+      updateCallbackGroup: 'callbackgroup/',
+      downloadCountryUrl: 'callbackgroup/countryRegionTemplate',
+      callbackGroup: 'callbackgroup/customerId/',
+      activityLogs: 'activityLogs',
     };
     var service = {
       getNotes: getNotes,
@@ -32,15 +31,15 @@
     return service;
 
     function getCallbackGroups(customerId) {
-      return $http.get(URL.callbackGroup + customerId).then(extractData);
+      return GmHttpService.httpGet(URL.callbackGroup + customerId).then(extractData);
     }
 
     function getOneCallbackGroup(customerId, groupId) {
-      return $http.get(URL.callbackGroup + customerId + '/groupId/' + groupId).then(extractData);
+      return GmHttpService.httpGet(URL.callbackGroup + customerId + '/groupId/' + groupId).then(extractData);
     }
 
     function updateCallbackGroup(data) {
-      return $http.put(URL.updateCallbackGroup, data).then(extractData);
+      return GmHttpService.httpPut(URL.updateCallbackGroup, null, null, data).then(extractData);
     }
 
     function updateCallbackGroupStatus(customerId, ccaGroupId, operation, data) {
@@ -51,38 +50,38 @@
       if (operation === 'cancel' || operation === 'decline') {
         url = URL.callbackGroup + customerId + '/groupId/' + ccaGroupId + '/' + operation;
       }
-      return $http.put(url, data).then(extractData);
+      return GmHttpService.httpPut(url, null, null, data).then(extractData);
     }
 
     function getCountries() {
-      return $http.get(URL.coutries).then(extractData);
+      return GmHttpService.httpGet(URL.coutries).then(extractData);
     }
 
     function postRequest(customerId, data) {
-      return $http.post(URL.callbackGroup + customerId, data).then(extractData);
+      return GmHttpService.httpPost(URL.callbackGroup + customerId, null, null, data).then(extractData);
     }
 
     function moveSite(data) {
-      return $http.put(URL.updateCallbackGroup + 'movesite', data).then(extractData);
+      return GmHttpService.httpPut(URL.updateCallbackGroup + 'movesite', null, null, data).then(extractData);
     }
 
     function postNote(data) {
       var url = URL.activityLogs;
-      return $http.post(url, data).then(extractData);
+      return GmHttpService.httpPost(url, null, null, data).then(extractData);
     }
 
     function getNotes(customerId, ccaGroupId) {
       var url = URL.activityLogs + '/' + customerId + '/' + ccaGroupId + '/add_note';
-      return $http.get(url).then(extractData);
+      return GmHttpService.httpGet(url).then(extractData);
     }
 
     function getHistories(customerId, ccaGroupId, groupName) {
       var url = URL.activityLogs + '/' + customerId + '/' + ccaGroupId + '/Callback%20Group/' + groupName;
-      return $http.get(url).then(extractData);
+      return GmHttpService.httpGet(url).then(extractData);
     }
 
     function getDownloadCountryUrl() {
-      return $http.get(URL.downloadCountryUrl).then(extractData);
+      return GmHttpService.httpGet(URL.downloadCountryUrl).then(extractData);
     }
 
     function extractData(response) {

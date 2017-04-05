@@ -1,5 +1,6 @@
 import { ServicesOverviewHybridCard } from './ServicesOverviewHybridCard';
 import { ICardButton, CardType } from './ServicesOverviewCard';
+import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 
 export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybridCard {
   public getShowMoreButton(): ICardButton | undefined {
@@ -39,7 +40,8 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
   public constructor(
     private Authinfo,
     private Config,
-    FusionClusterStatesService) {
+    HybridServicesClusterStatesService: HybridServicesClusterStatesService,
+  ) {
     super({
       active: false,
       cardClass: 'media',
@@ -49,7 +51,7 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
       name: 'servicesOverview.cards.hybridDataSecurity.title',
       routerState: 'hds.list',
       service: 'spark-hybrid-datasecurity',
-    }, FusionClusterStatesService);
+    }, HybridServicesClusterStatesService);
     this.checkRoles();
   }
 }

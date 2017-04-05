@@ -15,6 +15,8 @@
       resetAddress: resetAddress,
       checkForPstnSetup: checkForPstnSetup,
       setCountryCode: setCountryCode,
+      getCountryCode: getCountryCode,
+      getCarrierCapability: getCarrierCapability,
     };
 
     return service;
@@ -37,14 +39,14 @@
         reseller: false,
         details: {
           isTrial: true,
-          countryCode: 'US',
+          countryCode: PstnSetupService.getCountryCode(),
           pstnProvider: {},
           swivelNumbers: [],
           pstnContractInfo: {
             companyName: '',
-            signeeFirstName: '',
-            signeeLastName: '',
-            email: '',
+            firstName: '',
+            lastName: '',
+            emailAddress: '',
           },
           pstnNumberInfo: {
             state: {},
@@ -92,25 +94,32 @@
 
     function reserveNumbersWithCustomerV2(customerOrgId) {
       if (_trialData.details.pstnProvider.apiImplementation !== "SWIVEL") {
-        return PstnSetupService.reserveCarrierInventoryV2(
-          customerOrgId,
-          _trialData.details.pstnProvider.uuid,
-          _trialData.details.pstnNumberInfo.numbers,
-          true
-        ).then(function (reservationData) {
-          var order = {
-            data: {
-              numbers: reservationData.numbers,
-            },
-            numberType: PstnSetupService.NUMTYPE_DID,
-            orderType: PstnSetupService.NUMBER_ORDER,
-            reservationId: reservationData.uuid,
-          };
-          _trialData.details.pstnOrderData.push(order);
-        }).catch(function (response) {
-          Notification.errorResponse(response, 'trialModal.pstn.error.reserveFail');
-          return $q.reject(response);
-        });
+        if (angular.isString(_trialData.details.pstnNumberInfo.numbers[0])) {
+          return PstnSetupService.reserveCarrierInventoryV2(
+            customerOrgId,
+            _trialData.details.pstnProvider.uuid,
+            _trialData.details.pstnNumberInfo.numbers,
+            true
+          ).then(function (reservationData) {
+            var order = {
+              data: {
+                numbers: reservationData.numbers,
+              },
+              numberType: PstnSetupService.NUMTYPE_DID,
+              orderType: PstnSetupService.NUMBER_ORDER,
+              reservationId: reservationData.uuid,
+            };
+            _trialData.details.pstnOrderData.push(order);
+          }).catch(function (response) {
+            Notification.errorResponse(response, 'trialModal.pstn.error.reserveFail');
+            return $q.reject(response);
+          });
+        } else {
+          for (var i = 0; i < _trialData.details.pstnNumberInfo.numbers.length; i++) {
+            _trialData.details.pstnOrderData.push(_trialData.details.pstnNumberInfo.numbers[i]);
+          }
+          return $q.resolve();
+        }
       } else {
         return $q.resolve();
       }
@@ -120,9 +129,9 @@
       return PstnSetupService.createCustomerV2(
         customerOrgId,
         _trialData.details.pstnContractInfo.companyName,
-        _trialData.details.pstnContractInfo.signeeFirstName,
-        _trialData.details.pstnContractInfo.signeeLastName,
-        _trialData.details.pstnContractInfo.email,
+        _trialData.details.pstnContractInfo.firstName,
+        _trialData.details.pstnContractInfo.lastName,
+        _trialData.details.pstnContractInfo.emailAddress,
         _trialData.details.pstnProvider.uuid,
         _trialData.details.isTrial
       ).catch(function (response) {
@@ -182,10 +191,22 @@
       };
     }
 
+    function getCountryCode() {
+      return PstnSetupService.getCountryCode();
+    }
+
     function setCountryCode(countryCode) {
       getData();
       _trialData.details.countryCode = countryCode;
       PstnSetupService.setCountryCode(countryCode);
+    }
+
+    function getCarrierCapability(capability) {
+      var carrier = PstnSetupService.getProvider();
+      if (!carrier) {
+        return false;
+      }
+      return carrier.getCapability(capability);
     }
 
   }

@@ -6,8 +6,9 @@
     .controller('HDSSettingsController', HDSSettingsController);
 
   /* @ngInject */
-  function HDSSettingsController($modal, $state, $translate, Analytics, Authinfo, Orgservice, HDSService, FusionClusterService, Notification) {
+  function HDSSettingsController($modal, $q, $state, $translate, Analytics, Authinfo, Orgservice, HDSService, FusionClusterService, Notification) {
     var vm = this;
+    vm.lock = false;
     vm.PRE_TRIAL = 'pre_trial';    // service status Trial/Production mode
     vm.TRIAL = 'trial';
     vm.PRODUCTION = 'production';
@@ -23,6 +24,8 @@
     vm.addResource = addResource;
     vm.openAddTrialUsersModal = openAddTrialUsersModal;
     vm.openEditTrialUsersModal = openEditTrialUsersModal;
+    vm.deactivateTrialMode = deactivateTrialMode;
+    vm.deactivateProductionMode = deactivateProductionMode;
     var localizedHdsModeError = $translate.instant('hds.resources.settings.hdsModeGetError');
     var trialKmsServer = '';
     var trialKmsServerMachineUUID = '';
@@ -59,6 +62,9 @@
     vm.servicestatus = {
       title: 'hds.resources.settings.servicestatusTitle',
     };
+    vm.deactivate = {
+      title: 'common.deactivate',
+    };
 
     var DEFAULT_SERVICE_MODE = vm.NA_MODE;
 
@@ -76,7 +82,7 @@
       HDSService.getHdsTrialUsers(Authinfo.getOrgId(), vm.trialUserGroupId)
         .then(function (data) {
           var trialUsers = _.isObject(data.members) ? data.members : {};
-          vm.numTrialUsers = trialUsers.length;
+          vm.numTrialUsers = _.size(trialUsers);
         }).catch(function (error) {
           Notification.errorWithTrackingId(error, localizedHdsModeError);
         });
@@ -97,6 +103,9 @@
         });
     }
     function getOrgHdsInfo() {
+      var params = {
+        basicInfo: true,
+      };
       Orgservice.getOrg(function (data, status) {
         if (data.success || status === 200) {
           vm.orgSettings = data.orgSettings;
@@ -110,8 +119,11 @@
               vm.model.serviceMode = vm.PRODUCTION;
             }
           } else {
+            if (typeof vm.prodDomain === 'undefined') {
+              vm.prodDomain = 'Spark Default KMS';
+            }
             // trial info
-            if (typeof vm.altHdsServers !== 'undefined' || vm.altHdsServers.length > 0) {
+            if (_.size(vm.altHdsServers) > 0) {
               if (_.every(vm.altHdsServers, function (server) {
                 return server.active;
               })) {
@@ -143,11 +155,11 @@
           vm.model.serviceMode = vm.NA_MODE;
           Notification.error(localizedHdsModeError + status);
         }
-      });
+      }, null, params);
     }
 
     function recoverPreTrial() {
-      Orgservice.setOrgAltHdsServersHds(Authinfo.getOrgId(), jsonTrialMode)
+      HDSService.setOrgAltHdsServersHds(Authinfo.getOrgId(), jsonTrialMode)
         .then(function () {
           vm.model.serviceMode = vm.PRE_TRIAL;
         }).catch(function (error) {
@@ -156,7 +168,8 @@
     }
 
     function startTrial() {
-      if (vm.model.serviceMode === vm.PRE_TRIAL) {
+      if (vm.model.serviceMode === vm.PRE_TRIAL && !vm.lock) {
+        vm.lock = true;
         if (typeof vm.altHdsServers !== 'undefined' || vm.altHdsServers.length > 0) {
           _.forEach(vm.altHdsServers, function (server) {
             if (typeof server.active !== 'undefined') {
@@ -167,17 +180,20 @@
         var myJSON = {
           'altHdsServers': vm.altHdsServers,
         };
-        Orgservice.setOrgAltHdsServersHds(Authinfo.getOrgId(), myJSON)
+        HDSService.setOrgAltHdsServersHds(Authinfo.getOrgId(), myJSON)
           .then(function () {
             vm.model.serviceMode = vm.TRIAL;
           }).catch(function (error) {
             Notification.errorWithTrackingId(error, localizedHdsModeError);
+          }).finally(function () {
+            vm.lock = false;
           });
       }
     }
 
     function moveToProduction() {
-      if (vm.model.serviceMode === vm.TRIAL) {
+      if (vm.model.serviceMode === vm.TRIAL && !vm.lock) {
+        vm.lock = true;
         $modal.open({
           templateUrl: 'modules/hds/settings/confirm-move-to-production-dialog.html',
           type: 'dialog',
@@ -185,12 +201,16 @@
           .result.then(function () {
             HDSService.moveToProductionMode(trialKmsServer, trialKmsServerMachineUUID, trialAdrServer, trialSecurityService)
               .then(function () {
-                vm.model.serviceMode = vm.PRODUCTION;
+                getOrgHdsInfo();
                 // TODO: add remove the CI Group for Trial Users after MVO or finish up e2e test
                 Notification.success('hds.resources.settings.succeedMoveToProductionMode');
               }).catch(function (error) {
                 Notification.errorWithTrackingId(error, localizedHdsModeError);
+              }).finally(function () {
+                vm.lock = false;
               });
+          }).catch(function () {
+            vm.lock = false;
           });
       }
     }
@@ -207,7 +227,9 @@
         type: 'small',
       })
         .result.then(function () {
-          getTrialUsersInfo();
+          setTimeout(function () {
+            getTrialUsersInfo();
+          }, 3000);
         });
     }
 
@@ -219,8 +241,137 @@
         type: 'small',
       })
         .result.then(function () {
-          getTrialUsersInfo();
+          setTimeout(function () {
+            getTrialUsersInfo();
+          }, 3000);
         });
+    }
+    function deactivateTrialMode() {
+      if (vm.model.serviceMode === vm.TRIAL && !vm.lock) {
+        vm.lock = true;
+        $modal.open({
+          templateUrl: 'modules/hds/settings/confirm-deactivate-trialmode-dialog.html',
+          type: 'dialog',
+        })
+          .result.then(function () {
+            if (_.size(vm.altHdsServers) > 0) {
+              _.forEach(vm.altHdsServers, function (server) {
+                if (typeof server.active !== 'undefined') {
+                  server['active'] = false;
+                }
+              });
+            }
+            var myJSON = {
+              'altHdsServers': vm.altHdsServers,
+            };
+            HDSService.setOrgAltHdsServersHds(Authinfo.getOrgId(), myJSON)
+              .then(function () {
+                vm.model.serviceMode = vm.PRE_TRIAL;
+                Notification.success('hds.resources.settings.succeedDeactivateTrialMode');
+              }).catch(function (error) {
+                Notification.errorWithTrackingId(error, localizedHdsModeError);
+              }).finally(function () {
+                vm.lock = false;
+              });
+          }).catch(function () {
+            vm.lock = false;
+          });
+      }
+    }
+    function cleanTrialUserGroup() {
+      return HDSService.getHdsTrialUsersGroup(Authinfo.getOrgId())
+        .then(function (data) {
+          if (_.size(data.Resources) > 0) {
+            return HDSService.deleteCIGroup(Authinfo.getOrgId(), data.Resources[0].id);
+          } else {
+            return $q.resolve('No Trial User Group');
+          }
+        });
+    }
+    function createTrialUserGroup() {
+      return HDSService.createHdsTrialUsersGroup(Authinfo.getOrgId())
+        .then(function (data) {
+          return data.id;
+        });
+    }
+    function manageHdsServersInfo(newGroupID) {
+      var defer = $q.defer();
+      var jsonAltHdsServers = {
+        altHdsServers: [
+          {
+            type: 'kms',
+            kmsServer: vm.orgSettings.kmsServer,
+            kmsServerMachineUUID: vm.orgSettings.kmsServerMachineUUID,
+            groupId: newGroupID,
+            active: false,
+          },
+          {
+            type: 'adr',
+            adrServer: vm.orgSettings.adrServer,
+            groupId: newGroupID,
+            active: false,
+          },
+          {
+            type: 'sec',
+            securityService: vm.orgSettings.securityService,
+            groupId: newGroupID,
+            active: false,
+          },
+        ],
+      };
+      HDSService.deleteHdsServerInfo(Authinfo.getOrgId())
+        .then(function () {
+          HDSService.setOrgAltHdsServersHds(Authinfo.getOrgId(), jsonAltHdsServers)
+            .then(function () {
+              getOrgHdsInfo();
+              defer.resolve();
+            })
+            .catch(function () {
+              HDSService.moveToProductionMode(trialKmsServer, trialKmsServerMachineUUID, trialAdrServer, trialSecurityService);
+              HDSService.deleteCIGroup(Authinfo.getOrgId(), newGroupID);
+              defer.reject();
+            });
+        }).catch(function () {
+          defer.reject();
+        });
+
+      return defer.promise;
+    }
+    function deactivateProductionMode() {
+      // create CI Group for Trial Users
+      // delete kmsServer, kmsServerMachineUUID, adrServer, securityService from org settings
+      // create altHdsServers under org settings with above info
+      if (vm.model.serviceMode === vm.PRODUCTION && !vm.lock) {
+        vm.lock = true;
+        $modal.open({
+          templateUrl: 'modules/hds/settings/confirm-deactivate-trialmode-dialog.html',
+          type: 'dialog',
+        })
+          .result.then(function () {
+            cleanTrialUserGroup()
+              .then(function () {
+                createTrialUserGroup()
+                  .then(function (newGroupID) {
+                    manageHdsServersInfo(newGroupID)
+                      .then(function () {
+                        Notification.success('hds.resources.settings.succeedDeactivateProductionMode');
+                      }).catch(function (error) {
+                        Notification.errorWithTrackingId(error, localizedHdsModeError);
+                      }).finally(function () {
+                        vm.lock = false;
+                      });
+                  }).catch(function (error) {
+                    throw error;
+                  });
+              }).catch(function (error) {
+                Notification.errorWithTrackingId(error, localizedHdsModeError);
+                vm.lock = false;
+              });
+          }).catch(function () {
+            // user clicked Cancle Button, no need for a notification.
+            vm.lock = false;
+          });
+      }
     }
   }
 }());

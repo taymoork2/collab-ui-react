@@ -1,0 +1,69 @@
+<div class="modal-header">
+  <div class="modal-title" translate="hercules.settings.verifySipDestination.title"></div>
+</div>
+<div class="modal-body verify-sip-destination-modal">
+
+  <div ng-if="vm.currentStep === 'loading'">
+    <span class="spinner-sip-destination--large">
+      <i class="icon icon-spinner"></i>
+    </span>
+  </div>
+
+  <div ng-if="vm.currentStep === 'error'">
+    <p translate="hercules.settings.verifySipDestination.errorFromServer"></p>
+    <ul>
+      <li>{{vm.error.data.message}}</li>
+      <li translate="common.trackingId" translate-values="{trackingId: vm.error.data.trackingId}"></li>
+    </ul>
+    <p translate="hercules.settings.verifySipDestination.contactCiscoSupport"></p>
+  </div>
+
+  <div ng-if="vm.currentStep === 'result'">
+
+    <div class="sip-verification-modal-section">
+      <h6 translate="hercules.settings.verifySipDestination.testResultsHeader"></h6>
+      <hs-sip-destination-test-results test-result-numbers="{successful: vm.getNumberOfSteps('Info'),
+                                                             issues: vm.getNumberOfSteps('Warn'),
+                                                             failed: vm.getNumberOfSteps('Error')}"></hs-sip-destination-test-results>
+
+      <p ng-if="vm.hasWarningOrError()" class="warning-message">
+        <i class="icon icon-error"></i>
+        <span translate="hercules.settings.verifySipDestination.warningsOrErrors"></span>
+      </p>
+    </div>
+
+    <div class="sip-verification-modal-section">
+      <h6 translate="common.details"></h6>
+      <table class="table table-striped sip-destination-results-table">
+        <thead>
+        <tr>
+          <td translate="common.step"></td>
+          <td translate="common.details"></td>
+          <td translate="common.result" class="result"></td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="step in vm.result track by $index">
+          <td>{{vm.localizeType(step.type)}}</td>
+          <td>{{step.description}}</td>
+          <td class="result"><i class="icon" ng-class="vm.severityToIcon(step.severity)"></i></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+<div class="modal-footer">
+  <button ng-click="$dismiss(vm.hasWarningOrError())"
+          class="btn"
+          translate="common.close"></button>
+  <button ng-click="$close(false)"
+          ng-if="!vm.hasWarningOrError() && vm.currentStep === 'result'"
+          class="btn--primary"
+          translate="common.save"></button>
+  <button ng-click="$close(true)"
+          ng-if="vm.hasWarningOrError() && vm.currentStep === 'result'"
+          class="btn--primary"
+          translate="hercules.settings.verifySipDestination.saveAnyway"></button>
+</div>

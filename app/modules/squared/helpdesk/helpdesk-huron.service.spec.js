@@ -150,7 +150,7 @@ describe('HelpdeskHuronService', function () {
       .respond(huronUserWithNumbers);
 
     $httpBackend
-      .when('GET', 'https://atlas-integration.wbx2.com/admin/api/v1/helpdesk/organizations/4214d345-7caf-4e32-b015-34de878d1158/users/74c2ca8d-99ca-4bdf-b6b9-a142d503f024')
+      .when('GET', 'https://atlas-intb.ciscospark.com/admin/api/v1/helpdesk/organizations/4214d345-7caf-4e32-b015-34de878d1158/users/74c2ca8d-99ca-4bdf-b6b9-a142d503f024')
       .respond(user);
   }));
 

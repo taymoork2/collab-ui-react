@@ -93,12 +93,17 @@
     icon: 'icon-tools',
     title: 'tabs.developmentTab',
     hideProd: true,
-    subPages: [{
-      title: 'tabs.metricsDetailsTab',
-      //desc: 'tabs.metricsDetailsTabDesc',
-      state: 'media-service-v2',
-      link: '#mediaserviceV2',
-    }],
+    subPages: [
+      {
+        title: 'tabs.metricsDetailsTab',
+        //desc: 'tabs.metricsDetailsTabDesc',
+        state: 'media-service-v2',
+        link: '#mediaserviceV2',
+      }, {
+        title: 'tabs.editFeatureToggles',
+        state: 'edit-featuretoggles',
+        link: '#editfeaturetoggles',
+      }],
   }];
 
   module.exports = angular

@@ -237,7 +237,7 @@ describe('Controller: PstnNumbersCtrl', function () {
     });
 
     it('should show toll-free tab in paid if supported', function () {
-      PstnSetup.setIsTrial(false);
+      controller.isTrial = false;
       PstnSetupService.getCarrierCapabilities = jasmine.createSpy().and.returnValue($q.resolve(capabilityWithTollFree));
       controller.getCapabilities();
       $scope.$apply();

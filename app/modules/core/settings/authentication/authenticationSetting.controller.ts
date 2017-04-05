@@ -7,7 +7,10 @@ namespace globalsettings {
 
     /* @ngInject */
     constructor(private $state, Orgservice) {
-      Orgservice.getAdminOrg(this.getAdminOrgHandler.bind(this));
+      let params = {
+        basicInfo: true,
+      };
+      Orgservice.getAdminOrg(this.getAdminOrgHandler.bind(this), null, params);
     }
 
     private getAdminOrgHandler(data: { success: boolean, ssoEnabled: boolean }) {

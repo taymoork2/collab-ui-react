@@ -52,6 +52,7 @@
     vm.cluster_availability_heading = $translate.instant('mediaFusion.metrics.overAllAvailability');
     vm.customPlaceholder = $translate.instant('mediaFusion.report.custom');
     vm.total_cloud_heading = $translate.instant('mediaFusion.metrics.totalCloud');
+    vm.participants = $translate.instant('mediaFusion.metrics.participants');
 
     vm.second_card_heading = vm.total_cloud_heading;
     vm.redirected_heading = vm.cloud_calls_heading;
@@ -78,6 +79,7 @@
 
     vm.setClusterAvailability = setClusterAvailability;
     vm.setTotalCallsData = setTotalCallsData;
+    vm.setTotalCallsPie = setTotalCallsPie;
     vm.setSneekPeekData = setSneekPeekData;
     vm.setAvailabilityData = setAvailabilityData;
     vm.setCallVolumeData = setCallVolumeData;
@@ -97,7 +99,7 @@
       cardChartDiv: 'clientTypeChartDiv',
       noData: false,
     };
-    vm.numberOfMeetsOnPremiseschartOptions = {
+    vm.meetsHostedchartOptions = {
       isShow: true,
       cardChartDiv: 'numberOfMeetsOnPremisesChartDiv',
       noData: false,
@@ -105,6 +107,11 @@
     vm.cloudParticipantschartOptions = {
       isShow: true,
       cardChartDiv: 'cloudParticipantsChartDiv',
+      noData: false,
+    };
+    vm.totalParticipantschartOptions = {
+      isShow: true,
+      cardChartDiv: 'totalParticipantsChartDiv',
       noData: false,
     };
 
@@ -127,6 +134,9 @@
     vm.timeSelected = vm.timeOptions[0];
 
     vm.isFlipped = false;
+    vm.clientTypeDesc = $translate.instant('mediaFusion.metrics.cardDescription.clientType');
+    vm.cloudParticipantsDesc = $translate.instant('mediaFusion.metrics.cardDescription.cloudParticipants');
+    vm.meetsHostTypeDesc = $translate.instant('mediaFusion.metrics.cardDescription.meetsHostType');
 
     setRefreshInterval();
     getCluster();
@@ -135,6 +145,7 @@
     function loadResourceDatas() {
       deferred.promise.then(function () {
         setTotalCallsData();
+        setTotalCallsPie();
         setAvailabilityData();
         setClusterAvailability();
         setUtilizationData();
@@ -300,8 +311,7 @@
             vm.secondCardFooter.isShow = true;
             vm.secondCardFooter.value = vm.cloudOverflow;
           }
-          vm.second_card_value = vm.cloudcalls;
-
+          vm.second_card_value = (vm.cloudcalls - vm.cloudOverflow) < 0 ? 0 : (vm.cloudcalls - vm.cloudOverflow);
         } else {
           if (response === vm.ABORT) {
             return undefined;
@@ -332,6 +342,32 @@
             vm.totalcloudcalls = vm.onprem + vm.cloudOverflow;
           }
           vm.second_card_value = vm.cloudOverflow;
+          vm.totalcloudcalls = abbreviateNumber(vm.totalcloudcalls);
+        }
+        vm.totalcloudShort = (vm.totalcloudcalls == vm.noData) ? vm.noData : abbreviateNumber(vm.totalcloudcalls);
+        vm.totalcloudTooltip = checkForTooltip(vm.totalcloudShort) ? vm.totalcloudcalls : "";
+        vm.secondCardShort = (vm.second_card_value == vm.noData) ? vm.noData : abbreviateNumber(vm.second_card_value);
+        vm.secondCardTooltip = checkForTooltip(vm.secondCardShort) ? vm.second_card_value : "";
+        vm.onpremShort = (vm.onprem == vm.noData) ? vm.noData : abbreviateNumber(vm.onprem);
+        vm.onpremTooltip = checkForTooltip(vm.onpremShort) ? vm.onprem : "";
+      });
+    }
+
+    function setTotalCallsPie() {
+      MediaReportsService.getTotalCallsData(vm.timeSelected, vm.clusterSelected).then(function (response) {
+        if (!_.isUndefined(response.data)) {
+          var callsOnPremise = _.isUndefined(response.data.callsOnPremise) ? 0 : response.data.callsOnPremise;
+          var callsOverflow = _.isUndefined(response.data.callsOverflow) ? 0 : response.data.callsOverflow;
+          var cloudCalls = _.isUndefined(response.data.cloudCalls) ? 0 : response.data.cloudCalls;
+        }
+        if (response === vm.ABORT) {
+          return undefined;
+        } else if (_.isUndefined(response.data) || (callsOnPremise == 0 && callsOverflow == 0 && cloudCalls == 0)) {
+          AdoptionCardService.setDummyTotalParticipantsPiechart();
+          vm.totalParticipantschartOptions.noData = true;
+        } else {
+          AdoptionCardService.setTotalParticipantsPiechart(callsOnPremise, callsOverflow, cloudCalls);
+          vm.totalParticipantschartOptions.noData = false;
         }
       });
     }
@@ -356,17 +392,21 @@
           return undefined;
         } else if (_.isUndefined(response.data) || response.data.dataProvider.length === 0) {
           AdoptionCardService.setDummyNumberOfMeetsOnPremisesPiechart();
-          vm.numberOfMeetsOnPremiseschartOptions.noData = true;
+          vm.meetsHostedchartOptions.noData = true;
           vm.tot_number_meetings = vm.EMPTY;
           vm.tot_number_meetings = vm.noData;
+          vm.totMeetingsShort = vm.tot_number_meetings;
+          vm.totMeetingsTooltip = "";
         } else {
           var total_meets = 0;
           AdoptionCardService.setNumberOfMeetsOnPremisesPiechart(response.data);
-          vm.numberOfMeetsOnPremiseschartOptions.noData = false;
+          vm.meetsHostedchartOptions.noData = false;
           _.forEach(response.data.dataProvider, function (val) {
             total_meets = total_meets + val.value;
           });
           vm.tot_number_meetings = total_meets;
+          vm.totMeetingsShort = abbreviateNumber(vm.tot_number_meetings);
+          vm.totMeetingsTooltip = checkForTooltip(vm.totMeetingsShort) ? vm.tot_number_meetings : "";
         }
       });
     }
@@ -642,6 +682,34 @@
       } else {
         vm.isFlipped = true;
       }
+    }
+
+    function abbreviateNumber(value) {
+      if (value <= 1000) {
+        return value.toString();
+      }
+      var numDigits = ("" + value).length;
+      var suffixIndex = Math.floor(numDigits / 3);
+      var normalisedValue = value / Math.pow(1000, suffixIndex);
+      var precision = 3;
+      if (normalisedValue < 1) {
+        precision = 1;
+      }
+      var suffixes = ["", "k", "m", "bn"];
+      if (normalisedValue < 1) {
+        return _.round(normalisedValue * 1000) + suffixes[suffixIndex - 1];
+      } else {
+        return normalisedValue.toPrecision(precision) + suffixes[suffixIndex];
+      }
+    }
+
+    function checkForTooltip(value) {
+      var tooltipFlag = false;
+      value = "" + value;
+      if ((value.indexOf('k') > -1) || (value.indexOf('m') > -1) || (value.indexOf('bn') > -1)) {
+        tooltipFlag = true;
+      }
+      return tooltipFlag;
     }
 
   }

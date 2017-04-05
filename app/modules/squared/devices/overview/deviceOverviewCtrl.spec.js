@@ -2,7 +2,7 @@
 
 describe('Controller: DeviceOverviewCtrl', function () {
   var $scope, $controller, $state, controller, $httpBackend;
-  var $q, CsdmConfigService, CsdmDeviceService, Authinfo, Notification;
+  var $q, UrlConfig, CsdmDeviceService, Authinfo, Notification;
   var RemoteSupportModal, HuronConfig, FeatureToggleService, Userservice;
   var PstnSetupStatesService, CsdmHuronDeviceService;
 
@@ -22,7 +22,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
   beforeEach(initSpies);
   beforeEach(initController);
 
-  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _CsdmConfigService_, _CsdmDeviceService_, _Authinfo_, _Notification_, _RemoteSupportModal_, _HuronConfig_, _FeatureToggleService_, _Userservice_, _PstnSetupStatesService_) {
+  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _UrlConfig_, _CsdmDeviceService_, _Authinfo_, _Notification_, _RemoteSupportModal_, _HuronConfig_, _FeatureToggleService_, _Userservice_, _PstnSetupStatesService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
@@ -31,7 +31,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
     FeatureToggleService = _FeatureToggleService_;
     Userservice = _Userservice_;
 
-    CsdmConfigService = _CsdmConfigService_;
+    UrlConfig = _UrlConfig_;
     CsdmDeviceService = _CsdmDeviceService_;
     Authinfo = _Authinfo_;
     Notification = _Notification_;
@@ -41,8 +41,8 @@ describe('Controller: DeviceOverviewCtrl', function () {
   }
 
   function initSpies() {
-    $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/devices?checkDisplayName=false&checkOnline=false').respond(200);
-    $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/upgradeChannels').respond(200);
+    $httpBackend.whenGET(UrlConfig.getCsdmServiceUrl() + '/organization/null/devices?checkDisplayName=false&checkOnline=false').respond(200);
+    $httpBackend.whenGET(UrlConfig.getCsdmServiceUrl() + '/organization/null/upgradeChannels').respond(200);
     $httpBackend.whenGET('http://thedeviceurl').respond(200);
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200);
     $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/sipendpoints/3/addonmodules').respond(200);
@@ -246,10 +246,9 @@ describe('Controller: DeviceOverviewCtrl', function () {
 
 describe('Huron Device', function () {
   var $scope, $controller, controller, $httpBackend;
-  var $q, CsdmConfigService;
+  var $q, UrlConfig;
   var $stateParams, ServiceSetup, timeZone, newTimeZone, countries, newCountry, HuronConfig;
   var usStatesList = getJSONFixture('../../app/modules/huron/pstnSetup/states.json');
-  var usCanStatesList = getJSONFixture('../../app/modules/huron/pstnSetup/states_plus_canada.json');
   var $timeout;
 
   beforeEach(angular.mock.module('Hercules'));
@@ -260,13 +259,13 @@ describe('Huron Device', function () {
   beforeEach(initSpies);
 
 
-  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _CsdmConfigService_, _ServiceSetup_, _HuronConfig_, _$timeout_) {
+  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _UrlConfig_, _ServiceSetup_, _HuronConfig_, _$timeout_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
     $q = _$q_;
     $timeout = _$timeout_;
-    CsdmConfigService = _CsdmConfigService_;
+    UrlConfig = _UrlConfig_;
     ServiceSetup = _ServiceSetup_;
     HuronConfig = _HuronConfig_;
     $stateParams = {
@@ -320,18 +319,30 @@ describe('Huron Device', function () {
   }
 
   function initSpies() {
-    $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/devices?checkDisplayName=false&checkOnline=false').respond(200);
-    $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/upgradeChannels').respond(200);
+    $httpBackend.whenGET(UrlConfig.getCsdmServiceUrl() + '/organization/null/devices?checkDisplayName=false&checkOnline=false').respond(200);
+    $httpBackend.whenGET(UrlConfig.getCsdmServiceUrl() + '/organization/null/upgradeChannels').respond(200);
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200);
     $httpBackend.whenGET('http://thedeviceurl').respond(200);
     $httpBackend.whenGET(HuronConfig.getTerminusV2Url() + '/customers/numbers/e911').respond(200);
     $httpBackend.whenGET('modules/huron/pstnSetup/states.json').respond(usStatesList);
-    $httpBackend.whenGET('modules/huron/pstnSetup/states_plus_canada.json').respond(usCanStatesList);
 
     countries = getJSONFixture('huron/json/settings/countries.json');
 
     spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.resolve(timeZone));
     spyOn(ServiceSetup, 'getSiteCountries').and.returnValue($q.resolve(countries));
+    var sites = [{
+      uuid: '777-888-666',
+      steeringDigit: '5',
+      siteSteeringDigit: '6',
+    }];
+    var site = {
+      uuid: '1234567890',
+      steeringDigit: '5',
+      siteSteeringDigit: '6',
+      country: 'US',
+    };
+    spyOn(ServiceSetup, 'listSites').and.returnValue($q.resolve(sites));
+    spyOn(ServiceSetup, 'getSite').and.returnValue($q.resolve(site));
     spyOn($stateParams.huronDeviceService, 'setTimezoneForDevice').and.returnValue($q.resolve(true));
     spyOn($stateParams.huronDeviceService, 'setCountryForDevice').and.returnValue($q.resolve(true));
     spyOn($stateParams.huronDeviceService, 'setSettingsForAta').and.returnValue($q.resolve(true));

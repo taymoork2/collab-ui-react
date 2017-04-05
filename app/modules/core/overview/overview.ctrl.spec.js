@@ -7,7 +7,7 @@ describe('Controller: OverviewCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  var controller, $rootScope, $scope, $q, $state, $translate, Authinfo, Config, FeatureToggleService, Log, Orgservice, PstnSetupService, OverviewNotificationFactory, ReportsService, ServiceDescriptor, ServiceStatusDecriptor, TrialService, FusionClusterService, SunlightReportService, LicenseService;
+  var controller, $rootScope, $scope, $q, $state, $translate, Authinfo, Config, FeatureToggleService, Log, Orgservice, PstnSetupService, OverviewNotificationFactory, ReportsService, ServiceDescriptor, ServiceStatusDecriptor, TrialService, FusionClusterService, SunlightReportService;
   var orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');
   var usageOnlySharedDevicesFixture = getJSONFixture('core/json/organizations/usageOnlySharedDevices.json');
   var services = getJSONFixture('squared/json/services.json');
@@ -205,6 +205,18 @@ describe('Controller: OverviewCtrl', function () {
 
     ServiceDescriptor = {
       services: function () {},
+      getServices: function () {
+        return $q.resolve([{
+          id: Config.entitlements.fusion_cal,
+          acknowledged: false,
+        }, {
+          id: Config.entitlements.fusion_uc,
+          acknowledged: false,
+        }, {
+          id: Config.entitlements.fusion_ec,
+          acknowledged: false,
+        }]);
+      },
     };
 
     ServiceStatusDecriptor = {
@@ -225,26 +237,6 @@ describe('Controller: OverviewCtrl', function () {
       getOrg: jasmine.createSpy().and.callFake(function (callback) {
         callback(orgServiceJSONFixture.getOrgNoSip, 200);
       }),
-      getHybridServiceAcknowledged: function () {
-        var defer = $q.defer();
-        defer.resolve({
-          status: 200,
-          data: {
-            items: [{
-              id: Config.entitlements.fusion_cal,
-              acknowledged: false,
-            }, {
-              id: Config.entitlements.fusion_uc,
-              acknowledged: false,
-            }, {
-              id: Config.entitlements.fusion_ec,
-              acknowledged: false,
-            }],
-          },
-        });
-        return defer.promise;
-      },
-      setHybridServiceAcknowledged: jasmine.createSpy(),
     };
 
     PstnSetupService = {
@@ -258,10 +250,6 @@ describe('Controller: OverviewCtrl', function () {
           acceptedDate: "today",
         });
       },
-    };
-
-    LicenseService = {
-      orgIsEntitledTo: function () {},
     };
 
     ReportsService = {
@@ -292,11 +280,12 @@ describe('Controller: OverviewCtrl', function () {
     spyOn(Authinfo, 'isDeviceMgmt').and.returnValue(true);
     spyOn(Authinfo, 'isCustomerLaunchedFromPartner').and.returnValue(isCustomerLaunchedFromPartner);
     spyOn(Authinfo, 'isCare').and.returnValue(true);
+    spyOn(Authinfo, 'isMessageEntitled').and.returnValue(false);
+    spyOn(Authinfo, 'isSquaredUC').and.returnValue(false);
     spyOn(FeatureToggleService, 'atlasPMRonM2GetStatus').and.returnValue($q.resolve(true));
     spyOn(TrialService, 'getDaysLeftForCurrentUser').and.returnValue($q.resolve(1));
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
     spyOn(PstnSetupService, 'getCustomerTrialV2').and.callThrough();
-    spyOn(LicenseService, 'orgIsEntitledTo').and.returnValue(false);
 
     controller = $controller('OverviewCtrl', {
       $scope: $scope,
@@ -315,7 +304,6 @@ describe('Controller: OverviewCtrl', function () {
       OverviewNotificationFactory: OverviewNotificationFactory,
       SunlightReportService: SunlightReportService,
       hasGoogleCalendarFeatureToggle: false,
-      LicenseService: LicenseService,
     });
 
     $scope.$apply();

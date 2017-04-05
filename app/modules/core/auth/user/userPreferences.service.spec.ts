@@ -1,5 +1,6 @@
 import testModule from './index';
 import { User, UserPreferencesService } from './index';
+import { IPreferenceOperation } from './userPreferences.service';
 
 describe('UserPreferencesService Service', () => {
 
@@ -25,6 +26,8 @@ describe('UserPreferencesService Service', () => {
       displayName: 'chrisstoy+atlas.stoy.test.1@gmail.com',
       userSettings: ['{\'sparkAdmin.licensedDate\':\'1471615853573\'}'],
     });
+
+    installPromiseMatchers();
 
   });
 
@@ -52,42 +55,81 @@ describe('UserPreferencesService Service', () => {
 
   describe('setUserPreferences', () => {
 
-    it('should PATCH user updating preferences', function () {
+    beforeEach(function () {
 
-      this.$httpBackend.expect('PATCH', this.User.meta.location)
+      // mock result of the PATCH call.
+      this.$httpBackend.expectPATCH(this.User.meta.location)
         .respond((method, url, data) => {
-
           let patchData = JSON.parse(data);
           expect(patchData.schemas).toBeDefined();
           expect(patchData.userPreferences).toBeDefined();
-          expect(patchData.userPreferences[0].value).toEqual(UserPreferencesService.USER_PREF_TOS);
-          expect(patchData.userPreferences[0].operation).not.toBeDefined();
-          expect(patchData.userPreferences[1].value).toEqual(UserPreferencesService.USER_PREF_LAUNCH);
-          expect(patchData.userPreferences[1].operation).toEqual('delete');
+          expect(_.some(patchData.userPreferences, (vo: IPreferenceOperation) => vo.value === UserPreferencesService.USER_PREF_TOS)).toBeTruthy();
+          expect(_.some(patchData.userPreferences, (vo: IPreferenceOperation) => vo.value === UserPreferencesService.USER_PREF_LAUNCH)).toBeTruthy();
 
+          let activePrefs = _.flatMap(patchData.userPreferences, (pref) => {
+            return (_.isEqual(pref.operation, 'delete') ? null : pref.value);
+          });
+          let userPrefs = _.filter(activePrefs, key => !_.isNull(key));
+
+          // return mock version of the server response
           return [201, {
             method: method,
             url: url,
-            data: patchData,
+            data: {
+              schemas: patchData.schemas,
+              userPreferences: userPrefs,
+            },
           }];
         });
+    });
 
-      this.User.hideToS = true;
+    it('should support add new preference', function () {
+      this.User.userPreferences = [];
 
-      let success = false;
-      this.UserPreferencesService.setUserPreferences(this.User)
-        .then(() => {
-          success = true;
-        })
-        .catch(() => {
-          expect('error from PATCH').toBeFalsy();
-        })
-        .finally(() => {
-          expect(success).toBeTruthy();
-        });
+      let promise = this.UserPreferencesService.setUserPreferences(this.User, UserPreferencesService.USER_PREF_TOS, true);
+      expect(promise).toBeResolvedWith(jasmine.objectContaining({
+        data: {
+          schemas: this.User.schemas,
+          userPreferences: [UserPreferencesService.USER_PREF_TOS],
+        },
+      }));
 
-      this.$httpBackend.flush();
+    });
 
+    it('should support adding an existing preference', function () {
+      this.User.userPreferences = [UserPreferencesService.USER_PREF_TOS, UserPreferencesService.USER_PREF_LAUNCH];
+
+      let promise = this.UserPreferencesService.setUserPreferences(this.User, UserPreferencesService.USER_PREF_TOS, true);
+      expect(promise).toBeResolvedWith(jasmine.objectContaining({
+        data: {
+          schemas: this.User.schemas,
+          userPreferences: [UserPreferencesService.USER_PREF_LAUNCH, UserPreferencesService.USER_PREF_TOS],
+        },
+      }));
+    });
+
+    it('should support removing existing preference', function () {
+      this.User.userPreferences = [UserPreferencesService.USER_PREF_TOS, UserPreferencesService.USER_PREF_LAUNCH];
+
+      let promise = this.UserPreferencesService.setUserPreferences(this.User, UserPreferencesService.USER_PREF_TOS, false);
+      expect(promise).toBeResolvedWith(jasmine.objectContaining({
+        data: {
+          schemas: this.User.schemas,
+          userPreferences: [UserPreferencesService.USER_PREF_LAUNCH],
+        },
+      }));
+    });
+
+    it('should support removing non-existing preference', function () {
+      this.User.userPreferences = [UserPreferencesService.USER_PREF_TOS];
+
+      let promise = this.UserPreferencesService.setUserPreferences(this.User, UserPreferencesService.USER_PREF_LAUNCH, false);
+      expect(promise).toBeResolvedWith(jasmine.objectContaining({
+        data: {
+          schemas: this.User.schemas,
+          userPreferences: [UserPreferencesService.USER_PREF_TOS],
+        },
+      }));
     });
 
   });

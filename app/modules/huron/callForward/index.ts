@@ -12,6 +12,7 @@ export default angular
     'pascalprecht.translate',
     customerServiceModule,
     'huron.telephoneNumber',
+    'huron.telephoneNumberService',
     featureToggleModule,
     require('angular-resource'),
     require('modules/core/scripts/services/authinfo'),

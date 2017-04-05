@@ -111,6 +111,10 @@ export class SupportSettings {
       });
     });
 
+    let params = {
+      basicInfo: true,
+      disableCache: true,
+    };
     this.Orgservice.getOrg((data, status) => {
       if (data.success) {
         let settings = data.orgSettings;
@@ -148,7 +152,7 @@ export class SupportSettings {
         this.Log.debug('Get existing org failed. Status: ' + status);
       }
 
-    }, this.orgId, true);
+    }, this.orgId, params);
   }
 
   public saveUseCustomSupportUrl() {

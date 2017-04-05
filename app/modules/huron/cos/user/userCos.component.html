@@ -16,7 +16,8 @@
           name="{{restriction.restriction}}-restriction"
           ng-model="$ctrl.options[restriction.restriction].selected"
           options="$ctrl.options[restriction.restriction].options"
-          on-change-fn="$ctrl.changeRestriction(restriction)">
+          on-change-fn="$ctrl.changeRestriction(restriction)"
+          is-disabled="$ctrl.disableControl">
         </cs-select>
       </cs-sp-section>
     </div>

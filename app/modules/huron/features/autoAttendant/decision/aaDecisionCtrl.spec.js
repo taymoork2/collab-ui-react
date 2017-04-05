@@ -5,11 +5,29 @@ describe('Controller: AADecisionCtrl', function () {
   var aaCommonService;
   var aaQueueService;
   var controller;
-  var AAUiModelService, AutoAttendantCeMenuModelService;
+  var AAUiModelService, AAModelService, AutoAttendantCeMenuModelService;
+  var customVariableService;
+  var customVarJson = getJSONFixture('huron/json/autoAttendant/aaCustomVariables.json');
+
   var $rootScope, $scope;
 
   var aaUiModel = {
     openHours: {},
+  };
+  var aaModel = {
+    aaRecord: {
+      scheduleId: '1',
+      callExperienceName: 'AA1',
+    },
+    aaRecords: [{
+      callExperienceURL: 'url-1/1111',
+      callExperienceName: 'AA1',
+    }, {
+      callExperienceURL: 'url-2/1112',
+      callExperienceName: 'AA2',
+    }],
+    aaRecordUUID: '1111',
+    ceInfos: [],
   };
   var queue = [{
     queueName: "queueyLewis",
@@ -23,7 +41,7 @@ describe('Controller: AADecisionCtrl', function () {
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function ($controller, _$rootScope_, $q, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _FeatureToggleService_, _AACommonService_, _QueueHelperService_) {
+  beforeEach(inject(function ($controller, _$rootScope_, $q, _AAUiModelService_, _AAModelService_, _CustomVariableService_, _AutoAttendantCeMenuModelService_, _FeatureToggleService_, _AACommonService_, _QueueHelperService_) {
 
     $rootScope = _$rootScope_;
     $scope = $rootScope;
@@ -34,17 +52,37 @@ describe('Controller: AADecisionCtrl', function () {
     aaUiModel = {
       openHours: {},
     };
+
+    aaModel = {
+      aaRecord: {
+        scheduleId: '1',
+        callExperienceName: 'AA1',
+      },
+      aaRecords: [{
+        callExperienceURL: 'url-1/1111',
+        callExperienceName: 'AA1',
+      }, {
+        callExperienceURL: 'url-2/1112',
+        callExperienceName: 'AA2',
+      }],
+      aaRecordUUID: '1111',
+      ceInfos: [],
+    };
     controller = $controller;
 
     featureToggleService = _FeatureToggleService_;
     aaCommonService = _AACommonService_;
     aaQueueService = _QueueHelperService_;
+    customVariableService = _CustomVariableService_;
 
     AAUiModelService = _AAUiModelService_;
+    AAModelService = _AAModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
+    spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
     spyOn(featureToggleService, 'supports').and.returnValue($q.resolve(true));
+    spyOn(customVariableService, 'listCustomVariables').and.returnValue($q.resolve(customVarJson));
 
     aaCommonService.resetFormStatus();
 
@@ -177,6 +215,25 @@ describe('Controller: AADecisionCtrl', function () {
       expect(c.actionEntry.if.rightCondition).toEqual(c.ifOption.buffer);
       expect(c.actionEntry.if.leftCondition).toEqual(c.ifOption.value);
 
+    });
+    it('custom Variable  conditional from ifOption value', function () {
+      var c;
+      action.if = {};
+      action.if.leftCondition = 'custVar1';
+      action.if.rightCondition = 'Hello world';
+
+      c = controller('AADecisionCtrl', {
+        $scope: $scope,
+      });
+
+      $scope.$apply();
+
+      c.ifOption.value = 'sessionVariable';
+      c.ifOption.buffer = 'Hello World';
+
+      c.setIfDecision();
+
+      expect(c.actionEntry.if.rightCondition).toEqual(c.ifOption.buffer);
     });
   });
 

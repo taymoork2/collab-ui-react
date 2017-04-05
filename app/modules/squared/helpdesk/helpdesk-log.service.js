@@ -9,10 +9,24 @@
         return deferredResolve(findLastLog(HelpdeskMockData.logs.search));
       }
       var deferred = $q.defer();
-      LogService.searchLogs(term, function (data) {
+      // request backend to return logs sorted by descending timestamp, and only one
+      LogService.searchLogs(term, {
+        timeSortOrder: 'descending',
+        limit: 1,
+      }).then(function (data, status) {
+        data = _.isObject(data) ? data : {};
+        data.success = true;
+        data.status = status;
+        return data;
+      }).catch(function (data, status) {
+        data = _.isObject(data) ? data : {};
+        data.success = false;
+        data.status = status;
+        return data;
+      }).then(function (data) {
         if (data.success) {
           if (data.metadataList && data.metadataList.length > 0) {
-            deferred.resolve(findLastLog(data.metadataList));
+            deferred.resolve(cleanLogMetadata(data.metadataList[0]));
           } else {
             deferred.reject("NoLog");
           }
@@ -63,14 +77,17 @@
       var sorted = _.sortBy(metadataList, function (meta) {
         return new Date(meta.timestamp);
       });
-      var lastLog = _.last(sorted);
+      return cleanLogMetadata(_.last(sorted));
+    }
+
+    function cleanLogMetadata(logMetadata) {
       var platform = '';
-      if (lastLog.platform) {
-        platform = _.last(lastLog.platform.split('-')) || platform;
+      if (logMetadata.platform) {
+        platform = _.last(logMetadata.platform.split('-')) || platform;
       }
       return {
-        timestamp: lastLog.timestamp,
-        filename: lastLog.filename,
+        timestamp: logMetadata.timestamp,
+        filename: logMetadata.filename,
         platform: platform,
       };
     }

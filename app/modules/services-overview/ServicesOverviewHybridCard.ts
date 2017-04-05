@@ -19,10 +19,10 @@ const IserviceStatusToTxt = {
   setupNotComplete: 'servicesOverview.cardStatus.setupNotComplete',
 };
 
-export function filterAndGetCssStatus(FusionClusterStatesService, services: Array<IServiceStatus>, serviceId: string): string | undefined {
+export function filterAndGetCssStatus(HybridServicesClusterStatesService, services: Array<IServiceStatus>, serviceId: string): string | undefined {
   let service = _.find(services, (service) => service.serviceId === serviceId);
   if (service) {
-    return FusionClusterStatesService.getStatusIndicatorCSSClass(service.status);
+    return HybridServicesClusterStatesService.getStatusIndicatorCSSClass(service.status);
   }
   return undefined;
 }
@@ -46,7 +46,7 @@ export abstract class ServicesOverviewHybridCard extends ServicesOverviewCard {
 
   public constructor(
     params: IHybridCardParams,
-    private FusionClusterStatesService,
+    private HybridServicesClusterStatesService,
   ) {
     super(params);
     this.service = params.service;
@@ -55,7 +55,7 @@ export abstract class ServicesOverviewHybridCard extends ServicesOverviewCard {
 
   public hybridStatusEventHandler(servicesStatuses: Array<IServiceStatus>): void {
     this.status = {
-      status: filterAndGetCssStatus(this.FusionClusterStatesService, servicesStatuses, this.service),
+      status: filterAndGetCssStatus(this.HybridServicesClusterStatesService, servicesStatuses, this.service),
       text: filterAndGetTxtStatus(servicesStatuses, this.service),
       routerState: this.routerState,
     };

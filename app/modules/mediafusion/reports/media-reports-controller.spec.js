@@ -201,6 +201,7 @@ describe('Controller:MediaReportsController', function () {
       expect(controller.onprem).toBe(20);
       expect(controller.cloudOverflow).toBe(30);
       expect(controller.total).toBe(50);
+      expect(controller.second_card_value).toBe(30);
     });
 
     it('setClientTypeCard should invoke getClienTypeCardData', function () {
@@ -208,6 +209,21 @@ describe('Controller:MediaReportsController', function () {
       controller.setClientTypeCard();
       httpMock.flush();
       expect(MediaReportsService.getClientTypeCardData).toHaveBeenCalled();
+    });
+
+    it('setTotalCallsPie should invoke getTotalCallsData', function () {
+      var response = {
+        'data': {
+          'cloudCalls': 30,
+          'callsOverflow': 40,
+          'callsOnPremise': 20,
+        },
+      };
+      spyOn(MediaReportsService, 'getTotalCallsData').and.returnValue($q.resolve(response));
+      controller.setTotalCallsPie();
+      httpMock.flush();
+      expect(MediaReportsService.getTotalCallsData).toHaveBeenCalled();
+      expect(controller.totalParticipantschartOptions.noData).toBeFalsy();
     });
 
     it('setMeetingLocationCard should invoke getMeetingLocationCardData', function () {

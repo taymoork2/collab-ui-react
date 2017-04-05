@@ -5,18 +5,13 @@
   td[disabled] {
     width: 40%;
     padding-left: 0rem;
-    color: #aeaeaf;
+    color: $gray-light-1;
   }
 
   td {
     width: 40%;
     padding-left: 0rem;
   }
-}
-
-.deleteClusterTableRow .alert {
-  margin-right: 0px;
-  margin-left: 0px;
 }
 
 .deleteClusterTableHeaderRow {
@@ -29,7 +24,7 @@
     background-color: white;
     width: 40%;
     padding-left: 0rem;
-    color: #aeaeaf;
+    color: $gray-light-1;
   }
 }
 
@@ -48,7 +43,7 @@
 }
 
 .selectTheDest {
-  color: #aeaeaf;
+  color: $gray-light-1;
   font-style: italic;
 }
 

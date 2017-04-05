@@ -4,6 +4,8 @@
     </cs-select>
   </div>
   <div ng-switch="aaDecisionCtrl.ifOption.value">
+     <cs-select ng-switch-when="sessionVariable" ng-model="aaDecisionCtrl.sessionVarOption" options="aaDecisionCtrl.sessionVarOptions" icon="icon-chevron-down" placeholder="aaDecisionCtrl.selectVariablePlaceholder" ng-change= "aaDecisionCtrl.setIfDecision()">
+     </cs-select>
     <p ng-if="aaDecisionCtrl.ifOption.value != 'callerReturned' && aaDecisionCtrl.ifOption.value != ''" translate="autoAttendant.actionIs"></p> 
     <div ng-switch-when="Original-Caller-Number">
       <textarea class="aa-decision-textarea" aa-keypress ng-change="aaDecisionCtrl.update('Original-Caller-Number')" ng-model="aaDecisionCtrl.ifOption.buffer" type="text" id="aaDecisionCallerNumber{{ schedule + index }}" name="callerNumberCalled" }}" rows="4" maxlength="2000"></textarea>
@@ -25,11 +27,15 @@
       <textarea class="aa-decision-textarea" aa-keypress ng-change="aaDecisionCtrl.update('Original-Caller-Area-Code')" ng-model="aaDecisionCtrl.ifOption.buffer" type="text" id="aaDecisionAreaCode{{ schedule + index }}" name="areaCode" }}" rows="4" maxlength="2000"></textarea>
       <p class="cs-input__help-text" translate="autoAttendant.areaCodeInfo"></p>
     </div>
+    <div ng-switch-when="sessionVariable">
+      <textarea class="aa-decision-textarea" aa-keypress ng-change="aaDecisionCtrl.update('sessionVariable')" ng-model="aaDecisionCtrl.ifOption.buffer" type="text" id="aaDecisionSessionVariable{{ schedule + index }}" name="sessionVariable" }}" rows="4" maxlength="2000"></textarea>
+      <p class="cs-input__help-text" translate="autoAttendant.sessionVariableInfo"></p>
+    </div>
     <!-- not implemented as yet -->
-    <div ng-switch-when="callerReturned">
+    <!--div ng-switch-when="callerReturned">
       <p translate="autoAttendant.callerReturnedWhen"></p>
       <cs-select options="aaDecisionCtrl.callerReturnedOptions" ng-model="aaDecisionCtrl.callerReturnedOption" icon="icon-chevron-down" labelfield="label" valuefield="value" ng-change="aaDecisionCtrl.update(0)"></cs-select> 
-    </div> 
+    </div-->
   </div>
   <div class="row aa-flex-row aa-then">
     <h3 class="text-info " translate="autoAttendant.thenDecision"></h3>

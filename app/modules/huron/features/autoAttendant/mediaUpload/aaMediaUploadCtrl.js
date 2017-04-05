@@ -30,7 +30,6 @@
     vm.progress = 0;
     vm.actionCopy = undefined;
     vm.isSquishable = isSquishable;
-    vm.clioDelete = AAMediaUploadService.isClioEnabled();
 
     var maxLanes = 3;
 
@@ -329,7 +328,9 @@
         modalCanceled = true;
         uploadServProm.abort();
       }
-      AAMediaUploadService.notifyAsActive(uniqueCtrlIdentifier, false);
+      if (sourceType !== messageType.ROUTE_TO_QUEUE) {
+        AAMediaUploadService.notifyAsActive(uniqueCtrlIdentifier, false);
+      }
     });
 
     //if user cancels upload & previously uploaded media -> re-init/revert copy

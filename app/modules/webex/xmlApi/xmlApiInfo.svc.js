@@ -1,9 +1,6 @@
 (function () {
   'use strict';
 
-  angular.module('WebExApp')
-    .service('WebExXmlApiInfoSvc', WebExXmlApiInfoSvc);
-
   function WebExXmlApiInfoSvc() {
     return {
       xmlApiUrl: "",
@@ -12,4 +9,6 @@
       webexUserId: "",
     }; // return
   } // WebExXmlApiInfo()
+
+  module.exports = WebExXmlApiInfoSvc;
 })();

@@ -1,6 +1,7 @@
+import domainManagement from './index';
 describe('DomainManagementService', () => {
 
-  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module(domainManagement));
 
   let $httpBackend, DomainManagementService: any, UrlConfig, Authinfo, $rootScope;
 

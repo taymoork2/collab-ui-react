@@ -5,7 +5,7 @@ describe('Service: USSService', function () {
   beforeEach(angular.mock.module('Hercules'));
 
   var $httpBackend, Authinfo, CsdmHubFactory, USSService, hubOn, $translate, HybridServicesUtils;
-  var rootPath = 'https://uss-integration.wbx2.com/uss/api/v1/';
+  var rootPath = 'https://uss-intb.ciscospark.com/uss/api/v1/';
   var translations = {};
 
   beforeEach(angular.mock.module(function ($provide) {

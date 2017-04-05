@@ -1,4 +1,4 @@
-@import 'styles/toolkit/colors';
+@import '~collab-ui/scss/settings/settings';
 
 hybrid-services-cluster-page,
 .fusion-cluster-settings {
@@ -20,7 +20,7 @@ hybrid-services-cluster-page,
     font-family: 'CiscoSansTT Regular Oblique', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-style: italic;
     font-size: 0.75rem;
-    color: #aeaeaf;
+    color: $gray-light-1;
     line-height: 1rem;
     margin-top: 4px;
     margin-bottom: 0.25rem;

@@ -9,6 +9,7 @@ export class MediaReportFlipChartCard implements ng.IComponentOptions {
     footerOptions: '<',
     chartOptions: '<',
     cardClass: '=',
+    cardDesc: '=',
   };
 }
 angular.module('Mediafusion').component('ucMediaReportFlipChartCard', new MediaReportFlipChartCard());

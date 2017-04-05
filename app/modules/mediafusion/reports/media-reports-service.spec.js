@@ -43,15 +43,15 @@ describe('Service: Media Reports Service', function () {
     $provide.value("Authinfo", vm.Authinfo);
   }));
 
-  beforeEach(inject(function (_$httpBackend_, _MediaReportsService_, _Notification_, _MediaConfigServiceV2_) {
+  beforeEach(inject(function (_$httpBackend_, _MediaReportsService_, _Notification_, _UrlConfig_) {
     vm.$httpBackend = _$httpBackend_;
     vm.MediaReportsService = _MediaReportsService_;
     vm.Notification = _Notification_;
-    vm.MediaConfigServiceV2 = _MediaConfigServiceV2_;
+    vm.UrlConfig = _UrlConfig_;
 
     spyOn(vm.Notification, 'errorWithTrackingId');
 
-    vm.baseUrl = vm.MediaConfigServiceV2.getAthenaUrl() + '/organizations/' + vm.Authinfo.getOrgId();
+    vm.baseUrl = vm.UrlConfig.getAthenaServiceUrl() + '/organizations/' + vm.Authinfo.getOrgId();
     vm.callVolumeUrl = vm.baseUrl + '/call_volume/?relativeTime=4h';
     vm.UtilizationUrl = vm.baseUrl + '/utilization/?relativeTime=4h';
     vm.clusterAvailabilityUrl = vm.baseUrl + '/clusters_availability/?relativeTime=4h';

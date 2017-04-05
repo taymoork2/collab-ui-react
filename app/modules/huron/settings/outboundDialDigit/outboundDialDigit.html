@@ -1,0 +1,16 @@
+<div ng-form="outboundDialDigitForm">
+  <label class="control-label" translate="serviceSetupModal.steeringDigit"></label>
+  <p class="description-block" translate="serviceSetupModal.steeringDigitDescription"></p>
+  <div class="medium-2">
+    <cs-select
+      name="steeringDigit"
+      ng-model="$ctrl.steeringDigit"
+      options="$ctrl.steeringDigitOptions"
+      on-change-fn="$ctrl.onSteeringDigitChanged()"
+      is-warn="{{$ctrl.steeringDigitConflict()}}"
+      warn-msg="{{::'serviceSetupModal.warning.siteSteering' | translate}}"
+      filter="false"
+      required="true">
+    </cs-select>
+  </div>
+</div>

@@ -4,7 +4,7 @@ import notifications from 'modules/core/notifications';
 import featureMemberService from 'modules/huron/features';
 import callPickupGroupService from 'modules/huron/features/callPickup/services/';
 
-import { DisableEnterKeyHook } from './disableEnterKeyHook.directive.ts';
+import { DisableEnterKeyHook } from './disableEnterKeyHook.directive';
 
 export default angular
   .module('huron.call-pickup.members', [

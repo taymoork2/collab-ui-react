@@ -168,7 +168,8 @@ class LineOverview implements ng.IComponentController {
   }
 
   public onCancel(): void {
-    if (!this.lineOverviewData.line.uuid) {
+    let uuid = _.get(this, 'lineOverviewData.line.uuid');
+    if (!uuid) {
       this.$state.go(this.$state.$current.parent.name);
     } else {
       this.lineOverviewData = this.LineOverviewService.getOriginalConfig();

@@ -6,7 +6,7 @@
       .controller('CareFeaturesCtrl', CareFeaturesCtrl);
 
   /* @ngInject */
-  function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, Authinfo, CardUtils, CareFeatureList, CTService, Log, Notification, FeatureToggleService) {
+  function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, Authinfo, CardUtils, CareFeatureList, CTService, Log, Notification) {
     var vm = this;
     vm.init = init;
     var pageStates = {
@@ -30,6 +30,11 @@
     vm.template = null;
     vm.openNewCareFeatureModal = openNewCareFeatureModal;
     vm.setFilter = setFilter;
+    vm.hasMessage = Authinfo.isMessageEntitled();
+    vm.hasCall = Authinfo.isSquaredUC();
+    vm.tooltip = '';
+    vm.purchaseLink = purchaseLink;
+
     /* LIST OF FEATURES
      *
      *  To add a New Feature (like Voice Templates)
@@ -56,6 +61,15 @@
       color: 'alerts',
       icons: ['icon-phone'],
       data: [],
+    }, {
+      name: 'ChCa',
+      getFeature: CareFeatureList.getChatPlusCallbackTemplates,
+      formatter: CareFeatureList.formatTemplates,
+      i18n: 'careChatTpl.chatTemplate',
+      isEmpty: false,
+      color: 'cta',
+      icons: ['icon-message', 'icon-phone'],
+      data: [],
     }];
 
     vm.filters = [{
@@ -67,27 +81,12 @@
     }, {
       name: $translate.instant('sunlightDetails.callbackMediaType'),
       filterValue: 'callback',
+    }, {
+      name: $translate.instant('sunlightDetails.chatPlusCallbackMediaType'),
+      filterValue: 'chatPlusCallback',
     }];
 
-    FeatureToggleService.atlasCareChatPlusCallbackTrialsGetStatus().then(function (enabled) {
-      if (enabled) {
-        vm.features.push({
-          name: 'ChCa',
-          getFeature: CareFeatureList.getChatPlusCallbackTemplates,
-          formatter: CareFeatureList.formatTemplates,
-          i18n: 'careChatTpl.chatTemplate',
-          isEmpty: false,
-          color: 'cta',
-          icons: ['icon-message', 'icon-phone'],
-          data: [],
-        });
-        vm.filters.push({
-          name: $translate.instant('sunlightDetails.chatPlusCallbackMediaType'),
-          filterValue: 'chatPlusCallback',
-        });
-      }
-      init();
-    });
+    init();
 
     function init() {
       vm.pageState = pageStates.loading;
@@ -107,6 +106,12 @@
           vm.pageState = pageStates.showFeatures;
         }
       });
+
+      if (!vm.hasMessage && !vm.hasCall) {
+        vm.tooltip = $translate.instant('sunlightDetails.licensesMissing.messageAndCall');
+      } else if (!vm.hasMessage) {
+        vm.tooltip = $translate.instant('sunlightDetails.licensesMissing.messageOnly');
+      }
     }
 
     function handleFeaturePromises(promises) {
@@ -224,6 +229,10 @@
       }
 
     });
+
+    function purchaseLink() {
+      $state.go('my-company.subscriptions');
+    }
   }
 
 })();

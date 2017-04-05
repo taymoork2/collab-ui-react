@@ -77,6 +77,10 @@ require('./_partnerProfile.scss');
         }
       });
 
+      var params = {
+        disableCache: true,
+        basicInfo: true,
+      };
       Orgservice.getOrg(function (data, status) {
         if (data.success) {
           var settings = data.orgSettings;
@@ -111,7 +115,7 @@ require('./_partnerProfile.scss');
         } else {
           Log.debug('Get existing org failed. Status: ' + status);
         }
-      }, orgId, true);
+      }, orgId, params);
     };
 
     $scope.init();

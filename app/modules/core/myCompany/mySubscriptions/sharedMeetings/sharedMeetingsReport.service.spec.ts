@@ -86,7 +86,7 @@ describe('Service: SharedMeetingsReportService', function () {
     it('should return undefined when msSaveOrOpenBlob is defined', function () {
       this.$window.navigator.msSaveOrOpenBlob = jasmine.createSpy('msSaveOrOpenBlob');
       let response: string = this.SharedMeetingsReportService.getDownloadCSV(csvData);
-      expect(response).toEqual(undefined);
+      expect(response).toBeUndefined();
     });
 
     it('should call msSaveOrOpenBlob when downloadInternetExplorer is called', function () {

@@ -27,6 +27,11 @@ require('./_organization-overview.scss');
     }
 
     function getOrgInfo() {
+      var params = {
+        basicInfo: true,
+        disableCache: true,
+      };
+
       Orgservice.getAdminOrg(function (data) {
         if (data.success) {
           $scope.currentOrganization = data;
@@ -34,7 +39,7 @@ require('./_organization-overview.scss');
         } else {
           Notification.error('organizationsPage.orgReadFailed');
         }
-      }, $scope.currentOrganization.id, true);
+      }, $scope.currentOrganization.id, params);
     }
 
     function initReleaseChannels() {

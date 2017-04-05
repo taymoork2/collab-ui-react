@@ -11,6 +11,8 @@ import { ServicesOverviewHybridMediaCard } from './hybridMediaCard';
 import { ServicesOverviewHybridDataSecurityCard } from './hybridDataSecurityCard';
 import { ServicesOverviewHybridContextCard } from './hybridContextCard';
 import { ServicesOverviewPrivateTrunkCard } from './privateTrunkCard';
+import { PrivateTrunkPrereqService } from 'modules/hercules/private-trunk/prereq';
+import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 
 export class ServicesOverviewCtrl {
 
@@ -27,8 +29,9 @@ export class ServicesOverviewCtrl {
     private Config,
     private FeatureToggleService,
     private FusionClusterService,
-    private FusionClusterStatesService,
+    private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
     private CloudConnectorService,
+    private PrivateTrunkPrereqService: PrivateTrunkPrereqService,
   ) {
     this.cards = [
       new ServicesOverviewMessageCard(this.Authinfo),
@@ -36,13 +39,13 @@ export class ServicesOverviewCtrl {
       new ServicesOverviewCallCard(this.Authinfo, this.Config),
       new ServicesOverviewCareCard(this.Authinfo),
       new ServicesOverviewHybridServicesCard(this.Authinfo),
-      new ServicesOverviewHybridAndGoogleCalendarCard(this.$state, this.$q, this.$modal, this.Authinfo, this.CloudConnectorService, this.FusionClusterStatesService),
-      new ServicesOverviewHybridCalendarCard(this.Authinfo, this.FusionClusterStatesService),
-      new ServicesOverviewHybridCallCard(this.Authinfo, this.FusionClusterStatesService),
-      new ServicesOverviewHybridMediaCard(this.Authinfo, this.Config, this.FusionClusterStatesService),
-      new ServicesOverviewHybridDataSecurityCard(this.Authinfo, this.Config, this.FusionClusterStatesService),
-      new ServicesOverviewHybridContextCard(this.FusionClusterStatesService),
-      new ServicesOverviewPrivateTrunkCard(this.FusionClusterStatesService),
+      new ServicesOverviewHybridAndGoogleCalendarCard(this.$state, this.$q, this.$modal, this.Authinfo, this.CloudConnectorService, this.HybridServicesClusterStatesService),
+      new ServicesOverviewHybridCalendarCard(this.Authinfo, this.HybridServicesClusterStatesService),
+      new ServicesOverviewHybridCallCard(this.Authinfo, this.HybridServicesClusterStatesService),
+      new ServicesOverviewHybridMediaCard(this.Authinfo, this.Config, this.HybridServicesClusterStatesService),
+      new ServicesOverviewHybridDataSecurityCard(this.Authinfo, this.Config, this.HybridServicesClusterStatesService),
+      new ServicesOverviewHybridContextCard(this.HybridServicesClusterStatesService),
+      new ServicesOverviewPrivateTrunkCard( this.PrivateTrunkPrereqService, this.HybridServicesClusterStatesService),
     ];
 
     this.loadWebexSiteList();
@@ -76,6 +79,16 @@ export class ServicesOverviewCtrl {
     this.FeatureToggleService.supports(FeatureToggleService.features.huronEnterprisePrivateTrunking)
       .then(supports => {
         this.forwardEvent('privateTrunkFeatureToggleEventHandler', supports);
+        if (supports) {
+          this.PrivateTrunkPrereqService.getVerifiedDomains().then(response => {
+            this.forwardEvent('privateTrunkDomainEventHandler', response.length);
+          });
+        }
+      });
+
+    this.FeatureToggleService.supports(FeatureToggleService.features.sparkCallTenDigitExt)
+      .then(supports => {
+        this.forwardEvent('sparkCallTenDigitExtFeatureToggleEventhandler', supports);
       });
 
   }

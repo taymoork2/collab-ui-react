@@ -1,4 +1,4 @@
-@import 'styles/toolkit/colors';
+@import '~collab-ui/scss/settings/colors';
 
 .auto-answer {
   .auto-answer-title {
@@ -17,7 +17,7 @@
     color: $color-primary-light;
   }
   .icon-warning {
-    color: $brand-warning;
+    color: $color-attention;
   }
   #sharedline-member-warning,
   #multi-device-info,

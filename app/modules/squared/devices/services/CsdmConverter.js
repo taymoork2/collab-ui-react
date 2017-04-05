@@ -50,6 +50,7 @@
         this.mac = obj.mac;
         this.ip = getIp(obj);
         this.cisUuid = obj.cisUuid;
+        this.sipUrl = obj.sipUrl;
         this.isOnline = getIsOnline(obj);
         this.canReset = true;
         this.canDelete = true;
@@ -164,6 +165,7 @@
         this.image = "images/devices-hi/unknown.png";
         this.devices = convertDevicesForPlace(obj.devices || {}, this.type, this.displayName);
         this.codes = obj.codes || {};
+        this.externalLinkedAccounts = obj.externalLinkedAccounts || [];
       }
 
       // Hack, these two fields should be set correctly in CSDM. Adding here until we can fix this.

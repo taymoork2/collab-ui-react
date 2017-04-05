@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function MediaClusterServiceV2($http, CsdmPoller, CsdmCacheUpdater, CsdmHubFactory, UrlConfig, Authinfo, MediaConfigServiceV2) {
+  function MediaClusterServiceV2($http, CsdmPoller, CsdmCacheUpdater, CsdmHubFactory, UrlConfig, Authinfo) {
     var clusterCache = {
       mf_mgmt: {},
     };
@@ -207,7 +207,7 @@
     };
 
     var getClustersV2 = function () {
-      var url = MediaConfigServiceV2.getV2Url() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide';
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide';
 
       return $http.get(url).then(extractDataFromResponse);
     };
@@ -219,7 +219,7 @@
         "targetType": "mf_mgmt",
       };
 
-      var url = MediaConfigServiceV2.getV2Url() + '/organizations/' + Authinfo.getOrgId() + '/clusters';
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters';
       return $http
         .post(url, payLoad);
     };
@@ -231,7 +231,7 @@
         ttlInSeconds: 60 * 60,
       };
 
-      var url = MediaConfigServiceV2.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/allowedRedirectTargets';
+      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/allowedRedirectTargets';
       return $http
         .post(url, payLoad);
     };
@@ -310,6 +310,25 @@
 
     }
 
+    function getPropertySets() {
+      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/property_sets?type=mf.group';
+      return $http
+        .get(url)
+        .then(extractDataFromResponse);
+    }
+
+    function createPropertySet(payLoad) {
+      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/property_sets';
+      return $http
+        .post(url, payLoad);
+    }
+
+    function updatePropertySetById(id, payLoad) {
+      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/property_sets/' + id;
+      return $http
+        .post(url, payLoad);
+    }
+
     function getClustersByConnectorType(type) {
       var clusters = _.chain(clusterCache[type])
         .values() // turn them to an array
@@ -358,6 +377,9 @@
       getMostSevereRunningState: getMostSevereRunningState,
       buildAggregates: buildAggregates,
       getV1Clusters: getV1Clusters,
+      getPropertySets: getPropertySets,
+      createPropertySet: createPropertySet,
+      updatePropertySetById: updatePropertySetById,
     };
   }
 

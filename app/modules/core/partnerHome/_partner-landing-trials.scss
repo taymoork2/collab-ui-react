@@ -1,5 +1,8 @@
-@import 'styles/toolkit/spacing';
-@import 'styles/toolkit/colors';
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/list-group';
+@import '~collab-ui/scss/settings/typography';
+@import '~collab-ui/scss/settings/topbar';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
 
 .trialsPanel {
   padding: 15px;
@@ -54,7 +57,7 @@
 .trialTitle {
   @include vr-spacing(mb, 1);
 
-  font-family: $brand-font-cisco-TT-Extra-Light;
+  font-family: $brand-font-extra-light;
   color: $top-bar-inverse-link-disabled-color;
 }
 
@@ -63,7 +66,7 @@
 }
 
 .expired {
-  color: $btn-link-disabled-color;
+  color: $gray-dark;
   text-align: center;
 }
 

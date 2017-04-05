@@ -26,9 +26,9 @@
     "convertUsers": "Konverter Brugere",
     "errorWarningMessages": "Advarsler og fejl",
     "skipErrorsAndFinish": "Spring fejl over og afslut",
-    "newUsers": "{newusers, plural, one{# Ny bruger} other{# Nye brugere}}",
-    "updatedUsers": "{updatedusers, plural, one{# Opdateret bruger} other{# Opdaterede brugere}}",
-    "errors": "{errors, plural, one{# Fejl} other{# Fejl}}",
+    "newUsers": "{newusers, plural, =1{# Ny bruger} other{# Nye brugere}}",
+    "updatedUsers": "{updatedusers, plural, =1{# Opdateret bruger} other{# Opdaterede brugere}}",
+    "errors": "{errors, plural, =1{# Fejl} other{# Fejl}}",
     "pageTitle": "Brugere",
     "subTitleAdd": "Administrer brugere",
     "subTitleEnable": "Giv brugere rettigheder",
@@ -246,7 +246,7 @@
       "retryUsers": "Prøv igen",
       "retrying": "Prøver igen ...",
       "retryingIn": "prøver igen om:",
-      "retryingUsers": "{users, plural, one{antal bruger} other{antal brugere}}",
+      "retryingUsers": "{users, plural, =1{antal bruger} other{antal brugere}}",
       "exportUserList": "Eksporter brugerliste."
     },
     "advanced": {
@@ -1140,15 +1140,15 @@
   "notifications": {
     "success": "Succesmeddelelser",
     "error": "Fejlmeddelelser",
-    "successTotal": "{total, plural, one{# succes} other{# succeser}}",
-    "errorTotal": "{total, plural, one{# fejl} other{# fejl}}",
+    "successTotal": "{total, plural, =1{# succes} other{# succeser}}",
+    "errorTotal": "{total, plural, =1{# fejl} other{# fejl}}",
     "successDelete": "Slettet {{item}}.",
     "errorDelete": "Kunne ikke slette {{item}}."
   },
   "time": {
-    "seconds": "{time, plural, one{# sekund} other{# sekunder}}",
-    "minutes": "{time, plural, one{# minut} other{# minutter}}",
-    "hours": "{time, plural, one{# time} other{# timer}}"
+    "seconds": "{time, plural, =1{# sekund} other{# sekunder}}",
+    "minutes": "{time, plural, =1{# minut} other{# minutter}}",
+    "hours": "{time, plural, =1{# time} other{# timer}}"
   },
   "callDestination": {
     "numberFormat": "Nummerformat",
@@ -2083,7 +2083,7 @@
       "heading": "Tilmelding"
     },
     "notificationDropdown": {
-      "label": "{number, plural, one{# underretning} other{# underretninger}}"
+      "label": "{number, plural, =1{# underretning} other{# underretninger}}"
     },
     "fusion": {
       "types": {
@@ -2100,7 +2100,7 @@
         "clusters": "Grupper",
         "users": "Brugere",
         "release-channel": "Udgivelseskanal",
-        "nodes": "{count, plural, one{# Gruppe} other{# Grupper}}",
+        "nodes": "{count, plural, =1{# Gruppe} other{# Grupper}}",
         "nodesBtn": "Knude",
         "settings": "Indstillinger",
         "all": "Alle",
@@ -2634,8 +2634,8 @@
     "setSipDomainLink": "Hvad er en Spark SIP-adresse?",
     "setSipDomainMsg": "Indtast et underdomæne",
     "setSipDomainTitle": "Skrivebeskyttet",
-    "setSipDomainCompNames": "{count, plural, one{Dette underdomæne} other{Disse underdomæner}} vil blive reserveret til dig:",
-    "setSipDomainAsssignedNames": "{count, plural, one{Dette underdomæne er} other{Disse underdomæner er}} reserveret til dig",
+    "setSipDomainCompNames": "{count, plural, =1{Dette underdomæne} other{Disse underdomæner}} vil blive reserveret til dig:",
+    "setSipDomainAsssignedNames": "{count, plural, =1{Dette underdomæne er} other{Disse underdomæner er}} reserveret til dig",
     "setSipDomainCheckAvailability": "Tjek tilgængelighed",
     "setSipDomainPlaceholder": "Indtast et underdomæne",
     "setSipDomainErrorMessage": "Ikke tilgængelig. Prøv et andet navn.",
@@ -3374,10 +3374,10 @@
     "deleteNumber": "Slet nummer",
     "deleteConfirmation": "Er du sikker på, du vil slette {{pattern}}?",
     "deleteWarning": "Dette kan ikke omstødes. Du mister dette nummer på ubestemt tid.",
-    "allNumbers": "{count, plural, one{# nummer} other{# numre}}",
-    "pendingNumbers": "{count, plural, one{# nummer under behandling} other{# numre under behandling}}",
-    "unassignedNumbers": "{count, plural, one{# ikke tildelt nummer} other{# ikke tildelte numre}}",
-    "searchResults": "{count, plural, one{# søgeresultat} other{# søgeresultater}}",
+    "allNumbers": "{count, plural, =1{# nummer} other{# numre}}",
+    "pendingNumbers": "{count, plural, =1{# nummer under behandling} other{# numre under behandling}}",
+    "unassignedNumbers": "{count, plural, =1{# ikke tildelt nummer} other{# ikke tildelte numre}}",
+    "searchResults": "{count, plural, =1{# søgeresultat} other{# søgeresultater}}",
     "findNumber": "Find et nummer ..."
   },
   "pstnOrderOverview": {
@@ -3394,7 +3394,7 @@
   },
   "pstnOrderDetail": {
     "orderNumber": "Ordre #{{orderId}}",
-    "pendingNumbers": "{count, plural, one{Der er # nummer} other{Der er # numre}} afventende for denne ordre",
+    "pendingNumbers": "{count, plural, =1{Der er # nummer} other{Der er # numre}} afventende for denne ordre",
     "searchPlaceholder": "Søg telefonnumre",
     "waitOnTOSAcceptance": "Venter på ToS-accept fra kunde"
   },
@@ -3434,7 +3434,7 @@
     "package": "Pakke",
     "adding": "Tilføjer",
     "numbersTitle": "Antal",
-    "numbers": "{count, plural, one{# nummer} other{# numre}}",
+    "numbers": "{count, plural, =1{# nummer} other{# numre}}",
     "newNumbers": "{{count}} Ny",
     "portNumbers": "{{count}} port",
     "thankYou": "Tak",
@@ -3794,9 +3794,9 @@
     "notes": "Noter",
     "active": "Aktiv",
     "free": "Gratis",
-    "daysRemaining": "{count, plural, one{# dag} other{# dage}} tilbage",
-    "daysLeftToPurchase": "{count, plural, one{# dag} other{# dage}} tilbage til køb",
-    "daysLeftToRenew": "{count, plural, one{# dag} other{# dage}} tilbage til fornyelse",
+    "daysRemaining": "{count, plural, =1{# dag} other{# dage}} tilbage",
+    "daysLeftToPurchase": "{count, plural, =1{# dag} other{# dage}} tilbage til køb",
+    "daysLeftToRenew": "{count, plural, =1{# dag} other{# dage}} tilbage til fornyelse",
     "expiringToday": "Udløber i dag",
     "expired": "Udløbet",
     "expiredWithGracePeriod": "Udløbet. Køb nu",
@@ -3830,7 +3830,7 @@
     "trialTerms": "Vilkår for prøveversion",
     "trialOverview": "Prøveversion",
     "webexOverview": "WebEx",
-    "webexSiteCount": "{count, plural, one{# sted mere} other{# flere steder}}",
+    "webexSiteCount": "{count, plural, =1{# sted mere} other{# flere steder}}",
     "licenses": "Antal licenser",
     "totalQuantity": "Samlet mængde",
     "totalLicenses": "Samlede licenser",
@@ -3880,7 +3880,7 @@
     "accountStatus": "Kontostatus",
     "totalUsers": "Samlet antal brugere",
     "purchased": "Købt",
-    "domain": "{count, plural, one{Domæne} other{Domæner}}",
+    "domain": "{count, plural, =1{Domæne} other{Domæner}}",
     "domains": "Domæner",
     "quantityWithValue": "Ant: {{quantity}}",
     "anotherPartner": "(Anden partner)",

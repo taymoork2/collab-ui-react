@@ -1,4 +1,4 @@
-@import 'styles/toolkit/colors';
+@import '~collab-ui/scss/settings/colors';
 
 .read-only-modal {
   h3 {
@@ -18,7 +18,7 @@
 }
 
 .read-only-banner {
-  color: white;
+  color: $white;
   text-align: center;
   background-color: $color-attention-light;
   height: 2.75rem;

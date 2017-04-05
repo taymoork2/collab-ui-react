@@ -24,6 +24,10 @@
 
     function getSettings(orgId) {
       return $q(function (resolve, reject) {
+        var params = {
+          disableCache: true,
+          basicInfo: true,
+        };
         Orgservice.getOrg(function (data, status) {
           if (data.success) {
             var settings = data.orgSettings;
@@ -40,7 +44,7 @@
             Log.debug('Get existing org failed. Status: ' + status);
             reject();
           }
-        }, orgId, true);
+        }, orgId, params);
       });
     }
 

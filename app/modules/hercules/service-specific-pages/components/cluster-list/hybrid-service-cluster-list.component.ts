@@ -1,3 +1,8 @@
+import { ClusterService } from 'modules/hercules/services/cluster-service';
+import { ConnectorType } from 'modules/hercules/hybrid-services.types';
+import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
+import { EnterprisePrivateTrunkService } from 'modules/hercules/services/enterprise-private-trunk-service';
+
 export interface IGridApiScope extends ng.IScope {
   gridApi?: any;
 }
@@ -6,28 +11,35 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
 
   public clusterList: any = {};
   public clusterListGridOptions = {};
-  public getSeverity = this.FusionClusterStatesService.getSeverity;
+  public getSeverity = this.HybridServicesClusterStatesService.getSeverity;
 
   private serviceId: string;
-  private connectorType: string;
+  private connectorType: ConnectorType;
   private clusterId: string;
 
   /* @ngInject */
   constructor(
-    private $translate: ng.translate.ITranslateService,
     private $scope: IGridApiScope,
     private $state: ng.ui.IStateService,
-    private ClusterService,
+    private $translate: ng.translate.ITranslateService,
+    private ClusterService: ClusterService,
+    private EnterprisePrivateTrunkService: EnterprisePrivateTrunkService,
     private FusionClusterService,
-    private FusionClusterStatesService,
+    private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
     private HybridServicesUtils,
   ) {
     this.updateClusters = this.updateClusters.bind(this);
+    this.updateTrunks = this.updateTrunks.bind(this);
   }
 
   public $onInit() {
     this.connectorType = this.HybridServicesUtils.serviceId2ConnectorType(this.serviceId);
-    this.clusterList = this.ClusterService.getClustersByConnectorType(this.connectorType);
+    if (this.serviceId !== 'ciscouc') {
+      this.clusterList = this.ClusterService.getClustersByConnectorType(this.connectorType);
+    } else {
+      this.clusterList = this.EnterprisePrivateTrunkService.getAllResources();
+    }
+
     this.clusterListGridOptions = {
       data: '$ctrl.clusterList',
       enableSorting: false,
@@ -57,9 +69,22 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
         }
       },
     };
-    this.ClusterService.subscribe('data', this.updateClusters, {
-      scope: this.$scope,
-    });
+    if (this.serviceId === 'ciscouc') {
+      this.EnterprisePrivateTrunkService.subscribe('data', this.updateTrunks, {
+        scope: this.$scope,
+      });
+    } else {
+      this.ClusterService.subscribe('data', this.updateClusters, {
+        scope: this.$scope,
+      });
+    }
+
+  }
+
+  private updateTrunks() {
+    if (this.serviceId === 'ciscouc') {
+      this.clusterList = this.EnterprisePrivateTrunkService.getAllResources();
+    }
   }
 
   protected updateClusters() {
@@ -72,14 +97,15 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
           this.clusterList = this.ClusterService.getClustersByConnectorType(this.connectorType);
         });
     } else if (this.serviceId === 'spark-hybrid-datasecurity' ||
-               this.serviceId === 'squared-fusion-media' ||
-               this.serviceId === 'contact-center-context') {
+      this.serviceId === 'squared-fusion-media' ||
+      this.serviceId === 'contact-center-context') {
       this.clusterList = this.ClusterService.getClustersByConnectorType(this.connectorType);
     }
   }
 
   private goToSidepanel(clusterId: string) {
     let routeMap = {
+      ciscouc: 'private-trunk-sidepanel',
       'squared-fusion-cal': 'expressway-cluster-sidepanel',
       'squared-fusion-uc': 'expressway-cluster-sidepanel',
       'squared-fusion-media': 'media-cluster-details',

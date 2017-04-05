@@ -11,6 +11,18 @@
 .media-reports {
   @extend %content-subheader;
   @extend %page-content-padding;
+  .utilization-reports,
+  .participant-distribution-reports,
+  .number-of-participant-reports,
+  .availability-reports,
+  .client-type-reports,
+  .meeting-location-reports {
+    z-index: 1;
+  }
+  .amcharts-export-menu {
+    opacity: 1 !important;
+    z-index: 100;
+  }
   .media-reports-container {
     padding: 0.55rem 0.9rem !important;
   }
@@ -64,6 +76,12 @@
       color: $gray-dark-1;
       text-align: left;
       float: left;
+      .graph-text-color {
+        font-size: rem-calc(15);
+        color: #f0a378;
+        text-align: left;
+        float: left;
+      }
       .graph-number {
         font-size: rem-calc(18);
         color: $brand-success;
@@ -72,6 +90,11 @@
       .graph-media {
         font-size: rem-calc(18);
       }
+    }
+    .insight-padding {
+      padding-left: 0px;
+      padding-top: 0px;
+      padding-bottom: 0px;
     }
     .spinner-position {
       position: absolute;
@@ -110,13 +133,15 @@
       animation: graphAxisFade 2s ease-in-out 1 forwards;
     }
   }
+  .low-z-index {
+    z-index: 0;
+  }
 }
 .availabilityCursor {
   .amcharts-category-axis .amcharts-axis-label {
     cursor: pointer;
   }
 }
-
 @keyframes scaleUpMediaCards {
   0% {
     transform: scale(0, 0);

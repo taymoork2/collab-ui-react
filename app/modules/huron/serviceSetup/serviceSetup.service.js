@@ -1,9 +1,7 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Huron')
-    .factory('ServiceSetup', ServiceSetup);
+  module.exports = ServiceSetup;
 
   /* @ngInject */
   function ServiceSetup($filter, $q, $translate, Authinfo, AvrilSiteService, AvrilSiteUpdateService, CeSiteService, CustomerCommonService, CustomerCosRestrictionServiceV2, DateFormatService, ExternalNumberPool, FeatureToggleService, InternalNumberRangeService, SiteCountryService, SiteLanguageService, SiteService, TimeFormatService, TimeZoneService, VoicemailService, VoicemailTimezoneService) {

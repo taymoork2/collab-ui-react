@@ -619,7 +619,6 @@
       AACommonService.setMediaUploadToggle(featureToggleDefault);
       AACommonService.setCallerInputToggle(featureToggleDefault);
       AACommonService.setDecisionToggle(featureToggleDefault);
-      AACommonService.setClioToggle(featureToggleDefault);
       AACommonService.setRouteQueueToggle(featureToggleDefault);
       AACommonService.setRouteSIPAddressToggle(featureToggleDefault);
       return checkFeatureToggles();
@@ -631,7 +630,6 @@
         hasDecision: FeatureToggleService.supports(FeatureToggleService.features.huronAADecision),
         hasMediaUpload: FeatureToggleService.supports(FeatureToggleService.features.huronAAMediaUpload),
         hasRouteQueue: FeatureToggleService.supports(FeatureToggleService.features.huronAACallQueue),
-        hasClioMedia: FeatureToggleService.supports(FeatureToggleService.features.huronAAClioMedia),
         hasRouteRoom: FeatureToggleService.supports(FeatureToggleService.features.huronAARouteRoom),
       });
     }
@@ -641,7 +639,6 @@
       AACommonService.setDecisionToggle(featureToggles.hasDecision);
       AACommonService.setMediaUploadToggle(featureToggles.hasMediaUpload);
       AACommonService.setRouteQueueToggle(featureToggles.hasRouteQueue);
-      AACommonService.setClioToggle(featureToggles.hasClioMedia);
       AACommonService.setRouteSIPAddressToggle(featureToggles.hasRouteRoom);
     }
 

@@ -4,7 +4,7 @@
   angular.module('Core')
     .controller('ShowActivationCodeCtrl', ShowActivationCodeCtrl);
   /* @ngInject */
-  function ShowActivationCodeCtrl($q, UserListService, OtpService, CsdmDataModelService, CsdmHuronPlaceService, $stateParams, ActivationCodeEmailService, $translate, Notification, CsdmEmailService) {
+  function ShowActivationCodeCtrl($q, UserListService, OtpService, CsdmDataModelService, CsdmHuronPlaceService, $stateParams, ActivationCodeEmailService, $translate, Notification, CsdmEmailService, USSService) {
     var vm = this;
     var wizardData = $stateParams.wizard.state().data;
     vm.title = wizardData.title;
@@ -17,6 +17,7 @@
       deviceType: wizardData.account.deviceType,
       cisUuid: wizardData.account.cisUuid,
       isEntitledToHuron: wizardData.account.isEntitledToHuron,
+      ussProps: wizardData.account.ussProps,
     };
 
     vm.hideBackButton = wizardData.function === 'showCode';
@@ -78,10 +79,24 @@
           if (vm.account.cisUuid) { // Existing place
             createCodeForCloudberryAccount(vm.account.cisUuid).then(success, error);
           } else { // New place
-            createCloudberryPlace(vm.account.name, wizardData.account.entitlements, wizardData.account.directoryNumber, wizardData.account.externalNumber)
+            createCloudberryPlace(vm.account.name, wizardData.account.entitlements, wizardData.account.directoryNumber,
+              wizardData.account.externalNumber, getExternalLinkedAccounts(),
+              wizardData.account.ussProps || null)
               .then(function (place) {
                 vm.account.cisUuid = place.cisUuid;
-                createCodeForCloudberryAccount(vm.account.cisUuid).then(success, error);
+                $q.all({
+                  createCode: createCodeForCloudberryAccount(vm.account.cisUuid),
+                  saveRGroup: updateResourceGroup(vm.account.cisUuid, vm.account.ussProps),
+                }).then(function (s) {
+                  if (s && s.createCode) {
+                    success(s.createCode);
+                  } else {
+                    error(s);
+                  }
+                }, function (e) {
+                  error(e);
+                });
+
               }, error);
           }
         } else { // Personal (never create new)
@@ -122,6 +137,20 @@
       vm.isLoading = false;
     }
 
+    function getExternalLinkedAccounts() {
+      var extLinkedAcc = [];
+      if (wizardData.account.externalCalendarIdentifier) {
+        _.merge(extLinkedAcc, wizardData.account.externalCalendarIdentifier);
+      }
+      if (wizardData.account.externalHybridCallIdentifier) {
+        _.merge(extLinkedAcc, wizardData.account.externalHybridCallIdentifier);
+      }
+      if (extLinkedAcc.length === 0) {
+        return null;
+      }
+      return _.sortBy(extLinkedAcc, ['operation']);
+    }
+
     function createHuronPlace(name, entitlements, directoryNumber, externalNumber) {
       return CsdmDataModelService.createCmiPlace(name, entitlements, directoryNumber, externalNumber);
     }
@@ -139,12 +168,25 @@
       }, error);
     }
 
-    function createCloudberryPlace(name, entitlements, directoryNumber, externalNumber) {
-      return CsdmDataModelService.createCsdmPlace(name, entitlements, directoryNumber, externalNumber);
+    function createCloudberryPlace(name, entitlements, directoryNumber, externalNumber, externalLinkedAccounts, ussProps) {
+      return CsdmDataModelService.createCsdmPlace(name, entitlements, directoryNumber, externalNumber, externalLinkedAccounts, ussProps);
     }
 
     function createCodeForCloudberryAccount(cisUuid) {
       return CsdmDataModelService.createCodeForExisting(cisUuid);
+    }
+
+    function updateResourceGroup(cisUuid, ussProps) {
+      if (!ussProps) {
+        return $q.resolve({});
+      }
+      ussProps.userId = cisUuid;
+      USSService.updateUserProps(ussProps).then(function (s) {
+        return s;
+      }, function (e) {
+        Notification.errorResponse(e, 'addDeviceWizard.showActivationCode.failedResourceGroup');
+        return e;
+      });
     }
 
     function success(code) {

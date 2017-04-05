@@ -42,7 +42,7 @@ export class HuronCompassService {
   public fetchDomain(authData): string {
     return this.$http({
       method: 'GET',
-      url: `${this.UrlConfig.getAdminServiceUrl()}organizations/${authData.orgId}?disableCache=true`,
+      url: `${this.UrlConfig.getAdminServiceUrl()}organizations/${authData.orgId}?disableCache=true&basicInfo=true`,
     })
       .then((res) => {
         if (res.data.countryCode) {

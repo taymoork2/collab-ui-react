@@ -1,4 +1,6 @@
-@import 'styles/toolkit/fonts';
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/fonts';
+@import 'styles/partials/variables';
 
 .customer-admin-overview {
   .icon-spinner {
@@ -120,6 +122,10 @@
     color: $brand-white;
     display: flex;
     align-items: center;
+
+    &.info {
+      background-color: $color-people-base;
+    }
 
     &.invalid-token {
       background-color: $brand-danger;

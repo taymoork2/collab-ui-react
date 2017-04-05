@@ -1,6 +1,7 @@
+@import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
 @import 'modules/sunlight/reports/_care-task';
-@import 'styles/toolkit/spacing';
-@import 'styles/toolkit/layout';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~collab-ui/scss/tools/placeholders/page-layout';
 
 .customer-reports {
   @extend %content-subheader;
@@ -32,9 +33,12 @@
     }
   }
 
+  report-slider {
+    width: calc(100% - 135px); // subtracting the width and margin of the download button
+  }
+
   .download-page {
     @include vr-spacing(mh, 0.75);
-    min-width: vr-adjust(150);
-    width: 15%;
+    width: vr-adjust(125);
   }
 }

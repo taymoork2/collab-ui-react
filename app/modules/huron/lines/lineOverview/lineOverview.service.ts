@@ -38,6 +38,7 @@ export class LineOverviewService {
     private CallerIDService: CallerIDService,
     private HuronVoicemailService: HuronVoicemailService,
     private HuronUserService: HuronUserService,
+    private FeatureToggleService,
   ) {}
 
   public get(consumerType: LineConsumerType, ownerId: string, numberId: string = ''): ng.IPromise<LineOverviewData> {
@@ -292,8 +293,15 @@ export class LineOverviewService {
   public getEsnPrefix(): ng.IPromise<string> {
     return this.HuronSiteService.listSites().then(sites => {
       if (sites.length > 0) {
-        return this.HuronSiteService.getSite(sites[0].uuid).then(site => {
-          return site.siteSteeringDigit + site.siteCode;
+        return this.HuronSiteService.getSite(_.get<string>(sites[0], 'uuid')).then(site => {
+          return this.FeatureToggleService.sparkCallTenDigitExtGetStatus()
+            .then(routingPrefixSupported => {
+              if (routingPrefixSupported) {
+                return site.routingPrefix;
+              } else {
+                return _.get(site, 'siteSteeringDigit', '') + _.get(site, 'siteCode', '');
+              }
+            });
         });
       } else {
         return '';

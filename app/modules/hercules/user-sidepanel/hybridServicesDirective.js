@@ -19,7 +19,9 @@
     vm.extensions = getExtensions();
     vm.isEnabled = false;
     vm.userStatusLoaded = false;
-    vm.isInvitePending = vm.user ? Userservice.isInvitePending(vm.user) : false;
+    vm.isPlace = vm.user && vm.user.accountType === 'MACHINE';
+    vm.isUser = !vm.isPlace;
+    vm.isInvitePending = vm.user && vm.isUser ? Userservice.isInvitePending(vm.user) : false;
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar)
       .then(function (supported) {
@@ -28,6 +30,10 @@
 
     vm.allExceptUcFilter = function (item) {
       return item && item.enabled === true && item.id !== 'squared-fusion-ec';
+    };
+
+    vm.placeFilter = function (item) {
+      return item && item.enabled === true && item.entitled === true && item.id != 'squared-fusion-ec';
     };
 
     vm.getStatus = function (status) {
@@ -69,13 +75,20 @@
       return HybridServicesUtils.serviceId2Icon(id);
     };
 
-    if (extensionEntitlements.every(function (extensionEntitlement) {
-      return !Authinfo.isEntitled(extensionEntitlement);
-    })) {
+    if (extensionEntitlements.every(
+        function (extensionEntitlement) {
+          return !Authinfo.isEntitled(extensionEntitlement);
+        })) {
       return;
     }
 
-    var enforceLicenseCheck = _.size(Authinfo.getLicenses()) > 0;
+    vm.editService = function (service) {
+      if (vm.eservice) {
+        vm.eservice(service);
+      }
+    };
+
+    var enforceLicenseCheck = vm.isUser && _.size(Authinfo.getLicenses()) > 0;
     checkEntitlements(enforceLicenseCheck);
 
     function checkEntitlements(enforceLicenseCheck) {
@@ -130,7 +143,7 @@
     // Periodically update the user statuses from USS
     function updateStatusForUser() {
       if (!_.isUndefined(vm.user)) {
-        USSService.getStatusesForUser(vm.user.id)
+        USSService.getStatusesForUser(vm.user.id || vm.user.cisUuid)
           .then(function (userStatuses) {
             _.forEach(vm.extensions, function (extension) {
               extension.status = _.find(userStatuses, function (status) {
@@ -228,6 +241,7 @@
       controllerAs: 'hybridServicesCtrl',
       bindToController: {
         user: '=',
+        eservice: '=',
       },
       templateUrl: 'modules/hercules/user-sidepanel/hybridServices.tpl.html',
     };

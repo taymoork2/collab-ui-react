@@ -5,9 +5,9 @@
 </script>
 <div class="pilot-number-details">
   <div class="typeahead-large">
-    <input id="numberInput" ng-model="$ctrl.pagingGroupNumber"
+    <input id="numberInput" ng-model="$ctrl.queryString"
            ng-class="{'error': $ctrl.errorNumberInput}"
-           typeahead="num for num in $ctrl.fetchNumbers() | limitTo:10"
+           typeahead="num as num.extension for num in $ctrl.fetchNumbers() | limitTo:10"
            typeahead-on-select="$ctrl.selectNumber($item)"
            typeahead-template-url="numberTemplate.html"
            placeholder="{{:: 'pagingGroup.numberPlaceholder' | translate}}"
