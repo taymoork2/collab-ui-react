@@ -241,6 +241,11 @@ class HuronSettingsCtrl implements ng.IComponentController {
     this.checkForChanges();
   }
 
+  public onExtTransferChanged(externalTransferAllowed: boolean): void {
+    this.huronSettingsData.site.allowExternalTransfer = externalTransferAllowed;
+    this.checkForChanges();
+  }
+
   public onCompanyCallerIdFilter(filter: string): ng.IPromise<Array<IOption>> {
     return this.HuronSettingsOptionsService.loadCompanyCallerIdNumbers(filter)
       .then(numbers => this.settingsOptions.companyCallerIdOptions = numbers);
