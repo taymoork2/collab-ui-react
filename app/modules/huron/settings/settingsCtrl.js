@@ -17,6 +17,11 @@
       return license.licenseType === Config.licenseTypes.COMMUNICATION;
     }).length > 0;
 
+    vm.ftHuronFederatedSparkCall = false;
+    vm.ftHuronSupportThinktel = false;
+    vm.ftHuronL10nUserLocale2 = false;
+    vm.supportRegionalSettings = supportRegionalSettings;
+
     var DEFAULT_SITE_INDEX = '000001';
     var DEFAULT_TZ = {
       id: 'America/Los_Angeles',
@@ -1011,6 +1016,10 @@
       });
 
     init();
+
+    function supportRegionalSettings() {
+      return vm.ftHuronFederatedSparkCall || vm.ftHuronSupportThinktel || vm.ftHuronL10nUserLocale2;
+    }
 
     function clearCallerIdFields() {
       vm.model.callerId.uuid = '';
@@ -2051,6 +2060,18 @@
 
       FeatureToggleService.supports(FeatureToggleService.features.avrilVmEnable).then(function (result) {
         vm.voicemailAvrilCustomer = result;
+      });
+
+      FeatureToggleService.supports(FeatureToggleService.features.huronFederatedSparkCall).then(function (result) {
+        vm.ftHuronFederatedSparkCall = result;
+      });
+
+      FeatureToggleService.supports(FeatureToggleService.features.huronSupportThinktel).then(function (result) {
+        vm.ftHuronSupportThinktel = result;
+      });
+
+      FeatureToggleService.supports(FeatureToggleService.features.huronUserLocale2).then(function (result) {
+        vm.ftHuronL10nUserLocale2 = result;
       });
 
       return $q.resolve();

@@ -6,10 +6,11 @@
     .controller('ServiceSetupCtrl', ServiceSetupCtrl);
 
   /* @ngInject*/
-  function ServiceSetupCtrl($q, $state, $scope, ServiceSetup, Notification, Authinfo, $translate, HuronCustomer,
-    ValidationService, HuronCustomerService, TelephoneNumberService, ExternalNumberService,
+  function ServiceSetupCtrl($q, $state, $scope, ServiceSetup, Notification, Authinfo, $translate,
+    HuronCustomer, ValidationService, HuronCustomerService, TelephoneNumberService, ExternalNumberService,
     CeService, HuntGroupServiceV2, ModalService, DirectoryNumberService, VoicemailMessageAction,
-    PstnSetupService, Orgservice, FeatureToggleService, Config, CustomerCosRestrictionServiceV2, CustomerDialPlanServiceV2) {
+    PstnSetupService, Orgservice, FeatureToggleService, Config, CustomerCosRestrictionServiceV2,
+    CustomerDialPlanServiceV2, HuronCompassService) {
     var vm = this;
     vm.isTimezoneAndVoicemail = function () {
       return Authinfo.getLicenses().filter(function (license) {
@@ -125,6 +126,9 @@
     vm.optionalVmDidFeatureToggle = false;
     vm._buildVoicemailPrefixOptions = _buildVoicemailPrefixOptions;
     vm.isTerminusCustomer = false;
+    vm.ftHuronFederatedSparkCall = false;
+    vm.ftHuronSupportThinktel = false;
+    vm.ftHuronL10nUserLocale2 = false;
 
     PstnSetupService.getCustomer(Authinfo.getOrgId()).then(function () {
       vm.isTerminusCustomer = true;
@@ -132,6 +136,18 @@
 
     FeatureToggleService.supports(FeatureToggleService.features.avrilVmEnable).then(function (result) {
       vm.voicemailAvrilCustomer = result;
+    });
+
+    FeatureToggleService.supports(FeatureToggleService.features.huronFederatedSparkCall).then(function (result) {
+      vm.ftHuronFederatedSparkCall = result;
+    });
+
+    FeatureToggleService.supports(FeatureToggleService.features.huronSupportThinktel).then(function (result) {
+      vm.ftHuronSupportThinktel = result;
+    });
+
+    FeatureToggleService.supports(FeatureToggleService.features.huronUserLocale2).then(function (result) {
+      vm.ftHuronL10nUserLocale2 = result;
     });
 
     vm.validations = {
@@ -1239,6 +1255,10 @@
         currentSite.timeZone = currentSite.timeZone.id;
         currentSite.preferredLanguage = currentSite.preferredLanguage.value;
         currentSite.country = currentSite.country.value;
+
+        if (!currentSite.country) {
+          currentSite.country = HuronCompassService.getCountryCode();
+        }
 
         return ServiceSetup.createSite(currentSite)
             .then(function () {

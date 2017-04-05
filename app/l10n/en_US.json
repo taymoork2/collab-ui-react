@@ -1370,6 +1370,7 @@
     "preferredLanguageDescription": "Specify the language to use for Spark Call Services. Preferred language only applies to new users.",
     "preferredLanguagePlaceholder": "Select your language",
     "defaultCountry": "Default Country",
+    "defaultTones": "Default Tones",
     "defaultCountryDescription": "Specify the country to set the correct dial tone on user devices.",
     "defaultCountryPlaceholder": "Select your country",
     "timeZone": "Time Zone",
