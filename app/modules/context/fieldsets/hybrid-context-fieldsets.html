@@ -5,6 +5,13 @@
         ng-model="contextFieldsets.placeholder.count" search-item-fn="contextFieldsets.filterList(searchStr)" placeholder-text="{{contextFieldsets.placeholder.name}}">
       </cs-searchfilter>
     </cs-page-sub-header-left>
+    <cs-page-sub-header-right>
+      <button class="btn btn--people"
+              ng-click="contextFieldsets.createFieldset()"
+              ng-disabled="contextFieldsets.fetchFailed"
+              ng-if="contextFieldsets.hasContextDictionaryEditFeatureToggle"
+              translate="common.new"></button>
+    </cs-page-sub-header-right>
   </cs-page-sub-header>
   <div class="row grid">
     <div ng-if="!contextFieldsets.noSearchResults">

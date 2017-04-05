@@ -1,0 +1,42 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$ctrl.dismiss()">
+    <span class="sr-only" translate="common.close"></span>
+  </button>
+  <h3 class="modal-title" translate="context.dictionary.fieldsetPage.createNew"></h3>
+</div>
+<div class="modal-body context-modal-body">
+  <form name="newFieldsetForm">
+    <!-- ID -->
+    <div class="cs-input-group">
+      <p class="cs-input-label" translate="context.dictionary.fieldsetPage.fieldsetId"></p>
+      <input
+        cs-input
+        type="text"
+        id="fieldsetId"
+        name="fieldsetId"
+        placeholder="{{::'context.dictionary.fieldsetPage.fieldsetIdPlaceholder' | translate}}"
+        ng-model="$ctrl.fieldsetData.id"
+        cs-input-group-size="medium-12"
+        cs-input-messages="$ctrl.validationMessages"
+        cs-input-validators="$ctrl.validators">
+    </div>
+
+    <!-- DESCRIPTION -->
+    <div class="cs-input-group">
+      <p translate="common.description"></p>
+      <textarea
+        rows="4"
+        id="fieldsetDescription"
+        class="form-control"
+        placeholder="{{::'context.dictionary.fieldsetPage.descriptionPlaceholder' | translate}}"
+        ng-model="$ctrl.fieldsetData.description"></textarea>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button
+    class="btn btn-primary"
+    translate="common.create"
+    ng-click="$ctrl.create()"
+    ng-disabled="!$ctrl.buttonEnabled()"></button>
+</div>
