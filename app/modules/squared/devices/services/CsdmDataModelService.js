@@ -21,14 +21,21 @@
     var accountsFetchedDeferred;
     var slowResolved;
 
+    var isBigOrgPromise;
+
     function isBigOrg() {
-      return CsdmPlaceService.getSearchPlacesList("xy")//This method/hack was adapted from the users pages
-        .then(function () {
-          return $q.resolve(false);
-        })
-        .catch(function () {
-          return $q.resolve(true);
-        });
+
+      if (!isBigOrgPromise) {
+        isBigOrgPromise = CsdmPlaceService.getSearchPlacesList("xy")//This method/hack was adapted from the users pages
+          .then(function () {
+            return $q.resolve(false);
+          })
+          .catch(function (err) {
+            return $q.resolve(err !== null && err.status === 502);
+          });
+      }
+
+      return isBigOrgPromise;
     }
 
     function fetchDevices() {
@@ -82,9 +89,11 @@
     }
 
     function hasHuronLicenses() {
-      return _.filter(Authinfo.getLicenses(), function (l) {
-        return l.licenseType === 'COMMUNICATION';
-      }).length > 0;
+      return _.filter(
+          Authinfo.getLicenses(),
+          function (l) {
+            return l.licenseType === 'COMMUNICATION';
+          }).length > 0;
     }
 
     function updateDeviceMap(deviceMap, keepFunction) {
@@ -146,15 +155,23 @@
 
     function fetchAccounts() {
       accountsFetchedDeferred = $q.defer();
-      CsdmPlaceService.getPlacesList()
-        .then(function (accounts) {
-          _.each(_.values(accounts), function (a) {
-            addOrUpdatePlaceInDataModel(a);
-          });
-        })
-        .finally(function () {
+
+      isBigOrg().then(function (isBig) {
+        if (isBig) {
           setPlacesLoaded();
-        });
+          return;
+        }
+        CsdmPlaceService.getPlacesList()
+          .then(function (accounts) {
+            _.each(_.values(accounts), function (a) {
+              addOrUpdatePlaceInDataModel(a);
+            });
+          })
+          .finally(function () {
+            setPlacesLoaded();
+          });
+      });
+
       return accountsFetchedDeferred.promise;
     }
 
@@ -174,6 +191,20 @@
         fetchAccounts();
       }
       return accountsFetchedDeferred.promise;
+    }
+
+    function getPlaceByCisUuid(cisUuid) {
+      return CsdmPlaceService
+        .fetchItem(CsdmPlaceService.getPlacesUrl() + cisUuid)
+        .then(function (reloadedPlace) {
+
+          var updatedPlace = CsdmCacheUpdater.updateOne(placesDataModel, reloadedPlace.url, reloadedPlace, null, true);
+          _.each(reloadedPlace.devices, function (reloadedDevice) {
+            CsdmCacheUpdater.updateOne(theDeviceMap, reloadedDevice.url, reloadedDevice);
+          });
+
+          return updatedPlace;
+        });
     }
 
     function deleteItem(item) {
@@ -420,6 +451,7 @@
 
     return {
       devicePollerOn: devicePollerOn,
+      getPlaceByCisUuid: getPlaceByCisUuid,
       getPlacesMap: getPlacesMap,
       getSearchPlacesMap: getSearchPlacesMap,
       getDevicesMap: getDevicesMap,

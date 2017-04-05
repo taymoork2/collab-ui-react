@@ -47,6 +47,7 @@ describe('Service: CsdmDataModelService', function () {
     $timeout = _$timeout_;
     testScope = $rootScope.$new();
 
+    $httpBackend.whenGET('https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/places/?type=all&query=xy').respond({});
     $httpBackend.whenGET(devicesUrl + '?checkDisplayName=false&checkOnline=false').respond(initialHttpDevices);
     $httpBackend.whenGET(devicesUrl).respond(initialHttpDevices);
     $httpBackend.whenGET(huronDevicesUrl).respond(initialHuronDevices);
