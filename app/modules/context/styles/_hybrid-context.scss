@@ -27,6 +27,31 @@
   margin-top: 24px;
 }
 
-textarea {
-  resize: none;
+.context-padded-multi-line {
+  display: inline;
+  font-size: 0.75rem;
+  position: relative;
+  top: -9px;
+}
+
+.context-status-block {
+  display: inline-block;
+  font-size: 0.75rem;
+}
+
+.context-updated-date {
+  margin-left: 290px;
+  margin-top: -5px;
+  position: relative;
+}
+
+.context-fieldsets-none {
+  font-size: 0.75rem;
+  position: relative;
+  top: -22px;
+  left: 456px;
+}
+
+.context-nocursor {
+  cursor: default;
 }

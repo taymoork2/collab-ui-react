@@ -21,6 +21,11 @@ require('./_fields-sidepanel.scss');
     vm.fetchInProgress = false;
     vm.searchable = true;
     vm.lastUpdated = $filter('date')(vm.field.lastUpdated, $translate.instant('context.dictionary.fieldPage.dateFormat'));
+    vm.inUse = vm.field.publiclyAccessible; //lock public field
+    vm.actionList = [{
+      actionKey: 'common.edit',
+    }];
+    vm.hasDescription = false;
 
     vm.getLabelLength = function () {
       return _.isObject(vm.field.translations)
@@ -34,6 +39,7 @@ require('./_fields-sidepanel.scss');
         .then(function (fieldsetIds) {
           vm.fetchFailure = false;
           vm.associatedFieldsets = fieldsetIds;
+          vm.inUse = vm.inUse || fieldsetIds.length > 0;
         }).catch(function () {
           vm.fetchFailure = true;
         }).then(function () {
@@ -45,6 +51,9 @@ require('./_fields-sidepanel.scss');
       // fix searchable field
       if (_.isString(vm.field.searchable)) {
         vm.searchable = vm.field.searchable.trim().toLowerCase() === 'yes';
+      }
+      if (!_.isEmpty(vm.field.description)) {
+        vm.hasDescription = true;
       }
     };
 
