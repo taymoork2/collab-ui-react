@@ -5,7 +5,7 @@
 </script>
 <div class="pilot-number-details">
   <div class="typeahead-large">
-    <input id="numberInput" ng-model="$ctrl.queryString"
+    <input id="numberInput" ng-model="$ctrl.pagingGroupNumber.extension"
            ng-class="{'error': $ctrl.errorNumberInput}"
            typeahead="num as num.extension for num in $ctrl.fetchNumbers() | limitTo:10"
            typeahead-on-select="$ctrl.selectNumber($item)"

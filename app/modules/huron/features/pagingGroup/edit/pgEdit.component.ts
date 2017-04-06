@@ -422,8 +422,18 @@ class PgEditComponentCtrl implements ng.IComponentController {
 
   public onCancel(): void {
     this.name = this.pg.name;
-    this.number.extension = this.pg.extension;
-    this.number.extensionUUID = undefined; //This will be updated later
+    let numberData: INumberData = <INumberData> {
+      extension: this.pg.extension,
+      extensionUUID: this.pg.extensionUUID,
+    };
+
+    if (this.pg.extension === undefined && this.pg.extensionUUID) {
+      this.PagingNumberService.getNumberExtension(this.pg.extensionUUID).then(
+        (data: INumberData) => {
+          numberData.extension = data.extension;
+        });
+    }
+    this.number = numberData;
     if (this.pg.initiatorType !== undefined) {
       this.initiatorType = this.pg.initiatorType;
     }
