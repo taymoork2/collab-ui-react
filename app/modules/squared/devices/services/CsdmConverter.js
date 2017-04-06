@@ -147,13 +147,8 @@
       }
 
       function updatePlaceFromPlace(place, placeToUpdateFrom) {
-
-        // if (_.isEmpty(placeToUpdateFrom.devices)) {
-        //   placeToUpdateFrom = _.merge(placeToUpdateFrom, _.pick(place, ['devices']));
-        // }
         Place.bind(place)(placeToUpdateFrom);
-
-        if (placeToUpdateFrom.devices != null) {
+        if (placeToUpdateFrom.devices !== null) {
           place.devices = placeToUpdateFrom.devices;
         }
       }

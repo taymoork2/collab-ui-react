@@ -99,11 +99,14 @@
     function updateDeviceMap(deviceMap, keepFunction) {
 
       CsdmCacheUpdater.update(theDeviceMap, deviceMap, function (deletedDevice) {
-        var placeUrl = getPlaceUrl(deletedDevice);
-        if (placesDataModel[placeUrl]) {
-          _.unset(placesDataModel, [placeUrl, 'devices', deletedDevice.url]); // delete device from the place
+        var shouldKeep = keepFunction && keepFunction(deletedDevice);
+        if (!shouldKeep) {
+          var placeUrl = getPlaceUrl(deletedDevice);
+          if (placesDataModel[placeUrl]) {
+            _.unset(placesDataModel, [placeUrl, 'devices', deletedDevice.url]); // delete device from the place
+          }
         }
-        return keepFunction(deletedDevice);
+        return shouldKeep;
       });
 
       _.each(_.values(deviceMap), function (d) {
@@ -244,12 +247,12 @@
 
     function createCsdmPlace(name, entitlements, directoryNumber, externalNumber, externalLinkedAccounts) {
       return CsdmPlaceService.createCsdmPlace(name, entitlements, directoryNumber, externalNumber, externalLinkedAccounts)
-        .then(notifyCreatedPlace);
+        .then(onCreatedPlace);
     }
 
     function createCmiPlace(name, entitlements, directoryNumber, externalNumber) {
       return CsdmPlaceService.createCmiPlace(name, entitlements, directoryNumber, externalNumber)
-        .then(notifyCreatedPlace);
+        .then(onCreatedPlace);
     }
 
     function updateCloudberryPlace(objectToUpdate, entitlements, directoryNumber, externalNumber, externalLinkedAccounts) {
@@ -373,7 +376,7 @@
       return cloudBerryDevicesLoaded && huronDevicesLoaded;
     }
 
-    function notifyCreatedPlace(place) {
+    function onCreatedPlace(place) {
       var updatedPlace = addOrUpdatePlaceInDataModel(place);
       notifyListeners();
       return updatedPlace;
