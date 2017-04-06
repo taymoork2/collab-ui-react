@@ -11,8 +11,6 @@
     var urlBase = UrlConfig.getAdminServiceUrl() + 'organization';
     var localUrlBase = 'http://berserk.rd.cisco.com:8080/atlas-server/admin/api/v1/organization';
 
-    var csdmUrlBase = UrlConfig.getCsdmServiceUrl() + '/organization';
-
     function getDataForRange(start, end, granularity, models, api) {
       var startDate = moment(start);
       var endDate = moment(end);
@@ -23,10 +21,12 @@
         models = models.join();
       }
       if (startDate.isValid() && endDate.isValid() && startDate.isBefore(endDate) /*&& endDate.isBefore(now)*/) {
+        var url;
         if (api === 'local') {
-          urlBase = localUrlBase;
+          url = localUrlBase + '/' + Authinfo.getOrgId() + '/reports/device/usage?';
+        } else {
+          url = urlBase + '/' + Authinfo.getOrgId() + '/reports/device/usage?';
         }
-        var url = urlBase + '/' + Authinfo.getOrgId() + '/reports/device/usage?';
         url = url + 'interval=day'; // As long week and month is not implemented
         url = url + '&from=' + start + '&to=' + end;
         url = url + '&categories=aggregate';
@@ -261,31 +261,37 @@
       }
     }
 
-    function resolveDeviceData(devices) {
-      var promises = [];
-
+    function resolveDeviceData(devices, api) {
+      var url;
+      if (api === 'local') {
+        url = localUrlBase + '/' + Authinfo.getOrgId() + '/reports/devices?accountIds=';
+      } else {
+        url = urlBase + '/' + Authinfo.getOrgId() + '/reports/devices?accountIds=';
+      }
+      var ids = [];
       _.each(devices, function (device) {
-        var csdmUrl = csdmUrlBase + '/' + Authinfo.getOrgId() + '/places/';
-        promises.push(cancelableHttpGET(csdmUrl + device.accountId + '?shallow=true')
-          .then(function (res) {
-            return res.data;
-          })
-          .catch(function (err) {
-            //$log.info("Problems resolving device", err);
-            var infoText = "";
-            if (err.status === -1) {
-              infoText = $translate.instant('reportsPage.usageReports.timeoutWhenTryingToResolveNameFor') + " device id=" + device.accountId;
-            } else {
-              infoText = $translate.instant('reportsPage.usageReports.nameNotFoundFor') + " device id=" + device.accountId;
-            }
-            return {
-              "displayName": $translate.instant('reportsPage.usageReports.nameNotResolvedFor') + " id=" + device.accountId,
-              "info": infoText,
-            };
-          })
-        );
+        ids.push(device.accountId);
       });
-      return $q.all(promises);
+
+      var resolved = [];
+      return cancelableHttpGET(url + ids.join()).then(function (result) {
+        _.each(ids, function (id) {
+          var res = _.find(result.data, { id: id });
+          if (res) {
+            resolved.push({
+              id: res.id,
+              displayName: res.displayName,
+            });
+          } else {
+            resolved.push({
+              id: id,
+              displayName: $translate.instant('reportsPage.usageReports.nameNotResolvedFor') + " id=" + id,
+              info: $translate.instant('reportsPage.usageReports.nameNotFoundFor') + " device id=" + id,
+            });
+          }
+        });
+        return resolved;
+      });
     }
 
     function cancelableHttpGET(url) {
