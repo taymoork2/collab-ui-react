@@ -46,32 +46,37 @@
         </div>
 
         <div class="feature">
+          <span class="feature-name" translate="context.dictionary.fieldPage.label"></span>
+          <span class="feature-details">{{$ctrl.field.translations.en_US}}</span>
+        </div>
+
+        <div class="feature">
           <span class="feature-name" translate="common.description"></span>
           <span ng-if="!$ctrl.hasDescription" class="feature-details" translate="common.none"></span>
-</div>
+        </div>
         <div class="feature">
-          <label ng-if="$ctrl.hasDescription" class="context-padded-multi-line context-nocursor">{{$ctrl.field.description}}</label>
+          <label ng-if="$ctrl.field.description" class="context-padded-multi-line context-nocursor">{{$ctrl.field.description}}</label>
         </div>
 
         <div class="feature">
           <span class="feature-name" translate="context.dictionary.fieldPage.dataType"></span>
-          <span class="feature-details">{{$ctrl.field.dataType}}</span>
+          <span class="feature-details">{{$ctrl.field.dataTypeUI}}</span>
         </div>
 
         <div class="feature">
           <span class="feature-name" translate="context.dictionary.fieldPage.classification"></span>
-          <span class="feature-details">{{$ctrl.field.classification}}</span>
+          <span class="feature-details">{{$ctrl.field.classificationUI}}</span>
         </div>
 
         <div class="feature">
           <span class="feature-name" translate="context.dictionary.fieldPage.searchable"></span>
-          <span class="feature-details">{{$ctrl.field.searchable}}</span>
+          <span class="feature-details">{{$ctrl.field.searchableUI}}</span>
          </div>
 
          <div class="feature">
             <span class="feature-name"  translate="context.dictionary.fieldPage.lastUpdated"></span>
-            <span class="feature-details  context-updated-date" ng-if="$ctrl.lastUpdated">{{$ctrl.field.lastUpdated}}</span>
-            <span class="feature-details" ng-if="!$ctrl.lastUpdated" translate="context.dictionary.unavailable"></span>
+            <span class="feature-details  context-updated-date" ng-if="$ctrl.field.lastUpdatedUI">{{$ctrl.field.lastUpdatedUI}}</span>
+            <span class="feature-details" ng-if="!$ctrl.field.lastUpdatedUI" translate="context.dictionary.unavailable"></span>
          </div>
 
          <div class="cs-input-group">

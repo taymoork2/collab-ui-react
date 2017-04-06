@@ -2594,6 +2594,8 @@
         "fieldIdPlaceholder": "For eg. Invoice_Number",
         "fieldIdInvalidCharactersError": "Only alpha-numeric characters, hyphen(-) or underscore (_) allowed",
         "fieldIdUniqueError": "Field ID exists. Enter a different ID",
+        "fieldUpdateSuccess": "Field updated successfully!",
+        "fieldUpdateFailure": "Unable to update field. Try again or contact customer support.",
         "dataType": "Data Type",
         "dataTypePlaceholder": "Select Data Type",
         "descriptionPlaceholder": "Enter field details",
@@ -2613,6 +2615,7 @@
         "encryptedHelpText": "Is encrypted and contains no personally identifiable information",
         "unencrypted": "Unencrypted",
         "unencryptedHelpText": "Is not encrypted and contains no personally identifiable information",
+        "update": "Edit",
         "dateFormat": "MM/dd/yyyy",
         "noneFound": "No fields found",
         "fieldAttributes": "Field Attributes"
