@@ -138,7 +138,6 @@ describe('Service: ServiceStateChecker', function () {
       [{
         id: 'squared-fusion-ec',
         enabled: false, // will spawn a 'connect available' notification,
-        acknowledged: false,
       }]
     ));
 
@@ -153,7 +152,6 @@ describe('Service: ServiceStateChecker', function () {
       [{
         id: 'squared-fusion-ec',
         enabled: true,
-        acknowledged: false,
       }]
     ));
     USSService.getOrg.returns($q.resolve({ sipDomain: 'example.com' }));
@@ -171,7 +169,6 @@ describe('Service: ServiceStateChecker', function () {
     ServiceDescriptor.getServices.returns($q.resolve([{
       id: 'squared-fusion-ec',
       enabled: true,
-      acknowledged: true,
     }])
     );
     USSService.getStatusesSummary.returns([{
@@ -197,7 +194,6 @@ describe('Service: ServiceStateChecker', function () {
       [{
         id: 'squared-fusion-ec',
         enabled: true,
-        acknowledged: false,
       }]
    ));
 
@@ -224,7 +220,6 @@ describe('Service: ServiceStateChecker', function () {
       [{
         id: 'squared-fusion-ec',
         enabled: true, // will spawn a 'connect available' notification,
-        acknowledged: false,
       }]
     ));
 
@@ -259,7 +254,6 @@ describe('Service: ServiceStateChecker', function () {
       [{
         id: 'squared-fusion-ec',
         enabled: true,
-        acknowledged: false,
       }]
     ));
 

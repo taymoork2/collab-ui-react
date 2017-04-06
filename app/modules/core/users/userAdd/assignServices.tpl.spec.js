@@ -155,15 +155,12 @@ describe('assignServices', function () {
         items: [{
           id: ENT.cal,
           enabled: true,
-          acknowledged: false,
         }, {
           id: ENT.uc,
           enabled: true,
-          acknowledged: false,
         }, {
           id: ENT.ec,
           enabled: true,
-          acknowledged: false,
         }],
       });
 
