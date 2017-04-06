@@ -1,3 +1,5 @@
+import { IConnectorAlarm } from 'modules/hercules/hybrid-services.types';
+
 interface IPrivateTrunkResource {
   url: string;
   resourceId: string;
@@ -7,18 +9,24 @@ interface IPrivateTrunkResource {
   serviceStatus: TrunkStatus;
 }
 
-interface ITrunksFromFMS {
+export interface ITrunksFromFMS {
   alarmsUrl: string;
   id: string;
   state: TrunkStatus;
   resources: ITrunkFromFms[];
 }
 
-interface ITrunkFromFms {
-  hostname: string;
+export interface ITrunkFromFms {
   id: string;
   state: TrunkStatus;
   type: string;
+  destinations: IDestination[];
+  alarms: IConnectorAlarm[];
+}
+
+export interface IDestination {
+  address: string;
+  state: TrunkStatus;
 }
 
 type TrunkStatus = 'operational' | 'impaired' | 'outage' | 'unknown';
@@ -100,6 +108,52 @@ export class EnterprisePrivateTrunkService {
 
   public getAllResources() {
     return this.trunkCache;
+  }
+
+  public getTrunkFromFMS(trunkId: string) {
+    return this.ServiceDescriptor.getServiceStatus('ept')
+      .then((trunks: ITrunksFromFMS) => {
+        return _.find(trunks.resources, (trunk: any) => trunk.id === trunkId);
+      });
+  }
+
+  public getTrunkFromCmi(trunkId: string) {
+    const dummyTrunks = [
+      {
+        url: 'https://giggs.example.org',
+        resourceId: 'efc7ebfb-b7a4-42f2-a143-1c056741a03c',
+        name: 'CTG Alpha San Jose-E',
+        address: 'some.address.goes.here',
+        port: '1983',
+        serviceStatus: 'halla',
+      }, {
+        url: 'https://kanchelskis.example.org',
+        resourceId: 'e366b1ef-c3c3-414c-9125-5bf76c33df06',
+        name: 'CTG Alpha New York-E',
+        address: 'other.address.goes.here',
+        port: '1984',
+        serviceStatus: 'halla',
+      }, {
+        url: 'https://sharpe.example.org',
+        resourceId: '0ce247d8-4de9-482e-ac5a-51b2af1a7929',
+        name: 'ACE Beta Seattle',
+        address: 'ace.of.base',
+        port: '1985',
+        serviceStatus: 'halla',
+      }, {
+        url: 'https://bug.buggy.example.org',
+        resourceId: '2d2c9bd4-2e7d-4c3b-b1b9-c7e172c93600',
+        name: 'ACE Beta Lysaker',
+        address: 'beautiful.life',
+        port: '1986',
+        serviceStatus: 'halla',
+      }];
+    let trunk = _.find(dummyTrunks, (trunk: any) => trunk.resourceId === trunkId);
+    if (trunk) {
+      return this.$q.resolve(trunk);
+    } else {
+      return this.$q.reject('Could not find trunk.');
+    }
   }
 
 }

@@ -2047,7 +2047,7 @@
       "clusters-title-squared-fusion-media": "Media Clusters",
       "clusters-title-spark-hybrid-datasecurity": "HDS Clusters",
       "clusters-title-contact-center-context": "Context Clusters",
-      "clusters-title-ciscouc": "SIP Destination",
+      "clusters-title-ept": "SIP Destination",
       "status-title": "Service Status"
     },
     "hybridVoicemailUserSection": {
@@ -2548,6 +2548,10 @@
     },
     "hybridServicesConnectorSidepanel": {
       "alarmDetails": "Alarm Details"
+    },
+    "addressesStatusComponent": {
+      "addresses": "Addresses",
+      "noAddressesFound": "No addresses found"
     }
   },
   "context": {

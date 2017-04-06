@@ -62,6 +62,10 @@ export class AlarmListSectionComponentCtrl implements ng.IComponentController {
       this.$state.go('media-cluster-details.alarm-details', {
         alarm: alarm,
       });
+    } else if (this.connectorType === 'ept') {
+      this.$state.go('private-trunk-sidepanel.alarm-details', {
+        alarm: alarm,
+      });
     }
   }
 }
