@@ -654,6 +654,44 @@ describe('Service: CsdmDataModelService', function () {
       expect(changeNotification).toBeTruthy();
     });
 
+    it('get should return an updated item and update the model when a personal device was activated', function () {
+
+      var expectCall, changeNotification;
+      var uWithDevicesUuid = '36437546-PERSON-b3b345441ba6';
+      var devicesForUserUrl = 'https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/devices?type=all&cisUuid=' + uWithDevicesUuid;
+      var newPersonalDevice = 'https://cmi.huron-int.com/api/v1/voice/customers/3a6ff373-unittest-a27460e0ac5c/sipendpoints/' + uWithDevicesUuid;
+
+      CsdmDataModelService.getDevicesMap().then(function (devices) {
+        expect(Object.keys(devices).length).toBe(initialDeviceCount);
+
+        expect(initialDeviceMap['http://new/device']).toBeUndefined();
+        expect(Object.keys(initialDeviceMap)).not.toContain('http://new/device');
+        CsdmDataModelService.subscribeToChanges(testScope, function () {
+          changeNotification = "YES";
+        });
+
+        var userDevices = {};
+        userDevices[newPersonalDevice] = {
+          url: newPersonalDevice,
+        };
+        $httpBackend.expectGET(devicesForUserUrl).respond(userDevices);
+
+        CsdmDataModelService.reloadDevicesForUser(uWithDevicesUuid).then(function (returnedUserDevices) {
+          expect(Object.keys(returnedUserDevices)).toHaveLength(1);
+          expect(Object.keys(returnedUserDevices)).toContain(newPersonalDevice);
+          expectCall = true;
+
+          CsdmDataModelService.getDevicesMap().then(function (devicesFromMap) {
+            expect(Object.keys(devicesFromMap)).toHaveLength(initialDeviceCount + 1);
+            expect(Object.keys(devicesFromMap)).toContain(newPersonalDevice);
+          });
+        });
+      });
+      $httpBackend.flush();
+      expect(expectCall).toBe(true);
+      expect(changeNotification).toBeTruthy();
+    });
+
     it('get should return an updated item and update the model when place was renamed', function () {
 
       var expectCall, changeNotification;

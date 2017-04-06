@@ -6,10 +6,10 @@
     .controller('DevicesCtrlHuron', DevicesCtrlHuron);
 
   /* @ngInject */
-  function DevicesCtrlHuron($q, $scope, $state, $stateParams, Config, CsdmHuronUserDeviceService, CsdmDeviceService, WizardFactory, FeatureToggleService, Userservice, Authinfo) {
+  function DevicesCtrlHuron($q, $scope, $state, $stateParams, Config, CsdmDataModelService, WizardFactory, FeatureToggleService, Userservice, Authinfo) {
     var vm = this;
     vm.devices = {};
-    vm.loadedCloudberry = false;
+    vm.loadedDevices = false;
     vm.otps = [];
     vm.currentUser = $stateParams.currentUser;
     vm.csdmHuronUserDeviceService = null;
@@ -28,9 +28,7 @@
       });
       var personalPromise = FeatureToggleService.cloudberryPersonalModeGetStatus().then(function (result) {
         vm.showPersonal = result;
-        if (shouldLoadPersonalDevices()) {
-          activate();
-        }
+        activate();
       });
       $q.all([ataPromise, personalPromise, fetchDetailsForLoggedInUser()]).finally(function () {
         vm.generateCodeIsDisabled = false;
@@ -65,25 +63,19 @@
       }).length > 0;
     };
 
-    function addLinkOrButtonForActivationCode() {
-      if (_.has(vm, 'csdmHuronUserDeviceService.dataLoaded')) {
-        if (vm.csdmHuronUserDeviceService.dataLoaded() && vm.loadedCloudberry) {
-          if (_.size(vm.devices)) {
-            $scope.userOverview.enableAuthCodeLink();
-            vm.showGenerateOtpButton = false;
-          } else {
-            $scope.userOverview.disableAuthCodeLink();
-            vm.showGenerateOtpButton = true;
-          }
+    function addLinkOrButtonForActivationCode(loadedDevices) {
+      if (loadedDevices) {
+        if (_.size(vm.devices)) {
+          $scope.userOverview.enableAuthCodeLink();
+          vm.showGenerateOtpButton = false;
+        } else {
+          $scope.userOverview.disableAuthCodeLink();
+          vm.showGenerateOtpButton = true;
         }
       }
     }
 
-    $scope.$watch(function () {
-      if (_.has(vm, 'csdmHuronUserDeviceService.dataLoaded') && vm.loadedCloudberry) {
-        return vm.csdmHuronUserDeviceService.dataLoaded();
-      }
-    }, addLinkOrButtonForActivationCode);
+    $scope.$watch('vm.loadedDevices', addLinkOrButtonForActivationCode);
 
     vm.showDeviceDetails = function (device) {
       $state.go('user-overview.csdmDevice', {
@@ -157,50 +149,32 @@
     }
 
     function activate() {
-      vm.csdmHuronUserDeviceService = CsdmHuronUserDeviceService.create(vm.currentUser.id);
-      vm.csdmHuronUserDeviceService.fetch().then(function () {
-        _.extend(vm.devices, vm.csdmHuronUserDeviceService.getDeviceList());
-      });
-      CsdmDeviceService.fetchDevicesForUser(vm.currentUser.id).then(function (res) {
-        _.extend(vm.devices, res);
-      }).finally(function () {
-        vm.loadedCloudberry = true;
-      });
+      if (shouldLoadPersonalDevices()) {
+        CsdmDataModelService.reloadDevicesForUser(vm.currentUser.id).then(function (devices) {
+          vm.devices = devices;
+        }).finally(function () {
+          vm.loadedDevices = true;
+        });
+      } else {
+        vm.loadedDevices = true;
+      }
     }
 
     function shouldLoadPersonalDevices() {
       vm.currentUser = $stateParams.currentUser;
-      return vm.currentUser && (isEntitled(Config.entitlements.huron) || vm.showPersonal);
-    }
-
-    function isEntitled(ent) {
-      if (vm.currentUser && vm.currentUser.entitlements) {
-        for (var i = 0; i < vm.currentUser.entitlements.length; i++) {
-          var svc = vm.currentUser.entitlements[i];
-          if (svc === ent) {
-            return true;
-          }
-        }
-      }
-      return false;
+      return vm.currentUser && (isCurrentUserEntitledToHuron() || vm.showPersonal);
     }
 
     $scope.$on('deviceDeactivated', function () {
-      if (shouldLoadPersonalDevices()) {
-        activate();
-      }
+      activate();
     });
 
     $scope.$on('otpGenerated', function () {
-      if (shouldLoadPersonalDevices()) {
-        activate();
-      }
+      activate();
     });
 
     $scope.$on('entitlementsUpdated', function () {
-      if (shouldLoadPersonalDevices()) {
-        activate();
-      }
+      activate();
     });
   }
 })();

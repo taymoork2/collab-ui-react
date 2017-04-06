@@ -17,8 +17,14 @@
     }
 
     function fetchDevicesForUser(userId) {
-      return $http.get(devicesUrl + '?cisUuid=' + userId).then(function (res) {
-        return CsdmConverter.convertCloudberryDevices(res.data);
+      return $http.get(devicesUrl + '?type=all&cisUuid=' + userId).then(function (res) {
+        return _.mapValues(res.data, function (device) {
+          if (device.productFamily === 'Huron' || device.productFamily === 'ATA') {
+            return CsdmConverter.convertHuronDevice(device);
+          } else {
+            return CsdmConverter.convertCloudberryDevice(device);
+          }
+        });
       });
     }
 

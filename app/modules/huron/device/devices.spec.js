@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: DevicesCtrlHuron', function () {
-  var controller, $scope, $q, $stateParams, $state, $controller, CsdmHuronUserDeviceService, poller, FeatureToggleService, Userservice, Authinfo;
+  var controller, $scope, $q, $stateParams, $state, $controller, CsdmDataModelService, FeatureToggleService, Userservice, Authinfo;
 
   beforeEach(angular.mock.module('Huron'));
 
@@ -13,12 +13,12 @@ describe('Controller: DevicesCtrlHuron', function () {
   };
 
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$stateParams_, _$state_, _CsdmHuronUserDeviceService_, _CsdmDeviceService_, _FeatureToggleService_, _Userservice_, _Authinfo_) {
+  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$stateParams_, _$state_, _CsdmDataModelService_, _FeatureToggleService_, _Userservice_, _Authinfo_) {
     $scope = _$rootScope_.$new();
     $scope.userOverview = userOverview;
     $stateParams = _$stateParams_;
     $q = _$q_;
-    CsdmHuronUserDeviceService = _CsdmHuronUserDeviceService_;
+    CsdmDataModelService = _CsdmDataModelService_;
     $state = _$state_;
     FeatureToggleService = _FeatureToggleService_;
     Userservice = _Userservice_;
@@ -37,26 +37,16 @@ describe('Controller: DevicesCtrlHuron', function () {
       ],
     };
 
-    poller = {
-      fetch: function () {
-        return $q.resolve();
-      },
-      getDeviceList: function () {
-        return null;
-      },
-      dataLoaded: function () {
-        return true;
-      },
-    };
-
-    spyOn(_CsdmDeviceService_, 'fetchDevicesForUser').and.returnValue($q.resolve({}));
-    spyOn(CsdmHuronUserDeviceService, 'create').and.returnValue(poller);
-    spyOn(poller, 'getDeviceList').and.returnValue($q.resolve(deviceList));
+    spyOn(CsdmDataModelService, 'reloadDevicesForUser').and.returnValue($q.resolve(deviceList));
     spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.resolve(false));
     spyOn(Userservice, 'getUser');
     spyOn(Authinfo, 'isDeviceMgmt').and.returnValue(true);
 
   }));
+
+  afterEach(function () {
+    $scope.$destroy();
+  });
 
   function initController() {
     controller = $controller('DevicesCtrlHuron', {
@@ -79,45 +69,45 @@ describe('Controller: DevicesCtrlHuron', function () {
       initController();
     });
 
-    it('HuronDeviceService.getDeviceList() should only be called once', function () {
-      expect(poller.getDeviceList.calls.count()).toEqual(1);
+    it('CsdmDataModelService.reloadDevicesForUser() should only be called once', function () {
+      expect(CsdmDataModelService.reloadDevicesForUser.calls.count()).toEqual(1);
     });
 
     it('broadcast [deviceDeactivated] event', function () {
       $scope.$broadcast('deviceDeactivated');
       $scope.$apply();
-      expect(poller.getDeviceList.calls.count()).toEqual(2);
+      expect(CsdmDataModelService.reloadDevicesForUser.calls.count()).toEqual(2);
     });
 
     it('broadcast [otpGenerated] event', function () {
       $scope.$broadcast('otpGenerated');
       $scope.$apply();
-      expect(poller.getDeviceList.calls.count()).toEqual(2);
+      expect(CsdmDataModelService.reloadDevicesForUser.calls.count()).toEqual(2);
     });
 
     it('broadcast [entitlementsUpdated] event', function () {
       $scope.$broadcast('entitlementsUpdated');
       $scope.$apply();
-      expect(poller.getDeviceList.calls.count()).toEqual(2);
+      expect(CsdmDataModelService.reloadDevicesForUser.calls.count()).toEqual(2);
     });
 
     it('should still call activate when Huron entitlement is removed', function () {
-      poller.getDeviceList.calls.reset();
+      CsdmDataModelService.reloadDevicesForUser.calls.reset();
 
       $stateParams.currentUser.entitlements = ["squared-room-moderation", "webex-messenger", "squared-call-initiation", "webex-squared", "squared-syncup"];
       $scope.$broadcast('entitlementsUpdated');
       $scope.$apply();
 
-      expect(poller.getDeviceList.calls.count()).toEqual(1);
+      expect(CsdmDataModelService.reloadDevicesForUser.calls.count()).toEqual(1);
     });
 
     it('should not call activate when currentUser is not defined', function () {
-      poller.getDeviceList.calls.reset();
+      CsdmDataModelService.reloadDevicesForUser.calls.reset();
       $stateParams.currentUser = undefined;
       $scope.$broadcast('entitlementsUpdated');
       $scope.$apply();
 
-      expect(poller.getDeviceList.calls.count()).toEqual(0);
+      expect(CsdmDataModelService.reloadDevicesForUser.calls.count()).toEqual(0);
     });
 
   });
