@@ -360,6 +360,8 @@
         vm.secondCardTooltip = checkForTooltip(vm.secondCardShort) ? vm.second_card_value : "";
         vm.onpremShort = (vm.onprem == vm.noData) ? vm.noData : abbreviateNumber(vm.onprem);
         vm.onpremTooltip = checkForTooltip(vm.onpremShort) ? vm.onprem : "";
+        vm.cloudOverflowShort = (vm.cloudOverflow == vm.noData) ? vm.noData : abbreviateNumber(vm.cloudOverflow);
+        vm.cloudOverflowTooltip = checkForTooltip(vm.cloudOverflowShort) ? vm.cloudOverflow : "";
       });
     }
 
