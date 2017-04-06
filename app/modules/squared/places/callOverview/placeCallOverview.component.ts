@@ -38,10 +38,10 @@ class PlaceCallOverview implements ng.IComponentController {
   ) {
 
     this.displayPlace($stateParams.currentPlace);
-    CsdmDataModelService.getPlacesMap().then((placesMap) => {
-      //Replace the $stateParams clone with a real reference!
-      this.displayPlace(placesMap[$stateParams.currentPlace.url]);
-    });
+
+    CsdmDataModelService.reloadItem($stateParams.currentPlace)
+      .then((updatedPlace) => this.displayPlace(updatedPlace));
+
     this.hasSparkCall = this.hasEntitlement('ciscouc');
     this.$scope.$on(DialingType.INTERNATIONAL, (_e, data) => {
       this.DialingService.setInternationalDialing(data, LineConsumerType.PLACES, this.currentPlace.cisUuid).then(() => {

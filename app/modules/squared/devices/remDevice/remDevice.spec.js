@@ -24,7 +24,7 @@ describe('Controller: RemDeviceController', function () {
   }));
 
   describe('Expected Responses', function () {
-    beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$httpBackend_, _CsdmDeviceService_, _CsdmPlaceService_, CsdmDataModelService) {
+    beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$httpBackend_, _CsdmDeviceService_, _CsdmPlaceService_) {
       var initialDevices = getJSONFixture('squared/json/devices.json');
       var accounts = getJSONFixture('squared/json/accounts.json');
       var initialHuronDevices = getJSONFixture('squared/json/huronDevices.json');
@@ -50,9 +50,6 @@ describe('Controller: RemDeviceController', function () {
         $modalInstance: fakeModal,
         device: device,
       });
-
-      CsdmDataModelService.getPlacesMap();
-      $httpBackend.flush();
     }));
 
     afterEach(function () {

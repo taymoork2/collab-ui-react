@@ -4,7 +4,7 @@
   angular.module('Core')
     .controller('ChooseSharedSpaceCtrl', ChooseSharedSpaceCtrl);
   /* @ngInject */
-  function ChooseSharedSpaceCtrl(CsdmDataModelService, $stateParams, $translate) {
+  function ChooseSharedSpaceCtrl(CsdmFilteredPlaceViewFactory, $stateParams, $translate) {
     var vm = this;
     var wizardData = $stateParams.wizard.state().data;
     vm.title = wizardData.title;
@@ -21,9 +21,7 @@
     vm.isExistingCollapsed = true;
     vm.selected = null;
     vm.radioSelect = null;
-    vm.placesLoaded = false;
-    var rooms = undefined;
-    vm.hasRooms = undefined;
+    vm.filteredView = null;
 
     function init() {
       loadList();
@@ -49,26 +47,33 @@
           };
         }
       }
-      CsdmDataModelService.getPlacesMap().then(function (placesList) {
-        rooms = _(placesList)
-          .filter(filterFunction)
-          .map(function (place) {
-            place.readablePlaceType = place.type === 'huron'
-              ? $translate.instant('machineTypes.room')
-              : $translate.instant('machineTypes.lyra_space');
-            return place;
-          })
-          .sortBy('displayName')
-          .value();
-        vm.hasRooms = rooms.length > 0;
-        vm.placesLoaded = true;
-      });
+
+      vm.filteredView = CsdmFilteredPlaceViewFactory.createFilteredPlaceView();
+
+      var filterVal = 'all';
+      vm.filteredView.setFilters([{
+        count: 0,
+        filterValue: filterVal,
+        matches: filterFunction,
+      }]);
+
+      vm.filteredView.setSearchTimeout(0);
+      vm.filteredView.setCurrentFilterValue(filterVal);
     }
 
-    vm.getRooms = function () {
+    vm.getReadablePlaceType = function (place) {
+      return place.type === 'huron' ?
+        $translate.instant('machineTypes.room') : $translate.instant('machineTypes.lyra_space');
+    };
+
+    vm.getRooms = function (searchStr, maxResCount) {
+
       vm.deviceName = undefined;
       vm.place = undefined;
-      return rooms;
+
+      return vm.filteredView.setCurrentSearch(searchStr).then(function (promiseValue) {
+        return promiseValue.slice(0, maxResCount);
+      });
     };
 
     vm.selectPlace = function ($item) {

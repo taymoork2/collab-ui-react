@@ -263,6 +263,7 @@ describe('Component: pgEdit', () => {
       expect(this.view.find(CANCEL_BUTTON)).toExist();
       this.view.find(CANCEL_BUTTON).click();
       expect(this.controller.name).toEqual(pg.name);
+      expect(this.controller.number).toEqual(numberData);
       expect(this.controller.errorNameInput).toBeFalsy();
       expect(this.controller.formChanged).toBeFalsy();
     });
