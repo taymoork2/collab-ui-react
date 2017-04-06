@@ -22,6 +22,12 @@ interface ICsdmPlaceFilter {
 
 export class CsdmFilteredPlaceView {
 
+  public readonly bigorg: PlaceViewState = PlaceViewState.bigorg;
+  public readonly emptyresult: PlaceViewState = PlaceViewState.emptyresult;
+  public readonly noplaces: PlaceViewState = PlaceViewState.noplaces;
+  public readonly searching: PlaceViewState = PlaceViewState.searching;
+  public readonly showresult: PlaceViewState = PlaceViewState.showresult;
+
   private isBigOrg: ng.IPromise<boolean>;
 
   private fetchedPlaceMap: { [url: string]: IPlace; } = {};
@@ -36,12 +42,6 @@ export class CsdmFilteredPlaceView {
   private searchTimeoutMs: number = 750;
 
   private filters: ICsdmPlaceFilter[] = [];
-
-  public readonly bigorg: PlaceViewState = PlaceViewState.bigorg;
-  public readonly emptyresult: PlaceViewState = PlaceViewState.emptyresult;
-  public readonly noplaces: PlaceViewState = PlaceViewState.noplaces;
-  public readonly searching: PlaceViewState = PlaceViewState.searching;
-  public readonly showresult: PlaceViewState = PlaceViewState.showresult;
 
   public constructor(private dataModelService: ICsdmDataModelService, private $timeout: ng.ITimeoutService, private $q: ng.IQService) {
     this.isBigOrg = this.dataModelService.isBigOrg();
@@ -70,6 +70,7 @@ export class CsdmFilteredPlaceView {
   }
 
   public refresh(): void {
+    this.currentServerSearchString = '';
     this.setCurrentSearch(this.currentSearchString);
   }
 
@@ -84,7 +85,7 @@ export class CsdmFilteredPlaceView {
   public setCurrentFilterValue(filterValue): void {
 
     this.currentFilter = _.find(this.filters, {
-      filterValue: filterValue.filterValue,
+      filterValue: filterValue,
     });
     this.applyFilter();
   }
