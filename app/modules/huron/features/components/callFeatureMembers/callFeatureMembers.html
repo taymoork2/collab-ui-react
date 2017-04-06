@@ -7,7 +7,7 @@
     <span ng-show="!match.label.userName" ng-bind-html="match.label.displayName | typeaheadHighlight:query"></span>
   </a>
   <div class="member__line">
-    <span ng-bind-html="(match.label.numbers | callFeatureMemberNumbersFilter) | typeaheadHighlight:query"></span>
+    <span ng-bind-html="(match.label.numbers | callFeatureMemberNumberFormatterFilter) | typeaheadHighlight:query"></span>
   </div>
 </script>
 <script type="text/ng-template" id="callFeatureMemberLinesTemplate.html">
