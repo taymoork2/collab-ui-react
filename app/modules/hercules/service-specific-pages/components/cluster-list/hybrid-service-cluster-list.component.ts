@@ -12,6 +12,7 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
   public clusterList: any = {};
   public clusterListGridOptions = {};
   public getSeverity = this.HybridServicesClusterStatesService.getSeverity;
+  public getStatusIndicatorCSSClass = this.HybridServicesClusterStatesService.getStatusIndicatorCSSClass;
 
   private serviceId: string;
   private connectorType: ConnectorType;

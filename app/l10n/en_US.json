@@ -1813,7 +1813,10 @@
       "no_nodes_registered": "No Nodes Registered",
       "urgentUpgradeAvailable": "Urgent upgrade available",
       "registrationTimeout": "Registration timeout",
-      "connected": "Connected"
+      "connected": "Connected",
+      "operational": "Operational",
+      "impaired": "Impaired",
+      "outage": "Outage"
     },
     "userSidepanel": {
       "warningInvitePending": "This user has not yet accepted the invitation to join Cisco Spark. You can still enable {{ServiceName}}, but activation will not succeed until the user signs in.",
