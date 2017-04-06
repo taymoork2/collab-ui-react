@@ -8,6 +8,13 @@
   /* @ngInject */
   function ServiceDescriptor($http, UrlConfig, Authinfo, Orgservice) {
 
+    function getServiceStatus(serviceId, orgId) {
+      return $http.get(UrlConfig.getHerculesUrlV2() + '/organizations/' + (orgId || Authinfo.getOrgId()) + '/services/' + serviceId + '/status')
+        .then(function (response) {
+          return response.data;
+        });
+    }
+
     function getServices(orgId) {
       return $http.get(UrlConfig.getHerculesUrlV2() + '/organizations/' + (orgId || Authinfo.getOrgId()) + '/services')
         .then(extractData);
@@ -127,6 +134,7 @@
       filterEnabledServices: filterEnabledServices,
       filterAllExceptManagement: filterAllExceptManagement,
       isServiceEnabled: isServiceEnabled,
+      getServiceStatus: getServiceStatus,
       getServices: getServices,
       getEmailSubscribers: getEmailSubscribers,
       setEmailSubscribers: setEmailSubscribers,
