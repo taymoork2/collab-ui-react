@@ -21,7 +21,11 @@ require('./_fields-sidepanel.scss');
     vm.associatedFieldsets = [];
     vm.fetchFailure = false;
     vm.fetchInProgress = false;
-    vm.inUse = vm.field.publiclyAccessible; //lock public field
+    vm.searchable = true;
+    vm.lastUpdated = $filter('date')(vm.field.lastUpdated, $translate.instant('context.dictionary.fieldPage.dateFormat'));
+    vm.publiclyAccessible = false; //indicate whether the field is base or custom field
+    vm.inUse = false;
+    vm.inUseTooltipMessage = $translate.instant('context.dictionary.fieldPage.notInUseTooltip');
     vm.actionList = [{
       actionKey: 'common.edit',
       actionFunction: function () {
@@ -47,7 +51,10 @@ require('./_fields-sidepanel.scss');
         .then(function (fieldsetIds) {
           vm.fetchFailure = false;
           vm.associatedFieldsets = fieldsetIds;
-          vm.inUse = vm.inUse || fieldsetIds.length > 0;
+          vm.inUse = fieldsetIds.length > 0;
+          if (vm.inUse) {
+            vm.inUseTooltipMessage = $translate.instant('context.dictionary.fieldPage.inUseTooltip');
+          }
         }).catch(function () {
           vm.fetchFailure = true;
         }).then(function () {
@@ -55,7 +62,23 @@ require('./_fields-sidepanel.scss');
         });
     };
 
+
+    vm._fixFieldData = function () {
+      // fix searchable field
+      if (_.isString(vm.field.searchable)) {
+        vm.searchable = vm.field.searchable.trim().toLowerCase() === 'yes';
+      }
+      if (!_.isEmpty(vm.field.description)) {
+        vm.hasDescription = true;
+      }
+
+      //convert the UI friendly text to the actual boolean value
+      if (!_.isEmpty(vm.field.publiclyAccessible)) {
+        vm.publiclyAccessible = vm.field.publiclyAccessible.toLowerCase() === 'cisco';
+      }
+    };
     vm.$onInit = function () {
+      vm._fixFieldData();
       vm._getAssociatedFieldsets();
     };
   }
