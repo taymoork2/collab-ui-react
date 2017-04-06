@@ -10,19 +10,16 @@ describe('EnterprisePrivateTrunkService ', () => {
         id: 'efc7ebfb-b7a4-42f2-a143-1c056741a03c',
         type: 'trunk',
         state: 'impaired',
-        hostname: 'liverpool.example.org',
       },
       {
         id: 'e366b1ef-c3c3-414c-9125-5bf76c33df06',
         type: 'trunk',
         state: 'outage',
-        hostname: 'arsenal.example.org',
       },
       {
         id: '0ce247d8-4de9-482e-ac5a-51b2af1a7929',
         type: 'trunk',
         state: 'operational',
-        hostname: 'united.example.org',
       },
     ],
   };
