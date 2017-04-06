@@ -54,11 +54,17 @@
     vm.total_cloud_heading = $translate.instant('mediaFusion.metrics.totalCloud');
     vm.participants = $translate.instant('mediaFusion.metrics.participants');
 
+    vm.availabilityCardHeading = "";
+    vm.clusterAvailabilityCardHeading = $translate.instant('mediaFusion.metrics.clusterAvailabilityCardHeading');
+    vm.nodeAvailabilityCardHeading = $translate.instant('mediaFusion.metrics.nodeAvailabilityCardHeading');
+
     vm.second_card_heading = vm.total_cloud_heading;
     vm.redirected_heading = vm.cloud_calls_heading;
     vm.second_card_value = 0;
     vm.hosted_participants_heading = vm.on_prem_participants_heading;
     vm.hosted_heading = vm.on_prem_calls_heading;
+
+    vm.availabilityCardHeading = vm.clusterAvailabilityCardHeading;
 
     vm.Map = {};
     vm.secondCardFooter = {
@@ -168,10 +174,12 @@
         vm.clusterId = vm.Map[vm.clusterSelected];
         vm.second_card_heading = vm.redirected_calls_heading;
         vm.redirected_heading = vm.redirected_calls_heading;
+        vm.availabilityCardHeading = vm.nodeAvailabilityCardHeading;
       } else {
         vm.clusterId = vm.allClusters;
         vm.second_card_heading = vm.total_cloud_heading;
         vm.redirected_heading = vm.cloud_calls_heading;
+        vm.availabilityCardHeading = vm.clusterAvailabilityCardHeading;
       }
       loadResourceDatas();
       $timeout(function () {
@@ -253,7 +261,9 @@
         .then(function (clusters) {
           vm.clusterOptions.length = 0;
           vm.Map = {};
-          vm.clusters = _.filter(clusters, { targetType: 'mf_mgmt' });
+          vm.clusters = _.filter(clusters, {
+            targetType: 'mf_mgmt',
+          });
           _.each(clusters, function (cluster) {
             if (cluster.targetType === "mf_mgmt") {
               vm.clusterOptions.push(cluster.name);
@@ -531,14 +541,14 @@
           setDummyNumberOfParticipant();
         } else {
           deferred.promise.then(function () {
-              //set the number of participants graphs here
+            //set the number of participants graphs here
             if (_.isUndefined(setNumberOfParticipantGraph(response))) {
               setDummyNumberOfParticipant();
             } else {
               vm.numberOfParticipantStatus = vm.SET;
             }
           }, function () {
-              //map is not formed so we shoud show dummy graphs
+            //map is not formed so we shoud show dummy graphs
             setDummyNumberOfParticipant();
           });
         }
@@ -593,6 +603,7 @@
       vm.clientTypeChart = ClientTypeAdoptionGraphService.setClientTypeGraph(response, vm.clientTypeChart, vm.timeSelected);
       return vm.clientTypeChart;
     }
+
     function setNumberOfParticipantGraph(response) {
       vm.numberOfParticipantChart = NumberOfParticipantGraphService.setNumberOfParticipantGraph(response, vm.numberOfParticipantChart, vm.timeSelected);
       return vm.numberOfParticipantChart;

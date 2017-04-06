@@ -1,9 +1,10 @@
 describe('Component: pgNumber setup', () => {
 
-  let successResponse = [{
+  let numberData = {
     extension: '2222',
     extensionUUID: '22a2dc30-041f-4d25-9351-325eb1db7f79',
-  }];
+  };
+  let successResponse = [numberData];
 
   beforeEach(function () {
     this.initModules('huron.paging-group.number');
@@ -31,22 +32,13 @@ describe('Component: pgNumber setup', () => {
   });
 
   it('should select a number', function () {
-    let numberData = {
-      extension: '2222',
-      extensionUUID: '22a2dc30-041f-4d25-9351-325eb1db7f79',
-    };
     this.controller.selectNumber(numberData);
     expect(this.controller.pagingGroupNumber).toEqual(numberData);
   });
 
   it('fetch number success', function () {
-    let numberData = {
-      extension: '2222',
-      extensionUUID: '22a2dc30-041f-4d25-9351-325eb1db7f79',
-    };
-
     this.getNumberListDefer.resolve(successResponse);
-    this.controller.queryString = '222';
+    this.controller.pagingGroupNumber = numberData;
 
     this.controller.fetchNumbers().then(
       (data) => {
@@ -58,7 +50,7 @@ describe('Component: pgNumber setup', () => {
 
   it('fetch number failure', function () {
     this.getNumberListDefer.reject();
-    this.controller.queryString = '222';
+    this.controller.pagingGroupNumber = numberData;
     this.controller.fetchNumbers().then(
       (data) => {
         expect(data).toEqual([]);
