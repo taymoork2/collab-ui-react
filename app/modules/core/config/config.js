@@ -386,6 +386,7 @@
         'userRedirect',
         'userprofile',
         'users',
+        'customerPstnOrdersOverview',
       ],
       Support: ['support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram'],
       Tech_Support: ['gss'],
@@ -456,6 +457,7 @@
         'private-trunk-domain',
         'private-trunk-sidepanel',
         'private-trunk-redirect',
+        'customerPstnOrdersOverview',
       ],
       'squared-fusion-mgmt': [
         'expressway-cluster-sidepanel',

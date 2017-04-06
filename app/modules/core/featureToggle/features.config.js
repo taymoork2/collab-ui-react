@@ -191,4 +191,5 @@ module.exports = {
   huronEnterprisePrivateTrunking: 'huron-i387-enterprise-private-trunking',
   webexMetrics: 'webex-metrics',
   huronSupportForPortEmails: 'huron-support-for-port-emails',
+  huronCustomerAdminPMP: "huron-customer-admin-pmp",
 };

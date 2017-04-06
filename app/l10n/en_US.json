@@ -3857,7 +3857,8 @@
     "portNumberOrder": "Porting Numbers",
     "tollFreeNumberOrder": "New Toll-Free Numbers",
     "tollFreeNumberAdvanceOrder": "Toll-Free Advance Numbers",
-    "searchPlaceholder": "Search Orders"
+    "searchPlaceholder": "Search Orders",
+    "orderHistory": "Order History"
   },
   "pstnOrderDetail": {
     "orderNumber": "Order #{{orderId}}",
