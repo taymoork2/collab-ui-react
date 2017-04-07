@@ -29,10 +29,9 @@
   <div class="content-container media-reports-container">
     <div class="row" >
       <cs-card-layout ng-if="nav.displayResources">
-        <uc-media-report-flip-card parentcntrl="nav" headername="nav.total_participants_heading" value="nav.totalcloudShort" tooltip-value="nav.totalcloudTooltip" headercolor="'grey'" chart-options="nav.totalParticipantschartOptions"></uc-media-report-flip-card>
-        <uc-media-report-flip-card parentcntrl="nav" headername="nav.second_card_heading" value="nav.secondCardShort" tooltip-value="nav.secondCardTooltip" headercolor="'orange'" footer-options="nav.secondCardFooter" card-desc="nav.cloudParticipantsDesc"></uc-media-report-flip-card>
-        <uc-media-report-card parentcntrl="nav" headername="nav.hosted_participants_heading" value="nav.onpremShort" tooltip-value="nav.onpremTooltip" headercolor="'green'"></uc-media-report-card>
-        <uc-media-report-card parentcntrl="nav" headername="nav.cluster_availability_heading" value="nav.clusterAvailability" headercolor="'blue'" tooltip-options="nav.availabilityTooltipOptions"></uc-media-report-card>
+        <uc-media-report-flip-chart-card parentcntrl="nav" headername="nav.total_participants_heading" tooltip-value="nav.totalcloudTooltip" headercolor="'grey'" chart-options="nav.totalParticipantschartOptions" card-class="'three-cards'" card-desc="nav.clientTypeDesc"></uc-media-report-flip-chart-card>
+        <uc-media-report-card parentcntrl="nav" headername="nav.overflow_heading" value="nav.cloudOverflowShort" tooltip-value="nav.cloudOverflowTooltip" headercolor="'orange'" card-class="'three-cards'"></uc-media-report-card>
+        <uc-media-report-card parentcntrl="nav" headername="nav.cluster_availability_heading" value="nav.clusterAvailability" headercolor="'blue'" card-class="'three-cards'" tooltip-options="nav.availabilityTooltipOptions"></uc-media-report-card> 
         <uc-media-utilization parentcntrl="nav"></uc-media-utilization>
         <uc-number-of-participant parentcntrl="nav" ng-class="{'no-display': nav.clusterSelected !== nav.allClusters && nav.clusterSelected !== undefined}"></uc-number-of-participant>
         <uc-media-participant-distribution parentcntrl="nav"></uc-media-participant-distribution>
@@ -46,5 +45,5 @@
         <uc-media-client-type parentcntrl="nav"></uc-media-client-type>
       </cs-card-layout>
     </div>
-  </div>  
+  </div>
 </div>

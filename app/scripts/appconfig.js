@@ -2889,23 +2889,23 @@
               },
             },
           })
-          .state('context-new-field', {
+          .state('context-field-modal', {
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<context-new-field-modal existing-field-ids="$resolve.existingFieldIds" create-callback="$resolve.createCallback" dismiss="$dismiss()" class="new-field-modal"></context-new-field-modal>',
+                template: '<context-field-modal existing-field-ids="$resolve.existingFieldIds" callback="$resolve.callback" dismiss="$dismiss()" class="context-modal"></context-field-modal>',
               },
             },
             params: {
               existingFieldIds: [],
-              createCallback: function () {},
+              callback: function () {},
             },
             resolve: {
               existingFieldIds: /* @ngInject */ function ($stateParams) {
                 return $stateParams.existingFieldIds;
               },
-              createCallback: /* @ngInject */ function ($stateParams) {
-                return $stateParams.createCallback;
+              callback: /* @ngInject */ function ($stateParams) {
+                return $stateParams.callback;
               },
             },
           })
@@ -2939,6 +2939,31 @@
                 templateUrl: 'modules/context/fieldsets/hybrid-context-fieldsets.html',
                 controller: 'HybridContextFieldsetsCtrl',
                 controllerAs: 'contextFieldsets',
+              },
+            },
+            resolve: {
+              hasContextDictionaryEditFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasContextDictionaryEdit);
+              },
+            },
+          })
+          .state('context-fieldset-modal', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                template: '<context-fieldset-modal existing-fieldset-ids="$resolve.existingFieldsetIds" create-callback="$resolve.createCallback" dismiss="$dismiss()" class="context-modal"></context-fieldset-modal>',
+              },
+            },
+            params: {
+              existingFieldsetIds: [],
+              createCallback: function () {},
+            },
+            resolve: {
+              existingFieldsetIds: /* @ngInject */ function ($stateParams) {
+                return $stateParams.existingFieldsetIds;
+              },
+              createCallback: /* @ngInject */ function ($stateParams) {
+                return $stateParams.createCallback;
               },
             },
           })

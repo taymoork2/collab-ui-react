@@ -20,8 +20,7 @@
     TerminusCustomerService, TerminusCustomerCarrierService,
     TerminusCustomerV2Service, TerminusCustomerTrialV2Service,
     TerminusCarrierService, TerminusCarrierV2Service,
-    TerminusOrderV2Service,
-    TerminusCarrierInventoryCount, TerminusNumberService, TerminusCarrierInventorySearch,
+    TerminusOrderV2Service, TerminusNumberService,
     TerminusCarrierInventoryReserve, TerminusCarrierInventoryRelease,
     TerminusCustomerCarrierInventoryReserve, TerminusCustomerCarrierInventoryRelease,
     TerminusCustomerCarrierDidService, TerminusCustomerPortService,
@@ -244,6 +243,7 @@
     function getCarrierInventory(carrierId, state, npa) {
       var config = {
         carrierId: carrierId,
+        numberType: NUMTYPE_DID,
       };
       if (_.isString(npa)) {
         if (npa.length > 0) {
@@ -253,7 +253,7 @@
       } else {
         config.state = state;
       }
-      return TerminusCarrierInventoryCount.get(config).$promise;
+      return TerminusV2CarrierNumberCountService.get(config).$promise;
     }
 
     function getCarrierTollFreeInventory(carrierId) {
@@ -272,7 +272,8 @@
     function searchCarrierInventory(carrierId, params) {
       var paramObj = params || {};
       paramObj.carrierId = carrierId;
-      return TerminusCarrierInventorySearch.get(paramObj).$promise
+      paramObj.numberType = NUMTYPE_DID;
+      return TerminusV2CarrierNumberService.get(paramObj).$promise
         .then(function (response) {
           return _.get(response, 'numbers', []);
         });

@@ -289,7 +289,7 @@ require('modules/core/reports/amcharts-export.scss');
     }
 
     function resolveDeviceData(stats, target) {
-      return DeviceUsageService.resolveDeviceData(stats)
+      return DeviceUsageService.resolveDeviceData(stats, apiToUse)
         .then(function (deviceInfo) {
           _.each(stats, function (device, index) {
             target.push({

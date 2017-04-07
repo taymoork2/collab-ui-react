@@ -31,6 +31,7 @@ export class HuronSiteService {
     'dateFormat',
     'timeFormat',
     'routingPrefix',
+    'allowExternalTransfer',
   ];
 
   /* @ngInject */
@@ -112,6 +113,7 @@ export class HuronSiteService {
       timeFormat: site.timeFormat,
       routingPrefix: site.routingPrefix,
       emergencyCallBackNumber: site.emergencyCallBackNumber,
+      allowExternalTransfer: site.allowExternalTransfer,
       toggleEnabled: true, // TODO (jlowery): remove after 'i751-10d-ext' toggle is removed.
     }).$promise;
   }

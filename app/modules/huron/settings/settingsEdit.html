@@ -163,6 +163,21 @@
       </div>
     </div>
 
+    <!-- external call transfer/conference selection -->
+    <div cr-feature-toggle feature-show="h-i1033" class="cs-form__section">
+      <div class="section__info">
+        <div cs-sticky>
+          <h4 class="section__title" translate="externalTransfer.title"></h4>
+        </div>
+      </div>
+      <div class="section__content">
+        <uc-ext-transfer-org
+          on-change-fn="$ctrl.onExtTransferChanged(allowExternalTransfer)"
+          allow-external-transfer="$ctrl.huronSettingsData.site.allowExternalTransfer">
+        </uc-ext-transfer-org>
+      </div>
+    </div>
+
     <!-- company caller id selection -->
     <div class="cs-form__section">
       <div class="section__info">

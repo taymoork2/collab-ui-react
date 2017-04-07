@@ -19,6 +19,16 @@
   .meeting-location-reports {
     z-index: 1;
   }
+  .insight-balloon-div {
+    display: inline-block;
+    background-color: #FFF;
+    margin-bottom: -8px;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+  .dis-inline-block {
+    display: inline-block;
+  }
   .amcharts-export-menu {
     opacity: 1 !important;
     z-index: 100;

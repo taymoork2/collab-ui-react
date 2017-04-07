@@ -64,6 +64,7 @@
     var MAX_BLOCK_QUANTITY = 100;
     var MIN_VALID_CODE = 3;
     var MAX_VALID_CODE = 6;
+    var MAX_DID_QUANTITY = 100;
     //carrier capabilities
     var TOLLFREE_ORDERING_CAPABILITY = 'TOLLFREE_ORDERING';
 
@@ -360,9 +361,9 @@
 
     function getCount() {
       if (!vm.model.pstn.block) {
-        return 1; //1 causes the search to return all pstn's
+        return MAX_DID_QUANTITY;
       }
-      return (vm.model.pstn.quantity ? vm.model.pstn.quantity : 1);
+      return (vm.model.pstn.quantity ? vm.model.pstn.quantity : MAX_DID_QUANTITY);
     }
 
     function getNxxValue() {

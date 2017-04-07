@@ -49,6 +49,7 @@
       var dataProvider = [];
       cloudCalls = (cloudCalls - callsOverflow) < 0 ? 0 : (cloudCalls - callsOverflow);
       var total = cloudCalls + callsOverflow + callsOnPremise;
+      total = formatTotal(total);
       dataProvider = [{
         'name': vm.onPremiseHeading,
         'color': '#22D5A3',
@@ -68,7 +69,7 @@
       chartData.labelText = '[[name]]';
       chartData.balloonText = '[[name]]: [[percentage]]% ([[value]])';
       chartData.allLabels = [{
-        'text': vm.totalHeader + ' ' + total,
+        'text': total,
         'align': 'center',
         'y': 63,
       }];
@@ -125,6 +126,25 @@
         type.percentage = _.round(type.percentage, 2);
       });
       return newData;
+    }
+
+    function formatTotal(value) {
+      if (value <= 1000) {
+        return value.toString();
+      }
+      var numDigits = ("" + value).length;
+      var suffixIndex = Math.floor(numDigits / 3);
+      var normalisedValue = value / Math.pow(1000, suffixIndex);
+      var precision = 3;
+      if (normalisedValue < 1) {
+        precision = 1;
+      }
+      var suffixes = ["", "k", "m", "bn"];
+      if (normalisedValue < 1) {
+        return _.round(normalisedValue * 1000) + suffixes[suffixIndex - 1];
+      } else {
+        return normalisedValue.toPrecision(precision) + suffixes[suffixIndex];
+      }
     }
   }
 })();

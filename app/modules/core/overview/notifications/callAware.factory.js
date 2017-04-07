@@ -6,7 +6,7 @@
     .factory('OverviewCallAwareNotification', OverviewCallAwareNotification);
 
   /* @ngInject */
-  function OverviewCallAwareNotification($state, ServiceDescriptor) {
+  function OverviewCallAwareNotification($state, HybridServicesFlagService, HybridServicesUtils) {
     return {
       createNotification: function createNotification() {
         var notification = {
@@ -14,7 +14,7 @@
           badgeType: 'success',
           canDismiss: true,
           dismiss: function () {
-            ServiceDescriptor.acknowledgeService('squared-fusion-uc');
+            HybridServicesFlagService.raiseFlag(HybridServicesUtils.getAckFlagForHybridServiceId('squared-fusion-uc'));
           },
           link: function () {
             $state.go('call-service.list');

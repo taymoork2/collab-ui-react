@@ -8,6 +8,8 @@
     vm.average_utilzation = $translate.instant('mediaFusion.metrics.avgutilization');
     vm.client_types = $translate.instant('mediaFusion.metrics.clientTypes');
     vm.locations = $translate.instant('mediaFusion.metrics.location');
+    vm.onPremisesHeading = $translate.instant('mediaFusion.metrics.onPremisesHeading');
+    vm.cloudHeading = $translate.instant('mediaFusion.metrics.cloudHeading');
     vm.timeFormat = "YYYY-MM-DDTHH:mm:ss";
     return {
       dummyCallVolumeData: dummyCallVolumeData,
@@ -239,7 +241,14 @@
     function dummyNumberOfParticipantGraph() {
       var dummyGraph = [];
       dummyGraph.push({
-        valueField: 'number_of_particpant_count',
+        title: vm.cloudHeading,
+        valueField: 'field',
+        lineColor: chartColors.grayLightTwo,
+        showBalloon: false,
+        isDummy: true,
+      }, {
+        title: vm.onPremisesHeading,
+        valueField: 'field',
         lineColor: chartColors.grayLightTwo,
         showBalloon: false,
         isDummy: true,

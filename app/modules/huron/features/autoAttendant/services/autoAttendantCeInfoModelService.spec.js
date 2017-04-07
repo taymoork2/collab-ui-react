@@ -15,6 +15,7 @@ describe('Service: AutoAttendantCeInfoModelService', function () {
       "trigger": "incomingCall",
       "type": "directoryNumber",
       "number": "1111",
+      "uuid": "1111",
     }],
     "ceUrl": "https://ces.hitest.huron-dev.com/api/v1/customers/6662df48-b367-4c1e-9c3c-aa408aaa79a1/callExperiences/c16a6027-caef-4429-b3af-9d61ddc7964b",
   }, {
@@ -24,6 +25,7 @@ describe('Service: AutoAttendantCeInfoModelService', function () {
       "trigger": "incomingCall",
       "type": "directoryNumber",
       "number": "1112",
+      "uuid": "1112",
     }],
     "ceUrl": "https://ces.hitest.huron-dev.com/api/v1/customers/6662df48-b367-4c1e-9c3c-aa408aaa79a1/callExperiences/0c192613-a960-43bb-9101-b9bc80be049c",
   }];
@@ -50,6 +52,7 @@ describe('Service: AutoAttendantCeInfoModelService', function () {
         _resource.setTrigger(rawCeInfos[i].resources[j].trigger);
         _resource.setType(rawCeInfos[i].resources[j].type);
         _resource.setNumber(rawCeInfos[i].resources[j].number);
+        _resource.setUUID(rawCeInfos[i].resources[j].uuid);
         _ceInfo.addResource(_resource);
       }
       _ceInfo.setName(rawCeInfos[i].name);
@@ -72,6 +75,7 @@ describe('Service: AutoAttendantCeInfoModelService', function () {
           expect(resources[j].getTrigger()).toBe(rawCeInfos[i].resources[j].trigger);
           expect(resources[j].getType()).toBe(rawCeInfos[i].resources[j].type);
           expect(resources[j].getNumber()).toBe(rawCeInfos[i].resources[j].number);
+          expect(resources[j].getUUID()).toBe(rawCeInfos[i].resources[j].uuid);
         }
         expect(ceInfos[i].getCeUrl()).toBe(rawCeInfos[i].ceUrl);
       }

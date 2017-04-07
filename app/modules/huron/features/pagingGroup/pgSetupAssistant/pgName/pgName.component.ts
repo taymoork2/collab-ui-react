@@ -1,11 +1,19 @@
 class PagingGroupNameCtrl implements ng.IComponentController {
   public pagingGroupName: string;
   public errorNameInput: boolean = false;
+  public pgNameErrorMassage: string;
   private onUpdate: Function;
 
+  /*@ngInject*/
+  constructor(private $translate: ng.translate.ITranslateService) {}
+
   public onChange(): void {
-    let reg = /^[A-Za-z\-\_\d\s]+$/;
-    this.errorNameInput = !reg.test(this.pagingGroupName);
+    const reg = /[;"'&^></\\]/;
+    let invalidChar: Array<string> | null = this.pagingGroupName.match(reg);
+    this.errorNameInput = reg.test(this.pagingGroupName);
+    if (this.errorNameInput) {
+      this.pgNameErrorMassage = this.$translate.instant('pagingGroup.sayInvalidChar', { char: invalidChar }).replace('\\', '');
+    }
     this.onUpdate({
       name: this.pagingGroupName,
       isValid: !this.errorNameInput,
