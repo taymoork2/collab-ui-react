@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: DevicesCtrlHuron', function () {
-  var controller, $scope, $q, $stateParams, $state, $controller, CsdmDataModelService, FeatureToggleService, Userservice, Authinfo;
+  var controller, $scope, $q, $stateParams, $state, $controller, CsdmHuronUserDeviceService, poller, CsdmDataModelService, FeatureToggleService, Userservice, Authinfo;
 
   beforeEach(angular.mock.module('Huron'));
 
@@ -13,11 +13,12 @@ describe('Controller: DevicesCtrlHuron', function () {
   };
 
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$stateParams_, _$state_, _CsdmDataModelService_, _FeatureToggleService_, _Userservice_, _Authinfo_) {
+  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$stateParams_, _$state_, _CsdmHuronUserDeviceService_, _CsdmDataModelService_, _FeatureToggleService_, _Userservice_, _Authinfo_) {
     $scope = _$rootScope_.$new();
     $scope.userOverview = userOverview;
     $stateParams = _$stateParams_;
     $q = _$q_;
+    CsdmHuronUserDeviceService = _CsdmHuronUserDeviceService_;
     CsdmDataModelService = _CsdmDataModelService_;
     $state = _$state_;
     FeatureToggleService = _FeatureToggleService_;
@@ -37,6 +38,9 @@ describe('Controller: DevicesCtrlHuron', function () {
       ],
     };
 
+    poller = {};
+
+    spyOn(CsdmHuronUserDeviceService, 'create').and.returnValue(poller);
     spyOn(CsdmDataModelService, 'reloadDevicesForUser').and.returnValue($q.resolve(deviceList));
     spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.resolve(false));
     spyOn(Userservice, 'getUser');
@@ -61,6 +65,7 @@ describe('Controller: DevicesCtrlHuron', function () {
     spyOn(FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue($q.resolve(false));
     initController();
     expect(controller).toBeDefined();
+    expect(controller.csdmHuronUserDeviceService).toBe(poller);
   });
 
   describe('activate() method', function () {
@@ -125,18 +130,20 @@ describe('Controller: DevicesCtrlHuron', function () {
   });
 
   describe('showGenerateOtpButton()', function () {
-    beforeEach(function () {
+    it('should be true when no devices', function () {
       spyOn(FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue($q.resolve(true));
       initController();
-    });
-    it('should be false when not entitled to huron', function () {
-      $stateParams.currentUser.entitlements = ["squared-room-moderation", "webex-messenger", "squared-call-initiation", "webex-squared", "squared-syncup"];
-      $scope.$broadcast('entitlementsUpdated');
-      $scope.$apply();
-      expect(controller.showGenerateOtpButton).toBeFalsy();
+      expect(controller.showGenerateOtpButton).toBeTruthy();
     });
 
     it('should be false when devices', function () {
+      spyOn(FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue($q.resolve(true));
+      CsdmDataModelService.reloadDevicesForUser.and.returnValue($q.resolve({
+        'http://url': {
+          url: 'http://url',
+        },
+      }));
+      initController();
       expect(controller.showGenerateOtpButton).toBeFalsy();
     });
   });
