@@ -40,7 +40,7 @@ require('../fields/_fields-list.scss');
         existingFieldsetIds: _.map(vm.fieldsetsList.allFieldsets, function (fieldset) {
           return fieldset.id;
         }),
-        createCallback: function (newFieldset) {
+        callback: function (newFieldset) {
           var fieldsetCopy = _.cloneDeep(newFieldset);
           vm.fieldsetsList.allFieldsets.unshift(processFieldset(fieldsetCopy));
           filterList(vm.searchStr);

@@ -21,14 +21,12 @@
       color: $color-negative-base;
     }
     .failure-message {
-      font-family: $brand-font-cisco-TT-Light-Oblique;
-      font-style: italic;
+      font-family: $brand-font-regular;
       font-size: 14px;
       color: $color-negative-base;
     }
     .retry-action {
-      font-family: $brand-font-cisco-TT-Regular-Oblique;
-      font-style: italic;
+      font-family: $brand-font-regular;
       font-size: 14px;
       color: $color-primary-base;
       background: none;

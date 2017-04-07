@@ -28,6 +28,195 @@
     resize: none;
     height: 100px;
   }
+
+  .context-modal-content {
+    width: 42rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .section__info {
+    margin-bottom: 16px;
+  }
+
+  .field-list-item-wrapper {
+    text-align: center;
+  }
+
+  .field-list-item {
+    text-align: left;
+    padding: 10px 0px;
+    cursor: default;
+    width: 42rem;
+  }
+
+  .field-list-item .column-one {
+    float: left;
+    width: 60%;
+    line-height: 100%;
+    font-size: 0.875rem;
+    font-family: "CiscoSansTT Light";
+    color: #6A6B6C;
+    text-overflow: ellipsis;
+    padding-left: 2%;
+    white-space: nowrap;
+    overflow: hidden;
+    padding-top: 2px;
+    cursor: default;
+  }
+
+  .field-list-item .column-two {
+    float: left;
+    width: 35%;
+    line-height: 100%;
+    font-size: 0.875rem;
+    font-family: "CiscoSansTT Light";
+    color: #6A6B6C;
+    text-overflow: ellipsis;
+    padding-left: 4%;
+    white-space: nowrap;
+    overflow: hidden;
+    padding-top: 2px;
+    cursor: default;
+  }
+
+  .field-list-item .column-three {
+    float: left;
+    width: 5%;
+    line-height: 100%;
+    font-size: 0.875rem;
+    font-family: "CiscoSansTT Light";
+    color: #6A6B6C;
+    padding-top: 1px;
+    padding-left: 1%;
+    cursor: pointer;
+  }
+
+  .btn--white {
+    border-radius: 2px;
+    box-shadow: 0px 1px 2px 1px rgba(52, 53, 55, 0.18);
+  }
+
+  .btn--white:hover {
+    background-color: white;
+    border-radius: 2px;
+    box-shadow: 0px 1px 2px 1px rgba(52, 53, 55, 0.18);
+  }
+
+  .typeahead {
+    position: relative;
+    align-items: center;
+    border: 0;
+    border-bottom: solid;
+    border-width: 2px;
+    border-color: #049FD9;
+    width: 42rem;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 12px;
+    line-height: 36px;
+
+    .icon-search {
+      position: absolute;
+      top: 11px;
+      left: 10px;
+    }
+
+    input {
+      border: none;
+      width: 100%;
+      font-size: 0.875rem;
+      font-family: "CiscoSansTT Light";
+      color: #6A6B6C;
+      line-height: 24px;
+      @include vr-spacing(pt, 0.5);
+      padding-left: 36px;
+      &:focus {
+        box-shadow: none;
+        outline: none;
+      }
+      &::-webkit-input-placeholder {
+        color: #858688;
+        font-size: 0.875rem;
+        font-family: "CiscoSansTT Light";
+      }
+      &::-moz-placeholder {
+        color: #858688;
+        font-size: 0.875rem;
+        font-family: "CiscoSansTT Light";
+      }
+      &:-ms-input-placeholder {
+        color: #858688;
+        font-size: 0.875rem;
+        font-family: "CiscoSansTT Light";
+      }
+    }
+
+    .dropdown-menu {
+      width: 42rem;
+
+      .field-drop-down {
+        font-size: 0.875rem;
+        font-family: "CiscoSansTT Light";
+        color: #6A6B6C;
+      }
+
+      li {
+        height: 30px;
+
+        &.active:hover {
+          background: #ebebec;
+        }
+      }
+
+      .field-drop-down span.field-drop-down-id {
+        float: left;
+        width: 29rem;
+        line-height: 24px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        padding-top: 6px;
+        padding-left: 16px;
+      }
+
+      .field-drop-down span.field-drop-down-fieldinfo {
+        float: left;
+        line-height: 24px;
+        padding-top: 6px;
+        padding-left: 16px;
+      }
+    }
+  }
+}
+
+.context-retry-error {
+  i {
+    font-size: 18px;
+    margin-right: 5px;
+    vertical-align: middle;
+    color: $color-negative-base;
+  }
+  .failure-message {
+    font-family: "CiscoSansTT Regular", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    color: $color-negative-base;
+  }
+  .retry-action {
+    font-family: "CiscoSansTT Regular", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    color: $color-primary-base;
+    background: none;
+    padding: 0;
+    min-width: 0;
+  }
+  .retry-action:focus {
+    outline: none;
+    box-shadow: none;
+  }
+  .retry-action:disabled {
+    color: $gray-base;
+  }
 }
 
 .tooltip[popup-class="context-tooltip"] .c-nub {

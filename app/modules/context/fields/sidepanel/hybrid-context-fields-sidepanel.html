@@ -82,7 +82,7 @@
             <div ng-if="$ctrl.associatedFieldsets.length === 0 && $ctrl.fetchFailure" class="associated-fieldsets">
               <i class="icon icon-error"></i>
               <span translate="context.dictionary.fieldPage.associatedFieldsetsError" class="failure-message"></span>
-              <button translate="common.retry" class="retry-action" ng-click="$ctrl.getAssociatedFieldsets()" ng-disabled="$ctrl.fetchInProgress"></button>
+              <button translate="common.retry" class="retry-action" ng-click="$ctrl._getAssociatedFieldsets()" ng-disabled="$ctrl.fetchInProgress"></button>
             </div>
            <!-- show if successfully retrieved list of associated fieldsets -->
             <div ng-if="$ctrl.associatedFieldsets.length > 0" class="token" ng-repeat="id in $ctrl.associatedFieldsets">{{id}}</div>
