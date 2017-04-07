@@ -2088,7 +2088,7 @@
       "oneButtonToPushIntervalMinutesSavingError": "Could not save the change to early join time. Try again later.",
       "voicemail": {
         "heading": "Voicemail",
-        "description": "Allow users in your organization to access on-premise voicemail by using the Cisco Spark app.",
+        "description": "Users can access on-premises voicemail by using the Cisco Spark app.",
         "enableDescription": "All users with both Hybrid Call Service Aware and Connect can use voicemail now",
         "disableDescription": "Voicemail is disabled for all users",
         "voicemailDisabled": "To enable voicemail Call Service Connect needs to be turned on.",
@@ -2098,8 +2098,8 @@
         "voicemailStatusNotConfigured": "Voicemail service not configured",
         "voicemailStatusRequested": "Voicemail service activation pending",
         "voicemailStatusHybridSuccess": "Voicemail service operational",
-        "voicemailStatusHybridFailed": "Voicemail service impaired (see clusters for alarms)",
-        "voicemailStatusHybridPartial": "Voicemail service outage (see cluster for alarms)"
+        "voicemailStatusHybridFailed": "Voicemail service outage (see clusters for alarms)",
+        "voicemailStatusHybridPartial": "Voicemail service impaired (see clusters for alarms)"
       },
       "documentation": {
         "heading": "Documentation and Software",
