@@ -6,15 +6,14 @@
     .controller('DevicesCtrlHuron', DevicesCtrlHuron);
 
   /* @ngInject */
-  function DevicesCtrlHuron($q, $scope, $state, $stateParams, Config, CsdmDataModelService, WizardFactory, FeatureToggleService, Userservice, Authinfo) {
+  function DevicesCtrlHuron($q, $scope, $state, $stateParams, Config, CsdmHuronUserDeviceService, CsdmDataModelService, WizardFactory, FeatureToggleService, Userservice, Authinfo) {
     var vm = this;
     vm.devices = {};
-    vm.loadedDevices = false;
     vm.otps = [];
     vm.currentUser = $stateParams.currentUser;
-    vm.csdmHuronUserDeviceService = null;
     vm.showGenerateOtpButton = false;
     vm.generateCodeIsDisabled = true;
+    vm.csdmHuronUserDeviceService = CsdmHuronUserDeviceService.create(vm.currentUser.id);
 
     function init() {
       fetchATASupport();
@@ -63,19 +62,15 @@
       }).length > 0;
     };
 
-    function addLinkOrButtonForActivationCode(loadedDevices) {
-      if (loadedDevices) {
-        if (_.size(vm.devices)) {
-          $scope.userOverview.enableAuthCodeLink();
-          vm.showGenerateOtpButton = false;
-        } else {
-          $scope.userOverview.disableAuthCodeLink();
-          vm.showGenerateOtpButton = true;
-        }
+    function addLinkOrButtonForActivationCode() {
+      if (_.size(vm.devices)) {
+        $scope.userOverview.enableAuthCodeLink();
+        vm.showGenerateOtpButton = false;
+      } else {
+        $scope.userOverview.disableAuthCodeLink();
+        vm.showGenerateOtpButton = true;
       }
     }
-
-    $scope.$watch('vm.loadedDevices', addLinkOrButtonForActivationCode);
 
     vm.showDeviceDetails = function (device) {
       $state.go('user-overview.csdmDevice', {
@@ -153,10 +148,10 @@
         CsdmDataModelService.reloadDevicesForUser(vm.currentUser.id).then(function (devices) {
           vm.devices = devices;
         }).finally(function () {
-          vm.loadedDevices = true;
+          addLinkOrButtonForActivationCode();
         });
       } else {
-        vm.loadedDevices = true;
+        addLinkOrButtonForActivationCode();
       }
     }
 
