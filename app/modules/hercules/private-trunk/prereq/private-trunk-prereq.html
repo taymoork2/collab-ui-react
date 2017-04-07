@@ -4,7 +4,7 @@
   </button>
   <div id="prereqTitle" h4 class="modal-title" translate="servicesOverview.cards.privateTrunk.prereqTitle"></h5></div>
 </div>
-<div class="modal-body">
+<div class="modal-body private-trunk">
   <p id="prereqDesc" translate="servicesOverview.cards.privateTrunk.setupDescription" translate-value-click=""></p>
     <h5 translate="servicesOverview.cards.privateTrunk.domainVerification"></h5>
   <p ng-if=!$ctrl.hasVerifiedDomain>
@@ -21,7 +21,7 @@
     <p ng-if="$ctrl.domains.length > 1">
       <i class="icon icon-check"></i>
       <span translate="servicesOverview.cards.privateTrunk.verifiedDomain"></span>
-      <ul class="domainlist" ng-if="$ctrl.domains.length > 1" >
+      <ul class="domain-list" ng-if="$ctrl.domains.length > 1" >
         <li ng-repeat="domain in $ctrl.domains">
           <span>{{::domain}}</span>
         </li>

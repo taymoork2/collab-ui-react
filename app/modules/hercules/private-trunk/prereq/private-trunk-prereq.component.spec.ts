@@ -5,7 +5,7 @@ describe('Component: PrivateTrunkPrereq component', () => {
   const ERROR_ICON = '.icon-error';
   const CHECK_ICON = '.icon-check';
   const BUTTON_CLOSE = 'button.btn.btn-primary';
-  const UL_DOMAINLIST = 'ul.domainlist li';
+  const UL_DOMAINLIST = 'ul.domain-list li';
 
   let verifiedDomain: Array<string> = [ 'verified1.ept.org', 'verified2.ept.org' ];
 
