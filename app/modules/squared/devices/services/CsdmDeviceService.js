@@ -16,8 +16,8 @@
       });
     }
 
-    function fetchDevicesForUser(userId) {
-      return $http.get(devicesUrl + '?type=all&cisUuid=' + userId).then(function (res) {
+    function fetchDevicesForUser(userId, type) {
+      return $http.get(devicesUrl + '?type=' + type + '&cisUuid=' + userId).then(function (res) {
         return _.mapValues(res.data, function (device) {
           if (device.productFamily === 'Huron' || device.productFamily === 'ATA') {
             return CsdmConverter.convertHuronDevice(device);

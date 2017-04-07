@@ -368,8 +368,8 @@
       }
     }
 
-    function reloadDevicesForUser(cisUuid) {
-      return CsdmDeviceService.fetchDevicesForUser(cisUuid).then(function (devices) {
+    function reloadDevicesForUser(cisUuid, type) {
+      return CsdmDeviceService.fetchDevicesForUser(cisUuid, type).then(function (devices) {
         _.each(devices, function (device) {
           CsdmCacheUpdater.updateOne(theDeviceMap, device.url, device);
         });

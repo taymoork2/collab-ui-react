@@ -5,6 +5,7 @@ import { IActionItem } from '../../core/components/sectionTitle/sectionTitle.com
 class DeviceList implements ng.IComponentController {
   public ownerType: string;
   public deviceList: any;
+  public devicesLoaded: ng.IPromise<any>;
   public multipleOtp: boolean;
   public onGenerateFn: Function;
   public onShowDeviceDetailFn: Function;
@@ -30,8 +31,12 @@ class DeviceList implements ng.IComponentController {
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
     const { deviceList } = changes;
-    this.showGenerateButton = _.size(Object.keys(deviceList.currentValue)) === 0;
-    this.showActions = this.multipleOtp && !this.showGenerateButton;
+    if (this.devicesLoaded) {
+      this.devicesLoaded.then(() => {
+        this.showGenerateButton = _.size(Object.keys(deviceList.currentValue)) === 0;
+        this.showActions = this.multipleOtp && !this.showGenerateButton;
+      });
+    }
   }
 
   public onGenerateCode(): void {
@@ -60,6 +65,7 @@ export class DeviceListComponent implements ng.IComponentOptions {
   public bindings = <{ [binding: string]: string }>{
     ownerType: '@',
     deviceList: '<',
+    devicesLoaded: '<',
     multipleOtp: '<',
     onGenerateFn: '&',
     onShowDeviceDetailFn: '&',

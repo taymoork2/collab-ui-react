@@ -12,9 +12,7 @@
     vm.loadedDevices = false;
     vm.otps = [];
     vm.currentUser = $stateParams.currentUser;
-    vm.csdmHuronUserDeviceService = null;
-    vm.showGenerateOtpButton = false;
-    vm.generateCodeIsDisabled = true;
+    vm.csdmHuronUserDeviceService = CsdmHuronUserDeviceService.create(vm.currentUser.id);
 
     function init() {
       fetchATASupport();
@@ -63,20 +61,6 @@
       }).length > 0;
     };
 
-    function addLinkOrButtonForActivationCode(loadedDevices) {
-      if (loadedDevices) {
-        if (_.size(vm.devices)) {
-          $scope.userOverview.enableAuthCodeLink();
-          vm.showGenerateOtpButton = false;
-        } else {
-          $scope.userOverview.disableAuthCodeLink();
-          vm.showGenerateOtpButton = true;
-        }
-      }
-    }
-
-    $scope.$watch('vm.loadedDevices', addLinkOrButtonForActivationCode);
-
     vm.showDeviceDetails = function (device) {
       $state.go('user-overview.csdmDevice', {
         currentDevice: device,
@@ -84,7 +68,7 @@
       });
     };
 
-    vm.resetCode = function () {
+    vm.onGenerateOtpFn = function () {
       vm.resettingCode = true;
       var userFirstName;
       if (vm.currentUser.name) {
@@ -150,13 +134,25 @@
 
     function activate() {
       if (shouldLoadPersonalDevices()) {
-        CsdmDataModelService.reloadDevicesForUser(vm.currentUser.id).then(function (devices) {
-          vm.devices = devices;
-        }).finally(function () {
-          vm.loadedDevices = true;
-        });
+        var type;
+        var shouldLoadCloudberry = vm.showPersonal && vm.isOrgEntitledToRoomSystem();
+        var shouldLoadHuron = isCurrentUserEntitledToHuron();
+        if (shouldLoadCloudberry && shouldLoadHuron) {
+          type = 'all';
+        } else if (shouldLoadCloudberry) {
+          type = 'cloudberry';
+        } else if (shouldLoadHuron) {
+          type = 'huron';
+        }
+        if (type) {
+          vm.loadedDevicesPromise = CsdmDataModelService.reloadDevicesForUser(vm.currentUser.id, type).then(function (devices) {
+            vm.devices = devices;
+          });
+        } else {
+          vm.loadedDevicesPromise = $q.resolve();
+        }
       } else {
-        vm.loadedDevices = true;
+        vm.loadedDevicesPromise = $q.resolve();
       }
     }
 

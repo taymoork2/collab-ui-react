@@ -658,7 +658,8 @@ describe('Service: CsdmDataModelService', function () {
 
       var expectCall, changeNotification;
       var uWithDevicesUuid = '36437546-PERSON-b3b345441ba6';
-      var devicesForUserUrl = 'https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/devices?type=all&cisUuid=' + uWithDevicesUuid;
+      var type = 'shouldJustBePassedThrough';
+      var devicesForUserUrl = 'https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/devices?type=' + type + '&cisUuid=' + uWithDevicesUuid;
       var newPersonalDevice = 'https://cmi.huron-int.com/api/v1/voice/customers/3a6ff373-unittest-a27460e0ac5c/sipendpoints/' + uWithDevicesUuid;
 
       CsdmDataModelService.getDevicesMap().then(function (devices) {
@@ -676,7 +677,7 @@ describe('Service: CsdmDataModelService', function () {
         };
         $httpBackend.expectGET(devicesForUserUrl).respond(userDevices);
 
-        CsdmDataModelService.reloadDevicesForUser(uWithDevicesUuid).then(function (returnedUserDevices) {
+        CsdmDataModelService.reloadDevicesForUser(uWithDevicesUuid, type).then(function (returnedUserDevices) {
           expect(Object.keys(returnedUserDevices)).toHaveLength(1);
           expect(Object.keys(returnedUserDevices)).toContain(newPersonalDevice);
           expectCall = true;
