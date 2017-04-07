@@ -1232,6 +1232,8 @@
       /* as of now, all are InList type expressions. callerReturned is not
          implemented yet.
       */
+      out.varsUsed = [];
+      out.varsUsed.push(action.if.leftCondition);
 
       out.expression = createInListObj(action);
 

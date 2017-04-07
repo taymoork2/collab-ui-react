@@ -36,13 +36,16 @@
 
     afterEach(function () {});
 
-    describe('scrollBuilderToTarget:', function () {
+    xdescribe('scrollBuilderToTarget:', function () {
 
       it('just return if there is no target', function () {
+
         AAScrollBar.scrollBuilderToTarget();
+
         expect(container.animate).not.toHaveBeenCalled();
 
         $timeout.flush();
+
         expect(container.animate).not.toHaveBeenCalled();
       });
 

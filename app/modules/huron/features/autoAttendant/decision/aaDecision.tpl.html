@@ -4,8 +4,11 @@
     </cs-select>
   </div>
   <div ng-switch="aaDecisionCtrl.ifOption.value">
-     <cs-select ng-switch-when="sessionVariable" ng-model="aaDecisionCtrl.sessionVarOption" options="aaDecisionCtrl.sessionVarOptions" icon="icon-chevron-down" placeholder="aaDecisionCtrl.selectVariablePlaceholder" ng-change= "aaDecisionCtrl.setIfDecision()">
+     <div ng-class= "{'session-variable' : aaDecisionCtrl.isWarn}">
+     <cs-select ng-switch-when="sessionVariable" is-warn="{{ aaDecisionCtrl.isWarn }}" warn-msg="{{ aaDecisionCtrl.varMissingWarning }}" ng-model="aaDecisionCtrl.sessionVarOption" options="aaDecisionCtrl.sessionVarOptions" icon="icon-chevron-down" placeholder="aaDecisionCtrl.selectVariablePlaceholder" ng-change= "aaDecisionCtrl.setIfDecision()">
      </cs-select>
+    </div>
+    
     <p ng-if="aaDecisionCtrl.ifOption.value != 'callerReturned' && aaDecisionCtrl.ifOption.value != ''" translate="autoAttendant.actionIs"></p> 
     <div ng-switch-when="Original-Caller-Number">
       <textarea class="aa-decision-textarea" aa-keypress ng-change="aaDecisionCtrl.update('Original-Caller-Number')" ng-model="aaDecisionCtrl.ifOption.buffer" type="text" id="aaDecisionCallerNumber{{ schedule + index }}" name="callerNumberCalled" }}" rows="4" maxlength="2000"></textarea>

@@ -19,11 +19,13 @@
     vm.selectConditionPlaceholder = $translate.instant('autoAttendant.selectConditionPlaceholder');
     vm.selectActionPlaceholder = $translate.instant('autoAttendant.selectActionPlaceholder');
     vm.selectVariablePlaceholder = $translate.instant('autoAttendant.selectVariablePlaceholder');
+    vm.varMissingWarning = $translate.instant('autoAttendant.decisionMissingCustomVariable');
 
     vm.ifOption = {
       label: '',
       value: '',
     };
+    vm.isWarn = false;
 
     vm.sessionVarOption = '';
 
@@ -130,7 +132,9 @@
     function setIfDecision() {
       if (vm.ifOption.value == 'sessionVariable') {
         vm.actionEntry.if.leftCondition = vm.sessionVarOption;
+        vm.isWarn = !_.includes(vm.sessionVarOptions, vm.actionEntry.if.leftCondition);
       } else {
+        vm.isWarn = false;
         vm.actionEntry.if.leftCondition = vm.ifOption.value;
       }
       var option = _.find(vm.ifOptions, { 'value': vm.ifOption.value });
@@ -152,6 +156,13 @@
       return undefined;
 
     }
+    function addSessionObject() {
+      vm.ifOptions.push({
+        label: $translate.instant('autoAttendant.decisionSessionVariable'),
+        value: 'sessionVariable',
+        buffer: '',
+      });
+    }
 
     function getSessionVariables(ceId) {
       return CustomVariableService.listCustomVariables(ceId).then(function (data) {
@@ -161,13 +172,8 @@
               vm.sessionVarOptions.push(customVar);
             });
           });
-
           vm.sessionVarOptions.sort();
-          vm.ifOptions.push({
-            label: $translate.instant('autoAttendant.decisionSessionVariable'),
-            value: 'sessionVariable',
-            buffer: '',
-          });
+          addSessionObject();
         }
       });
     }
@@ -186,10 +192,16 @@
     }
 
     function populateMenu() {
-      if (!_.isEmpty(vm.actionEntry.if.leftCondition)) {
+      if (vm.actionEntry.if.leftCondition) {
+
         vm.ifOption = _.find(vm.ifOptions, { 'value': vm.actionEntry.if.leftCondition });
-        if (_.isEmpty(vm.ifOption)) {
+        if (!vm.ifOption) {
           vm.ifOption = _.find(vm.ifOptions, { 'value': 'sessionVariable' });
+          if (!vm.ifOption) {
+            addSessionObject();
+            vm.ifOption = vm.ifOptions[vm.ifOptions.length - 1];
+          }
+          vm.isWarn = !_.includes(vm.sessionVarOptions, vm.actionEntry.if.leftCondition);
           vm.sessionVarOption = vm.actionEntry.if.leftCondition;
         }
         vm.ifOption.buffer = vm.actionEntry.if.rightCondition;
