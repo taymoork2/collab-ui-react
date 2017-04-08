@@ -165,6 +165,7 @@ module.exports = {
   gemServicesTab: 'gem-services-tab',
   atlasHerculesGoogleCalendar: 'atlas-hercules-google-calendar',
   avrilVmEnable: 'avril-vm-enable',
+  avrilVmMailboxEnable: 'avril-vm-mailbox-enable',
   avrilVoicemaill1249: 'avril-voicemail-l1249',
   cloudberryPersonalMode: 'ce-enable-personal-mode',
   huronFederatedSparkCall: 'huron-federated-spark-call',
