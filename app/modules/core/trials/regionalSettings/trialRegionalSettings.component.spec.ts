@@ -1,6 +1,7 @@
 describe('Component: trialRegionalSettings', () => {
   const COUNTRY_SELECT = '.csSelect-container[name="defaultCountry"]';
   const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
+  const PLACEHOLDER = '.placeholder';
 
   let countryList = getJSONFixture('core/json/trials/countryList.json');
 
@@ -8,28 +9,71 @@ describe('Component: trialRegionalSettings', () => {
     this.initModules('trial.regionalSettings');
     this.injectDependencies(
       '$scope',
+      '$q',
+      'HuronCountryService',
+      'FeatureToggleService',
     );
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
+    spyOn(this.HuronCountryService, 'getCountryList').and.returnValue(countryList);
   });
 
   function initComponent() {
     this.compileComponent('trialRegionalSettings', {
-      defaultCountry: 'defaultCountry',
-      defaultCountryList: 'defaultCountryList',
+      callTrialEnabled: 'callTrialEnabled',
+      defaultCountry: '',
       onChangeFn: 'onChangeFn(country)',
     });
   }
 
-  describe('Default country not chosen', () => {
-    beforeEach(initComponent);
+  describe('Without country feature toggles', () => {
     beforeEach(function () {
-      this.$scope.defaultCountryList = countryList;
-      this.$scope.$apply();
+      spyOn(this.FeatureToggleService, 'supports').and.returnValue(false);
+    });
+    beforeEach(initComponent);
+
+    it('should have a drop down select box with 2 options, US and Canada', function () {
+      expect(this.view).toContainElement(COUNTRY_SELECT);
+      expect(this.controller.countryList.length).toBe(2);
+      expect(this.view.find(COUNTRY_SELECT).find(DROPDOWN_OPTIONS).get(0)).toHaveText('Canada');
     });
 
-    it('should have a drop down select box with options', function () {
+    it('should have a placeholder', function () {
+      expect(this.view.find(PLACEHOLDER)).toHaveText('serviceSetupModal.defaultCountryPlaceholder');
+    });
+
+    it('should invoke onChangeFn when a country is selected', function () {
+      this.view.find(COUNTRY_SELECT).find(DROPDOWN_OPTIONS).get(0).click();
+      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(jasmine.objectContaining({
+        id: 'CA',
+      }));
+    });
+
+    describe('and call trial is false', () => {
+      beforeEach(function () {
+        this.$scope.callTrialEnabled = false;
+        this.$scope.$apply();
+      });
+
+      it('should add N/A to the country list', function () {
+        expect(this.controller.countryList.length).toBe(3);
+        expect(this.view.find(COUNTRY_SELECT).find(DROPDOWN_OPTIONS).get(2)).toHaveText('serviceSetupModal.notApplicable');
+      });
+    });
+  });
+
+  describe('With federation feature toggle', () => {
+    beforeEach(function () {
+      spyOn(this.FeatureToggleService, 'supports').and.returnValue(true);
+    });
+    beforeEach(initComponent);
+
+    it('should have a drop down select box with European options', function () {
       expect(this.view).toContainElement(COUNTRY_SELECT);
       expect(this.view.find(COUNTRY_SELECT).find(DROPDOWN_OPTIONS).get(0)).toHaveText('Austria');
+    });
+
+    it('should have a placeholder', function () {
+      expect(this.view.find(PLACEHOLDER)).toHaveText('serviceSetupModal.defaultCountryPlaceholder');
     });
 
     it('should invoke onChangeFn when a country is selected', function () {
@@ -37,6 +81,18 @@ describe('Component: trialRegionalSettings', () => {
       expect(this.$scope.onChangeFn).toHaveBeenCalledWith(jasmine.objectContaining({
         id: 'AT',
       }));
+    });
+
+    describe('When call trial is false', () => {
+      beforeEach(function () {
+        this.$scope.callTrialEnabled = false;
+        this.$scope.$apply();
+      });
+
+      it('should add N/A to the country list', function () {
+        expect(this.controller.countryList.length).toBe(15);
+        expect(this.view.find(COUNTRY_SELECT).find(DROPDOWN_OPTIONS).get(14)).toHaveText('serviceSetupModal.notApplicable');
+      });
     });
   });
 
