@@ -299,8 +299,13 @@
               } else {
                 $previousState.memo(sidepanelMemo);
               }
+              var template = '<cs-sidepanel';
+              if ($state.params.size) {
+                template = template + ' size="large"';
+              }
+              template = template + '></cs-sidepanel>';
               $state.sidepanel = $modal.open({
-                template: '<cs-sidepanel></cs-sidepanel>',
+                template: template,
                 // TODO(pajeter): remove inline template when cs-modal is updated
                 windowTemplate: '<div modal-render="{{$isRendered}}" tabindex="-1" role="dialog" class="sidepanel-modal"' +
                 'modal-animation-class="fade"' +
