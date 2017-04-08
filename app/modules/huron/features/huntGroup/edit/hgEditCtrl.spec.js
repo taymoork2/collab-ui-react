@@ -328,7 +328,7 @@ describe('Hunt Group EditCtrl Controller', function () {
   });
 
   it('have intialized formly fields correctly', function () {
-    expect(hgEditCtrl.fields.length).toEqual(4);
+    expect(hgEditCtrl.name.length).toEqual(1);
   });
 
   it('on save hunt group success updates the pristine model', function () {

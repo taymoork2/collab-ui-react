@@ -30,12 +30,10 @@ export class PagingGroupService {
       let pgs = _.map(_.get(response, 'pagingGroups', []));
       let promises: Array<ng.IPromise<any>> = [];
       _.forEach(pgs, (pg: any): void => {
-        if (pg.extension === undefined && pg.extensionUUID) {
-          promises.push(this.PagingNumberService.getNumberExtension(pg.extensionUUID).then(
-            (data: INumberData) => {
-              pg.extension = data.extension;
-            }));
-        }
+        promises.push(this.PagingNumberService.getNumberExtension(pg.groupId).then(
+          (data: INumberData) => {
+            pg.extension = data.extension;
+          }));
       });
 
       return this.$q.all(promises).then(() => {

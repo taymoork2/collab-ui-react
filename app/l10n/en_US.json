@@ -3243,6 +3243,7 @@
     "decisionCallerCountryCode": "The Caller's Country Code",
     "decisionCallerAreaCode": "The Caller's Area Code",
     "decisionSessionVariable": "The Session Variable",
+    "decisionMissingCustomVariable": "The selected variable is undefined in this call tree. Null values will result in negative results.",
     "callerReturned5Mins": "5 Minutes",
     "callerReturnedOneDay": "1 Day",
     "callerReturnedOneWeek": "1 Week",
@@ -3857,7 +3858,8 @@
     "portNumberOrder": "Porting Numbers",
     "tollFreeNumberOrder": "New Toll-Free Numbers",
     "tollFreeNumberAdvanceOrder": "Toll-Free Advance Numbers",
-    "searchPlaceholder": "Search Orders"
+    "searchPlaceholder": "Search Orders",
+    "orderHistory": "Order History"
   },
   "pstnOrderDetail": {
     "orderNumber": "Order #{{orderId}}",
@@ -7068,10 +7070,12 @@
         "sip": "Enter Sip destination",
         "displayLabel": "Display name",
         "displayName": "Enter display name",
-        "nextSip": "Add another SIP destination",
+        "addDestination": "Add another SIP destination",
         "hybridDestination": "Use one or more Expressway-E configured for Hybrid Call Connect ",
         "cancelHeader": "Cancel Enterprise Private Trunking Setup.",
-        "cancelBody": "Are you sure you want to cancel?"
+        "cancelBody": "Are you sure you want to cancel?",
+        "invalidChars": "Invalid characters in domain, allowed set is \"[a-z] [A-Z] [0-9]._-\".",
+        "hybridRequiredError": "Required: Expressway-E for Hybrid Call Connect was not found"
       }
     },
     "showMore": "View all",

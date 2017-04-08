@@ -19,7 +19,6 @@
 
   .cs-card.small {
     position: relative;
-    width: 43%;
 
     @include vr-spacing(ph, 0);
 
@@ -29,6 +28,27 @@
 
     article > header {
       @include vr-spacing(ph, 0.75);
+    }
+  }
+
+  .pilot-number-pill {
+    width: 9.5rem;
+
+    article header.open-panel {
+      border-radius: 0.25rem !important;
+      cursor: default;
+    }
+
+    i,
+    i:hover {
+      color: $color-white;
+      cursor: pointer;
+    }
+
+    .pilot-number {
+      display: inline-block;
+      min-width: 85%;
+      text-align: left;
     }
   }
 
@@ -234,5 +254,17 @@
 .dragover {
   .cs-card.header-background header {
     background: $gray;
+  }
+}
+
+.hg-numbers {
+  margin: 2rem;
+
+  input {
+    min-width: 20rem;
+  }
+
+  .cs-card.small {
+    padding-right: 0.5rem;
   }
 }

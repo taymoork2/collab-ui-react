@@ -8,14 +8,16 @@
   <private-trunk-domain ng-if="$ctrl.currentStepIndex === 1"
     domain-selected="$ctrl.domainSelected"
     domains="$ctrl.domains"
-    on-change-fn="$ctrl.setSelectedDomain(nextButton, domainSelected)">
+    is-domain="$ctrl.isDomain"
+    on-change-fn="$ctrl.setSelectedDomain(isDomain, domainSelected)">
   </private-trunk-domain>
-  <private-trunk-destination ng-if="$ctrl.currentStepIndex===2">
+  <private-trunk-destination ng-if="$ctrl.currentStepIndex === 2"
+    private-trunk-resource="$ctrl.privateTrunkResource"
+    on-change-fn="$ctrl.setResources(privateTrunkResource)">
   </private-trunk-destination>
-
 </div>
 <div class="modal-footer">
   <button class="btn btn-default" ng-click="$ctrl.dismiss()" ng-if="$ctrl.currentStepIndex===1" translate="common.close"></button>
   <button class="btn btn-default" ng-click="$ctrl.previousStep()" ng-if="$ctrl.currentStepIndex > 1" translate="common.back"></button>
-  <button class="btn btn-primary" ng-disabled="!$ctrl.isNextButton" ng-click="$ctrl.nextStep()" translate="common.next"></button>
+  <button class="btn btn-primary" ng-disabled="!$ctrl.isNextButton()" ng-click="$ctrl.nextStep()" translate="common.next"></button>
 </div>

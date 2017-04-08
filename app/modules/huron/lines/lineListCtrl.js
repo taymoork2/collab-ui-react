@@ -6,7 +6,7 @@
     .controller('LinesListCtrl', LinesListCtrl);
 
   /* @ngInject */
-  function LinesListCtrl($scope, $templateCache, $timeout, $translate, LineListService, Log, Config, Notification) {
+  function LinesListCtrl($scope, $templateCache, $timeout, $translate, LineListService, Log, Config, Notification, Authinfo, FeatureToggleService) {
 
     var vm = this;
 
@@ -27,6 +27,10 @@
       by: 'userid',
       order: '-asc',
     };
+    vm.currentCustomer = {
+      customerOrgId: Authinfo.getOrgId(),
+    };
+    vm.huronCustomerAdminPMPFeatureToggle = false;
 
     // Defines Grid Filter "All"
     vm.placeholder = {
@@ -176,7 +180,10 @@
         getLineList();
       }
     }
-
+    FeatureToggleService.supports(FeatureToggleService.features.huronCustomerAdminPMP)
+      .then(function (supported) {
+        vm.huronCustomerAdminPMPFeatureToggle = supported;
+      });
     getLineList();
   }
 })();

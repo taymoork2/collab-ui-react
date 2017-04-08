@@ -1,0 +1,101 @@
+<div ng-form="privateTrunkDestinationForm" class="private-trunk">
+  <h5 translate="servicesOverview.cards.privateTrunk.destinationTitle"></h5>
+     <div class="cs-radio-group">
+        <input
+        cs-input
+        type="radio"
+        ng-model="$ctrl.destinationRadio"
+        id="destinationRadio1"
+        name="destinationRadio1"
+        ng-value="'new'"
+        cs-input-label="{{'servicesOverview.cards.privateTrunk.destination' | translate}}"
+        cs-input-help-text="{{'servicesOverview.cards.privateTrunk.destinationHelp'| translate}}">
+        <div ng-if="$ctrl.destinationRadio==='new'">
+          <div class="row cs-input-group">
+            <div ng-repeat="dest in $ctrl.privateTrunkResource.destinations">
+              <div class="columns medium-5 large-5">
+                <input
+                  cs-input
+                  type="text"
+                  id="{{'destination'+$index}}"
+                  name="{{'destination'+$index}}"
+                  ng-model="dest.address"
+                  cs-input-nested="1"
+                  cs-input-size="medium-12"
+                  placeholder="{{'servicesOverview.cards.privateTrunk.sip' | translate }}"
+                  cs-input-label="{{'servicesOverview.cards.privateTrunk.sipLabel' | translate}}"
+                  ng-change="$ctrl.changeDestination({{$index}})"
+                  required
+                  ng-pattern="/^[a-zA-Z0-9._-]{1,253}[:0-9]{0,6}$/"
+                  cs-input-messages="$ctrl.errorMessages"
+                  is-disabled= "$ctrl.destinationRadio!=='new'">
+              </div>
+              <div class="columns medium-5 large-5">
+                <input
+                  cs-input
+                  type="text"
+                  id="{{'name'+$index}}"
+                  name="{{'name'+$index}}"
+                  ng-model="dest.name"
+                  cs-input-nested="1"
+                  cs-input-size="medium-12"
+                  placeholder="{{'servicesOverview.cards.privateTrunk.displayName' | translate}}"
+                  cs-input-label="{{'servicesOverview.cards.privateTrunk.displayLabel' | translate}}"
+                  ng-change="$ctrl.change()"
+                  ng-required="true"
+                  cs-input-messages="$ctrl.errorMessages"
+                  is-disabled= "$ctrl.destinationRadio!=='new'">
+              </div>
+              <div class="columns medium-2 large-2">
+                <i ng-if="$index >= 1" class="icon icon-exit-outline exit-icon" ng-click="$ctrl.delete($index)"></i>
+              </div>
+            </div>
+            <div class="columns medium-6 add-align">
+              <a href="" translate="servicesOverview.cards.privateTrunk.addDestination" ng-if="privateTrunkDestinationForm.$valid" ng-click="$ctrl.addDestination()"></a>
+            </div>
+          </div>
+        </div>
+        <input
+          cs-input
+          type="radio"
+          ng-model="$ctrl.destinationRadio"
+          id="destinationRadio2"
+          name="destinationRadio2"
+          ng-value="'hybrid'"
+          cs-input-label="{{'servicesOverview.cards.privateTrunk.hybridDestination' | translate}}"
+          ng-change="$ctrl.change()">
+          <div ng-if="$ctrl.destinationRadio==='hybrid'">
+            <div class="row cs-input-group ">
+              <div class="columns medium-5 large-5">
+                <input
+                  cs-input
+                  type="text"
+                  id="hybridAddress"
+                  name="hybridAddress"
+                  ng-model="$ctrl.privateTrunkResource.hybridDestination.address"
+                  cs-input-nested="1"
+                  cs-input-size="medium-12"
+                  cs-input-label="{{'servicesOverview.cards.privateTrunk.sipLabel' | translate}}"
+                  ng-readonly="true"
+                  ng-required="true"
+                  cs-input-messages="$ctrl.error">
+                </div>
+              <div class="columns medium-5 large-6 left">
+                <input
+                  cs-input
+                  type="text"
+                  id="hybridName"
+                  name="hybridName"
+                  ng-model="$ctrl.privateTrunkResource.hybridDestination.name"
+                  cs-input-nested="1"
+                  cs-input-size="medium-12"
+                  cs-input-label="{{'servicesOverview.cards.privateTrunk.displayLabel' | translate}}"
+                  ng-change="$ctrl.change()"
+                  ng-required="true"
+                  cs-input-messages="$ctrl.errorMessages">
+                </div>
+            </div>
+         </div>
+     </div>
+  </form>
+</div>

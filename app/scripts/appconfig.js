@@ -2258,6 +2258,51 @@
               webexDomains: {},
             },
           })
+          .state('customerPstnOrdersOverview', {
+            parent: 'sidepanel',
+            params: {
+              currentCustomer: {},
+            },
+            data: {},
+            views: {
+              'sidepanel@': {
+                template: '<uc-customer-pstn-orders-overview current-customer="$resolve.currentCustomer"></uc-customer-pstn-orders-overview>',
+              },
+            },
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customerPstnOrdersOverview').data.displayName = $translate.instant('pstnOrderOverview.orderHistory');
+              },
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/pstnOrderManagement/customerPstnOrdersOverview'], done);
+              }),
+              currentCustomer: /* @ngInject */ function ($stateParams) {
+                return $stateParams.currentCustomer;
+              },
+            },
+          })
+          .state('customerPstnOrdersOverview.orderDetail', {
+            params: {
+              currentOrder: {},
+              currentCustomer: {},
+            },
+            data: {},
+            template: '<uc-order-detail current-customer= "$resolve.currentCustomer" current-order="$resolve.currentOrder"></uc-order-detail>',
+            resolve: {
+              data: /* @ngInject */ function ($state, $stateParams) {
+                $state.get('customerPstnOrdersOverview.orderDetail').data.displayName = $stateParams.currentOrder.carrierOrderId;
+              },
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/pstnOrderManagement/orderDetail'], done);
+              }),
+              currentOrder: /* @ngInject */ function ($stateParams) {
+                return $stateParams.currentOrder;
+              },
+              currentCustomer: /* @ngInject */ function ($stateParams) {
+                return $stateParams.currentCustomer;
+              },
+            },
+          })
           .state('customer-overview.pstnOrderDetail', {
             parent: 'customer-overview.pstnOrderOverview',
             controller: 'PstnOrderDetailCtrl',
