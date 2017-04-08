@@ -5,6 +5,11 @@
       </cs-searchfilter>
     </cs-page-sub-header-left>
     <cs-page-sub-header-right ng-show="Utils.isAdminPage()">
+      <div ng-if="linesListCtrl.huronCustomerAdminPMPFeatureToggle">
+        <a ui-sref="customerPstnOrdersOverview({currentCustomer: linesListCtrl.currentCustomer})">
+          <span class="order-history" translate="pstnOrderOverview.orderHistory"></span>
+        </a>
+      </div>
       <div class="page-option-buttons" ng-controller="LineExportCtrl as lineExportCtrl">
         <div ng-if="!lineExportCtrl.exportBusy">
           <a id="export-btn" ng-csv="lineExportCtrl.exportCSV()" filename="{{'linesPage.csvFilename' | translate}}">
