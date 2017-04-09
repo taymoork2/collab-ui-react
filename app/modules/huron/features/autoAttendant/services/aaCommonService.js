@@ -68,7 +68,7 @@
     }
 
     function isValid() {
-      return (!_.size(invalidList));
+      return (_.size(invalidList) === 0);
     }
 
     function getInvalid(which) {
