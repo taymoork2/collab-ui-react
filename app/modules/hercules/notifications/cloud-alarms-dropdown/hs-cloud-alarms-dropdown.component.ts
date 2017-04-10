@@ -5,8 +5,8 @@ interface IAlarms {
   key: string;
 }
 
-class GoogleCalendarNotificationsDropdownCtrl implements ng.IComponentController {
-  private serviceId = 'squared-fusion-gcal';
+class HsCloudAlarmsDropdownComponentCtrl implements ng.IComponentController {
+  private serviceId;
 
   public open = false;
   public alarms: IAlarms[] = [];
@@ -101,7 +101,10 @@ class GoogleCalendarNotificationsDropdownCtrl implements ng.IComponentController
   }
 }
 
-export class GoogleCalendarNotificationsDropdownComponent implements ng.IComponentOptions {
-  public controller = GoogleCalendarNotificationsDropdownCtrl;
-  public templateUrl = 'modules/hercules/google-calendar-settings/google-calendar-notifications-dropdown/google-calendar-notifications-dropdown.html';
+export class HsCloudAlarmsDropdownComponent implements ng.IComponentOptions {
+  public controller = HsCloudAlarmsDropdownComponentCtrl;
+  public templateUrl = 'modules/hercules/notifications/cloud-alarms-dropdown/hs-cloud-alarms-dropdown.component.html';
+  public bindings = {
+    serviceId: '<',
+  };
 }

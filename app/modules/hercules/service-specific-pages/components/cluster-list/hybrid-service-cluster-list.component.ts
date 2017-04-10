@@ -35,7 +35,7 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
 
   public $onInit() {
     this.connectorType = this.HybridServicesUtils.serviceId2ConnectorType(this.serviceId);
-    if (this.serviceId !== 'ciscouc') {
+    if (this.serviceId !== 'ept') {
       this.clusterList = this.ClusterService.getClustersByConnectorType(this.connectorType);
     } else {
       this.clusterList = this.EnterprisePrivateTrunkService.getAllResources();
@@ -63,6 +63,9 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
       onRegisterApi: (gridApi) => {
         this.$scope.gridApi = gridApi;
         gridApi.selection.on.rowSelectionChanged(this.$scope, (row) => {
+          if (this.serviceId === 'ept') {
+            row.entity.id = row.entity.resourceId;
+          }
           this.goToSidepanel(row.entity.id);
         });
         if (!_.isUndefined(this.clusterId) && this.clusterId !== null) {
@@ -70,7 +73,7 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
         }
       },
     };
-    if (this.serviceId === 'ciscouc') {
+    if (this.serviceId === 'ept') {
       this.EnterprisePrivateTrunkService.subscribe('data', this.updateTrunks, {
         scope: this.$scope,
       });
@@ -83,7 +86,7 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
   }
 
   private updateTrunks() {
-    if (this.serviceId === 'ciscouc') {
+    if (this.serviceId === 'ept') {
       this.clusterList = this.EnterprisePrivateTrunkService.getAllResources();
     }
   }
@@ -106,7 +109,7 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
 
   private goToSidepanel(clusterId: string) {
     let routeMap = {
-      ciscouc: 'private-trunk-sidepanel',
+      ept: 'private-trunk-sidepanel',
       'squared-fusion-cal': 'expressway-cluster-sidepanel',
       'squared-fusion-uc': 'expressway-cluster-sidepanel',
       'squared-fusion-media': 'media-cluster-details',

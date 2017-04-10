@@ -3093,7 +3093,7 @@
             url: '/private-trunk-overview/list',
             views: {
               sipDestinationList: {
-                template: '<hybrid-service-cluster-list service-id="\'ciscouc\'"></hybrid-service-cluster-list>',
+                template: '<hybrid-service-cluster-list service-id="\'ept\'"></hybrid-service-cluster-list>',
               },
             },
           })
@@ -3621,10 +3621,32 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                template: '<div ui-view="header"></div>',
+                template: '<private-trunk-sidepanel trunk-id="$resolve.trunkId"></private-trunk-sidepanel>',
               },
               'header@private-trunk-sidepanel': {
-                template: 'Private Trunk Header',
+                templateUrl: 'modules/hercules/private-trunk/private-trunk-sidepanel/private-trunk-sidepanel-header.html',
+              },
+            },
+            data: {},
+            params: {
+              clusterId: null,
+            },
+            resolve: {
+              trunkId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.clusterId; // Deliberately "renaming" clusterId to trunkId here
+              },
+            },
+          })
+          .state('private-trunk-sidepanel.alarm-details', {
+            template: '<alarm-details-sidepanel alarm="$resolve.alarm"></alarm-details-sidepanel>',
+            // If data not present, $state.current.data.displayName can't be changed
+            data: {},
+            params: {
+              alarm: null,
+            },
+            resolve: {
+              alarm: /* @ngInject */ function ($stateParams) {
+                return $stateParams.alarm;
               },
             },
           })
