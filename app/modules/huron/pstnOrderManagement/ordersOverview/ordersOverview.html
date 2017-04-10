@@ -7,6 +7,9 @@
       <input id="orderSearchInput" type="text" class="form-control" ng-model="$ctrl.filter" ng-model-options="{ debounce: 250 }" placeholder="{{::'pstnOrderOverview.searchPlaceholder' | translate}}">
       <i class="icon icon-search"></i>
     </div>
+    <div class="grid-refresh" ng-if="$ctrl.loading">
+      <i class='icon icon-spinner icon-2x'></i>
+    </div>
     <ul class="list-group">
       <li id="ordersList" class="feature" ng-repeat="order in filteredOrders = ($ctrl.orders | filter:$ctrl.filter | orderBy:'-sortDate')">  
         <a ui-sref="{{$ctrl.isPartner ? 'customer-overview.orderDetail({currentOrder: order})' : 'customerPstnOrdersOverview.orderDetail({currentOrder: order, currentCustomer: $ctrl.currentCustomer})'}}">

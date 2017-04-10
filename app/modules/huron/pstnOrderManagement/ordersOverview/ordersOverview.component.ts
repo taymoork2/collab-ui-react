@@ -28,7 +28,9 @@ export class OrdersOverviewCtrl implements ng.IComponentController {
       //club all the batches with same OrderId into one Order.
       //V2 Terminus orders API returns different batches for same order as 2 separate orders with different batchID
       this.orders = _.cloneDeep(this.condenseOrderBatches());
+      this.loading = false;
     }, () => {
+      this.loading = false;
     });
   }
 
