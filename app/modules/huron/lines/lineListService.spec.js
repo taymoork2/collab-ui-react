@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Service: LineListService', function () {
-  var $httpBackend, $q, $scope, ExternalNumberService, HuronConfig, LineListService, PstnSetupService;
+  var $httpBackend, $q, $scope, ExternalNumberService, HuronConfig, LineListService, PstnSetupService, PstnSetup;
 
   var lines = getJSONFixture('huron/json/lines/numbers.json');
   var linesExport = getJSONFixture('huron/json/lines/numbersCsvExport.json');
@@ -10,6 +10,7 @@ describe('Service: LineListService', function () {
 
   var Authinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
+    getCallPartnerOrgId: jasmine.createSpy('getCallPartnerOrgId').and.returnValue('1'),
   };
 
   beforeEach(angular.mock.module('Huron'));
@@ -23,7 +24,7 @@ describe('Service: LineListService', function () {
     $provide.value('Authinfo', authInfo);
   }));
 
-  beforeEach(inject(function ($rootScope, _$httpBackend_, _$q_, _ExternalNumberService_, _HuronConfig_, _LineListService_, _PstnSetupService_) {
+  beforeEach(inject(function ($rootScope, _$httpBackend_, _$q_, _ExternalNumberService_, _HuronConfig_, _LineListService_, _PstnSetupService_, _PstnSetup_) {
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     $q = _$q_;
@@ -31,20 +32,23 @@ describe('Service: LineListService', function () {
     HuronConfig = _HuronConfig_;
     LineListService = _LineListService_;
     PstnSetupService = _PstnSetupService_;
+    PstnSetup = _PstnSetup_;
 
     spyOn(PstnSetupService, 'listPendingOrdersWithDetail').and.returnValue($q.resolve());
     spyOn(PstnSetupService, 'translateStatusMessage');
     spyOn(ExternalNumberService, 'isTerminusCustomer').and.returnValue($q.resolve());
     spyOn(ExternalNumberService, 'getCarrierInfo').and.returnValue($q.resolve());
+    spyOn(PstnSetup, 'isResellerExists').and.returnValue($q.resolve(true));
   }));
 
-  afterEach(function () {
-    $httpBackend.flush();
-    $httpBackend.verifyNoOutstandingExpectation();
-    $httpBackend.verifyNoOutstandingRequest();
-  });
-
   describe('getLineList', function () {
+
+    afterEach(function () {
+      $httpBackend.flush();
+      $httpBackend.verifyNoOutstandingExpectation();
+      $httpBackend.verifyNoOutstandingRequest();
+    });
+
     it('should use default search criteria', function () {
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?limit=100&offset=0&order=userid-asc').respond(lines);
       LineListService.getLineList(0, 100, 'userid', '-asc', '', 'all').then(function (response) {
@@ -142,15 +146,33 @@ describe('Service: LineListService', function () {
         expect(length).toEqual(exisitingLines.length);
       });
     });
+
+    it('should exportCSV', function () {
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?limit=100&offset=0&order=internalnumber-asc').respond(lines);
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?limit=100&offset=101&order=internalnumber-asc').respond([]);
+      LineListService.exportCSV({})
+        .then(function (response) {
+          expect(response.length).toBe(linesExport.length);
+        });
+    });
+
   });
 
-  it('should exportCSV', function () {
-    $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?limit=100&offset=0&order=internalnumber-asc').respond(lines);
-    $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?limit=100&offset=101&order=internalnumber-asc').respond([]);
-    LineListService.exportCSV({})
-      .then(function (response) {
-        expect(response.length).toBe(linesExport.length);
-      });
+  describe('getLineList', function () {
+
+    it('should check reseller in terminus with true/false value', function () {
+      $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/resellers/' + Authinfo.getCallPartnerOrgId()).respond(200);
+      LineListService.isResellerExists()
+        .then(function (response) {
+          expect(response).toBe(true);
+        });
+      PstnSetup.isResellerExists.and.returnValue($q.resolve(false));
+      $scope.$apply();
+      LineListService.isResellerExists()
+        .then(function (response) {
+          expect(response).toBe(true);
+        });
+    });
   });
 
 });

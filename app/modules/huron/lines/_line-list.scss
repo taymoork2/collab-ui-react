@@ -34,7 +34,10 @@
 }
 
 .line-list .page-sub-header .export-lines i {
-  margin-left: 0.25rem;
+  color: $gray-dark-1;
+  font-size: $h3-font-size;
+  margin-left: 1rem;
+  cursor: pointer;
   padding-left: 0;
 }
 

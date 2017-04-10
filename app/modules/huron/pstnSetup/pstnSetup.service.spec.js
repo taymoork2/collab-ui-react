@@ -98,7 +98,7 @@ describe('Service: PstnSetupService', function () {
       'CountryCodes',
       'TelephoneNumberService'
      );
-    spyOn(this.Authinfo, 'getOrgId').and.returnValue(suite.partnerId);
+    spyOn(this.Authinfo, 'getCallPartnerOrgId').and.returnValue(suite.partnerId);
     spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve());
   });
 

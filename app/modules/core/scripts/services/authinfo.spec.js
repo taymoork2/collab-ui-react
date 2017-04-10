@@ -325,6 +325,34 @@ describe('Authinfo:', function () {
     });
   });
 
+  describe('customer with communication license', function () {
+
+    var accountData = getJSONFixture('core/json/authInfo/customer_comm_License.json');
+
+    it('gets the correct partner Id and customer admin Email.', function () {
+      var Authinfo = setupUser();
+      Authinfo.updateAccountInfo(accountData);
+      expect(Authinfo.getCommPartnerOrgId()).toEqual(accountData.customers[0].licenses[0].partnerOrgId);
+      expect(Authinfo.getCustomerAdminEmail()).toEqual(accountData.customers[0].customerAdminEmail);
+    });
+
+    it('gets the correct org id based partner.', function () {
+      var Authinfo = setupUser({
+        roles: ['PARTNER_USER'],
+      });
+      Authinfo.updateAccountInfo(accountData);
+      expect(Authinfo.getCallPartnerOrgId()).toEqual(defaultUser.orgId);
+    });
+
+    it('gets the correct org id based on customer.', function () {
+      var Authinfo = setupUser({
+        roles: ['FULL_ADMIN'],
+      });
+      Authinfo.updateAccountInfo(accountData);
+      expect(Authinfo.getCallPartnerOrgId()).toEqual(accountData.customers[0].licenses[0].partnerOrgId);
+    });
+  });
+
   function setupConfig(override) {
     override = override || {};
     var Config = injector.get('Config');

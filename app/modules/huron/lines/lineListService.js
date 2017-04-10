@@ -6,7 +6,7 @@
     .factory('LineListService', LineListService);
 
   /* @ngInject */
-  function LineListService($q, $translate, Authinfo, Config, ExternalNumberService, Log, PstnSetupService, UserLineAssociationService) {
+  function LineListService($q, $translate, Authinfo, Config, ExternalNumberService, Log, PstnSetupService, UserLineAssociationService, PstnSetup) {
 
     var customerId = Authinfo.getOrgId();
     var apiImplementation = undefined;
@@ -16,6 +16,7 @@
       getLineList: getLineList,
       exportCSV: exportCSV,
       getApiImplementation: getApiImplementation,
+      isResellerExists: isResellerExists,
     };
     return service;
 
@@ -197,5 +198,20 @@
       } // end of getLinesInBatches
       return deferred.promise;
     } // end of exportCSV
+
+    function isResellerExists() {
+      if (!PstnSetup.isResellerExists()) {
+        return PstnSetupService.getResellerV2().then(function () {
+          // to avoid a re-check later on in pstnSetup state.
+          PstnSetup.setResellerExists(true);
+          return true;
+        })
+        .catch(function () {
+          return false;
+        });
+      } else {
+        return $q.resolve(true);
+      }
+    }
   } // end of function LineListService
 })();

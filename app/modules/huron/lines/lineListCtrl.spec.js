@@ -1,30 +1,46 @@
 'use strict';
 
 describe('Controller: LineListCtrl', function () {
-  var controller, $controller, $q, $scope, $timeout, FeatureToggleService, LineListService, Notification;
+  var controller, $controller, $q, $scope, $timeout, FeatureToggleService, LineListService, Notification, $state, Authinfo;
 
   var lines = getJSONFixture('huron/json/lines/numbers.json');
+  var customerInfo = {
+    orgId: "91745f4e-308f-489e-8e7d-3f07b7df4f95",
+    customerName: "abcef",
+    customerAdminEmail: "abc@my.org",
+  };
 
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$q_, $rootScope, _$controller_, _$timeout_, _FeatureToggleService_, _LineListService_, _Notification_) {
+  beforeEach(inject(function (_$q_, $rootScope, _$controller_, _$timeout_, _FeatureToggleService_, _LineListService_, _Notification_, _$state_, _Authinfo_) {
     $q = _$q_;
     $timeout = _$timeout_;
     $controller = _$controller_;
+    $state = _$state_;
     $scope = $rootScope.$new();
     FeatureToggleService = _FeatureToggleService_;
     LineListService = _LineListService_;
     Notification = _Notification_;
+    Authinfo = _Authinfo_;
 
     spyOn(Notification, 'errorResponse');
     spyOn(Notification, 'error');
+    spyOn($state, 'go');
+
+    spyOn(Authinfo, 'getOrgId').and.returnValue(customerInfo.orgId);
+    spyOn(Authinfo, 'getOrgName').and.returnValue(customerInfo.customerName);
+    spyOn(Authinfo, 'getCustomerAdminEmail').and.returnValue(customerInfo.customerAdminEmail);
+    spyOn(Authinfo, 'getLicenseIsTrial').and.returnValue(true);
 
     spyOn(LineListService, 'getLineList').and.returnValue($q.resolve(lines));
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
 
     controller = $controller('LinesListCtrl', {
       $scope: $scope,
+      $state: $state,
+      Notification: Notification,
+      Authinfo: Authinfo,
     });
 
     $scope.$apply();
@@ -148,4 +164,39 @@ describe('Controller: LineListCtrl', function () {
       expect(LineListService.getLineList).toHaveBeenCalledWith(0, 100, 'userid', '-asc', 'abc', 'all', $scope.gridData);
     });
   });
+
+  describe('showProviderDetails, true case', function () {
+
+    beforeEach(function () {
+      spyOn(LineListService, 'isResellerExists').and.returnValue($q.resolve(true));
+    });
+
+    it('should change the state on reseller exists true', function () {
+      controller.showProviderDetails();
+      $timeout.flush();
+      expect($state.go).toHaveBeenCalledWith('pstnSetup', {
+        customerId: customerInfo.orgId,
+        customerName: customerInfo.customerName,
+        customerEmail: customerInfo.customerAdminEmail,
+        customerCommunicationLicenseIsTrial: true,
+        customerRoomSystemsLicenseIsTrial: true,
+      });
+    });
+
+  });
+
+  describe('showProviderDetails, false case', function () {
+
+    beforeEach(function () {
+      spyOn(LineListService, 'isResellerExists').and.returnValue($q.resolve(false));
+    });
+
+    it('should throw notification on reseller exists false', function () {
+      controller.showProviderDetails();
+      $timeout.flush();
+      expect(Notification.error).toHaveBeenCalled();
+    });
+
+  });
+
 });

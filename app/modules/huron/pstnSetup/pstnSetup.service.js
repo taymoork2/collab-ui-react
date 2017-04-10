@@ -133,20 +133,20 @@
       };
 
       if (PstnSetup.isResellerExists()) {
-        payload.resellerId = Authinfo.getOrgId();
+        payload.resellerId = Authinfo.getCallPartnerOrgId();
       }
       return TerminusCustomerV2Service.save({}, payload).$promise;
     }
 
     function getResellerV2() {
       return TerminusV2ResellerService.get({
-        resellerId: Authinfo.getOrgId(),
+        resellerId: Authinfo.getCallPartnerOrgId(),
       }).$promise;
     }
 
     function createResellerV2() {
       var payload = {
-        uuid: Authinfo.getOrgId(),
+        uuid: Authinfo.getCallPartnerOrgId(),
         name: Authinfo.getOrgName(),
         email: Authinfo.getPrimaryEmail(),
       };
@@ -207,13 +207,13 @@
 
     function listResellerCarriers() {
       return TerminusResellerCarrierService.query({
-        resellerId: Authinfo.getOrgId(),
+        resellerId: Authinfo.getCallPartnerOrgId(),
       }).$promise.then(getCarrierDetails);
     }
 
     function listResellerCarriersV2() {
       return TerminusResellerCarrierV2Service.query({
-        resellerId: Authinfo.getOrgId(),
+        resellerId: Authinfo.getCallPartnerOrgId(),
         country: PstnSetup.getCountryCode(),
       }).$promise.then(getCarrierDetails);
     }
@@ -303,7 +303,7 @@
       } else {
         // Otherwise reserve with carrier
         return TerminusV2ResellerCarrierNumberReservationService.save({
-          resellerId: Authinfo.getOrgId(),
+          resellerId: Authinfo.getCallPartnerOrgId(),
           carrierId: carrierId,
         }, {
           numberType: NUMTYPE_DID,
@@ -330,7 +330,7 @@
       } else {
         // Otherwise release with carrier
         return TerminusV2ResellerNumberReservationService.delete({
-          resellerId: Authinfo.getOrgId(),
+          resellerId: Authinfo.getCallPartnerOrgId(),
           reservationId: reservationId,
         }, {
           numbers: numbers,
@@ -353,7 +353,7 @@
       } else {
         // Otherwise release with carrier
         return TerminusV2ResellerNumberReservationService.delete({
-          resellerId: Authinfo.getOrgId(),
+          resellerId: Authinfo.getCallPartnerOrgId(),
           reservationId: reservationId,
         }, {
           numbers: numbers,
@@ -380,7 +380,7 @@
       } else {
         // Otherwise reserve with carrier
         return TerminusV2ResellerCarrierNumberReservationService.save({
-          resellerId: Authinfo.getOrgId(),
+          resellerId: Authinfo.getCallPartnerOrgId(),
           carrierId: carrierId,
         }, {
           numberType: NUMTYPE_TOLLFREE,

@@ -21,6 +21,7 @@
     vm.load = false;
     vm.sortColumn = sortColumn;
     vm.getLineList = getLineList;
+    vm.showProviderDetails = showProviderDetails;
     $scope.gridData = [];
     $scope.canShowActionsMenu = canShowActionsMenu;
     $scope.canShowExternalNumberDelete = canShowExternalNumberDelete;
@@ -209,7 +210,6 @@
       }
     }
 
-
     function getTemplate(name) {
       return $templateCache.get('modules/huron/lines/templates/' + name + '.html');
     }
@@ -233,6 +233,21 @@
         }
       });
 
+    function showProviderDetails() {
+      LineListService.isResellerExists().then(function (response) {
+        if (response) {
+          return $state.go('pstnSetup', {
+            customerId: Authinfo.getOrgId(),
+            customerName: Authinfo.getOrgName(),
+            customerEmail: Authinfo.getCustomerAdminEmail(),
+            customerCommunicationLicenseIsTrial: Authinfo.getLicenseIsTrial("COMMUNICATION", 'ciscouc'),
+            customerRoomSystemsLicenseIsTrial: Authinfo.getLicenseIsTrial("SHARED_DEVICES", false),
+          });
+        } else {
+          Notification.error('pstnSetup.resellerMissingError');
+        }
+      });
+    }
     getLineList();
   }
 })();
