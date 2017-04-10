@@ -2561,10 +2561,22 @@
             controller: 'TrialDeviceController',
             controllerAs: 'callTrial',
           })
-          .state('trial.pstn', {
+          .state('trial.pstnDeprecated', {
             templateUrl: 'modules/core/trials/trialPstn.tpl.html',
             controller: 'TrialPstnCtrl',
             controllerAs: 'pstnTrial',
+          })
+          .state('trial.pstn', {
+            template: '<uc-pstn-trial-setup class="modal-content" dismiss="$dismiss()"></uc-pstn-trial-setup>',
+            controller: 'TrialPstnCtrl',
+            controllerAs: 'pstnTrial',
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/huron/pstn/pstnTrialSetup'));
+                }, 'pstn-setup');
+              }),
+            },
           })
           .state('trial.emergAddress', {
             templateUrl: 'modules/core/trials/trialEmergAddress.tpl.html',

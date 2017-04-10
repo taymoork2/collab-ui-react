@@ -1,8 +1,14 @@
 class EmergencyServicesCtrl implements ng.IComponentController {
   public resetAddress: Function;
+  public validateAddress: Function;
+  public showValidation: boolean = false;
 
   public resetAddr(): void {
     this.resetAddress();
+  }
+
+  public validate(): void {
+    this.validateAddress();
   }
 
 }
@@ -18,5 +24,7 @@ export class EmergencyServicesComponent implements ng.IComponentOptions {
     readOnly: '<',
     countryCode: '<',
     resetAddress: '&',
+    validateAddress: '&',
+    showValidation: '@',
   };
 }

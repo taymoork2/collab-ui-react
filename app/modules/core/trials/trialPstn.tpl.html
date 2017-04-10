@@ -44,8 +44,7 @@
             <h6 translate="trialModal.pstn.numbers"></h6>
           </div>
           <div class="did-input">
-            <cs-token-field ng-if="!pstnTrial.ftHuronFederatedSparkCall" tokens="pstnTrial.manualUnsavedTokens" tokenfieldid="pstnTrial.manualTokenFieldId" tokenoptions="pstnTrial.manualTokenOptions" tokenmethods="pstnTrial.manualTokenMethods"></cs-token-field>
-            <uc-pstn-swivel-numbers ng-if="pstnTrial.ftHuronFederatedSparkCall" numbers="pstnTrial.manualUnsavedTokens" on-change="pstnTrial.manualTokenChange(numbers, invalidCount)" no-acknowledge="true"></uc-pstn-swivel-numbers>
+            <cs-token-field tokens="pstnTrial.manualUnsavedTokens" tokenfieldid="pstnTrial.manualTokenFieldId" tokenoptions="pstnTrial.manualTokenOptions" tokenmethods="pstnTrial.manualTokenMethods"></cs-token-field>
           </div>
         </div>
       </div>

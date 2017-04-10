@@ -7,7 +7,7 @@ export default angular
     'atlas.templates',
     'collab.ui',
     'pascalprecht.translate',
-    'huron.telephoneNumber',
+    'huron.telephoneNumberService',
     notifications,
   ])
   .component('ucPstnSwivelNumbers', new PstnSwivelNumbersComponent())
