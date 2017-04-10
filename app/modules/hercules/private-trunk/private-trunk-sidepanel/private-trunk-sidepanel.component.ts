@@ -19,7 +19,9 @@ class PrivateTrunkSidepanelComponentCtrl implements ng.IComponentController {
   ) {}
 
   public $onInit() {
-    this.$state.current.data.displayName = this.$translate.instant('common.overview');
+    if (this.$state.current.data) {
+      this.$state.current.data.displayName = this.$translate.instant('common.overview');
+    }
     this.getData();
   }
 
