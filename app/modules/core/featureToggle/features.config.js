@@ -14,6 +14,7 @@ module.exports = {
   atlasFTSWRemoveUsersSSO: 'atlas-ftsw-remove-users-sso',
   atlasHelpDeskExt: 'atlas-helpdesk-extended-information',
   atlasHelpDeskOrderSearch: 'atlas-helpdesk-order-search',
+  atlasHybridDataSecurity: 'atlas-hybrid-data-security',
   atlasHybridServicesResourceList: 'atlas-hybrid-services-resource-list',
   atlasITProPack: 'atlas-it-pro-pack',
   atlasITProPackPurchased: 'atlas-it-pro-pack-purchased',
