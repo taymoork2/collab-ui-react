@@ -1877,6 +1877,12 @@ require('./_user-add.scss');
               isComplete = false;
               break;
             }
+            case 408: {
+              userResult.message = $translate.instant('onboardModal.result.408');
+              userResult.alertType = 'danger';
+              isComplete = false;
+              break;
+            }
             case 409: {
               userResult.message = $translate.instant('onboardModal.result.409');
               userResult.alertType = 'danger';
