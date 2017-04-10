@@ -277,6 +277,34 @@ require('modules/core/reports/amcharts-export.scss');
         vm.waitingForDeviceMetrics = false;
         vm.mostUsedDevices = [];
         vm.leastUsedDevices = [];
+        vm.peopleCount = stats.peopleCount;
+
+        vm.peopleCount = _.groupBy(vm.peopleCount, function (pc) {
+          return pc.accountId;
+        });
+
+        stats.most = _.map(stats.most, function (stat) {
+          stat.peopleCount = '-';
+          var peopleCount = _.find(vm.peopleCount, function (pc) {
+            return pc[0].accountId == stat.accountId;
+          });
+          if (peopleCount) {
+            stat.peopleCount = parseInt(peopleCount[0]['peopleCountAvg'], 10);
+          }
+          return stat;
+        });
+
+        stats.least = _.map(stats.least, function (stat) {
+          stat.peopleCount = '-';
+          var peopleCount = _.find(vm.peopleCount, function (pc) {
+            return pc[0].accountId == stat.accountId;
+          });
+          if (peopleCount) {
+            stat.peopleCount = parseInt(peopleCount[0]['peopleCountAvg'], 10);
+          }
+          return stat;
+        });
+
         resolveDeviceData(stats.most, vm.mostUsedDevices)
           .then(function () {
             vm.waitForMost = false;
@@ -293,8 +321,10 @@ require('modules/core/reports/amcharts-export.scss');
         .then(function (deviceInfo) {
           _.each(stats, function (device, index) {
             target.push({
+              "cisUuid": deviceInfo[index].cisUuid,
               "name": deviceInfo[index].displayName,
               "info": deviceInfo[index].info,
+              "peopleCount": device.peopleCount,
               "duration": secondsTohhmmss(device.totalDuration),
               "calls": device.callCount });
           });

@@ -606,6 +606,7 @@
       "hoursUsed": "Time Used",
       "callCount": "Calls",
       "callHours": "Call Hours",
+      "peopleCount": "Participants",
       "deviceUsage": "Room Device Usage",
       "pairedCount": "# Paired",
       "last7Days": "Last 7 Days",
