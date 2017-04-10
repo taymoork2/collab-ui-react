@@ -21,6 +21,7 @@
     var callerInputToggle = false;
     var decisionToggle = false;
     var routeSIPAddressToggle = false;
+    var dynAnnounceToggle = false;
     var uniqueId = 0;
 
     var invalidList = {};
@@ -40,6 +41,8 @@
       setCallerInputToggle: setCallerInputToggle,
       setRouteQueueToggle: setRouteQueueToggle,
       setRouteSIPAddressToggle: setRouteSIPAddressToggle,
+      setDynAnnounceToggle: setDynAnnounceToggle,
+      isDynAnnounceToggle: isDynAnnounceToggle,
       isRouteQueueToggle: isRouteQueueToggle,
       isCallerInputToggle: isCallerInputToggle,
       isDecisionToggle: isDecisionToggle,
@@ -135,6 +138,10 @@
       aaCENumberStatus = status;
     }
 
+    function setDynAnnounceToggle(status) {
+      dynAnnounceToggle = status;
+    }
+
     function setRouteQueueToggle(status) {
       routeQueueToggle = status;
     }
@@ -163,6 +170,10 @@
      */
     function isRouteQueueToggle() {
       return routeQueueToggle;
+    }
+
+    function isDynAnnounceToggle() {
+      return dynAnnounceToggle;
     }
 
     function isMediaUploadToggle() {
