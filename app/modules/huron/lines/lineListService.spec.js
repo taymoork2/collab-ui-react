@@ -35,6 +35,7 @@ describe('Service: LineListService', function () {
     spyOn(PstnSetupService, 'listPendingOrdersWithDetail').and.returnValue($q.resolve());
     spyOn(PstnSetupService, 'translateStatusMessage');
     spyOn(ExternalNumberService, 'isTerminusCustomer').and.returnValue($q.resolve());
+    spyOn(ExternalNumberService, 'getCarrierInfo').and.returnValue($q.resolve());
   }));
 
   afterEach(function () {

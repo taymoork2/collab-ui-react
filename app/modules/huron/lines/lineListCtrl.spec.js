@@ -42,7 +42,38 @@ describe('Controller: LineListCtrl', function () {
     });
 
     it('should have grid data', function () {
-      expect($scope.gridData.length).toBe(3);
+      expect($scope.gridData.length).toBe(4);
+    });
+
+    it('should show Actions column', function () {
+      expect(controller.gridOptions.columnDefs.length).toBe(4);
+    });
+
+    it('should show Actions icon on rows with unassingnable externalNumbers', function () {
+      expect($scope.canShowActionsMenu($scope.gridData[0])).toBeFalsy();
+      expect($scope.canShowActionsMenu($scope.gridData[1])).toBeFalsy();
+      expect($scope.canShowActionsMenu($scope.gridData[2])).toBeFalsy();
+      expect($scope.canShowActionsMenu($scope.gridData[3])).toBeTruthy();
+    });
+
+    it('should show Delete menu item on rows with unassingnable externalNumbers', function () {
+      expect($scope.canShowExternalNumberDelete($scope.gridData[0])).toBeFalsy();
+      expect($scope.canShowExternalNumberDelete($scope.gridData[1])).toBeFalsy();
+      expect($scope.canShowExternalNumberDelete($scope.gridData[2])).toBeFalsy();
+      expect($scope.canShowExternalNumberDelete($scope.gridData[3])).toBeTruthy();
+    });
+
+    it('should not show Actions column if feature toggle is off', function () {
+      FeatureToggleService.supports.and.returnValue($q.resolve(false));
+      var controllerToggleOff = $controller('LinesListCtrl', {
+        $scope: $scope,
+      });
+
+      $scope.$apply();
+      $timeout.flush();
+
+      expect(controllerToggleOff.gridOptions.columnDefs.length).toBe(3);
+      expect(_.some(controllerToggleOff.gridOptions.columnDefs, function (col) { return col.name === 'actions'; })).toBeFalsy();
     });
   });
 
@@ -117,5 +148,4 @@ describe('Controller: LineListCtrl', function () {
       expect(LineListService.getLineList).toHaveBeenCalledWith(0, 100, 'userid', '-asc', 'abc', 'all', $scope.gridData);
     });
   });
-
 });

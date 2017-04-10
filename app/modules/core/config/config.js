@@ -458,6 +458,7 @@
         'private-trunk-sidepanel',
         'private-trunk-redirect',
         'customerPstnOrdersOverview',
+        'externalNumberDelete',
       ],
       'squared-fusion-mgmt': [
         'expressway-cluster-sidepanel',
