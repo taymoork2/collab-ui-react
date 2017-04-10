@@ -1,17 +1,23 @@
-describe('Component: ClusterSettingsLinkComponent ', () => {
-  let $componentController, $state, ctrl, $scope;
+import clusterSettingsLink from './index';
+
+describe('Component: ClusterSettingsLinkComponent  ', () => {
+  let $componentController, $state, ctrl;
 
   beforeEach(angular.mock.module('Hercules'));
-  beforeEach(inject(dependencies));
-  // beforeEach(initSpies);
-  // afterEach(cleanup);
 
-  function dependencies (_$componentController_, _$state_, $rootScope) {
+  beforeEach(function () {
+    this.initModules(clusterSettingsLink);
+  });
+
+  beforeEach(inject(dependencies));
+  beforeEach(initSpies);
+  afterEach(cleanup);
+
+  function dependencies (_$componentController_, _$state_) {
     $componentController = _$componentController_;
     $state = _$state_;
-    $scope = $rootScope.$new();
   }
-/*
+
   function cleanup() {
     $componentController = $state = ctrl = undefined;
   }
@@ -19,39 +25,23 @@ describe('Component: ClusterSettingsLinkComponent ', () => {
   function initSpies() {
     spyOn($state, 'go');
   }
-*/
-/*
-  beforeEach(function () {
-    this.initModules(angular.mock.module('Hercules'));
-    this.injectDependencies('$componentController', '$scope', '$state');
-
-
-    spyOn(this.$state, 'go');
-    this.initController = (): void => {
-      this.controller = this.$componentController('ClusterSettingsLink', {
-        $state: this.$state,
-      });
-      this.$scope.$apply();
-    };
-  });
-*/
 
   function initController(clusterType: string,
                           clusterId: string) {
-    ctrl = $componentController('ClusterSettingsLink', {});
-    ctrl.clusterType = clusterType;
-    ctrl.clusterId = clusterId;
+    ctrl = $componentController('clusterSettingsLink', {}, {
+      clusterType: clusterType,
+      clusterId: clusterId,
+    });
   }
 
-
-  it ('Clicking on edit link will change state to hds-cluster.settings', () => {
+  it ('will change state to hds-cluster.settings when the link is clicked', () => {
     let clusterType = 'hds_app';
     let clusterId = 'abcd1234';
     initController(clusterType, clusterId);
     expect(ctrl).toBeDefined();
-    //ctrl.goToClusterSettings();
-    //expect($state.go).toHaveBeenCalledWith('hds-cluster.settings');
-  });
 
+    ctrl.goToClusterSettings();
+    expect($state.go).toHaveBeenCalledWith('hds-cluster.settings', { id: clusterId });
+  });
 
 });
