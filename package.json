@@ -46,6 +46,7 @@
     "webdriver": "webdriver-manager update"
   },
   "dependencies": {
+    "@ciscospark/http-core": "0.7.80",
     "@ciscospark/plugin-encryption": "^0.7.36",
     "@ciscospark/plugin-search": "^0.7.36",
     "@ciscospark/spark-core": "^0.7.36",
