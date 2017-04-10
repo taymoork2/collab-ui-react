@@ -2177,18 +2177,22 @@
               },
             },
           })
-          .state('customer-overview.pstnOrderOverview', {
-            controller: 'PstnOrderOverviewCtrl',
-            controllerAs: 'pstnOrderOverview',
-            templateUrl: 'modules/huron/orderManagement/pstnOrderOverview.tpl.html',
-            resolve: {
-              data: /* @ngInject */ function ($state, $translate) {
-                $state.get('customer-overview.pstnOrderOverview').data.displayName = $translate.instant('customerPage.pstnOrders');
-              },
-            },
-            data: {},
+          .state('customer-overview.ordersOverview', {
             params: {
               currentCustomer: {},
+            },
+            data: {},
+            template: '<uc-orders-overview is-partner="true" current-customer="$resolve.currentCustomer"></uc-orders-overview>',
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.ordersOverview').data.displayName = $translate.instant('customerPage.pstnOrders');
+              },
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/pstnOrderManagement/ordersOverview'], done);
+              }),
+              currentCustomer: /* @ngInject */ function ($stateParams) {
+                return $stateParams.currentCustomer;
+              },
             },
           })
           .state('customer-overview.meetingDetail', {
@@ -2303,19 +2307,27 @@
               },
             },
           })
-          .state('customer-overview.pstnOrderDetail', {
-            parent: 'customer-overview.pstnOrderOverview',
-            controller: 'PstnOrderDetailCtrl',
-            controllerAs: 'pstnOrderDetail',
-            templateUrl: 'modules/huron/orderManagement/pstnOrderDetail.tpl.html',
-            resolve: {
-              data: /* @ngInject */ function ($state, $translate) {
-                $state.get('customer-overview.pstnOrderDetail').data.displayName = $translate.instant('customerPage.pstnOrders');
-              },
+          .state('customer-overview.orderDetail', {
+            parent: 'customer-overview.ordersOverview',
+            params: {
+              currentCustomer: {},
+              currentOrder: {},
             },
             data: {},
-            params: {
-              currentOrder: {},
+            template: '<uc-order-detail current-customer= "$resolve.currentCustomer" current-order="$resolve.currentOrder"></uc-order-detail>',
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.orderDetail').data.displayName = $translate.instant('customerPage.pstnOrders');
+              },
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/pstnOrderManagement/orderDetail'], done);
+              }),
+              currentCustomer: /* @ngInject */ function ($stateParams) {
+                return $stateParams.currentCustomer;
+              },
+              currentOrder: /* @ngInject */ function ($stateParams) {
+                return $stateParams.currentOrder;
+              },
             },
           })
           .state('firsttimesplash', {

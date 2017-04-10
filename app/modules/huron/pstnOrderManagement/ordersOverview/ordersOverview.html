@@ -9,7 +9,7 @@
     </div>
     <ul class="list-group">
       <li id="ordersList" class="feature" ng-repeat="order in filteredOrders = ($ctrl.orders | filter:$ctrl.filter | orderBy:'-sortDate')">  
-        <a ui-sref="{{$ctrl.isPartner ? 'customer-overview.pstnOrdersDetail({currentOrder: order})' : 'customerPstnOrdersOverview.orderDetail({currentOrder: order, currentCustomer: $ctrl.currentCustomer})'}}">
+        <a ui-sref="{{$ctrl.isPartner ? 'customer-overview.orderDetail({currentOrder: order})' : 'customerPstnOrdersOverview.orderDetail({currentOrder: order, currentCustomer: $ctrl.currentCustomer})'}}">
           <span id="orderName" class="feature-name" translate="pstnOrderDetail.orderNumber" translate-values="{orderId: order.carrierOrderId}"></span>
           <span class="feature-status">
             <span id="orderStatus">{{order.status}}</span>
