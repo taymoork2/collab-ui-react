@@ -86,6 +86,7 @@ export class HuronSiteService {
     let location: string;
     // TODO (jlowery): remove after 'i751-10d-ext' toggle is removed.
     _.set(site, 'toggleEnabled', true);
+    site = <Site>_.omit(site, 'allowExternalTransfer');
     return this.huronSiteService.save({
       customerId: this.Authinfo.getOrgId(),
     }, site,
