@@ -312,43 +312,6 @@
       var returnData = [];
       return $http.get(vm.urlBase + getQuerys(vm.total_calls, vm.allClusters, time)).then(function (response) {
         if (!_.isUndefined(response) && !_.isUndefined(response.data)) {
-          response.data = {
-            "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
-            "dataProvider": [{
-              "name": "ANDROID",
-              "value": 11684,
-            }, {
-              "name": "DES",
-              "value": 1,
-            }, {
-              "name": "DESKTOP",
-              "value": 225394,
-            }, {
-              "name": "IPAD",
-              "value": 4444,
-            }, {
-              "name": "IPHONE",
-              "value": 77276,
-            }, {
-              "name": "JABBER",
-              "value": 119,
-            }, {
-              "name": "SIP",
-              "value": 230012,
-            }, {
-              "name": "SPARK_BOARD",
-              "value": 19231,
-            }, {
-              "name": "TP_ENDPOINT",
-              "value": 132537,
-            }, {
-              "name": "UC",
-              "value": 2,
-            }, {
-              "name": "UNKNOWN",
-              "value": 1294,
-            }],
-          };
           return translateClientTypeData(response);
         } else {
           return returnData;
