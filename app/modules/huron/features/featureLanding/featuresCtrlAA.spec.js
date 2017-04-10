@@ -1,15 +1,16 @@
 /**
  * Created by sjalipar on 10/9/15.
  */
+
 'use strict';
 
 describe('Features Controller', function () {
 
-  var featureCtrl, $rootScope, $scope, $modal, $q, $state, $filter, $timeout, Authinfo, Log, Notification, getDeferred, AutoAttendantCeInfoModelService, HuntGroupService, CallParkService, FeatureToggleService;
+  var featureCtrl, $rootScope, $scope, $modal, $q, $state, $filter, $timeout, Authinfo, Log, Notification, getDeferred, AutoAttendantCeInfoModelService, HuntGroupService, CallParkService, CallPickupGroupService, PagingGroupService, FeatureToggleService;
   var listOfAAs = getJSONFixture('huron/json/autoAttendant/aaList.json');
   var emptyListOfAAs = [];
   var emptyListOfCPs = {
-    callparks: []
+    callparks: [],
   };
   var getAAListSuccessResp = function (data) {
     return data;
@@ -27,19 +28,19 @@ describe('Features Controller', function () {
     'featureName': 'huronHuntGroup.hg',
     'filterValue': 'AA',
     'hasReferences': true,
-    'referenceNames': ['Main AA']
+    'referenceNames': ['Main AA'],
   }, {
     'cardName': 'Third  AA',
     'numbers': ['3333'],
     'id': 'c16a6027-caef-4429-b3af-9d61ddc73333',
     'featureName': 'huronHuntGroup.hg',
-    'filterValue': 'AA'
+    'filterValue': 'AA',
   }];
 
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$modal_, _$state_, _$filter_, _$timeout_, _Authinfo_, _AutoAttendantCeInfoModelService_, _Log_, _Notification_, _HuntGroupService_, _CallParkService_, _FeatureToggleService_) {
+  beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$modal_, _$state_, _$filter_, _$timeout_, _Authinfo_, _AutoAttendantCeInfoModelService_, _Log_, _Notification_, _HuntGroupService_, _CallParkService_, _CallPickupGroupService_, _PagingGroupService_, _FeatureToggleService_) {
     $rootScope = _$rootScope_;
     $scope = _$rootScope_.$new();
     $modal = _$modal_;
@@ -51,6 +52,8 @@ describe('Features Controller', function () {
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     HuntGroupService = _HuntGroupService_;
     CallParkService = _CallParkService_;
+    PagingGroupService = _PagingGroupService_;
+    CallPickupGroupService = _CallPickupGroupService_;
     FeatureToggleService = _FeatureToggleService_;
 
     Log = _Log_;
@@ -60,10 +63,12 @@ describe('Features Controller', function () {
     getDeferred = $q.defer();
 
     spyOn(AutoAttendantCeInfoModelService, 'getCeInfosList').and.returnValue(getDeferred.promise);
-    spyOn(HuntGroupService, 'getListOfHuntGroups').and.returnValue($q.when());
-    spyOn(CallParkService, 'getListOfCallParks').and.returnValue($q.when(emptyListOfCPs));
+    spyOn(HuntGroupService, 'getListOfHuntGroups').and.returnValue($q.resolve());
+    spyOn(CallParkService, 'getCallParkList').and.returnValue($q.resolve(emptyListOfCPs.callparks));
+    spyOn(CallPickupGroupService, 'getListOfPickupGroups').and.returnValue(getDeferred.promise);
+    spyOn(PagingGroupService, 'getListOfPagingGroups').and.returnValue($q.resolve());
     spyOn(Notification, 'error');
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when());
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve());
 
     spyOn($state, 'go');
 
@@ -76,7 +81,7 @@ describe('Features Controller', function () {
       Authinfo: Authinfo,
       AutoAttendantCeInfoModelService: AutoAttendantCeInfoModelService,
       Log: Log,
-      Notification: Notification
+      Notification: Notification,
     });
 
   }));
@@ -105,13 +110,13 @@ describe('Features Controller', function () {
     expect($state.go).toHaveBeenCalledWith('huronfeatures.deleteFeature', {
       deleteFeatureName: AAs[0].cardName,
       deleteFeatureId: AAs[0].id,
-      deleteFeatureType: 'AA'
+      deleteFeatureType: 'AA',
     });
   });
   it('should be able to edit an AA function ', function () {
     featureCtrl.editHuronFeature(AAs[0]);
     expect($state.go).toHaveBeenCalledWith('huronfeatures.aabuilder', {
-      aaName: AAs[0].cardName
+      aaName: AAs[0].cardName,
     });
   });
 
@@ -172,7 +177,7 @@ describe('Features Controller', function () {
     $rootScope.$broadcast('HURON_FEATURE_DELETED', {
       deleteFeatureName: AAs[0].cardName,
       deleteFeatureId: AAs[0].id,
-      deleteFeatureType: 'AA'
+      deleteFeatureType: 'AA',
     });
 
     expect(featureCtrl.listOfFeatures).not.toContain(saveFeature);
@@ -195,7 +200,7 @@ describe('Features Controller', function () {
     $rootScope.$broadcast('HURON_FEATURE_DELETED', {
       deleteFeatureName: AAs[0].cardName,
       deleteFeatureId: AAs[0].id,
-      deleteFeatureType: 'AA'
+      deleteFeatureType: 'AA',
     });
 
     expect(featureCtrl.listOfFeatures[0].hasDepends).toEqual(false);

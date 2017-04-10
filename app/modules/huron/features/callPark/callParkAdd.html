@@ -1,0 +1,55 @@
+<div class="call-feature-add">
+  <cs-overlay-panel
+    class="callpark overlay-panel typeahead-group"
+    overlay-title="{{::'callPark.newCallPark' | translate}}"
+    close="$ctrl.cancelModal()"
+    ng-keyup="$ctrl.evalKeyPress($event.keyCode)">
+
+    <cs-setup-assistant
+      previous="$ctrl.previousButton($ctrl.pageIndex)"
+      next="$ctrl.nextButton($ctrl.pageIndex)"
+      previous-fn="$ctrl.previousPage()"
+      next-fn="$ctrl.nextPage()"
+      next-text="$ctrl.createHelpText()">
+
+      <form novalidate name="$ctrl.form" role="form">
+        <uc-call-feature-name
+          ng-if="$ctrl.pageIndex === 0"
+          placeholder-key="callPark.namePlaceholder"
+          name-hint-key="callPark.nameHint"
+          name="$ctrl.callPark.name"
+          is-required="true"
+          is-new="true"
+          on-change-fn="$ctrl.setCallParkName(name)"
+          on-key-press-fn="$ctrl.enterNextPage(keyCode)"
+          ng-class="$ctrl.animation">
+        </uc-call-feature-name>
+
+        <div class="select-number-details" ng-if="$ctrl.pageIndex === 1" ng-class="$ctrl.animation">
+          <div class="typeahead-large cpselect large">
+            <div class="title" translate="callPark.selectParkNumber"></div>
+            <div class="desc" translate="callPark.selectParkHint"></div>
+              <div class="cp-number">
+                <uc-call-park-number
+                  range="$ctrl.range"
+                  extension-length="$ctrl.extensionLength"
+                  on-change-fn="$ctrl.setCallParkRange(range)"
+                  on-key-press-fn="$ctrl.enterNextPage(keyCode)">
+                </uc-call-park-number>
+              </div >
+          </div>
+        </div>
+
+        <uc-call-park-member ng-if="$ctrl.pageIndex === 2"
+          members="$ctrl.callPark.members"
+          is-new="true"
+          on-change-fn="$ctrl.setCallParkMembers(members)"
+          on-key-press-fn="$ctrl.enterNextPage(keyCode)"
+          ng-class="$ctrl.animation">
+        </uc-call-park-member>
+
+      </form>
+
+    </cs-setup-assistant>
+  </cs-overlay-panel>
+</div>

@@ -1,0 +1,26 @@
+<div ng-form="$ctrl.piNotificationsForm" class="call-pickup-notification-form large-6">
+  <input
+      type="checkbox"
+      cs-input
+      name="playSound"
+      ng-model="$ctrl.playSound"
+      ng-change="$ctrl.onChange()"
+      id="playSound"
+      cs-input-label="{{:: 'callPickup.playSound' | translate}}">
+  <input
+      type="checkbox"
+      cs-input
+      name="displayCallingParty"
+      ng-model="$ctrl.displayCallingParty"
+      ng-change="$ctrl.onChange()"
+      id="displayCallingParty"
+      cs-input-label="{{:: 'callPickup.callingParty' | translate}}">
+  <input
+      type="checkbox"
+      cs-input
+      name="displayCalledParty"
+      ng-model="$ctrl.displayCalledParty" 
+      ng-change="$ctrl.onChange()"
+      id="displayCalledParty"
+      cs-input-label="{{:: 'callPickup.calledParty' | translate}}">
+</div>

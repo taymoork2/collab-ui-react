@@ -9,9 +9,9 @@
     $log,
     $stateParams,
     $translate,
+    Auth,
     Authinfo,
     Notification,
-    Orgservice,
     WebExUtilsFact,
     WebExXmlApiFact,
     WebexUserSettingsSvc,
@@ -24,7 +24,7 @@
       resetBtn: false,
       resetBtn2: false,
       saveBtn: false,
-      saveBtn2: false
+      saveBtn2: false,
     };
 
     // set allowSessionMismatch=true to allow User Setting panel 3 to load
@@ -266,7 +266,7 @@
                 trainingCenterApplicable: trainingCenterApplicable,
                 eventCenterApplicable: eventCenterApplicable,
                 supportCenterApplicable: supportCenterApplicable,
-                sessionEnabled: false
+                sessionEnabled: false,
               }; // sessionType
 
               sessionTypes.push(sessionType);
@@ -531,7 +531,7 @@
         return $q.all({
           userInfoXml: userInfoXml,
           siteInfoXml: siteInfoXml,
-          meetingTypesInfoXml: meetingTypesInfoXml
+          meetingTypesInfoXml: meetingTypesInfoXml,
         });
       }, // getUserSettingsInfoXml()
 
@@ -541,88 +541,87 @@
 
         var _self = this;
 
-        Orgservice.getValidLicenses().then(
-          function getOrgLicensesSuccess(orgLicenses) {
-            // var funcName = "getOrgLicensesSuccess()";
-            // var logMsg = "";
-
-            // logMsg = funcName + ": " + "\n" +
-            //   "orgLicenses=" + JSON.stringify(orgLicenses);
-            // $log.log(logMsg);
-
-            _self.getUserSettingsFromWebEx();
+        Auth.getCustomerAccount(Authinfo.getOrgId()).then(
+          function getValidLicensesSuccess(response) {
+            var funcName = "getOrgLicensesSuccess()";
+            var logMsg = "";
 
             var currSite = $stateParams.site;
-            // var userName = $stateParams.currentUser.userName;
             var userLicenses = $stateParams.currentUser.licenseID;
+            var orgLicenses = WebExUtilsFact.getOrgWebexLicenses(response);
 
-            // logMsg = funcName + "\n" +
-            //   "userLicenses=" + JSON.stringify(userLicenses);
-            // $log.log(logMsg);
+            if (0 >= orgLicenses.size) {
+              logMsg = funcName + "\n" +
+                "ERROR - no org licenses found in Atlas!" + "\n" +
+                "userName=" + $stateParams.currentUser.userName + "\n" +
+                "userLicenses=" + JSON.stringify(userLicenses) + "\n" +
+                "currSite=" + currSite;
+              $log.log(logMsg);
+            } else {
+              _.forEach(userLicenses,
+                function (userLicense) {
+                  var userLicenseItems = userLicense.split("_");
+                  var userLicenseType = userLicenseItems[0];
 
-            userLicenses.forEach(
-              function checkLicense(userLicense) {
-                // var funcName = "checkLicense()";
-                // var logMsg = "";
+                  // only check for webex center type of license
+                  if (
+                    ("EE" == userLicenseType) ||
+                    ("MC" == userLicenseType) ||
+                    ("EC" == userLicenseType) ||
+                    ("SC" == userLicenseType) ||
+                    ("TC" == userLicenseType)
+                  ) {
 
-                var userLicenseItems = userLicense.split("_");
-                var userLicenseType = userLicenseItems[0];
+                    var userLicenseSiteUrl = userLicenseItems[userLicenseItems.length - 1];
 
-                // only check for webex center type of license
-                if (
-                  ("EE" == userLicenseType) ||
-                  ("MC" == userLicenseType) ||
-                  ("EC" == userLicenseType) ||
-                  ("SC" == userLicenseType) ||
-                  ("TC" == userLicenseType) ||
-                  ("CMR" == userLicenseType)
-                ) {
-
-                  var userLicenseSiteUrl = userLicenseItems[userLicenseItems.length - 1];
-
-                  // logMsg = funcName + "\n" +
-                  //   "currSite=" + currSite + "\n" +
-                  //   "userName=" + userName + "\n" +
-                  //   "userLicense=" + userLicense;
-                  // $log.log(logMsg);
-
-                  // check that the license is for the current site
-                  if (userLicenseSiteUrl == currSite) {
-                    // verify that the user's webex center license is valid for the org
-                    orgLicenses.forEach(
-                      function compareOrgLicense(orgLicense) {
-                        // var funcName = "";
-                        // var logMsg = "";
-
-                        // logMsg = funcName + "\n" +
-                        //   "orgLicense=" + JSON.stringify(orgLicense) + "\n" +
-                        //   "userLicense=" + JSON.stringify(userLicense);
-                        // $log.log(logMsg);
-
-                        if (userLicense == orgLicense.licenseId) {
-                          if ("EE" == userLicenseType) {
-                            WebexUserSettingsSvc.meetingCenter.isEntitledOnAtlas = true;
-                            WebexUserSettingsSvc.trainingCenter.isEntitledOnAtlas = true;
-                            WebexUserSettingsSvc.eventCenter.isEntitledOnAtlas = true;
-                            WebexUserSettingsSvc.supportCenter.isEntitledOnAtlas = true;
-                          } else {
-                            if (WebexUserSettingsSvc.meetingCenter.id == userLicenseType) {
+                    // check that the license is for the current site
+                    if (userLicenseSiteUrl == currSite) {
+                      // verify that the user's webex center license is valid for the org
+                      orgLicenses.forEach(
+                        function (orgLicense) {
+                          if (userLicense == orgLicense.licenseId) {
+                            if ("EE" == userLicenseType) {
                               WebexUserSettingsSvc.meetingCenter.isEntitledOnAtlas = true;
-                            } else if (WebexUserSettingsSvc.trainingCenter.id == userLicenseType) {
                               WebexUserSettingsSvc.trainingCenter.isEntitledOnAtlas = true;
-                            } else if (WebexUserSettingsSvc.eventCenter.id == userLicenseType) {
                               WebexUserSettingsSvc.eventCenter.isEntitledOnAtlas = true;
-                            } else if (WebexUserSettingsSvc.supportCenter.id == userLicenseType) {
                               WebexUserSettingsSvc.supportCenter.isEntitledOnAtlas = true;
+                            } else {
+                              if (WebexUserSettingsSvc.meetingCenter.id == userLicenseType) {
+                                WebexUserSettingsSvc.meetingCenter.isEntitledOnAtlas = true;
+                              } else if (WebexUserSettingsSvc.trainingCenter.id == userLicenseType) {
+                                WebexUserSettingsSvc.trainingCenter.isEntitledOnAtlas = true;
+                              } else if (WebexUserSettingsSvc.eventCenter.id == userLicenseType) {
+                                WebexUserSettingsSvc.eventCenter.isEntitledOnAtlas = true;
+                              } else if (WebexUserSettingsSvc.supportCenter.id == userLicenseType) {
+                                WebexUserSettingsSvc.supportCenter.isEntitledOnAtlas = true;
+                              }
                             }
                           }
-                        }
-                      } // compareOrgLicense()
-                    ); // orgLicenses.forEach()
+                        } // compareOrgLicense()
+                      ); // orgLicenses.forEach()
+                    }
                   }
-                }
-              } // checkLicense()
-            ); // userLicenses.forEach(()
+                } // checkLicense()
+              ); // userLicenses.forEach(()
+            }
+
+            if (
+              !WebexUserSettingsSvc.meetingCenter.isEntitledOnAtlas &&
+              !WebexUserSettingsSvc.trainingCenter.isEntitledOnAtlas &&
+              !WebexUserSettingsSvc.eventCenter.isEntitledOnAtlas &&
+              !WebexUserSettingsSvc.supportCenter.isEntitledOnAtlas
+            ) {
+
+              logMsg = funcName + "\n" +
+                "ERROR - no WebEx center entitlement in Atlas" + "\n" +
+                "userName=" + $stateParams.currentUser.userName + "\n" +
+                "userLicenses=" + JSON.stringify(userLicenses) + "\n" +
+                "orgLicenses=" + JSON.stringify(orgLicenses) + "\n" +
+                "currSite=" + currSite;
+              $log.log(logMsg);
+            }
+
+            _self.getUserSettingsFromWebEx();
           }, // getOrgLicensesSuccess()
 
           function getOrgLicensesError(response) {
@@ -910,7 +909,7 @@
           trainingCenter: "false",
           supportCenter: "false",
           eventCenter: "false",
-          salesCenter: "false"
+          salesCenter: "false",
         };
 
         // go through the session types
@@ -1270,7 +1269,7 @@
           errMsg = $translate.instant(
             "webexUserSettingsAccessErrors.030001", {
               givenName: givenName,
-              familyName: familyName
+              familyName: familyName,
             }
           );
         } else if ("110055" == errId) {
@@ -1296,7 +1295,7 @@
 
           errMsg = $translate.instant(
             "webexUserSettingsAccessErrors.110055", {
-              sessionTypeName: sessionTypeName
+              sessionTypeName: sessionTypeName,
             }
           );
         } else {

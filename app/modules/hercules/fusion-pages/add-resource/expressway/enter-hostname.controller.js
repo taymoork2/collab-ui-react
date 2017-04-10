@@ -12,14 +12,15 @@
     vm.canGoNext = canGoNext;
     vm.handleKeypress = handleKeypress;
     vm._translation = {
-      placeholder: $translate.instant('hercules.addResourceDialog.enterHostnamePlaceholder')
+      placeholder: $translate.instant('hercules.addResourceDialog.enterHostnamePlaceholder'),
+      help: $translate.instant('hercules.addResourceDialog.registerNewExpresswayHelp'),
     };
     vm.minlength = 3;
     vm.validationMessages = {
       required: $translate.instant('common.invalidRequired'),
       minlength: $translate.instant('common.invalidMinLength', {
-        min: vm.minlength
-      })
+        min: vm.minlength,
+      }),
     };
 
     ///////////////
@@ -27,8 +28,8 @@
     function next() {
       $stateParams.wizard.next({
         expressway: {
-          hostname: vm.hostname
-        }
+          hostname: vm.hostname,
+        },
       });
     }
 

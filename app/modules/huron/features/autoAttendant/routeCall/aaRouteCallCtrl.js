@@ -6,35 +6,35 @@
     .controller('AARouteCallMenuCtrl', AARouteCallMenuCtrl);
 
   /* @ngInject */
-  function AARouteCallMenuCtrl($scope, $translate, AAUiModelService, AACommonService, AAScrollBar) {
+  function AARouteCallMenuCtrl($scope, $translate, AAUiModelService, AACommonService, QueueHelperService) {
 
     var vm = this;
+    vm.queues = [];
     vm.actionPlaceholder = $translate.instant('autoAttendant.actionPlaceholder');
 
     vm.options = [{
       "label": $translate.instant('autoAttendant.phoneMenuRouteUser'),
-      "value": "routeToUser"
+      "value": "routeToUser",
     }, {
       "label": $translate.instant('autoAttendant.phoneMenuRouteVM'),
-      "value": "routeToVoiceMail"
+      "value": "routeToVoiceMail",
     }, {
       "label": $translate.instant('autoAttendant.phoneMenuRouteHunt'),
-      "value": "routeToHuntGroup"
+      "value": "routeToHuntGroup",
     }, {
       "label": $translate.instant('autoAttendant.phoneMenuRouteAA'),
-      "value": "goto"
+      "value": "goto",
     }, {
       "label": $translate.instant('autoAttendant.phoneMenuRouteToExtNum'),
-      "value": "route"
+      "value": "route",
     }];
 
     vm.selected = {
       label: '',
-      value: ''
+      value: '',
     };
 
     vm.setSelects = setSelects;
-    vm.selectChanged = selectChanged;
 
     function setSelects() {
 
@@ -47,9 +47,9 @@
 
       _.forEach(vm.options, function (option) {
         val = _.find(vm.menuEntry.actions, {
-          name: option.value
+          name: option.value,
         });
-        if (angular.isDefined(val)) {
+        if (!_.isUndefined(val)) {
           if (val.name === option.value) {
             vm.selected = option;
             return true;
@@ -60,18 +60,56 @@
 
     }
 
-    function selectChanged() {
-      AAScrollBar.resizeBuilderScrollBar();
+    /**
+     * This push the Route To Queue option in Route Call List and push get all the queues
+    */
+    function getQueues() {
+      return QueueHelperService.listQueues().then(function (aaQueueList) {
+        if (aaQueueList.length > 0) {
+          vm.options.push({
+            "label": $translate.instant('autoAttendant.phoneMenuRouteQueue'),
+            "value": 'routeToQueue',
+          });
+          _.each(aaQueueList, function (aaQueue) {
+            var idPos = aaQueue.queueUrl.lastIndexOf("/");
+            vm.queues.push({
+              description: aaQueue.queueName,
+              id: aaQueue.queueUrl.substr(idPos + 1),
+            });
+          });
+        }
+      });
+    }
+
+    function sortAndSetActionType() {
+      vm.options.sort(AACommonService.sortByProperty('label'));
+      setSelects();
+    }
+
+    function setUpFeatureToggles() {
+
+      if (AACommonService.isRouteSIPAddressToggle()) {
+        vm.options.push({
+          "label": $translate.instant('autoAttendant.phoneMenuRouteToSipEndpoint'),
+          "value": 'routeToSipEndpoint',
+        });
+      }
+
+      if (AACommonService.isRouteQueueToggle()) {
+        getQueues().finally(sortAndSetActionType);
+      } else {
+        sortAndSetActionType();
+      }
+
     }
 
     function activate() {
       var ui = AAUiModelService.getUiModel();
       vm.menuEntry = ui[$scope.schedule].entries[$scope.index];
-      vm.options.sort(AACommonService.sortByProperty('label'));
-      setSelects();
-
+      setUpFeatureToggles();
     }
 
     activate();
   }
+
 })();

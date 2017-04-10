@@ -10,7 +10,7 @@
       restrict: 'EA',
       templateUrl: 'modules/huron/externalNumbers/externalNumberOverview.tpl.html',
       controller: 'ExternalNumberOverviewCtrl',
-      controllerAs: 'externalNumberOverview'
+      controllerAs: 'externalNumberOverview',
     };
 
     return directive;

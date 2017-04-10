@@ -1,3 +1,5 @@
+require('./_cdr-overview.scss');
+
 (function () {
   'use strict';
 
@@ -23,11 +25,11 @@
     vm.remoteSessionID = cdrData.remoteSessionID;
     vm.cdr = [];
     // build an array to use with angular filter
-    angular.forEach(cdrData, function (value, key) {
+    _.forEach(cdrData, function (value, key) {
       if (key.toLowerCase() !== '$$hashkey') {
         vm.cdr.push({
           'key': key,
-          'value': value
+          'value': value,
         });
       }
     });
@@ -40,9 +42,9 @@
         top: 0,
         right: 3,
         left: 0,
-        bottom: 0
+        bottom: 0,
       },
-      autohidemode: "leave"
+      autohidemode: "leave",
     };
 
     vm.openLadderDiagram = function () {
@@ -50,22 +52,22 @@
         call: $stateParams.call,
         uniqueIds: $stateParams.uniqueIds,
         events: $stateParams.events,
-        logstashPath: logstashPath
+        logstashPath: logstashPath,
       });
     };
 
     vm.cdrClick = function () {
-      if (angular.isDefined(vm.jsonBlob)) {
+      if (!_.isUndefined(vm.jsonBlob)) {
         CdrService.downloadInIE(vm.jsonBlob, vm.filename);
       }
     };
 
     function init() {
       var downloadData = CdrService.createDownload(call);
-      if (angular.isDefined(downloadData.jsonBlob)) {
+      if (!_.isUndefined(downloadData.jsonBlob)) {
         vm.jsonBlob = downloadData.jsonBlob;
       }
-      if (angular.isDefined(downloadData.jsonUrl)) {
+      if (!_.isUndefined(downloadData.jsonUrl)) {
         vm.jsonUrl = downloadData.jsonUrl;
       }
     }

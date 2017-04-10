@@ -5,12 +5,9 @@
 (function () {
   'use strict';
 
-  angular.module('Sunlight')
-    .service('SunlightConfigService', sunlightConfigService);
-
   /* @ngInject */
   function sunlightConfigService($http, UrlConfig, Authinfo) {
-    var sunlightUserConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/user';
+    var sunlightUserConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/user';
     var sunlightChatTemplateUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/template';
     var sunlightChatConfigBase = UrlConfig.getSunlightConfigServiceUrl() + '/organization';
     var service = {
@@ -19,7 +16,11 @@
       createChatTemplate: createChatTemplate,
       editChatTemplate: editChatTemplate,
       createUserInfo: createUserInfo,
-      getChatConfig: getChatConfig
+      getChatConfig: getChatConfig,
+      deleteUser: deleteUser,
+      onBoardCare: onBoardCare,
+      updateChatConfig: updateChatConfig,
+      aaOnboard: aaOnboard,
     };
 
     return service;
@@ -48,5 +49,27 @@
       var sunlightChatConfigUrl = sunlightChatConfigBase + '/' + Authinfo.getOrgId() + '/chat';
       return $http.get(sunlightChatConfigUrl);
     }
+
+    function deleteUser(userId) {
+      return $http.delete(sunlightUserConfigUrl + '/' + userId);
+    }
+
+    function updateChatConfig(chatConfig) {
+      var sunlightChatConfigUrl = sunlightChatConfigBase + '/' + Authinfo.getOrgId() + '/chat';
+      return $http.put(sunlightChatConfigUrl, chatConfig);
+    }
+
+    function onBoardCare() {
+      var onboardPayload = { 'orgDisplayName': Authinfo.getOrgName(),
+        'csDiscoveryUrl': 'discovery.produs1.ciscoccservice.com' };
+      return $http.put(sunlightChatConfigBase + '/' + Authinfo.getOrgId() + '/csonboard', onboardPayload);
+    }
+
+    function aaOnboard() {
+      var onboardPayload = {};
+      return $http.post(sunlightChatConfigBase + '/' + Authinfo.getOrgId() + '/aaonboard', onboardPayload);
+    }
   }
+
+  module.exports = sunlightConfigService;
 })();

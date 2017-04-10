@@ -1,0 +1,11 @@
+<label class="control-label" for="dateFormatSelect" translate="serviceSetupModal.dateFormat"></label>
+<p class="description-block" translate="serviceSetupModal.dfDescription"></p>
+<div class="medium-5">
+  <cs-select
+    name="dateFormatSelect"
+    ng-model="$ctrl.selected"
+    options="$ctrl.dateFormatOptions"
+    on-change-fn="$ctrl.onDateFormatChanged()"
+    filter="false">
+  </cs-select>
+</div>

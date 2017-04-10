@@ -92,27 +92,6 @@ _EOF
     [ "$(grep_for_test_result_lines < "$sample_output" | grep passed | head -1 | trim_out_launcher_prefix)" = "chrome #01-0 passed" ]
 }
 
-@test "get_sauce_property - should source an appropriate sauce-related properties file and print the respective value for a given property" {
-    [ "$(get_sauce_property SAUCE_USERNAME)" = "sauce-labs-atlas-web" ]
-}
-
-@test "get_sauce_property - should error out and exit 1 if no 'sauce_property' is provided" {
-    run get_sauce_property
-    [ "$status" -eq 1 ]
-    [ "$output" = "Error: no sauce_property passed to get_sauce_property" ]
-}
-
-@test "get_sauce_property - should print empty string if no matching key was found" {
-    run get_sauce_property foo
-    [ "$output" = "" ]
-}
-
-@test "get_sauce_property - should error out and exit 1 if 'sauce_config_file' is passed, but references an invalid config file" {
-    run get_sauce_property foo ./non-existent-properties-file
-    [ "$status" -eq 1 ]
-    [ "$output" = "Error: sauce_config_file not found: ./non-existent-properties-file" ]
-}
-
 @test "md5_hmac - should print the MD5 HMAC-hashed value given a job id from a SauceLabs link" {
     [ "$(grep_for_sauce_link_lines < "$sample_output" | head -1 | cut_url | cut_sauce_job_id | md5_hmac)" = "b3535e7677603d240ba38256b8562b41" ]
 }

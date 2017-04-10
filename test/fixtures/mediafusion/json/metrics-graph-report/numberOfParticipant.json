@@ -1,0 +1,59 @@
+{
+   "graphData":[
+      {
+         "cloudParticipants":"0.0",
+         "onPremParticipants":"0.0",
+         "time":"2017-02-19T11:21:18.189Z"
+      },
+      {
+         "cloudParticipants":"0.0",
+         "onPremParticipants":"0.0",
+         "bullet_cloudParticipants": "round",
+         "insight_cloudParticipants": "Nodes Unavailable 1",
+         "time":"2017-02-20T09:21:51.149Z"
+      },
+      {
+         "cloudParticipants":"0.0",
+         "onPremParticipants":"0.0",
+         "time":"2017-02-20T09:31:51.167Z"
+      },
+      {
+         "cloudParticipants":"0.0",
+         "onPremParticipants":"0.0",
+         "time":"2017-02-20T10:31:51.123Z"
+      },
+      {
+         "cloudParticipants":"5.0",
+         "onPremParticipants":"0.0",
+         "bullet_cloudParticipants": "round",
+         "insight_cloudParticipants": "Redirected by Cluster 5,Nodes Unavailable 1",
+         "time":"2017-02-20T10:41:51.135Z"
+      },
+      {
+         "cloudParticipants":"5.0",
+         "onPremParticipants":"0.0",
+         "bullet_cloudParticipants": "round",
+         "insight_cloudParticipants": "Redirected by Cluster 5",
+         "time":"2017-02-20T10:51:51.119Z"
+      },
+      {
+         "cloudParticipants":"0.0",
+         "onPremParticipants":"0.0",
+         "time":"2017-02-20T11:01:51.164Z"
+      }
+   ],
+   "graphs":[
+      {
+         "title":"cloudParticipants",
+         "valueField":"cloudParticipants",
+         "bulletField": "bullet_cloudParticipants",
+         "descriptionField": "insight_cloudParticipants"
+      },
+      {
+         "title":"onPremParticipants",
+         "valueField":"onPremParticipants",
+         "bulletField": "bullet_onPremParticipants",
+         "descriptionField": "insight_onPremParticipants"
+      }
+   ]
+}

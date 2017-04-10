@@ -1,18 +1,184 @@
-[{
-  "isCustomerPartner": false,
-  "label": "Training Center 100",
-  "license": {
-    "features": [
-      "webex-squared",
-      "squared-call-initiation",
-      "cloudmeetings"
-    ],
-    "isTrial": true,
-    "trialId": "33e66606-b1b8-4794-a7c5-5bfc5046380f",
-    "licenseId": "MS_07bbaaf5-735d-4878-a6ea-d67d69feb1c0",
-    "licenseType": "CONFERENCING",
-    "offerName": "TC",
-    "status": "ACTIVE",
-    "volume": 100
+[
+  {
+    "isCustomerPartner": false,
+    "label": "Training Center 100",
+    "license": {
+      "features": [
+        "webex-squared",
+        "squared-call-initiation",
+        "cloudmeetings"
+      ],
+      "isTrial": true,
+      "trialId": "33e66606-b1b8-4794-a7c5-5bfc5046380f",
+      "licenseId": "MS_07bbaaf5-735d-4878-a6ea-d67d69feb1c0",
+      "licenseType": "CONFERENCING",
+      "offerName": "TC",
+      "status": "ACTIVE",
+      "volume": 100
+    }
+  },
+  {
+    "label": "Meeting Center 200",
+    "value": 1,
+    "name": "confRadio",
+    "license": {
+      "licenseId": "MC_60a53872-76d1-404d-ba44-a4929ac839e6_sqcie2e30.dmz.webex.com",
+      "offerName": "MC",
+      "licenseType": "CONFERENCING",
+      "billingServiceId": "SubCt31test20161222111",
+      "features": [
+        "cloudmeetings"
+      ],
+      "volume": 200,
+      "isTrial": false,
+      "status": "ACTIVE",
+      "capacity": 200,
+      "siteUrl": "sqcie2e30.dmz.webex.com",
+      "isCIUnifiedSite": true,
+      "licenseModel": "Cloud Shared Meeting"
+    },
+    "isCustomerPartner": false
+  },
+  {
+    "label": "Enterprise Edition 200",
+    "value": 1,
+    "name": "confRadio",
+    "license": {
+      "licenseId": "EE_35c24923-4c76-4240-8c60-1224d8d20c6a_sqcie2e31.dmz.webex.com",
+      "offerName": "EE",
+      "licenseType": "CONFERENCING",
+      "billingServiceId": "SubCt31test20161222112",
+      "features": [
+        "cloudmeetings"
+      ],
+      "volume": 200,
+      "isTrial": false,
+      "status": "PENDING",
+      "capacity": 200,
+      "siteUrl": "sqcie2e31.dmz.webex.com",
+      "isCIUnifiedSite": true,
+      "licenseModel": "Cloud Shared Meeting"
+    },
+    "isCustomerPartner": false
+  },
+  {
+    "label": "Meeting Center 100",
+    "value": 1,
+    "name": "confRadio",
+    "license": {
+      "licenseId": "MC_590f0c6e-cb09-4b7e-a521-8f8cce9ce7c9_sqe2e01.dmz.webex.com",
+      "offerName": "MC",
+      "licenseType": "CONFERENCING",
+      "billingServiceId": "Sub20161222117",
+      "features": [
+        "cloudmeetings"
+      ],
+      "volume": 100,
+      "isTrial": false,
+      "status": "PENDING",
+      "capacity": 100,
+      "siteUrl": "sqe2e01.dmz.webex.com",
+      "isCIUnifiedSite": false,
+      "licenseModel": "hosts"
+    },
+    "isCustomerPartner": false
+  },
+  {
+    "label": "Meeting Center 100",
+    "value": 1,
+    "name": "confRadio",
+    "license": {
+      "licenseId": "MC_92892b81-a1da-421e-b4ad-60e97a640397_sqe2e05.dmz.webex.com",
+      "offerName": "MC",
+      "licenseType": "CONFERENCING",
+      "billingServiceId": "Sub20161222115",
+      "features": [
+        "cloudmeetings"
+      ],
+      "volume": 100,
+      "isTrial": false,
+      "status": "PENDING",
+      "capacity": 100,
+      "siteUrl": "sqe2e05.dmz.webex.com",
+      "isCIUnifiedSite": false,
+      "licenseModel": "hosts"
+    },
+    "isCustomerPartner": false
+  },
+  {
+    "label": "Meeting 25 Party",
+    "value": 1,
+    "name": "confRadio",
+    "license": {
+      "licenseId": "CF_f60653e0-9093-45be-a647-7eebd25dba72",
+      "offerName": "CF",
+      "licenseType": "CONFERENCING",
+      "billingServiceId": "SubCt31test20161222112",
+      "features": [
+        "squared-syncup"
+      ],
+      "volume": 5,
+      "isTrial": false,
+      "status": "PENDING",
+      "capacity": 10
+    },
+    "isCustomerPartner": false
+  },
+  {
+    "label": "Meeting 25 Party",
+    "value": 1,
+    "name": "confRadio",
+    "license": {
+      "licenseId": "CF_f6589ed6-74ea-4487-82fa-3d45a7b17f0e",
+      "offerName": "CF",
+      "licenseType": "CONFERENCING",
+      "billingServiceId": "Sub20161222111",
+      "features": [
+        "squared-syncup"
+      ],
+      "volume": 5,
+      "isTrial": false,
+      "status": "PENDING",
+      "capacity": 25
+    },
+    "isCustomerPartner": false
+  },
+  {
+    "label": "Meeting 25 Party",
+    "value": 1,
+    "name": "confRadio",
+    "license": {
+      "licenseId": "CF_45c18dc0-b13f-4f7d-b155-d800cc777e89",
+      "offerName": "CF",
+      "licenseType": "CONFERENCING",
+      "billingServiceId": "Sub20161222117",
+      "features": [
+        "squared-syncup"
+      ],
+      "volume": 5,
+      "isTrial": false,
+      "status": "PENDING",
+      "capacity": 25
+    },
+    "isCustomerPartner": false
+  },
+  {
+    "label": "Meeting 25 Party",
+    "value": 1,
+    "name": "confRadio",
+    "license": {
+      "licenseId": "CF_419c7915-db11-4ca0-a03f-2fea95a46193",
+      "offerName": "CF",
+      "licenseType": "CONFERENCING",
+      "billingServiceId": "SubCt31test20161222111",
+      "features": [
+        "squared-syncup"
+      ],
+      "volume": 5,
+      "isTrial": false,
+      "status": "ACTIVE",
+      "capacity": 10
+    },
+    "isCustomerPartner": false
   }
-}]
+]

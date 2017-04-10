@@ -11,28 +11,30 @@ describe('Spark Care Partner flow', function () {
     });
 
     it('should add a new care trial', function () {
-      utils.click(partner.trialFilter);
       utils.click(partner.addButton);
 
-      utils.expectIsDisplayed(partner.addTrialForm);
+      utils.expectIsDisplayed(partner.editTrialForm);
       utils.expectIsDisabled(partner.startTrialButton);
 
       utils.expectIsDisplayed(partner.messageTrialCheckbox);
       utils.expectIsDisplayed(partner.careTrialCheckbox);
 
       // expect all offers checked
-      utils.expectCheckbox(partner.messageTrialCheckbox, true);
-      utils.expectCheckbox(partner.careTrialCheckbox, true);
-      utils.expectCheckbox(partner.squaredUCTrialCheckbox, true);
-      utils.expectCheckbox(partner.roomSystemsTrialCheckbox, true);
+      utils.expectInputCheckbox(partner.messageTrialCheckbox, true);
+      utils.expectInputCheckbox(partner.careTrialCheckbox, true);
+      utils.expectInputCheckbox(partner.squaredUCTrialCheckbox, true);
+      utils.expectInputCheckbox(partner.roomSystemsTrialCheckbox, true);
+      utils.expectInputCheckbox(partner.sparkBoardTrialCheckbox, true);
       utils.setCheckboxIfDisplayed(partner.webexTrialCheckbox, false, 100);
 
       utils.sendKeys(partner.customerNameInput, partner.newTrial.customerName);
       utils.sendKeys(partner.customerEmailInput, partner.newTrial.customerEmail);
+      utils.click(partner.validLocationCheckbox); //set valid location checkbox
 
       // Disable other offers
       utils.click(partner.squaredUCTrialCheckbox);
       utils.click(partner.roomSystemsTrialCheckbox);
+      utils.click(partner.sparkBoardTrialCheckbox);
 
       utils.click(partner.startTrialButton);
       notifications.assertSuccess(partner.newTrial.customerName, 'A trial was successfully started');
@@ -55,11 +57,12 @@ describe('Spark Care Partner flow', function () {
 
         utils.click(partner.termsActionButton);
         utils.click(partner.editTermsButton);
+        utils.click(partner.validLocationCheckbox);
 
         utils.waitForModal().then(function () {
           utils.expectIsDisplayed(partner.editTrialForm);
 
-          utils.expectClass(partner.careTrialCheckbox, 'enabled');
+          utils.waitClass(partner.careTrialCheckbox, 'enabled');
           utils.expectCheckbox(partner.careTrialCheckbox, true);
 
           var licInput = partner.careLicenseCountTextbox;
@@ -90,7 +93,7 @@ describe('Spark Care Partner flow', function () {
 
     function clickTrialRowAndPreview() {
       navigation.clickCustomers();
-      utils.click(partner.trialFilter);
+      //utils.click(partner.trialFilter);
       utils.search(partner.newTrial.customerName, -1);
       utils.expectIsDisplayed(partner.newTrialRow);
       utils.click(partner.newTrialRow);

@@ -1,0 +1,14 @@
+{
+  "uuid": "29c63c1f-83b0-42b9-98ee-85624e4c7409",
+  "orderId": "300341",
+  "type": "PSTN",
+  "status": "PENDING",
+  "carrier": "INTELEPEER",
+  "numbers": [{
+    "network": "PENDING"
+  }],
+  "attributes": {"npa":"123", "quantity":"1"},
+  "operation": "BLOCK_ORDER",
+  "description": "Order for 1  Telephone Numbers in Area Code 123",
+  "url": "https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/orders/29c63c1f-83b0-42b9-98ee-85624e4c7409"
+}

@@ -42,11 +42,11 @@
     "dataProvider": [{
       "label": "callMetrics.callConditionFail",
       "value": 7,
-      "color": "#444"
+      "color": "#343537"
     }, {
       "label": "callMetrics.callConditionSuccessful",
       "value": 50,
-      "color": "#00c1aa"
+      "color": "#6ec9bc"
     }],
     "labelData": {
       "numTotalCalls": 58,

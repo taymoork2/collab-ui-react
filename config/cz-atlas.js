@@ -7,50 +7,57 @@ var temp = require('temp').track();
 
 var maxLineWidth = 100;
 
-// Our custom implementation of commitizen,
-// used by `npm run commit`
+// Our custom implementation of commitizen (https://github.com/commitizen/cz-cli)
+// used by `npm run commit` or 'git cz'
 // Loosely based on:
 // https://github.com/leonardoanalista/cz-customizable
 // https://github.com/commitizen/cz-conventional-changelog
 module.exports = {
   prompter: function (cz, commit) {
-    console.log('\nLine 1 will be cropped at ' + maxLineWidth + ' characters. All other lines will be wrapped after ' + maxLineWidth + ' characters.\n');
+    console.log('\nLine 1 cropped at ' + maxLineWidth + ' characters. Subsequent lines wrapped after ' + maxLineWidth + ' characters.\n');
 
     var questions = [{
       type: 'list',
       name: 'type',
       message: 'Select the type of change that you\'re committing:',
       choices: [{
-        name: 'feat:     A new feature',
-        value: 'feat'
+        name: 'feat:     A new feature (100% complete, otherwise it\'s WIP)',
+        value: 'feat',
       }, {
-        name: 'fix:      A bug fix',
-        value: 'fix'
+        name: 'fix:      A bug fix (100% fixed, otherwise it\'s WIP)',
+        value: 'fix',
       }, {
         name: 'docs:     Documentation only changes',
-        value: 'docs'
+        value: 'docs',
       }, {
         name: 'style:    Changes that do not affect the meaning of the code\n            (white-space, formatting, missing semi-colons, etc)',
-        value: 'style'
+        value: 'style',
       }, {
         name: 'refactor: A code change that neither fixes a bug or adds a feature',
-        value: 'refactor'
+        value: 'refactor',
       }, {
         name: 'perf:     A code change that improves performance',
-        value: 'perf'
+        value: 'perf',
       }, {
-        name: 'test:     Adding missing tests',
-        value: 'test'
+        name: 'test:     Changes to automated tests',
+        value: 'test',
       }, {
         name: 'chore:    Changes to the build process or auxiliary tools\n            and libraries such as documentation generation',
-        value: 'chore'
-      }]
+        value: 'chore',
+      }, {
+        name: 'revert:   Undo the changes introduced by a previous commit',
+        value: 'revert',
+      }, {
+        name: 'WIP:      Work in progress',
+        value: 'WIP',
+      }],
     }, {
       type: 'list',
       name: 'module',
-      message: 'Denote the module impacted by this change (core, huron, webex, etc.):\n',
+      message: 'Select the module affected by this change (use * for none):\n',
       choices: [
         'core',
+        'context',
         'devices',
         'ediscovery',
         'helpdesk',
@@ -58,57 +65,60 @@ module.exports = {
         'huron',
         'mediafusion',
         'messenger',
+        'release',
         'sunglight',
         'support',
+        'trials',
         'users',
         'webex',
-        'custom'
-      ]
+        '*',
+        'custom',
+        'CHANGELOG',
+      ],
     }, {
       type: 'input',
       name: 'module',
-      message: 'Denote the module impacted by this change:',
+      message: 'Enter text to describe the module:',
       when: function (answers) {
         return answers.module === 'custom';
-      }
+      },
     }, {
       type: 'input',
       name: 'subject',
-      message: 'Write a SHORT, IMPERATIVE tense description of the change:\n',
+      message: 'Write a short (<80 chars) description of the change. Include the User Story or defect # (if applicable). e.g. "US1234 - update backend URLs":\n',
       validate: function (value) {
-        // TODO: check length < 100 when concatenated with type + module
-        return !!value;
+        return !!(value && value.length < 80);
       },
     }, {
       type: 'input',
       name: 'body',
-      message: 'Provide a LONGER description of the change (optional). Use "|" to break new line:\n'
+      message: 'Write a longer description of the change (optional). Use "|" to break new line:\n',
     }, {
       type: 'input',
       name: 'footer',
-      message: 'List any issues, JIRA, Rally, etc. related to change (optional). E.g.: Fixes #31, F410:\n'
+      message: 'Provide any helpful links. User story and defect links are mandatory. For Github issues, use "Fixes #123" or equivalent. Use "|" to break new line:\n',
     }, {
       type: 'expand',
       name: 'confirmCommit',
       message: function (answers) {
-        var SEP = '###--------------------------------------------------------###';
+        var SEP = '--------------------------------------------------------';
         console.log('\n' + SEP + '\n' + buildCommit(answers) + '\n' + SEP + '\n');
-        return 'Are you sure you want to proceed with the commit above?';
+        return 'Proceed with commit? (Y)es, (N)o, (E)dit w/editor';
       },
       choices: [{
         key: 'y',
         name: 'Yes',
-        value: 'yes'
+        value: 'yes',
       }, {
         key: 'n',
         name: 'Abort commit',
-        value: 'no'
+        value: 'no',
       }, {
         key: 'e',
         name: 'Edit message',
-        value: 'edit'
+        value: 'edit',
       }],
-      default: 0
+      default: 0,
     }];
 
     cz.prompt(questions)
@@ -121,7 +131,7 @@ module.exports = {
                 editor(info.path, function (code) {
                   if (code === 0) {
                     var commitStr = fs.readFileSync(info.path, {
-                      encoding: 'utf8'
+                      encoding: 'utf8',
                     });
                     commit(commitStr);
                   } else {
@@ -137,7 +147,7 @@ module.exports = {
           console.log('Commit has been canceled.');
         }
       });
-  }
+  },
 };
 
 function buildCommit(answers) {
@@ -145,7 +155,7 @@ function buildCommit(answers) {
     trim: true,
     newline: '\n',
     indent: '',
-    width: maxLineWidth
+    width: maxLineWidth,
   };
 
   function addModule(module) {
@@ -168,14 +178,25 @@ function buildCommit(answers) {
     return result;
   }
 
+  function parseNewLines(a) {
+/* Looking at Angular JS changelog format, multiple blank lines are allowed
+    var b;
+    while ( (b = a.replace(/\|\|/g, '|')) !== a ) {
+      a = b;
+    }
+*/
+    if (a[a.length - 1] === '|') {
+      a = a.slice(0, -1);
+    }
+    return a.split('|').join('\n');
+  }
+
   // Hard limit this line
   var head = (answers.type + addModule(answers.module) + addSubject(answers.subject)).slice(0, maxLineWidth);
 
   // Wrap these lines at 100 characters
-  var body = wrap(answers.body, wrapOptions) || '';
-  body = body.split('|').join('\n');
-
-  var footer = wrap(answers.footer, wrapOptions);
+  var body = parseNewLines(wrap(answers.body, wrapOptions) || '');
+  var footer = parseNewLines(wrap(answers.footer, wrapOptions) || '');
 
   var result = head;
   if (body) {

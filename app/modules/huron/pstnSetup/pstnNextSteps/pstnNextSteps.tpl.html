@@ -9,7 +9,7 @@
       <h3 translate="pstnSetup.thankYou"></h3>
       <h2 translate="pstnSetup.OrderSubmitted"></h2>
       <h2>
-      <span ng-hide="pstnNextSteps.pstnOrders.length > 1"><i class="icon icon-information left"></i><span class="h5 left" translate="pstnSetup.nextStepPrompt1"></span></span>
+      <span ng-hide="pstnNextSteps.isTrial || pstnNextSteps.pstnOrders.length > 1"><i class="icon icon-information left"></i><span class="h5 left" translate="pstnSetup.nextStepPrompt1"></span></span>
       <span ng-show="pstnNextSteps.portOrders.length"><i class="icon icon-information left"></i><span class="h5 left" translate="pstnSetup.nextStepPrompt2"></span></span>
       </h2>
       <div>

@@ -2,40 +2,39 @@
   'use strict';
 
   /* @ngInject  */
-  function CsdmPlaceService($window, $http, Authinfo, CsdmConfigService, CsdmConverter, FeatureToggleService, $q) {
+  function CsdmPlaceService($http, Authinfo, UrlConfig, CsdmConverter) {
 
-    var csdmPlacesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/places/';
+    var csdmPlacesUrl = UrlConfig.getCsdmServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/places/';
 
     function getPlacesUrl() {
       return csdmPlacesUrl;
     }
 
     function getPlacesList() {
-      return placesFeatureIsEnabled()
+      return $http.get(csdmPlacesUrl + "?shallow=true&type=all")
         .then(function (res) {
-          if (res) {
-            return $http.get(csdmPlacesUrl)
-              .then(function (res) {
-                return CsdmConverter.convertPlaces(res.data);
-              });
-          } else {
-            return $q.reject('feature not enabled');
-          }
+          return CsdmConverter.convertPlaces(res.data);
         });
     }
 
-    function placesFeatureIsEnabled() {
-      if ($window.location.search.indexOf("enablePlaces=true") > -1) {
-        return $q.when(true);
-      } else {
-        return FeatureToggleService.supports(FeatureToggleService.features.csdmPlaces);
-      }
+    function getSearchPlacesList(searchStr) {
+      return $http.get(csdmPlacesUrl + "?type=all&query=" + searchStr)
+        .then(function (res) {
+          return CsdmConverter.convertPlaces(res.data);
+        });
     }
 
-    function updatePlaceName(placeUrl, name) {
-      return $http.patch(placeUrl, {
-        name: name
+    function updateItemName(place, name) {
+      return $http.patch(place.url, {
+        name: name,
       }).then(function (res) {
+        res.data.type = place.type;
+        return CsdmConverter.convertPlace(res.data);
+      });
+    }
+
+    function fetchItem(placeUrl) {
+      return $http.get(placeUrl).then(function (res) {
         return CsdmConverter.convertPlace(res.data);
       });
     }
@@ -44,23 +43,54 @@
       return $http.delete(place.url);
     }
 
-    function createCsdmPlace(name, deviceType) {
+    function createCsdmPlace(name, entitlements, directoryNumber, externalNumber, externalLinkedAccounts, ussProps) {
+      return createPlace(name, entitlements || ['webex-squared', 'spark'], directoryNumber, externalNumber, 'lyra_space', externalLinkedAccounts, ussProps);
+    }
+
+    function createCmiPlace(name, entitlements, directoryNumber, externalNumber) {
+      return createPlace(name, entitlements || ['ciscouc'], directoryNumber, externalNumber, 'room');
+    }
+
+    function createPlace(name, entitlements, directoryNumber, externalNumber, machineType, externalLinkedAccounts, ussProps) {
       return $http.post(csdmPlacesUrl, {
         name: name,
-        placeType: deviceType
+        directoryNumber: directoryNumber,
+        externalNumber: externalNumber,
+        entitlements: entitlements,
+        machineType: machineType,
+        extLinkedAccts: externalLinkedAccounts,
+        ussProps: ussProps,
+      }).then(function (res) {
+        var convertedPlace = CsdmConverter.convertPlace(res.data);
+        // TODO: Don't need to set these here when CSDM returns the lines on place creation
+        convertedPlace.directoryNumber = convertedPlace.directoryNumber || directoryNumber;
+        convertedPlace.externalNumber = convertedPlace.externalNumber || externalNumber;
+        return convertedPlace;
+      });
+    }
+
+    function updatePlace(placeUrl, entitlements, directoryNumber, externalNumber, externalLinkedAccounts) {
+      return $http.patch(placeUrl, {
+        directoryNumber: directoryNumber,
+        externalNumber: externalNumber,
+        entitlements: entitlements,
+        extLinkedAccts: externalLinkedAccounts,
       }).then(function (res) {
         return CsdmConverter.convertPlace(res.data);
       });
     }
 
     return {
-      placesFeatureIsEnabled: placesFeatureIsEnabled,
       deletePlace: deletePlace,
       deleteItem: deletePlace,
+      fetchItem: fetchItem,
       createCsdmPlace: createCsdmPlace,
+      createCmiPlace: createCmiPlace,
       getPlacesList: getPlacesList,
-      updatePlaceName: updatePlaceName,
-      getPlacesUrl: getPlacesUrl
+      updateItemName: updateItemName,
+      getPlacesUrl: getPlacesUrl,
+      updatePlace: updatePlace,
+      getSearchPlacesList: getSearchPlacesList,
     };
   }
 

@@ -3,7 +3,7 @@ export class ExampleService {
 
   /* @ngInject */
   constructor(
-    private $resource: ng.resource.IResourceService
+    private $resource: ng.resource.IResourceService,
   ) {
     this.exampleResource = this.$resource('/example/:id');
   }

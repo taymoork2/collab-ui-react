@@ -3,13 +3,21 @@
 describe('Directive: aaDialByExt', function () {
   var $compile, $rootScope, $scope, $q;
   var AAUiModelService, AutoAttendantCeMenuModelService, FeatureToggleService;
+  var element;
 
   var aaUiModel = {
     openHours: {},
     ceInfo: {
-      name: 'aa'
-    }
+      name: 'aa',
+    },
   };
+
+  afterEach(function () {
+    if (element) {
+      element.remove();
+    }
+    element = undefined;
+  });
 
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
@@ -29,7 +37,7 @@ describe('Directive: aaDialByExt', function () {
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
     FeatureToggleService = _FeatureToggleService_;
 
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
     AutoAttendantCeMenuModelService.clearCeMenuMap();
@@ -38,8 +46,15 @@ describe('Directive: aaDialByExt', function () {
 
   }));
 
+  afterEach(function () {
+    $compile = null;
+    $rootScope = null;
+    $scope = null;
+    $q = null;
+  });
+
   it('replaces the element with the appropriate content', function () {
-    var element = $compile("<aa-dial-by-ext aa-schedule='openHours' aa-menu-id='menu1' aa-index='0' aa-key-index='0'></aa-dial-by-ext>")($rootScope);
+    element = $compile("<aa-dial-by-ext aa-schedule='openHours' aa-menu-id='menu1' aa-index='0' aa-key-index='0'></aa-dial-by-ext>")($rootScope);
     $rootScope.$digest();
     expect(element.html()).toContain("aaDialByExtCtrl");
   });

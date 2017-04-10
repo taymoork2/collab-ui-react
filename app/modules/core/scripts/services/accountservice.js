@@ -10,13 +10,13 @@
       createAccount: function (customerOrgName, customerAdminEmail, partnerAdminEmail, isPartner, beId, begeoId, duration, licenseCount, offersList, startDate) {
         var accountUrl = UrlConfig.getAdminServiceUrl() + 'accounts';
         var accountRequest = {
-          'offers': []
+          'offers': [],
         };
 
         for (var i in offersList) {
           accountRequest.offers.push({
             'id': offersList[i],
-            'licenseCount': licenseCount
+            'licenseCount': licenseCount,
           });
         }
 
@@ -46,12 +46,12 @@
 
         $http.get(accountUrl)
           .success(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             data.success = true;
             callback(data, status);
           })
           .error(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             data.success = false;
             data.status = status;
             callback(data, status);
@@ -75,21 +75,21 @@
         $http({
           method: 'PATCH',
           url: accountUrl,
-          data: payload
+          data: payload,
         })
           .success(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             data.success = true;
             Log.debug('Posted orgDataForAccount: ' + payload);
             callback(data, status);
           })
           .error(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             data.success = false;
             data.status = status;
             callback(data, status);
           });
-      }
+      },
     };
   }
 })();

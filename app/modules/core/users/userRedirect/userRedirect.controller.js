@@ -1,3 +1,5 @@
+require('./_user-redirect.scss');
+
 (function () {
   'use strict';
 

@@ -4,7 +4,7 @@
   module.exports = angular
     .module('squared.activate', [
       require('modules/core/config/urlConfig'),
-      require('modules/core/windowLocation/windowLocation'),
+      require('modules/core/window').default,
       require('modules/core/scripts/services/log'),
       require('modules/core/scripts/services/utils'),
       require('modules/squared/scripts/services/activateService'),
@@ -19,7 +19,7 @@
       provisionSuccess: false,
       codeExpired: false,
       resendSuccess: false,
-      errmsg: false
+      errmsg: false,
     };
 
     var hideAllMessages = function () {

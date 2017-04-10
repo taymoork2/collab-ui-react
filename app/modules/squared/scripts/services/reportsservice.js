@@ -5,7 +5,7 @@
     .service('ReportsService', ReportsService);
 
   /* @ngInject */
-  function ReportsService($http, $q, $rootScope, Log, Authinfo, UrlConfig) {
+  function ReportsService($http, $rootScope, Log, Authinfo, UrlConfig) {
     var apiUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/';
 
     var callMetricsUrl = 'reports/stats/callUsage';
@@ -15,7 +15,6 @@
 
     var timeChartUrl;
 
-    var logInfoBaseUrl = 'reports/tables/calls/';
     var healthUrl = UrlConfig.getHealthCheckServiceUrl();
     var averageCallCount = 'reports/counts/avgCallsPerUser';
     var entitlementCount = 'reports/counts/entitlements';
@@ -28,7 +27,7 @@
       'entitlementCount': entitlementCount,
       'contentSharedCount': contentSharedCount,
       'callsCount': callsUrl,
-      'conversationsCount': conversationsUrl
+      'conversationsCount': conversationsUrl,
     };
 
     return {
@@ -38,27 +37,19 @@
       callsUrl: callsUrl,
       conversationsUrl: conversationsUrl,
       timeChartUrl: timeChartUrl,
-      logInfoBaseUrl: logInfoBaseUrl,
       healthUrl: healthUrl,
       averageCallCount: averageCallCount,
-      entitlementCount: entitlementCount,
       contentSharedCount: contentSharedCount,
       urls: urls,
       buildUrl: buildUrl,
       sendChartResponse: sendChartResponse,
-      getCounts: getCounts,
-      getTimeCharts: getTimeCharts,
-      getUsageMetrics: getUsageMetrics,
       getPartnerMetrics: getPartnerMetrics,
-      getTotalPartnerCounts: getTotalPartnerCounts,
-      getLandingMetrics: getLandingMetrics,
-      getAllMetrics: getAllMetrics,
-      getLogInfo: getLogInfo,
-      getCallSummary: getCallSummary,
       healthMonitor: healthMonitor,
       getHealthStatus: getHealthStatus,
-      getOverviewMetrics: getOverviewMetrics
+      getOverviewMetrics: getOverviewMetrics,
     };
+
+    ///////////////////////
 
     function buildUrl(metricType, params) {
       var metricUrl = timeChartUrl;
@@ -91,23 +82,9 @@
     function sendChartResponse(data, status, metricType) {
       var response = {
         'data': data,
-        'status': status
+        'status': status,
       };
       $rootScope.$broadcast(metricType + 'Loaded', response);
-    }
-
-    function getCounts(useCache) {
-      var params = {
-        'intervalCount': 1,
-        'intervalType': 'month',
-        'cache': useCache,
-        'isCustomerView': true
-      };
-
-      var customerCounts = ['callsCount', 'conversationsCount', 'contentSharedCount'];
-      for (var chart in customerCounts) {
-        getUsageMetrics(customerCounts[chart], params);
-      }
     }
 
     function getTimeCharts(useCache, customerCharts, paramOverrides) {
@@ -117,12 +94,12 @@
         'spanCount': 1,
         'spanType': 'week',
         'cache': useCache,
-        'isCustomerView': true
+        'isCustomerView': true,
       }, paramOverrides);
 
-      for (var chart in customerCharts) {
-        getUsageMetrics(customerCharts[chart], params);
-      }
+      _.forEach(customerCharts, function (customerChart) {
+        getUsageMetrics(customerChart, params);
+      });
     }
 
     function getUsageMetrics(metricType, params, orgId) {
@@ -152,13 +129,13 @@
 
       return $http.get(metricUrl)
         .success(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = true;
           Log.debug('Callback for ' + metricType + ' for org=' + Authinfo.getOrgId());
           sendChartResponse(data, status, metricType);
         })
         .error(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = false;
           data.status = status;
           data.errorMsg = data;
@@ -173,56 +150,12 @@
         'spanCount': 1,
         'spanType': 'week',
         'cache': useCache,
-        'isCustomerView': false
+        'isCustomerView': false,
       };
 
-      for (var chart in partnerCharts) {
-        getUsageMetrics(partnerCharts[chart], params, orgId);
-      }
-    }
-
-    // For retrieving the
-    function getTotalPartnerCounts(useCache, customerList, countTypes) {
-      if (Authinfo.isPartner() && angular.isArray(customerList) && angular.isArray(countTypes)) {
-        var params = {
-          'intervalCount': 1,
-          'intervalType': 'month',
-          'spanCount': 1,
-          'spanType': 'week',
-          'cache': useCache,
-          'isCustomerView': false
-        };
-
-        angular.forEach(countTypes, function (count) {
-          var promises = [];
-          var dataResponse = {
-            success: true,
-            data: 0,
-            status: null,
-            errorMsg: null
-          };
-
-          angular.forEach(customerList, function (org) {
-            timeChartUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + org.value + '/' + urls[count];
-            var metricUrl = buildUrl(count, params);
-            var promise = $http.get(metricUrl)
-              .success(function (data, status) {
-                dataResponse.data += Math.round(data.data);
-                dataResponse.status = status;
-              })
-              .error(function (data, status) {
-                data.success = false;
-                data.status = status;
-                data.errorMsg = data;
-              });
-            promises.push(promise);
-          });
-
-          $q.all(promises).then(function () {
-            sendChartResponse(dataResponse, dataResponse.status, count);
-          });
-        });
-      }
+      _.forEach(partnerCharts, function (partnerChart) {
+        getUsageMetrics(partnerChart, params, orgId);
+      });
     }
 
     function getOverviewMetrics(useCache) {
@@ -230,79 +163,31 @@
       getTimeCharts(useCache, charts, {
         intervalType: 'week',
         intervalCount: 2,
-        spanType: 'week'
+        spanType: 'week',
       });
 
       var callCharts = ['oneOnOneCalls', 'groupCalls'];
       getTimeCharts(useCache, callCharts, {
         intervalType: 'month',
         intervalCount: 2,
-        spanType: 'month'
+        spanType: 'month',
       });
     }
 
-    function getLandingMetrics(useCache) {
-      getCounts(useCache);
-      var charts = ['calls', 'conversations', 'contentShared'];
-      getTimeCharts(useCache, charts);
-    }
-
-    function getAllMetrics(useCache) {
-      getCounts(useCache);
-
-      var charts = ['calls', 'conversations', 'contentShareSizes', 'contentShared',
-        'activeUsers', 'entitlements', 'avgCallsPerUser', 'avgConversations', 'convOneOnOne', 'convGroup',
-        'calls', 'callsAvgDuration'
-      ];
-
-      getTimeCharts(useCache, charts);
-    }
-
-    function getLogInfo(locusId, startTime, callback) {
-      var logInfoUrl = apiUrl + logInfoBaseUrl + locusId + '?locusCallStartTime=' + startTime;
-
-      $http.get(logInfoUrl)
-        .success(function (data, status) {
-          data = data || {};
-          data.success = true;
-          Log.debug('Retrieved call info for : ' + locusId + ' startTime : ' + startTime);
-          callback(data, status);
-        })
-        .error(function (data, status) {
-          data = data || {};
-          data.success = false;
-          data.status = status;
-          callback(data, status);
-        });
-    }
-
-    function getCallSummary(locusId, startTime, callback) {
-      var callSummaryUrl = apiUrl + logInfoBaseUrl + locusId + '/callSummaryEvents' + '?locusCallStartTime=' + startTime;
-
-      $http.get(callSummaryUrl)
-        .success(function (data, status) {
-          data = data || {};
-          data.success = true;
-          Log.debug('Retrieved call summary for : ' + locusId + ' startTime : ' + startTime);
-          callback(data, status);
-        })
-        .error(function (data, status) {
-          data = data || {};
-          data.success = false;
-          data.status = status;
-          callback(data, status);
-        });
-    }
-
     function healthMonitor(callback) {
-      $http.get(healthUrl)
+      $http.get(healthUrl,
+        {
+          // statuspage.io doesn't play nice w/ our oauth header, so we unset it specifically here
+          headers: { Authorization: undefined },
+        })
         .success(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = true;
-          Log.debug('Callback for healthMonitor');
           callback(data, status);
         })
         .error(function (data, status) {
+          data = _.isObject(data) ? data : {};
+          data.success = false;
           callback(data, status);
         });
     }
@@ -312,7 +197,11 @@
         totalWarning = 0,
         totalDanger = 0;
 
-      return $http.get(healthUrl)
+      return $http.get(healthUrl,
+        {
+          // statuspage.io doesn't play nice w/ our oauth header, so we unset it specifically here
+          headers: { Authorization: undefined },
+        })
         .then(function (response) {
           var length = response.data.components.length;
           var healthStatus;

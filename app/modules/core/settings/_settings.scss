@@ -1,3 +1,10 @@
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/typography';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+
+@import 'sipDomain/_sip-domain-settings';
+@import 'dirsync/_dirSync';
+
 .settings {
   background-color: white;
 
@@ -10,32 +17,50 @@
       &.success {
         color: $color-cta-base;
       }
+
       &.disabled {
         color: $gray-base;
       }
     }
+
     .enterprise-sipDomain-page {
       margin-top: -1.25rem;
     }
-    #domainManagement{
-      .verify-btn{
-        top:0;
+
+    #domainManagement {
+      .verify-btn {
+        top: 0;
       }
     }
-    #brandingLogoPanel,#webex_client_versions_label_and_dropdown{
-      h4{
+
+    #brandingLogoPanel,
+    #webex_client_versions_label_and_dropdown {
+      h4 {
         font-size: 1rem;
         font-family: $brand-font-light;
         margin-bottom: 0.5rem;
       }
-      span{
+
+      span {
         font-family: $brand-font-light;
         margin-left: 0.05rem;
       }
     }
 
-    #webex_client_versions_label_and_dropdown .row{
+    #webex_client_versions_label_and_dropdown .row {
       margin-top: 2.5rem;
+    }
+  }
+
+  .save-cancel-footer {
+    width: calc(100% - 100px);
+    position: fixed;
+    top: calc(100vh - 60px);
+    background-color: $gray-light-4;
+    @include vr-spacing(ph, 2);
+    @include vr-spacing(pv, 1);
+    .save-cancel-buttons {
+      @include vr-spacing(ml, 0.5);
     }
   }
 }

@@ -1,4 +1,5 @@
 'use strict';
+
 describe('Controller: SupportCtrl', function () {
   beforeEach(angular.mock.module('Squared'));
 
@@ -21,12 +22,18 @@ describe('Controller: SupportCtrl', function () {
     controller('SupportCtrl', {
       $scope: $scope,
       Authinfo: Authinfo,
-      Userservice: Userservice
+      Userservice: Userservice,
     });
   }));
 
   describe('Tools card view', function () {
     var view;
+    afterEach(function () {
+      if (view) {
+        view.remove();
+      }
+      view = undefined;
+    });
     beforeEach(inject(function (_$templateCache_) {
       var html = _$templateCache_.get("modules/squared/support/support-status.html");
       view = $compile(angular.element(html))($scope);
@@ -44,13 +51,13 @@ describe('Controller: SupportCtrl', function () {
       Authinfo.isHelpDeskUser = sinon.stub().returns(false);
       Userservice.getUser = sinon.stub().yields({
         success: true,
-        roles: ['ciscouc.devops', 'ciscouc.devsupport']
+        roles: ['ciscouc.devops', 'ciscouc.devsupport'],
       });
 
       controller('SupportCtrl', {
         $scope: $scope,
         Authinfo: Authinfo,
-        Userservice: Userservice
+        Userservice: Userservice,
       });
 
       $scope.$digest();
@@ -62,7 +69,7 @@ describe('Controller: SupportCtrl', function () {
       Authinfo.isHelpDeskUser = sinon.stub().returns(false);
       Userservice.getUser = sinon.stub().yields({
         success: true,
-        roles: ['noDevRole']
+        roles: ['noDevRole'],
       });
       $scope.$digest();
       var hasToolsCard = _.includes(view.html(), "supportPageToolsCard");
@@ -90,13 +97,13 @@ describe('Controller: SupportCtrl', function () {
       Authinfo.isHelpDeskUser = sinon.stub().returns(false);
       Userservice.getUser = sinon.stub().yields({
         success: true,
-        roles: ['ciscouc.devops', 'ciscouc.devsupport']
+        roles: ['ciscouc.devops', 'ciscouc.devsupport'],
       });
 
       controller('SupportCtrl', {
         $scope: $scope,
         Authinfo: Authinfo,
-        Userservice: Userservice
+        Userservice: Userservice,
       });
 
       $scope.gotoCdrSupport = sinon.spy($scope, 'gotoCdrSupport');
@@ -110,13 +117,13 @@ describe('Controller: SupportCtrl', function () {
       Authinfo.isHelpDeskUser = sinon.stub().returns(false);
       Userservice.getUser = sinon.stub().yields({
         success: true,
-        roles: ['noDevopRole']
+        roles: ['noDevopRole'],
       });
 
       controller('SupportCtrl', {
         $scope: $scope,
         Authinfo: Authinfo,
-        Userservice: Userservice
+        Userservice: Userservice,
       });
 
       $scope.gotoCdrSupport = sinon.spy($scope, 'gotoCdrSupport');

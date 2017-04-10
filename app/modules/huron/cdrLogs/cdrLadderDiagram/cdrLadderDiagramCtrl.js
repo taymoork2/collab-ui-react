@@ -77,11 +77,12 @@
       _.forEach(vm.events, function (event) {
         if (!_.isUndefined(event.eventSource)) {
           var message = JSON.parse(event.message);
-          if ((message.id === SIP_MESSAGE) && !_.isUndefined(message.dataParam.rawMsg) && (message.dataParam.rawMsg.indexOf(LOCUS) > 0)) {
+          var rawMsg = _.get(message, 'dataParam.rawMsg', '');
+          if ((message.id === SIP_MESSAGE) && rawMsg && (rawMsg.indexOf(LOCUS) > 0)) {
             if (_.isNull(locusId)) {
-              startIndex = message.dataParam.rawMsg.indexOf(LOCUS);
-              endIndex = message.dataParam.rawMsg.indexOf("Content-Length");
-              locusId = message.dataParam.rawMsg.substring(startIndex + 7, endIndex).replace("\\n", "").replace("\\r", "");
+              startIndex = rawMsg.indexOf(LOCUS);
+              endIndex = rawMsg.indexOf("Content-Length");
+              locusId = rawMsg.substring(startIndex + 7, endIndex).replace("\\n", "").replace("\\r", "");
               endIndex = locusId.indexOf("Content-Type");
               if (endIndex > 0) {
                 locusId = locusId.substring(0, endIndex);
@@ -160,7 +161,7 @@
           "msgType": msgType,
           "remoteAlias": remoteAlias,
           "localAlias": event.eventSource.hostname,
-          "callflowTransition": true
+          "callflowTransition": true,
         });
       }
 
@@ -176,7 +177,7 @@
           "msgType": msgType,
           "remoteAlias": event.eventSource.hostname,
           "localAlias": remoteAlias,
-          "callflowTransition": true
+          "callflowTransition": true,
         });
       }
 
@@ -188,7 +189,7 @@
         "msgType": msgType,
         "remoteAlias": remoteAlias,
         "localAlias": localAlias,
-        "callflowTransition": false
+        "callflowTransition": false,
       };
       addEventData(sparkEvent);
     }
@@ -203,7 +204,7 @@
             "serviceID": "",
             "serviceInstanceID": "0",
             "customerID": "none",
-            "hostname": event.localAlias
+            "hostname": event.localAlias,
           },
           "dataParam": {
             "remoteName": event.remoteAlias,
@@ -213,8 +214,8 @@
             "localAlias": event.localAlias,
             "localIPAddress": event.sourceIp,
             "remotePAddress": event.destinationIp,
-            "callflowTransition": event.callflowTransition
-          }
+            "callflowTransition": event.callflowTransition,
+          },
         });
 
         if ((event.type === "SparkEvent") && (!_.includes(vm.sparkHostNames, event.localAlias))) {
@@ -238,20 +239,20 @@
     function generateDownloads() {
       var jsonFileData = {
         cdrs: vm.call,
-        events: vm.events
+        events: vm.events,
       };
       var jsonBlob = new $window.Blob([JSON.stringify(jsonFileData, null, 2)], {
-        type: 'application/json'
+        type: 'application/json',
       });
       vm.jsonUrl = ($window.URL || $window.webkitURL).createObjectURL(jsonBlob);
 
       var csvBlob = new $window.Blob([convertCsv()], {
-        type: 'text/csv'
+        type: 'text/csv',
       });
       vm.csvUrl = ($window.URL || $window.webkitURL).createObjectURL(csvBlob);
 
       var htmlBlob = new $window.Blob([vm.diagramHTML], {
-        type: 'text/html'
+        type: 'text/html',
       });
       vm.htmlUrl = ($window.URL || $window.webkitURL).createObjectURL(htmlBlob);
 
@@ -281,7 +282,7 @@
         function (response) {
           if (response.hits.hits.length > 0) {
             vm.events = formatEventsResponse(response);
-            vm.huronEvents = angular.copy(vm.events);
+            vm.huronEvents = _.cloneDeep(vm.events);
             $rootScope.$broadcast('event-query-resolved');
           } else {
             vm.error = 'Response was undefined';
@@ -292,7 +293,6 @@
           vm.error = esErrorResponse(response);
           vm.spin = false;
         });
-      return;
     };
 
     function generateEventSourceJson() {
@@ -381,7 +381,7 @@
           if (vm.call[i]['dataParam'][dataParamKeys[dpi]] !== undefined) {
             // we have to use replace becasue sometimes paramaters have ',' which messes up csv
             if (typeof vm.call[i]['dataParam'][dataParamKeys[dpi]] == 'string') {
-              csvCallBody += (vm.call[i]['dataParam'][dataParamKeys[dpi]]).replace(/,/g, ' ');
+              csvCallBody += _.replace(vm.call[i]['dataParam'][dataParamKeys[dpi]], /,/g, ' ');
             } else {
               csvCallBody += vm.call[i]['dataParam'][dataParamKeys[dpi]];
             }
@@ -562,8 +562,8 @@
         if (vm.filterCallIdOptions[i].value === true) {
           filtered = _.union(filtered, $filter('filter')(vm.events, {
             dataParam: {
-              callID: vm.filterCallIdOptions[i].label
-            }
+              callID: vm.filterCallIdOptions[i].label,
+            },
           }));
         }
       }
@@ -604,14 +604,14 @@
           filtered = _.union(filtered, $filter('filter')(vm.events, {
             dataParam: {
               localSessionID: sessionIds[0],
-              remoteSessionID: sessionIds[1]
-            }
+              remoteSessionID: sessionIds[1],
+            },
           }));
           filtered = _.union(filtered, $filter('filter')(vm.events, {
             dataParam: {
               localSessionID: sessionIds[1],
-              remoteSessionID: sessionIds[0]
-            }
+              remoteSessionID: sessionIds[0],
+            },
           }));
         }
       });
@@ -661,8 +661,8 @@
         if (option.value === true) {
           filtered = _.union(filtered, $filter('filter')(vm.events, {
             eventSource: {
-              hostname: option.name
-            }
+              hostname: option.name,
+            },
           }));
         }
       });
@@ -671,8 +671,8 @@
         if (option.value === true) {
           filtered = _.union(filtered, $filter('filter')(vm.events, {
             eventSource: {
-              hostname: option.name
-            }
+              hostname: option.name,
+            },
           }));
         }
       });

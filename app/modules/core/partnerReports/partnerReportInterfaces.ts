@@ -1,19 +1,85 @@
-// Used by the time Filter
-export interface ITimespan {
-  value: number;
+// base interfaces
+export interface IGraphBase {
+  date: string;
+  balloon: boolean;
+}
+
+export interface IDropdownBase {
+  value: number | string;
   label: string;
+}
+
+// export menu
+export interface IExportMenu {
+  id: string;
+  label: string;
+  click?: Function;
+}
+
+// time slider
+export interface ITimeSliderFunctions {
+  sliderUpdate?: Function;
+  update: Function;
+}
+
+export interface ITimespan extends IDropdownBase {
   description: string;
+  min: number;
+  max: number;
 }
 
 // Used by the Customer Filter
-export interface IReportsCustomer {
-  value: string;
-  label: string;
+export interface IReportsCustomer extends IDropdownBase {
   isAllowedToManage: boolean;
   isSelected: boolean;
 }
 
+// used by the Reports Filter
+export interface IFilterObject {
+  id: string;
+  label: string;
+  selected: boolean;
+  toggle?: Function;
+}
+
 // Table information used by the report-card
+export interface IReportCard {
+  // Top Report Variables
+  animate: boolean;
+  description: string;
+  headerTitle: string;
+  id: string;
+  reportType: string;
+  state: string;
+  table?: IReportsTable;
+  titlePopover: string;
+}
+
+export interface IReportCardTable extends IReportCard {
+  table: IReportsTable;
+}
+
+export interface ISecondaryReport {
+  alternateTranslations: boolean;
+  broadcast: string;
+  description: string;
+  display: boolean;
+  emptyDescription: string;
+  errorDescription: string;
+  search: boolean;
+  state: string;
+  sortOptions: Array<IReportSortOption>;
+  table: IReportsTable;
+  title: string;
+}
+
+export interface IReportDropdown {
+  array: Array<IDropdownBase>;
+  click: Function;
+  disabled: boolean;
+  selected: IDropdownBase;
+}
+
 export interface IReportsTable {
   headers: Array<IReportsHeader>;
   data: any;
@@ -30,11 +96,24 @@ export interface IReportSortOption {
   direction: boolean;
 }
 
+export interface IReportLabel {
+  class?: string;
+  click?: Function;
+  hidden: boolean;
+  number: number | string;
+  text: string;
+}
+
+export interface IReportTooltip {
+  title: string;
+  text: string;
+}
+
 // Endpoint interface
 export interface IEndpointData {
   class: string;
   output: Array<string>;
-  splitClasses: string | void;
+  splitClasses?: string;
 }
 
 // Call Metrics Interfaces
@@ -50,21 +129,18 @@ export interface ICallMetricsLabels {
 }
 
 export interface ICallMetricsDataProvider {
+  value: number;
   label: string;
-  // value can be string or number
-  value: any;
   color: string;
 }
 
 // Media Quality Interface
-export interface IMediaQualityData {
-  date: string | void;
+export interface IMediaQualityData extends IGraphBase {
   totalDurationSum: number;
   partialSum: number;
   goodQualityDurationSum: number;
   fairQualityDurationSum: number;
   poorQualityDurationSum: number;
-  balloon: boolean;
 }
 
 // Active User interfaces
@@ -75,27 +151,28 @@ export interface IActiveUserCustomerData {
   totalRegistered: number;
 }
 
-export interface IActiveUserData {
-  date: string;
+export interface IActiveUserData extends IGraphBase {
   totalRegisteredUsers: number;
   activeUsers: number;
   percentage: number;
-  balloon: boolean;
 }
 
-export interface IActiveTableData {
-  orgName: string;
+export interface IActiveTableBase {
   numCalls: number;
   totalActivity: number;
   sparkMessages: number;
   userName: string;
 }
 
+export interface IActiveTableData extends IActiveTableBase {
+  orgName: string;
+}
+
 export interface IPopulationData {
-  customerName: string | void;
-  percentage: number | void;
+  customerName?: string;
+  percentage?: number;
   overallPopulation: number;
-  color: string | void;
+  color?: string;
   balloon: boolean;
   labelColorField: string;
 }
@@ -119,6 +196,7 @@ export interface IIntervalQuery {
 
 export interface ITypeQuery {
   name: string;
+  extension?: string;
   type: string;
   cache: boolean;
 }
@@ -138,5 +216,13 @@ export interface ICustomerIntervalQuery {
   spanCount: number;
   spanType: string;
   cache: boolean;
-  customerView: boolean;
+  customerView?: boolean;
+}
+
+export interface IPartnerCharts {
+  active?: any;
+  devices?: any;
+  metrics?: any;
+  media?: any;
+  population?: any;
 }

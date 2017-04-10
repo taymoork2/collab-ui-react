@@ -22,7 +22,7 @@ describe('Service: VoicemailMessageAction', function () {
   describe('get', function () {
     var messageActions = [{
       objectId: '1',
-      voicemailAction: 1
+      voicemailAction: 1,
     }];
 
     it('should get messageAction', function () {
@@ -52,7 +52,7 @@ describe('Service: VoicemailMessageAction', function () {
   describe('update', function () {
     var messageAction = {
       voicemailAction: 3,
-      relayAddress: 'dummy@test.xyz'
+      relayAddress: 'dummy@test.xyz',
     };
 
     it('should update messageAction', function () {

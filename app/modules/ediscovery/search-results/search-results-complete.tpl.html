@@ -1,0 +1,33 @@
+<div class="report-parameters">
+  <span class="result-title results-spacing" translate="ediscovery.search.reportStatus"></span>
+  <br>
+  <span ng-if="ediscoverySearchCtrl.report.state === 'COMPLETED'"
+    translate="ediscovery.search.generatedAt"
+    translate-value-time="{{ediscoverySearchCtrl.report.createdTime | date: 'shortTime'}}"></span>
+  <br>
+  <span class="result-title results-spacing" translate="ediscovery.searchResults.totalReportSize"></span>
+  <br>
+  <span>{{ediscoverySearchCtrl.searchResults.totalSize}}</span>
+  <div class="row" ng-if="ediscoverySearchCtrl.report && ediscoverySearchCtrl.report.canBeDownloaded">
+    <div class="columns small-12 medium-12 large-12 results-spacing">
+      <button cs-btn
+              class="btn btn--primary"
+              loading="ediscoverySearchCtrl.downloadingReport"
+              ng-click="ediscoverySearchCtrl.downloadReport(ediscoverySearchCtrl.report)">
+        <span translate="ediscovery.search.downloadReport"></span>
+      </button>
+      <button ng-cloak type="button" class="btn"
+                translate="ediscovery.search.viewReportsList"
+                ui-sref="ediscovery.reports">
+      </button>
+      <!-- To be added when download content link is present -->
+      <!-- <div>
+        <span translate="ediscovery.searchResults.downloadContent"></span>
+      </div> -->
+      <div class="expiry-info">
+        <i class="icon icon-warning"></i>
+        <span translate="ediscovery.search.expiryInfo"></span>
+      </div>
+    </div>
+  </div>
+</div>

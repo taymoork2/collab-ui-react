@@ -1,9 +1,15 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Core')
-    .factory('UserCsvService', UserCsvService);
+  module.exports = angular.module('core.UserCsvService', [
+    require('modules/core/scripts/services/authinfo'),
+    require('modules/core/scripts/services/log'),
+    require('modules/core/scripts/services/utils'),
+    require('modules/core/config/urlConfig'),
+    require('modules/core/trackingId/trackingId.module'),
+  ])
+    .service('UserCsvService', UserCsvService)
+    .name;
 
   /* @ngInject */
   function UserCsvService($translate, Config, TrackingId) {
@@ -15,7 +21,7 @@
       numNewUsers: 0,
       numExistingUsers: 0,
       userArray: [],
-      userErrorArray: []
+      userErrorArray: [],
     };
 
     var service = {
@@ -25,7 +31,7 @@
       addErrorWithTrackingID: addErrorWithTrackingID,
       chunkSizeWithSparkCall: 2,
       chunkSizeWithoutSparkCall: 10,
-      maxUsersInCSV: 1100
+      maxUsersInCSV: 1100,
     };
 
     return service;
@@ -37,7 +43,7 @@
     }
 
     function setCsvStat(csvObject, resetArray) {
-      _.assign(csvStat, csvObject, function (a, b) {
+      _.assignInWith(csvStat, csvObject, function (a, b) {
         if (_.isArray(a)) {
           if (resetArray) {
             return b;
@@ -88,7 +94,7 @@
               case Config.messageErrors.userExistsError:
                 {
                   responseMessage = $translate.instant('usersPage.userExistsError', {
-                    email: email
+                    email: email,
                   });
                   break;
                 }
@@ -97,28 +103,28 @@
                 {
                   responseMessage = $translate.instant('usersPage.claimedDomainError', {
                     email: email,
-                    domain: email.split('@')[1]
+                    domain: email.split('@')[1],
                   });
                   break;
                 }
               case Config.messageErrors.userExistsInDiffOrgError:
                 {
                   responseMessage = $translate.instant('usersPage.userExistsInDiffOrgError', {
-                    email: email
+                    email: email,
                   });
                   break;
                 }
               case Config.messageErrors.notSetupForManUserAddError:
                 {
                   responseMessage = $translate.instant('usersPage.notSetupForManUserAddError', {
-                    email: email
+                    email: email,
                   });
                   break;
                 }
               case Config.messageErrors.userExistsDomainClaimError:
                 {
                   responseMessage = $translate.instant('usersPage.userExistsDomainClaimError', {
-                    email: email
+                    email: email,
                   });
                   break;
                 }
@@ -130,14 +136,14 @@
               case Config.messageErrors.unableToMigrateError:
                 {
                   responseMessage = $translate.instant('usersPage.unableToMigrateError', {
-                    email: email
+                    email: email,
                   });
                   break;
                 }
               case Config.messageErrors.insufficientEntitlementsError:
                 {
                   responseMessage = $translate.instant('usersPage.insufficientEntitlementsError', {
-                    email: email
+                    email: email,
                   });
                   break;
                 }
@@ -180,11 +186,11 @@
           {
             if (messageCode === '0') {
               responseMessage = $translate.instant('firstTimeWizard.bulkCancelledErrorByUser', {
-                email: email
+                email: email,
               });
             } else {
               responseMessage = $translate.instant('firstTimeWizard.bulkCancelledErrorByServer', {
-                email: email
+                email: email,
               });
             }
             break;
@@ -198,7 +204,8 @@
       return responseMessage;
     }
 
-    function addErrorWithTrackingID(errorMsg, response, headers) {
+    function addErrorWithTrackingID(_errorMsg, response, headers) {
+      var errorMsg = _errorMsg || '';
       var headersFunc = (response && response.headers) ? response.headers : headers;
       if (_.isFunction(headersFunc)) {
         if (errorMsg.length > 0 && !_.endsWith(errorMsg, '.')) {

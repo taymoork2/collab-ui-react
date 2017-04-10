@@ -11,30 +11,22 @@ describe('CsdmConverterSpec', function () {
 
   it('should convert tags', function () {
     var obj = {
-      description: '["foo"]'
+      description: '["foo"]',
     };
-    expect(converter.convertCode(obj).tags[0]).toBe('foo');
     expect(converter.convertCloudberryDevice(obj).tags[0]).toBe('foo');
   });
 
   it('should convert tags for huron devices', function () {
     var obj = {
-      description: '["foo", "bar"]'
+      description: '["foo", "bar"]',
     };
     expect(converter.convertHuronDevice(obj).tags[0]).toBe('foo');
     expect(converter.convertHuronDevice(obj).tags[1]).toBe('bar');
   });
 
-  it('should add needsActivation flag', function () {
-    var arr = [{
-      state: 'UNCLAIMED'
-    }];
-    expect(converter.convertCloudberryDevices(arr)[0].needsActivation).toBeTruthy();
-  });
-
   it('unknown product should be cleared', function () {
     var arr = [{
-      product: 'UNKNOWN'
+      product: 'UNKNOWN',
     }];
     expect(converter.convertCloudberryDevices(arr)[0].product).toBe('');
     expect(converter.convertHuronDevices(arr)[0].product).toBe('');
@@ -43,8 +35,8 @@ describe('CsdmConverterSpec', function () {
   it('should set isOnline when status is CONNECTED', function () {
     var arr = [{
       status: {
-        connectionStatus: 'CONNECTED'
-      }
+        connectionStatus: 'CONNECTED',
+      },
     }];
     expect(converter.convertCloudberryDevices(arr)[0].isOnline).toBeTruthy();
     expect(converter.convertHuronDevices(arr)[0].isOnline).toBeTruthy();
@@ -53,8 +45,8 @@ describe('CsdmConverterSpec', function () {
   it('should not set isOnline when status isnt CONNECTED', function () {
     var arr = [{
       status: {
-        connectionStatus: 'foo'
-      }
+        connectionStatus: 'foo',
+      },
     }];
     expect(converter.convertCloudberryDevices(arr)[0].isOnline).toBeFalsy();
     expect(converter.convertHuronDevices(arr)[0].isOnline).toBeFalsy();
@@ -64,7 +56,7 @@ describe('CsdmConverterSpec', function () {
 
     it('displayName', function () {
       var arr = [{
-        displayName: 'bar'
+        displayName: 'bar',
       }];
       expect(converter.convertCloudberryDevices(arr)[0].displayName).toBe('bar');
       expect(converter.convertHuronDevices(arr)[0].displayName).toBe('bar');
@@ -72,7 +64,7 @@ describe('CsdmConverterSpec', function () {
 
     it('mac', function () {
       var arr = [{
-        mac: 'bar'
+        mac: 'bar',
       }];
       expect(converter.convertCloudberryDevices(arr)[0].mac).toBe('bar');
       expect(converter.convertHuronDevices(arr)[0].mac).toBe('bar');
@@ -80,7 +72,7 @@ describe('CsdmConverterSpec', function () {
 
     it('product', function () {
       var arr = [{
-        product: 'bar'
+        product: 'bar',
       }];
       expect(converter.convertCloudberryDevices(arr)[0].product).toBe('bar');
       expect(converter.convertHuronDevices(arr)[0].product).toBe('bar');
@@ -88,14 +80,14 @@ describe('CsdmConverterSpec', function () {
 
     it('serial', function () {
       var arr = [{
-        serial: 'bar'
+        serial: 'bar',
       }];
       expect(converter.convertCloudberryDevices(arr)[0].serial).toBe('bar');
     });
 
     it('url', function () {
       var arr = [{
-        url: 'foo'
+        url: 'foo',
       }];
       expect(converter.convertCloudberryDevices(arr)[0].url).toBe('foo');
       expect(converter.convertHuronDevices(arr)[0].url).toBe('foo');
@@ -103,7 +95,7 @@ describe('CsdmConverterSpec', function () {
 
     it('cisUuid', function () {
       var arr = [{
-        cisUuid: 'foo'
+        cisUuid: 'foo',
       }];
       expect(converter.convertCloudberryDevices(arr)[0].cisUuid).toBe('foo');
       expect(converter.convertHuronDevices(arr)[0].cisUuid).toBe('foo');
@@ -111,27 +103,23 @@ describe('CsdmConverterSpec', function () {
 
     it('accountType', function () {
       var arr = [{
-        accountType: 'PERSON'
+        accountType: 'PERSON',
       }];
       expect(converter.convertCloudberryDevices(arr)[0].accountType).toBe('PERSON');
-      expect(converter.convertCloudberryDevices(arr)[0].canEditDisplayName).toBeFalsy();
       expect(converter.convertHuronDevices(arr)[0].accountType).toBe('PERSON');
-      expect(converter.convertHuronDevices(arr)[0].canEditDisplayName).toBeFalsy();
     });
 
     it('default accountType', function () {
       var arr = [{}];
       expect(converter.convertCloudberryDevices(arr)[0].accountType).toBe('MACHINE');
-      expect(converter.convertCloudberryDevices(arr)[0].canEditDisplayName).toBeTruthy();
       expect(converter.convertHuronDevices(arr)[0].accountType).toBe('PERSON');
-      expect(converter.convertHuronDevices(arr)[0].canEditDisplayName).toBeFalsy();
     });
 
     it('photos', function () {
       var arr = [{
         photos: [{
-          url: 'foo'
-        }]
+          url: 'foo',
+        }],
       }];
       expect(converter.convertCloudberryDevices(arr)[0].photos[0].url).toBe('foo');
       expect(converter.convertHuronDevices(arr)[0].photos[0].url).toBe('foo');
@@ -139,7 +127,7 @@ describe('CsdmConverterSpec', function () {
 
     it('huronId', function () {
       var arr = [{
-        url: 'https://cmi.huron-int.com/api/v1/voice/customers/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/sipendpoints/f0b72ba5-0121-452b-a0c8-f6680f660de6'
+        url: 'https://cmi.huron-int.com/api/v1/voice/customers/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/sipendpoints/f0b72ba5-0121-452b-a0c8-f6680f660de6',
       }];
       expect(converter.convertHuronDevices(arr)[0].huronId).toBe('f0b72ba5-0121-452b-a0c8-f6680f660de6');
     });
@@ -149,14 +137,14 @@ describe('CsdmConverterSpec', function () {
   describe('photos', function () {
     it('should handle empty', function () {
       var arr = [{
-        photos: []
+        photos: [],
       }];
       expect(converter.convertCloudberryDevices(arr)[0].photos).toBe(null);
       expect(converter.convertHuronDevices(arr)[0].photos).toBe(null);
     });
     it('should handle null', function () {
       var arr = [{
-        photos: null
+        photos: null,
       }];
       expect(converter.convertCloudberryDevices(arr)[0].photos).toBe(null);
       expect(converter.convertHuronDevices(arr)[0].photos).toBe(null);
@@ -166,103 +154,50 @@ describe('CsdmConverterSpec', function () {
   describe('image', function () {
     it('should convert sx10 to correct image', function () {
       var arr = [{
-        product: "Cisco TelePresence SX10"
+        product: "Cisco TelePresence SX10",
+        imageFilename: "tralala.png",
       }];
-      expect(converter.convertCloudberryDevices(arr)[0].image).toBe('images/devices-hi/sx10.png');
+      expect(converter.convertCloudberryDevices(arr)[0].image).toBe('images/devices-hi/tralala.png');
     });
 
     it('should convert MODEL_CISCO_7811 to correct image', function () {
       var arr = [{
-        product: "MODEL_CISCO_7811"
+        product: "MODEL_CISCO_7811",
+        imageFilename: "nfdsøafnkdløf.png",
       }];
-      expect(converter.convertHuronDevices(arr)[0].image).toBe('images/devices-hi/cisco_7811.png');
+      expect(converter.convertHuronDevices(arr)[0].image).toBe('images/devices-hi/nfdsøafnkdløf.png');
     });
   });
 
   describe('state and cssColorClass', function () {
-    it('should convert device with issues yellow color and show status', function () {
-      var arr = [{
-        state: 'CLAIMED',
-        status: {
-          level: "error",
-          connectionStatus: 'CONNECTED'
-        }
-      }];
-      expect(converter.convertCloudberryDevices(arr)[0].state.readableState).toBe('CsdmStatus.OnlineWithIssues');
-      expect(converter.convertCloudberryDevices(arr)[0].state.priority).toBe("1");
-      expect(converter.convertCloudberryDevices(arr)[0].cssColorClass).toBe('warning');
-    });
-
     it('should convert device with issues yellow color but keep status', function () {
       var arr = [{
         status: {
           level: "error",
-          connectionStatus: 'CONNECTED'
-        }
+          connectionStatus: 'CONNECTED',
+        },
       }];
       expect(converter.convertCloudberryDevices(arr)[0].state.readableState).toBe('CsdmStatus.OnlineWithIssues');
       expect(converter.convertCloudberryDevices(arr)[0].state.priority).toBe("1");
       expect(converter.convertCloudberryDevices(arr)[0].cssColorClass).toBe('warning');
-    });
-
-    it('should convert state UNCLAIMED to Requires Activation and gray', function () {
-      var arr = [{
-        state: 'UNCLAIMED'
-      }];
-      expect(converter.convertCloudberryDevices(arr)[0].state.readableState).toBe('CsdmStatus.RequiresActivation');
-      expect(converter.convertCloudberryDevices(arr)[0].state.priority).toBe("3");
-      expect(converter.convertCloudberryDevices(arr)[0].cssColorClass).toBe('disabled');
-    });
-
-    it('should convert state CLAIMED and connection status CONNECTED to Online and green', function () {
-      var arr = [{
-        state: 'CLAIMED',
-        status: {
-          connectionStatus: 'CONNECTED'
-        }
-      }];
-      expect(converter.convertCloudberryDevices(arr)[0].state.readableState).toBe('CsdmStatus.Online');
-      expect(converter.convertCloudberryDevices(arr)[0].state.priority).toBe("5");
-      expect(converter.convertCloudberryDevices(arr)[0].cssColorClass).toBe('success');
     });
 
     it('should convert connection status CONNECTED to Online and green', function () {
       var arr = [{
         status: {
-          connectionStatus: 'CONNECTED'
-        }
+          connectionStatus: 'CONNECTED',
+        },
       }];
       expect(converter.convertCloudberryDevices(arr)[0].state.readableState).toBe('CsdmStatus.Online');
       expect(converter.convertCloudberryDevices(arr)[0].state.priority).toBe("5");
       expect(converter.convertCloudberryDevices(arr)[0].cssColorClass).toBe('success');
     });
 
-    it('should convert state CLAIMED and connection status UNKNOWN to Offline and red', function () {
-      var arr = [{
-        state: 'CLAIMED',
-        status: {
-          connectionStatus: 'UNKNOWN'
-        }
-      }];
-      expect(converter.convertCloudberryDevices(arr)[0].state.readableState).toBe('CsdmStatus.Offline');
-      expect(converter.convertCloudberryDevices(arr)[0].state.priority).toBe("2");
-      expect(converter.convertCloudberryDevices(arr)[0].cssColorClass).toBe('danger');
-    });
-
     it('should convert connection status UNKNOWN to Offline and red', function () {
       var arr = [{
         status: {
-          connectionStatus: 'UNKNOWN'
-        }
-      }];
-      expect(converter.convertCloudberryDevices(arr)[0].state.readableState).toBe('CsdmStatus.Offline');
-      expect(converter.convertCloudberryDevices(arr)[0].state.priority).toBe("2");
-      expect(converter.convertCloudberryDevices(arr)[0].cssColorClass).toBe('danger');
-    });
-
-    it('should convert state CLAIMED and no connection status to Offline and red', function () {
-      var arr = [{
-        state: 'CLAIMED'
+          connectionStatus: 'UNKNOWN',
+        },
       }];
       expect(converter.convertCloudberryDevices(arr)[0].state.readableState).toBe('CsdmStatus.Offline');
       expect(converter.convertCloudberryDevices(arr)[0].state.priority).toBe("2");
@@ -278,16 +213,16 @@ describe('CsdmConverterSpec', function () {
           events: [{
             type: 'software',
             level: 'INFO',
-            description: 'sw_version'
-          }]
-        }
+            description: 'sw_version',
+          }],
+        },
       }];
       expect(converter.convertCloudberryDevices(arr)[0].software).toBe('sw_version');
     });
 
     it('should not fail when no software events', function () {
       var arr = [{
-        status: {}
+        status: {},
       }];
       expect(converter.convertCloudberryDevices(arr)[0].software).toBeFalsy();
     });
@@ -300,9 +235,9 @@ describe('CsdmConverterSpec', function () {
           events: [{
             type: 'ip',
             level: 'INFO',
-            description: 'ip_addr'
-          }]
-        }
+            description: 'ip_addr',
+          }],
+        },
       }];
       expect(converter.convertCloudberryDevices(arr)[0].ip).toBe('ip_addr');
     });
@@ -317,10 +252,10 @@ describe('CsdmConverterSpec', function () {
             level: 'warn',
             description: 'tcpfallback_description',
             references: {
-              mediaProtocol: 'TCP'
-            }
-          }]
-        }
+              mediaProtocol: 'TCP',
+            },
+          }],
+        },
       }];
       expect(converter.convertCloudberryDevices(arr)[0].diagnosticsEvents[0].type).toBe('Potential Loss of Video Quality');
       expect(converter.convertCloudberryDevices(arr)[0].diagnosticsEvents[0].message).toBe('This device is communicating via the TCP protocol, which could cause higher latency and therefore reduced media streaming experience. If you are experiencing issues with your media streaming, you can try to open UDP port 33434 on your local firewall to aid media streaming issues.');
@@ -333,9 +268,9 @@ describe('CsdmConverterSpec', function () {
           connectionStatus: 'CONNECTED',
           events: [{
             type: 'foo',
-            level: 'warn'
-          }]
-        }
+            level: 'warn',
+          }],
+        },
       }];
       expect(converter.convertCloudberryDevices(arr)[0].diagnosticsEvents[0].type).toBe('CsdmStatus.errorCodes.unknown.type');
       expect(converter.convertCloudberryDevices(arr)[0].diagnosticsEvents[0].message).toBe('CsdmStatus.errorCodes.unknown.message');
@@ -347,8 +282,8 @@ describe('CsdmConverterSpec', function () {
       var arr = [{
         status: {
           level: 'not_ok',
-          connectionStatus: 'CONNECTED'
-        }
+          connectionStatus: 'CONNECTED',
+        },
       }];
       expect(converter.convertCloudberryDevices(arr)[0].hasIssues).toBeTruthy();
     });
@@ -357,8 +292,8 @@ describe('CsdmConverterSpec', function () {
       var arr = [{
         status: {
           level: 'not_ok',
-          connectionStatus: 'OFFLINE'
-        }
+          connectionStatus: 'OFFLINE',
+        },
       }];
       expect(converter.convertCloudberryDevices(arr)[0].hasIssues).toBeFalsy();
     });
@@ -367,8 +302,8 @@ describe('CsdmConverterSpec', function () {
       var arr = [{
         status: {
           level: 'OK',
-          connectionStatus: 'CONNECTED'
-        }
+          connectionStatus: 'CONNECTED',
+        },
       }];
       expect(converter.convertCloudberryDevices(arr)[0].hasIssues).toBeFalsy();
     });
@@ -378,9 +313,9 @@ describe('CsdmConverterSpec', function () {
     it('when long ago', function () {
       var arr = [{
         status: {
-          lastConnectionTime: '2015-01-09T08:00:00Z',
-          connectionStatus: 'UNKNOWN'
-        }
+          lastStatusReceivedTime: '2015-01-09T08:00:00Z',
+          connectionStatus: 'UNKNOWN',
+        },
       }];
       expect(converter.convertCloudberryDevices(arr)[0].lastConnectionTime.substring(0, 11) == "Jan 9, 2015").toBeTruthy();
     });
@@ -388,9 +323,9 @@ describe('CsdmConverterSpec', function () {
     it('when today', function () {
       var arr = [{
         status: {
-          lastConnectionTime: new Date(),
-          connectionStatus: 'UNKNOWN'
-        }
+          lastStatusReceivedTime: new Date(),
+          connectionStatus: 'UNKNOWN',
+        },
       }];
       expect(converter.convertCloudberryDevices(arr)[0].lastConnectionTime.substring(0, 8) == "Today at").toBeTruthy();
     });
@@ -398,20 +333,20 @@ describe('CsdmConverterSpec', function () {
     it('when null', function () {
       var arr = [{
         status: {
-          connectionStatus: 'UNKNOWN'
-        }
+          connectionStatus: 'UNKNOWN',
+        },
       }];
       expect(converter.convertCloudberryDevices(arr)[0].lastConnectionTime).toBeFalsy();
     });
   });
 
-  describe("remote support user", function () {
+  describe('remote support user', function () {
     it('rsuKey is taken from remoteSupportUser on device', function () {
       var token = 'this_is_a_very_secret_token';
       var arr = [{
         remoteSupportUser: {
-          token: token
-        }
+          token: token,
+        },
       }];
       expect(converter.convertCloudberryDevices(arr)[0].rsuKey).toBe(token);
     });
@@ -419,65 +354,51 @@ describe('CsdmConverterSpec', function () {
     it('no remoteSupportUser means no rsuKey, no nullReferences', function () {
       expect(converter.convertCloudberryDevices([{}]).rsuKey).toBeFalsy();
     });
+
+    it('remoteSupportUser should only be available for Cloudberry or Darling productFamily', function () {
+      var arr = [{
+        productFamily: 'Cloudberry',
+      }, {
+        productFamily: 'Darling',
+      }, {
+        productFamily: 'Eve',
+      }, {
+        productFamily: 'Huron',
+      }, {
+        productFamily: 'ATA',
+      }, {
+        productFamily: 'Some other weird code name',
+      }];
+      expect(converter.convertCloudberryDevices(arr)[0].hasRemoteSupport).toBe(true);
+      expect(converter.convertCloudberryDevices(arr)[1].hasRemoteSupport).toBe(true);
+      expect(converter.convertCloudberryDevices(arr)[2].hasRemoteSupport).toBe(false);
+      expect(converter.convertCloudberryDevices(arr)[3].hasRemoteSupport).toBe(false);
+      expect(converter.convertCloudberryDevices(arr)[4].hasRemoteSupport).toBe(false);
+      expect(converter.convertCloudberryDevices(arr)[5].hasRemoteSupport).toBe(false);
+    });
   });
 
-  describe("Non-existing devices", function () {
-    it('should have a url', function () {
+  describe('advanced settings', function () {
+    it('advanced settings should be available for Cloudberry productFamily', function () {
       var arr = [{
-        url: "foo"
+        productFamily: 'Cloudberry',
+      }, {
+        productFamily: 'Darling',
+      }, {
+        productFamily: 'Eve',
+      }, {
+        productFamily: 'Huron',
+      }, {
+        productFamily: 'ATA',
+      }, {
+        productFamily: 'Some other weird code name',
       }];
-      expect(converter.convertAccounts(arr)[0].url).toBe('foo');
+      expect(converter.convertCloudberryDevices(arr)[0].hasAdvancedSettings).toBe(true);
+      expect(converter.convertCloudberryDevices(arr)[1].hasAdvancedSettings).toBe(false);
+      expect(converter.convertCloudberryDevices(arr)[2].hasAdvancedSettings).toBe(false);
+      expect(converter.convertCloudberryDevices(arr)[3].hasAdvancedSettings).toBe(false);
+      expect(converter.convertCloudberryDevices(arr)[4].hasAdvancedSettings).toBe(false);
+      expect(converter.convertCloudberryDevices(arr)[5].hasAdvancedSettings).toBe(false);
     });
-
-    it('should have a cisUuid', function () {
-      var arr = [{
-        id: "foo"
-      }];
-      expect(converter.convertAccounts(arr)[0].cisUuid).toBe('foo');
-    });
-
-    it('should have a displayName', function () {
-      var arr = [{
-        displayName: "foo"
-      }];
-      expect(converter.convertAccounts(arr)[0].displayName).toBe('foo');
-    });
-
-    it('should have a isUnused', function () {
-      var arr = [{
-        url: "foo"
-      }];
-      expect(converter.convertAccounts(arr)[0].isUnused).toBeTruthy();
-    });
-
-    it('should have a canDelete', function () {
-      var arr = [{
-        url: "foo"
-      }];
-      expect(converter.convertAccounts(arr)[0].canDelete).toBeTruthy();
-    });
-
-    it('should set Product to Account', function () {
-      var arr = [{
-        url: "foo"
-      }];
-      expect(converter.convertAccounts(arr)[0].product).toBe('spacesPage.account');
-    });
-
-    it('should set state to Non existent', function () {
-      var arr = [{
-        url: "foo"
-      }];
-      expect(converter.convertAccounts(arr)[0].state.priority).toBe("4");
-      expect(converter.convertAccounts(arr)[0].state.readableState).toBe('CsdmStatus.Inactive');
-    });
-
-    it('should have issues', function () {
-      var arr = [{
-        url: "foo"
-      }];
-      expect(converter.convertAccounts(arr)[0].hasIssues).toBeTruthy();
-    });
-
   });
 });

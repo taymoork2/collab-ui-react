@@ -1,36 +1,34 @@
 <div class="sq-places-page-overview">
   <div ui-view="header"></div>
   <cs-sp-container>
-    <cs-sp-section ng-if="$ctrl.currentPlace.type === 'cloudberry'">
-      <div class="section-title-row">
-        <span class="section-name" translate="spacesPage.informationHeader"></span>
-      </div>
-      <div class="form-group" ng-show="$ctrl.currentPlace.sipUrl">
-        <label class="col-sm-4 control-label" translate="deviceOverviewPage.sipUrl"></label>
-        <div class="col-sm-8">
-          <p class="form-control-static">{{$ctrl.currentPlace.sipUrl}}</p>
-        </div>
-      </div>
-    </cs-sp-section>
-
-    <cs-sp-section ng-if="$ctrl.currentPlace.type === 'huron'">
-      <div class="section-title-row">
-        <span class="section-name" translate="placesPage.servicesHeader"></span>
-      </div>
+    <cs-sp-section>
+      <section-title
+        title-key="placesPage.servicesHeader"
+        action-list="$ctrl.actionList">
+      </section-title>
       <feature-list
         features="$ctrl.services"
-        feature-actions="$ctrl.serviceActions(feature)">
+        on-feature-click="$ctrl.clickService(feature)">
       </feature-list>
+      <hercules-cloud-extensions user="$ctrl.currentPlace" eservice="$ctrl.editCloudberryServices" ng-if="$ctrl.csdmHybridCalendarFeature"></hercules-cloud-extensions>
     </cs-sp-section>
 
     <cs-sp-section>
       <uc-device-list
         owner-type="place"
-        device-list="$ctrl.deviceList"
+        device-list="$ctrl.currentPlace.devices"
         multiple-otp="$ctrl.currentPlace.type !== 'cloudberry'"
         on-generate-fn="$ctrl.onGenerateOtpFn()"
         on-show-device-detail-fn="$ctrl.showDeviceDetails(device)">
       </uc-device-list>
+    </cs-sp-section>
+
+    <cs-sp-section ng-if="$ctrl.showDeviceSettings">
+      <uc-device-settings
+        owner-type="place"
+        owner-id="$ctrl.currentPlace.id"
+        device-list="$ctrl.currentPlace.devices">
+      </uc-device-settings>
     </cs-sp-section>
   </cs-sp-container>
 </div>

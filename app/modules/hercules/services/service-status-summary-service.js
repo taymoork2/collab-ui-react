@@ -12,12 +12,12 @@
       var clusterStatus = "Unknown";
 
       var service = _.find(cluster.services, {
-        service_type: service_id
+        service_type: service_id,
       });
 
       var nfOfConnectorsInState = function (service, state) {
         var connectorsInState = _.filter(service.connectors, {
-          state: state
+          state: state,
         });
         return connectorsInState.length || 0;
       };
@@ -56,7 +56,7 @@
         return null;
       }
       return _.find(cluster.services, {
-        service_type: serviceType
+        service_type: serviceType,
       });
     };
 
@@ -98,7 +98,7 @@
       serviceFromCluster: serviceFromCluster,
       serviceNotInstalled: serviceNotInstalled,
       softwareUpgradeAvailable: softwareUpgradeAvailable,
-      softwareVersion: softwareVersion
+      softwareVersion: softwareVersion,
     };
   }
 

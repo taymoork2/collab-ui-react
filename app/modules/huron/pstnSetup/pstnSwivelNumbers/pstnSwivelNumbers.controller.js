@@ -22,12 +22,12 @@
       limit: 50,
       tokens: [],
       minLength: 9,
-      beautify: false
+      beautify: false,
     };
     vm.tokenmethods = {
       createtoken: createToken,
       createdtoken: createdToken,
-      edittoken: editToken
+      edittoken: editToken,
     };
 
     init();
@@ -51,12 +51,17 @@
     }
 
     function createToken(e) {
-      var tokenNumber = e.attrs.label;
-      e.attrs.value = TelephoneNumberService.getDIDValue(tokenNumber);
-      e.attrs.label = TelephoneNumberService.getDIDLabel(tokenNumber);
+      if (e.attrs.value.charAt(0) !== '+') {
+        e.attrs.value = '+'.concat(e.attrs.value);
+      }
+      try {
+        e.attrs.value = e.attrs.label = phoneUtils.formatE164(e.attrs.value);
+      } catch (e) {
+        //noop
+      }
 
       var duplicate = _.find(getSwivelNumberTokens(), {
-        value: e.attrs.value
+        value: e.attrs.value,
       });
       if (duplicate) {
         e.attrs.duplicate = true;
@@ -67,17 +72,15 @@
       if (e.attrs.duplicate) {
         $timeout(function () {
           var tokens = getSwivelNumberTokens();
-          _.remove(tokens, function (e) {
-            return e.duplicate;
-          });
+          tokens = tokens.splice(_.indexOf(tokens, e.attrs), 1);
           Notification.error('pstnSetup.duplicateNumber', {
-            number: e.attrs.label
+            number: e.attrs.label,
           });
           setSwivelNumberTokens(tokens.map(function (token) {
             return token.value;
           }));
         });
-      } else if (!TelephoneNumberService.validateDID(e.attrs.value)) {
+      } else if (!TelephoneNumberService.internationalNumberValidator(e.attrs.value)) {
         angular.element(e.relatedTarget).addClass('invalid');
         e.attrs.invalid = true;
       }
@@ -94,7 +97,7 @@
     function validateSwivelNumbers() {
       var tokens = getSwivelNumberTokens() || [];
       var invalid = _.find(tokens, {
-        invalid: true
+        invalid: true,
       });
       if (invalid) {
         Notification.error('pstnSetup.invalidNumberPrompt');
@@ -108,9 +111,10 @@
         });
         var swivelOrder = [{
           data: {
-            numbers: numbers
+            numbers: numbers,
           },
-          type: PstnSetupService.NUMBER_ORDER
+          numberType: PstnSetupService.NUMTYPE_DID,
+          orderType: PstnSetupService.SWIVEL_ORDER,
         }];
         PstnSetup.setOrders(swivelOrder);
         $state.go('pstnSetup.review');

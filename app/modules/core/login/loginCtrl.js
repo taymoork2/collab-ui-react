@@ -2,10 +2,17 @@
   'use strict';
 
   /* @ngInject */
-  function LoginCtrl($location, $rootScope, $scope, $state, $stateParams, Auth, Authinfo, Log, LogMetricsService, PageParam, SessionStorage, TokenService, Utils) {
-    var storedState = 'storedState';
-    var storedParams = 'storedParams';
-    var queryParams = SessionStorage.popObject('queryParams');
+  function LoginCtrl($location, $rootScope, $scope, $state, $stateParams, $translate, Auth, Authinfo, Config, Log, LocalStorage, LogMetricsService, PageParam, SessionStorage, StorageKeys, TokenService, Utils) {
+    var queryParams = SessionStorage.popObject(StorageKeys.REQUESTED_QUERY_PARAMS);
+    var language = LocalStorage.get('language');
+
+    $scope.message = LocalStorage.get('loginMessage');
+
+    if (language) {
+      $translate.use(language).then(function () {
+        moment.locale(language);
+      });
+    }
 
     var pageParam = $location.search().pp;
     if (pageParam) {
@@ -37,7 +44,7 @@
     var authorizeUser = function () {
       $scope.loading = true;
       Auth.authorize({
-        reauthorize: $stateParams.reauthorize
+        reauthorize: $stateParams.reauthorize,
       })
         .then(function () {
           if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {
@@ -47,9 +54,9 @@
             var params;
             if (PageParam.getRoute()) {
               state = PageParam.getRoute();
-            } else if (SessionStorage.get(storedState)) {
-              state = SessionStorage.pop(storedState);
-              params = SessionStorage.popObject(storedParams);
+            } else if (SessionStorage.get(StorageKeys.REQUESTED_STATE_NAME)) {
+              state = SessionStorage.pop(StorageKeys.REQUESTED_STATE_NAME);
+              params = SessionStorage.popObject(StorageKeys.REQUESTED_STATE_PARAMS);
             } else if ((Authinfo.isPartnerAdmin() || Authinfo.isPartnerSalesAdmin()) && !$stateParams.customerOrgId && !$stateParams.partnerOrgId) {
               Log.debug('Sending "partner logged in" metrics');
               LogMetricsService.logMetrics('Partner logged in', LogMetricsService.getEventType('partnerLogin'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
@@ -64,6 +71,8 @@
               state = 'support.status';
             } else if (Authinfo.isPartnerUser()) {
               state = 'partnercustomers.list';
+            } else if (Authinfo.isTechSupport()) {
+              state = 'gss';
             }
             $rootScope.services = Authinfo.getServices();
 
@@ -71,7 +80,7 @@
               Log.debug('Sending "customer logged in" metrics');
               LogMetricsService.logMetrics('Customer logged in', LogMetricsService.getEventType('customerLogin'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
             }
-
+            $rootScope.$emit('LOGIN');
             $state.go(state, params);
           }
         }).catch(function () {

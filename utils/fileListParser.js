@@ -1,6 +1,7 @@
 /**
  * File list parsing utility
  */
+
 'use strict';
 
 var fs = require('fs');
@@ -26,5 +27,5 @@ function toList(filePath) {
 }
 
 module.exports = {
-  toList: toList
+  toList: toList,
 };

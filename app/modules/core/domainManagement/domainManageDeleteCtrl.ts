@@ -1,3 +1,5 @@
+require('./_domainManagement.scss');
+
 namespace domainManagement {
 
   class DomainManageDeleteCtrl {
@@ -27,7 +29,7 @@ namespace domainManagement {
         && this._loggedOnUser.domain === this._domainToDelete.text
           //Not last verified/claimed domain (which is ok to delete, as doing so will reset the enforceUsersInVerifiedAndClaimedDomains flag in CI:
         && this._moreThanOneVerifiedDomainLeft)) {
-          this._error = this.$translate.instant('domainManagement.delete.preventLockoutError');
+        this._error = this.$translate.instant('domainManagement.delete.preventLockoutError');
       }
     }
 
@@ -51,7 +53,7 @@ namespace domainManagement {
               data: { domain: this._domainToDelete.text, action: 'unverify', error: err },
             });
             this._error = err;
-          }
+          },
         );
       } else {
         this.DomainManagementService.unclaimDomain(this._domainToDelete.text).then(
@@ -71,7 +73,7 @@ namespace domainManagement {
               data: { domain: this._domainToDelete.text, action: 'unclaim', error: err },
             });
             this._error = err;
-          }
+          },
         );
       }
     }
@@ -110,7 +112,7 @@ namespace domainManagement {
         status,
         startLog,
         1,
-        data
+        data,
       );
     }
   }

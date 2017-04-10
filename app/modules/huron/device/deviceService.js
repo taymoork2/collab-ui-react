@@ -15,7 +15,9 @@
       updateDevice: updateDevice,
       deleteDevice: deleteDevice,
       getCurrentDevice: getCurrentDevice,
-      setCurrentDevice: setCurrentDevice
+      setCurrentDevice: setCurrentDevice,
+      getTags: getTags,
+      decodeHuronTags: decodeHuronTags,
     };
 
     return service;
@@ -24,7 +26,7 @@
     function listDevices(userUuid) {
       return UserEndpointService.query({
         customerId: Authinfo.getOrgId(),
-        userId: userUuid
+        userId: userUuid,
       }).$promise;
     }
 
@@ -48,14 +50,14 @@
     }
 
     function decodeHuronTags(description) {
-      var tagString = (description || "").replace(/\['/g, '["').replace(/']/g, '"]').replace(/',/g, '",').replace(/,'/g, ',"');
+      var tagString = _.replace(description, /\['/g, '["').replace(/']/g, '"]').replace(/',/g, '",').replace(/,'/g, ',"');
       return tagString;
     }
 
     function loadDevices(userUuid) {
       return UserEndpointService.query({
         customerId: Authinfo.getOrgId(),
-        userId: userUuid
+        userId: userUuid,
       }).$promise
         .then(function (devices) {
           var deviceList = [];
@@ -69,15 +71,15 @@
                 status: '',
                 ipAddress: '',
                 progressStatus: false,
-                isValid: true
-              }
+                isValid: true,
+              },
             };
 
             deviceList.push(device);
 
             SipEndpointService.get({
               customerId: Authinfo.getOrgId(),
-              sipEndpointId: device.uuid
+              sipEndpointId: device.uuid,
             }, function (endpoint) {
               this.model = endpoint.model;
               this.description = getTagString(decodeHuronTags(endpoint.description));
@@ -89,15 +91,15 @@
               customerId: Authinfo.getOrgId(),
               sipEndpointId: device.uuid,
               status: true,
-              ipaddress: true
+              ipaddress: true,
             }).$promise.then(function (endpoint) {
-              if (angular.isDefined(endpoint.registrationStatus) && angular.lowercase(endpoint.registrationStatus) === 'registered') {
+              if (!_.isUndefined(endpoint.registrationStatus) && angular.lowercase(endpoint.registrationStatus) === 'registered') {
                 this.deviceStatus.status = 'Online';
               } else {
                 this.deviceStatus.status = 'Offline';
               }
 
-              if (angular.isDefined(endpoint.ipAddress) && endpoint.ipAddress !== null) {
+              if (!_.isUndefined(endpoint.ipAddress) && endpoint.ipAddress !== null) {
                 this.deviceStatus.ipAddress = endpoint.ipAddress;
               } else {
                 this.deviceStatus.ipAddress = 'unknown';
@@ -115,18 +117,18 @@
 
     function updateDevice(device) {
       var payload = {
-        description: device.description
+        description: device.description,
       };
       return SipEndpointService.update({
         customerId: Authinfo.getOrgId(),
-        sipEndpointId: device.uuid
+        sipEndpointId: device.uuid,
       }, payload).$promise;
     }
 
     function deleteDevice(device) {
       return SipEndpointService.delete({
         customerId: Authinfo.getOrgId(),
-        sipEndpointId: device.uuid
+        sipEndpointId: device.uuid,
       }).$promise;
     }
 

@@ -12,7 +12,7 @@
 
       _.each(res, function (result) {
         var details = result.details;
-        if (angular.isArray(details)) {
+        if (_.isArray(details)) {
           results.push(result.searchType + " returned " + result.details.length + " results.");
         } else {
           errors.push(result.searchType + " returned errors:" + result.details);
@@ -26,7 +26,7 @@
         withinOrg: orgId != null,
         nrOfRequests: res.length,
         searchResult: results,
-        searchError: errors
+        searchError: errors,
       };
 
       LogMetricsService.logMetrics(
@@ -44,7 +44,7 @@
 
     function reportOperation(operation) {
       var json = {
-        operation: operation
+        operation: operation,
       };
 
       LogMetricsService.logMetrics(
@@ -72,9 +72,10 @@
       DEVICE_SEARCH_HURON_NUMBER: "Huron device number search",
       DEVICE_SEARCH_CLOUDBERRY: "Cloudberry device search",
       ORG_SEARCH: "Org search",
+      ORDER_SEARCH: "Order search",
       SEARCH_HISTORY: "searchHistory",
       SEARCH_HELP: "searchHelp",
-      SPARK_STATUS: "sparkStatus"
+      SPARK_STATUS: "sparkStatus",
     };
   }
 

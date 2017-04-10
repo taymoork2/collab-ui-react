@@ -20,10 +20,11 @@
             <aa-say-message ng-switch-when="phoneMenuSayMessage" aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-say-message>
             <!--- submenu is not handled by switch statement; see ng-if on row below -->
             <aa-route-to-queue ng-switch-when="phoneMenuRouteQueue" aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index" aa-key-index="{{$index}}" aa-queues="{{aaPhoneMenu.queues}}"></aa-route-to-queue>
+            <aa-route-to-sip-endpoint ng-switch-when="phoneMenuRouteToSipEndpoint" aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-sip-endpoint>
           </div>
         </div>
         <div class="small-1 columns">
-          <i class="aa-trash-icon" aria-label="common.delete" ng-click="aaPhoneMenu.deleteKeyAction($index); $event.stopPropagation();"></i>
+          <i ng-if="aaPhoneMenu.selectedActions.length > 1" class="icon icon-trash aa-trash-icon" aria-label="common.delete" ng-click="aaPhoneMenu.deleteKeyAction($index); $event.stopPropagation();"></i>
         </div>
       </div>
       <div class="row" ng-if="keyAction.action.name === 'phoneMenuPlaySubmenu'">

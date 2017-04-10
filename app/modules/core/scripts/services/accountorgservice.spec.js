@@ -5,7 +5,7 @@ describe('Service : AccountOrgService', function () {
 
   var AccountOrgService, $httpBackend;
   var authInfo = {
-    getOrgId: sinon.stub().returns('bcd7afcd-839d-4c61-a7a8-31c6c7f016d7')
+    getOrgId: sinon.stub().returns('bcd7afcd-839d-4c61-a7a8-31c6c7f016d7'),
   };
   var appSecurityRegex = /.*\/settings\/clientSecurityPolicy\.*/;
 
@@ -53,7 +53,7 @@ describe('Service : AccountOrgService', function () {
 
       $httpBackend.whenGET(appSecurityRegex).respond(function () {
         var data = {
-          clientSecurityPolicy: true
+          clientSecurityPolicy: true,
         };
         return [200, data];
       });

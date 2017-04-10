@@ -3,6 +3,10 @@
 describe('Service: TrialTimeZoneService:', function () {
   var TrialTimeZoneService;
 
+  afterEach(function () {
+    TrialTimeZoneService = undefined;
+  });
+
   beforeEach(angular.mock.module('core.trial'));
   beforeEach(inject(dependencies));
 
@@ -54,7 +58,7 @@ describe('Service: TrialTimeZoneService:', function () {
       }
 
       it('should return a list of predefined timezone info objects', function () {
-        expect(timeZones.length).toBe(55);
+        expect(timeZones.length).toBe(92);
       });
 
       it('each timezone info object should have a \'label\' property', function () {

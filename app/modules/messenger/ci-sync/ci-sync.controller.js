@@ -19,34 +19,23 @@
     vm.dataStates = Object.freeze({
       loading: 1,
       loaded: 2,
-      error: 3
-    });
-
-    vm.statusOptions = Object.freeze({
-      on: {
-        badgeClass: 'badge-primary',
-        label: 'On'
-      },
-      off: {
-        badgeClass: 'badge-default',
-        label: 'Off'
-      }
+      error: 3,
     });
 
     // the label is only a stake holder right now
     vm.adminTypes = Object.freeze({
       org: {
-        label: $translate.instant(translatePrefix + 'labelOrgAdmin')
+        label: $translate.instant(translatePrefix + 'labelOrgAdmin'),
       },
       ops: {
-        label: $translate.instant(translatePrefix + 'labelOpsAdmin')
+        label: $translate.instant(translatePrefix + 'labelOpsAdmin'),
       },
       read: {
-        label: $translate.instant(translatePrefix + 'labelReadAdmin')
+        label: $translate.instant(translatePrefix + 'labelReadAdmin'),
       },
       unknown: {
-        label: $translate.instant(translatePrefix + 'labelUnauthorizedUser')
-      }
+        label: $translate.instant(translatePrefix + 'labelUnauthorizedUser'),
+      },
     });
 
     // Public
@@ -54,10 +43,6 @@
     vm.dataStatus = vm.dataStates.loading;
     vm.errorMsg = '';
     vm.isDirSync = false;
-    vm.status = vm.statusOptions.on;
-    vm.ciAdmins = [];
-    vm.ciUsers = [];
-    vm.ciData = CiService.getCiOrgInfo();
     vm.orgAdminUrl = 'https://wapi.webexconnect.com/wbxconnect/acs/widgetserver/mashkit/apps/standalone.html?app=WBX.base.orgadmin';
 
     // Translated text
@@ -70,6 +55,7 @@
     vm.pwdSyncTooltip = $translate.instant(translatePrefix + 'pwdSyncTooltip');
     vm.sparkEntTooltip = $translate.instant(translatePrefix + 'sparkEntTooltip');
     vm.usrDisTooltip = $translate.instant(translatePrefix + 'usrDisTooltip');
+    vm.usrDelTooltip = $translate.instant(translatePrefix + 'usrDelTooltip');
 
     vm.syncInfo = {
       messengerOrgName: 'Unknown',
@@ -81,7 +67,8 @@
       isNewDataFormat: false,
       isPwdSync: true,
       isSparkEnt: true,
-      isUsrDis: true
+      isUsrDis: true,
+      isUsrDel: true,
     };
 
     vm.fields = [{
@@ -92,8 +79,8 @@
         label: $translate.instant(translatePrefix + 'labelOrgName'),
         required: false,
         disabled: true,
-        placeholder: ''
-      }
+        placeholder: '',
+      },
     }, {
       key: 'messengerOrgId',
       type: 'input',
@@ -102,8 +89,8 @@
         label: $translate.instant(translatePrefix + 'labelOrgId'),
         required: false,
         disabled: true,
-        placeholder: ''
-      }
+        placeholder: '',
+      },
     }, {
       key: 'linkDate',
       type: 'input',
@@ -112,8 +99,8 @@
         label: $translate.instant(translatePrefix + 'labelCILinkDate'),
         required: false,
         disabled: true,
-        placeholder: ''
-      }
+        placeholder: '',
+      },
     }];
 
     vm.init = init;
@@ -140,9 +127,6 @@
       checkUserType()
         .then(function () {
           if (authorized()) {
-            vm.ciData = CiService.getCiOrgInfo();
-            CiService.getCiAdmins(vm.ciAdmins);
-            CiService.getCiNonAdmins(vm.ciUsers);
             getSyncStatus();
           }
         }).catch(function (errorMsg) {
@@ -289,13 +273,13 @@
 
   function msgrTextStatusOn() {
     return {
-      templateUrl: 'modules/messenger/ci-sync/ciSyncTextStatusOn.html'
+      templateUrl: 'modules/messenger/ci-sync/ciSyncTextStatusOn.html',
     };
   }
 
   function msgrTextStatusOff() {
     return {
-      templateUrl: 'modules/messenger/ci-sync/ciSyncTextStatusOff.html'
+      templateUrl: 'modules/messenger/ci-sync/ciSyncTextStatusOff.html',
     };
   }
 })();

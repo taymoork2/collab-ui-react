@@ -7,13 +7,9 @@ var RolesPage = function () {
   this.displayNameInput = element(by.id('displayNameInput'));
   this.emailInput = element(by.id('customerEmailInput'));
 
-  this.fullAdmin = element(by.id('full-admin-options')).element(by.css('.ng-valid'));
-  this.salesAdmin = element(by.id('sales-admin-options')).element(by.css('.ng-valid'));
-  this.noAdmin = element(by.id('no-admin-options')).element(by.css('.ng-valid'));
-
-  this.fullAdminDiv = element(by.id('full-admin-options'));
-  this.salesAdminDiv = element(by.id('sales-admin-options'));
-  this.noAdminDiv = element(by.id('no-admin-options'));
+  this.fullAdmin = element(by.id('full-admin-options')).element(by.css('div.cs-input-radio'));
+  this.salesAdmin = element(by.id('sales-admin-options')).element(by.css('cs-checkbox'));
+  this.noAdmin = element(by.id('no-admin-options')).element(by.css('div.cs-input-radio'));
 
   this.saveButton = element(by.id('saveButton'));
   this.closeButton = element(by.css('.close-row'));

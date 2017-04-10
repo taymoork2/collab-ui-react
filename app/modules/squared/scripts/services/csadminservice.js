@@ -10,23 +10,23 @@
 
     var service = {
       csadminUrl: csadminUrl,
-      setCsAdmin: setCsAdmin
+      setCsAdmin: setCsAdmin,
     };
 
     return service;
 
     function setCsAdmin(encryptedParam, callback) {
       var csadminData = {
-        'encryptedQueryString': encryptedParam
+        'encryptedQueryString': encryptedParam,
       };
       $http.post(csadminUrl, csadminData)
         .success(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = true;
           callback(data, status);
         })
         .error(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = false;
           data.status = status;
           callback(data, status);

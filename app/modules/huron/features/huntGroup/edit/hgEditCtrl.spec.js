@@ -1,6 +1,7 @@
 /**
  * Created by zamamoha on 10/20/15.
  */
+
 'use strict';
 
 describe('Hunt Group EditCtrl Controller', function () {
@@ -11,13 +12,14 @@ describe('Hunt Group EditCtrl Controller', function () {
   var pilotNumbers = getJSONFixture('huron/json/features/edit/pilotNumbers.json');
   var GetMember1Url = new RegExp(".*/api/v2/customers/1/users/ba6c9d76-bed9-413f-a373-054a40df7095.*");
   var GetMember2Url = new RegExp(".*/api/v2/customers/1/users/5dea2d85-7f23-4392-a1bc-360b8a74a487.*");
-  var GetMemberListUrl = new RegExp(".*/api/v2/customers/1/users?.*");
+  var GetMemberListUrl = new RegExp(".*/api/v2/customers/1/members?.*");
   var GetFallbackNumbersUrl = new RegExp(".*/api/v2/customers/1/numbers.*");
   var user1 = getJSONFixture('huron/json/features/huntGroup/member1.json');
   var user2 = getJSONFixture('huron/json/features/huntGroup/member2.json');
+  var member1 = getJSONFixture('huron/json/features/huntGroup/member3.json');
   var member1ResponseHandler, member2ResponseHandler;
   var members = {
-    "users": [user1, user2]
+    "users": [user1, user2],
   };
 
   beforeEach(angular.mock.module('Huron'));
@@ -26,7 +28,7 @@ describe('Hunt Group EditCtrl Controller', function () {
   }));
 
   var spiedAuthinfo = {
-    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
   };
 
   beforeEach(inject(function (_$rootScope_, $controller, _$httpBackend_, _$q_, _$state_, _$timeout_, _Authinfo_,
@@ -48,23 +50,23 @@ describe('Hunt Group EditCtrl Controller', function () {
     };
     $stateParams = {
       feature: {
-        id: '111'
-      }
+        id: '111',
+      },
     };
     form = {
       '$invalid': false,
       $setDirty: emptyForm,
       $setPristine: emptyForm,
-      $setUntouched: emptyForm
+      $setUntouched: emptyForm,
     };
 
     spyOn($state, 'go');
     spyOn(Notification, 'success');
     spyOn(Notification, 'errorResponse');
-    spyOn(HuntGroupService, 'getDetails').and.returnValue($q.when(hgFeature));
-    spyOn(HuntGroupService, 'getAllUnassignedPilotNumbers').and.returnValue($q.when(pilotNumbers));
+    spyOn(HuntGroupService, 'getDetails').and.returnValue($q.resolve(hgFeature));
+    spyOn(HuntGroupService, 'getAllUnassignedPilotNumbers').and.returnValue($q.resolve(pilotNumbers));
     spyOn(HuntGroupFallbackDataService, 'isVoicemailDisabled').and.returnValue($q.defer().promise);
-    spyOn(HuntGroupFallbackDataService, 'allowLocalValidation').and.returnValue($q.when());
+    spyOn(HuntGroupMemberDataService, 'fetchHuntMembers');
     member1ResponseHandler = $httpBackend.whenGET(GetMember1Url).respond(200, user1);
     member2ResponseHandler = $httpBackend.whenGET(GetMember2Url).respond(200, user2);
 
@@ -74,7 +76,7 @@ describe('Hunt Group EditCtrl Controller', function () {
       $timeout: $timeout,
       Authinfo: Authinfo,
       HuntGroupService: HuntGroupService,
-      Notification: Notification
+      Notification: Notification,
     });
 
     hgEditCtrl.form = form;
@@ -94,7 +96,7 @@ describe('Hunt Group EditCtrl Controller', function () {
       $timeout: $timeout,
       Authinfo: Authinfo,
       HuntGroupService: HuntGroupService,
-      Notification: Notification
+      Notification: Notification,
     });
     $scope.$apply();
     expect($state.go).toHaveBeenCalledWith("huronfeatures");
@@ -109,7 +111,7 @@ describe('Hunt Group EditCtrl Controller', function () {
       $timeout: $timeout,
       Authinfo: Authinfo,
       HuntGroupService: HuntGroupService,
-      Notification: Notification
+      Notification: Notification,
     });
     $scope.$apply();
     expect(Notification.errorResponse).toHaveBeenCalled();
@@ -118,7 +120,7 @@ describe('Hunt Group EditCtrl Controller', function () {
   });
 
   it('on resetting the form, the model has pristine data from edit service', function () {
-    var newHgFeature = angular.copy(hgFeature);
+    var newHgFeature = _.cloneDeep(hgFeature);
     newHgFeature.name = "Test Model";
     expect(hgEditCtrl.model.name).not.toEqual(newHgFeature.name);
     expect(hgEditCtrl.model.name).toEqual(hgFeature.name); // Existing model.
@@ -149,7 +151,7 @@ describe('Hunt Group EditCtrl Controller', function () {
       $timeout: $timeout,
       Authinfo: Authinfo,
       HuntGroupService: HuntGroupService,
-      Notification: Notification
+      Notification: Notification,
     });
     $httpBackend.flush();
     $scope.$apply();
@@ -165,7 +167,7 @@ describe('Hunt Group EditCtrl Controller', function () {
   });
 
   it('on adding a new hunt member the form is marked dirty', function () {
-    var newUser = angular.copy(hgEditCtrl.selectedHuntMembers[0]);
+    var newUser = _.cloneDeep(hgEditCtrl.selectedHuntMembers[0]);
     newUser.uuid = "test";
     newUser.user.uuid = "test";
     var initMembersCount = hgEditCtrl.selectedHuntMembers.length;
@@ -190,8 +192,8 @@ describe('Hunt Group EditCtrl Controller', function () {
     $scope.$apply();
     $httpBackend.verifyNoOutstandingRequest(); // No request made.
 
+    HuntGroupMemberDataService.fetchHuntMembers.and.returnValue(member1);
     hgEditCtrl.fetchHuntMembers("mem");
-    $httpBackend.flush();
   });
 
   it('on trying to change fallback member, is able to fetch the members from member data service', function () {
@@ -200,8 +202,8 @@ describe('Hunt Group EditCtrl Controller', function () {
     $scope.$apply();
     $httpBackend.verifyNoOutstandingRequest(); // No request made.
 
+    HuntGroupMemberDataService.fetchHuntMembers.and.returnValue(member1);
     hgEditCtrl.fetchFallbackDestination("mem");
-    $httpBackend.flush();
   });
 
   it('disables the save button when it fines the vm.form.invalid is true', function () {
@@ -211,7 +213,6 @@ describe('Hunt Group EditCtrl Controller', function () {
     hgEditCtrl.form.$invalid = false;
     expect(hgEditCtrl.showDisableSave()).toBeFalsy();
     hgEditCtrl.removeFallbackDest();
-    hgEditCtrl.allowLocalValidation = false;
     expect(hgEditCtrl.showDisableSave()).toBeTruthy();
 
     hgEditCtrl.selectedFallbackNumber = "+19723453456";
@@ -230,7 +231,7 @@ describe('Hunt Group EditCtrl Controller', function () {
     spyOn(hgEditCtrl.form, '$setDirty');
     hgEditCtrl.selectedFallbackNumber = "3456";
     $httpBackend.expectGET(GetFallbackNumbersUrl).respond(200, {
-      numbers: []
+      numbers: [],
     });
     hgEditCtrl.validateFallbackNumber();
     $httpBackend.flush();
@@ -241,7 +242,7 @@ describe('Hunt Group EditCtrl Controller', function () {
   it('on toggle hunt member panel, openMemberPanelUuid is updated correctly', function () {
     expect(hgEditCtrl.openMemberPanelUuid).toBeUndefined();
 
-    var newUser = angular.copy(user1);
+    var newUser = _.cloneDeep(user1);
     newUser.email = "test@cisco.com";
     member1ResponseHandler.respond(200, newUser);
     hgEditCtrl.toggleMemberPanel(hgEditCtrl.selectedHuntMembers[0].user);
@@ -253,7 +254,7 @@ describe('Hunt Group EditCtrl Controller', function () {
     $scope.$apply();
     expect(hgEditCtrl.openMemberPanelUuid).toBeUndefined();
 
-    newUser = angular.copy(user2);
+    newUser = _.cloneDeep(user2);
     newUser.email = "test@cisco.com";
     member2ResponseHandler.respond(200, newUser);
     hgEditCtrl.toggleMemberPanel(hgEditCtrl.selectedHuntMembers[1].user);
@@ -269,15 +270,15 @@ describe('Hunt Group EditCtrl Controller', function () {
       "selectableNumber": {
         "internal": "2043",
         "external": "",
-        "uuid": "bbdfc3bc-ca48-4d13-b8cc-9554ce71203b"
-      }
+        "uuid": "bbdfc3bc-ca48-4d13-b8cc-9554ce71203b",
+      },
     };
 
     hgEditCtrl.selectFallback(fbUser);
     $scope.$apply();
     expect(hgEditCtrl.selectedFallbackMember.openPanel).toBeFalsy();
 
-    var newUser = angular.copy(user1);
+    var newUser = _.cloneDeep(user1);
     newUser.email = "test@cisco.com";
     member1ResponseHandler.respond(200, newUser);
 
@@ -299,6 +300,7 @@ describe('Hunt Group EditCtrl Controller', function () {
 
   it('on validateFallbackNumber, applies validation and dirties the form', function () {
     spyOn(hgEditCtrl.form, '$setDirty');
+    hgEditCtrl.selectedFallbackNumber = '+19723453456';
     hgEditCtrl.validateFallbackNumber();
     expect(hgEditCtrl.form.$setDirty).not.toHaveBeenCalled();
 
@@ -326,7 +328,7 @@ describe('Hunt Group EditCtrl Controller', function () {
   });
 
   it('have intialized formly fields correctly', function () {
-    expect(hgEditCtrl.fields.length).toEqual(4);
+    expect(hgEditCtrl.name.length).toEqual(1);
   });
 
   it('on save hunt group success updates the pristine model', function () {
@@ -334,7 +336,7 @@ describe('Hunt Group EditCtrl Controller', function () {
     expect(hgFeaturePristine.name).toEqual("HuntGroupUnitTest");
 
     hgEditCtrl.model.name = "NewHuntGroup";
-    spyOn(HuntGroupService, 'updateHuntGroup').and.returnValue($q.when());
+    spyOn(HuntGroupService, 'updateHuntGroup').and.returnValue($q.resolve());
     hgEditCtrl.saveForm();
     $scope.$apply();
 
@@ -363,14 +365,14 @@ describe('Hunt Group EditCtrl Controller', function () {
         uuid: user1.uuid,
         displayUser: true,
         user: user1,
-        selectableNumber: user1.numbers[0]
+        selectableNumber: user1.numbers[0],
       };
 
       var member2 = {
         uuid: user2.uuid,
         displayUser: true,
         user: user2,
-        selectableNumber: user2.numbers[0]
+        selectableNumber: user2.numbers[0],
       };
 
       HuntGroupMemberDataService.reset(false); // removes all members.
@@ -390,12 +392,12 @@ describe('Hunt Group EditCtrl Controller', function () {
         "userName": user1.firstName + " " + user1.lastName,
         "userUuid": user1.uuid,
         "number": user1.numbers[0].number,
-        "numberUuid": user1.numbers[0].uuid
+        "numberUuid": user1.numbers[0].uuid,
       }, {
         "userName": user2.firstName + " " + user2.lastName,
         "userUuid": user2.uuid,
         "number": user2.numbers[0].number,
-        "numberUuid": user2.numbers[0].uuid
+        "numberUuid": user2.numbers[0].uuid,
       }];
 
       // rearrangeResponsesInSequence corrects the order:
@@ -405,4 +407,13 @@ describe('Hunt Group EditCtrl Controller', function () {
       expect(
         HuntGroupMemberDataService.getHuntMembers()[1].uuid).toEqual(member2.uuid);
     });
+
+  it("does not search on the number api when looking for members", function () {
+    var noSuggestion = {
+      "users": [],
+    };
+    $httpBackend.expectGET(GetMemberListUrl).respond(200, noSuggestion);
+    hgEditCtrl.fetchHuntMembers("123", true);
+    $scope.$apply();
+  });
 });

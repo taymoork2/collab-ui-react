@@ -1,0 +1,32 @@
+<div class="delete-incident-page">
+  <h1 translate="gss.deleteIncident" translate-values="{ incidentName: deleteIncidentCtrl.incident.incidentName }"></h1>
+
+  <p>
+    <em translate="common.warning"></em>
+    <strong translate="gss.deletingIncidentCannotBeUndone"></strong>
+    <span translate="gss.deleteEnsureAction"></span>
+  </p>
+
+  <p translate="gss.deleteConfirmation"></p>
+
+  <input type="text"
+         class="cs-input"
+         ng-model="deleteIncidentCtrl.deleteCommand"
+         ng-pattern="deleteIncidentCtrl.delConfirmText">
+
+  <button cs-btn
+          id="deleteIncidentBtn"
+          class="btn activate-button btn--negative"
+          ng-disabled="!deleteIncidentCtrl.isValid()"
+          loading="deleteIncidentCtrl.isLoading"
+          ng-click="deleteIncidentCtrl.deleteIncident()">
+    <span translate="common.delete"></span>
+  </button>
+
+  <button cs-btn
+          class="btn"
+          id="cancelBtn"
+          ng-click="deleteIncidentCtrl.goBack()">
+    <span translate="common.cancel"></span>
+  </button>
+</div>

@@ -51,7 +51,7 @@
         var chr1, chr2, chr3;
         var enc1, enc2, enc3, enc4;
         var i = 0;
-        input = input.replace(/[^A-Za-z0-9\+\/=]/g, '');
+        input = _.replace(input, /[^A-Za-z0-9+/=]/g, '');
         while (i < input.length) {
           enc1 = this._keyStr.indexOf(input.charAt(i++));
           enc2 = this._keyStr.indexOf(input.charAt(i++));
@@ -72,7 +72,7 @@
         return output;
       },
       utf8Encode: function (string) {
-        string = string.replace(/\r\n/g, '\n');
+        string = _.replace(string, /\r\n/g, '\n');
         var utftext = '';
         for (var n = 0; n < string.length; n++) {
           var c = string.charCodeAt(n);
@@ -112,7 +112,7 @@
           }
         }
         return string;
-      }
+      },
     };
 
     var getDeepKeyValues = function (obj, key) {
@@ -128,7 +128,7 @@
       return res;
     };
 
-    return {
+    var service = {
       Base64: Base64,
       getDeepKeyValues: getDeepKeyValues,
 
@@ -258,11 +258,11 @@
 
       getSqEntitlements: function (user) {
         var entitlements = {};
-        if (angular.isArray($rootScope.services)) {
+        if (_.isArray($rootScope.services)) {
           for (var i = $rootScope.services.length - 1; i >= 0; i--) {
             var service = $rootScope.services[i].serviceId;
             var ciName = $rootScope.services[i].ciName;
-            if (angular.isDefined(user) && angular.isArray(user.entitlements) && user.entitlements.indexOf(ciName) > -1) {
+            if (!_.isUndefined(user) && _.isArray(user.entitlements) && user.entitlements.indexOf(ciName) > -1) {
               entitlements[service] = true;
               entitlements.webExSquared = true;
             } else {
@@ -280,12 +280,28 @@
 
       checkForIeWorkaround: function () {
         if (this.isIe()) {
-          return "vertical-ie-workaround";
+          return 'vertical-ie-workaround';
         } else {
-          return "";
+          return '';
         }
-      }
+      },
 
+      mailTo: mailTo,
+      toUriString: toUriString,
     };
+
+    return service;
+
+    //////////
+
+    function mailTo(params) {
+      var uri = service.toUriString(params);
+      $window.location.href = 'mailto:?' + uri;
+    }
+
+    function toUriString(params) {
+      /* eslint no-undef:0 */
+      return jQuery.param(params);
+    }
   }
 })();

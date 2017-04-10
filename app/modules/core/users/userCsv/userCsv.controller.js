@@ -1,3 +1,5 @@
+require('./_user-csv.scss');
+
 (function () {
   'use strict';
 
@@ -6,16 +8,15 @@
     .controller('UserCsvCtrl', UserCsvCtrl);
 
   /* @ngInject */
-  function UserCsvCtrl($interval, $modal, $q, $rootScope, $scope, $state, $timeout, $translate, $previousState, $stateParams,
-                       Authinfo, Config, CsvDownloadService, FeatureToggleService, HuronCustomer, LogMetricsService, NAME_DELIMITER,
-                       Notification, Orgservice, TelephoneNumberService, UserCsvService, Userservice, ResourceGroupService, USSService) {
+  function UserCsvCtrl($interval, $modal, $q, $rootScope, $scope, $state, $timeout, $translate, $previousState,
+    Analytics, Authinfo, Config, CsvDownloadService, FeatureToggleService, HuronCustomer, LogMetricsService, NAME_DELIMITER,
+    Notification, ServiceDescriptor, TelephoneNumberService, UserCsvService, Userservice, ResourceGroupService, USSService, DirSyncService) {
     // variables
     var vm = this;
     vm.licenseUnavailable = false;
     vm.isCancelledByUser = false;
     vm.isExporting = false;
     vm.isCsvValid = false;
-    vm.isOverExportThreshold = !!$stateParams.isOverExportThreshold;
     vm.handleHybridServicesResourceGroups = false;
     vm.hybridServicesUserProps = [];
 
@@ -25,43 +26,54 @@
     var saveDeferred;
     var csvHeaders = null;
     var orgHeaders;
-
+    var renamedHeaders = {
+      'Calendar Service': 'Hybrid Calendar Service (Exchange)',
+    };
+    var mutuallyExclusiveCalendarEntitlements = {
+      'squaredFusionCal': 'squaredFusionGCal',
+      'squaredFusionGCal': 'squaredFusionCal',
+    };
     var USER_ID_EMAIL_HEADER = 'User ID/Email (Required)';
+    var NO_RESOURCE_GROUP = '**no resource group**';
 
     CsvDownloadService.getCsv('headers').then(function (csvData) {
-      orgHeaders = angular.copy(csvData.columns || []);
+      orgHeaders = _.cloneDeep(csvData.columns || []);
     }).catch(function (response) {
       Notification.errorResponse(response, 'firstTimeWizard.downloadHeadersError');
     });
 
-    vm.isDirSyncEnabled = false;
-    FeatureToggleService.supportsDirSync().then(function (enabled) {
-      vm.isDirSyncEnabled = enabled;
-    });
-    FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups).then(function (enabled) {
-      vm.isAtlasF237ResourceGroupsEnabled = enabled;
+    vm.isDirSyncEnabled = DirSyncService.isDirSyncEnabled();
+    if (DirSyncService.requiresRefresh()) {
+      DirSyncService.refreshStatus().then(function () {
+        vm.isDirSyncEnabled = DirSyncService.isDirSyncEnabled();
+      });
+    }
+
+    FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup).then(function (enabled) {
+      vm.hasResourceGroupFeatureToggle = enabled;
     });
 
-    var csvPromiseChain = $q.when();
+    var csvPromiseChain = $q.resolve();
     var uniqueEmails = [];
     var processingError;
     var headers;
     var idIndex;
     var isCalendarServiceEnabled = false;
     var isCalendarOrCallServiceEntitled = false;
-    Orgservice.getHybridServiceAcknowledged().then(function (response) {
-      if (response.status === 200) {
-        _.forEach(response.data.items, function (item) {
-          if (item.id === Config.entitlements.fusion_cal) {
-            isCalendarServiceEnabled = item.enabled;
+
+    ServiceDescriptor.getServices()
+      .then(function (services) {
+        _.forEach(services, function (service) {
+          if (service.id === Config.entitlements.fusion_cal) {
+            isCalendarServiceEnabled = service.enabled;
             isCalendarOrCallServiceEntitled = true;
-          } else if (item.id === Config.entitlements.fusion_uc) {
+          } else if (service.id === Config.entitlements.fusion_uc) {
             isCalendarOrCallServiceEntitled = true;
           }
         });
-        vm.handleHybridServicesResourceGroups = isCalendarOrCallServiceEntitled && vm.isAtlasF237ResourceGroupsEnabled;
-      }
-    });
+        vm.handleHybridServicesResourceGroups = isCalendarOrCallServiceEntitled && vm.hasResourceGroupFeatureToggle;
+      });
+
     var bulkStartLog = null;
     var hasVoicemailService = false;
     vm.model = {
@@ -86,18 +98,20 @@
 
       userArray: [],
       userErrorArray: [],
-      csvChunk: 0
+      csvChunk: 0,
     };
     vm.model.desc = $translate.instant("csvUpload.desc", {
-      maxUsers: maxUsers
+      maxUsers: maxUsers,
     });
     vm.model.templateAnchorText = $translate.instant("firstTimeWizard.downloadStep");
 
     // watches
-    $scope.$watchCollection(function () {
+    $scope.$watch(function () {
       return vm.model.file;
-    }, function () {
-      $timeout(vm.validateCsv);
+    }, function (newValue, oldValue) {
+      if (newValue !== oldValue) {
+        $timeout(vm.validateCsv);
+      }
     });
 
     // see if there is already a download started. if so, continue with that download
@@ -111,11 +125,11 @@
     vm.onExportDownloadStatus = onExportDownloadStatus;
 
     vm.onFileSizeError = function () {
-      $timeout(Notification.error('firstTimeWizard.csvMaxSizeError'));
+      Notification.error('firstTimeWizard.csvMaxSizeError');
     };
 
     vm.onFileTypeError = function () {
-      $timeout(Notification.error('firstTimeWizard.csvFileTypeError'));
+      Notification.error('firstTimeWizard.csvFileTypeError');
     };
 
     vm.resetFile = function () {
@@ -125,29 +139,45 @@
     vm.validateCsv = function () {
       setUploadProgress(0);
       vm.isCsvValid = false;
-      if (vm.model.file) {
-        setUploadProgress(0);
-        csvUsersArray = $.csv.toArrays(vm.model.file);
-        if (_.isArray(csvUsersArray) && csvUsersArray.length > 0 && _.isArray(csvUsersArray[0])) {
-          if (_.indexOf(csvUsersArray[0], USER_ID_EMAIL_HEADER) > -1) {
-            csvHeaders = csvUsersArray.shift();
-            if (csvUsersArray.length > 0 && csvUsersArray.length <= maxUsers) {
-              vm.isCsvValid = true;
+      try {
+        if (vm.model.file) {
+          // only validate if there is a file to test
+          csvUsersArray = $.csv.toArrays(vm.model.file);
+          if (_.isArray(csvUsersArray) && csvUsersArray.length > 0 && _.isArray(csvUsersArray[0])) {
+            if (_.indexOf(csvUsersArray[0], USER_ID_EMAIL_HEADER) > -1) {
+              csvHeaders = csvUsersArray.shift();
+              if (csvUsersArray.length > 0 && csvUsersArray.length <= maxUsers) {
+                vm.isCsvValid = true;
+              } else {
+                warnCsvUserCount();
+                vm.resetFile();
+              }
             } else {
-              warnCsvUserCount();
+              Notification.error('firstTimeWizard.uploadCsvBadHeaders');
+              vm.resetFile();
             }
+          } else {
+            Notification.error('firstTimeWizard.uploadCsvBadFormat');
+            vm.resetFile();
           }
         }
+      } catch (e) {
+        Notification.error('firstTimeWizard.uploadCsvBadFormat');
+        vm.resetFile();
+      } finally {
         setUploadProgress(100);
       }
+
     };
 
     var rootState = $previousState.get().state.name;
     vm.onBack = function () {
+      Analytics.trackAddUsers(Analytics.eventNames.BACK);
       $state.go(rootState);
     };
 
     vm.startUpload = function () {
+      Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.CSV_UPLOAD);
       beforeSubmitCsv().then(function () {
         bulkSaveWithIndividualLicenses();
         $state.go('users.csv.results');
@@ -165,14 +195,25 @@
       if (vm.model.isProcessing) {
         $modal.open({
           type: 'dialog',
-          templateUrl: 'modules/core/users/userCsv/userCsvStopImportConfirm.tpl.html'
+          templateUrl: 'modules/core/users/userCsv/userCsvStopImportConfirm.tpl.html',
         }).result.then(function () {
           // cancel the current import
           vm.cancelProcessCsv();
         });
       } else {
+        Analytics.trackAddUsers(Analytics.eventNames.CANCEL_MODAL);
         $scope.$dismiss();
       }
+    };
+
+    vm.onDoneImport = function () {
+      var analyticsData = {
+        numberOfErrors: vm.model.userErrorArray.length,
+        usersAdded: vm.model.numNewUsers,
+        usersUpdated: vm.model.numExistingUsers,
+      };
+      Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.FINISH, null, analyticsData);
+      $state.modal.dismiss();
     };
 
     vm.cancelProcessCsv = function () {
@@ -182,11 +223,16 @@
       $scope.$broadcast('timer-stop');
     };
 
+    vm.onCancelModal = function () {
+      Analytics.trackAddUsers(Analytics.eventNames.CANCEL_MODAL);
+      $state.modal.dismiss();
+    };
+
     vm.licenseBulkErrorModal = function () {
       if (Authinfo.isOnline()) {
         $modal.open({
           type: 'dialog',
-          templateUrl: "modules/core/users/userCsv/licenseUnavailabilityModal.tpl.html"
+          templateUrl: "modules/core/users/userCsv/licenseUnavailabilityModal.tpl.html",
         }).result.then(function () {
           $state.go('my-company.subscriptions');
         });
@@ -201,7 +247,7 @@
     function warnCsvUserCount() {
       if (csvUsersArray.length > maxUsers) {
         Notification.error('firstTimeWizard.csvMaxLinesError', {
-          max: String(maxUsers)
+          max: String(maxUsers),
         });
       } else {
         Notification.error('firstTimeWizard.uploadCsvEmpty');
@@ -238,7 +284,7 @@
       var data = {
         'newUsersCount': vm.model.numNewUsers || 0,
         'updatedUsersCount': vm.model.numExistingUsers || 0,
-        'errorUsersCount': _.isArray(vm.model.userErrorArray) ? vm.model.userErrorArray.length : 0
+        'errorUsersCount': _.isArray(vm.model.userErrorArray) ? vm.model.userErrorArray.length : 0,
       };
       LogMetricsService.logMetrics('Finished bulk processing', eType, LogMetricsService.getEventAction('buttonClick'), 200, bulkStartLog, 1, data);
     }
@@ -247,7 +293,7 @@
       return {
         entitlementName: name,
         entitlementState: state ? 'ACTIVE' : 'INACTIVE',
-        properties: {}
+        properties: {},
       };
     }
 
@@ -255,7 +301,7 @@
       return {
         id: name.toString(),
         idOperation: bAdd ? 'ADD' : 'REMOVE',
-        properties: {}
+        properties: {},
       };
     }
 
@@ -296,14 +342,14 @@
         vm.model.userErrorArray.push({
           row: row,
           email: email,
-          error: errorMsg
+          error: errorMsg,
         });
         UserCsvService.setCsvStat({
           userErrorArray: [{
             row: row,
             email: email,
-            error: errorMsg
-          }]
+            error: errorMsg,
+          }],
         });
       });
     }
@@ -320,7 +366,7 @@
         vm.model.importCompletedAt = Date.now();
         UserCsvService.setCsvStat({
           numTotalUsers: vm.model.numTotalUsers,
-          processProgress: vm.model.processProgress
+          processProgress: vm.model.processProgress,
         });
 
         if (vm.model.numTotalUsers >= csvUsersArray.length) {
@@ -331,7 +377,7 @@
           vm.resetFile();
           vm.model.isProcessing = false;
           UserCsvService.setCsvStat({
-            isProcessing: false
+            isProcessing: false,
           });
           $scope.$broadcast('timer-stop');
           sendBulkMetric();
@@ -352,9 +398,14 @@
     }
 
     function findHeaderIndex(name) {
-      return _.findIndex(headers, function (h) {
-        return h.name == name;
+      var index = _.findIndex(headers, function (h) {
+        return h.name === name;
       });
+      if (index !== -1) {
+        return headers[index].csvColIndex;
+      } else {
+        return -1;
+      }
     }
 
     function generateHeaders(serverHeaders, userHeaders) {
@@ -363,12 +414,14 @@
       if (!serverHeaders || !userHeaders) {
         return [];
       } else {
-        _.forEach(userHeaders, function (uHeader) {
+        _.forEach(userHeaders, function (uHeader, k) {
           index = _.findIndex(serverHeaders, function (sHeader) {
-            return sHeader.name == uHeader;
+            return sHeader.name === uHeader || sHeader.name === renamedHeaders[uHeader];
           });
           if (index !== -1) {
-            returnHeaders.push(serverHeaders[index]);
+            var h = serverHeaders[index];
+            h.csvColIndex = k;
+            returnHeaders.push(h);
           }
         });
       }
@@ -382,8 +435,8 @@
       function successCallback(response, onboardedUsers) {
 
         function onboardedUserWithEmail(email) {
-          return _.find(onboardedUsers, {
-            'address': email
+          return _.find(onboardedUsers, function (user) {
+            return _.toLower(user.address) === _.toLower(email);
           });
         }
 
@@ -405,20 +458,20 @@
                 $timeout(function () {
                   vm.model.numExistingUsers++;
                   UserCsvService.setCsvStat({
-                    numExistingUsers: vm.model.numExistingUsers
+                    numExistingUsers: vm.model.numExistingUsers,
                   });
                 });
               } else {
                 $timeout(function () {
                   vm.model.numNewUsers++;
                   UserCsvService.setCsvStat({
-                    numNewUsers: vm.model.numNewUsers
+                    numNewUsers: vm.model.numNewUsers,
                   });
                 });
               }
               // Build list of successful onboards and patches
               var addItem = {
-                address: user.email
+                address: user.email,
               };
               if (addItem.address.length > 0) {
                 addedUsersList.push(addItem);
@@ -485,18 +538,8 @@
           var currentProps = _.find(vm.hybridServicesUserProps, function (prop) {
             return prop.userId === user.uuid;
           });
-          var oldCalProps = currentProps ? currentProps.resourceGroups['squared-fusion-cal'] : undefined;
-          var newCalProps = user.resourceGroups['squared-fusion-cal'];
-          var calResourceGroupChanged = oldCalProps !== newCalProps;
-          if (calResourceGroupChanged && !newCalProps) {
-            user.resourceGroups['squared-fusion-cal'] = ''; // Will clear the group in USS
-          }
-          var oldUCProps = currentProps ? currentProps.resourceGroups['squared-fusion-uc'] : undefined;
-          var newUCProps = user.resourceGroups['squared-fusion-uc'];
-          var ucResourceGroupChanged = oldUCProps !== newUCProps;
-          if (ucResourceGroupChanged && !newUCProps) {
-            user.resourceGroups['squared-fusion-uc'] = ''; // Will clear the group in USS
-          }
+          var calResourceGroupChanged = tweakResourceGroups(user, 'squared-fusion-cal', currentProps);
+          var ucResourceGroupChanged = tweakResourceGroups(user, 'squared-fusion-uc', currentProps);
           if (calResourceGroupChanged || ucResourceGroupChanged) {
             updatedUserProps.push({ userId: user.uuid, resourceGroups: user.resourceGroups });
           }
@@ -509,6 +552,23 @@
             });
           });
         }
+      }
+
+      function tweakResourceGroups(user, entitlement, currentProps) {
+        var resourceGroupChanged = false;
+        var newProps = user.resourceGroups[entitlement];
+        if (newProps) {
+          var oldProps = currentProps ? (currentProps.resourceGroups[entitlement] || NO_RESOURCE_GROUP) : NO_RESOURCE_GROUP;
+          resourceGroupChanged = oldProps !== newProps;
+          if (newProps === NO_RESOURCE_GROUP) {
+            if (resourceGroupChanged) {
+              user.resourceGroups[entitlement] = '';
+            } else {
+              delete user.resourceGroups[entitlement];
+            }
+          }
+        }
+        return resourceGroupChanged;
       }
 
       function getResourceGroup(name) {
@@ -578,11 +638,13 @@
               if (!resourceGroup) {
                 processingError = true;
                 addUserError(csvRowIndex, id, $translate.instant("firstTimeWizard.invalidCalendarServiceResourceGroup", {
-                  group: calendarServiceResourceGroup
+                  group: calendarServiceResourceGroup,
                 }));
               } else {
                 calendarServiceResourceGroup = resourceGroup.id;
               }
+            } else {
+              calendarServiceResourceGroup = NO_RESOURCE_GROUP;
             }
           }
           index = findHeaderIndex('Hybrid Call Service Resource Group');
@@ -593,11 +655,13 @@
               if (!resourceGroup) {
                 processingError = true;
                 addUserError(csvRowIndex, id, $translate.instant("firstTimeWizard.invalidCallServiceResourceGroup", {
-                  group: callServiceResourceGroup
+                  group: callServiceResourceGroup,
                 }));
               } else {
                 callServiceResourceGroup = resourceGroup.id;
               }
+            } else {
+              callServiceResourceGroup = NO_RESOURCE_GROUP;
             }
           }
         }
@@ -619,8 +683,8 @@
           addUserError(csvRowIndex, id, $translate.instant('firstTimeWizard.bulkInvalidDID'));
         } else {
           // get license and entitlements
-          _.forEach(headers, function (header, k) {
-            var input = _.trim(userRow[k]);
+          _.forEach(headers, function (header) {
+            var input = _.trim(userRow[header.csvColIndex]);
             if (header.license) { // if this is a license column
               if (isTrue(input)) {
                 licenseList.push(new LicenseFeature(header.license, true));
@@ -641,7 +705,12 @@
                   // if lincense is Calendar Service, only process if it is enabled
                   if (entitlement.toUpperCase().indexOf('SQUAREDFUSIONCAL') === -1 || isCalendarServiceEnabled) {
                     if (isTrue(input)) {
-                      entitleList.push(new Feature(entitlement, true));
+                      if (hasMutuallyExclusiveCalendarEntitlements(entitlement, entitleList)) {
+                        processingError = true;
+                        addUserError(csvRowIndex, id, $translate.instant('firstTimeWizard.mutuallyExclusiveCalendarEntitlements'));
+                      } else {
+                        entitleList.push(new Feature(entitlement, true));
+                      }
                     } else if (isFalse(input)) {
                       if (vm.model.enableRemove) {
                         entitleList.push(new Feature(entitlement, false));
@@ -680,7 +749,7 @@
               'internalExtension': directoryNumber,
               'directLine': directLine,
               'licenses': licenseList,
-              'entitlements': entitleList
+              'entitlements': entitleList,
             };
             if (vm.handleHybridServicesResourceGroups) {
               user.resourceGroups = {};
@@ -696,7 +765,19 @@
             return null;
           }
         }
+      }
 
+      /**
+       * We only allow squared-fusion-cal OR squared-fusion-gcal entitlement to be set per user
+       */
+      function hasMutuallyExclusiveCalendarEntitlements(entitlement, currentFeatureList) {
+        var badEntitlement = mutuallyExclusiveCalendarEntitlements[entitlement];
+        if (!badEntitlement) {
+          return false;
+        }
+        return _.some(currentFeatureList, function (feature) {
+          return feature.entitlementName === badEntitlement && feature.entitlementState === 'ACTIVE';
+        });
       }
 
       /**
@@ -729,6 +810,8 @@
             // We filled out chunk or this is the last user. Process the bulk onboard
             // we pass idx since this is used for reference to original CSV in error reporting
             csvPromiseChain = onboardCsvUsers(tempUserArray, csvPromiseChain);
+            // this event is picked up by idleTimeoutService to keep the user logged in
+            $rootScope.$emit(Config.idleTabKeepAliveEvent);
             tempUserArray = [];
           }
 
@@ -742,7 +825,7 @@
         return {
           seconds: (millisec / 1e3) % 60 | 0,
           minutes: (millisec / 6e4) % 60 | 0,
-          hours: (millisec / 36e5) % 24 | 0
+          hours: (millisec / 36e5) % 24 | 0,
         };
       }
 
@@ -771,7 +854,7 @@
                 vm.model.isRetrying = false;
                 $interval.cancel(ip);
 
-                var retryPromises = $q.when();
+                var retryPromises = $q.resolve();
                 var tempUserArray = [];
                 var users = vm.model.usersToRetry;
                 vm.model.usersToRetry = [];
@@ -797,7 +880,7 @@
       }
 
       vm.model.csvChunk = 0;
-      csvPromiseChain = $q.when();
+      csvPromiseChain = $q.resolve();
       uniqueEmails = [];
 
       saveDeferred = $q.defer();
@@ -817,7 +900,7 @@
         numNewUsers: 0,
         numExistingUsers: 0,
         userArray: csvUsersArray,
-        userErrorArray: []
+        userErrorArray: [],
       }, true);
 
       initBulkMetric();
@@ -828,15 +911,15 @@
             vm.hybridServicesUserProps = userProps;
             ResourceGroupService.getAll().then(function (resourceGroups) {
               vm.resourceGroups = resourceGroups;
-            }).catch(function () {
+            }).catch(function (response) {
               vm.handleHybridServicesResourceGroups = false;
-              Notification.error('firstTimeWizard.fmsResourceGroupsLoadFailed');
+              Notification.errorResponse(response, 'firstTimeWizard.fmsResourceGroupsLoadFailed');
             }).finally(function () {
               processCsvRows();
             });
-          }).catch(function () {
+          }).catch(function (response) {
             vm.handleHybridServicesResourceGroups = false;
-            Notification.error('firstTimeWizard.ussUserPropsLoadFailed');
+            Notification.errorResponse(response, 'firstTimeWizard.ussUserPropsLoadFailed');
             processCsvRows();
           });
         } else {

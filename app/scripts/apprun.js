@@ -4,7 +4,9 @@
   module.exports = wx2AdminWebClientApp;
 
   /* @ngInject */
-  function wx2AdminWebClientApp($animate, $interval, $location, $rootScope, $state, $translate, $window, Auth, Authinfo, Config, Localize, Log, LogMetricsService, OnlineUpgradeService, PreviousState, SessionStorage, TokenService, TrackingId, Utils) {
+  function wx2AdminWebClientApp($animate, $interval, $location, $rootScope, $state, $translate, $window, Auth, Authinfo, Config,
+    HealthService, IdleTimeoutService, Localize, Log, LogMetricsService, OnlineUpgradeService, PreviousState, SessionStorage,
+    StorageKeys, TokenService, TrackingId, Utils, TOSService) {
     //Expose the localize service globally.
     $rootScope.Localize = Localize;
     $rootScope.Utils = Utils;
@@ -13,18 +15,16 @@
 
     $rootScope.typeOfExport = {
       USER: 1,
-      CUSTOMER: 2
+      CUSTOMER: 2,
     };
     $window.$state = $state;
     //Enable logging
     $rootScope.debug = false;
 
-    var storedState = 'storedState';
-    var storedParams = 'storedParams';
-    var queryParams = 'queryParams';
-
     TokenService.init();
     TokenService.setAuthorizationHeader();
+
+    IdleTimeoutService.init();
 
     Config.setTestEnvConfig($location.search()['test-env-config']);
 
@@ -33,24 +33,37 @@
     }
 
     $rootScope.$on('$stateChangeStart', function (e, to, toParams) {
+
       if (typeof to.authenticate === 'undefined' || to.authenticate) {
         if (Authinfo.isInitialized()) {
-          if (!Authinfo.isAllowedState(to.name)) {
-            e.preventDefault();
-            $state.go('unauthorized');
-          } else if (OnlineUpgradeService.shouldForceUpgrade()) {
-            e.preventDefault();
-            OnlineUpgradeService.openUpgradeModal();
-          } else if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin() && to.name !== 'firsttimewizard') {
-            e.preventDefault();
-            $state.go('firsttimewizard');
-          }
+
+          TOSService.hasAcceptedTOS()
+            .then(function (acceptedTOS) {
+              if (!Authinfo.isAllowedState(to.name)) {
+                e.preventDefault();
+                $state.go('unauthorized');
+              } else if (OnlineUpgradeService.shouldForceUpgrade()) {
+                e.preventDefault();
+                OnlineUpgradeService.openUpgradeModal();
+              } else if (!acceptedTOS) {
+                e.preventDefault();
+                TOSService.openTOSModal();
+              } else if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin() && to.name !== 'firsttimewizard') {
+                e.preventDefault();
+                $state.go('firsttimewizard');
+              }
+            });
         } else {
           e.preventDefault();
-          SessionStorage.put(storedState, to.name);
-          SessionStorage.putObject(storedParams, toParams);
-          SessionStorage.putObject(queryParams, $location.search());
-          $state.go('login');
+          SessionStorage.put(StorageKeys.REQUESTED_STATE_NAME, to.name);
+          SessionStorage.putObject(StorageKeys.REQUESTED_STATE_PARAMS, toParams);
+          SessionStorage.putObject(StorageKeys.REQUESTED_QUERY_PARAMS, $location.search());
+          HealthService.getHealthStatus()
+            .then(function () {
+              $state.go('login');
+            }).catch(function () {
+              $state.go('server-maintenance');
+            });
         }
       }
     });
@@ -90,7 +103,7 @@
       $interval.cancel(delay);
       if (TokenService.getAccessToken()) {
         Log.debug('starting refresh timer...');
-          //start refresh cycle after 15 minutes
+        //start refresh cycle after 15 minutes
         refreshToken();
       } else {
         Auth.redirectToLogin();
@@ -109,7 +122,7 @@
       PreviousState.setParams(fromParams);
 
       // Add Body Class to the $rootScope on stateChange
-      $rootScope.bodyClass = _.get(toState, 'data.bodyClass') || toState.name.replace(/\./g, '-') + '-state';
+      $rootScope.bodyClass = _.get(toState, 'data.bodyClass') || _.replace(toState.name, /\./g, '-') + '-state';
     });
 
     function getFromStandardGetParams(url) {
@@ -138,5 +151,6 @@
       }
       return result;
     }
+
   }
-}());
+})();

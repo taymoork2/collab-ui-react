@@ -4,17 +4,25 @@ describe('Config', function () {
 
   beforeEach(angular.mock.module('Core'));
 
-  var Config, $location, tabConfig, Storage;
-  beforeEach(inject(function (_$location_, _Config_, _tabConfig_, _Storage_) {
-    Config = _Config_;
-    Storage = _Storage_;
-    tabConfig = _tabConfig_;
+  var Config, $location, tabConfig, LocalStorage;
+
+  afterEach(function () {
+    Config = $location = tabConfig = LocalStorage = undefined;
+  });
+
+  beforeEach(inject(function (_$location_) {
     $location = _$location_;
-    spyOn($location, 'host');
+    spyOn($location, 'host').and.returnValue('wbx2.com/bla');
+  }));
+
+  beforeEach(inject(function (_Config_, _tabConfig_, _LocalStorage_) {
+    Config = _Config_;
+    LocalStorage = _LocalStorage_;
+    tabConfig = _tabConfig_;
   }));
 
   afterEach(function () {
-    Storage.put('TEST_ENV_CONFIG', '');
+    LocalStorage.remove('TEST_ENV_CONFIG');
   });
 
   var devHost = 'localhost';
@@ -32,7 +40,8 @@ describe('Config', function () {
     expect(Config.roleStates.PARTNER_SALES_ADMIN).toContain('pstnSetup');
   });
 
-  it('should not have development states assigned to Full_Admin role', function () {
+  it('should not have development states assigned to Full_Admin role in non-dev mode', function () {
+
     function getDevelopmentStates() {
       var devStates = [];
       for (var i = 0; i < tabConfig.length; i++) {

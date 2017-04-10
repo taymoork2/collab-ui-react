@@ -5,37 +5,35 @@
     .controller('OverviewReportsCtrl', OverviewReportsCtrl);
 
   /* @ngInject */
-  function OverviewReportsCtrl($scope, $translate, Authinfo, Notification, Log, PartnerService, ReportsService, chartColors, CommonGraphService) {
+  function OverviewReportsCtrl($scope, $translate, Authinfo, Notification, PartnerService, ReportsService, chartColors, CommonGraphService) {
     var LINE = 'line';
     var AXIS = 'axis';
     var NUMFORMAT = 'numFormat';
     var READY = 'ready';
     var REFRESH = 'refresh';
+    var NO_DATA = 'no-data';
 
     var entId = 'entitlementsdiv';
     var entTitle = $translate.instant('reports.UsersOnboarded');
-    var partnerCharts = ['entitlements', 'entitlementCount'];
-    var entRefreshDiv = 'entitlements-refresh';
+    var partnerCharts = ['entitlements'];
     var cacheValue = (parseInt(moment.utc().format('H'), 10) >= 8);
     var dummyChartVals = [];
     var customerList = [];
     var allCustomers = {
       value: 0,
-      label: $translate.instant('reports.allCustomers')
+      label: $translate.instant('reports.allCustomers'),
     };
 
     $scope.entCount = 0;
     $scope.entitlementStatus = REFRESH;
-    $scope.totalOrgsData = [angular.copy(allCustomers)];
-    $scope.currentSelection = angular.copy(allCustomers);
+    $scope.totalOrgsData = [_.cloneDeep(allCustomers)];
+    $scope.currentSelection = _.cloneDeep(allCustomers);
 
     $scope.getCustomerReports = function () {
       $scope.entitlementStatus = REFRESH;
-      angular.element('#' + entRefreshDiv).html('<i class=\'icon icon-spinner icon-2x\'/>');
 
       if ($scope.currentSelection.value === allCustomers.value) {
-        ReportsService.getPartnerMetrics(cacheValue, null, [partnerCharts[0]]);
-        ReportsService.getTotalPartnerCounts(cacheValue, customerList, [partnerCharts[1]]);
+        ReportsService.getPartnerMetrics(cacheValue, null, partnerCharts);
       } else {
         ReportsService.getPartnerMetrics(cacheValue, $scope.currentSelection.value, partnerCharts);
       }
@@ -43,7 +41,7 @@
     $scope.getCustomerReports();
 
     function getManagedOrgs() {
-      $scope.totalOrgsData = [angular.copy(allCustomers)];
+      $scope.totalOrgsData = [_.cloneDeep(allCustomers)];
       PartnerService.getManagedOrgsList()
         .then(function (reponse) {
           customerList = _.map(_.get(reponse, 'data.organizations'), function (org) {
@@ -54,14 +52,14 @@
           });
           customerList.push({
             value: Authinfo.getOrgId(),
-            label: Authinfo.getOrgName()
+            label: Authinfo.getOrgName(),
           });
           customerList.sort(function (a, b) {
             var org1 = a.label;
             var org2 = b.label;
             return org1.localeCompare(org2);
           });
-          angular.forEach(customerList, function (item) {
+          _.forEach(customerList, function (item) {
             $scope.totalOrgsData.push(item);
           });
           $scope.getCustomerReports();
@@ -77,8 +75,8 @@
         dummyChartVals.push({
           data: [{
             'date': currentDate.toISOString(),
-            'count': 0
-          }]
+            'count': 0,
+          }],
         });
       }
       dummyChartVals = formatMultipleOrgData(dummyChartVals.reverse());
@@ -94,15 +92,18 @@
       var catAxis = CommonGraphService.getBaseVariable(AXIS);
       catAxis.gridPosition = 'start';
       catAxis.title = $translate.instant('reports.weekOf');
-      catAxis.gridColor = chartColors.grayLight;
+      catAxis.gridColor = chartColors.grayLightTwo;
       catAxis.gridAlpha = 1;
 
       var graphs = [];
       graphs.push(CommonGraphService.getBaseVariable(LINE));
+      graphs[0].bullet = 'round';
       graphs[0].lineColor = colors;
       graphs[0].valueField = 'count';
       graphs[0].title = entTitle;
       graphs[0].balloonText = '[[value]]';
+      graphs[0].fillAlphas = 0;
+      graphs[0].lineAlpha = 1;
 
       var chartObject = CommonGraphService.getBaseSerialGraph(data, 0, valueAxes, graphs, 'date', catAxis);
       chartObject.marginTop = 20;
@@ -112,7 +113,7 @@
       chartObject.export = undefined;
       chartObject.colors = [colors];
       chartObject.plotAreaBorderAlpha = 0;
-      chartObject.plotAreaBorderColor = chartColors.grayDarkest;
+      chartObject.plotAreaBorderColor = chartColors.grayDarkThree;
       chartObject.balloon.borderThickness = 2;
       chartObject.balloon.fillAlpha = 0.8;
       chartObject.numberFormatter = CommonGraphService.getBaseVariable(NUMFORMAT);
@@ -120,9 +121,9 @@
         'enabled': showCursor,
         'valueLineEnabled': true,
         'valueLineBalloonEnabled': true,
-        'cursorColor': chartColors.grayDarkest,
+        'cursorColor': chartColors.grayDarkThree,
         'valueBalloonsEnabled': false,
-        'cursorPosition': 'mouse'
+        'cursorPosition': 'mouse',
       };
 
       return AmCharts.makeChart(entId, chartObject);
@@ -151,7 +152,7 @@
 
       for (var date2 in dateMap) {
         var chartSection = {
-          'date': date2
+          'date': date2,
         };
         var currentDateObj = dateMap[date2];
         for (var obj2 in currentDateObj) {
@@ -179,67 +180,45 @@
       return chart;
     }
 
-    function usableData(data) {
-      var returnVar = false;
-      if (angular.isArray(data) && !angular.isArray(data[0].data) && data.length > 0) {
-        angular.forEach(data, function (item) {
-          if (item.count > 0) {
-            returnVar = true;
-          }
-        });
-      } else if (angular.isArray(data) && angular.isArray(data[0].data)) {
-        angular.forEach(data, function (org) {
-          var usableOrg = usableData(org.data);
-          if (usableOrg) {
-            returnVar = true;
-          }
-        });
-      }
-
-      return returnVar;
+    function errorMessage(title, response) {
+      Notification.errorResponse(response, 'reports.error', {
+        graph: title.toLowerCase(),
+      });
     }
 
-    function errorMessage(title, error) {
-      var errorMessage = $translate.instant('reports.error', {
-        graph: title.toLowerCase()
-      });
-      Log.debug(errorMessage + ' Status: ' + error.status);
+    function sumMultipleOrgDataCount(timeChartResponse) {
+      return _.sumBy(timeChartResponse.data, sumOrgDataCount);
+    }
 
-      if ((error.data !== null) && angular.isDefined(error.data) && angular.isDefined(error.data.trackingId) && (error.data.trackingId !== null)) {
-        errorMessage += '<br>' + $translate.instant('reportsPage.trackingId') + error.data.trackingId;
-      }
-      Notification.notify(errorMessage, error);
+    function sumOrgDataCount(orgResponse) {
+      return _.sumBy(orgResponse.data, 'count');
     }
 
     $scope.$on('entitlementsLoaded', function (event, response) {
       var data = _.get(response, 'data', {});
-      if (data.success && usableData(data.data)) {
+      if (data.success) {
         $scope.entitlementStatus = READY;
 
         var formattedData = null;
+        var dataCount;
         if ($scope.currentSelection.value === allCustomers.value) {
-          formattedData = formatMultipleOrgData(response.data.data);
+          formattedData = formatMultipleOrgData(data.data);
+          dataCount = sumMultipleOrgDataCount(data);
         } else {
-          formattedData = formatTimeChartData(response.data.data);
+          formattedData = formatTimeChartData(data.data);
+          dataCount = sumOrgDataCount(data);
         }
+        $scope.entCount = _.round(dataCount);
 
-        updateChart(formattedData, chartColors.blue, true);
+        updateChart(formattedData, chartColors.primaryBase, true);
       } else {
-        if (!response.data.success) {
-          errorMessage(entTitle, response);
-        }
-
-        angular.element('#' + entRefreshDiv).html('<h3 class="dummy-data-message">' + $translate.instant('reportsPage.noData') + '</h3>');
-        updateChart(dummyChartVals, chartColors.grayLight, false);
-      }
-    });
-
-    $scope.$on('entitlementCountLoaded', function (event, response) {
-      if (response.data.success) {
-        $scope.entCount = Math.round(response.data.data);
-      } else {
+        errorMessage(entTitle, response);
         $scope.entCount = 0;
-        errorMessage($translate.instant('partnerHomePage.entitlementsTitle'), response);
+
+      }
+      if ($scope.entCount === 0) {
+        $scope.entitlementStatus = NO_DATA;
+        updateChart(dummyChartVals, chartColors.grayLightTwo, false);
       }
     });
   }

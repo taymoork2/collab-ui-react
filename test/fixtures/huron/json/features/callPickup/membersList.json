@@ -1,0 +1,56 @@
+[
+    {
+        "uuid": "0001",
+        "type": "USER_REAL_USER",
+        "firstName": "Chuck",
+        "lastName": "Norris",
+        "userName": "chuck.norris@test.com",
+        "displayName": null,
+        "numbers": []
+    },
+    {
+        "uuid": "0002",
+        "type": "USER_PLACE",
+        "firstName": null,
+        "lastName": null,
+        "userName": null,
+        "displayName": "Koala Lounge 1",
+        "numbers": []
+    },
+    {
+        "uuid": "000",
+        "type": "USER_REAL_USER",
+        "firstName": "Tom",
+        "lastName": null,
+        "userName": "tom@test.com",
+        "displayName": null,
+        "numbers": []
+    },
+    {
+        "uuid": "0004",
+        "type": "USER_REAL_USER",
+        "firstName": null,
+        "lastName": "Smith",
+        "userName": "smith@test.com",
+        "displayName": null,
+        "numbers": []
+    },
+    {
+        "uuid": "0005",
+        "type": "USER_REAL_USER",
+        "firstName": null,
+        "lastName": null,
+        "userName": "peter@test.com",
+        "displayName": null,
+        "numbers": []
+    },
+    {
+        "uuid": "1212",
+        "type": "USER_PLACE",
+        "firstName": null,
+        "lastName": null,
+        "userName": null,
+        "displayName": null,
+        "numbers": []
+    }
+]

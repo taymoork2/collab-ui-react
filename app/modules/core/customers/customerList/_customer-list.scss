@@ -1,3 +1,9 @@
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~collab-ui/scss/tools/placeholders/page-layout';
+
+@import '~collab-ui/scss/objects/labels';
+
 .customer-list {
   @extend %grid-subheader;
   @extend %page-background-white;
@@ -7,8 +13,8 @@
   }
 
   .filter-dropdown {
-      width: 250px;
-      margin-right: 24px;
+    width: 250px;
+    margin-right: 24px;
   }
 }
 
@@ -21,7 +27,18 @@
     padding-top: 1rem;
     padding-bottom: 1rem;
     height: 56px;
+
+    &.icon-column {
+      padding-top: 1.21rem;
+    }
+
     .service-icon {
+      color: $gray-dark-2;
+      margin-right: 1rem;
+      font-size: 1rem;
+    }
+
+    .service-icon-managed-by-others {
       color: $gray-light-1;
       margin-right: 1rem;
       font-size: 1rem;
@@ -95,7 +112,6 @@
       color: $brand-white;
     }
 
-
     .badge-active.selected {
       @include badge-active-darker;
     }
@@ -122,6 +138,15 @@
   .ui-grid-row {
     border-bottom: none;
     height: 56px;
+
+    &:hover {
+      background-color: $gray-light-4;
+    }
+  }
+
+  .ui-grid-row.ui-grid-row-selected > [ui-grid-row] > .ui-grid-cell {
+    background-color: rgba($color-primary-lighter, 0.5);
+    color: $gray-darker;
   }
 
   .status-column {
@@ -137,6 +162,7 @@
 .ui-grid-header-cell .ui-grid-cell-contents {
   cursor: pointer;
 }
+
 .ui-grid-header-cell.align-center,
 .ui-grid-cell:last-child.align-center {
   text-align: center;
@@ -146,7 +172,8 @@
   border-right: 1px solid $gray-light-3;
 }
 
-.ui-grid-header-cell:first-child, .ui-grid-cell:first-child {
+.ui-grid-header-cell:first-child,
+.ui-grid-cell:first-child {
   border-right: 1px solid $gray-light-3;
 }
 
@@ -169,8 +196,8 @@
 }
 
 .subcol {
-  display:inline-block;
-  margin-left:10px;
+  display: inline-block;
+  margin-left: 10px;
 
   &:first-child {
     margin-left: 0px;
@@ -180,6 +207,7 @@
     min-width: 3.75rem;
     display: inline-block;
   }
+
   .no-license {
     min-width: 3.75rem;
     display: inline-block;
@@ -202,7 +230,8 @@
   text-align: center;
 }
 
-.ngCell.colt5, .ngCell.colt6 {
+.ngCell.colt5,
+.ngCell.colt6 {
   overflow: visible;
 
   .dropdown-menu {
@@ -225,6 +254,7 @@
     color: $white;
     line-height: 1.71;
   }
+
   .service-text {
     line-height: 1.14;
     margin-bottom: 0.25rem;
@@ -237,18 +267,23 @@
 
   .service-status {
     line-height: 1.14;
+
     .icon {
       font-size: 0.5rem;
       margin-bottom: 4px;
+
       &.purchased {
         color: $color-cta-base;
       }
+
       &.expired {
         color: $color-alerts-base;
       }
+
       &.trial {
         color: $color-attention-base;
       }
+
       &.free {
         display: none;
       }

@@ -10,9 +10,9 @@
     var today = true;
 
     function dummifyGraph(chartConfig) {
-      var dummyColors = [chartColors.dummyGrayFillDarker, chartColors.dummyGrayFillDark];
+      var dummyColors = [chartColors.grayLightOne, chartColors.grayLightTwo];
       if (today) {
-        dummyColors = [chartColors.dummyGrayFillDarker, chartColors.dummyGrayFillDark, chartColors.dummyGrayFillLighter, chartColors.dummyGrayFillLight];
+        dummyColors = [chartColors.grayLightOne, chartColors.grayLightTwo, chartColors.grayLightThree, chartColors.grayLightFour];
       }
 
       var dummyGraphs = _.map(chartConfig.graphs, function (graph, i) {
@@ -21,7 +21,7 @@
           showBalloon: false,
           lineColor: dummyColors[i],
           fillColors: dummyColors[i],
-          pattern: ''
+          pattern: '',
         });
       });
       chartConfig.export.enabled = false;
@@ -63,17 +63,17 @@
 
       var abandonedGraph = {
         title: $translate.instant('careReportsPage.abandoned'),
-        lineColor: chartColors.colorLightRed,
+        lineColor: chartColors.alertsBase,
         fillColors: chartColors.colorLightRedFill,
         valueField: 'numTasksAbandonedState',
         showBalloon: true,
-        balloonFunction: balloonTextForTaskVolume
+        balloonFunction: balloonTextForTaskVolume,
       };
 
       var handledGraph = {
         title: $translate.instant('careReportsPage.handled'),
-        lineColor: chartColors.colorLightGreen,
-        valueField: 'numTasksHandledState'
+        lineColor: chartColors.ctaBase,
+        valueField: 'numTasksHandledState',
       };
 
       var graphsPartial = [handledGraph, abandonedGraph];
@@ -189,25 +189,25 @@
       var pattern = {
         "url": "line_pattern.png",
         "width": 14,
-        "height": 14
+        "height": 14,
       };
 
       var queueGraph = {
         title: $translate.instant('careReportsPage.queueTime'),
-        lineColor: chartColors.colorLightYellow,
-        fillColors: chartColors.colorLightYellow,
+        lineColor: chartColors.attentionBase,
+        fillColors: chartColors.attentionBase,
         valueField: 'avgTaskWaitTime',
         dashLength: 2,
         fillAlphas: 1,
         pattern: pattern,
         showBalloon: true,
-        balloonFunction: balloonTextForTaskTime
+        balloonFunction: balloonTextForTaskTime,
       };
       var handleGraph = {
         title: $translate.instant('careReportsPage.handleTime'),
-        lineColor: chartColors.colorLightGreen,
+        lineColor: chartColors.ctaBase,
         fillColors: chartColors.colorLightGreenFill,
-        valueField: 'avgTaskCloseTime'
+        valueField: 'avgTaskCloseTime',
       };
 
       var graphsPartial = [handleGraph, queueGraph];
@@ -251,24 +251,24 @@
       var pattern = {
         "url": "line_pattern.png",
         "width": 14,
-        "height": 14
+        "height": 14,
       };
 
       var inQueueGraph = {
         title: $translate.instant('careReportsPage.in-queue'),
-        lineColor: chartColors.colorLightYellow,
-        fillColors: chartColors.colorLightYellow,
+        lineColor: chartColors.attentionBase,
+        fillColors: chartColors.attentionBase,
         valueField: 'numPendingTasks',
         dashLength: 2,
         fillAlphas: 1,
         pattern: pattern,
         showBalloon: true,
-        balloonFunction: balloonTextForTaskAggregate
+        balloonFunction: balloonTextForTaskAggregate,
       };
 
       var assignedGraph = {
         title: $translate.instant('careReportsPage.assigned'),
-        lineColor: chartColors.colorLightYellow,
+        lineColor: chartColors.attentionBase,
         fillColors: chartColors.colorLightYellowFill,
         valueField: 'numWorkingTasks',
       };
@@ -310,10 +310,11 @@
 
       var valueAxes = [CareReportsGraphService.getBaseVariable('axis')];
       valueAxes[0].title = $translate.instant('careReportsPage.csatRating');
+      valueAxes[0].maximum = 5;
 
       var csatGraph = {
         title: $translate.instant('careReportsPage.averageCsat'),
-        lineColor: chartColors.colorLightGreen,
+        lineColor: chartColors.ctaBase,
         fillColors: chartColors.brandWhite,
         valueField: 'avgCsatScores',
         showBalloon: true,
@@ -321,7 +322,7 @@
         bullet: 'circle',
         bulletAlpha: 0,
         bulletBorderAlpha: 0,
-        bulletSize: 2
+        bulletSize: 2,
       };
       var graphsPartial = [csatGraph];
       var graphs = _.map(graphsPartial, function (graph) {
@@ -344,7 +345,8 @@
       getTaskIncomingGraphConfig: getTaskIncomingGraphConfig,
       getTaskTimeGraphConfig: getTaskTimeGraphConfig,
       getAverageCsatGraphConfig: getAverageCsatGraphConfig,
-      getTaskAggregateGraphConfig: getTaskAggregateGraphConfig
+      getTaskAggregateGraphConfig: getTaskAggregateGraphConfig,
+      millisToTime: millisToTime,
     };
 
     return service;

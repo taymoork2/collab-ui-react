@@ -1,132 +1,119 @@
 'use strict';
 
 describe('Controller: MediaServiceSettingsControllerV2', function () {
+  var controller, FusionClusterService, MediaClusterServiceV2, Notification, Analytics, $q, httpBackend, Orgservice, clusters;
 
-  // load the service's module
   beforeEach(angular.mock.module('Mediafusion'));
 
-  var controller, $q, $modal, redirectTargetPromise;
-  var $rootScope;
-  var ServiceDescriptor, MailValidatorService, Notification, XhrNotificationService, MediaServiceActivationV2, FeatureToggleService;
-  var serviceId = "squared-fusion-media";
-
-  var authInfo = {
-    getOrgId: sinon.stub().returns('5632f806-ad09-4a26-a0c0-a49a13f38873'),
-    isSquaredUC: sinon.stub().returns(true)
-  };
-
-  beforeEach(angular.mock.module(function ($provide) {
-    $provide.value("Authinfo", authInfo);
-  }));
-
-  //expect(XhrNotificationService.notify).toHaveBeenCalled();
-  beforeEach(inject(function (_$rootScope_, $state, $controller, $stateParams, _$q_, _$modal_, $translate, _MediaServiceActivationV2_, _MailValidatorService_, _XhrNotificationService_, _Notification_, _ServiceDescriptor_, _FeatureToggleService_) {
-    $rootScope = _$rootScope_;
-    $q = _$q_;
-    $modal = _$modal_;
-
-    MediaServiceActivationV2 = _MediaServiceActivationV2_;
-    MailValidatorService = _MailValidatorService_;
-    XhrNotificationService = _XhrNotificationService_;
-    FeatureToggleService = _FeatureToggleService_;
+  beforeEach(inject(function ($controller, $httpBackend, $stateParams, _FusionClusterService_, _MediaClusterServiceV2_, _Notification_, _$q_, _Analytics_, _Orgservice_) {
+    clusters = [{
+      'id': 'a050fcc7-9ade-4790-a06d-cca596910421',
+      'name': 'MFA_TEST1',
+      'connectors': [{
+        'id': 'mf_mgmt@ac43493e-3f11-4eaa-aec0-f16f2a69969a',
+        'connectorType': 'mf_mgmt',
+        'upgradeState': 'upgraded',
+        'hostname': '10.196.5.251',
+      }, {
+        'id': 'mf_mgmt@a41a0783-e695-461e-8f15-355f02f91075',
+        'connectorType': 'mf_mgmt',
+        'hostname': '10.196.5.246',
+      }],
+      'releaseChannel': 'DEV',
+      'targetType': 'mf_mgmt',
+    }];
+    FusionClusterService = _FusionClusterService_;
+    MediaClusterServiceV2 = _MediaClusterServiceV2_;
+    Orgservice = _Orgservice_;
     Notification = _Notification_;
-    ServiceDescriptor = _ServiceDescriptor_;
-    redirectTargetPromise = {
-      then: sinon.stub()
-    };
-    FeatureToggleService.features = {
-      atlasHybridServicesResourceList: 'atlas-hybrid-services-resource-list'
-    };
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
-    sinon.stub(ServiceDescriptor, 'getEmailSubscribers');
-    ServiceDescriptor.getEmailSubscribers.returns(redirectTargetPromise);
-    sinon.stub($state, 'go');
+    Analytics = _Analytics_;
+    $q = _$q_;
+    httpBackend = $httpBackend;
+    httpBackend.when('GET', /^\w+.*/).respond({});
     controller = $controller('MediaServiceSettingsControllerV2', {
-      $state: $state,
       $stateParams: $stateParams,
-      $q: $q,
-      $modal: $modal,
-      $translate: $translate,
-
-      MediaServiceActivationV2: MediaServiceActivationV2,
-      MailValidatorService: MailValidatorService,
-      XhrNotificationService: XhrNotificationService,
+      FusionClusterService: FusionClusterService,
+      MediaClusterServiceV2: MediaClusterServiceV2,
+      Orgservice: Orgservice,
       Notification: Notification,
-      ServiceDescriptor: ServiceDescriptor
+      Analytics: Analytics,
+      $q: $q,
+      hasMFVIdeoFeatureToggle: false,
     });
-
   }));
 
   it('controller should be defined', function () {
     expect(controller).toBeDefined();
   });
-  it('should disable media service', function () {
-    spyOn(MediaServiceActivationV2, 'setServiceEnabled').and.returnValue($q.when());
-    spyOn(MediaServiceActivationV2, 'getUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.when(
-      [{
-        statusCode: 0,
-        identityOrgId: "5632f806-ad09-4a26-a0c0-a49a13f38873",
-        mediaAgentOrgIds: ["5632f806-ad09-4a26-a0c0-a49a13f38873", "squared", "something"]
-      }]
-    ));
-    spyOn(MediaServiceActivationV2, 'setUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.when());
-    controller.disableMediaService(serviceId);
-    expect(MediaServiceActivationV2.setServiceEnabled).toHaveBeenCalled();
+  it('check if setEnableVideoQuality sets the tag if videoPropertySetId is present', function () {
+    controller.enableVideoQuality = true;
+    spyOn(Notification, 'success');
+    spyOn(Orgservice, 'setOrgSettings').and.returnValue($q.resolve({}));
+    spyOn(MediaClusterServiceV2, 'updatePropertySetById').and.returnValue($q.resolve({}));
+    controller.videoPropertySetId = "1234";
+    controller.setEnableVideoQuality();
+    httpBackend.verifyNoOutstandingExpectation();
+    expect(Orgservice.setOrgSettings).toHaveBeenCalled();
+    expect(MediaClusterServiceV2.updatePropertySetById).toHaveBeenCalled();
+    expect(Notification.success).toHaveBeenCalled();
   });
-  it('should disable orpheus for mediafusion org', function () {
-    spyOn(MediaServiceActivationV2, 'getUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.when(
-      [{
-        statusCode: 0,
-        identityOrgId: "5632f806-ad09-4a26-a0c0-a49a13f38873",
-        mediaAgentOrgIds: ["5632f806-ad09-4a26-a0c0-a49a13f38873", "squared"]
-      }]
-    ));
-    spyOn(MediaServiceActivationV2, 'deleteUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.when());
-    controller.disableOrpheusForMediaFusion();
-
-    expect(MediaServiceActivationV2.getUserIdentityOrgToMediaAgentOrgMapping).toHaveBeenCalled();
+  it('check if setEnableVideoQuality if videoPropertySetId is present has error we get notification', function () {
+    controller.enableVideoQuality = true;
+    spyOn(Notification, 'errorWithTrackingId');
+    spyOn(Orgservice, 'setOrgSettings').and.returnValue($q.resolve({}));
+    spyOn(MediaClusterServiceV2, 'updatePropertySetById').and.returnValue($q.reject());
+    controller.videoPropertySetId = "1234";
+    controller.setEnableVideoQuality();
+    httpBackend.verifyNoOutstandingExpectation();
+    expect(Orgservice.setOrgSettings).toHaveBeenCalled();
+    expect(MediaClusterServiceV2.updatePropertySetById).toHaveBeenCalled();
+    expect(Notification.errorWithTrackingId).toHaveBeenCalled();
   });
 
-  it('should notify error while disabling media service', function () {
-    spyOn(MediaServiceActivationV2, 'setServiceEnabled').and.returnValue($q.reject());
-    spyOn(XhrNotificationService, 'notify');
-    controller.disableMediaService(serviceId);
-
-    expect(MediaServiceActivationV2.setServiceEnabled).toHaveBeenCalled();
-    //expect(XhrNotificationService.notify).toHaveBeenCalled();
+  it('check if setEnableVideoQuality gets property sets if videoPropertySetId is null', function () {
+    controller.enableVideoQuality = true;
+    spyOn(Orgservice, 'setOrgSettings').and.returnValue($q.resolve({}));
+    spyOn(MediaClusterServiceV2, 'getPropertySets').and.returnValue($q.resolve({}));
+    controller.videoPropertySetId = null;
+    controller.setEnableVideoQuality();
+    httpBackend.verifyNoOutstandingExpectation();
+    expect(Orgservice.setOrgSettings).toHaveBeenCalled();
+    expect(MediaClusterServiceV2.getPropertySets).toHaveBeenCalled();
   });
 
-  it('should disable media service success call', function () {
-    var getResponse = {
-      data: 'this is a mocked response'
-    };
-    var setServiceEnabledDeferred = $q.defer();
-    spyOn(MediaServiceActivationV2, 'setServiceEnabled').and.returnValue(setServiceEnabledDeferred.promise);
-    setServiceEnabledDeferred.resolve(getResponse);
-
-    sinon.stub(controller, 'disableOrpheusForMediaFusion');
-    controller.disableOrpheusForMediaFusion(redirectTargetPromise);
-
-    $rootScope.$apply();
-    controller.disableMediaService(serviceId);
-    expect(MediaServiceActivationV2.setServiceEnabled).toHaveBeenCalled();
-    expect(controller.disableOrpheusForMediaFusion).toHaveBeenCalled();
-  });
-  it('should disable media service error call', function () {
-    var getResponse = {
-      data: 'this is a mocked response'
-    };
-    var setServiceEnabledDeferred = $q.defer();
-    spyOn(MediaServiceActivationV2, 'setServiceEnabled').and.returnValue(setServiceEnabledDeferred.promise);
-    setServiceEnabledDeferred.reject(getResponse);
-
-    sinon.stub(XhrNotificationService, 'notify');
-    XhrNotificationService.notify(redirectTargetPromise);
-
-    $rootScope.$apply();
-    controller.disableMediaService(serviceId);
-    expect(MediaServiceActivationV2.setServiceEnabled).toHaveBeenCalled();
-    expect(XhrNotificationService.notify).toHaveBeenCalled();
+  it('check if createPropertySetAndAssignClusters creates propertysets and assigns clusters', function () {
+    spyOn(FusionClusterService, 'getAll').and.returnValue($q.resolve(clusters));
+    spyOn(MediaClusterServiceV2, 'createPropertySet').and.returnValue($q.resolve({
+      'data': {
+        id: '1234',
+      },
+    }));
+    spyOn(MediaClusterServiceV2, 'updatePropertySetById').and.returnValue($q.resolve({}));
+    controller.createPropertySetAndAssignClusters();
+    httpBackend.verifyNoOutstandingExpectation();
+    expect(FusionClusterService.getAll).toHaveBeenCalled();
+    expect(MediaClusterServiceV2.createPropertySet).toHaveBeenCalled();
+    expect(MediaClusterServiceV2.updatePropertySetById).toHaveBeenCalled();
+    expect(controller.clusters.length).toBe(1);
+    expect(controller.videoPropertySetId).toBe('1234');
   });
 
+  it('check if createPropertySetAndAssignClusters creates propertysets and assigns clusters has errors we get notification', function () {
+    spyOn(Notification, 'errorWithTrackingId');
+    spyOn(FusionClusterService, 'getAll').and.returnValue($q.resolve(clusters));
+    spyOn(MediaClusterServiceV2, 'createPropertySet').and.returnValue($q.resolve({
+      'data': {
+        id: '1234',
+      },
+    }));
+    spyOn(MediaClusterServiceV2, 'updatePropertySetById').and.returnValue($q.reject());
+    controller.createPropertySetAndAssignClusters();
+    httpBackend.verifyNoOutstandingExpectation();
+    expect(FusionClusterService.getAll).toHaveBeenCalled();
+    expect(MediaClusterServiceV2.createPropertySet).toHaveBeenCalled();
+    expect(MediaClusterServiceV2.updatePropertySetById).toHaveBeenCalled();
+    expect(controller.clusters.length).toBe(1);
+    expect(controller.videoPropertySetId).toBe('1234');
+    expect(Notification.errorWithTrackingId).toHaveBeenCalled();
+  });
 });

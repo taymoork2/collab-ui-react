@@ -1,3 +1,5 @@
+require('./_user-add.scss');
+
 (function () {
   'use strict';
 
@@ -7,7 +9,7 @@
   function crAddUsersResults() {
     return {
       restrict: 'EA',
-      templateUrl: 'modules/core/users/userAdd/addUsersResults.tpl.html'
+      templateUrl: 'modules/core/users/userAdd/addUsersResults.tpl.html',
     };
   }
 })();

@@ -5,7 +5,6 @@
 
   /* @ngInject */
   function WebExSiteSettingsFact(
-    $log,
     $q,
     $stateParams,
     $translate,
@@ -86,7 +85,7 @@
             pageObjs: null,
             lang: null,
 
-            subSectionObjs: []
+            subSectionObjs: [],
           };
 
           if ("SC" == cardId) {
@@ -94,14 +93,14 @@
               id: "WebACD",
               label: "WebACD",
               lang: null,
-              pageObjs: null
+              pageObjs: null,
             });
 
             cardObj.subSectionObjs.push({
               id: "RA",
               label: "Remote Access",
               lang: null,
-              pageObjs: null
+              pageObjs: null,
             });
           }
 
@@ -117,7 +116,7 @@
             id: categoryId,
             pinPageId: categoryPinPageId,
             pinPageObj: null,
-            pageObjs: []
+            pageObjs: [],
           };
 
           return categoryObj;
@@ -134,7 +133,7 @@
         var siteName = WebExUtilsFact.getSiteName(siteUrl);
         var pageTitle = $translate.instant("webexSiteSettingsLabels.siteSettingsIndexPageTitle");
         var pageTitleFull = $translate.instant("webexSiteSettingsLabels.siteSettingsIndexPageTitleFull", {
-          siteUrl: siteUrl
+          siteUrl: siteUrl,
         });
 
         logMsg = funcName + ": " + "\n" +
@@ -233,7 +232,7 @@
             ) {
 
               _this.webExSiteSettingsObj.hasLoadError = true;
-            } else if (angular.isUndefined(settingPagesInfo.bodyJson.ns1_siteAdminNavUrl)) {
+            } else if (_.isUndefined(settingPagesInfo.bodyJson.ns1_siteAdminNavUrl)) {
               logMsg = funcName + "\n" +
                 "ERROR: ns1_siteAdminNavUrl is undefined" + "\n" +
                 "siteUrl=" + _this.webExSiteSettingsObj.siteUrl;
@@ -246,7 +245,7 @@
 
               logMsg = funcName + ": " + "ns1_siteAdminNavUrl=" + "\n" +
                 JSON.stringify(ns1_siteAdminNavUrl);
-              $log.log(logMsg);
+              Log.debug(logMsg);
 
               _this.processSettingPagesInfo(ns1_siteAdminNavUrl);
               _this.copyFromInfoCategoryToCommonCategory();
@@ -347,7 +346,7 @@
 
         var _this = this;
 
-        var locale = $translate.use().replace("_", "-");
+        var locale = _.replace($translate.use(), "_", "-");
         var webexPageId = categoryId + "_" + pageId;
         var indexPageLabelId = "webexSiteSettingsLabels.indexPageLabel_" + webexPageId;
         var indexPageLabel = $translate.instant(indexPageLabelId);
@@ -367,7 +366,7 @@
           pageId: pageId,
           label: indexPageLabel,
           iframeUrl: iframeUrl,
-          uiSref: uiSref
+          uiSref: uiSref,
         };
 
         logMsg = funcName + ": " + "\n" +
@@ -570,7 +569,7 @@
         return $q.all({
           // siteInfoXml: siteInfoXml,
           // meetingTypesInfoXml: meetingTypesInfoXml,
-          settingPagesInfoXml: settingPagesInfoXml
+          settingPagesInfoXml: settingPagesInfoXml,
         });
       }, // getSiteSettingsInfoXml()
     }; // return

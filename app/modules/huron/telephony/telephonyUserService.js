@@ -6,18 +6,18 @@
     .factory('HuronUser', HuronUser);
 
   /* @ngInject */
-  function HuronUser(Authinfo, UserServiceCommon, UserServiceCommonV2, HuronEmailService, UserDirectoryNumberService, IdentityOTPService, UserOTPService, LogMetricsService, Notification, CallerId) {
+  function HuronUser(Authinfo, UserServiceCommon, UserServiceCommonV2, HuronEmailService, UserDirectoryNumberService, IdentityOTPService, LogMetricsService, Notification, CallerId) {
 
     function deleteUser(uuid) {
       return UserServiceCommon.remove({
         customerId: Authinfo.getOrgId(),
-        userId: uuid
+        userId: uuid,
       }).$promise;
     }
 
     function acquireOTP(userName) {
       var otpRequest = {
-        'userName': userName
+        'userName': userName,
       };
 
       return IdentityOTPService.save({}, otpRequest).$promise;
@@ -36,7 +36,7 @@
         }
       }
 
-      if (angular.isDefined(uuid)) {
+      if (!_.isUndefined(uuid)) {
         user.uuid = uuid;
       }
 
@@ -49,14 +49,14 @@
       }
 
       return UserServiceCommonV2.save({
-        customerId: Authinfo.getOrgId()
+        customerId: Authinfo.getOrgId(),
       }, user).$promise
         .then(function () {
-          return sendWelcomeEmail(user.userName, user.lastName, uuid, Authinfo.getOrgId(), true);
+          return sendWelcomeEmail(user.userName, user.lastName, uuid, Authinfo.getOrgId());
         });
     }
 
-    function sendWelcomeEmail(userName, lastName, uuid, customerId, acquireOTPFlg) {
+    function sendWelcomeEmail(userName, lastName, uuid, customerId) {
 
       var emailInfo = {
         'email': userName,
@@ -65,11 +65,11 @@
         'oneTimePassword': null,
         'expiresOn': null,
         'userId': uuid,
-        'customerId': customerId
+        'customerId': customerId,
       };
       return UserDirectoryNumberService.query({
         customerId: customerId,
-        userId: uuid
+        userId: uuid,
       }).$promise
         .then(function (userDnInfo) {
           if (userDnInfo && userDnInfo[0] && userDnInfo[0].directoryNumber && userDnInfo[0].directoryNumber.pattern) {
@@ -79,39 +79,12 @@
           }
         })
         .then(function () {
-          if (acquireOTPFlg) {
-            return acquireOTP(userName);
-          } else {
-            return UserOTPService.query({
-              customerId: customerId,
-              userId: uuid
-            }).$promise
-              .then(function (otps) {
-                var otpList = [];
-                for (var i = 0; i < otps.length; i++) {
-                  if (otps[i].expires.status === "valid") {
-                    var otp = {
-                      password: otps[i].activationCode,
-                      expiresOn: otps[i].expires.time,
-                      valid: otps[i].expires.status
-                    };
-                    otpList.push(otp);
-                  }
-                }
-
-                if (otpList.length > 0) {
-                  return otpList[0];
-                } else {
-                  return acquireOTP(userName);
-                }
-
-              });
-          }
+          return acquireOTP(userName);
         })
         .then(function (otpInfo) {
           emailInfo.oneTimePassword = otpInfo.password;
           var timezone = jstz.determine().name();
-          if (timezone === null || angular.isUndefined(timezone)) {
+          if (timezone === null || _.isUndefined(timezone)) {
             timezone = 'UTC';
           }
           emailInfo.expiresOn = moment(otpInfo.expiresOn).local().tz(timezone).format('MMMM DD, YYYY h:mm A (z)');
@@ -130,7 +103,7 @@
     function update(uuid, data) {
       var user = {
         firstName: '',
-        lastName: ''
+        lastName: '',
       };
       if (data.name && data.name.givenName) {
         user.firstName = data.name.givenName.trim();
@@ -141,7 +114,7 @@
 
       return UserServiceCommon.update({
         customerId: Authinfo.getOrgId(),
-        userId: uuid
+        userId: uuid,
       }, user).$promise.then(function () {
         var userName = '';
         userName = (user.firstName) ? user.firstName : '';
@@ -154,13 +127,13 @@
     function updateDtmfAccessId(uuid, dtmfAccessId) {
       var payload = {
         'voicemail': {
-          'dtmfAccessId': dtmfAccessId
-        }
+          'dtmfAccessId': dtmfAccessId,
+        },
       };
 
       return UserServiceCommon.update({
         customerId: Authinfo.getOrgId(),
-        userId: uuid
+        userId: uuid,
       }, payload).$promise;
     }
 
@@ -170,7 +143,7 @@
       create: create,
       update: update,
       updateDtmfAccessId: updateDtmfAccessId,
-      sendWelcomeEmail: sendWelcomeEmail
+      sendWelcomeEmail: sendWelcomeEmail,
     };
 
   }

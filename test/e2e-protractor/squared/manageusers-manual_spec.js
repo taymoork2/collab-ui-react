@@ -4,14 +4,14 @@
 /* global LONG_TIMEOUT */
 
 // NOTE: Be sure to re-enable the afterAll at line 144 when re-enabling this test!
-xdescribe('Manage Users - Manual -', function () {
+describe('Manage Users - Manual -', function () {
   var token;
 
   var usersEmailOnly = _.times(2, function () {
     return {
       email: utils.randomTestGmailwithSalt('manual'),
       first: 'EmailOnly',
-      last: 'McTestuser-' + utils.randomDid()
+      last: 'McTestuser-' + utils.randomDid(),
     };
   });
 
@@ -19,7 +19,7 @@ xdescribe('Manage Users - Manual -', function () {
     return {
       email: utils.randomTestGmailwithSalt('manual'),
       first: 'NamesAndEmail',
-      last: 'McTestuser-' + utils.randomDid()
+      last: 'McTestuser-' + utils.randomDid(),
     };
   });
 
@@ -118,10 +118,7 @@ xdescribe('Manage Users - Manual -', function () {
       utils.expectIsDisplayed(manageUsersPage.buttons.save);
       utils.click(manageUsersPage.buttons.save);
 
-      _.each(allUsers, function (user) {
-        activate.setup(null, user.email);
-      });
-
+      // make sure users were added as expected
       utils.expectTextToBeSet(manageUsersPage.importStatus.newUsers, '' + allUsers.length);
       utils.expectTextToBeSet(manageUsersPage.importStatus.updatedUsers, '0');
       utils.expectTextToBeSet(manageUsersPage.importStatus.errorUsers, '0');
@@ -134,14 +131,15 @@ xdescribe('Manage Users - Manual -', function () {
         utils.searchAndClick(user.email);
         utils.expectIsDisplayed(users.servicesPanel);
 
-        utils.expectIsDisplayed(users.messageService);
-        utils.expectIsNotDisplayed(users.meetingService);
+        utils.expectIsDisplayed(users.messageServicePaid);
+        utils.expectIsNotDisplayed(users.messageServiceFree);
+        utils.expectIsDisplayed(users.meetingServiceFree);
         utils.click(users.closeSidePanel);
       });
     });
 
     // delete all the users we created
-    xafterAll(function () {
+    afterAll(function () {
       _.each(allUsers, function (user) {
         deleteUtils.deleteUser(user.email, token);
       });

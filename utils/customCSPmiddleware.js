@@ -23,18 +23,24 @@ module.exports = csp({
       'https://*.webexconnect.com',
       'https://wbxdmz.admin.ciscospark.com',
       'https://wbxbts.admin.ciscospark.com',
-      'blob:'
+      'blob:',
     ],
     frameSrc: [
       'https://buy.ciscospark.com', // Digital River
+      'https://ds2-qlikdemo.cisco.com',
+    ],
+    objectSrc: [
+      'http://www.cisco.com', // Terms of Service
     ],
     connectSrc: [
       '\'self\'',
+      'wss://mercury-connection-a.wbx2.com',
       'https://*.cisco.com',
       'https://*.ciscoccservice.com',
       'https://*.ciscospark.com',
       'https://*.huron-dev.com',
       'https://*.huron-int.com',
+      'https://*.sparkc-eu.com',
       'https://*.huron.uno',
       'https://*.statuspage.io',
       'https://*.wbx2.com',
@@ -44,6 +50,8 @@ module.exports = csp({
       'https://api.mixpanel.com',
       'https://cdn.mxpnl.com',
       'http://54.183.25.170:8001',
+      'https://clio-manager-a.wbx2.com',
+      'https://clio-manager-intb.ciscospark.com',
       // manual DNS entry for local dev:
       'http://dev-admin.ciscospark.com:8000',
       'ws://dev-admin.ciscospark.com:8000',
@@ -56,6 +64,7 @@ module.exports = csp({
       'http://dev-admin.ciscospark.com:8080',
       'http://dpm.demdex.net', // Adobe DTM Omniture
       'http://ciscowebex.d1.sc.omtrdc.net', // Adobe DTM Omniture
+      'https://*.clouddrive.com', // CSV download
     ],
     fontSrc: [
       '\'self\'',
@@ -94,6 +103,6 @@ module.exports = csp({
       'http://dev-admin.ciscospark.com:8000', // manual DNS entry for local dev
       // Webpack Dev
       'blob:',
-    ]
-  }
+    ],
+  },
 });

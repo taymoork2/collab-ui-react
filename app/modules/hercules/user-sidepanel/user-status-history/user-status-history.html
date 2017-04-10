@@ -1,0 +1,80 @@
+<cs-sp-container>
+  <cs-sp-section class="cloud-extensions" ng-repeat="entry in $ctrl.historyEntries">
+    <div class="history-label">
+      <span class="section-name" ng-if="entry.type === 'SetUserStatus'">{{'hercules.activationStatus.' + entry.status | translate}}</span>
+      <span class="section-name" ng-if="entry.type !== 'SetUserStatus'">{{'hercules.userHistory.types.' + entry.type | translate}}</span>
+    </div>
+    <div class="row collapse">
+      <div class="columns small-4">
+        <span class="history-label">{{'hercules.userHistory.time' | translate}}:</span>
+      </div>
+      <div class="columns small-8">
+        <span class="history-label">{{entry.timestamp}}</span>
+      </div>
+    </div>
+    <div class="row collapse" ng-if="entry.type === 'RemoveUserResourceGroup'">
+      <div class="columns small-4">
+        <span class="history-label">{{'common.description' | translate}}:</span>
+      </div>
+      <div class="columns small-8">
+        <span class="history-label description" translate="hercules.userHistory.noLongerAssignedToResourceGroup"></span>
+      </div>
+    </div>
+    <div class="row collapse" ng-if="entry.type === 'AddEntitlement'">
+      <div class="columns small-4">
+        <span class="history-label">{{'common.description' | translate}}:</span>
+      </div>
+      <div class="columns small-8">
+        <span class="history-label description" translate="hercules.userHistory.serviceEnabled"></span>
+      </div>
+    </div>
+    <div class="row collapse" ng-if="entry.payload.description && !entry.payload.messages">
+      <div class="columns small-4">
+        <span class="history-label">{{'common.description' | translate}}:</span>
+      </div>
+      <div class="columns small-8">
+        <span class="history-label description">{{entry.payload.description}}</span>
+      </div>
+    </div>
+
+    <div class="row collapse" ng-if="entry.payload.messages">
+      <div class="columns small-4">
+        <span class="history-label">{{'cloudExtensions.details' | translate}}:</span>
+      </div>
+      <div class="columns small-8">
+        <user-status-messages messages="entry.payload.messages"></user-status-messages>
+      </div>
+    </div>
+
+    <div class="row collapse" ng-if="entry.homedCluster">
+      <div class="columns small-4">
+        <span class="history-label">{{'cloudExtensions.cluster' | translate}}:</span>
+      </div>
+      <div class="columns small-8">
+        <span class="history-label">{{entry.homedCluster.name}}</span>
+      </div>
+    </div>
+    <div class="row collapse" ng-if="entry.homedConnector">
+      <div class="columns small-4">
+        <span class="history-label">{{'hercules.connectors.host_name' | translate}}:</span>
+      </div>
+      <div class="columns small-8">
+        <span class="history-label">
+          <a href="https://{{entry.homedConnector.hostname}}" target="_blank">{{entry.homedConnector.hostname}}</a>
+        </span>
+      </div>
+    </div>
+    <div class="row collapse" ng-if="entry.resourceGroup">
+      <div class="columns small-4">
+        <span class="history-label">{{'common.description' | translate}}:</span>
+      </div>
+      <div class="columns small-8">
+        <span class="history-label description" translate="hercules.userHistory.assignedToResourceGroup" translate-values='{ resourceGroupName: entry.resourceGroup.name}'></span>
+      </div>
+    </div>
+  </cs-sp-section>
+  <div class="last-entries-label" ng-if="$ctrl.historyEntries.length === $ctrl.numEntriesToShow">
+    <span class="history-label" translate="hercules.userHistory.showingFirstEntries" translate-values='{ numEntries: $ctrl.numEntriesToShow}'></span>
+  </div>
+</cs-sp-container>
+

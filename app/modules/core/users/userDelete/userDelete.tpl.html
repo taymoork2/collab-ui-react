@@ -8,13 +8,21 @@
   </h3>
 </div>
 <div class="modal-body">
-  <p><span translate="usersPage.deleteUserConfText" translate-values="{ email: userDelete.deleteUsername }"></span></p>
+  <span cs-loader ng-if="!userDelete.msgrloaded"></span>
+  <div ng-if="userDelete.msgrloaded && !userDelete.isMsgrUser">
+    <p><span translate="usersPage.deleteUserConfText" translate-values="{ email: userDelete.deleteUsername }"></span></p>
+  </div>
+  <div ng-if="userDelete.msgrloaded && userDelete.isMsgrUser" class="delete-msgr-user-body">
+    <p><span translate="usersPage.deleteMsgrUserConfText"></span>
+    <a href="{{userDelete.orgAdminUrl}}" target="_blank" translate="usersPage.orgAdminLinkText"></a></p>
+  </div>
 </div>
 <div class="modal-footer">
-  <button id="cancelButton" class="btn" ng-click="$dismiss();">
-    <span translate="common.cancel"></span>
+  <button id="okButton" class="btn" ng-click="$dismiss();" ng-show="userDelete.msgrloaded">
+    <span translate="common.cancel" ng-show="!userDelete.isMsgrUser"></span>
+    <span translate="common.ok" ng-show="userDelete.isMsgrUser"></span>
   </button>
-  <button id="deleteUserButton" cs-btn loading="userDelete.loading" class="btn btn--alert" ng-click="userDelete.deactivateUser();">
+  <button id="deleteUserButton" cs-btn loading="userDelete.loading" class="btn btn--alert" ng-click="userDelete.deactivateUser();" ng-show="userDelete.msgrloaded && !userDelete.isMsgrUser">
     <span translate="usersPage.deleteUser"></span>
   </button>
 </div>

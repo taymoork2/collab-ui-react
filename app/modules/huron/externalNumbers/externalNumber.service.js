@@ -12,6 +12,7 @@
       setAllNumbers: setAllNumbers,
       getAllNumbers: getAllNumbers,
       getAssignedNumbers: getAssignedNumbers,
+      getPendingNumbersAndOrders: getPendingNumbersAndOrders,
       getPendingNumbers: getPendingNumbers,
       getPendingOrders: getPendingOrders,
       getUnassignedNumbers: getUnassignedNumbers,
@@ -19,7 +20,9 @@
       deleteNumber: deleteNumber,
       isTerminusCustomer: isTerminusCustomer,
       getPendingOrderQuantity: getPendingOrderQuantity,
-      getQuantity: getQuantity
+      getQuantity: getQuantity,
+      getAssignedNumbersV2: getAssignedNumbersV2,
+      getUnassignedNumbersV2: getUnassignedNumbersV2,
     };
     var allNumbers = [];
     var pendingNumbers = [];
@@ -31,10 +34,40 @@
     var ALL = 'all';
     var PENDING = 'pending';
     var UNASSIGNED = 'unassigned';
+    var EXTERNAL = 'external';
 
     return service;
 
-    function refreshNumbers(customerId) {
+    function refreshNumbers(customerId, queryNumberType, filter) {
+      return getPendingNumbersAndOrders(customerId)
+        .then(function () {
+          // Specifying ASSIGNED_AND_UNASSIGNED_NUMBERS and FIXED_LINE_OR_MOBILE returns both
+          // assigned and unassigned standard PSTN numbers.
+          // Toll-Free numbers should not be returned by default, but can be overridden.
+          var externalNumberType = ExternalNumberPool.FIXED_LINE_OR_MOBILE;
+          if (!_.isEmpty(queryNumberType)) {
+            externalNumberType = queryNumberType;
+          }
+          filter = !filter ? ExternalNumberPool.NO_PATTERN_MATCHING : filter;
+          return ExternalNumberPool.getExternalNumbers(
+            customerId,
+            filter,
+            ExternalNumberPool.ASSIGNED_AND_UNASSIGNED_NUMBERS,
+            externalNumberType)
+          .then(formatNumberLabels)
+          .then(function (numbers) {
+            unassignedNumbers = filterUnassigned(numbers);
+            assignedNumbers = filterAssigned(numbers);
+            allNumbers = pendingNumbers.concat(getNumbersWithoutPending(numbers));
+          });
+        })
+        .catch(function (response) {
+          clearNumbers();
+          return $q.reject(response);
+        });
+    }
+
+    function getPendingNumbersAndOrders(customerId) {
       return isTerminusCustomer(customerId)
         .then(function (isSupported) {
           if (isSupported) {
@@ -64,19 +97,6 @@
             pendingNumbers = [];
             pendingOrders = [];
           }
-        })
-        .then(function () {
-          return ExternalNumberPool.getAll(customerId)
-            .then(formatNumberLabels)
-            .then(function (numbers) {
-              unassignedNumbers = filterUnassigned(numbers);
-              assignedNumbers = filterAssigned(numbers);
-              allNumbers = pendingNumbers.concat(getNumbersWithoutPending(numbers));
-            });
-        })
-        .catch(function (response) {
-          clearNumbers();
-          return $q.reject(response);
         });
     }
 
@@ -84,7 +104,7 @@
       return isTerminusCustomer(customerId)
         .then(function (isSupported) {
           if (isSupported) {
-            return PstnSetupService.deleteNumber(customerId, number.pattern);
+            return PstnSetupService.deleteNumber(customerId, number.number);
           } else {
             return ExternalNumberPool.deletePool(customerId, number.uuid);
           }
@@ -141,6 +161,17 @@
       return assignedNumbers;
     }
 
+    function getAssignedNumbersV2(customerId, hint) {
+      return NumberSearchServiceV2.get({
+        number: hint,
+        customerId: customerId,
+        type: EXTERNAL,
+        assigned: 'true',
+      }).$promise.then(function (data) {
+        return data.numbers;
+      });
+    }
+
     function getPendingNumbers() {
       return pendingNumbers;
     }
@@ -153,6 +184,17 @@
       return unassignedNumbers;
     }
 
+    function getUnassignedNumbersV2(customerId, hint) {
+      return NumberSearchServiceV2.get({
+        number: hint,
+        customerId: customerId,
+        type: EXTERNAL,
+        assigned: 'false',
+      }).$promise.then(function (data) {
+        return data.numbers;
+      });
+    }
+
     function getUnassignedNumbersWithoutPending() {
       return getNumbersWithoutPending(unassignedNumbers);
     }
@@ -161,7 +203,7 @@
     function getNumbersWithoutPending(numbersArray) {
       return _.reject(numbersArray, function (numberObj) {
         return _.some(pendingNumbers, {
-          pattern: numberObj.pattern
+          pattern: numberObj.pattern,
         });
       });
     }
@@ -170,7 +212,7 @@
       if (_.find(terminusDetails, { customerId: customerId })) {
         return $q.resolve(true);
       }
-      return PstnSetupService.getCustomer(customerId)
+      return PstnSetupService.getCustomerV2(customerId)
         .then(_.partial(allowPstnSetup, customerId))
         .catch(_.partial(hasExternalNumbers, customerId));
     }
@@ -178,7 +220,7 @@
     function hasExternalNumbers(customerId) {
       return NumberSearchServiceV2.get({
         customerId: customerId,
-        type: 'external'
+        type: 'external',
       }).$promise.then(function (response) {
         if (_.get(response, 'numbers.length') !== 0) {
           return false;
@@ -190,7 +232,7 @@
 
     function allowPstnSetup(customerId) {
       terminusDetails.push({
-        customerId: customerId
+        customerId: customerId,
       });
       return true;
     }

@@ -1,5 +1,6 @@
 (function () {
   'use strict';
+
   angular
     .module('uc.autoattendant')
     .factory('AATrackChangeService', AATrackChangeService);
@@ -14,7 +15,7 @@
 
     return {
       track: track,
-      isChanged: isChanged
+      isChanged: isChanged,
     };
 
     function track(key, value) {
@@ -22,7 +23,7 @@
     }
 
     function isChanged(key, value) {
-      if (angular.isDefined(trackStore[key])) {
+      if (!_.isUndefined(trackStore[key])) {
         return !angular.equals(trackStore[key], value);
       }
 

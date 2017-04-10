@@ -4,6 +4,11 @@ describe('Controller: PartnerProfileCtrl', function () {
   var $scope, $controller, $q;
   var Notification, Orgservice, UserListService, FeatureToggleService;
 
+  afterEach(function () {
+    $scope = $controller = $q = undefined;
+    Notification = Orgservice = UserListService = FeatureToggleService = undefined;
+  });
+
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
@@ -26,15 +31,15 @@ describe('Controller: PartnerProfileCtrl', function () {
     spyOn(Notification, 'success');
     spyOn(Notification, 'error');
     spyOn(Notification, 'errorResponse');
-    spyOn(Orgservice, 'setOrgSettings').and.returnValue($q.when());
+    spyOn(Orgservice, 'setOrgSettings').and.returnValue($q.resolve());
     spyOn(UserListService, 'listPartners');
     spyOn(Orgservice, 'getOrg');
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
   }
 
   function initController() {
     $controller('PartnerProfileCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
     $scope.$apply();
   }
@@ -57,7 +62,7 @@ describe('Controller: PartnerProfileCtrl', function () {
           reportingSiteDesc: 'this is support text',
           helpUrl: 'helpUrl',
           isCiscoHelp: false,
-          isCiscoSupport: false
+          isCiscoSupport: false,
         };
         expect(Orgservice.setOrgSettings).toHaveBeenCalledWith(null, expectedOrgSettings);
       });

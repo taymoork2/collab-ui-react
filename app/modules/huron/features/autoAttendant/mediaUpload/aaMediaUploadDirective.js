@@ -8,15 +8,21 @@
   function aaMediaUpload() {
     return {
       restrict: 'AE',
-      scope: {
-        aaUploadedFname: '@',
-        aaUploadedFdate: '@',
-        schedule: '@aaSchedule',
-        index: '=aaIndex',
-      },
       controller: 'AAMediaUploadCtrl',
       controllerAs: 'aaMediaUpload',
-      templateUrl: 'modules/huron/features/autoAttendant/mediaUpload/aaMedia.tpl.html'
+      templateUrl: 'modules/huron/features/autoAttendant/mediaUpload/aaMedia.tpl.html',
+      scope: {
+        schedule: '@aaSchedule',
+        menuId: '@aaMenuId',
+        index: '=aaIndex',
+        aaFileSize: '@aaMediaUploadSize',
+        isMenuHeader: '@aaMenuHeader',
+        menuKeyIndex: '@aaKeyIndex',
+        fromSubMenu: '@aaFromSubMenu',
+        type: '@aaMediaType',
+        change: "&aaChange",
+        mediaState: "=aaMediaState",
+      },
     };
   }
 })();

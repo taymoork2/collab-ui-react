@@ -53,22 +53,22 @@
         this.webExSite = parts[3];
       }
       this.displayName = $translate.instant(Config.confMap[this.offerCode], {
-        capacity: this.capacity
+        capacity: this.capacity,
       });
     }
 
     function aggregatedLicenses(licenses, type) {
       var matchingLicenses = _.clone(_.filter(licenses, {
-        type: type
+        type: type,
       }));
       var aggregatedLics = [];
       _.each(matchingLicenses, function (l) {
         var displayName = $translate.instant('helpdesk.licenseDisplayNames.' + l.offerCode, {
-          capacity: l.capacity
+          capacity: l.capacity,
         });
         var key = l.offerCode + '#' + (l.capacity || 0) + (l.siteUrl ? "#" + l.siteUrl : '');
         var aggregate = _.find(aggregatedLics, {
-          key: key
+          key: key,
         });
         if (aggregate) {
           aggregate.totalVolume += l.volume;
@@ -81,12 +81,12 @@
             totalUsage: (l.usage || 0),
             totalVolume: l.volume,
             licenses: [l],
-            siteUrl: l.siteUrl
+            siteUrl: l.siteUrl,
           };
           aggregatedLics.push(aggregate);
         }
         aggregate.isTrial = _.every(aggregate.licenses, {
-          isTrial: true
+          isTrial: true,
         });
         if (aggregate.licenses && aggregate.licenses.length > 0) {
           var max = _.maxBy(aggregate.licenses, 'trialExpiresInDays');
@@ -121,7 +121,7 @@
       aggregatedLicenses: aggregatedLicenses,
       UserLicense: UserLicense,
       getLicensesInOrg: getLicensesInOrg,
-      getUnlicensedUsersCount: getUnlicensedUsersCount
+      getUnlicensedUsersCount: getUnlicensedUsersCount,
     };
   }
 

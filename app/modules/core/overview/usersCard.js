@@ -6,7 +6,7 @@
     .factory('OverviewUsersCard', OverviewUsersCard);
 
   /* @ngInject */
-  function OverviewUsersCard($rootScope, $state, Auth, Authinfo, Config) {
+  function OverviewUsersCard($rootScope, $state, Config, Orgservice, DirSyncService) {
     return {
       createCard: function createCard() {
         var card = {};
@@ -15,7 +15,7 @@
         card.template = 'modules/core/overview/usersCard.tpl.html';
         card.cardClass = 'user-card';
         card.icon = 'icon-circle-user';
-
+        card.isUpdating = true;
         card.showLicenseCard = false;
 
         card.unlicensedUsersHandler = function (data) {
@@ -31,34 +31,58 @@
         };
 
         function getUnassignedLicenses() {
-          Auth.getCustomerAccount(Authinfo.getOrgId()).then(function (response) {
-            var max = 0;
-            var licenses = _.get(response, 'data.customers[0].licenses');
-            var licenseType = '';
-            if (licenses) {
-              _.forEach(licenses, function (data) {
-                if (data.volume > max) {
-                  max = data.volume;
-                  licenseType = data.licenseType;
-                } else if (data.volume === max && data.licenseType === Config.licenseTypes.MESSAGING) {
-                  licenseType = Config.licenseTypes.MESSAGING;
-                }
-              });
+          Orgservice.getLicensesUsage().then(function (response) {
+            var licenses = _.flatMap(response, 'licenses');
+            if (licenses.length > 0) {
+              displayLicenseData(licenses);
             }
-            card.licenseNumber = max;
-            card.licenseType = licenseType;
           });
+        }
+
+        function displayLicenseData(licenses) {
+          var finalCounts = {};
+          _.forEach(licenses, function (data) {
+            if (data.licenseType in finalCounts) {
+              finalCounts[data.licenseType].volume = finalCounts[data.licenseType].volume + data.volume;
+              finalCounts[data.licenseType].usage = finalCounts[data.licenseType].usage + data.usage;
+            } else {
+              finalCounts[data.licenseType] = {
+                volume: data.volume,
+                usage: data.usage,
+              };
+            }
+          });
+
+          var displayKey;
+          var volume = 0;
+          var usage = 0;
+          _.forEach(finalCounts, function (countData, key) {
+            if ((key !== Config.licenseTypes.STORAGE && countData.volume > volume) || (key === Config.licenseTypes.MESSAGING && countData.volume === volume)) {
+              displayKey = key;
+              volume = countData.volume;
+              usage = countData.usage;
+            }
+          });
+
+          if (displayKey) {
+            card.licenseNumber = volume - usage;
+            card.licenseType = displayKey;
+          }
         }
 
         card.orgEventHandler = function (data) {
           if (data.success) {
             card.ssoEnabled = data.ssoEnabled || false;
-            card.dirsyncEnabled = data.dirsyncEnabled || false;
             //ssoEnabled is used in enterpriseSettingsCtrl so share through rootScope
             if (data.ssoEnabled) {
               $rootScope.ssoEnabled = true;
             }
           }
+          DirSyncService.refreshStatus()
+            .finally(function () {
+              card.dirsyncEnabled = DirSyncService.isDirSyncEnabled();
+              card.isUpdating = false;
+            });
         };
 
         card.openConvertModal = function () {
@@ -68,16 +92,25 @@
         card.showSSOSettings = function () {
           $state.go('setupwizardmodal', {
             currentTab: 'enterpriseSettings',
-            currentStep: 'init'
+            currentStep: 'init',
+            onlyShowSingleTab: true,
+          });
+        };
+
+        card.showDirSyncSettings = function () {
+          $state.go('settings', {
+            showSettings: 'dirsync',
           });
         };
 
         card.manageUsers = function () {
-          $state.go('users.manage', {});
+          $state.go('users.list').then(function () {
+            $state.go('users.manage.picker');
+          });
         };
 
         return card;
-      }
+      },
     };
   }
 })();

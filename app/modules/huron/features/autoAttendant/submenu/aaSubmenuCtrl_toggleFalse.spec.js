@@ -5,7 +5,7 @@ describe('Controller: AASubmenuCtrl', function () {
   var AutoAttendantCeMenuModelService, AACommonService;
   var $rootScope, $scope;
   var aaUiModel = {
-    openHours: {}
+    openHours: {},
   };
   var schedule = 'openHours';
   var index = '0';
@@ -16,11 +16,11 @@ describe('Controller: AASubmenuCtrl', function () {
 
   function raw2MenuEntry(raw) {
     var _menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-    angular.extend(_menuEntry, raw);
+    _.assign(_menuEntry, raw);
     _menuEntry.actions = [];
     for (var j = 0; j < raw.actions.length; j++) {
       var _action = AutoAttendantCeMenuModelService.newCeActionEntry();
-      angular.extend(_action, raw.actions[j]);
+      _.assign(_action, raw.actions[j]);
       _menuEntry.addAction(_action);
     }
     return _menuEntry;
@@ -28,7 +28,7 @@ describe('Controller: AASubmenuCtrl', function () {
 
   function raw2Menu(raw) {
     var _menu = AutoAttendantCeMenuModelService.newCeMenu();
-    angular.extend(_menu, raw);
+    _.assign(_menu, raw);
     _menu.headers = [];
     _menu.entries = [];
     for (var i = 0; i < raw.headers.length; i++) {
@@ -65,7 +65,7 @@ describe('Controller: AASubmenuCtrl', function () {
     spyOn(AACommonService, 'isRouteQueueToggle').and.returnValue(false);
 
     controller = $controller('AASubmenuCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
     $scope.$apply();
 
@@ -79,7 +79,7 @@ describe('Controller: AASubmenuCtrl', function () {
 
     it('feature toggle false', function () {
       var count = _.findIndex(controller.keyActions, {
-        "name": 'phoneMenuRouteQueue'
+        "name": 'phoneMenuRouteQueue',
       });
       expect(count).toEqual(-1);
     });

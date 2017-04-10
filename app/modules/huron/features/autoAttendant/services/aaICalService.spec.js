@@ -8,32 +8,32 @@ describe('Service: AACalendarService', function () {
     days: [{
       abbr: 'MO',
       index: 1,
-      active: false
+      active: false,
     }, {
       abbr: 'TU',
       index: 2,
-      active: false
+      active: false,
     }, {
       abbr: 'WE',
       index: 3,
-      active: false
+      active: false,
     }, {
       abbr: 'TH',
       index: 4,
-      active: false
+      active: false,
     }, {
       abbr: 'FR',
       index: 5,
-      active: false
+      active: false,
     }, {
       abbr: 'SA',
       index: 6,
-      active: false
+      active: false,
     }, {
       abbr: 'SU',
       index: 0,
-      active: false
-    }]
+      active: false,
+    }],
   };
 
   var days = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
@@ -41,23 +41,23 @@ describe('Service: AACalendarService', function () {
   var ranks = [{
     label: 'ranks.first',
     index: 0,
-    number: 1
+    number: 1,
   }, {
     label: 'ranks.second',
     index: 1,
-    number: 2
+    number: 2,
   }, {
     label: 'ranks.third',
     index: 2,
-    number: 3
+    number: 3,
   }, {
     label: 'ranks.fourth',
     index: 3,
-    number: 4
+    number: 4,
   }, {
     label: 'ranks.last',
     index: -1,
-    number: -1
+    number: -1,
   }];
 
   beforeEach(angular.mock.module('uc.autoattendant'));
@@ -109,6 +109,14 @@ describe('Service: AACalendarService', function () {
       expect(actual).toEqual(ranks);
     });
   });
+  describe('getDefaultDayHours', function () {
+    it('should return the default hours', function () {
+      var days = AAICalService.getDefaultDayHours();
+      expect(days).toBeDefined();
+      expect(days.length).toEqual(7);
+    });
+  });
+
 
   describe('addHoursRange - getHoursRanges', function () {
     it('add valid hours range to the calendar and should get the same range', function () {
@@ -215,7 +223,7 @@ describe('Service: AACalendarService', function () {
         name: 'Christmas',
         date: '2016-12-25',
         allDay: true,
-        exactDate: true
+        exactDate: true,
       };
 
       AAICalService.addHoursRange('holiday', calendar, range);
@@ -238,7 +246,7 @@ describe('Service: AACalendarService', function () {
         date: '2016-12-25',
         starttime: starttime,
         endtime: endtime,
-        exactDate: true
+        exactDate: true,
       };
 
       AAICalService.addHoursRange('holiday', calendar, range);
@@ -261,7 +269,7 @@ describe('Service: AACalendarService', function () {
         date: '2016-12-25',
         starttime: starttime,
         endtime: '12:00 AM',
-        exactDate: true
+        exactDate: true,
       };
 
       AAICalService.addHoursRange('holiday', calendar, range);
@@ -286,7 +294,7 @@ describe('Service: AACalendarService', function () {
         date: '2016-12-25',
         allDay: true,
         exactDate: true,
-        recurAnnually: true
+        recurAnnually: true,
       };
       AAICalService.addHoursRange('holiday', calendar, range);
       var calendarRaw = {};
@@ -307,15 +315,15 @@ describe('Service: AACalendarService', function () {
         name: 'Thanksgiving',
         month: {
           index: 10,
-          number: 11
+          number: 11,
         },
         day: {
           index: 4,
-          abbr: 'TH'
+          abbr: 'TH',
         },
         rank: AAICalService.getRanks()[3],
         allDay: true,
-        exactDate: false
+        exactDate: false,
       };
       AAICalService.addHoursRange('holiday', calendar, range);
       var calendarRaw = {};
@@ -338,16 +346,16 @@ describe('Service: AACalendarService', function () {
         name: 'Thanksgiving',
         month: {
           index: 10,
-          number: 11
+          number: 11,
         },
         day: {
           index: 4,
-          abbr: 'TH'
+          abbr: 'TH',
         },
         rank: AAICalService.getRanks()[3],
         starttime: starttime,
         endtime: endtime,
-        exactDate: false
+        exactDate: false,
       };
       AAICalService.addHoursRange('holiday', calendar, range);
       var calendarRaw = {};
@@ -370,16 +378,16 @@ describe('Service: AACalendarService', function () {
         name: 'Thanksgiving',
         month: {
           index: 10,
-          number: 11
+          number: 11,
         },
         day: {
           index: 4,
-          abbr: 'TH'
+          abbr: 'TH',
         },
         rank: AAICalService.getRanks()[3],
         allDay: true,
         exactDate: false,
-        recurAnnually: true
+        recurAnnually: true,
       };
       AAICalService.addHoursRange('holiday', calendar, range);
       var calendarRaw = {};
@@ -402,16 +410,16 @@ describe('Service: AACalendarService', function () {
         name: 'Last Friday of Jan',
         month: {
           index: 0,
-          number: 1
+          number: 1,
         },
         day: {
           index: 5,
-          abbr: 'FR'
+          abbr: 'FR',
         },
         rank: AAICalService.getRanks()[4],
         allDay: true,
         exactDate: false,
-        recurAnnually: true
+        recurAnnually: true,
       };
       AAICalService.addHoursRange('holiday', calendar, range);
       var calendarRaw = {};
@@ -434,16 +442,16 @@ describe('Service: AACalendarService', function () {
         name: 'First Friday of Feb',
         month: {
           index: 1,
-          number: 2
+          number: 2,
         },
         day: {
           index: 5,
-          abbr: 'FR'
+          abbr: 'FR',
         },
         rank: AAICalService.getRanks()[0],
         allDay: true,
         exactDate: false,
-        recurAnnually: true
+        recurAnnually: true,
       };
       AAICalService.addHoursRange('holiday', calendar, range);
       var calendarRaw = {};
@@ -464,7 +472,13 @@ describe('Service: AACalendarService', function () {
       //The holidays are sort chronologically based on today, so this test will fail at some point.
       var calendarRaw = {};
       calendarRaw.scheduleData = 'BEGIN:VCALENDAR \n' + 'BEGIN:VTIMEZONE\n' + 'TZID:UTC/GMT\n' + 'X-LIC-LOCATION:UTC/GMT\n' + 'END:VTIMEZONE\n' + 'BEGIN:VEVENT\n' + 'SUMMARY:holiday\n' + 'RRULE:FREQ=YEARLY;BYMONTH=2;BYMONTHDAY=1\n' + 'DESCRIPTION:First day of Feb\n' + 'PRIORITY:1\n' + 'DTSTART;TZID=UTC/GMT:20150201T000000\n' + 'DTEND;TZID=UTC/GMT:20150201T235900\n' + 'END:VEVENT\n' + 'BEGIN:VEVENT\n' + 'SUMMARY:holiday\n' + 'RRULE:FREQ=YEARLY;BYMONTH=2;BYMONTHDAY=10\n' + 'DESCRIPTION:Feb 10th\n' + 'PRIORITY:1\n' + 'DTSTART;TZID=UTC/GMT:20150210T000000\n' + 'DTEND;TZID=UTC/GMT:20150210T235900\n' + 'END:VEVENT\n' + 'BEGIN:VEVENT\n' + 'SUMMARY:holiday\n' + 'RRULE:FREQ=YEARLY;BYMONTH=2;BYDAY=WE;BYSETPOS=2\n' + 'DESCRIPTION:Second Wed of Feb;2;2;WE\n' + 'PRIORITY:1\n' + 'DTSTART;TZID=UTC/GMT:20170208T000000\n' + 'DTEND;TZID=UTC/GMT:20170208T235900\n' + 'END:VEVENT\n' + 'BEGIN:VEVENT\n' + 'SUMMARY:holiday\n' + 'RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=TH;BYSETPOS=4\n' + 'DESCRIPTION:Thanksgiving;11;4;TH\n' + 'PRIORITY:1\n' + 'DTSTART;TZID=UTC/GMT:20161124T000000\n' + 'DTEND;TZID=UTC/GMT:20161124T235900\n' + 'END:VEVENT\n' + 'BEGIN:VEVENT\n' + 'SUMMARY:holiday\n' + 'DESCRIPTION:Christmas\n' + 'PRIORITY:1\n' + 'DTSTART;TZID=UTC/GMT:20101225T000000\n' + 'DTEND;TZID=UTC/GMT:20101225T235900\n' + 'END:VEVENT\n' + 'BEGIN:VEVENT\n' + 'SUMMARY:holiday\n' + 'DESCRIPTION:Last Tuesday of Jan;1;-1;TU\n' + 'PRIORITY:1\n' + 'DTSTART;TZID=UTC/GMT:20120124T000000\n' + 'DTEND;TZID=UTC/GMT:20120124T235900\n' + 'END:VEVENT\n' + 'END:VCALENDAR';
+
+      // test will fail if a rolling date is used. eg, thanksgiving 2016 becomes 2017 as soon as tday is done for that year.
+
+      jasmine.clock().mockDate(new Date(2016, 9, 23));
+
       var rangeFromCalendar = AAICalService.getHoursRanges(calendarRaw).holidays;
+
       expect(rangeFromCalendar.length).toEqual(6);
       expect(rangeFromCalendar[0].name).toEqual("Christmas");
       expect(rangeFromCalendar[1].name).toEqual("Last Tuesday of Jan");
@@ -472,6 +486,17 @@ describe('Service: AACalendarService', function () {
       expect(rangeFromCalendar[3].name).toEqual("First day of Feb");
       expect(rangeFromCalendar[4].name).toEqual("Second Wed of Feb");
       expect(rangeFromCalendar[5].name).toEqual("Feb 10th");
+
+      jasmine.clock().mockDate(new Date(2017, 0, 9));
+      rangeFromCalendar = AAICalService.getHoursRanges(calendarRaw).holidays;
+
+      expect(rangeFromCalendar[0].name).toEqual("Christmas");
+      expect(rangeFromCalendar[1].name).toEqual("Last Tuesday of Jan");
+      expect(rangeFromCalendar[2].name).toEqual("First day of Feb");
+      expect(rangeFromCalendar[3].name).toEqual("Second Wed of Feb");
+      expect(rangeFromCalendar[4].name).toEqual("Feb 10th");
+      expect(rangeFromCalendar[5].name).toEqual("Thanksgiving");
+
     });
   });
 });

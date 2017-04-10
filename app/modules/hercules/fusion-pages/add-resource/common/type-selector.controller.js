@@ -5,12 +5,14 @@
     .controller('TypeSelectorController', TypeSelectorController);
 
   /* @ngInject */
-  function TypeSelectorController($q, $stateParams, $translate, Authinfo, Config, FusionClusterService, hasMediaFeatureToggle) {
+  function TypeSelectorController($q, $stateParams, $translate, Authinfo, Config, FusionClusterService, hasCucmSupportFeatureToggle) {
     var vm = this;
     vm.UIstate = 'loading';
     vm.isEntitledTo = {
       expressway: Authinfo.isEntitled(Config.entitlements.fusion_mgmt),
-      mediafusion: hasMediaFeatureToggle && Authinfo.isEntitled(Config.entitlements.mediafusion)
+      mediafusion: Authinfo.isEntitled(Config.entitlements.mediafusion),
+      context: Authinfo.isEntitled(Config.entitlements.context),
+      cucm: Authinfo.isEntitled(Config.entitlements.fusion_khaos) && hasCucmSupportFeatureToggle,
     };
     vm.selectedType = '';
     vm.next = next;
@@ -24,6 +26,11 @@
       })
       .keys()
       .value();
+
+    if (Authinfo.isCustomerLaunchedFromPartner()) {
+      vm.UIstate = 'isPartnerAdmin';
+      return;
+    }
 
     ///////////////
 
@@ -45,8 +52,12 @@
         vm._translation = {
           expressway: $translate.instant('hercules.fusion.types.expressway'),
           mediafusion: $translate.instant('hercules.fusion.types.mediafusion'),
+          context: $translate.instant('hercules.fusion.types.context'),
+          cucm: $translate.instant('hercules.fusion.types.cucm'),
           expresswayHelpText: vm.hasSetup.expressway ? $translate.instant('hercules.fusion.add-resource.type.expressway-description') : $translate.instant('hercules.fusion.add-resource.type.expressway-not-setup'),
-          mediafusionHelpText: vm.hasSetup.mediafusion ? $translate.instant('hercules.fusion.add-resource.type.mediafusion-description') : $translate.instant('hercules.fusion.add-resource.type.mediafusion-not-setup')
+          mediafusionHelpText: vm.hasSetup.mediafusion ? $translate.instant('hercules.fusion.add-resource.type.mediafusion-description') : $translate.instant('hercules.fusion.add-resource.type.mediafusion-not-setup'),
+          contextHelpText: vm.hasSetup.context ? $translate.instant('hercules.fusion.add-resource.type.context-description') : $translate.instant('hercules.fusion.add-resource.type.context-not-setup'),
+          cucmHelpText: $translate.instant('hercules.fusion.add-resource.type.cucm-description'),
         };
         vm.UIstate = 'success';
       })
@@ -56,14 +67,14 @@
 
     function getSetupState(services) {
       var promises = _.map(services, function (service) {
-        var serviceId;
-        if (service === 'expressway') {
-          serviceId = 'squared-fusion-mgmt';
+        switch (service) {
+          case 'expressway':
+            return FusionClusterService.serviceIsSetUp('squared-fusion-mgmt');
+          case 'mediafusion':
+            return FusionClusterService.serviceIsSetUp('squared-fusion-media');
+          default:
+            return true;
         }
-        if (service === 'mediafusion') {
-          serviceId = 'squared-fusion-media';
-        }
-        return FusionClusterService.serviceIsSetUp(serviceId);
       });
       var map = _.zipObject(services, promises);
       return $q.all(map);
@@ -71,7 +82,7 @@
 
     function next() {
       $stateParams.wizard.next({
-        targetType: vm.selectedType
+        targetType: vm.selectedType,
       }, vm.selectedType);
     }
 

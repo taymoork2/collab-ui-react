@@ -1,5 +1,7 @@
 'use strict';
 
+var testModule = require('./index').default;
+
 describe('Service: ModalService', function () {
   var ModalService, $modal;
 
@@ -8,9 +10,16 @@ describe('Service: ModalService', function () {
   var myClose = 'myClose';
   var myDismiss = 'myDismiss';
   var myType = 'myType';
-  var mySize = 'mySize';
 
-  beforeEach(angular.mock.module('Core'));
+  afterEach(function () {
+    ModalService = $modal = undefined;
+  });
+
+  afterAll(function () {
+    myTitle = myMessage = myClose = myDismiss = myType = undefined;
+  });
+
+  beforeEach(angular.mock.module(testModule));
 
   beforeEach(inject(function (_ModalService_, _$modal_) {
     ModalService = _ModalService_;
@@ -27,10 +36,8 @@ describe('Service: ModalService', function () {
       close: myClose,
       dismiss: myDismiss,
       btnType: myType,
-      size: mySize
     });
     expect($modal.open).toHaveBeenCalledWith({
-      size: mySize,
       templateUrl: 'modules/core/modal/modal.tpl.html',
       controller: 'ModalCtrl',
       controllerAs: 'modal',
@@ -40,8 +47,10 @@ describe('Service: ModalService', function () {
         message: jasmine.any(Function),
         close: jasmine.any(Function),
         dismiss: jasmine.any(Function),
-        btnType: jasmine.any(Function)
-      }
+        btnType: jasmine.any(Function),
+        hideTitle: jasmine.any(Function),
+        hideDismiss: jasmine.any(Function),
+      },
     });
   });
 

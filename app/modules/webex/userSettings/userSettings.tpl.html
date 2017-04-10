@@ -1,21 +1,21 @@
 <cs-sp-buttons ng-if="userSettingsView.form.$dirty">
   <button id="saveBtn"
-    name="saveBtn"
-    class="btn btn--primary"
-    cs-btn
-    loading="loading.saveBtn"
-    type="submit"
-    ng-click="btnSave(userSettingsView.form)"
-    ng-disabled="userSettingsModel.disableSave">
+          name="saveBtn"
+          class="btn btn--primary"
+          cs-btn
+          loading="loading.saveBtn"
+          type="submit"
+          ng-click="btnSave(userSettingsView.form)"
+          ng-disabled="userSettingsModel.disableSave">
     <span translate="common.save"></span>
   </button>
 
   <button id="resetBtn"
-    name="resetBtn"
-    cs-btn
-    loading="loading.resetBtn"
-    ng-click="btnReset(userSettingsView.form)"
-    ng-disabled="userSettingsModel.disableCancel">
+          name="resetBtn"
+          cs-btn
+          loading="loading.resetBtn"
+          ng-click="btnReset(userSettingsView.form)"
+          ng-disabled="userSettingsModel.disableCancel">
     <span translate="common.cancel"></span>
   </button>
 </cs-sp-buttons>
@@ -23,9 +23,19 @@
 <form name="userSettingsView.form" novalidate role="form">
   <cs-sp-container>
     <cs-sp-section>
-      <div id="errSection"
-           name="errSection"
-           ng-if="userSettingsModel.hasLoadError">
+      <div ng-if="!userSettingsModel.hasLoadError && !userSettingsModel.viewReady"
+           id="spinnerSection",
+           name="spinnerSection"
+           class="center" >
+           
+        <br>
+        <br>
+        <i class="icon icon-spinner icon-2x"></i>
+      </div>
+      
+      <div ng-if="userSettingsModel.hasLoadError"
+           id="errSection"
+           name="errSection">
 
         <div class="center">
           <div class="nodata-icon">
@@ -44,19 +54,19 @@
           </button>
 
           <button id="reloadBtn"
-            name="reloadBtn"
-            cs-btn
-            loading="loading.reloadBtn"
-            class="btn btn--people wiz-onboard-btn"
-            ng-if="userSettingsModel.allowRetry"
-            ng-click="btnReload()">
+                  name="reloadBtn"
+                  cs-btn
+                  loading="loading.reloadBtn"
+                  class="btn btn--people wiz-onboard-btn"
+                  ng-if="userSettingsModel.allowRetry"
+                  ng-click="btnReload()">
             <span translate="webexUserSettings.reload"></span>
           </button>
         </div>
       </div>
 
-      <div id="webexUserSettingsPage"
-           ng-if="userSettingsModel.viewReady">
+      <div ng-if="userSettingsModel.viewReady"
+           id="webexUserSettingsPage">
 
         <h4 class="list-group-item-heading">
           &nbsp;
@@ -147,7 +157,8 @@
         <!-- Start of Training Center -->
         <div ng-if="userSettingsModel.trainingCenter.isSiteEnabled && userSettingsModel.trainingCenter.isEntitledOnWebEx">
           <p><b>{{userSettingsModel.trainingCenter.label}}</b></p>
-          <table class="wx-table" id="TC"
+          <table class="wx-table"
+                 id="TC"
                  name="TC">
 
             <tr class="wx-tr" valign="top"
@@ -167,13 +178,13 @@
               </td>
             </tr>
           </table>
-           <hr>
+          <hr>
         </div>
         <!-- End of Training Center -->
 
-        <div id="privLinkSection"
-             name="privLinkSection"
-             ng-if="!userSettingsView.form.$dirty">
+        <div ng-if="!userSettingsView.form.$dirty"
+             id="privLinkSection"
+             name="privLinkSection">
 
           <div class="feature-list" ng-binding>
             <ul>

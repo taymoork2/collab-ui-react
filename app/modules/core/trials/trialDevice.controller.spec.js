@@ -1,32 +1,47 @@
-/* globals $controller, $httpBackend, $q, $rootScope, FeatureToggleService, Notification, TrialDeviceController, TrialCallService, TrialDeviceService, TrialRoomSystemService*/
+/* globals $controller, $httpBackend, $q, $rootScope, Analytics, FeatureToggleService, Notification, Orgservice, TrialDeviceController, TrialCallService, TrialDeviceService, TrialRoomSystemService*/
+
 'use strict';
 
 describe('Controller: TrialDeviceController', function () {
-  var controller;
+  var controller, scope;
   var trialData = getJSONFixture('core/json/trials/trialData.json');
+  var limitData = {};
+
+  afterEach(function () {
+    controller = scope = undefined;
+  });
+
+  afterAll(function () {
+    trialData = limitData = undefined;
+  });
 
   beforeEach(angular.mock.module('core.trial'));
   beforeEach(angular.mock.module('Core'));
-  // TODO - check for removal of Huron and Sunlight when DX80 and MX300 are officially supported
+  // TODO - check for removal of Huron and Sunlight when MX300 are officially supported
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(function () {
-    // TODO - check for removal of $httpBackend and FeatureToggleService when DX80 and MX300 are officially supported
-    bard.inject(this, '$controller', '$httpBackend', '$q', '$rootScope', 'FeatureToggleService', 'Notification', 'TrialCallService', 'TrialDeviceService', 'TrialRoomSystemService');
+    // TODO - check for removal of $httpBackend and FeatureToggleService when MX300 are officially supported
+    bard.inject(this, '$controller', '$httpBackend', '$q', '$rootScope', 'Analytics', 'FeatureToggleService', 'Notification', 'Orgservice', 'TrialCallService', 'TrialDeviceService', 'TrialRoomSystemService');
   });
 
   beforeEach(function () {
-    // TODO - remove $httpBackend when DX80 and MX300 are officially supported
+    // TODO - remove $httpBackend when MX300 are officially supported
     $httpBackend
       .when('GET', 'https://identity.webex.com/identity/scim/null/v1/Users/me')
       .respond({});
-
+    spyOn(Orgservice, 'getOrg');
+    limitData = TrialDeviceService.getDeviceLimit();
+    spyOn(Analytics, 'trackTrialSteps');
+    spyOn(FeatureToggleService, 'atlasPhonesCanadaGetStatus').and.returnValue($q.resolve(false));
     initController();
   });
 
   function initController() {
-    controller = $controller('TrialDeviceController');
+    scope = $rootScope.$new();
+    scope.trialData = trialData.enabled;
+    controller = $controller('TrialDeviceController', { $scope: scope.$new() });
     $rootScope.$apply();
   }
 
@@ -37,13 +52,13 @@ describe('Controller: TrialDeviceController', function () {
 
     it('should have nothing enabled', function () {
       var roomSystems = _.find(controller.details.roomSystems, {
-        enabled: true
+        enabled: true,
       });
       var phones = _.filter(controller.details.phones, {
-        enabled: true
+        enabled: true,
       });
       var shippingInfo = _.find(controller.details.shippingInfo, {
-        enabled: true
+        enabled: true,
       });
 
       expect(roomSystems).toBeUndefined();
@@ -51,21 +66,21 @@ describe('Controller: TrialDeviceController', function () {
       expect(shippingInfo).toBeUndefined();
     });
 
-    // TODO: remove when DX80 and MX300 support is official
+    // TODO: remove when MX300 support is official
     describe('feature toggle for displaying new room systems', function () {
-      it('should show DX80 and MX300 when feature toggle is true', function () {
-        spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+      it('should show MX300 when feature toggle is true', function () {
+        spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
         initController();
 
         expect(controller.showNewRoomSystems).toBe(true);
         expect(FeatureToggleService.supports).toHaveBeenCalled();
       });
 
-      it('should NOT show DX80 and MX300 when feature toggle is false', function () {
-        spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
+      it('should show MX300 when feature toggle is false', function () {
+        spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
         initController();
 
-        expect(controller.showNewRoomSystems).toBe(false);
+        expect(controller.showNewRoomSystems).toBe(true);
         expect(FeatureToggleService.supports).toHaveBeenCalled();
       });
     });
@@ -95,19 +110,19 @@ describe('Controller: TrialDeviceController', function () {
         enabled: true,
         quantity: 2,
         readonly: false,
-        valid: true
+        valid: true,
       }, {
         model: 'CISCO_DX80',
         enabled: true,
         quantity: 1,
         readonly: false,
-        valid: true
+        valid: true,
       }, {
         model: 'CISCO_8865',
         enabled: false,
         quantity: 2,
         readonly: false,
-        valid: true
+        valid: true,
 
       }];
       var devices2 = [{
@@ -115,7 +130,7 @@ describe('Controller: TrialDeviceController', function () {
         enabled: true,
         quantity: 4,
         readonly: false,
-        valid: true
+        valid: true,
 
       }];
       var devices3 = [{
@@ -123,20 +138,20 @@ describe('Controller: TrialDeviceController', function () {
         enabled: false,
         quantity: 2,
         readonly: false,
-        valid: true
+        valid: true,
 
       }, {
         model: 'CISCO_MX300',
         enabled: false,
         quantity: 2,
         readonly: false,
-        valid: true
+        valid: true,
       }, {
         model: 'CISCO_8865',
         enabled: false,
         quantity: 2,
         readonly: false,
-        valid: true
+        valid: true,
 
       }];
 
@@ -149,7 +164,7 @@ describe('Controller: TrialDeviceController', function () {
       var deviceModel = {
         enabled: true,
         quantity: 3,
-        readonly: false
+        readonly: false,
 
       };
 
@@ -164,7 +179,7 @@ describe('Controller: TrialDeviceController', function () {
       var deviceModel = {
         enabled: false,
         quantity: 0,
-        readonly: false
+        readonly: false,
 
       };
       spyOn(controller, 'getQuantity').and.returnValue(2);
@@ -179,13 +194,14 @@ describe('Controller: TrialDeviceController', function () {
     it('should set device trial limits', function () {
       bard.mockService(TrialDeviceService, {
         getData: trialData.enabled.trials.deviceTrial,
-        getLimitsPromise: $q.when({
+        getLimitsPromise: $q.resolve({
           activeDeviceTrials: 17,
-          maxDeviceTrials: 20
-        })
+          maxDeviceTrials: 20,
+        }),
+        getDeviceLimit: limitData,
+        listTypes: {},
       });
-      controller = $controller('TrialDeviceController');
-      $rootScope.$apply();
+      initController();
 
       expect(controller.activeTrials).toEqual(17);
       expect(controller.maxTrials).toEqual(20);
@@ -195,13 +211,14 @@ describe('Controller: TrialDeviceController', function () {
     it('should set limitReached', function () {
       bard.mockService(TrialDeviceService, {
         getData: trialData.enabled.trials.deviceTrial,
-        getLimitsPromise: $q.when({
+        getLimitsPromise: $q.resolve({
           activeDeviceTrials: 20,
-          maxDeviceTrials: 20
-        })
+          maxDeviceTrials: 20,
+        }),
+        getDeviceLimit: limitData,
+        listTypes: {},
       });
-      controller = $controller('TrialDeviceController');
-      $rootScope.$apply();
+      initController();
 
       expect(controller.activeTrials).toEqual(20);
       expect(controller.maxTrials).toEqual(20);
@@ -211,10 +228,11 @@ describe('Controller: TrialDeviceController', function () {
     it('should set limitsError', function () {
       bard.mockService(TrialDeviceService, {
         getData: trialData.enabled.trials.deviceTrial,
-        getLimitsPromise: $q.reject()
+        getLimitsPromise: $q.reject(),
+        getDeviceLimit: limitData,
+        listTypes: {},
       });
-      controller = $controller('TrialDeviceController');
-      $rootScope.$apply();
+      initController();
 
       expect(controller.limitsError).toBe(true);
       expect(controller.limitReached).toBe(true);
@@ -224,13 +242,14 @@ describe('Controller: TrialDeviceController', function () {
       spyOn(Notification, 'warning');
       bard.mockService(TrialDeviceService, {
         getData: trialData.enabled.trials.deviceTrial,
-        getLimitsPromise: $q.when({
+        getLimitsPromise: $q.resolve({
           activeDeviceTrials: 17,
-          maxDeviceTrials: 20
-        })
+          maxDeviceTrials: 20,
+        }),
+        getDeviceLimit: limitData,
+        listTypes: {},
       });
-      controller = $controller('TrialDeviceController');
-      $rootScope.$apply();
+      initController();
 
       expect(Notification.warning).toHaveBeenCalled();
     });
@@ -239,41 +258,42 @@ describe('Controller: TrialDeviceController', function () {
   describe('input quantity default setting', function () {
 
     it('should change the quantity to 0 when disabled', function () {
-      var controller = $controller('TrialDeviceController');
       var device = {
         model: 'CISCO_SX10',
         enabled: false,
         quantity: 3,
         readonly: false,
-        valid: true
+        valid: true,
+        minQuantity: 1,
+        maxQuantity: 3,
       };
-      device.quantity = controller.getQuantityInputDefault(device, 1);
+      device.quantity = controller.getQuantityInputDefault(device);
       expect(device.quantity).toBe(0);
     });
 
     it('should change the quantity to default when enabled and has quantity 0', function () {
-
-      var controller = $controller('TrialDeviceController');
       var device = {
         model: 'CISCO_SX10',
         enabled: true,
         quantity: 0,
         readonly: false,
-        valid: true
+        valid: true,
+        minQuantity: 1,
+        maxQuantity: 3,
       };
-      device.quantity = controller.getQuantityInputDefault(device, 1);
+      device.quantity = controller.getQuantityInputDefault(device);
       expect(device.quantity).toBe(1);
     });
 
     it('should not change the quantity when enabled and has quantity other than 0', function () {
-
-      var controller = $controller('TrialDeviceController');
       var device = {
         model: 'CISCO_SX10',
         enabled: true,
         quantity: 3,
         readonly: false,
-        valid: true
+        valid: true,
+        minQuantity: 1,
+        maxQuantity: 3,
       };
       device.quantity = controller.getQuantityInputDefault(device, 1);
       expect(device.quantity).toBe(3);
@@ -285,8 +305,10 @@ describe('Controller: TrialDeviceController', function () {
     it('should validate when device is not enabled', function () {
       var valid = controller.validateInputQuantity(2, 2, {
         model: {
-          enabled: false
-        }
+          enabled: false,
+          minQuantity: 1,
+          maxQuantity: 3,
+        },
       });
       expect(valid).toBe(true);
     });
@@ -294,13 +316,15 @@ describe('Controller: TrialDeviceController', function () {
     it('should validate quantity between 1 and 4 for new trial', function () {
       var valid1 = controller.validateInputQuantity(1, 1, {
         model: {
-          enabled: true
-        }
+          enabled: true,
+          model: 'CISCO_8865',
+        },
       });
       var valid2 = controller.validateInputQuantity(4, 4, {
         model: {
-          enabled: true
-        }
+          enabled: true,
+          model: 'CISCO_8865',
+        },
       });
 
       expect(valid1).toBe(true);
@@ -311,21 +335,23 @@ describe('Controller: TrialDeviceController', function () {
     it('should validate quantity between 1 and 5 for trial prior to 9/1/2016', function () {
       var stateParams = {
         currentTrial: {
-          startDate: new Date(2016, 7, 1)
-        }
+          startDate: new Date(2016, 7, 1),
+        },
       };
 
-      var controller = $controller('TrialDeviceController', { $stateParams: stateParams });
+      var controller = $controller('TrialDeviceController', { $scope: scope.$new(), $stateParams: stateParams });
 
       var valid1 = controller.validateInputQuantity(1, 1, {
         model: {
-          enabled: true
-        }
+          enabled: true,
+          model: 'CISCO_8845',
+        },
       });
       var valid2 = controller.validateInputQuantity(5, 5, {
         model: {
-          enabled: true
-        }
+          enabled: true,
+          model: 'CISCO_8845',
+        },
       });
 
       expect(valid1).toBe(true);
@@ -335,16 +361,36 @@ describe('Controller: TrialDeviceController', function () {
     it('should not validate quantity below 1 and above 5', function () {
       var valid1 = controller.validateInputQuantity(0, 0, {
         model: {
-          enabled: true
-        }
+          enabled: true,
+          model: 'CISCO_8845',
+        },
       });
       var valid2 = controller.validateInputQuantity(6, 6, {
         model: {
-          enabled: true
-        }
+          enabled: true,
+          model: 'CISCO_8845',
+        },
       });
 
       expect(valid1).toBe(false);
+      expect(valid2).toBe(false);
+    });
+
+
+    it('should not validate quantity above 1 for mx300', function () {
+      var valid1 = controller.validateInputQuantity(1, 1, {
+        model: {
+          enabled: true,
+          model: 'CISCO_MX300',
+        },
+      });
+      var valid2 = controller.validateInputQuantity(2, 2, {
+        model: {
+          enabled: true,
+          model: 'CISCO_MX300',
+        },
+      });
+      expect(valid1).toBe(true);
       expect(valid2).toBe(false);
     });
   });
@@ -352,8 +398,8 @@ describe('Controller: TrialDeviceController', function () {
   describe('total quantity validation', function () {
     var model = {
       model: {
-        enabled: true
-      }
+        enabled: true,
+      },
     };
 
     it('should validate when quantity is between 1 and 5 for new trial', function () {
@@ -369,12 +415,11 @@ describe('Controller: TrialDeviceController', function () {
     it('should validate when quantity is between 1 and 7 for trial prior to 9/1/2016', function () {
       var stateParams = {
         currentTrial: {
-          startDate: new Date(2016, 7, 1)
-        }
+          startDate: new Date(2016, 7, 1),
+        },
       };
 
-      var controller = $controller('TrialDeviceController', { $stateParams: stateParams });
-
+      var controller = $controller('TrialDeviceController', { $scope: scope.$new(), $stateParams: stateParams });
       spyOn(controller, 'calcQuantity').and.returnValues(0, 1, 0, 7);
 
       var valid1 = controller.validateTotalQuantity(null, null, model);
@@ -396,8 +441,8 @@ describe('Controller: TrialDeviceController', function () {
     it('should validate when device is not enabled', function () {
       var valid = controller.validateTotalQuantity(null, null, {
         model: {
-          enabled: false
-        }
+          enabled: false,
+        },
       });
       expect(valid).toBe(true);
     });
@@ -406,14 +451,15 @@ describe('Controller: TrialDeviceController', function () {
   describe('room systems quantity validation', function () {
     var model = {
       model: {
-        enabled: true
-      }
+        enabled: true,
+        model: 'CISCO_DX80',
+      },
     };
 
     it('should validate when quantity is 3 or less', function () {
       spyOn(controller, 'calcQuantity').and.returnValue(3);
 
-      var valid = controller.validateRoomSystemsQuantity(null, null, model);
+      var valid = controller.validateTypeQuantity(null, null, model);
 
       expect(valid).toBe(true);
     });
@@ -421,7 +467,7 @@ describe('Controller: TrialDeviceController', function () {
     it('should not validate when quantity is greater than 5', function () {
       spyOn(controller, 'calcQuantity').and.returnValue(6);
 
-      var valid = controller.validateRoomSystemsQuantity(null, null, model);
+      var valid = controller.validateTypeQuantity(null, null, model);
 
       expect(valid).toBe(false);
     });
@@ -429,16 +475,16 @@ describe('Controller: TrialDeviceController', function () {
     it('should not validate when quantity is less than 1', function () {
       spyOn(controller, 'calcQuantity').and.returnValue(0);
 
-      var valid = controller.validateRoomSystemsQuantity(null, null, model);
+      var valid = controller.validateTypeQuantity(null, null, model);
 
       expect(valid).toBe(false);
     });
 
     it('should validate when device is not enabled', function () {
-      var valid = controller.validateRoomSystemsQuantity(null, null, {
+      var valid = controller.validateTypeQuantity(null, null, {
         model: {
-          enabled: false
-        }
+          enabled: false,
+        },
       });
       expect(valid).toBe(true);
     });
@@ -447,14 +493,15 @@ describe('Controller: TrialDeviceController', function () {
   describe('phones quantity validation', function () {
     var model = {
       model: {
-        enabled: true
-      }
+        enabled: true,
+        model: 'CISCO_8865',
+      },
     };
 
     it('should validate when quantity is 4 or less for new trial', function () {
       spyOn(controller, 'calcQuantity').and.returnValue(4);
 
-      var valid = controller.validatePhonesQuantity(null, null, model);
+      var valid = controller.validateTypeQuantity(null, null, model);
 
       expect(valid).toBe(true);
     });
@@ -463,15 +510,15 @@ describe('Controller: TrialDeviceController', function () {
 
       var stateParams = {
         currentTrial: {
-          startDate: new Date(2016, 7, 1)
-        }
+          startDate: new Date(2016, 7, 1),
+        },
       };
 
-      var controller = $controller('TrialDeviceController', { $stateParams: stateParams });
+      var controller = $controller('TrialDeviceController', { $scope: scope.$new(), $stateParams: stateParams });
 
       spyOn(controller, 'calcQuantity').and.returnValue(5);
 
-      var valid = controller.validatePhonesQuantity(null, null, model);
+      var valid = controller.validateTypeQuantity(null, null, model);
 
       expect(valid).toBe(true);
     });
@@ -479,7 +526,7 @@ describe('Controller: TrialDeviceController', function () {
     it('should not validate when quantity is greater than 5', function () {
       spyOn(controller, 'calcQuantity').and.returnValue(6);
 
-      var valid = controller.validatePhonesQuantity(null, null, model);
+      var valid = controller.validateTypeQuantity(null, null, model);
 
       expect(valid).toBe(false);
     });
@@ -487,16 +534,16 @@ describe('Controller: TrialDeviceController', function () {
     it('should not validate when phone quantity is less than 1', function () {
       spyOn(controller, 'calcQuantity').and.returnValue(0);
 
-      var valid = controller.validatePhonesQuantity(null, null, model);
+      var valid = controller.validateTypeQuantity(null, null, model);
 
       expect(valid).toBe(false);
     });
 
     it('should validate when device is not enabled', function () {
-      var valid = controller.validatePhonesQuantity(null, null, {
+      var valid = controller.validateTypeQuantity(null, null, {
         model: {
-          enabled: false
-        }
+          enabled: false,
+        },
       });
       expect(valid).toBe(true);
     });
@@ -522,7 +569,7 @@ describe('Controller: TrialDeviceController', function () {
         getData: trialData.enabled.trials.roomSystemTrial,
       });
 
-      controller = $controller('TrialDeviceController');
+      initController();
       $rootScope.$apply();
 
       var total = controller.getTotalQuantity();
@@ -535,8 +582,8 @@ describe('Controller: TrialDeviceController', function () {
     it('should validate when model valid is true', function () {
       var valid = controller.validateChecks(null, null, {
         model: {
-          valid: true
-        }
+          valid: true,
+        },
       });
       expect(valid).toBe(true);
     });
@@ -545,8 +592,8 @@ describe('Controller: TrialDeviceController', function () {
       var valid = controller.validateChecks(null, null, {
         model: {
           enabled: true,
-          valid: true
-        }
+          valid: true,
+        },
       });
       expect(valid).toBe(true);
     });
@@ -555,8 +602,8 @@ describe('Controller: TrialDeviceController', function () {
       var valid = controller.validateChecks(null, null, {
         model: {
           enabled: false,
-          valid: false
-        }
+          valid: false,
+        },
       });
       expect(valid).toBe(false);
     });
@@ -567,13 +614,15 @@ describe('Controller: TrialDeviceController', function () {
 
       bard.mockService(TrialDeviceService, {
         getData: trialData.enabled.trials.deviceTrial,
-        getLimitsPromise: $q.when({
+        getLimitsPromise: $q.resolve({
           activeDeviceTrials: 20,
-          maxDeviceTrials: 20
-        })
+          maxDeviceTrials: 20,
+        }),
+        getDeviceLimit: limitData,
+        listTypes: {},
       });
 
-      controller = $controller('TrialDeviceController');
+      initController();
       controller.canAddMoreDevices = false;
       $rootScope.$apply();
 
@@ -584,12 +633,14 @@ describe('Controller: TrialDeviceController', function () {
     it('should return true when the limit is not reached', function () {
       bard.mockService(TrialDeviceService, {
         getData: trialData.enabled.trials.deviceTrial,
-        getLimitsPromise: $q.when({
+        getLimitsPromise: $q.resolve({
           activeDeviceTrials: 15,
-          maxDeviceTrials: 20
-        })
+          maxDeviceTrials: 20,
+        }),
+        getDeviceLimit: limitData,
+        listTypes: {},
       });
-      controller = $controller('TrialDeviceController');
+      initController();
       controller.canAddMoreDevices = false;
       $rootScope.$apply();
 
@@ -600,84 +651,78 @@ describe('Controller: TrialDeviceController', function () {
 
   describe('areTemplateOptionsDisabled function', function () {
     it('should set to true if device.enabled is false', function () {
-      var controller = $controller('TrialDeviceController');
       var device = {
         model: 'CISCO_SX10',
         enabled: false,
         quantity: 3,
         readonly: false,
-        valid: true
+        valid: true,
       };
 
       expect(controller.areTemplateOptionsDisabled(device)).toBeTruthy();
     });
 
     it('should set to false if device.enabled is true', function () {
-      var controller = $controller('TrialDeviceController');
       var device = {
         model: 'CISCO_DX80',
         enabled: true,
         quantity: 3,
         readonly: false,
-        valid: true
+        valid: true,
       };
       expect(controller.areTemplateOptionsDisabled(device)).toBeFalsy();
     });
 
     it('should set to false if device.readonly is true', function () {
-      var controller = $controller('TrialDeviceController');
       var device = {
         model: 'CISCO_MX300',
         enabled: false,
         quantity: 3,
         readonly: true,
-        valid: true
+        valid: true,
       };
       expect(controller.areTemplateOptionsDisabled(device)).toBeTruthy();
     });
   });
 
-  describe('feature toggle for international shipping', function () {
-    it('should set supportsInternationalShipping value based on feature toggle value', function () {
-      spyOn(FeatureToggleService, 'atlasShipDevicesInternationalGetStatus').and.returnValue($q.when(true));
-      initController();
-
-      expect(controller.supportsInternationalShipping).toBe(true);
-      expect(FeatureToggleService.atlasShipDevicesInternationalGetStatus).toHaveBeenCalled();
-    });
-
-    xit('should only show US when  only dx10 is  selected and toggle is false', function () {
-      spyOn(FeatureToggleService, 'atlasShipDevicesInternationalGetStatus').and.returnValue($q.when(false));
-      initController();
-      expect(controller.supportsInternationalShipping).toBe(false);
-      expect(FeatureToggleService.atlasShipDevicesInternationalGetStatus).toHaveBeenCalled();
-    });
-  });
-
   describe('Shipping to additional countries ', function () {
-    it('should show a larger list of countries when only CISCO_SX10 is selected and toggle is true', function () {
-      spyOn(FeatureToggleService, 'atlasShipDevicesInternationalGetStatus').and.returnValue($q.when(true));
-      initController();
+    it('should show a largest list of countries when only CISCO_SX10 is selected', function () {
       controller.sx10.enabled = true;
       controller.sx10.quantity = 1;
       var countryList = controller.getCountriesForSelectedDevices();
-      expect(countryList.length).toBeGreaterThan(1);
+      expect(countryList.length).toBeGreaterThan(2);
     });
-    xit('should have a list of countries to be US only when CISCO_SX10 is selected and toggle is false', function () {
-      spyOn(FeatureToggleService, 'atlasShipDevicesInternationalGetStatus').and.returnValue($q.when(false));
+    it('should have a list of countries to be US and Canada only when CISCO_SX10 and Desk Phone is selected AND FT is true', function () {
+      FeatureToggleService.atlasPhonesCanadaGetStatus.and.returnValue($q.resolve(true));
       initController();
       controller.sx10.enabled = true;
       controller.sx10.quantity = 1;
+      controller.phone8865.enabled = true;
+      controller.phone8865.quantity = 1;
+
+      var countryList = controller.getCountriesForSelectedDevices();
+      expect(countryList.length).toBe(2);
+      expect(countryList).toContain({ country: 'United States' });
+      expect(countryList).toContain({ country: 'Canada' });
+    });
+    it('should have a list of countries to be US only when CISCO_SX10 and Desk Phone is selected and FT is false', function () {
+
+      controller.sx10.enabled = true;
+      controller.sx10.quantity = 1;
+      controller.phone8865.enabled = true;
+      controller.phone8865.quantity = 1;
+      FeatureToggleService.atlasPhonesCanadaGetStatus.and.returnValue($q.resolve(false));
       var countryList = controller.getCountriesForSelectedDevices();
       expect(countryList.length).toBe(1);
       expect(countryList).toContain({ country: 'United States' });
+      expect(countryList).not.toContain({ country: 'Canada' });
 
     });
-    it('should have a list of countries to be US only when CISCO_SX10 and phone is selected and toggle is true', function () {
-      spyOn(FeatureToggleService, 'atlasShipDevicesInternationalGetStatus').and.returnValue($q.when(true));
-      initController();
+    it('should have a list of countries to still be US only when MX300 phone is selected', function () {
       controller.sx10.enabled = true;
       controller.sx10.quantity = 1;
+      controller.mx300.enabled = true;
+      controller.mx300.quantity = 1;
       controller.phone8865.enabled = true;
       controller.phone8865.quantity = 1;
       var countryList = controller.getCountriesForSelectedDevices();

@@ -1,3 +1,6 @@
+require('./_branding.scss');
+require('./_brandingUpload.scss');
+
 (function () {
   'use strict';
 
@@ -18,11 +21,11 @@
     brand.logoCriteria = {
       'pattern': '.png',
       'width': {
-        min: '100'
+        min: '100',
       },
       'size': {
-        max: '1MB'
-      }
+        max: '1MB',
+      },
     };
 
     brand.useLatestWbxVersion = false;
@@ -52,6 +55,10 @@
         }
       });
 
+      var params = {
+        disableCache: true,
+        basicInfo: true,
+      };
       Orgservice.getOrg(function (data, status) {
         if (data.success) {
           var settings = data.orgSettings;
@@ -71,7 +78,7 @@
           Log.debug('Get existing org failed. Status: ' + status);
         }
 
-      }, orgId, true);
+      }, orgId, params);
 
       BrandService.getLogoUrl(orgId).then(function (logoUrl) {
         brand.tempLogoUrl = logoUrl;
@@ -138,8 +145,8 @@
         } else {
           Notification.success('partnerProfile.webexVersionUseLatestFalse');
         }
-      }).catch(function () {
-        Notification.error('partnerProfile.webexVersionUseLatestUpdateFailed');
+      }).catch(function (response) {
+        Notification.errorResponse(response, 'partnerProfile.webexVersionUseLatestUpdateFailed');
       });
     }
 
@@ -160,8 +167,8 @@
 
       p.then(function () {
         Notification.success('partnerProfile.webexClientVersionUpdated');
-      }).catch(function () {
-        Notification.error('partnerProfile.webexClientVersionUpdatedFailed');
+      }).catch(function (response) {
+        Notification.errorResponse(response, 'partnerProfile.webexClientVersionUpdatedFailed');
       });
     }
 
@@ -171,14 +178,14 @@
       wbxclientversionselectchanged,
       2000, {
         'leading': true,
-        'trailing': false
+        'trailing': false,
       });
 
     brand.toggleWebexSelectLatestVersionAlways = _.debounce(
       toggleWebexSelectLatestVersionAlways,
       100, {
         'leading': true,
-        'trailing': false
+        'trailing': false,
       });
 
     brand.upload = function (file) {
@@ -195,7 +202,7 @@
         type: 'small',
         scope: $scope,
         modalClass: 'modal-logo-upload',
-        templateUrl: 'modules/core/partnerProfile/branding/brandingUpload.tpl.html'
+        templateUrl: 'modules/core/partnerProfile/branding/brandingUpload.tpl.html',
       });
     }
 
@@ -207,7 +214,7 @@
       }
     }, 2000, {
       'leading': true,
-      'trailing': false
+      'trailing': false,
     });
 
     brand.toggleAllowCustomerLogos = _.debounce(function (value) {
@@ -218,13 +225,13 @@
       }
     }, 2000, {
       'leading': true,
-      'trailing': false
+      'trailing': false,
     });
 
     // Add branding example static page
     brand.showBrandingExample = function (type) {
       $state.go('brandingExample', {
-        modalType: type
+        modalType: type,
       });
     };
 
@@ -251,24 +258,34 @@
     }
 
     function uploadSuccess() {
+      var orgId = Authinfo.getOrgId();
       $timeout(function () {
         if (brand.uploadModal) {
           brand.uploadModal.close();
         }
       }, 3000);
       // Automatically start using the custom logo
-      BrandService.resetCdnLogo(Authinfo.getOrgId());
-      // load logo url after upload success
-      BrandService.getLogoUrl(Authinfo.getOrgId()).then(function (logoUrl) {
-        brand.tempLogoUrl = logoUrl;
-      });
-
-      brand.usePartnerLogo = false;
-      brand.toggleLogo(false);
+      BrandService.resetCdnLogo(orgId).then(function () {
+        BrandService.getLogoUrl(orgId).then(function (logoUrl) {
+          brand.tempLogoUrl = logoUrl;
+          brand.usePartnerLogo = false;
+          brand.toggleLogo(false);
+        }).catch(uploadError);
+      }).catch(uploadError);
     }
 
-    function uploadError() {
-      brand.logoError = 'unknown';
+    function uploadError(response) {
+      var errorKey;
+      brand.logoFile = null;
+      if (brand.uploadModal) {
+        brand.uploadModal.close();
+      }
+      if (_.get(response, 'data.name') === 'SecurityError') {
+        errorKey = 'partnerProfile.imageUploadFailedSecurity';
+      } else {
+        errorKey = 'partnerProfile.imageUploadFailed';
+      }
+      Notification.errorResponse(response, errorKey);
     }
 
     function uploadProgress(evt) {

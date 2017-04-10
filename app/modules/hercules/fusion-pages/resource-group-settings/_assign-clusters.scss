@@ -44,8 +44,9 @@
   }
 
   .resource-name {
-    font-size: 0.875rem;
     @include text-overflow();
+
+    font-size: 0.875rem;
     padding-right: 1rem;
   }
 

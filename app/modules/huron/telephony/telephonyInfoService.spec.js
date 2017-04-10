@@ -1,7 +1,8 @@
 'use strict';
 
 describe('Service: TelephonyInfoService', function () {
-  var $httpBackend, $q, $translate, HuronConfig, TelephonyInfoService, ServiceSetup, DirectoryNumber, HuronCustomer, InternationalDialing;
+  var $httpBackend, $q, $translate, HuronConfig, TelephonyInfoService, ServiceSetup, DirectoryNumber,
+    HuronCustomer, InternationalDialing, ExternalNumberPool;
   var $rootScope, Authinfo;
 
   var internalNumbers, externalNumbers, getExternalNumberPool;
@@ -16,17 +17,17 @@ describe('Service: TelephonyInfoService', function () {
     "servicePackage": "DEMO_STANDARD",
     "links": [{
       "rel": "common",
-      "href": "/api/v1/common/customers/84562afa-2f35-474f-ba0f-2def42864e12"
+      "href": "/api/v1/common/customers/84562afa-2f35-474f-ba0f-2def42864e12",
     }, {
       "rel": "voicemail",
-      "href": "/api/v1/voicemail/customers/84562afa-2f35-474f-ba0f-2def42864e12"
+      "href": "/api/v1/voicemail/customers/84562afa-2f35-474f-ba0f-2def42864e12",
     }, {
       "rel": "voice",
-      "href": "/api/v1/voice/customers/84562afa-2f35-474f-ba0f-2def42864e12"
-    }]
+      "href": "/api/v1/voice/customers/84562afa-2f35-474f-ba0f-2def42864e12",
+    }],
   };
 
-  beforeEach(inject(function (_$rootScope_, _$httpBackend_, _$translate_, _$q_, _HuronConfig_, _TelephonyInfoService_, _ServiceSetup_, _DirectoryNumber_, _HuronCustomer_, _Authinfo_, _InternationalDialing_) {
+  beforeEach(inject(function (_$rootScope_, _$httpBackend_, _$translate_, _$q_, _HuronConfig_, _TelephonyInfoService_, _ServiceSetup_, _DirectoryNumber_, _HuronCustomer_, _Authinfo_, _InternationalDialing_, _ExternalNumberPool_) {
     $httpBackend = _$httpBackend_;
     $q = _$q_;
     $rootScope = _$rootScope_;
@@ -38,19 +39,20 @@ describe('Service: TelephonyInfoService', function () {
     HuronCustomer = _HuronCustomer_;
     Authinfo = _Authinfo_;
     InternationalDialing = _InternationalDialing_;
+    ExternalNumberPool = _ExternalNumberPool_;
 
     internalNumbers = getJSONFixture('huron/json/internalNumbers/internalNumbers.json');
     externalNumbers = getJSONFixture('huron/json/externalNumbers/externalNumbers.json');
     getExternalNumberPool = externalNumbers.slice(0);
     getExternalNumberPool.unshift({
       "uuid": "none",
-      "pattern": "directoryNumberPanel.none"
+      "pattern": "directoryNumberPanel.none",
     });
     cosRestrictions = getJSONFixture('huron/json/telephonyInfo/userCosRestrictions.json');
 
-    spyOn(ServiceSetup, 'listSites').and.returnValue($q.when([]));
-    spyOn(DirectoryNumber, 'getAlternateNumbers').and.returnValue($q.when([]));
-    spyOn(HuronCustomer, 'get').and.returnValue($q.when(customer));
+    spyOn(ServiceSetup, 'listSites').and.returnValue($q.resolve([]));
+    spyOn(DirectoryNumber, 'getAlternateNumbers').and.returnValue($q.resolve([]));
+    spyOn(HuronCustomer, 'get').and.returnValue($q.resolve(customer));
     spyOn(Authinfo, 'getOrgId').and.returnValue('1');
     spyOn(InternationalDialing, 'listCosRestrictions');
     spyOn(InternationalDialing, 'isDisableInternationalDialing');
@@ -64,7 +66,7 @@ describe('Service: TelephonyInfoService', function () {
   describe('getInternationalDialing():', function () {
     it('should call get COS restrictions when NOT hiding international dialing', function () {
       InternationalDialing.isDisableInternationalDialing.and.returnValue(false);
-      InternationalDialing.listCosRestrictions.and.returnValue($q.when(cosRestrictions));
+      InternationalDialing.listCosRestrictions.and.returnValue($q.resolve(cosRestrictions));
 
       TelephonyInfoService.getInternationalDialing();
       $rootScope.$apply();
@@ -155,24 +157,40 @@ describe('Service: TelephonyInfoService', function () {
 
   describe('loadExternalNumberPool', function () {
 
-    it('should return external number pool', function () {
-      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&order=pattern').respond(externalNumbers);
+    it('should query for unassigned PSTN numbers and return external number pool when no parameters provided', function () {
+      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&externalnumbertype=Fixed+Line+or+Mobile&order=pattern').respond(externalNumbers);
       TelephonyInfoService.loadExternalNumberPool().then(function (response) {
         expect(response).toEqual(getExternalNumberPool);
       });
       $httpBackend.flush();
     });
 
-    it('should return external number pool with query param', function () {
-      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&order=pattern&pattern=%255%25').respond(externalNumbers);
+    it('should query for a specific unassigned PSTN number and return external number pool with pattern query param', function () {
+      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&externalnumbertype=Fixed+Line+or+Mobile&order=pattern&pattern=%255%25').respond(externalNumbers);
       TelephonyInfoService.loadExternalNumberPool('5').then(function (response) {
         expect(response).toEqual(getExternalNumberPool);
       });
       $httpBackend.flush();
     });
 
+    it('should query for unassigned Toll-Free numbers and return external number pool with NO_PATTERN_MATCHING and TOLL_FREE query params', function () {
+      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&externalnumbertype=Toll+Free&order=pattern').respond(externalNumbers);
+      TelephonyInfoService.loadExternalNumberPool(ExternalNumberPool.NO_PATTERN_MATCHING, ExternalNumberPool.TOLL_FREE).then(function (response) {
+        expect(response).toEqual(getExternalNumberPool);
+      });
+      $httpBackend.flush();
+    });
+
+    it('should query for unassigned numbers of all number types and return external number pool with NO_PATTERN_MATCHING and ALL_EXTERNAL_NUMBER_TYPES query params', function () {
+      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&order=pattern').respond(externalNumbers);
+      TelephonyInfoService.loadExternalNumberPool(ExternalNumberPool.NO_PATTERN_MATCHING, ExternalNumberPool.ALL_EXTERNAL_NUMBER_TYPES).then(function (response) {
+        expect(response).toEqual(getExternalNumberPool);
+      });
+      $httpBackend.flush();
+    });
+
     it('should return an empty pool when an error occurs', function () {
-      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&order=pattern').respond(500);
+      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&externalnumbertype=Fixed+Line+or+Mobile&order=pattern').respond(500);
       TelephonyInfoService.loadExternalNumberPool().then(function () {
         expect(TelephonyInfoService.getExternalNumberPool()).toEqual([]);
       });
@@ -197,7 +215,7 @@ describe('Service: TelephonyInfoService', function () {
 
     it('should accept an object', function () {
       var cosRestrictions = getJSONFixture('huron/json/user/cosRestrictionsObject.json');
-      InternationalDialing.listCosRestrictions.and.returnValue($q.when(cosRestrictions));
+      InternationalDialing.listCosRestrictions.and.returnValue($q.resolve(cosRestrictions));
       TelephonyInfoService.getUserInternationalDialingDetails();
       $rootScope.$apply();
       expect(TelephonyInfoService.getTelephonyInfo().internationalDialingStatus).toEqual('internationalDialingPanel.alwaysAllow');

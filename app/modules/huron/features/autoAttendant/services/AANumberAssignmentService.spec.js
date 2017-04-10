@@ -5,7 +5,7 @@ describe('Service: AANumberAssignmentService', function () {
   var url, cmiAAAsignmentURL;
   // require('jasmine-collection-matchers');
   var Authinfo = {
-    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
   };
 
   var aCe = getJSONFixture('huron/json/autoAttendant/aCallExperience.json');
@@ -13,16 +13,16 @@ describe('Service: AANumberAssignmentService', function () {
   var cmiAAAssignedNumbers = [{
     "number": "2578",
     "type": "NUMBER_FORMAT_EXTENSION",
-    "uuid": "29d70a54-cf0a-4279-ad75-09116eedb7a7"
+    "uuid": "29d70a54-cf0a-4279-ad75-09116eedb7a7",
   }, {
     "number": "8002578",
     "type": "NUMBER_FORMAT_ENTERPRISE_LINE",
-    "uuid": "29d70b54-cf0a-4279-ad75-09116eedb7a7"
+    "uuid": "29d70b54-cf0a-4279-ad75-09116eedb7a7",
   }];
 
   var cmiAAAsignments = {
     "numbers": cmiAAAssignedNumbers,
-    "url": "https://cmi.huron-int.com/api/v2/customers/3338d491-d6ca-4786-82ed-cbe9efb02ad2/features/autoattendants/23a42558-6485-4dab-9505-704b6204410c/numbers"
+    "url": "https://cmi.huron-int.com/api/v2/customers/3338d491-d6ca-4786-82ed-cbe9efb02ad2/features/autoattendants/23a42558-6485-4dab-9505-704b6204410c/numbers",
   };
 
   var onlyAA = [];
@@ -61,7 +61,7 @@ describe('Service: AANumberAssignmentService', function () {
 
         var response = [{
           'pattern': '+' + pattern.replace(/\D/g, ''),
-          'uuid': pattern.replace(/\D/g, '') + '-id'
+          'uuid': pattern.replace(/\D/g, '') + '-id',
         }];
 
         return [200, response];
@@ -85,10 +85,10 @@ describe('Service: AANumberAssignmentService', function () {
 
       $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&order=pattern').respond(200, [{
         'pattern': '+14084744458',
-        'uuid': '9999999991-id'
+        'uuid': '9999999991-id',
       }, {
         'pattern': '+8888888881',
-        'uuid': '8888888881-id'
+        'uuid': '8888888881-id',
       }]);
 
       AANumberAssignmentService.formatAAE164ResourcesBasedOnCMI(resources).then(
@@ -118,10 +118,10 @@ describe('Service: AANumberAssignmentService', function () {
 
       $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&order=pattern').respond(200, [{
         'pattern': '+14084744458',
-        'uuid': '9999999991-id'
+        'uuid': '9999999991-id',
       }, {
         'pattern': '+8888888881',
-        'uuid': '8888888881-id'
+        'uuid': '8888888881-id',
       }]);
 
       AANumberAssignmentService.formatAAE164ResourcesBasedOnCMI(resources).then(

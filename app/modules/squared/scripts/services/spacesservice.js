@@ -13,7 +13,7 @@
       listDevices: listDevices,
       addDevice: addDevice,
       deleteDevice: deleteDevice,
-      getDeviceStatus: getDeviceStatus
+      getDeviceStatus: getDeviceStatus,
     };
 
     return service;
@@ -21,12 +21,12 @@
     function listDevices(callback) {
       $http.get(deviceUrl)
         .success(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = true;
           callback(data, status);
         })
         .error(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = false;
           data.status = status;
           callback(data, status);
@@ -35,18 +35,18 @@
 
     function addDevice(newDeviceName, callback) {
       var deviceData = {
-        'name': newDeviceName
+        'name': newDeviceName,
       };
 
       if (deviceData.name.length > 0) {
         $http.post(deviceUrl, deviceData)
           .success(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             data.success = true;
             callback(data, status);
           })
           .error(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             data.success = false;
             data.status = status;
             callback(data, status);
@@ -62,12 +62,12 @@
         var deleteUrl = deviceUrl + '/' + deviceUuid;
         $http.delete(deleteUrl)
           .success(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             data.success = true;
             callback(data, status);
           })
           .error(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             data.success = false;
             data.status = status;
             callback(data, status);
@@ -83,12 +83,12 @@
         var getStatusUrl = deviceUrl + '/' + deviceUuid + '/status';
         $http.get(getStatusUrl)
           .success(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             data.success = true;
             callback(data, i, status);
           })
           .error(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             data.success = false;
             data.status = status;
             callback(data, i, status);

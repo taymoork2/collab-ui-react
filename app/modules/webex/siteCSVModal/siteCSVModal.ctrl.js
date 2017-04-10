@@ -28,7 +28,7 @@
     vm.startImport = startImport;
 
     vm.modal = {
-      file: null
+      file: null,
     };
 
     vm.siteRow = $stateParams.siteRow;

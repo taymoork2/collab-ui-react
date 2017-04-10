@@ -1,0 +1,15 @@
+{
+  "userName": "CurrentUser",
+  "displayName": "Display Name",
+  "entitlements": ["squared-call-initiation",
+    "squared-fusion-mgmt",
+    "webex-squared",
+    "spark-room-system",
+    "contact-center-context"
+  ],
+  "id": "111",
+  "meta": {
+    "organizationID": "222"
+  },
+  "roles": ["spark.synckms"]
+}

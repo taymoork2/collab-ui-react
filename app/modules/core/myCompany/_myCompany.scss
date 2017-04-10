@@ -1,4 +1,4 @@
-@import 'mySubscriptions/_mySubscription';
+@import '~collab-ui/scss/tools/placeholders/page-layout';
 
 .my-company-page {
   @extend %grid-subheader;
@@ -9,6 +9,10 @@
     @extend %page-background-white;
   }
 
+  .content-container {
+    height: 100%;
+  }
+
   iframe {
     display: block;
     width: 100%;
@@ -16,16 +20,21 @@
     border: none;
   }
 }
-.btn--myCompany{
-  .icon{
+
+.btn--myCompany {
+  .header-label {
+    margin-right: 0.75rem !important;
+  }
+
+  .icon {
     position: static !important;
-    margin-left: 0.75rem !important;
   }
 }
 
 .my-company-order-history-actions {
   display: flex;
   align-items: center;
+
   .icon {
     margin-right: 0.5rem;
   }

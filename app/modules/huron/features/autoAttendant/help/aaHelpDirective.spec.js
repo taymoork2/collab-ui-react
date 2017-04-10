@@ -2,6 +2,14 @@
 
 describe('Directive: aaHelpDirective', function () {
   var $compile, $rootScope;
+  var element;
+
+  afterEach(function () {
+    if (element) {
+      element.remove();
+    }
+    element = undefined;
+  });
 
   beforeEach(angular.mock.module('Huron'));
 
@@ -11,14 +19,14 @@ describe('Directive: aaHelpDirective', function () {
   }));
 
   it('creates the appropriate content as element', function () {
-    var element = $compile("<aa-help content='help me if you can'></aa-help>")($rootScope);
+    element = $compile("<aa-help content='help me if you can'></aa-help>")($rootScope);
     $rootScope.$digest();
 
     expect(element.html()).toContain("aa-help-icon");
   });
 
   it('creates the appropriate content as attribute', function () {
-    var element = $compile("<div aa-help content='please, please help me'></div>")($rootScope);
+    element = $compile("<div aa-help content='please, please help me'></div>")($rootScope);
     $rootScope.$digest();
 
     expect(element.html()).toContain("aa-help-icon");

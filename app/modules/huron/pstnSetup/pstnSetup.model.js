@@ -1,15 +1,18 @@
 (function () {
   'use strict';
 
-  angular.module('Huron')
-    .factory('PstnSetup', PstnSetup);
+  module.exports = angular.module('huron.PstnSetup', [
+    require('angular-resource'),
+  ])
+    .factory('PstnSetup', PstnSetup)
+    .name;
 
   function PstnSetup() {
-    var customerId, customerName, customerFirstName, customerLastName, customerEmail, serviceAddress, customerExists, resellerExists, carrierExists, siteExists, provider, numbers, orders, singleCarrierReseller, isTrial;
+    var customerId, customerName, customerFirstName, customerLastName, customerEmail, serviceAddress, customerExists, resellerExists, carrierExists, siteExists, provider, numbers, orders, carriers, singleCarrierReseller, isTrial, countryCode;
 
     init();
     var model = {
-      clear: init,
+      clear: clear,
       clearProviderSpecificData: clearProviderSpecificData,
       setCustomerId: setCustomerId,
       getCustomerId: getCustomerId,
@@ -38,15 +41,23 @@
       getNumbers: getNumbers,
       setOrders: setOrders,
       getOrders: getOrders,
+      setCarriers: setCarriers,
+      getCarriers: getCarriers,
       isSingleCarrierReseller: isSingleCarrierReseller,
       setSingleCarrierReseller: setSingleCarrierReseller,
       setIsTrial: setIsTrial,
-      getIsTrial: getIsTrial
+      getIsTrial: getIsTrial,
+      getCountryCode: getCountryCode,
+      setCountryCode: setCountryCode,
     };
 
     return model;
 
     function init() {
+      clear();
+    }
+
+    function clear() {
       customerId = '';
       customerName = '';
       customerFirstName = '';
@@ -57,19 +68,24 @@
       resellerExists = false;
       carrierExists = false;
       siteExists = false;
-      provider = {};
+      provider = undefined;
       numbers = [];
       orders = [];
+      carriers = [];
       singleCarrierReseller = false;
       isTrial = true;
+      countryCode = 'US';
     }
 
     function clearProviderSpecificData() {
       customerFirstName = '';
       customerLastName = '';
+      serviceAddress = {};
+      siteExists = false;
+      carrierExists = false;
+      carrierExists = [];
       numbers = [];
       orders = [];
-      serviceAddress = {};
     }
 
     function setCustomerId(_customerId) {
@@ -161,7 +177,7 @@
     }
 
     function getProviderId() {
-      return angular.isObject(provider) ? provider.uuid : '';
+      return _.isObject(provider) ? provider.uuid : '';
     }
 
     function setNumbers(_numbers) {
@@ -180,6 +196,20 @@
       return _.cloneDeep(orders);
     }
 
+    function setCarriers(_carriers) {
+      if (_.isArray(_carriers) && _carriers.length > 0) {
+        carrierExists = true;
+        carriers = _carriers;
+      } else {
+        carrierExists = false;
+        carriers = [];
+      }
+    }
+
+    function getCarriers() {
+      return carriers;
+    }
+
     function isSingleCarrierReseller() {
       return singleCarrierReseller;
     }
@@ -195,5 +225,14 @@
     function getIsTrial() {
       return isTrial;
     }
+
+    function getCountryCode() {
+      return countryCode;
+    }
+
+    function setCountryCode(_countryCode) {
+      countryCode = _countryCode;
+    }
+
   }
 })();

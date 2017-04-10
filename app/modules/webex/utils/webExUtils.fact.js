@@ -1,17 +1,13 @@
 (function () {
   'use strict';
 
-  angular
-    .module('WebExApp')
-    .factory('WebExUtilsFact', WebExUtilsFact);
-
   /* @ngInject */
   function WebExUtilsFact(
     $q,
     $log,
     $rootScope,
+    Auth,
     Authinfo,
-    Orgservice,
     WebExXmlApiFact
   ) {
 
@@ -44,7 +40,7 @@
       var confLicenses = _.filter(licenses, {
         siteUrl: siteUrl,
         licenseType: 'CONFERENCING',
-        isCIUnifiedSite: false
+        isCIUnifiedSite: false,
       });
 
       if (
@@ -64,7 +60,7 @@
         var cmrLicenses = _.filter(licenses, {
           siteUrl: siteUrl,
           licenseType: 'CMR',
-          isCIUnifiedSite: false
+          isCIUnifiedSite: false,
         });
 
         if (
@@ -92,7 +88,7 @@
         ".my",
         ".mydmz",
         ".mybts",
-        ".mydev"
+        ".mydev",
       ];
 
       var dotIndex = siteUrl.indexOf(".");
@@ -132,17 +128,17 @@
 
         licensesTotal: {
           id: "licensesTotal",
-          count: "---"
+          count: "---",
         },
 
         licensesUsage: {
           id: "licensesUsage",
-          count: "---"
+          count: "---",
         },
 
         licensesAvailable: {
           id: "licensesAvailable",
-          count: "---"
+          count: "---",
         },
 
         iframeLinkObj1: {
@@ -209,7 +205,7 @@
         headerJson: headerJson,
         bodyJson: bodyJson,
         errId: errId,
-        errReason: errReason
+        errReason: errReason,
       };
 
       return result;
@@ -278,7 +274,7 @@
 
       var trainReleaseJson = {
         trainReleaseVersion: null,
-        trainReleaseOrder: null
+        trainReleaseOrder: null,
       };
 
       // var trainReleaseVersion = null;
@@ -307,13 +303,41 @@
       return enableT30UnifiedAdmin;
     }; // getEnableT30UnifiedAdmin()
 
+    obj.getOrgWebexLicenses = function (orgInfo) {
+      var orgWebexLicenses = [];
+
+      if (null != orgInfo) {
+        var customerInfo = _.get(orgInfo, 'data.customers[0]');
+        var custLicenses = customerInfo.licenses;
+        var custSubscriptions = customerInfo.subscriptions;
+
+        if (null != custLicenses) {
+          orgWebexLicenses = orgWebexLicenses.concat(custLicenses);
+        } else if (null != custSubscriptions) {
+          custSubscriptions.forEach(
+            function (custSubscription) {
+              var subscriptionLicenses = custSubscription.licenses;
+
+              if (null != subscriptionLicenses) {
+                orgWebexLicenses = orgWebexLicenses.concat(subscriptionLicenses);
+              }
+            }
+          );
+        }
+      }
+
+      return orgWebexLicenses;
+    }; // getOrgWebexLicenses()
+
     obj.getAllSitesWebexLicenseInfo = function () {
       var deferredGetWebexLicenseInfo = $q.defer();
 
-      Orgservice.getValidLicenses().then(
-        function getValidLicensesSuccess(licenses) {
-          // var funcName = "getValidLicensesSuccess()";
-          // var logMsg = "";
+      Auth.getCustomerAccount(Authinfo.getOrgId()).then(
+        function getValidLicensesSuccess(response) {
+          var funcName = "getValidLicensesSuccess()";
+          var logMsg = "";
+
+          var licenses = obj.getOrgWebexLicenses(response);
 
           // logMsg = funcName + ": " + "\n" +
           //   "licenses=" + JSON.stringify(licenses);
@@ -321,28 +345,35 @@
 
           var allSitesLicenseInfo = [];
 
-          licenses.forEach(
-            function checkLicense(license) {
-              if (
-                ("CONFERENCING" == license.licenseType) ||
-                ("CMR" == license.licenseType)
-              ) {
+          if (0 >= licenses.size) {
+            logMsg = funcName + "\n" +
+              "ERROR - no org licenses found in Atlas!" + "\n" +
+              "licenses=" + JSON.stringify(licenses);
+            $log.log(logMsg);
+          } else {
+            licenses.forEach(
+              function checkLicense(license) {
+                if (
+                  ("CONFERENCING" == license.licenseType) ||
+                  ("CMR" == license.licenseType)
+                ) {
 
-                var capacity = license.capacity;
-                var licenseFields = license.licenseId.split("_");
-                var webexSite = licenseFields[licenseFields.length - 1];
-                var offerCode = licenseFields[0];
+                  var capacity = license.capacity;
+                  var licenseFields = license.licenseId.split("_");
+                  var webexSite = licenseFields[licenseFields.length - 1];
+                  var offerCode = licenseFields[0];
 
-                var licenseInfo = {
-                  'webexSite': webexSite,
-                  'offerCode': offerCode,
-                  'capacity': capacity,
-                };
+                  var licenseInfo = {
+                    'webexSite': webexSite,
+                    'offerCode': offerCode,
+                    'capacity': capacity,
+                  };
 
-                allSitesLicenseInfo.push(licenseInfo);
-              }
-            } // checkLicense()
-          ); // licenses.forEach()
+                  allSitesLicenseInfo.push(licenseInfo);
+                }
+              } // checkLicense()
+            ); // licenses.forEach()
+          }
 
           if (0 < allSitesLicenseInfo.length) {
             deferredGetWebexLicenseInfo.resolve(allSitesLicenseInfo);
@@ -384,35 +415,36 @@
     }; // setInfoCardLicenseInfo();
 
     obj.logoutSite = function () {
+      var promise = null;
       var siteUrl = $rootScope.lastSite;
 
-      var promise;
-      if (!angular.isDefined(siteUrl)) {
+      if (_.isUndefined(siteUrl)) {
         $log.log('No WebEx site visited.');
         var deferred = $q.defer();
         deferred.resolve('OK');
         promise = deferred.promise;
       } else {
         var siteName = obj.getSiteName(siteUrl);
+        var logoutUrl = "https://" + $rootScope.nginxHost + "/wbxadmin/clearcookie.do?proxyfrom=atlas&siteurl=" + siteName.toLowerCase();
 
-        var logoutUrl = "https://" + $rootScope.nginxHost + "/wbxadmin/clearcookie.do?proxyfrom=atlas&siteurl=" + siteName;
         $log.log('Logout from WebEx site ' + siteName + ", " + logoutUrl);
 
         var jqpromise = $.ajax({
           type: 'POST',
           url: logoutUrl,
           data: $.param({
-            ngxsiteurl: siteUrl
+            ngxsiteurl: siteUrl.toLowerCase(),
           }),
           xhrFields: {
-            withCredentials: true
+            withCredentials: true,
           },
           headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
+            'Content-Type': 'application/x-www-form-urlencoded',
           },
-          timeout: 250
+          timeout: 250,
         });
-        promise = $q.when(jqpromise); //convert into angularjs promise
+
+        promise = $q.resolve(jqpromise); //convert into angularjs promise
       }
 
       return promise;
@@ -456,4 +488,7 @@
 
     return obj;
   } // webexUtilsFact()
+
+  module.exports = WebExUtilsFact;
+
 })();

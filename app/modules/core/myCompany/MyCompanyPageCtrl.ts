@@ -1,3 +1,5 @@
+require('./_myCompany.scss');
+
 namespace myCompanyPage {
   class MyCompanyPageCtrl {
 
@@ -26,7 +28,9 @@ namespace myCompanyPage {
       }];
 
       this._title = this.$translate.instant('my-company.pageTitle');
-      if (this.Authinfo.isOnline()) {
+      const customers = this.Authinfo.getCustomerAccounts();
+      const result = _.some(customers, { customerType: 'Online' });
+      if (result) {
         this._tabs.push({
           title: this.$translate.instant('my-company.order'),
           state: 'my-company.orders',

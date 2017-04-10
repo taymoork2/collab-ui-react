@@ -44,7 +44,7 @@
           card.allLicenses = licenses;
 
           card.trial = _.some(filterLicenses(licenses), {
-            'isTrial': true
+            'isTrial': true,
           });
 
           var hasSites = _.some(licenses, function (l) {
@@ -72,7 +72,7 @@
         }
 
         return card;
-      }
+      },
     };
   }
 })();

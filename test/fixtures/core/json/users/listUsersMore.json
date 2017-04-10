@@ -1,7 +1,7 @@
 {
-  "totalResults": "2",
+  "totalResults": "4",
   "itemsPerPage": "2",
-  "startIndex": "100",
+  "startIndex": "2",
   "schemas": ["urn:scim:schemas:core:1.0", "urn:scim:schemas:extension:cisco:commonidentity:1.0"],
   "Resources": [{
     "userName": "collabctg+testuser3@gmail.com",

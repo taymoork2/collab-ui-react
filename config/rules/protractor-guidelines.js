@@ -8,7 +8,7 @@ module.exports = function (context) {
     'notifications', 'landing', 'login', 'enterEmailAddrPage', 'createAccountPage', 'navigation', 'users', 'reports', 'support', 'roles', 'partner', 'wizard', 'invite', 'activate',
     'callrouting', 'autoattendant', 'servicesetup', 'telephony', 'huronFeatures', 'huntGroup', 'mediaservice', 'careLandingPage', 'careChatTemplateSetupPage',
   // Others
-    'Math', '_'
+    'Math', '_',
   ];
 
   var allowedPageElementMethods = ['first', 'last', 'then'];
@@ -83,12 +83,11 @@ module.exports = function (context) {
         }
 
         context.report(node, 'Declare functions in page objects (test/e2e-protractor/pages), also make sure the page name is added to the allowedIdentifiers in protractor-guidelines.js, otherwise this rule completely blows.');
-        return;
       }
 
       // Log unchecked nodes
       // console.log('SOURCE: ' + context.getSource(node));
       // console.dir(node);
-    }
+    },
   };
 };

@@ -1,7 +1,12 @@
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/fonts';
+@import 'styles/partials/variables';
+
 .customer-admin-overview {
   .icon-spinner {
     vertical-align: middle;
   }
+
   .add-number-link {
     color: $color-primary-base;
   }
@@ -13,23 +18,6 @@
     align-items: center;
   }
 
-  .plus-icon {
-    @extend .icon;
-    @extend .icon-plus;
-    border-radius: 50%;
-    font-size: 25px;
-    margin-left: 10px;
-  }
-  .plus-icon-inactive {
-    color: $gray-lighter;
-    background-color: $gray-lightest;
-  }
-  .plus-icon-active {
-    cursor: pointer;
-    color: $brand-white;
-    background-color: $brand-info;
-  }
-
   .search {
     position: relative;
     padding-right: 0px;
@@ -39,6 +27,7 @@
       height: 32px;
       text-indent: 20px;
     }
+
     .icon-search {
       position: absolute;
       top: 10px;
@@ -52,13 +41,13 @@
     margin-bottom: 5px !important;
     height: 31px !important;
   }
-  
+
   .tab-content {
     border: 0;
   }
 
   .close-icon-height {
-    line-height:inherit;  
+    line-height: inherit;
   }
 
   .nav-tabs + .tab-content {
@@ -72,6 +61,7 @@
       margin-left: 10px;
       vertical-align: middle;
     }
+
     .icon-refresh {
       cursor: pointer;
     }
@@ -86,6 +76,7 @@
     input {
       flex: 1;
     }
+
     .icon-search {
       font-size: 20px;
       right: 30px;
@@ -98,7 +89,7 @@
     margin-bottom: 15px;
     color: $gray-dark;
   }
-  
+
   .bottom-pad {
     padding-bottom: 1rem;
   }
@@ -108,7 +99,7 @@
   margin-left: 1.5rem;
   margin-top: 1rem;
   margin-right: 1.5rem;
-  
+
   .detail-group-item {
     font-family: $brand-font-regular;
     font-size: 0.875rem;
@@ -132,6 +123,10 @@
     display: flex;
     align-items: center;
 
+    &.info {
+      background-color: $color-people-base;
+    }
+
     &.invalid-token {
       background-color: $brand-danger;
     }
@@ -141,14 +136,17 @@
       font-size: 16px;
       font-family: $brand-font-light;
     }
+
     .close {
       color: $brand-white;
       font-size: inherit;
       margin-left: -$close-button-size;
-      &:before {
+
+      &::before {
         font-size: $close-button-size;
       }
     }
+
     + .list-group-item {
       margin-top: 5px;
     }

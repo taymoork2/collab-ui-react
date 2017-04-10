@@ -159,31 +159,6 @@ function get_head_commit_id {
     git log -n1 --pretty=format:'%h'
 }
 
-function get_npm_shrinkwrap_file {
-    local cache_dir="${WX2_ADMIN_WEB_CLIENT_HOME}/.cache"
-    local commit_id="${1:-`get_head_commit_id`}"
-    echo "${cache_dir}/npm-shrinkwrap-for-${commit_id}.json"
-}
-
-function mv_npm_shrinkwrap_file {
-    local commit_id="${1}"
-    local npm_shrinkwrap_file="`get_npm_shrinkwrap_file ${commit_id}`"
-    mv npm-shrinkwrap.json "${npm_shrinkwrap_file}"
-}
-
-function mk_npm_shrinkwrap_tar {
-    cd ${WX2_ADMIN_WEB_CLIENT_HOME}
-    local commit_id="${1:-`get_head_commit_id`}"
-    local npm_shrinkwrap_file="$( ls `get_npm_shrinkwrap_file ${commit_id}` 2>/dev/null )"
-
-    # only if an appropriate npm-shrink-*.json file exists
-    if [ -n "${npm_shrinkwrap_file}" ]; then
-        local target_files=".cache/`basename ${npm_shrinkwrap_file}`"
-        mk_deps_tar "npm-shrinkwrap" "${commit_id}" ${target_files}
-    fi
-    cd ~-
-}
-
 function mk_npm_deps_tar {
     cd ${WX2_ADMIN_WEB_CLIENT_HOME}
     local target_files="package.json node_modules"

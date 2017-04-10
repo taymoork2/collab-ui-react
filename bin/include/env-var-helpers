@@ -1,0 +1,79 @@
+if [ -z "${WX2_ADMIN_WEB_CLIENT_HOME}" ]; then
+    >&2 echo "Error: WX2_ADMIN_WEB_CLIENT_HOME is not set, please export this environment variable first."
+    exit 1
+fi
+
+# sniff-test function for whether current environment looks like jenkins
+# - ported over from '.../utils/processEnvUtils.js'
+function is_ci {
+    if [ -z "$BUILD_NUMBER" -o \
+        -z "$JOB_NAME" -o \
+        -z "$JENKINS_URL" ]; then
+        return 1
+    fi
+}
+
+# parse properties file and export each property as an env var
+# shellcheck disable=SC2120
+function inj_env_vars_from_file {
+    while read line; do
+        # line uses a var, use eval
+        if [[ "$line" =~ =.*\$ ]]; then
+            eval "export $line"
+            continue
+        fi
+
+        # line is blank, skip
+        if [[ "$line" =~ ^[[:space:]]*$ ]]; then
+            continue
+        fi
+
+        # line is comment, skip
+        if [[ "$line" =~ ^[[:space:]]*# ]]; then
+            continue
+        fi
+
+        # default
+        export $line
+    done < "$1"
+}
+
+function inj_build_env_vars_for {
+    local env="$1"
+    case "$env" in
+        "dev" )
+            inj_env_vars_from_file "${WX2_ADMIN_WEB_CLIENT_HOME}/config/env-vars/common"
+            inj_env_vars_from_file "${WX2_ADMIN_WEB_CLIENT_HOME}/config/env-vars/dev"
+            ;;
+        "nightly" )
+            inj_env_vars_from_file "${WX2_ADMIN_WEB_CLIENT_HOME}/config/env-vars/common"
+            inj_env_vars_from_file "${WX2_ADMIN_WEB_CLIENT_HOME}/config/env-vars/nightly"
+            ;;
+        "pipeline" )
+            inj_env_vars_from_file "${WX2_ADMIN_WEB_CLIENT_HOME}/config/env-vars/common"
+            inj_env_vars_from_file "${WX2_ADMIN_WEB_CLIENT_HOME}/config/env-vars/pipeline"
+            ;;
+        * )
+            >&2 echo "Error: inj_build_env_vars_for: invalid choice: $env"
+            return 1
+            ;;
+    esac
+}
+
+function print_build_env_vars_for {
+    local env="$1"
+    case "$env" in
+        "nightly" )
+            cat "${WX2_ADMIN_WEB_CLIENT_HOME}/config/env-vars/common"
+            cat "${WX2_ADMIN_WEB_CLIENT_HOME}/config/env-vars/nightly"
+            ;;
+        "pipeline" )
+            cat "${WX2_ADMIN_WEB_CLIENT_HOME}/config/env-vars/common"
+            cat "${WX2_ADMIN_WEB_CLIENT_HOME}/config/env-vars/pipeline"
+            ;;
+        * )
+            >&2 echo "Error: print_build_env_vars_for: invalid choice: $env"
+            return 1
+            ;;
+    esac
+}

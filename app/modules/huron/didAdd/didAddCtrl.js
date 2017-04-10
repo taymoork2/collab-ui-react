@@ -6,7 +6,7 @@
     .controller('DidAddCtrl', DidAddCtrl);
 
   /* @ngInject */
-  function DidAddCtrl($rootScope, $scope, $state, $stateParams, $q, $translate, ExternalNumberPool, EmailService, DidAddEmailService, Notification, Authinfo, $timeout, LogMetricsService, DidService, TelephoneNumberService, DialPlanService, PstnSetupService) {
+  function DidAddCtrl($q, $rootScope, $state, $stateParams, $timeout, $translate, Authinfo, DialPlanService, DidAddEmailService, DidService, ExternalNumberPool, LogMetricsService, Notification, PstnSetupService, TelephoneNumberService, TrialService) {
     var vm = this;
     var firstValidDid = false;
     var editMode = !!$stateParams.editMode;
@@ -27,7 +27,7 @@
 
     vm.tokenfieldid = 'didAddField';
     vm.tokenplaceholder = $translate.instant('didManageModal.inputPlacehoder');
-    vm.currentTrial = angular.copy($stateParams.currentTrial);
+    vm.currentTrial = _.cloneDeep($stateParams.currentTrial);
     vm.getExampleNumbers = TelephoneNumberService.getExampleNumbers;
 
     vm.tokenoptions = {
@@ -36,13 +36,13 @@
       limit: 50,
       tokens: [],
       minLength: 9,
-      beautify: false
+      beautify: false,
     };
     vm.tokenmethods = {
       createtoken: createToken,
       createdtoken: createdToken,
       removedtoken: removedToken,
-      edittoken: editToken
+      edittoken: editToken,
     };
 
     vm.checkForInvalidTokens = checkForInvalidTokens;
@@ -53,7 +53,6 @@
     vm.backtoStartTrial = backtoStartTrial;
     vm.backtoEditTrial = backtoEditTrial;
     vm.currentOrg = $stateParams.currentOrg;
-    vm.emailNotifyTrialCustomer = emailNotifyTrialCustomer;
 
     activate();
     initSubmitButtonStatus();
@@ -153,7 +152,7 @@
                   Notification.errorResponse(response, 'serviceSetupModal.carrierCountryGetError');
                 }
                 setDidValidationCountry({
-                  country: "us"
+                  country: "us",
                 });
               });
           })
@@ -174,7 +173,7 @@
               Notification.errorResponse(response, 'serviceSetupModal.carrierCountryGetError');
             }
             setDidValidationCountry({
-              country: "us"
+              country: "us",
             });
           }).then(reinitTokens);
       }
@@ -209,7 +208,7 @@
       var didList = [];
       var tokens = vm.unsavedTokens;
 
-      if (angular.isString(tokens) && tokens.length > 0) {
+      if (_.isString(tokens) && tokens.length > 0) {
         didList = tokens.split(',');
       }
 
@@ -250,7 +249,7 @@
           }).catch(function (response) {
             errors.push({
               pattern: newDid,
-              message: response.status === 409 ? $translate.instant('didManageModal.didAlreadyExist') : Notification.processErrorResponse(response)
+              message: response.status === 409 ? $translate.instant('didManageModal.didAlreadyExist') : Notification.processErrorResponse(response),
             });
           });
           promises.push(addPromise);
@@ -277,20 +276,20 @@
     }
 
     function backtoEditTrial() {
-      $state.go('trialEdit.info', {
-        currentTrial: vm.currentTrial
-      });
+      var route = TrialService.getEditTrialRoute(vm.currentTrial);
+      $state.go(route.path, route.params);
     }
 
     function backtoStartTrial() {
-      $state.go('trialAdd.info');
+      var route = TrialService.getAddTrialRoute();
+      $state.go(route.path, route.params);
     }
 
     function sendEmail() {
       var emailInfo = {
         'email': vm.currentOrg.customerEmail,
         'customerName': vm.currentOrg.customerName,
-        'partnerName': Authinfo.getOrgName()
+        'partnerName': Authinfo.getOrgName(),
       };
       DidAddEmailService.save({}, emailInfo, function () {
         Notification.success('didManageModal.emailSuccessText');
@@ -298,26 +297,6 @@
         Notification.error('didManageModal.emailFailText');
       });
       $state.modal.close();
-    }
-
-    function emailNotifyTrialCustomer() {
-      if (angular.isDefined($scope.trial)) {
-        EmailService.emailNotifyTrialCustomer(
-            $scope.trial.model.customerEmail,
-            $scope.trial.model.licenseDuration,
-            $scope.trial.model.customerOrgId)
-          .then(function () {
-            Notification.success('didManageModal.emailSuccessText');
-          })
-          .catch(function () {
-            Notification.error('didManageModal.emailFailText');
-          })
-          .finally(function () {
-            angular.element('#trialNotifyCustomer').prop('disabled', true);
-          });
-      } else {
-        Notification.error('didManageModal.emailFailText');
-      }
     }
 
     // We want to capture the modal close event and clear didList from service.

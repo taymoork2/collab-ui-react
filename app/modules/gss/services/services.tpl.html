@@ -1,0 +1,19 @@
+<div class="services-page">
+  <ul>
+    <li ng-repeat="theService in gssServicesCtrl.services">
+      <div class="row">
+        <div class="columns medium-10">
+          <span>{{ theService.serviceName }}</span>
+        </div>
+
+        <div class="columns medium-1">
+          <a ng-click="gssServicesCtrl.editService(theService)" translate="common.edit"></a>
+        </div>
+
+        <div class="columns medium-1">
+          <a ng-click="gssServicesCtrl.deleteService(theService)" translate="common.delete"></a>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>

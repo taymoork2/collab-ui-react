@@ -8,27 +8,30 @@
 
       var currentSearch, currentFilter, arr = [];
 
-      var filters = [{
-        count: 0,
-        name: $translate.instant('common.all'),
-        filterValue: 'all'
-      }, {
-        count: 0,
-        name: $translate.instant('CsdmStatus.OnlineWithIssues'),
-        filterValue: 'issues'
-      }, {
-        count: 0,
-        name: $translate.instant('CsdmStatus.Offline'),
-        filterValue: 'offline'
-      }, {
-        count: 0,
-        name: $translate.instant('CsdmStatus.RequiresActivation'),
-        filterValue: 'codes'
-      }, {
-        count: 0,
-        name: $translate.instant('CsdmStatus.Online'),
-        filterValue: 'online'
-      }];
+      var filters = [];
+      var resetFilters = function () {
+        // use to reset defaults to wipe out any lingering settings and keep translations fresh
+        filters = [{
+          count: 0,
+          name: $translate.instant('common.all'),
+          filterValue: 'all',
+        }, {
+          count: 0,
+          name: $translate.instant('CsdmStatus.OnlineWithIssues'),
+          filterValue: 'issues',
+        }, {
+          count: 0,
+          name: $translate.instant('CsdmStatus.Offline'),
+          filterValue: 'offline',
+        }, {
+          count: 0,
+          name: $translate.instant('CsdmStatus.Online'),
+          filterValue: 'online',
+        }];
+        setCurrentSearch('');
+        setCurrentFilter('');
+      };
+      resetFilters();
 
       var getFilters = function () {
         return filters;
@@ -36,44 +39,33 @@
 
       var updateFilters = function (list) {
         _.find(filters, {
-          filterValue: 'codes'
-        }).count = _.chain(list)
-          .filter(isActivationCode)
-          .filter(matchesSearch)
-          .value().length;
-
-        _.find(filters, {
-          filterValue: 'issues'
+          filterValue: 'issues',
         }).count = _.chain(list)
           .filter(hasIssues)
           .filter(matchesSearch)
           .value().length;
 
         _.find(filters, {
-          filterValue: 'online'
+          filterValue: 'online',
         }).count = _.chain(list)
           .filter(isOnline)
           .filter(matchesSearch)
           .value().length;
 
         _.find(filters, {
-          filterValue: 'offline'
+          filterValue: 'offline',
         }).count = _.chain(list)
           .filter(isOffline)
           .filter(matchesSearch)
           .value().length;
 
         _.find(filters, {
-          filterValue: 'all'
+          filterValue: 'all',
         }).count = _.filter(list, matchesSearch).length;
       };
 
-      function isActivationCode(item) {
-        return item.needsActivation;
-      }
-
       function hasIssues(item) {
-        return item.hasIssues && item.isOnline && !item.isUnused;
+        return item.hasIssues && item.isOnline;
       }
 
       function isOnline(item) {
@@ -81,7 +73,7 @@
       }
 
       function isOffline(item) {
-        return !item.isOnline && !item.needsActivation && !item.isUnused;
+        return !item.isOnline;
       }
 
       function setCurrentSearch(search) {
@@ -139,7 +131,7 @@
       }
 
       function termMatchesAnyFieldOfItem(term, item) {
-        return ['displayName', 'product', 'ip', 'mac', 'serial'].some(function (field) {
+        return ['displayName', 'product', 'ip', 'mac', 'serial', 'readableActiveInterface'].some(function (field) {
           return item && (item[field] || '').toLowerCase().indexOf(term || '') != -1;
         });
       }
@@ -148,8 +140,6 @@
         switch (currentFilter) {
           case 'all':
             return true;
-          case 'codes':
-            return isActivationCode(item);
           case 'issues':
             return hasIssues(item);
           case 'online':
@@ -164,6 +154,7 @@
       return {
         getFilters: getFilters,
         getFilteredList: getFilteredList,
+        resetFilters: resetFilters,
         setCurrentFilter: setCurrentFilter,
         setCurrentSearch: setCurrentSearch,
       };

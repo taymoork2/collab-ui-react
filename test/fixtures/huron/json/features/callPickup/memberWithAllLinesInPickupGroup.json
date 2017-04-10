@@ -1,0 +1,10 @@
+{
+    "type": "USER_REAL_USER",
+    "uuid": "ccf6f31f-b87c-4a0f-8ddf-bd3e489eeaed",
+    "firstName": "John",
+    "lastName": "Doe",
+    "userName": "john_doe_1977@hotmail.com",
+    "displayName": null,
+    "url": "https://cmi.huron-int.com/api/v2/customers/226d7977-ff3a-42dc-88ff-f866170a06c8/users/ccf6f31f-b87c-4a0f-8ddf-bd3e489eeaed",
+    "disabled": true
+}

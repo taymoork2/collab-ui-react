@@ -60,6 +60,14 @@
           "quantity": 0
         }
       },
+      "advanceCareTrial": {
+        "type": "CAREVOICE",
+        "enabled": false,
+        "details": {
+          "enabled": false,
+          "quantity": 0
+        }
+      },
       "roomSystemTrial": {
         "type": "ROOMSYSTEMS",
         "enabled": false,
@@ -157,6 +165,14 @@
           "quantity": 10
         }
       },
+      "advanceCareTrial": {
+        "type": "CAREVOICE",
+        "enabled": true,
+        "details": {
+          "enabled": true,
+          "quantity": 10
+        }
+      },
       "roomSystemTrial": {
         "type": "ROOMSYSTEMS",
         "enabled": true,
@@ -174,6 +190,19 @@
             "enabled": true,
             "quantity": 0
           }]
+        }
+      },
+      "sparkBoardTrial": {
+        "type": "SPARKBOARDS",
+        "enabled": true,
+        "details": {
+          "roomSystems": [
+            {
+              "model": "CISCO_SPARK_BOARD",
+              "enabled": false,
+              "quantity": 0
+            }
+          ]
         }
       },
       "skipDeviceTrial": {

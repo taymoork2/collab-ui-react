@@ -1,65 +1,78 @@
 'use strict';
 
 describe('SetupWizardCtrl', function () {
-  beforeEach(angular.mock.module('Core'));
-  beforeEach(angular.mock.module('Huron'));
-  beforeEach(angular.mock.module('Sunlight'));
 
-  var $controller, $httpBackend, $scope, $q, Authinfo, FeatureToggleService, Orgservice;
+  beforeEach(function () {
+    this.initModules('Core');
 
-  var usageFixture = getJSONFixture('core/json/organizations/usage.json');
-  var usageOnlySharedDevicesFixture = getJSONFixture('core/json/organizations/usageOnlySharedDevices.json');
+    this.injectDependencies(
+      '$controller',
+      '$q',
+      '$scope',
+      '$state',
+      '$stateParams',
+      'Authinfo',
+      'FeatureToggleService',
+      'Orgservice',
+      'DirSyncService'
+    );
 
-  beforeEach(inject(function ($rootScope, _$httpBackend_, _$controller_, _$q_, _Authinfo_, _FeatureToggleService_, _Orgservice_) {
-    $httpBackend = _$httpBackend_;
-    $scope = $rootScope.$new();
-    $q = _$q_;
-    $controller = _$controller_;
-    Authinfo = _Authinfo_;
-    FeatureToggleService = _FeatureToggleService_;
-    Orgservice = _Orgservice_;
+    this.usageFixture = getJSONFixture('core/json/organizations/usage.json');
+    this.usageOnlySharedDevicesFixture = getJSONFixture('core/json/organizations/usageOnlySharedDevices.json');
+    this.enabledFeatureToggles = [];
 
-    spyOn(Authinfo, 'isCustomerAdmin').and.returnValue(true);
-    spyOn(Authinfo, 'isSetupDone').and.returnValue(false);
-    spyOn(Authinfo, 'isSquaredUC').and.returnValue(false);
-    spyOn(Authinfo, 'isCSB').and.returnValue(true);
-    spyOn(Authinfo, 'isCare').and.returnValue(false);
+    spyOn(this.Authinfo, 'isCustomerAdmin').and.returnValue(true);
+    spyOn(this.Authinfo, 'isSetupDone').and.returnValue(false);
+    spyOn(this.Authinfo, 'isCSB').and.returnValue(true);
+    spyOn(this.Authinfo, 'isCare').and.returnValue(false);
+    spyOn(this.Authinfo, 'getLicenses').and.returnValue([{
+      licenseType: 'SHARED_DEVICES',
+    }]);
 
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
-    spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));
-    spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(false));
-    spyOn(Orgservice, 'getAdminOrgUsage').and.returnValue($q.when(usageFixture));
-  }));
+    spyOn(this.DirSyncService, 'requiresRefresh').and.returnValue(false);
+    spyOn(this.DirSyncService, 'refreshStatus').and.returnValue(this.$q.resolve());
+
+    spyOn(this.FeatureToggleService, 'supports').and.callFake(function (feature) {
+      return this.$q.resolve(_.includes(this.enabledFeatureToggles, feature));
+    }.bind(this));
+    spyOn(this.Orgservice, 'getAdminOrgUsage').and.returnValue(this.$q.resolve(this.usageFixture));
+
+    this._expectStepIndex = _expectStepIndex;
+    this._expectSubStepIndex = _expectSubStepIndex;
+    this.expectStepOrder = expectStepOrder;
+    this.expectSubStepOrder = expectSubStepOrder;
+    this.initController = initController;
+  });
 
   function _expectStepIndex(step, index) {
-    expect(_.findIndex($scope.tabs, {
-      name: step
+    expect(_.findIndex(this.$scope.tabs, {
+      name: step,
     })).toBe(index);
   }
 
   function _expectSubStepIndex(step, subStep, index) {
-    expect(_.chain($scope.tabs)
+    expect(_.chain(this.$scope.tabs)
       .find({
-        name: step
+        name: step,
       })
       .get('steps')
       .findIndex({
-        name: subStep
+        name: subStep,
       })
       .value()).toBe(index);
   }
 
   function expectStepOrder(steps) {
-    expect($scope.tabs.length).toBe(steps.length);
+    expect(this.$scope.tabs.length).toBe(steps.length);
     _.forEach(steps, function (step, index) {
-      _expectStepIndex(step, index);
-    });
+      this._expectStepIndex(step, index);
+    }.bind(this));
   }
 
   function expectSubStepOrder(macroStep, subSteps) {
     // get the step
-    var stepVal = _.find($scope.tabs, {
-      name: macroStep
+    var stepVal = _.find(this.$scope.tabs, {
+      name: macroStep,
     });
 
     // verify substeps length
@@ -67,253 +80,288 @@ describe('SetupWizardCtrl', function () {
 
     // for each substep verify order
     _.forEach(subSteps, function (subStep, index) {
-      _expectSubStepIndex(macroStep, subStep, index);
-    });
+      this._expectSubStepIndex(macroStep, subStep, index);
+    }.bind(this));
   }
 
   function initController() {
-    $controller('SetupWizardCtrl', {
-      $scope: $scope
+    this.$controller('SetupWizardCtrl', {
+      $scope: this.$scope,
     });
-    $scope.$apply();
+    this.$scope.$apply();
   }
 
   describe('When all toggles are false (and Authinfo.isSetupDone is false as well)', function () {
     beforeEach(initController);
 
-    it('the wizard should have 4 macro-level steps', function () {
-      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'finish']);
+    it('the wizard should have 5 macro-level steps', function () {
+      this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'finish']);
     });
 
     it('planReview should have a single substep', function () {
-      expectSubStepOrder('planReview', ['init']);
+      this.expectSubStepOrder('planReview', ['init']);
     });
 
     it('messagingSetup should have a single substep', function () {
-      expectSubStepOrder('messagingSetup', ['setup']);
+      this.expectSubStepOrder('messagingSetup', ['setup']);
     });
 
     it('enterpriseSettings should have five steps', function () {
-      expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
+      this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
     });
 
     it('finish should have a single substep', function () {
-      expectSubStepOrder('finish', ['init']);
+      this.expectSubStepOrder('finish', ['init']);
     });
   });
 
   describe('When Authinfo.isSetupDone is true', function () {
     beforeEach(function () {
-      Authinfo.isSetupDone.and.returnValue(true);
-      initController();
+      this.Authinfo.isSetupDone.and.returnValue(true);
+      this.initController();
     });
 
     it('the wizard should not have the finish step', function () {
-      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings']);
+      this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings']);
     });
   });
 
-  describe('When Authinfo.isSquaredUC is true and addClaimSipUrl is false', function () {
+  describe('When has COMMUNICATION license', function () {
     beforeEach(function () {
-      Authinfo.isSquaredUC.and.returnValue(true);
-      initController();
-    });
-
-    it('the wizard should have the 5 steps', function () {
-      expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'finish']);
-    });
-
-    it('serviceSetup should have a single substep', function () {
-      expectSubStepOrder('serviceSetup', ['init']);
-    });
-  });
-
-  describe('When Authinfo.isSquaredUC is true and addClaimSipUrl is true', function () {
-    beforeEach(function () {
-      Authinfo.isSquaredUC.and.returnValue(true);
-      FeatureToggleService.supports.and.callFake(function (val) {
-        if (val === FeatureToggleService.features.atlasSipUriDomain) {
-          return $q.when(true);
-        }
-        return $q.when(false);
-      });
-      initController();
+      this.Authinfo.getLicenses.and.returnValue([{
+        licenseType: 'COMMUNICATION',
+      }]);
+      this.initController();
     });
 
     it('the wizard should have 5 steps', function () {
-      expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'finish']);
+      this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'finish']);
     });
 
     it('serviceSetup should have a single substep', function () {
-      expectSubStepOrder('serviceSetup', ['init']);
+      this.expectSubStepOrder('serviceSetup', ['init']);
     });
   });
 
   describe('When dirsync is enabled', function () {
     beforeEach(function () {
-      FeatureToggleService.supportsDirSync.and.returnValue($q.when(true));
-      initController();
+      spyOn(this.DirSyncService, 'isDirSyncEnabled').and.returnValue(true);
+      this.initController();
     });
 
-    it('the wizard should have 4 tabs', function () {
-      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'finish']);
+    it('the wizard should have 5 tabs', function () {
+      this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'finish']);
     });
 
   });
 
   describe('When Authinfo.isCSB is disabled', function () {
     beforeEach(function () {
-      Authinfo.isCSB.and.returnValue(false);
-      initController();
+      this.Authinfo.isCSB.and.returnValue(false);
+      this.initController();
     });
 
-    it('the wizard should have 5 tabs', function () {
-      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'addUsers', 'finish']);
+    it('the wizard should have 6 tabs', function () {
+      this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'addUsers', 'finish']);
     });
 
   });
 
   describe('When Authinfo.isCare is enabled and addUsers too', function () {
     beforeEach(function () {
-      Authinfo.isCare.and.returnValue(true);
-      Authinfo.isCSB.and.returnValue(false);
-      FeatureToggleService.atlasCareTrialsGetStatus = jasmine.createSpy().and.returnValue($q.when(true));
-      $httpBackend.expectGET(/.*atlas.*\/userauthinfo/g).respond(200, { roles: ['User', 'Full_Admin'] });
-      initController();
-      $httpBackend.flush();
+      this.Authinfo.isCare.and.returnValue(true);
+      this.Authinfo.isCSB.and.returnValue(false);
+      this.initController();
     });
 
-    it('the wizard should have the 6 steps', function () {
-      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'careSettings', 'addUsers', 'finish']);
+    it('the wizard should have the 7 steps', function () {
+      this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'careSettings', 'addUsers', 'finish']);
     });
 
     it('careSettings should have a single substep', function () {
-      expectSubStepOrder('careSettings', ['csonboard']);
+      this.expectSubStepOrder('careSettings', ['csonboard']);
     });
   });
 
   describe('When Authinfo.isCare is enabled ', function () {
     beforeEach(function () {
-      Authinfo.isCare.and.returnValue(true);
-      FeatureToggleService.atlasCareTrialsGetStatus = jasmine.createSpy().and.returnValue($q.when(true));
-      $httpBackend.expectGET(/.*atlas.*\/userauthinfo/g).respond(200, { roles: ['User', 'Full_Admin'] });
-      initController();
-      $httpBackend.flush();
+      this.Authinfo.isCare.and.returnValue(true);
+      this.initController();
     });
 
-    it('the wizard should have the 5 steps', function () {
-      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'careSettings', 'finish']);
+    it('the wizard should have the 6 steps', function () {
+      this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'careSettings', 'finish']);
     });
   });
 
   describe('When Authinfo.isCare is enabled and not first time setup', function () {
     beforeEach(function () {
-      Authinfo.isCare.and.returnValue(true);
-      FeatureToggleService.atlasCareTrialsGetStatus = jasmine.createSpy().and.returnValue($q.when(true));
-      Authinfo.isSetupDone.and.returnValue(true);
-      $httpBackend.expectGET(/.*atlas.*\/userauthinfo/g).respond(200, { roles: ['User', 'Full_Admin'] });
-      initController();
-      $httpBackend.flush();
+      this.Authinfo.isCare.and.returnValue(true);
+      this.Authinfo.isSetupDone.and.returnValue(true);
+      this.initController();
     });
 
-    it('the wizard should have the 4 steps', function () {
-      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'careSettings']);
-    });
-  });
-
-  describe('Partner should not see Care', function () {
-    beforeEach(function () {
-      $httpBackend.expectGET(/.*atlas.*\/userauthinfo/g).respond(200, { roles: ['PARTNER_USER', 'PARTNER_ADMIN'] });
-      Authinfo.isCare.and.returnValue(true);
-      FeatureToggleService.atlasCareTrialsGetStatus = jasmine.createSpy().and.returnValue($q.when(true));
-      initController();
-    });
-
-    it('the wizard should have the 4 steps without care', function () {
-      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'finish']);
-    });
-  });
-
-  describe('When dirsync is enabled', function () {
-    beforeEach(function () {
-      FeatureToggleService.supports.and.callFake(function (val) {
-        if (val === FeatureToggleService.features.atlasSipUriDomainEnterprise) {
-          return $q.when(true);
-        }
-        return $q.when(false);
-      });
-      initController();
-    });
-
-    it('the wizard should have 4 tabs', function () {
-      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'finish']);
+    it('the wizard should have the 5 steps', function () {
+      this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'careSettings']);
     });
   });
 
   describe('When there are only shared device licenses', function () {
     beforeEach(function () {
-      FeatureToggleService.atlasDarlingGetStatus = jasmine.createSpy().and.returnValue($q.when(true));
-      Orgservice.getAdminOrgUsage = jasmine.createSpy().and.returnValue($q.when(usageOnlySharedDevicesFixture));
+      this.Orgservice.getAdminOrgUsage = jasmine.createSpy().and.returnValue(this.$q.resolve(this.usageOnlySharedDevicesFixture));
 
-      initController();
+      this.initController();
     });
 
-    it('the wizard should have 3 tabs', function () {
-      expectStepOrder(['planReview', 'enterpriseSettings', 'finish']);
-      expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl']);
+    it('the wizard should have 4 tabs', function () {
+      this.expectStepOrder(['planReview', 'serviceSetup', 'enterpriseSettings', 'finish']);
+      this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl']);
     });
   });
 
   describe('When everything is true', function () {
     beforeEach(function () {
-      Authinfo.isSetupDone.and.returnValue(true);
-      Authinfo.isSquaredUC.and.returnValue(true);
-      Authinfo.isCare.and.returnValue(true);
+      this.Authinfo.isSetupDone.and.returnValue(true);
+      this.Authinfo.getLicenses.and.returnValue([{
+        licenseType: 'COMMUNICATION',
+      }]);
+      this.Authinfo.isCare.and.returnValue(true);
 
-      FeatureToggleService.supports.and.returnValue($q.when(true));
-      FeatureToggleService.supportsDirSync.and.returnValue($q.when(true));
-      FeatureToggleService.atlasCareTrialsGetStatus = jasmine.createSpy().and.returnValue($q.when(true));
+      this.FeatureToggleService.supports.and.returnValue(this.$q.resolve(true));
+      spyOn(this.DirSyncService, 'isDirSyncEnabled').and.returnValue(true);
 
-      $httpBackend.expectGET(/.*atlas.*\/userauthinfo/g).respond(200, { roles: ['User', 'Full_Admin'] });
-      initController();
-      $httpBackend.flush();
+      this.initController();
     });
 
     it('the wizard should have a lot of settings', function () {
-      expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'careSettings']);
-      expectSubStepOrder('planReview', ['init']);
-      expectSubStepOrder('serviceSetup', ['init']);
-      expectSubStepOrder('messagingSetup', ['setup']);
-      expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
-      expectSubStepOrder('careSettings', ['csonboard']);
+      this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'careSettings']);
+      this.expectSubStepOrder('planReview', ['init']);
+      this.expectSubStepOrder('serviceSetup', ['init']);
+      this.expectSubStepOrder('messagingSetup', ['setup']);
+      this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'enterprisePmrSetup', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
+      this.expectSubStepOrder('careSettings', ['csonboard']);
     });
   });
 
   it('will filter tabs if onlyShowSingleTab is true', function () {
-    $controller('SetupWizardCtrl', {
-      $scope: $scope,
+    this.$controller('SetupWizardCtrl', {
+      $scope: this.$scope,
       $stateParams: {
         onlyShowSingleTab: true,
-        currentTab: 'messagingSetup'
-      }
+        currentTab: 'messagingSetup',
+      },
     });
-    $scope.$apply();
+    this.$scope.$apply();
 
-    expectStepOrder(['messagingSetup']);
+    this.expectStepOrder(['messagingSetup']);
   });
 
   it('will filter steps if onlyShowSingleTab is true and currentStep is set.', function () {
-    $controller('SetupWizardCtrl', {
-      $scope: $scope,
+    this.$controller('SetupWizardCtrl', {
+      $scope: this.$scope,
       $stateParams: {
         currentTab: 'enterpriseSettings',
         currentStep: 'init',
-        onlyShowSingleTab: true
-      }
+        onlyShowSingleTab: true,
+      },
     });
-    $scope.$apply();
-    expectStepOrder(['enterpriseSettings']);
-    expectSubStepOrder('enterpriseSettings', ['init', 'exportMetadata', 'importIdp', 'testSSO']);
+    this.$scope.$apply();
+    this.expectStepOrder(['enterpriseSettings']);
+    this.expectSubStepOrder('enterpriseSettings', ['init', 'exportMetadata', 'importIdp', 'testSSO']);
   });
 
+  describe('atlasFTSWRemoveUsersSSO feature test', function () {
+    beforeEach(function () {
+      this.Authinfo.isCSB.and.returnValue(false); // why isn't this default for testing?
+    });
+
+    describe('firstTimeSetup is false', function () {
+      describe('does not support consolidated first time setup wizard', function () {
+        beforeEach(initController);
+
+        it('the wizard should have 6 tabs', function () {
+          this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'addUsers', 'finish']);
+        });
+
+        it('enterpriseSettings should have all steps', function () {
+          this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
+        });
+      });
+
+      describe('supports consolidated first time setup wizard', function () {
+        beforeEach(function () {
+          this.enabledFeatureToggles = [
+            this.FeatureToggleService.features.atlasFTSWRemoveUsersSSO,
+          ];
+          this.initController();
+        });
+
+        it('the wizard should not have addUsers tab', function () {
+          this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'finish']);
+        });
+
+        it('enterpriseSettings should still have all steps', function () {
+          this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
+        });
+      });
+    });
+
+    describe('firstTimeSetup is true', function () {
+      beforeEach(function () {
+        _.set(this.$state, 'current.data.firstTimeSetup', true);
+      });
+
+      describe('does not support consolidated first time setup wizard', function () {
+        beforeEach(initController);
+
+        it('the wizard should have 6 tabs', function () {
+          this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'addUsers', 'finish']);
+        });
+
+        it('enterpriseSettings should have all steps', function () {
+          this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
+        });
+      });
+
+      describe('supports consolidated first time setup wizard', function () {
+        beforeEach(function () {
+          this.enabledFeatureToggles = [
+            this.FeatureToggleService.features.atlasFTSWRemoveUsersSSO,
+          ];
+          this.initController();
+        });
+
+        it('the wizard should not have addUsers tab', function () {
+          this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'finish']);
+        });
+
+        it('enterpriseSettings should only have sip uri step', function () {
+          this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl']);
+        });
+      });
+    });
+  });
+
+  describe('stateParams with onlyShowSingleTab and numberOfSteps', function () {
+    it('should only contain a single tab and specific steps if numberOfSteps is set', function () {
+      _.set(this.$stateParams, 'onlyShowSingleTab', true);
+      _.set(this.$stateParams, 'currentTab', 'enterpriseSettings');
+      _.set(this.$stateParams, 'currentStep', 'init');
+      _.set(this.$stateParams, 'numberOfSteps', 1);
+      this.initController();
+
+      this.expectStepOrder(['enterpriseSettings']);
+      this.expectSubStepOrder('enterpriseSettings', ['init']);
+    });
+
+    it('should only contain a single tab and remaining steps if numberOfSteps is not set', function () {
+      _.set(this.$stateParams, 'onlyShowSingleTab', true);
+      _.set(this.$stateParams, 'currentTab', 'enterpriseSettings');
+      _.set(this.$stateParams, 'currentStep', 'init');
+      this.initController();
+
+      this.expectStepOrder(['enterpriseSettings']);
+      this.expectSubStepOrder('enterpriseSettings', ['init', 'exportMetadata', 'importIdp', 'testSSO']);
+    });
+  });
 });

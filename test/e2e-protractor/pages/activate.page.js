@@ -12,7 +12,7 @@ var ActivatePage = function () {
   this.setup = function setup(deviceUA, email) {
     var obj = {
       body: this.getTestBody(email),
-      deviceUA: deviceUA
+      deviceUA: deviceUA,
     };
 
     var flow = protractor.promise.controlFlow();
@@ -27,7 +27,7 @@ var ActivatePage = function () {
       'email': email || utils.randomTestGmail(),
       'pushId': utils.randomId(),
       'deviceName': utils.randomId(),
-      'deviceId': utils.randomId()
+      'deviceId': utils.randomId(),
     };
   }
 
@@ -36,14 +36,14 @@ var ActivatePage = function () {
       method: 'post',
       url: config.oauth2Url + 'access_token',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
       auth: {
         'user': config.oauthClientRegistration.id,
         'pass': config.oauthClientRegistration.secret,
-        'sendImmediately': true
+        'sendImmediately': true,
       },
-      body: 'grant_type=client_credentials&scope=' + config.oauthClientRegistration.scope
+      body: 'grant_type=client_credentials&scope=' + config.oauthClientRegistration.scope,
     };
     return utils.sendRequest(options).then(function (data) {
       var resp = JSON.parse(data);
@@ -58,9 +58,9 @@ var ActivatePage = function () {
       headers: {
         'User-Agent': obj.deviceUA,
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + obj.token
+        Authorization: 'Bearer ' + obj.token,
       },
-      body: JSON.stringify(obj.body)
+      body: JSON.stringify(obj.body),
     };
     return utils.sendRequest(options).then(function (data) {
       var resp = JSON.parse(data);

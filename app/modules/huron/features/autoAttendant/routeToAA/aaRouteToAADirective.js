@@ -13,11 +13,13 @@
         menuId: '@aaMenuId',
         index: '=aaIndex',
         keyIndex: '@aaKeyIndex',
-        fromRouteCall: '@aaFromRouteCall'
+        fromRouteCall: '@aaFromRouteCall',
+        fromDecision: '@aaFromDecision',
+        fromFallback: '@aaFromFallback',
       },
       controller: 'AARouteToAACtrl',
       controllerAs: 'aaRouteToAA',
-      templateUrl: 'modules/huron/features/autoAttendant/routeToAA/aaRouteToAA.tpl.html'
+      templateUrl: 'modules/huron/features/autoAttendant/routeToAA/aaRouteToAA.tpl.html',
     };
   }
 })();

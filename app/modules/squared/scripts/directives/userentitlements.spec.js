@@ -26,7 +26,7 @@
       spyOn(Userservice, 'updateUsers');
 
       $controller('UserEntitlementsCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
       $scope.$apply();
     }));
@@ -37,7 +37,7 @@
 
       expect(Userservice.updateUsers).toHaveBeenCalledWith(jasmine.any(Array), null, [{
         entitlementName: 'messengerInterop',
-        entitlementState: 'INACTIVE'
+        entitlementState: 'INACTIVE',
       }], 'changeEntitlement', jasmine.any(Function));
     });
 

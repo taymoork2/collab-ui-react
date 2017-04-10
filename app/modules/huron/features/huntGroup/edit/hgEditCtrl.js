@@ -1,3 +1,5 @@
+require('./_hg-edit.scss');
+
 (function () {
   'use strict';
 
@@ -7,7 +9,8 @@
   /* @ngInject */
   function HuntGroupEditCtrl($state, $q, $stateParams, $translate,
     Authinfo, HuntGroupService, Notification, HuntGroupFallbackDataService,
-    HuntGroupMemberDataService, HuntGroupEditDataService) {
+    HuntGroupMemberDataService, HuntGroupEditDataService, DialPlanService,
+    TelephoneNumberService, CardUtils) {
     var vm = this;
     vm.selectHuntMethod = selectHuntMethod;
     vm.resetForm = resetForm;
@@ -45,14 +48,21 @@
     vm.validateFallbackNumber = validateFallbackNumber;
     vm.removeFallbackDest = removeFallbackDest;
     vm.checkFallbackDirtiness = checkFallbackDirtiness;
-    vm.selectedFallbackNumber = undefined;
+    vm.setFallbackNumber = setFallbackNumber;
     vm.selectedFallbackMember = undefined;
     vm.disableVoicemail = false;
-    vm.allowLocalValidation = false;
+
+    vm.externalRegionCodeFn = getRegionCode;
+    vm.callDestInputs = ['internal', 'external'];
 
     vm.showDisableSave = showDisableSave;
 
     vm.model = {};
+
+    vm.fetchNumbers = fetchNumbers;
+    vm.selectPilotNumber = selectPilotNumber;
+    vm.unSelectHuntGroupMember = unSelectHuntGroupMember;
+    vm.unSelectPilotNumber = unSelectPilotNumber;
 
     var customerId = Authinfo.getOrgId();
 
@@ -67,7 +77,6 @@
     ////////////////
 
     function init() {
-      allowLocalValidation();
       HuntGroupEditDataService.reset();
       HuntGroupEditDataService.fetchHuntGroup(customerId, vm.hgId)
         .then(function (pristineData) {
@@ -83,10 +92,18 @@
         })
         .catch(function (error) {
           Notification.errorResponse(error, 'huronHuntGroup.huntGroupFetchFailure', {
-            huntGroupName: vm.model.name
+            huntGroupName: vm.model.name,
           });
           $state.go(vm.huronFeaturesUrl);
         });
+    }
+
+    function setFallbackNumber(model) {
+      vm.selectedFallbackNumber = model;
+    }
+
+    function getRegionCode() {
+      return DialPlanService.getCustomerVoice(Authinfo.getOrgId());
     }
 
     function updateModal(pristineData, resetFromBackend) {
@@ -103,11 +120,13 @@
         vm.title = vm.model.name;
         updatePilotNumbers(pristineData);
         vm.selectedHuntMembers = HuntGroupMemberDataService.getHuntMembers();
-        vm.selectedFallbackNumber = HuntGroupFallbackDataService.getFallbackNumber();
+        vm.selectedFallbackNumber = TelephoneNumberService.getDestinationObject(HuntGroupFallbackDataService.getFallbackNumber());
         vm.selectedFallbackMember = HuntGroupFallbackDataService.getFallbackMember();
-        HuntGroupFallbackDataService.isVoicemailDisabled(customerId, _.get(pristineData, 'fallbackDestination.numberUuid')).then(function (isVoicemailDisabled) {
-          vm.disableVoicemail = isVoicemailDisabled;
-        });
+        if (customerId && _.get(pristineData, 'fallbackDestination.numberUuid')) {
+          HuntGroupFallbackDataService.isVoicemailDisabled(customerId, _.get(pristineData, 'fallbackDestination.numberUuid')).then(function (isVoicemailDisabled) {
+            vm.disableVoicemail = isVoicemailDisabled;
+          });
+        }
         if (resetFromBackend) {
           initializeFields();
         }
@@ -117,11 +136,11 @@
     }
 
     function updatePilotNumbers(pristineData) {
-      vm.allPilotOptions = angular.copy(vm.allUnassignedPilotNumbers);
+      vm.allPilotOptions = _.cloneDeep(vm.allUnassignedPilotNumbers);
       pristineData.numbers.forEach(function (n) {
         n.isSelected = true;
       });
-      vm.selectedPilotNumbers = angular.copy(pristineData.numbers);
+      vm.selectedPilotNumbers = _.cloneDeep(pristineData.numbers);
       vm.allPilotOptions = vm.allPilotOptions.concat(pristineData.numbers);
     }
 
@@ -129,6 +148,7 @@
       updateModal(HuntGroupEditDataService.getPristine(), false);
       vm.form.$setPristine();
       vm.form.$setUntouched();
+      CardUtils.resize();
     }
 
     function checkFallbackDirtiness() {
@@ -143,14 +163,12 @@
       }
     }
 
-    function fetchHuntMembers(nameHint) {
-      return HuntGroupMemberDataService.fetchHuntMembers(nameHint);
+    function fetchHuntMembers(nameHint, onlyMembers) {
+      return HuntGroupMemberDataService.fetchHuntMembers(nameHint, onlyMembers);
     }
 
     function showDisableSave() {
-      return (vm.form.$invalid ||
-        (HuntGroupFallbackDataService.isFallbackInvalid() && !vm.allowLocalValidation) ||
-        vm.isMembersInvalid());
+      return (vm.form.$invalid || HuntGroupFallbackDataService.isFallbackInvalid() || vm.isMembersInvalid());
     }
 
     function shouldShowFallbackLookup() {
@@ -159,14 +177,18 @@
     }
 
     function shouldShowFallbackPill() {
-      return HuntGroupFallbackDataService.isFallbackValidMember();
+      return (vm.selectedFallbackMember === undefined &&
+      vm.model.fallbackDestination.number &&
+      HuntGroupFallbackDataService.isValidInternalOrgNumber()) ||
+      HuntGroupFallbackDataService.isFallbackValidMember();
     }
 
     function shouldShowFallbackWarning() {
-      return HuntGroupFallbackDataService.isFallbackInvalid() && !vm.allowLocalValidation;
+      return HuntGroupFallbackDataService.isFallbackInvalid();
     }
 
     function removeFallbackDest() {
+      vm.selectedFallbackNumber = undefined;
       vm.selectedFallbackMember = HuntGroupFallbackDataService.removeFallbackMember();
       vm.form.$setDirty();
     }
@@ -184,7 +206,7 @@
     }
 
     function fetchFallbackDestination(nameHint) {
-      return HuntGroupMemberDataService.fetchMembers(nameHint);
+      return HuntGroupMemberDataService.fetchMembers(nameHint, false);
     }
 
     function selectHuntGroupMember(member) {
@@ -246,25 +268,34 @@
           }
           return {
             type: numberObj.type,
-            number: numberObj.number
+            number: numberObj.number,
           };
         }),
         huntMethod: vm.model.huntMethod,
         maxRingSecs: vm.model.maxRingSecs.value,
         maxWaitMins: vm.model.maxWaitMins.value,
-        fallbackDestination: HuntGroupFallbackDataService.getFallbackDestinationJSON(vm.allowLocalValidation),
-        members: HuntGroupMemberDataService.getMembersNumberUuidJSON()
+        fallbackDestination: HuntGroupFallbackDataService.getFallbackDestinationJSON(),
+        members: HuntGroupMemberDataService.getMembersNumberUuidJSON(),
       };
     }
 
     function saveForm() {
       vm.saveInProgress = true;
       var updateJSONRequest = hgUpdateReqBody();
+      var tempExternalNumber;
+      if (_.isObject(updateJSONRequest.fallbackDestination.number) && _.has(updateJSONRequest, 'fallbackDestination.number.phoneNumber')) {
+        tempExternalNumber = updateJSONRequest.fallbackDestination.number;
+        updateJSONRequest.fallbackDestination.number = TelephoneNumberService.getDIDValue(updateJSONRequest.fallbackDestination.number.phoneNumber);
+      }
       HuntGroupService.updateHuntGroup(customerId, vm.hgId, updateJSONRequest).then(function () {
         vm.saveInProgress = false;
         Notification.success('huronHuntGroup.successUpdate', {
-          huntGroupName: vm.model.name
+          huntGroupName: vm.model.name,
         });
+
+        if (!_.isUndefined(tempExternalNumber)) {
+          updateJSONRequest.fallbackDestination.number = tempExternalNumber;
+        }
 
         HuntGroupEditDataService.setPristine(updateJSONRequest);
         HuntGroupFallbackDataService.setAsPristine();
@@ -273,13 +304,50 @@
       }, function (data) {
         vm.saveInProgress = false;
         Notification.errorResponse(data, 'huronHuntGroup.errorUpdate', {
-          huntGroupName: vm.model.name
+          huntGroupName: vm.model.name,
         });
       });
     }
 
+    function fetchNumbers(typedNumber) {
+
+      vm.errorNumberInput = false;
+      var GetPilotNumbers = HuntGroupService.getPilotNumberSuggestions(typedNumber);
+
+      if (GetPilotNumbers) {
+        GetPilotNumbers.setOnFailure(function (response) {
+          Notification.errorResponse(response, 'huronHuntGroup.numberFetchFailure');
+        });
+        GetPilotNumbers.setFilter({
+          sourceKey: 'uuid',
+          responseKey: 'uuid',
+          dataToStrip: vm.model.numbers,
+        });
+
+        return GetPilotNumbers.fetch().then(function (numbers) {
+          vm.errorNumberInput = (numbers && numbers.length === 0);
+          return numbers;
+        });
+      }
+
+      return [];
+    }
+
+    function selectPilotNumber(numItem) {
+      vm.selectedPilotNumber = undefined;
+      vm.model.numbers.push(numItem);
+      vm.form.$setDirty();
+      CardUtils.resize();
+    }
+
+    function unSelectPilotNumber(numItem) {
+      vm.model.numbers.splice(vm.model.numbers.indexOf(numItem), 1);
+      vm.form.$setDirty();
+      CardUtils.resize(100);
+    }
+
     function initializeFields() {
-      vm.fields = [{
+      vm.name = [{
         key: 'name',
         type: 'input',
         className: 'hg-name',
@@ -287,48 +355,18 @@
           label: $translate.instant('huronHuntGroup.nameLabel'),
           placeholder: $translate.instant('huronHuntGroup.nameLabel'),
           description: $translate.instant('huronHuntGroup.nameDesc'),
-          required: true
-        }
-      }, {
-        key: 'numbers',
-        type: 'select',
-        className: 'hg-num',
-        templateOptions: {
-          label: $translate.instant('huronHuntGroup.numbersLabel'),
-          placeholder: $translate.instant('huronHuntGroup.numbersLabel'),
-          inputPlaceholder: $translate.instant('huronHuntGroup.numbersInputPlaceHolder'),
-          waitTime: 'true',
-          multi: 'true',
-          filter: true,
-          singular: $translate.instant('huronHuntGroup.numberSingular'),
-          plural: $translate.instant('huronHuntGroup.numberPlural'),
-          valuefield: 'number',
-          labelfield: 'number',
           required: true,
-          onClick: function () {
-            vm.form.$setDirty();
-          }
+          pattern: '^[a-zA-Z 0-9._-]{1,50}$',
         },
-        controller: /* @ngInject */ function ($scope) {
-          $scope.to.options = vm.allPilotOptions;
-          $scope.$watchCollection('model.numbers', function (value) {
-            if (angular.equals(value, vm.selectedPilotNumbers)) {
-              $scope.to.options = angular.copy(vm.allPilotOptions);
-              $scope.to.placeholder = vm.selectedPilotNumbers.length + ' ' + $translate.instant('huronHuntGroup.numberSingular') + ' Selected';
-            }
-            if (angular.equals(value, [])) {
-              if (vm.form.numbers) {
-                vm.form.numbers.$setValidity('required', false);
-              }
-              $scope.to.placeholder = 'Select Option';
-            } else {
-              if (vm.form.numbers) {
-                vm.form.numbers.$setValidity('required', true);
-              }
-            }
-          });
-        }
-      }, {
+        validation: {
+          messages: {
+            pattern: function () {
+              return $translate.instant('huronHuntGroup.errorNamePattern');
+            },
+          },
+        },
+      }];
+      vm.time = [{
         key: 'maxRingSecs',
         type: 'select',
         className: 'hg-time',
@@ -337,11 +375,11 @@
           description: $translate.instant('huronHuntGroup.ringTimeDesc'),
           labelfield: 'label',
           valuefield: 'value',
-          secondaryLabel: $translate.instant('huronHuntGroup.ringTimeSecondaryLabel')
+          secondaryLabel: $translate.instant('huronHuntGroup.ringTimeSecondaryLabel'),
         },
         controller: /* @ngInject */ function ($scope) {
           $scope.to.options = HuntGroupEditDataService.getMaxRingSecsOptions();
-        }
+        },
       }, {
         key: 'maxWaitMins',
         type: 'select',
@@ -351,19 +389,13 @@
           description: $translate.instant('huronHuntGroup.waitTimeDesc'),
           labelfield: 'label',
           valuefield: 'value',
-          secondaryLabel: $translate.instant('huronHuntGroup.waitTimeSecondaryLabel')
+          secondaryLabel: $translate.instant('huronHuntGroup.waitTimeSecondaryLabel'),
         },
         controller: /* @ngInject */ function ($scope) {
           $scope.to.options = HuntGroupEditDataService.getMaxWaitMinsOptions();
-        }
+        },
       }];
       vm.isLoadingCompleted = true;
-    }
-
-    function allowLocalValidation() {
-      HuntGroupFallbackDataService.allowLocalValidation().then(function (result) {
-        vm.allowLocalValidation = result;
-      });
     }
   }
 })();

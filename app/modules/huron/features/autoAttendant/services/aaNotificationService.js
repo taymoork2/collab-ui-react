@@ -11,7 +11,7 @@
     var service = {
       success: success,
       error: error,
-      errorResponse: errorResponse
+      errorResponse: errorResponse,
     };
 
     return service;
@@ -28,7 +28,7 @@
       //notification service (toaster msgs) will automatically
       //be tracked through the Config Environment Metric Service
       AAConfigEnvMetricService.trackProdNotifications(AAMetricNameService.UI_NOTIFICATION + '.error', {
-        type: message
+        type: message,
       });
     }
 
@@ -70,7 +70,7 @@
       //notification service (toaster msgs) will automatically
       //be tracked through the Config Environment Metric Service
       AAConfigEnvMetricService.trackProdNotifications(AAMetricNameService.UI_NOTIFICATION + '.error', {
-        type: message
+        type: message,
       });
     }
   }

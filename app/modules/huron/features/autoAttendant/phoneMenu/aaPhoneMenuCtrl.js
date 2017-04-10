@@ -11,12 +11,12 @@
     this.keys = [];
     this.action = {
       name: '',
-      label: ''
+      label: '',
     };
   }
 
   /* @ngInject */
-  function AAPhoneMenuCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, AAScrollBar, FeatureToggleService, QueueHelperService) {
+  function AAPhoneMenuCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, QueueHelperService) {
     var vm = this;
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
     vm.actionPlaceholder = $translate.instant('autoAttendant.actionPlaceholder');
@@ -24,7 +24,7 @@
     vm.selectedActions = [];
     vm.selectedTimeout = {
       name: '',
-      value: ''
+      value: '',
     };
     vm.menuEntry = {};
 
@@ -46,40 +46,40 @@
       label: $translate.instant('autoAttendant.phoneMenuRepeatMenu'),
       name: 'phoneMenuRepeatMenu',
       action: 'repeatActionsOnInput',
-      level: 0
+      level: 0,
     }, {
       label: $translate.instant('autoAttendant.actionSayMessage'),
       name: 'phoneMenuSayMessage',
-      action: 'say'
+      action: ['say', 'play'],
     }, {
       label: $translate.instant('autoAttendant.phoneMenuDialExt'),
       name: 'phoneMenuDialExt',
       action: 'runActionsOnInput',
-      inputType: 2
+      inputType: 2,
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteHunt'),
       name: 'phoneMenuRouteHunt',
-      action: 'routeToHuntGroup'
+      action: 'routeToHuntGroup',
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteAA'),
       name: 'phoneMenuRouteAA',
-      action: 'goto'
+      action: 'goto',
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteUser'),
       name: 'phoneMenuRouteUser',
-      action: 'routeToUser'
+      action: 'routeToUser',
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteVM'),
       name: 'phoneMenuRouteMailbox',
-      action: 'routeToVoiceMail'
+      action: 'routeToVoiceMail',
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteToExtNum'),
       name: 'phoneMenuRouteToExtNum',
-      action: 'route'
+      action: 'route',
     }, {
       label: $translate.instant('autoAttendant.phoneMenuPlaySubmenu'),
       name: 'phoneMenuPlaySubmenu',
-      action: 'runActionsOnInput'
+      action: 'runActionsOnInput',
     }];
 
     // search for a key action by its name
@@ -109,7 +109,6 @@
       // remove key that is in use from creating the new key entry
       setAvailableKeys();
       setPhonemenuFormDirty();
-      AAScrollBar.resizeBuilderScrollBar();
     }
 
     // the user has pressed the trash can icon for a key/action pair
@@ -118,7 +117,6 @@
       vm.menuEntry.entries.splice(index, 1);
       setAvailableKeys();
       setPhonemenuFormDirty();
-      AAScrollBar.resizeBuilderScrollBar();
     }
 
     // the user has changed the key for an existing action
@@ -136,7 +134,7 @@
         AutoAttendantCeMenuModelService.deleteCeMenuMap(entryI.getId());
       }
       var _keyAction = findKeyAction(keyAction.name);
-      if (angular.isDefined(_keyAction)) {
+      if (!_.isUndefined(_keyAction)) {
         if (_keyAction.name === 'phoneMenuPlaySubmenu') {
           // 1) Change of main menu attempts should copied into its submenus.
           // See aaTimeoutInvalidCtrl.js.
@@ -157,7 +155,7 @@
           phoneMenuEntry.key = vm.menuEntry.entries[index].key;
           var action = phoneMenuEntry.actions[0];
           action.name = keyAction.action;
-          if (angular.isDefined(_keyAction.inputType)) {
+          if (!_.isUndefined(_keyAction.inputType)) {
             // some action names are overloaded and are distinguished
             // by inputType
             action.inputType = _keyAction.inputType;
@@ -167,7 +165,6 @@
           vm.menuEntry.entries[index] = phoneMenuEntry;
         }
         setPhonemenuFormDirty();
-        AAScrollBar.resizeBuilderScrollBar();
       }
     }
 
@@ -226,12 +223,20 @@
             keyAction.key = menuEntry.key;
             if (_.has(menuEntry, 'actions')) {
               if (menuEntry.actions.length > 0 && menuEntry.type == "MENU_OPTION") {
-                if (angular.isDefined(menuEntry.actions[0].name) && menuEntry.actions[0].name.length > 0) {
+                if (!_.isUndefined(menuEntry.actions[0].name) && menuEntry.actions[0].name.length > 0) {
                   keyAction.action = _.find(vm.keyActions, _.bind(function (keyAction) {
                     if (_.has(this, 'inputType')) {
                       return this.name === keyAction.action && this.inputType === keyAction.inputType;
                     } else if (!_.has(keyAction, 'inputType')) {
-                      return this.name === keyAction.action;
+                      if (this.name === keyAction.action) {
+                        return true;
+                      } else {
+                        if (keyAction.action.length > 1) {
+                          return (this.name === keyAction.action[0] || this.name === keyAction.action[1]);
+                        } else {
+                          return false;
+                        }
+                      }
                     }
                     return false;
                   }, menuEntry.actions[0]));
@@ -264,8 +269,6 @@
 
       // remove key that is in use from creating the new key entry
       setAvailableKeys();
-
-      AAScrollBar.resizeBuilderScrollBar(AAScrollBar.delay.LONG); // delay resize for all transitions to finish (from action change)
     }
 
     function setPhonemenuFormDirty() {
@@ -275,44 +278,36 @@
      * This push the Route To Queue option in Phone Menu List and push get all the queues
     */
     function getQueues() {
-      if (AACommonService.isRouteQueueToggle) {
-        return QueueHelperService.listQueues().then(function (aaQueueList) {
-          if (aaQueueList.length > 0) {
-            vm.keyActions.push({
-              label: $translate.instant('autoAttendant.phoneMenuRouteQueue'),
-              name: 'phoneMenuRouteQueue',
-              action: 'routeToQueue'
+      return QueueHelperService.listQueues().then(function (aaQueueList) {
+        if (aaQueueList.length > 0) {
+          vm.keyActions.push({
+            label: $translate.instant('autoAttendant.phoneMenuRouteQueue'),
+            name: 'phoneMenuRouteQueue',
+            action: 'routeToQueue',
+          });
+          _.each(aaQueueList, function (aaQueue) {
+            var idPos = aaQueue.queueUrl.lastIndexOf("/");
+            vm.queues.push({
+              description: aaQueue.queueName,
+              id: aaQueue.queueUrl.substr(idPos + 1),
             });
-            _.each(aaQueueList, function (aaQueue) {
-              var idPos = aaQueue.queueUrl.lastIndexOf("/");
-              vm.queues.push({
-                description: aaQueue.queueName,
-                id: aaQueue.queueUrl.substr(idPos + 1)
-              });
-            });
-          }
-        });
-      }
-    }
-    /**
-     * This include the list of feature which are not production ready yet
-     */
-    function toggleRouteToQueueFeature() {
-      return FeatureToggleService.supports(FeatureToggleService.features.huronAACallQueue).then(function (result) {
-        if (result) {
-          AACommonService.setRouteQueueToggle(true);
-        } else {
-          AACommonService.setRouteQueueToggle(false);
+          });
         }
-      }).catch(function () {
-        AACommonService.setRouteQueueToggle(false);
+      });
+    }
+
+    function addRouteToSipEndPoint() {
+      vm.keyActions.push({
+        label: $translate.instant('autoAttendant.phoneMenuRouteToSipEndpoint'),
+        name: 'phoneMenuRouteToSipEndpoint',
+        action: 'routeToSipEndpoint',
       });
     }
 
     /////////////////////
 
     function activate() {
-      vm.keyActions.sort(AACommonService.sortByProperty('name'));
+      vm.keyActions.sort(AACommonService.sortByProperty('label'));
 
       if (vm.menuEntry.type === 'MENU_OPTION') {
         // If this is a new phone menu, add button zero
@@ -335,8 +330,16 @@
       vm.entries = vm.uiMenu.entries;
       vm.menuEntry = vm.entries[$scope.index];
       vm.menuId = vm.menuEntry.id;
-      AACommonService.setRouteQueueToggle(false);
-      toggleRouteToQueueFeature().finally(getQueues().finally(activate));
+
+      if (AACommonService.isRouteSIPAddressToggle()) {
+        addRouteToSipEndPoint();
+      }
+
+      if (AACommonService.isRouteQueueToggle()) {
+        getQueues().finally(activate);
+      } else {
+        activate();
+      }
     }
 
     init();

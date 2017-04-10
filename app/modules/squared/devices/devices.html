@@ -2,16 +2,26 @@
   <cs-page-header title="{{::'spacesPage.title' | translate}}"></cs-page-header>
   <cs-page-sub-header ng-show="sc.existsDevices()">
     <cs-page-sub-header-left>
-      <cs-searchfilter filters="sc.deviceFilter.getFilters()" search-item-fn="sc.deviceFilter.setCurrentSearch(searchStr)" set-filter-fn="sc.deviceFilter.setCurrentFilter(filter.filterValue)">{}
+      <cs-searchfilter filters="sc.deviceFilter.getFilters()" search-item-fn="sc.setCurrentSearch(searchStr)" set-filter-fn="sc.setCurrentFilter(filter.filterValue)">{}
       </cs-searchfilter>
     </cs-page-sub-header-left>
     <cs-page-sub-header-right>
-      <button class="btn btn--people add-button" ng-click="sc.startAddDeviceFlow()">
+      <span
+        ng-if="sc.deviceExportFeature"
+        class="icon icon-download export-button"
+        ng-click="sc.startDeviceExport()"
+        ng-hide="sc.exporting">
+      </span>
+      <button
+        class="btn btn--people add-button"
+        ng-click="sc.startAddDeviceFlow()"
+        ng-disabled="sc.addDeviceIsDisabled">
         <span translate="spacesPage.addBtn"></span>
       </button>
+
     </cs-page-sub-header-right>
   </cs-page-sub-header>
-  <div class="content-container" cs-scroll>
+  <div class="content-container" >
     <cs-accordion id="licenseWarning" ng-show="sc.showLicenseWarning">
       <cs-accordion-group show-caret="true" display-status="warning">
         <cs-accordion-heading>
@@ -36,27 +46,26 @@
       </div>
     </div>
     <div ng-if="sc.shouldShowList()">
-      <div ng-if="sc.existsDevices() && sc.updateListAndFilter().length > 0" id="roomsListPanel" class="row">
-        <div gridscrollbar class="gridStyle" ui-grid="sc.gridOptions" ui-grid-selection></div>
+      <div ng-if="sc.existsDevices() && sc.deviceList().length > 0" id="roomsListPanel" class="row">
+        <div class="gridStyle" ui-grid="sc.gridOptions" ui-grid-selection></div>
       </div>
-      <div ng-if="sc.updateListAndFilter().length === 0 && sc.existsDevices()">
+      <div ng-if="sc.deviceList().length === 0 && sc.existsDevices()">
         <div class="none_found">
           <i class="icon icon-circle-comp-negative" />
+          <span class="h2" translate="spacesPage.noneFound"></span>
           <span class="h5" translate="spacesPage.tryAgain"></span>
-          <span class="h1" translate="spacesPage.noneFound"></span>
         </div>
       </div>
       <div ng-if="!sc.existsDevices()">
         <div class="none_found">
           <i class="icon icon-circle-telepresence" />
-          <span class="h5" translate="spacesPage.nothingHere"></span>
-          <span class="h1" translate="spacesPage.noDevices"></span>
+          <span class="h2" translate="spacesPage.nothingHere"></span>
+          <span class="h5" translate="spacesPage.noDevices"></span>
           <button class="btn btn--people btn--large add-button" ng-click="sc.startAddDeviceFlow()">
             <span translate="spacesPage.addBtn"></span>
           </button>
         </div>
       </div>
     </div>
-    <squared-add-device></squared-add-device>
   </div>
 </div>

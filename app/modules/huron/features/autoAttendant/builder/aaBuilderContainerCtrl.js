@@ -6,7 +6,7 @@
     .controller('AABuilderContainerCtrl', AABuilderContainerCtrl);
 
   /* @ngInject */
-  function AABuilderContainerCtrl($scope, $modal, AAUiModelService, AAModelService, AAValidationService, AAScrollBar) {
+  function AABuilderContainerCtrl($scope, $modal, AAUiModelService, AAModelService, AAValidationService) {
 
     var vm = this;
     vm.aaModel = {};
@@ -16,7 +16,7 @@
     vm.openScheduleModal = openScheduleModal;
 
     function openScheduleModal(sectionToToggle) {
-      if (!AAValidationService.isRouteToValidationSuccess(vm.ui)) {
+      if (!AAValidationService.isValidCES(vm.ui)) {
         return;
       }
 
@@ -28,9 +28,9 @@
         resolve: {
           sectionToToggle: function () {
             return sectionToToggle;
-          }
+          },
         },
-        modalClass: 'aa-schedule'
+        modalClass: 'aa-schedule',
       });
 
       modalInstance.result.then(function () {
@@ -39,7 +39,6 @@
         vm.ui = AAUiModelService.getUiModel();
         $scope.$broadcast('ScheduleChanged');
         setUpStyle();
-        AAScrollBar.resizeBuilderScrollBar(AAScrollBar.delay.SHORT); // delay for transitions to finish
       });
     }
 

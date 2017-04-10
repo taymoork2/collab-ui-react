@@ -9,7 +9,7 @@
   function AAConfigEnvMetricService(Config, Analytics) {
 
     var service = {
-      trackProdNotifications: trackProdNotifications
+      trackProdNotifications: trackProdNotifications,
     };
 
     return service;

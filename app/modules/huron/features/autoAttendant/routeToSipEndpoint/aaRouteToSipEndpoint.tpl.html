@@ -1,0 +1,25 @@
+<form name="aaRouteToSip.aaRouteToSipForm" novalidate>
+  <div class="row">
+    <input
+    cs-input
+    type="text"
+    class="aa-sip-input"
+    id="routeToSipInput{{ schedule + index + menuKeyIndex }}"
+    name="routeToSipInput"
+    placeholder="{{ ::'autoAttendant.routeToSipPlaceHolder' | translate }}"
+    cs-input-messages="aaRouteToSip.errorMessages"
+    required
+    aa-keypress
+    ng-model="aaRouteToSip.model.sipInput"
+    ng-pattern="/^([a-zA-Z0-9:.-]+)@([a-zA-Z0-9.-]+)\.([a-z]{2,5})$/"
+    ng-minlength="4"
+    ng-maxlength="253"
+    ng-change="aaRouteToSip.updateUiModel();">
+  </div>
+</form>
+<!--
+notes:
+minlength: must be atleast sip:
+maxlength: uri max chars is 253
+pattern: naive regex pattern, implemented in previous story, retained here
+-->

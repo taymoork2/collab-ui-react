@@ -1,5 +1,6 @@
 (function () {
   'use strict';
+
   angular
     .module('Squared')
     .controller('RemoteSupportController',
@@ -33,9 +34,10 @@
         }
 
         function pollDeviceForNewRsuKey(endTime, deferred) {
-          CsdmDataModelService.reloadDevice(rs.currentDevice).then(function (device) {
+          CsdmDataModelService.reloadItem(rs.currentDevice).then(function (device) {
             if (device.rsuKey != rs.oldRsuKey) {
               rs.resetDone = true;
+              rs.currentDevice = device;
               return deferred.resolve();
             }
             if (new Date().getTime() > endTime) {
@@ -54,17 +56,17 @@
         function open(currentDevice) {
           return $modal.open({
             resolve: {
-              currentDevice: _.constant(currentDevice)
+              currentDevice: _.constant(currentDevice),
             },
             controllerAs: 'rs',
             controller: 'RemoteSupportController',
             templateUrl: 'modules/squared/devices/remoteSupport/remoteSupport.html',
-            modalId: 'remoteSupportModal'
+            modalId: 'remoteSupportModal',
           }).result;
         }
 
         return {
-          open: open
+          open: open,
         };
       }
     );

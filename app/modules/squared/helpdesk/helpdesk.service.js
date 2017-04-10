@@ -3,13 +3,16 @@
 
   /* @ngInject */
 
-  function HelpdeskService($http, $location, $q, $translate, $window, CacheFactory, Config, CsdmConfigService, CsdmConverter, FeatureToggleService, HelpdeskHttpRequestCanceller, HelpdeskMockData, ServiceDescriptor, UrlConfig, USSService) {
+  function HelpdeskService($http, $location, $q, $translate, $window, CacheFactory, Config, CsdmConverter, FeatureToggleService, HelpdeskHttpRequestCanceller, HelpdeskMockData, ServiceDescriptor, UrlConfig, USSService) {
     var urlBase = UrlConfig.getAdminServiceUrl();
     var orgCache = CacheFactory.get('helpdeskOrgCache');
     var service = {
       usersWithRole: usersWithRole,
       searchUsers: searchUsers,
       searchOrgs: searchOrgs,
+      searchOrders: searchOrders,
+      resendAdminEmail: resendAdminEmail,
+      editAdminEmail: editAdminEmail,
       getUser: getUser,
       getOrg: getOrg,
       isEmailBlocked: isEmailBlocked,
@@ -17,7 +20,7 @@
       getHybridServices: getHybridServices,
       resendInviteEmail: resendInviteEmail,
       getWebExSites: getWebExSites,
-      getServiceOrder: getServiceOrder,
+      getServiceOrders: getServiceOrders,
       getCloudberryDevice: getCloudberryDevice,
       getOrgDisplayName: getOrgDisplayName,
       findAndResolveOrgsForUserResults: findAndResolveOrgsForUserResults,
@@ -33,33 +36,44 @@
       getInviteResendUrl: getInviteResendUrl,
       getInviteResendPayload: getInviteResendPayload,
       invokeInviteEmail: invokeInviteEmail,
+      getAccount: getAccount,
+      getOrder: getOrder,
+      getEmailStatus: getEmailStatus,
+      hasBounceDetails: hasBounceDetails,
+      clearBounceDetails: clearBounceDetails,
+      hasComplaintDetails: hasComplaintDetails,
+      clearComplaintDetails: clearComplaintDetails,
+      hasUnsubscribeDetails: hasUnsubscribeDetails,
+      clearUnsubscribeDetails: clearUnsubscribeDetails,
+      getLatestEmailEvent: getLatestEmailEvent,
+      unixTimestampToUTC: unixTimestampToUTC,
     };
 
     if (!orgCache) {
       orgCache = new CacheFactory('helpdeskOrgCache', {
         maxAge: 120 * 1000,
-        deleteOnExpire: 'aggressive'
+        deleteOnExpire: 'aggressive',
       });
     }
     var orgDisplayNameCache = CacheFactory.get('helpdeskOrgDisplayNameCache');
     if (!orgDisplayNameCache) {
       orgDisplayNameCache = new CacheFactory('helpdeskOrgDisplayNameCache', {
         maxAge: 10 * 60 * 1000,
-        deleteOnExpire: 'aggressive'
+        deleteOnExpire: 'aggressive',
       });
     }
     var devicesInOrgCache = CacheFactory.get('helpdeskDevicesInOrgCache');
     if (!devicesInOrgCache) {
       devicesInOrgCache = new CacheFactory('helpdeskDevicesInOrgCache', {
         maxAge: 180 * 1000,
-        deleteOnExpire: 'aggressive'
+        deleteOnExpire: 'aggressive',
       });
     }
     var userCache = CacheFactory.get('helpdeskUserCache');
     if (!userCache) {
       userCache = new CacheFactory('helpdeskUserCache', {
         maxAge: 60 * 1000,
-        deleteOnExpire: 'aggressive'
+        deleteOnExpire: 'aggressive',
       });
     }
 
@@ -82,7 +96,7 @@
       },
       all: function () {
         return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
-      }
+      },
     };
 
     function checkIfMobile() {
@@ -90,11 +104,11 @@
     }
 
     function extractItems(res) {
-      return res.data.items;
+      return _.get(res, 'data.items');
     }
 
     function extractData(res) {
-      return res.data;
+      return _.get(res, 'data');
     }
 
     function extractDevice(res) {
@@ -102,14 +116,17 @@
     }
 
     function extractOrg(res) {
-      var org = res.data;
-      orgCache.put(org.id, org);
-      orgDisplayNameCache.put(org.id, org.displayName);
+      var org = extractData(res);
+      var id = _.get(org, 'id');
+      if (id) {
+        orgCache.put(id, org);
+        orgDisplayNameCache.put(id, _.get(org, 'displayName'));
+      }
       return org;
     }
 
     function extractUsers(res) {
-      var users = res.data.items;
+      var users = extractItems(res);
       _.each(users, function (user) {
         user.displayName = getCorrectedDisplayName(user);
         if (user.organization) {
@@ -126,12 +143,12 @@
 
     function getCorrectedDisplayName(user) {
       var displayName = '';
-      if (user.name != null) {
+      if (user.name) {
         displayName = user.name.givenName ? user.name.givenName : '';
         displayName += user.name.familyName ? ' ' + user.name.familyName : '';
       }
       if (!displayName) {
-        return user.displayName;
+        return user.displayName ? user.displayName : user.userName;
       }
       return displayName;
     }
@@ -142,14 +159,14 @@
 
     function cancelableHttpGET(url) {
       var config = {
-        timeout: HelpdeskHttpRequestCanceller.newCancelableTimeout()
+        timeout: HelpdeskHttpRequestCanceller.newCancelableTimeout(),
       };
 
       return $http
         .get(url, config)
         .catch(function (error) {
-          error.cancelled = error.config.timeout.cancelled;
-          error.timedout = error.config.timeout.timedout;
+          error.cancelled = _.get(error, 'config.timeout.cancelled', false);
+          error.timedout = _.get(error, 'config.timeout.timedout', false);
           return $q.reject(error);
         });
     }
@@ -180,6 +197,44 @@
 
       return cancelableHttpGET(urlBase + 'helpdesk/search/organizations?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit)
         .then(extractItems);
+    }
+
+    function searchOrders(searchString) {
+      return cancelableHttpGET(urlBase + 'commerce/orders/search?webOrderId=' + encodeURIComponent(searchString))
+        .then(extractData);
+    }
+
+    function resendAdminEmail(orderUUID, toCustomer) {
+      var url;
+      if (toCustomer) {
+        url = urlBase + "helpdesk/orders/" + orderUUID + "/actions/resendcustomeradminemail/invoke";
+      } else {
+        url = urlBase + "helpdesk/orders/" + orderUUID + "/actions/resendpartneradminemail/invoke";
+      }
+      return $http.post(url).then(extractData);
+    }
+
+    function editAdminEmail(orderUUID, adminEmail, toCustomer) {
+      var url = '';
+      if (_.isUndefined(orderUUID) || !_.isString(orderUUID)) {
+        $q.reject('A proper order UUID must be passed');
+      }
+      if (_.isUndefined(adminEmail) || !_.isString(adminEmail)) {
+        $q.reject('A valid admin email must be passed');
+      }
+      if (_.isUndefined(toCustomer) || !_.isBoolean(toCustomer)) {
+        $q.reject('Need specify email recipient');
+      }
+      var payload = {
+        emailId: adminEmail,
+      };
+
+      if (toCustomer) {
+        url = urlBase + "helpdesk/orders/" + orderUUID + "/customerAdminEmail";
+      } else {
+        url = urlBase + "helpdesk/orders/" + orderUUID + "/partnerAdminEmail";
+      }
+      return $http.post(url, payload).then(extractData);
     }
 
     function getUser(orgId, userId) {
@@ -217,21 +272,24 @@
         return deferredResolve(cachedDisplayName);
       }
       // Use the search function as it returns a lot less data
-      return searchOrgs(orgId, 1).then(function (result) {
-        if (result.length > 0) {
-          var org = result[0];
-          orgDisplayNameCache.put(org.id, org.displayName);
-          return org.displayName;
-        }
-        return '';
-      });
+      return searchOrgs(orgId, 1)
+        .then(function (result) {
+          if (_.isArray(result) && _.size(result) > 0) {
+            var org = result[0];
+            if (org.id && org.displayName) {
+              orgDisplayNameCache.put(org.id, org.displayName);
+              return org.displayName;
+            }
+          }
+          return $q.reject(result);
+        });
     }
 
     function getHybridServices(orgId) {
       if (useMock()) {
         return deferredResolve(filterRelevantServices(HelpdeskMockData.hybridServices));
       }
-      return ServiceDescriptor.servicesInOrg(orgId, true).then(filterRelevantServices);
+      return ServiceDescriptor.getServices(orgId).then(filterRelevantServices);
     }
 
     var filterRelevantServices = function (services) {
@@ -250,7 +308,7 @@
         return deferredResolve(filterDevices(searchString, devices, limit));
       }
       return $http
-        .get(CsdmConfigService.getUrl() + '/organization/' + encodeURIComponent(orgId) + '/devices?checkOnline=false&isHelpDesk=true')
+        .get(UrlConfig.getCsdmServiceUrl() + '/organization/' + encodeURIComponent(orgId) + '/devices?checkOnline=false&isHelpDesk=true')
         .then(function (res) {
           var devices = CsdmConverter.convertCloudberryDevices(res.data);
           devicesInOrgCache.put(orgId, devices);
@@ -267,17 +325,17 @@
         return deferredResolve(device);
       }
       return $http
-        .get(CsdmConfigService.getUrl() + '/organization/' + orgId + '/devices/' + deviceId + '?isHelpDesk=true&checkOnline=true')
+        .get(UrlConfig.getCsdmServiceUrl() + '/organization/' + orgId + '/devices/' + deviceId + '?isHelpDesk=true&checkOnline=true')
         .then(extractDevice);
     }
 
     function filterDevices(searchString, devices, limit) {
       searchString = searchString.toLowerCase();
       var filteredDevices = [];
-      var macSearchString = searchString.replace(/[:/.-]/g, '');
+      var macSearchString = _.replace(searchString, /[:/.-]/g, '');
       _.each(devices, function (device) {
         if ((device.displayName || '').toLowerCase().indexOf(searchString) != -1 || (device.mac || '').toLowerCase().replace(/[:]/g, '').indexOf(
-            macSearchString) != -1 || (device.serial || '').toLowerCase().indexOf(searchString) != -1 || (device.cisUuid || '').toLowerCase().indexOf(searchString) != -1) {
+          macSearchString) != -1 || (device.serial || '').toLowerCase().indexOf(searchString) != -1 || (device.cisUuid || '').toLowerCase().indexOf(searchString) != -1) {
           if (_.size(filteredDevices) < limit) {
             device.id = device.url.split('/').pop();
             filteredDevices.push(device);
@@ -294,7 +352,7 @@
       user.displayName = getCorrectedDisplayName(user);
       user.isConsumerUser = user.orgId === Config.consumerOrgId;
       user.organization = {
-        id: user.orgId
+        id: user.orgId,
       };
       if (!user.accountStatus) {
         user.statuses = [];
@@ -344,7 +402,7 @@
                   user.organization.displayName = displayName;
                 }
               });
-            }, angular.noop);
+            }, _.noop);
           });
         }
 
@@ -357,20 +415,22 @@
 
     function resendInviteEmail(trimmedUserData) {
       var email = trimmedUserData.email;
-      // TODO: fix this, 'FeatureToggleService.supports()' returns a promise, and is therefore
-      //   always truthy and very likely not the real intent of this code
-      if (FeatureToggleService.supports(FeatureToggleService.features.atlasEmailStatus)) {
-        return isEmailBlocked(email).then(function () {
-          $http.delete(urlBase + 'email/bounces?email=' + email)
+      return FeatureToggleService.supports(FeatureToggleService.features.atlasEmailStatus)
+        .then(function (isSupported) {
+          if (!isSupported) {
+            return $q.reject();
+          }
+          return service.isEmailBlocked(email)
+            .then(function () {
+              return $http.delete(urlBase + 'email/bounces?email=' + email);
+            })
             .then(function () {
               return service.invokeInviteEmail(trimmedUserData);
             });
-        }).catch(function () {
+        })
+        .catch(function () {
           return service.invokeInviteEmail(trimmedUserData);
         });
-      } else {
-        return service.invokeInviteEmail(trimmedUserData);
-      }
     }
 
     function getInviteResendUrl(trimmedUserData) {
@@ -385,12 +445,12 @@
       var payload = {
         inviteList: [{
           displayName: displayName,
-          email: email
-        }]
+          email: email,
+        }],
       };
       if (isSparkOnlineUser(trimmedUserData)) {
         payload = {
-          onlineOrderIds: onlineOrderIds
+          onlineOrderIds: onlineOrderIds,
         };
       }
       return payload;
@@ -410,8 +470,8 @@
         .post(urlBase + 'helpdesk/actions/sendverificationcode/invoke', {
           inviteList: [{
             displayName: displayName,
-            email: email
-          }]
+            email: email,
+          }],
         })
         .then(extractData);
     }
@@ -425,17 +485,19 @@
         .then(extractItems);
     }
 
-    function getServiceOrder(orgId) {
+    function getServiceOrders(orgId) {
       if (useMock()) {
-        return deferredResolve(HelpdeskMockData.serviceOrder);
+        return deferredResolve(HelpdeskMockData.serviceOrders);
       }
       return $http
-        .get(urlBase + 'helpdesk/serviceorder/' + encodeURIComponent(orgId))
+        .get(urlBase + 'helpdesk/organizations/' + encodeURIComponent(orgId) + '/serviceorders')
         .then(extractData);
     }
 
     function elevateToReadonlyAdmin(orgId) {
-      return $http.post(urlBase + 'helpdesk/organizations/' + encodeURIComponent(orgId) + '/actions/elevatereadonlyadmin/invoke');
+      return $http
+        .post(urlBase + 'helpdesk/organizations/' + encodeURIComponent(orgId) + '/actions/elevatereadonlyadmin/invoke')
+        .then(USSService.notifyReadOnlyLaunch);
     }
 
     function getHybridStatusesForUser(userId, orgId) {
@@ -459,9 +521,100 @@
       return HelpdeskHttpRequestCanceller.empty();
     }
 
+    function getAccount(accountId) {
+      return $http
+        .get(urlBase + 'accounts/' + encodeURIComponent(accountId))
+        .then(extractData);
+    }
+
+    function getOrder(orderId) {
+      return $http
+        .get(urlBase + 'orders/' + encodeURIComponent(orderId))
+        .then(extractData);
+    }
+
+    function getLatestEmailEvent(email) {
+      return service.getEmailStatus(email).then(function (emailEvents) {
+        return _.first(emailEvents);
+      });
+    }
+
+    function getEmailStatus(email) {
+      return $http
+        .get(urlBase + 'email?email=' + encodeURIComponent(email))
+        .then(extractItems);
+    }
+
+    function hasSuppressionDetails(suppressionType, email) {
+      if (!suppressionType) {
+        return $q.reject('No suppression type provided.');
+      }
+      if (!email) {
+        return $q.reject('No email provided.');
+      }
+
+      return $http.get(urlBase + 'email/' + suppressionType + '?email=' + encodeURIComponent(email))
+        .then(function (data) {
+          // notes:
+          // - usually the response SHOULD be 404, indicating the email address is not on the list
+          // - in certain cases, we get a 200 response, with an empty JSON object => `{}`
+          // - so we additionally check for the expected 'address' property in the response, and
+          //   reject if not present
+          if (!_.get(data, 'data.address')) {
+            return $q.reject('No email address in response payload.');
+          }
+          return data;
+        });
+    }
+
+    function clearSuppressionDetails(suppressionType, email) {
+      if (!suppressionType) {
+        return $q.reject('No suppression type provided.');
+      }
+      if (!email) {
+        return $q.reject('No email provided.');
+      }
+      return $http.delete(urlBase + 'email/' + suppressionType + '?email=' + encodeURIComponent(email));
+    }
+
+    function hasBounceDetails(email) {
+      return hasSuppressionDetails('bounces', email);
+    }
+
+    function clearBounceDetails(email) {
+      return clearSuppressionDetails('bounces', email);
+    }
+
+    function hasComplaintDetails(email) {
+      return hasSuppressionDetails('complaints', email);
+    }
+
+    function clearComplaintDetails(email) {
+      return clearSuppressionDetails('complaints', email);
+    }
+
+    function hasUnsubscribeDetails(email) {
+      return hasSuppressionDetails('unsubscribes', email);
+    }
+
+    function clearUnsubscribeDetails(email) {
+      return clearSuppressionDetails('unsubscribes', email);
+    }
+
+    // Convert Date from seconds to UTC format
+    function unixTimestampToUTC(timestamp) {
+      if (!timestamp) {
+        return;
+      }
+      // convert seconds to ms
+      var newDate = new Date();
+      newDate.setTime(timestamp * 1000);
+      return newDate.toUTCString();
+    }
+
     return service;
   }
 
   angular.module('Squared')
     .service('HelpdeskService', HelpdeskService);
-}());
+})();

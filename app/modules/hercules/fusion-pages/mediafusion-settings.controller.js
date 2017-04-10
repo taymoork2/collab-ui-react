@@ -6,65 +6,33 @@
     .controller('MediafusionClusterSettingsController', MediafusionClusterSettingsController);
 
   /* @ngInject */
-  function MediafusionClusterSettingsController($stateParams, $translate, FusionClusterService, XhrNotificationService, MediaClusterServiceV2, $modal, FusionUtils, Notification, ResourceGroupService) {
+  function MediafusionClusterSettingsController($stateParams, FusionClusterService, Notification, MediaClusterServiceV2, hasMFFeatureToggle) {
     var vm = this;
-    vm.backUrl = 'cluster-list';
+    vm.saveSipTrunk = saveSipTrunk;
+    vm.hasMFFeatureToggle = hasMFFeatureToggle;
+    //vm.sipurlconfiguration = '';
     vm.upgradeSchedule = {
-      title: 'hercules.expresswayClusterSettings.upgradeScheduleHeader'
-    };
-    vm.releaseChannel = {
-      title: 'mediaFusion.clusters.releaseChannel',
-      description: 'mediaFusion.clusters.releaseChannelDesc'
-    };
-    vm.delete = {
-      title: 'mediaFusion.clusters.deletecluster',
-      description: 'mediaFusion.clusters.deleteclusterDesc'
+      title: 'hercules.expresswayClusterSettings.upgradeScheduleHeader',
     };
 
-    vm.releaseChannelOptions = [{
-      label: $translate.instant('hercules.fusion.add-resource-group.release-channel.stable'),
-      value: 'stable'
-    }];
-
-    vm.populateChannels = function () {
-      ResourceGroupService.getAllowedChannels()
-        .then(function (channels) {
-          _.forEach(['beta', 'latest'], function (restrictedChannel) {
-            if (_.includes(channels, restrictedChannel)) {
-              vm.releaseChannelOptions.push({
-                label: $translate.instant('hercules.fusion.add-resource-group.release-channel.' + restrictedChannel),
-                value: restrictedChannel
-              });
-            }
-          });
-        }, XhrNotificationService.notify);
-    };
-    vm.populateChannels();
-
-    vm.selected = '';
-
-    vm.changeReleaseChannel = function () {
-      if (vm.selected.label != vm.cluster.releaseChannel) {
-        MediaClusterServiceV2.updateV2Cluster(vm.cluster.id, vm.displayName, vm.selected.value)
-          .then(function () {
-            Notification.success('hercules.fusion.add-resource-group.release-channel.saveReleaseChannelSuccess');
-          }, function () {
-            Notification.error('hercules.fusion.add-resource-group.release-channel.saveReleaseChannelError');
-          });
-      }
+    vm.sipRegistration = {
+      title: 'mediaFusion.sipconfiguration.title',
     };
 
-    vm.deleteCluster = function () {
-      $modal.open({
-        resolve: {
-          cluster: function () {
-            return vm.cluster;
-          }
-        },
-        controller: 'DeleteClusterSettingControllerV2',
-        controllerAs: "deleteClust",
-        templateUrl: 'modules/mediafusion/media-service-v2/delete-cluster/delete-cluster-dialog.html'
+    MediaClusterServiceV2.getProperties($stateParams.id)
+      .then(function (properties) {
+        vm.sipurlconfiguration = properties['mf.ucSipTrunk'];
       });
+
+    vm.deregisterModalOptions = {
+      resolve: {
+        cluster: function () {
+          return vm.cluster;
+        },
+      },
+      controller: 'DeleteClusterSettingControllerV2',
+      controllerAs: 'deleteClust',
+      templateUrl: 'modules/mediafusion/media-service-v2/delete-cluster/delete-cluster-dialog.html',
     };
 
     loadCluster($stateParams.id);
@@ -77,13 +45,27 @@
           });
           vm.cluster = cluster;
           vm.clusters = clusters;
-          if (vm.cluster) {
-            vm.selectPlaceholder = FusionUtils.getLocalizedReleaseChannel(vm.cluster.releaseChannel);
-            vm.localizedTitle = $translate.instant('hercules.expresswayClusterSettings.pageTitle', {
-              clusterName: cluster.name
-            });
+          if (cluster && cluster.connectors && cluster.connectors.length === 0) {
+            /* We have cluster data, but there are no nodes. Let's use the default deregistration dialog.  */
+            vm.deregisterModalOptions = undefined;
           }
-        }, XhrNotificationService.notify);
+        })
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+        });
+    }
+
+    function saveSipTrunk() {
+      vm.payLoad = {
+        'mf.ucSipTrunk': vm.sipurlconfiguration,
+      };
+      MediaClusterServiceV2
+        .setProperties($stateParams.id, vm.payLoad)
+          .then(function () {
+            Notification.success('mediaFusion.sipconfiguration.success');
+          }, function (err) {
+            Notification.errorWithTrackingId(err, 'hercules.genericFailure');
+          });
     }
   }
 })();

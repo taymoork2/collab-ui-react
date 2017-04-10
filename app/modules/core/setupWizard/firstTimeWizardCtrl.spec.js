@@ -5,53 +5,66 @@ describe('FirstTimeWizardCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  var $controller, $q, $scope, Auth, Authinfo, FeatureToggleService, Userservice;
+  var $controller, $q, $scope, Auth, Authinfo, Userservice;
+
+  afterEach(function () {
+    $controller = $q = $scope = Auth = Authinfo = Userservice = undefined;
+  });
 
   beforeEach(inject(function (_$controller_, _$q_, $rootScope, _Auth_, _Authinfo_,
-    _FeatureToggleService_, _Userservice_) {
+    _Userservice_) {
     $controller = _$controller_;
     $q = _$q_;
     $scope = $rootScope.$new();
     Auth = _Auth_;
     Authinfo = _Authinfo_;
-    FeatureToggleService = _FeatureToggleService_;
     Userservice = _Userservice_;
   }));
 
   describe('Customer Org Admin', function () {
 
-    var successResponse = {
+    var successResponseWithCare = {
       data: {
         id: 'admin-user',
-        roles: 'full_admin',
-        entitlements: ['spark']
+        roles: ['full_admin'],
+        entitlements: ['spark', 'cloud-contact-center', 'contact-center-context'],
       },
-      status: 200
+      status: 200,
+    };
+    var successResponseWithoutCare = {
+      data: {
+        id: 'admin-user',
+        roles: ['full_admin'],
+        entitlements: ['spark'],
+      },
+      status: 200,
     };
     var failedResponse = {
       data: '',
-      status: 404
+      status: 404,
     };
+
+    afterAll(function () {
+      successResponseWithCare = successResponseWithoutCare = failedResponse = undefined;
+    });
 
     function initController() {
       $controller('FirstTimeWizardCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
       $scope.$apply();
     }
 
     function initControllerWith(data) {
-      FeatureToggleService.atlasCareTrialsGetStatus.and.returnValue($q.when(data.atlasCareTrialsOn));
       Authinfo.isInDelegatedAdministrationOrg.and.returnValue(data.asDelegatedAdmin);
       Authinfo.getCareServices.and.returnValue(data.careServices);
-      Userservice.getUser.and.returnValue($q.when(data.getUserResponse));
-      Userservice.updateUserProfile.and.returnValue($q.when(data.updateUserProfileResponse));
+      Userservice.getUserAsPromise.and.returnValue($q.resolve(data.getUserResponse));
+      Userservice.updateUserProfile.and.returnValue($q.resolve(data.updateUserProfileResponse));
       initController();
     }
 
     beforeEach(function () {
-      spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus');
-      spyOn(Userservice, 'getUser');
+      spyOn(Userservice, 'getUserAsPromise');
       spyOn(Userservice, 'updateUserProfile');
       spyOn(Authinfo, 'isInDelegatedAdministrationOrg');
       spyOn(Authinfo, 'getCareServices');
@@ -59,54 +72,42 @@ describe('FirstTimeWizardCtrl', function () {
       spyOn(Auth, 'logout').and.stub();
     });
 
-    it('should not check care feature toggle, if isInDelegatedAdministrationOrg is true', function () {
-      initControllerWith({
-        asDelegatedAdmin: true
-      });
-
-      // We will handle partner scenarios later.
-      expect(FeatureToggleService.atlasCareTrialsGetStatus).not.toHaveBeenCalled();
-    });
-
     it('should not get user details if there are no care licenses', function () {
       initControllerWith({
         asDelegatedAdmin: false,
-        atlasCareTrialsOn: true,
-        careServices: []
+        careServices: [],
       });
 
       expect(Authinfo.getCareServices).toHaveBeenCalled();
-      expect(Userservice.getUser).not.toHaveBeenCalled();
+      expect(Userservice.getUserAsPromise).not.toHaveBeenCalled();
     });
 
     it('should not patch user if get user failed', function () {
       initControllerWith({
         asDelegatedAdmin: false,
-        atlasCareTrialsOn: true,
         careServices: [{
-          type: 'CDC_xxx'
+          type: 'CDC_xxx',
         }],
-        getUserResponse: failedResponse
+        getUserResponse: failedResponse,
       });
 
       expect(Authinfo.getCareServices).toHaveBeenCalled();
-      expect(Userservice.getUser).toHaveBeenCalled();
+      expect(Userservice.getUserAsPromise).toHaveBeenCalled();
       expect(Userservice.updateUserProfile).not.toHaveBeenCalled();
     });
 
     it('do not logout if patch user failed', function () {
       initControllerWith({
         asDelegatedAdmin: false,
-        atlasCareTrialsOn: true,
         careServices: [{
-          type: 'CDC_xxx'
+          type: 'CDC_xxx',
         }],
-        getUserResponse: successResponse,
-        updateUserProfileResponse: failedResponse
+        getUserResponse: successResponseWithoutCare,
+        updateUserProfileResponse: failedResponse,
       });
 
       expect(Authinfo.getCareServices).toHaveBeenCalled();
-      expect(Userservice.getUser).toHaveBeenCalled();
+      expect(Userservice.getUserAsPromise).toHaveBeenCalled();
       expect(Userservice.updateUserProfile).toHaveBeenCalled();
       expect(Auth.logout).not.toHaveBeenCalled();
     });
@@ -116,15 +117,28 @@ describe('FirstTimeWizardCtrl', function () {
       function () {
         initControllerWith({
           asDelegatedAdmin: false,
-          atlasCareTrialsOn: true,
           careServices: [{
-            type: 'CDC_xxx'
+            type: 'CDC_xxx',
           }],
-          getUserResponse: successResponse,
-          updateUserProfileResponse: successResponse
+          getUserResponse: successResponseWithoutCare,
+          updateUserProfileResponse: successResponseWithCare,
         });
 
         expect(Auth.logout).toHaveBeenCalled();
+      });
+
+    it('should NOT proceed to patch if care admin does not have syncKms role but has care entitlements',
+      function () {
+        initControllerWith({
+          asDelegatedAdmin: false,
+          careServices: [{
+            type: 'CDC_xxx',
+          }],
+          getUserResponse: successResponseWithCare,
+          updateUserProfileResponse: successResponseWithCare,
+        });
+
+        expect(Auth.logout).not.toHaveBeenCalled();
       });
   });
 });

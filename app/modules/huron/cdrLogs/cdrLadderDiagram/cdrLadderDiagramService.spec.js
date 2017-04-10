@@ -46,8 +46,8 @@ describe('Controller: CdrLadderDiagramService', function () {
   var cdrEvents = getJSONFixture('huron/json/cdrDiagram/cdrEvents.json');
   var messageSquence = getJSONFixture('huron/json/cdrDiagram/messageSquence.json');
   var activitiesResponse = getJSONFixture('huron/json/cdrDiagram/activities.json');
-  var diagnosticsServiceUrl = 'https://atlas-integration.wbx2.com/admin/api/v1/callflow/ladderdiagram';
-  var activitiesServiceUrl = 'https://atlas-integration.wbx2.com/admin/api/v1/callflow/activities?id=lid.f2aa2076-77eb-329f-b5c1-a2f21fdfdc89&start=2016-05-05T21:14:16.000Z&end=2016-05-05T21:14:16.999Z';
+  var diagnosticsServiceUrl = 'https://atlas-intb.ciscospark.com/admin/api/v1/callflow/ladderdiagram';
+  var activitiesServiceUrl = 'https://atlas-intb.ciscospark.com/admin/api/v1/callflow/activities?id=lid.f2aa2076-77eb-329f-b5c1-a2f21fdfdc89&start=2016-05-05T21:14:16.000Z&end=2016-05-05T21:14:16.999Z';
 
   beforeEach(inject(function (_$httpBackend_, _CdrLadderDiagramService_, _Notification_, _Authinfo_) {
     CdrLadderDiagramService = _CdrLadderDiagramService_;

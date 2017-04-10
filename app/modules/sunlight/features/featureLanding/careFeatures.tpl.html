@@ -4,10 +4,18 @@
      <!--Show New Feature when no features are present-->
      <div ng-switch-when = "NewFeature" class="no-features content-container">
        <i class="icon icon-circle-contact-centre"></i>
-       <div class="h2" translate="sunlightDetails.featuresNotYetConfiguredPage.createCT"></div>
-       <div class="h6 ct-desc" translate="sunlightDetails.featuresNotYetConfiguredPage.createCTDesc"></div>
-       <div class="new-btn">
-         <button type="button" class="btn--people" ui-sref="care.ChatSA" translate="sunlightDetails.featuresNotYetConfiguredPage.new"></button>
+       <div class="h2" translate="sunlightDetails.featuresNotYetConfiguredPage.createCareTemplate"></div>
+       <div class="h6 ct-desc">
+         <span translate="sunlightDetails.featuresNotYetConfiguredPage.createCareTemplateDesc" />
+         <span ng-if="!careFeaturesCtrl.hasMessage && !careFeaturesCtrl.hasCall"
+               translate="sunlightDetails.featuresNotYetConfiguredPage.MessageAndCallLicenseMissing"
+               translate-value-onclick="careFeaturesCtrl.purchaseLink()" translate-compile />
+         <span ng-if="!careFeaturesCtrl.hasMessage && careFeaturesCtrl.hasCall"
+           translate="sunlightDetails.featuresNotYetConfiguredPage.MessageLicenseMissing"
+               translate-value-onclick="careFeaturesCtrl.purchaseLink()" translate-compile />
+       </div>
+       <div class="new-btn" ng-if="careFeaturesCtrl.hasMessage">
+         <button type="button" class="btn--people" ng-click="careFeaturesCtrl.openNewCareFeatureModal()" translate="sunlightDetails.featuresNotYetConfiguredPage.new"></button>
        </div>
      </div>
 
@@ -28,13 +36,19 @@
      <div ng-switch-when = "ShowFeatures">
        <cs-page-sub-header>
          <cs-page-sub-header-left>
-           <cs-searchfilter search-item-fn="careFeaturesCtrl.searchData(searchStr)" placeholder-text="{{careFeaturesCtrl.placeholder.name}}" hide-count="true">
+           <cs-searchfilter filters="careFeaturesCtrl.filters" set-filter-fn="careFeaturesCtrl.setFilter(filter.filterValue)"
+                            search-item-fn="careFeaturesCtrl.searchData(searchStr)" placeholder-text="{{careFeaturesCtrl.placeholder.name}}" hide-count="true">
            </cs-searchfilter>
          </cs-page-sub-header-left>
          <cs-page-sub-header-right>
-           <button class="btn btn--people new-feature-button" ui-sref="care.ChatSA">
-             <span translate="sunlightDetails.newFeatureButtonText"></span>
-           </button>
+           <div class="tooltip-wrapper-div" tooltip="{{careFeaturesCtrl.tooltip}}"
+                tooltip-enable="!careFeaturesCtrl.hasMessage" tooltip-placement="bottom-right"
+                tooltip-trigger="mouseenter">
+             <button class="btn btn--people new-feature-button" ng-disabled="!careFeaturesCtrl.hasMessage"
+                     ng-click="careFeaturesCtrl.openNewCareFeatureModal()">
+               <span translate="sunlightDetails.newFeatures.newFeatureButtonText"></span>
+             </button>
+           </div>
          </cs-page-sub-header-right>
        </cs-page-sub-header>
        <div class="content-container">

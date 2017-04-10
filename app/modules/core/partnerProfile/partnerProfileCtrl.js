@@ -1,3 +1,5 @@
+require('./_partnerProfile.scss');
+
 (function () {
   'use strict';
 
@@ -17,12 +19,12 @@
     // radio button values
     $scope.problemSiteInfo = {
       cisco: 0,
-      ext: 1
+      ext: 1,
     };
 
     $scope.helpSiteInfo = {
       cisco: 0,
-      ext: 1
+      ext: 1,
     };
     //For now restrict to one user (who is a partner)
     //$scope.showClientVersions = Authinfo.getPrimaryEmail() === 'marvelpartners@gmail.com';
@@ -75,6 +77,10 @@
         }
       });
 
+      var params = {
+        disableCache: true,
+        basicInfo: true,
+      };
       Orgservice.getOrg(function (data, status) {
         if (data.success) {
           var settings = data.orgSettings;
@@ -109,7 +115,7 @@
         } else {
           Log.debug('Get existing org failed. Status: ' + status);
         }
-      }, orgId, true);
+      }, orgId, params);
     };
 
     $scope.init();
@@ -179,7 +185,7 @@
 
     function notifyError(response) {
       Notification.errorResponse(response, 'errors.statusError', {
-        status: response.status
+        status: response.status,
       });
     }
 

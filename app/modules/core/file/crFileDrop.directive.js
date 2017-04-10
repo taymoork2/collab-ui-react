@@ -13,9 +13,10 @@
         fileName: '=',
         fileMaxSizeError: '&',
         fileTypeError: '&',
-        fileValidator: '&'
+        fileValidator: '&',
+        readingStrategy: '@',
       },
-      link: link
+      link: link,
     };
 
     return directive;
@@ -90,7 +91,11 @@
         var type = file.type;
         var size = file.size;
         reader.onload = onLoad;
-        reader.readAsText(file);
+        if (scope.readingStrategy === 'dataURL') {
+          reader.readAsDataURL(file);
+        } else {
+          reader.readAsText(file);
+        }
 
         function onLoad(loadEvent) {
           if (checkSize(size) && isTypeValid(type, name)) {

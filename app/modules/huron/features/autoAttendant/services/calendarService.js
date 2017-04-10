@@ -9,12 +9,12 @@
   function calendarService($resource, HuronConfig) {
     return $resource(HuronConfig.getCesUrl() + '/customers/:customerId/schedules/:scheduleId', {
       customerId: '@customerId',
-      scheduleId: '@scheduleId'
+      scheduleId: '@scheduleId',
     }, {
       update: {
         method: 'PUT',
-        isArray: false
-      }
+        isArray: false,
+      },
     });
   }
 })();

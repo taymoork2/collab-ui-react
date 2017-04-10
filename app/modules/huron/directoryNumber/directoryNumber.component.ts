@@ -1,5 +1,5 @@
 interface IDirectoryNumberOption {
-  value: string | undefined;
+  value: string | null;
   label: string;
 }
 
@@ -24,48 +24,51 @@ class DirectoryNumber implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
-    private $translate: ng.translate.ITranslateService
+    private $translate: ng.translate.ITranslateService,
   ) {
     this.inputPlaceholder = this.$translate.instant('directoryNumberPanel.searchNumber');
     this.placeholder = this.$translate.instant('directoryNumberPanel.chooseNumber');
     this.nonePlaceholder = this.$translate.instant('directoryNumberPanel.none');
     this.noneOption = {
-      value: undefined,
+      value: null,
       label: this.nonePlaceholder,
     };
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+    const {
+      internalNumbers,
+      externalNumbers,
+      internalSelected,
+      externalSelected,
+    } = changes;
+
     // populate internalOptions
-    let internalNumbersChange = changes['internalNumbers'];
-    if (internalNumbersChange) {
-      if (internalNumbersChange.currentValue && _.isArray(internalNumbersChange.currentValue)) {
-        this.internalOptions = this.convertStringArrayToDirectoryNumberOptionsArray(internalNumbersChange.currentValue as string[]);
+    if (internalNumbers) {
+      if (internalNumbers.currentValue && _.isArray(internalNumbers.currentValue)) {
+        this.internalOptions = this.convertStringArrayToDirectoryNumberOptionsArray(internalNumbers.currentValue as string[]);
       }
     }
 
     // populate externalOptions
-    let externalNumbersChange = changes['externalNumbers'];
-    if (externalNumbersChange) {
-      if (externalNumbersChange.currentValue && _.isArray(externalNumbersChange.currentValue)) {
-        this.externalOptions = this.convertStringArrayToDirectoryNumberOptionsArray(externalNumbersChange.currentValue as string[]);
+    if (externalNumbers) {
+      if (externalNumbers.currentValue && _.isArray(externalNumbers.currentValue)) {
+        this.externalOptions = this.convertStringArrayToDirectoryNumberOptionsArray(externalNumbers.currentValue as string[]);
         this.externalOptions.unshift(this.noneOption);
       }
     }
 
     // add internalSelected as an IDirectoryNumberOption object to internalOptions
-    let internalSelectedChange = changes['internalSelected'];
-    if (internalSelectedChange) {
-      if (internalSelectedChange.currentValue) {
-        this.internalSelected = this.setCurrentOption(internalSelectedChange.currentValue, this.internalOptions);
+    if (internalSelected) {
+      if (internalSelected.currentValue) {
+        this.internalSelected = this.setCurrentOption(internalSelected.currentValue, this.internalOptions);
       }
     }
 
     // add externalSelected as an IDirectoryNumberOption object to externalOptions
-    let externalSelectedChange = changes['externalSelected'];
-    if (externalSelectedChange) {
-      if (externalSelectedChange.currentValue) {
-        this.externalSelected = this.setCurrentOption(externalSelectedChange.currentValue, this.externalOptions);
+    if (externalSelected) {
+      if (externalSelected.currentValue) {
+        this.externalSelected = this.setCurrentOption(externalSelected.currentValue, this.externalOptions);
       } else {
         this.externalSelected = this.noneOption;
       }
@@ -122,8 +125,11 @@ class DirectoryNumber implements ng.IComponentController {
 
   private setMatchingExternalNumber(): void {
     let matchingExternalNumber = _.find(this.externalOptions, (externalOption) => {
-      return _.endsWith(externalOption.value, this.internalSelected.value);
+      if (_.isString(externalOption.value) && _.isString(this.internalSelected.value)) {
+        return _.endsWith(externalOption.value, this.internalSelected.value);
+      }
     });
+
     if (matchingExternalNumber) {
       this.externalSelected = matchingExternalNumber;
     }
@@ -143,7 +149,7 @@ class DirectoryNumber implements ng.IComponentController {
 export class DirectoryNumberComponent implements ng.IComponentOptions {
   public controller = DirectoryNumber;
   public templateUrl = 'modules/huron/directoryNumber/directoryNumber.html';
-  public bindings = <{ [binding: string]: string }>{
+  public bindings = {
     showInternalExtensions: '<',
     internalSelected: '<',
     internalNumbers: '<',

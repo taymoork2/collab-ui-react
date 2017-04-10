@@ -1,8 +1,10 @@
+require('./helpdesk.scss');
+
 (function () {
   'use strict';
 
   /* @ngInject */
-  function HelpdeskController(HelpdeskSplunkReporterService, $q, HelpdeskService, $translate, $scope, $state, $modal, HelpdeskSearchHistoryService, HelpdeskHuronService, LicenseService, Config, $window, Authinfo) {
+  function HelpdeskController($modal, $q, $scope, $state, $translate, $window, Authinfo, Config, HelpdeskHuronService, HelpdeskSearchHistoryService, HelpdeskService, HelpdeskSplunkReporterService, LicenseService) {
     $scope.$on('$viewContentLoaded', function () {
       setSearchFieldFocus();
       $window.document.title = $translate.instant("helpdesk.browserTabHeaderTitle");
@@ -15,6 +17,7 @@
     vm.initSearchWithoutOrgFilter = initSearchWithoutOrgFilter;
     vm.searchingForUsers = false;
     vm.searchingForOrgs = false;
+    vm.searchingForOrders = false;
     vm.searchingForDevices = false;
     vm.lookingUpOrgFilter = false;
     vm.searchString = '';
@@ -23,9 +26,13 @@
     vm.showDeviceResultPane = showDeviceResultPane;
     vm.showUsersResultPane = showUsersResultPane;
     vm.showOrgsResultPane = showOrgsResultPane;
+    vm.showOrdersResultPane = showOrdersResultPane;
     vm.setCurrentSearch = setCurrentSearch;
     vm.showSearchHelp = showSearchHelp;
     vm.isCustomerHelpDesk = !Authinfo.isInDelegatedAdministrationOrg();
+    vm.orderNumberSize = 8;
+    vm.isOrderSearchEnabled = false;
+    vm.isOrderSearchEnabled = Authinfo.isCisco() || Authinfo.isCiscoMock();
 
     $scope.$on('helpdeskLoadSearchEvent', function (event, args) {
       var search = args.message;
@@ -36,13 +43,15 @@
     function showSearchHelp() {
       var searchHelpUrl = "modules/squared/helpdesk/helpdesk-search-help-dialog.html";
       var searchHelpMobileUrl = "modules/squared/helpdesk/helpdesk-search-help-dialog-mobile.html";
+      var isSearchOrderEnabled = vm.isOrderSearchEnabled;
       $modal.open({
         templateUrl: HelpdeskService.checkIfMobile() ? searchHelpMobileUrl : searchHelpUrl,
         controller: function () {
           var vm = this;
           vm.isCustomerHelpDesk = !Authinfo.isInDelegatedAdministrationOrg();
+          vm.isOrderSearchEnabled = isSearchOrderEnabled;
         },
-        controllerAs: 'searchHelpModalCtrl'
+        controllerAs: 'searchHelpModalCtrl',
       });
       HelpdeskSplunkReporterService.reportOperation(HelpdeskSplunkReporterService.SEARCH_HELP);
     }
@@ -63,28 +72,34 @@
       searchString: '',
       userSearchResults: null,
       orgSearchResults: null,
+      orderSearchResults: null,
       deviceSearchResults: null,
       userSearchFailure: null,
       orgSearchFailure: null,
+      orderSearchFailure: null,
       deviceSearchFailure: null,
       orgFilter: vm.isCustomerHelpDesk ? {
         id: Authinfo.getOrgId(),
-        displayName: Authinfo.getOrgName()
+        displayName: Authinfo.getOrgName(),
       } : null,
       orgLimit: vm.searchResultsPageSize,
       userLimit: vm.searchResultsPageSize,
       deviceLimit: vm.searchResultsPageSize,
+      orderLimit: vm.searchResultsPageSize,
       initSearch: function (searchString) {
         this.searchString = searchString;
         this.userSearchResults = null;
         this.orgSearchResults = null;
+        this.orderSearchResults = null;
         this.deviceSearchResults = null;
         this.userSearchFailure = null;
         this.orgSearchFailure = null;
+        this.orderSearchFailure = null;
         this.deviceSearchFailure = null;
         this.orgLimit = vm.searchResultsPageSize;
         this.userLimit = vm.searchResultsPageSize;
         this.deviceLimit = vm.searchResultsPageSize;
+        this.orderLimit = vm.searchResultsPageSize;
         setSearchFieldFocus();
       },
       clear: function () {
@@ -92,7 +107,7 @@
         if (!vm.isCustomerHelpDesk) {
           this.orgFilter = null;
         }
-      }
+      },
     };
 
     if (vm.isCustomerHelpDesk) {
@@ -116,7 +131,11 @@
       promises.push(searchUsers(vm.searchString, orgFilterId));
       if (!orgFilterId) {
         promises.push(searchOrgs(vm.searchString));
+        if (vm.isOrderSearchEnabled) {
+          promises.push(searchOrders(vm.searchString));
+        }
       } else {
+        vm.isOrderSearchEnabled = false;
         promises = promises.concat(searchDevices(vm.searchString, vm.currentSearch.orgFilter));
       }
 
@@ -194,7 +213,6 @@
         searchDone.resolve(stats(HelpdeskSplunkReporterService.ORG_SEARCH, vm.currentSearch.orgSearchFailure));
       }
       return searchDone.promise;
-
     }
 
     function searchDevices(searchString, org) {
@@ -291,6 +309,69 @@
       return [searchDone.promise, search2Done.promise];
     }
 
+    function searchOrders(searchString) {
+      var searchDone = $q.defer();
+      if (isValidOrderEntry(searchString)) {
+        vm.searchingForOrders = true;
+        HelpdeskService.searchOrders(searchString).then(function (res) {
+          var order = [];
+          var found = _.find(res, function (el) { return el.orderStatus === "PROVISIONED"; });
+          if (!_.isUndefined(found)) {
+            order.push(found);
+          }
+
+          if (order.length === 0) {
+            vm.currentSearch.orderSearchResults = null;
+            vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.noSearchHits');
+          } else {
+            vm.currentSearch.orderSearchResults = order;
+            vm.currentSearch.orderSearchFailure = null;
+          }
+          vm.searchingForOrders = false;
+          HelpdeskSearchHistoryService.saveSearch(vm.currentSearch);
+          vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches();
+        }, function (err) {
+          vm.searchingForOrders = false;
+          vm.currentSearch.orderSearchResults = null;
+          vm.currentSearch.orderSearchFailure = null;
+          if (err.status === 404) {
+            var errorCode = _.get(err.data, "errorCode");
+            // Compare the error code with 'Order not found' (400117)
+            if (errorCode === 400117) {
+              vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.noSearchHits');
+            } else {
+              vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.badOrderSearchInput');
+            }
+          } else if (err.cancelled === true || err.timedout === true) {
+            vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.cancelled');
+          } else {
+            vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.unexpectedError');
+          }
+        }).finally(function () {
+          searchDone.resolve(stats(HelpdeskSplunkReporterService.ORDER_SEARCH, vm.currentSearch.orderSearchFailure || vm.currentSearch.orderSearchResults));
+        });
+      } else {
+        vm.searchingForOrders = false;
+        vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.badOrderSearchInput');
+        searchDone.resolve(stats(HelpdeskSplunkReporterService.ORDER_SEARCH, vm.currentSearch.orderSearchFailure));
+      }
+      return searchDone.promise;
+    }
+
+    function isValidOrderEntry(searchString) {
+      // A valid order search entry should has a prefix of 'ssw' or minimum 8-digit followed by a hyphen '-'
+      if (searchString.toLowerCase().indexOf("ssw") === 0) {
+        return true;
+      }
+      var n = searchString.search('-');
+      var prefix = (n === -1) ? searchString : searchString.substring(0, n);
+
+      if (!isNaN(prefix) && prefix.length >= vm.orderNumberSize) {
+        return true;
+      }
+      return false;
+    }
+
     function initSearchWithOrgFilter(org) {
       vm.lookingUpOrgFilter = true;
       vm.searchingForDevices = false;
@@ -301,7 +382,7 @@
         HelpdeskService.getOrg(org.id).then(function (fullOrg) {
           vm.lookingUpOrgFilter = false;
           vm.currentSearch.orgFilter = fullOrg;
-        }, angular.noop);
+        }, _.noop);
       } else {
         HelpdeskService.cancelAllRequests().then(function () {
           vm.searchString = '';
@@ -309,7 +390,7 @@
           HelpdeskService.getOrg(org.id).then(function (fullOrg) {
             vm.lookingUpOrgFilter = false;
             vm.currentSearch.orgFilter = fullOrg;
-          }, angular.noop);
+          }, _.noop);
         });
       }
     }
@@ -325,6 +406,10 @@
 
     function showOrgsResultPane() {
       return vm.searchingForOrgs || vm.currentSearch.orgSearchResults || vm.currentSearch.orgSearchFailure;
+    }
+
+    function showOrdersResultPane() {
+      return vm.searchingForOrders || vm.currentSearch.orderSearchResults || vm.currentSearch.orderSearchFailure;
     }
 
     function showDeviceResultPane() {
@@ -343,6 +428,9 @@
         case 'org':
           vm.currentSearch.orgLimit += vm.searchResultsPageSize;
           break;
+        case 'order':
+          vm.currentSearch.orderLimit += vm.searchResultsPageSize;
+          break;
         case 'device':
           vm.currentSearch.deviceLimit += vm.searchResultsPageSize;
           HelpdeskHuronService.setOwnerAndDeviceDetails(_.take(vm.currentSearch.deviceSearchResults, vm.currentSearch.deviceLimit));
@@ -354,7 +442,7 @@
       _.each(deviceSearchResults, function (device) {
         device.organization = {
           id: vm.currentSearch.orgFilter.id,
-          displayName: vm.currentSearch.orgFilter.displayName
+          displayName: vm.currentSearch.orgFilter.displayName,
         };
       });
     }
@@ -433,7 +521,7 @@
     function stats(searchType, details) {
       return {
         "searchType": searchType,
-        "details": details
+        "details": details,
       };
     }
 

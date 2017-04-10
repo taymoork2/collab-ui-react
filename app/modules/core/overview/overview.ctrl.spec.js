@@ -7,10 +7,19 @@ describe('Controller: OverviewCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  var controller, controllerCareFeatureDisabled, $rootScope, $scope, $q, $state, $translate, Authinfo, Config, FeatureToggleService, Log, Orgservice, OverviewNotificationFactory, ReportsService, ServiceDescriptor, ServiceStatusDecriptor, TrialService, FusionClusterService, SunlightReportService;
+  var controller, $rootScope, $scope, $q, $state, $translate, Authinfo, Config, FeatureToggleService, Log, Orgservice, PstnSetupService, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, ServiceStatusDecriptor, TrialService, FusionClusterService, SunlightReportService;
   var orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');
   var usageOnlySharedDevicesFixture = getJSONFixture('core/json/organizations/usageOnlySharedDevices.json');
   var services = getJSONFixture('squared/json/services.json');
+  var isCustomerLaunchedFromPartner = true;
+
+  afterEach(function () {
+    controller = $rootScope = $scope = $q = $state = $translate = Authinfo = Config = FeatureToggleService = Log = Orgservice = PstnSetupService = OverviewNotificationFactory = ReportsService = HybridServicesFlagService = ServiceStatusDecriptor = TrialService = FusionClusterService = SunlightReportService = undefined;
+  });
+
+  afterAll(function () {
+    orgServiceJSONFixture = usageOnlySharedDevicesFixture = services = undefined;
+  });
 
   describe('Wire up', function () {
     beforeEach(inject(defaultWireUpFunc));
@@ -31,23 +40,6 @@ describe('Controller: OverviewCtrl', function () {
       expect(_.includes(cardnames, 'overview.cards.undefined.title')).toBeFalsy();
     });
 
-    // TODO Need to be removed once Care is graduated on atlas.
-    it('should not display care card if feature is toggled off', function () {
-      expect(controllerCareFeatureDisabled.cards).toBeDefined();
-
-      var cardnames = _.map(controllerCareFeatureDisabled.cards, function (card) {
-        return card.name;
-      });
-      expect(_.includes(cardnames, 'overview.cards.message.title')).toBeTruthy();
-      expect(_.includes(cardnames, 'overview.cards.meeting.title')).toBeTruthy();
-      expect(_.includes(cardnames, 'overview.cards.roomSystem.title')).toBeTruthy();
-      expect(_.includes(cardnames, 'overview.cards.call.title')).toBeTruthy();
-      expect(_.includes(cardnames, 'overview.cards.care.title')).toBeFalsy();
-      expect(_.includes(cardnames, 'overview.cards.hybrid.title')).toBeTruthy();
-      expect(_.includes(cardnames, 'overview.cards.users.title')).toBeTruthy();
-      expect(_.includes(cardnames, 'overview.cards.undefined.title')).toBeFalsy();
-    });
-
     it('should have properly set trialDaysLeft', function () {
       expect(controller.trialDaysLeft).toEqual(1);
     });
@@ -55,8 +47,8 @@ describe('Controller: OverviewCtrl', function () {
 
   describe('Enable Devices', function () {
     beforeEach(function () {
-      Orgservice.getAdminOrgUsage = jasmine.createSpy().and.returnValue($q.when(usageOnlySharedDevicesFixture));
       inject(defaultWireUpFunc);
+      Orgservice.getAdminOrgUsage = jasmine.createSpy().and.returnValue($q.resolve(usageOnlySharedDevicesFixture));
     });
 
     it('should call do something', function () {
@@ -75,8 +67,8 @@ describe('Controller: OverviewCtrl', function () {
         components: [{
           name: 'Spark Call',
           status: 'error',
-          id: 'gfg7cvjszyw0'
-        }]
+          id: 'gfg7cvjszyw0',
+        }],
       });
 
       expect(callCard.healthStatus).toEqual('danger');
@@ -84,11 +76,27 @@ describe('Controller: OverviewCtrl', function () {
   });
 
   describe('Notifications', function () {
-    var TOTAL_NOTIFICATIONS = 6;
+    var TOTAL_NOTIFICATIONS = 9;
     beforeEach(inject(defaultWireUpFunc));
 
     it('should all be shown', function () {
       expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS);
+    });
+
+    it('should dismiss the Crash Log notification', function () {
+      expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS);
+
+      var notification = OverviewNotificationFactory.createCrashLogNotification();
+      controller.dismissNotification(notification);
+      expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS - 1);
+    });
+
+    it('should dismiss the PMR notification', function () {
+      expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS);
+
+      var notification = OverviewNotificationFactory.createPMRNotification();
+      controller.dismissNotification(notification);
+      expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS - 1);
     });
 
     it('should dismiss the Devices notification', function () {
@@ -131,11 +139,40 @@ describe('Controller: OverviewCtrl', function () {
       expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS - 1);
     });
 
+    it('should dismiss the Care License notification', function () {
+      expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS);
+
+      var notification = OverviewNotificationFactory.createCareLicenseNotification();
+      controller.dismissNotification(notification);
+      expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS - 1);
+    });
+
     it('should dismiss the Cloud SIP URI Notification using a rootScope broadcast', function () {
       expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS);
 
       $rootScope.$broadcast('DISMISS_SIP_NOTIFICATION');
       expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS - 1);
+    });
+  });
+
+  describe('Notifications - Login as Partner: ', function () {
+    beforeEach(function () {
+      isCustomerLaunchedFromPartner = true;
+      inject(defaultWireUpFunc);
+    });
+
+    it('should NOT call ToS check if logged in as a Partner', function () {
+      expect(PstnSetupService.getCustomerTrialV2).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Notifications - Login as Customer: ', function () {
+    beforeEach(function () {
+      isCustomerLaunchedFromPartner = false;
+      inject(defaultWireUpFunc);
+    });
+    it('should call ToS check if logged in as a Customer', function () {
+      expect(PstnSetupService.getCustomerTrialV2).toHaveBeenCalled();
     });
   });
 
@@ -163,15 +200,22 @@ describe('Controller: OverviewCtrl', function () {
     spyOn(SunlightReportService, 'getOverviewData');
     SunlightReportService.getOverviewData.and.returnValue({});
 
-    FeatureToggleService.features = {
-      atlasHybridServicesResourceList: 'atlas-media-service-onboarding'
-    };
-
     spyOn(FusionClusterService, 'getAll');
     FusionClusterService.getAll.and.returnValue($q.resolve());
 
-    ServiceDescriptor = {
-      services: function () {}
+    HybridServicesFlagService = {
+      readFlags: function () {
+        return $q.resolve([{
+          name: 'fms.services.squared-fusion-cal.acknowledged',
+          raised: false,
+        }, {
+          name: 'fms.services.squared-fusion-uc.acknowledged',
+          raised: false,
+        }, {
+          name: 'fms.services.squared-fusion-ec.acknowledged',
+          raised: false,
+        }]);
+      },
     };
 
     ServiceStatusDecriptor = {
@@ -179,58 +223,51 @@ describe('Controller: OverviewCtrl', function () {
         var defer = $q.defer();
         defer.resolve(null);
         return defer.promise;
-      }
+      },
     };
     Orgservice = {
       getAdminOrg: function () {},
       getAdminOrgUsage: function () {
-        return $q.when({
-          data: orgServiceJSONFixture.getLicensesUsage.singleSub
+        return $q.resolve({
+          data: orgServiceJSONFixture.getLicensesUsage.singleSub,
         });
       },
       getUnlicensedUsers: function () {},
       getOrg: jasmine.createSpy().and.callFake(function (callback) {
         callback(orgServiceJSONFixture.getOrgNoSip, 200);
       }),
-      getHybridServiceAcknowledged: function () {
-        var defer = $q.defer();
-        defer.resolve({
-          status: 200,
-          data: {
-            items: [{
-              id: Config.entitlements.fusion_cal,
-              acknowledged: false
-            }, {
-              id: Config.entitlements.fusion_uc,
-              acknowledged: false
-            }, {
-              id: Config.entitlements.fusion_ec,
-              acknowledged: false
-            }]
-          }
+    };
+
+    PstnSetupService = {
+      getCustomerV2: function () {
+        return $q.resolve({
+          trial: true,
         });
-        return defer.promise;
       },
-      setHybridServiceAcknowledged: jasmine.createSpy()
+      getCustomerTrialV2: function () {
+        return $q.resolve({
+          acceptedDate: "today",
+        });
+      },
     };
 
     ReportsService = {
       getOverviewMetrics: function () {},
-      healthMonitor: function () {}
+      healthMonitor: function () {},
     };
 
     spyOn(Authinfo, 'getConferenceServicesWithoutSiteUrl').and.returnValue([{
       license: {
-        siteUrl: 'fakesite1'
-      }
+        siteUrl: 'fakesite1',
+      },
     }, {
       license: {
-        siteUrl: 'fakesite2'
-      }
+        siteUrl: 'fakesite2',
+      },
     }, {
       license: {
-        siteUrl: 'fakesite3'
-      }
+        siteUrl: 'fakesite3',
+      },
     }]);
     spyOn(Authinfo, 'getOrgId').and.returnValue('1');
     spyOn(Authinfo, 'isPartner').and.returnValue(false);
@@ -239,9 +276,15 @@ describe('Controller: OverviewCtrl', function () {
     spyOn(Authinfo, 'getServices').and.returnValue(services);
     spyOn(Authinfo, 'isSetupDone').and.returnValue(false);
     spyOn(Authinfo, 'isCustomerAdmin').and.returnValue(true);
-    spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(true));
-    spyOn(TrialService, 'getDaysLeftForCurrentUser').and.returnValue($q.when(1));
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
+    spyOn(Authinfo, 'isDeviceMgmt').and.returnValue(true);
+    spyOn(Authinfo, 'isCustomerLaunchedFromPartner').and.returnValue(isCustomerLaunchedFromPartner);
+    spyOn(Authinfo, 'isCare').and.returnValue(true);
+    spyOn(Authinfo, 'isMessageEntitled').and.returnValue(false);
+    spyOn(Authinfo, 'isSquaredUC').and.returnValue(false);
+    spyOn(FeatureToggleService, 'atlasPMRonM2GetStatus').and.returnValue($q.resolve(true));
+    spyOn(TrialService, 'getDaysLeftForCurrentUser').and.returnValue($q.resolve(1));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
+    spyOn(PstnSetupService, 'getCustomerTrialV2').and.callThrough();
 
     controller = $controller('OverviewCtrl', {
       $scope: $scope,
@@ -252,31 +295,14 @@ describe('Controller: OverviewCtrl', function () {
       $state: $state,
       ReportsService: ReportsService,
       Orgservice: Orgservice,
-      ServiceDescriptor: ServiceDescriptor,
+      PstnSetupService: PstnSetupService,
+      HybridServicesFlagService: HybridServicesFlagService,
       ServiceStatusDecriptor: ServiceStatusDecriptor,
       Config: Config,
       TrialService: TrialService,
       OverviewNotificationFactory: OverviewNotificationFactory,
       SunlightReportService: SunlightReportService,
-      hasCareFeatureToggle: true
-    });
-
-    // TODO Need to be removed once Care is graduated on atlas.
-    controllerCareFeatureDisabled = $controller('OverviewCtrl', {
-      $scope: $scope,
-      $rootScope: $rootScope,
-      Log: Log,
-      Authinfo: Authinfo,
-      $translate: $translate,
-      $state: $state,
-      ReportsService: ReportsService,
-      Orgservice: Orgservice,
-      ServiceDescriptor: ServiceDescriptor,
-      ServiceStatusDecriptor: ServiceStatusDecriptor,
-      Config: Config,
-      TrialService: TrialService,
-      OverviewNotificationFactory: OverviewNotificationFactory,
-      hasCareFeatureToggle: false
+      hasGoogleCalendarFeatureToggle: false,
     });
 
     $scope.$apply();

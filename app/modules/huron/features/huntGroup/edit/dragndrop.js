@@ -14,7 +14,7 @@
       getData: getData,
       setData: setData,
       getElement: getElement,
-      setElement: setElement
+      setElement: setElement,
     };
 
     function getData() {
@@ -40,7 +40,7 @@
       restrict: 'A',
       scope: {
         draggable: '=',
-        onEnterKey: '&'
+        onEnterKey: '&',
       },
       link: function (scope, elem) {
         elem.attr('draggable', true);
@@ -52,7 +52,7 @@
 
         elem.on('dragstart', function (event) {
           event = event.originalEvent || event;
-          event.dataTransfer.setData('Text', angular.toJson(scope.draggable));
+          event.dataTransfer.setData('Text', JSON.stringify(scope.draggable));
           event.dataTransfer.effectAllowed = 'move';
           elem.addClass('dragging');
           $timeout(function () {
@@ -81,7 +81,7 @@
             }
           });
         });
-      }
+      },
     };
   }
 
@@ -92,7 +92,7 @@
       scope: {
         dropList: '=',
         callback: '&',
-        unique: '@'
+        unique: '@',
       },
       link: function (scope, elem) {
         var placeholder = getPlaceholderElement(),
@@ -200,7 +200,7 @@
           var index = getPlaceholderIndex();
           var targetArray = scope.dropList;
           var objIndex;
-          angular.forEach(targetArray, function (value, key) {
+          _.forEach(targetArray, function (value, key) {
             if (value[scope.unique] === transferredObject[scope.unique]) {
               objIndex = key;
             }
@@ -217,7 +217,7 @@
           event.stopPropagation();
           return false;
         });
-      }
+      },
     };
   }
 })();

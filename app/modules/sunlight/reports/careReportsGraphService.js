@@ -17,12 +17,12 @@
       plotAreaBorderAlpha: 0,
       legendValueText: ' ',
       showBalloon: false,
-      fillAlphas: 0.1
+      fillAlphas: 0.1,
     };
 
     baseVariables['axis'] = {
       'axisColor': '#D7D7D8',
-      'gridColor': chartColors.grayLight,
+      'gridColor': chartColors.grayLightTwo,
       'color': '#6A6B6C',
       'fontFamily': 'CiscoSansTT Light',
       'fontSize': 12,
@@ -30,11 +30,11 @@
       'titleColor': '#6A6B6C',
       'gridAlpha': 0,
       'axisAlpha': 1,
-      'stackType': 'regular'
+      'stackType': 'regular',
     };
 
     baseVariables['legend'] = {
-      'color': chartColors.grayDarkest,
+      'color': chartColors.grayDarkThree,
       'align': 'center',
       'autoMargins': false,
       'switchable': false,
@@ -47,7 +47,7 @@
       'horizontalGap': 5,
       'valueAlign': 'left',
       'valueWidth': 0,
-      'verticalGap': 20
+      'verticalGap': 20,
     };
 
     baseVariables['balloon'] = {
@@ -57,7 +57,7 @@
       'fillAlpha': 1,
       'fillColor': chartColors.brandWhite,
       'fixedPosition': true,
-      'shadowAlpha': 0
+      'shadowAlpha': 0,
     };
 
     baseVariables['chartCursor'] = {
@@ -67,12 +67,12 @@
       'categoryBalloonEnabled': false,
       'valueLineBalloonEnabled': false,
       'cursorAlpha': 1,
-      'graphBulletAlpha': 1
+      'graphBulletAlpha': 1,
     };
 
     baseVariables['export'] = {
       'libs': {
-        'autoLoad': false
+        'autoLoad': false,
       },
       'menu': [{
         'class': 'export-main',
@@ -81,14 +81,14 @@
           'label': $translate.instant('reportsPage.saveAs'),
           'title': $translate.instant('reportsPage.saveAs'),
           'class': 'export-list',
-          'menu': ['PNG', 'JPG', 'PDF']
-        }, 'PRINT']
-      }]
+          'menu': ['PNG', 'JPG', 'PDF'],
+        }, 'PRINT'],
+      }],
     };
 
     function getBaseVariable(key) {
-      if (baseVariables[key] !== null && angular.isDefined(baseVariables[key])) {
-        return angular.copy(baseVariables[key]);
+      if (baseVariables[key] !== null && !_.isUndefined(baseVariables[key])) {
+        return _.cloneDeep(baseVariables[key]);
       } else {
         return {};
       }
@@ -103,7 +103,7 @@
       marginLeft: 50,
       plotAreaBorderAlpha: 0,
       balloon: getBaseVariable('balloon'),
-      export: false
+      export: false,
     };
 
     function buildChartConfig(data, legend, graphs, chartCursor, categoryField, categoryAxis, valueAxes, exportReport) {
@@ -115,14 +115,14 @@
         categoryField: categoryField,
         categoryAxis: categoryAxis,
         valueAxes: valueAxes,
-        export: exportReport
+        export: exportReport,
       };
-      return angular.copy(_.defaults(chartConfig, baseChartConfig));
+      return _.cloneDeep(_.defaults(chartConfig, baseChartConfig));
     }
 
     var service = {
       getBaseVariable: getBaseVariable,
-      buildChartConfig: buildChartConfig
+      buildChartConfig: buildChartConfig,
     };
 
     return service;

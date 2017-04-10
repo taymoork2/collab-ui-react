@@ -11,11 +11,11 @@ describe('Service: ExcelService', function () {
     $window = {
       Blob: sinon.stub(),
       URL: {
-        createObjectURL: sinon.stub()
+        createObjectURL: sinon.stub(),
       },
       navigator: {
-        msSaveOrOpenBlob: sinon.stub()
-      }
+        msSaveOrOpenBlob: sinon.stub(),
+      },
     };
     $provide.value('$window', $window);
   }
@@ -32,30 +32,30 @@ describe('Service: ExcelService', function () {
     it('should convert an array of arrays to a string', function () {
       var result = ExcelService.createFile(null, [
         ['a', 'b'],
-        [1, 2]
+        [1, 2],
       ]);
       expect(result).toBe('sep=,\r\na,b\r\n1,2');
     });
     it('should convert escape cells containing the separator', function () {
       var result = ExcelService.createFile(null, [
-        ['a,c', 'b']
+        ['a,c', 'b'],
       ]);
       expect(result).toBe('sep=,\r\n"a,c",b');
     });
     it('should convert an array of objects to a string', function () {
       var result = ExcelService.createFile(null, [{
         a: 1,
-        b: 2
+        b: 2,
       }, {
         c: 'dog',
-        d: 'cat'
+        d: 'cat',
       }]);
       expect(result).toBe('sep=,\r\n1,2\r\ndog,cat');
     });
     it('should add a header to the output if provided', function () {
       var result = ExcelService.createFile(['Name', 'Age'], [{
         name: 'Doge',
-        age: 5
+        age: 5,
       }]);
       expect(result).toBe('sep=,\r\nName,Age\r\nDoge,5');
     });

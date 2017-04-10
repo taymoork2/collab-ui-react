@@ -1,0 +1,9 @@
+PROJ__BUILD_ENV=nightly
+
+# env vars for use by 'atlas-web--nightly' job
+NIGHTLY=true
+
+# env vars for use with 'e2e.sh'
+SAUCE__MAX_INSTANCES=10
+SAUCE__USERNAME=
+SAUCE__ACCESS_KEY=

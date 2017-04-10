@@ -1,0 +1,20 @@
+[  
+   {  
+      "url":"https://cmi.huron-int.com/api/v2/customers/226d7977-ff3a-42dc-88ff-f866170a06c8/features/callpickups/6ebcf83f-6594-419d-85a0-4c98b5f97995",
+      "uuid":"6ebcf83f-6594-419d-85a0-4c98b5f97995",
+      "name":"blue",
+      "memberCount":2
+   },
+   {  
+      "url":"https://cmi.huron-int.com/api/v2/customers/226d7977-ff3a-42dc-88ff-f866170a06c8/features/callpickups/bce45ce1-743a-454b-b1bf-30ca838ee3e5",
+      "uuid":"bce45ce1-743a-454b-b1bf-30ca838ee3e5",
+      "name":"check",
+      "memberCount":3
+   },
+   {  
+      "url":"https://cmi.huron-int.com/api/v2/customers/226d7977-ff3a-42dc-88ff-f866170a06c8/features/callpickups/1e861505-c281-4086-98c5-2e46b4659065",
+      "uuid":"1e861505-c281-4086-98c5-2e46b4659065",
+      "name":"demo_1",
+      "memberCount":2
+   }
+]

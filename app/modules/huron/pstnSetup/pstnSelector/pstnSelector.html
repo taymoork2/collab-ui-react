@@ -1,0 +1,93 @@
+<form  name="$ctrl.form" isolate-form novalidate>
+  <div class="flex-search" ng-class="{error: ($ctrl.form.search.$error.pattern || $ctrl.form.search.$error.invalid) && $ctrl.form.search.$touched}">
+    <input type="text" name="search" autocomplete="off" ng-model="$ctrl.searchVal" ng-change="$ctrl.searchChange()" placeholder="{{::'pstnSetup.pstnSelector.searchPlaceholder' | translate}}" pattern="^\d{3}(\d{3})?$" ng-maxlength="$ctrl.maxLength" maxlength="{{$ctrl.maxLength}}" required>
+    <button ng-disabled="$ctrl.form.$invalid" class="btn-primary" ng-click="$ctrl.lookup()">
+      <span translate="common.search"></span>
+    </button>
+  </div>
+  <p class="cs-input__help-text" translate="pstnSetup.pstnSelector.searchDesc"></p>
+  <div ng-class="{error: ($ctrl.form.search.$error.pattern || $ctrl.form.search.$error.invalid) && $ctrl.form.search.$touched}">
+    <div class="cs-input__messages" ng-if="$ctrl.form.search.$error.pattern">
+      <div class="message" translate="pstnSetup.pstnSelector.invalidFormat"></div>
+    </div>
+    <div class="cs-input__messages" ng-if="$ctrl.form.search.$error.invalid">
+      <div class="message" translate="pstnSetup.pstnSelector.unavailableNPA"></div>
+    </div>
+  </div>
+  <div class="row collapse-both block" ng-if="$ctrl.simple !== 'true'">
+    <div class="search-options">
+      <input
+        cs-input
+        type="checkbox"
+        ng-model="$ctrl.block"
+        id="blockChk{{$ctrl.numberType}}"
+        name="blockChk{{$ctrl.numberType}}"
+        ng-click="$ctrl.blockClick()"
+        cs-input-label="{{::'pstnSetup.block' | translate}}">
+
+      <i class="icon icon-info" tooltip="{{::'pstnSetup.advancedOrder.blockTooltip' | translate}}" tooltip-trigger="mouseenter" tooltip-placement="right" tooltip-animation="false" ></i>
+    </div>
+    <div class="medium-4 columns" ng-if="$ctrl.block">
+      <input
+        id="quantity{{$ctrl.numberType}}"
+        name="quantity{{$ctrl.numberType}}"
+        type="number"
+        placeholder="{{::'pstnSetup.quantity' | translate}}"
+        min="2"
+        max="100"
+        ng-model="$ctrl.quantity"
+        ng-disabled="!$ctrl.block"
+        ng-required="$ctrl.block">
+      <div ng-if="$ctrl.form['quantity'+$ctrl.numberType].$valid === false && $ctrl.block">
+        <p translate="pstnSetup.quantityRange"></p>
+      </div>
+    </div>
+    <div class="search-options" ng-if="$ctrl.block">
+        <input
+          cs-input
+          type="checkbox"
+          ng-model="$ctrl.consecutive"
+          ng-disabled="!$ctrl.block"
+          id="consecutiveChk"
+          name="consecutiveChk"
+          cs-input-label="{{::'pstnSetup.consecutive' | translate}}">
+        <i class="icon icon-info" tooltip="{{::'pstnSetup.advancedOrder.consecutiveTooltip' | translate}}" tooltip-trigger="mouseenter" tooltip-placement="right" tooltip-animation="false" ></i>
+      </div>
+  </div>
+</form>
+
+<section ng-if="$ctrl.searchResults.length > 0">
+  <div class="provider-flex">
+    <h5 translate="pstnSetup.searchResults"></h5>
+    <button type="button" class="btn btn--people" ng-click="$ctrl.addCart('NUMBER_ORDER')" cs-btn loading="$ctrl.addLoading" ng-disabled="$ctrl.addDisabled"><span translate="common.add"></span></button>
+  </div>
+  <ul class="large-block-grid-3 medium-block-grid-2 search-results">
+    <div ng-class="{error: $ctrl.error}">
+      <div class="cs-input__messages">
+        <div class="message">{{$ctrl.errorMessage}}</div>
+      </div>
+    </div>
+    <li ng-repeat="searchResult in $ctrl.searchResults | startFrom: $ctrl.paginateOptions.currentPage*$ctrl.paginateOptions.pageSize | limitTo: $ctrl.paginateOptions.pageSize">
+      <cs-checkbox ckid="searchResult{{$ctrl.numberType}}{{$index}}" ng-model="$ctrl.searchResultsModel[$index]" ng-click="$ctrl.searchResultChange()" label="{{::$ctrl.formatTelephoneNumber(searchResult)}}"></cs-checkbox>
+    </li>
+  </ul>
+  <div class="provider-flex">
+    <button type="button" class="btn--circle btn--primary icon icon-chevron-left" ng-click="$ctrl.previousPage()" ng-class="{invisible: $ctrl.paginateOptions.currentPage === 0}"><span class="sr-only" translate="common.back"></span></button>
+    <button type="button" class="btn--circle btn--primary icon icon-chevron-right" ng-click="$ctrl.nextPage()" ng-class="{invisible: $ctrl.paginateOptions.currentPage >= $ctrl.searchResults.length/$ctrl.paginateOptions.pageSize - 1}"><span class="sr-only" translate="common.next"></span></button>
+  </div>
+</section>
+<section ng-if="$ctrl.showAdvancedOrder">
+  <section class="pad-top pad-bottom">
+    <span class="h4" translate="pstnSetup.advancedOrder.noResults"></span>
+  </section>
+  <section class="pad-bottom">
+    <span class="h6" translate="pstnSetup.advancedOrder.detail" translate-values="{areaCode: pstnNumbers.model.pstn.areaCode.code}"></span>
+  </section>
+  <section>
+    <div class="order-inline right-margin">
+        <input cs-input type="text" class="input-width text-center" id="advanceQuantityInput" ng-model="$ctrl.quant" cs-input-label="{{::'pstnSetup.quantity' | translate}}">
+    </div>
+    <button type="button" class="btn btn--people btn--large order-inline" ng-click="$ctrl.addCart('BLOCK_ORDER')" translate="pstnSetup.advancedOrder.addNumbers"></button>
+  </section>
+</section>
+<section ng-if="$ctrl.showNoResult" translate="pstnSetup.pstnSelector.noResults"></section>

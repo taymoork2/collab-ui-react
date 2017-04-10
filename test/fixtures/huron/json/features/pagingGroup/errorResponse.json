@@ -1,0 +1,12 @@
+{
+    "data": {
+        "error": {
+            "key": "400",
+            "message": [
+                {
+                    "description": "A group with this name already exists."
+                }
+            ]
+        }
+    }
+}

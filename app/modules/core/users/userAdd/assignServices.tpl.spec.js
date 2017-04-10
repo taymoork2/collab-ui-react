@@ -1,15 +1,18 @@
+
 'use strict';
+
+var csvDownloadModule = require('modules/core/csvDownload').default;
 
 describe('assignServices', function () {
   var $scope, $state, $previousState, $httpBackend, $q;
-  var view, authinfo, csvDownloadService, hybridService, Orgservice, FeatureToggleService;
+  var view, authinfo, csvDownloadService, Orgservice;
 
   var orgid = '1';
 
   var BUCKET = {
     msg: '#paidMsg',
     conf: '#paidMtg',
-    comm: '#CO_1'
+    comm: '#CO_1',
   };
 
   var ENT = {
@@ -18,14 +21,33 @@ describe('assignServices', function () {
     cal: 'squared-fusion-cal',
     id_uc: '#squared-fusion-uc',
     id_ec: '#squared-fusion-ec',
-    id_cal: '#squared-fusion-cal'
+    id_cal: '#squared-fusion-cal',
   };
 
-  var expectCB = function (name, state) {
-    return expect(_.find(view.scope().hybridServicesPanelCtrl.extensions, {
-      id: name
-    }).entitlementState === 'ACTIVE').toBe(state);
+  var ENT_NAMES = {
+    'squared-fusion-uc': 'squaredFusionUC',
+    'squared-fusion-ec': 'squaredFusionEC',
+    'squared-fusion-cal': 'squaredFusionCal',
   };
+
+  var expectCB = function (name, entitled) {
+    var entitlement = _.find(view.scope().hybridServicesPanelCtrl.entitlements, {
+      entitlementName: ENT_NAMES[name],
+    });
+    if (entitled) {
+      expect(entitlement).toBeDefined();
+      expect(entitlement.entitlementState).toBe('ACTIVE');
+    } else {
+      expect(entitlement).toBeUndefined();
+    }
+  };
+
+  afterEach(function () {
+    if (view) {
+      view.remove();
+    }
+    view = undefined;
+  });
 
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Hercules'));
@@ -33,9 +55,10 @@ describe('assignServices', function () {
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module('Messenger'));
   beforeEach(angular.mock.module('WebExApp'));
+  beforeEach(angular.mock.module(csvDownloadModule));
 
   beforeEach(inject(function ($compile, $rootScope, $templateCache, _$httpBackend_,
-    $controller, _$q_, _$state_, _Authinfo_, _CsvDownloadService_, _HybridService_, _FeatureToggleService_,
+    $controller, _$q_, _$state_, _Authinfo_, _CsvDownloadService_,
     _Orgservice_, _$previousState_) {
 
     $scope = $rootScope.$new();
@@ -48,8 +71,6 @@ describe('assignServices', function () {
     Orgservice = _Orgservice_;
     authinfo = _Authinfo_;
     csvDownloadService = _CsvDownloadService_;
-    hybridService = _HybridService_;
-    FeatureToggleService = _FeatureToggleService_;
 
     var headers = getJSONFixture('core/json/users/headers.json');
     var accountData = getJSONFixture('core/json/authInfo/msg_mtg_comm_Licenses.json');
@@ -57,8 +78,8 @@ describe('assignServices', function () {
 
     var current = {
       step: {
-        name: 'fakeStep'
-      }
+        name: 'fakeStep',
+      },
     };
     $scope.wizard = {};
     $scope.wizard.current = current;
@@ -66,23 +87,23 @@ describe('assignServices', function () {
     spyOn($state, 'go');
     spyOn($previousState, 'get').and.returnValue({
       state: {
-        name: 'test.state'
-      }
+        name: 'test.state',
+      },
     });
 
     function setupAuthinfo() {
       spyOn(authinfo, 'getConferenceServicesWithoutSiteUrl').and.returnValue([{
         license: {
-          siteUrl: 'fakesite1'
-        }
+          siteUrl: 'fakesite1',
+        },
       }, {
         license: {
-          siteUrl: 'fakesite2'
-        }
+          siteUrl: 'fakesite2',
+        },
       }, {
         license: {
-          siteUrl: 'fakesite3'
-        }
+          siteUrl: 'fakesite3',
+        },
       }]);
       spyOn(authinfo, 'getOrgId').and.returnValue(orgid);
       spyOn(authinfo, 'isInitialized').and.returnValue(true);
@@ -101,15 +122,13 @@ describe('assignServices', function () {
     authinfo.updateAccountInfo(accountData);
 
     spyOn(_Orgservice_, 'getUnlicensedUsers');
-    spyOn(_FeatureToggleService_, 'atlasCareTrialsGetStatus').and.returnValue($q.resolve(false));
-    spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.when(getLicensesUsage));
-    spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));
+    spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.resolve(getLicensesUsage));
 
     spyOn(csvDownloadService, 'getCsv').and.callFake(function (type) {
       if (type === 'headers') {
-        return $q.when(headers);
+        return $q.resolve(headers);
       } else {
-        return $q.when({});
+        return $q.resolve({});
       }
     });
 
@@ -123,46 +142,27 @@ describe('assignServices', function () {
         "uuid": "70b8d459-7f58-487a-afc8-02c0a82d53ca",
         "steeringDigit": "9",
         "timeZone": "America/Los_Angeles",
-        "voicemailPilotNumberGenerated": "false"
+        "voicemailPilotNumberGenerated": "false",
       }]);
 
     $httpBackend
       .when('GET', 'l10n/en_US.json')
       .respond({});
 
-    function setupHybridServices() {
-      $httpBackend
-        .when('GET', 'https://hercules-integration.wbx2.com/v1/organizations/' + orgid + '/services')
-        .respond({
-          items: [{
-            id: ENT.cal,
-            enabled: true,
-            acknowledged: false
-          }, {
-            id: ENT.uc,
-            enabled: true,
-            acknowledged: false
-          }, {
-            id: ENT.ec,
-            enabled: true,
-            acknowledged: false
-          }]
-        });
-
-      hybridService.getEntitledExtensions().then(function (extensions) {
-        expect(extensions.length).toEqual(3);
-
-        expect(extensions[0].id).toEqual(ENT.cal);
-        expect(extensions[0].enabled).toEqual(true);
-
-        expect(extensions[1].id).toEqual(ENT.uc);
-        expect(extensions[1].enabled).toEqual(true);
-
-        expect(extensions[2].id).toEqual(ENT.ec);
-        expect(extensions[2].enabled).toEqual(true);
+    $httpBackend
+      .when('GET', 'https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/' + orgid + '/services')
+      .respond({
+        items: [{
+          id: ENT.cal,
+          enabled: true,
+        }, {
+          id: ENT.uc,
+          enabled: true,
+        }, {
+          id: ENT.ec,
+          enabled: true,
+        }],
       });
-    }
-    setupHybridServices();
 
     // Org info
     $httpBackend
@@ -170,12 +170,12 @@ describe('assignServices', function () {
       .respond({});
 
     $httpBackend
-      .when('GET', 'https://atlas-integration.wbx2.com/admin/api/v1/customers/' + orgid + '/usage')
+      .when('GET', 'https://atlas-intb.ciscospark.com/admin/api/v1/customers/' + orgid + '/usage')
       .respond({});
 
     $controller('OnboardCtrl', {
       $scope: $scope,
-      $state: $state
+      $state: $state,
     });
 
     var html = $templateCache.get("modules/core/users/userAdd/assignServices.tpl.html");
@@ -214,15 +214,9 @@ describe('assignServices', function () {
     view.find(ENT.id_uc).click();
   });
 
-  it('should confirm checking Call Service Connect also checks Call Service Connect', function () {
-    // Click EC
-    view.find(ENT.id_ec).click();
-    expectCB(ENT.uc, true);
-    expectCB(ENT.ec, true);
-  });
-
   it('should confirm unchecking Call Service Connect does not uncheck Call Service Aware', function () {
-    // First click EC
+    // Click both UC and EC
+    view.find(ENT.id_uc).click();
     view.find(ENT.id_ec).click();
     expectCB(ENT.uc, true);
     expectCB(ENT.ec, true);
@@ -234,7 +228,8 @@ describe('assignServices', function () {
   });
 
   it('should confirm unchecking Call Service Aware also unchecks Call Service Connect', function () {
-    // Click EC
+    // Click UC and EC
+    view.find(ENT.id_uc).click();
     view.find(ENT.id_ec).click();
     expectCB(ENT.uc, true);
     expectCB(ENT.ec, true);
@@ -253,36 +248,28 @@ describe('assignServices', function () {
     expectCB(ENT.ec, false);
   });
 
-  it('should confirm checking Huron Call, disabled Call Services Aware and Connect', function () {
+  it('should confirm checking Huron Call, disabled Call Services Aware', function () {
     expect(view.find(BUCKET.comm).is(':disabled')).toBe(false);
     expect(view.find(ENT.id_uc).is(':disabled')).toBe(false);
-    expect(view.find(ENT.id_ec).is(':disabled')).toBe(false);
 
     // Click Call should disabled Aware and Connect
     view.find(BUCKET.comm).click();
     expect(view.find(ENT.id_uc).is(':disabled')).toBe(true);
-    expect(view.find(ENT.id_ec).is(':disabled')).toBe(true);
 
     // Unclick Call should enable Aware and Connect
     view.find(BUCKET.comm).click();
     expect(view.find(ENT.id_uc).is(':disabled')).toBe(false);
-    expect(view.find(ENT.id_ec).is(':disabled')).toBe(false);
   });
 
-  it('should confirm checking either Call Services Aware or Connect disables Huron Call', function () {
+  it('should confirm checking Call Services Aware disables Huron Call', function () {
     expect(view.find(BUCKET.comm).is(':disabled')).toBe(false);
     expect(view.find(ENT.id_uc).is(':disabled')).toBe(false);
-    expect(view.find(ENT.id_ec).is(':disabled')).toBe(false);
 
-    // Clicking Connect (also checks Aware)
-    view.find(ENT.id_ec).click();
+    // Clicking UC
+    view.find(ENT.id_uc).click();
     expect(view.find(BUCKET.comm).is(':disabled')).toBe(true);
 
-    // Uncheck Connect, which leaves Aware on
-    view.find(ENT.id_ec).click();
-    expect(view.find(BUCKET.comm).is(':disabled')).toBe(true);
-
-    // Uncheck Aware, which should activate Call
+    // Uncheck UC
     view.find(ENT.id_uc).click();
     expect(view.find(BUCKET.comm).is(':disabled')).toBe(false);
   });

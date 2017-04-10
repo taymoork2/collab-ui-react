@@ -3,7 +3,7 @@
 describe('Service: AACeDependenciesService', function () {
   var AACeDependenciesService, $httpBackend, HuronConfig, url;
   var Authinfo = {
-    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
   };
 
   var depends = getJSONFixture('huron/json/autoAttendant/dependencies.json');

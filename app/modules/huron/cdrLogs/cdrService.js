@@ -30,21 +30,21 @@
       createDownload: createDownload,
       downloadInIE: downloadInIE,
       extractUniqueIds: extractUniqueIds,
-      proxy: proxy
+      proxy: proxy,
     };
 
     function getUser(userName, calltype) {
       var defer = $q.defer();
-      var name = userName.replace(/@/g, '%40').replace(/\+/g, '%2B');
+      var name = _.replace(userName, /@/g, '%40').replace(/\+/g, '%2B');
       var url = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '?filter=username eq "' + name + '"';
 
       $http.get(url).success(function (data) {
-        if (angular.isArray(data.Resources) && (data.Resources.length > 0)) {
+        if (_.isArray(data.Resources) && (data.Resources.length > 0)) {
           defer.resolve(data.Resources[0].id);
         } else {
           Log.debug('User does not exist in this org.');
           Notification.error('cdrLogs.nonexistentUser', {
-            calltype: calltype
+            calltype: calltype,
           });
           defer.reject(null);
         }
@@ -59,20 +59,20 @@
 
     function createDownload(call) {
       var jsonFileData = {
-        cdrs: call
+        cdrs: call,
       };
       var jsonBlob = new $window.Blob([JSON.stringify(jsonFileData)], {
-        type: 'application/json'
+        type: 'application/json',
       });
 
       var jsonUrl;
-      if (angular.isUndefined($window.navigator.msSaveOrOpenBlob)) {
+      if (_.isUndefined($window.navigator.msSaveOrOpenBlob)) {
         jsonUrl = ($window.URL || $window.webkitURL).createObjectURL(jsonBlob);
       }
 
       return {
         jsonBlob: jsonBlob,
-        jsonUrl: jsonUrl
+        jsonUrl: jsonUrl,
       };
     }
 
@@ -102,7 +102,7 @@
       }
       cancelPromise = $q.defer();
       currentJob = Math.random();
-      var thisJob = angular.copy(currentJob);
+      var thisJob = _.cloneDeep(currentJob);
 
       var startTimeUtc = formDate(model.startDate, model.startTime);
       var endTimeUtc = formDate(model.endDate, model.endTime);
@@ -111,7 +111,7 @@
       var promises = [];
       var userUuidRetrieved = true;
 
-      if (angular.isDefined(model.callingUser) && (model.callingUser !== '')) {
+      if (!_.isUndefined(model.callingUser) && (model.callingUser !== '')) {
         var callingUserPromse = convertUuid(model.callingUser, $translate.instant('cdrLogs.callingParty')).then(function (callingUUID) {
           if (callingUUID !== null) {
             devicesQuery.push(deviceQuery(callingUser, callingUUID));
@@ -121,7 +121,7 @@
         });
         promises.push(callingUserPromse);
       }
-      if (angular.isDefined(model.calledUser) && (model.calledUser !== '')) {
+      if (!_.isUndefined(model.calledUser) && (model.calledUser !== '')) {
         var calledUserPromse = convertUuid(model.calledUser, $translate.instant('cdrLogs.calledParty')).then(function (calledUUID) {
           if (calledUUID !== null) {
             devicesQuery.push(deviceQuery(calledUser, calledUUID));
@@ -136,16 +136,16 @@
         var queryPromises = [];
 
         if (userUuidRetrieved) {
-          if (angular.isDefined(model.callingPartyDevice) && (model.callingPartyDevice !== '')) {
+          if (!_.isUndefined(model.callingPartyDevice) && (model.callingPartyDevice !== '')) {
             devicesQuery.push(deviceQuery(callingDevice, model.callingPartyDevice));
           }
-          if (angular.isDefined(model.calledPartyDevice) && (model.calledPartyDevice !== '')) {
+          if (!_.isUndefined(model.calledPartyDevice) && (model.calledPartyDevice !== '')) {
             devicesQuery.push(deviceQuery(calledDevice, model.calledPartyDevice));
           }
-          if (angular.isDefined(model.callingPartyNumber) && (model.callingPartyNumber !== '')) {
+          if (!_.isUndefined(model.callingPartyNumber) && (model.callingPartyNumber !== '')) {
             devicesQuery.push(deviceQuery(callingNumber, model.callingPartyNumber));
           }
-          if (angular.isDefined(model.calledPartyNumber) && (model.calledPartyNumber !== '')) {
+          if (!_.isUndefined(model.calledPartyNumber) && (model.calledPartyNumber !== '')) {
             devicesQuery.push(deviceQuery(calledNumber, model.calledPartyNumber));
           }
 
@@ -157,8 +157,8 @@
           jsQuery += '}}} },"size": ' + model.hitSize + ',"sort": [{"@timestamp": {"order": "desc"}}]}';
           var results = [];
 
-          var callingPromise = proxy(jsQuery, angular.copy(thisJob)).then(function (response) {
-            if (!angular.isUndefined(response.hits.hits) && (response.hits.hits.length > 0)) {
+          var callingPromise = proxy(jsQuery, _.cloneDeep(thisJob)).then(function (response) {
+            if (!_.isUndefined(response.hits.hits) && (response.hits.hits.length > 0)) {
               for (var i = 0; i < response.hits.hits.length; i++) {
                 results.push(response.hits.hits[i]._source);
               }
@@ -169,14 +169,11 @@
                   return response;
                 }
               }, function (response) {
-                if (response !== ABORT) {
-                  return;
-                } else {
+                if (response === ABORT) {
                   return response;
                 }
               });
             }
-            return;
           },
             function (response) {
               return errorResponse(response);
@@ -211,7 +208,7 @@
 
     function generateHosts() {
       var hostsJson = '{"query_string":{"query":"id:CDR.CDR"}},';
-      angular.forEach(serverHosts, function (host, index) {
+      _.forEach(serverHosts, function (host, index) {
         hostsJson += '{"query_string":{"query":"id:CDR.CDR AND eventSource.hostname:\\"' + host + '\\""}}';
         if (index + 1 < serverHosts.length) {
           hostsJson += ',';
@@ -254,7 +251,6 @@
             return recursiveQuery(newCdrArray, thisJob);
           } else {
             groupCdrsIntoCalls(newCdrArray);
-            return;
           }
         } else {
           return ABORT;
@@ -268,7 +264,7 @@
       var jsQuery = '{"query": {"filtered": {"query": {"bool": {"should": [' + generateHosts() + ']} },"filter": {"bool": {"should":[' + item + ']}}}},"size": 2000,"sort": [{"@timestamp": {"order": "desc"}}]}';
 
       return proxy(jsQuery, thisJob).then(function (response) {
-        if (!angular.isUndefined(response.hits.hits) && (response.hits.hits.length > 0)) {
+        if (!_.isUndefined(response.hits.hits) && (response.hits.hits.length > 0)) {
           for (var i = 0; i < response.hits.hits.length; i++) {
             cdrArray.push(response.hits.hits[i]._source);
           }
@@ -276,7 +272,7 @@
 
         if (queryArray.length > 0) {
           return secondaryQuery(queryArray, thisJob).then(function (newCdrArray) {
-            if (angular.isDefined(newCdrArray)) {
+            if (!_.isUndefined(newCdrArray)) {
               cdrArray.concat(newCdrArray);
             }
             return cdrArray;
@@ -295,7 +291,7 @@
     }
 
     function extractUniqueIds(cdrArray) {
-      if (!angular.isDefined(cdrArray)) {
+      if (_.isUndefined(cdrArray)) {
         return [];
       }
       var uniqueIds = [];
@@ -337,7 +333,6 @@
         proxyData.push(splitFurther(call, x));
         x++;
       }
-      return;
     }
 
     function splitFurther(callGrouping, callNum) {
@@ -379,7 +374,7 @@
           method: "POST",
           url: cdrUrl,
           data: query,
-          timeout: cancelPromise.promise
+          timeout: cancelPromise.promise,
         }).success(function (response) {
           defer.resolve(response);
         }).error(function (response, status) {
@@ -389,26 +384,26 @@
               method: "POST",
               url: cdrUrl,
               data: query,
-              timeout: cancelPromise.promise
+              timeout: cancelPromise.promise,
             }).success(function (secondaryResponse) {
               defer.resolve(secondaryResponse);
             }).error(function (secondaryResponse, secondaryStatus) {
               defer.reject({
                 'response': secondaryResponse,
-                'status': secondaryStatus
+                'status': secondaryStatus,
               });
             });
           } else {
             defer.reject({
               'response': response,
-              'status': status
+              'status': status,
             });
           }
         });
       } else {
         defer.reject({
           'response': "",
-          'status': -1
+          'status': -1,
         });
       }
 
@@ -437,7 +432,6 @@
         Log.debug('Request failed due to an error with Elastic Search. Status: ' + response.status);
         Notification.error('cdrLogs.cdr500Error');
       }
-      return;
     }
   }
 })();

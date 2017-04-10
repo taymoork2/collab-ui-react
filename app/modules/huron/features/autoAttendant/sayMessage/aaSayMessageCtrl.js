@@ -10,30 +10,29 @@
 
     var vm = this;
 
-
     var properties = {
       NAME: ["play", "say"],
       REPEAT_NAME: "repeatActionsOnInput",
       LABEL: "label",
       VALUE: "value",
-      HEADER_TYPE: "MENU_OPTION_ANNOUNCEMENT"
+      HEADER_TYPE: "MENU_OPTION_ANNOUNCEMENT",
     };
 
     var sayMessageType = {
       ACTION: 1,
       MENUHEADER: 2,
       MENUKEY: 3,
-      SUBMENU_HEADER: 4
+      SUBMENU_HEADER: 4,
     };
 
     var languageOption = {
       label: '',
-      value: ''
+      value: '',
     };
 
     var voiceOption = {
       label: '',
-      value: ''
+      value: '',
     };
 
 
@@ -41,8 +40,6 @@
       PLAY: 0,
       SAY: 1,
     };
-
-    var saveAction = {};
 
     var selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
     vm.menuEntry = {};
@@ -68,54 +65,9 @@
     vm.isMessageInputOnly = isMessageInputOnly;
     vm.updateVoiceOption = updateVoiceOption;
 
-    vm.messageOption = {
-      label: '',
-      value: ''
-    };
-
-    vm.messageOptions = [{
-      "label": $translate.instant('autoAttendant.uploadedFile'),
-      "value": "uploadFile"
-    }, {
-      "label": $translate.instant('autoAttendant.actionSayMessage'),
-      "value": "sayMessage"
-    }];
-
-    vm.uploadedFile = undefined;
-    vm.uploadedDate = undefined;
-    vm.setMessageOptions = setMessageOptions;
-
-    vm.isMediaUploadToggle = isMediaUploadToggle;
+    vm.isMediaUploadToggle = false;
 
     /////////////////////
-
-    //the media upload only is set for the say message action,
-    //not for phone menu, dial by ext, or submenu at this point
-    //and is also feature toggled
-    function isMediaUploadToggle() {
-      var mediaUploadOn = false;
-      if (vm.sayMessageType == sayMessageType.ACTION && (AACommonService.isMediaUploadToggle())) {
-        mediaUploadOn = true;
-      }
-
-      return mediaUploadOn;
-    }
-
-    function setMessageOptions() {
-
-      var action = vm.actionEntry;
-
-      angular.copy(action, saveAction[action.name]);
-
-      if (vm.messageOption.value === 'sayMessage') {
-
-        angular.copy(saveAction['say'], action);
-
-        vm.messageInput = action.getValue();
-      } else {
-        angular.copy(saveAction['play'], action);
-      }
-    }
 
     function setVoiceOptions() {
       vm.voiceOptions = _.sortBy(AALanguageService.getVoiceOptions(vm.languageOption), properties.LABEL);
@@ -151,7 +103,7 @@
 
     function setVoiceOption() {
       if (vm.voiceBackup && _.find(vm.voiceOptions, {
-        "value": vm.voiceBackup.value
+        "value": vm.voiceBackup.value,
       })) {
         vm.voiceOption = vm.voiceBackup;
       } else if (_.find(vm.voiceOptions, AALanguageService.getVoiceOption())) {
@@ -162,17 +114,22 @@
     }
 
     function populateUiModel() {
-      vm.messageInput = vm.actionEntry.getValue();
+      if (!vm.isMediaUploadToggle) {
+        vm.messageInput = vm.actionEntry.getValue();
+      }
 
       vm.languageOptions = _.sortBy(AALanguageService.getLanguageOptions(), properties.LABEL);
 
       vm.voiceOption = AALanguageService.getVoiceOption(vm.actionEntry.getVoice());
       vm.languageOption = AALanguageService.getLanguageOption(vm.actionEntry.getVoice());
 
-      vm.messageOption = vm.messageOptions[_.get(actionType, vm.actionEntry.name.toUpperCase())];
-
       vm.voiceBackup = vm.voiceOption;
       setVoiceOptions();
+
+      var menu = vm.menuEntry;
+      if (menu.entries) {
+        updateQueueSettingsLanguageVoice(menu);
+      }
     }
 
     /*
@@ -181,6 +138,8 @@
     */
     function updateVoiceOption(menu) {
       if (menu.entries) {
+        updateQueueSettingsLanguageVoice(menu);
+
         _.each(menu.entries, function (entry) {
           if (AutoAttendantCeMenuModelService.isCeMenu(entry)) {
             var submenuHeader = getSayActionHeader(entry);
@@ -204,11 +163,10 @@
     }
 
     function saveUiModel() {
-      if (vm.messageOption.value === 'uploadFile') {
-        return;
+      if (!vm.isMediaUploadToggle) {
+        vm.actionEntry.setValue(vm.messageInput);
       }
 
-      vm.actionEntry.setValue(vm.messageInput);
       AACommonService.setSayMessageStatus(true);
 
       if (vm.sayMessageType === sayMessageType.SUBMENU_HEADER) {
@@ -216,7 +174,6 @@
       }
 
       vm.actionEntry.setVoice(vm.voiceOption.value);
-      saveAction['say'].setVoice(vm.voiceOption.value);
 
       switch (vm.sayMessageType) {
         case sayMessageType.MENUHEADER:
@@ -236,7 +193,7 @@
               var repeatAction = AutoAttendantCeMenuModelService.newCeActionEntry(properties.REPEAT_NAME, '');
               vm.menuEntry.entries[$scope.menuKeyIndex].addAction(repeatAction);
             }
-            return;
+            return undefined;
           }
         case sayMessageType.ACTION:
         // no special handling
@@ -245,7 +202,8 @@
 
     function createMenuEntry() {
       var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-      menuEntry.addAction(createSayAction(actionType.SAY));
+      var type = vm.isMediaUploadToggle ? actionType.PLAY : actionType.SAY;
+      menuEntry.addAction(createSayAction(type));
       return menuEntry;
     }
 
@@ -323,7 +281,7 @@
               if (keyAction) {
                 vm.actionEntry = keyAction;
               } else {
-                vm.actionEntry = createSayAction(actionType.SAY);
+                vm.actionEntry = (vm.isMediaUploadToggle ? createSayAction(actionType.PLAY) : createSayAction(actionType.SAY));
                 vm.menuEntry.entries[$scope.menuKeyIndex].actions[0] = vm.actionEntry;
               }
             } else {
@@ -335,7 +293,7 @@
             if (!vm.actionEntry.getVoice()) {
               var sayHeader = getSayActionHeader(vm.menuEntry);
               var headerSayAction = getSayAction(sayHeader);
-              if (angular.isDefined(headerSayAction)) {
+              if (!_.isUndefined(headerSayAction)) {
                 vm.actionEntry.setVoice(headerSayAction.getVoice());
               }
             }
@@ -348,15 +306,22 @@
             vm.menuEntry = uiMenu.entries[$scope.index];
             var sayAction = getSayAction(vm.menuEntry);
             if (!sayAction) {
-              sayAction = createSayAction(actionType.SAY);
+              sayAction = (vm.isMediaUploadToggle ? createSayAction(actionType.PLAY) : createSayAction(actionType.SAY));
               vm.menuEntry.addAction(sayAction);
             }
             vm.actionEntry = sayAction;
-            angular.copy(sayAction, saveAction[sayAction.name]);
-
-            return;
           }
       }
+    }
+
+    function updateQueueSettingsLanguageVoice(menu) {
+      _.each(menu.entries, function (entry) {
+        var queueSettings = _.get(entry, 'actions[0].queueSettings');
+        if (queueSettings) {
+          queueSettings.language = AALanguageService.getLanguageCode(vm.languageOption);
+          queueSettings.voice = vm.voiceOption.value;
+        }
+      });
     }
 
     function activate() {
@@ -367,9 +332,10 @@
       } else if ($scope.menuKeyIndex && $scope.menuKeyIndex > -1) {
         vm.sayMessageType = sayMessageType.MENUKEY;
       }
-
-      saveAction['say'] = createSayAction(actionType.SAY);
-      saveAction['play'] = createSayAction(actionType.PLAY);
+      //the media upload only is set for the say message action,
+      //not for phone menu, dial by ext, or submenu at this point
+      //and is also feature toggled
+      vm.isMediaUploadToggle = AACommonService.isMediaUploadToggle();
       setActionEntry();
       populateUiModel();
     }

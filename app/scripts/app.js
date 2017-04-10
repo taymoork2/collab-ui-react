@@ -65,18 +65,30 @@
 
   angular.module('wx2AdminWebClientApp', [
     require('modules/core/scripts/controllers/bodyCtrl'),
+    require('modules/core/analytics'),
     require('modules/core/auth/auth'),
+    require('modules/core/auth/tos').default,
+    require('modules/core/auth/user').default,
     require('modules/core/auth/token.service'),
+    require('modules/core/auth/idle').default,
     require('modules/core/config/config'),
-    require('modules/core/featureToggle/featureToggle.service'),
+
+    // TODO: eventually a larger component encapsulating customer-overview should supercede this
+    require('modules/core/customers/customerSubscriptions/adminList').default,
+
+    require('modules/core/featureToggle').default,
+    require('modules/core/users').default,
+    require('modules/core/csvDownload').default,
     require('modules/core/l10n/languages'),
-    require('modules/core/notifications/notifications.module'),
+    require('modules/core/modal').default,
+    require('modules/core/notifications').default,
     require('modules/core/scripts/services/authinfo'),
-    require('modules/core/scripts/services/storage'),
+    require('modules/core/healthMonitor/healthService'),
+    require('modules/core/users').default,
     require('modules/core/scripts/services/localize'),
     require('modules/core/scripts/services/utils'),
     require('modules/core/scripts/services/log'),
-    require('modules/core/scripts/services/sessionstorage'),
+    require('modules/core/storage').default,
     require('modules/core/scripts/services/logmetricsservice'),
     require('modules/core/scripts/services/responseinterceptor'),
     require('modules/core/scripts/services/readonly.interceptor'),
@@ -87,18 +99,19 @@
     require('modules/online/analytics').default,
     require('modules/online/upgrade').default,
     'atlas.templates',
-    'cisco.ui',
+    'collab.ui',
     'ct.ui.router.extras.sticky',
-    'ct.ui.router.extras.future',
     'ct.ui.router.extras.previous',
     'ngAnimate',
+    require('angular-aria'),
     'ngCookies',
     'ngResource',
     'ngSanitize',
     'oc.lazyLoad',
     'pascalprecht.translate',
     'ui.router',
-  ]).run(require('./apprun'));
+  ]).run(require('./apprun'))
+    .config(require('./app.exceptions.config').default);
   require('./appconfig');
 
   function requireAll(requireContext) {

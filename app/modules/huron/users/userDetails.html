@@ -1,0 +1,17 @@
+<cs-sp-section>
+    <section-title title-key="usersPreview.userDetails"></section-title>
+    <div class="feature-list">
+        <ul>
+            <li class="feature" ng-repeat="userDetail in $ctrl.details track by $index">
+                <span class="feature-name">{{userDetail.name}}</span>
+                <span class="feature-details feature-label" ng-if="userDetail.detail">{{userDetail.detail}}</span>
+                <span class="feature-details feature-label" ng-if="!userDetail.detail">
+                    {{'usersPreview.notConfigured' | translate}}
+                </span>
+                <span class="feature-details feature-label" ng-if="userDetail.dirsyncEnabled">
+                    <i class="icon icon-info" tooltip-placement="left" tooltip="{{'usersPreview.dirsyncToolTip' | translate}}"></i>
+                </span>
+            </li>
+        </ul>
+    </div>
+</cs-sp-section>

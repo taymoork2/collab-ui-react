@@ -3,7 +3,8 @@
     <li class="feature" ng-repeat="directoryNumber in $ctrl.directoryNumbers | limitTo:$ctrl.numberOfLines track by directoryNumber.uuid">
       <a id="{{::directoryNumber.uuid}}"
         ng-if="::$ctrl.directoryNumberSref"
-        ui-sref="{{::$ctrl.directoryNumberSref}}">
+        ui-sref="{{::$ctrl.directoryNumberSref}}"
+        ng-click="$ctrl.onDirectoryNumberClick()">
         <span class="feature-name">
           <span ng-bind="directoryNumber.internal"></span>
           <span class="feature-name" ng-if="directoryNumber.external">
@@ -14,7 +15,7 @@
             <span translate="common.or"></span> <span ng-bind="directoryNumber.altDnPattern"></span>
           </span>
         </span>
-        <span class="feature-status" ng-if="directoryNumber.primary" ng-bind="$ctrl.setLineUseLabel(directoryNumber.primary)"></span>
+        <span class="feature-status" ng-if="directoryNumber.primary || directoryNumber.shared" ng-bind="$ctrl.setLineUseLabel(directoryNumber.primary, directoryNumber.shared)"></span>
         <span class="feature-status" ng-if="directoryNumber.dnSharedUsage" ng-bind="directoryNumber.dnSharedUsage"></span>
         <i class="feature-arrow"></i>
       </a>

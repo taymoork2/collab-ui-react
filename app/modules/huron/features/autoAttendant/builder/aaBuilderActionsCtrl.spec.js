@@ -6,7 +6,7 @@ describe('Controller: AABuilderActionsCtrl', function () {
   var $rootScope, $scope;
 
   var aaUiModel = {
-    openHours: {}
+    openHours: {},
   };
 
   var testOptions = [{
@@ -15,7 +15,7 @@ describe('Controller: AABuilderActionsCtrl', function () {
     url: 'testUrl',
     hint: 'testHint',
     help: 'testHelp',
-    actions: ['testAction']
+    actions: ['testAction'],
   }];
 
   var sortedOptions = [{
@@ -34,7 +34,7 @@ describe('Controller: AABuilderActionsCtrl', function () {
     url: 'modules/huron/features/autoAttendant/phoneMenu/aaPhoneMenu.tpl.html',
     hint: 'testHint',
     help: 'testHelp',
-    actions: ['runActionsOnInput']
+    actions: ['runActionsOnInput'],
   }];
 
   var testOptionsWithDialByExt = [{
@@ -44,7 +44,7 @@ describe('Controller: AABuilderActionsCtrl', function () {
     hint: 'testHint',
     help: 'testHelp',
     type: 2,
-    actions: ['runActionsOnInput']
+    actions: ['runActionsOnInput'],
   }];
 
   function type(obj) {
@@ -67,9 +67,10 @@ describe('Controller: AABuilderActionsCtrl', function () {
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
     spyOn(AutoAttendantCeMenuModelService, 'deleteCeMenuMap');
 
+
     $scope.schedule = 'openHours';
     controller = $controller('AABuilderActionsCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
     $scope.$apply();
   }));
@@ -89,7 +90,7 @@ describe('Controller: AABuilderActionsCtrl', function () {
       $scope.index = 0;
 
       var controller = $controller('AABuilderActionsCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
 
       expect(controller.option.title).toEqual('autoAttendant.phoneMenuDialExt');
@@ -199,6 +200,22 @@ describe('Controller: AABuilderActionsCtrl', function () {
         expect(controller.options[i].title).toEqual(sortedOptions[i].title);
       }
     });
+  });
+
+  describe('test caller Input', function () {
+    it('should add the Caller Input label', function () {
+      spyOn(AACommonService, 'isCallerInputToggle').and.returnValue(true);
+      // setup the options menu
+      controller = $controller('AABuilderActionsCtrl', {
+        $scope: $scope,
+      });
+
+      expect(controller.options.length).toEqual(5);
+      // note: only works until an action that starts with an A or a B happens
+      expect(controller.options[0].title).toEqual('autoAttendant.actionCallerInput');
+
+    });
+
   });
 
 });

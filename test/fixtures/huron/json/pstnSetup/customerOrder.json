@@ -1,4 +1,14 @@
-[{
-  "number": "5125934450",
-  "network": "PENDING"
-}]
+{
+  "uuid": "29c63c1f-83b0-42b9-98ee-85624e4c7408",
+  "orderId": "300340",
+  "type": "PSTN",
+  "status": "PENDING",
+  "carrier": "INTELEPEER",
+  "numbers": [{
+    "number": "5125934450",
+    "network": "PENDING"
+  }],
+  "attributes": {},
+  "operation": "NUMBER_ORDER",
+  "url": "https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/orders/29c63c1f-83b0-42b9-98ee-85624e4c7408"
+}

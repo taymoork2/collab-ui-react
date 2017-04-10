@@ -6,7 +6,7 @@ describe('Controller: AABuilderLaneCtrl', function () {
   var $rootScope, $scope, $timeout;
 
   var aaUiModel = {
-    openHours: {}
+    openHours: {},
   };
 
   beforeEach(angular.mock.module('uc.autoattendant'));
@@ -24,7 +24,7 @@ describe('Controller: AABuilderLaneCtrl', function () {
 
     $scope.schedule = 'openHours';
     controller = $controller('AABuilderLaneCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
     $scope.$apply();
   }));

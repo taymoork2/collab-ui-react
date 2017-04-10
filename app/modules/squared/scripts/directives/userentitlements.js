@@ -33,7 +33,7 @@
     $scope.getServiceName = function (service) {
       return _.chain(services)
         .find({
-          serviceId: service
+          serviceId: service,
         })
         .get('displayName')
         .value();
@@ -53,11 +53,13 @@
           var serviceId = service.serviceId;
           return {
             entitlementName: serviceId,
-            entitlementState: $scope.entitlements[serviceId] ? 'ACTIVE' : 'INACTIVE'
+            entitlementState: $scope.entitlements[serviceId] ? 'ACTIVE' : 'INACTIVE',
           };
         })
         .value();
     };
+
+    $scope.hasUserEntitlements = !!$scope.entitlementsKeys.length;
 
     var watchCheckboxes = function () {
       $timeout(function () {});
@@ -101,11 +103,11 @@
       $scope.btn_saveLoad = true;
       Userservice.updateUsers([{
         'address': user.userName,
-        'name': user.name
+        'name': user.name,
       }], null, getUserEntitlementList(), 'changeEntitlement', function (data) {
         var entitleResult = {
           msg: null,
-          type: 'null'
+          type: 'null',
         };
         if (data.success) {
           var userStatus = data.userResponse[0].status;
@@ -130,17 +132,18 @@
           Notification.notify([entitleResult.msg], entitleResult.type);
           $scope.btn_saveLoad = false;
 
-          var index = $scope.queryuserslist.map(function (element) {
-            return element.id;
-          }).indexOf($scope.currentUser.id);
-          var updatedUser = $scope.queryuserslist[index];
-          for (var i = 0; i < $rootScope.services.length; i++) {
-            var service = $rootScope.services[i].serviceId;
-            var ciName = $rootScope.services[i].ciName;
-            if ($scope.entitlements[service] === true && updatedUser.entitlements.indexOf(ciName) === -1) {
-              updatedUser.entitlements.push(ciName);
-            } else if ($scope.entitlements[service] === false && updatedUser.entitlements.indexOf(ciName) > -1) {
-              updatedUser.entitlements.splice(updatedUser.entitlements.indexOf(ciName), 1);
+          var updatedUser = _.find($scope.queryuserslist, {
+            id: $scope.currentUser.id,
+          });
+          if (updatedUser) {
+            for (var i = 0; i < $rootScope.services.length; i++) {
+              var service = $rootScope.services[i].serviceId;
+              var ciName = $rootScope.services[i].ciName;
+              if ($scope.entitlements[service] === true && updatedUser.entitlements.indexOf(ciName) === -1) {
+                updatedUser.entitlements.push(ciName);
+              } else if ($scope.entitlements[service] === false && updatedUser.entitlements.indexOf(ciName) > -1) {
+                updatedUser.entitlements.splice(updatedUser.entitlements.indexOf(ciName), 1);
+              }
             }
           }
           $rootScope.$broadcast('entitlementsUpdated');
@@ -149,7 +152,7 @@
           Log.error(data);
           entitleResult = {
             msg: 'Failed to update ' + user.userName + '\'s entitlements.',
-            type: 'error'
+            type: 'error',
           };
           Notification.notify([entitleResult.msg], entitleResult.type);
           $scope.btn_saveLoad = false;
@@ -168,9 +171,9 @@
         currentUser: '=',
         entitlements: '=',
         queryuserslist: '=',
-        service: '='
+        service: '=',
       },
-      templateUrl: 'modules/squared/scripts/directives/views/userentitlements.html'
+      templateUrl: 'modules/squared/scripts/directives/views/userentitlements.html',
     };
   }
 })();

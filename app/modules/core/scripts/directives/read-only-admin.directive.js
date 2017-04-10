@@ -8,7 +8,7 @@
       if (Authinfo.isReadOnlyAdmin()) {
         var eventHandler = attributes.disableIfReadOnlyAdmin;
         if (eventHandler) {
-          scope[eventHandler] = angular.noop;
+          scope[eventHandler] = _.noop;
         }
         element.prop("disabled", true);
       }
@@ -17,7 +17,7 @@
     return {
       restrict: 'A',
       link: link,
-      priority: 100
+      priority: 100,
     };
 
   }
@@ -34,7 +34,7 @@
     return {
       restrict: 'A',
       link: link,
-      priority: 100
+      priority: 100,
     };
 
   }

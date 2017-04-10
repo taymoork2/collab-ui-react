@@ -7,7 +7,7 @@ describe('Service: CsdmPlacesService', function () {
   var $rootScope;
 
   var CsdmPlaceService;
-  var placesUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/null/places/';
+  var placesUrl = 'https://csdm-intb.ciscospark.com/csdm/api/v1/organization/null/places/?shallow=true&type=all';
   var accounts = getJSONFixture('squared/json/accounts.json');
 
   beforeEach(inject(function (_CsdmPlaceService_, _$httpBackend_, _$rootScope_) {
@@ -23,36 +23,15 @@ describe('Service: CsdmPlacesService', function () {
     $httpBackend.verifyNoOutstandingRequest();
   });
 
-  describe('feature not enabled', function () {
-    beforeEach(inject(function (FeatureToggleService, $q) {
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
-    }));
-
-    it('get device list should return empty ', function () {
-      $httpBackend.whenGET(placesUrl).respond({});
-      var promiseExecuted;
-      CsdmPlaceService.getPlacesList().then(function () {
-        fail();
-      }).catch(function () {
-        promiseExecuted = true;
-      });
-
-      $rootScope.$apply();
-      expect(promiseExecuted).toBe(true);
-    });
-  });
-
-  describe('feature enabled', function () {
-    beforeEach(inject(function (FeatureToggleService, $q) {
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
-    }));
-
+  describe('getPlacesList()', function () {
     it('get device list should return a non empty list ', function () {
       $httpBackend.whenGET(placesUrl).respond(accounts);
 
       var promiseExecuted;
       CsdmPlaceService.getPlacesList().then(function (placeList) {
-        expect(_.keys(placeList).length).toBe(2);
+        expect(_.keys(placeList).length).toBe(5);
+        expect(placeList["https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/places/a19b308a-Place1WithHuronDevice-71898e423bec"].type).toBe('huron');
+        expect(placeList["https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/places/a19b308a-PlaceWithDevice-71898e423bec"].type).toBe('cloudberry');
         promiseExecuted = true;
       });
 

@@ -8,7 +8,7 @@ describe('Controller: AABuilderMainCtrl', function () {
   var AATrackChangeService, AADependencyService;
   var FeatureToggleService;
   var ServiceSetup, timeZone, translatedTimeZone, sysModel;
-  var Analytics, AAMetricNameService;
+  var element;
 
   var ces = getJSONFixture('huron/json/autoAttendant/callExperiences.json');
   var aCe = getJSONFixture('huron/json/autoAttendant/aCallExperience.json');
@@ -21,8 +21,9 @@ describe('Controller: AABuilderMainCtrl', function () {
     "assignedResources": [{
       "id": "00097a86-45ef-44a7-aa78-6d32a0ca1d3b",
       "type": "directoryNumber",
-      "trigger": "incomingCall"
-    }]
+      "trigger": "incomingCall",
+      "uuid": "00097a86-45ef-44a7-aa78-6d32a0ca1d3b",
+    }],
   };
 
   var aaModel = {};
@@ -34,7 +35,8 @@ describe('Controller: AABuilderMainCtrl', function () {
       _resource.setId(rawCeInfo.assignedResources[j].id);
       _resource.setTrigger(rawCeInfo.assignedResources[j].trigger);
       _resource.setType(rawCeInfo.assignedResources[j].type);
-      if (angular.isDefined(rawCeInfo.assignedResources[j].number)) {
+      _resource.setUUID(rawCeInfo.assignedResources[j].uuid);
+      if (!_.isUndefined(rawCeInfo.assignedResources[j].number)) {
         _resource.setNumber(rawCeInfo.assignedResources[j].number);
       }
       _ceInfo.addResource(_resource);
@@ -44,6 +46,13 @@ describe('Controller: AABuilderMainCtrl', function () {
     return _ceInfo;
   }
 
+  afterEach(function () {
+    if (element) {
+      element.remove();
+    }
+    element = undefined;
+  });
+
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
@@ -51,7 +60,7 @@ describe('Controller: AABuilderMainCtrl', function () {
   beforeEach(inject(function (_$state_, _$rootScope_, _$q_, _$compile_, _$stateParams_, _$controller_, _AANotificationService_,
     _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAUiModelService_, _AAModelService_, _AANumberAssignmentService_,
     _AutoAttendantCeService_, _AAValidationService_, _HuronConfig_, _$httpBackend_, _AAUiScheduleService_,
-    _AACalendarService_, _AATrackChangeService_, _AADependencyService_, _FeatureToggleService_, _ServiceSetup_, _Analytics_, _AAMetricNameService_) {
+    _AACalendarService_, _AATrackChangeService_, _AADependencyService_, _FeatureToggleService_, _ServiceSetup_) {
 
     $state = _$state_;
     $rootScope = _$rootScope_;
@@ -79,8 +88,6 @@ describe('Controller: AABuilderMainCtrl', function () {
     AADependencyService = _AADependencyService_;
     FeatureToggleService = _FeatureToggleService_;
     ServiceSetup = _ServiceSetup_;
-    Analytics = _Analytics_;
-    AAMetricNameService = _AAMetricNameService_;
 
     // aaModel.dataReadyPromise = $q(function () {});
     $stateParams.aaName = '';
@@ -92,35 +99,36 @@ describe('Controller: AABuilderMainCtrl', function () {
         siteSteeringDigit: '6',
         siteCode: '200',
         voicemailPilotNumber: "+16506679080",
-        timeZone: 'America/Los_Angeles'
-      }
+        timeZone: 'America/Los_Angeles',
+      },
     };
     timeZone = [{
       id: 'America/Los_Angeles',
-      label: 'America/Los_Angeles'
+      label: 'America/Los_Angeles',
     }];
     translatedTimeZone = [{
       id: 'America/Los_Angeles',
-      label: 'timeZones.America/Los_Angeles'
+      label: 'timeZones.America/Los_Angeles',
     }];
 
     spyOn($state, 'go');
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
     spyOn(AAUiModelService, 'initUiModel');
-    spyOn(AutoAttendantCeInfoModelService, 'getCeInfosList').and.returnValue($q.when($stateParams.aaName));
+    spyOn(AutoAttendantCeInfoModelService, 'getCeInfosList').and.returnValue($q.resolve($stateParams.aaName));
     spyOn(AutoAttendantCeMenuModelService, 'clearCeMenuMap');
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
-    spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.when(timeZone));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
+    spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.resolve(timeZone));
     spyOn(ServiceSetup, 'listSites').and.callFake(function () {
       ServiceSetup.sites = [sysModel.site];
-      return $q.when();
+      return $q.resolve();
     });
-    spyOn(ServiceSetup, 'getSite').and.returnValue($q.when(sysModel.site));
+    spyOn(ServiceSetup, 'getSite').and.returnValue($q.resolve(sysModel.site));
+    spyOn($rootScope, '$broadcast').and.callThrough();
 
     controller = $controller('AABuilderMainCtrl as vm', {
       $scope: $scope,
       $stateParams: $stateParams,
-      AANotificationService: AANotificationService
+      AANotificationService: AANotificationService,
     });
     $scope.$apply();
   }));
@@ -150,18 +158,18 @@ describe('Controller: AABuilderMainCtrl', function () {
   describe('areAssignedResourcesDifferent', function () {
     it('should show no differences', function () {
       var a1 = [{
-        id: "408792221"
+        id: "408792221",
       }, {
-        id: "4087963542"
+        id: "4087963542",
       }, {
-        id: "40872655"
+        id: "40872655",
       }];
       var a2 = [{
-        id: "408792221"
+        id: "408792221",
       }, {
-        id: "4087963542"
+        id: "4087963542",
       }, {
-        id: "40872655"
+        id: "40872655",
       }];
 
       var ret = controller.areAssignedResourcesDifferent(a1, a2, "id");
@@ -174,18 +182,18 @@ describe('Controller: AABuilderMainCtrl', function () {
 
     it('should show a difference', function () {
       var a1 = [{
-        id: "40892221"
+        id: "40892221",
       }, {
-        id: "4087963542"
+        id: "4087963542",
       }, {
-        id: "40872655"
+        id: "40872655",
       }];
       var a2 = [{
-        id: "408792221"
+        id: "408792221",
       }, {
-        id: "4087963542"
+        id: "4087963542",
       }, {
-        id: "40872655"
+        id: "40872655",
       }];
 
       var ret = controller.areAssignedResourcesDifferent(a1, a2, "id");
@@ -222,7 +230,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       resource.setId("bad");
       resource.setNumber("bad");
 
-      aaModel.aaRecord = angular.copy(aCe);
+      aaModel.aaRecord = _.cloneDeep(aCe);
       aaModel.aaRecord.assignedResources.push(resource);
       aaModel.aaRecordUUID = "uuid";
 
@@ -252,7 +260,7 @@ describe('Controller: AABuilderMainCtrl', function () {
 
           var response = [{
             'pattern': '+' + pattern.replace(/\D/g, ''),
-            'uuid': pattern.replace(/\D/g, '') + '-id'
+            'uuid': pattern.replace(/\D/g, '') + '-id',
           }];
 
           return [200, response];
@@ -261,9 +269,9 @@ describe('Controller: AABuilderMainCtrl', function () {
       spyOn(AANotificationService, 'errorResponse');
       var resources = {
         workingResources: [],
-        failedResources: ["9999999991"]
+        failedResources: ["9999999991"],
       };
-      spyOn(AANumberAssignmentService, 'setAANumberAssignmentWithErrorDetail').and.returnValue($q.when(resources));
+      spyOn(AANumberAssignmentService, 'setAANumberAssignmentWithErrorDetail').and.returnValue($q.resolve(resources));
 
       controller.saveAANumberAssignmentWithErrorDetail();
 
@@ -282,13 +290,13 @@ describe('Controller: AABuilderMainCtrl', function () {
     var aaNameChangedSpy;
 
     beforeEach(function () {
-      createCeSpy = spyOn(AutoAttendantCeService, 'createCe').and.returnValue($q.when(angular.copy(rawCeInfo)));
-      updateCeSpy = spyOn(AutoAttendantCeService, 'updateCe').and.returnValue($q.when(angular.copy(rawCeInfo)));
+      createCeSpy = spyOn(AutoAttendantCeService, 'createCe').and.returnValue($q.resolve(_.cloneDeep(rawCeInfo)));
+      updateCeSpy = spyOn(AutoAttendantCeService, 'updateCe').and.returnValue($q.resolve(_.cloneDeep(rawCeInfo)));
       spyOn(AANotificationService, 'success');
       spyOn(AANotificationService, 'error');
       spyOn(AANotificationService, 'errorResponse');
       spyOn($scope.vm, 'saveUiModel');
-      spyOn(AANumberAssignmentService, 'setAANumberAssignment').and.returnValue($q.when());
+      spyOn(AANumberAssignmentService, 'setAANumberAssignment').and.returnValue($q.resolve());
 
       spyOn(AADependencyService, 'notifyAANameChange');
       aaNameChangedSpy = spyOn(AATrackChangeService, 'isChanged').and.returnValue(false);
@@ -324,7 +332,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       aaModel.aaRecordUUID = "";
       createCeSpy.and.returnValue($q.reject({
         statusText: "server error",
-        status: 500
+        status: 500,
       }));
       controller.saveAARecords();
       $scope.$apply();
@@ -391,7 +399,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       aaModel.aaRecordUUID = 'c16a6027-caef-4429-b3af-9d61ddc7964b';
       updateCeSpy.and.returnValue($q.reject({
         statusText: "server error",
-        status: 500
+        status: 500,
       }));
       controller.saveAARecords();
       $scope.$apply();
@@ -413,7 +421,7 @@ describe('Controller: AABuilderMainCtrl', function () {
     var readCe;
 
     beforeEach(function () {
-      readCe = spyOn(AutoAttendantCeService, 'readCe').and.returnValue($q.when(angular.copy(aCe)));
+      readCe = spyOn(AutoAttendantCeService, 'readCe').and.returnValue($q.resolve(_.cloneDeep(aCe)));
       spyOn($scope.vm, 'populateUiModel');
       spyOn(AANotificationService, 'error');
       spyOn(AANotificationService, 'errorResponse');
@@ -433,7 +441,6 @@ describe('Controller: AABuilderMainCtrl', function () {
       expect($scope.vm.populateUiModel).toHaveBeenCalled();
       expect(AutoAttendantCeService.readCe).not.toHaveBeenCalled();
       expect(AANotificationService.error).not.toHaveBeenCalled();
-      expect($scope.vm.loading).toBeTruthy();
 
       // AAName is not tracked yet when opening new AA
       expect(AATrackChangeService.isChanged).not.toHaveBeenCalled();
@@ -450,7 +457,6 @@ describe('Controller: AABuilderMainCtrl', function () {
       expect($scope.vm.populateUiModel).toHaveBeenCalled();
       expect(AutoAttendantCeService.readCe).not.toHaveBeenCalled();
       expect(AANotificationService.error).not.toHaveBeenCalled();
-      expect($scope.vm.loading).toBeTruthy();
     });
 
     it('should create a new aaRecord successfully when no name is given and vm.aaModel.aaRecord is undefined and a template name is set', function () {
@@ -464,7 +470,6 @@ describe('Controller: AABuilderMainCtrl', function () {
       expect($scope.vm.populateUiModel).toHaveBeenCalled();
       expect(AutoAttendantCeService.readCe).not.toHaveBeenCalled();
       expect(AANotificationService.error).not.toHaveBeenCalled();
-      expect($scope.vm.loading).toBeTruthy();
     });
 
     it('should be able to read an existing new aaRecord successfully when no name is given', function () {
@@ -478,7 +483,6 @@ describe('Controller: AABuilderMainCtrl', function () {
       expect(AAModelService.getNewAARecord).not.toHaveBeenCalled();
       expect(AutoAttendantCeService.readCe).not.toHaveBeenCalled();
       expect(AANotificationService.error).not.toHaveBeenCalled();
-      expect($scope.vm.loading).toBeTruthy();
 
       expect($scope.vm.populateUiModel).toHaveBeenCalled();
     });
@@ -491,7 +495,6 @@ describe('Controller: AABuilderMainCtrl', function () {
 
       expect(AAModelService.getNewAARecord).not.toHaveBeenCalled();
       expect(AANotificationService.error).not.toHaveBeenCalled();
-      expect($scope.vm.loading).toBeTruthy();
 
       expect($scope.vm.aaModel.aaRecord.callExperienceName).toEqual(aCe.callExperienceName);
       expect($scope.vm.populateUiModel).toHaveBeenCalled();
@@ -505,7 +508,7 @@ describe('Controller: AABuilderMainCtrl', function () {
     it('should return error when the backend return 500 error', function () {
       readCe.and.returnValue(
         $q.reject({
-          status: 500
+          status: 500,
         })
       );
       $scope.vm.aaModel = {};
@@ -516,7 +519,6 @@ describe('Controller: AABuilderMainCtrl', function () {
       expect(AANotificationService.errorResponse).toHaveBeenCalled();
       expect(AAModelService.getNewAARecord).not.toHaveBeenCalled();
       expect($scope.vm.populateUiModel).not.toHaveBeenCalled();
-      expect($scope.vm.loading).toBeTruthy();
     });
   });
 
@@ -551,8 +553,8 @@ describe('Controller: AABuilderMainCtrl', function () {
         tname: "template2",
         actions: [{
           lane: "openHours",
-          actionset: ["play3", "play4", "play5"]
-        }]
+          actionset: ["play3", "play4", "play5"],
+        }],
       }];
       $scope.vm.templateName = 'template2';
       controller.setupTemplate();
@@ -568,11 +570,11 @@ describe('Controller: AABuilderMainCtrl', function () {
         tname: "template3",
         actions: [{
           lane: 'openHours',
-          actionset: ["playOpen1", "playOpen2"]
+          actionset: ["playOpen1", "playOpen2"],
         }, {
           lane: 'closedHours',
-          actionset: ["playClosed1"]
-        }]
+          actionset: ["playClosed1"],
+        }],
       }];
       $scope.vm.templateName = 'template3';
       controller.setupTemplate();
@@ -619,10 +621,10 @@ describe('Controller: AABuilderMainCtrl', function () {
         tname: "templateMissingActionSet",
         actions: [{
           lane: "openHours",
-          actionset: ["playOpen1", "playOpen2"]
+          actionset: ["playOpen1", "playOpen2"],
         }, {
-          lane: "closedHours"
-        }]
+          lane: "closedHours",
+        }],
       }];
 
       $scope.vm.templateName = 'templateMissingActionSet';
@@ -637,7 +639,7 @@ describe('Controller: AABuilderMainCtrl', function () {
     it('should NOT display add step icons on aa-builder-lane', function () {
       $rootScope.schedule = 'openHours';
       $rootScope.index = 0;
-      var element = $compile("<aa-builder-lane aa-schedule='openHours'></aa-builder-lane>")($rootScope);
+      element = $compile("<aa-builder-lane aa-schedule='openHours'></aa-builder-lane>")($rootScope);
 
       $rootScope.$digest();
       expect(element.find('aa-panel').hasClass('ng-show')).toBe(false);
@@ -648,7 +650,7 @@ describe('Controller: AABuilderMainCtrl', function () {
     it('should NOT display add step icons on aa-builder-actions', function () {
       $rootScope.schedule = 'openHours';
       $rootScope.index = 0;
-      var element = $compile("<aa-builder-actions></aa-builder-actions>")($rootScope);
+      element = $compile("<aa-builder-actions></aa-builder-actions>")($rootScope);
 
       $rootScope.$digest();
       expect(element.find('aa-panel').hasClass('ng-show')).toBe(false);
@@ -760,33 +762,6 @@ describe('Controller: AABuilderMainCtrl', function () {
     });
   });
 
-  describe('setLoadingDone', function () {
-
-    beforeEach(function () {
-      spyOn(Analytics, 'trackEvent').and.returnValue($q.when({}));
-    });
-
-    it('should set the vm.loading to false', function () {
-      controller.setLoadingDone();
-      expect($scope.vm.loading).toBeFalsy();
-    });
-
-    it('should send metrics when called with a defined aa name', function () {
-      $scope.vm.isAANameDefined = true;
-      controller.setLoadingDone();
-      expect(Analytics.trackEvent).toHaveBeenCalledWith(AAMetricNameService.BUILDER_PAGE, {
-        type: 'load'
-      });
-    });
-
-    it('should not send metrics when called with a undefined aa name', function () {
-      $scope.vm.isAANameDefined = false;
-      controller.setLoadingDone();
-      expect(Analytics.trackEvent).not.toHaveBeenCalled();
-    });
-
-  });
-
   describe('save8To5Schedule', function () {
 
     var createScheduleDefer;
@@ -835,7 +810,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       createScheduleDefer.reject({
         name: 'AA',
         statusText: 'Server Error',
-        status: '500'
+        status: '500',
       });
 
       expect(errorText).toBe('');
@@ -1027,6 +1002,5 @@ describe('Controller: AABuilderMainCtrl', function () {
       expect(controller.saveCeDefinition).not.toHaveBeenCalled();
       expect(controller.delete8To5Schedule).toHaveBeenCalled();
     });
-
   });
 });

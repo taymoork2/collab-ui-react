@@ -20,7 +20,7 @@ describe('Service: InternationalDialing', function () {
 
   describe('isDisableInternationalDialing():', function () {
     it('should hide international dialing if customer is in trial', function () {
-      FeatureToggleService.supports.and.returnValue($q.when(false));
+      FeatureToggleService.supports.and.returnValue($q.resolve(false));
       Authinfo.getLicenseIsTrial.and.returnValue(true);
 
       var isTrial = InternationalDialing.isDisableInternationalDialing();
@@ -31,7 +31,7 @@ describe('Service: InternationalDialing', function () {
     });
 
     it('should show international dialing if customer is NOT in trial', function () {
-      FeatureToggleService.supports.and.returnValue($q.when(false));
+      FeatureToggleService.supports.and.returnValue($q.resolve(false));
       Authinfo.getLicenseIsTrial.and.returnValue(false);
 
       var isTrial = InternationalDialing.isDisableInternationalDialing();
@@ -42,7 +42,7 @@ describe('Service: InternationalDialing', function () {
     });
 
     it('should show international dialing if customer is in trial but has override', function () {
-      FeatureToggleService.supports.and.returnValue($q.when(true));
+      FeatureToggleService.supports.and.returnValue($q.resolve(true));
 
       var isTrial = InternationalDialing.isDisableInternationalDialing();
       $rootScope.$apply();
@@ -52,7 +52,7 @@ describe('Service: InternationalDialing', function () {
     });
 
     it('should hide international dialing if get override fails and unable to determine if customer is in trial', function () {
-      FeatureToggleService.supports.and.returnValue($q.when(false));
+      FeatureToggleService.supports.and.returnValue($q.resolve(false));
       Authinfo.getLicenseIsTrial.and.returnValue(undefined);
 
       var isTrial = InternationalDialing.isDisableInternationalDialing();

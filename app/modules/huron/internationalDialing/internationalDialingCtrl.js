@@ -11,15 +11,15 @@
 
     var cbUseGlobal = {
       label: $translate.instant('internationalDialingPanel.useGlobal'),
-      value: '-1'
+      value: '-1',
     };
     var cbAlwaysAllow = {
       label: $translate.instant('internationalDialingPanel.alwaysAllow'),
-      value: '1'
+      value: '1',
     };
     var cbNeverAllow = {
       label: $translate.instant('internationalDialingPanel.neverAllow'),
-      value: '0'
+      value: '0',
     };
 
     vm.currentUser = $stateParams.currentUser;
@@ -35,13 +35,13 @@
       templateOptions: {
         labelfield: "label",
         valuefield: "value",
-        options: vm.validInternationalDialingOptions
-      }
+        options: vm.validInternationalDialingOptions,
+      },
     }];
 
     vm.model = {
       internationalDialingEnabled: cbUseGlobal,
-      internationalDialingUuid: null
+      internationalDialingUuid: null,
     };
 
     init();
@@ -109,7 +109,7 @@
     function save() {
       var cosType = {
         restriction: InternationalDialing.INTERNATIONAL_DIALING,
-        blocked: false
+        blocked: false,
       };
 
       if (vm.model.internationalDialingEnabled.value === "0") {

@@ -5,7 +5,7 @@
     .controller('UserInfoController', UserInfoController);
 
   /* @ngInject */
-  function UserInfoController($filter, $scope, $state, $timeout, $translate, $window, Authinfo, Auth, Config, FeedbackService, Log, Notification, Userservice, Utils, WebExUtilsFact) {
+  function UserInfoController($scope, $state, $timeout, $translate, $window, Authinfo, Auth, Config, FeedbackService, Log, Notification, Userservice, Utils, WebExUtilsFact) {
     var getAuthinfoData = function () {
       $scope.username = Authinfo.getUserName();
       $scope.orgname = Authinfo.getOrgName();
@@ -79,9 +79,7 @@
     };
 
     $scope.saveFeedback = function () {
-      var msg = $filter('translate')('directoryNumberPanel.success');
-      var type = 'success';
-      Notification.notify([msg], type);
+      Notification.success('directoryNumberPanel.success');
     };
 
     if (Auth.isLoggedIn()) {

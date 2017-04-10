@@ -1,25 +1,22 @@
 (function () {
   'use strict';
+
   angular
     .module('Squared')
     .controller('RemPlaceController',
 
       /* @ngInject */
-      function ($modalInstance, CsdmDataModelService, CsdmHuronPlaceService, XhrNotificationService, place, $rootScope, $timeout) {
+      function ($modalInstance, CsdmDataModelService, Notification, place) {
         var rdc = this;
         rdc.place = place;
 
-        rdc.refreshPlaceList = function () {
-          $rootScope.$broadcast('PLACE_LIST_UPDATED');
-        };
-
         rdc.deletePlace = function () {
-          var deleteFunction = rdc.place.type === 'cloudberry' ? CsdmDataModelService.deleteItem : CsdmHuronPlaceService.deletePlace;
-          return deleteFunction(rdc.place)
+          return CsdmDataModelService.deleteItem(rdc.place)
             .then(function () {
               $modalInstance.close();
-              $timeout(rdc.refreshPlaceList, 500);
-            }, XhrNotificationService.notify);
+            }, function (error) {
+              Notification.errorResponse(error, 'placesPage.failedToDelete');
+            });
         };
       }
     )
@@ -29,17 +26,17 @@
         function open(place) {
           return $modal.open({
             resolve: {
-              place: _.constant(place)
+              place: _.constant(place),
             },
             controllerAs: 'rdc',
             controller: 'RemPlaceController',
             templateUrl: 'modules/squared/places/remPlace/remPlace.html',
-            type: 'dialog'
+            type: 'dialog',
           }).result;
         }
 
         return {
-          open: open
+          open: open,
         };
       }
     );

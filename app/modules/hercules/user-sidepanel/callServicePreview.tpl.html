@@ -7,7 +7,7 @@
   <button id="btn-cancel" ng-disabled="saving" translate="common.cancel"
           ng-click="reset()"></button>
 </cs-sp-buttons>
-<cs-sp-container>
+<cs-sp-container ng-if="isUser">
   <cs-sp-section class="cloud-extensions">
     <div class="section-title-row">
       <span class="section-name" translate="hercules.cloudExtensions.serviceNames.squared-fusion-uc"></span>
@@ -18,53 +18,69 @@
       <p class="extension-description">{{'hercules.cloudExtensions.serviceDescriptions.squared-fusion-uc' |
         translate}}</p>
 
-      <div ng-if="!isInvitePending">
-        <span class="cloud-extension-label">{{'cloudExtensions.status' | translate}}:</span>
-        <span class="cloud-extension-label" ng-if="callServiceAware.entitled && callServiceAware.status"
-              ng-class="callServiceAware.entitled && callServiceAware.status ? 'status-' + callServiceAware.status.state : 'disabled'"
-              id="callServiceAwareStatus"
-              translate="hercules.activationStatus.{{getStatus(callServiceAware.status)}}"></span>
-        <span class="cloud-extension-label status-off" ng-if="!callServiceAware.entitled" translate="common.off"></span>
-        <span cs-loader ng-if="!callServiceAware.status && callServiceAware.entitled"></span>
-      </div>
-      <div ng-if="callServiceAware.entitled && callServiceAware.homedConnector">
-        <span class="cloud-extension-label">{{'cloudExtensions.host' | translate}}:</span>
-        <span class="cloud-extension-label" ng-if="callServiceAware.entitled && callServiceAware.homedConnector">
-          <a href="https://{{callServiceAware.homedConnector.host_name}}" target="_blank" style="color: #3ca8e8">{{callServiceAware.homedConnector.host_name}}</a>
-        </span>
-      </div>
-      <div ng-if="callServiceAware.sipUri && callServiceAware.entitled">
-        <span class="cloud-extension-label">{{'cloudExtensions.sipUri' | translate}}:</span>
-        <span class="cloud-extension-label status-notActivated">{{callServiceAware.sipUri}}</span>
-      </div>
-        <div ng-if="domainVerificationError" class="error-message">
-          <i class="icon icon-error"></i>
-          <p class="message">
-            <span translate="hercules.domain-verification.domain-not-verified"/>
-            <span translate="hercules.domain-verification.navigateToCallSettings"
-                  translate-value-onclick="navigateToCallSettings()" translate-compile></span>
-          </p>
+      <div ng-if="!isInvitePending" class="row collapse">
+        <div class="columns small-3">
+          <span class="cloud-extension-label">{{::'cloudExtensions.status' | translate}}:</span>
+        </div>
+        <div class="columns small-7 normal-line-height">
+          <span class="cloud-extension-label" ng-if="callServiceAware.currentUserEntitled && callServiceAware.status && !savingAwareEntitlement"
+                ng-class="'status-' + callServiceAware.status.state"
+                id="callServiceAwareStatus"
+                translate="hercules.activationStatus.{{getStatus(callServiceAware.status)}}"></span>
+          <span class="cloud-extension-label last-state-change-timestamp" ng-if="callServiceAware.currentUserEntitled && callServiceAware.status && callServiceAware.status.lastStateChangeText && !savingAwareEntitlement">
+            {{callServiceAware.status.lastStateChangeText}}
+          </span>
+          <span class="cloud-extension-label status-off" ng-if="!callServiceAware.currentUserEntitled && !savingAwareEntitlement" translate="common.off"></span>
+          <span cs-loader ng-if="savingAwareEntitlement || (!callServiceAware.status && callServiceAware.currentUserEntitled)"></span>
+        </div>
+        <div class="columns small-2">
+          <span ng-if="callServiceAware.currentUserEntitled && callServiceAware.status && !savingAwareEntitlement" class="cloud-extension-label right">
+            <a ui-sref="user-overview.hybrid-services-squared-fusion-uc.uc-history" translate="hercules.userHistory.seeHistory"></a>
+          </span>
+        </div>
       </div>
 
-      <div ng-if="callServiceAware.entitled
-        && callServiceAware.status
-        && callServiceAware.status.state === 'error'
-        && callServiceAware.status.description"
-           class="error-message">
+      <div ng-if="!isInvitePending" class="row collapse">
+        <div class="columns small-9 small-offset-3">
+          <user-status-messages ng-if="callServiceAware.currentUserEntitled && callServiceAware.status" messages="callServiceAware.status.messages"></user-status-messages>
+        </div>
+      </div>
+
+      <div class="row collapse" ng-if="callServiceAware.currentUserEntitled && callServiceAware.homedCluster">
+        <div class="columns small-3">
+          <span class="cloud-extension-label">{{::'cloudExtensions.cluster' | translate}}:</span>
+        </div>
+        <div class="columns small-9">
+          <span class="cloud-extension-label">{{callServiceAware.homedCluster.name}}</span>
+        </div>
+      </div>
+
+      <div class="row collapse" ng-if="callServiceAware.currentUserEntitled && callServiceAware.homedConnector">
+        <div class="columns small-3">
+          <span class="cloud-extension-label">{{::'hercules.connectors.host_name' | translate}}:</span>
+        </div>
+        <div class="columns small-9">
+          <span class="cloud-extension-label">
+            <a href="https://{{callServiceAware.homedConnector.hostname}}" target="_blank">{{callServiceAware.homedConnector.hostname}}</a>
+          </span>
+        </div>
+      </div>
+
+      <div class="row collapse" ng-if="callServiceAware.directoryUri || (callServiceAware.status.state === 'error' || callServiceAware.status.state === 'activated')">
+        <div class="columns small-3">
+          <span class="cloud-extension-label">{{::'cloudExtensions.sipUri' | translate}}:</span>
+        </div>
+        <div class="columns small-9">
+          <span class="cloud-extension-label">{{callServiceAware.directoryUri}}</span>
+        </div>
+      </div>
+
+      <div ng-if="domainVerificationError" class="error-message">
         <i class="icon icon-error"></i>
         <p class="message">
-          {{callServiceAware.status.description.defaultMessage}}
-        </p>
-      </div>
-
-      <div ng-if="callServiceAware.entitled
-        && callServiceAware.status
-        && callServiceAware.status.state === 'notActivated'
-        && callServiceAware.status.description"
-           class="info-message">
-        <i class="icon icon-info"></i>
-        <p class="message">
-          {{callServiceAware.status.description.defaultMessage}}
+          <span translate="hercules.domain-verification.domain-not-verified"/>
+          <span translate="hercules.domain-verification.navigateToCallSettings"
+                translate-value-onclick="navigateToCallSettings()" translate-compile></span>
         </p>
       </div>
 
@@ -79,45 +95,48 @@
     </div>
 
   </cs-sp-section>
-  <cs-sp-section class="cloud-extensions"
-                 ng-if="callServiceAware.entitled && callServiceConnect.orgEntitled && callServiceConnect.enabledInFMS">
+  <cs-sp-section class="cloud-extensions" ng-if="callServiceAware.currentUserEntitled && callServiceConnect.orgEntitled && callServiceConnect.enabledInFMS">
     <div class="section-title-row">
       <span class="section-name" translate="hercules.cloudExtensions.serviceNames.squared-fusion-ec"></span>
-      <cs-toggle-switch toggle-id="callServiceConnectEntitledToggle" ng-model="callServiceConnect.entitled"
-                        size="small"></cs-toggle-switch>
-    </div>
-    <p class="extension-description">{{'hercules.cloudExtensions.serviceDescriptions.squared-fusion-ec' |
-      translate}}</p>
-    <div ng-if="!isInvitePending">
-      <span class="cloud-extension-label">{{'cloudExtensions.status' | translate}}:</span>
-      <span class="cloud-extension-label" ng-if="callServiceConnect.entitled && callServiceConnect.status"
-            ng-class="callServiceConnect.entitled && callServiceConnect.status ? 'status-' + callServiceConnect.status.state : 'disabled'"
-            id="callServiceConnectStatus"
-            translate="hercules.activationStatus.{{getStatus(callServiceConnect.status)}}"></span>
-      <span class="cloud-extension-label status-off" ng-if="!callServiceConnect.entitled" translate="common.off"></span>
-      <span cs-loader ng-if="!callServiceConnect.status && callServiceConnect.entitled"></span>
+      <cs-toggle-switch toggle-id="callServiceConnectEntitledToggle" ng-model="callServiceConnect.entitled" size="small"></cs-toggle-switch>
     </div>
 
-    <div ng-if="callServiceConnect.entitled && callServiceConnect.status.state === 'error'"
-         class="error-message">
-      <i class="icon icon-error"></i>
-      <p class="message">
-        {{callServiceConnect.status.description.defaultMessage}}
-      </p>
+    <p class="extension-description" translate="hercules.cloudExtensions.serviceDescriptions.squared-fusion-ec"></p>
+
+    <div ng-if="!isInvitePending" class="row collapse">
+      <div class="columns small-3">
+        <span class="cloud-extension-label">{{::'cloudExtensions.status' | translate}}:</span>
+      </div>
+      <div class="columns small-7 normal-line-height">
+        <span class="cloud-extension-label" ng-if="callServiceConnect.currentUserEntitled && callServiceConnect.status && !savingConnectEntitlement"
+              ng-class="'status-' + callServiceConnect.status.state"
+              id="callServiceConnectStatus"
+              translate="hercules.activationStatus.{{getStatus(callServiceConnect.status)}}"></span>
+        <span class="cloud-extension-label last-state-change-timestamp" ng-if="callServiceConnect.currentUserEntitled && callServiceConnect.status && callServiceConnect.status.lastStateChangeText && !savingConnectEntitlement">
+          {{callServiceConnect.status.lastStateChangeText}}
+        </span>
+        <span class="cloud-extension-label status-off" ng-if="!callServiceConnect.currentUserEntitled && !savingConnectEntitlement" translate="common.off"></span>
+        <span cs-loader ng-if="savingConnectEntitlement || (!callServiceConnect.status && callServiceConnect.currentUserEntitled)"></span>
+      </div>
+      <div class="columns small-2">
+        <span class="cloud-extension-label right" ng-if="callServiceConnect.currentUserEntitled && callServiceConnect.status && !savingConnectEntitlement">
+          <a ui-sref="user-overview.hybrid-services-squared-fusion-uc.ec-history" translate="hercules.userHistory.seeHistory"></a>
+        </span>
+      </div>
     </div>
 
-    <div ng-if="callServiceConnect.entitled
-      && callServiceConnect.status
-      && callServiceConnect.status.state === 'notActivated'
-      && callServiceConnect.status.description"
-         class="info-message">
-      <i class="icon icon-info"></i>
-      <p class="message">
-        {{callServiceConnect.status.description.defaultMessage}}
-      </p>
+    <div ng-if="!isInvitePending" class="row collapse">
+      <div class="columns small-9 small-offset-3">
+        <user-status-messages ng-if="callServiceConnect.currentUserEntitled && callServiceConnect.status" messages="callServiceConnect.status.messages"></user-status-messages>
+      </div>
     </div>
 
   </cs-sp-section>
+
+  <hybrid-voicemail-user-section call-service-connect-enabled-for-user="callServiceConnect.currentUserEntitled"
+                                 user-id="callServiceConnect.userId"
+                                 ng-if="callServiceAware.currentUserEntitled && callServiceConnect.orgEntitled && callServiceConnect.enabledInFMS"></hybrid-voicemail-user-section>
+
   <cs-sp-section class="cloud-extensions" ng-if="resourceGroup.show">
     <div class="section-title-row">
       <span class="section-name" translate="hercules.resourceGroups.resourceGroupHeading"></span>
@@ -148,4 +167,129 @@
       </form>
     </div>
   </cs-sp-section>
+</cs-sp-container>
+
+
+<cs-sp-container ng-if="isPlace">
+  <cs-sp-section class="cloud-extensions">
+    <div class="section-title-row">
+      <span class="section-name" translate="hercules.cloudExtensions.serviceNames.squared-fusion-ec-place"></span>
+    </div>
+    <div>
+      <div class="row collapse">
+        <div class="columns small-3">
+          <span class="cloud-extension-label">{{::'cloudExtensions.status' | translate}}:</span>
+        </div>
+        <div class="columns small-7 normal-line-height">
+          <span class="cloud-extension-label"
+                ng-if="callServiceAware.currentUserEntitled && callServiceAware.status && !savingAwareEntitlement"
+                ng-class="'status-' + callServiceAware.status.state"
+                id="callServiceConnectPlaceStatus"
+                translate="hercules.activationStatus.{{getStatus(callServiceAware.status)}}"></span>
+          <span class="cloud-extension-label last-state-change-timestamp"
+                ng-if="callServiceAware.currentUserEntitled && callServiceAware.status && callServiceAware.status.lastStateChangeText && !savingAwareEntitlement">
+            {{callServiceAware.status.lastStateChangeText}}
+          </span>
+          <span class="cloud-extension-label status-off"
+                ng-if="!callServiceAware.currentUserEntitled && !savingAwareEntitlement" translate="common.off"></span>
+          <span cs-loader
+                ng-if="savingAwareEntitlement || (!callServiceAware.status && callServiceAware.currentUserEntitled)"></span>
+        </div>
+        <div class="columns small-2">
+          <span ng-if="callServiceAware.currentUserEntitled && callServiceAware.status && !savingAwareEntitlement"
+                class="cloud-extension-label right">
+            <a ui-sref="place-overview.hybrid-services-squared-fusion-uc.uc-history"
+               translate="hercules.userHistory.seeHistory"></a>
+          </span>
+        </div>
+      </div>
+
+      <div class="row collapse cloud-extension-label normal-line-height placeStatus">
+        <span ng-if="callServiceAware.status.state === 'notActivated'" translate="hercules.placeSidepanel.hybridCallNotActivated"></span>
+      </div>
+      <div class="row collapse cloud-extension-label normal-line-height mailid">
+        <div class="columns small-12"><span translate="addDeviceWizard.sparkCallConnect.mailId"></span><span>: {{mailID}}</span></div>
+      </div>
+      <div class="row collapse cloud-extension-label normal-line-height">{{'hercules.placeSidepanel.mail-id-explanation-part1' | translate}}
+        <a ng-click="editCloudberryServices(callServiceAware.id)">{{'hercules.placeSidepanel.mail-id-explanation-part2' | translate}}</a>
+      </div>
+
+      <div class="row collapse">
+        <div class="columns small-9 small-offset-3">
+          <user-status-messages ng-if="callServiceAware.currentUserEntitled && callServiceAware.status"
+                                messages="callServiceAware.status.messages"></user-status-messages>
+        </div>
+      </div>
+
+      <div class="row collapse" ng-if="callServiceAware.currentUserEntitled && callServiceAware.homedCluster">
+        <div class="columns small-3">
+          <span class="cloud-extension-label">{{::'cloudExtensions.cluster' | translate}}:</span>
+        </div>
+        <div class="columns small-9">
+          <span class="cloud-extension-label">{{callServiceAware.homedCluster.name}}</span>
+        </div>
+      </div>
+
+      <div class="row collapse" ng-if="callServiceAware.currentUserEntitled && callServiceAware.homedConnector">
+        <div class="columns small-3">
+          <span class="cloud-extension-label">{{::'hercules.connectors.host_name' | translate}}:</span>
+        </div>
+        <div class="columns small-9">
+          <span class="cloud-extension-label">
+            <a href="https://{{callServiceAware.homedConnector.hostname}}" target="_blank">{{callServiceAware.homedConnector.hostname}}</a>
+          </span>
+        </div>
+      </div>
+
+      <div class="row collapse"
+           ng-if="callServiceAware.directoryUri || (callServiceAware.status.state === 'error' || callServiceAware.status.state === 'activated')">
+        <div class="columns small-3">
+          <span class="cloud-extension-label">{{::'cloudExtensions.sipUri' | translate}}:</span>
+        </div>
+        <div class="columns small-9">
+          <span class="cloud-extension-label">{{callServiceAware.directoryUri}}</span>
+        </div>
+      </div>
+
+      <div ng-if="domainVerificationError" class="error-message">
+        <i class="icon icon-error"></i>
+        <p class="message">
+          <span translate="hercules.domain-verification.domain-not-verified"/>
+          <span translate="hercules.domain-verification.navigateToCallSettings"
+                translate-value-onclick="navigateToCallSettings()" translate-compile></span>
+        </p>
+      </div>
+
+    </div>
+
+    <cs-sp-section class="cloud-extensions" ng-if="resourceGroup.show">
+      <div class="section-title-row">
+        <span class="section-name" translate="hercules.resourceGroups.resourceGroupHeading"></span>
+      </div>
+      <div ng-if="!resourceGroup.cannotFindResouceGroup">
+        <p class="extension-description" translate="hercules.resourceGroups.setDescription"></p>
+        <cs-select
+          ng-model="resourceGroup.selected"
+          options="resourceGroup.options"
+          on-change-fn="selectedResourceGroupChanged()">
+        </cs-select>
+        <div class="warning-message" ng-if="resourceGroup.shouldWarn">
+          <i class="icon icon-warning"></i>
+          <p class="message"
+             translate="hercules.resourceGroups.groupIsEmptyWarning"
+             translate-values="{ConnectorName: localizedConnectorName}">
+          </p>
+        </div>
+      </div>
+      <div ng-if="resourceGroup.cannotFindResouceGroup" class="error-message">
+        <i class="icon icon-error"></i>
+        <p class="message"
+           translate="hercules.resourceGroups.groupHasBeenDeleted"></p>
+        <form>
+          <button class="btn" type="submit" ng-click="setResourceGroupOnUser('')">
+            <span translate="common.remove"></span>
+          </button>
+        </form>
+      </div>
+    </cs-sp-section>
 </cs-sp-container>

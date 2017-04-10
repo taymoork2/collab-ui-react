@@ -2,10 +2,10 @@
   'use strict';
 
   angular.module('Core')
-    .service('DirSyncService', DirSyncService);
+    .service('DirSyncServiceOld', DirSyncServiceOld);
 
   /* @ngInject */
-  function DirSyncService($http, Log, Authinfo, UrlConfig) {
+  function DirSyncServiceOld($http, Log, Authinfo, UrlConfig) {
 
     var dirsyncUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/dirsync';
 
@@ -13,13 +13,13 @@
       getDirSyncDomain: function (callback) {
         $http.get(dirsyncUrl)
           .success(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             data.success = true;
             Log.debug('Retrieved dirsync status');
             callback(data, status);
           })
           .error(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             data.success = false;
             data.status = status;
             callback(data, status);
@@ -31,13 +31,13 @@
 
         $http.get(dirsyncStatusUrl)
           .success(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             data.success = true;
             Log.debug('Retrieved dirsync domain');
             callback(data, status);
           })
           .error(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             data.success = false;
             data.status = status;
             callback(data, status);
@@ -47,18 +47,18 @@
       postDomainName: function (domainName, callback) {
         var domainUrl = dirsyncUrl + '/domain';
         var payload = {
-          domainName: domainName
+          domainName: domainName,
         };
 
         $http.post(domainUrl, payload)
           .success(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             data.success = true;
             Log.debug('Created Directory Sync Domain: ' + domainName);
             callback(data, status);
           })
           .error(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             data.success = false;
             data.status = status;
             callback(data, status);
@@ -68,22 +68,22 @@
       syncUsers: function (incrSyncInterval, callback) {
         var payload = {
           incrSyncInterval: incrSyncInterval,
-          fullSyncEnable: true
+          fullSyncEnable: true,
         };
 
         $http({
           method: 'PATCH',
           url: dirsyncUrl,
-          data: payload
+          data: payload,
         })
           .success(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             data.success = true;
             Log.debug('Started Directory Sync');
             callback(data, status);
           })
           .error(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             data.success = false;
             data.status = status;
             callback(data, status);

@@ -1,5 +1,6 @@
 (function () {
   'use strict';
+
   angular.module('Mediafusion').service('MetricsGraphService', MetricsGraphService);
   /* @ngInject */
   function MetricsGraphService($translate, CommonMetricsGraphService, chartColors, $window) {
@@ -11,7 +12,6 @@
     var LEGEND = 'legend';
     // variables for the call volume section
     var callVolumediv = 'callVolumediv';
-    // var callVolumeBalloonText = '<span class="graph-text">' + $translate.instant('activeUsers.registeredUsers') + ' <span class="graph-number">[[totalRegisteredUsers]]</span></span><br><span class="graph-text">' + $translate.instant('activeUsers.active') + ' <span class="graph-number">[[percentage]]%</span></span>';
     var callLocalTitle = $translate.instant('mediaFusion.metrics.callLocal');
     var callRejectTitle = $translate.instant('mediaFusion.metrics.callReject');
     var callLocalClusterTitle = $translate.instant('mediaFusion.metrics.callLocalCluster');
@@ -40,13 +40,13 @@
     var availabilityStatus = $translate.instant('mediaFusion.metrics.availabilityStatus');
     var availabilityOfHost = $translate.instant('mediaFusion.metrics.availabilityOfHost');
     var clusterTitle = $translate.instant('mediaFusion.metrics.clusterTitle');
-    var availabilityLegendCluster = [{ 'title': availableTitle, 'color': chartColors.metricDarkGreen }, { 'title': unavailableTitle, 'color': chartColors.metricsRed }];
-    var availabilityLegendAllcluster = [{ 'title': availableTitle, 'color': chartColors.metricDarkGreen }, { 'title': unavailableTitle, 'color': chartColors.metricsRed }, { 'title': partialTitle, 'color': chartColors.metricYellow }];
+    var availabilityLegendCluster = [{ 'title': availableTitle, 'color': chartColors.metricDarkGreen }, { 'title': unavailableTitle, 'color': chartColors.negativeDarker }];
+    var availabilityLegendAllcluster = [{ 'title': availableTitle, 'color': chartColors.metricDarkGreen }, { 'title': unavailableTitle, 'color': chartColors.negativeDarker }, { 'title': partialTitle, 'color': chartColors.attentionBase }];
 
     return {
       setUtilizationGraph: setUtilizationGraph,
       setCallVolumeGraph: setCallVolumeGraph,
-      setAvailabilityGraph: setAvailabilityGraph
+      setAvailabilityGraph: setAvailabilityGraph,
     };
 
     function getBaseExportForGraph(fields, fileName, columnNames) {
@@ -56,7 +56,7 @@
         'columnNames': columnNames,
         'fileName': fileName,
         'libs': {
-          'autoLoad': false
+          'autoLoad': false,
         },
         'menu': [{
           'class': 'export-main',
@@ -65,7 +65,7 @@
             'label': $translate.instant('reportsPage.saveAs'),
             'title': $translate.instant('reportsPage.saveAs'),
             'class': 'export-list',
-            'menu': ['PNG', 'JPG']
+            'menu': ['PNG', 'JPG'],
           }, {
             'label': $translate.instant('reportsPage.pdf'),
             'title': $translate.instant('reportsPage.pdf'),
@@ -75,51 +75,14 @@
                   $window.open(data, 'amCharts.pdf');
                 });
               });
-            }
+            },
           }, {
             'class': 'export-list',
             'label': $translate.instant('reportsPage.export'),
             'title': $translate.instant('reportsPage.export'),
-            'menu': ['CSV', 'XLSX']
-          }]
-        }]
-      };
-      return baseVariables['export'];
-    }
-
-    function getBaseExportForUtilizationGraph(fileName, columnNames) {
-      baseVariables['export'] = {
-        'enabled': true,
-        'columnNames': columnNames,
-        'fileName': fileName,
-        'libs': {
-          'autoLoad': false
-        },
-        'menu': [{
-          'class': 'export-main',
-          'label': $translate.instant('reportsPage.downloadOptions'),
-          'menu': [{
-            'label': $translate.instant('reportsPage.saveAs'),
-            'title': $translate.instant('reportsPage.saveAs'),
-            'class': 'export-list',
-            'menu': ['PNG', 'JPG']
-          }, {
-            'label': $translate.instant('reportsPage.pdf'),
-            'title': $translate.instant('reportsPage.pdf'),
-            click: function () {
-              this.capture({}, function () {
-                this.toPDF({}, function (data) {
-                  $window.open(data, 'amCharts.pdf');
-                });
-              });
-            }
-          }, {
-            'class': 'export-list',
-            'label': $translate.instant('reportsPage.export'),
-            'title': $translate.instant('reportsPage.export'),
-            'menu': ['CSV', 'XLSX']
-          }]
-        }]
+            'menu': ['CSV', 'XLSX'],
+          }],
+        }],
       };
       return baseVariables['export'];
     }
@@ -147,7 +110,7 @@
       catAxis.gridAlpha = 0.3;
       catAxis.minorGridAlpha = 0.1;
       catAxis.minorGridEnabled = false;
-      catAxis.minPeriod = "mm";
+      catAxis.minPeriod = 'mm';
       //catAxis.twoLineMode = true;
       var startDuration = 1;
       if (!data[0].balloon) {
@@ -168,15 +131,15 @@
           'timestamp': timeStamp,
         };
       }
-      cluster = cluster.replace(/\s/g, "_");
-      daterange = daterange.replace(/\s/g, "_");
+      cluster = _.replace(cluster, /\s/g, '_');
+      daterange = _.replace(daterange, /\s/g, '_');
       var ExportFileName = 'MediaService_TotalCalls_' + cluster + '_' + daterange + '_' + new Date();
       var chartData = CommonMetricsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, callVolumeGraphs(data, cluster), 'timestamp', catAxis, getBaseExportForGraph(exportFields, ExportFileName, columnNames));
       chartData.numberFormatter = CommonMetricsGraphService.getBaseVariable(NUMFORMAT);
       chartData.legend = CommonMetricsGraphService.getBaseVariable(LEGEND);
       chartData.legend.labelText = '[[title]]';
       var chart = AmCharts.makeChart(callVolumediv, chartData);
-      chart.addListener("rendered", zoomChart);
+      chart.addListener('rendered', zoomChart);
       zoomChart(chart);
       return chart;
     }
@@ -226,8 +189,8 @@
 
     function setCallVolumeGraph(data, callVolumeChart, cluster, daterange) {
       if (data === null || data === 'undefined' || data.length === 0) {
-        return;
-      } else if (callVolumeChart !== null && angular.isDefined(callVolumeChart)) {
+        return undefined;
+      } else if (callVolumeChart !== null && !_.isUndefined(callVolumeChart)) {
         var startDuration = 1;
         if (!data[0].balloon) {
           startDuration = 0;
@@ -273,7 +236,18 @@
       catAxis.gridAlpha = 0.1;
       catAxis.minorGridAlpha = 0.1;
       catAxis.minorGridEnabled = false;
-      catAxis.minPeriod = "mm";
+      var dateLabel = daterange.label;
+      var dateValue = daterange.value;
+
+      if (dateValue === 0) {
+        catAxis.minPeriod = '10mm';
+      } else if (dateValue === 1) {
+        catAxis.minPeriod = 'hh';
+      } else if (dateValue === 2) {
+        catAxis.minPeriod = '3hh';
+      } else {
+        catAxis.minPeriod = '8hh';
+      }
 
       var startDuration = 1;
       if (!data[0].balloon) {
@@ -281,25 +255,29 @@
       }
 
       var columnNames = {
-        'time': timeStamp
+        'time': timeStamp,
       };
-      angular.forEach(graphs, function (value) {
+      var exportFields = [];
+      _.forEach(graphs, function (value) {
         if (value.title !== average_utilzation) {
           columnNames[value.valueField] = value.title + ' ' + 'Utilization';
         } else {
           columnNames[value.valueField] = value.title;
         }
       });
-      cluster = cluster.replace(/\s/g, "_");
-      daterange = daterange.replace(/\s/g, "_");
-      var ExportFileName = 'MediaService_Utilization_' + cluster + '_' + daterange + '_' + new Date();
+      for (var key in columnNames) {
+        exportFields.push(key);
+      }
+      cluster = _.replace(cluster, /\s/g, '_');
+      dateLabel = _.replace(dateLabel, /\s/g, '_');
+      var ExportFileName = 'MediaService_Utilization_' + cluster + '_' + dateLabel + '_' + new Date();
 
-      var chartData = CommonMetricsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, getBaseExportForUtilizationGraph(ExportFileName, columnNames));
+      var chartData = CommonMetricsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, getBaseExportForGraph(exportFields, ExportFileName, columnNames));
       chartData.legend = CommonMetricsGraphService.getBaseVariable(LEGEND);
       chartData.legend.labelText = '[[title]]';
       chartData.legend.useGraphSettings = true;
       var chart = AmCharts.makeChart(utilizationdiv, chartData);
-      chart.addListener("rendered", zoomChart);
+      chart.addListener('rendered', zoomChart);
       zoomChart(chart);
       return chart;
     }
@@ -308,9 +286,9 @@
 
       var isDummy = false;
       if (data === null || data === 'undefined' || data.length === 0) {
-        return;
-      } else if (utilizationChart !== null && angular.isDefined(utilizationChart)) {
-        if (data[0].colorTwo === chartColors.dummyGray) {
+        return undefined;
+      } else if (utilizationChart !== null && !_.isUndefined(utilizationChart)) {
+        if (data[0].colorTwo === chartColors.grayLightTwo) {
           isDummy = true;
         }
         var startDuration = 1;
@@ -325,6 +303,7 @@
         utilizationChart.chartCursor.valueLineBalloonEnabled = true;
         utilizationChart.chartCursor.valueLineEnabled = true;
         utilizationChart.chartCursor.categoryBalloonEnabled = true;
+        utilizationChart.chartCursor.oneBalloonOnly = true;
         if (isDummy) {
           utilizationChart.chartCursor.valueLineBalloonEnabled = false;
           utilizationChart.chartCursor.valueLineEnabled = false;
@@ -334,7 +313,7 @@
         utilizationChart.validateData();
         return utilizationChart;
       } else {
-        if (data[0].colorTwo === chartColors.dummyGray) {
+        if (data[0].colorTwo === chartColors.grayLightTwo) {
           isDummy = true;
         }
 
@@ -346,7 +325,8 @@
         utilizationChart.chartCursor.valueLineBalloonEnabled = true;
         utilizationChart.chartCursor.valueLineEnabled = true;
         utilizationChart.chartCursor.valueBalloonsEnabled = true;
-        utilizationChart.chartCursor.balloonColor = chartColors.grayLight;
+        utilizationChart.chartCursor.oneBalloonOnly = true;
+        utilizationChart.chartCursor.balloonColor = chartColors.grayLightTwo;
         if (isDummy) {
           utilizationChart.chartCursor.valueLineBalloonEnabled = false;
           utilizationChart.chartCursor.valueLineEnabled = false;
@@ -380,12 +360,12 @@
       }
       var legend;
       if (selectedCluster === allClusters) {
-        legend = angular.copy(availabilityLegendAllcluster);
+        legend = _.cloneDeep(availabilityLegendAllcluster);
       } else {
-        legend = angular.copy(availabilityLegendCluster);
+        legend = _.cloneDeep(availabilityLegendCluster);
       }
-      if (angular.isDefined(data.data[0].isDummy) && data.data[0].isDummy) {
-        angular.forEach(legend, function (value, key) {
+      if (!_.isUndefined(data.data[0].isDummy) && data.data[0].isDummy) {
+        _.forEach(legend, function (value, key) {
           legend[key].color = '#AAB3B3';
         });
       }
@@ -408,8 +388,8 @@
           'category': node,
         };
       }
-      cluster = cluster.replace(/\s/g, "_");
-      daterange = daterange.replace(/\s/g, "_");
+      cluster = _.replace(cluster, /\s/g, '_');
+      daterange = _.replace(daterange, /\s/g, '_');
       var ExportFileName = 'MediaService_Availability_' + cluster + '_' + daterange + '_' + new Date();
       var chartData = CommonMetricsGraphService.getGanttGraph(data.data[0].clusterCategories, valueAxis, getBaseExportForGraph(exportFields, ExportFileName, columnNames));
       chartData.legend = CommonMetricsGraphService.getBaseVariable(LEGEND);
@@ -431,7 +411,7 @@
       //var startDate = str.substring(0, 10);
       startDate = convertToLocalTime(startDate);
       if (data === null || data === 'undefined' || data.length === 0) {
-        return;
+        return undefined;
       } else {
         availabilityChart = createAvailabilityGraph(data, selectedCluster, cluster, daterange);
         availabilityChart.period = data.data[0].period;

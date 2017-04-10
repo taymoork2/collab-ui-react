@@ -1,0 +1,97 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="callConnectOptions.close()">
+  </button>
+  <h3 class="modal-title" translate="{{callConnectOptions.title}}"></h3>
+</div>
+<div class="modal-body">
+
+  <form name="placesEditServices" class="chooseServiceForm" ng-submit="callConnectOptions.submitForm()">
+    <h4 translate="addDeviceWizard.sparkCallConnect.editSettingsTitle"></h4>
+    <div class="callServiceRow">
+      <span class="circle">1</span>
+      <label translate="addDeviceWizard.sparkCallConnect.step1"></label>
+    </div>
+    <div class="callServiceRow">
+      <span class="circle">2</span>
+      <label translate="addDeviceWizard.sparkCallConnect.step2"></label>
+    </div>
+    <div class="callServiceRow emailControlsParent">
+      <span class="circle">3</span>
+      <div class="callServiceControls">
+        <label translate="addDeviceWizard.sparkCallConnect.step3"></label>
+        <div class="cs-radio-group callServiceControls emailControls">
+          <label for="email" translate="addDeviceWizard.sparkCallConnect.mailId"></label>
+          <input id="email" type="email" autocomplete="off" ng-model="callConnectOptions.mailID">
+        </div>
+      </div>
+
+    </div>
+    <div class="callServiceRow" ng-if="callConnectOptions.getResourceGroupShow()">
+      <span class="circle">4</span>
+      <div class="callServiceControls">
+        <div class="callServiceControls" ng-if="!callConnectOptions.resourceGroup.cannotFindResouceGroup">
+          <label translate="hercules.resourceGroups.setPlaceDescription"></label>
+          <cs-select
+            class="selectResourceGroup"
+            ng-model="callConnectOptions.resourceGroup.selected"
+            options="callConnectOptions.resourceGroup.options"
+            on-change-fn="callConnectOptions.selectedResourceGroupChanged()">
+          </cs-select>
+          <div class="warning-message" ng-if="callConnectOptions.resourceGroup.shouldWarn">
+            <i class="icon icon-warning"></i>
+            <p class="message"
+               translate="hercules.resourceGroups.groupIsEmptyWarning"
+               translate-values="{ConnectorName: localizedConnectorName}">
+            </p>
+          </div>
+        </div>
+        <div ng-if="callConnectOptions.resourceGroup.cannotFindResouceGroup" class="error-message">
+          <i class="icon icon-error"></i>
+          <p class="message"
+             translate="hercules.resourceGroups.groupHasBeenDeleted"></p>
+          <form>
+            <button class="btn" type="submit" ng-click="callConnectOptions.setResourceGroup('')">
+              <span translate="common.remove"></span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+
+  <button
+    id="back-button"
+    class="btn"
+    sq-click-promise="callConnectOptions.back()"
+    ng-class="{'ng-hide':!callConnectOptions.hasBackStep()}"
+    translate="common.back">
+  </button>
+  <button
+    type="button"
+    class="btn"
+    ng-click="callConnectOptions.close()"
+    ng-class="{'ng-hide':callConnectOptions.hasBackStep()}"
+    translate="common.cancel">
+  </button>
+  <button
+    cs-btn
+    id="save-button"
+    loading="callConnectOptions.isLoading"
+    class="btn btn--primary"
+    ng-class="{'ng-hide':callConnectOptions.hasNextStep()}"
+    ng-click="callConnectOptions.save()"
+    ng-disabled="callConnectOptions.isSaveDisabled()">
+    <span translate="common.save"></span>
+  </button>
+  <button
+    cs-btn
+    id="next-button"
+    class="btn btn--primary"
+    ng-class="{'ng-hide':!callConnectOptions.hasNextStep()}"
+    ng-click="callConnectOptions.next()"
+    ng-disabled="callConnectOptions.isNextDisabled()">
+    <span translate="common.next"></span>
+  </button>
+</div>

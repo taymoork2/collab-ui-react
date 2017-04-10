@@ -4,13 +4,22 @@ describe('Template: userDeleteSelf', function () {
   var $compile, $scope, $templateCache, $controller, $translate, controller;
   var view;
   var DELETE_BUTTON = '#deleteUserButton';
+  var OK_BUTTON = '#okButton';
   var CONFIRMATION_INPUT = '#inputYes';
   var DISABLED = 'disabled';
   var YES = 'YES';
 
+  afterEach(function () {
+    if (view) {
+      view.remove();
+    }
+    view = undefined;
+  });
+
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module('Messenger'));
 
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
@@ -30,11 +39,13 @@ describe('Template: userDeleteSelf', function () {
 
   function compileView() {
     controller = $controller('UserDeleteCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
     $scope.userDelete = controller;
 
     spyOn(controller, 'deactivateUser');
+    controller.isMsgrUser = false;
+    controller.msgrloaded = true;
 
     var template = $templateCache.get('modules/core/users/userDelete/userDeleteSelf.tpl.html');
     view = $compile(angular.element(template))($scope);
@@ -43,6 +54,7 @@ describe('Template: userDeleteSelf', function () {
 
   it('should be disabled by default', function () {
     expect(view.find(DELETE_BUTTON).attr(DISABLED)).toEqual(DISABLED);
+    expect(view.find(OK_BUTTON).length).toEqual(1);
   });
 
   it('typing confirmation should enable delete button', function () {
@@ -57,5 +69,16 @@ describe('Template: userDeleteSelf', function () {
   it('clicking button should call delete', function () {
     view.find(DELETE_BUTTON).click();
     expect(controller.deactivateUser).toHaveBeenCalled();
+  });
+
+  it('should have ok button with isMsgrUser enabled', function () {
+    controller.isMsgrUser = true;
+    var template = $templateCache.get('modules/core/users/userDelete/userDeleteSelf.tpl.html');
+    view = $compile(angular.element(template))($scope);
+    $scope.$apply();
+
+    expect(view.find(OK_BUTTON).length).toEqual(1);
+    expect(view.find(OK_BUTTON).hasClass('ng-hide')).toBe(false);
+    expect(view.find(DELETE_BUTTON).hasClass('ng-hide')).toBe(true);
   });
 });

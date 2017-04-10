@@ -5,13 +5,20 @@ describe('settingsMenuCtrl', function () {
 
   var controller, $translate;
 
+  afterEach(function () {
+    $translate.use('en_US');
+    moment.locale('en_US');
+    controller = $translate = undefined;
+  });
+
   describe('with real languages', function () {
     beforeEach(inject(function ($rootScope, $controller, _$translate_) {
       $translate = _$translate_;
-      $translate.use = sinon.stub().returns('no_NO');
+
+      $translate.use = sinon.stub().returns('nb_NO');
 
       controller = $controller('SettingsMenuCtrl', {
-        $scope: $rootScope.$new
+        $scope: $rootScope.$new,
       });
     }));
 
@@ -20,7 +27,7 @@ describe('settingsMenuCtrl', function () {
     });
 
     it('should set the current language', function () {
-      expect(controller.selected.value).toBe('no_NO');
+      expect(controller.selected.value).toBe('nb_NO');
     });
   });
 
@@ -29,15 +36,15 @@ describe('settingsMenuCtrl', function () {
       $translate = _$translate_;
       $translate.instant = sinon.stub().returns('foo');
       $translate.use = sinon.stub().returns({
-        then: sinon.stub()
+        then: sinon.stub(),
       });
 
       controller = $controller('SettingsMenuCtrl', {
         $scope: $rootScope.$new,
         languages: [{
           value: 'foo_BAR',
-          label: 'languages.simplifiedDothraki'
-        }]
+          label: 'languages.simplifiedDothraki',
+        }],
       });
     }));
 

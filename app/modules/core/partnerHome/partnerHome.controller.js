@@ -1,3 +1,6 @@
+require('./_partner-home.scss');
+require('./_partner-landing-trials.scss');
+
 (function () {
   'use strict';
 
@@ -5,7 +8,7 @@
     .controller('PartnerHomeCtrl', PartnerHomeCtrl);
 
   /* @ngInject */
-  function PartnerHomeCtrl($scope, $timeout, $state, $window, Analytics, Authinfo, Log, Notification, Orgservice, PartnerService, TrialService) {
+  function PartnerHomeCtrl($scope, $state, $window, Analytics, Authinfo, CardUtils, Log, Notification, Orgservice, PartnerService, TrialService) {
     $scope.currentDataPosition = 0;
 
     $scope.daysExpired = 5;
@@ -32,20 +35,18 @@
         $scope.activeCount = $scope.activeList.length;
       }
 
-      Orgservice.getOrg(function (data, status) {
-        if (data.success) {
-          $scope.isTestOrg = data.isTestOrg;
-        } else {
-          Log.error('Query org info failed. Status: ' + status);
-        }
-      });
+      Orgservice.isTestOrg()
+        .then(function (isTestOrg) {
+          $scope.isTestOrg = isTestOrg;
+        });
+
     }
 
     function openAddTrialModal() {
-      if ($scope.isTestOrg) {
-        Analytics.trackTrialSteps('start', $state.current.name);
-      }
-      $state.go('trialAdd.info').then(function () {
+      Analytics.trackTrialSteps(Analytics.sections.TRIAL.eventNames.START_SETUP);
+
+      var route = TrialService.getAddTrialRoute();
+      $state.go(route.path, route.params).then(function () {
         $state.modal.result.finally(getTrialsList);
       });
     }
@@ -67,21 +68,18 @@
     function getTrialsList() {
       $scope.showTrialsRefresh = true;
       TrialService.getTrialsList()
-        .catch(function (err) {
-          Log.debug('Failed to retrieve trial information. Status: ' + err.status);
-          Notification.error('partnerHomePage.errGetTrialsQuery', {
-            status: err.status
-          });
+        .catch(function (response) {
+          Notification.errorResponse(response, 'partnerHomePage.errGetTrialsQuery');
         })
         .then(function (response) {
-          return PartnerService.loadRetrievedDataToList(_.get(response, 'data.trials', []), true);
+          return PartnerService.loadRetrievedDataToList(_.get(response, 'data.trials', []), { isTrialData: true });
         })
         .then(function (trialsList) {
           $scope.activeList = _.filter(trialsList, {
-            state: "ACTIVE"
+            state: "ACTIVE",
           });
           $scope.expiredList = _.filter(trialsList, {
-            state: "EXPIRED"
+            state: "EXPIRED",
           });
           $scope.showExpired = $scope.expiredList.length > 0;
           Log.debug('active trial records found:' + $scope.activeList.length);
@@ -89,27 +87,15 @@
         })
         .finally(function () {
           $scope.showTrialsRefresh = false;
-          resizeCards();
+          CardUtils.resize();
         });
     }
 
     function launchCustomerPortal(trial) {
       $window.open($state.href('login_swap', {
         customerOrgId: trial.customerOrgId,
-        customerOrgName: trial.customerName
+        customerOrgName: trial.customerName,
       }));
-    }
-
-    function resizeCards() {
-      $timeout(function () {
-        $('.cs-card-layout').masonry('destroy');
-        $('.cs-card-layout').masonry({
-          itemSelector: '.cs-card',
-          columnWidth: '.cs-card',
-          isResizable: true,
-          percentPosition: true
-        });
-      }, 0);
     }
   }
 })();

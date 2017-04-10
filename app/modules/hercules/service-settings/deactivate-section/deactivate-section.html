@@ -1,0 +1,24 @@
+<setting-section setting="$ctrl.deactivateSection" class="needs-border-top">
+  <div class="sub-section">
+    <h5 class="sub-section__label"
+        translate="hercules.deactivateServiceComponent.deactivateServiceLabel"
+        translate-values="{serviceName: $ctrl.localizedServiceName}"></h5>
+
+    <p class="sub-section__description"
+       translate="hercules.deactivateServiceComponent.deactivateServiceCommon"
+       translate-values="{serviceName: $ctrl.localizedServiceName}"></p>
+
+    <p ng-if="$ctrl.serviceId === 'squared-fusion-cal' || $ctrl.serviceId === 'squared-fusion-uc'" class="sub-section__description">
+      <span translate="hercules.deactivateServiceComponent.expresswayDataWiped"
+            translate-values="{connectorName: $ctrl.localizedConnectorName}"></span>
+      <span translate="hercules.deactivateServiceComponent.noClustersWillBeDeregistered"></span>
+    </p>
+
+    <button
+      class="btn"
+      ng-click="$ctrl.confirmDisable()"
+      translate="common.deactivate">
+    </button>
+
+  </div>
+</setting-section>

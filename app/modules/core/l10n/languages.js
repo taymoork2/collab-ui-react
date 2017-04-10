@@ -1,70 +1,92 @@
 (function () {
   'use strict';
+
   var DEFAULT_LANGUAGE = 'en_US';
 
   var languages = [{
     value: 'da_DK',
-    label: 'languages.danish'
+    label: 'languages.danish',
+    browserCodes: ['da_DK', 'da'],
   }, {
     value: 'de_DE',
-    label: 'languages.german'
+    label: 'languages.german',
+    browserCodes: ['de_DE', 'de', 'de_AT', 'de_CH'],
   }, {
     value: 'en_US',
-    label: 'languages.englishAmerican'
+    label: 'languages.englishAmerican',
+    browserCodes: ['en_US', 'en'],
   }, {
     value: 'en_GB',
-    label: 'languages.englishBritish'
+    label: 'languages.englishBritish',
+    browserCodes: ['en_GB', 'en_IE'],
   }, {
     value: 'es_ES',
-    label: 'languages.spanishSpain'
+    label: 'languages.spanishSpain',
+    browserCodes: ['es_ES', 'es'],
   }, {
-    value: 'es_LA',
-    label: 'languages.spanishColumbian'
+    value: 'es_CO',
+    label: 'languages.spanishColumbian',
+    browserCodes: ['es_CO', 'es_419', 'es_XL', 'es_MX'],
   }, {
     value: 'fr_FR',
-    label: 'languages.french'
+    label: 'languages.french',
+    browserCodes: ['fr_FR', 'fr', 'fr_CH', 'fr_BE'],
   }, {
     value: 'fr_CA',
-    label: 'languages.frenchCanadian'
+    label: 'languages.frenchCanadian',
+    browserCodes: ['fr_CA'],
   }, {
     value: 'id_ID',
-    label: 'languages.indonesian'
+    label: 'languages.indonesian',
+    browserCodes: ['id_ID', 'id'],
   }, {
     value: 'it_IT',
-    label: 'languages.italian'
+    label: 'languages.italian',
+    browserCodes: ['it_IT', 'it', 'it_CH'],
   }, {
     value: 'ja_JP',
-    label: 'languages.japanese'
+    label: 'languages.japanese',
+    browserCodes: ['ja_JP', 'ja'],
   }, {
     value: 'ko_KR',
-    label: 'languages.korean'
+    label: 'languages.korean',
+    browserCodes: ['ko_KR', 'ko'],
   }, {
-    value: 'no_NO',
-    label: 'languages.norwegian'
+    value: 'nb_NO',
+    label: 'languages.norwegian',
+    browserCodes: ['nb_NO', 'nb', 'no', 'nn', 'nn_NO'],
   }, {
     value: 'nl_NL',
-    label: 'languages.dutch'
+    label: 'languages.dutch',
+    browserCodes: ['nl_NL', 'nl', 'nl_BE'],
   }, {
     value: 'pl_PL',
-    label: 'languages.polish'
+    label: 'languages.polish',
+    browserCodes: ['pl_PL', 'pl'],
   }, {
     value: 'pt_BR',
-    label: 'languages.portugueseBrazillian'
+    label: 'languages.portugueseBrazillian',
+    browserCodes: ['pt_BR', 'pt', 'pt_PT'],
   }, {
     value: 'ru_RU',
-    label: 'languages.russian'
+    label: 'languages.russian',
+    browserCodes: ['ru_RU', 'ru'],
   }, {
     value: 'sv_SE',
-    label: 'languages.swedish'
+    label: 'languages.swedish',
+    browserCodes: ['sv_SE', 'sv'],
   }, {
     value: 'tr_TR',
-    label: 'languages.turkish'
+    label: 'languages.turkish',
+    browserCodes: ['tr_TR', 'tr'],
   }, {
     value: 'zh_CN',
-    label: 'languages.chineseMandarin'
+    label: 'languages.chineseMandarin',
+    browserCodes: ['zh_CN', 'zh'],
   }, {
     value: 'zh_TW',
-    label: 'languages.chineseTraditional'
+    label: 'languages.chineseTraditional',
+    browserCodes: ['zh_TW'],
   }];
 
   /* @ngInject */
@@ -87,22 +109,25 @@
         getBrowserLanguage(),
         DEFAULT_LANGUAGE,
       ]);
-      var languageKeys = _.map(languages, 'value');
       var browserLanguage;
       var language;
       var i;
 
       var isBrowserLanguage = function (language) {
-        return language === browserLanguage;
+        return _.includes(language.browserCodes, browserLanguage);
       };
+
       var startsWithBrowserLanguage = function (language) {
-        return _.startsWith(language, browserLanguage);
+        return _.find(language.browserCodes, function (browserCode) {
+          return _.startsWith(browserCode, browserLanguage);
+        });
       };
+
       for (i = 0; i < browserLanguages.length; i++) {
         browserLanguage = browserLanguages[i];
-        language = _.find(languageKeys, isBrowserLanguage) || _.find(languageKeys, startsWithBrowserLanguage);
+        language = _.find(languages, isBrowserLanguage) || _.find(languages, startsWithBrowserLanguage);
         if (language) {
-          return language;
+          return language.value;
         }
       }
 
@@ -134,7 +159,12 @@
     }
 
     function formatLanguage(language) {
-      return language.replace('-', '_');
+      var userLangSplit = _.split(language, /[-_]+/, 2);
+      if (userLangSplit.length <= 1) {
+        return language;
+      }
+
+      return _.toLower(userLangSplit[0]) + '_' + _.toUpper(userLangSplit[1]);
     }
   }
 

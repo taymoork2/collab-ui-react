@@ -1,8 +1,16 @@
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/typography';
+
 // Most CSS is reusing the toolkit forms styles
 setting-section {
   display: block;
 }
 
 setting-section + setting-section {
-  border-top: 1px solid #D7D7D8;
+  border-top: 1px solid $gray-light-2;
 }
+
+a.as-button {
+  color: $anchor-font-color;
+}
+

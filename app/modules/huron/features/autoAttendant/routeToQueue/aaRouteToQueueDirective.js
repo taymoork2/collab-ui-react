@@ -14,11 +14,12 @@
         index: '=aaIndex',
         keyIndex: '@aaKeyIndex',
         fromRouteCall: '@aaFromRouteCall',
-        queues: "@aaQueues"
+        fromDecision: '@aaFromDecision',
+        queues: '@aaQueues',
       },
       controller: 'AARouteToQueueCtrl',
       controllerAs: 'aaRouteToQueue',
-      templateUrl: 'modules/huron/features/autoAttendant/routeToQueue/aaRouteToQueue.tpl.html'
+      templateUrl: 'modules/huron/features/autoAttendant/routeToQueue/aaRouteToQueue.tpl.html',
     };
   }
 })();

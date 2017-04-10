@@ -1,3 +1,5 @@
+require('./_user-preview.scss');
+
 (function () {
   'use strict';
 
@@ -8,7 +10,7 @@
     return {
       restrict: 'EA',
       templateUrl: 'modules/core/users/userPreview/editServices.tpl.html',
-      controller: 'OnboardCtrl'
+      controller: 'OnboardCtrl',
     };
   }
 })();

@@ -1,0 +1,9 @@
+{
+    "type": "USER_PLACE",
+    "uuid": "38fcc914-5a18-442b-ae61-866df55d7ac9",
+    "firstName": "firstName",
+    "lastName": "lastName",
+    "userName": "userName",
+    "displayName": "displayName",
+    "url": "https://cmi.huron-int.com/api/v2/customers/226d7977-ff3a-42dc-88ff-f866170a06c8/places/38fcc914-5a18-442b-ae61-866df55d7ac9"
+}

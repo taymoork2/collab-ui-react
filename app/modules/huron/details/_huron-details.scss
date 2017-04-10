@@ -1,6 +1,5 @@
-/*import any additional sassy css (scss) here*/
+// import any additional sassy css (scss) here
 @import '../settings/_settings';
-@import '../features/_features';
 @import '../lines/_line-list';
 
 .save-section {
@@ -16,6 +15,7 @@
   p {
     flex: 1;
   }
+
   button {
     @include vr-spacing(ml, 0.5);
   }

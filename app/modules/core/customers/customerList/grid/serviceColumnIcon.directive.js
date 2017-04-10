@@ -10,19 +10,19 @@
       restrict: 'E',
       scope: {
         type: '@',
-        row: '='
+        row: '=',
       },
       templateUrl: 'modules/core/customers/customerList/grid/serviceColumnIcon.tpl.html',
-      link: link
+      link: link,
     };
 
     function link(scope) {
       scope.translateTypeToIcon = translateTypeToIcon;
       scope.getTooltipText = getTooltipText;
-      scope.isVisible = PartnerService.isLicenseTypeAny(scope.row, scope.type);
+      _setVisibility(scope);
       scope.$watch('row', _.throttle(function () {
         // When filtering, directives aren't "re-linked", so recalculate this
-        scope.isVisible = PartnerService.isLicenseTypeAny(scope.row, scope.type);
+        _setVisibility(scope);
       }, 25));
       // caching some of the expensive and repeated operations
       scope.TOOLTIP_TEMPLATE = $($templateCache.get('modules/core/customers/customerList/grid/serviceIconTooltip.tpl.html'));
@@ -35,13 +35,14 @@
         trial: 'trial',
         purchased: 'purchased',
         free: 'free',
-        noInfo: 'licenseInfoNotAvailable'
+        noInfo: 'licenseInfoNotAvailable',
       };
       var TYPE_TO_TRANSLATION_CONVERSIONS = {
         // an unfortunate requirement since (some of) the translations don't match the object names
         messaging: 'message',
         communications: 'call',
-        conferencing: 'meeting'
+        conferencing: 'meeting',
+        roomSystems: 'roomSystem',
       };
 
       // necessary to call this function due to the way that both toolkit's tooltip works
@@ -51,26 +52,35 @@
         if (type === WEBEX_TYPE) {
           return getWebexTooltip(rowData, type);
         } else {
-          var tooltip = scope.TOOLTIP_TEMPLATE.clone();
-          var serviceStatus = getServiceStatus(rowData, type);
-          var tooltipDataObj = {
-            statusClass: serviceStatus
-          };
-          if (TYPE_TO_TRANSLATION_CONVERSIONS[type]) {
-            tooltipDataObj.serviceName = $translate.instant('customerPage.' + TYPE_TO_TRANSLATION_CONVERSIONS[type]);
-          } else {
-            tooltipDataObj.serviceName = $translate.instant('customerPage.' + type);
-          }
-          if (serviceStatus !== POSSIBLE_SERVICE_STATUSES.free && rowData[type].volume) {
-            tooltipDataObj.qty = $translate.instant('customerPage.quantityWithValue', {
-              quantity: rowData[type].volume
-            });
-          }
-          tooltipDataObj.status = $translate.instant('customerPage.' + serviceStatus);
-          // Note that the tooltip displays raw html, which can contain unsecure code!
-          // In this case all input is put through $translate, sanitized, or changed to a constant
-          return $interpolate(tooltip[0].outerHTML)(tooltipDataObj);
+          return getNonWebexTooltip(rowData, type);
         }
+
+      }
+
+      function getNonWebexTooltip(rowData, type) {
+        var tooltip = scope.TOOLTIP_TEMPLATE.clone();
+        var serviceStatus = getServiceStatus(rowData, type);
+        var serviceManagedByAnotherPartner = !PartnerService.isServiceManagedByCurrentPartner(rowData[type]);
+        var tooltipDataObj = {
+          statusClass: serviceStatus,
+        };
+
+        if (TYPE_TO_TRANSLATION_CONVERSIONS[type]) {
+          tooltipDataObj.serviceName = $translate.instant('customerPage.' + TYPE_TO_TRANSLATION_CONVERSIONS[type]);
+        } else {
+          tooltipDataObj.serviceName = $translate.instant('customerPage.' + type);
+        }
+        if (serviceStatus !== POSSIBLE_SERVICE_STATUSES.free && rowData[type].volume) {
+          tooltipDataObj.qty = $translate.instant('customerPage.quantityWithValue', {
+            quantity: rowData[type].volume });
+        }
+        tooltipDataObj.status = $translate.instant('customerPage.' + serviceStatus);
+        if (serviceManagedByAnotherPartner && serviceStatus !== POSSIBLE_SERVICE_STATUSES.free && rowData[type].volume) {
+          tooltipDataObj.anotherPartner = $translate.instant('customerPage.anotherPartner');
+        }
+        // Note that the tooltip displays raw html, which can contain unsecure code!
+        // In this case all input is put through $translate, sanitized, or changed to a constant
+        return $interpolate(tooltip[0].outerHTML)(tooltipDataObj);
       }
 
       function getWebexTooltip(rowData) {
@@ -78,12 +88,14 @@
         tooltip.find('.service-name').text(scope.WEBEX_TRANSLATION);
         tooltip.find('.tooltip-qty').remove();
         tooltip.find('.service-status').remove();
+        tooltip.find('.tooltip-another-partner').remove();
         var webexServicesCounted = 0;
         var sitesFound = [];
-        _.forEach(Config.webexTypes, function (licenseType) {
+        var webexTypes = _.without(Config.webexTypes, 'webexCMR');
+        _.forEach(webexTypes, function (licenseType) {
           var licenseData = rowData[licenseType];
           var isLicenseAny = PartnerService.isLicenseTypeAny(rowData, licenseType);
-          var hasLicenseId = angular.isDefined(licenseData.licenseId);
+          var hasLicenseId = !_.isUndefined(licenseData.licenseId);
           var isUniqueUrl = !_.includes(sitesFound, licenseData.siteUrl);
 
           if (isLicenseAny && hasLicenseId && isUniqueUrl) {
@@ -96,7 +108,7 @@
         });
         if (webexServicesCounted > MAX_SITES_DISPLAYED) {
           var additionalSiteCount = $translate.instant('customerPage.webexSiteCount', {
-            count: webexServicesCounted - MAX_SITES_DISPLAYED
+            count: webexServicesCounted - MAX_SITES_DISPLAYED,
           }, 'messageformat');
           tooltip.append('<p class="service-text">' + additionalSiteCount + '</p>');
         }
@@ -106,14 +118,20 @@
       function createWebexTooltipBlock(rowData, licenseType, licenseData) {
         var tooltipBlock = scope.TOOLTIP_TEMPLATE_BLOCK.clone();
         var serviceStatus = getServiceStatus(rowData, licenseType);
+        var serviceManagedByAnotherPartner = !PartnerService.isServiceManagedByCurrentPartner(rowData[licenseType]);
         var tooltipDataObj = {
           url: licenseData.siteUrl,
           qty: $translate.instant('customerPage.quantityWithValue', {
-            quantity: licenseData.volume
+            quantity: licenseData.volume,
           }),
           statusClass: serviceStatus,
-          status: $translate.instant('customerPage.' + serviceStatus)
+          status: $translate.instant('customerPage.' + serviceStatus),
         };
+
+        if (serviceManagedByAnotherPartner && serviceStatus !== POSSIBLE_SERVICE_STATUSES.free && rowData[licenseType].volume) {
+          tooltipDataObj.anotherPartner = $translate.instant('customerPage.anotherPartner');
+        }
+
         return $interpolate(tooltipBlock[0].outerHTML)(tooltipDataObj);
       }
 
@@ -152,9 +170,22 @@
             return 'icon-webex';
           case 'roomSystems':
             return 'icon-devices';
+          case 'sparkBoard':
+            return 'icon-whiteboard';
           case 'care':
             return 'icon-headset';
         }
+      }
+
+      function _isVisible(row, type, collection) {
+        return PartnerService.isLicenseTypeAny(row, type) && collection.indexOf(type) !== -1;
+      }
+
+      function _setVisibility(scope) {
+        scope.showServiceManagedByCurrentPartner = _isVisible(scope.row, scope.type,
+          scope.row.orderedServices.servicesManagedByCurrentPartner);
+        scope.showServiceManagedByAnotherPartner = _isVisible(scope.row, scope.type,
+          scope.row.orderedServices.servicesManagedByAnotherPartner);
       }
     }
 

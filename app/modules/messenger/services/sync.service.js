@@ -15,23 +15,23 @@
     var syncModes = Object.freeze({
       messenger: {
         on: {
-          text: 'enabled'
+          text: 'enabled',
         },
         on_nospark: {
-          text: 'enabled_nospark'
+          text: 'enabled_nospark',
         },
         off: {
-          text: 'disabled'
-        }
+          text: 'disabled',
+        },
       },
       dirsync: {
         on: {
-          text: 'link_enabled'
+          text: 'link_enabled',
         },
         off: {
-          text: 'link_disabled'
-        }
-      }
+          text: 'link_disabled',
+        },
+      },
     });
 
     var syncStringFromServer = "";
@@ -55,7 +55,8 @@
       isPwdSync: true,
       isSparkEnt: true,  // false -- no spark
       isUsrDis: true,
-      isUsrMin: false   // true -- DirSync, read only as we don't change DirSync in messenger card
+      isUsrDel: true,
+      isUsrMin: false,   // true -- DirSync, read only as we don't change DirSync in messenger card
     };
 
     var serviceUrl = UrlConfig.getMessengerServiceUrl() + '/orgs/' + Authinfo.getOrgId() + '/cisync/';
@@ -77,7 +78,7 @@
       getNewDirSyncFlag: getNewDirSyncFlag,
       getSimplifiedStatus: getSimplifiedStatus,
       setDirSyncMode: setDirSyncMode,
-      setMessengerSyncMode: setMessengerSyncMode
+      setMessengerSyncMode: setMessengerSyncMode,
     };
 
     // Return the service
@@ -102,7 +103,7 @@
 
           defer.reject({
             status: response.status,
-            message: error
+            message: error,
           });
         });
 
@@ -178,7 +179,8 @@
         isNewDataFormat: syncStatus.isNewDataFormat,
         isPwdSync: syncStatus.isPwdSync,
         isSparkEnt: syncStatus.isSparkEnt,
-        isUsrDis: syncStatus.isUsrDis
+        isUsrDis: syncStatus.isUsrDis,
+        isUsrDel: syncStatus.isUsrDel,
       };
     }
 
@@ -307,6 +309,7 @@
       syncStatus.isPwdSync = true;
       syncStatus.isSparkEnt = true;
       syncStatus.isUsrDis = true;
+      syncStatus.isUsrDel = true;
       syncStatus.isUsrMin = false;
     }
 
@@ -314,7 +317,7 @@
       var syncMode = syncModes.messenger.off;
 
       // set to old data format by default, use new data format only when we detect it.
-      syncStringFromServer = syncString.trim();
+      syncStringFromServer = _.trim(syncString);
       syncStatus.isNewDataFormat = false;
       setSyncStatusNewDataDefaults();
 
@@ -338,11 +341,11 @@
           break;
         default:
           // new data format handled here -- "msgr_to_spark;pwd_sync=1:spark_ent=1:usr_dis=1:usr_del=1:usr_min=0"
-          var arraySyncString = syncString.trim().split(";");
+          var arraySyncString = _.trim(syncString).split(";");
           if (arraySyncString.length > 0) {
             // parse other data first before PK parse because of dependency
             if (arraySyncString.length > 1) {
-              var arrayOtherData = arraySyncString[1].trim().split(":");
+              var arrayOtherData = _.trim(arraySyncString[1]).split(":");
               _.forEach(arrayOtherData, function (data) {
                 // we only check non-default values
                 switch (data) {
@@ -354,6 +357,9 @@
                     break;
                   case "usr_dis=0":
                     syncStatus.isUsrDis = false;
+                    break;
+                  case "usr_del=0":
+                    syncStatus.isUsrDel = false;
                     break;
                   case "usr_min=1":
                     syncStatus.isUsrMin = true;
@@ -408,7 +414,7 @@
         keyValue += "0";
       }
       if (syncString.includes(key + "=", 0)) {
-        return syncString.replace(re, keyValue);
+        return _.replace(syncString, re, keyValue);
       } else {
         return syncString.concat(":" + keyValue);
       }
@@ -418,6 +424,7 @@
       syncStatus.isPwdSync = syncInfo.isPwdSync;
       syncStatus.isSparkEnt = syncInfo.isSparkEnt;
       syncStatus.isUsrDis = syncInfo.isUsrDis;
+      syncStatus.isUsrDel = syncInfo.isUsrDel;
       // Update sync mode
       if (isDirSyncRaw()) {
         setDirSyncMode(syncInfo.isSyncEnabled);
@@ -438,7 +445,7 @@
 
       var params = {
         ciSyncMode: syncStatus.syncMode.text,
-        authRedirect: syncStatus.isAuthRedirect
+        authRedirect: syncStatus.isAuthRedirect,
       };
       // new data format
       if (syncStatus.isNewDataFormat) {
@@ -455,43 +462,44 @@
         newSyncString = updateNewDataSyncString(newSyncString, /pwd_sync=[0-9]/, "pwd_sync", syncStatus.isPwdSync);
         newSyncString = updateNewDataSyncString(newSyncString, /spark_ent=[0-9]/, "spark_ent", syncStatus.isSparkEnt);
         newSyncString = updateNewDataSyncString(newSyncString, /usr_dis=[0-9]/, "usr_dis", syncStatus.isUsrDis);
+        newSyncString = updateNewDataSyncString(newSyncString, /usr_del=[0-9]/, "usr_del", syncStatus.isUsrDel);
         newSyncString = updateNewDataSyncString(newSyncString, /usr_min=[0-9]/, "usr_min", syncStatus.isUsrMin);
 
         params = {
           ciSyncMode: newSyncString,
-          authRedirect: syncStatus.isAuthRedirect
+          authRedirect: syncStatus.isAuthRedirect,
         };
       } else {
         // convert old format data to new data format when update clicked
         if (isDirSyncRaw()) {
           if (syncInfo.isSyncEnabled) {
-            newSyncString = "msgr_to_spark;pwd_sync=0:usr_dis=0:spark_ent=1:usr_min=1";
+            newSyncString = "msgr_to_spark;pwd_sync=0:usr_dis=0:usr_del=0:spark_ent=1:usr_min=1";
           } else {
             newSyncString = "disabled;usr_min=1";
           }
           params = {
             ciSyncMode: newSyncString,
-            authRedirect: syncStatus.isAuthRedirect
+            authRedirect: syncStatus.isAuthRedirect,
           };
         } else {
           // ***note*** we don't set isNewDataFormat after conversion, we get this when next fetch & parse
           if (isEnabledNoSpark) {
             // enabled_nospark -> msgr_to_spark;spark_ent=0:pwd_sync=1:usr_dis=1:usr_min=0
             if (syncInfo.isSyncEnabled) {
-              newSyncString = "msgr_to_spark;spark_ent=0:pwd_sync=1:usr_dis=1:usr_min=0";
+              newSyncString = "msgr_to_spark;spark_ent=0:pwd_sync=1:usr_dis=1:usr_del=1:usr_min=0";
             } else {
-              newSyncString = "disabled;spark_ent=0:pwd_sync=1:usr_dis=1:usr_min=0";
+              newSyncString = "disabled;spark_ent=0:pwd_sync=1:usr_dis=1:usr_del=1:usr_min=0";
             }
             params = {
               ciSyncMode: newSyncString,
-              authRedirect: syncStatus.isAuthRedirect
+              authRedirect: syncStatus.isAuthRedirect,
             };
           } else if (syncInfo.isSyncEnabled) {
             // convert to new data format when enabling the msgr sync with the default values
-            newSyncString = "msgr_to_spark;pwd_sync=1:spark_ent=1:usr_dis=1:usr_min=0";
+            newSyncString = "msgr_to_spark;pwd_sync=1:spark_ent=1:usr_dis=1:usr_del=1:usr_min=0";
             params = {
               ciSyncMode: newSyncString,
-              authRedirect: syncStatus.isAuthRedirect
+              authRedirect: syncStatus.isAuthRedirect,
             };
           }
         }
@@ -508,7 +516,7 @@
 
         defer.reject({
           status: response.status,
-          message: error
+          message: error,
         });
       });
 

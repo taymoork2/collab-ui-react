@@ -3,7 +3,7 @@
 
   module.exports = angular
     .module('core.readonlyinterceptor', [
-      require('modules/core/notifications/notifications.module'),
+      require('modules/core/notifications').default,
       require('modules/core/scripts/services/authinfo'),
       require('modules/core/scripts/services/log'),
     ])
@@ -27,11 +27,13 @@
       '/WBXService/XMLService',
       '/meetingsapi/v1/users/',
       '/meetingsapi/v1/files/',
-      '/releaseChannels'
+      '/channels',
+      '/api/v1/internals/actions/invalidateUser/invoke',
+      '/releaseChannels',
     ];
 
     return {
-      request: rejectOnNotRead
+      request: rejectOnNotRead,
     };
 
     function rejectOnNotRead(config) {
@@ -52,14 +54,15 @@
     }
 
     function isInAllowedList(url) {
-      var found = _.find(allowedList, function (p) {
+      var foundInAllowList = _.find(allowedList, function (p) {
         return _.includes(url, p);
       });
-      if (found) {
-        return true;
-      } else {
-        return false;
-      }
+      return foundInAllowList || isUpdatingSelfInCI(url);
+    }
+
+    function isUpdatingSelfInCI(url) {
+      var Authinfo = $injector.get('Authinfo');
+      return _.includes(url, 'identity/scim/' + Authinfo.getUserOrgId() + '/v1/Users/' + Authinfo.getUserId());
     }
   }
 

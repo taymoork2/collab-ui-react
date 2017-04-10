@@ -8,7 +8,7 @@ export class OnlineAnalyticsService {
   /* @ngInject */
   constructor(
     private Authinfo,
-    private Config
+    private Config,
   ) {}
 
   public track(event: string): void {

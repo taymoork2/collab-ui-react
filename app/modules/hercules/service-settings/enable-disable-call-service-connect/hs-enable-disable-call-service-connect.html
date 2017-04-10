@@ -1,0 +1,11 @@
+<button type="button"
+        class="btn"
+        ng-class="{'btn--primary': !$ctrl.serviceIsEnabled}"
+        ng-disabled="$ctrl.saving"
+        ng-click="$ctrl.flipStatus()">
+  <span ng-if="!$ctrl.serviceIsEnabled" translate="common.activate"></span>
+  <span ng-if="$ctrl.serviceIsEnabled" translate="common.deactivate"></span>
+</button>
+<span ng-show="$ctrl.saving">
+  <i class="icon icon-spinner"/>
+</span>

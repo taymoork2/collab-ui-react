@@ -11,18 +11,18 @@ describe(
     var $translate;
 
     // source
-    var paramsSiteUrl = "g0.webex.com";
-    var paramsWebexPageId = "CommonSettings_address";
-    var paramsSettingPageIframeUrl = '"https://g0.ciscospark.com/wbxadmin/address/addressbook.do?siteurl=sjsite14&actionFlag=first&currentPageNum=1&index=ALL"';
-    var authPrimaryEmail = "mojoco@webex.com";
-    var useLocale = "es_LA";
+    var paramsSiteUrl = 'g0.webex.com';
+    var paramsWebexPageId = 'CommonSettings_address';
+    var paramsSettingPageIframeUrl = 'https://g0.ciscospark.com/wbxadmin/address/addressbook.do?siteurl=sjsite14&actionFlag=first&currentPageNum=1&index=ALL';
+    var authPrimaryEmail = 'mojoco@webex.com';
+    var useLocale = 'es_CO';
 
     // expected
     var scopeSiteSettingId = paramsWebexPageId;
-    var scopeSiteSettingsBreadcrumbUiSref = "site-list.site-settings({siteUrl:" + "'" + paramsSiteUrl + "'" + "})";
+    var scopeSiteSettingsBreadcrumbUiSref = 'site-list.site-settings({siteUrl:' + '"' + paramsSiteUrl + '"' + '})';
     var scopeTrustIframeUrl = paramsSettingPageIframeUrl;
     var scopeAdminEmail = authPrimaryEmail;
-    var scopeLocale = "es_MX";
+    var scopeLocale = 'es_MX';
     var scopeSiteName = paramsSiteUrl;
 
     beforeEach(angular.mock.module('WebExApp'));

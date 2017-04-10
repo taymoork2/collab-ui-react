@@ -1,12 +1,14 @@
 'use strict';
 
+var csvDownloadModule = require('modules/core/csvDownload').default;
+
 describe('Template: editServices', function () {
 
   var SAVE_BUTTON = '#btnSaveEnt';
   var userId = 'dbca1001-ab12-cd34-de56-abcdef123454';
 
   function init() {
-    this.initModules('Core', 'Hercules', 'Huron', 'Messenger', 'Sunlight', 'WebExApp');
+    this.initModules('Core', 'Hercules', 'Huron', 'Messenger', 'Sunlight', 'WebExApp', csvDownloadModule);
     this.injectDependencies('$httpBackend', '$q', '$previousState', 'CsvDownloadService', 'FeatureToggleService', 'Orgservice', 'UrlConfig');
     initDependencySpies.apply(this);
     this.compileView('OnboardCtrl', 'modules/core/users/userPreview/editServices.tpl.html');
@@ -25,16 +27,14 @@ describe('Template: editServices', function () {
         return this.$q.resolve({});
       }
     }.bind(this));
-    spyOn(this.FeatureToggleService, 'supportsDirSync').and.returnValue(this.$q.resolve(false));
-    spyOn(this.FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(this.$q.resolve(true));
+    spyOn(this.FeatureToggleService, 'atlasSharedMeetingsGetStatus').and.returnValue(this.$q.when(false));
     spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
-    spyOn(this.Orgservice, 'getHybridServiceAcknowledged').and.returnValue(this.$q.resolve(this.mock.fusionServices));
     spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.mock.getLicensesUsage));
     spyOn(this.Orgservice, 'getUnlicensedUsers');
     spyOn(this.$previousState, 'get').and.returnValue({
       state: {
-        name: 'test.state'
-      }
+        name: 'test.state',
+      },
     });
     this.$httpBackend.expectGET(this.UrlConfig.getSunlightConfigServiceUrl() + '/user/' + userId).respond(200);
     this.$httpBackend
@@ -46,7 +46,7 @@ describe('Template: editServices', function () {
         "uuid": "70b8d459-7f58-487a-afc8-02c0a82d53ca",
         "steeringDigit": "9",
         "timeZone": "America/Los_Angeles",
-        "voicemailPilotNumberGenerated": "false"
+        "voicemailPilotNumberGenerated": "false",
       }]);
   }
 

@@ -1,3 +1,5 @@
+require('./_new-feature.scss');
+
 (function () {
   'use strict';
 
@@ -14,26 +16,38 @@
       code: 'autoAttendant.code',
       label: 'autoAttendant.title',
       description: 'autoAttendant.modalDescription',
-      toggle: 'huronAutoAttendant'
+      toggle: 'huronAutoAttendant',
     }, {
       id: 'HG',
       code: 'huronHuntGroup.code',
       label: 'huronHuntGroup.modalTitle',
       description: 'huronHuntGroup.modalDescription',
-      toggle: 'huronHuntGroup'
-    }];
-
-    var callParkService = {
+      toggle: 'huronHuntGroup',
+    }, {
       id: 'CP',
       code: 'callPark.code',
       label: 'callPark.title',
       description: 'callPark.modalDescription',
-      toggle: 'huronCallPark'
+      toggle: 'huronCallPark',
+    }, {
+      id: 'PG',
+      code: 'pagingGroup.code',
+      label: 'pagingGroup.title',
+      description: 'pagingGroup.modalDescription',
+      toggle: 'huronPagingGroup',
+    }];
+
+    var callPickupService = {
+      id: 'PI',
+      code: 'callPickup.code',
+      label: 'callPickup.title',
+      description: 'callPickup.modalDescription',
+      toggle: 'huronCallPickup',
     };
 
-    FeatureToggleService.supports(FeatureToggleService.features.callParkService).then(function (result) {
+    FeatureToggleService.supports(FeatureToggleService.features.huronCallPickup).then(function (result) {
       if (result) {
-        vm.features.push(callParkService);
+        vm.features.push(callPickupService);
       }
       init();
     });
@@ -51,12 +65,16 @@
         $state.go('huronHuntGroup');
       } else if (featureId === 'CP') {
         $state.go('huronCallPark');
+      } else if (featureId === 'PI') {
+        $state.go('huronCallPickup');
       } else if (featureId === 'AA') {
         $modal.open({
           templateUrl: 'modules/huron/features/newFeature/aatype-select-modal.html',
           controller: 'AATypeSelectCtrl',
-          size: 'lg'
+          size: 'lg',
         });
+      } else if (featureId === 'PG') {
+        $state.go('huronPagingGroup');
       }
       $modalInstance.close(featureId);
     }

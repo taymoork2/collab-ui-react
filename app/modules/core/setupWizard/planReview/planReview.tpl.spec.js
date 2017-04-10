@@ -4,6 +4,13 @@ describe('Template: planReview', function () {
   var $scope, $controller, $httpBackend, controller, $q, $templateCache, $compile, view;
   var FeatureToggleService, Userservice, UrlConfig, getUserMe;
 
+  afterEach(function () {
+    if (view) {
+      view.remove();
+    }
+    view = undefined;
+  });
+
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
@@ -17,7 +24,7 @@ describe('Template: planReview', function () {
     getCareServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/careServices.json').careLicense),
     getCmrServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/cmrServices.json')),
     getLicenses: sinon.stub().returns(getJSONFixture('core/json/authInfo/licenseServices.json')),
-    isCare: sinon.stub().returns(true)
+    isCare: sinon.stub().returns(true),
   };
 
   beforeEach(angular.mock.module(function ($provide) {
@@ -42,9 +49,10 @@ describe('Template: planReview', function () {
   }
 
   function initSpies() {
-    spyOn(FeatureToggleService, 'getFeatureForUser').and.returnValue($q.when(true));
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
-    spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'getFeatureForUser').and.returnValue($q.resolve(true));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
+    spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.resolve(true));
+    spyOn(FeatureToggleService, 'atlasSharedMeetingsGetStatus').and.returnValue($q.resolve(false));
     getUserMe = getJSONFixture('core/json/users/me.json');
 
     spyOn(Userservice, 'getUser').and.callFake(function (uid, callback) {
@@ -57,7 +65,7 @@ describe('Template: planReview', function () {
 
   function compileView() {
     controller = $controller('PlanReviewCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
     $scope.planReview = controller;
     var template = $templateCache.get('modules/core/setupWizard/planReview/planReview.tpl.html');

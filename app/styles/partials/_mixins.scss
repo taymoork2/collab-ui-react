@@ -1,6 +1,7 @@
 @mixin close-icon($color, $hover-color) {
   cursor: pointer;
   color: $color;
+
   &:hover {
     color: $hover-color;
   }

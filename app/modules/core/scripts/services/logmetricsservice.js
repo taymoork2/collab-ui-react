@@ -5,7 +5,7 @@
     require('modules/core/scripts/services/authinfo'),
     require('modules/core/config/config'),
     require('modules/core/scripts/services/log'),
-    require('modules/core/scripts/services/storage'),
+    require('modules/core/storage').default,
     require('modules/core/auth/auth'),
     require('modules/core/config/urlConfig'),
   ]).service('LogMetricsService', LogMetricsService)
@@ -30,10 +30,14 @@
       eventAction: {
         buttonClick: 'BUTTONCLICK',
         pageLoad: 'PAGELOAD',
-        keyInputs: 'KEYINPUTS'
+        keyInputs: 'KEYINPUTS',
       },
 
       eventType: {
+        contextNewField: 'CONTEXTNEWFIELD',
+        contextCreateFieldsetSuccess: 'CONTEXTCREATEFIELDSETSUCCESS',
+        contextCreateFieldsetFailure: 'CONTEXTCREATEFIELDSETFAILURE',
+        contextNewFieldset: 'CONTEXTNEWFIELDSET',
         contextServiceEnabled: 'CONTEXTSERVICEENABLED',
         contextServiceDisabled: 'CONTEXTSERVICEDISABLED',
         inviteUsers: 'INVITEUSERS',
@@ -44,6 +48,7 @@
         trialDidEntered: 'TRIALDIDENTERED',
         trialStarted: 'TRIALSTARTED',
         trialEdited: 'TRIALEDITED',
+        trialExtPartnerNotify: 'TRIALEXTPARTNERNOTIFY',
         organizationPage: 'ORGANIZATIONPAGE',
         organizationCreated: 'ORGANIZATIONCREATED',
         customerLogin: 'CUSTOMERLOGIN',
@@ -65,11 +70,16 @@
         domainManageInstructions: 'DOMAININST',
         helpdeskSearch: 'HELPDESKSEARCH',
         helpdeskOperation: 'HELPDESKOPERATION',
+        deviceUsageReportOperation: 'DEVICEUSAGEREPORTOPERATION',
         careTemplateInit: 'CARETEMPLATEINIT',
         careTemplateFinish: 'CARETEMPLATEFINISH',
         careReports: 'CAREREPORTS',
         careEnabled: 'CAREENABLED',
-        careDisabled: 'CAREDISABLED'
+        careDisabled: 'CAREDISABLED',
+        careVoiceEnabled: 'CAREVOICEENABLED',
+        careVoiceDisabled: 'CAREVOICEDISABLED',
+        dirSyncDisabled: 'DIRSYNCDISABLED',
+        connectorDeregistered: "CONNECTORDEREGISTERED",
       },
 
       getEventAction: function (eAction) {
@@ -91,7 +101,7 @@
 
           events[0] = new LogMetricEvent(eAction, eType, status, elapsedTime, units, data);
           var logsMetricEvent = {
-            metrics: events
+            metrics: events,
           };
           Log.debug(logsMetricEvent);
           if (Config.isProd()) {
@@ -108,17 +118,13 @@
         var stateFound = true;
 
         switch (state.name) {
-          case 'trialAdd.info':
+          case 'trial.info':
             msg = "In trial page";
             eType = this.getEventType('trialPage');
             break;
-          case 'trialAdd.addNumbers':
+          case 'trial.addNumbers':
             msg = "In trial DID page";
             eType = this.getEventType('trialDidPage');
-            break;
-          case 'organization-overview.add.info':
-            msg = "In organization creation page";
-            eType = this.getEventType('organizationPage');
             break;
           case 'overview':
             msg = "In customer overview page";
@@ -156,7 +162,7 @@
             msg = 'In Care reports';
             eType = this.getEventType('careReports');
             break;
-          case 'care.ChatSA':
+          case 'care.setupAssistant':
             msg = 'In Care Template setup assistant';
             eType = this.getEventType('careTemplateInit');
             break;
@@ -168,7 +174,7 @@
         if (stateFound && (msg !== null) && (eType !== null)) {
           this.logMetrics(msg, eType, this.eventAction['buttonClick'], 200, moment(), 1, null);
         }
-      }
+      },
 
     };
   }

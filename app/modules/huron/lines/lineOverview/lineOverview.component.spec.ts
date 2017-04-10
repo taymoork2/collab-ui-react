@@ -1,4 +1,5 @@
-import { LineConsumerType, Line } from '../services';
+import { LineConsumerType, Line } from 'modules/huron/lines/services';
+import { CallForward } from 'modules/huron/callForward';
 
 describe('Component: lineOverview', () => {
   const BUTTON_SAVE = '.button-container .btn--primary';
@@ -11,6 +12,7 @@ describe('Component: lineOverview', () => {
     siteToSite: '71001234',
     incomingCallMaximum: 8,
     primary: true,
+    shared: false,
   };
 
   let existingLineNonPrimary: Line = {
@@ -20,11 +22,14 @@ describe('Component: lineOverview', () => {
     siteToSite: '71006789',
     incomingCallMaximum: 2,
     primary: false,
+    shared: false,
   };
 
   let esnPrefix: string = '7100';
   let internalNumbers: Array<string> = ['1234', '5678'];
   let externalNumbers: Array<string> = ['+5555551212', '+5555551313'];
+
+  beforeEach(angular.mock.module('Squared'));
 
   beforeEach(function () {
     this.initModules('huron.line-overview');
@@ -33,7 +38,9 @@ describe('Component: lineOverview', () => {
       '$scope',
       '$state',
       'LineOverviewService',
-      'DirectoryNumberOptionsService'
+      'DirectoryNumberOptionsService',
+      'CallerIDService',
+      'FeatureToggleService',
     );
 
     this.existingLinePrimary = existingLinePrimary;
@@ -42,8 +49,10 @@ describe('Component: lineOverview', () => {
     this.internalNumbers = internalNumbers;
     this.externalNumbers = externalNumbers;
 
+    this.$scope.ownerName = 'Bond James Bond';
+    this.$scope.ownerId = '007';
     this.getLineOverviewDataDefer = this.$q.defer();
-    spyOn(this.LineOverviewService, 'getLineOverviewData').and.returnValue(this.getLineOverviewDataDefer.promise);
+    spyOn(this.LineOverviewService, 'get').and.returnValue(this.getLineOverviewDataDefer.promise);
 
     this.getInternalNumberOptionsDefer = this.$q.defer();
     spyOn(this.DirectoryNumberOptionsService, 'getInternalNumberOptions').and.returnValue(this.getInternalNumberOptionsDefer.promise);
@@ -54,15 +63,17 @@ describe('Component: lineOverview', () => {
     this.getExternalNumberOptionsDefer = this.$q.defer();
     spyOn(this.DirectoryNumberOptionsService, 'getExternalNumberOptions').and.returnValue(this.getExternalNumberOptionsDefer.promise);
 
-    this.createLineDefer = this.$q.defer();
-    spyOn(this.LineOverviewService, 'createLine').and.returnValue(this.createLineDefer.promise);
+    this.saveDefer = this.$q.defer();
+    spyOn(this.LineOverviewService, 'save').and.returnValue(this.saveDefer.promise);
+
+    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.when(true));
   });
 
   function initComponent() {
     this.compileComponent('ucLineOverview', {
       ownerType: 'place',
-      ownerName: 'Bond James Bond',
-      ownerId: '007',
+      ownerName: 'ownerName',
+      ownerId: 'ownerId',
       numberId: 'numberId',
     });
   }
@@ -73,6 +84,7 @@ describe('Component: lineOverview', () => {
       this.$scope.numberId = this.existingLinePrimary.uuid;
       this.lineOverview = {
         line: this.existingLinePrimary,
+        callForward: new CallForward(),
       };
     });
 
@@ -84,7 +96,7 @@ describe('Component: lineOverview', () => {
       this.$scope.$apply();
 
       expect(this.DirectoryNumberOptionsService.getInternalNumberOptions).toHaveBeenCalled();
-      expect(this.LineOverviewService.getLineOverviewData).toHaveBeenCalled();
+      expect(this.LineOverviewService.get).toHaveBeenCalled();
       expect(this.LineOverviewService.getEsnPrefix).toHaveBeenCalled();
       expect(this.DirectoryNumberOptionsService.getExternalNumberOptions).toHaveBeenCalled();
     });
@@ -112,6 +124,7 @@ describe('Component: lineOverview', () => {
     beforeEach(function () {
       this.lineOverview = {
         line: new Line(),
+        callForward: new CallForward(),
       };
       this.getInternalNumberOptionsDefer.resolve(this.internalNumbers);
       this.getLineOverviewDataDefer.resolve(this.lineOverview);
@@ -138,8 +151,8 @@ describe('Component: lineOverview', () => {
 
     it('should create new line when save button is clicked', function () {
       this.view.find(BUTTON_SAVE).click();
-      this.createLineDefer.resolve();
-      expect(this.LineOverviewService.createLine).toHaveBeenCalledWith(LineConsumerType.PLACES, '007', this.lineOverview.line);
+      this.saveDefer.resolve();
+      expect(this.LineOverviewService.save).toHaveBeenCalledWith(LineConsumerType.PLACES, '007', undefined, this.lineOverview, []);
     });
 
   });

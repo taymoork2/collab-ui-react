@@ -15,7 +15,7 @@
     vm.assignToResourceGroup = 'no';
     vm._translation = {
       assignYes: $translate.instant('hercules.addResourceDialog.assignYes'),
-      assignNo: $translate.instant('hercules.addResourceDialog.assignNo')
+      assignNo: $translate.instant('hercules.addResourceDialog.assignNo'),
     };
     vm.next = next;
     vm.canGoNext = canGoNext;
@@ -24,7 +24,7 @@
 
     function init() {
 
-      FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups)
+      FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup)
         .then(function (supported) {
           if (!supported) {
             $stateParams.wizard.next();
@@ -37,8 +37,9 @@
                 } else {
                   $stateParams.wizard.next();
                 }
-              }, function () {
-                Notification.error('hercules.genericFailure');
+              })
+              .catch(function (error) {
+                Notification.errorWithTrackingId(error, 'hercules.genericFailure');
               });
           }
         });
@@ -53,8 +54,9 @@
         ResourceGroupService.assign(vm.clusterId, vm.selectedResourceGroup.value)
           .then(function () {
             $stateParams.wizard.next();
-          }, function () {
-            Notification.error('hercules.genericFailure');
+          })
+          .catch(function (error) {
+            Notification.errorWithTrackingId(error, 'hercules.genericFailure');
           });
       } else {
         $stateParams.wizard.next();

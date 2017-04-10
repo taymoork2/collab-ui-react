@@ -12,7 +12,7 @@
       getData: getData,
       reset: reset,
       hasCallDevicesAvailable: hasCallDevicesAvailable,
-      canAddCallDevice: canAddCallDevice
+      canAddCallDevice: canAddCallDevice,
     };
 
     return service;
@@ -37,30 +37,30 @@
             enabled: false,
             quantity: 0,
             readonly: false,
-            valid: true
+            valid: true,
           }, {
             model: 'CISCO_8845',
             enabled: false,
             quantity: 0,
             readonly: false,
-            valid: true
+            valid: true,
           }, {
             model: 'CISCO_8841',
             enabled: false,
             quantity: 0,
             readonly: false,
-            valid: true
+            valid: true,
           }, {
             model: 'CISCO_7841',
             enabled: false,
             quantity: 0,
             readonly: false,
-            valid: true
-          }]
-        }
+            valid: true,
+          }],
+        },
       };
 
-      _trialData = angular.copy(defaults);
+      _trialData = _.cloneDeep(defaults);
       return _trialData;
     }
 

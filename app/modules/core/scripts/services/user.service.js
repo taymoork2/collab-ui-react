@@ -6,13 +6,13 @@
     .service('Userservice', Userservice);
 
   /* @ngInject */
-  function Userservice($http, $q, $rootScope, $translate, Authinfo, Config, HuronUser, Log, NAME_DELIMITER, Notification, SunlightConfigService, TelephoneNumberService, UrlConfig) {
+  function Userservice($http, $q, $rootScope, Authinfo, Config, HuronUser, Log, NAME_DELIMITER, Notification, SunlightConfigService, TelephoneNumberService, UrlConfig) {
     var userUrl = UrlConfig.getAdminServiceUrl();
-
     var service = {
       updateUsers: updateUsers,
       addUsers: addUsers,
       getUser: getUser,
+      getUserAsPromise: getUserAsPromise,
       updateUserProfile: updateUserProfile,
       inviteUsers: inviteUsers,
       sendEmail: sendEmail,
@@ -27,30 +27,36 @@
       resendInvitation: resendInvitation,
       sendSparkWelcomeEmail: sendSparkWelcomeEmail,
       getUserPhoto: getUserPhoto,
-      isValidThumbnail: isValidThumbnail
+      isValidThumbnail: isValidThumbnail,
+      getAnyDisplayableNameFromUser: getAnyDisplayableNameFromUser,
+      getFullNameFromUser: getFullNameFromUser,
+      getPrimaryEmailFromUser: getPrimaryEmailFromUser,
+      getUserLicence: getUserLicence,
+      getPreferredWebExSiteForCalendaring: getPreferredWebExSiteForCalendaring,
     };
 
+    // TODO: migrate these helpers to 'SunlightUserService'
     var _helpers = {
-      isSunlightUserUpdateRequired: isSunlightUserUpdateRequired,
+      licenseUpdateRequired: licenseUpdateRequired,
+      removeCESRoleforUser: removeCESRoleforUser,
       getUserLicence: getUserLicence,
-      createUserData: createUserData
+      createUserData: createUserData,
     };
 
     return service;
 
     function updateUsers(usersDataArray, licenses, entitlements, method, callback) {
       var userData = {
-        users: []
+        users: [],
       };
 
-      for (var i = 0; i < usersDataArray.length; i++) {
-        var userInfo = usersDataArray[i];
-        var userEmail = userInfo.address.trim();
+      _.forEach(usersDataArray, function (userInfo) {
+        var userEmail = _.trim(userInfo.address);
         if (userEmail.length > 0) {
           var user = {
             email: userEmail,
             userEntitlements: entitlements,
-            licenses: licenses
+            licenses: licenses,
           };
 
           var userLic = {};
@@ -68,45 +74,45 @@
           }
           userData.users.push(user);
         }
-      }
+      });
 
       if (userData.users.length > 0) {
         return $http({
           method: 'PATCH',
           url: userUrl + 'organization/' + Authinfo.getOrgId() + '/users',
-          data: userData
+          data: userData,
         }).success(function (data, status, headers) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           $rootScope.$broadcast('Userservice::updateUsers');
           data.success = true;
-          if (angular.isFunction(callback)) {
+          if (_.isFunction(callback)) {
             callback(data, status, method, headers);
           }
         }).error(function (data, status, headers) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = false;
           data.status = status;
-          if (angular.isFunction(callback)) {
+          if (_.isFunction(callback)) {
             callback(data, status, method, headers);
           }
         });
       } else {
-        return $q.when();
+        return $q.resolve();
       }
     }
 
     function addUsers(usersDataArray, entitlements, callback) {
       var userData = {
-        'users': []
+        'users': [],
       };
 
-      for (var i = 0; i < usersDataArray.length; i++) {
-        var userEmail = usersDataArray[i].address.trim();
-        var userName = usersDataArray[i].name.trim();
+      _.forEach(usersDataArray, function (userInfo) {
+        var userEmail = _.trim(userInfo.address);
+        var userName = _.trim(userInfo.name);
         var user = {
           'email': null,
           'name': null,
-          'userEntitlements': entitlements
+          'userEntitlements': entitlements,
         };
         if (userEmail.length > 0) {
           user.email = userEmail;
@@ -115,19 +121,19 @@
           }
           userData.users.push(user);
         }
-      }
+      });
 
       if (userData.users.length > 0) {
 
         $http.post(userUrl + 'organization/' + Authinfo.getOrgId() + '/users', userData)
           .success(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             $rootScope.$broadcast('Userservice::updateUsers');
             data.success = true;
             callback(data, status);
           })
           .error(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             data.success = false;
             data.status = status;
 
@@ -138,6 +144,11 @@
       }
     }
 
+    // DEPRECATED
+    // - update all callers of this method to use 'getUserAsPromise()' instead, before removing
+    //   this implementataion
+    // - 'getUserAsPromise()' can then assume this name after all callers use promise-style
+    //   chaining
     function getUser(userid, noCache, callback) {
       var scimUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + userid;
       // support the signature getUser(userid, noCache, callback) and getUser(userid, callback)
@@ -145,22 +156,28 @@
         callback = noCache;
       }
       return $http.get(scimUrl, {
-        cache: !noCache
+        cache: !noCache,
       })
         .success(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = true;
           callback(data, status);
         })
         .error(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = false;
           data.status = status;
           callback(data, status);
         });
     }
 
-    function updateUserProfile(userid, userData, callback) {
+    function getUserAsPromise(userId, httpConfig) {
+      var scimUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + userId;
+      var _httpConfig = _.extend({}, httpConfig);
+      return $http.get(scimUrl, _httpConfig);
+    }
+
+    function updateUserProfile(userid, userData) {
       var scimUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + userid;
 
       if (!userData) {
@@ -170,36 +187,26 @@
       return $http({
         method: 'PATCH',
         url: scimUrl,
-        data: userData
+        data: userData,
       })
-        .success(function (data, status) {
-          data = data || {};
+        .then(function (response) {
+          var entitlements = _.get(response, 'data.entitlements', []);
           // This code is being added temporarily to update users on Squared UC
           // Discussions are ongoing concerning how these common functions should be
           // integrated.
-          if (data.entitlements && data.entitlements.indexOf(Config.entitlements.huron) !== -1) {
-            HuronUser.update(data.id, data)
+          if (_.includes(entitlements, Config.entitlements.huron)) {
+            var data = _.get(response, 'data', {});
+            return HuronUser.update(data.id, data)
+              .catch(function (huronResponse) {
+                // Notify Huron error huronResponse
+                Notification.errorResponse(huronResponse);
+              })
               .then(function () {
-                data.success = true;
-                callback(data, status);
-              }).catch(function (response) {
-                // Notify Huron error
-                Notification.errorResponse(response);
-
-                // Callback update success
-                data.success = true;
-                callback(data, status);
+                // always return original successful response
+                return response;
               });
-          } else {
-            data.success = true;
-            callback(data, status);
           }
-        })
-        .error(function (data, status) {
-          data = data || {};
-          data.success = false;
-          data.status = status;
-          callback(data, status);
+          return response;
         });
     }
 
@@ -215,21 +222,21 @@
       }
 
       var userData = {
-        'inviteList': []
+        'inviteList': [],
       };
 
-      for (var i = 0; i < usersDataArray.length; i++) {
-        var userEmail = usersDataArray[i].address.trim();
+      _.forEach(usersDataArray, function (userInfo) {
+        var userEmail = _.trim(userInfo.address);
 
         var userName = null;
-        if (usersDataArray[i].name) {
-          userName = usersDataArray[i].name.trim();
+        if (userInfo.name) {
+          userName = _.trim(userInfo.name);
         }
 
         var user = {
           'email': userEmail,
           'displayName': userName,
-          'userEntitlements': null
+          'userEntitlements': null,
         };
         if (entitlements) {
           user['userEntitlements'] = entitlements;
@@ -237,18 +244,18 @@
         if (userEmail.length > 0) {
           userData.inviteList.push(user);
         }
-      }
+      });
 
       if (userData.inviteList.length > 0) {
 
         $http.post(apiUrl, userData)
           .success(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             data.success = true;
             callback(data, status);
           })
           .error(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             data.success = false;
             data.status = status;
             callback(data, status);
@@ -261,16 +268,16 @@
     function sendEmail(userEmail, adminEmail, callback) {
       var requestBody = {
         'recipientEmail': userEmail,
-        'adminEmail': adminEmail
+        'adminEmail': adminEmail,
       };
       $http.post(userUrl + 'user/mail/provisioning', requestBody)
         .success(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = true;
           callback(data, status);
         })
         .error(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = false;
           data.status = status;
           callback(data, status);
@@ -289,55 +296,45 @@
       return $http.get(emailUrl);
     }
 
-    function patchUserRoles(email, name, roles, callback) {
+    // TODO: mipark2 - remove this and update upstream code to use UserRoleService
+    function patchUserRoles(email, name, roles) {
       var patchUrl = userUrl + '/organization/' + Authinfo.getOrgId() + '/users/roles';
 
       var requestBody = {
         'users': [{
           'userRoles': roles,
           'email': email,
-          'name': name
-        }]
+          'name': name,
+        }],
       };
 
-      $http({
+      return $http({
         method: 'PATCH',
         url: patchUrl,
-        data: requestBody
-      })
-        .success(function (data, status) {
-          data = data || {};
-          data.success = true;
-          callback(data, status);
-        })
-        .error(function (data, status) {
-          data = data || {};
-          data.success = false;
-          data.status = status;
-          callback(data, status);
-        });
+        data: requestBody,
+      });
     }
 
     function migrateUsers(users, callback) {
       var requestBody = {
-        'users': []
+        'users': [],
       };
 
       for (var x in users) {
         var user = {
-          'email': users[x].userName
+          'email': users[x].userName,
         };
         requestBody.users.push(user);
       }
 
       $http.post(userUrl + 'organization/' + Authinfo.getOrgId() + '/users/migrate', requestBody)
         .success(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = true;
           callback(data, status);
         })
         .error(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = false;
           data.status = status;
           callback(data, status);
@@ -351,7 +348,7 @@
       // bind the licenses and entitlements that are shared by all users
       var getUserPayload = getUserPayloadForOnboardAPI.bind({
         licenses: licenses,
-        entitlements: entitlements
+        entitlements: entitlements,
       });
       var userPayload = getUserPayload(usersDataArray, true);
       return onboardUsersAPI(userPayload, cancelPromise);
@@ -379,11 +376,11 @@
       var licenses = (!_.isUndefined(thisParams) && _.isArray(thisParams.licenses)) ? thisParams.licenses : undefined;
       var entitlements = (!_.isUndefined(thisParams) && _.isArray(thisParams.entitlements)) ? thisParams.entitlements : undefined;
       var userPayload = {
-        'users': []
+        'users': [],
       };
 
-      _.forEach(users || [], function (userData) {
-        var userEmail = userData.address.trim();
+      _.forEach(users, function (userData) {
+        var userEmail = _.trim(userData.address);
         var userName = userData.name;
         var displayName = userData.displayName;
 
@@ -394,7 +391,7 @@
             'familyName': null,
           },
           'userEntitlements': null,
-          'licenses': null
+          'licenses': null,
         };
 
         if (userEmail.length > 0) {
@@ -439,17 +436,17 @@
       }
       return {
         'givenName': givenName,
-        'familyName': familyName
+        'familyName': familyName,
       };
     }
 
     function onboardUsersAPI(userPayload, cancelPromise) {
       if (userPayload && _.isArray(userPayload.users) && userPayload.users.length > 0) {
         var onboardUsersPromise = $http.post(userUrl + 'organization/' + Authinfo.getOrgId() + '/users/onboard', userPayload, {
-          timeout: cancelPromise
+          timeout: cancelPromise,
         });
         onboardUsersPromise.then(function (response) {
-          checkAndOnboardSunlightUser(response.data.userResponse, userPayload.users);
+          checkAndUpdateSunlightUser(response.data.userResponse, userPayload.users);
         });
         return onboardUsersPromise;
       } else {
@@ -457,45 +454,96 @@
       }
     }
 
-    function checkAndOnboardSunlightUser(userResponse, users) {
+    // TODO: migrate these sunlight specific logic to 'SunlightUserService'
+    function removeCESRoleforUser(userId) {
+      var userRoleData = {
+        schemas: Config.scimSchemas,
+        roles: [],
+      };
+      userRoleData.roles.push({ value: Config.backend_roles.ciscouc_ces, operation: 'delete' });
+      return updateUserProfile(userId, userRoleData)
+        .catch(function (response) {
+          Notification.errorWithTrackingId(response, 'usersPage.careDeleteCESRoleError');
+        });
+    }
+
+    function checkRolesAndOnboardSunlightUser(userId, ciUserData, sunlightUserData, checkCesRole) {
+      var needSyncKms = !_.includes(ciUserData.roles, Config.backend_roles.spark_synckms);
+      var needCiscoucCES = checkCesRole ? !_.includes(ciUserData.roles, Config.backend_roles.ciscouc_ces) : false;
+      var needContextServiceEntitlement = !_.includes(ciUserData.entitlements, Config.entitlements.context);
+
+      onboardSunlightUser(userId, needSyncKms, needContextServiceEntitlement, needCiscoucCES, sunlightUserData);
+    }
+
+    function onboardSunlightUser(userId, needSyncKms, needContextServiceEntitlement, needCiscoucCES, sunlightUserData) {
+      return patchSunlightRolesAndEntitlements(userId, needSyncKms, needContextServiceEntitlement, needCiscoucCES)
+        .then(function () {
+          SunlightConfigService.updateUserInfo(sunlightUserData, userId)
+            .catch(function (response) {
+              Notification.errorWithTrackingId(response, 'usersPage.careAddUserError');
+            });
+        })
+        .catch(function (response) {
+          Notification.errorWithTrackingId(response, 'usersPage.careAddUserRoleError');
+        });
+    }
+
+    function checkAndUpdateSunlightUser(userResponse, users) {
       var userResponseSuccess = _.filter(userResponse, function (response) {
         return response.status === 200;
       });
       _.each(userResponseSuccess, function (userResponseSuccess) {
         var userLicenses = _helpers.getUserLicence(userResponseSuccess.email, users);
-        if (_helpers.isSunlightUserUpdateRequired(userLicenses)) {
-          var userData = _helpers.createUserData();
-          var userId = userResponseSuccess.uuid;
-          SunlightConfigService.updateUserInfo(userData, userId)
-            .then(function () {
-              checkAndPatchSyncKmsRole(userId);
-            }, function () {
-              Notification.error($translate.instant('usersPage.careAddUserError'));
-            });
+        var userId = userResponseSuccess.uuid;
+        if ((_helpers.licenseUpdateRequired(userLicenses, Config.offerCodes.CO, 'REMOVE')) || (_helpers.licenseUpdateRequired(userLicenses, Config.offerCodes.CVC, 'REMOVE'))) {
+          _helpers.removeCESRoleforUser(userId);
+        }
+        if ((_helpers.licenseUpdateRequired(userLicenses, Config.offerCodes.CDC, 'ADD')) || (_helpers.licenseUpdateRequired(userLicenses, Config.offerCodes.CVC, 'ADD'))) {
+          var sunlightUserData = _helpers.createUserData();
+          // Get user to check for roles and entitlements
+          getUserAsPromise(userId)
+          .then(function (ciUserData) {
+            if (ciUserData.status === 200) {
+              var checkCesRole = licenseUpdateRequired(userLicenses, Config.offerCodes.CVC, 'ADD') &&
+              licenseUpdateRequired(userLicenses, Config.offerCodes.CO, 'ADD');
+              checkRolesAndOnboardSunlightUser(userId, ciUserData, sunlightUserData, checkCesRole);
+            }
+          });
         }
       });
-
     }
 
-    function checkAndPatchSyncKmsRole(userId) {
-      getUser(userId, function (data) {
-        if (data.success) {
-          var hasSyncKms = _.find(data.roles, function (r) {
-            return r === Config.backend_roles.spark_synckms;
-          });
-          if (!hasSyncKms) {
-            var userRoleData = {
-              schemas: Config.scimSchemas,
-              roles: [Config.backend_roles.spark_synckms]
-            };
-            updateUserProfile(userId, userRoleData, function (data) {
-              if (!data.success) {
-                Notification.error($translate.instant('usersPage.careAddUserRoleError'));
-              }
-            });
-          }
+    function licenseUpdateRequired(licenses, offerCode, idOperation) {
+      return _.some(licenses, function (license) {
+        if (license.idOperation === idOperation) {
+          return _.includes(license.id, offerCode);
         }
       });
+    }
+
+    function patchSunlightRolesAndEntitlements(userId, needSyncKms, needContextServiceEntitlement, needCiscoucCES) {
+      var userRoleData = {
+        schemas: Config.scimSchemas,
+        roles: [],
+      };
+      if (needSyncKms) {
+        userRoleData.roles.push(Config.backend_roles.spark_synckms);
+      }
+
+      if (needCiscoucCES) {
+        userRoleData.roles.push(Config.backend_roles.ciscouc_ces);
+      }
+
+      if (needContextServiceEntitlement) {
+        userRoleData.entitlements = [Config.entitlements.context];
+      }
+      if (needSyncKms || needCiscoucCES || needContextServiceEntitlement) {
+        return updateUserProfile(userId, userRoleData);
+      } else {
+        var defer = $q.defer();
+        defer.resolve();
+        return defer.promise;
+      }
     }
 
     function createUserData() {
@@ -509,16 +557,22 @@
     }
 
     function getUserLicence(userEmail, users) {
-      return _.find(users, function (user) {
-        return userEmail === user.email;
-      }).licenses;
+      var aUser = _.find(users, function (user) {
+        return _.toLower(userEmail) === _.toLower(user.email);
+      });
+      if (!_.isNil(aUser)) {
+        return _.get(aUser, 'licenses', []);
+      } else {
+        return [];
+      }
     }
+
     /*
      * Modifies a license or entitlement array with properties specific for the user
      */
     function buildUserSpecificProperties(user, entitlementOrLicenseList) {
       return _.map(entitlementOrLicenseList, function (_entitlementOrLicense) {
-        var entitlementOrLicense = angular.copy(_entitlementOrLicense);
+        var entitlementOrLicense = _.cloneDeep(_entitlementOrLicense);
         if (!_.has(entitlementOrLicense, 'properties')) {
           entitlementOrLicense.properties = {};
         }
@@ -537,26 +591,19 @@
       });
     }
 
-    function isSunlightUserUpdateRequired(licenses) {
-      var addedSunlightLicense = _.find(licenses, function (license) {
-        return license.id.indexOf(Config.offerCodes.CDC) >= 0 && license.idOperation === 'ADD';
-      });
-      return typeof addedSunlightLicense !== 'undefined';
-    }
-
     function isHuronUser(allEntitlements) {
       return _.indexOf(allEntitlements, Config.entitlements.huron) >= 0;
     }
 
     function isInvitePending(user) {
-      return _.includes(user.accountStatus, 'pending');
+      return user.pendingStatus;
     }
 
     function resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {
       if ((userStatus === 'pending' || userStatus === 'error') && !isHuronUser(entitlements)) {
         return sendSparkWelcomeEmail(userEmail, userName);
       } else if (isHuronUser(entitlements) && !dirsyncEnabled) {
-        return HuronUser.sendWelcomeEmail(userEmail, userName, uuid, Authinfo.getOrgId(), false);
+        return HuronUser.sendWelcomeEmail(userEmail, userName, uuid, Authinfo.getOrgId());
       }
       return $q.reject('invitation not sent');
     }
@@ -564,7 +611,7 @@
     function sendSparkWelcomeEmail(userEmail, userName) {
       var userData = [{
         'address': userEmail,
-        'name': userName
+        'name': userName,
       }];
 
       return $q(function (resolve, reject) {
@@ -594,6 +641,58 @@
       return !(_.startsWith(userPhotoValue, 'file:') || _.isEmpty(userPhotoValue));
     }
 
+    function getAnyDisplayableNameFromUser(user) {
+      var givenName = _.get(user, 'name.givenName', '');
+      var familyName = _.get(user, 'name.familyName', '');
+      var nameParts = [];
+      if (givenName) {
+        nameParts.push(givenName);
+      }
+      if (familyName) {
+        nameParts.push(familyName);
+      }
+      if (nameParts.length) {
+        return nameParts.join(' ');
+      }
+      if (user.displayName) {
+        return user.displayName;
+      }
+      return user.userName;
+    }
+
+    function getFullNameFromUser(user) {
+      var givenName = _.get(user, 'name.givenName', '');
+      var familyName = _.get(user, 'name.familyName', '');
+      if (givenName && familyName) {
+        return givenName + ' ' + familyName;
+      }
+      return (user.displayName) ? user.displayName : user.userName;
+    }
+
+    function getPrimaryEmailFromUser(user) {
+      var primaryEmail = _.chain(user)
+        .get('emails')
+        .find({ primary: true })
+        .get('value')
+        .value();
+
+      if (!primaryEmail) {
+        primaryEmail = _.get(user, 'userName');
+      }
+
+      return primaryEmail;
+    }
+
+    function getPreferredWebExSiteForCalendaring(user) {
+      if (!_.isEmpty(user.userPreferences)) {
+        var name = _.find(user.userPreferences, function (userPreference) {
+          return userPreference.indexOf('calSvcPreferredWebexSite') > 0;
+        });
+        if (_.isString(name)) {
+          return name.substring(name.indexOf(':') + 1).replace(/"/g, '');
+        }
+      }
+    }
   }
 
 })();

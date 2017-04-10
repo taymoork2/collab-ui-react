@@ -6,36 +6,42 @@
     .controller('CallServicePreviewCtrl', CallServicePreviewCtrl);
 
   /*@ngInject*/
-  function CallServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, ClusterService, ServiceDescriptor, UriVerificationService, DomainManagementService, $translate, FeatureToggleService, ResourceGroupService) {
+  function CallServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, FusionClusterService, UriVerificationService, DomainManagementService, $translate, FeatureToggleService, ResourceGroupService, UCCService, HybridServicesUtils) {
     $scope.saveLoading = false;
-    $scope.currentUser = $stateParams.currentUser;
+    $scope.domainVerificationError = false;
+    $scope.currentUser = $stateParams.currentUser || $stateParams.currentPlace;
+    $scope.isPlace = $scope.currentUser.accountType === 'MACHINE';
+    $scope.isUser = !$scope.isPlace;
     var isEntitled = function (ent) {
-      return $stateParams.currentUser.entitlements && $stateParams.currentUser.entitlements.indexOf(ent) > -1;
+      return $scope.currentUser.entitlements && $scope.currentUser.entitlements.indexOf(ent) > -1;
     };
-
-    var sipUri = _.find($scope.currentUser.sipAddresses, {
-      type: "enterprise"
-    });
+    var isSetup = function (id) {
+      var extension = _.find($stateParams.extensions, { id: id });
+      return extension ? extension.isSetup : false;
+    };
 
     $scope.isInvitePending = Userservice.isInvitePending($scope.currentUser);
     $scope.localizedServiceName = $translate.instant('hercules.serviceNames.' + $stateParams.extensionId);
     $scope.localizedConnectorName = $translate.instant('hercules.connectorNames.' + $stateParams.extensionId);
     $scope.localizedOnboardingWarning = $translate.instant('hercules.userSidepanel.warningInvitePending', {
-      ServiceName: $scope.localizedServiceName
+      ServiceName: $scope.localizedServiceName,
     });
 
     $scope.callServiceAware = {
       id: 'squared-fusion-uc',
       name: 'squaredFusionUC',
-      entitled: isEntitled('squared-fusion-uc'),
-      sipUri: sipUri ? sipUri.value : null
+      entitled: isEntitled('squared-fusion-uc'), // Tracks the entitlement as set in the UI (toggle)
+      directoryUri: null,
+      currentUserEntitled: isEntitled('squared-fusion-uc'), // Tracks the actual entitlement on the user
     };
     $scope.callServiceConnect = {
       id: 'squared-fusion-ec',
       name: 'squaredFusionEC',
-      entitled: isEntitled('squared-fusion-ec'),
+      entitled: isEntitled('squared-fusion-ec'), // Tracks the entitlement as set in the UI (toggle)
       orgEntitled: Authinfo.isFusionEC(),
-      enabledInFMS: false
+      enabledInFMS: false,
+      currentUserEntitled: isEntitled('squared-fusion-ec'), // Tracks the actual entitlement on the user
+      userId: $scope.currentUser.id,
     };
     $scope.resourceGroup = {
       show: false,
@@ -60,17 +66,13 @@
             $scope.resourceGroup.shouldWarn = !hasEligibleCluster;
           });
         }
-      }
+      },
     };
     $scope.resourceGroup.init();
 
     // Only show callServiceConnect if it's enabled
     if ($scope.callServiceConnect.orgEntitled) {
-      ServiceDescriptor.isServiceEnabled($scope.callServiceConnect.id, function (error, enabled) {
-        if (!error) {
-          $scope.callServiceConnect.enabledInFMS = enabled;
-        }
-      });
+      $scope.callServiceConnect.enabledInFMS = isSetup($scope.callServiceConnect.id);
     }
 
     $scope.$watch('callServiceAware.entitled', function (newVal, oldVal) {
@@ -84,6 +86,15 @@
         $scope.setShouldShowButtons();
       }
     });
+
+    if ($scope.isPlace && $scope.currentUser.externalLinkedAccounts) {
+      var existingHybridCallLink = _.head(_.filter($scope.currentUser.externalLinkedAccounts, function (linkedAccount) {
+        return linkedAccount && (linkedAccount.providerID === 'squared-fusion-uc');
+      }));
+      if (existingHybridCallLink) {
+        $scope.mailID = existingHybridCallLink.accountGUID;
+      }
+    }
 
     var entitlementHasChanged = function () {
       return $scope.callServiceConnect.entitled !== isEntitled($scope.callServiceConnect.id) || $scope.callServiceAware.entitled !== isEntitled($scope.callServiceAware.id);
@@ -112,14 +123,30 @@
           return $scope.callServiceConnect.id === status.serviceId;
         });
         refreshUserInUssIfServiceEntitledButNoStatus($scope.callServiceConnect, userIsRefreshed);
-        if ($scope.callServiceAware.status && $scope.callServiceAware.status.connectorId) {
-          ClusterService.getConnector($scope.callServiceAware.status.connectorId).then(function (connector) {
-            $scope.callServiceAware.homedConnector = connector;
+        if ($scope.callServiceAware.status && $scope.callServiceAware.status.clusterId) {
+          FusionClusterService.get($scope.callServiceAware.status.clusterId).then(function (cluster) {
+            $scope.callServiceAware.homedCluster = cluster;
+            $scope.callServiceAware.homedConnector = _.find(cluster.connectors, { id: $scope.callServiceAware.status.connectorId });
           });
         }
-        if ($scope.callServiceConnect.status && $scope.callServiceConnect.status.connectorId) {
-          ClusterService.getConnector($scope.callServiceConnect.status.connectorId).then(function (connector) {
-            $scope.callServiceConnect.homedConnector = connector;
+        if ($scope.callServiceAware.status && $scope.callServiceAware.status.lastStateChange) {
+          $scope.callServiceAware.status.lastStateChangeText = HybridServicesUtils.getTimeSinceText($scope.callServiceAware.status.lastStateChange);
+        }
+        if ($scope.callServiceConnect.status && $scope.callServiceConnect.status.lastStateChange) {
+          $scope.callServiceConnect.status.lastStateChangeText = HybridServicesUtils.getTimeSinceText($scope.callServiceConnect.status.lastStateChange);
+        }
+        if ($scope.callServiceAware.entitled && $scope.callServiceAware.status) {
+          UCCService.getUserDiscovery($scope.currentUser.id).then(function (userDiscovery) {
+            $scope.callServiceAware.directoryUri = userDiscovery.directoryURI;
+            if ($scope.callServiceAware.directoryUri) {
+              DomainManagementService.getVerifiedDomains().then(function (domainList) {
+                if (!UriVerificationService.isDomainVerified(domainList, $scope.callServiceAware.directoryUri)) {
+                  $scope.domainVerificationError = true;
+                }
+              });
+            } else {
+              $scope.domainVerificationError = false;
+            }
           });
         }
       }).catch(function (response) {
@@ -168,7 +195,7 @@
     };
 
     var readResourceGroups = function () {
-      FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups)
+      FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup)
         .then(function (supported) {
           if (supported) {
             ResourceGroupService.getAllAsOptions().then(function (options) {
@@ -196,44 +223,50 @@
     readResourceGroups();
 
     var addEntitlementToCurrentUser = function (entitlement) {
-      if (!_.includes($stateParams.currentUser.entitlements, entitlement)) {
-        $stateParams.currentUser.entitlements.push(entitlement);
+      if (!_.includes($scope.currentUser.entitlements, entitlement)) {
+        $scope.currentUser.entitlements.push(entitlement);
       }
+      $scope.callServiceAware.currentUserEntitled = isEntitled($scope.callServiceAware.id);
+      $scope.callServiceConnect.currentUserEntitled = isEntitled($scope.callServiceConnect.id);
     };
 
     var removeEntitlementFromCurrentUser = function (entitlement) {
-      _.remove($stateParams.currentUser.entitlements, function (e) {
+      _.remove($scope.currentUser.entitlements, function (e) {
         return e === entitlement;
       });
+      $scope.callServiceAware.currentUserEntitled = isEntitled($scope.callServiceAware.id);
+      $scope.callServiceConnect.currentUserEntitled = isEntitled($scope.callServiceConnect.id);
     };
 
     var updateEntitlements = function () {
       $scope.savingEntitlements = true;
+      $scope.savingAwareEntitlement = $scope.callServiceAware.currentUserEntitled !== $scope.callServiceAware.entitled;
+      $scope.savingConnectEntitlement = $scope.callServiceConnect.currentUserEntitled !== $scope.callServiceConnect.entitled;
       var user = [{
-        'address': $scope.currentUser.userName
+        'address': $scope.currentUser.userName,
       }];
       var entitlements = [{
         entitlementName: $scope.callServiceAware.name,
-        entitlementState: $scope.callServiceAware.entitled === true ? 'ACTIVE' : 'INACTIVE'
+        entitlementState: $scope.callServiceAware.entitled === true ? 'ACTIVE' : 'INACTIVE',
       }];
       if ($scope.callServiceConnect.orgEntitled && $scope.callServiceConnect.enabledInFMS) {
         entitlements.push({
           entitlementName: $scope.callServiceConnect.name,
-          entitlementState: $scope.callServiceAware.entitled === true && $scope.callServiceConnect.entitled === true ? 'ACTIVE' : 'INACTIVE'
+          entitlementState: $scope.callServiceAware.entitled === true && $scope.callServiceConnect.entitled === true ? 'ACTIVE' : 'INACTIVE',
         });
       }
 
       Userservice.updateUsers(user, null, entitlements, 'updateEntitlement', function (data) {
         var entitleResult = {
           msg: null,
-          type: 'null'
+          type: 'null',
         };
         if (data.success) {
           var userStatus = data.userResponse[0].status;
           if (userStatus === 200) {
             resetStatusesIfEntitlementChanged();
-            if (!$stateParams.currentUser.entitlements) {
-              $stateParams.currentUser.entitlements = [];
+            if (!$scope.currentUser.entitlements) {
+              $scope.currentUser.entitlements = [];
             }
             if ($scope.callServiceAware.entitled) {
               addEntitlementToCurrentUser($scope.callServiceAware.id);
@@ -252,7 +285,7 @@
             refreshUserInUss();
           } else if (userStatus === 404) {
             entitleResult.msg = $translate.instant('hercules.userSidepanel.entitlements-dont-exist', {
-              userName: $scope.currentUser.userName
+              userName: $scope.currentUser.userName,
             });
             entitleResult.type = 'error';
           } else if (userStatus === 409) {
@@ -260,7 +293,7 @@
             entitleResult.type = 'error';
           } else {
             entitleResult.msg = $translate.instant('hercules.userSidepanel.not-updated', {
-              userName: $scope.currentUser.userName
+              userName: $scope.currentUser.userName,
             });
             entitleResult.type = 'error';
           }
@@ -271,13 +304,13 @@
         } else {
           entitleResult = {
             msg: $translate.instant('hercules.userSidepanel.not-updated', {
-              userName: $scope.currentUser.userName
+              userName: $scope.currentUser.userName,
             }),
-            type: 'error'
+            type: 'error',
           };
           Notification.notify([entitleResult.msg], entitleResult.type);
         }
-        $scope.savingEntitlements = false;
+        $scope.savingEntitlements = $scope.savingAwareEntitlement = $scope.savingConnectEntitlement = false;
         $scope.saving = $scope.resourceGroup.saving;
       });
     };
@@ -290,8 +323,8 @@
         $scope.setShouldShowButtons();
         $scope.resourceGroup.cannotFindResouceGroup = false;
         Notification.success('hercules.resourceGroups.resourceGroupSaved');
-      }).catch(function () {
-        Notification.error('hercules.resourceGroups.failedToSetGroup');
+      }).catch(function (error) {
+        Notification.errorWithTrackingId(error, 'hercules.resourceGroups.failedToSetGroup');
       }).finally(function () {
         $scope.resourceGroup.saving = false;
         $scope.saving = $scope.savingEntitlements;
@@ -317,6 +350,10 @@
       $scope.showButtons = false;
     };
 
+    $scope.editCloudberryServices = function (service) {
+      $stateParams.editService(service);
+    };
+
     $scope.closePreview = function () {
       $state.go('users.list');
     };
@@ -324,24 +361,6 @@
     $scope.getStatus = function (status) {
       return USSService.decorateWithStatus(status);
     };
-
-    $scope.domainVerificationError = false; // need to be to be backwards compatible.
-    $scope.checkIfDomainIsVerified = function (awareEntitled) {
-      if (awareEntitled) {
-        if (sipUri) {
-          DomainManagementService.getVerifiedDomains().then(function (domainList) {
-            if (!UriVerificationService.isDomainVerified(domainList, sipUri.value)) {
-              $scope.domainVerificationError = true;
-            }
-          });
-        }
-      } else {
-        $scope.domainVerificationError = false;
-      }
-    };
-
-    // Do this at construct time
-    $scope.checkIfDomainIsVerified($scope.callServiceAware.entitled);
 
     $scope.navigateToCallSettings = function () {
       $state.go('call-service.settings');

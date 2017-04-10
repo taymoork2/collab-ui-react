@@ -15,7 +15,10 @@
       $scope.isCareEnabled = careStatus && Authinfo.isCare();
     });
 
-    $scope.exportCSV = function () {
+    // for legacy reasons, we always stick to using the 'exportType' property if already set
+    $scope.exportCSV = function (exportType, activeFilter) {
+      $scope.exportType = $scope.exportType || exportType;
+      $scope.activeFilter = $scope.activeFilter || activeFilter;
       if ($scope.exportType === $rootScope.typeOfExport.USER) {
         promise = UserListService.exportCSV($scope.activeFilter);
       } else if ($scope.exportType === $rootScope.typeOfExport.CUSTOMER) {
@@ -27,9 +30,8 @@
       }
 
       if (promise) {
-        promise.then(null, function (error) {
-          Log.debug(error);
-          Notification.error('errors.csvError');
+        promise.catch(function (response) {
+          Notification.errorResponse(response, 'errors.csvError');
         }).finally(function () {
           $rootScope.exporting = false;
           $rootScope.$broadcast('EXPORT_FINISHED');

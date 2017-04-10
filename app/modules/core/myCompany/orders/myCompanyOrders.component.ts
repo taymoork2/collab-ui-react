@@ -1,5 +1,9 @@
 import { IOrderDetail } from './myCompanyOrders.service';
-import { DigitalRiverService } from '../../../online/digitalRiver/digitalRiver.service';
+import { Notification } from 'modules/core/notifications';
+import { MyCompanyOrdersService } from './myCompanyOrders.service';
+
+const COMPLETED = 'COMPLETED';
+const ERROR = 'ERROR';
 
 class MyCompanyOrdersCtrl implements ng.IComponentController {
 
@@ -13,23 +17,77 @@ class MyCompanyOrdersCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
-    private DigitalRiverService: DigitalRiverService,
-    private Notification,
+    private $translate: angular.translate.ITranslateService,
+    private Notification: Notification,
+    private MyCompanyOrdersService: MyCompanyOrdersService,
   ) {}
 
   public $onInit(): void {
-    // TODO restore initData and initGridOptions from history when iframe is removed
-    this.initIframe();
-  }
-
-  private initIframe(): void {
     this.loading = true;
-    this.DigitalRiverService.getOrderHistoryUrl().then((orderHistoryUrl) => {
-      this.digitalRiverOrderHistoryUrl = orderHistoryUrl;
+    this.initGridOptions();
+    this.MyCompanyOrdersService.getOrderDetails().then(orderDetails => {
+      this.orderDetailList = _.map(orderDetails, (orderDetail: any) => {
+        if (_.size(orderDetail.productDescriptionList) > 0) {
+          orderDetail.productDescriptionList =
+              this.formatProductDescriptionList(orderDetail.productDescriptionList);
+        }
+        if (COMPLETED === orderDetail.status) {
+          orderDetail.status = this.$translate.instant('myCompanyOrders.completed');
+        } else if (ERROR === orderDetail.status) {
+          orderDetail.status = this.$translate.instant('myCompanyOrders.error');
+        } else {
+          orderDetail.status = this.$translate.instant('myCompanyOrders.pending');
+        }
+        return orderDetail;
+      });
+      // sort orders with newest in top
+      this.orderDetailList.sort((a: IOrderDetail, b: IOrderDetail): number => {
+        if (a.orderDate < b.orderDate) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
     }).catch((response) => {
       this.Notification.errorWithTrackingId(response, 'myCompanyOrders.loadError');
+    }).finally(() => {
       this.loading = false;
     });
+  }
+
+  private initGridOptions(): void {
+    this.gridOptions = {
+      data: '$ctrl.orderDetailList',
+      multiSelect: false,
+      rowHeight: 45,
+      enableRowSelection: false,
+      enableRowHeaderSelection: false,
+      enableColumnMenus: false,
+      enableHorizontalScrollbar: 0,
+      columnDefs: [{
+        name: 'externalOrderId',
+        displayName: this.$translate.instant('myCompanyOrders.numberHeader'),
+        width: '14%',
+      }, {
+        name: 'productDescriptionList',
+        displayName: this.$translate.instant('myCompanyOrders.descriptionHeader'),
+        width: '45%',
+      }, {
+        name: 'orderDate',
+        displayName: this.$translate.instant('myCompanyOrders.dateHeader'),
+        cellFilter: 'date',
+        width: '14%',
+      }, {
+        name: 'status',
+        displayName: this.$translate.instant('myCompanyOrders.statusHeader'),
+        width: '14%',
+      }, {
+        name: 'total',
+        displayName: this.$translate.instant('myCompanyOrders.priceHeader'),
+        cellFilter: 'currency',
+        width: '*',
+      }],
+    };
   }
 
   public downloadPdf(): void {

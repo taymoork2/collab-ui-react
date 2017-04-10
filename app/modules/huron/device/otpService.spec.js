@@ -9,7 +9,7 @@ describe('Service: OtpService', function () {
   beforeEach(angular.mock.module('ngResource'));
 
   var authInfo = {
-    getOrgId: sinon.stub().returns('1')
+    getOrgId: sinon.stub().returns('1'),
   };
 
   beforeEach(angular.mock.module(function ($provide) {
@@ -33,28 +33,6 @@ describe('Service: OtpService', function () {
     expect(OtpService).toBeDefined();
   });
 
-  describe('loadOtps function', function () {
-    it('should exist', function () {
-      expect(OtpService.loadOtps).toBeDefined();
-    });
-
-    it('should return 1 OTP', function () {
-      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/common/customers/1/users/1/otp').respond(200, getJSONFixture('huron/json/device/otps.json'));
-      OtpService.loadOtps('1').then(function (data) {
-        expect(data.length).toEqual(1);
-      });
-      $httpBackend.flush();
-    });
-
-    it('should not return invalid OTPs', function () {
-      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/common/customers/1/users/1/otp').respond(200, getJSONFixture('huron/json/device/invalidOtps.json'));
-      OtpService.loadOtps('1').then(function (data) {
-        expect(data.length).toEqual(0);
-      });
-      $httpBackend.flush();
-    });
-  });
-
   describe('generateOtp function', function () {
     it('should exist', function () {
       expect(OtpService.generateOtp).toBeDefined();
@@ -62,7 +40,7 @@ describe('Service: OtpService', function () {
 
     it('should generate an OTP', function () {
       $httpBackend.whenPOST(HuronConfig.getCmiUrl() + '/identity/users/otp', {
-        'userName': 'someUser'
+        'userName': 'someUser',
       }).respond(200, getJSONFixture('huron/json/device/otps/0001000200030004.json'));
       OtpService.generateOtp('someUser').then(function (data) {
         expect(data.code).toEqual('0001000200030004');
@@ -97,27 +75,6 @@ describe('Service: OtpService', function () {
       var timezone = jstz.determine().name();
       var utcTimeToLocal = moment(expiryTime).local().tz(timezone).format('MMMM DD, YYYY h:mm A (z)');
       expect(OtpService.convertExpiryTime(expiryTime)).toEqual(utcTimeToLocal);
-    });
-  });
-
-  describe('getQrCodeUrl function', function () {
-    beforeEach(function () {
-      $httpBackend.expectGET(HuronConfig.getEmailUrl() + '/getqrimage/encoded?oneTimePassword=23232323232').respond(200, getJSONFixture('huron/json/device/otps/qrcode.json'));
-    });
-
-    it('should generate a qrImage', function () {
-
-      OtpService.getQrCodeUrl('23232323232').then(function (data) {
-        var arrayData = '';
-        for (var i in Object.keys(data)) {
-
-          if (data.hasOwnProperty(i)) {
-            arrayData += data[i];
-          }
-        }
-        expect(arrayData).toEqual('FAKEIMAGE');
-      });
-      $httpBackend.flush();
     });
   });
 });

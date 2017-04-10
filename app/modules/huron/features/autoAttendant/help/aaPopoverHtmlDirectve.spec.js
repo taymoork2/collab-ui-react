@@ -4,6 +4,16 @@ describe('Directive: aaPopoverHtml', function () {
   var $compile, $rootScope, $scope;
   var element, divElement;
 
+  afterEach(function () {
+    if (divElement) {
+      divElement.remove();
+    }
+    if (element) {
+      element.remove();
+    }
+    divElement = element = undefined;
+  });
+
   beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function (_$compile_, _$rootScope_) {

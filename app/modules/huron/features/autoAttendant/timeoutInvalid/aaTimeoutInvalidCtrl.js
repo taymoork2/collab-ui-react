@@ -15,29 +15,29 @@
     vm.selectedActions = [];
     vm.selectedTimeout = {
       name: '',
-      value: ''
+      value: '',
     };
     vm.menuEntry = {};
     vm.repeatOptions = [{
       label: $translate.instant('autoAttendant.phoneMenuRepeatOnce'),
       name: 'repeatOnce',
-      value: 2
+      value: 2,
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRepeatTwice'),
       name: 'repeatTwice',
-      value: 3
+      value: 3,
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRepeatThree'),
       name: 'repeatThree',
-      value: 4
+      value: 4,
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRepeatFour'),
       name: 'repeatFour',
-      value: 5
+      value: 5,
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRepeatFive'),
       name: 'repeatFive',
-      value: 6
+      value: 6,
     }];
 
     vm.timeoutInvalidChanged = timeoutInvalidChanged;
@@ -49,13 +49,13 @@
       label: $translate.instant('autoAttendant.phoneMenuContinue'),
       name: 'continue',
       action: 'repeatActionsOnInput',
-      value: 1
+      value: 1,
     }, {
       label: $translate.instant('autoAttendant.repeatMenu'),
       name: 'repeatMenu',
       action: 'repeatActionsOnInput',
       value: 2,
-      childOptions: vm.repeatOptions
+      childOptions: vm.repeatOptions,
     }];
 
     var runActionsOnInput = 'runActionsOnInput';
@@ -83,7 +83,7 @@
         vm.updateTimeoutInvalidChangedInSubmenu(entry.attempts);
         type = vm.selectedTimeout.name;
       } else if (vm.selectedTimeout.value === 2) {
-        if (angular.isDefined(vm.selectedTimeout.selectedChild)) {
+        if (!_.isUndefined(vm.selectedTimeout.selectedChild)) {
           entry.attempts = vm.selectedTimeout.selectedChild.value;
           vm.updateTimeoutInvalidChangedInSubmenu(entry.attempts);
           type = vm.selectedTimeout.selectedChild.name;
@@ -91,11 +91,11 @@
       }
       if (_.has(entry, 'type') && entry.type === 'MENU_OPTION') {
         Analytics.trackEvent(AAMetricNameService.TIMEOUT_PHONE_MENU, {
-          type: type
+          type: type,
         });
       } else if (_.has(entry, 'actions[0].name') && entry.actions[0].name === runActionsOnInput && _.has(entry, 'actions[0].inputType') && entry.actions[0].inputType === 2) {
         Analytics.trackEvent(AAMetricNameService.TIMEOUT_DIAL_BY_EXT, {
-          type: type
+          type: type,
         });
       }
     }
@@ -111,20 +111,20 @@
       // populate with data from an existing AA
       var entry = vm.menuEntry;
 
-      if (angular.isDefined(entry.attempts)) {
+      if (!_.isUndefined(entry.attempts)) {
         // both timeout options have the same action name so
         // we distinguish by the number of attempts allowed
         if (entry.attempts === 1) {
-          vm.selectedTimeout = angular.copy(vm.timeoutActions[0]);
+          vm.selectedTimeout = _.cloneDeep(vm.timeoutActions[0]);
         } else {
-          vm.selectedTimeout = angular.copy(vm.timeoutActions[1]);
-          vm.selectedTimeout.childOptions = angular.copy(vm.repeatOptions);
+          vm.selectedTimeout = _.cloneDeep(vm.timeoutActions[1]);
+          vm.selectedTimeout.childOptions = _.cloneDeep(vm.repeatOptions);
           if (entry.attempts >= 2 && entry.attempts <= 6) {
-            vm.selectedTimeout.selectedChild = angular.copy(vm.repeatOptions[entry.attempts - 2]);
+            vm.selectedTimeout.selectedChild = _.cloneDeep(vm.repeatOptions[entry.attempts - 2]);
 
           } else {
             // this case should never happens.
-            vm.selectedTimeout.selectedChild = angular.copy(vm.repeatOptions[0]);
+            vm.selectedTimeout.selectedChild = _.cloneDeep(vm.repeatOptions[0]);
           }
         }
       } else {
@@ -139,9 +139,9 @@
     }
 
     function createOptionMenu() {
-      vm.selectedTimeout = angular.copy(vm.timeoutActions[0]);
-      vm.selectedTimeout.childOptions = angular.copy(vm.repeatOptions);
-      vm.selectedTimeout.selectedChild = angular.copy(vm.repeatOptions[2]);
+      vm.selectedTimeout = _.cloneDeep(vm.timeoutActions[0]);
+      vm.selectedTimeout.childOptions = _.cloneDeep(vm.repeatOptions);
+      vm.selectedTimeout.selectedChild = _.cloneDeep(vm.repeatOptions[2]);
     }
 
     function setPhonemenuFormDirty() {

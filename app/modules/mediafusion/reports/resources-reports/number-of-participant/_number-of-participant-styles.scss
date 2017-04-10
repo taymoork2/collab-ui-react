@@ -1,0 +1,9 @@
+.number-of-participant-reports {
+  position: relative;
+  bottom: 10px;
+
+  .barchart {
+    position: relative;
+    top: rem-calc(-5);
+  }
+}

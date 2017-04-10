@@ -6,13 +6,14 @@
     .controller('AARouteToUserCtrl', AARouteToUserCtrl);
 
   /* @ngInject */
-  function AARouteToUserCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, $q, Authinfo, Userservice, UserListService, UserServiceVoice, AACommonService, LineService) {
+  function AARouteToUserCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, $q, Authinfo, Userservice, UserListService, UserServiceVoice, AACommonService, LineResource) {
 
     var vm = this;
+    var conditional = 'conditional';
 
     vm.userSelected = {
       description: '',
-      id: ''
+      id: '',
     };
 
     vm.users = [];
@@ -21,7 +22,7 @@
       order: 'ascending',
       maxCount: 10,
       startAt: 0,
-      fullLoad: 10 // how many to query, a full listing
+      fullLoad: 10, // how many to query, a full listing
     };
 
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceHolder');
@@ -29,7 +30,7 @@
 
     vm.uiMenu = {};
     vm.menuEntry = {
-      entries: []
+      entries: [],
     };
     vm.menuKeyEntry = {};
 
@@ -43,15 +44,27 @@
     var routeToUser = 'routeToUser';
 
     var fromRouteCall = false;
+    var fromDecision = false;
+
 
     /////////////////////
 
     function populateUiModel() {
-      if (fromRouteCall) {
-        vm.userSelected.id = vm.menuEntry.actions[0].getValue();
+      var entry, action;
+
+      if (fromRouteCall || fromDecision) {
+        entry = _.get(vm.menuEntry, 'actions[0].queueSettings.fallback', vm.menuEntry);
       } else {
-        vm.userSelected.id = vm.menuKeyEntry.actions[0].getValue();
+        entry = _.get(vm.menuKeyEntry, 'actions[0].queueSettings.fallback', vm.menuKeyEntry);
       }
+
+      action = _.get(entry, 'actions[0]');
+
+      if (action && _.get(action, 'name') === conditional) {
+        action = _.get(action.then, 'queueSettings.fallback.actions[0]', action.then);
+      }
+
+      vm.userSelected.id = action.getValue();
 
       if (vm.userSelected.id) {
         getFormattedUserAndExtension(vm.userSelected.id).then(function (userName) {
@@ -62,23 +75,31 @@
 
     function saveUiModel() {
       AACommonService.setPhoneMenuStatus(true);
-      if (fromRouteCall) {
-        vm.menuEntry.actions[0].setValue(vm.userSelected.id);
+
+      var entry, action;
+
+      if (fromRouteCall || fromDecision) {
+        entry = vm.menuEntry;
       } else {
-        vm.menuKeyEntry.actions[0].setValue(vm.userSelected.id);
+        entry = vm.menuKeyEntry;
       }
+      action = _.get(entry, 'actions[0].queueSettings.fallback.actions[0]', entry.actions[0]);
+      if (_.get(action, 'name') === conditional) {
+        action = _.get(action.then, 'queueSettings.fallback.actions[0]', action.then);
+      }
+      action.setValue(vm.userSelected.id);
     }
 
     // format name with extension
     function formatName(user, extension) {
       var name;
-      if (angular.isDefined(user.displayName)) {
+      if (!_.isUndefined(user.displayName)) {
         name = user.displayName;
       } else {
         name = user.userName;
       }
 
-      if (angular.isDefined(extension) && extension.length > 0) {
+      if (!_.isUndefined(extension) && extension.length > 0) {
         return name + ' (' + extension + ')';
       } else {
         return name;
@@ -123,11 +144,11 @@
     function getUserExtension(uuid) {
       return UserServiceVoice.query({
         customerId: Authinfo.getOrgId(),
-        userId: uuid
+        userId: uuid,
       }).$promise.then(
         function (response) {
           // success
-          if (angular.isDefined(response.primaryDirectoryNumber) && response.primaryDirectoryNumber != null) {
+          if (!_.isUndefined(response.primaryDirectoryNumber) && response.primaryDirectoryNumber != null) {
             return response.primaryDirectoryNumber.pattern;
           } else {
             // the user actually has no extension - represented as null in the json, which works here as well
@@ -143,9 +164,9 @@
 
     // get extension's voicemail profile
     function getVoicemailProfile(pattern) {
-      return LineService.query({
+      return LineResource.query({
         customerId: Authinfo.getOrgId(),
-        pattern: pattern
+        pattern: pattern,
       }).$promise.then(
         function (response) {
           // success
@@ -167,7 +188,7 @@
       var abortSearchPromise = vm.abortSearchPromise;
 
       // if we didn't get a start-at, we are starting over
-      if (!angular.isDefined(startat)) {
+      if (_.isUndefined(startat)) {
         startat = vm.sort.startAt;
         vm.users = [];
         if (vm.abortSearchPromise) {
@@ -195,7 +216,7 @@
                       if (_.size(vm.users) < vm.sort.fullLoad) {
                         vm.users.push({
                           description: formatName(aUser, extension),
-                          id: aUser.id
+                          id: aUser.id,
                         });
                       }
                     }
@@ -205,7 +226,7 @@
                   if (_.size(vm.users) < vm.sort.fullLoad) {
                     vm.users.push({
                       description: formatName(aUser, extension),
-                      id: aUser.id
+                      id: aUser.id,
                     });
                   }
                 }
@@ -216,7 +237,7 @@
                 // if CMI user call otherwise failed, not immediately clear if user has extension or not, show just the user in the UI
                 vm.users.push({
                   description: formatName(aUser, ''),
-                  id: aUser.id
+                  id: aUser.id,
                 });
               }
 
@@ -246,35 +267,82 @@
       return defer.promise;
 
     }
+    function checkForRouteToVU(action, routeToName) {
+
+      // make sure action is V or U not External Number, User, etc
+      if (!(action.getName() === routeToName)) {
+        action.setName(routeToName);
+        action.setValue('');
+        delete action.queueSettings;
+      }
+    }
 
     function activate() {
 
-      var routeToUserOrVM = angular.isDefined($scope.voicemail) ? routeToVoiceMail : routeToUser;
+      var routeToUserOrVM = !_.isUndefined($scope.voicemail) ? routeToVoiceMail : routeToUser;
 
-      if ($scope.fromRouteCall) {
-        var ui = AAUiModelService.getUiModel();
+      var ui = AAUiModelService.getUiModel();
+      if ($scope.fromDecision) {
+
+        var conditionalAction;
+        fromDecision = true;
+
         vm.uiMenu = ui[$scope.schedule];
         vm.menuEntry = vm.uiMenu.entries[$scope.index];
-        fromRouteCall = true;
-
-        if (vm.menuEntry.actions.length === 0) {
-          action = AutoAttendantCeMenuModelService.newCeActionEntry(routeToUserOrVM, '');
-          vm.menuEntry.addAction(action);
-        } else {
-          // make sure action is User||VoiceMail not AA, HG, extNum, etc
-          if (!(vm.menuEntry.actions[0].getName() === routeToUserOrVM)) {
-            vm.menuEntry.actions[0].setName(routeToUserOrVM);
-            vm.menuEntry.actions[0].setValue('');
+        conditionalAction = _.get(vm.menuEntry, 'actions[0]', '');
+        if (!conditionalAction || conditionalAction.getName() !== conditional) {
+          conditionalAction = AutoAttendantCeMenuModelService.newCeActionEntry(conditional, '');
+          vm.menuEntry.actions[0] = conditionalAction;
+        }
+        if (!$scope.fromFallback) {
+          if (!conditionalAction.then) {
+            conditionalAction.then = {};
+            conditionalAction.then = AutoAttendantCeMenuModelService.newCeActionEntry(routeToUserOrVM, '');
+          } else {
+            checkForRouteToVU(conditionalAction.then, routeToUserOrVM);
           }
         }
       } else {
-        vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
-        if ($scope.keyIndex < vm.menuEntry.entries.length) {
-          vm.menuKeyEntry = vm.menuEntry.entries[$scope.keyIndex];
+        if ($scope.fromRouteCall) {
+          vm.uiMenu = ui[$scope.schedule];
+          vm.menuEntry = vm.uiMenu.entries[$scope.index];
+          fromRouteCall = true;
+
+          if (!$scope.fromFallback) {
+            if (vm.menuEntry.actions.length === 0) {
+              action = AutoAttendantCeMenuModelService.newCeActionEntry(routeToUserOrVM, '');
+              vm.menuEntry.addAction(action);
+            } else {
+              checkForRouteToVU(vm.menuEntry.actions[0], routeToUserOrVM);
+            }
+          }
         } else {
-          vm.menuKeyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-          var action = AutoAttendantCeMenuModelService.newCeActionEntry(routeToUserOrVM, '');
-          vm.menuKeyEntry.addAction(action);
+          vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
+          if ($scope.keyIndex < vm.menuEntry.entries.length) {
+            vm.menuKeyEntry = vm.menuEntry.entries[$scope.keyIndex];
+          } else {
+            vm.menuKeyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+            var action = AutoAttendantCeMenuModelService.newCeActionEntry(routeToUserOrVM, '');
+            vm.menuKeyEntry.addAction(action);
+          }
+        }
+      }
+
+      if ($scope.fromFallback) {
+        var entry;
+        if (_.has(vm.menuKeyEntry, 'actions[0]')) {
+          entry = vm.menuKeyEntry.actions[0];
+        } else {
+          entry = vm.menuEntry.actions[0];
+        }
+        if (_.get(entry, 'name') === conditional) {
+          entry = entry.then;
+        }
+
+        var fallbackAction = _.get(entry, 'queueSettings.fallback.actions[0]');
+        if (fallbackAction && (fallbackAction.getName() !== routeToUserOrVM)) {
+          fallbackAction.setName(routeToUserOrVM);
+          fallbackAction.setValue('');
         }
       }
       populateUiModel();

@@ -1,0 +1,14 @@
+<div ng-form="$ctrl.cpReversionTimerForm" class="cs-input-group large-6">
+  <cs-select
+    name="fallbackTimer"
+    ng-model="$ctrl.fallbackTimer"
+    selected="$ctrl.fallbackTimer"
+    options="$ctrl.options"
+    combo="true"
+    required="true"
+    secondary-label="{{:: 'callPark.reversionTimerSeconds' | translate }}"
+    on-change-fn="$ctrl.onFallbackTimerChange(value)"
+    is-error="{{$ctrl.isError}}"
+    error-msg="{{$ctrl.errorMsg}}">
+  </cs-select>
+</div>

@@ -6,42 +6,41 @@
     .service('CsdmHuronOrgDeviceService', CsdmHuronOrgDeviceService)
     .service('CsdmHuronUserDeviceService', CsdmHuronUserDeviceService);
 
-  function CsdmHuronUserDeviceService($injector, Authinfo, CsdmConfigService) {
+  function CsdmHuronUserDeviceService($injector, Authinfo, UrlConfig) {
     function create(userId) {
-      var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/users/' + userId + '/huronDevices';
+      var devicesUrl = UrlConfig.getCsdmServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/devices/?cisUuid=' + userId + '&type=huron';
       return $injector.instantiate(CsdmHuronDeviceService, {
-        devicesUrl: devicesUrl
+        devicesUrl: devicesUrl,
       });
     }
 
     return {
-      create: create
+      create: create,
     };
   }
 
-  function CsdmHuronOrgDeviceService($injector, Authinfo, CsdmConfigService) {
+  function CsdmHuronOrgDeviceService($injector, Authinfo, UrlConfig) {
     function create() {
-      var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/huronDevices';
+      var devicesUrl = UrlConfig.getCsdmServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/devices/?type=huron';
       return $injector.instantiate(CsdmHuronDeviceService, {
-        devicesUrl: devicesUrl
+        devicesUrl: devicesUrl,
       });
     }
 
     return {
-      create: create
+      create: create,
     };
   }
 
   /* @ngInject  */
-  function CsdmHuronDeviceService($http, $q, $translate, Authinfo, HuronConfig, CsdmConverter, CmiKemService, KemService, Notification, devicesUrl) {
+  function CsdmHuronDeviceService($http, $q, Authinfo, HuronConfig, CsdmConverter, UrlConfig, devicesUrl) {
 
     function huronEnabled() {
-      return $q.when(Authinfo.isSquaredUC());
+      return $q.resolve(Authinfo.isSquaredUC());
     }
 
-    function decodeHuronTags(description) {
-      var tagString = (description || "").replace(/\['/g, '["').replace(/']/g, '"]').replace(/',/g, '",').replace(/,'/g, ',"');
-      return tagString;
+    function getFindDevicesUrl(userId) {
+      return UrlConfig.getCsdmServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/devices/?cisUuid=' + userId + '&type=huron';
     }
 
     function getCmiUploadLogsUrl(userId, deviceId) {
@@ -60,8 +59,12 @@
       return HuronConfig.getCmiV2Url() + '/customers/' + Authinfo.getOrgId() + '/users/' + cisUuid + '/phones/' + deviceId;
     }
 
+    function getAtaUrl(deviceId, cisUuid) {
+      return HuronConfig.getCmiV2Url() + '/customers/' + Authinfo.getOrgId() + '/users/' + cisUuid + '/phones/' + deviceId + '/ata190s';
+    }
+
     function encodeHuronTags(description) {
-      return (description || "").replace(/"/g, "'");
+      return _.replace(description, /"/g, "'");
     }
 
     var deviceList = {};
@@ -69,7 +72,7 @@
 
     function fetch() {
       return huronEnabled().then(function (enabled) {
-        return !enabled ? $q.when([]) : $http.get(devicesUrl).then(function (res) {
+        return !enabled ? $q.resolve([]) : $http.get(devicesUrl).then(function (res) {
           loadedData = true;
           _.extend(deviceList, CsdmConverter.convertHuronDevices(res.data));
         }, function () {
@@ -78,7 +81,17 @@
       });
     }
 
-    fetch();
+    function fetchDevices() {
+      return $http.get(devicesUrl).then(function (res) {
+        return CsdmConverter.convertHuronDevices(res.data);
+      });
+    }
+
+    function fetchItem(url) {
+      return $http.get(url).then(function (res) {
+        return CsdmConverter.convertHuronDevice(res.data);
+      });
+    }
 
     function dataLoaded() {
       return !Authinfo.isSquaredUC() || loadedData;
@@ -88,22 +101,18 @@
       return deviceList;
     }
 
-    function update(url, obj) {
-      return $http.put(url, obj).then(function () {
-        var device = _.clone(deviceList[url]);
-        if (obj.description) {
-          try {
-            device.tags = JSON.parse(decodeHuronTags(obj.description));
-          } catch (e) {
-            device.tags = [];
-          }
-        }
-        return device;
-      });
+    function deleteItem(device) {
+      return $http.delete(device.url);
     }
 
     function deleteDevice(deviceUrl) {
       return $http.delete(deviceUrl);
+    }
+
+    function getDevicesForPlace(cisUuid) {
+      return $http.get(getFindDevicesUrl(cisUuid)).then(function (res) {
+        return CsdmConverter.convertHuronDevices(res.data);
+      });
     }
 
     function getLinesForDevice(huronDevice) {
@@ -113,7 +122,7 @@
           return $q.all(_.map(res.data, function (directoryNumber) {
             var line = {
               'directoryNumber': directoryNumber.directoryNumber.pattern,
-              'usage': directoryNumber.dnUsage
+              'usage': directoryNumber.dnUsage,
             };
             return $http.get(getAlternateNumbersUrl(directoryNumber.directoryNumber.uuid)).then(function (alternates) {
               if (alternates.data && alternates.data[0]) {
@@ -127,28 +136,71 @@
         });
     }
 
-    function getTimezoneForDevice(huronDevice) {
+    function getDeviceInfo(huronDevice) {
       return $http.get(getPhoneUrl(huronDevice.huronId, huronDevice.cisUuid))
         .then(function (res) {
-          var timeZone = null;
+          var response = {
+            timeZone: null,
+          };
           if (res.data) {
-            timeZone = res.data.timeZone;
+            response.timeZone = res.data.timeZone;
+            response.country = res.data.country;
+            response.emergencyCallbackNumber = res.data.emergencyCallbackNumber.number;
           }
-          return timeZone;
+          return response;
+        });
+    }
+
+    function getAtaInfo(huronDevice) {
+      return $http.get(getAtaUrl(huronDevice.huronId, huronDevice.cisUuid))
+        .then(function (res) {
+          var response = {
+            "port": null,
+            "inputAudioLevel": null,
+            "outputAudioLevel": null,
+            "impedance": null,
+            "t38FaxEnabled": false,
+          };
+          if (res.data) {
+            response.port = res.data.port;
+            response.inputAudioLevel = res.data.inputAudioLevel;
+            response.outputAudioLevel = res.data.outputAudioLevel;
+            response.impedance = res.data.impedance;
+            response.t38FaxEnabled = res.data.t38FaxEnabled;
+          }
+          return response;
         });
     }
 
     function setTimezoneForDevice(huronDevice, timezone) {
       return $http.put(getPhoneUrl(huronDevice.huronId, huronDevice.cisUuid), {
-        timeZone: timezone
+        timeZone: timezone,
+      });
+    }
+
+    function setSettingsForAta(huronDevice, settings) {
+      return $http.put(getAtaUrl(huronDevice.huronId, huronDevice.cisUuid), settings);
+    }
+
+    function setCountryForDevice(huronDevice, country) {
+      return $http.put(getPhoneUrl(huronDevice.huronId, huronDevice.cisUuid), {
+        country: country,
+      });
+    }
+
+    function setEmergencyCallback(huronDevice, emergencyCallbackNumber) {
+      return $http.put(getPhoneUrl(huronDevice.huronId, huronDevice.cisUuid), {
+        emergencyCallbackNumber: {
+          number: emergencyCallbackNumber,
+        },
       });
     }
 
     function resetDevice(url) {
       return $http.put(url, {
         actions: {
-          reset: true
-        }
+          reset: true,
+        },
       });
     }
 
@@ -157,29 +209,41 @@
       if (jsonTags.length >= 128) {
         return $q.reject("List of tags is longer than supported.");
       }
-      deviceList[url].tags = tags; // update ui asap
-      deviceList[url].tagString = tags.join(', '); // update ui asap
-      return update(url, {
-        description: jsonTags
+      if (!/^[^"%\\&<>]*$/.test(jsonTags)) {
+        return $q.reject("'" + tags[tags.length - 1] + "' contains invalid character(s).");
+      }
+
+      return $http.put(url, {
+        description: jsonTags,
       });
     }
 
     function uploadLogs(device, feedbackId) {
       return $http.post(getCmiUploadLogsUrl(device.cisUuid, device.huronId), {
-        ticketId: feedbackId
+        ticketId: feedbackId,
       });
     }
 
     return {
+
+      fetchDevices: fetchDevices,
+      fetchItem: fetchItem,
+      deleteItem: deleteItem,
+      updateTags: updateTags,
       dataLoaded: dataLoaded,
       getDeviceList: getDeviceList,
+      getDevicesForPlace: getDevicesForPlace,
       deleteDevice: deleteDevice,
       getLinesForDevice: getLinesForDevice,
-      getTimezoneForDevice: getTimezoneForDevice,
+      getDeviceInfo: getDeviceInfo,
+      getAtaInfo: getAtaInfo,
       setTimezoneForDevice: setTimezoneForDevice,
+      setCountryForDevice: setCountryForDevice,
+      setEmergencyCallback: setEmergencyCallback,
+      setSettingsForAta: setSettingsForAta,
       resetDevice: resetDevice,
       uploadLogs: uploadLogs,
-      updateTags: updateTags
+      fetch: fetch,
     };
   }
 })();

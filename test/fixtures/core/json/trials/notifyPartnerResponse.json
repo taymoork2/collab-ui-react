@@ -1,0 +1,17 @@
+{
+  "notifyPartnerEmailStatusList":[
+    {
+      "adminEmail":"fakeuserunodostres+admin1@gmail.com",
+      "messageId":"Successfully sent email: 20161208001351.30584.2917.72E33209@mail-a.koalabait.com",
+      "status":200
+    },{
+      "adminEmail":"fakeuserunodostres+admin2@gmail.com",
+      "messageId":"Successfully sent email: 20161208001351.30584.2917.72E3320a@mail-a.koalabait.com",
+      "status":200
+    },{
+      "adminEmail":"fakeuserunodostres+admin3@gmail.com",
+      "messageId":"Successfully sent email: 20161208001351.30584.2917.72E3320b@mail-a.koalabait.com",
+      "status":200
+    }
+  ]
+}

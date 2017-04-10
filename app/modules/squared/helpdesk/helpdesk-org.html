@@ -10,9 +10,15 @@
 
   <div class="row full">
     <div class="details-column columns large-4 medium-5">
-
-      <h3 ng-class="{'pointer': helpdeskOrgCtrl.supportsExtendedInformation}" ng-click="helpdeskOrgCtrl.openExtendedInformation()">{{helpdeskOrgCtrl.org.displayName}}</h3>
-
+      <cr-inline-edit-text
+        class="h3"
+        value="helpdeskOrgCtrl.org.displayName"
+        on-save="helpdeskOrgCtrl.updateDisplayName(newValue)"
+        validation-messages="helpdeskOrgCtrl.editOrgValidationMessages"
+        async-validators="helpdeskOrgCtrl.editOrgAsyncValidators"
+        is-text-clickable="helpdeskOrgCtrl.supportsExtendedInformation"
+        on-text-click="helpdeskOrgCtrl.openExtendedInformation()">
+      </cr-inline-edit-text>
       <hr>
 
       <div class="customer-or-partner">
@@ -107,10 +113,13 @@
 
       <div class="row">
         <div class="large-5 columns details-heading">
-          <span>{{'helpdesk.orderSystem' | translate}}:</span>
+          <span>{{'helpdesk.orderSystems' | translate}}:</span>
         </div>
         <div class="large-7 columns details-value">
-          <span>{{helpdeskOrgCtrl.orderSystem}}</span>
+          <span ng-repeat="orderSystem in helpdeskOrgCtrl.orderSystems">
+            {{orderSystem}}{{$last ? '' : ', '}}
+          </span>
+          <span ng-if="!helpdeskOrgCtrl.orderSystems" translate="helpdesk.none"></span>
         </div>
       </div>
 
@@ -165,7 +174,7 @@
                  style="margin-top: 1.0rem;">
               <span><a href
                        ng-click="helpdeskOrgCtrl.hideAllAdminUsers()"
-                       translate="helpdesk.hideAllAdminUsers"></a></span>
+                       translate="common.hideAllAdminUsers"></a></span>
             </div>
           </div>
 

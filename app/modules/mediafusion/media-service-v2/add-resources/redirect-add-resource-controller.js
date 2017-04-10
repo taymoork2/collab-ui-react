@@ -6,7 +6,7 @@
     .controller('RedirectAddResourceControllerV2', RedirectAddResourceControllerV2);
 
   /* @ngInject */
-  function RedirectAddResourceControllerV2($modalInstance, $translate, firstTimeSetup, yesProceed, $modal, $state, AddResourceCommonServiceV2, $window) {
+  function RedirectAddResourceControllerV2($modalInstance, $translate, firstTimeSetup, yesProceed, $modal, AddResourceCommonServiceV2, $window) {
     var vm = this;
     vm.clusterList = [];
     vm.selectPlaceholder = $translate.instant('mediaFusion.add-resource-dialog.cluster-placeholder');
@@ -36,22 +36,20 @@
 
     function closeSetupModal(isCloseOk) {
       if (!firstTimeSetup) {
-        $modalInstance.close();
+        $modalInstance.dismiss();
         return;
       }
       if (isCloseOk) {
         $modalInstance.close();
-        $state.go('services-overview');
         return;
       }
       $modal.open({
-        templateUrl: 'modules/hercules/add-resource/confirm-setup-cancel-dialog.html',
-        type: 'dialog'
+        templateUrl: 'modules/hercules/service-specific-pages/common-expressway-based/confirm-setup-cancel-dialog.html',
+        type: 'dialog',
       })
         .result.then(function (isAborting) {
           if (isAborting) {
-            $modalInstance.close();
-            $state.go('services-overview');
+            $modalInstance.dismiss();
           }
         });
     }
@@ -65,7 +63,7 @@
         vm.noProceed = true;
         $window.open('https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/Media-Fusion-Management-Connector/mfusion.ova');
       } else if (vm.yesProceed) {
-        if (angular.isDefined(vm.selectedCluster) && vm.selectedCluster != '' && angular.isDefined(vm.hostName)) {
+        if (!_.isUndefined(vm.selectedCluster) && vm.selectedCluster != '' && !_.isUndefined(vm.hostName)) {
           vm.enableRedirectToTarget = true;
         }
       } else {
@@ -76,7 +74,7 @@
     function canGoNext() {
       if (vm.firstTimeSetup && !vm.yesProceed) {
         return true;
-      } else if (vm.yesProceed && angular.isDefined(vm.hostName) && vm.hostName != '' && angular.isDefined(vm.selectedCluster) && vm.selectedCluster != '') {
+      } else if (vm.yesProceed && !_.isUndefined(vm.hostName) && vm.hostName != '' && !_.isUndefined(vm.selectedCluster) && vm.selectedCluster != '') {
         return true;
       } else {
         return false;

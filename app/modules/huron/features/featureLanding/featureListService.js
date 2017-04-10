@@ -6,13 +6,15 @@
     .service('HuronFeaturesListService', HuronFeaturesListService);
 
   /* @ngInject */
-  function HuronFeaturesListService($filter) {
+  function HuronFeaturesListService() {
     var service = {
       autoAttendants: autoAttendants,
       callParks: callParks,
       huntGroups: huntGroups,
+      pagingGroups: pagingGroups,
+      pickupGroups: pickupGroups,
       filterCards: filterCards,
-      orderByFilter: orderByFilter
+      orderByFilter: orderByFilter,
     };
 
     var formattedCard = {
@@ -78,7 +80,7 @@
 
     function callParks(data) {
       var formattedList = [];
-      _.forEach(data.callparks, function (callPark) {
+      _.forEach(data, function (callPark) {
         formattedCard.cardName = callPark.name;
         formattedCard.id = callPark.uuid;
         formattedCard.startRange = callPark.startRange;
@@ -107,49 +109,62 @@
       return orderByCardName(formattedList);
     }
 
+    function pagingGroups(data) {
+      var formattedList = [];
+      _.forEach(data, function (pagingGroup) {
+        formattedCard.cardName = pagingGroup.name;
+        formattedCard.pgNumber = pagingGroup.extension;
+        formattedCard.memberCount = pagingGroup.memberCount;
+        formattedCard.id = pagingGroup.groupId;
+        formattedCard.featureName = 'huronFeatureDetails.pg';
+        formattedCard.filterValue = 'PG';
+        formattedList.push(formattedCard);
+        formattedCard = {};
+      });
+      return orderByCardName(formattedList);
+    }
+
+    function pickupGroups(data) {
+      var formattedList = [];
+      _.forEach(data, function (pickupGroup) {
+        formattedCard.cardName = pickupGroup.name;
+        formattedCard.memberCount = pickupGroup.memberCount;
+        formattedCard.id = pickupGroup.uuid;
+        formattedCard.featureName = 'huronFeatureDetails.pi';
+        formattedCard.filterValue = 'PI';
+        formattedList.push(formattedCard);
+        formattedCard = {};
+      });
+      return orderByCardName(formattedList);
+    }
     /*
      Card can be searched by cardName, numbers, and memberCount (if Hunt Group Card)
      Card can be filtered by the specifying the filterValue (ex: AA, HG, CP)
      */
     function filterCards(list, filterValue, filterText) {
-      var filter = (filterValue === 'all') ? '' : filterValue;
-
-      var cardsFilteredByName = $filter('filter')(list, {
-        cardName: filterText,
-        filterValue: filter
+      var filterStringProperties = [
+        'cardName',
+        'startRange',
+        'endRange',
+        'pgNumber',
+        'memberCount',
+      ];
+      var filteredList = _.filter(list, function (feature) {
+        if (feature.filterValue !== filterValue && filterValue !== 'all') {
+          return false;
+        }
+        if (_.isEmpty(filterText)) {
+          return true;
+        }
+        var matchedStringProperty = _.some(filterStringProperties, function (stringProperty) {
+          return _.includes(_.get(feature, stringProperty), filterText);
+        });
+        var matchedNumbers = _.some(feature.numbers, function (number) {
+          return _.includes(number, filterText);
+        });
+        return matchedStringProperty || matchedNumbers;
       });
-
-      var cardsFilteredByNumber = $filter('filter')(list, {
-        cardName: "!" + filterText,
-        numbers: filterText,
-        filterValue: filter
-      });
-
-      var cardsFilteredByStartRange = $filter('filter')(list, {
-        cardName: "!" + filterText,
-        numbers: "!" + filterText,
-        startRange: filterText,
-        filterValue: filter
-      });
-
-      var cardsFilteredByEndRange = $filter('filter')(list, {
-        cardName: "!" + filterText,
-        numbers: "!" + filterText,
-        startRange: "!" + filterText,
-        endRange: filterText,
-        filterValue: filter
-      });
-
-      var cardsFilteredByMemberCount = $filter('filter')(list, {
-        cardName: "!" + filterText,
-        numbers: "!" + filterText,
-        startRange: "!" + filterText,
-        endRange: "!" + filterText,
-        memberCount: filterText,
-        filterValue: filter
-      });
-
-      return orderByFilter(cardsFilteredByName.concat(cardsFilteredByNumber, cardsFilteredByStartRange, cardsFilteredByEndRange, cardsFilteredByMemberCount));
+      return orderByFilter(filteredList);
     }
 
     function orderByCardName(list) {

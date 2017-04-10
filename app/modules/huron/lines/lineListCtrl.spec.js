@@ -20,11 +20,11 @@ describe('Controller: LineListCtrl', function () {
     spyOn(Notification, 'errorResponse');
     spyOn(Notification, 'error');
 
-    spyOn(LineListService, 'getLineList').and.returnValue($q.when(lines));
-    spyOn(FeatureToggleService, 'supports');
+    spyOn(LineListService, 'getLineList').and.returnValue($q.resolve(lines));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
 
     controller = $controller('LinesListCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
 
     $scope.$apply();
@@ -56,8 +56,6 @@ describe('Controller: LineListCtrl', function () {
     });
 
     it('should call getLineList with filter assignedLines', function () {
-      FeatureToggleService.supports.and.returnValue($q.when(true));
-
       controller.setFilter('assignedLines');
       $scope.$apply();
 
@@ -66,8 +64,6 @@ describe('Controller: LineListCtrl', function () {
     });
 
     it('should call getLineList with filter unassignedLines', function () {
-      FeatureToggleService.supports.and.returnValue($q.when(true));
-
       controller.setFilter('unassignedLines');
       $scope.$apply();
 
@@ -80,7 +76,7 @@ describe('Controller: LineListCtrl', function () {
     it('should display notification on exception', function () {
       LineListService.getLineList.and.returnValue($q.reject());
       controller = $controller('LinesListCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
       $scope.$apply();
       expect(Notification.errorResponse).toHaveBeenCalled();
@@ -94,8 +90,8 @@ describe('Controller: LineListCtrl', function () {
       var sortColumns = [{
         'name': 'internalnumber',
         'sort': {
-          'direction': 'asc'
-        }
+          'direction': 'asc',
+        },
       }];
 
       controller.sortColumn($scope, sortColumns);

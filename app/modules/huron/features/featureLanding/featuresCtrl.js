@@ -1,3 +1,5 @@
+require('./_feature-landing.scss');
+
 (function () {
   'use strict';
 
@@ -6,7 +8,7 @@
     .controller('HuronFeaturesCtrl', HuronFeaturesCtrl);
 
   /* @ngInject */
-  function HuronFeaturesCtrl($scope, $state, $filter, $timeout, $modal, $q, $translate, Authinfo, HuronFeaturesListService, HuntGroupService, CallParkService, AutoAttendantCeInfoModelService, Notification, Log, FeatureToggleService) {
+  function HuronFeaturesCtrl($scope, $state, $filter, $modal, $q, $translate, Authinfo, HuronFeaturesListService, HuntGroupService, CallParkService, PagingGroupService, AutoAttendantCeInfoModelService, Notification, Log, FeatureToggleService, CallPickupGroupService, CardUtils) {
 
     var vm = this;
     vm.searchData = searchData;
@@ -25,28 +27,25 @@
     vm.noFeatures = false;
     vm.loading = true;
     vm.placeholder = {
-      'name': 'Search'
+      'name': 'Search',
     };
     vm.filters = [{
       name: $translate.instant('common.all'),
-      filterValue: 'all'
+      filterValue: 'all',
     }, {
       name: $translate.instant('autoAttendant.title'),
-      filterValue: 'AA'
+      filterValue: 'AA',
     }, {
       name: $translate.instant('huronHuntGroup.modalTitle'),
-      filterValue: 'HG'
+      filterValue: 'HG',
+    }, {
+      name: $translate.instant('callPark.title'),
+      filterValue: 'CP',
+    }, {
+      name: $translate.instant('pagingGroup.title'),
+      filterValue: 'PG',
     }];
 
-    FeatureToggleService.supports(FeatureToggleService.features.callParkService).then(function (result) {
-      if (result) {
-        var cp = {
-          name: $translate.instant('callPark.title'),
-          filterValue: 'CP'
-        };
-        vm.filters.push(cp);
-      }
-    });
     /* LIST OF FEATURES
      *
      *  To add a New Feature
@@ -57,28 +56,67 @@
      * */
     vm.features = [{
       name: 'HG',
-      getFeature: HuntGroupService.getListOfHuntGroups,
+      getFeature: function () {
+        return HuntGroupService.getListOfHuntGroups();
+      },
       formatter: HuronFeaturesListService.huntGroups,
       isEmpty: false,
       i18n: 'huronFeatureDetails.hgName',
-      color: 'alerts'
+      color: 'alerts',
     }, {
       name: 'AA',
-      getFeature: AutoAttendantCeInfoModelService.getCeInfosList,
+      getFeature: function () {
+        return AutoAttendantCeInfoModelService.getCeInfosList();
+      },
       formatter: HuronFeaturesListService.autoAttendants,
       isEmpty: false,
       i18n: 'huronFeatureDetails.aaName',
-      color: 'primary'
+      color: 'primary',
     }, {
       name: 'CP',
-      getFeature: CallParkService.getListOfCallParks,
+      getFeature: function () {
+        return CallParkService.getCallParkList();
+      },
       formatter: HuronFeaturesListService.callParks,
       isEmpty: false,
       i18n: 'huronFeatureDetails.cpName',
-      color: 'cta'
+      color: 'cta',
+    }, {
+      name: 'PG',
+      getFeature: function () {
+        return PagingGroupService.getListOfPagingGroups();
+      },
+      formatter: HuronFeaturesListService.pagingGroups,
+      isEmpty: false,
+      i18n: 'huronFeatureDetails.pgName',
+      color: 'people',
     }];
 
-    init();
+    var piFeature = {
+      name: 'PI',
+      getFeature: function () {
+        return CallPickupGroupService.getListOfPickupGroups();
+      },
+      formatter: HuronFeaturesListService.pickupGroups,
+      isEmpty: false,
+      i18n: 'huronFeatureDetails.piName',
+      color: 'attention',
+    };
+
+    var featureTogglePromises = [];
+    var callPickupPromise = FeatureToggleService.supports(FeatureToggleService.features.huronCallPickup);
+    featureTogglePromises.push(callPickupPromise);
+    $q.all(featureTogglePromises).then(function (data) {
+      if (data[0] === true) {
+        var pi = {
+          name: $translate.instant('callPickup.title'),
+          filterValue: 'PI',
+        };
+        vm.features.push(piFeature);
+        vm.filters.push(pi);
+      }
+      init();
+    });
 
     function init() {
       vm.loading = false;
@@ -91,7 +129,6 @@
       var featuresPromises = getListOfFeatures();
 
       handleFeaturePromises(featuresPromises);
-
       $q.all(featuresPromises).then(function () {
         showNewFeaturePageIfNeeded();
       });
@@ -112,9 +149,22 @@
 
     function reload() {
       $state.go($state.current, {}, {
-        reload: true
+        reload: true,
       });
     }
+    vm.featureFilter = function (feature) {
+      if (feature.filterValue !== 'CP' && feature.filterValue !== 'PG' && feature.filterValue !== 'PI') {
+        return true;
+      }
+      return false;
+    };
+
+    vm.filterForMemberCount = function (feature) {
+      if (feature.filterValue === 'HG' || feature.filterValue === 'CP' || feature.filterValue === 'PG' || feature.filterValue === 'PI') {
+        return true;
+      }
+      return false;
+    };
 
     function getListOfFeatures() {
       var promises = [];
@@ -138,7 +188,7 @@
 
       Log.warn('Could fetch features for customer with Id:', Authinfo.getOrgId());
       Notification.errorResponse(response, 'huronFeatureDetails.failedToLoad', {
-        featureType: $filter('translate')(feature.i18n)
+        featureType: $filter('translate')(feature.i18n),
       });
 
       feature.isEmpty = true;
@@ -169,15 +219,23 @@
       if (feature.filterValue === 'AA') {
         vm.aaModel.aaName = feature.cardName;
         $state.go('huronfeatures.aabuilder', {
-          aaName: vm.aaModel.aaName
+          aaName: vm.aaModel.aaName,
         });
       } else if (feature.filterValue === 'HG') {
         $state.go('huntgroupedit', {
-          feature: feature
+          feature: feature,
         });
       } else if (feature.filterValue === 'CP') {
         $state.go('callparkedit', {
-          feature: feature
+          feature: feature,
+        });
+      } else if (feature.filterValue === 'PG') {
+        $state.go('huronPagingGroupEdit', {
+          feature: feature,
+        });
+      } else if (feature.filterValue === 'PI') {
+        $state.go('callpickupedit', {
+          feature: feature,
         });
       }
     };
@@ -185,7 +243,7 @@
     vm.deleteHuronFeature = function (feature) {
       if (feature.hasDepends) {
         Notification.error('huronFeatureDetails.aaDeleteBlocked', {
-          aaNames: feature.dependsNames.join(", ")
+          aaNames: feature.dependsNames.join(", "),
         });
         return;
       }
@@ -194,7 +252,7 @@
       $state.go('huronfeatures.deleteFeature', {
         deleteFeatureName: feature.cardName,
         deleteFeatureId: feature.id,
-        deleteFeatureType: feature.filterValue
+        deleteFeatureType: feature.filterValue,
       });
     };
 
@@ -203,7 +261,7 @@
         detailsFeatureName: feature.cardName,
         detailsFeatureId: feature.id,
         detailsFeatureType: feature.filterValue,
-        detailsDependsList: feature.dependsNames
+        detailsDependsList: feature.dependsNames,
       });
     };
 
@@ -225,15 +283,7 @@
     }
 
     function reInstantiateMasonry() {
-      $timeout(function () {
-        $('.cs-card-layout').masonry('destroy');
-        $('.cs-card-layout').masonry({
-          itemSelector: '.cs-card',
-          columnWidth: '.cs-card',
-          isResizable: true,
-          percentPosition: true
-        });
-      }, 0);
+      CardUtils.resize();
     }
 
     function showReloadPageIfNeeded() {
@@ -252,7 +302,7 @@
           var cardToRefresh = _.find(listOfAllFeatures, function (feature) {
             return feature.cardName === ref;
           });
-          if (angular.isDefined(cardToRefresh)) {
+          if (!_.isUndefined(cardToRefresh)) {
             cardToRefresh.dependsNames.splice(cardToRefresh.dependsNames.indexOf(featureToBeDeleted.cardName), 1);
             if (cardToRefresh.dependsNames.length === 0) {
               cardToRefresh.hasDepends = false;
@@ -275,11 +325,11 @@
       var modalInstance = $modal.open({
         templateUrl: 'modules/huron/features/newFeature/newFeatureModal.tpl.html',
         controller: 'NewFeatureModalCtrl',
-        controllerAs: 'newFeatureModalCtrl'
+        controllerAs: 'newFeatureModalCtrl',
       });
 
       /* Goto the corresponding Set up Assistant controller
-      based on the feature selected */
+       based on the feature selected */
       modalInstance.result.then(function (selectedFeature) {
         vm.feature = selectedFeature;
       }, function () {

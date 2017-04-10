@@ -5,7 +5,7 @@ describe('Controller: AASubmenuCtrl', function () {
   var AutoAttendantCeMenuModelService, AACommonService;
   var $rootScope, $scope;
   var aaUiModel = {
-    openHours: {}
+    openHours: {},
   };
   var schedule = 'openHours';
   var index = '0';
@@ -14,7 +14,7 @@ describe('Controller: AASubmenuCtrl', function () {
   var queueName = 'Sunlight Queue 1';
   var queues = [{
     queueName: queueName,
-    queueUrl: '/c16a6027-caef-4429-b3af-9d61ddc7964b'
+    queueUrl: '/c16a6027-caef-4429-b3af-9d61ddc7964b',
   }];
 
   var data = getJSONFixture('huron/json/autoAttendant/aaPhoneMenuCtrl.json');
@@ -22,11 +22,11 @@ describe('Controller: AASubmenuCtrl', function () {
 
   function raw2MenuEntry(raw) {
     var _menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-    angular.extend(_menuEntry, raw);
+    _.assign(_menuEntry, raw);
     _menuEntry.actions = [];
     for (var j = 0; j < raw.actions.length; j++) {
       var _action = AutoAttendantCeMenuModelService.newCeActionEntry();
-      angular.extend(_action, raw.actions[j]);
+      _.assign(_action, raw.actions[j]);
       _menuEntry.addAction(_action);
     }
     return _menuEntry;
@@ -34,7 +34,7 @@ describe('Controller: AASubmenuCtrl', function () {
 
   function raw2Menu(raw) {
     var _menu = AutoAttendantCeMenuModelService.newCeMenu();
-    angular.extend(_menu, raw);
+    _.assign(_menu, raw);
     _menu.headers = [];
     _menu.entries = [];
     for (var i = 0; i < raw.headers.length; i++) {
@@ -51,25 +51,27 @@ describe('Controller: AASubmenuCtrl', function () {
   }
 
   var sortedOptions = [{
-    "name": 'phoneMenuDialExt',
+    "label": 'autoAttendant.actionSayMessage',
   }, {
-    "name": 'phoneMenuGoBack',
+    "label": 'autoAttendant.phoneMenuDialExt',
   }, {
-    "name": 'phoneMenuRepeatMenu',
+    "label": 'autoAttendant.phoneMenuGoBack',
   }, {
-    "name": 'phoneMenuRouteAA',
+    "label": 'autoAttendant.phoneMenuRepeatMenu',
   }, {
-    "name": 'phoneMenuRouteHunt',
+    "label": 'autoAttendant.phoneMenuRouteAA',
   }, {
-    "name": 'phoneMenuRouteMailbox',
+    "label": 'autoAttendant.phoneMenuRouteHunt',
   }, {
-    "name": 'phoneMenuRouteQueue',
+    "label": 'autoAttendant.phoneMenuRouteQueue',
   }, {
-    "name": 'phoneMenuRouteToExtNum',
+    "label": 'autoAttendant.phoneMenuRouteToExtNum',
   }, {
-    "name": 'phoneMenuRouteUser',
+    "label": 'autoAttendant.phoneMenuRouteToSipEndpoint',
   }, {
-    "name": 'phoneMenuSayMessage',
+    "label": 'autoAttendant.phoneMenuRouteUser',
+  }, {
+    "label": 'autoAttendant.phoneMenuRouteVM',
   }];
 
   beforeEach(angular.mock.module('uc.autoattendant'));
@@ -92,9 +94,10 @@ describe('Controller: AASubmenuCtrl', function () {
     $scope.queues = JSON.stringify(queues);
 
     spyOn(AACommonService, 'isRouteQueueToggle').and.returnValue(true);
+    spyOn(AACommonService, 'isRouteSIPAddressToggle').and.returnValue(true);
 
     controller = $controller('AASubmenuCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
     $scope.$apply();
 
@@ -139,8 +142,8 @@ describe('Controller: AASubmenuCtrl', function () {
 
   describe('deleteKeyAction', function () {
     it('should delete an existing keyAction object from the selectedActions array', function () {
-      controller.selectedActions = angular.copy(data.selectedActions);
-      controller.menuEntry = angular.copy(data.ceMenu);
+      controller.selectedActions = _.cloneDeep(data.selectedActions);
+      controller.menuEntry = _.cloneDeep(data.ceMenu);
       controller.deleteKeyAction(0);
       expect(controller.selectedActions.length).toEqual(1);
       expect(controller.selectedActions[0]).toEqual(data.oneSelectedAction);
@@ -149,8 +152,8 @@ describe('Controller: AASubmenuCtrl', function () {
 
   describe('keyChanged', function () {
     it('should change the key for an existing action', function () {
-      controller.menuEntry = angular.copy(data.ceMenu);
-      controller.selectedActions = angular.copy(data.selectedActions);
+      controller.menuEntry = _.cloneDeep(data.ceMenu);
+      controller.selectedActions = _.cloneDeep(data.selectedActions);
       var newKey = '3';
       controller.keyChanged(0, newKey);
       expect(controller.selectedActions[0].key).toEqual(newKey);
@@ -159,12 +162,12 @@ describe('Controller: AASubmenuCtrl', function () {
 
   describe('keyActionChanged', function () {
     it('should write Repeat-this-Menu action to the model', function () {
-      var ceMenu = angular.copy(data.ceMenu);
+      var ceMenu = _.cloneDeep(data.ceMenu);
       var expectEntry = raw2MenuEntry(ceMenu.entries[0]);
       var phoneMenu = {
         "type": "MENU_OPTION",
         "entries": [],
-        "headers": []
+        "headers": [],
       };
       controller.menuEntry = phoneMenu;
       controller.selectedActions = [];
@@ -177,13 +180,13 @@ describe('Controller: AASubmenuCtrl', function () {
     });
 
     it('should change Repeat-Menu to Dial-by-Extension action in the model', function () {
-      var ceMenu = angular.copy(data.ceMenu);
+      var ceMenu = _.cloneDeep(data.ceMenu);
       var expectEntry = raw2MenuEntry(ceMenu.entries[0]);
       var expectEntry2 = raw2MenuEntry(ceMenu.entries[1]);
       var phoneMenu = {
         "type": "MENU_OPTION",
         "entries": [],
-        "headers": []
+        "headers": [],
       };
       controller.menuEntry = phoneMenu;
       controller.selectedActions = [];
@@ -199,7 +202,7 @@ describe('Controller: AASubmenuCtrl', function () {
     });
 
     it('should change Repeat-Menu to Go Back action in the model', function () {
-      var ceMenu = angular.copy(data.ceMenu);
+      var ceMenu = _.cloneDeep(data.ceMenu);
       var expectEntry = raw2MenuEntry(ceMenu.entries[0]);
       var expectEntry2 = raw2MenuEntry(ceMenu.entries[0]);
       expectEntry2.actions[0].level = -1;
@@ -207,7 +210,7 @@ describe('Controller: AASubmenuCtrl', function () {
       var phoneMenu = {
         "type": "MENU_OPTION",
         "entries": [],
-        "headers": []
+        "headers": [],
       };
       controller.menuEntry = phoneMenu;
       controller.selectedActions = [];
@@ -223,14 +226,14 @@ describe('Controller: AASubmenuCtrl', function () {
     });
 
     it('should successfully change a Say-Message button to a Route-To-User button', function () {
-      var ceMenuWithSay = angular.copy(data.ceMenuWithSay);
-      var ceMenuWithRouteToUser = angular.copy(data.ceMenuWithRouteToUser);
+      var ceMenuWithSay = _.cloneDeep(data.ceMenuWithSay);
+      var ceMenuWithRouteToUser = _.cloneDeep(data.ceMenuWithRouteToUser);
       var phoneMenuEntry = raw2MenuEntry(ceMenuWithSay.entries[0]);
       var expectEntry = raw2MenuEntry(ceMenuWithRouteToUser.entries[0]);
       var phoneMenu = {
         "type": "MENU_OPTION",
         "entries": [],
-        "headers": []
+        "headers": [],
       };
       phoneMenu.entries.push(phoneMenuEntry);
       controller.menuEntry = phoneMenu;
@@ -282,7 +285,7 @@ describe('Controller: AASubmenuCtrl', function () {
 
     it('should sort options', function () {
       for (var i = 0; i < sortedOptions.length; i++) {
-        expect(controller.keyActions[i].name).toEqual(sortedOptions[i].name);
+        expect(controller.keyActions[i].label).toEqual(sortedOptions[i].label);
       }
     });
   });

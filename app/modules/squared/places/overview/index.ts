@@ -1,5 +1,7 @@
+import './placeOverview.scss';
 import { PlaceOverviewComponent } from './placeOverview.component';
 
-angular
+export default angular
   .module('Squared')
-  .component('placeOverview', new PlaceOverviewComponent());
+  .component('placeOverview', new PlaceOverviewComponent())
+  .name;

@@ -5,11 +5,15 @@ describe('ResponseInterceptor', function () {
 
   var Interceptor, Auth;
 
+  afterEach(function () {
+    Interceptor = Auth = undefined;
+  });
+
   beforeEach(function () {
     angular.mock.module(function ($provide) {
       Auth = {
-        logout: sinon.stub(),
-        refreshAccessTokenAndResendRequest: sinon.stub()
+        logout: jasmine.createSpy('logout'),
+        refreshAccessTokenAndResendRequest: jasmine.createSpy('refreshAccessTokenAndResendRequest'),
       };
       $provide.value('Auth', Auth);
     });
@@ -20,51 +24,77 @@ describe('ResponseInterceptor', function () {
   }));
 
   it('should refresh token for 200001 errors', function () {
-    Interceptor.responseError({
+    testRefreshAccessTokenAndResendRequestForResponse({
       status: 401,
       data: {
         Errors: [{
-          errorCode: '200001'
-        }]
-      }
+          errorCode: '200001',
+        }],
+      },
     });
-
-    expect(Auth.refreshAccessTokenAndResendRequest.calledOnce).toBe(true);
   });
 
   it('should refresh token for HTTP auth errors', function () {
-    Interceptor.responseError({
+    testRefreshAccessTokenAndResendRequestForResponse({
       status: 401,
-      data: 'This request requires HTTP authentication.'
+      data: 'This request requires HTTP authentication.',
     });
+  });
 
-    expect(Auth.refreshAccessTokenAndResendRequest.calledOnce).toBe(true);
+  it('should refresh token for Request unauthorized', function () {
+    testRefreshAccessTokenAndResendRequestForResponse({
+      status: 401,
+      data: {
+        error: {
+          message: 'Request unauthorized',
+        },
+      },
+    });
   });
 
   it('should refresh token for hercules 400 auth error responses', function () {
-    Interceptor.responseError({
+    testRefreshAccessTokenAndResendRequestForResponse({
       status: 400,
       data: {
         error: {
           message: [{
-            description: "Invalid access token."
-          }]
-        }
-      }
+            description: "Invalid access token.",
+          }],
+        },
+      },
     });
-
-    expect(Auth.refreshAccessTokenAndResendRequest.calledOnce).toBe(true);
   });
 
   it('should logout when token has expired', function () {
-    Interceptor.responseError({
+    testLogoutForResponse({
       status: 400,
       data: {
-        error_description: 'The refresh token provided is expired'
-      }
+        error_description: 'The refresh token provided is expired',
+      },
     });
-
-    expect(Auth.logout.calledOnce).toBe(true);
   });
+
+  it('should logout when refresh token is invalid because requested scope is invalid', function () {
+    testLogoutForResponse({
+      status: 400,
+      data: {
+        error_description: 'The requested scope is invalid',
+      },
+    });
+  });
+
+  function testRefreshAccessTokenAndResendRequestForResponse(response) {
+    Interceptor.responseError(response);
+    expect(Auth.refreshAccessTokenAndResendRequest).toHaveBeenCalledTimes(1);
+
+    // Assume same request is retried - it should not invoke the refresh/resend again
+    Interceptor.responseError(response);
+    expect(Auth.refreshAccessTokenAndResendRequest).toHaveBeenCalledTimes(1);
+  }
+
+  function testLogoutForResponse(response) {
+    Interceptor.responseError(response);
+    expect(Auth.logout).toHaveBeenCalledTimes(1);
+  }
 
 });

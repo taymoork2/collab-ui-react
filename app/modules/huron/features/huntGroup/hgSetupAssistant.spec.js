@@ -2,7 +2,7 @@
 
 describe('Huron Setup Assistant Ctrl', function () {
 
-  var controller, $scope, $modal, $timeout, Notification, HuntGroupService, $q, $state, HuntGroupFallbackDataService;
+  var controller, $scope, $modal, $timeout, Notification, HuntGroupService, $q, $state;
 
   var leftArrow = 37;
   var rightArrow = 39;
@@ -13,7 +13,7 @@ describe('Huron Setup Assistant Ctrl', function () {
 
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$modal_, _$timeout_, _Notification_, _HuntGroupService_, _$q_, _$state_, _HuntGroupFallbackDataService_) {
+  beforeEach(inject(function ($rootScope, $controller, _$modal_, _$timeout_, _Notification_, _HuntGroupService_, _$q_, _$state_) {
     $scope = $rootScope.$new();
     $modal = _$modal_;
     $timeout = _$timeout_;
@@ -21,21 +21,19 @@ describe('Huron Setup Assistant Ctrl', function () {
     HuntGroupService = _HuntGroupService_;
     $q = _$q_;
     $state = _$state_;
-    HuntGroupFallbackDataService = _HuntGroupFallbackDataService_;
 
     spyOn($modal, 'open');
     spyOn($state, 'go');
     spyOn(Notification, 'success');
     spyOn(Notification, 'error');
-    spyOn(HuntGroupService, 'saveHuntGroup').and.returnValue($q.when());
-    spyOn(HuntGroupFallbackDataService, 'allowLocalValidation').and.returnValue($q.when(false));
+    spyOn(HuntGroupService, 'saveHuntGroup').and.returnValue($q.resolve());
 
     controller = $controller('HuntGroupSetupAssistantCtrl', {
       $scope: $scope,
       $modal: $modal,
       Notification: Notification,
       HuntGroupService: HuntGroupService,
-      $state: $state
+      $state: $state,
     });
   }));
 
@@ -50,7 +48,7 @@ describe('Huron Setup Assistant Ctrl', function () {
     expect(controller.nextButton(0)).toEqual(true);
   });
 
-  it("should enable next button when not null on second pagee", function () {
+  it("should enable next button when not null on second page", function () {
     expect(controller.nextButton(1)).toEqual(false);
     controller.selectedPilotNumbers.push(testGroupNumber);
     expect(controller.nextButton(1)).toEqual(true);

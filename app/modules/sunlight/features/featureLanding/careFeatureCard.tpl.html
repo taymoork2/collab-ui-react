@@ -1,12 +1,14 @@
 <div class="cs-card-container">
   <cs-card-layout>
-    <cs-card ng-repeat="careFeature in careFeaturesCtrl.listOfFeatures" class="small header-bar" ng-class="careFeaturesCtrl.cardColor[careFeature.featureType]">
+    <cs-card ng-repeat="careFeature in careFeaturesCtrl.filteredListOfFeatures" class="small header-bar" ng-class="careFeature.color">
       <article>
         <header>
           <div class="header-with-right-icon">
             <p class="h4 ellipsis" title="{{careFeature.name}}"> {{careFeature.name}} </p>
-            <div class="right">
-              <span class="card-icon card-icon-color-{{careFeature.featureType}}">{{:: careFeature.featureType | translate}}</span>
+            <div class="right card-icons-inline">
+              <span class="card-icon" ng-repeat="icon in careFeature.icons">
+                <i class="icon {{icon}}"></i>
+              </span>
             </div>
           </div>
         </header>

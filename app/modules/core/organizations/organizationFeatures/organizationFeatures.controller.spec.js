@@ -8,7 +8,7 @@ describe('Controller: OrganizationFeaturesCtrl', function () {
   }];
 
   var data = {
-    featureToggles: featureToggles
+    featureToggles: featureToggles,
   };
 
   var currentOrg = {
@@ -32,7 +32,7 @@ describe('Controller: OrganizationFeaturesCtrl', function () {
     spyOn(FeatureToggleService, 'getFeaturesForOrg');
     spyOn(FeatureToggleService, 'generateFeatureToggleRule');
     spyOn(FeatureToggleService, 'setFeatureToggles');
-    FeatureToggleService.getFeaturesForOrg = jasmine.createSpy().and.returnValue($q.when(data));
+    FeatureToggleService.getFeaturesForOrg = jasmine.createSpy().and.returnValue($q.resolve(data));
     FeatureToggleService.generateFeatureToggleRule = jasmine.createSpy().and.returnValue({});
 
     controller = $controller('OrganizationFeaturesCtrl', {
@@ -50,14 +50,14 @@ describe('Controller: OrganizationFeaturesCtrl', function () {
   });
 
   it('should auto-fire a post to the service on toggle state change', function () {
-    FeatureToggleService.setFeatureToggles = jasmine.createSpy().and.returnValue($q.when());
+    FeatureToggleService.setFeatureToggles = jasmine.createSpy().and.returnValue($q.resolve());
     // mock click action
     var toggle = controller.toggles[0];
     toggle.model = !toggle.model;
 
     // invoke click callback
-    controller.handleClick();
-    expect(FeatureToggleService.generateFeatureToggleRule).toHaveBeenCalledWith(currentOrg.id, toggle.name, toggle.model);
+    controller.handleClick(toggle);
+    expect(FeatureToggleService.generateFeatureToggleRule).toHaveBeenCalled();
     expect(FeatureToggleService.setFeatureToggles).toHaveBeenCalled();
   });
 });

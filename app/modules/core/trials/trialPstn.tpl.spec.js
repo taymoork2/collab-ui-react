@@ -1,27 +1,55 @@
 'use strict';
 
 describe('Template: trialPstn.tpl.spec.js:', function () {
-
-  var $compile, $controller, $scope, $templateCache;
+  var $q, $compile, $controller, $scope, $templateCache, Analytics, Orgservice, PstnSetupStatesService, FeatureToggleService, PstnSetupService;
   var view;
   var skipBtn, backBtn;
+
+  var location = {
+    type: 'State',
+    areas: [{
+      name: 'Texas',
+      abbreviation: 'TX',
+    }],
+  };
+
+  afterEach(function () {
+    if (view) {
+      view.remove();
+    }
+    $q = $compile = $controller = $scope = $templateCache = Analytics = Orgservice = PstnSetupStatesService = FeatureToggleService = PstnSetupService = undefined;
+    view = skipBtn = backBtn = undefined;
+  });
 
   beforeEach(angular.mock.module('Huron'));
   beforeEach(inject(dependencies));
   beforeEach(compileView);
 
-  function dependencies(_$compile_, _$controller_, _$rootScope_, _$templateCache_) {
+
+  function dependencies(_$q_, _$compile_, _$controller_, _$rootScope_, _$templateCache_, _Analytics_, _Orgservice_, _PstnSetupStatesService_, _FeatureToggleService_, _PstnSetupService_) {
+    $q = _$q_;
     $compile = _$compile_;
     $controller = _$controller_;
     $scope = _$rootScope_.$new();
     $templateCache = _$templateCache_;
+    PstnSetupStatesService = _PstnSetupStatesService_;
+    FeatureToggleService = _FeatureToggleService_;
+    Orgservice = _Orgservice_;
+    Analytics = _Analytics_;
+    PstnSetupService = _PstnSetupService_;
+
+    spyOn(PstnSetupStatesService, 'getLocation').and.returnValue($q.resolve(location));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
+    spyOn(Analytics, 'trackTrialSteps');
+    spyOn(PstnSetupService, 'getResellerV2').and.returnValue($q.resolve());
   }
 
   function compileView() {
+    spyOn(Orgservice, 'getOrg');
     var template = $templateCache.get('modules/core/trials/trialPstn.tpl.html');
 
     $controller('TrialPstnCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
 
     view = $compile(angular.element(template))($scope);
@@ -34,7 +62,6 @@ describe('Template: trialPstn.tpl.spec.js:', function () {
     function findSkipBtn() {
       skipBtn = view.find('a.alt-btn-link');
     }
-
     it('should match the selector \'a.alt-btn-lnk\'', function () {
       expect(skipBtn.length).toBe(1);
     });

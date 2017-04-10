@@ -4,6 +4,14 @@ describe('UserInfoDirective', function () {
   var $compile, $rootScope, Authinfo, Userservice;
   var view, scope;
 
+  afterEach(function () {
+    if (view) {
+      view.remove();
+    }
+    $compile = $rootScope = Authinfo = Userservice = undefined;
+    view = scope = undefined;
+  });
+
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));

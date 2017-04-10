@@ -9,31 +9,32 @@
 
     var sortedOptions = [{
       "title": 'autoAttendant.actionPhoneMenu',
-      "label": 'AutoAttendantTestLabel'
+      "label": 'AutoAttendantTestLabel',
     }, {
       "title": 'autoAttendant.actionRouteCall',
-      "label": 'autoAttendantTestLabel'
+      "label": 'autoAttendantTestLabel',
     }, {
       "title": 'autoAttendant.actionSayMessage',
-      "label": 'secondTestLabel'
+      "label": 'secondTestLabel',
     }, {
       "title": 'autoAttendant.phoneMenuDialExt',
-      "label": 'testLabel'
+      "label": 'testLabel',
     }];
 
     var unSortedOptions = [{
       "title": 'autoAttendant.actionRouteCall',
-      "label": 'testLabel'
+      "label": 'testLabel',
     }, {
       "title": 'autoAttendant.phoneMenuDialExt',
-      "label": 'autoAttendantTestLabel'
+      "label": 'autoAttendantTestLabel',
     }, {
       "title": 'autoAttendant.actionSayMessage',
-      "label": 'AutoAttendantTestLabel'
+      "label": 'AutoAttendantTestLabel',
     }, {
       "title": 'autoAttendant.actionPhoneMenu',
-      "label": 'secondTestLabel'
+      "label": 'secondTestLabel',
     }];
+
 
     beforeEach(angular.mock.module('uc.autoattendant'));
     beforeEach(angular.mock.module('Huron'));
@@ -73,6 +74,43 @@
         expect(AACommonService.isFormDirty()).toBeFalsy();
       });
 
+      it('setActionStatus should be true', function () {
+        AACommonService.setActionStatus(true);
+        expect(AACommonService.isFormDirty()).toBeTruthy();
+      });
+      it('setActionStatus should be false', function () {
+        AACommonService.setActionStatus(false);
+        expect(AACommonService.isFormDirty()).toBeFalsy();
+      });
+      it('setCENumberStatus should be true', function () {
+        AACommonService.setCENumberStatus(true);
+        expect(AACommonService.isFormDirty()).toBeTruthy();
+      });
+      it('setCENumberStatus should be false', function () {
+        AACommonService.setCENumberStatus(false);
+        expect(AACommonService.isFormDirty()).toBeFalsy();
+      });
+      it('setDialByExtensionStatus should be false', function () {
+        AACommonService.setDialByExtensionStatus(false);
+        expect(AACommonService.isFormDirty()).toBeFalsy();
+      });
+      it('setDialByExtensionStatus should be true', function () {
+        AACommonService.setDialByExtensionStatus(true);
+        expect(AACommonService.isFormDirty()).toBeTruthy();
+      });
+      it('setMediaUploadStatus should be false', function () {
+        AACommonService.setMediaUploadStatus(false);
+        expect(AACommonService.isFormDirty()).toBeFalsy();
+      });
+      it('setMediaUploadStatus should be true', function () {
+        AACommonService.setMediaUploadStatus(true);
+        expect(AACommonService.isFormDirty()).toBeTruthy();
+      });
+      it('getUniqueId should be incremented', function () {
+        AACommonService.getUniqueId();
+        var id2 = AACommonService.getUniqueId();
+        expect(id2).toEqual(2);
+      });
       it('all is valid by default', function () {
         expect(AACommonService.isValid()).toBeTruthy();
       });
@@ -80,9 +118,12 @@
       it('is valid or invalid as set with one item', function () {
         AACommonService.setIsValid("1", false);
         expect(AACommonService.isValid()).toBeFalsy();
+        expect(AACommonService.getInvalid("1")).toBeFalsy();
 
         AACommonService.setIsValid("1", true);
         expect(AACommonService.isValid()).toBeTruthy();
+        expect(AACommonService.getInvalid("1")).not.toBeDefined();
+
       });
 
       it('is making properly formatted key', function () {
@@ -121,6 +162,49 @@
         AACommonService.setRouteQueueToggle(true);
         expect(AACommonService.isRouteQueueToggle()).toBeTruthy();
       });
+      it('setCallerInputToggle should set to false', function () {
+        AACommonService.setCallerInputToggle(false);
+        expect(AACommonService.isCallerInputToggle()).toBeFalsy();
+      });
+      it('setCallerInputToggle should set to true', function () {
+        AACommonService.setCallerInputToggle(true);
+        expect(AACommonService.isCallerInputToggle()).toBeTruthy();
+      });
+      it('setRouteSIPAddressToggle should set to false', function () {
+        AACommonService.setRouteSIPAddressToggle(false);
+        expect(AACommonService.isRouteSIPAddressToggle()).toBeFalsy();
+      });
+      it('setRouteSIPAddressToggle should set to true', function () {
+        AACommonService.setRouteSIPAddressToggle(true);
+        expect(AACommonService.isRouteSIPAddressToggle()).toBeTruthy();
+      });
+      it('setMediaUploadToggle should set to false', function () {
+        AACommonService.setMediaUploadToggle(false);
+        expect(AACommonService.isMediaUploadToggle()).toBeFalsy();
+      });
+      it('setMediaUploadToggle should set to true', function () {
+        AACommonService.setMediaUploadToggle(true);
+        expect(AACommonService.isMediaUploadToggle()).toBeTruthy();
+      });
+
+      it('setCallerInputStatus should set to true', function () {
+        AACommonService.setCallerInputStatus(true);
+        expect(AACommonService.isFormDirty()).toBeTruthy();
+      });
+      it('setCallerInputStatus should set to false', function () {
+        AACommonService.setCallerInputStatus(false);
+        expect(AACommonService.isFormDirty()).toBeFalsy();
+      });
+
+      it('setQueueSettingsStatus should set to true', function () {
+        AACommonService.setQueueSettingsStatus(true);
+        expect(AACommonService.isFormDirty()).toBeTruthy();
+      });
+      it('setQueueSettingsStatus should set to false', function () {
+        AACommonService.setQueueSettingsStatus(false);
+        expect(AACommonService.isFormDirty()).toBeFalsy();
+      });
+
 
     });
 
@@ -177,6 +261,61 @@
           expect(unSortedOptions[i].label).toEqual(sortedOptions[i].label);
         }
       });
+
+    });
+
+    describe('keyActionAvailable', function () {
+      it('should send back available keys minus 0, 1', function () {
+        var expected = ['2', '3', '4', '5', '6', '7', '8', '9', '#', '*'];
+
+        var inputActions = [{
+          key: '0',
+        }, {
+          key: '1',
+        }];
+
+        var available = AACommonService.keyActionAvailable('', inputActions);
+
+        expect(available.length).toEqual(10);
+        expect(available).toEqual(expected);
+
+      });
+
+      it('should send back available keys minus 0, 1 but with 9', function () {
+
+        var inputActions = [{
+          key: '0',
+        }, {
+          key: '1',
+        }, {
+          key: '9',
+        }];
+
+        var available = AACommonService.keyActionAvailable('9', inputActions);
+
+        expect(available.length).toEqual(10);
+
+      });
+
+      it('should send back available keys minus 0, 1 with 5', function () {
+        var expected = ['2', '3', '4', '5', '6', '7', '8', '#', '*'];
+
+        var inputActions = [{
+          key: '0',
+        }, {
+          key: '1',
+        }, {
+          key: '9',
+        }];
+
+        var available = AACommonService.keyActionAvailable('5', inputActions);
+
+        expect(available.length).toEqual(9);
+        expect(available).toEqual(expected);
+
+
+      });
+
 
     });
 

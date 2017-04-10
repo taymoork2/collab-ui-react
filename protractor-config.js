@@ -23,9 +23,9 @@ var E2E_FAIL_RETRY = appConfig.e2eFailRetry;
 var NEWLINE = '\n';
 
 var maxInstances;
-if (process.env.SAUCE_MAX_INSTANCES) {
-  maxInstances = process.env.SAUCE_MAX_INSTANCES;
-} else if (process.env.SAUCE_USERNAME) {
+if (process.env.SAUCE__MAX_INSTANCES) {
+  maxInstances = process.env.SAUCE__MAX_INSTANCES;
+} else if (process.env.SAUCE__USERNAME) {
   maxInstances = 10;
 } else {
   maxInstances = 1;
@@ -38,48 +38,57 @@ exports.config = {
     jenkins: gatingSuites,
   }),
 
-  sauceUser: process.env.SAUCE_USERNAME,
-  sauceKey: process.env.SAUCE_ACCESS_KEY,
-  sauceAgent: process.env.SAUCE_USERNAME ? agent : undefined,
-  directConnect: !process.env.SAUCE_USERNAME,
+  sauceUser: process.env.SAUCE__USERNAME,
+  sauceKey: process.env.SAUCE__ACCESS_KEY,
+  sauceAgent: process.env.SAUCE__USERNAME ? agent : undefined,
+  directConnect: !process.env.SAUCE__USERNAME,
 
   capabilities: {
-    'browserName': 'chrome',
-    "screenResolution": "1680x1050",
-    'platform': process.env.SAUCE_USERNAME ? 'Windows 7' : undefined,
-    'tunnelIdentifier': process.env.SC_TUNNEL_IDENTIFIER,
-    'name': 'wx2-admin-web-client',
-    'build': process.env.BUILD_NUMBER,
+    browserName: 'chrome',
+    screenResolution: '1680x1050',
+    platform: process.env.SAUCE__USERNAME ? 'Windows 7' : undefined,
+    tunnelIdentifier: process.env.SAUCE__TUNNEL_ID,
+    name: 'wx2-admin-web-client',
+    build: process.env.BUILD_NUMBER,
 
-    'chromeOptions': {
-      //'args': ['--disable-extensions', '--start-fullscreen']
-      'args': ['--disable-extensions', '--window-position=0,0', '--window-size=1280,900']
+    chromeOptions: {
+      // Get rid of --ignore-certificate yellow warning
+      args: ['--disable-extensions', '--window-position=0,0', '--window-size=1280,900', '--no-sandbox', '--test-type=browser'],
+      // For completeness setting the download path and avoiding download prompt default on chrome
+      prefs: {
+        download: {
+          prompt_for_download: false,
+          directory_upgrade: true,
+          default_directory: '/tmp/downloads',
+        },
+      },
     },
     shardTestFiles: true,
-    maxInstances: maxInstances
+    maxInstances: maxInstances,
   },
 
   plugins: [{
     package: 'protractor-console-plugin',
     failOnWarning: false, // (Default - false),
-    failOnError: false,   // (Default - true),
-    logWarnings: true,    // (Default - true),
-    exclude: [            // Array of strings and regex (Default - [])
+    failOnError: false, // (Default - true),
+    logWarnings: true, // (Default - true),
+    exclude: [ // Array of strings and regex (Default - [])
       /executionContextId/,
       /object Object/,
-      /favicon/
-    ]
+      /favicon/,
+      /\/browser-sync\//,
+    ],
   }],
 
   // A base URL for your application under test. Calls to protractor.get()
   // with relative paths will be prepended with this.
-  baseUrl: process.env.LAUNCH_URL || 'http://127.0.0.1:8000',
+  baseUrl: getLaunchUrl(args),
 
   onPrepare: function () {
     global._ = require('lodash');
     browser.ignoreSynchronization = true;
 
-    global.isSauce = !!(process.env.SAUCE_USERNAME && process.env.SAUCE_USERNAME.length > 0);
+    global.isSauce = !!(process.env.SAUCE__USERNAME && process.env.SAUCE__USERNAME.length > 0);
     global.isProductionBackend = !!args.productionBackend;
     global.log = new Logger();
 
@@ -116,7 +125,6 @@ exports.config = {
     var DownloadPage = require('./test/e2e-protractor/pages/download.page.js');
     var ActivatePage = require('./test/e2e-protractor/pages/activate.page.js');
     var SpacesPage = require('./test/e2e-protractor/pages/spaces.page.js');
-    var CallRoutingPage = require('./test/e2e-protractor/pages/callrouting.page.js');
     var AutoAttendantPage = require('./test/e2e-protractor/pages/autoattendant.page.js');
     var PartnerHomePage = require('./test/e2e-protractor/pages/partner.page.js');
     var TelephonyPage = require('./test/e2e-protractor/pages/telephony.page.js');
@@ -143,6 +151,10 @@ exports.config = {
     var CareLandingPage = require('./test/e2e-protractor/pages/careLanding.page.js');
     var CareChatTemplateSetupPage = require('./test/e2e-protractor/pages/careChatTemplate.page.js');
     var ManageUsersPage = require('./test/e2e-protractor/pages/manageUsers.page.js');
+    var GSSDashboardPage = require('./test/e2e-protractor/pages/gssDashboard.page.js');
+    var GSSComponentPage = require('./test/e2e-protractor/pages/gssComponent.page.js');
+    var GSSServicePage = require('./test/e2e-protractor/pages/gssService.page.js');
+    var GSSIncidentPage = require('./test/e2e-protractor/pages/gssIncident.page.js');
 
     global.notifications = new Notifications();
     global.navigation = new Navigation();
@@ -159,7 +171,6 @@ exports.config = {
     global.download = new DownloadPage();
     global.activate = new ActivatePage();
     global.spaces = new SpacesPage();
-    global.callrouting = new CallRoutingPage();
     global.autoattendant = new AutoAttendantPage();
     global.partner = new PartnerHomePage();
     global.telephony = new TelephonyPage();
@@ -187,6 +198,10 @@ exports.config = {
     global.careLandingPage = new CareLandingPage();
     global.careChatTemplateSetupPage = new CareChatTemplateSetupPage();
     global.manageUsersPage = new ManageUsersPage();
+    global.gssDashboard = new GSSDashboardPage();
+    global.gssComponent = new GSSComponentPage();
+    global.gssService = new GSSServicePage();
+    global.gssIncident = new GSSIncidentPage();
 
     function initReporters(config) {
       var testFile = _.chain(config)
@@ -195,19 +210,19 @@ exports.config = {
         .takeRight()
         .trimStart('/')
         .value();
-      var jenkinsSubdir = processEnvUtil.isJenkins() ? process.env.BUILD_TAG : '';
+      var jenkinsSubdir = process.env.BUILD_TAG || '';
 
       jasmine.getEnv().addReporter(
         new jasmineReporters.JUnitXmlReporter({
           savePath: 'test/e2e-protractor/reports/' + jenkinsSubdir + '/run-' + processEnvUtil.getE2eRunCounter(),
-          consolidateAll: false
+          consolidateAll: false,
         })
       );
 
       jasmine.getEnv().addReporter(
         new SpecReporter({
           displayStacktrace: true,
-          displaySpecDuration: true
+          displaySpecDuration: true,
         })
       );
 
@@ -259,12 +274,12 @@ exports.config = {
     showColors: true,
     print: function () {},
     includeStackTrace: true,
-    defaultTimeoutInterval: VERY_LONG_TIMEOUT
+    defaultTimeoutInterval: VERY_LONG_TIMEOUT,
   },
 
   // The timeout for each script run on the browser. This should be longer
   // than the maximum time your application needs to stabilize between tasks.
-  allScriptsTimeout: VERY_LONG_TIMEOUT
+  allScriptsTimeout: VERY_LONG_TIMEOUT,
 };
 
 function Logger() {
@@ -290,8 +305,18 @@ function Logger() {
 }
 
 function mkProxyAgent() {
-  if (process.env.SAUCE_ENABLE_WEB_PROXY === 'false') {
+  if (process.env.SAUCE__ENABLE_WEB_PROXY === 'false') {
     return;
   }
   return new HttpsProxyAgent(process.env.http_proxy || 'http://proxy.esl.cisco.com:80');
+}
+
+function getLaunchUrl(args) {
+  if (args.prod) {
+    return 'https://admin.ciscospark.com';
+  }
+  if (args.int) {
+    return 'https://int-admin.ciscospark.com';
+  }
+  return 'http://127.0.0.1:8000';
 }

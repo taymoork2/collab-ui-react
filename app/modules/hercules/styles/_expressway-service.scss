@@ -3,8 +3,13 @@
 .calendar-service-list-state {
   @extend %page-background-white;
 }
-
 $user-statuses-bar-height: 7.25rem;
+
+.context-resources-state {
+  @extend %page-background-white;
+  overflow: hidden;
+}
+
 .expressway-service {
   @extend %grid-subheader;
   @extend %page-background-white;
@@ -12,31 +17,16 @@ $user-statuses-bar-height: 7.25rem;
   &.with-user-statuses-bar {
     // we have to override what `%grid-subheader` is doing
     // That's a bit ugly, the toolkit should not have to enforce heights like this…
-    & .grid-container,
-    & .gridStyle {
+    .grid-container,
+    .gridStyle {
       height: calc(100vh - (#{$top-bar-height} + (#{$top-bar-border-width} * 2) + #{$page-header-height} + #{$page-sub-header-height} + #{$user-statuses-bar-height}));
     }
   }
 
-  .add-resource-button {
-    margin-left: 1rem;
+  .trash-icon {
+    margin-left: 10px;
+    margin-top: 5px;
   }
-}
-
-.hercules.call-service {
-  .call-aware, .call-connect {
-    padding-bottom: 2rem;
-  }
-  .call-connect {
-    padding-top: 2rem;
-  }
-  .feature-settings {
-    padding-bottom: 1rem;
-  }
-}
-
-.hercules-trash-icon {
-  color: $color-alerts
 }
 
 /**
@@ -47,55 +37,54 @@ Special stuff currently used for out own mail input field...
   //border: 2px solid rgba(0,0,0,0.75);
   border: 1px solid rgba(0, 0, 0, 0.25);
   border-radius: 3px;
-  padding: .3rem;
+  padding: 0.3rem;
 
-  input, input:focus, input[type="text"]:focus {
+  input,
+  input:focus,
+  input[type='text']:focus {
     border: none !important;
     box-shadow: none !important;
     border-color: none !important;
     transition: none !important;
   }
+
   #existing-mails {
     .token-label {
       display: inline-block;
       overflow: hidden;
       text-overflow: ellipsis;
-      margin-right: .3rem;
-      margin-bottom: .3rem;
+      margin-right: 0.3rem;
+      margin-bottom: 0.3rem;
       cursor: pointer;
-      padding: {
-        left: .75rem;
-        right: 1.75rem;
-        top: .3rem;
-        bottom: .3rem;
-      }
       color: white !important;
       vertical-align: top;
       line-height: 1;
       background-color: $brand-primary;
       border-radius: 2px;
-
       position: relative;
 
       .del {
         display: block;
-        width: .75rem;
-        height: .75rem;
+        width: 0.75rem;
+        height: 0.75rem;
         color: white;
         position: absolute;
-        right: .25rem;
-        top: .3rem;
+        right: 0.25rem;
+        top: 0.3rem;
       }
     }
+
     .token-label.alert {
       margin-left: 0 !important;
-      margin-right: .3rem !important;
-      margin-bottom: .3rem !important;
+      margin-right: 0.3rem !important;
+      margin-bottom: 0.3rem !important;
       background-color: $brand-danger;
     }
+
     .token-label:hover {
       background-color: $brand-primary-dark;
     }
+
     .token-label.alert:hover {
       background-color: $brand-danger;
     }
@@ -104,7 +93,6 @@ Special stuff currently used for out own mail input field...
 
 .hercules-clusters-list {
   position: relative;
-
 
   .clusters-list-loading {
     position: absolute;
@@ -150,6 +138,7 @@ Special stuff currently used for out own mail input field...
     td {
       padding: 10px 10px 10px 0;
     }
+
     tbody {
       tr {
         border-top: transparent;
@@ -161,10 +150,12 @@ Special stuff currently used for out own mail input field...
 .hercules-certificates-table {
   table {
     margin-bottom: 0px;
+
     td {
       padding: 5px 5px 10px 0;
       vertical-align: top;
     }
+
     tbody {
       tr {
         border-top: transparent;
@@ -178,6 +169,7 @@ Special stuff currently used for out own mail input field...
     margin-right: 10px;
     line-height: $feature-line-height;
   }
+
   .status-indicator {
     line-height: $feature-line-height;
   }
@@ -192,20 +184,24 @@ Special stuff currently used for out own mail input field...
   padding: 2rem 1.25rem;
   border-bottom: 1px solid $gray-light-3;
   height: $user-statuses-bar-height;
+
   @media only screen and (max-height: 950px) {
     padding-top: 1rem;
     padding-bottom: 1rem;
     height: $user-statuses-bar-height - 2rem;
   }
 }
+
 .user-statuses-card {
   display: flex;
   flex-direction: column;
   margin-right: 3rem;
 }
+
 .user-statuses-title {
   color: $gray-dark-2;
 }
+
 .user-statuses-content {
   display: flex;
   margin: 0;
@@ -231,22 +227,25 @@ Special stuff currently used for out own mail input field...
     max-width: 300px;
     text-align: left;
   }
+
   .sip-domain-icon {
-    margin-left: 30px;
+    margin-left: 10px;
   }
 }
 
 .hercules-sip-destination-table {
   display: flex;
+
   .form-control {
     flex: 1 0 auto;
-    /* the following override default value for .form-control */
+    // the following override default value for .form-control
     margin-right: 10px;
     margin-bottom: 0;
     width: auto;
   }
+
   .btn {
-    margin: 0 !important; /* override .hercules .btn--primary */
+    margin: 0 !important; // override .hercules .btn--primary
     flex: 0 0 auto;
   }
 }
@@ -269,7 +268,7 @@ Special stuff currently used for out own mail input field...
   left: 0;
   width: 100%;
   font-size: 10px;
-  color: #CCC;
+  color: #ccc;
 }
 
 .hercules-user-error-name {
@@ -292,11 +291,74 @@ Special stuff currently used for out own mail input field...
     margin-bottom: 0.625rem;
   }
 
-  & > div {
+  > div {
     margin-right: 5rem;
   }
 }
 
+.export-user-statuses-progress-info {
+  padding-bottom: 0.5rem;
+}
+
 .hercules-capitalize {
   text-transform: capitalize;
+}
+
+.hercules-upload-key-modal {
+
+  .hercules-upload-key-section {
+    margin-bottom: 25px;
+  }
+
+  .hercules-upload-key-header {
+    margin-bottom: 10px;
+  }
+
+  .file-drop-content > label {
+    cursor: pointer;
+    color: $link-color;
+
+    &:hover {
+      color: $link-hover-color;
+    }
+  }
+
+  .file-drop {
+    border: 1px dashed $gray-light;
+    height: 300px;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+
+    &.dragover {
+      border-color: $link-hover-color;
+      background: $gray-lightest;
+    }
+  }
+
+  .file-drop-content {
+    position: relative;
+    align-self: center;
+
+    .icon {
+      font-size: 5rem;
+      margin-bottom: 2rem;
+      color: $color-primary-base;
+      display: block;
+    }
+  }
+
+  .file-drop-inactive {
+    @extend .file-drop;
+
+    border: 1px solid $gray-light;
+
+    .file-drop-content {
+      width: 50%;
+    }
+  }
+
+  .file-drop-content > input {
+    display: none;
+  }
 }

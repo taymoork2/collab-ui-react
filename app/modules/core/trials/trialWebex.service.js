@@ -10,7 +10,7 @@
   function WebexOrderStatusResource($resource, Authinfo, UrlConfig) {
     return $resource(UrlConfig.getAdminServiceUrl() + 'organization/:orgId/trials/:trialId/provOrderStatus', {
       orgId: Authinfo.getOrgId(),
-      trialId: '@trialId'
+      trialId: '@trialId',
     }, {});
   }
 
@@ -21,7 +21,7 @@
       getData: getData,
       reset: reset,
       validateSiteUrl: validateSiteUrl,
-      getTrialStatus: getTrialStatus
+      getTrialStatus: getTrialStatus,
     };
 
     return service;
@@ -42,11 +42,11 @@
         enabled: false,
         details: {
           siteUrl: '',
-          timeZone: undefined
-        }
+          timeZone: undefined,
+        },
       };
 
-      _trialData = angular.copy(defaults);
+      _trialData = _.cloneDeep(defaults);
       return _trialData;
     }
 
@@ -56,39 +56,39 @@
         method: 'POST',
         url: validationUrl,
         headers: {
-          'Content-Type': 'text/plain'
+          'Content-Type': 'text/plain',
         },
         data: {
           "isTrial": true,
           "properties": [{
             "key": "siteUrl",
-            "value": siteUrl
-          }]
-        }
+            "value": siteUrl,
+          }],
+        },
       };
 
       return $http(config).then(function (response) {
-        var data = response.data.properties[0];
+        var data = _.get(response, 'data.properties[0]', {});
         var errorCodes = {
           0: 'validSite',
           434057: 'domainInvalid',
           439012: 'duplicateSite',
           439015: 'duplicateSite',
-          431397: 'duplicateSite'
+          431397: 'duplicateSite',
         };
         var isValid = (data.isValid === 'true');
         return {
           'isValid': isValid && data.errorCode === '0',
-          'errorCode': errorCodes[data.errorCode] || 'invalidSite'
+          'errorCode': errorCodes[data.errorCode] || 'invalidSite',
         };
-      }).catch(function () {
-        Notification.error('trialModal.meeting.validationHttpError');
+      }).catch(function (response) {
+        Notification.errorResponse(response, 'trialModal.meeting.validationHttpError');
       });
     }
 
     function getTrialStatus(trialId) {
       return WebexOrderStatusResource.get({
-        'trialId': trialId
+        'trialId': trialId,
       }).$promise.then(function (data) {
         var orderStatus = data.provOrderStatus !== 'PROVISIONED';
         var timeZoneId = data.timeZoneId && data.timeZoneId.toString();
@@ -97,7 +97,7 @@
           siteUrl: data.siteUrl,
           timeZoneId: timeZoneId,
           trialExists: _.isUndefined(data.errorCode),
-          pending: orderStatus
+          pending: orderStatus,
         };
       });
     }

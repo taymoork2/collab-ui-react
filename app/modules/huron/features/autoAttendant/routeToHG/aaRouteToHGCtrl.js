@@ -9,10 +9,11 @@
   function AARouteToHGCtrl($scope, $translate, HuntGroupService, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService) {
 
     var vm = this;
+    var conditional = 'conditional';
 
     vm.hgSelected = {
       description: '',
-      id: ''
+      id: '',
     };
 
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceHolder');
@@ -21,7 +22,7 @@
 
     vm.uiMenu = {};
     vm.menuEntry = {
-      entries: []
+      entries: [],
     };
     vm.menuKeyEntry = {};
 
@@ -31,31 +32,49 @@
     var rtHG = 'routeToHuntGroup';
 
     var fromRouteCall = false;
+    var fromDecision = false;
 
     /////////////////////
 
     function populateUiModel() {
+      var entry;
+      var action;
 
-      if (fromRouteCall) {
-        vm.hgSelected.id = vm.menuEntry.actions[0].getValue();
+      if (fromRouteCall || fromDecision) {
+        entry = _.get(vm.menuEntry, 'actions[0].queueSettings.fallback', vm.menuEntry);
       } else {
-        vm.hgSelected.id = vm.menuKeyEntry.actions[0].getValue();
+        entry = _.get(vm.menuKeyEntry, 'actions[0].queueSettings.fallback', vm.menuKeyEntry);
       }
 
-      vm.hgSelected.description = _.result(_.find(vm.huntGroups, {
-        'id': vm.hgSelected.id
-      }), 'description', '');
+      action = _.get(entry, 'actions[0]');
+      if (action && _.get(action, 'name') === conditional) {
+        action = _.get(action.then, 'queueSettings.fallback.actions[0]', action.then);
+      }
 
+      vm.hgSelected.id = action.getValue();
+
+      vm.hgSelected.description = _.result(_.find(vm.huntGroups, {
+        'id': vm.hgSelected.id,
+      }), 'description', '');
     }
 
     function saveUiModel() {
-      if (fromRouteCall) {
-        vm.menuEntry.actions[0].setValue(vm.hgSelected.id);
-      } else {
-        vm.menuKeyEntry.actions[0].setValue(vm.hgSelected.id);
-      }
 
       AACommonService.setPhoneMenuStatus(true);
+      var entry, action;
+
+      if (fromRouteCall || fromDecision) {
+        entry = vm.menuEntry;
+      } else {
+        entry = vm.menuKeyEntry;
+      }
+
+      action = _.get(entry, 'actions[0].queueSettings.fallback.actions[0]', entry.actions[0]);
+
+      if (_.get(action, 'name') === conditional) {
+        action = _.get(action.then, 'queueSettings.fallback.actions[0]', action.then);
+      }
+      action.setValue(vm.hgSelected.id);
     }
 
     function getHuntGroups() {
@@ -64,39 +83,88 @@
         _.each(hgPool, function (aHuntGroup) {
           vm.huntGroups.push({
             description: aHuntGroup.name.concat(' (').concat(_.head(_.map(aHuntGroup.numbers, 'number'))).concat(')'),
-            id: aHuntGroup.uuid
+            id: aHuntGroup.uuid,
           });
         });
       });
 
     }
 
+    function checkForRouteToHG(action) {
+
+      // make sure action is HG not External Number, User, etc
+      if (!(action.getName() === rtHG)) {
+        action.setName(rtHG);
+        action.setValue('');
+        delete action.queueSettings;
+      }
+    }
+
     function activate() {
 
-      if ($scope.fromRouteCall) {
-        var ui = AAUiModelService.getUiModel();
+      var ui = AAUiModelService.getUiModel();
+
+      if ($scope.fromDecision) {
+        var conditionalAction;
+        fromDecision = true;
+
         vm.uiMenu = ui[$scope.schedule];
         vm.menuEntry = vm.uiMenu.entries[$scope.index];
-        fromRouteCall = true;
+        conditionalAction = _.get(vm.menuEntry, 'actions[0]', '');
+        if (!conditionalAction || conditionalAction.getName() !== conditional) {
+          conditionalAction = AutoAttendantCeMenuModelService.newCeActionEntry(conditional, '');
+          vm.menuEntry.actions[0] = conditionalAction;
 
-        if (vm.menuEntry.actions.length === 0) {
-          action = AutoAttendantCeMenuModelService.newCeActionEntry(rtHG, '');
-          vm.menuEntry.addAction(action);
-        } else {
-          // make sure action is HG not AA, User, extNum, etc
-          if (!(vm.menuEntry.actions[0].getName() === rtHG)) {
-            vm.menuEntry.actions[0].setName(rtHG);
-            vm.menuEntry.actions[0].setValue('');
-          } // else let saved value be used
+        }
+        if (!$scope.fromFallback) {
+          if (!conditionalAction.then) {
+            conditionalAction.then = {};
+            conditionalAction.then = AutoAttendantCeMenuModelService.newCeActionEntry(rtHG, '');
+          } else {
+            checkForRouteToHG(conditionalAction.then);
+          }
         }
       } else {
-        vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
-        if ($scope.keyIndex < vm.menuEntry.entries.length) {
-          vm.menuKeyEntry = vm.menuEntry.entries[$scope.keyIndex];
+
+        if ($scope.fromRouteCall) {
+          vm.uiMenu = ui[$scope.schedule];
+          vm.menuEntry = vm.uiMenu.entries[$scope.index];
+          fromRouteCall = true;
+
+          if (!$scope.fromFallback) {
+            if (vm.menuEntry.actions.length === 0) {
+              action = AutoAttendantCeMenuModelService.newCeActionEntry(rtHG, '');
+              vm.menuEntry.addAction(action);
+            } else {
+              checkForRouteToHG(vm.menuEntry.actions[0]);
+            }
+          }
         } else {
-          vm.menuKeyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-          var action = AutoAttendantCeMenuModelService.newCeActionEntry(rtHG, '');
-          vm.menuKeyEntry.addAction(action);
+          vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
+          if ($scope.keyIndex < vm.menuEntry.entries.length) {
+            vm.menuKeyEntry = vm.menuEntry.entries[$scope.keyIndex];
+          } else {
+            vm.menuKeyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+            var action = AutoAttendantCeMenuModelService.newCeActionEntry(rtHG, '');
+            vm.menuKeyEntry.addAction(action);
+          }
+        }
+      }
+
+      if ($scope.fromFallback) {
+        var entry;
+        if (_.has(vm.menuKeyEntry, 'actions[0]')) {
+          entry = vm.menuKeyEntry.actions[0];
+        } else {
+          entry = vm.menuEntry.actions[0];
+        }
+        if (_.get(entry, 'name') === conditional) {
+          entry = entry.then;
+        }
+        var fallbackAction = _.get(entry, 'queueSettings.fallback.actions[0]');
+        if (fallbackAction && (fallbackAction.getName() !== rtHG)) {
+          fallbackAction.setName(rtHG);
+          fallbackAction.setValue('');
         }
       }
 

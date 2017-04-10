@@ -9,13 +9,13 @@
 
     $scope.initNext = function () {
       var deferred = $q.defer();
-      if (angular.isDefined($scope.wizard) && angular.isFunction($scope.wizard.getRequiredTabs)) {
+      if (!_.isUndefined($scope.wizard) && _.isFunction($scope.wizard.getRequiredTabs)) {
         var required = $scope.wizard.getRequiredTabs();
-        if (angular.isArray(required) && required.length > 0) {
+        if (_.isArray(required) && required.length > 0) {
           var errors = [];
           for (var i = 0; i < required.length; i++) {
             errors.push($translate.instant('firstTimeWizard.completeRequired', {
-              name: required[i]
+              name: required[i],
             }));
           }
           Notification.notify(errors, 'error');

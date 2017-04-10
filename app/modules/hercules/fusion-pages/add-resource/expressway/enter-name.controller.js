@@ -5,32 +5,38 @@
     .controller('ExpresswayEnterNameController', ExpresswayEnterNameController);
 
   /* @ngInject */
-  function ExpresswayEnterNameController($q, $stateParams, $translate, FusionClusterService, XhrNotificationService) {
+  function ExpresswayEnterNameController($q, $stateParams, $translate, FusionClusterService, Notification) {
     var vm = this;
     var wizardData = $stateParams.wizard.state().data;
-    vm.name = wizardData.expressway.hostname;
+    vm.name = '';
     vm.next = next;
     vm.canGoNext = canGoNext;
     vm.handleKeypress = handleKeypress;
     vm.provisioning = false;
     vm._translation = {
-      help: $translate.instant('hercules.expresswayClusterSettings.renameClusterDescription'),
-      placeholder: $translate.instant('hercules.addResourceDialog.clusternameWatermark')
+      help: $translate.instant('hercules.renameAndDeregisterComponent.renameClusterDescription'),
+      placeholder: $translate.instant('hercules.addResourceDialog.clusternameWatermark'),
     };
     vm.minlength = 1;
     vm.validationMessages = {
       required: $translate.instant('common.invalidRequired'),
       minlength: $translate.instant('common.invalidMinLength', {
-        min: vm.minlength
-      })
+        min: vm.minlength,
+      }),
     };
+    vm.releaseChannel = 'stable';
 
     ///////////////
+
+    FusionClusterService.getOrgSettings()
+      .then(function (data) {
+        vm.releaseChannel = data.expresswayClusterReleaseChannel;
+      });
 
     function provisionCluster(data) {
       vm.provisioning = true;
       vm.clusterId = null;
-      return FusionClusterService.preregisterCluster(data.name, 'stable', 'c_mgmt')
+      return FusionClusterService.preregisterCluster(data.name, vm.releaseChannel, 'c_mgmt')
         .then(function (cluster) {
           vm.clusterId = cluster.id;
           var promises = [];
@@ -74,11 +80,13 @@
           $stateParams.wizard.next({
             expressway: {
               name: vm.name,
-              clusterId: vm.clusterId
-            }
+              clusterId: vm.clusterId,
+            },
           });
         })
-        .catch(XhrNotificationService.notify);
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+        });
     }
   }
 })();

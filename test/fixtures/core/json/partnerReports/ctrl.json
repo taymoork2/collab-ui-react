@@ -1,0 +1,201 @@
+{
+  "ALL": "all",
+  "ENGAGEMENT": "engagement",
+  "QUALITY": "quality",
+  "EMPTY": "empty",
+  "ERROR": "error",
+  "REFRESH": "refresh",
+  "SET": "set",
+  "SCREEN_XS": "screen-xs",
+  "SCREEN_SM": "screen-sm",
+  "SCREEN_MD": "screen-md",
+  "SCREEN_LG": "screen-lg",
+  "reportFilter": [{
+    "id": "allReports",
+    "label": "reportsPage.all",
+    "selected": true
+  }, {
+    "id": "engagementReports",
+    "label": "reportsPage.engagement",
+    "selected": false
+  }, {
+    "id": "qualityReports",
+    "label": "reportsPage.quality",
+    "selected": false
+  }],
+  "activeUserOptions": {
+    "animate": true,
+    "description": "activeUsers.description",
+    "headerTitle": "activeUsers.activeUsers",
+    "id": "activeUsers",
+    "reportType": "barchart",
+    "state": "set",
+    "titlePopover": "undefined"
+  },
+  "activeUserSecondaryOptions": {
+    "alternateTranslations": false,
+    "broadcast": "ReportCard::UpdateSecondaryReport",
+    "description": "activeUsers.mostActiveDescription",
+    "display": true,
+    "emptyDescription": "activeUsers.noActiveUsers",
+    "errorDescription": "activeUsers.errorActiveUsers",
+    "search": false,
+    "state": "set",
+    "sortOptions": [{
+      "option": "userName",
+      "direction": false
+    }, {
+      "option": "orgName",
+      "direction": false
+    }, {
+      "option": "numCalls",
+      "direction": false
+    }, {
+      "option": "sparkMessages",
+      "direction": true
+    }, {
+      "option": "totalActivity",
+      "direction": true
+    }],
+    "table": {
+      "headers": [{
+        "title": "activeUsers.user",
+        "class": "col-md-4 pointer"
+      }, {
+        "title": "activeUsers.customer",
+        "class": "col-md-4 pointer"
+      }, {
+        "title": "activeUsers.calls",
+        "class": "horizontal-center col-md-2 pointer"
+      }, {
+        "title": "activeUsers.sparkMessages",
+        "class": "horizontal-center col-md-2 pointer"
+      }],
+      "data": [],
+      "dummy": false
+    },
+    "title": "activeUsers.mostActiveUsers"
+  },
+  "avgRoomsOptions": {
+    "animate": true,
+    "description": "avgRooms.avgRoomsDescription",
+    "headerTitle": "avgRooms.avgRooms",
+    "id": "avgRooms",
+    "reportType": "barchart",
+    "state": "set",
+    "titlePopover": "undefined"
+  },
+  "deviceOptions": {
+    "animate": true,
+    "description": "registeredEndpoints.customerDescription",
+    "headerTitle": "registeredEndpoints.registeredEndpoints",
+    "id": "devices",
+    "reportType": "barchart",
+    "state": "set",
+    "titlePopover": "undefined"
+  },
+  "filesSharedOptions": {
+    "animate": true,
+    "description": "filesShared.filesSharedDescription",
+    "headerTitle": "filesShared.filesShared",
+    "id": "filesShared",
+    "reportType": "barchart",
+    "state": "set",
+    "titlePopover": "undefined"
+  },
+  "populationOptions": {
+    "animate": false,
+    "description": "activeUserPopulation.description",
+    "headerTitle": "activeUserPopulation.titleByCompany",
+    "id": "userPopulation",
+    "reportType": "barchart",
+    "state": "set",
+    "titlePopover": "undefined"
+  },
+  "mediaOptions": {
+    "animate": true,
+    "description": "mediaQuality.description",
+    "headerTitle": "mediaQuality.mediaQuality",
+    "id": "mediaQuality",
+    "reportType": "barchart",
+    "state": "set",
+    "titlePopover": "mediaQuality.packetLossDefinition"
+  },
+  "endpointOptions": {
+    "animate": true,
+    "description": "registeredEndpoints.description",
+    "headerTitle": "registeredEndpoints.registeredEndpoints",
+    "id": "reg-endpoints",
+    "reportType": "table",
+    "state": "set",
+    "table": {
+      "headers": [{
+        "title": "registeredEndpoints.company",
+        "class": "customer-data col-md-4"
+      }, {
+        "title": "registeredEndpoints.maxRegisteredDevices",
+        "class": "horizontal-center col-md-2"
+      }, {
+        "title": "registeredEndpoints.trend",
+        "class": "horizontal-center col-md-2"
+      }, {
+        "title": "registeredEndpoints.totalRegistered",
+        "class": "horizontal-center col-md-2"
+      }],
+      "data": [],
+      "dummy": false
+    },
+    "titlePopover": "undefined"
+  },
+  "callOptions": {
+    "animate": false,
+    "description": "callMetrics.callMetricsDesc",
+    "headerTitle": "callMetrics.callMetrics",
+    "id": "callMetrics",
+    "reportType": "donut",
+    "state": "set",
+    "titlePopover": "undefined"
+  },
+  "metricsLabels": [{
+    "number": 14554,
+    "text": "callMetrics.totalCalls",
+    "hidden": false
+  }, {
+    "number": 169298,
+    "text": "callMetrics.callMinutes",
+    "hidden": false
+  }, {
+    "number": "0.35%",
+    "text": "callMetrics.failureRate",
+    "hidden": false
+  }],
+  "qualityLabels":[{
+    "class": "good",
+    "number": 4284,
+    "text": "mediaQuality.good",
+    "hidden": false
+  }, {
+    "class": "fair",
+    "number": 52,
+    "text": "mediaQuality.fair",
+    "hidden": false
+  }, {
+    "class": "poor",
+    "number": 53,
+    "text": "mediaQuality.poor",
+    "hidden": false
+  }],
+  "exportMenu": [{
+    "id": "saveAs",
+    "label": "reportsPage.saveAs"
+  }, {
+    "id": "jpg",
+    "label": "reportsPage.jpg"
+  }, {
+    "id": "png",
+    "label": "reportsPage.png"
+  }, {
+    "id": "pdf",
+    "label": "reportsPage.pdf"
+  }]
+}

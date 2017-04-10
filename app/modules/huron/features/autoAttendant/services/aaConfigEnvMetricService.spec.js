@@ -11,11 +11,11 @@ describe('Service: AAConfigEnvMetricService', function () {
     Config = _Config_;
     Analytics = _Analytics_;
     AAMetricNameService = _AAMetricNameService_;
-    spyOn(Analytics, 'trackEvent').and.returnValue($q.when({}));
+    spyOn(Analytics, 'trackEvent').and.returnValue($q.resolve({}));
   }));
   var message = 'autoAttendant.errorMocked';
   var properties = {
-    type: message
+    type: message,
   };
 
   describe('trackProdOrIntegNotifications', function () {

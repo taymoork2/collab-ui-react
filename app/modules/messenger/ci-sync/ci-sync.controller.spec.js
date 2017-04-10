@@ -1,5 +1,6 @@
 (function () {
   'use strict';
+
   var $q, $controller, Authinfo, Notification, CiService, SyncService;
   var $scope;
   var ctrl;
@@ -30,7 +31,7 @@
       beforeEach(function () {
         spyOn(CiService, 'getCiAdmins');
         spyOn(CiService, 'getCiNonAdmins');
-        spyOn(SyncService, 'getSyncStatus').and.returnValue($q.when());
+        spyOn(SyncService, 'getSyncStatus').and.returnValue($q.resolve());
       });
 
       it('should initialize user with adminTypes.read', function () {
@@ -45,7 +46,7 @@
         spyOn(Authinfo, 'isReadOnlyAdmin').and.returnValue(false);
         spyOn(Authinfo, 'isCustomerAdmin').and.returnValue(false);
         spyOn(Authinfo, 'isHelpDeskUser').and.returnValue(true);
-        spyOn(CiService, 'isOrgManager').and.returnValue($q.when(true));
+        spyOn(CiService, 'isOrgManager').and.returnValue($q.resolve(true));
 
         initController();
 
@@ -55,10 +56,10 @@
       it('should initialize user with adminTypes.org with non-org-manager Customer Admin', function () {
         spyOn(Authinfo, 'isReadOnlyAdmin').and.returnValue(false);
         spyOn(Authinfo, 'isCustomerAdmin').and.returnValue(true);
-        spyOn(CiService, 'hasRole').and.returnValue($q.when());
+        spyOn(CiService, 'hasRole').and.returnValue($q.resolve());
         spyOn(Authinfo, 'isWebexSquared').and.returnValue(true);
         spyOn(Authinfo, 'isWebexMessenger').and.returnValue(true);
-        spyOn(CiService, 'isOrgManager').and.returnValue($q.when(false));
+        spyOn(CiService, 'isOrgManager').and.returnValue($q.resolve(false));
         initController();
         expect(ctrl.adminType).toBe(ctrl.adminTypes.org);
       });
@@ -66,10 +67,10 @@
       it('should initialize user with adminTypes.ops with Customer Admin & Org Manager', function () {
         spyOn(Authinfo, 'isReadOnlyAdmin').and.returnValue(false);
         spyOn(Authinfo, 'isCustomerAdmin').and.returnValue(true);
-        spyOn(CiService, 'hasRole').and.returnValue($q.when());
+        spyOn(CiService, 'hasRole').and.returnValue($q.resolve());
         spyOn(Authinfo, 'isWebexSquared').and.returnValue(true);
         spyOn(Authinfo, 'isWebexMessenger').and.returnValue(true);
-        spyOn(CiService, 'isOrgManager').and.returnValue($q.when(true));
+        spyOn(CiService, 'isOrgManager').and.returnValue($q.resolve(true));
         initController();
         expect(ctrl.adminType).toBe(ctrl.adminTypes.ops);
       });
@@ -94,7 +95,7 @@
         function () {
           spyOn(Authinfo, 'isReadOnlyAdmin').and.returnValue(false);
           spyOn(Authinfo, 'isCustomerAdmin').and.returnValue(true);
-          spyOn(CiService, 'hasRole').and.returnValue($q.when());
+          spyOn(CiService, 'hasRole').and.returnValue($q.resolve());
           spyOn(Authinfo, 'isWebexSquared').and.returnValue(false);
           spyOn(Notification, 'error');
 
@@ -125,7 +126,7 @@
         spyOn(Authinfo, 'isReadOnlyAdmin').and.returnValue(false);
         spyOn(Authinfo, 'isCustomerAdmin').and.returnValue(false);
         spyOn(Authinfo, 'isHelpDeskUser').and.returnValue(true);
-        spyOn(CiService, 'isOrgManager').and.returnValue($q.when(false));
+        spyOn(CiService, 'isOrgManager').and.returnValue($q.resolve(false));
         spyOn(Notification, 'error');
 
         initController();
@@ -155,41 +156,27 @@
   });
 
   describe('Unit testing msgr-text-status-on directive', function () {
-    var $compile, $rootScope;
-
-    beforeEach(angular.mock.module('Messenger'));
-
-    beforeEach(inject(function (_$compile_, _$rootScope_) {
-      $compile = _$compile_;
-      $rootScope = _$rootScope_;
-    }));
+    beforeEach(function () {
+      this.initModules('Messenger');
+      this.compileComponent('msgrTextStatusOn');
+    });
 
     it('Replaces the element with the appropriate content', function () {
-      // Compile a piece of HTML containing the directive
-      var element = $compile("<div msgr-text-status-on></div>")($rootScope);
-      $rootScope.$digest();
       // Check that the compiled element contains the templated content
-      expect(element.html()).toContain("common.status");
-      expect(element.html()).toContain("common.on");
+      expect(this.view.html()).toContain("common.status");
+      expect(this.view.html()).toContain("common.on");
     });
   });
   describe('Unit testing msgr-text-status-off directive', function () {
-    var $compile, $rootScope;
-
-    beforeEach(angular.mock.module('Messenger'));
-
-    beforeEach(inject(function (_$compile_, _$rootScope_) {
-      $compile = _$compile_;
-      $rootScope = _$rootScope_;
-    }));
+    beforeEach(function () {
+      this.initModules('Messenger');
+      this.compileComponent('msgrTextStatusOff');
+    });
 
     it('Replaces the element with the appropriate content', function () {
-      // Compile a piece of HTML containing the directive
-      var element = $compile("<div msgr-text-status-off></div>")($rootScope);
-      $rootScope.$digest();
       // Check that the compiled element contains the templated content
-      expect(element.html()).toContain("common.status");
-      expect(element.html()).toContain("common.off");
+      expect(this.view.html()).toContain("common.status");
+      expect(this.view.html()).toContain("common.off");
     });
   });
 

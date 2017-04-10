@@ -1,7 +1,5 @@
-@CHARSET "UTF-8";
-
 .webexlogo {
-    vertical-align:text-bottom;
+  vertical-align: text-bottom;
 }
 
 .webex {
@@ -11,6 +9,7 @@
   &-site-setting {
     @extend %content-subheader;
   }
+
   &-site-setting,
   &-site-report-iframe {
     @extend %page-background-white;

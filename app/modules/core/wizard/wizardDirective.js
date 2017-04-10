@@ -1,3 +1,5 @@
+require('./_wizard.scss');
+
 (function () {
   'use strict';
 
@@ -20,16 +22,16 @@
           return;
         }
 
-        if (_.has(scope, name)) {
-          promises.push($q.when(scope[name]()));
+        if (_.hasIn(scope, name)) {
+          promises.push($q.resolve(scope[name]()));
           return;
         } else if (tabControllerAs || subTabControllerAs) {
-          if (_.has(scope, tabControllerAs + '.' + name)) {
-            promises.push($q.when(scope[tabControllerAs][name]()));
+          if (_.hasIn(scope, tabControllerAs + '.' + name)) {
+            promises.push($q.resolve(scope[tabControllerAs][name]()));
             return;
           }
-          if (_.has(scope, subTabControllerAs + '.' + name)) {
-            promises.push($q.when(scope[subTabControllerAs][name]()));
+          if (_.hasIn(scope, subTabControllerAs + '.' + name)) {
+            promises.push($q.resolve(scope[subTabControllerAs][name]()));
             return;
           }
         }
@@ -47,13 +49,14 @@
   }
 
   /* @ngInject */
-  function WizardCtrl($controller, $modal, $rootScope, $scope, $state, $stateParams, $translate, Authinfo, Config, ModalService, PromiseHook, ServiceSetup, SessionStorage) {
+  function WizardCtrl($controller, $modal, $rootScope, $scope, $state, $stateParams, $translate, Authinfo, Config, PromiseHook, SessionStorage) {
     var vm = this;
     vm.current = {};
 
     vm.currentTab = $stateParams.currentTab;
     vm.currentStep = $stateParams.currentStep;
     vm.onlyShowSingleTab = $stateParams.onlyShowSingleTab;
+    vm.numberOfSteps = $stateParams.numberOfSteps;
 
     vm.termsCheckbox = false;
     vm.isCustomerPartner = isCustomerPartner;
@@ -93,12 +96,11 @@
     vm.showDoItLater = false;
     vm.wizardNextLoad = false;
 
-    vm.firstTimeSetup = true;
     vm.showSkipTabBtn = false;
 
     // If tabs change (feature support in SetupWizard) and a step is not defined, re-initialize
     $scope.$watchCollection('tabs', function (tabs) {
-      if (tabs && tabs.length > 0 && angular.isUndefined(vm.current.step)) {
+      if (tabs && tabs.length > 0 && _.isUndefined(vm.current.step)) {
         init();
       }
     });
@@ -106,7 +108,7 @@
     function initCurrent() {
       if ($stateParams.currentTab) {
         vm.current.tab = _.find(getTabs(), {
-          name: $stateParams.currentTab
+          name: $stateParams.currentTab,
         });
       } else {
         vm.current.tab = getTabs()[0];
@@ -114,14 +116,14 @@
 
       if ($stateParams.currentSubTab) {
         vm.current.subTab = _.find(getTab().subTabs, {
-          name: $stateParams.currentSubTab
+          name: $stateParams.currentSubTab,
         });
       }
 
       var steps = getSteps();
       if (steps.length) {
         var index = _.findIndex(steps, {
-          name: $stateParams.currentStep
+          name: $stateParams.currentStep,
         });
         if (index === -1) {
           index = 0;
@@ -132,24 +134,18 @@
     }
 
     function init() {
-      ServiceSetup.listSites().then(function () {
-        if (ServiceSetup.sites.length !== 0) {
-          vm.firstTimeSetup = false;
-        }
-      }).finally(function () {
-        initCurrent();
-        setNextText();
-        vm.isNextDisabled = false;
-      });
+      initCurrent();
+      setNextText();
+      vm.isNextDisabled = false;
     }
 
     function getSteps() {
       var tab = getTab();
-      if (angular.isDefined(tab) && angular.isArray(tab.steps)) {
+      if (!_.isUndefined(tab) && _.isArray(tab.steps)) {
         return tab.steps;
-      } else if (angular.isDefined(tab) && angular.isArray(tab.subTabs) && tab.subTabs.length > 0) {
+      } else if (!_.isUndefined(tab) && _.isArray(tab.subTabs) && tab.subTabs.length > 0) {
         for (var i = 0; i < tab.subTabs.length; i++) {
-          if (angular.isUndefined(getSubTab()) || tab.subTabs[i] === getSubTab()) {
+          if (_.isUndefined(getSubTab()) || tab.subTabs[i] === getSubTab()) {
             vm.current.subTab = tab.subTabs[i];
             return tab.subTabs[i].steps;
           }
@@ -182,7 +178,7 @@
 
     function setSubTab(subTab) {
       vm.current.subTab = subTab;
-      if (angular.isDefined(subTab)) {
+      if (!_.isUndefined(subTab)) {
         setStep(getSteps()[0]);
       }
     }
@@ -222,7 +218,7 @@
       var tab = getTab();
       if (tab && tab.controller) {
         return $controller(tab.controller, {
-          $scope: $scope
+          $scope: $scope,
         });
       }
     }
@@ -232,7 +228,7 @@
       var subTab = getSubTab();
       if (subTab && subTab.controller) {
         return $controller(subTab.controller, {
-          $scope: $scope
+          $scope: $scope,
         });
       }
     }
@@ -243,7 +239,7 @@
 
     function previousTab() {
       var tabs = getTabs();
-      if (angular.isArray(tabs)) {
+      if (_.isArray(tabs)) {
         var tabIndex = tabs.indexOf(getTab());
         if (tabIndex > 0) {
           setTab(tabs[tabIndex - 1]);
@@ -254,12 +250,12 @@
     function nextTab() {
       var tabs = getTabs();
       vm.wizardNextLoad = false;
-      if (angular.isArray(tabs)) {
+      if (_.isArray(tabs)) {
         var tabIndex = tabs.indexOf(getTab());
         $scope.tabs[tabIndex].required = false;
         if (tabIndex + 1 < tabs.length) {
           setTab(tabs[tabIndex + 1]);
-        } else if (tabIndex + 1 === tabs.length && angular.isFunction($scope.finish)) {
+        } else if (tabIndex + 1 === tabs.length && _.isFunction($scope.finish)) {
           $scope.finish();
         }
       }
@@ -267,7 +263,7 @@
 
     function previousStep() {
       var steps = getSteps();
-      if (angular.isArray(steps)) {
+      if (_.isArray(steps)) {
         var index = steps.indexOf(getStep());
         if (index > 0) {
           setStep(steps[index - 1]);
@@ -279,44 +275,43 @@
 
     function nextStep() {
       var subTabControllerAs = _.isUndefined(getSubTab()) ? undefined : getSubTab().controllerAs;
-      if (getTab().name === 'serviceSetup' && getStep().name === 'init' && vm.firstTimeSetup) {
-        return ModalService.open({
-          title: $translate.instant('common.warning'),
-          message: $translate.instant('serviceSetupModal.saveCallSettingsExtensionLengthAllowed'),
-          close: $translate.instant('common.continue'),
-          dismiss: $translate.instant('common.cancel'),
-          type: 'negative'
-        })
-          .result.then(function () {
-            executeNextStep(subTabControllerAs);
-          });
-      } else {
-        executeNextStep(subTabControllerAs);
-      }
-    }
-
-    function executeNextStep(subTabControllerAs) {
       new PromiseHook($scope, getStepName() + 'Next', getTab().controllerAs, subTabControllerAs).then(function () {
-        if (getTab().name === 'enterpriseSettings' && getStep().name === 'enterpriseSipUrl') {
-          $rootScope.$broadcast('wizard-enterprise-sip-url-event');
-        }
-        var steps = getSteps();
-        if (angular.isArray(steps)) {
-          var index = steps.indexOf(getStep());
-          if (index + 1 < steps.length) {
-            setStep(steps[index + 1]);
-          } else if (index + 1 === steps.length) {
-            nextTab();
+        if (getTab().name === 'enterpriseSettings') {
+          if (getStep().name === 'enterpriseSipUrl') {
+            $rootScope.$broadcast('wizard-enterprise-sip-url-event');
+          } else if (getStep().name === 'enterprisePmrSetup') {
+            $rootScope.$broadcast('wizard-enterprise-pmr-event');
+            nextStepSuccessful();
+          } else {
+            nextStepSuccessful();
           }
+        } else {
+          nextStepSuccessful();
         }
       }).finally(function () {
         vm.wizardNextLoad = false;
       });
     }
 
+    $rootScope.$on('wizard-enterprise-sip-save', function () {
+      nextStepSuccessful();
+    });
+
+    function nextStepSuccessful() {
+      var steps = getSteps();
+      if (_.isArray(steps)) {
+        var index = steps.indexOf(getStep());
+        if (index + 1 < steps.length) {
+          setStep(steps[index + 1]);
+        } else if (index + 1 === steps.length) {
+          nextTab();
+        }
+      }
+    }
+
     function goToStep(requestedStep) {
       var steps = getSteps();
-      if (angular.isArray(steps)) {
+      if (_.isArray(steps)) {
         var index = _.map(steps, function (step) {
           return step.name;
         }).indexOf(requestedStep);
@@ -337,7 +332,7 @@
     }
 
     function isCustomerPartner() {
-      return Authinfo.getRoles().indexOf('CUSTOMER_PARTNER') > -1;
+      return Authinfo.hasRole('CUSTOMER_PARTNER');
     }
 
     function isFromPartnerLaunch() {
@@ -362,6 +357,10 @@
       return steps.indexOf(getStep()) === steps.length - 1;
     }
 
+    function isSingleTabSingleStep() {
+      return vm.onlyShowSingleTab && vm.numberOfSteps === 1;
+    }
+
     function isFirstTime() {
       return $scope.isFirstTime;
     }
@@ -375,7 +374,7 @@
     }
 
     function setNextText() {
-      if ((isFirstTab() && isFirstTime() && !isCustomerPartner() && !isFromPartnerLaunch()) || (isFirstTab() && isFirstStep())) {
+      if ((isFirstTab() && isFirstTime() && !isCustomerPartner() && !isFromPartnerLaunch()) || (isFirstTab() && isFirstStep() && !isSingleTabSingleStep())) {
         vm.nextText = $translate.instant('firstTimeWizard.getStarted');
       } else if (isFirstTime() && isLastTab() && isLastStep()) {
         vm.nextText = $translate.instant('common.finish');
@@ -386,7 +385,8 @@
       }
 
       // enable/disable skip tab button
-      vm.showSkipTabBtn = (vm.isFirstTime() && vm.current.tab.name === 'addUsers' && vm.isFirstStep());
+      vm.showSkipTabBtn = (vm.isFirstTime() && (vm.current.tab.name === 'addUsers' || vm.current.tab.name === 'careSettings')
+        && vm.isFirstStep());
     }
 
     $scope.$on('wizardNextButtonDisable', function (event, status) {
@@ -396,7 +396,7 @@
 
     function openTermsAndConditions() {
       $modal.open({
-        templateUrl: 'modules/core/wizard/termsAndConditions.tpl.html'
+        templateUrl: 'modules/core/wizard/termsAndConditions.tpl.html',
       });
     }
 
@@ -406,7 +406,7 @@
 
     function hasDefaultButtons() {
       if (vm.current.step) {
-        return angular.isUndefined(vm.current.step.buttons);
+        return _.isUndefined(vm.current.step.buttons);
       }
       return false;
     }
@@ -430,9 +430,9 @@
       scope: {
         tabs: '=',
         finish: '=',
-        isFirstTime: "="
+        isFirstTime: "=",
       },
-      templateUrl: 'modules/core/wizard/wizard.tpl.html'
+      templateUrl: 'modules/core/wizard/wizard.tpl.html',
     };
 
     return directive;
@@ -442,7 +442,7 @@
     var directive = {
       require: '^crWizard',
       restrict: 'AE',
-      templateUrl: 'modules/core/wizard/wizardNav.tpl.html'
+      templateUrl: 'modules/core/wizard/wizardNav.tpl.html',
     };
 
     return directive;
@@ -455,7 +455,7 @@
       restrict: 'AE',
       scope: true,
       templateUrl: 'modules/core/wizard/wizardMain.tpl.html',
-      link: link
+      link: link,
     };
 
     return directive;
@@ -485,7 +485,7 @@
       restrict: 'AE',
       scope: true,
       templateUrl: 'modules/core/wizard/wizardButtons.tpl.html',
-      link: link
+      link: link,
     };
 
     return directive;

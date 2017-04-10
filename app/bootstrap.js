@@ -1,8 +1,6 @@
 'use strict';
 
 (function () {
-  require('jquery');
-  require('angular');
-
+  require('./bootstrap.dependencies');
   require('./scripts/app');
 }());

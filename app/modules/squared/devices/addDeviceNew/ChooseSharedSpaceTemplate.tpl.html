@@ -1,12 +1,16 @@
 <div class="modal-header">
   <button type="button" class="close" ng-click="$dismiss()">
   </button>
-  <h3 class="modal-title" translate="{{choosePlace.wizardData.title}}"></h3>
+  <h3 class="modal-title" translate="{{choosePlace.title}}"></h3>
 </div>
 <div class="modal-body device-wizard choose-shared">
   <div ng-hide="choosePlace.onlyNew()">
     <h4 translate="addDeviceWizard.chooseSharedSpace.existingOrNewPlace"></h4>
-    <p class="wizardDescription" translate="addDeviceWizard.chooseSharedSpace.existingOrNewPlaceInstructions"></p>
+    <p class="wizardDescription" ng-show="choosePlace.deviceType === 'huron'" translate="addDeviceWizard.chooseSharedSpace.existingOrNewPlaceDeskPhoneInstructions"></p>
+    <p class="wizardDescription" ng-hide="choosePlace.deviceType === 'huron'">
+      <span translate="placesPage.placesDefinition"></span>
+      <span translate="addDeviceWizard.chooseSharedSpace.existingOrNewPlaceCollaborationDeviceInstructions"></span>
+    </p>
     <div class="typeChoice">
       <div class="typeButtonWrapper typeButtonWrapperLeft">
           <div class="typeButton typeButtonLeft"
@@ -18,12 +22,11 @@
           <h4 translate="addDeviceWizard.chooseSharedSpace.existingPlace"></h4>
           <span>&nbsp;</span>
         </div>
-        <div ng-hide="choosePlace.hasRooms || choosePlace.isExistingCollapsed || choosePlace.placesLoaded">
-          <div cs-loader class="loader-example--large"></div>
-        </div>
-        <div class="errorBox" ng-hide="choosePlace.hasRooms || choosePlace.isExistingCollapsed || !choosePlace.placesLoaded">
+        <div class="errorBox" ng-hide="choosePlace.isExistingCollapsed || !choosePlace.filteredView.isInState(choosePlace.filteredView.noplaces)">
           <i class="icon icon-warning"></i>
-          <span translate="addDeviceWizard.chooseSharedSpace.noExistingPlaces"></span>
+          <span translate="addDeviceWizard.chooseSharedSpace.noExistingPlaces" ng-if="choosePlace.showPersonal"></span>
+          <span translate="addDeviceWizard.chooseSharedSpace.noExistingHuronPlaces" ng-if="choosePlace.deviceType === 'huron'"></span>
+          <span translate="addDeviceWizard.chooseSharedSpace.noExistingCloudberryPlaces" ng-if="choosePlace.deviceType === 'cloudberry'"></span>
         </div>
       </div>
       <div class="typeButtonWrapper">
@@ -40,19 +43,34 @@
     </div>
   </div>
 
-  <div class="chooseExistingPlace" ng-hide="choosePlace.isExistingCollapsed || !choosePlace.hasRooms || !choosePlace.placesLoaded">
+  <div class="chooseExistingPlace" ng-hide="choosePlace.isExistingCollapsed || choosePlace.filteredView.isInState(choosePlace.filteredView.noplaces)">
     <form class="chooseExistingPlaceForm" onsubmit="$('#next-button').click()">
-      <h4 translate="addDeviceWizard.chooseSharedSpace.existingPlace"></h4>
-      <p translate="addDeviceWizard.chooseSharedSpace.existingPlaceInstructions"></p>
+      <h4 translate="addDeviceWizard.chooseSharedSpace.whichPlace"></h4>
+      <p ng-show="choosePlace.deviceType === 'huron' && !choosePlace.showPersonal"
+         translate="addDeviceWizard.chooseSharedSpace.existingDeskPhonePlaceInstructions"></p>
+      <p ng-show="choosePlace.deviceType !== 'huron' && !choosePlace.showPersonal"
+         translate="addDeviceWizard.chooseSharedSpace.existingCollaborationDevicePlaceInstructions"></p>
+      <p ng-show="choosePlace.showPersonal" translate="addDeviceWizard.chooseSharedSpace.existingPlaceInstructions"></p>
       <div>
-        <input type="text"
-               ng-model="choosePlace.selected"
-               typeahead="room for room in choosePlace.rooms | filter:$viewValue | limitTo:6"
-               typeahead-template-url="placeTemplate.html"
-               typeahead-on-select="choosePlace.selectPlace($item)"
-               placeholder="{{'addDeviceWizard.chooseSharedSpace.selectPlace' | translate}}"
-               typeahead-wait-ms="500"/>
-        <script type="text/ng-template" id="placeTemplate.html">
+        <span class="searchInputField">
+          <input type="text"
+                 ng-model="choosePlace.selected"
+                 typeahead="room for room in choosePlace.getRooms($viewValue, 6)"
+                 typeahead-template-url="placeTemplate.html"
+                 typeahead-on-select="choosePlace.selectPlace($item)"
+                 placeholder="{{'addDeviceWizard.chooseSharedSpace.selectPlace' | translate}}"
+                 typeahead-wait-ms="500"/>
+          <div ng-if="choosePlace.filteredView.isInState(choosePlace.filteredView.searching)">
+            <i class="icon icon icon-spinner"></i>
+          </div>
+        </span>
+        <span ng-if="choosePlace.filteredView.isInState(choosePlace.filteredView.emptyresult)" translate="placesPage.noneFound"></span>
+        <script type="text/ng-template" id="placeTemplate.html" ng-if="choosePlace.showPersonal">
+          <a>
+            <span ng-bind-html="match.label.displayName + ' (' + choosePlace.getReadablePlaceType(match) + ')' | typeaheadHighlight:query" ></span>
+          </a>
+        </script>
+        <script type="text/ng-template" id="placeTemplate.html" ng-if="!choosePlace.showPersonal">
           <a>
             <span ng-bind-html="match.label.displayName | typeaheadHighlight:query" ></span>
           </a>
@@ -64,9 +82,8 @@
 
   <div class="createNewPlace" ng-hide="choosePlace.isNewCollapsed">
     <form name="placeForm" class="createNewPlaceForm" onsubmit="$('#next-button').click()">
-      <h4 ng-show="choosePlace.wizardData.showPlaces" translate="addDeviceWizard.chooseSharedSpace.newPlace"></h4>
-      <h4 ng-hide="choosePlace.wizardData.showPlaces" translate="addDeviceWizard.chooseSharedSpace.deviceInstalled"></h4>
-      <p>{{ choosePlace.localizedCreateInstructions() }}</p>
+      <h4 translate="addDeviceWizard.chooseSharedSpace.placeLocation"></h4>
+      <p translate="addDeviceWizard.chooseSharedSpace.newPlaceInstructions"></p>
       <div class="newPlaceSpacing" ng-show="choosePlace.onlyNew()"></div>
       <div class="cs-input-group" ng-class="{'error': placeForm.newPlace.$invalid && placeForm.newPlace.$touched}">
         <input
@@ -74,7 +91,7 @@
             type="text"
             id="newPlace"
             name="newPlace"
-            focus-on="true"
+            focus-on
             ng-model="choosePlace.deviceName"
             placeholder="{{'addDeviceWizard.chooseSharedSpace.insertRoomName' | translate}}"
             class="form-control"
@@ -105,7 +122,6 @@
 
   <button
       cs-btn
-      loading="choosePlace.isLoading"
       id="next-button"
       class="btn btn--primary"
       ng-click="choosePlace.next()"

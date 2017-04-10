@@ -1,21 +1,32 @@
-<div>
+<div class="fallback-destination-sa">
   <div class="typeahead-large">
-    <input ng-model="huntGroupSA.selectedFallbackNumber"
-           ng-class="{'error': huntGroupSA.isErrorFallbackInput()}"
-           typeahead="user for user in huntGroupSA.fetchFallbackDestination($viewValue) | limitTo:10"
-           typeahead-on-select="huntGroupSA.selectFallback($item)"
-           typeahead-template-url="userTemplate.html"
-           placeholder="{{:: 'huronHuntGroup.fallbackPlaceholder' | translate}}"
-           ng-keyup="huntGroupSA.validateFallbackNumber()"
-           ng-disabled="huntGroupSA.selectedFallbackMember"
-           focus-on>
+     <div>
+      <h1 class="text-center" translate="huronHuntGroup.fallbackPlaceholder"></h1>
+      <h6 class="text-center" translate="huronHuntGroup.fallbackHint"></h6>
+    </div>
+    <cs-call-destination
+      input-type="undefined"
+      class="columns medium-10"
+      ng-class="{'error': huntGroupSA.isErrorFallbackInput()}"
+      ng-keyup="huntGroupSA.validateFallbackNumber()"
+      model="huntGroupSA.selectedFallbackNumber"
+      inputs="huntGroupSA.callDestInputs"
+      select-type="button"
+      size="medium-12"
+      internal-number-data-fn="huntGroupSA.fetchFallbackDestination(data)"
+      internal-number-on-select="huntGroupSA.selectFallback(data)"
+      internal-number-template-url="userTemplate.html"
+      external-number-region-code-fn="huntGroupSA.externalRegionCodeFn()"
+      on-change-fn="huntGroupSA.setSelectedFallbackNumber(model)"
+      focus-on>
+    </cs-call-destination>
+    <p class="input-description"></p>
 
-    <p class="input-description" translate="huronHuntGroup.fallbackHint"></p>
   </div>
   <div class="fallback-container">
     <cs-card-layout block-view="true" ng-if="huntGroupSA.selectedFallbackMember">
       <cs-card class="small header-background primary hunt-member-card">
-        <article>
+        <article ng-if="huntGroupSA.selectedFallbackMember.member.user">
           <a href ng-click="huntGroupSA.toggleFallback()">
             <header ng-class="{'open-panel' : huntGroupSA.selectedFallbackMember.openPanel}">
               <div class="header-with-right-icon">
@@ -43,6 +54,14 @@
             </fieldset>
           </section>
         </article>
+        <article ng-if="huntGroupSA.selectedFallbackMember.member.searchNumber">
+          <header>
+            <div class="header-with-right-icon">
+              <h5 class="ellipsis">{{huntGroupSA.selectedFallbackMember.member.searchNumber}}</h5>
+              <i class="icon icon-close icon-lg" ng-click="huntGroupSA.removeFallbackDest()"></i>
+            </div>
+          </header>
+        </article>
       </cs-card>
     </cs-card-layout>
 
@@ -56,8 +75,8 @@
     <div class="text-center fallback-container-item">
       <button class="btn" cs-btn loading="huntGroupSA.saveProgress"
               ng-click="huntGroupSA.saveHuntGroup()"
-              ng-class="{'btn--success': (huntGroupSA.isFallbackValid() || huntGroupSA.allowLocalValidation)}""
-              ng-disabled="!huntGroupSA.isFallbackValid() && !huntGroupSA.allowLocalValidation">
+              ng-class="{'btn--success': (huntGroupSA.isFallbackValid())}"
+              ng-disabled="!huntGroupSA.isFallbackValid()">
         <span translate="huronHuntGroup.createGroupLabel"></span>
       </button>
     </div>

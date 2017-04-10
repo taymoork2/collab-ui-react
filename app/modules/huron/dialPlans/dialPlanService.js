@@ -1,9 +1,7 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Huron')
-    .factory('DialPlanService', DialPlanService);
+  module.exports = DialPlanService;
 
   /* @ngInject */
   function DialPlanService(Authinfo, CustomerVoiceCmiService) {
@@ -12,7 +10,7 @@
       getCustomerVoice: getCustomerVoice,
       updateCustomerVoice: updateCustomerVoice,
       getCustomerDialPlanDetails: getCustomerDialPlanDetails,
-      getCustomerDialPlanCountryCode: getCustomerDialPlanCountryCode
+      getCustomerDialPlanCountryCode: getCustomerDialPlanCountryCode,
     };
 
     return service;
@@ -20,14 +18,14 @@
     // get the customer's voice service profile
     function getCustomerVoice(customerId) {
       var queryString = {
-        customerId: customerId || Authinfo.getOrgId()
+        customerId: customerId || Authinfo.getOrgId(),
       };
       return CustomerVoiceCmiService.get(queryString).$promise;
     }
 
     function updateCustomerVoice(customerId, payload) {
       return CustomerVoiceCmiService.update({
-        customerId: customerId
+        customerId: customerId,
       }, payload).$promise;
     }
 
@@ -50,7 +48,7 @@
               extensionGenerated: "false",
               steeringDigitRequired: "true",
               supportSiteCode: "true",
-              supportSiteSteeringDigit: "true"
+              supportSiteSteeringDigit: "true",
             };
             return northAmericanDialPlanData;
           } else {

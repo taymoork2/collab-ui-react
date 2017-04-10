@@ -1,8 +1,18 @@
 'use strict';
 
 describe('Controller: DeviceOverviewCtrl', function () {
-  var $scope, $controller, controller, $httpBackend;
-  var $q, CsdmConfigService, CsdmDeviceService, CsdmCodeService, Authinfo, Notification, RemoteSupportModal, HuronConfig;
+  var $scope, $controller, $state, controller, $httpBackend;
+  var $q, UrlConfig, CsdmDeviceService, Authinfo, Notification;
+  var RemoteSupportModal, HuronConfig, FeatureToggleService, Userservice;
+  var PstnSetupStatesService, CsdmHuronDeviceService;
+
+  var location = {
+    type: 'State',
+    areas: [{
+      name: 'Texas',
+      abbreviation: 'TX',
+    }],
+  };
 
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module('Squared'));
@@ -12,43 +22,61 @@ describe('Controller: DeviceOverviewCtrl', function () {
   beforeEach(initSpies);
   beforeEach(initController);
 
-  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _CsdmConfigService_, _CsdmDeviceService_, _CsdmCodeService_, _Authinfo_, _Notification_, _RemoteSupportModal_, _HuronConfig_) {
+  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _UrlConfig_, _CsdmDeviceService_, _Authinfo_, _Notification_, _RemoteSupportModal_, _HuronConfig_, _FeatureToggleService_, _Userservice_, _PstnSetupStatesService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
     $q = _$q_;
+    $state = {};
+    FeatureToggleService = _FeatureToggleService_;
+    Userservice = _Userservice_;
 
-    CsdmConfigService = _CsdmConfigService_;
+    UrlConfig = _UrlConfig_;
     CsdmDeviceService = _CsdmDeviceService_;
-    CsdmCodeService = _CsdmCodeService_;
     Authinfo = _Authinfo_;
     Notification = _Notification_;
     RemoteSupportModal = _RemoteSupportModal_;
     HuronConfig = _HuronConfig_;
+    PstnSetupStatesService = _PstnSetupStatesService_;
   }
 
   function initSpies() {
-    $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/devices?checkDisplayName=false&checkOnline=false').respond(200);
-    $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/upgradeChannels').respond(200);
+    $httpBackend.whenGET(UrlConfig.getCsdmServiceUrl() + '/organization/null/devices?checkDisplayName=false&checkOnline=false').respond(200);
+    $httpBackend.whenGET(UrlConfig.getCsdmServiceUrl() + '/organization/null/upgradeChannels').respond(200);
+    $httpBackend.whenGET('http://thedeviceurl').respond(200);
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200);
     $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/sipendpoints/3/addonmodules').respond(200);
+    $httpBackend.whenGET('https://cmi.huron-int.com/api/v1/voice/customers/sites').respond([]);
+    spyOn(CsdmHuronDeviceService, 'getLinesForDevice').and.returnValue($q.resolve([]));
+    spyOn(CsdmHuronDeviceService, 'getDeviceInfo').and.returnValue($q.resolve({}));
+    spyOn(PstnSetupStatesService, 'getLocation').and.returnValue($q.resolve(location));
   }
+
+  CsdmHuronDeviceService = {
+    getLinesForDevice: {},
+    getDeviceInfo: {},
+  };
 
   var $stateParams = {
     currentDevice: {
+      url: 'http://thedeviceurl',
       isHuronDevice: false,
       product: 'Cisco 8865',
       cisUuid: 2,
       huronId: 3,
-      kem: []
-    }
+      kem: [],
+    },
+    huronDeviceService: CsdmHuronDeviceService,
   };
 
   function initController() {
     controller = $controller('DeviceOverviewCtrl', {
       $scope: $scope,
       channels: {},
-      $stateParams: $stateParams
+      $stateParams: $stateParams,
+      $state: $state,
+      Userservice: Userservice,
+      FeatureToggleService: FeatureToggleService,
     });
     $scope.$apply();
   }
@@ -89,7 +117,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
       spyOn(RemoteSupportModal, 'open');
 
       controller.currentDevice = {
-        hasRemoteSupport: true
+        hasRemoteSupport: true,
       };
       controller.showRemoteSupportDialog();
 
@@ -106,7 +134,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
 
     it('should show remote support button when supported', function () {
       controller.currentDevice = {
-        hasRemoteSupport: true
+        hasRemoteSupport: true,
       };
       expect(controller.showRemoteSupportButton()).toBe(true);
     });
@@ -123,7 +151,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
     it('should ignore already present tags', function () {
       controller.newTag = 'existing tag';
       controller.currentDevice = {
-        tags: ['existing tag']
+        tags: ['existing tag'],
       };
       controller.addTag();
       expect(controller.isAddingTag).toBeFalsy();
@@ -133,26 +161,11 @@ describe('Controller: DeviceOverviewCtrl', function () {
     it('should ignore leading and trailing whitespace when checking for existing tags', function () {
       controller.newTag = ' existing tag ';
       controller.currentDevice = {
-        tags: ['existing tag']
+        tags: ['existing tag'],
       };
       controller.addTag();
       expect(controller.isAddingTag).toBeFalsy();
       expect(controller.newTag).toBeUndefined();
-    });
-
-    it('should post new tags to CsdmCodeDeviceService for activation codes', function () {
-      controller.newTag = 'new tag';
-      controller.currentDevice = {
-        isCode: true,
-        tags: [],
-        url: 'testUrl',
-        needsActivation: true
-      };
-      spyOn(CsdmCodeService, 'updateTags').and.returnValue($q.resolve());
-      controller.addTag();
-      $scope.$apply();
-      expect(CsdmCodeService.updateTags).toHaveBeenCalled();
-      expect(CsdmCodeService.updateTags).toHaveBeenCalledWith('testUrl', ['new tag']);
     });
 
     it('should post new tags to CsdmDeviceService for cloudberry devices', function () {
@@ -160,7 +173,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
       controller.currentDevice = {
         isCloudberryDevice: true,
         tags: [],
-        url: 'testUrl'
+        url: 'testUrl',
       };
       spyOn(CsdmDeviceService, 'updateTags').and.returnValue($q.resolve());
       controller.addTag();
@@ -174,7 +187,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
       controller.currentDevice = {
         isCloudberryDevice: true,
         tags: ['old tag'],
-        url: 'testUrl'
+        url: 'testUrl',
       };
       spyOn(CsdmDeviceService, 'updateTags').and.returnValue($q.resolve());
       controller.addTag();
@@ -187,7 +200,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
       controller.currentDevice = {
         isCloudberryDevice: true,
         tags: ['old tag', 'old tag2'],
-        url: 'testUrl'
+        url: 'testUrl',
       };
       spyOn(CsdmDeviceService, 'updateTags').and.returnValue($q.resolve());
       controller.removeTag('old tag');
@@ -201,7 +214,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
       controller.currentDevice = {
         isCloudberryDevice: true,
         tags: [],
-        url: 'testUrl'
+        url: 'testUrl',
       };
       spyOn(CsdmDeviceService, 'updateTags').and.returnValue($q.resolve());
       controller.addTag();
@@ -213,7 +226,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
     it('should ignore keys other than Enter', function () {
       spyOn(controller, 'addTag');
       controller.addTagOnEnter({
-        keyCode: 12
+        keyCode: 12,
       });
       $scope.$apply();
       expect(controller.addTag).not.toHaveBeenCalled();
@@ -222,7 +235,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
     it('should call addTag on Enter', function () {
       spyOn(controller, 'addTag');
       controller.addTagOnEnter({
-        keyCode: 13
+        keyCode: 13,
       });
       $scope.$apply();
       expect(controller.addTag).toHaveBeenCalled();
@@ -233,10 +246,10 @@ describe('Controller: DeviceOverviewCtrl', function () {
 
 describe('Huron Device', function () {
   var $scope, $controller, controller, $httpBackend;
-  var $q, CsdmConfigService;
-  var $stateParams, ServiceSetup, timeZone, newTimeZone;
-  var FeatureToggleService;
-  var HuronConfig;
+  var $q, UrlConfig;
+  var $stateParams, ServiceSetup, timeZone, newTimeZone, countries, newCountry, HuronConfig;
+  var usStatesList = getJSONFixture('../../app/modules/huron/pstnSetup/states.json');
+  var $timeout;
 
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module('Squared'));
@@ -246,27 +259,32 @@ describe('Huron Device', function () {
   beforeEach(initSpies);
 
 
-  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _CsdmConfigService_, _$stateParams_, _ServiceSetup_, _FeatureToggleService_, _HuronConfig_) {
+  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _UrlConfig_, _ServiceSetup_, _HuronConfig_, _$timeout_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
     $q = _$q_;
-    CsdmConfigService = _CsdmConfigService_;
+    $timeout = _$timeout_;
+    UrlConfig = _UrlConfig_;
     ServiceSetup = _ServiceSetup_;
-    $stateParams = _$stateParams_;
-    FeatureToggleService = _FeatureToggleService_;
     HuronConfig = _HuronConfig_;
     $stateParams = {
       currentDevice: {
-        isHuronDevice: true
+        url: 'http://thedeviceurl',
+        isHuronDevice: true,
       },
-      huronDeviceService: CsdmHuronDeviceService($q)
+      huronDeviceService: CsdmHuronDeviceService($q),
     };
   }
 
   newTimeZone = {
     "id": "America/Anchorage",
-    "label": "America/Anchorage"
+    "label": "America/Anchorage",
+  };
+
+  newCountry = {
+    "label": "Canada",
+    "value": "CA",
   };
 
   function CsdmHuronDeviceService(q) {
@@ -275,8 +293,16 @@ describe('Huron Device', function () {
       return q.resolve(true);
     }
 
-    function getTimezoneForDevice() {
-      return q.resolve('America/Los_Angeles');
+    function setCountryForDevice() {
+      return q.resolve(true);
+    }
+
+    function setSettingsForAta() {
+      return q.resolve(true);
+    }
+
+    function getDeviceInfo() {
+      return q.resolve({ timeZone: 'America/Los_Angeles', country: 'US' });
     }
 
     function getLinesForDevice() {
@@ -285,18 +311,41 @@ describe('Huron Device', function () {
 
     return {
       setTimezoneForDevice: setTimezoneForDevice,
-      getTimezoneForDevice: getTimezoneForDevice,
-      getLinesForDevice: getLinesForDevice
+      setCountryForDevice: setCountryForDevice,
+      setSettingsForAta: setSettingsForAta,
+      getDeviceInfo: getDeviceInfo,
+      getLinesForDevice: getLinesForDevice,
     };
   }
 
   function initSpies() {
-    $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/devices?checkDisplayName=false&checkOnline=false').respond(200);
-    $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/upgradeChannels').respond(200);
+    $httpBackend.whenGET(UrlConfig.getCsdmServiceUrl() + '/organization/null/devices?checkDisplayName=false&checkOnline=false').respond(200);
+    $httpBackend.whenGET(UrlConfig.getCsdmServiceUrl() + '/organization/null/upgradeChannels').respond(200);
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200);
+    $httpBackend.whenGET('http://thedeviceurl').respond(200);
+    $httpBackend.whenGET(HuronConfig.getTerminusV2Url() + '/customers/numbers/e911').respond(200);
+    $httpBackend.whenGET('modules/huron/pstnSetup/states.json').respond(usStatesList);
 
-    spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.when(timeZone));
-    spyOn($stateParams.huronDeviceService, 'setTimezoneForDevice').and.returnValue($q.when(true));
+    countries = getJSONFixture('huron/json/settings/countries.json');
+
+    spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.resolve(timeZone));
+    spyOn(ServiceSetup, 'getSiteCountries').and.returnValue($q.resolve(countries));
+    var sites = [{
+      uuid: '777-888-666',
+      steeringDigit: '5',
+      siteSteeringDigit: '6',
+    }];
+    var site = {
+      uuid: '1234567890',
+      steeringDigit: '5',
+      siteSteeringDigit: '6',
+      country: 'US',
+    };
+    spyOn(ServiceSetup, 'listSites').and.returnValue($q.resolve(sites));
+    spyOn(ServiceSetup, 'getSite').and.returnValue($q.resolve(site));
+    spyOn($stateParams.huronDeviceService, 'setTimezoneForDevice').and.returnValue($q.resolve(true));
+    spyOn($stateParams.huronDeviceService, 'setCountryForDevice').and.returnValue($q.resolve(true));
+    spyOn($stateParams.huronDeviceService, 'setSettingsForAta').and.returnValue($q.resolve(true));
 
   }
 
@@ -304,7 +353,7 @@ describe('Huron Device', function () {
     controller = $controller('DeviceOverviewCtrl', {
       $scope: $scope,
       channels: {},
-      $stateParams: $stateParams
+      $stateParams: $stateParams,
     });
 
     $scope.$apply();
@@ -327,25 +376,36 @@ describe('Huron Device', function () {
     });
   });
 
-  describe('kem support', function () {
-    beforeEach(function () {
-      $stateParams.currentDevice.product = 'Cisco 8865';
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
-      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/sipendpoints/addonmodules').respond(200, [{
-        customerId: 'fake-customer-id',
-        sipEndpointId: 'fake-huron-id',
-        addOnModuleId: 1
-      }]);
-    });
+  describe('T38 support', function () {
     beforeEach(initController);
 
-    it('should fetch KEM info for the device', function () {
-      $httpBackend.flush();
-      expect(controller.currentDevice.kem).not.toBeNull();
-      expect(controller.currentDevice.kem).not.toBeUndefined();
-      expect(controller.kemNumber.value).toBe(1);
-      expect(controller.currentDevice.kem[0].customerId).toBe('fake-customer-id');
+
+    it('should init controller', function () {
+      expect(controller).toBeDefined();
     });
 
+    it('should update T38 status', function () {
+      controller.saveT38Settings();
+      $scope.$apply();
+
+      $timeout.flush();
+      expect($stateParams.huronDeviceService.setSettingsForAta).toHaveBeenCalledWith(jasmine.any(Object), { t38FaxEnabled: false });
+    });
+  });
+
+  describe('country support', function () {
+    beforeEach(initController);
+
+    it('should init controller', function () {
+      expect(controller).toBeDefined();
+    });
+
+    it('should update country value', function () {
+      controller.selectedCountry = newCountry;
+      controller.saveCountryAndWait();
+      $scope.$apply();
+
+      expect($stateParams.huronDeviceService.setCountryForDevice).toHaveBeenCalledWith(jasmine.any(Object), newCountry.value);
+    });
   });
 });

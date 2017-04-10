@@ -1,3 +1,5 @@
+require('./ediscovery.scss');
+
 (function () {
   'use strict';
 
@@ -58,7 +60,7 @@
       }
       $scope.reportsBeingCancelled[id] = true;
       EdiscoveryService.patchReport(id, {
-        state: "ABORTED"
+        state: "ABORTED",
       }).then(function () {
         if (!EdiscoveryNotificationService.notificationsEnabled()) {
           Notification.success('ediscovery.search.reportCancelled');
@@ -122,38 +124,32 @@
         displayName: $translate.instant("ediscovery.reportsList.name"),
         sortable: true,
         cellTemplate: 'modules/ediscovery/cell-template-name.html',
-        width: '*'
-      }, {
-        field: 'roomQuery.roomId',
-        displayName: $translate.instant("ediscovery.reportsList.roomId"),
-        sortable: false,
-        cellTemplate: 'modules/ediscovery/cell-template-room-id.html',
-        width: '*'
+        width: '*',
       }, {
         field: 'createdTime',
         displayName: $translate.instant("ediscovery.reportsList.dateGenerated"),
         sortable: false,
         cellTemplate: 'modules/ediscovery/cell-template-createdTime.html',
-        width: '*'
+        width: '*',
       }, {
         field: 'size',
         displayName: $translate.instant("ediscovery.reportsList.size"),
         sortable: false,
         cellTemplate: 'modules/ediscovery/cell-template-size.html',
-        width: '110'
+        width: '110',
       }, {
         field: 'state',
-        displayName: $translate.instant("ediscovery.reportsList.state"),
+        displayName: $translate.instant("ediscovery.reportsList.status"),
         sortable: false,
         cellTemplate: 'modules/ediscovery/cell-template-state.html',
-        width: '*'
+        width: '*',
       }, {
         field: 'actions',
         displayName: $translate.instant("ediscovery.reportsList.actions"),
         sortable: false,
         cellTemplate: 'modules/ediscovery/cell-template-action.html',
-        width: '160'
-      }]
+        width: '160',
+      }],
     };
 
     function pollAvalonReport() {
@@ -177,13 +173,13 @@
     function rerunReport(report) {
       $state.go('ediscovery.search', {
         report: report,
-        reRun: true
+        reRun: true,
       });
     }
 
     function viewReport(report) {
       $state.go('ediscovery.search', {
-        report: report
+        report: report,
       });
     }
   }

@@ -1,3 +1,5 @@
+@import '~collab-ui/scss/settings/colors';
+
 .reveal-modal.full .modal-logo-upload {
   height: initial;
 }
@@ -7,7 +9,7 @@
   border: 1px solid $brand-primary-dark;
 
   .modal-body {
-    margin: 20px 0 0 0;
+    margin: 20px 0 0;
     padding: 0;
     color: $brand-primary-dark;
     background-color: transparent;

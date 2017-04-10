@@ -12,8 +12,8 @@ describe('Controller: AADialByExtCtrl', function () {
   var aaUiModel = {
     openHours: {},
     ceInfo: {
-      name: 'AA2'
-    }
+      name: 'AA2',
+    },
   };
   var schedule = 'openHours';
   var index = '0';
@@ -43,6 +43,17 @@ describe('Controller: AADialByExtCtrl', function () {
 
   }));
 
+  afterEach(function () {
+    $rootScope = null;
+    $scope = null;
+    $q = null;
+    $controller = null;
+    AAModelService = null;
+    AAUiModelService = null;
+    AutoAttendantCeMenuModelService = null;
+    FeatureToggleService = null;
+  });
+
   describe('AADialByExt', function () {
     var controller;
 
@@ -51,17 +62,16 @@ describe('Controller: AADialByExtCtrl', function () {
       $scope.keyIndex = '0';
       $scope.menuId = menuId;
 
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
+      spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
       spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
 
       spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
       AutoAttendantCeMenuModelService.clearCeMenuMap();
       aaUiModel[schedule] = AutoAttendantCeMenuModelService.newCeMenu();
-      aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenu());
-
+      aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
       // setup the options menu
       controller = $controller('AADialByExtCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
       $scope.$apply();
     }));
@@ -69,16 +79,31 @@ describe('Controller: AADialByExtCtrl', function () {
     describe('activate', function () {
 
       it('should be able to create new AA entry', function () {
-
         expect(controller).toBeDefined();
         expect(controller.menuEntry.actions[0].name).toEqual('runActionsOnInput');
         expect(controller.menuEntry.actions[0].value).toEqual('');
       });
 
       it('should initialize the message attribute', function () {
-
         expect(controller.messageInput).toEqual('');
         controller.saveUiModel(); // GW test
+      });
+
+      describe('phone menu activate', function () {
+        beforeEach(inject(function ($controller) {
+          $scope.menuKeyIndex = '0';
+          $scope.menuId = 'menu0';
+          controller = $controller('AADialByExtCtrl', {
+            $scope: $scope,
+          });
+          $scope.$apply();
+        }));
+
+        it('should be able to create new AA entry', function () {
+          expect(controller).toBeDefined();
+          expect(controller.menuEntry.actions[0].name).toEqual('runActionsOnInput');
+          expect(controller.menuEntry.actions[0].value).toEqual('');
+        });
       });
     });
 
@@ -92,13 +117,13 @@ describe('Controller: AADialByExtCtrl', function () {
         menuEntry.setKey(data.ceMenu.key);
         menuEntry.addAction(action);
 
-        aaUiModel[schedule].entries[0].addEntry(menuEntry);
+        aaUiModel[schedule].entries[0] = menuEntry;
 
         var controller = $controller('AADialByExtCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
 
-        expect(controller.menuEntry).toEqual(aaUiModel[schedule].entries[0].entries[0]);
+        expect(controller.menuEntry).toEqual(aaUiModel[schedule].entries[0]);
       });
     });
 
@@ -108,7 +133,7 @@ describe('Controller: AADialByExtCtrl', function () {
         var actionEntry = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
         var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
         menuEntry.addAction(actionEntry);
-        aaUiModel[schedule].entries[0].addEntry(menuEntry);
+        aaUiModel[schedule].entries[0] = menuEntry;
         expect(controller.menuEntry.actions[0].value).toEqual('');
         var message = 'Enter the extension now.';
         controller.messageInput = message;
@@ -125,7 +150,7 @@ describe('Controller: AADialByExtCtrl', function () {
       $scope = $rootScope;
       $scope.keyIndex = undefined;
 
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+      spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
 
       spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
       spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
@@ -134,7 +159,7 @@ describe('Controller: AADialByExtCtrl', function () {
 
       // setup the options menu
       controller = $controller('AADialByExtCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
       $scope.$apply();
     }));
@@ -198,7 +223,7 @@ describe('Controller: AADialByExtCtrl', function () {
       $scope = $rootScope;
       $scope.keyIndex = undefined;
 
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+      spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
 
       spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
       spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
@@ -213,7 +238,7 @@ describe('Controller: AADialByExtCtrl', function () {
 
       // setup the options menu
       controller = $controller('AADialByExtCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
       $scope.$apply();
     }));

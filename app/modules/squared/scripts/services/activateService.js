@@ -15,7 +15,7 @@
     var service = {
       userUrl: userUrl,
       activateUser: activateUser,
-      resendCode: resendCode
+      resendCode: resendCode,
     };
 
     return service;
@@ -23,7 +23,7 @@
     function activateUser(encryptedParam) {
       return Auth.setAccessToken().then(function () {
         return $http.post(userUrl + 'users/email/activate', {
-          'encryptedQueryString': encryptedParam
+          'encryptedQueryString': encryptedParam,
         });
       });
     }
@@ -31,7 +31,7 @@
     function resendCode(eqp) {
       return Auth.setAccessToken().then(function () {
         return $http.post(userUrl + 'users/email/reverify', {
-          'encryptedQueryString': eqp
+          'encryptedQueryString': eqp,
         });
       });
     }

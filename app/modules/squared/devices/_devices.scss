@@ -1,58 +1,109 @@
+@import '~collab-ui/scss/settings/core';
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/typography';
+@import '~collab-ui/scss/tools/placeholders/page-layout';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+
 .sq-devices-page {
   @extend %grid-subheader;
   @extend %page-background-white;
 
-  .ui-grid-cell:first-child ,
-  .ui-grid-header-cell:first-child  {
-   border-right: 0px;
+  .ui-grid-cell:first-child,
+  .ui-grid-header-cell:first-child {
+    border-right: 0px;
 
     .space_avatar {
       margin: 4px 5px 4px 30px;
       width: 35px;
     }
   }
+  .export-button {
+    font-size: 1.5rem;
+    padding-right: 2rem;
+  }
+  .export-button:hover {
+    cursor: pointer;
+    color: $link-color;
+  }
 }
 
 .none_found {
+  @include vr-spacing(pt, 7);
+
   display: flex;
   flex-direction: column;
   overflow: hidden;
   overflow-y: auto;
   flex: 1;
-  @include vr-spacing(pt, 10);
   background-color: $gray-lightest;
   align-items: center;
   justify-content: center;
+
   i {
     font-size: 7em;
+
     @include vr-spacing(mb, 1.5);
   }
+
   button {
     @include vr-spacing(mt, 1);
   }
-  h4, h1 {
-    @include vr-spacing(mv, .5);
+
+  .h5,
+  .h2 {
+    @include vr-spacing(mv, 0.5);
+    color: $gray-base;
+    text-align: center;
+    margin-bottom: 12px;
+    max-width: 440px;
+    margin-left: auto;
+    margin-right: auto;
+
+    @media screen and (max-width: 640px) {
+      width: 90%;
+    }
   }
-  i, h5 {
+
+  i {
     color: $gray-light-1;
   }
 }
 
-
+sq-places-page-overview,
 .sq-devices-page-overview {
+  label {
+    cursor: auto;
+  }
+}
+
+.sq-devices-page-overview,
+.sq-devices-emergency-services {
+  .internal-link {
+    color: $gray-dark-1;
+  }
+
+  .dropdown-menu li {
+    min-width: 190px !important;
+    width: auto;
+    padding: 0.5em 1em;
+  }
+
   .activation-code-pane h3 {
     color: $color-people-light;
   }
+
   .message-container {
     position: absolute;
     left: 0;
     right: 0;
     padding: 50px;
     text-align: center;
+
     img {
       width: 200px;
     }
   }
+
   .add-device-modal .alert {
     border: 0;
     padding: 15px;
@@ -72,32 +123,11 @@
     background: white;
     border-radius: 100px;
     box-shadow: 1px 1px 5px #666;
-    padding: 9px 10px 6px 10px;
+    padding: 9px 10px 6px;
   }
 
   .btn-action {
     width: 141px;
-  }
-
-  .activationOverview {
-    display: flex;
-    flex-direction: column;
-    align-items: center
-  }
-
-  .activationImage {
-    margin: 15px 0 40px 0;
-    width: 116px;
-  }
-
-  .activationDescription {
-    text-align: center;
-  }
-
-  .activationButtons {
-    margin-top: 40px;
-    display: flex;
-    justify-content: center;
   }
 
   .overview {
@@ -114,6 +144,7 @@
 
   .overviewDescription {
     margin: 0 0 0 15px;
+
     p {
       font-size: 1.1rem;
     }
@@ -123,21 +154,66 @@
     padding-bottom: 10px;
   }
 
-  .timeZoneSelector {
+  .timeZoneSelector,
+  .countrySelector {
     width: 280px;
   }
 
-  .button-container {
-    right: 0;
+  .issue-link {
+    color: $color-primary-base;
   }
 
-  .dropdown-container {
-    @include vr-spacing(mt, 1);
+  .warningFaxes {
+    font-style: italic;
+    color: $gray-light-1;
+  }
+  .updatingT38 {
+    display: block;
+    margin-top: -4em;
+    margin-left: 4em;
+  }
+}
+
+.sq-devices-emergency-services {
+  .breadcrumbs {
     @include vr-spacing(mb, 1);
   }
 
-  .select-list.alert {
-    @include vr-spacing(m, 0);
+  hr-settings-service-address > div {
+    background-color: $gray-light-3;
+  }
+
+  .label-margin {
+    @include vr-spacing(mb, 0.5, 0px, false);
+  }
+
+  .save-section {
+    @include vr-spacing(mt, 3, -1px, true);
+    @include vr-spacing(pr, 1);
+    @include vr-spacing(pt, 0.5);
+    @include vr-spacing(pb, 0.5);
+    @include vr-spacing(pl, 1.5, 1px, false);
+    @include vr-spacing(ml, 1.5, -1px, true);
+
+    width: 100%;
+    background-color: $gray-light-4;
+    border-bottom: none;
+  }
+
+  .modify-button {
+    color: $color-primary-base;
+  }
+
+  .saved-address {
+    @include vr-spacing(p, 0.75);
+    @include vr-spacing(mb, 0.5);
+
+    position: relative;
+    background-color: $gray-light-3;
+  }
+
+  .cs-input__messages {
+    @include vr-spacing(pb, 1);
   }
 }
 
@@ -155,12 +231,14 @@
   margin-left: 10px;
 }
 
-.modal-success, .modal-warning {
+.modal-success,
+.modal-warning {
   padding: 10px 20px;
   margin: 0 30px;
   color: white;
   display: flex;
   align-items: center;
+
   i {
     padding-right: 15px;
     font-size: 1.5rem;
@@ -188,77 +266,49 @@
     white-space: nowrap;
     display: flex;
     align-items: center;
-    padding: 2px 8px 0 8px;
+    padding: 2px 8px 0;
     background-color: #eee;
-    color: #6A6B6C;
+    color: #6a6b6c;
   }
+
   .add-tag {
     background-color: #c5e9f7;
+
     i {
       font-size: 20px;
     }
   }
+
   .add-tag:hover {
     cursor: pointer;
     color: $link-color;
   }
+
   i {
     padding-left: 10px;
     font-size: 12px;
   }
+
   i:hover {
     cursor: pointer;
     color: $link-color;
   }
-  input[type=text] {
+
+  input[type='text'] {
     border: 0;
     margin: 0;
     padding: 0;
     display: inline;
     border-bottom: 1px solid $brand-primary;
-    width: 100px;
     border-radius: 0;
     transition: initial;
     font-size: 14px;
     outline: none !important;
     box-shadow: none !important;
   }
-  a {
-    font-size: .7rem;
-  }
-}
 
-/* widgets */
-.editable-input {
-  padding-top: 5px;
-  &, .read-only-value, form {
-    display: flex;
-    align-items: center;
-  }
-  i, input {
-    font-size: 22px;
-  }
-  i {
-    color: #999;
-    cursor: pointer;
-  }
-  i:hover, .read-only-value:hover i {
-    color: #000;
-  }
-  .read-only-value span {
-    cursor: pointer;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-  input {
-    width: 320px;
-  }
-  .read-only-value span {
-    max-width: 320px;
-  }
-  .read-only-value span, input {
-    padding-right: 10px;
+  a {
+    font-size: 0.7rem;
   }
 }
 
@@ -273,20 +323,31 @@
     max-width: 580px;
   }
 
+  .errorBox,
+  .noSparkCallWarning {
+    max-width: 580px;
+  }
+
   .typeChoice {
     display: flex;
-    @media screen and (max-width: 500px){
+
+    @media screen and (max-width: 500px) {
       flex-wrap: wrap;
     }
 
     .typeButtonWrapper {
       flex-basis: 50%;
-      @media screen and (max-width: 500px){
+
+      @media screen and (max-width: 500px) {
         flex-grow: 1;
       }
+
       margin-bottom: 16px;
+
       .typeButton {
-        @extend .ui-grid-disable-selection;
+        user-select: none;
+        cursor: default;
+
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -296,6 +357,7 @@
         margin-top: 32px;
         margin-bottom: 16px;
         height: 251px;
+        outline: none;
       }
 
       .typeImageBox {
@@ -313,7 +375,8 @@
         border: solid 1px #049fd9;
       }
 
-      .typeButtonClicked, .typeButtonClicked:hover {
+      .typeButtonClicked,
+      .typeButtonClicked:hover {
         border: solid 2px #049fd9;
         padding: 0;
       }
@@ -325,9 +388,27 @@
   }
 }
 
+.showActivationCode {
+  .activationCodeFailure {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    font-size: 7em;
+
+    i {
+      @include vr-spacing(mb, 1.5);
+      color: $gray-light-1;
+    }
+  }
+}
+
 .errorBox {
   display: flex;
   align-items: flex-start;
+
   .icon {
     margin: 3px 8px 0 0;
     color: #f5a623;
@@ -336,12 +417,9 @@
 
 .choose-shared {
   display: flex;
-  .createNewPlace, .chooseExistingPlace {
-    flex-grow: 1;
-    display: flex;
-  }
 
-  .createNewPlaceForm, .chooseExistingPlaceForm {
+  .createNewPlaceForm,
+  .chooseExistingPlaceForm {
     //flex-basis: 50%;
     display: flex;
     flex-direction: column;
@@ -350,6 +428,21 @@
 
     input {
       margin-top: 16px;
+    }
+
+    .searchInputField {
+      display: block;
+      overflow: hidden;
+
+      input,
+      div {
+        float: left;
+      }
+
+      div {
+        margin-top: 24px;
+        margin-left: 10px;
+      }
     }
   }
 
@@ -384,9 +477,11 @@
   .chooseExistingUserForm input {
     width: 250px;
   }
+}
 
-  .existingUserSpacing {
-    height: 24px;
+.add-lines {
+  .page-option-buttons {
+    margin-top: 16px;
   }
 }
 
@@ -400,11 +495,7 @@
     flex-direction: column;
     align-items: center;
 
-    .qrCodePlaceholder {
-      height: 16px;
-    }
-
-    .loading{
+    .loading {
       font-size: 3em;
     }
 
@@ -421,12 +512,15 @@
     .qrCodeButtons {
       margin-top: 32px;
 
-      a, span {
+      a,
+      span {
         font-size: 16px;
       }
-      a{
+
+      a {
         margin-right: 24px;
-        &:last-child{
+
+        &:last-child {
           margin-right: 0;
         }
       }
@@ -444,11 +538,13 @@
           width: 22px;
         }
 
-        .sendMailArrow, .userInput {
+        .sendMailArrow,
+        .userInput {
           margin-left: 8px;
         }
 
-        .selectedAddress, .userSearch {
+        .selectedAddress,
+        .userSearch {
           display: flex;
           justify-content: center;
 
@@ -481,9 +577,11 @@
       }
     }
   }
+
   .btn {
     transition: none;
   }
+
   #newRoom {
     margin-top: 10px;
     margin-bottom: 25px;
@@ -494,9 +592,11 @@
   h3 {
     display: flex;
   }
+
   input {
     margin-right: 15px;
   }
+
   #display-key {
     width: 100%;
   }
@@ -509,16 +609,150 @@
 .device-status-red {
   color: $brand-danger;
 }
+
 .device-status-yellow {
   color: $brand-warning;
 }
+
 .device-status-green {
   color: $brand-success;
 }
+
 .device-status-gray {
   color: $gray;
 }
 
 .accordion {
   margin-bottom: 10px;
+}
+
+.kem-wrapper {
+  display: flex;
+  justify-content: space-between;
+  color: $gray-dark-1;
+
+  .kem-description {
+    width: 25em;
+  }
+
+  .kem-number {
+    @include vr-spacing(pr, 2);
+  }
+}
+
+.ataDeviceModal {
+  button {
+    width: auto !important;
+  }
+  .rzSliderStyle {
+    .rz-bubble {
+      display: none;
+    }
+    .rz-bar {
+      background-color: $gray-light-2;
+      height: 2px;
+    }
+    .rz-bar.rz-selection,
+    .rz-selection {
+      background-color: $brand-primary;
+    }
+  }
+  .rangeSliderWrap {
+    position: relative;
+    width: 100%;
+    max-width: 600px !important;
+    margin-top: 0.75em;
+    margin-bottom: 1.5em;
+
+    .rzSliderStyle {
+      display: block;
+      width: 80%;
+      width: calc(100% - 60px);
+      max-width: 600px !important;
+      position: relative;
+      margin-top: -2em;
+      margin-left: 0.5em;
+      margin-right: 0.7em;
+      .rz-pointer {
+        left: 389px;
+        top: -11px;
+        width: 22px;
+        height: 22px;
+        background-color: white;
+        border: 1px solid $gray-light-2;
+        &::after {
+          display: none;
+        }
+      }
+    }
+    .rzSliderStyle,
+    .icon {
+      float: left;
+    }
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 80%;
+      width: calc(100% - 60px);
+      background: transparent;
+      background-color: rgba(255, 255, 255, 0);
+      margin: 1em 0.65em 3em 1.5em;
+      height: 2px;
+      border-radius: 1px;
+      border-color: $brand-primary;
+      color: $gray-light-3;
+      border-width: 0;
+      z-index: 1 !important;
+      position: relative;
+      &::-moz-range-track {
+        background-color: rgba(255, 255, 255, 0);
+        opacity: 0;
+      }
+      &::-ms-track {
+        background-color: rgba(255, 255, 255, 0);
+        opacity: 0;
+      }
+
+      &::-ms-fill-lower {
+        background-color: rgba(255, 255, 255, 0);
+        opacity: 0;
+      }
+      &::-ms-fill-upper {
+        background-color: rgba(255, 255, 255, 0);
+        opacity: 0;
+      }
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+    }
+
+    input[type=range]:focus {
+      outline: none;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      margin-top: -3px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: white;
+      border: 1px solid $gray-light-2;
+    }
+    input[type=range]::-moz-range-thumb {
+      margin-top: -3px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: white;
+      border: 1px solid $gray-light-2;
+    }
+    input[type=range]::-ms-thumb {
+      margin-top: -3px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: white;
+      border: 1px solid $gray-light-2;
+    }
+  }
 }

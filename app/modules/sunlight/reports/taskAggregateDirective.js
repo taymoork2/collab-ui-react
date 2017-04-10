@@ -9,7 +9,7 @@
     var directive = {
       restrict: 'EA',
       scope: false,
-      templateUrl: 'modules/sunlight/reports/taskAggregate.tpl.html'
+      templateUrl: 'modules/sunlight/reports/taskAggregate.tpl.html',
     };
 
     return directive;

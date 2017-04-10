@@ -40,9 +40,9 @@ describe('Partner Reports', function () {
 
     it('should show all reports', function () {
       // active users
-      utils.expectIsDisplayed(reports.partnerActiveHeader);
-      utils.expectIsDisplayed(reports.activePartnerDescription);
-      utils.expectTextToBeSet(reports.activePartnerDescription, lowerTime[0]);
+      utils.expectIsDisplayed(reports.activeHeader);
+      utils.expectIsDisplayed(reports.activeDescription);
+      utils.expectTextToBeSet(reports.activeDescription, lowerTime[0]);
       utils.expectIsDisplayed(reports.activeUsersChart);
 
       // most active users
@@ -57,20 +57,20 @@ describe('Partner Reports', function () {
       utils.expectIsDisplayed(reports.activePopulationGraph);
 
       // registered endpoints
-      utils.expectIsDisplayed(reports.regEndpointHeader);
+      utils.expectIsDisplayed(reports.endpointsHeader);
       utils.expectIsDisplayed(reports.endpointDescription);
       utils.expectTextToBeSet(reports.endpointDescription, lowerTime[0]);
       utils.expectIsDisplayed(reports.registeredEndpointsTable);
       reports.confirmCustomerInTable(e2eCustomer, reports.registeredEndpointsTable, true);
 
       // call metrics
-      utils.expectIsDisplayed(reports.partnerMetricsHeader);
-      utils.expectIsDisplayed(reports.partnerMetricsDescription);
-      utils.expectTextToBeSet(reports.partnerMetricsDescription, lowerTime[0]);
+      utils.expectIsDisplayed(reports.metricsHeader);
+      utils.expectIsDisplayed(reports.metricsDescription);
+      utils.expectTextToBeSet(reports.metricsDescription, lowerTime[0]);
       utils.expectIsDisplayed(reports.callMetricsGraph);
 
       // device media quality
-      utils.expectIsDisplayed(reports.partnerMediaHeader);
+      utils.expectIsDisplayed(reports.mediaHeader);
       utils.expectIsDisplayed(reports.mediaDescription);
       utils.expectIsDisplayed(reports.mediaQualityGraph);
     });
@@ -89,15 +89,15 @@ describe('Partner Reports', function () {
       utils.click(reports.engagement);
 
       // engagement graphs
-      utils.expectIsDisplayed(reports.partnerActiveHeader);
-      utils.expectIsDisplayed(reports.activePartnerDescription);
+      utils.expectIsDisplayed(reports.activeHeader);
+      utils.expectIsDisplayed(reports.activeDescription);
       utils.expectIsDisplayed(reports.activeUsersChart);
 
       utils.expectIsDisplayed(reports.activePopulationHeader);
       utils.expectIsDisplayed(reports.activePopulationDescription);
       utils.expectIsDisplayed(reports.activePopulationGraph);
 
-      utils.expectIsDisplayed(reports.regEndpointHeader);
+      utils.expectIsDisplayed(reports.endpointsHeader);
       utils.expectIsDisplayed(reports.endpointDescription);
       utils.expectIsDisplayed(reports.registeredEndpointsTable);
 
@@ -115,11 +115,11 @@ describe('Partner Reports', function () {
       utils.expectIsNotDisplayed(reports.registeredEndpointsTable);
 
       // quality graphs
-      utils.expectIsDisplayed(reports.partnerMetricsHeader);
-      utils.expectIsDisplayed(reports.partnerMetricsDescription);
+      utils.expectIsDisplayed(reports.metricsHeader);
+      utils.expectIsDisplayed(reports.metricsDescription);
       utils.expectIsDisplayed(reports.callMetricsGraph);
 
-      utils.expectIsDisplayed(reports.partnerMediaHeader);
+      utils.expectIsDisplayed(reports.mediaHeader);
       utils.expectIsDisplayed(reports.mediaDescription);
       utils.expectIsDisplayed(reports.mediaQualityGraph);
     });
@@ -128,9 +128,9 @@ describe('Partner Reports', function () {
       utils.click(reports.allTypes);
 
       // active users
-      utils.expectIsDisplayed(reports.partnerActiveHeader);
-      utils.expectIsDisplayed(reports.activePartnerDescription);
-      utils.expectTextToBeSet(reports.activePartnerDescription, lowerTime[1]);
+      utils.expectIsDisplayed(reports.activeHeader);
+      utils.expectIsDisplayed(reports.activeDescription);
+      utils.expectTextToBeSet(reports.activeDescription, lowerTime[1]);
       utils.expectIsDisplayed(reports.activeUsersChart);
 
       // most active users
@@ -144,20 +144,20 @@ describe('Partner Reports', function () {
       utils.expectIsDisplayed(reports.activePopulationGraph);
 
       // registered endpoints
-      utils.expectIsDisplayed(reports.regEndpointHeader);
+      utils.expectIsDisplayed(reports.endpointsHeader);
       utils.expectIsDisplayed(reports.endpointDescription);
       utils.expectTextToBeSet(reports.endpointDescription, lowerTime[1]);
       utils.expectIsDisplayed(reports.registeredEndpointsTable);
       reports.confirmCustomerInTable(e2eCustomer, reports.registeredEndpointsTable, true);
 
       // call metrics
-      utils.expectIsDisplayed(reports.partnerMetricsHeader);
-      utils.expectIsDisplayed(reports.partnerMetricsDescription);
-      utils.expectTextToBeSet(reports.partnerMetricsDescription, lowerTime[1]);
+      utils.expectIsDisplayed(reports.metricsHeader);
+      utils.expectIsDisplayed(reports.metricsDescription);
+      utils.expectTextToBeSet(reports.metricsDescription, lowerTime[1]);
       utils.expectIsDisplayed(reports.callMetricsGraph);
 
       // device media quality
-      utils.expectIsDisplayed(reports.partnerMediaHeader);
+      utils.expectIsDisplayed(reports.mediaHeader);
       utils.expectIsDisplayed(reports.mediaDescription);
       utils.expectIsDisplayed(reports.mediaQualityGraph);
     });

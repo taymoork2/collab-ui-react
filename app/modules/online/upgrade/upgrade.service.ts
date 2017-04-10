@@ -1,13 +1,19 @@
+import { Notification } from 'modules/core/notifications';
+import { IToolkitModalService, IToolkitModalServiceInstance } from 'modules/core/modal';
+
+export interface IBmmpAttr {
+  subscriptionId: string;
+  productInstanceId: string;
+  changeplanOverride: string;
+}
+
+export interface IProdInst {
+  productInstanceId: string;
+  name: string;
+}
+
 interface ISubscriptionResource extends ng.resource.IResourceClass<ng.resource.IResource<any>> {
   patch: ng.resource.IResourceMethod<any>;
-}
-
-interface IToolkitModalSettings extends ng.ui.bootstrap.IModalSettings {
-  type: string;
-}
-
-interface IToolkitModalService extends ng.ui.bootstrap.IModalService {
-  open(options: IToolkitModalSettings): ng.ui.bootstrap.IModalServiceInstance;
 }
 
 const CANCELLED = 'CANCELLED';
@@ -15,15 +21,16 @@ const CANCEL = 'CANCEL';
 
 export class OnlineUpgradeService {
   private subscriptionResource: ISubscriptionResource;
-  private upgradeModal: ng.ui.bootstrap.IModalServiceInstance;
+  private upgradeModal: IToolkitModalServiceInstance;
 
   /* @ngInject */
   constructor(
+    private $http: ng.IHttpService,
     private $modal: IToolkitModalService,
     private $resource: ng.resource.IResourceService,
     private $q: ng.IQService,
     private Authinfo,
-    private Notification,
+    private Notification: Notification,
     private UrlConfig,
   ) {
     let patchAction: ng.resource.IActionDescriptor = {
@@ -53,7 +60,7 @@ export class OnlineUpgradeService {
   public cancelSubscriptions(): ng.IPromise<any> {
     let hasError = false;
     return this.$q.all(_.map(this.Authinfo.getSubscriptions(), (subscription) => {
-      return this.cancelSubscription(_.get<string>(subscription, 'subscriptionId'))
+      return this.cancelSubscription(_.get<string>(subscription, 'externalSubscriptionId'))
         .catch((response) => {
           hasError = true;
           this.Notification.errorWithTrackingId(response, 'subscriptions.cancelError');
@@ -67,6 +74,34 @@ export class OnlineUpgradeService {
 
   public getSubscriptionId(): string {
     return _.get<string>(this.Authinfo.getSubscriptions(), '[0].subscriptionId');
+  }
+
+  public getProductInstance(userId, subId): ng.IPromise<IProdInst> {
+    return this.$http.get<any>(this.UrlConfig.getAdminServiceUrl() + 'commerce/productinstances?ciUUID=' + userId).then((response) => {
+      const productGroups = _.get(response, 'data.productGroups');
+      const productInstances = _.flatMap(productGroups, 'productInstance');
+      const productInstance = _.find(productInstances, (instance: any) => {
+        return instance.subscriptionInfo.subscriptionId === subId && instance.baseProduct;
+      });
+      return this.getProdInstAttrs(productInstance);
+    });
+  }
+
+  private getProdInstAttrs(productInstance): IProdInst {
+    let prodInst: IProdInst = {
+      productInstanceId: '',
+      name: '',
+    };
+    if (productInstance) {
+      prodInst.productInstanceId = productInstance.productInstanceId;
+      prodInst.name = productInstance.description;
+    }
+
+    return prodInst;
+  }
+
+  public getSubscription(subId): ng.IPromise<any> {
+    return this.$http.get<any>(this.UrlConfig.getAdminServiceUrl() + 'subscriptions/' + subId);
   }
 
   public shouldForceUpgrade(): boolean {

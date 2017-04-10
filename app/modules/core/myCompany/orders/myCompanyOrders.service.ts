@@ -17,14 +17,19 @@ export class MyCompanyOrdersService {
   constructor(
     private $resource: ng.resource.IResourceService,
     private Authinfo,
-    private UrlConfig
+    private UrlConfig,
   ) {
     this.ordersService = this.$resource(this.UrlConfig.getAdminServiceUrl() + 'commerce/purchaseorders/customer/:customerId');
   }
 
   public getOrderDetails(): ng.IPromise<IOrderDetail[]> {
+    // we only want the online account for Order History
+    let customerId = _.get(_.find(this.Authinfo.getCustomerAccounts(), {
+      customerType: 'Online',
+    }), 'customerId', this.Authinfo.getCustomerId());
+
     return this.ordersService.get({
-      customerId: this.Authinfo.getCustomerId(),
+      customerId: customerId,
     }).$promise
       .then(orderList => {
         return _.get<IOrderDetail[]>(orderList, 'commerceOrderList', []);

@@ -1,0 +1,17 @@
+{
+    "directoryNumber": {
+        "url": "https://cmi.huron-int.com/api/v1/voice/customers/226d7977-ff3a-42dc-88ff-f866170a06c8/directorynumbers/e95cf2c0-39a7-456b-9737-f06b708447af",
+        "uuid": "e95cf2c0-39a7-456b-9737-f06b708447af"
+    },
+    "features": [
+        {
+            "name": "demo_updated",
+            "type": "CALL_FEATURE_PICKUP_GROUP",
+            "uuid": "d9f4ebb1-8065-4c12-b4f5-42d190ead898"
+        }
+    ],
+    "number": "2176",
+    "type": "internal",
+    "url": "https://cmi.huron-int.com/api/v2/customers/226d7977-ff3a-42dc-88ff-f866170a06c8/numbers/0a67abb2-79ee-46cd-9891-30597d0ef54f",
+    "uuid": "0a67abb2-79ee-46cd-9891-30597d0ef54f"
+}

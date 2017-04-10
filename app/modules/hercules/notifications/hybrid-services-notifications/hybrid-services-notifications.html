@@ -1,0 +1,18 @@
+<div class="hercules-notifications">
+  <div class="notification-button" ng-click="notificationController.handleClick()" ng-class="[{active: notificationController.showNotifications, clickable: notificationController.filteredNotifications().length > 0}, notificationController.getNumberCSSClass()]">
+    <div class="icon icon-bell"></div>
+    <div class="notification-label" translate="hercules.notificationDropdown.label" translate-values="{number: notificationController.filteredNotifications().length}" translate-interpolation="messageformat"></div>
+  </div>
+  <div class="notification-dropdown-container" ng-if="notificationController.showNotifications && notificationController.filteredNotifications().length > 0">
+    <ul class="notification-dropdown">
+      <li class="notification-entry" ng-repeat="notification in notificationController.filteredNotifications() | orderBy : 'priority'">
+        <div class="notification-entry-severity">
+          <span class="badge" ng-class="notificationController.getBadgeCSSClass(notification.type)">{{::notificationController.typeDisplayName(notification.type)}}</span>
+        </div>
+        <div class="notification-entry-details">
+          <ng-include src="notification.template"></ng-include>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>

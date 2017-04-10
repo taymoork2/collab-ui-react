@@ -1,0 +1,11 @@
+<label class="control-label" translate="serviceSetupModal.defaultCountry"></label>
+<p class="description-block" translate="serviceSetupModal.defaultCountryDescription"></p>
+<div class="medium-5">
+  <cs-select
+    name="defaultCountry"
+    ng-model="$ctrl.selected"
+    options="$ctrl.defaultCountryOptions"
+    on-change-fn="$ctrl.onDefaultCountryChanged()"
+    filter="false">
+  </cs-select>
+</div>

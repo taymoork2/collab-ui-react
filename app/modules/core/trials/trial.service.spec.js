@@ -1,4 +1,5 @@
-/* globals $httpBackend, $q, $rootScope, Config, Authinfo, LogMetricsService, TrialCallService, TrialCareService, TrialDeviceService,TrialMeetingService,TrialWebexService, TrialMessageService, TrialResource, TrialRoomSystemService, TrialService, UrlConfig*/
+/* globals $httpBackend, $q, $rootScope, Config, Authinfo, LogMetricsService, TrialCallService, TrialCareService, TrialAdvanceCareService,TrialDeviceService,TrialMeetingService,TrialWebexService, TrialMessageService, TrialResource, TrialRoomSystemService, TrialSparkBoardService, TrialService, UrlConfig*/
+
 'use strict';
 
 describe('Service: Trial Service:', function () {
@@ -8,7 +9,7 @@ describe('Service: Trial Service:', function () {
 
   beforeEach(function () {
     bard.inject(this, '$httpBackend', '$q', '$rootScope', 'Config', 'Authinfo', 'LogMetricsService',
-      'TrialCallService', 'TrialCareService', 'TrialMeetingService', 'TrialMessageService', 'TrialWebexService', 'TrialResource', 'TrialRoomSystemService', 'TrialDeviceService', 'UrlConfig');
+      'TrialCallService', 'TrialCareService', 'TrialAdvanceCareService', 'TrialMeetingService', 'TrialMessageService', 'TrialWebexService', 'TrialResource', 'TrialRoomSystemService', 'TrialSparkBoardService', 'TrialDeviceService', 'UrlConfig');
   });
 
   beforeEach(function () {
@@ -16,20 +17,20 @@ describe('Service: Trial Service:', function () {
     bard.mockService(Authinfo, {
       getOrgId: '1',
       getLicenses: [{
-        'trialId': 'fake-uuid-value-0'
+        'trialId': 'fake-uuid-value-0',
       }, {
-        'trialId': 'fake-uuid-value-1'
+        'trialId': 'fake-uuid-value-1',
       }, {
-        'trialId': 'fake-uuid-value-2'
-      }]
+        'trialId': 'fake-uuid-value-2',
+      }],
     });
     $httpBackend.whenGET(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials').respond({
       activeDeviceTrials: 17,
-      maxDeviceTrials: 20
+      maxDeviceTrials: 20,
     });
     $httpBackend.whenGET(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials' + '?customerName=searchStr').respond({
       activeDeviceTrials: 17,
-      maxDeviceTrials: 20
+      maxDeviceTrials: 20,
     });
   });
 
@@ -42,6 +43,7 @@ describe('Service: Trial Service:', function () {
     var trialData = getJSONFixture('core/json/trials/trialData.json');
     var trialAddResponse = getJSONFixture('core/json/trials/trialAddResponse.json');
     var trialEditResponse = getJSONFixture('core/json/trials/trialEditResponse.json');
+    var notifyPartnerResponse = getJSONFixture('core/json/trials/notifyPartnerResponse.json');
 
     beforeEach(function () {
       TrialService.getData();
@@ -77,28 +79,43 @@ describe('Service: Trial Service:', function () {
       $httpBackend.flush();
     });
 
+    it('should send a partner notification', function () {
+      $httpBackend.whenPOST(UrlConfig.getAdminServiceUrl() + '/trials/notifypartnertrialextinterest').respond(notifyPartnerResponse);
+      TrialService.notifyPartnerTrialExt().then(function (response) {
+        expect(response.data).toEqual(notifyPartnerResponse);
+        expect(LogMetricsService.logMetrics).toHaveBeenCalled();
+      });
+      $httpBackend.flush();
+    });
+
     describe('start trial with enabled trials', function () {
       beforeEach(function () {
         bard.mockService(TrialMessageService, {
-          getData: trialData.enabled.trials.messageTrial
+          getData: trialData.enabled.trials.messageTrial,
         });
         bard.mockService(TrialMeetingService, {
-          getData: trialData.enabled.trials.meetingTrial
+          getData: trialData.enabled.trials.meetingTrial,
         });
         bard.mockService(TrialWebexService, {
-          getData: trialData.enabled.trials.webexTrial
+          getData: trialData.enabled.trials.webexTrial,
         });
         bard.mockService(TrialCallService, {
-          getData: trialData.enabled.trials.callTrial
+          getData: trialData.enabled.trials.callTrial,
         });
         bard.mockService(TrialCareService, {
-          getData: trialData.enabled.trials.careTrial
+          getData: trialData.enabled.trials.careTrial,
         });
         bard.mockService(TrialRoomSystemService, {
-          getData: trialData.enabled.trials.roomSystemTrial
+          getData: trialData.enabled.trials.roomSystemTrial,
+        });
+        bard.mockService(TrialSparkBoardService, {
+          getData: trialData.enabled.trials.sparkBoardTrial,
         });
         bard.mockService(TrialDeviceService, {
-          getData: trialData.enabled.trials.deviceTrial
+          getData: trialData.enabled.trials.deviceTrial,
+        });
+        bard.mockService(TrialAdvanceCareService, {
+          getData: trialData.enabled.trials.advanceCareTrial,
         });
         TrialService.getData();
       });
@@ -106,10 +123,10 @@ describe('Service: Trial Service:', function () {
       it('should have offers list', function () {
         $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
           var offerList = ['MESSAGE', 'MEETING', 'WEBEX', 'ROOMSYSTEMS', 'CALL'];
-          var offers = angular.fromJson(data).offers;
+          var offers = JSON.parse(data).offers;
           return _.every(offerList, function (offer) {
             return _.some(offers, {
-              id: offer
+              id: offer,
             });
           });
         }).respond(200);
@@ -121,7 +138,7 @@ describe('Service: Trial Service:', function () {
 
       it('should have meeting settings', function () {
         $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
-          var details = angular.fromJson(data).details;
+          var details = JSON.parse(data).details;
           return details.siteUrl === 'now.istomorrow.org' && details.timeZoneId === '4';
         }).respond(200);
 
@@ -134,12 +151,12 @@ describe('Service: Trial Service:', function () {
         $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
           var deviceList = [{
             model: 'CISCO_SX10',
-            quantity: 2
+            quantity: 2,
           }, {
             model: 'CISCO_8865',
-            quantity: 3
+            quantity: 3,
           }];
-          var dataJson = angular.fromJson(data);
+          var dataJson = JSON.parse(data);
           var devices = dataJson.details.devices;
           return _.some(devices, deviceList[0]) && _.some(devices, deviceList[1]) && (dataJson.details.shippingInfo.dealId == 'Enabled deal');
         }).respond(200);
@@ -165,11 +182,11 @@ describe('Service: Trial Service:', function () {
       it('should get state correcty from string', function () {
         testData.shippingInfo.state = 'TX';
         bard.mockService(TrialDeviceService, {
-          getData: testData
+          getData: testData,
         });
         TrialService.getData();
         $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
-          var state = angular.fromJson(data).details.shippingInfo.state;
+          var state = JSON.parse(data).details.shippingInfo.state;
           return state === 'TX';
         }).respond(200);
 
@@ -181,14 +198,14 @@ describe('Service: Trial Service:', function () {
       it('should get state correcty from object', function () {
         testData.shippingInfo.state = {
           'abbr': 'IL',
-          'state': 'Illinois'
+          'state': 'Illinois',
         };
         bard.mockService(TrialDeviceService, {
-          getData: testData
+          getData: testData,
         });
         TrialService.getData();
         $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
-          return angular.fromJson(data).details.shippingInfo.state === 'IL';
+          return JSON.parse(data).details.shippingInfo.state === 'IL';
 
         }).respond(200);
 
@@ -200,12 +217,12 @@ describe('Service: Trial Service:', function () {
       it('should get country correcty from string', function () {
         testData.shippingInfo.country = 'Canada';
         bard.mockService(TrialDeviceService, {
-          getData: testData
+          getData: testData,
         });
         TrialService.getData();
         $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
 
-          return angular.fromJson(data).details.shippingInfo.country === 'Canada';
+          return JSON.parse(data).details.shippingInfo.country === 'Canada';
         }).respond(200);
 
         TrialService.startTrial();
@@ -215,15 +232,15 @@ describe('Service: Trial Service:', function () {
 
       it('should get country correcty from object', function () {
         testData.shippingInfo.country = {
-          'country': 'Germany'
+          'country': 'Germany',
         };
         bard.mockService(TrialDeviceService, {
-          getData: testData
+          getData: testData,
         });
         TrialService.getData();
         $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
 
-          return angular.fromJson(data).details.shippingInfo.country === 'Germany';
+          return JSON.parse(data).details.shippingInfo.country === 'Germany';
         }).respond(200);
 
         TrialService.startTrial();
@@ -236,7 +253,7 @@ describe('Service: Trial Service:', function () {
     describe('start trial with disabled trials', function () {
       it('should have blank offers list', function () {
         $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
-          return angular.fromJson(data).offers.length === 0;
+          return JSON.parse(data).offers.length === 0;
         }).respond(200);
 
         TrialService.startTrial();
@@ -246,7 +263,7 @@ describe('Service: Trial Service:', function () {
 
       it('should have blank details', function () {
         $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
-          var details = angular.fromJson(data).details;
+          var details = JSON.parse(data).details;
           return _.isEmpty(details.devices) && _.isEmpty(details.offers);
         }).respond(200);
 
@@ -259,14 +276,14 @@ describe('Service: Trial Service:', function () {
     describe('start call trial with skipped devices', function () {
       beforeEach(function () {
         bard.mockService(TrialCallService, {
-          getData: trialData.enabled.trials.skipDeviceTrial
+          getData: trialData.enabled.trials.skipDeviceTrial,
         });
         TrialService.getData();
       });
 
       it('should not have devices if call trial order page was skipped', function () {
         $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
-          var devices = angular.fromJson(data).details.devices;
+          var devices = JSON.parse(data).details.devices;
           return _.isEmpty(devices);
         }).respond(200);
 
@@ -282,7 +299,7 @@ describe('Service: Trial Service:', function () {
     var fakeTrialId = 'fake-uuid-value-1000';
     var fakeTrialPeriodData = {
       startDate: '2015-12-06T00:00:00.000Z',
-      trialPeriod: 90
+      trialPeriod: 90,
     };
     var fakeToday, fakeStartDate;
 
@@ -306,8 +323,8 @@ describe('Service: Trial Service:', function () {
         beforeEach(function () {
           getDaysLeftForCurrentUser = TrialService.getDaysLeftForCurrentUser;
           spyOn(TrialService, 'getTrialIds').and.returnValue([fakeTrialId]);
-          spyOn(TrialService, 'getExpirationPeriod').and.returnValue($q.when(1));
-          spyOn(TrialService, 'getTrialPeriodData').and.returnValue($q.when(fakeTrialPeriodData));
+          spyOn(TrialService, 'getExpirationPeriod').and.returnValue($q.resolve(1));
+          spyOn(TrialService, 'getTrialPeriodData').and.returnValue($q.resolve(fakeTrialPeriodData));
         });
 
         it('should resolve with the return value from "TrialService.getExpirationPeriod()"', function () {
@@ -332,7 +349,7 @@ describe('Service: Trial Service:', function () {
       describe('getTrialPeriodData():', function () {
         describe('successful fetch of trial data:', function () {
           beforeEach(function () {
-            spyOn(TrialService, 'getTrial').and.returnValue($q.when(fakeTrialPeriodData));
+            spyOn(TrialService, 'getTrial').and.returnValue($q.resolve(fakeTrialPeriodData));
           });
 
           describe('resolves with an object that:', function () {
@@ -353,14 +370,14 @@ describe('Service: Trial Service:', function () {
         describe('failed fetch of trial data:', function () {
           beforeEach(function () {
             spyOn(TrialService, 'getTrial').and.returnValue($q.reject({
-              message: 'getTrial failed'
+              message: 'getTrial failed',
             }));
           });
 
           it('should bubble up rejection that that caused "getTrial" to reject', function () {
             TrialService.getTrialPeriodData(fakeTrialId).catch(function (reason) {
               expect(reason).toEqual({
-                message: 'getTrial failed'
+                message: 'getTrial failed',
               });
             });
           });
@@ -375,9 +392,9 @@ describe('Service: Trial Service:', function () {
             });
 
             it('should resolve with 29, given 1 day passed since the start date and trial period is 30', function () {
-              var fakeTrialPeriodData = $q.when({
+              var fakeTrialPeriodData = $q.resolve({
                 startDate: '2016-01-01T00:00:00.000Z',
-                trialPeriod: 30
+                trialPeriod: 30,
               });
               spyOn(TrialService, 'getTrialPeriodData').and.returnValue(fakeTrialPeriodData);
 
@@ -388,9 +405,9 @@ describe('Service: Trial Service:', function () {
             });
 
             it('should resolve with 30, given start date and current date are the same and trial period is 30', function () {
-              var fakeTrialPeriodData = $q.when({
+              var fakeTrialPeriodData = $q.resolve({
                 startDate: '2016-01-02T00:00:00.000Z',
-                trialPeriod: 30
+                trialPeriod: 30,
               });
               spyOn(TrialService, 'getTrialPeriodData').and.returnValue(fakeTrialPeriodData);
 
@@ -401,9 +418,9 @@ describe('Service: Trial Service:', function () {
             });
 
             it('should resolve with -1, given 31 days passed since the start date and trial period is 30', function () {
-              var fakeTrialPeriodData = $q.when({
+              var fakeTrialPeriodData = $q.resolve({
                 startDate: '2015-12-02T00:00:00.000Z',
-                trialPeriod: 30
+                trialPeriod: 30,
               });
               spyOn(TrialService, 'getTrialPeriodData').and.returnValue(fakeTrialPeriodData);
 
@@ -541,8 +558,8 @@ describe('Service: Trial Service:', function () {
             key: org,
             value: 'Test Name',
             isValid: 'true',
-            isExist: 'false'
-          }]
+            isExist: 'false',
+          }],
         };
       });
 
@@ -551,42 +568,42 @@ describe('Service: Trial Service:', function () {
       });
 
       it('should return unique', function () {
-        $httpBackend.whenPOST(UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke').respond(angular.toJson(valData));
+        $httpBackend.whenPOST(UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke').respond(JSON.stringify(valData));
         expectShallowVal(org, {
-          unique: true
+          unique: true,
         });
       });
 
       it('should return error in use', function () {
         valData.properties[0].isExist = 'true';
-        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke').respond(angular.toJson(valData));
+        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke').respond(JSON.stringify(valData));
         expectShallowVal(org, {
-          error: 'trialModal.errorInUse'
+          error: 'trialModal.errorInUse',
         });
       });
 
       it('should return error invalid name', function () {
         valData.properties[0].isValid = 'false';
-        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke').respond(angular.toJson(valData));
+        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke').respond(JSON.stringify(valData));
         expectShallowVal(org, {
-          error: 'trialModal.errorInvalidName'
+          error: 'trialModal.errorInvalidName',
         });
       });
 
       it('should return error invalid', function () {
         valData.properties[0].key = email;
         valData.properties[0].isValid = 'false';
-        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke').respond(angular.toJson(valData));
+        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke').respond(JSON.stringify(valData));
         expectShallowVal(email, {
-          error: 'trialModal.errorInvalid'
+          error: 'trialModal.errorInvalid',
         });
       });
 
       it('should return error server down', function () {
         valData = {};
-        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke').respond(angular.toJson(valData));
+        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke').respond(JSON.stringify(valData));
         expectShallowVal(org, {
-          error: 'trialModal.errorServerDown'
+          error: 'trialModal.errorServerDown',
         });
       });
 
@@ -596,7 +613,7 @@ describe('Service: Trial Service:', function () {
         }).respond(501);
         expectShallowVal(org, {
           error: 'trialModal.errorServerDown',
-          status: 501
+          status: 501,
         });
       });
     });

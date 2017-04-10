@@ -10,7 +10,7 @@
         <i class="message-box__icon icon-circle-comp-negative"></i>
         <h3 class="message-box__title message-box__title--alert activate-error" translate="activation.codeExpired" translate-values="{ deviceName: deviceName }"></h3>
         <h5 class="message-box__details" translate="activation.requestNewCode" translate-values="{ deviceName: deviceName, userEmail:userEmail }"></h5>
-        <button id="sendCodeLink" class="btn btn--people btn--expand" ng-click="resendCode()" translate="activation.sendCodeLink"></button>
+        <button id="sendCodeLink" class="btn btn--people" ng-click="resendCode()" translate="activation.sendCodeLink"></button>
       </section>
       <section class="message-box__content" id="resendSuccess" ng-show="result.resendSuccess">
         <i class="message-box__icon icon-circle-check"></i>

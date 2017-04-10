@@ -5,7 +5,7 @@
   <h3 class="modal-title" translate="hercules.fusion.add-resource.title"></h3>
 </div>
 <div class="modal-body add-resource-modal">
-  <h4 translate="hercules.addResourceDialog.enterHostname"></h4>
+  <h4 translate="hercules.addResourceDialog.registerNewExpressway"></h4>
   <form name="hostnameForm" novalidate>
     <div class="row">
       <div class="cs-input-group medium-12 columns">
@@ -20,7 +20,8 @@
           ng-minlength="{{vm.minlength}}"
           ng-keypress="vm.handleKeypress($event)"
           ng-required="true"
-          ng-model="vm.hostname">
+          ng-model="vm.hostname"
+          cs-input-help-text="{{vm._translation.help}}">
       </div>
     </div>
   </form>

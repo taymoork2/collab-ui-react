@@ -2,55 +2,20 @@
   'use strict';
 
   /* @ngInject  */
-  function CsdmCodeService($http, Authinfo, CsdmConfigService, CsdmConverter) {
+  function CsdmCodeService($http, Authinfo, UrlConfig, CsdmConverter) {
 
-    var codesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/codes';
-
-    function fetchCodes() {
-      return $http.get(codesUrl).then(function (res) {
-        return CsdmConverter.convertCodes(res.data);
-      });
-    }
-
-    function updateItemName(code, name) {
-      return $http.patch(code.url, {
-        name: name
-      });
-    }
-
-    function updateTags(url, tags) {
-      return $http.patch(url, {
-        description: JSON.stringify(tags || [])
-      });
-    }
-
-    function deleteCode(code) {
-      return $http.delete(code.url);
-    }
-
-    function createCode(name) {
-      return $http.post(codesUrl, {
-        name: name
-      }).then(function (res) {
-        return CsdmConverter.convertCode(res.data);
-      });
-    }
+    var codesUrl = UrlConfig.getCsdmServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/codes';
 
     function createCodeForExisting(cisUuid) {
       return $http.post(codesUrl, {
-        cisUuid: cisUuid
+        cisUuid: cisUuid,
       }).then(function (res) {
         return CsdmConverter.convertCode(res.data);
       });
     }
 
     return {
-      fetchCodes: fetchCodes,
-      deleteItem: deleteCode,
-      updateTags: updateTags,
-      createCode: createCode,
       createCodeForExisting: createCodeForExisting,
-      updateItemName: updateItemName
     };
   }
 

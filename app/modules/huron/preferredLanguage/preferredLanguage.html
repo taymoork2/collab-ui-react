@@ -1,0 +1,23 @@
+<cs-sp-section>
+    <div class="section-title-row">
+        <span class="section-name" translate="preferredLanguage.title"></span>
+    </div>
+    <p class="description-block" 
+        ng-show="$ctrl.hasSparkCall"
+        translate="preferredLanguage.description"></p>
+    <p class="description-block" 
+        ng-hide="$ctrl.hasSparkCall"
+        translate="preferredLanguage.descriptionForCloudberryDevice"></p> 
+    <div cs-loader ng-if="$ctrl.hasSparkCall" ng-hide="$ctrl.plIsLoaded"></div>
+    <div ng-if="$ctrl.hasSparkCall" ng-show="$ctrl.plIsLoaded">
+        <cs-select
+            name="languageSelect"
+            ng-model="$ctrl.optionSelected"
+            options="$ctrl.options"
+            labelfield="label"
+            valuefield="value"
+            filter="false"
+            on-change-fn="$ctrl.onChangePreferredLanugage()"
+        ></cs-select>
+    </div>
+</cs-sp-section>

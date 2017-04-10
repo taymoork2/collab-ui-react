@@ -1,3 +1,8 @@
+@import 'modules/core/setupWizard/planReview/plan-container';
+
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/typography';
+
 .modal-useradd-dialog {
   width: 900px;
 }
@@ -18,10 +23,7 @@
   min-height: 225px;
   margin-bottom: 40px;
   margin-top: 35px;
-  padding-left: 30px;
-  padding-right: 30px;
-  padding-top: 25px;
-  padding-bottom: 29px;
+  padding: 25px 30px 29px;
 }
 
 .modal-useradd-body {
@@ -41,7 +43,6 @@
     padding-bottom: 20px;
   }
 }
-
 
 .modal-icon-flex-row {
   width: 33px;
@@ -63,10 +64,11 @@
     color: $color-negative-base;
 
     .icon-error {
-      margin-right: .5rem;
-      margin-top: .4rem;
+      margin-right: 0.5rem;
+      margin-top: 0.4rem;
       font-size: medium;
     }
+
     p {
       display: inline-block;
     }
@@ -121,10 +123,7 @@
 .hr-style {
   border: 0;
   height: 1px;
-  background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
-  background-image: -moz-linear-gradient(left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
-  background-image: -ms-linear-gradient(left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
-  background-image: -o-linear-gradient(left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
   margin-top: 5px;
   margin-bottom: 15px;
   border-top: 1px solid #dddddd;
@@ -246,8 +245,6 @@
 }
 
 .warning-icon {
-  @extend .icon;
-  @extend .icon-warning;
   margin-right: 12px;
   font-size: 15px;
   color: $brand-warning;
@@ -270,6 +267,7 @@
   float: left;
   min-height: 135px;
   min-width: 250px;
+
   label {
     margin-bottom: 0px;
   }
@@ -304,25 +302,28 @@
 .onboard-users .user-name-email-input {
   display: flex;
   align-items: center;
+
   .flex1 {
     flex: 1;
     margin-right: 5px;
   }
+
   .flex2 {
     flex: 2;
     margin-right: 5px;
   }
+
   .plus-icon {
-    @extend .icon;
-    @extend .icon-plus;
     border-radius: 50%;
     font-size: 25px;
     margin-left: 10px;
   }
+
   .plus-icon-inactive {
     color: $gray-lighter;
     background-color: $gray-lightest;
   }
+
   .plus-icon-active {
     cursor: pointer;
     color: $brand-white;
@@ -330,9 +331,9 @@
   }
 }
 
-/*-------------------------------------------------------------------
-  US196818 | Atlas - Add User Modal Update
--------------------------------------------------------------------*/
+// ------------------------------------------------------------------
+//  US196818 | Atlas - Add User Modal Update
+// ------------------------------------------------------------------
 
 .add-users,
 .edit-services {
@@ -341,22 +342,12 @@
       width: 100%;
       text-align: center;
       margin: 40px auto;
+
       &.ng-enter,
       &.ng-leave {
         transition: none;
       }
-      /* starting animations for enter */
-      &.ng-enter {
-      }
-      /* terminal animations for enter */
-      &.ng-enter.ng-enter-active {
-      }
-      /* starting animations for leave */
-      &.ng-leave {
-      }
-      /* terminal animations for leave */
-      &.ng-leave.ng-leave-active {
-      }
+
       .icon {
         font-size: 75px;
       }
@@ -376,11 +367,13 @@
   .tokenfield.form-control,
   .tokenfield.form-control-static {
     width: 100% !important;
+
     input.token-input {
       margin-top: 0;
       padding: 6px;
     }
   }
+
   .wizard-main & {
     margin-left: 2px;
     margin-right: 2px;
@@ -425,14 +418,64 @@
   }
 }
 
+.license-entity-type {
+  font-family: $brand-font-light;
+  font-size: 14px;
+  color: $gray-base;
+  display: block;
+}
+
+.license-entity {
+  font-family: $brand-font-light;
+  font-size: 12px;
+  color: $gray-base;
+  display: block;
+}
+
+.license-entity-disable {
+  font-family: $brand-font-light;
+  font-size: 0.75rem;
+  color: $gray-light-1;
+  display: block;
+}
+
+.license-siteUrl {
+  color: $color-primary-base;
+  font-family: $brand-font-light;
+  font-size: 12px;
+}
+
+.under-label-reposition {
+  margin-top: -12px;
+  margin-left: 32px;
+}
+
+.product-entity-reposition {
+  margin-left: 16px;
+}
+
+.license-entity-tooltip {
+  color: $color-primary-base;
+  font-size: 12px;
+}
+
+.license-tooltip-html {
+  font-size: 12px;
+  text-align: center;
+  width: 170px;
+  height: auto;
+}
+
 .wizard-main {
   .title-separator-pipe {
     color: $gray-light;
   }
+
   .onboard-label {
     margin-bottom: 20px;
     margin-top: 10px;
   }
+
   .wizard-main-title {
     color: $gray-dark-1;
   }
@@ -463,57 +506,70 @@
     padding-right: 0px;
     height: calc(100vh - 370px);
     width: 100%;
+
     .ngTopPanel {
       width: 100% !important;
       background-color: $gray-lightest;
       border-bottom: 1px solid $gray-light;
       box-sizing: content-box;
     }
+
     .ngHeaderContainer {
       width: 100% !important;
     }
+
     .ngHeaderRow {
       width: 100%;
     }
+
     .ngHeaderCell {
       width: 100%;
     }
+
     .ngHeaderText {
       padding-left: 20px;
     }
+
     .ngViewport {
       width: 100% !important;
     }
+
     .ngCanvas {
       margin-top: 10px;
       width: 100% !important;
     }
+
     .ngRow {
       border-width: 0px;
-      /* affects borders around grid rows */
+      // affects borders around grid rows
       width: 100%;
     }
+
     .ngRow:hover {
       background-color: transparent;
     }
+
     .ngCell {
       padding-top: 10px;
       padding-bottom: 10px;
     }
+
     .ngCellText {
       padding-top: 0px;
       padding-bottom: 0px;
       padding-left: 20px;
     }
+
     .name-display-style {
       font-size: 14px;
       color: $gray-darkest;
       text-align: left;
-      line-height: 1.0;
+      line-height: 1;
       display: block;
       margin-top: 0px;
       margin-bottom: 0px;
     }
+
     .email-display-style {
       font-family: Arial;
       font-size: 12px;
@@ -522,6 +578,7 @@
       margin-top: 0px;
       margin-bottom: 0px;
     }
+
     .error,
     .warning {
       font-family: Arial;
@@ -529,83 +586,69 @@
       text-align: left;
     }
   }
+
   .select-list {
     padding-top: 0px;
     padding-left: 0px;
   }
+
   .select-list.colt1 {
     width: 200px;
   }
+
   .select-list.colt2 {
     width: 90px;
     margin-left: auto;
     margin-right: auto;
   }
+
   .selected {
     a {
       background-color: transparent;
     }
+
     a .icon {
       background-color: transparent;
     }
   }
+
   .form-control.select-toggle {
     padding-top: 8px;
   }
+
   .form-control[disabled].select-toggle {
     border: 1px solid $brand-danger;
     background-color: transparent;
-    .icon-arrow-down {
-      &:after {
-        /*this is the X icon that appears when no DNs are available*/
-        @extend %icon-error;
-        top: 0;
-        left: -12px;
-        position: absolute;
-        font-size: 18px;
-        line-height: 35px;
-        height: 17px;
-        width: 17px;
-        color: $brand-danger;
-      }
-    }
   }
+
   .select-warning .select-toggle {
     border: 1px solid $brand-warning-dark;
     background-color: transparent;
-    .icon-arrow-down {
-      &:after {
-        /*this is the X icon that appears when no DNs are available*/
-        @extend %icon-warning;
-        top: 0;
-        left: -12px;
-        position: absolute;
-        font-size: 18px;
-        line-height: 35px;
-        height: 17px;
-        width: 17px;
-        color: $brand-warning-dark;
-      }
-    }
   }
+
   .icon-arrow-down {
     padding-top: 0;
   }
+
   .ngHeaderText.colt2 {
     text-align: center;
   }
+
   .ngCell.colt2 {
     overflow: visible;
     padding-left: 20px;
+
     .dropdown-menu {
       right: 25px;
       left: auto;
       top: 70%;
     }
   }
+
   .ngCell.colt1 {
     overflow: visible;
     padding-left: 20px;
+
     .dropdown-menu {
       top: 70%;
     }
@@ -614,4 +657,25 @@
 
 .users-upload-results {
   min-height: 0px;
+}
+
+.care-information-text {
+  display: block;
+}
+
+.under-careradio-reposition {
+  @include vr-spacing(mb, 0.8);
+}
+
+.entitle-check-grp {
+  .icon-warning {
+    color: $color-attention-base;
+    @include vr-spacing(mt, 0.4);
+    @include vr-spacing(ml, 0.15);
+  }
+
+  .under-label-caremsg-reposition {
+    @include vr-spacing(mt, -0.75);
+    @include vr-spacing(ml, 2);
+  }
 }

@@ -7,11 +7,11 @@
       return $injector.instantiate(CsdmPollerInstance, {
         hub: hub,
         service: service,
-        options: options || {}
+        options: options || {},
       });
     }
     return {
-      create: create
+      create: create,
     };
   }
 
@@ -19,7 +19,7 @@
     return {
       create: function () {
         return new Hub();
-      }
+      },
     };
   }
 
@@ -90,7 +90,7 @@
       on: on,
       emit: emit,
       count: count,
-      onListener: onListener
+      onListener: onListener,
     };
   }
 
@@ -119,7 +119,7 @@
       function notifyAll(err, data) {
         hub.emit('data', {
           error: err,
-          data: data
+          data: data,
         });
         if (hub.count('data') > 0) {
           pollPromise = $timeout(poll, pollDelay);
@@ -146,7 +146,7 @@
     return {
       forceAction: forceAction,
       updateDelay: updateDelay,
-      resetDelay: resetDelay
+      resetDelay: resetDelay,
     };
   }
 

@@ -1,3 +1,5 @@
+require('./_domainManagement.scss');
+
 namespace domainManagement {
 
   class DomainManageVerifyCtrl {
@@ -97,7 +99,7 @@ namespace domainManagement {
         status,
         startLog,
         1,
-        data
+        data,
       );
     }
   }

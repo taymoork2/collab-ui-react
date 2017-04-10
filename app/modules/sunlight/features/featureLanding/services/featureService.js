@@ -2,18 +2,20 @@
   'use strict';
 
   angular
-    .module('Sunlight')
-    .service('CareFeatureList', CareFeatureList);
+      .module('Sunlight')
+      .service('CareFeatureList', CareFeatureList);
 
   /* @ngInject */
-  function CareFeatureList($filter, Authinfo, ConfigTemplateService) {
+  function CareFeatureList(Authinfo, ConfigTemplateService) {
 
     var service = {
       getChatTemplates: getChatTemplates,
-      formatChatTemplates: formatChatTemplates,
-      deleteChatTemplate: deleteChatTemplate,
-      getChatTemplate: getChatTemplate,
-      filterCards: filterCards
+      getCallbackTemplates: getCallbackTemplates,
+      getChatPlusCallbackTemplates: getChatPlusCallbackTemplates,
+      getTemplate: getTemplate,
+      formatTemplates: formatTemplates,
+      deleteTemplate: deleteTemplate,
+      filterCards: filterCards,
     };
 
     return service;
@@ -21,21 +23,35 @@
     function getChatTemplates() {
       return ConfigTemplateService.query({
         orgId: Authinfo.getOrgId(),
-        mediaType: 'chat'
+        mediaType: 'chat',
       }).$promise;
     }
 
-    function deleteChatTemplate(templateId) {
+    function getCallbackTemplates() {
+      return ConfigTemplateService.query({
+        orgId: Authinfo.getOrgId(),
+        mediaType: 'callback',
+      }).$promise;
+    }
+
+    function getChatPlusCallbackTemplates() {
+      return ConfigTemplateService.query({
+        orgId: Authinfo.getOrgId(),
+        mediaType: 'chatPlusCallback',
+      }).$promise;
+    }
+
+    function deleteTemplate(templateId) {
       return ConfigTemplateService.delete({
         orgId: Authinfo.getOrgId(),
-        templateId: templateId
+        templateId: templateId,
       }).$promise;
     }
 
-    function getChatTemplate(templateId) {
+    function getTemplate(templateId) {
       return ConfigTemplateService.get({
         orgId: Authinfo.getOrgId(),
-        templateId: templateId
+        templateId: templateId,
       }).$promise;
     }
 
@@ -46,21 +62,34 @@
       });
     }
 
-    function filterCards(list, filterText) {
-      var filteredList = $filter('filter')(list, {
-        name: filterText
+    function filterCards(list, filterValue, filterText) {
+      var filterStringProperties = [
+        'name',
+      ];
+      var filteredList = _.filter(list, function (feature) {
+        if (feature.mediaType !== filterValue && filterValue !== 'all') {
+          return false;
+        }
+        if (_.isEmpty(filterText)) {
+          return true;
+        }
+        var matchedStringProperty = _.some(filterStringProperties, function (stringProperty) {
+          return _.includes(_.get(feature, stringProperty).toLowerCase(), filterText.toLowerCase());
+        });
+        return matchedStringProperty;
       });
-
-      return orderByCardName(filteredList);
+      return filteredList;
     }
 
-    function formatChatTemplates(list) {
+    function formatTemplates(list, feature) {
       var formattedList = _.map(list, function (tpl) {
-        tpl.featureType = 'CT';
-        tpl.color = 'attention';
+        tpl.featureType = feature.name;
+        tpl.color = feature.color;
+        tpl.icons = feature.icons;
         return tpl;
       });
       return orderByCardName(formattedList);
+
     }
 
   }

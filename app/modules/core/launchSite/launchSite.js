@@ -13,8 +13,8 @@
     };
 
     $scope.getId = function (url) {
-      var match = url.match(/^https?:\/\/([^:\/?#]*)/);
-      return match[1].replace(/\./g, '-');
+      var match = url.match(/^https?:\/\/([^:/?#]*)/);
+      return _.replace(match[1], /\./g, '-');
     };
 
     $scope.submitForm = function () {
@@ -33,9 +33,9 @@
         advancedSettings: '@',
         adminEmailParam: '@',
         userEmailParam: '@',
-        webexAdvancedUrl: '@'
+        webexAdvancedUrl: '@',
       },
-      templateUrl: 'modules/core/launchSite/launchSite.tpl.html'
+      templateUrl: 'modules/core/launchSite/launchSite.tpl.html',
     };
   }
 })();

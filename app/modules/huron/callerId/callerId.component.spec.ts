@@ -2,31 +2,33 @@ describe('component: callerId', () => {
   const CALLERID_SELECT = '.csSelect-container[name="callerIdSelection"]';
   const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
   const CALLERIDNAME_INPUT = 'input[name="callerIdName"]';
-  const CALLERIDNUMBER_INPUT = 'input[name="callerIdNumber"]';
+  const CALLERIDNUMBER_INPUT = 'phone-number input';
 
   beforeEach(function() {
     this.initModules('huron.caller-id');
-    this.injectDependencies('$scope', '$timeout');
+    this.injectDependencies('$scope', '$timeout', '$q', 'CallerIDService', 'HuronCustomerService', 'TelephoneNumberService');
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
+    this.$scope.myForm = {
+      $dirty: true,
+    };
+    this.callDestInputs = ['external'];
     this.$scope.callerIdOptions = [{
       label: 'Custom',
-      value: {
-        name: '',
-        externalCallerIdType: 'Custom',
-      },
+      value: 'EXT_CALLER_ID_CUSTOM',
     }, {
       label: 'Blocked Outbound Caller ID',
-      value: {
-        name: 'Caller will not see any caller ID or number',
-        externalCallerIdType: 'Blocked Outbound Caller ID',
-      },
+      value: 'EXT_CALLER_ID_BLOCKED_CALLER_ID',
     }];
+    this.$scope.companyNumbers = [];
+    this.$scope.callerIdSelected = 'EXT_CALLER_ID_BLOCKED_CALLER_ID';
+    spyOn(this.HuronCustomerService, 'getVoiceCustomer').and.returnValue(this.$q.resolve({}));
     this.compileComponent('ucCallerId', {
       callerIdOptions: 'callerIdOptions',
       callerIdSelected: 'callerIdSelected',
       customCallerIdName: 'customCallerIdName',
       customCallerIdNumber: 'customCallerIdNumber',
       onChangeFn: 'onChangeFn(callerIdSelected, customCallerIdName, customCallerIdNumber)',
+      companyNumbers: 'companyNumbers',
     });
   });
 
@@ -36,12 +38,12 @@ describe('component: callerId', () => {
     expect(this.view.find(CALLERIDNAME_INPUT)).not.toExist();
   });
 
-  it('should invoke onChangeFn with internalNumber on option click', function () {
+  it('should invoke onChangeFn with external on option click', function () {
     this.view.find(CALLERID_SELECT).find(DROPDOWN_OPTIONS).get(0).click();
     expect(this.$scope.onChangeFn).toHaveBeenCalledWith(
       this.$scope.callerIdOptions[0],
       undefined,
-      undefined
+      undefined,
     );
     this.$timeout.flush(); // for cs-select
     expect(this.view.find(CALLERIDNAME_INPUT)).toExist();
@@ -49,13 +51,20 @@ describe('component: callerId', () => {
     expect(this.$scope.onChangeFn).toHaveBeenCalledWith(
       this.$scope.callerIdOptions[0],
       'Field',
-      undefined
+      undefined,
     );
-    this.view.find(CALLERIDNUMBER_INPUT).val('8179325799').change().blur();
-    expect(this.$scope.onChangeFn).toHaveBeenCalledWith(
-      this.$scope.callerIdOptions[0],
-      'Field',
-      '8179325799'
-    );
+    this.view.find(CALLERIDNUMBER_INPUT).val('+1 214-932-5799').change().blur();
+    expect(this.$scope.onChangeFn).toHaveBeenCalled();
+  });
+
+  it('showCustom returns whether its a custom or not', function() {
+    this.controller.callerIdSelected = {
+      label: 'Custom',
+    };
+    expect(this.controller.showCustom()).toBe(true);
+    this.controller.callerIdSelected = {
+      label: 'Blocked Outbound Caller ID',
+    };
+    expect(this.controller.showCustom()).toBe(false);
   });
 });

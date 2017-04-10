@@ -1,17 +1,30 @@
 export class CommonGraphService {
+  public readonly AXIS: string = 'axis';
+  public readonly CENTER: string = 'center';
+  public readonly COLOR: string = 'color';
+  public readonly COLUMN: string = 'column';
+  public readonly CURSOR: string = 'cursor';
+  public readonly DATE: string = 'date';
+  public readonly LEGEND: string = 'legend';
+  public readonly LINE: string = 'line';
+  public readonly LINE_AXIS: string = 'lineAxis';
+  public readonly NUMFORMAT: string = 'numFormat';
+  public readonly PREFIXES: string = 'prefixesOfBigNumbers';
+  public readonly SINGLE_LINE: string = 'singleLine';
+  public readonly START: string = 'start';
+  public readonly TITLE: string = 'title';
+
   /* @ngInject */
   constructor(
     private chartColors,
-    private $translate,
-    private $window
   ) {}
 
   private baseVariables = {
     axis: {
-      axisColor: this.chartColors.grayLight,
-      gridColor: this.chartColors.grayLight,
-      color: this.chartColors.grayDarkest,
-      titleColor: this.chartColors.grayDarkest,
+      axisColor: this.chartColors.grayLightTwo,
+      gridColor: this.chartColors.grayLightTwo,
+      color: this.chartColors.grayDarkThree,
+      titleColor: this.chartColors.grayDarkThree,
       fontFamily: 'CiscoSansTT Light',
       gridAlpha: 0,
       axisAlpha: 1,
@@ -29,7 +42,7 @@ export class CommonGraphService {
       type: 'column',
       fillAlphas: 1,
       lineAlpha: 0,
-      balloonColor: this.chartColors.grayLight,
+      balloonColor: this.chartColors.grayLightTwo,
       columnWidth: 0.6,
     },
     cursor: {
@@ -41,35 +54,14 @@ export class CommonGraphService {
     },
     export: {
       enabled: true,
-      position: 'top-left',
       libs: {
         autoLoad: false,
       },
-      menu: [{
-        class: 'export-main',
-        label: this.$translate.instant('reportsPage.downloadOptions'),
-        menu: [{
-          label: this.$translate.instant('reportsPage.saveAs'),
-          title: this.$translate.instant('reportsPage.saveAs'),
-          class: 'export-list',
-          menu: ['PNG', 'JPG'],
-        }, {
-          label: this.$translate.instant('reportsPage.pdf'),
-          title: this.$translate.instant('reportsPage.pdf'),
-          click: _.partial(function (commonGraphService: CommonGraphService) {
-            this.capture({}, function () {
-              this.toPDF({}, function (data) {
-                commonGraphService.$window.open(data, 'amCharts.pdf');
-              });
-            });
-          }, this),
-        }],
-      }],
+      menu: [],
     },
     legend: {
-      color: this.chartColors.grayDarkest,
-      align: 'center',
-      autoMargins: false,
+      color: this.chartColors.grayDarkThree,
+      align: this.CENTER,
       switchable: false,
       fontSize: 13,
       markerLabelGap: 10,
@@ -83,12 +75,35 @@ export class CommonGraphService {
       verticalGap: 20,
     },
     line: {
-      type: 'line',
+      type: this.LINE,
+      bullet: 'none',
+      fillAlphas: 0.5,
+      lineAlpha: 0.5,
+      lineThickness: 1,
+      hidden: false,
+    },
+    singleLine: {
+      type: this.LINE,
       bullet: 'round',
+      bulletBorderAlpha: 1,
+      bulletColor: this.chartColors.brandWhite,
+      bulletSize: 5,
       fillAlphas: 0,
       lineAlpha: 1,
       lineThickness: 3,
-      hidden: false,
+      hideBulletsCount: 25,
+      useLineColorForBulletBorder: true,
+    },
+    lineAxis: {
+      axisColor: this.chartColors.grayLightTwo,
+      gridColor: this.chartColors.grayLightTwo,
+      color: this.chartColors.grayDarkThree,
+      titleColor: this.chartColors.grayDarkThree,
+      fontFamily: 'CiscoSansTT Light',
+      gridAlpha: 1,
+      axisAlpha: 1,
+      tickLength: 5,
+      startOnAxis: true,
     },
     numFormat: {
       precision: 0,
@@ -108,49 +123,41 @@ export class CommonGraphService {
       number: 1e+12,
       prefix: 'T',
     }],
-    scroll: {
-      autoGridCount: true,
-    },
   };
 
   public getBaseVariable(key: string): any {
     if (this.baseVariables[key]) {
-      return _.clone(this.baseVariables[key]);
+      return _.cloneDeep(this.baseVariables[key]);
     } else {
       return;
     }
   }
 
   public getBaseSerialGraph(data: Array<any>, startDuration: number, valueAxes: Array<any>, graphs: Array<any>, categoryField: string, catAxis: any): any {
-    return _.clone({
+    return _.cloneDeep({
       type: 'serial',
       startEffect: 'easeOutSine',
       addClassNames: true,
       fontFamily: 'CiscoSansTT Extra Light',
       backgroundColor: this.chartColors.brandWhite,
       backgroundAlpha: 1,
-      balloon: this.baseVariables['balloon'],
-      autoMargins: false,
-      marginLeft: 60,
-      marginTop: 60,
-      marginRight: 60,
-      usePrefixes: true,
-      prefixesOfBigNumbers: this.baseVariables['prefixesOfBigNumbers'],
-      export: this.baseVariables['export'],
+      balloon: this.getBaseVariable('balloon'),
+      export: this.getBaseVariable('export'),
       startDuration: startDuration,
       dataProvider: data,
       valueAxes: valueAxes,
       graphs: graphs,
       categoryField: categoryField,
       categoryAxis: catAxis,
+      zoomOutText: '',
     });
   }
 
   public getBasePieChart(data: Array<any>, balloonText: string, innerRadius: string, radius: string, labelText: string, labelsEnabled: boolean, titleField: string, valueField: string, colorField: string, labelColorField: string): any {
-    return _.clone({
+    return _.cloneDeep({
       type: 'pie',
-      balloon: this.baseVariables['balloon'],
-      export: this.baseVariables['export'],
+      balloon: this.getBaseVariable('balloon'),
+      export: this.getBaseVariable('export'),
       fontFamily: 'Arial',
       fontSize: 14,
       percentPrecision: 0,
@@ -171,6 +178,3 @@ export class CommonGraphService {
     });
   }
 }
-
-angular.module('Core')
-  .service('CommonGraphService', CommonGraphService);

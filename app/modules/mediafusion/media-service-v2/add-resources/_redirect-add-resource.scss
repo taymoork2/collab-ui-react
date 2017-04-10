@@ -1,6 +1,6 @@
 .redirect-add-resource {
   button {
-    margin-left: .5rem;
+    margin-left: 0.5rem;
   }
 
   .modal-footer .btn + .btn {
@@ -13,7 +13,7 @@
   }
 
   .small-font {
-  	font-size: .75rem;
+    font-size: 0.75rem;
   }
 
   .addResourceBodyInfo {
@@ -21,22 +21,25 @@
   }
 }
 
-.myAddResourceForm .cs-radio-group{
+.myAddResourceForm .cs-radio-group {
   padding-top: 1rem;
 }
-.inputHostNameForm{
+
+.inputHostNameForm {
   padding-top: 1rem;
 }
-.inputHostNameForm .dropdown-menu{
+
+.inputHostNameForm .dropdown-menu {
   top: 101%;
   bottom: auto;
-  height:11rem;
+  height: 11rem;
 }
+
 .addResourceInlineBlock {
   display: initial;
 }
 
 .addResourceFQDN {
-    display: initial;
-    color: #0387B8;
+  display: initial;
+  color: #0387b8;
 }

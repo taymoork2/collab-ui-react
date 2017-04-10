@@ -1,7 +1,7 @@
 <div class="ui-grid-cell-contents">
   <span ng-if="!row.entity.isDone"
         tooltip-placement="{{grid.renderContainers.body.visibleRowCache.indexOf(row) === 0 ? 'left' : 'top'}}"
-        cs-tooltip="{{'ediscovery.reportsList.viewDetails' | translate}}"
+        tooltip="{{'ediscovery.reportsList.viewDetails' | translate}}"
         tooltip-animation="false"
         tooltip-append-to-body="true"
         class="icon icon-info-outline action-icons"
@@ -9,14 +9,14 @@
   <span ng-if="row.entity.canBeDownloaded">
     <span ng-if="!grid.appScope.downloadingReportId"
           tooltip-placement="{{grid.renderContainers.body.visibleRowCache.indexOf(row) === 0 ? 'left' : 'top'}}"
-          cs-tooltip="{{'ediscovery.search.downloadReport' | translate}} ({{'ediscovery.reportsList.expires' | translate}} {{row.entity.expiresIn}})"
+          tooltip="{{'ediscovery.search.downloadReport' | translate}} ({{'ediscovery.reportsList.expires' | translate}} {{row.entity.expiresIn}})"
           tooltip-animation="false"
           tooltip-append-to-body="true"
-          class="icon icon-download action-icons"
+          class="icon icon-report action-icons"
           ng-click="grid.appScope.downloadReport(row.entity);$event.stopPropagation();"></span>
     <span ng-if="grid.appScope.downloadingReportId === row.entity.id"
           class="download-wait">
-            <i class="icon icon-download action-icons"></i>
+            <i class="icon icon-report action-icons"></i>
             <i class="icon icon-spinner action-icons"
                cs-tooltip="{{'ediscovery.reportsList.waitingForDownload' | translate}}"
                tooltip-placement="{{grid.renderContainers.body.visibleRowCache.indexOf(row) === 0 ? 'left' : 'top'}}"
@@ -25,21 +25,21 @@
     </span>
     <span ng-if="grid.appScope.downloadingReportId && grid.appScope.downloadingReportId !== row.entity.id"
           tooltip-placement="{{grid.renderContainers.body.visibleRowCache.indexOf(row) === 0 ? 'left' : 'top'}}"
-          cs-tooltip="{{'ediscovery.reportsList.anotherDownloadInProgress' | translate}}"
+          tooltip="{{'ediscovery.reportsList.anotherDownloadInProgress' | translate}}"
           tooltip-animation="false"
           tooltip-append-to-body="true"
-          class="icon icon-download action-icons disabled"></span>
+          class="icon icon-report action-icons disabled"></span>
   </span>
   <span ng-if="row.entity.hasExpired"
-        cs-tooltip="{{'ediscovery.reportsList.expired' | translate}} {{row.entity.expiresIn}}."
+        tooltip="{{'ediscovery.reportsList.expired' | translate}} {{row.entity.expiresIn}}."
         tooltip-animation="false"
         tooltip-append-to-body="true"
-        class="icon icon-download action-icons disabled">
+        class="icon icon-report action-icons disabled">
   </span>
 
   <span ng-if="row.entity.canBeCancelled && !grid.appScope.reportsBeingCancelled[row.entity.id]"
         tooltip-placement="{{grid.renderContainers.body.visibleRowCache.indexOf(row) === 0 ? 'left' : 'top'}}"
-        cs-tooltip="{{'ediscovery.search.cancelReport' | translate}}"
+        tooltip="{{'ediscovery.search.cancelReport' | translate}}"
         tooltip-animation="false"
         tooltip-append-to-body="true"
         class="icon icon-exit action-icons"
@@ -48,10 +48,9 @@
     <i class="icon icon-exit action-icons"></i>
     <i class="icon icon-spinner action-icons"></i>
   </span>
-
   <span ng-if="row.entity.isDone"
         tooltip-placement="{{grid.renderContainers.body.visibleRowCache.indexOf(row) === 0 ? 'left' : 'top'}}"
-        cs-tooltip="{{'ediscovery.reportsList.createNew' | translate}}"
+        tooltip="{{'ediscovery.reportsList.generateReport' | translate}}"
         tooltip-animation="false"
         tooltip-append-to-body="true"
         class="icon icon-refresh action-icons"

@@ -9,12 +9,13 @@
 #webexSiteReports {
   .cs-card-container {
     @include vr-spacing(ph, 0);
-      .cs-card-layout {
-        @include vr-spacing(mb, 0);
-      }
+
+    .cs-card-layout {
+      @include vr-spacing(mb, 0);
     }
+  }
 }
 
 .webexlogo {
-   @include vr-spacing(pr, .25);
+  @include vr-spacing(pr, 0.25);
 }

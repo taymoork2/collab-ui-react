@@ -6,40 +6,44 @@ var PartnerHomePage = function () {
   var dateTime = utils.getDateTimeString();
   var trialName = 'Atlas_Test_UI_' + dateTime + '_' + randomNumber;
 
+  this.pendingCount = 0;
+  this.timeStart = 0;
+
   this.newTrial = {
     customerName: trialName,
     customerEmail: 'collabctg+' + trialName + '@gmail.com',
-    webexSiteURL: trialName + '.webex.com'
+    webexSiteURL: trialName.replace(/_/g, '-') + '.webex.com',
+    sipDomain: dateTime.replace(/_/g, '-'),
   };
 
   this.editTrial = {
-    licenseCount: '90'
+    licenseCount: '90',
   };
 
   this.newSqUCTrial = {
     customerName: 'Atlas_Test_UC_' + randomNumber.slice(0, 5),
-    customerEmail: 'collabctg+Atlas' + randomNumber.slice(0, 5) + '@gmail.com'
+    customerEmail: 'collabctg+Atlas' + randomNumber.slice(0, 5) + '@gmail.com',
   };
 
   this.differentTrial = {
     customerName: 'collabctg+Atlas_Different',
-    customerEmail: 'collabctg+Atlas_Different@gmail.com'
+    customerEmail: 'collabctg+Atlas_Different@gmail.com',
   };
 
   this.testuser = {
     username: 'atlaspartneradmin@atlas.test.com',
-    password: 'C1sc0123!'
+    password: 'C1sc0123!',
   };
 
   this.csrole = {
     adminOrgId: '9a65eda3-272a-4aca-ac28-c72cb34013e4',
-    regularOrgId: 'c6b0e64c-908e-498e-a94e-5d3ae1e650ad'
+    regularOrgId: 'c6b0e64c-908e-498e-a94e-5d3ae1e650ad',
   };
 
   this.dids = {
     one: utils.randomDid(),
     two: utils.randomDid(),
-    three: utils.randomDid()
+    three: utils.randomDid(),
   };
 
   this.getDidTokenClose = function (did) {
@@ -89,22 +93,22 @@ var PartnerHomePage = function () {
   this.previewPanel = element(by.css('.customer-overview'));
   this.customerInfo = element(by.id('customer-info'));
   this.trialInfo = element(by.id('trial-info'));
-  this.actionsButton = element(by.id(this.newTrial.customerName + 'ActionsButton'));
+  this.trialPending = element(by.cssContainingText('span', 'Pending'));
   this.launchCustomerPanelButton = element(by.id('launchCustomer'));
   this.exitPreviewButton = element(by.css('.panel-close'));
   this.partnerFilter = element(by.id('partnerFilter'));
-  this.trialFilter = element(by.cssContainingText('.filter', 'Trial'));
   this.searchFilter = element(by.id('searchFilter'));
-  this.allFilter = element(by.cssContainingText('.filter', 'All'));
   this.partnerEmail = element.all(by.binding('userName'));
   this.messageTrialCheckbox = element(by.css('label[for="messageTrial"]'));
   this.roomSystemsCheckbox = element(by.css('label[for="trialRoomSystem"]'));
   this.roomSystemsCheckboxChecked = element(by.css('label[for="trialRoomSystemsChecked"]'));
   this.squaredUCTrialCheckbox = element(by.css('label[for="callTrial"]'));
   this.roomSystemsTrialCheckbox = element(by.css('label[for="roomSystemsTrial"]'));
+  this.sparkBoardTrialCheckbox = element(by.css('label[for="sparkBoardTrial"]'));
   this.careTrialCheckbox = element(by.css('label[for="careTrial"]'));
   this.webexTrialCheckbox = element(by.css('label[for="webexTrial"]'));
   this.careLicenseCountTextbox = element(by.css('input[name="input_trialCareLicenseCount"]'));
+  this.validLocationCheckbox = element(by.css('label[for="isValidLocation"]'));
   this.customerNameHeader = element(by.cssContainingText('.ngHeaderText ', 'Customer Name'));
   this.myOrganization = element(by.id('partner'));
   this.launchButton = element(by.id('launchPartner'));
@@ -112,6 +116,7 @@ var PartnerHomePage = function () {
   this.closeBtnOnModal = element(by.id('modal-close'));
   this.videoModal = element(by.id('videoId'));
   this.webexSiteURL = element(by.id('siteUrl'));
+  this.openMeetingSidePanelLink = element(by.cssContainingText('.feature-name', 'Meeting 25 Party'));
 
   this.viewAllLink = element(by.id('viewAllLink'));
   this.customerList = element(by.id('customerListPanel'));
@@ -140,6 +145,8 @@ var PartnerHomePage = function () {
   this.deleteCustomerButton = element(by.id('deleteCustomer'));
   this.deleteCustomerOrgConfirm = element(by.css('.btn--alert'));
 
+  this.pageHeaderTitle = element(by.css('.page-header__title'));
+
   this.assertResultsLength = function () {
     element.all(by.binding('row.entity')).then(function (rows) {
       expect(rows.length).toBeGreaterThan(1);
@@ -150,6 +157,59 @@ var PartnerHomePage = function () {
     return trialRow.evaluate('row.entity.customerOrgId').then(function (orgId) {
       expect(orgId).not.toBeNull();
       return orgId;
+    });
+  };
+
+  this.expectTrialNotPending = function (isRecursion) {
+    // Helper function to refresh page and drill down to trial sidepanel
+    function refreshPageAndCheckIsPending() {
+      var timeNow = new Date();
+      console.log('Trial still pending, refreshing page ' + partner.pendingCount + ' time elapsed: ' + ((timeNow - partner.timeStart) / 60000) + ' minutes');
+      partner.pendingCount++;
+
+      browser.refresh();
+
+      // There is a bug in the trial view where entering search text
+      // too soon results in the search being ignored, so let's wait until a
+      // known trial shows up in the list...
+      utils.waitIsDisplayed(element(by.cssContainingText('.ui-grid-cell',
+        'Atlas Test Partner Organization')));
+
+      utils.search(partner.newTrial.customerName, -1);
+      utils.waitIsDisplayed(partner.newTrialRow);
+
+      utils.click(partner.newTrialRow);
+      utils.waitIsDisplayed(partner.previewPanel);
+      utils.click(partner.openMeetingSidePanelLink);
+
+      return utils.waitIsDisplayed(partner.trialPending, 55000).then(function () {
+        return true;
+      }, function () {
+        return false;
+      });
+    }
+
+    // If this is the first time through, reset the recursion count
+    if (!isRecursion || false) {
+      partner.pendingCount = 0;
+      partner.timeStart = new Date();
+    }
+
+    // Loop until status is no longer pending, or we timeout
+    return utils.waitIsNotDisplayed(partner.trialPending, 2 * 60000).then(function () {
+      return true;
+    }, function () {
+      // Long timeout
+      if (partner.pendingCount >= 15) {
+        return false;
+      }
+      // Refresh page and check again
+      return refreshPageAndCheckIsPending().then(function (result) {
+        if (result) {
+          return partner.expectTrialNotPending(true);
+        }
+        return true;
+      });
     });
   };
 
@@ -181,6 +241,13 @@ var PartnerHomePage = function () {
     }, 5000, 'Waiting for video to load');
   };
 
+  this.getMeetingLink = function (name) {
+    return element(by.cssContainingText('.btn-link', name));
+  };
+
+  this.getTrialConfigBtn = function (name) {
+    return element(by.id(name + '_webex-site-settings'));
+  };
 };
 
 module.exports = PartnerHomePage;

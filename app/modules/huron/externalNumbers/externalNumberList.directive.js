@@ -15,8 +15,8 @@
         externalNumbers: '=',
         tooltipText: '@',
         tooltipClass: '@',
-        quantity: '='
-      }
+        quantity: '=',
+      },
     };
 
     return directive;

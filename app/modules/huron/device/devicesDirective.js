@@ -1,3 +1,5 @@
+require('./_hn-devices.scss');
+
 (function () {
   'use strict';
 
@@ -10,7 +12,7 @@
       restrict: 'EA',
       templateUrl: 'modules/huron/device/devicesOverview.tpl.html',
       controller: 'DevicesCtrlHuron',
-      controllerAs: 'ucDevices'
+      controllerAs: 'ucDevices',
     };
 
     return directive;

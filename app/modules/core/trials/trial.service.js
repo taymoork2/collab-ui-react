@@ -9,12 +9,12 @@
   function TrialResource($resource, UrlConfig, Authinfo) {
     return $resource(UrlConfig.getAdminServiceUrl() + 'organization/:orgId/trials/:trialId', {
       orgId: Authinfo.getOrgId(),
-      trialId: '@trialId'
+      trialId: '@trialId',
     }, {});
   }
 
   /* @ngInject */
-  function TrialService($http, $q, Authinfo, Config, LogMetricsService, TrialCallService, TrialCareService, TrialContextService, TrialDeviceService, TrialMeetingService, TrialMessageService, TrialPstnService, TrialResource, TrialRoomSystemService, TrialWebexService, UrlConfig) {
+  function TrialService($http, $q, Authinfo, Config, LogMetricsService, TrialCallService, TrialAdvanceCareService, TrialCareService, TrialContextService, TrialDeviceService, TrialMeetingService, TrialMessageService, TrialPstnService, TrialResource, TrialRoomSystemService, TrialSparkBoardService, TrialWebexService, UrlConfig) {
     var _trialData;
     var trialsUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials';
 
@@ -33,6 +33,10 @@
       getExpirationPeriod: getExpirationPeriod,
       shallowValidation: shallowValidation,
       getDaysLeftForCurrentUser: getDaysLeftForCurrentUser,
+      notifyPartnerTrialExt: notifyPartnerTrialExt,
+      getAddTrialRoute: getAddTrialRoute,
+      getEditTrialRoute: getEditTrialRoute,
+
     };
 
     return service;
@@ -41,15 +45,15 @@
 
     function getTrial(id) {
       return TrialResource.get({
-        trialId: id
+        trialId: id,
       }).$promise;
     }
 
     function getTrialsList(searchText) {
       return $http.get(trialsUrl, {
         params: {
-          customerName: searchText
-        }
+          customerName: searchText,
+        },
       });
     }
 
@@ -60,51 +64,51 @@
         method: 'POST',
         url: validationUrl,
         headers: {
-          'Content-Type': 'text/plain'
+          'Content-Type': 'text/plain',
         },
         data: {
           isTrial: true,
           properties: [{
             key: key,
-            value: val
-          }]
-        }
+            value: val,
+          }],
+        },
       };
 
       return $http(config).then(function (response) {
         var data = response.data || {};
         var obj = _.find(data.properties, {
-          key: key
+          key: key,
         });
-        if (angular.isUndefined(obj)) {
+        if (_.isUndefined(obj)) {
           return {
-            error: 'trialModal.errorServerDown'
+            error: 'trialModal.errorServerDown',
           };
         } else {
           // we allow duplicate emails for the  the user who is a consumer
           if (obj.isExist === 'true' && !(key === 'endCustomerEmail' && obj.isConsumer === 'true')) {
             return {
-              error: 'trialModal.errorInUse'
+              error: 'trialModal.errorInUse',
             };
           } else if (obj.isValid === 'false') {
             if (key === 'organizationName') {
               return {
-                error: 'trialModal.errorInvalidName'
+                error: 'trialModal.errorInvalidName',
               };
             } else {
               return {
-                error: 'trialModal.errorInvalid'
+                error: 'trialModal.errorInvalid',
               };
             }
           }
           return {
-            unique: true
+            unique: true,
           };
         }
       }).catch(function (response) {
         return {
           error: 'trialModal.errorServerDown',
-          status: response.status
+          status: response.status,
         };
       });
     }
@@ -113,7 +117,7 @@
       return service.getTrialsList().then(function (response) {
         return {
           activeDeviceTrials: response.data.activeDeviceTrials,
-          maxDeviceTrials: response.data.activeDeviceTrialsLimit
+          maxDeviceTrials: response.data.activeDeviceTrialsLimit,
         };
       });
     }
@@ -125,7 +129,7 @@
         trialPeriod: data.details.licenseDuration,
         dealId: data.trials.deviceTrial.shippingInfo.dealId,
         details: _getDetails(data),
-        offers: _getOffers(data)
+        offers: _getOffers(data),
       };
 
       var editTrialUrl = trialsUrl + '/' + trialId;
@@ -139,16 +143,18 @@
         .error(logEditTrialMetric);
     }
 
-    function startTrial() {
+    function startTrial(custId) {
       var data = _trialData;
+      var addTrialUrl = (custId) ? trialsUrl + '?customerOrgId=' + custId : trialsUrl;
       var trialData = {
         customerName: data.details.customerName,
         customerEmail: data.details.customerEmail,
         trialPeriod: data.details.licenseDuration,
+        country: _.get(data.details.country, 'id', 'US'),
         dealId: data.trials.deviceTrial.shippingInfo.dealId,
         startDate: new Date(),
         details: _getDetails(data),
-        offers: _getOffers(data)
+        offers: _getOffers(data),
       };
 
       function logStartTrialMetric(data, status) {
@@ -158,9 +164,27 @@
         LogMetricsService.logMetrics('Start Trial', LogMetricsService.getEventType('trialStarted'), LogMetricsService.getEventAction('buttonClick'), status, moment(), 1, trialData);
       }
 
-      return $http.post(trialsUrl, trialData)
+      return $http.post(addTrialUrl, trialData)
         .success(logStartTrialMetric)
         .error(logStartTrialMetric);
+    }
+
+    function notifyPartnerTrialExt() {
+      var notifyPartnerTrialExtUrl = UrlConfig.getAdminServiceUrl() + '/trials/notifypartnertrialextinterest';
+
+      function logNotifyPartnerTrialExtMetric(data, status) {
+        LogMetricsService.logMetrics('Notify partner to extend trial', LogMetricsService.getEventType('trialExtPartnerNotify'), LogMetricsService.getEventAction('buttonClick'), status, moment(), 1, null);
+      }
+
+      return $http.post(notifyPartnerTrialExtUrl)
+        .then(function (response) {
+          logNotifyPartnerTrialExtMetric(response.data, response.status);
+          return response;
+        })
+        .catch(function (response) {
+          logNotifyPartnerTrialExtMetric(response.data, response.status);
+          return response;
+        });
     }
 
     function getData() {
@@ -175,18 +199,18 @@
       var deviceDetails = _trialData.trials.deviceTrial;
       var details = {
         devices: [],
-        shippingInfo: deviceDetails.shippingInfo
+        shippingInfo: deviceDetails.shippingInfo,
       };
 
       _(data.trials)
         .filter({
-          enabled: true
+          enabled: true,
         })
         .forEach(function (trial) {
           if (trial.type === Config.offerTypes.roomSystems) {
             var roomSystemDevices = _(trial.details.roomSystems)
               .filter({
-                enabled: true
+                enabled: true,
               })
               .map(function (device) {
                 return _.pick(device, ['model', 'quantity']);
@@ -196,7 +220,7 @@
           } else if (trial.type === Config.offerTypes.call || trial.type === Config.offerTypes.squaredUC) {
             var callDevices = _(trial.details.phones)
               .filter({
-                enabled: true
+                enabled: true,
               })
               .map(function (device) {
                 return _.pick(device, ['model', 'quantity']);
@@ -244,14 +268,14 @@
     function _getOffers(data) {
       return _(data.trials)
         .filter({
-          enabled: true
+          enabled: true,
         })
         .map(function (trial) {
           if (trial.type === Config.offerTypes.pstn || trial.type === Config.offerTypes.context) {
             return undefined;
           }
           var licenseCount =
-            (trial.type === Config.trials.roomSystems || trial.type === Config.offerTypes.care) ?
+            (trial.type === Config.trials.roomSystems || trial.type === Config.offerTypes.care || trial.type === Config.offerTypes.advanceCare || trial.type === Config.offerTypes.sparkBoard) ?
             trial.details.quantity : data.details.licenseCount;
           return {
             id: trial.type,
@@ -269,30 +293,36 @@
       TrialCallService.reset();
       TrialCareService.reset();
       TrialRoomSystemService.reset();
+      TrialSparkBoardService.reset();
       TrialDeviceService.reset();
       TrialPstnService.reset();
       TrialContextService.reset();
+      TrialAdvanceCareService.reset();
 
       var defaults = {
         customerName: '',
         customerEmail: '',
         licenseDuration: 90,
         dealId: '',
-        licenseCount: 100
+        country: '',
+        licenseCount: 100,
+        validLocation: null,
       };
 
       _trialData = {
-        details: angular.copy(defaults),
+        details: _.cloneDeep(defaults),
         trials: {
           messageTrial: TrialMessageService.getData(),
           meetingTrial: TrialMeetingService.getData(),
           webexTrial: TrialWebexService.getData(),
           callTrial: TrialCallService.getData(),
           careTrial: TrialCareService.getData(),
+          advanceCareTrial: TrialAdvanceCareService.getData(),
           roomSystemTrial: TrialRoomSystemService.getData(),
+          sparkBoardTrial: TrialSparkBoardService.getData(),
           deviceTrial: TrialDeviceService.getData(),
           pstnTrial: TrialPstnService.getData(),
-          contextTrial: TrialContextService.getData()
+          contextTrial: TrialContextService.getData(),
         },
       };
 
@@ -324,7 +354,7 @@
 
           return {
             startDate: startDate,
-            trialPeriod: trialPeriod
+            trialPeriod: trialPeriod,
           };
         });
     }
@@ -357,6 +387,30 @@
     function getDaysLeftForCurrentUser() {
       var trialIds = service.getTrialIds();
       return service.getExpirationPeriod(trialIds);
+    }
+
+    function getAddTrialRoute(currentCustomer) {
+      var result = {
+        path: 'trial.info',
+        params: {
+          mode: 'add',
+          currentTrial: currentCustomer,
+        },
+      };
+      return result;
+    }
+
+    function getEditTrialRoute(currentCustomer, trialDetails) {
+      var params = {
+        currentTrial: currentCustomer,
+        details: trialDetails,
+        mode: 'edit',
+      };
+      var result = {
+        path: 'trial.info',
+        params: params,
+      };
+      return result;
     }
   }
 })();

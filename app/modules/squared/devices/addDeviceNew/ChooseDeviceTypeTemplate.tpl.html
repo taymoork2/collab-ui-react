@@ -1,17 +1,15 @@
 <div class="modal-header">
   <button type="button" class="close" ng-click="$dismiss()">
   </button>
-  <h3 class="modal-title" translate="{{ chooseDeviceType.wizardData.title }}"></h3>
+  <h3 class="modal-title" translate="{{ chooseDeviceType.title }}"></h3>
 </div>
 <div class="modal-body choose-device-type device-wizard">
   <div>
-    <h4 ng-if="!chooseDeviceType.isNewPlaceFlow()" translate="addDeviceWizard.chooseDeviceType.deviceType"></h4>
-    <h4 ng-if="chooseDeviceType.isNewPlaceFlow()"
+    <h4 ng-hide="chooseDeviceType.isNewPlaceFlow() || chooseDeviceType.showPersonal"
+        translate="addDeviceWizard.chooseDeviceType.deviceType"></h4>
+    <h4 ng-show="chooseDeviceType.isNewPlaceFlow() || chooseDeviceType.showPersonal"
         translate="addDeviceWizard.chooseDeviceType.deviceTypeNewPlace"></h4>
-    <p ng-if="!chooseDeviceType.isNewPlaceFlow()" class="wizardDescription"
-       translate="addDeviceWizard.chooseDeviceType.deviceTypeInstructions"></p>
-    <p ng-if="chooseDeviceType.isNewPlaceFlow()" class="wizardDescription"
-       translate="addDeviceWizard.chooseDeviceType.deviceTypeInstructionsNewPlace"></p>
+    <p class="wizardDescription" translate="addDeviceWizard.chooseDeviceType.deviceTypeInstructions"></p>
     <div class="typeChoice">
       <div class="typeButtonWrapper typeButtonWrapperLeft">
         <div class="typeButton"
@@ -21,11 +19,9 @@
           <div class="typeImageBox">
             <img class="typeImage" type="image" src="images/devices/desk-phone-system.png"/>
           </div>
-          <h4 ng-if="!chooseDeviceType.wizardData.showPlaces"
-              translate="addDeviceWizard.chooseDeviceType.newDeskPhone"></h4>
-          <h4 ng-if="chooseDeviceType.wizardData.showPlaces"
-              translate="addDeviceWizard.chooseDeviceType.deskPhone"></h4>
-          <span translate="addDeviceWizard.chooseDeviceType.deskPhoneExamples"></span>
+          <h4 translate="addDeviceWizard.chooseDeviceType.deskPhone"></h4>
+          <span ng-if="!chooseDeviceType.showATA" translate="addDeviceWizard.chooseDeviceType.deskPhoneExamples"></span>
+          <span ng-if="chooseDeviceType.showATA" translate="addDeviceWizard.chooseDeviceType.deskPhoneExamplesExtra"></span>
         </div>
         <div class="errorBox" ng-if="chooseDeviceType.huronError">
           <i class="icon icon-warning"></i>
@@ -40,10 +36,8 @@
           <div class="typeImageBox">
             <img class="typeImage" type="image" src="images/devices/room-system.png"/>
           </div>
-          <h4 ng-if="!chooseDeviceType.wizardData.showPlaces"
-              translate="addDeviceWizard.chooseDeviceType.newRoomSystem"></h4>
-          <h4 ng-if="chooseDeviceType.wizardData.showPlaces" translate="addDeviceWizard.chooseDeviceType.roomSystem"></h4>
-          <span translate="addDeviceWizard.chooseDeviceType.roomSystemExamples"></span>
+          <h4 translate="addDeviceWizard.chooseDeviceType.roomSystem"></h4>
+          <span translate="addDeviceWizard.chooseDeviceType.roomSystemExamplesExpanded"></span>
         </div>
         <div class="errorBox" ng-if="chooseDeviceType.cloudberryError">
           <i class="icon icon-warning"></i>

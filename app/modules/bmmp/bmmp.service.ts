@@ -4,12 +4,12 @@ export class BmmpService  {
     private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
     private Authinfo,
-    private UrlConfig
+    private UrlConfig,
   ) {}
 
   public init(): void {
     this.$timeout(() => {
-      bmmp.init('', '', this.Authinfo.getOrgId(), 'atlas', this.$translate.use(), '', this.UrlConfig.getBmmpUrl());
+      bmmp.init('', '', this.Authinfo.getUserId(), 'atlas', this.$translate.use(), '', this.UrlConfig.getBmmpUrl());
     });
   }
 }

@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Service: AAValidationService', function () {
-  var AANotificationService, AAModelService, AutoAttendantCeInfoModelService, AAValidationService, AACommonService, AutoAttendantCeMenuModelService;
+  var AANotificationService, AAModelService, AutoAttendantCeInfoModelService, AAValidationService, AACommonService, AutoAttendantCeMenuModelService, AAUtilityService;
 
   var rawCeInfo = {
     "callExperienceName": "AAA2",
@@ -9,13 +9,19 @@ describe('Service: AAValidationService', function () {
     "assignedResources": [{
       "id": "00097a86-45ef-44a7-aa78-6d32a0ca1d3b",
       "type": "directoryNumber",
-      "trigger": "incomingCall"
-    }]
+      "trigger": "incomingCall",
+    }],
   };
 
   var aaModel = {};
   var data = getJSONFixture('huron/json/autoAttendant/aaPhoneMenuCtrl.json');
   var welcomeMenu = getJSONFixture('huron/json/autoAttendant/welcomeMenu.json');
+
+  function KeyAction() {
+    this.key = '';
+    this.value = '';
+    this.keys = [];
+  }
 
   function ce2CeInfo(rawCeInfo) {
     var _ceInfo = AutoAttendantCeInfoModelService.newCeInfo();
@@ -24,7 +30,7 @@ describe('Service: AAValidationService', function () {
       _resource.setId(rawCeInfo.assignedResources[j].id);
       _resource.setTrigger(rawCeInfo.assignedResources[j].trigger);
       _resource.setType(rawCeInfo.assignedResources[j].type);
-      if (angular.isDefined(rawCeInfo.assignedResources[j].number)) {
+      if (!_.isUndefined(rawCeInfo.assignedResources[j].number)) {
         _resource.setNumber(rawCeInfo.assignedResources[j].number);
       }
       _ceInfo.addResource(_resource);
@@ -38,15 +44,17 @@ describe('Service: AAValidationService', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_AANotificationService_, _AutoAttendantCeInfoModelService_, _AAModelService_, _AutoAttendantCeMenuModelService_, _AAValidationService_, _AACommonService_) {
+  beforeEach(inject(function (_AANotificationService_, _AutoAttendantCeInfoModelService_, _AAModelService_, _AutoAttendantCeMenuModelService_, _AAValidationService_, _AACommonService_, _AAUtilityService_) {
     AAModelService = _AAModelService_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AAValidationService = _AAValidationService_;
     AANotificationService = _AANotificationService_;
     AACommonService = _AACommonService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
+    AAUtilityService = _AAUtilityService_;
 
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
+    spyOn(AAUtilityService, 'countOccurences').and.returnValue(0);
 
   }));
 
@@ -114,6 +122,170 @@ describe('Service: AAValidationService', function () {
     });
   });
 
+  describe('isCallerInputValidationSuccess', function () {
+    var ui;
+    beforeEach(function () {
+      spyOn(AANotificationService, 'error');
+      aaModel.ceInfos = [];
+      aaModel.aaRecords = [];
+      ui = {};
+      ui.isOpenHours = true;
+
+      ui.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+
+    });
+
+    it('should report Variable Name is blank validation', function () {
+      var valid;
+      var entry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+
+      var actionEntry = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+
+      actionEntry.inputType = 3;
+      actionEntry.variableName = '';
+      entry.addAction(actionEntry);
+
+      ui.openHours.addEntryAt(0, entry);
+
+      valid = AAValidationService.isValidCES(ui);
+
+      expect(valid).toEqual(false);
+      expect(AANotificationService.error).toHaveBeenCalled();
+      expect(AANotificationService.error.calls.argsFor(0)).toEqual(['autoAttendant.callerInputMenuErrorVariableNameMissing', {
+        schedule: 'autoAttendant.scheduleOpen',
+        at: 1,
+      }]);
+
+    });
+
+    it('should report Variable Name is blank validation for menu two', function () {
+      var valid;
+      var entry1 = AutoAttendantCeMenuModelService.newCeMenuEntry();
+      var entry2 = AutoAttendantCeMenuModelService.newCeMenuEntry();
+
+      var actionEntry1 = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+      var actionEntry2 = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+
+      actionEntry1.inputType = 3;
+      actionEntry1.variableName = 'my variable';
+      entry1.addAction(actionEntry1);
+
+
+      actionEntry2.inputType = 3;
+      actionEntry2.variableName = '';
+      entry2.addAction(actionEntry2);
+
+      ui.openHours.addEntryAt(0, entry1);
+      ui.openHours.addEntryAt(1, entry2);
+
+      valid = AAValidationService.isValidCES(ui);
+
+      expect(valid).toEqual(false);
+      expect(AANotificationService.error.calls.argsFor(0)).toEqual(['autoAttendant.callerInputMenuErrorVariableNameMissing', {
+        schedule: 'autoAttendant.scheduleOpen',
+        at: 2,
+      }]);
+
+    });
+
+    it('should not report Variable Name is blank', function () {
+      var valid;
+      var entry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+
+      var actionEntry = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+
+      actionEntry.inputType = 3;
+      actionEntry.variableName = 'my variable name';
+      entry.addAction(actionEntry);
+
+      ui.openHours.addEntryAt(0, entry);
+
+      valid = AAValidationService.isValidCES(ui);
+
+      expect(valid).toEqual(true);
+      expect(AANotificationService.error).not.toHaveBeenCalled();
+
+    });
+
+    it('should report No input values validation', function () {
+      var valid;
+      var entry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+
+      var actionEntry = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+
+      actionEntry.inputType = 4;
+      actionEntry.variableName = 'my variable name';
+      entry.addAction(actionEntry);
+
+      ui.openHours.addEntryAt(0, entry);
+
+      valid = AAValidationService.isValidCES(ui);
+
+      expect(valid).toEqual(false);
+
+      expect(AANotificationService.error.calls.argsFor(0)).toEqual(['autoAttendant.callerInputMenuErrorNoInputValuesEntered', {
+        schedule: 'autoAttendant.scheduleOpen',
+        at: 1,
+      }]);
+
+    });
+    it('should report no input values entered validation', function () {
+
+      var valid;
+      var entry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+
+      var actionEntry = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+
+      actionEntry.inputType = 4;
+      actionEntry.variableName = 'my variable name';
+      actionEntry.inputActions = [];
+      actionEntry.inputActions.push(new KeyAction());
+      actionEntry.inputActions.push(new KeyAction());
+      actionEntry.inputActions.push(new KeyAction());
+
+      entry.addAction(actionEntry);
+
+      ui.openHours.addEntryAt(0, entry);
+
+      valid = AAValidationService.isValidCES(ui);
+
+      expect(valid).toEqual(false);
+
+      expect(AANotificationService.error.calls.argsFor(0)).toEqual(['autoAttendant.callerInputMenuErrorNoInputValuesEntered', {
+        schedule: 'autoAttendant.scheduleOpen',
+        at: 1,
+      }]);
+
+    });
+    it('should report No errors when at least one input value is entered', function () {
+      var goodKey = new KeyAction();
+
+      var valid;
+      var entry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+
+      var actionEntry = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+
+      actionEntry.inputType = 4;
+      actionEntry.variableName = 'my variable name';
+      goodKey.value = 'my value';
+      actionEntry.inputActions = [];
+      actionEntry.inputActions.push(new KeyAction());
+      actionEntry.inputActions.push(new KeyAction());
+      actionEntry.inputActions.push(goodKey);
+
+      entry.addAction(actionEntry);
+
+      ui.openHours.addEntryAt(0, entry);
+
+      valid = AAValidationService.isValidCES(ui);
+
+      expect(valid).toEqual(true);
+      expect(AANotificationService.error).not.toHaveBeenCalled();
+
+    });
+
+  });
+
   describe('isPhoneMenuValidationSuccess', function () {
     var ui;
     beforeEach(function () {
@@ -122,22 +294,23 @@ describe('Service: AAValidationService', function () {
       aaModel.aaRecords = [];
       ui = {};
       ui.isOpenHours = true;
-      ui.openHours = angular.copy(data.combinedMenu);
+      ui.openHours = _.cloneDeep(data.combinedMenu);
 
     });
 
     it('report validation success for a phone menu defined', function () {
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(true);
       expect(AANotificationService.error).not.toHaveBeenCalled();
+
     });
 
     it('report validation error for an empty Route to Auto Attendant target', function () {
       var uiPhoneMenu = ui.openHours.entries[0];
       var uiKey2 = uiPhoneMenu.entries[1];
       uiKey2.actions[0].value = "";
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(false);
       expect(AANotificationService.error).toHaveBeenCalled();
@@ -170,7 +343,7 @@ describe('Service: AAValidationService', function () {
 
       subMenu.entries[0].addAction(actionEntry);
 
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(false);
 
@@ -178,7 +351,7 @@ describe('Service: AAValidationService', function () {
         key: '0',
         schedule: 'autoAttendant.scheduleOpen',
         at: 1,
-        subkey: '2'
+        subkey: '2',
       }]);
 
       expect(AANotificationService.error).toHaveBeenCalled();
@@ -213,7 +386,7 @@ describe('Service: AAValidationService', function () {
 
       subMenu.entries[0].addAction(actionEntry);
 
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(true);
 
@@ -221,6 +394,33 @@ describe('Service: AAValidationService', function () {
 
     });
 
+    it('should report a validation error for an empty target in Submenu', function () {
+
+      var topMenu, subMenu;
+
+      ui = {};
+      ui.isOpenHours = true;
+      ui.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+
+      subMenu = AutoAttendantCeMenuModelService.newCeMenu();
+      topMenu = AutoAttendantCeMenuModelService.newCeMenu();
+      topMenu.setType("MENU_OPTION");
+
+      ui.openHours.addEntryAt(0, topMenu);
+
+      subMenu.setType("MENU_OPTION");
+
+      // ui.openHours.entries[0].addEntryAt(0, subMenu);
+      topMenu.addEntryAt(0, subMenu);
+      topMenu.entries[0].key = "0";
+
+      var valid = AAValidationService.isValidCES(ui);
+
+      expect(valid).toEqual(false);
+
+      expect(AANotificationService.error).toHaveBeenCalled();
+
+    });
     it('should not report validation error for valid Route to Auto Attendant target in Submenu', function () {
 
       var topMenu, subMenu;
@@ -251,7 +451,7 @@ describe('Service: AAValidationService', function () {
       ui.openHours.entries[0].entries[0].entries[0].setType("MENU_OPTION");
       ui.openHours.entries[0].entries[0].entries[0].setKey("1");
 
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(true);
 
@@ -264,7 +464,7 @@ describe('Service: AAValidationService', function () {
       var uiKey2 = uiPhoneMenu.entries[1];
       uiKey2.key = "";
       uiKey2.actions[0].value = "";
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(true);
       expect(AANotificationService.error).not.toHaveBeenCalled();
@@ -274,7 +474,7 @@ describe('Service: AAValidationService', function () {
       var uiPhoneMenu = ui.openHours.entries[0];
       var uiKey2 = uiPhoneMenu.entries[2];
       uiKey2.actions[0].value = "";
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(false);
       expect(AANotificationService.error).toHaveBeenCalled();
@@ -285,17 +485,37 @@ describe('Service: AAValidationService', function () {
       var uiKey2 = uiPhoneMenu.entries[2];
       uiKey2.key = "";
       uiKey2.actions[0].value = "";
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(true);
       expect(AANotificationService.error).not.toHaveBeenCalled();
+    });
+    it('should report validation error for a Phone Menu with no entries', function () {
+      var uiPhoneMenu = ui.openHours.entries[0];
+      uiPhoneMenu.entries.length = 1;
+
+      var uiKey2 = uiPhoneMenu.entries[0];
+      uiKey2.key = "";
+      uiKey2.actions[0].value = "";
+      uiKey2.actions[0].name = "";
+      var valid = AAValidationService.isValidCES(ui);
+
+      expect(valid).toEqual(false);
+      expect(AANotificationService.error).toHaveBeenCalled();
+
+      uiPhoneMenu.entries.length = 0;
+
+      valid = AAValidationService.isValidCES(ui);
+
+      expect(valid).toEqual(false);
+      expect(AANotificationService.error).toHaveBeenCalled();
     });
 
     it('report validation error for an empty Route to User target', function () {
       var uiPhoneMenu = ui.openHours.entries[0];
       var uiKey2 = uiPhoneMenu.entries[3];
       uiKey2.actions[0].value = "";
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(false);
       expect(AANotificationService.error).toHaveBeenCalled();
@@ -306,7 +526,7 @@ describe('Service: AAValidationService', function () {
       var uiKey2 = uiPhoneMenu.entries[3];
       uiKey2.key = "";
       uiKey2.actions[0].value = "";
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(true);
       expect(AANotificationService.error).not.toHaveBeenCalled();
@@ -316,7 +536,7 @@ describe('Service: AAValidationService', function () {
       var uiPhoneMenu = ui.openHours.entries[0];
       var uiKey2 = uiPhoneMenu.entries[4];
       uiKey2.actions[0].value = "";
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(false);
       expect(AANotificationService.error).toHaveBeenCalled();
@@ -327,7 +547,7 @@ describe('Service: AAValidationService', function () {
       var uiKey2 = uiPhoneMenu.entries[4];
       uiKey2.key = "";
       uiKey2.actions[0].value = "";
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(true);
       expect(AANotificationService.error).not.toHaveBeenCalled();
@@ -340,7 +560,7 @@ describe('Service: AAValidationService', function () {
 
       spyOn(AACommonService, 'getInvalid').and.returnValue(undefined);
 
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(true);
       expect(AANotificationService.error).not.toHaveBeenCalled();
@@ -352,7 +572,7 @@ describe('Service: AAValidationService', function () {
       var uiPhoneMenu = ui.openHours.entries[0];
       var uiKey2 = uiPhoneMenu.entries[5];
       uiKey2.actions[0].value = "XXxX";
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(false);
       expect(AANotificationService.error).toHaveBeenCalled();
@@ -363,7 +583,7 @@ describe('Service: AAValidationService', function () {
       var uiKey2 = uiPhoneMenu.entries[5];
       uiKey2.key = "";
       uiKey2.actions[0].value = "";
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(true);
       expect(AANotificationService.error).not.toHaveBeenCalled();
@@ -373,14 +593,14 @@ describe('Service: AAValidationService', function () {
       var uiPhoneMenu = ui.openHours.entries[0];
       var uiKey2 = uiPhoneMenu.entries[6];
       uiKey2.actions[0].value = "";
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
       expect(valid).toEqual(false);
       expect(AANotificationService.error).toHaveBeenCalled();
     });
 
     it('report validation error for an empty Route to Phone Number target Closed Hours', function () {
       ui.isClosedHours = true;
-      ui.closedHours = angular.copy(data.combinedMenu);
+      ui.closedHours = _.cloneDeep(data.combinedMenu);
 
       var uiPhoneMenu = ui.closedHours.entries[0];
       var uiKey2 = uiPhoneMenu.entries[5];
@@ -388,7 +608,7 @@ describe('Service: AAValidationService', function () {
 
       spyOn(AACommonService, 'getInvalid').and.returnValue(false);
 
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(false);
       expect(AANotificationService.error).toHaveBeenCalled();
@@ -400,23 +620,23 @@ describe('Service: AAValidationService', function () {
       var uiKey2 = uiPhoneMenu.entries[6];
       uiKey2.key = "";
       uiKey2.actions[0].value = "Test Queue";
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(true);
       expect(AANotificationService.error).not.toHaveBeenCalled();
 
-      /* var uiCombinedMenu = angular.copy(data.combinedMenu);
+      /* var uiCombinedMenu = _.cloneDeep(data.combinedMenu);
        var uiPhoneMenu = uiCombinedMenu.entries[0];
        var uiKey2 = uiPhoneMenu.entries[6];
        uiKey2.actions[0].value = "Test Queue";
-       var valid = AAValidationService.isRouteToValidationSuccess(uiCombinedMenu);
+       var valid = AAValidationService.isValidCES(uiCombinedMenu);
        expect(valid).toEqual(true);
        expect(AANotificationService.error).not.toHaveBeenCalled();*/
     });
 
     it('report 2 validation error for an empty Route to Phone Number target Closed/Open Hours', function () {
       ui.isClosedHours = true;
-      ui.closedHours = angular.copy(data.combinedMenu);
+      ui.closedHours = _.cloneDeep(data.combinedMenu);
 
       var uiPhoneMenu = ui.closedHours.entries[0];
       var uiKey2 = uiPhoneMenu.entries[5];
@@ -428,7 +648,7 @@ describe('Service: AAValidationService', function () {
 
       spyOn(AACommonService, 'getInvalid').and.returnValue(false);
 
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(false);
       expect(AANotificationService.error).toHaveBeenCalled();
@@ -443,7 +663,7 @@ describe('Service: AAValidationService', function () {
 
       spyOn(AACommonService, 'getInvalid').and.returnValue(false);
 
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(false);
       expect(AANotificationService.error).toHaveBeenCalled();
@@ -453,7 +673,7 @@ describe('Service: AAValidationService', function () {
 
     it('report 3 validation error for an empty Route to Phone Number target Closed/Open/Holiday Hours', function () {
       ui.isClosedHours = true;
-      ui.closedHours = angular.copy(data.combinedMenu);
+      ui.closedHours = _.cloneDeep(data.combinedMenu);
 
       var uiPhoneMenu = ui.closedHours.entries[0];
       var uiKey2 = uiPhoneMenu.entries[5];
@@ -464,11 +684,11 @@ describe('Service: AAValidationService', function () {
       uiKey2.actions[0].value = "";
 
       ui.isHolidays = true;
-      ui.holidays = angular.copy(data.combinedMenu);
+      ui.holidays = _.cloneDeep(data.combinedMenu);
 
       spyOn(AACommonService, 'getInvalid').and.returnValue(false);
 
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(false);
       expect(AANotificationService.error).toHaveBeenCalled();
@@ -487,13 +707,13 @@ describe('Service: AAValidationService', function () {
       aaModel.aaRecords = [];
       ui = {};
       ui.isOpenHours = true;
-      ui.openHours = angular.copy(data.combinedMenu);
+      ui.openHours = _.cloneDeep(data.combinedMenu);
 
     });
 
     it('report success for a Route Call Route with a VoiceMail target', function () {
       ui.isOpenHours = true;
-      ui.openHours = angular.copy(welcomeMenu.welcomeMenu);
+      ui.openHours = _.cloneDeep(welcomeMenu.welcomeMenu);
 
       var routeTo = _.find(ui.openHours.entries, function (entry) {
         return entry.actions[0].name === 'routeToVoiceMail';
@@ -501,7 +721,7 @@ describe('Service: AAValidationService', function () {
 
       routeTo.actions[0].value = 'UserVoiceMail';
 
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(true);
       expect(AANotificationService.error).not.toHaveBeenCalled();
@@ -510,7 +730,7 @@ describe('Service: AAValidationService', function () {
 
     it('report success and ignore Say Message without a value', function () {
       ui.isOpenHours = true;
-      ui.openHours = angular.copy(welcomeMenu.welcomeMenu);
+      ui.openHours = _.cloneDeep(welcomeMenu.welcomeMenu);
 
       var sayMsg = _.find(ui.openHours.entries, function (entry) {
         return entry.actions[0].name === 'say';
@@ -518,7 +738,7 @@ describe('Service: AAValidationService', function () {
 
       sayMsg.actions[0].value = '';
 
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(true);
       expect(AANotificationService.error).not.toHaveBeenCalled();
@@ -527,7 +747,7 @@ describe('Service: AAValidationService', function () {
 
     it('report 1 validation error for an empty Route Call Route to VoiceMail target', function () {
       ui.isOpenHours = true;
-      ui.openHours = angular.copy(welcomeMenu.welcomeMenu);
+      ui.openHours = _.cloneDeep(welcomeMenu.welcomeMenu);
 
       var routeTo = _.find(ui.openHours.entries, function (entry) {
         return entry.actions[0].name === 'routeToVoiceMail';
@@ -535,7 +755,7 @@ describe('Service: AAValidationService', function () {
 
       routeTo.actions[0].value = '';
 
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(false);
       expect(AANotificationService.error).toHaveBeenCalled();
@@ -545,7 +765,7 @@ describe('Service: AAValidationService', function () {
 
     it('report 1 validation error for an empty Route Call Route to User target', function () {
       ui.isOpenHours = true;
-      ui.openHours = angular.copy(welcomeMenu.welcomeMenu);
+      ui.openHours = _.cloneDeep(welcomeMenu.welcomeMenu);
 
       var routeTo = _.find(ui.openHours.entries, function (entry) {
         return entry.actions[0].name === 'routeToUser';
@@ -553,7 +773,7 @@ describe('Service: AAValidationService', function () {
 
       routeTo.actions[0].value = '';
 
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(false);
       expect(AANotificationService.error).toHaveBeenCalled();
@@ -564,7 +784,7 @@ describe('Service: AAValidationService', function () {
 
     it('report 1 validation error for an empty Route Call Route to Hunt Group target', function () {
       ui.isOpenHours = true;
-      ui.openHours = angular.copy(welcomeMenu.welcomeMenu);
+      ui.openHours = _.cloneDeep(welcomeMenu.welcomeMenu);
 
       var routeTo = _.find(ui.openHours.entries, function (entry) {
         return entry.actions[0].name === 'routeToHuntGroup';
@@ -572,7 +792,7 @@ describe('Service: AAValidationService', function () {
 
       routeTo.actions[0].value = '';
 
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(false);
       expect(AANotificationService.error).toHaveBeenCalled();
@@ -582,7 +802,7 @@ describe('Service: AAValidationService', function () {
 
     it('report 1 validation error for an empty Route Call Route to Auto Attendant target', function () {
       ui.isOpenHours = true;
-      ui.openHours = angular.copy(welcomeMenu.welcomeMenu);
+      ui.openHours = _.cloneDeep(welcomeMenu.welcomeMenu);
 
       var routeTo = _.find(ui.openHours.entries, function (entry) {
         return entry.actions[0].name === 'goto';
@@ -590,7 +810,7 @@ describe('Service: AAValidationService', function () {
 
       routeTo.actions[0].value = '';
 
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(false);
       expect(AANotificationService.error).toHaveBeenCalled();
@@ -600,7 +820,7 @@ describe('Service: AAValidationService', function () {
 
     it('report 1 validation error for an empty Route Call Route to Phone Number target', function () {
       ui.isOpenHours = true;
-      ui.openHours = angular.copy(welcomeMenu.welcomeMenu);
+      ui.openHours = _.cloneDeep(welcomeMenu.welcomeMenu);
 
       var routeTo = _.find(ui.openHours.entries, function (entry) {
         return entry.actions[0].name === 'route';
@@ -610,7 +830,7 @@ describe('Service: AAValidationService', function () {
 
       spyOn(AACommonService, 'getInvalid').and.returnValue(false);
 
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(false);
       expect(AANotificationService.error).toHaveBeenCalledWith(
@@ -622,7 +842,7 @@ describe('Service: AAValidationService', function () {
       spyOn(AACommonService, 'getInvalid').and.returnValue(false);
 
       ui.isOpenHours = true;
-      ui.openHours = angular.copy(welcomeMenu.welcomeMenu);
+      ui.openHours = _.cloneDeep(welcomeMenu.welcomeMenu);
 
       var routeTo = _.find(ui.openHours.entries, function (entry) {
         return entry.actions[0].name === 'route';
@@ -630,7 +850,7 @@ describe('Service: AAValidationService', function () {
 
       routeTo.actions[0].value = 'XXXX';
 
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(false);
       expect(AANotificationService.error).toHaveBeenCalledWith(
@@ -639,7 +859,7 @@ describe('Service: AAValidationService', function () {
 
     it('report 5 validation error for an empty Route Call target', function () {
       ui.isOpenHours = true;
-      ui.openHours = angular.copy(welcomeMenu.welcomeMenu);
+      ui.openHours = _.cloneDeep(welcomeMenu.welcomeMenu);
 
       var routeTo = _.find(ui.openHours.entries, function (entry) {
         return entry.actions[0].name === 'route';
@@ -673,7 +893,7 @@ describe('Service: AAValidationService', function () {
 
       spyOn(AACommonService, 'getInvalid').and.returnValue(false);
 
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(false);
       expect(AANotificationService.error).toHaveBeenCalled();

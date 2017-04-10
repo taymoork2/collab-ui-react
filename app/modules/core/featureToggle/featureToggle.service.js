@@ -1,189 +1,42 @@
 (function () {
   'use strict';
 
-  module.exports = angular.module('core.featuretoggle', [
-    require('modules/core/config/config'),
-    require('modules/core/scripts/services/authinfo'),
-    require('modules/core/scripts/services/org.service'),
-    require('modules/huron/telephony/telephonyConfig'),
-  ])
-    .factory('HuronCustomerFeatureToggleService', HuronCustomerFeatureToggleService)
-    .service('FeatureToggleService', FeatureToggleService)
-    .name;
+  module.exports = FeatureToggleService;
 
   /* @ngInject */
-  function FeatureToggleService($http, $q, $resource, $state, Authinfo, HuronCustomerFeatureToggleService, UrlConfig, Orgservice) {
-    var features = {
-      dirSync: 'atlas-dir-sync',
-      atlasBrandingWordingChange: 'atlas-branding-wording-change',
-      atlasCareTrials: 'atlas-care-trials',
-      atlasContextServiceTrials: 'atlas-context-service-trials',
-      atlasCsvEnhancement: 'atlas-csv-enhancement',
-      atlasCustomerListUpdate: 'atlas-customer-list-update',
-      atlasDarling: 'atlas-darling',
-      atlasDataRetentionSettings: 'atlas-data-retention-settings',
-      atlasEmailStatus: 'atlas-email-status',
-      atlasHelpDeskExt: 'atlas-helpdesk-extended-information',
-      atlasHybridServicesResourceList: 'atlas-hybrid-services-resource-list',
-      atlasMediaServiceMetrics: 'atlas-media-service-metrics',
-      atlasMediaServiceOnboarding: 'atlas-media-service-onboarding',
-      atlasNewRoomSystems: 'atlas-new-roomSystems',
-      atlasNewUserExport: 'atlas-new-user-export',
-      atlasNurturingEmails: 'atlas-nurturing-emails',
-      atlasPinSettings: 'atlas-pin-settings',
-      atlasPMRonM2: 'atlas-pmr-on-m2',
-      atlasPstnTfn: 'atlas-pstn-tfn',
-      atlasReadOnlyAdmin: 'atlas-read-only-admin',
-      atlasReportsUpdate: 'atlas-reports-update',
-      atlasComplianceRole: 'atlas-compliance-role',
-      atlasSettingsPage: 'atlas-settings-page',
-      atlasShipDevicesInternational: 'atlas-ship-devices-international',
-      atlasSipUriDomain: 'atlas-sip-uri-domain',
-      atlasSipUriDomainEnterprise: 'atlas-sip-uri-domain-enterprise',
-      atlasUserPendingStatus: 'atlas-user-pending-status',
-      atlasWebexTrials: 'atlas-webex-trials',
-      atlasDeviceUsageReport: 'atlas-device-usage-report',
-      androidAddGuestRelease: 'android-add-guest-release',
-      androidDirectUpload: 'android-direct-upload',
-      androidImportantFilter: 'android-important-filter',
-      androidKmsMessagingApiV2: 'android-kms-messaging-api-v2',
-      androidMentions: 'android-mentions',
-      androidMessageSearch: 'android-message-search',
-      androidModernTokenRefresh: 'android-modern-token-refresh',
-      androidTeams: 'android-teams',
-      atMentions: 'at-mentions',
-      audioPairing: 'audio-pairing',
-      bridgeMaxConvParticipants: 'bridge-max-conv-participants',
-      callMultiDevice: 'call-multi-device',
-      calliopeDiscovery: 'calliope-discovery',
-      callParkService: 'call-park-service',
-      calsvcDetectCmrLoc: 'calsvc_detect_cmr_loc',
-      clientRingbackV2: 'client-ringback-v2',
-      console: 'console',
-      deleteContent: 'delete-content',
-      disableCacheForFeatures: 'disableCacheForFeatures',
-      enforceSparkContentEncryption: 'enforce-spark-content-encryption',
-      featureToggleRules: 'feature-toggle-rules',
-      feedbackViaEmail: 'feedback-via-email',
-      filterBadges: 'filter-badges',
-      flagMsg: 'flag-msg',
-      fmcCommandDispatch: 'fmc-command-dispatch',
-      geoHintEnabled: 'geo-hint-enabled',
-      huronAACallQueue: 'huronAACallQueue',
-      huronAAMediaUpload: 'huron-aa-mediaupload',
-      huronClassOfService: 'COS',
-      huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
-      huronKEM: 'huronKEM',
-      huronSpeedDial: 'huronSpeedDial',
-      huronPagingGroup: 'huronPagingGroup',
-      iosActionBar: 'ios-action-bar',
-      iosAecType: 'ios-aec-type',
-      iosCameraview: 'ios-cameraview',
-      iosCoBranding: 'ios-co-branding',
-      iosFilterBadges: 'ios-filter-badges',
-      iosFiltering: 'ios-filtering',
-      iosImportantFilter: 'ios-important-filter',
-      iosImportantFilter2: 'ios-important-filter2',
-      iosKmsMessagingApi3: 'ios-kms-messaging-api3',
-      iosKmsMessagingApi4: 'ios-kms-messaging-api4',
-      iosLocalNotification2: 'ios-local-notification2',
-      iosLocusUsingResource: 'ios-locus-using-resource',
-      iosMentions: 'ios-mentions',
-      iosMentionsFilter: 'ios-mentions-filter',
-      iosSearchService: 'ios-search-service',
-      iosSearchService2: 'ios-search-service2',
-      iosTeams: 'ios-teams',
-      iosTeams2: 'ios-teams2',
-      joinhubCreateARoom: 'joinhub-create-a-room',
-      l2sipAllowSipForward: 'l2sip-allow-sip-forward',
-      l2sipAllowSipTransfer: 'l2sip-allow-sip-transfer',
-      locusMaxRosterParticipants: 'locus-max-roster-participants',
-      manyCalls: 'many-calls',
-      mediaEnableFilmstripOsx: 'media-enable-filmstrip-osx',
-      mediaEnableFilmstripWin: 'media-enable-filmstrip-win',
-      mediaEnableMultistreamCrown: 'media-enable-multistream-crown',
-      mediaEnableSimulcast: 'media-enable-simulcast',
-      mediaMariFecAudioEnabled: 'media-mari-fec-audio-enabled',
-      mediaMariFecEnabled: 'media-mari-fec-enabled',
-      mediaMariFecVideoEnabled: 'media-mari-fec-video-enabled',
-      mediaMariRateAdaptation: 'media-mari-rate-adaptation',
-      mentionsNotif: 'mentions-notif',
-      mentionsTab: 'mentions-tab',
-      mercurySingletonConnection: 'mercury-singleton-connection',
-      mercury51: 'mercury5.1',
-      modifyConvoActivityLimits: 'modify-convo-activity-limits',
-      multigetCi: 'multiget-ci',
-      muteByDefault: 'mute-by-default',
-      newMessageBanner: 'new-message-banner',
-      newMessageBannerAndroid: 'new-message-banner-android',
-      newMessagesIndicator: 'new-messages-indicator',
-      osxImportantFilter: 'osx-important-filter',
-      persistenceForFeatures: 'persistenceForFeatures',
-      relevantRooms: 'relevant-rooms',
-      sanitizeactivityOptimization: 'sanitizeactivity-optimization',
-      searchRemote: 'search-remote',
-      searchTab: 'search-tab',
-      sendStickies: 'send-stickies',
-      sendStickies2: 'send-stickies2',
-      sparkJsSdkEcdh3: 'spark-js-sdk-ecdh-3',
-      squrls: 'squrls',
-      stickiesSend: 'stickies.send',
-      titleEncryption: 'title-encryption',
-      uploadCallLogs: 'upload-call-logs',
-      userPresence: 'user-presence',
-      uwpImportantFilter: 'uwp-important-filter',
-      webGuestCall: 'web-guest-call',
-      webHuronCalls: 'web-huron-calls',
-      webManualPairing: 'web-manual-pairing',
-      webMentionsTab: 'web-mentions-tab',
-      webRoapCalls: 'web-roap-calls',
-      webTeams: 'web-teams',
-      winGuestCall: 'win-guest-call',
-      winHuronCalls: 'win-huron-calls',
-      winImporantFilter: 'win-important-filter',
-      winMentionsList: 'win-mentions-list',
-      winMentionsTab: 'win-mentions-tab',
-      winProximityDeviceSelection: 'win-proximity-device-selection',
-      winTeams: 'win-teams',
-      zeroTouchMeeting: 'zero-touch-meeting',
-      locationSharing: 'location-sharing',
-      ceAllowNolockdown: 'ce-allow-nolockdown',
-      webexCSV: 'webex-CSV',
-      enableCrashLogs: 'csdm-enable-crash-logs',
-      csdmPlaces: 'csdm-places',
-      globalStatus: 'global-status',
-      atlasF237ResourceGroups: 'atlas-f237-resource-group',
-      huronLocalDialing: 'huron-local-dialing',
-      huronDeviceE911: 'huron-device-e911-address'
-    };
-
+  function FeatureToggleService($http, $q, $resource, $rootScope, $state, Authinfo, HuronConfig, UrlConfig) {
+    var features = require('./features.config');
     var toggles = {};
 
-    var orgResource = $resource(UrlConfig.getWdmUrl() + '/features/rules/:id', {
-      id: '@id'
-    }, {
-      get: {
-        method: 'GET',
-        cache: true
-      },
-      refresh: {
-        method: 'GET',
-        cache: false
-      }
-    });
+    // returns huron feature toggle value for the given user or user's org
+    var huronUserResource;
 
-    var userResource = $resource(UrlConfig.getWdmUrl() + '/features/users/:id', {
-      id: '@id'
-    }, {
-      get: {
-        method: 'GET',
-        cache: true
-      }
-    });
+    // returns huron feature toggle value for the given customer; must be full admin or partner admin for the customer
+    var huronCustomerResource;
 
-    var dirSyncConfigurationResource = $resource(UrlConfig.getAdminServiceUrl() + 'organization/:customerId/dirsync', {
-      customerId: '@customerId'
-    });
+    var orgResource = $resource(UrlConfig.getFeatureUrl() + '/features/rules/:id', {
+      id: '@id',
+    },
+      {
+        get: {
+          method: 'GET',
+          cache: true,
+        },
+        refresh: {
+          method: 'GET',
+          cache: false,
+        },
+      });
+
+    var userResource = $resource(UrlConfig.getFeatureUrl() + '/features/users/:id', {
+      id: '@id',
+    },
+      {
+        get: {
+          method: 'GET',
+          cache: true,
+        },
+      });
 
     var service = {
       getUrl: getUrl,
@@ -195,9 +48,7 @@
       generateFeatureToggleRule: generateFeatureToggleRule,
       stateSupportsFeature: stateSupportsFeature,
       supports: supports,
-      supportsDirSync: supportsDirSync,
       features: features,
-      getCustomerHuronToggle: getCustomerHuronToggle
     };
 
     init();
@@ -205,6 +56,13 @@
     return service;
 
     function init() {
+      setHuronUserResource(HuronConfig.getMinervaUrl());
+      setHuronCustomerResource(HuronConfig.getMinervaUrl());
+      // setup listener
+      $rootScope.$on('COMPASS_BASE_DOMAIN_CHANGED', function () {
+        setHuronUserResource(HuronConfig.getMinervaUrl());
+        setHuronCustomerResource(HuronConfig.getMinervaUrl());
+      });
       return _.reduce(features, function (status, feature, key) {
         status[key + 'GetStatus'] = function () {
           return supports(features[key]);
@@ -239,7 +97,7 @@
       }
       clearCache = clearCache || false;
       var info = {
-        id: id
+        id: id,
       };
       var url = getUrl(isUser);
 
@@ -262,18 +120,35 @@
       });
     }
 
-    function getHuronToggle(isUser, id, feature) {
+    function getHuronToggle(feature) {
       if (Authinfo.isSquaredUC()) {
-        return getCustomerHuronToggle(id, feature);
-      } else {
-        return $q.when(false);
+        if (Authinfo.isCustomerLaunchedFromPartner()) {
+          return getHuronToggleForCustomer(Authinfo.getOrgId(), feature);
+        }
+
+        return getHuronToggleForUser(Authinfo.getUserId(), feature);
       }
+
+      return $q.resolve(false);
     }
 
-    function getCustomerHuronToggle(id, feature) {
-      return HuronCustomerFeatureToggleService.get({
-        customerId: id,
-        featureName: feature
+    function getHuronToggleForUser(userId, feature) {
+      return huronUserResource.get({
+        userId: userId,
+        featureName: feature,
+      }).$promise.then(function (data) {
+        toggles[feature] = data.val;
+        return data.val;
+      }).catch(function () {
+        return false;
+      });
+    }
+
+
+    function getHuronToggleForCustomer(customerId, feature) {
+      return huronCustomerResource.get({
+        customerId: customerId,
+        featureName: feature,
       }).$promise.then(function (data) {
         toggles[feature] = data.val;
         return data.val;
@@ -290,7 +165,7 @@
       var atlasToggle = getFeatures(isUser, id).then(function (features) {
         // find the toggle, then get the val, default to false
         return _.get(_.find(features.developer, {
-          key: feature
+          key: feature,
         }), 'val', false);
       }).catch(function () {
         return false;
@@ -298,7 +173,7 @@
 
       return atlasToggle.then(function (toggle) {
         if (!toggle) {
-          return getHuronToggle(isUser, id, feature);
+          return getHuronToggle(feature);
         } else {
           return toggle;
         }
@@ -326,11 +201,7 @@
 
     function supports(feature) {
       return $q(function (resolve) {
-        if (feature === features.dirSync) {
-          supportsDirSync().then(function (enabled) {
-            resolve(enabled);
-          });
-        } else if (angular.isDefined(toggles[feature])) {
+        if (!_.isUndefined(toggles[feature])) {
           resolve(toggles[feature]);
         } else {
           $http.get(UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/me', {
@@ -339,7 +210,7 @@
             return getFeatureForUser(_.get(response, 'data.id'), feature)
               .then(function (result) {
                 if (!result) {
-                  return getHuronToggle(false, Authinfo.getOrgId(), feature);
+                  return getHuronToggle(feature);
                 } else {
                   return result;
                 }
@@ -354,24 +225,6 @@
       });
     }
 
-    function supportsDirSync() {
-      return dirSyncConfigurationResource.get({
-        customerId: Authinfo.getOrgId()
-      }).$promise.then(function (response) {
-        return response.serviceMode === 'ENABLED';
-      }).catch(function (response) {
-        Orgservice.getOrgCacheOption(function (data) {
-          if (data.success) {
-            return data.dirsyncEnabled;
-          } else {
-            return $q.reject(response);
-          }
-        }, null, {
-          cache: false
-        });
-      });
-    }
-
     function setFeatureToggles(isUser, listOfFeatureToggleRules) {
       if (isUser) {
         return $q.reject('User level toggles are not changeable in the web app');
@@ -380,7 +233,7 @@
       var usingId = isUser ? undefined : '';
 
       return getUrl(isUser).save({
-        id: usingId
+        id: usingId,
       }, listOfFeatureToggleRules).$promise;
     }
 
@@ -414,18 +267,33 @@
         feature.val = false;
       }
     }
+
+    function setHuronUserResource() {
+      huronUserResource = $resource(HuronConfig.getMinervaUrl() + '/features/users/:userId/developer/:featureName', {
+        userId: '@userId',
+        featureName: '@featureName',
+      },
+        {
+          get: {
+            method: 'GET',
+            cache: true,
+          },
+        });
+    }
+
+    function setHuronCustomerResource() {
+      huronCustomerResource = $resource(HuronConfig.getMinervaUrl() + '/features/customers/:customerId/developer/:featureName', {
+        customerId: '@customerId',
+        featureName: '@featureName',
+      },
+        {
+          get: {
+            method: 'GET',
+            cache: true,
+          },
+        });
+    }
+
   }
 
-  /* @ngInject */
-  function HuronCustomerFeatureToggleService($resource, HuronConfig) {
-    return $resource(HuronConfig.getMinervaUrl() + '/features/customers/:customerId/developer/:featureName', {
-      customerId: '@customerId',
-      featureName: '@featureName'
-    }, {
-      get: {
-        method: 'GET',
-        cache: true
-      }
-    });
-  }
 })();

@@ -11,9 +11,6 @@
   function ValidationService(phone) {
 
     var factory = {
-      trialLicenseCount: trialLicenseCount,
-      trialRoomSystemQuantity: trialRoomSystemQuantity,
-      trialCareQuantity: trialCareQuantity,
       nonPrintable: nonPrintable,
       alertingName: alertingName,
       callForward: callForward,
@@ -21,25 +18,10 @@
       positiveNumber: positiveNumber,
       maxNumber100: maxNumber100,
       phoneUS: phoneUS,
-      phoneAny: phoneAny
+      phoneAny: phoneAny,
     };
 
     return factory;
-
-    function trialLicenseCount(viewValue, modelValue) {
-      var value = modelValue || viewValue;
-      return /^[1-9][0-9]{0,2}$/.test(value);
-    }
-
-    function trialCareQuantity(viewValue, modelValue, totalCount) {
-      var value = +modelValue || +viewValue;
-      return (value >= 0 && value <= 50 && totalCount >= value);
-    }
-
-    function trialRoomSystemQuantity(viewValue, modelValue) {
-      var value = modelValue || viewValue;
-      return /^(2[0]|1[0-9]|[1-9])$/.test(value);
-    }
 
     function nonPrintable(viewValue, modelValue) {
       var value = modelValue || viewValue;
@@ -48,7 +30,7 @@
 
     function alertingName(viewValue, modelValue) {
       var value = modelValue || viewValue;
-      return /^[^\]"%<>\[&|{}]{0,}$/.test(value);
+      return /^[^\]"%<>[&|{}]{0,}$/.test(value);
     }
 
     function callForward(viewValue, modelValue) {
@@ -63,7 +45,7 @@
 
     function positiveNumber(viewValue, modelValue) {
       var value = modelValue || viewValue;
-      return (angular.isString(value) && value.length === 0) || value > 0;
+      return (_.isString(value) && value.length === 0) || value > 0;
     }
 
     function maxNumber100(viewValue, modelValue) {

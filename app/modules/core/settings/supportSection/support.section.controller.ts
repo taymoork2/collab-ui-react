@@ -1,3 +1,5 @@
+import { Notification } from 'modules/core/notifications';
+
 export class SupportSettings {
 
   private customSupport = { enable: false, url: '', text: '' };
@@ -75,17 +77,24 @@ export class SupportSettings {
   }
 
   /* @ngInject */
-  constructor(private Authinfo, private Orgservice, private Notification, $translate, private UserListService, private Log) {
+  constructor(
+    private $translate: ng.translate.ITranslateService,
+    private Authinfo,
+    private Orgservice,
+    private Notification: Notification,
+    private UserListService,
+    private Log,
+  ) {
     this.orgId = Authinfo.getOrgId();
-    this.initTexts($translate);
+    this.initTexts();
     this.initOrgInfo();
   }
 
-  private initTexts($translate) {
+  private initTexts() {
     this.placeHolder = {
-      troubleUrl: $translate.instant('partnerProfile.troubleUrl'),
-      troubleText: $translate.instant('partnerProfile.troubleText'),
-      helpUrlText: $translate.instant('partnerProfile.helpUrlText'),
+      troubleUrl: this.$translate.instant('partnerProfile.troubleUrl'),
+      troubleText: this.$translate.instant('partnerProfile.troubleText'),
+      helpUrlText: this.$translate.instant('partnerProfile.helpUrlText'),
     };
   }
 
@@ -102,6 +111,10 @@ export class SupportSettings {
       });
     });
 
+    let params = {
+      basicInfo: true,
+      disableCache: true,
+    };
     this.Orgservice.getOrg((data, status) => {
       if (data.success) {
         let settings = data.orgSettings;
@@ -139,7 +152,7 @@ export class SupportSettings {
         this.Log.debug('Get existing org failed. Status: ' + status);
       }
 
-    }, this.orgId, true);
+    }, this.orgId, params);
   }
 
   public saveUseCustomSupportUrl() {

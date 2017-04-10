@@ -9,7 +9,7 @@ class Example implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
-    private ExampleService: ExampleService
+    private ExampleService: ExampleService,
   ) {}
 
   public incrementCount(): void {

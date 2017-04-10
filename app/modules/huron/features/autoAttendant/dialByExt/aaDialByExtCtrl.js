@@ -11,23 +11,20 @@
 
     var runActionName = 'runActionsOnInput';
 
-    var messageInput = '';
     var languageOption = {
       label: '',
-      value: ''
+      value: '',
     };
     var voiceOption = {
       label: '',
-      value: ''
+      value: '',
     };
 
     var selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
-
     vm.aaModel = {};
     vm.menuEntry = {};
-    vm.messageInput = messageInput;
+    vm.messageInput = '';
     vm.messageInputPlaceholder = $translate.instant('autoAttendant.sayMessagePlaceholder');
-
     vm.languageOption = languageOption;
     vm.languagePlaceholder = selectPlaceholder;
     vm.languageOptions = [];
@@ -42,7 +39,14 @@
 
     vm.saveUiModel = saveUiModel;
 
+    vm.isMediaUploadToggle = isMediaUploadToggle;
+
     /////////////////////
+
+    function isMediaUploadToggle() {
+      return AACommonService.isMediaUploadToggle();
+    }
+
     function setVoiceOptions() {
       vm.voiceOptions = _.sortBy(AALanguageService.getVoiceOptions(vm.languageOption), 'label');
       setVoiceOption();
@@ -50,7 +54,7 @@
 
     function setVoiceOption() {
       if (vm.voiceBackup && _.find(vm.voiceOptions, {
-        "value": vm.voiceBackup.value
+        "value": vm.voiceBackup.value,
       })) {
         vm.voiceOption = vm.voiceBackup;
       } else if (_.find(vm.voiceOptions, AALanguageService.getVoiceOption())) {
@@ -66,11 +70,20 @@
 
     function populateUiModel() {
       var action = vm.menuEntry.actions[0];
+      // isMediaUpload not in use? No messageType directive used. Save here.
 
-      vm.messageInput = action.getValue();
+      if (!isMediaUploadToggle()) {
 
-      if (vm.isTextOnly) {
-        return;
+        vm.messageInput = action.getValue();
+
+        if (vm.isTextOnly) {
+          return;
+        }
+
+      }
+
+      if (isMediaUploadToggle() && vm.isTextOnly) {
+        vm.messageInput = action.getValue();
       }
       vm.languageOptions = _.sortBy(AALanguageService.getLanguageOptions(), 'label');
 
@@ -83,7 +96,10 @@
 
     function saveUiModel() {
 
-      vm.menuEntry.actions[0].setValue(vm.messageInput);
+      // if mediaUpload toggled messageInput is handled in the directive..
+      if (!isMediaUploadToggle() || vm.isTextOnly) {
+        vm.menuEntry.actions[0].setValue(vm.messageInput);
+      }
 
       if (!vm.isTextOnly) {
         vm.menuEntry.actions[0].voice = vm.voiceOption.value;
@@ -101,13 +117,12 @@
 
     function setPhoneMenuMinMaxEntry() {
       var action = vm.menuEntry.actions[0];
-      if (angular.isUndefined(action.minNumberOfCharacters)) {
+      if (_.isUndefined(action.minNumberOfCharacters)) {
         setActionMinMax(action);
       }
     }
 
     function setActionEntry() {
-
       if (vm.menuEntry.actions.length === 0) {
         var action = AutoAttendantCeMenuModelService.newCeActionEntry(runActionName, '');
         action.inputType = 2;
@@ -128,27 +143,25 @@
     }
 
     function activate() {
-      if ($scope.keyIndex) {
+      if ($scope.menuKeyIndex) {
         // called from phone menu, no support for lang/voice/timeout
         var uiPhoneMenu = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
         vm.isTextOnly = true;
 
         // Read an existing dialByExt entry if exist or initialize it if not
-        if ($scope.keyIndex < uiPhoneMenu.entries.length) {
-          vm.menuEntry = uiPhoneMenu.entries[$scope.keyIndex];
+        if ($scope.menuKeyIndex < uiPhoneMenu.entries.length) {
+          vm.menuEntry = uiPhoneMenu.entries[$scope.menuKeyIndex];
         } else {
           vm.menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
           var action = AutoAttendantCeMenuModelService.newCeActionEntry(runActionName, '');
           vm.menuEntry.addAction(action);
         }
-
         setPhoneMenuMinMaxEntry();
 
       } else {
         var uiModel = AAUiModelService.getUiModel();
         var uiCombinedMenu = uiModel[$scope.schedule];
         vm.menuEntry = uiCombinedMenu.entries[$scope.index];
-
         setActionEntry();
       }
 

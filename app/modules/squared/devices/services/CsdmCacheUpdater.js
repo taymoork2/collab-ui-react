@@ -6,23 +6,33 @@
     /* @ngInject  */
     function () {
 
-      var updateOne = function (current, url, updatedObj) {
-        if (!current[url]) {
-          current[url] = updatedObj;
-        } else {
-          var currentObj = current[url];
+      var updateSingle = function (currentObj, updatedObj, mergeOnly) {
+        if (!mergeOnly) {
           _.each(currentObj, function (value, key) {
             delete currentObj[key];
           });
-          _.each(updatedObj, function (value, key) {
-            currentObj[key] = value;
-          });
+        }
+        _.each(updatedObj, function (value, key) {
+          currentObj[key] = value;
+        });
+        return currentObj;
+      };
+
+      var updateOne = function (current, url, updatedObj, addedFunction, mergeOnly) {
+        if (!current[url]) {
+          current[url] = updatedObj;
+          if (addedFunction) {
+            addedFunction(updatedObj);
+          }
+          return updatedObj;
+        } else {
+          return updateSingle(current[url], updatedObj, mergeOnly);
         }
       };
 
-      var addAndUpdate = function (current, updated) {
+      var addAndUpdate = function (current, updated, addedFunction) {
         _.each(updated, function (updatedObj, url) {
-          updateOne(current, url, updatedObj);
+          updateOne(current, url, updatedObj, addedFunction);
         });
       };
 
@@ -35,12 +45,13 @@
       };
 
       return {
-        update: function (current, updated, keepFunction) {
-          addAndUpdate(current, updated);
+        update: function (current, updated, keepFunction, addedFunction) {
+          addAndUpdate(current, updated, addedFunction);
           removeDeleted(current, updated, keepFunction);
           return current;
         },
-        updateOne: updateOne
+        updateOne: updateOne,
+        updateSingle: updateSingle,
       };
 
     }

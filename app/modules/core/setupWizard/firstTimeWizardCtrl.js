@@ -6,9 +6,9 @@
 
   /* @ngInject */
   function FirstTimeWizardCtrl($q, $scope, $state, $translate, Auth, Authinfo,
-    Config, FeatureToggleService, Log, Orgservice, Userservice) {
+    Config, Log, Orgservice, Userservice) {
     $scope.greeting = $translate.instant('index.greeting', {
-      name: Authinfo.getUserName()
+      name: Authinfo.getUserName(),
     });
 
     $scope.finish = function () {
@@ -33,28 +33,20 @@
        * Patch the first time admin login with SyncKms role and Care entitlements.
        */
       if (adminPatchNeeded()) {
-        FeatureToggleService.atlasCareTrialsGetStatus()
-          .then(getCareAdminUser)
-          .then(isPatchRequired)
-          .then(patchAdmin)
-          .then(updateAccessToken)
-          .then(function () {
-            Log.info('Admin user patched successfully.');
-          })
-          .catch(onFailure);
+        Userservice.getUserAsPromise('me')
+         .then(isPatchRequired)
+         .then(patchAdmin)
+         .then(updateAccessToken)
+         .then(function () {
+           Log.info('Admin user patched successfully.');
+         })
+         .catch(onFailure);
       }
     }
 
     function adminPatchNeeded() {
       return (!Authinfo.isInDelegatedAdministrationOrg() &&
         Authinfo.getCareServices().length > 0);
-    }
-
-    function getCareAdminUser(careEnabled) {
-      if (!careEnabled) {
-        return $q.reject();
-      }
-      return Userservice.getUser('me', _.noop);
     }
 
     function isPatchRequired(response) {
@@ -64,26 +56,23 @@
       }
 
       var careAdmin = response.data;
-      var hasSyncKms = _.find(careAdmin.roles, function (r) {
-        return r === Config.backend_roles.spark_synckms;
-      });
 
       var hasCareEntitlements = _.filter(careAdmin.entitlements, function (e) {
         return (e === Config.entitlements.care ||
           e === Config.entitlements.context);
       }).length === 2;
 
-      return (!hasSyncKms || !hasCareEntitlements) ? $q.resolve(careAdmin) : $q.reject();
+      return (!hasCareEntitlements) ? $q.resolve(careAdmin) : $q.reject();
     }
 
     function patchAdmin(admin) {
       var userData = {
         schemas: Config.scimSchemas,
         roles: [Config.backend_roles.spark_synckms],
-        entitlements: [Config.entitlements.care, Config.entitlements.context]
+        entitlements: [Config.entitlements.care, Config.entitlements.context],
       };
 
-      return Userservice.updateUserProfile(admin.id, userData, _.noop);
+      return Userservice.updateUserProfile(admin.id, userData);
     }
 
     function updateAccessToken(response) {

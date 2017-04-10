@@ -2,31 +2,38 @@
   'use strict';
 
   angular
-    .module('Sunlight')
-    .controller('CareFeaturesCtrl', CareFeaturesCtrl);
+      .module('Sunlight')
+      .controller('CareFeaturesCtrl', CareFeaturesCtrl);
 
   /* @ngInject */
-  function CareFeaturesCtrl($filter, $q, $state, $scope, $timeout, Authinfo, CareFeatureList, CTService, Log, Notification) {
+  function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, Authinfo, CardUtils, CareFeatureList, CTService, Log, Notification) {
     var vm = this;
     vm.init = init;
     var pageStates = {
       newFeature: 'NewFeature',
       showFeatures: 'ShowFeatures',
       loading: 'Loading',
-      error: 'Error'
+      error: 'Error',
     };
     var listOfAllFeatures = [];
     var featureToBeDeleted = {};
     vm.searchData = searchData;
     vm.deleteCareFeature = deleteCareFeature;
     vm.openEmbedCodeModal = openEmbedCodeModal;
-    vm.listOfFeatures = [];
+    vm.filteredListOfFeatures = [];
     vm.pageState = pageStates.loading;
     vm.cardColor = {};
     vm.placeholder = {
-      name: 'Search'
+      name: 'Search',
     };
+    vm.filterText = '';
     vm.template = null;
+    vm.openNewCareFeatureModal = openNewCareFeatureModal;
+    vm.setFilter = setFilter;
+    vm.hasMessage = Authinfo.isMessageEntitled();
+    vm.hasCall = Authinfo.isSquaredUC();
+    vm.tooltip = '';
+    vm.purchaseLink = purchaseLink;
 
     /* LIST OF FEATURES
      *
@@ -37,29 +44,74 @@
      *  4. Define the formatter
      * */
     vm.features = [{
-      name: 'CT',
+      name: 'Ch',
       getFeature: CareFeatureList.getChatTemplates,
-      formatter: CareFeatureList.formatChatTemplates,
+      formatter: CareFeatureList.formatTemplates,
       i18n: 'careChatTpl.chatTemplate',
       isEmpty: false,
-      color: 'attention'
+      color: 'primary',
+      icons: ['icon-message'],
+      data: [],
+    }, {
+      name: 'Ca',
+      getFeature: CareFeatureList.getCallbackTemplates,
+      formatter: CareFeatureList.formatTemplates,
+      i18n: 'careChatTpl.chatTemplate',
+      isEmpty: false,
+      color: 'alerts',
+      icons: ['icon-phone'],
+      data: [],
+    }, {
+      name: 'ChCa',
+      getFeature: CareFeatureList.getChatPlusCallbackTemplates,
+      formatter: CareFeatureList.formatTemplates,
+      i18n: 'careChatTpl.chatTemplate',
+      isEmpty: false,
+      color: 'cta',
+      icons: ['icon-message', 'icon-phone'],
+      data: [],
     }];
+
+    vm.filters = [{
+      name: $translate.instant('common.all'),
+      filterValue: 'all',
+    }, {
+      name: $translate.instant('sunlightDetails.chatMediaType'),
+      filterValue: 'chat',
+    }, {
+      name: $translate.instant('sunlightDetails.callbackMediaType'),
+      filterValue: 'callback',
+    }, {
+      name: $translate.instant('sunlightDetails.chatPlusCallbackMediaType'),
+      filterValue: 'chatPlusCallback',
+    }];
+
     init();
 
     function init() {
       vm.pageState = pageStates.loading;
-
-      _.forEach(vm.features, function (feature) {
-        vm.cardColor[feature.name] = feature.color;
-      });
-
       var featuresPromises = getListOfFeatures();
 
       handleFeaturePromises(featuresPromises);
 
       $q.all(featuresPromises).then(function () {
         showNewFeaturePageIfNeeded();
+      }).finally(function () {
+        for (var i = 0; i < vm.features.length; i++) {
+          listOfAllFeatures = listOfAllFeatures.concat(vm.features[i].data);
+        }
+        //by default "all" filter is the selected
+        vm.filteredListOfFeatures = _.clone(listOfAllFeatures);
+        if (listOfAllFeatures.length > 0) {
+          vm.pageState = pageStates.showFeatures;
+        }
       });
+
+      if (!vm.hasMessage && !vm.hasCall) {
+        vm.tooltip = $translate.instant('sunlightDetails.licensesMissing.messageAndCall');
+      } else if (!vm.hasMessage) {
+        vm.tooltip = $translate.instant('sunlightDetails.licensesMissing.messageOnly');
+      }
     }
 
     function handleFeaturePromises(promises) {
@@ -73,16 +125,11 @@
     }
 
     function handleFeatureData(data, feature) {
-
-      var list = feature.formatter(data);
+      var list = feature.formatter(data, feature);
       if (list.length > 0) {
-
-        vm.pageState = pageStates.showFeatures;
+        feature.data = list;
         feature.isEmpty = false;
-        vm.listOfFeatures = vm.listOfFeatures.concat(list);
-        listOfAllFeatures = listOfAllFeatures.concat(list);
-      } else if (list.length === 0) {
-
+      } else {
         feature.isEmpty = true;
         showReloadPageIfNeeded();
       }
@@ -90,7 +137,7 @@
 
     function getListOfFeatures() {
       var promises = [];
-      vm.features.forEach(function (value) {
+      _.forEach(vm.features, function (value) {
         promises.push(value.getFeature());
       });
       return promises;
@@ -99,8 +146,8 @@
     function handleFailures(response, feature) {
       vm.pageState = pageStates.error;
       Log.warn('Could not fetch features for customer with Id:', Authinfo.getOrgId());
-      Notification.errorResponse(response, 'careChatTpl.failedToLoad', {
-        featureText: $filter('translate')(feature.i18n)
+      Notification.errorWithTrackingId(response, 'careChatTpl.failedToLoad', {
+        featureText: $filter('translate')(feature.i18n),
       });
     }
 
@@ -113,71 +160,79 @@
     }
 
     function showNewFeaturePageIfNeeded() {
-
-      if (vm.pageState !== pageStates.showFeatures && areFeaturesEmpty() && vm.listOfFeatures.length === 0) {
+      if (vm.pageState !== pageStates.showFeatures && areFeaturesEmpty()) {
         vm.pageState = pageStates.newFeature;
       }
     }
 
     function reInstantiateMasonry() {
-      $timeout(function () {
-        $('.cs-card-layout').masonry('destroy');
-        $('.cs-card-layout').masonry({
-          itemSelector: '.cs-card',
-          columnWidth: '.cs-card',
-          isResizable: true,
-          percentPosition: true
-        });
-      }, 0);
+      CardUtils.resize(200);
     }
 
     function showReloadPageIfNeeded() {
-      if (vm.pageState === pageStates.loading && areFeaturesEmpty() && vm.listOfFeatures.length === 0) {
+      if (vm.pageState === pageStates.loading && areFeaturesEmpty()) {
         vm.pageState = pageStates.error;
       }
+    }
+
+    //Switches Data that populates the Features tab
+    function setFilter(filterValue) {
+      vm.filteredListOfFeatures = CareFeatureList.filterCards(listOfAllFeatures, filterValue, vm.filterText);
+      reInstantiateMasonry();
     }
 
     /* This function does an in-page search for the string typed in search box*/
     function searchData(searchStr) {
       vm.filterText = searchStr;
-      vm.listOfFeatures = CareFeatureList.filterCards(listOfAllFeatures, vm.filterText);
+      vm.filteredListOfFeatures = CareFeatureList.filterCards(listOfAllFeatures, 'all', vm.filterText);
       reInstantiateMasonry();
     }
 
     vm.editCareFeature = function (feature) {
-      CareFeatureList.getChatTemplate(feature.templateId).then(function (template) {
-        $state.go('care.ChatSA', {
+      CareFeatureList.getTemplate(feature.templateId).then(function (template) {
+        $state.go('care.setupAssistant', {
           isEditFeature: true,
-          template: template
+          template: template,
+          type: template.configuration.mediaType,
         });
       });
     };
 
     function deleteCareFeature(feature) {
       featureToBeDeleted = feature;
-      if (feature.featureType == 'CT') {
-        $state.go('care.Features.DeleteFeature', {
-          deleteFeatureName: feature.name,
-          deleteFeatureId: feature.templateId,
-          deleteFeatureType: feature.featureType
-        });
-      }
+      $state.go('care.Features.DeleteFeature', {
+        deleteFeatureName: feature.name,
+        deleteFeatureId: feature.templateId,
+        deleteFeatureType: feature.featureType,
+      });
     }
 
     function openEmbedCodeModal(feature) {
       CTService.openEmbedCodeModal(feature.templateId, feature.name);
     }
 
+    function openNewCareFeatureModal() {
+      $modal.open({
+        templateUrl: 'modules/sunlight/features/featureLanding/newCareFeatureModal.tpl.html',
+        controller: 'NewCareFeatureModalCtrl',
+        controllerAs: 'NewCareFeatureModalCtrl',
+      });
+    }
+
     //list is updated by deleting a feature
     $scope.$on('CARE_FEATURE_DELETED', function () {
       listOfAllFeatures.splice(listOfAllFeatures.indexOf(featureToBeDeleted), 1);
-      vm.listOfFeatures = listOfAllFeatures;
+      vm.filteredListOfFeatures = listOfAllFeatures;
       featureToBeDeleted = {};
       if (listOfAllFeatures.length === 0) {
         vm.pageState = pageStates.newFeature;
       }
 
     });
+
+    function purchaseLink() {
+      $state.go('my-company.subscriptions');
+    }
   }
 
 })();

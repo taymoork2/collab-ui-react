@@ -1,34 +1,34 @@
 'use strict';
 
 describe('Controller: FusionClusterListController', function () {
-  var controller, $controller, $q, $rootScope, Authinfo, FusionClusterService, XhrNotificationService;
+  var controller, $controller, $q, $rootScope, Analytics, Authinfo, FusionClusterService, Notification;
 
   beforeEach(angular.mock.module('Squared'));
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
-  function dependencies(_$rootScope_, _$controller_, _$q_, _Authinfo_, _FusionClusterService_, _XhrNotificationService_) {
+  function dependencies(_$rootScope_, _$controller_, _$q_, _Analytics_, _Authinfo_, _FusionClusterService_, _Notification_) {
     $rootScope = _$rootScope_;
     $controller = _$controller_;
     $q = _$q_;
+    Analytics = _Analytics_;
     Authinfo = _Authinfo_;
     FusionClusterService = _FusionClusterService_;
-    XhrNotificationService = _XhrNotificationService_;
+    Notification = _Notification_;
   }
 
   function initSpies() {
     spyOn(FusionClusterService, 'getAll');
-    spyOn(XhrNotificationService, 'notify');
+    spyOn(Analytics, 'trackHSNavigation');
+    spyOn(Notification, 'errorWithTrackingId');
     spyOn(Authinfo, 'isEntitled').and.returnValue(true);
   }
 
-  function initController(options) {
-    var hasMediaFeatureToggle = _.get(options, 'hasMediaFeatureToggle', true);
+  function initController() {
     controller = $controller('FusionClusterListController', {
-      hasF237FeatureToggle: false,
-      hasF410FeatureToggle: true,
-      hasMediaFeatureToggle: hasMediaFeatureToggle
+      hasResourceGroupFeatureToggle: false,
+      hasCucmSupportFeatureToggle: true,
     });
   }
 
@@ -48,14 +48,14 @@ describe('Controller: FusionClusterListController', function () {
   });
 
   describe('after loading clusters', function () {
-    it('should call XhrNotificationService.notify if loading failed', function () {
+    it('should call Notification.errorWithTrackingId if loading failed', function () {
       FusionClusterService.getAll.and.returnValue($q.reject());
       initController();
       expect(controller.loading).toBe(true);
-      expect(XhrNotificationService.notify).not.toHaveBeenCalled();
+      expect(Notification.errorWithTrackingId).not.toHaveBeenCalled();
       $rootScope.$apply(); // force FusionClusterService.getAll() to return
       expect(controller.loading).toBe(false);
-      expect(XhrNotificationService.notify).toHaveBeenCalled();
+      expect(Notification.errorWithTrackingId).toHaveBeenCalled();
     });
 
     it('should update filters and displayed clusters', function () {
@@ -65,50 +65,49 @@ describe('Controller: FusionClusterListController', function () {
           alarms: [],
           connectorType: 'c_mgmt',
           runningState: 'running',
-          hostname: 'a.elg.no'
-        }]
+          hostname: 'a.elg.no',
+        }],
       }, {
         targetType: 'mf_mgmt',
         connectors: [{
           alarms: [],
           connectorType: 'mf_mgmt',
           runningState: 'running',
-          hostname: 'a.elg.no'
-        }]
+          hostname: 'a.elg.no',
+        }],
+      }, {
+        targetType: 'cs_mgmt',
+        connectors: [{
+          alarms: [],
+          connectorType: 'cs_mgmt',
+          runningState: 'running',
+          hostname: 'a.elg.no',
+        }],
+      }, {
+        targetType: 'ucm_mgmt',
+        connectors: [{
+          alarms: [],
+          connectorType: 'ucm_mgmt',
+          runningState: 'running',
+          hostname: 'a.elg.no',
+        }],
       }]));
       initController();
       expect(controller.filters[0].count).toBe(0);
       expect(controller.filters[1].count).toBe(0);
+      expect(controller.filters[2].count).toBe(0);
+      expect(controller.filters[3].count).toBe(0);
+      expect(controller.filters[4].count).toBe(0);
       expect(controller.displayedClusters.length).toBe(0);
       $rootScope.$apply(); // force FusionClusterService.getAll() to return
       expect(controller.filters[0].count).toBe(1);
       expect(controller.filters[1].count).toBe(1);
-      expect(controller.displayedClusters.length).toBe(2);
+      expect(controller.filters[2].count).toBe(0);
+      expect(controller.filters[3].count).toBe(1);
+      expect(controller.filters[4].count).toBe(1);
+      expect(controller.displayedClusters.length).toBe(4);
     });
 
-    it('should filter hybrid media clusters if the feature toggle is missing', function () {
-      FusionClusterService.getAll.and.returnValue($q.resolve([{
-        targetType: 'c_mgmt',
-        connectors: [{
-          alarms: [],
-          connectorType: 'c_mgmt',
-          runningState: 'running',
-          hostname: 'a.elg.no'
-        }]
-      }, {
-        targetType: 'mf_mgmt',
-        connectors: [{
-          alarms: [],
-          connectorType: 'mf_mgmt',
-          runningState: 'running',
-          hostname: 'a.elg.no'
-        }]
-      }]));
-      initController({ hasMediaFeatureToggle: false });
-      $rootScope.$apply(); // force FusionClusterService.getAll() to return
-      expect(controller.displayedClusters.length).toBe(1);
-      expect(controller.displayedClusters[0].targetType).toBe('c_mgmt');
-    });
   });
 
 });

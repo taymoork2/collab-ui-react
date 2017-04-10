@@ -9,7 +9,7 @@
     var service = {
       getOrderStatus: getOrderStatus,
       resendCustomerEmail: resendCustomerEmail,
-      resendPartnerEmail: resendPartnerEmail
+      resendPartnerEmail: resendPartnerEmail,
     };
 
     return service;
@@ -19,7 +19,7 @@
 
       $http.get(orderStatusUrl)
         .success(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = true;
           Log.debug('Retrieved order status for enc: ' + enc);
           callback(data, status);

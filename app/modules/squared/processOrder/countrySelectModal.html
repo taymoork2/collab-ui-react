@@ -1,0 +1,25 @@
+<div class="modal-body">
+  <div class="spark-call-location-body">
+    <span><i class="icon icon-cisco-logo cisco-logo"></i></span>
+    <span class="h2 spark-name">Spark</span>
+
+    <p><h4 translate="processOrderPage.modalTitle"></h4></p>
+    <p><h5 translate="processOrderPage.modalDesc"></h5></p>
+  </div>
+  <div class="spark-call-location-list">
+    <div class="large-8 columns">
+      <p translate="processOrderPage.countrySelectLabel"></p>
+      <cs-select
+        name="defaultCountry"
+        ng-model="ctrl.country"
+        options="ctrl.countryList"
+        labelfield="name"
+        valuefield="id"
+        placeholder="ctrl.placeholder">
+      </cs-select>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button class="btn btn--primary" ng-click="$close(ctrl.country)" translate="common.next"></button>
+</div>

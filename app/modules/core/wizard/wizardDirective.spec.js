@@ -2,9 +2,14 @@
 
 describe('Controller: WizardCtrl', function () {
   var controller, $scope, $state, $q, $translate, tabs, Userservice,
-    FeatureToggleService, ServiceSetup, rootScope;
+    FeatureToggleService, ServiceSetup, rootScope, Authinfo;
 
   var getUserMe, getMyFeatureToggles;
+
+  afterEach(function () {
+    controller = $scope = $state = $q = $translate = tabs = Userservice = FeatureToggleService = ServiceSetup = rootScope = Authinfo = undefined;
+    getUserMe = getMyFeatureToggles = undefined;
+  });
 
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
@@ -19,8 +24,8 @@ describe('Controller: WizardCtrl', function () {
     controller: 'PlanReviewCtrl as planReview',
     steps: [{
       name: 'init',
-      template: 'modules/core/setupWizard/planReview.tpl.html'
-    }]
+      template: 'modules/core/setupWizard/planReview.tpl.html',
+    }],
   }, {
     name: 'messagingSetup',
     label: 'firstTimeWizard.messageSettings',
@@ -30,8 +35,8 @@ describe('Controller: WizardCtrl', function () {
     controller: 'MessagingSetupCtrl as msgSetup',
     steps: [{
       name: 'setup',
-      template: 'modules/core/setupWizard/messagingSetup.tpl.html'
-    }]
+      template: 'modules/core/setupWizard/messagingSetup.tpl.html',
+    }],
   }, {
     name: 'enterpriseSettings',
     label: 'firstTimeWizard.enterpriseSettings',
@@ -41,20 +46,20 @@ describe('Controller: WizardCtrl', function () {
     controller: 'EnterpriseSettingsCtrl',
     steps: [{
       name: 'enterpriseSipUrl',
-      template: 'modules/core/setupWizard/enterprise.setSipDomain.tpl.html'
+      template: 'modules/core/setupWizard/enterprise.setSipDomain.tpl.html',
     }, {
       name: 'init',
-      template: 'modules/core/setupWizard/enterprise.init.tpl.html'
+      template: 'modules/core/setupWizard/enterprise.init.tpl.html',
     }, {
       name: 'exportMetadata',
-      template: 'modules/core/setupWizard/enterprise.exportMetadata.tpl.html'
+      template: 'modules/core/setupWizard/enterprise.exportMetadata.tpl.html',
     }, {
       name: 'importIdp',
-      template: 'modules/core/setupWizard/enterprise.importIdp.tpl.html'
+      template: 'modules/core/setupWizard/enterprise.importIdp.tpl.html',
     }, {
       name: 'testSSO',
-      template: 'modules/core/setupWizard/enterprise.testSSO.tpl.html'
-    }]
+      template: 'modules/core/setupWizard/enterprise.testSSO.tpl.html',
+    }],
   }, {
     name: 'addUsers',
     label: 'firstTimeWizard.addUsers',
@@ -67,32 +72,32 @@ describe('Controller: WizardCtrl', function () {
       title: 'firstTimeWizard.simple',
       steps: [{
         name: 'init',
-        template: 'modules/core/setupWizard/addUsers.init.tpl.html'
+        template: 'modules/core/setupWizard/addUsers.init.tpl.html',
       }, {
         name: 'manualEntry',
-        template: 'modules/core/setupWizard/addUsers.manualEntry.tpl.html'
-      }]
+        template: 'modules/core/setupWizard/addUsers.manualEntry.tpl.html',
+      }],
     }, {
       name: 'advanced',
       title: 'firstTimeWizard.advanced',
       steps: [{
         name: 'init',
-        template: 'modules/core/setupWizard/addUsers.init.tpl.html'
+        template: 'modules/core/setupWizard/addUsers.init.tpl.html',
       }, {
         name: 'domainEntry',
-        template: 'modules/core/setupWizard/addUsers.domainEntry.tpl.html'
+        template: 'modules/core/setupWizard/addUsers.domainEntry.tpl.html',
       }, {
         name: 'installConnector',
-        template: 'modules/core/setupWizard/addUsers.installConnector.tpl.html'
+        template: 'modules/core/setupWizard/addUsers.installConnector.tpl.html',
       }, {
         name: 'syncStatus',
-        template: 'modules/core/setupWizard/addUsers.syncStatus.tpl.html'
-      }]
-    }]
+        template: 'modules/core/setupWizard/addUsers.syncStatus.tpl.html',
+      }],
+    }],
   }];
 
   beforeEach(inject(function ($rootScope, $controller, _$state_, _$q_, _$translate_,
-    $stateParams, _Userservice_, _FeatureToggleService_, _ServiceSetup_) {
+    $stateParams, _Userservice_, _FeatureToggleService_, _ServiceSetup_, _Authinfo_) {
     rootScope = $rootScope;
     $scope = rootScope.$new();
     $scope.tabs = tabs;
@@ -102,6 +107,7 @@ describe('Controller: WizardCtrl', function () {
     Userservice = _Userservice_;
     ServiceSetup = _ServiceSetup_;
     FeatureToggleService = _FeatureToggleService_;
+    Authinfo = _Authinfo_;
 
     getUserMe = getJSONFixture('core/json/users/me.json');
     getMyFeatureToggles = getJSONFixture('core/json/users/me/featureToggles.json');
@@ -109,15 +115,19 @@ describe('Controller: WizardCtrl', function () {
     spyOn($state, 'go');
     spyOn(Userservice, 'getUser').and.returnValue(getUserMe);
     spyOn(FeatureToggleService, 'getFeatureForUser').and.returnValue(getMyFeatureToggles);
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
+    spyOn(Authinfo, 'getLicenses').and.returnValue([{
+      licenseType: 'COMMUNICATION',
+    }]);
     spyOn(rootScope, '$broadcast').and.callThrough();
-    spyOn(ServiceSetup, 'listSites').and.returnValue($q.when());
+    spyOn(ServiceSetup, 'listSites').and.returnValue($q.resolve());
 
     controller = $controller('WizardCtrl', {
       $rootScope: rootScope,
       $scope: $scope,
       $translate: $translate,
       $stateParams: $stateParams,
-      $state: $state
+      $state: $state,
     });
 
     $scope.$apply();

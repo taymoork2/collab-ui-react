@@ -31,13 +31,13 @@
       getHuntMembers: getHuntMembers,
       isMemberDirty: isMemberDirty,
       setAsPristine: setAsPristine,
-      rearrangeResponsesInSequence: rearrangeResponsesInSequence // elevated for unit testing
+      rearrangeResponsesInSequence: rearrangeResponsesInSequence, // elevated for unit testing
     };
 
     ////////////////
 
     function setAsPristine() {
-      pristineSelectedHuntMembers = angular.copy(selectedHuntMembers);
+      pristineSelectedHuntMembers = _.cloneDeep(selectedHuntMembers);
     }
 
     function isMemberDirty(pristineMember) {
@@ -65,7 +65,7 @@
     }
 
     function rearrangeResponsesInSequence(users) {
-      var tempArray = angular.copy(selectedHuntMembers);
+      var tempArray = _.cloneDeep(selectedHuntMembers);
       selectedHuntMembers.splice(0, selectedHuntMembers.length);
 
       users.forEach(function (user) {
@@ -104,12 +104,12 @@
            * aligned.
            */
           rearrangeResponsesInSequence(users);
-          pristineSelectedHuntMembers = angular.copy(selectedHuntMembers);
+          pristineSelectedHuntMembers = _.cloneDeep(selectedHuntMembers);
           asyncTask.resolve(selectedHuntMembers);
         }, memberFailureResponse(asyncTask));
 
       } else {
-        selectedHuntMembers = angular.copy(pristineSelectedHuntMembers);
+        selectedHuntMembers = _.cloneDeep(pristineSelectedHuntMembers);
         asyncTask.resolve(selectedHuntMembers);
       }
       return asyncTask.promise;
@@ -175,11 +175,11 @@
      * on the nameHint, but filter those selected on
      * UI already from showing.
      */
-    function fetchHuntMembers(nameHint) {
-      return fetchMembers(nameHint, {
+    function fetchHuntMembers(nameHint, onlyMembers) {
+      return fetchMembers(nameHint, onlyMembers, {
         sourceKey: 'uuid',
         responseKey: 'uuid',
-        dataToStrip: selectedHuntMembers
+        dataToStrip: selectedHuntMembers,
       });
     }
 
@@ -187,8 +187,8 @@
      * Given a hint and a filter function, fetch the huron
      * users from the backend and apply the filtering logic.
      */
-    function fetchMembers(nameHint, filter) {
-      var GetHuntMembers = HuntGroupService.getHuntMembers(nameHint);
+    function fetchMembers(nameHint, onlyMembers, filter) {
+      var GetHuntMembers = HuntGroupService.getHuntMembers(nameHint, onlyMembers);
 
       if (GetHuntMembers) {
         GetHuntMembers.setOnFailure(memberFailureResponse());
@@ -219,7 +219,9 @@
         return;
       }
 
-      if (!user.firstName && !user.lastName) {
+      if (user.displayName) {
+        return user.displayName;
+      } else if (!user.firstName && !user.lastName) {
         return user.userName;
       } else if (user.firstName && user.lastName) {
         return user.firstName + ' ' + user.lastName;
@@ -227,8 +229,6 @@
         return user.firstName;
       } else if (user.lastName) {
         return user.lastName;
-      } else {
-        return;
       }
     }
   }

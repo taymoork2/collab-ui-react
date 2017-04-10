@@ -1,3 +1,5 @@
+require('./_customer-admin.scss');
+
 (function () {
   'use strict';
 
@@ -10,7 +12,7 @@
       restrict: 'E',
       templateUrl: 'modules/core/customers/customerAdministrators/customerAdministratorOverview.tpl.html',
       controller: 'CustomerAdministratorOverviewCtrl',
-      controllerAs: 'customerAdminOverview'
+      controllerAs: 'customerAdminOverview',
     };
 
     return directive;

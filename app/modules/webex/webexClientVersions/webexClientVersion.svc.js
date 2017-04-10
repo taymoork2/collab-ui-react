@@ -19,7 +19,7 @@
       'clientVersions': 'clientversions', //get
       'getTemplate': 'partnertemplate/${partnerId}',
       'postTemplate': 'partnertemplate',
-      'putTemplate': 'partnertemplate/${partnerTemplateId}'
+      'putTemplate': 'partnertemplate/${partnerTemplateId}',
     };
 
     this.getVersionJson = function (partnerTemplate, partnerId, version, useLatest) {
@@ -27,7 +27,7 @@
         'partnerTemplateId': partnerTemplate,
         'partnerId': partnerId,
         'clientVersion': version,
-        'useLatest': useLatest
+        'useLatest': useLatest,
       };
     };
 
@@ -39,7 +39,7 @@
 
     this.getToggle_webexSelectLatestVersionAlways = function () {
       var selectLatest = "latest_version";
-      return $q.when(selectLatest);
+      return $q.resolve(selectLatest);
     };
 
     /**
@@ -73,7 +73,7 @@
        Here we will simply return a list of strings that corresponds to the client versions.
     */
     this.getWbxClientVersions = function () {
-      //http://atlas-integration.wbx2.com/admin/api/v1/partnertemplate/clientversions
+      //http://atlas-intb.ciscospark.com/admin/api/v1/partnertemplate/clientversions
       // var url = this.getTotalUrl('clientVersions');
       // return $http.get(url).then(function (response) {
       //   return response.data.clientVersions;
@@ -90,12 +90,12 @@
       var relativeUrl = self.relativeUrls[name];
       var url = self.getAdminServiceUrl() + relativeUrl;
 
-      if (!angular.isUndefined(orgId)) {
-        url = url.replace("${partnerId}", orgId);
+      if (!_.isUndefined(orgId)) {
+        url = _.replace(url, "${partnerId}", orgId);
       }
 
-      if (!angular.isUndefined(partnerTemplate)) {
-        url = url.replace("${partnerTemplateId}", partnerTemplate);
+      if (!_.isUndefined(partnerTemplate)) {
+        url = _.replace(url, "${partnerTemplateId}", partnerTemplate);
       }
 
       return url;

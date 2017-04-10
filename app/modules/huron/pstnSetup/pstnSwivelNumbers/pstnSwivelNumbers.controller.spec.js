@@ -23,7 +23,7 @@ describe('Controller: PstnSwivelNumbersCtrl', function () {
     spyOn($state, 'go');
 
     controller = $controller('PstnSwivelNumbersCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
     $scope.$apply();
   }));

@@ -27,21 +27,41 @@ describe('Controller: PstnReviewCtrl', function () {
     PstnSetup.setSiteExists(true);
     PstnSetup.setOrders(orderCart);
 
-    spyOn(PstnSetupService, 'createCustomer').and.returnValue($q.when());
-    spyOn(PstnSetupService, 'updateCustomerCarrier').and.returnValue($q.when());
-    spyOn(PstnSetupService, 'orderNumbers').and.returnValue($q.when());
-    spyOn(PstnSetupService, 'portNumbers').and.returnValue($q.when());
-    spyOn(PstnSetupService, 'orderBlock').and.returnValue($q.when());
-    spyOn(PstnServiceAddressService, 'createCustomerSite').and.returnValue($q.when());
-    spyOn(ExternalNumberPool, 'create').and.returnValue($q.when());
+    spyOn(PstnSetupService, 'createCustomerV2').and.returnValue($q.resolve());
+    spyOn(PstnSetupService, 'updateCustomerCarrier').and.returnValue($q.resolve());
+    spyOn(PstnSetupService, 'orderNumbersV2').and.returnValue($q.resolve());
+    spyOn(PstnSetupService, 'orderTollFreeBlock').and.returnValue($q.resolve());
+    spyOn(PstnSetupService, 'portNumbers').and.returnValue($q.resolve());
+    spyOn(PstnSetupService, 'orderBlock').and.returnValue($q.resolve());
+    spyOn(PstnServiceAddressService, 'createCustomerSite').and.returnValue($q.resolve());
+    spyOn(ExternalNumberPool, 'create').and.returnValue($q.resolve());
     spyOn($state, 'go');
 
     controller = $controller('PstnReviewCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
 
     $scope.$apply();
   }));
+
+  afterEach(function () {
+    controller = undefined;
+    $controller = undefined;
+    $scope = undefined;
+    $q = undefined;
+    $state = undefined;
+    PstnSetup = undefined;
+    PstnSetupService = undefined;
+    PstnServiceAddressService = undefined;
+    ExternalNumberPool = undefined;
+  });
+
+  afterAll(function () {
+    carrierList = undefined;
+    customer = undefined;
+    orderCart = undefined;
+  });
+
 
   describe('placeOrder', function () {
     describe('when customer exists', function () {
@@ -50,23 +70,24 @@ describe('Controller: PstnReviewCtrl', function () {
 
         expect($state.go).not.toHaveBeenCalledWith('pstnSetup.nextSteps');
         $scope.$apply();
-        expect(PstnSetupService.createCustomer).not.toHaveBeenCalled();
+        expect(PstnSetupService.createCustomerV2).not.toHaveBeenCalled();
         expect(PstnSetupService.updateCustomerCarrier).not.toHaveBeenCalled();
         expect(PstnServiceAddressService.createCustomerSite).not.toHaveBeenCalled();
-        expect(PstnSetupService.orderNumbers).toHaveBeenCalled();
+        expect(PstnSetupService.orderNumbersV2).toHaveBeenCalled();
         expect($state.go).toHaveBeenCalledWith('pstnSetup.nextSteps', {
-          portOrders: [orderCart[1]]
+          portOrders: [orderCart[1]],
         });
       });
 
-      it('should contain one of each order', function () {
+      it('should contain at least one of each order type', function () {
         expect(controller.portOrders.length).toEqual(1);
-        expect(controller.advancedOrders.length).toEqual(1);
+        expect(controller.advancedOrders.length).toEqual(3);
         expect(controller.newOrders.length).toEqual(1);
+        expect(controller.newTollFreeOrders.length).toEqual(1);
       });
 
       it('should show the correct number of new and port numbers', function () {
-        expect(controller.totalNewAdvancedOrder).toEqual(6);
+        expect(controller.totalNewAdvancedOrder).toEqual(19);
         expect(controller.totalPortNumbers).toEqual(2);
       });
     });
@@ -81,12 +102,12 @@ describe('Controller: PstnReviewCtrl', function () {
 
         expect($state.go).not.toHaveBeenCalledWith('pstnSetup.nextSteps');
         $scope.$apply();
-        expect(PstnSetupService.createCustomer).not.toHaveBeenCalled();
+        expect(PstnSetupService.createCustomerV2).not.toHaveBeenCalled();
         expect(PstnSetupService.updateCustomerCarrier).toHaveBeenCalled();
         expect(PstnServiceAddressService.createCustomerSite).not.toHaveBeenCalled();
-        expect(PstnSetupService.orderNumbers).toHaveBeenCalled();
+        expect(PstnSetupService.orderNumbersV2).toHaveBeenCalled();
         expect($state.go).toHaveBeenCalledWith('pstnSetup.nextSteps', {
-          portOrders: [orderCart[1]]
+          portOrders: [orderCart[1]],
         });
       });
     });
@@ -102,12 +123,12 @@ describe('Controller: PstnReviewCtrl', function () {
 
         expect($state.go).not.toHaveBeenCalledWith('pstnSetup.nextSteps');
         $scope.$apply();
-        expect(PstnSetupService.createCustomer).toHaveBeenCalled();
+        expect(PstnSetupService.createCustomerV2).toHaveBeenCalled();
         expect(PstnSetupService.updateCustomerCarrier).not.toHaveBeenCalled();
         expect(PstnServiceAddressService.createCustomerSite).not.toHaveBeenCalled();
-        expect(PstnSetupService.orderNumbers).toHaveBeenCalled();
+        expect(PstnSetupService.orderNumbersV2).toHaveBeenCalled();
         expect($state.go).toHaveBeenCalledWith('pstnSetup.nextSteps', {
-          portOrders: [orderCart[1]]
+          portOrders: [orderCart[1]],
         });
       });
     });
@@ -122,12 +143,12 @@ describe('Controller: PstnReviewCtrl', function () {
 
         expect($state.go).not.toHaveBeenCalledWith('pstnSetup.nextSteps');
         $scope.$apply();
-        expect(PstnSetupService.createCustomer).not.toHaveBeenCalled();
+        expect(PstnSetupService.createCustomerV2).not.toHaveBeenCalled();
         expect(PstnSetupService.updateCustomerCarrier).not.toHaveBeenCalled();
         expect(PstnServiceAddressService.createCustomerSite).toHaveBeenCalled();
-        expect(PstnSetupService.orderNumbers).toHaveBeenCalled();
+        expect(PstnSetupService.orderNumbersV2).toHaveBeenCalled();
         expect($state.go).toHaveBeenCalledWith('pstnSetup.nextSteps', {
-          portOrders: [orderCart[1]]
+          portOrders: [orderCart[1]],
         });
       });
     });

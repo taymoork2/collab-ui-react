@@ -16,6 +16,18 @@ describe('Template: partnerProfile', function () {
   var SAVE_BUTTON = '#orgProfileSaveBtn';
   var INVISIBLE = 'invisible';
 
+  afterEach(function () {
+    if (view) {
+      view.remove();
+    }
+    $scope = $controller = $q = $templateCache = $compile = view = undefined;
+    Notification = Orgservice = UserListService = BrandService = FeatureToggleService = WebexClientVersion = Authinfo = undefined;
+  });
+
+  afterAll(function () {
+    PROBLEM_SITE_RADIO_0 = PROBLEM_SITE_RADIO_1 = HELP_SITE_RADIO_0 = HELP_SITE_RADIO_1 = PARTNER_HELP_URL = BUTTON_CONTAINER = CANCEL_BUTTON = SAVE_BUTTON = INVISIBLE = undefined;
+  });
+
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
@@ -42,25 +54,25 @@ describe('Template: partnerProfile', function () {
     spyOn(Notification, 'success');
     spyOn(Notification, 'error');
     spyOn(Notification, 'errorResponse');
-    spyOn(Orgservice, 'setOrgSettings').and.returnValue($q.when());
+    spyOn(Orgservice, 'setOrgSettings').and.returnValue($q.resolve());
     spyOn(UserListService, 'listPartners');
-    spyOn(BrandService, 'getLogoUrl').and.returnValue($q.when());
-    spyOn(WebexClientVersion, 'getWbxClientVersions').and.returnValue($q.when());
-    spyOn(WebexClientVersion, 'getPartnerIdGivenOrgId').and.returnValue($q.when());
-    spyOn(WebexClientVersion, 'getTemplate').and.returnValue($q.when());
+    spyOn(BrandService, 'getLogoUrl').and.returnValue($q.resolve());
+    spyOn(WebexClientVersion, 'getWbxClientVersions').and.returnValue($q.resolve());
+    spyOn(WebexClientVersion, 'getPartnerIdGivenOrgId').and.returnValue($q.resolve());
+    spyOn(WebexClientVersion, 'getTemplate').and.returnValue($q.resolve());
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
       callback({
         success: true,
-        orgSettings: {}
+        orgSettings: {},
       });
     });
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
     spyOn(Authinfo, 'isPartner');
   }
 
   function compileView() {
     $controller('PartnerProfileCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
     var template = $templateCache.get('modules/core/partnerProfile/partnerProfile.tpl.html');
     var elem = angular.element(template);

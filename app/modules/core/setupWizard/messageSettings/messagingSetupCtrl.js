@@ -20,23 +20,23 @@
     vm.placeholder = $translate.instant('firstTimeWizard.messagingSetupPlaceholder');
     vm.selected = {
       label: '',
-      value: ''
+      value: '',
     };
     vm.options = [{
       label: $translate.instant('firstTimeWizard.messagingSetupDataRetentionOption1'),
-      value: 'immediate'
+      value: 'immediate',
     }, {
       label: $translate.instant('firstTimeWizard.messagingSetupDataRetentionOption2'),
-      value: '30'
+      value: '30',
     }, {
       label: $translate.instant('firstTimeWizard.messagingSetupDataRetentionOption3'),
-      value: '60'
+      value: '60',
     }, {
       label: $translate.instant('firstTimeWizard.messagingSetupDataRetentionOption4'),
-      value: '90'
+      value: '90',
     }, {
       label: $translate.instant('firstTimeWizard.messagingSetupDataRetentionOption5'),
-      value: 'indefinite'
+      value: 'indefinite',
     }];
 
     FeatureToggleService.atlasDataRetentionSettingsGetStatus().then(function (toggle) {
@@ -83,8 +83,8 @@
           .then(function () {
             Notification.success('firstTimeWizard.messengerRetentionSuccess');
           })
-          .catch(function () {
-            Notification.error('firstTimeWizard.messengerRetentionError');
+          .catch(function (response) {
+            Notification.errorResponse(response, 'firstTimeWizard.messengerRetentionError');
           });
       }
 
@@ -93,8 +93,8 @@
           .then(function () {
             Notification.success('firstTimeWizard.messengerRetentionEditSuccess');
           })
-          .catch(function () {
-            Notification.error('firstTimeWizard.messengerRetentionEditError');
+          .catch(function (response) {
+            Notification.errorResponse(response, 'firstTimeWizard.messengerRetentionEditError');
           });
       }
 
@@ -103,8 +103,8 @@
           .then(function () {
             Notification.success('firstTimeWizard.messengerEnableWebexSuccess');
           })
-          .catch(function () {
-            Notification.error('firstTimeWizard.messengerEnableWebexError');
+          .catch(function (response) {
+            Notification.errorResponse(response, 'firstTimeWizard.messengerEnableWebexError');
           });
 
       } else if (!vm.msgIntegration && msgIntFlag) {
@@ -112,8 +112,8 @@
           .then(function () {
             Notification.success('firstTimeWizard.messengerDisableWebexError');
           })
-          .catch(function () {
-            Notification.error('firstTimeWizard.messengerDisableWebexError');
+          .catch(function (response) {
+            Notification.errorResponse(response, 'firstTimeWizard.messengerDisableWebexError');
           });
       }
     };

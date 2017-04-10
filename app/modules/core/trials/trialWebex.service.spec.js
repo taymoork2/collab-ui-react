@@ -1,4 +1,5 @@
 /* globals $httpBackend, $q, Authinfo, Config, Notification, WebexOrderStatusResource, TrialWebexService, UrlConfig */
+
 'use strict';
 
 describe('Service: Webex Trial Service', function () {
@@ -10,7 +11,7 @@ describe('Service: Webex Trial Service', function () {
     bard.inject(this, '$httpBackend', '$q', 'Authinfo', 'Config', 'Notification', 'WebexOrderStatusResource', 'UrlConfig');
 
     bard.mockService(Authinfo, {
-      getOrgId: 'org-abc-123'
+      getOrgId: 'org-abc-123',
     });
     bard.mockService(WebexOrderStatusResource, {
       get: function (data) {
@@ -18,15 +19,12 @@ describe('Service: Webex Trial Service', function () {
         var status = {
           'siteUrl': 'trial-acmecorp.webex.com',
           'timeZoneId': 4,
-          'provOrderStatus': orderStatus
+          'provOrderStatus': orderStatus,
         };
         return {
-          '$promise': $q.when(status)
+          '$promise': $q.resolve(status),
         };
-      }
-    });
-    bard.mockService(Notification, {
-      error: $q.when([])
+      },
     });
   });
 
@@ -44,8 +42,8 @@ describe('Service: Webex Trial Service', function () {
       $httpBackend.whenPOST(UrlConfig.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke').respond({
         properties: [{
           isValid: 'true',
-          errorCode: '0'
-        }]
+          errorCode: '0',
+        }],
       });
       TrialWebexService.validateSiteUrl('trial-acmecorp.webex.com').then(function (response) {
         expect(response.isValid).toBe(true);
@@ -57,8 +55,8 @@ describe('Service: Webex Trial Service', function () {
       $httpBackend.whenPOST(UrlConfig.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke').respond({
         properties: [{
           isValid: 'false',
-          errorCode: '434057'
-        }]
+          errorCode: '434057',
+        }],
       });
       TrialWebexService.validateSiteUrl('acmecorp.com').then(function (response) {
         expect(response.isValid).toBe(false);
@@ -70,8 +68,8 @@ describe('Service: Webex Trial Service', function () {
       $httpBackend.whenPOST(UrlConfig.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke').respond({
         properties: [{
           isValid: 'false',
-          errorCode: '439012'
-        }]
+          errorCode: '439012',
+        }],
       });
       TrialWebexService.validateSiteUrl('acmecorp.com').then(function (response) {
         expect(response.isValid).toBe(false);
@@ -83,8 +81,8 @@ describe('Service: Webex Trial Service', function () {
       $httpBackend.whenPOST(UrlConfig.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke').respond({
         properties: [{
           isValid: 'false',
-          errorCode: '431397'
-        }]
+          errorCode: '431397',
+        }],
       });
       TrialWebexService.validateSiteUrl('acmecorp.com').then(function (response) {
         expect(response.isValid).toBe(false);
@@ -96,8 +94,8 @@ describe('Service: Webex Trial Service', function () {
       $httpBackend.whenPOST(UrlConfig.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke').respond({
         properties: [{
           isValid: 'false',
-          errorCode: '439015'
-        }]
+          errorCode: '439015',
+        }],
       });
       TrialWebexService.validateSiteUrl('acmecorp.com').then(function (response) {
         expect(response.isValid).toBe(false);
@@ -109,8 +107,8 @@ describe('Service: Webex Trial Service', function () {
       $httpBackend.whenPOST(UrlConfig.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke').respond({
         properties: [{
           isValid: 'true',
-          errorCode: '2'
-        }]
+          errorCode: '2',
+        }],
       });
       TrialWebexService.validateSiteUrl('trial-acmecorp.webex.com').then(function (response) {
         expect(response.isValid).toBe(false);
@@ -122,8 +120,8 @@ describe('Service: Webex Trial Service', function () {
       $httpBackend.whenPOST(UrlConfig.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke').respond({
         properties: [{
           isValid: 'false',
-          errorCode: '1337'
-        }]
+          errorCode: '1337',
+        }],
       });
       TrialWebexService.validateSiteUrl('acmecorp.com').then(function (response) {
         expect(response.errorCode).toBe('invalidSite');

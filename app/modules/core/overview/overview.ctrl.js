@@ -1,3 +1,5 @@
+require('./_overview.scss');
+
 (function () {
   'use strict';
 
@@ -6,116 +8,207 @@
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($rootScope, $scope, $translate, Authinfo, Config, FeatureToggleService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, SunlightReportService, TrialService, UrlConfig, hasCareFeatureToggle) {
+  function OverviewCtrl($modal, $rootScope, $state, $scope, $translate, Authinfo, CardUtils, Config, FeatureToggleService, FusionClusterService, hasGoogleCalendarFeatureToggle, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, SunlightReportService, TrialService, UrlConfig, PstnSetupService, HybridServicesUtils) {
     var vm = this;
+
+    var PSTN_TOS_ACCEPT = 'pstn-tos-accept-event';
 
     vm.pageTitle = $translate.instant('overview.pageTitle');
     vm.isCSB = Authinfo.isCSB();
+    vm.isDeviceManagement = Authinfo.isDeviceMgmt();
+    vm.orgData = null;
 
     vm.cards = [
       OverviewCardFactory.createMessageCard(),
       OverviewCardFactory.createMeetingCard(),
       OverviewCardFactory.createCallCard(),
+      OverviewCardFactory.createCareCard(),
       OverviewCardFactory.createRoomSystemsCard(),
       OverviewCardFactory.createHybridServicesCard(),
-      OverviewCardFactory.createUsersCard()
+      OverviewCardFactory.createUsersCard(),
     ];
-    // TODO Need to be removed once Care is graduated on atlas.
-    if (hasCareFeatureToggle) {
-      // Add care card after call card
-      vm.cards.splice(3, 0, OverviewCardFactory.createCareCard());
-    }
 
     vm.notifications = [];
+    vm.pstnToSNotification = null;
     vm.trialDaysLeft = undefined;
     vm.dismissNotification = dismissNotification;
 
-    vm.hasMediaFeatureToggle = false;
-
-    function isFeatureToggled() {
-      return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceOnboarding);
+    // for smaller screens where the notifications are on top, the layout needs to resize after the notifications are loaded
+    function resizeNotifications() {
+      CardUtils.resize(0, '.fourth.cs-card-layout');
     }
-    isFeatureToggled().then(function (reply) {
-      vm.hasMediaFeatureToggle = reply;
-    });
 
     function init() {
+      findAnyUrgentUpgradeInHybridServices();
       removeCardUserTitle();
       if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {
         vm.notifications.push(OverviewNotificationFactory.createSetupNotification());
+        resizeNotifications();
       }
-      Orgservice.getHybridServiceAcknowledged().then(function (response) {
-        if (response.status === 200) {
-          angular.forEach(response.data.items, function (item) {
-            if (!item.acknowledged) {
-              if (item.id === Config.entitlements.fusion_cal) {
+
+      var hybridServiceNotificationFlags = _.chain([
+        Config.entitlements.fusion_cal,
+        Config.entitlements.fusion_gcal,
+        Config.entitlements.fusion_uc,
+        Config.entitlements.fusion_ec,
+        Config.entitlements.mediafusion,
+        Config.entitlements.hds,
+      ])
+      .filter(Authinfo.isEntitled)
+      .map(HybridServicesUtils.getAckFlagForHybridServiceId)
+      .value();
+
+      HybridServicesFlagService
+        .readFlags(hybridServiceNotificationFlags)
+        .then(function (flags) {
+          _.forEach(flags, function (flag) {
+            if (!flag.raised) {
+              if (flag.name === HybridServicesUtils.getAckFlagForHybridServiceId(Config.entitlements.fusion_cal)) {
                 vm.notifications.push(OverviewNotificationFactory.createCalendarNotification());
-              } else if (item.id === Config.entitlements.fusion_uc) {
+              } else if (flag.name === HybridServicesUtils.getAckFlagForHybridServiceId(Config.entitlements.fusion_gcal) && hasGoogleCalendarFeatureToggle) {
+                vm.notifications.push(OverviewNotificationFactory.createGoogleCalendarNotification($modal, $state, HybridServicesFlagService, HybridServicesUtils));
+              } else if (flag.name === HybridServicesUtils.getAckFlagForHybridServiceId(Config.entitlements.fusion_uc)) {
                 vm.notifications.push(OverviewNotificationFactory.createCallAwareNotification());
-              } else if (item.id === Config.entitlements.fusion_ec) {
+              } else if (flag.name === HybridServicesUtils.getAckFlagForHybridServiceId(Config.entitlements.fusion_ec)) {
                 vm.notifications.push(OverviewNotificationFactory.createCallConnectNotification());
-              } else if (item.id === Config.entitlements.mediafusion && vm.hasMediaFeatureToggle) {
+              } else if (flag.name === HybridServicesUtils.getAckFlagForHybridServiceId(Config.entitlements.mediafusion)) {
                 vm.notifications.push(OverviewNotificationFactory.createHybridMediaNotification());
+              } else if (flag.name === HybridServicesUtils.getAckFlagForHybridServiceId(Config.entitlements.hds)) {
+                vm.notifications.push(OverviewNotificationFactory.createHybridDataSecurityNotification());
               }
             }
           });
-        } else {
-          Log.error("Error in GET service acknowledged status");
-        }
-      });
+          resizeNotifications();
+        })
+        .catch(function () {
+          Log.error('Error in GET service acknowledged status');
+        });
+
+      var params = {
+        basicInfo: true,
+        disableCache: true,
+      };
+
       Orgservice.getOrg(function (data, status) {
         if (status === 200) {
+          vm.orgData = data;
+
+          getTOSStatus();
           if (!data.orgSettings.sipCloudDomain) {
             vm.notifications.push(OverviewNotificationFactory.createCloudSipUriNotification());
+          }
+          if (vm.isDeviceManagement && _.isUndefined(data.orgSettings.allowCrashLogUpload)) {
+            vm.notifications.push(OverviewNotificationFactory.createCrashLogNotification());
+          }
+          if (Authinfo.isCare() || Authinfo.isCareVoice()) {
+            var hasMessage = Authinfo.isMessageEntitled();
+            var hasCall = Authinfo.isSquaredUC();
+            if (!hasMessage && !hasCall) {
+              vm.notifications.push(OverviewNotificationFactory
+                .createCareLicenseNotification('homePage.careLicenseMsgAndCallMissingText', 'homePage.careLicenseLinkText'));
+            } else if (!hasMessage) {
+              vm.notifications.push(OverviewNotificationFactory
+                .createCareLicenseNotification('homePage.careLicenseMsgMissingText', 'homePage.careLicenseLinkText'));
+            } else if (!hasCall) {
+              vm.notifications.push(OverviewNotificationFactory
+                .createCareLicenseNotification('homePage.careLicenseCallMissingText', 'homePage.careLicenseLinkText'));
+            }
           }
         } else {
           Log.debug('Get existing org failed. Status: ' + status);
           Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
         }
-      });
-      FeatureToggleService.atlasDarlingGetStatus().then(function (toggle) {
-        if (toggle) {
-          Orgservice.getAdminOrgUsage()
-            .then(function (response) {
-              var sharedDevicesUsage = -1;
-              var seaGullsUsage = -1;
-              _.each(response.data, function (subscription) {
-                _.each(subscription, function (licenses) {
-                  _.each(licenses, function (license) {
-                    if (license.status === Config.licenseStatus.ACTIVE) {
-                      if (license.offerName === Config.offerCodes.SD) {
-                        sharedDevicesUsage = license.usage;
-                      } else if (license.offerName === Config.offerCodes.SB) {
-                        seaGullsUsage = license.usage;
-                      }
-                    }
-                  });
-                });
-              });
-              if (sharedDevicesUsage === 0 || seaGullsUsage === 0) {
-                setRoomSystemEnabledDevice(true);
-                if (sharedDevicesUsage === 0 && seaGullsUsage === 0) {
-                  vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpDevices'));
-                } else if (seaGullsUsage === 0) {
-                  vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSeaGullDevices'));
-                } else {
-                  vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSharedDevices'));
+      }, Authinfo.getOrgId(), params);
+      Orgservice.getAdminOrgUsage()
+        .then(function (response) {
+          var sharedDevicesUsage = -1;
+          var seaGullsUsage = -1;
+          _.each(response.data, function (subscription) {
+            _.each(subscription, function (licenses) {
+              _.each(licenses, function (license) {
+                if (license.status === Config.licenseStatus.ACTIVE) {
+                  if (license.offerName === Config.offerCodes.SD) {
+                    sharedDevicesUsage = license.usage;
+                  } else if (license.offerName === Config.offerCodes.SB) {
+                    seaGullsUsage = license.usage;
+                  }
                 }
-              } else {
-                setRoomSystemEnabledDevice(false);
-              }
+              });
             });
+          });
+          if (sharedDevicesUsage === 0 || seaGullsUsage === 0) {
+            setRoomSystemEnabledDevice(true);
+            if (sharedDevicesUsage === 0 && seaGullsUsage === 0) {
+              vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpDevices'));
+            } else if (seaGullsUsage === 0) {
+              vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSparkBoardDevices'));
+            } else {
+              vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSharedDevices'));
+            }
+          } else {
+            setRoomSystemEnabledDevice(false);
+          }
+        });
+
+      FeatureToggleService.atlasPMRonM2GetStatus().then(function (toggle) {
+        if (toggle) {
+          vm.notifications.push(OverviewNotificationFactory.createPMRNotification());
         }
       });
+
       TrialService.getDaysLeftForCurrentUser().then(function (daysLeft) {
         vm.trialDaysLeft = daysLeft;
       });
     }
 
+    function getTOSStatus() {
+      //Don't allow the Parner to accept ToS for the customer
+      if (Authinfo.isCustomerLaunchedFromPartner()) {
+        return;
+      }
+      if (vm.orgData !== null) {
+        PstnSetupService.getCustomerV2(vm.orgData.id).then(function (customer) {
+          if (customer.trial) {
+            PstnSetupService.getCustomerTrialV2(vm.orgData.id).then(function (trial) {
+              if (!_.has(trial, 'acceptedDate')) {
+                vm.pstnToSNotification = OverviewNotificationFactory.createPSTNToSNotification();
+                vm.notifications.push(vm.pstnToSNotification);
+                $scope.$on(PSTN_TOS_ACCEPT, onPstnToSAccept);
+              }
+            });
+          }
+        });
+      }
+    }
+
+    function onPstnToSAccept() {
+      if (vm.pstnToSNotification !== null) {
+        dismissNotification(vm.pstnToSNotification);
+      }
+    }
+
+    function findAnyUrgentUpgradeInHybridServices() {
+      FusionClusterService.getAll()
+        .then(function (clusters) {
+          // c_mgmt will be tested when it will have its own service page back
+          var connectorsToTest = ['c_cal', 'c_ucmc'];
+          connectorsToTest.forEach(function (connectorType) {
+            var hasUrgentUpgrade = _.find(clusters, function (cluster) {
+              return _.some(cluster.provisioning, function (p) {
+                return p.connectorType === connectorType && p.availablePackageIsUrgent;
+              });
+            });
+            if (hasUrgentUpgrade) {
+              vm.notifications.push(OverviewNotificationFactory.createUrgentUpgradeNotification(connectorType));
+            }
+          });
+        });
+    }
+
     function removeCardUserTitle() {
       if (vm.isCSB) {
         _.remove(vm.cards, {
-          name: 'overview.cards.users.title'
+          name: 'overview.cards.users.title',
         });
       }
     }
@@ -128,7 +221,7 @@
 
     function dismissNotification(notification) {
       vm.notifications = _.reject(vm.notifications, {
-        name: notification.name
+        name: notification.name,
       });
       notification.dismiss();
     }
@@ -154,7 +247,11 @@
 
     SunlightReportService.getOverviewData();
 
-    Orgservice.getAdminOrg(_.partial(forwardEvent, 'orgEventHandler'), false, true);
+    var params = {
+      disableCache: true,
+      basicInfo: true,
+    };
+    Orgservice.getAdminOrg(_.partial(forwardEvent, 'orgEventHandler'), false, params);
 
     Orgservice.getUnlicensedUsers(_.partial(forwardEvent, 'unlicensedUsersHandler'));
 
@@ -164,12 +261,18 @@
 
     $scope.$on('DISMISS_SIP_NOTIFICATION', function () {
       vm.notifications = _.reject(vm.notifications, {
-        name: 'cloudSipUri'
+        name: 'cloudSipUri',
       });
     });
 
-    $rootScope.$watch('ssoEnabled', function () {
-      Orgservice.getAdminOrg(_.partial(forwardEvent, 'orgEventHandler'), false, true);
+    $rootScope.$watch('ssoEnabled', function (newValue, oldValue) {
+      if (newValue !== oldValue) {
+        var params = {
+          disableCache: true,
+          basicInfo: true,
+        };
+        Orgservice.getAdminOrg(_.partial(forwardEvent, 'orgEventHandler'), false, params);
+      }
     });
   }
 })();

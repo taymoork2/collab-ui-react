@@ -1,4 +1,5 @@
 {
+  "keys": ["cursor", "column", "line", "singleLine", "axis", "legend", "numFormat", "balloon", "export", "prefixesOfBigNumbers"],
   "baseVariables": {
     "cursor": {
       "cursorAlpha": 0,
@@ -11,31 +12,42 @@
       "type": "column",
       "fillAlphas": 1,
       "lineAlpha": 0,
-      "balloonColor": "#ccc",
+      "balloonColor": "#D7D7D8",
       "columnWidth": 0.6
     },
     "line": {
       "type": "line",
+      "bullet": "none",
+      "fillAlphas": 0.5,
+      "lineAlpha": 0.5,
+      "lineThickness": 1,
+      "hidden": false
+    },
+    "singleLine": {
+      "type": "line",
       "bullet": "round",
+      "bulletBorderAlpha": 1,
+      "bulletColor": "#FFFFFF",
+      "bulletSize": 5,
       "fillAlphas": 0,
       "lineAlpha": 1,
       "lineThickness": 3,
-      "hidden": false
+      "hideBulletsCount": 25,
+      "useLineColorForBulletBorder": true
     },
     "axis": {
-      "axisColor": "#ccc",
-      "gridColor": "#ccc",
-      "color": "#444",
+      "axisColor": "#D7D7D8",
+      "gridColor": "#D7D7D8",
+      "color": "#343537",
       "gridAlpha": 0,
       "axisAlpha": 1,
       "tickLength": 0,
-      "titleColor": "#444",
+      "titleColor": "#343537",
       "fontFamily": "CiscoSansTT Light"
     },
     "legend": {
-      "color": "#444",
+      "color": "#343537",
       "align": "center",
-      "autoMargins": false,
       "switchable": false,
       "fontSize": 13,
       "markerLabelGap": 10,
@@ -57,29 +69,16 @@
       "adjustBorderColor": true,
       "borderThickness": 1,
       "fillAlpha": 1,
-      "fillColor": "#fff",
+      "fillColor": "#FFFFFF",
       "fixedPosition": true,
       "shadowAlpha": 0
     },
     "export": {
       "enabled": true,
-      "position": "top-left",
       "libs": {
         "autoLoad": false
       },
-      "menu": [{
-        "class": "export-main",
-        "label": "reportsPage.downloadOptions",
-        "menu": [{
-          "label": "reportsPage.saveAs",
-          "title": "reportsPage.saveAs",
-          "class": "export-list",
-          "menu": ["PNG", "JPG"]
-        }, {
-          "label": "reportsPage.pdf",
-          "title": "reportsPage.pdf"
-        }]
-      }]
+      "menu": []
     },
     "prefixesOfBigNumbers": [{
       "number": 1e+3,
@@ -93,29 +92,22 @@
     }, {
       "number": 1e+12,
       "prefix": "T"
-    }],
-    "scroll": {
-      "autoGridCount": true
-    }
+    }]
   },
   "getBaseSerialGraph": {
     "type": "serial",
     "startEffect": "easeOutSine",
     "addClassNames": true,
     "fontFamily": "CiscoSansTT Extra Light",
-    "backgroundColor": "#fff",
+    "backgroundColor": "#FFFFFF",
     "backgroundAlpha": 1,
-    "autoMargins": false,
-    "marginLeft": 60,
-    "marginTop": 60,
-    "marginRight": 60,
-    "usePrefixes": true,
     "startDuration": "dummyData",
     "dataProvider": "dummyData",
     "valueAxes": "dummyData",
     "graphs": "dummyData",
     "categoryField": "dummyData",
-    "categoryAxis": "dummyData"
+    "categoryAxis": "dummyData",
+    "zoomOutText": ""
   },
   "getBasePieChart": {
     "type": "pie",

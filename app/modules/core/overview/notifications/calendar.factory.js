@@ -6,7 +6,7 @@
     .factory('OverviewCalendarNotification', OverviewCalendarNotification);
 
   /* @ngInject */
-  function OverviewCalendarNotification($state, Orgservice) {
+  function OverviewCalendarNotification($state, HybridServicesFlagService, HybridServicesUtils) {
     return {
       createNotification: function createNotification() {
         var notification = {
@@ -14,18 +14,18 @@
           badgeType: 'success',
           canDismiss: true,
           dismiss: function () {
-            Orgservice.setHybridServiceAcknowledged('calendar-service');
+            HybridServicesFlagService.raiseFlag(HybridServicesUtils.getAckFlagForHybridServiceId('squared-fusion-cal'));
           },
           link: function () {
             $state.go('calendar-service.list');
           },
           linkText: 'homePage.getStarted',
           name: 'calendar',
-          text: 'homePage.setUpCalendarService'
+          text: 'homePage.setUpCalendarService',
         };
 
         return notification;
-      }
+      },
     };
   }
 })();

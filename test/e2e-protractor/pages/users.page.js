@@ -1,3 +1,5 @@
+/* globals manageUsersPage */
+
 'use strict';
 
 // TODO - break up into UserList/UserAdd/UserPreview
@@ -5,7 +7,7 @@ var UsersPage = function () {
   this.inviteTestUser = {
     username: 'pbr-org-admin@squared2webex.com',
     password: 'C1sc0123!',
-    usernameWithNoEntitlements: 'collabctg+doNotDeleteTestUser@gmail.com'
+    usernameWithNoEntitlements: 'collabctg+doNotDeleteTestUser@gmail.com',
   };
 
   this.testUser = {
@@ -25,7 +27,7 @@ var UsersPage = function () {
 
   this.servicesPanel = element.all(by.cssContainingText('.section-title-row', 'Services')).first();
   this.servicesActionButton = this.servicesPanel.element(by.css('button.actions-button'));
-  this.editServicesButton = element(by.cssContainingText('a', 'Edit services'));
+  this.editServicesButton = element(by.css('.section-title-row a.as-button[translate="common.edit"]'));
   this.editServicesModal = element(by.css('.edit-services'));
 
   this.servicesPanelCommunicationsCheckbox = element(by.css('.indentedCheckbox'));
@@ -44,11 +46,10 @@ var UsersPage = function () {
   this.rolesPanel = element(by.id('roles-panel'));
   this.closeRolesPanel = element(by.id('close-roles'));
   this.closeSidePanel = element(by.css('.panel-close'));
-  this.messagingService = element.all(by.css('#Message .feature-arrow')).first();
-
-  this.communicationsService = element(by.css('#Call .feature-arrow'));
-  this.conferencingService = element(by.css('#Meeting .feature-arrow'));
-  this.contactCenterService = element(by.css('#ContactCenter .feature-arrow'));
+  this.messagingService = element(by.cssContainingText('.feature', 'Message')).element(by.css('.feature-arrow'));
+  this.communicationsService = element(by.cssContainingText('.feature', 'Call')).element(by.css('.feature-arrow'));
+  this.conferencingService = element(by.cssContainingText('.feature', 'Meeting')).element(by.css('.feature-arrow'));
+  this.contactCenterService = element(by.cssContainingText('.feature', 'Care')).element(by.css('.feature-arrow'));
   this.sunlightUserPanel = element(by.cssContainingText('.section-title-row', 'Channels'));
   this.sunlightChatChannel = element(by.css('label[for="sunlight-chat"]'));
   this.sunlightEmailChannel = element(by.css('label[for="sunlight-email"]'));
@@ -162,17 +163,26 @@ var UsersPage = function () {
   this.hybridServices_UC = element(by.css('label[for="squared-fusion-uc"]'));
   this.hybridServices_EC = element(by.css('label[for="squared-fusion-ec"]'));
 
-  this.hybridServices_sidePanel_Calendar = element(by.id('squared-fusion-cal-status'));
-  this.hybridServices_sidePanel_UC = element(by.id('squared-fusion-uc-status'));
+  this.hybridServices_sidePanel_Calendar = element(by.css('#link_squared-fusion-cal .feature-status'));
+  this.hybridServices_sidePanel_UC = element(by.css('#link_squared-fusion-uc .feature-status'));
 
   this.callServiceAware_link = element(by.id('link_squared-fusion-uc'));
 
   this.callServiceAwareStatus = element(by.id('callServiceAwareStatus'));
   this.callServiceConnectStatus = element(by.id('callServiceConnectStatus'));
 
+  this.callServiceAwareToggle = element(by.css('label[for="callServiceAwareEntitledToggle"]'));
+  this.callServiceConnectToggle = element(by.css('label[for="callServiceConnectEntitledToggle"]'));
   this.msgRadio = element(by.repeater('license in msgFeature.licenses'));
-  this.messageService = element(by.id('Message'));
-  this.meetingService = element(by.id('Meeting'));
+
+  this.messageService = element(by.cssContainingText('.feature-name', 'Message'));
+  this.meetingService = element(by.cssContainingText('.feature-name', 'Meeting'));
+
+  this.messageServiceFree = element(by.cssContainingText('.feature-label', 'Message Free'));
+  this.meetingServiceFree = element(by.cssContainingText('.feature-label', 'Meeting Free 3 Party'));
+
+  this.messageServicePaid = element(by.cssContainingText('.feature-label', 'Message'));
+  this.meetingServicePaid = element(by.cssContainingText('.feature-label', 'Meeting 25 Party'));
 
   this.assertSorting = function (nameToSort) {
     this.queryResults.getAttribute('value').then(function (value) {
@@ -235,8 +245,12 @@ var UsersPage = function () {
   };
 
   this.createUser = function (userName) {
-    utils.click(this.addUsers);
-    utils.expectIsDisplayed(this.manageDialog);
+    utils.click(navigation.usersTab);
+    utils.click(manageUsersPage.buttons.manageUsers);
+    utils.expectTextToBeSet(manageUsersPage.select.title, 'Add or Modify Users');
+    utils.click(manageUsersPage.select.radio.orgManual);
+    utils.click(manageUsersPage.buttons.next);
+
     utils.click(this.nameAndEmailRadio);
     utils.sendKeys(this.firstName, 'Test');
     utils.sendKeys(this.lastName, 'User');
@@ -253,25 +267,30 @@ var UsersPage = function () {
     utils.click(users.finishButton);
     utils.expectIsNotDisplayed(users.manageDialog);
 
-    activate.setup(null, alias);
     utils.search(alias);
   };
 
   this.clickServiceCheckbox = function (alias, expectedMsgState, expectedMtgState, clickService) {
-    function expectDisplayed(elem, state) {
-      if (state) {
-        utils.expectIsDisplayed(elem);
-      } else {
-        utils.expectIsNotDisplayed(elem);
-      }
-    }
 
     utils.clickUser(alias);
-    expectDisplayed(users.servicesPanel, true);
-    expectDisplayed(users.messageService, expectedMsgState);
-    expectDisplayed(users.meetingService, expectedMtgState);
+    utils.expectIsDisplayed(users.servicesPanel);
 
-    utils.click(users.servicesActionButton);
+    utils.expectIsDisplayed(users.messageService);
+    utils.expectIsDisplayed(users.meetingService);
+
+    if (expectedMsgState) {
+      utils.expectIsDisplayed(users.messageServicePaid);
+    } else {
+      utils.expectIsDisplayed(users.messageServiceFree);
+    }
+
+    if (expectedMtgState) {
+      utils.expectIsDisplayed(users.meetingServicePaid);
+    } else {
+      utils.expectIsDisplayed(users.meetingServiceFree);
+    }
+
+    utils.expectIsDisplayed(users.editServicesButton);
     utils.click(users.editServicesButton);
 
     utils.waitForModal().then(function () {

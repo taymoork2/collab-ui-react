@@ -1,0 +1,18 @@
+[
+  {
+    "restriction":"DIALINGCOSTAG_NATIONAL",
+    "blocked":"false"
+  },
+  {
+    "restriction":"DIALINGCOSTAG_INTERNATIONAL",
+    "blocked":"true"
+  },
+  {
+    "restriction":"DIALINGCOSTAG_MOBILE",
+    "blocked":"false"
+  },
+  {
+    "restriction":"DIALINGCOSTAG_PREMIUM",
+    "blocked":"true"
+  }
+]

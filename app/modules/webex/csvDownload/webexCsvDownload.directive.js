@@ -55,12 +55,12 @@
         type: '@',
         filedownloadurl: '@',
         filename: '@',
-        downloading: '@'
+        downloading: '@',
       },
       controller: webexCsvDownloadCtrl,
       controllerAs: 'webexCsvDownload',
       bindToController: true,
-      link: link
+      link: link,
     };
 
     return directive;
@@ -111,14 +111,14 @@
         $timeout(function () {
           var downloadAnchor = angular.element('#download-csv-' + scope.webexCsvDownload.type);
 
-          scope.webexCsvDownload.tempFunction = scope.webexCsvDownload.downloadCsv || angular.noop;
-          scope.webexCsvDownload.downloadCsv = angular.noop;
+          scope.webexCsvDownload.tempFunction = scope.webexCsvDownload.downloadCsv || _.noop;
+          scope.webexCsvDownload.downloadCsv = _.noop;
           // scope.webexCsvDownload = removeFocus;
 
           downloadAnchor
             .attr({
               href: url,
-              download: attrs.filename
+              download: attrs.filename,
             })
             .removeAttr('disabled');
         });
@@ -127,9 +127,9 @@
       function changeAnchorAttrToOriginalState() {
         $timeout(function () {
           var downloadAnchor = angular.element('#download-csv-' + scope.webexCsvDownload.type);
-          scope.webexCsvDownload.downloadCsv = scope.webexCsvDownload.tempFunction || angular.noop;
+          scope.webexCsvDownload.downloadCsv = scope.webexCsvDownload.tempFunction || _.noop;
           downloadAnchor.attr({
-            href: ''
+            href: '',
           }).removeAttr('download');
         });
       } // changeAnchorAttrToOriginalState()

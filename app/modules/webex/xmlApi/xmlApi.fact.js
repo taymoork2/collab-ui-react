@@ -3,8 +3,6 @@
 
   /* global X2JS */
 
-  angular.module('WebExApp').factory('WebExXmlApiFact', WebExXmlApiFact);
-
   /* @ngInject */
   function WebExXmlApiFact(
     $http,
@@ -13,7 +11,7 @@
     $q,
     $rootScope,
     Authinfo,
-    Storage,
+    LocalStorage,
     WebExXmlApiConstsSvc,
     Auth,
     SessionStorage,
@@ -36,8 +34,8 @@
         method: "POST",
         data: xmlRequest,
         headers: {
-          'Content-Type': 'application/x-www-rform-urlencoded'
-        }
+          'Content-Type': 'application/x-www-rform-urlencoded',
+        },
       }).success(function (data) {
         resolve(data);
       }).error(function (data) {
@@ -284,7 +282,7 @@
             "Found session tickets in $rootScope";
           // $log.log(logMsg);
         } else {
-          var storedSessionTicketsJson = Storage.get('sessionTickets');
+          var storedSessionTicketsJson = LocalStorage.get('sessionTickets');
           if (storedSessionTicketsJson !== null) {
             logMsg = funcName + ": " + "wbxSiteUrl" + wbxSiteUrl + "\n" +
               "Found session tickets in Storage";
@@ -377,7 +375,7 @@
           xmlApiUrl: xmlApiUrl,
           wbxSiteName: wbxSiteName,
           webexAdminID: primaryEmail,
-          accessToken: TokenService.getAccessToken()
+          accessToken: TokenService.getAccessToken(),
         };
 
         this.getSessionTicketInfo(xmlApiAccessInfo).then(
@@ -414,7 +412,7 @@
                   $rootScope.sessionTickets = {};
                 }
                 $rootScope.sessionTickets[wbxSiteName] = ticket;
-                Storage.put('sessionTickets', JSON.stringify($rootScope.sessionTickets));
+                LocalStorage.put('sessionTickets', JSON.stringify($rootScope.sessionTickets));
                 logMsg = funcName + ".success()" + ": " + "\n" + "Generated a new ticket for site=" + wbxSiteName;
                 $log.log(logMsg);
                 defer.resolve(ticket.sessionTik);
@@ -499,7 +497,7 @@
         }
 
         WebExXmlApiConstsSvc.replaceSets.forEach(function (replaceSet) {
-          bodySliceXml = bodySliceXml.replace(replaceSet.replaceThis, replaceSet.withThis);
+          bodySliceXml = _.replace(bodySliceXml, replaceSet.replaceThis, replaceSet.withThis);
         });
 
         logMsg = funcName + ": " + commentText + "\n" +
@@ -558,4 +556,6 @@
       },
     }; // return
   } //XmlApiFact()
+
+  module.exports = WebExXmlApiFact;
 })();

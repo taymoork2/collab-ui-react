@@ -3,12 +3,12 @@
 
   module.exports = angular
     .module('core.config', [
-      require('modules/core/scripts/services/storage')
+      require('modules/core/storage').default,
     ])
     .factory('Config', Config)
     .name;
 
-  function Config($location, Storage) {
+  function Config($location, $window, LocalStorage) {
     var TEST_ENV_CONFIG = 'TEST_ENV_CONFIG';
 
     var getCurrentHostname = function () {
@@ -29,7 +29,7 @@
 
       scimSchemas: [
         'urn:scim:schemas:core:1.0',
-        'urn:scim:schemas:extension:cisco:commonidentity:1.0'
+        'urn:scim:schemas:extension:cisco:commonidentity:1.0',
       ],
 
       helpUrl: 'https://help.webex.com/community/cisco-cloud-collab-mgmt',
@@ -47,8 +47,15 @@
 
       tokenTimers: {
         timeoutTimer: 3000000, // 50 mins
-        refreshTimer: 39600000, // 11 hours
-        refreshDelay: 900000 // 15 mins
+        refreshTimer: 6600000, // 1 hour 50 mins (Access token expires in 120 mins)
+        refreshDelay: 540000, // 9 mins
+      },
+
+      idleTabTimeout: 1200000, //20 mins
+      idleTabKeepAliveEvent: 'IDLE_TIMEOUT_KEEP_ALIVE',
+
+      siteDomainUrl: {
+        webexUrl: '.webex.com',
       },
 
       entitlements: {
@@ -56,13 +63,24 @@
         squared: 'webex-squared',
         fusion_uc: 'squared-fusion-uc',
         fusion_cal: 'squared-fusion-cal',
+        fusion_gcal: 'squared-fusion-gcal',
         mediafusion: 'squared-fusion-media',
+        hds: 'spark-hybrid-datasecurity',
         fusion_mgmt: 'squared-fusion-mgmt',
         room_system: 'spark-room-system',
         fusion_ec: 'squared-fusion-ec',
         messenger: 'webex-messenger',
         care: 'cloud-contact-center',
-        context: 'contact-center-context'
+        care_inbound_voice: 'cloud-contact-center-inbound-voice',
+        context: 'contact-center-context',
+        fusion_google_cal: 'squared-fusion-gcal',
+        fusion_khaos: 'squared-fusion-khaos',
+        message: 'squared-room-moderation',
+      },
+
+      licenseModel: {
+        cloudSharedMeeting: 'cloud shared meeting',
+        hosts: 'hosts',
       },
 
       offerTypes: {
@@ -75,9 +93,11 @@
         meeting: 'MEETING',
         call: 'CALL',
         roomSystems: 'ROOMSYSTEMS',
+        sparkBoard: 'SPARKBOARDS',
         pstn: 'PSTN',
         care: 'CARE',
-        context: 'CONTEXT'
+        advanceCare: 'CAREVOICE',
+        context: 'CONTEXT',
       },
 
       // These can be used to access object properties for trials
@@ -85,6 +105,7 @@
         'messaging',
         'communications',
         'care',
+        'advanceCare',
         'roomSystems',
         'conferencing',
         'webexCMR',
@@ -92,7 +113,7 @@
         'webexEventCenter',
         'webexMeetingCenter',
         'webexTrainingCenter',
-        'webexSupportCenter'
+        'webexSupportCenter',
       ],
 
       webexTypes: [
@@ -101,13 +122,13 @@
         'webexEventCenter',
         'webexMeetingCenter',
         'webexTrainingCenter',
-        'webexSupportCenter'
+        'webexSupportCenter',
       ],
 
       freeLicenses: [
         'messaging',
         'communications',
-        'conferencing'
+        'conferencing',
       ],
 
       //WARNING: Deprecated, use offerTypes
@@ -116,13 +137,13 @@
         message: 'COLLAB',
         meeting: 'WEBEX',
         call: 'SQUAREDUC',
-        roomSystems: 'ROOMSYSTEMS'
+        roomSystems: 'ROOMSYSTEMS',
       },
 
       //TODO: Revisit whether or not this is still needed or need to be modified now that there is offerTypes.
       organizations: {
         collab: 'COLLAB',
-        squaredUC: 'SQUAREDUC'
+        squaredUC: 'SQUAREDUC',
       },
 
       backend_roles: { // as stored in the ci
@@ -135,8 +156,11 @@
         sales: 'atlas-portal.partner.salesadmin',
         helpdesk: 'atlas-portal.partner.helpdesk',
         orderadmin: 'atlas-portal.partner.orderadmin',
+        partner_management: 'atlas-portal.cisco.partnermgmt',
         spark_synckms: 'spark.synckms',
-        readonly_admin: 'id_readonly_admin'
+        ciscouc_ces: 'ciscouc.ces',
+        readonly_admin: 'id_readonly_admin',
+        tech_support: 'atlas-portal.cisco.techsupport',
       },
 
       roles: {
@@ -149,14 +173,20 @@
         sales: 'Sales_Admin',
         helpdesk: 'Help_Desk',
         orderadmin: 'Order_Admin',
+        partner_management: 'Partner_Management',
         spark_synckms: 'Spark_SyncKms',
         readonly_admin: 'Readonly_Admin',
-        compliance_user: 'Compliance_User'
+        compliance_user: 'Compliance_User',
+        tech_support: 'Tech_Support',
       },
 
       roleState: {
         active: 'ACTIVE',
-        inactive: 'INACTIVE'
+        inactive: 'INACTIVE',
+      },
+
+      subscriptionState: {
+        trial: 'Trial',
       },
 
       confMap: {
@@ -167,7 +197,7 @@
         SC: 'onboardModal.supportCenter',
         TC: 'onboardModal.trainingCenter',
         EC: 'onboardModal.eventCenter',
-        CO: 'onboardModal.communication'
+        CO: 'onboardModal.communication',
       },
 
       offerCodes: {
@@ -180,16 +210,17 @@
         EC: 'EC', // Event Center (WebEx)
         CO: 'CO', // Communication
         SD: 'SD', // Spark Room System
-        SB: 'SB', // Seagull
+        SB: 'SB', // Spark Board
         CMR: 'CMR', // Collaboration Meeting Room (WebEx)
-        CDC: 'CDC' // Care Digital Channel
+        CDC: 'CDC', // Care Digital Channel
+        CVC: 'CVC', // Care Voice Channel
       },
 
       licenseStatus: {
         PENDING: 'PENDING',
         ACTIVE: 'ACTIVE',
         CANCELLED: 'CANCELLED',
-        SUSPENDED: 'SUSPENDED'
+        SUSPENDED: 'SUSPENDED',
       },
 
       licenseTypes: {
@@ -199,7 +230,8 @@
         STORAGE: 'STORAGE',
         SHARED_DEVICES: 'SHARED_DEVICES',
         CMR: 'CMR',
-        CARE: 'CARE'
+        CARE: 'CARE',
+        ADVANCE_CARE: 'ADVANCE_CARE',
       },
 
       messageErrors: {
@@ -216,6 +248,37 @@
         hybridServicesComboError: '400094',
       },
 
+      timeFormat: {
+        HOUR_12: '12-hour',
+        HOUR_24: '24-hour',
+      },
+
+      dateFormat: {
+        MDY_H: 'M-D-Y',
+        DMY_H: 'D-M-Y',
+        YMD_H: 'Y-M-D',
+        MDY_P: 'M.D.Y',
+        DMY_P: 'D.M.Y',
+        YMD_P: 'Y.M.D',
+        MDY_S: 'M/D/Y',
+        DMY_S: 'D/M/Y',
+        YMD_S: 'Y/M/D',
+      },
+
+      webexSiteStatus: {
+        RECEIVED: 'RECEIVED',
+        PENDING_PARM: 'PENDING_PARM',
+        PROV_READY: 'PROV_READY',
+        PROVISIONING: 'PROVISIONING',
+        PROVISIONED: 'PROVISIONED',
+        REJECTED: 'REJECTED',
+        ERROR: 'ERROR',
+        PARTIAL: 'PARTIAL',
+        ABORTED: 'ABORTED',
+        TIMEOUT: 'TIMEOUT',
+        NA: 'NA',
+      },
+
       defaultEntitlements: ['webex-squared', 'squared-call-initiation'],
 
       batchSize: 10,
@@ -226,7 +289,7 @@
           '127.0.0.1',
           'localhost',
           'server',
-          'dev-admin.ciscospark.com'
+          'dev-admin.ciscospark.com',
         ];
         return _.includes(whitelistDevHosts, hostName);
       },
@@ -234,7 +297,7 @@
       canUseAbsUrlForDevLogin: function (absUrl) {
         var whitelistAbsUrls = [
           'http://127.0.0.1:8000',
-          'http://dev-admin.ciscospark.com:8000'
+          'http://dev-admin.ciscospark.com:8000',
         ];
         return _.includes(whitelistAbsUrls, absUrl);
       },
@@ -281,16 +344,20 @@
 
     config.setTestEnvConfig = function (testEnv) {
       if (testEnv) {
-        Storage.put(TEST_ENV_CONFIG, testEnv); // Store in localStorage so new windows pick up the value, will be cleared on logout
+        LocalStorage.put(TEST_ENV_CONFIG, testEnv); // Store in localStorage so new windows pick up the value, will be cleared on logout
       }
     };
 
     config.isE2E = function () {
-      return _.includes(Storage.get(TEST_ENV_CONFIG), 'e2e');
+      return _.includes(LocalStorage.get(TEST_ENV_CONFIG), 'e2e');
+    };
+
+    config.isUserAgent = function (userAgentString) {
+      return $window.navigator.userAgent.indexOf(userAgentString) > -1;
     };
 
     config.forceProdForE2E = function () {
-      return Storage.get(TEST_ENV_CONFIG) === 'e2e-prod';
+      return LocalStorage.get(TEST_ENV_CONFIG) === 'e2e-prod';
     };
 
     config.roleStates = {
@@ -305,6 +372,8 @@
         'dr-login-forward',
         'editService',
         'firsttimewizard',
+        'gem',
+        'gemCbgDetails',
         'my-company',
         'overview',
         'profile',
@@ -317,17 +386,18 @@
         'userRedirect',
         'userprofile',
         'users',
-        'status'
+        'customerPstnOrdersOverview',
       ],
-      Support: ['status', 'support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram', 'reports-metrics'],
-      WX2_User: ['status', 'overview', 'support', 'activateProduct'],
-      WX2_Support: ['status', 'overview', 'reports', 'support'],
+      Support: ['support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram'],
+      Tech_Support: ['gss'],
+      WX2_User: ['overview', 'support', 'activateProduct'],
+      WX2_Support: ['overview', 'reports', 'support'],
       WX2_SquaredInviter: [],
-      PARTNER_ADMIN: ['status', 'partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup', 'video', 'settings'],
-      PARTNER_SALES_ADMIN: ['status', 'overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'pstnSetup', 'video', 'settings'],
-      CUSTOMER_PARTNER: ['status', 'overview', 'partnercustomers', 'customer-overview'],
+      PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'gem', 'gemOverview', 'gemCbgDetails', 'gmTdDetails', 'customer-overview', 'partnerreports', 'trial', 'trialAdd', 'trialEdit', 'profile', 'pstn', 'pstnSetup', 'video', 'settings'],
+      PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trial', 'trialAdd', 'trialEdit', 'pstn', 'pstnSetup', 'video', 'settings'],
+      CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
       //TODO User role is used by Online Ordering UI. The dr* states will be removed once the Online UI is separated from Atlas.
-      User: ['status', 'drLoginReturn', 'drOnboard', 'drConfirmAdminOrg', 'drOnboardQuestion', 'drOnboardEnterAdminEmail', 'drOrgName', 'drAdminChoices'],
+      User: ['drLoginReturn', 'drOnboard', 'drConfirmAdminOrg', 'drOnboardQuestion', 'drOnboardEnterAdminEmail', 'drOrgName', 'drAdminChoices'],
       Site_Admin: [
         'site-list',
         'site-csv-import',
@@ -335,14 +405,19 @@
         'site-csv-results',
         'site-settings',
         'site-setting',
-        'webex-reports',
+        'reports.webex',
         'webex-reports-iframe',
         'services-overview',
       ],
       Application: ['organizations', 'organization-overview'],
       Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org', 'helpdesklaunch'],
-      Compliance_User: ['ediscovery', 'ediscovery.search', 'ediscovery.reports']
+      Compliance_User: ['ediscovery', 'ediscovery.search', 'ediscovery.reports'],
     };
+
+    if (config.isDev()) {
+      // only allow feature toggle editor in Development mode
+      config.roleStates.Full_Admin.push('edit-featuretoggles');
+    }
 
     config.roleStates.Readonly_Admin = _.clone(config.roleStates.Full_Admin);
     config.roleStates.PARTNER_READ_ONLY_ADMIN = _.clone(config.roleStates.PARTNER_ADMIN);
@@ -353,35 +428,45 @@
         'autoattendant',
         'callpark',
         'callparkedit',
-        'callpickup',
-        'callrouting',
+        'callPickupSetupAssistant',
+        'callpickupedit',
         'device-overview',
         'devices',
         'didadd',
-        'generateauthcode',
         'huntgroups',
         'huronCallPark',
         'hurondetails',
         'huronfeatures',
         'huronHuntGroup',
+        'huronPagingGroup',
+        'huronCallPickup',
+        'huronPagingGroupEdit',
         'huronlines',
         'huronnewfeature',
         'huronsettings',
+        'huronsettingsnew',
         'huntgroupedit',
         'intercomgroups',
         'mediaonhold',
         'paginggroups',
+        'pickupGroups',
         'place-overview',
         'places',
         'services-overview',
+        'private-trunk-overview',
+        'private-trunk-domain',
+        'private-trunk-sidepanel',
+        'private-trunk-redirect',
+        'customerPstnOrdersOverview',
       ],
       'squared-fusion-mgmt': [
-        'cluster-details',
-        'management-connector-details',
-        'management-service',
+        'expressway-cluster-sidepanel',
         'services-overview',
         'resource-group-settings',
-        'cluster-list'
+        'cluster-list',
+        'expressway-cluster',
+        'hybrid-services-connector-sidepanel',
+        'cucm-cluster', // Remove when squared-fusion-khaos entitlement is returned by Atlas backend
       ],
       'spark-room-system': [
         'addDeviceFlow',
@@ -389,43 +474,75 @@
         'devices',
         'place-overview',
         'places',
+        'huronsettings',
+        'huronlines',
       ],
       'squared-fusion-uc': [
         'add-resource',
         'call-service',
         'cluster-list',
-        'expressway-settings',
+        'expressway-cluster',
+        'hybrid-services-connector-sidepanel',
         'services-overview',
       ],
       'squared-fusion-cal': [
         'add-resource',
         'calendar-service',
         'cluster-list',
-        'expressway-settings',
+        'expressway-cluster',
+        'hybrid-services-connector-sidepanel',
+        'services-overview',
+      ],
+      'squared-fusion-gcal': [
+        'add-resource',
+        'google-calendar-service',
+        'cluster-list',
         'services-overview',
       ],
       'squared-team-member': [
-        'organization'
+        'organization',
+      ],
+      'spark-hybrid-datasecurity': [
+        'hds',
+        'hds.list',
+        'hds.settings',
+        'hds-cluster-details',
+        'hds-cluster',
       ],
       'squared-fusion-media': [
         'add-resource',
-        'connector-details',
-        'connector-details-v2',
-        'media-service',
         'media-service-v2',
-        'mediafusion-settings',
+        'mediafusion-cluster',
         'metrics',
-        'reports-metrics',
+        'reports.metrics',
+        'reports.media',
+        'reports.mediaservice',
         'services-overview',
-        'cluster-list'
+        'cluster-list',
+        'media-cluster-details',
       ],
       'webex-messenger': [
         'messenger',
         'services-overview',
       ],
       'cloud-contact-center': [
-        'care'
-      ]
+        'care',
+      ],
+      'contact-center-context': [
+        'context-settings',
+        'context-fields',
+        'context-fieldsets',
+        'context-fieldset-modal',
+        'context-fieldsets-sidepanel',
+        'context-resources',
+        'context-cluster-sidepanel',
+        'add-resource',
+        'context-fields-sidepanel',
+        'context-field-modal',
+      ],
+      'squared-fusion-khaos': [
+        'cucm-cluster',
+      ],
     };
 
     // These states are not allowed in specific views
@@ -433,25 +550,26 @@
     config.restrictedStates = {
       'customer': [
         'partneroverview',
-        'partnerreports'
+        'partnerreports',
       ],
       'partner': [
         'calendar-service',
         'call-service',
         'cluster-list',
         'devices',
-        'expressway-settings',
+        'places',
+        'expressway-cluster',
+        'hybrid-services-connector-sidepanel',
         'fusion',
         'hurondetails',
         'huronsettings',
-        'management-service',
         'media-service',
         'media-service-v2',
-        'mediafusion-settings',
+        'mediafusion-cluster',
         'overview',
         'reports',
         'services-overview',
-      ]
+      ],
     };
 
     // These states do not require a role/service check

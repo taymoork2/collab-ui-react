@@ -1,5 +1,6 @@
 (function () {
   'use strict';
+
   angular
     .module('Squared')
     .service('CommonLineService', CommonLineService);
@@ -18,18 +19,18 @@
       getTelephonyInfo: getTelephonyInfo,
       loadInternalNumberPool: loadInternalNumberPool,
       loadExternalNumberPool: loadExternalNumberPool,
-      returnInternalNumberlist: returnInternalNumberlist,
+      returnInternalNumberList: returnInternalNumberList,
+      returnExternalNumberList: returnExternalNumberList,
       checkDnOverlapsSteeringDigit: checkDnOverlapsSteeringDigit,
       assignDNForUserList: assignDNForUserList,
       assignMapUserList: assignMapUserList,
-      getInternalNumberlist: getInternalNumberlist,
       getEntitylist: getEntitylist,
       setEntitylist: setEntitylist,
       getInternalNumberPool: getInternalNumberPool,
       getExternalNumberPool: getExternalNumberPool,
       getNameTemplate: getNameTemplate,
       mapDidToDn: mapDidToDn,
-      isDnNotAvailable: isDnNotAvailable
+      isDnNotAvailable: isDnNotAvailable,
 
     };
 
@@ -53,8 +54,7 @@
     // Check to see if the currently selected directory number's first digit is
     // the same as the company steering digit.
     function checkDnOverlapsSteeringDigit(entity) {
-      var steeringDigit = telephonyInfo.steeringDigit;
-      return _.startsWith(_.get(entity, 'assignedDn.pattern'), steeringDigit);
+      return _.startsWith(_.get(entity, 'assignedDn.pattern'), _.get(telephonyInfo, 'steeringDigit'));
     }
 
     function getEntitylist() {
@@ -63,14 +63,6 @@
 
     function setEntitylist() {
       entitylist = _.cloneDeep(entitylist);
-    }
-
-    function getInternalNumberlist(pattern) {
-      if (pattern) {
-        loadInternalNumberPool(pattern);
-      } else {
-        return internalNumberPool;
-      }
     }
 
     function getInternalNumberPool() {
@@ -96,7 +88,7 @@
       }).catch(function (response) {
         externalNumberPool = [{
           uuid: 'none',
-          pattern: $translate.instant('directoryNumberPanel.none')
+          pattern: $translate.instant('directoryNumberPanel.none'),
         }];
         Notification.errorResponse(response, 'directoryNumberPanel.externalNumberPoolError');
       });
@@ -154,11 +146,19 @@
       return nameTemplate;
     }
 
-    function returnInternalNumberlist(pattern) {
+    function returnInternalNumberList(pattern) {
       if (pattern) {
         loadInternalNumberPool(pattern);
       } else {
         return internalNumberPool;
+      }
+    }
+
+    function returnExternalNumberList(pattern) {
+      if (pattern) {
+        loadExternalNumberPool(pattern);
+      } else {
+        return externalNumberPool;
       }
     }
 

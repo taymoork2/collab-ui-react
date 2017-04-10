@@ -1,0 +1,23 @@
+{
+    "numbers": [
+        {
+            "external": null,
+            "internal": "2176",
+            "primary": true,
+            "shared": false,
+            "siteToSite": "81002176",
+            "url": "https://cmi.huron-int.com/api/v2/customers/226d7977-ff3a-42dc-88ff-f866170a06c8/users/ccf6f31f-b87c-4a0f-8ddf-bd3e489eeaed/numbers/e95cf2c0-39a7-456b-9737-f06b708447af",
+            "uuid": "e95cf2c0-39a7-456b-9737-f06b708447af"
+        },
+        {
+            "external": null,
+            "internal": "3583",
+            "primary": false,
+            "shared": false,
+            "siteToSite": "81003583",
+            "url": "https://cmi.huron-int.com/api/v2/customers/226d7977-ff3a-42dc-88ff-f866170a06c8/users/ccf6f31f-b87c-4a0f-8ddf-bd3e489eeaed/numbers/0f738c2e-67d1-471c-ae72-4a01d1208c0a",
+            "uuid": "0f738c2e-67d1-471c-ae72-4a01d1208c0a"
+        }
+    ],
+    "url": "https://cmi.huron-int.com/api/v2/customers/226d7977-ff3a-42dc-88ff-f866170a06c8/users/ccf6f31f-b87c-4a0f-8ddf-bd3e489eeaed/numbers"
+}

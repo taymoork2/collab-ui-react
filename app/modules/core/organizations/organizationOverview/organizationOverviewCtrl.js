@@ -1,3 +1,5 @@
+require('./_organization-overview.scss');
+
 (function () {
   'use strict';
 
@@ -11,7 +13,7 @@
     $scope.setEftToggle = setEftToggle;
     $scope.eftToggleLoading = true;
     $scope.updateEftToggle = updateEftToggle;
-    $scope.currentOrganization.isEFT = false;
+    $scope.isEFT = false;
     $scope.currentEftSetting = false;
     $scope.toggleReleaseChannelAllowed = toggleReleaseChannelAllowed;
     $scope.showHybridServices = false;
@@ -25,6 +27,11 @@
     }
 
     function getOrgInfo() {
+      var params = {
+        basicInfo: true,
+        disableCache: true,
+      };
+
       Orgservice.getAdminOrg(function (data) {
         if (data.success) {
           $scope.currentOrganization = data;
@@ -32,7 +39,7 @@
         } else {
           Notification.error('organizationsPage.orgReadFailed');
         }
-      }, $scope.currentOrganization.id, true);
+      }, $scope.currentOrganization.id, params);
     }
 
     function initReleaseChannels() {
@@ -53,6 +60,7 @@
           };
         };
         $scope.betaChannel = new ReleaseChannel('beta', _.includes($scope.currentOrganization.services, 'squared-fusion-mgmt-channel-beta'));
+        $scope.alphaChannel = new ReleaseChannel('alpha', _.includes($scope.currentOrganization.services, 'squared-fusion-mgmt-channel-alpha'));
         $scope.latestChannel = new ReleaseChannel('latest', _.includes($scope.currentOrganization.services, 'squared-fusion-mgmt-channel-latest'));
       }
     }
@@ -60,11 +68,11 @@
     function updateEftToggle() {
       return Orgservice.getEftSetting(currentOrgId)
         .then(function (response) {
-          _.set($scope, 'currentOrganization.isEFT', response.data.eft);
+          _.set($scope, 'isEFT', response.data.eft);
           $scope.currentEftSetting = response.data.eft;
         })
-        .catch(function () {
-          Notification.error('organizationsPage.eftError');
+        .catch(function (response) {
+          Notification.errorResponse(response, 'organizationsPage.eftError');
         })
         .finally(function () {
           $scope.eftToggleLoading = false;
@@ -72,16 +80,15 @@
     }
 
     function setEftToggle(eft) {
-      if ($scope.currentEftSetting !== $scope.currentOrganization.isEFT) {
-        $scope.eftToggleLoading = true;
+      if (eft !== $scope.currentEftSetting) {
         Orgservice.setEftSetting(eft, currentOrgId)
-          .then(updateEftToggle)
-          .catch(function () {
-            _.set($scope, 'currentOrganization.isEFT', $scope.currentEftSetting);
-            Notification.error('organizationsPage.eftError');
+          .then(function () {
+            _.set($scope, 'isEFT', eft);
+            _.set($scope, 'currentEftSetting', eft);
           })
-          .finally(function () {
-            $scope.eftToggleLoading = false;
+          .catch(function (response) {
+            _.set($scope, 'isEFT', $scope.currentEftSetting);
+            Notification.errorResponse(response, 'organizationsPage.eftError');
           });
       }
     }
@@ -93,8 +100,8 @@
       Orgservice.setHybridServiceReleaseChannelEntitlement(currentOrgId, channel.name, channel.newAllow).then(function () {
         Notification.success('organizationsPage.releaseChannelToggleSuccess');
         channel.updated();
-      }).catch(function () {
-        Notification.error('organizationsPage.releaseChannelToggleFailure');
+      }).catch(function (response) {
+        Notification.errorResponse(response, 'organizationsPage.releaseChannelToggleFailure');
         channel.reset();
       });
     }
@@ -107,7 +114,7 @@
 
     $scope.exportBtn = {
       title: $filter('translate')('organizationsPage.exportBtn'),
-      disabled: false
+      disabled: false,
     };
 
     if ($rootScope.exporting === true) {

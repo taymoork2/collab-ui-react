@@ -1,19 +1,21 @@
-import {
-  SharedLineUser,
-  User,
-  SharedLineDevice,
-} from './sharedLine';
+import { SharedLine } from './sharedLine';
+import { Member, USER_REAL_USER } from '../members';
 
 class SharedLineCtrl implements ng.IComponentController {
-  public selectedUser: SharedLineUser | undefined;
-  public sharedLineUsers: SharedLineUser[];
-  public sharedLineEndpoints: SharedLineDevice[];
+  public selectedMember: Member | undefined;
+  public newSharedLineMembers: Array<Member>;
+  public selectedSharedLine: SharedLine;
+  public sharedLines: Array<SharedLine>;
   public oneAtATime: boolean = true;
 
   public selectSharedLineUserFn: Function;
   public getUserListFn: Function;
-  public isSingleDeviceFn: Function;
-  public disassociateSharedLineUserFn: Function;
+  public onSharedLineChangeFn: Function;
+  public onDeleteSharedLineMemberFn: Function;
+
+  public $onInit(): void {
+    this.newSharedLineMembers = [];
+  }
 
   public getUserList(filter: string): void {
     return this.getUserListFn({
@@ -21,47 +23,64 @@ class SharedLineCtrl implements ng.IComponentController {
     });
   }
 
-  public getUserName(name: { givenName: string, familyName: string }, userId: string): string {
-    let userName = _.get(name, 'name.givenName', '') +  ' '  +  _.get(name, 'name.familyName', '');
-    return userName.trim() || userId;
+  public getDisplayName(sharedLine: SharedLine): string {
+    if (_.get(sharedLine, 'user.userName')) {
+      return this.formatUserName(_.get<string>(sharedLine, 'user.firstName'), _.get<string>(sharedLine, 'user.lastName'), _.get<string>(sharedLine, 'user.userName'));
+    } else  {
+      return _.get(sharedLine, 'place.displayName', '');
+    }
   }
 
-  public selectSharedLineUser(user: User): void {
-    this.selectedUser = undefined;
-    let userInfo: SharedLineUser = new SharedLineUser();
-    _.assign(userInfo, user);
-    userInfo.name = this.getUserName(user.name, user.userName);
+  public getMemberDisplayName(member: Member): string {
+    if (member.type === USER_REAL_USER) {
+      return this.formatUserName(_.get<string>(member, 'firstName'), _.get<string>(member, 'lastName'), _.get<string>(member, 'userName'));
+    } else {
+      return _.get(member, 'displayName', '');
+    }
+  }
+
+  public onSelectSharedLineMember(member: Member): void {
+    this.selectedMember = undefined;
+    this.newSharedLineMembers.push(member);
     this.selectSharedLineUserFn({
-      user: userInfo,
+      members: this.newSharedLineMembers,
     });
   }
 
-  public isSingleDevice(userUuid: string): boolean {
-    return this.isSingleDeviceFn({
-      sharedLineEndpoints: this.sharedLineEndpoints,
-      uuid: userUuid,
+  public onDeleteSharedLineMember(sharedLineMember: SharedLine): void {
+    this.onDeleteSharedLineMemberFn({
+      sharedLineMember: sharedLineMember,
     });
   }
 
-  public disassociateSharedLineUser(user: SharedLineUser, batchDelete: boolean): void {
-    this.disassociateSharedLineUserFn({
-      userInfo: user,
-      batchDelete: batchDelete,
+  public onSharedLineChange(): void {
+    this.onSharedLineChangeFn({
+      sharedLines: _.cloneDeep(this.sharedLines),
     });
   }
+
+  private formatUserName(firstName: string, lastName: string, userName: string): string {
+    let _userName = userName;
+    let _firstName = firstName || '';
+    let _lastName = lastName || '';
+    if (_firstName.length > 0 || _lastName.length > 0) {
+      _userName = _.trim(_firstName + ' ' + _lastName);
+    }
+    return _userName;
+  }
+
 }
 
 export class SharedLineComponent implements ng.IComponentOptions {
   public controller = SharedLineCtrl;
   public templateUrl = 'modules/huron/sharedLine/sharedLine.html';
-  public bindings = <{ [binding: string]: string }>{
-    selectedUser: '<',
-    sharedLineUsers: '<',
-    sharedLineEndpoints: '<',
+  public bindings = {
+    sharedLines: '<',
+    newSharedLineMembers: '<',
     oneAtATime: '<',
     selectSharedLineUserFn: '&',
     getUserListFn: '&',
-    isSingleDeviceFn: '&',
-    disassociateSharedLineUserFn: '&',
+    onSharedLineChangeFn: '&',
+    onDeleteSharedLineMemberFn: '&',
   };
 }

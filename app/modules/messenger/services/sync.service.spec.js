@@ -99,11 +99,12 @@
       expect(service.getSimplifiedStatus().isPwdSync).toEqual(true);
       expect(service.getSimplifiedStatus().isSparkEnt).toEqual(true);
       expect(service.getSimplifiedStatus().isUsrDis).toEqual(true);
+      expect(service.getSimplifiedStatus().isUsrDel).toEqual(true);
       expect(service.getNewDirSyncFlag()).toEqual(false);
     });
 
     it('check new data format parsing : other data non-default values', function () {
-      $httpBackend.expectGET('foo/orgs/12345/cisync/').respond({ orgName: 'prod', authRedirect: true, ciSyncMode: 'msgr_to_spark;pwd_sync=0:spark_ent=0:usr_dis=0:usr_min=1' });
+      $httpBackend.expectGET('foo/orgs/12345/cisync/').respond({ orgName: 'prod', authRedirect: true, ciSyncMode: 'msgr_to_spark;pwd_sync=0:spark_ent=0:usr_dis=0:usr_del=0:usr_min=1' });
       $httpBackend.flush();
 
       expect(service.getNewDataFormat()).toEqual(true);
@@ -111,6 +112,7 @@
       expect(service.getSimplifiedStatus().isPwdSync).toEqual(false);
       expect(service.getSimplifiedStatus().isSparkEnt).toEqual(false);
       expect(service.getSimplifiedStatus().isUsrDis).toEqual(false);
+      expect(service.getSimplifiedStatus().isUsrDel).toEqual(false);
       expect(service.getNewDirSyncFlag()).toEqual(true);
     });
     it('check new data format parsing : other data default for missing data', function () {
@@ -122,6 +124,7 @@
       expect(service.getSimplifiedStatus().isPwdSync).toEqual(true);
       expect(service.getSimplifiedStatus().isSparkEnt).toEqual(true);
       expect(service.getSimplifiedStatus().isUsrDis).toEqual(true);
+      expect(service.getSimplifiedStatus().isUsrDel).toEqual(true);
       expect(service.getNewDirSyncFlag()).toEqual(false);
     });
   });

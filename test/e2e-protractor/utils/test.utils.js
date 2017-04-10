@@ -41,11 +41,11 @@ exports.resolvePath = function (filePath) {
 };
 
 exports.writeFile = function (file, text) {
-  return fs.writeFile(file, text);
+  return fs.writeFileSync(file, text);
 };
 
 exports.deleteFile = function (file) {
-  return fs.unlink(file);
+  return fs.unlinkSync(file);
 };
 
 exports.searchField = element(by.id('searchFilter'));
@@ -101,9 +101,9 @@ exports.getToken = function () {
     auth: {
       'user': config.oauthClientRegistration.id,
       'pass': config.oauthClientRegistration.secret,
-      'sendImmediately': true
+      'sendImmediately': true,
     },
-    body: 'grant_type=client_credentials&scope=' + config.oauthClientRegistration.scope
+    body: 'grant_type=client_credentials&scope=' + config.oauthClientRegistration.scope,
   };
 
   return this.sendRequest(options).then(function (data) {
@@ -120,7 +120,7 @@ exports.scrollBottom = function (selector) {
   browser.executeScript('$("' + selector + '").first().scrollTop($("' + selector + '").first().scrollHeight);');
 };
 
-exports.scroll = function (el) {
+exports.scrollIntoView = function (el) {
   browser.executeScript('arguments[0].scrollIntoView()', el.getWebElement());
 };
 
@@ -222,9 +222,9 @@ exports.waitForSpinner = function () {
   }
 };
 
-exports.expectIsDisplayed = function (elem) {
-  this.wait(elem).then(function () {
-    expect(elem.isDisplayed()).toBeTruthy();
+exports.expectIsDisplayed = function (elem, timeout) {
+  return this.wait(elem, timeout || TIMEOUT).then(function () {
+    return expect(elem.isDisplayed()).toBeTruthy();
   });
 };
 
@@ -241,8 +241,6 @@ exports.expectAllDisplayed = function (elems) {
     });
   });
 };
-
-exports.expectAllNotDisplayed = this.expectIsNotDisplayed;
 
 exports.expectIsDisabled = function (elem) {
   this.wait(elem).then(function () {
@@ -286,8 +284,13 @@ exports.expectIsNotDisplayed = function (elem, timeout) {
       return EC.stalenessOf(elem)();
     });
   }
-  browser.wait(logAndWait, TIMEOUT, 'Waiting for element not to be visible: ' + elem.locator());
+
+  return browser.wait(logAndWait, timeout || TIMEOUT, 'Waiting for element not to be visible: ' + elem.locator());
 };
+
+exports.expectAllNotDisplayed = this.expectIsNotDisplayed;
+exports.waitIsNotDisplayed = this.expectIsNotDisplayed;
+exports.waitIsDisplayed = this.expectIsDisplayed;
 
 exports.expectTextToBeSet = function (elem, text, timeout) {
   browser.wait(function () {
@@ -298,6 +301,28 @@ exports.expectTextToBeSet = function (elem, text, timeout) {
       return false;
     });
   }, timeout || TIMEOUT, 'Waiting for Text to be set: ' + elem.locator() + ' ' + text);
+};
+
+exports.waitForAttribute = function (elem, attr, value) {
+  this.wait(elem).then(function () {
+    return browser.wait(function () {
+      return elem.getAttribute(attr).then(function (attrValue) {
+        log('Waiting for element: ' + elem.locator() + ' attribute ' + attr + ' ' + attrValue + ' to be ' + value);
+        return value === attrValue;
+      });
+    });
+  });
+};
+
+exports.waitForAttributeToContain = function (elem, attr, value) {
+  this.wait(elem).then(function () {
+    return browser.wait(function () {
+      return elem.getAttribute(attr).then(function (attrValue) {
+        log('Waiting for element: ' + elem.locator() + ' attribute ' + attr + ' ' + attrValue + ' to contain ' + value);
+        return _.includes(attrValue, value);
+      });
+    });
+  });
 };
 
 exports.expectValueToBeSet = function (elem, text, timeout) {
@@ -361,7 +386,9 @@ exports.click = function (elem, maxRetry) {
     } else {
       return elem.click().then(_.noop, function (e) {
         log('Failed to click element: ' + elem.locator() + ' Error: ' + ((e && e.message) || e));
-        return exports.click(elem, --maxRetry);
+        return notifications.clearNotifications().then(function () {
+          return exports.click(elem, --maxRetry);
+        });
       });
     }
   });
@@ -494,17 +521,24 @@ exports.expectTruthy = function (elem) {
   expect(elem).toBeTruthy();
 };
 
-exports.expectClass = function (elem, cls) {
-  return this.wait(elem).then(function () {
-    return elem.getAttribute('class').then(function (classes) {
-      log('Expect element to have class: ' + elem.locator() + ' ' + cls);
-      return classes.split(' ').indexOf(cls) !== -1;
-    });
+exports.waitClass = function (elem, cls, timeout) {
+  return this.wait(elem, timeout || TIMEOUT).then(function () {
+    browser.wait(function () {
+      return elem.getAttribute('class').then(function (classes) {
+        return classes !== undefined && classes !== null && classes.split(' ').indexOf(cls) !== -1;
+      }, function () {
+        return false;
+      });
+    }, timeout || TIMEOUT, 'Waiting for elem(' + elem.locator() + ') to contain class ' + cls);
   });
 };
 
 exports.clickEscape = function () {
   this.sendKeys(element(by.tagName('body')), protractor.Key.ESCAPE);
+};
+
+exports.clickEnter = function () {
+  this.sendKeys(element(by.tagName('body')), protractor.Key.ENTER);
 };
 
 exports.expectSwitchState = function (elem, value) {
@@ -642,19 +676,32 @@ exports.clickLastBreadcrumb = function () {
   this.click(element.all(by.css('.side-panel-container')).last().all(by.css('li[ng-repeat="crumb in breadcrumbs"] a')).last());
 };
 
-exports.switchToNewWindow = function () {
+function switchToWindow(handleIndex) {
   return browser.wait(function () {
     return browser.getAllWindowHandles().then(function (handles) {
-      if (handles && handles.length > 1) {
-        var newWindow = handles[1];
+      if (handles && handles.length > handleIndex) {
+        var newWindow = handles[handleIndex];
         browser.switchTo().window(newWindow);
         return true;
       } else {
         return false;
       }
     });
-  }, 40000, 'Waiting for a new window');
+  }, 40000, 'Waiting for window');
+}
+
+exports.switchToNewWindow = function () {
+  return switchToWindow(1);
 };
+
+exports.switchToOriginalWindow = function () {
+  return switchToWindow(0);
+};
+
+exports.closeAndSwitchToOriginalWindow = function () {
+  browser.close();
+  return this.switchToOriginalWindow();
+}
 
 exports.getInnerElementByTagName = function (outerElement, tagName) {
   return outerElement.element(by.tagName(tagName));
@@ -744,7 +791,7 @@ exports.quickDeleteUser = function (bFirst, name) {
     this.search(name, -1);
   }
 
-  return waitUntilElemIsPresent(users.userListAction, 2000).then(function () {
+  return exports.waitUntilElemIsPresent(users.userListAction, 2000).then(function () {
     exports.click(users.userListAction);
     exports.click(users.deleteUserOption);
     exports.expectIsDisplayed(users.deleteUserModal);
@@ -757,12 +804,14 @@ exports.quickDeleteUser = function (bFirst, name) {
     return false;
   });
 
-  function waitUntilElemIsPresent(elem, timeout) {
-    return exports.wait(elem, timeout).then(function () {
-      return elem.isDisplayed();
-    })
-  }
 };
+
+exports.waitUntilElemIsPresent = function (elem, timeout) {
+  return exports.wait(elem, timeout).then(function () {
+    return elem.isDisplayed();
+  })
+};
+
 
 exports.waitForModal = function () {
   return this.wait(element(by.css('.reveal-modal')));

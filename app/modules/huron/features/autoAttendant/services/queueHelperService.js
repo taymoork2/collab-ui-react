@@ -16,7 +16,7 @@
     /////////////////////
     function listQueues() {
       return QueueService.query({
-        customerId: Authinfo.getOrgId()
+        customerId: Authinfo.getOrgId(),
       }).$promise;
     }
 

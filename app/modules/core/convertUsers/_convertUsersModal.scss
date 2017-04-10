@@ -1,7 +1,26 @@
+@import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+
+cr-convert-users-modal {
+  height: 100%;
+
+  .manage-users-dialog {
+    // 100% - header - footer
+    height: calc(100% - 160px);
+
+    .ui-grid-cell,
+    .ui-grid-header-cell {
+      min-width: vr-adjust(400);
+    }
+  }
+}
+
 .convert-users {
   #convertCancelButton {
     margin-right: 10px;
   }
+
   .gridStyle {
     width: 898px;
     height: 491px;
@@ -32,13 +51,15 @@
       left: 10px;
     }
   }
-   .spinner-example--large {
+
+  .spinner-example--large {
     font-size: 2rem;
     padding-left: 425px;
   }
 
   .noUnlicensedUsers {
     @include vr-spacing(mt, 5);
+
     text-align: center;
   }
 }

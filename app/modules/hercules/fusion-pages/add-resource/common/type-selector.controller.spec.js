@@ -11,8 +11,8 @@ describe('Controller: TypeSelectorController', function () {
     $rootScope = _$rootScope_;
     $stateParams = {
       wizard: {
-        next: function () {}
-      }
+        next: function () {},
+      },
     };
     Authinfo = _Authinfo_;
     FusionClusterService = _FusionClusterService_;
@@ -23,11 +23,10 @@ describe('Controller: TypeSelectorController', function () {
     Authinfo.isEntitled.and.returnValue(true);
   }));
 
-  function initController(options) {
-    var feature = _.get(options, 'hasMediaFeatureToggle', true);
+  function initController() {
     return $controller('TypeSelectorController', {
       $stateParams: $stateParams,
-      hasMediaFeatureToggle: feature,
+      hasCucmSupportFeatureToggle: true,
     });
   }
 
@@ -41,6 +40,8 @@ describe('Controller: TypeSelectorController', function () {
       var controller = initController();
       expect(controller.isEntitledTo.expressway).toBe(true);
       expect(controller.isEntitledTo.mediafusion).toBe(true);
+      expect(controller.isEntitledTo.context).toBe(true);
+      expect(controller.isEntitledTo.cucm).toBe(true);
     });
 
     it('should initialize isEntitledTo to false if org is not entitled', function () {
@@ -48,13 +49,10 @@ describe('Controller: TypeSelectorController', function () {
       var controller = initController();
       expect(controller.isEntitledTo.expressway).toBe(false);
       expect(controller.isEntitledTo.mediafusion).toBe(false);
+      expect(controller.isEntitledTo.context).toBe(false);
+      expect(controller.isEntitledTo.cucm).toBe(false);
     });
 
-    it('should initialize isEntitledTo.mediafusion to false if no media feature toggle', function () {
-      // fake the entitlement to true, and observe that the feature toggle is more important
-      var controller = initController({ hasMediaFeatureToggle: false });
-      expect(controller.isEntitledTo.mediafusion).toBe(false);
-    });
   });
 
   describe('canGoNext()', function () {
@@ -100,6 +98,8 @@ describe('Controller: TypeSelectorController', function () {
       expect(controller.hasSetup).toEqual({
         expressway: true,
         mediafusion: false,
+        context: true,
+        cucm: true,
       });
     });
 
@@ -107,7 +107,8 @@ describe('Controller: TypeSelectorController', function () {
       FusionClusterService.serviceIsSetUp.and.callFake(serviceIsSetUpMockAlwaysTrue);
       var controller = initController();
       $rootScope.$apply();
-      expect(controller.selectedType).toBe('expressway');
+      // context will be the selected type because services get sorted alphabetically
+      expect(controller.selectedType).toBe('context');
     });
 
     it('should go to the next step if the user had only one service entitled for and it is setup', function () {

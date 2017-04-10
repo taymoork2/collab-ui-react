@@ -6,7 +6,7 @@
     .controller('AABuilderActionsCtrl', AABuilderActionsCtrl);
 
   /* @ngInject */
-  function AABuilderActionsCtrl($scope, $translate, $controller, AAUiModelService, AACommonService, AutoAttendantCeMenuModelService, AAScrollBar) {
+  function AABuilderActionsCtrl($scope, $translate, $controller, AAUiModelService, AACommonService, AutoAttendantCeMenuModelService) {
 
     var vm = this;
     var appendSpecialCharHelp = "<br><br>" + $translate.instant('autoAttendant.sayMessageSpecialChar');
@@ -19,7 +19,7 @@
       help: $translate.instant('autoAttendant.sayMessageHelp') + appendSpecialCharHelp,
       metric: 'Say-Message-Title',
       showHelpLink: true,
-      actions: ['say', 'play']
+      actions: ['play', 'say'],
     }, {
       title: $translate.instant('autoAttendant.actionPhoneMenu'),
       controller: 'AAPhoneMenuCtrl as aaPhoneMenu',
@@ -28,7 +28,7 @@
       help: $translate.instant('autoAttendant.phoneMenuHelp') + appendSpecialCharHelp,
       metric: 'Phone-Menu-Title',
       showHelpLink: true,
-      actions: ['runActionsOnInput']
+      actions: ['runActionsOnInput'],
     }, {
       title: $translate.instant('autoAttendant.phoneMenuDialExt'),
       controller: 'AADialByExtCtrl as aaDialByExtCtrl',
@@ -37,8 +37,8 @@
       help: $translate.instant('autoAttendant.actionDialByExtensionHelp'),
       metric: 'Dial-By-Extension-Title',
       showHelpLink: false,
-      type: 2, // to flag that this is not phonemenu, see setOption
-      actions: ['runActionsOnInput']
+      type: [2], // to flag that this is not phonemenu, see setOption
+      actions: ['runActionsOnInput'],
     }, {
       title: $translate.instant('autoAttendant.actionRouteCall'),
       controller: 'AARouteCallMenuCtrl as aaRouteCallMenu',
@@ -47,7 +47,7 @@
       help: $translate.instant('autoAttendant.routeCallMenuHelp'),
       metric: 'Route-Call-Title',
       showHelpLink: false,
-      actions: ['route', 'goto', 'routeToUser', 'routeToVoiceMail', 'routeToHuntGroup']
+      actions: ['route', 'goto', 'routeToUser', 'routeToVoiceMail', 'routeToHuntGroup', 'routeToQueue', 'routeToSipEndpoint'],
     }];
 
     vm.actionPlaceholder = $translate.instant("autoAttendant.actionPlaceholder");
@@ -60,8 +60,10 @@
     vm.getSelectHint = getSelectHint;
     vm.removeAction = removeAction;
 
-    /////////////////////
 
+    var PHONE_MENU_INDEX = 1;
+
+    /////////////////////
     function selectOption() {
       // if we are selecting a phone menu, re-initialize uiMenu.entries[vm.index] with a CeMenu.
       if (vm.option.actions[0] === 'runActionsOnInput' && !_.has(vm.option, 'type')) {
@@ -71,7 +73,6 @@
         uiMenu.entries[vm.index] = menu;
       }
       AACommonService.setActionStatus(true);
-      AAScrollBar.resizeBuilderScrollBar(AAScrollBar.delay.MEDIUM); // delay for transitions to finish
     }
 
     function getSelectHint() {
@@ -98,7 +99,7 @@
     function getOptionController() {
       if (vm.option && vm.option.controller) {
         return $controller(vm.option.controller, {
-          $scope: $scope
+          $scope: $scope,
         });
       }
     }
@@ -112,18 +113,17 @@
       uiMenu.deleteEntryAt(index);
 
       AACommonService.setActionStatus(true);
-      AAScrollBar.resizeBuilderScrollBar(AAScrollBar.delay.MEDIUM); // delay for transitions to finish
     }
 
     function setOption() {
       if ($scope.index >= 0) {
         var menuEntry = vm.ui[vm.schedule].getEntryAt($scope.index);
         if (menuEntry.type == "MENU_OPTION") {
-          vm.option = vm.options[1];
+          vm.option = vm.options[PHONE_MENU_INDEX];
         } else if (menuEntry.actions.length > 0 && menuEntry.actions[0].getName()) {
           var matchType = function (action) {
             return menuEntry.actions[0].getName() === action &&
-              menuEntry.actions[0].inputType === vm.options[i].type;
+              (_.has(vm.options[i], 'type') ? _.includes(vm.options[i].type, menuEntry.actions[0].inputType) : true);
           };
           for (var i = 0; i < vm.options.length; i++) {
             var isMatch = vm.options[i].actions.some(matchType);
@@ -135,7 +135,42 @@
       }
     }
 
+    function setFeatureToggledActions() {
+      if (AACommonService.isMediaUploadToggle()) {
+        vm.options[0].help = vm.options[0].help.concat('<br></br>').concat($translate.instant('autoAttendant.mediaUploadFileInfo'));
+        vm.options[1].help = vm.options[1].help.concat('<br></br>').concat($translate.instant('autoAttendant.mediaUploadFileInfo'));
+        vm.options[2].help = vm.options[2].help.concat('<br></br>').concat($translate.instant('autoAttendant.mediaUploadFileInfo'));
+      }
+      if (AACommonService.isCallerInputToggle()) {
+        vm.options.push({
+          title: $translate.instant('autoAttendant.actionCallerInput'),
+          controller: 'AACallerInputCtrl as aaCallerInput',
+          url: 'modules/huron/features/autoAttendant/callerInput/aaCallerInput.tpl.html',
+          hint: $translate.instant('autoAttendant.actionCallerInputHint'),
+          help: $translate.instant('autoAttendant.actionCallerInputHelp') + appendSpecialCharHelp,
+          metric: 'Caller-Input-Title',
+          type: [3, 4],
+          showHelpLink: true,
+          actions: ['runActionsOnInput'],
+        });
+      }
+      if (AACommonService.isDecisionToggle()) {
+        vm.options.push({
+          title: $translate.instant('autoAttendant.actionDecision'),
+          ifTitle: $translate.instant('autoAttendant.actionIfDecision'),
+          controller: 'AADecisionCtrl as aaDecisionCtrl',
+          url: 'modules/huron/features/autoAttendant/decision/aaDecision.tpl.html',
+          hint: $translate.instant('autoAttendant.actionDecisionHint'),
+          help: $translate.instant('autoAttendant.actionDecisionHelp'),
+          metric: 'Decision-Title',
+          showHelpLink: true,
+          actions: ['conditional'],
+        });
+      }
+    }
+
     function activate() {
+      setFeatureToggledActions();
       vm.index = $scope.index;
       vm.schedule = $scope.schedule;
       vm.ui = AAUiModelService.getUiModel();

@@ -20,24 +20,24 @@
 
     var maxRingSecsValue = [{
       value: 10,
-      label: "10"
+      label: "10",
     }, {
       value: 15,
-      label: "15"
+      label: "15",
     }, {
       value: 20,
-      label: "20"
+      label: "20",
     }];
 
     var maxWaitMinsValue = [{
       value: 1,
-      label: "1"
+      label: "1",
     }, {
       value: 2,
-      label: "2"
+      label: "2",
     }, {
       value: 3,
-      label: "3"
+      label: "3",
     }];
 
     return {
@@ -48,7 +48,7 @@
       reset: reset,
       setPristine: setPristine,
       getMaxRingSecsOptions: getMaxRingSecsOptions,
-      getMaxWaitMinsOptions: getMaxWaitMinsOptions
+      getMaxWaitMinsOptions: getMaxWaitMinsOptions,
     };
 
     ////////////////
@@ -63,17 +63,17 @@
 
     function setPristine(updatedHG) {
       updateAllTimeoutFields(updatedHG);
-      pristineHGData = angular.copy(updatedHG);
+      pristineHGData = _.cloneDeep(updatedHG);
     }
 
     function updateAllTimeoutFields(updatedHG) {
       updatedHG.maxRingSecs = {
         value: updatedHG.maxRingSecs,
-        label: updatedHG.maxRingSecs
+        label: updatedHG.maxRingSecs,
       };
       updatedHG.maxWaitMins = {
         value: updatedHG.maxWaitMins,
-        label: updatedHG.maxWaitMins
+        label: updatedHG.maxWaitMins,
       };
     }
 
@@ -101,7 +101,7 @@
     }
 
     function getPristine() {
-      return angular.copy(pristineHGData);
+      return _.cloneDeep(pristineHGData);
     }
 
     function isFallbackDirty() {

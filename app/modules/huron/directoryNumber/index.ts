@@ -6,7 +6,7 @@ export * from './directoryNumberOptions.service';
 export default angular
   .module('huron.directory-number', [
     'atlas.templates',
-    'cisco.ui',
+    'collab.ui',
     'pascalprecht.translate',
     'ngResource',
     require('modules/core/scripts/services/authinfo'),

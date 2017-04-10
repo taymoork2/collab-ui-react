@@ -10,34 +10,53 @@ describe('Service: Report Service', () => {
   const defaults = getJSONFixture('core/json/partnerReports/commonReportService.json');
   const mediaQualityData = getJSONFixture('core/json/partnerReports/mediaQualityData.json');
   const registeredEndpointsData = getJSONFixture('core/json/partnerReports/registeredEndpointData.json');
-  const timeFilter: Array<ITimespan> = _.clone(defaults.timeFilter[0]);
+  const timeFilter: Array<ITimespan> = _.cloneDeep(defaults.timeFilter[0]);
   const rejectError = {
     status: 500,
-  };
-
-  let updateDates = (data: any, format: boolean) => {
-    for (let i = data.length - 1; i >= 0; i--) {
-      if (format) {
-        data[i].date = moment().subtract(data.length - i, defaults.DAY).format(defaults.dayFormat);
-      } else {
-        data[i].date = moment().subtract(data.length - i, defaults.DAY).format();
-      }
-    }
-    return data;
   };
 
   beforeEach(function () {
     this.initModules('Core', 'Huron');
     this.injectDependencies('$httpBackend', '$q', 'CommonReportService', 'ReportService');
 
-    spyOn(this.CommonReportService, 'returnErrorCheck').and.callFake((error, message, response) => {
+    spyOn(this.CommonReportService, 'returnErrorCheck').and.callFake((error: any, message: string, response: any): any => {
       expect(error).toEqual(rejectError);
-      expect(message).not.toBe(undefined);
+      expect(message).toEqual(jasmine.any(String));
       return response;
+    });
+
+    spyOn(this.CommonReportService, 'getModifiedDate').and.callFake((date: string, filter: ITimespan): string => {
+      expect(filter).toEqual(jasmine.any(Object));
+      let dateArray: Array<any> = _.cloneDeep(defaults.returnGraph);
+      let dateIndex: number = 0;
+
+      _.forEach(dateArray, (item: any, index: number) => {
+        if (item.fullDate === date) {
+          dateIndex = index;
+        }
+      });
+
+      return dateArray[dateIndex].date;
+    });
+
+    spyOn(this.CommonReportService, 'getReturnGraph').and.callFake((filter: ITimespan, date: string, graphItem: any): Array<any> => {
+      expect(filter).toEqual(jasmine.any(Object));
+      expect(date).toEqual(jasmine.any(String));
+      let dateArray: Array<any> = _.cloneDeep(defaults.returnGraph);
+      let graph: Array<any> = [];
+
+      _.forEach(dateArray, (item: any): void => {
+        let newItem = _.cloneDeep(graphItem);
+        newItem.date = item.date;
+        graph.push(newItem);
+      });
+
+      return graph;
     });
   });
 
   afterEach(function () {
+    jasmine.clock().uninstall();
     this.$httpBackend.verifyNoOutstandingExpectation();
     this.$httpBackend.verifyNoOutstandingRequest();
   });
@@ -49,12 +68,8 @@ describe('Service: Report Service', () => {
 
   describe('Active User Services', function () {
     beforeEach(function () {
-      let activeUserDetailedAPI = _.clone(activeUserData.detailedAPI);
-      activeUserDetailedAPI.data[0].data = updateDates(activeUserDetailedAPI.data[0].data, false);
-      activeUserDetailedAPI.data[1].data = updateDates(activeUserDetailedAPI.data[1].data, false);
-
       spyOn(this.CommonReportService, 'getPartnerReport').and.returnValue(this.$q.when({
-        data: activeUserDetailedAPI,
+        data: activeUserData.detailedAPI,
       }));
     });
 
@@ -65,14 +80,14 @@ describe('Service: Report Service', () => {
     });
 
     it('should getActiveUserData for an existing customer', function () {
-      let popData = _.clone(activeUserData.activePopResponse);
+      let popData = _.cloneDeep(activeUserData.activePopResponse);
       _.forEach(popData, (data) => {
         data.color = undefined;
       });
 
       this.ReportService.getActiveUserData(customerData.customerOptions, timeFilter).then(function (response) {
         expect(response).toEqual({
-          graphData: updateDates(_.clone(activeUserData.detailedResponse), true),
+          graphData: activeUserData.detailedResponse,
           popData: popData,
           isActiveUsers: true,
         });
@@ -86,7 +101,7 @@ describe('Service: Report Service', () => {
     });
 
     it('should notify an error for getActiveUserData and return empty data', function () {
-      let popData = _.clone(activeUserData.activePopResponse);
+      let popData = _.cloneDeep(activeUserData.activePopResponse);
       _.forEach(popData, (data) => {
         data.percentage = 0;
         data.overallPopulation = 0;
@@ -106,10 +121,13 @@ describe('Service: Report Service', () => {
   describe('Most Active User Services', function () {
     it('should getActiveTableData for an existing customer', function () {
       spyOn(this.CommonReportService, 'getPartnerReportByReportType').and.returnValue(this.$q.when({
-        data: _.clone(activeUserData.mostActiveAPI),
+        data: _.cloneDeep(activeUserData.mostActiveAPI),
       }));
       this.ReportService.getActiveTableData(customerData.customerOptions, timeFilter).then(function (response) {
-        expect(response).toEqual(_.clone(activeUserData.mostActiveResponse));
+        expect(response.length).toEqual(activeUserData.mostActiveResponse.length);
+        _.forEach(activeUserData.mostActiveResponse, (item) => {
+          expect(response).toContain(item);
+        });
       });
     });
 
@@ -123,16 +141,11 @@ describe('Service: Report Service', () => {
 
   describe('Media Quality Services', function () {
     it('should get MediaQuality Metrics', function () {
-      let mediaAPI = _.clone(mediaQualityData.mediaQualityAPI);
-      mediaAPI.data[0].data[0].date = moment().subtract(1, 'day').format();
-      mediaAPI.data[2].data[0].date = moment().subtract(3, 'day').format();
-      let mediaQualityResponse = updateDates(_.clone(mediaQualityData.mediaQualityResponse), true);
-
       spyOn(this.CommonReportService, 'getPartnerReport').and.returnValue(this.$q.when({
-        data: mediaAPI,
+        data: mediaQualityData.mediaQualityAPI,
       }));
       this.ReportService.getMediaQualityMetrics(customerData.customerOptions, timeFilter).then(function (response) {
-        expect(response).toEqual(mediaQualityResponse);
+        expect(response).toEqual(mediaQualityData.mediaQualityResponse);
       });
     });
 
@@ -147,7 +160,7 @@ describe('Service: Report Service', () => {
   describe('Call Metrics Services', function () {
     it('should get Call Metrics', function () {
       spyOn(this.CommonReportService, 'getPartnerReport').and.returnValue(this.$q.when({
-        data: _.clone(callMetricsData.callMetricsAPI),
+        data: _.cloneDeep(callMetricsData.callMetricsAPI),
       }));
       this.ReportService.getCallMetricsData(customerData.customerOptions, timeFilter).then(function (response) {
         expect(response).toEqual(callMetricsData.callMetricsResponse);
@@ -157,14 +170,14 @@ describe('Service: Report Service', () => {
     it('should get empty array for GET failure', function () {
       spyOn(this.CommonReportService, 'getPartnerReport').and.returnValue(this.$q.reject(rejectError));
       this.ReportService.getCallMetricsData(customerData.customerOptions, timeFilter).then(function (data) {
-        expect(data).toEqual(_.clone(callMetricsData.emptyArray));
+        expect(data).toEqual(_.cloneDeep(callMetricsData.emptyArray));
       });
     });
   });
 
   describe('Registered Endpoint Service', function () {
     it('should get registered endpoints for a customer with positive response', function () {
-      let endpointData: Array<Array<IEndpointData>> = _.clone(registeredEndpointsData.registeredEndpointResponse);
+      let endpointData: Array<Array<IEndpointData>> = _.cloneDeep(registeredEndpointsData.registeredEndpointResponse);
       _.forEach(endpointData, (data) => {
         data[0].splitClasses = undefined;
         data[2].splitClasses = undefined;
@@ -172,7 +185,7 @@ describe('Service: Report Service', () => {
       });
 
       spyOn(this.CommonReportService, 'getPartnerReport').and.returnValue(this.$q.when({
-        data: _.clone(registeredEndpointsData.registeredEndpointsAPI),
+        data: _.cloneDeep(registeredEndpointsData.registeredEndpointsAPI),
       }));
       this.ReportService.getRegisteredEndpoints(customerData.customerOptions, timeFilter).then(function (response) {
         expect(response).toEqual(endpointData);
@@ -188,11 +201,11 @@ describe('Service: Report Service', () => {
   });
 
   describe('Helper Services', function () {
-    let managedOrgsUrl = 'https://atlas-integration.wbx2.com/admin/api/v1/organizations/null/managedOrgs';
+    let managedOrgsUrl = 'https://atlas-intb.ciscospark.com/admin/api/v1/organizations/null/managedOrgs';
 
     it('getCustomerList should return a list of customers', function () {
       this.$httpBackend.whenGET(managedOrgsUrl).respond({
-        organizations: _.clone(customerData.customerResponse),
+        organizations: _.cloneDeep(customerData.customerResponse),
       });
       this.ReportService.getCustomerList().then(function (list) {
         expect(list).toEqual(customerData.customerResponse);

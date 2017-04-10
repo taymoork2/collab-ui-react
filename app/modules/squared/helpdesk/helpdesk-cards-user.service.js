@@ -7,7 +7,7 @@
     function getMessageCardForUser(user) {
       var messageCard = {
         entitled: false,
-        entitlements: []
+        entitlements: [],
       };
       var paidOrFree;
       if (LicenseService.userIsEntitledTo(user, 'webex-squared')) {
@@ -26,7 +26,7 @@
       var meetingCard = {
         entitled: false,
         entitlements: [],
-        licensesByWebExSite: {}
+        licensesByWebExSite: {},
       };
       if (LicenseService.userIsEntitledTo(user, 'squared-syncup')) {
         meetingCard.entitled = true;
@@ -41,7 +41,7 @@
               return new LicenseService.UserLicense(license);
             })
             .filter(function (license) {
-              return angular.isDefined(license.webExSite);
+              return !_.isUndefined(license.webExSite);
             })
             .groupBy('webExSite')
             .value();
@@ -57,7 +57,7 @@
     function getCallCardForUser(user) {
       var callCard = {
         entitled: false,
-        entitlements: []
+        entitlements: [],
       };
       if (LicenseService.userIsEntitledTo(user, 'ciscouc')) {
         callCard.entitled = true;
@@ -71,23 +71,29 @@
       var hybridServicesCard = {
         entitled: false,
         cal: {
-          entitled: false
+          entitled: false,
+        },
+        gcal: {
+          entitled: false,
         },
         uc: {
-          entitled: false
+          entitled: false,
         },
         ec: {
-          entitled: false
-        }
+          entitled: false,
+        },
       };
       if (LicenseService.userIsEntitledTo(user, 'squared-fusion-cal')) {
         hybridServicesCard.entitled = true;
         hybridServicesCard.cal.entitled = true;
       }
+      if (LicenseService.userIsEntitledTo(user, 'squared-fusion-gcal')) {
+        hybridServicesCard.entitled = true;
+        hybridServicesCard.gcal.entitled = true;
+      }
       if (LicenseService.userIsEntitledTo(user, 'squared-fusion-uc')) {
         hybridServicesCard.entitled = true;
         hybridServicesCard.uc.entitled = true;
-
         hybridServicesCard.ec.entitled = LicenseService.userIsEntitledTo(user, 'squared-fusion-ec');
       }
       return hybridServicesCard;
@@ -97,7 +103,7 @@
       getMessageCardForUser: getMessageCardForUser,
       getMeetingCardForUser: getMeetingCardForUser,
       getCallCardForUser: getCallCardForUser,
-      getHybridServicesCardForUser: getHybridServicesCardForUser
+      getHybridServicesCardForUser: getHybridServicesCardForUser,
     };
   }
 

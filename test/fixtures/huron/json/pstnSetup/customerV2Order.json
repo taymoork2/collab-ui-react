@@ -1,0 +1,17 @@
+{
+    "uuid": "29c63c1f-83b0-42b9-98ee-85624e4c7409",
+    "description": "Order for 2 Telephone Numbers in Area Code+Prefix 469786",
+    "type": "PSTN",
+    "status": "PENDING",
+    "statusMessage": "None",
+    "carrier": "INTELEPEER",
+    "operation": "NUMBER_ORDER",
+    "carrierOrderId": "300340",
+    "created": "Thu Aug 04 15:01:27 UTC 2099",
+    "completed": "Thu Aug 04 15:02:24 UTC 2099",
+    "numbers": [{
+        "number": "5125934450",
+        "network": "PENDING"}
+    ],
+    "url": "https://terminus.huron-int.com/api/v2/customers/726c3f08-ec1b-4363-a9df-77e0abb3bc34/numbers/orders/28e635dc-3024-4188-995c-7bd6202c1bb0"
+}

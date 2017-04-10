@@ -14,7 +14,7 @@
     vm.continueImport = continueImport;
     vm.selected = {
       value: '',
-      label: ''
+      label: '',
     };
 
     function continueImport() {
@@ -25,7 +25,7 @@
         var type = 'continue';
         //register the metric property of 'continue' to Analytics
         Analytics.trackEvent(AAMetricNameService.IMPORT_SCHEDULE_FEATURE, {
-          type: type
+          type: type,
         });
       });
     }
@@ -57,7 +57,7 @@
         vm.options = _.map(filtered, function (obj) {
           return {
             label: obj.scheduleName,
-            value: obj.scheduleUrl.split('/schedules/')[1]
+            value: obj.scheduleUrl.split('/schedules/')[1],
           };
         });
 
@@ -70,7 +70,7 @@
       }, function (response) {
         if (response.status !== 404) {
           AANotificationService.error('autoAttendant.failureImport', {
-            status: response.status
+            status: response.status,
           });
         }
       });
@@ -78,7 +78,7 @@
       var type = 'open';
       //register the metric propety of 'open' to Analytics
       Analytics.trackEvent(AAMetricNameService.IMPORT_SCHEDULE_FEATURE, {
-        type: type
+        type: type,
       });
     }
 

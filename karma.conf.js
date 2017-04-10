@@ -1,12 +1,15 @@
 var _ = require('lodash');
-var webpackConfig = require('./webpack.config');
 var args = require('yargs').argv;
 var shimFile = args.shimFile || './karma/karma.shim.default.js';
 var shimFileName = _.last(shimFile.split('/'));
 
+// populate node env like webpack env args
+_.assignIn(process.env, args.env);
+var webpackConfig = require('./webpack.config.js')(process.env);
+
 module.exports = function (config) {
   var _config = {
-    preprocessors: {}
+    preprocessors: {},
   };
 
   // 'shimFile' from CLI, so set it up separately from main config
@@ -26,25 +29,25 @@ module.exports = function (config) {
       'source-map-support',
     ],
 
-    files: [
-      {
-        pattern: './test/fixtures/**/*.json', included: false
-      },
-      {
-        pattern: './app/**/*.json', included: false
-      },
-      {
-        pattern: shimFile,
-        watched: false
-      },
-    ],
+    files: [{
+      pattern: './test/fixtures/**/*.json',
+      included: false,
+    },
+    {
+      pattern: './app/**/*.json',
+      included: false,
+    },
+    {
+      pattern: shimFile,
+      watched: false,
+    }],
 
     exclude: [],
 
     webpack: webpackConfig,
 
     webpackMiddleware: {
-      stats: 'errors-only'
+      stats: 'errors-only',
     },
 
     coverageReporter: {
@@ -52,19 +55,15 @@ module.exports = function (config) {
       reporters: [{
         type: 'json',
         subdir: 'json',
-        file: shimFileName + '.json'
+        file: shimFileName + '.json',
       }],
     },
 
-    htmlReporter: {
-      outputFile: 'test/unit-test-results.html'
-    },
-
     webpackServer: {
-      noInfo: true // please don't spam the console when running in karma!
+      noInfo: true, // please don't spam the console when running in karma!
     },
 
-    reporters: ['progress', 'coverage', 'html'],
+    reporters: ['progress', 'coverage'],
 
     port: 9876,
 

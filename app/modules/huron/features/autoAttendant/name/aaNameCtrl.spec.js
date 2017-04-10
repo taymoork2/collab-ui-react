@@ -13,8 +13,8 @@ describe('Controller: aaBuilderNameCtrl', function () {
     "assignedResources": [{
       "id": "00097a86-45ef-44a7-aa78-6d32a0ca1d3b",
       "type": "directoryNumber",
-      "trigger": "incomingCall"
-    }]
+      "trigger": "incomingCall",
+    }],
   };
 
   var aaModel = {};
@@ -28,7 +28,7 @@ describe('Controller: aaBuilderNameCtrl', function () {
       _resource.setId(rawCeInfo.assignedResources[j].id);
       _resource.setTrigger(rawCeInfo.assignedResources[j].trigger);
       _resource.setType(rawCeInfo.assignedResources[j].type);
-      if (angular.isDefined(rawCeInfo.assignedResources[j].number)) {
+      if (!_.isUndefined(rawCeInfo.assignedResources[j].number)) {
         _resource.setNumber(rawCeInfo.assignedResources[j].number);
       }
       _ceInfo.addResource(_resource);
@@ -58,10 +58,11 @@ describe('Controller: aaBuilderNameCtrl', function () {
 
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
 
-    spyOn(AutoAttendantCeService, 'listCes').and.returnValue($q.when(angular.copy(ces)));
+    spyOn(AutoAttendantCeService, 'listCes').and.returnValue($q.resolve(_.cloneDeep(ces)));
+    spyOn($rootScope, '$broadcast').and.callThrough();
 
     controller = $controller('aaBuilderNameCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
     $scope.$apply();
   }));
@@ -73,8 +74,8 @@ describe('Controller: aaBuilderNameCtrl', function () {
   describe('saveAARecord', function () {
 
     beforeEach(function () {
-      spyOn(AutoAttendantCeService, 'createCe').and.returnValue($q.when(angular.copy(rawCeInfo)));
-      spyOn(AutoAttendantCeService, 'updateCe').and.returnValue($q.when(angular.copy(rawCeInfo)));
+      spyOn(AutoAttendantCeService, 'createCe').and.returnValue($q.resolve(_.cloneDeep(rawCeInfo)));
+      spyOn(AutoAttendantCeService, 'updateCe').and.returnValue($q.resolve(_.cloneDeep(rawCeInfo)));
       spyOn(AANotificationService, 'error');
       spyOn(AANotificationService, 'success');
       spyOn(AutoAttendantCeInfoModelService, 'setCeInfo');
@@ -98,6 +99,19 @@ describe('Controller: aaBuilderNameCtrl', function () {
       controller.name = testGroupName;
       controller.evalKeyPress(rightArrow);
       expect(controller.ui.ceInfo.name).toEqual(testGroupName);
+    });
+
+    it('should broadcast AANameCreated Event only when record is saved ', function () {
+      controller.name = testGroupName;
+      controller.saveAARecord();
+      expect($rootScope.$broadcast).toHaveBeenCalledWith('AANameCreated');
+      $rootScope.$broadcast.calls.reset();
+      controller.saveAARecord();
+      expect($rootScope.$broadcast).not.toHaveBeenCalledWith('AANameCreated');
+      $rootScope.$broadcast.calls.reset();
+      $rootScope.$broadcast('AACreationFailed');
+      controller.saveAARecord();
+      expect($rootScope.$broadcast).toHaveBeenCalledWith('AANameCreated');
     });
 
     /*  Commented out as code references AutoAttendant.saveAARecords()
@@ -160,5 +174,4 @@ describe('Controller: aaBuilderNameCtrl', function () {
     controller.name = testGroupName;
     expect(controller.previousButton()).toEqual("hidden");
   });
-
 });

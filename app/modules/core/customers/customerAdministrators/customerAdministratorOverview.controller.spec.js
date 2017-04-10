@@ -4,6 +4,10 @@ describe('Controller: customerAdministratorOverviewCtrl', function () {
   beforeEach(angular.mock.module('Core'));
   var controller, $controller, $scope, $stateParams, $q, CustomerAdministratorService, Notification;
 
+  afterEach(function () {
+    controller = $controller = $scope = $stateParams = $q = CustomerAdministratorService = Notification = undefined;
+  });
+
   beforeEach(inject(function (_$controller_, $rootScope, _$q_, _$stateParams_, _Notification_, _CustomerAdministratorService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
@@ -16,10 +20,10 @@ describe('Controller: customerAdministratorOverviewCtrl', function () {
       customerOrgId: '5555-6666',
     };
 
-    spyOn(CustomerAdministratorService, 'getAssignedSalesAdministrators').and.returnValue($q.when({
+    spyOn(CustomerAdministratorService, 'getCustomerAdmins').and.returnValue($q.resolve({
       data: {
-        totalResults: 2
-      }
+        totalResults: 2,
+      },
     }));
     spyOn(Notification, 'error');
   }));
@@ -27,7 +31,7 @@ describe('Controller: customerAdministratorOverviewCtrl', function () {
   function initController() {
     controller = $controller('CustomerAdministratorOverviewCtrl', {
       $scope: $scope,
-      $stateParams: $stateParams
+      $stateParams: $stateParams,
     });
     $scope.$apply();
   }

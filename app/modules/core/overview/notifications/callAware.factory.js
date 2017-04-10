@@ -6,7 +6,7 @@
     .factory('OverviewCallAwareNotification', OverviewCallAwareNotification);
 
   /* @ngInject */
-  function OverviewCallAwareNotification($state, Orgservice) {
+  function OverviewCallAwareNotification($state, HybridServicesFlagService, HybridServicesUtils) {
     return {
       createNotification: function createNotification() {
         var notification = {
@@ -14,18 +14,18 @@
           badgeType: 'success',
           canDismiss: true,
           dismiss: function () {
-            Orgservice.setHybridServiceAcknowledged('call-aware-service');
+            HybridServicesFlagService.raiseFlag(HybridServicesUtils.getAckFlagForHybridServiceId('squared-fusion-uc'));
           },
           link: function () {
             $state.go('call-service.list');
           },
           linkText: 'homePage.getStarted',
           name: 'callAware',
-          text: 'homePage.setUpCallAwareService'
+          text: 'homePage.setUpCallAwareService',
         };
 
         return notification;
-      }
+      },
     };
   }
 })();

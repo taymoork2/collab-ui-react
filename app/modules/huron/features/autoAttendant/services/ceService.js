@@ -1,32 +1,48 @@
 (function () {
   'use strict';
 
-  angular
-    .module('uc.autoattendant')
+  module.exports = angular
+    .module('uc.autoattendant.ce-service', [
+      require('angular-resource'),
+    ])
     .factory('CeService', CeService)
-    .factory('CeSiteService', CeSiteService);
+    .factory('CeSiteService', CeSiteService)
+    .factory('CeCustomVariableService', CeCustomVariableService)
+    .name;
 
   /* @ngInject */
   function CeService($resource, HuronConfig) {
     return $resource(HuronConfig.getCesUrl() + '/customers/:customerId/callExperiences/:ceId', {
       customerId: '@customerId',
-      ceId: '@ceId'
+      ceId: '@ceId',
     }, {
       'update': {
         method: 'PUT',
-        isArray: false
-      }
+        isArray: false,
+      },
     });
   }
 
   function CeSiteService($resource, HuronConfig) {
     return $resource(HuronConfig.getCesUrl() + '/customers/:customerId/sites', {
-      customerId: '@customerId'
+      customerId: '@customerId',
     }, {
       'update': {
         method: 'PUT',
-        isArray: false
-      }
+        isArray: false,
+      },
+    });
+  }
+
+  function CeCustomVariableService($resource, HuronConfig) {
+    return $resource(HuronConfig.getCesUrl() + '/customers/:customerId/callExperiences/:ceId/customVariables', {
+      customerId: '@customerId',
+      ceId: '@ceId',
+    }, {
+      'update': {
+        method: 'PUT',
+        isArray: false,
+      },
     });
   }
 })();

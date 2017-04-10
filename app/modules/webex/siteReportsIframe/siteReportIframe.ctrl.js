@@ -13,6 +13,7 @@
     $sce,
     $timeout,
     $window,
+    Log,
     Authinfo,
     TokenService,
     WebExUtilsFact
@@ -20,47 +21,66 @@
 
     var _this = this;
 
-    _this.funcName = "ReportsIframeCtrl()";
-    _this.logMsg = "";
+    _this.funcName = 'ReportsIframeCtrl()';
+    _this.logMsg = '';
+
+    var translateUse = $translate.use();
+
+    _this.logMsg = _this.funcName + '\n' +
+      'translateUse=' + translateUse + '\n' +
+      'stateParams=' + JSON.stringify($stateParams);
+    Log.debug(_this.logMsg);
+
+    var iframeUrlOrig = $stateParams.reportPageIframeUrl;
+    var siteUrl = $stateParams.siteUrl;
+    // var iframeUrlOrig = 'https://wbxbts.admin.ciscospark.com/wbxadmin/MeetingsInProgress.do?proxyfrom=atlas&siteurl=T31Test-ee';
+    // var siteUrl = 'T31Test-ee.webex.com';
 
     $scope.isIframeLoaded = false;
-    $scope.siteUrl = $stateParams.siteUrl;
-    $scope.indexPageSref = "webex-reports({siteUrl:'" + $stateParams.siteUrl + "'})";
+    $scope.siteUrl = siteUrl;
+    $scope.indexPageSref = 'reports.webex({siteUrl:"' + siteUrl + '"})';
     $scope.reportPageId = $stateParams.reportPageId;
-    $scope.reportPageTitle = $translate.instant("webexReportsPageTitles." + $scope.reportPageId);
-    $scope.reportPageIframeUrl = $stateParams.reportPageIframeUrl;
-    $scope.iframeUrl = $stateParams.reportPageIframeUrl;
+    $scope.reportPageTitle = $translate.instant('webexReportsPageTitles.' + $scope.reportPageId);
+    $scope.reportPageIframeUrl = iframeUrlOrig;
 
-    // for iframe request
-    if ($scope.iframeUrl.indexOf("cibtsgsbt31.webex.com") > 0) {
-      $scope.iframeUrl = $scope.iframeUrl.replace($stateParams.siteUrl, "wbxbts.admin.ciscospark.com");
+    var siteName = WebExUtilsFact.getSiteName(siteUrl);
+    var iframeUrl = _.replace(iframeUrlOrig, siteName, siteName.toLowerCase());
+
+    if (iframeUrlOrig != iframeUrl) {
+      _this.logMsg = _this.funcName + '\n' +
+        'WARNING: mixed case iframe url detected' + '\n' +
+        'iframeUrlOrig=' + iframeUrlOrig + '\n' +
+        'iframeUrl=' + iframeUrl + '\n' +
+        '';
+      $log.log(_this.logMsg);
     }
-    $scope.trustIframeUrl = $sce.trustAsResourceUrl($scope.iframeUrl);
+
+    // iframe request variables
+    $scope.trustIframeUrl = $sce.trustAsResourceUrl(iframeUrl);
     $scope.adminEmail = Authinfo.getPrimaryEmail();
     $scope.authToken = TokenService.getAccessToken();
-    $scope.locale = ("es_LA" == $translate.use()) ? "es_MX" : $translate.use();
-    $scope.siteName = $stateParams.siteUrl;
-    $scope.siteName2 = WebExUtilsFact.getSiteName($stateParams.siteUrl);
+    $scope.locale = ('es_CO' == translateUse) ? 'es_MX' : translateUse;
+    $scope.siteName = siteUrl.toLowerCase();
     $scope.fullSparkDNS = $window.location.origin;
 
-    _this.logMsg = _this.funcName + ": " + "\n" +
-      "siteUrl=" + $scope.siteUrl + "\n" +
-      "reportPageId=" + $scope.reportPageId + "\n" +
-      "reportPageTitle=" + $scope.reportPageTitle + "\n" +
-      "reportPageIframeUrl=" + $scope.reportPageIframeUrl + "\n" +
-      "iframeUrl=" + $scope.iframeUrl + "\n" +
-      "adminEmail=" + $scope.adminEmail + "\n" +
-      "locale=" + $scope.locale + "\n" +
-      "trustIframeUrl=" + $scope.trustIframeUrl;
-    $log.log(_this.logMsg);
+    _this.logMsg = _this.funcName + ': ' + '\n' +
+      'siteUrl=' + $scope.siteUrl + '\n' +
+      'reportPageId=' + $scope.reportPageId + '\n' +
+      'reportPageTitle=' + $scope.reportPageTitle + '\n' +
+      'reportPageIframeUrl=' + $scope.reportPageIframeUrl + '\n' +
+      'iframeUrl=' + $scope.iframeUrl + '\n' +
+      'adminEmail=' + $scope.adminEmail + '\n' +
+      'locale=' + $scope.locale + '\n' +
+      'trustIframeUrl=' + $scope.trustIframeUrl;
+    Log.debug(_this.logMsg);
 
-    $rootScope.lastSite = $stateParams.siteUrl;
-    $log.log("last site " + $rootScope.lastSite);
+    $rootScope.lastSite = siteUrl;
+    $log.log('last site ' + $rootScope.lastSite);
 
     var parser = $window.document.createElement('a');
     parser.href = $scope.iframeUrl;
     $rootScope.nginxHost = parser.hostname;
-    $log.log("nginxHost " + $rootScope.nginxHost);
+    Log.debug('nginxHost ' + $rootScope.nginxHost);
 
     $timeout(
       function loadIframe() {
@@ -72,14 +92,14 @@
     );
 
     $window.iframeLoaded = function (iframeId) {
-      var funcName = "iframeLoaded()";
+      var funcName = 'iframeLoaded()';
       var logMsg = funcName;
 
       var currScope = angular.element(iframeId).scope();
       var phase = currScope.$$phase;
 
-      logMsg = funcName + "\n" +
-        "phase=" + phase;
+      logMsg = funcName + '\n' +
+        'phase=' + phase;
       $log.log(logMsg);
 
       if (!phase) {

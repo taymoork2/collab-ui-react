@@ -14,14 +14,14 @@ describe('CsdmHubFactory', function () {
     var listenerAddedListener = sinon.stub();
     var listenerRemovedListener = sinon.stub();
     var scope = {
-      '$on': sinon.stub()
+      '$on': sinon.stub(),
     };
 
     hub.onListener('added', listenerAddedListener);
     hub.onListener('removed', listenerRemovedListener);
 
     hub.on('foo', listener, {
-      scope: scope
+      scope: scope,
     });
     expect(scope.$on.callCount).toBe(1);
     expect(listenerAddedListener.callCount).toBe(1);

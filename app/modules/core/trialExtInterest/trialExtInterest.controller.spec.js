@@ -4,6 +4,14 @@ describe('Controller: TrialExtInterestCtrl', function () {
   var $rootScope, $location, Log, TrialExtInterestService, $controller, controller, $q;
   var eqpParam = 'hi';
 
+  afterEach(function () {
+    $rootScope = $location = Log = TrialExtInterestService = $controller = controller = $q = undefined;
+  });
+
+  afterAll(function () {
+    eqpParam = undefined;
+  });
+
   beforeEach(angular.mock.module('Core'));
 
   beforeEach(inject(function (_$rootScope_, _$location_, _Log_, _TrialExtInterestService_, _$controller_, _$q_) {
@@ -16,7 +24,7 @@ describe('Controller: TrialExtInterestCtrl', function () {
 
     spyOn(TrialExtInterestService, 'notifyPartnerAdmin').and.returnValue($q.reject());
     spyOn($location, 'search').and.returnValue({
-      eqp: null
+      eqp: null,
     });
     spyOn(Log, 'error');
   }));
@@ -43,7 +51,7 @@ describe('Controller: TrialExtInterestCtrl', function () {
 
     beforeEach(function () {
       $location.search.and.returnValue({
-        eqp: eqpParam
+        eqp: eqpParam,
       });
     });
 
@@ -57,7 +65,7 @@ describe('Controller: TrialExtInterestCtrl', function () {
 
     describe('With a successful service call', function () {
       beforeEach(function () {
-        TrialExtInterestService.notifyPartnerAdmin.and.returnValue($q.when());
+        TrialExtInterestService.notifyPartnerAdmin.and.returnValue($q.resolve());
         initController();
       });
 

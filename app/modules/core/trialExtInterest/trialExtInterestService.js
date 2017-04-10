@@ -15,11 +15,11 @@
         var trialExtInterestData = {
           'type': '15',
           'eqp': {
-            'encryptedQueryString': encryptedParam
-          }
+            'encryptedQueryString': encryptedParam,
+          },
         };
         return $http.post(trialExtInterestUrl, trialExtInterestData);
-      }
+      },
     };
   }
 })();

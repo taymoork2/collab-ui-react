@@ -3,7 +3,7 @@
 describe('Controller: organizationOverviewCtrl', function () {
   var controller, $scope, Orgservice, $q, $controller, Notification, currentOrganization;
   var authInfo = {
-    getOrgId: sinon.stub()
+    getOrgId: sinon.stub(),
   };
 
   beforeEach(angular.mock.module(function ($provide) {
@@ -20,17 +20,17 @@ describe('Controller: organizationOverviewCtrl', function () {
     $q = _$q_;
     currentOrganization = getJSONFixture('core/json/organizations/adminServices.json').getAdminOrg;
 
-    spyOn(Orgservice, 'getEftSetting').and.returnValue($q.when({
+    spyOn(Orgservice, 'getEftSetting').and.returnValue($q.resolve({
       data: {
-        eft: true
-      }
+        eft: true,
+      },
     }));
-    spyOn(Orgservice, 'setEftSetting').and.returnValue($q.when({}));
-    spyOn(Orgservice, 'setHybridServiceReleaseChannelEntitlement').and.returnValue($q.when({}));
+    spyOn(Orgservice, 'setEftSetting').and.returnValue($q.resolve({}));
+    spyOn(Orgservice, 'setHybridServiceReleaseChannelEntitlement').and.returnValue($q.resolve({}));
     spyOn(Orgservice, 'getAdminOrg').and.callFake(function (callback) {
       callback(currentOrganization, 200);
     });
-    spyOn(Notification, 'error');
+    spyOn(Notification, 'errorResponse');
   }));
 
   function initController(services) {
@@ -39,8 +39,8 @@ describe('Controller: organizationOverviewCtrl', function () {
       $scope: $scope,
       Authinfo: authInfo,
       $stateParams: {
-        currentOrganization: currentOrganization
-      }
+        currentOrganization: currentOrganization,
+      },
     });
     $scope.$apply();
   }
@@ -66,12 +66,10 @@ describe('Controller: organizationOverviewCtrl', function () {
 
     it('should check if updateEftToggle in success state sets isEFT to true', function () {
       _.set($scope, 'currentOrganization.isEFT', false);
-      $scope.updateEftToggle().then(function () {
-        expect($scope.currentOrganization.isEFT).toEqual(true);
-      })
-        .finally(function () {
-          expect($scope.eftToggleLoading).toEqual(false);
-        });
+      $scope.updateEftToggle();
+      $scope.$apply();
+      expect($scope.isEFT).toEqual(true);
+      expect($scope.eftToggleLoading).toEqual(false);
     });
   });
 
@@ -82,12 +80,10 @@ describe('Controller: organizationOverviewCtrl', function () {
     });
 
     it('should gracefully error', function () {
-      $scope.updateEftToggle().then(function () {
-        expect(Notification.error).toHaveBeenCalled();
-      })
-        .finally(function () {
-          expect($scope.eftToggleLoading).toEqual(false);
-        });
+      $scope.updateEftToggle();
+      $scope.$apply();
+      expect(Notification.errorResponse).toHaveBeenCalled();
+      expect($scope.eftToggleLoading).toEqual(false);
     });
   });
 
@@ -101,7 +97,7 @@ describe('Controller: organizationOverviewCtrl', function () {
       var setting = true;
       $scope.setEftToggle(setting);
       $scope.$apply();
-      expect($scope.currentOrganization.isEFT).toEqual(setting);
+      expect($scope.isEFT).toEqual(setting);
     });
   });
 
@@ -116,7 +112,7 @@ describe('Controller: organizationOverviewCtrl', function () {
       var setting = true;
       $scope.setEftToggle(setting);
       $scope.$apply();
-      expect(Notification.error).toHaveBeenCalled();
+      expect(Notification.errorResponse).toHaveBeenCalled();
     });
 
     it('should check if setEftToggle in error state reverts the isEFT toggle', function () {
@@ -124,7 +120,7 @@ describe('Controller: organizationOverviewCtrl', function () {
       var setting = true;
       $scope.setEftToggle(setting);
       $scope.$apply();
-      expect($scope.currentOrganization.isEFT).toEqual($scope.currentEftSetting);
+      expect($scope.isEFT).toEqual($scope.currentEftSetting);
     });
   });
 
@@ -149,11 +145,14 @@ describe('Controller: organizationOverviewCtrl', function () {
     });
 
     it('should init the release channels to allowed if beta and latest entitlements are set', function () {
-      initController(['squared-fusion-mgmt', 'squared-fusion-mgmt-channel-beta', 'squared-fusion-mgmt-channel-latest']);
+      initController(['squared-fusion-mgmt', 'squared-fusion-mgmt-channel-beta', 'squared-fusion-mgmt-channel-alpha', 'squared-fusion-mgmt-channel-latest']);
       expect($scope.showHybridServices).toBeTruthy();
       expect($scope.betaChannel.newAllow).toBeTruthy();
       expect($scope.betaChannel.oldAllow).toBeTruthy();
       expect($scope.betaChannel.name).toEqual('beta');
+      expect($scope.alphaChannel.newAllow).toBeTruthy();
+      expect($scope.alphaChannel.oldAllow).toBeTruthy();
+      expect($scope.alphaChannel.name).toEqual('alpha');
       expect($scope.latestChannel.newAllow).toBeTruthy();
       expect($scope.latestChannel.oldAllow).toBeTruthy();
       expect($scope.latestChannel.name).toEqual('latest');
@@ -166,7 +165,7 @@ describe('Controller: organizationOverviewCtrl', function () {
       Orgservice.setHybridServiceReleaseChannelEntitlement.and.callFake(function (orgId, channel, allow) {
         channelSentToBackend = channel;
         allowSentToBackend = allow;
-        return $q.when({});
+        return $q.resolve({});
       });
       $scope.betaChannel.newAllow = true;
       $scope.toggleReleaseChannelAllowed($scope.betaChannel);
@@ -177,6 +176,24 @@ describe('Controller: organizationOverviewCtrl', function () {
       expect($scope.betaChannel.oldAllow).toBeTruthy();
     });
 
+    it('should set allow true for the alpha release channel when not entitled and toggled', function () {
+      initController(['squared-fusion-mgmt']);
+      var channelSentToBackend = null;
+      var allowSentToBackend = null;
+      Orgservice.setHybridServiceReleaseChannelEntitlement.and.callFake(function (orgId, channel, allow) {
+        channelSentToBackend = channel;
+        allowSentToBackend = allow;
+        return $q.resolve({});
+      });
+      $scope.alphaChannel.newAllow = true;
+      $scope.toggleReleaseChannelAllowed($scope.alphaChannel);
+      $scope.$apply();
+      expect(Orgservice.setHybridServiceReleaseChannelEntitlement.calls.count()).toEqual(1);
+      expect(channelSentToBackend).toEqual('alpha');
+      expect(allowSentToBackend).toBeTruthy();
+      expect($scope.alphaChannel.oldAllow).toBeTruthy();
+    });
+
     it('should set allow true for the latest release channel when not entitled and toggled', function () {
       initController(['squared-fusion-mgmt']);
       var channelSentToBackend = null;
@@ -184,7 +201,7 @@ describe('Controller: organizationOverviewCtrl', function () {
       Orgservice.setHybridServiceReleaseChannelEntitlement.and.callFake(function (orgId, channel, allow) {
         channelSentToBackend = channel;
         allowSentToBackend = allow;
-        return $q.when({});
+        return $q.resolve({});
       });
       $scope.latestChannel.newAllow = true;
       $scope.toggleReleaseChannelAllowed($scope.latestChannel);
@@ -202,7 +219,7 @@ describe('Controller: organizationOverviewCtrl', function () {
       Orgservice.setHybridServiceReleaseChannelEntitlement.and.callFake(function (orgId, channel, allow) {
         channelSentToBackend = channel;
         allowSentToBackend = allow;
-        return $q.when({});
+        return $q.resolve({});
       });
       $scope.betaChannel.newAllow = false;
       $scope.toggleReleaseChannelAllowed($scope.betaChannel);
@@ -213,6 +230,24 @@ describe('Controller: organizationOverviewCtrl', function () {
       expect($scope.betaChannel.oldAllow).toBeFalsy();
     });
 
+    it('should set allow false for the alpha release channel when entitled and toggled', function () {
+      initController(['squared-fusion-mgmt', 'squared-fusion-mgmt-channel-alpha']);
+      var channelSentToBackend = null;
+      var allowSentToBackend = null;
+      Orgservice.setHybridServiceReleaseChannelEntitlement.and.callFake(function (orgId, channel, allow) {
+        channelSentToBackend = channel;
+        allowSentToBackend = allow;
+        return $q.resolve({});
+      });
+      $scope.alphaChannel.newAllow = false;
+      $scope.toggleReleaseChannelAllowed($scope.alphaChannel);
+      $scope.$apply();
+      expect(Orgservice.setHybridServiceReleaseChannelEntitlement.calls.count()).toEqual(1);
+      expect(channelSentToBackend).toEqual('alpha');
+      expect(allowSentToBackend).toBeFalsy();
+      expect($scope.alphaChannel.oldAllow).toBeFalsy();
+    });
+
     it('should set allow false for the latest release channel when entitled and toggled', function () {
       initController(['squared-fusion-mgmt', 'squared-fusion-mgmt-channel-latest']);
       var channelSentToBackend = null;
@@ -220,7 +255,7 @@ describe('Controller: organizationOverviewCtrl', function () {
       Orgservice.setHybridServiceReleaseChannelEntitlement.and.callFake(function (orgId, channel, allow) {
         channelSentToBackend = channel;
         allowSentToBackend = allow;
-        return $q.when({});
+        return $q.resolve({});
       });
       $scope.latestChannel.newAllow = false;
       $scope.toggleReleaseChannelAllowed($scope.latestChannel);
@@ -242,7 +277,7 @@ describe('Controller: organizationOverviewCtrl', function () {
       expect(Orgservice.setHybridServiceReleaseChannelEntitlement.calls.count()).toEqual(1);
       expect($scope.latestChannel.newAllow).toBeFalsy();
       expect($scope.latestChannel.oldAllow).toBeFalsy();
-      expect(Notification.error.calls.count()).toEqual(1);
+      expect(Notification.errorResponse).toHaveBeenCalled();
     });
   });
 });

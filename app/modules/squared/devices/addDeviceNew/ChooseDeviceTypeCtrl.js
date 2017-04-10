@@ -12,30 +12,34 @@
       vm.cloudberryError = false;
     };
 
-    vm.wizardData = $stateParams.wizard.state().data;
+    var wizardData = $stateParams.wizard.state().data;
+    vm.title = wizardData.title;
+    vm.showATA = wizardData.showATA;
+    vm.showPersonal = wizardData.showPersonal;
     vm.selectedDeviceType = null;
     vm.isLoading = false;
 
     vm.isNewPlaceFlow = function () {
-      return vm.wizardData.showPlaces && vm.wizardData.function !== 'addDevice';
+      return wizardData.function !== 'addDevice';
     };
 
-    vm.hideCancelButton = vm.isNewPlaceFlow();
-    vm.hideBackButton = !vm.isNewPlaceFlow();
+    vm.hideCancelButton = vm.isNewPlaceFlow() || vm.showPersonal;
+    vm.hideBackButton = !vm.isNewPlaceFlow() && !vm.showPersonal;
 
     vm.next = function () {
       if (vm.selectedDeviceType) {
         vm.isLoading = true;
         $stateParams.wizard.next({
-          deviceType: vm.selectedDeviceType,
-          deviceName: vm.wizardData.deviceName
+          account: {
+            deviceType: vm.selectedDeviceType,
+          },
         }, vm.selectedDeviceType);
       }
     };
 
     vm.cloudberry = function () {
       vm.resetErrors();
-      if ($stateParams.wizard.state().data.isEntitledToRoomSystem) {
+      if (wizardData.isEntitledToRoomSystem) {
         vm.selectedDeviceType = 'cloudberry';
       } else {
         vm.selectedDeviceType = null;
@@ -45,7 +49,7 @@
 
     vm.huron = function () {
       vm.resetErrors();
-      if ($stateParams.wizard.state().data.isEntitledToHuron) {
+      if (wizardData.isEntitledToHuron) {
         vm.selectedDeviceType = 'huron';
       } else {
         vm.selectedDeviceType = null;

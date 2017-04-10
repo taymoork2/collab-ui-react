@@ -12,7 +12,7 @@
       controller: 'TrialNoticeBannerCtrl',
       controllerAs: 'bannerCtrl',
       bindToController: true,
-      scope: true
+      scope: true,
     };
 
     return directive;

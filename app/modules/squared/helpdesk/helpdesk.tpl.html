@@ -3,8 +3,8 @@
     <cs-header-left>
     </cs-header-left>
     <cs-header-right>
-      <div cs-dropdown class="sparkstatus-info dropdown">
-        <button cs-dropdown-toggle class="btn-sparkstatus dropdown-toggle" tabindex="0">
+      <div cs-dropdown class="user-info dropdown">
+        <button cs-dropdown-toggle class="btn--user btn--sparkstatus dropdown-toggle" tabindex="0">
           <span class="icon icon-circle" ng-class="{unknown:  'helpdesk-grey', error: 'helpdesk-error', major_outage: 'helpdesk-error', warning: 'helpdesk-warning', partial_outage: 'helpdesk-yellow', operational: 'helpdesk-ok', degraded_performance:'helpdesk-yellow'}[helpdeskHeaderCtrl.overallSparkStatus]">
           </span>
         </button>
@@ -23,8 +23,8 @@
           </div>
         </div>
       </div>
-      <div cs-dropdown class="history-info dropdown">
-        <button cs-dropdown-toggle class="btn-history dropdown-toggle" ng-click="helpdeskHeaderCtrl.populateHistory()" tabindex="0">
+      <div cs-dropdown class="user-info dropdown">
+        <button cs-dropdown-toggle class="btn--user btn--history dropdown-toggle" ng-click="helpdeskHeaderCtrl.populateHistory()" tabindex="0">
           <i class="icon icon-clock"></i>
         </button>
         <ul cs-dropdown-menu class="helpdesk-history-dropdown-menu" role="menu">

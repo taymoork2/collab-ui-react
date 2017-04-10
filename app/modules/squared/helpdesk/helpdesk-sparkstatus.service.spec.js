@@ -1,4 +1,5 @@
 'use strict';
+
 describe('Service: HelpdeskSparkStatusService', function () {
   beforeEach(angular.mock.module('Squared'));
 
@@ -14,18 +15,18 @@ describe('Service: HelpdeskSparkStatusService', function () {
 
     var healthReport = {
       "components": [],
-      "success": true
+      "success": true,
     };
 
     healthReport.components = [{
       "name": "Spark Message",
-      "status": "error"
+      "status": "error",
     }, {
       "name": "Spark Call",
-      "status": "degraded_performance"
+      "status": "degraded_performance",
     }, {
       "name": "SparkHybrid",
-      "status": "operational"
+      "status": "operational",
     }];
 
     beforeEach(function () {
@@ -46,13 +47,13 @@ describe('Service: HelpdeskSparkStatusService', function () {
 
       var healthStatuses = [{
         "name": "Spark Message",
-        "status": "error"
+        "status": "error",
       }, {
         "name": "Spark Call",
-        "status": "degraded_performance"
+        "status": "degraded_performance",
       }, {
         "name": "SparkHybrid",
-        "status": "operational"
+        "status": "operational",
       }];
 
       var result = Service.highestSeverity(healthStatuses);
@@ -60,10 +61,10 @@ describe('Service: HelpdeskSparkStatusService', function () {
 
       healthStatuses = [{
         "name": "Spark Call",
-        "status": "operational"
+        "status": "operational",
       }, {
         "name": "SparkHybrid",
-        "status": "degraded_performance"
+        "status": "degraded_performance",
       }];
 
       result = Service.highestSeverity(healthStatuses);
@@ -71,10 +72,10 @@ describe('Service: HelpdeskSparkStatusService', function () {
 
       healthStatuses = [{
         "name": "Spark Call",
-        "status": "operational"
+        "status": "operational",
       }, {
         "name": "SparkHybrid",
-        "status": "operational"
+        "status": "operational",
       }];
 
       result = Service.highestSeverity(healthStatuses);
@@ -89,7 +90,7 @@ describe('Service: HelpdeskSparkStatusService', function () {
     it("Fails getting data from reports service", function (done) {
       var healthReport = {
         "components": [],
-        "success": false
+        "success": false,
       };
 
       sinon.stub(ReportsService, 'healthMonitor');

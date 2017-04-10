@@ -1,0 +1,33 @@
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+
+.private-trunk {
+  h5 {
+    @include vr-spacing(mt, .5);
+    @include vr-spacing(mb, .5);
+  }
+  .help {
+    p {
+      @include vr-spacing(mt, .25);
+      @include vr-spacing(mb, .25);
+    }
+  }
+  .domain-list {
+    padding-left: 1rem;
+  }
+  .icon {
+    position: relative;
+  }
+  .icon-error {
+    @include vr-spacing(mt, 0.25);
+    @include vr-spacing(mr, 0.5);
+  }
+  .exit-icon {
+    padding-top: 2.3rem;
+    font-size: 1.3rem;
+    position: absolute;
+    cursor: pointer;
+  }
+  .add-align {
+    padding-left: 2rem;
+  }
+}

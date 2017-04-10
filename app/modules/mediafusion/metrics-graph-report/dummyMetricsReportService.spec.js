@@ -1,15 +1,16 @@
 'use strict';
+
 describe('Controller: Dummy Metrics Reports', function () {
   var DummyMetricsReportService;
   var chartColors;
   var timeFilter = [{
-    value: 0
+    value: 0,
   }, {
-    value: 1
+    value: 1,
   }, {
-    value: 2
+    value: 2,
   }, {
-    value: 3
+    value: 3,
   }];
   beforeEach(angular.mock.module('Mediafusion'));
   describe('Dummy Data Responses', function () {
@@ -44,10 +45,10 @@ describe('Controller: Dummy Metrics Reports', function () {
       expect(responseForLastMonth).toBeDefined();
       expect(responseForLastThreeMonth).toBeDefined();
 
-      expect(responseFor24hrs[0].colorTwo).toBe(chartColors.dummyGray);
-      expect(respomseForLastWeek[0].colorTwo).toBe(chartColors.dummyGray);
-      expect(responseForLastMonth[0].colorTwo).toBe(chartColors.dummyGray);
-      expect(responseForLastThreeMonth[0].colorTwo).toBe(chartColors.dummyGray);
+      expect(responseFor24hrs[0].colorTwo).toBe(chartColors.grayLightTwo);
+      expect(respomseForLastWeek[0].colorTwo).toBe(chartColors.grayLightTwo);
+      expect(responseForLastMonth[0].colorTwo).toBe(chartColors.grayLightTwo);
+      expect(responseForLastThreeMonth[0].colorTwo).toBe(chartColors.grayLightTwo);
 
     });
   });

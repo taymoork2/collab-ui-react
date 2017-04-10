@@ -14,9 +14,7 @@
   }
 
   /* @ngInject */
-  function PstnNumbersCtrl($q, $scope, $state, $timeout, $translate, DidService, Notification,
-                           PstnSetup, PstnSetupService, TelephoneNumberService, TerminusStateService, ValidationService,
-                           FeatureToggleService) {
+  function PstnNumbersCtrl($q, $scope, $state, $timeout, $translate, DidService, Notification, PstnSetup, PstnSetupService, TelephoneNumberService, PstnSetupStatesService, ValidationService, FeatureToggleService) {
     var vm = this;
 
     vm.provider = PstnSetup.getProvider();
@@ -26,30 +24,49 @@
       addDisabled: true,
       areaCode: null,
       areaCodeOptions: null,
+      areaCodeEnable: false,
+      nxx: null,
+      nxxOptions: null,
+      nxxEnable: false,
       block: false,
       consecutive: false,
       isSingleResult: false,
       paginateOptions: null,
       quantity: 1,
+      searchEnable: false,
       searchResults: [],
       searchResultsModel: {},
       showAdvancedOrder: false,
-      state: ''
+      state: '',
+      states: [],
     };
 
     vm.model = {
       pstn: _.clone(baseModel),
-      tollFree: _.clone(baseModel)
+      tollFree: _.clone(baseModel),
     };
 
     vm.orderNumbersTotal = 0;
-    vm.showPortNumbers = !PstnSetup.getIsTrial();
-    vm.showTollFreeNumbers = null; // Replace with !PstnSetup.getIsTrial(); when feature toggle is removed
+    vm.tollFreeTitle = $translate.instant('pstnSetup.tollFreeTitle', {
+      areaCodes: '',
+    });
+    vm.showTollFreeNumbers = false;
+    vm.isTrial = PstnSetup.getIsTrial();
+    vm.showPortNumbers = !vm.isTrial;
     var BLOCK_ORDER = PstnSetupService.BLOCK_ORDER;
     var PORT_ORDER = PstnSetupService.PORT_ORDER;
     var NUMBER_ORDER = PstnSetupService.NUMBER_ORDER;
-    var TOLLFREE_BLOCK_ORDER = PstnSetupService.TOLLFREE_BLOCK_ORDER;
-    var TOLLFREE_ORDER = PstnSetupService.TOLLFREE_ORDER;
+    var NUMTYPE_DID = PstnSetupService.NUMTYPE_DID;
+    var NUMTYPE_TOLLFREE = PstnSetupService.NUMTYPE_TOLLFREE;
+    var NXX = 'nxx';
+    var NXX_EMPTY = '--';
+    var MIN_BLOCK_QUANTITY = 2;
+    var MAX_BLOCK_QUANTITY = 100;
+    var MIN_VALID_CODE = 3;
+    var MAX_VALID_CODE = 6;
+    var MAX_DID_QUANTITY = 100;
+    //carrier capabilities
+    var TOLLFREE_ORDERING_CAPABILITY = 'TOLLFREE_ORDERING';
 
     vm.addToCart = addToCart;
     vm.addAdvancedOrder = addAdvancedOrder;
@@ -58,10 +75,18 @@
     vm.hasBackButton = hasBackButton;
     vm.goBack = goBack;
     vm.getOrderQuantity = getOrderQuantity;
+    vm.getStateInventory = getStateInventory;
+    vm.getAreaNxx = getAreaNxx;
+    vm.searchCarrierInventory = searchCarrierInventory;
+    vm.searchCarrierTollFreeInventory = searchCarrierTollFreeInventory;
+    vm.getCapabilities = getCapabilities;
+    vm.onBlockClick = onBlockClick;
+    vm.resultChange = resultChange;
 
     vm.formatTelephoneNumber = formatTelephoneNumber;
     vm.showOrderQuantity = showOrderQuantity;
     vm.searchResults = [];
+    vm.locationLabel = '';
 
     vm.model.pstn.paginateOptions = {
       currentPage: 0,
@@ -76,7 +101,7 @@
       nextPage: function () {
         vm.model.pstn.searchResultsModel = {};
         this.currentPage++;
-      }
+      },
     };
 
     $scope.$watchCollection(function () {
@@ -98,158 +123,41 @@
       nextPage: function () {
         vm.model.tollFree.searchResultsModel = {};
         this.currentPage++;
-      }
+      },
     };
 
-    vm.pstnFields = [{
-      className: 'row collapse-both',
-      fieldGroup: [{
-        type: 'select',
-        key: 'pstn.state',
-        className: 'medium-4 columns',
-        templateOptions: {
-          required: true,
-          label: $translate.instant('pstnSetup.state'),
-          options: [],
-          labelfield: 'name',
-          valuefield: 'abbreviation',
-          onChangeFn: getStateInventory,
-          placeholder: $translate.instant('pstnSetup.searchStates'),
-          filter: true
-        },
-        controller: /* @ngInject */ function ($scope) {
-          TerminusStateService.query().$promise.then(function (states) {
-            $scope.to.options = states;
-            if (_.get(PstnSetup.getServiceAddress(), 'state')) {
-              vm.model.pstn.state = {
-                abbreviation: PstnSetup.getServiceAddress().state,
-                name: _.result(_.find(states, {
-                  'abbreviation': PstnSetup.getServiceAddress().state
-                }), 'name')
-              };
-              getStateInventory();
-            }
-          });
+    init();
+
+    function init() {
+      PstnSetupStatesService.getLocation(PstnSetup.getCountryCode()).then(function (location) {
+        vm.model.pstn.quantity = null;
+        vm.locationLabel = location.type;
+        vm.model.pstn.states = location.areas;
+        if (_.get(PstnSetup.getServiceAddress(), 'state')) {
+          vm.model.pstn.state = {
+            abbreviation: PstnSetup.getServiceAddress().state,
+            name: _.result(_.find(vm.model.pstn.states, {
+              'abbreviation': PstnSetup.getServiceAddress().state,
+            }), 'name'),
+          };
         }
-      }, {
-        type: 'select',
-        key: 'pstn.areaCode',
-        id: 'areaCode',
-        className: 'medium-4 columns',
-        templateOptions: {
-          required: true,
-          label: $translate.instant('pstnSetup.areaCode'),
-          options: [],
-          labelfield: 'code',
-          valuefield: 'code',
-          placeholder: $translate.instant('pstnSetup.selectAreaCode'),
-          inputPlaceholder: $translate.instant('pstnSetup.searchAreaCodes'),
-          filter: true,
-          onChangeFn: function () {
-            vm.model.pstn.showAdvancedOrder = false;
-          }
-        },
-        controller: /* @ngInject */ function ($scope) {
+      });
+      getCapabilities();
+      FeatureToggleService.supports(FeatureToggleService.features.huronFederatedSparkCall)
+      .then(function (results) {
+        vm.ftHuronFederatedSparkCall = results;
+        if (!results) {
           $scope.$watchCollection(function () {
-            return vm.model.pstn.areaCodeOptions;
-          }, function (newAreaCodes) {
-            newAreaCodes = newAreaCodes || [];
-            $scope.to.options = _.sortBy(newAreaCodes, 'code');
+            return vm.model.tollFree.searchResultsModel;
+          }, function (searchResultsModel) {
+            // set disabled in next digest because of cs-btn
+            $timeout(function () {
+              vm.model.tollFree.addDisabled = !_.includes(searchResultsModel, true);
+            });
           });
         }
-      }, {
-        type: 'input',
-        key: 'pstn.quantity',
-        id: 'quantity',
-        className: 'medium-2 columns',
-        templateOptions: {
-          required: true,
-          label: $translate.instant('pstnSetup.quantity')
-        },
-        hideExpression: function () {
-          return !vm.model.pstn.block;
-        },
-        validators: {
-          positiveNumber: {
-            expression: ValidationService.positiveNumber,
-            message: function () {
-              return $translate.instant('validation.positiveNumber');
-            }
-          },
-          maxValue: {
-            expression: ValidationService.maxNumber100,
-            message: function () {
-              return $translate.instant('validation.maxNumber100');
-            }
-          }
-        }
-      }, {
-        type: 'button',
-        key: 'searchBtn',
-        className: 'search-button right',
-        templateOptions: {
-          btnClass: 'btn btn--circle primary',
-          spanClass: 'icon icon-search',
-          onClick: searchCarrierInventory
-        },
-        expressionProperties: {
-          'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-            return !scope.model.pstn.areaCode || !scope.model.pstn.quantity;
-          }
-        }
-      }]
-    }, {
-      className: 'row',
-      fieldGroup: [{
-        type: 'cs-input',
-        key: 'pstn.block',
-        className: 'small-indent',
-        templateOptions: {
-          type: 'checkbox',
-          id: 'blockChk',
-          label: $translate.instant('pstnSetup.block'),
-          onClick: function () {
-            // if the 'block' checkbox is unchecked, reset search quantity back to 1
-            if (!vm.model.pstn.block) {
-              vm.model.pstn.quantity = 1;
-            }
-          }
-        }
-      }, {
-        className: '',
-        noFormControl: true,
-        template: '<i class="icon icon-info" tooltip="{{::\'pstnSetup.advancedOrder.blockTooltip\' | translate}}"  tooltip-trigger="mouseenter" tooltip-placement="right" tooltip-animation="false" ></i>'
-      }, {
-        type: 'cs-input',
-        key: 'pstn.consecutive',
-        className: 'check-space',
-        templateOptions: {
-          type: 'checkbox',
-          id: 'consecutiveChk',
-          label: $translate.instant('pstnSetup.consecutive')
-        },
-        hideExpression: function () {
-          if (angular.isUndefined(vm.model.pstn.quantity) || vm.model.pstn.quantity < 2) {
-            // uncheck the consecutive checkbox
-            vm.model.pstn.consecutive = false;
-            return true;
-          }
-          return false;
-        }
-      }, {
-        className: '',
-        noFormControl: true,
-        template: '<i class="icon icon-info" tooltip="{{::\'pstnSetup.advancedOrder.consecutiveTooltip\' | translate}}"  tooltip-trigger="mouseenter" tooltip-placement="right" tooltip-animation="false" ></i>',
-        hideExpression: function () {
-          if (angular.isUndefined(vm.model.pstn.quantity) || vm.model.pstn.quantity < 2) {
-            // uncheck the consecutive checkbox
-            vm.model.pstn.consecutive = false;
-            return true;
-          }
-          return false;
-        }
-      }]
-    }];
+      });
+    }
 
     vm.tollFreeFields = [{
       className: 'row collapse-both',
@@ -269,7 +177,7 @@
           filter: true,
           onChangeFn: function () {
             vm.model.tollFree.showAdvancedOrder = false;
-          }
+          },
         },
         controller: /* @ngInject */ function ($scope) {
           $scope.$watchCollection(function () {
@@ -278,7 +186,7 @@
             newAreaCodes = newAreaCodes || [];
             $scope.to.options = _.sortBy(newAreaCodes, 'code');
           });
-        }
+        },
       }, {
         type: 'input',
         key: 'tollFree.quantity',
@@ -286,7 +194,7 @@
         className: 'medium-2 columns',
         templateOptions: {
           required: true,
-          label: $translate.instant('pstnSetup.quantity')
+          label: $translate.instant('pstnSetup.quantity'),
         },
         hideExpression: function () {
           return !vm.model.tollFree.block;
@@ -296,15 +204,15 @@
             expression: ValidationService.positiveNumber,
             message: function () {
               return $translate.instant('validation.positiveNumber');
-            }
+            },
           },
           maxValue: {
             expression: ValidationService.maxNumber100,
             message: function () {
               return $translate.instant('validation.maxNumber100');
-            }
-          }
-        }
+            },
+          },
+        },
       }, {
         type: 'button',
         key: 'searchBtn',
@@ -312,14 +220,14 @@
         templateOptions: {
           btnClass: 'btn btn--circle primary',
           spanClass: 'icon icon-search',
-          onClick: searchCarrierTollFreeInventory
+          onClick: searchCarrierTollFreeInventory,
         },
         expressionProperties: {
           'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
             return !scope.model.tollFree.areaCode || !scope.model.tollFree.quantity;
-          }
-        }
-      }]
+          },
+        },
+      }],
     }, {
       className: 'row',
       fieldGroup: [{
@@ -335,13 +243,13 @@
             if (!vm.model.tollFree.block) {
               vm.model.tollFree.quantity = 1;
             }
-          }
-        }
+          },
+        },
       }, {
         className: '',
         noFormControl: true,
-        template: '<i class="icon icon-info" tooltip="{{::\'pstnSetup.advancedOrder.blockTooltip\' | translate}}"  tooltip-trigger="mouseenter" tooltip-placement="right" tooltip-animation="false" ></i>'
-      }]
+        template: '<i class="icon icon-info" tooltip="{{::\'pstnSetup.advancedOrder.blockTooltip\' | translate}}"  tooltip-trigger="mouseenter" tooltip-placement="right" tooltip-animation="false" ></i>',
+      }],
     }];
 
     ////////////////////////
@@ -349,8 +257,34 @@
     function getStateInventory() {
       PstnSetupService.getCarrierInventory(PstnSetup.getProviderId(), vm.model.pstn.state.abbreviation)
         .then(function (response) {
-          vm.model.pstn.areaCodeOptions = response.areaCodes;
+          vm.model.pstn.areaCodeOptions = _.sortBy(response.areaCodes, 'code');
           vm.model.pstn.areaCode = '';
+          vm.model.pstn.areaCodeEnable = true;
+          vm.model.pstn.nxxOptions = null;
+          vm.model.pstn.nxx = null;
+          vm.model.pstn.nxxEnable = false;
+          vm.model.pstn.searchEnable = false;
+          vm.model.pstn.searchResults = [];
+          vm.model.pstn.showAdvancedOrder = false;
+        })
+        .catch(function (response) {
+          Notification.errorResponse(response, 'pstnSetup.errors.states');
+        });
+    }
+
+    function getAreaNxx() {
+      vm.model.pstn.searchEnable = true;
+      PstnSetupService.getCarrierInventory(PstnSetup.getProviderId(),
+        vm.model.pstn.state.abbreviation, vm.model.pstn.areaCode.code)
+        .then(function (response) {
+          if (!_.isEmpty(response)) {
+            vm.model.pstn.nxxOptions = _.sortBy(response.exchanges, 'code');
+            vm.model.pstn.nxxOptions.unshift({ code: NXX_EMPTY });
+            vm.model.pstn.nxx = vm.model.pstn.nxxOptions[0];
+            vm.model.pstn.nxxEnable = true;
+            vm.model.pstn.searchResults = [];
+            vm.model.pstn.showAdvancedOrder = false;
+          }
         })
         .catch(function (response) {
           Notification.errorResponse(response, 'pstnSetup.errors.states');
@@ -361,6 +295,19 @@
       PstnSetupService.getCarrierTollFreeInventory(PstnSetup.getProviderId())
         .then(function (response) {
           vm.model.tollFree.areaCodeOptions = response.areaCodes;
+          var areaCodes = '';
+          response.areaCodes.map(function (areaCode, index, array) {
+            areaCodes += areaCode.code;
+            if (array.length !== index + 1) {
+              areaCodes += ', ';
+            } else {
+              areaCodes += '.';
+            }
+            return areaCode;
+          });
+          vm.tollFreeTitle = $translate.instant('pstnSetup.tollFreeTitle', {
+            areaCodes: areaCodes,
+          });
           vm.model.tollFree.areaCode = '';
         })
         .catch(function (response) {
@@ -368,26 +315,129 @@
         });
     }
 
-    function searchCarrierInventory() {
+    function getCapabilities() {
+      if (!vm.isTrial) {
+        PstnSetupService.getCarrierCapabilities(PstnSetup.getProviderId())
+          .then(function (response) {
+            var supportedCapabilities = [];
+            for (var x in response) {
+              supportedCapabilities.push(response[x].capability);
+            }
+            if (supportedCapabilities.indexOf(TOLLFREE_ORDERING_CAPABILITY) !== -1) {
+              vm.showTollFreeNumbers = true;
+            }
+          })
+          .catch(function (response) {
+            Notification.errorResponse(response, 'pstnSetup.errors.capabilities');
+          });
+      }
+    }
+
+    function onBlockClick() {
+      if (vm.model.pstn.block) {
+        if (vm.model.pstn.quantity == null) {
+          vm.model.pstn.quantity = MIN_BLOCK_QUANTITY;
+        } else if (!(vm.model.pstn.quantity >= MIN_BLOCK_QUANTITY || vm.model.pstn.quantity <= MAX_BLOCK_QUANTITY)) {
+          vm.model.pstn.quantity = MIN_BLOCK_QUANTITY;
+        }
+      } else {
+        vm.model.pstn.quantity = null;
+      }
+    }
+
+    function resultChange(change) {
+      vm.model.pstn.searchResultsModel = change;
+    }
+
+    function isSingleResult() {
+      if (!vm.model.pstn.block) {
+        return true;
+      }
+      if (vm.model.pstn.quantity == 1 || vm.model.pstn.quantity == null) {
+        return true;
+      }
+      return false;
+    }
+
+    function getCount() {
+      if (!vm.model.pstn.block) {
+        return MAX_DID_QUANTITY;
+      }
+      return (vm.model.pstn.quantity ? vm.model.pstn.quantity : MAX_DID_QUANTITY);
+    }
+
+    function getNxxValue() {
+      if (vm.model.pstn.nxx !== null) {
+        if (vm.model.pstn.nxx.code !== NXX_EMPTY) {
+          return vm.model.pstn.nxx.code;
+        }
+      }
+      return null;
+    }
+
+    function searchCarrierInventory(areaCode, block, quantity, consecutive) {
+      if (areaCode) {
+        vm.model.pstn.showNoResult = false;
+        areaCode = '' + areaCode;
+        vm.model.pstn.areaCode = {
+          code: areaCode.slice(0, MIN_VALID_CODE),
+        };
+        vm.model.pstn.block = block;
+        vm.model.pstn.quantity = quantity;
+        vm.model.pstn.consecutive = consecutive;
+        if (areaCode.length === MAX_VALID_CODE) {
+          vm.model.pstn.nxx = {
+            code: areaCode.slice(MIN_VALID_CODE, areaCode.length),
+          };
+        } else {
+          vm.model.pstn.nxx = {
+            code: null,
+          };
+        }
+      }
       vm.model.pstn.showAdvancedOrder = false;
       var field = this;
       var params = {
         npa: vm.model.pstn.areaCode.code,
-        count: vm.model.pstn.quantity,
-        sequential: vm.model.pstn.consecutive
+        count: getCount(),
+        sequential: vm.model.pstn.consecutive,
       };
+      //add optional nxx parameter
+      var nxx = getNxxValue();
+      if (nxx !== null) {
+        params[NXX] = vm.model.pstn.nxx.code;
+      }
+
       vm.model.pstn.searchResults = [];
       vm.model.pstn.searchResultsModel = {};
       vm.model.pstn.paginateOptions.currentPage = 0;
-      vm.model.pstn.isSingleResult = vm.model.pstn.quantity == 1;
+      vm.model.pstn.isSingleResult = isSingleResult();
       field.loading = true;
 
       PstnSetupService.searchCarrierInventory(PstnSetup.getProviderId(), params)
         .then(function (numberRanges) {
           if (numberRanges.length === 0) {
-            vm.model.pstn.showAdvancedOrder = true;
+            if (vm.isTrial) {
+              vm.model.pstn.showNoResult = true;
+            } else {
+              vm.model.pstn.showAdvancedOrder = true;
+            }
+
           } else if (vm.model.pstn.isSingleResult) {
-            vm.model.pstn.searchResults = _.flatten(numberRanges);
+            if (areaCode && areaCode.length > MIN_VALID_CODE) {
+              vm.model.pstn.searchResults = _.flatten(numberRanges).filter(function (number) {
+                return number.includes(areaCode);
+              });
+              if (vm.model.pstn.searchResults.length === 0) {
+                if (vm.isTrial) {
+                  vm.model.pstn.showNoResult = true;
+                } else {
+                  vm.model.pstn.showAdvancedOrder = true;
+                }
+              }
+            } else {
+              vm.model.pstn.searchResults = _.flatten(numberRanges);
+            }
           } else {
             vm.model.pstn.searchResults = numberRanges;
           }
@@ -400,18 +450,31 @@
         });
     }
 
-    function searchCarrierTollFreeInventory() {
+    function searchCarrierTollFreeInventory(areaCode, block, quantity, consecutive) {
       vm.model.tollFree.showAdvancedOrder = false;
       var field = this;
+      if (angular.isString(areaCode)) {
+        vm.model.tollFree.block = block;
+        vm.model.tollFree.quantity = quantity;
+        vm.model.tollFree.consecutive = consecutive;
+        if (areaCode) {
+          areaCode = '' + areaCode;
+          vm.model.tollFree.areaCode = {
+            code: areaCode.slice(0, MIN_VALID_CODE),
+          };
+        }
+        vm.model.tollFree.isSingleResult = !block;
+      }
       var params = {
         npa: vm.model.tollFree.areaCode.code,
-        count: vm.model.tollFree.quantity,
-        sequential: vm.model.tollFree.consecutive
+        count: vm.model.tollFree.quantity === 1 ? undefined : vm.model.tollFree.quantity,
       };
       vm.model.tollFree.searchResults = [];
       vm.model.tollFree.searchResultsModel = {};
       vm.model.tollFree.paginateOptions.currentPage = 0;
-      vm.model.tollFree.isSingleResult = vm.model.tollFree.quantity == 1;
+      if (!angular.isString(areaCode)) {
+        vm.model.tollFree.isSingleResult = vm.model.tollFree.quantity == 1;
+      }
       field.loading = true;
 
       PstnSetupService.searchCarrierTollFreeInventory(PstnSetup.getProviderId(), params)
@@ -432,34 +495,47 @@
         });
     }
 
-    function addToCart(type) {
-      switch (type) {
+    function addToCart(orderType, numberType, quantity, searchResultsModel) {
+      if (quantity) {
+        if (numberType === NUMTYPE_DID) {
+          vm.model.pstn.quantity = quantity;
+        } else if (numberType === NUMTYPE_TOLLFREE) {
+          vm.model.tollFree.quantity = quantity;
+        }
+      }
+      if (searchResultsModel) {
+        if (numberType === NUMTYPE_DID) {
+          vm.model.pstn.searchResultsModel = searchResultsModel;
+        } else if (numberType === NUMTYPE_TOLLFREE) {
+          vm.model.tollFree.searchResultsModel = searchResultsModel;
+        }
+      }
+
+      switch (orderType) {
         case NUMBER_ORDER:
-        case TOLLFREE_ORDER:
-          addToOrder(type);
+          addToOrder(numberType);
           break;
         case PORT_ORDER:
           addPortNumbersToOrder();
           break;
         case BLOCK_ORDER:
-        case TOLLFREE_BLOCK_ORDER:
-          addAdvancedOrder(type);
+          addAdvancedOrder(numberType);
           break;
       }
     }
 
-    function addToOrder(type) {
+    function addToOrder(numberType) {
       var model;
       var promises = [];
       var reservation;
       vm.addLoading = true;
       // add to cart
-      if (type === NUMBER_ORDER) {
+      if (numberType === NUMTYPE_DID) {
         model = vm.model.pstn;
-      } else if (type === TOLLFREE_ORDER) {
+      } else if (numberType === NUMTYPE_TOLLFREE) {
         model = vm.model.tollFree;
       } else {
-        Notification.error('pstnSetup.errors.unsupportedOrderType', type);
+        Notification.error('pstnSetup.errors.unsupportedOrderType', numberType);
       }
       _.forIn(model.searchResultsModel, function (value, _key) {
         if (value) {
@@ -467,24 +543,26 @@
           var searchResultsIndex = (model.paginateOptions.currentPage * model.paginateOptions.pageSize) + key;
           if (searchResultsIndex < model.searchResults.length) {
             var numbers = model.searchResults[searchResultsIndex];
-            if (type === NUMBER_ORDER) {
-              reservation = PstnSetupService.reserveCarrierInventory(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), numbers, PstnSetup.isCustomerExists());
-            } else if (type === TOLLFREE_ORDER) {
+            if (numberType === NUMTYPE_DID) {
+              reservation = PstnSetupService.reserveCarrierInventoryV2(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), numbers, PstnSetup.isCustomerExists());
+            } else if (numberType === NUMTYPE_TOLLFREE) {
               reservation = PstnSetupService.reserveCarrierTollFreeInventory(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), numbers, PstnSetup.isCustomerExists());
             }
             var promise = reservation
-              .then(function () {
+              .then(function (reservationData) {
                 var order = {
                   data: {
-                    numbers: numbers
+                    numbers: numbers,
                   },
-                  type: type
+                  numberType: numberType,
+                  orderType: NUMBER_ORDER,
+                  reservationId: reservationData.uuid,
                 };
                 vm.orderCart.push(order);
                 // return the index to be used in the promise callback
                 return {
                   searchResultsIndex: searchResultsIndex,
-                  searchResultsModelIndex: key
+                  searchResultsModelIndex: key,
                 };
               }).catch(function (response) {
                 Notification.errorResponse(response);
@@ -496,7 +574,7 @@
       $q.all(promises).then(function (results) {
         // sort our successful indexes and process from high to low
         _.forInRight(_.sortBy(results), function (indices) {
-          if (angular.isObject(indices) && angular.isNumber(indices.searchResultsIndex) && angular.isNumber(indices.searchResultsModelIndex)) {
+          if (_.isObject(indices) && _.isNumber(indices.searchResultsIndex) && _.isNumber(indices.searchResultsModelIndex)) {
             // clear the checkbox
             _.set(model.searchResultsModel, indices.searchResultsModelIndex, false);
             // remove from search result
@@ -512,22 +590,26 @@
       });
     }
 
-    function addAdvancedOrder(type) {
+    function addAdvancedOrder(numberType) {
       var model;
-      if (type === BLOCK_ORDER) {
+      if (numberType === NUMTYPE_DID) {
         model = vm.model.pstn;
-      }
-      if (type === TOLLFREE_BLOCK_ORDER) {
+      } else if (numberType === NUMTYPE_TOLLFREE) {
         model = vm.model.tollFree;
       }
       var advancedOrder = {
         data: {
           areaCode: model.areaCode.code,
           length: parseInt(model.quantity, 10),
-          consecutive: model.consecutive
+          consecutive: model.consecutive,
         },
-        type: type
+        numberType: numberType,
+        orderType: BLOCK_ORDER,
       };
+      var nxx = getNxxValue();
+      if (nxx !== null) {
+        advancedOrder.data[NXX] = vm.model.pstn.nxx.code;
+      }
       vm.orderCart.push(advancedOrder);
       model.showAdvancedOrder = false;
     }
@@ -539,34 +621,37 @@
     function removeOrder(order) {
       if (isPortOrder(order) || isAdvancedOrder(order)) {
         removeOrderFromCart(order);
-      } else if (_.get(order, 'type') === TOLLFREE_ORDER) {
-        PstnSetupService.releaseCarrierTollFreeInventory(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), order.data.numbers, PstnSetup.isCustomerExists())
+      } else if (_.get(order, 'orderType') === PstnSetupService.NUMBER_ORDER && _.get(order, 'numberType') === PstnSetupService.NUMTYPE_TOLLFREE) {
+        PstnSetupService.releaseCarrierTollFreeInventory(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), order.data.numbers, order.reservationId, PstnSetup.isCustomerExists())
           .then(_.partial(removeOrderFromCart, order));
       } else {
-        PstnSetupService.releaseCarrierInventory(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), order.data.numbers, PstnSetup.isCustomerExists())
+        PstnSetupService.releaseCarrierInventoryV2(PstnSetup.getCustomerId(), order.reservationId, order.data.numbers, PstnSetup.isCustomerExists())
           .then(_.partial(removeOrderFromCart, order));
       }
     }
 
     function formatTelephoneNumber(telephoneNumber) {
-      switch (_.get(telephoneNumber, 'type')) {
+      switch (_.get(telephoneNumber, 'orderType')) {
         case NUMBER_ORDER:
-        case TOLLFREE_ORDER:
           return getCommonPattern(telephoneNumber.data.numbers);
         case PORT_ORDER:
           return PORTING_NUMBERS;
-        case BLOCK_ORDER:
-        case TOLLFREE_BLOCK_ORDER:
-          return '(' + telephoneNumber.data.areaCode + ') XXX-XXXX';
+        case BLOCK_ORDER: {
+          var pstn = 'XXX-XXXX';
+          if (_.has(telephoneNumber.data, NXX)) {
+            pstn = telephoneNumber.data.nxx + '-' + 'XXXX';
+          }
+          return '(' + telephoneNumber.data.areaCode + ') ' + pstn;
+        }
         case undefined:
           return getCommonPattern(telephoneNumber);
         default:
-          return;
+          return undefined;
       }
     }
 
     function getCommonPattern(telephoneNumber) {
-      if (angular.isString(telephoneNumber)) {
+      if (_.isString(telephoneNumber)) {
         return TelephoneNumberService.getDIDLabel(telephoneNumber);
       } else {
         var firstNumber = TelephoneNumberService.getDIDLabel(_.head(telephoneNumber));
@@ -586,7 +671,6 @@
     vm.unsavedTokens = [];
     vm.validCount = 0;
     vm.invalidCount = 0;
-    vm.tollFreeNumberCount = 0;
     vm.tokenfieldId = 'pstn-port-numbers';
 
     vm.tokenoptions = {
@@ -595,13 +679,13 @@
       limit: 50,
       tokens: [],
       minLength: 9,
-      beautify: false
+      beautify: false,
     };
     vm.tokenmethods = {
       createtoken: createToken,
       createdtoken: createdToken,
       removedtoken: removedToken,
-      edittoken: editToken
+      edittoken: editToken,
     };
 
     function createToken(e) {
@@ -614,9 +698,6 @@
       if (isTokenInvalid(e.attrs.value)) {
         angular.element(e.relatedTarget).addClass('invalid');
         e.attrs.invalid = true;
-        if (TelephoneNumberService.isTollFreeNumber(e.attrs.value)) {
-          vm.tollFreeNumberCount++;
-        }
       } else {
         vm.validCount++;
       }
@@ -628,7 +709,6 @@
 
     function isTokenInvalid(value) {
       return !TelephoneNumberService.validateDID(value) ||
-        TelephoneNumberService.isTollFreeNumber(value) ||
         _.includes(DidService.getDidList(), value);
     }
 
@@ -649,7 +729,6 @@
       // reset valid and list before setTokens
       vm.validCount = 0;
       vm.invalidCount = 0;
-      vm.tollFreeNumberCount = 0;
       DidService.clearDidList();
       angular.element('#' + vm.tokenfieldId).tokenfield('setTokens', tmpDids);
     }
@@ -663,19 +742,19 @@
     }
 
     function isPortOrder(order) {
-      return _.get(order, 'type') === PORT_ORDER;
+      return _.get(order, 'orderType') === PORT_ORDER;
     }
 
     function addPortNumbersToOrder() {
       var portOrder = {
         data: {},
-        type: PORT_ORDER
+        orderType: PORT_ORDER,
       };
       var portNumbersPartition = _.partition(getTokens(), 'invalid');
       var invalidPortNumbers = _.map(portNumbersPartition[0], 'value');
       portOrder.data.numbers = _.map(portNumbersPartition[1], 'value');
       var existingPortOrder = _.find(vm.orderCart, {
-        type: PORT_ORDER
+        orderType: PORT_ORDER,
       });
       if (existingPortOrder) {
         var newPortNumbers = _.difference(portOrder.data.numbers, existingPortOrder.data.numbers);
@@ -708,7 +787,7 @@
     }
 
     function getLongestCommonSubstring(x, y) {
-      if (!angular.isString(x) || !angular.isString(y)) {
+      if (!_.isString(x) || !_.isString(y)) {
         return '';
       }
       var i = 0;
@@ -735,17 +814,15 @@
     }
 
     function getOrderQuantity(order) {
-      switch (_.get(order, 'type')) {
+      switch (_.get(order, 'orderType')) {
         case NUMBER_ORDER:
-        case TOLLFREE_ORDER:
           return order.data.numbers.length;
         case PORT_ORDER:
           return order.data.numbers.length;
         case BLOCK_ORDER:
-        case TOLLFREE_BLOCK_ORDER:
           return order.data.length;
         case undefined:
-          return;
+          return undefined;
       }
     }
 
@@ -762,8 +839,7 @@
     }
 
     function isAdvancedOrder(order) {
-      var orderType = _.get(order, 'type');
-      return (orderType === BLOCK_ORDER || orderType === TOLLFREE_BLOCK_ORDER);
+      return _.get(order, 'orderType') === BLOCK_ORDER;
     }
 
     $scope.$watchCollection(function () {
@@ -775,15 +851,6 @@
       });
     });
 
-    $scope.$watchCollection(function () {
-      return vm.model.tollFree.searchResultsModel;
-    }, function (searchResultsModel) {
-      // set disabled in next digest because of cs-btn
-      $timeout(function () {
-        vm.model.tollFree.addDisabled = !_.includes(searchResultsModel, true);
-      });
-    });
-
     $scope.$watch(function () {
       return vm.showTollFreeNumbers;
     }, function (showTollFreeNumbersTab) {
@@ -791,14 +858,6 @@
         getTollFreeInventory();
       }
     });
-
-    function toggleTollFreeNumberFeature() {
-      FeatureToggleService.supports(FeatureToggleService.features.atlasPstnTfn).then(function (result) {
-        vm.showTollFreeNumbers = result;
-      });
-    }
-
-    toggleTollFreeNumberFeature();
 
     // We want to capture the modal close event and clear didList from service.
     if ($state.modal) {

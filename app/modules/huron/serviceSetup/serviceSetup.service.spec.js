@@ -1,10 +1,10 @@
 'use strict';
 
 describe('Service: ServiceSetup', function () {
-  var ServiceSetup, $httpBackend, HuronConfig;
+  var ServiceSetup, $httpBackend, HuronConfig, FeatureToggleService, $q;
 
   var Authinfo = {
-    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
   };
 
   beforeEach(angular.mock.module('Huron'));
@@ -13,10 +13,13 @@ describe('Service: ServiceSetup', function () {
     $provide.value("Authinfo", Authinfo);
   }));
 
-  beforeEach(inject(function (_ServiceSetup_, _$httpBackend_, _HuronConfig_) {
+
+  beforeEach(inject(function (_ServiceSetup_, _$httpBackend_, _HuronConfig_, _FeatureToggleService_, _$q_) {
+    $q = _$q_;
     ServiceSetup = _ServiceSetup_;
     $httpBackend = _$httpBackend_;
     HuronConfig = _HuronConfig_;
+    FeatureToggleService = _FeatureToggleService_;
   }));
 
   afterEach(function () {
@@ -39,7 +42,7 @@ describe('Service: ServiceSetup', function () {
     var sites = [{
       uuid: '777-888-666',
       steeringDigit: '5',
-      siteSteeringDigit: '6'
+      siteSteeringDigit: '6',
     }];
 
     beforeEach(function () {
@@ -58,7 +61,7 @@ describe('Service: ServiceSetup', function () {
     var site = {
       uuid: '1234567890',
       steeringDigit: '5',
-      siteSteeringDigit: '6'
+      siteSteeringDigit: '6',
     };
 
     beforeEach(function () {
@@ -77,7 +80,7 @@ describe('Service: ServiceSetup', function () {
     var site = {
       uuid: '1234567890',
       steeringDigit: '5',
-      siteSteeringDigit: '6'
+      siteSteeringDigit: '6',
     };
 
     beforeEach(function () {
@@ -90,20 +93,80 @@ describe('Service: ServiceSetup', function () {
     });
   });
 
+  describe('getAvrilSite', function () {
+    var site = {
+      guid: '1234567890',
+    };
+
+    beforeEach(function () {
+      $httpBackend.expectGET(HuronConfig.getAvrilUrl() + '/customers/1/sites/' + site.guid).respond(201);
+    });
+
+    it('should get the avril voicemail site', function () {
+      ServiceSetup.getAvrilSite(site.guid);
+      $httpBackend.flush();
+    });
+  });
+
+  describe('updateAvrilSite', function () {
+    var site = {
+      guid: '1234567890',
+    };
+    var voicemailFeatures = {
+      VM2E: false,
+      VM2T: true,
+      VM2S: true,
+    };
+
+    beforeEach(function () {
+      $httpBackend.expectPUT(HuronConfig.getAvrilUrl() + '/customers/1/sites/' + site.guid).respond(204);
+    });
+
+    it('should update avril voicemail', function () {
+      ServiceSetup.updateAvrilSite(site.guid, voicemailFeatures);
+      $httpBackend.flush();
+    });
+  });
+
+
+  describe('createAvrilSite', function () {
+    var site = {
+      guid: '1234567890',
+      siteCode: '8',
+      siteSteeringDigit: '6',
+      timezone: 'MST',
+      extensionLength: '10',
+      pilotNumber: '1008',
+    };
+
+    var HuronConfig = {
+      getAvrilUrl: jasmine.createSpy('getAvrilUrl').and.returnValue('https://avrildirmgmt.appstaging.ciscoccservice.com/avrildirmgmt/api/v1'),
+    };
+
+    beforeEach(function () {
+      $httpBackend.whenPOST(HuronConfig.getAvrilUrl() + '/customers/1/sites').respond(201);
+    });
+
+    it('should create avril site', function () {
+      ServiceSetup.createAvrilSite(site.guid, site.siteSteeringDigit, site.code, site.timezone, site.extensionLength, site.pilotNumber);
+      $httpBackend.flush();
+    });
+  });
+
   describe('loadExternalNumberPool', function () {
     var extNumPool = [{
       uuid: '777-888-666',
-      pattern: '+11234567890'
+      pattern: '+11234567890',
     }];
 
     beforeEach(function () {
-      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&order=pattern').respond(extNumPool);
+      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&externalnumbertype=Fixed+Line+or+Mobile&order=pattern').respond(extNumPool);
     });
 
     it('should list external number pool', function () {
       ServiceSetup.loadExternalNumberPool();
       $httpBackend.flush();
-
+      expect(ServiceSetup.externalNumberPool).toEqual(extNumPool);
       expect(angular.equals(ServiceSetup.externalNumberPool, extNumPool)).toBe(true);
     });
   });
@@ -112,8 +175,8 @@ describe('Service: ServiceSetup', function () {
     var customer = [{
       uuid: '1234567890',
       voicemail: {
-        pilotNumber: '+11234567890'
-      }
+        pilotNumber: '+11234567890',
+      },
     }];
 
     beforeEach(function () {
@@ -129,7 +192,7 @@ describe('Service: ServiceSetup', function () {
   describe('updateVoicemailTimezone', function () {
     var usertemplate = [{
       timeZoneName: 'America/Chicago',
-      objectId: 'fd87d99c-98a4-45db-af59-ebb9a6f18fdd'
+      objectId: 'fd87d99c-98a4-45db-af59-ebb9a6f18fdd',
     }];
     beforeEach(function () {
       $httpBackend.expectPUT(HuronConfig.getCmiUrl() + '/voicemail/customers/1/usertemplates').respond(204);
@@ -144,7 +207,7 @@ describe('Service: ServiceSetup', function () {
   describe('listVoicemailTimezone', function () {
     var usertemplate = [{
       timeZoneName: 'America/Chicago',
-      objectId: 'fd87d99c-98a4-45db-af59-ebb9a6f18fdd'
+      objectId: 'fd87d99c-98a4-45db-af59-ebb9a6f18fdd',
     }];
     beforeEach(function () {
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voicemail/customers/1/usertemplates?query=(alias+startswith+1)').respond(usertemplate);
@@ -162,7 +225,7 @@ describe('Service: ServiceSetup', function () {
   describe('getVoicemailPilotNumber', function () {
     var voicemail = {
       pilotNumber: '+1234567890',
-      uuid: '1234567890'
+      uuid: '1234567890',
     };
 
     beforeEach(function () {
@@ -180,12 +243,12 @@ describe('Service: ServiceSetup', function () {
   describe('createInternalNumberRange', function () {
     var internalNumberRange = {
       beginNumber: '5000',
-      endNumber: '5999'
+      endNumber: '5999',
     };
 
     beforeEach(function () {
       $httpBackend.expectPOST(HuronConfig.getCmiUrl() + '/voice/customers/1/internalnumberranges').respond(201, {}, {
-        'location': 'http://some/url/123456'
+        'location': 'http://some/url/123456',
       });
     });
 
@@ -204,7 +267,7 @@ describe('Service: ServiceSetup', function () {
 
   describe('deleteInternalNumberRange', function () {
     var internalNumberRange = {
-      uuid: '5550f6e1-c1f5-493f-b9fd-666480cb0adf'
+      uuid: '5550f6e1-c1f5-493f-b9fd-666480cb0adf',
     };
 
     beforeEach(function () {
@@ -219,11 +282,11 @@ describe('Service: ServiceSetup', function () {
 
   describe('verifyIsObject', function () {
     var testArray = [{
-      name: 'test'
+      name: 'test',
     }];
 
     var testObject = {
-      name: 'test'
+      name: 'test',
     };
 
     it('should receive an array and return an object', function () {
@@ -246,7 +309,7 @@ describe('Service: ServiceSetup', function () {
   describe('listInternalNumberRanges', function () {
     var internalNumberRanges = [{
       beginNumber: '5000',
-      endNumber: '5999'
+      endNumber: '5999',
     }];
 
     beforeEach(function () {
@@ -261,17 +324,98 @@ describe('Service: ServiceSetup', function () {
     });
   });
 
-  describe('getTimeZones', function () {
+  describe('getDateFormats', function () {
     beforeEach(function () {
-      $httpBackend.expectGET('/app/modules/huron/serviceSetup/jodaTimeZones.json').respond(getJSONFixture('huron/json/timeZones/timeZones.json'));
-
-      it('should get time zones', function () {
-        ServiceSetup.getTimeZones();
-
-        $httpBackend.flush();
-      });
+      $httpBackend.expectGET('modules/huron/serviceSetup/dateFormats.json').respond(getJSONFixture('huron/json/settings/dateFormat.json'));
     });
 
+    it('should get the Date formats', function () {
+      ServiceSetup.getDateFormats().then(function (response) {
+        expect(response).toBeDefined();
+        expect(response.length).toBe(3);
+      });
+      $httpBackend.flush();
+    });
+  });
+
+  describe('getTimeFormats', function () {
+    beforeEach(function () {
+      $httpBackend.expectGET('modules/huron/serviceSetup/timeFormat.json').respond(getJSONFixture('huron/json/settings/timeFormats.json'));
+    });
+
+    it('should get the Time formats', function () {
+      ServiceSetup.getTimeFormats().then(function (response) {
+        expect(response).toBeDefined();
+        expect(response.length).toBe(2);
+      });
+      $httpBackend.flush();
+    });
+  });
+
+  describe('getTimeZones', function () {
+    beforeEach(function () {
+      $httpBackend.expectGET('modules/huron/serviceSetup/jodaTimeZones.json').respond(getJSONFixture('huron/json/timeZones/timeZones.json'));
+    });
+
+    it('should get time zones', function () {
+      ServiceSetup.getTimeZones().then(function (response) {
+        expect(response).toBeDefined();
+        expect(response.length).toBe(472);
+      });
+      $httpBackend.flush();
+    });
+  });
+
+  describe('getSiteLanguages', function () {
+    beforeEach(function () {
+      $httpBackend.expectGET('modules/huron/serviceSetup/siteLanguages.json').respond(getJSONFixture('huron/json/settings/languages.json'));
+      spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
+    });
+
+    it('should get site default languages & additional languages since userlocale2 feature toggle was enabled', function () {
+      ServiceSetup.getSiteLanguages().then(function (response) {
+        expect(response).toBeDefined();
+        expect(response.length).toBe(4);
+        var filteredLanguage = _.find(response, { 'value': 'es_ES' });
+        expect(filteredLanguage).toBeDefined();
+        var translatedLanguages = ServiceSetup.getTranslatedSiteLanguages(response);
+        expect(translatedLanguages).toBeDefined();
+        expect(translatedLanguages.length).toBe(4);
+      });
+      $httpBackend.flush();
+    });
+
+    it('should get site default languages only since userlocale2 feature toggle was disabled', function () {
+      FeatureToggleService.supports = jasmine.createSpy().and.returnValue($q.resolve(false));
+      ServiceSetup.getSiteLanguages().then(function (response) {
+        expect(response).toBeDefined();
+        expect(response.length).toBe(2);
+        var filteredLanguage = _.find(response, { 'value': 'es_ES' });
+        expect(filteredLanguage).not.toBeDefined();
+        var translatedLanguages = ServiceSetup.getTranslatedSiteLanguages(response);
+        expect(translatedLanguages).toBeDefined();
+        expect(translatedLanguages.length).toBe(2);
+      });
+      $httpBackend.flush();
+    });
+  });
+
+  describe('getSiteCountries', function () {
+    beforeEach(function () {
+      $httpBackend.expectGET('modules/huron/serviceSetup/siteCountries.json').respond(getJSONFixture('huron/json/settings/countries.json'));
+    });
+
+    it('should get site countries', function () {
+      FeatureToggleService.supports = jasmine.createSpy().and.returnValue($q.resolve(true));
+      ServiceSetup.getSiteCountries().then(function (response) {
+        expect(response).toBeDefined();
+        expect(response.length).toBe(2);
+        var translatedCountries = ServiceSetup.getTranslatedSiteCountries(response);
+        expect(translatedCountries).toBeDefined();
+        expect(translatedCountries.length).toBe(2);
+      });
+      $httpBackend.flush();
+    });
   });
 
   describe('generateVoiceMailNumber', function () {

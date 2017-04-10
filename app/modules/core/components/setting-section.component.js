@@ -1,10 +1,12 @@
+require('./_setting-section.scss');
+
 (function () {
   angular.module('Core')
     .component('settingSection', {
       bindings: {
-        setting: '='
+        setting: '=',
       },
       transclude: true,
-      templateUrl: "modules/core/components/setting-section.html"
+      templateUrl: "modules/core/components/setting-section.html",
     });
 })();

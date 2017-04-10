@@ -23,7 +23,7 @@
     }
     return {
       restrict: 'A',
-      link: Link
+      link: Link,
     };
   }
 

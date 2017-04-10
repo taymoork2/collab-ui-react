@@ -1,14 +1,13 @@
 <div class="modal-header">
   <button type="button" class="close" ng-click="$dismiss()">
   </button>
-  <h3 class="modal-title" translate="{{choosePersonal.wizardData.title}}"></h3>
+  <h3 class="modal-title" translate="{{choosePersonal.title}}"></h3>
 </div>
 <div class="modal-body device-wizard choose-personal">
   <div class="chooseExistingUser">
     <form class="chooseExistingUserForm" onsubmit="$('#next-button').click()">
-      <h4 translate="addDeviceWizard.choosePersonal.existingUser"></h4>
-      <p translate="addDeviceWizard.choosePersonal.existingUserInstructions"></p>
-      <div class="existingUserSpacing" ng-hide="choosePersonal.wizardData.allowUserCreation"></div>
+      <h4 translate="addDeviceWizard.choosePersonal.whichUser"></h4>
+      <p translate="addDeviceWizard.choosePersonal.existingUserInstructions" ng-if="choosePersonal.deviceType === 'huron'"></p>
       <div>
         <input type="text"
                class="existingUserInput"
@@ -26,9 +25,8 @@
         </script>
         <span ng-show="choosePersonal.isSearching" cs-loader class="loader-example--small"></span>
         <span ng-show="choosePersonal.noResults" translate="addDeviceWizard.choosePersonal.noUserFound"></span>
-        <div class="errorBox" ng-if="choosePersonal.userError">
-          <i class="icon icon-warning"></i>
-          <span translate="addDeviceWizard.choosePersonal.userMissesUcEntitlement"></span>
+        <div class="noSparkCallWarning" ng-if="choosePersonal.userError">
+          <span translate="addDeviceWizard.confirmRoomDeviceOnly.noSparkCallWarning"></span>
         </div>
       </div>
       <div class="scrollSpace"></div>
@@ -44,7 +42,6 @@
   </button>
   <button
     cs-btn
-    loading="choosePersonal.isLoading"
     id="create-place-button"
     class="btn btn--primary"
     ng-click="choosePersonal.next()"

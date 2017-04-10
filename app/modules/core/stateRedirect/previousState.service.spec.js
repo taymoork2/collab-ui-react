@@ -5,6 +5,10 @@
     var PreviousState, $state;
     var state, stateParams;
 
+    afterEach(function () {
+      PreviousState = $state = state = stateParams = undefined;
+    });
+
     beforeEach(angular.mock.module('Core'));
 
     beforeEach(inject(function (_PreviousState_, _$state_) {
@@ -37,7 +41,7 @@
       beforeEach(function () {
         state = 'myPreviousState';
         stateParams = {
-          myParam: 'myValue'
+          myParam: 'myValue',
         };
         PreviousState.set(state);
         PreviousState.setParams(stateParams);
@@ -65,7 +69,7 @@
       beforeEach(function () {
         state = 'login';
         stateParams = {
-          myParam: 'myValue'
+          myParam: 'myValue',
         };
         PreviousState.set(state);
         PreviousState.setParams(stateParams);

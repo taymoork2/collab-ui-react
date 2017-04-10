@@ -1,5 +1,4 @@
 .cloud-extensions {
-
   .status-error {
     color: $brand-danger;
   }
@@ -24,24 +23,19 @@
     color: $gray-dark;
   }
 
+  .status-pending_activation {
+    color: $gray-dark;
+  }
+
   .cs-loading {
     display: inline;
     padding-left: 1rem;
+    line-height: 2rem;
   }
 
   .feature-list-loader {
     padding-left: 0;
     padding-right: 0.5rem;
-  }
-
-  .feature-icon-extension {
-    @extend .icon;
-    font-size: rem-calc(25);
-    margin-right: 13px;
-    line-height: $feature-line-height;
-    &:before {
-      line-height: $feature-line-height;
-    }
   }
 
   .section-title-row {
@@ -69,6 +63,7 @@
     line-height: inherit;
     padding-bottom: 10px;
   }
+
   .row-hybrid {
     background: $gray-lightest;
     display: inline-flex;
@@ -83,6 +78,7 @@
       font-family: $brand-font-cisco-TT-Extra-Light;
       padding-left: 12px;
     }
+
     .icon {
       font-size: 35px;
       display: inline-block;
@@ -95,16 +91,42 @@
     font-family: $brand-font-light;
     font-size: 14px;
     color: $gray-darkest;
-    .hs-header {
-      padding-left: 15px;
-      font-family: $brand-font-cisco-TT-Extra-Light;
+
+    .indented {
+      margin-left: 1.5rem;
     }
-    .hs-extension-list {
-      padding-top: 20px;
+
+    .column-padded {
+      padding: 1.5rem;
     }
-    .indentedCB {
-      margin-left: 27px;
+
+    .service-heading {
+      color: $color-primary-base;
+      font-family: $brand-font-light;
+      font-size: 14px;
+      line-height: 24px;
     }
+  }
+
+  .has-warnings-icon {
+    color: $brand-warning-dark;
+    position: relative;
+    top: 2px;
+  }
+
+  .last-state-change-timestamp {
+    line-height: normal;
+    color: $gray-dark;
+  }
+
+  .normal-line-height {
+    line-height: normal;
+  }
+  .mailid {
+    margin-top: 2rem;
+  }
+  .placeStatus {
+    margin-top: 0.5rem;
   }
 }
 
@@ -114,6 +136,9 @@
   font-size: 0.875rem;
   line-height: 2.25rem;
   font-family: $brand-font-light;
+  a {
+    color: $color-primary-base;
+  }
 }
 
 form {
@@ -122,6 +147,7 @@ form {
 
 .info-message {
   position: relative;
+
   .icon {
     position: absolute;
     color: $color-primary-base;
@@ -132,6 +158,7 @@ form {
 .warning-message {
   position: relative;
   margin-top: 1rem;
+
   .icon {
     position: absolute;
     color: $color-attention-base;
@@ -141,6 +168,7 @@ form {
 
 .error-message {
   position: relative;
+
   .icon {
     position: absolute;
     color: $color-alerts-base;

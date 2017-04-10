@@ -3,6 +3,10 @@
 describe('Controller: TrialEmergAddressCtrl', function () {
   var controller, trials, $scope, TrialPstnService;
 
+  afterEach(function () {
+    controller = trials = $scope = TrialPstnService = undefined;
+  });
+
   beforeEach(angular.mock.module('core.trial'));
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Core'));
@@ -37,7 +41,7 @@ describe('Controller: TrialEmergAddressCtrl', function () {
       unit: '4321',
       city: 'Dallas',
       state: 'TX',
-      zip: '75080'
+      zip: '75080',
     };
 
     it('should set the carrier', function () {

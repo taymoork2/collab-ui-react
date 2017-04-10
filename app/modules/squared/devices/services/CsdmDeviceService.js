@@ -2,8 +2,8 @@
   'use strict';
 
   /* @ngInject  */
-  function CsdmDeviceService($http, Authinfo, CsdmConfigService, CsdmConverter, Utils) {
-    var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/devices';
+  function CsdmDeviceService($http, Authinfo, UrlConfig, CsdmConverter, Utils) {
+    var devicesUrl = UrlConfig.getCsdmServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/devices';
     var devicesFastUrlPostFix = "?checkDisplayName=false&checkOnline=false";
 
     function fetchDevices(requestFullData) {
@@ -16,7 +16,19 @@
       });
     }
 
-    function fetchDevice(url) {
+    function fetchDevicesForUser(userId) {
+      return $http.get(devicesUrl + '?type=all&cisUuid=' + userId).then(function (res) {
+        return _.mapValues(res.data, function (device) {
+          if (device.productFamily === 'Huron' || device.productFamily === 'ATA') {
+            return CsdmConverter.convertHuronDevice(device);
+          } else {
+            return CsdmConverter.convertCloudberryDevice(device);
+          }
+        });
+      });
+    }
+
+    function fetchItem(url) {
       return $http.get(url).then(function (res) {
         return CsdmConverter.convertCloudberryDevice(res.data);
       });
@@ -27,18 +39,12 @@
     }
 
     function deleteItem(device) {
-      return $http.delete(device.url);
-    }
-
-    function updateItemName(device, newName) {
-      return $http.patch(device.url, {
-        name: newName
-      });
+      return $http.delete(device.url + '?keepPlace=true');
     }
 
     function updateTags(deviceUrl, tags) {
       return $http.patch(deviceUrl, {
-        description: JSON.stringify(tags || [])
+        description: JSON.stringify(tags || []),
       });
     }
 
@@ -51,7 +57,17 @@
         command: "logUpload",
         eventType: "room.request_logs",
         feedbackId: feedbackId,
-        email: email
+        email: email,
+      });
+    }
+
+    function sendAdvancedSettingsOtp(deviceUrl, token, email, displayName) {
+      return notifyDevice(deviceUrl, {
+        command: "localAccess",
+        eventType: "room.localAccess",
+        displayName: displayName,
+        email: email,
+        token: token,
       });
     }
 
@@ -61,24 +77,23 @@
         eventType: "room.renewRSU",
         feedbackId: feedbackId,
         email: email,
-        message: Utils.getUUID()
+        message: Utils.getUUID(),
       });
     }
 
     return {
       fetchDevices: fetchDevices,
+      fetchDevicesForUser: fetchDevicesForUser,
       deleteItem: deleteItem,
-      updateItemName: updateItemName,
       updateTags: updateTags,
-      fetchDevice: fetchDevice,
+      fetchItem: fetchItem,
+      notifyDevice: notifyDevice,
+      sendAdvancedSettingsOtp: sendAdvancedSettingsOtp,
 
 //Grey list:
-      //on: deviceCache.on,
-      //getDevice: getDevice,
       uploadLogs: uploadLogs,
       deleteDevice: deleteDevice,
-
-      renewRsuKey: renewRsuKey
+      renewRsuKey: renewRsuKey,
     };
   }
 

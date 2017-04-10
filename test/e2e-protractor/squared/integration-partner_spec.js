@@ -1,6 +1,7 @@
 'use strict';
 
-/* global deleteTrialUtils */
+var featureToggle = require('../utils/featureToggle.utils');
+
 /* global LONG_TIMEOUT */
 
 describe('Partner flow', function () {
@@ -13,7 +14,7 @@ describe('Partner flow', function () {
     });
 
     it('should display correct navigation colors', function () {
-      utils.expectClass(navigation.body, 'inverse');
+      utils.waitClass(navigation.body, 'inverse');
     });
 
     it('should display correct tabs for user based on role', function () {
@@ -46,31 +47,23 @@ describe('Partner flow', function () {
       navigation.clickCustomers();
     });
 
-    describe('New Trial box', function () {
-
-      beforeEach(function () {
-        utils.click(partner.addButton);
-        utils.expectIsDisplayed(partner.addTrialForm);
-      });
-
-      afterEach(function () {
-        utils.click(partner.cancelTrialButton);
-      });
-    });
-
     it('should add a new trial', function () {
-      utils.click(partner.trialFilter);
+      //utils.click(partner.trialFilter);
       utils.click(partner.addButton);
-      utils.expectIsDisplayed(partner.addTrialForm);
 
+      utils.expectIsDisplayed(partner.editTrialForm);
       utils.expectIsDisabled(partner.startTrialButton);
 
-      utils.expectCheckbox(partner.squaredUCTrialCheckbox, true);
-      utils.expectCheckbox(partner.roomSystemsTrialCheckbox, true);
+      utils.expectInputCheckbox(partner.squaredUCTrialCheckbox, true);
+      utils.expectInputCheckbox(partner.roomSystemsTrialCheckbox, true);
       utils.click(partner.squaredUCTrialCheckbox); // no PSTN on this trial
       utils.click(partner.roomSystemsTrialCheckbox); // no room systems on this trial
-      utils.expectCheckbox(partner.squaredUCTrialCheckbox, false);
-      utils.expectCheckbox(partner.roomSystemsTrialCheckbox, false);
+      utils.click(partner.sparkBoardTrialCheckbox); // no spark board system on this trial
+      utils.click(partner.careTrialCheckbox); // no care on this trial
+      utils.click(partner.validLocationCheckbox); // valid location checked
+      utils.expectInputCheckbox(partner.squaredUCTrialCheckbox, false);
+      utils.expectInputCheckbox(partner.roomSystemsTrialCheckbox, false);
+      utils.expectInputCheckbox(partner.sparkBoardTrialCheckbox, false);
       utils.setCheckboxIfDisplayed(partner.webexTrialCheckbox, false, 100);
 
       utils.sendKeys(partner.customerNameInput, partner.newTrial.customerName);
@@ -82,7 +75,7 @@ describe('Partner flow', function () {
     });
 
     it('should find new trial', function (done) {
-      utils.click(partner.trialFilter);
+      //utils.click(partner.trialFilter);
       utils.search(partner.newTrial.customerName, -1);
       utils.expectIsDisplayed(partner.newTrialRow);
 
@@ -97,17 +90,18 @@ describe('Partner flow', function () {
       utils.expectIsDisplayed(partner.previewPanel);
       utils.click(partner.termsActionButton);
       utils.click(partner.editTermsButton);
+      utils.click(partner.validLocationCheckbox); //valid location
 
       utils.waitForModal().then(function () {
         utils.expectIsDisplayed(partner.editTrialForm);
-        utils.expectClass(partner.messageTrialCheckbox, 'disabled');
+        utils.waitClass(partner.messageTrialCheckbox, 'disabled');
 
         utils.expectIsDisabled(partner.saveUpdateButton);
         utils.clear(partner.licenseCountInput);
         utils.sendKeys(partner.licenseCountInput, partner.editTrial.licenseCount);
         utils.click(partner.saveUpdateButton);
         notifications.assertSuccess(partner.newTrial.customerName, 'You have successfully edited a trial for');
-        utils.click(partner.trialFilter);
+        //utils.click(partner.trialFilter);
         utils.expectIsDisplayed(partner.newTrialRow);
       });
     }, LONG_TIMEOUT);
@@ -138,13 +132,20 @@ describe('Partner flow', function () {
       utils.click(wizard.saveBtn);
 
       utils.expectTextToBeSet(wizard.mainviewTitle, 'Enterprise Settings');
-      utils.click(wizard.nextBtn);
-      utils.click(wizard.nextBtn);
+      if (featureToggle.features.atlasFTSWRemoveUsersSSO) {
+        // click "Save" instead of "Next" because there are no SSO steps
+        // goes to last tab because there is no Add Users
+        utils.click(wizard.saveBtn);
+      } else {
+        // TODO: remove when feature toggle is removed
+        utils.click(wizard.nextBtn);
+        utils.click(wizard.nextBtn);
 
-      utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
-      utils.expectIsDisplayed(wizard.skipBtn);
-      utils.click(wizard.nextBtn);
-      utils.click(wizard.saveBtn);
+        utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
+        utils.expectIsDisplayed(wizard.skipBtn);
+        utils.click(wizard.nextBtn);
+        utils.click(wizard.saveBtn);
+      }
       notifications.clearNotifications();
 
       utils.expectTextToBeSet(wizard.mainviewTitle, 'Get Started');
@@ -184,7 +185,7 @@ describe('Partner flow', function () {
       appWindow = browser.getWindowHandle();
 
       utils.search('', -1); // clear search
-      utils.click(partner.allFilter);
+      //utils.click(partner.allFilter);
       utils.click(partner.myOrganization);
       utils.click(partner.launchButton);
 
@@ -204,18 +205,14 @@ describe('Partner flow', function () {
 
   describe("Delete the test customer", function () {
     it('should login navigate to the test customer', function () {
-      utils.click(partner.trialFilter);
+      //utils.click(partner.trialFilter);
       utils.search(partner.newTrial.customerName, -1);
       utils.click(partner.newTrialRow);
       utils.expectIsDisplayed(partner.previewPanel);
     });
 
     it('should click the Delete Customer button', function () {
-      var webElement = partner.deleteCustomerButton.getWebElement();
-      browser.executeScript(function (e) {
-        e.scrollIntoView()
-      }, webElement);
-
+      utils.scrollIntoView(partner.deleteCustomerButton);
       utils.click(partner.deleteCustomerButton);
       utils.waitForModal().then(function () {
         utils.click(partner.deleteCustomerOrgConfirm).then(function () {

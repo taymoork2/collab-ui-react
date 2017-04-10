@@ -1,0 +1,20 @@
+<setting-section setting="$ctrl.documentationSection" class="needs-border-top">
+  <div class="sub-section">
+    <h5 class="sub-section__label" translate="hercules.settings.documentation.heading"></h5>
+
+      <p class="sub-section__description"
+         translate="hercules.settings.documentation.help"
+         translate-values="{helpLink: $ctrl.helpLink, localizedServiceName: $ctrl.localizedServiceName}" >
+      </p>
+      <p class="sub-section__description">
+        <span ng-if="$ctrl.serviceId === 'squared-fusion-cal' || $ctrl.serviceId === 'squared-fusion-uc'"
+              translate="hercules.settings.documentation.downloadExpressway"
+              translate-values="{softwareName: $ctrl.softwareName, downloadLink: $ctrl.downloadLink}">
+        </span>
+        <span ng-if="$ctrl.serviceId === 'squared-fusion-media' || $ctrl.serviceId === 'spark-hybrid-datasecurity'"
+                      translate="hercules.settings.documentation.downloadECP"
+                      translate-values="{serviceName: $ctrl.localizedServiceName, downloadLink: $ctrl.downloadLink}">
+        </span>
+      </p>
+  </div>
+</setting-section>

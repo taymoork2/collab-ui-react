@@ -7,12 +7,12 @@ describe('sunlightUserOverviewCtrl', function () {
   var successResponse = {
     'data': userInfo,
     'status': 200,
-    'statusText': 'OK'
+    'statusText': 'OK',
   };
 
   var failureResponse = {
     'status': 500,
-    'statusText': 'Intenal Server Error'
+    'statusText': 'Intenal Server Error',
   };
 
   beforeEach(angular.mock.module('Sunlight'));
@@ -40,9 +40,10 @@ describe('sunlightUserOverviewCtrl', function () {
     spyOn($state, 'go');
     spyOn(Notification, 'success');
     spyOn(Notification, 'error');
+    spyOn(Notification, 'errorWithTrackingId');
 
     $stateParams = {
-      currentUser: angular.copy(getJSONFixture('core/json/currentUser.json'))
+      currentUser: _.cloneDeep(getJSONFixture('core/json/currentUser.json')),
     };
 
     controller = $controller('SunlightUserOverviewCtrl', {
@@ -52,7 +53,7 @@ describe('sunlightUserOverviewCtrl', function () {
       SunlightConfigService: sunlightConfigService,
       Notification: Notification,
       formlyValidationMessages: formlyValidationMessages,
-      Log: Log
+      Log: Log,
     });
   }));
 
@@ -67,7 +68,7 @@ describe('sunlightUserOverviewCtrl', function () {
     $scope.$apply();
     controller.loadUserInformation($stateParams.currentUser.id);
     expect(Notification.error).toHaveBeenCalledWith(jasmine.any(String), {
-      userId: 'CurrentUser'
+      userId: 'CurrentUser',
     });
   });
 
@@ -84,7 +85,7 @@ describe('sunlightUserOverviewCtrl', function () {
     updateUserInfoDeferred.resolve(successResponse);
     $scope.$apply();
     expect(Notification.success).toHaveBeenCalledWith(jasmine.any(String), {
-      userId: 'CurrentUser'
+      userId: 'CurrentUser',
     });
   });
 
@@ -96,8 +97,8 @@ describe('sunlightUserOverviewCtrl', function () {
     controller.updateUserData($stateParams.currentUser.id);
     updateUserInfoDeferred.reject(failureResponse);
     $scope.$apply();
-    expect(Notification.error).toHaveBeenCalledWith(jasmine.any(String), {
-      userId: 'CurrentUser'
+    expect(Notification.errorWithTrackingId).toHaveBeenCalledWith(failureResponse, jasmine.any(String), {
+      userId: 'CurrentUser',
     });
   });
 
@@ -110,7 +111,7 @@ describe('sunlightUserOverviewCtrl', function () {
     controller.updateUserData($stateParams.currentUser.id);
 
     expect(Notification.error).toHaveBeenCalledWith(jasmine.any(String), {
-      userId: 'CurrentUser'
+      userId: 'CurrentUser',
     });
   });
 
@@ -124,7 +125,7 @@ describe('sunlightUserOverviewCtrl', function () {
     updateUserInfoDeferred.resolve(successResponse);
     $scope.$apply();
     expect(Notification.success).toHaveBeenCalledWith(jasmine.any(String), {
-      userId: 'CurrentUser'
+      userId: 'CurrentUser',
     });
   });
 

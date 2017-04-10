@@ -19,6 +19,8 @@
         stableHelpText: $translate.instant('hercules.fusion.add-resource-group.release-channel.stableHelpText'),
         beta: $translate.instant('hercules.fusion.add-resource-group.release-channel.beta'),
         betaHelpText: $translate.instant('hercules.fusion.add-resource-group.release-channel.betaHelpText'),
+        alpha: $translate.instant('hercules.fusion.add-resource-group.release-channel.alpha'),
+        alphaHelpText: $translate.instant('hercules.fusion.add-resource-group.release-channel.alphaHelpText'),
         latest: $translate.instant('hercules.fusion.add-resource-group.release-channel.latest'),
         latestHelpText: $translate.instant('hercules.fusion.add-resource-group.release-channel.latestHelpText'),
       },
@@ -27,15 +29,15 @@
     vm.validationMessages = {
       required: $translate.instant('common.invalidRequired'),
       minlength: $translate.instant('common.invalidMinLength', {
-        min: vm.minlength
-      })
+        min: vm.minlength,
+      }),
     };
     vm.createResourceGroup = createResourceGroup;
     vm.canCreate = canCreate;
     vm.handleKeypress = handleKeypress;
     vm.plop = {
       title: 'Resource Group Details',
-      description: 'Resource group are a set of clusters you may assign users to.'
+      description: 'Resource group are a set of clusters you may assign users to.',
     };
     vm.allowedChannels = [];
 
@@ -49,9 +51,9 @@
         })
         .catch(function (response) {
           if (response.status === 409) {
-            Notification.error('hercules.resourceGroupSettings.duplicateName');
+            Notification.errorWithTrackingId(response, 'hercules.resourceGroupSettings.duplicateName');
           } else {
-            Notification.error('hercules.genericFailure');
+            Notification.errorWithTrackingId(response, 'hercules.genericFailure');
           }
         })
         .finally(function () {

@@ -1,0 +1,72 @@
+[
+  {
+    "id": "AT",
+    "name": "Austria",
+    "domain": "sparkc-eu.com"
+  },
+  {
+    "id": "BE",
+    "name": "Belgium",
+    "domain": "sparkc-eu.com"
+  },
+  {
+    "id": "CA",
+    "name": "Canada",
+    "domain": "huron-dev.com"
+  },
+  {
+    "id": "CO",
+    "name": "Colombia",
+    "domain": "huron-dev.com"
+  },
+  {
+    "id": "DE",
+    "name": "Germany",
+    "domain": "sparkc-eu.com"
+  },
+  {
+    "id": "FR",
+    "name": "France",
+    "domain": "sparkc-eu.com"
+  },
+  {
+    "id": "IT",
+    "name": "Italy",
+    "domain": "sparkc-eu.com"
+  },
+  {
+    "id": "NL",
+    "name": "Netherlands",
+    "domain": "sparkc-eu.com"
+  },
+  {
+    "id": "PT",
+    "name": "Portugal",
+    "domain": "sparkc-eu.com"
+  },
+  {
+    "id": "ES",
+    "name": "Spain",
+    "domain": "sparkc-eu.com"
+  },
+  {
+    "id": "SE",
+    "name": "Sweden",
+    "domain": "sparkc-eu.com"
+  },
+  {
+    "id": "CH",
+    "name": "Switzerland",
+    "domain": "sparkc-eu.com"
+  },
+  {
+    "id": "GB",
+    "name": "United Kingdom",
+    "domain": "sparkc-eu.com"
+  },
+  {
+    "id": "US",
+    "name": "United States",
+    "domain": "huron-dev.com"
+  }
+]

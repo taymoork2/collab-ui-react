@@ -1,0 +1,14 @@
+.gss-iframe {
+  .select-options {
+    overflow-y: scroll;
+  }
+  .syncContent {
+    width: 100%;
+    article {
+      @include vr-spacing(p, 5);
+    }
+    section {
+      text-align: center;
+    }
+  }
+}

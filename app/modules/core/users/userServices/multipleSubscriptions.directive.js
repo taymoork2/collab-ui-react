@@ -11,7 +11,7 @@
       restrict: 'E',
       templateUrl: 'modules/core/users/userServices/multipleSubscriptions.tpl.html',
       controller: 'MultipleSubscriptionsCtrl',
-      controllerAs: 'multipleSubscriptions'
+      controllerAs: 'multipleSubscriptions',
     };
 
     return directive;

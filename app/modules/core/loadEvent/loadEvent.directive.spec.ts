@@ -2,7 +2,7 @@ describe('Directive: loadEvent', () => {
   beforeEach(function () {
     this.initModules('Core');
     this.injectDependencies(
-      '$scope'
+      '$scope',
     );
     this.$scope.loading = true;
     this.compileTemplate('<div load-event loading="loading"></div>');

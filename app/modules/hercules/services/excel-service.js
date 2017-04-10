@@ -17,7 +17,7 @@
     var firstLine = 'sep=' + separator + EOL;
     var service = {
       createFile: createFile,
-      downloadFile: downloadFile
+      downloadFile: downloadFile,
     };
 
     return service;
@@ -25,7 +25,7 @@
     function createFile(header, content) {
       var csvContent = firstLine;
       // Check if there's a provided header array
-      if (angular.isArray(header)) {
+      if (_.isArray(header)) {
         var headerString = stringifyArray(header);
         csvContent += headerString + EOL;
       }
@@ -41,7 +41,7 @@
 
     function downloadFile(filename, textContent) {
       var blob = new $window.Blob([textContent], {
-        type: 'text/csv;charset=utf-8;'
+        type: 'text/csv;charset=utf-8;',
       });
 
       if ($window.navigator.msSaveOrOpenBlob) {
@@ -56,7 +56,7 @@
         downloadLink.attr({
           'href': $window.URL.createObjectURL(blob),
           'download': filename,
-          'target': '_blank'
+          'target': '_blank',
         });
         $document.find('body').append(downloadContainer);
         $timeout(function () {
@@ -76,9 +76,9 @@
     }
 
     function stringifyField(data) {
-      if (angular.isString(data)) {
+      if (_.isString(data)) {
         // Escape double quotes
-        data = data.replace(/"/g, '""');
+        data = _.replace(data, /"/g, '""');
         if (data.indexOf(separator) > -1 || data.indexOf('\n') > -1 || data.indexOf('\r') > -1) {
           data = '"' + data + '"';
         }

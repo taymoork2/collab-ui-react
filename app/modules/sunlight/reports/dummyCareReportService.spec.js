@@ -26,7 +26,7 @@ describe(' DummyCareReportService', function () {
     });
   });
 
-  it('should get DummyReportingData for org for time selected yesterday', function () {
+  xit('should get DummyReportingData for org for time selected yesterday', function () {
     var response = dummyCareReportService.dummyOrgStatsData(1);
     expect(response.length).toBe(24);
     _.each(response, function (reportData) {

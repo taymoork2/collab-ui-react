@@ -6,12 +6,44 @@
     .service('USSService', USSService);
 
   /* @ngInject */
-  function USSService($http, UrlConfig, Authinfo, CsdmPoller, CsdmHubFactory) {
+  function USSService($http, UrlConfig, Authinfo, CsdmPoller, CsdmHubFactory, $translate, HybridServicesUtils) {
     var cachedUserStatusSummary = [];
 
     var USSUrl = UrlConfig.getUssUrl() + 'uss/api/v1';
 
-    var fetchStatusesSummary = function () {
+    var hub = CsdmHubFactory.create();
+
+    var service = {
+      getStatusesForUser: getStatusesForUser,
+      decorateWithStatus: decorateWithStatus,
+      getOrg: getOrg,
+      updateOrg: updateOrg,
+      getStatusesSummary: getStatusesSummary,
+      subscribeStatusesSummary: hub.on,
+      getStatusesForUserInOrg: getStatusesForUserInOrg,
+      extractSummaryForAService: extractSummaryForAService,
+      getUserProps: getUserProps,
+      updateUserProps: updateUserProps,
+      getAllUserProps: getAllUserProps,
+      updateBulkUserProps: updateBulkUserProps,
+      removeAllUsersFromResourceGroup: removeAllUsersFromResourceGroup,
+      refreshEntitlementsForUser: refreshEntitlementsForUser,
+      getUserPropsSummary: getUserPropsSummary,
+      getUserJournal: getUserJournal,
+      notifyReadOnlyLaunch: notifyReadOnlyLaunch,
+      getAllStatuses: getAllStatuses,
+    };
+
+    CsdmPoller.create(fetchStatusesSummary, hub);
+
+    return service;
+
+    function statusesParameterRequestString(serviceId, state, limit) {
+      var statefilter = state ? '&state=' + state : '';
+      return 'serviceId=' + serviceId + statefilter + '&limit=' + limit + '&entitled=true';
+    }
+
+    function fetchStatusesSummary() {
       return $http
         .get(USSUrl + '/orgs/' + Authinfo.getOrgId() + '/userStatuses/summary')
         .then(function (res) {
@@ -24,29 +56,21 @@
             activated: 0,
             notActivated: 0,
             error: 0,
-            total: 0
+            total: 0,
           };
           _.forEach(['squared-fusion-cal', 'squared-fusion-uc'], function (serviceId) {
             var found = _.find(summary, {
-              serviceId: serviceId
+              serviceId: serviceId,
             });
             if (!found) {
-              var newSummary = angular.copy(emptySummary);
+              var newSummary = _.cloneDeep(emptySummary);
               newSummary.serviceId = serviceId;
               summary.push(newSummary);
             }
           });
           cachedUserStatusSummary = summary;
         });
-    };
-
-    var hub = CsdmHubFactory.create();
-    CsdmPoller.create(fetchStatusesSummary, hub);
-
-    var statusesParameterRequestString = function (serviceId, state, offset, limit) {
-      var statefilter = state ? "&state=" + state : "";
-      return 'serviceId=' + serviceId + statefilter + '&offset=' + offset + '&limit=' + limit + '&entitled=true';
-    };
+    }
 
     function extractData(res) {
       return res.data;
@@ -54,6 +78,18 @@
 
     function extractUserProps(res) {
       return res.data.userProps;
+    }
+
+    function extractJournalEntries(res) {
+      var entries = res.data.entries || [];
+      return _.chain(entries)
+        .map(function (entry) {
+          if (entry.entry.payload) {
+            entry.entry.payload.messages = sortAndTweakUserMessages(entry.entry.payload.messages);
+          }
+          return entry;
+        })
+        .value();
     }
 
     function decorateWithStatus(status) {
@@ -82,12 +118,8 @@
 
     function getStatusesForUserInOrg(userId, orgId) {
       return $http
-        .get(USSUrl + '/orgs/' + (orgId || Authinfo.getOrgId()) + '/userStatuses?userId=' + userId)
-        .then(function (res) {
-          return _.filter(res.data.userStatuses, function (nugget) {
-            return nugget.entitled || (nugget.entitled === false && nugget.state != 'deactivated');
-          });
-        });
+        .get(USSUrl + '/orgs/' + (orgId || Authinfo.getOrgId()) + '/userStatuses?includeMessages=true&entitled=true&userId=' + userId)
+        .then(extractAndTweakUserStatuses);
     }
 
     function getOrg(orgId) {
@@ -106,10 +138,25 @@
       return cachedUserStatusSummary;
     }
 
-    function getStatuses(serviceId, state, offset, limit) {
+    function getAllStatuses(serviceId, state) {
+      return recursivelyReadStatuses(USSUrl + '/orgs/' + Authinfo.getOrgId() + '/userStatuses?includeMessages=true&' + statusesParameterRequestString(serviceId, state, 10000))
+        .then(extractAndTweakUserStatuses);
+    }
+
+    function recursivelyReadStatuses(statusesUrl) {
       return $http
-        .get(USSUrl + '/orgs/' + Authinfo.getOrgId() + '/userStatuses?' + statusesParameterRequestString(serviceId, state, offset, limit))
-        .then(extractData);
+        .get(statusesUrl)
+        .then(extractData)
+        .then(function (response) {
+          if (response.paging && response.paging.next) {
+            return recursivelyReadStatuses(response.paging.next)
+              .then(function (statuses) {
+                return response.userStatuses.concat(statuses);
+              });
+          } else {
+            return response.userStatuses;
+          }
+        });
     }
 
     function extractSummaryForAService(servicesId) {
@@ -154,23 +201,83 @@
         .then(extractData);
     }
 
-    return {
-      getStatusesForUser: getStatusesForUser,
-      decorateWithStatus: decorateWithStatus,
-      getOrg: getOrg,
-      updateOrg: updateOrg,
-      getStatusesSummary: getStatusesSummary,
-      getStatuses: getStatuses,
-      subscribeStatusesSummary: hub.on,
-      getStatusesForUserInOrg: getStatusesForUserInOrg,
-      extractSummaryForAService: extractSummaryForAService,
-      getUserProps: getUserProps,
-      updateUserProps: updateUserProps,
-      getAllUserProps: getAllUserProps,
-      updateBulkUserProps: updateBulkUserProps,
-      removeAllUsersFromResourceGroup: removeAllUsersFromResourceGroup,
-      refreshEntitlementsForUser: refreshEntitlementsForUser
-    };
-  }
+    function getUserPropsSummary(orgId) {
+      return $http
+        .get(USSUrl + '/orgs/' + (orgId || Authinfo.getOrgId()) + '/userProps/summary')
+        .then(extractData);
+    }
 
+    function getUserJournal(userId, orgId, limit, serviceId) {
+      return $http
+        .get(USSUrl + '/orgs/' + (orgId || Authinfo.getOrgId()) + '/userJournal/' + userId + (limit ? '?limit=' + limit : '') + (serviceId ? '&serviceId=' + serviceId : ''))
+        .then(extractJournalEntries);
+    }
+
+    function notifyReadOnlyLaunch() {
+      return $http.post(USSUrl + '/internals/actions/invalidateUser/invoke');
+    }
+
+    function extractAndTweakUserStatuses(res) {
+      var userStatuses = res.data ? res.data.userStatuses : res;
+      return _.chain(userStatuses)
+        .map(function (userStatus) {
+          userStatus.messages = sortAndTweakUserMessages(userStatus.messages);
+          return userStatus;
+        })
+        .value();
+    }
+
+    function sortAndTweakUserMessages(messages) {
+      if (_.size(messages) > 0) {
+        return _.chain(messages)
+          .sortBy(function (message) {
+            return getMessageSortOrder(message.severity);
+          })
+          .map(function (message) {
+            var translateReplacements = convertToTranslateReplacements(message.replacementValues);
+            message.title = translateWithFallback(message.key + '.title', message.title, translateReplacements);
+            message.description = translateWithFallback(message.key + '.description', message.description, translateReplacements);
+            message.iconClass = getMessageIconClass(message.severity);
+            return message;
+          })
+          .value();
+      }
+      return messages;
+    }
+
+    function translateWithFallback(messageKey, fallback, translateReplacements) {
+      var translationKey = 'hercules.userStatusMessages.' + messageKey;
+      var translation = $translate.instant(translationKey, translateReplacements);
+      return translation === translationKey ? fallback : translation;
+    }
+
+    function convertToTranslateReplacements(messageReplacementValues) {
+      return _.reduce(messageReplacementValues, function (translateReplacements, replacementValue) {
+        translateReplacements[replacementValue.key] = replacementValue.type === 'timestamp' ? HybridServicesUtils.getLocalTimestamp(replacementValue.value) : replacementValue.value;
+        return translateReplacements;
+      }, {});
+    }
+
+    function getMessageIconClass(severity) {
+      switch (severity) {
+        case 'error':
+          return 'icon-error';
+        case 'warning':
+          return 'icon-warning';
+        default:
+          return 'icon-info';
+      }
+    }
+
+    function getMessageSortOrder(severity) {
+      switch (severity) {
+        case 'error':
+          return 0;
+        case 'warning':
+          return 1;
+        default:
+          return 2;
+      }
+    }
+  }
 }());

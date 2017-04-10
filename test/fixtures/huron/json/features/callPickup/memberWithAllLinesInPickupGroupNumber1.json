@@ -1,0 +1,27 @@
+{
+    "numbers": [
+        {
+            "directoryNumber": {
+                "url": "https://cmi.huron-int.com/api/v1/voice/customers/226d7977-ff3a-42dc-88ff-f866170a06c8/directorynumbers/e95cf2c0-39a7-456b-9737-f06b708447af",
+                "uuid": "e95cf2c0-39a7-456b-9737-f06b708447af"
+            },
+            "number": "2176",
+            "type": "internal",
+            "url": "https://cmi.huron-int.com/api/v2/customers/226d7977-ff3a-42dc-88ff-f866170a06c8/numbers/0a67abb2-79ee-46cd-9891-30597d0ef54f",
+            "uuid": "0a67abb2-79ee-46cd-9891-30597d0ef54f"
+        }
+    ],
+    "paging": {
+        "count": null,
+        "limit": 200,
+        "next": [
+            "https://cmi.huron-int.com/api/v2/customers/226d7977-ff3a-42dc-88ff-f866170a06c8/numbers?number=2176&offset=200&limit=200"
+        ],
+        "offset": 0,
+        "pages": null,
+        "prev": [
+            "https://cmi.huron-int.com/api/v2/customers/226d7977-ff3a-42dc-88ff-f866170a06c8/numbers?number=2176&offset=0&limit=200"
+        ]
+    },
+    "url": "https://cmi.huron-int.com/api/v2/customers/226d7977-ff3a-42dc-88ff-f866170a06c8/numbers?number=2176&wide=true"
+}

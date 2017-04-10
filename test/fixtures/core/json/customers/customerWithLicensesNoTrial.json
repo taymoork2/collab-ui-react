@@ -1,0 +1,45 @@
+{
+    "customerOrgId": "bb38a606-c80f-419a-8921-7712b10d6a60",
+    "customerName": "Atlas_Test_Cloudberry-603a",
+    "customerEmail": "ramescsco+test-atlas-603a@gmail.com",
+    "endDate": "Dec 27, 2016",
+    "numUsers": 0,
+    "activeUsers": 0,
+    "daysLeft": null,
+    "usage": 0,
+    "licenses": 0,
+    "deviceLicenses": 0,
+    "licenseList": [{
+        "licenseId": "SD_9334ccfd-7785-499c-92b3-d28d883285d1",
+        "offerName": "SD",
+        "licenseType": "SHARED_DEVICES",
+        "billingServiceId": "Test-SvcId-CB-603a",
+        "features": [
+            "spark-room-system"
+        ],
+        "volume": 10,
+        "isTrial": false,
+        "status": "ACTIVE",
+        "partnerOrg": "Seattle Autobots",
+        "partnerEmail": "fakeuserunodostres+admin1@gmail.com"
+    }],
+    "daysUsed": null,
+    "percentUsed": null,
+    "offer": {
+        "trialServices": []
+    },
+    "status": "ACTIVE",
+    "state": "ACTIVE",
+    "isAllowedToManage": true,
+    "isSquaredUcOffer": false,
+    "notes": {
+        "daysLeft": null,
+        "sortOrder": 2,
+        "text": "Purchased"
+    },
+    "isPartner": false,
+    "isTrialData": false,
+    "purchased": true,
+    "totalLicenses": 10,
+    "uniqueServiceCount": 4
+}

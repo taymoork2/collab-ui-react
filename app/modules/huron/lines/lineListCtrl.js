@@ -6,7 +6,7 @@
     .controller('LinesListCtrl', LinesListCtrl);
 
   /* @ngInject */
-  function LinesListCtrl($scope, $templateCache, $timeout, $translate, LineListService, Log, Config, Notification) {
+  function LinesListCtrl($scope, $templateCache, $timeout, $translate, LineListService, Log, Config, Notification, Authinfo, FeatureToggleService) {
 
     var vm = this;
 
@@ -25,25 +25,29 @@
 
     vm.sort = {
       by: 'userid',
-      order: '-asc'
+      order: '-asc',
     };
+    vm.currentCustomer = {
+      customerOrgId: Authinfo.getOrgId(),
+    };
+    vm.huronCustomerAdminPMPFeatureToggle = false;
 
     // Defines Grid Filter "All"
     vm.placeholder = {
       name: $translate.instant('linesPage.allLines'),
-      filterValue: 'all'
+      filterValue: 'all',
     };
 
     // Defines Grid Filters "Unassigned" and "Assigned"
     vm.filters = [{
       name: $translate.instant('linesPage.unassignedLines'),
-      filterValue: 'unassignedLines'
+      filterValue: 'unassignedLines',
     }, {
       name: $translate.instant('linesPage.assignedLines'),
-      filterValue: 'assignedLines'
+      filterValue: 'assignedLines',
     }, {
       name: $translate.instant('linesPage.pending'),
-      filterValue: 'pending'
+      filterValue: 'pending',
     }];
 
     // Set data filter
@@ -96,7 +100,7 @@
           }
 
           //function for sorting based on which piece of data the row has
-          angular.forEach($scope.gridData, function (row) {
+          _.forEach($scope.gridData, function (row) {
             row.displayField = function () {
               return (this.userId ? this.userId : $translate.instant('linesPage.unassignedLines')) + (this.status ? ' - ' + this.status : '');
             };
@@ -140,13 +144,13 @@
         displayName: $translate.instant('linesPage.internalNumberHeader'),
         width: '20%',
         cellClass: 'internalNumberColumn',
-        sortable: true
+        sortable: true,
       }, {
         field: 'externalNumber',
         displayName: $translate.instant('linesPage.phoneNumbers'),
         sortable: true,
         cellClass: 'externalNumberColumn',
-        width: '20%'
+        width: '20%',
       }, {
         field: 'displayField()',
         displayName: $translate.instant('linesPage.assignedTo'),
@@ -154,10 +158,10 @@
         sortable: true,
         sort: {
           direction: 'asc',
-          priority: 0
+          priority: 0,
         },
-        sortCellFiltered: true
-      }]
+        sortCellFiltered: true,
+      }],
     };
 
     function sortColumn(scope, sortColumns) {
@@ -176,7 +180,10 @@
         getLineList();
       }
     }
-
+    FeatureToggleService.supports(FeatureToggleService.features.huronCustomerAdminPMP)
+      .then(function (supported) {
+        vm.huronCustomerAdminPMPFeatureToggle = supported;
+      });
     getLineList();
   }
 })();

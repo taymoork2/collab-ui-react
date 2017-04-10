@@ -13,11 +13,12 @@
         menuId: '@aaMenuId',
         index: '=aaIndex',
         isMenuHeader: '=aaHeader',
-        menuKeyIndex: '@aaKeyIndex'
+        menuKeyIndex: '@aaKeyIndex',
+        fromSubMenu: '@aaFromSubMenu',
       },
       controller: 'AASayMessageCtrl',
       controllerAs: 'aaSay',
-      templateUrl: 'modules/huron/features/autoAttendant/sayMessage/aaSayMessage.tpl.html'
+      templateUrl: 'modules/huron/features/autoAttendant/sayMessage/aaSayMessage.tpl.html',
     };
   }
 })();

@@ -4,6 +4,10 @@
   describe('Controller: StateRedirectCtrl', function () {
     var controller, $controller, $scope, Auth, PreviousState;
 
+    afterEach(function () {
+      controller = $controller = $scope = Auth = PreviousState = undefined;
+    });
+
     beforeEach(angular.mock.module('core.stateredirect'));
     beforeEach(angular.mock.module('ngSanitize'));
 
@@ -22,7 +26,7 @@
       beforeEach(function () {
         PreviousState.isValid.and.returnValue(true);
         controller = $controller('StateRedirectCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
       });
 
@@ -54,7 +58,7 @@
       beforeEach(function () {
         PreviousState.isValid.and.returnValue(false);
         controller = $controller('StateRedirectCtrl', {
-          $scope: $scope
+          $scope: $scope,
         });
       });
 

@@ -17,13 +17,13 @@ describe('MultipleSubscriptionsCtrl: Ctrl', function () {
     Authinfo = _Authinfo_;
 
     getLicensesUsage = getJSONFixture('core/json/organizations/Orgservice.json').getLicensesUsage;
-    spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.when());
+    spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.resolve());
     spyOn(Authinfo, 'getLicenses').and.returnValue('anything');
   }));
 
   function initController() {
     controller = $controller('MultipleSubscriptionsCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
 
     $scope.$apply();
@@ -38,7 +38,7 @@ describe('MultipleSubscriptionsCtrl: Ctrl', function () {
 
     describe('for single subscriptions', function () {
       beforeEach(function () {
-        Orgservice.getLicensesUsage.and.returnValue($q.when(getLicensesUsage.singleSub));
+        Orgservice.getLicensesUsage.and.returnValue($q.resolve(getLicensesUsage.singleSub));
         initController();
       });
 
@@ -53,7 +53,7 @@ describe('MultipleSubscriptionsCtrl: Ctrl', function () {
 
     describe('for multiple subscriptions', function () {
       beforeEach(function () {
-        Orgservice.getLicensesUsage.and.returnValue($q.when(getLicensesUsage.multiSub));
+        Orgservice.getLicensesUsage.and.returnValue($q.resolve(getLicensesUsage.multiSub));
         initController();
       });
 
@@ -68,7 +68,7 @@ describe('MultipleSubscriptionsCtrl: Ctrl', function () {
 
     describe('for trial subscriptions', function () {
       beforeEach(function () {
-        Orgservice.getLicensesUsage.and.returnValue($q.when(getLicensesUsage.trialSub));
+        Orgservice.getLicensesUsage.and.returnValue($q.resolve(getLicensesUsage.trialSub));
         initController();
       });
 
@@ -77,6 +77,26 @@ describe('MultipleSubscriptionsCtrl: Ctrl', function () {
         expect(controller.showLicenses('', true)).toEqual(true);
       });
     });
+
+    describe('for care trial subscriptions', function () {
+      beforeEach(function () {
+        initController();
+      });
+
+      it('should verify that there is a trial subscription', function () {
+        expect(controller.oneBilling).toEqual(false);
+        expect(controller.showCareLicenses(getLicensesUsage.careK1K2TrialSub)).toEqual(true);
+        expect(controller.showCareLicenses(getLicensesUsage.careK1TrialSub)).toEqual(true);
+        expect(controller.showCareLicenses(getLicensesUsage.careK2TrialSub)).toEqual(true);
+      });
+
+      it('should verify that there is no trial subscription', function () {
+        controller.selectedSubscription = 'xyz';
+        expect(controller.oneBilling).toEqual(false);
+        expect(controller.showCareLicenses(getLicensesUsage.careFakeTrialSub)).toEqual(undefined);
+      });
+    });
+
 
   });
 });

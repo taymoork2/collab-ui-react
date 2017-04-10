@@ -1,7 +1,8 @@
 (function () {
   'use strict';
+
   /* @ngInject */
-  function AddResourceCommonServiceV2(XhrNotificationService, $translate, $q, MediaClusterServiceV2, $window, MediaServiceActivationV2) {
+  function AddResourceCommonServiceV2(Notification, $translate, $q, MediaClusterServiceV2, $window, MediaServiceActivationV2) {
     var vm = this;
     vm.clusters = null;
     vm.onlineNodeList = [];
@@ -19,7 +20,9 @@
       var deferred = $q.defer();
       MediaClusterServiceV2.getAll()
         .then(function (clusters) {
-          vm.clusters = _.filter(clusters, { targetType: 'mf_mgmt' });
+          vm.clusters = _.filter(clusters, {
+            targetType: 'mf_mgmt',
+          });
           _.each(clusters, function (cluster) {
             if (cluster.targetType === 'mf_mgmt') {
               vm.clusterList.push(cluster.name);
@@ -35,7 +38,10 @@
           vm.clusterList.sort();
           deferred.resolve(vm.clusterList);
 
-        }, XhrNotificationService.notify);
+        })
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'mediaFusion.genericError');
+        });
       return deferred.promise;
     }
 
@@ -43,13 +49,13 @@
       vm.clusterDetail = null;
       //Checking if the host is already present
       if (vm.onlineNodeList.indexOf(hostName) > -1) {
-        XhrNotificationService.notify($translate.instant('mediaFusion.add-resource-dialog.serverOnline'));
-        return;
+        Notification.error('mediaFusion.add-resource-dialog.serverOnline');
+        return $q.reject();
       }
 
       if (vm.offlineNodeList.indexOf(hostName) > -1) {
-        XhrNotificationService.notify($translate.instant('mediaFusion.add-resource-dialog.serverOffline'));
-        return;
+        Notification.error('mediaFusion.add-resource-dialog.serverOffline');
+        return $q.reject();
       }
 
       //Checking if value in selected cluster is in cluster list
@@ -60,15 +66,34 @@
       });
       if (vm.clusterDetail == null) {
         var deferred = $q.defer();
-        MediaClusterServiceV2.createClusterV2(enteredCluster, 'stable').then(function (resp) {
-          vm.selectedClusterId = resp.data.id;
-          deferred.resolve(whiteListHost(hostName, vm.selectedClusterId));
-        }, function () {
-          var error = $translate.instant('mediaFusion.clusters.clusterCreationFailed', {
-            enteredCluster: enteredCluster
+        MediaClusterServiceV2.createClusterV2(enteredCluster, 'stable')
+          .then(function (resp) {
+            vm.selectedClusterId = resp.data.id;
+            // Add the created cluster to property set
+            MediaClusterServiceV2.getPropertySets()
+              .then(function (propertySets) {
+                if (propertySets.length > 0) {
+                  vm.videoPropertySet = _.filter(propertySets, {
+                    name: 'videoQualityPropertySet',
+                  });
+                  if (vm.videoPropertySet.length > 0) {
+                    var clusterPayload = {
+                      'assignedClusters': vm.selectedClusterId,
+                    };
+                    // Assign it the property set with cluster list
+                    MediaClusterServiceV2.updatePropertySetById(vm.videoPropertySet[0].id, clusterPayload);
+                  }
+                }
+              });
+
+            deferred.resolve(whiteListHost(hostName, vm.selectedClusterId));
+          })
+          .catch(function (error) {
+            var errorMessage = $translate.instant('mediaFusion.clusters.clusterCreationFailed', {
+              enteredCluster: enteredCluster,
+            });
+            Notification.errorWithTrackingId(error, errorMessage);
           });
-          XhrNotificationService.notify(error);
-        });
         return deferred.promise;
       } else {
         vm.selectedClusterId = vm.clusterDetail.id;
@@ -90,7 +115,7 @@
     return {
       addRedirectTargetClicked: addRedirectTargetClicked,
       updateClusterLists: updateClusterLists,
-      redirectPopUpAndClose: redirectPopUpAndClose
+      redirectPopUpAndClose: redirectPopUpAndClose,
     };
 
   }

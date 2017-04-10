@@ -1,0 +1,171 @@
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/typography';
+
+.device-usage-report-pages {
+  @import 'least-most.scss';
+  position: relative;
+  .customer-report-filter {
+    width: 12.5rem;
+  }
+  .model-filter {
+    margin-left: 1rem;
+    width: 14rem;
+  }
+
+  .cs-card.large,
+  .cs-card.full {
+    article {
+      header {
+        padding-left: 1rem;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+      }
+      .corrected {
+        padding-left: 0;
+        padding-right: 0;
+      }
+    }
+  }
+
+  .extreme-table-entry {
+    //font-size: 1rem;
+    padding-bottom: 0.3rem;
+    padding-top: 0.3rem;
+    &.missing {
+      color: $color-negative-darker;
+      cursor: help;
+    }
+    &.name {
+      width: 60%;
+    }
+    &.time {
+      width: 20%;
+    }
+    &.calls {
+      width: 20%;
+    }
+  }
+
+  //.extreme-table-entry.missing {
+  //  padding-bottom: 0.3rem;
+  //  padding-top: 0.3rem;
+  //  color:red;
+  //  cursor:pointer;
+  //  border:1px solid green;
+  //}
+
+  td.right-aligned,
+  th.right-aligned {
+    text-align: right;
+  }
+
+  .total-usage-table {
+    .digit {
+      font-family: $brand-font-thin;
+      font-size: 3rem;
+      color: $brand-primary;
+      min-height: 4.5rem;
+      .loader {
+        padding-top: 2rem;
+        font-size: 1rem;
+      }
+    }
+
+    .text {
+      font-size: 0.875rem;
+    }
+  }
+
+  .card-look {
+    margin: 1rem;
+    border-radius: 2px;
+    background-color: $white;
+    box-shadow: 0px 1px 2px 1px rgba(52, 53, 55, 0.18);
+
+    .header {
+      padding: 1rem;
+      border-bottom: 1px solid $gray-light-2;
+    }
+
+    .corrected {
+      padding-left: 1rem;
+      padding-right: 1rem;
+      padding-top: 1rem;
+    }
+
+    .device-usage-total-chart {
+      height: 400px;
+      padding: 1rem;
+      //padding-top: 3rem;
+
+      .amcharts-export-menu-top-right {
+        top: -56px;
+        right: 0px;
+      }
+
+      .amcharts-main-div {
+        font-family: $brand-font-light;
+        color: $gray-dark-2;
+        font-weight: normal;
+      }
+
+      .amcharts-title {
+        @extend .amcharts-main-div;
+        font-size: 1.25rem;
+      }
+
+      .amcharts-axis-title {
+        @extend .amcharts-main-div;
+        font-size: 1rem;
+      }
+      .amcharts-axis-label {
+        @extend .amcharts-main-div;
+        font-size: 0.875rem;
+      }
+    }
+
+    .device-select {
+      width: 15rem;
+      margin-right: 3rem;
+      //margin-top: 0.5rem;
+    }
+  }
+
+  .lm-table {
+    table-layout: fixed;
+    width: 100%;
+    white-space: nowrap;
+    td,
+    th {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .least-most {
+    @extend .card-look;
+    margin: 0.5rem;
+    min-height: 16rem;
+    .loader {
+      width: 100%;
+      text-align: center;
+      vertical-align: center;
+      font-size: 1rem;
+    }
+  }
+
+  .no-border {
+    border: none;
+  }
+
+  .small-padding {
+    padding: 1rem;
+  }
+
+  .score-card {
+    .full.side-info-card.cs-card {
+      display: block;
+    }
+  }
+}

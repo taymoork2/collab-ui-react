@@ -9,33 +9,54 @@
 
     var aaSayMessageForm = false;
     var aaPhoneMenuOptions = false;
+    var aaCallerInputStatus = false;
+    var aaDecisionStatus = false;
     var aaActionStatus = false;
     var aaDialByExtensionStatus = false;
     var aaCENumberStatus = false;
     var aaMediaUploadStatus = false;
+    var aaQueueSettingsStatus = false;
     var routeQueueToggle = false;
     var mediaUploadToggle = false;
+    var callerInputToggle = false;
+    var decisionToggle = false;
+    var routeSIPAddressToggle = false;
+    var uniqueId = 0;
 
     var invalidList = {};
     var service = {
       isFormDirty: isFormDirty,
       setSayMessageStatus: setSayMessageStatus,
       setPhoneMenuStatus: setPhoneMenuStatus,
+      setCallerInputStatus: setCallerInputStatus,
+      setDecisionStatus: setDecisionStatus,
       setActionStatus: setActionStatus,
       setDialByExtensionStatus: setDialByExtensionStatus,
       setCENumberStatus: setCENumberStatus,
       setMediaUploadStatus: setMediaUploadStatus,
-      setRouteQueueToggle: setRouteQueueToggle,
-      isRouteQueueToggle: isRouteQueueToggle,
+      setDecisionToggle: setDecisionToggle,
+      setQueueSettingsStatus: setQueueSettingsStatus,
       setMediaUploadToggle: setMediaUploadToggle,
+      setCallerInputToggle: setCallerInputToggle,
+      setRouteQueueToggle: setRouteQueueToggle,
+      setRouteSIPAddressToggle: setRouteSIPAddressToggle,
+      isRouteQueueToggle: isRouteQueueToggle,
+      isCallerInputToggle: isCallerInputToggle,
+      isDecisionToggle: isDecisionToggle,
       isMediaUploadToggle: isMediaUploadToggle,
+      isRouteSIPAddressToggle: isRouteSIPAddressToggle,
       isValid: isValid,
       setIsValid: setIsValid,
       getInvalid: getInvalid,
+      getUniqueId: getUniqueId,
       makeKey: makeKey,
       resetFormStatus: resetFormStatus,
       saveUiModel: saveUiModel,
-      sortByProperty: sortByProperty
+      sortByProperty: sortByProperty,
+      keyActionAvailable: keyActionAvailable,
+      DIGITS_DIAL_BY: 2,
+      DIGITS_RAW: 3,
+      DIGITS_CHOICE: 4,
     };
 
     return service;
@@ -43,11 +64,11 @@
     /////////////////////
 
     function isFormDirty() {
-      return aaMediaUploadStatus || aaSayMessageForm || aaPhoneMenuOptions || aaActionStatus || aaDialByExtensionStatus || aaCENumberStatus;
+      return aaQueueSettingsStatus || aaMediaUploadStatus || aaSayMessageForm || aaPhoneMenuOptions || aaCallerInputStatus || aaActionStatus || aaDialByExtensionStatus || aaCENumberStatus || aaDecisionStatus;
     }
 
     function isValid() {
-      return !_.size(invalidList);
+      return (!_.size(invalidList));
     }
 
     function getInvalid(which) {
@@ -61,6 +82,10 @@
       return schedule + '-' + tag;
     }
 
+    function getUniqueId() {
+      return ++uniqueId;
+    }
+
     function setIsValid(element, validity) {
       if (!validity) {
         invalidList[element] = validity;
@@ -68,20 +93,21 @@
         delete invalidList[element];
       }
     }
+    function setMediaUploadStatus(status) {
+      aaMediaUploadStatus = status;
+    }
 
     function resetFormStatus() {
       aaSayMessageForm = false;
       aaPhoneMenuOptions = false;
+      aaCallerInputStatus = false;
+      aaDecisionStatus = false;
       aaActionStatus = false;
       aaDialByExtensionStatus = false;
       aaMediaUploadStatus = false;
+      aaQueueSettingsStatus = false;
       aaCENumberStatus = false;
-      routeQueueToggle = false;
       invalidList = {};
-    }
-
-    function setMediaUploadStatus(status) {
-      aaMediaUploadStatus = status;
     }
 
     function setSayMessageStatus(status) {
@@ -91,7 +117,12 @@
     function setPhoneMenuStatus(status) {
       aaPhoneMenuOptions = status;
     }
-
+    function setCallerInputStatus(status) {
+      aaCallerInputStatus = status;
+    }
+    function setDecisionStatus(status) {
+      aaDecisionStatus = status;
+    }
     function setActionStatus(status) {
       aaActionStatus = status;
     }
@@ -108,8 +139,23 @@
       routeQueueToggle = status;
     }
 
+    function setQueueSettingsStatus(status) {
+      aaQueueSettingsStatus = status;
+    }
+
     function setMediaUploadToggle(status) {
       mediaUploadToggle = status;
+    }
+
+    function setCallerInputToggle(status) {
+      callerInputToggle = status;
+    }
+    function setDecisionToggle(status) {
+      decisionToggle = status;
+    }
+
+    function setRouteSIPAddressToggle(status) {
+      routeSIPAddressToggle = status;
     }
 
     /**
@@ -119,11 +165,19 @@
       return routeQueueToggle;
     }
 
-    /**
-    * will check the toggle status for queue which is only allowed for say messages and not phone menu or submenu
-    */
     function isMediaUploadToggle() {
       return mediaUploadToggle;
+    }
+
+    function isCallerInputToggle() {
+      return callerInputToggle;
+    }
+    function isDecisionToggle() {
+      return decisionToggle;
+    }
+
+    function isRouteSIPAddressToggle() {
+      return routeSIPAddressToggle;
     }
 
     function saveUiModel(ui, aaRecord) {
@@ -131,7 +185,7 @@
       var closedHours = AutoAttendantCeMenuModelService.getCombinedMenu(aaRecord, 'closedHours');
       var holidays = AutoAttendantCeMenuModelService.getCombinedMenu(aaRecord, 'holidays');
       if (ui.isOpenHours) {
-        if (angular.isUndefined(openHours)) {
+        if (_.isUndefined(openHours)) {
           openHours = AutoAttendantCeMenuModelService.newCeMenu();
           openHours.setType('MENU_WELCOME');
         }
@@ -139,7 +193,7 @@
       }
 
       if (ui.isClosedHours || (ui.holidaysValue === 'closedHours' && ui.isHolidays)) {
-        if (angular.isUndefined(closedHours)) { //New
+        if (_.isUndefined(closedHours)) { //New
           closedHours = AutoAttendantCeMenuModelService.newCeMenu();
           closedHours.setType('MENU_WELCOME');
         }
@@ -149,7 +203,7 @@
       }
 
       if (ui.isHolidays && ui.holidaysValue !== 'closedHours') {
-        if (angular.isUndefined(holidays)) { //New
+        if (_.isUndefined(holidays)) { //New
           holidays = AutoAttendantCeMenuModelService.newCeMenu();
           holidays.setType('MENU_WELCOME');
         }
@@ -174,4 +228,21 @@
     };
   };
 
+  /*
+   * will cycle through key actions and extract already used keys.
+   * return: a set of available keys
+   */
+  function keyActionAvailable(selectedKey, inputActions) {
+    var keys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '#', '*'];
+
+    _.forEach(inputActions, function (inputAction) {
+      if (inputAction.key !== selectedKey) {
+        _.pull(keys, inputAction.key);
+      }
+
+    });
+
+    return keys;
+
+  }
 })();

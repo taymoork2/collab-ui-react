@@ -8,7 +8,7 @@ describe('Service: OnlineAnalyticsService', () => {
     this.injectDependencies(
       'Authinfo',
       'Config',
-      'OnlineAnalyticsService'
+      'OnlineAnalyticsService',
     );
 
     spyOn(this.Authinfo, 'isOnline').and.returnValue(true);

@@ -1,0 +1,17 @@
+<script type="text/ng-template" id="numberTemplate.html">
+  <a>
+    <span ng-bind-html="match.label | typeaheadHighlight:query"></span>
+  </a>
+</script>
+<div class="pilot-number-details">
+  <div class="typeahead-large">
+    <input id="numberInput" ng-model="$ctrl.pagingGroupNumber.extension"
+           ng-class="{'error': $ctrl.errorNumberInput}"
+           typeahead="num as num.extension for num in $ctrl.fetchNumbers() | limitTo:10"
+           typeahead-on-select="$ctrl.selectNumber($item)"
+           typeahead-template-url="numberTemplate.html"
+           placeholder="{{:: 'pagingGroup.numberPlaceholder' | translate}}"
+           typeahead-min-length="3" typeahead-wait-ms="200" focus-on/>
+    <p class="input-description" translate="pagingGroup.numberHint"></p>
+  </div>
+</div>

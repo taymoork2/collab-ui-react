@@ -1,18 +1,20 @@
 'use strict';
+
 describe('Controller: HelpdeskController', function () {
   beforeEach(angular.mock.module('Squared'));
 
-  var HelpdeskService, HelpdeskHuronService, LicenseService, $controller, q, $translate, $scope, httpBackend, controller, HelpdeskSearchHistoryService, Config, Authinfo;
+  var HelpdeskService, HelpdeskHuronService, LicenseService, $controller, q, $translate, $scope, httpBackend, controller,
+    HelpdeskSearchHistoryService, Config, Authinfo, FeatureToggleService;
 
   var createUserMockData = function (name, orgId) {
     return {
       "active": true,
       "id": "dcba4321_" + name,
       "organization": {
-        id: orgId
+        id: orgId,
       },
       "userName": name,
-      "displayName": name.replace(".", " ")
+      "displayName": name.replace(".", " "),
     };
   };
 
@@ -21,7 +23,7 @@ describe('Controller: HelpdeskController', function () {
       "id": orgId,
       "displayName": name,
       "isPartner": false,
-      "isTestOrg": false
+      "isTestOrg": false,
     };
   };
 
@@ -34,8 +36,9 @@ describe('Controller: HelpdeskController', function () {
   var validSearchString = "bill gates";
   var lessThanThreeCharacterSearchString = "bi";
 
-  beforeEach(inject(function (_$translate_, $httpBackend, _$rootScope_, _HelpdeskService_, _HelpdeskSearchHistoryService_, _$controller_, _$q_, _HelpdeskHuronService_, _LicenseService_, _Config_, _Authinfo_) {
+  beforeEach(inject(function (_$translate_, $httpBackend, _$rootScope_, _HelpdeskService_, _HelpdeskSearchHistoryService_, _$controller_, _$q_, _HelpdeskHuronService_, _LicenseService_, _Config_, _Authinfo_, _FeatureToggleService_) {
     HelpdeskService = _HelpdeskService_;
+    FeatureToggleService = _FeatureToggleService_;
     HelpdeskSearchHistoryService = _HelpdeskSearchHistoryService_;
     q = _$q_;
     $scope = _$rootScope_.$new();
@@ -63,32 +66,32 @@ describe('Controller: HelpdeskController', function () {
       "active": true,
       "id": "ddb4dd78-26a2-45a2-8ad8-4c181c5b3f0a",
       "organization": {
-        id: "e6ac8f0b-6cea-492d-875d-8edf159a844c"
+        id: "e6ac8f0b-6cea-492d-875d-8edf159a844c",
       },
       "userName": "bill.gates",
       "displayName": "Bill Gates",
       "phoneNumbers": [{
         "type": "work",
-        "value": "+47 67 51 14 67"
+        "value": "+47 67 51 14 67",
       }, {
         "type": "mobile",
-        "value": "+47 92 01 30 30"
+        "value": "+47 92 01 30 30",
       }],
-      "url": "whatever.com"
+      "url": "whatever.com",
     }];
 
     var orgSearchResult = [{
-      "url": "https://atlas-integration.wbx2.com/admin/api/v1/helpdesk/organizations/e6ac8f0b-6cea-492d-875d-8edf159a844c",
+      "url": "https://atlas-intb.ciscospark.com/admin/api/v1/helpdesk/organizations/e6ac8f0b-6cea-492d-875d-8edf159a844c",
       "id": "e6ac8f0b-6cea-492d-875d-8edf159a844c",
       "displayName": "Bill Gates Foundation",
       "isPartner": false,
-      "isTestOrg": false
+      "isTestOrg": false,
     }];
 
     var orgLookupResult = {
       "id": "e6ac8f0b-6cea-492d-875d-8edf159a844c",
       "displayName": "Bill Gates Foundation",
-      "services": ['spark-room-system']
+      "services": ['spark-room-system'],
     };
 
     var cloudberryDevices = {
@@ -98,7 +101,7 @@ describe('Controller: HelpdeskController', function () {
         "url": "https://csdm-a.wbx2.com/csdm/api/v1/organization/4214d345-7caf-4e32-b015-34de878d1158/devices/94b3e13c-b1dd-5e2a-9b64-e3ca02de51d3",
         "serial": "FTT1927036F",
         "mac": "18:8B:9D:D4:52:02",
-        "product": "Cisco TelePresence SX10"
+        "product": "Cisco TelePresence SX10",
       },
       "https://csdm-a.wbx2.com/csdm/api/v1/organization/4214d345-7caf-4e32-b015-34de878d1158/devices/56c6a1f4-1e9d-50fc-b560-21496452ba72": {
         "displayName": "Ladidadi Room",
@@ -107,8 +110,8 @@ describe('Controller: HelpdeskController', function () {
         "serial": "FTT173601WA",
         "mac": "E8:ED:F3:B5:DB:8F",
         "product": "Cisco TelePresence SX20",
-        "state": "CLAIMED"
-      }
+        "state": "CLAIMED",
+      },
     };
 
     var huronDevices = [{
@@ -120,8 +123,8 @@ describe('Controller: HelpdeskController', function () {
       "model": "Cisco 8861",
       "ownerUser": {
         "uuid": "74c2ca8d-99ca-4bdf-b6b9-a142d503f024",
-        "userId": "58852083@qq.com"
-      }
+        "userId": "58852083@qq.com",
+      },
     }, {
       "uuid": "18a6e2be-0e22-4ae9-8a29-f9ab05b5da09",
       "url": null,
@@ -131,13 +134,38 @@ describe('Controller: HelpdeskController', function () {
       "model": "Cisco 8865",
       "ownerUser": {
         "uuid": "74c2ca8d-99ca-4bdf-b6b9-a142d503f024",
-        "userId": "58852083@qq.com"
-      }
+        "userId": "58852083@qq.com",
+      },
+    }];
+
+    var orderSearchResult = [{
+      "accountId": "4895afc9-83e9-44cb-b78a-05e541d41661",
+      "externalOrderId": "67891234",
+      "lastModified": "2016-09-27T22:56:51.839Z",
+      "orderReceived": "2016-09-27T22:56:30.051Z",
+      "orderStatus": "PROVISIONED",
+      "orderUuid": "3e54548d-12ff-43f4-9aff-10c2fcc64130",
+      "orderingTool": "CCW",
+      "serviceId": "Sub1234-5678",
+      "serviceProvisioningId": "SPID-Atlas_Test_int_001",
+    }];
+
+    var orderSearchResult2 = [{
+      "accountId": "4895afc9-83e9-44cb-b78a-05e541d41661",
+      "externalOrderId": "67891234",
+      "lastModified": "2016-09-27T22:56:51.839Z",
+      "orderReceived": "2016-09-27T22:56:30.051Z",
+      "orderStatus": "REJECTED",
+      "orderUuid": "3e54548d-12ff-43f4-9aff-10c2fcc64130",
+      "orderingTool": "CCW",
+      "serviceId": "Sub1234-5678",
+      "serviceProvisioningId": "SPID-Atlas_Test_int_001",
     }];
 
     beforeEach(function () {
       sinon.stub(HelpdeskService, 'searchUsers');
       sinon.stub(HelpdeskService, 'searchOrgs');
+      sinon.stub(HelpdeskService, 'searchOrders');
       sinon.stub(HelpdeskService, 'searchCloudberryDevices');
       sinon.stub(HelpdeskService, 'findAndResolveOrgsForUserResults');
       sinon.stub(HelpdeskService, 'getOrg');
@@ -146,6 +174,7 @@ describe('Controller: HelpdeskController', function () {
       sinon.stub(Authinfo, 'isInDelegatedAdministrationOrg');
       sinon.stub(Authinfo, 'getOrgId');
       sinon.stub(Authinfo, 'getOrgName');
+      sinon.stub(FeatureToggleService, 'atlasHelpDeskOrderSearchGetStatus').returns(q.resolve(true));
 
       var deferredUserResult = q.defer();
       deferredUserResult.resolve(userSearchResult);
@@ -185,7 +214,7 @@ describe('Controller: HelpdeskController', function () {
         HelpdeskHuronService: HelpdeskHuronService,
         LicenseService: LicenseService,
         Config: Config,
-        Authinfo: Authinfo
+        Authinfo: Authinfo,
       });
 
       controller.initSearchWithoutOrgFilter();
@@ -227,7 +256,7 @@ describe('Controller: HelpdeskController', function () {
       expect(controller.showDeviceResultPane()).toBeFalsy();
 
       controller.initSearchWithOrgFilter({
-        "id": "e6ac8f0b-6cea-492d-875d-8edf159a844c"
+        "id": "e6ac8f0b-6cea-492d-875d-8edf159a844c",
       });
       expect(controller.lookingUpOrgFilter).toBeTruthy();
       $scope.$apply();
@@ -250,12 +279,12 @@ describe('Controller: HelpdeskController', function () {
       deferredOrgLookupResult.resolve({
         "id": "e6ac8f0b-6cea-492d-875d-8edf159a844c",
         "displayName": "Bill Gates Foundation",
-        "services": ['spark-room-system', 'ciscouc']
+        "services": ['spark-room-system', 'ciscouc'],
       });
       HelpdeskService.getOrg.returns(deferredOrgLookupResult.promise);
 
       controller.initSearchWithOrgFilter({
-        "id": "e6ac8f0b-6cea-492d-875d-8edf159a844c"
+        "id": "e6ac8f0b-6cea-492d-875d-8edf159a844c",
       });
       expect(controller.lookingUpOrgFilter).toBeTruthy();
       $scope.$apply();
@@ -322,7 +351,7 @@ describe('Controller: HelpdeskController', function () {
         HelpdeskHuronService: HelpdeskHuronService,
         LicenseService: LicenseService,
         Config: Config,
-        Authinfo: Authinfo
+        Authinfo: Authinfo,
       });
 
       expect(controller.isCustomerHelpDesk).toBeTruthy();
@@ -334,6 +363,64 @@ describe('Controller: HelpdeskController', function () {
       expect(controller.searchingForUsers).toBeTruthy();
       expect(controller.searchingForOrgs).toBeFalsy();
     });
+
+    it('simple search with single hit shows search result for order', function () {
+      controller.isOrderSearchEnabled = true;
+      var deferredOrdersResult = q.defer();
+      deferredOrdersResult.resolve(orderSearchResult);
+      HelpdeskService.searchOrders.returns(deferredOrdersResult.promise);
+
+      expect(controller.showOrdersResultPane()).toBeFalsy();
+      expect(controller.searchingForOrders).toBeFalsy();
+      controller.searchString = "67891234";
+      controller.search();
+      $scope.$apply();
+      expect(controller.searchingForOrders).toBeFalsy();
+      expect(controller.currentSearch.orderSearchResults[0].externalOrderId).toEqual("67891234");
+    });
+
+    it('simple search with Rejected order', function () {
+      controller.isOrderSearchEnabled = true;
+      var deferredOrdersResult = q.defer();
+      deferredOrdersResult.resolve(orderSearchResult2);
+      HelpdeskService.searchOrders.returns(deferredOrdersResult.promise);
+
+      expect(controller.showOrdersResultPane()).toBeFalsy();
+      expect(controller.searchingForOrders).toBeFalsy();
+      controller.searchString = "67891234";
+      controller.search();
+      $scope.$apply();
+      expect(controller.searchingForOrders).toBeFalsy();
+
+      expect(controller.currentSearch.orderSearchFailure).toEqual("helpdesk.noSearchHits");
+    });
+
+    it('simple search with less than eight characters shows search failure directly', function () {
+      controller.isOrderSearchEnabled = true;
+      // Search string is 7 numeric string, and should fail the lower limit of 8 digits.
+      controller.searchString = "6789123";
+      controller.search();
+      expect(controller.searchingForOrders).toBeFalsy();
+      $scope.$apply();
+      expect(controller.showUsersResultPane()).toBeTruthy();
+      expect(controller.showOrgsResultPane()).toBeTruthy();
+      expect(controller.showOrdersResultPane()).toBeTruthy();
+      expect(controller.showDeviceResultPane()).toBeFalsy();
+      expect(controller.currentSearch.orderSearchFailure).toEqual("helpdesk.badOrderSearchInput");
+    });
+
+    it('simple search with prefix different from "ssw" shows search failure directly', function () {
+      controller.isOrderSearchEnabled = true;
+      controller.searchString = "ssx67891234";
+      controller.search();
+      expect(controller.searchingForOrders).toBeFalsy();
+      $scope.$apply();
+      expect(controller.showUsersResultPane()).toBeTruthy();
+      expect(controller.showOrgsResultPane()).toBeTruthy();
+      expect(controller.showOrdersResultPane()).toBeTruthy();
+      expect(controller.showDeviceResultPane()).toBeFalsy();
+      expect(controller.currentSearch.orderSearchFailure).toEqual("helpdesk.badOrderSearchInput");
+    });
   });
 
   describe("backend http error", function () {
@@ -342,6 +429,7 @@ describe('Controller: HelpdeskController', function () {
       sinon.stub(HelpdeskService, 'searchUsers');
       sinon.stub(HelpdeskService, 'searchOrgs');
       sinon.stub(Authinfo, 'isInDelegatedAdministrationOrg');
+      sinon.stub(FeatureToggleService, 'atlasHelpDeskOrderSearchGetStatus').returns(q.resolve(true));
 
       Authinfo.isInDelegatedAdministrationOrg.returns(true);
 
@@ -350,7 +438,7 @@ describe('Controller: HelpdeskController', function () {
     it('400 gives badUserSearchInput message', function () {
       var deferred = q.defer();
       deferred.reject({
-        "status": 400
+        "status": 400,
       });
       HelpdeskService.searchUsers.returns(deferred.promise);
       HelpdeskService.searchOrgs.returns(deferred.promise);
@@ -362,7 +450,7 @@ describe('Controller: HelpdeskController', function () {
         HelpdeskSearchHistoryService: HelpdeskSearchHistoryService,
         HelpdeskHuronService: HelpdeskHuronService,
         LicenseService: LicenseService,
-        Config: Config
+        Config: Config,
       });
 
       controller.searchString = validSearchString;
@@ -379,7 +467,7 @@ describe('Controller: HelpdeskController', function () {
     it('error codes other that 400 gives unexpectedError message', function () {
       var deferred = q.defer();
       deferred.reject({
-        "status": 401
+        "status": 401,
       });
       HelpdeskService.searchUsers.returns(deferred.promise);
       HelpdeskService.searchOrgs.returns(deferred.promise);
@@ -391,7 +479,7 @@ describe('Controller: HelpdeskController', function () {
         HelpdeskSearchHistoryService: HelpdeskSearchHistoryService,
         HelpdeskHuronService: HelpdeskHuronService,
         LicenseService: LicenseService,
-        Config: Config
+        Config: Config,
       });
 
       controller.searchString = validSearchString;

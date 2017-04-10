@@ -16,16 +16,19 @@
           dismiss: function () {},
           link: function () {
             $state.go('setupwizardmodal', {
-              currentTab: 'enterpriseSettings'
+              currentTab: 'enterpriseSettings',
+              currentStep: 'enterpriseSipUrl',
+              numberOfSteps: 1,
+              onlyShowSingleTab: true,
             });
           },
           linkText: 'homePage.goSetupCloudSipUri',
           name: 'cloudSipUri',
-          text: 'homePage.setupCloudSipUriMessage'
+          text: 'homePage.setupCloudSipUriMessage',
         };
 
         return notification;
-      }
+      },
     };
   }
 })();

@@ -12,9 +12,9 @@
     vm.resourceGroup = resourceGroup;
     vm.originalData = {
       availableClusters: [],
-      clustersInResourceGroup: []
+      clustersInResourceGroup: [],
     };
-    vm.newData = angular.copy(vm.originalData);
+    vm.newData = _.cloneDeep(vm.originalData);
     vm._helpers = {
       hasServices: hasServices,
       stateLabelToStatusClass: stateLabelToStatusClass,
@@ -29,14 +29,14 @@
     function loadData() {
       return FusionClusterService.getResourceGroups()
         .then(function (response) {
-          var group = _.find(response.groups, { 'id': resourceGroup.id });
-          vm.originalData.availableClusters = filterHMClusters(response.unassigned);
-          vm.originalData.clustersInResourceGroup = filterHMClusters(group.clusters);
-          vm.newData = angular.copy(vm.originalData);
+          var group = _.find(response.groups, { id: resourceGroup.id });
+          vm.originalData.availableClusters = filterNonExpresswayClusters(response.unassigned);
+          vm.originalData.clustersInResourceGroup = group.clusters;
+          vm.newData = _.cloneDeep(vm.originalData);
           vm.loadingState = false;
         })
-        .catch(function () {
-          Notification.error('hercules.assignClustersModal.errorLoading');
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.assignClustersModal.errorLoading');
         });
     }
 
@@ -54,9 +54,9 @@
       vm.newData.availableClusters.push(cluster);
     }
 
-    function filterHMClusters(clusters) {
+    function filterNonExpresswayClusters(clusters) {
       return _.filter(clusters, function (cluster) {
-        return cluster.targetType !== 'mf_mgmt';
+        return cluster.targetType === 'c_mgmt';
       });
     }
 
@@ -88,25 +88,32 @@
 
     function save() {
       vm.savingState = true;
+      var someClustersAreChangingReleaseChannel = false;
       var promises = [];
       _.forEach(vm.newData.clustersInResourceGroup, function (cluster) {
-        if (!_.find(vm.originalData.clustersInResourceGroup, { 'id': cluster.id })) {
+        if (!_.find(vm.originalData.clustersInResourceGroup, { id: cluster.id })) {
           // assign
           promises.push(ResourceGroupService.assign(cluster.id, vm.resourceGroup.id));
+          if (cluster.releaseChannel !== vm.resourceGroup.releaseChannel) {
+            someClustersAreChangingReleaseChannel = true;
+          }
         }
       });
       _.forEach(vm.newData.availableClusters, function (cluster) {
-        if (!_.find(vm.originalData.availableClusters, { 'id': cluster.id })) {
+        if (!_.find(vm.originalData.availableClusters, { id: cluster.id })) {
           // unassign
           promises.push(ResourceGroupService.assign(cluster.id, ''));
+          if (cluster.releaseChannel !== 'stable') {
+            someClustersAreChangingReleaseChannel = true;
+          }
         }
       });
       return $q.all(promises)
         .then(function () {
-          $modalInstance.close();
+          $modalInstance.close({ change: someClustersAreChangingReleaseChannel });
         })
-        .catch(function () {
-          Notification.error('hercules.genericFailure');
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
           vm.savingState = false;
           // refresh data with what worked
           return loadData();

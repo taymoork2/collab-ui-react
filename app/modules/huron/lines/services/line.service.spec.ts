@@ -7,13 +7,14 @@ describe('Service: LineService', () => {
       '$httpBackend',
       'Authinfo',
       'HuronConfig',
-      'LineService'
+      'LineService',
     );
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
 
     let getLineResponse: Line = {
       uuid: '0000000',
       primary: true,
+      shared: false,
       internal: '12345',
       external: '',
       siteToSite: '710012345',

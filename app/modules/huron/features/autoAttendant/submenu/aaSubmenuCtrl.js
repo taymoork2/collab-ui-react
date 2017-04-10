@@ -1,5 +1,6 @@
 (function () {
   'use strict';
+
   angular
     .module('uc.autoattendant')
     .controller('AASubmenuCtrl', AASubmenuCtrl);
@@ -10,12 +11,12 @@
     this.keys = [];
     this.action = {
       name: '',
-      label: ''
+      label: '',
     };
   }
 
   /* @ngInject */
-  function AASubmenuCtrl($scope, $translate, AutoAttendantCeMenuModelService, AACommonService, AAScrollBar) {
+  function AASubmenuCtrl($scope, $translate, AutoAttendantCeMenuModelService, AACommonService) {
 
     var vm = this;
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
@@ -24,7 +25,7 @@
     vm.selectedActions = [];
     vm.selectedTimeout = {
       name: '',
-      value: ''
+      value: '',
     };
     vm.menuEntry = {};
     vm.queues = [];
@@ -46,41 +47,41 @@
       label: $translate.instant('autoAttendant.phoneMenuRepeatMenu'),
       name: 'phoneMenuRepeatMenu',
       action: 'repeatActionsOnInput',
-      level: 0
+      level: 0,
     }, {
       label: $translate.instant('autoAttendant.actionSayMessage'),
       name: 'phoneMenuSayMessage',
-      action: 'say'
+      action: ['say', 'play'],
     }, {
       label: $translate.instant('autoAttendant.phoneMenuDialExt'),
       name: 'phoneMenuDialExt',
       action: 'runActionsOnInput',
-      inputType: 2
+      inputType: 2,
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteHunt'),
       name: 'phoneMenuRouteHunt',
-      action: 'routeToHuntGroup'
+      action: 'routeToHuntGroup',
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteAA'),
       name: 'phoneMenuRouteAA',
-      action: 'goto'
+      action: 'goto',
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteUser'),
       name: 'phoneMenuRouteUser',
-      action: 'routeToUser'
+      action: 'routeToUser',
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteVM'),
       name: 'phoneMenuRouteMailbox',
-      action: 'routeToVoiceMail'
+      action: 'routeToVoiceMail',
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteToExtNum'),
       name: 'phoneMenuRouteToExtNum',
-      action: 'route'
+      action: 'route',
     }, {
       label: $translate.instant('autoAttendant.phoneMenuGoBack'),
       name: 'phoneMenuGoBack',
       action: 'repeatActionsOnInput',
-      level: -1
+      level: -1,
     }];
 
     // search for a key action by its name
@@ -110,7 +111,6 @@
       // remove key that is in use from creating the new key entry
       setAvailableKeys();
       setPhonemenuFormDirty();
-      AAScrollBar.resizeBuilderScrollBar();
     }
 
     // the user has pressed the trash can icon for a key/action pair
@@ -119,7 +119,6 @@
       vm.menuEntry.entries.splice(index, 1);
       setAvailableKeys();
       setPhonemenuFormDirty();
-      AAScrollBar.resizeBuilderScrollBar();
     }
 
     // the user has changed the key for an existing action
@@ -133,7 +132,7 @@
     // the user has changed the action for an existing key
     function keyActionChanged(index, keyAction) {
       var _keyAction = findKeyAction(keyAction.name);
-      if (angular.isDefined(_keyAction)) {
+      if (!_.isUndefined(_keyAction)) {
         var phoneMenuEntry = vm.menuEntry.entries[index];
         // Phone menu option now could have multiple actions in it, e.g., say message.
         // When switching between phone menu options, clear the actions array to
@@ -142,7 +141,7 @@
         phoneMenuEntry.actions[0] = AutoAttendantCeMenuModelService.newCeActionEntry('', '');
         var action = phoneMenuEntry.actions[0];
         action.name = keyAction.action;
-        if (angular.isDefined(_keyAction.inputType)) {
+        if (!_.isUndefined(_keyAction.inputType)) {
           // some action names are overloaded and are distinguished
           // by inputType
           action.inputType = _keyAction.inputType;
@@ -150,7 +149,6 @@
           action.level = _keyAction.level;
         }
         setPhonemenuFormDirty();
-        AAScrollBar.resizeBuilderScrollBar();
       }
     }
 
@@ -191,12 +189,16 @@
             if (menuEntry.actions.length > 0 && menuEntry.type == "MENU_OPTION") {
               var keyAction = new KeyAction();
               keyAction.key = menuEntry.key;
-              if (angular.isDefined(menuEntry.actions[0].name) && menuEntry.actions[0].name.length > 0) {
+              if (!_.isUndefined(menuEntry.actions[0].name) && menuEntry.actions[0].name.length > 0) {
                 keyAction.action = _.find(vm.keyActions, _.bind(function (keyAction) {
                   if (this.name === 'repeatActionsOnInput') {
                     return (this.name === keyAction.action && this.level === keyAction.level);
                   } else {
-                    return this.name === keyAction.action;
+                    if (this.name === keyAction.action) {
+                      return true;
+                    } else if (keyAction.action.length > 1) {
+                      return (this.name === keyAction.action[0] || this.name === keyAction.action[1]);
+                    }
                   }
                 }, menuEntry.actions[0]));
               } else {
@@ -223,7 +225,14 @@
 
       // remove key that is in use from creating the new key entry
       setAvailableKeys();
-      AAScrollBar.resizeBuilderScrollBar();
+    }
+
+    function addRouteToSipEndPoint() {
+      vm.keyActions.push({
+        label: $translate.instant('autoAttendant.phoneMenuRouteToSipEndpoint'),
+        name: 'phoneMenuRouteToSipEndpoint',
+        action: 'routeToSipEndpoint',
+      });
     }
 
     function setPhonemenuFormDirty() {
@@ -243,7 +252,7 @@
           vm.keyActions.push({
             label: $translate.instant('autoAttendant.phoneMenuRouteQueue'),
             name: 'phoneMenuRouteQueue',
-            action: 'routeToQueue'
+            action: 'routeToQueue',
           });
         }
       }
@@ -257,7 +266,11 @@
       vm.menuId = vm.menuEntry.id;
 
       toggleRouteToQueueFeature();
-      vm.keyActions.sort(AACommonService.sortByProperty('name'));
+
+      if (AACommonService.isRouteSIPAddressToggle()) {
+        addRouteToSipEndPoint();
+      }
+      vm.keyActions.sort(AACommonService.sortByProperty('label'));
 
       if (vm.menuEntry.type === 'MENU_OPTION') {
         if (_.has(vm.menuEntry, 'headers.length') && vm.menuEntry.headers.length === 0 &&

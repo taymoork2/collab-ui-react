@@ -3,15 +3,23 @@
 describe('Directive: aaScheduleInfo', function () {
   var $q, $compile, $rootScope, $scope;
   var AAICalService, AAModelService, AACalendarService;
+  var element;
+
+  afterEach(function () {
+    if (element) {
+      element.remove();
+    }
+    element = undefined;
+  });
 
   beforeEach(angular.mock.module('Huron'));
   var aaModel = {
     aaRecord: {
       scheduleId: '1',
-      callExperienceName: 'AA1'
+      callExperienceName: 'AA1',
     },
     aaRecordUUID: '1111',
-    ceInfos: []
+    ceInfos: [],
   };
   var schedule = 'openHours';
   var openHours = [];
@@ -27,13 +35,13 @@ describe('Directive: aaScheduleInfo', function () {
     AAICalService = _AAICalService_;
 
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
-    spyOn(AACalendarService, 'readCalendar').and.returnValue($q.when());
-    spyOn(AAICalService, 'getHoursRanges').and.returnValue($q.when(angular.copy(openHours)));
+    spyOn(AACalendarService, 'readCalendar').and.returnValue($q.resolve());
+    spyOn(AAICalService, 'getHoursRanges').and.returnValue($q.resolve(_.cloneDeep(openHours)));
     $scope.schedule = schedule;
   }));
 
   it('replaces the element with the appropriate content', function () {
-    var element = $compile("<aa-schedule-info schedule='openHours'> </aa-schedule-info>")($rootScope);
+    element = $compile("<aa-schedule-info schedule='openHours'> </aa-schedule-info>")($rootScope);
     $rootScope.$digest();
     expect(element.html()).toContain("aa-panel");
   });

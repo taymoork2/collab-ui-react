@@ -4,96 +4,125 @@ describe('Service: USSService', function () {
   beforeEach(angular.mock.module('Squared')); // because we use CsdmPoller
   beforeEach(angular.mock.module('Hercules'));
 
-  var $httpBackend, Authinfo, CsdmHubFactory, USSService, hubOn;
-  var rootPath = 'https://uss-integration.wbx2.com/uss/api/v1/';
+  var $httpBackend, Authinfo, CsdmHubFactory, USSService, hubOn, $translate, HybridServicesUtils;
+  var rootPath = 'https://uss-intb.ciscospark.com/uss/api/v1/';
+  var translations = {};
 
   beforeEach(angular.mock.module(function ($provide) {
     hubOn = sinon.spy();
     CsdmHubFactory = {
-      create: sinon.stub()
+      create: sinon.stub(),
     };
     CsdmHubFactory.create.returns({
       on: hubOn,
-      onListener: sinon.stub()
+      onListener: sinon.stub(),
     });
     $provide.value('CsdmHubFactory', CsdmHubFactory);
   }));
-  beforeEach(inject(function (_$httpBackend_, _USSService_, _Authinfo_) {
+  beforeEach(inject(function (_$httpBackend_, _USSService_, _Authinfo_, _$translate_, _HybridServicesUtils_) {
     Authinfo = _Authinfo_;
     Authinfo.getOrgId = sinon.stub().returns('456');
-
+    $translate = _$translate_;
+    spyOn($translate, 'instant').and.callFake(function (key) {
+      return translations[key] || key;
+    });
+    HybridServicesUtils = _HybridServicesUtils_;
+    spyOn(HybridServicesUtils, 'getLocalTimestamp');
     $httpBackend = _$httpBackend_;
     USSService = _USSService_;
   }));
 
   it('should fetch and return data from the correct backend', function () {
     $httpBackend
-      .when('GET', rootPath + 'orgs/456/userStatuses?userId=123')
+      .when('GET', rootPath + 'orgs/456/userStatuses?includeMessages=true&entitled=true&userId=123')
       .respond({
         userStatuses: [{
           userId: '123',
           orgId: 'cisco',
-          serviceId: 'squared-fusion-cal',
-          entitled: false,
-          state: 'deactivated'
-        }, {
-          userId: '123',
-          orgId: 'cisco',
-          serviceId: 'squared-fusion-uc',
-          entitled: false,
-          state: 'pendingDeactivation'
-        }, {
-          userId: '123',
-          orgId: 'cisco',
           serviceId: 'squared-fusion-yolo',
           entitled: true,
-          state: 'deactivated'
+          state: 'deactivated',
         }, {
           userId: '123',
           orgId: 'cisco',
           serviceId: 'squared-fusion-voicemail',
           entitled: true,
-          state: 'activated'
-        }]
+          state: 'activated',
+        }],
       });
 
     USSService.getStatusesForUser('123')
       .then(function (response) {
-        expect(response.length).toBe(3);
-        expect(response[0].serviceId).toBe('squared-fusion-uc');
-        expect(response[1].serviceId).toBe('squared-fusion-yolo');
-        expect(response[2].serviceId).toBe('squared-fusion-voicemail');
+        expect(response.length).toBe(2);
+        expect(response[0].serviceId).toBe('squared-fusion-yolo');
+        expect(response[1].serviceId).toBe('squared-fusion-voicemail');
       });
 
     $httpBackend.flush();
   });
 
   describe('getStatusesForUser', function () {
-    it('should return statuses for a given user', function () {
+    it('should return statuses for a given user and correctly deal with messages', function () {
+      translations['hercules.userStatusMessages.c_cal.error.title'] = 'Replaced error title';
+      translations['hercules.userStatusMessages.c_cal.error.description'] = 'Replaced error description';
       $httpBackend
-        .when('GET', rootPath + 'orgs/456/userStatuses?userId=123')
+        .when('GET', rootPath + 'orgs/456/userStatuses?includeMessages=true&entitled=true&userId=123')
         .respond({
           userStatuses: [{
             userId: '123',
             orgId: 'cisco',
             serviceId: 'squared-fusion-cal',
-            entitled: false,
-            state: 'deactivated'
-          }]
+            entitled: true,
+            state: 'error',
+            messages: [
+              {
+                key: 'c_cal.warn',
+                title: 'warn title',
+                severity: 'warning',
+                description: 'warn description',
+              },
+              {
+                key: 'c_cal.error',
+                severity: 'error',
+                title: 'error title',
+                description: 'error description',
+                replacementValues: [
+                  {
+                    key: 'replace1',
+                    value: 'value1',
+                  },
+                  {
+                    key: 'replace2',
+                    value: '2017-01-31T14:05:34.069Z',
+                    type: 'timestamp',
+                  },
+                ],
+              },
+            ],
+          }],
         });
 
       USSService.getStatusesForUser('123')
-        .then(function (response) {
-          // in the mocked HTTP response, the user is not entitled and
-          // state === 'deactivated' so USSService will filter it
-          expect(response.length).toBe(0);
+        .then(function (statuses) {
+          expect(statuses.length).toBe(1);
+          var status = statuses[0];
+          expect(status.state).toBe('error');
+          expect(status.serviceId).toBe('squared-fusion-cal');
+          expect(status.messages.length).toBe(2);
+          expect(status.messages[0].key).toBe('c_cal.error');
+          expect(status.messages[0].title).toBe('Replaced error title');
+          expect(status.messages[0].description).toBe('Replaced error description');
+          expect(status.messages[1].key).toBe('c_cal.warn');
+          expect(status.messages[1].title).toBe('warn title');
+          expect(status.messages[1].description).toBe('warn description');
+          expect(HybridServicesUtils.getLocalTimestamp).toHaveBeenCalledWith('2017-01-31T14:05:34.069Z');
         });
       $httpBackend.flush();
     });
 
     it('should return error status if unable to fetch data from backend', function () {
       $httpBackend
-        .when('GET', rootPath + 'orgs/456/userStatuses?userId=123')
+        .when('GET', rootPath + 'orgs/456/userStatuses?includeMessages=true&entitled=true&userId=123')
         .respond(500);
 
       USSService.getStatusesForUser('123')
@@ -109,7 +138,7 @@ describe('Service: USSService', function () {
       it('error state is not entitled', function () {
         var status = USSService.decorateWithStatus({
           entitled: false,
-          state: 'error'
+          state: 'error',
         });
         expect(status).toBe('not_entitled');
       });
@@ -117,7 +146,7 @@ describe('Service: USSService', function () {
       it('deactivated state is not entitled', function () {
         var status = USSService.decorateWithStatus({
           entitled: false,
-          state: 'deactivated'
+          state: 'deactivated',
         });
         expect(status).toBe('not_entitled');
       });
@@ -125,7 +154,7 @@ describe('Service: USSService', function () {
       it('notActivated state is not entitled', function () {
         var status = USSService.decorateWithStatus({
           entitled: false,
-          state: 'notActivated'
+          state: 'notActivated',
         });
         expect(status).toBe('not_entitled');
       });
@@ -133,7 +162,7 @@ describe('Service: USSService', function () {
       it('activated state is pending deactivation', function () {
         var status = USSService.decorateWithStatus({
           entitled: false,
-          state: 'activated'
+          state: 'activated',
         });
         expect(status).toBe('not_entitled');
       });
@@ -141,7 +170,7 @@ describe('Service: USSService', function () {
       it('other state is unknown', function () {
         var status = USSService.decorateWithStatus({
           entitled: true,
-          state: 'other'
+          state: 'other',
         });
         expect(status).toBe('unknown');
       });
@@ -151,7 +180,7 @@ describe('Service: USSService', function () {
       it('deactivated state is pending activation', function () {
         var status = USSService.decorateWithStatus({
           entitled: true,
-          state: 'deactivated'
+          state: 'deactivated',
         });
         expect(status).toBe('pending_activation');
       });
@@ -159,7 +188,7 @@ describe('Service: USSService', function () {
       it('notActivated state is pending activation', function () {
         var status = USSService.decorateWithStatus({
           entitled: true,
-          state: 'notActivated'
+          state: 'notActivated',
         });
         expect(status).toBe('pending_activation');
       });
@@ -167,7 +196,7 @@ describe('Service: USSService', function () {
       it('activated state is activated', function () {
         var status = USSService.decorateWithStatus({
           entitled: true,
-          state: 'activated'
+          state: 'activated',
         });
         expect(status).toBe('activated');
       });
@@ -175,7 +204,7 @@ describe('Service: USSService', function () {
       it('error state is error', function () {
         var status = USSService.decorateWithStatus({
           entitled: true,
-          state: 'error'
+          state: 'error',
         });
         expect(status).toBe('error');
       });
@@ -183,7 +212,7 @@ describe('Service: USSService', function () {
       it('other state is unknown', function () {
         var status = USSService.decorateWithStatus({
           entitled: true,
-          state: 'other'
+          state: 'other',
         });
         expect(status).toBe('unknown');
       });
@@ -196,7 +225,7 @@ describe('Service: USSService', function () {
         .when('GET', rootPath + 'orgs/456')
         .respond({
           id: '456',
-          sipDomain: ''
+          sipDomain: '',
         });
 
       USSService.getOrg('456')
@@ -212,16 +241,16 @@ describe('Service: USSService', function () {
       $httpBackend
         .when('PATCH', rootPath + 'orgs/456', {
           id: '456',
-          sipDomain: 'whatever'
+          sipDomain: 'whatever',
         })
         .respond({
           id: '456',
-          sipDomain: 'whatever'
+          sipDomain: 'whatever',
         });
 
       USSService.updateOrg({
         id: '456',
-        sipDomain: 'whatever'
+        sipDomain: 'whatever',
       })
         .then(function (response) {
           expect(response.sipDomain).toEqual('whatever');
@@ -243,14 +272,14 @@ describe('Service: USSService', function () {
   describe('getStatuses', function () {
     it('should work', function () {
       $httpBackend
-        .when('GET', rootPath + 'orgs/456/userStatuses?serviceId=squared-fusion-cal&offset=0&limit=100&entitled=true')
+        .when('GET', rootPath + 'orgs/456/userStatuses?includeMessages=true&serviceId=squared-fusion-cal&limit=10000&entitled=true')
         .respond({
           userStatuses: [{
             userId: '123',
             orgId: '456',
             serviceId: 'squared-fusion-cal',
             entitled: true,
-            state: 'notActivated'
+            state: 'notActivated',
           }, {
             userId: 'ABC',
             orgId: '456',
@@ -260,15 +289,15 @@ describe('Service: USSService', function () {
             connectorId: 'c_cal@0A5E3DE8',
             description: {
               key: 'c_cal.DiscoveryScoreException',
-              defaultMessage: 'Failed to get score for the user:  MailServer Error:  User folder bind error'
+              defaultMessage: 'Failed to get score for the user:  MailServer Error:  User folder bind error',
             },
-            clusterId: 'f61e9340-928e-11e5-9965-005056b12db1'
-          }]
+            clusterId: 'f61e9340-928e-11e5-9965-005056b12db1',
+          }],
         });
 
-      USSService.getStatuses('squared-fusion-cal', null, 0, 100)
-        .then(function (response) {
-          expect(response.userStatuses.length).toEqual(2);
+      USSService.getAllStatuses('squared-fusion-cal', null)
+        .then(function (userStatuses) {
+          expect(userStatuses.length).toEqual(2);
         });
       $httpBackend.flush();
     });
@@ -285,15 +314,15 @@ describe('Service: USSService', function () {
   describe('getStatusesForUserInOrg', function () {
     it('should return statuses for a given user in org', function () {
       $httpBackend
-        .when('GET', rootPath + 'orgs/456/userStatuses?userId=123')
+        .when('GET', rootPath + 'orgs/456/userStatuses?includeMessages=true&entitled=true&userId=123')
         .respond({
           userStatuses: [{
             userId: '123',
             orgId: '456',
             serviceId: 'squared-fusion-cal',
             entitled: true,
-            state: 'active'
-          }]
+            state: 'active',
+          }],
         });
 
       USSService.getStatusesForUserInOrg('123', '456')

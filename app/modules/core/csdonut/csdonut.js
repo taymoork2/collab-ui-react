@@ -17,7 +17,7 @@
         hideusage: '=',
         ssize: '=',
         tsize: '=',
-        name: '='
+        name: '=',
       },
 
       controller: ['$scope', function controller($scope) {
@@ -40,7 +40,7 @@
           x: 0,
           y: 14,
           content: '',
-          color: '#6A6B6C'
+          color: '#6A6B6C',
         };
 
         var colour = d3.scale.category20();
@@ -51,18 +51,23 @@
             (typeof hideusage !== 'undefined' && hideusage === true) ||
             (typeof unlimited !== 'undefined' && unlimited === true)
           ) {
-            $scope.text.size = 18;
+            $scope.text.size = '100%';
             $scope.text.y = 6;
+            if (typeof $scope.ssize !== 'undefined' && $scope.ssize < 64) {
+              // for small donuts, make sure the font size fits inside the donut
+              $scope.text.size = '70%';
+              $scope.text.y = 4;
+            }
           } else if (typeof value === 'undefined' || value.toString().length > 3) {
-            $scope.text.size = 25;
-            $scope.text.y = 12;
+            $scope.text.size = '70%';
+            $scope.text.y = 4;
           } else {
             if (tsize) {
-              $scope.text.size = tsize;
-              $scope.text.y = 5;
+              $scope.text.size = tsize + 'px';
+              $scope.text.y = (tsize / 3.2);
             } else {
-              $scope.text.size = 26;
-              $scope.text.y = 10;
+              $scope.text.size = '90%';
+              $scope.text.y = 5;
             }
           }
         };
@@ -173,7 +178,7 @@
 
         var radius, pie, arc, svg, path, text;
         scope.computeDataset(scope.value, scope.max, scope.unlimited, scope.hideusage, scope.ssize);
-        scope.computeTextProperties(scope.value, scope.unlimited, scope.hideusage, scope.tsize);
+        scope.computeTextProperties(scope.text.content, scope.unlimited, scope.hideusage, scope.tsize);
         scope.createDonut = function createDonut() {
           radius = Math.min(scope.getWidth(), scope.getHeight()) / 2;
           pie = d3.layout.pie().sort(null).value(function value(model) {
@@ -197,7 +202,7 @@
             .attr('x', scope.text.x).attr('y', scope.text.y)
             .attr('text-anchor', 'middle')
             .attr('class', 'cs-donut-text')
-            .attr('style', 'fill:' + scope.text.color + '; font-size:' + scope.text.size + 'px; font-family:CiscoSansTT Extra Light')
+            .attr('style', 'fill:' + scope.text.color + '; font-size:' + scope.text.size + '; font-family:CiscoSansTT Extra Light')
             .text(scope.text.content);
 
           path = svg.selectAll('path')
@@ -233,8 +238,8 @@
 
         //Listen for changes in the directive attributes
         scope.$watchGroup(['value', 'max', 'unlimited', 'hideusage'], function () {
-          scope.computeTextProperties(scope.value, scope.unlimited, scope.hideusage);
           scope.computeDataset(scope.value, scope.max, scope.unlimited, scope.hideusage);
+          scope.computeTextProperties(scope.text.content, scope.unlimited, scope.hideusage);
         });
 
         // Listen for any changes to the dataset...
@@ -251,14 +256,14 @@
           path.data(pie(scope.clean(scope.dataset)));
           path.transition().duration(750).attrTween('d', scope.tweenArc).each('end', function () {
             text.text(scope.text.content)
-              .attr('style', 'fill:' + scope.text.color + '; font-size:' + scope.text.size + 'px; font-family: CiscoSansTT Extra Light;')
+              .attr('style', 'fill:' + scope.text.color + '; font-size:' + scope.text.size + '; font-family: CiscoSansTT Extra Light;')
               .attr('y', scope.text.y);
             path.attr('fill', function (d, i) {
               return scope.getColour(i);
             });
           });
         }, true);
-      }
+      },
     };
   }
 })();

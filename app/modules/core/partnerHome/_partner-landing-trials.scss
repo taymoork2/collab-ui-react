@@ -1,10 +1,17 @@
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/list-group';
+@import '~collab-ui/scss/settings/typography';
+@import '~collab-ui/scss/settings/topbar';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+
 .trialsPanel {
   padding: 15px;
   background-color: $brand-white;
   border-color: $list-group-border;
   border-width: 1px;
+
   .trial {
-    margin-bottom: .5rem;
+    margin-bottom: 0.5rem;
   }
 }
 
@@ -14,13 +21,16 @@
 }
 
 .trialHeader {
+  @include vr-spacing(pb, 0.25);
+
   display: flex;
   align-items: flex-end;
-  @include vr-spacing(pb,0.25);
-  & > span {
+
+  > span {
     color: $gray-dark-2;
     line-height: inherit;
-    & ~ span {
+
+    ~ span {
       text-align: center;
     }
   }
@@ -36,32 +46,34 @@
 }
 
 .expiredTrials {
-  @include vr-spacing(pt,2);
-  @include vr-spacing(pb,0.5);
+  @include vr-spacing(pt, 2);
+  @include vr-spacing(pb, 0.5);
 }
 
 .viewAll {
-  @include vr-spacing(pt,0.5);
+  @include vr-spacing(pt, 0.5);
 }
 
 .trialTitle {
-  font-family: $brand-font-cisco-TT-Extra-Light;
+  @include vr-spacing(mb, 1);
+
+  font-family: $brand-font-extra-light;
   color: $top-bar-inverse-link-disabled-color;
-  @include vr-spacing(mb,1);
 }
+
 .userTitle {
-  @include vr-spacing(mb,0.75);
+  @include vr-spacing(mb, 0.75);
 }
 
 .expired {
-  color: $btn-link-disabled-color;
+  color: $gray-dark;
   text-align: center;
 }
 
 .trialCustomer {
   color: $brand-primary;
   text-align: left;
-  margin-bottom: -.75rem;
+  margin-bottom: -0.75rem;
 }
 
 .trialLicense {

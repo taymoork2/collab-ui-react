@@ -6,7 +6,7 @@ describe('Controller: AAPhoneMenuCtrl', function () {
   var AAUiModelService, AutoAttendantCeMenuModelService, QueueHelperService;
   var $rootScope, $scope, $q;
   var aaUiModel = {
-    openHours: {}
+    openHours: {},
   };
   var schedule = 'openHours';
   var index = '0';
@@ -29,8 +29,8 @@ describe('Controller: AAPhoneMenuCtrl', function () {
     QueueHelperService = _QueueHelperService_;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
-    spyOn(QueueHelperService, 'listQueues').and.returnValue($q.when(queues));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
+    spyOn(QueueHelperService, 'listQueues').and.returnValue($q.resolve(queues));
 
     AutoAttendantCeMenuModelService.clearCeMenuMap();
     aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
@@ -45,7 +45,7 @@ describe('Controller: AAPhoneMenuCtrl', function () {
     aaUiModel['openHours'].addEntryAt(index, menu);
 
     controller = $controller('AAPhoneMenuCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
     $scope.$apply();
 
@@ -64,7 +64,7 @@ describe('Controller: AAPhoneMenuCtrl', function () {
 
     it('feature toggle false', function () {
       var count = _.findIndex(controller.keyActions, {
-        "name": 'phoneMenuRouteQueue'
+        "name": 'phoneMenuRouteQueue',
       });
       expect(count).toEqual(-1);
     });

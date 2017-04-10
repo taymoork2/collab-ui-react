@@ -2,11 +2,11 @@
 
 describe('Controller: AASayMessageCtrl', function () {
   var controller;
-  var AAUiModelService, AutoAttendantCeMenuModelService;
+  var AAUiModelService, AutoAttendantCeMenuModelService, AACommonService;
   var $rootScope, $scope;
 
   var aaUiModel = {
-    openHours: {}
+    openHours: {},
   };
   var schedule = 'openHours';
   var index = '0';
@@ -44,13 +44,15 @@ describe('Controller: AASayMessageCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$rootScope_, _AAUiModelService_, _AutoAttendantCeMenuModelService_) {
+  beforeEach(inject(function (_$rootScope_, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _AACommonService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
     AAUiModelService = _AAUiModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
+    AACommonService = _AACommonService_;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
+    spyOn(AACommonService, 'isMediaUploadToggle').and.returnValue(true);
 
     $scope.schedule = schedule;
     $scope.index = index;
@@ -60,11 +62,19 @@ describe('Controller: AASayMessageCtrl', function () {
     aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
   }));
 
+  afterEach(function () {
+    $rootScope = null;
+    $scope = null;
+    AAUiModelService = null;
+    AutoAttendantCeMenuModelService = null;
+    controller = null;
+  });
+
   describe('create say action', function () {
     beforeEach(inject(function ($controller) {
       $scope = $rootScope;
       controller = $controller('AASayMessageCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
       $scope.$apply();
 
@@ -77,7 +87,7 @@ describe('Controller: AASayMessageCtrl', function () {
         expect(controller.getFooter()).toBeTruthy();
         expect(controller.getMessageLabel()).toBeTruthy();
         expect(aaUiModel[schedule]['entries'][index]['actions'].length).toEqual(1);
-        expect(aaUiModel[schedule]['entries'][index]['actions'][0].name).toEqual('say');
+        expect(aaUiModel[schedule]['entries'][index]['actions'][0].name).toEqual('play');
       });
 
       it('should set the available languages', function () {
@@ -91,10 +101,10 @@ describe('Controller: AASayMessageCtrl', function () {
     });
 
     describe('saveUiModel', function () {
-      it('should write say action to the model', function () {
+      it('should write play action to the model', function () {
         var message = "This is a test.";
         var voice = "Veronica";
-        controller.messageInput = message;
+        controller.actionEntry.value = message;
         controller.voiceOption.value = voice;
         controller.saveUiModel();
         $scope.$apply();
@@ -140,7 +150,7 @@ describe('Controller: AASayMessageCtrl', function () {
       aaUiModel[schedule]['entries'][index] = menu;
 
       controller = $controller('AASayMessageCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
       $scope.$apply();
     }));
@@ -152,7 +162,7 @@ describe('Controller: AASayMessageCtrl', function () {
         expect(controller.getFooter()).toBeTruthy();
         expect(controller.getMessageLabel()).toBeTruthy();
         expect(aaUiModel[schedule]['entries'][index]['headers'][0]['actions'].length).toEqual(1);
-        expect(aaUiModel[schedule]['entries'][index]['headers'][0]['actions'][0].name).toEqual('say');
+        expect(aaUiModel[schedule]['entries'][index]['headers'][0]['actions'][0].name).toEqual('play');
         expect(controller.languageOptions.length > 0).toEqual(true);
 
       });
@@ -162,7 +172,7 @@ describe('Controller: AASayMessageCtrl', function () {
       it('should write say action to the model', function () {
         var message = "This is a test.";
         var voice = "Veronica";
-        controller.messageInput = message;
+        controller.actionEntry.value = message;
         controller.voiceOption.value = voice;
         controller.saveUiModel();
         $scope.$apply();
@@ -191,7 +201,7 @@ describe('Controller: AASayMessageCtrl', function () {
       menu.entries.push(keyEntry);
 
       controller = $controller('AASayMessageCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
       $scope.$apply();
     }));
@@ -233,7 +243,7 @@ describe('Controller: AASayMessageCtrl', function () {
       AutoAttendantCeMenuModelService.clearCeMenuMap();
       getBasePhoneMenuWithHeader();
       controller = $controller('AASayMessageCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
       $scope.$apply();
     }));
@@ -274,7 +284,7 @@ describe('Controller: AASayMessageCtrl', function () {
       menu.entries[index] = submenu;
 
       controller = $controller('AASayMessageCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
       $scope.$apply();
 
@@ -284,7 +294,7 @@ describe('Controller: AASayMessageCtrl', function () {
     describe('activate', function () {
       it('should initialize say action in headers of new submenu with main menu voice', function () {
         var submenu = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
-        expect(submenu.headers[0].actions[0].name).toBe('say');
+        expect(submenu.headers[0].actions[0].name).toBe('play');
         expect(submenu.headers[0].actions[0].getVoice()).toBe(voice);
         expect(submenu.headers[0].getVoice()).toBe(voice);
       });
@@ -296,14 +306,13 @@ describe('Controller: AASayMessageCtrl', function () {
         expect(controller.messageInput).not.toBeTruthy();
 
         var message = "This is a test.";
-        controller.messageInput = message;
+        controller.actionEntry.value = message;
         controller.saveUiModel();
 
         var submenu = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
         expect(controller).toBeDefined();
-        expect(controller.messageInput).toEqual(message);
         expect(submenu['headers'][0]['actions'].length).toEqual(1);
-        expect(submenu['headers'][0]['actions'][0].name).toEqual('say');
+        expect(submenu['headers'][0]['actions'][0].name).toEqual('play');
         expect(submenu['headers'][0]['actions'][0].value).toEqual(message);
         expect(controller.updateVoiceOption).not.toHaveBeenCalled();
       });
@@ -336,7 +345,7 @@ describe('Controller: AASayMessageCtrl', function () {
       menu.entries[index] = submenu;
 
       controller = $controller('AASayMessageCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
       $scope.$apply();
 
@@ -379,7 +388,7 @@ describe('Controller: AASayMessageCtrl', function () {
       keyEntry.addAction(emptyAction);
       menu.entries.push(keyEntry);
       controller = $controller('AASayMessageCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
       $scope.$apply();
 
@@ -392,14 +401,13 @@ describe('Controller: AASayMessageCtrl', function () {
         expect(controller.messageInput).not.toBeTruthy();
 
         var message = "This is a test.";
-        controller.messageInput = message;
+        controller.actionEntry.value = message;
         controller.saveUiModel();
         $scope.$apply();
 
         expect(controller).toBeDefined();
-        expect(controller.messageInput).toEqual(message);
         expect(aaUiModel[schedule]['entries'][index]['entries'][keyIndex]['actions'].length).toEqual(2);
-        expect(aaUiModel[schedule]['entries'][index]['entries'][keyIndex]['actions'][0].name).toEqual('say');
+        expect(aaUiModel[schedule]['entries'][index]['entries'][keyIndex]['actions'][0].name).toEqual('play');
         expect(aaUiModel[schedule]['entries'][index]['entries'][keyIndex]['actions'][0].value).toEqual(message);
         expect(controller.updateVoiceOption).not.toHaveBeenCalled();
       });
@@ -423,16 +431,9 @@ describe('Controller: AASayMessageCtrl', function () {
       menu.entries.push(keyEntry);
 
       controller = $controller('AASayMessageCtrl', {
-        $scope: $scope
+        $scope: $scope,
       });
       $scope.$apply();
     }));
-
-    describe('setActionEntry', function () {
-      it('should read existing say action for phone menu', function () {
-        expect(controller).toBeDefined();
-        expect(controller.messageInput).toEqual(valueInput);
-      });
-    });
   });
 });

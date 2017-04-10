@@ -12,7 +12,7 @@
       increment: increment,
       clear: clear,
       get: get,
-      getWithoutSequence: getWithoutSequence
+      getWithoutSequence: getWithoutSequence,
     };
 
     var TRACKING_ID = 'TrackingID';

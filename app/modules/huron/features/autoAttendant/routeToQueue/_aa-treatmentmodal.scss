@@ -1,3 +1,49 @@
-.aa-treatment-modal {
-     margin-top: 10px;
+.aa-queue-settings-modal {
+  .aa-treatment-modal {
+    @include vr-spacing(mt, 0.5);
+  }
+  .aa-message-select-list {
+    margin-bottom: 0rem;
+  }
+  .aa-select-modal {
+    width: 9.4rem;
+    display: inline-block;
+    @include vr-spacing(mr, 0.5);
+  }
+
+  .aa-display-radio {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  h3 {
+    display: inline-block;
+  }
+
+  .aa-help-icon {
+    color: $color-primary-lighter;
+    position: absolute;
+
+    &:hover {
+      color: $white;
+      cursor: pointer;
+    }
+
+    &:focus {
+      color: $white;
+      outline: none;
+    }
+  }
+
+  .aa-help-wrapper {
+    .modal-title {
+      max-width: 900px;
+      margin: 0;
+      padding: 0 0rem 0 1rem;
+    }
+
+    .popover {
+      @include vr-spacing(mt, 0);
+    }
+  }
 }

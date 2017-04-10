@@ -1,29 +1,37 @@
 import { LineOverviewComponent } from './lineOverview.component';
 import { LineOverviewService } from './lineOverview.service';
-import lineServiceModule from '../services';
-import directoryNumber from '../../directoryNumber';
-import callForward from '../../callForward';
-import simultaneousCalls from '../../simultaneousCalls';
-import callerId from '../../callerId';
-import sharedLine from '../../sharedLine';
-import siteService from '../../sites';
-
-export * from './lineOverview.service';
+import lineService from 'modules/huron/lines/services';
+import directoryNumber from 'modules/huron/directoryNumber';
+import callForward from 'modules/huron/callForward';
+import simultaneousCalls from 'modules/huron/simultaneousCalls';
+import callerId from 'modules/huron/callerId';
+import sharedLine from 'modules/huron/sharedLine';
+import siteService from 'modules/huron/sites';
+import memberService from 'modules/huron/members';
+import notifications from 'modules/core/notifications';
+import autoAnswer from 'modules/huron/autoAnswer';
+import voicemailModule from 'modules/huron/voicemail';
+import huronUserService  from 'modules/huron/users';
+export * from 'modules/huron/lines/lineOverview/lineOverview.service';
 
 export default angular
   .module('huron.line-overview', [
     'atlas.templates',
-    'cisco.ui',
+    'collab.ui',
     'pascalprecht.translate',
     directoryNumber,
     callForward,
     simultaneousCalls,
-    lineServiceModule,
+    lineService,
     callerId,
     sharedLine,
     require('modules/core/config/config'),
-    require('modules/core/notifications/notifications.module'),
+    notifications,
     siteService,
+    memberService,
+    autoAnswer,
+    huronUserService,
+    voicemailModule,
   ])
   .component('ucLineOverview', new LineOverviewComponent())
   .service('LineOverviewService', LineOverviewService)

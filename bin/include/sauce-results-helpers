@@ -106,25 +106,15 @@ function prepend_lines_with {
     ${SED_CMD} -E "s/(.*)/${prefix}${delim}\\1/"
 }
 
-function get_sauce_property {
-    local sauce_property=${1}
-    local sauce_config_file=${2:-${WX2_ADMIN_WEB_CLIENT_HOME}/test/env/sauce.properties}
-    if [ -z "${sauce_property}" ]; then
-      >&2 echo "Error: no sauce_property passed to get_sauce_property"
-      return 1
-    elif [ ! -r "$sauce_config_file" ]; then
-      >&2 echo "Error: sauce_config_file not found: ${sauce_config_file}"
-      return 1
-    fi
-    . "$sauce_config_file"
-    echo "${!sauce_property}"
-}
-
 function md5_hmac {
     local sauce_username
     local sauce_access_key
-    sauce_username="$(get_sauce_property SAUCE_USERNAME)"
-    sauce_access_key="$(get_sauce_property SAUCE_ACCESS_KEY)"
+    sauce_username="$(printenv SAUCE__USERNAME)"
+    sauce_access_key="$(printenv SAUCE__ACCESS_KEY)"
+    if [ -z "$sauce_username" -o -z "$sauce_access_key" ]; then
+        >&2 echo "Error: md5_hmac: invalid creds (username: \"${sauce_username}\" / acces key: \"${sauce_access_key}\")"
+        return 1
+    fi
     openssl md5 -hmac "${sauce_username}:${sauce_access_key}" | ${SED_CMD} -e 's/^.* //'
 }
 

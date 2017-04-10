@@ -1,36 +1,22 @@
-// notes:
-// - segfaults have been occurring more recently (roughly starting around 2016-07-ish)
-// - register this to acquire more debugging info
-// - TODO: consider removing this once no longer needed
-const segfaultHandler = require('segfault-handler');
-
-const dateStr = new Date().toISOString().replace(/:/g, '_');
-const crashLogFile = `webpack-segfault-crash--${dateStr}.log`;
-segfaultHandler.registerHandler(crashLogFile);
-
 const webpack = require('webpack');
 const _ = require('lodash');
 const args = require('yargs').argv;
 const path = require('path');
 const loaders = require('./loaders');
-const autoprefixer = require('autoprefixer');
+const StyleLintPlugin = require('stylelint-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+
 
 const host = args.host || '127.0.0.1';
 const port = args.port || '8000';
 
-/**
- * TODO remove when math-expression-evaluator fixes their release version in 1.2.12
- * https://github.com/redhivesoftware/math-expression-evaluator/pull/2
- */
-Array.indexOf = _.indexOf;
-
-module.exports = (function makeWebpackConfig() {
+function webpackConfig(env) {
   const config = {};
   config.context = path.resolve('./app');
 
   config.entry = {
     preload: ['scripts/preload'],
-    app: ['bootstrap'],
+    bootstrap: ['polyfills', 'bootstrap'],
     styles: ['styles/app'],
   };
 
@@ -44,9 +30,7 @@ module.exports = (function makeWebpackConfig() {
   config.devtool = 'eval';
 
   config.module = {
-    preLoaders: [],
-    postLoaders: [],
-    loaders: _.flatten([
+    rules: _.flatten([
       loaders.js,
       loaders.ts,
       loaders.scss,
@@ -57,35 +41,18 @@ module.exports = (function makeWebpackConfig() {
       loaders.assets,
       loaders.dependencies,
     ]),
-  };
-
-  if (!args.nolint) {
-    config.module.preLoaders.push(loaders.eslint);
-    config.module.preLoaders.push(loaders.tslint);
-  }
-
-  config.eslint = {
-    failOnError: true,
-  };
-
-  config.tslint = {
-    emitErrors: true,
-    failOnHint: true,
-  };
-
-  config.postcss = [
-    autoprefixer({
-      browsers: ['last 2 version'],
-    }),
-  ];
-
-  config.sassLoader = {
-    sourceComments: true,
-    includePaths: [
-      path.resolve('node_modules/bootstrap-sass/assets/stylesheets'),
-      path.resolve('node_modules/foundation-sites/scss'),
+    noParse: [
+      /messageformat\/messageformat\.js/,
+      /clipboard\/dist\/clipboard.js/,
+      /\/google-libphonenumber\/dist\/browser\/libphonenumber.js/,
+      /\/query-command-supported\/dist\/queryCommandSupported.js/,
     ],
   };
+
+  if (!env.nolint) {
+    config.module.rules.push(loaders.eslint);
+    config.module.rules.push(loaders.tslint);
+  }
 
   config.plugins = [
     new webpack.ProvidePlugin({
@@ -103,8 +70,20 @@ module.exports = (function makeWebpackConfig() {
     }),
   ];
 
+  if (env.analyze) {
+    config.plugins.push(new BundleAnalyzerPlugin());
+  }
+
+  // Activate once IntelliJ / WebStorm supports stylelint
+  if (!env.nolint) {
+    config.plugins.push(new StyleLintPlugin({
+      configFile: '.stylelintrc.js',
+      failOnError: true,
+    }));
+  }
+
   config.resolve = {
-    extensions: ['', '.ts', '.js', '.json', '.css', '.scss', '.html'],
+    extensions: ['.ts', '.js', '.json', '.css', '.scss', '.html'],
     alias: {
       // App aliases (used by ProvidePlugin)
       clipboard: 'clipboard/dist/clipboard.js',
@@ -115,12 +94,17 @@ module.exports = (function makeWebpackConfig() {
       x2js: 'x2js/xml2json.js',
       // Test aliases
       sinon: 'sinon/pkg/sinon.js',
+      imagesloaded: 'imagesloaded/imagesloaded.pkgd.js',
+      'masonry-layout': 'masonry-layout/dist/masonry.pkgd.js',
     },
-    root: [
+    modules: [
       path.resolve('./app'),
       path.resolve('./test'),
+      'node_modules',
     ],
   };
 
   return config;
-}());
+}
+
+module.exports = webpackConfig;

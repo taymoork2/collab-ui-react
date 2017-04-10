@@ -1,5 +1,6 @@
 (function () {
   'use strict';
+
   angular.module('Mediafusion').service('DummyMetricsReportService', DummyMetricsReportService);
   /* @ngInject */
   function DummyMetricsReportService($translate, chartColors) {
@@ -10,7 +11,7 @@
       dummyCallVolumeData: dummyCallVolumeData,
       dummyAvailabilityData: dummyAvailabilityData,
       dummyUtilizationData: dummyUtilizationData,
-      dummyUtilizationGraph: dummyUtilizationGraph
+      dummyUtilizationGraph: dummyUtilizationGraph,
     };
 
     function dummyAvailabilityData(filter) {
@@ -18,7 +19,7 @@
       var start;
       var end;
       var duration;
-      var color = chartColors.dummyGray;
+      var color = chartColors.grayLightTwo;
       var period;
       if (filter.value === 0) {
         end = moment().utc().format(timeFormat);
@@ -51,31 +52,31 @@
             "start": 1,
             "duration": duration,
             "color": color,
-            "task": "No data"
-          }]
+            "task": "No data",
+          }],
         }, {
           "category": "Cluster/Host",
           "segments": [{
             "start": 1,
             "duration": duration,
             "color": color,
-            "task": "No data"
-          }]
+            "task": "No data",
+          }],
         }, {
           "category": "Cluster/Host",
           "segments": [{
             "start": 1,
             "duration": duration,
             "color": color,
-            "task": "No data"
-          }]
+            "task": "No data",
+          }],
         }],
         "startTime": start,
-        "endTime": end
+        "endTime": end,
       }];
       var returnData;
       returnData = {
-        'data': data
+        'data': data,
       };
       return returnData;
     }
@@ -89,8 +90,8 @@
             call_reject: Math.floor((Math.random() * 1) + 1),
             active_calls: Math.floor((Math.random() * 1) + 1),
             balloon: false,
-            colorOne: chartColors.dummyGrayLight,
-            colorTwo: chartColors.dummyGray
+            colorOne: chartColors.grayLightThree,
+            colorTwo: chartColors.grayLightTwo,
           });
         }
       } else if (filter.value === 1) {
@@ -100,8 +101,8 @@
             call_reject: Math.floor((Math.random() * 1) + 1),
             active_calls: Math.floor((Math.random() * 1) + 1),
             balloon: false,
-            colorOne: chartColors.dummyGrayLight,
-            colorTwo: chartColors.dummyGray
+            colorOne: chartColors.grayLightThree,
+            colorTwo: chartColors.grayLightTwo,
           });
         }
       } else if (filter.value === 2) {
@@ -111,8 +112,8 @@
             call_reject: Math.floor((Math.random() * 1) + 1),
             active_calls: Math.floor((Math.random() * 1) + 1),
             balloon: false,
-            colorOne: chartColors.dummyGrayLight,
-            colorTwo: chartColors.dummyGray
+            colorOne: chartColors.grayLightThree,
+            colorTwo: chartColors.grayLightTwo,
           });
         }
       } else {
@@ -122,8 +123,8 @@
             call_reject: Math.floor((Math.random() * 1) + 1),
             active_calls: Math.floor((Math.random() * 1) + 1),
             balloon: false,
-            colorOne: chartColors.dummyGrayLight,
-            colorTwo: chartColors.dummyGray
+            colorOne: chartColors.grayLightThree,
+            colorTwo: chartColors.grayLightTwo,
           });
         }
       }
@@ -137,7 +138,7 @@
           dummyGraphVal.push({
             time: moment().subtract(i * 5, 'minutes').format(timeFormat),
             average_util: Math.floor((Math.random() * 10) + 1),
-            balloon: false
+            balloon: false,
           });
         }
       } else if (filter.value === 1) {
@@ -145,7 +146,7 @@
           dummyGraphVal.push({
             time: moment().subtract(i, 'hours').format(timeFormat),
             average_util: Math.floor((Math.random() * 10) + 1),
-            balloon: false
+            balloon: false,
           });
         }
       } else if (filter.value === 2) {
@@ -153,7 +154,7 @@
           dummyGraphVal.push({
             time: moment().subtract(i * 3, 'hours').format(timeFormat),
             average_util: Math.floor((Math.random() * 10) + 1),
-            balloon: false
+            balloon: false,
           });
         }
       } else {
@@ -161,7 +162,7 @@
           dummyGraphVal.push({
             time: moment().subtract(i * 8, 'hours').format(timeFormat),
             average_util: Math.floor((Math.random() * 10) + 1),
-            balloon: false
+            balloon: false,
           });
         }
       }
@@ -174,8 +175,8 @@
         title: vm.average_utilzation,
         valueField: vm.average_utilzation,
         dashLength: 4,
-        lineColor: chartColors.dummyGray,
-        showBalloon: false
+        lineColor: chartColors.grayLightTwo,
+        showBalloon: false,
       });
       return dummyGraph;
     }

@@ -23,7 +23,7 @@ describe('Controller: AAHelpCtrl', function () {
     AAMetricNameService = _AAMetricNameService_;
 
     controller = $controller('AAHelpCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
     $scope.$apply();
   }));
@@ -70,14 +70,14 @@ describe('Controller: AAHelpCtrl', function () {
 
   describe('sendMetrics', function () {
     beforeEach(function () {
-      spyOn(Analytics, 'trackEvent').and.returnValue($q.when({}));
+      spyOn(Analytics, 'trackEvent').and.returnValue($q.resolve({}));
     });
 
     it('should send metrics if metrics are defined', function () {
       controller.metric = metric;
       controller.sendMetrics();
       expect(Analytics.trackEvent).toHaveBeenCalledWith(AAMetricNameService.UI_HELP, {
-        icon: controller.metric
+        icon: controller.metric,
       });
     });
 

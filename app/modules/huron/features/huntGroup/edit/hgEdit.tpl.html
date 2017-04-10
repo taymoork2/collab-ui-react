@@ -1,12 +1,24 @@
 <cs-page-header title="{{::hge.title}}" back="hge.back" back-url="hge.huronFeaturesUrl"></cs-page-header>
+<script type="text/ng-template" id="numberTemplate.html">
+  <a>
+    <span ng-bind-html="(match.label.number | telephoneNumber) | typeaheadHighlight:query"></span>
+  </a>
+</script>
 <script type="text/ng-template" id="userTemplate.html">
   <div class="hunt-member-name" ng-if="match.label.displayUser">
-    <span ng-bind-html="match.label.user.firstName | typeaheadHighlight:query"></span>&nbsp;
-    <span ng-bind-html="match.label.user.lastName | typeaheadHighlight:query"></span>
-    <span ng-bind-html="' (' + match.label.user.userName + ')' | typeaheadHighlight:query"></span>
+    <span ng-if="match.label.user.displayName " ng-bind-html="match.label.user.displayName | typeaheadHighlight:query"></span>
+    <span ng-if="match.label.user.firstName" ng-bind-html="match.label.user.firstName | typeaheadHighlight:query">&nbsp;</span>
+    <span ng-if="match.label.user.lastName" ng-bind-html="match.label.user.lastName | typeaheadHighlight:query"></span>
+    <span ng-if="match.label.user.userName && match.label.user.firstName || match.label.user.lastName" ng-bind-html="' (' + match.label.user.userName + ')' | typeaheadHighlight:query"></span>
+    <span ng-if="match.label.user.userName && !match.label.user.firstName && !match.label.user.lastName" ng-bind-html="match.label.user.userName | typeaheadHighlight:query"></span>
   </div>
   <a class="hunt-member-line">
-    <span ng-bind-html="(match.label.selectableNumber | huntMemberTelephone) | typeaheadHighlight:query"></span>
+    <span
+      ng-if="match.label.selectableNumber"
+      ng-bind-html="(match.label.selectableNumber | huntMemberTelephone) | typeaheadHighlight:query"></span>
+    <span
+      ng-if="match.label.searchNumber"
+      ng-bind-html="(match.label.searchNumber) | typeaheadHighlight:query"></span>
   </a>
 </script>
 <div class="save-section hg-save" ng-if="hge.form.$dirty">
@@ -22,27 +34,65 @@
   </div>
   <div class="row" ng-if="hge.isLoadingCompleted">
     <div class="medium-6 columns">
+       <form novalidate>
+        <formly-form model="hge.model" fields="hge.name" form="hge.form"></formly-form>
+      </form>
+      <div class="form-input typeahead hg-numbers" >
+        <label translate="huronHuntGroup.numbersLabel" for="numberInput"></label>
+        <p class="input-description description-block" translate="huronHuntGroup.numberHint"></p>
+        <input id="numberInput" ng-model="hge.selectedPilotNumber"
+            type="text"
+            ng-class="{'error': hge.errorNumberInput}"
+            typeahead="num for num in hge.fetchNumbers($viewValue) | limitTo:10"
+            typeahead-on-select="hge.selectPilotNumber($item)"
+            typeahead-template-url="numberTemplate.html"
+            placeholder="{{:: 'huronHuntGroup.numberPlaceholder' | translate}}"
+            ng-keypress="hge.enterNextPage($event.keyCode)"
+            typeahead-min-length="3" typeahead-wait-ms="200" focus-on/>
+        <div class="hg-number-container">
+          <cs-card-layout>
+            <cs-card class="small header-background primary pilot-number-pill"
+            ng-repeat="num in hge.model.numbers">
+              <article>
+                <header ng-class="{'open-panel' : huntGroupSA.openMemberPanelUuid === member.user.uuid}">
+                <div class="header-with-right-icon">
+                  <h5 class="ellipsis" title="{{num.number | telephoneNumber}}">{{num.number | telephoneNumber}}</h5>
+                  <i class="icon icon-close icon-lg" ng-click="hge.unSelectPilotNumber(num)"></i>
+                </div>
+                </header>
+              </article>
+            </cs-card>
+          </cs-card-layout>
+        </div>
+      </div>
       <form novalidate>
-        <formly-form model="hge.model" fields="hge.fields" form="hge.form"></formly-form>
+        <formly-form model="hge.model" fields="hge.time" form="hge.form"></formly-form>
       </form>
       <div class="hg-wrapper">
         <label for="fallback-dest">{{:: 'huronHuntGroup.fallbackLabel' | translate}}</label>
         <p>{{:: 'huronHuntGroup.fallbackDesc' | translate}}</p>
 
-        <div ng-if="hge.shouldShowFallbackLookup()" class="form-input typeahead"
-             ng-class="{'warning-typeahead': hge.shouldShowFallbackWarning()}">
-          <input type="text" ng-model="hge.selectedFallbackNumber"
-                 typeahead="user for user in hge.fetchFallbackDestination($viewValue) | limitTo: 10"
-                 typeahead-template-url="userTemplate.html" typeahead-on-select="hge.selectFallback($item)"
-                 ng-keyup="hge.validateFallbackNumber()" placeholder="{{:: 'huronHuntGroup.numberLabel' | translate}}"/>
+        <div ng-if="!hge.shouldShowFallbackPill()" class="form-input typeahead">
+          <cs-call-destination
+            model="hge.selectedFallbackNumber"
+            size="medium-12"
+            inputs="hge.callDestInputs"
+            select-type="select"
+            external-number-region-code-fn="hge.externalRegionCodeFn()"
+            ng-keyup="hge.validateFallbackNumber()"
+            internal-number-data-fn="hge.fetchFallbackDestination(data)"
+            internal-number-on-select="hge.selectFallback(data)"
+            internal-number-template-url="userTemplate.html"
+            on-change-fn="hge.setFallbackNumber(model)">
+          </cs-call-destination>
         </div>
         <div class="ellipsis warning-typeahead" ng-if="hge.shouldShowFallbackWarning()">
-            <span class="icon"></span> <span class="message">{{:: 'huronHuntGroup.invalidFallback' | translate}}</span>
+            <span class="icon icon-warning"></span> <span class="message">{{:: 'huronHuntGroup.invalidFallback' | translate}}</span>
         </div>
         <div ng-if="hge.shouldShowFallbackPill()">
           <div class="clearfix">
             <div class="small header-background primary cs-card hunt-member-card">
-              <article>
+              <article  ng-if="hge.selectedFallbackMember.member.selectableNumber">
                 <a href ng-click="hge.toggleFallback()">
                   <header>
                     <div class="header-with-right-icon">
@@ -66,6 +116,14 @@
                     </p>
                   </fieldset>
                 </section>
+              </article>
+              <article ng-if="hge.selectedFallbackMember.member.searchNumber || hge.model.fallbackDestination.number">
+                <header>
+                  <div class="header-with-right-icon">
+                    <h5 class="ellipsis">{{hge.selectedFallbackMember.member.searchNumber || hge.model.fallbackDestination.number}}</h5>
+                    <i class="icon icon-close icon-lg" ng-click="hge.removeFallbackDest()"></i>
+                  </div>
+                </header>
               </article>
             </div>
           </div>
@@ -121,12 +179,12 @@
         <div class="hgmembers">
           <div class="form-input typeahead select-member" ng-class="{'warning-typeahead': hge.isMembersInvalid()}">
             <input type="text" ng-model="hge.userSelected"
-                   typeahead="user for user in hge.fetchHuntMembers($viewValue) | limitTo: 10"
+                   typeahead="user for user in hge.fetchHuntMembers($viewValue, true) | limitTo: 10"
                    typeahead-template-url="userTemplate.html" typeahead-on-select="hge.selectHuntGroupMember($item)"
                    placeholder="{{:: 'huronHuntGroup.addMemberLabel' | translate}}">
 
             <div class="ellipsis warning-typeahead" ng-if="hge.isMembersInvalid()">
-              <span class="icon"></span> <span class="message">{{:: 'huronHuntGroup.invalidMember' | translate}}</span>
+              <span class="icon icon-warning"></span> <span class="message">{{:: 'huronHuntGroup.invalidMember' | translate}}</span>
             </div>
           </div>
           <p>{{:: 'huronHuntGroup.membersDesc' | translate}}</p>

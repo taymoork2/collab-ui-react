@@ -2,16 +2,23 @@
   'use strict';
 
   describe('Template: customerList.tpl.html', function () {
-    var $scope, $compile, $templateCache, $q, $controller, view;
-    var Authinfo, customerListToggle, Orgservice, PartnerService, FeatureToggleService, TrialService;
+    var $scope, $compile, $templateCache, $q, $controller, controller, view;
+    var Authinfo, Orgservice, PartnerService, FeatureToggleService;
     var ADD_BUTTON = '#addTrial';
     var SEARCH_FILTER = '#searchFilter';
+
+    afterEach(function () {
+      if (view) {
+        view.remove();
+      }
+      view = undefined;
+    });
 
     beforeEach(angular.mock.module('Core'));
     beforeEach(angular.mock.module('Huron'));
     beforeEach(angular.mock.module('Sunlight'));
 
-    beforeEach(inject(function ($rootScope, _$compile_, _$templateCache_, _$controller_, _$q_, _Authinfo_, _Orgservice_, _PartnerService_, _FeatureToggleService_, _TrialService_) {
+    beforeEach(inject(function ($rootScope, _$compile_, _$templateCache_, _$controller_, _$q_, _Authinfo_, _Orgservice_, _PartnerService_, _FeatureToggleService_) {
       $scope = $rootScope.$new();
       $compile = _$compile_;
       $templateCache = _$templateCache_;
@@ -19,38 +26,36 @@
       Authinfo = _Authinfo_;
       PartnerService = _PartnerService_;
       Orgservice = _Orgservice_;
-      TrialService = _TrialService_;
       FeatureToggleService = _FeatureToggleService_;
       $q = _$q_;
       $scope.timeoutVal = 1;
       $rootScope.typeOfExport = {
         USER: 1,
-        CUSTOMER: 2
+        CUSTOMER: 2,
       };
 
-      customerListToggle = false;
-
-      spyOn(TrialService, 'getTrialsList').and.returnValue($q.when({
-        data: {}
-      }));
-      spyOn(PartnerService, 'getManagedOrgsList').and.returnValue($q.when({
-        data: {}
+      spyOn(PartnerService, 'getManagedOrgsList').and.returnValue($q.resolve({
+        data: {},
       }));
 
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+      spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
 
       spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
         callback({
-          success: true
+          success: true,
         }, 200);
       });
       spyOn(Authinfo, 'isCare').and.returnValue(true);
-      spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
-        $q.when(true)
-      );
+      spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.resolve(true));
+      spyOn(FeatureToggleService, 'atlasCareInboundTrialsGetStatus').and.returnValue($q.resolve(true));
     }));
 
     describe('Add trial button', function () {
+
+      beforeEach(function () {
+        spyOn(Orgservice, 'isTestOrg').and.returnValue($q.resolve(true));
+      });
+
       it('should show by default', function () {
         initAndCompile();
         expect(view.find(ADD_BUTTON).length).toEqual(1);
@@ -64,21 +69,27 @@
     });
 
     describe('Customer name Search filter', function () {
+
+      beforeEach(function () {
+        spyOn(Orgservice, 'isTestOrg').and.returnValue($q.resolve(true));
+      });
+
       it('clicking search box should call filterList', function () {
         initAndCompile();
-        spyOn($scope, 'filterList').and.callFake(function () {});
+        spyOn(controller, 'filterList').and.callFake(function () {});
         view.find(SEARCH_FILTER).val('customerName').change();
-        expect($scope.filterList).toHaveBeenCalledWith('customerName');
+        expect(controller.filterList).toHaveBeenCalledWith('customerName');
       });
     });
 
     function initAndCompile() {
-      $controller('CustomerListCtrl', {
+      controller = $controller('CustomerListCtrl', {
         $scope: $scope,
-        customerListToggle: customerListToggle
       });
+      $scope.customerList = controller;
       var template = $templateCache.get('modules/core/customers/customerList/customerList.tpl.html');
-      view = $compile(angular.element(template))($scope);
+      var elem = angular.element(template);
+      view = $compile(elem)($scope);
       $scope.$apply();
     }
   });

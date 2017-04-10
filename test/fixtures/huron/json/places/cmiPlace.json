@@ -1,0 +1,19 @@
+{
+  "url": "https://cmi.huron-int.com/api/v2/customers/00000000-0000-0000-0000-000000000000/places/00000000-0000-0000-0000-000000000000",
+  "uuid": "00000000-0000-0000-0000-000000000000",
+  "name": "desk1483988375072@localetesting.wbx2.com",
+  "displayName": "Desk",
+  "sipAddress": null,
+  "preferredLanguage": "de_DE",
+  "numbers": [
+    {
+      "uuid": "00000000-0000-0000-0000-000000000000",
+      "internal": "5001",
+      "external": null,
+      "siteToSite": "81005001",
+      "primary": true,
+      "shared": false,
+      "url": "https://cmi.huron-int.com/api/v2/customers/00000000-0000-0000-0000-000000000000/places/00000000-0000-0000-0000-000000000000/numbers/00000000-0000-0000-0000-000000000000"
+    }
+  ]
+}

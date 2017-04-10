@@ -16,7 +16,7 @@
         ratingValue: '=',
         max: '=',
         readonly: '@',
-        onRatingSelected: '&'
+        onRatingSelected: '&',
       },
       link: function (scope) {
 
@@ -24,7 +24,7 @@
           scope.stars = [];
           for (var i = 0; i < scope.max; i++) {
             scope.stars.push({
-              filled: i < scope.ratingValue
+              filled: i < scope.ratingValue,
             });
           }
         };
@@ -35,7 +35,7 @@
           }
           scope.ratingValue = index + 1;
           scope.onRatingSelected({
-            rating: index + 1
+            rating: index + 1,
           });
         };
 
@@ -44,7 +44,7 @@
             updateStars();
           }
         });
-      }
+      },
     };
   }
 })();

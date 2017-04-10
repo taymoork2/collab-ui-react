@@ -2,18 +2,15 @@
  *      Huron Style imports
  ************************************/
 
-@import '../didAdd/_did-add';
-@import '../lineSettings/_line-settings';
-@import '../device/_hn-devices';
-@import '../callRouting/_call-routing';
-@import '../cdrLogs/cdr-logs';
 @import '../features/_features';
 @import '../sharedLine/_shared-line';
 @import '../externalNumbers/_external-numbers';
 @import '../pstnSetup/_pstn-setup';
+@import '../pstnSetup/pstnToS/_pstn-tos';
+@import '../pstnSetup/pstnSelector/_pstn-selector';
 @import '../details/_huron-details';
 @import '../snr/_snr';
 @import '../cdrLogs/cdrLadderDiagram/_cdr-diagram';
 @import '../speedDials/_speeddials';
-@import '../overview/_telephonyoverview';
+@import '../overview/_usercalloverview';
 @import '../overview/directoryNumberList';

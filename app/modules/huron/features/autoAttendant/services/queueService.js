@@ -6,12 +6,12 @@
     .factory('QueueService', function ($resource, HuronConfig) {
       return $resource(HuronConfig.getCesUrl() + '/customers/:customerId/queues/:queueId', {
         customerId: '@customerId',
-        queueId: '@queueId'
+        queueId: '@queueId',
       }, {
         'update': {
           method: 'PUT',
-          isArray: false
-        }
+          isArray: false,
+        },
       });
     });
 })();

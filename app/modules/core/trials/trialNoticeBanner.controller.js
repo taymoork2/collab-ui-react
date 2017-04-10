@@ -5,7 +5,7 @@
     .controller('TrialNoticeBannerCtrl', TrialNoticeBannerCtrl);
 
   /* @ngInject */
-  function TrialNoticeBannerCtrl($q, Authinfo, EmailService, Notification, TrialService, UserListService) {
+  function TrialNoticeBannerCtrl($q, Authinfo, Notification, TrialService, UserListService) {
     var vm = this;
     var primaryPartnerAdminId;
 
@@ -13,7 +13,7 @@
       SUCCESS: 0,
       PARTIAL_FAILURE: 1,
       TOTAL_FAILURE: 2,
-      NOT_REQUESTED: 3
+      NOT_REQUESTED: 3,
     };
 
     vm.canShow = canShow;
@@ -23,8 +23,7 @@
     vm.sendRequest = sendRequest;
     vm._helpers = {
       getPartnerInfo: getPartnerInfo,
-      sendEmail: sendEmail,
-      getWebexSiteUrl: getWebexSiteUrl
+      getWebexSiteUrl: getWebexSiteUrl,
     };
 
     init();
@@ -35,40 +34,39 @@
       TrialService.getDaysLeftForCurrentUser().then(function (daysLeft) {
         vm.daysLeft = daysLeft;
       });
-      getPartnerInfo();
 
+      getPartnerInfo();
     }
 
     function canShow() {
       return Authinfo.isUserAdmin() && !!TrialService.getTrialIds().length && (primaryPartnerAdminId !== Authinfo.getUserId());
-
     }
 
     function sendRequest() {
       var partnerOrgName = Authinfo.getOrgName();
-      var customerEmail = Authinfo.getPrimaryEmail();
-
-      return vm._helpers.sendEmail(partnerOrgName, customerEmail)
+      return TrialService.notifyPartnerTrialExt()
+        .catch(function (err) {
+          Notification.error('trials.requestConfirmTotalFailNotifyMsg');
+          vm.requestResult = vm.requestResultEnum.TOTAL_FAILURE;
+          return $q.reject(err);
+        })
         .then(function (results) {
-
-          var emailError = _.filter(results, {
-            status: 400
+          var notifySuccess = _.filter(results.data.notifyPartnerEmailStatusList, {
+            status: 200,
           });
-          if (emailError.length === 0) {
-            Notification.success('trials.requestConfirmNotifyMsg');
-            vm.requestResult = vm.requestResultEnum.SUCCESS;
-          } else if (emailError.length === vm.partnerAdmin.length) {
+
+          if (notifySuccess.length === 0) {
             Notification.error('trials.requestConfirmTotalFailNotifyMsg');
             vm.requestResult = vm.requestResultEnum.TOTAL_FAILURE;
-
+          } else if (notifySuccess.length === results.data.notifyPartnerEmailStatusList.length) {
+            Notification.success('trials.requestConfirmNotifyMsg');
+            vm.requestResult = vm.requestResultEnum.SUCCESS;
           } else {
             Notification.error('trials.requestConfirmPartialFailNotifyMsg', {
-              partnerOrgName: partnerOrgName
+              partnerOrgName: partnerOrgName,
             });
             vm.requestResult = vm.requestResultEnum.PARTIAL_FAILURE;
-
           }
-
         });
     }
 
@@ -77,19 +75,6 @@
         primaryPartnerAdminId = _.get(response, 'data.partners[0].id');
         vm.partnerAdmin = _.get(response, 'data.partners');
       });
-    }
-
-    function sendEmail(customerName, customerEmail) {
-      var webexSiteUrl = vm._helpers.getWebexSiteUrl();
-      //for all partner admins - build an array of send email function calls
-      var partnerEmail = _.map(vm.partnerAdmin, function (admin) {
-        return EmailService.emailNotifyPartnerTrialConversionRequest(
-          customerName, customerEmail, admin.userName, webexSiteUrl).catch(function (err) {
-            err.userName = admin.userName;
-            return err;
-          });
-      });
-      return $q.all(partnerEmail);
     }
 
     function getWebexSiteUrl() {

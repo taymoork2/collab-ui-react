@@ -8,7 +8,7 @@
   /* @ngInject */
   function TrackingIdInterceptor($injector) {
     var interceptor = {
-      request: request
+      request: request,
     };
 
     var TRACKING_ID = 'TrackingID';
@@ -18,14 +18,15 @@
 
     // These services don't allow TrackingID header
     var blacklist = [
-      'statuspage.io'
+      'statuspage.io',
     ];
 
     // These services don't allow Access-Control-Expose-Headers header
     var accessControlExposeHeadersRegexBlacklist = [
       // Disallow all webex.com domains except for identity.webex.com subdomain
       buildBlacklistedDomainWithWhitelistedSubdomainRegex('webex.com', ['identity']),
-      buildBlacklistedDomainRegex('webexconnect.com')
+      buildBlacklistedDomainRegex('webexconnect.com'),
+      buildBlacklistedDomainRegex('ciscoccservice.com'),
     ];
 
     return interceptor;
@@ -45,17 +46,18 @@
       } else {
         whitelistSubdomainArray = [];
       }
-      var regex = "^https://(?:";
+      var regex = "^https?://";
       if (whitelistSubdomainArray.length) {
+        // negative lookahead for whitelisted subdomains
         regex += "(?!" + _.map(whitelistSubdomain, function (subdomain) {
-          return subdomain.replace(".", "\\.") + "\\." + blacklistDomain.replace(".", "\\.");
+          return _.escapeRegExp(subdomain + '.' + blacklistDomain);
         }).join('|');
-        regex += ").*)";
-      } else {
-        regex += ".*)" + blacklistDomain.replace(".", "\\.");
+        regex += ")";
       }
+      // should only match specified domains
+      regex += ".*" + _.escapeRegExp('.' + blacklistDomain);
 
-      return new RegExp(regex);
+      return new RegExp(regex, 'i');
     }
 
     function buildBlacklistedDomainRegex(blacklistDomain) {

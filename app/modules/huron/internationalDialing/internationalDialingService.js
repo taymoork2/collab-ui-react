@@ -14,7 +14,7 @@
       INTERNATIONAL_DIALING: 'DIALINGCOSTAG_INTERNATIONAL',
       listCosRestrictions: listCosRestrictions,
       updateCosRestriction: updateCosRestriction,
-      isDisableInternationalDialing: isDisableInternationalDialing
+      isDisableInternationalDialing: isDisableInternationalDialing,
     };
 
     return internationalDialing;
@@ -22,7 +22,7 @@
     function listCosRestrictions(curUserId) {
       return UserCosRestrictionServiceV2.get({
         customerId: Authinfo.getOrgId(),
-        userId: curUserId
+        userId: curUserId,
       }, angular.bind(this, function (cosRestrictions) {
         this.cosRestrictions = cosRestrictions;
       })).$promise;
@@ -33,20 +33,20 @@
         return UserCosRestrictionServiceV2.delete({
           customerId: Authinfo.getOrgId(),
           userId: curUserId,
-          restrictionId: cosUuid
+          restrictionId: cosUuid,
         }).$promise;
       } else {
         if (cosUuid == null) {
           return UserCosRestrictionServiceV2.save({
             customerId: Authinfo.getOrgId(),
             userId: curUserId,
-            restrictionId: cosUuid
+            restrictionId: cosUuid,
           }, cosType).$promise;
         } else {
           return UserCosRestrictionServiceV2.update({
             customerId: Authinfo.getOrgId(),
             userId: curUserId,
-            restrictionId: cosUuid
+            restrictionId: cosUuid,
           }, cosType).$promise;
         }
       }

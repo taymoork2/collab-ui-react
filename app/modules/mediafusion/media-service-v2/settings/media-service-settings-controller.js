@@ -2,131 +2,136 @@
   'use strict';
 
   /* @ngInject */
-  function MediaServiceSettingsControllerV2($state, $modal, MediaServiceActivationV2, Authinfo, $stateParams, ServiceDescriptor, MailValidatorService, XhrNotificationService, Notification, FeatureToggleService) {
+  function MediaServiceSettingsControllerV2($stateParams, Analytics, FusionClusterService, hasMFVIdeoFeatureToggle, Authinfo, Orgservice, MediaClusterServiceV2, Notification) {
     var vm = this;
-    vm.config = "";
-    vm.wx2users = "";
-    vm.serviceType = "mf_mgmt";
-    vm.serviceId = "squared-fusion-media";
+    vm.config = '';
+    vm.wx2users = '';
+    vm.serviceType = 'mf_mgmt';
+    vm.hasMFVIdeoFeatureToggle = hasMFVIdeoFeatureToggle;
+    vm.serviceId = 'squared-fusion-media';
     vm.cluster = $stateParams.cluster;
-    vm.featureToggled = false;
+    vm.enableVideoQuality = false;
+    vm.setEnableVideoQuality = setEnableVideoQuality;
+    vm.createPropertySetAndAssignClusters = createPropertySetAndAssignClusters;
+    vm.updatePropertySet = updatePropertySet;
+    vm.clusterCount = 0;
+    vm.successCount = 0;
+    vm.errorCount = 0;
+    vm.settingsValue = null;
+    vm.videoPropertySet = [];
+    vm.videoPropertySetId = null;
 
-    function isFeatureToggled() {
-      return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridServicesResourceList);
-    }
-    isFeatureToggled().then(function (reply) {
-      vm.featureToggled = reply;
-    });
+    vm.emailSection = {
+      title: 'common.general',
+    };
 
-    vm.disableMediaService = function () {
-      MediaServiceActivationV2.setServiceEnabled(vm.serviceId, false).then(
-        function success() {
-          MediaServiceActivationV2.setisMediaServiceEnabled(false);
-          MediaServiceActivationV2.setServiceAcknowledged(vm.serviceId, false);
-          vm.disableOrpheusForMediaFusion();
-          if (vm.featureToggled) {
-            $state.go('services-overview');
-          } else {
-            $state.go("media-service.list", {
-              serviceType: "mf_mgmt"
-            }, {
-              reload: true
+    vm.videoQuality = {
+      title: 'mediaFusion.videoQuality.title',
+    };
+
+    var params = {
+      disableCache: true,
+    };
+
+    // Getting the value of orgSettings.isMediaFusionFullQualityVideo and setting it to enableVideoQuality
+    Orgservice.getOrg(function (response) {
+      vm.enableVideoQuality = _.get(response, 'orgSettings.isMediaFusionFullQualityVideo');
+      vm.enableVideoQuality = (vm.enableVideoQuality === undefined) ? false : vm.enableVideoQuality;
+      //Getting all the property sets
+      MediaClusterServiceV2.getPropertySets()
+        .then(function (propertySets) {
+          if (propertySets.length > 0) {
+            vm.videoPropertySet = _.filter(propertySets, {
+              name: 'videoQualityPropertySet',
             });
-          }
-        },
-        function error() {
-          XhrNotificationService.notify(error);
-        });
-    };
-
-    vm.confirmDisable = function (serviceId) {
-      $modal.open({
-        templateUrl: "modules/mediafusion/media-service-v2/settings/confirm-disable-dialog.html",
-        controller: DisableConfirmController,
-        controllerAs: "disableConfirmDialog",
-        type: 'small'
-      }).result.then(function () {
-        vm.disableMediaService(serviceId);
-      });
-    };
-
-    vm.disableOrpheusForMediaFusion = function () {
-      MediaServiceActivationV2.getUserIdentityOrgToMediaAgentOrgMapping().then(
-        function success(response) {
-          var mediaAgentOrgIdsArray = [];
-          var orgId = Authinfo.getOrgId();
-          mediaAgentOrgIdsArray = response.data.mediaAgentOrgIds;
-
-          var index = mediaAgentOrgIdsArray.indexOf(orgId);
-          mediaAgentOrgIdsArray.splice(index, 1);
-
-          index = mediaAgentOrgIdsArray.indexOf("squared");
-          mediaAgentOrgIdsArray.splice(index, 1);
-
-          if (mediaAgentOrgIdsArray.length > 0) {
-            MediaServiceActivationV2.setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
-              function success() {},
-              function error(errorResponse) {
-                Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
-                  failureMessage: errorResponse.message
-                });
-              });
-          } else {
-            MediaServiceActivationV2.deleteUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
-              function success() {},
-              function error(errorResponse) {
-                Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
-                  failureMessage: errorResponse.message
-                });
-              });
+            // If there is no property set with name mfVideoPropertycreate one
+            if (vm.videoPropertySet.length === 0) {
+              createPropertySetAndAssignClusters();
+            }
+          } else if (propertySets.length === 0) {
+            // If there is no property set create one
+            createPropertySetAndAssignClusters();
           }
         });
-    };
+    }, null, params);
 
-    vm.config = "";
-    ServiceDescriptor.getEmailSubscribers(vm.serviceId, function (error, emailSubscribers) {
-      if (!error) {
-        vm.emailSubscribers = _.map(_.without(emailSubscribers.split(','), ''), function (user) {
-          return {
-            text: user
+    function createPropertySetAndAssignClusters() {
+      // First get all clusters to form cluster id list
+      FusionClusterService.getAll()
+        .then(function (clusters) {
+          vm.clusters = _.filter(clusters, {
+            targetType: 'mf_mgmt',
+          });
+          var payLoad = {
+            'type': 'mf.group',
+            'name': 'videoQualityPropertySet',
+            'properties': {
+              'mf.videoQuality': 'false',
+            },
           };
+          // Create property set
+          MediaClusterServiceV2.createPropertySet(payLoad)
+            .then(function (response) {
+              vm.videoPropertySetId = response.data.id;
+              var clusterPayload = {
+                'assignedClusters': _.map(vm.clusters, 'id'),
+              };
+              // Assign it the property set with cluster list
+              MediaClusterServiceV2.updatePropertySetById(vm.videoPropertySetId, clusterPayload)
+                .then('', function (err) {
+                  Notification.errorWithTrackingId(err, 'mediaFusion.videoQuality.error');
+                });
+            });
         });
+    }
+
+    function setEnableVideoQuality() {
+      //Setting the value for video quality in CI.
+      var settings = {
+        isMediaFusionFullQualityVideo: vm.enableVideoQuality,
+      };
+      Orgservice.setOrgSettings(Authinfo.getOrgId(), settings);
+      //Setting the value for video quality in all clusters using Tag.
+      var payLoad = {
+        'properties': {
+          'mf.videoQuality': vm.enableVideoQuality,
+        },
+      };
+      // Check if there is value in vm.videoPropertySetId else get the propertyset id
+      if (vm.videoPropertySetId === null) {
+        MediaClusterServiceV2.getPropertySets()
+          .then(function (propertySets) {
+            if (propertySets.length > 0) {
+              var videoPropertySet = _.filter(propertySets, {
+                name: 'videoQualityPropertySet',
+              });
+              updatePropertySet(videoPropertySet[0].id, payLoad);
+            }
+          });
       } else {
-        vm.emailSubscribers = [];
+        updatePropertySet(vm.videoPropertySetId, payLoad);
       }
-    });
 
-    vm.cluster = $stateParams.cluster;
+    }
 
-    vm.writeConfig = function () {
-      var emailSubscribers = _.map(vm.emailSubscribers, function (data) {
-        return data.text;
-      }).toString();
-      if (emailSubscribers && !MailValidatorService.isValidEmailCsv(emailSubscribers)) {
-        Notification.error('mediaFusion.email.invalidEmail');
-      } else {
-        vm.savingEmail = true;
-        ServiceDescriptor.setEmailSubscribers(vm.serviceId, emailSubscribers, function (statusCode) {
-          if (statusCode === 204) {
-            Notification.success('mediaFusion.email.emailNotificationsSavingSuccess');
-          } else {
-            Notification.error('mediaFusion.email.emailNotificationsSavingError');
-          }
-          vm.savingEmail = false;
+    function updatePropertySet(id, payLoad) {
+      // Assign the modified video quality to property set
+      MediaClusterServiceV2.updatePropertySetById(id, payLoad)
+        .then(function () {
+          Notification.success('mediaFusion.videoQuality.success');
+        }, function (err) {
+          Notification.errorWithTrackingId(err, 'mediaFusion.videoQuality.error');
         });
-      }
-    };
-  }
+    }
 
-  /* @ngInject */
-  function DisableConfirmController(MediaServiceActivationV2, $modalInstance) {
-    var modalVm = this;
-    modalVm.ok = function () {
-      $modalInstance.close();
+    vm.deactivateModalOptions = {
+      templateUrl: 'modules/mediafusion/media-service-v2/settings/confirm-disable-dialog.html',
+      controller: 'DisableMediaServiceController',
+      controllerAs: 'disableServiceDialog',
+      type: 'small',
     };
-    modalVm.cancel = function () {
-      $modalInstance.dismiss();
-    };
+
+    Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_MEDIA_SETTINGS);
   }
 
   angular

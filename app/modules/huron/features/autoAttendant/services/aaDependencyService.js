@@ -9,7 +9,7 @@
   function AADependencyService($q, AACalendarService, AANotificationService) {
     return {
       notifyAANameChange: notifyAANameChange,
-      notifyScheduleDependent: notifyScheduleDependent
+      notifyScheduleDependent: notifyScheduleDependent,
     };
 
     function notifyAANameChange(event) {
@@ -34,7 +34,7 @@
           AANotificationService.errorResponse(error, 'autoAttendant.errorUpdateScheduleName', {
             name: event.newName,
             statusText: error.statusText,
-            status: error.status
+            status: error.status,
           });
           deferred.reject(error);
         });

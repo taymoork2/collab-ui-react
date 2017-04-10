@@ -6,9 +6,10 @@
     .factory('ScimPatchService', ScimPatchService);
 
   /* @ngInject */
-  function PartnerService($http, $rootScope, $q, $translate, Analytics, Authinfo, Auth, Config, TrialService, UrlConfig) {
+  function PartnerService($http, $rootScope, $q, $translate, Analytics, Authinfo, Auth, Config, TrialService, UrlConfig, UserRoleService) {
     var managedOrgsUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
-    var siteListUrl = UrlConfig.getAdminServiceUrl() + 'organizations/%s/siteUrls';
+    var siteListUrl = UrlConfig.getAdminServiceUrl() + 'organizations/%s/sitesProvOrderStatus';
+
     var customerStatus = {
       FREE: 0,
       TRIAL: 1,
@@ -19,27 +20,27 @@
       NOTE_EXPIRE_TODAY: 0,
       NOTE_NO_LICENSE: 0,
       NOTE_CANCELED: 0,
-      NOTE_NOT_EXPIRED: 99
+      NOTE_NOT_EXPIRED: 99,
     };
 
     var helpers = {
       createConferenceMapping: _createConferenceMapping,
+      createRoomDeviceMapping: _createRoomDeviceMapping,
       createLicenseMapping: _createLicenseMapping,
       createFreeServicesMapping: _createFreeServicesMapping,
-      buildService: _buildService,
+      LicensedService: _LicensedService,
       addService: _addService,
       removeFromFreeServices: _removeFromFreeServices,
-      isDisplayablePaidService: _isDisplayablePaidService,
+      isDisplayableService: _isDisplayableService,
       calculatePurchaseStatus: _calculatePurchaseStatus,
       calculateTotalLicenses: _calculateTotalLicenses,
-      countUniqueServices: _countUniqueServices
-
+      countUniqueServices: _countUniqueServices,
+      isServiceNotLicensed: _isServiceNotLicensed,
     };
 
     var factory = {
       customerStatus: customerStatus,
       getManagedOrgsList: getManagedOrgsList,
-      patchManagedOrgs: patchManagedOrgs,
       modifyManagedOrgs: modifyManagedOrgs,
       isLicenseATrial: isLicenseATrial,
       isLicenseActive: isLicenseActive,
@@ -54,7 +55,10 @@
       getFreeOrActiveServices: getFreeOrActiveServices,
       getSiteUrls: getSiteUrls,
       isLicenseTypeAny: isLicenseTypeAny,
-      helpers: helpers
+      getTrialMeetingServices: getTrialMeetingServices,
+      canAdminTrial: canAdminTrial,
+      isServiceManagedByCurrentPartner: isServiceManagedByCurrentPartner,
+      helpers: helpers,
     };
 
     return factory;
@@ -63,31 +67,31 @@
       var conferenceMapping = {};
       conferenceMapping[Config.offerCodes.CF] = {
         translatedOfferCode: $translate.instant('trials.meeting'),
-        order: 1
+        order: 1,
       };
       conferenceMapping[Config.offerCodes.MC] = {
         translatedOfferCode: $translate.instant('customerPage.MC'),
-        order: 2
+        order: 2,
       };
       conferenceMapping[Config.offerCodes.EE] = {
         translatedOfferCode: $translate.instant('customerPage.EE'),
-        order: 3
+        order: 3,
       };
       conferenceMapping[Config.offerCodes.TC] = {
         translatedOfferCode: $translate.instant('customerPage.TC'),
-        order: 4
+        order: 4,
       };
       conferenceMapping[Config.offerCodes.SC] = {
         translatedOfferCode: $translate.instant('customerPage.SC'),
-        order: 5
+        order: 5,
       };
       conferenceMapping[Config.offerCodes.EC] = {
         translatedOfferCode: $translate.instant('customerPage.EC'),
-        order: 6
+        order: 6,
       };
       conferenceMapping[Config.offerCodes.CMR] = {
         translatedOfferCode: $translate.instant('customerPage.CMR'),
-        order: 7
+        order: 7,
       };
 
       conferenceMapping = _.mapValues(conferenceMapping, function (offer) {
@@ -95,11 +99,32 @@
           name: offer.translatedOfferCode,
           order: offer.order,
           icon: 'icon-circle-group',
-          licenseType: Config.licenseTypes.CONFERENCING
+          licenseType: Config.licenseTypes.CONFERENCING,
         };
       });
       return conferenceMapping;
+    }
 
+    function _createRoomDeviceMapping() {
+      var offerMapping = {};
+      offerMapping[Config.offerCodes.SD] = {
+        translatedOfferCode: $translate.instant('trials.roomSystem'),
+        order: 6,
+      };
+      offerMapping[Config.offerCodes.SB] = {
+        translatedOfferCode: $translate.instant('trials.sparkBoardSystem'),
+        order: 7,
+      };
+
+      offerMapping = _.mapValues(offerMapping, function (offer) {
+        return {
+          name: offer.translatedOfferCode,
+          order: offer.order,
+          licenseType: Config.licenseTypes.SHARED_DEVICES,
+        };
+      });
+
+      return offerMapping;
     }
 
     function _createLicenseMapping() {
@@ -107,26 +132,26 @@
       licenseMapping[Config.licenseTypes.MESSAGING] = {
         name: $translate.instant('trials.message'),
         icon: 'icon-circle-message',
-        order: 0
+        order: 0,
       };
 
       licenseMapping[Config.licenseTypes.COMMUNICATION] = {
         name: $translate.instant('trials.call'),
         icon: 'icon-circle-call',
-        isCall: true,
-        order: 3
+        order: 3,
       };
 
       licenseMapping[Config.licenseTypes.SHARED_DEVICES] = {
-        name: $translate.instant('trials.roomSystem'),
+        name: $translate.instant('subscriptions.room'),
         icon: 'icon-circle-telepresence',
-        order: 6
+        isRoom: true,
+        order: 6,
       };
 
       licenseMapping[Config.licenseTypes.CARE] = {
-        name: $translate.instant('trials.care'),
+        name: $translate.instant('trials.sparkCare'),
         icon: 'icon-circle-contact-centre',
-        order: 5
+        order: 5,
       };
       return licenseMapping;
     }
@@ -139,7 +164,7 @@
         code: Config.offerCodes.MS,
         qty: 0,
         free: true,
-        order: 20
+        order: 20,
 
       }, {
         licenseType: Config.licenseTypes.CONFERENCING,
@@ -148,7 +173,7 @@
         code: Config.offerCodes.CF,
         qty: 0,
         free: true,
-        order: 21
+        order: 21,
       }, {
         licenseType: Config.licenseTypes.COMMUNICATION,
         name: $translate.instant('trials.call'),
@@ -156,29 +181,30 @@
         code: Config.offerCodes.CO,
         qty: 0,
         free: true,
-        isCall: true,
-        order: 22
+        order: 22,
       }];
       return freeServices;
 
     }
 
-    function _buildService(licenseInfo, mapping) {
+    function _LicensedService(licenseInfo, mapping) {
       var isConference = (mapping[Config.offerCodes.CF] !== undefined);
       var service;
       if (isConference) {
         service = (licenseInfo.offerName) ? mapping[licenseInfo.offerName] : mapping[Config.offerCodes.CF];
       } else {
-        service = mapping[licenseInfo.licenseType];
+        service = mapping[licenseInfo.licenseType] || mapping[licenseInfo.offerName];
         service.licenseType = licenseInfo.licenseType;
       }
-      service.qty = licenseInfo.volume;
-      return service;
+
+      _.assign(this, service);
+      this.qty = licenseInfo.volume || 0;
+
     }
 
     function _addService(services, service) {
       var existingService = _.find(services, {
-        name: service.name
+        name: service.name,
       });
       if (existingService) {
         existingService.qty = existingService.qty + service.qty;
@@ -198,53 +224,37 @@
       });
     }
 
-    function _isDisplayablePaidService(service, isCareEnabled) {
+    function _isDisplayableService(service, options) {
+      var isTrial = options.isTrial;
+      var isShowCMR = options.isShowCMR;
+      var isCareEnabled = options.isCareEnabled;
+      var isAdvanceCareEnabled = options.isAdvanceCareEnabled;
 
-      var serviceNotCareOrCareIsShown = (service.licenseType !== Config.licenseTypes.CARE) || isCareEnabled;
-      if (service.isTrial) {
-        return false;
+      var serviceNotCareOrCareIsShown = (service.licenseType !== Config.licenseTypes.CARE || isCareEnabled) &&
+        (service.licenseType !== Config.licenseTypes.ADVANCE_CARE || isAdvanceCareEnabled);
+      var serviceNotHiddenWebex = ((service.licenseType !== Config.licenseTypes.STORAGE) && (isShowCMR || service.licenseType !== Config.licenseTypes.CMR));
+      //if 'isTrial' it has to be true. Otherwise any false value is fine
+      var correctServiceStatus = true;
+      if (isTrial !== undefined) {
+        correctServiceStatus = (isTrial) ? (service.isTrial === true) : !service.isTrial;
       }
-      if ((service.licenseType !== Config.licenseTypes.STORAGE) && serviceNotCareOrCareIsShown) {
-        return true;
-      } else {
-        return false;
-      }
+      return (serviceNotHiddenWebex && serviceNotCareOrCareIsShown && correctServiceStatus);
     }
 
     function getManagedOrgsList(searchText) {
       return $http.get(managedOrgsUrl, {
         params: {
-          customerName: searchText
-        }
-      });
-    }
-
-    function patchManagedOrgs(uuid, customerOrgId) {
-      var authUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + uuid;
-
-      var payload = {
-        'schemas': [
-          'urn:scim:schemas:core:1.0',
-          'urn:scim:schemas:extension:cisco:commonidentity:1.0'
-        ],
-        'managedOrgs': [{
-          'orgId': customerOrgId,
-          'role': 'ID_Full_Admin'
-        }]
-      };
-
-      return $http({
-        method: 'PATCH',
-        url: authUrl,
-        data: payload
+          customerName: searchText,
+        },
       });
     }
 
     function modifyManagedOrgs(customerOrgId) {
       return Auth.getAuthorizationUrlList().then(function (response) {
         if (response.status === 200 && (_.indexOf(response.data.managedOrgs, customerOrgId) < 0)) {
-          patchManagedOrgs(response.data.uuid, customerOrgId);
-          Analytics.trackUserPatch(response.data.orgId, response.data.uuid);
+          var primaryEmail = Authinfo.getPrimaryEmail();
+          Analytics.trackPartnerActions(Analytics.sections.TRIAL.eventNames.PATCH, response.data.orgId, response.data.uuid);
+          return UserRoleService.enableFullAdmin(primaryEmail, customerOrgId);
         }
       });
     }
@@ -263,7 +273,7 @@
     }
 
     function isLicenseFree(license) {
-      return license && angular.isUndefined(license.isTrial);
+      return license && _.isUndefined(license.isTrial);
     }
     // end series of fn's
 
@@ -285,13 +295,14 @@
     }
 
     function getLicense(licenses, offerCode) {
-      return _.find(licenses, {
-        offerName: offerCode
-      }) || {};
+      var offers = _.filter(licenses, {
+        offerName: offerCode,
+      });
+      return (offers.length === 0) ? {} : offers;
     }
 
     function isLicenseInfoAvailable(licenses) {
-      return angular.isArray(licenses);
+      return _.isArray(licenses);
     }
 
     function setServiceSortOrder(license) {
@@ -328,7 +339,7 @@
           if (rowData.daysLeft > 0) {
             notes.sortOrder = customerStatus.NOTE_NOT_EXPIRED;
             notes.text = $translate.instant('customerPage.daysLeftToPurchase', {
-              count: rowData.daysLeft
+              count: rowData.daysLeft,
             }, 'messageformat');
           } else if (rowData.daysLeft === 0) {
             notes.sortOrder = customerStatus.NOTE_EXPIRE_TODAY;
@@ -353,13 +364,13 @@
       rowData.notes = notes;
     }
 
-    function loadRetrievedDataToList(list, isTrialData, isCareEnabled) {
+    function loadRetrievedDataToList(list, options) {
       return _.map(list, function (customer) {
-        return massageDataForCustomer(customer, isTrialData, isCareEnabled);
+        return massageDataForCustomer(customer, options);
       });
     }
 
-    function massageDataForCustomer(customer, isTrialData, isCareEnabled) {
+    function massageDataForCustomer(customer, options) {
       var edate = moment(customer.startDate).add(customer.trialPeriod, 'days').format('MMM D, YYYY');
       var dataObj = {
         trialId: customer.trialId,
@@ -375,6 +386,7 @@
         licenses: 0,
         deviceLicenses: 0,
         licenseList: [],
+        orderedServices: {},
         messaging: null,
         conferencing: null,
         communications: null,
@@ -383,6 +395,7 @@
         webexEEConferencing: null,
         webexCMR: null,
         care: null,
+        advanceCare: null,
         daysUsed: 0,
         percentUsed: 0,
         duration: customer.trialPeriod,
@@ -394,13 +407,14 @@
         isAllowedToManage: true,
         isSquaredUcOffer: false,
         notes: {},
-        isPartner: false
+        isPartner: false,
+        isTrialData: _.get(options, 'isTrialData', false),
       };
 
-      var licensesAndOffersData = parseLicensesAndOffers(customer, isCareEnabled);
-      angular.extend(dataObj, licensesAndOffersData);
+      var licensesAndOffersData = parseLicensesAndOffers(customer, options);
+      _.assign(dataObj, licensesAndOffersData);
 
-      dataObj.isAllowedToManage = isTrialData || customer.isAllowedToManage;
+      dataObj.isAllowedToManage = dataObj.isTrialData || customer.isAllowedToManage;
       dataObj.isPartner = _.get(customer, 'isPartner', false);
       dataObj.unmodifiedLicenses = _.cloneDeep(customer.licenses);
       dataObj.licenseList = customer.licenses;
@@ -411,7 +425,7 @@
 
       var daysLeft = TrialService.calcDaysLeft(customer.startDate, customer.trialPeriod);
       dataObj.daysLeft = daysLeft;
-      if (isTrialData) {
+      if (dataObj.isTrialData) {
         if (daysLeft < 0) {
           dataObj.status = $translate.instant('customerPage.expired');
           dataObj.state = 'EXPIRED';
@@ -421,12 +435,11 @@
       var serviceEntry = {
         status: dataObj.status,
         daysLeft: daysLeft,
-        customerName: dataObj.customerName
+        customerName: dataObj.customerName,
       };
 
       // havent figured out what this is doing yet...
       dataObj.sparkConferencing = initializeService(customer.licenses, Config.offerCodes.CF, serviceEntry);
-      dataObj.webexCMR = initializeService(customer.licenses, Config.offerCodes.CMR, serviceEntry);
       dataObj.communications = initializeService(customer.licenses, Config.offerCodes.CO, serviceEntry);
       dataObj.webexEventCenter = initializeService(customer.licenses, Config.offerCodes.EC, serviceEntry);
       dataObj.webexEEConferencing = initializeService(customer.licenses, Config.offerCodes.EE, serviceEntry);
@@ -434,45 +447,99 @@
       dataObj.messaging = initializeService(customer.licenses, Config.offerCodes.MS, serviceEntry);
       dataObj.webexSupportCenter = initializeService(customer.licenses, Config.offerCodes.SC, serviceEntry);
       dataObj.roomSystems = initializeService(customer.licenses, Config.offerCodes.SD, serviceEntry);
+      dataObj.sparkBoard = initializeService(customer.licenses, Config.offerCodes.SB, serviceEntry);
       dataObj.webexTrainingCenter = initializeService(customer.licenses, Config.offerCodes.TC, serviceEntry);
       dataObj.webexCMR = initializeService(customer.licenses, Config.offerCodes.CMR, serviceEntry);
       dataObj.care = initializeService(customer.licenses, Config.offerCodes.CDC, serviceEntry);
+      dataObj.advanceCare = initializeService(customer.licenses, Config.offerCodes.CVC, serviceEntry);
 
       // 12/17/2015 - Timothy Trinh
       // setting conferencing to sparkConferencing for now to preserve how
       // the customer list page currently works.
       dataObj.conferencing = dataObj.sparkConferencing;
 
-      dataObj.totalLicenses = _calculateTotalLicenses(dataObj, isCareEnabled);
-      dataObj.uniqueServiceCount = _countUniqueServices(dataObj);
       dataObj.purchased = _calculatePurchaseStatus(dataObj);
+
+      dataObj.totalLicenses = _calculateTotalLicenses(dataObj, options);
+      dataObj.uniqueServiceCount = _countUniqueServices(dataObj);
+
+      dataObj.orderedServices = _getOrderedServices(dataObj, options);
 
       setNotesSortOrder(dataObj);
       return dataObj;
     }
 
+    // The information provided by this function will be used in displaying the service icons on the customer list page.
+    function _getOrderedServices(data, options) {
+      var servicesToProcess = ['messaging', 'conferencing', 'communications', 'webexEEConferencing',
+        'roomSystems', 'sparkBoard', 'care'];
+      var servicesManagedByCurrentPartner = [];
+      var servicesManagedByAnotherPartner = [];
+
+      _.forEach(servicesToProcess, function (service) {
+        var serviceToAdd = service;
+        if (service === 'webexEEConferencing') {
+          serviceToAdd = 'webex';
+        }
+        if (service !== 'care' || (service === 'care' && _.get(options, 'isCareEnabled', true))) {
+          if (isServiceManagedByCurrentPartner(data[service])) {
+            servicesManagedByCurrentPartner.push(serviceToAdd);
+          } else {
+            servicesManagedByAnotherPartner.push(serviceToAdd);
+          }
+        }
+      });
+
+      return { servicesManagedByCurrentPartner: servicesManagedByCurrentPartner,
+        servicesManagedByAnotherPartner: servicesManagedByAnotherPartner };
+    }
+
+    function isServiceManagedByCurrentPartner(serviceObj) {
+      var currentPartnerId = Authinfo.getPrimaryEmail();
+      var currentPartnerOrgId = Authinfo.getOrgId();
+
+      var isInCurrentPartnerOrg = serviceObj.partnerOrgId === currentPartnerOrgId;
+      var isCurrentPartnerId = serviceObj.partnerEmail === currentPartnerId;
+      var isNotLicensed = _isServiceNotLicensed(serviceObj);
+      if (isInCurrentPartnerOrg || isCurrentPartnerId || isNotLicensed) {
+        return true;
+      }
+
+      return false;
+    }
+
+    // Services that are not licensed will not have the usual properties associated with a license. The volume property is a
+    // property associated with a license that we can check for undefined. Also, services that are not licensed will only have
+    // 4 default properties (customerName, daysLeft, sortOrder, and status) in the service object. So, in addition to checking
+    // for the volume property, we'll also check for the number of properties in the service object to be 4.
+    function _isServiceNotLicensed(serviceObj) {
+      var numberOfProperties = Object.keys(serviceObj).length;
+      return serviceObj.volume === undefined && numberOfProperties === 4;
+    }
+
     function _calculatePurchaseStatus(customerData) {
-      if (customerData.state === Config.licenseStatus.ACTIVE) {
-        return !_.some(customerData.licenseList, 'isTrial');
+      if (customerData.state === Config.licenseStatus.ACTIVE && customerData.licenseList) {
+        return !(customerData.licenseList.length === 0 || _.some(customerData.licenseList, 'isTrial'));
       } else {
         return false;
       }
     }
 
-    function _calculateTotalLicenses(customerData, isCareEnabled) {
+
+    function _calculateTotalLicenses(customerData, options) {
       if (customerData.purchased || customerData.isPartner) {
         return _.sumBy(customerData.licenseList, function (license) {
-          if (license.licenseType === Config.licenseTypes.STORAGE) {
+          if (!helpers.isDisplayableService(license, _.assign({ isTrial: undefined, isShowCMR: false }, options))) {
             return 0;
           } else {
-            return license.volume;
+            return license.volume || 0;
           }
         });
       } else {
         // device and care licenses can be undefined
         return customerData.licenses +
               (customerData.deviceLicenses || 0) +
-              (isCareEnabled ? (customerData.careLicenses || 0) : 0);
+              (_.get(options, 'isCareEnabled', false) ? (customerData.careLicenses || 0) : 0);
       }
     }
 
@@ -497,10 +564,21 @@
 
     function initializeService(licenses, offerCode, serviceEntry) {
       var licensesGotten = getLicense(licenses, offerCode);
-      angular.extend(licensesGotten, serviceEntry);
-      setServiceSortOrder(licensesGotten);
+      if (!_.isArray(licensesGotten)) {
+        _.assign(licensesGotten, serviceEntry);
+        setServiceSortOrder(licensesGotten);
+        return licensesGotten;
+      } else {
+        var result = {};
+        _.assign(result, licensesGotten[0], serviceEntry);
+        var qty = _.reduce(licensesGotten, function (volume, license) {
+          return volume + license.volume;
+        }, 0);
+        result.volume = qty;
+        setServiceSortOrder(result);
+        return result;
+      }
 
-      return licensesGotten;
     }
 
     function exportCSV(isCareEnabled) {
@@ -523,35 +601,35 @@
             exportedCustomer.roomSystemsEntitlements = '';
 
             var messagingLicense = _.find(customer.licenses, {
-              licenseType: Config.licenseTypes.MESSAGING
+              licenseType: Config.licenseTypes.MESSAGING,
             });
             var conferenceLicense = _.find(customer.licenses, {
-              licenseType: Config.licenseTypes.CONFERENCING
+              licenseType: Config.licenseTypes.CONFERENCING,
             });
             var communicationsLicense = _.find(customer.licenses, {
-              licenseType: Config.licenseTypes.COMMUNICATION
+              licenseType: Config.licenseTypes.COMMUNICATION,
             });
             var roomSystemsLicense = _.find(customer.licenses, {
-              licenseType: Config.licenseTypes.SHARED_DEVICES
+              licenseType: Config.licenseTypes.SHARED_DEVICES,
             });
             var careLicense = _.find(customer.licenses, {
-              licenseType: Config.licenseTypes.CARE
+              licenseType: Config.licenseTypes.CARE,
             });
 
-            if (messagingLicense && angular.isArray(messagingLicense.features)) {
+            if (messagingLicense && _.isArray(messagingLicense.features)) {
               exportedCustomer.messagingEntitlements = messagingLicense.features.join(' ');
             }
-            if (conferenceLicense && angular.isArray(conferenceLicense.features)) {
+            if (conferenceLicense && _.isArray(conferenceLicense.features)) {
               exportedCustomer.conferenceEntitlements = conferenceLicense.features.join(' ');
             }
-            if (communicationsLicense && angular.isArray(communicationsLicense.features)) {
+            if (communicationsLicense && _.isArray(communicationsLicense.features)) {
               exportedCustomer.communicationsEntitlements = communicationsLicense.features.join(' ');
             }
-            if (roomSystemsLicense && angular.isArray(roomSystemsLicense.features)) {
+            if (roomSystemsLicense && _.isArray(roomSystemsLicense.features)) {
               exportedCustomer.roomSystemsEntitlements = roomSystemsLicense.features.join(' ');
             }
             if (isCareEnabled) {
-              if (careLicense && angular.isArray(careLicense.features)) {
+              if (careLicense && _.isArray(careLicense.features)) {
                 exportedCustomer.careEntitlements = careLicense.features.join(' ');
               }
             }
@@ -578,17 +656,34 @@
         });
     }
 
-    function parseLicensesAndOffers(customer, isCareEnabled) {
+    function getTrialMeetingServices(licenseList) {
+      var conferenceMapping = helpers.createConferenceMapping();
+      var meetingServices = [];
+      _.forEach(licenseList, function (licenseInfo) {
+        if (licenseInfo.isTrial) {
+          if (licenseInfo.licenseType === Config.licenseTypes.CONFERENCING || licenseInfo.licenseType === Config.licenseTypes.CMR) {
+            var service = new helpers.LicensedService(licenseInfo, conferenceMapping);
+            helpers.addService(meetingServices, service);
+          }
+        }
+      });
+      return meetingServices;
+    }
+
+    function parseLicensesAndOffers(customer, options) {
       var partial = {
         licenses: 0,
         deviceLicenses: 0,
         isSquaredUcOffer: false,
         usage: 0,
-        offer: {}
+        offer: {},
       };
-
+      var isCareEnabled = _.get(options, 'isCareEnabled', true);
+      var isAdvanceCareEnabled = _.get(options, 'isAdvanceCareEnabled', true);
       var userServiceMapping = helpers.createLicenseMapping();
       var conferenceServices = [];
+      var roomServices = [];
+      var sparkCare = [];
       var trialService;
       var trialServices = [];
 
@@ -608,10 +703,10 @@
         if (!offerInfo) {
           continue;
         }
-
         partial.usage = offerInfo.usageCount;
         if (offerInfo.id !== Config.offerTypes.roomSystems &&
-          offerInfo.id !== Config.offerTypes.care) {
+          offerInfo.id !== Config.offerTypes.care &&
+          offerInfo.id !== Config.offerTypes.advanceCare) {
           partial.licenses = offerInfo.licenseCount;
         }
         trialService = null;
@@ -625,7 +720,6 @@
           case Config.offerTypes.squaredUC:
             partial.isSquaredUcOffer = true;
             trialService = userServiceMapping[Config.licenseTypes.COMMUNICATION];
-            trialService.isCall = true;
             break;
           case Config.offerTypes.webex:
           case Config.offerTypes.meetings:
@@ -633,24 +727,51 @@
               name: $translate.instant('customerPage.EE'),
               order: 1,
               qty: offerInfo.licenseCount,
-              isWebex: true
+              isWebex: true,
             });
             break;
           case Config.offerTypes.meeting:
             conferenceServices.push({
+              offerType: offerInfo.id,
               name: $translate.instant('trials.meeting'),
               order: 1,
-              qty: offerInfo.licenseCount
+              qty: offerInfo.licenseCount,
             });
             break;
           case Config.offerTypes.roomSystems:
-            trialService = userServiceMapping[Config.licenseTypes.SHARED_DEVICES];
-            partial.deviceLicenses = offerInfo.licenseCount;
+            roomServices.push({
+              offerType: offerInfo.id,
+              name: $translate.instant('trials.roomSystem'),
+              order: 1,
+              qty: offerInfo.licenseCount,
+            });
+            break;
+          case Config.offerTypes.sparkBoard:
+            roomServices.push({
+              offerType: offerInfo.id,
+              name: $translate.instant('trials.sparkBoardSystem'),
+              order: 2,
+              qty: offerInfo.licenseCount,
+            });
             break;
           case Config.offerTypes.care:
             if (isCareEnabled) {
-              trialService = userServiceMapping[Config.licenseTypes.CARE];
-              partial.careLicenses = offerInfo.licenseCount;
+              sparkCare.push({
+                offerTypes: offerInfo.id,
+                name: $translate.instant('trials.care'),
+                order: 1,
+                qty: offerInfo.licenseCount,
+              });
+            }
+            break;
+          case Config.offerTypes.advanceCare:
+            if (isAdvanceCareEnabled) {
+              sparkCare.push({
+                offerTypes: offerInfo.id,
+                name: $translate.instant('trials.advanceCare'),
+                order: 2,
+                qty: offerInfo.licenseCount,
+              });
             }
             break;
         }
@@ -669,30 +790,78 @@
         .join(', ');
         var licenseQty = conferenceServices[0].qty;
         var hasWebex = _.some(conferenceServices, { isWebex: true });
-        trialServices.push({ name: name, qty: licenseQty, icon: 'icon-circle-group', order: 1, hasWebex: hasWebex });
+        trialServices.push({ name: name, sub: conferenceServices, qty: licenseQty, icon: 'icon-circle-group', order: 1, hasWebex: hasWebex });
+      }
+
+      if (sparkCare.length > 0) {
+        var careName = $translate.instant('customerPage.care');
+        var uniqueSparkCare = _.uniqBy(sparkCare, 'order');
+        uniqueSparkCare = _.sortBy(uniqueSparkCare, 'order').map(function (o) {
+          o['icon'] = 'icon-circle-contact-centre';
+          return o;
+        });
+        partial.careLicenses = _.sumBy(uniqueSparkCare, 'qty');
+        trialServices.push({ name: careName, sub: uniqueSparkCare, qty: partial.careLicenses, icon: 'icon-circle-contact-centre', order: 5, isSparkCare: true });
+      }
+
+      if (roomServices.length > 0) {
+        trialService = userServiceMapping[Config.licenseTypes.SHARED_DEVICES];
+        partial.isRoomSystems = true;
+        var sbTrial = _.chain(roomServices)
+          .filter({ offerType: Config.offerTypes.sparkBoard })
+          .last()
+          .value();
+        var sdTrial = _.chain(roomServices)
+          .filter({ offerType: Config.offerTypes.roomSystems })
+          .last()
+          .value();
+        trialService.sub = [];
+        if (sbTrial) {
+          partial.deviceLicenses += sbTrial.qty || 0;
+          trialService.sub.push(sbTrial);
+        }
+        if (sdTrial) {
+          partial.deviceLicenses += sdTrial.qty || 0;
+          trialService.sub.push(sdTrial);
+        }
+        trialService.qty = partial.deviceLicenses;
+        trialServices.push(trialService);
       }
 
       partial.offer.trialServices = _.chain(trialServices).sortBy('order').uniq().value();
       return partial;
     }
 
-    function getFreeOrActiveServices(customer, isCareEnabled) {
+    function getFreeOrActiveServices(customer, options) {
 
       var paidServices = [];
       var meetingServices = [];
+      var roomDevices = [];
       var service = null;
       var result = null;
+      var isCareEnabled = options.isCareEnabled;
+      var isAdvanceCareEnabled = options.isAdvanceCareEnabled;
+      var isTrial = options.isTrial;
 
       var meetingHeader = {
         licenseType: 'MEETING',
         isMeeting: true,
         name: $translate.instant('customerPage.meeting'),
         icon: 'icon-circle-group',
-        order: 1
+        order: 1,
+      };
+
+      var roomDevicesHeader = {
+        licenseType: Config.licenseTypes.SHARED_DEVICES,
+        isRoom: true,
+        name: $translate.instant('subscriptions.room'),
+        icon: 'icon-circle-telepresence',
+        order: 26,
       };
 
       var licenseMapping = helpers.createLicenseMapping();
       var conferenceMapping = helpers.createConferenceMapping();
+      var roomDeviceMapping = helpers.createRoomDeviceMapping();
       var freeServices = helpers.createFreeServicesMapping();
 
       _.forEach(_.get(customer, 'licenseList', []), function (licenseInfo) {
@@ -700,18 +869,21 @@
         if (licenseInfo) {
           helpers.removeFromFreeServices(freeServices, licenseInfo);
           //from paid or free services
-          if (helpers.isDisplayablePaidService(licenseInfo, isCareEnabled)) { //if conference
+          if (helpers.isDisplayableService(licenseInfo, { isTrial: isTrial, isShowCMR: true, isCareEnabled: isCareEnabled, isAdvanceCareEnabled: isAdvanceCareEnabled })) { //if conference
             if (licenseInfo.licenseType === Config.licenseTypes.CONFERENCING || licenseInfo.licenseType === Config.licenseTypes.CMR) {
-              service = helpers.buildService(licenseInfo, conferenceMapping);
+              service = new helpers.LicensedService(licenseInfo, conferenceMapping);
               helpers.addService(meetingServices, service);
+            } else if (licenseInfo.licenseType === Config.licenseTypes.SHARED_DEVICES) {
+              service = new helpers.LicensedService(licenseInfo, roomDeviceMapping);
+              helpers.addService(roomDevices, service);
             } else {
-              service = helpers.buildService(licenseInfo, licenseMapping);
+              service = new helpers.LicensedService(licenseInfo, licenseMapping);
               helpers.addService(paidServices, service);
             }
           }
         }
       });
-
+      // handle meeting services
       //if only one meeting service -- move to the services list
       if (meetingServices.length === 1) {
         var singleMeetingService = meetingServices.shift();
@@ -721,17 +893,29 @@
       //if there is more than one
       if (meetingServices.length >= 1) {
         var totalQ = _.reduce(meetingServices, function (prev, curr) {
-          return {
-            qty: prev.qty + curr.qty
+          return (curr.licenseType !== Config.licenseTypes.CMR) ? {
+            qty: prev.qty + curr.qty,
+          } : {
+            qty: prev.qty + 0,
           };
         });
-
         _.merge(meetingHeader, {
           qty: totalQ.qty,
-          sub: _.sortBy(meetingServices, 'order')
+          sub: _.sortBy(meetingServices, 'order'),
         });
-
         paidServices.push(meetingHeader);
+      }
+
+      //handle room devices
+      if (roomDevices.length) {
+        totalQ = _.reduce(roomDevices, function (prev, curr) {
+          return prev + curr.qty;
+        }, 0);
+        _.merge(roomDevicesHeader, {
+          qty: totalQ,
+          sub: _.sortBy(roomDevices, 'order'),
+        });
+        paidServices.push(roomDevicesHeader);
       }
 
       if (freeServices.length > 0 || paidServices.length > 0) {
@@ -740,12 +924,27 @@
       return result;
     }
 
+    function canAdminTrial(licenseList) {
+      // no trials -- can't admin.
+      // right now all services in trial are managed by the same org. So - one matches => all match.
+      // it is possible that partnerOrg is null. In that case -- check email
+      return !!_.find(licenseList, function (license) {
+        var partnerOrgId = _.get(license, 'partnerOrgId');
+        if (license.isTrial) {
+          if (_.isNil(partnerOrgId)) {
+            return _.get(license, 'partnerEmail') === Authinfo.getPrimaryEmail();
+          }
+          return partnerOrgId === Authinfo.getOrgId();
+        }
+      });
+    }
+
     function getSiteUrls(customerId) {
       var url;
       if (!customerId) {
         return $q.reject('A Customer Organization Id must be passed');
       } else {
-        url = siteListUrl.replace('%s', customerId);
+        url = _.replace(siteListUrl, '%s', customerId);
         return $http.get(url);
       }
     }
@@ -753,11 +952,11 @@
   /* @ngInject */
   function ScimPatchService($resource, Authinfo, UrlConfig) {
     return $resource(UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/:userId', {
-      userId: '@userId'
+      userId: '@userId',
     }, {
       'update': {
-        method: 'PATCH'
-      }
+        method: 'PATCH',
+      },
     });
   }
 

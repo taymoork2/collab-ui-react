@@ -32,6 +32,7 @@ var Navigation = function () {
   this.mediaServiceMgmtTab = element(by.css('a[href="#mediaservice"]'));
   this.enterpriseResourcesTab = element(by.css('a[href="#vts"]'));
   this.utilizationTab = element(by.css('a[href="#utilization"]'));
+  this.gssTab = element(by.css('li.gssTab > a'));
 
   // hybrid services
   this.activateService = element(by.id('activateService'));
@@ -201,6 +202,11 @@ var Navigation = function () {
     utils.click(this.accountTab);
   };
 
+  this.clickGSSTab = function () {
+    utils.click(this.gssTab);
+    this.expectCurrentUrl('/gss');
+  };
+
   this.getTabCount = function () {
     return this.tabCount.then(function (tabs) {
       return tabs.length;
@@ -246,7 +252,7 @@ var Navigation = function () {
     utils.click(this.userInfoButton);
     utils.click(this.logoutButton);
     this.expectDriverCurrentUrl('/login', 'idbroker.webex.com');
-
+    browser.get('data:,');
   };
 
   this.sendFeedback = function () {
@@ -303,7 +309,7 @@ var Navigation = function () {
 
   this.navigateUsingIntegrationBackend = function (url) {
     return browser.get(getUrl(url, {
-      forceIntegration: true
+      forceIntegration: true,
     }));
   };
 

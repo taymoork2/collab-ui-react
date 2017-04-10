@@ -19,11 +19,11 @@
           },
           linkText: 'homePage.beginTrial',
           name: 'setup',
-          text: 'homePage.setUpYourTrial'
+          text: 'homePage.setUpYourTrial',
         };
 
         return notification;
-      }
+      },
     };
   }
 })();

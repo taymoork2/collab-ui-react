@@ -3,12 +3,13 @@
  */
 (function () {
   'use strict';
+
   angular
     .module('Huron')
     .controller('HuronFeatureDeleteCtrl', HuronFeatureDeleteCtrl);
 
   /* @ngInject */
-  function HuronFeatureDeleteCtrl($rootScope, $scope, $stateParams, $timeout, $translate, AAModelService, HuntGroupService, CallParkService, AutoAttendantCeService, AutoAttendantCeInfoModelService, Notification, Log, AACalendarService) {
+  function HuronFeatureDeleteCtrl($rootScope, $scope, $stateParams, $timeout, $translate, AAModelService, CallPickupGroupService, HuntGroupService, CallParkService, PagingGroupService, AutoAttendantCeService, AutoAttendantCeInfoModelService, Notification, Log, AACalendarService, CardUtils) {
     var vm = this;
     vm.deleteBtnDisabled = false;
     vm.deleteFeature = deleteFeature;
@@ -21,8 +22,12 @@
       vm.featureType = $translate.instant('huronHuntGroup.title');
     } else if (vm.featureFilter === 'CP') {
       vm.featureType = $translate.instant('callPark.title');
+    } else if (vm.featureFilter === 'PG') {
+      vm.featureType = $translate.instant('pagingGroup.title');
+    } else if (vm.featureFilter === 'PI') {
+      vm.featureType = $translate.instant('callPickup.title');
     } else {
-      vm.featureType = 'Feature';
+      vm.featureType = $translate.instant('huronFeatureDetails.feature');
     }
     vm.deleteBtnDisabled = false;
 
@@ -31,15 +36,7 @@
     vm.deleteError = deleteError;
 
     function reInstantiateMasonry() {
-      $timeout(function () {
-        $('.cs-card-layout').masonry('destroy');
-        $('.cs-card-layout').masonry({
-          itemSelector: '.cs-card',
-          columnWidth: '.cs-card',
-          isResizable: true,
-          percentPosition: true
-        });
-      }, 0);
+      CardUtils.resize();
     }
 
     function deleteFeature() {
@@ -73,14 +70,14 @@
               .then(function () {
                 aaModel.ceInfos.splice(delPosition, 1);
                 AutoAttendantCeInfoModelService.deleteCeInfo(aaModel.aaRecords, ceInfoToDelete);
-                if (angular.isDefined(scheduleId)) {
+                if (!_.isUndefined(scheduleId)) {
                   AACalendarService.deleteCalendar(scheduleId);
                 }
                 deleteSuccess();
               },
-                function (response) {
-                  deleteError(response);
-                });
+              function (response) {
+                deleteError(response);
+              });
           });
       } else if (vm.featureFilter === 'HG') {
         HuntGroupService.deleteHuntGroup(vm.featureId).then(
@@ -100,15 +97,31 @@
             deleteError(response);
           }
         );
-      } else {
-        return;
+      } else if (vm.featureFilter === 'PG') {
+        PagingGroupService.deletePagingGroup(vm.featureId).then(
+          function () {
+            deleteSuccess();
+          },
+          function (response) {
+            deleteError(response);
+          }
+        );
+      } else if (vm.featureFilter === 'PI') {
+        CallPickupGroupService.deletePickupGroup(vm.featureId).then(
+          function () {
+            deleteSuccess();
+          },
+          function (response) {
+            deleteError(response);
+          }
+        );
       }
     }
 
     function deleteSuccess() {
       vm.deleteBtnDisabled = false;
 
-      if (angular.isFunction($scope.$dismiss)) {
+      if (_.isFunction($scope.$dismiss)) {
         $scope.$dismiss();
       }
 
@@ -116,7 +129,7 @@
         $rootScope.$broadcast('HURON_FEATURE_DELETED');
         Notification.success('huronFeatureDetails.deleteSuccessText', {
           featureName: vm.featureName,
-          featureType: vm.featureType
+          featureType: vm.featureType,
         });
         reInstantiateMasonry();
       }, 250);
@@ -125,28 +138,28 @@
     function deleteError(response) {
       vm.deleteBtnDisabled = false;
 
-      if (angular.isFunction($scope.$dismiss)) {
+      if (_.isFunction($scope.$dismiss)) {
         $scope.$dismiss();
       }
       Log.warn('Failed to delete the ' + vm.featureType + ' with name: ' + vm.featureName + ' and id:' + vm.featureId);
 
       var error = $translate.instant('huronFeatureDetails.deleteFailedText', {
         featureName: vm.featureName,
-        featureType: vm.featureType
+        featureType: vm.featureType,
       });
       if (response) {
         if (response.status) {
           error += $translate.instant('errors.statusError', {
-            status: response.status
+            status: response.status,
           });
-          if (response.data && angular.isString(response.data)) {
+          if (response.data && _.isString(response.data)) {
             error += ' ' + $translate.instant('huronFeatureDetails.messageError', {
-              message: response.data
+              message: response.data,
             });
           }
         } else {
           error += 'Request failed.';
-          if (angular.isString(response.data)) {
+          if (_.isString(response.data)) {
             error += ' ' + response.data;
           }
         }

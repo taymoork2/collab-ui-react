@@ -8,7 +8,7 @@
   function DownloadsCtrl($scope, $location, UrlConfig, Userservice) {
     $scope.email = $location.search().email;
     $scope.tlData = {
-      email: $scope.email
+      email: $scope.email,
     };
 
     $scope.webClientURL = UrlConfig.getWebClientUrl();

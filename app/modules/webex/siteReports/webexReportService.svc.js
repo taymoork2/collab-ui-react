@@ -18,8 +18,6 @@
     //ok, we need a unique global self.
     //the above self is overloaded in places.
 
-    //var loc = $translate.use().replace("_", "-");
-
     var common_reports_pageids = ["meetings_in_progess",
       "meeting_usage",
       "recording_usage",
@@ -31,25 +29,25 @@
       "event_center_site_summary",
       "event_center_scheduled_events",
       "event_center_held_events",
-      "event_center_report_template"
+      "event_center_report_template",
     ];
 
     var support_center_pageids = ["support_center_support_sessions",
       "support_center_call_volume",
       "support_center_csr_activity",
       "support_center_url_referral",
-      "support_center_allocation_queue"
+      "support_center_allocation_queue",
     ];
 
     var training_center_pageids = ["training_usage",
       "registration",
       "recording",
       "coupon",
-      "attendee"
+      "attendee",
     ];
 
     var remote_access_pageids = ["remote_access_computer_usage",
-      "remote_access_csrs_usage", "remote_access_computer_tracking"
+      "remote_access_csrs_usage", "remote_access_computer_tracking",
     ];
 
     //This can be used for translations
@@ -78,7 +76,7 @@
       "recording": "tc_recorded_session_access_report",
       "registration": "tc_registration_report",
       "attendee": "tc_training_report_attendee",
-      "training_usage": "tc_usage"
+      "training_usage": "tc_usage",
     };
 
     //All card names are hard coded in all languages except for the commom
@@ -87,7 +85,7 @@
       "training_center": "Training Center",
       "support_center": "Support Center",
       "event_center": "Event Center",
-      "remote_access": "Remote Access"
+      "remote_access": "Remote Access",
     };
 
     /*var pinnnedItems = ["meeting_usage", "attendee", "event_center_overview",
@@ -95,7 +93,7 @@
     ];*/
 
     var pinnnedItems = ["meeting_in_progess", "training_usage", "event_center_overview",
-      "support_center_support_sessions", "remote_access_computer_usage"
+      "support_center_support_sessions", "remote_access_computer_usage",
     ];
 
     this.reverseMapping = function (mapping) {
@@ -152,7 +150,7 @@
       this.reportPageIframeUrl = theUrl;
       this.modifiedUrl = this.reportPageIframeUrl;
       this.toUIsrefString = function () {
-        return "webex-reports.webex-reports-iframe({" +
+        return "webex-reports-iframe({" +
           "  siteUrl:" + "'" + this.siteUrl + "'" + "," +
           "  reportPageId:" + "'" + this.reportPageId + "'" + "," +
           "  reportPageIframeUrl:" + "'" + this.reportPageIframeUrl + "'" +
@@ -212,14 +210,14 @@
         return new UIsref(thelink, "ReportID", self.site_url);
       });
       this.isEmpty = function () {
-        return (angular.isUndefined(self.uisrefs)) || (self.uisrefs.length === 0);
+        return (_.isUndefined(self.uisrefs)) || (self.uisrefs.length === 0);
       };
       this.isNotEmpty = function () {
         return !self.isEmpty();
       };
       this.subsections = [];
       this.hasNoSubsections = function () {
-        return (angular.isUndefined(self.subsections)) || (self.subsections.length === 0);
+        return (_.isUndefined(self.subsections)) || (self.subsections.length === 0);
       };
       this.hasSubsections = function () {
         return !self.hasNoSubsections();
@@ -232,7 +230,7 @@
         var theComparator = function (aRef, bRef) {
           var atranslatedString = aRef.reportPageId_translated;
           var btranslatedString = bRef.reportPageId_translated;
-          var loc = $translate.use().replace("_", "-");
+          var loc = _.replace($translate.use(), "_", "-");
           var compareResult = atranslatedString.localeCompare(btranslatedString, loc);
           return compareResult;
         };
@@ -282,14 +280,14 @@
       var training_center = new ReportsSection("training_center", siteUrl, ["/u/y/z", "www.yahoo.com"], "TC", "en");
       var remote_access = new ReportsSection("remote_access", siteUrl, ["/u/y/z", "www.yahoo.com"], "RA", "en");
 
-      if (angular.isDefined(mapJson)) {
+      if (!_.isUndefined(mapJson)) {
         //use the above 5 lists to gather all the UISrefs
         [
           [common_reports_pageids, common_reports],
           [training_center_pageids, training_center],
           [support_center_pageids, support_center],
           [event_center_pageids, event_center],
-          [remote_access_pageids, remote_access]
+          [remote_access_pageids, remote_access],
         ].forEach(function (xs) {
           var section = xs[1];
           var category_Name = section.category_Name;
@@ -337,13 +335,13 @@
       infoCardObj.iframeLinkObj1.iframePageObj = {
         id: "infoCardMeetingInProgress",
         label: $translate.instant("webexSiteReports.meeting_in_progess"),
-        uiSref: null
+        uiSref: null,
       };
 
       infoCardObj.iframeLinkObj2.iframePageObj = {
         id: "infoCardMeetingUsage",
         label: $translate.instant("webexSiteReports.meeting_usage"),
-        uiSref: null
+        uiSref: null,
       };
 
       var reportsObject = {
@@ -353,7 +351,7 @@
         cardsSectionId: siteUrl + "-" + "cardsSection",
         siteUrl: siteUrl,
         siteName: siteName,
-        infoCardObj: infoCardObj
+        infoCardObj: infoCardObj,
       };
 
       WebExXmlApiFact.getSessionTicket(siteUrl, siteName).then(
@@ -400,7 +398,7 @@
               ) {
 
                 reportsObject.hasLoadError = true;
-              } else if (angular.isUndefined(reportPagesInfoJson.bodyJson.ns1_siteAdminNavUrl)) {
+              } else if (_.isUndefined(reportPagesInfoJson.bodyJson.ns1_siteAdminNavUrl)) {
                 logMsg = funcName + "\n" +
                   "ERROR: ns1_siteAdminNavUrl is undefined" + "\n" +
                   "siteUrl=" + siteUrl;
@@ -413,7 +411,7 @@
 
                 logMsg = funcName + ": " + "ns1_siteAdminNavUrl=" + "\n" +
                   JSON.stringify(ns1_siteAdminNavUrl);
-                $log.log(logMsg);
+                Log.debug(logMsg);
 
                 var rpts = self.getReports(siteUrl, reportPagesInfoJson);
                 reportsObject["reports"] = rpts;
@@ -469,7 +467,7 @@
       return $q.all({
         // siteInfoXml: siteInfoXml,
         // meetingTypesInfoXml: meetingTypesInfoXml,
-        reportPagesInfoXml: reportPagesInfoXml
+        reportPagesInfoXml: reportPagesInfoXml,
       });
     };
 

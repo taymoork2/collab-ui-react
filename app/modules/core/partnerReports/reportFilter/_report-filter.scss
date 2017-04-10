@@ -1,0 +1,11 @@
+@import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
+
+.report-filter {
+  .filter-icon {
+    position: relative;
+    left: vr-adjust(-12);
+  }
+  .visible-report-filter {
+    display: block;
+  }
+}

@@ -12,4 +12,4 @@ export class DomainsSetting extends SettingSection {
 angular.module('Core').component('domainsSetting', {
   controller: 'DomainManagementCtrl as dv',
   templateUrl: 'modules/core/domainManagement/domainManagement.tpl.html',
-  });
+});

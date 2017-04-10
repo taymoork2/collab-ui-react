@@ -1,3 +1,5 @@
+require('./_user-preview.scss');
+
 (function () {
   'use strict';
 
@@ -9,7 +11,7 @@
       restrict: 'EA',
       replace: true,
       templateUrl: 'modules/core/users/userPreview/userInfoCard.tpl.html',
-      link: function () {}
+      link: function () {},
     };
   }
 })();

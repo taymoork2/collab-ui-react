@@ -12,7 +12,7 @@ describe('Controller: ListOrganizationsCtrl', function () {
 
     var orgServiceResponses = getJSONFixture('core/json/organizations/Orgservice.json');
     var listOrgs = orgServiceResponses.listOrgs;
-    spyOn(Orgservice, 'listOrgs').and.returnValue($q.when(listOrgs));
+    spyOn(Orgservice, 'listOrgs').and.returnValue($q.resolve(listOrgs));
 
     $scope.timeoutVal = 1;
 
@@ -22,7 +22,7 @@ describe('Controller: ListOrganizationsCtrl', function () {
       $scope: $scope,
       $state: $state,
       $timeout: $timeout,
-      Orgservice: _Orgservice_
+      Orgservice: _Orgservice_,
     });
     $scope.$apply();
   }));

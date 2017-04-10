@@ -12,7 +12,7 @@
       getData: getData,
       reset: reset,
       hasRoomSystemDeviceAvailable: hasRoomSystemDeviceAvailable,
-      canAddRoomSystemDevice: canAddRoomSystemDevice
+      canAddRoomSystemDevice: canAddRoomSystemDevice,
     };
 
     return service;
@@ -37,24 +37,24 @@
             enabled: false,
             quantity: 0,
             readonly: false,
-            valid: true
+            valid: true,
           }, {
             model: 'CISCO_DX80',
             enabled: false,
             quantity: 0,
             readonly: false,
-            valid: true
+            valid: true,
           }, {
             model: 'CISCO_MX300',
             enabled: false,
             quantity: 0,
             readonly: false,
-            valid: true
+            valid: true,
           }],
-        }
+        },
       };
 
-      _trialData = angular.copy(defaults);
+      _trialData = _.cloneDeep(defaults);
       return _trialData;
     }
 

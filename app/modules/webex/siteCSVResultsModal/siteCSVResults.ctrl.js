@@ -57,7 +57,7 @@
       vm.gridRows.push({
         id: 'export-finished-time',
         title: $translate.instant("webexCSVResultsModal.csvFinished"),
-        value: displayFinishedTime
+        value: displayFinishedTime,
       });
 
       vm.gridRows.push({
@@ -94,7 +94,7 @@
       vm.gridRows.push({
         id: 'import-finished-time',
         title: $translate.instant("webexCSVResultsModal.csvFinished"),
-        value: displayFinishedTime
+        value: displayFinishedTime,
       });
 
       vm.gridRows.push({

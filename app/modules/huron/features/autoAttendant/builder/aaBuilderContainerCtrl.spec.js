@@ -6,12 +6,12 @@ describe('Controller: AABuilderContainerCtrl', function () {
 
   var uiModel = {
     isClosedHours: false,
-    isHolidays: false
+    isHolidays: false,
   };
   var aaModel = {
     aaRecord: {
-      scheduleId: undefined
-    }
+      scheduleId: undefined,
+    },
   };
 
   var fakeModal = {
@@ -19,14 +19,14 @@ describe('Controller: AABuilderContainerCtrl', function () {
       then: function (okCallback, cancelCallback) {
         this.okCallback = okCallback;
         this.cancelCallback = cancelCallback;
-      }
+      },
     },
     close: function (item) {
       this.result.okCallback(item);
     },
     dismiss: function (type) {
       this.result.cancelCallback(type);
-    }
+    },
   };
 
   beforeEach(angular.mock.module('uc.autoattendant'));
@@ -47,7 +47,7 @@ describe('Controller: AABuilderContainerCtrl', function () {
     spyOn($modal, 'open').and.returnValue(fakeModal);
 
     controller = $controller('AABuilderContainerCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
 
   }));
@@ -55,7 +55,7 @@ describe('Controller: AABuilderContainerCtrl', function () {
   describe('openScheduleModal', function () {
 
     it('should not open the Modal on Validation error', function () {
-      spyOn(AAValidationService, 'isRouteToValidationSuccess').and.returnValue(false);
+      spyOn(AAValidationService, 'isValidCES').and.returnValue(false);
 
       controller.openScheduleModal();
 
@@ -63,12 +63,12 @@ describe('Controller: AABuilderContainerCtrl', function () {
 
     });
     it('should open the Modal on Validation success', function () {
-      spyOn(AAValidationService, 'isRouteToValidationSuccess').and.returnValue(true);
+      spyOn(AAValidationService, 'isValidCES').and.returnValue(true);
 
       controller.openScheduleModal();
       fakeModal.close({
         holidays: [],
-        hours: []
+        hours: [],
       });
 
       $scope.$apply();

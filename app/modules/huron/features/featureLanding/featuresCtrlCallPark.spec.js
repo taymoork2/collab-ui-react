@@ -2,10 +2,10 @@
 
 describe('Features Controller', function () {
 
-  var featureCtrl, $rootScope, $scope, $modal, $q, $state, $filter, $timeout, Authinfo, HuntGroupService, TelephoneNumberService, Log, Notification, getDeferred, AutoAttendantCeInfoModelService, AAModelService, FeatureToggleService, CallParkService;
+  var featureCtrl, $rootScope, $scope, $modal, $q, $state, $filter, $timeout, Authinfo, HuntGroupService, TelephoneNumberService, Log, Notification, getDeferred, AutoAttendantCeInfoModelService, AAModelService, FeatureToggleService, CallParkService, CallPickupGroupService, PagingGroupService;
   var listOfCPs = getJSONFixture('huron/json/features/callPark/cpList.json');
   var emptyListOfCPs = {
-    callparks: []
+    callparks: [],
   };
   var getCPListSuccessResp = function (data) {
     return data;
@@ -13,7 +13,7 @@ describe('Features Controller', function () {
   var getCPListFailureResp = {
     'data': 'Internal Server Error',
     'status': 500,
-    'statusText': 'Internal Server Error'
+    'statusText': 'Internal Server Error',
   };
   var callParks = {
     "callparks": [{
@@ -23,7 +23,7 @@ describe('Features Controller', function () {
       "endRange": "5012",
       "memberCount": 3,
       "featureName": "huronFeatureDetails.cp",
-      "filterValue": "CP"
+      "filterValue": "CP",
     }, {
       "id": "abcd1234-abcd-abcd-abcddef123456",
       "cardName": "Technical Support",
@@ -31,8 +31,8 @@ describe('Features Controller', function () {
       "endRange": "5010",
       "memberCount": 2,
       "featureName": "huronFeatureDetails.cp",
-      "filterValue": "CP"
-    }]
+      "filterValue": "CP",
+    }],
   };
 
   var singlePark = {
@@ -41,15 +41,15 @@ describe('Features Controller', function () {
       "name": "Technical Support",
       "startRange": "5010",
       "endRange": "5010",
-      "memberCount": 2
-    }]
+      "memberCount": 2,
+    }],
   };
 
 
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$modal_, _$state_, _$filter_, _$timeout_, _Authinfo_, _HuntGroupService_, _TelephoneNumberService_, _AutoAttendantCeInfoModelService_, _AAModelService_, _Log_, _Notification_, _FeatureToggleService_, _CallParkService_) {
+  beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$modal_, _$state_, _$filter_, _$timeout_, _Authinfo_, _HuntGroupService_, _PagingGroupService_, _CallPickupGroupService_, _TelephoneNumberService_, _AutoAttendantCeInfoModelService_, _AAModelService_, _Log_, _Notification_, _FeatureToggleService_, _CallParkService_) {
     $rootScope = _$rootScope_;
     $scope = _$rootScope_.$new();
     $modal = _$modal_;
@@ -59,6 +59,8 @@ describe('Features Controller', function () {
     $q = _$q_;
     Authinfo = _Authinfo_;
     HuntGroupService = _HuntGroupService_;
+    PagingGroupService = _PagingGroupService_;
+    CallPickupGroupService = _CallPickupGroupService_;
     CallParkService = _CallParkService_;
     TelephoneNumberService = _TelephoneNumberService_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
@@ -71,11 +73,13 @@ describe('Features Controller', function () {
     getDeferred = $q.defer();
 
     //Using a Jasmine Spy to return a promise when methods of the HuntGroupService are called
-    spyOn(HuntGroupService, 'getListOfHuntGroups').and.returnValue($q.when([]));
-    spyOn(CallParkService, 'getListOfCallParks').and.returnValue(getDeferred.promise);
-    spyOn(AutoAttendantCeInfoModelService, 'getCeInfosList').and.returnValue($q.when([]));
+    spyOn(HuntGroupService, 'getListOfHuntGroups').and.returnValue($q.resolve([]));
+    spyOn(CallParkService, 'getCallParkList').and.returnValue(getDeferred.promise);
+    spyOn(AutoAttendantCeInfoModelService, 'getCeInfosList').and.returnValue($q.resolve([]));
+    spyOn(PagingGroupService, 'getListOfPagingGroups').and.returnValue($q.resolve());
+    spyOn(CallPickupGroupService, 'getListOfPickupGroups').and.returnValue($q.resolve());
     spyOn(AAModelService, 'newAAModel').and.returnValue(getDeferred.promise);
-    spyOn(FeatureToggleService, 'supports').and.returnValue(getDeferred.promise);
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
     spyOn($state, 'go');
     spyOn(Notification, 'success');
     spyOn(Notification, 'errorResponse');
@@ -90,26 +94,26 @@ describe('Features Controller', function () {
       CallParkService: CallParkService,
       TelephoneNumberService: TelephoneNumberService,
       Log: Log,
-      Notification: Notification
+      Notification: Notification,
     });
 
   }));
 
   //TODO: re-enable after feature toggles are removed
   it('should get list of callParks and then store the data in listOfFeatures', function () {
-    getDeferred.resolve(getCPListSuccessResp(listOfCPs));
+    getDeferred.resolve(getCPListSuccessResp(listOfCPs.callparks));
     $scope.$apply();
     $timeout.flush();
     expect(featureCtrl.listOfFeatures).toEqual(callParks.callparks);
   });
   it('should get list of callParks and if there is any data, should change the pageState to showFeatures', function () {
-    getDeferred.resolve(getCPListSuccessResp(listOfCPs));
+    getDeferred.resolve(getCPListSuccessResp(listOfCPs.callparks));
     $scope.$apply();
     $timeout.flush();
     expect(featureCtrl.pageState).toEqual('showFeatures');
   });
   it('should get list of callParks and if data received is empty, should change the pageState to newFeature', function () {
-    getDeferred.resolve(getCPListSuccessResp(emptyListOfCPs));
+    getDeferred.resolve(getCPListSuccessResp(emptyListOfCPs.callparks));
     $scope.$apply();
     $timeout.flush();
     expect(featureCtrl.pageState).toEqual('NewFeature');
@@ -120,17 +124,19 @@ describe('Features Controller', function () {
     $timeout.flush();
     expect(Notification.errorResponse).toHaveBeenCalledWith(getCPListFailureResp,
       'huronFeatureDetails.failedToLoad', {
-        featureType: 'huronFeatureDetails.cpName'
+        featureType: 'huronFeatureDetails.cpName',
       });
   });
   it('should set the pageState to Loading when controller is getting data from back-end', function () {
+    $timeout.flush();
     expect(featureCtrl.pageState).toEqual('Loading');
-    getDeferred.resolve(getCPListSuccessResp(listOfCPs));
+    getDeferred.resolve(getCPListSuccessResp(listOfCPs.callparks));
     $scope.$apply();
     $timeout.flush();
     expect(featureCtrl.pageState).toEqual('showFeatures');
   });
   it('should set the pageState to Reload when controller fails to load the data for all features from back-end', function () {
+    $timeout.flush();
     expect(featureCtrl.pageState).toEqual('Loading');
     getDeferred.reject(getCPListFailureResp);
     $scope.$apply();
@@ -138,48 +144,49 @@ describe('Features Controller', function () {
     expect(featureCtrl.pageState).toEqual('Reload');
   });
   it('should be able call delete a callPark function and call the $state service', function () {
-    getDeferred.resolve(getCPListSuccessResp(emptyListOfCPs));
+    getDeferred.resolve(getCPListSuccessResp(emptyListOfCPs.callparks));
     $scope.$apply();
     $timeout.flush();
     featureCtrl.deleteHuronFeature(callParks.callparks[0]);
     expect($state.go).toHaveBeenCalledWith('huronfeatures.deleteFeature', {
       deleteFeatureName: callParks.callparks[0].cardName,
       deleteFeatureId: callParks.callparks[0].id,
-      deleteFeatureType: 'CP'
+      deleteFeatureType: 'CP',
     });
   });
   it('should receive the HURON_FEATURE_DELETED event when a callPark gets deleted', function () {
     $rootScope.$broadcast('HURON_FEATURE_DELETED', {
       deleteFeatureName: callParks.callparks[0].cardName,
       deleteFeatureId: callParks.callparks[0].id,
-      deleteFeatureType: 'CP'
+      deleteFeatureType: 'CP',
     });
     expect(featureCtrl.listOfFeatures).not.toEqual(jasmine.arrayContaining([callParks.callparks[0]]));
   });
   it('should receive the HURON_FEATURE_DELETED event and set pageState to newFeature if they are no features to show', function () {
+    $timeout.flush();
     featureCtrl.listOfFeatures = [];
     expect(featureCtrl.pageState).toEqual('Loading');
-    getDeferred.resolve(getCPListSuccessResp(singlePark));
+    getDeferred.resolve(getCPListSuccessResp(singlePark.callparks));
     $scope.$apply();
     $timeout.flush();
     expect(featureCtrl.pageState).toEqual('showFeatures');
     $rootScope.$broadcast('HURON_FEATURE_DELETED', {
       deleteFeatureName: callParks.callparks[0].cardName,
       deleteFeatureId: callParks.callparks[0].id,
-      deleteFeatureType: 'CP'
+      deleteFeatureType: 'CP',
     });
     expect(featureCtrl.listOfFeatures).not.toEqual(jasmine.arrayContaining([callParks.callparks[0]]));
     expect(featureCtrl.pageState).toEqual('NewFeature');
   });
   it('should set the view to callParks when CP filter is selected', function () {
-    getDeferred.resolve(getCPListSuccessResp(listOfCPs));
+    getDeferred.resolve(getCPListSuccessResp(listOfCPs.callparks));
     $scope.$apply();
     $timeout.flush();
     featureCtrl.setFilter('CP');
     expect(featureCtrl.listOfFeatures).toEqual(jasmine.arrayContaining(callParks.callparks));
   });
   it('should take search query and display the results according to search query', function () {
-    getDeferred.resolve(getCPListSuccessResp(listOfCPs));
+    getDeferred.resolve(getCPListSuccessResp(listOfCPs.callparks));
     $scope.$apply();
     $timeout.flush();
     featureCtrl.searchData(callParks.callparks[0].cardName);

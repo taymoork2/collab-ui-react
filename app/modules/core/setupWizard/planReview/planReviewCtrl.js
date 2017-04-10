@@ -10,37 +10,37 @@
     var vm = this;
     var classes = {
       userService: 'user-service-',
-      hasRoomSys: 'has-room-systems'
+      hasRoomSys: 'has-room-systems',
     };
 
     vm.messagingServices = {
       isNewTrial: false,
-      services: []
+      services: [],
     };
 
     vm.confServices = {
       isNewTrial: false,
-      services: []
+      services: [],
     };
 
     vm.commServices = {
       isNewTrial: false,
-      services: []
+      services: [],
     };
 
     vm.careServices = {
       isNewTrial: false,
-      services: Authinfo.getCareServices() || []
+      services: Authinfo.getCareServices() || [],
     };
 
     vm.cmrServices = {
       isNewTrial: false,
-      services: []
+      services: [],
     };
 
     vm.roomServices = {
       isNewTrial: false,
-      services: []
+      services: [],
     };
 
     vm.roomSystemsCount = 0;
@@ -52,13 +52,27 @@
     vm.isInitialized = false; // invert the logic and initialize to false so the template doesn't flicker before spinner
     vm.getUserServiceRowClass = getUserServiceRowClass;
     vm._helpers = {
-      maxServiceRows: maxServiceRows
+      maxServiceRows: maxServiceRows,
     };
     vm.isCareEnabled = false;
+    vm.isSharedMeetingsEnabled = false;
+    vm.temporarilyOverrideSharedMeetingsFeatureToggle = { default: true, defaultValue: true };
 
     //TODO this function has to be removed when atlas-care-trials feature is removed
     vm.getGridColumnClassName = function () {
       return vm.isCareEnabled ? 'small-3' : 'small-4';
+    };
+
+    vm.isSharedMeetingsLicense = function (service) {
+      return _.lowerCase(_.get(service, 'license.licenseModel', '')) === Config.licenseModel.cloudSharedMeeting;
+    };
+
+    vm.determineLicenseType = function (service) {
+      return vm.isSharedMeetingsLicense(service) ? $translate.instant('firstTimeWizard.sharedLicenses') : $translate.instant('firstTimeWizard.namedLicenses');
+    };
+
+    vm.generateLicenseTooltip = function (service) {
+      return vm.isSharedMeetingsLicense(service) ? '<div class="license-tooltip-html">' + $translate.instant('firstTimeWizard.sharedLicenseTooltip') + '</div>' : '<div class="license-tooltip-html">' + $translate.instant('firstTimeWizard.namedLicenseTooltip') + '</div>';
     };
 
     init();
@@ -77,13 +91,18 @@
 
     function init() {
 
-      FeatureToggleService.atlasCareTrialsGetStatus().then(function (careStatus) {
-        vm.isCareEnabled = careStatus && Authinfo.isCare();
-      });
+      vm.isCareEnabled = Authinfo.isCare();
 
+      if (_.get(vm, 'temporarilyOverrideSharedMeetingsFeatureToggle.default') === true) {
+        vm.isSharedMeetingsEnabled = _.get(vm, 'temporarilyOverrideSharedMeetingsFeatureToggle.defaultValue');
+      } else {
+        FeatureToggleService.atlasSharedMeetingsGetStatus().then(function (smpStatus) {
+          vm.isSharedMeetingsEnabled = smpStatus;
+        });
+      }
 
       vm.messagingServices.services = Authinfo.getMessageServices() || [];
-      angular.forEach(vm.messagingServices.services, function (service) {
+      _.forEach(vm.messagingServices.services, function (service) {
         if (service.license.isTrial) {
           vm.trialExists = true;
           vm.trialId = service.license.trialId;
@@ -95,7 +114,7 @@
       });
 
       vm.confServices.services = Authinfo.getConferenceServices() || [];
-      angular.forEach(vm.confServices.services, function (service) {
+      _.forEach(vm.confServices.services, function (service) {
         var siteUrl = service.license.siteUrl;
         var isCISite = WebExUtilsFact.isCIEnabledSite(siteUrl);
 
@@ -114,8 +133,46 @@
         }
       });
 
+      vm.hasAdvancedLicenses = function () {
+        return _.some(vm.confServices.services, function (service) {
+          return _.has(service, 'license.siteUrl');
+        });
+      };
+
+      vm.hasBasicLicenses = function () {
+        return _.some(vm.confServices.services, function (service) {
+          return _.get(service, 'license.offerName') === 'CF';
+        });
+      };
+
+      /* TODO: Refactor this functions into MultipleSubscriptions Controller */
+      vm.selectedSubscriptionHasBasicLicenses = function (subscriptionId) {
+        if (subscriptionId && subscriptionId !== Config.subscriptionState.trial) {
+          return _.some(vm.confServices.services, function (service) {
+            if (_.get(service, 'license.billingServiceId') === subscriptionId) {
+              return !_.has(service, 'license.siteUrl');
+            }
+          });
+        } else {
+          return vm.hasBasicLicenses();
+        }
+      };
+
+      /* TODO: Refactor this functions into MultipleSubscriptions Controller */
+      vm.selectedSubscriptionHasAdvancedLicenses = function (subscriptionId) {
+        if (subscriptionId && subscriptionId !== Config.subscriptionState.trial) {
+          return _.some(vm.confServices.services, function (service) {
+            if (_.get(service, 'license.billingServiceId') === subscriptionId) {
+              return _.has(service, 'license.siteUrl');
+            }
+          });
+        } else {
+          return vm.hasAdvancedLicenses();
+        }
+      };
+
       vm.commServices.services = Authinfo.getCommunicationServices() || [];
-      angular.forEach(vm.commServices.services, function (service) {
+      _.forEach(vm.commServices.services, function (service) {
         if (service.license.isTrial) {
           vm.trialExists = true;
           vm.trialId = service.license.trialId;
@@ -145,7 +202,7 @@
       }
 
       vm.roomServices.services = Authinfo.getLicenses() || [];
-      angular.forEach(vm.roomServices.services, function (service) {
+      _.forEach(vm.roomServices.services, function (service) {
         if (service.licenseType === Config.licenseTypes.SHARED_DEVICES) {
           vm.roomSystemsCount += service.volume;
           if (service.isTrial) {
@@ -173,7 +230,7 @@
       vm.cmrServices.services = Authinfo.getCmrServices();
 
       vm.sites = {};
-      angular.forEach(vm.confServices.services, function (service) {
+      _.forEach(vm.confServices.services, function (service) {
         if (service.license) {
           if (service.license.siteUrl) {
             if (!vm.sites[service.license.siteUrl]) {
@@ -183,8 +240,21 @@
           }
         }
       });
+
+      vm.sitesBasedOnBillingId = {};
+      _.forEach(vm.sites, function (services) {
+        _.forEach(services, function (service) {
+          if (_.has(service, 'license.billingServiceId')) {
+            if (!vm.sitesBasedOnBillingId[service.license.billingServiceId]) {
+              vm.sitesBasedOnBillingId[service.license.billingServiceId] = [];
+            }
+            vm.sitesBasedOnBillingId[service.license.billingServiceId].push(service);
+          }
+        });
+      });
+
       if (Object.prototype.toString.call(vm.cmrServices.services) == '[object Array]') {
-        angular.forEach(vm.cmrServices.services, function (service) {
+        _.forEach(vm.cmrServices.services, function (service) {
           if (service.license) {
             if (service.license.siteUrl) {
               if (!vm.sites[service.license.siteUrl]) {

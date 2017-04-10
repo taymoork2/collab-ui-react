@@ -23,10 +23,10 @@ stdout.on('error', function (err) {
 getStdin()
   .then(function (json) {
     orgs = JSON.parse(json).organizations;
-    orgs = _(orgs)
+    orgs = _.chain(orgs)
       .filter({
         'isAllowedToManage': true,
-        'isTestOrg': true
+        'isTestOrg': true,
       })
       .filter(function (org) {
         return re.test(org.customerName);

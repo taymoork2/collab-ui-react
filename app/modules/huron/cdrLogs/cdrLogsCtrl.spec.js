@@ -28,7 +28,7 @@ describe('Controller: CdrLogsCtrl', function () {
       Config: Config,
       formlyConfig: formlyConfig,
       CdrService: CdrService,
-      Notification: Notification
+      Notification: Notification,
     });
     //TODO: will fix this after the cdr page fix is merged.
     //$scope.$apply();

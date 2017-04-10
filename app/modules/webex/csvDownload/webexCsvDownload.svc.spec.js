@@ -1,6 +1,7 @@
 /**
  *
  */
+
 'use strict';
 
 describe('WebExCsvDownloadService.webexCreateObjectUrl() test', function () {

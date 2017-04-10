@@ -8,6 +8,14 @@ describe('LeaderBoard', function () {
   var $controller, $q, $scope, controller, Orgservice, TrialService, WebExUtilsFact;
   var usageOnlySharedDevicesFixture = getJSONFixture('core/json/organizations/usageOnlySharedDevices.json');
 
+  afterEach(function () {
+    $controller = $q = $scope = controller = Orgservice = TrialService = WebExUtilsFact = undefined;
+  });
+
+  afterAll(function () {
+    usageOnlySharedDevicesFixture = undefined;
+  });
+
   beforeEach(inject(function (_$controller_, _$q_, $rootScope, _Orgservice_, _TrialService_, _WebExUtilsFact_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
@@ -16,15 +24,15 @@ describe('LeaderBoard', function () {
     TrialService = _TrialService_;
     WebExUtilsFact = _WebExUtilsFact_;
 
-    spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.when(usageOnlySharedDevicesFixture));
-    spyOn(TrialService, 'getDaysLeftForCurrentUser').and.returnValue($q.when());
+    spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.resolve(usageOnlySharedDevicesFixture));
+    spyOn(TrialService, 'getDaysLeftForCurrentUser').and.returnValue($q.resolve());
     spyOn(WebExUtilsFact, 'isCIEnabledSite').and.returnValue(false);
     spyOn(WebExUtilsFact, 'getSiteAdminUrl').and.returnValue('https://siteAdminUrl.junk.com');
   }));
 
   function initController() {
     controller = $controller('leaderBoardCtrl', {
-      $scope: $scope
+      $scope: $scope,
     });
     $scope.$apply();
   }

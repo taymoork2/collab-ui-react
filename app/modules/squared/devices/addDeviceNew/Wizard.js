@@ -6,11 +6,11 @@
   function WizardFactory($injector) {
     function create(state) {
       return $injector.instantiate(Wizard, {
-        wizardState: state
+        wizardState: state,
       });
     }
     return {
-      create: create
+      create: create,
     };
   }
 
@@ -23,7 +23,7 @@
       wizardState.currentStateName = next;
       _.merge(wizardState.data, data);
       $state.go(next, {
-        wizard: this
+        wizard: this,
       });
     }
 
@@ -31,7 +31,7 @@
       var nav = wizardState.history.pop();
       wizardState.currentStateName = nav;
       $state.go(nav, {
-        wizard: this
+        wizard: this,
       });
     }
 
@@ -42,7 +42,7 @@
     return {
       next: next,
       back: back,
-      state: state
+      state: state,
     };
 
   }

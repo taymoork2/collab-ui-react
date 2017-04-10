@@ -1,5 +1,4 @@
 .container-ci-sync {
-
   .bottom-padding {
     padding-bottom: 30px;
   }
@@ -21,16 +20,16 @@
 
   .info {
     .info-header {
-        font-family: "CiscoSansTT Thick", Helvetica;
-        font-size: 22px;
+      font-family: 'CiscoSansTT Thick', Helvetica;
+      font-size: 22px;
     }
 
     .data-item {
-        font-family: "Consolas", "Courier New";
+      font-family: Consolas, 'Courier New';
     }
 
     .data-key {
-        font-weight: bold;
+      font-weight: bold;
     }
   }
 
@@ -49,5 +48,4 @@
   .sync-stats {
     min-width: 350px;
   }
-
 }

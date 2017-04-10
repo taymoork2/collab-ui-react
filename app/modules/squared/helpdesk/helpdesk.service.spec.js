@@ -1,21 +1,28 @@
 'use strict';
+
 describe('HelpdeskService', function () {
   beforeEach(angular.mock.module('Squared'));
 
-  var $timeout, $httpBackend, Service, urlBase, ServiceDescriptor, $scope, q, HelpdeskMockData,
-    CsdmConverter, HelpdeskHttpRequestCanceller, FeatureToggleService;
+  var $timeout, $httpBackend, Service, urlBase, ServiceDescriptor, $scope, $q, HelpdeskMockData,
+    CsdmConverter, HelpdeskHttpRequestCanceller, FeatureToggleService, CacheFactory;
 
-  beforeEach(inject(function (_$timeout_, UrlConfig, _$rootScope_, _$httpBackend_, _HelpdeskService_, _ServiceDescriptor_, _$q_, _HelpdeskMockData_, _CsdmConverter_, _HelpdeskHttpRequestCanceller_, _FeatureToggleService_) {
+  afterEach(function () {
+    $timeout = $httpBackend = Service = urlBase = ServiceDescriptor = $scope = $q = HelpdeskMockData =
+      CsdmConverter = HelpdeskHttpRequestCanceller = FeatureToggleService = CacheFactory = undefined;
+  });
+
+  beforeEach(inject(function (_$timeout_, UrlConfig, _$rootScope_, _$httpBackend_, _HelpdeskService_, _ServiceDescriptor_, _$q_, _HelpdeskMockData_, _CsdmConverter_, _HelpdeskHttpRequestCanceller_, _FeatureToggleService_, _CacheFactory_) {
     Service = _HelpdeskService_;
     ServiceDescriptor = _ServiceDescriptor_;
     HelpdeskHttpRequestCanceller = _HelpdeskHttpRequestCanceller_;
     $scope = _$rootScope_.$new();
-    q = _$q_;
+    $q = _$q_;
     $timeout = _$timeout_;
     urlBase = UrlConfig.getAdminServiceUrl();
     HelpdeskMockData = _HelpdeskMockData_;
     CsdmConverter = _CsdmConverter_;
     FeatureToggleService = _FeatureToggleService_;
+    CacheFactory = _CacheFactory_;
 
     $httpBackend = _$httpBackend_;
   }));
@@ -27,7 +34,7 @@ describe('HelpdeskService', function () {
       "displayName": "Marvel Partners",
       "meta": {
         "created": "2015-04-03T00:06:14.681Z",
-        "uri": "https://identity.webex.com/organization/scim/v1/Orgs/ce8d17f8-1734-4a54-8510-fae65acc505e"
+        "uri": "https://identity.webex.com/organization/scim/v1/Orgs/ce8d17f8-1734-4a54-8510-fae65acc505e",
       },
       "zone": "AllZone",
       "ssoEnabled": false,
@@ -41,23 +48,23 @@ describe('HelpdeskService', function () {
         "squared-syncup",
         "cloudmeetings",
         "webex-squared",
-        "ciscouc"
+        "ciscouc",
       ],
       "selfSubscribeServices": ["squared-call-initiation", "squared-syncup", "cloudMeetings", "webex-squared"],
       "manages": [{
         "orgId": "aed98e0f-485b-46b5-8623-ed48bab2f882",
-        "roles": ["id_full_admin"]
+        "roles": ["id_full_admin"],
       }, {
         "orgId": "192e66a3-3f63-45a2-a0a3-e2c5f1a97396",
-        "roles": ["id_full_admin"]
+        "roles": ["id_full_admin"],
       }, {
         "orgId": "bc1d8493-69a7-4ba7-a0c0-62abf1b57ac6",
-        "roles": ["id_full_admin"]
+        "roles": ["id_full_admin"],
       }],
       "isPartner": false,
       "delegatedAdministration": true,
       "isTestOrg": true,
-      "orgSettings": []
+      "orgSettings": [],
     };
 
     $httpBackend
@@ -77,18 +84,18 @@ describe('HelpdeskService', function () {
     var orgSearchResponseMock = {
       "items": [{
         "id": "2222",
-        "displayName": "Bill Gates Foundation"
-      }]
+        "displayName": "Bill Gates Foundation",
+      }],
     };
 
     var userSearchResult = [{
       "active": true,
       "id": "1111",
       "organization": {
-        id: "2222"
+        id: "2222",
       },
       "userName": "bill.gates",
-      "displayName": "Bill Gates"
+      "displayName": "Bill Gates",
     }];
 
     $httpBackend
@@ -112,8 +119,8 @@ describe('HelpdeskService', function () {
     var orgSearchResponseMock = {
       "items": [{
         "id": "2222",
-        "displayName": "Bill Gates Foundation"
-      }]
+        "displayName": "Bill Gates Foundation",
+      }],
     };
 
     $httpBackend
@@ -122,7 +129,7 @@ describe('HelpdeskService', function () {
 
     var error;
 
-    Service.searchUsers("whatever", "1111", 30, null, null).then(function () {}).catch(function (err) {
+    Service.searchUsers("whatever", "1111", 30, null, null).then(function () { }).catch(function (err) {
       error = err;
     });
 
@@ -140,8 +147,8 @@ describe('HelpdeskService', function () {
     var orgSearchResponseMock = {
       "items": [{
         "id": "2222",
-        "displayName": "Bill Gates Foundation"
-      }]
+        "displayName": "Bill Gates Foundation",
+      }],
     };
 
 
@@ -151,7 +158,7 @@ describe('HelpdeskService', function () {
 
     var error;
 
-    Service.searchUsers("whatever", "1111", 30, null, null).then(function () {}).catch(function (err) {
+    Service.searchUsers("whatever", "1111", 30, null, null).then(function () { }).catch(function (err) {
       error = err;
     });
 
@@ -172,36 +179,31 @@ describe('HelpdeskService', function () {
 
   it("get list of hybrid services relevant services in an org", function () {
     var serviceDescriptionsMock = [{
-      "acknowledged": false,
       "emailSubscribers": "",
       "enabled": false,
-      "id": "squared-not-fusion"
+      "id": "squared-not-fusion",
     }, {
-      "acknowledged": false,
       "emailSubscribers": "",
       "enabled": false,
-      "id": "squared-fusion-uc"
+      "id": "squared-fusion-uc",
     }, {
-      "acknowledged": false,
       "emailSubscribers": "",
       "enabled": false,
-      "id": "squared-fusion-cal"
+      "id": "squared-fusion-cal",
     }, {
-      "acknowledged": false,
       "emailSubscribers": "",
       "enabled": false,
-      "id": "squared-fusion-mgmt"
+      "id": "squared-fusion-mgmt",
     }, {
-      "acknowledged": false,
       "emailSubscribers": "",
       "enabled": false,
-      "id": "squared-a-cool-service"
+      "id": "squared-a-cool-service",
     }];
 
-    sinon.stub(ServiceDescriptor, 'servicesInOrg');
-    var deferred = q.defer();
+    sinon.stub(ServiceDescriptor, 'getServices');
+    var deferred = $q.defer();
     deferred.resolve(serviceDescriptionsMock);
-    ServiceDescriptor.servicesInOrg.returns(deferred.promise);
+    ServiceDescriptor.getServices.returns(deferred.promise);
 
     var result;
     Service.getHybridServices("1234").then(function (res) {
@@ -213,6 +215,98 @@ describe('HelpdeskService', function () {
     expect(result[0].id).toEqual("squared-fusion-uc");
     expect(result[1].id).toEqual("squared-fusion-cal");
     expect(result[2].id).toEqual("squared-fusion-mgmt");
+  });
+
+  describe('getOrgDisplayName', function () {
+
+    beforeEach(function () {
+      CacheFactory.get('helpdeskOrgDisplayNameCache').removeAll();
+    });
+
+    it('should return displayName when valid result returned', function () {
+      $httpBackend
+        .expect('GET', urlBase + 'helpdesk/search/organizations?phrase=testOrgId&limit=1')
+        .respond(200, { items: [{ displayName: 'test', id: 'testOrgId' }] });
+
+      Service.getOrgDisplayName('testOrgId')
+        .then(function (displayName) {
+          expect(displayName).toEqual('test');
+        })
+        .catch(function () {
+          expect('rejected promise').toBeFalsy();
+        });
+      $httpBackend.flush();
+    });
+
+    it('should reject promise when response.items is not an array', function () {
+
+      $httpBackend
+        .expectGET(urlBase + 'helpdesk/search/organizations?phrase=testOrgId&limit=1')
+        .respond(200, { items: 'this is not an array' });
+
+      var caughtError = false;
+      Service.getOrgDisplayName('testOrgId')
+        .catch(function () {
+          caughtError = true;
+        })
+        .finally(function () {
+          expect(caughtError).toBeTruthy();
+        });
+      $httpBackend.flush();
+    });
+
+    it('should reject promise when response.items is an empty array', function () {
+
+      $httpBackend
+        .expectGET(urlBase + 'helpdesk/search/organizations?phrase=testOrgId&limit=1')
+        .respond(200, { items: [] });
+
+      var caughtError = false;
+      Service.getOrgDisplayName('testOrgId')
+        .catch(function () {
+          caughtError = true;
+        })
+        .finally(function () {
+          expect(caughtError).toBeTruthy();
+        });
+      $httpBackend.flush();
+    });
+
+    it('should reject promise when response.items does not contain displayName', function () {
+
+      $httpBackend
+        .expectGET(urlBase + 'helpdesk/search/organizations?phrase=testOrgId&limit=1')
+        .respond(200, { items: [{ noName: 'test', id: 'testOrgId' }] });
+
+      var caughtError = false;
+      Service.getOrgDisplayName('testOrgId')
+        .catch(function () {
+          caughtError = true;
+        })
+        .finally(function () {
+          expect(caughtError).toBeTruthy();
+        });
+      $httpBackend.flush();
+    });
+
+    it('should reject promise on HTTP error', function () {
+
+      $httpBackend
+        .expectGET(urlBase + 'helpdesk/search/organizations?phrase=testOrgId&limit=1')
+        .respond(503, 'ignoreme');
+
+      var caughtError = false;
+      Service.getOrgDisplayName('testOrgId')
+        .catch(function (result) {
+          expect(result.status).toEqual(503);
+          caughtError = true;
+        })
+        .finally(function () {
+          expect(caughtError).toBeTruthy();
+        });
+      $httpBackend.flush();
+    });
+
   });
 
   it('finds cloudberry devices by display name', function () {
@@ -303,22 +397,22 @@ describe('HelpdeskService', function () {
   it('getInviteResendPayload: returns an appropriate object depending on the userData provided', function () {
     var result = Service.getInviteResendPayload({
       displayName: 'fake-displayName',
-      email: 'fake-email'
+      email: 'fake-email',
     });
     expect(result).toEqual({
       inviteList: [{
         displayName: 'fake-displayName',
-        email: 'fake-email'
-      }]
+        email: 'fake-email',
+      }],
     });
 
     result = Service.getInviteResendPayload({
       displayName: 'fake-displayName',
       email: 'fake-email',
-      onlineOrderIds: ['fake-onlineOrderId-0']
+      onlineOrderIds: ['fake-onlineOrderId-0'],
     });
     expect(result).toEqual({
-      onlineOrderIds: ['fake-onlineOrderId-0']
+      onlineOrderIds: ['fake-onlineOrderId-0'],
     });
   });
 
@@ -326,7 +420,7 @@ describe('HelpdeskService', function () {
     var fakeUserData = {
       displayName: 'fake-displayName',
       email: 'fake-email',
-      onlineOrderIds: ['fake-onlineOrderId-0']
+      onlineOrderIds: ['fake-onlineOrderId-0'],
     };
 
     spyOn(Service, 'getInviteResendUrl').and.callThrough();
@@ -346,24 +440,84 @@ describe('HelpdeskService', function () {
     $httpBackend.verifyNoOutstandingRequest();
   });
 
-  it('resendInviteEmail: checks a feature toggle and calls invokeInviteEmail', function () {
-    var fakeUserData = {
-      displayName: 'fake-displayName',
-      email: 'fake-email',
-      onlineOrderIds: ['fake-onlineOrderId-0']
-    };
+  describe('getLatestEmailEvent:', function () {
+    it('calls through to getEmailStatus()', function () {
+      spyOn(Service, 'getEmailStatus').and.returnValue($q.resolve());
+      Service.getLatestEmailEvent('fake-email@example.com');
+      expect(Service.getEmailStatus.calls.count()).toBe(1);
+      expect(Service.getEmailStatus).toHaveBeenCalledWith('fake-email@example.com');
+    });
 
-    spyOn(Service, 'invokeInviteEmail').and.callThrough();
+    it('should return the first item of the resolved promise\'s list', function () {
+      spyOn(Service, 'getEmailStatus').and.returnValue($q.resolve([{ fake: 'data' }]));
+      Service.getLatestEmailEvent('fake-email@example.com').then(function (latestEvent) {
+        expect(latestEvent).toEqual({ fake: 'data' });
+      });
+      $scope.$apply();
+    });
+  });
 
-    // TODO: fix this, currently app code is mis-using 'FeatureToggleService.supports()'
-    // - for now, stub it like it behaves synchronously
-    spyOn(FeatureToggleService, 'supports').and.returnValue(false);
+  describe('unixTimestampToUTC:', function () {
+    it('should print UTC formatted date time given a Unix timestamp in seconds', function () {
+      var timestampInSec = 1482652800;
+      expect(Service.unixTimestampToUTC(timestampInSec)).toBe('Sun, 25 Dec 2016 08:00:00 GMT');
 
-    Service.resendInviteEmail(fakeUserData);
+      timestampInSec = 1480966041.160986;
+      expect(Service.unixTimestampToUTC(timestampInSec)).toBe('Mon, 05 Dec 2016 19:27:21 GMT');
+    });
+  });
 
-    expect(FeatureToggleService.supports.calls.count()).toBe(1);
-    expect(FeatureToggleService.supports).toHaveBeenCalledWith(FeatureToggleService.features.atlasEmailStatus);
-    expect(Service.invokeInviteEmail.calls.count()).toBe(1);
-    expect(Service.invokeInviteEmail).toHaveBeenCalledWith(fakeUserData);
+  describe('resendInviteEmail:', function () {
+    var fakeUserData;
+
+    afterEach(function () {
+      fakeUserData = undefined;
+    });
+
+    beforeEach(function () {
+      fakeUserData = {
+        displayName: 'fake-displayName',
+        email: 'fake-email',
+        onlineOrderIds: ['fake-onlineOrderId-0'],
+      };
+
+      spyOn(Service, 'invokeInviteEmail');
+    });
+
+    it('always checks the feature-toggle FeatureToggleService.features.atlasEmailStatus', function () {
+      spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
+
+      Service.resendInviteEmail(fakeUserData);
+      $scope.$apply();
+
+      expect(FeatureToggleService.supports.calls.count()).toBe(1);
+      expect(FeatureToggleService.supports).toHaveBeenCalledWith(FeatureToggleService.features.atlasEmailStatus);
+    });
+
+    it('when feature-toggle disabled: simply calls invokeInviteEmail', function () {
+      spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
+
+      Service.resendInviteEmail(fakeUserData);
+      $scope.$apply();
+
+      expect(Service.invokeInviteEmail.calls.count()).toBe(1);
+      expect(Service.invokeInviteEmail).toHaveBeenCalledWith(fakeUserData);
+    });
+
+    it('when feature-toggle enabled: checks isEmailBlocked and does a delete before calling invokeInviteEmail', function () {
+      spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
+      spyOn(Service, 'isEmailBlocked').and.returnValue($q.resolve());
+
+      $httpBackend
+        .expectDELETE(/email\/bounces\?email=/).respond(200);
+
+      Service.resendInviteEmail(fakeUserData);
+      $httpBackend.flush();
+
+      expect(Service.isEmailBlocked.calls.count()).toBe(1);
+      expect(Service.isEmailBlocked).toHaveBeenCalledWith(fakeUserData.email);
+      expect(Service.invokeInviteEmail.calls.count()).toBe(1);
+      expect(Service.invokeInviteEmail).toHaveBeenCalledWith(fakeUserData);
+    });
   });
 });
