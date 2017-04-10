@@ -4975,6 +4975,7 @@
         "windows": "Windows Mobile",
         "total": "Total"
       },
+      "mobile": "Mobile",
       "cardDescription": {
         "clientType": "Summary of the types of meeting clients that are in use at an organization",
         "cloudParticipants2": ": Number of calls made within an enterprise but overflowed to a cloud cluster.",
