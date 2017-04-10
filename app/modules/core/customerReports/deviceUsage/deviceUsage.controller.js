@@ -64,39 +64,8 @@ require('modules/core/reports/amcharts-export.scss');
       clearDisplayedStats();
       vm.selectModelsPlaceholder = $translate.instant('reportsPage.usageReports.selectModelsToFilterOn');
       DeviceUsageSplunkMetricsService.reportOperation(DeviceUsageSplunkMetricsService.eventTypes.timeRangeSelected, vm.timeSelected);
-      vm.deviceFilter = vm.deviceOptions[0];
       getDataForSelectedRange(vm.timeSelected.value);
     }
-
-    vm.deviceOptions = [
-      {
-        value: 0,
-        label: $translate.instant('reportsPage.usageReports.deviceOptions.all'),
-      },
-      {
-        value: 1,
-        label: $translate.instant('reportsPage.usageReports.deviceOptions.roomSystems'),
-      },
-      {
-        value: 2,
-        label: $translate.instant('reportsPage.usageReports.deviceOptions.sparkBoard'),
-      },
-    ];
-    vm.deviceFilter = vm.deviceOptions[0];
-
-    vm.deviceUpdate = function () {
-      switch (vm.deviceFilter.value) {
-        case 0:
-          loadChartDataForDeviceType(vm.reportData);
-          break;
-        case 1:
-          loadChartDataForDeviceType(extractDeviceType('ce'));
-          break;
-        case 2:
-          loadChartDataForDeviceType(extractDeviceType('SparkBoard'));
-          break;
-      }
-    };
 
     function getDataForSelectedRange(timeSelected, models) {
       switch (timeSelected) {
@@ -117,29 +86,6 @@ require('modules/core/reports/amcharts-export.scss');
           dateRange = DeviceUsageDateService.getDateRangeForLastNTimeUnits(7, 'day');
           loadLastWeek(dateRange, models);
       }
-    }
-
-    function extractDeviceType(deviceCategory) {
-      var extract = _.chain(vm.reportData).reduce(function (result, item) {
-        if (typeof result[item.time] === 'undefined') {
-          result[item.time] = {
-            callCount: 0,
-            totalDuration: 0,
-            pairedCount: 0,
-          };
-        }
-        if (item.deviceCategories[deviceCategory]) {
-          result[item.time].callCount += item.deviceCategories[deviceCategory].callCount;
-          result[item.time].totalDuration += item.deviceCategories[deviceCategory].totalDuration;
-          result[item.time].pairedCount += item.deviceCategories[deviceCategory].pairedCount;
-        }
-        return result;
-      }, {}).map(function (value, key) {
-        value.totalDurationY = (value.totalDuration / 3600).toFixed(2);
-        value.time = key;
-        return value;
-      }).value();
-      return extract;
     }
 
     $scope.$watch(function () {
@@ -217,11 +163,6 @@ require('modules/core/reports/amcharts-export.scss');
       amChart.valueAxes[0].maximum = (max / 3600) * 1.1;
     }
 
-    function loadChartDataForDeviceType(data) {
-      amChart.dataProvider = data;
-      amChart.validateData();
-    }
-
     function loadLastWeek(dates, models) {
       vm.waitingForDeviceMetrics = true;
       vm.waitForLeast = true;
@@ -295,7 +236,7 @@ require('modules/core/reports/amcharts-export.scss');
             target.push({
               "name": deviceInfo[index].displayName,
               "info": deviceInfo[index].info,
-              "duration": secondsTohhmmss(device.totalDuration),
+              "duration": secondsTohhmmss(device.callDuration),
               "calls": device.callCount });
           });
         });
