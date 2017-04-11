@@ -1,11 +1,9 @@
 'use strict';
 
 describe('Controller: DevicesCtrlHuron', function () {
-  var controller, $scope, $q, $stateParams, $state, $controller, CsdmHuronUserDeviceService, poller, CsdmDataModelService, FeatureToggleService, Userservice, Authinfo;
+  var controller, $scope, $q, $stateParams, $state, CsdmUpgradeChannelService, $httpBackend, UrlConfig, $controller, CsdmHuronUserDeviceService, poller, CsdmDataModelService, FeatureToggleService, Userservice, Authinfo;
 
   beforeEach(angular.mock.module('Huron'));
-
-  var deviceList = {};
 
   var userOverview = {
     enableAuthCodeLink: jasmine.createSpy(),
@@ -13,11 +11,14 @@ describe('Controller: DevicesCtrlHuron', function () {
   };
 
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$stateParams_, _$state_, _CsdmHuronUserDeviceService_, _CsdmDataModelService_, _FeatureToggleService_, _Userservice_, _Authinfo_) {
+  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$stateParams_, _$state_, _$httpBackend_, _UrlConfig_, _CsdmUpgradeChannelService_, _CsdmHuronUserDeviceService_, _CsdmDataModelService_, _FeatureToggleService_, _Userservice_, _Authinfo_) {
     $scope = _$rootScope_.$new();
     $scope.userOverview = userOverview;
     $stateParams = _$stateParams_;
     $q = _$q_;
+    $httpBackend = _$httpBackend_;
+    UrlConfig = _UrlConfig_;
+    CsdmUpgradeChannelService = _CsdmUpgradeChannelService_;
     CsdmHuronUserDeviceService = _CsdmHuronUserDeviceService_;
     CsdmDataModelService = _CsdmDataModelService_;
     $state = _$state_;
@@ -41,10 +42,13 @@ describe('Controller: DevicesCtrlHuron', function () {
     poller = {};
 
     spyOn(CsdmHuronUserDeviceService, 'create').and.returnValue(poller);
-    spyOn(CsdmDataModelService, 'reloadDevicesForUser').and.returnValue($q.resolve(deviceList));
+    spyOn(CsdmDataModelService, 'reloadDevicesForUser').and.returnValue($q.resolve({}));
     spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.resolve(false));
     spyOn(Userservice, 'getUser');
     spyOn(Authinfo, 'isDeviceMgmt').and.returnValue(true);
+    spyOn(CsdmUpgradeChannelService, 'getUpgradeChannelsPromise').and.returnValue($q.resolve([]));
+    $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200);
+    $httpBackend.whenGET(UrlConfig.getCsdmServiceUrl() + '/organization/null/upgradeChannels').respond(200, []);
 
   }));
 
@@ -66,6 +70,27 @@ describe('Controller: DevicesCtrlHuron', function () {
     initController();
     expect(controller).toBeDefined();
     expect(controller.csdmHuronUserDeviceService).toBe(poller);
+  });
+
+  describe('device settings', function () {
+    it('should not be visible without "cloudberryLyraConfig" feature toggle', function () {
+      spyOn(FeatureToggleService, 'cloudberryLyraConfigGetStatus').and.returnValue($q.resolve(false));
+      initController();
+      expect(controller.showDeviceSettings).toBeFalsy();
+    });
+
+    it('should not be visible with "cloudberryLyraConfig" feature toggle and without channels', function () {
+      spyOn(FeatureToggleService, 'cloudberryLyraConfigGetStatus').and.returnValue($q.resolve(true));
+      initController();
+      expect(controller.showDeviceSettings).toBeFalsy();
+    });
+
+    it('should be visible with "cloudberryLyraConfig" feature toggle and with channels', function () {
+      CsdmUpgradeChannelService.getUpgradeChannelsPromise.and.returnValue($q.resolve(['a channel', 'and another']));
+      spyOn(FeatureToggleService, 'cloudberryLyraConfigGetStatus').and.returnValue($q.resolve(true));
+      initController();
+      expect(controller.showDeviceSettings).toBeTruthy();
+    });
   });
 
   describe('activate() method', function () {

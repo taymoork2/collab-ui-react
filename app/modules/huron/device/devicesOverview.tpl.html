@@ -9,3 +9,10 @@
   </uc-device-list>
 </cs-sp-section>
 
+<cs-sp-section ng-if="ucDevices.showDeviceSettings">
+  <uc-device-settings
+    owner-type="user"
+    owner-id="ucDevices.currentUser.id"
+    device-list="ucDevices.devices">
+  </uc-device-settings>
+</cs-sp-section>
