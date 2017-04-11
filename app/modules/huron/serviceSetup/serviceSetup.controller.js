@@ -824,26 +824,29 @@
     }
 
     function loadVoicemailPilotNumber(site) {
-      if (vm.model.site.voicemailPilotNumberGenerated === 'false' &&
-            (site.voicemailPilotNumber.length < 40)) {
+      var voicemailPilotNumber = _.get(site, 'voicemailPilotNumber');
+
+      if (vm.model.site.voicemailPilotNumberGenerated === 'false' && voicemailPilotNumber &&
+            (voicemailPilotNumber.length < 40)) {
         vm.model.ftswCompanyVoicemail.ftswExternalVoicemail = true;
       } else {
         vm.model.ftswCompanyVoicemail.ftswExternalVoicemail = false;
       }
-      if (site.voicemailPilotNumber === Authinfo.getOrgId()) {
+
+      if (voicemailPilotNumber === Authinfo.getOrgId()) {
         // There may be existing customers who have yet to set the company
         // voicemail number; likely they have it set to orgId.
         // Remove this logic once we can confirm no existing customers are configured
         // this way.
         vm.model.site.voicemailPilotNumber = undefined;
-      } else if (site.voicemailPilotNumber) {
-        vm.model.site.voicemailPilotNumber = site.voicemailPilotNumber;
+      } else if (voicemailPilotNumber) {
+        vm.model.site.voicemailPilotNumber = voicemailPilotNumber;
         vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
 
         if (vm.model.ftswCompanyVoicemail.ftswExternalVoicemail) {
           vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = {
-            pattern: site.voicemailPilotNumber,
-            label: TelephoneNumberService.getDIDLabel(site.voicemailPilotNumber),
+            pattern: voicemailPilotNumber,
+            label: TelephoneNumberService.getDIDLabel(voicemailPilotNumber),
           };
         }
       }
