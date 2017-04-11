@@ -1,6 +1,11 @@
 import { HuronSettingsComponent } from './settings.component';
 import { HuronSettingsService } from './settings.service';
 import { HuronSettingsOptionsService } from './settingsOptions.service';
+import numberServiceModule from 'modules/huron/numbers';
+import dialPlanServiceModule from 'modules/huron/dialPlans';
+import siteServiceModule from 'modules/huron/sites';
+import modalServiceModule from 'modules/core/modal';
+import customerServiceModule from 'modules/huron/customer';
 import preferredLanguageModule from 'modules/huron/settings/preferredLanguage';
 import extensionRangeModule from 'modules/huron/settings/extensionRange';
 import extensionLengthModule from 'modules/huron/settings/extensionLength';
@@ -28,6 +33,17 @@ export default angular
     'atlas.templates',
     'collab.ui',
     'pascalprecht.translate',
+    require('modules/huron/lineSettings/callerIdService'),
+    require('modules/huron/settings/voicemailMessageAction.service'),
+    require('modules/huron/pstnSetup/terminusServices'),
+    require('modules/huron/pstnSetup/pstnSetup.service'),
+    require('modules/huron/pstnSetup/pstnServiceAddress/pstnServiceAddress.service'),
+    require('modules/huron/pstnSetup/pstnSetupStates.service'),
+    numberServiceModule,
+    dialPlanServiceModule,
+    siteServiceModule,
+    modalServiceModule,
+    customerServiceModule,
     preferredLanguageModule,
     extensionRangeModule,
     extensionLengthModule,

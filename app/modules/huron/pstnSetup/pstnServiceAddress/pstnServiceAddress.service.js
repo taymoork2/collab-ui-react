@@ -1,8 +1,12 @@
 (function () {
   'use strict';
 
-  angular.module('Huron')
-    .factory('PstnServiceAddressService', PstnServiceAddressService);
+  module.exports = angular
+    .module('huron.pstn-service-address-service', [
+      require('modules/huron/pstnSetup/terminusServices'),
+    ])
+    .factory('PstnServiceAddressService', PstnServiceAddressService)
+    .name;
 
   /* @ngInject */
   function PstnServiceAddressService($q, TerminusV2LookupE911Service, TerminusCustomerSiteService) {

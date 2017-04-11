@@ -171,6 +171,10 @@ export class HuronSettingsService {
     if (!_.isEqual(data.companyCallerId, this.huronSettingsDataCopy.companyCallerId)) {
       promises.push(this.saveCompanyCallerId(data.companyCallerId));
     }
+
+    if (!_.isEqual(data.site, this.huronSettingsDataCopy.site)) {
+      promises.push(this.saveAutoAttendantSite(data.site));
+    }
     return promises;
   }
 
@@ -441,6 +445,17 @@ export class HuronSettingsService {
     let steeringDigit = _.isUndefined(routingPrefix) ? '' : routingPrefix.charAt(0);
     let siteCode = _.isUndefined(routingPrefix) ? '' : routingPrefix.substr(1);
     return [steeringDigit, siteCode, extensionLength].join('-');
+  }
+
+  private saveAutoAttendantSite(site: Site): ng.IPromise<void> {
+    return this.ServiceSetup.saveAutoAttendantSite({
+      siteSteeringDigit: site.steeringDigit === 'null' ? null : site.steeringDigit,
+      siteCode: site.routingPrefix ? site.routingPrefix.substr(1) : null,
+      uuid: site.uuid,
+    })
+      .catch(error => {
+        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.error.autoAttendantPost'));
+      });
   }
 
   public getOriginalConfig(): HuronSettingsData {
