@@ -76,7 +76,8 @@
     .constant('addressparser', require('emailjs-addressparser'));
 
   // TODO fix circular dependencies between modules
-  angular.module('Squared', ['Core', 'Hercules', 'Huron', 'Sunlight']);
+  angular.module('Squared', ['Core', 'Hercules', 'Huron', 'Sunlight',
+    require('modules/squared/devices/services/CsdmPoller')]);
 
   angular.module('DigitalRiver', ['Core']);
 
@@ -117,6 +118,8 @@
     'ngTagsInput',
     require('modules/hercules/private-trunk/prereq').default,
     require('modules/hercules/private-trunk/setup').default,
+    require('modules/hercules/services/uss-service'),
+    require('modules/hercules/services/hybrid-services-utils').default,
   ]);
 
   angular.module('HDS', ['Core', 'Hercules']);

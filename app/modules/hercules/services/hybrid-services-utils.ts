@@ -156,6 +156,7 @@ export class HybridServicesUtils {
   }
 }
 
-angular
-  .module('Hercules')
-  .service('HybridServicesUtils', HybridServicesUtils);
+export default angular
+  .module('hercules.hds', [])
+  .service('HybridServicesUtils', HybridServicesUtils)
+  .name;

@@ -11,6 +11,7 @@ export default angular
     'collab.ui',
     'pascalprecht.translate',
     privateTrunkPrereq,
+    require('modules/hercules/services/uss-service'),
   ])
   .component('privateTrunkSetup', new PrivateTrunkSetupComponent())
   .component('privateTrunkDomain', new PrivateTrunkDomainComponent())

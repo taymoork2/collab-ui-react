@@ -9,15 +9,19 @@ export enum DestinationRadioType {
   NEW = <any>'new',
   HYBRID = <any>'hybrid',
 }
-
-const DOMAIN_MAXLENGTH = 253;
-
+const DOMAIN_MAX_LENGTH = 253;
+const MIN_PORT = 0;
+const MAX_PORT = 65535;
 export class PrivateTrunkDestinationCtrl implements ng.IComponentController {
   public privateTrunkResource: PrivateTrunkResource;
   public destinationRadio: DestinationRadioType = DestinationRadioType.NEW;
-  public errorMessages: { required: string, maxlength: string, pattern: string };
   public onChangeFn: Function;
-  private error: { required: string };
+  public isFormValid: boolean = false;
+  public errorMessages: Object;
+  public privateTrunkDestinationform: ng.IFormController;
+  public validators: Object;
+  public validationMessages: Object;
+
   /* @ngInject */
   constructor(
     private PrivateTrunkPrereqService: PrivateTrunkPrereqService,
@@ -25,18 +29,10 @@ export class PrivateTrunkDestinationCtrl implements ng.IComponentController {
     private USSService,
     private Authinfo,
    ) {
-    this.errorMessages = {
-      required: this.$translate.instant('common.invalidRequired'),
-      maxlength: this.$translate.instant('common.invalidMaxLength', {
-        max: DOMAIN_MAXLENGTH,
-      }),
-      pattern: this.$translate.instant('servicesOverview.cards.privateTrunk.invalidChars'),
-    };
-    this.error = {
-      required: this.$translate.instant('servicesOverview.cards.privateTrunk.hybridRequiredError'),
-    };
+
   }
   public $onInit(): void {
+    this.isFormValid = true;
     if (_.isUndefined(this.privateTrunkResource)) {
       this.privateTrunkResource = new PrivateTrunkResource();
       this.addDestination();
@@ -44,6 +40,36 @@ export class PrivateTrunkDestinationCtrl implements ng.IComponentController {
     this.USSService.getOrg(this.Authinfo.getOrgId()).then(response => {
       this.privateTrunkResource.hybridDestination.address = response.sipDomain;
     });
+
+    this.errorMessages = {
+      newAddress: {
+        required: this.$translate.instant('common.invalidRequired'),
+        pattern: this.$translate.instant('servicesOverview.cards.privateTrunk.error.invalidChars'),
+        unique: this.$translate.instant('servicesOverview.cards.privateTrunk.error.invalidUniqueEntry'),
+        maxlength: this.$translate.instant('servicesOverview.cards.privateTrunk.error.invalidMaxLength', {
+          max: DOMAIN_MAX_LENGTH,
+        }),
+        portrange: this.$translate.instant('servicesOverview.cards.privateTrunk.error.invalidPort', {
+          min: MIN_PORT,
+          max: MAX_PORT,
+        }),
+      },
+      name: {
+        required: this.$translate.instant('common.invalidRequired'),
+      },
+      hybrid: {
+        required: this.$translate.instant('servicesOverview.cards.privateTrunk.error.hybridRequired'),
+      },
+    };
+
+    this.validators = {
+      pattern: this.invalidCharactersValidation,
+      // use arrow function here to auto-bind this
+      unique: (viewValue: string) => this.uniqueDomainValidation(viewValue),
+      maxlength: (viewValue: string) => this.domainlengthValidation(viewValue),
+      portrange: (viewValue: string) => this.portValidation(viewValue),
+    };
+
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
@@ -78,12 +104,35 @@ export class PrivateTrunkDestinationCtrl implements ng.IComponentController {
     if (this.privateTrunkResource.destinations[index].address) {
       let destination = this.privateTrunkResource.destinations[index];
       if ( !_.isEmpty(destination.address) && !_.isEmpty(destination.name)) {
-        this.change();
+        this.changeSIPDestination();
       }
     }
   }
 
-  public change(): void {
+  public invalidCharactersValidation(viewValue: string) {
+    let value = _.split(viewValue, ':', 2);
+    let regex = new RegExp(/^[0-9a-zA-Z-_.]+$/g);
+    return regex.test(value[0]);
+  }
+
+  public uniqueDomainValidation(viewValue: string) {
+    return _.indexOf(_.map(this.privateTrunkResource.destinations, (dest) => {
+      return dest.address;
+    }), viewValue) === -1;
+  }
+
+  public portValidation(viewValue: string) {
+    let port = _.split(viewValue, ':');
+    return ((!_.isUndefined(port) && port.length > 1) ? _.inRange(_.toNumber(port[1]), 0, 65525) : true );
+  }
+
+  public domainlengthValidation(viewValue) {
+    let value = _.split(viewValue, ':', 2);
+    return value[0].length <= DOMAIN_MAX_LENGTH;
+
+  }
+
+  public changeSIPDestination(): void {
     if (this.destinationRadio === DestinationRadioType.NEW) {
       this.privateTrunkResource.hybridDestination.name = '';
     } else {

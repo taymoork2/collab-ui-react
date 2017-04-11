@@ -13,7 +13,7 @@
         <div ng-if="$ctrl.destinationRadio==='new'">
           <div class="row cs-input-group">
             <div ng-repeat="dest in $ctrl.privateTrunkResource.destinations">
-              <div class="columns medium-5 large-5">
+              <div class="columns medium-5 large-5 small-5">
                 <input
                   cs-input
                   type="text"
@@ -25,12 +25,12 @@
                   placeholder="{{'servicesOverview.cards.privateTrunk.sip' | translate }}"
                   cs-input-label="{{'servicesOverview.cards.privateTrunk.sipLabel' | translate}}"
                   ng-change="$ctrl.changeDestination({{$index}})"
-                  required
-                  ng-pattern="/^[a-zA-Z0-9._-]{1,253}[:0-9]{0,6}$/"
-                  cs-input-messages="$ctrl.errorMessages"
+                  ng-required="true"
+                  cs-input-validators="$ctrl.validators"
+                  cs-input-messages="$ctrl.errorMessages.newAddress"
                   is-disabled= "$ctrl.destinationRadio!=='new'">
               </div>
-              <div class="columns medium-5 large-5">
+              <div class="columns medium-5 large-5 small-5">
                 <input
                   cs-input
                   type="text"
@@ -41,17 +41,17 @@
                   cs-input-size="medium-12"
                   placeholder="{{'servicesOverview.cards.privateTrunk.displayName' | translate}}"
                   cs-input-label="{{'servicesOverview.cards.privateTrunk.displayLabel' | translate}}"
-                  ng-change="$ctrl.change()"
+                  ng-change="$ctrl.changeSIPDestination()"
                   ng-required="true"
-                  cs-input-messages="$ctrl.errorMessages"
+                  cs-input-messages="$ctrl.errorMessages.name"
                   is-disabled= "$ctrl.destinationRadio!=='new'">
               </div>
-              <div class="columns medium-2 large-2">
+              <div class="columns medium-2 large-2 small-2">
                 <i ng-if="$index >= 1" class="icon icon-exit-outline exit-icon" ng-click="$ctrl.delete($index)"></i>
               </div>
             </div>
             <div class="columns medium-6 add-align">
-              <a href="" translate="servicesOverview.cards.privateTrunk.addDestination" ng-if="privateTrunkDestinationForm.$valid" ng-click="$ctrl.addDestination()"></a>
+              <a id="addDestination" href="" translate="servicesOverview.cards.privateTrunk.addDestination" ng-if="privateTrunkDestinationForm.$valid" ng-click="$ctrl.addDestination()"></a>
             </div>
           </div>
         </div>
@@ -78,7 +78,7 @@
                   cs-input-label="{{'servicesOverview.cards.privateTrunk.sipLabel' | translate}}"
                   ng-readonly="true"
                   ng-required="true"
-                  cs-input-messages="$ctrl.error">
+                  cs-input-messages="$ctrl.errorMessages.hybrid">
                 </div>
               <div class="columns medium-5 large-6 left">
                 <input
@@ -90,10 +90,10 @@
                   cs-input-nested="1"
                   cs-input-size="medium-12"
                   cs-input-label="{{'servicesOverview.cards.privateTrunk.displayLabel' | translate}}"
-                  ng-change="$ctrl.change()"
+                  ng-change="$ctrl.changeSIPDestination()"
                   ng-required="true"
-                  cs-input-messages="$ctrl.errorMessages">
-                </div>
+                  cs-input-messages="$ctrl.errorMessages.name">
+               </div>
             </div>
          </div>
      </div>

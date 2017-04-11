@@ -28,9 +28,6 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
       this.domainSelected = [];
     }
 
-    // if( _.isUndefined(this.privateTrunkResource) {
-    //   this.privateTrunkResource = new PrivateTrunkResource();
-    // }
   }
 
   public initDomainInfo(): void {
