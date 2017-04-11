@@ -84,15 +84,25 @@ export class HuronSiteService {
 
   public createSite(site: ISite): ng.IPromise<string> {
     let location: string;
-    // TODO (jlowery): remove after 'i751-10d-ext' toggle is removed.
-    _.set(site, 'toggleEnabled', true);
-    site = <Site>_.omit(site, [
-      'allowExternalTransfer',
-      'disableVoicemail',
-    ]);
     return this.huronSiteService.save({
       customerId: this.Authinfo.getOrgId(),
-    }, site,
+    }, {
+      siteIndex: site.siteIndex,
+      steeringDigit: site.steeringDigit === 'null' ? null : site.steeringDigit,
+      timeZone: site.timeZone,
+      voicemailPilotNumber: site.voicemailPilotNumber,
+      voicemailPilotNumberGenerated: site.voicemailPilotNumberGenerated,
+      siteDescription: site.siteDescription,
+      extensionLength: site.extensionLength,
+      preferredLanguage: site.preferredLanguage,
+      country: site.country,
+      dateFormat: site.dateFormat,
+      timeFormat: site.timeFormat,
+      routingPrefix: site.routingPrefix,
+      emergencyCallBackNumber: site.emergencyCallBackNumber,
+      regionCodeDialing: site.regionCodeDialing,
+      toggleEnabled: true, // TODO (jlowery): remove after 'i751-10d-ext' toggle is removed.
+    },
     (_response, headers) => {
       location = headers('Location');
     }).$promise
