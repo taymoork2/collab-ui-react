@@ -29,7 +29,6 @@ interface IBaseSite {
 interface ISiteResponse extends IBaseSite {
   disableVoicemail?: string;
   regionCodeDialing?: IRegionCodeDialingResponse;
-  allowInternationalDialing?: string;
   voicemailPilotNumberGenerated?: string;
   allowExternalTransfer?: string;
 }
@@ -37,7 +36,6 @@ interface ISiteResponse extends IBaseSite {
 export interface ISite extends IBaseSite {
   disableVoicemail: boolean;
   regionCodeDialing: IRegionCodeDialing;
-  allowInternationalDialing: boolean;
   voicemailPilotNumberGenerated: boolean;
   allowExternalTransfer: boolean;
 }
@@ -60,7 +58,6 @@ export class Site implements ISite {
   public routingPrefix;
   public disableVoicemail;
   public regionCodeDialing;
-  public allowInternationalDialing;
   public voicemailPilotNumberGenerated;
   public allowExternalTransfer;
 
@@ -81,7 +78,6 @@ export class Site implements ISite {
     timeFormat: DEFAULT_TIME_FORMAT,
     routingPrefix: undefined,
     disableVoicemail: undefined,
-    allowInternationalDialing: undefined,
     voicemailPilotNumberGenerated: undefined,
     allowExternalTransfer: undefined,
     regionCodeDialing: undefined,
@@ -93,7 +89,6 @@ export class Site implements ISite {
     this.voicemailPilotNumber = site.voicemailPilotNumber;
     this.mediaTraversalMode = site.mediaTraversalMode;
     this.siteDescription = site.siteDescription;
-    this.allowInternationalDialing = site.allowInternationalDialing;
     this.emergencyCallBackNumber = site.emergencyCallBackNumber;
     this.extensionLength = site.extensionLength;
     this.preferredLanguage = site.preferredLanguage;

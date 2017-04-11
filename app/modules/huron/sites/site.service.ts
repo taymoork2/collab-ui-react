@@ -22,7 +22,6 @@ export class HuronSiteService {
     'mediaTraversalMode',
     'siteDescription',
     'vmCluster',
-    'allowInternationalDialing',
     'extensionLength',
     'voicemailPilotNumberGenerated',
     'emergencyCallBackNumber',
