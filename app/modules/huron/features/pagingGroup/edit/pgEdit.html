@@ -25,7 +25,7 @@
         <div ng-class="{'error': $ctrl.errorNameInput}">
           <input id="paging-group-name" type="text" required="required" class="cs-input" ng-model="$ctrl.name" ng-change="$ctrl.onChange()">
           <div class="cs-input__messages" ng-messages-multiple role="alert" ng-show="$ctrl.errorNameInput">
-            <div class="message">{{$ctrl.pgNameErrorMassage}}</div>
+            <div class="message" ng-bind-html="$ctrl.pgNameErrorMassage"></div>
           </div>
         </div>
       </div>

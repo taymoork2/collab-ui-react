@@ -29,14 +29,9 @@ describe('Component: pgName', () => {
     });
 
     it('update name with incorrect string', function () {
-      this.view.find(NAME_INPUT).val('abcd<').change();
-      expect(this.$scope.onUpdate).toHaveBeenCalledWith('abcd<', false);
-      expect(this.controller.errorNameInput).toBe(true);
-      this.view.find(NAME_INPUT).val('abc\\').change();
-      expect(this.$scope.onUpdate).toHaveBeenCalledWith('abc\\', false);
-      expect(this.controller.errorNameInput).toBe(true);
-      this.view.find(NAME_INPUT).val('abc"').change();
-      expect(this.$scope.onUpdate).toHaveBeenCalledWith('abc"', false);
+      this.view.find(NAME_INPUT).val('abcd>').change();
+      expect(this.$scope.onUpdate).toHaveBeenCalledWith('abcd>', false);
+      expect(this.controller.pgNameErrorMassage).toEqual('pagingGroup.sayInvalidChar');
       expect(this.controller.errorNameInput).toBe(true);
     });
   });
