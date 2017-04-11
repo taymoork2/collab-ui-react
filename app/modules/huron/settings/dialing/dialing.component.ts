@@ -6,6 +6,7 @@ class DialingSetupCtrl implements ng.IComponentController {
   public steeringDigit: string;
   public regionCode: string;
   public useSimplifiedNationalDialing: boolean;
+  public supportsLocalDialing: boolean;
   public supportsSimplifiedNationalDialing: boolean;
   public isTerminusCustomer: boolean;
   public onChangeFn: Function;
@@ -105,6 +106,7 @@ export class DialingSetupComponent {
   public bindings = {
     steeringDigit: '<',
     useSimplifiedNationalDialing: '<',
+    supportsLocalDialing: '<',
     supportsSimplifiedNationalDialing: '<',
     regionCode: '<',
     isTerminusCustomer: '<',

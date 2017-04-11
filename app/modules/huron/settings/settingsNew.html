@@ -64,11 +64,14 @@
     <div class="row full columns warning bottom-margin" ng-if="!$ctrl.isTerminusCustomer">
       <p class="row full columns warning terminus-warning indent-area-code"><i class="icon icon-warning"></i>{{::'serviceSetupModal.warning.outboundDialing' | translate}}</p>
     </div>
-    <div class="row full service-setup service-setup-regional-settings bottom-margin">
+    <div
+      class="row full service-setup service-setup-regional-settings bottom-margin"
+      ng-if="$ctrl.settingsOptions.dialPlan.supportsSimplifiedNationalDialing || $ctrl.settingsOptions.dialPlan.supportsLocalDialing">
       <uc-dialing-setup
         steering-digit="$ctrl.huronSettingsData.site.steeringDigit"
         use-simplified-national-dialing="$ctrl.huronSettingsData.site.regionCodeDialing.useSimplifiedNationalDialing"
         supports-simplified-national-dialing="$ctrl.settingsOptions.dialPlan.supportsSimplifiedNationalDialing"
+        supports-local-dialing="$ctrl.settingsOptions.dialPlan.supportsLocalDialing"
         region-code="$ctrl.huronSettingsData.site.regionCodeDialing.regionCode"
         is-terminus-customer="$ctrl.isTerminusCustomer"
         on-change-fn="$ctrl.onRegionCodeChanged(regionCode, useSimplifiedNationalDialing)">

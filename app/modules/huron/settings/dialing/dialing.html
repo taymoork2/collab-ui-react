@@ -28,7 +28,7 @@
       value="local"
       ng-model="$ctrl.dialingHabit"
       ng-change="$ctrl.onDialingHabitChanged(value)"
-      ng-disabled="!$ctrl.isTerminusCustomer">
+      ng-disabled="!$ctrl.isTerminusCustomer || !$ctrl.supportsLocalDialing">
       <label class="cs-radio" for="localDialing"><span translate="serviceSetupModal.simplifiedDialingTitle"></span></label>
       <p class="cs-input__help-text">
         {{:: 'serviceSetupModal.simplifiedDialingDesc' | translate}}
@@ -36,7 +36,7 @@
         {{:: 'serviceSetupModal.multipleAreaCodeText' | translate}}
       </p>
   </div>
-  <div class="indent-area-code" ng-if="$ctrl.isTerminusCustomer">
+  <div class="indent-area-code" ng-if="$ctrl.isTerminusCustomer && $ctrl.supportsLocalDialing">
     <input
       cs-input
       type="text"
