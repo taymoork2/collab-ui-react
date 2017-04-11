@@ -1,5 +1,7 @@
+import { IToolkitModalService } from 'modules/core/modal';
+import { Notification } from 'modules/core/notifications';
 import { TelephonyDomainService } from './telephonyDomain.service';
-import { Notification } from '../../core/notifications/notification.service';
+
 
 export interface IGridApiScope extends ng.IScope {
   gridApi?: uiGrid.IGridApi;
@@ -25,6 +27,7 @@ class TelephonyDomains implements ng.IComponentController {
     private $filter: ng.IFilterService,
     private $state: ng.ui.IStateService,
     private $timeout: ng.ITimeoutService,
+    private $modal: IToolkitModalService,
     private $rootScope: ng.IRootScopeService,
     private $stateParams: ng.ui.IStateParamsService,
     private $templateCache: ng.ITemplateCacheService,
@@ -67,7 +70,12 @@ class TelephonyDomains implements ng.IComponentController {
   }
 
   public onRequest() {
-    this.$state.go('gem.modal.tdRequest', { customerId: this.customerId });
+    this.$modal.open({
+      type: 'full',
+      template: '<gm-td-modal-request dismiss="$dismiss()" close="$close()" class="new-field-modal"></gm-td-modal-request>',
+    }).result.then(() => {
+      this.$state.go('gmTdLargePanel');
+    });
   }
 
   public exportCSV() {

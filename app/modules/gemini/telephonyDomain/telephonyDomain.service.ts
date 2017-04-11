@@ -10,47 +10,58 @@ export class TelephonyDomainService {
     private $translate: ng.translate.ITranslateService,
   ) {
     this.url = {
-      telephonyDomain: 'telephonyDomain/',
-      getTelephonyDomains: 'telephonyDomains/customerId/',
-      getTelephonyDomain: 'telephonydomain/getTelephonyDomainInfoByDomainId/',
       getActivityLogs: 'activityLogs',
+      telephonyDomain: 'telephonyDomain/',
       moveSite: 'telephonydomain/moveSite',
+      getTelephonyDomains: 'telephonyDomains/customerId/',
       cancelSubmission: 'telephonydomain/cancelSubmission',
+      getNumbers: 'telephonydomain/getTelephonyNumberByDomainId/',
+      getTelephonyDomain: 'telephonydomain/getTelephonyDomainInfoByDomainId/',
+      downloadUrl: 'https://hfccap12.qa.webex.com/ccaportal/resources/excel/ccaportal_telephony_numbers.xls', // TODO, will use urlConfig
     };
   }
 
   public getTelephonyDomains(customerId: string) {
-    let url = `${this.url.getTelephonyDomains}/${customerId}`;
+    const url = `${this.url.getTelephonyDomains}/${customerId}`;
     return this.GmHttpService.httpGet(url).then(this.extractData);
   }
 
   public getTelephonyDomain(customerId, ccaDomainId) {
-    let url = `${this.url.getTelephonyDomain}${customerId}/${ccaDomainId}`;
+    const url = `${this.url.getTelephonyDomain}${customerId}/${ccaDomainId}`;
     return this.GmHttpService.httpGet(url).then(this.extractData);
   }
 
   public getRegions() {
-    let url = `${this.url.telephonyDomain}/regions`;
+    const url = `${this.url.telephonyDomain}/regions`;
     return this.GmHttpService.httpGet(url).then(this.extractData);
   }
 
   public getNotes(customerId: string, ccaDomainId: string) {
-    let url = `${this.url.getActivityLogs}/${customerId}/${customerId}/${ccaDomainId}/add_note`;
+    const url = `${this.url.getActivityLogs}/${customerId}/${ccaDomainId}/add_note`;
     return this.GmHttpService.httpGet(url).then(this.extractData);
   }
 
   public getHistories(customerId: string, ccaDomainId: string, domainName: string) {
-    let url = `${this.url.getActivityLogs}/${customerId}/${ccaDomainId}/Telephony%20Domain/${domainName}`;
+    const url = `${this.url.getActivityLogs}/${customerId}/${ccaDomainId}/Telephony%20Domain/${domainName}`;
     return this.GmHttpService.httpGet(url).then(this.extractData);
   }
 
+  public getNumbers(customerId: string, ccaDomainId: string) {
+    const url = `${this.url.getNumbers}${customerId}/${ccaDomainId}`;
+    return this.GmHttpService.httpGet(url).then(this.extractData);
+  }
+
+  public getDownloadUrl() {
+    return this.url.downloadUrl;
+  }
+
   public postNotes(data: any) {
-    let url = this.url.getActivityLogs;
+    const url = this.url.getActivityLogs;
     return this.GmHttpService.httpPost(url, null, null, data).then(this.extractData);
   }
 
   public moveSite(data: any) {
-    let url = this.url.moveSite;
+    const url = this.url.moveSite;
     return this.GmHttpService.httpPut(url, null, null, data).then(this.extractData);
   }
 
@@ -93,6 +104,10 @@ export class TelephonyDomainService {
     });
   }
 
+  public transformCSVNumber(value: any) {
+    return (value == null ? '' : value + '\t');
+  }
+
   private extractData(response) {
     return _.get(response, 'data');
   }
@@ -131,10 +146,6 @@ export class TelephonyDomainService {
     });
 
     return newData;
-  }
-
-  private transformCSVNumber(value: any) {
-    return (value == null ? '' : value + '\t');
   }
 
   private transformBridgeSet(v1: string, v2: string) {

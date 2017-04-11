@@ -50,6 +50,16 @@
           return $state.current.parent === 'sidepanel' || (rootStateIsSidepanel && $state.includes(rootState));
         }
 
+        /* @ngInject */
+        function SidePanelLargeOpen($window) {
+          $window.document.querySelector('.side-panel').classList.add('large');
+        }
+
+        /* @ngInject */
+        function SidePanelLargeClose($window) {
+          $window.document.querySelector('.side-panel').classList.remove('large');
+        }
+
         //Add blob to the default angular whitelist
         $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|tel|file|blob):/);
 
@@ -2081,8 +2091,15 @@
             },
             templateUrl: 'modules/gemini/callbackGroup/cbgRequest.tpl.html',
           })
-          .state('gem.modal.tdRequest', {
-            template: '<gm-td-modal-request dismiss="$dismiss()" class="new-field-modal"></gm-td-modal-request>',
+          .state('gmTdLargePanel', {
+            data: {},
+            parent: 'sidepanel',
+            views: { 'sidepanel@': { template: '<gm-td-large-panel></gm-td-large-panel>' } },
+            resolve: {
+              sideBarInfo: /* @ngInject */ function ($state) {
+                $state.params.size = 'large';
+              },
+            },
           })
           .state('gmTdDetails', {
             data: {},
@@ -2091,6 +2108,11 @@
             views: {
               'sidepanel@': { template: '<gm-td-details></gm-td-details>' },
               'header@gmTdDetails': { templateUrl: 'modules/gemini/telephonyDomain/details/gmTdDetailsHeader.tpl.html' } },
+          })
+          .state('gmTdDetails.numbersView', {
+            onEnter: SidePanelLargeOpen,
+            onExit: SidePanelLargeClose,
+            template: '<gm-td-numbers-view></gm-td-numbers-view>',
           })
           .state('gmTdDetails.sites', {
             params: { data: {} },
