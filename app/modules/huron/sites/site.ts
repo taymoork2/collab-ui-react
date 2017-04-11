@@ -125,7 +125,7 @@ export class RegionCodeDialing implements IRegionCodeDialing {
   public useSimplifiedNationalDialing;
 
   constructor(regionCode: IRegionCodeDialingResponse) {
-    this.regionCode = regionCode.regionCode;
-    this.useSimplifiedNationalDialing = (regionCode.useSimplifiedNationalDialing === 'true');
+    this.regionCode = _.get(regionCode, 'regionCode');
+    this.useSimplifiedNationalDialing = (_.get(regionCode, 'useSimplifiedNationalDialing') === 'true');
   }
 }
