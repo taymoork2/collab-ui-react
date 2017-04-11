@@ -2685,6 +2685,26 @@
             controller: 'LinesListCtrl',
             controllerAs: 'linesListCtrl',
           })
+          .state('externalNumberDelete', {
+            parent: 'modalDialog',
+            params: {
+              numberInfo: {},
+              refreshFn: function () {},
+            },
+            views: {
+              'modal@': {
+                template: '<delete-external-number number-info="$resolve.numberInfo" refresh-fn="$resolve.refreshFn()" dismiss="$dismiss()"></delete-external-number>',
+              },
+            },
+            resolve: {
+              numberInfo: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams, 'numberInfo');
+              },
+              refreshFn: /* @ngInject */ function ($stateParams) {
+                return $stateParams.refreshFn;
+              },
+            },
+          })
           .state('huronsettings', {
             url: '/settings',
             parent: 'hurondetails',

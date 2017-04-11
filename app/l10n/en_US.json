@@ -3849,9 +3849,6 @@
     "editNumbers": "Edit Phone Numbers",
     "pendingNumbersTooltip": "Numbers can be in pending status for various reasons. Thank you for your patience during normal processing time. If it is taking longer than expected, please contact your provider.",
     "listError": "Failed to load phone number list.",
-    "deleteNumber": "Delete Number",
-    "deleteConfirmation": "Are you sure you want to delete {{pattern}}?",
-    "deleteWarning": "This cannot be reversed.  You will lose this number indefinitely.",
     "allNumbers": "{count, plural, =1{# Number} other{# Numbers}}",
     "pendingNumbers": "{count, plural, =1{# Pending Number} other{# Pending Numbers}}",
     "unassignedNumbers": "{count, plural, =1{# Unassigned Number} other{# Unassigned Numbers}}",
@@ -5956,7 +5953,13 @@
     "phoneNumbers": "Phone Numbers",
     "assignedTo": "Assigned to",
     "inProgress": "In Progress",
-    "quantity": "Quantity: {{count}}"
+    "quantity": "Quantity: {{count}}",
+    "deletePhoneNumber": "Delete Phone Number",
+    "deleteNumber": "Delete Number",
+    "deleteNumberTitle": "Permanently Delete Number",
+    "deleteNumberTextBase": "Are you sure you want to delete this phone number? The number will be {{ isApiImplementationSwivel }}.",
+    "deleteNumberTextStandard": "permanently returned to the PSTN provider",
+    "deleteNumberTextBYOP": "returned to you immediately"
   },
   "messengerCiSync": {
     "authRedirectHeading": "Redirect Messenger Users to Common Identity Login Flow",
