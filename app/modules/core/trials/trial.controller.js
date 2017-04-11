@@ -174,6 +174,7 @@
       name: 'trial.call',
     });
     vm.setDefaultCountry = setDefaultCountry;
+    vm.updateCountryList = updateCountryList;
 
     //watch room systems trial 'enabled' for quantity
     $scope.$watch(function () {
@@ -225,7 +226,7 @@
         atlasDarling: FeatureToggleService.atlasDarlingGetStatus(),
         ftCareTrials: FeatureToggleService.atlasCareTrialsGetStatus(),
         ftAdvanceCareTrials: FeatureToggleService.atlasCareInboundTrialsGetStatus(),
-        ftShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus(),  //TODO add true for shipping testing.
+        ftShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus(), //TODO add true for shipping testing.
         ftSupportThinktel: FeatureToggleService.huronSupportThinktelGetStatus(),
         ftFederatedSparkCall: FeatureToggleService.huronFederatedSparkCallGetStatus(),
         adminOrg: Orgservice.getAdminOrgAsPromise().catch(function () { return false; }),
@@ -287,7 +288,7 @@
     }
 
     function getCountryList() {
-      return HuronCountryService.getHardCodedCountryList()
+      return HuronCountryService.getCountryList()
         .catch(function () {
           return [];
         });
@@ -342,7 +343,6 @@
       } else {
         setViewState('trial.emergAddress', isPstn() && (_.get(vm.details.country, 'id') !== 'N/A'));
       }
-
 
       addRemoveStates();
     }
@@ -954,6 +954,8 @@
       //trial code being instantiated
       if (country && (_.get(country, 'id') !== 'N/A')) {
         countryCode = country.id;
+      } else if (_.get(country, 'id') === 'N/A') {
+        countryCode = "US";
       } else {
         countryCode = TrialPstnService.getCountryCode();
       }
@@ -972,6 +974,24 @@
     function setDefaultCountry(country) {
       TrialPstnService.setCountryCode(country.id);
       vm.details.country = country;
+    }
+
+    var notApplicable = {
+      'id': 'N/A',
+      'name': 'Not Applicable',
+      'domain': '',
+    };
+
+    // Added to update Regional Settings country list with Not Applicable option.
+    // N/A should only be an option if Call is not selected in the trial
+    function updateCountryList() {
+      if (vm.callTrial.enabled) {
+        if (_.includes(vm.defaultCountryList, notApplicable)) {
+          vm.defaultCountryList = _.dropRight(vm.defaultCountryList);
+        }
+      } else if (!_.includes(vm.defaultCountryList, notApplicable)) {
+        vm.defaultCountryList = _.unionWith(vm.defaultCountryList, [notApplicable], _.isEqual);
+      }
     }
   }
 })();

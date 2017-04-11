@@ -9,11 +9,13 @@
   function LineListService($q, $translate, Authinfo, Config, ExternalNumberService, Log, PstnSetupService, UserLineAssociationService) {
 
     var customerId = Authinfo.getOrgId();
+    var apiImplementation = undefined;
 
     // define functions available in this factory
     var service = {
       getLineList: getLineList,
       exportCSV: exportCSV,
+      getApiImplementation: getApiImplementation,
     };
     return service;
 
@@ -49,10 +51,19 @@
 
       return ExternalNumberService.isTerminusCustomer(customerId).then(function () {
         var orderPromise = PstnSetupService.listPendingOrdersWithDetail(customerId);
+        var carrierInfoPromise;
 
-        return $q.all([linesPromise, orderPromise]).then(function (results) {
+        if (_.isUndefined(apiImplementation)) {
+          carrierInfoPromise = ExternalNumberService.getCarrierInfo(customerId);
+        }
+
+        return $q.all([linesPromise, orderPromise, carrierInfoPromise]).then(function (results) {
           var lines = results[0];
           var orders = results[1];
+
+          if (!_.isUndefined(results[2])) {
+            apiImplementation = _.get(results[2], 'apiImplementation');
+          }
 
           var pendingLines = [];
           var nonProvisionedPendingLines = [];
@@ -117,6 +128,10 @@
         });
 
     } // end of function getLineList
+
+    function getApiImplementation() {
+      return apiImplementation;
+    }
 
     function dedupGrid(newLine, grid) {
       _.remove(grid, function (row) {

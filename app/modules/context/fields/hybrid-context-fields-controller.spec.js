@@ -68,7 +68,7 @@ describe('HybridContextFieldsCtrl', function () {
       var controller = initController();
       controller.createField();
       expect(LogMetricsService.logMetrics).toHaveBeenCalled();
-      expect($state.go).toHaveBeenCalledWith('context-new-field', jasmine.any(Object));
+      expect($state.go).toHaveBeenCalledWith('context-field-modal', jasmine.any(Object));
     });
   });
 

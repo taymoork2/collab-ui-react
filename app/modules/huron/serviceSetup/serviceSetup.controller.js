@@ -6,10 +6,11 @@
     .controller('ServiceSetupCtrl', ServiceSetupCtrl);
 
   /* @ngInject*/
-  function ServiceSetupCtrl($q, $state, $scope, ServiceSetup, Notification, Authinfo, $translate, HuronCustomer,
-    ValidationService, DialPlanService, TelephoneNumberService, ExternalNumberService,
+  function ServiceSetupCtrl($q, $state, $scope, ServiceSetup, Notification, Authinfo, $translate,
+    HuronCustomer, ValidationService, HuronCustomerService, TelephoneNumberService, ExternalNumberService,
     CeService, HuntGroupServiceV2, ModalService, DirectoryNumberService, VoicemailMessageAction,
-    PstnSetupService, Orgservice, FeatureToggleService, Config, CustomerCosRestrictionServiceV2, CustomerDialPlanServiceV2) {
+    PstnSetupService, Orgservice, FeatureToggleService, Config, CustomerCosRestrictionServiceV2,
+    CustomerDialPlanServiceV2, HuronCompassService) {
     var vm = this;
     vm.isTimezoneAndVoicemail = function () {
       return Authinfo.getLicenses().filter(function (license) {
@@ -125,6 +126,9 @@
     vm.optionalVmDidFeatureToggle = false;
     vm._buildVoicemailPrefixOptions = _buildVoicemailPrefixOptions;
     vm.isTerminusCustomer = false;
+    vm.ftHuronFederatedSparkCall = false;
+    vm.ftHuronSupportThinktel = false;
+    vm.ftHuronL10nUserLocale2 = false;
 
     PstnSetupService.getCustomer(Authinfo.getOrgId()).then(function () {
       vm.isTerminusCustomer = true;
@@ -132,6 +136,18 @@
 
     FeatureToggleService.supports(FeatureToggleService.features.avrilVmEnable).then(function (result) {
       vm.voicemailAvrilCustomer = result;
+    });
+
+    FeatureToggleService.supports(FeatureToggleService.features.huronFederatedSparkCall).then(function (result) {
+      vm.ftHuronFederatedSparkCall = result;
+    });
+
+    FeatureToggleService.supports(FeatureToggleService.features.huronSupportThinktel).then(function (result) {
+      vm.ftHuronSupportThinktel = result;
+    });
+
+    FeatureToggleService.supports(FeatureToggleService.features.huronUserLocale2).then(function (result) {
+      vm.ftHuronL10nUserLocale2 = result;
     });
 
     vm.validations = {
@@ -824,26 +840,29 @@
     }
 
     function loadVoicemailPilotNumber(site) {
-      if (vm.model.site.voicemailPilotNumberGenerated === 'false' &&
-            (site.voicemailPilotNumber.length < 40)) {
+      var voicemailPilotNumber = _.get(site, 'voicemailPilotNumber');
+
+      if (vm.model.site.voicemailPilotNumberGenerated === 'false' && voicemailPilotNumber &&
+            (voicemailPilotNumber.length < 40)) {
         vm.model.ftswCompanyVoicemail.ftswExternalVoicemail = true;
       } else {
         vm.model.ftswCompanyVoicemail.ftswExternalVoicemail = false;
       }
-      if (site.voicemailPilotNumber === Authinfo.getOrgId()) {
+
+      if (voicemailPilotNumber === Authinfo.getOrgId()) {
         // There may be existing customers who have yet to set the company
         // voicemail number; likely they have it set to orgId.
         // Remove this logic once we can confirm no existing customers are configured
         // this way.
         vm.model.site.voicemailPilotNumber = undefined;
-      } else if (site.voicemailPilotNumber) {
-        vm.model.site.voicemailPilotNumber = site.voicemailPilotNumber;
+      } else if (voicemailPilotNumber) {
+        vm.model.site.voicemailPilotNumber = voicemailPilotNumber;
         vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
 
         if (vm.model.ftswCompanyVoicemail.ftswExternalVoicemail) {
           vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = {
-            pattern: site.voicemailPilotNumber,
-            label: TelephoneNumberService.getDIDLabel(site.voicemailPilotNumber),
+            pattern: voicemailPilotNumber,
+            label: TelephoneNumberService.getDIDLabel(voicemailPilotNumber),
           };
         }
       }
@@ -1085,7 +1104,7 @@
     }
 
     function setServiceValues() {
-      return DialPlanService.getCustomerVoice(Authinfo.getOrgId()).then(function (response) {
+      return HuronCustomerService.getVoiceCustomer().then(function (response) {
         if (response.dialPlan === null) {
           // if customer's dialPlan attribute is defined but null, assume the customer is on the
           // North American Dial Plan. Look up uuid for NANP and insert it into customer dialPlan.
@@ -1237,7 +1256,24 @@
         currentSite.preferredLanguage = currentSite.preferredLanguage.value;
         currentSite.country = currentSite.country.value;
 
+        if (!currentSite.country) {
+          currentSite.country = HuronCompassService.getCountryCode();
+        }
+
         return ServiceSetup.createSite(currentSite)
+            .then(function () {
+              if (vm.voicemailAvrilCustomer && (isAvrilVoiceEnabled || vm.customer.servicePackage === VOICE_VOICEMAIL_AVRIL)) {
+                ServiceSetup.listSites().then(function () {
+                  if (ServiceSetup.sites.length !== 0) {
+                    var siteUuid = ServiceSetup.sites[0].uuid;
+                    ServiceSetup.createAvrilSite(siteUuid, currentSite.siteSteeringDigit,
+                     currentSite.siteCode, currentSite.preferredLanguage.value, currentSite.timeZone.id,
+                     currentSite.extensionLength, currentSite.voicemailPilotNumber, currentSite);
+                  }
+                });
+
+              }
+            })
           .then(function () {
             if (voicemailToggleEnabled && currentSite.voicemailPilotNumber) {
               return updateVoicemailSettings();
@@ -1316,7 +1352,7 @@
           vm.model.regionCode = '';
         }
         if (vm.model.regionCode !== vm.model.initialRegionCode) {
-          return DialPlanService.updateCustomerVoice(Authinfo.getOrgId(), {
+          return HuronCustomerService.updateVoiceCustomer({
             regionCode: vm.model.regionCode,
           })
           .catch(function (error) {

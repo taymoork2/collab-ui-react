@@ -20,10 +20,7 @@
     TerminusCustomerService, TerminusCustomerCarrierService,
     TerminusCustomerV2Service, TerminusCustomerTrialV2Service,
     TerminusCarrierService, TerminusCarrierV2Service,
-    TerminusOrderV2Service,
-    TerminusCarrierInventoryCount, TerminusNumberService, TerminusCarrierInventorySearch,
-    TerminusCarrierInventoryReserve, TerminusCarrierInventoryRelease,
-    TerminusCustomerCarrierInventoryReserve, TerminusCustomerCarrierInventoryRelease,
+    TerminusOrderV2Service, TerminusNumberService,
     TerminusCustomerCarrierDidService, TerminusCustomerPortService,
     TerminusResellerCarrierService, TerminusResellerCarrierV2Service,
     TerminusV2ResellerService,
@@ -31,7 +28,7 @@
     TerminusV2CarrierCapabilitiesService,
     TerminusV2ResellerNumberReservationService, TerminusV2ResellerCarrierNumberReservationService,
     TerminusV2CustomerNumberReservationService,
-    TerminusV2CustomerNumberOrderBlockService, TelephoneNumberService, FeatureToggleService) {
+    TerminusV2CustomerNumberOrderBlockService, TelephoneNumberService) {
     //Providers
     var INTELEPEER = "INTELEPEER";
     var TATA = "TATA";
@@ -55,7 +52,6 @@
     //$resource constants
     var BLOCK = 'block';
     var ORDER = 'order';
-    var PORT = 'port';
     var NUMTYPE_DID = 'DID';
     var NUMTYPE_TOLLFREE = 'TOLLFREE';
     //misc
@@ -78,8 +74,6 @@
       getCarrierDetails: getCarrierDetails,
       searchCarrierInventory: searchCarrierInventory,
       searchCarrierTollFreeInventory: searchCarrierTollFreeInventory,
-      reserveCarrierInventory: reserveCarrierInventory,
-      releaseCarrierInventory: releaseCarrierInventory,
       reserveCarrierInventoryV2: reserveCarrierInventoryV2,
       releaseCarrierInventoryV2: releaseCarrierInventoryV2,
       releaseCarrierTollFreeInventory: releaseCarrierTollFreeInventory,
@@ -244,6 +238,7 @@
     function getCarrierInventory(carrierId, state, npa) {
       var config = {
         carrierId: carrierId,
+        numberType: NUMTYPE_DID,
       };
       if (_.isString(npa)) {
         if (npa.length > 0) {
@@ -253,7 +248,7 @@
       } else {
         config.state = state;
       }
-      return TerminusCarrierInventoryCount.get(config).$promise;
+      return TerminusV2CarrierNumberCountService.get(config).$promise;
     }
 
     function getCarrierTollFreeInventory(carrierId) {
@@ -272,7 +267,8 @@
     function searchCarrierInventory(carrierId, params) {
       var paramObj = params || {};
       paramObj.carrierId = carrierId;
-      return TerminusCarrierInventorySearch.get(paramObj).$promise
+      paramObj.numberType = NUMTYPE_DID;
+      return TerminusV2CarrierNumberService.get(paramObj).$promise
         .then(function (response) {
           return _.get(response, 'numbers', []);
         });
@@ -286,51 +282,6 @@
         .then(function (response) {
           return _.get(response, 'numbers', []);
         });
-    }
-
-    function reserveCarrierInventory(customerId, carrierId, numbers, isCustomerExists) {
-      if (!_.isArray(numbers)) {
-        numbers = [numbers];
-      }
-
-      if (isCustomerExists) {
-        // If a customer exists, reserve with the customer
-        return TerminusCustomerCarrierInventoryReserve.save({
-          customerId: customerId,
-          carrierId: carrierId,
-        }, {
-          numbers: numbers,
-        }).$promise;
-      } else {
-        // Otherwise reserve with carrier
-        return TerminusCarrierInventoryReserve.save({
-          carrierId: carrierId,
-        }, {
-          numbers: numbers,
-        }).$promise;
-      }
-    }
-
-    function releaseCarrierInventory(customerId, carrierId, numbers, isCustomerExists) {
-      if (!_.isArray(numbers)) {
-        numbers = [numbers];
-      }
-      if (isCustomerExists) {
-        // If a customer exists, release with the customer
-        return TerminusCustomerCarrierInventoryRelease.save({
-          customerId: customerId,
-          carrierId: carrierId,
-        }, {
-          numbers: numbers,
-        }).$promise;
-      } else {
-        // Otherwise release with carrier
-        return TerminusCarrierInventoryRelease.save({
-          carrierId: carrierId,
-        }, {
-          numbers: numbers,
-        }).$promise;
-      }
     }
 
     function reserveCarrierInventoryV2(customerId, carrierId, numbers, isCustomerExists) {
@@ -545,14 +496,6 @@
     }
 
     function portNumbers(customerId, carrierId, numbers) {
-      return FeatureToggleService.supports(
-        FeatureToggleService.features.huronSupportForPortEmails
-        ).then(function (isHuronSupportForPortEmails) {
-          return _portNumbers(customerId, carrierId, numbers, isHuronSupportForPortEmails);
-        });
-    }
-
-    function _portNumbers(customerId, carrierId, numbers, isHuronSupportForPortEmails) {
       var promises = [];
       var tfnNumbers = [];
 
@@ -565,27 +508,15 @@
         numberType: NUMTYPE_TOLLFREE,
       };
 
-      var payload = {
-        numbers: numbers,
-      };
-
       var didPayload = {
         numbers: numbers,
         numberType: NUMTYPE_DID,
       };
 
       if (numbers.length > 0) {
-        if (isHuronSupportForPortEmails) {
-          promises.push(TerminusCustomerPortService.save({
-            customerId: customerId,
-          }, didPayload).$promise);
-        } else {
-          promises.push(TerminusCustomerCarrierDidService.save({
-            customerId: customerId,
-            carrierId: carrierId,
-            type: PORT,
-          }, payload).$promise);
-        }
+        promises.push(TerminusCustomerPortService.save({
+          customerId: customerId,
+        }, didPayload).$promise);
       }
       if (tfnNumbers.length > 0) {
         promises.push(TerminusCustomerPortService.save({

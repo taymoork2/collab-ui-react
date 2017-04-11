@@ -108,6 +108,15 @@
         },
         persistentProperties: null,
       },
+      CONTEXT: {
+        name: 'Context Service related operations',
+        eventNames: {
+          CONTEXT_CREATE_FIELDSET_SUCCESS: 'Successfully created a new fieldset',
+          CONTEXT_CREATE_FIELDSET_FAILURE: 'Failed to create a new fieldset',
+          CONTEXT_CREATE_FIELD_SUCCESS: 'Successfully created a new field',
+          CONTEXT_CREATE_FIELD_FAILURE: 'Failed to create a new field',
+        },
+      },
     };
 
     var service = {

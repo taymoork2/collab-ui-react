@@ -1,15 +1,13 @@
+import { DialPlanService } from './dialPlan.service';
 
-let DialPlanService = require('./dialPlanService');
-
-let AuthinfoModule = require('modules/core/scripts/services/authinfo');
-let HuronConfigModule = require('modules/huron/telephony/telephonyConfig');
-let CmiServicesModule = require('modules/huron/telephony/cmiServices');
+export * from './dialPlan';
+export * from './dialPlan.service';
 
 export default angular
   .module('huron.dialPlans', [
-    AuthinfoModule,
-    HuronConfigModule,
-    CmiServicesModule,
+    require('modules/core/scripts/services/authinfo'),
+    require('modules/huron/telephony/telephonyConfig'),
+    require('modules/huron/telephony/cmiServices'),
   ])
-  .factory('DialPlanService', DialPlanService)
+  .service('DialPlanService', DialPlanService)
   .name;

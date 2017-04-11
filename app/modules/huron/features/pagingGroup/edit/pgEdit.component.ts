@@ -13,6 +13,7 @@ class PgEditComponentCtrl implements ng.IComponentController {
   public name: string = '';
   public errorNameInput: boolean = false;
   public formChanged: boolean = false;
+  public pgNameErrorMassage: string;
 
   //Paging group number
   private number: INumberData;
@@ -68,16 +69,17 @@ class PgEditComponentCtrl implements ng.IComponentController {
           this.pg = data;
           this.name = this.pg.name;
           let numberData: INumberData = <INumberData> {
-            extension: this.pg.extension,
-            extensionUUID: this.pg.extensionUUID,
+            extension: undefined,
+            extensionUUID: undefined,
           };
 
-          if (this.pg.extension === undefined && this.pg.extensionUUID) {
-            this.PagingNumberService.getNumberExtension(this.pg.extensionUUID).then(
-              (data: INumberData) => {
-                numberData.extension = data.extension;
-              });
-          }
+          this.PagingNumberService.getNumberExtension(this.pgId).then(
+            (data: INumberData) => {
+              numberData.extension = data.extension;
+            },
+            (response) => {
+              this.Notification.errorResponse(response, this.pg.name);
+            });
           this.number = numberData;
           this.userCount = _.get(_.countBy(this.pg.members, 'type'), USER, 0);
           this.placeCount = _.get(_.countBy(this.pg.members, 'type'), PLACE, 0);
@@ -421,8 +423,18 @@ class PgEditComponentCtrl implements ng.IComponentController {
 
   public onCancel(): void {
     this.name = this.pg.name;
-    this.number.extension = this.pg.extension;
-    this.number.extensionUUID = undefined; //This will be updated later
+    let numberData: INumberData = <INumberData> {
+      extension: this.pg.extension,
+      extensionUUID: this.pg.extensionUUID,
+    };
+
+    if (this.pg.extension === undefined && this.pg.extensionUUID) {
+      this.PagingNumberService.getNumberExtension(this.pg.extensionUUID).then(
+        (data: INumberData) => {
+          numberData.extension = data.extension;
+        });
+    }
+    this.number = numberData;
     if (this.pg.initiatorType !== undefined) {
       this.initiatorType = this.pg.initiatorType;
     }
@@ -451,8 +463,12 @@ class PgEditComponentCtrl implements ng.IComponentController {
 
   public onChange(): void {
     this.errorNoIntiators = false;
-    let reg = /^[A-Za-z\-\_\d\s]+$/;
-    this.errorNameInput = !reg.test(this.name);
+    const reg = /[;"'&^></\\]/;
+    let invalidChar: Array<string> | null = this.name.match(reg);
+    this.errorNameInput = reg.test(this.name);
+    if (this.errorNameInput) {
+      this.pgNameErrorMassage = this.$translate.instant('pagingGroup.sayInvalidChar', { char: invalidChar }).replace('\\', '');
+    }
     if (this.initiatorType === CUSTOM && this.initiators.length === 0) {
       this.errorNoIntiators = true;
     }

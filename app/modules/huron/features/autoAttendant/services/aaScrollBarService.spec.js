@@ -39,10 +39,13 @@
     describe('scrollBuilderToTarget:', function () {
 
       it('just return if there is no target', function () {
+
         AAScrollBar.scrollBuilderToTarget();
+
         expect(container.animate).not.toHaveBeenCalled();
 
         $timeout.flush();
+
         expect(container.animate).not.toHaveBeenCalled();
       });
 

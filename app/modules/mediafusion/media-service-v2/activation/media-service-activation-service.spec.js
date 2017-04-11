@@ -7,7 +7,6 @@ describe('MediaServiceActivationV2', function () {
 
   // instantiate service
   var Service, $q, $httpBackend, authinfo, Notification, FusionClusterService, ServiceDescriptor;
-  var extensionEntitlements = ['squared-fusion-media'];
   //var serviceId = "squared-fusion-media";
   var mediaAgentOrgIds = ['mediafusion'];
   var serviceId = "squared-fusion-media";
@@ -31,15 +30,6 @@ describe('MediaServiceActivationV2', function () {
     $httpBackend = $injector.get('$httpBackend');
     Notification = _Notification_;
   }));
-
-  it('should set service acknowledged', function () {
-    var data = {
-      "acknowledged": true,
-    };
-    $httpBackend.when('PATCH', 'https://hercules-intb.ciscospark.com/v1/organizations/12345/services/' + extensionEntitlements[0], data).respond(200, {});
-    Service.setServiceAcknowledged(extensionEntitlements[0], true);
-    expect($httpBackend.flush).not.toThrow();
-  });
 
   it('should set user identity org to media agent org id mapping', function () {
     var data = {

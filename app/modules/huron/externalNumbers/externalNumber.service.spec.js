@@ -3,9 +3,9 @@
 describe('Service: ExternalNumberService', function () {
   var $rootScope, $httpBackend, $translate, $q, ExternalNumberService, HuronConfig, PstnSetupService, ExternalNumberPool;
   var allNumbers, pendingNumbers, pendingOrders, unassignedNumbers, assignedNumbers, externalNumbers, numberResponse, noNumberResponse, pendingList, pendingAdvanceOrder, malformedAdvanceOrder, malformedAdvanceOrderLabel;
-  var customerId, externalNumber;
+  var customerId, externalNumber, carrierId;
 
-  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('huron.externalNumberService'));
 
   beforeEach(inject(function (_$rootScope_, _$httpBackend_, _$translate_, _$q_, _ExternalNumberService_, _HuronConfig_, _PstnSetupService_, _ExternalNumberPool_) {
     $rootScope = _$rootScope_;
@@ -18,6 +18,7 @@ describe('Service: ExternalNumberService', function () {
     HuronConfig = _HuronConfig_;
 
     customerId = '12345-67890-12345';
+    carrierId = '987-654-321';
     externalNumber = {
       uuid: '22222-33333',
       number: '+14795552233',
@@ -79,7 +80,7 @@ describe('Service: ExternalNumberService', function () {
 
     spyOn(PstnSetupService, 'listPendingNumbers').and.returnValue($q.resolve(pendingList));
     spyOn(PstnSetupService, 'isCarrierSwivel').and.returnValue($q.resolve(false));
-    spyOn(PstnSetupService, 'getCustomerV2').and.returnValue($q.resolve());
+    spyOn(PstnSetupService, 'getCustomerV2').and.returnValue($q.resolve({ pstnCarrierId: carrierId }));
     spyOn(PstnSetupService, 'deleteNumber');
     spyOn(ExternalNumberPool, 'deletePool');
     spyOn(ExternalNumberPool, 'getExternalNumbers').and.returnValue($q.resolve(externalNumbers));
@@ -246,8 +247,12 @@ describe('Service: ExternalNumberService', function () {
 
   describe('isTerminus customer function', function () {
     it('should return true for existing Terminus customer', function () {
+      var carrierInfo = { "apiImplementation": "INTELEPEER" };
+      $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/carriers/' + carrierId).respond(carrierInfo);
       ExternalNumberService.isTerminusCustomer(customerId).then(function (response) {
         expect(response).toBe(true);
+        var result = ExternalNumberService.getCarrierInfo(customerId);
+        expect(result).toEqual(carrierInfo);
       });
     });
 

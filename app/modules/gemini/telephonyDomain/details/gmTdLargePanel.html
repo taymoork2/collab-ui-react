@@ -1,0 +1,42 @@
+<div class="customer-overview gm-full-panel">
+  <cs-sp-header>
+    <div class="header-info" id="customer-info">
+      <div class="header-info-wrap">
+        <div class="header-title">
+          <span>{{$ctrl.fullpanelTitle}}</span>
+        </div>
+      </div>
+    </div>
+  </cs-sp-header>
+
+  <cs-sp-container class="gemini-side-panel gm-td-side-panel">
+    <cs-sp-section>
+      <div class="row gm-row-left">
+        <div class="pull-left medium-12">
+        <span class="pull-right" ng-if="$ctrl.data.status">
+          <i class="icon icon-circle status-indicator" ng-class="{'success': $ctrl.model.status === 'A' || $ctrl.model.status === 'P', 'danger': $ctrl.model.status === 'R' || $ctrl.model.status === 'L', 'warning': $ctrl.model.status === 'S', 'disabled': $ctrl.model.status === 'C'}"></i>
+          {{$ctrl.model.status_}}
+        </span>
+        </div>
+
+        <div class="pull-left medium-12">
+          <span class="feature-name">{{::'gemini.tds.field.partnerTdName' | translate}}: {{$ctrl.data.customerAttribute}}</span>
+        </div>
+
+        <div class="pull-left medium-12">
+          <span class="feature-name">{{::'gemini.region' | translate}}: {{$ctrl.data.region.value}}</span>
+        </div>
+
+        <div class="pull-left medium-12">
+          <span class="feature-name">{{::'gemini.tds.noteToCisco' | translate}}: {{$ctrl.data.notes}}</span>
+        </div>
+      </div>
+
+      <gm-td-numbers></gm-td-numbers>
+    </cs-sp-section>
+
+    <cs-sp-buttons>
+      <button type="button" class="btn btn-default" cs-btn ng-click="$ctrl.onCancel()"><span translate="common.cancel"></span></button>
+    </cs-sp-buttons>
+  </cs-sp-container>
+</div>

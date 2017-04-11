@@ -56,6 +56,7 @@
     require('modules/core/scripts/services/userlist.service'),
     require('modules/core/users/userCsv/userCsv.service'),
     require('modules/core/cards').default,
+    require('modules/core/customerReports/sparkReports').default,
     require('modules/core/partnerReports/commonReportServices').default,
     require('modules/core/partnerReports/reportCard').default,
     require('modules/core/partnerReports/reportFilter').default,
@@ -75,7 +76,8 @@
     .constant('addressparser', require('emailjs-addressparser'));
 
   // TODO fix circular dependencies between modules
-  angular.module('Squared', ['Core', 'Hercules', 'Huron', 'Sunlight']);
+  angular.module('Squared', ['Core', 'Hercules', 'Huron', 'Sunlight',
+    require('modules/squared/devices/services/CsdmPoller')]);
 
   angular.module('DigitalRiver', ['Core']);
 
@@ -97,6 +99,7 @@
     'huron.PstnSetup',
     'huron.pstnsetupservice',
     'huron.telephoneNumberService',
+    'huron.externalNumberService',
     require('modules/huron/telephony/telephonyConfig'),
     require('modules/huron/telephony/cmiServices'),
     require('modules/huron/autoAnswer').default,
@@ -105,6 +108,7 @@
     require('modules/huron/pstn/pstnContactInfo').default,
     require('modules/huron/pstnSetup/pstnSelector').default,
     require('modules/huron/overview').default,
+    require('modules/huron/lines/deleteExternalNumber').default,
   ]);
 
   angular.module('Hercules', [
@@ -114,6 +118,8 @@
     'ngTagsInput',
     require('modules/hercules/private-trunk/prereq').default,
     require('modules/hercules/private-trunk/setup').default,
+    require('modules/hercules/services/uss-service'),
+    require('modules/hercules/services/hybrid-services-utils').default,
   ]);
 
   angular.module('HDS', ['Core', 'Hercules']);

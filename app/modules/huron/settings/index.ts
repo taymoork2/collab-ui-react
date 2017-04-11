@@ -16,6 +16,7 @@ import cosRestrictionModule from 'modules/huron/settings/cos';
 import companyCallerIdModule from 'modules/huron/settings/companyCallerId';
 import emergencyServiceNumberModule from 'modules/huron/settings/emergencyServiceNumber';
 import emergencyServiceAddressModule from 'modules/huron/settings/emergencyServiceAddress';
+import externalTransferModule from 'modules/huron/settings/externalCallTransfer';
 
 export * from './settings.service';
 export * from './settingsOptions.service';
@@ -42,6 +43,7 @@ export default angular
     companyCallerIdModule,
     emergencyServiceNumberModule,
     emergencyServiceAddressModule,
+    externalTransferModule,
   ])
   .component('ucSettings', new HuronSettingsComponent())
   .service('HuronSettingsService', HuronSettingsService)

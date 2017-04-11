@@ -150,8 +150,13 @@ export class HybridServicesUtils {
     }
     return moment(timestamp).local().tz(timezone).format(format || 'LLL (z)');
   }
+
+  public getAckFlagForHybridServiceId(entitlement: HybridServiceId): string {
+    return `fms.services.${entitlement}.acknowledged`;
+  }
 }
 
-angular
-  .module('Hercules')
-  .service('HybridServicesUtils', HybridServicesUtils);
+export default angular
+  .module('hercules.hds', [])
+  .service('HybridServicesUtils', HybridServicesUtils)
+  .name;

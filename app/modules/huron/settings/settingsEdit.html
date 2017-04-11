@@ -104,11 +104,17 @@
             on-change-fn="$ctrl.onSteeringDigitChanged(steeringDigit)">
           </uc-outbound-dial-digit>
         </div>
-        <div class="sub-section">
+        <div
+          class="sub-section"
+          ng-if="$ctrl.settingsOptions.dialPlan.supportsSimplifiedNationalDialing || $ctrl.settingsOptions.dialPlan.supportsLocalDialing">
           <uc-dialing-setup
-            region-code="$ctrl.huronSettingsData.customerVoice.regionCode"
+            steering-digit="$ctrl.huronSettingsData.site.steeringDigit"
+            use-simplified-national-dialing="$ctrl.huronSettingsData.site.regionCodeDialing.useSimplifiedNationalDialing"
+            supports-simplified-national-dialing="$ctrl.settingsOptions.dialPlan.supportsSimplifiedNationalDialing"
+            supports-local-dialing="$ctrl.settingsOptions.dialPlan.supportsLocalDialing"
+            region-code="$ctrl.huronSettingsData.site.regionCodeDialing.regionCode"
             is-terminus-customer="$ctrl.isTerminusCustomer"
-            on-change-fn="$ctrl.onRegionCodeChanged(regionCode)">
+            on-change-fn="$ctrl.onRegionCodeChanged(regionCode, useSimplifiedNationalDialing)">
           </uc-dialing-setup>
         </div>
       </div>
@@ -125,7 +131,7 @@
       <div class="section__content">
         <uc-cos-form
           cos-restrictions="$ctrl.huronSettingsData.cosRestrictions"
-          premium-numbers="$ctrl.settingsOptions.premiumNumbers"
+          premium-numbers="$ctrl.settingsOptions.dialPlan.premiumNumbers"
           on-change-fn="$ctrl.onCustomerCosRestrictionsChanged(restrictions)">
         </uc-cos-form>
       </div>
@@ -163,6 +169,21 @@
       </div>
     </div>
 
+    <!-- external call transfer/conference selection -->
+    <div cr-feature-toggle feature-show="h-i1033" class="cs-form__section">
+      <div class="section__info">
+        <div cs-sticky>
+          <h4 class="section__title" translate="externalTransfer.title"></h4>
+        </div>
+      </div>
+      <div class="section__content">
+        <uc-ext-transfer-org
+          on-change-fn="$ctrl.onExtTransferChanged(allowExternalTransfer)"
+          allow-external-transfer="$ctrl.huronSettingsData.site.allowExternalTransfer">
+        </uc-ext-transfer-org>
+      </div>
+    </div>
+
     <!-- company caller id selection -->
     <div class="cs-form__section">
       <div class="section__info">
@@ -193,7 +214,7 @@
       <div class="section__content">
         <uc-company-voicemail
           site="$ctrl.huronSettingsData.site"
-          dial-plan-country-code="$ctrl.settingsOptions.countryCode"
+          dial-plan-country-code="$ctrl.settingsOptions.dialPlan.countryCode"
           external-number-options="$ctrl.settingsOptions.companyVoicemailOptions"
           company-voicemail-enabled="$ctrl.huronSettingsData.customer.hasVoicemailService"
           voicemail-to-email="$ctrl.huronSettingsData.voicemailToEmailSettings.voicemailToEmail"

@@ -28,7 +28,6 @@
     vm.locatedinCallSettings = locatedinCallSettings;
     vm.navigateToCurrentServiceSettings = navigateToCurrentServiceSettings;
     vm.showUserErrorsDialog = showUserErrorsDialog;
-    vm.dismissNewServiceNotification = dismissNewServiceNotification;
     vm.showEnterpriseSettings = showEnterpriseSettings;
     vm.setSipUriNotificationAcknowledged = setSipUriNotificationAcknowledged;
 
@@ -130,11 +129,6 @@
           },
         },
       });
-    }
-
-    function dismissNewServiceNotification(notificationId, serviceId) {
-      ServiceDescriptor.acknowledgeService(serviceId);
-      NotificationService.removeNotification(notificationId);
     }
 
     function showEnterpriseSettings() {

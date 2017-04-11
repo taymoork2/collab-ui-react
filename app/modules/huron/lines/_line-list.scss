@@ -7,8 +7,13 @@
 
   .ui-grid {
     .internalNumberColumn,
-    .externalNumberColumn {
+    .externalNumberColumn,
+    .actionsColumn {
       text-align: center;
+    }
+
+    .assignedToColumn {
+      text-align: left;
     }
 
     .ui-grid-row {
@@ -23,7 +28,7 @@
     text-align: center;
   }
 
-  .ui-grid-header-cell:last-child {
+  .ui-grid-header-cell.assignedToHeader {
     text-align: left;
   }
 }
@@ -44,4 +49,14 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.order-history {
+  margin-right: 1rem;
+  font-size: $h5-font-size;
+}
+
+#deleteExternalNumberOption {
+  span {
+    color: $color-alerts-base;
+  }
 }

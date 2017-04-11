@@ -6,31 +6,28 @@ describe('DeviceUsageService', function () {
 
   var DeviceUsageService;
   var $httpBackend;
-  var UrlConfig;
   var Authinfo;
-  var $q;
+  var UrlConfig;
   var now = moment('2016-10-27T00:00:00.000Z').toDate(); // Fri, Oct, 2016
 
   // TODO: Swap when production ready
-  //var urlBase = 'https://atlas-intb.ciscospark.com/admin/api/v1/organization';
   var urlBase = 'http://berserk.rd.cisco.com:8080/atlas-server/admin/api/v1/organization';
-
-  var baseOrgUrl = urlBase + '/null/reports/device'; // orgid not relevant for test
 
   afterEach(function () {
     DeviceUsageService = undefined;
   });
 
-  beforeEach(inject(function (_$httpBackend_, _DeviceUsageService_, _UrlConfig_, _Authinfo_, _$q_) {
+  beforeEach(inject(function (_$httpBackend_, _DeviceUsageService_, _Authinfo_, _UrlConfig_) {
     DeviceUsageService = _DeviceUsageService_;
     $httpBackend = _$httpBackend_;
     UrlConfig = _UrlConfig_;
     Authinfo = _Authinfo_;
-    $q = _$q_;
     moment.tz.setDefault('Europe/London');
     jasmine.clock().install();
     var baseTime = now;
     jasmine.clock().mockDate(baseTime);
+    urlBase = UrlConfig.getAdminServiceUrl() + 'organization';
+
   }));
 
   afterEach(function () {
@@ -156,12 +153,14 @@ describe('DeviceUsageService', function () {
     });
 
     it('replaces missing days with data indicating zero use', function () {
-      var usageRequest = baseOrgUrl + '/usage?interval=day&from=2010-10-25&to=2016-10-28&categories=aggregate&countryCodes=aggregate&accounts=aggregate&models=aggregate';
+      sinon.stub(Authinfo, 'getOrgId');
+      Authinfo.getOrgId.returns("1234");
+      var usageRequest = urlBase + '/1234/reports/device/usage?interval=day&from=2010-10-25&to=2016-10-28&categories=aggregate&countryCodes=aggregate&accounts=aggregate&models=aggregate';
       $httpBackend
         .when('GET', usageRequest)
         .respond({ items: usageDataResponse });
 
-      var availabilityRequest = baseOrgUrl + '/data_availability?interval=day&from=2010-10-25&to=2016-10-28';
+      var availabilityRequest = urlBase + '/1234/reports/device/data_availability?interval=day&from=2010-10-25&to=2016-10-28';
       $httpBackend
         .when('GET', availabilityRequest)
         .respond({ items: availableDataResponse });
@@ -190,7 +189,7 @@ describe('DeviceUsageService', function () {
 
       var dataResponse;
 
-      DeviceUsageService.getDataForRange("2010-10-25", "2016-10-28", 'day', [], 'local').then(function (result) {
+      DeviceUsageService.getDataForRange("2010-10-25", "2016-10-28", 'day', [], 'backend').then(function (result) {
         dataResponse = result;
       });
       $httpBackend.flush();
@@ -199,37 +198,117 @@ describe('DeviceUsageService', function () {
 
     });
 
-    it('resolves name from accoundId', function () {
-      sinon.stub(Authinfo, 'getOrgId');
-      Authinfo.getOrgId.returns("1234");
-
-      var devices = [
+    it('calls backend to get least and most used', function () {
+      var usageData1 =
         {
-          accountId: "1111",
-        }, {
-          accountId: "2222",
-        },
+          "date": "2016-10-25T00:00:00.000Z",
+          "accountId": "*",
+          "category": "ce",
+          "model": "SX20",
+          "countryCode": "*",
+          //"callCount": 2,         //missing
+          //"callDuration": 500,    //missing
+        };
+      var usageData2 =
+        {
+          "date": "2016-10-26T00:00:00.000Z",
+          "accountId": "*",
+          "category": "SparkBoard",
+          "model": "SparkBoard 55",
+          "countryCode": "*",
+          "callCount": 4,
+          "callDuration": 500,
+        };
+      var usageData3 =
+        {
+          "date": "2016-10-27T00:00:00.000Z",
+          "accountId": "*",
+          "category": "ce",
+          "model": "SX20",
+          "countryCode": "*",
+          "callCount": 6,
+          "callDuration": 500,
+        };
+
+      var usageData = [
+        usageData1,
+        usageData2,
+        usageData3,
       ];
 
-      var csdmRequest = UrlConfig.getCsdmServiceUrl() + '/organization/1234/places/1111?shallow=true';
+      sinon.stub(Authinfo, 'getOrgId');
+      Authinfo.getOrgId.returns("1234");
+      var least = urlBase + '/1234/reports/device/usage/aggregate?interval=day&from=2010-10-25&to=2016-10-28&countryCodes=aggregate&models=__&orderBy=callDuration&descending=false&limit=20';
       $httpBackend
-        .when('GET', csdmRequest)
-        .respond($q.resolve({ displayName: "oneoneoneone", whatever: "whatever" }));
+        .when('GET', least)
+        .respond({ items: usageData });
 
-      csdmRequest = UrlConfig.getCsdmServiceUrl() + '/organization/1234/places/2222?shallow=true';
+      var most = urlBase + '/1234/reports/device/usage/aggregate?interval=day&from=2010-10-25&to=2016-10-28&countryCodes=aggregate&models=__&orderBy=callDuration&descending=true&limit=20';
       $httpBackend
-        .when('GET', csdmRequest)
-        .respond($q.resolve({ displayName: "twotwotwotwo", whatever: "whatever" }));
+        .when('GET', most)
+        .respond({ items: usageData });
+
+      var count = urlBase + '/1234/reports/device/usage/count?interval=day&from=2010-10-25&to=2016-10-28&models=__&excludeUnused=true';
+      $httpBackend
+        .when('GET', count)
+        .respond({ items: [{ date: "*", count: 42 }] });
+
+      var dataResponse;
+
+      usageData1.callCount = 0;
+      usageData1.callDuration = 0;
+
+      var extectedResult = _.clone([
+        usageData1,
+        usageData2,
+        usageData3,
+      ]);
+
+      DeviceUsageService.extractStats(usageData, "2010-10-25", "2016-10-28").then(function (result) {
+        dataResponse = result;
+      });
+
+      $httpBackend.flush();
+
+      expect(dataResponse.most).toEqual(extectedResult);
+      expect(dataResponse.least).toEqual(extectedResult);
+
+    });
+
+    it('resolves name from accoundIds and returns result in same sequence as listed in devices request', function () {
+      sinon.stub(Authinfo, 'getOrgId');
+      Authinfo.getOrgId.returns("1234");
+      var devicesRequest = urlBase + '/1234/reports/devices?accountIds=1111,2222,3333,4444,5555';
+      $httpBackend
+        .when('GET', devicesRequest)
+        .respond([
+            { displayName: "two", id: "2222", whatever: "whatever" },
+            { displayName: "four", id: "4444", whatever: "whatever" },
+            { displayName: "three", id: "3333", whatever: "whatever" },
+            { displayName: "one", id: "1111", whatever: "whatever" },
+        ]);
 
       var result;
-      DeviceUsageService.resolveDeviceData(devices).then(function (data) {
+
+      var deviceIdsToResolve = [
+        { accountId: "1111" },
+        { accountId: "2222" },
+        { accountId: "3333" },
+        { accountId: "4444" },
+        { accountId: "5555" },
+      ];
+      DeviceUsageService.resolveDeviceData(deviceIdsToResolve).then(function (data) {
         result = data;
       });
       $httpBackend.flush();
 
       expect(result).toEqual([
-        { displayName: "oneoneoneone", whatever: "whatever" },
-        { displayName: "twotwotwotwo", whatever: "whatever" },
+        { id: "1111", displayName: "one" },
+        { id: "2222", displayName: "two" },
+        { id: "3333", displayName: "three" },
+        { id: "4444", displayName: "four" },
+        { id: "5555", displayName: "reportsPage.usageReports.nameNotResolvedFor id=5555", info: 'reportsPage.usageReports.nameNotFoundFor device id=5555' },
+
       ]);
     });
   });

@@ -1,10 +1,5 @@
 import { PrivateTrunkPrereqService } from 'modules/hercules/private-trunk/prereq';
-
-export interface IOption {
-  value: string;
-  label: string;
-  isSelected: boolean;
-}
+import { IOption } from './private-trunk-setup';
 
 export enum DomainRadioType {
   DOMAIN = <any>'domain',
@@ -12,66 +7,88 @@ export enum DomainRadioType {
 }
 
 export class PrivateTrunkDomainCtrl implements ng.IComponentController {
-  public domainOptions: Array<IOption> = [];
+  public domainOptions: Array<IOption>;
   public domains: Array<string>;
-  public domainSelected: Array<IOption> = [];
-  public domainOptionRadio: DomainRadioType = DomainRadioType.DOMAIN;
+  public domainSelected: Array<IOption>;
+  public domainOptionRadio: DomainRadioType;
   public selectPlaceHolder: string;
   public onChangeFn: Function;
-  public isNext: boolean = false;
-  public currentStepIndex: number;
+
   /* @ngInject */
   constructor(
     private PrivateTrunkPrereqService: PrivateTrunkPrereqService,
     private $translate: ng.translate.ITranslateService,
   ) {
-    this.selectPlaceHolder = this.$translate.instant('servicesOverview.cards.privateTrunk.selectDomain');
-
   }
 
   public $onInit(): void {
-    this.PrivateTrunkPrereqService.getVerifiedDomains().then(verifiedDomains => {
-      this.domainOptions = _.map(verifiedDomains, (domain) => {
-        return({ value: domain, label: domain, isSelected: false });
-      });
-    });
+    if ( _.isUndefined(this.domainSelected)) {
+      this.domainSelected = [];
+    }
     this.selectPlaceHolder = this.$translate.instant('servicesOverview.cards.privateTrunk.selectDomain');
-    this.domainOptionRadio = DomainRadioType.DOMAIN;
-    this.currentStepIndex = 1;
+    if (_.isUndefined(this.domainOptionRadio)) {
+      this.domainOptionRadio = DomainRadioType.DOMAIN;
+    }
   }
 
-  public nextStepChange(): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+    const { domains, domainSelected, isDomain } = changes;
+    if ( !_.isUndefined(domainSelected) && _.isArray(domainSelected.currentValue) && domainSelected.currentValue.length) {
+      this.setSelected(domainSelected);
+    }
+
+    if (domains && _.isArray(domains.currentValue) && domains.currentValue.length) {
+      this.setDomainInfo(domains);
+    }
+    this.domainOptions = _.map(this.domains, (domain) => {
+      if (_.isArray(this.domainSelected) && this.isDomainSelected(domain)) {
+        return ({ value: domain, label: domain, isSelected: true });
+      } else {
+        return ({ value: domain, label: domain, isSelected: false });
+      }
+    });
+    if (!_.isUndefined(isDomain) && !_.isUndefined(isDomain.currentValue)) {
+      this.domainOptionRadio =  isDomain.currentValue ? DomainRadioType.DOMAIN : DomainRadioType.NONE;
+    }
   }
+
+  public isDomainSelected(domain: string): boolean {
+    let temp = _.find(this.domainSelected, (selected) => {
+      return (selected.value === domain) ? true : false ;
+    });
+    return (temp !== undefined);
+  }
+
+  public setDomainInfo(domain: ng.IChangesObject): void {
+    this.domains = _.cloneDeep(domain.currentValue);
+  }
+
+  public setSelected(domainSelected: ng.IChangesObject): void {
+    if (!_.isUndefined(domainSelected) && domainSelected.currentValue) {
+      this.domainSelected = _.cloneDeep(domainSelected.currentValue);
+    }
+  }
+
   public changeRadio(): void {
     if (this.domainOptionRadio === DomainRadioType.NONE) {
-      this.domainSelected = [];
       _.forEach(this.domainOptions, (options) => {
         options.isSelected = false;
       });
       this.selectPlaceHolder = this.$translate.instant('servicesOverview.cards.privateTrunk.selectDomain');
-      this.change([]);
     }
+    this.change([]);
   }
 
   public changeSelected(): void {
     if (this.domainSelected && _.isArray(this.domainSelected)) {
-      let domainArrayStr: Array<any> = _.values(this.domainSelected); //.map('value').value();
-      this.change(domainArrayStr);
+      this.change(this.domainSelected);
     }
   }
 
-  public checkNextButton(): boolean {
-    let isNextButtonEnabled = false;
-    if (this.domainOptionRadio === DomainRadioType.NONE || (this.domainOptionRadio === DomainRadioType.DOMAIN && this.domainSelected && this.domainSelected.length)) {
-      isNextButtonEnabled = true;
-    }
-    return isNextButtonEnabled;
-  }
-
-  public change(domainArrayStr: Array<string>): void {
+  public change(domainSelected: Array<IOption>): void {
     this.onChangeFn({
-      nextButton: this.checkNextButton(),
-      domains: domainArrayStr,
+      isDomain: (this.domainOptionRadio === DomainRadioType.DOMAIN),
+      domainSelected: domainSelected,
     });
   }
 
@@ -84,7 +101,9 @@ export class PrivateTrunkDomainComponent implements ng.IComponentOptions {
   public controller = PrivateTrunkDomainCtrl;
   public templateUrl = 'modules/hercules/private-trunk/setup/private-trunk-domain.html';
   public bindings = {
-    selected: '<',
+    domains: '<',
+    domainSelected: '<',
+    isDomain: '<',
     onChangeFn: '&',
   };
 }

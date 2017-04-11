@@ -76,7 +76,7 @@ describe('Controller: Trial Webex', function () {
   }
 
   it('should resolve siteUrl validation when valid', function (done) {
-    controller.validateSiteUrl('acmecorp.webex.com')
+    controller.validateSiteUrl('acmecorp.webex.com', 'acmecorp.webex.com')
       .then(function () {
         expect(true).toBeTruthy();
         done();
@@ -89,7 +89,7 @@ describe('Controller: Trial Webex', function () {
 
   it('should reject siteUrl validation when invalid', function (done) {
 
-    controller.validateSiteUrl('invalid.test.com')
+    controller.validateSiteUrl('invalid.test.com', 'invalid.test.com')
       .then(function () {
         done.fail('validation promise was resolved');
       })

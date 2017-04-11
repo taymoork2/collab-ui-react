@@ -7,7 +7,7 @@
 
   /* @ngInject */
 
-  function HuronSettingsCtrl($q, $scope, $state, $translate, Authinfo, CeService, CallerId, Config, DirectoryNumberService, DialPlanService, ExternalNumberService, FeatureToggleService, HuronCustomer, HuntGroupServiceV2, InternationalDialing, ModalService, Notification, PstnSetupService, ServiceSetup, TelephoneNumberService, ValidationService, VoicemailMessageAction, TerminusUserDeviceE911Service, PstnServiceAddressService, CustomerCosRestrictionServiceV2, CustomerDialPlanServiceV2, Orgservice, PstnSetup) {
+  function HuronSettingsCtrl($q, $scope, $state, $translate, Authinfo, CeService, CallerId, Config, DirectoryNumberService, HuronCustomerService, ExternalNumberService, FeatureToggleService, HuronCustomer, HuntGroupServiceV2, InternationalDialing, ModalService, Notification, PstnSetupService, ServiceSetup, TelephoneNumberService, ValidationService, VoicemailMessageAction, TerminusUserDeviceE911Service, PstnServiceAddressService, CustomerCosRestrictionServiceV2, CustomerDialPlanServiceV2, Orgservice, PstnSetup) {
     var vm = this;
     vm.loading = true;
 
@@ -16,6 +16,11 @@
     vm.showRegionAndVoicemail = Authinfo.getLicenses().filter(function (license) {
       return license.licenseType === Config.licenseTypes.COMMUNICATION;
     }).length > 0;
+
+    vm.ftHuronFederatedSparkCall = false;
+    vm.ftHuronSupportThinktel = false;
+    vm.ftHuronL10nUserLocale2 = false;
+    vm.supportRegionalSettings = supportRegionalSettings;
 
     var DEFAULT_SITE_INDEX = '000001';
     var DEFAULT_TZ = {
@@ -1012,6 +1017,10 @@
 
     init();
 
+    function supportRegionalSettings() {
+      return vm.ftHuronFederatedSparkCall || vm.ftHuronSupportThinktel || vm.ftHuronL10nUserLocale2;
+    }
+
     function clearCallerIdFields() {
       vm.model.callerId.uuid = '';
       vm.model.callerId.callerIdName = '';
@@ -1233,6 +1242,7 @@
 
       if (_.get(vm, 'model.site.extensionLength') && (vm.model.site.extensionLength !== savedModel.site.extensionLength)) {
         siteData.extensionLength = vm.model.site.extensionLength;
+        vm.avrilDialPlanUpdated = true;
       }
 
       if (_.get(vm, 'model.site.siteSteeringDigit.siteDialDigit') && (vm.model.site.siteSteeringDigit.siteDialDigit !== savedModel.site.siteSteeringDigit.siteDialDigit)) {
@@ -1649,7 +1659,7 @@
     }
 
     function loadDialPlan() {
-      return DialPlanService.getCustomerVoice(Authinfo.getOrgId()).then(function (response) {
+      return HuronCustomerService.getVoiceCustomer().then(function (response) {
         if (response.dialPlan === null) {
           // if customer's dialPlan attribute is defined but null, assume the customer is on the
           // North American Dial Plan. Look up uuid for NANP and insert it into customer dialPlan.
@@ -2037,7 +2047,7 @@
         vm.model.regionCode = '';
       }
       if (vm.model.regionCode !== vm.previousModel.regionCode) {
-        return DialPlanService.updateCustomerVoice(Authinfo.getOrgId(), {
+        return HuronCustomerService.updateVoiceCustomer({
           regionCode: vm.model.regionCode,
         }).catch(function (error) {
           errors.push(Notification.processErrorResponse(error, 'serviceSetupModal.error.updateCustomerVoice'));
@@ -2050,6 +2060,18 @@
 
       FeatureToggleService.supports(FeatureToggleService.features.avrilVmEnable).then(function (result) {
         vm.voicemailAvrilCustomer = result;
+      });
+
+      FeatureToggleService.supports(FeatureToggleService.features.huronFederatedSparkCall).then(function (result) {
+        vm.ftHuronFederatedSparkCall = result;
+      });
+
+      FeatureToggleService.supports(FeatureToggleService.features.huronSupportThinktel).then(function (result) {
+        vm.ftHuronSupportThinktel = result;
+      });
+
+      FeatureToggleService.supports(FeatureToggleService.features.huronUserLocale2).then(function (result) {
+        vm.ftHuronL10nUserLocale2 = result;
       });
 
       return $q.resolve();

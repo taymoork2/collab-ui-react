@@ -64,10 +64,6 @@ describe('Service: PstnSetupService', function () {
     numbers: portNumbers,
   };
 
-  var portOrderPstnPayload = {
-    numbers: ['+19726579867'],
-  };
-
   var portOrderV2PstnPayload = {
     numbers: ['+19726579867'],
     numberType: "DID",
@@ -137,7 +133,6 @@ describe('Service: PstnSetupService', function () {
     blockOrderPayloadWithNxx = undefined;
     orderPayload = undefined;
     portOrderPayload = undefined;
-    portOrderPstnPayload = undefined;
     portOrderV2PstnPayload = undefined;
     portOrderTfnPayload = undefined;
     pstnOrderPayload = undefined;
@@ -216,20 +211,7 @@ describe('Service: PstnSetupService', function () {
     this.$httpBackend.flush();
   });
 
-  it('should make different types of port order', function () {
-    this.FeatureToggleService.supports.and.returnValue(this.$q.resolve(false));
-    this.$httpBackend.expectPOST(this.HuronConfig.getTerminusUrl() + '/customers/' + suite.customerId + '/carriers/' + suite.carrierId + '/did/port', portOrderPstnPayload).respond(201);
-    this.$httpBackend.expectPOST(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/ports', portOrderTfnPayload).respond(201);
-    var portOrderData = _.cloneDeep(portOrderPayload);
-    var promise = this.PstnSetupService.portNumbers(suite.customerId, suite.carrierId, portOrderData.numbers);
-    //verify the logic to split the ports
-    promise.then(function () {
-      expect(portOrderData.numbers.length).toEqual(1);
-    });
-    this.$httpBackend.flush();
-  });
-
-  it('feature toggle should make V2 DId port API call', function () {
+  it('should make V2 DId port API call', function () {
     this.FeatureToggleService.supports.and.returnValue(this.$q.resolve(true));
     this.$httpBackend.expectPOST(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/ports', portOrderV2PstnPayload).respond(201);
     this.$httpBackend.expectPOST(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/ports', portOrderTfnPayload).respond(201);

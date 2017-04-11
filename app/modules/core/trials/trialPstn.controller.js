@@ -17,6 +17,7 @@
     var SELECT = '';
     var MIN_VALID_CODE = 3;
     var MAX_VALID_CODE = 6;
+    var MAX_DID_QUANTITY = 100;
 
     vm.parentTrialData = $scope.$parent.trialData;
     vm.trialData = TrialPstnService.getData();
@@ -393,7 +394,7 @@
       }
       var params = {
         npa: vm.trialData.details.pstnNumberInfo.areaCode.code,
-        count: '1',
+        count: MAX_DID_QUANTITY,
         sequential: false,
       };
 

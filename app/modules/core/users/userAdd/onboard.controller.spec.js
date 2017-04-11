@@ -85,7 +85,7 @@ describe('OnboardCtrl: Ctrl', function () {
     spyOn(this.TelephonyInfoService, 'getInternalNumberPool').and.returnValue(this.mock.internalNumbers);
     spyOn(this.TelephonyInfoService, 'loadInternalNumberPool').and.returnValue(this.$q.when(this.mock.internalNumbers));
     spyOn(this.TelephonyInfoService, 'getExternalNumberPool').and.returnValue(this.mock.externalNumbers);
-    spyOn(this.DialPlanService, 'getCustomerDialPlanDetails').and.returnValue(this.$q.when({
+    spyOn(this.DialPlanService, 'getDialPlan').and.returnValue(this.$q.when({
       extensionGenerated: 'false',
     }));
 
