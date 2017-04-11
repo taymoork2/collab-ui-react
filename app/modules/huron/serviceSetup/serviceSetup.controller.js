@@ -7,7 +7,7 @@
 
   /* @ngInject*/
   function ServiceSetupCtrl($q, $state, $scope, ServiceSetup, Notification, Authinfo, $translate, HuronCustomer,
-    ValidationService, DialPlanService, TelephoneNumberService, ExternalNumberService,
+    ValidationService, HuronCustomerService, TelephoneNumberService, ExternalNumberService,
     CeService, HuntGroupServiceV2, ModalService, DirectoryNumberService, VoicemailMessageAction,
     PstnSetupService, Orgservice, FeatureToggleService, Config, CustomerCosRestrictionServiceV2, CustomerDialPlanServiceV2) {
     var vm = this;
@@ -1085,7 +1085,7 @@
     }
 
     function setServiceValues() {
-      return DialPlanService.getCustomerVoice(Authinfo.getOrgId()).then(function (response) {
+      return HuronCustomerService.getVoiceCustomer().then(function (response) {
         if (response.dialPlan === null) {
           // if customer's dialPlan attribute is defined but null, assume the customer is on the
           // North American Dial Plan. Look up uuid for NANP and insert it into customer dialPlan.
@@ -1329,7 +1329,7 @@
           vm.model.regionCode = '';
         }
         if (vm.model.regionCode !== vm.model.initialRegionCode) {
-          return DialPlanService.updateCustomerVoice(Authinfo.getOrgId(), {
+          return HuronCustomerService.updateVoiceCustomer({
             regionCode: vm.model.regionCode,
           })
           .catch(function (error) {

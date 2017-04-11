@@ -89,6 +89,11 @@ describe('Component: pgEdit', () => {
     extensionUUID: '8e33e338-0caa-4579-86df-38ef7590f432',
   };
 
+  let numberData3 = {
+    extension: '2222',
+    extensionUUID: undefined,
+  };
+
   beforeEach(function () {
     this.initModules('huron.paging-group.edit');
     this.injectDependencies(
@@ -159,7 +164,7 @@ describe('Component: pgEdit', () => {
 
     it('should initialize all the Paging Group data', function () {
       this.getNumberSuggestionsDefer.resolve(pilotNumbers);
-      this.getNumberExtensionDefer.resolve(numberData);
+      this.getNumberExtensionDefer.resolve(numberData3);
       this.getPagingGroupDefer.resolve(pg);
       this.getUserDefer.resolve(userResponse);
       this.getPlaceDefer.resolve(placeResponse);
@@ -167,7 +172,7 @@ describe('Component: pgEdit', () => {
       this.$scope.$apply();
       expect(this.PagingGroupService.getPagingGroup).toHaveBeenCalledWith(this.pg.groupId);
       expect(this.controller.name).toEqual(this.pg.name);
-      expect(this.controller.number).toEqual(numberData);
+      expect(this.controller.number).toEqual(numberData3);
       expect(this.controller.members[0].member.displayName).toEqual('peter desk');
       expect(this.controller.members[1].member.firstName).toEqual('rtp2');
       expect(this.controller.loading).toBeFalsy();
@@ -581,7 +586,7 @@ describe('Component: pgEdit', () => {
 
     it('should update pg to clear out outOfSync if not find an user in UPDM', function () {
       this.getNumberSuggestionsDefer.resolve(_.cloneDeep(pilotNumbers));
-      this.getNumberExtensionDefer.resolve(_.cloneDeep(numberData));
+      this.getNumberExtensionDefer.resolve(_.cloneDeep(numberData3));
       this.getPagingGroupDefer.resolve(_.cloneDeep(pg));
       this.getUserDefer.reject(memberFailureResp);
       this.getPlaceDefer.reject(memberFailureResp);
@@ -589,7 +594,7 @@ describe('Component: pgEdit', () => {
       this.$scope.$apply();
       expect(this.PagingGroupService.getPagingGroup).toHaveBeenCalledWith(this.pg.groupId);
       expect(this.controller.name).toEqual(this.pg.name);
-      expect(this.controller.number).toEqual(numberData);
+      expect(this.controller.number).toEqual(numberData3);
       expect(this.controller.loading).toBeFalsy();
       expect(this.PagingGroupService.updatePagingGroup).toHaveBeenCalled();
       expect(this.PagingNumberService.getNumberSuggestions).toHaveBeenCalled();

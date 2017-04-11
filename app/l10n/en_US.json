@@ -1453,11 +1453,17 @@
     "externalNumberDescriptionText": "Select a number that users can call to check their voicemail from outside the company network.",
     "voicemailPrefixTitle": "Voicemail ID Prefix",
     "voicemailPrefixDesc": "Select a prefix to reserve for dialing mailboxes from a device. Extensions between {{number}}{{extensionLength0}} and {{number}}{{extensionLength9}} are not recommended for assignment.",
-    "dialing": "Dialing",
+    "dialing": "Dialing Preferences",
     "internalDialing": "Internal Dialing",
     "externalDialing": "External Dialing",
     "nationalDialingTitle": "National Dialing",
     "nationalDialingDesc": "Require the user to dial the full phone number for each PSTN call.",
+    "notSimplifiedDialingTitle": "Require this user to dial the full phone number for each PSTN call",
+    "exampleDialing": "Example dialing: {{dialingExample}}",
+    "simplifiedDialingTitle": "Simplified local dialing",
+    "simplifiedDialingDesc": "User does NOT dial the country code specified below.",
+    "multipleAreaCodeText": "Not recommended for locations with multiple area codes.",
+    "requireOneToDialLabel": "Require the user to dial 1 before the area code",
     "localDialingTitle": "Local Dialing",
     "localDialingDesc": "Auto-prepend a country code and area code to phone calls for simplified local dialing. Not recommended for locations with multiple area codes.",
     "localDialingNumberTitle": "Prepended Area Code",
@@ -2047,7 +2053,7 @@
       "clusters-title-squared-fusion-media": "Media Clusters",
       "clusters-title-spark-hybrid-datasecurity": "HDS Clusters",
       "clusters-title-contact-center-context": "Context Clusters",
-      "clusters-title-ciscouc": "SIP Destination",
+      "clusters-title-ept": "SIP Destination",
       "status-title": "Service Status"
     },
     "hybridVoicemailUserSection": {
@@ -2088,7 +2094,7 @@
       "oneButtonToPushIntervalMinutesSavingError": "Could not save the change to early join time. Try again later.",
       "voicemail": {
         "heading": "Voicemail",
-        "description": "Allow users in your organization to access on-premise voicemail by using the Cisco Spark app.",
+        "description": "Users can access on-premises voicemail by using the Cisco Spark app.",
         "enableDescription": "All users with both Hybrid Call Service Aware and Connect can use voicemail now",
         "disableDescription": "Voicemail is disabled for all users",
         "voicemailDisabled": "To enable voicemail Call Service Connect needs to be turned on.",
@@ -2098,8 +2104,8 @@
         "voicemailStatusNotConfigured": "Voicemail service not configured",
         "voicemailStatusRequested": "Voicemail service activation pending",
         "voicemailStatusHybridSuccess": "Voicemail service operational",
-        "voicemailStatusHybridFailed": "Voicemail service impaired (see clusters for alarms)",
-        "voicemailStatusHybridPartial": "Voicemail service outage (see cluster for alarms)"
+        "voicemailStatusHybridFailed": "Voicemail service outage (see clusters for alarms)",
+        "voicemailStatusHybridPartial": "Voicemail service impaired (see clusters for alarms)"
       },
       "documentation": {
         "heading": "Documentation and Software",
@@ -2548,6 +2554,10 @@
     },
     "hybridServicesConnectorSidepanel": {
       "alarmDetails": "Alarm Details"
+    },
+    "addressesStatusComponent": {
+      "addresses": "Addresses",
+      "noAddressesFound": "No addresses found"
     }
   },
   "context": {
@@ -3243,6 +3253,7 @@
     "decisionCallerCountryCode": "The Caller's Country Code",
     "decisionCallerAreaCode": "The Caller's Area Code",
     "decisionSessionVariable": "The Session Variable",
+    "decisionMissingCustomVariable": "The selected variable is undefined in this call tree. Null values will result in negative results.",
     "callerReturned5Mins": "5 Minutes",
     "callerReturnedOneDay": "1 Day",
     "callerReturnedOneWeek": "1 Week",
@@ -3857,7 +3868,8 @@
     "portNumberOrder": "Porting Numbers",
     "tollFreeNumberOrder": "New Toll-Free Numbers",
     "tollFreeNumberAdvanceOrder": "Toll-Free Advance Numbers",
-    "searchPlaceholder": "Search Orders"
+    "searchPlaceholder": "Search Orders",
+    "orderHistory": "Order History"
   },
   "pstnOrderDetail": {
     "orderNumber": "Order #{{orderId}}",
@@ -4969,6 +4981,7 @@
         "windows": "Windows Mobile",
         "total": "Total"
       },
+      "mobile": "Mobile",
       "cardDescription": {
         "clientType": "Summary of the types of meeting clients that are in use at an organization",
         "cloudParticipants2": ": Number of calls made within an enterprise but overflowed to a cloud cluster.",
@@ -7068,10 +7081,12 @@
         "sip": "Enter Sip destination",
         "displayLabel": "Display name",
         "displayName": "Enter display name",
-        "nextSip": "Add another SIP destination",
+        "addDestination": "Add another SIP destination",
         "hybridDestination": "Use one or more Expressway-E configured for Hybrid Call Connect ",
         "cancelHeader": "Cancel Enterprise Private Trunking Setup.",
-        "cancelBody": "Are you sure you want to cancel?"
+        "cancelBody": "Are you sure you want to cancel?",
+        "invalidChars": "Invalid characters in domain, allowed set is \"[a-z] [A-Z] [0-9]._-\".",
+        "hybridRequiredError": "Required: Expressway-E for Hybrid Call Connect was not found"
       }
     },
     "showMore": "View all",

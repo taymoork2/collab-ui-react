@@ -46,7 +46,7 @@ describe('Controller: ConfirmDeleteHostController ', () => {
     controller.removeHost();
     $scope.$apply();
     expect($state.go).toHaveBeenCalledWith('calendar-service.list');
-    expect(ClusterService.deleteHost).toHaveBeenCalledWith(clusterid, hostSerial);
+    expect(ClusterService.deleteHost).toHaveBeenCalledWith(hostSerial);
     expect(Notification.success).toHaveBeenCalled();
   });
 
@@ -58,7 +58,7 @@ describe('Controller: ConfirmDeleteHostController ', () => {
     controller.removeHost();
     $scope.$apply();
     expect($state.go).toHaveBeenCalledWith('call-service.list');
-    expect(ClusterService.deleteHost).toHaveBeenCalledWith(clusterid, hostSerial);
+    expect(ClusterService.deleteHost).toHaveBeenCalledWith(hostSerial);
     expect(Notification.success).toHaveBeenCalled();
   });
 

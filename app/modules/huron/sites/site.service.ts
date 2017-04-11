@@ -1,4 +1,4 @@
-import { Site } from './site';
+import { ISite, Site } from './site';
 
 export class EmergencyCallBackNumber {
   public uuid: string;
@@ -32,6 +32,7 @@ export class HuronSiteService {
     'timeFormat',
     'routingPrefix',
     'allowExternalTransfer',
+    'regionCodeDialing',
   ];
 
   /* @ngInject */
@@ -59,30 +60,30 @@ export class HuronSiteService {
       });
   }
 
-  public getSite(siteId: string): ng.IPromise<Site> {
+  public getSite(siteId: string): ng.IPromise<ISite> {
     return this.huronSiteService.get({
       customerId: this.Authinfo.getOrgId(),
       siteId: siteId,
-    }).$promise;
+    }).$promise
+    .then(site => {
+      return new Site(site);
+    });
   }
 
-  public getTheOnlySite(): ng.IPromise<Site> {
+  public getTheOnlySite(): ng.IPromise<ISite> {
     return this.huronSiteService.query({
       customerId: this.Authinfo.getOrgId(),
     }).$promise
     .then(sites => {
       if (sites.length > 0) {
-        return this.getSite(_.get<string>(sites[0], 'uuid'))
-          .then(site => {
-            return _.pick(site, this.sitePickList);
-          });
+        return this.getSite(_.get<string>(sites[0], 'uuid'));
       } else {
         return new Site();
       }
     });
   }
 
-  public createSite(site: Site): ng.IPromise<string> {
+  public createSite(site: ISite): ng.IPromise<string> {
     let location: string;
     // TODO (jlowery): remove after 'i751-10d-ext' toggle is removed.
     _.set(site, 'toggleEnabled', true);
@@ -95,12 +96,12 @@ export class HuronSiteService {
     .then( () => location);
   }
 
-  public updateSite(site: Site): ng.IPromise<void> {
+  public updateSite(site: ISite): ng.IPromise<void> {
     return this.huronSiteService.update({
       customerId: this.Authinfo.getOrgId(),
       siteId: site.uuid,
     }, {
-      steeringDigit: site.steeringDigit,
+      steeringDigit: site.steeringDigit === 'null' ? null : site.steeringDigit,
       timeZone: site.timeZone,
       disableVoicemail: site.disableVoicemail,
       voicemailPilotNumber: site.voicemailPilotNumber,
@@ -114,11 +115,12 @@ export class HuronSiteService {
       routingPrefix: site.routingPrefix,
       emergencyCallBackNumber: site.emergencyCallBackNumber,
       allowExternalTransfer: site.allowExternalTransfer,
+      regionCodeDialing: site.regionCodeDialing,
       toggleEnabled: true, // TODO (jlowery): remove after 'i751-10d-ext' toggle is removed.
     }).$promise;
   }
 
-  public listSites(): ng.IPromise<Site[]> {
+  public listSites(): ng.IPromise<ISite[]> {
     return this.huronSiteService.query({
       customerId: this.Authinfo.getOrgId(),
     }).$promise

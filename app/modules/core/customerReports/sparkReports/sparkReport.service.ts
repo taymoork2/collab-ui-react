@@ -569,6 +569,3 @@ export class SparkReportService {
     return deviceArray;
   }
 }
-
-angular.module('Core')
-  .service('SparkReportService', SparkReportService);

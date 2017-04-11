@@ -1,0 +1,16 @@
+<cs-sp-section ng-if="$ctrl.destinationList.length === 0">
+  <section-title title-key="hercules.addressesStatusComponent.addresses"></section-title>
+  <p translate="hercules.addressesStatusComponent.noAddressesFound"></p>
+</cs-sp-section>
+<cs-sp-section ng-if="$ctrl.destinationList.length > 0">
+  <section-title title-key="hercules.addressesStatusComponent.addresses"></section-title>
+  <div class="feature-list">
+    <p ng-repeat="destination in $ctrl.destinationList | orderBy: 'address'" class="feature">
+      <span class="feature-name">{{destination.address}}</span>
+      <span class="feature-status">
+        <i class="icon icon-circle status-indicator" ng-class="$ctrl.getStatusIndicatorCSSClass(destination.state)"></i>
+        <span translate="{{'servicesOverview.cardStatus.' + destination.state}}"></span>
+      </span>
+    </p>
+  </div>
+</cs-sp-section>

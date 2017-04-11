@@ -9,8 +9,8 @@ require('./_hg-edit.scss');
   /* @ngInject */
   function HuntGroupEditCtrl($state, $q, $stateParams, $translate,
     Authinfo, HuntGroupService, Notification, HuntGroupFallbackDataService,
-    HuntGroupMemberDataService, HuntGroupEditDataService, DialPlanService,
-    TelephoneNumberService) {
+    HuntGroupMemberDataService, HuntGroupEditDataService, HuronCustomerService,
+    TelephoneNumberService, CardUtils) {
     var vm = this;
     vm.selectHuntMethod = selectHuntMethod;
     vm.resetForm = resetForm;
@@ -59,6 +59,11 @@ require('./_hg-edit.scss');
 
     vm.model = {};
 
+    vm.fetchNumbers = fetchNumbers;
+    vm.selectPilotNumber = selectPilotNumber;
+    vm.unSelectHuntGroupMember = unSelectHuntGroupMember;
+    vm.unSelectPilotNumber = unSelectPilotNumber;
+
     var customerId = Authinfo.getOrgId();
 
     if ($stateParams.feature && $stateParams.feature.id) {
@@ -98,7 +103,7 @@ require('./_hg-edit.scss');
     }
 
     function getRegionCode() {
-      return DialPlanService.getCustomerVoice(Authinfo.getOrgId());
+      return HuronCustomerService.getVoiceCustomer();
     }
 
     function updateModal(pristineData, resetFromBackend) {
@@ -143,6 +148,7 @@ require('./_hg-edit.scss');
       updateModal(HuntGroupEditDataService.getPristine(), false);
       vm.form.$setPristine();
       vm.form.$setUntouched();
+      CardUtils.resize();
     }
 
     function checkFallbackDirtiness() {
@@ -303,8 +309,45 @@ require('./_hg-edit.scss');
       });
     }
 
+    function fetchNumbers(typedNumber) {
+
+      vm.errorNumberInput = false;
+      var GetPilotNumbers = HuntGroupService.getPilotNumberSuggestions(typedNumber);
+
+      if (GetPilotNumbers) {
+        GetPilotNumbers.setOnFailure(function (response) {
+          Notification.errorResponse(response, 'huronHuntGroup.numberFetchFailure');
+        });
+        GetPilotNumbers.setFilter({
+          sourceKey: 'uuid',
+          responseKey: 'uuid',
+          dataToStrip: vm.model.numbers,
+        });
+
+        return GetPilotNumbers.fetch().then(function (numbers) {
+          vm.errorNumberInput = (numbers && numbers.length === 0);
+          return numbers;
+        });
+      }
+
+      return [];
+    }
+
+    function selectPilotNumber(numItem) {
+      vm.selectedPilotNumber = undefined;
+      vm.model.numbers.push(numItem);
+      vm.form.$setDirty();
+      CardUtils.resize();
+    }
+
+    function unSelectPilotNumber(numItem) {
+      vm.model.numbers.splice(vm.model.numbers.indexOf(numItem), 1);
+      vm.form.$setDirty();
+      CardUtils.resize(100);
+    }
+
     function initializeFields() {
-      vm.fields = [{
+      vm.name = [{
         key: 'name',
         type: 'input',
         className: 'hg-name',
@@ -322,46 +365,8 @@ require('./_hg-edit.scss');
             },
           },
         },
-      }, {
-        key: 'numbers',
-        type: 'select',
-        className: 'hg-num',
-        templateOptions: {
-          label: $translate.instant('huronHuntGroup.numbersLabel'),
-          placeholder: $translate.instant('huronHuntGroup.numbersLabel'),
-          inputPlaceholder: $translate.instant('huronHuntGroup.numbersInputPlaceHolder'),
-          waitTime: 'true',
-          multi: 'true',
-          filter: true,
-          singular: $translate.instant('huronHuntGroup.numberSingular'),
-          plural: $translate.instant('huronHuntGroup.numberPlural'),
-          valuefield: 'number',
-          labelfield: 'number',
-          required: true,
-          onClick: function () {
-            vm.form.$setDirty();
-          },
-        },
-        controller: /* @ngInject */ function ($scope) {
-          $scope.to.options = vm.allPilotOptions;
-          $scope.$watchCollection('model.numbers', function (value) {
-            if (angular.equals(value, vm.selectedPilotNumbers)) {
-              $scope.to.options = _.cloneDeep(vm.allPilotOptions);
-              $scope.to.placeholder = vm.selectedPilotNumbers.length + ' ' + $translate.instant('huronHuntGroup.numberSingular') + ' Selected';
-            }
-            if (angular.equals(value, [])) {
-              if (vm.form.numbers) {
-                vm.form.numbers.$setValidity('required', false);
-              }
-              $scope.to.placeholder = 'Select Option';
-            } else {
-              if (vm.form.numbers) {
-                vm.form.numbers.$setValidity('required', true);
-              }
-            }
-          });
-        },
-      }, {
+      }];
+      vm.time = [{
         key: 'maxRingSecs',
         type: 'select',
         className: 'hg-time',

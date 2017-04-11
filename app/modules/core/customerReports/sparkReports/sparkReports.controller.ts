@@ -42,7 +42,7 @@ interface IConversationPopulated {
   rooms: boolean;
 }
 
-class SparkReportCtrl {
+export class SparkReportCtrl {
   /* @ngInject */
   constructor(
     private $rootScope: ng.IRootScopeService,
@@ -155,22 +155,8 @@ class SparkReportCtrl {
   private minMax: IMinMax;
 
   // charts and export controls
-  private charts: ICharts = {
-    active: undefined,
-    rooms: undefined,
-    files: undefined,
-    media: undefined,
-    device: undefined,
-    metrics: undefined,
-  };
-  public exportArrays: ICharts = {
-    active: undefined,
-    rooms: undefined,
-    files: undefined,
-    media: undefined,
-    device: undefined,
-    metrics: undefined,
-  };
+  private charts: ICharts = {};
+  public exportArrays: ICharts = {};
 
   public exportFullPage(): void {
     this.ReportPrintService.printCustomerPage(this.currentFilter, this.timeSelected, this.minMax, this.charts, {
@@ -263,7 +249,6 @@ class SparkReportCtrl {
     id: 'activeUsers',
     reportType: this.ReportConstants.BARCHART,
     state: this.ReportConstants.REFRESH,
-    table: undefined,
     titlePopover: this.ReportConstants.UNDEF,
   };
 
@@ -438,7 +423,6 @@ class SparkReportCtrl {
     id: 'avgRooms',
     reportType: this.ReportConstants.BARCHART,
     state: this.ReportConstants.REFRESH,
-    table: undefined,
     titlePopover: this.ReportConstants.UNDEF,
   };
 
@@ -557,7 +541,6 @@ class SparkReportCtrl {
     id: 'filesShared',
     reportType: this.ReportConstants.BARCHART,
     state: this.ReportConstants.REFRESH,
-    table: undefined,
     titlePopover: this.ReportConstants.UNDEF,
   };
 
@@ -598,7 +581,6 @@ class SparkReportCtrl {
     id: 'mediaQuality',
     reportType: this.ReportConstants.BARCHART,
     state: this.ReportConstants.REFRESH,
-    table: undefined,
     titlePopover: 'mediaQuality.packetLossDefinition',
   };
   public mediaDropdown: IReportDropdown = {
@@ -749,7 +731,6 @@ class SparkReportCtrl {
     id: 'devices',
     reportType: this.ReportConstants.BARCHART,
     state: this.ReportConstants.REFRESH,
-    table: undefined,
     titlePopover: this.ReportConstants.UNDEF,
   };
 
@@ -764,7 +745,7 @@ class SparkReportCtrl {
         }
       } else {
         if (this.currentDeviceGraphs[this.deviceDropdown.selected.value].emptyGraph) {
-          this.setDeviceGraph(this.DummySparkDataService.dummyDeviceData(this.timeSelected, this.displayNewReports), undefined);
+          this.setDeviceGraph(this.DummySparkDataService.dummyDeviceData(this.timeSelected, this.displayNewReports));
           this.deviceOptions.state = this.ReportConstants.EMPTY;
         } else {
           this.setDeviceGraph(this.currentDeviceGraphs, this.deviceDropdown.selected);
@@ -776,7 +757,7 @@ class SparkReportCtrl {
     selected: this.ReportConstants.DEFAULT_ENDPOINT,
   };
 
-  private setDeviceGraph(data: Array<IEndpointWrapper>, deviceFilter: IDropdownBase | undefined): void {
+  private setDeviceGraph(data: Array<IEndpointWrapper>, deviceFilter?: IDropdownBase): void {
     this.exportArrays.device = null;
     let tempDevicesChart: any;
 
@@ -832,7 +813,7 @@ class SparkReportCtrl {
     this.deviceDropdown.selected = this.deviceDropdown.array[0];
     this.deviceDropdown.disabled = true;
     this.deviceOptions.state = this.ReportConstants.REFRESH;
-    this.setDeviceGraph(this.DummySparkDataService.dummyDeviceData(this.timeSelected, this.displayNewReports), undefined);
+    this.setDeviceGraph(this.DummySparkDataService.dummyDeviceData(this.timeSelected, this.displayNewReports));
 
     if (this.timeSelected.value === this.ReportConstants.WEEK_FILTER.value) {
       if (_.isUndefined(this.deviceWeekData)) {
@@ -899,25 +880,18 @@ class SparkReportCtrl {
     id: 'callMetrics',
     reportType: this.ReportConstants.DONUT,
     state: this.ReportConstants.REFRESH,
-    table: undefined,
     titlePopover: this.ReportConstants.UNDEF,
   };
 
   public metricsLabels: Array<IReportLabel> = [{
-    class: undefined,
-    click: undefined,
     hidden: false,
     number: 0,
     text: 'callMetrics.totalCalls',
   }, {
-    class: undefined,
-    click: undefined,
     hidden: false,
     number: 0,
     text: 'callMetrics.callMinutes',
   }, {
-    class: undefined,
-    click: undefined,
     hidden: false,
     number: 0,
     text: 'callMetrics.failureRate',
@@ -933,7 +907,7 @@ class SparkReportCtrl {
     }
   }
 
-  private setMetrics(data: IMetricsLabel | undefined): void {
+  private setMetrics(data?: IMetricsLabel): void {
     if (data) {
       this.metricsLabels[0].number = data.totalCalls;
       this.metricsLabels[1].number = data.totalAudioDuration;
@@ -963,7 +937,7 @@ class SparkReportCtrl {
 
   private setCallMetricsGraph(): void {
     this.metricsOptions.state = this.ReportConstants.REFRESH;
-    this.setMetrics(undefined);
+    this.setMetrics();
     this.setMetricGraph(this.DummySparkDataService.dummyMetricsData());
 
     if (this.timeSelected.value === this.ReportConstants.WEEK_FILTER.value) {
@@ -1047,9 +1021,9 @@ class SparkReportCtrl {
     this.setActiveGraph(this.DummySparkDataService.dummyActiveUserData(this.timeSelected, this.displayNewReports));
     this.setAverageGraph(this.DummySparkDataService.dummyAvgRoomData(this.timeSelected));
     this.setFilesGraph(this.DummySparkDataService.dummyFilesSharedData(this.timeSelected));
-    this.setMetrics(undefined);
+    this.setMetrics();
     this.setMetricGraph(this.DummySparkDataService.dummyMetricsData());
-    this.setDeviceGraph(this.DummySparkDataService.dummyDeviceData(this.timeSelected, this.displayNewReports), undefined);
+    this.setDeviceGraph(this.DummySparkDataService.dummyDeviceData(this.timeSelected, this.displayNewReports));
     this.setMediaGraph(this.DummySparkDataService.dummyMediaData(this.timeSelected, this.displayNewReports));
 
     this.CardUtils.resize(0);
@@ -1061,7 +1035,3 @@ class SparkReportCtrl {
     }
   }
 }
-
-angular
-  .module('Core')
-  .controller('SparkReportCtrl', SparkReportCtrl);

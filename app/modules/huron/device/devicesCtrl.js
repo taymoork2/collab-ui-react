@@ -6,10 +6,9 @@
     .controller('DevicesCtrlHuron', DevicesCtrlHuron);
 
   /* @ngInject */
-  function DevicesCtrlHuron($q, $scope, $state, $stateParams, Config, CsdmDataModelService, WizardFactory, FeatureToggleService, Userservice, Authinfo) {
+  function DevicesCtrlHuron($q, $scope, $state, $stateParams, Config, CsdmHuronUserDeviceService, CsdmDataModelService, WizardFactory, FeatureToggleService, Userservice, Authinfo) {
     var vm = this;
     vm.devices = {};
-    vm.loadedDevices = false;
     vm.otps = [];
     vm.currentUser = $stateParams.currentUser;
     vm.csdmHuronUserDeviceService = CsdmHuronUserDeviceService.create(vm.currentUser.id);

@@ -400,7 +400,7 @@ require('./_user-add.scss');
     };
 
     function toggleShowExtensions() {
-      return DialPlanService.getCustomerDialPlanDetails().then(function (response) {
+      return DialPlanService.getDialPlan().then(function (response) {
         var indexOfDidColumn = _.findIndex($scope.addDnGridOptions.columnDefs, {
           field: 'externalNumber',
         });

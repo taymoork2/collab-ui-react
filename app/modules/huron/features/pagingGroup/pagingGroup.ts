@@ -33,6 +33,6 @@ export interface IMemberWithPicture {
 }
 
 export interface INumberData extends ng.resource.IResource<INumberData> {
-  extension: string;
-  extensionUUID: string;
+  extension: any | undefined;
+  extensionUUID: string | undefined;
 }

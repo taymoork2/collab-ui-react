@@ -103,7 +103,9 @@
 
     function translateClientTypeData(response) {
       _.forEach(response.data.dataProvider, function (val) {
-        val.name = vm.clientTypeTranMap[val.name];
+        if (!_.isUndefined(vm.clientTypeTranMap[val.name])) {
+          val.name = vm.clientTypeTranMap[val.name];
+        }
       });
       return response;
     }

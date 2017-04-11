@@ -198,6 +198,83 @@ describe('DeviceUsageService', function () {
 
     });
 
+    it('calls backend to get least and most used', function () {
+      var usageData1 =
+        {
+          "date": "2016-10-25T00:00:00.000Z",
+          "accountId": "*",
+          "category": "ce",
+          "model": "SX20",
+          "countryCode": "*",
+          //"callCount": 2,         //missing
+          //"callDuration": 500,    //missing
+        };
+      var usageData2 =
+        {
+          "date": "2016-10-26T00:00:00.000Z",
+          "accountId": "*",
+          "category": "SparkBoard",
+          "model": "SparkBoard 55",
+          "countryCode": "*",
+          "callCount": 4,
+          "callDuration": 500,
+        };
+      var usageData3 =
+        {
+          "date": "2016-10-27T00:00:00.000Z",
+          "accountId": "*",
+          "category": "ce",
+          "model": "SX20",
+          "countryCode": "*",
+          "callCount": 6,
+          "callDuration": 500,
+        };
+
+      var usageData = [
+        usageData1,
+        usageData2,
+        usageData3,
+      ];
+
+      sinon.stub(Authinfo, 'getOrgId');
+      Authinfo.getOrgId.returns("1234");
+      var least = urlBase + '/1234/reports/device/usage/aggregate?interval=day&from=2010-10-25&to=2016-10-28&countryCodes=aggregate&models=__&orderBy=callDuration&descending=false&limit=20';
+      $httpBackend
+        .when('GET', least)
+        .respond({ items: usageData });
+
+      var most = urlBase + '/1234/reports/device/usage/aggregate?interval=day&from=2010-10-25&to=2016-10-28&countryCodes=aggregate&models=__&orderBy=callDuration&descending=true&limit=20';
+      $httpBackend
+        .when('GET', most)
+        .respond({ items: usageData });
+
+      var count = urlBase + '/1234/reports/device/usage/count?interval=day&from=2010-10-25&to=2016-10-28&models=__&excludeUnused=true';
+      $httpBackend
+        .when('GET', count)
+        .respond({ items: [{ date: "*", count: 42 }] });
+
+      var dataResponse;
+
+      usageData1.callCount = 0;
+      usageData1.callDuration = 0;
+
+      var extectedResult = _.clone([
+        usageData1,
+        usageData2,
+        usageData3,
+      ]);
+
+      DeviceUsageService.extractStats(usageData, "2010-10-25", "2016-10-28").then(function (result) {
+        dataResponse = result;
+      });
+
+      $httpBackend.flush();
+
+      expect(dataResponse.most).toEqual(extectedResult);
+      expect(dataResponse.least).toEqual(extectedResult);
+
+    });
+
     it('resolves name from accoundIds and returns result in same sequence as listed in devices request', function () {
       sinon.stub(Authinfo, 'getOrgId');
       Authinfo.getOrgId.returns("1234");

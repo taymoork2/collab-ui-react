@@ -4,6 +4,7 @@
 
 <form name="$ctrl.form" novalidate  ng-if="!$ctrl.loading">
   <div class="container-fluid service-setup-container">
+    <!-- regional settings -->
     <div ng-if="$ctrl.showRegionAndVoicemail" class="row full service-setup service-setup-regional-settings bottom-margin">
       <uc-time-zone
         time-zone="$ctrl.huronSettingsData.site.timeZone"
@@ -25,6 +26,8 @@
         on-change-fn="$ctrl.onDefaultCountryChanged(defaultCountry)">
       </uc-default-country>
     </div>
+
+    <!-- internal dialing section -->
     <h4 class="title-margin-bottom"translate="serviceSetupModal.internalDialing"></h4>
     <div class="row full service-setup service-setup-regional-settings bottom-margin">
       <uc-routing-prefix
@@ -47,6 +50,8 @@
         on-change-fn="$ctrl.onExtensionRangeChanged(extensionRanges)">
       </uc-extension-range>
     </div>
+
+    <!-- external dialing section -->
     <h4 class="title-margin-bottom" translate="serviceSetupModal.externalDialing"></h4>
     <div class="row full service-setup service-setup-regional-settings bottom-margin">
       <uc-outbound-dial-digit
@@ -61,19 +66,28 @@
     </div>
     <div class="row full service-setup service-setup-regional-settings bottom-margin">
       <uc-dialing-setup
-        is-terminus-customer="$ctrl.isTerminusCustomer">
+        steering-digit="$ctrl.huronSettingsData.site.steeringDigit"
+        use-simplified-national-dialing="$ctrl.huronSettingsData.site.regionCodeDialing.useSimplifiedNationalDialing"
+        supports-simplified-national-dialing="$ctrl.settingsOptions.dialPlan.supportsSimplifiedNationalDialing"
+        region-code="$ctrl.huronSettingsData.site.regionCodeDialing.regionCode"
+        is-terminus-customer="$ctrl.isTerminusCustomer"
+        on-change-fn="$ctrl.onRegionCodeChanged(regionCode, useSimplifiedNationalDialing)">
       </uc-dialing-setup>
     </div>
+
+    <!-- cos restrictions selection -->
     <uc-cos-form
       env="ftsw"
       cos-restrictions="$ctrl.huronSettingsData.cosRestrictions"
-      premium-numbers="$ctrl.settingsOptions.premiumNumbers"
+      premium-numbers="$ctrl.settingsOptions.dialPlan.premiumNumbers"
       on-change-fn="$ctrl.onCustomerCosRestrictionsChanged(restrictions)">
     </uc-cos-form>
+
+    <!-- company voicemail selection -->
     <div class="row full service-setup service-setup-regional-settings bottom-margin">
       <uc-company-voicemail
         site="$ctrl.huronSettingsData.site"
-        dial-plan-country-code="$ctrl.settingsOptions.countryCode"
+        dial-plan-country-code="$ctrl.settingsOptions.dialPlan.countryCode"
         external-number-options="$ctrl.settingsOptions.companyVoicemailOptions"
         company-voicemail-enabled="$ctrl.huronSettingsData.customer.hasVoicemailService"
         voicemail-to-email="$ctrl.huronSettingsData.voicemailToEmailSettings.voicemailToEmail"

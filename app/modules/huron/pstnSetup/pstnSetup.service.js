@@ -21,8 +21,6 @@
     TerminusCustomerV2Service, TerminusCustomerTrialV2Service,
     TerminusCarrierService, TerminusCarrierV2Service,
     TerminusOrderV2Service, TerminusNumberService,
-    TerminusCarrierInventoryReserve, TerminusCarrierInventoryRelease,
-    TerminusCustomerCarrierInventoryReserve, TerminusCustomerCarrierInventoryRelease,
     TerminusCustomerCarrierDidService, TerminusCustomerPortService,
     TerminusResellerCarrierService, TerminusResellerCarrierV2Service,
     TerminusV2ResellerService,
@@ -77,8 +75,6 @@
       getCarrierDetails: getCarrierDetails,
       searchCarrierInventory: searchCarrierInventory,
       searchCarrierTollFreeInventory: searchCarrierTollFreeInventory,
-      reserveCarrierInventory: reserveCarrierInventory,
-      releaseCarrierInventory: releaseCarrierInventory,
       reserveCarrierInventoryV2: reserveCarrierInventoryV2,
       releaseCarrierInventoryV2: releaseCarrierInventoryV2,
       releaseCarrierTollFreeInventory: releaseCarrierTollFreeInventory,
@@ -287,51 +283,6 @@
         .then(function (response) {
           return _.get(response, 'numbers', []);
         });
-    }
-
-    function reserveCarrierInventory(customerId, carrierId, numbers, isCustomerExists) {
-      if (!_.isArray(numbers)) {
-        numbers = [numbers];
-      }
-
-      if (isCustomerExists) {
-        // If a customer exists, reserve with the customer
-        return TerminusCustomerCarrierInventoryReserve.save({
-          customerId: customerId,
-          carrierId: carrierId,
-        }, {
-          numbers: numbers,
-        }).$promise;
-      } else {
-        // Otherwise reserve with carrier
-        return TerminusCarrierInventoryReserve.save({
-          carrierId: carrierId,
-        }, {
-          numbers: numbers,
-        }).$promise;
-      }
-    }
-
-    function releaseCarrierInventory(customerId, carrierId, numbers, isCustomerExists) {
-      if (!_.isArray(numbers)) {
-        numbers = [numbers];
-      }
-      if (isCustomerExists) {
-        // If a customer exists, release with the customer
-        return TerminusCustomerCarrierInventoryRelease.save({
-          customerId: customerId,
-          carrierId: carrierId,
-        }, {
-          numbers: numbers,
-        }).$promise;
-      } else {
-        // Otherwise release with carrier
-        return TerminusCarrierInventoryRelease.save({
-          carrierId: carrierId,
-        }, {
-          numbers: numbers,
-        }).$promise;
-      }
     }
 
     function reserveCarrierInventoryV2(customerId, carrierId, numbers, isCustomerExists) {

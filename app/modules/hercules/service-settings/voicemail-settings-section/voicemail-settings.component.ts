@@ -57,11 +57,11 @@ class HybridVoicemailCtrl implements ng.IComponentController {
         this.voicemailStatus = this.$translate.instant('hercules.settings.voicemail.voicemailStatusHybridSuccess');
         break;
       case 'HYBRID_FAILED':
-        this.status = 'warning';
+        this.status = 'danger';
         this.voicemailStatus = this.$translate.instant('hercules.settings.voicemail.voicemailStatusHybridFailed');
         break;
       case 'HYBRID_PARTIAL':
-        this.status = 'danger';
+        this.status = 'warning';
         this.voicemailStatus = this.$translate.instant('hercules.settings.voicemail.voicemailStatusHybridPartial');
         break;
     }

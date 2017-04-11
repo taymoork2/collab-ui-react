@@ -157,6 +157,23 @@
       return reduced;
     }
 
+    // In some strange situations the backend do not return
+    // datafields for callCount and callDuration.
+    // The UI interprets missing fields as zero.
+    function addMissingDataFieldFromBackend(items) {
+      _.each(items, function (item) {
+        if (_.isNil(item.callCount) || _.isNaN(item.callCount)) {
+          //$log.info('Missing call count for', item);
+          item.callCount = 0;
+        }
+
+        if (_.isNil(item.callDuration) || _.isNaN(item.callDuration)) {
+          //$log.info('Missing call duration for', item);
+          item.callDuration = 0;
+        }
+      });
+    }
+
     function extractStats(reduced, start, end, models) {
       var deferredAll = $q.defer();
       var stats = {
@@ -172,15 +189,8 @@
         stats.most = results[1];
         stats.noOfDevices = results[2];
 
-        // Preliminary compatibility with V1
-        _.each(stats.least, function (item) {
-          item.totalDuration = item.callDuration;
-        });
-
-        // Preliminary compatibility with V1
-        _.each(stats.most, function (item) {
-          item.totalDuration = item.callDuration;
-        });
+        addMissingDataFieldFromBackend(stats.least);
+        addMissingDataFieldFromBackend(stats.most);
 
         deferredAll.resolve(stats);
       }).catch(function (ex) {
