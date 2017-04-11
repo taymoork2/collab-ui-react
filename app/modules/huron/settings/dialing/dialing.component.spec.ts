@@ -20,6 +20,7 @@ describe('Component: dialing', () => {
       regionCode: 'regionCode',
       steeringDigit: 'steeringDigit',
       useSimplifiedNationalDialing: 'useSimplifiedNationalDialing',
+      supportsLocalDialing: 'supportsLocalDialing',
       supportsSimplifiedNationalDialing: 'supportsSimplifiedNationalDialing',
       isTerminusCustomer: 'isTerminusCustomer',
       onChangeFn: 'onChangeFn(regionCode, useSimplifiedNationalDialing)',
@@ -30,6 +31,7 @@ describe('Component: dialing', () => {
     beforeEach(function() {
       this.$scope.regionCode = null;
       this.$scope.isTerminusCustomer = true;
+      this.$scope.supportsLocalDialing = true;
       this.$scope.supportsSimplifiedNationalDialing = true;
       this.$scope.$apply();
     });
@@ -55,10 +57,11 @@ describe('Component: dialing', () => {
     });
   });
 
-  describe('Terminus Customer = true: National Dialing selected: Simplified dialing NOT supported', () => {
+  describe('Terminus Customer = true: National Dialing selected: Simplified dialing NOT supported: Local Dialing supported', () => {
     beforeEach(function() {
       this.$scope.regionCode = null;
       this.$scope.isTerminusCustomer = true;
+      this.$scope.supportsLocalDialing = true;
       this.$scope.supportsSimplifiedNationalDialing = false;
       this.$scope.$apply();
     });
@@ -71,6 +74,33 @@ describe('Component: dialing', () => {
     it('should NOT have "Require user to dial one..." checkbox', function() {
       expect(this.view).not.toContainElement(REQUIRE_ONE_TO_DIAL_CHECKBOX);
     });
+  });
+
+  describe('Terminus Customer = true: National Dialing selected: Simplified dialing supported: supportsLocalDialing = false', () => {
+    beforeEach(function() {
+      this.$scope.regionCode = null;
+      this.$scope.isTerminusCustomer = true;
+      this.$scope.supportsLocalDialing = false;
+      this.$scope.supportsSimplifiedNationalDialing = true;
+      this.$scope.$apply();
+    });
+
+    it('should have "National Dialing" and "Local Dialing" radio buttons', function() {
+      expect(this.view).toContainElement(NATIONAL_RADIO);
+      expect(this.view).toContainElement(LOCAL_RADIO);
+    });
+
+    it('should have "Require user to dial one..." checkbox', function() {
+      expect(this.view).toContainElement(REQUIRE_ONE_TO_DIAL_CHECKBOX);
+    });
+
+    it('should have Local Dialing radio disabled', function() {
+      expect(this.view.find(LOCAL_RADIO)).toBeDisabled();
+    });
+
+    it('should NOT display Area Code input', function() {
+      expect(this.view).not.toContainElement(AREA_CODE_INPUT);
+    });
 
   });
 
@@ -78,6 +108,7 @@ describe('Component: dialing', () => {
     beforeEach(function() {
       this.$scope.regionCode = '';
       this.$scope.isTerminusCustomer = true;
+      this.$scope.supportsLocalDialing = true;
       this.$scope.supportsSimplifiedNationalDialing = true;
       this.$scope.$apply();
     });
@@ -115,10 +146,11 @@ describe('Component: dialing', () => {
     });
   });
 
-  describe('Terminus Customer = true: Area Code set', function() {
+  describe('Terminus Customer = true: Area Code set: supportsLocalDialing = true', function() {
     beforeEach(function() {
       this.$scope.regionCode = AREA_CODE;
       this.$scope.isTerminusCustomer = true;
+      this.$scope.supportsLocalDialing = true;
       this.$scope.$apply();
     });
 
@@ -152,10 +184,11 @@ describe('Component: dialing', () => {
     });
   });
 
-  describe('Terminus Customer = false', () => {
+  describe('Terminus Customer = false: supportsLocalDialing = true', () => {
     beforeEach(function() {
       this.$scope.regionCode = '';
       this.$scope.isTerminusCustomer = false;
+      this.$scope.supportsLocalDialing = true;
       this.$scope.$apply();
     });
 
