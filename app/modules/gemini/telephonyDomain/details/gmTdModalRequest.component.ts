@@ -3,7 +3,9 @@ import { Notification } from '../../../core/notifications/notification.service';
 
 class GmTdModalRequestCtrl implements ng.IComponentController {
 
+  private close;
   public data: any = {};
+  public messages: Object;
   public selectPlaceholder: string;
   public options: Array<Object> = [];
   public selected = { label: '', value: '' };
@@ -20,6 +22,10 @@ class GmTdModalRequestCtrl implements ng.IComponentController {
 
   public $onInit() {
     this.getRegions();
+    this.messages = {
+      required: this.$translate.instant('common.invalidRequired'),
+      maxlength: this.$translate.instant('gemini.tds.request.customerNameLengthError'),
+    };
   }
 
   public getRegions() {
@@ -36,14 +42,16 @@ class GmTdModalRequestCtrl implements ng.IComponentController {
   }
 
   public onNext() {
-    this.data.region = this.selected;
-    this.gemService.setStorage('currentTelephonyDomain', this.data); // TODO, in next state , get the currentTelephonyDomain
-    // TODO, go to next state -- do next
+    this.data.region = { regionId: this.selected.value, regionName: this.selected.label };
+    this.gemService.setStorage('currentTelephonyDomain', this.data);
+    this.gemService.setStorage('fullpanelTitle', this.data.customerName);
+
+    this.close();
   }
 }
 
 export class GmTdModalRequestComponent implements ng.IComponentOptions {
-  public bindings = { dismiss: '&' };
+  public bindings = { dismiss: '&', close: '&' };
   public controller = GmTdModalRequestCtrl;
   public templateUrl = 'modules/gemini/telephonyDomain/details/gmTdModalRequest.html';
 }

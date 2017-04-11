@@ -7150,6 +7150,7 @@
       "noteToCisco": "Note to Cisco Team",
       "defaultToll": "Default Toll",
       "defaultTollFree": "Default Toll Free",
+      "downloadConfirmMsg": "The exported template file is in .xls format with dropdown lists for ease of use. However after finish editing of the template, it needs to <b>\"Save As\" CSV format</b> before importing.",
       "export": {
         "csvFilename": "exported_telephonyDomain.csv",
         "result": {
@@ -7157,19 +7158,57 @@
           "failed": "There was an error exporting Telephony Domain list."
         }
       },
+      "numbers": {
+        "export": {
+          "exportToCSV": "Export to CSV",
+          "csvFilename": "exported_telephonyNumbers.csv",
+          "result": {
+            "success": "Phone numbers have been successfully exported.",
+            "failed": "There was an error exporting phone numbers."
+          }
+        },
+        "field": {
+          "phoneNumber": "Phone Number",
+          "phoneLabel": "Phone Label",
+          "accessNumber": "Access Number",
+          "tollType": "Toll Type",
+          "callType": "Call Type",
+          "defaultNumber": "Default Number",
+          "globalDisplay": "Global Display",
+          "country": "Country",
+          "hiddenOnClient": "Hidden On Client",
+          "values": {
+            "noForDefaultNumber": "NO",
+            "displayForGlobalDisplay": "Display",
+            "noForGlobalDisplay": "NO",
+            "displayForHiddenOnClient": "Display",
+            "hiddenForHiddenOnClient": "Hidden"
+          }
+        }
+      },
       "request": {
         "names": "Names",
         "region": "Region",
+        "addNumber": "Add Number",
         "notePlaceholder": "Text here",
         "regionNote": "Region and Note",
+        "phoneNumbers": "Phone Numbers",
         "selectPlaceholder": "Select ...",
         "labelCustomerName": "Customer Name",
-        "partnerName": "Parter Name(optional)",
+        "partnerName": "Partner Name (optional)",
         "modalTitle": "Request Telephony Domain",
         "noteText": "Note to Cisco Team(optional)",
         "customerPlaceholder": "Who is the Telephony Domain for",
         "partnerPlaceholder": "Enter a nickname for this Telephony Domain",
-        "customerHelpText": "Once approved by Cisco team, this name can note be changed"
+        "customerHelpText": "Once approved by Cisco team, this name cannot be changed",
+        "customerNameLengthError": "your customer name should be less than 15 characters",
+        "importNumber": {
+          "fromTd": "Import TD",
+          "fromCsv": "Import CSV"
+        },
+        "download": {
+          "csvTemplate": "Download CSV Template"
+        }
       },
       "field": {
         "status": "Status",
