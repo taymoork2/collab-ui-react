@@ -6,7 +6,6 @@ const loaders = require('./loaders');
 const StyleLintPlugin = require('stylelint-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
-
 const host = args.host || '127.0.0.1';
 const port = args.port || '8000';
 
@@ -27,7 +26,7 @@ function webpackConfig(env) {
     chunkFilename: 'js/[name].js',
   };
 
-  config.devtool = 'eval';
+  config.devtool = env['no-devtool'] ? false : 'eval';
 
   config.module = {
     rules: _.flatten([
