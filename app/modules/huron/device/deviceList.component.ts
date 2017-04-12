@@ -36,6 +36,9 @@ class DeviceList implements ng.IComponentController {
         this.showGenerateButton = _.size(Object.keys(deviceList.currentValue)) === 0;
         this.showActions = this.multipleOtp && !this.showGenerateButton;
       });
+    } else {
+      this.showGenerateButton = _.size(Object.keys(deviceList.currentValue)) === 0;
+      this.showActions = this.multipleOtp && !this.showGenerateButton;
     }
   }
 
