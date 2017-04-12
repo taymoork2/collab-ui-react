@@ -16,11 +16,11 @@ export class PrivateTrunkDestinationCtrl implements ng.IComponentController {
   public privateTrunkResource: PrivateTrunkResource;
   public destinationRadio: DestinationRadioType = DestinationRadioType.NEW;
   public onChangeFn: Function;
-  public isFormValid: boolean = false;
   public errorMessages: Object;
   public privateTrunkDestinationform: ng.IFormController;
   public validators: Object;
   public validationMessages: Object;
+  public isSetupFirstTime: boolean;
 
   /* @ngInject */
   constructor(
@@ -32,10 +32,11 @@ export class PrivateTrunkDestinationCtrl implements ng.IComponentController {
 
   }
   public $onInit(): void {
-    this.isFormValid = true;
+    this.isSetupFirstTime = false;
     if (_.isUndefined(this.privateTrunkResource)) {
       this.privateTrunkResource = new PrivateTrunkResource();
       this.addDestination();
+      this.isSetupFirstTime = true;
     }
     this.USSService.getOrg(this.Authinfo.getOrgId()).then(response => {
       this.privateTrunkResource.hybridDestination.address = response.sipDomain;
@@ -89,11 +90,13 @@ export class PrivateTrunkDestinationCtrl implements ng.IComponentController {
 
   public addDestination(): void {
     let dest = new Destination();
+    this.isSetupFirstTime = true;
     this.privateTrunkResource.destinations.push(dest);
   }
 
   public delete(index): void {
     this.privateTrunkResource.destinations.splice(index, 1);
+    this.changeSIPDestination();
   }
 
   public dismiss(): void {
@@ -104,6 +107,7 @@ export class PrivateTrunkDestinationCtrl implements ng.IComponentController {
     if (this.privateTrunkResource.destinations[index].address) {
       let destination = this.privateTrunkResource.destinations[index];
       if ( !_.isEmpty(destination.address) && !_.isEmpty(destination.name)) {
+        this.isSetupFirstTime = true;
         this.changeSIPDestination();
       }
     }
@@ -115,10 +119,12 @@ export class PrivateTrunkDestinationCtrl implements ng.IComponentController {
     return regex.test(value[0]);
   }
 
-  public uniqueDomainValidation(viewValue: string) {
-    return _.indexOf(_.map(this.privateTrunkResource.destinations, (dest) => {
-      return dest.address;
-    }), viewValue) === -1;
+  public uniqueDomainValidation(viewValue: string): boolean {
+    let isUnique = true;
+    if (this.isSetupFirstTime) {
+      isUnique =  _.indexOf(_.map(this.privateTrunkResource.destinations, (dest) => dest.address), viewValue) === -1;
+    }
+    return isUnique;
   }
 
   public portValidation(viewValue: string) {
@@ -129,7 +135,6 @@ export class PrivateTrunkDestinationCtrl implements ng.IComponentController {
   public domainlengthValidation(viewValue) {
     let value = _.split(viewValue, ':', 2);
     return value[0].length <= DOMAIN_MAX_LENGTH;
-
   }
 
   public changeSIPDestination(): void {
