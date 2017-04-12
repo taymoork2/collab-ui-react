@@ -233,8 +233,6 @@ export class HuronSettingsService {
           beginNumber: range.beginNumber,
           endNumber: range.endNumber,
         };
-      }).filter(range => { // do not show singlenumber intenalranges
-        return range.beginNumber !== range.endNumber;
       }).sort( (a, b) => { // sort - order by beginNumber ascending
         return _.toSafeInteger(a.beginNumber) - _.toSafeInteger(b.beginNumber);
       });
