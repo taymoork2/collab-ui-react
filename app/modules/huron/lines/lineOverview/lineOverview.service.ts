@@ -299,13 +299,13 @@ export class LineOverviewService {
   public getEsnPrefix(): ng.IPromise<string> {
     return this.HuronSiteService.listSites().then(sites => {
       if (sites.length > 0) {
-        return this.HuronSiteService.getSite(_.get<string>(sites[0], 'uuid')).then(site => {
+        return this.HuronSiteService.getTheOnlySite().then(site => {
           return this.FeatureToggleService.sparkCallTenDigitExtGetStatus()
             .then(routingPrefixSupported => {
               if (routingPrefixSupported) {
-                return site.routingPrefix;
+                return _.get(site, 'routingPrefix', '');
               } else {
-                return _.get(site, 'siteSteeringDigit', '') + _.get(site, 'siteCode', '');
+                return _.get(site, 'steeringDigit', '') + _.get(site, 'siteCode', '');
               }
             });
         });
