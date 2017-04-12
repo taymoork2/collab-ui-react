@@ -1,7 +1,7 @@
 {
   "https://csdm-intb.ciscospark.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/c528e32d-ed35-4e00-a20d-d4d3519efb4f":
   {
-    "displayName":"PlaceWithDevice",
+    "displayName":"test device 1",
     "cisUuid":"a19b308a-PlaceWithDevice-71898e423bec",
     "accountType":"MACHINE",
     "url":"https://csdm-intb.ciscospark.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/c528e32d-ed35-4e00-a20d-d4d3519efb4f",
@@ -23,7 +23,7 @@
   },
   "https://csdm-intb.ciscospark.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f":
   {
-    "displayName":"PlaceWithDevice",
+    "displayName":"test device 2",
     "cisUuid":"a19b308a-PlaceWithDevice-71898e423bec",
     "accountType":"MACHINE",
     "url":"https://csdm-intb.ciscospark.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f",
@@ -45,7 +45,7 @@
   },
   "https://csdm-intb.ciscospark.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/6ae09bec-c0f0-58af-b490-60ed6a695a89":
   {
-    "displayName":"PlaceWithDevice",
+    "displayName":"Tangram_rD8Jz5LZVv",
     "cisUuid":"a19b308a-PlaceWithDevice-71898e423bec",
     "accountType":"MACHINE",
     "url":"https://csdm-intb.ciscospark.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/6ae09bec-c0f0-58af-b490-60ed6a695a89",

@@ -124,7 +124,7 @@ describe('CallConnectOptions component:', () => {
     it('should call CsdmDataModelService with correct entitlement and extLinkAccts', () => {
       spyOn(test.CsdmDataModelService, 'updateCloudberryPlace').and.returnValue(test.$q.resolve({}));
       const place = { cisUuid: uid };
-      spyOn(test.CsdmDataModelService, 'getPlaceByCisUuid').and.returnValue(test.$q.resolve(place));
+      spyOn(test.CsdmDataModelService, 'getPlacesMap').and.returnValue(test.$q.resolve({ 'https://url': place }));
       spyOn(test.USSService, 'updateUserProps').and.returnValue(test.$q.resolve({}));
 
       let mailId = 'mail@example.com';

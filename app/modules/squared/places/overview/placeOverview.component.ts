@@ -1,9 +1,18 @@
 import { IFeature } from '../../../core/components/featureList/featureList.component';
 import { IActionItem } from '../../../core/components/sectionTitle/sectionTitle.component';
-import IPlace = csdm.IPlace;
-import ICsdmDataModelService = csdm.ICsdmDataModelService;
 
 interface IDevice {
+}
+
+interface IPlace {
+  devices: {};
+  cisUuid?: string;
+  id?: string;
+  type?: string;
+  url?: string;
+  entitlements?: Array<any>;
+  displayName?: string;
+  externalLinkedAccounts?: any[];
 }
 
 class PlaceOverview implements ng.IComponentController {
@@ -32,7 +41,7 @@ class PlaceOverview implements ng.IComponentController {
               private $translate: ng.translate.ITranslateService,
               private Authinfo,
               private CsdmHuronUserDeviceService,
-              private CsdmDataModelService: ICsdmDataModelService,
+              private CsdmDataModelService,
               private FeatureToggleService,
               private ServiceDescriptor,
               private Notification,
@@ -48,7 +57,7 @@ class PlaceOverview implements ng.IComponentController {
     this.fetchAsyncSettings();
   }
 
-  private displayPlace(newPlace: IPlace) {
+  private displayPlace(newPlace) {
     this.currentPlace = newPlace;
     this.currentPlace.id = this.currentPlace.cisUuid;
     this.loadServices();
