@@ -42,7 +42,10 @@ class GmTdModalRequestCtrl implements ng.IComponentController {
   }
 
   public onNext() {
+    this.data.action = 'newAdd';
+    this.data.customerId = this.gemService.getStorage('gmCustomerId');
     this.data.region = { regionId: this.selected.value, regionName: this.selected.label };
+
     this.gemService.setStorage('currentTelephonyDomain', this.data);
     this.gemService.setStorage('fullpanelTitle', this.data.customerName);
 

@@ -7147,6 +7147,9 @@
     "notAllowed": "Not allowed in read-only mode. Operation not executed."
   },
   "gemini": {
+    "import": "Import",
+    "hidden": "Hidden",
+    "display": "Display",
     "services": {
       "pageTitle": "Service"
     },
@@ -7185,6 +7188,11 @@
       "noteToCisco": "Note to Cisco Team",
       "defaultToll": "Default Toll",
       "defaultTollFree": "Default Toll Free",
+      "selectPhoneNumber": "Select Phone Numbers",
+      "phoneNumbersSelected": "Phone numbers selected",
+      "selectTdPlaceholder": "Select Telephony Domain...",
+      "selectExistingTd": "Select existing Telephony Domain",
+      "selectPhoneNumberTips": "Select all or individual phone numbers to import.",
       "downloadConfirmMsg": "The exported template file is in .xls format with dropdown lists for ease of use. However after finish editing of the template, it needs to <b>\"Save As\" CSV format</b> before importing.",
       "export": {
         "csvFilename": "exported_telephonyDomain.csv",
