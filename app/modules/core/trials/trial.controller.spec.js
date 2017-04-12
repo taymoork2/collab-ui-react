@@ -8,7 +8,7 @@ describe('Controller: TrialCtrl:', function () {
   var trialEditResponse = getJSONFixture('core/json/trials/trialEditResponse.json');
   var purchasedCustomerData = getJSONFixture('core/json/customers/customerWithLicensesNoTrial.json');
   var purchasedWithTrialCustomerData = getJSONFixture('core/json/customers/customerWithLicensesAndTrial.json');
-
+  var enabledFeatureToggles = [];
   afterEach(function () {
     controller = helpers = $controller = $scope = $state = $q = $translate = $window = $httpBackend = Analytics = Authinfo = Config = Notification = TrialService = TrialContextService = HuronCustomer = FeatureToggleService = Orgservice = undefined;
   });
@@ -63,7 +63,7 @@ describe('Controller: TrialCtrl:', function () {
     spyOn(FeatureToggleService, 'huronSupportThinktelGetStatus').and.returnValue($q.resolve(false));
     spyOn(FeatureToggleService, 'huronFederatedSparkCallGetStatus').and.returnValue($q.resolve(false));
     spyOn(FeatureToggleService, 'supports').and.callFake(function (param) {
-      fail('the following toggle wasn\'t expected' + param); //taking control of which toggles this controller are using (explicit or implicit)
+      return $q.resolve(_.includes(enabledFeatureToggles, param));
     });
     spyOn(Orgservice, 'getAdminOrgAsPromise').and.returnValue($q.resolve({
       data: {
