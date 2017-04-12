@@ -106,6 +106,7 @@
     require('modules/huron/pstn').default,
     require('modules/huron/pstn/pstnProviders').default,
     require('modules/huron/pstn/pstnContactInfo').default,
+    require('modules/huron/pstn/pstnSwivelNumbers').default,
     require('modules/huron/pstnSetup/pstnSelector').default,
     require('modules/huron/overview').default,
     require('modules/huron/lines/deleteExternalNumber').default,

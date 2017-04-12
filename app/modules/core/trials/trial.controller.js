@@ -102,6 +102,10 @@
       trials: [vm.callTrial, vm.roomSystemTrial],
       enabled: true,
     }, {
+      name: 'trial.pstnDeprecated',
+      trials: [vm.pstnTrial],
+      enabled: true,
+    }, {
       name: 'trial.pstn',
       trials: [vm.pstnTrial],
       enabled: true,
@@ -111,7 +115,7 @@
       enabled: true,
     }];
     // Navigate trial modal in this order
-    vm.navOrder = ['trial.info', 'trial.webex', 'trial.pstn', 'trial.emergAddress', 'trial.call'];
+    vm.navOrder = ['trial.info', 'trial.webex', 'trial.pstnDeprecated', 'trial.emergAddress', 'trial.call'];
     vm.navStates = ['trial.info'];
 
     vm.nonTrialServices = [{
@@ -255,6 +259,10 @@
           vm.ftSupportThinktel = results.ftSupportThinktel;
           vm.ftFederatedSparkCall = results.ftFederatedSparkCall;
 
+          if (vm.ftSupportThinktel || vm.ftFederatedSparkCall) {
+            vm.navOrder = ['trial.info', 'trial.webex', 'trial.pstn', 'trial.call'];
+          }
+
           var initResults = (vm.isExistingOrg()) ? getExistingOrgInitResults(results, vm.hasCallEntitlement, vm.preset, vm.paidServices) : getNewOrgInitResults(results, vm.hasCallEntitlement, vm.stateDefaults);
           _.merge(vm, initResults);
           // TODO: algendel
@@ -339,8 +347,10 @@
       setViewState('trial.webex', hasEnabledWebexTrial());
       setViewState('trial.pstn', isPstn() && (_.get(vm.details.country, 'id') !== 'N/A'));
       if (vm.ftSupportThinktel || vm.ftFederatedSparkCall) {
+        setViewState('trial.pstn', isPstn() && (_.get(vm.details.country, 'id') !== 'N/A'));
         setViewState('trial.emergAddress', TrialPstnService.getCarrierCapability('E911'));
       } else {
+        setViewState('trial.pstnDeprecated', isPstn() && (_.get(vm.details.country, 'id') !== 'N/A'));
         setViewState('trial.emergAddress', isPstn() && (_.get(vm.details.country, 'id') !== 'N/A'));
       }
 
