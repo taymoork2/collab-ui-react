@@ -11,43 +11,49 @@
         cs-input-label="{{'servicesOverview.cards.privateTrunk.destination' | translate}}"
         cs-input-help-text="{{'servicesOverview.cards.privateTrunk.destinationHelp'| translate}}">
         <div ng-if="$ctrl.destinationRadio==='new'">
-          <div class="row cs-input-group">
+          <div class="row cs-input-group modal-destination">
+            <div class="columns medium-5 large-5 small-5">
+              <span class="label-align"translate="servicesOverview.cards.privateTrunk.sipLabel"></span>
+            </div>
+            <div class="columns medium-6 large-6 small-6">
+              <span class="label-2-align" translate="servicesOverview.cards.privateTrunk.displayLabel"></span>
+            </div>
             <div ng-repeat="dest in $ctrl.privateTrunkResource.destinations">
-              <div class="columns medium-5 large-5 small-5">
-                <input
-                  cs-input
-                  type="text"
-                  id="{{'destination'+$index}}"
-                  name="{{'destination'+$index}}"
-                  ng-model="dest.address"
-                  cs-input-nested="1"
-                  cs-input-size="medium-12"
-                  placeholder="{{'servicesOverview.cards.privateTrunk.sip' | translate }}"
-                  cs-input-label="{{'servicesOverview.cards.privateTrunk.sipLabel' | translate}}"
-                  ng-change="$ctrl.changeDestination({{$index}})"
-                  ng-required="true"
-                  cs-input-validators="$ctrl.validators"
-                  cs-input-messages="$ctrl.errorMessages.newAddress"
-                  is-disabled= "$ctrl.destinationRadio!=='new'">
-              </div>
-              <div class="columns medium-5 large-5 small-5">
-                <input
-                  cs-input
-                  type="text"
-                  id="{{'name'+$index}}"
-                  name="{{'name'+$index}}"
-                  ng-model="dest.name"
-                  cs-input-nested="1"
-                  cs-input-size="medium-12"
-                  placeholder="{{'servicesOverview.cards.privateTrunk.displayName' | translate}}"
-                  cs-input-label="{{'servicesOverview.cards.privateTrunk.displayLabel' | translate}}"
-                  ng-change="$ctrl.changeSIPDestination()"
-                  ng-required="true"
-                  cs-input-messages="$ctrl.errorMessages.name"
-                  is-disabled= "$ctrl.destinationRadio!=='new'">
-              </div>
-              <div class="columns medium-2 large-2 small-2">
-                <i ng-if="$index >= 1" class="icon icon-exit-outline exit-icon" ng-click="$ctrl.delete($index)"></i>
+              <div class="row">
+                <div class="columns medium-5 large-5 small-5">
+                  <input
+                    cs-input
+                    type="text"
+                    id="{{'destination'+$index}}"
+                    name="{{'destination'+$index}}"
+                    ng-model="dest.address"
+                    cs-input-nested="1"
+                    cs-input-size="medium-12"
+                    placeholder="{{'servicesOverview.cards.privateTrunk.sip' | translate }}"
+                    ng-change="$ctrl.changeDestination({{$index}})"
+                    ng-required="true"
+                    cs-input-validators="$ctrl.validators"
+                    cs-input-messages="$ctrl.errorMessages.newAddress"
+                    is-disabled= "$ctrl.destinationRadio!=='new'">
+                </div>
+                <div class="columns medium-5 large-5 small-5">
+                  <input
+                    cs-input
+                    type="text"
+                    id="{{'name'+$index}}"
+                    name="{{'name'+$index}}"
+                    ng-model="dest.name"
+                    cs-input-nested="1"
+                    cs-input-size="medium-12"
+                    placeholder="{{'servicesOverview.cards.privateTrunk.displayName' | translate}}"
+                    ng-change="$ctrl.changeSIPDestination()"
+                    ng-required="true"
+                    cs-input-messages="$ctrl.errorMessages.name"
+                    is-disabled= "$ctrl.destinationRadio!=='new'">
+                </div>
+                <div class="columns medium-2 large-2 small-2">
+                  <i ng-if="$index >= 1" class="icon icon-exit-outline exit-icon" ng-click="$ctrl.delete($index)"></i>
+                </div>
               </div>
             </div>
             <div class="columns medium-6 add-align">
