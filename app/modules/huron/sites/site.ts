@@ -83,6 +83,7 @@ export class Site implements ISite {
     regionCodeDialing: undefined,
   }) {
     this.uuid = site.uuid;
+    this.siteCode = site.siteCode;
     this.siteIndex = site.siteIndex;
     this.steeringDigit = _.isNull(site.steeringDigit) ? NULL : site.steeringDigit;
     this.timeZone = site.timeZone;
