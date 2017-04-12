@@ -6,20 +6,22 @@
     .controller('DevicesCtrlHuron', DevicesCtrlHuron);
 
   /* @ngInject */
-  function DevicesCtrlHuron($q, $scope, $state, $stateParams, Config, CsdmHuronUserDeviceService, CsdmDataModelService, WizardFactory, FeatureToggleService, Userservice, Authinfo) {
+  function DevicesCtrlHuron($q, $scope, $state, $stateParams, Config, CsdmHuronUserDeviceService, CsdmDataModelService,
+    CsdmUpgradeChannelService, WizardFactory, FeatureToggleService, Userservice, Authinfo) {
     var vm = this;
     vm.devices = {};
     vm.otps = [];
     vm.currentUser = $stateParams.currentUser;
     vm.csdmHuronUserDeviceService = CsdmHuronUserDeviceService.create(vm.currentUser.id);
+    vm.showDeviceSettings = false;
 
     function init() {
-      fetchATASupport();
+      fetchAsyncSettings();
     }
 
     init();
 
-    function fetchATASupport() {
+    function fetchAsyncSettings() {
       var ataPromise = FeatureToggleService.csdmATAGetStatus().then(function (result) {
         vm.showATA = result;
       });
@@ -29,6 +31,14 @@
       });
       $q.all([ataPromise, personalPromise, fetchDetailsForLoggedInUser()]).finally(function () {
         vm.generateCodeIsDisabled = false;
+      });
+
+      FeatureToggleService.cloudberryLyraConfigGetStatus().then(function (feature) {
+        if (feature) {
+          CsdmUpgradeChannelService.getUpgradeChannelsPromise().then(function (channels) {
+            vm.showDeviceSettings = channels.length > 1;
+          });
+        }
       });
     }
 
