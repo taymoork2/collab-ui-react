@@ -1,44 +1,75 @@
+import { HuronCountryService } from 'modules/huron/countries';
+
+export class TrialRegionalSettingsComponent implements ng.IComponentOptions {
+  public controller = TrialRegionalSettingsCtrl;
+  public templateUrl = 'modules/core/trials/regionalSettings/trialRegionalSettings.html';
+  public bindings = {
+    callTrialEnabled: '<',
+    onChangeFn: '&',
+    defaultCountry: '<',
+  };
+}
+
 class TrialRegionalSettingsCtrl implements ng.IComponentController {
   public defaultCountry: string;
-  public defaultCountryList;
   public countryList;
-  public filterCountryList: boolean;
   public onChangeFn: Function;
   public placeholder: string;
+  private notApplicable: INotApplicable;
+  private ftHuronFederatedSparkCall: any;
 
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
     private $element: ng.IRootElementService,
-  ) {}
+    private HuronCountryService: HuronCountryService,
+    private FeatureToggleService,
+    private $q: ng.IQService,
+  ) { }
 
   public $onInit(): void {
-    this.placeholder = this.$translate.instant('partnerHomePage.defaultCountryPlaceholder');
-  }
+    this.placeholder = this.$translate.instant('serviceSetupModal.defaultCountryPlaceholder');
+    const promises = {
+      countryList: this.HuronCountryService.getCountryList(),
+      huronFederatedSparkCall: this.FeatureToggleService.supports('huron-federated-spark-call'),
+    };
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
-    const { defaultCountryList } = changes;
-    if (defaultCountryList && defaultCountryList.currentValue) {
-      this.processDefaultCountryListChanges(defaultCountryList);
-    }
+    this.$q.all(promises).then((data) => {
+      this.countryList = data['countryList'];
+      this.ftHuronFederatedSparkCall = data['huronFederatedSparkCall'];
+    }).then(() => {
+      this.countryList = this.filterCountryList(this.countryList);
+    });
+
+    this.notApplicable = {
+      id: 'N/A',
+      name: this.$translate.instant('serviceSetupModal.notApplicable'),
+      domain: '',
+    };
   }
 
   public $postLink(): void {
     this.$element.addClass('cs-form__section');
   }
 
-  private processDefaultCountryListChanges(defaultCountryListChanges: ng.IChangesObject): void {
-    this.countryList = this.getCountryList(defaultCountryListChanges.currentValue);
+  set callTrialEnabled(value: boolean) {
+    if (value) {
+      if (_.includes(this.countryList, this.notApplicable)) {
+        this.countryList = _.dropRight(this.countryList);
+      }
+    } else if (!_.includes(this.countryList, this.notApplicable)) {
+      this.countryList = _.unionWith(this.countryList, [this.notApplicable], _.isEqual);
+    }
   }
 
-  private getCountryList(list) {
-    if (this.filterCountryList) {
-      return _.filter(list, country => {
+  private filterCountryList(countryList) {
+    if (this.ftHuronFederatedSparkCall) {
+      return countryList;
+    } else {
+      return _.filter(countryList, country => {
         const countryId = _.get(country, 'id');
         return _.includes(['US', 'CA', 'N/A'], countryId);
       });
-    } else {
-      return list;
     }
   }
 
@@ -49,13 +80,8 @@ class TrialRegionalSettingsCtrl implements ng.IComponentController {
   }
 }
 
-export class TrialRegionalSettingsComponent implements ng.IComponentOptions {
-  public controller = TrialRegionalSettingsCtrl;
-  public templateUrl = 'modules/core/trials/regionalSettings/trialRegionalSettings.html';
-  public bindings = {
-    defaultCountry: '<',
-    defaultCountryList: '<',
-    filterCountryList: '<',
-    onChangeFn: '&',
-  };
+interface INotApplicable {
+  id: string;
+  name: string;
+  domain: string;
 }
