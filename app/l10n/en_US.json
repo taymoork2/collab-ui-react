@@ -1481,7 +1481,7 @@
     },
     "cos": {
       "title": "Dialing Restrictions",
-      "desc": "Restrict certain dialing features for the enitre organization. You can override each setting for individual users.",
+      "desc": "Restrict certain dialing features for the entire organization. You can override each setting for individual users.",
       "nationalTitle": "National Dialing",
       "nationalDesc": "Choose whether users are allowed to dial national and toll-free numbers.",
       "mobileTitle": "Mobile Dialing",
