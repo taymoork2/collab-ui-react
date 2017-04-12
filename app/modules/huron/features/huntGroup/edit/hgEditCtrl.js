@@ -54,6 +54,8 @@ require('./_hg-edit.scss');
 
     vm.externalRegionCodeFn = getRegionCode;
     vm.callDestInputs = ['internal', 'external'];
+    vm.minRingSeconds = 10;
+    vm.maxRingSeconds = 120;
 
     vm.showDisableSave = showDisableSave;
 
@@ -117,6 +119,7 @@ require('./_hg-edit.scss');
 
       $q.all([fetchFallbackPromise, fetchMemberPromise]).then(function () {
         vm.model = pristineData;
+        vm.model.maxRingSecs.value = parseInt(pristineData.maxRingSecs.value, 10/*base10*/);
         vm.title = vm.model.name;
         updatePilotNumbers(pristineData);
         vm.selectedHuntMembers = HuntGroupMemberDataService.getHuntMembers();
@@ -367,20 +370,6 @@ require('./_hg-edit.scss');
         },
       }];
       vm.time = [{
-        key: 'maxRingSecs',
-        type: 'select',
-        className: 'hg-time',
-        templateOptions: {
-          label: $translate.instant('huronHuntGroup.ringTimeLabel'),
-          description: $translate.instant('huronHuntGroup.ringTimeDesc'),
-          labelfield: 'label',
-          valuefield: 'value',
-          secondaryLabel: $translate.instant('huronHuntGroup.ringTimeSecondaryLabel'),
-        },
-        controller: /* @ngInject */ function ($scope) {
-          $scope.to.options = HuntGroupEditDataService.getMaxRingSecsOptions();
-        },
-      }, {
         key: 'maxWaitMins',
         type: 'select',
         className: 'hg-time',
@@ -397,5 +386,11 @@ require('./_hg-edit.scss');
       }];
       vm.isLoadingCompleted = true;
     }
+
+    vm.maxRingErrorMessages = {
+      required: $translate.instant('huronHuntGroup.error.required'),
+      min: $translate.instant('huronHuntGroup.error.minRingSecs', { secs: vm.minRingSeconds }),
+      max: $translate.instant('huronHuntGroup.error.maxRingSecs', { secs: vm.maxRingSeconds }),
+    };
   }
 })();

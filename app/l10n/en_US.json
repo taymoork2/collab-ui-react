@@ -6325,7 +6325,12 @@
     "memberFetchFailure": "Unable to get members.",
     "huntGroupFetchFailure": "Failed to fetch hunt group details '{{huntGroupName}}'.",
     "invalidMember": "Select at least one member",
-    "invalidFallback": "Select a number or enter a new valid number"
+    "invalidFallback": "Select a number or enter a new valid number",
+    "error" : {
+      "required": "This field is required",
+      "minRingSecs": "The shortest ring duration is {{secs}} seconds",
+      "maxRingSecs": "The longest ring duration is {{secs}} seconds"
+    }
   },
   "digitalRiver": {
     "enterEmailAddr": {
