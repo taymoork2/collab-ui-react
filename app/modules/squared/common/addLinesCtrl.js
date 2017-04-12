@@ -50,7 +50,8 @@
       vm.isLoading = true;
       var numbers = vm.getSelectedNumbers();
       if (numbers.directoryNumber || numbers.externalNumber) {
-        CsdmDataModelService.reloadItem(wizardData.account).then(function (place) {
+        CsdmDataModelService.getPlacesMap().then(function (list) {
+          var place = _.find(_.values(list), { 'cisUuid': wizardData.account.cisUuid });
           if (place) {
             CsdmDataModelService.updateCloudberryPlace(place, wizardData.account.entitlements, numbers.directoryNumber, numbers.externalNumber)
               .then(function () {

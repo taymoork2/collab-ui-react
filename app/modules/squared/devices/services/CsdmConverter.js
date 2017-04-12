@@ -132,25 +132,22 @@
         }
       }
 
-      function updatePlaceFromDevice(updatedPlace, device) {
-
+      function updatePlaceFromDevice(place, device) {
+        var updatedPlace = place;
         updatedPlace.type = device.type || updatedPlace.type;
         updatedPlace.cisUuid = device.cisUuid || device.uuid;
         updatedPlace.displayName = device.displayName;
         updatedPlace.sipUrl = device.sipUrl;
-
-        _.each(updatedPlace.devices, function (existingDevice) {
-          existingDevice.displayName = device.displayName;
-        });
-
         Place.bind(updatedPlace)(updatedPlace);
       }
 
       function updatePlaceFromPlace(place, placeToUpdateFrom) {
-        Place.bind(place)(placeToUpdateFrom);
-        if (placeToUpdateFrom.devices !== null) {
-          place.devices = placeToUpdateFrom.devices;
+
+        if (_.isEmpty(placeToUpdateFrom.devices)) {
+          placeToUpdateFrom = _.merge(placeToUpdateFrom, _.pick(place, ['devices']));
         }
+        Place.bind(place)(placeToUpdateFrom);
+        place.devices = placeToUpdateFrom.devices;
       }
 
       function Place(obj) {

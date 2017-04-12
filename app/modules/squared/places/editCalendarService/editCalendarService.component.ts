@@ -1,5 +1,4 @@
 import { IExternalLinkedAccount } from '../../common/ExternalLinkedAccount';
-import ICsdmDataModelService = csdm.ICsdmDataModelService;
 
 class EditCalendarService implements ng.IComponentController {
   private dismiss: Function;
@@ -61,7 +60,7 @@ class EditCalendarService implements ng.IComponentController {
   }
 
   /* @ngInject */
-  constructor(private CsdmDataModelService: ICsdmDataModelService, private $stateParams, private $translate, ServiceDescriptor, private ResourceGroupService, private USSService, private Notification) {
+  constructor(private CsdmDataModelService, private $stateParams, private $translate, ServiceDescriptor, private ResourceGroupService, private USSService, private Notification) {
     ServiceDescriptor.getServices()
       .then((services) => {
         let enabledServices: Array<{ id: string }> = ServiceDescriptor.filterEnabledServices(services);
@@ -207,7 +206,8 @@ class EditCalendarService implements ng.IComponentController {
     let directoryNumber = this.wizardData.account.directoryNumber || null;
     let externalNumber = this.wizardData.account.externalNumber || null;
 
-    this.CsdmDataModelService.getPlaceByCisUuid(this.wizardData.account.cisUuid).then((place) => {
+    this.CsdmDataModelService.getPlacesMap().then((list) => {
+      let place = _.find(_.values(list), { cisUuid: this.wizardData.account.cisUuid });
       if (place) {
         this.CsdmDataModelService.updateCloudberryPlace(
           place,

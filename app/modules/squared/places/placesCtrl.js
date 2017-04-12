@@ -8,35 +8,36 @@ require('../devices/_devices.scss');
     .controller('PlacesCtrl',
 
       /* @ngInject */
-      function ($q, $scope, $state, $templateCache, $translate, CsdmFilteredPlaceViewFactory, CsdmDataModelService, Userservice, Authinfo, WizardFactory, RemPlaceModal, FeatureToggleService, ServiceDescriptor) {
+      function ($q, $timeout, $scope, $state, $templateCache, $translate, CsdmDataModelService, Userservice, PlaceFilter, Authinfo, WizardFactory, RemPlaceModal, FeatureToggleService, ServiceDescriptor) {
         var vm = this;
 
         vm.data = [];
         vm.addPlaceIsDisabled = true;
+        vm.placeFilter = PlaceFilter;
+        vm.placeFilter.resetFilters();
+        vm.bigOrg = false;
+        vm.serverSearchString = '';
+        vm.timeoutVal = 1000;
+        vm.timer = 0;
+        var filteredPlaces;
+        var placesList;
+
+        vm.listStates = {
+          searching: "searching",
+          noplaces: "noplaces",
+          bigorg: "bigorg",
+          showresult: "showresult",
+          emptyresult: "emptyresult",
+        };
+
+        vm.listState = vm.listStates.searching;
 
         function init() {
           fetchAsyncSettings();
-
-          vm.filteredView = CsdmFilteredPlaceViewFactory.createFilteredPlaceView();
-
-          vm.filteredView.setFilters([{
-            count: 0,
-            name: $translate.instant('common.all'),
-            filterValue: 'all',
-            matches: function () {
-              return true;
-            },
-          }, {
-            count: 0,
-            name: $translate.instant('CsdmStatus.WithDevices'),
-            filterValue: 'devices',
-            matches: function (place) {
-              return _.size(place.devices) > 0;
-            },
-          }]);
-
-          vm.filteredView.isBigOrg.then(function () {
-            CsdmDataModelService.subscribeToChanges($scope, vm.filteredView.refresh.bind(vm.filteredView));
+          CsdmDataModelService.isBigOrg().then(function (res) {
+            vm.bigOrg = res;
+            loadList(vm.bigOrg);
+            CsdmDataModelService.subscribeToChanges($scope, vm.updateListAndFilter.bind(this));
           });
         }
 
@@ -69,6 +70,22 @@ require('../devices/_devices.scss');
           });
         }
 
+        function loadList(isBigOrg) {
+          if (isBigOrg) {
+            placesList = [];
+            vm.listState = vm.listStates.bigorg;
+          } else {
+            CsdmDataModelService.getPlacesMap(true).then(function (list) {
+              placesList = list;
+              if (Object.keys(placesList).length === 0) {
+                vm.listState = vm.listStates.noplaces;
+              } else {
+                vm.updateListAndFilter();
+              }
+            });
+          }
+        }
+
         function fetchDisplayNameForLoggedInUser() {
           var userDetailsDeferred = $q.defer();
           Userservice.getUser('me', function (data) {
@@ -87,6 +104,8 @@ require('../devices/_devices.scss');
           return userDetailsDeferred.promise;
         }
 
+        init();
+
         vm.isOrgEntitledToRoomSystem = function () {
           return Authinfo.isDeviceMgmt();
         };
@@ -97,6 +116,61 @@ require('../devices/_devices.scss');
               function (l) {
                 return l.licenseType === 'COMMUNICATION';
               }).length > 0;
+        };
+
+        vm.setCurrentSearch = function (searchStr) {
+          vm.placeFilter.setCurrentSearch(searchStr);
+          vm.updateListAndFilter();
+        };
+
+        vm.setCurrentFilter = function (filterValue) {
+          vm.placeFilter.setCurrentFilter(filterValue);
+          vm.updateListAndFilter();
+        };
+
+        vm.placeList = function () {
+          return filteredPlaces;
+        };
+
+        vm.updateListAndFilter = function () {
+
+          if (vm.timer) {
+            $timeout.cancel(vm.timer);
+            vm.timer = 0;
+          }
+          var searchStr = vm.placeFilter.getCurrentSearch();
+          var doServerSideSearch = vm.bigOrg && (searchStr && searchStr.length > 2) && (!(vm.serverSearchString.length > 2 && _.startsWith(searchStr, vm.serverSearchString)));
+
+          vm.timer = $timeout(function () {
+
+            if (!vm.bigOrg || (searchStr && searchStr.length > 2)) {
+              if (doServerSideSearch) {
+                vm.listState = vm.listStates.searching;
+                CsdmDataModelService.getSearchPlacesMap(searchStr).then(function (list) {
+                  vm.serverSearchString = searchStr;
+                  placesList = list;
+                  filteredPlaces = PlaceFilter.getFilteredList(_.values(placesList));
+                  vm.listState = filteredPlaces.length > 0 ? vm.listStates.showresult : vm.listStates.emptyresult;
+                }, function () {
+                  vm.listState = vm.listStates.emptyresult;
+                  vm.serverSearchString = '';
+                  placesList = {};
+                  filteredPlaces = [];
+                  return [];
+                });
+              } else {
+                //Client-side search only. Not big-org or data already loaded
+                filteredPlaces = PlaceFilter.getFilteredList(_.values(placesList));
+                vm.listState = filteredPlaces.length > 0 ? vm.listStates.showresult : vm.listStates.emptyresult;
+              }
+            } else {
+              vm.listState = vm.listStates.bigorg;
+              vm.serverSearchString = '';
+              placesList = {};
+              filteredPlaces = [];
+              return [];
+            }
+          }, doServerSideSearch ? vm.timeoutVal : 0);
         };
 
         vm.numDevices = function (place) {
@@ -111,7 +185,7 @@ require('../devices/_devices.scss');
         };
 
         vm.gridOptions = {
-          data: 'sc.filteredView.getResult()',
+          data: 'sc.placeList()',
           rowHeight: 45,
           enableRowHeaderSelection: false,
           enableColumnMenus: false,
@@ -247,8 +321,6 @@ require('../devices/_devices.scss');
         function sortNoDevicesFn(a, b) {
           return _.size(a) - _.size(b);
         }
-
-        init();
       }
     );
 })();

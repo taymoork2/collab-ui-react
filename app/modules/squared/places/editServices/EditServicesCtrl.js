@@ -92,7 +92,8 @@
       if (vm.service === 'sparkOnly' || vm.enableCalService != initialEnableCalService) {
         vm.isLoading = true;
         if (vm.service !== initialService || vm.enableCalService != initialEnableCalService) {
-          CsdmDataModelService.getPlaceByCisUuid(wizardData.account.cisUuid).then(function (place) {
+          CsdmDataModelService.getPlacesMap().then(function (list) {
+            var place = _.find(_.values(list), { 'cisUuid': wizardData.account.cisUuid });
             if (place) {
               CsdmDataModelService.updateCloudberryPlace(place, getUpdatedEntitlements())
                 .then(function () {
