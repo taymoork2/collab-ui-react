@@ -3617,7 +3617,11 @@
     "calledParty": "Display called party's information",
     "callingParty": "Display calling party's information",
     "playSound": "Play Sound",
-    "assignmentMsg": "Assigned to "
+    "assignmentMsg": "Assigned to {{pickupGroupName}}",
+    "linesTaken": "Line(s) Unavailable",
+    "linesTakenDesc": "Line(s) are already assigned to pickup group(s).",
+    "linesTakenHelp": "If you would like to assign a line to this group, please unassign it and try again.",
+    "okButton": "OK"
   },
   "pagingGroup": {
     "title": "Paging Group",
