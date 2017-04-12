@@ -68,6 +68,7 @@
           id="destinationRadio2"
           name="destinationRadio2"
           ng-value="'hybrid'"
+          ng-disabled="$ctrl.isEmptyHybridAddress()"
           cs-input-label="{{'servicesOverview.cards.privateTrunk.hybridDestination' | translate}}"
           ng-change="$ctrl.change()">
           <div ng-if="$ctrl.destinationRadio==='hybrid'">

@@ -73,6 +73,10 @@ export class PrivateTrunkDestinationCtrl implements ng.IComponentController {
 
   }
 
+  public isEmptyHybridAddress() {
+    return _.isEmpty(this.privateTrunkResource.hybridDestination.address);
+  }
+
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
     const { privateTrunkResource } = changes;
 

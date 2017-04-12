@@ -23,10 +23,9 @@ describe('Component: privateTrunkDestination component', () => {
     );
 
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('1');
-    spyOn(this.USSService, 'getOrg').and.returnValue(this.$q.resolve({ uuid: '123', sipdomain: 'test.com', lastSyncTime: '2017-04-10T16:19:53.430Z' }));
+    spyOn(this.USSService, 'getOrg').and.returnValue(this.$q.resolve({ uuid: '123', sipDomain: 'test.com', lastSyncTime: '2017-04-10T16:19:53.430Z' }));
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
     this.$scope.destinationRadio = 'new';
-
     this.compileComponent('privateTrunkDestination', {
       privateTrunkResource: 'privateTrunkResource',
       onChangeFn: 'onChangeFn(selected)',
@@ -68,7 +67,6 @@ describe('Component: privateTrunkDestination component', () => {
 
   it('should set only the name of existing hybrid destination', function() {
     let name = 'SIP Connector Remote';
-
     expect(this.view).toContainElement(RADIO_OPTION2);
     this.view.find(RADIO_OPTION2).click().click();
     expect(this.view.find(RADIO_OPTION2)).toBeChecked();
