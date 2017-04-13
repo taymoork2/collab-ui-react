@@ -11,8 +11,7 @@ describe('Service: TelephoneNumberService', function () {
 
   beforeEach(function () {
     this.initModules(
-      require('./telephoneNumber.service'),
-      require('collab-ui')
+      require('./telephoneNumber.service')
     );
     this.injectDependencies(
       'TelephoneNumberService',

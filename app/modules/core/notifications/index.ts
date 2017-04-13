@@ -8,7 +8,7 @@ export { Notification };
 export default angular
   .module('core.notifications', [
     require('scripts/app.templates'),
-    'toaster',
+    require('angularjs-toaster'),
     require('angular-translate'),
     require('modules/core/config/config'),
     require('modules/core/scripts/services/log'),

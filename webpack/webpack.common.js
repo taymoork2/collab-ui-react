@@ -104,6 +104,7 @@ function webpackConfig(env) {
     modules: [
       path.resolve('./app'),
       path.resolve('./test'),
+      path.resolve('./thirdparty-shims'),
       // load external modules from our project dependencies first
       path.resolve('./node_modules'),
       'node_modules',
