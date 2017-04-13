@@ -104,7 +104,7 @@ class CallPickupMembersCtrl implements ng.IComponentController {
 
     evt.stopPropagation();
 
-    modalScope.member = member.userName;
+    modalScope.member = this.getDisplayName(member);
     modalScope.lines = [];
     modalScope.names = [];
     this.CallPickupGroupService.getMemberNumbers(member.uuid)
