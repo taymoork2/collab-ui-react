@@ -7,7 +7,7 @@ var Spark = require('@ciscospark/spark-core').default;
 
   /* @ngInject */
   function EdiscoverySearchController($q, $stateParams, $translate, $timeout, $scope, $window, Analytics, EdiscoveryService, EdiscoveryNotificationService,
-    FeatureToggleService, Notification, TokenService) {
+    FeatureToggleService, ITProPackService, Notification, TokenService) {
     $scope.$on('$viewContentLoaded', function () {
       angular.element('#searchInput').focus();
     });
@@ -84,7 +84,7 @@ var Spark = require('@ciscospark/spark-core').default;
       vm.ediscoveryToggle = result;
     });
 
-    FeatureToggleService.atlasITProPackPurchasedGetStatus().then(function (result) {
+    ITProPackService.hasITProPackPurchased().then(function (result) {
       vm.itProPackToggle = result;
     });
 
