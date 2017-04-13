@@ -22,6 +22,7 @@
     vm.availabilityStatus = vm.REFRESH;
     vm.clientTypeStatus = vm.REFRESH;
     vm.meetingLocationStatus = vm.REFRESH;
+    vm.clientTypesCardStatus = vm.REFRESH;
 
     vm.clusterFilter = null;
     vm.timeFilter = null;
@@ -150,8 +151,8 @@
 
     function loadResourceDatas() {
       deferred.promise.then(function () {
-        setTotalCallsData();
         setTotalCallsPie();
+        setTotalCallsData();
         setAvailabilityData();
         setClusterAvailability();
         setUtilizationData();
@@ -389,9 +390,11 @@
         if (response === vm.ABORT) {
           return undefined;
         } else if (_.isUndefined(response.data) || response.data.dataProvider.length === 0) {
+          vm.clientTypesCardStatus = vm.EMPTY;
           AdoptionCardService.setDummyClientTypePiechart();
           vm.clientTypeschartOptions.noData = true;
         } else {
+          vm.clientTypesCardStatus = vm.SET;
           AdoptionCardService.setClientTypePiechart(response.data);
           vm.clientTypeschartOptions.noData = false;
         }
