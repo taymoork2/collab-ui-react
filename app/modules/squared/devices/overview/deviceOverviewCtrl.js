@@ -20,7 +20,12 @@
     deviceOverview.selectedCountry = "";
     deviceOverview.hideE911Edit = true;
     deviceOverview.faxEnabled = false;
+    deviceOverview.t38FeatureToggle = false;
     function init() {
+      FeatureToggleService.csdmT38GetStatus().then(function (response) {
+        deviceOverview.t38FeatureToggle = response;
+      });
+
       displayDevice($stateParams.currentDevice);
 
       CsdmDataModelService.reloadItem($stateParams.currentDevice).then(function (updatedDevice) {
