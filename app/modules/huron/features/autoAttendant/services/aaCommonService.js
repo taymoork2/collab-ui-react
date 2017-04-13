@@ -19,7 +19,6 @@
     var routeQueueToggle = false;
     var mediaUploadToggle = false;
     var callerInputToggle = false;
-    var decisionToggle = false;
     var routeSIPAddressToggle = false;
     var uniqueId = 0;
 
@@ -34,7 +33,6 @@
       setDialByExtensionStatus: setDialByExtensionStatus,
       setCENumberStatus: setCENumberStatus,
       setMediaUploadStatus: setMediaUploadStatus,
-      setDecisionToggle: setDecisionToggle,
       setQueueSettingsStatus: setQueueSettingsStatus,
       setMediaUploadToggle: setMediaUploadToggle,
       setCallerInputToggle: setCallerInputToggle,
@@ -42,7 +40,6 @@
       setRouteSIPAddressToggle: setRouteSIPAddressToggle,
       isRouteQueueToggle: isRouteQueueToggle,
       isCallerInputToggle: isCallerInputToggle,
-      isDecisionToggle: isDecisionToggle,
       isMediaUploadToggle: isMediaUploadToggle,
       isRouteSIPAddressToggle: isRouteSIPAddressToggle,
       isValid: isValid,
@@ -150,9 +147,6 @@
     function setCallerInputToggle(status) {
       callerInputToggle = status;
     }
-    function setDecisionToggle(status) {
-      decisionToggle = status;
-    }
 
     function setRouteSIPAddressToggle(status) {
       routeSIPAddressToggle = status;
@@ -171,9 +165,6 @@
 
     function isCallerInputToggle() {
       return callerInputToggle;
-    }
-    function isDecisionToggle() {
-      return decisionToggle;
     }
 
     function isRouteSIPAddressToggle() {
