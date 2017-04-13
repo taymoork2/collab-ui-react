@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# validate the commit headline with a regex
+line_start="^"
+commit_type="(chore|fix|docs|style|refactor|perf|test|chore|revert|WIP)"
+optional_scope="(\([a-zA-Z,\-]+\))?"
+colon_and_space="\: "
+any_trailing_content=".+"
+regex="${line_start}${commit_type}${optional_scope}${colon_and_space}${any_trailing_content}"
+# read msg file and remove comments
+file=`sed '/^#/ d' $1`
+
+if ! [[ ${file} =~ ${regex} ]]; then
+  echo ""
+  echo "Attempted to save commit message:"
+  echo ""
+  echo "\`\`\`"
+  echo "${file}"
+  echo "\`\`\`"
+  echo ""
+  echo "Commit message does not meet expected guidelines:"
+  echo "https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/wiki/How-to-commit-changes#commit-message-raw-format"
+  echo ""
+  echo "Please retry with a proper commit or use \`npm run commit\` to help you format a message"
+
+  exit 1
+fi

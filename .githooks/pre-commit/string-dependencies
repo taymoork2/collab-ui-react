@@ -1,0 +1,26 @@
+#!/bin/bash
+
+deps=(
+  "'atlas.templates'"
+  "'collab.ui'"
+  "'pascalprecht.translate'"
+)
+
+for dep in "${deps[@]}"
+do
+  failures=( $(grep -rl "${dep}" ./app/modules) )
+  count=${#failures[@]}
+  if [ $count -gt 0 ]; then
+    echo ""
+    echo "Dependency ${dep} is not allowed to be used as a string constant."
+    echo "Please use an appropriate import/require in the files:"
+    printf "%s\n" ${failures[@]}
+    has_failure=true
+  fi
+done
+
+if [ "${has_failure}" = true ]; then
+  echo ""
+  echo "Please correct these dependency errors and try again"
+  exit 1
+fi
