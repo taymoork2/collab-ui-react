@@ -8,8 +8,8 @@
     <section>
       <div class="metrics-info">
         <div id="{{$ctrl.chartOptions.cardChartDiv}}" class="chartContainer" ng-class="{'no-display': $ctrl.chartOptions.isShow==false || $ctrl.chartOptions.isShow==undefined}">
-          <div class="spinner-position" ng-if="$ctrl.parentcntrl.isRefresh($ctrl.parentcntrl.clientTypesCardStatus)">
-          <p><i class='icon icon-spinner icon-2x'></i> </p>
+          <div class="spinner-position" ng-if="!$ctrl.chartOptions.noData">
+          <p><h5><i class='icon icon-spinner icon-2x'></i></h5></p>
           </div>
         </div>
         <div class="no-data-center-card" ng-if="$ctrl.chartOptions.noData">

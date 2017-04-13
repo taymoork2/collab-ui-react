@@ -22,7 +22,6 @@
     vm.availabilityStatus = vm.REFRESH;
     vm.clientTypeStatus = vm.REFRESH;
     vm.meetingLocationStatus = vm.REFRESH;
-    vm.clientTypesCardStatus = vm.REFRESH;
 
     vm.clusterFilter = null;
     vm.timeFilter = null;
@@ -109,11 +108,6 @@
     vm.meetsHostedchartOptions = {
       isShow: true,
       cardChartDiv: 'numberOfMeetsOnPremisesChartDiv',
-      noData: false,
-    };
-    vm.cloudParticipantschartOptions = {
-      isShow: true,
-      cardChartDiv: 'cloudParticipantsChartDiv',
       noData: false,
     };
     vm.totalParticipantschartOptions = {
@@ -390,11 +384,9 @@
         if (response === vm.ABORT) {
           return undefined;
         } else if (_.isUndefined(response.data) || response.data.dataProvider.length === 0) {
-          vm.clientTypesCardStatus = vm.EMPTY;
           AdoptionCardService.setDummyClientTypePiechart();
           vm.clientTypeschartOptions.noData = true;
         } else {
-          vm.clientTypesCardStatus = vm.SET;
           AdoptionCardService.setClientTypePiechart(response.data);
           vm.clientTypeschartOptions.noData = false;
         }
