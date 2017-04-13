@@ -1,5 +1,6 @@
 export class ITProPackService {
 
+  /* @ngInject */
   constructor(
     private FeatureToggleService,
     private $q: ng.IQService,
