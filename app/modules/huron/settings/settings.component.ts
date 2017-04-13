@@ -44,6 +44,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
     private HuronSettingsOptionsService: HuronSettingsOptionsService,
     private $scope: ng.IScope,
     private $translate: ng.translate.ITranslateService,
+    private $state: ng.ui.IStateService,
     private ModalService,
     private PstnSetupService,
     private PstnSetup,
@@ -112,20 +113,28 @@ class HuronSettingsCtrl implements ng.IComponentController {
 
   public saveHuronSettings(): ng.IPromise<void> {
     this.processing = true;
-    return this.HuronSettingsService.save(this.huronSettingsData).then(huronSettingsData => {
-      this.huronSettingsData = huronSettingsData;
-      this.Notification.success('serviceSetupModal.saveSuccess');
-    }).finally( () => {
-      this.processing = false;
-      this.resetForm();
-    });
+    let showEnableVoicemailModal: boolean = false;
+    if (this.huronSettingsData.customer.hasVoicemailService && !this.HuronSettingsService.getOriginalConfig().customer.hasVoicemailService) {
+      showEnableVoicemailModal = true;
+    }
+    return this.HuronSettingsService.save(this.huronSettingsData)
+      .then(huronSettingsData => {
+        this.huronSettingsData = huronSettingsData;
+        this.Notification.success('serviceSetupModal.saveSuccess');
+      }).finally( () => {
+        this.processing = false;
+        this.resetForm();
+        if (showEnableVoicemailModal && !this.ftsw) {
+          this.$state.go('users.enableVoicemail');
+        }
+      });
   }
 
   public showSaveDialogs(): void {
     if (this.showDialPlanChangedDialog && this.showVoiceMailDisableDialog) {
       this.openDialPlanChangeDialog()
-      .then(() => this.openDisableVoicemailWarningDialog()
-      .then(() => this.saveHuronSettings()));
+        .then(() => this.openDisableVoicemailWarningDialog()
+        .then(() => this.saveHuronSettings()));
     } else if (this.showDialPlanChangedDialog) {
       this.openDialPlanChangeDialog()
         .then(() => this.saveHuronSettings());
