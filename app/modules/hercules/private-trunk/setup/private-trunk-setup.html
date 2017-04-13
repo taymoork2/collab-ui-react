@@ -15,6 +15,9 @@
     private-trunk-resource="$ctrl.privateTrunkResource"
     on-change-fn="$ctrl.setResources(privateTrunkResource)">
   </private-trunk-destination>
+  <private-trunk-certificate ng-if="$ctrl.currentStepIndex === 3"
+    on-change-fn="$ctrl.uploadFile(file)">
+  </private-trunk-certificate>
 </div>
 <div class="modal-footer">
   <button class="btn btn-default" ng-click="$ctrl.dismiss()" ng-if="$ctrl.currentStepIndex===1" translate="common.close"></button>

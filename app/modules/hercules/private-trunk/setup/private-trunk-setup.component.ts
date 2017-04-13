@@ -3,7 +3,7 @@ import { IToolkitModalService } from 'modules/core/modal';
 import { IOption, PrivateTrunkResource } from './private-trunk-setup';
 
 export class PrivateTrunkSetupCtrl implements ng.IComponentController {
-  private static readonly MAX_INDEX: number = 2;
+  private static readonly MAX_INDEX: number = 3;
   private static readonly MIN_INDEX: number = 1;
   public domainSelected: Array<IOption>;
   public isNext: boolean = false;
@@ -51,6 +51,12 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
 
   public setResources(privateTrunkResource: PrivateTrunkResource): void {
     this.privateTrunkResource = _.cloneDeep(privateTrunkResource);
+  }
+
+  public uploadFile(file: File): void {
+    if (file) {
+      //to-do -- update the file data by calling api.
+    }
   }
 
   public isNextButton(): boolean {
