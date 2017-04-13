@@ -7109,6 +7109,14 @@
         "displayName": "Enter display name",
         "addDestination": "Add another SIP destination",
         "hybridDestination": "Use one or more Expressway-E configured for Hybrid Call Connect ",
+        "certificateTitle": "Certificates",
+        "certificateDescription": "Choose whether you want to use the certificates provided by the Cisco Collaboration Cloud default trust list or upload your own.",
+        "certificateRadio1": "Use default trust list",
+        "certificateRadio2": "I want to upload my own certificate",
+        "dragAndDropKeyFileHere": "Drag and drop the certificate file here or ",
+        "clickToBrowse": "click to browse",
+        "fileReadyForImport": "File ready for import",
+        "certificateDelete": "Are you sure you want to remove this certificate?",
         "cancelHeader": "Cancel Enterprise Private Trunking Setup.",
         "cancelBody": "Are you sure you want to cancel?"
       }

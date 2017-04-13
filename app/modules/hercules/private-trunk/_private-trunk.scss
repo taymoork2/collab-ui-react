@@ -1,5 +1,6 @@
 @import '~collab-ui/scss/tools/mixins/spacing-responsive';
-
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/tools/functions/core';
 .private-trunk {
   h5 {
     @include vr-spacing(mt, .5);
@@ -35,5 +36,112 @@
   }
   .label-2-align {
     padding-left: 1.5rem;
+  }
+
+  .columns .box {
+    @include vr-spacing(m, 1);
+    border: thin solid $gray-light-2;
+    color: $gray-base;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1 1 auto;
+
+    .box-content {
+      align-self: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+    }
+
+    .icon {
+      font-size: 1.5rem;
+      display: inline;
+      line-height: 2rem;
+      &:hover,
+      &:active,
+      &:focus {
+        color: $brand-primary;
+      }
+    }
+
+    .icon-label {
+      position: relative;
+      top: .5rem;
+      padding-left: .25rem;
+    }
+
+    .prompt {
+      padding-bottom: .5rem;
+      label {
+        cursor: pointer;
+        color: $link-color;
+
+        &:hover {
+          color: $link-hover-color;
+        }
+
+        display: inline;
+      }
+    }
+  }
+  .flex-center-container {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+
+  .certificate-upload {
+    flex: 1 1 auto;
+    height: 100%;
+    .hotspot {
+      cursor: pointer;
+      &:hover {
+        color: $brand-primary;
+      }
+    }
+
+    label.hotspot {
+      font-size: vr-adjust(16);
+      text-align: right;
+    }
+    .span-text {
+      position: relative;
+      bottom: .5rem;
+      padding-left: .5rem;
+    }
+    .file-drop {
+      @extend .flex-center-container;
+
+      flex-direction: column;
+
+      &.dragover {
+        background: $color-primary-lighter;
+        border: dashed $color-primary;
+      }
+
+      input {
+        display: none;
+      }
+    }
+
+    .file-drop-inactive {
+      @extend .file-drop;
+
+      .file-drop-content {
+        background: $gray-light-4;
+
+        .icon-check {
+          color: $color-cta-base;
+        }
+      }
+
+      .file-name {
+        @include vr-spacing(mt, 0.25);
+      }
+    }
   }
 }
