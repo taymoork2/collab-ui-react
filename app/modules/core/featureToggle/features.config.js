@@ -75,7 +75,6 @@ module.exports = {
   huronAACallQueue: 'huronAACallQueue',
   huronAAMediaUpload: 'huron-aa-mediaupload',
   huronAACallerInput: 'huron-aa-callerinput',
-  huronAADecision: 'huron-aa-decision',
   huronAARouteRoom: 'huron-aa-routeroom',
   huronClassOfService: 'COS',
   huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
@@ -193,4 +192,5 @@ module.exports = {
   huronEnterprisePrivateTrunking: 'huron-i387-enterprise-private-trunking',
   webexMetrics: 'webex-metrics',
   huronCustomerAdminPMP: "huron-customer-admin-pmp",
+  hRegionalTones: "h-regional-tones",
 };

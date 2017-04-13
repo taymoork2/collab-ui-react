@@ -126,9 +126,9 @@
     vm.optionalVmDidFeatureToggle = false;
     vm._buildVoicemailPrefixOptions = _buildVoicemailPrefixOptions;
     vm.isTerminusCustomer = false;
-    vm.ftHuronFederatedSparkCall = false;
-    vm.ftHuronSupportThinktel = false;
-    vm.ftHuronL10nUserLocale2 = false;
+
+    vm.ftHRegionalTones = false;
+    vm.supportRegionalSettings = supportRegionalSettings;
 
     PstnSetupService.getCustomer(Authinfo.getOrgId()).then(function () {
       vm.isTerminusCustomer = true;
@@ -138,16 +138,8 @@
       vm.voicemailAvrilCustomer = result;
     });
 
-    FeatureToggleService.supports(FeatureToggleService.features.huronFederatedSparkCall).then(function (result) {
-      vm.ftHuronFederatedSparkCall = result;
-    });
-
-    FeatureToggleService.supports(FeatureToggleService.features.huronSupportThinktel).then(function (result) {
-      vm.ftHuronSupportThinktel = result;
-    });
-
-    FeatureToggleService.supports(FeatureToggleService.features.huronUserLocale2).then(function (result) {
-      vm.ftHuronL10nUserLocale2 = result;
+    FeatureToggleService.supports(FeatureToggleService.features.hRegionalTones).then(function (result) {
+      vm.ftHRegionalTones = result;
     });
 
     vm.validations = {
@@ -732,6 +724,10 @@
         return !vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled;
       },
     }];
+
+    function supportRegionalSettings() {
+      return vm.ftHRegionalTones;
+    }
 
     function initServiceSetup() {
       var errors = [];
