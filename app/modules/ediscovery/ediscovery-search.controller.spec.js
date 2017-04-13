@@ -4,10 +4,10 @@ describe('Controller: EdiscoverySearchController', function () {
   beforeEach(angular.mock.module('Ediscovery'));
   beforeEach(angular.mock.module('Huron'));
 
-  var $controller, $q, $scope, $translate, Analytics, ediscoverySearchController, EdiscoveryService, EdiscoveryNotificationService, FeatureToggleService, Notification, TrialService;
+  var $controller, $q, $scope, $translate, Analytics, ediscoverySearchController, EdiscoveryService, EdiscoveryNotificationService, FeatureToggleService, ITProPackService, Notification, TrialService;
   var promiseUrl, promise;
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$translate_, _Analytics_, _EdiscoveryService_, _EdiscoveryNotificationService_, _FeatureToggleService_, _Notification_, _TrialService_) {
+  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$translate_, _Analytics_, _EdiscoveryService_, _EdiscoveryNotificationService_, _FeatureToggleService_, _ITProPackService_, _Notification_, _TrialService_) {
     $scope = _$rootScope_.$new();
     $controller = _$controller_;
     $q = _$q_;
@@ -18,6 +18,7 @@ describe('Controller: EdiscoverySearchController', function () {
     FeatureToggleService = _FeatureToggleService_;
     Notification = _Notification_;
     TrialService = _TrialService_;
+    ITProPackService = _ITProPackService_;
 
     promiseUrl = $q.resolve({
       avalonRoomsUrl: 'https://whatever.com/myFancyRoomsApi',
@@ -25,7 +26,7 @@ describe('Controller: EdiscoverySearchController', function () {
 
     spyOn(Analytics, 'trackEvent').and.returnValue($q.resolve());
     spyOn(FeatureToggleService, 'atlasEdiscoveryGetStatus').and.returnValue($q.resolve(false));
-    spyOn(FeatureToggleService, 'atlasITProPackPurchasedGetStatus').and.returnValue($q.resolve(false));
+    spyOn(ITProPackService, 'hasITProPackPurchased').and.returnValue($q.resolve(false));
     spyOn(TrialService, 'getTrial').and.returnValue($q.resolve());
     spyOn(TrialService, 'getDaysLeftForCurrentUser');
 
@@ -40,6 +41,7 @@ describe('Controller: EdiscoverySearchController', function () {
       EdiscoveryNotificationService: EdiscoveryNotificationService,
       FeatureToggleService: FeatureToggleService,
       Notification: Notification,
+      ITProPackService: ITProPackService,
     });
 
     $scope.$apply();
