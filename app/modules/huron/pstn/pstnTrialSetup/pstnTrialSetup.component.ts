@@ -1,4 +1,4 @@
-import { SWIVEL, MIN_VALID_CODE, MAX_VALID_CODE, NXX, MAX_DID_QUANTITY } from './../index';
+import { SWIVEL, MIN_VALID_CODE, MAX_VALID_CODE, NXX, MAX_DID_QUANTITY } from '../pstn.const';
 import { Notification } from '../../../core/notifications/notification.service';
 import { PaginateOptions } from '../paging-option.model';
 import { PstnService } from '../pstn.service';

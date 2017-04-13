@@ -1,4 +1,6 @@
-describe('Service: pstnWizard', () => {
+import pstnWizard from './index';
+
+describe('Service: PstnWizardService', () => {
   let consecutiveOrder = {
     data: {
       numbers: [
@@ -58,7 +60,7 @@ describe('Service: pstnWizard', () => {
   };
 
   beforeEach(function () {
-    this.initModules('huron.pstn-wizard');
+    this.initModules(pstnWizard);
     this.injectDependencies(
       '$httpBackend',
       'Authinfo',

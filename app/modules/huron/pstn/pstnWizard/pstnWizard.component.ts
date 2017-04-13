@@ -1,11 +1,13 @@
 import { Notification } from 'modules/core/notifications/notification.service';
-import { NumberModel, INumbersModel } from './number.model';
-import { PstnWizardService, IOrder } from './pstnWizard.service';
-import { TokenMethods } from '../pstnSwivelNumbers/pstnSwivelNumbers.component';
 import { IEmergencyAddress } from 'modules/squared/devices/emergencyServices/index';
-import { TOKEN_FIELD_ID } from '../index';
+import { NumberModel, INumbersModel } from './number.model';
+import { PstnWizardService } from './pstnWizard.service';
+import { DirectInwardDialing } from './directInwardDialing';
+import { TokenMethods } from '../pstnSwivelNumbers';
+import { TOKEN_FIELD_ID } from '../pstn.const';
 import { PstnService } from '../pstn.service';
-import { PstnModel } from '../pstn.model';
+import { PstnModel, IOrder } from '../pstn.model';
+
 
 export class PstnWizardComponent implements ng.IComponentOptions {
   public controller = PstnWizardCtrl;
@@ -62,6 +64,8 @@ export class PstnWizardCtrl implements ng.IComponentController {
   public tokenmethods: TokenMethods;
   public titles: {};
 
+  private did: DirectInwardDialing = new DirectInwardDialing();
+
   /* @ngInject */
   constructor(private PstnModel: PstnModel,
               private PstnServiceAddressService,
@@ -70,7 +74,6 @@ export class PstnWizardCtrl implements ng.IComponentController {
               private $window: ng.IWindowService,
               private $timeout: ng.ITimeoutService,
               private PstnService: PstnService,
-              private DidService,
               private $translate: ng.translate.ITranslateService,
               private PstnWizardService: PstnWizardService,
               private TelephoneNumberService,
@@ -128,23 +131,23 @@ export class PstnWizardCtrl implements ng.IComponentController {
       this.validCount++;
     }
     // add to service after validation/duplicate checks
-    this.DidService.addDid(e.attrs.value);
+    this.did.add(e.attrs.value);
 
     this.invalidCount = this.getInvalidTokens().length;
   }
 
   public isTokenInvalid(value): boolean {
     return !this.TelephoneNumberService.validateDID(value) ||
-      _.includes(this.DidService.getDidList(), value);
+      _.includes(this.did.getList(), value);
   }
 
   public removeToken(e): void {
-    this.DidService.removeDid(e.attrs.value);
+    this.did.remove(e.attrs.value);
     this.$timeout(this.initTokens);
   }
 
   public editToken(e): void {
-    this.DidService.removeDid(e.attrs.value);
+    this.did.remove(e.attrs.value);
     if (!angular.element(e.relatedTarget).hasClass('invalid')) {
       this.validCount--;
     }
@@ -335,11 +338,11 @@ export class PstnWizardCtrl implements ng.IComponentController {
   }
 
   public initTokens(didList): void {
-    let tmpDids = didList || this.DidService.getDidList();
+    let tmpDids = didList || this.did.getList();
     // reset valid and list before setTokens
     this.validCount = 0;
     this.invalidCount = 0;
-    this.DidService.clearDidList();
+    this.did.clearList();
     angular.element('#' + this.tokenfieldId).tokenfield('setTokens', tmpDids);
   }
 

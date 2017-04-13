@@ -1,4 +1,4 @@
-import { NUMBER_ORDER, PORT_ORDER, BLOCK_ORDER, NXX, MIN_BLOCK_QUANTITY, MAX_BLOCK_QUANTITY } from '../../pstn/index';
+import { NUMBER_ORDER, PORT_ORDER, BLOCK_ORDER, NXX, MIN_BLOCK_QUANTITY, MAX_BLOCK_QUANTITY } from 'modules/huron/pstn/pstn.const';
 class PstnSelectorCtrl implements ng.IComponentController {
   public search: Function;
   public addToCart: Function;
