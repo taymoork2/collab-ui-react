@@ -7871,7 +7871,11 @@
       "modifyMessageSucceed": "Message successfully modified.",
       "modifyMessageFailed": "An error occurred modifying message.",
       "updateIncidentSucceed": "Incident {{incidentName}} update succeed.",
-      "updateIncidentFailed": "Incident {{incidentName}} update failed."
+      "updateIncidentFailed": "Incident {{incidentName}} update failed.",
+      "deleteMessageTitle": "Delete Incident Message",
+      "deleteMessageConfirmMsg": "Are you sure you want to permanently delete message?",
+      "deleteMessageSucceed": "Message successfully deleted.",
+      "deleteMessageFailed": "An error occurred deleting message."
     },
     "incidentStatus": {
       "investigating": "Investigating",

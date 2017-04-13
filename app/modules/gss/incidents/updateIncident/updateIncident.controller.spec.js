@@ -1,7 +1,8 @@
 'use strict';
 
 describe('controller: UpdateIncidentCtrl', function () {
-  var $controller, $q, $scope, $state, $stateParams, controller, GSSService, IncidentsService;
+  var $controller, $modal, $q, $scope, $state, $stateParams, controller, GSSService, IncidentsService, Notification;
+  var modal;
   var testData = {
     empty: '',
     actionType: 'update',
@@ -60,8 +61,9 @@ describe('controller: UpdateIncidentCtrl', function () {
   beforeEach(initSpies);
   beforeEach(initController);
 
-  function dependencies(_$controller_, _$q_, _$rootScope_, _$state_, _$stateParams_, _GSSService_, _IncidentsService_) {
+  function dependencies(_$controller_, _$modal_, _$q_, _$rootScope_, _$state_, _$stateParams_, _GSSService_, _IncidentsService_, _Notification_) {
     $controller = _$controller_;
+    $modal = _$modal_;
     $q = _$q_;
     $scope = _$rootScope_.$new();
     $state = _$state_;
@@ -72,10 +74,12 @@ describe('controller: UpdateIncidentCtrl', function () {
 
     GSSService = _GSSService_;
     IncidentsService = _IncidentsService_;
+    Notification = _Notification_;
+    modal = $q.defer();
   }
 
   function destructDI() {
-    $controller = $q = $scope = $state = $stateParams = controller = GSSService = IncidentsService = undefined;
+    $controller = $modal = $q = $scope = $state = $stateParams = controller = GSSService = IncidentsService = undefined;
   }
 
   function initSpies() {
@@ -85,6 +89,7 @@ describe('controller: UpdateIncidentCtrl', function () {
     spyOn(IncidentsService, 'updateIncident').and.returnValue($q.resolve());
     spyOn(IncidentsService, 'updateIncidentMessage').and.returnValue($q.resolve());
     spyOn(IncidentsService, 'getAffectedComponents').and.returnValue($q.resolve());
+    spyOn(IncidentsService, 'deleteIncidentMessage').and.returnValue($q.resolve());
     spyOn($state, 'go');
   }
 
@@ -249,5 +254,18 @@ describe('controller: UpdateIncidentCtrl', function () {
   it('getLocalizedIncidentStatus', function () {
     expect(controller.getLocalizedIncidentStatus(testData.incidentForUpdate.status))
       .toEqual(testData.incidentForUpdate.localizedStatus);
+  });
+
+  xit('deleteMessage button clicked, should show modal with the message detail', function () {
+    spyOn(Notification, 'success');
+    spyOn($modal, 'open').and.returnValue({
+      result: modal.promise,
+    });
+
+    controller.deleteMessage(testData.message);
+    $scope.$apply();
+    expect($modal.open).toHaveBeenCalled();
+    expect(Notification.success).toHaveBeenCalledWith('gss.incidentsPage.deleteMessageSucceed');
+    expect(IncidentsService.deleteIncidentMessage).toHaveBeenCalled();
   });
 });

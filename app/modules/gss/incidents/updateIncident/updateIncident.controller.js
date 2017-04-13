@@ -6,7 +6,7 @@
     .controller('UpdateIncidentCtrl', UpdateIncidentCtrl);
 
   /* @ngInject */
-  function UpdateIncidentCtrl($scope, $state, $stateParams, $translate, Authinfo, GSSService, IncidentsService, Notification) {
+  function UpdateIncidentCtrl($scope, $state, $modal, $stateParams, $translate, Authinfo, GSSService, IncidentsService, Notification) {
     var vm = this;
     var update = 'update';
     var resolved = 'resolved';
@@ -33,6 +33,8 @@
     vm.hideAffectedComponent = hideAffectedComponent;
     vm.isValidForMessage = isValidForMessage;
     vm.getLocalizedIncidentStatus = getLocalizedIncidentStatus;
+    vm.isLoadingMessage = true;
+    vm.deleteMessage = deleteMessage;
 
     init();
 
@@ -307,6 +309,7 @@
         .getIncident(vm.incidentForUpdate.incidentId)
         .then(function (data) {
           vm.incidentForUpdate = data;
+          vm.isLoadingMessage = false;
         });
     }
 
@@ -375,6 +378,35 @@
       });
 
       return affectedComponents;
+    }
+
+    function deleteMessage(message) {
+      message.statusName = vm.getLocalizedIncidentStatus(message.status);
+      var delMessage = message;
+
+      $modal.open({
+        type: 'small',
+        templateUrl: 'modules/gss/incidents/message/deleteMessage.tpl.html',
+        controller: function () {
+          var ctrl = this;
+          ctrl.message = delMessage;
+        },
+        controllerAs: 'ctrl',
+      }).result.then(function () {
+        vm.isLoadingMessage = true;
+        IncidentsService
+          .deleteIncidentMessage(message.messageId)
+          .then(function () {
+            _.remove(vm.incidentForUpdate.messages, {
+              messageId: message.messageId,
+            });
+            vm.isLoadingMessage = false;
+            Notification.success('gss.incidentsPage.deleteMessageSucceed');
+          })
+          .catch(function (error) {
+            Notification.errorWithTrackingId(error, 'gss.incidentsPage.deleteMessageFailed');
+          });
+      });
     }
   }
 })();
