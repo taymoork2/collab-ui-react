@@ -186,6 +186,8 @@ describe('Controller: AARouteToQueueCtrl', function () {
       });
 
       it('should maintain a master copy of the model if not "saved"', function () {
+        spyOn($scope, '$broadcast').and.callThrough();
+
         controller.openQueueTreatmentModal();
         $scope.$apply();
         expect(controller.menuEntry.actions[0].description).toEqual('');
@@ -193,6 +195,7 @@ describe('Controller: AARouteToQueueCtrl', function () {
         modal.reject();
         $scope.$apply();
         expect(controller.menuEntry.actions[0].description).toEqual('');
+        expect($scope.$broadcast).toHaveBeenCalledWith('Queue_Cancelled');
       });
     });
 
