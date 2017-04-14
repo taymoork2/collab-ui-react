@@ -2,18 +2,9 @@
 @import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
 @import '~collab-ui/scss/tools/mixins/spacing-responsive';
 
-.reveal-modal.dialog .modal-body.subdomain-modal,
-.subdomain-modal {
-  @include vr-spacing(ph, 3);
-  margin: 0;
+.modal-body.subdomain-modal {
   .modal-space {
     @include vr-spacing(mt, 0.75);
-  }
-  .subdomain-modal-warning {
-    display: inline-flex;
-    .subdomain-warning-icon {
-      color: $color-attention-base;
-    }
   }
 }
 

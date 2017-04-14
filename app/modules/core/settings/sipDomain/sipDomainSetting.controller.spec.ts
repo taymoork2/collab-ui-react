@@ -38,8 +38,6 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
 
     this.modal = {
       templateUrl: '',
-      controller: jasmine.any(Function),
-      controllerAs: 'subdomain',
       type: 'dialog',
     };
 
@@ -472,7 +470,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
         this.cscModal.templateUrl = 'modules/core/settings/sipDomain/editCSCWarning.tpl.html';
       });
 
-      it('should open a modal warning about the effects CSC changes and call toggleSipForm on close', function () {
+      it('should open a modal warning about the effects CSC changes and do nothing on close', function () {
         spyOn(this.$modal, 'open').and.returnValue({
           result: this.$q.when(true),
         });
@@ -482,7 +480,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
         this.controller.editSubdomain();
         this.$scope.$apply();
         expect(this.$modal.open).toHaveBeenCalledWith(this.cscModal);
-        expect(this.controller.toggleSipForm).toHaveBeenCalledTimes(1);
+        expect(this.controller.toggleSipForm).not.toHaveBeenCalled();
       });
 
       it('should open a modal warning about the effects CSC changes and do nothing on dismiss', function () {
@@ -541,7 +539,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
         expect(this.$modal.open).toHaveBeenCalledWith(this.saveModal);
       });
 
-      it('should reactivate save\cancel buttons if modal has "no" selected', function () {
+      it('should reactivate save/cancel buttons if modal has "no" selected', function () {
         spyOn(this.$modal, 'open').and.returnValue({
           result: this.$q.reject(false),
         });
