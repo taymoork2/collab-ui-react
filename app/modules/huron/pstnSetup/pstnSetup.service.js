@@ -410,16 +410,15 @@
       var payload = {
         npa: npa,
         quantity: quantity,
+        numberType: NUMTYPE_DID,
         sequential: isSequential,
       };
       if (_.isString(nxx)) {
         payload['nxx'] = nxx;
       }
 
-      return TerminusCustomerCarrierDidService.save({
+      return TerminusV2CustomerNumberOrderBlockService.save({
         customerId: customerId,
-        carrierId: carrierId,
-        type: BLOCK,
       }, payload).$promise;
     }
 

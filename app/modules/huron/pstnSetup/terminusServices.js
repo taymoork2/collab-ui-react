@@ -3,6 +3,7 @@
 
   module.exports = angular.module('huron.TerminusServices', [
     require('angular-resource'),
+    require('modules/huron/telephony/telephonyConfig'),
     require('modules/core/config/config'),
   ])
     .factory('TerminusCustomerService', TerminusCustomerService)

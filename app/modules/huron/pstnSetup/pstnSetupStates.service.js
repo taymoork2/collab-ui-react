@@ -1,8 +1,10 @@
 (function () {
   'use strict';
 
-  angular.module('Huron')
-    .service('PstnSetupStatesService', PstnSetupStatesService);
+  module.exports = angular
+    .module('huron.pstn-setup-states-service', [])
+    .service('PstnSetupStatesService', PstnSetupStatesService)
+    .name;
 
   var JSON_US = 'modules/huron/pstnSetup/states.json';
   var JSON_CA = 'modules/huron/pstnSetup/provinces.json';

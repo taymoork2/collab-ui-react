@@ -1,9 +1,13 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Huron')
-    .factory('CallerId', CallerId);
+  module.exports = angular.module('huron.callerId', [
+    'huron.directory-number-service',
+    require('modules/core/auth/auth'),
+    require('modules/huron/telephony/cmiServices'),
+  ])
+    .service('CallerId', CallerId)
+    .name;
 
   /* @ngInject */
   function CallerId(Authinfo, $q, CompanyNumberService, UserDirectoryNumberService, DirectoryNumberUserService, DirectoryNumber,
