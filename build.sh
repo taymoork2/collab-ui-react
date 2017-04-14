@@ -39,13 +39,7 @@ echo "Inspecting checksums of $manifest_files from last successful build... "
 checksums_ok=$(is_checksums_ok "$manifest_checksums_file" && echo "true" || echo "false")
 
 echo "Checking if it is time to refresh..."
-
-# FIXME:
-# - temporarily setting to 14 days refresh period while BMS team works on artifactory performance issue
-# - see: https://remedy-atlantic.cloudapps.cisco.com/incidents/INC800006546822
-min_refresh_period=$(( 60 * 60 * 24 * 14 ))  # <= 14 days (TEMPORARY)
-# min_refresh_period=$(( 60 * 60 * 24 ))  # 24 hours
-
+min_refresh_period=$(( 60 * 60 * 24 ))  # 24 hours
 # shellcheck disable=SC2154
 time_to_refresh=$(is_time_to_refresh $min_refresh_period "$last_refreshed_file" \
     && echo "true" || echo "false")
