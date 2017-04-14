@@ -8,5 +8,5 @@ export default angular
     'collab.ui',
     'pascalprecht.translate',
   ])
-  .component('ucPreferredLanguage', new PreferredLanguageComponent())
+  .component('ucSettingsPreferredLanguage', new PreferredLanguageComponent())
   .name;

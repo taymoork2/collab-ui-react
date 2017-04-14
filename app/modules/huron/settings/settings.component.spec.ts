@@ -107,7 +107,7 @@ describe('Component: settings', () => {
     });
 
     it('should have preferred language component', function() {
-      expect(this.view).toContainElement('uc-preferred-language');
+      expect(this.view).toContainElement('uc-settings-preferred-language');
     });
 
     it('should have default country component', function() {
@@ -165,7 +165,7 @@ describe('Component: settings', () => {
     });
 
     it('should have preferred language component', function() {
-      expect(this.view).toContainElement('uc-preferred-language');
+      expect(this.view).toContainElement('uc-settings-preferred-language');
     });
 
     it('should have default country component', function() {
