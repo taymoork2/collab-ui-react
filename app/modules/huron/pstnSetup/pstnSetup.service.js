@@ -3,7 +3,7 @@
 
   module.exports = angular.module('huron.pstnsetupservice', [
     require('angular-resource'),
-    'huron.telephoneNumber',
+    require('modules/huron/telephony/telephoneNumber.filter'),
     require('modules/core/scripts/services/authinfo'),
     require('modules/core/notifications').default,
     require('./pstnSetup.model'),

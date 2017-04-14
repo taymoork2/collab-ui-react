@@ -6,9 +6,9 @@ import featureToggleService from 'modules/core/featureToggle';
 
 export default angular
   .module('huron.paging-group.edit', [
-    'atlas.templates',
-    'collab.ui',
-    'pascalprecht.translate',
+    require('scripts/app.templates'),
+    require('collab-ui-ng').default,
+    require('angular-translate'),
     require('modules/core/notifications').default,
     pagingGroupService,
     featureMemberService,

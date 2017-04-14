@@ -2,8 +2,8 @@ import { CustomerPstnOrdersOverviewComponent } from './customerPstnOrdersOvervie
 
 export default angular
   .module('huron.customer-pstn-orders-overview', [
-    'atlas.templates',
-    'collab.ui',
+    require('scripts/app.templates'),
+    require('collab-ui-ng').default,
     'huron.orders-overview',
   ])
   .component('ucCustomerPstnOrdersOverview', new CustomerPstnOrdersOverviewComponent())

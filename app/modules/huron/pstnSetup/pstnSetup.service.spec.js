@@ -83,8 +83,7 @@ describe('Service: PstnSetupService', function () {
   // dependencies
   beforeEach(function () {
     this.initModules(
-      require('./pstnSetup.service'),
-      require('collab-ui')
+      require('./pstnSetup.service')
     );
     this.injectDependencies(
       '$http',

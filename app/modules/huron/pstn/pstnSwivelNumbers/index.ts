@@ -4,9 +4,9 @@ import notifications from 'modules/core/notifications';
 export const TIMEOUT = 100;
 export default angular
   .module('huron.pstn-swivelNumbers', [
-    'atlas.templates',
-    'collab.ui',
-    'pascalprecht.translate',
+    require('scripts/app.templates'),
+    require('collab-ui-ng').default,
+    require('angular-translate'),
     'huron.telephoneNumberService',
     notifications,
   ])

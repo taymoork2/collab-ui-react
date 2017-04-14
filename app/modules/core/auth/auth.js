@@ -3,7 +3,7 @@
 
   module.exports = angular
     .module('core.auth.auth', [
-      'pascalprecht.translate',
+      require('angular-translate'),
       require('angular-ui-router'),
       require('angular-sanitize'),
       require('modules/core/auth/token.service'),

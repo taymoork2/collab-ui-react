@@ -2,8 +2,8 @@ import { OrderDetailComponent } from './orderDetail.component';
 
 export default angular
   .module('huron.order-detail', [
-    'atlas.templates',
-    'collab.ui',
+    require('scripts/app.templates'),
+    require('collab-ui-ng').default,
     'huron.telephoneNumber',
     require('modules/huron/pstnSetup/pstnSetup.service'),
   ])

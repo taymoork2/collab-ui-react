@@ -9,9 +9,9 @@ export * from './private-trunk-setup';
 
 export default angular
   .module('hercules.private-trunk-setup', [
-    'atlas.templates',
-    'collab.ui',
-    'pascalprecht.translate',
+    require('scripts/app.templates'),
+    require('collab-ui-ng').default,
+    require('angular-translate'),
     privateTrunkPrereq,
     require('modules/hercules/services/uss-service'),
   ])

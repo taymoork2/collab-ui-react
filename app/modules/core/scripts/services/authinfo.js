@@ -2,7 +2,7 @@
   'use strict';
 
   module.exports = angular.module('core.authinfo', [
-    'pascalprecht.translate',
+    require('angular-translate'),
     require('modules/core/config/config'),
     require('modules/core/config/tabConfig'),
   ])

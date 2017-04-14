@@ -5,8 +5,8 @@
 
   angular.module('Core', [
     'angular-cache',
-    'atlas.templates',
-    'collab.ui',
+    require('scripts/app.templates'),
+    require('collab-ui-ng').default,
     'cisco.formly',
     require('modules/core/auth/tos').default,
     require('modules/core/auth/user').default,
@@ -28,7 +28,6 @@
     'core.utils',
     'csDonut',
     'ct.ui.router.extras.previous',
-    'cwill747.phonenumber',
     'ngAnimate',
     'ngclipboard',
     'ngCookies',
@@ -37,7 +36,7 @@
     'ngMessages',
     'ngFileUpload',
     'ngCsv',
-    'pascalprecht.translate',
+    require('angular-translate'),
     'ui.router',
     'ui.grid',
     'ui.grid.selection',
@@ -180,6 +179,6 @@
   requireAll(require.context("../", true, /\.(jpg|png|svg|ico|json|csv|pdf)$/));
 
   function requireAll(requireContext) {
-    return requireContext.keys().forEach(requireContext);
+    return requireContext.keys().map(requireContext);
   }
 }());

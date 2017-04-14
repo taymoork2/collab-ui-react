@@ -30,9 +30,9 @@ export const E911_ADDRESS_PENDING: string = 'PENDING';
 
 export default angular
   .module('huron.settings', [
-    'atlas.templates',
-    'collab.ui',
-    'pascalprecht.translate',
+    require('scripts/app.templates'),
+    require('collab-ui-ng').default,
+    require('angular-translate'),
     require('modules/huron/lineSettings/callerIdService'),
     require('modules/huron/settings/voicemailMessageAction.service'),
     require('modules/huron/pstnSetup/terminusServices'),
