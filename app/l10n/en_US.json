@@ -2869,15 +2869,16 @@
       "searchRoomHelpText": "e.g. a42163f4-eb1e-2c03-efcf2-9c5372c2e099",
       "messages": "Where <b>Messages</b> contains",
       "messagesPlaceholder": "e.g. project AND manager",
-      "noMatchesFound": "No Matches Found"
+      "noMatchesFound": "No Matches Found",
+      "dateRangeTooltip": "To generate reports greater than 90 days, contact your admin about our IT Pro Package."
     },
     "searchResults": {
       "backToSearch": "Back to Search",
       "searchInfo": "Search Info",
-      "emailAddress": "Email Address",
+      "emailAddress": "Email Addresses",
       "spaceId": "Space Id",
       "dateRange": "Date Range",
-      "textAndFileName": "Text Messages or File Name Contains",
+      "messages": "Messages Contains",
       "notApplicable": "N/A",
       "reportSummary": "Report Summary",
       "spaces": "Spaces",
@@ -2885,7 +2886,7 @@
       "files": "Files",
       "estReport": "Est. Report Size",
       "generateReport": "Generate Report",
-      "generateText": "Enter report information to generate a report. Generation time will depend on estimated report size.",
+      "generateText": "Enter report information to generate a report. The time to generate the report depends on the estimated report size.",
       "description": "Description",
       "exportFormat": "Export Format",
       "totalReportSize": "Total Report Size",
