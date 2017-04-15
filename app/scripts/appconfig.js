@@ -1105,6 +1105,7 @@
               queryuserslist: {},
               currentUserId: '',
               orgInfo: {},
+              preferredLanguageDetails: {},
             },
             data: {
               displayName: 'Overview',
@@ -1124,6 +1125,26 @@
                   done(require('modules/huron/overview'));
                 }, 'user-call-overview');
               }),
+            },
+          })
+          .state('user-overview.userDetails', {
+            template: '<uc-user-details-overview preferred-language-details="$resolve.preferredLanguageDetails"></uc-user-details-overview>',
+            params: {
+              reloadToggle: false,
+            },
+            data: {},
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('user-overview.userDetails').data.displayName = $translate.instant('usersPreview.userDetails');
+              },
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/huron/users/userDetailsOverview'));
+                }, 'uc-user-details-overview');
+              }),
+              preferredLanguageDetails: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams, 'preferredLanguageDetails');
+              },
             },
           })
           .state('user-overview.csdmDevice', {
