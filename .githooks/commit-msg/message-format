@@ -8,7 +8,7 @@ colon_and_space="\: "
 any_trailing_content=".+"
 regex="${line_start}${commit_type}${optional_scope}${colon_and_space}${any_trailing_content}"
 # read msg file and remove comments
-file=`sed '/^#/ d' $1`
+file=$(sed '/^#/ d' "$1")
 
 if ! [[ ${file} =~ ${regex} ]]; then
   echo ""
