@@ -15,6 +15,7 @@
     vm.overflowHeading = $translate.instant('mediaFusion.metrics.cloud_calls');
     vm.cloudCallHeading = $translate.instant('mediaFusion.metrics.totalCloud');
     vm.othersHeading = $translate.instant('mediaFusion.metrics.othersHeading');
+    vm.redirectHeading = $translate.instant('mediaFusion.metrics.redirectedcalls');
 
 
     return {
@@ -44,18 +45,19 @@
       return chart;
     }
 
-    function setTotalParticipantsPiechart(callsOnPremise, callsOverflow, cloudCalls) {
+    function setTotalParticipantsPiechart(callsOnPremise, callsOverflow, cloudCalls, isAllCluster) {
       var data = {};
       var dataProvider = [];
       cloudCalls = (cloudCalls - callsOverflow) < 0 ? 0 : (cloudCalls - callsOverflow);
       var total = cloudCalls + callsOverflow + callsOnPremise;
       total = formatTotal(total);
+      var secondHeading = isAllCluster ? vm.overflowHeading : vm.redirectHeading;
       dataProvider = [{
         'name': vm.onPremiseHeading,
         'color': '#22D5A3',
         'value': callsOnPremise,
       }, {
-        'name': vm.overflowHeading,
+        'name': secondHeading,
         'color': '#1CA0AE',
         'value': callsOverflow,
       }, {
@@ -191,14 +193,14 @@
       if (value <= 1000) {
         return value.toString();
       }
-      var numDigits = ("" + value).length;
+      var numDigits = ('' + value).length;
       var suffixIndex = Math.floor(numDigits / 3);
       var normalisedValue = value / Math.pow(1000, suffixIndex);
       var precision = 3;
       if (normalisedValue < 1) {
         precision = 1;
       }
-      var suffixes = ["", "k", "m", "bn"];
+      var suffixes = ['', 'k', 'm', 'bn'];
       if (normalisedValue < 1) {
         return _.round(normalisedValue * 1000) + suffixes[suffixIndex - 1];
       } else {

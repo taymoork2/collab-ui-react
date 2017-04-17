@@ -86,7 +86,7 @@
     }
 
     function addColorForMeetingsCard(response) {
-      _.forEach(response.data.dataProvider, function (val) {
+      _.each(response.data.dataProvider, function (val) {
         if (val.name === 'ON_PREM') {
           val.color = '#02bbcc';
           val.name = vm.onPremisesHeading;
@@ -102,7 +102,7 @@
     }
 
     function translateClientTypeData(response) {
-      _.forEach(response.data.dataProvider, function (val) {
+      _.each(response.data.dataProvider, function (val) {
         if (!_.isUndefined(vm.clientTypeTranMap[val.name])) {
           val.name = vm.clientTypeTranMap[val.name];
         }

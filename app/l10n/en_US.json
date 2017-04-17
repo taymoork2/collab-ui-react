@@ -4956,6 +4956,7 @@
       "node": "Node",
       "availabilityStatus": "Availability Status",
       "clusterTitle": "Cluster",
+      "clusterNodeTitle": "Cluster/Node",
       "lowAvailableClusters": "Low availability clusters",
       "clusterTakingMoreCalls": "Clusters hosting more no of calls",
       "totalMeetings": "Total Number of Meetings",
@@ -4991,11 +4992,12 @@
       },
       "mobile": "Mobile",
       "cardDescription": {
-        "clientType": "Summary of the types of meeting clients that are in use at an organization",
+        "clientType": "Summary of the types of meeting clients that are in use at an organization.",
         "cloudParticipants2": ": Number of calls made within an enterprise but overflowed to a cloud cluster.",
-        "cloudParticipants1": ": Number of calls landed on a cloud cluster.",
+        "cloudParticipants1": ": Number of calls that could not utilize enterprise Hybrid Media Nodes, because of no connection to the enterprise network or being subject to enforced policy.",
         "onpremDesc": ": Number of calls hosted on any of the enterprise clusters.",
-        "meetsHostType": "A breakdown of the number of meetings based on where the calls were hosted"
+        "meetsHostType": "A breakdown of the number of meetings based on where the calls were hosted.",
+        "redirect": ": Number of calls that could not be hosted by this cluster and hence got redirected."
       }
     },
     "deleteGroup": {
@@ -6330,7 +6332,7 @@
     "huntGroupFetchFailure": "Failed to fetch hunt group details '{{huntGroupName}}'.",
     "invalidMember": "Select at least one member",
     "invalidFallback": "Select a number or enter a new valid number",
-    "error" : {
+    "error": {
       "required": "This field is required",
       "minRingSecs": "The shortest ring duration is {{secs}} seconds",
       "maxRingSecs": "The longest ring duration is {{secs}} seconds"

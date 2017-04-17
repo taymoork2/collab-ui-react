@@ -129,7 +129,7 @@
       var columnNames = {
         'time': timeStamp,
       };
-      _.forEach(graphs, function (value) {
+      _.each(graphs, function (value) {
         if (value.title === 'onPremParticipants') {
           value.title = onPremisesHeading;
           value.lineColor = '#67b7dc';
@@ -141,7 +141,7 @@
         }
       });
       var exportFields = [];
-      _.forEach(columnNames, function (key) {
+      _.each(columnNames, function (key) {
         exportFields.push(key);
       });
       dateLabel = _.replace(dateLabel, /\s/g, '_');
@@ -173,7 +173,7 @@
 
     function formatGraph(graphs) {
       var tempData = [];
-      _.forEach(graphs, function (value) {
+      _.each(graphs, function (value) {
         if (value.title === 'cloudParticipants') {
           value.balloonText = '<div class="insight-balloon-div"><span class="graph-text dis-inline-block">' + cloudHeading + ' ' + ' <span class="graph-number dis-inline-block">[[value]]</span></span>' + ' <p class="graph-text insight-padding"><span class="graph-text-color dis-inline-block">[[' + value.descriptionField + ']]</span></p></div>';
         } else if (value.title === 'onPremParticipants') {

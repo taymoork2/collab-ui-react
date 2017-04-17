@@ -138,7 +138,7 @@
         'time': vm.timeStamp,
       };
       var exportFields = [];
-      _.forEach(graphs, function (value) {
+      _.each(graphs, function (value) {
         if (value.title !== vm.average_utilzation) {
           columnNames[value.valueField] = value.title + ' ' + vm.utilization;
         } else {
@@ -196,7 +196,7 @@
 
     function getClusterName(graphs, clusterMap) {
       var tempData = [];
-      _.forEach(graphs, function (value) {
+      _.each(graphs, function (value) {
         var clusterName = _.findKey(clusterMap, function (val) {
           return val === value.valueField;
         });
