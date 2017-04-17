@@ -2795,14 +2795,15 @@
     }
   },
   "ediscovery": {
-    "browserTabHeaderTitle": "Spark Activity Reports",
-    "heading": "Search Spark Space Activity",
-    "subheading": "Find all relevant data using Email or Space ID",
+    "browserTabHeaderTitle": "Cisco Spark Activity Reports",
+    "heading": "Search Cisco Spark Space Activity",
+    "subheading": "Choose to search for specific users or spaces. Add more than one by separating with commas",
     "searchTip": "Search data by room ID",
     "unableToDownloadFile": "Unable to download file",
     "dateError": {
       "StartDateMustBeforeEndDate": "Start date must be before end date",
-      "StartDateCannotBeInTheFuture": "Start date cannot be in the future"
+      "StartDateCannotBeInTheFuture": "Start date cannot be in the future",
+      "InvalidDateRange": "Invalid date range. Date range must not be greater than 90 days in the past."
     },
     "searchingPleaseWait": "Finding information, please wait...",
     "reportStates": {
@@ -2860,18 +2861,20 @@
       "invalidLimit": "search must be limited to less than 100 emails or room id's"
     },
     "searchParameters": {
-      "searchBy": "Search By",
-      "searchByPlaceholder": "Email ID",
-      "searchByEmailPlaceholder": "e.g. johnsmith@email.com, jansmith@email.com",
-      "searchByRoomPlaceholder": "e.g. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-      "textAndFileName": "Where <b>Text Messages</b> or <b>File Name</b> contains",
-      "textAndFileNamePlaceholder": "e.g. project AND manager",
+      "search": "Search",
+      "searchPlaceholder": "Email Address",
+      "searchEmailPlaceholder": "Enter Email Address",
+      "searchEmailHelpText": "e.g. johnsmith@email.com, jansmit@email.com",
+      "searchRoomPlaceholder": "Enter space ID",
+      "searchRoomHelpText": "e.g. a42163f4-eb1e-2c03-efcf2-9c5372c2e099",
+      "messages": "Where <b>Messages</b> contains",
+      "messagesPlaceholder": "e.g. project AND manager",
       "noMatchesFound": "No Matches Found"
     },
     "searchResults": {
       "backToSearch": "Back to Search",
       "searchInfo": "Search Info",
-      "emailId": "Email Id",
+      "emailAddress": "Email Address",
       "spaceId": "Space Id",
       "dateRange": "Date Range",
       "textAndFileName": "Text Messages or File Name Contains",
@@ -4153,7 +4156,6 @@
       "sx10": "SX10",
       "dx80": "DX80",
       "mx300": "MX300 (Limit {{max}})",
-      "dx80Delay": " (will ship on April 15th)",
       "phone8865": "8865",
       "phone8845": "8845",
       "phone8841": "8841",
@@ -7107,6 +7109,14 @@
         "displayName": "Enter display name",
         "addDestination": "Add another SIP destination",
         "hybridDestination": "Use one or more Expressway-E configured for Hybrid Call Connect ",
+        "certificateTitle": "Certificates",
+        "certificateDescription": "Choose whether you want to use the certificates provided by the Cisco Collaboration Cloud default trust list or upload your own.",
+        "certificateRadio1": "Use default trust list",
+        "certificateRadio2": "I want to upload my own certificate",
+        "dragAndDropKeyFileHere": "Drag and drop the certificate file here or ",
+        "clickToBrowse": "click to browse",
+        "fileReadyForImport": "File ready for import",
+        "certificateDelete": "Are you sure you want to remove this certificate?",
         "cancelHeader": "Cancel Enterprise Private Trunking Setup.",
         "cancelBody": "Are you sure you want to cancel?"
       }

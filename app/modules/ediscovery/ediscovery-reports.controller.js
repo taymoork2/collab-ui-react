@@ -4,7 +4,7 @@ require('./ediscovery.scss');
   'use strict';
 
   /* @ngInject */
-  function EdiscoveryReportsController(ReportUtilService, $state, $interval, $window, $scope, $translate, EdiscoveryService, uiGridConstants, EdiscoveryNotificationService, Notification) {
+  function EdiscoveryReportsController($interval, $scope, $state, $translate, $window, Analytics, EdiscoveryService, EdiscoveryNotificationService, Notification, ReportUtilService, uiGridConstants) {
     $scope.$on('$viewContentLoaded', function () {
       $window.document.title = $translate.instant("ediscovery.browserTabHeaderTitle");
     });
@@ -178,6 +178,7 @@ require('./ediscovery.scss');
     }
 
     function viewReport(report) {
+      Analytics.trackEdiscoverySteps(Analytics.sections.EDISCOVERY.eventNames.SEARCH_SECTION);
       $state.go('ediscovery.search', {
         report: report,
       });

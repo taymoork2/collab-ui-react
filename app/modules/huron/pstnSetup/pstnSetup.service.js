@@ -3,7 +3,7 @@
 
   module.exports = angular.module('huron.pstnsetupservice', [
     require('angular-resource'),
-    'huron.telephoneNumber',
+    require('modules/huron/telephony/telephoneNumber.filter'),
     require('modules/core/scripts/services/authinfo'),
     require('modules/core/notifications').default,
     require('./pstnSetup.model'),
@@ -410,16 +410,15 @@
       var payload = {
         npa: npa,
         quantity: quantity,
+        numberType: NUMTYPE_DID,
         sequential: isSequential,
       };
       if (_.isString(nxx)) {
         payload['nxx'] = nxx;
       }
 
-      return TerminusCustomerCarrierDidService.save({
+      return TerminusV2CustomerNumberOrderBlockService.save({
         customerId: customerId,
-        carrierId: carrierId,
-        type: BLOCK,
       }, payload).$promise;
     }
 

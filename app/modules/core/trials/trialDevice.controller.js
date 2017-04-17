@@ -162,7 +162,7 @@
       type: 'checkbox',
       className: 'pull-left medium-6 medium-offset-1',
       templateOptions: {
-        label: $translate.instant('trialModal.call.dx80') + $translate.instant('trialModal.call.dx80Delay'),
+        label: $translate.instant('trialModal.call.dx80'),
         id: 'cameraDX80',
         labelClass: 'medium-offset-1',
       },

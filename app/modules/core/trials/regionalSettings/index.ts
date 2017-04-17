@@ -4,9 +4,9 @@ import FeatureToggleServices from 'modules/core/featureToggle';
 
 export default angular
   .module('trial.regionalSettings', [
-    'atlas.templates',
-    'collab.ui',
-    'pascalprecht.translate',
+    require('scripts/app.templates'),
+    require('collab-ui-ng').default,
+    require('angular-translate'),
     HuronCountryService,
     FeatureToggleServices,
   ])

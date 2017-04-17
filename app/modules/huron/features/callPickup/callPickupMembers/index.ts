@@ -7,9 +7,9 @@ import focusModule from 'modules/core/focus';
 
 export default angular
   .module('huron.call-pickup.members', [
-    'atlas.templates',
-    'collab.ui',
-    'pascalprecht.translate',
+    require('scripts/app.templates'),
+    require('collab-ui-ng').default,
+    require('angular-translate'),
     memberService,
     callPickupGroupService,
     require('modules/core/config/urlConfig'),

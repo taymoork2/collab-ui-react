@@ -1,3 +1,4 @@
+const webpack = require('webpack');
 const merge = require('webpack-merge');
 const commonWebpack = require('./webpack.common');
 const loaders = require('./loaders');
@@ -11,19 +12,19 @@ function webpackConfig(env) {
 
   const tsLoaderRule = _.find(commonWebpackConfig.module.rules, loaders.ts);
   const tsLoader = _.find(tsLoaderRule.use, {
-    loader: 'ts-loader',
+    loader: 'awesome-typescript-loader',
   });
-  // set inline source maps for code coverage and debugging
-  _.set(tsLoader, 'options.compilerOptions.sourceMap', false);
-  _.set(tsLoader, 'options.compilerOptions.inlineSourceMap', true);
-
-  const scssLoaderRule = _.find(commonWebpackConfig.module.rules, loaders.scss);
-  scssLoaderRule.use = 'null-loader';
+  // TODO: karma stack trace is showing transpiled line reference instead of source
+  // Inline source maps needed for code coverage and debugging
+  _.set(tsLoader, 'options.sourceMap', false);
+  _.set(tsLoader, 'options.inlineSourceMap', true);
 
   const testConfig = merge.smart(commonWebpackConfig, {
-    // ideally faster build speed
-    devtool: 'cheap-inline-source-map',
+    devtool: 'inline-source-map',
     output: {},
+    plugins: [
+      new webpack.NormalModuleReplacementPlugin(/\.(svg|png|jpg|jpeg|gif|ico|scss|css|woff|woff2|ttf|eot|pdf)$/, 'node-noop'),
+    ],
   });
 
   // remove `entry` for karma-webpack

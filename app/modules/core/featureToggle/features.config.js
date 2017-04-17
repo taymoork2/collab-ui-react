@@ -193,4 +193,6 @@ module.exports = {
   webexMetrics: 'webex-metrics',
   huronCustomerAdminPMP: "huron-customer-admin-pmp",
   hRegionalTones: "h-regional-tones",
+  huronPstn: "h-pstn",
+  csdmT38: "csdm-ata-t38",
 };

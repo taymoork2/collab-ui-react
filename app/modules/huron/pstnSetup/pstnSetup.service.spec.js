@@ -47,11 +47,13 @@ describe('Service: PstnSetupService', function () {
   var blockOrderPayload = {
     "npa": "555",
     "quantity": "20",
+    "numberType": "DID",
   };
 
   var blockOrderPayloadWithNxx = {
     "npa": "555",
     "quantity": "20",
+    "numberType": "DID",
     "sequential": true,
     "nxx": "777",
   };
@@ -81,8 +83,7 @@ describe('Service: PstnSetupService', function () {
   // dependencies
   beforeEach(function () {
     this.initModules(
-      require('./pstnSetup.service'),
-      require('collab-ui')
+      require('./pstnSetup.service')
     );
     this.injectDependencies(
       '$http',
@@ -225,13 +226,13 @@ describe('Service: PstnSetupService', function () {
   });
 
   it('should make a block order', function () {
-    this.$httpBackend.expectPOST(this.HuronConfig.getTerminusUrl() + '/customers/' + suite.customerId + '/carriers/' + suite.carrierId + '/did/block', blockOrderPayload).respond(201);
+    this.$httpBackend.expectPOST(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/blocks', blockOrderPayload).respond(201);
     this.PstnSetupService.orderBlock(suite.customerId, suite.carrierId, blockOrderPayload.npa, blockOrderPayload.quantity);
     this.$httpBackend.flush();
   });
 
   it('should make a block order with nxx', function () {
-    this.$httpBackend.expectPOST(this.HuronConfig.getTerminusUrl() + '/customers/' + suite.customerId + '/carriers/' + suite.carrierId + '/did/block', blockOrderPayloadWithNxx).respond(201);
+    this.$httpBackend.expectPOST(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/blocks', blockOrderPayloadWithNxx).respond(201);
     this.PstnSetupService.orderBlock(suite.customerId, suite.carrierId, blockOrderPayloadWithNxx.npa, blockOrderPayloadWithNxx.quantity, blockOrderPayloadWithNxx.sequential, blockOrderPayloadWithNxx.nxx);
     this.$httpBackend.flush();
   });

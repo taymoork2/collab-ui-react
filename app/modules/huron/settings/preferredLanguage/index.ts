@@ -4,9 +4,9 @@ export * from './preferredLanguage.component';
 
 export default angular
   .module('huron.settings.preferred-language', [
-    'atlas.templates',
-    'collab.ui',
-    'pascalprecht.translate',
+    require('scripts/app.templates'),
+    require('collab-ui-ng').default,
+    require('angular-translate'),
   ])
-  .component('ucPreferredLanguage', new PreferredLanguageComponent())
+  .component('ucSettingsPreferredLanguage', new PreferredLanguageComponent())
   .name;

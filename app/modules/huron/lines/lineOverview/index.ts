@@ -16,9 +16,9 @@ export * from 'modules/huron/lines/lineOverview/lineOverview.service';
 
 export default angular
   .module('huron.line-overview', [
-    'atlas.templates',
-    'collab.ui',
-    'pascalprecht.translate',
+    require('scripts/app.templates'),
+    require('collab-ui-ng').default,
+    require('angular-translate'),
     directoryNumber,
     callForward,
     simultaneousCalls,

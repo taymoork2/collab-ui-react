@@ -231,6 +231,7 @@
         ftAdvanceCareTrials: FeatureToggleService.atlasCareInboundTrialsGetStatus(),
         ftShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus(), //TODO add true for shipping testing.
         adminOrg: Orgservice.getAdminOrgAsPromise().catch(function () { return false; }),
+        huronPstn: FeatureToggleService.supports(FeatureToggleService.features.huronPstn),
       };
       if (!vm.isNewTrial()) {
         promises.tcHasService = TrialContextService.trialHasService(vm.currentTrial.customerOrgId);
@@ -252,8 +253,9 @@
           vm.canSeeDevicePage = !isTestOrg || overrideTestOrg;
           vm.devicesModal.enabled = vm.canSeeDevicePage;
           vm.defaultCountryList = results.huronCountryList;
+          vm.huronPstn = results.huronPstn;
 
-          if (vm.ftSupportThinktel || vm.ftFederatedSparkCall) {
+          if (vm.huronPstn) {
             vm.navOrder = ['trial.info', 'trial.webex', 'trial.pstn', 'trial.call'];
           }
 
@@ -333,12 +335,12 @@
       setViewState('trial.call', canAddDevice());
       setViewState('trial.webex', hasEnabledWebexTrial());
       setViewState('trial.pstn', isPstn() && (_.get(vm.details.country, 'id') !== 'N/A'));
-      if (vm.ftSupportThinktel || vm.ftFederatedSparkCall) {
+      setViewState('trial.emergAddress', TrialPstnService.getCarrierCapability('E911'));
+
+      if (vm.huronPstn) {
         setViewState('trial.pstn', isPstn() && (_.get(vm.details.country, 'id') !== 'N/A'));
-        setViewState('trial.emergAddress', TrialPstnService.getCarrierCapability('E911'));
       } else {
         setViewState('trial.pstnDeprecated', isPstn() && (_.get(vm.details.country, 'id') !== 'N/A'));
-        setViewState('trial.emergAddress', isPstn() && (_.get(vm.details.country, 'id') !== 'N/A'));
       }
 
       addRemoveStates();

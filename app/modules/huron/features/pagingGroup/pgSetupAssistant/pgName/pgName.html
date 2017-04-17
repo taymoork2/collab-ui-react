@@ -7,6 +7,6 @@
         focus-on>
   <p class="input-description"></p>
   <div class="cs-input__messages" ng-messages-multiple role="alert" ng-show="$ctrl.errorNameInput">
-    <div class="message">{{$ctrl.pgNameErrorMassage}}</div>
+    <div class="message" ng-bind-html="$ctrl.pgNameErrorMassage" ></div>
   </div>
 </div>
