@@ -110,11 +110,6 @@
       cardChartDiv: 'numberOfMeetsOnPremisesChartDiv',
       noData: false,
     };
-    vm.cloudParticipantschartOptions = {
-      isShow: true,
-      cardChartDiv: 'cloudParticipantsChartDiv',
-      noData: false,
-    };
     vm.totalParticipantschartOptions = {
       isShow: true,
       cardChartDiv: 'totalParticipantsChartDiv',
@@ -150,8 +145,8 @@
 
     function loadResourceDatas() {
       deferred.promise.then(function () {
-        setTotalCallsData();
         setTotalCallsPie();
+        setTotalCallsData();
         setAvailabilityData();
         setClusterAvailability();
         setUtilizationData();

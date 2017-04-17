@@ -7,13 +7,17 @@
     </header>
     <section>
       <div class="metrics-info">
-        <div id="{{$ctrl.chartOptions.cardChartDiv}}" class="chartContainer" ng-class="{'no-display': $ctrl.chartOptions.isShow==false || $ctrl.chartOptions.isShow==undefined}"></div>
+        <div id="{{$ctrl.chartOptions.cardChartDiv}}" class="chartContainer" ng-class="{'no-display': $ctrl.chartOptions.isShow==false || $ctrl.chartOptions.isShow==undefined}">
+          <div class="spinner-position" ng-if="!$ctrl.chartOptions.noData">
+          <p><h5><i class='icon icon-spinner icon-2x'></i></h5></p>
+          </div>
+        </div>
         <div class="no-data-center-card" ng-if="$ctrl.chartOptions.noData">
           <p>
             <h3 class="no-data-card"> 
             <i class='icon icon-warning no-data-warning-card'></i>
             <span translate='mediaFusion.metrics.nodata'></span></h3>
-          <p>
+          </p>
         </div>
       </div>
     </section>
