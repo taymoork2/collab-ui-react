@@ -2,7 +2,7 @@
 
 # validate the commit headline with a regex
 line_start="^"
-commit_type="(chore|fix|docs|style|refactor|perf|test|chore|revert|WIP)"
+commit_type="(feat|fix|docs|style|refactor|perf|test|chore|revert|WIP)"
 optional_scope="(\([a-zA-Z,\-]+\))?"
 colon_and_space="\: "
 any_trailing_content=".+"
