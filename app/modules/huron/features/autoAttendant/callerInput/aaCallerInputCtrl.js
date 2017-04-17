@@ -300,8 +300,8 @@
     function collectVarNames(entry, varNames) {
       _.forEach(entry, function (value, key) {
         if (_.isArray(value)) {
-          _.forEach(value, function (e) {
-            return collectVarNames(e, varNames);
+          _.forEach(value, function (nowEntry) {
+            return collectVarNames(nowEntry, varNames);
           });
         }
         if (key === 'variableName') {
