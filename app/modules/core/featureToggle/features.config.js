@@ -36,7 +36,6 @@ module.exports = {
   atlasReportsUpdate: 'atlas-reports-update',
   atlasComplianceRole: 'atlas-compliance-role',
   atlasSipUriDomain: 'atlas-sip-uri-domain',
-  atlasSharedMeetings: 'atlas-shared-meetings',
   atlasSharedMeetingsReports: 'atlas-shared-meetings-reports',
   atlasSubdomainUpdate: 'atlas-subdomain-update',
   atlasSuppressOnboardingEmail: 'atlas-suppress-onboarding-email',

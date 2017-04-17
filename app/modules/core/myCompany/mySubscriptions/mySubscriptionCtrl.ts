@@ -16,8 +16,6 @@ class MySubscriptionCtrl {
   public loading: boolean = false;
   public digitalRiverSubscriptionsUrl: string;
   public isSharedMeetingsReportsEnabled: boolean;
-  public isSharedMeetingsEnabled: boolean;
-  public temporarilyOverrideSharedMeetingsFeatureToggle = { default: true, defaultValue: true };
   public temporarilyOverrideSharedMeetingsReportsFeatureToggle = { default: false, defaultValue: true };
   public bmmpAttr: IBmmpAttr;
 
@@ -107,14 +105,6 @@ class MySubscriptionCtrl {
   }
 
   private initFeatures(): void {
-    if (this.temporarilyOverrideSharedMeetingsFeatureToggle.default === true) {
-      this.isSharedMeetingsEnabled = this.temporarilyOverrideSharedMeetingsFeatureToggle.defaultValue;
-    } else {
-      this.FeatureToggleService.atlasSharedMeetingsGetStatus().then((status) => {
-        this.isSharedMeetingsEnabled = status;
-      });
-    }
-
     if (this.temporarilyOverrideSharedMeetingsReportsFeatureToggle.default) {
       this.isSharedMeetingsReportsEnabled = this.temporarilyOverrideSharedMeetingsReportsFeatureToggle.defaultValue;
     } else {

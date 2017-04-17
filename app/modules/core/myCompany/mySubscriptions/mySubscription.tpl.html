@@ -61,7 +61,7 @@
               </div>
 
               <!-- if category wraps offers -->
-              <div ng-if="mcpSub.wrapsOffers(licenseCategory)" class="subscription-item" ng-class="{'item-with-borders': !(mcpSub.isSharedMeetingsLicense(offer) && mcpSub.isSharedMeetingsEnabled)}" ng-repeat="wrapper in licenseCategory.offerWrapper">
+              <div ng-if="mcpSub.wrapsOffers(licenseCategory)" class="subscription-item" ng-class="{'item-with-borders': !mcpSub.isSharedMeetingsLicense(offer)}" ng-repeat="wrapper in licenseCategory.offerWrapper">
                 <div class="license-item" ng-repeat="offer in wrapper.offers">
                   <div class="license-count-indicator" ng-if="!offer.siteUrl || (offer.siteUrl && !mcpSub.isSharedMeetingsLicense(offer))">
                     <cs-donut name="offer.id" hideusage="mcpSub.hideUsage(offer)" value="offer.usage" max="offer.volume" ssize="48" class="text-center"></cs-donut>
@@ -69,21 +69,21 @@
                   <div class="subscription-description subscription-detail" ng-class="{'subscription-advanced-detail': mcpSub.isSharedMeetingsLicense(offer)}">
                     <div class="name h5" translate="subscriptions.licenseTypes.{{::offer.offerName}}"></div>
                     <div class="h6 subscription-site siteUrl" ng-if="offer.siteUrl">{{::offer.siteUrl}}</div>
-                    <div ng-if="subscription.siteUrl && mcpSub.isSharedMeetingsEnabled && !mcpSub.isSharedMeetingsLicense(offer)">
+                    <div ng-if="subscription.siteUrl && !mcpSub.isSharedMeetingsLicense(offer)">
                       <span class="name h6">{{mcpSub.determineLicenseType(offer)}}</span>
                     </div>
                     <!-- For CI sites -->
-                    <div ng-if="!mcpSub.hideUsage(offer) && !(mcpSub.isSharedMeetingsLicense(offer) && mcpSub.isSharedMeetingsEnabled)">
+                    <div ng-if="!mcpSub.hideUsage(offer) && !mcpSub.isSharedMeetingsLicense(offer)">
                       <span class="h6" translate="subscriptions.usage"></span>
                       <span class="h6" ng-class="{'warning': offer.usage > offer.volume}">{{::offer.usage}}/{{::offer.volume}}</span>
                     </div>
 
                     <!-- For non-CI sites -->
-                    <div ng-if="mcpSub.hideUsage(offer) && !(mcpSub.isSharedMeetingsLicense(offer) && mcpSub.isSharedMeetingsEnabled)">
+                    <div ng-if="mcpSub.hideUsage(offer) && !mcpSub.isSharedMeetingsLicense(offer)">
                       <span class="h6" translate="subscriptions.quantity"></span>
                       <span class="h6">{{::offer.volume}}</span>
                     </div>
-                    <div ng-if="mcpSub.hideUsage(offer) && !(mcpSub.isSharedMeetingsLicense(offer) && mcpSub.isSharedMeetingsEnabled)">
+                    <div ng-if="mcpSub.hideUsage(offer) && !mcpSub.isSharedMeetingsLicense(offer)">
                       <a class="h6 link" translate="subscriptions.signIn" ng-click="mcpSub.nonCISignIn(offer)"></a>
                     </div>
                   </div>

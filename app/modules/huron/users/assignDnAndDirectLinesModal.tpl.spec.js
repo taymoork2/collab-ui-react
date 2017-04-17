@@ -25,7 +25,6 @@ describe('Template: assignDnAndDirectLinesModal', function () {
       }
     }.bind(this));
 
-    spyOn(this.FeatureToggleService, 'atlasSharedMeetingsGetStatus').and.returnValue(this.$q.when(false));
     spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.when(true));
     spyOn(this.Orgservice, 'getUnlicensedUsers');
     spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.when(this.mock.getLicensesUsage));

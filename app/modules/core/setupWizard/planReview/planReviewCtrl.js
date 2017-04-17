@@ -6,7 +6,7 @@
     .controller('PlanReviewCtrl', PlanReviewCtrl);
 
   /* @ngInject */
-  function PlanReviewCtrl($translate, Authinfo, Config, FeatureToggleService, TrialService, WebExUtilsFact) {
+  function PlanReviewCtrl($translate, Authinfo, Config, TrialService, WebExUtilsFact) {
     var vm = this;
     var classes = {
       userService: 'user-service-',
@@ -55,8 +55,6 @@
       maxServiceRows: maxServiceRows,
     };
     vm.isCareEnabled = false;
-    vm.isSharedMeetingsEnabled = false;
-    vm.temporarilyOverrideSharedMeetingsFeatureToggle = { default: true, defaultValue: true };
 
     //TODO this function has to be removed when atlas-care-trials feature is removed
     vm.getGridColumnClassName = function () {
@@ -92,14 +90,6 @@
     function init() {
 
       vm.isCareEnabled = Authinfo.isCare();
-
-      if (_.get(vm, 'temporarilyOverrideSharedMeetingsFeatureToggle.default') === true) {
-        vm.isSharedMeetingsEnabled = _.get(vm, 'temporarilyOverrideSharedMeetingsFeatureToggle.defaultValue');
-      } else {
-        FeatureToggleService.atlasSharedMeetingsGetStatus().then(function (smpStatus) {
-          vm.isSharedMeetingsEnabled = smpStatus;
-        });
-      }
 
       vm.messagingServices.services = Authinfo.getMessageServices() || [];
       _.forEach(vm.messagingServices.services, function (service) {

@@ -33,8 +33,6 @@
     vm.clickService = clickService;
     vm.clickUserDetailsService = clickUserDetailsService;
     vm.actionList = [];
-    vm.isSharedMeetingsEnabled = false;
-    vm.temporarilyOverrideSharedMeetingsFeatureToggle = { default: true, defaultValue: true };
     vm.hasSparkCall = false;
 
     var msgState = {
@@ -93,14 +91,6 @@
       });
 
       vm.services = [];
-
-      if (_.get(vm, 'temporarilyOverrideSharedMeetingsFeatureToggle.default') === true) {
-        vm.isSharedMeetingsEnabled = _.get(vm, 'temporarilyOverrideSharedMeetingsFeatureToggle.defaultValue', false);
-      } else {
-        FeatureToggleService.atlasSharedMeetingsGetStatus().then(function (smpStatus) {
-          vm.isSharedMeetingsEnabled = smpStatus;
-        });
-      }
 
       initServices();
       initActionList();
@@ -255,7 +245,7 @@
       if (UserOverviewService.userHasEntitlement(vm.currentUser, 'cloudmeetings')) {
         confState.actionAvailable = getDisplayableServices('CONFERENCING') || _.isArray(vm.currentUser.trainSiteNames);
         if (vm.currentUser.trainSiteNames) {
-          confState.detail = vm.isSharedMeetingsEnabled ? $translate.instant('onboardModal.paidAdvancedConferencing') : $translate.instant('onboardModal.paidConfWebEx');
+          confState.detail = $translate.instant('onboardModal.paidAdvancedConferencing');
         }
       } else if (UserOverviewService.userHasEntitlement(vm.currentUser, 'squared-syncup')) {
         if (hasLicense('CF')) {
