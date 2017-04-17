@@ -16,13 +16,13 @@ describe('Controller: CustomerOverviewCtrl', function () {
       customerOrgId: '123-456',
       licenseList: [{
         licenseId: licenseString,
-        offerName: "MC",
-        licenseType: "CONFERENCING",
-        siteUrl: "t30citest.webex.com",
+        offerName: 'MC',
+        licenseType: 'CONFERENCING',
+        siteUrl: 't30citest.webex.com',
       }, {
-        licenseId: "ST_04b1c66d-9cb7-4280-bd0e-cfdb763fbdc6",
-        offerName: "ST",
-        licenseType: "STORAGE",
+        licenseId: 'ST_04b1c66d-9cb7-4280-bd0e-cfdb763fbdc6',
+        offerName: 'ST',
+        licenseType: 'STORAGE',
       }],
     };
     identityCustomer = {
@@ -34,13 +34,13 @@ describe('Controller: CustomerOverviewCtrl', function () {
     };
     Authinfo = {
       getPrimaryEmail: function () {
-        return "xyz123@gmail.com";
+        return 'xyz123@gmail.com';
       },
       getOrgId: function () {
         return '1A2B3C4D';
       },
       getOrgName: function () {
-        return "xyz123";
+        return 'xyz123';
       },
       isPartnerAdmin: function () {
         return true;
