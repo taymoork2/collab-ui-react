@@ -146,14 +146,15 @@
         });
     }
 
-    function getAdminOrgUsage(oid) {
+    function getAdminOrgUsage(oid, useCache) {
+      var cache = _.isUndefined(useCache) ? true : useCache;
       var orgId = oid || Authinfo.getOrgId();
       var adminUrl = UrlConfig.getAdminServiceUrl() + 'customers/' + orgId + '/usage';
-      return $http.get(adminUrl, { cache: true });
+      return $http.get(adminUrl, { cache: cache });
     }
 
-    function getLicensesUsage() {
-      return getAdminOrgUsage()
+    function getLicensesUsage(useCache) {
+      return getAdminOrgUsage(undefined, useCache)
         .then(function (response) {
           var usageLicenses = response.data || [];
           var statusLicenses = Authinfo.getLicenses();
