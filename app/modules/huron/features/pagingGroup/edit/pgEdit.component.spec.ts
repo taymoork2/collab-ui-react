@@ -91,7 +91,6 @@ describe('Component: pgEdit', () => {
 
   let numberData3 = {
     extension: '2222',
-    extensionUUID: undefined,
   };
 
   beforeEach(function () {
