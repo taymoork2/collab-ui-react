@@ -5972,9 +5972,9 @@
     "deletePhoneNumber": "Delete Phone Number",
     "deleteNumber": "Delete Number",
     "deleteNumberTitle": "Permanently Delete Number",
-    "deleteNumberTextBase": "Are you sure you want to delete this phone number? The number will be {{ isApiImplementationSwivel }}.",
-    "deleteNumberTextStandard": "permanently returned to the PSTN provider",
-    "deleteNumberTextBYOP": "returned to you immediately"
+    "deleteNumberTextBase": "Are you sure you want to delete this phone number? {{ isApiImplementationSwivel }}.",
+    "deleteNumberTextStandard": "It will be permanently removed. Review billing changes with the PSTN provider",
+    "deleteNumberTextBYOP": "The number will be returned to you immediately"
   },
   "messengerCiSync": {
     "authRedirectHeading": "Redirect Messenger Users to Common Identity Login Flow",
