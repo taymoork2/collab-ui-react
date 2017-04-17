@@ -310,6 +310,7 @@
       clearCeMenuMap: clearCeMenuMap,
       deleteCeMenuMap: deleteCeMenuMap,
       isCeMenu: isCeMenu,
+      isCeMenuEntry: isCeMenuEntry,
 
       newCeMenu: function () {
         return new CeMenu();
@@ -1712,5 +1713,10 @@
     function isCeMenu(obj) {
       return (objectType(obj) === 'CeMenu');
     }
+    function isCeMenuEntry(obj) {
+      return (objectType(obj) === 'CeMenuEntry');
+    }
+
+
   }
 })();
