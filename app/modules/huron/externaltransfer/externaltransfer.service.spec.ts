@@ -25,10 +25,10 @@ describe('Service: externaltransferService', () => {
     this.$httpBackend.verifyNoOutstandingRequest();
   });
 
-  describe('getDefaultSettingsForUser', () => {
+  describe('getDefaultSettings', () => {
     it('should be successful', function () {
       this.$httpBackend.expectGET(this.HuronConfig.getCmiUrl() + '/voice/customers/' + this.Authinfo.getOrgId() + '/users/123').respond(200);
-      this.ExternalTransferService.getDefaultSettingForUser('123').then(
+      this.ExternalTransferService.getDefaultSetting('123', 'users').then(
         successSpy,
         failureSpy,
       );
@@ -38,8 +38,8 @@ describe('Service: externaltransferService', () => {
     });
 
     it('should not be successful', function () {
-      this.$httpBackend.expectGET(this.HuronConfig.getCmiUrl() + '/voice/customers/' + this.Authinfo.getOrgId() + '/users/123').respond(500);
-      this.ExternalTransferService.getDefaultSettingForUser('123').then(
+      this.$httpBackend.expectGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/places/123').respond(500);
+      this.ExternalTransferService.getDefaultSetting('123', 'places').then(
         successSpy,
         failureSpy,
       );
@@ -49,10 +49,10 @@ describe('Service: externaltransferService', () => {
     });
   });
 
-  describe('updateSettingsForUser', () => {
+  describe('updateSettings', () => {
     it('should be successful', function () {
       this.$httpBackend.expectPUT(this.HuronConfig.getCmiUrl() + '/voice/customers/' + this.Authinfo.getOrgId() + '/users/123').respond(200);
-      this.ExternalTransferService.updateSettingsForUser('123', 'true').then(
+      this.ExternalTransferService.updateSettings('123', 'users', 'true').then(
         successSpy,
         failureSpy,
       );
@@ -62,8 +62,8 @@ describe('Service: externaltransferService', () => {
     });
 
     it('should not be successful', function () {
-      this.$httpBackend.expectPUT(this.HuronConfig.getCmiUrl() + '/voice/customers/' + this.Authinfo.getOrgId() + '/users/123').respond(500);
-      this.ExternalTransferService.updateSettingsForUser('123', 'true').then(
+      this.$httpBackend.expectPUT(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/places/123').respond(500);
+      this.ExternalTransferService.updateSettings('123', 'places', 'true').then(
         successSpy,
         failureSpy,
       );

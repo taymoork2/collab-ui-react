@@ -1962,6 +1962,22 @@
               },
             },
           })
+          .state('place-overview.communication.externaltransfer', {
+            template: '<uc-external-transfer member-type="places" member-id="$resolve.ownerId"></uc-external-transfer>',
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/huron/externaltransfer'));
+                }, 'place-call-externaltransfer');
+              }),
+              ownerId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentPlace, 'cisUuid');
+              },
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('place-overview.communication.externaltransfer').data.displayName = $translate.instant('serviceSetupModal.externalTransfer.title');
+              },
+            },
+          })
           .state('place-overview.hybrid-services-squared-fusion-cal', {
             templateUrl: 'modules/hercules/user-sidepanel/calendarServicePreview.tpl.html',
             controller: 'CalendarServicePreviewCtrl',
