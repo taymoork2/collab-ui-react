@@ -26,7 +26,7 @@ export class PrivateTrunkResource {
     destinations: Array<Destination>,
     hybridDestination: Destination,
   } = {
-    destinations: [ ],
+    destinations: [],
     hybridDestination: new Destination(),
   }) {
     this.destinations = obj.destinations;

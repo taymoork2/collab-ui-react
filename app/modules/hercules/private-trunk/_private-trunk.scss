@@ -2,6 +2,16 @@
 @import '~collab-ui/scss/settings/colors';
 @import '~collab-ui/scss/tools/functions/core';
 .private-trunk {
+  .padding-p {
+    padding-right: 4.5rem;
+  }
+
+  .cert-word-wrap {
+    word-wrap: break-word;
+    .bold {
+      font-weight: bold;
+    }
+  }
   h5 {
     @include vr-spacing(mt, .5);
     @include vr-spacing(mb, .5);
@@ -15,9 +25,7 @@
   .domain-list {
     padding-left: 1rem;
   }
-  .icon {
-    position: relative;
-  }
+
   .icon-error {
     @include vr-spacing(mt, 0.25);
     @include vr-spacing(mr, 0.5);
@@ -43,19 +51,17 @@
     border: thin solid $gray-light-2;
     color: $gray-base;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
+    flex-grow: column;
     flex: 1 1 auto;
 
     .box-content {
       align-self: center;
       display: flex;
-      align-items: center;
-      justify-content: center;
       background: transparent;
     }
 
-    .icon {
+    .icon.icon-upload-contain {
       font-size: 1.5rem;
       display: inline;
       line-height: 2rem;
@@ -72,6 +78,20 @@
       padding-left: .25rem;
     }
 
+    .icon.close-icon-align {
+      position: relative;
+      float: right;
+      font-size: .75rem;
+      line-height: 1rem;
+      padding-right: .5rem;
+      padding-top: .25rem;
+    }
+
+    .span-filename {
+      padding-left: .5rem;
+      font-size: 1rem;
+      line-height: 2rem;
+    }
     .prompt {
       padding-bottom: .5rem;
       label {
