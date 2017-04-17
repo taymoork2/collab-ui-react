@@ -131,6 +131,7 @@
             };
           });
           vm.gridRefresh = false;
+          vm.vendor = LineListService.getVendor();
         })
         .catch(function (response) {
           Log.debug('Query for line associations failed.');

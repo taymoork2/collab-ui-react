@@ -2293,11 +2293,12 @@
             parent: 'sidepanel',
             params: {
               currentCustomer: {},
+              vendor: undefined,
             },
             data: {},
             views: {
               'sidepanel@': {
-                template: '<uc-customer-pstn-orders-overview current-customer="$resolve.currentCustomer"></uc-customer-pstn-orders-overview>',
+                template: '<uc-customer-pstn-orders-overview current-customer="$resolve.currentCustomer" vendor="$resolve.vendor"></uc-customer-pstn-orders-overview>',
               },
             },
             resolve: {
@@ -2309,6 +2310,9 @@
               }),
               currentCustomer: /* @ngInject */ function ($stateParams) {
                 return $stateParams.currentCustomer;
+              },
+              vendor: /* @ngInject */ function ($stateParams) {
+                return $stateParams.vendor;
               },
             },
           })

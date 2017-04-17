@@ -3886,7 +3886,9 @@
     "orderNumber": "Order #{{orderId}}",
     "pendingNumbers": "{count, plural, =1{There is # number} other{There are # numbers}} pending for this order",
     "searchPlaceholder": "Search Phone Numbers",
-    "waitOnTOSAcceptance": "Waiting on ToS acceptance from customer"
+    "waitOnTOSAcceptance": "Waiting on ToS acceptance from customer",
+    "orderCreationDate": "On {{date}} by {{createdBy}}",
+    "orderCreatedBy": "Partner"
   },
   "serviceAddress": {
     "streetAddress": "Address Line 1",
