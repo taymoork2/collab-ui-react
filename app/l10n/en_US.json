@@ -1129,6 +1129,7 @@
     "create": "Create",
     "dateRange": "Date Range",
     "deactivate": "Deactivate",
+    "default": "Default",
     "delete": "Delete",
     "description": "Description",
     "details": "Details",
@@ -1487,6 +1488,15 @@
       "numericOnlyError": "Routing Prefix can only contain digits.",
       "tooShortError": "Routing Prefix must contain at least one digit.",
       "tooLongError": "Routing Prefix can contain a maximum of seven digits."
+    },
+    "externalTransfer": {
+      "title": "External Call Transfers/Conference",
+      "desc": "Choose whether this user is allowed to do external call transfers and conferences. This will override global settings.",
+      "neverAllow": "Never Allow",
+      "alwaysAllow": "Always Allow",
+      "orgSetting": "Organization Settings ({{state}})",
+      "success": "External Call Transfers/Conference settings successfully saved.",
+      "error": "External Call Transfers/Conference settings failed to update"
     },
     "cos": {
       "title": "Dialing Restrictions",
@@ -3761,7 +3771,8 @@
     "maxLines": "You reached the limit of 25 lines. Please remove a line from this user before provisioning additional lines.",
     "showMore": "Show more",
     "showLess": "Show less",
-    "localDialing": "Local Dialing"
+    "localDialing": "Local Dialing",
+    "externalTransfer": "External Call Transfers/Conference"
   },
   "preferredLanguage": {
     "title": "Preferred Language",

@@ -1265,6 +1265,26 @@
               },
             },
           })
+          .state('user-overview.communication.externaltransfer', {
+            template: '<uc-external-transfer member-type="users" member-id="$resolve.ownerId"></uc-external-transfer>',
+            params: {
+              watcher: null,
+              selected: null,
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/huron/externaltransfer'));
+                }, 'user-call-externaltransfer');
+              }),
+              ownerId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentUser, 'id');
+              },
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('user-overview.communication.externaltransfer').data.displayName = $translate.instant('serviceSetupModal.externalTransfer.title');
+              },
+            },
+          })
           .state('user-overview.communication.internationalDialing', {
             template: '<uc-dialing  watcher="$resolve.watcher" selected="$resolve.selected" title="internationalDialingPanel.title"></uc-dialing>',
             params: {
