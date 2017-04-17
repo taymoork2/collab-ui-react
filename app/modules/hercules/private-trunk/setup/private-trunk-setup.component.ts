@@ -22,6 +22,7 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
   public certificateInfo: ICertificateArray;
   public certFileNameIdMap: Array<ICertificateFileNameIdMap> = [];
   public fileName: string;
+  public isImporting: boolean = false;
   /* @ngInject */
   constructor(
     private PrivateTrunkPrereqService: PrivateTrunkPrereqService,
@@ -71,26 +72,40 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
     if (!file) {
       return;
     }
+    this.isImporting = true;
     this.fileName = fileName;
     this.CertService.uploadCertificate(this.Authinfo.getOrgId(), file)
     .then( (res) => this.readCerts(res),
     ).catch (error => {
+      this.isImporting = false;
       this.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
     });
 
   }
 
   public readCerts(res) {
-    let certId = _.get(res, 'data.certId', '');
-    let obj = _.clone(this.certFileNameIdMap);
-    obj.push({ certId: certId, fileName: this.fileName });
-    this.certFileNameIdMap = _.clone(obj);
+    if (res) {
+      let certId = _.get(res, 'data.certId', '');
+      let obj = _.clone(this.certFileNameIdMap);
+      obj.push({ certId: certId, fileName: this.fileName });
+      this.certFileNameIdMap = _.clone(obj);
+    }
     this.CertService.getCerts(this.Authinfo.getOrgId())
     .then( res => {
       this.certificates = res || [];
       this.formattedCertList = this.CertificateFormatterService.formatCerts(this.certificates);
+      this.isImporting = false;
     }, error => {
       this.Notification.errorWithTrackingId(error, 'hercules.settings.call.certificatesCannotRead');
+      this.isImporting = false;
+    });
+  }
+
+  public deleteCert(certId: string): void {
+    this.CertService.deleteCert(certId)
+    .then(() => this.readCerts(null),
+    ).catch(error => {
+      this.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
     });
   }
 

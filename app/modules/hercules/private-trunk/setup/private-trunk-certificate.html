@@ -26,7 +26,11 @@
     <div class="columns large-12 medium-12 small-12" ng-if="$ctrl.certificateRadio==='new'">
       <div class="box center">
         <div class="flex-center-container certificate-upload">
-          <div class="file-drop"
+          <label ng-if="$ctrl.isImporting" class="icon-label" for="import">
+              <span class="icon icon-spinner"></span>
+              <span class="body-small span-text" translate="siteList.siteCsvImportInProgressLinkLabel"></span>
+          </label>
+          <div ng-if="!$ctrl.isImporting" class="file-drop"
             cr-file-drop
             file="$ctrl.file"
             file-name="$ctrl.fileName"
@@ -58,7 +62,7 @@
           <div class="box">
             <p>
               <span class="span-filename" >{{$ctrl.getFileName(cert.certId)}}</span>
-              <i class="icon icon-close close-icon-align" ng-click="$ctrl.dismiss(cert.certId)"></i>
+              <i class="icon icon-close close-icon-align" ng-click="$ctrl.deleteCert(cert.certId)"></i>
             </p>
             <div ng-repeat="(key, value) in cert" ng-if="key!=='certId'">
               <div class="body-small columns large-6 medium-6 small-6 cert-word-wrap bold ">{{$ctrl.certLabels[$index]}}</div>
