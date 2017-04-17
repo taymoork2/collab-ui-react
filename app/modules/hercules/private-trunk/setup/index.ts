@@ -14,6 +14,8 @@ export default angular
     require('angular-translate'),
     privateTrunkPrereq,
     require('modules/hercules/services/uss-service'),
+    require('modules/hercules/services/cert-service').default,
+    require('modules/hercules/services/certificate-formatter-service').default,
   ])
   .component('privateTrunkSetup', new PrivateTrunkSetupComponent())
   .component('privateTrunkDomain', new PrivateTrunkDomainComponent())

@@ -13,6 +13,7 @@ describe('Service: CertService', () => {
 
   function initSpies(): void {
     spyOn(CertService, 'uploadCert').and.returnValue($q.resolve(true));
+
   }
 
   afterEach( () => {

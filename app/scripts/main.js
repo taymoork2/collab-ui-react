@@ -122,6 +122,8 @@
     require('modules/hercules/private-trunk/setup').default,
     require('modules/hercules/services/uss-service'),
     require('modules/hercules/services/hybrid-services-utils').default,
+    require('modules/hercules/services/cert-service').default,
+    require('modules/hercules/services/certificate-formatter-service').default,
   ]);
 
   angular.module('HDS', ['Core', 'Hercules']);
