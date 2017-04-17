@@ -4,7 +4,10 @@
       <h3 id="orderNumber" translate="pstnOrderDetail.orderNumber" translate-values="{orderId: $ctrl.currentOrder.carrierOrderId}"></h3>
     </div>
     <div>
-      <span id="orderCreated" class="feature-name">{{$ctrl.currentOrder.created}}&emsp;{{$ctrl.currentOrder.type}}</span>
+      <span id="orderCreated" class="feature-name" translate="pstnOrderDetail.orderCreationDate" translate-values="{date: $ctrl.currentOrder.created, createdBy: $ctrl.createdBy }">&emsp;</span>
+    </div>
+    <div>
+      <span id="orderType" class="feature-name">{{$ctrl.currentOrder.type}}</span>
     </div>
     <div>
       <span id="orderStatus" class="feature-name">{{$ctrl.currentOrder.status}}

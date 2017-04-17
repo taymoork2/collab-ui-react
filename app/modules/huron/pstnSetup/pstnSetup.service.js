@@ -668,6 +668,10 @@
                 number.status = newOrder.status;
                 number.tooltip = newOrder.tooltip;
               });
+
+              if (!_.isUndefined(order.attributes) && !_.isUndefined(order.attributes.createdBy)) {
+                newOrder.createdBy = order.attributes.createdBy;
+              }
               return newOrder;
             }
             return undefined;

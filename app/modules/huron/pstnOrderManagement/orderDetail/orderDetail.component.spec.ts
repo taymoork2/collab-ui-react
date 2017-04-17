@@ -15,7 +15,7 @@ describe('Component: OrderDetail', () => {
 
   function initComponent() {
     spyOn(this.PstnSetupService, 'getCustomerV2').and
-      .returnValue(this.$q.resolve({ trial: true }));
+      .returnValue(this.$q.resolve({ trial: true, name: 'ATLAS_Test_Customer' }));
     spyOn(this.PstnSetupService, 'getCustomerTrialV2').and
       .returnValue(this.$q.resolve({ acceptedDate: 'today' }));
     spyOn(this.$translate, 'instant');
@@ -45,6 +45,9 @@ describe('Component: OrderDetail', () => {
         tooltip: 'Completed Successfully',
       });
     });
+    it('should set the createdBy to customerName', function () {
+      expect(this.controller.createdBy).toBe('ATLAS_Test_Customer');
+    });
     it('should make PstnSetupService calls to fetch the data', function () {
       expect(this.PstnSetupService.getCustomerTrialV2).toHaveBeenCalled();
     });
@@ -69,6 +72,20 @@ describe('Component: OrderDetail', () => {
     it('should make PstnSetupService calls to fetch the data', function () {
       expect(this.PstnSetupService.getCustomerV2).toHaveBeenCalled();
       expect(this.PstnSetupService.getCustomerTrialV2).toHaveBeenCalled();
+    });
+  });
+
+  describe('Component: OrderDetail-Parnter placed the pendingBlockOrder', () => {
+    beforeEach(initComponent);
+    beforeEach(function () {
+      this.$translate.instant.and.returnValue('Partner');
+      this.compileComponent('ucOrderDetail', {
+        currentCustomer: 'currentCustomer',
+        currentOrder: 'orders.pendingBlockOrder',
+      });
+    });
+    it('should have created by Partner', function () {
+      expect(this.controller.createdBy).toBe('Partner');
     });
   });
 
@@ -101,6 +118,7 @@ describe('Component: OrderDetail', () => {
     const NUMBER_SEARCH_INPUT = 'input#numberSearchInput';
     beforeEach(initComponent);
     beforeEach(function () {
+      this.$translate.instant.and.returnValue('Partner');
       this.compileComponent('ucOrderDetail', {
         currentCustomer: 'currentCustomer',
         currentOrder: 'orders.fulfilledNumberOrder',
@@ -114,6 +132,9 @@ describe('Component: OrderDetail', () => {
     it('should have an input search to find the number', function () {
       expect(this.view.find(NUMBER_SEARCH_INPUT)).toExist();
       expect(this.view.find(NUMBER_SEARCH_INPUT)).toHaveAttr('placeholder');
+    });
+    it('should have createdBy a Partner by default', function () {
+      expect(this.controller.createdBy).toBe('Partner');
     });
   });
 });
