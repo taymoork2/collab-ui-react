@@ -11,6 +11,7 @@
     var customerId = Authinfo.getOrgId();
     var apiImplementation = undefined;
     var vendor = undefined;
+    var carrierName = undefined;
 
     // define functions available in this factory
     var service = {
@@ -19,6 +20,7 @@
       getApiImplementation: getApiImplementation,
       isResellerExists: isResellerExists,
       getVendor: getVendor,
+      getCarrierName: getCarrierName,
     };
     return service;
 
@@ -67,6 +69,7 @@
           if (!_.isUndefined(results[2])) {
             apiImplementation = _.get(results[2], 'apiImplementation');
             vendor = _.get(results[2], 'vendor');
+            carrierName = _.get(results[2], 'name');
           }
 
           var pendingLines = [];
@@ -138,6 +141,10 @@
     }
     function getVendor() {
       return vendor;
+    }
+
+    function getCarrierName() {
+      return carrierName;
     }
 
     function dedupGrid(newLine, grid) {
