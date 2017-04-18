@@ -7086,7 +7086,8 @@
       },
       "hybridDataSecurity": {
         "title": "Hybrid Data Security",
-        "description": "Creates an on-premises security realm.",
+        "description": "Manage your encryption keys and other security services on-premises.",
+        "tooltip": "This premium feature is available with the IT Pro Pack. Contact your partner to learn more.",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
@@ -7160,7 +7161,8 @@
     },
     "showMore": "View all",
     "genericButtons": {
-      "setup": "Set up"
+      "setup": "Set up",
+      "learnMore": "Learn More"
     },
     "cardStatus": {
       "operational": "Operational",

@@ -3,6 +3,7 @@ export interface ICardButton {
   buttonClass?: string;
   routerState?: string;
   buttonState?: string;
+  externalLink?: string;
 }
 
 export interface ICardStatus {
@@ -26,6 +27,8 @@ export interface ICardParams {
   name: string;
   template?: string;
   setupMode?: boolean;
+  infoIcon?: string;
+  infoText?: string;
 }
 
 export abstract class ServicesOverviewCard {
@@ -41,6 +44,8 @@ export abstract class ServicesOverviewCard {
   public name: string;
   public status: ICardStatus;
   public setupMode: boolean;
+  public infoIcon: string;
+  public infoText: string;
 
   public getCardType() {
     return this.cardType;
@@ -64,6 +69,8 @@ export abstract class ServicesOverviewCard {
     name,
     template = 'modules/services-overview/card.tpl.html',
     setupMode = false,
+    infoIcon = '',
+    infoText = '',
   }: ICardParams) {
     this.active = active;
     this.cardClass = cardClass;
@@ -74,5 +81,7 @@ export abstract class ServicesOverviewCard {
     this.name = name;
     this.template = template;
     this.setupMode = setupMode;
+    this.infoIcon = infoIcon;
+    this.infoText = infoText;
   }
 }
