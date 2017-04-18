@@ -1459,7 +1459,7 @@
     "voicemailGetError": "Failed to get company voicemail number.",
     "voicemailUpdateError": "Failed to update company voicemail number.",
     "voicemailNoExternalNumbersError": "You must have unassigned direct lines to turn on voicemail. Please contact your partner or administrator.",
-    "voicemailNoDirectNumbersError": "You must have unassigned direct lines to turn on external voicemail access.",
+    "voicemailNoDirectNumbersError": "Warning:  You must have unassigned direct lines to turn on external voicemail access.",
     "timezoneUpdateError": "Failed to update company timezone.",
     "extensionDeleteSuccess": "Successfully deleted extension {{extension}}.",
     "extensionDeleteError": "Failed to delete extension {{extension}}.",

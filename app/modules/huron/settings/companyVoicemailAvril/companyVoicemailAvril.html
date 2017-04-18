@@ -1,0 +1,123 @@
+<div ng-form="$ctrl.companyVoicemailAvrilForm">
+  <label class="control-label" translate="serviceSetupModal.companyVoicemail"></label>
+  <cs-toggle-switch
+    ng-model="$ctrl.companyVoicemailEnabled"
+    toggle-id="companyVoicemailToggle"
+    name="companyVoicemailToggle"
+    size="small"
+    cs-change="$ctrl.onCompanyVoicemailChange(toggleValue)">
+  </cs-toggle-switch>
+  <div ng-if="$ctrl.companyVoicemailEnabled" class="save-popup-margin">
+    <label class="control-label"><span translate="serviceSetupModal.vmDeliveryMethods"></span></label>
+    <p class="description-block" translate="serviceSetupModal.vmDeliveryMethodsHelpText"></p>
+    <div class="cs-radio-group">
+      <input
+        cs-input
+        type="radio"
+        id="vmToSpark"
+        name="deliveryMethodRadio"
+        value="vmToSpark"
+        ng-model="$ctrl.deliveryMethod"
+        ng-change="$ctrl.onDeliveryMethodChanged()"
+        cs-input-label="{{:: 'serviceSetupModal.voicemailToSparkLabel' | translate}}">
+      <input
+        cs-input
+        type="radio"
+        id="vmToPhone"
+        name="deliveryMethodRadio"
+        value="vmToPhone"
+        ng-model="$ctrl.deliveryMethod"
+        ng-change="$ctrl.onDeliveryMethodChanged()"
+        ng-disabled="$ctrl.missingDirectNumbers"
+        cs-input-label="{{:: 'serviceSetupModal.voicemailToPhoneLabel' | translate}}"
+        cs-input-help-text="{{$ctrl.missingDirectNumbersHelpText}}">
+      <div ng-if="$ctrl.deliveryMethod === 'vmToPhone'" class="indent-area-code">
+        <p
+          class="description-block"
+          translate="serviceSetupModal.externalNumberDescriptionText">
+        </p>
+        <div class="medium-5">
+          <cs-select
+            name="companyVoicemailNumber"
+            ng-model="$ctrl.selectedNumber"
+            options="$ctrl.externalNumberOptions"
+            input-placeholder="$ctrl.filterPlaceholder"
+            on-change-fn="$ctrl.onCompanyVoicemailNumberChanged()"
+            required="true"
+            filter="true"
+            refresh-data-fn="$ctrl.getNumbers(filter)">
+          </cs-select>
+          <p
+            class="help-block"
+            ng-if="!$ctrl.missingDirectNumbers"
+            translate="serviceSetupModal.voicemailPilotHelpText">
+          </p>
+        </div>
+      </div>
+      <input
+        cs-input
+        type="radio"
+        id="vmToSparkAndPhone"
+        name="deliveryMethodRadio"
+        value="vmToSparkAndPhone"
+        ng-model="$ctrl.deliveryMethod"
+        ng-change="$ctrl.onDeliveryMethodChanged()"
+        ng-disabled="$ctrl.missingDirectNumbers"
+        cs-input-label="{{:: 'serviceSetupModal.voicemailToSparkAndPhoneLabel' | translate}}"
+        cs-input-help-text="{{$ctrl.missingDirectNumbersHelpText}}">
+      <div ng-if="$ctrl.deliveryMethod === 'vmToSparkAndPhone'" class="indent-area-code">
+        <p
+          class="description-block"
+          translate="serviceSetupModal.externalNumberDescriptionText">
+        </p>
+        <div class="medium-5">
+          <cs-select
+            name="companyVoicemailNumber"
+            ng-model="$ctrl.selectedNumber"
+            options="$ctrl.externalNumberOptions"
+            input-placeholder="$ctrl.filterPlaceholder"
+            on-change-fn="$ctrl.onCompanyVoicemailNumberChanged()"
+            required="true"
+            filter="true"
+            refresh-data-fn="$ctrl.getNumbers(filter)">
+          </cs-select>
+          <p
+            class="help-block"
+            ng-if="!$ctrl.missingDirectNumbers"
+            translate="serviceSetupModal.voicemailPilotHelpText">
+          </p>
+        </div>
+        <p class="warning terminus-warning"><i class="icon icon-warning"></i>{{::'serviceSetupModal.messageWaitingIndicatorText' | translate}}</p>
+      </div>
+    </div>
+    <input
+      cs-input
+      type="checkbox"
+      ng-model="$ctrl.voicemailToEmail"
+      id="voicemailToEmail"
+      name="voicemailToEmail"
+      ng-change="$ctrl.onVoicemailToEmailChanged(value)"
+      cs-input-label="{{::'serviceSetupModal.voicemailToEmailLabel' | translate}}">
+      <div class="indent-area-code cs-radio-group" ng-if="$ctrl.voicemailToEmail">
+        <input
+          cs-input
+          type="radio"
+          id="withAttachment"
+          name="withAttachmentRadio"
+          value="withAttachment"
+          ng-model="$ctrl.attachmentPref"
+          ng-change="$ctrl.onVoicemailToEmailPrefChanged()"
+          cs-input-label="{{:: 'serviceSetupModal.EmailNotificationAttached' | translate}}"
+          cs-input-help-text="{{::'serviceSetupModal.voicemailToEmailHelpText' | translate}}">
+        <input
+          cs-input
+          type="radio"
+          id="withoutAttachment"
+          name="withoutAttachmentRadio"
+          value="withoutAttachment"
+          ng-model="$ctrl.attachmentPref"
+          ng-change="$ctrl.onVoicemailToEmailPrefChanged()"
+          cs-input-label="{{:: 'serviceSetupModal.EmailNotificationWithoutAttached' | translate}}">
+      </div>
+  </div>
+</div>
