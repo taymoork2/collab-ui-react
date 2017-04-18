@@ -227,7 +227,7 @@ require('modules/core/reports/amcharts-export.scss');
         stats.most = _.map(stats.most, function (stat) {
           stat.peopleCount = '-';
           var peopleCount = _.find(vm.peopleCount, function (pc) {
-            return pc[0].accountId == stat.accountId;
+            return pc[0].accountId === stat.accountId;
           });
           if (peopleCount) {
             stat.peopleCount = parseInt(peopleCount[0]['peopleCountAvg'], 10);
@@ -238,7 +238,7 @@ require('modules/core/reports/amcharts-export.scss');
         stats.least = _.map(stats.least, function (stat) {
           stat.peopleCount = '-';
           var peopleCount = _.find(vm.peopleCount, function (pc) {
-            return pc[0].accountId == stat.accountId;
+            return pc[0].accountId === stat.accountId;
           });
           if (peopleCount) {
             stat.peopleCount = parseInt(peopleCount[0]['peopleCountAvg'], 10);

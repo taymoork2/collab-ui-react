@@ -327,12 +327,14 @@
     function getPeopleCount(start, end) {
       var url = getBaseOrgUrl() + 'reports/device/people_count/aggregate?interval=day&from=' + start + '&to=' + end + '&categories=aggregate';
 
-      return cancelableHttpGET(url).then(function (response) {
-        return response.data.items;
-      }, function (reject) {
-        $log.warn("Reject", reject);
-        return $q.reject(analyseReject(reject));
-      });
+      return cancelableHttpGET(url)
+        .then(function (response) {
+          return response.data.items;
+        })
+        .catch(function (reject) {
+          $log.warn('Reject', reject);
+          return $q.reject(analyseReject(reject));
+        });
     }
 
     return {
