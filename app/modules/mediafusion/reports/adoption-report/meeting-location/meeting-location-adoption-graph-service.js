@@ -128,7 +128,7 @@
         'time': vm.timeStamp,
       };
       var exportFields = [];
-      _.forEach(graphs, function (value) {
+      _.each(graphs, function (value) {
         if (value.valueField === 'ON_PREM') {
           value.lineColor = '#02bbcc';
           value.title = vm.onPremisesHeading;
@@ -141,7 +141,7 @@
         }
         columnNames[value.valueField] = value.title + ' ' + vm.meetingLocation;
       });
-      _.forEach(columnNames, function (key) {
+      _.each(columnNames, function (key) {
         exportFields.push(key);
       });
       dateLabel = _.replace(dateLabel, /\s/g, '_');
@@ -164,14 +164,14 @@
 
       chartData.legend.listeners = [{
         'event': 'hideItem',
-        "method": legendHandler,
+        'method': legendHandler,
       }, {
         'event': 'showItem',
         'method': legendHandler,
       }];
 
       var chart = AmCharts.makeChart(vm.meetingLocationdiv, chartData);
-      // listen for zoomed event and call "handleZoom" method
+      // listen for zoomed event and call 'handleZoom' method
       chart.addListener('zoomed', handleZoom);
       return chart;
     }
@@ -194,7 +194,7 @@
 
     function getClusterName(graphs) {
       var tempData = [];
-      _.forEach(graphs, function (value) {
+      _.each(graphs, function (value) {
         if (value.title === 'ON_PREM') {
           value.balloonText = '<span class="graph-text">' + vm.onPremisesHeading + ' ' + '<span class="graph-number">[[value]]</span></span>';
         } else if (value.title === 'CLOUD') {

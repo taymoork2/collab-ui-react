@@ -50,7 +50,7 @@
       if (_.isUndefined(data.data[0].isDummy)) {
         var availabilityData = [];
         if (selectedCluster === vm.allClusters) {
-          _.forEach(data.data[0].clusterCategories, function (clusterCategory) {
+          _.each(data.data[0].clusterCategories, function (clusterCategory) {
             var clusterName = _.findKey(Idmap, function (val) {
               return val === clusterCategory.category;
             });
@@ -99,7 +99,7 @@
         legend = _.cloneDeep(vm.availabilityLegendCluster);
       }
       if (!_.isUndefined(data.data[0].isDummy) && data.data[0].isDummy) {
-        _.forEach(legend, function (value, key) {
+        _.each(legend, function (value, key) {
           legend[key].color = '#AAB3B3';
         });
       }
@@ -115,8 +115,8 @@
       catAxes.gridAlpha = 0.3;
       if (!isDummy) {
         catAxes.listeners = [{
-          "event": "clickItem",
-          "method": function (event) {
+          'event': 'clickItem',
+          'method': function (event) {
             $rootScope.$broadcast('clusterClickEvent', {
               data: event.serialDataItem.category,
             });
@@ -151,8 +151,8 @@
       chartData.graph.showHandOnHover = (selectedCluster === vm.allClusters);
       if (!isDummy) {
         chartData.listeners = [{
-          "event": "clickGraphItem",
-          "method": function (event) {
+          'event': 'clickGraphItem',
+          'method': function (event) {
             $rootScope.$broadcast('clusterClickEvent', {
               data: event.item.category,
             });
@@ -163,7 +163,7 @@
       var chart = AmCharts.makeChart(vm.availabilitydiv, chartData, 0);
 
       chart.addListener('init', function () {
-        // listen for zoomed event and call "handleZoom" method
+        // listen for zoomed event and call 'handleZoom' method
         chart.valueAxis.addListener('axisZoomed', handleZoom);
         chart.categoryAxis.addListener('rollOverItem', function (event) {
           event.target.setAttr('cursor', 'default');
@@ -171,7 +171,7 @@
           event.chart.balloon.showBalloon(event.serialDataItem.category);
         });
 
-        chart.categoryAxis.addListener("rollOutItem", function (event) {
+        chart.categoryAxis.addListener('rollOutItem', function (event) {
           event.chart.balloon.hide();
         });
       });
@@ -196,7 +196,7 @@
 
     function formatLabel(label) {
       if (label.length > 10) {
-        return (label.length <= 12) ? label : label.substring(0, 10) + "..";
+        return (label.length <= 12) ? label : label.substring(0, 10) + '..';
       } else {
         return label;
       }
