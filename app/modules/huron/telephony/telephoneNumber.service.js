@@ -4,7 +4,7 @@
 
   module.exports = angular.module('huron.telephoneNumberService', [
     require('angular-resource'),
-    'collab.ui',
+    require('collab-ui-ng').default,
   ])
     .factory('TelephoneNumberService', TelephoneNumberService)
     .name;

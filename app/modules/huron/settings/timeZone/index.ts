@@ -4,9 +4,9 @@ export * from './timeZone.component';
 
 export default angular
   .module('huron.settings.time-zone', [
-    'atlas.templates',
-    'collab.ui',
-    'pascalprecht.translate',
+    require('scripts/app.templates'),
+    require('collab-ui-ng').default,
+    require('angular-translate'),
   ])
   .component('ucTimeZone', new TimeZoneComponent())
   .name;

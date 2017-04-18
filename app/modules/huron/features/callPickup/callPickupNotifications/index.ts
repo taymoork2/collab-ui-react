@@ -3,9 +3,9 @@ import callPickupGroupService from 'modules/huron/features/callPickup/services/'
 
 export default angular
   .module('huron.call-pickup.notifications', [
-    'atlas.templates',
-    'collab.ui',
-    'pascalprecht.translate',
+    require('scripts/app.templates'),
+    require('collab-ui-ng').default,
+    require('angular-translate'),
     callPickupGroupService,
   ])
   .component('callPickupNotifications',  new CallPickupNotificationsComponent())

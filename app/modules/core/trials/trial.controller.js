@@ -5,7 +5,7 @@
     .controller('TrialCtrl', TrialCtrl);
 
   /* @ngInject */
-  function TrialCtrl($q, $state, $scope, $stateParams, $translate, $window, Analytics, Authinfo, Config, HuronCountryService, HuronCustomer, FeatureToggleService, Notification, Orgservice, TrialContextService, TrialDeviceService, TrialPstnService, TrialService) {
+  function TrialCtrl($q, $state, $scope, $stateParams, $translate, $window, Analytics, Authinfo, Config, HuronCustomer, FeatureToggleService, Notification, Orgservice, TrialContextService, TrialDeviceService, TrialPstnService, TrialService) {
     var vm = this;
     vm.careTypes = {
       K1: 1,
@@ -102,6 +102,10 @@
       trials: [vm.callTrial, vm.roomSystemTrial],
       enabled: true,
     }, {
+      name: 'trial.pstnDeprecated',
+      trials: [vm.pstnTrial],
+      enabled: true,
+    }, {
       name: 'trial.pstn',
       trials: [vm.pstnTrial],
       enabled: true,
@@ -111,7 +115,7 @@
       enabled: true,
     }];
     // Navigate trial modal in this order
-    vm.navOrder = ['trial.info', 'trial.webex', 'trial.pstn', 'trial.emergAddress', 'trial.call'];
+    vm.navOrder = ['trial.info', 'trial.webex', 'trial.pstnDeprecated', 'trial.emergAddress', 'trial.call'];
     vm.navStates = ['trial.info'];
 
     vm.nonTrialServices = [{
@@ -174,7 +178,6 @@
       name: 'trial.call',
     });
     vm.setDefaultCountry = setDefaultCountry;
-    vm.updateCountryList = updateCountryList;
 
     //watch room systems trial 'enabled' for quantity
     $scope.$watch(function () {
@@ -227,10 +230,8 @@
         ftCareTrials: FeatureToggleService.atlasCareTrialsGetStatus(),
         ftAdvanceCareTrials: FeatureToggleService.atlasCareInboundTrialsGetStatus(),
         ftShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus(), //TODO add true for shipping testing.
-        ftSupportThinktel: FeatureToggleService.huronSupportThinktelGetStatus(),
-        ftFederatedSparkCall: FeatureToggleService.huronFederatedSparkCallGetStatus(),
         adminOrg: Orgservice.getAdminOrgAsPromise().catch(function () { return false; }),
-        huronCountryList: getCountryList(),
+        huronPstn: FeatureToggleService.supports(FeatureToggleService.features.huronPstn),
       };
       if (!vm.isNewTrial()) {
         promises.tcHasService = TrialContextService.trialHasService(vm.currentTrial.customerOrgId);
@@ -252,8 +253,11 @@
           vm.canSeeDevicePage = !isTestOrg || overrideTestOrg;
           vm.devicesModal.enabled = vm.canSeeDevicePage;
           vm.defaultCountryList = results.huronCountryList;
-          vm.ftSupportThinktel = results.ftSupportThinktel;
-          vm.ftFederatedSparkCall = results.ftFederatedSparkCall;
+          vm.huronPstn = results.huronPstn;
+
+          if (vm.huronPstn) {
+            vm.navOrder = ['trial.info', 'trial.webex', 'trial.pstn', 'trial.call'];
+          }
 
           var initResults = (vm.isExistingOrg()) ? getExistingOrgInitResults(results, vm.hasCallEntitlement, vm.preset, vm.paidServices) : getNewOrgInitResults(results, vm.hasCallEntitlement, vm.stateDefaults);
           _.merge(vm, initResults);
@@ -287,13 +291,6 @@
         });
     }
 
-    function getCountryList() {
-      return HuronCountryService.getCountryList()
-        .catch(function () {
-          return [];
-        });
-    }
-
     function isNewTrial() {
       return mode === 'add';
     }
@@ -319,11 +316,11 @@
     }
 
     function toggleTrial() {
-      if (!vm.callTrial.enabled && !vm.roomSystemTrial.enabled && !vm.sparkBoardTrial.enabled) {
+      if ((!vm.callTrial.enabled && !vm.roomSystemTrial.enabled && !vm.sparkBoardTrial.enabled) || _.get(vm.details.country, 'id') === 'N/A') {
         vm.pstnTrial.enabled = false;
       }
 
-      if ((vm.callTrial.enabled || vm.roomSystemTrial.enabled || vm.sparkBoardTrial.enabled) && vm.hasCallEntitlement && !vm.pstnTrial.skipped) {
+      if ((vm.callTrial.enabled || vm.roomSystemTrial.enabled || vm.sparkBoardTrial.enabled) && vm.hasCallEntitlement && !vm.pstnTrial.skipped && _.get(vm.details.country, 'id') !== 'N/A') {
         vm.pstnTrial.enabled = true;
       }
 
@@ -338,10 +335,12 @@
       setViewState('trial.call', canAddDevice());
       setViewState('trial.webex', hasEnabledWebexTrial());
       setViewState('trial.pstn', isPstn() && (_.get(vm.details.country, 'id') !== 'N/A'));
-      if (vm.ftSupportThinktel || vm.ftFederatedSparkCall) {
-        setViewState('trial.emergAddress', TrialPstnService.getCarrierCapability('E911'));
+      setViewState('trial.emergAddress', TrialPstnService.getCarrierCapability('E911'));
+
+      if (vm.huronPstn) {
+        setViewState('trial.pstn', isPstn() && (_.get(vm.details.country, 'id') !== 'N/A'));
       } else {
-        setViewState('trial.emergAddress', isPstn() && (_.get(vm.details.country, 'id') !== 'N/A'));
+        setViewState('trial.pstnDeprecated', isPstn() && (_.get(vm.details.country, 'id') !== 'N/A'));
       }
 
       addRemoveStates();
@@ -974,24 +973,6 @@
     function setDefaultCountry(country) {
       TrialPstnService.setCountryCode(country.id);
       vm.details.country = country;
-    }
-
-    var notApplicable = {
-      'id': 'N/A',
-      'name': 'Not Applicable',
-      'domain': '',
-    };
-
-    // Added to update Regional Settings country list with Not Applicable option.
-    // N/A should only be an option if Call is not selected in the trial
-    function updateCountryList() {
-      if (vm.callTrial.enabled) {
-        if (_.includes(vm.defaultCountryList, notApplicable)) {
-          vm.defaultCountryList = _.dropRight(vm.defaultCountryList);
-        }
-      } else if (!_.includes(vm.defaultCountryList, notApplicable)) {
-        vm.defaultCountryList = _.unionWith(vm.defaultCountryList, [notApplicable], _.isEqual);
-      }
     }
   }
 })();

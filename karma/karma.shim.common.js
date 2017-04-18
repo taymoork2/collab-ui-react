@@ -1,12 +1,9 @@
 // Bootstrap the app
-require('../app/bootstrap.js');
+require('../app/bootstrap.dependencies');
 require('angular-mocks');
 
-// Load the rest of the app
-require('../app/scripts/main.js');
-
 // Test Dependencies
-require('jasmine-jquery/lib/jasmine-jquery.js');
+require('jasmine-jquery');
 require('sinon');
 require('karma-sinon');
 require('jasmine-sinon');

@@ -7,7 +7,7 @@
 
   /* @ngInject */
 
-  function HuronSettingsCtrl($q, $scope, $state, $translate, Authinfo, CeService, CallerId, Config, DirectoryNumberService, DialPlanService, ExternalNumberService, FeatureToggleService, HuronCustomer, HuntGroupServiceV2, InternationalDialing, ModalService, Notification, PstnSetupService, ServiceSetup, TelephoneNumberService, ValidationService, VoicemailMessageAction, TerminusUserDeviceE911Service, PstnServiceAddressService, CustomerCosRestrictionServiceV2, CustomerDialPlanServiceV2, Orgservice, PstnSetup) {
+  function HuronSettingsCtrl($q, $scope, $state, $translate, Authinfo, CeService, CallerId, Config, DirectoryNumberService, HuronCustomerService, ExternalNumberService, FeatureToggleService, HuronCustomer, HuntGroupServiceV2, InternationalDialing, ModalService, Notification, PstnSetupService, ServiceSetup, TelephoneNumberService, ValidationService, VoicemailMessageAction, TerminusUserDeviceE911Service, PstnServiceAddressService, CustomerCosRestrictionServiceV2, CustomerDialPlanServiceV2, Orgservice, PstnSetup) {
     var vm = this;
     vm.loading = true;
 
@@ -16,6 +16,9 @@
     vm.showRegionAndVoicemail = Authinfo.getLicenses().filter(function (license) {
       return license.licenseType === Config.licenseTypes.COMMUNICATION;
     }).length > 0;
+
+    vm.ftHRegionalTones = false;
+    vm.supportRegionalSettings = supportRegionalSettings;
 
     var DEFAULT_SITE_INDEX = '000001';
     var DEFAULT_TZ = {
@@ -1012,6 +1015,10 @@
 
     init();
 
+    function supportRegionalSettings() {
+      return vm.ftHRegionalTones;
+    }
+
     function clearCallerIdFields() {
       vm.model.callerId.uuid = '';
       vm.model.callerId.callerIdName = '';
@@ -1650,7 +1657,7 @@
     }
 
     function loadDialPlan() {
-      return DialPlanService.getCustomerVoice(Authinfo.getOrgId()).then(function (response) {
+      return HuronCustomerService.getVoiceCustomer().then(function (response) {
         if (response.dialPlan === null) {
           // if customer's dialPlan attribute is defined but null, assume the customer is on the
           // North American Dial Plan. Look up uuid for NANP and insert it into customer dialPlan.
@@ -2038,7 +2045,7 @@
         vm.model.regionCode = '';
       }
       if (vm.model.regionCode !== vm.previousModel.regionCode) {
-        return DialPlanService.updateCustomerVoice(Authinfo.getOrgId(), {
+        return HuronCustomerService.updateVoiceCustomer({
           regionCode: vm.model.regionCode,
         }).catch(function (error) {
           errors.push(Notification.processErrorResponse(error, 'serviceSetupModal.error.updateCustomerVoice'));
@@ -2051,6 +2058,10 @@
 
       FeatureToggleService.supports(FeatureToggleService.features.avrilVmEnable).then(function (result) {
         vm.voicemailAvrilCustomer = result;
+      });
+
+      FeatureToggleService.supports(FeatureToggleService.features.hRegionalTones).then(function (result) {
+        vm.ftHRegionalTones = result;
       });
 
       return $q.resolve();

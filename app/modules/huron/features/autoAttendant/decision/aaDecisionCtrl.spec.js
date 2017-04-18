@@ -241,6 +241,26 @@ describe('Controller: AADecisionCtrl', function () {
 
       expect(c.actionEntry.if.rightCondition).toEqual(c.ifOption.buffer);
       expect(c.isWarn).toEqual(true);
+    });
+
+    it('should not warn when left condition is empty', function () {
+      var c;
+      action.if = {};
+      action.if.leftCondition = '';
+      action.if.rightCondition = 'Hello world';
+
+      c = controller('AADecisionCtrl', {
+        $scope: $scope,
+      });
+
+      $scope.$apply();
+
+      c.ifOption.value = 'sessionVariable';
+      c.ifOption.buffer = '';
+
+      c.setIfDecision();
+
+      expect(c.isWarn).toEqual(false);
 
     });
   });

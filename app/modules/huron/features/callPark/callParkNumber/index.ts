@@ -6,9 +6,9 @@ import { CallParkRangeLengthValidator } from './cpValidateRangeLength.directive'
 
 export default angular
   .module('huron.call-park-number', [
-    'atlas.templates',
-    'collab.ui',
-    'pascalprecht.translate',
+    require('scripts/app.templates'),
+    require('collab-ui-ng').default,
+    require('angular-translate'),
   ])
   .component('ucCallParkNumber', new CallParkNumberComponent())
   .directive('validateRange', CallParkRangeValidator.factory)

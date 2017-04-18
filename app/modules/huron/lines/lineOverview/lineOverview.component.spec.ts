@@ -66,7 +66,7 @@ describe('Component: lineOverview', () => {
     this.saveDefer = this.$q.defer();
     spyOn(this.LineOverviewService, 'save').and.returnValue(this.saveDefer.promise);
 
-    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.when(true));
+    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
   });
 
   function initComponent() {

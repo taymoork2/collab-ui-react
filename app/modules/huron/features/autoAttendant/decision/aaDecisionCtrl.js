@@ -132,7 +132,10 @@
     function setIfDecision() {
       if (vm.ifOption.value == 'sessionVariable') {
         vm.actionEntry.if.leftCondition = vm.sessionVarOption;
-        vm.isWarn = !_.includes(vm.sessionVarOptions, vm.actionEntry.if.leftCondition);
+
+        // no warning if blank leftCondition - first time through
+        vm.isWarn = vm.actionEntry.if.leftCondition ? !_.includes(vm.sessionVarOptions, vm.actionEntry.if.leftCondition) : false;
+
       } else {
         vm.isWarn = false;
         vm.actionEntry.if.leftCondition = vm.ifOption.value;

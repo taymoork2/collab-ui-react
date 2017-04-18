@@ -36,7 +36,7 @@
 
     afterEach(function () {});
 
-    xdescribe('scrollBuilderToTarget:', function () {
+    describe('scrollBuilderToTarget:', function () {
 
       it('just return if there is no target', function () {
 

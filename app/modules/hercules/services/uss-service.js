@@ -1,9 +1,13 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Hercules')
-    .service('USSService', USSService);
+  module.exports = angular
+    .module('hercules.uss', [
+      require('modules/squared/devices/services/CsdmPoller'),
+      require('modules/hercules/services/hybrid-services-utils').default,
+    ])
+    .service('USSService', USSService)
+    .name;
 
   /* @ngInject */
   function USSService($http, UrlConfig, Authinfo, CsdmPoller, CsdmHubFactory, $translate, HybridServicesUtils) {

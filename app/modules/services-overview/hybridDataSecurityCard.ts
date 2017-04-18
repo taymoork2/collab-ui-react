@@ -33,7 +33,11 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
   private checkRoles() {
     const hasRequiredRoles = _.includes(this.Authinfo.getRoles(), this.Config.roles.full_admin) ||
       _.includes(this.Authinfo.getRoles(), this.Config.roles.readonly_admin);
-    this.display = hasRequiredRoles && this.Authinfo.isFusionHDS();
+    return hasRequiredRoles;
+  }
+
+  public hybridDataSecurityFeatureToggleEventHandler(hasFeature: boolean) {
+    this.display = this.checkRoles() && (this.Authinfo.isFusionHDS() || hasFeature);
   }
 
   /* @ngInject */
@@ -52,6 +56,6 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
       routerState: 'hds.list',
       service: 'spark-hybrid-datasecurity',
     }, HybridServicesClusterStatesService);
-    this.checkRoles();
+    this.display = this.checkRoles() && this.Authinfo.isFusionHDS();
   }
 }

@@ -3,14 +3,12 @@
     "url": "/paging/api/v1/customers/94aab8b4-dd35-4702-959b-7c13ff0ece5b/pagingGroups/7f48fa87-6956-4084-ac14-01f4a8bb6f12",
     "groupId": "bbcd1234-abcd-abcd-abcddef123456",
     "name": "Test1",
-    "extensionUUID": "a431a167-30a5-4b44-8694-ad9025851111",
     "memberCount": 2
   },
   {
     "url": "/paging/api/v1/customers/94aab8b4-dd35-4702-959b-7c13ff0ece5b/pagingGroups/a431a167-30a5-4b44-8694-ad9025859665",
     "groupId": "abcd1234-abcd-abcd-abcddef123456",
     "name": "Test2",
-    "extensionUUID": "a431a167-30a5-4b44-8694-ad9025852222",
     "memberCount": 3
   }]
 }

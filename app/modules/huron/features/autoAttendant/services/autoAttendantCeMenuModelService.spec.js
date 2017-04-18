@@ -408,6 +408,15 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       expect(angular.equals(_menuEntry, _menuEntry2)).toBe(false);
     });
   });
+  describe('isCeMenuEntry', function () {
+    it('should return true for a type CeMenuEntry object', function () {
+      expect(AutoAttendantCeMenuModelService.isCeMenuEntry(AutoAttendantCeMenuModelService.newCeMenuEntry())).toBe(true);
+    });
+
+    it('should return true for a type CeMenuEntry object', function () {
+      expect(AutoAttendantCeMenuModelService.isCeMenuEntry(AutoAttendantCeMenuModelService.newCeMenu())).toBe(false);
+    });
+  });
 
   describe('newCeMenu', function () {
     it('should return an object of type CeMenu', function () {

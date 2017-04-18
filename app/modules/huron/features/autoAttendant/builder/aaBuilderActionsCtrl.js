@@ -48,6 +48,16 @@
       metric: 'Route-Call-Title',
       showHelpLink: false,
       actions: ['route', 'goto', 'routeToUser', 'routeToVoiceMail', 'routeToHuntGroup', 'routeToQueue', 'routeToSipEndpoint'],
+    }, {
+      title: $translate.instant('autoAttendant.actionDecision'),
+      ifTitle: $translate.instant('autoAttendant.actionIfDecision'),
+      controller: 'AADecisionCtrl as aaDecisionCtrl',
+      url: 'modules/huron/features/autoAttendant/decision/aaDecision.tpl.html',
+      hint: $translate.instant('autoAttendant.actionDecisionHint'),
+      help: $translate.instant('autoAttendant.actionDecisionHelp'),
+      metric: 'Decision-Title',
+      showHelpLink: true,
+      actions: ['conditional'],
     }];
 
     vm.actionPlaceholder = $translate.instant("autoAttendant.actionPlaceholder");
@@ -142,7 +152,7 @@
         vm.options[2].help = vm.options[2].help.concat('<br></br>').concat($translate.instant('autoAttendant.mediaUploadFileInfo'));
       }
       if (AACommonService.isCallerInputToggle()) {
-        vm.options.push({
+        vm.options.splice(4, 0, {
           title: $translate.instant('autoAttendant.actionCallerInput'),
           controller: 'AACallerInputCtrl as aaCallerInput',
           url: 'modules/huron/features/autoAttendant/callerInput/aaCallerInput.tpl.html',
@@ -152,19 +162,6 @@
           type: [3, 4],
           showHelpLink: true,
           actions: ['runActionsOnInput'],
-        });
-      }
-      if (AACommonService.isDecisionToggle()) {
-        vm.options.push({
-          title: $translate.instant('autoAttendant.actionDecision'),
-          ifTitle: $translate.instant('autoAttendant.actionIfDecision'),
-          controller: 'AADecisionCtrl as aaDecisionCtrl',
-          url: 'modules/huron/features/autoAttendant/decision/aaDecision.tpl.html',
-          hint: $translate.instant('autoAttendant.actionDecisionHint'),
-          help: $translate.instant('autoAttendant.actionDecisionHelp'),
-          metric: 'Decision-Title',
-          showHelpLink: true,
-          actions: ['conditional'],
         });
       }
     }

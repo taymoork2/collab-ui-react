@@ -400,7 +400,7 @@ require('./_user-add.scss');
     };
 
     function toggleShowExtensions() {
-      return DialPlanService.getCustomerDialPlanDetails().then(function (response) {
+      return DialPlanService.getDialPlan().then(function (response) {
         var indexOfDidColumn = _.findIndex($scope.addDnGridOptions.columnDefs, {
           field: 'externalNumber',
         });
@@ -1873,6 +1873,12 @@ require('./_user-add.scss');
             }
             case 404: {
               userResult.message = $translate.instant('onboardModal.result.404');
+              userResult.alertType = 'danger';
+              isComplete = false;
+              break;
+            }
+            case 408: {
+              userResult.message = $translate.instant('onboardModal.result.408');
               userResult.alertType = 'danger';
               isComplete = false;
               break;

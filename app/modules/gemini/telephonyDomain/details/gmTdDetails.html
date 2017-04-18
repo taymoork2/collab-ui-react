@@ -77,7 +77,7 @@
 
         <div class="section-title-row">
           <span class="section-name" translate="gemini.tds.phoneNumbers"></span>
-          <span class="pull-right" ng-if="$ctrl.model.telephonyNumberList.length"><a translate="gemini.tds.seeAll" class="color-primary-base"><!-- TODO will do next sprint--></a></span>
+          <span class="pull-right" ng-if="$ctrl.model.telephonyNumberList.length"><a translate="gemini.tds.seeAll" ng-click="$ctrl.onSeeAllPhoneHumbers()" class="color-primary-base"></a></span>
         </div>
 
         <div class="side-panel-defaultToll">
@@ -133,7 +133,7 @@
       </cs-sp-section>
 
       <cs-sp-buttons>
-        <button type="button" class="btn btn--primary" cs-btn loading="$ctrl.model.btnCancelSubmissionLoading" ng-click="$ctrl.onCancelSubmission()" ng-if="$ctrl.model.isShowCancelSubmission" ng-disabled="$ctrl.model.btnCancelSubmissionDisable">
+        <button type="button" class="btn btn--negative" cs-btn loading="$ctrl.model.btnCancelSubmissionLoading" ng-click="$ctrl.onCancelSubmission()" ng-if="$ctrl.model.isShowCancelSubmission" ng-disabled="$ctrl.model.btnCancelSubmissionDisable">
           <span translate="gemini.button.cancelSubmission"></span>
         </button>
       </cs-sp-buttons>

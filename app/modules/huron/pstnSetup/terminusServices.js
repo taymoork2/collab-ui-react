@@ -3,6 +3,7 @@
 
   module.exports = angular.module('huron.TerminusServices', [
     require('angular-resource'),
+    require('modules/huron/telephony/telephonyConfig'),
     require('modules/core/config/config'),
   ])
     .factory('TerminusCustomerService', TerminusCustomerService)
@@ -19,12 +20,6 @@
     .factory('TerminusNumberService', TerminusNumberService)
     .factory('TerminusCarrierService', TerminusCarrierService)
     .factory('TerminusCarrierV2Service', TerminusCarrierV2Service)
-    .factory('TerminusCarrierInventoryCount', TerminusCarrierInventoryCount)
-    .factory('TerminusCarrierInventorySearch', TerminusCarrierInventorySearch)
-    .factory('TerminusCarrierInventoryReserve', TerminusCarrierInventoryReserve)
-    .factory('TerminusCarrierInventoryRelease', TerminusCarrierInventoryRelease)
-    .factory('TerminusCustomerCarrierInventoryReserve', TerminusCustomerCarrierInventoryReserve)
-    .factory('TerminusCustomerCarrierInventoryRelease', TerminusCustomerCarrierInventoryRelease)
     .factory('TerminusStateService', TerminusStateService)
     .factory('TerminusV2LookupE911Service', TerminusV2LookupE911Service)
     .factory('TerminusUserDeviceE911Service', TerminusUserDeviceE911Service)
@@ -125,36 +120,6 @@
   /* @ngInject */
   function TerminusCarrierV2Service($resource, HuronConfig) {
     return $resource(HuronConfig.getTerminusV2Url() + '/carriers/:carrierId', {});
-  }
-
-  /* @ngInject */
-  function TerminusCarrierInventoryCount($resource, HuronConfig) {
-    return $resource(HuronConfig.getTerminusUrl() + '/inventory/carriers/:carrierId/did/count');
-  }
-
-  /* @ngInject */
-  function TerminusCarrierInventorySearch($resource, HuronConfig) {
-    return $resource(HuronConfig.getTerminusUrl() + '/inventory/carriers/:carrierId/did/search');
-  }
-
-  /* @ngInject */
-  function TerminusCarrierInventoryReserve($resource, HuronConfig) {
-    return $resource(HuronConfig.getTerminusUrl() + '/inventory/carriers/:carrierId/did/reserve');
-  }
-
-  /* @ngInject */
-  function TerminusCarrierInventoryRelease($resource, HuronConfig) {
-    return $resource(HuronConfig.getTerminusUrl() + '/inventory/carriers/:carrierId/did/release');
-  }
-
-  /* @ngInject */
-  function TerminusCustomerCarrierInventoryReserve($resource, HuronConfig) {
-    return $resource(HuronConfig.getTerminusUrl() + '/inventory/customers/:customerId/carriers/:carrierId/did/reserve');
-  }
-
-  /* @ngInject */
-  function TerminusCustomerCarrierInventoryRelease($resource, HuronConfig) {
-    return $resource(HuronConfig.getTerminusUrl() + '/inventory/customers/:customerId/carriers/:carrierId/did/release');
   }
 
   /* @ngInject */

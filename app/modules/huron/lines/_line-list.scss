@@ -7,8 +7,13 @@
 
   .ui-grid {
     .internalNumberColumn,
-    .externalNumberColumn {
+    .externalNumberColumn,
+    .actionsColumn {
       text-align: center;
+    }
+
+    .assignedToColumn {
+      text-align: left;
     }
 
     .ui-grid-row {
@@ -23,13 +28,16 @@
     text-align: center;
   }
 
-  .ui-grid-header-cell:last-child {
+  .ui-grid-header-cell.assignedToHeader {
     text-align: left;
   }
 }
 
 .line-list .page-sub-header .export-lines i {
-  margin-left: 0.25rem;
+  color: $gray-dark-1;
+  font-size: $h3-font-size;
+  margin-left: 1rem;
+  cursor: pointer;
   padding-left: 0;
 }
 
@@ -45,8 +53,13 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
 .order-history {
   margin-right: 1rem;
   font-size: $h5-font-size;
+}
+
+#deleteExternalNumberOption {
+  span {
+    color: $color-alerts-base;
+  }
 }

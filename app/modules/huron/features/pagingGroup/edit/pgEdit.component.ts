@@ -68,19 +68,15 @@ class PgEditComponentCtrl implements ng.IComponentController {
         (data) => {
           this.pg = data;
           this.name = this.pg.name;
-          let numberData: INumberData = <INumberData> {
-            extension: undefined,
-            extensionUUID: undefined,
-          };
 
           this.PagingNumberService.getNumberExtension(this.pgId).then(
             (data: INumberData) => {
-              numberData.extension = data.extension;
+              this.number = data;
             },
             (response) => {
               this.Notification.errorResponse(response, this.pg.name);
             });
-          this.number = numberData;
+
           this.userCount = _.get(_.countBy(this.pg.members, 'type'), USER, 0);
           this.placeCount = _.get(_.countBy(this.pg.members, 'type'), PLACE, 0);
           this.getMembers(this.pg.members);
@@ -423,18 +419,12 @@ class PgEditComponentCtrl implements ng.IComponentController {
 
   public onCancel(): void {
     this.name = this.pg.name;
-    let numberData: INumberData = <INumberData> {
-      extension: this.pg.extension,
-      extensionUUID: this.pg.extensionUUID,
-    };
 
-    if (this.pg.extension === undefined && this.pg.extensionUUID) {
-      this.PagingNumberService.getNumberExtension(this.pg.extensionUUID).then(
-        (data: INumberData) => {
-          numberData.extension = data.extension;
-        });
-    }
-    this.number = numberData;
+    this.PagingNumberService.getNumberExtension(this.pgId).then(
+      (data: INumberData) => {
+        this.number = data;
+      });
+
     if (this.pg.initiatorType !== undefined) {
       this.initiatorType = this.pg.initiatorType;
     }

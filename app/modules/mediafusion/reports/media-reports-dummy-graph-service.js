@@ -10,7 +10,9 @@
     vm.locations = $translate.instant('mediaFusion.metrics.location');
     vm.onPremisesHeading = $translate.instant('mediaFusion.metrics.onPremisesHeading');
     vm.cloudHeading = $translate.instant('mediaFusion.metrics.cloudHeading');
-    vm.timeFormat = "YYYY-MM-DDTHH:mm:ss";
+    vm.clusterHeading = $translate.instant('mediaFusion.metrics.clusterTitle');
+    vm.clusterNodeHeading = $translate.instant('mediaFusion.metrics.clusterNodeTitle');
+    vm.timeFormat = 'YYYY-MM-DDTHH:mm:ss';
     return {
       dummyCallVolumeData: dummyCallVolumeData,
       dummyAvailabilityData: dummyAvailabilityData,
@@ -33,65 +35,62 @@
         end = moment().utc().format(vm.timeFormat);
         start = moment().utc().subtract(4, 'hours').format(vm.timeFormat);
         duration = 240;
-        period = "mm";
+        period = 'mm';
       } else if (filter.value === 1) {
         end = moment().utc().format(vm.timeFormat);
         start = moment().utc().subtract(1, 'days').format(vm.timeFormat);
         duration = 1440;
-        period = "mm";
+        period = 'mm';
       } else if (filter.value === 2) {
         end = moment().utc().format(vm.timeFormat);
         start = moment().utc().subtract(7, 'days').format(vm.timeFormat);
         duration = 168;
-        period = "hh";
+        period = 'hh';
       } else if (filter.value === 3) {
         end = moment().utc().format(vm.timeFormat);
         start = moment().utc().subtract(1, 'months').format(vm.timeFormat);
-        period = "hh";
+        period = 'hh';
         duration = 744;
       } else {
         end = moment().utc().format(vm.timeFormat);
         start = moment().utc().subtract(3, 'months').format(vm.timeFormat);
-        period = "hh";
+        period = 'hh';
         duration = 2260;
       }
       data = [{
-        "isDummy": true,
-        "orgId": "2c3c9f9e-73d9-4460-a668-047162ff1bac",
-        "period": period,
-        "clusterCategories": [{
-          "category": "Cluster/Host",
-          "segments": [{
-            "start": 1,
-            "duration": duration,
-            "color": color,
-            "task": "No data",
-            "startTime": start,
-            "endTime": end,
+        'isDummy': true,
+        'orgId': '2c3c9f9e-73d9-4460-a668-047162ff1bac',
+        'period': period,
+        'clusterCategories': [{
+          'category': vm.clusterNodeHeading,
+          'segments': [{
+            'start': 1,
+            'duration': duration,
+            'color': color,
+            'startTime': start,
+            'endTime': end,
           }],
         }, {
-          "category": "Cluster/Host",
-          "segments": [{
-            "start": 1,
-            "duration": duration,
-            "color": color,
-            "task": "No data",
-            "startTime": start,
-            "endTime": end,
+          'category': vm.clusterNodeHeading,
+          'segments': [{
+            'start': 1,
+            'duration': duration,
+            'color': color,
+            'startTime': start,
+            'endTime': end,
           }],
         }, {
-          "category": "Cluster/Host",
-          "segments": [{
-            "start": 1,
-            "duration": duration,
-            "color": color,
-            "task": "No data",
-            "startTime": start,
-            "endTime": end,
+          'category': vm.clusterNodeHeading,
+          'segments': [{
+            'start': 1,
+            'duration': duration,
+            'color': color,
+            'startTime': start,
+            'endTime': end,
           }],
         }],
-        "startTime": start,
-        "endTime": end,
+        'startTime': start,
+        'endTime': end,
       }];
       var returnData;
       returnData = {
@@ -223,7 +222,7 @@
     function dummyParticipantDistributionGraph() {
       var dummyGraph = [];
       dummyGraph.push({
-        title: 'Cluster',
+        title: vm.clusterHeading,
         valueField: 'field',
         lineColor: chartColors.grayLightTwo,
         showBalloon: false,

@@ -41,6 +41,7 @@
     vm.addToCart = addToCart;
     vm.removeOrder = removeOrder;
     vm.maxSelection = pstnTokenLimit;
+    vm.manualTokenChange = manualTokenChange;
     vm.location = '';
     vm.paginateOptions = {
       currentPage: 0,
@@ -554,6 +555,11 @@
         vm.trialData.details.pstnProvider = localScope.to.options[0];
         vm.providerImplementation = localScope.to.options[0].apiImplementation;
       }
+    }
+
+    function manualTokenChange(tokens, invalidCount) {
+      vm.trialData.details.swivelNumbers = tokens;
+      vm.invalidCount = invalidCount;
     }
 
     function disableNextButton() {

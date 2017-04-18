@@ -12,8 +12,7 @@ describe('Service: CsdmDataModelService', function () {
   var placesUrl = 'https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/places/';
   var pWithoutDeviceUuid = '938d9c32-placeWithoutDevice-88d7c1a7f63e';
   var pWithoutDeviceUrl = placesUrl + '938d9c32-placeWithoutDevice-88d7c1a7f63e';
-  var pWithDevicesUuid = 'a19b308a-PlaceWithDevice-71898e423bec';
-  var pWithDeviceUrl = placesUrl + pWithDevicesUuid;
+  var pWithDeviceUrl = placesUrl + 'a19b308a-PlaceWithDevice-71898e423bec';
   var device1Url = 'https://csdm-intb.ciscospark.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/c528e32d-ed35-4e00-a20d-d4d3519efb4f';
   var devicesUrl = 'https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/devices';
 
@@ -48,7 +47,6 @@ describe('Service: CsdmDataModelService', function () {
     $timeout = _$timeout_;
     testScope = $rootScope.$new();
 
-    $httpBackend.whenGET('https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/places/?type=all&query=xy').respond({});
     $httpBackend.whenGET(devicesUrl + '?checkDisplayName=false&checkOnline=false').respond(initialHttpDevices);
     $httpBackend.whenGET(devicesUrl).respond(initialHttpDevices);
     $httpBackend.whenGET(huronDevicesUrl).respond(initialHuronDevices);
@@ -300,7 +298,7 @@ describe('Service: CsdmDataModelService', function () {
     it('change device name is not possible', function () {
       executeGetCallsAndInitPromises();
       var deviceUrlToUpdate = "https://csdm-intb.ciscospark.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f";
-      var originalName = "PlaceWithDevice";
+      var originalName = "test device 2";
       var newDeviceName = "This Is The New name !!";
       var promiseRejected;
 
@@ -658,7 +656,8 @@ describe('Service: CsdmDataModelService', function () {
 
       var expectCall, changeNotification;
       var uWithDevicesUuid = '36437546-PERSON-b3b345441ba6';
-      var devicesForUserUrl = 'https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/devices?type=all&cisUuid=' + uWithDevicesUuid;
+      var type = 'shouldJustBePassedThrough';
+      var devicesForUserUrl = 'https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/devices?type=' + type + '&cisUuid=' + uWithDevicesUuid;
       var newPersonalDevice = 'https://cmi.huron-int.com/api/v1/voice/customers/3a6ff373-unittest-a27460e0ac5c/sipendpoints/' + uWithDevicesUuid;
 
       CsdmDataModelService.getDevicesMap().then(function (devices) {
@@ -676,7 +675,7 @@ describe('Service: CsdmDataModelService', function () {
         };
         $httpBackend.expectGET(devicesForUserUrl).respond(userDevices);
 
-        CsdmDataModelService.reloadDevicesForUser(uWithDevicesUuid).then(function (returnedUserDevices) {
+        CsdmDataModelService.reloadDevicesForUser(uWithDevicesUuid, type).then(function (returnedUserDevices) {
           expect(Object.keys(returnedUserDevices)).toHaveLength(1);
           expect(Object.keys(returnedUserDevices)).toContain(newPersonalDevice);
           expectCall = true;
@@ -724,15 +723,13 @@ describe('Service: CsdmDataModelService', function () {
       expect(changeNotification).toBeTruthy();
     });
 
-    it('reloadItem should return an updated item and update the model when a device was deleted server side', function () {
+    it('get should return an updated item and update the model when a device was deleted', function () {
 
       var expectCall, changeNotification;
       var placeToUpdateUrl = pWithDeviceUrl;
 
       var updatedPlace = {
-        'cisUuid': pWithDevicesUuid,
         'url': pWithDeviceUrl,
-        'displayName': initialPlaceMap[pWithDeviceUrl].displayName,
         'devices': {},
       };
       $httpBackend.expectGET(placeToUpdateUrl).respond(updatedPlace);
@@ -1115,15 +1112,7 @@ describe('Service: CsdmDataModelService', function () {
 
         var moddedDeviceRef = initialDeviceMap[moddedDevUrl];
 
-        _(devicesWithOneModified)
-          .filter({
-            cisUuid: pWithDevicesUuid,
-          })
-          .forEach(function (device) {
-            device.displayName = newDisplayName;
-          });
-
-        expect(devicesWithOneModified[moddedDevUrl].displayName).toEqual(newDisplayName);
+        devicesWithOneModified[moddedDevUrl].displayName = newDisplayName;
 
         $httpBackend.expectGET(devicesUrl).respond(devicesWithOneModified);
 

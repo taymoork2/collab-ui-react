@@ -6,22 +6,22 @@
     .controller('DevicesCtrlHuron', DevicesCtrlHuron);
 
   /* @ngInject */
-  function DevicesCtrlHuron($q, $scope, $state, $stateParams, Config, CsdmHuronUserDeviceService, CsdmDataModelService, WizardFactory, FeatureToggleService, Userservice, Authinfo) {
+  function DevicesCtrlHuron($q, $scope, $state, $stateParams, Config, CsdmHuronUserDeviceService, CsdmDataModelService,
+    CsdmUpgradeChannelService, WizardFactory, FeatureToggleService, Userservice, Authinfo) {
     var vm = this;
     vm.devices = {};
     vm.otps = [];
     vm.currentUser = $stateParams.currentUser;
-    vm.showGenerateOtpButton = false;
-    vm.generateCodeIsDisabled = true;
     vm.csdmHuronUserDeviceService = CsdmHuronUserDeviceService.create(vm.currentUser.id);
+    vm.showDeviceSettings = false;
 
     function init() {
-      fetchATASupport();
+      fetchAsyncSettings();
     }
 
     init();
 
-    function fetchATASupport() {
+    function fetchAsyncSettings() {
       var ataPromise = FeatureToggleService.csdmATAGetStatus().then(function (result) {
         vm.showATA = result;
       });
@@ -31,6 +31,14 @@
       });
       $q.all([ataPromise, personalPromise, fetchDetailsForLoggedInUser()]).finally(function () {
         vm.generateCodeIsDisabled = false;
+      });
+
+      FeatureToggleService.cloudberryLyraConfigGetStatus().then(function (feature) {
+        if (feature) {
+          CsdmUpgradeChannelService.getUpgradeChannelsPromise().then(function (channels) {
+            vm.showDeviceSettings = channels.length > 1;
+          });
+        }
       });
     }
 
@@ -62,16 +70,6 @@
       }).length > 0;
     };
 
-    function addLinkOrButtonForActivationCode() {
-      if (_.size(vm.devices)) {
-        $scope.userOverview.enableAuthCodeLink();
-        vm.showGenerateOtpButton = false;
-      } else {
-        $scope.userOverview.disableAuthCodeLink();
-        vm.showGenerateOtpButton = true;
-      }
-    }
-
     vm.showDeviceDetails = function (device) {
       $state.go('user-overview.csdmDevice', {
         currentDevice: device,
@@ -79,7 +77,7 @@
       });
     };
 
-    vm.resetCode = function () {
+    vm.onGenerateOtpFn = function () {
       vm.resettingCode = true;
       var userFirstName;
       if (vm.currentUser.name) {
@@ -145,13 +143,25 @@
 
     function activate() {
       if (shouldLoadPersonalDevices()) {
-        CsdmDataModelService.reloadDevicesForUser(vm.currentUser.id).then(function (devices) {
-          vm.devices = devices;
-        }).finally(function () {
-          addLinkOrButtonForActivationCode();
-        });
+        var type;
+        var shouldLoadCloudberry = vm.showPersonal && vm.isOrgEntitledToRoomSystem();
+        var shouldLoadHuron = isCurrentUserEntitledToHuron();
+        if (shouldLoadCloudberry && shouldLoadHuron) {
+          type = 'all';
+        } else if (shouldLoadCloudberry) {
+          type = 'cloudberry';
+        } else if (shouldLoadHuron) {
+          type = 'huron';
+        }
+        if (type) {
+          vm.loadedDevicesPromise = CsdmDataModelService.reloadDevicesForUser(vm.currentUser.id, type).then(function (devices) {
+            vm.devices = devices;
+          });
+        } else {
+          vm.loadedDevicesPromise = $q.resolve();
+        }
       } else {
-        addLinkOrButtonForActivationCode();
+        vm.loadedDevicesPromise = $q.resolve();
       }
     }
 

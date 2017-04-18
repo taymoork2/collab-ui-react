@@ -31,4 +31,15 @@
     "rel": "voice",
     "href": "/api/v1/voice/customers/00000000-0000-0000-0000-000000000000/userlineassociations"
   }]
+}, {
+  "dnUsage": null,
+  "externalNumber": "+19725551001",
+  "internalNumber": null,
+  "userId": null,
+  "uuid": null,
+  "url": "https://cmi.huron.com/api/v1/voice/customers/00000000-0000-0000-0000-000000000000/userlineassociations",
+  "links": [{
+    "rel": "voice",
+    "href": "/api/v1/voice/customers/00000000-0000-0000-0000-000000000000/userlineassociations"
+}]
 }]

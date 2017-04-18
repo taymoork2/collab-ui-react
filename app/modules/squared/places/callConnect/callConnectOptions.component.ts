@@ -127,7 +127,8 @@ export class CallConnectOptions implements ng.IComponentController {
 
   public save() {
     this.isLoading = true;
-    this.CsdmDataModelService.getPlaceByCisUuid(this.wizardData.account.cisUuid).then((place) => {
+    this.CsdmDataModelService.getPlacesMap().then((list) => {
+      let place = _.find(_.values(list), { cisUuid: this.wizardData.account.cisUuid });
       if (place) {
         this.CsdmDataModelService.updateCloudberryPlace(
           place,

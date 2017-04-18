@@ -1,5 +1,3 @@
-import { PrivateTrunkPrereqService } from 'modules/hercules/private-trunk/prereq';
-
 export class PrivateTrunkOverviewCtrl implements ng.IComponentController {
   public back: boolean = true;
   public backState = 'services-overview';
@@ -14,13 +12,13 @@ export class PrivateTrunkOverviewCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
-    private PrivateTrunkPrereqService: PrivateTrunkPrereqService,
+    private $state,
   ) {
   }
 
   public $onInit(): void {
-    if (this.hasPrivateTrunkFeatureToggle) {
-      this.PrivateTrunkPrereqService.openSetupModal();
+    if (!this.hasPrivateTrunkFeatureToggle) {
+      this.$state.go(this.backState);
     }
   }
 }

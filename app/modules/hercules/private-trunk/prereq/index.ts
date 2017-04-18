@@ -5,9 +5,9 @@ export * from './private-trunk-prereq.service';
 
 export default angular
   .module('hercules.private-trunk-prereq', [
-    'atlas.templates',
-    'collab.ui',
-    'pascalprecht.translate',
+    require('scripts/app.templates'),
+    require('collab-ui-ng').default,
+    require('angular-translate'),
     domainManagementService,
   ])
   .component('privateTrunkPrereq', new PrivateTrunkPrereqComponent())

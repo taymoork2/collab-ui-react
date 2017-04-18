@@ -60,7 +60,7 @@ describe('Component: pgNumber service', () => {
   it('should get the extension based on number uuid', function () {
     let numberData3 = <INumberData> {
       extension: '2222',
-      extensionUUID: '',
+      extensionUUID: undefined,
     };
     let groupId: string = 'abcd1234-abcd-abcd-abcddef123456';
     this.$httpBackend.whenGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/features/paging/' + groupId + '/numbers').respond(200, successResponse2);

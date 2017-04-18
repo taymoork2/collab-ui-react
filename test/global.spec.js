@@ -1,6 +1,7 @@
 'use strict';
 
 var Promise = require('promise');
+require('oclazyload');
 beforeEach(angular.mock.module('oc.lazyLoad', function ($provide) {
   var ocLazyLoadMock = jasmine.createSpyObj('$ocLazyLoad', ['load', 'inject', 'getModules', 'toggleWatch']);
   ocLazyLoadMock.inject.and.returnValue(Promise.resolve());

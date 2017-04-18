@@ -1,0 +1,33 @@
+#!/bin/bash
+
+function echo_underline {
+  echo -e "$(tput smul)$*$(tput rmul)"
+}
+
+deps=(
+  "'atlas.templates'|require('scripts/app.templates')"
+  "'collab.ui'|require('collab-ui-ng').default"
+  "'pascalprecht.translate'|require('angular-translate')"
+)
+
+staged_js_or_ts_files=$(git diff --cached --name-only --diff-filter=ACMR ${PWD}/app/modules | grep -e "\.js$" -e "\.ts$")
+
+for dep in "${deps[@]}"; do
+  bad_term=${dep%%|*}
+  good_term=${dep##*|}
+  # shellcheck disable=SC2086
+  failures=( $(grep -l "${bad_term}" $staged_js_or_ts_files) )
+  count=${#failures[@]}
+  if [ "$count" -gt 0 ]; then
+    echo -e "Please avoid $(echo_underline "${bad_term}"), use $(echo_underline "${good_term}") instead for module dependencies."
+    echo "- in files:"
+    printf "  ${PWD}/%s\n" "${failures[@]}"
+    echo ""
+    has_failure=true
+  fi
+done
+
+if [ "${has_failure}" = true ]; then
+  echo "Please correct dependency error(s) and try again."
+  exit 1
+fi

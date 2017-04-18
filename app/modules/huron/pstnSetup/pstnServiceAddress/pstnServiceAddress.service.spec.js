@@ -1,6 +1,10 @@
 'use strict';
 
+var testModule = require('./pstnServiceAddress.service');
+
 describe('Service: PstnServiceAddressService', function () {
+  beforeEach(angular.mock.module(testModule));
+
   var $httpBackend, HuronConfig, PstnServiceAddressService;
 
   var customerId = '744d58c5-9205-47d6-b7de-a176e3ca431f';
@@ -11,8 +15,6 @@ describe('Service: PstnServiceAddressService', function () {
   var customerSite = getJSONFixture('huron/json/pstnSetup/customerSite.json');
 
   var address, terminusAddress, serviceAddress;
-
-  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function (_$httpBackend_, _HuronConfig_, _PstnServiceAddressService_) {
     $httpBackend = _$httpBackend_;

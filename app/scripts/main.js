@@ -5,8 +5,8 @@
 
   angular.module('Core', [
     'angular-cache',
-    'atlas.templates',
-    'collab.ui',
+    require('scripts/app.templates'),
+    require('collab-ui-ng').default,
     'cisco.formly',
     require('modules/core/auth/tos').default,
     require('modules/core/auth/user').default,
@@ -23,11 +23,11 @@
     'core.pageparam',
     'core.previousstate',
     'core.trackingId',
+    'core.itProPack',
     'core.trial',
     'core.utils',
     'csDonut',
     'ct.ui.router.extras.previous',
-    'cwill747.phonenumber',
     'ngAnimate',
     'ngclipboard',
     'ngCookies',
@@ -36,7 +36,7 @@
     'ngMessages',
     'ngFileUpload',
     'ngCsv',
-    'pascalprecht.translate',
+    require('angular-translate'),
     'ui.router',
     'ui.grid',
     'ui.grid.selection',
@@ -52,10 +52,12 @@
     require('modules/core/featureToggle').default,
     require('modules/core/focus').default,
     require('modules/core/inlineEditText').default,
+    require('modules/core/scrollIndicator').default,
     require('modules/core/scripts/services/org.service'),
     require('modules/core/scripts/services/userlist.service'),
     require('modules/core/users/userCsv/userCsv.service'),
     require('modules/core/cards').default,
+    require('modules/core/customerReports/sparkReports').default,
     require('modules/core/partnerReports/commonReportServices').default,
     require('modules/core/partnerReports/reportCard').default,
     require('modules/core/partnerReports/reportFilter').default,
@@ -75,7 +77,8 @@
     .constant('addressparser', require('emailjs-addressparser'));
 
   // TODO fix circular dependencies between modules
-  angular.module('Squared', ['Core', 'Hercules', 'Huron', 'Sunlight']);
+  angular.module('Squared', ['Core', 'Hercules', 'Huron', 'Sunlight',
+    require('modules/squared/devices/services/CsdmPoller')]);
 
   angular.module('DigitalRiver', ['Core']);
 
@@ -97,14 +100,17 @@
     'huron.PstnSetup',
     'huron.pstnsetupservice',
     'huron.telephoneNumberService',
+    'huron.externalNumberService',
     require('modules/huron/telephony/telephonyConfig'),
     require('modules/huron/telephony/cmiServices'),
     require('modules/huron/autoAnswer').default,
     require('modules/huron/pstn').default,
     require('modules/huron/pstn/pstnProviders').default,
     require('modules/huron/pstn/pstnContactInfo').default,
+    require('modules/huron/pstn/pstnSwivelNumbers').default,
     require('modules/huron/pstnSetup/pstnSelector').default,
     require('modules/huron/overview').default,
+    require('modules/huron/lines/deleteExternalNumber').default,
   ]);
 
   angular.module('Hercules', [
@@ -114,6 +120,10 @@
     'ngTagsInput',
     require('modules/hercules/private-trunk/prereq').default,
     require('modules/hercules/private-trunk/setup').default,
+    require('modules/hercules/services/uss-service'),
+    require('modules/hercules/services/hybrid-services-utils').default,
+    require('modules/hercules/services/cert-service').default,
+    require('modules/hercules/services/certificate-formatter-service').default,
   ]);
 
   angular.module('HDS', ['Core', 'Hercules']);
@@ -171,6 +181,6 @@
   requireAll(require.context("../", true, /\.(jpg|png|svg|ico|json|csv|pdf)$/));
 
   function requireAll(requireContext) {
-    return requireContext.keys().forEach(requireContext);
+    return requireContext.keys().map(requireContext);
   }
 }());

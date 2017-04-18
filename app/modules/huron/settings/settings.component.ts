@@ -44,6 +44,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
     private HuronSettingsOptionsService: HuronSettingsOptionsService,
     private $scope: ng.IScope,
     private $translate: ng.translate.ITranslateService,
+    private $state: ng.ui.IStateService,
     private ModalService,
     private PstnSetupService,
     private PstnSetup,
@@ -82,21 +83,24 @@ class HuronSettingsCtrl implements ng.IComponentController {
 
     this.$q.resolve(this.initSettingsComponent()).finally( () => this.loading = false);
 
-    this.$scope.$watch(() => {
-      return _.get(this.form, '$invalid');
-    }, (invalid) => {
-      this.$scope.$emit('wizardNextButtonDisable', !!invalid);
-    });
+    if (this.ftsw) {
+      this.$scope.$watch(() => {
+        return _.get(this.form, '$invalid');
+      }, invalid => {
+        this.$scope.$emit('wizardNextButtonDisable', !!invalid);
+      });
 
-    this.$scope.$watch(() => {
-      return this.loading;
-    }, (loading) => {
-      this.$scope.$emit('wizardNextButtonDisable', !!loading);
-    });
+      this.$scope.$watch(() => {
+        return this.loading;
+      }, loading => {
+        this.$scope.$emit('wizardNextButtonDisable', !!loading);
+      });
+    }
+
   }
 
   private initSettingsComponent(): ng.IPromise<any> {
-    return this.HuronSettingsOptionsService.getOptions(this.Authinfo.getOrgId()).then(options => this.settingsOptions = options)
+    return this.HuronSettingsOptionsService.getOptions().then(options => this.settingsOptions = options)
     .then( () => {
       return this.HuronSettingsService.get(this.siteId).then(huronSettingsData => this.huronSettingsData = huronSettingsData);
     });
@@ -109,20 +113,28 @@ class HuronSettingsCtrl implements ng.IComponentController {
 
   public saveHuronSettings(): ng.IPromise<void> {
     this.processing = true;
-    return this.HuronSettingsService.save(this.huronSettingsData).then(huronSettingsData => {
-      this.huronSettingsData = huronSettingsData;
-      this.Notification.success('serviceSetupModal.saveSuccess');
-    }).finally( () => {
-      this.processing = false;
-      this.resetForm();
-    });
+    let showEnableVoicemailModal: boolean = false;
+    if (this.huronSettingsData.customer.hasVoicemailService && !this.HuronSettingsService.getOriginalConfig().customer.hasVoicemailService) {
+      showEnableVoicemailModal = true;
+    }
+    return this.HuronSettingsService.save(this.huronSettingsData)
+      .then(huronSettingsData => {
+        this.huronSettingsData = huronSettingsData;
+        this.Notification.success('serviceSetupModal.saveSuccess');
+      }).finally( () => {
+        this.processing = false;
+        this.resetForm();
+        if (showEnableVoicemailModal && !this.ftsw) {
+          this.$state.go('users.enableVoicemail');
+        }
+      });
   }
 
   public showSaveDialogs(): void {
     if (this.showDialPlanChangedDialog && this.showVoiceMailDisableDialog) {
       this.openDialPlanChangeDialog()
-      .then(() => this.openDisableVoicemailWarningDialog()
-      .then(() => this.saveHuronSettings()));
+        .then(() => this.openDisableVoicemailWarningDialog()
+        .then(() => this.saveHuronSettings()));
     } else if (this.showDialPlanChangedDialog) {
       this.openDialPlanChangeDialog()
         .then(() => this.saveHuronSettings());
@@ -202,13 +214,14 @@ class HuronSettingsCtrl implements ng.IComponentController {
     this.checkForChanges();
   }
 
-  public onRegionCodeChanged(regionCode: string): void {
-    this.huronSettingsData.customerVoice.regionCode = regionCode;
+  public onRegionCodeChanged(regionCode: string, useSimplifiedNationalDialing: boolean): void {
+    _.set(this.huronSettingsData.site.regionCodeDialing, 'regionCode', regionCode);
+    _.set(this.huronSettingsData.site.regionCodeDialing, 'useSimplifiedNationalDialing', useSimplifiedNationalDialing);
     this.setShowDialPlanChangedDialogFlag();
     this.checkForChanges();
   }
 
-  public onCompanyVoicemailChanged(voicemailPilotNumber: string, voicemailPilotNumberGenerated: string, companyVoicemailEnabled: boolean): void {
+  public onCompanyVoicemailChanged(voicemailPilotNumber: string, voicemailPilotNumberGenerated: boolean, companyVoicemailEnabled: boolean): void {
     _.set(this.huronSettingsData.customer, 'hasVoicemailService', companyVoicemailEnabled);
     if (!companyVoicemailEnabled) {
       this.huronSettingsData.site.disableVoicemail = true;
@@ -284,7 +297,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
     if (this.huronSettingsData.site.extensionLength !== originalConfig.site.extensionLength
       || this.huronSettingsData.site.steeringDigit !== originalConfig.site.steeringDigit
       || this.huronSettingsData.site.routingPrefix !== originalConfig.site.routingPrefix
-      || this.huronSettingsData.customerVoice.regionCode !== originalConfig.customerVoice.regionCode) {
+      || this.huronSettingsData.site.regionCodeDialing !== originalConfig.site.regionCodeDialing) {
       this.showDialPlanChangedDialog = true;
     } else {
       this.showDialPlanChangedDialog = false;
