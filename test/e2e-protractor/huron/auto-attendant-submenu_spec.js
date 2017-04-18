@@ -5,26 +5,13 @@
 describe('Huron Auto Attendant', function () {
   var remote = require('selenium-webdriver/remote');
 
-  var initialIgnoreSync = true;
-
   beforeAll(function () {
 
     browser.setFileDetector(new remote.FileDetector());
 
-    initialIgnoreSync = browser.ignoreSynchronization;
-
-    login.login('aa-admin');
+    login.login('aa-admin', '#/hurondetails/features');
 
   }, 120000);
-
-  // See AUTOATTN-556
-  beforeEach(function () {
-    browser.ignoreSynchronization = false;
-  });
-
-  afterEach(function () {
-    browser.ignoreSynchronization = initialIgnoreSync;
-  });
 
   describe('Create and Delete AA', function () {
 
