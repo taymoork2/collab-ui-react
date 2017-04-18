@@ -1,13 +1,12 @@
 <cs-sp-section>
 
-  <div ng-if="$ctrl.hasResourceGroupFeatureToggle || $ctrl.clusterType === 'mf_mgmt'"
-       class="section-title-row feature-inline">
+  <div class="section-title-row feature-inline">
     <span class="section-name"
           translate="common.releaseChannel"></span>
     <span class="feature-name">{{$ctrl.releaseChannelName}}</span>
   </div>
 
-  <div ng-if="$ctrl.hasResourceGroupFeatureToggle && $ctrl.resourceGroupName"
+  <div ng-if="$ctrl.resourceGroupName"
        class="section-title-row feature-inline">
     <span class="section-name"
           translate="hercules.resourceGroups.resourceGroupHeading"></span>

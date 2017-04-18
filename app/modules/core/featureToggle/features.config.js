@@ -160,7 +160,6 @@ module.exports = {
   csdmATA: 'csdm-ata',
   csdmHybridCall: 'csdm-hybrid-call',
   csdmPlaceCalendar: 'csdm-hybrid-calendar',
-  atlasF237ResourceGroup: 'atlas-f237-resource-group',
   atlasHybridNodesView: 'atlas-hybrid-nodes-view',
   atlasHybridVoicemail: 'atlas-hybrid-voicemail',
   atlasHybridCallDiagnosticTool: 'atlas-hybrid-call-diagnostic-tool',

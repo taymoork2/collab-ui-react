@@ -187,29 +187,23 @@
     };
 
     var readResourceGroups = function () {
-      FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup)
-        .then(function (supported) {
-          $scope.resourceGroupsFeatureToggle = supported;
-          if (supported) {
-            ResourceGroupService.getAllAsOptions().then(function (options) {
-              if (options.length > 0) {
-                $scope.resourceGroup.options = $scope.resourceGroup.options.concat(options);
-                if ($scope.extension.status && $scope.extension.status.resourceGroupId) {
-                  setSelectedResourceGroup($scope.extension.status.resourceGroupId);
-                } else {
-                  USSService.getUserProps($scope.currentUser.id).then(function (props) {
-                    if (props.resourceGroups && props.resourceGroups[$scope.extension.id]) {
-                      setSelectedResourceGroup(props.resourceGroups[$scope.extension.id]);
-                    } else {
-                      $scope.resourceGroup.displayWarningIfNecessary();
-                    }
-                  });
-                }
-                $scope.resourceGroup.updateShow();
+      ResourceGroupService.getAllAsOptions().then(function (options) {
+        if (options.length > 0) {
+          $scope.resourceGroup.options = $scope.resourceGroup.options.concat(options);
+          if ($scope.extension.status && $scope.extension.status.resourceGroupId) {
+            setSelectedResourceGroup($scope.extension.status.resourceGroupId);
+          } else {
+            USSService.getUserProps($scope.currentUser.id).then(function (props) {
+              if (props.resourceGroups && props.resourceGroups[$scope.extension.id]) {
+                setSelectedResourceGroup(props.resourceGroups[$scope.extension.id]);
+              } else {
+                $scope.resourceGroup.displayWarningIfNecessary();
               }
             });
           }
-        });
+          $scope.resourceGroup.updateShow();
+        }
+      });
     };
 
     var updateEntitlement = function (entitled) {
@@ -346,9 +340,7 @@
 
     $scope.selectedCalendarTypeChanged = function (type) {
       $scope.extension.id = type;
-      if ($scope.resourceGroupsFeatureToggle) {
-        $scope.resourceGroup.updateShow();
-      }
+      $scope.resourceGroup.updateShow();
       $scope.calendarType.init();
     };
   }

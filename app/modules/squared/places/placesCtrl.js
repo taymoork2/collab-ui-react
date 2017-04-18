@@ -62,10 +62,7 @@ require('../devices/_devices.scss');
               return service.id === 'squared-fusion-uc';
             }).some().value();
           });
-          var atlasF237ResourceGroupsPromise = FeatureToggleService.atlasF237ResourceGroupGetStatus().then(function (feature) {
-            vm.atlasF237ResourceGroups = feature;
-          });
-          $q.all([ataPromise, hybridPromise, placeCalendarPromise, gcalFeaturePromise, atlasF237ResourceGroupsPromise, anyCalendarEnabledPromise, fetchDisplayNameForLoggedInUser()]).finally(function () {
+          $q.all([ataPromise, hybridPromise, placeCalendarPromise, gcalFeaturePromise, anyCalendarEnabledPromise, fetchDisplayNameForLoggedInUser()]).finally(function () {
             vm.addPlaceIsDisabled = false;
           });
         }
@@ -241,7 +238,6 @@ require('../devices/_devices.scss');
               hybridCalendarEnabledOnOrg: vm.hybridCalendarEnabledOnOrg,
               hybridCallEnabledOnOrg: vm.hybridCallEnabledOnOrg,
               atlasHerculesGoogleCalendarFeatureToggle: vm.atlasHerculesGoogleCalendarFeatureToggle,
-              atlasF237ResourceGroups: vm.atlasF237ResourceGroups,
               title: 'addDeviceWizard.newSharedSpace.title',
               isEntitledToHuron: vm.isOrgEntitledToHuron(),
               isEntitledToRoomSystem: vm.isOrgEntitledToRoomSystem(),

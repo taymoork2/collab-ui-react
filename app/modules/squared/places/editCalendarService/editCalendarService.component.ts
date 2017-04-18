@@ -16,7 +16,6 @@ class EditCalendarService implements ng.IComponentController {
       ussProps,
     },
     atlasHerculesGoogleCalendarFeatureToggle: boolean,
-    atlasF237ResourceGroups: boolean,
   };
   private static fusionCal = 'squared-fusion-cal';
   private static fusionGCal = 'squared-fusion-gcal';
@@ -104,7 +103,7 @@ class EditCalendarService implements ng.IComponentController {
   }
 
   public getResourceGroupShow() {
-    return this.wizardData.atlasF237ResourceGroups && this.resourceGroup && this.resourceGroup.show;
+    return this.resourceGroup && this.resourceGroup.show;
   }
 
   public getShowCalService() {
@@ -116,28 +115,25 @@ class EditCalendarService implements ng.IComponentController {
   }
 
   private fetchResourceGroups() {
-    if (this.wizardData.atlasF237ResourceGroups) {
-      this.ResourceGroupService.getAllAsOptions().then((options) => {
-        if (options.length > 0) {
-          this.resourceGroup.options = this.resourceGroup.options.concat(options);
-          if (this.wizardData.account.cisUuid && this.initialCalService) {
-            this.USSService.getUserProps(this.wizardData.account.cisUuid).then((props) => {
-              if (props.resourceGroups && props.resourceGroups[this.initialCalService]) {
-                let selectedGroup = _.find(this.resourceGroup.options, (group) => {
-                  return group.value === props.resourceGroups[this.initialCalService];
-                });
-                if (selectedGroup) {
-                  this.resourceGroup.selected = selectedGroup;
-                  this.resourceGroup.current = selectedGroup;
-                }
-              } else {
+    this.ResourceGroupService.getAllAsOptions().then((options) => {
+      if (options.length > 0) {
+        this.resourceGroup.options = this.resourceGroup.options.concat(options);
+        if (this.wizardData.account.cisUuid && this.initialCalService) {
+          this.USSService.getUserProps(this.wizardData.account.cisUuid).then((props) => {
+            if (props.resourceGroups && props.resourceGroups[this.initialCalService]) {
+              let selectedGroup = _.find(this.resourceGroup.options, (group) => {
+                return group.value === props.resourceGroups[this.initialCalService];
+              });
+              if (selectedGroup) {
+                this.resourceGroup.selected = selectedGroup;
+                this.resourceGroup.current = selectedGroup;
               }
-            });
-          }
-          this.resourceGroup.show = true;
+            }
+          });
         }
-      });
-    }
+        this.resourceGroup.show = true;
+      }
+    });
   }
 
   private getCalService(entitlements) {

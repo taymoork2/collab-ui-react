@@ -12,11 +12,12 @@ describe('EditCalendarService component:', () => {
       '$httpBackend',
       'ServiceDescriptor',
       'CsdmDataModelService',
+      'ResourceGroupService',
       'USSService',
       '$q',
     );
     test = this;
-
+    spyOn(this.ResourceGroupService, 'getAllAsOptions').and.returnValue(this.$q.resolve({}));
   });
 
   let state: any = defaultState();

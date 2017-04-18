@@ -11,7 +11,6 @@ export class ScheduleInfoSectionComponentCtrl implements ng.IComponentController
   private cluster: ICluster;
   public clusterType: string;
 
-  public hasResourceGroupFeatureToggle: boolean = false;
   public releaseChannelName: string;
   public resourceGroupName: string;
   public schedule: ISchedule | {} = {};
@@ -28,21 +27,16 @@ export class ScheduleInfoSectionComponentCtrl implements ng.IComponentController
 
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject}) {
 
-    const { cluster, hasResourceGroupFeatureToggle } = changes;
-    if (hasResourceGroupFeatureToggle && hasResourceGroupFeatureToggle.currentValue) {
-      this.hasResourceGroupFeatureToggle = hasResourceGroupFeatureToggle.currentValue;
-    }
+    const { cluster } = changes;
 
     if (cluster && cluster.currentValue) {
       this.cluster = cluster.currentValue;
       this.releaseChannelName = this.$translate.instant('hercules.fusion.add-resource-group.release-channel.' + this.cluster.releaseChannel);
       this.buildSchedule();
-      if (this.hasResourceGroupFeatureToggle) {
-        this.findResourceGroupName()
-          .then(resourceGroupName => {
-            this.resourceGroupName = resourceGroupName;
-          });
-      }
+      this.findResourceGroupName()
+        .then(resourceGroupName => {
+          this.resourceGroupName = resourceGroupName;
+        });
     }
 
   }
@@ -83,6 +77,5 @@ export class ScheduleInfoSectionComponent implements ng.IComponentOptions {
   public bindings = {
     cluster: '<',
     clusterType: '<',
-    hasResourceGroupFeatureToggle: '<',
   };
 }

@@ -24,7 +24,6 @@ class ExpresswayClusterSettingsPageCtrl implements ng.IComponentController {
     title: 'hercules.expresswayClusterSettings.deactivateServicesHeader',
   };
   public localizedClusterNameWatermark = this.$translate.instant('hercules.expresswayClusterSettings.clusterNameWatermark');
-  public hasResourceGroupFeatureToggle: boolean;
 
   /* @ngInject */
   constructor(
@@ -51,19 +50,17 @@ class ExpresswayClusterSettingsPageCtrl implements ng.IComponentController {
       .then(cluster => {
         this.enabledServices = _.map<any, string>(cluster.provisioning, 'connectorType');
 
-        if (this.hasResourceGroupFeatureToggle) {
-          this.ResourceGroupService.getAll()
-            .then(this.buildResourceOptions)
-            .then(groups => {
-              this.resourceGroupOptions = groups;
-              return cluster.resourceGroupId;
-            })
-            .then(this.getCurrentResourceGroup)
-            .then(group => {
-              this.originalResourceGroup = group;
-              this.selectedResourceGroup = group;
-            });
-        }
+        this.ResourceGroupService.getAll()
+          .then(this.buildResourceOptions)
+          .then(groups => {
+            this.resourceGroupOptions = groups;
+            return cluster.resourceGroupId;
+          })
+          .then(this.getCurrentResourceGroup)
+          .then(group => {
+            this.originalResourceGroup = group;
+            this.selectedResourceGroup = group;
+          });
       })
       .catch(error => {
         this.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
@@ -230,6 +227,5 @@ export class ExpresswayClusterSettingsPageComponent implements ng.IComponentOpti
   public templateUrl = 'modules/hercules/expressway-cluster-settings-page/expressway-cluster-settings-page.html';
   public bindings = {
     clusterId: '<',
-    hasResourceGroupFeatureToggle: '<',
   };
 }

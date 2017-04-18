@@ -29,7 +29,6 @@ describe('Controller: PlacesCtrl', function () {
     spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.resolve());
     spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'csdmPlaceCalendarGetStatus').and.returnValue($q.resolve(true));
-    spyOn(FeatureToggleService, 'atlasF237ResourceGroupGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'atlasHerculesGoogleCalendarGetStatus').and.returnValue($q.resolve(true));
     spyOn(ServiceDescriptor, 'getServices').and.returnValue($q.resolve([]));
     spyOn(CsdmDataModelService, 'subscribeToChanges').and.returnValue(true);
