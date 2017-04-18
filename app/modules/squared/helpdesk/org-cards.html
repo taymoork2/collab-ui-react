@@ -154,6 +154,53 @@
       <footer></footer>
     </article>
   </cs-card>
+  
+    <cs-card class="large header-bar cta-base" ng-show="helpdeskOrgCtrl.careCard.entitled">
+    <article>
+      <header class="align-center">
+        <div class="overview-header">
+          <i class="icon icon-circle-call"></i>{{'helpdesk.care' | translate}}
+        </div>
+      </header>
+      <section>
+        <h5 translate="helpdesk.licenses"></h5>
+        <span ng-if="helpdeskOrgCtrl.careCard.aggregatedLicenses.length === 0" translate="helpdesk.none"></span>
+
+        <div ng-repeat="aggregatedLicense in helpdeskOrgCtrl.careCard.aggregatedLicenses">
+          <span>{{aggregatedLicense.displayName}}: </span>
+          <span ng-if="!helpdeskOrgCtrl.licenseUsageReady">{{aggregatedLicense.totalVolume}} licenses</span>
+          <span
+            ng-if="helpdeskOrgCtrl.licenseUsageReady">{{helpdeskOrgCtrl.usageText(aggregatedLicense.totalUsage || 0, aggregatedLicense.totalVolume)}} ({{aggregatedLicense.usagePercentage}}%)</span>
+          <span ng-if="aggregatedLicense.isTrial">| </span>
+          <span class="badge badge-warning" ng-if="aggregatedLicense.isTrial" translate="helpdesk.trial"></span>
+          <span ng-if="aggregatedLicense.isTrial && aggregatedLicense.trialExpiresInDays > 0">{{helpdeskOrgCtrl.daysLeftText(aggregatedLicense)}}</span>
+            <span ng-if="aggregatedLicense.isTrial && aggregatedLicense.trialExpiresInDays == 0"
+                  class="red">{{'helpdesk.licenseStatus.expired' |  translate}}</span>
+          <span ng-if="aggregatedLicense.licenses.length > 1">|
+            <a href ng-click="helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key] = !helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key]">
+              {{helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key] ? 'helpdesk.less' : 'helpdesk.more' | translate}}
+            </a>
+          </span>
+
+          <div ng-repeat="license in aggregatedLicense.licenses" style="margin-left: 1rem;"
+               collapse="!helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key]">
+            <span>{{'helpdesk.licenseStatus.' + (license.status | lowercase) | translate}}:</span>
+            <span
+              ng-if="helpdeskOrgCtrl.licenseUsageReady">{{helpdeskOrgCtrl.usageText(license.usage || 0, license.volume)}}</span>
+            <span ng-if="!helpdeskOrgCtrl.licenseUsageReady">{{license.volume}} licenses</span>
+            <span ng-if="license.isTrial">| </span>
+            <span class="badge badge-warning" ng-if="license.isTrial" translate="helpdesk.trial"></span>
+            <span
+              ng-if="license.isTrial && license.trialExpiresInDays > 0">{{helpdeskOrgCtrl.daysLeftText(license)}}</span>
+            <span ng-if="license.isTrial && license.trialExpiresInDays == 0"
+                  class="red">{{'helpdesk.licenseStatus.expired' |  translate}}</span>
+          </div>
+
+        </div>
+      </section>
+      <footer></footer>
+    </article>
+  </cs-card>
 
   <cs-card class="large header-bar gray" ng-show="helpdeskOrgCtrl.roomSystemsCard.entitled">
     <article>
