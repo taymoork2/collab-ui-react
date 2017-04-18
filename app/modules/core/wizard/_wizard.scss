@@ -15,16 +15,6 @@
   a {
     cursor: pointer;
   }
-
-  .skip-link {
-    @include vr-spacing(mr, 1);
-
-    color: $gray-dark-1;
-
-    &:hover {
-      color: $color-primary-base;
-    }
-  }
 }
 
 .wizard-main-wrapper {
@@ -245,10 +235,6 @@ cr-wizard-main,
 
 .wizard-main-btns {
   padding-top: 32px;
-
-  .btn--link {
-    margin-right: 30px;
-  }
 }
 
 #terms-link {

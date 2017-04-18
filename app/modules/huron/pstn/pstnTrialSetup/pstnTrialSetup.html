@@ -91,11 +91,11 @@
 
 <!-- footer -->
 <div class="modal-footer trials">
-  <a class="alt-btn-link"
+  <button class="skip-btn btn btn--link btn--none"
     ng-click="$ctrl.skip(true)"
     translate="trialModal.skip">
-  </a>
-  <button class="btn with-slim-offset offset-l"
+  </button>
+  <button class="btn with-slim-offset"
     ng-click="$ctrl.previousStep()"
     ng-disabled="$ctrl.trial.loading"
     translate="common.back">
