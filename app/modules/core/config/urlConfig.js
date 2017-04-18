@@ -135,7 +135,7 @@
       prod: 'https://bubble.produs1.ciscoccservice.com',
     },
     SunlightReportServiceUrl: {
-      dev: 'https://reporting.devus1.ciscoccservice.com/reporting/v1',
+      dev: 'https://reporting.produs1.ciscoccservice.com/reporting/v1',
       cfe: 'https://reporting.appstaging.ciscoccservice.com/reporting/v1',
       integration: 'https://reporting.appstaging.ciscoccservice.com/reporting/v1',
       prod: 'https://reporting.produs1.ciscoccservice.com/reporting/v1',

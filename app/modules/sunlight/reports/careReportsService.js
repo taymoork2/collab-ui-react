@@ -30,23 +30,30 @@
       return chartConfig;
     }
 
-    function showTaskIncomingGraph(div, data, categoryAxisTitle, isToday) {
-      var chartConfig = getTaskIncomingGraphConfig(data, categoryAxisTitle, isToday);
+    function showTaskIncomingGraph(div, data, categoryAxisTitle, title, isToday) {
+      var chartConfig = getTaskIncomingGraphConfig(data, categoryAxisTitle, title, isToday);
       return AmCharts.makeChart(div, chartConfig);
     }
 
-    function showTaskIncomingDummy(div, data, categoryAxisTitle, isToday) {
-      var chartConfig = getTaskIncomingGraphConfig(data, categoryAxisTitle, isToday);
+    function showTaskIncomingDummy(div, data, categoryAxisTitle, title, isToday) {
+      var chartConfig = getTaskIncomingGraphConfig(data, categoryAxisTitle, title, isToday);
 
       dummifyGraph(chartConfig);
 
       return AmCharts.makeChart(div, chartConfig);
     }
 
-    function getTaskIncomingGraphConfig(data, categoryAxisTitle, isToday) {
+    function getTaskIncomingGraphConfig(data, categoryAxisTitle, title, isToday) {
       today = isToday;
       var exportReport = CareReportsGraphService.getBaseVariable('export');
       exportReport.enabled = true;
+      exportReport.divId = 'exportdiv';
+
+      var titles = CareReportsGraphService.getBaseVariable('title');
+      if (!angular.isUndefined(title)) {
+        titles[0].text = title;
+        titles[0].enabled = true;
+      }
 
       var chartCursor = CareReportsGraphService.getBaseVariable('chartCursor');
       chartCursor.cursorAlpha = 1;
@@ -82,7 +89,7 @@
       });
 
       return CareReportsGraphService.buildChartConfig(data, legend, graphs, chartCursor,
-              'createdTime', categoryAxis, valueAxes, exportReport);
+              'createdTime', categoryAxis, valueAxes, exportReport, titles);
     }
 
     function balloonTextForTaskVolume(graphDataItem, graph) {
@@ -157,22 +164,28 @@
       return categoryRange;
     }
 
-    function showTaskTimeGraph(div, data, categoryAxisTitle) {
-      var chartConfig = getTaskTimeGraphConfig(data, categoryAxisTitle);
+    function showTaskTimeGraph(div, data, categoryAxisTitle, title) {
+      var chartConfig = getTaskTimeGraphConfig(data, categoryAxisTitle, title);
       return AmCharts.makeChart(div, chartConfig);
     }
 
-    function showTaskTimeDummy(div, data, categoryAxisTitle) {
-      var chartConfig = getTaskTimeGraphConfig(data, categoryAxisTitle);
+    function showTaskTimeDummy(div, data, categoryAxisTitle, title) {
+      var chartConfig = getTaskTimeGraphConfig(data, categoryAxisTitle, title);
 
       dummifyGraph(chartConfig);
 
       return AmCharts.makeChart(div, chartConfig);
     }
 
-    function getTaskTimeGraphConfig(data, categoryAxisTitle) {
+    function getTaskTimeGraphConfig(data, categoryAxisTitle, title) {
       var exportReport = CareReportsGraphService.getBaseVariable('export');
       exportReport.enabled = true;
+
+      var titles = CareReportsGraphService.getBaseVariable('title');
+      if (!angular.isUndefined(title)) {
+        titles[0].text = title;
+        titles[0].enabled = true;
+      }
 
       var chartCursor = CareReportsGraphService.getBaseVariable('chartCursor');
       chartCursor.cursorAlpha = 1;
@@ -216,25 +229,31 @@
       });
 
       return CareReportsGraphService.buildChartConfig(data, legend, graphs, chartCursor,
-              'createdTime', categoryAxis, valueAxes, exportReport);
+              'createdTime', categoryAxis, valueAxes, exportReport, titles);
     }
 
-    function showTaskAggregateGraph(div, data, categoryAxisTitle) {
-      var chartConfig = getTaskAggregateGraphConfig(data, categoryAxisTitle);
+    function showTaskAggregateGraph(div, data, categoryAxisTitle, title) {
+      var chartConfig = getTaskAggregateGraphConfig(data, categoryAxisTitle, title);
       return AmCharts.makeChart(div, chartConfig);
     }
 
-    function showTaskAggregateDummy(div, data, categoryAxisTitle) {
-      var chartConfig = getTaskAggregateGraphConfig(data, categoryAxisTitle);
+    function showTaskAggregateDummy(div, data, categoryAxisTitle, title) {
+      var chartConfig = getTaskAggregateGraphConfig(data, categoryAxisTitle, title);
 
       dummifyGraph(chartConfig);
 
       return AmCharts.makeChart(div, chartConfig);
     }
 
-    function getTaskAggregateGraphConfig(data, categoryAxisTitle) {
+    function getTaskAggregateGraphConfig(data, categoryAxisTitle, title) {
       var exportReport = CareReportsGraphService.getBaseVariable('export');
       exportReport.enabled = true;
+
+      var titles = CareReportsGraphService.getBaseVariable('title');
+      if (!angular.isUndefined(title)) {
+        titles[0].text = title;
+        titles[0].enabled = true;
+      }
 
       var chartCursor = CareReportsGraphService.getBaseVariable('chartCursor');
       chartCursor.cursorAlpha = 1;
@@ -279,25 +298,31 @@
       });
 
       return CareReportsGraphService.buildChartConfig(data, legend, graphs, chartCursor,
-              'createdTime', categoryAxis, valueAxes, exportReport);
+              'createdTime', categoryAxis, valueAxes, exportReport, titles);
     }
 
-    function showAverageCsatGraph(div, data, categoryAxisTitle) {
-      var chartConfig = getAverageCsatGraphConfig(data, categoryAxisTitle);
+    function showAverageCsatGraph(div, data, categoryAxisTitle, title) {
+      var chartConfig = getAverageCsatGraphConfig(data, categoryAxisTitle, title);
       return AmCharts.makeChart(div, chartConfig);
     }
 
-    function showAverageCsatDummy(div, data, categoryAxisTitle) {
-      var chartConfig = getAverageCsatGraphConfig(data, categoryAxisTitle);
+    function showAverageCsatDummy(div, data, categoryAxisTitle, title) {
+      var chartConfig = getAverageCsatGraphConfig(data, categoryAxisTitle, title);
 
       dummifyGraph(chartConfig);
 
       return AmCharts.makeChart(div, chartConfig);
     }
 
-    function getAverageCsatGraphConfig(data, categoryAxisTitle) {
+    function getAverageCsatGraphConfig(data, categoryAxisTitle, title) {
       var exportReport = CareReportsGraphService.getBaseVariable('export');
       exportReport.enabled = true;
+
+      var titles = CareReportsGraphService.getBaseVariable('title');
+      if (!angular.isUndefined(title)) {
+        titles[0].text = title;
+        titles[0].enabled = true;
+      }
 
       var chartCursor = CareReportsGraphService.getBaseVariable('chartCursor');
       chartCursor.cursorAlpha = 1;
@@ -330,7 +355,7 @@
       });
 
       return CareReportsGraphService.buildChartConfig(data, legend, graphs, chartCursor,
-              'createdTime', categoryAxis, valueAxes, exportReport);
+              'createdTime', categoryAxis, valueAxes, exportReport, titles);
     }
 
     var service = {
