@@ -133,6 +133,10 @@ describe('Controller: CustomerOverviewCtrl', function () {
     expect($state.go.calls.mostRecent().args[0]).toEqual('partnercustomers.list');
   });
 
+  it('should check the customer org id to see if it is a test org', function () {
+    expect(Orgservice.isTestOrg).toHaveBeenCalledWith('123-456');
+  });
+
   it('should display correct customer portal launch button via var isOrgSetup', function () {
     // isOrgSetup is false from spyOn in beforeEach
     expect(controller.isOrgSetup).toBe(false);
