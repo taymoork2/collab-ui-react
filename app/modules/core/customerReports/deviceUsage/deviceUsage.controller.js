@@ -218,14 +218,22 @@ require('modules/core/reports/amcharts-export.scss');
         vm.waitingForDeviceMetrics = false;
         vm.mostUsedDevices = [];
         vm.leastUsedDevices = [];
-        resolveDeviceData(stats.most, vm.mostUsedDevices)
-          .then(function () {
-            vm.waitForMost = false;
-          });
-        resolveDeviceData(stats.least, vm.leastUsedDevices)
-          .then(function () {
-            vm.waitForLeast = false;
-          });
+        if (stats.most && stats.most.length > 0) {
+          resolveDeviceData(stats.most, vm.mostUsedDevices)
+            .then(function () {
+              vm.waitForMost = false;
+            });
+        } else {
+          vm.waitForMost = false;
+        }
+        if (stats.least && stats.least.length > 0) {
+          resolveDeviceData(stats.least, vm.leastUsedDevices)
+            .then(function () {
+              vm.waitForLeast = false;
+            });
+        } else {
+          vm.waitForLeast = false;
+        }
       });
     }
 
