@@ -74,12 +74,18 @@
       return hybridServicesCard;
     }
 
+    function getCareCardForOrg(org, licenses) {
+      var entitled = LicenseService.orgIsEntitledTo(org, 'cloud-contact-center');
+      return new OrgCard(entitled, licenses, Config.licenseTypes.CARE);
+    }
+
     return {
       getMessageCardForOrg: getMessageCardForOrg,
       getMeetingCardForOrg: getMeetingCardForOrg,
       getCallCardForOrg: getCallCardForOrg,
       getHybridServicesCardForOrg: getHybridServicesCardForOrg,
       getRoomSystemsCardForOrg: getRoomSystemsCardForOrg,
+      getCareCardForOrg: getCareCardForOrg,
     };
   }
 

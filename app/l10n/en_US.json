@@ -6775,7 +6775,9 @@
       "ST": "Storage",
       "SD": "DX, MX, or SX systems",
       "SB": "Spark Board",
-      "linkedSite": "Legacy WebEx License"
+      "linkedSite": "Legacy WebEx License",
+      "CDC": "Chat and Callback",
+      "CVC": "Chat, Callback and Inbound Call"
     },
     "trial": "Trial",
     "adminUsers": "Administrators",
@@ -6895,7 +6897,8 @@
       "validationFailure": "Unable to validate",
       "editNameSuccess": "Organization name successfully updated.",
       "editNameFailure": "Failed to update customer name."
-    }
+    },
+    "care": "Care"
   },
   "activation": {
     "verificationComplete": "Verification Complete",

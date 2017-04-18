@@ -23,7 +23,7 @@ describe('HelpdeskCardsService', function () {
 
   describe('Org Cards', function () {
     var org = {
-      services: ['spark-room-system', 'ciscouc', 'webex-squared', 'rubbish'],
+      services: ['spark-room-system', 'ciscouc', 'webex-squared', 'rubbish', 'cloud-contact-center'],
     };
     var licenses = [{
       offerCode: 'MS',
@@ -50,6 +50,11 @@ describe('HelpdeskCardsService', function () {
       type: 'RUBBISH',
       volume: 100,
       usage: 50,
+    }, {
+      offerCode: 'CDC',
+      type: 'CARE',
+      volume: 101,
+      usage: 51,
     }];
 
     beforeEach(function () {
@@ -202,6 +207,21 @@ describe('HelpdeskCardsService', function () {
       expect(card.services[0].setup).toBeTruthy();
       expect(card.services[0].statusCss).toEqual('success');
 
+    });
+
+    it('should return care card for org', function () {
+      var card = HelpdeskCardsOrgService.getCareCardForOrg(org, licenses);
+      expect(LicenseService.orgIsEntitledTo).toHaveBeenCalled();
+      expect(card.entitled).toBeTruthy();
+      expect(card.aggregatedLicenses.length).toEqual(1);
+      var aggregatedLicense = _.head(card.aggregatedLicenses);
+      expect(aggregatedLicense.totalVolume).toEqual(101);
+      expect(aggregatedLicense.totalUsage).toEqual(51);
+      expect(aggregatedLicense.displayName).toEqual('helpdesk.licenseDisplayNames.CDC');
+      var license = _.head(aggregatedLicense.licenses);
+      expect(license.type).toEqual('CARE');
+      expect(license.volume).toEqual(101);
+      expect(license.usage).toEqual(51);
     });
 
   });
