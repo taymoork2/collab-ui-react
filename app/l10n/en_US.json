@@ -6000,6 +6000,7 @@
     "assignedLines": "Assigned",
     "pending": "Pending",
     "csvBtnTitle": "Export to CSV",
+    "csvBtnExportingTitle": "Export in progress",
     "csvFilename": "exported_lines.csv",
     "internalNumberHeader": "Internal Extension",
     "externalNumberHeader": "Direct Line",
