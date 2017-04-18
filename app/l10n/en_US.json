@@ -1466,7 +1466,7 @@
     "simplifiedDialingTitle": "Simplified local dialing",
     "simplifiedDialingDesc": "User does NOT dial the country code specified below.",
     "multipleAreaCodeText": "Not recommended for locations with multiple area codes.",
-    "requireOneToDialLabel": "Require the user to dial 1 before the area code",
+    "requireOneToDialLabel": "Do not require the user to dial 1 before the area code",
     "localDialingTitle": "Local Dialing",
     "localDialingDesc": "Auto-prepend a country code and area code to phone calls for simplified local dialing. Not recommended for locations with multiple area codes.",
     "localDialingNumberTitle": "Prepended Area Code",
