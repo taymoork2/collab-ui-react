@@ -46,8 +46,16 @@
     padding-left: 1.5rem;
   }
 
+  .box.singlebox-margin {
+    margin: 0 rem_calc(16) rem_calc(8);
+  }
+
+  .box.multibox-margin {
+    @include vr-spacing(m, .5);
+    @include vr-spacing(pb, .5);
+  }
+
   .columns .box {
-    @include vr-spacing(m, 1);
     border: thin solid $gray-light-2;
     color: $gray-base;
     display: flex;
