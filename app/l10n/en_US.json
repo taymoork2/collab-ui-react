@@ -6847,6 +6847,8 @@
       "local": "Local"
     },
     "vmprefix": "Voicemail ID Prefix",
+    "routingPrefix": "Routing Prefix",
+    "extensionLength": "Extension Length",
     "outboundDigit": "Outbound Dial Digit",
     "areaCode": "Area Code",
     "customerInfo": "Customer Information",
