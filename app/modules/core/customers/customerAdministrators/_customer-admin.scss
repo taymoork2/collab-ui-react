@@ -123,6 +123,10 @@
     display: flex;
     align-items: center;
 
+    &.info {
+      background-color: $color-people-base;
+    }
+
     &.invalid-token {
       background-color: $brand-danger;
     }

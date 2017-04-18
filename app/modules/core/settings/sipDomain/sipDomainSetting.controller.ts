@@ -187,6 +187,9 @@ export class SipDomainSettingController {
   }
 
   private loadSipDomain() {
+    let params = {
+      basicInfo: true,
+    };
     this.Orgservice.getOrg((data, status) => {
       let displayName = '';
       let sparkDomainStr = this.UrlConfig.getSparkDomainCheckUrl();
@@ -203,7 +206,7 @@ export class SipDomainSettingController {
       }
       this._inputValue = displayName;
       this.currentDisplayName = displayName;
-    }, false, true);
+    }, false, params);
   }
 
   // Used in New Feature

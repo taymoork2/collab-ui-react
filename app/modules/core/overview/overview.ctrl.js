@@ -8,7 +8,7 @@ require('./_overview.scss');
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($modal, $rootScope, $state, $scope, $translate, Authinfo, CardUtils, Config, FeatureToggleService, FusionClusterService, hasGoogleCalendarFeatureToggle, Log, LicenseService, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, ServiceDescriptor, SunlightReportService, TrialService, UrlConfig, PstnSetupService) {
+  function OverviewCtrl($modal, $rootScope, $state, $scope, $translate, Authinfo, CardUtils, Config, FeatureToggleService, FusionClusterService, hasGoogleCalendarFeatureToggle, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, SunlightReportService, TrialService, UrlConfig, PstnSetupService, HybridServicesUtils) {
     var vm = this;
 
     var PSTN_TOS_ACCEPT = 'pstn-tos-accept-event';
@@ -46,21 +46,34 @@ require('./_overview.scss');
         resizeNotifications();
       }
 
-      ServiceDescriptor.getServices()
-        .then(function (services) {
-          _.forEach(services, function (service) {
-            if (!service.acknowledged) {
-              if (service.id === Config.entitlements.fusion_cal) {
+      var hybridServiceNotificationFlags = _.chain([
+        Config.entitlements.fusion_cal,
+        Config.entitlements.fusion_gcal,
+        Config.entitlements.fusion_uc,
+        Config.entitlements.fusion_ec,
+        Config.entitlements.mediafusion,
+        Config.entitlements.hds,
+      ])
+      .filter(Authinfo.isEntitled)
+      .map(HybridServicesUtils.getAckFlagForHybridServiceId)
+      .value();
+
+      HybridServicesFlagService
+        .readFlags(hybridServiceNotificationFlags)
+        .then(function (flags) {
+          _.forEach(flags, function (flag) {
+            if (!flag.raised) {
+              if (flag.name === HybridServicesUtils.getAckFlagForHybridServiceId(Config.entitlements.fusion_cal)) {
                 vm.notifications.push(OverviewNotificationFactory.createCalendarNotification());
-              } else if (service.id === Config.entitlements.fusion_gcal && hasGoogleCalendarFeatureToggle) {
-                vm.notifications.push(OverviewNotificationFactory.createGoogleCalendarNotification($modal, $state, Orgservice));
-              } else if (service.id === Config.entitlements.fusion_uc) {
+              } else if (flag.name === HybridServicesUtils.getAckFlagForHybridServiceId(Config.entitlements.fusion_gcal) && hasGoogleCalendarFeatureToggle) {
+                vm.notifications.push(OverviewNotificationFactory.createGoogleCalendarNotification($modal, $state, HybridServicesFlagService, HybridServicesUtils));
+              } else if (flag.name === HybridServicesUtils.getAckFlagForHybridServiceId(Config.entitlements.fusion_uc)) {
                 vm.notifications.push(OverviewNotificationFactory.createCallAwareNotification());
-              } else if (service.id === Config.entitlements.fusion_ec) {
+              } else if (flag.name === HybridServicesUtils.getAckFlagForHybridServiceId(Config.entitlements.fusion_ec)) {
                 vm.notifications.push(OverviewNotificationFactory.createCallConnectNotification());
-              } else if (service.id === Config.entitlements.mediafusion) {
+              } else if (flag.name === HybridServicesUtils.getAckFlagForHybridServiceId(Config.entitlements.mediafusion)) {
                 vm.notifications.push(OverviewNotificationFactory.createHybridMediaNotification());
-              } else if (service.id === Config.entitlements.hds) {
+              } else if (flag.name === HybridServicesUtils.getAckFlagForHybridServiceId(Config.entitlements.hds)) {
                 vm.notifications.push(OverviewNotificationFactory.createHybridDataSecurityNotification());
               }
             }
@@ -88,8 +101,8 @@ require('./_overview.scss');
             vm.notifications.push(OverviewNotificationFactory.createCrashLogNotification());
           }
           if (Authinfo.isCare() || Authinfo.isCareVoice()) {
-            var hasMessage = LicenseService.orgIsEntitledTo(data, 'squared-room-moderation');
-            var hasCall = LicenseService.orgIsEntitledTo(data, 'ciscouc');
+            var hasMessage = Authinfo.isMessageEntitled();
+            var hasCall = Authinfo.isSquaredUC();
             if (!hasMessage && !hasCall) {
               vm.notifications.push(OverviewNotificationFactory
                 .createCareLicenseNotification('homePage.careLicenseMsgAndCallMissingText', 'homePage.careLicenseLinkText'));
@@ -252,12 +265,14 @@ require('./_overview.scss');
       });
     });
 
-    $rootScope.$watch('ssoEnabled', function () {
-      var params = {
-        disableCache: true,
-        basicInfo: true,
-      };
-      Orgservice.getAdminOrg(_.partial(forwardEvent, 'orgEventHandler'), false, params);
+    $rootScope.$watch('ssoEnabled', function (newValue, oldValue) {
+      if (newValue !== oldValue) {
+        var params = {
+          disableCache: true,
+          basicInfo: true,
+        };
+        Orgservice.getAdminOrg(_.partial(forwardEvent, 'orgEventHandler'), false, params);
+      }
     });
   }
 })();

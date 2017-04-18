@@ -1,4 +1,4 @@
-import { IConnector } from 'modules/hercules/herculesInterfaces';
+import { IConnector } from 'modules/hercules/hybrid-services.types';
 
 class HybridServicesConnectorSidepanelCtrl implements ng.IComponentController {
   public connector: IConnector;

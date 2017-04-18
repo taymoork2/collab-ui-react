@@ -45,15 +45,15 @@ modules/
 ├── hybrid-services/
 │   ├── common/
 │   │   ├── services/
-│   │   │   ├── fusion-cluster-service.ts
-│   │   │   ├── fusion-cluster-service.spec.ts
-│   │   │   ├── whatever-service.ts
-│   │   │   └── whatever-service.spec.ts
+│   │   │   ├── fusion-cluster.service.ts
+│   │   │   ├── fusion-cluster.service.spec.ts
+│   │   │   ├── whatever.service.ts
+│   │   │   └── whatever.service.spec.ts
 │   │   ├── components/
 │   │   │   ├── something-something-component/
 │   │   │   │   ├── _hs-something-something.scss
 │   │   │   │   ├── hs-something-something.component.ts
-│   │   │   │   ├── hs-something-something.html
+│   │   │   │   ├── hs-something-something.component.html
 │   │   │   │   └── index.ts
 │   │   │   ├── deactivate-service-section/
 │   │   │   ├── upgrade-cluster/

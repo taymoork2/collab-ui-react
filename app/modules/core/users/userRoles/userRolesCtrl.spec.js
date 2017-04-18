@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: UserRolesCtrl', function () {
-  var controller, $q, $scope, $rootScope, $stateParams, Config, Authinfo, Orgservice, $controller, Userservice, FeatureToggleService, Notification;
+  var controller, $q, $scope, $rootScope, $stateParams, Config, Authinfo, Orgservice, $controller, Userservice, FeatureToggleService, Notification, EdiscoveryService;
   var fakeUserJSONFixture = getJSONFixture('core/json/sipTestFakeUser.json');
   var careUserJSONFixture = getJSONFixture('core/json/users/careTestFakeUser.json');
   var currentUser = fakeUserJSONFixture.fakeUser1;
@@ -12,7 +12,7 @@ describe('Controller: UserRolesCtrl', function () {
   beforeEach(angular.mock.module('Squared'));
   beforeEach(angular.mock.module('Ediscovery'));
 
-  beforeEach(inject(function (_$rootScope_, _$q_, _Config_, _$stateParams_, _$controller_, _Authinfo_, _Orgservice_, _Userservice_, _FeatureToggleService_, _Notification_) {
+  beforeEach(inject(function (_$rootScope_, _$q_, _Config_, _$stateParams_, _$controller_, _Authinfo_, _Orgservice_, _Userservice_, _FeatureToggleService_, _Notification_, _EdiscoveryService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $q = _$q_;
@@ -23,6 +23,7 @@ describe('Controller: UserRolesCtrl', function () {
     Authinfo = _Authinfo_;
     FeatureToggleService = _FeatureToggleService_;
     Notification = _Notification_;
+    EdiscoveryService = _EdiscoveryService_;
     $stateParams = _$stateParams_;
     $stateParams.currentUser = currentUser;
 
@@ -66,7 +67,6 @@ describe('Controller: UserRolesCtrl', function () {
   }
 
   describe('UserRolesCtrl Initialization: ', function () {
-
     it('should successfully initialize the UserRolesCtrl controller even without a currentUser', function () {
       $stateParams.currentUser = null;
       initController();
@@ -227,7 +227,6 @@ describe('Controller: UserRolesCtrl', function () {
 
       ///////////
       describe('Failures', function () {
-
         afterEach(function () {
           expect($rootScope.$broadcast).not.toHaveBeenCalled();
           expect(Notification.success).not.toHaveBeenCalled();
@@ -249,7 +248,6 @@ describe('Controller: UserRolesCtrl', function () {
         });
 
         it('should notify an error when updateUserProfile fails', function () {
-
           Userservice.updateUserProfile.and.callFake(function () {
             return $q.reject({});
           });
@@ -262,13 +260,10 @@ describe('Controller: UserRolesCtrl', function () {
           expect(Userservice.patchUserRoles).toHaveBeenCalled();
           expect(Userservice.updateUserProfile).toHaveBeenCalled();
         });
-
-
       });
 
       ///////////
       describe('Successes', function () {
-
         afterEach(function () {
           expect($rootScope.$broadcast).toHaveBeenCalledWith('USER_LIST_UPDATED');
           expect(Notification.success).toHaveBeenCalledWith('profilePage.success');
@@ -276,7 +271,6 @@ describe('Controller: UserRolesCtrl', function () {
         });
 
         it('should not patch anything if no changes made', function () {
-
           // don't make any changes, just try to do an update
           $scope.updateRoles();
           $scope.$digest();
@@ -286,7 +280,6 @@ describe('Controller: UserRolesCtrl', function () {
         });
 
         it('should only patch Roles if no User Data changed', function () {
-
           expect($scope.rolesObj.adminRadioValue).not.toEqual(2);
           $scope.rolesObj.adminRadioValue = 2;
 
@@ -295,11 +288,9 @@ describe('Controller: UserRolesCtrl', function () {
 
           expect(Userservice.patchUserRoles).toHaveBeenCalled();
           expect(Userservice.updateUserProfile).not.toHaveBeenCalled();
-
         });
 
         it('should only patch User Data if Roles have not changed', function () {
-
           expect($scope.formUserData.name.givenName).not.toEqual('Tester');
           $scope.formUserData.name.givenName = 'Tester';
           expectedUserData.name.givenName = 'Tester';
@@ -309,11 +300,9 @@ describe('Controller: UserRolesCtrl', function () {
 
           expect(Userservice.patchUserRoles).not.toHaveBeenCalled();
           expect(Userservice.updateUserProfile).toHaveBeenCalledWith(currentUser.id, expectedUserData);
-
         });
 
         it('should patch Roles and User Data if they both have been changed', function () {
-
           expect($scope.rolesObj.adminRadioValue).not.toEqual(2);
           $scope.rolesObj.adminRadioValue = 2;
 
@@ -326,11 +315,9 @@ describe('Controller: UserRolesCtrl', function () {
 
           expect(Userservice.patchUserRoles).toHaveBeenCalled();
           expect(Userservice.updateUserProfile).toHaveBeenCalledWith(currentUser.id, expectedUserData);
-
         });
 
         it('should call updateUserProfile with correct meta attributes', function () {
-
           // test clearing givenName
           $scope.formUserData.name.givenName = '';
           $scope.updateRoles();
@@ -360,15 +347,52 @@ describe('Controller: UserRolesCtrl', function () {
           ed3.meta.attributes.push('displayName');
           delete ed3.displayName;
           expect(Userservice.updateUserProfile).toHaveBeenCalledWith(currentUser.id, ed3);
-
         });
       });
     });
+  });
 
+  describe('Compliance User - ', function () {
+    beforeEach(function () {
+      initController();
+      $scope.showComplianceRole = true;
+      spyOn(Notification, 'errorResponse');
+    });
+
+    it('should update Compliance Officer setting', function () {
+      spyOn(EdiscoveryService, 'setEntitledForCompliance').and.returnValue($q.resolve(true));
+
+      expect($scope.rolesObj.complianceValue).toBeFalsy();
+      $scope.rolesObj.complianceValue = true;
+      $scope.updateRoles();
+      $scope.$digest();
+
+      expect($scope.currentUser.entitlements).toContain('compliance');
+      expect($scope.rolesObj.complianceValue).toBeTruthy();
+      $scope.rolesObj.complianceValue = false;
+      $scope.updateRoles();
+      $scope.$digest();
+
+      expect($scope.currentUser.entitlements).not.toContain('compliance');
+      expect($scope.rolesObj.complianceValue).toBeFalsy();
+      expect(Notification.errorResponse).not.toHaveBeenCalled();
+    });
+
+    it('should not update on error', function () {
+      spyOn(EdiscoveryService, 'setEntitledForCompliance').and.returnValue($q.reject({}));
+
+      expect($scope.rolesObj.complianceValue).toBeFalsy();
+      $scope.rolesObj.complianceValue = true;
+      $scope.updateRoles();
+      $scope.$digest();
+
+      expect($scope.currentUser.entitlements).not.toContain('compliance');
+      expect($scope.rolesObj.complianceValue).toBeTruthy();
+      expect(Notification.errorResponse).toHaveBeenCalledWith(jasmine.any(Object), 'profilePage.complianceError');
+    });
   });
 
   describe('Care User', function () {
-
     describe('Updating roles for Care user 1', function () {
       beforeEach(function () {
         $stateParams.currentUser = careUserJSONFixture.fakeUser1;
@@ -376,7 +400,6 @@ describe('Controller: UserRolesCtrl', function () {
       });
 
       it('should have spark.synckms role when already present', function () {
-
         var expectedRoles = [
           {
             roleName: 'Full_Admin',
@@ -435,7 +458,6 @@ describe('Controller: UserRolesCtrl', function () {
       });
 
       it('should not have spark.synckms role when not already present', function () {
-
         var expectedRoles = [
           {
             roleName: 'Full_Admin',
@@ -494,7 +516,6 @@ describe('Controller: UserRolesCtrl', function () {
       });
 
       it('should have orderadmin, helpdesk, and partner_management role when already present', function () {
-
         var expectedRoles = [
           {
             roleName: 'Full_Admin',
@@ -549,8 +570,5 @@ describe('Controller: UserRolesCtrl', function () {
         expect(Userservice.patchUserRoles.calls.argsFor(0)[2]).toEqual(expectedRoles);
       });
     });
-
-
   });
-
 });

@@ -54,11 +54,17 @@
     vm.total_cloud_heading = $translate.instant('mediaFusion.metrics.totalCloud');
     vm.participants = $translate.instant('mediaFusion.metrics.participants');
 
+    vm.availabilityCardHeading = "";
+    vm.clusterAvailabilityCardHeading = $translate.instant('mediaFusion.metrics.clusterAvailabilityCardHeading');
+    vm.nodeAvailabilityCardHeading = $translate.instant('mediaFusion.metrics.nodeAvailabilityCardHeading');
+
     vm.second_card_heading = vm.total_cloud_heading;
     vm.redirected_heading = vm.cloud_calls_heading;
     vm.second_card_value = 0;
     vm.hosted_participants_heading = vm.on_prem_participants_heading;
     vm.hosted_heading = vm.on_prem_calls_heading;
+
+    vm.availabilityCardHeading = vm.clusterAvailabilityCardHeading;
 
     vm.Map = {};
     vm.secondCardFooter = {
@@ -104,11 +110,6 @@
       cardChartDiv: 'numberOfMeetsOnPremisesChartDiv',
       noData: false,
     };
-    vm.cloudParticipantschartOptions = {
-      isShow: true,
-      cardChartDiv: 'cloudParticipantsChartDiv',
-      noData: false,
-    };
     vm.totalParticipantschartOptions = {
       isShow: true,
       cardChartDiv: 'totalParticipantsChartDiv',
@@ -144,8 +145,8 @@
 
     function loadResourceDatas() {
       deferred.promise.then(function () {
-        setTotalCallsData();
         setTotalCallsPie();
+        setTotalCallsData();
         setAvailabilityData();
         setClusterAvailability();
         setUtilizationData();
@@ -168,10 +169,12 @@
         vm.clusterId = vm.Map[vm.clusterSelected];
         vm.second_card_heading = vm.redirected_calls_heading;
         vm.redirected_heading = vm.redirected_calls_heading;
+        vm.availabilityCardHeading = vm.nodeAvailabilityCardHeading;
       } else {
         vm.clusterId = vm.allClusters;
         vm.second_card_heading = vm.total_cloud_heading;
         vm.redirected_heading = vm.cloud_calls_heading;
+        vm.availabilityCardHeading = vm.clusterAvailabilityCardHeading;
       }
       loadResourceDatas();
       $timeout(function () {
@@ -253,7 +256,9 @@
         .then(function (clusters) {
           vm.clusterOptions.length = 0;
           vm.Map = {};
-          vm.clusters = _.filter(clusters, { targetType: 'mf_mgmt' });
+          vm.clusters = _.filter(clusters, {
+            targetType: 'mf_mgmt',
+          });
           _.each(clusters, function (cluster) {
             if (cluster.targetType === "mf_mgmt") {
               vm.clusterOptions.push(cluster.name);
@@ -312,7 +317,6 @@
             vm.secondCardFooter.value = vm.cloudOverflow;
           }
           vm.second_card_value = (vm.cloudcalls - vm.cloudOverflow) < 0 ? 0 : (vm.cloudcalls - vm.cloudOverflow);
-
         } else {
           if (response === vm.ABORT) {
             return undefined;
@@ -343,7 +347,16 @@
             vm.totalcloudcalls = vm.onprem + vm.cloudOverflow;
           }
           vm.second_card_value = vm.cloudOverflow;
+          vm.totalcloudcalls = abbreviateNumber(vm.totalcloudcalls);
         }
+        vm.totalcloudShort = (vm.totalcloudcalls == vm.noData) ? vm.noData : abbreviateNumber(vm.totalcloudcalls);
+        vm.totalcloudTooltip = checkForTooltip(vm.totalcloudShort) ? vm.totalcloudcalls : "";
+        vm.secondCardShort = (vm.second_card_value == vm.noData) ? vm.noData : abbreviateNumber(vm.second_card_value);
+        vm.secondCardTooltip = checkForTooltip(vm.secondCardShort) ? vm.second_card_value : "";
+        vm.onpremShort = (vm.onprem == vm.noData) ? vm.noData : abbreviateNumber(vm.onprem);
+        vm.onpremTooltip = checkForTooltip(vm.onpremShort) ? vm.onprem : "";
+        vm.cloudOverflowShort = (vm.cloudOverflow == vm.noData) ? vm.noData : abbreviateNumber(vm.cloudOverflow);
+        vm.cloudOverflowTooltip = checkForTooltip(vm.cloudOverflowShort) ? vm.cloudOverflow : "";
       });
     }
 
@@ -389,6 +402,8 @@
           vm.meetsHostedchartOptions.noData = true;
           vm.tot_number_meetings = vm.EMPTY;
           vm.tot_number_meetings = vm.noData;
+          vm.totMeetingsShort = vm.tot_number_meetings;
+          vm.totMeetingsTooltip = "";
         } else {
           var total_meets = 0;
           AdoptionCardService.setNumberOfMeetsOnPremisesPiechart(response.data);
@@ -397,6 +412,8 @@
             total_meets = total_meets + val.value;
           });
           vm.tot_number_meetings = total_meets;
+          vm.totMeetingsShort = abbreviateNumber(vm.tot_number_meetings);
+          vm.totMeetingsTooltip = checkForTooltip(vm.totMeetingsShort) ? vm.tot_number_meetings : "";
         }
       });
     }
@@ -519,14 +536,14 @@
           setDummyNumberOfParticipant();
         } else {
           deferred.promise.then(function () {
-              //set the number of participants graphs here
+            //set the number of participants graphs here
             if (_.isUndefined(setNumberOfParticipantGraph(response))) {
               setDummyNumberOfParticipant();
             } else {
               vm.numberOfParticipantStatus = vm.SET;
             }
           }, function () {
-              //map is not formed so we shoud show dummy graphs
+            //map is not formed so we shoud show dummy graphs
             setDummyNumberOfParticipant();
           });
         }
@@ -581,6 +598,7 @@
       vm.clientTypeChart = ClientTypeAdoptionGraphService.setClientTypeGraph(response, vm.clientTypeChart, vm.timeSelected);
       return vm.clientTypeChart;
     }
+
     function setNumberOfParticipantGraph(response) {
       vm.numberOfParticipantChart = NumberOfParticipantGraphService.setNumberOfParticipantGraph(response, vm.numberOfParticipantChart, vm.timeSelected);
       return vm.numberOfParticipantChart;
@@ -672,6 +690,34 @@
       } else {
         vm.isFlipped = true;
       }
+    }
+
+    function abbreviateNumber(value) {
+      if (value <= 1000) {
+        return value.toString();
+      }
+      var numDigits = ("" + value).length;
+      var suffixIndex = Math.floor(numDigits / 3);
+      var normalisedValue = value / Math.pow(1000, suffixIndex);
+      var precision = 3;
+      if (normalisedValue < 1) {
+        precision = 1;
+      }
+      var suffixes = ["", "k", "m", "bn"];
+      if (normalisedValue < 1) {
+        return _.round(normalisedValue * 1000) + suffixes[suffixIndex - 1];
+      } else {
+        return normalisedValue.toPrecision(precision) + suffixes[suffixIndex];
+      }
+    }
+
+    function checkForTooltip(value) {
+      var tooltipFlag = false;
+      value = "" + value;
+      if ((value.indexOf('k') > -1) || (value.indexOf('m') > -1) || (value.indexOf('bn') > -1)) {
+        tooltipFlag = true;
+      }
+      return tooltipFlag;
     }
 
   }

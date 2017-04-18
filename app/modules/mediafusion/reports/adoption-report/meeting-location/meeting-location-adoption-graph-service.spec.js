@@ -45,7 +45,7 @@ describe('Service: Meeting Location Adoption GraphService', function () {
   it('setMeetingLocationGraph should return an amchart object successfully', function () {
 
     var setMeetingLocationResponse = MeetingLocationAdoptionGraphService.setMeetingLocationGraph(meetingLocationGraphData, meetingLocationChart, daterange);
-    expect(setMeetingLocationResponse.graphs.length).toBe(6);
+    expect(setMeetingLocationResponse.graphs.length).toBe(5);
     expect(setMeetingLocationResponse.dataProvider).toEqual(meetingLocationGraphData.meetinglocationresponse);
   });
 

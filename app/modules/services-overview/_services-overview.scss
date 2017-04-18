@@ -56,6 +56,26 @@
       }
     }
 
+    .private-trunk-nodomain {
+      .description {
+        flex: none !important;
+      }
+      .card-button {
+        text-align: center;
+        div:nth-child(1) {
+          position: absolute;
+          bottom: 3.5rem;
+          margin-bottom: .8rem;
+          width: calc(100% - 3rem);
+        }
+        div:nth-child(2) {
+          position: absolute;
+          bottom: 1.5rem;
+          width: calc(100% - 3rem);
+        }
+      }
+    }
+
     .cs-card-layout {
       padding-bottom: 2rem;
       z-index: 1;

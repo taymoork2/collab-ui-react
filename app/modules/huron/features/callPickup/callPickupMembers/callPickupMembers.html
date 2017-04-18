@@ -1,30 +1,25 @@
 <script type="text/ng-template" id="userTemplate.html">
-  <a ng-click="match.model.disabled && $event.stopPropagation()"
-     ng-class="{'disabled': match.model.disabled}">
-
+  <a>
     <span ng-bind-html="match.label | typeaheadHighlight:query"
           ng-class="{'disabled': match.model.disabled}">
     </span>
   </a>
 </script>
-
 <div id="pickup-typeahead" class="typeahead-large" ng-if="$ctrl.isNew">
-
   <input
     id="memberInput"
     ng-model="$ctrl.memberName"
     ng-class="{'error': $ctrl.errorMemberInput}"
-    ng-change="$ctrl.fetchMembers()"
-    typeahead="mem as $ctrl.getDisplayName(mem) for mem in $ctrl.memberList | limitTo:3"
+    typeahead="mem as $ctrl.getDisplayName(mem) for mem in $ctrl.fetchMembers($viewValue)"
     typeahead-on-select="$ctrl.selectMember($item)"
+    typeahead-dont-select="$ctrl.displayModalLinesTaken($event)"
+    typeahead-should-select="!$ctrl.isActiveMemberDisabled()"
     typeahead-template-url="userTemplate.html"
     placeholder="{{:: 'callPickup.memberPlaceholder' | translate}}"
     typeahead-min-length="3"
     typeahead-wait-ms="200"
     autocomplete="off"
-    focus-on
-    disable-enter-key-hook>
-
+    focus-on>
   <p class="input-description" translate="callPickup.memberHint"></p>
   <div class="warning">
     <div class="pi-cs-input__messages">
@@ -38,18 +33,18 @@
     id="memberInput"
     ng-model="$ctrl.memberName"
     ng-class="{'error': $ctrl.errorMemberInput}"
-    ng-change="$ctrl.fetchMembers()"
-    typeahead="mem as $ctrl.getDisplayName(mem) for mem in $ctrl.memberList | limitTo:3"
+    typeahead="mem as $ctrl.getDisplayName(mem) for mem in $ctrl.fetchMembers($viewValue)"
     typeahead-on-select="$ctrl.selectMember($item)"
+    typeahead-dont-select="$ctrl.displayModalLinesTaken($event)"
+    typeahead-should-select="!$ctrl.isActiveMemberDisabled()"
     typeahead-template-url="userTemplate.html"
     placeholder="{{:: 'callPickup.memberPlaceholder' | translate}}"
     typeahead-min-length="3"
     typeahead-wait-ms="200"
     cs-input-size="small-12"
     autocomplete="off"
-    no-dirty
-    disable-enter-key-hook>
-  </div>
+    no-dirty>
+</div>
 <div id="cs-card-members">
   <cs-card-layout>
     <cs-card-member

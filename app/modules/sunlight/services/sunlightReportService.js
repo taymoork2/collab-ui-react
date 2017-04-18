@@ -1,9 +1,6 @@
 (function () {
   'use strict';
 
-  angular.module('Sunlight')
-    .service('SunlightReportService', sunlightReportService);
-
   /* @ngInject */
   function sunlightReportService($http, $q, $rootScope, Authinfo, UrlConfig) {
     var sunlightReportUrl = UrlConfig.getSunlightReportServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/report/';
@@ -522,4 +519,7 @@
     }
 
   }
+
+  module.exports = sunlightReportService;
+
 })();

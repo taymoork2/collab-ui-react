@@ -6,10 +6,11 @@
     .controller('ServiceSetupCtrl', ServiceSetupCtrl);
 
   /* @ngInject*/
-  function ServiceSetupCtrl($q, $state, $scope, ServiceSetup, Notification, Authinfo, $translate, HuronCustomer,
-    ValidationService, DialPlanService, TelephoneNumberService, ExternalNumberService,
+  function ServiceSetupCtrl($q, $state, $scope, ServiceSetup, Notification, Authinfo, $translate,
+    HuronCustomer, ValidationService, HuronCustomerService, TelephoneNumberService, ExternalNumberService,
     CeService, HuntGroupServiceV2, ModalService, DirectoryNumberService, VoicemailMessageAction,
-    PstnSetupService, Orgservice, FeatureToggleService, Config, CustomerCosRestrictionServiceV2, CustomerDialPlanServiceV2) {
+    PstnSetupService, Orgservice, FeatureToggleService, Config, CustomerCosRestrictionServiceV2,
+    CustomerDialPlanServiceV2, HuronCompassService) {
     var vm = this;
     vm.isTimezoneAndVoicemail = function () {
       return Authinfo.getLicenses().filter(function (license) {
@@ -45,7 +46,7 @@
     vm.loadExternalNumberPool = loadExternalNumberPool;
     vm.initServiceSetup = initServiceSetup;
     vm.initNext = initNext;
-    vm.checkIfTestOrg = checkIfTestOrg;
+    vm.checkIfTestOrg = Orgservice.isTestOrg;
     vm.setCustomerCosRestrictions = setCustomerCosRestrictions;
     vm.processing = true;
     vm.externalNumberPool = [];
@@ -126,12 +127,19 @@
     vm._buildVoicemailPrefixOptions = _buildVoicemailPrefixOptions;
     vm.isTerminusCustomer = false;
 
+    vm.ftHRegionalTones = false;
+    vm.supportRegionalSettings = supportRegionalSettings;
+
     PstnSetupService.getCustomer(Authinfo.getOrgId()).then(function () {
       vm.isTerminusCustomer = true;
     });
 
     FeatureToggleService.supports(FeatureToggleService.features.avrilVmEnable).then(function (result) {
       vm.voicemailAvrilCustomer = result;
+    });
+
+    FeatureToggleService.supports(FeatureToggleService.features.hRegionalTones).then(function (result) {
+      vm.ftHRegionalTones = result;
     });
 
     vm.validations = {
@@ -717,6 +725,10 @@
       },
     }];
 
+    function supportRegionalSettings() {
+      return vm.ftHRegionalTones;
+    }
+
     function initServiceSetup() {
       var errors = [];
       return HuronCustomer.get().then(function (customer) {
@@ -803,7 +815,7 @@
       .then(function () {
         if (!Authinfo.isSetupDone() && !vm.hasVoicemailService) {
           // set voicemail toggle to enabled when non-test customer runs FTSW for the very first time
-          return checkIfTestOrg().then(function (isTestOrg) {
+          return Orgservice.isTestOrg().then(function (isTestOrg) {
             if (isTestOrg) {
               vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = false;
             } else {
@@ -823,39 +835,30 @@
       return (length < range.length) ? range.slice(0, length) : _.padEnd(range, length, char);
     }
 
-    function checkIfTestOrg() {
-      var isTestOrg = $q(function (resolve) {
-        var params = {
-          basicInfo: true,
-        };
-        Orgservice.getOrg(function (response) {
-          resolve(response.isTestOrg);
-        }, null, params);
-      });
-      return isTestOrg;
-    }
-
     function loadVoicemailPilotNumber(site) {
-      if (vm.model.site.voicemailPilotNumberGenerated === 'false' &&
-            (site.voicemailPilotNumber.length < 40)) {
+      var voicemailPilotNumber = _.get(site, 'voicemailPilotNumber');
+
+      if (vm.model.site.voicemailPilotNumberGenerated === 'false' && voicemailPilotNumber &&
+            (voicemailPilotNumber.length < 40)) {
         vm.model.ftswCompanyVoicemail.ftswExternalVoicemail = true;
       } else {
         vm.model.ftswCompanyVoicemail.ftswExternalVoicemail = false;
       }
-      if (site.voicemailPilotNumber === Authinfo.getOrgId()) {
+
+      if (voicemailPilotNumber === Authinfo.getOrgId()) {
         // There may be existing customers who have yet to set the company
         // voicemail number; likely they have it set to orgId.
         // Remove this logic once we can confirm no existing customers are configured
         // this way.
         vm.model.site.voicemailPilotNumber = undefined;
-      } else if (site.voicemailPilotNumber) {
-        vm.model.site.voicemailPilotNumber = site.voicemailPilotNumber;
+      } else if (voicemailPilotNumber) {
+        vm.model.site.voicemailPilotNumber = voicemailPilotNumber;
         vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
 
         if (vm.model.ftswCompanyVoicemail.ftswExternalVoicemail) {
           vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = {
-            pattern: site.voicemailPilotNumber,
-            label: TelephoneNumberService.getDIDLabel(site.voicemailPilotNumber),
+            pattern: voicemailPilotNumber,
+            label: TelephoneNumberService.getDIDLabel(voicemailPilotNumber),
           };
         }
       }
@@ -919,6 +922,11 @@
         customerId: Authinfo.getOrgId(),
       }).$promise.then(function (dialPlan) {
         vm.premiumNumbers = _.get(dialPlan, 'premiumNumbers', []).toString();
+        vm.countryCode = _.get(dialPlan, 'countryCode');
+        if (vm.countryCode !== null) {
+          TelephoneNumberService.setCountryCode(vm.countryCode);
+          vm.generatedVoicemailNumber = ServiceSetup.generateVoiceMailNumber(Authinfo.getOrgId(), vm.countryCode);
+        }
       });
     }
 
@@ -1092,12 +1100,11 @@
     }
 
     function setServiceValues() {
-      return DialPlanService.getCustomerVoice(Authinfo.getOrgId()).then(function (response) {
+      return HuronCustomerService.getVoiceCustomer().then(function (response) {
         if (response.dialPlan === null) {
           // if customer's dialPlan attribute is defined but null, assume the customer is on the
           // North American Dial Plan. Look up uuid for NANP and insert it into customer dialPlan.
           response.dialPlanDetails = {
-            countryCode: "+1",
             extensionGenerated: "false",
             steeringDigitRequired: "true",
             supportSiteCode: "true",
@@ -1129,10 +1136,6 @@
         }
         if (response.dialPlanDetails.supportSiteCode !== 'true') {
           vm.model.site.siteCode = undefined;
-        }
-        if (response.dialPlanDetails.countryCode !== null) {
-          TelephoneNumberService.setCountryCode(response.dialPlanDetails.countryCode);
-          vm.generatedVoicemailNumber = ServiceSetup.generateVoiceMailNumber(Authinfo.getOrgId(), response.dialPlanDetails.countryCode);
         }
       }).catch(function (response) {
         vm.hideFieldInternalNumberRange = false;
@@ -1249,7 +1252,24 @@
         currentSite.preferredLanguage = currentSite.preferredLanguage.value;
         currentSite.country = currentSite.country.value;
 
+        if (!currentSite.country) {
+          currentSite.country = HuronCompassService.getCountryCode();
+        }
+
         return ServiceSetup.createSite(currentSite)
+            .then(function () {
+              if (vm.voicemailAvrilCustomer && (isAvrilVoiceEnabled || vm.customer.servicePackage === VOICE_VOICEMAIL_AVRIL)) {
+                ServiceSetup.listSites().then(function () {
+                  if (ServiceSetup.sites.length !== 0) {
+                    var siteUuid = ServiceSetup.sites[0].uuid;
+                    ServiceSetup.createAvrilSite(siteUuid, currentSite.siteSteeringDigit,
+                     currentSite.siteCode, currentSite.preferredLanguage.value, currentSite.timeZone.id,
+                     currentSite.extensionLength, currentSite.voicemailPilotNumber, currentSite);
+                  }
+                });
+
+              }
+            })
           .then(function () {
             if (voicemailToggleEnabled && currentSite.voicemailPilotNumber) {
               return updateVoicemailSettings();
@@ -1328,7 +1348,7 @@
           vm.model.regionCode = '';
         }
         if (vm.model.regionCode !== vm.model.initialRegionCode) {
-          return DialPlanService.updateCustomerVoice(Authinfo.getOrgId(), {
+          return HuronCustomerService.updateVoiceCustomer({
             regionCode: vm.model.regionCode,
           })
           .catch(function (error) {

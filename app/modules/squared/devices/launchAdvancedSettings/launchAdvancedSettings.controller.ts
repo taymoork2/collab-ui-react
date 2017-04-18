@@ -32,6 +32,7 @@ class LaunchAdvancedSettingsController {
     private currentDevice,
     private Utils,
     private WindowService: WindowService,
+    private Notification,
   ) {
     this.buildStates();
     this.changeState(this.getInitialState(this.currentDevice));
@@ -95,7 +96,11 @@ class LaunchAdvancedSettingsController {
         button2text: 'common.proceed',
         isRetry: false,
         button2Click: () => {
-          this.connectToEndpoint();
+          if (_.isFunction(this.Authinfo.isReadOnlyAdmin) && this.Authinfo.isReadOnlyAdmin()) {
+            this.Notification.notifyReadOnly();
+          } else {
+            this.connectToEndpoint();
+          }
         },
         onEnter: () => {
           if (this.states.connect.isRetry) {

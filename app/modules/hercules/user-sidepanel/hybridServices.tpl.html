@@ -29,7 +29,7 @@
     <ul>
       <li class="feature" ng-repeat="extension in hybridServicesCtrl.extensions | filter: hybridServicesCtrl.placeFilter">
         <a
-           ui-sref="place-overview.hybrid-services-{{extension.id}}({extensionId: extension.id, extensions: hybridServicesCtrl.extensions})">
+           ui-sref="place-overview.hybrid-services-{{extension.id}}({extensionId: extension.id, extensions: hybridServicesCtrl.extensions, editService: hybridServicesCtrl.editService})">
           <i class="feature-icon" ng-class="hybridServicesCtrl.extensionIcon(extension.id)"></i>
           <span class="feature-name" translate="hercules.serviceNames.{{extension.id}}"></span>
           <span class="feature-status" ng-class="extension.status ? 'status-' + hybridServicesCtrl.getStatus(extension.status) : ''"

@@ -1,6 +1,7 @@
 import { ICardStatus, CardType } from './ServicesOverviewCard';
 import { IServiceStatus, filterAndGetCssStatus, filterAndGetTxtStatus, filterAndGetEnabledService } from './ServicesOverviewHybridCard';
 import { ICardButton, ServicesOverviewCard } from './ServicesOverviewCard';
+import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 
 export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOverviewCard {
   private canDisplay: ng.IDeferred<boolean> = this.$q.defer();
@@ -113,7 +114,7 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
           // .googleActive conveys the same meaning as .active for Hybrid Calendar
           this.googleActive = servicesStatus.setup;
           this.googleStatus = {
-            status: filterAndGetCssStatus(this.FusionClusterStatesService, servicesStatuses, serviceId),
+            status: filterAndGetCssStatus(this.HybridServicesClusterStatesService, servicesStatuses, serviceId),
             text: filterAndGetTxtStatus(servicesStatuses, serviceId),
             routerState: 'google-calendar-service.settings',
           };
@@ -128,7 +129,7 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
     // No need to do any work if we can't display the card
     this.canDisplay.promise.then(() => {
       this.status = {
-        status: filterAndGetCssStatus(this.FusionClusterStatesService, servicesStatuses, service),
+        status: filterAndGetCssStatus(this.HybridServicesClusterStatesService, servicesStatuses, service),
         text: filterAndGetTxtStatus(servicesStatuses, service),
         routerState: 'calendar-service.list',
       };
@@ -154,7 +155,7 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
     private $modal,
     private Authinfo,
     private CloudConnectorService,
-    private FusionClusterStatesService,
+    private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
   ) {
     super({
       active: false,

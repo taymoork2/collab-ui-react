@@ -108,7 +108,7 @@ var PartnerHomePage = function () {
   this.careTrialCheckbox = element(by.css('label[for="careTrial"]'));
   this.webexTrialCheckbox = element(by.css('label[for="webexTrial"]'));
   this.careLicenseCountTextbox = element(by.css('input[name="input_trialCareLicenseCount"]'));
-  this.validLocationCheckbox = element(by.css('label[for="formly_5_custom-checkbox-link_validLocation_0"]'));
+  this.validLocationCheckbox = element(by.css('label[for="isValidLocation"]'));
   this.customerNameHeader = element(by.cssContainingText('.ngHeaderText ', 'Customer Name'));
   this.myOrganization = element(by.id('partner'));
   this.launchButton = element(by.id('launchPartner'));

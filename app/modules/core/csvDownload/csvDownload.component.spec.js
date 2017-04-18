@@ -91,7 +91,7 @@ describe('csvDownload', function () {
   describe("Component", function () {
 
     beforeEach(function () {
-      this.$httpBackend.when('GET', 'https://atlas-integration.wbx2.com/admin/api/v1/csv/organizations/null/users/template').respond({});
+      this.$httpBackend.when('GET', 'https://atlas-intb.ciscospark.com/admin/api/v1/csv/organizations/null/users/template').respond({});
       this.$window.navigator.msSaveOrOpenBlob = undefined;
     });
 

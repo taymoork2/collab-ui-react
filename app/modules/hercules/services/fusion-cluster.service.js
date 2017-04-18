@@ -8,7 +8,7 @@
     .factory('FusionClusterService', FusionClusterService);
 
   /* @ngInject */
-  function FusionClusterService($http, $q, $translate, Authinfo, FusionClusterStatesService, HybridServicesUtils, UrlConfig, USSService, Notification) {
+  function FusionClusterService($http, $q, $translate, Authinfo, HybridServicesClusterStatesService, HybridServicesUtils, UrlConfig, USSService, Notification) {
     var service = {
       preregisterCluster: preregisterCluster,
       addPreregisteredClusterToAllowList: addPreregisteredClusterToAllowList,
@@ -41,6 +41,8 @@
       getOrgSettings: getOrgSettings,
       setOrgSettings: setOrgSettings,
       getConnector: getConnector,
+      getHost: getHost,
+      updateHost: updateHost,
     };
 
     return service;
@@ -139,43 +141,43 @@
           var calConnectors = _.filter(cluster.connectors, { connectorType: 'c_cal' });
           cluster.servicesStatuses = [{
             serviceId: 'squared-fusion-mgmt',
-            state: FusionClusterStatesService.getMergedStateSeverity(mgmtConnectors),
+            state: HybridServicesClusterStatesService.getMergedStateSeverity(mgmtConnectors),
             total: mgmtConnectors.length,
           }, {
             serviceId: 'squared-fusion-uc',
-            state: FusionClusterStatesService.getMergedStateSeverity(ucmcConnectors),
+            state: HybridServicesClusterStatesService.getMergedStateSeverity(ucmcConnectors),
             total: ucmcConnectors.length,
           }, {
             serviceId: 'squared-fusion-cal',
-            state: FusionClusterStatesService.getMergedStateSeverity(calConnectors),
+            state: HybridServicesClusterStatesService.getMergedStateSeverity(calConnectors),
             total: calConnectors.length,
           }];
         } else if (cluster.targetType === 'mf_mgmt') {
           var mediaConnectors = _.filter(cluster.connectors, { connectorType: 'mf_mgmt' });
           cluster.servicesStatuses = [{
             serviceId: 'squared-fusion-media',
-            state: FusionClusterStatesService.getMergedStateSeverity(mediaConnectors),
+            state: HybridServicesClusterStatesService.getMergedStateSeverity(mediaConnectors),
             total: mediaConnectors.length,
           }];
         } else if (cluster.targetType === 'hds_app') {
           var hdsConnectors = _.filter(cluster.connectors, { connectorType: 'hds_app' });
           cluster.servicesStatuses = [{
             serviceId: 'spark-hybrid-datasecurity',
-            state: FusionClusterStatesService.getMergedStateSeverity(hdsConnectors),
+            state: HybridServicesClusterStatesService.getMergedStateSeverity(hdsConnectors),
             total: hdsConnectors.length,
           }];
         } else if (cluster.targetType === 'cs_mgmt') {
           var hybridContextConnectors = _.filter(cluster.connectors, { connectorType: 'cs_mgmt' });
           cluster.servicesStatuses = [{
             serviceId: 'contact-center-context',
-            state: FusionClusterStatesService.getMergedStateSeverity(hybridContextConnectors),
+            state: HybridServicesClusterStatesService.getMergedStateSeverity(hybridContextConnectors),
             total: hybridContextConnectors.length,
           }];
         } else if (cluster.targetType === 'ucm_mgmt') {
           var ucmConnectors = _.filter(cluster.connectors, { connectorType: 'ucm_mgmt' });
           cluster.servicesStatuses = [{
             serviceId: 'squared-fusion-khaos',
-            state: FusionClusterStatesService.getMergedStateSeverity(ucmConnectors),
+            state: HybridServicesClusterStatesService.getMergedStateSeverity(ucmConnectors),
             total: ucmConnectors.length,
           }];
         }
@@ -413,7 +415,7 @@
         setup: processClustersToSeeIfServiceIsSetup(serviceId, clusterList),
         status: processClustersToAggregateStatusForService(serviceId, clusterList),
       };
-      serviceStatus.statusCss = FusionClusterStatesService.getStatusIndicatorCSSClass(serviceStatus.status);
+      serviceStatus.statusCss = HybridServicesClusterStatesService.getStatusIndicatorCSSClass(serviceStatus.status);
       return serviceStatus;
     }
 
@@ -531,9 +533,9 @@
       return $http.get(url).then(extractData);
     }
 
-    function setOrgSettings(data, orgId) {
+    function setOrgSettings(params, orgId) {
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + (orgId || Authinfo.getOrgId()) + '/settings';
-      return $http.patch(url, data).then(extractData);
+      return $http.patch(url, params).then(extractData);
     }
 
     function getConnector(connectorId, orgId) {
@@ -543,6 +545,16 @@
         var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + (orgId || Authinfo.getOrgId()) + '/connectors/' + connectorId;
         return $http.get(url).then(extractData);
       }
+    }
+
+    function getHost(serial, orgId) {
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + (orgId || Authinfo.getOrgId()) + '/hosts/' + serial;
+      return $http.get(url).then(extractData);
+    }
+
+    function updateHost(serial, params, orgId) {
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + (orgId || Authinfo.getOrgId()) + '/hosts/' + serial;
+      return $http.patch(url, params).then(extractData);
     }
   }
 })();

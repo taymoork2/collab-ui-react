@@ -747,6 +747,3 @@ export class SparkGraphService {
     return chart;
   }
 }
-
-angular.module('Core')
-  .service('SparkGraphService', SparkGraphService);

@@ -48,7 +48,7 @@ describe('EditServicesCtrl: Ctrl', function () {
       expect(controller.service).toBe('sparkCall');
     });
 
-    it('sparkOnly is selected if "ciscouc" and "fusionec" is not present', function () {
+    it('sparkOnly is selected if "ciscouc" and callConnect entitlements  is not present', function () {
       $stateParams.wizard = {
         state: function () {
           return {
@@ -65,13 +65,13 @@ describe('EditServicesCtrl: Ctrl', function () {
       expect(controller.service).toBe('sparkOnly');
     });
 
-    it('sparkCallConnect is selected if "fusionec" is present', function () {
+    it('sparkCallConnect is selected if the two entitlements is present', function () {
       $stateParams.wizard = {
         state: function () {
           return {
             data: {
               account: {
-                entitlements: ['fusionec'],
+                entitlements: ['squared-fusion-uc', 'squared-fusion-ec'],
               },
             },
           };
@@ -84,12 +84,13 @@ describe('EditServicesCtrl: Ctrl', function () {
   });
 
   describe('init of ctrl', function () {
-    it('should set sparkCallConnectEnabled to false if toggle is not present and entitlement is not set', function () {
+    it('should set sparkCallConnectEnabled to false if toggle is not present and hybridCallEnabledOnOrg is true', function () {
       $stateParams.wizard = {
         state: function () {
           return {
             data: {
               csdmHybridCallFeature: false,
+              hybridCallEnabledOnOrg: true,
               account: {
                 entitlements: ['something'],
               },
@@ -102,14 +103,15 @@ describe('EditServicesCtrl: Ctrl', function () {
       expect(controller.sparkCallConnectEnabled).toBe(false);
     });
 
-    it('should set sparkCallConnectEnabled to true if toggle is not present and entitlement is already set', function () {
+    it('should set sparkCallConnectEnabled to false if toggle is not present and callConnect is enabled ', function () {
       $stateParams.wizard = {
         state: function () {
           return {
             data: {
               csdmHybridCallFeature: false,
+              hybridCallEnabledOnOrg: true,
               account: {
-                entitlements: ['fusionec'],
+                entitlements: ['squared-fusion-uc', 'squared-fusion-ec'],
               },
             },
           };
@@ -117,15 +119,16 @@ describe('EditServicesCtrl: Ctrl', function () {
       };
       initController();
       $scope.$digest();
-      expect(controller.sparkCallConnectEnabled).toBe(true);
+      expect(controller.sparkCallConnectEnabled).toBe(false);
     });
 
-    it('should set sparkCallConnectEnabled to true if toggle is present', function () {
+    it('should set sparkCallConnectEnabled to true if toggle is present and callConnect is enabled on org', function () {
       $stateParams.wizard = {
         state: function () {
           return {
             data: {
               csdmHybridCallFeature: true,
+              hybridCallEnabledOnOrg: true,
               account: {
                 entitlements: ['something'],
               },
@@ -173,7 +176,7 @@ describe('EditServicesCtrl: Ctrl', function () {
           return {
             data: {
               account: {
-                entitlements: ['fusionec'],
+                entitlements: ['squared-fusion-uc', 'squared-fusion-ec'],
               },
               function: 'editServices',
             },
@@ -309,7 +312,34 @@ describe('EditServicesCtrl: Ctrl', function () {
         expect(wizardState.account.enableCalService).toEqual(true);
       });
 
-      it('selecting sparkCallConnect should pass on all fields required by the next step including fusionec entitlement', function () {
+      it('selecting sparkOnly and Calendar should pass on all fields required by the next step including no call entitlement', function () {
+        state = function () {
+          return {
+            data: {
+              account: {
+                entitlements: ['something'],
+              },
+            },
+          };
+        };
+        $stateParams.wizard = {
+          state: state,
+          next: function () {
+          },
+        };
+        spyOn($stateParams.wizard, 'next');
+        initController();
+        controller.service = 'sparkOnly';
+        controller.enableCalService = true;
+
+        controller.next();
+        expect($stateParams.wizard.next).toHaveBeenCalled();
+        var wizardState = $stateParams.wizard.next.calls.mostRecent().args[0];
+        expect(wizardState.account.entitlements).toEqual(['something']);
+        expect(wizardState.account.enableCalService).toEqual(true);
+      });
+
+      it('selecting sparkCallConnect should pass on all fields required by the next step including the two callConnect entitlements', function () {
         state = function () {
           return {
             data: {
@@ -330,7 +360,34 @@ describe('EditServicesCtrl: Ctrl', function () {
         controller.next();
         expect($stateParams.wizard.next).toHaveBeenCalled();
         var wizardState = $stateParams.wizard.next.calls.mostRecent().args[0];
-        expect(wizardState.account.entitlements).toEqual(['something', 'fusionec']);
+        expect(wizardState.account.entitlements).toEqual(['something', 'squared-fusion-ec', 'squared-fusion-uc']);
+        expect(wizardState.account.enableCalService).toEqual(false);
+      });
+
+      it('selecting sparkCallConnect and calendar should pass on all fields required by the next step including the two callConnect entitlements', function () {
+        state = function () {
+          return {
+            data: {
+              account: {
+                entitlements: ['something'],
+              },
+            },
+          };
+        };
+        $stateParams.wizard = {
+          state: state,
+          next: function () {
+          },
+        };
+        spyOn($stateParams.wizard, 'next');
+        initController();
+        controller.service = 'sparkCallConnect';
+        controller.enableCalService = true;
+        controller.next();
+        expect($stateParams.wizard.next).toHaveBeenCalled();
+        var wizardState = $stateParams.wizard.next.calls.mostRecent().args[0];
+        expect(wizardState.account.entitlements).toEqual(['something', 'squared-fusion-ec', 'squared-fusion-uc']);
+        expect(wizardState.account.enableCalService).toEqual(true);
       });
     });
 

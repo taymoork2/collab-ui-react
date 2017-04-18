@@ -1,0 +1,71 @@
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/fonts';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+
+.context-fields-state {
+  background-color: $gray-lightest;
+  overflow: hidden;
+}
+
+.context-fieldsets-state {
+  background-color: $gray-lightest;
+  overflow: hidden;
+}
+
+.context-sidepanel-title {
+  max-width: 90% !important;
+}
+
+.context-modal {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.context-modal-body {
+
+  textarea {
+    resize: none;
+    height: 100px;
+  }
+}
+
+.tooltip[popup-class="context-tooltip"] .c-nub {
+  font-size: small;
+  white-space: normal;
+  word-wrap: break-word;
+  max-width: 300px;
+}
+
+.section-wrapper {
+  margin-top: 24px;
+}
+
+.context-padded-multi-line {
+  display: inline;
+  font-size: 0.75rem;
+  position: relative;
+  top: -9px;
+}
+
+.context-status-block {
+  display: inline-block;
+  font-size: 0.75rem;
+}
+
+.context-updated-date {
+  margin-left: 290px;
+  margin-top: -5px;
+  position: relative;
+}
+
+.context-fieldsets-none {
+  font-size: 0.75rem;
+  position: relative;
+  top: -22px;
+  left: 456px;
+}
+
+.context-nocursor {
+  cursor: default;
+}

@@ -346,6 +346,3 @@ export class DummySparkDataService {
     };
   }
 }
-
-angular.module('Core')
-  .service('DummySparkDataService', DummySparkDataService);

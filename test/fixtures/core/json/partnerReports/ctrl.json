@@ -6,6 +6,10 @@
   "ERROR": "error",
   "REFRESH": "refresh",
   "SET": "set",
+  "SCREEN_XS": "screen-xs",
+  "SCREEN_SM": "screen-sm",
+  "SCREEN_MD": "screen-md",
+  "SCREEN_LG": "screen-lg",
   "reportFilter": [{
     "id": "allReports",
     "label": "reportsPage.all",

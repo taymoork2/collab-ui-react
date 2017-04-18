@@ -1,14 +1,24 @@
 'use strict';
 
-/**
- * Sorting order for the files to load
- */
-/* eslint-env es6 */
+const entries = [
+  'manifest',
+  'preload',
+  'styles',
+  'bootstrap-vendor',
+  'bootstrap',
+];
+
 function sortOrder(a, b) {
-  const index = { preload: 3, styles: 2, app: 1 };
-  const aI = index[a.names[0]];
-  const bI = index[b.names[0]];
-  return aI && bI ? bI - aI : -1;
+  const entryA = a.names[0];
+  const entryB = b.names[0];
+
+  // prefer 'a' over 'b' if either entry is not found
+  if (!entries.includes(entryA) || !entries.includes(entryB)) {
+    return -1;
+  }
+
+  // otherwise, let their index values decide the sort
+  return entries.indexOf(entryA) - entries.indexOf(entryB);
 }
 
 module.exports = sortOrder;

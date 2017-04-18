@@ -2,6 +2,7 @@ export interface ICardButton {
   name: string;
   buttonClass?: string;
   routerState?: string;
+  buttonState?: string;
 }
 
 export interface ICardStatus {

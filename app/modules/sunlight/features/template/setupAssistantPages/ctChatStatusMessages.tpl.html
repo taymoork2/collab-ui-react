@@ -16,7 +16,9 @@
               <input id="waiting" cs-input name="waitingMessage"
                      class="h5 inputField ct-attribute-field-textbox large-11 margin-0"
                      cs-input-messages="careSetupAssistant.singleLineValidationMessage25"
-                     type="text" ng-maxlength="careSetupAssistant.lengthConstants.singleLineMaxCharLimit25"
+                     type="text"
+                     ng-maxlength="careSetupAssistant.lengthConstants.singleLineMaxCharLimit25"
+                     validate-characters="careSetupAssistant.InvalidCharacters"
                      ng-model="careSetupAssistant.template.configuration.chatStatusMessages.messages.waitingMessage.displayText"
                      ng-model-options="{ allowInvalid: true }"/>
             </div>
@@ -28,7 +30,9 @@
               <input id="chatting" cs-input name="chattingMessage"
                      class="h5 inputField ct-attribute-field-textbox large-11 margin-0"
                      cs-input-messages="careSetupAssistant.singleLineValidationMessage25"
-                     type="text" ng-maxlength="careSetupAssistant.lengthConstants.singleLineMaxCharLimit25"
+                     type="text"
+                     ng-maxlength="careSetupAssistant.lengthConstants.singleLineMaxCharLimit25"
+                     validate-characters="careSetupAssistant.InvalidCharacters"
                      ng-model="careSetupAssistant.template.configuration.chatStatusMessages.messages.chattingMessage.displayText"
                      ng-model-options="{ allowInvalid: true }"/>
             </div>
@@ -40,11 +44,12 @@
               <input id="leaveRoom" cs-input name="leaveRoomMessage"
                      class="h5 inputField ct-attribute-field-textbox large-11 margin-0"
                      cs-input-messages="careSetupAssistant.singleLineValidationMessage25"
-                     type="text" ng-maxlength="careSetupAssistant.lengthConstants.singleLineMaxCharLimit25"
+                     type="text"
+                     ng-maxlength="careSetupAssistant.lengthConstants.singleLineMaxCharLimit25"
+                     validate-characters="careSetupAssistant.InvalidCharacters"
                      ng-model="careSetupAssistant.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText"
                      ng-model-options="{ allowInvalid: true }"/>
             </div>
-
           </section>
         </article>
       </cs-card>

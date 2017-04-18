@@ -14,7 +14,6 @@ export interface IUser {
   trainSiteNames: Array<string>;
   roles: Array<string>;
   invitations?: IServiceInvitations;
-  hasEntitlement?(entitlement: string): boolean;
 }
 
 /* Instance of a User */
@@ -48,12 +47,6 @@ export class User implements IUser {
     roles: [],
   }) {
     _.extend(this, obj);
-  }
-
-  public hasEntitlement(entitlement: string): boolean {
-    return _.some(this.entitlements, (ent) => {
-      return _.isEqual(ent, entitlement);
-    });
   }
 }
 
@@ -129,7 +122,6 @@ export class UserOverviewService {
     private $http: ng.IHttpService,
     private $resource: ng.resource.IResourceService,
     private $q: ng.IQService,
-    private Auth,
     private WebExUtilsFact,
     private Config,
     private SunlightConfigService,
@@ -145,23 +137,21 @@ export class UserOverviewService {
   /* Gets the User with the given UserId, and sets internal data for that user */
   public getUser(userId: string): ng.IPromise<IUserData> {
 
-    let userData: IUserData = new UserData();
-
     const userUrl = this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '/' + userId;
     return this.$http.get(userUrl)
       .then((response) => {
+        let userData: IUserData = new UserData();
         userData.user = new User(<IUser>response.data);
         userData.sqEntitlements = new SquaredEntitlements(this.Utils.getSqEntitlements(userData.user));
-      })
-      .then(() => {
-        return this.updateTrainSiteNames(userData);
-      })
-      .then(() => {
-        return this.getAccountStatus(userData);
-      })
-      .then(() => {
+        userData.user.trainSiteNames = this.updateTrainSiteNames(userData.user);
+        userData.user.pendingStatus = !this.getAccountActiveStatus(userData.user);
         return this.updateInvitationStatus(userData);
       });
+  }
+
+  /* Returns true if the user has the entitlement, else returns false */
+  public userHasEntitlement(user: IUser, entitlement: string): boolean {
+    return _.includes(user.entitlements, entitlement);
   }
 
   //////////////
@@ -176,7 +166,7 @@ export class UserOverviewService {
   // If there are no entitlements for the user, then check if there are any pending
   // invitations in Casandra database
   // NOTE: This is temporary until all users are migrated out of Casandra and into CI!
-  private updateInvitationStatus(userData: IUserData): ng.IPromise<IUserData> | IUserData {
+  private updateInvitationStatus(userData: IUserData): ng.IPromise<IUserData> {
 
     let promise = this.$q.resolve();
 
@@ -253,43 +243,36 @@ export class UserOverviewService {
     return false;
   }
 
-  private updateTrainSiteNames(userData: IUserData): IUserData {
-    if (userData.user.trainSiteNames) {
-      let ciTrainSiteNames = userData.user.trainSiteNames.filter(
+  private updateTrainSiteNames(user: IUser): Array<string> {
+    if (user.trainSiteNames) {
+      let ciTrainSiteNames = user.trainSiteNames.filter(
         (chkSiteUrl) => {
           return this.WebExUtilsFact.isCIEnabledSite(chkSiteUrl);
         },
       );
-      userData.user.trainSiteNames = (0 < ciTrainSiteNames.length) ? ciTrainSiteNames : [];
+      return (0 < ciTrainSiteNames.length) ? ciTrainSiteNames : [];
+    } else {
+      return [];
     }
-    return userData;
   }
 
-  private getAccountStatus(userData: IUserData): ng.IPromise<IUserData> | IUserData {
-    // user status pending until we determine otherwise
-    userData.user.pendingStatus = false;
-    return this.Auth.isOnlineOrg()
-      .then((isOnline: boolean) => {
+  public getAccountActiveStatus(user: IUser): boolean {
+    // is there a sign-up date for the user?
+    if (!_.isEmpty(user.entitlements)) {
 
-        // is there a sign-up date for the user?
-        let userHasSignedUp = _.some(userData.user.userSettings, (userSetting) => {
-          return userSetting.indexOf('spark.signUpDate') > 0;
-        });
+      let userHasSignedUp = _.some(user.userSettings, (x) => _.includes(x, 'spark.signUpDate'));
+      let hasCiscouc = this.userHasEntitlement(user, 'ciscouc');
 
-        // is an active user if user has entitlements AND (has signed up, or is in an onlineOrg, or is in Cisco org)
-        let isActiveUser = !_.isEmpty(userData.user.entitlements) &&
-          (userHasSignedUp || !!isOnline ||
-            (userData.user && _.isFunction(userData.user.hasEntitlement) && userData.user.hasEntitlement('ciscouc')));
-
-        userData.user.pendingStatus = !isActiveUser;
-        return userData;
-      });
+      return (userHasSignedUp || hasCiscouc);
+    }
+    // user is not active
+    return false;
   }
 
   public getUserPreferredLanguage(languageCode) {
     return this.ServiceSetup.getAllLanguages().then(languages => {
       if (_.isEmpty(languages)) { return this.DEFAULT_LANG; }
-      let translatedLanguages =  this.ServiceSetup.getTranslatedSiteLanguages(languages);
+      let translatedLanguages = this.ServiceSetup.getTranslatedSiteLanguages(languages);
       return this.findPreferredLanguageByCode(translatedLanguages, languageCode);
     });
   }

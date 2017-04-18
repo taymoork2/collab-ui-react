@@ -1,17 +1,16 @@
 'use strict';
 
 describe('Controller: TrialCtrl:', function () {
-  var controller, helpers, $controller, $scope, $state, $q, $translate, $window, $httpBackend, Authinfo, Analytics, Config, Notification, TrialService, TrialContextService, TrialPstnService, HuronCountryService, HuronCustomer, FeatureToggleService, Orgservice;
+  var controller, helpers, $controller, $scope, $state, $q, $translate, $window, $httpBackend, Authinfo, Analytics, Config, Notification, TrialService, TrialContextService, TrialPstnService, HuronCustomer, FeatureToggleService, Orgservice;
 
   var stateParams = {};
   var addContextSpy, removeContextSpy, addWatchSpy;
   var trialEditResponse = getJSONFixture('core/json/trials/trialEditResponse.json');
   var purchasedCustomerData = getJSONFixture('core/json/customers/customerWithLicensesNoTrial.json');
   var purchasedWithTrialCustomerData = getJSONFixture('core/json/customers/customerWithLicensesAndTrial.json');
-  var countryList = getJSONFixture('core/json/trials/countryList.json');
-
+  var enabledFeatureToggles = [];
   afterEach(function () {
-    controller = helpers = $controller = $scope = $state = $q = $translate = $window = $httpBackend = Analytics = Authinfo = Config = Notification = TrialService = TrialContextService = HuronCustomer = HuronCountryService = FeatureToggleService = Orgservice = undefined;
+    controller = helpers = $controller = $scope = $state = $q = $translate = $window = $httpBackend = Analytics = Authinfo = Config = Notification = TrialService = TrialContextService = HuronCustomer = FeatureToggleService = Orgservice = undefined;
   });
 
   afterAll(function () {
@@ -24,7 +23,7 @@ describe('Controller: TrialCtrl:', function () {
   beforeEach(angular.mock.module('Sunlight'));
 
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$state_, _$q_, _$translate_, _$window_, _$httpBackend_, _Analytics_, _Authinfo_, _Config_, _Notification_, _TrialService_, _TrialContextService_, _TrialPstnService_, _HuronCountryService_, _HuronCustomer_, _FeatureToggleService_, _Orgservice_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$state_, _$q_, _$translate_, _$window_, _$httpBackend_, _Analytics_, _Authinfo_, _Config_, _Notification_, _TrialService_, _TrialContextService_, _TrialPstnService_, _HuronCustomer_, _FeatureToggleService_, _Orgservice_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $state = _$state_;
@@ -42,8 +41,6 @@ describe('Controller: TrialCtrl:', function () {
     Orgservice = _Orgservice_;
     TrialPstnService = _TrialPstnService_;
     Config = _Config_;
-    HuronCountryService = _HuronCountryService_;
-
 
     spyOn(Notification, 'success');
     spyOn(Notification, 'errorResponse');
@@ -57,16 +54,17 @@ describe('Controller: TrialCtrl:', function () {
     addContextSpy = spyOn(TrialContextService, 'addService').and.returnValue($q.resolve());
     removeContextSpy = spyOn(TrialContextService, 'removeService').and.returnValue($q.resolve());
     spyOn(TrialContextService, 'trialHasService').and.returnValue(false);
+    spyOn(TrialPstnService, 'checkForPstnSetup').and.returnValue($q.resolve(false));
     spyOn(FeatureToggleService, 'atlasContextServiceTrialsGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'atlasCareInboundTrialsGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.resolve(true));
-    spyOn(TrialPstnService, 'checkForPstnSetup').and.returnValue($q.resolve(false));
     spyOn(FeatureToggleService, 'atlasTrialsShipDevicesGetStatus').and.returnValue($q.resolve(false));
+    spyOn(FeatureToggleService, 'huronSupportThinktelGetStatus').and.returnValue($q.resolve(false));
+    spyOn(FeatureToggleService, 'huronFederatedSparkCallGetStatus').and.returnValue($q.resolve(false));
     spyOn(FeatureToggleService, 'supports').and.callFake(function (param) {
-      fail('the following toggle wasn\'t expected' + param); //taking control of which toggles this controller are using (explicit or implicit)
+      return $q.resolve(_.includes(enabledFeatureToggles, param));
     });
-    spyOn(FeatureToggleService, 'huronFederatedSparkCallGetStatus').and.returnValue($q.resolve(true));
     spyOn(Orgservice, 'getAdminOrgAsPromise').and.returnValue($q.resolve({
       data: {
         success: true,
@@ -78,10 +76,8 @@ describe('Controller: TrialCtrl:', function () {
       callback(getJSONFixture('core/json/organizations/Orgservice.json').getOrg, 200);
     });
 
-    spyOn(HuronCountryService, 'getCountryList').and.returnValue($q.resolve(countryList));
-
     $httpBackend
-      .when('GET', 'https://atlas-integration.wbx2.com/admin/api/v1/organizations/null?disableCache=false')
+      .when('GET', 'https://atlas-intb.ciscospark.com/admin/api/v1/organizations/null?disableCache=false')
       .respond({});
   }));
 
@@ -96,7 +92,6 @@ describe('Controller: TrialCtrl:', function () {
       Orgservice: Orgservice,
       Notification: Notification,
       HuronCustomer: HuronCustomer,
-      HuronCountryService: HuronCountryService,
       FeatureToggleService: FeatureToggleService,
       TrialPstnService: TrialPstnService,
     });
@@ -621,72 +616,54 @@ describe('Controller: TrialCtrl:', function () {
         });
 
         describe('validateCareLicense:', function () {
-          it('care license validation succeeds when care is not selected.', function () {
-            controller.careTrial.enabled = false;
-            expect(helpers.validateCareLicense()).toBeTruthy();
-          });
-
-          it('care license validation allows value between 0 and 50.', function () {
+          it('care license validation allows max value up to and including 50.', function () {
             controller.details.licenseCount = 100;
             controller.careTrial.enabled = true;
             controller.advanceCareTrial.details.quantity = 0;
-
-            expect(helpers.validateCareLicense(-1, -1)).toBeFalsy();
-            expect(helpers.validateCareLicense(1, 1)).toBeTruthy();
-            expect(helpers.validateCareLicense(50, 50)).toBeTruthy();
-            expect(helpers.validateCareLicense(51, 51)).toBeFalsy();
+            var max = controller._helpers.getCareMaxLicenseCount(controller.careTypes.K1);
+            expect(max).toBe(50);
           });
-
-          it('care license validation allows value between 0 and 50 with advance care enabled', function () {
+          it('care license validation allows max value up to and including 50 with advance care enabled', function () {
             controller.details.licenseCount = 50;
             controller.careTrial.enabled = true;
             controller.advanceCareTrial.details.quantity = 25;
-
-            expect(helpers.validateCareLicense(-1, -1)).toBeFalsy();
-            expect(helpers.validateCareLicense(1, 1)).toBeTruthy();
-            expect(helpers.validateCareLicense(25, 25)).toBeTruthy();
-            expect(helpers.validateCareLicense(51, 51)).toBeFalsy();
+            var max = controller._helpers.getCareMaxLicenseCount(controller.careTypes.K1);
+            expect(max).toBe(50);
           });
 
           it('care license validation disallows value greater than details.licenseCount', function () {
             controller.details.licenseCount = CARE_LICENSE_COUNT - 1;
             controller.careTrial.enabled = true;
-            expect(helpers.validateCareLicense(CARE_LICENSE_COUNT, CARE_LICENSE_COUNT)).toBeFalsy();
+            var max = controller._helpers.getCareMaxLicenseCount(controller.careTypes.K1);
+            expect(max).toBe(CARE_LICENSE_COUNT - 1);
           });
         });
 
         describe('validateAdvanceCareLicense:', function () {
-          it('advance care license validation succeeds when care is not selected.', function () {
-            controller.advanceCareTrial.enabled = false;
-            expect(helpers.validateAdvanceCareLicense()).toBeTruthy();
-          });
 
-          it('advance care license validation allows value between 0 and 50.', function () {
+          it('advance care license validation allows value up to and including 50.', function () {
             controller.details.licenseCount = 100;
             controller.advanceCareTrial.enabled = true;
             controller.careTrial.details.quantity = 0;
+            var max = controller._helpers.getCareMaxLicenseCount(controller.careTypes.K2);
+            expect(max).toBe(50);
 
-            expect(helpers.validateAdvanceCareLicense(-1, -1)).toBeFalsy();
-            expect(helpers.validateAdvanceCareLicense(1, 1)).toBeTruthy();
-            expect(helpers.validateAdvanceCareLicense(50, 50)).toBeTruthy();
-            expect(helpers.validateAdvanceCareLicense(51, 51)).toBeFalsy();
           });
 
-          it('advance care license validation allows value between 0 and 50 with advance care enabled', function () {
+          it('advance care license validation allows max value up to and including 50 with advance care enabled', function () {
             controller.details.licenseCount = 50;
             controller.advanceCareTrial.enabled = true;
             controller.careTrial.details.quantity = 25;
 
-            expect(helpers.validateAdvanceCareLicense(-1, -1)).toBeFalsy();
-            expect(helpers.validateAdvanceCareLicense(1, 1)).toBeTruthy();
-            expect(helpers.validateAdvanceCareLicense(25, 25)).toBeTruthy();
-            expect(helpers.validateAdvanceCareLicense(51, 51)).toBeFalsy();
+            var max = controller._helpers.getCareMaxLicenseCount(controller.careTypes.K1);
+            expect(max).toBe(50);
           });
 
           it('advance care license validation disallows value greater than details.licenseCount', function () {
             controller.details.licenseCount = CARE_LICENSE_COUNT - 1;
             controller.advanceCareTrial.enabled = true;
-            expect(helpers.validateAdvanceCareLicense(CARE_LICENSE_COUNT, CARE_LICENSE_COUNT)).toBeFalsy();
+            var max = controller._helpers.getCareMaxLicenseCount(controller.careTypes.K2);
+            expect(max).toBe(CARE_LICENSE_COUNT - 1);
           });
         });
       });
@@ -886,7 +863,7 @@ describe('Controller: TrialCtrl:', function () {
     });
 
     it('should have correct navigation state order', function () {
-      expect(controller.navOrder).toEqual(['trial.info', 'trial.webex', 'trial.pstn', 'trial.emergAddress', 'trial.call']);
+      expect(controller.navOrder).toEqual(['trial.info', 'trial.webex', 'trial.pstnDeprecated', 'trial.emergAddress', 'trial.call']);
     });
 
     it('should transition state', function () {
@@ -1261,21 +1238,13 @@ describe('Controller: TrialCtrl:', function () {
         });
 
         describe('validateCareLicense:', function () {
-          it('care license validation is not used when care is not selected.', function () {
-            controller.careTrial.enabled = false;
-            expect(controller._helpers.validateCareLicense()).toBeTruthy();
-          });
-
-          it('care license validation allows value between 1 and 50.', function () {
-            controller.details.licenseCount = 100;
-            controller.careTrial.enabled = true;
-            expect(controller._helpers.validateCareLicense(CARE_LICENSE_COUNT, CARE_LICENSE_COUNT)).toBeTruthy();
-          });
-
           it('care license validation disallows value greater than total users.', function () {
             controller.details.licenseCount = 10;
             controller.careTrial.enabled = true;
-            expect(controller._helpers.validateCareLicense(CARE_LICENSE_COUNT + 1, CARE_LICENSE_COUNT + 1)).toBeFalsy();
+            controller.advanceCareTrial.enabled = false;
+            controller.advanceCareTrial.paid = 0;
+            var max = controller._helpers.getCareMaxLicenseCount(controller.careTypes.K1);
+            expect(max).toBe(10);
           });
           it('if message is purchased care license <= message licenses regardless of licenseCount', function () {
             controller.details.licenseCount = 10;
@@ -1283,26 +1252,29 @@ describe('Controller: TrialCtrl:', function () {
             controller.advanceCareTrial.enabled = false;
             controller.messageTrial.enabled = false;
             controller.messageTrial.paid = 40;
-            expect(controller._helpers.validateCareLicense(CARE_LICENSE_COUNT + 1, CARE_LICENSE_COUNT + 1)).toBe(true);
+            var max = controller._helpers.getCareMaxLicenseCount(controller.careTypes.K1);
+            expect(max).toBe(40);
+          });
+          it('if advanceCare purchased should count with K1', function () {
+            controller.details.licenseCount = 10;
+            controller.careTrial.enabled = true;
+            controller.advanceCareTrial.enabled = false;
+            controller.advanceCareTrial.paid = 5;
+            controller.messageTrial.enabled = false;
+            controller.messageTrial.paid = 40;
+            var max = controller._helpers.getCareMaxLicenseCount(controller.careTypes.K1);
+            expect(max).toBe(35);
           });
         });
 
         describe('validateAdvanceCareLicense:', function () {
-          it('advance care license validation is not used when care is not selected.', function () {
-            controller.advanceCareTrial.enabled = false;
-            expect(controller._helpers.validateAdvanceCareLicense()).toBeTruthy();
-          });
-
-          it('advance care license validation allows value between 1 and 50.', function () {
-            controller.details.licenseCount = 100;
-            controller.advanceCareTrial.enabled = true;
-            expect(controller._helpers.validateAdvanceCareLicense(CARE_LICENSE_COUNT, CARE_LICENSE_COUNT)).toBeTruthy();
-          });
 
           it('advance care license validation disallows value greater than total users.', function () {
             controller.details.licenseCount = 10;
             controller.advanceCareTrial.enabled = true;
-            expect(controller._helpers.validateAdvanceCareLicense(CARE_LICENSE_COUNT + 1, CARE_LICENSE_COUNT + 1)).toBeFalsy();
+            controller.careTrial.enabled = false;
+            var max = controller._helpers.getCareMaxLicenseCount(controller.careTypes.K2);
+            expect(max).toBe(10);
           });
           it('if message is purchased advance care license <= message licenses regardless of licenseCount', function () {
             controller.details.licenseCount = 10;
@@ -1310,81 +1282,12 @@ describe('Controller: TrialCtrl:', function () {
             controller.messageTrial.enabled = false;
             controller.messageTrial.paid = 40;
             controller.careTrial.enabled = false;
-            expect(controller._helpers.validateAdvanceCareLicense(CARE_LICENSE_COUNT + 1, CARE_LICENSE_COUNT + 1)).toBe(true);
+            var max = controller._helpers.getCareMaxLicenseCount(controller.careTypes.K2);
+            expect(max).toBe(40);
           });
         });
       });
     });
-
-    describe('Input validators', function () {
-      var orgInput;
-      var emailInput;
-      var testCase = [{
-        retVal: {
-          unique: true,
-        },
-        targetVal: true,
-      }, {
-        retVal: {
-          error: 'trialModal.errorInUse',
-        },
-        targetVal: false,
-      }, {
-        retVal: {
-          error: 'trialModal.errorInvalidName',
-        },
-        targetVal: false,
-      }, {
-        retVal: {
-          error: 'trialModal.errorInvalid',
-        },
-        targetVal: false,
-      }, {
-        retVal: {
-          error: 'trialModal.errorServerDown',
-        },
-        targetVal: false,
-      }, {
-        retVal: {
-          bad: 'bad',
-        },
-        targetVal: false,
-      }];
-
-      beforeEach(function () {
-        orgInput = controller.custInfoFields[0];
-        emailInput = controller.custInfoFields[1];
-        orgInput.options = {
-          validation: {
-            show: null,
-          },
-        };
-        emailInput.options = {
-          validation: {
-            show: null,
-          },
-        };
-      });
-
-      function doTestCase(index) {
-        spyOn(TrialService, 'shallowValidation').and.returnValue($q.resolve(testCase[index].retVal));
-
-        orgInput.asyncValidators.uniqueName.expression('test', 'test', orgInput);
-        emailInput.asyncValidators.uniqueEmail.expression('test', 'test', emailInput);
-        $scope.$apply();
-
-        expect(controller.uniqueName).toBe(testCase[index].targetVal);
-        expect(controller.uniqueEmail).toBe(testCase[index].targetVal);
-      }
-
-      _.times(testCase.length, function (index) {
-        var testMsg = 'should confirm ' + JSON.stringify(testCase[index].retVal) + ' validates as ' + testCase[index].targetVal;
-        it(testMsg, function () {
-          doTestCase(index);
-        });
-      });
-    });
-
   });
 
   describe('start trial existing org mode:', function () {
@@ -1418,7 +1321,7 @@ describe('Controller: TrialCtrl:', function () {
     });
 
     it('should have correct navigation state order', function () {
-      expect(controller.navOrder).toEqual(['trial.info', 'trial.webex', 'trial.pstn', 'trial.emergAddress', 'trial.call']);
+      expect(controller.navOrder).toEqual(['trial.info', 'trial.webex', 'trial.pstnDeprecated', 'trial.emergAddress', 'trial.call']);
     });
 
     it('should transition state', function () {

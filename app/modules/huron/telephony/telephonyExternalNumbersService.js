@@ -1,8 +1,12 @@
   (function () {
     'use strict';
 
+    var cmiServicesModule = require('./cmiServices');
+
     module.exports = angular
-      .module('huron.external-number-pool', [])
+      .module('huron.external-number-pool', [
+        cmiServicesModule,
+      ])
       .factory('ExternalNumberPool', ExternalNumberPool)
       .name;
 

@@ -6,7 +6,11 @@
     .controller('DeviceOverviewCtrl', DeviceOverviewCtrl);
 
   /* @ngInject */
-  function DeviceOverviewCtrl($q, $state, $scope, $interval, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, channels, RemoteSupportModal, LaunchAdvancedSettingsModal, ServiceSetup, KemService, TerminusUserDeviceE911Service, EmergencyServicesService, AtaDeviceModal) {
+  function DeviceOverviewCtrl($q, $state, $scope, $interval, Notification, $stateParams, $translate, $timeout, Authinfo,
+    FeedbackService, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal,
+    ResetDeviceModal, channels, RemoteSupportModal, LaunchAdvancedSettingsModal, ServiceSetup, KemService,
+    TerminusUserDeviceE911Service, EmergencyServicesService, AtaDeviceModal, DeviceOverviewService,
+    FeatureToggleService) {
     var deviceOverview = this;
     var huronDeviceService = $stateParams.huronDeviceService;
     deviceOverview.linesAreLoaded = false;
@@ -16,7 +20,12 @@
     deviceOverview.selectedCountry = "";
     deviceOverview.hideE911Edit = true;
     deviceOverview.faxEnabled = false;
+    deviceOverview.t38FeatureToggle = false;
     function init() {
+      FeatureToggleService.csdmT38GetStatus().then(function (response) {
+        deviceOverview.t38FeatureToggle = response;
+      });
+
       displayDevice($stateParams.currentDevice);
 
       CsdmDataModelService.reloadItem($stateParams.currentDevice).then(function (updatedDevice) {
@@ -64,9 +73,10 @@
 
       deviceOverview.deviceHasInformation = deviceOverview.currentDevice.ip || deviceOverview.currentDevice.mac || deviceOverview.currentDevice.serial || deviceOverview.currentDevice.software || deviceOverview.currentDevice.hasRemoteSupport;
 
-      deviceOverview.canChangeUpgradeChannel = channels.length > 1 && deviceOverview.currentDevice.isOnline;
-
-      deviceOverview.shouldShowUpgradeChannel = channels.length > 1 && !deviceOverview.currentDevice.isOnline;
+      FeatureToggleService.cloudberryLyraConfigGetStatus().then(function (feature) {
+        deviceOverview.canChangeUpgradeChannel = channels.length > 1 && !deviceOverview.currentDevice.isHuronDevice && deviceOverview.currentDevice.isOnline && !feature;
+        deviceOverview.shouldShowUpgradeChannel = channels.length > 1 && !deviceOverview.currentDevice.isHuronDevice && (!deviceOverview.currentDevice.isOnline || feature);
+      });
 
       deviceOverview.upgradeChannelOptions = _.map(channels, getUpgradeChannelObject);
 
@@ -131,12 +141,10 @@
 
     function initCountryOptions() {
       deviceOverview.countryPlaceholder = $translate.instant('deviceOverviewPage.countryPlaceholder');
-
       if (!deviceOverview.countryOptions) {
-        return ServiceSetup.getSiteCountries()
-          .then(function (countries) {
-            deviceOverview.countryOptions = _.sortBy(ServiceSetup.getTranslatedSiteCountries(countries), 'label');
-          });
+        return DeviceOverviewService.getCountryOptions().then(function (countries) {
+          deviceOverview.countryOptions = countries;
+        });
       } else {
         return $q.resolve();
       }
@@ -148,10 +156,8 @@
         deviceOverview.emergencyCallbackNumber = result.emergencyCallbackNumber;
         deviceOverview.selectedTimeZone = getTimeZoneFromId(result);
         deviceOverview.tzIsLoaded = true;
-        if (result.country) {
-          deviceOverview.country = result.country;
-          deviceOverview.selectedCountry = getCountryFromId(result.country);
-        }
+        deviceOverview.country = result.country;
+        deviceOverview.selectedCountry = DeviceOverviewService.findCountryByCode(deviceOverview.countryOptions, result.country);
         deviceOverview.countryIsLoaded = true;
       }).then(getEmergencyInformation);
     }
@@ -162,12 +168,6 @@
           return o.id === timeZone.timeZone;
         });
       }
-    }
-
-    function getCountryFromId(country) {
-      return _.find(deviceOverview.countryOptions, function (o) {
-        return o.value === country;
-      });
     }
 
     function pollLines() {
@@ -240,7 +240,7 @@
           })
           .finally(function () {
             deviceOverview.updatingCountry = false;
-            deviceOverview.selectedCountry = getCountryFromId(newValue);
+            deviceOverview.selectedCountry = DeviceOverviewService.findCountryByCode(deviceOverview.countryOptions, newValue);
           });
       }
     };
@@ -289,7 +289,8 @@
 
     function pollDeviceForNewCountry(newValue, endTime, deferred) {
       huronDeviceService.getDeviceInfo(deviceOverview.currentDevice).then(function (result) {
-        if (result.country === newValue) {
+        //Temporary workaround to handle null reset until CMI Device API returns null.
+        if (result.country === newValue || newValue === null) {
           Notification.success('deviceOverviewPage.countryUpdated');
           return deferred.resolve();
         }

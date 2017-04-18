@@ -16,6 +16,7 @@ class PstnSelectorCtrl implements ng.IComponentController {
   public error: boolean;
   public maxSelection: number;
   public form: ng.IFormController;
+  public validSearch;
 
   /* @ngInject */
   constructor(private TelephoneNumberService,
@@ -142,6 +143,18 @@ class PstnSelectorCtrl implements ng.IComponentController {
       this.quantity = null;
     }
   }
+
+  public searchChange() {
+    if (this.searchVal && this.validSearch) {
+      if (this.validSearch.filter((valid) => valid.code === this.searchVal).length === 0) {
+        this.form.search.$setValidity('invalid', false);
+      } else {
+        this.form.search.$setValidity('invalid', true);
+      }
+    } else {
+      this.form.search.$setValidity('invalid', true);
+    }
+  }
 }
 
 export class PstnSelectorComponent implements ng.IComponentOptions {
@@ -161,5 +174,6 @@ export class PstnSelectorComponent implements ng.IComponentOptions {
     simple: '@',
     numberType: '@',
     errorMessage: '@',
+    validSearch: '<',
   };
 }

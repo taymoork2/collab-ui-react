@@ -1,15 +1,24 @@
 import { IUser } from './index';
 
-const VALUE = 'value';
-const DELETE = 'delete';
-const OPERATION = 'operation';
 const KEY_SCHEMAS: string = 'schemas';
 const KEY_USER_PREF: string = 'userPreferences';
 
+export interface IPreferenceOperation {
+  value: string;
+  operation?: string;
+}
+
 export class UserPreferencesService {
 
+  // known User Preferences
   public static USER_PREF_LAUNCH: string = 'SparkHideLaunch';
   public static USER_PREF_TOS: string = 'SparkTOSAccept';
+  public static DELETE_OP = 'delete';
+
+  public allPrefs: Array<string> = [
+    UserPreferencesService.USER_PREF_LAUNCH,
+    UserPreferencesService.USER_PREF_TOS,
+  ];
 
   /* @ngInject */
   constructor(
@@ -23,23 +32,29 @@ export class UserPreferencesService {
     });
   }
 
-  public setUserPreferences(user: IUser): ng.IPromise<IUser> {
+  public setUserPreferences(user: IUser, prefId: string, value: boolean): ng.IPromise<IUser> {
 
     let updateUserPreferences: Array<Object> = [];
-    let preference: Object = {};
 
-    preference[VALUE] = UserPreferencesService.USER_PREF_TOS;
-    if (!user.hideToS) {
-      preference[OPERATION] = DELETE;
-    }
-    updateUserPreferences.push(preference);
+    // set status of each preference
+    _.forEach(this.allPrefs, (pref) => {
+      let preference: IPreferenceOperation = {
+        value: pref,
+      };
 
-    preference = {};
-    preference[VALUE] = UserPreferencesService.USER_PREF_LAUNCH;
-    if (!user.hideLaunch) {
-      preference[OPERATION] = DELETE;
-    }
-    updateUserPreferences.push(preference);
+      // if preference was already set, or we are disabling it, the set to delete it
+      if (_.isEqual(prefId, pref)) {
+        if (!value) {
+          // turn off this preference
+          preference.operation = UserPreferencesService.DELETE_OP;
+        }
+      } else if (!this.hasPreference(user, pref)) {
+        // wasn't set before
+        preference.operation = UserPreferencesService.DELETE_OP;
+      }
+
+      updateUserPreferences.push(preference);
+    });
 
     let body: Object = {};
     body[KEY_SCHEMAS] = user.schemas;

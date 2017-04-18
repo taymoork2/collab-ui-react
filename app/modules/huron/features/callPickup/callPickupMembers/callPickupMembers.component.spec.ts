@@ -7,6 +7,7 @@ describe('Component: callPickupMembers', () => {
   let checkboxesList = getJSONFixture('huron/json/features/callPickup/checkboxesList.json');
   let numbersObject = getJSONFixture('huron/json/features/callPickup/numbersList.json');
   let numbersArray = _.result(numbersObject, 'numbers');
+  let model = { disabled: true, userName: 'johndoe@gmail.com', uuid: '1000' };
 
   beforeEach(function () {
     this.initModules('huron.call-pickup.members');
@@ -20,6 +21,7 @@ describe('Component: callPickupMembers', () => {
       'HuronConfig',
       'UserNumberService',
       'CallPickupGroupService',
+      '$modal',
     );
 
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
@@ -76,14 +78,15 @@ describe('Component: callPickupMembers', () => {
       let mockMembersList = membersList.slice(1, 4);
       let linesTaken = true;
       this.view.find(MEMBER_INPUT).val('doe').change();
+      this.controller.fetchMembers('doe').then(function (mockMembersList) {
+        for (let i = 0; i < mockMembersList.length; i++) {
+          expect(mockMembersList[i].disabled).toEqual(true);
+        }
+      });
       this.getMemberSuggestionsByLimitDefer.resolve(mockMembersList);
       this.areAllLinesInPickupGroupDefer.resolve(linesTaken);
       this.$scope.$apply();
       expect(mockMembersList.length).toEqual(suggestedMembersCount);
-
-      for (let i = 0; i < mockMembersList.length; i++) {
-        expect(mockMembersList[i].disabled).toEqual(true);
-      }
     });
   });
 
@@ -289,6 +292,60 @@ describe('Component: callPickupMembers', () => {
     it('Can get USER_PLACE type', function() {
       let mem2 = _.cloneDeep(membersList[1]);
       expect(this.controller.getMemberType(mem2)).toEqual('place');
+    });
+  });
+
+  describe('disabled member modal', () => {
+    beforeEach(initComponent);
+
+    it('get active member disabled test', function () {
+      let element = '<li ng-repeat="match in matches track by $index" id="typeahead-2335-4881-option-0" class="ng-scope active"></li>';
+      this.compileTemplate(element);
+
+      let scope = function() {
+        return {
+          scope: function() {
+            return {
+              match: {
+                model: model,
+              },
+            };
+          },
+        };
+      };
+
+      spyOn($.fn, 'find').and.callFake(scope);
+      expect(this.controller.getActiveMember()).toEqual(model);
+    });
+
+
+    it('is active member disabled test', function () {
+      spyOn(this.controller, 'getActiveMember').and.returnValue(model);
+      expect(this.controller.isActiveMemberDisabled()).toBeTruthy();
+    });
+
+    it('displayModalLinesTaken test', function () {
+      let ENTER_KEY = 13;
+
+      this.getNumbersDefer.resolve(numbersArray);
+      this.isLineInPickupGroupDefer.resolve('helpdesk');
+
+      spyOn(this.controller, 'isActiveMemberDisabled').and.returnValue(true);
+
+      let member = { userName: 'johndoe@gmail.com', uuid: '1000' };
+      spyOn(this.controller, 'getActiveMember').and.returnValue(member);
+
+      let evt = $.Event('keydown', { keyCode: ENTER_KEY });
+      let spyStopPropagation = spyOn(evt, 'stopPropagation');
+      let spyModal = spyOn(this.$modal, 'open');
+
+      this.controller.displayModalLinesTaken(evt);
+      this.$scope.$digest();
+
+      expect(this.CallPickupGroupService.getMemberNumbers).toHaveBeenCalled();
+      expect(this.CallPickupGroupService.isLineInPickupGroup).toHaveBeenCalled();
+      expect(spyStopPropagation).toHaveBeenCalled();
+      expect(spyModal).toHaveBeenCalled();
     });
   });
 });

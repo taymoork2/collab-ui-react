@@ -19,8 +19,8 @@ class TimeZoneCtrl implements ng.IComponentController {
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
-    let timeZoneChanges = changes['timeZone'];
-    if (timeZoneChanges && timeZoneChanges.currentValue) {
+    const { timeZone } = changes;
+    if (timeZone && timeZone.currentValue) {
       this.selected = _.find(this.timeZoneOptions, { id: this.timeZone });
     }
   }

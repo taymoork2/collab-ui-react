@@ -1,7 +1,5 @@
 'use strict';
 
-var featureToggle = require('../utils/featureToggle.utils');
-
 /* global LONG_TIMEOUT, deleteTrialUtils */
 
 describe('Spark Care Partner flow', function () {
@@ -13,27 +11,25 @@ describe('Spark Care Partner flow', function () {
     });
 
     it('should add a new care trial', function () {
+<<<<<<< HEAD
       //utils.click(partner.trialFilter);
       browser.pause();
+=======
+>>>>>>> upstream/master
       utils.click(partner.addButton);
 
-      if (featureToggle.features.atlasStartTrialForPaid) {
-        utils.expectIsDisplayed(partner.editTrialForm);
-      } else {
-        // TODO: remove when feature toggle is removed
-        utils.expectIsDisplayed(partner.addTrialForm);
-      }
+      utils.expectIsDisplayed(partner.editTrialForm);
       utils.expectIsDisabled(partner.startTrialButton);
 
       utils.expectIsDisplayed(partner.messageTrialCheckbox);
       utils.expectIsDisplayed(partner.careTrialCheckbox);
 
       // expect all offers checked
-      utils.expectCheckbox(partner.messageTrialCheckbox, true);
-      utils.expectCheckbox(partner.careTrialCheckbox, true);
-      utils.expectCheckbox(partner.squaredUCTrialCheckbox, true);
-      utils.expectCheckbox(partner.roomSystemsTrialCheckbox, true);
-      utils.expectCheckbox(partner.sparkBoardTrialCheckbox, true);
+      utils.expectInputCheckbox(partner.messageTrialCheckbox, true);
+      utils.expectInputCheckbox(partner.careTrialCheckbox, true);
+      utils.expectInputCheckbox(partner.squaredUCTrialCheckbox, true);
+      utils.expectInputCheckbox(partner.roomSystemsTrialCheckbox, true);
+      utils.expectInputCheckbox(partner.sparkBoardTrialCheckbox, true);
       utils.setCheckboxIfDisplayed(partner.webexTrialCheckbox, false, 100);
 
       utils.sendKeys(partner.customerNameInput, partner.newTrial.customerName);

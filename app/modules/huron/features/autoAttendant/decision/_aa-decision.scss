@@ -4,6 +4,10 @@
   @include vr-spacing(mt, .75);
   @include vr-spacing(mb, 1);
 
+  .session-variable {
+    @include vr-spacing(mb, 1.5);
+  }
+
   .aa-flex-row {
     @include vr-spacing(ml, 0);
     @include vr-spacing(mb, 0);
@@ -25,10 +29,12 @@
   }
 
   .select-list {
-    @include vr-spacing(pr, 1.75);
     .dropdown-menu {
       min-width: 100%;
       width: auto;
+    }
+    .msg-container {
+      line-height: 1rem;
     }
   }
 

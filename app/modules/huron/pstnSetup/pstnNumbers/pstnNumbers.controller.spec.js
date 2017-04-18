@@ -130,7 +130,6 @@ describe('Controller: PstnNumbersCtrl', function () {
     PstnSetup.setProvider(customerCarrierList[0]);
     PstnSetup.setCountryCode('US');
 
-    spyOn(PstnSetupService, 'releaseCarrierInventory').and.returnValue($q.resolve());
     spyOn(PstnSetupService, 'releaseCarrierInventoryV2').and.returnValue($q.resolve());
     spyOn(PstnSetupService, 'getCarrierInventory').and.returnValue($q.resolve(response));
     spyOn(PstnSetupService, 'getCarrierTollFreeInventory').and.returnValue($q.resolve(response));
@@ -237,7 +236,7 @@ describe('Controller: PstnNumbersCtrl', function () {
     });
 
     it('should show toll-free tab in paid if supported', function () {
-      PstnSetup.setIsTrial(false);
+      controller.isTrial = false;
       PstnSetupService.getCarrierCapabilities = jasmine.createSpy().and.returnValue($q.resolve(capabilityWithTollFree));
       controller.getCapabilities();
       $scope.$apply();

@@ -19,7 +19,7 @@
     <span class="section-name"
           translate="hercules.expresswayClusterSettings.upgradeScheduleSubHeader"></span>
     <span ng-if="!$ctrl.isHybridContextCluster()" class="feature-name">{{$ctrl.schedule.dateTime}}, {{$ctrl.schedule.timeZone}}</span>
-    <span ng-if="$ctrl.isHybridContextCluster()" class="feature-name" translate="hercules.softwareUpgrade.upgradesAutomatically"></span>
+    <span ng-if="$ctrl.isHybridContextCluster()" class="upgrade-text" translate="hercules.softwareUpgrade.upgradesAutomatically"></span>
   </div>
 
   <div ng-if="$ctrl.schedule && $ctrl.hasUrgentUpgradeSchedule()"

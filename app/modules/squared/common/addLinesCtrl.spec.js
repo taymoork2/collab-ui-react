@@ -85,7 +85,7 @@ describe('AddLinesCtrl: Ctrl', function () {
     spyOn(CommonLineService, 'loadExternalNumberPool').and.returnValue($q.resolve(externalNumbers));
     spyOn(CommonLineService, 'loadPrimarySiteInfo').and.returnValue($q.resolve(sites));
     spyOn(CommonLineService, 'mapDidToDn').and.returnValue($q.resolve(externalNumberPoolMap));
-    spyOn(DialPlanService, 'getCustomerDialPlanDetails').and.returnValue($q.resolve({
+    spyOn(DialPlanService, 'getDialPlan').and.returnValue($q.resolve({
       extensionGenerated: 'false',
     }));
 

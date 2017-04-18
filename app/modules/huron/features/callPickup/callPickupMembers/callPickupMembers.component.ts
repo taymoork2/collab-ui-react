@@ -2,6 +2,7 @@ import { Member } from 'modules/huron/members';
 import { IMember, IPickupGroup, IMemberNumber, ICallPickupNumbers } from 'modules/huron/features/callPickup/services';
 import { Notification } from 'modules/core/notifications';
 import { CallPickupGroupService } from 'modules/huron/features/callPickup/services/callPickupGroup.service';
+import { IToolkitModalService } from 'modules/core/modal';
 
 class CallPickupMembersCtrl implements ng.IComponentController {
   public memberList: Member[] = [];
@@ -21,11 +22,14 @@ class CallPickupMembersCtrl implements ng.IComponentController {
     private FeatureMemberService,
     private $translate: ng.translate.ITranslateService,
     private CallPickupGroupService: CallPickupGroupService,
+    private $modal: IToolkitModalService,
+    private $scope,
+    private $element,
   ) { }
 
-  public fetchMembers(): void {
-    if (this.memberName) {
-      this.FeatureMemberService.getMemberSuggestionsByLimit(this.memberName, this.suggestionLimit)
+  public fetchMembers(memberName: String): void {
+    if (memberName) {
+      return this.FeatureMemberService.getMemberSuggestionsByLimit(memberName, this.suggestionLimit)
       .then(
         (members: Member[]) => {
           this.memberList = _.reject(members, mem => _.some(this.selectedMembers, member =>
@@ -39,6 +43,7 @@ class CallPickupMembersCtrl implements ng.IComponentController {
                 member['disabled'] = disabled;
               });
           });
+          return this.memberList;
         });
     }
   }
@@ -76,6 +81,47 @@ class CallPickupMembersCtrl implements ng.IComponentController {
       this.Notification.error('callPickup.memberLimitExceeded');
     }
     this.memberList = [];
+  }
+
+  private getActiveMember(): any {
+    let scope = this.$element.find('li.active').scope();
+    return scope['match']['model'];
+  }
+
+  public isActiveMemberDisabled(): boolean {
+    let model = this.getActiveMember();
+    let disabled = model['disabled'];
+    return disabled;
+  }
+
+  public displayModalLinesTaken(evt): void {
+    if (!this.isActiveMemberDisabled()) {
+      return;
+    }
+
+    let modalScope = this.$scope.$new();
+    let member = this.getActiveMember();
+
+    evt.stopPropagation();
+
+    modalScope.member = this.getDisplayName(member);
+    modalScope.lines = [];
+    modalScope.names = [];
+    this.CallPickupGroupService.getMemberNumbers(member.uuid)
+      .then((numbers: IMemberNumber[]) => {
+        _.forEach(numbers, num => {
+          this.CallPickupGroupService.isLineInPickupGroup(num.internal)
+          .then((name: string) => {
+            modalScope.lines.push(num.internal);
+            modalScope.names.push(name);
+          });
+        });
+      });
+    this.$modal.open({
+      templateUrl: 'modules/huron/features/callPickup/callPickupMembers/callPickupLinesTaken.html',
+      type: 'dialog',
+      scope: modalScope,
+    });
   }
 
   private updateExistingCallPickup(action: string) {

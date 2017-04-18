@@ -12,12 +12,12 @@
 
   width: 100%;
 
-  .row:first-child {
-    @include vr-spacing(pt, 0.25);
-  }
-
   .aa-sm-collapse-left {
     @include vr-spacing(pl, 0);
+  }
+
+  .aa-sm-right {
+    @include vr-spacing(pl, 0.75);
   }
 
   .aa-sm-action {

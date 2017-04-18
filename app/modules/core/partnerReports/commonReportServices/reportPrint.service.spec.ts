@@ -1,10 +1,9 @@
-import {
-  IExportMenu,
-} from '../partnerReportInterfaces';
+import reportServices from './index';
+import { IExportMenu } from '../partnerReportInterfaces';
 
 describe('Service: Report Print Service', () => {
   beforeEach(function () {
-    this.initModules('Core');
+    this.initModules(reportServices);
     this.injectDependencies('$scope', 'ReportPrintService', 'Notification');
 
     this.activeData = getJSONFixture('core/json/customerReports/activeUser.json');

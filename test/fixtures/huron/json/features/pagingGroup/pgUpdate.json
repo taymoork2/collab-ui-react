@@ -1,0 +1,29 @@
+{
+  "groupId": "bbcd1234-abcd-abcd-abcddef123456",
+  "name": "Test2",
+  "extension": "2222",
+  "extensionUUID": "8e33e338-0caa-4579-86df-38ef7590f432",
+  "members": [ 
+  {
+    "memberId": "0002", 
+    "deviceIds": [], 
+    "type": "PLACE"
+  },
+  {
+    "memberId": "0001", 
+    "deviceIds": [], 
+    "type": "USER"
+  }
+  ],
+  "initiatorType": "CUSTOM",
+  "initiators": [
+    { 
+      "initiatorId": "0001",
+      "type": "USER" 
+    },
+    { 
+      "initiatorId": "0002", 
+      "type": "PLACE" 
+    }
+  ]
+}

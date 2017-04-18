@@ -1,56 +1,66 @@
 describe('OverviewUsersCard', function () {
 
-  var $rootScope, OverviewUsersCard, card;
+  beforeEach(function () {
+    this.initModules('Core');
+    this.injectDependencies('$rootScope', '$q', 'OverviewUsersCard', 'Orgservice');
 
-  var convertUserData = {
-    success: true,
-    totalResults: 10,
-  };
+    this.convertUserData = {
+      success: true,
+      totalResults: 10,
+    };
 
-  var userData = {
-    success: true,
-    totalResults: 0,
-  };
+    this.userData = {
+      success: true,
+      totalResults: 0,
+    };
 
-  afterEach(function () {
-    $rootScope = OverviewUsersCard = card = undefined;
+    this.licenses = [{
+      licenses: [{
+        licenseType: 'MESSAGING',
+        usage: 2,
+        volume: 10,
+      }, {
+        licenseType: 'STORAGE',
+        usage: 2,
+        volume: 10,
+      }],
+    }, {
+      licenses: [{
+        licenseType: 'COMMUNICATION',
+        usage: 2,
+        volume: 20,
+      }, {
+        licenseType: 'MESSAGING',
+        usage: 2,
+        volume: 10,
+      }],
+    }];
+
+    spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.when(this.licenses));
+
+    this.card = this.OverviewUsersCard.createCard();
+    this.$rootScope.$apply();
   });
 
-  afterAll(function () {
-    convertUserData = userData = undefined;
+  it('should create user card', function () {
+    expect(this.card.showLicenseCard).toEqual(false);
+    expect(this.card.name).toEqual('overview.cards.users.title');
   });
 
-  beforeEach(angular.mock.module('Core'));
+  it('should stay on convert user card', function () {
+    this.card.unlicensedUsersHandler(this.convertUserData);
+    expect(this.card.usersToConvert).toEqual(10);
+    expect(this.card.showLicenseCard).toEqual(false);
+  });
 
-  function dependencies(_OverviewUsersCard_, _$rootScope_) {
-    $rootScope = _$rootScope_;
-    OverviewUsersCard = _OverviewUsersCard_;
-  }
+  it('should create license card if convert users is 0', function () {
+    this.card.unlicensedUsersHandler(this.userData);
+    this.$rootScope.$apply();
 
-  beforeEach(inject(dependencies));
-
-  describe('overviewuserscard', function () {
-    beforeEach(function () {
-      card = OverviewUsersCard.createCard();
-      $rootScope.$apply();
-    });
-
-    it('should create user card', function () {
-      expect(card.showLicenseCard).toEqual(false);
-      expect(card.name).toEqual('overview.cards.users.title');
-    });
-
-    it('should stay on convert user card', function () {
-      card.unlicensedUsersHandler(convertUserData);
-      expect(card.usersToConvert).toEqual(10);
-      expect(card.showLicenseCard).toEqual(false);
-    });
-
-    it('should create license card if convert users is 0', function () {
-      card.unlicensedUsersHandler(userData);
-      expect(card.usersToConvert).toEqual(0);
-      expect(card.showLicenseCard).toEqual(true);
-      expect(card.name).toEqual('overview.cards.licenses.title');
-    });
+    expect(this.card.usersToConvert).toEqual(0);
+    expect(this.card.showLicenseCard).toEqual(true);
+    expect(this.card.name).toEqual('overview.cards.licenses.title');
+    expect(this.card.licenseNumber).toEqual(16);
+    expect(this.card.licenseType).toEqual(this.licenses[0].licenses[0].licenseType);
   });
 });

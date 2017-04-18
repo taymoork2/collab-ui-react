@@ -310,6 +310,7 @@
       clearCeMenuMap: clearCeMenuMap,
       deleteCeMenuMap: deleteCeMenuMap,
       isCeMenu: isCeMenu,
+      isCeMenuEntry: isCeMenuEntry,
 
       newCeMenu: function () {
         return new CeMenu();
@@ -1232,6 +1233,8 @@
       /* as of now, all are InList type expressions. callerReturned is not
          implemented yet.
       */
+      out.varsUsed = [];
+      out.varsUsed.push(action.if.leftCondition);
 
       out.expression = createInListObj(action);
 
@@ -1710,5 +1713,10 @@
     function isCeMenu(obj) {
       return (objectType(obj) === 'CeMenu');
     }
+    function isCeMenuEntry(obj) {
+      return (objectType(obj) === 'CeMenuEntry');
+    }
+
+
   }
 })();

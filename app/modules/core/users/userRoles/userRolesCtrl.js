@@ -8,6 +8,8 @@ require('./_user-roles.scss');
 
   /* @ngInject */
   function UserRolesCtrl($q, $scope, $translate, $stateParams, SessionStorage, Userservice, Log, Authinfo, Config, $rootScope, Notification, Orgservice, FeatureToggleService, EdiscoveryService) {
+    var COMPLIANCE = 'compliance';
+
     $scope.currentUser = $stateParams.currentUser;
     $scope.sipAddr = '';
     $scope.dirsyncEnabled = false;
@@ -144,7 +146,7 @@ require('./_user-roles.scss');
       $scope.rolesObj.helpdeskValue = hasRole(Config.backend_roles.helpdesk);
       $scope.rolesObj.orderAdminValue = hasRole(Config.backend_roles.orderadmin);
       $scope.rolesObj.partnerManagementValue = hasRole(Config.backend_roles.partner_management);
-      $scope.rolesObj.complianceValue = $scope.currentUser && _.includes($scope.currentUser.entitlements, 'compliance');
+      $scope.rolesObj.complianceValue = isEntitledToCompliance();
 
       $scope.initialRoles = rolesFromScope();
     }
@@ -188,12 +190,15 @@ require('./_user-roles.scss');
 
     function updateRoles() {
       if ($scope.showComplianceRole && $scope.rolesObj.complianceValue !== isEntitledToCompliance()) {
+        $scope.updatingUser = true;
         EdiscoveryService.setEntitledForCompliance(Authinfo.getOrgId(), $scope.currentUser.id, $scope.rolesObj.complianceValue)
           .then(function () {
+            setComplianceEntitlement($scope.rolesObj.complianceValue);
             saveForm();
           })
           .catch(function (response) {
             Notification.errorResponse(response, 'profilePage.complianceError');
+            $scope.updatingUser = false;
           });
       } else {
         saveForm();
@@ -428,7 +433,15 @@ require('./_user-roles.scss');
     }
 
     function isEntitledToCompliance() {
-      return $scope.currentUser && _.includes($scope.currentUser.entitlements, 'compliance');
+      return $scope.currentUser && _.includes($scope.currentUser.entitlements, COMPLIANCE);
+    }
+
+    function setComplianceEntitlement(compliant) {
+      if (compliant) {
+        $scope.currentUser.entitlements.push(COMPLIANCE);
+      } else {
+        _.pull($scope.currentUser.entitlements, COMPLIANCE);
+      }
     }
 
     function checkAdminDisplayName() {

@@ -10,8 +10,8 @@ class HuronTimeFormatCtrl implements ng.IComponentController {
   constructor() {}
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
-    let timeFormatChanges = changes['timeFormat'];
-    if (timeFormatChanges && timeFormatChanges.currentValue) {
+    const { timeFormat } = changes;
+    if (timeFormat && timeFormat.currentValue) {
       this.selected = _.find(this.timeFormatOptions, { value: this.timeFormat });
     }
   }

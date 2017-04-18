@@ -36,6 +36,7 @@
       getUnlicensedUsers: getUnlicensedUsers,
       isSetupDone: isSetupDone,
       setSetupDone: setSetupDone,
+      isTestOrg: isTestOrg,
       setOrgSettings: setOrgSettings,
       createOrg: createOrg,
       deleteOrg: deleteOrg,
@@ -43,7 +44,6 @@
       getOrgCacheOption: getOrgCacheOption,
       getEftSetting: getEftSetting,
       setEftSetting: setEftSetting,
-      setOrgAltHdsServersHds: setOrgAltHdsServersHds,
       validateSiteUrl: validateSiteUrl,
       setHybridServiceReleaseChannelEntitlement: setHybridServiceReleaseChannelEntitlement,
       updateDisplayName: updateDisplayName,
@@ -51,6 +51,7 @@
     };
 
     var savedOrgSettingsCache = [];
+    var isTestOrgCache = {};
 
     return service;
 
@@ -251,6 +252,20 @@
       });
     }
 
+    function isTestOrg(orgId) {
+      if (_.isUndefined(orgId)) {
+        orgId = Authinfo.getOrgId();
+      }
+      if (_.isBoolean(isTestOrgCache[orgId])) {
+        return $q.resolve(isTestOrgCache[orgId]);
+      }
+      return getAdminOrgAsPromise(orgId, { basicInfo: true })
+        .then(function (org) {
+          isTestOrgCache[orgId] = _.get(org, 'data.isTestOrg', false);
+          return isTestOrgCache[orgId];
+        });
+    }
+
     function getCachedOrgSettings(orgId) {
       return _.chain(savedOrgSettingsCache)
         .filter(function (cache) {
@@ -297,7 +312,7 @@
       };
       // only set 'country' property if passed in (otherwise, it is safe left as undefined)
       if (country) {
-        _.set(orgRequest, 'country', _.get(country, 'id', 'US'));
+        orgUrl = orgUrl + '?country=' + _.get(country, 'id', 'US');
       }
       return Auth.setAccessToken().then(function () {
         return $http.post(orgUrl, orgRequest).then(function (response) {
@@ -390,11 +405,6 @@
           eft: setting,
         },
       });
-    }
-
-    function setOrgAltHdsServersHds(orgId, altHdsServers) {
-      var serviceUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '/settings/altHdsServers';
-      return $http.put(serviceUrl, altHdsServers);
     }
 
     function isSetupDone(orgId) {

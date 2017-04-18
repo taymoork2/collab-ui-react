@@ -2,7 +2,7 @@
   <form name="nameVariableForm" novalidate>
     <div class="row aa-flex-row">
       <div class="large-12 small-12 columns aa-name-variable">
-        <input cs-input type="text" name="callerInputNameVariable" id="callerInputNameVariable{{ schedule + index }}" placeholder="{{ :: 'autoAttendant.callerInputNamePlaceHolder' | translate }}" ng-maxlength="aaCallerInput.maxVariableLength" cs-input-messages="aaCallerInput.validationMsg" ng-model="aaCallerInput.nameInput" ng-change="aaCallerInput.saveNameInput()" cs-input-group-size="medium-12" cs-input-label="{{ :: 'autoAttendant.callerInputLabel' | translate }}">
+        <input cs-input type="text" ng-required="true" ng-minlength="aaCallerInput.minVariableLength" name="callerInputNameVariable" id="callerInputNameVariable" placeholder="{{ :: 'autoAttendant.callerInputNamePlaceHolder' | translate }}" ng-maxlength="aaCallerInput.maxVariableLength" cs-input-messages="aaCallerInput.validationMsgs" cs-input-warning-message="{{ :: 'autoAttendant.callerInputVariableDuplicateMsg' | translate }}" cs-input-warning="aaCallerInput.isWarn" ng-model="aaCallerInput.nameInput" ng-change="aaCallerInput.saveNameInput()" cs-input-group-size="medium-12" cs-input-label="{{ :: 'autoAttendant.callerInputLabel' | translate }}">
       </div>
     </div>
     <label class="add-name-input-help-desc" translate="autoAttendant.callerNameInputHelpText"></label>
@@ -33,7 +33,7 @@
       <div class="panel">
         <div ng-if="aaCallerInput.inputActions.length" class="row aa-pm-vertical-line" ng-repeat="keyAction in aaCallerInput.inputActions">
           <div class="row">
-            <form name="nameKeyedInputForm" novalidate>
+            <ng-form name="nameKeyedInputForm">
               <div class="small-2 columns">
                 <cs-select ng-model="keyAction.key" options="keyAction.keys" placeholder="aaCallerInput.selectPlaceholder" on-change-fn="aaCallerInput.keyChanged($index, keyAction.key)" class="aa-pm-key-select" icon="icon-chevron-down" ng-class="{'not-selected':!keyAction.key}">
                 </cs-select>
@@ -45,7 +45,7 @@
               <div class="small-1 columns">
                 <i ng-if="aaCallerInput.inputActions.length > 1" class="icon icon-trash aa-trash-icon" aria-label="common.delete" ng-click="aaCallerInput.deleteKeyAction($index); $event.stopPropagation();"></i>
               </div>
-            </form>
+            </ng-form>
           </div>
         </div>
         <div class="row" ng-if="aaCallerInput.inputActions.length < 12">

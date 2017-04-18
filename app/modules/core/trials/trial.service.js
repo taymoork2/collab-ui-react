@@ -389,25 +389,25 @@
       return service.getExpirationPeriod(trialIds);
     }
 
-    function getAddTrialRoute(isNewImplementation, currentCustomer) {
+    function getAddTrialRoute(currentCustomer) {
       var result = {
-        path: (isNewImplementation) ? 'trial.info' : 'trialAdd.info',
-        params: (isNewImplementation) ? {
+        path: 'trial.info',
+        params: {
           mode: 'add',
           currentTrial: currentCustomer,
-        } : {},
+        },
       };
       return result;
     }
 
-    function getEditTrialRoute(isNewImplementation, currentCustomer, trialDetails) {
+    function getEditTrialRoute(currentCustomer, trialDetails) {
       var params = {
         currentTrial: currentCustomer,
         details: trialDetails,
         mode: 'edit',
       };
       var result = {
-        path: (isNewImplementation) ? 'trial.info' : 'trialEdit.info',
+        path: 'trial.info',
         params: params,
       };
       return result;

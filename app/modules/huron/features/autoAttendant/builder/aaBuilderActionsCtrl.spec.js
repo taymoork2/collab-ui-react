@@ -18,15 +18,19 @@ describe('Controller: AABuilderActionsCtrl', function () {
     actions: ['testAction'],
   }];
 
-  var sortedOptions = [{
-    "title": 'autoAttendant.actionPhoneMenu',
-  }, {
-    "title": 'autoAttendant.actionRouteCall',
-  }, {
-    "title": 'autoAttendant.actionSayMessage',
-  }, {
-    "title": 'autoAttendant.phoneMenuDialExt',
-  }];
+  var sortedOptions = [
+    {
+      "title": 'autoAttendant.actionDecision',
+    }, {
+      "title": 'autoAttendant.actionPhoneMenu',
+    }, {
+      "title": 'autoAttendant.actionRouteCall',
+    }, {
+      "title": 'autoAttendant.actionSayMessage',
+    }, {
+      "title": 'autoAttendant.phoneMenuDialExt',
+    },
+  ];
 
   var testOptionsWithPhoneMenu = [{
     title: 'Phone Menu',
@@ -203,6 +207,16 @@ describe('Controller: AABuilderActionsCtrl', function () {
   });
 
   describe('test caller Input', function () {
+    it('should not add the Caller Input label', function () {
+      spyOn(AACommonService, 'isCallerInputToggle').and.returnValue(false);
+      // setup the options menu
+      controller = $controller('AABuilderActionsCtrl', {
+        $scope: $scope,
+      });
+
+      expect(controller.options.length).toEqual(5);
+    });
+
     it('should add the Caller Input label', function () {
       spyOn(AACommonService, 'isCallerInputToggle').and.returnValue(true);
       // setup the options menu
@@ -210,7 +224,7 @@ describe('Controller: AABuilderActionsCtrl', function () {
         $scope: $scope,
       });
 
-      expect(controller.options.length).toEqual(5);
+      expect(controller.options.length).toEqual(6);
       // note: only works until an action that starts with an A or a B happens
       expect(controller.options[0].title).toEqual('autoAttendant.actionCallerInput');
 

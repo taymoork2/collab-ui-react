@@ -3,8 +3,6 @@
 
   /* global X2JS */
 
-  angular.module('WebExApp').factory('WebExXmlApiFact', WebExXmlApiFact);
-
   /* @ngInject */
   function WebExXmlApiFact(
     $http,
@@ -558,4 +556,6 @@
       },
     }; // return
   } //XmlApiFact()
+
+  module.exports = WebExXmlApiFact;
 })();

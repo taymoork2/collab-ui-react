@@ -12,7 +12,7 @@ require('./_hunt-group.scss');
   /* @ngInject */
   function HuntGroupSetupAssistantCtrl($q, $state, $modal, $timeout,
     Authinfo, Notification, HuntGroupService,
-    HuntGroupFallbackDataService, HuntGroupMemberDataService, DialPlanService) {
+    HuntGroupFallbackDataService, HuntGroupMemberDataService, HuronCustomerService) {
     var vm = this;
     var customerId = Authinfo.getOrgId();
 
@@ -96,7 +96,7 @@ require('./_hunt-group.scss');
     }
 
     function getRegionCode() {
-      return DialPlanService.getCustomerVoice(Authinfo.getOrgId());
+      return HuronCustomerService.getVoiceCustomer();
     }
 
     function fetchNumbers(typedNumber) {

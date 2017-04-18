@@ -6,7 +6,7 @@
     .controller('DidAddCtrl', DidAddCtrl);
 
   /* @ngInject */
-  function DidAddCtrl($q, $rootScope, $state, $stateParams, $timeout, $translate, Authinfo, DialPlanService, DidAddEmailService, DidService, ExternalNumberPool, LogMetricsService, Notification, PstnSetupService, TelephoneNumberService) {
+  function DidAddCtrl($q, $rootScope, $state, $stateParams, $timeout, $translate, Authinfo, DialPlanService, DidAddEmailService, DidService, ExternalNumberPool, LogMetricsService, Notification, PstnSetupService, TelephoneNumberService, TrialService) {
     var vm = this;
     var firstValidDid = false;
     var editMode = !!$stateParams.editMode;
@@ -276,13 +276,13 @@
     }
 
     function backtoEditTrial() {
-      $state.go('trialEdit.info', {
-        currentTrial: vm.currentTrial,
-      });
+      var route = TrialService.getEditTrialRoute(vm.currentTrial);
+      $state.go(route.path, route.params);
     }
 
     function backtoStartTrial() {
-      $state.go('trialAdd.info');
+      var route = TrialService.getAddTrialRoute();
+      $state.go(route.path, route.params);
     }
 
     function sendEmail() {

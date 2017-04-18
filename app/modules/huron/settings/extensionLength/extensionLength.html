@@ -7,7 +7,7 @@
     options="$ctrl.extensionLengthOptions"
     on-change-fn="$ctrl.onExtensionLengthChanged()"
     filter="false"
-    required="true">
+    required="true"
+    is-disabled="!$ctrl.firstTimeSetup">
   </cs-select>
 </div>
-<p class="help-block" translate="serviceSetupModal.extensionLengthHelpText"></p>

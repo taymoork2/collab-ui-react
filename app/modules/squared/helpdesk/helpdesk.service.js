@@ -3,7 +3,7 @@
 
   /* @ngInject */
 
-  function HelpdeskService($http, $location, $q, $translate, $window, CacheFactory, Config, CsdmConfigService, CsdmConverter, FeatureToggleService, HelpdeskHttpRequestCanceller, HelpdeskMockData, ServiceDescriptor, UrlConfig, USSService) {
+  function HelpdeskService($http, $location, $q, $translate, $window, CacheFactory, Config, CsdmConverter, FeatureToggleService, HelpdeskHttpRequestCanceller, HelpdeskMockData, ServiceDescriptor, UrlConfig, USSService) {
     var urlBase = UrlConfig.getAdminServiceUrl();
     var orgCache = CacheFactory.get('helpdeskOrgCache');
     var service = {
@@ -308,7 +308,7 @@
         return deferredResolve(filterDevices(searchString, devices, limit));
       }
       return $http
-        .get(CsdmConfigService.getUrl() + '/organization/' + encodeURIComponent(orgId) + '/devices?checkOnline=false&isHelpDesk=true')
+        .get(UrlConfig.getCsdmServiceUrl() + '/organization/' + encodeURIComponent(orgId) + '/devices?checkOnline=false&isHelpDesk=true')
         .then(function (res) {
           var devices = CsdmConverter.convertCloudberryDevices(res.data);
           devicesInOrgCache.put(orgId, devices);
@@ -325,7 +325,7 @@
         return deferredResolve(device);
       }
       return $http
-        .get(CsdmConfigService.getUrl() + '/organization/' + orgId + '/devices/' + deviceId + '?isHelpDesk=true&checkOnline=true')
+        .get(UrlConfig.getCsdmServiceUrl() + '/organization/' + orgId + '/devices/' + deviceId + '?isHelpDesk=true&checkOnline=true')
         .then(extractDevice);
     }
 

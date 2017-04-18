@@ -4,6 +4,7 @@ const webpack = require('webpack');
 const merge = require('webpack-merge');
 const dllDepsConfig = require('./dll-deps.config');
 const commonWebpack = require('./webpack.common');
+const plugins = require('./plugins');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const lsMostRecentFile = require('../utils/lsMostRecentFile');
 const sortOrder = require('../utils/sortOrder');
@@ -17,10 +18,10 @@ function webpackConfig(env) {
   // base config
   const devWebpack = {
     entry: {
-      app: [hotMiddlewareScript],
+      bootstrap: [hotMiddlewareScript],
       styles: [hotMiddlewareScript],
     },
-    plugins: [
+    plugins: plugins.commonsChunkPlugins.concat([
       new HtmlWebpackPlugin({
         template: 'index.html',
         inject: 'body',
@@ -29,7 +30,7 @@ function webpackConfig(env) {
         chunksSortMode: sortOrder,
       }),
       new webpack.HotModuleReplacementPlugin(),
-    ],
+    ]),
   };
 
   // ----------

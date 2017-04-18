@@ -1,8 +1,20 @@
-<!-- Main Content -->
-<div class="content-container">
-    <div class="row">
-        <cs-card-layout>
-            {{nav.metricsUrl}}
-        </cs-card-layout>
-    </div>
+<div ng-if="!nav.isIframeLoaded"
+     id="webexMetricsIframeLoading"
+     name="webexMetricsIframeLoading"
+     align="center">
+  <br/>
+  <i class="icon icon-spinner icon-2x"></i>
+</div>
+
+<div ng-show="nav.isIframeLoaded"
+     id="iframeContainer"
+     name="iframeContainer">
+  <iframe id="webexMetricsIframeContainer"
+          name="webexMetricsIframeContainer"
+          onLoad="iframeLoaded('#webexMetricsIframeContainer')"
+          i-frame-resizable="iframeContainer"
+          src={{nav.metricsUrl}}
+          ng-style="{'width': '100%', 'height': iframeHeight }"
+          frameborder="0">
+  </iframe>
 </div>

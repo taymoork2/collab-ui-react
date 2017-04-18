@@ -5,11 +5,18 @@
       </cs-searchfilter>
     </cs-page-sub-header-left>
     <cs-page-sub-header-right ng-show="Utils.isAdminPage()">
+      <div ng-if="linesListCtrl.huronCustomerAdminPMPFeatureToggle && !linesListCtrl.gridRefresh">
+        <a ui-sref="customerPstnOrdersOverview({currentCustomer: linesListCtrl.currentCustomer, vendor:linesListCtrl.vendor})">
+          <span class="order-history" translate="pstnOrderOverview.orderHistory"></span>
+        </a>
+        <button id="addNumbers" class="btn btn--people" ng-click="linesListCtrl.showProviderDetails()" translate="customerPage.addNumbers">
+        </button>
+      </div>
       <div class="page-option-buttons" ng-controller="LineExportCtrl as lineExportCtrl">
         <div ng-if="!lineExportCtrl.exportBusy">
           <a id="export-btn" ng-csv="lineExportCtrl.exportCSV()" filename="{{'linesPage.csvFilename' | translate}}">
-            <span id="export-icon" class="export export-lines" tooltip-placement="left" tooltip="{{'linesPage.csvBtnTitle' | translate}}" tooltip-animation="false" tooltip-append-to-body="true">
-              <i class="icon icon-content-share"></i>
+            <span id="export-icon" class="export-lines" tooltip-placement="top" tooltip="{{'linesPage.csvBtnTitle' | translate}}" tooltip-animation="false" tooltip-append-to-body="true">
+              <i class="icon icon-content-share icon-lg"></i>
             </span>
           </a>
         </div>

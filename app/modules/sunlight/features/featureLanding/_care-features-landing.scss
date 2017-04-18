@@ -94,6 +94,16 @@
       color: $gray-darker;
     }
   }
+
+  .tooltip {
+    .c-nub {
+      max-width: 250px;
+    }
+  }
+
+  .tooltip-wrapper-div {
+    display: inline-block;
+  }
 }
 
 .no-features {
@@ -111,7 +121,7 @@
   }
 
   .ct-desc {
-    max-width: rem-calc(330);
+    max-width: rem-calc(460);
   }
 
   .new-btn {
@@ -133,7 +143,7 @@
   @include vr-spacing(pb, 2);
   @include vr-spacing(pl, 2);
 
-  button {
+  div.feature-card-container {
     // The button options in the body.
     display: flex;
     flex-direction: column;
@@ -142,71 +152,87 @@
     color: $gray-darkest;
     background-color: $gray-lightest;
     border-style: hidden;
+    border-radius: 0.25rem;
+    cursor: default;
+    text-align: center;
+    font-family: $brand-font-cisco-TT-Light;
+    box-shadow: none;
 
     @include vr-spacing(mr, 0.125);
     @include vr-spacing(ml, 0.5);
     @include vr-spacing(mb, 1);
     @include vr-spacing(p, 0);
 
-    &:hover {
+    &:not([disabled]):hover {
+      cursor: pointer;
       background-color: $gray-light;
     }
 
     &:first-child:nth-last-child(4),
-    &:first-child:nth-last-child(4) ~ button {
+    &:first-child:nth-last-child(4) ~ div {
       flex: 1 1 48%;
     }
-  }
 
-  .feature-icon-container {
-    @include vr-spacing(pt, 2.5);
+    .feature-icon-container {
+      @include vr-spacing(pt, 2.5);
 
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    .icon {
-      font-size: rem-calc(24);
-      flex-basis: 50%;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      .icon {
+        font-size: rem-calc(24);
+        flex-basis: 50%;
 
-      &:first-child {
-        flex-basis: 100%;
-        padding-bottom: rem-calc(26);
+        &:first-child {
+          flex-basis: 100%;
+          padding-bottom: rem-calc(26);
+        }
       }
     }
-  }
 
-  .feature-icon-circle {      // Icon in the option.
-    font-family: $brand-font-extra-light;
-    margin-left: 0;
-    margin-right: rem-calc(10);
-    margin-bottom: 0;
-    justify-content: center;
-    font-size: $h2-font-size;
-    background: $brand-white;
-    border-radius: 50%;
-    width: rem-calc(78);
-    height: rem-calc(78);
-    padding-top: rem-calc(12);
+    .feature-icon-circle {      // Icon in the option.
+      font-family: $brand-font-extra-light;
+      margin-left: 0;
+      margin-right: rem-calc(10);
+      margin-bottom: 0;
+      justify-content: center;
+      font-size: $h2-font-size;
+      background: $brand-white;
+      border-radius: 50%;
+      width: rem-calc(78);
+      height: rem-calc(78);
+      padding-top: rem-calc(12);
 
-    @include vr-spacing(p, 0.625);
-  }
+      @include vr-spacing(p, 0.625);
+    }
 
-  .feature-icon-color-care {
-    color: $gray-base;
-  }
+    .feature-icon-color-care {
+      color: $color-people-base;
+    }
 
-  .feature-label-container {
-    @include vr-spacing(pt, 2);
-    color: $color-people-base;
-  }
+    .feature-icon-disabled {
+      color: $gray-light-1;
+      background: $gray-light-3;
+      cursor: default;
+    }
 
-  .feature-description-container {
-    @include vr-spacing(pt, 2);
-    @include vr-spacing(ph, 1.5);
-    @include vr-spacing(pb, 1.5);
+    .feature-label-container {
+      @include vr-spacing(pt, 2);
+      color: $color-people-base;
+    }
 
-    &.text-center {
-      padding: rem-calc(20) 20%;
+    .feature-label-disabled {
+      color: $gray-base;
+    }
+
+    .feature-description-container {
+      @include vr-spacing(pt, 2);
+      @include vr-spacing(ph, 1.5);
+      @include vr-spacing(pb, 1.5);
+
+      &.text-center {
+        padding: rem-calc(20) 20%;
+      }
     }
   }
 }
@@ -238,4 +264,3 @@
   font-size: 3rem;
   text-align: center;
 }
-

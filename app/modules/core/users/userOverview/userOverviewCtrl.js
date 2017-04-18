@@ -160,7 +160,7 @@
       var userLicenses = vm.currentUser.licenseID;
       if (userLicenses) {
         for (var l = userLicenses.length - 1; l >= 0; l--) {
-          var licensePrefix = userLicenses[l].substring(0, 2);
+          var licensePrefix = userLicenses[l].substring(0, license.length);
           if (licensePrefix === license) {
             return true;
           }
@@ -231,7 +231,7 @@
     // this uses the entitlements returned from the getUser CI call.
     function initServices() {
 
-      if (vm.currentUser.hasEntitlement('squared-room-moderation') || !vm.hasAccount) {
+      if (UserOverviewService.userHasEntitlement(vm.currentUser, 'squared-room-moderation') || !vm.hasAccount) {
         if (hasLicense('MS')) {
           msgState.detail = $translate.instant('onboardModal.paidMsg');
           msgState.actionAvailable = getDisplayableServices('MESSAGING');
@@ -239,19 +239,19 @@
       }
       vm.services.push(msgState);
 
-      if (vm.currentUser.hasEntitlement('cloudmeetings')) {
+      if (UserOverviewService.userHasEntitlement(vm.currentUser, 'cloudmeetings')) {
         confState.actionAvailable = getDisplayableServices('CONFERENCING') || _.isArray(vm.currentUser.trainSiteNames);
         if (vm.currentUser.trainSiteNames) {
           confState.detail = vm.isSharedMeetingsEnabled ? $translate.instant('onboardModal.paidAdvancedConferencing') : $translate.instant('onboardModal.paidConfWebEx');
         }
-      } else if (vm.currentUser.hasEntitlement('squared-syncup')) {
+      } else if (UserOverviewService.userHasEntitlement(vm.currentUser, 'squared-syncup')) {
         if (hasLicense('CF')) {
           confState.detail = $translate.instant('onboardModal.paidConf');
         }
       }
       vm.services.push(confState);
 
-      if (vm.currentUser.hasEntitlement('ciscouc')) {
+      if (UserOverviewService.userHasEntitlement(vm.currentUser, 'ciscouc')) {
         if (hasLicense('CO')) {
           commState.detail = $translate.instant('onboardModal.paidComm');
           commState.actionAvailable = true;
@@ -259,15 +259,19 @@
       }
       vm.services.push(commState);
 
-      if (vm.currentUser.hasEntitlement('cloud-contact-center')) {
-        if (hasLicense('CD') || hasLicense('CV')) {
+      if (UserOverviewService.userHasEntitlement(vm.currentUser, 'cloud-contact-center')) {
+        if (hasLicense('CDC') || hasLicense('CVC')) {
           SunlightConfigService.getUserInfo(vm.currentUser.id)
             .then(function () {
               var hasSyncKms = _.includes(vm.currentUser.roles, Config.backend_roles.spark_synckms);
               var hasCiscoucCES = _.includes(vm.currentUser.roles, Config.backend_roles.ciscouc_ces);
               var hasContextServiceEntitlement = _.includes(vm.currentUser.entitlements, Config.entitlements.context);
               if ((hasSyncKms && hasContextServiceEntitlement) || hasCiscoucCES) {
-                contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
+                if (hasLicense('CDC')) {
+                  contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
+                } else if (hasLicense('CVC')) {
+                  contactCenterState.detail = $translate.instant('onboardModal.paidContactCenterVoice');
+                }
                 vm.services.push(contactCenterState);
               }
             });

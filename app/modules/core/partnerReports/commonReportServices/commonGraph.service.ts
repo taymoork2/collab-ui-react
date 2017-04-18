@@ -178,6 +178,3 @@ export class CommonGraphService {
     });
   }
 }
-
-angular.module('Core')
-  .service('CommonGraphService', CommonGraphService);

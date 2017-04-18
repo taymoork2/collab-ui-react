@@ -7,14 +7,14 @@ describe('Controller: OverviewCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  var controller, $rootScope, $scope, $q, $state, $translate, Authinfo, Config, FeatureToggleService, Log, Orgservice, PstnSetupService, OverviewNotificationFactory, ReportsService, ServiceDescriptor, ServiceStatusDecriptor, TrialService, FusionClusterService, SunlightReportService, LicenseService;
+  var controller, $rootScope, $scope, $q, $state, $translate, Authinfo, Config, FeatureToggleService, Log, Orgservice, PstnSetupService, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, ServiceStatusDecriptor, TrialService, FusionClusterService, SunlightReportService;
   var orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');
   var usageOnlySharedDevicesFixture = getJSONFixture('core/json/organizations/usageOnlySharedDevices.json');
   var services = getJSONFixture('squared/json/services.json');
   var isCustomerLaunchedFromPartner = true;
 
   afterEach(function () {
-    controller = $rootScope = $scope = $q = $state = $translate = Authinfo = Config = FeatureToggleService = Log = Orgservice = PstnSetupService = OverviewNotificationFactory = ReportsService = ServiceDescriptor = ServiceStatusDecriptor = TrialService = FusionClusterService = SunlightReportService = undefined;
+    controller = $rootScope = $scope = $q = $state = $translate = Authinfo = Config = FeatureToggleService = Log = Orgservice = PstnSetupService = OverviewNotificationFactory = ReportsService = HybridServicesFlagService = ServiceStatusDecriptor = TrialService = FusionClusterService = SunlightReportService = undefined;
   });
 
   afterAll(function () {
@@ -203,18 +203,17 @@ describe('Controller: OverviewCtrl', function () {
     spyOn(FusionClusterService, 'getAll');
     FusionClusterService.getAll.and.returnValue($q.resolve());
 
-    ServiceDescriptor = {
-      services: function () {},
-      getServices: function () {
+    HybridServicesFlagService = {
+      readFlags: function () {
         return $q.resolve([{
-          id: Config.entitlements.fusion_cal,
-          acknowledged: false,
+          name: 'fms.services.squared-fusion-cal.acknowledged',
+          raised: false,
         }, {
-          id: Config.entitlements.fusion_uc,
-          acknowledged: false,
+          name: 'fms.services.squared-fusion-uc.acknowledged',
+          raised: false,
         }, {
-          id: Config.entitlements.fusion_ec,
-          acknowledged: false,
+          name: 'fms.services.squared-fusion-ec.acknowledged',
+          raised: false,
         }]);
       },
     };
@@ -252,10 +251,6 @@ describe('Controller: OverviewCtrl', function () {
       },
     };
 
-    LicenseService = {
-      orgIsEntitledTo: function () {},
-    };
-
     ReportsService = {
       getOverviewMetrics: function () {},
       healthMonitor: function () {},
@@ -284,11 +279,12 @@ describe('Controller: OverviewCtrl', function () {
     spyOn(Authinfo, 'isDeviceMgmt').and.returnValue(true);
     spyOn(Authinfo, 'isCustomerLaunchedFromPartner').and.returnValue(isCustomerLaunchedFromPartner);
     spyOn(Authinfo, 'isCare').and.returnValue(true);
+    spyOn(Authinfo, 'isMessageEntitled').and.returnValue(false);
+    spyOn(Authinfo, 'isSquaredUC').and.returnValue(false);
     spyOn(FeatureToggleService, 'atlasPMRonM2GetStatus').and.returnValue($q.resolve(true));
     spyOn(TrialService, 'getDaysLeftForCurrentUser').and.returnValue($q.resolve(1));
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
     spyOn(PstnSetupService, 'getCustomerTrialV2').and.callThrough();
-    spyOn(LicenseService, 'orgIsEntitledTo').and.returnValue(false);
 
     controller = $controller('OverviewCtrl', {
       $scope: $scope,
@@ -300,14 +296,13 @@ describe('Controller: OverviewCtrl', function () {
       ReportsService: ReportsService,
       Orgservice: Orgservice,
       PstnSetupService: PstnSetupService,
-      ServiceDescriptor: ServiceDescriptor,
+      HybridServicesFlagService: HybridServicesFlagService,
       ServiceStatusDecriptor: ServiceStatusDecriptor,
       Config: Config,
       TrialService: TrialService,
       OverviewNotificationFactory: OverviewNotificationFactory,
       SunlightReportService: SunlightReportService,
       hasGoogleCalendarFeatureToggle: false,
-      LicenseService: LicenseService,
     });
 
     $scope.$apply();

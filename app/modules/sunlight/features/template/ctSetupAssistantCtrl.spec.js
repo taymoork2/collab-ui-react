@@ -100,6 +100,33 @@ describe('Care Setup Assistant Ctrl', function () {
       ] },
   };
 
+  var customerInfoWithInvalidAttributeValue = {
+    'welcomeHeader': {
+      'attributes': [
+        { 'name': 'header', 'value': 'Welcome to >' },
+        { 'name': 'organization', 'value': 'Sunlight Org' },
+      ],
+    },
+    'field1': {
+      'attributes': [
+        { 'name': 'label', 'value': 'Name <' },
+        { 'name': 'hintText', 'value': 'Something' },
+        { 'name': 'type', 'value': { id: 'name' } },
+      ] },
+    'field2': {
+      'attributes': [
+        { 'name': 'label', 'value': 'Email' },
+        { 'name': 'hintText', 'value': 'Something' },
+        { 'name': 'type', 'value': { id: 'email' } },
+      ] },
+    'field3': {
+      'attributes': [
+        { 'name': 'label', 'value': 'SomethingElse' },
+        { 'name': 'hintText', 'value': 'SomethingElse' },
+        { 'name': 'type', 'value': { id: 'custom' } },
+      ] },
+  };
+
   var selectedDaysByDefault = businessHours.selectedDaysByDefault;
   var defaultTimeZone = businessHours.defaultTimeZone;
   var defaultDayPreview = businessHours.defaultDayPreview;
@@ -112,7 +139,7 @@ describe('Care Setup Assistant Ctrl', function () {
   });
 
   afterAll(function () {
-    selectedDaysByDefault = defaultTimeZone = defaultDayPreview = startTimeOptions = defaultTimings = businessHours = failedData = deSelectAllDays = duplicateFieldTypeData = customerInfoWithLongAttributeValue = undefined;
+    selectedDaysByDefault = defaultTimeZone = defaultDayPreview = startTimeOptions = defaultTimings = businessHours = failedData = deSelectAllDays = duplicateFieldTypeData = customerInfoWithLongAttributeValue = customerInfoWithInvalidAttributeValue = undefined;
   });
 
   beforeEach(angular.mock.module('Sunlight'));
@@ -255,8 +282,18 @@ describe('Care Setup Assistant Ctrl', function () {
       checkStateOfNavigationButtons(FEEDBACK_PAGE_INDEX, true, false);
     });
 
+    it('next button should be disabled if feedback comment has any invalid character', function () {
+      controller.template.configuration.pages.feedback.fields.comment.displayText = "<";
+      checkStateOfNavigationButtons(FEEDBACK_PAGE_INDEX, true, false);
+    });
+
     it('next button should be disabled if feedback query is longer than 250 characters', function () {
       controller.template.configuration.pages.feedback.fields.feedbackQuery.displayText = Array(252).join("a");
+      checkStateOfNavigationButtons(FEEDBACK_PAGE_INDEX, true, false);
+    });
+
+    it('next button should be disabled if feedback query has any invalid character', function () {
+      controller.template.configuration.pages.feedback.fields.feedbackQuery.displayText = "<";
       checkStateOfNavigationButtons(FEEDBACK_PAGE_INDEX, true, false);
     });
 
@@ -456,6 +493,20 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.categoryOptionTag).toEqual('');
     });
 
+    it("should not add invalid category", function () {
+      var ENTER_KEYPRESS_EVENT = {
+        which: 13,
+      };
+      var errorString = 'Agent has left the chat room Waiting for an Agent to join You are chatting with our agent Agent has left the chat room Waiting for an Agent to join You are chatting with our agent Agent has left the chat room Waiting for an Agent to join You are chatting with our agent ';
+      controller.categoryOptionTag = errorString;
+      spyOn(controller, 'addCategoryOption').and.callThrough();
+
+      controller.onEnterKey(ENTER_KEYPRESS_EVENT);
+
+      expect(controller.addCategoryOption).toHaveBeenCalled();
+      expect(controller.categoryOptionTag).toEqual(errorString);
+    });
+
     it("should validate type for a unique field", function () {
       expect(controller.validateType({ id: 'name' })).toEqual(true);
     });
@@ -505,6 +556,11 @@ describe('Care Setup Assistant Ctrl', function () {
 
     it("next button should get disabled when attributes of customerInfo: Static and Dynamic fields have value > 50 chars", function () {
       controller.template.configuration.pages.customerInformation.fields = customerInfoWithLongAttributeValue;
+      expect(controller.nextButton()).toEqual(false);
+    });
+
+    it("next button should get disabled when attributes of customerInfo: Static and Dynamic fields have invalid characters", function () {
+      controller.template.configuration.pages.customerInformation.fields = customerInfoWithInvalidAttributeValue;
       expect(controller.nextButton()).toEqual(false);
     });
   });
@@ -557,6 +613,11 @@ describe('Care Setup Assistant Ctrl', function () {
 
     it('should disable the right btn if off hours message is more than 250 characters', function () {
       controller.template.configuration.pages.offHours.message = Array(252).join("a");
+      checkStateOfNavigationButtons(OFF_HOURS_PAGE_INDEX, true, false);
+    });
+
+    it('should disable the right btn if off hours message contains invalid characters', function () {
+      controller.template.configuration.pages.offHours.message = "<";
       checkStateOfNavigationButtons(OFF_HOURS_PAGE_INDEX, true, false);
     });
 
@@ -762,6 +823,10 @@ describe('Care Setup Assistant Ctrl', function () {
       controller.template.configuration.chatStatusMessages.messages.chattingMessage.displayText = Array(30).join("n");
       checkStateOfNavigationButtons(CHAT_STATUS_MESSAGES_PAGE_INDEX, true, false);
     });
+    it("should have next button disabled if status message has invalid character", function () {
+      controller.template.configuration.chatStatusMessages.messages.waitingMessage.displayText = "<";
+      checkStateOfNavigationButtons(CHAT_STATUS_MESSAGES_PAGE_INDEX, true, false);
+    });
     it("should have next button disabled if any of the status messages are more than 25 characters", function () {
       controller.template.configuration.chatStatusMessages.messages.waitingMessage.displayText = "Waiting Message";
       controller.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText = "Left Room Message";
@@ -782,6 +847,11 @@ describe('Care Setup Assistant Ctrl', function () {
 
     it("next button should be disabled when unavailable msg is more than 250 characters", function () {
       controller.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText = Array(252).join("a");
+      checkStateOfNavigationButtons(AGENT_UNAVAILABLE_PAGE_INDEX, true, false);
+    });
+
+    it("next button should be disabled when unavailable msg has invalid characters", function () {
+      controller.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText = "<";
       checkStateOfNavigationButtons(AGENT_UNAVAILABLE_PAGE_INDEX, true, false);
     });
 

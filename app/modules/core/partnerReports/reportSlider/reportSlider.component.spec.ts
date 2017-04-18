@@ -1,141 +1,133 @@
-import {
-  ITimeSliderFunctions,
-  ITimespan,
-} from '../partnerReportInterfaces';
+import reportSlider from './index';
 
 describe('Component: reportSlider', () => {
-  let defaults = getJSONFixture('core/json/partnerReports/commonReportService.json');
-  let updateFunctions: ITimeSliderFunctions = {
-    sliderUpdate: jasmine.createSpy('sliderUpdate'),
-    update: jasmine.createSpy('update'),
-  };
-  const timeFilter: Array<ITimespan> = _.cloneDeep(defaults.altTimeFilter);
-
-  // html selectors
-  const slider: string = '.slider';
-  const sliderLabels: string = '.sliderLabel';
-  const filter: string = '.pull-right.report-filter';
-  const openFilter: string = 'div.select-list div.dropdown .select-toggle';
-  const dropdown: string = '.dropdown-menu ul.select-options li a';
-  const startDate: string = '#startDate';
-  const endDate: string = '#endDate';
-  const startDateMenu: string = '#startDateMenu';
-  const endDateMenu: string = '#endDateMenu';
-  const time: string = '#timeFilter';
-  const timeMenu: string = '#timeFilterMenu';
-  const menuOptions: string = ' .dropdown-menu .filter';
-  const span: string = ' span';
-
-  // screen sizes
-  const SCREEN_LG = 'screen-lg';
-  const SCREEN_XS = 'screen-xs';
-
   beforeEach(function () {
-    this.initModules('Core');
-    this.injectDependencies('$rootScope', '$scope', '$timeout');
-    this.$scope.selected = timeFilter[0];
-    this.$scope.options = timeFilter;
-    this.$scope.updateFunctions = updateFunctions;
+    this.initModules(reportSlider);
+    this.injectDependencies('$componentController', '$rootScope', '$scope', 'CommonReportService', 'ReportConstants');
+
+    this.ctrlData = getJSONFixture('core/json/partnerReports/ctrl.json');
+    this.defaults = getJSONFixture('core/json/partnerReports/commonReportService.json');
+
+    this.options = _.cloneDeep(this.defaults.altTimeFilter);
+    this.updateFunctions = {
+      sliderUpdate: jasmine.createSpy('sliderUpdate'),
+      update: jasmine.createSpy('update'),
+    };
+
+    this.$rootScope.breakpoint = this.ctrlData.SCREEN_LG;
+
+    this.controller = this.$componentController('reportSlider', {
+      $scope: this.$scope,
+      $rootScope: this.$rootScope,
+    }, {
+      selected: this.options[0],
+      options: this.options,
+      updateFunctions: this.updateFunctions,
+    });
   });
 
-  it('it should call the appropriate update functions for preset time ranges and custom time ranges', function () {
-    this.$rootScope.breakpoint = SCREEN_LG;
-    this.compileComponent('reportSlider', {
-      selected: 'selected',
-      options: 'options',
-      updateFunctions: 'updateFunctions',
-    });
-
-    expect(this.view).not.toContainElement(slider);
-    expect(this.view).not.toContainElement(startDate);
-    expect(this.view).not.toContainElement(endDate);
-    expect(this.view).not.toContainElement(startDateMenu);
-    expect(this.view).not.toContainElement(endDateMenu);
-    expect(this.view).toContainElement(filter);
-    expect(this.view).toContainElement(openFilter);
-
-    // Verify all entries are displayed
-    this.view.find(openFilter).click();
-    this.$timeout.flush();
-    expect(this.view.find(dropdown).length).toEqual(timeFilter.length);
-    _.forEach(this.view.find(dropdown), (element: any, index: number): void => {
-      expect(element.innerText).toEqual(timeFilter[index].label);
-    });
-
-    // Select non-custom option
-    this.view.find(dropdown)[1].click();
-    expect(this.$scope.selected).toEqual(timeFilter[1]);
-    expect(updateFunctions.update).toHaveBeenCalledTimes(1);
-    expect(updateFunctions.sliderUpdate).toHaveBeenCalledTimes(0);
-    expect(this.view).not.toContainElement(slider);
-    expect(updateFunctions.sliderUpdate).toHaveBeenCalledTimes(0);
-    expect(updateFunctions.update).toHaveBeenCalledTimes(1);
-
-    // Select custom option
-    this.view.find(openFilter).click();
-    this.$timeout.flush();
-    this.view.find(dropdown)[timeFilter.length - 1].click();
-    expect(this.view).toContainElement(slider);
-    this.$timeout.flush();
-    expect(this.$scope.selected).toEqual(timeFilter[timeFilter.length - 1]);
-    expect(updateFunctions.update).toHaveBeenCalledTimes(1);
-    expect(updateFunctions.sliderUpdate).toHaveBeenCalledTimes(1);
-    expect(this.view.find(sliderLabels).length).toEqual(5);
-    expect(updateFunctions.sliderUpdate).toHaveBeenCalledTimes(1);
-    expect(updateFunctions.update).toHaveBeenCalledTimes(1);
+  it('should start with expected defaults', function () {
+    expect(this.controller.translateSlider).toEqual(jasmine.any(Function));
+    expect(this.controller.startDate).toBeFalsy();
+    expect(this.controller.endDate).toBeFalsy();
+    expect(this.controller.optionPicker).toBeFalsy();
+    expect(this.controller.dateArray).toEqual(this.CommonReportService.getReturnLineGraph(this.ReportConstants.THREE_MONTH_FILTER, { date: '' }));
+    expect(this.controller.ceil).toEqual(this.ReportConstants.YEAR);
+    expect(this.controller.floor).toEqual(0);
+    expect(this.controller.min).toEqual(this.ReportConstants.TWENTY_FOUR_WEEKS);
+    expect(this.controller.max).toEqual(this.ReportConstants.YEAR);
   });
 
-  it('should use alternate custom display on small screens', function () {
-    this.$rootScope.breakpoint = SCREEN_XS;
-    this.compileComponent('reportSlider', {
-      selected: 'selected',
-      options: 'options',
-      updateFunctions: 'updateFunctions',
+  it('screenSmall - should only return true for small and extra small screens', function () {
+    expect(this.controller.screenSmall()).toBeFalsy();
+    this.$rootScope.breakpoint = this.ctrlData.SCREEN_MD;
+    expect(this.controller.screenSmall()).toBeFalsy();
+    this.$rootScope.breakpoint = this.ctrlData.SCREEN_SM;
+    expect(this.controller.screenSmall()).toBeTruthy();
+    this.$rootScope.breakpoint = this.ctrlData.SCREEN_XS;
+    expect(this.controller.screenSmall()).toBeTruthy();
+  });
+
+  it('screenXSmall - should only return true for extra small screens', function () {
+    expect(this.controller.screenXSmall()).toBeFalsy();
+    this.$rootScope.breakpoint = this.ctrlData.SCREEN_MD;
+    expect(this.controller.screenXSmall()).toBeFalsy();
+    this.$rootScope.breakpoint = this.ctrlData.SCREEN_SM;
+    expect(this.controller.screenXSmall()).toBeFalsy();
+    this.$rootScope.breakpoint = this.ctrlData.SCREEN_XS;
+    expect(this.controller.screenXSmall()).toBeTruthy();
+  });
+
+  it('toggleMinDate - should toggle the startDate menu', function () {
+    this.controller.toggleMinDate();
+    expect(this.controller.startDate).toBeTruthy();
+  });
+
+  it('toggleMaxDate - should toggle the endDate menu', function () {
+    this.controller.toggleMaxDate();
+    expect(this.controller.endDate).toBeTruthy();
+  });
+
+  it('toggleOptionPicker - should toggle the optionPicker menu', function () {
+    this.controller.toggleOptionPicker();
+    expect(this.controller.optionPicker).toBeTruthy();
+  });
+
+  it('setMin - should set min and toggle startDate', function () {
+    this.controller.setMin(5);
+    expect(this.updateFunctions.sliderUpdate).toHaveBeenCalled();
+    expect(this.controller.startDate).toBeTruthy();
+    expect(this.controller.min).toEqual(5);
+  });
+
+  it('min - changing the min value should also call the slider updated', function () {
+    this.controller.min = 6;
+    expect(this.updateFunctions.sliderUpdate).toHaveBeenCalled();
+  });
+
+  it('setMax - should set min and toggle endDate', function () {
+    this.controller.setMax(40);
+    expect(this.updateFunctions.sliderUpdate).toHaveBeenCalled();
+    expect(this.controller.endDate).toBeTruthy();
+    expect(this.controller.max).toEqual(40);
+  });
+
+  it('max - changing the max value should also call the slider updated', function () {
+    this.controller.max = 45;
+    expect(this.updateFunctions.sliderUpdate).toHaveBeenCalled();
+  });
+
+  it('updateSmallScreen - should update the selected option on small screens and toggle optionPicker', function () {
+    this.controller.updateSmallScreen(this.options[1]);
+    expect(this.controller.selected).toEqual(this.options[1]);
+    expect(this.updateFunctions.update).toHaveBeenCalled();
+    expect(this.controller.optionPicker).toBeTruthy();
+  });
+
+  it('update - should only call the slider update if the custom filter is set', function () {
+    this.controller.update();
+    expect(this.updateFunctions.update).toHaveBeenCalledTimes(1);
+    expect(this.updateFunctions.sliderUpdate).toHaveBeenCalledTimes(0);
+
+    this.controller.selected = this.options[this.options.length - 1];
+    this.controller.update();
+    expect(this.updateFunctions.update).toHaveBeenCalledTimes(1);
+    expect(this.updateFunctions.sliderUpdate).toHaveBeenCalledTimes(1);
+  });
+
+  it('sliderUpdate - should call the external sliderUpdate', function () {
+    this.controller.sliderUpdate();
+    expect(this.updateFunctions.sliderUpdate).toHaveBeenCalled();
+  });
+
+  describe('isCustom - ', function () {
+    it('should return false when custom option is not selected', function() {
+      expect(this.controller.isCustom()).toBeFalsy();
     });
 
-    expect(this.view).not.toContainElement(slider);
-    expect(this.view).not.toContainElement(startDate);
-    expect(this.view).not.toContainElement(endDate);
-    expect(this.view).not.toContainElement(startDateMenu);
-    expect(this.view).not.toContainElement(endDateMenu);
-    expect(this.view).not.toContainElement(filter);
-    expect(this.view).not.toContainElement(openFilter);
-    expect(this.view).toContainElement(time);
-    expect(this.view.find(time + span).html()).toEqual(timeFilter[0].label);
-
-    // Select Custom option
-    this.view.find(time).click();
-    expect(this.view.find(timeMenu + menuOptions).length).toEqual(timeFilter.length);
-    this.view.find(timeMenu + menuOptions)[timeFilter.length - 1].click();
-    expect(this.view.find(time + span).html()).toEqual(timeFilter[timeFilter.length - 1].label);
-
-    expect(this.view).not.toContainElement(slider);
-    expect(this.view).not.toContainElement(filter);
-    expect(this.view).not.toContainElement(openFilter);
-    expect(this.view).toContainElement(startDate);
-    expect(this.view).toContainElement(endDate);
-    expect(this.view).toContainElement(startDateMenu);
-    expect(this.view).toContainElement(endDateMenu);
-    expect(updateFunctions.sliderUpdate).toHaveBeenCalledTimes(2);
-    expect(updateFunctions.update).toHaveBeenCalledTimes(1);
-
-    let dateOne: string = this.view.find(startDate)[0].innerText;
-    let dateTwo: string = this.view.find(endDate)[0].innerText;
-
-    // change start date
-    this.view.find(startDate).click();
-    expect(this.view.find(startDateMenu + menuOptions).length).toEqual(51);
-    this.view.find(startDateMenu + menuOptions)[6].click();
-    expect(this.view.find(startDate)[0].innerText).not.toEqual(dateOne);
-    expect(updateFunctions.sliderUpdate).toHaveBeenCalledTimes(3);
-    expect(updateFunctions.update).toHaveBeenCalledTimes(1);
-
-    // change end date
-    this.view.find(endDate).click();
-    expect(this.view.find(endDateMenu + menuOptions).length).toEqual(45);
-    this.view.find(endDateMenu + menuOptions)[0].click();
-    expect(this.view.find(endDate)[0].innerText).not.toEqual(dateTwo);
-    expect(updateFunctions.sliderUpdate).toHaveBeenCalledTimes(4);
-    expect(updateFunctions.update).toHaveBeenCalledTimes(1);
+    it('should return true when custom option is selected', function() {
+      this.controller.selected = this.options[this.options.length - 1];
+      expect(this.controller.isCustom()).toBeTruthy();
+    });
   });
 });

@@ -8,7 +8,7 @@ export * from './user';
 
 export default angular
   .module('core.auth.user', [
-    'collab.ui',
+    require('collab-ui-ng').default,
     coreUrlConfigModule,
   ])
   .service('MeService', MeService)

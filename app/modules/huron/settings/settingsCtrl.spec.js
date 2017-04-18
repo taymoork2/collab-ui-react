@@ -3,8 +3,8 @@
 describe('Controller: HuronSettingsCtrl', function () {
   var $scope, $q, $httpBackend;
   var Authinfo, Notification;
-  var ExternalNumberService, DialPlanService, PstnSetupService, ModalService;
-  var HuronCustomer, ServiceSetup, CallerId, HuronConfig, InternationalDialing, VoicemailMessageAction;
+  var ExternalNumberService, PstnSetupService, ModalService;
+  var HuronCustomer, HuronCustomerService, ServiceSetup, CallerId, HuronConfig, InternationalDialing, VoicemailMessageAction;
   var modalDefer, customer, timezones, timezone, internalNumberRanges, languages, avrilSites;
   var sites, site, companyNumbers, cosRestrictions, customerCarriers, messageAction, countries;
   var $rootScope, FeatureToggleService, TerminusUserDeviceE911Service, Orgservice;
@@ -14,7 +14,7 @@ describe('Controller: HuronSettingsCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$rootScope_, _$q_, _$httpBackend_, _ExternalNumberService_, _DialPlanService_,
+  beforeEach(inject(function (_$rootScope_, _$q_, _$httpBackend_, _ExternalNumberService_, _HuronCustomerService_,
     _PstnSetupService_, _ModalService_, _Notification_, _HuronCustomer_, _ServiceSetup_, _InternationalDialing_, _Authinfo_, _HuronConfig_,
     _CallerId_, _VoicemailMessageAction_, $compile, _FeatureToggleService_, _TerminusUserDeviceE911Service_, _Orgservice_) {
 
@@ -26,12 +26,12 @@ describe('Controller: HuronSettingsCtrl', function () {
     Authinfo = _Authinfo_;
     Notification = _Notification_;
     ExternalNumberService = _ExternalNumberService_;
-    DialPlanService = _DialPlanService_;
     PstnSetupService = _PstnSetupService_;
     ModalService = _ModalService_;
     ServiceSetup = _ServiceSetup_;
     InternationalDialing = _InternationalDialing_;
     HuronCustomer = _HuronCustomer_;
+    HuronCustomerService = _HuronCustomerService_;
     HuronConfig = _HuronConfig_;
     CallerId = _CallerId_;
     VoicemailMessageAction = _VoicemailMessageAction_;
@@ -70,13 +70,12 @@ describe('Controller: HuronSettingsCtrl', function () {
     spyOn(ServiceSetup, 'updateAvrilSite').and.returnValue($q.resolve());
     spyOn(ExternalNumberService, 'refreshNumbers').and.returnValue($q.resolve());
     spyOn(PstnSetupService, 'getCustomer').and.returnValue($q.resolve());
-    spyOn(DialPlanService, 'getCustomerVoice').and.returnValue($q.resolve({
+    spyOn(HuronCustomerService, 'getVoiceCustomer').and.returnValue($q.resolve({
       dialPlanDetails: {
         extensionGenerated: 'false',
-        countryCode: '+1',
       },
     }));
-    spyOn(DialPlanService, 'updateCustomerVoice').and.returnValue($q.resolve());
+    spyOn(HuronCustomerService, 'updateVoiceCustomer').and.returnValue($q.resolve());
     spyOn(TerminusUserDeviceE911Service, 'update').and.returnValue($q.resolve());
     spyOn(Orgservice, 'getOrg').and.returnValue($q.resolve());
     spyOn(ServiceSetup, 'listSites').and.callFake(function () {
@@ -120,6 +119,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     $httpBackend
       .expectGET(HuronConfig.getCmiV2Url() + '/customers/' + customer.uuid + '/dialplans')
       .respond({
+        countryCode: '+13',
         premiumNumbers: ['800', '900'],
       });
   }));
@@ -1006,20 +1006,6 @@ describe('Controller: HuronSettingsCtrl', function () {
     });
 
     describe('Voicemail prefix', function () {
-      it('should change the extension length and change site code', function () {
-        $scope.to = {};
-        controller._buildVoicemailPrefixOptions($scope);
-        controller.model.site.extensionLength = '5';
-        $scope.$apply();
-        expect(controller.model.site.siteCode).toEqual(10);
-      });
-
-      it('should handle $scope.to being undefined', function () {
-        controller._buildVoicemailPrefixOptions($scope);
-        controller.model.site.extensionLength = '5';
-        $scope.$apply();
-        expect(controller.model.site.siteCode).toEqual(10);
-      });
 
       it('should set voicemail prefix to intersect with extension range and trigger warning', function () {
         controller.model.site.siteSteeringDigit.voicemailPrefixLabel = '1100';
@@ -1077,20 +1063,20 @@ describe('Controller: HuronSettingsCtrl', function () {
     });
 
     describe('dailing habits', function () {
-      it('should not call DialPlanService when dailing habit is not changed', function () {
+      it('should not call HuronCustomerService when dailing habit is not changed', function () {
         controller.model.regionCode = '';
         controller.previousModel.regionCode = '';
         controller.save();
         $scope.$apply();
-        expect(DialPlanService.updateCustomerVoice).not.toHaveBeenCalled();
+        expect(HuronCustomerService.updateVoiceCustomer).not.toHaveBeenCalled();
       });
 
-      it('should call DialPlanService when dailing habit is changed', function () {
+      it('should call HuronCustomerService when dailing habit is changed', function () {
         controller.model.regionCode = '214';
         controller.previousModel.regionCode = '';
         controller.save();
         $scope.$apply();
-        expect(DialPlanService.updateCustomerVoice).toHaveBeenCalled();
+        expect(HuronCustomerService.updateVoiceCustomer).toHaveBeenCalled();
       });
     });
   });
@@ -1188,7 +1174,7 @@ describe('Controller: HuronSettingsCtrl', function () {
       controller.model.companyVoicemail.externalVoicemail = false;
       controller.model.site.voicemailPilotNumber = undefined;
       $scope.$apply();
-      expect(controller.customerCountryCode).toEqual('+1');
+      expect(controller.countryCode).toEqual('+13');
       expect(ServiceSetup.generateVoiceMailNumber).toHaveBeenCalled();
     });
 

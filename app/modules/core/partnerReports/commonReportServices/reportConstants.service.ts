@@ -184,6 +184,3 @@ export class ReportConstants {
     };
   }
 }
-
-angular.module('Core')
-  .service('ReportConstants', ReportConstants);

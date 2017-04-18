@@ -35,6 +35,16 @@
     };
 
     var sections = {
+      EDISCOVERY: {
+        name: 'eDiscovery',
+        eventNames: {
+          INITIAL_SEARCH: 'eDiscovery: Search Button Clicked',
+          GENERATE_REPORT: 'eDiscovery: Generate Report Button Clicked',
+          SEARCH_SECTION: 'eDiscovery: Search Section Viewed',
+          REPORTS_SECTION: 'eDiscovery: Report Viewed',
+        },
+        persistentProperties: null,
+      },
       TRIAL: {
         name: 'Trial Flow',
         eventNames: {
@@ -108,6 +118,15 @@
         },
         persistentProperties: null,
       },
+      CONTEXT: {
+        name: 'Context Service related operations',
+        eventNames: {
+          CONTEXT_CREATE_FIELDSET_SUCCESS: 'Successfully created a new fieldset',
+          CONTEXT_CREATE_FIELDSET_FAILURE: 'Failed to create a new fieldset',
+          CONTEXT_CREATE_FIELD_SUCCESS: 'Successfully created a new field',
+          CONTEXT_CREATE_FIELD_FAILURE: 'Failed to create a new field',
+        },
+      },
     };
 
     var service = {
@@ -124,6 +143,7 @@
       sections: sections,
       trackError: trackError,
       trackEvent: trackEvent,
+      trackEdiscoverySteps: trackEdiscoverySteps,
       trackPartnerActions: trackPartnerActions,
       trackTrialSteps: trackTrialSteps,
       trackUserOnboarding: trackUserOnboarding,
@@ -202,6 +222,26 @@
     }
 
     /**
+      * Ediscovery Events
+      */
+    function trackEdiscoverySteps(eventName) {
+      if (!_.isString(eventName) && eventName.length !== 0) {
+        return $q.reject('eventName not passed');
+      }
+
+      var properties = {
+        from: _.get($state, '$current.name'),
+      };
+
+      _getOrgData('EDISCOVERY').then(function (data) {
+        _.extend(properties, data);
+        delete properties.realOrgId;
+      });
+
+      return trackEvent(eventName, properties);
+    }
+
+    /**
      * Trial Events
      */
     function trackTrialSteps(eventName, trialData, additionalPayload) {
@@ -220,10 +260,6 @@
           properties.servicesArray = _buildTrialServicesArray(trialData.trials);
           properties.duration = _.get(trialData, 'details.licenseDuration');
           properties.licenseQty = _.get(trialData, 'details.licenseCount');
-          /* TODO: add this once we have a clear strategy
-          if (properties.from === 'trialAdd.call' || properties.from === 'trialEdit.call') {
-            properties.devicesArray = _buildTrialDevicesArray(trialData.trials);
-          }*/
         }
         _.extend(properties, additionalPayload);
         return trackEvent(eventName, properties);
@@ -239,8 +275,8 @@
         return $q.reject('eventName, uuid or orgId not passed');
       }
       var properties = {
-        uuid: _hashSha256(UUID),
-        orgId: _hashSha256(orgId),
+        uuid: UUID,
+        orgId: orgId,
         section: sections.PARTNER.name,
       };
       return trackEvent(eventName, properties);
@@ -257,7 +293,7 @@
 
       var properties = {
         from: name,
-        orgId: _hashSha256(orgId),
+        orgId: orgId,
         section: sections.USER_ONBOARDING.name,
       };
 
@@ -312,8 +348,8 @@
       }
 
       var properties = _.extend({
-        userId: _hashSha256(Authinfo.getUserId()),
-        orgId: _hashSha256(Authinfo.getOrgId()),
+        userId: Authinfo.getUserId(),
+        orgId: Authinfo.getOrgId(),
       }, payload);
       return trackEvent(eventName, properties);
     }
@@ -334,8 +370,8 @@
         stack: stack,
         error: error,
         cause: cause,
-        userId: _hashSha256(Authinfo.getUserId()),
-        orgId: _hashSha256(Authinfo.getOrgId()),
+        userId: Authinfo.getUserId(),
+        orgId: Authinfo.getOrgId(),
         domain: _getDomainFromEmail(Authinfo.getPrimaryEmail()),
         state: _.get($state, '$current.name'),
       });
@@ -377,9 +413,9 @@
       sections[sectionName].persistentProperties = {
         licenses: _.map(licenses, 'licenseType'),
         realOrgId: Authinfo.getOrgId(),
-        orgId: _hashSha256(Authinfo.getOrgId()),
+        orgId: Authinfo.getOrgId(),
         domain: _getDomainFromEmail(Authinfo.getPrimaryEmail()),
-        uuid: _hashSha256(Authinfo.getUserId()),
+        uuid: Authinfo.getUserId(),
         role: Authinfo.getRoles(),
         section: sections[sectionName].name,
       };
@@ -411,13 +447,6 @@
 
       });
       return isTrial ? 'trial' : 'active';
-    }
-
-    function _hashSha256(id) {
-      if (!id) {
-        return null;
-      }
-      return CryptoJS.SHA256(id).toString(CryptoJS.enc.Base64);
     }
 
     function _getDomainFromEmail(email) {

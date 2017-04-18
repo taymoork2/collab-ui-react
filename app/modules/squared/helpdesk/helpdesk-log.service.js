@@ -8,19 +8,19 @@
       if (HelpdeskService.useMock()) {
         return deferredResolve(findLastLog(HelpdeskMockData.logs.search));
       }
-      var deferred = $q.defer();
-      LogService.searchLogs(term, function (data) {
-        if (data.success) {
-          if (data.metadataList && data.metadataList.length > 0) {
-            deferred.resolve(findLastLog(data.metadataList));
-          } else {
-            deferred.reject("NoLog");
-          }
-        } else {
-          deferred.reject("NoLog");
+      // request backend to return logs sorted by descending timestamp, and only one
+      return LogService.searchLogs(term, {
+        timeSortOrder: 'descending',
+        limit: 1,
+      }).then(function (response) {
+        var metadataList = _.get(response, 'data.metadataList');
+        if (_.size(metadataList)) {
+          return cleanLogMetadata(metadataList[0]);
         }
+        return $q.reject('NoLog');
+      }).catch(function () {
+        return $q.reject('NoLog');
       });
-      return deferred.promise;
     }
 
     function getLastPushedLogForUser(uuid) {
@@ -29,6 +29,7 @@
       }
 
       var deferred = $q.defer();
+      // TODO (mipark2): revisit this after moving 'LogService.listLogs()' away from callback-style
       LogService.listLogs(uuid, function (data) {
         if (data.success) {
           if (data.metadataList && data.metadataList.length > 0) {
@@ -49,6 +50,7 @@
       }
 
       var deferred = $q.defer();
+      // TODO (mipark2): revisit this after moving 'LogService.downloadLog()' away from callback-style
       LogService.downloadLog(filename, function (data) {
         if (data.success) {
           deferred.resolve(data.tempURL);
@@ -63,14 +65,17 @@
       var sorted = _.sortBy(metadataList, function (meta) {
         return new Date(meta.timestamp);
       });
-      var lastLog = _.last(sorted);
+      return cleanLogMetadata(_.last(sorted));
+    }
+
+    function cleanLogMetadata(logMetadata) {
       var platform = '';
-      if (lastLog.platform) {
-        platform = _.last(lastLog.platform.split('-')) || platform;
+      if (logMetadata.platform) {
+        platform = _.last(logMetadata.platform.split('-')) || platform;
       }
       return {
-        timestamp: lastLog.timestamp,
-        filename: lastLog.filename,
+        timestamp: logMetadata.timestamp,
+        filename: logMetadata.filename,
         platform: platform,
       };
     }

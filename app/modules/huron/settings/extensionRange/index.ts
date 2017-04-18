@@ -12,9 +12,9 @@ export * from './extensionRange';
 
 export default angular
   .module('huron.settings.extension-range', [
-    'atlas.templates',
-    'collab.ui',
-    'pascalprecht.translate',
+    require('scripts/app.templates'),
+    require('collab-ui-ng').default,
+    require('angular-translate'),
   ])
   .component('ucExtensionRange', new ExtensionRangeComponent())
   .directive('validateExtensionRangeLength', ExtensionRangeLengthValidator.factory)

@@ -6,14 +6,19 @@
     .factory('LineListService', LineListService);
 
   /* @ngInject */
-  function LineListService($q, $translate, Authinfo, Config, ExternalNumberService, Log, PstnSetupService, UserLineAssociationService) {
+  function LineListService($q, $translate, Authinfo, Config, ExternalNumberService, Log, PstnSetupService, UserLineAssociationService, PstnSetup) {
 
     var customerId = Authinfo.getOrgId();
+    var apiImplementation = undefined;
+    var vendor = undefined;
 
     // define functions available in this factory
     var service = {
       getLineList: getLineList,
       exportCSV: exportCSV,
+      getApiImplementation: getApiImplementation,
+      isResellerExists: isResellerExists,
+      getVendor: getVendor,
     };
     return service;
 
@@ -49,10 +54,20 @@
 
       return ExternalNumberService.isTerminusCustomer(customerId).then(function () {
         var orderPromise = PstnSetupService.listPendingOrdersWithDetail(customerId);
+        var carrierInfoPromise;
 
-        return $q.all([linesPromise, orderPromise]).then(function (results) {
+        if (_.isUndefined(apiImplementation)) {
+          carrierInfoPromise = ExternalNumberService.getCarrierInfo(customerId);
+        }
+
+        return $q.all([linesPromise, orderPromise, carrierInfoPromise]).then(function (results) {
           var lines = results[0];
           var orders = results[1];
+
+          if (!_.isUndefined(results[2])) {
+            apiImplementation = _.get(results[2], 'apiImplementation');
+            vendor = _.get(results[2], 'vendor');
+          }
 
           var pendingLines = [];
           var nonProvisionedPendingLines = [];
@@ -118,6 +133,13 @@
 
     } // end of function getLineList
 
+    function getApiImplementation() {
+      return apiImplementation;
+    }
+    function getVendor() {
+      return vendor;
+    }
+
     function dedupGrid(newLine, grid) {
       _.remove(grid, function (row) {
         return row.externalNumber === newLine.externalNumber;
@@ -182,5 +204,20 @@
       } // end of getLinesInBatches
       return deferred.promise;
     } // end of exportCSV
+
+    function isResellerExists() {
+      if (!PstnSetup.isResellerExists()) {
+        return PstnSetupService.getResellerV2().then(function () {
+          // to avoid a re-check later on in pstnSetup state.
+          PstnSetup.setResellerExists(true);
+          return true;
+        })
+        .catch(function () {
+          return false;
+        });
+      } else {
+        return $q.resolve(true);
+      }
+    }
   } // end of function LineListService
 })();

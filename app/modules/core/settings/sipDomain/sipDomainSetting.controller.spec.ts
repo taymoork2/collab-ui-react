@@ -108,6 +108,14 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
       }));
     });
 
+    it('getOrg call on initialization should be called with correct parameters', function () {
+      let params = {
+        basicInfo: true,
+      };
+      this.initController();
+      expect(this.Orgservice.getOrg).toHaveBeenCalledWith(jasmine.any(Function), false, params);
+    });
+
     it('initialization should gracefully error', function () {
       this.Orgservice.getOrg.and.callFake((callback) => {
         callback(this.orgServiceJSONFixture.getOrg, 201);

@@ -1,4 +1,6 @@
+import { ClusterService } from 'modules/hercules/services/cluster-service';
 import { Notification } from 'modules/core/notifications';
+import { ConnectorType } from 'modules/hercules/hybrid-services.types';
 
 export abstract class ExpresswayContainerController {
 
@@ -13,13 +15,13 @@ export abstract class ExpresswayContainerController {
     private $scope: ng.IScope,
     private $state: ng.ui.IStateService,
     private Authinfo,
-    private ClusterService,
+    private ClusterService: ClusterService,
     protected Notification: Notification,
     protected ServiceDescriptor,
     private ServiceStateChecker,
     protected USSService,
     protected servicesId: string[],
-    private connectorType: string,
+    private connectorType: ConnectorType,
   ) {
 
     this.firstTimeSetup();

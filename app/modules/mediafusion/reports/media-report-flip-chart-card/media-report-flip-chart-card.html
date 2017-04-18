@@ -7,13 +7,17 @@
     </header>
     <section>
       <div class="metrics-info">
-        <div id="{{$ctrl.chartOptions.cardChartDiv}}" class="chartContainer" ng-class="{'no-display': $ctrl.chartOptions.isShow==false || $ctrl.chartOptions.isShow==undefined}"></div>
+        <div id="{{$ctrl.chartOptions.cardChartDiv}}" class="chartContainer" ng-class="{'no-display': $ctrl.chartOptions.isShow==false || $ctrl.chartOptions.isShow==undefined}">
+          <div class="spinner-position" ng-if="!$ctrl.chartOptions.noData">
+          <p><h5><i class='icon icon-spinner icon-2x'></i></h5></p>
+          </div>
+        </div>
         <div class="no-data-center-card" ng-if="$ctrl.chartOptions.noData">
           <p>
             <h3 class="no-data-card"> 
             <i class='icon icon-warning no-data-warning-card'></i>
             <span translate='mediaFusion.metrics.nodata'></span></h3>
-          <p>
+          </p>
         </div>
       </div>
     </section>
@@ -25,8 +29,18 @@
       <div class="metrics-header"> {{$ctrl.headername}} </div>
     </header>
     <section>
-      <div class="metrics-info">
+      <div class="metrics-info" ng-class="{'no-display': $ctrl.parentcntrl.displayAdoption==false}">
         <div class="card-desc"> {{$ctrl.cardDesc}} </div>
+      </div>
+      <div class="metrics-info" ng-class="{'no-display': $ctrl.parentcntrl.displayAdoption==true}">
+        <div class="card-desc-small">
+        <b translate="mediaFusion.metrics.totalCloud"></b>
+        <span translate="mediaFusion.metrics.cardDescription.cloudParticipants1" class="span-desc-small"></span><br>
+        <b translate="mediaFusion.metrics.cloudcalls"></b>
+        <span translate="mediaFusion.metrics.cardDescription.cloudParticipants2" class="span-desc-small"></span><br>
+        <b translate="mediaFusion.metrics.onPremisesHeading"></b>
+        <span translate="mediaFusion.metrics.cardDescription.onpremDesc" class="span-desc-small"></span>
+        </div>
       </div>
     </section>
     <i class='icon icon-back media-flip-icon' ng-click="isFlipped=false"></i>

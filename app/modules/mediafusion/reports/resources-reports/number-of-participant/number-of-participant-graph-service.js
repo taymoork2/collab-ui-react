@@ -6,6 +6,7 @@
   function NumberOfParticipantGraphService(CommonReportsGraphService, chartColors, $translate, $rootScope) {
 
     var numberOfParticipantdiv = 'numberOfParticipantdiv';
+    var exportDiv = 'number-of-participant-div';
     var GUIDEAXIS = 'guideaxis';
     var AXIS = 'axis';
     var LEGEND = 'legend';
@@ -46,6 +47,8 @@
         numberOfParticipantChart.graphs = graphs;
         numberOfParticipantChart.startDuration = startDuration;
         numberOfParticipantChart.balloon.enabled = true;
+        numberOfParticipantChart.balloon.horizontalPadding = 3;
+        numberOfParticipantChart.balloon.verticalPadding = 2;
         numberOfParticipantChart.chartCursor.valueLineBalloonEnabled = true;
         numberOfParticipantChart.chartCursor.valueLineEnabled = true;
         numberOfParticipantChart.chartCursor.categoryBalloonEnabled = true;
@@ -143,11 +146,11 @@
       });
       dateLabel = _.replace(dateLabel, /\s/g, '_');
       var ExportFileName = 'MediaService_Number_of_Participants' + dateLabel + '_' + new Date();
-      var chartData = CommonReportsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, CommonReportsGraphService.getBaseExportForGraph(exportFields, ExportFileName, columnNames));
+      var chartData = CommonReportsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, CommonReportsGraphService.getBaseExportForGraph(exportFields, ExportFileName, columnNames, exportDiv));
+      chartData.chartCursor.balloonPointerOrientation = 'vertical';
       chartData.legend = CommonReportsGraphService.getBaseVariable(LEGEND);
       chartData.legend.labelText = '[[title]]';
       chartData.legend.useGraphSettings = true;
-
       var chart = AmCharts.makeChart(numberOfParticipantdiv, chartData);
       chart.addListener('zoomed', handleZoom);
       return chart;
@@ -172,9 +175,9 @@
       var tempData = [];
       _.forEach(graphs, function (value) {
         if (value.title === 'cloudParticipants') {
-          value.balloonText = '<span class="graph-text">' + cloudHeading + ' ' + ' <span class="graph-number">[[value]]</span></span>' + ' <span class="graph-text">[[' + value.descriptionField + ']]</span></span>';
+          value.balloonText = '<div class="insight-balloon-div"><span class="graph-text dis-inline-block">' + cloudHeading + ' ' + ' <span class="graph-number dis-inline-block">[[value]]</span></span>' + ' <p class="graph-text insight-padding"><span class="graph-text-color dis-inline-block">[[' + value.descriptionField + ']]</span></p></div>';
         } else if (value.title === 'onPremParticipants') {
-          value.balloonText = '<span class="graph-text">' + onPremisesHeading + ' ' + ' <span class="graph-number">[[value]]</span></span>' + ' <span class="graph-text">[[' + value.descriptionField + ']]</span></span>';
+          value.balloonText = '<div class="insight-balloon-div"><span class="graph-text dis-inline-block">' + onPremisesHeading + ' ' + ' <span class="graph-number dis-inline-block">[[value]]</span></span>' + ' <span class="graph-text"><span class="graph-text-color dis-inline-block">[[' + value.descriptionField + ']]</span></span></div>';
         }
         value.lineThickness = 2;
         value.connect = true;

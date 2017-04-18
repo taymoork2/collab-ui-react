@@ -1,0 +1,30 @@
+<cs-sp-section class="side-panel-history">
+  <div class="section-title-row">
+    <div class="section-name">
+      <i class="icon icon-2x {{$ctrl.isCollapsed ? 'icon-chevron-right': 'icon-chevron-down'}}" ng-click="$ctrl.onCollapse()"></i>
+      <span translate="gemini.cbgs.logs.history"></span>
+    </div>
+  </div>
+  <div class="section-content" collapse="$ctrl.isCollapsed">
+    <ul class="history-ul" ng-if="!$ctrl.isLoading">
+      <li ng-repeat="item in $ctrl.model | limitTo:$ctrl.displayNum">
+        <h6>{{item.action}}</h6>
+        <h6 ng-if="item.objectName">{{item.objectName}}</h6>
+        <p>
+          <small>{{item.createdDate}} {{item.actionTime}} {{::'gemini.cbgs.by' | translate}} {{item.userName}}
+            {{!item.email ? '' : '(' + item.email + ')'}}
+          </small>
+        </p>
+        <p>
+          <small ng-if="item.moveSiteMsg">{{item.moveSiteMsg}}</small>
+        </p>
+      </li>
+    </ul>
+    <p ng-show="$ctrl.isShowAll()" class="show-more">
+      <a class="primary-color" href ng-click="$ctrl.onShowAll()" translate="gemini.cbgs.showMore"></a>
+    </p>
+    <div ng-if="$ctrl.isLoading">
+      <i class="icon icon-spinner"></i>
+    </div>
+  </div>
+</cs-sp-section>

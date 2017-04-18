@@ -7,6 +7,7 @@
 
     var vm = this;
     vm.availabilitydiv = 'availabilitydiv';
+    vm.exportDiv = 'availability-div';
     vm.AXIS = 'axis';
     vm.LEGEND = 'legend';
 
@@ -41,7 +42,11 @@
     }
 
     function setAvailabilityGraph(data, availabilityChart, selectedCluster, cluster, daterange, Idmap) {
+      var isDummy = false;
       var tempData = _.cloneDeep(data);
+      if (data.data[0].isDummy) {
+        isDummy = true;
+      }
       if (_.isUndefined(data.data[0].isDummy)) {
         var availabilityData = [];
         if (selectedCluster === vm.allClusters) {
@@ -66,15 +71,22 @@
       if (tempData === null || tempData === 'undefined' || tempData.length === 0) {
         return undefined;
       } else {
-        availabilityChart = createAvailabilityGraph(tempData, selectedCluster, cluster, daterange);
+        availabilityChart = createAvailabilityGraph(tempData, selectedCluster, cluster, daterange, isDummy);
         availabilityChart.period = tempData.data[0].period;
         availabilityChart.startDate = startDate;
+        if (isDummy) {
+          availabilityChart.chartCursor.valueBalloonsEnabled = false;
+          availabilityChart.chartCursor.valueLineBalloonEnabled = false;
+          availabilityChart.chartCursor.categoryBalloonEnabled = false;
+          availabilityChart.chartCursor.valueLineEnabled = false;
+          availabilityChart.balloon.enabled = false;
+        }
         availabilityChart.validateData();
         return availabilityChart;
       }
     }
 
-    function createAvailabilityGraph(data, selectedCluster, cluster, daterange) {
+    function createAvailabilityGraph(data, selectedCluster, cluster, daterange, isDummy) {
       // if there are no active users for this user
       if (data === null || data === 'undefined' || data.length === 0) {
         return;
@@ -101,14 +113,16 @@
       catAxes.autoGridCount = false;
       catAxes.gridCount = 10;
       catAxes.gridAlpha = 0.3;
-      catAxes.listeners = [{
-        "event": "clickItem",
-        "method": function (event) {
-          $rootScope.$broadcast('clusterClickEvent', {
-            data: event.serialDataItem.category,
-          });
-        },
-      }];
+      if (!isDummy) {
+        catAxes.listeners = [{
+          "event": "clickItem",
+          "method": function (event) {
+            $rootScope.$broadcast('clusterClickEvent', {
+              data: event.serialDataItem.category,
+            });
+          },
+        }];
+      }
       var exportFields = ['startTime', 'endTime', 'nodes', 'availability', 'category'];
       var columnNames = {};
       if (cluster === vm.allClusters) {
@@ -130,19 +144,22 @@
       cluster = _.replace(cluster, /\s/g, '_');
       daterange = _.replace(daterange, /\s/g, '_');
       var ExportFileName = 'MediaService_Availability_' + cluster + '_' + daterange + '_' + new Date();
-      var chartData = CommonReportsGraphService.getGanttGraph(data.data[0].clusterCategories, valueAxis, CommonReportsGraphService.getBaseExportForGraph(exportFields, ExportFileName, columnNames), catAxes);
+      var chartData = CommonReportsGraphService.getGanttGraph(data.data[0].clusterCategories, valueAxis, CommonReportsGraphService.getBaseExportForGraph(exportFields, ExportFileName, columnNames, vm.exportDiv), catAxes);
       chartData.legend = CommonReportsGraphService.getBaseVariable(vm.LEGEND);
       chartData.legend.labelText = '[[title]]';
       chartData.legend.data = legend;
       chartData.graph.showHandOnHover = (selectedCluster === vm.allClusters);
-      chartData.listeners = [{
-        "event": "clickGraphItem",
-        "method": function (event) {
-          $rootScope.$broadcast('clusterClickEvent', {
-            data: event.item.category,
-          });
-        },
-      }];
+      if (!isDummy) {
+        chartData.listeners = [{
+          "event": "clickGraphItem",
+          "method": function (event) {
+            $rootScope.$broadcast('clusterClickEvent', {
+              data: event.item.category,
+            });
+          },
+        }];
+      }
+
       var chart = AmCharts.makeChart(vm.availabilitydiv, chartData, 0);
 
       chart.addListener('init', function () {

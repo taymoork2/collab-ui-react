@@ -2,7 +2,7 @@
 
 describe('Controller: AABuilderNumbersCtrl', function () {
   var controller, AANotificationService;
-  var AAModelService, AutoAttendantCeInfoModelService, Authinfo, AANumberAssignmentService, AACommonService;
+  var AAModelService, AAUiModelService, AutoAttendantCeInfoModelService, Authinfo, AANumberAssignmentService, AACommonService;
   var $rootScope, $scope, $q;
   var $httpBackend, HuronConfig;
   var url, cmiAAAsignmentURL;
@@ -17,11 +17,13 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       "type": "directoryNumber",
       "trigger": "incomingCall",
       "number": "999999",
+      "uuid": "00097a86-45ef-44a7-aa78-6d32a0ca1d3b",
     }, {
       "id": "00097a86-45ef-44a7-aa78-6d32a0ca1d3c",
       "type": "directoryNumber",
       "trigger": "incomingCall",
       "number": "12068551179",
+      "uuid": "00097a86-45ef-44a7-aa78-6d32a0ca1d3c",
     }],
   };
 
@@ -43,6 +45,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
   var cmiAAAsignments = [cmiAAAsignment];
 
   var aaModel = {};
+  var aaUiModel = {};
 
   var errorSpy;
 
@@ -53,6 +56,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       resource.setId(rawCeInfo.assignedResources[j].id);
       resource.setTrigger(rawCeInfo.assignedResources[j].trigger);
       resource.setType(rawCeInfo.assignedResources[j].type);
+      resource.setUUID(rawCeInfo.assignedResources[j].uuid);
       if (!_.isUndefined(rawCeInfo.assignedResources[j].number)) {
         resource.setNumber(rawCeInfo.assignedResources[j].number);
       }
@@ -77,15 +81,16 @@ describe('Controller: AABuilderNumbersCtrl', function () {
   }));
 
   beforeEach(inject(function (_$rootScope_, _$q_, $controller, _$httpBackend_, _HuronConfig_, _AutoAttendantCeInfoModelService_,
-    _AAModelService_, _AANumberAssignmentService_, _AACommonService_, _Authinfo_, _AANotificationService_) {
+    _AAModelService_, _AANumberAssignmentService_, _AACommonService_, _Authinfo_, _AANotificationService_, _AAUiModelService_) {
     $rootScope = _$rootScope_;
     $q = _$q_;
     $scope = $rootScope;
     $httpBackend = _$httpBackend_;
     HuronConfig = _HuronConfig_;
+    AAModelService = _AAModelService_;
+    AAUiModelService = _AAUiModelService_;
 
     AANumberAssignmentService = _AANumberAssignmentService_;
-    AAModelService = _AAModelService_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     Authinfo = _Authinfo_;
     AACommonService = _AACommonService_;
@@ -93,6 +98,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
     AANotificationService = _AANotificationService_;
 
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
+    spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
 
     $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&order=pattern').respond(200, [{
       'pattern': '+9999999991',
@@ -137,6 +143,33 @@ describe('Controller: AABuilderNumbersCtrl', function () {
     $httpBackend.whenGET(cmiAAAsignmentURL).respond(cmiAAAsignments);
 
     aaModel.aaRecordUUID = '2';
+
+    var rawCeInfo2 = {
+      "assignedResources": [{
+        "id": "00097a86-45ef-44a7-aa78-6d32a0ca1d3b",
+        "type": "directoryNumber",
+        "trigger": "incomingCall",
+        "number": "999999",
+        "uuid": "00097a86-45ef-44a7-aa78-6d32a0ca1d3b",
+      }, {
+        "id": "00097a86-45ef-44a7-aa78-6d32a0ca1d3d",
+        "type": "externalNumber",
+        "trigger": "incomingCall",
+        "number": "1190",
+        "uuid": "00097a86-45ef-44a7-aa78-6d32a0ca1d3d",
+      }],
+    };
+    aaUiModel.ceInfo = ce2CeInfo(rawCeInfo2);
+
+    $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/internalnumberpools/00097a86-45ef-44a7-aa78-6d32a0ca1d3b').respond({
+      "pattern": "999990",
+      "uuid": "00097a86-45ef-44a7-aa78-6d32a0ca1d3b",
+    });
+
+    $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools/00097a86-45ef-44a7-aa78-6d32a0ca1d3d').respond({
+      "pattern": "testNum",
+      "uuid": "00097a86-45ef-44a7-aa78-6d32a0ca1d3d",
+    });
 
     controller = $controller('AABuilderNumbersCtrl', {
       $scope: $scope,
@@ -246,7 +279,9 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       controller.numberTypeList["1234567"] = "externalNumber";
 
       // add a number
-      controller.addNumber("2064261234");
+      controller.addNumber({
+        value: "2064261234",
+      });
       $httpBackend.flush();
       $scope.$apply();
 
@@ -254,7 +289,9 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       expect(controller.availablePhoneNums.length === 2);
 
       // add internal
-      controller.addNumber("1234");
+      controller.addNumber({
+        value: "1234",
+      });
       $httpBackend.flush();
       $scope.$apply();
 
@@ -262,7 +299,9 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       expect(controller.availablePhoneNums.length === 1);
 
       // add another
-      controller.addNumber("1234567");
+      controller.addNumber({
+        value: "1234567",
+      });
       $httpBackend.flush();
       $scope.$apply();
 
@@ -347,7 +386,9 @@ describe('Controller: AABuilderNumbersCtrl', function () {
         status: 500,
       }));
 
-      controller.addNumber("1234");
+      controller.addNumber({
+        value: "1234",
+      });
 
       $scope.$apply();
       $httpBackend.flush();
@@ -383,7 +424,8 @@ describe('Controller: AABuilderNumbersCtrl', function () {
         value: "1234567",
       };
 
-      controller.removeNumber(rawCeInfo.assignedResources[0].number);
+      var resources = controller.ui.ceInfo.getResources();
+      controller.removeNumber(resources[0]);
       $scope.$apply();
 
       // we should have 3 numbers now
@@ -403,8 +445,11 @@ describe('Controller: AABuilderNumbersCtrl', function () {
     it('should not move a bad or missing phone number to available', function () {
 
       controller.availablePhoneNums = [];
-
-      controller.removeNumber('');
+      var resource = AutoAttendantCeInfoModelService.newResource();
+      resource.setType(aCe.assignedResources.type);
+      resource.setId("bad");
+      resource.setNumber('');
+      controller.removeNumber(resource);
 
       $scope.$apply();
 
@@ -425,49 +470,13 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       var resources = controller.ui.ceInfo.getResources();
 
       resources.push(resource);
-      controller.removeNumber(rawCeInfo.assignedResources[0].number);
+      controller.removeNumber(resources[0]);
       $scope.$apply();
       $httpBackend.flush();
       expect(AACommonService.isValid()).toBe(false);
       expect(errorSpy).toHaveBeenCalled();
 
     });
-  });
-
-  describe('getDupeNumberAnyAA', function () {
-
-    beforeEach(function () {
-
-      aaModel.ceInfos = [];
-      aaModel.aaRecords = cesWithNumber;
-      aaModel.aaRecord = aCe;
-
-      // controller.name = rawCeInfo.callExperienceName;
-      controller.ui = {};
-      controller.ui.ceInfo = ce2CeInfo(rawCeInfo);
-
-    });
-
-    it('should find a duplicate phone number', function () {
-
-      var ret = controller.getDupeNumberAnyAA(cesWithNumber[0].assignedResources[0].number);
-
-      $scope.$apply();
-
-      expect(ret).toEqual(true);
-
-    });
-
-    it('should not find a duplicate phone number', function () {
-
-      var ret = controller.getDupeNumberAnyAA("1234567");
-
-      $scope.$apply();
-
-      expect(ret).toEqual(false);
-
-    });
-
   });
 
   describe('getExternalNumbers', function () {

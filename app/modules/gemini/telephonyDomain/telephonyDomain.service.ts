@@ -1,33 +1,81 @@
+import { GmHttpService } from '../common/gem.http.service';
+
 export class TelephonyDomainService {
 
   private url;
 
   /* @ngInject */
   constructor(
-    private UrlConfig,
-    private $http: ng.IHttpService,
+    private GmHttpService: GmHttpService,
     private $translate: ng.translate.ITranslateService,
   ) {
-    let gmUrl = this.UrlConfig.getGeminiUrl();
     this.url = {
-      getTelephonyDomains: gmUrl + 'telephonyDomains/' + 'customerId/',
-      getTelephonyDomain: gmUrl + 'telephonydomain/getTelephonyDomainInfoByDomainId/',
-      getActivityLogs: gmUrl + 'activityLogs',
+      getActivityLogs: 'activityLogs',
+      telephonyDomain: 'telephonyDomain/',
+      moveSite: 'telephonydomain/moveSite',
+      getTelephonyDomains: 'telephonyDomains/customerId/',
+      cancelSubmission: 'telephonydomain/cancelSubmission',
+      getNumbers: 'telephonydomain/getTelephonyNumberByDomainId/',
+      getTelephonyDomain: 'telephonydomain/getTelephonyDomainInfoByDomainId/',
+      downloadUrl: 'https://hfccap12.qa.webex.com/ccaportal/resources/excel/ccaportal_telephony_numbers.xls', // TODO, will use urlConfig
     };
   }
 
   public getTelephonyDomains(customerId: string) {
-    let url = this.url.getTelephonyDomains + customerId;
-    return this.$http.get(url, {}).then((response) => {
-      return _.get(response, 'data');
-    });
+    const url = `${this.url.getTelephonyDomains}/${customerId}`;
+    return this.GmHttpService.httpGet(url).then(this.extractData);
   }
 
   public getTelephonyDomain(customerId, ccaDomainId) {
-    let url = this.url.getTelephonyDomain + customerId + '/' + ccaDomainId;
-    return this.$http.get(url, {}).then((response) => {
-      return _.get(response, 'data');
-    });
+    const url = `${this.url.getTelephonyDomain}${customerId}/${ccaDomainId}`;
+    return this.GmHttpService.httpGet(url).then(this.extractData);
+  }
+
+  public getRegions() {
+    const url = `${this.url.telephonyDomain}/regions`;
+    return this.GmHttpService.httpGet(url).then(this.extractData);
+  }
+
+  public getNotes(customerId: string, ccaDomainId: string) {
+    const url = `${this.url.getActivityLogs}/${customerId}/${ccaDomainId}/add_note`;
+    return this.GmHttpService.httpGet(url).then(this.extractData);
+  }
+
+  public getHistories(customerId: string, ccaDomainId: string, domainName: string) {
+    const url = `${this.url.getActivityLogs}/${customerId}/${ccaDomainId}/Telephony%20Domain/${domainName}`;
+    return this.GmHttpService.httpGet(url).then(this.extractData);
+  }
+
+  public getNumbers(customerId: string, ccaDomainId: string) {
+    const url = `${this.url.getNumbers}${customerId}/${ccaDomainId}`;
+    return this.GmHttpService.httpGet(url).then(this.extractData);
+  }
+
+  public getDownloadUrl() {
+    return this.url.downloadUrl;
+  }
+
+  public postNotes(data: any) {
+    const url = this.url.getActivityLogs;
+    return this.GmHttpService.httpPost(url, null, null, data).then(this.extractData);
+  }
+
+  public moveSite(data: any) {
+    const url = this.url.moveSite;
+    return this.GmHttpService.httpPut(url, null, null, data).then(this.extractData);
+  }
+
+  public updateTelephonyDomainStatus(customerId: string, ccaDomainId: string, telephonyDomainId: number, operation: string) {
+    let url: string = '';
+    let postData: any = {
+      ccaDomainId: ccaDomainId,
+      customerId: customerId,
+      TelephonyDomainId: telephonyDomainId,
+    };
+    if (operation === 'cancel') {
+      url = this.url.cancelSubmission;
+    }
+    return this.GmHttpService.httpPost(url, null, null, postData).then(this.extractData);
   }
 
   public telephonyDomainsExportCSV(customerId: string) {
@@ -56,13 +104,21 @@ export class TelephonyDomainService {
     });
   }
 
+  public transformCSVNumber(value: any) {
+    return (value == null ? '' : value + '\t');
+  }
+
+  private extractData(response) {
+    return _.get(response, 'data');
+  }
+
   private formatCsvData(data: any) {
     let newData: any [] = [];
     let oneLine = {
-      domainName: this.transformCSVNumber(data.domainName),
+      domainName: this.transformCSVNumber(data.telephonyDomainName || data.domainName),
       totalSites: this.transformCSVNumber(data.telephonyDomainSites.length),
       bridgeSet: this.transformBridgeSet(data.primaryBridgeName, data.backupBridgeName),
-      webDomain: this.transformCSVNumber(data.webDomainName),
+      webDomain: this.transformCSVNumber(data.webDomainName || 'N/A'),
       status: data.status ? this.$translate.instant('gemini.cbgs.field.status.' + data.status) : '',
       description: this.transformCSVNumber(data.customerAttribute),
       siteUrl: '',
@@ -92,35 +148,10 @@ export class TelephonyDomainService {
     return newData;
   }
 
-  private transformCSVNumber(value: any) {
-    return (value == null ? '' : value + '\t');
-  }
-
   private transformBridgeSet(v1: string, v2: string) {
     v1 = !v1 ? 'N/A' : this.transformCSVNumber(v1);
     v2 = !v2 ? 'N/A' : this.transformCSVNumber(v2);
 
     return (v1 === 'N/A' && v2 === 'N/A') ? 'N/A' : (v1 + '+' + v2);
-  }
-
-  public getNotes(customerId: string, ccaDomainId: string) {
-    let url = this.url.getActivityLogs + '/' + customerId + '/' + ccaDomainId + '/add_note';
-    return this.$http.get(url, {}).then((response) => {
-      return _.get(response, 'data');
-    });
-  }
-
-  public postNotes(data: any) {
-    let url = this.url.getActivityLogs;
-    return this.$http.post(url, data).then((response) => {
-      return _.get(response, 'data');
-    });
-  }
-
-  public getHistories(customerId: string, ccaDomainId: string, domainName: string) {
-    let url = this.url.getActivityLogs + '/' + customerId + '/' + ccaDomainId + '/Telephony%20Domain/' + domainName;
-    return this.$http.get(url, {}).then((response) => {
-      return _.get(response, 'data');
-    });
   }
 }

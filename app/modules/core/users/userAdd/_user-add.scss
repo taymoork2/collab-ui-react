@@ -432,6 +432,13 @@
   display: block;
 }
 
+.license-entity-disable {
+  font-family: $brand-font-light;
+  font-size: 0.75rem;
+  color: $gray-light-1;
+  display: block;
+}
+
 .license-siteUrl {
   color: $color-primary-base;
   font-family: $brand-font-light;
@@ -663,12 +670,12 @@
 .entitle-check-grp {
   .icon-warning {
     color: $color-attention-base;
-    @include vr-spacing(mt, 0.6);
+    @include vr-spacing(mt, 0.4);
     @include vr-spacing(ml, 0.15);
   }
 
   .under-label-caremsg-reposition {
-    @include vr-spacing(mt, -0.9);
+    @include vr-spacing(mt, -0.75);
     @include vr-spacing(ml, 2);
   }
 }

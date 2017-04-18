@@ -1,10 +1,10 @@
 'use strict';
 
 describe('Controller: ServiceSetup', function () {
-  var $scope, $state, $previousState, $q, $httpBackend, ServiceSetup, Notification, HuronConfig, HuronCustomer, DialPlanService;
-  var Authinfo, VoicemailMessageAction, Orgservice;
+  var $scope, $state, $previousState, $q, $httpBackend, ServiceSetup, Notification, HuronConfig, HuronCustomer;
+  var Authinfo, VoicemailMessageAction;
   var model, customer, voicemail, avrilSites, externalNumberPool, usertemplate, form, timeZone, ExternalNumberService, ModalService, modalDefer, messageAction, FeatureToggleService, languages, countries;
-  var $rootScope, PstnSetupService;
+  var $rootScope, PstnSetupService, HuronCustomerService;
   var dialPlanDetailsNorthAmerica = [{
     countryCode: "+1",
     extensionGenerated: "false",
@@ -17,15 +17,15 @@ describe('Controller: ServiceSetup', function () {
   beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function (_$rootScope_, _$previousState_, _$q_, _ServiceSetup_, _Notification_, _HuronConfig_, _$httpBackend_,
-    _HuronCustomer_, _DialPlanService_, _ExternalNumberService_, _ModalService_, _Authinfo_, _VoicemailMessageAction_, _FeatureToggleService_,
-    _PstnSetupService_, _Orgservice_) {
+    _HuronCustomer_, _HuronCustomerService_, _ExternalNumberService_, _ModalService_, _Authinfo_, _VoicemailMessageAction_, _FeatureToggleService_,
+    _PstnSetupService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
     $q = _$q_;
     ServiceSetup = _ServiceSetup_;
     Notification = _Notification_;
     HuronCustomer = _HuronCustomer_;
-    DialPlanService = _DialPlanService_;
+    HuronCustomerService = _HuronCustomerService_;
     ExternalNumberService = _ExternalNumberService_;
     ModalService = _ModalService_;
     HuronConfig = _HuronConfig_;
@@ -35,7 +35,6 @@ describe('Controller: ServiceSetup', function () {
     VoicemailMessageAction = _VoicemailMessageAction_;
     $previousState = _$previousState_;
     PstnSetupService = _PstnSetupService_;
-    Orgservice = _Orgservice_;
     FeatureToggleService = _FeatureToggleService_;
 
     customer = {
@@ -129,10 +128,10 @@ describe('Controller: ServiceSetup', function () {
     spyOn(ServiceSetup, 'getSiteCountries').and.returnValue($q.resolve(countries));
     spyOn(Notification, 'notify');
     spyOn(Notification, 'errorResponse');
-    spyOn(DialPlanService, 'getCustomerVoice').and.returnValue($q.resolve({
+    spyOn(HuronCustomerService, 'getVoiceCustomer').and.returnValue($q.resolve({
       dialPlanDetails: dialPlanDetailsNorthAmerica,
     }));
-    spyOn(DialPlanService, 'updateCustomerVoice').and.returnValue($q.resolve());
+    spyOn(HuronCustomerService, 'updateVoiceCustomer').and.returnValue($q.resolve());
     spyOn(ModalService, 'open').and.returnValue({
       result: modalDefer.promise,
     });
@@ -897,10 +896,6 @@ describe('Controller: ServiceSetup', function () {
         expect(promise.$$state.value).toEqual('Site/extension create failed.');
       });
 
-      it('should call getCustomerDialPlanDetails()', function () {
-        expect(DialPlanService.getCustomerVoice).toHaveBeenCalled();
-      });
-
       it('should call createInternalNumberRange() if hideFieldInternalNumberRange is false', function () {
         controller.hideFieldInternalNumberRange = false;
         controller.initNext();
@@ -918,9 +913,6 @@ describe('Controller: ServiceSetup', function () {
 
     describe('setServiceValues', function () {
 
-      it('should call DialPlanService()', function () {
-        expect(DialPlanService.getCustomerVoice).toHaveBeenCalled();
-      });
     });
 
     describe('initnext.updateTimezone', function () {
@@ -1068,50 +1060,21 @@ describe('Controller: ServiceSetup', function () {
       });
     });
 
-    describe('dailing habits', function () {
-      it('should not call DialPlanService when dailing habit is not changed', function () {
+    describe('dialling habits', function () {
+      it('should not call HuronCustomerService when dialling habit is not changed', function () {
         controller.model.regionCode = '';
         controller.model.initialRegionCode = '';
         controller.initNext();
         $scope.$apply();
-        expect(DialPlanService.updateCustomerVoice).not.toHaveBeenCalled();
+        expect(HuronCustomerService.updateVoiceCustomer).not.toHaveBeenCalled();
       });
 
-      it('should call DialPlanService when dailing habit is changed', function () {
+      it('should call HuronCustomerService when dialling habit is changed', function () {
         controller.model.regionCode = '214';
         controller.model.initialRegionCode = '';
         controller.initNext();
         $scope.$apply();
-        expect(DialPlanService.updateCustomerVoice).toHaveBeenCalled();
-      });
-    });
-    describe('checkIfTestOrg', function () {
-      it('should return true if customer orgs isTestOrg value is true', function () {
-        spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
-          callback({
-            success: true,
-            isTestOrg: true,
-          }, 200);
-        });
-        var results;
-        controller.checkIfTestOrg().then(function (data) {
-          results = data;
-        });
-        $scope.$apply();
-        expect(Orgservice.getOrg).toHaveBeenCalled();
-        expect(results).toBe(true);
-      });
-      it('should return false if customer orgs isTestOrg value is false', function () {
-        spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
-          callback({ isTestOrg: false }, 200);
-        });
-        var results;
-        controller.checkIfTestOrg().then(function (data) {
-          results = data;
-        });
-        $scope.$apply();
-        expect(Orgservice.getOrg).toHaveBeenCalled();
-        expect(results).toBe(false);
+        expect(HuronCustomerService.updateVoiceCustomer).toHaveBeenCalled();
       });
     });
   });

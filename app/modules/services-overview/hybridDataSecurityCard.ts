@@ -1,5 +1,6 @@
 import { ServicesOverviewHybridCard } from './ServicesOverviewHybridCard';
 import { ICardButton, CardType } from './ServicesOverviewCard';
+import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 
 export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybridCard {
   public getShowMoreButton(): ICardButton | undefined {
@@ -32,14 +33,19 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
   private checkRoles() {
     const hasRequiredRoles = _.includes(this.Authinfo.getRoles(), this.Config.roles.full_admin) ||
       _.includes(this.Authinfo.getRoles(), this.Config.roles.readonly_admin);
-    this.display = hasRequiredRoles && this.Authinfo.isFusionHDS();
+    return hasRequiredRoles;
+  }
+
+  public hybridDataSecurityFeatureToggleEventHandler(hasFeature: boolean) {
+    this.display = this.checkRoles() && (this.Authinfo.isFusionHDS() || hasFeature);
   }
 
   /* @ngInject */
   public constructor(
     private Authinfo,
     private Config,
-    FusionClusterStatesService) {
+    HybridServicesClusterStatesService: HybridServicesClusterStatesService,
+  ) {
     super({
       active: false,
       cardClass: 'media',
@@ -49,7 +55,7 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
       name: 'servicesOverview.cards.hybridDataSecurity.title',
       routerState: 'hds.list',
       service: 'spark-hybrid-datasecurity',
-    }, FusionClusterStatesService);
-    this.checkRoles();
+    }, HybridServicesClusterStatesService);
+    this.display = this.checkRoles() && this.Authinfo.isFusionHDS();
   }
 }

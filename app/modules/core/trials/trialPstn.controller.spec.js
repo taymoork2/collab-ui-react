@@ -123,6 +123,7 @@ describe('Controller: TrialPstnCtrl', function () {
     spyOn(PstnSetupService, 'getResellerV2').and.returnValue($q.resolve());
     spyOn(PstnSetupService, 'listResellerCarriers');
     spyOn(PstnSetupService, 'listDefaultCarriers');
+    spyOn(PstnSetupService, 'searchCarrierInventory').and.returnValue($q.resolve());
 
     controller = $controller('TrialPstnCtrl', {
       $scope: $scope,
@@ -140,7 +141,12 @@ describe('Controller: TrialPstnCtrl', function () {
 
   it('should initialize with the company name and email', function () {
     expect(controller.trialData.details.pstnContractInfo.companyName).toEqual(customerName);
-    expect(controller.trialData.details.pstnContractInfo.email).toEqual(customerEmail);
+    expect(controller.trialData.details.pstnContractInfo.emailAddress).toEqual(customerEmail);
+  });
+
+  it('should set the nxx params', function () {
+    controller.searchCarrierInventory('817932');
+    expect(controller.trialData.details.pstnNumberInfo.areaCode.code).toBe('817');
   });
 
   it('should reset NXX value when Area Code changes', function () {
@@ -149,9 +155,9 @@ describe('Controller: TrialPstnCtrl', function () {
     controller.trialData.details.pstnProvider.uuid = carrierId;
     controller.trialData.details.pstnNumberInfo.state = location.areas[0];
 
-    $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/inventory/carriers/' + carrierId + '/did/count?groupBy=nxx&npa=' + areaCode.code + '&state=' + stateSearch).respond(exchangesResponse);
+    $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/carriers/' + carrierId + '/numbers/count?numberType=DID&groupBy=nxx&npa=' + areaCode.code + '&state=' + stateSearch).respond(exchangesResponse);
 
-    $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/inventory/carriers/' + carrierId + '/search?count=10&npa=' + areaCode.code + '&sequential=false' + stateSearch).respond(numbersResponse);
+    $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/carriers/' + carrierId + '/numbers?numberType=DID&count=10&npa=' + areaCode.code + '&sequential=false' + stateSearch).respond(numbersResponse);
 
     controller.trialData.details.pstnNumberInfo.areaCode = areaCode;
     controller.trialData.details.pstnNumberInfo.nxx = exchangesResponse.exchanges[0];
@@ -177,7 +183,7 @@ describe('Controller: TrialPstnCtrl', function () {
     });
 
     it('should get area codes', function () {
-      $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/inventory/carriers/' + carrierId + '/did/count?state=' + stateSearch).respond(areaCodeResponse);
+      $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/carriers/' + carrierId + '/numbers/count?numberType=DID&state=' + stateSearch).respond(areaCodeResponse);
       controller.trialData.details.pstnProvider.uuid = carrierId;
       controller.trialData.details.pstnNumberInfo.state.abbreviation = stateSearch;
       controller.getStateInventory();

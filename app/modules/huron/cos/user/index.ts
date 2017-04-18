@@ -1,12 +1,14 @@
 import { UserClassOfServiceComponent } from './userCos.component';
 import { UserCosService } from './userCos.service';
+import FeatureToggleService from 'modules/core/featureToggle';
 
 export default angular
   .module('huron.user-class-of-service', [
-    'atlas.templates',
-    'collab.ui',
-    'pascalprecht.translate',
+    require('scripts/app.templates'),
+    require('collab-ui-ng').default,
+    require('angular-translate'),
     'ngResource',
+    FeatureToggleService,
     require('modules/core/scripts/services/authinfo'),
     require('modules/huron/telephony/cmiServices'),
   ])

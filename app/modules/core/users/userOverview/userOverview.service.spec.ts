@@ -3,7 +3,7 @@ import testModule from './index';
 describe('Service: UserOverviewService', () => {
 
   beforeEach(function () {
-    this.initModules(testModule, 'WebExApp', 'Sunlight', 'Huron');
+    this.initModules(testModule, 'WebExApp', 'Huron');
     this.injectDependencies(
       '$httpBackend',
       'UserOverviewService',
@@ -31,6 +31,19 @@ describe('Service: UserOverviewService', () => {
   afterEach(function () {
     this.$httpBackend.verifyNoOutstandingExpectation();
     this.$httpBackend.verifyNoOutstandingRequest();
+  });
+
+  describe('userHasEntitlement', () => {
+
+    it('should return false if user does not have the requested entitlement', function () {
+      expect(this.UserOverviewService.userHasEntitlement(this.updatedUser, 'ciscouc')).toBeFalsy();
+    });
+
+    it('should return true if user has the requested entitlement', function () {
+      this.updatedUser.entitlements.push('ciscouc');
+      expect(this.UserOverviewService.userHasEntitlement(this.updatedUser, 'ciscouc')).toBeTruthy();
+    });
+
   });
 
   describe('getUser()', () => {
@@ -84,9 +97,10 @@ describe('Service: UserOverviewService', () => {
       it('should not initialize trainSiteNames when not supplied', function () {
 
         expect(this.updatedUser.trainSiteName).not.toBeDefined();
+
         let promise = this.UserOverviewService.getUser('userid')
           .then((userData) => {
-            expect(userData.user.trainSiteNames).not.toBeDefined();
+            expect(userData.trainSiteName).toHaveLength(0);
           });
         this.$httpBackend.flush();
 
@@ -125,11 +139,19 @@ describe('Service: UserOverviewService', () => {
 
     });
 
+    describe('getAccountActiveStatus', () => {
+
+      it('should return false if user has no entitlements', function () {
+        expect(this.UserOverviewService.getAccountActiveStatus(this.updatedUser)).toBeFalsy();
+      });
+
+    });
+
     describe('getAccountStatus', () => {
 
       it('should reject getUser if there is an error fetching data', function () {
         // reject call to Auth.IsOnlineOrg()
-        this.isOnlineOrgSpy.and.returnValue(this.$q.reject());
+        this.$httpBackend.expectGET(/.*\/userid.*/g).respond(400);
 
         let promise = this.UserOverviewService.getUser('userid');
         this.$httpBackend.flush();
@@ -178,18 +200,32 @@ describe('Service: UserOverviewService', () => {
         }));
       });
 
-      it('should set pendingStatus false when Auth.isOnlineOrg is true', function () {
-        this.isOnlineOrgSpy.and.returnValue(this.$q.resolve(true));
-        _.remove(this.updatedUser.entitlements, (n) => { return n === 'ciscouc'; });
+      it('should set pendingStatus true regardless of Auth.isOnlineOrg status', function () {
+        _.remove(this.updatedUser.entitlements, (n) => n === 'ciscouc');
         this.updatedUser.userSettings = [];
 
-        let promise = this.UserOverviewService.getUser('userid');
+        this.$httpBackend.whenGET(/.*\/userid.*/g).respond(200, this.updatedUser);
+
+        // test when isOnlineOrg is true
+        this.isOnlineOrgSpy.and.returnValue(this.$q.resolve(true));
+        let promise1 = this.UserOverviewService.getUser('userid');
         this.$httpBackend.flush();
-        expect(promise).toBeResolvedWith(jasmine.objectContaining({
+        expect(promise1).toBeResolvedWith(jasmine.objectContaining({
           user: jasmine.objectContaining({
-            pendingStatus: false,
+            pendingStatus: true,
           }),
         }));
+
+        // test when isOnlineOrg is false
+        this.isOnlineOrgSpy.and.returnValue(this.$q.resolve(false));
+        let promise2 = this.UserOverviewService.getUser('userid');
+        this.$httpBackend.flush();
+        expect(promise2).toBeResolvedWith(jasmine.objectContaining({
+          user: jasmine.objectContaining({
+            pendingStatus: true,
+          }),
+        }));
+
       });
 
       it('should set pendingStatus false when user has entitlement "ciscouc"', function () {

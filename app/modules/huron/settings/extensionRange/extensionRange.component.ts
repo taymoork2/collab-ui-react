@@ -34,6 +34,7 @@ class ExtensionRangeCtrl implements ng.IComponentController {
         beginNumber: this.DEFAULT_START_RANGE,
         endNumber: this.DEFAULT_END_RANGE,
       }];
+      this.onExtensionRangeChange();
     }
   }
 
@@ -77,6 +78,10 @@ class ExtensionRangeCtrl implements ng.IComponentController {
       return false;
     }
     return true;
+  }
+
+  public isDisabled(numberRange: IExtensionRange): boolean {
+    return !this.firstTimeSetup && !_.isEmpty(numberRange.uuid);
   }
 
 }

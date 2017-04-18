@@ -151,7 +151,7 @@
     }
 
     function toggleShowExtensions() {
-      return DialPlanService.getCustomerDialPlanDetails().then(function (response) {
+      return DialPlanService.getDialPlan().then(function (response) {
         var indexOfDidColumn = _.findIndex(vm.addDnGridOptions.columnDefs, {
           field: 'externalNumber',
         });

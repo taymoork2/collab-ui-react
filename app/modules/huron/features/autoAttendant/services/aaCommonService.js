@@ -19,8 +19,6 @@
     var routeQueueToggle = false;
     var mediaUploadToggle = false;
     var callerInputToggle = false;
-    var decisionToggle = false;
-    var clioToggle = false;
     var routeSIPAddressToggle = false;
     var uniqueId = 0;
 
@@ -35,18 +33,14 @@
       setDialByExtensionStatus: setDialByExtensionStatus,
       setCENumberStatus: setCENumberStatus,
       setMediaUploadStatus: setMediaUploadStatus,
-      setDecisionToggle: setDecisionToggle,
       setQueueSettingsStatus: setQueueSettingsStatus,
       setMediaUploadToggle: setMediaUploadToggle,
       setCallerInputToggle: setCallerInputToggle,
       setRouteQueueToggle: setRouteQueueToggle,
       setRouteSIPAddressToggle: setRouteSIPAddressToggle,
-      setClioToggle: setClioToggle,
       isRouteQueueToggle: isRouteQueueToggle,
       isCallerInputToggle: isCallerInputToggle,
-      isDecisionToggle: isDecisionToggle,
       isMediaUploadToggle: isMediaUploadToggle,
-      isClioToggle: isClioToggle,
       isRouteSIPAddressToggle: isRouteSIPAddressToggle,
       isValid: isValid,
       setIsValid: setIsValid,
@@ -71,7 +65,7 @@
     }
 
     function isValid() {
-      return (!_.size(invalidList));
+      return (_.size(invalidList) === 0);
     }
 
     function getInvalid(which) {
@@ -146,10 +140,6 @@
       aaQueueSettingsStatus = status;
     }
 
-    function setClioToggle(status) {
-      clioToggle = status;
-    }
-
     function setMediaUploadToggle(status) {
       mediaUploadToggle = status;
     }
@@ -157,19 +147,9 @@
     function setCallerInputToggle(status) {
       callerInputToggle = status;
     }
-    function setDecisionToggle(status) {
-      decisionToggle = status;
-    }
 
     function setRouteSIPAddressToggle(status) {
       routeSIPAddressToggle = status;
-    }
-
-    /**
-     * Will check the toggle status for clio enabled upload
-     */
-    function isClioToggle() {
-      return clioToggle;
     }
 
     /**
@@ -185,9 +165,6 @@
 
     function isCallerInputToggle() {
       return callerInputToggle;
-    }
-    function isDecisionToggle() {
-      return decisionToggle;
     }
 
     function isRouteSIPAddressToggle() {

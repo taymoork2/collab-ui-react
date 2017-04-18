@@ -1,14 +1,17 @@
-<form  name="$ctrl.form" novalidate>
-  <div class="flex-search" ng-class="{error: $ctrl.form.search.$error.pattern && $ctrl.form.search.$touched}">
-    <input type="text" name="search" ng-model="$ctrl.searchVal" placeholder="{{::'pstnSetup.pstnSelector.searchPlaceholder' | translate}}" pattern="^\d{3}(\d{3})?$" ng-maxlength="$ctrl.maxLength" maxlength="{{$ctrl.maxLength}}" required>
+<form  name="$ctrl.form" isolate-form novalidate>
+  <div class="flex-search" ng-class="{error: ($ctrl.form.search.$error.pattern || $ctrl.form.search.$error.invalid) && $ctrl.form.search.$touched}">
+    <input type="text" name="search" autocomplete="off" ng-model="$ctrl.searchVal" ng-change="$ctrl.searchChange()" placeholder="{{::'pstnSetup.pstnSelector.searchPlaceholder' | translate}}" pattern="^\d{3}(\d{3})?$" ng-maxlength="$ctrl.maxLength" maxlength="{{$ctrl.maxLength}}" required>
     <button ng-disabled="$ctrl.form.$invalid" class="btn-primary" ng-click="$ctrl.lookup()">
       <span translate="common.search"></span>
     </button>
   </div>
   <p class="cs-input__help-text" translate="pstnSetup.pstnSelector.searchDesc"></p>
-  <div ng-class="{error: $ctrl.form.search.$error.pattern && $ctrl.form.search.$touched}">
-    <div class="cs-input__messages">
-      <div class="message">Invalid number format.</div>
+  <div ng-class="{error: ($ctrl.form.search.$error.pattern || $ctrl.form.search.$error.invalid) && $ctrl.form.search.$touched}">
+    <div class="cs-input__messages" ng-if="$ctrl.form.search.$error.pattern">
+      <div class="message" translate="pstnSetup.pstnSelector.invalidFormat"></div>
+    </div>
+    <div class="cs-input__messages" ng-if="$ctrl.form.search.$error.invalid">
+      <div class="message" translate="pstnSetup.pstnSelector.unavailableNPA"></div>
     </div>
   </div>
   <div class="row collapse-both block" ng-if="$ctrl.simple !== 'true'">
@@ -24,9 +27,7 @@
 
       <i class="icon icon-info" tooltip="{{::'pstnSetup.advancedOrder.blockTooltip' | translate}}" tooltip-trigger="mouseenter" tooltip-placement="right" tooltip-animation="false" ></i>
     </div>
-  </div>
-  <div class="row collapse-both block-child" ng-if="$ctrl.block">
-    <div class="medium-4 columns">
+    <div class="medium-4 columns" ng-if="$ctrl.block">
       <input
         id="quantity{{$ctrl.numberType}}"
         name="quantity{{$ctrl.numberType}}"
@@ -40,7 +41,8 @@
       <div ng-if="$ctrl.form['quantity'+$ctrl.numberType].$valid === false && $ctrl.block">
         <p translate="pstnSetup.quantityRange"></p>
       </div>
-      <div class="search-options">
+    </div>
+    <div class="search-options" ng-if="$ctrl.block">
         <input
           cs-input
           type="checkbox"
@@ -51,7 +53,6 @@
           cs-input-label="{{::'pstnSetup.consecutive' | translate}}">
         <i class="icon icon-info" tooltip="{{::'pstnSetup.advancedOrder.consecutiveTooltip' | translate}}" tooltip-trigger="mouseenter" tooltip-placement="right" tooltip-animation="false" ></i>
       </div>
-    </div>
   </div>
 </form>
 
@@ -75,7 +76,7 @@
     <button type="button" class="btn--circle btn--primary icon icon-chevron-right" ng-click="$ctrl.nextPage()" ng-class="{invisible: $ctrl.paginateOptions.currentPage >= $ctrl.searchResults.length/$ctrl.paginateOptions.pageSize - 1}"><span class="sr-only" translate="common.next"></span></button>
   </div>
 </section>
-<section class="text-center" ng-if="$ctrl.showAdvancedOrder">
+<section ng-if="$ctrl.showAdvancedOrder">
   <section class="pad-top pad-bottom">
     <span class="h4" translate="pstnSetup.advancedOrder.noResults"></span>
   </section>

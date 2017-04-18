@@ -6,7 +6,7 @@
     .controller('TrialPstnCtrl', TrialPstnCtrl);
 
   /* @ngInject */
-  function TrialPstnCtrl($scope, $timeout, $translate, Analytics, Authinfo, Notification, PstnSetup, PstnSetupService, TelephoneNumberService, TrialPstnService, PstnSetupStatesService, FeatureToggleService) {
+  function TrialPstnCtrl($scope, $timeout, $translate, Analytics, Authinfo, Notification, PstnSetup, PstnSetupService, TelephoneNumberService, TrialPstnService, PstnSetupStatesService, FeatureToggleService, $q) {
     var vm = this;
 
     var NXX = 'nxx';
@@ -15,6 +15,9 @@
     var pstnTokenLimit = 10;
     var pageSize = 15;
     var SELECT = '';
+    var MIN_VALID_CODE = 3;
+    var MAX_VALID_CODE = 6;
+    var MAX_DID_QUANTITY = 100;
 
     vm.parentTrialData = $scope.$parent.trialData;
     vm.trialData = TrialPstnService.getData();
@@ -38,6 +41,7 @@
     vm.addToCart = addToCart;
     vm.removeOrder = removeOrder;
     vm.maxSelection = pstnTokenLimit;
+    vm.manualTokenChange = manualTokenChange;
     vm.location = '';
     vm.paginateOptions = {
       currentPage: 0,
@@ -131,7 +135,7 @@
       },
     }, {
       model: vm.trialData.details.pstnContractInfo,
-      key: 'signeeFirstName',
+      key: 'firstName',
       type: 'cs-input',
       className: 'medium-12',
       templateOptions: {
@@ -142,7 +146,7 @@
       },
     }, {
       model: vm.trialData.details.pstnContractInfo,
-      key: 'signeeLastName',
+      key: 'lastName',
       type: 'cs-input',
       className: 'medium-12',
       templateOptions: {
@@ -153,7 +157,7 @@
       },
     }, {
       model: vm.trialData.details.pstnContractInfo,
-      key: 'email',
+      key: 'emailAddress',
       type: 'cs-input',
       className: 'medium-12',
       templateOptions: {
@@ -191,8 +195,8 @@
         vm.trialData.details.pstnContractInfo.companyName = $scope.trial.details.customerName;
       }
 
-      if (_.has($scope, 'trial.details.customerEmail') && _.get(vm, 'trialData.details.pstnContractInfo.email') === '') {
-        vm.trialData.details.pstnContractInfo.email = $scope.trial.details.customerEmail;
+      if (_.has($scope, 'trial.details.customerEmail') && _.get(vm, 'trialData.details.pstnContractInfo.emailAddress') === '') {
+        vm.trialData.details.pstnContractInfo.emailAddress = $scope.trial.details.customerEmail;
       }
 
       $timeout(function () {
@@ -209,10 +213,10 @@
       vm.pstn.stateOptions = location.areas;
     }
 
-    function onProviderChange() {
+    function onProviderChange(reset) {
       vm.trialData.details.pstnProvider = PstnSetup.getProvider();
       vm.providerImplementation = vm.trialData.details.pstnProvider.apiImplementation;
-      resetNumberSearch();
+      resetNumberSearch(reset);
       vm.providerSelected = true;
     }
 
@@ -325,42 +329,87 @@
       return null;
     }
 
-    function removeOrder(order) {
-      vm.trialData.details.pstnNumberInfo.numbers.splice(vm.trialData.details.pstnNumberInfo.numbers.indexOf(order), 1);
+    function removeOrderFromCart(order) {
+      _.pull(vm.trialData.details.pstnNumberInfo.numbers, order);
       vm.maxSelection = 10 - vm.trialData.details.pstnNumberInfo.numbers.length;
     }
 
+    function removeOrder(order) {
+      PstnSetupService.releaseCarrierInventoryV2(PstnSetup.getCustomerId(), order.reservationId, order.data.numbers, PstnSetup.isCustomerExists())
+          .then(_.partial(removeOrderFromCart, order));
+    }
+
     function addToCart(searchResultsModel) {
+      var reservation;
+      var promises = [];
       _.forIn(searchResultsModel, function (value, _key) {
         if (value) {
           var key = _.parseInt(_key);
           var searchResultsIndex = (vm.paginateOptions.currentPage * vm.paginateOptions.pageSize) + key;
           if (searchResultsIndex < vm.searchResults.length && !vm.trialData.details.pstnNumberInfo.numbers.includes(vm.searchResults[searchResultsIndex])) {
-            vm.trialData.details.pstnNumberInfo.numbers.push(vm.searchResults[searchResultsIndex]);
+            var numbers = vm.searchResults[searchResultsIndex];
+            reservation = PstnSetupService.reserveCarrierInventoryV2(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), numbers, PstnSetup.isCustomerExists());
+            var promise = reservation
+              .then(function (reservationData) {
+                var order = {
+                  data: {
+                    numbers: numbers,
+                  },
+                  numberType: 'DID',
+                  orderType: 'NUMBER_ORDER',
+                  reservationId: reservationData.uuid,
+                };
+                vm.trialData.details.pstnNumberInfo.numbers.push(order);
+                // return the index to be used in the promise callback
+                return {
+                  searchResultsIndex: searchResultsIndex,
+                  searchResultsModelIndex: key,
+                };
+              }).catch(function (response) {
+                Notification.errorResponse(response);
+              });
+            promises.push(promise);
           }
         }
       });
-      vm.maxSelection = 10 - vm.trialData.details.pstnNumberInfo.numbers.length;
-      vm.searchResults = [];
+
+      $q.all(promises).finally(function () {
+        vm.addLoading = false;
+        // check if we need to decrement current page
+        if (vm.paginateOptions.currentPage >= vm.paginateOptions.numberOfPages()) {
+          vm.paginateOptions.currentPage--;
+        }
+        vm.maxSelection = 10 - vm.trialData.details.pstnNumberInfo.numbers.length;
+        vm.searchResults = [];
+      });
     }
 
     function searchCarrierInventory(value) {
+      vm.paginateOptions.currentPage = 0;
       if (value) {
         vm.trialData.details.pstnNumberInfo.areaCode = {
-          code: ('' + value).slice(0, 3),
+          code: ('' + value).slice(0, MIN_VALID_CODE),
         };
       } else {
         vm.trialData.details.pstnNumberInfo.numbers = [];
       }
       var params = {
         npa: vm.trialData.details.pstnNumberInfo.areaCode.code,
-        count: '1',
+        count: MAX_DID_QUANTITY,
         sequential: false,
       };
 
       var nxx = getNxxValue();
       if (nxx !== null) {
         params[NXX] = nxx;
+      }
+
+      if (value) {
+        if (value.length === MAX_VALID_CODE) {
+          params[NXX] = value.slice(MIN_VALID_CODE, value.length);
+        } else {
+          params[NXX] = null;
+        }
       }
 
       PstnSetupService.searchCarrierInventory(vm.trialData.details.pstnProvider.uuid, params)
@@ -508,6 +557,11 @@
       }
     }
 
+    function manualTokenChange(tokens, invalidCount) {
+      vm.trialData.details.swivelNumbers = tokens;
+      vm.invalidCount = invalidCount;
+    }
+
     function disableNextButton() {
       if (!checkForInvalidTokens()) {
         // there are invalid tokens
@@ -531,13 +585,15 @@
       $('#didAddField').tokenfield('setTokens', ',');
     }
 
-    function resetNumberSearch() {
+    function resetNumberSearch(reset) {
       vm.trialData.details.pstnNumberInfo.state = SELECT;
       vm.trialData.details.pstnNumberInfo.areaCode = SELECT;
       vm.pstn.areaCodeEnable = false;
       vm.trialData.details.pstnNumberInfo.nxx = '--';
       vm.pstn.nxxEnable = false;
-      resetNumbers();
+      if (reset) {
+        resetNumbers();
+      }
     }
 
   }

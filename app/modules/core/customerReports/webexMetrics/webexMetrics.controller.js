@@ -7,11 +7,28 @@
 
   /* @ngInject */
   function WebExMetricsCtrl(
-    UrlConfig
+    $sce, $window, UrlConfig
   ) {
     var vm = this;
 
-    //TODO: link to Qlik https://ds2-qlikdemo.cisco.com/single/?appid=04385ccd-6286-416e-b34f-48a34370935e&sheet=hKpxwJe&select=clearall
-    vm.metricsUrl = UrlConfig.getWebexMetricsUrl();
+    vm.isIframeLoaded = false;
+    vm.getTrustUrl = getTrustUrl;
+    vm.metricsUrl = getTrustUrl();
+    $window.iframeLoaded = iframeLoaded;
+
+    function getTrustUrl() {
+      return $sce.trustAsResourceUrl(UrlConfig.getWebexMetricsUrl());
+    }
+
+    function iframeLoaded(iframeId) {
+      var currScope = angular.element(iframeId).scope();
+      var phase = currScope.$$phase;
+
+      if (!phase) {
+        currScope.$apply(function () {
+          vm.isIframeLoaded = true;
+        });
+      }
+    }
   }
 })();
