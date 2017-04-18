@@ -8,6 +8,8 @@ describe('Service: TelephoneNumberService', function () {
   var invalidE164 = '+12005251111';
   var tollFreeNumber = '+18003287448';
   var premiumNumber = '+19003287448';
+  var euNumber = '020 3443 8618';
+  var euCode = 'GB';
 
   beforeEach(function () {
     this.initModules(
@@ -22,6 +24,14 @@ describe('Service: TelephoneNumberService', function () {
   it('should default country code to 1', function () {
     expect(this.TelephoneNumberService.getCountryCode()).toEqual('1');
     expect(this.TelephoneNumberService.getRegionCode()).toEqual('us');
+  });
+
+  it('should default country code to US if country code not passed in', function () {
+    expect(this.TelephoneNumberService.validateDID(euNumber)).toEqual(false);
+  });
+
+  it('should read country code from calling service if passed in', function () {
+    expect(this.TelephoneNumberService.validateDID(euNumber, euCode)).toEqual(true);
   });
 
   it('should change region code from country code', function () {
