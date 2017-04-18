@@ -9,7 +9,7 @@
   function CallServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, FusionClusterService, UriVerificationService, DomainManagementService, $translate, FeatureToggleService, ResourceGroupService, UCCService, HybridServicesUtils) {
     $scope.saveLoading = false;
     $scope.domainVerificationError = false;
-    $scope.currentUser = $stateParams.currentUser || $stateParams.currentPlace;
+    $scope.currentUser = $stateParams.currentUser || $stateParams.getCurrentPlace();
     $scope.isPlace = $scope.currentUser.accountType === 'MACHINE';
     $scope.isUser = !$scope.isPlace;
     var isEntitled = function (ent) {

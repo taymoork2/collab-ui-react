@@ -1880,6 +1880,7 @@
               extensions: {},
               parentState: 'place-overview',
               editService: {},
+              getCurrentPlace: {},
             },
           })
           .state('place-overview.hybrid-services-squared-fusion-cal.history', {
@@ -1901,6 +1902,7 @@
               extensionId: {},
               extensions: {},
               editService: {},
+              getCurrentPlace: {},
             },
           })
           .state('place-overview.hybrid-services-squared-fusion-gcal.history', {
@@ -1922,6 +1924,7 @@
               extensionId: {},
               extensions: {},
               editService: {},
+              getCurrentPlace: {},
             },
           })
           .state('place-overview.hybrid-services-squared-fusion-uc.uc-history', {
