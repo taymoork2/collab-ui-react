@@ -54,7 +54,6 @@ module.exports = {
   bridgeMaxConvParticipants: 'bridge-max-conv-participants',
   callMultiDevice: 'call-multi-device',
   calliopeDiscovery: 'calliope-discovery',
-  huronCallPickup: 'huronCallPickup',
   huronBlfPickup: 'huronBlfPickup',
   calsvcDetectCmrLoc: 'calsvc_detect_cmr_loc',
   calsvcWebexMeetingRegistries: 'calsvc_webex_meeting_registries',
