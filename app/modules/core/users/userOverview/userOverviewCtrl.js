@@ -31,9 +31,11 @@
     vm.getUserPhoto = Userservice.getUserPhoto;
     vm.isValidThumbnail = Userservice.isValidThumbnail;
     vm.clickService = clickService;
+    vm.clickUserDetailsService = clickUserDetailsService;
     vm.actionList = [];
     vm.isSharedMeetingsEnabled = false;
     vm.temporarilyOverrideSharedMeetingsFeatureToggle = { default: true, defaultValue: true };
+    vm.hasSparkCall = false;
 
     var msgState = {
       name: $translate.instant('onboardModal.message'),
@@ -66,9 +68,16 @@
     var preferredLanguageState = {
       name: $translate.instant('preferredLanguage.title'),
       detail: "",
+      state: 'userDetails',
       dirsyncEnabled: false,
+      actionAvailable: true,
     };
-
+    var preferredLanguageDetails = {
+      selectedLanguageCode: '',
+      languageOptions: [],
+      currentUserId: '',
+      hasSparkCall: false,
+    };
     init();
 
     /////////////////////////////
@@ -144,6 +153,10 @@
 
     function clickService(feature) {
       $state.go('user-overview.' + feature.state);
+    }
+
+    function clickUserDetailsService(feature) {
+      $state.go('user-overview.' + feature.state, { 'preferredLanguageDetails': preferredLanguageDetails });
     }
 
     function getDisplayableServices(serviceName) {
@@ -255,6 +268,7 @@
         if (hasLicense('CO')) {
           commState.detail = $translate.instant('onboardModal.paidComm');
           commState.actionAvailable = true;
+          vm.hasSparkCall = true;
         }
       }
       vm.services.push(commState);
@@ -280,11 +294,17 @@
     }
 
     function initUserDetails() {
+      vm.userDetailList = [];
       var ciLanguageCode = _.get(vm.currentUser, 'preferredLanguage');
       var ciDirsyncEnabled = _.get(vm.orgInfo, 'dirsyncEnabled');
       if (ciLanguageCode) {
-        UserOverviewService.getUserPreferredLanguage(ciLanguageCode).then(function (userPreferredLanguage) {
-          preferredLanguageState.detail = userPreferredLanguage ? _.get(userPreferredLanguage, 'label') : ciLanguageCode;
+        var formattedLanguage = UserOverviewService.formatLanguage(ciLanguageCode);
+        UserOverviewService.getUserPreferredLanguage(formattedLanguage).then(function (userLanguageDetails) {
+          preferredLanguageState.detail = !_.isEmpty(userLanguageDetails.language) ? _.get(userLanguageDetails.language, 'label') : formattedLanguage;
+          preferredLanguageDetails.selectedLanguageCode = formattedLanguage;
+          preferredLanguageDetails.languageOptions = !_.isEmpty(userLanguageDetails.translatedLanguages) ? _.get(userLanguageDetails, 'translatedLanguages') : [];
+          preferredLanguageDetails.currentUserId = vm.currentUser.id;
+          preferredLanguageDetails.hasSparkCall = vm.hasSparkCall;
         }).catch(function (error) {
           Notification.errorResponse(error, 'usersPreview.userPreferredLanguageError');
         });
