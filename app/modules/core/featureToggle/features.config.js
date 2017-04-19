@@ -188,7 +188,6 @@ module.exports = {
   huronNetworkLocaleCH: 'huron-l10n-network-locale-ch',
   huronNetworkLocaleIE: 'huron-l10n-network-locale-ie',
   huronNetworkLocaleMX: 'huron-l10n-network-locale-mx',
-  huroncfnatimer: 'huron-cfna-timer',
   atlasHybridCucmSupport: 'atlas-hybrid-cucm-support',
   huronEnterprisePrivateTrunking: 'huron-i387-enterprise-private-trunking',
   webexMetrics: 'webex-metrics',
