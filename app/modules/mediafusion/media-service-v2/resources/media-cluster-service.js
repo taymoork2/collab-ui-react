@@ -279,11 +279,6 @@
         .post(url);
     }
 
-    function defuseV2Connector(connectorId) {
-      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/actions/deregister/invoke?managementConnectorId=' + connectorId;
-      return $http.post(url);
-    }
-
     function deleteClusterWithConnector(clusterId) {
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/actions/deregisterCluster/invoke?clusterId=' + clusterId;
       return $http.post(url);
@@ -343,12 +338,6 @@
       return clusterCache['mf_mgmt'][id];
     }
 
-    function upgradeCluster(id) {
-      var connectorType = 'mf_mgmt';
-      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + id + '/provisioning/actions/update/invoke?connectorType=' + connectorType + '&forced=true';
-      return $http.post(url);
-    }
-
     var hub = CsdmHubFactory.create();
     CsdmPoller.create(fetch, hub);
 
@@ -365,9 +354,7 @@
       getAll: getAll,
       deleteV2Cluster: deleteV2Cluster,
       updateV2Cluster: updateV2Cluster,
-      defuseV2Connector: defuseV2Connector,
       deleteClusterWithConnector: deleteClusterWithConnector,
-      upgradeCluster: upgradeCluster,
       moveV2Host: moveV2Host,
       getProperties: getProperties,
       setProperties: setProperties,
