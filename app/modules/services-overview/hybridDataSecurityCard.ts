@@ -7,6 +7,8 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
     return undefined;
   }
 
+  private itProPack: boolean;
+
   private setupButton: ICardButton = {
     name: 'servicesOverview.genericButtons.setup',
     routerState: 'hds.list',
@@ -30,10 +32,18 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
     return [this.setupButton];
   }
 
-  private checkRoles() {
+  private checkRoles(): boolean {
     const hasRequiredRoles = _.includes(this.Authinfo.getRoles(), this.Config.roles.full_admin) ||
       _.includes(this.Authinfo.getRoles(), this.Config.roles.readonly_admin);
-    this.display = hasRequiredRoles && this.Authinfo.isFusionHDS();
+    return hasRequiredRoles;
+  }
+
+  public hybridDataSecurityFeatureToggleEventHandler(hasFeature: boolean): void {
+    this.display = this.checkRoles() && (this.Authinfo.isFusionHDS() || hasFeature);
+  }
+
+  public itProPackPurchasedEventHandler(hasPurchased: boolean): void {
+    this.itProPack = hasPurchased;
   }
 
   /* @ngInject */
@@ -52,6 +62,7 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
       routerState: 'hds.list',
       service: 'spark-hybrid-datasecurity',
     }, HybridServicesClusterStatesService);
-    this.checkRoles();
+    this.display = this.checkRoles() && this.Authinfo.isFusionHDS();
+    this.itProPack = false;
   }
 }

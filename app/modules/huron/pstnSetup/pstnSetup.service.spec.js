@@ -47,11 +47,13 @@ describe('Service: PstnSetupService', function () {
   var blockOrderPayload = {
     "npa": "555",
     "quantity": "20",
+    "numberType": "DID",
   };
 
   var blockOrderPayloadWithNxx = {
     "npa": "555",
     "quantity": "20",
+    "numberType": "DID",
     "sequential": true,
     "nxx": "777",
   };
@@ -62,10 +64,6 @@ describe('Service: PstnSetupService', function () {
 
   var portOrderPayload = {
     numbers: portNumbers,
-  };
-
-  var portOrderPstnPayload = {
-    numbers: ['+19726579867'],
   };
 
   var portOrderV2PstnPayload = {
@@ -85,8 +83,7 @@ describe('Service: PstnSetupService', function () {
   // dependencies
   beforeEach(function () {
     this.initModules(
-      require('./pstnSetup.service'),
-      require('collab-ui')
+      require('./pstnSetup.service')
     );
     this.injectDependencies(
       '$http',
@@ -102,7 +99,7 @@ describe('Service: PstnSetupService', function () {
       'CountryCodes',
       'TelephoneNumberService'
      );
-    spyOn(this.Authinfo, 'getOrgId').and.returnValue(suite.partnerId);
+    spyOn(this.Authinfo, 'getCallPartnerOrgId').and.returnValue(suite.partnerId);
     spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve());
   });
 
@@ -137,7 +134,6 @@ describe('Service: PstnSetupService', function () {
     blockOrderPayloadWithNxx = undefined;
     orderPayload = undefined;
     portOrderPayload = undefined;
-    portOrderPstnPayload = undefined;
     portOrderV2PstnPayload = undefined;
     portOrderTfnPayload = undefined;
     pstnOrderPayload = undefined;
@@ -216,20 +212,7 @@ describe('Service: PstnSetupService', function () {
     this.$httpBackend.flush();
   });
 
-  it('should make different types of port order', function () {
-    this.FeatureToggleService.supports.and.returnValue(this.$q.resolve(false));
-    this.$httpBackend.expectPOST(this.HuronConfig.getTerminusUrl() + '/customers/' + suite.customerId + '/carriers/' + suite.carrierId + '/did/port', portOrderPstnPayload).respond(201);
-    this.$httpBackend.expectPOST(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/ports', portOrderTfnPayload).respond(201);
-    var portOrderData = _.cloneDeep(portOrderPayload);
-    var promise = this.PstnSetupService.portNumbers(suite.customerId, suite.carrierId, portOrderData.numbers);
-    //verify the logic to split the ports
-    promise.then(function () {
-      expect(portOrderData.numbers.length).toEqual(1);
-    });
-    this.$httpBackend.flush();
-  });
-
-  it('feature toggle should make V2 DId port API call', function () {
+  it('should make V2 DId port API call', function () {
     this.FeatureToggleService.supports.and.returnValue(this.$q.resolve(true));
     this.$httpBackend.expectPOST(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/ports', portOrderV2PstnPayload).respond(201);
     this.$httpBackend.expectPOST(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/ports', portOrderTfnPayload).respond(201);
@@ -243,13 +226,13 @@ describe('Service: PstnSetupService', function () {
   });
 
   it('should make a block order', function () {
-    this.$httpBackend.expectPOST(this.HuronConfig.getTerminusUrl() + '/customers/' + suite.customerId + '/carriers/' + suite.carrierId + '/did/block', blockOrderPayload).respond(201);
+    this.$httpBackend.expectPOST(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/blocks', blockOrderPayload).respond(201);
     this.PstnSetupService.orderBlock(suite.customerId, suite.carrierId, blockOrderPayload.npa, blockOrderPayload.quantity);
     this.$httpBackend.flush();
   });
 
   it('should make a block order with nxx', function () {
-    this.$httpBackend.expectPOST(this.HuronConfig.getTerminusUrl() + '/customers/' + suite.customerId + '/carriers/' + suite.carrierId + '/did/block', blockOrderPayloadWithNxx).respond(201);
+    this.$httpBackend.expectPOST(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/blocks', blockOrderPayloadWithNxx).respond(201);
     this.PstnSetupService.orderBlock(suite.customerId, suite.carrierId, blockOrderPayloadWithNxx.npa, blockOrderPayloadWithNxx.quantity, blockOrderPayloadWithNxx.sequential, blockOrderPayloadWithNxx.nxx);
     this.$httpBackend.flush();
   });

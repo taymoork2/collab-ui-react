@@ -150,8 +150,10 @@
     };
   }
 
-  angular.module('Squared')
+  module.exports = angular
+    .module('squared.csdm', [])
     .service('CsdmHubFactory', CsdmHubFactory)
-    .service('CsdmPoller', CsdmPoller);
+    .service('CsdmPoller', CsdmPoller)
+    .name;
 
 })();

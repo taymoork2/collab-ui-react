@@ -172,5 +172,56 @@ describe('Service: contextFieldsetsService', function () {
     });
     this.$httpBackend.flush();
   });
+  describe('createFieldset', function () {
+    it('should return upon successful create', function () {
+      this.$httpBackend.expectPOST(dictionaryUrl + '/dictionary/fieldset/v1').respond(201, 'newFieldset');
+      this.ContextFieldsetsService.createFieldset({}).then(function (response) {
+        expect(response.data).toBe('newFieldset');
+        expect(response.status).toBe(201);
+      }).catch(fail);
+      this.$httpBackend.flush();
+    });
+
+    it('should reject if create fails', function () {
+      this.$httpBackend.expectPOST(dictionaryUrl + '/dictionary/fieldset/v1').respond(400, 'some error');
+      this.ContextFieldsetsService.createFieldset({}).then(function () {
+        fail('ContextFieldsService.createFieldset should have rejected');
+      }).catch(function (errorResponse) {
+        expect(errorResponse.data).toBe('some error');
+        expect(errorResponse.status).toBe(400);
+      });
+      this.$httpBackend.flush();
+    });
+  });
+
+  describe('createAndGetFieldset', function () {
+    it('should create, get, and return the fieldset', function () {
+      this.$httpBackend.expectPOST(dictionaryUrl + '/dictionary/fieldset/v1').respond(201, 'newFieldset');
+      this.$httpBackend.expectGET(dictionaryUrl + '/dictionary/fieldset/v1/id/someId').respond(200, {
+        id: 'someId',
+        foo: 'bar',
+      });
+      this.ContextFieldsetsService.createAndGetFieldset({
+        id: 'someId',
+      }).then(function (fieldset) {
+        expect(fieldset.id).toBe('someId');
+        expect(fieldset.foo).toBe('bar');
+      }).catch(fail);
+      this.$httpBackend.flush();
+    });
+
+    it('should reject if error occurs', function () {
+      this.$httpBackend.expectPOST(dictionaryUrl + '/dictionary/fieldset/v1').respond(400, 'some error');
+      this.ContextFieldsetsService.createAndGetFieldset({
+        id: 'someId',
+      }).then(function () {
+        fail('ContextFieldsetsService.createAndGetFieldset should have rejected');
+      }).catch(function (errorResponse) {
+        expect(errorResponse.data).toBe('some error');
+        expect(errorResponse.status).toBe(400);
+      });
+      this.$httpBackend.flush();
+    });
+  });
 
 });

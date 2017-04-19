@@ -24,7 +24,7 @@ describe('Component: HybridVoicemailCtrl ', () => {
     });
     ctrl.toggleVoicemail(false);
     $scope.$apply();
-    expect(ctrl.status).toBe('danger');
+    expect(ctrl.status).toBe('warning');
     expect(Notification.success.calls.count()).toBe(1);
   });
 

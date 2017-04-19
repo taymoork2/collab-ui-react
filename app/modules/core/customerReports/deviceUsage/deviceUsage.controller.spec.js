@@ -57,6 +57,7 @@ describe('Controller: DeviceUsageCtrl', function () {
     it('starts with fetching initial data based on default last 7 days range', function (done) {
       sinon.stub(DeviceUsageService, 'getDataForRange');
       sinon.stub(DeviceUsageService, 'extractStats');
+      sinon.stub(DeviceUsageService, 'resolveDeviceData');
       var deviceData = {
         reportItems: [
           { totalDuration: 42 },
@@ -65,6 +66,7 @@ describe('Controller: DeviceUsageCtrl', function () {
       };
       DeviceUsageService.getDataForRange.returns($q.resolve(deviceData));
       DeviceUsageService.extractStats.returns($q.resolve([]));
+      DeviceUsageService.resolveDeviceData.returns($q.resolve([]));
 
       expect(controller.waitingForDeviceMetrics).toBe(true);
       controller.init();

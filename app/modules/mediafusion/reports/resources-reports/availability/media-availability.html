@@ -1,8 +1,8 @@
 <cs-card id='availability-card' class="full media-metrics-report-card">
   <article class="media-service-card">
     <graphheader>
-      <h4 class='report-section-header' translate='mediaFusion.metrics.availabilityOfCluster' ng-if="$ctrl.parentcntrl.clusterSelected == $ctrl.parentcntrl.allClusters"></h4>
-      <h4 class='report-section-header' translate='mediaFusion.metrics.availabilityOfHost' ng-if="$ctrl.parentcntrl.clusterSelected != $ctrl.parentcntrl.allClusters"></h4>
+      <h4 class='report-section-header' translate='mediaFusion.metrics.clusterAvailabilityCardHeading' ng-if="$ctrl.parentcntrl.clusterSelected == $ctrl.parentcntrl.allClusters"></h4>
+      <h4 class='report-section-header' translate='mediaFusion.metrics.nodeAvailabilityCardHeading' ng-if="$ctrl.parentcntrl.clusterSelected != $ctrl.parentcntrl.allClusters"></h4>
       <div id="availability-div"></div>
     </graphheader>
     <section>

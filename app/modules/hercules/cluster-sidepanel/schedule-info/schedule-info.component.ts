@@ -1,4 +1,5 @@
 import { ICluster } from 'modules/hercules/hybrid-services.types';
+import { HybridServicesI18NService } from 'modules/hercules/services/hybrid-services-i18n.service';
 
 interface ISchedule {
   dateTime: string;
@@ -11,7 +12,6 @@ export class ScheduleInfoSectionComponentCtrl implements ng.IComponentController
   private cluster: ICluster;
   public clusterType: string;
 
-  public hasResourceGroupFeatureToggle: boolean = false;
   public releaseChannelName: string;
   public resourceGroupName: string;
   public schedule: ISchedule | {} = {};
@@ -20,7 +20,7 @@ export class ScheduleInfoSectionComponentCtrl implements ng.IComponentController
   constructor(
     private $q: ng.IQService,
     private $translate: ng.translate.ITranslateService,
-    private FusionClusterService,
+    private HybridServicesI18NService: HybridServicesI18NService,
     private ResourceGroupService,
   ) {}
 
@@ -28,32 +28,27 @@ export class ScheduleInfoSectionComponentCtrl implements ng.IComponentController
 
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject}) {
 
-    const { cluster, hasResourceGroupFeatureToggle } = changes;
-    if (hasResourceGroupFeatureToggle && hasResourceGroupFeatureToggle.currentValue) {
-      this.hasResourceGroupFeatureToggle = hasResourceGroupFeatureToggle.currentValue;
-    }
+    const { cluster } = changes;
 
     if (cluster && cluster.currentValue) {
       this.cluster = cluster.currentValue;
       this.releaseChannelName = this.$translate.instant('hercules.fusion.add-resource-group.release-channel.' + this.cluster.releaseChannel);
       this.buildSchedule();
-      if (this.hasResourceGroupFeatureToggle) {
-        this.findResourceGroupName()
-          .then(resourceGroupName => {
-            this.resourceGroupName = resourceGroupName;
-          });
-      }
+      this.findResourceGroupName()
+        .then(resourceGroupName => {
+          this.resourceGroupName = resourceGroupName;
+        });
     }
 
   }
 
   private buildSchedule = () => {
     this.schedule = {
-      dateTime: this.FusionClusterService.formatTimeAndDate(this.cluster.upgradeSchedule),
-      urgentScheduleTime: this.FusionClusterService.formatTimeAndDate({
+      dateTime: this.HybridServicesI18NService.formatTimeAndDate(this.cluster.upgradeSchedule),
+      urgentScheduleTime: this.HybridServicesI18NService.formatTimeAndDate({
         scheduleTime: this.cluster.upgradeSchedule.urgentScheduleTime,
         // Simulate every day
-        scheduleDays: { length: 7 },
+        scheduleDays: ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'],
       }),
       timeZone: this.cluster.upgradeSchedule.scheduleTimeZone,
     };
@@ -83,6 +78,5 @@ export class ScheduleInfoSectionComponent implements ng.IComponentOptions {
   public bindings = {
     cluster: '<',
     clusterType: '<',
-    hasResourceGroupFeatureToggle: '<',
   };
 }

@@ -28,6 +28,9 @@ class DeviceSettings implements ng.IComponentController {
   public onSaveUpgradeChannel() {
     this.updatingUpgradeChannel = true;
     this.CsdmConfigurationService.updateRuleForPlace(this.ownerId, 'software_channel', this.selectedUpgradeChannel.value)
+      .then(() => {
+        this.Notification.success('deviceOverviewPage.channelUpdated');
+      })
       .catch(error => {
         this.Notification.errorResponse(error, 'deviceOverviewPage.failedToSaveChanges');
         this.resetSelectedUpgradeChannel();

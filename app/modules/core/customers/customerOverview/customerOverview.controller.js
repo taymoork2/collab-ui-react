@@ -112,7 +112,7 @@ require('./_customer-overview.scss');
       getLogoSettings();
       getIsSetupDone();
       getCountryCode();
-      Orgservice.isTestOrg()
+      Orgservice.isTestOrg(vm.customerOrgId)
         .then(function (isTestOrg) {
           vm.isTest = isTestOrg;
         });

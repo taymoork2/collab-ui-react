@@ -6,7 +6,7 @@
     .service('HDSAddResourceCommonService', HDSAddResourceCommonService);
 
   /* @ngInject */
-  function HDSAddResourceCommonService($window, FusionClusterService, Notification, ServiceDescriptor) {
+  function HDSAddResourceCommonService($window, FusionClusterService, HybridServicesExtrasService, Notification, ServiceDescriptor) {
     var vm = this;
     vm.clusters = null;
     vm.onlineNodeList = [];
@@ -80,7 +80,7 @@
     }
 
     function allowListHost(hostName, clusterId) {
-      return FusionClusterService.addPreregisteredClusterToAllowList(hostName, 3600, clusterId);
+      return HybridServicesExtrasService.addPreregisteredClusterToAllowList(hostName, 3600, clusterId);
     }
 
     function redirectPopUpAndClose(hostName, enteredCluster, firstTimeSetup) {

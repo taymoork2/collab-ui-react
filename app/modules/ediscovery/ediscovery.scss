@@ -98,16 +98,16 @@
 
     .basic-search {
       background-color: $brand-white;
-      padding-top: 9rem;
+      padding-top: 8rem;
     }
 
     .advanced-search {
       background-color: $gray-light-4;
-      padding-top: 9rem;
+      padding-top: 8rem;
     }
 
     @media only screen and (max-height: 950px) {
-      padding-top: 7rem;
+      padding-top: 6rem;
     }
 
     div.search-result-area {
@@ -168,12 +168,22 @@
 
       .date-error {
         color: $color-negative-base;
+        float: left;
+        padding: 3px;
       }
 
       .ediscovery-advanced-search {
         margin-top: 48px;
         display: inline-block;
         width: 50%;
+
+        .subheading {
+          font-size: 14px;
+          font-weight: 300;
+          line-height: 1.71;
+          color: #858688;
+          margin-bottom: 8px;
+        }
 
         .cs-input {
           width: 100%;
@@ -195,8 +205,12 @@
           display: block;
         }
 
-        .search-text {
+        .search-spacing {
           float: left;
+        }
+
+        .search-text {
+          color: #4f5051;
         }
 
         .search-box {
@@ -222,6 +236,12 @@
 
         .large-gap {
           margin-top: 36px;
+        }
+
+        .icon-info {
+          width: 16px;
+          height: 16px;
+          color: #aeaeaf;
         }
       }
 
@@ -364,6 +384,16 @@
           padding-top: 24px;
         }
 
+        .icon-info {
+          width: 16px;
+          height: 16px;
+          color: $gray-light-1;
+        }
+
+        .date-range-tooltip {
+          padding: 16px 24px 4px;
+        }
+
         .result-title {
           font-size: 12px;
           font-family: 'CiscoSansTT Light', 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -407,7 +437,7 @@
         }
 
         .report-parameters {
-          padding: 12px 32px;
+          padding: 0 32px 12px;
 
           .results-spacing {
             margin-top: 16px;
@@ -458,10 +488,6 @@
             padding-top: 0.5rem;
           }
 
-          i.icon-warning {
-            color: $color-attention-base;
-          }
-
           .report-timeout {
             padding-top: 1rem;
           }
@@ -475,6 +501,10 @@
 
         .expiry-info {
           padding-top: 1.5rem;
+
+          i.icon-warning {
+            color: $color-attention-base;
+          }
         }
 
         .last-input-row {

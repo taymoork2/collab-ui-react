@@ -1,0 +1,12 @@
+<div class="did-input">
+  <cs-token-field tokens="$ctrl.number" tokenfieldid="$ctrl.tokenfieldid" tokenplaceholder="$ctrl.tokenplaceholder" tokenoptions="$ctrl.tokenoptions" tokenmethods="$ctrl.tokenmethods"></cs-token-field>
+  <div class="cs-input-group cs-input-checkbox" ng-if="!$ctrl.noAcknowledge">
+      <input id="swivelEmergencyAcknowledge" name="swivelEmergencyAcknowledge"
+        ng-false-value="null"
+        ng-model="$ctrl.emergencyAcknowledge"
+        required type="checkbox"
+        ng-change="$ctrl.onAckChange()"
+        value="true">
+      <label class="cs-checkbox" for="swivelEmergencyAcknowledge"><span translate="pstnSetup.emergencyAcknowledge"></span></label>
+  </div>
+</div>

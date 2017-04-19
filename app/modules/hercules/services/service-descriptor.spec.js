@@ -28,17 +28,15 @@ describe('ServiceDescriptor', function () {
 
   it('should fetch services', function (done) {
     $httpBackend
-      .expectGET('https://hercules-intb.ciscospark.com/v1/organizations/12345/services')
+      .expectGET('https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/12345/services')
       .respond({
         items: [{
           id: 'squared-fusion-cal',
           enabled: true,
-          acknowledged: false,
           emailSubscribers: 'aalto@example.org',
         }, {
           id: 'squared-fusion-uc',
           enabled: true,
-          acknowledged: false,
           emailSubscribers: 'alvar@example.org',
         }],
       });
@@ -54,12 +52,11 @@ describe('ServiceDescriptor', function () {
 
   it('should read out the email subscribers for a given service using a GET request', function () {
     $httpBackend
-      .expectGET('https://hercules-intb.ciscospark.com/v1/organizations/12345/services')
+      .expectGET('https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/12345/services')
       .respond({
         items: [{
           id: 'squared-fusion-cal',
           enabled: true,
-          acknowledged: false,
           emailSubscribers: 'aalto@example.org',
         }],
       });
@@ -72,7 +69,7 @@ describe('ServiceDescriptor', function () {
   it('should set the email subscribers for a given service using a PATCH request', function () {
     $httpBackend
       .expectPATCH(
-        'https://hercules-intb.ciscospark.com/v1/organizations/12345/services/squared-fusion-mgmt', {
+        'https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/12345/services/squared-fusion-mgmt', {
           emailSubscribers: 'alvar@example.org',
         })
       .respond(204, '');
@@ -108,7 +105,7 @@ describe('ServiceDescriptor', function () {
 
   it('should return false if service squared-fusion-ec is not enabled', function () {
     $httpBackend
-     .expectGET('https://hercules-intb.ciscospark.com/v1/organizations/' + authinfo.getOrgId() + '/services').respond(
+     .expectGET('https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/' + authinfo.getOrgId() + '/services').respond(
        200, {}
     );
     Service.isServiceEnabled('squared-fusion-ec').then(function (response) {
@@ -119,7 +116,7 @@ describe('ServiceDescriptor', function () {
 
   it('should return true if service "squared-fusion-ec" is enabled', function () {
     $httpBackend
-      .expectGET('https://hercules-intb.ciscospark.com/v1/organizations/' + authinfo.getOrgId() + '/services').respond(
+      .expectGET('https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/' + authinfo.getOrgId() + '/services').respond(
       200, { items: [{ 'id': 'squared-fusion-ec', 'enabled': true }] }
     );
 

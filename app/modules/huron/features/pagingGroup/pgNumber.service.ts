@@ -35,15 +35,20 @@ export class PagingNumberService {
       }));
   }
 
+  // The uuid below should be pagingGroup's id, will call features API to get number
   public getNumberExtension(uuid: string): ng.IPromise<INumberData> {
-    return this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/numbers/:numberId').get({
+    return this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/features/paging/:pagingId/numbers').get({
       customerId: this.Authinfo.getOrgId(),
-      numberId: uuid,
+      pagingId: uuid,
     }).$promise.then(response => {
+      let numbers =  _.map(_.get(response, 'numbers', []), 'number');
       let numberData: INumberData = <INumberData> {
-        extension: response.number,
-        extensionUUID: response.uuid,
+        extension: undefined,
+        extensionUUID: undefined,
       };
+      if (numbers.length > 0 ) {
+        numberData.extension = numbers[0];
+      }
       return numberData;
     });
   }

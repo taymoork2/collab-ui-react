@@ -11,8 +11,6 @@
     var urlBase = UrlConfig.getAdminServiceUrl() + 'organization';
     var localUrlBase = 'http://berserk.rd.cisco.com:8080/atlas-server/admin/api/v1/organization';
 
-    var csdmUrlBase = UrlConfig.getCsdmServiceUrl() + '/organization';
-
     function getDataForRange(start, end, granularity, models, api) {
       var startDate = moment(start);
       var endDate = moment(end);
@@ -23,10 +21,12 @@
         models = models.join();
       }
       if (startDate.isValid() && endDate.isValid() && startDate.isBefore(endDate) /*&& endDate.isBefore(now)*/) {
+        var url;
         if (api === 'local') {
-          urlBase = localUrlBase;
+          url = localUrlBase + '/' + Authinfo.getOrgId() + '/reports/device/usage?';
+        } else {
+          url = urlBase + '/' + Authinfo.getOrgId() + '/reports/device/usage?';
         }
-        var url = urlBase + '/' + Authinfo.getOrgId() + '/reports/device/usage?';
         url = url + 'interval=day'; // As long week and month is not implemented
         url = url + '&from=' + start + '&to=' + end;
         url = url + '&categories=aggregate';
@@ -157,6 +157,23 @@
       return reduced;
     }
 
+    // In some strange situations the backend do not return
+    // datafields for callCount and callDuration.
+    // The UI interprets missing fields as zero.
+    function addMissingDataFieldFromBackend(items) {
+      _.each(items, function (item) {
+        if (_.isNil(item.callCount) || _.isNaN(item.callCount)) {
+          //$log.info('Missing call count for', item);
+          item.callCount = 0;
+        }
+
+        if (_.isNil(item.callDuration) || _.isNaN(item.callDuration)) {
+          //$log.info('Missing call duration for', item);
+          item.callDuration = 0;
+        }
+      });
+    }
+
     function extractStats(reduced, start, end, models) {
       var deferredAll = $q.defer();
       var stats = {
@@ -170,17 +187,15 @@
       $q.all([getLeast(start, end, models, limit), getMost(start, end, models, limit), getTotalNoOfUsedDevices(start, end, models)]).then(function (results) {
         stats.least = results[0];
         stats.most = results[1];
-        stats.noOfDevices = results[2];
+        // Sometimes the backend does not return any value for 'number of used device' if zero.
+        if (_.isUndefined(results[2])) {
+          stats.noOfDevices = 0;
+        } else {
+          stats.noOfDevices = results[2];
+        }
 
-        // Preliminary compatibility with V1
-        _.each(stats.least, function (item) {
-          item.totalDuration = item.callDuration;
-        });
-
-        // Preliminary compatibility with V1
-        _.each(stats.most, function (item) {
-          item.totalDuration = item.callDuration;
-        });
+        addMissingDataFieldFromBackend(stats.least);
+        addMissingDataFieldFromBackend(stats.most);
 
         deferredAll.resolve(stats);
       }).catch(function (ex) {
@@ -261,31 +276,37 @@
       }
     }
 
-    function resolveDeviceData(devices) {
-      var promises = [];
-
+    function resolveDeviceData(devices, api) {
+      var url;
+      if (api === 'local') {
+        url = localUrlBase + '/' + Authinfo.getOrgId() + '/reports/devices?accountIds=';
+      } else {
+        url = urlBase + '/' + Authinfo.getOrgId() + '/reports/devices?accountIds=';
+      }
+      var ids = [];
       _.each(devices, function (device) {
-        var csdmUrl = csdmUrlBase + '/' + Authinfo.getOrgId() + '/places/';
-        promises.push(cancelableHttpGET(csdmUrl + device.accountId + '?shallow=true')
-          .then(function (res) {
-            return res.data;
-          })
-          .catch(function (err) {
-            //$log.info("Problems resolving device", err);
-            var infoText = "";
-            if (err.status === -1) {
-              infoText = $translate.instant('reportsPage.usageReports.timeoutWhenTryingToResolveNameFor') + " device id=" + device.accountId;
-            } else {
-              infoText = $translate.instant('reportsPage.usageReports.nameNotFoundFor') + " device id=" + device.accountId;
-            }
-            return {
-              "displayName": $translate.instant('reportsPage.usageReports.nameNotResolvedFor') + " id=" + device.accountId,
-              "info": infoText,
-            };
-          })
-        );
+        ids.push(device.accountId);
       });
-      return $q.all(promises);
+
+      var resolved = [];
+      return cancelableHttpGET(url + ids.join()).then(function (result) {
+        _.each(ids, function (id) {
+          var res = _.find(result.data, { id: id });
+          if (res) {
+            resolved.push({
+              id: res.id,
+              displayName: res.displayName,
+            });
+          } else {
+            resolved.push({
+              id: id,
+              displayName: $translate.instant('reportsPage.usageReports.nameNotResolvedFor') + " id=" + id,
+              info: $translate.instant('reportsPage.usageReports.nameNotFoundFor') + " device id=" + id,
+            });
+          }
+        });
+        return resolved;
+      });
     }
 
     function cancelableHttpGET(url) {

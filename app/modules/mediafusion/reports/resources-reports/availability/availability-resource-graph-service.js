@@ -42,11 +42,15 @@
     }
 
     function setAvailabilityGraph(data, availabilityChart, selectedCluster, cluster, daterange, Idmap) {
+      var isDummy = false;
       var tempData = _.cloneDeep(data);
+      if (data.data[0].isDummy) {
+        isDummy = true;
+      }
       if (_.isUndefined(data.data[0].isDummy)) {
         var availabilityData = [];
         if (selectedCluster === vm.allClusters) {
-          _.forEach(data.data[0].clusterCategories, function (clusterCategory) {
+          _.each(data.data[0].clusterCategories, function (clusterCategory) {
             var clusterName = _.findKey(Idmap, function (val) {
               return val === clusterCategory.category;
             });
@@ -67,15 +71,22 @@
       if (tempData === null || tempData === 'undefined' || tempData.length === 0) {
         return undefined;
       } else {
-        availabilityChart = createAvailabilityGraph(tempData, selectedCluster, cluster, daterange);
+        availabilityChart = createAvailabilityGraph(tempData, selectedCluster, cluster, daterange, isDummy);
         availabilityChart.period = tempData.data[0].period;
         availabilityChart.startDate = startDate;
+        if (isDummy) {
+          availabilityChart.chartCursor.valueBalloonsEnabled = false;
+          availabilityChart.chartCursor.valueLineBalloonEnabled = false;
+          availabilityChart.chartCursor.categoryBalloonEnabled = false;
+          availabilityChart.chartCursor.valueLineEnabled = false;
+          availabilityChart.balloon.enabled = false;
+        }
         availabilityChart.validateData();
         return availabilityChart;
       }
     }
 
-    function createAvailabilityGraph(data, selectedCluster, cluster, daterange) {
+    function createAvailabilityGraph(data, selectedCluster, cluster, daterange, isDummy) {
       // if there are no active users for this user
       if (data === null || data === 'undefined' || data.length === 0) {
         return;
@@ -88,7 +99,7 @@
         legend = _.cloneDeep(vm.availabilityLegendCluster);
       }
       if (!_.isUndefined(data.data[0].isDummy) && data.data[0].isDummy) {
-        _.forEach(legend, function (value, key) {
+        _.each(legend, function (value, key) {
           legend[key].color = '#AAB3B3';
         });
       }
@@ -102,14 +113,16 @@
       catAxes.autoGridCount = false;
       catAxes.gridCount = 10;
       catAxes.gridAlpha = 0.3;
-      catAxes.listeners = [{
-        "event": "clickItem",
-        "method": function (event) {
-          $rootScope.$broadcast('clusterClickEvent', {
-            data: event.serialDataItem.category,
-          });
-        },
-      }];
+      if (!isDummy) {
+        catAxes.listeners = [{
+          'event': 'clickItem',
+          'method': function (event) {
+            $rootScope.$broadcast('clusterClickEvent', {
+              data: event.serialDataItem.category,
+            });
+          },
+        }];
+      }
       var exportFields = ['startTime', 'endTime', 'nodes', 'availability', 'category'];
       var columnNames = {};
       if (cluster === vm.allClusters) {
@@ -136,18 +149,21 @@
       chartData.legend.labelText = '[[title]]';
       chartData.legend.data = legend;
       chartData.graph.showHandOnHover = (selectedCluster === vm.allClusters);
-      chartData.listeners = [{
-        "event": "clickGraphItem",
-        "method": function (event) {
-          $rootScope.$broadcast('clusterClickEvent', {
-            data: event.item.category,
-          });
-        },
-      }];
+      if (!isDummy) {
+        chartData.listeners = [{
+          'event': 'clickGraphItem',
+          'method': function (event) {
+            $rootScope.$broadcast('clusterClickEvent', {
+              data: event.item.category,
+            });
+          },
+        }];
+      }
+
       var chart = AmCharts.makeChart(vm.availabilitydiv, chartData, 0);
 
       chart.addListener('init', function () {
-        // listen for zoomed event and call "handleZoom" method
+        // listen for zoomed event and call 'handleZoom' method
         chart.valueAxis.addListener('axisZoomed', handleZoom);
         chart.categoryAxis.addListener('rollOverItem', function (event) {
           event.target.setAttr('cursor', 'default');
@@ -155,7 +171,7 @@
           event.chart.balloon.showBalloon(event.serialDataItem.category);
         });
 
-        chart.categoryAxis.addListener("rollOutItem", function (event) {
+        chart.categoryAxis.addListener('rollOutItem', function (event) {
           event.chart.balloon.hide();
         });
       });
@@ -180,7 +196,7 @@
 
     function formatLabel(label) {
       if (label.length > 10) {
-        return (label.length <= 12) ? label : label.substring(0, 10) + "..";
+        return (label.length <= 12) ? label : label.substring(0, 10) + '..';
       } else {
         return label;
       }

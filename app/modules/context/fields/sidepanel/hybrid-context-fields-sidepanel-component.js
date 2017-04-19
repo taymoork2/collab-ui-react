@@ -9,18 +9,31 @@ require('./_fields-sidepanel.scss');
       templateUrl: 'modules/context/fields/sidepanel/hybrid-context-fields-sidepanel.html',
       bindings: {
         field: '<',
+        process: '<',
+        callback: '<',
       },
     });
 
     /* @ngInject */
-  function ContextFieldsSidepanelCtrl(ContextFieldsetsService, $filter, $translate) {
+  function ContextFieldsSidepanelCtrl(ContextFieldsetsService, $filter, $translate, $state) {
 
     var vm = this;
     vm.associatedFieldsets = [];
     vm.fetchFailure = false;
     vm.fetchInProgress = false;
-    vm.searchable = true;
-    vm.lastUpdated = $filter('date')(vm.field.lastUpdated, $translate.instant('context.dictionary.fieldPage.dateFormat'));
+    vm.inUse = vm.field.publiclyAccessible; //lock public field
+    vm.actionList = [{
+      actionKey: 'common.edit',
+      actionFunction: function () {
+        $state.go('context-field-modal', {
+          existingFieldData: vm.field,
+          callback: function (updatedField) {
+            vm.field = vm.process(_.cloneDeep(updatedField));
+            vm.callback(updatedField);
+          },
+        });
+      },
+    }];
 
     vm.getLabelLength = function () {
       return _.isObject(vm.field.translations)
@@ -34,22 +47,15 @@ require('./_fields-sidepanel.scss');
         .then(function (fieldsetIds) {
           vm.fetchFailure = false;
           vm.associatedFieldsets = fieldsetIds;
+          vm.inUse = vm.inUse || fieldsetIds.length > 0;
         }).catch(function () {
           vm.fetchFailure = true;
-        }).then(function () {
+        }).finally(function () {
           vm.fetchInProgress = false;
         });
     };
 
-    vm._fixFieldData = function () {
-      // fix searchable field
-      if (_.isString(vm.field.searchable)) {
-        vm.searchable = vm.field.searchable.trim().toLowerCase() === 'yes';
-      }
-    };
-
     vm.$onInit = function () {
-      vm._fixFieldData();
       vm._getAssociatedFieldsets();
     };
   }

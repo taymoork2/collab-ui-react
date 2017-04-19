@@ -9,9 +9,9 @@ import pgInitiator from './pgInitiator';
 
 export default angular
   .module('huron.paging-group.setup-assistant', [
-    'atlas.templates',
-    'collab.ui',
-    'pascalprecht.translate',
+    require('scripts/app.templates'),
+    require('collab-ui-ng').default,
+    require('angular-translate'),
     pgName,
     pgNumber,
     pgMember,

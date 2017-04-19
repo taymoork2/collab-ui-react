@@ -22,11 +22,10 @@ describe('Controller: ConfirmDeleteHostController ', () => {
     spyOn($state, 'go');
   }
 
-  function initController(clusterid: string, hostSerial: string, connectorType: string): void {
+  function initController(hostSerial: string, connectorType: string): void {
     controller = $controller('ConfirmDeleteHostController', {
       $modalInstance: modalInstanceMock,
       Notification: Notification,
-      cluster: { id: clusterid },
       hostSerial: hostSerial,
       connectorType: connectorType,
       ClusterService: ClusterService,
@@ -39,26 +38,24 @@ describe('Controller: ConfirmDeleteHostController ', () => {
   };
 
   it('must call ClusterService.deleteHost with the correct connectorType ("calendar-service-list"), to set correct state, and then pop a green Notification', () => {
-    let clusterid: string = '1234';
     let hostSerial: string = '5678';
     let connectorType: string = 'c_cal';
-    initController(clusterid, hostSerial, connectorType);
+    initController(hostSerial, connectorType);
     controller.removeHost();
     $scope.$apply();
     expect($state.go).toHaveBeenCalledWith('calendar-service.list');
-    expect(ClusterService.deleteHost).toHaveBeenCalledWith(clusterid, hostSerial);
+    expect(ClusterService.deleteHost).toHaveBeenCalledWith(hostSerial);
     expect(Notification.success).toHaveBeenCalled();
   });
 
   it('must call ClusterService.deleteHost with the correct connectorType ("call-service-list") to set correct state, and then pop a green Notification', () => {
-    let clusterid: string = '1234';
     let hostSerial: string = '5678';
     let connectorType: string = 'c_ucmc';
-    initController(clusterid, hostSerial, connectorType);
+    initController(hostSerial, connectorType);
     controller.removeHost();
     $scope.$apply();
     expect($state.go).toHaveBeenCalledWith('call-service.list');
-    expect(ClusterService.deleteHost).toHaveBeenCalledWith(clusterid, hostSerial);
+    expect(ClusterService.deleteHost).toHaveBeenCalledWith(hostSerial);
     expect(Notification.success).toHaveBeenCalled();
   });
 

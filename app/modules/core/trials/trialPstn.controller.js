@@ -17,6 +17,7 @@
     var SELECT = '';
     var MIN_VALID_CODE = 3;
     var MAX_VALID_CODE = 6;
+    var MAX_DID_QUANTITY = 100;
 
     vm.parentTrialData = $scope.$parent.trialData;
     vm.trialData = TrialPstnService.getData();
@@ -40,6 +41,7 @@
     vm.addToCart = addToCart;
     vm.removeOrder = removeOrder;
     vm.maxSelection = pstnTokenLimit;
+    vm.manualTokenChange = manualTokenChange;
     vm.location = '';
     vm.paginateOptions = {
       currentPage: 0,
@@ -393,7 +395,7 @@
       }
       var params = {
         npa: vm.trialData.details.pstnNumberInfo.areaCode.code,
-        count: '1',
+        count: MAX_DID_QUANTITY,
         sequential: false,
       };
 
@@ -553,6 +555,11 @@
         vm.trialData.details.pstnProvider = localScope.to.options[0];
         vm.providerImplementation = localScope.to.options[0].apiImplementation;
       }
+    }
+
+    function manualTokenChange(tokens, invalidCount) {
+      vm.trialData.details.swivelNumbers = tokens;
+      vm.invalidCount = invalidCount;
     }
 
     function disableNextButton() {

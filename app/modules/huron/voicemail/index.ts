@@ -8,9 +8,9 @@ import notifications from 'modules/core/notifications';
 export * from './voicemail.service';
 export default angular
   .module('huron.voicemail', [
-    'atlas.templates',
-    'collab.ui',
-    'pascalprecht.translate',
+    require('scripts/app.templates'),
+    require('collab-ui-ng').default,
+    require('angular-translate'),
     customerServiceModule,
     userServiceModule,
     notifications,

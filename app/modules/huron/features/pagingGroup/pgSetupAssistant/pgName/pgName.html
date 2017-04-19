@@ -1,11 +1,12 @@
-<div class = "name-detail">
-  <div class="typeahead-large typeahead-large__no-icon">
-    <input id = "nameInput" class="form-control"
-         ng-class="{'error': $ctrl.errorNameInput}"
-         placeholder="{{:: 'pagingGroup.namePlaceholder' | translate}}"
-         ng-model="$ctrl.pagingGroupName"
-         ng-change="$ctrl.onChange()"
-         focus-on>
-    <p class="input-description" translate="pagingGroup.nameHint"></p>
+<div class="typeahead-large typeahead-large__no-icon"ng-from="$ctrl.pagingGroupForm" ng-class="{'error': $ctrl.errorNameInput}">
+  <input id = "nameInput" name="pagingGroupName"
+        ng-class="{'error': $ctrl.errorNameInput}"
+        placeholder="{{:: 'pagingGroup.namePlaceholder' | translate}}"
+        ng-model="$ctrl.pagingGroupName"
+        ng-change="$ctrl.onChange()"
+        focus-on>
+  <p class="input-description"></p>
+  <div class="cs-input__messages" ng-messages-multiple role="alert" ng-show="$ctrl.errorNameInput">
+    <div class="message" ng-bind-html="$ctrl.pgNameErrorMassage" ></div>
   </div>
 </div>

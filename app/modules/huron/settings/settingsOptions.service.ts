@@ -1,4 +1,5 @@
 import { IOption } from 'modules/huron/dialing/dialing.service';
+import { IDialPlan, DialPlanService } from 'modules/huron/dialPlans';
 import { NumberService, NumberType } from 'modules/huron/numbers';
 
 export class HuronSettingsOptions {
@@ -7,11 +8,10 @@ export class HuronSettingsOptions {
   public timeFormatOptions: Array<IOption>;
   public defaultCountryOptions: Array<IOption>;
   public timeZoneOptions: Array<IOption>;
-  public countryCode: string;
-  public premiumNumbers: string;
   public companyCallerIdOptions: Array<IOption>;
   public companyVoicemailOptions: Array<IOption>;
   public emergencyServiceNumberOptions: Array<IEmergencyNumberOption>;
+  public dialPlan: IDialPlan;
 }
 
 export interface IEmergencyNumberOption extends IOption {
@@ -26,10 +26,10 @@ export class HuronSettingsOptionsService {
     private ServiceSetup,
     private NumberService: NumberService,
     private TelephoneNumberService,
-    private CustomerDialPlanServiceV2,
+    private DialPlanService: DialPlanService,
   ) { }
 
-  public getOptions(customerId: string): ng.IPromise<HuronSettingsOptions> {
+  public getOptions(): ng.IPromise<HuronSettingsOptions> {
     let settingsOptions = new HuronSettingsOptions();
     return this.$q.all({
       dateFormatOptions: this.loadDateFormatOptions(),
@@ -40,11 +40,7 @@ export class HuronSettingsOptionsService {
       companyCallerIdOptions: this.loadCompanyCallerIdNumbers(undefined),
       companyVoicemailOptions: this.loadCompanyVoicemailNumbers(undefined),
       emergencyServiceNumbers: this.loadEmergencyServiceNumbers(undefined),
-      dialPlan: this.loadDialPlan(customerId)
-        .then(dialPlan => {
-          settingsOptions.countryCode = _.get<string>(dialPlan, 'countryCode');
-          settingsOptions.premiumNumbers = _.toString(_.get<Array<string>>(dialPlan, 'premiumNumbers', []));
-        }),
+      dialPlan: this.loadDialPlan(),
     }).then(response => {
       settingsOptions.dateFormatOptions = _.get<Array<IOption>>(response, 'dateFormatOptions');
       settingsOptions.timeFormatOptions = _.get<Array<IOption>>(response, 'timeFormatOptions');
@@ -54,6 +50,7 @@ export class HuronSettingsOptionsService {
       settingsOptions.companyCallerIdOptions = _.get<Array<IOption>>(response, 'companyCallerIdOptions');
       settingsOptions.companyVoicemailOptions = _.get<Array<IOption>>(response, 'companyVoicemailOptions');
       settingsOptions.emergencyServiceNumberOptions = _.get<Array<IEmergencyNumberOption>>(response, 'emergencyServiceNumbers');
+      settingsOptions.dialPlan = _.get<IDialPlan>(response, 'dialPlan');
       return settingsOptions;
     });
   }
@@ -123,10 +120,8 @@ export class HuronSettingsOptionsService {
       });
   }
 
-  public loadDialPlan(customerId: string): ng.IPromise<any> {
-    return this.CustomerDialPlanServiceV2.get({
-      customerId: customerId,
-    }).$promise;
+  public loadDialPlan(): ng.IPromise<IDialPlan> {
+    return this.DialPlanService.getDialPlan();
   }
 
 }

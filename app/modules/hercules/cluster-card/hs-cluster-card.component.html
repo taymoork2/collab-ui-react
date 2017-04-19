@@ -26,7 +26,7 @@
             <div class="cluster-list-info" ng-if="!$ctrl.cluster.upgradeSchedule" translate="common.notSet"></div>
           </div>
         </div>
-        <div ng-if="$ctrl.cluster.targetType == 'mf_mgmt' || $ctrl.hasResourceGroupFeatureToggle">
+        <div>
           <div class="cluster-list-cat" translate="hercules.fusion.list.release-channel"></div>
           <div class="cluster-list-info">{{$ctrl.getLocalizedReleaseChannel($ctrl.cluster.releaseChannel)}}</div>
         </div>

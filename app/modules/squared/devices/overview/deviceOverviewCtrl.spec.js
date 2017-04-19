@@ -2,9 +2,9 @@
 
 describe('Controller: DeviceOverviewCtrl', function () {
   var $scope, $controller, $state, controller, $httpBackend;
-  var $q, UrlConfig, CsdmDeviceService, Authinfo, Notification;
-  var RemoteSupportModal, HuronConfig, FeatureToggleService, Userservice;
-  var PstnSetupStatesService, CsdmHuronDeviceService;
+  var $q, UrlConfig, CsdmDeviceService, Authinfo, Notification, CsdmDataModelService;
+  var RemoteSupportModal, HuronConfig, FeatureToggleService, Userservice, TerminusUserDeviceE911Service;
+  var PstnSetupStatesService, CsdmHuronDeviceService, ServiceSetup, DeviceOverviewService;
 
   var location = {
     type: 'State',
@@ -20,9 +20,10 @@ describe('Controller: DeviceOverviewCtrl', function () {
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
-  beforeEach(initController);
 
-  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _UrlConfig_, _CsdmDeviceService_, _Authinfo_, _Notification_, _RemoteSupportModal_, _HuronConfig_, _FeatureToggleService_, _Userservice_, _PstnSetupStatesService_) {
+  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _UrlConfig_, _CsdmDeviceService_, _Authinfo_,
+    _Notification_, _RemoteSupportModal_, _HuronConfig_, _FeatureToggleService_, _Userservice_, _CsdmDataModelService_,
+    _PstnSetupStatesService_, _ServiceSetup_, _DeviceOverviewService_, _TerminusUserDeviceE911Service_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
@@ -35,9 +36,13 @@ describe('Controller: DeviceOverviewCtrl', function () {
     CsdmDeviceService = _CsdmDeviceService_;
     Authinfo = _Authinfo_;
     Notification = _Notification_;
+    CsdmDataModelService = _CsdmDataModelService_;
     RemoteSupportModal = _RemoteSupportModal_;
     HuronConfig = _HuronConfig_;
     PstnSetupStatesService = _PstnSetupStatesService_;
+    ServiceSetup = _ServiceSetup_;
+    DeviceOverviewService = _DeviceOverviewService_;
+    TerminusUserDeviceE911Service = _TerminusUserDeviceE911Service_;
   }
 
   function initSpies() {
@@ -47,9 +52,16 @@ describe('Controller: DeviceOverviewCtrl', function () {
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200);
     $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/sipendpoints/3/addonmodules').respond(200);
     $httpBackend.whenGET('https://cmi.huron-int.com/api/v1/voice/customers/sites').respond([]);
+    spyOn(CsdmDataModelService, 'reloadItem').and.returnValue($q.reject());
     spyOn(CsdmHuronDeviceService, 'getLinesForDevice').and.returnValue($q.resolve([]));
     spyOn(CsdmHuronDeviceService, 'getDeviceInfo').and.returnValue($q.resolve({}));
     spyOn(PstnSetupStatesService, 'getLocation').and.returnValue($q.resolve(location));
+    spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.resolve());
+    spyOn(ServiceSetup, 'getTranslatedTimeZones').and.returnValue($q.resolve());
+    spyOn(DeviceOverviewService, 'getCountryOptions').and.returnValue($q.resolve());
+    spyOn(TerminusUserDeviceE911Service, 'get').and.returnValue({
+      $promise: $q.reject(),
+    });
   }
 
   CsdmHuronDeviceService = {
@@ -57,23 +69,11 @@ describe('Controller: DeviceOverviewCtrl', function () {
     getDeviceInfo: {},
   };
 
-  var $stateParams = {
-    currentDevice: {
-      url: 'http://thedeviceurl',
-      isHuronDevice: false,
-      product: 'Cisco 8865',
-      cisUuid: 2,
-      huronId: 3,
-      kem: [],
-    },
-    huronDeviceService: CsdmHuronDeviceService,
-  };
-
-  function initController() {
+  function initControllerWithSettings(channels, stateParams) {
     controller = $controller('DeviceOverviewCtrl', {
       $scope: $scope,
-      channels: {},
-      $stateParams: $stateParams,
+      channels: channels,
+      $stateParams: stateParams,
       $state: $state,
       Userservice: Userservice,
       FeatureToggleService: FeatureToggleService,
@@ -81,11 +81,173 @@ describe('Controller: DeviceOverviewCtrl', function () {
     $scope.$apply();
   }
 
+  function initController() {
+    initControllerWithSettings([], {
+      currentDevice: {
+        url: 'http://thedeviceurl',
+        isHuronDevice: false,
+        product: 'Cisco 8865',
+        cisUuid: 2,
+        huronId: 3,
+        kem: [],
+      },
+      huronDeviceService: CsdmHuronDeviceService,
+    });
+  }
+
   it('should init controller', function () {
+    initController();
     expect(controller).toBeDefined();
   });
 
+  describe('upgrade channel', function () {
+    var stateParams;
+
+    describe('with feature toggle "cloudberryLyraConfig"', function () {
+      beforeEach(function () {
+        spyOn(FeatureToggleService, 'cloudberryLyraConfigGetStatus').and.returnValue($q.resolve(true));
+      });
+
+      describe('with device online', function () {
+        beforeEach(function () {
+          stateParams = {
+            currentDevice: {
+              isOnline: true,
+            },
+            huronDeviceService: CsdmHuronDeviceService,
+          };
+        });
+
+        it('should show current channel if there are channels to choose for a non-huron device', function () {
+          stateParams.currentDevice.isHuronDevice = false;
+          initControllerWithSettings(['very new stuff', 'a bit more conservative stable stuff'], stateParams);
+          expect(controller.canChangeUpgradeChannel).toBeFalsy();
+          expect(controller.shouldShowUpgradeChannel).toBe(true);
+        });
+
+        it('should not show anything if there are no channels to choose', function () {
+          stateParams.currentDevice.isHuronDevice = false;
+          initControllerWithSettings([], stateParams);
+          expect(controller.canChangeUpgradeChannel).toBeFalsy();
+          expect(controller.shouldShowUpgradeChannel).toBeFalsy();
+        });
+
+        it('should not show anything for Huron devices', function () {
+          stateParams.currentDevice.isHuronDevice = true;
+          initControllerWithSettings(['very new stuff', 'a bit more conservative stable stuff'], stateParams);
+          expect(controller.canChangeUpgradeChannel).toBeFalsy();
+          expect(controller.shouldShowUpgradeChannel).toBeFalsy();
+        });
+      });
+
+      describe('with device offline', function () {
+        beforeEach(function () {
+          stateParams = {
+            currentDevice: {
+              isOnline: false,
+            },
+            huronDeviceService: CsdmHuronDeviceService,
+          };
+        });
+
+        it('should show current channel if there are channels to choose for a non-huron device', function () {
+          stateParams.currentDevice.isHuronDevice = false;
+          initControllerWithSettings(['very new stuff', 'a bit more conservative stable stuff'], stateParams);
+          expect(controller.canChangeUpgradeChannel).toBeFalsy();
+          expect(controller.shouldShowUpgradeChannel).toBe(true);
+        });
+
+        it('should not show anything if there are no channels to choose', function () {
+          stateParams.currentDevice.isHuronDevice = false;
+          initControllerWithSettings([], stateParams);
+          expect(controller.canChangeUpgradeChannel).toBeFalsy();
+          expect(controller.shouldShowUpgradeChannel).toBeFalsy();
+        });
+
+        it('should not show anything for Huron devices', function () {
+          stateParams.currentDevice.isHuronDevice = true;
+          initControllerWithSettings(['very new stuff', 'a bit more conservative stable stuff'], stateParams);
+          expect(controller.canChangeUpgradeChannel).toBeFalsy();
+          expect(controller.shouldShowUpgradeChannel).toBeFalsy();
+        });
+      });
+    });
+
+    describe('without feature toggle "cloudberryLyraConfig"', function () {
+      beforeEach(function () {
+        spyOn(FeatureToggleService, 'cloudberryLyraConfigGetStatus').and.returnValue($q.resolve(false));
+      });
+
+      describe('with device online', function () {
+        beforeEach(function () {
+          stateParams = {
+            currentDevice: {
+              isOnline: true,
+            },
+            huronDeviceService: CsdmHuronDeviceService,
+          };
+        });
+
+        it('should be able to change channels if there are channels to choose for a non-huron device', function () {
+          stateParams.currentDevice.isHuronDevice = false;
+          initControllerWithSettings(['very new stuff', 'a bit more conservative stable stuff'], stateParams);
+          expect(controller.canChangeUpgradeChannel).toBe(true);
+          expect(controller.shouldShowUpgradeChannel).toBeFalsy();
+        });
+
+        it('should not show anything if there are no channels to choose', function () {
+          stateParams.currentDevice.isHuronDevice = false;
+          initControllerWithSettings([], stateParams);
+          expect(controller.canChangeUpgradeChannel).toBeFalsy();
+          expect(controller.shouldShowUpgradeChannel).toBeFalsy();
+        });
+
+        it('should not show anything for Huron devices', function () {
+          stateParams.currentDevice.isHuronDevice = true;
+          initControllerWithSettings(['very new stuff', 'a bit more conservative stable stuff'], stateParams);
+          expect(controller.canChangeUpgradeChannel).toBeFalsy();
+          expect(controller.shouldShowUpgradeChannel).toBeFalsy();
+        });
+      });
+
+      describe('with device offline', function () {
+        beforeEach(function () {
+          stateParams = {
+            currentDevice: {
+              isOnline: false,
+            },
+            huronDeviceService: CsdmHuronDeviceService,
+          };
+        });
+
+        it('should show current channel if there are channels to choose for a non-huron device', function () {
+          stateParams.currentDevice.isHuronDevice = false;
+          initControllerWithSettings(['very new stuff', 'a bit more conservative stable stuff'], stateParams);
+          expect(controller.canChangeUpgradeChannel).toBeFalsy();
+          expect(controller.shouldShowUpgradeChannel).toBe(true);
+        });
+
+        it('should not show anything if there are no channels to choose', function () {
+          stateParams.currentDevice.isHuronDevice = false;
+          initControllerWithSettings([], stateParams);
+          expect(controller.canChangeUpgradeChannel).toBeFalsy();
+          expect(controller.shouldShowUpgradeChannel).toBeFalsy();
+        });
+
+        it('should not show anything for Huron devices', function () {
+          stateParams.currentDevice.isHuronDevice = true;
+          initControllerWithSettings(['very new stuff', 'a bit more conservative stable stuff'], stateParams);
+          expect(controller.canChangeUpgradeChannel).toBeFalsy();
+          expect(controller.shouldShowUpgradeChannel).toBeFalsy();
+        });
+      });
+    });
+  });
+
   describe('remote support', function () {
+    beforeEach(function () {
+      initController();
+    });
 
     it('should not show remote support modal when readonly', function () {
       spyOn(Authinfo, 'isReadOnlyAdmin').and.returnValue(true);
@@ -141,6 +303,10 @@ describe('Controller: DeviceOverviewCtrl', function () {
   });
 
   describe('Tags', function () {
+    beforeEach(function () {
+      initController();
+    });
+
     it('should ignore only whitespace tags', function () {
       controller.newTag = ' ';
       controller.addTag();

@@ -1,9 +1,12 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Huron')
-    .factory('DirectoryNumber', DirectoryNumber);
+  module.exports = angular.module('huron.directory-number-service', [
+    require('modules/core/auth/auth'),
+    require('modules/huron/telephony/cmiServices'),
+  ])
+    .service('DirectoryNumber', DirectoryNumber)
+    .name;
 
   /* @ngInject */
   function DirectoryNumber(Authinfo, UserDirectoryNumberService, DirectoryNumberService, AlternateNumberService) {

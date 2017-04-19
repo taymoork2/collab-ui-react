@@ -9,7 +9,7 @@ describe('Huron Auto Attendant', function () {
   beforeAll(function () {
     browser.setFileDetector(new remote.FileDetector());
 
-    login.login('aa-admin');
+    login.login('aa-admin', '#/hurondetails/features');
 
   }, 120000);
 

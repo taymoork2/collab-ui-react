@@ -310,6 +310,7 @@
       clearCeMenuMap: clearCeMenuMap,
       deleteCeMenuMap: deleteCeMenuMap,
       isCeMenu: isCeMenu,
+      isCeMenuEntry: isCeMenuEntry,
 
       newCeMenu: function () {
         return new CeMenu();
@@ -566,8 +567,8 @@
         action.if = {};
         exp = parseLeftRightExpression(inAction.conditional.expression);
 
-        action.if.leftCondition = exp[0];
-        action.if.rightCondition = exp[1];
+        action.if.leftCondition = exp.ifCondition;
+        action.if.rightCondition = exp.isConditions;
 
         if (inAction.conditional.true[0].route) {
           action.then = new Action("route", inAction.conditional.true[0].route.destination);
@@ -1232,6 +1233,8 @@
       /* as of now, all are InList type expressions. callerReturned is not
          implemented yet.
       */
+      out.varsUsed = [];
+      out.varsUsed.push(action.if.leftCondition);
 
       out.expression = createInListObj(action);
 
@@ -1710,5 +1713,10 @@
     function isCeMenu(obj) {
       return (objectType(obj) === 'CeMenu');
     }
+    function isCeMenuEntry(obj) {
+      return (objectType(obj) === 'CeMenuEntry');
+    }
+
+
   }
 })();

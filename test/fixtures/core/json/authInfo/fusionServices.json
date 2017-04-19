@@ -1,12 +1,10 @@
 [{
   "id": "squared-fusion-mgmt",
   "enabled": true,
-  "acknowledged": true,
   "emailSubscribers": ""
 }, {
   "id": "squared-fusion-cal",
   "enabled": false,
-  "acknowledged": true,
   "emailSubscribers": ""
 }]
 

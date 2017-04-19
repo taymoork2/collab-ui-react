@@ -75,8 +75,8 @@
             ></cs-select>
           </div>
         </div>
-        <div class="sub-section service-setup service-setup-regional-settings">
-          <label class="control-label" translate="serviceSetupModal.defaultCountry"></label>
+        <div class="sub-section service-setup service-setup-regional-settings" ng-if="settings.supportRegionalSettings()">
+          <label class="control-label" translate="serviceSetupModal.defaultTones"></label>
           <p class="description-block" translate="serviceSetupModal.defaultCountryDescription"></p>
           <div class="medium-5">
             <cs-select
