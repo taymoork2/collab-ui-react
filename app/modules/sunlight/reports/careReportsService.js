@@ -47,7 +47,6 @@
       today = isToday;
       var exportReport = CareReportsGraphService.getBaseVariable('export');
       exportReport.enabled = true;
-      exportReport.divId = 'exportdiv';
 
       var titles = CareReportsGraphService.getBaseVariable('title');
       if (!angular.isUndefined(title)) {
