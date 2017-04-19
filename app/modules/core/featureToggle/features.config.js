@@ -74,7 +74,6 @@ module.exports = {
   flagMsg: 'flag-msg',
   fmcCommandDispatch: 'fmc-command-dispatch',
   geoHintEnabled: 'geo-hint-enabled',
-  huronAACallQueue: 'huronAACallQueue',
   huronAAMediaUpload: 'huron-aa-mediaupload',
   huronAACallerInput: 'huron-aa-callerinput',
   huronAARouteRoom: 'huron-aa-routeroom',

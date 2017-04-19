@@ -16,7 +16,6 @@
     var aaCENumberStatus = false;
     var aaMediaUploadStatus = false;
     var aaQueueSettingsStatus = false;
-    var routeQueueToggle = false;
     var mediaUploadToggle = false;
     var callerInputToggle = false;
     var routeSIPAddressToggle = false;
@@ -37,11 +36,9 @@
       setQueueSettingsStatus: setQueueSettingsStatus,
       setMediaUploadToggle: setMediaUploadToggle,
       setCallerInputToggle: setCallerInputToggle,
-      setRouteQueueToggle: setRouteQueueToggle,
       setRouteSIPAddressToggle: setRouteSIPAddressToggle,
       setDynAnnounceToggle: setDynAnnounceToggle,
       isDynAnnounceToggle: isDynAnnounceToggle,
-      isRouteQueueToggle: isRouteQueueToggle,
       isCallerInputToggle: isCallerInputToggle,
       isMediaUploadToggle: isMediaUploadToggle,
       isRouteSIPAddressToggle: isRouteSIPAddressToggle,
@@ -138,11 +135,6 @@
     function setDynAnnounceToggle(status) {
       dynAnnounceToggle = status;
     }
-
-    function setRouteQueueToggle(status) {
-      routeQueueToggle = status;
-    }
-
     function setQueueSettingsStatus(status) {
       aaQueueSettingsStatus = status;
     }
@@ -157,13 +149,6 @@
 
     function setRouteSIPAddressToggle(status) {
       routeSIPAddressToggle = status;
-    }
-
-    /**
-     * Will check the toggle status for Queue which is set while aaPhoneMenuCtrl
-     */
-    function isRouteQueueToggle() {
-      return routeQueueToggle;
     }
 
     function isDynAnnounceToggle() {
