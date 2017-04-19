@@ -12,7 +12,7 @@
       'squared-fusion-gcal': 'squaredFusionGCal',
     };
 
-    $scope.currentUser = $stateParams.currentUser || $stateParams.currentPlace;
+    $scope.currentUser = $stateParams.currentUser || $stateParams.getCurrentPlace();
     $scope.isPlace = $scope.currentUser.accountType === 'MACHINE';
     $scope.isUser = !$scope.isPlace;
     $scope.currentStateName = $state.current.name;

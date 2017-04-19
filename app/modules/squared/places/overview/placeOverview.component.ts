@@ -147,6 +147,10 @@ class PlaceOverview implements ng.IComponentController {
     }
   }
 
+  public getCurrentPlace = (): IPlace => {
+    return this.currentPlace;
+  }
+
   private startStateMap = {
     'squared-fusion-uc': 'addDeviceFlow.callConnectOptions',
     'squared-fusion-cal': 'addDeviceFlow.editCalendarService',
