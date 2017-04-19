@@ -154,6 +154,11 @@
 
   angular.module('Gemini', ['Core']);
 
+  angular.module('CMC', [
+    'Core',
+    require('modules/cmc').default,
+  ]);
+
   module.exports = angular.module('Main', [
     'Core',
     'Squared',
@@ -170,6 +175,7 @@
     'GSS',
     'oc.lazyLoad',
     'Gemini',
+    'CMC',
   ]).config(require('./main.config'))
     .run(require('./main.run'))
     .name;
