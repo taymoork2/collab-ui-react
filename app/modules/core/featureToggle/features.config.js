@@ -41,6 +41,7 @@ module.exports = {
   atlasSubdomainUpdate: 'atlas-subdomain-update',
   atlasSuppressOnboardingEmail: 'atlas-suppress-onboarding-email',
   atlasTrialsShipDevices: 'atlasTrialsShipDevices',
+  atlasMobileConvergence: 'atlas-mobile-convergence',
   androidAddGuestRelease: 'android-add-guest-release',
   androidDirectUpload: 'android-direct-upload',
   androidImportantFilter: 'android-important-filter',

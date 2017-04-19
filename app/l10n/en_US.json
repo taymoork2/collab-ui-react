@@ -2563,6 +2563,11 @@
       "noAddressesFound": "No addresses found"
     }
   },
+  "cmc": {
+    "menu": {
+      "mobileConvergenceService": "Mobile Convergence Service"
+    }
+  },
   "context": {
     "pageTitle": "Hybrid Context Service",
     "clusters": {

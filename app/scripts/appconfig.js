@@ -1429,6 +1429,24 @@
             },
           })
 
+          .state('user-overview.cmc', {
+            template: '<cmc-user-details-settings user="$resolve.user" ng-if="$resolve.hasCmcFeatureToggle"></cmc-user-details-settings>',
+            params: {
+              service: 'CMC',
+            },
+            resolve: {
+              data: /* @ngInject */ function ($translate, $state) {
+                $state.get('user-overview.cmc').data.displayName = $translate.instant('cmc.menu.mobileConvergenceService');
+              },
+              user: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams, 'currentUser');
+              },
+              hasCmcFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMobileConvergence);
+              },
+            },
+          })
+
           // FOR Development: allow editing of user's feature toggles
           .state('edit-featuretoggles', {
             url: '/editfeaturetoggles',
