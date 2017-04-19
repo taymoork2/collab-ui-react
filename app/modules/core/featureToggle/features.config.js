@@ -78,6 +78,7 @@ module.exports = {
   huronAAMediaUpload: 'huron-aa-mediaupload',
   huronAACallerInput: 'huron-aa-callerinput',
   huronAARouteRoom: 'huron-aa-routeroom',
+  huronAADynannounce: 'huron-aa-dynannounce',
   huronClassOfService: 'COS',
   huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
   huronUserLocale2: 'huron-l10n-user-locale-2',

@@ -629,6 +629,7 @@
         hasMediaUpload: FeatureToggleService.supports(FeatureToggleService.features.huronAAMediaUpload),
         hasRouteQueue: FeatureToggleService.supports(FeatureToggleService.features.huronAACallQueue),
         hasRouteRoom: FeatureToggleService.supports(FeatureToggleService.features.huronAARouteRoom),
+        hasDynAnnounce: FeatureToggleService.supports(FeatureToggleService.features.huronAADynannounce),
       });
     }
 
@@ -637,6 +638,7 @@
       AACommonService.setMediaUploadToggle(featureToggles.hasMediaUpload);
       AACommonService.setRouteQueueToggle(featureToggles.hasRouteQueue);
       AACommonService.setRouteSIPAddressToggle(featureToggles.hasRouteRoom);
+      AACommonService.setDynAnnounceToggle(featureToggles.hasDynAnnounce);
     }
 
     //load the feature toggle prior to creating the elements
