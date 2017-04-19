@@ -114,6 +114,13 @@ require('./_fields-list.scss');
         field.lastUpdatedUI = $filter('date')(field.lastUpdated, $translate.instant('context.dictionary.fieldPage.dateFormat'));
       }
 
+      var accessibleMap = {
+        true: $translate.instant('context.dictionary.base'),
+        false: $translate.instant('context.dictionary.custom'),
+      };
+
+      field.publiclyAccessible = accessibleMap[field.publiclyAccessible];
+
       return field;
     }
 
@@ -167,7 +174,6 @@ require('./_fields-list.scss');
             process: processField,
             callback: function (updatedField) {
               vm.gridRefresh = true;
-              // vm.fieldsList.allFields[0].description = updatedField.description;
               var index = _.findIndex(vm.fieldsList.allFields, function (current) {
                 return current.id === updatedField.id;
               });
@@ -223,8 +229,12 @@ require('./_fields-list.scss');
           displayName: $translate.instant('context.dictionary.fieldPage.searchable'),
           maxWidth: 200,
         }, {
+          field: 'publiclyAccessible',
+          displayName: $translate.instant('context.dictionary.access'),
+          maxWidth: 200,
+        }, {
           field: 'lastUpdatedUI',
-          displayName: $translate.instant('context.dictionary.fieldPage.lastUpdated'),
+          displayName: $translate.instant('context.dictionary.dateUpdated'),
           maxWidth: 300,
         }],
       };
@@ -249,14 +259,14 @@ require('./_fields-list.scss');
       }
 
       var lowerStr = str.toLowerCase();
-      return $q.resolve(fieldList.filter(function (field) {
-        return (_.has(field, 'id') ? (field.id.toLowerCase().indexOf(lowerStr) !== -1) : false) ||
-          (_.has(field, 'description') ? (field.description.toLowerCase().indexOf(lowerStr) !== -1) : false) ||
-          (_.has(field, 'dataTypeUI') ? (field.dataTypeUI.toLowerCase().indexOf(lowerStr) !== -1) : false) ||
-          (_.has(field, 'searchableUI') ? (field.searchableUI.toLowerCase().indexOf(lowerStr) !== -1) : false) ||
-          (_.has(field, 'classificationUI') ? (field.classificationUI.toLowerCase().indexOf(lowerStr) !== -1) : false) ||
-          (_.has(field, 'lastUpdatedUI') ? (field.lastUpdatedUI.toLowerCase().indexOf(lowerStr) !== -1) : false);
-      }));
+      var containSearchString = function (field) {
+        var propertiesToCheck = ['id', 'description', 'dataTypeUI', 'searchableUI', 'classificationUI', 'lastUpdatedUI', 'publiclyAccessible'];
+        return _.some(propertiesToCheck, function (property) {
+          var value = _.get(field, property, '').toLowerCase();
+          return _.includes(value, lowerStr);
+        });
+      };
+      return $q.resolve(fieldList.filter(containSearchString));
     }
   }
 }());

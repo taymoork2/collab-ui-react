@@ -2589,6 +2589,10 @@
       "status": "Status",
       "inUse": "In Use",
       "notInUse": "Not In Use",
+      "base": "Cisco",
+      "custom": "Custom",
+      "access": "Source",
+      "dateUpdated": "Date Updated",
       "fieldPage": {
         "associatedFieldsets": "Associated Fieldsets",
         "associatedFieldsetsError": "Unable to retrieve associated fieldsets.",
@@ -2610,7 +2614,6 @@
         "label": "Label",
         "labelHelpText": "Name of the field displayed in the application",
         "labelPlaceholder": "Enter Label",
-        "lastUpdated": "Date Updated",
         "startSearching": "To begin, search for a field",
         "noSearchResults": "Search yielded no results",
         "fieldReadFailed": "Unable to retrieve fields. Refresh your browser to try again.",
@@ -2623,7 +2626,9 @@
         "update": "Edit",
         "dateFormat": "MM/dd/yyyy",
         "noneFound": "No fields found",
-        "fieldAttributes": "Field Attributes"
+        "fieldAttributes": "Field Attributes",
+        "inUseTooltip": "Field associated with fieldsets",
+        "notInUseTooltip": "Field not associated with any fieldsets"
       },
       "fieldsetPage": {
         "fieldsetId": "Fieldset ID",
@@ -2643,7 +2648,10 @@
         "fieldsetCreateFailure": "Unable to create fieldset. Try again or contact customer support.",
         "fieldsetIdUniqueError": "Fieldset ID exists. Enter a different ID",
         "fieldsetIdInvalidCharactersError": "Only alpha-numeric characters, period(.), hyphen(-) or underscore (_) allowed",
-        "noneFound": "No fieldsets found"
+        "noneFound": "No fieldsets found",
+        "fieldsetAttributes": "Fieldset Attributes",
+        "inUseTooltip": "Fieldset associated with objects",
+        "notInUseTooltip": "Fieldset not associated with any objects"
       }
     }
   },

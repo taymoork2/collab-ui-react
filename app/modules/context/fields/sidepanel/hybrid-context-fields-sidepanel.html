@@ -5,7 +5,7 @@
   <!-- main side panel body -->
   <cs-sp-container>
     <cs-sp-section>
-      <div ng-show="!$ctrl.inUse">
+      <div ng-show="!$ctrl.inUse && !$ctrl.publiclyAccessible">
         <section-title
           title-key="context.dictionary.fieldPage.fieldAttributes"
           action-list="$ctrl.actionList"
@@ -25,7 +25,7 @@
               <span class="feature-name" translate="context.dictionary.status"></span>
               <span class="feature-details">
                 <i class="icon icon-circle status-indicator success"></i>
-                <span class="context-status-block" translate="context.dictionary.inUse"></span>
+                <span class="context-status-block" tooltip-class="context-tooltip" tooltip="{{$ctrl.inUseTooltipMessage}}" tooltip-placement="bottom" translate="context.dictionary.inUse"></span>
               </span>
             </span>
           </div>
@@ -34,7 +34,7 @@
               <span class="feature-name" translate="context.dictionary.status"></span>
               <span class="feature-details">
                 <i class="icon icon-circle status-indicator"></i>
-                <span class="context-status-block" translate="context.dictionary.notInUse"></span>
+                <span class="context-status-block" tooltip-class="context-tooltip" tooltip="{{$ctrl.inUseTooltipMessage}}" tooltip-placement="bottom" translate="context.dictionary.notInUse"></span>
               </span>
             </span>
           </div>
@@ -74,12 +74,12 @@
          </div>
 
          <div class="feature">
-            <span class="feature-name"  translate="context.dictionary.fieldPage.lastUpdated"></span>
+            <span class="feature-name"  translate="context.dictionary.dateUpdated"></span>
             <span class="feature-details  context-updated-date" ng-if="$ctrl.field.lastUpdatedUI">{{$ctrl.field.lastUpdatedUI}}</span>
             <span class="feature-details" ng-if="!$ctrl.field.lastUpdatedUI" translate="context.dictionary.unavailable"></span>
          </div>
 
-         <div class="cs-input-group">
+         <div class="associated-fieldsets-block">
             <p translate="context.dictionary.fieldPage.associatedFieldsets"></p>
            <!-- show if no fieldsets are returned -->
            <span ng-if="$ctrl.associatedFieldsets.length === 0 && !$ctrl.fetchFailure" translate="common.none" class="context-fieldsets-none"></span>

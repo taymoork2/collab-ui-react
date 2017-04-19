@@ -7,6 +7,7 @@
   var searchPath = '/dictionary/fieldset/v1/search';
   var createPath = '/dictionary/fieldset/v1';
   var getPath = '/dictionary/fieldset/v1/id/';
+  var statusPath = '/dictionary/fieldset/v1/status/';
 
   /* @ngInject */
   function contextFieldsetsService($http, Discovery) {
@@ -16,6 +17,7 @@
       getFieldset: getFieldset,
       createFieldset: createFieldset,
       createAndGetFieldset: createAndGetFieldset,
+      getInUse: getInUse,
     };
 
     return service;
@@ -74,6 +76,16 @@
       return createFieldset(data)
         .then(function () {
           return getFieldset(data.id);
+        });
+    }
+
+    function getInUse(id) {
+      return Discovery.getEndpointForService('dictionary')
+        .then(function (dictionaryUrl) {
+          return $http.get(dictionaryUrl + statusPath + id)
+            .then(function (response) {
+              return _.get(response, 'data.status.inUse', false);
+            });
         });
     }
   }
