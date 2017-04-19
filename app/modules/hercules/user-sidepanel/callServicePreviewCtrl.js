@@ -6,10 +6,10 @@
     .controller('CallServicePreviewCtrl', CallServicePreviewCtrl);
 
   /*@ngInject*/
-  function CallServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, FusionClusterService, UriVerificationService, DomainManagementService, $translate, FeatureToggleService, ResourceGroupService, UCCService, HybridServicesI18NService) {
+  function CallServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, FusionClusterService, UriVerificationService, DomainManagementService, $translate, ResourceGroupService, UCCService, HybridServicesI18NService) {
     $scope.saveLoading = false;
     $scope.domainVerificationError = false;
-    $scope.currentUser = $stateParams.currentUser || $stateParams.currentPlace;
+    $scope.currentUser = $stateParams.currentUser || $stateParams.getCurrentPlace();
     $scope.isPlace = $scope.currentUser.accountType === 'MACHINE';
     $scope.isUser = !$scope.isPlace;
     var isEntitled = function (ent) {
@@ -195,28 +195,23 @@
     };
 
     var readResourceGroups = function () {
-      FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup)
-        .then(function (supported) {
-          if (supported) {
-            ResourceGroupService.getAllAsOptions().then(function (options) {
-              if (options.length > 0) {
-                $scope.resourceGroup.options = $scope.resourceGroup.options.concat(options);
-                if ($scope.callServiceAware.status && $scope.callServiceAware.status.resourceGroupId) {
-                  setSelectedResourceGroup($scope.callServiceAware.status.resourceGroupId);
-                } else {
-                  USSService.getUserProps($scope.currentUser.id).then(function (props) {
-                    if (props.resourceGroups && props.resourceGroups[$scope.callServiceAware.id]) {
-                      setSelectedResourceGroup(props.resourceGroups[$scope.callServiceAware.id]);
-                    } else {
-                      $scope.resourceGroup.displayWarningIfNecessary();
-                    }
-                  });
-                }
-                $scope.resourceGroup.show = true;
+      ResourceGroupService.getAllAsOptions().then(function (options) {
+        if (options.length > 0) {
+          $scope.resourceGroup.options = $scope.resourceGroup.options.concat(options);
+          if ($scope.callServiceAware.status && $scope.callServiceAware.status.resourceGroupId) {
+            setSelectedResourceGroup($scope.callServiceAware.status.resourceGroupId);
+          } else {
+            USSService.getUserProps($scope.currentUser.id).then(function (props) {
+              if (props.resourceGroups && props.resourceGroups[$scope.callServiceAware.id]) {
+                setSelectedResourceGroup(props.resourceGroups[$scope.callServiceAware.id]);
+              } else {
+                $scope.resourceGroup.displayWarningIfNecessary();
               }
             });
           }
-        });
+          $scope.resourceGroup.show = true;
+        }
+      });
     };
 
     updateStatus();

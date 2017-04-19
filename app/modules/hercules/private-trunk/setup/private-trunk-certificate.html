@@ -11,7 +11,7 @@
       name="certificateRadio1"
       ng-value="'default'"
       cs-input-label="{{'servicesOverview.cards.privateTrunk.certificateRadio1' | translate}}"
-      ng-change="$ctrl.change()">
+      ng-change="$ctrl.changeOption()">
     <input
       cs-input
       type="radio"
@@ -20,11 +20,11 @@
       name="certificateRadio2"
       ng-value="'new'"
       cs-input-label="{{'servicesOverview.cards.privateTrunk.certificateRadio2' | translate}}"
-      ng-change="$ctrl.change()">
+      ng-change="$ctrl.changeOption()">
   </div>
   <div row>
     <div class="columns large-12 medium-12 small-12" ng-if="$ctrl.certificateRadio==='new'">
-      <div class="box center">
+      <div class="box center singlebox-margin">
         <div class="flex-center-container certificate-upload">
           <label ng-if="$ctrl.isImporting" class="icon-label" for="import">
               <span class="icon icon-spinner"></span>
@@ -59,7 +59,7 @@
     </div>
       <div ng-repeat="cert in $ctrl.formattedCertList">
         <div class="columns large-6 medium-6 small-6">
-          <div class="box">
+          <div class="box multibox-margin">
             <p>
               <span class="span-filename" >{{$ctrl.getFileName(cert.certId)}}</span>
               <i class="icon icon-close close-icon-align" ng-click="$ctrl.deleteCert(cert.certId)"></i>

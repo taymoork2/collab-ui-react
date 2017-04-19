@@ -10,7 +10,6 @@ export class CallConnectOptions implements ng.IComponentController {
       externalLinkedAccounts: IExternalLinkedAccount[],
     },
     atlasHerculesGoogleCalendarFeatureToggle,
-    atlasF237ResourceGroups
     function: string,
   };
   private static hybridCalluc = 'squared-fusion-uc';
@@ -81,7 +80,7 @@ export class CallConnectOptions implements ng.IComponentController {
   }
 
   public getResourceGroupShow() {
-    return this.wizardData.atlasF237ResourceGroups && this.resourceGroup && this.resourceGroup.show;
+    return this.resourceGroup && this.resourceGroup.show;
   }
 
   public submitForm() {
@@ -172,27 +171,25 @@ export class CallConnectOptions implements ng.IComponentController {
   }
 
   private fetchResourceGroups() {
-    if (this.wizardData.atlasF237ResourceGroups) {
-      this.ResourceGroupService.getAllAsOptions().then((options) => {
-        if (options.length > 0) {
-          this.resourceGroup.options = this.resourceGroup.options.concat(options);
-          if (this.wizardData.account.cisUuid) {
-            this.USSService.getUserProps(this.wizardData.account.cisUuid).then((props) => {
-              if (props.resourceGroups && props.resourceGroups[CallConnectOptions.hybridCalluc]) {
-                let selectedGroup = _.find(this.resourceGroup.options, (group) => {
-                  return group.value === props.resourceGroups[CallConnectOptions.hybridCalluc];
-                });
-                if (selectedGroup) {
-                  this.resourceGroup.selected = selectedGroup;
-                  this.resourceGroup.current = selectedGroup;
-                }
+    this.ResourceGroupService.getAllAsOptions().then((options) => {
+      if (options.length > 0) {
+        this.resourceGroup.options = this.resourceGroup.options.concat(options);
+        if (this.wizardData.account.cisUuid) {
+          this.USSService.getUserProps(this.wizardData.account.cisUuid).then((props) => {
+            if (props.resourceGroups && props.resourceGroups[CallConnectOptions.hybridCalluc]) {
+              let selectedGroup = _.find(this.resourceGroup.options, (group) => {
+                return group.value === props.resourceGroups[CallConnectOptions.hybridCalluc];
+              });
+              if (selectedGroup) {
+                this.resourceGroup.selected = selectedGroup;
+                this.resourceGroup.current = selectedGroup;
               }
-            });
-          }
-          this.resourceGroup.show = true;
+            }
+          });
         }
-      });
-    }
+        this.resourceGroup.show = true;
+      }
+    });
   }
 
   public setResourceGroup(group: string) {

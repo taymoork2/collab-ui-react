@@ -7,7 +7,7 @@
 
 
   /* @ngInject */
-  function AddResourceController($modalInstance, $window, $translate, connectorType, serviceId, firstTimeSetup, Notification, FmsOrgSettings, FusionClusterService, HybridServicesExtrasService, HybridServicesUtilsService, $modal, $state, ResourceGroupService, FeatureToggleService) {
+  function AddResourceController($modalInstance, $window, $translate, connectorType, serviceId, firstTimeSetup, Notification, FmsOrgSettings, FusionClusterService, HybridServicesExtrasService, HybridServicesUtilsService, $modal, $state, ResourceGroupService) {
     var vm = this;
     vm.connectors = [];
     vm.warning = warning;
@@ -299,19 +299,14 @@
       $window.open("https://" + encodeURIComponent(vm.hostname) + "/fusionregistration");
     };
 
-    FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup)
-      .then(function (support) {
-        if (support) {
-          ResourceGroupService.getAllAsOptions().then(function (options) {
-            if (options.length > 0) {
-              vm.resourceGroupOptions = vm.resourceGroupOptions.concat(options);
-              vm.optionalSelectResourceGroupStep = true;
-            }
-          }, function () {
-            vm.couldNotReadResourceGroupsFromServer = true;
-          });
-        }
-      });
+    ResourceGroupService.getAllAsOptions().then(function (options) {
+      if (options.length > 0) {
+        vm.resourceGroupOptions = vm.resourceGroupOptions.concat(options);
+        vm.optionalSelectResourceGroupStep = true;
+      }
+    }, function () {
+      vm.couldNotReadResourceGroupsFromServer = true;
+    });
 
     vm.saveResourceGroup = function () {
       if (vm.selectedResourceGroup.value !== '') {

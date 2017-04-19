@@ -12,11 +12,11 @@ export class PrivateTrunkCertificateCtrl implements ng.IComponentController {
   public fileName: string = '';
   public onChangeFn: Function;
   public onDeleteCertFn: Function;
+  public onChangeOptionFn: Function;
   public formattedCertList: IformattedCertificate;
   public certLabels: Array<string>;
   public certFileNameIdMap: Array<ICertificateFileNameIdMap> = [];
   public isImporting: boolean = false;
-
 
   /* @ngInject */
   constructor(
@@ -46,7 +46,7 @@ export class PrivateTrunkCertificateCtrl implements ng.IComponentController {
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
-    const { formattedCertList, certFileNameIdMap, isImporting } = changes;
+    const { formattedCertList, certFileNameIdMap, isImporting, isCertificateDefault } = changes;
 
     if (!_.isUndefined(formattedCertList)) {
       this.setFormattedCertList(formattedCertList.currentValue);
@@ -56,6 +56,9 @@ export class PrivateTrunkCertificateCtrl implements ng.IComponentController {
     }
     if (!_.isUndefined(isImporting)) {
       this.isImporting = isImporting.currentValue;
+    }
+    if (!_.isUndefined(isCertificateDefault)) {
+      this.certificateRadio = isCertificateDefault.currentValue ? CertificateRadioType.DEFAULT : CertificateRadioType.NEW;
     }
   }
 
@@ -69,6 +72,12 @@ export class PrivateTrunkCertificateCtrl implements ng.IComponentController {
 
   public getFileName(certId: string): any {
     return _.get(_.find(this.certFileNameIdMap, { certId: certId }), 'fileName', '');
+  }
+
+  public changeOption() {
+    this.onChangeOptionFn({
+      isCertificateDefault: (this.certificateRadio === CertificateRadioType.DEFAULT),
+    });
   }
 
   public deleteCert(certId: string): void {
@@ -92,7 +101,9 @@ export class PrivateTrunkCertificateComponent implements ng.IComponentOptions {
     formattedCertList: '<',
     certFileNameIdMap: '<',
     isImporting: '<',
+    isCertificateDefault: '<',
     onChangeFn: '&',
     onDeleteCertFn: '&',
+    onChangeOptionFn: '&',
   };
 }

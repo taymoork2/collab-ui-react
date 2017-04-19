@@ -48,10 +48,7 @@ require('./_devices.scss');
               return service.id === 'squared-fusion-uc';// || service.id === 'squared-fusion-cal';
             }).some().value();
           });
-          var atlasF237ResourceGroupsPromise = FeatureToggleService.atlasF237ResourceGroupGetStatus().then(function (feature) {
-            vm.atlasF237ResourceGroups = feature;
-          });
-          $q.all([ataPromise, hybridPromise, personalPromise, placeCalendarPromise, anyCalendarEnabledPromise, atlasF237ResourceGroupsPromise, fetchDetailsForLoggedInUser()]).finally(function () {
+          $q.all([ataPromise, hybridPromise, personalPromise, placeCalendarPromise, anyCalendarEnabledPromise, fetchDetailsForLoggedInUser()]).finally(function () {
             vm.addDeviceIsDisabled = false;
           });
 
@@ -215,7 +212,6 @@ require('./_devices.scss');
               csdmHybridCalendarFeature: vm.csdmHybridCalendarFeature,
               hybridCalendarEnabledOnOrg: vm.hybridCalendarEnabledOnOrg,
               hybridCallEnabledOnOrg: vm.hybridCallEnabledOnOrg,
-              atlasF237ResourceGroups: vm.atlasF237ResourceGroups,
               title: "addDeviceWizard.newDevice",
               isEntitledToHuron: vm.isOrgEntitledToHuron(),
               isEntitledToRoomSystem: vm.isOrgEntitledToRoomSystem(),
@@ -295,7 +291,6 @@ require('./_devices.scss');
               csdmHybridCalendarFeature: vm.csdmHybridCalendarFeature,
               hybridCalendarEnabledOnOrg: vm.hybridCalendarEnabledOnOrg,
               hybridCallEnabledOnOrg: vm.hybridCallEnabledOnOrg,
-              atlasF237ResourceGroups: vm.atlasF237ResourceGroups,
               title: "addDeviceWizard.newDevice",
               isEntitledToHuron: vm.isOrgEntitledToHuron(),
               isEntitledToRoomSystem: vm.isOrgEntitledToRoomSystem(),
