@@ -27,6 +27,11 @@ class CmcUserDetailsSettingsController implements ng.IComponentController {
 
   public cancel(): void {
     this.showButtons = false;
+    this.entitled = this.isEntitled();
+    this.mobile = this.mobileNumber();
+  }
+  public changedNumber(): void {
+    this.showButtons = true;
   }
 
   public toggleClick(value): void {
