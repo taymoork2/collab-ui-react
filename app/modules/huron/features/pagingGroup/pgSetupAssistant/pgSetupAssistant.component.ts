@@ -187,7 +187,6 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
     let pg: IPagingGroup = <IPagingGroup>{
       name: this.name,
       extension: this.number.extension,
-      extensionUUID: this.number.extensionUUID,
       members: members,
       initiatorType: this.initiatorType,
       initiators: initiators,

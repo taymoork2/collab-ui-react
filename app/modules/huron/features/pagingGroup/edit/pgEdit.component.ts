@@ -17,6 +17,7 @@ class PgEditComponentCtrl implements ng.IComponentController {
 
   //Paging group number
   private number: INumberData;
+  private originalNumber: INumberData;
   private availableNumbers: INumberData[] = [];
 
   //Paging group members
@@ -72,6 +73,7 @@ class PgEditComponentCtrl implements ng.IComponentController {
           this.PagingNumberService.getNumberExtension(this.pgId).then(
             (data: INumberData) => {
               this.number = data;
+              this.originalNumber = data;
             },
             (response) => {
               this.Notification.errorResponse(response, this.pg.name);
@@ -419,11 +421,7 @@ class PgEditComponentCtrl implements ng.IComponentController {
 
   public onCancel(): void {
     this.name = this.pg.name;
-
-    this.PagingNumberService.getNumberExtension(this.pgId).then(
-      (data: INumberData) => {
-        this.number = data;
-      });
+    this.number = this.originalNumber;
 
     if (this.pg.initiatorType !== undefined) {
       this.initiatorType = this.pg.initiatorType;
@@ -493,8 +491,7 @@ class PgEditComponentCtrl implements ng.IComponentController {
     }
     let pg: IPagingGroup = <IPagingGroup>{
       name: this.name,
-      extension: this.number.extension,
-      extensionUUID: this.number.extensionUUID,
+      extension: (this.number.extension === this.originalNumber.extension) ? undefined : this.number.extension,
       members: members,
       initiatorType: this.initiatorType,
       initiators: initiators,
