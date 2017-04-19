@@ -3206,6 +3206,7 @@
     "actionCallerInput": "Caller Input",
     "actionCallerInputHint": "Store information that the caller supplies.",
     "actionCallerInputHelp": "Store information that the caller supplies.",
+    "invalidCharacter": "Invalid character entered.",
     "callerInputCnvtDigit": "Convert digit input to text string value.",
     "callerInputMaxLenStr": "Max Length of String",
     "callerInputVariableTooLongMsg": "Maximum length of input variable is exceeded.",

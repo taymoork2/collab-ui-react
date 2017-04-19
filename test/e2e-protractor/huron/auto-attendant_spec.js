@@ -565,31 +565,15 @@ describe('Huron Auto Attendant', function () {
 
       utils.expectIsDisabled(autoattendant.modalsave);
       utils.click(autoattendant.day1);
-      utils.expectIsEnabled(autoattendant.modalsave);
-      utils.click(autoattendant.modalsave);
-      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
-
-    }, 60000);
-
-    it('should add a Holiday Schedule to AA', function () {
-      utils.click(autoattendant.schedule);
       utils.wait(autoattendant.toggleHolidays, 12000);
       utils.click(autoattendant.toggleHolidays);
+      utils.wait(autoattendant.addholiday, 12000);
       utils.click(autoattendant.addholiday);
       utils.sendKeys(autoattendant.holidayName, 'Thanksgiving');
       utils.expectIsDisabled(autoattendant.modalsave);
       utils.click(autoattendant.date);
       utils.click(autoattendant.selectdate);
-      utils.expectIsEnabled(autoattendant.modalsave);
-      utils.click(autoattendant.modalsave);
-      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
-
-    }, 60000);
-
-    it('should add a Recurring Holiday Schedule to AA', function () {
-      utils.click(autoattendant.schedule);
-      utils.wait(autoattendant.toggleHolidays, 12000);
-      utils.click(autoattendant.toggleHolidays);
+      utils.wait(autoattendant.addholiday, 12000);
       utils.click(autoattendant.addholiday);
       utils.click(autoattendant.recurAnnually);
       utils.click(autoattendant.exactDate);
@@ -613,32 +597,11 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsDisplayed(autoattendant.scheduleInfoClosedHours);
       utils.expectIsDisplayed(autoattendant.scheduleInfoHolidayHours);
     }, 60000);
-
-    it('should update a AA Schedule', function () {
-      utils.wait(autoattendant.schedule, 12000);
-      utils.click(autoattendant.schedule);
-      // utils.wait(autoattendant.starttime);
-      utils.click(autoattendant.starttime);
-      utils.sendKeys(autoattendant.starttime, '2:30AM');
-      utils.expectIsEnabled(autoattendant.modalsave);
-      utils.click(autoattendant.modalsave);
-      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
-    }, 60000);
-
     it('should be able to change time zone for AA', function () {
       utils.click(autoattendant.schedule);
-      utils.wait(autoattendant.toggleHolidays, 12000);
       utils.click(autoattendant.timeZone);
       utils.click(autoattendant.firstTimeZoneElement);
-      utils.expectIsEnabled(autoattendant.modalsave);
-      utils.click(autoattendant.modalsave);
-      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
-      expect(autoattendant.aaTimeZone.getText()).toEqual(autoattendant.firstTimeZone);
-    }, 120000);
 
-    it('should delete a AA Schedule', function () {
-      utils.click(autoattendant.schedule);
-      utils.expectIsDisabled(autoattendant.modalsave);
       utils.click(autoattendant.scheduletrash);
 
       utils.wait(autoattendant.toggleHolidays, 12000);
