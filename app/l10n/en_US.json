@@ -6903,6 +6903,7 @@
     "browserTabHeaderTitle": "Partner Management",
     "navHeaderTitle": "Cloud Collaboration Management",
     "next": "Next",
+    "startOver": "Start Over",
     "done": "Done",
     "step1": "Step 1 of 2",
     "step2": "Step 2 of 2",
@@ -6916,7 +6917,7 @@
     "search": {
       "heading": "Create new partner organization",
       "email": "Admin Email Address",
-      "confirmEmail": "Confirm admin email address",
+      "confirmEmail": "Confirm Admin Email Address",
       "name": "Company Name",
       "confirmName": "Confirm Company Name",
       "desc": "Step 1: Enter the email address of the admin for this partner"
@@ -6925,16 +6926,16 @@
       "heading": "Search Results"
     },
     "create": {
-      "desc": "Please set the other partner details",
+      "desc": "Step 2: Enter partner details",
       "type": "Partner Type",
       "lifeCycleCB": "LifeCycle Partner",
       "createPartnerOrg": "Create Partner Org",
       "selectPartnerPlaceholder": "Choose partner type",
       "partnerTypes": {
-        "dist": "Distributor",
-        "tier1": "DVAR (Tier-1 Partner)",
-        "tier2": "Tier-2 Reseller",
-        "none": "Not a Partner"
+        "DISTI": "Distributor",
+        "DVAR": "DVAR (Tier-1 Partner)",
+        "RESELLER": "Tier-2 Reseller",
+        "NA": "Not a Partner"
       }
     }
   },

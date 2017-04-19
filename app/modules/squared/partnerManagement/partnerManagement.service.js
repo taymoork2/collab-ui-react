@@ -13,7 +13,7 @@
       var deferred = $q.defer();
 
       $http({
-        url: UrlConfig.getAdminServiceUrl() + 'organizations/search?emailAddress=' + encodeURIComponent(email),
+        url: UrlConfig.getAdminServiceUrl() + 'organizations/search?emailAddress=' + email, //encodeURIComponent(email),
         method: 'POST',
       }).then(function (resp) {
         deferred.resolve(resp);

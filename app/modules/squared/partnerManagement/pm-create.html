@@ -1,45 +1,56 @@
 <div class="partner-main centered" tabindex="0">
     <div class="row">
-        <div class="main-heading">
+        <div class="main-heading columns medium-12">
             <h2 translate="partnerManagement.search.heading"></h2>
-            <div class="panel-desc">
-                <span class="input-spacing" translate="partnerManagement.create.desc"></span>
-            </div>
-        <div>
-
-        <div class="columns">
-            <label id="email-label" for="email" translate="partnerManagement.search.email"></label>
-            <div>
-                <input name="email" cs-input class="medium-8 input-checked" ng-model="vm.data.email" ng-readonly="true">
-                <i id="check-glyph" class="icon icon-check icon-2x"></i>
+            <div class="desc-panel">
+                <span class="desc-text" translate="partnerManagement.create.desc"></span>
             </div>
 
-            <div class="medium-8">
-                <form name="createForm">
-                    <input cs-input class="form-control" name="name"
-                        ng-model="vm.data.name" cs-input-label="{{'partnerManagement.search.name' | translate}}"
-                        cs-input-messages="vm.messages" required
-                        ng-blur="searchForm.confirmName.$validate()">
+            <div class="create-form">
+                <label id="email-label" for="email" translate="partnerManagement.search.email"></label>
+                <div>
+                    <input name="email" cs-input class="medium-8 input-checked" ng-model="vm.data.email" ng-readonly="true">
+                    <i id="check-glyph" class="icon icon-check icon-2x"></i>
+                </div>
 
-                    <input cs-input name="confirmName" class="form-control"
-                        ng-model="vm.data.confirmName" cs-input-label="{{'partnerManagement.search.confirmName' | translate}}"
-                        cs-input-messages="vm.messages" required validate-match="{{createForm.name.$viewValue}}">
+                <div class="medium-8">
+                    <form name="createForm">
+                        <input cs-input class="form-control" name="name"
+                            ng-model="vm.data.name" cs-input-label="{{'partnerManagement.search.name' | translate}}"
+                            cs-input-messages="vm.messages" required
+                            ng-blur="searchForm.confirmName.$validate()">
 
-                    <label translate="partnerManagement.create.type"></label>
-                    <cs-select ng-model="vm.data.partnerType" options="vm.partnerOptions"
-                        placeholder="vm.partnerPlaceholder" required></cs-select>
+                        <input cs-input name="confirmName" class="form-control"
+                            ng-model="vm.data.confirmName" cs-input-label="{{'partnerManagement.search.confirmName' | translate}}"
+                            cs-input-messages="vm.messages" required validate-match="{{createForm.name.$viewValue}}">
 
-                    <div id="lifeCycle">
-                        <input cs-input type="checkbox" ng-model="vm.data.lifeCyclePartner"
-                        cs-input-label="{{'partnerManagement.create.lifeCycleCB' | translate}}">
-                    </div>
-                </form>
+                        <label translate="partnerManagement.create.type"></label>
+                        <cs-select ng-model="vm.data.partnerType" options="vm.partnerOptions"
+                            placeholder="vm.partnerPlaceholder" required></cs-select>
+
+                        <div id="lifeCycle">
+                            <input cs-input type="checkbox" ng-model="vm.data.lifeCyclePartner"
+                            cs-input-label="{{'partnerManagement.create.lifeCycleCB' | translate}}">
+                        </div>
+                    </form>
+                </div>
             </div>
-
-            <button id="next" type="button" ng-click="vm.create()" class="btn btn--medium pm-next" ng-disabled="createForm.$invalid">
-                <span ng-hide="vm.isLoading" translate="partnerManagement.next"></span>
-                <div ng-show="vm.isLoading" cs-loader class="loader-example--small"></div>
-            </button>
+        </div>
+        <hr class="pm-rule">
+        <div class="row">
+            <div class="columns medium-4 text-left">
+                <span class="pm-step" translate="partnerManagement.step2"></span>
+            </div>
+            <div class="columns medium-8">
+                <div class="text-right">
+                    <button cs-btn id="startOver" type="button" ng-click="vm.startOver()" class="btn pm-btn pm-btn-pad" ng-disabled="vm.isLoading">
+                        <span translate="partnerManagement.startOver"></span>
+                    </button>
+                    <button cs-btn id="next" type="button" ng-click="vm.create()" class="btn btn--primary pm-btn" ng-disabled="createForm.$invalid" loading="vm.isLoading">
+                        <span translate="partnerManagement.next"></span>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </div>

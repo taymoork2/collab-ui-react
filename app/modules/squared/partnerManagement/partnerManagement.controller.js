@@ -1,5 +1,7 @@
 require('./partnerManagement.scss');
 
+/* eslint-disable */
+
 (function () {
   'use strict';
 
@@ -17,7 +19,7 @@ require('./partnerManagement.scss');
     vm.isLoading = false;
 
     vm.partnerPlaceholder = $translate.instant('partnerManagement.create.selectPartnerPlaceholder');
-    vm.partnerTypes = ['dist', 'tier1', 'tier2', 'none'];
+    vm.partnerTypes = ['DISTI', 'DVAR', 'RESELLER', 'NA'];
     vm.partnerOptions = _.map(vm.partnerTypes, function (s) { return $translate.instant('partnerManagement.create.partnerTypes.' + s); });
 
     // Error messages from validators
@@ -27,15 +29,18 @@ require('./partnerManagement.scss');
       noMatch: $translate.instant('partnerManagement.error.noMatch'),
     };
 
-    // form data
-    vm.data = {
-      email: '',
-      confirmEmail: '',
-      name: '',
-      confirmName: '',
-      partnerType: '',
-      lifeCyclePartner: false,
-    };
+    // reset form data
+    function initData() {
+      vm.data = {
+        email: '',
+        confirmEmail: '',
+        name: '',
+        confirmName: '',
+        partnerType: '',
+        lifeCyclePartner: false,
+      };
+    }
+    initData();
 
     vm.search = function () {
       vm.isLoading = true;
@@ -65,6 +70,11 @@ require('./partnerManagement.scss');
     vm.done = function () {
       vm.isLoading = false;
     };
+
+    vm.startOver = function () {
+      initData();
+      $state.go('partnerManagement.search');
+    };
   }
 
   angular
@@ -84,3 +94,5 @@ require('./partnerManagement.scss');
     };
   }
 }());
+
+/* eslint-enable */

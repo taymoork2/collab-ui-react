@@ -8,12 +8,13 @@
   padding-top: 1rem;
   text-align: center;
   outline: none;
+  box-shadow: none;
 
   .main-heading {
-    padding-top: 74px;
+    padding-top: 75px;
     display: inline-block;
     text-align: left;
-    height: 560px;
+    height: 583px;
 
     .results-header {
       float: left;
@@ -36,6 +37,10 @@
       color: $gray-light-1;
     }
 
+    .create-form {
+      padding-top: 16px;
+    }
+
     .input-checked {
       float: left;
     }
@@ -49,7 +54,7 @@
     }
 
     #lifeCycle {
-      padding-top: 10px;
+      padding-top: 15px;
     }
 
     @media only screen and (max-width: 500px) {
@@ -75,13 +80,20 @@
     width: 420px;
   }
 
-  .pm-step {
-    text-align: left;
-    color: $gray-light-1;
+  .pm-rule {
+    margin-bottom: 1rem;
   }
 
-  .pm-next {
-    float: right;
-    width: 127px;
+  .pm-step {
+    color: $gray-light-1;
+    font-size: 16px;
+  }
+
+  .pm-btn {
+    width: 147px;
+  }
+
+  .pm-btn-pad {
+    padding-right: 15px;
   }
 }

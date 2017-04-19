@@ -21,15 +21,17 @@
             </form>
         </div>
       </div>
-      <hr>
+      <hr class="pm-rule">
       <div class="row">
-        <div class="medium-4">
+        <div class="columns medium-4 text-left">
             <span class="pm-step" translate="partnerManagement.step1"></span>
         </div>
-        <div class="medium-8">
-            <button cs-btn id="next" type="button" ng-click="vm.search()" class="btn btn--primary pm-next" ng-disabled="searchForm.$invalid" loading="vm.isLoading">
-                <span translate="partnerManagement.next"></span>
-            </button>
+        <div class="columns medium-8">
+            <div class="text-right">
+                <button cs-btn id="next" type="button" ng-click="vm.search()" class="btn btn--primary pm-btn" ng-disabled="searchForm.$invalid" loading="vm.isLoading">
+                    <span translate="partnerManagement.next"></span>
+                </button>
+            </div>
         </div>
       </div>
     </div>
