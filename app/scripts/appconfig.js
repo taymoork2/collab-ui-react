@@ -386,11 +386,14 @@
             $state.modal.result.finally(function () {
               if (!this.stopPreviousState) {
                 $state.modal = null;
-                var previousState = $previousState.get(modalMemo);
-                if (previousState) {
-                  return $previousState.go(modalMemo).then(function () {
-                    $previousState.forget(modalMemo);
-                  });
+                //context-fields-sidepanel needs to update the view with new values after the update
+                if ($state.current.name !== 'context-fields-sidepanel') {
+                  var previousState = $previousState.get(modalMemo);
+                  if (previousState) {
+                    return $previousState.go(modalMemo).then(function () {
+                      $previousState.forget(modalMemo);
+                    });
+                  }
                 }
               }
             }.bind($state.modal));
@@ -3018,16 +3021,20 @@
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<context-field-modal existing-field-ids="$resolve.existingFieldIds" callback="$resolve.callback" dismiss="$dismiss()" class="context-modal"></context-field-modal>',
+                template: '<context-field-modal existing-field-ids="$resolve.existingFieldIds" callback="$resolve.callback" existing-field-data="$resolve.existingFieldData" dismiss="$dismiss()" class="context-modal"></context-field-modal>',
               },
             },
             params: {
               existingFieldIds: [],
+              existingFieldData: {},
               callback: function () {},
             },
             resolve: {
               existingFieldIds: /* @ngInject */ function ($stateParams) {
                 return $stateParams.existingFieldIds;
+              },
+              existingFieldData: /* @ngInject */ function ($stateParams) {
+                return $stateParams.existingFieldData;
               },
               callback: /* @ngInject */ function ($stateParams) {
                 return $stateParams.callback;
@@ -3038,7 +3045,7 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                template: '<context-fields-sidepanel field="$resolve.field"></context-fields-sidepanel>',
+                template: '<context-fields-sidepanel field="$resolve.field" process="$resolve.process" callback="$resolve.callback"></context-fields-sidepanel>',
               },
               'header@context-fields-sidepanel': {
                 templateUrl: 'modules/context/fields/sidepanel/hybrid-context-fields-sidepanel-header.html',
@@ -3049,10 +3056,18 @@
             },
             params: {
               field: {},
+              process: function () {},
+              callback: function () {},
             },
             resolve: {
               field: /* @ngInject */ function ($stateParams) {
                 return $stateParams.field;
+              },
+              process: /* @ngInject */ function ($stateParams) {
+                return $stateParams.process;
+              },
+              callback: /* @ngInject */ function ($stateParams) {
+                return $stateParams.callback;
               },
             },
           })

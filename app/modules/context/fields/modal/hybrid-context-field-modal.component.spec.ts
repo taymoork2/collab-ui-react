@@ -2,9 +2,20 @@ import fieldModalComponent from './hybrid-context-field-modal.component';
 
 describe('Component: context field modal', () => {
 
-  let serviceSpy;
-  const mockedField = {
+  let createServiceSpy, updateServiceSpy;
+  const mockedCreateField = {
     id: 'id',
+  };
+  const mockedUpdateField = {
+    id: '',
+    description: '',
+    classification: 'ENCRYPTED',
+    classificationUI: 'context.dictionary.fieldPage.encrypted',
+    dataTypeUI: '',
+    dataType: undefined,
+    translations: ({ en_US: '' }),
+    searchable: false,
+    lastUpdated: undefined,
   };
 
   beforeEach(function () {
@@ -21,7 +32,8 @@ describe('Component: context field modal', () => {
     spyOn(this.Notification, 'success');
     spyOn(this.Notification, 'error');
     spyOn(this.Analytics, 'trackEvent');
-    serviceSpy = spyOn(this.ContextFieldsService, 'createAndGetField').and.returnValue(this.$q.resolve(mockedField));
+    createServiceSpy = spyOn(this.ContextFieldsService, 'createAndGetField').and.returnValue(this.$q.resolve(mockedCreateField));
+    updateServiceSpy = spyOn(this.ContextFieldsService, 'updateAndGetField').and.returnValue(this.$q.resolve(mockedUpdateField));
 
     this.$scope.callback = jasmine.createSpy('callback');
     this.$scope.dismiss = jasmine.createSpy('dismiss');
@@ -36,8 +48,8 @@ describe('Component: context field modal', () => {
 
   describe('fixDataForApi', function () {
     it('should correctly fix dataType and classification', function () {
-      this.controller.fieldData.dataType = 'context.dictionary.dataTypes.string';
-      this.controller.fieldData.classification = 'context.dictionary.fieldPage.unencrypted';
+      this.controller.fieldData.dataTypeUI = 'context.dictionary.dataTypes.string';
+      this.controller.fieldData.classificationUI = 'context.dictionary.fieldPage.unencrypted';
       const fixedField = this.controller.fixDataForApi();
       expect(fixedField.dataType).toBe('string');
       expect(fixedField.classification).toBe('UNENCRYPTED');
@@ -79,7 +91,7 @@ describe('Component: context field modal', () => {
     it('should return true if valid id, label, and datatype are selected', function () {
       this.controller.fieldData.id = 'someId';
       this.controller.fieldData.translations.en_US = 'label';
-      this.controller.fieldData.dataType = 'dataType';
+      this.controller.fieldData.dataTypeUI = 'dataType';
       expect(this.controller.buttonEnabled()).toBe(true);
     });
 
@@ -134,7 +146,7 @@ describe('Component: context field modal', () => {
       let callbackCalled = false;
       let dismissCalled = false;
       this.controller.callback = function (field) {
-        expect(field).toEqual(mockedField);
+        expect(field).toEqual(mockedCreateField);
         callbackCalled = true;
       };
       this.controller.dismiss = function () {
@@ -151,9 +163,40 @@ describe('Component: context field modal', () => {
     });
 
     it('should reject if create fails', function (done) {
-      serviceSpy.and.returnValue(this.$q.reject('error'));
+      createServiceSpy.and.returnValue(this.$q.reject('error'));
       this.controller.create().then(() => {
         expect(this.Notification.error).toHaveBeenCalledWith('context.dictionary.fieldPage.fieldCreateFailure');
+        expect(this.Analytics.trackEvent).toHaveBeenCalled();
+        done();
+      }).catch(done.fail);
+      this.$scope.$apply();
+    });
+  });
+
+  describe('update', function () {
+    it('should update the field successfully and make sure callback is called and dismiss is NOT called', function (done) {
+      let callbackCalled = false, dismissCalled = false;
+      this.controller.callback = function (field) {
+        expect(field).toEqual(mockedUpdateField);
+        callbackCalled = true;
+      };
+      this.controller.dismiss = function () {
+        dismissCalled = true;
+      };
+      this.controller.update().then(() => {
+        expect(callbackCalled).toBe(true);
+        expect(dismissCalled).toBe(false);
+        expect(this.Notification.success).toHaveBeenCalledWith('context.dictionary.fieldPage.fieldUpdateSuccess');
+        expect(this.Analytics.trackEvent).toHaveBeenCalled();
+        done();
+      }).catch(done.fail);
+      this.$scope.$apply();
+    });
+
+    it('should reject if update fails', function (done) {
+      updateServiceSpy.and.returnValue(this.$q.reject('error'));
+      this.controller.update().then(() => {
+        expect(this.Notification.error).toHaveBeenCalledWith('context.dictionary.fieldPage.fieldUpdateFailure');
         expect(this.Analytics.trackEvent).toHaveBeenCalled();
         done();
       }).catch(done.fail);

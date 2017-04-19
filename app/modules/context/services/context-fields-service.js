@@ -6,7 +6,7 @@
 
   var searchPath = '/dictionary/field/v1/search';
   var createPath = '/dictionary/field/v1';
-  var getPath = '/dictionary/field/v1/id/';
+  var idPath = '/dictionary/field/v1/id/';
 
   /* @ngInject */
   function contextFieldsService($http, Discovery) {
@@ -15,6 +15,8 @@
       createField: createField,
       getField: getField,
       createAndGetField: createAndGetField,
+      updateField: updateField,
+      updateAndGetField: updateAndGetField,
     };
 
     return service;
@@ -39,7 +41,7 @@
     function getField(id) {
       return Discovery.getEndpointForService('dictionary')
         .then(function (dictionaryUrl) {
-          return $http.get(dictionaryUrl + getPath + id);
+          return $http.get(dictionaryUrl + idPath + id);
         })
         .then(function (response) {
           return response.data;
@@ -55,6 +57,20 @@
 
     function createAndGetField(data) {
       return createField(data)
+        .then(function () {
+          return getField(data.id);
+        });
+    }
+
+    function updateField(data) {
+      return Discovery.getEndpointForService('dictionary')
+        .then(function (dictionaryUrl) {
+          return $http.put(dictionaryUrl + idPath + data.id, data);
+        });
+    }
+
+    function updateAndGetField(data) {
+      return updateField(data)
         .then(function () {
           return getField(data.id);
         });
