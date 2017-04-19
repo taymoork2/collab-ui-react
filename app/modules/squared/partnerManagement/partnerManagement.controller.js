@@ -20,7 +20,11 @@ require('./partnerManagement.scss');
 
     vm.partnerPlaceholder = $translate.instant('partnerManagement.create.selectPartnerPlaceholder');
     vm.partnerTypes = ['DISTI', 'DVAR', 'RESELLER', 'NA'];
-    vm.partnerOptions = _.map(vm.partnerTypes, function (s) { return $translate.instant('partnerManagement.create.partnerTypes.' + s); });
+    vm.partnerOptions = _.map(vm.partnerTypes, function (s) { 
+      return  { label: $translate.instant('partnerManagement.create.partnerTypes.' + s),
+                value: s,
+              };
+            });
 
     // Error messages from validators
     vm.messages = {
@@ -43,6 +47,8 @@ require('./partnerManagement.scss');
     initData();
 
     vm.search = function () {
+      $state.go('partnerManagement.create');
+/*
       vm.isLoading = true;
       svc.search(vm.data.email).then(function (resp) {
         vm.isLoading = false;
@@ -54,9 +60,11 @@ require('./partnerManagement.scss');
           }
         }
       }).catch(function (resp) {
-        vm.isLoadign = false;
-        Notification.errorWithTrackingId(resp, 'partnerManagement.error.searchFailed');
+        vm.isLoading = false;
+        Notification.errorWithTrackingId(resp,
+        'partnerManagement.error.searchFailed', {msg: resp.data.message)};
       });
+*/
     };
 
     vm.create = function () {
@@ -64,11 +72,16 @@ require('./partnerManagement.scss');
       svc.create(vm.data).then(function () {
         vm.isLoading = false;
         $state.go('partnerManagement.createSuccess');
+      }).catch(function (resp) {
+        vm.isLoading = false;
+        Notification.errorWithTrackingId(resp,
+          'partnerManagement.error.createFailed', {msg: resp.data.message});
       });
     };
 
     vm.done = function () {
       vm.isLoading = false;
+      $state.go('support.status');
     };
 
     vm.startOver = function () {

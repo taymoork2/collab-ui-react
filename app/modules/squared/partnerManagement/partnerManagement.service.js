@@ -13,7 +13,7 @@
       var deferred = $q.defer();
 
       $http({
-        url: UrlConfig.getAdminServiceUrl() + 'organizations/search?emailAddress=' + email, //encodeURIComponent(email),
+        url: UrlConfig.getAdminServiceUrl() + 'organizations/search?emailAddress=' + encodeURIComponent(email),
         method: 'POST',
       }).then(function (resp) {
         deferred.resolve(resp);
@@ -28,7 +28,8 @@
       var postData = {
         'partnerOrgName': data.name,
         'partnerAdminEmail': data.email,
-        'partnerType': data.type,
+        'partnerType': data.partnerType.value,
+        'isPartner': true,
         'isLifecyclePartner': ((data.lifeCyclePartner === true) ? 'true' : 'false'),
       };
 

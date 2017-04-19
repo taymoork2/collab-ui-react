@@ -6902,6 +6902,7 @@
   "partnerManagement": {
     "browserTabHeaderTitle": "Partner Management",
     "navHeaderTitle": "Cloud Collaboration Management",
+    "back": "Back",
     "next": "Next",
     "startOver": "Start Over",
     "done": "Done",
@@ -6912,7 +6913,8 @@
       "email": "This is not a valid email address",
       "noMatch": "The values do not match",
       "required": "This field is required",
-      "searchFailed": "Search failed."
+      "searchFailed": "Search failed ({{msg}})",
+      "createFailed": "Create partner org failed ({{msg}})"
     },
     "search": {
       "heading": "Create new partner organization",
@@ -6937,6 +6939,10 @@
         "RESELLER": "Tier-2 Reseller",
         "NA": "Not a Partner"
       }
+    },
+    "created": {
+      "heading": "{{name}} has been created.",
+      "desc": "A new partner organization has been created and an email has been sent to the customer admin."
     }
   },
   "activation": {

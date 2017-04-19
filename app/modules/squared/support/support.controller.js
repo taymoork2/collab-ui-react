@@ -52,8 +52,8 @@ require('./_support.scss');
     }
 
     function gotoPartnerManagement() {
-      var url = $state.href('partnerManagement.search');
-      $window.open(url, '_blank');
+      // Don't open new tab for this tool
+      $state.go('partnerManagement.search');
     }
 
     function initializeShowLinks() {

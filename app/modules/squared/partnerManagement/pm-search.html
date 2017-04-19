@@ -16,7 +16,9 @@
 
                 <input cs-input name="confirmEmail" class="form-control"
                     placeholder="{{'partnerManagement.exampleEmail' | translate}}"
-                    ng-model="vm.data.confirmEmail" cs-input-label="{{'partnerManagement.search.confirmEmail' | translate}}"
+                    ng-model="vm.data.confirmEmail"
+                    ng-model-options="{updateOn: 'default blur', debounce: {default: 800, blur: 0}}"
+                    cs-input-label="{{'partnerManagement.search.confirmEmail' | translate}}"
                     cs-input-messages="vm.messages" required validate-match="{{searchForm.email.$viewValue}}">
             </form>
         </div>
@@ -28,9 +30,14 @@
         </div>
         <div class="columns medium-8">
             <div class="text-right">
-                <button cs-btn id="next" type="button" ng-click="vm.search()" class="btn btn--primary pm-btn" ng-disabled="searchForm.$invalid" loading="vm.isLoading">
-                    <span translate="partnerManagement.next"></span>
-                </button>
+                <div class="text-right">
+                    <button cs-btn id="back" type="button" ng-click="vm.done()" class="btn pm-btn pm-btn-pad" ng-disabled="vm.isLoading">
+                        <span translate="partnerManagement.back"></span>
+                    </button>
+                    <button cs-btn id="next" type="button" ng-click="vm.search()" class="btn btn--primary pm-btn" ng-disabled="searchForm.$invalid" loading="vm.isLoading">
+                        <span translate="partnerManagement.next"></span>
+                    </button>
+                </div>
             </div>
         </div>
       </div>

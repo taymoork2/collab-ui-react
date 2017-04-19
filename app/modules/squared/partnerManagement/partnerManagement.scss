@@ -14,7 +14,7 @@
     padding-top: 75px;
     display: inline-block;
     text-align: left;
-    height: 583px;
+    min-height: 583px;
 
     .results-header {
       float: left;
@@ -53,7 +53,7 @@
       padding-left: 10px;
     }
 
-    #lifeCycle {
+    #lifeCycleDiv {
       padding-top: 15px;
     }
 
