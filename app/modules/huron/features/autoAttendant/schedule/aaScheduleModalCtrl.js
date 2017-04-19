@@ -71,6 +71,14 @@
         day.label = moment.weekdays(day.index);
       });
       vm.openhours.push(_.cloneDeep(openhour));
+
+      _.forEach(vm.openhours, function (value, index) {
+        if ((_.isUndefined(vm.openhours[index].starttime)) || (_.isUndefined(vm.openhours[index].endtime))) {
+          vm.openhours[index].starttime = '08:00 AM';
+          vm.openhours[index].endtime = '05:00 PM';
+        }
+      });
+
     }
 
     //check each hours form that exist in the DOM for validity
@@ -182,6 +190,14 @@
           rankError: false,
           dayError: false,
         });
+
+        _.each(vm.holidays, function (holiday) {
+          if ((_.isUndefined(holiday.starttime)) || (_.isUndefined(holiday.endtime))) {
+            holiday.starttime = '08:00 AM';
+            holiday.endtime = '05:00 PM';
+          }
+        });
+
       } else {
         vm.forceCheckHoliday();
       }
