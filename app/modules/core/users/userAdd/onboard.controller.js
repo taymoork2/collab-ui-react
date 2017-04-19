@@ -1041,7 +1041,7 @@ require('./_user-add.scss');
       enableColumnMenus: false,
       columnDefs: [{
         field: 'name',
-        displayName: $translate.instant('usersPage.nameHeader'),
+        displayName: $translate.instant('common.user'),
         sortable: false,
         cellTemplate: nameTemplate,
         width: '*',
