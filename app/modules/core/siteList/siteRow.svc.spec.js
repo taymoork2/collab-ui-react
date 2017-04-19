@@ -135,7 +135,6 @@ describe('Service: WebExSiteRowService', function () {
     },
     "$$hashKey": "uiGrid-0009",
     "showCSVIconAndResults": true,
-    "asyncErr": false,
   };
 
   // var fakeConferenceService1 = {
@@ -643,7 +642,9 @@ describe('Service: WebExSiteRowService', function () {
     expect(searchResult.showCSVInfo).toEqual(true);
   });
 
-  it('can process "Auth token is invalid"', function () {
+  // TODO: restore this after CSCvd83672 is deployed to WebEx production
+  // - see also: https://jira-eng-chn-sjc1.cisco.com/jira/projects/ATLAS/issues/ATLAS-2022
+  xit('can process "Auth token is invalid"', function () {
 
     WebExSiteRowService.getConferenceServices();
     WebExSiteRowService.configureGrid();

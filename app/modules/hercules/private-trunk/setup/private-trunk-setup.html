@@ -16,7 +16,12 @@
     on-change-fn="$ctrl.setResources(privateTrunkResource)">
   </private-trunk-destination>
   <private-trunk-certificate ng-if="$ctrl.currentStepIndex === 3"
-    on-change-fn="$ctrl.uploadFile(file)">
+    is-importing = "$ctrl.isImporting"
+    formatted-cert-list="$ctrl.formattedCertList"
+    cert-file-name-id-map="$ctrl.certFileNameIdMap"
+    file-name="$ctrl.fileName"
+    on-change-fn="$ctrl.uploadFile(file, fileName)"
+    on-delete-cert-fn="$ctrl.deleteCert(certId)">
   </private-trunk-certificate>
 </div>
 <div class="modal-footer">

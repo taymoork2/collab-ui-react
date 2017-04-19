@@ -4,8 +4,8 @@ import { ScrollIndicatorDirective } from './scrollIndicator.directive';
 
 export default angular
   .module('core.scroll-indicator', [
-    'atlas.templates',
-    'collab.ui',
+    require('scripts/app.templates'),
+    require('collab-ui-ng').default,
   ])
   .directive('scrollIndicator', ScrollIndicatorDirective.factory)
   .name;

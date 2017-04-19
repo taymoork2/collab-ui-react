@@ -137,7 +137,7 @@
         'time': vm.timeStamp,
       };
       var exportFields = [];
-      _.forEach(graphs, function (value) {
+      _.each(graphs, function (value) {
         columnNames[value.valueField] = value.title + ' ' + vm.participants;
       });
       for (var key in columnNames) {
@@ -203,7 +203,7 @@
 
     function getClusterName(graphs, clusterMap) {
       var tempData = [];
-      _.forEach(graphs, function (value) {
+      _.each(graphs, function (value) {
         var clusterName = _.findKey(clusterMap, function (val) {
           return val === value.valueField;
         });

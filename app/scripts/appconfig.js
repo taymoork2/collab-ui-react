@@ -2293,11 +2293,12 @@
             parent: 'sidepanel',
             params: {
               currentCustomer: {},
+              vendor: undefined,
             },
             data: {},
             views: {
               'sidepanel@': {
-                template: '<uc-customer-pstn-orders-overview current-customer="$resolve.currentCustomer"></uc-customer-pstn-orders-overview>',
+                template: '<uc-customer-pstn-orders-overview current-customer="$resolve.currentCustomer" vendor="$resolve.vendor"></uc-customer-pstn-orders-overview>',
               },
             },
             resolve: {
@@ -2309,6 +2310,9 @@
               }),
               currentCustomer: /* @ngInject */ function ($stateParams) {
                 return $stateParams.currentCustomer;
+              },
+              vendor: /* @ngInject */ function ($stateParams) {
+                return $stateParams.vendor;
               },
             },
           })
@@ -2696,20 +2700,25 @@
           .state('hurondetailsBase', {
             abstract: true,
             parent: 'main',
-            templateUrl: 'modules/huron/details/huronDetails.tpl.html',
+            templateUrl: 'modules/huron/details/huronDetails.html',
           })
           .state('hurondetails', {
             url: '/hurondetails',
             parent: 'hurondetailsBase',
             views: {
               'header': {
-                templateUrl: 'modules/huron/details/huronDetailsHeader.tpl.html',
-                controller: 'HuronDetailsHeaderCtrl',
-                controllerAs: 'header',
+                template: '<uc-huron-details-header></uc-huron-details-header>',
               },
               'main': {
                 template: '<div ui-view></div>',
               },
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/huron/details'));
+                }, 'call-details');
+              }),
             },
           })
           .state('huronlines', {

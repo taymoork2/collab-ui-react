@@ -187,7 +187,12 @@
       $q.all([getLeast(start, end, models, limit), getMost(start, end, models, limit), getTotalNoOfUsedDevices(start, end, models)]).then(function (results) {
         stats.least = results[0];
         stats.most = results[1];
-        stats.noOfDevices = results[2];
+        // Sometimes the backend does not return any value for 'number of used device' if zero.
+        if (_.isUndefined(results[2])) {
+          stats.noOfDevices = 0;
+        } else {
+          stats.noOfDevices = results[2];
+        }
 
         addMissingDataFieldFromBackend(stats.least);
         addMissingDataFieldFromBackend(stats.most);

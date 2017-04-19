@@ -11,9 +11,9 @@ export class TelephonyDomainService {
   ) {
     this.url = {
       getActivityLogs: 'activityLogs',
-      telephonyDomain: 'telephonyDomain/',
+      telephonyDomain: 'telephonydomain/',
       moveSite: 'telephonydomain/moveSite',
-      getTelephonyDomains: 'telephonyDomains/customerId/',
+      getTelephonyDomains: 'telephonydomain/customerId/',
       cancelSubmission: 'telephonydomain/cancelSubmission',
       getNumbers: 'telephonydomain/getTelephonyNumberByDomainId/',
       getTelephonyDomain: 'telephonydomain/getTelephonyDomainInfoByDomainId/',
@@ -22,7 +22,7 @@ export class TelephonyDomainService {
   }
 
   public getTelephonyDomains(customerId: string) {
-    const url = `${this.url.getTelephonyDomains}/${customerId}`;
+    const url = `${this.url.getTelephonyDomains}${customerId}`;
     return this.GmHttpService.httpGet(url).then(this.extractData);
   }
 
@@ -31,8 +31,13 @@ export class TelephonyDomainService {
     return this.GmHttpService.httpGet(url).then(this.extractData);
   }
 
+  public getRegionDomains(data: Object) {
+    const url = `${this.url.telephonyDomain}getRegionDomains`;
+    return this.GmHttpService.httpPost(url, null, null, data).then(this.extractData);
+  }
+
   public getRegions() {
-    const url = `${this.url.telephonyDomain}/regions`;
+    const url = `${this.url.telephonyDomain}regions`;
     return this.GmHttpService.httpGet(url).then(this.extractData);
   }
 

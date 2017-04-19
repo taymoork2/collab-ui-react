@@ -5,10 +5,7 @@ export default angular
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
-    'atlas.templates',
-    'collab.ui',
-    'pascalprecht.translate',
-    'ngSanitize',
+    require('angular-sanitize'),
   ])
   .component('pgName',  new PgNameComponent())
   .name;

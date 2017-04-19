@@ -13,6 +13,7 @@ import { ServicesOverviewHybridContextCard } from './hybridContextCard';
 import { ServicesOverviewPrivateTrunkCard } from './privateTrunkCard';
 import { PrivateTrunkPrereqService } from 'modules/hercules/private-trunk/prereq';
 import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
+import { ITProPackService }  from 'modules/core/itProPack/itProPack.service';
 
 export class ServicesOverviewCtrl {
 
@@ -32,6 +33,7 @@ export class ServicesOverviewCtrl {
     private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
     private CloudConnectorService,
     private PrivateTrunkPrereqService: PrivateTrunkPrereqService,
+    private ITProPackService: ITProPackService,
   ) {
     this.cards = [
       new ServicesOverviewMessageCard(this.Authinfo),
@@ -69,6 +71,16 @@ export class ServicesOverviewCtrl {
     this.FeatureToggleService.supports(FeatureToggleService.features.csdmPstn)
       .then(supports => {
         this.forwardEvent('csdmPstnFeatureToggleEventHandler', supports);
+      });
+
+    this.FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity)
+      .then(supports => {
+        this.forwardEvent('hybridDataSecurityFeatureToggleEventHandler', supports);
+      });
+
+    this.ITProPackService.hasITProPackPurchased()
+      .then(result => {
+        this.forwardEvent('itProPackEventHandler', result);
       });
 
     this.FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar)

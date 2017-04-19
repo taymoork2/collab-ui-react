@@ -9,6 +9,9 @@ describe('Controller: AACallerInputCtrl', function () {
   var AAUiModelService, AutoAttendantCeMenuModelService;
   var $rootScope, $scope;
 
+  var customVariableService;
+  var customVarJson = getJSONFixture('huron/json/autoAttendant/aaCustomVariables.json');
+
   var aaUiModel = {
     openHours: {},
   };
@@ -36,7 +39,7 @@ describe('Controller: AACallerInputCtrl', function () {
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function ($controller, _$rootScope_, $q, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _FeatureToggleService_, _AALanguageService_, _AACommonService_) {
+  beforeEach(inject(function ($controller, _$rootScope_, $q, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _CustomVariableService_, _FeatureToggleService_, _AALanguageService_, _AACommonService_) {
 
     $rootScope = _$rootScope_;
     $scope = $rootScope;
@@ -52,29 +55,37 @@ describe('Controller: AACallerInputCtrl', function () {
     featureToggleService = _FeatureToggleService_;
     aaLanguageService = _AALanguageService_;
     aaCommonService = _AACommonService_;
+    customVariableService = _CustomVariableService_;
 
     AAUiModelService = _AAUiModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
     spyOn(featureToggleService, 'supports').and.returnValue($q.resolve(true));
+    spyOn(customVariableService, 'listCustomVariables').and.returnValue($q.resolve(customVarJson));
 
-    aaCommonService.resetFormStatus();
 
     AutoAttendantCeMenuModelService.clearCeMenuMap();
     aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+    aaUiModel.closedHours = AutoAttendantCeMenuModelService.newCeMenu();
 
     $scope.schedule = schedule;
     $scope.index = index;
     $scope.menuId = menuId;
 
-    var menu = AutoAttendantCeMenuModelService.newCeMenuEntry();
+    var menuOpen = AutoAttendantCeMenuModelService.newCeMenuEntry();
+    var menuClosed = AutoAttendantCeMenuModelService.newCeMenuEntry();
 
-    aaUiModel['openHours'].addEntryAt(index, menu);
+    aaUiModel['openHours'].addEntryAt(index, menuOpen);
+    aaUiModel['closedHours'].addEntryAt(index, menuClosed);
+    var action = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+    action.variableName = 'Closed Variable';
+    menuClosed.addAction(action);
 
     controller = $controller('AACallerInputCtrl', {
       $scope: $scope,
     });
+
 
     $scope.$apply();
 
@@ -96,6 +107,27 @@ describe('Controller: AACallerInputCtrl', function () {
     it('should add runActionsOnInput action object menuEntry', function () {
       // appends a play action onto menuEntry
       expect(controller.menuEntry.actions[0].name).toEqual('runActionsOnInput');
+    });
+    it('should set warn to true because of duplicate variable name in session object', function () {
+      controller.nameInput = 'account_no';
+      controller.saveNameInput();
+      expect(controller.isWarn).toEqual(true);
+    });
+    it('should set warn to true because of duplicate variable name in model', function () {
+      controller.nameInput = 'Closed Variable';
+      controller.saveNameInput();
+      expect(controller.isWarn).toEqual(true);
+    });
+    it('should not set warn to true', function () {
+      controller.nameInput = 'Unique name';
+      controller.saveNameInput();
+      expect(controller.isWarn).toEqual(false);
+    });
+    it('should invalid to true', function () {
+      controller.nameInput = undefined;
+      controller.saveNameInput();
+      expect(controller.isWarn).toEqual(false);
+      expect(aaCommonService.isValid()).toEqual(false);
     });
   });
 

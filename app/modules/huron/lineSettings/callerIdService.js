@@ -5,6 +5,7 @@
     'huron.directory-number-service',
     require('modules/core/auth/auth'),
     require('modules/huron/telephony/cmiServices'),
+    require('modules/huron/lineSettings/directoryNumberService'),
   ])
     .service('CallerId', CallerId)
     .name;

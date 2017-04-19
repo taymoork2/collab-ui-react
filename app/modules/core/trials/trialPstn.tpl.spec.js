@@ -60,9 +60,9 @@ describe('Template: trialPstn.tpl.spec.js:', function () {
     beforeEach(findSkipBtn);
 
     function findSkipBtn() {
-      skipBtn = view.find('a.alt-btn-link');
+      skipBtn = view.find('.skip-btn');
     }
-    it('should match the selector \'a.alt-btn-lnk\'', function () {
+    it('should match the selector \'.skip-btn\'', function () {
       expect(skipBtn.length).toBe(1);
     });
 

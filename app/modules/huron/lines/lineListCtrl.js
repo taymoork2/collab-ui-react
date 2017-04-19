@@ -22,6 +22,7 @@
     vm.sortColumn = sortColumn;
     vm.getLineList = getLineList;
     vm.showProviderDetails = showProviderDetails;
+    vm.isBYOPSTNCarrier = isBYOPSTNCarrier;
     $scope.gridData = [];
     $scope.canShowActionsMenu = canShowActionsMenu;
     $scope.canShowExternalNumberDelete = canShowExternalNumberDelete;
@@ -41,6 +42,8 @@
       name: $translate.instant('linesPage.allLines'),
       filterValue: 'all',
     };
+
+    vm.isCallTrial = Authinfo.getLicenseIsTrial('COMMUNICATION', 'ciscouc') && Authinfo.getLicenseIsTrial('SHARED_DEVICES', false);
 
     // Defines Grid Filters "Unassigned" and "Assigned"
     vm.filters = [{
@@ -98,6 +101,10 @@
       return canShowExternalNumberDelete(line);
     }
 
+    function isBYOPSTNCarrier() {
+      return LineListService.getCarrierName() === 'BYO-PSTN';
+    }
+
     function canShowExternalNumberDelete(line) {
       return line.externalNumber && (_.startsWith(line.displayField(), $translate.instant('linesPage.unassignedLines')));
     }
@@ -131,6 +138,7 @@
             };
           });
           vm.gridRefresh = false;
+          vm.vendor = LineListService.getVendor();
         })
         .catch(function (response) {
           Log.debug('Query for line associations failed.');

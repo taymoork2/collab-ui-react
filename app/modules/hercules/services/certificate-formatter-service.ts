@@ -1,4 +1,4 @@
-interface ICertificate {
+export interface ICertificate {
   url: string;
   certId: string;
   orgId: string;
@@ -17,7 +17,7 @@ interface ICertificate {
   certBytes: string;
 }
 
-interface IformattedCertificate {
+export interface IformattedCertificate {
   emailAddress: string;
   commonName: string;
   organizationalUnit: string;
@@ -30,7 +30,7 @@ interface IformattedCertificate {
   expires: string;
 }
 
-interface IcertificatesAsMap {
+export interface IcertificatesAsMap {
   EMAILADDRESS: string;
   CN: string;
   OU: string;
@@ -40,6 +40,10 @@ interface IcertificatesAsMap {
   C: string;
 }
 
+export interface ICertificateFileNameIdMap {
+  certId: string;
+  fileName: string;
+}
 export class CertificateFormatterService {
 
   /* @ngInject */
@@ -76,6 +80,7 @@ export class CertificateFormatterService {
   }
 }
 
-angular
-  .module('Hercules')
-  .service('CertificateFormatterService', CertificateFormatterService);
+export default angular
+  .module('hercules.formatter', [])
+  .service('CertificateFormatterService', CertificateFormatterService)
+  .name;

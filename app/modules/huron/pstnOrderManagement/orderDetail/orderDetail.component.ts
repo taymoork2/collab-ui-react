@@ -1,5 +1,6 @@
 
 const BLOCK_ORDER = 'BLOCK_ORDER';
+const CUSTOMER = 'CUSTOMER';
 export class OrderDetailCtrl implements ng.IComponentController {
   public currentOrder: any;
   public currentCustomer: any;
@@ -7,7 +8,7 @@ export class OrderDetailCtrl implements ng.IComponentController {
   public allNumbersCount = 0;
   public info: Array<any> = [];
   public tosAccepted = true;
-
+  public createdBy = this.$translate.instant('pstnOrderDetail.orderCreatedBy');
   /* @ngInject */
   constructor(
     private PstnSetupService,
@@ -63,6 +64,10 @@ export class OrderDetailCtrl implements ng.IComponentController {
             this.tosAccepted = false;
           }
         });
+      }
+      if (!_.isUndefined(this.currentOrder.createdBy)) {
+        this.createdBy = (this.currentOrder.createdBy).toUpperCase() === CUSTOMER ?
+                       customer.name : this.$translate.instant('pstnOrderDetail.orderCreatedBy');
       }
     });
   }

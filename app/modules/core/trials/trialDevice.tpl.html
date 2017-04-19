@@ -71,12 +71,12 @@
 
 <!-- footer -->
 <div class="modal-footer trials">
-  <a class="alt-btn-link"
+  <button class="skip-btn btn btn--link btn--none"
     ng-hide="!callTrial.areAdditionalDevicesAllowed()"
     ng-click="callTrial.skip(true); trial.nextStep()"
     translate="trialModal.skip">
-  </a>
-  <button class="btn with-slim-offset offset-l"
+  </button>
+  <button class="btn with-slim-offset"
     ng-click="trial.previousStep()"
     ng-disabled="trial.loading"
     translate="common.back">

@@ -277,7 +277,7 @@
           value = (modelValue || viewValue);
         }
         if (value) {
-          return TelephoneNumberService.validateDID(value);
+          return TelephoneNumberService.validateDID(value, vm.customer.countryCode);
         } else {
           return true;
         }
