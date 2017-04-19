@@ -2,13 +2,13 @@
   'use strict';
 
   /* @ngInject */
-  function DisableMediaServiceController(MediaClusterServiceV2, $modalInstance, $q, $state, MediaServiceActivationV2, Notification, ServiceDescriptor) {
+  function DisableMediaServiceController(MediaClusterServiceV2, $modalInstance, $q, $state, MediaServiceActivationV2, Notification, ServiceDescriptor, ClusterService) {
     var vm = this;
     vm.step = '1';
     vm.checkboxModel = false;
     vm.hadError = false;
     vm.serviceId = "squared-fusion-media";
-    vm.clusters = MediaClusterServiceV2.getClustersByConnectorType('mf_mgmt');
+    vm.clusters = ClusterService.getClustersByConnectorType('mf_mgmt');
     vm.clusterNames = _.map(vm.clusters, 'name');
     vm.clusterIds = _.map(vm.clusters, 'id');
     vm.clusterNames.sort();
