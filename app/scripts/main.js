@@ -120,10 +120,11 @@
     'ngTagsInput',
     require('modules/hercules/private-trunk/prereq').default,
     require('modules/hercules/private-trunk/setup').default,
-    require('modules/hercules/services/uss-service'),
-    require('modules/hercules/services/hybrid-services-utils').default,
     require('modules/hercules/services/cert-service').default,
     require('modules/hercules/services/certificate-formatter-service').default,
+    require('modules/hercules/services/hybrid-services-i18n.service').default,
+    require('modules/hercules/services/hybrid-services-utils.service').default,
+    require('modules/hercules/services/uss-service'),
   ]);
 
   angular.module('HDS', ['Core', 'Hercules']);

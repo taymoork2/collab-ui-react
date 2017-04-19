@@ -6,7 +6,7 @@
     .factory('OverviewDataSecurityNotification', OverviewDataSecurityNotification);
 
   /* @ngInject */
-  function OverviewDataSecurityNotification($state, HybridServicesFlagService, HybridServicesUtils) {
+  function OverviewDataSecurityNotification($state, HybridServicesFlagService, HybridServicesUtilsService) {
     return {
       createNotification: function createNotification() {
         var notification = {
@@ -14,7 +14,7 @@
           badgeType: 'success',
           canDismiss: true,
           dismiss: function () {
-            HybridServicesFlagService.raiseFlag(HybridServicesUtils.getAckFlagForHybridServiceId('spark-hybrid-datasecurity'));
+            HybridServicesFlagService.raiseFlag(HybridServicesUtilsService.getAckFlagForHybridServiceId('spark-hybrid-datasecurity'));
           },
           link: function () {
             $state.go('hds.settings');

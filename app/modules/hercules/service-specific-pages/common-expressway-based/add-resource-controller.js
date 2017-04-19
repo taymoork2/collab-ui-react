@@ -7,7 +7,7 @@
 
 
   /* @ngInject */
-  function AddResourceController($modalInstance, $window, $translate, connectorType, serviceId, firstTimeSetup, Notification, FusionClusterService, HybridServicesUtils, $modal, $state, ResourceGroupService) {
+  function AddResourceController($modalInstance, $window, $translate, connectorType, serviceId, firstTimeSetup, Notification, FmsOrgSettings, FusionClusterService, HybridServicesExtrasService, HybridServicesUtilsService, $modal, $state, ResourceGroupService) {
     var vm = this;
     vm.connectors = [];
     vm.warning = warning;
@@ -68,7 +68,7 @@
     vm.updateDropdownMenu = updateDropdownMenu;
 
     findAndPopulateExistingExpressways(vm.connectorType);
-    FusionClusterService.getOrgSettings()
+    FmsOrgSettings.get()
       .then(function (data) {
         vm.releaseChannel = data.expresswayClusterReleaseChannel;
       });
@@ -132,7 +132,7 @@
     }
 
     function addPreregisteredClusterToAllowList(clusterId) {
-      return FusionClusterService.addPreregisteredClusterToAllowList(vm.hostname, 3600, clusterId)
+      return HybridServicesExtrasService.addPreregisteredClusterToAllowList(vm.hostname, 3600, clusterId)
         .then(function () {
           vm.clusterId = clusterId;
         })
@@ -233,7 +233,7 @@
     }
 
     function getIconClassForService() {
-      return HybridServicesUtils.serviceId2Icon(vm.serviceId);
+      return HybridServicesUtilsService.serviceId2Icon(vm.serviceId);
     }
 
     function closeSetupModal() {

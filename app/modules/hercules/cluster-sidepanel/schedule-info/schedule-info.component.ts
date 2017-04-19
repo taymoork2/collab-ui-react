@@ -1,4 +1,5 @@
 import { ICluster } from 'modules/hercules/hybrid-services.types';
+import { HybridServicesI18NService } from 'modules/hercules/services/hybrid-services-i18n.service';
 
 interface ISchedule {
   dateTime: string;
@@ -19,7 +20,7 @@ export class ScheduleInfoSectionComponentCtrl implements ng.IComponentController
   constructor(
     private $q: ng.IQService,
     private $translate: ng.translate.ITranslateService,
-    private FusionClusterService,
+    private HybridServicesI18NService: HybridServicesI18NService,
     private ResourceGroupService,
   ) {}
 
@@ -43,11 +44,11 @@ export class ScheduleInfoSectionComponentCtrl implements ng.IComponentController
 
   private buildSchedule = () => {
     this.schedule = {
-      dateTime: this.FusionClusterService.formatTimeAndDate(this.cluster.upgradeSchedule),
-      urgentScheduleTime: this.FusionClusterService.formatTimeAndDate({
+      dateTime: this.HybridServicesI18NService.formatTimeAndDate(this.cluster.upgradeSchedule),
+      urgentScheduleTime: this.HybridServicesI18NService.formatTimeAndDate({
         scheduleTime: this.cluster.upgradeSchedule.urgentScheduleTime,
         // Simulate every day
-        scheduleDays: { length: 7 },
+        scheduleDays: ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'],
       }),
       timeZone: this.cluster.upgradeSchedule.scheduleTimeZone,
     };

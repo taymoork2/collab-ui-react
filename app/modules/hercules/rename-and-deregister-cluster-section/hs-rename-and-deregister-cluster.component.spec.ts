@@ -1,13 +1,13 @@
 import renameAndDeregisterClusterSection from './index';
 
-describe('Component: hsRenameAndDeregisterClusterSection ', () => {
+describe('Component: hsRenameAndDeregisterClusterSection', () => {
 
   let $componentController, $scope, $q, Notification;
 
   beforeEach(function () {
     this.initModules(renameAndDeregisterClusterSection);
     this.injectDependencies(
-      'FusionClusterService',
+      'HybridServicesClusterService',
       'Notification',
     );
   });
@@ -34,7 +34,7 @@ describe('Component: hsRenameAndDeregisterClusterSection ', () => {
 
   });
 
-  describe ('controller ', function () {
+  describe ('controller', function () {
 
     beforeEach(inject(function (_$componentController_, $rootScope, _$q_, _Notification_) {
       $componentController = _$componentController_;
@@ -69,14 +69,14 @@ describe('Component: hsRenameAndDeregisterClusterSection ', () => {
 
     it ('should call the provided callback function when the name changes', function() {
 
-      let MockFusionClusterService = {
-        setClusterName: function() {
-          return $q.resolve(true);
+      let MockHybridServicesClusterService = {
+        setClusterInformation: function() {
+          return $q.resolve();
         },
       };
 
       let ctrl = $componentController('hsRenameAndDeregisterClusterSection', {
-        FusionClusterService: MockFusionClusterService,
+        HybridServicesClusterService: MockHybridServicesClusterService,
       }, bindings);
       ctrl.clusterName = 'This is a new cluster name';
       ctrl.saveClusterName();

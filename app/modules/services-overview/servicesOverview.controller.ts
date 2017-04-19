@@ -27,11 +27,11 @@ export class ServicesOverviewCtrl {
     private Analytics,
     private Auth,
     private Authinfo,
+    private CloudConnectorService,
     private Config,
     private FeatureToggleService,
     private FusionClusterService,
     private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
-    private CloudConnectorService,
     private PrivateTrunkPrereqService: PrivateTrunkPrereqService,
     private ITProPackService: ITProPackService,
   ) {

@@ -1,5 +1,6 @@
 import { ICluster } from 'modules/hercules/hybrid-services.types';
 import { Notification } from 'modules/core/notifications';
+import { HybridServicesExtrasService } from 'modules/hercules/services/hybrid-services-extras.service';
 
 interface IClusterWithAllowedredirectTarget extends ICluster {
   allowedRedirectTarget: any;
@@ -15,7 +16,7 @@ export class CompleteregistrationOrRemoveExpresswayCtrl implements ng.IComponent
     private $modal,
     private $state: ng.ui.IStateService,
     private $window: ng.IWindowService,
-    private FusionClusterService,
+    private HybridServicesExtrasService: HybridServicesExtrasService,
     private Notification: Notification,
   ) {
 
@@ -23,7 +24,7 @@ export class CompleteregistrationOrRemoveExpresswayCtrl implements ng.IComponent
 
   public $onInit() {
     if (this.cluster && _.size(this.cluster.connectors) === 0) {
-      this.FusionClusterService.getPreregisteredClusterAllowList()
+      this.HybridServicesExtrasService.getPreregisteredClusterAllowList()
         .then(allowList => {
           this.cluster.allowedRedirectTarget = _.find(allowList, { clusterId: this.cluster.id });
         })
