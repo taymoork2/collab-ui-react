@@ -270,7 +270,6 @@ describe('Controller: AADecisionCtrl', function () {
   xdescribe('list Queues', function () {
     beforeEach(inject(function ($q) {
       spyOn(aaQueueService, 'listQueues').and.returnValue($q.resolve(queue));
-      aaCommonService.setRouteQueueToggle(true);
     }));
 
     it('should add the Queue option to the dropdown', function () {

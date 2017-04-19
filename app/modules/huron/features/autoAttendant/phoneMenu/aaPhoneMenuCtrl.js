@@ -334,12 +334,7 @@
       if (AACommonService.isRouteSIPAddressToggle()) {
         addRouteToSipEndPoint();
       }
-
-      if (AACommonService.isRouteQueueToggle()) {
-        getQueues().finally(activate);
-      } else {
-        activate();
-      }
+      getQueues().finally(activate);
     }
 
     init();
