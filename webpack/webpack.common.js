@@ -70,6 +70,11 @@ function webpackConfig(env) {
     }),
   ];
 
+  // remove ProgressPlugin if requested via CLI
+  if (env.noprogress) {
+    config.plugins.shift();
+  }
+
   if (env.analyze) {
     config.plugins.push(new BundleAnalyzerPlugin());
   }

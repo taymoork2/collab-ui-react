@@ -139,7 +139,7 @@ webpack_pid=$!
 npm run lint
 npm run json-verify
 npm run languages-verify
-nice -15 npm run test
+nice -15 npm run test --env.noprogress
 set +e
 
 
