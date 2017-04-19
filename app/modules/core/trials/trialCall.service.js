@@ -1,9 +1,7 @@
 (function () {
   'use strict';
 
-  angular
-    .module('core.trial')
-    .factory('TrialCallService', TrialCallService);
+  module.exports = TrialCallService;
 
   /* @ngInject */
   function TrialCallService(Config) {
