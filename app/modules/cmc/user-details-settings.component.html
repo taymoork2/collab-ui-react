@@ -1,9 +1,9 @@
 
 <cs-sp-buttons ng-if="$ctrl.showButtons">
-  <button id="btn-save" class="btn--primary btn-save" cs-btn loading="saving" ng-click="$ctrl.save()">
+  <button class="btn--primary btn-save" cs-btn loading="saving" ng-click="$ctrl.save()">
     <span translate="common.save"></span>
   </button>
-  <button id="btn-cancel" ng-disabled="saving" translate="common.cancel" ng-click="$ctrl.cancel()"></button>
+  <button ng-disabled="saving" translate="common.cancel" ng-click="$ctrl.cancel()"></button>
 </cs-sp-buttons>
 
 <cs-sp-container>

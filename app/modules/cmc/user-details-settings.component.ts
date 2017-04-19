@@ -73,9 +73,7 @@ class CmcUserDetailsSettingsController implements ng.IComponentController {
   }
 
   private isEntitled(): boolean {
-    return !!_.find(this.user.entitlements, (ent) => {
-      return ent === 'cmc';
-    });
+    return _.includes(this.user.entitlements, 'cmc');
   }
 
   private fakeCmcAndMobileIfNotPresent() {

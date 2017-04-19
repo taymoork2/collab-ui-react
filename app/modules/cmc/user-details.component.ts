@@ -9,8 +9,11 @@ class CmcUserDetailsController implements ng.IComponentController {
   private user: IUser;
 
   /* @ngInject */
-  constructor(private $log: ng.ILogService, private $state: ng.ui.IStateService, private Orgservice, private UserOverviewService) {
-    this.services = new Array<IFeature>();
+  constructor(private $log: ng.ILogService,
+              private $state: ng.ui.IStateService,
+              private Orgservice,
+              private UserOverviewService) {
+    this.services = [];
     this.$log.debug('UserOverviewService', this.UserOverviewService);
     this.$log.debug('Orgservice', this.Orgservice);
     this.services.push({
