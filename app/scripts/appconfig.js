@@ -2687,6 +2687,54 @@
               },
             },
           })
+          .state('pstnWizard', {
+            parent: 'modal',
+            params: {
+              customerId: {},
+              customerName: {},
+              customerEmail: {},
+              customerCommunicationLicenseIsTrial: {},
+              customerRoomSystemsLicenseIsTrial: {},
+            },
+            views: {
+              'modal@': {
+                template: '<uc-pstn-paid-wizard class="modal-content" customer-id="$resolve.customerId" customer-communication-license-is-trial="$resolve.customerCommunicationLicenseIsTrial" customer-room-systems-license-is-trial="$resolve.customerRoomSystemsLicenseIsTrial" dismiss="$dismiss()" close="$close()"></uc-pstn-paid-wizard>',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalClass = 'pstn-numbers';
+                  },
+                },
+              },
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/huron/pstn/pstnWizard'));
+                }, 'pstn-wizard');
+              }),
+              customerSetup: /* @ngInject */ function ($stateParams, PstnSetup, PstnSetupService, Notification) {
+                PstnSetup.setCustomerId($stateParams.customerId);
+                PstnSetup.setCustomerName($stateParams.customerName);
+                PstnSetup.setCustomerEmail($stateParams.customerEmail);
+                PstnSetup.setIsTrial($stateParams.customerCommunicationLicenseIsTrial && $stateParams.customerRoomSystemsLicenseIsTrial);
+                //Reset Carriers
+                PstnSetup.setCarriers([]);
+
+                //Verify the the Terminus Reseller is setup, otherwise setup the Reseller
+                if (!PstnSetup.isResellerExists()) {
+                  PstnSetupService.getResellerV2().then(function () {
+                    PstnSetup.setResellerExists(true);
+                  }).catch(function () {
+                    PstnSetupService.createResellerV2().then(function () {
+                      PstnSetup.setResellerExists(true);
+                    }).catch(function (response) {
+                      Notification.errorResponse(response, 'pstnSetup.resellerCreateError');
+                    });
+                  });
+                }
+              },
+            },
+          })
           .state('pstnSetup', {
             parent: 'modal',
             params: {
