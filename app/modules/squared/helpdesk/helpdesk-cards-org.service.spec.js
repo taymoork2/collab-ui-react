@@ -112,9 +112,11 @@ describe('HelpdeskCardsService', function () {
       sinon.stub(HelpdeskHuronService, 'getOrgSiteInfo');
       var deferredSiteInfoResult = q.defer();
       deferredSiteInfoResult.resolve({
-        "steeringDigit": "7",
+        "steeringDigit": null,
         "siteSteeringDigit": "4",
+        "routingPrefix": "7100",
         "siteCode": "100",
+        "extensionLength": "10",
         "mediaTraversalMode": "TURNOnly",
         "uuid": "7b9ad03e-8c78-4ffa-8680-df50664bcce4",
       });
@@ -144,7 +146,9 @@ describe('HelpdeskCardsService', function () {
       expect(license.volume).toEqual(200);
       expect(license.usage).toEqual(100);
       expect(card.voiceMailPrefix).toBe("4100");
-      expect(card.outboundDialDigit).toBe("7");
+      expect(card.routingPrefix).toBe("7100");
+      expect(card.outboundDialDigit).toEqual("helpdesk.none");
+      expect(card.extensionLength).toBe("10");
       expect(card.dialing).toEqual("helpdesk.dialingPlan.local");
       expect(card.areaCode).toBe("940");
     });

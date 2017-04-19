@@ -21,7 +21,13 @@
       };
       HelpdeskHuronService.getOrgSiteInfo(org.id).then(function (site) {
         callCard.voiceMailPrefix = site.siteSteeringDigit + site.siteCode;
-        callCard.outboundDialDigit = site.steeringDigit;
+        if (_.isEmpty(site.steeringDigit)) {
+          callCard.outboundDialDigit = $translate.instant("helpdesk.none");
+        } else {
+          callCard.outboundDialDigit = site.steeringDigit;
+        }
+        callCard.routingPrefix = site.routingPrefix;
+        callCard.extensionLength = site.extensionLength;
       });
       HelpdeskHuronService.getTenantInfo(org.id).then(function (tenant) {
         if (_.isEmpty(tenant.regionCode)) {
