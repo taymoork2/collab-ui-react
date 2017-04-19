@@ -3109,19 +3109,19 @@
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<context-fieldset-modal existing-fieldset-ids="$resolve.existingFieldsetIds" create-callback="$resolve.createCallback" dismiss="$dismiss()" class="context-modal"></context-fieldset-modal>',
+                template: '<context-fieldset-modal existing-fieldset-ids="$resolve.existingFieldsetIds" callback="$resolve.callback" dismiss="$dismiss()" class="context-modal"></context-fieldset-modal>',
               },
             },
             params: {
               existingFieldsetIds: [],
-              createCallback: function () {},
+              callback: function () {},
             },
             resolve: {
               existingFieldsetIds: /* @ngInject */ function ($stateParams) {
                 return $stateParams.existingFieldsetIds;
               },
-              createCallback: /* @ngInject */ function ($stateParams) {
-                return $stateParams.createCallback;
+              callback: /* @ngInject */ function ($stateParams) {
+                return $stateParams.callback;
               },
             },
           })

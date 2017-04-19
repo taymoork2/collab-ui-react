@@ -50,7 +50,7 @@ require('./_fields-sidepanel.scss');
           vm.inUse = vm.inUse || fieldsetIds.length > 0;
         }).catch(function () {
           vm.fetchFailure = true;
-        }).then(function () {
+        }).finally(function () {
           vm.fetchInProgress = false;
         });
     };
