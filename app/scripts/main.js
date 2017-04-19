@@ -111,7 +111,9 @@
     require('modules/huron/pstnSetup/pstnSelector').default,
     require('modules/huron/overview').default,
     require('modules/huron/lines/deleteExternalNumber').default,
-  ]);
+  ])
+  .constant('ASTParser', require('acorn'))
+  .constant('ASTWalker', require('acorn/dist/walk'));
 
   angular.module('Hercules', [
     'Core',

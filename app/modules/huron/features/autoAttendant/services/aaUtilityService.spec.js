@@ -2,22 +2,41 @@
 
 describe('Service: AAUtilityService', function () {
   var AAUtilityService;
+  var ASTParser;
+  var ASTWalker;
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function (_AAUtilityService_) {
+  beforeEach(inject(function (_AAUtilityService_, _ASTWalker_, _ASTParser_) {
     AAUtilityService = _AAUtilityService_;
+    ASTParser = _ASTParser_;
+    ASTWalker = _ASTWalker_;
+    spyOn(ASTParser, 'parse').and.callThrough();
+    spyOn(ASTWalker, 'ancestor').and.callThrough();
   }));
 
   afterEach(function () {
 
   });
 
-  describe('JS_CONDITIONAL_ARR', function () {
+  describe('CONSTANTS', function () {
 
-    it('should test the service value set', function () {
-      expect(AAUtilityService.JS_CONDITIONAL_ARR).toEqual('checks');
+    it('should test the conditionalArr service value set', function () {
+      expect(AAUtilityService.CONSTANTS.js.conditionalArr).toEqual('checks');
     });
+
+    it('should test the func service value set', function () {
+      expect(AAUtilityService.CONSTANTS.js.func).toEqual('var func = function ()');
+    });
+
+    it('should test the CallExpression service value set', function () {
+      expect(AAUtilityService.CONSTANTS.expressions.CallExpression).toEqual('CallExpression');
+    });
+
+    it('should test the ThisExpression service value set', function () {
+      expect(AAUtilityService.CONSTANTS.expressions.ThisExpression).toEqual('ThisExpression');
+    });
+
   });
 
   describe('removeEscapeChars', function () {
@@ -91,61 +110,45 @@ describe('Service: AAUtilityService', function () {
 
     it('should not fail on undefined expression', function () {
       var string = undefined;
-      var expected = [];
-      var check = AAUtilityService.pullJSPieces(string);
-      expect(check).toEqual(expected);
-    });
-
-    it('should extract an if condition formatted correctly', function () {
-      var string = 'this[\'test\']';
-      var expected = [];
-      expected[0] = 'test';
-      expected[1] = '';
+      var expected = { };
+      expected.ifCondition = '';
+      expected.isConditions = '';
       var check = AAUtilityService.pullJSPieces(string);
       expect(check).toEqual(expected);
     });
 
     it('should not extract an if condition formatted incorrectly', function () {
       var string = 'thsi[\'test\']';
-      var expected = [];
-      expected[0] = '';
-      expected[1] = '';
+      var expected = { };
+      expected.ifCondition = '';
+      expected.isConditions = '';
       var check = AAUtilityService.pullJSPieces(string);
       expect(check).toEqual(expected);
     });
 
     it('should extract an is condition formatted correctly', function () {
       var string = 'var func = function () {var checks = []; checks.push(\'test0 test1\'); return checks.indexOf(this[\'test\']) !== -1 };';
-      var expected = [];
-      expected[0] = 'test';
-      expected[1] = 'test0 test1';
+      var expected = { };
+      expected.ifCondition = 'test';
+      expected.isConditions = 'test0 test1';
       var check = AAUtilityService.pullJSPieces(string);
       expect(check).toEqual(expected);
     });
 
     it('should extract an is condition formatted correctly 2x', function () {
-      var string = 'var func = function () {var checks = []; checks.push(\'test0 test1\'); checks.push(\'test2\') return checks.indexOf(this[\'test\']) !== -1 };';
-      var expected = [];
-      expected[0] = 'test';
-      expected[1] = 'test0 test1, test2';
+      var string = 'var func = function () {var checks = []; checks.push(\'test0 test1\'); checks.push(\'test2\'); return checks.indexOf(this[\'test\']) !== -1 };';
+      var expected = { };
+      expected.ifCondition = 'test';
+      expected.isConditions = 'test0 test1, test2';
       var check = AAUtilityService.pullJSPieces(string);
       expect(check).toEqual(expected);
     });
 
     it('should not extract an is condition formatted incorrectly', function () {
       var string = 'var func = function () {var checks = []; skcehc.push(\'test0 test1\'); skcehc.push(\'test2\') return checks.indexOf(this[\'test\']) !== -1 };';
-      var expected = [];
-      expected[0] = 'test';
-      expected[1] = '';
-      var check = AAUtilityService.pullJSPieces(string);
-      expect(check).toEqual(expected);
-    });
-
-    it('should extract 1/2 of an is condition formatted 1/2 incorrectly', function () {
-      var string = 'var func = function () {var checks = []; checks.push(\'test0 test1\'); skcehc.push(\'test2\') return checks.indexOf(this[\'test\']) !== -1 };';
-      var expected = [];
-      expected[0] = 'test';
-      expected[1] = 'test0 test1';
+      var expected = { };
+      expected.ifCondition = '';
+      expected.isConditions = '';
       var check = AAUtilityService.pullJSPieces(string);
       expect(check).toEqual(expected);
     });

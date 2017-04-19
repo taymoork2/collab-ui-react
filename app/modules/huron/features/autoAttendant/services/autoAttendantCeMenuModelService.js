@@ -567,8 +567,8 @@
         action.if = {};
         exp = parseLeftRightExpression(inAction.conditional.expression);
 
-        action.if.leftCondition = exp[0];
-        action.if.rightCondition = exp[1];
+        action.if.leftCondition = exp.ifCondition;
+        action.if.rightCondition = exp.isConditions;
 
         if (inAction.conditional.true[0].route) {
           action.then = new Action("route", inAction.conditional.true[0].route.destination);
