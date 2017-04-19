@@ -21,7 +21,6 @@
     ctrl.goToExpressway = goToExpressway;
     ctrl.hasAlarms = hasAlarms;
     ctrl.hasNodesViewFeatureToggle = false;
-    ctrl.hasResourceGroupFeatureToggle = false;
     ctrl.hasServices = hasServices;
     ctrl.hideFooter = hideFooter;
     ctrl.hybridServicesComparator = HybridServicesUtils.hybridServicesComparator;
@@ -33,10 +32,6 @@
     ctrl.openSettings = openSettings;
     ctrl.upgradesAutomatically = upgradesAutomatically;
 
-    FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup)
-      .then(function (supported) {
-        ctrl.hasResourceGroupFeatureToggle = supported;
-      });
     FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView)
       .then(function (supported) {
         ctrl.hasNodesViewFeatureToggle = supported;

@@ -9,7 +9,7 @@ require('./_user-csv.scss');
 
   /* @ngInject */
   function UserCsvCtrl($interval, $modal, $q, $rootScope, $scope, $state, $timeout, $translate, $previousState,
-    Analytics, Authinfo, Config, CsvDownloadService, FeatureToggleService, HuronCustomer, LogMetricsService, NAME_DELIMITER,
+    Analytics, Authinfo, Config, CsvDownloadService, HuronCustomer, LogMetricsService, NAME_DELIMITER,
     Notification, ServiceDescriptor, TelephoneNumberService, UserCsvService, Userservice, ResourceGroupService, USSService, DirSyncService) {
     // variables
     var vm = this;
@@ -49,10 +49,6 @@ require('./_user-csv.scss');
       });
     }
 
-    FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup).then(function (enabled) {
-      vm.hasResourceGroupFeatureToggle = enabled;
-    });
-
     var csvPromiseChain = $q.resolve();
     var uniqueEmails = [];
     var processingError;
@@ -71,7 +67,7 @@ require('./_user-csv.scss');
             isCalendarOrCallServiceEntitled = true;
           }
         });
-        vm.handleHybridServicesResourceGroups = isCalendarOrCallServiceEntitled && vm.hasResourceGroupFeatureToggle;
+        vm.handleHybridServicesResourceGroups = isCalendarOrCallServiceEntitled;
       });
 
     var bulkStartLog = null;

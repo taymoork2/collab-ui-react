@@ -17,7 +17,6 @@ class PlaceOverview implements ng.IComponentController {
   private hybridCalendarEnabledOnOrg = false;
   private hybridCallEnabledOnOrg = false;
   private atlasHerculesGoogleCalendarFeatureToggle = false;
-  private atlasF237ResourceGroups = false;
   public generateCodeIsDisabled = true;
 
   private currentPlace: IPlace = <IPlace>{ devices: {} };
@@ -103,11 +102,8 @@ class PlaceOverview implements ng.IComponentController {
         return service.id === 'squared-fusion-uc';
       }).some().value();
     });
-    let atlasF237ResourceGroupsPromise = this.FeatureToggleService.atlasF237ResourceGroupGetStatus().then(feature => {
-      this.atlasF237ResourceGroups = feature;
-    });
 
-    this.$q.all([ataPromise, hybridPromise, placeCalendarPromise, gcalFeaturePromise, anyCalendarEnabledPromise, atlasF237ResourceGroupsPromise, this.fetchDetailsForLoggedInUser()]).finally(() => {
+    this.$q.all([ataPromise, hybridPromise, placeCalendarPromise, gcalFeaturePromise, anyCalendarEnabledPromise, this.fetchDetailsForLoggedInUser()]).finally(() => {
       this.generateCodeIsDisabled = false;
     });
 
@@ -169,7 +165,6 @@ class PlaceOverview implements ng.IComponentController {
         hybridCalendarEnabledOnOrg: this.hybridCalendarEnabledOnOrg,
         hybridCallEnabledOnOrg: this.hybridCallEnabledOnOrg,
         atlasHerculesGoogleCalendarFeatureToggle: this.atlasHerculesGoogleCalendarFeatureToggle,
-        atlasF237ResourceGroups: this.atlasF237ResourceGroups,
         account: {
           deviceType: this.currentPlace.type,
           type: 'shared',
@@ -255,7 +250,6 @@ class PlaceOverview implements ng.IComponentController {
         hybridCalendarEnabledOnOrg: this.hybridCalendarEnabledOnOrg,
         hybridCallEnabledOnOrg: this.hybridCallEnabledOnOrg,
         atlasHerculesGoogleCalendarFeatureToggle: this.atlasHerculesGoogleCalendarFeatureToggle,
-        atlasF237ResourceGroups: this.atlasF237ResourceGroups,
         admin: this.adminUserDetails,
         account: {
           type: 'shared',

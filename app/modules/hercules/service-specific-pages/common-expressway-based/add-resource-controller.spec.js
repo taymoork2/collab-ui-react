@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: AddResourceController', function () {
-  var controller, $scope, $controller, $q, modalInstanceMock, translateMock, windowMock, clusterServiceMock, fusionClusterServiceMock, FeatureToggleServiceMock;
+  var controller, $scope, $controller, $q, modalInstanceMock, translateMock, windowMock, clusterServiceMock, fusionClusterServiceMock, ResourceGroupService;
 
   var clusterIdOfNewCluster = 'c6b4d8f1-6d34-465c-8d6d-b541058fc15e';
   var newConnectorType = 'c_cal';
@@ -11,10 +11,11 @@ describe('Controller: AddResourceController', function () {
   beforeEach(inject(dependencies));
   beforeEach(initController);
 
-  function dependencies($rootScope, _$controller_, _$q_) {
+  function dependencies($rootScope, _$controller_, _$q_, _ResourceGroupService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
+    ResourceGroupService = _ResourceGroupService_;
   }
 
   function initController() {
@@ -158,10 +159,7 @@ describe('Controller: AddResourceController', function () {
       }])),
     };
 
-    FeatureToggleServiceMock = {
-      supports: sinon.stub().returns($q.resolve(false)),
-      features: '',
-    };
+    spyOn(ResourceGroupService, 'getAllAsOptions').and.returnValue($q.resolve({}));
 
     controller = $controller('AddResourceController', {
       $scope: $scope,
@@ -173,7 +171,7 @@ describe('Controller: AddResourceController', function () {
       ClusterService: clusterServiceMock,
       FusionClusterService: fusionClusterServiceMock,
       firstTimeSetup: false,
-      FeatureToggleService: FeatureToggleServiceMock,
+      ResourceGroupService: ResourceGroupService,
     });
     $scope.$apply();
   }

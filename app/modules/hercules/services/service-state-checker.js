@@ -6,7 +6,7 @@
     .service('ServiceStateChecker', ServiceStateChecker);
 
   /*@ngInject*/
-  function ServiceStateChecker($q, $translate, Authinfo, ClusterService, DomainManagementService, FeatureToggleService, FusionClusterService, HybridServicesUtils, NotificationService, Orgservice, ServiceDescriptor, USSService, Notification) {
+  function ServiceStateChecker($translate, Authinfo, ClusterService, DomainManagementService, FusionClusterService, HybridServicesUtils, NotificationService, Orgservice, ServiceDescriptor, USSService, Notification) {
     var isSipUriAcknowledged = false;
     var hasSipUriDomainConfigured = false;
     var hasVerifiedDomains = false;
@@ -220,13 +220,9 @@
     }
 
     function checkUnassignedClusterReleaseChannels() {
-      var defaultReleaseChannelPromise = FusionClusterService.getOrgSettings()
+      FusionClusterService.getOrgSettings()
         .then(function (data) {
           return data.expresswayClusterReleaseChannel;
-        });
-      FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup)
-        .then(function (support) {
-          return support ? defaultReleaseChannelPromise : $q.reject();
         })
         .then(function (defaultReleaseChannel) {
           var clusters = ClusterService.getClustersByConnectorType('c_mgmt');
@@ -258,6 +254,7 @@
             });
           }
         });
+
     }
 
     // Do not show these alarms as the checkUserStatuses() notifications already covers the fact that your have users in the error state
