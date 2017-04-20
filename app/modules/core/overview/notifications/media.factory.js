@@ -6,7 +6,7 @@
     .factory('OverviewHybridMediaNotification', OverviewHybridMediaNotification);
 
   /* @ngInject */
-  function OverviewHybridMediaNotification($state, HybridServicesFlagService, HybridServicesUtils) {
+  function OverviewHybridMediaNotification($state, HybridServicesFlagService, HybridServicesUtilsService) {
     return {
       createNotification: function createNotification() {
         var notification = {
@@ -14,7 +14,7 @@
           badgeType: 'success',
           canDismiss: true,
           dismiss: function () {
-            HybridServicesFlagService.raiseFlag(HybridServicesUtils.getAckFlagForHybridServiceId('squared-fusion-media'));
+            HybridServicesFlagService.raiseFlag(HybridServicesUtilsService.getAckFlagForHybridServiceId('squared-fusion-media'));
           },
           link: function () {
             $state.go('media-service-v2.list');

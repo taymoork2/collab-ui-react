@@ -163,6 +163,17 @@
         ]
       }]
     },
+    "titles": [
+      {
+        "text": "",
+        "bold": false,
+        "font-family": "Verdana",
+        "size": 12,
+        "color": "#6A6B6C",
+        "class": "amcharts-axis-title",
+        "enabled": false
+      }
+    ],
     "type": "serial",
     "theme": "light",
     "path": "./images/",
@@ -283,6 +294,17 @@
       ],
       "enabled": true
     },
+    "titles": [
+      {
+        "text": "dummyTitle",
+        "bold": false,
+        "font-family": "Verdana",
+        "size": 12,
+        "color": "#6A6B6C",
+        "class": "amcharts-axis-title",
+        "enabled": true
+      }
+    ],
     "type": "serial",
     "theme": "light",
     "path": "./images/",
@@ -466,6 +488,17 @@
       ],
       "enabled": true
     },
+    "titles": [
+      {
+        "text": "dummyTitle",
+        "bold": false,
+        "font-family": "Verdana",
+        "size": 12,
+        "color": "#6A6B6C",
+        "class": "amcharts-axis-title",
+        "enabled": true
+      }
+    ],
     "type": "serial",
     "theme": "light",
     "path": "./images/",

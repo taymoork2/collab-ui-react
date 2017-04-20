@@ -93,17 +93,33 @@ require('./_fields-list.scss');
         PII: $translate.instant('context.dictionary.fieldPage.piiEncrypted'),
       };
 
-      field.searchable = searchableMap[field.searchable] || $translate.instant('common.yes');
+      // searchable is a string, so even "false" is truthy. if searchable has a value already, get boolean value
+      // default to true if not provided
+      if (_.isString(field.searchable)) {
+        field.searchable = field.searchable.trim().toLowerCase() === 'true';
+      } else if (_.isBoolean(field.searchable)) {
+        field.searchable = field.searchable;
+      } else {
+        field.searchable = true;
+      }
+      field.searchableUI = searchableMap[field.searchable] || $translate.instant('common.yes');
 
       if (field.dataType) {
-        field.dataType = _.upperFirst(field.dataType.trim());
+        field.dataTypeUI = _.upperFirst(field.dataType.trim());
       }
 
-      field.classification = classificationMap[field.classification] || $translate.instant('context.dictionary.fieldPage.unencrypted');
+      field.classificationUI = classificationMap[field.classification] || $translate.instant('context.dictionary.fieldPage.unencrypted');
 
       if (field.lastUpdated) {
-        field.lastUpdated = $filter('date')(field.lastUpdated, $translate.instant('context.dictionary.fieldPage.dateFormat'));
+        field.lastUpdatedUI = $filter('date')(field.lastUpdated, $translate.instant('context.dictionary.fieldPage.dateFormat'));
       }
+
+      var accessibleMap = {
+        true: $translate.instant('context.dictionary.base'),
+        false: $translate.instant('context.dictionary.custom'),
+      };
+
+      field.publiclyAccessible = accessibleMap[field.publiclyAccessible];
 
       return field;
     }
@@ -155,6 +171,23 @@ require('./_fields-list.scss');
         gridApi.selection.on.rowSelectionChanged($scope, function (row) {
           $state.go('context-fields-sidepanel', {
             field: row.entity,
+            process: processField,
+            callback: function (updatedField) {
+              vm.gridRefresh = true;
+              var index = _.findIndex(vm.fieldsList.allFields, function (current) {
+                return current.id === updatedField.id;
+              });
+              if (index > -1) {
+                var fieldCopy = processField(_.cloneDeep(updatedField));
+                _.fill(vm.fieldsList.allFields, fieldCopy, index, index + 1);
+                vm.gridOptions.data = vm.fieldsList.allFields;
+              }
+              vm.gridRefresh = false;
+              //need to select the row to reopen the side panel to update the view of side panel
+              vm.gridApi.grid.modifyRows(vm.gridOptions.data);
+              vm.gridApi.selection.selectRow(vm.gridOptions.data[index]);
+              filterList(vm.searchStr);
+            },
           });
         });
         gridApi.infiniteScroll.on.needLoadMoreData($scope, function () {
@@ -174,6 +207,7 @@ require('./_fields-list.scss');
         enableColumnResize: true,
         enableRowHeaderSelection: false,
         enableColumnMenus: false,
+        enableRowHashing: false,
         onRegisterApi: onRegisterApi,
         columnDefs: [{
           field: 'id',
@@ -183,20 +217,24 @@ require('./_fields-list.scss');
           field: 'description',
           displayName: $translate.instant('common.description'),
         }, {
-          field: 'dataType',
+          field: 'dataTypeUI',
           displayName: $translate.instant('context.dictionary.fieldPage.dataType'),
           maxWidth: 200,
         }, {
-          field: 'classification',
+          field: 'classificationUI',
           displayName: $translate.instant('context.dictionary.fieldPage.classification'),
           maxWidth: 200,
         }, {
-          field: 'searchable',
+          field: 'searchableUI',
           displayName: $translate.instant('context.dictionary.fieldPage.searchable'),
           maxWidth: 200,
         }, {
-          field: 'lastUpdated',
-          displayName: $translate.instant('context.dictionary.fieldPage.lastUpdated'),
+          field: 'publiclyAccessible',
+          displayName: $translate.instant('context.dictionary.access'),
+          maxWidth: 200,
+        }, {
+          field: 'lastUpdatedUI',
+          displayName: $translate.instant('context.dictionary.dateUpdated'),
           maxWidth: 300,
         }],
       };
@@ -221,14 +259,14 @@ require('./_fields-list.scss');
       }
 
       var lowerStr = str.toLowerCase();
-      return $q.resolve(fieldList.filter(function (field) {
-        return (_.has(field, 'id') ? (field.id.toLowerCase().indexOf(lowerStr) !== -1) : false) ||
-          (_.has(field, 'description') ? (field.description.toLowerCase().indexOf(lowerStr) !== -1) : false) ||
-          (_.has(field, 'dataType') ? (field.dataType.toLowerCase().indexOf(lowerStr) !== -1) : false) ||
-          (_.has(field, 'searchable') ? (field.searchable.toLowerCase().indexOf(lowerStr) !== -1) : false) ||
-          (_.has(field, 'classification') ? (field.classification.toLowerCase().indexOf(lowerStr) !== -1) : false) ||
-          (_.has(field, 'lastUpdated') ? (field.lastUpdated.toLowerCase().indexOf(lowerStr) !== -1) : false);
-      }));
+      var containSearchString = function (field) {
+        var propertiesToCheck = ['id', 'description', 'dataTypeUI', 'searchableUI', 'classificationUI', 'lastUpdatedUI', 'publiclyAccessible'];
+        return _.some(propertiesToCheck, function (property) {
+          var value = _.get(field, property, '').toLowerCase();
+          return _.includes(value, lowerStr);
+        });
+      };
+      return $q.resolve(fieldList.filter(containSearchString));
     }
   }
 }());

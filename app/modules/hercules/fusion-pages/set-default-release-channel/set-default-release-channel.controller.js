@@ -5,7 +5,7 @@
     .controller('SetDefaultReleaseChannelController', SetDefaultReleaseChannelController);
 
   /* @ngInject */
-  function SetDefaultReleaseChannelController($q, $modalInstance, $translate, unassignedClusters, FusionClusterService, Notification, ResourceGroupService) {
+  function SetDefaultReleaseChannelController($q, $modalInstance, $translate, unassignedClusters, FmsOrgSettings, HybridServicesClusterService, Notification, ResourceGroupService) {
     var vm = this;
     var restrictedChannels = ['beta', 'latest'];
     var saving = false;
@@ -26,7 +26,7 @@
 
     function saveReleaseChannel(channel) {
       saving = true;
-      return FusionClusterService.setOrgSettings({
+      return FmsOrgSettings.set({
         expresswayClusterReleaseChannel: channel,
       })
       .then(_.partial(updateAllUnassignedClusters, channel))
@@ -40,15 +40,15 @@
       });
     }
 
-    function updateAllUnassignedClusters(channel) {
+    function updateAllUnassignedClusters(releaseChannel) {
       var promises = _.map(unassignedClusters, function (cluster) {
-        return FusionClusterService.setReleaseChannel(cluster.id, channel);
+        return HybridServicesClusterService.setClusterInformation(cluster.id, { releaseChannel: releaseChannel });
       });
       return $q.all(promises);
     }
 
     function getDefaultReleaseChannel() {
-      return FusionClusterService.getOrgSettings()
+      return FmsOrgSettings.get()
         .then(function (data) {
           vm.releaseChannelSelected = _.find(vm.releaseChannelOptions, {
             value: data.expresswayClusterReleaseChannel.toLowerCase(),

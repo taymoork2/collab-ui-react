@@ -1,8 +1,4 @@
-interface IPreferredLanugageOption {
-  featureToggle: string | null;
-  value: string | '';
-  label: string;
-}
+import { IPreferredLanugageOption } from './preferredLanugage.interfaces';
 
 class PreferredLanguage implements ng.IComponentController {
   public hasSparkCall: boolean;
@@ -13,6 +9,7 @@ class PreferredLanguage implements ng.IComponentController {
   public onPrefLanguageChange: boolean = false;
   public onChangeFn: Function;
   public nonePlaceholder: string;
+  public description: string;
 
   private options: IPreferredLanugageOption[] = [];
   private optionSelected: IPreferredLanugageOption;
@@ -68,5 +65,6 @@ export class PreferredLanguageComponent implements ng.IComponentOptions {
     preferredLanguage: '<',
     preferredLanguageOptions: '<',
     onChangeFn: '&',
+    description: '<',
   };
 }

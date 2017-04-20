@@ -111,7 +111,9 @@
     require('modules/huron/pstnSetup/pstnSelector').default,
     require('modules/huron/overview').default,
     require('modules/huron/lines/deleteExternalNumber').default,
-  ]);
+  ])
+  .constant('ASTParser', require('acorn'))
+  .constant('ASTWalker', require('acorn/dist/walk'));
 
   angular.module('Hercules', [
     'Core',
@@ -120,10 +122,11 @@
     'ngTagsInput',
     require('modules/hercules/private-trunk/prereq').default,
     require('modules/hercules/private-trunk/setup').default,
-    require('modules/hercules/services/uss-service'),
-    require('modules/hercules/services/hybrid-services-utils').default,
     require('modules/hercules/services/cert-service').default,
     require('modules/hercules/services/certificate-formatter-service').default,
+    require('modules/hercules/services/hybrid-services-i18n.service').default,
+    require('modules/hercules/services/hybrid-services-utils.service').default,
+    require('modules/hercules/services/uss-service'),
   ]);
 
   angular.module('HDS', ['Core', 'Hercules']);
@@ -153,6 +156,11 @@
 
   angular.module('Gemini', ['Core']);
 
+  angular.module('CMC', [
+    'Core',
+    require('modules/cmc').default,
+  ]);
+
   module.exports = angular.module('Main', [
     'Core',
     'Squared',
@@ -169,6 +177,7 @@
     'GSS',
     'oc.lazyLoad',
     'Gemini',
+    'CMC',
   ]).config(require('./main.config'))
     .run(require('./main.run'))
     .name;

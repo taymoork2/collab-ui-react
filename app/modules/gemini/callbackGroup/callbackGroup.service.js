@@ -71,7 +71,7 @@
     }
 
     function getNotes(customerId, ccaGroupId) {
-      var url = URL.activityLogs + '/' + customerId + '/' + ccaGroupId + '/add_note';
+      var url = URL.activityLogs + '/' + customerId + '/' + ccaGroupId + '/add_notes_cg';
       return GmHttpService.httpGet(url).then(extractData);
     }
 

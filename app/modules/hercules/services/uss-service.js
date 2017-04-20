@@ -3,14 +3,15 @@
 
   module.exports = angular
     .module('hercules.uss', [
+      require('modules/hercules/services/hybrid-services-i18n.service').default,
+      require('modules/hercules/services/hybrid-services-utils.service').default,
       require('modules/squared/devices/services/CsdmPoller'),
-      require('modules/hercules/services/hybrid-services-utils').default,
     ])
     .service('USSService', USSService)
     .name;
 
   /* @ngInject */
-  function USSService($http, UrlConfig, Authinfo, CsdmPoller, CsdmHubFactory, $translate, HybridServicesUtils) {
+  function USSService($http, UrlConfig, Authinfo, CsdmPoller, CsdmHubFactory, $translate, HybridServicesI18NService) {
     var cachedUserStatusSummary = [];
 
     var USSUrl = UrlConfig.getUssUrl() + 'uss/api/v1';
@@ -257,7 +258,7 @@
 
     function convertToTranslateReplacements(messageReplacementValues) {
       return _.reduce(messageReplacementValues, function (translateReplacements, replacementValue) {
-        translateReplacements[replacementValue.key] = replacementValue.type === 'timestamp' ? HybridServicesUtils.getLocalTimestamp(replacementValue.value) : replacementValue.value;
+        translateReplacements[replacementValue.key] = replacementValue.type === 'timestamp' ? HybridServicesI18NService.getLocalTimestamp(replacementValue.value) : replacementValue.value;
         return translateReplacements;
       }, {});
     }

@@ -224,17 +224,25 @@ require('modules/core/reports/amcharts-export.scss');
           return pc.accountId;
         });
 
-        stats.most = vm.addPeopleCount(stats.most, vm.peopleCount);
-        stats.least = vm.addPeopleCount(stats.least, vm.peopleCount);
+        if (stats.most && stats.most.length > 0) {
+          stats.most = vm.addPeopleCount(stats.most, vm.peopleCount);
+          resolveDeviceData(stats.most, vm.mostUsedDevices)
+            .then(function () {
+              vm.waitForMost = false;
+            });
+        } else {
+          vm.waitForMost = false;
+        }
 
-        resolveDeviceData(stats.most, vm.mostUsedDevices)
-          .then(function () {
-            vm.waitForMost = false;
-          });
-        resolveDeviceData(stats.least, vm.leastUsedDevices)
-          .then(function () {
-            vm.waitForLeast = false;
-          });
+        if (stats.least && stats.least.length > 0) {
+          stats.least = vm.addPeopleCount(stats.least, vm.peopleCount);
+          resolveDeviceData(stats.least, vm.leastUsedDevices)
+            .then(function () {
+              vm.waitForLeast = false;
+            });
+        } else {
+          vm.waitForLeast = false;
+        }
       });
     }
 

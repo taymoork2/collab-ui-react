@@ -22,10 +22,7 @@
           <h4 translate="addDeviceWizard.chooseSharedSpace.existingPlace"></h4>
           <span>&nbsp;</span>
         </div>
-        <div ng-hide="choosePlace.hasRooms || choosePlace.isExistingCollapsed || choosePlace.placesLoaded">
-          <div cs-loader class="loader-example--large"></div>
-        </div>
-        <div class="errorBox" ng-hide="choosePlace.hasRooms || choosePlace.isExistingCollapsed || !choosePlace.placesLoaded">
+        <div class="errorBox" ng-hide="choosePlace.isExistingCollapsed || !choosePlace.filteredView.isInState(choosePlace.filteredView.noplaces)">
           <i class="icon icon-warning"></i>
           <span translate="addDeviceWizard.chooseSharedSpace.noExistingPlaces" ng-if="choosePlace.showPersonal"></span>
           <span translate="addDeviceWizard.chooseSharedSpace.noExistingHuronPlaces" ng-if="choosePlace.deviceType === 'huron'"></span>
@@ -46,20 +43,28 @@
     </div>
   </div>
 
-  <div class="chooseExistingPlace" ng-hide="choosePlace.isExistingCollapsed || !choosePlace.hasRooms || !choosePlace.placesLoaded">
+  <div class="chooseExistingPlace" ng-hide="choosePlace.isExistingCollapsed || choosePlace.filteredView.isInState(choosePlace.filteredView.noplaces)">
     <form class="chooseExistingPlaceForm" onsubmit="$('#next-button').click()">
       <h4 translate="addDeviceWizard.chooseSharedSpace.whichPlace"></h4>
-      <p ng-show="choosePlace.deviceType === 'huron' && !choosePlace.showPersonal" translate="addDeviceWizard.chooseSharedSpace.existingDeskPhonePlaceInstructions"></p>
-      <p ng-show="choosePlace.deviceType !== 'huron' && !choosePlace.showPersonal" translate="addDeviceWizard.chooseSharedSpace.existingCollaborationDevicePlaceInstructions"></p>
+      <p ng-show="choosePlace.deviceType === 'huron' && !choosePlace.showPersonal"
+         translate="addDeviceWizard.chooseSharedSpace.existingDeskPhonePlaceInstructions"></p>
+      <p ng-show="choosePlace.deviceType !== 'huron' && !choosePlace.showPersonal"
+         translate="addDeviceWizard.chooseSharedSpace.existingCollaborationDevicePlaceInstructions"></p>
       <p ng-show="choosePlace.showPersonal" translate="addDeviceWizard.chooseSharedSpace.existingPlaceInstructions"></p>
       <div>
-        <input type="text"
-               ng-model="choosePlace.selected"
-               typeahead="room for room in choosePlace.getRooms() | filter:$viewValue | limitTo:6"
-               typeahead-template-url="placeTemplate.html"
-               typeahead-on-select="choosePlace.selectPlace($item)"
-               placeholder="{{'addDeviceWizard.chooseSharedSpace.selectPlace' | translate}}"
-               typeahead-wait-ms="500"/>
+        <span class="searchInputField">
+          <input type="text"
+                 ng-model="choosePlace.selected"
+                 typeahead="room for room in choosePlace.getRooms($viewValue, 6)"
+                 typeahead-template-url="placeTemplate.html"
+                 typeahead-on-select="choosePlace.selectPlace($item)"
+                 placeholder="{{'addDeviceWizard.chooseSharedSpace.selectPlace' | translate}}"
+                 typeahead-wait-ms="500"/>
+          <div ng-if="choosePlace.filteredView.isInState(choosePlace.filteredView.searching)">
+            <i class="icon icon icon-spinner"></i>
+          </div>
+        </span>
+        <span ng-if="choosePlace.filteredView.isInState(choosePlace.filteredView.emptyresult)" translate="placesPage.noneFound"></span>
         <script type="text/ng-template" id="placeTemplate.html" ng-if="choosePlace.showPersonal">
           <a>
             <span ng-bind-html="match.label.displayName + ' (' + match.label.readablePlaceType + ')' | typeaheadHighlight:query" ></span>

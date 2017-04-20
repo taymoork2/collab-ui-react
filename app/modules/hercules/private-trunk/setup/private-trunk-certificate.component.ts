@@ -11,9 +11,12 @@ export class PrivateTrunkCertificateCtrl implements ng.IComponentController {
   public file: File;
   public fileName: string = '';
   public onChangeFn: Function;
+  public onDeleteCertFn: Function;
+  public onChangeOptionFn: Function;
   public formattedCertList: IformattedCertificate;
   public certLabels: Array<string>;
   public certFileNameIdMap: Array<ICertificateFileNameIdMap> = [];
+  public isImporting: boolean = false;
 
   /* @ngInject */
   constructor(
@@ -43,13 +46,19 @@ export class PrivateTrunkCertificateCtrl implements ng.IComponentController {
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
-    const { formattedCertList, certFileNameIdMap } = changes;
+    const { formattedCertList, certFileNameIdMap, isImporting, isCertificateDefault } = changes;
 
     if (!_.isUndefined(formattedCertList)) {
       this.setFormattedCertList(formattedCertList.currentValue);
     }
     if (!_.isUndefined(certFileNameIdMap)) {
       this.setCertFileNameIdMap(certFileNameIdMap.currentValue);
+    }
+    if (!_.isUndefined(isImporting)) {
+      this.isImporting = isImporting.currentValue;
+    }
+    if (!_.isUndefined(isCertificateDefault)) {
+      this.certificateRadio = isCertificateDefault.currentValue ? CertificateRadioType.DEFAULT : CertificateRadioType.NEW;
     }
   }
 
@@ -64,6 +73,19 @@ export class PrivateTrunkCertificateCtrl implements ng.IComponentController {
   public getFileName(certId: string): any {
     return _.get(_.find(this.certFileNameIdMap, { certId: certId }), 'fileName', '');
   }
+
+  public changeOption() {
+    this.onChangeOptionFn({
+      isCertificateDefault: (this.certificateRadio === CertificateRadioType.DEFAULT),
+    });
+  }
+
+  public deleteCert(certId: string): void {
+    this.onDeleteCertFn({
+      certId: certId,
+    });
+  }
+
   public onChangeFile(file) {
     this.onChangeFn ({
       file: file,
@@ -71,13 +93,17 @@ export class PrivateTrunkCertificateCtrl implements ng.IComponentController {
     });
   }
 }
+
 export class PrivateTrunkCertificateComponent implements ng.IComponentOptions {
   public controller = PrivateTrunkCertificateCtrl;
   public templateUrl = 'modules/hercules/private-trunk/setup/private-trunk-certificate.html';
   public bindings = {
     formattedCertList: '<',
     certFileNameIdMap: '<',
+    isImporting: '<',
+    isCertificateDefault: '<',
     onChangeFn: '&',
-
+    onDeleteCertFn: '&',
+    onChangeOptionFn: '&',
   };
 }

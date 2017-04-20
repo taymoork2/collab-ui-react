@@ -16,13 +16,11 @@ describe('Component: callForward', () => {
     this.initModules(callForwardModule);
     this.injectDependencies(
       '$scope', 'HuronCustomerService', 'Authinfo', '$q',
-      'FeatureToggleService',
     );
     this.$scope.userVoicemailEnabled = true;
     this.$scope.callForward = new CallForward();
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
     this.$scope.ownerType = 'users';
-    spyOn(this.FeatureToggleService, 'supports');
   });
 
   function initComponent() {
@@ -37,9 +35,6 @@ describe('Component: callForward', () => {
   }
 
   describe('Call Forward None (initial state)', () => {
-    beforeEach(function () {
-      this.FeatureToggleService.supports.and.returnValue(this.$q.when(true));
-    });
     beforeEach(initComponent);
 
     it('should have a callForwardNone radio button', function() {
@@ -66,9 +61,6 @@ describe('Component: callForward', () => {
   });
 
   describe('Call Forward All with voicemailEnabled = true', () => {
-    beforeEach(function () {
-      this.FeatureToggleService.supports.and.returnValue(this.$q.when(true));
-    });
     beforeEach(initComponent);
     beforeEach(function () {
       this.view.find(CALL_FWD_ALL_RADIO).click().click();
@@ -96,9 +88,6 @@ describe('Component: callForward', () => {
   });
 
   describe('Call Forward Busy with voicemailEnabled', () => {
-    beforeEach(function () {
-      this.FeatureToggleService.supports.and.returnValue(this.$q.when(true));
-    });
     beforeEach(initComponent);
     beforeEach(function () {
       this.view.find(CALL_FWD_BUSY_RADIO).click().click();
@@ -127,9 +116,6 @@ describe('Component: callForward', () => {
   });
 
   describe('Call Forward Busy External with voicemailEnabled', () => {
-    beforeEach(function () {
-      this.FeatureToggleService.supports.and.returnValue(this.$q.when(false));
-    });
     beforeEach(initComponent);
     beforeEach(function () {
       this.view.find(CALL_FWD_BUSY_RADIO).click().click();
@@ -157,7 +143,6 @@ describe('Component: callForward', () => {
 
   describe('Call Forward All with voicemailEnabled = false and Destination number changed', () => {
     beforeEach(function () {
-      this.FeatureToggleService.supports.and.returnValue(this.$q.when(true));
       //This is User Voicemail or system voicemail setting
       this.$scope.userVoicemailEnabled = true;
     });
@@ -183,7 +168,6 @@ describe('Component: callForward', () => {
   describe('Call Forward Busy with User voicemailEnabled = false and Number changed', () => {
     beforeEach(function () {
       //This is User Voicemail or system voicemail setting
-      this.FeatureToggleService.supports.and.returnValue(this.$q.when(true));
       this.$scope.userVoicemailEnabled = false;
     });
     beforeEach(initComponent);
@@ -204,7 +188,6 @@ describe('Component: callForward', () => {
   describe('Call Forward Busy with ringDuration timer', () => {
     beforeEach(function () {
       this.$scope.voicemailEnabled = false;
-      this.FeatureToggleService.supports.and.returnValue(this.$q.when(true));
     });
     beforeEach(initComponent);
     beforeEach(function () {
@@ -236,17 +219,6 @@ describe('Component: callForward', () => {
       expect(this.controller.validateCallForwardTimer()).toBeFalsy();
       this.controller.callForwardTimer = 114;
       expect(this.controller.validateCallForwardTimer()).toBeTruthy();
-    });
-  });
-
-  describe('call forward timer feature toggle', () => {
-    beforeEach(function () {
-      this.FeatureToggleService.supports.and.returnValue(this.$q.when(false));
-    });
-    beforeEach(initComponent);
-    it('should have not autoanswer section if huron-auto-answer feature toggle is off', function () {
-      expect(this.FeatureToggleService.supports).toHaveBeenCalledWith('huron-cfna-timer');
-      expect(this.view.find(CALL_FWD_NOANSWER_TIMER)).not.toExist();
     });
   });
 });

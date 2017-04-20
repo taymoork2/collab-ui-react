@@ -1,17 +1,14 @@
-import { IConnector, ConnectorAlarmSeverity, ConnectorState, ExtendedConnectorState } from 'modules/hercules/hybrid-services.types';
+import { IConnector, ConnectorAlarmSeverity, ConnectorState, ExtendedConnectorState, StatusIndicatorCSSClass, ServiceSeverityLabel, ServiceSeverity } from 'modules/hercules/hybrid-services.types';
 
 export interface IMergedStateSeverity {
   cssClass: StatusIndicatorCSSClass;
-  label: SeverityLabel;
+  label: ServiceSeverityLabel;
   name: ConnectorState;
-  severity: Severity;
+  severity: ServiceSeverity;
 }
 
 type AlarmCSSClass = 'warning' | 'danger';
-export type StatusIndicatorCSSClass = 'success' | 'warning' | 'danger' | 'disabled';
 type Status = 'operational' | 'impaired' | 'outage' | 'setupNotComplete' | 'unknown';
-type Severity = 0 | 1 | 2 | 3;
-type SeverityLabel = 'ok' | 'unknown' | 'warning' | 'error';
 
 export class HybridServicesClusterStatesService {
   /* @ngInject */
@@ -59,8 +56,8 @@ export class HybridServicesClusterStatesService {
     };
   }
 
-  public getSeverityLabel(value: Severity): SeverityLabel {
-    let label: SeverityLabel = 'ok';
+  public getSeverityLabel(value: ServiceSeverity): ServiceSeverityLabel {
+    let label: ServiceSeverityLabel = 'ok';
     switch (value) {
       case 0:
         label = 'ok';
@@ -78,7 +75,7 @@ export class HybridServicesClusterStatesService {
     return label;
   }
 
-  public getStateSeverity(connectorOrState: IConnector | ExtendedConnectorState): Severity {
+  public getStateSeverity(connectorOrState: IConnector | ExtendedConnectorState): ServiceSeverity {
     // Also note that this function accepts both a connector or just a string
     let state: ExtendedConnectorState = 'running';
     if (!_.isString(connectorOrState)) {
@@ -93,7 +90,7 @@ export class HybridServicesClusterStatesService {
       state = connectorOrState;
     }
 
-    let value: Severity = 0;
+    let value: ServiceSeverity = 0;
     switch (state) {
       case 'running':
         break;
@@ -146,7 +143,7 @@ export class HybridServicesClusterStatesService {
     return connector.alarms && connector.alarms.length > 0;
   }
 
-  private getSeverityCssClass(severity: Severity): StatusIndicatorCSSClass {
+  private getSeverityCssClass(severity: ServiceSeverity): StatusIndicatorCSSClass {
     let cssClass: StatusIndicatorCSSClass = 'success';
     switch (severity) {
       case 0:

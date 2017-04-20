@@ -12,7 +12,7 @@
     });
 
   /* @ngInject */
-  function HerculesNotificationsController($q, $modal, $scope, $state, $translate, FusionClusterService, Notification, NotificationService, ServiceDescriptor, ServiceStateChecker, USSService) {
+  function HerculesNotificationsController($q, $modal, $scope, $state, $translate, FusionClusterService, HybridServicesClusterService, Notification, NotificationService, ServiceDescriptor, ServiceStateChecker, USSService) {
     var vm = this;
     vm.showNotifications = false;
     vm.notificationsLength = notificationsLength;
@@ -86,7 +86,7 @@
 
     function fixClusters(options) {
       var promises = _.map(options.clusters, function (cluster) {
-        return FusionClusterService.setReleaseChannel(cluster.id, options.channel);
+        return HybridServicesClusterService.setClusterInformation(cluster.id, { releaseChannel: options.channel });
       });
       return $q.all(promises)
         .then(function () {

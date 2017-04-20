@@ -386,11 +386,14 @@
             $state.modal.result.finally(function () {
               if (!this.stopPreviousState) {
                 $state.modal = null;
-                var previousState = $previousState.get(modalMemo);
-                if (previousState) {
-                  return $previousState.go(modalMemo).then(function () {
-                    $previousState.forget(modalMemo);
-                  });
+                //context-fields-sidepanel needs to update the view with new values after the update
+                if ($state.current.name !== 'context-fields-sidepanel') {
+                  var previousState = $previousState.get(modalMemo);
+                  if (previousState) {
+                    return $previousState.go(modalMemo).then(function () {
+                      $previousState.forget(modalMemo);
+                    });
+                  }
                 }
               }
             }.bind($state.modal));
@@ -1102,6 +1105,7 @@
               queryuserslist: {},
               currentUserId: '',
               orgInfo: {},
+              preferredLanguageDetails: {},
             },
             data: {
               displayName: 'Overview',
@@ -1121,6 +1125,26 @@
                   done(require('modules/huron/overview'));
                 }, 'user-call-overview');
               }),
+            },
+          })
+          .state('user-overview.userDetails', {
+            template: '<uc-user-details-overview preferred-language-details="$resolve.preferredLanguageDetails"></uc-user-details-overview>',
+            params: {
+              reloadToggle: false,
+            },
+            data: {},
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('user-overview.userDetails').data.displayName = $translate.instant('usersPreview.userDetails');
+              },
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/huron/users/userDetailsOverview'));
+                }, 'uc-user-details-overview');
+              }),
+              preferredLanguageDetails: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams, 'preferredLanguageDetails');
+              },
             },
           })
           .state('user-overview.csdmDevice', {
@@ -1423,6 +1447,24 @@
             controller: 'UserRolesCtrl',
             data: {
               displayName: 'Roles',
+            },
+          })
+
+          .state('user-overview.cmc', {
+            template: '<cmc-user-details-settings user="$resolve.user" ng-if="$resolve.hasCmcFeatureToggle"></cmc-user-details-settings>',
+            params: {
+              service: 'CMC',
+            },
+            resolve: {
+              data: /* @ngInject */ function ($translate, $state) {
+                $state.get('user-overview.cmc').data.displayName = $translate.instant('cmc.menu.mobileConvergenceService');
+              },
+              user: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams, 'currentUser');
+              },
+              hasCmcFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMobileConvergence);
+              },
             },
           })
 
@@ -1880,6 +1922,7 @@
               extensions: {},
               parentState: 'place-overview',
               editService: {},
+              getCurrentPlace: {},
             },
           })
           .state('place-overview.hybrid-services-squared-fusion-cal.history', {
@@ -1901,6 +1944,7 @@
               extensionId: {},
               extensions: {},
               editService: {},
+              getCurrentPlace: {},
             },
           })
           .state('place-overview.hybrid-services-squared-fusion-gcal.history', {
@@ -1922,6 +1966,7 @@
               extensionId: {},
               extensions: {},
               editService: {},
+              getCurrentPlace: {},
             },
           })
           .state('place-overview.hybrid-services-squared-fusion-uc.uc-history', {
@@ -2949,9 +2994,6 @@
             controllerAs: 'resourceList',
             parent: 'main',
             resolve: {
-              hasResourceGroupFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
-              },
               hasCucmSupportFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCucmSupport);
               },
@@ -3018,16 +3060,20 @@
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<context-field-modal existing-field-ids="$resolve.existingFieldIds" callback="$resolve.callback" dismiss="$dismiss()" class="context-modal"></context-field-modal>',
+                template: '<context-field-modal existing-field-ids="$resolve.existingFieldIds" callback="$resolve.callback" existing-field-data="$resolve.existingFieldData" dismiss="$dismiss()" class="context-modal"></context-field-modal>',
               },
             },
             params: {
               existingFieldIds: [],
+              existingFieldData: {},
               callback: function () {},
             },
             resolve: {
               existingFieldIds: /* @ngInject */ function ($stateParams) {
                 return $stateParams.existingFieldIds;
+              },
+              existingFieldData: /* @ngInject */ function ($stateParams) {
+                return $stateParams.existingFieldData;
               },
               callback: /* @ngInject */ function ($stateParams) {
                 return $stateParams.callback;
@@ -3038,7 +3084,7 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                template: '<context-fields-sidepanel field="$resolve.field"></context-fields-sidepanel>',
+                template: '<context-fields-sidepanel field="$resolve.field" process="$resolve.process" callback="$resolve.callback"></context-fields-sidepanel>',
               },
               'header@context-fields-sidepanel': {
                 templateUrl: 'modules/context/fields/sidepanel/hybrid-context-fields-sidepanel-header.html',
@@ -3049,10 +3095,18 @@
             },
             params: {
               field: {},
+              process: function () {},
+              callback: function () {},
             },
             resolve: {
               field: /* @ngInject */ function ($stateParams) {
                 return $stateParams.field;
+              },
+              process: /* @ngInject */ function ($stateParams) {
+                return $stateParams.process;
+              },
+              callback: /* @ngInject */ function ($stateParams) {
+                return $stateParams.callback;
               },
             },
           })
@@ -3076,19 +3130,19 @@
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<context-fieldset-modal existing-fieldset-ids="$resolve.existingFieldsetIds" create-callback="$resolve.createCallback" dismiss="$dismiss()" class="context-modal"></context-fieldset-modal>',
+                template: '<context-fieldset-modal existing-fieldset-ids="$resolve.existingFieldsetIds" callback="$resolve.callback" dismiss="$dismiss()" class="context-modal"></context-fieldset-modal>',
               },
             },
             params: {
               existingFieldsetIds: [],
-              createCallback: function () {},
+              callback: function () {},
             },
             resolve: {
               existingFieldsetIds: /* @ngInject */ function ($stateParams) {
                 return $stateParams.existingFieldsetIds;
               },
-              createCallback: /* @ngInject */ function ($stateParams) {
-                return $stateParams.createCallback;
+              callback: /* @ngInject */ function ($stateParams) {
+                return $stateParams.callback;
               },
             },
           })
@@ -3210,12 +3264,7 @@
           })
           .state('expressway-cluster.settings', {
             url: '/settings',
-            template: '<expressway-cluster-settings-page cluster-id="$resolve.id" has-resource-group-feature-toggle="$resolve.hasResourceGroupFeatureToggle"></expressway-cluster-settings-page>',
-            resolve: {
-              hasResourceGroupFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
-              },
-            },
+            template: '<expressway-cluster-settings-page cluster-id="$resolve.id"></expressway-cluster-settings-page>',
           })
           .state('hybrid-services-connector-sidepanel', {
             parent: 'sidepanel',
@@ -3290,7 +3339,7 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                template: '<cluster-sidepanel-overview cluster-type="\'hds_app\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType" has-resource-group-feature-toggle="$resolve.hasResourceGroupFeatureToggle" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></cluster-sidepanel-overview>',
+                template: '<cluster-sidepanel-overview cluster-type="\'hds_app\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></cluster-sidepanel-overview>',
               },
               'header@hds-cluster-details': {
                 templateUrl: 'modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html',
@@ -3309,9 +3358,6 @@
               },
               connectorType: /* @ngInject */ function ($stateParams) {
                 return $stateParams.connectorType;
-              },
-              hasResourceGroupFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
               },
               hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
@@ -3734,7 +3780,7 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                template: '<cluster-sidepanel-overview cluster-type="\'c_mgmt\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType" has-resource-group-feature-toggle="$resolve.hasResourceGroupFeatureToggle" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></cluster-sidepanel-overview>',
+                template: '<cluster-sidepanel-overview cluster-type="\'c_mgmt\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></cluster-sidepanel-overview>',
               },
               'header@expressway-cluster-sidepanel': {
                 templateUrl: 'modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html',
@@ -3752,9 +3798,6 @@
               },
               connectorType: /* @ngInject */ function ($stateParams) {
                 return $stateParams.connectorType;
-              },
-              hasResourceGroupFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
               },
               hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
@@ -3794,11 +3837,6 @@
             controller: 'ResourceGroupSettingsController',
             controllerAs: 'rgsCtrl',
             parent: 'main',
-            resolve: {
-              hasResourceGroupFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
-              },
-            },
           });
 
         $stateProvider

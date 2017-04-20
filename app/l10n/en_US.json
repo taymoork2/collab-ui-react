@@ -324,7 +324,6 @@
     "paidCiscoSparkMessaging": "Cisco Spark Messaging",
     "paidConf": "Meeting 25 Party",
     "paidCiscoSparkMeetings": "Cisco Spark 25 party Meetings",
-    "paidConfWebEx": "WebEx Meetings",
     "paidAdvancedConferencing": "Advanced Meetings",
     "paidComm": "Call",
     "paidSparkCall": "Cisco Spark Call",
@@ -1467,7 +1466,7 @@
     "simplifiedDialingTitle": "Simplified local dialing",
     "simplifiedDialingDesc": "User does NOT dial the country code specified below.",
     "multipleAreaCodeText": "Not recommended for locations with multiple area codes.",
-    "requireOneToDialLabel": "Require the user to dial 1 before the area code",
+    "requireOneToDialLabel": "Do not require the user to dial 1 before the area code",
     "localDialingTitle": "Local Dialing",
     "localDialingDesc": "Auto-prepend a country code and area code to phone calls for simplified local dialing. Not recommended for locations with multiple area codes.",
     "localDialingNumberTitle": "Prepended Area Code",
@@ -1482,7 +1481,7 @@
     },
     "cos": {
       "title": "Dialing Restrictions",
-      "desc": "Restrict certain dialing features for the enitre organization. You can override each setting for individual users.",
+      "desc": "Restrict certain dialing features for the entire organization. You can override each setting for individual users.",
       "nationalTitle": "National Dialing",
       "nationalDesc": "Choose whether users are allowed to dial national and toll-free numbers.",
       "mobileTitle": "Mobile Dialing",
@@ -2473,8 +2472,8 @@
       "usersAssign": "Assign Users",
       "usersDescription1": "Choose users who you want to gain access to configuration in the resource group (for example, beta testers). You can:",
       "usersDescription2": "Assign them individually from the <a ui-sref='users.list'>users page</a>.",
-      "usersDescription3": "Assign them in bulk using the <a ui-sref='users.list'>CSV template</a>.",
-      "usersDescription4": "Refer to <strong>documentation</strong> if you need help.",
+      "usersDescription3": "Assign them in bulk using the <a ng-click=\"{{onclick}}\">CSV template</a>.",
+      "usersDescription4": "Refer to <a href='{{href}}' target='_blank'>documentation</a> if you need help.",
       "renameGroup": "Rename",
       "renameGroupDescription": "Rename the resource group",
       "removeGroup": "Remove",
@@ -2564,6 +2563,11 @@
       "noAddressesFound": "No addresses found"
     }
   },
+  "cmc": {
+    "menu": {
+      "mobileConvergenceService": "Mobile Convergence Service"
+    }
+  },
   "context": {
     "pageTitle": "Hybrid Context Service",
     "clusters": {
@@ -2585,9 +2589,13 @@
       "status": "Status",
       "inUse": "In Use",
       "notInUse": "Not In Use",
+      "base": "Cisco",
+      "custom": "Custom",
+      "access": "Source",
+      "dateUpdated": "Date Updated",
       "fieldPage": {
         "associatedFieldsets": "Associated Fieldsets",
-        "associatedFieldsetsError": "Unable to load associated fieldsets.",
+        "associatedFieldsetsError": "Unable to retrieve associated fieldsets.",
         "createNew": "Create New Field",
         "fieldCreateSuccess": "Field created successfully! Add field to a fieldset to use in your application.",
         "fieldCreateFailure": "Unable to create field. Try again or contact customer support.",
@@ -2595,6 +2603,8 @@
         "fieldIdPlaceholder": "For eg. Invoice_Number",
         "fieldIdInvalidCharactersError": "Only alpha-numeric characters, hyphen(-) or underscore (_) allowed",
         "fieldIdUniqueError": "Field ID exists. Enter a different ID",
+        "fieldUpdateSuccess": "Field updated successfully!",
+        "fieldUpdateFailure": "Unable to update field. Try again or contact customer support.",
         "dataType": "Data Type",
         "dataTypePlaceholder": "Select Data Type",
         "descriptionPlaceholder": "Enter field details",
@@ -2604,7 +2614,6 @@
         "label": "Label",
         "labelHelpText": "Name of the field displayed in the application",
         "labelPlaceholder": "Enter Label",
-        "lastUpdated": "Date Updated",
         "startSearching": "To begin, search for a field",
         "noSearchResults": "Search yielded no results",
         "fieldReadFailed": "Unable to retrieve fields. Refresh your browser to try again.",
@@ -2614,9 +2623,12 @@
         "encryptedHelpText": "Is encrypted and contains no personally identifiable information",
         "unencrypted": "Unencrypted",
         "unencryptedHelpText": "Is not encrypted and contains no personally identifiable information",
+        "update": "Edit",
         "dateFormat": "MM/dd/yyyy",
         "noneFound": "No fields found",
-        "fieldAttributes": "Field Attributes"
+        "fieldAttributes": "Field Attributes",
+        "inUseTooltip": "Field associated with fieldsets",
+        "notInUseTooltip": "Field not associated with any fieldsets"
       },
       "fieldsetPage": {
         "fieldsetId": "Fieldset ID",
@@ -2627,11 +2639,19 @@
         "fieldsetIdPlaceholder": "For eg. sales.shoppingcart",
         "descriptionPlaceholder": "What is this fieldset for?",
         "createNew": "Create New Fieldset",
+        "fieldsetAttributes": "Fieldset Attributes",
+        "addOrEditFields": "Search and Select fields you want in this fieldset.",
+        "searchFields": "Search Fields",
+        "loadFailure": "Unable to retrieve fields.",
+        "noFields": "No fields available",
         "fieldsetCreateSuccess": "Fieldset created successfully!",
         "fieldsetCreateFailure": "Unable to create fieldset. Try again or contact customer support.",
         "fieldsetIdUniqueError": "Fieldset ID exists. Enter a different ID",
         "fieldsetIdInvalidCharactersError": "Only alpha-numeric characters, period(.), hyphen(-) or underscore (_) allowed",
-        "noneFound": "No fieldsets found"
+        "noneFound": "No fieldsets found",
+        "fieldsetAttributes": "Fieldset Attributes",
+        "inUseTooltip": "Fieldset associated with objects",
+        "notInUseTooltip": "Fieldset not associated with any objects"
       }
     }
   },
@@ -2870,15 +2890,16 @@
       "searchRoomHelpText": "e.g. a42163f4-eb1e-2c03-efcf2-9c5372c2e099",
       "messages": "Where <b>Messages</b> contains",
       "messagesPlaceholder": "e.g. project AND manager",
-      "noMatchesFound": "No Matches Found"
+      "noMatchesFound": "No Matches Found",
+      "dateRangeTooltip": "To generate reports greater than 90 days, contact your admin about our IT Pro Package."
     },
     "searchResults": {
       "backToSearch": "Back to Search",
       "searchInfo": "Search Info",
-      "emailAddress": "Email Address",
+      "emailAddress": "Email Addresses",
       "spaceId": "Space Id",
       "dateRange": "Date Range",
-      "textAndFileName": "Text Messages or File Name Contains",
+      "messages": "Messages Contains",
       "notApplicable": "N/A",
       "reportSummary": "Report Summary",
       "spaces": "Spaces",
@@ -2886,7 +2907,7 @@
       "files": "Files",
       "estReport": "Est. Report Size",
       "generateReport": "Generate Report",
-      "generateText": "Enter report information to generate a report. Generation time will depend on estimated report size.",
+      "generateText": "Enter report information to generate a report. The time to generate the report depends on the estimated report size.",
       "description": "Description",
       "exportFormat": "Export Format",
       "totalReportSize": "Total Report Size",
@@ -3044,11 +3065,9 @@
     "subdomainChangesDescription": "Subdomain changes may take up to a few hours to complete.",
     "subdomainDescription": "Select a subdomain that identifies your company. The subdomain will be used to create {count, plural, =1{a Spark SIP Address} other{Spark SIP Addresses}}. You can change the subdomain name later in your account settings.",
     "updateSubdomainMessage": "Subdomain changes may take up to a few hours to complete. Users will no longer be able to make calls using the previous Spark SIP Address after changes are completed.",
-    "cscUpdateSubdomainMessage": "Subdomain changes may take up to a few hours to complete. After the change, the previous Spark SIP addresses will no longer work for Call Service Connect calls.",
     "subdomainUpdateConfirmation": "We recommend that you perform this step during off hours. Are you sure you want to save your changes?",
-    "cscWarningMessage": "Changing your Spark SIP Address will cause a Call Service Connect outage.  See the <a ng-click=\"{{onclick}}\">documentation for guidance</a>.",
-    "editCSCPartOne": "For the SIP domain change to take effect, you must disable and reenable all active call connectors from the Expressway-Cs.",
-    "editCSCPartTwo": "We recommend that you perform these steps during off hours.  See the <a ng-click=\"{{onclick}}\">documentation for guidance</a>.",
+    "editCSCPartOne": "You have Hybrid Call Service Connect enabled in your organization. You cannot change the Spark SIP Address subdomain unless you temporarily disable Call Service Connect for all your users.",
+    "editCSCPartTwo": "Go to <b>Services > Hybrid Call > Settings</b> and deactivate Call Service Connect. Then return here to change the subdomain.",
     "editCSCPartThree": "Do you still want to edit your Spark SIP Address?",
     "enterSubdomain": "Enter Subdomain",
     "subdomainInvalid": "Invalid subdomain name.",
@@ -3694,7 +3713,7 @@
   },
   "preferredLanguage": {
     "title": "Preferred Language",
-    "description": "Choose the preferred language for this place. This will override the default organization setting.",
+    "description": "Choose the preferred language for this {{module}}. This will override the default organization setting.",
     "placeholder": "Select your language",
     "organizationSettingLabel": "Organization Setting - ",
     "descriptionForCloudberryDevice": "Configure preferred language on the room’s device page.",
@@ -3702,7 +3721,9 @@
     "failedToSaveChanges": "Failed to save preferred Language. Reason:",
     "failedToFetchCmiPlacesInfo": "Failed to fetch places info. Reason:",
     "failedToFetchSiteLanguages": "Failed to fetch languages. Reason:",
-    "failedToFetchSiteLevelLanguage": "Failed to fetch site level language. Reason:"
+    "failedToFetchSiteLevelLanguage": "Failed to fetch site level language. Reason:",
+    "userModule": "user",
+    "placeModule": "place"
   },
   "directoryNumberPanel": {
     "title": "Line Configuration",
@@ -6776,7 +6797,9 @@
       "ST": "Storage",
       "SD": "DX, MX, or SX systems",
       "SB": "Spark Board",
-      "linkedSite": "Legacy WebEx License"
+      "linkedSite": "Legacy WebEx License",
+      "CDC": "Chat and Callback",
+      "CVC": "Chat, Callback and Inbound Call"
     },
     "trial": "Trial",
     "adminUsers": "Administrators",
@@ -6846,6 +6869,8 @@
       "local": "Local"
     },
     "vmprefix": "Voicemail ID Prefix",
+    "routingPrefix": "Routing Prefix",
+    "extensionLength": "Extension Length",
     "outboundDigit": "Outbound Dial Digit",
     "areaCode": "Area Code",
     "customerInfo": "Customer Information",
@@ -6896,7 +6921,8 @@
       "validationFailure": "Unable to validate",
       "editNameSuccess": "Organization name successfully updated.",
       "editNameFailure": "Failed to update customer name."
-    }
+    },
+    "care": "Care"
   },
   "activation": {
     "verificationComplete": "Verification Complete",
@@ -7866,7 +7892,11 @@
       "modifyMessageSucceed": "Message successfully modified.",
       "modifyMessageFailed": "An error occurred modifying message.",
       "updateIncidentSucceed": "Incident {{incidentName}} update succeed.",
-      "updateIncidentFailed": "Incident {{incidentName}} update failed."
+      "updateIncidentFailed": "Incident {{incidentName}} update failed.",
+      "deleteMessageTitle": "Delete Incident Message",
+      "deleteMessageConfirmMsg": "Are you sure you want to permanently delete message?",
+      "deleteMessageSucceed": "Message successfully deleted.",
+      "deleteMessageFailed": "An error occurred deleting message."
     },
     "incidentStatus": {
       "investigating": "Investigating",

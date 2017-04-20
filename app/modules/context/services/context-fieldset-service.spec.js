@@ -224,4 +224,32 @@ describe('Service: contextFieldsetsService', function () {
     });
   });
 
+  describe('getInUse', function () {
+    it('should get in use status', function () {
+      this.$httpBackend.expectGET(dictionaryUrl + '/dictionary/fieldset/v1/status/someId').respond(200, {
+        'status': {
+          'inUse': false,
+        },
+        'refUrl': '/dictionary/fieldset/v1/someId',
+        'id': 'someId',
+      });
+
+      this.ContextFieldsetsService.getInUse('someId').then(function (status) {
+        expect(status).toBe(false);
+      }).catch(fail);
+      this.$httpBackend.flush();
+    });
+
+    it('should reject if error response is returned', function () {
+      this.$httpBackend.expectGET(dictionaryUrl + '/dictionary/fieldset/v1/status/someId').respond(400, 'some error');
+      this.ContextFieldsetsService.getInUse('someId').then(function () {
+        fail('');
+      }).catch(function (errorResponse) {
+        expect(errorResponse.data).toBe('some error');
+        expect(errorResponse.status).toBe(400);
+      });
+      this.$httpBackend.flush();
+    });
+  });
+
 });

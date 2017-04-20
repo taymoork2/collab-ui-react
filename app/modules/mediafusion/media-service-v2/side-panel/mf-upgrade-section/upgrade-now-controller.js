@@ -2,14 +2,14 @@
   'use strict';
 
   /* @ngInject */
-  function UpgradeNowControllerV2(MediaClusterServiceV2, Notification, $modalInstance, clusterId, $translate) {
+  function UpgradeNowControllerV2(ClusterService, Notification, $modalInstance, clusterId, $translate) {
     var vm = this;
-    //clusterId, connector, MediaClusterServiceV2, $translate, $modalInstance, Notification
+    //clusterId, connector, ClusterService, $translate, $modalInstance, Notification
 
     vm.upgrade = function () {
       vm.saving = true;
-      MediaClusterServiceV2
-        .upgradeCluster(clusterId)
+      ClusterService
+        .upgradeSoftware(clusterId, 'mf_mgmt')
         .then(function () {
           $modalInstance.close();
           vm.saving = false;

@@ -1,3 +1,5 @@
+import { IMergedStateSeverity } from 'modules/hercules/services/hybrid-services-cluster-states.service';
+
 export type ClusterTargetType = 'c_mgmt' | 'mf_mgmt' | 'hds_app' | 'ucm_mgmt' | 'cs_mgmt' | 'unknown';
 export type ConnectorAlarmSeverity = 'critical' | 'error' | 'warning' | 'alert';
 export type ConnectorMaintenanceMode = 'on' | 'off' | 'pending';
@@ -6,7 +8,11 @@ export type ConnectorType = 'c_mgmt' | 'c_cal' | 'c_ucmc' | 'mf_mgmt' | 'hds_app
 export type ConnectorUpgradeState = 'upgraded' | 'upgrading' | 'pending';
 export type DayOfWeek = 'sunday' | 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday';
 export type ExtendedConnectorState = ConnectorState | 'has_warning_alarms' | 'has_error_alarms' | 'not_registered' | 'no_nodes_registered';
-export type HybridServiceId = 'squared-fusion-mgmt' | 'squared-fusion-cal' | 'squared-fusion-gcal' | 'squared-fusion-uc' | 'squared-fusion-ec' | 'squared-fusion-media' | 'spark-hybrid-datasecurity' | 'contact-center-context' | 'squared-fusion-khaos' | 'squared-fusion-servicability';
+export type HybridServiceId = 'squared-fusion-mgmt' | 'squared-fusion-cal' | 'squared-fusion-gcal' | 'squared-fusion-uc' | 'squared-fusion-ec' | 'squared-fusion-media' | 'spark-hybrid-datasecurity' | 'contact-center-context' | 'squared-fusion-khaos' | 'squared-fusion-servicability' | 'ept';
+export type ServiceAlarmSeverity = 'error' | 'warning' | 'critical'; // TODO: check if that's really the only values
+export type ServiceSeverity = 0 | 1 | 2 | 3;
+export type ServiceSeverityLabel = 'ok' | 'unknown' | 'warning' | 'error';
+export type StatusIndicatorCSSClass = 'success' | 'warning' | 'danger' | 'disabled';
 export type TimeOfDay = '00:00' | '01:00' | '02:00' | '03:00' | '04:00' | '05:00' | '06:00' | '07:00' | '08:00' | '09:00' | '10:00' | '11:00' | '12:00' | '13:00' | '14:00' | '15:00' | '16:00' | '17:00' | '18:00' | '19:00' | '20:00' | '21:00' | '22:00' | '23:00';
 export type HybridVoicemailStatus = 'NOT_CONFIGURED' | 'REQUESTED' | 'HYBRID_SUCCESS' | 'HYBRID_FAILED' | 'HYBRID_PARTIAL' | undefined ;
 
@@ -24,6 +30,16 @@ export interface IResourceGroup {
   releaseChannel: string;
 }
 
+export interface IUpgradeSchedule {
+  moratoria: IMoratoria[];
+  nextUpgradeWindow: ITimeWindow;
+  scheduleDays: DayOfWeek[];
+  scheduleTime: TimeOfDay;
+  scheduleTimeZone: string;
+  urgentScheduleTime: TimeOfDay;
+  url: string;
+}
+
 export interface ICluster {
   connectors: IConnector[];
   id: string;
@@ -32,17 +48,25 @@ export interface ICluster {
   releaseChannel: string;
   resourceGroupId?: string;
   targetType: ClusterTargetType;
-  upgradeSchedule: {
-    moratoria: IMoratoria[];
-    nextUpgradeWindow: ITimeWindow;
-    scheduleDays: DayOfWeek[];
-    scheduleTime: TimeOfDay;
-    scheduleTimeZone: string;
-    urgentScheduleTime: TimeOfDay;
-    url: string;
-  };
+  upgradeSchedule: IUpgradeSchedule;
   upgradeScheduleUrl: string;
   url: string;
+}
+
+// ClusterService
+export interface IExtendedCluster extends ICluster {
+  aggregates: IClusterAggregate;
+}
+
+// HybridServicesClusterService
+export interface IExtendedClusterFusion extends ICluster {
+  servicesStatuses: IExtendedClusterServiceStatus[];
+}
+
+export interface IExtendedClusterServiceStatus {
+  serviceId: HybridServiceId;
+  state: IMergedStateSeverity;
+  total: number;
 }
 
 export interface IHost {
@@ -61,10 +85,6 @@ export interface IClusterAggregate {
   upgradeAvailable: boolean;
   upgradeWarning: boolean;
   hosts: IHostAggregate[];
-}
-
-export interface IExtendedCluster extends ICluster {
-  aggregates: IClusterAggregate;
 }
 
 export interface IMoratoria {
@@ -158,6 +178,25 @@ export interface IConnectorAlarm {
     text: string,
     link: string,
   }[];
+}
+
+export interface IAlarmReplacementValues {
+  key: string;
+  value: string;
+  type?: string;
+}
+
+export interface IServiceAlarm {
+  url: string;
+  serviceId: HybridServiceId;
+  sourceId: 'uss' | 'ccc' | 'das';
+  sourceType: 'connector' | 'cloud';
+  alarmId: string;
+  severity: ServiceAlarmSeverity;
+  title: string;
+  description: string;
+  key: string;
+  replacementValues: IAlarmReplacementValues[];
 }
 
 export interface IExtendedConnectorAlarm extends IConnectorAlarm {

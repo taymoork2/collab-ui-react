@@ -1,4 +1,5 @@
 import { IExternalLinkedAccount } from '../../common/ExternalLinkedAccount';
+import ICsdmDataModelService = csdm.ICsdmDataModelService;
 
 class EditCalendarService implements ng.IComponentController {
   private dismiss: Function;
@@ -16,7 +17,6 @@ class EditCalendarService implements ng.IComponentController {
       ussProps,
     },
     atlasHerculesGoogleCalendarFeatureToggle: boolean,
-    atlasF237ResourceGroups: boolean,
   };
   private static fusionCal = 'squared-fusion-cal';
   private static fusionGCal = 'squared-fusion-gcal';
@@ -60,7 +60,7 @@ class EditCalendarService implements ng.IComponentController {
   }
 
   /* @ngInject */
-  constructor(private CsdmDataModelService, private $stateParams, private $translate, ServiceDescriptor, private ResourceGroupService, private USSService, private Notification) {
+  constructor(private CsdmDataModelService: ICsdmDataModelService, private $stateParams, private $translate, ServiceDescriptor, private ResourceGroupService, private USSService, private Notification) {
     ServiceDescriptor.getServices()
       .then((services) => {
         let enabledServices: Array<{ id: string }> = ServiceDescriptor.filterEnabledServices(services);
@@ -104,7 +104,7 @@ class EditCalendarService implements ng.IComponentController {
   }
 
   public getResourceGroupShow() {
-    return this.wizardData.atlasF237ResourceGroups && this.resourceGroup && this.resourceGroup.show;
+    return this.resourceGroup && this.resourceGroup.show;
   }
 
   public getShowCalService() {
@@ -116,28 +116,25 @@ class EditCalendarService implements ng.IComponentController {
   }
 
   private fetchResourceGroups() {
-    if (this.wizardData.atlasF237ResourceGroups) {
-      this.ResourceGroupService.getAllAsOptions().then((options) => {
-        if (options.length > 0) {
-          this.resourceGroup.options = this.resourceGroup.options.concat(options);
-          if (this.wizardData.account.cisUuid && this.initialCalService) {
-            this.USSService.getUserProps(this.wizardData.account.cisUuid).then((props) => {
-              if (props.resourceGroups && props.resourceGroups[this.initialCalService]) {
-                let selectedGroup = _.find(this.resourceGroup.options, (group) => {
-                  return group.value === props.resourceGroups[this.initialCalService];
-                });
-                if (selectedGroup) {
-                  this.resourceGroup.selected = selectedGroup;
-                  this.resourceGroup.current = selectedGroup;
-                }
-              } else {
+    this.ResourceGroupService.getAllAsOptions().then((options) => {
+      if (options.length > 0) {
+        this.resourceGroup.options = this.resourceGroup.options.concat(options);
+        if (this.wizardData.account.cisUuid && this.initialCalService) {
+          this.USSService.getUserProps(this.wizardData.account.cisUuid).then((props) => {
+            if (props.resourceGroups && props.resourceGroups[this.initialCalService]) {
+              let selectedGroup = _.find(this.resourceGroup.options, (group) => {
+                return group.value === props.resourceGroups[this.initialCalService];
+              });
+              if (selectedGroup) {
+                this.resourceGroup.selected = selectedGroup;
+                this.resourceGroup.current = selectedGroup;
               }
-            });
-          }
-          this.resourceGroup.show = true;
+            }
+          });
         }
-      });
-    }
+        this.resourceGroup.show = true;
+      }
+    });
   }
 
   private getCalService(entitlements) {
@@ -206,8 +203,7 @@ class EditCalendarService implements ng.IComponentController {
     let directoryNumber = this.wizardData.account.directoryNumber || null;
     let externalNumber = this.wizardData.account.externalNumber || null;
 
-    this.CsdmDataModelService.getPlacesMap().then((list) => {
-      let place = _.find(_.values(list), { cisUuid: this.wizardData.account.cisUuid });
+    this.CsdmDataModelService.reloadPlace(this.wizardData.account.cisUuid).then((place) => {
       if (place) {
         this.CsdmDataModelService.updateCloudberryPlace(
           place,

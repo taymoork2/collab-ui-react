@@ -46,8 +46,7 @@ describe('Controller: RemPlaceController', function () {
         place: place,
       });
 
-      CsdmDataModelService.getPlacesMap();
-      $httpBackend.flush();
+      CsdmDataModelService.isBigOrg = $q.resolve(false);
     }));
 
     afterEach(function () {

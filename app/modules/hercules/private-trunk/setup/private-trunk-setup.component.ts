@@ -22,6 +22,9 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
   public certificateInfo: ICertificateArray;
   public certFileNameIdMap: Array<ICertificateFileNameIdMap> = [];
   public fileName: string;
+  public isImporting: boolean = false;
+  public isCertificateDefault: boolean = true;
+
   /* @ngInject */
   constructor(
     private PrivateTrunkPrereqService: PrivateTrunkPrereqService,
@@ -71,31 +74,83 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
     if (!file) {
       return;
     }
+    this.isImporting = true;
     this.fileName = fileName;
     this.CertService.uploadCertificate(this.Authinfo.getOrgId(), file)
     .then( (res) => this.readCerts(res),
     ).catch (error => {
+      this.isImporting = false;
       this.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
     });
 
   }
 
   public readCerts(res) {
-    let certId = _.get(res, 'data.certId', '');
-    let obj = _.clone(this.certFileNameIdMap);
-    obj.push({ certId: certId, fileName: this.fileName });
-    this.certFileNameIdMap = _.clone(obj);
+    if (res) {
+      let certId = _.get(res, 'data.certId', '');
+      let obj = _.clone(this.certFileNameIdMap);
+      obj.push({ certId: certId, fileName: this.fileName });
+      this.certFileNameIdMap = _.clone(obj);
+    }
     this.CertService.getCerts(this.Authinfo.getOrgId())
     .then( res => {
       this.certificates = res || [];
       this.formattedCertList = this.CertificateFormatterService.formatCerts(this.certificates);
+      this.isImporting = false;
     }, error => {
       this.Notification.errorWithTrackingId(error, 'hercules.settings.call.certificatesCannotRead');
+      this.isImporting = false;
     });
   }
 
+  public deleteCertModal(certId: string): void {
+    this.$modal.open({
+      templateUrl: 'modules/hercules/private-trunk/setup/private-trunk-certificate-delete-confirm.html',
+      type: 'dialog',
+    })
+      .result.then(() => {
+        this.CertService.deleteCert(certId)
+        .then(() => this.getUpdatedCertInfo(certId),
+        ).catch(error => {
+          this.Notification.errorWithTrackingId(error, 'hercules.settings.call.certificatesCannotDelete');
+        });
+      });
+  }
+
+  public deleteCerts(): void {
+    _.forEach(this.formattedCertList, (cert) => {
+      this.CertService.deleteCert(cert.certId);
+    });
+    this.formattedCertList = [];
+    this.certFileNameIdMap  = [];
+  }
+
+  public getUpdatedCertInfo(certId: string) {
+    this.readCerts(null);
+    this.certFileNameIdMap.splice(_.indexOf(this.certFileNameIdMap, { certId: certId } ));
+  }
+
+  public changeOption(isCertificateDefault: boolean): void {
+    this.isCertificateDefault = isCertificateDefault;
+  }
+
+  public isSetupCertificates(): boolean {
+    let isValid = false;
+    if (this.isCertificateDefault) {
+      if (this.formattedCertList && this.formattedCertList.length) {
+        //cleanup the certificates as default Cisco Certificate has been selected
+        this.deleteCerts();
+        isValid = true;
+      }
+      isValid = true;
+    } else if (this.formattedCertList && this.formattedCertList.length) {
+      isValid = true;
+    }
+    return isValid;
+  }
+
   public isNextButton(): boolean {
-    let isNextButton = (!this.isDomain || (_.isArray(this.domainSelected) && this.domainSelected.length > 0));
+    let isNextButton = (!this.isDomain || (_.isArray(this.domainSelected) && this.domainSelected.length > 0) || this.isCertificateDefault);
     return (isNextButton && this.currentStepIndex < PrivateTrunkSetupCtrl.MAX_INDEX) ;
   }
 
@@ -105,6 +160,7 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
       type: 'dialog',
     })
       .result.then(() => {
+        this.deleteCerts();
         this.PrivateTrunkPrereqService.dismissModal();
         this.$state.go('services-overview');
       });

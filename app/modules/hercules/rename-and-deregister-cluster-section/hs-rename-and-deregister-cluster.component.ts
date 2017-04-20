@@ -1,4 +1,6 @@
 import { Notification } from 'modules/core/notifications';
+import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
+import { IToolkitModalService } from 'modules/core/modal';
 
 class RenameAndDeregisterClusterSectionCtrl implements ng.IComponentController {
 
@@ -28,11 +30,11 @@ class RenameAndDeregisterClusterSectionCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
-    private $modal,
-    private $translate: ng.translate.ITranslateService,
+    private $modal: IToolkitModalService,
     private $state: ng.ui.IStateService,
+    private $translate: ng.translate.ITranslateService,
+    private HybridServicesClusterService: HybridServicesClusterService,
     private Notification: Notification,
-    private FusionClusterService,
   ) { }
 
   public $onInit() {
@@ -63,7 +65,7 @@ class RenameAndDeregisterClusterSectionCtrl implements ng.IComponentController {
     }
 
     this.savingNameState = true;
-    this.FusionClusterService.setClusterName(this.clusterId, clusterName)
+    this.HybridServicesClusterService.setClusterInformation(this.clusterId, { name: clusterName })
       .then(() => {
         this.Notification.success('hercules.renameAndDeregisterComponent.clusterNameSaved');
         this.onNameUpdate({ name: clusterName });

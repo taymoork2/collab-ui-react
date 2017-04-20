@@ -12,11 +12,12 @@ describe('EditCalendarService component:', () => {
       '$httpBackend',
       'ServiceDescriptor',
       'CsdmDataModelService',
+      'ResourceGroupService',
       'USSService',
       '$q',
     );
     test = this;
-
+    spyOn(this.ResourceGroupService, 'getAllAsOptions').and.returnValue(this.$q.resolve({}));
   });
 
   let state: any = defaultState();
@@ -290,7 +291,7 @@ describe('EditCalendarService component:', () => {
         id: FUSION_CAL_ENTITLEMENT,
         enabled: true,
       }]));
-      spyOn(test.CsdmDataModelService, 'getPlacesMap').and.returnValue(test.$q.resolve({ 'https://csdm/place.url': { cisUuid: id } }));
+      spyOn(test.CsdmDataModelService, 'reloadPlace').and.returnValue(test.$q.resolve({ cisUuid: id }));
       state.wizardData = {
         state: () => {
           return {
