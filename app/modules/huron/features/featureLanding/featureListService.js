@@ -7,6 +7,7 @@
 
   /* @ngInject */
   function HuronFeaturesListService() {
+
     var service = {
       autoAttendants: autoAttendants,
       callParks: callParks,
@@ -170,7 +171,9 @@
     function orderByCardName(list) {
       return _.sortBy(list, function (item) {
         //converting cardName to lower case as _.sortBy by default does a case sensitive sorting
-        return item.cardName.toLowerCase();
+        if (item.cardName) {
+          return item.cardName.toLowerCase();
+        }
       });
     }
 
