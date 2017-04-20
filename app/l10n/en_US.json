@@ -4999,7 +4999,7 @@
       "clientTypeHeading": "Client Type Distribution",
       "onPremisesHeading": "On-Premises",
       "cloudHeading": "Cloud",
-      "hybridHeading": "Hybrid",
+      "hybridHeading": "Cloud and On-Premises",
       "othersHeading": "Others",
       "clientType": {
         "android": "Android",
