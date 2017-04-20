@@ -41,8 +41,8 @@ class DeviceSettings implements ng.IComponentController {
   }
 
   private fetchAsyncSettings(): void {
-    this.FeatureToggleService.cloudberryLyraConfigGetStatus().then(lyraConfig => {
-      if (lyraConfig) {
+    this.FeatureToggleService.csdmPlaceUpgradeChannelGetStatus().then(placeUpgradeChannel => {
+      if (placeUpgradeChannel) {
         let firstUnsupportedDevice = _.find(this.deviceList || [], (d: any) => d.product); // TODO: Replace with sw version check once implemented
         if (firstUnsupportedDevice) {
           this.unsupportedDeviceType = firstUnsupportedDevice.product;
