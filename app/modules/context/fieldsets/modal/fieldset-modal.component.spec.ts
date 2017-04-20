@@ -2,9 +2,16 @@ import fieldsetModule from './fieldset-modal.component';
 
 describe('Component: context fieldset modal', () => {
 
-  let fieldsetServiceSpy, fieldServiceSpy;
+  let fieldsetServiceCreateSpy, fieldServiceSpy, fieldsetServiceUpdateSpy;
+  let formIsSetDirty;
+
   const mockedFieldset = {
     id: 'id',
+  };
+
+  const mockedUpdateFieldset = {
+    id: 'id',
+    data: 'someData',
   };
 
   const mockedFields = [{
@@ -57,15 +64,26 @@ describe('Component: context fieldset modal', () => {
     spyOn(this.Notification, 'success');
     spyOn(this.Notification, 'error');
     spyOn(this.Analytics, 'trackEvent');
-    fieldsetServiceSpy = spyOn(this.ContextFieldsetsService, 'createAndGetFieldset').and.returnValue(this.$q.resolve(mockedFieldset));
+    fieldsetServiceCreateSpy = spyOn(this.ContextFieldsetsService, 'createAndGetFieldset').and.returnValue(this.$q.resolve(mockedFieldset));
     fieldServiceSpy = spyOn(this.ContextFieldsService, 'getFields').and.returnValue(this.$q.resolve(mockedFields));
+    fieldsetServiceUpdateSpy = spyOn(this.ContextFieldsetsService, 'updateAndGetFieldset').and.returnValue(this.$q.resolve(mockedUpdateFieldset));
 
     this.$scope.callback = jasmine.createSpy('callback');
     this.$scope.dismiss = jasmine.createSpy('dismiss');
     this.$scope.existingFieldsetIds = [];
+    this.$scope.existingFieldsetData = {};
+
+    formIsSetDirty = false;
+    this.$scope.fieldsetForm = {
+      $setDirty: function () {
+        formIsSetDirty = true;
+      },
+      $valid: true,
+    };
 
     this.compileComponent('context-fieldset-modal', {
       existingFieldsetIds: 'existingFieldsetIds',
+      existingFieldsetData: 'existingFieldsetData',
       callback: 'callback()',
       dismiss: 'dismiss()',
     });
@@ -131,22 +149,22 @@ describe('Component: context fieldset modal', () => {
     });
   });
 
-  describe('createButtonEnabled', function () {
+  describe('createOrSaveButtonEnabled', function () {
     it('should return true if fieldset contains a field', function () {
       this.controller.fieldsetData.id = 'someId';
       this.controller.fieldsetData.fields = ['abc'];
-      expect(this.controller.createButtonEnabled()).toBe(true);
+      expect(this.controller.createOrSaveButtonEnabled()).toBe(true);
     });
 
     it('should return false if no field is selected', function () {
       this.controller.fieldsetData.id = 'someId';
       this.controller.fieldsetData.fields = [];
-      expect(this.controller.createButtonEnabled()).toBe(false);
+      expect(this.controller.createOrSaveButtonEnabled()).toBe(false);
     });
 
     it('should return false if actionInProgress is true', function () {
       this.controller.actionInProgress = true;
-      expect(this.controller.createButtonEnabled()).toBe(false);
+      expect(this.controller.createOrSaveButtonEnabled()).toBe(false);
     });
   });
 
@@ -239,7 +257,7 @@ describe('Component: context fieldset modal', () => {
         searchable: true,
         refUrl: '',
         lastUpdated: '',
-      });
+      }, this.$scope.form);
       expect(this.controller.fieldsetData.fields).toContain('field1');
     });
   });
@@ -258,8 +276,9 @@ describe('Component: context fieldset modal', () => {
         searchable: true,
         refUrl: '',
         lastUpdated: '',
-      });
+      }, this.$scope.fieldsetForm);
       expect(this.controller.fieldsetData.fields).not.toContain('field2');
+      expect(formIsSetDirty).toBe(true);
     });
   });
 
@@ -279,6 +298,50 @@ describe('Component: context fieldset modal', () => {
         expect(callbackCalled).toBe(true);
         expect(dismissCalled).toBe(true);
         expect(this.Notification.success).toHaveBeenCalledWith('context.dictionary.fieldsetPage.fieldsetCreateSuccess');
+        expect(this.Analytics.trackEvent).toHaveBeenCalled();
+        done();
+      }).catch(done.fail);
+      this.$scope.$apply();
+    });
+
+    it('should reject if create fails', function (done) {
+      fieldsetServiceCreateSpy.and.returnValue(this.$q.reject('error'));
+      this.controller.create().then(() => {
+        expect(this.Notification.error).toHaveBeenCalledWith('context.dictionary.fieldsetPage.fieldsetCreateFailure');
+        expect(this.Analytics.trackEvent).toHaveBeenCalled();
+        done();
+      }).catch(done.fail);
+      this.$scope.$apply();
+    });
+  });
+
+  describe('update', function () {
+    it('should correctly update the fieldset, call the callback function, and should not call the dismiss function', function (done) {
+      let callbackCalled = false;
+      let dismissCalled = false;
+      this.controller.callback = function (fieldset) {
+        expect(fieldset).toEqual(mockedUpdateFieldset);
+        callbackCalled = true;
+      };
+      this.controller.dismiss = function () {
+        dismissCalled = true;
+      };
+      this.controller.update().then(() => {
+        //make sure the fieldsetDta of the controller is copied from the returned data
+        expect(this.controller.fieldsetData).toEqual(mockedUpdateFieldset);
+        expect(callbackCalled).toBe(true);
+        expect(dismissCalled).toBe(false);
+        expect(this.Notification.success).toHaveBeenCalledWith('context.dictionary.fieldsetPage.fieldsetUpdateSuccess');
+        expect(this.Analytics.trackEvent).toHaveBeenCalled();
+        done();
+      }).catch(done.fail);
+      this.$scope.$apply();
+    });
+
+    it('should reject if update fails', function (done) {
+      fieldsetServiceUpdateSpy.and.returnValue(this.$q.reject('error'));
+      this.controller.update().then(() => {
+        expect(this.Notification.error).toHaveBeenCalledWith('context.dictionary.fieldsetPage.fieldsetUpdateFailure');
         expect(this.Analytics.trackEvent).toHaveBeenCalled();
         done();
       }).catch(done.fail);

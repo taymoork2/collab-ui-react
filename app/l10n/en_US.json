@@ -2602,6 +2602,7 @@
       "custom": "Custom",
       "access": "Source",
       "dateUpdated": "Date Updated",
+      "update": "Edit",
       "fieldPage": {
         "associatedFieldsets": "Associated Fieldsets",
         "associatedFieldsetsError": "Unable to retrieve associated fieldsets.",
@@ -2632,12 +2633,11 @@
         "encryptedHelpText": "Is encrypted and contains no personally identifiable information",
         "unencrypted": "Unencrypted",
         "unencryptedHelpText": "Is not encrypted and contains no personally identifiable information",
-        "update": "Edit",
         "dateFormat": "MM/dd/yyyy",
         "noneFound": "No fields found",
         "fieldAttributes": "Field Attributes",
-        "inUseTooltip": "Field associated with fieldsets",
-        "notInUseTooltip": "Field not associated with any fieldsets"
+        "inUseTooltip": "Field associated with fieldsets.",
+        "notInUseTooltip": "Field not associated with any fieldsets."
       },
       "fieldsetPage": {
         "fieldsetId": "Fieldset ID",
@@ -2659,8 +2659,10 @@
         "fieldsetIdInvalidCharactersError": "Only alpha-numeric characters, period(.), hyphen(-) or underscore (_) allowed",
         "noneFound": "No fieldsets found",
         "fieldsetAttributes": "Fieldset Attributes",
-        "inUseTooltip": "Fieldset associated with objects",
-        "notInUseTooltip": "Fieldset not associated with any objects"
+        "inUseTooltip": "Fieldset associated with objects.",
+        "notInUseTooltip": "Fieldset not associated with any objects.",
+        "fieldsetUpdateSuccess": "Fieldset updated successfully!",
+        "fieldsetUpdateFailure": "Unable to update fieldset. Try again or contact customer support."
       }
     }
   },

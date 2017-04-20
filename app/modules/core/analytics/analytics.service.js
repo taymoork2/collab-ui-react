@@ -127,6 +127,8 @@
           CONTEXT_CREATE_FIELD_FAILURE: 'Failed to create a new field',
           CONTEXT_UPDATE_FIELD_SUCCESS: 'Successfully updated a field',
           CONTEXT_UPDATE_FIELD_FAILURE: 'Failed to update a field',
+          CONTEXT_UPDATE_FIELDSET_SUCCESS: 'Successfully updated a fieldset',
+          CONTEXT_UPDATE_FIELDSET_FAILURE: 'Failed to update a fieldset',
         },
       },
     };
