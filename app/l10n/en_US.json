@@ -2340,6 +2340,7 @@
       "list": {
         "title": "Clusters",
         "empty": "No clusters found.",
+        "empty-ept": "No SIP Destinations found.",
         "upgrade-schedule": "Upgrade Schedule",
         "upgrades-automatically": "Upgrades automatically",
         "clusters": "Clusters",
@@ -2354,6 +2355,7 @@
         "set-default-release-channel": "Set default release channel",
         "add-resource-group": "Create new resource group",
         "expressway": "Expressway",
+        "ept": "SIP Destinations",
         "mediafusion": "Media",
         "hds": "Data Security",
         "cucm": "CUCM",
@@ -6494,7 +6496,8 @@
           "squared-fusion-media": "Media",
           "spark-hybrid-datasecurity": "Data Security",
           "contact-center-context": "Context",
-          "squared-fusion-khaos": "Management"
+          "squared-fusion-khaos": "Management",
+          "ept": "Private Trunk"
         }
       },
       "licenses": {

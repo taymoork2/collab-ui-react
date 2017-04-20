@@ -2997,6 +2997,9 @@
               hasCucmSupportFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCucmSupport);
               },
+              hasEnterprisePrivateTrunkingFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.huronEnterprisePrivateTrunking);
+              },
             },
           })
           // hybrid context
@@ -3227,7 +3230,15 @@
             url: '/private-trunk-overview/list',
             views: {
               sipDestinationList: {
-                template: '<hybrid-service-cluster-list service-id="\'ept\'"></hybrid-service-cluster-list>',
+                template: '<hybrid-service-cluster-list service-id="\'ept\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>',
+              },
+            },
+            params: {
+              clusterId: null,
+            },
+            resolve: {
+              clusterId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.clusterId;
               },
             },
           })

@@ -103,6 +103,7 @@ export class EnterprisePrivateTrunkService {
       })
       .then((sortedTrunks) => {
         this.CsdmCacheUpdater.update(this.trunkCache, sortedTrunks);
+        return sortedTrunks;
       });
   }
 

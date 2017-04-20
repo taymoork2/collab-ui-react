@@ -1,19 +1,20 @@
 'use strict';
 
 describe('Controller: FusionClusterListController', function () {
-  var controller, $controller, $q, $rootScope, Analytics, Authinfo, FusionClusterService, Notification, ResourceGroupService;
+  var controller, $controller, $q, $rootScope, Analytics, Authinfo, EnterprisePrivateTrunkService, FusionClusterService, Notification, ResourceGroupService;
 
   beforeEach(angular.mock.module('Squared'));
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
-  function dependencies(_$rootScope_, _$controller_, _$q_, _Analytics_, _Authinfo_, _FusionClusterService_, _Notification_, _ResourceGroupService_) {
+  function dependencies(_$rootScope_, _$controller_, _$q_, _Analytics_, _Authinfo_, _EnterprisePrivateTrunkService_, _FusionClusterService_, _Notification_, _ResourceGroupService_) {
     $rootScope = _$rootScope_;
     $controller = _$controller_;
     $q = _$q_;
     Analytics = _Analytics_;
     Authinfo = _Authinfo_;
+    EnterprisePrivateTrunkService = _EnterprisePrivateTrunkService_;
     FusionClusterService = _FusionClusterService_;
     Notification = _Notification_;
     ResourceGroupService = _ResourceGroupService_;
@@ -24,22 +25,24 @@ describe('Controller: FusionClusterListController', function () {
     spyOn(FusionClusterService, 'getResourceGroups').and.returnValue($q.resolve({
       groups: {},
     }));
+    spyOn(EnterprisePrivateTrunkService, 'fetch');
     spyOn(ResourceGroupService, 'getAllowedChannels').and.returnValue($q.resolve(['stable']));
     spyOn(Analytics, 'trackHSNavigation');
     spyOn(Notification, 'errorWithTrackingId');
     spyOn(Authinfo, 'isEntitled').and.returnValue(true);
   }
 
-  function initController() {
+  function initController(hasEnterprisePrivateTrunkingFeatureToggle) {
     controller = $controller('FusionClusterListController', {
       hasCucmSupportFeatureToggle: true,
+      hasEnterprisePrivateTrunkingFeatureToggle: hasEnterprisePrivateTrunkingFeatureToggle,
     });
   }
 
   describe('init', function () {
     beforeEach(function () {
       FusionClusterService.getAll.and.returnValue($q.resolve());
-      initController();
+      initController(false);
     });
 
     it('should be loading', function () {
@@ -54,7 +57,7 @@ describe('Controller: FusionClusterListController', function () {
   describe('after loading clusters', function () {
     it('should call Notification.errorWithTrackingId if loading failed', function () {
       FusionClusterService.getResourceGroups.and.returnValue($q.reject());
-      initController();
+      initController(false);
       expect(controller.loading).toBe(true);
       expect(Notification.errorWithTrackingId).not.toHaveBeenCalled();
       $rootScope.$apply(); // force FusionClusterService.getAll() to return
@@ -96,7 +99,7 @@ describe('Controller: FusionClusterListController', function () {
           hostname: 'a.elg.no',
         }],
       }] }));
-      initController();
+      initController(false);
       expect(controller.filters[0].count).toBe(0);
       expect(controller.filters[1].count).toBe(0);
       expect(controller.filters[2].count).toBe(0);
@@ -110,7 +113,111 @@ describe('Controller: FusionClusterListController', function () {
       expect(controller.filters[2].count).toBe(0);
       expect(controller.filters[3].count).toBe(1);
       expect(controller.filters[4].count).toBe(1);
-      expect(controller.displayedGroups.length).toBe(5);
+      expect(controller.displayedGroups.length).toBe(6);
+    });
+
+  });
+
+  describe('Private Trunking ', function () {
+
+    beforeEach(function () {
+      EnterprisePrivateTrunkService.fetch.and.returnValue($q.resolve([
+        {
+          resourceId: 'b01dface',
+          name: 'To fulle menn',
+          serviceStatus: 'unknown',
+        },
+        {
+          resourceId: 'f005ba11',
+          name: 'Aldri stol på en fyllik',
+          serviceStatus: 'outage',
+        },
+        {
+          resourceId: 'deadbea7',
+          name: 'Skinnet bedrar',
+          serviceStatus: 'operational',
+        },
+        {
+          resourceId: 'ba5eba11',
+          name: 'Ingen har skylda',
+          serviceStatus: 'impaired',
+        },
+      ]));
+    });
+
+    it('should format data from EnterprisePrivateTrunkService so that it is on the FMS cluster format', function () {
+
+      initController(true);
+      controller._loadSipDestinations();
+      $rootScope.$apply();
+      expect(controller.displayedGroups[5].unassigned).toEqual(jasmine.objectContaining([
+        {
+          name: 'To fulle menn',
+          id: 'b01dface',
+          targetType: 'ept',
+          servicesStatuses: [
+            {
+              serviceId: 'ept',
+              state: {
+                cssClass: 'warning',
+              },
+              total: 1,
+            },
+          ],
+        },
+        {
+          name: 'Aldri stol på en fyllik',
+          id: 'f005ba11',
+          targetType: 'ept',
+          servicesStatuses: [
+            {
+              serviceId: 'ept',
+              state: {
+                cssClass: 'danger',
+              },
+              total: 1,
+            },
+          ],
+        },
+        {
+          name: 'Skinnet bedrar',
+          id: 'deadbea7',
+          targetType: 'ept',
+          servicesStatuses: [
+            {
+              serviceId: 'ept',
+              state: {
+                cssClass: 'success',
+              },
+              total: 1,
+            },
+          ],
+        },
+        {
+          name: 'Ingen har skylda',
+          id: 'ba5eba11',
+          targetType: 'ept',
+          servicesStatuses: [
+            {
+              serviceId: 'ept',
+              state: {
+                cssClass: 'warning',
+              },
+              total: 1,
+            },
+          ],
+        },
+      ]));
+
+    });
+
+    it('should not get private trunk data if you are not feature toggled', function () {
+
+      initController(false);
+      controller._loadSipDestinations();
+      $rootScope.$apply();
+      expect(EnterprisePrivateTrunkService.fetch).not.toHaveBeenCalled();
+
     });
 
   });
