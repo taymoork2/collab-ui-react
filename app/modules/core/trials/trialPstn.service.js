@@ -1,9 +1,7 @@
 (function () {
   'use strict';
 
-  angular
-    .module('core.trial')
-    .factory('TrialPstnService', TrialPstnService);
+  module.exports = TrialPstnService;
 
   /* @ngInject */
   function TrialPstnService($q, Config, Notification, PstnServiceAddressService, PstnSetupService) {
