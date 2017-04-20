@@ -224,27 +224,8 @@ require('modules/core/reports/amcharts-export.scss');
           return pc.accountId;
         });
 
-        stats.most = _.map(stats.most, function (stat) {
-          stat.peopleCount = '-';
-          var peopleCount = _.find(vm.peopleCount, function (pc) {
-            return pc[0].accountId === stat.accountId;
-          });
-          if (peopleCount) {
-            stat.peopleCount = parseInt(peopleCount[0]['peopleCountAvg'], 10);
-          }
-          return stat;
-        });
-
-        stats.least = _.map(stats.least, function (stat) {
-          stat.peopleCount = '-';
-          var peopleCount = _.find(vm.peopleCount, function (pc) {
-            return pc[0].accountId === stat.accountId;
-          });
-          if (peopleCount) {
-            stat.peopleCount = parseInt(peopleCount[0]['peopleCountAvg'], 10);
-          }
-          return stat;
-        });
+        stats.most = vm.addPeopleCount(stats.most, vm.peopleCount);
+        stats.least = vm.addPeopleCount(stats.least, vm.peopleCount);
 
         resolveDeviceData(stats.most, vm.mostUsedDevices)
           .then(function () {
@@ -256,6 +237,22 @@ require('modules/core/reports/amcharts-export.scss');
           });
       });
     }
+
+    vm.addPeopleCount = function (object, people) {
+      object = _.map(object, function (stat) {
+        stat.peopleCount = '-';
+        $log.log('people', people);
+        var peopleCount = _.find(people, function (pc) {
+          $log.log('pc', pc);
+          return pc[0].accountId === stat.accountId;
+        });
+        if (peopleCount) {
+          stat.peopleCount = parseInt(peopleCount[0]['peopleCountAvg'], 10);
+        }
+        return stat;
+      });
+      return object;
+    };
 
     function resolveDeviceData(stats, target) {
       return DeviceUsageService.resolveDeviceData(stats, apiToUse)
