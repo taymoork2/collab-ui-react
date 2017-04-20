@@ -1,6 +1,6 @@
 import { IMergedStateSeverity } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 
-export type ClusterTargetType = 'c_mgmt' | 'mf_mgmt' | 'hds_app' | 'ucm_mgmt' | 'cs_mgmt' | 'unknown';
+export type ClusterTargetType = 'c_mgmt' | 'mf_mgmt' | 'hds_app' | 'ucm_mgmt' | 'cs_mgmt' | 'ept' | 'unknown';
 export type ConnectorAlarmSeverity = 'critical' | 'error' | 'warning' | 'alert';
 export type ConnectorMaintenanceMode = 'on' | 'off' | 'pending';
 export type ConnectorState = 'running' | 'not_installed' | 'disabled' | 'downloading' | 'installing' | 'not_configured' | 'uninstalling' | 'registered' | 'initializing' | 'offline' | 'stopped' | 'not_operational' | 'unknown';
