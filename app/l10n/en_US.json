@@ -4084,6 +4084,14 @@
     "feature5": "Basic 911 included",
     "feature6": "Taxes additional"
   },
+  "westucFeatures": {
+    "feature1": "Unlimited* calling in the U.S.",
+    "feature2": "1 DID telephone number (new or ported)",
+    "feature3": "Caller ID",
+    "feature4": "Directory listing",
+    "feature5": "E911",
+    "feature6": "No set-up fees"
+  },  
   "partnerHomePage": {
     "trialsHeading": "Trials",
     "onboardingTitle": "Onboarding",

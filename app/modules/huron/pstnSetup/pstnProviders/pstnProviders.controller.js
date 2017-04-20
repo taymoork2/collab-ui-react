@@ -174,9 +174,16 @@
         });
       } else if (carrier.vendor === PstnSetupService.WESTUC) {
         _.extend(carrierObj, {
-          logoSrc: 'images/carriers/logo_westuc.jpg',
+          logoSrc: 'images/carriers/logo_westuc.svg',
           logoAlt: 'West Corporation',
-          features: [],
+          features: [
+            $translate.instant('westucFeatures.feature1'),
+            $translate.instant('westucFeatures.feature2'),
+            $translate.instant('westucFeatures.feature3'),
+            $translate.instant('westucFeatures.feature4'),
+            $translate.instant('westucFeatures.feature5'),
+            $translate.instant('westucFeatures.feature6'),
+          ],
           selectFn: goToNumbers,
         });
       }
