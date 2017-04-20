@@ -12,6 +12,8 @@ interface IFieldData {
   translations: any;
   searchable: Boolean;
   lastUpdated?: string;
+  publiclyAccessibleUI: string;
+  publiclyAccessible: Boolean;
 }
 
 class FieldModalCtrl implements ng.IComponentController {
@@ -24,6 +26,7 @@ class FieldModalCtrl implements ng.IComponentController {
   private dataTypeApiMap: Object;
   private classificationApiMap: Object;
   private classificationHelpTextMap: Object;
+  private publiclyAccessibleMap: Object;
 
   public dataTypeOptions: string[];
   public dataTypePlaceholder: string;
@@ -75,6 +78,11 @@ class FieldModalCtrl implements ng.IComponentController {
     this.classificationHelpTextMap[this.encrypted] = this.$translate.instant('context.dictionary.fieldPage.encryptedHelpText');
     this.classificationHelpTextMap[this.pii] = this.$translate.instant('context.dictionary.fieldPage.PiiEncryptedHelpText');
 
+    //map publiclyAccessible to value that matches by api
+    this.publiclyAccessibleMap = {};
+    this.publiclyAccessibleMap[this.$translate.instant('context.dictionary.custom')] = false;
+    this.publiclyAccessibleMap[this.$translate.instant('context.dictonary.cisco')] = true;
+
     // set up the options and placeholder for dataType
     this.dataTypeOptions = _.keys(this.dataTypeApiMap);
     this.dataTypePlaceholder = this.$translate.instant('context.dictionary.fieldPage.dataTypePlaceholder');
@@ -109,6 +117,8 @@ class FieldModalCtrl implements ng.IComponentController {
           en_US: '',
         },
         searchable: false,
+        publiclyAccessible: false,
+        publiclyAccessibleUI: '',
       }
       // make a copy to that changes to data isn't reflected in side panel as
       // new data is entered by user
@@ -166,6 +176,7 @@ class FieldModalCtrl implements ng.IComponentController {
   public fixDataForApi() {
     this.fieldData.dataType = this.dataTypeApiMap[this.fieldData.dataTypeUI];
     this.fieldData.classification = this.classificationApiMap[this.fieldData.classificationUI];
+    this.fieldData.publiclyAccessible = this.publiclyAccessibleMap[this.fieldData.publiclyAccessibleUI];
 
     return this.fieldData;
   }
