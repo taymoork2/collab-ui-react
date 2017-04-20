@@ -74,7 +74,7 @@ require('./_fields-sidepanel.scss');
 
       //convert the UI friendly text to the actual boolean value
       if (!_.isEmpty(vm.field.publiclyAccessible)) {
-        vm.publiclyAccessible = vm.field.publiclyAccessible.toLowerCase() === 'cisco';
+        vm.publiclyAccessible = vm.field.publiclyAccessibleUI.toLowerCase() === 'cisco';
       }
     };
     vm.$onInit = function () {

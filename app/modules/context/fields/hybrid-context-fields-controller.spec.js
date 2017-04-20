@@ -117,7 +117,7 @@ describe('HybridContextFieldsCtrl', function () {
       expect(controller.fieldsList.allFields.length).toBe(1);
       expect(controller.fieldsList.allFields[0].classificationUI).toEqual('context.dictionary.fieldPage.unencrypted');
       expect(controller.fieldsList.allFields[0].searchableUI).toEqual('common.yes');
-      expect(controller.fieldsList.allFields[0].publiclyAccessible).toEqual('context.dictionary.custom');
+      expect(controller.fieldsList.allFields[0].publiclyAccessible).toEqual('false');
       expect(controller.fieldsList.allFields[0].dataTypeUI).not.toExist();
       expect(controller.fieldsList.allFields[0].lastUpdatedUI).not.toBeNull();
     });
@@ -268,28 +268,28 @@ describe('HybridContextFieldsCtrl', function () {
 
       var fieldList = [{
         'description': 'Field for NoClassification',
-        'publiclyAccessible': 'false',
+        'publiclyAccessibleUI': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'id': '2017Field',
         'dataTypeUI': 'boolean',
         'lastUpdatedUI': '2017-01-26T18:42:42.124Z',
       }, {
         'description': 'Field for NoClassification',
-        'publiclyAccessible': 'false',
+        'publiclyAccessibleUI': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'id': '2016Field',
         'dataTypeUI': 'boolean',
         'lastUpdatedUI': '2016-01-26T18:42:42.124Z',
       }, {
         'description': 'Field for NoClassification',
-        'publiclyAccessible': 'false',
+        'publiclyAccessibleUI': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'id': '2015Field',
         'dataTypeUI': 'boolean',
         'lastUpdatedUI': '2015-01-26T18:42:42.124Z',
       }, {
         'description': 'Field for abc3',
-        'publiclyAccessible': 'false',
+        'publiclyAccessibleUI': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'id': '2014FieldWithDateMatch',
         'dataTypeUI': 'boolean',
@@ -312,34 +312,34 @@ describe('HybridContextFieldsCtrl', function () {
       $scope.$apply();
 
       var fieldList = [{
-        'publiclyAccessible': 'false',
+        'publiclyAccessibleUI': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'id': 'First',
         'lastUpdatedUI': '2017-01-26T18:42:42.124Z',
       }, {
-        'publiclyAccessible': 'false',
+        'publiclyAccessibleUI': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'id': 'SearchStrInTranslation',
         'lastUpdatedUI': '2017-01-26T18:42:42.124Z',
       }, {
-        'publiclyAccessible': 'false',
+        'publiclyAccessibleUI': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'id': 'SearchStrInClassification',
         'classificationUI': 'first',
         'lastUpdatedUI': '2017-01-26T18:42:42.124Z',
       }, {
-        'publiclyAccessible': 'false',
+        'publiclyAccessibleUI': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'id': 'SearchStrInDescription',
         'description': 'First in description',
         'lastUpdatedUI': '2017-01-26T18:42:42.124Z',
       }, {
-        'publiclyAccessible': 'false',
+        'publiclyAccessibleUI': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'id': 'SearchStrLowerCaseInLastUpdatedDate',
         'lastUpdatedUI': 'first in date',
       }, {
-        'publiclyAccessible': 'false',
+        'publiclyAccessibleUI': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'id': 'SearchStrInDataType',
         'dataTypeUI': '$$first in datatype',
@@ -348,7 +348,7 @@ describe('HybridContextFieldsCtrl', function () {
         'OhterKey2': 'first',
         'otherKey3': 'anyOtherFirst',
       }, {
-        'publiclyAccessible': 'false',
+        'publiclyAccessibleUI': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'id': 'SearchStrInSearchable',
         'dataTypeUI': 'String',
@@ -374,34 +374,34 @@ describe('HybridContextFieldsCtrl', function () {
       $scope.$apply();
 
       var fieldList = [{
-        'publiclyAccessible': 'false',
+        'publiclyAccessibleUI': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'id': 'aaa_test',
         'lastUpdatedUI': '2017-01-26T18:42:42.124Z',
       }, {
-        'publiclyAccessible': 'false',
+        'publiclyAccessibleUI': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'id': 'aaa.test',
         'lastUpdatedUI': '2017-01-26T18:42:42.124Z',
       }, {
-        'publiclyAccessible': 'false',
+        'publiclyAccessibleUI': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'id': 'SearchStrInClassificationUpperCase',
         'classificationUI': 'ContainsAAA_Test',
         'lastUpdatedUI': '2017-01-26T18:42:42.124Z',
       }, {
-        'publiclyAccessible': 'false',
+        'publiclyAccessibleUI': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'id': 'aaa test',
         'description': 'First in description',
         'lastUpdatedUI': '2017-01-26T18:42:42.124Z',
       }, {
-        'publiclyAccessible': 'false',
+        'publiclyAccessibleUI': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'id': 'AAA test!',
         'lastUpdatedUI': 'first in date',
       }, {
-        'publiclyAccessible': 'false',
+        'publiclyAccessibleUI': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'id': 'SearchStrInDataType',
         'dataTypeUI': 'aaa_TEST',
@@ -411,14 +411,14 @@ describe('HybridContextFieldsCtrl', function () {
         'otherKey3': 'anyOtherFirst',
         'id': 'SearchStrInOtherFields',
       }, {
-        'publiclyAccessible': 'false',
+        'publiclyAccessibleUI': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'id': 'SearchStrInSearchable',
 
         'dataTypeUI': 'String',
         'searchableUI': 'aaa_TEST',
       }, {
-        'publiclyAccessible': 'aaa_test_something',
+        'publiclyAccessibleUI': 'aaa_test_something',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'id': 'SearchStrInPubliclyAccessible',
         'dataType': 'String',

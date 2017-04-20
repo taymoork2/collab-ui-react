@@ -16,6 +16,8 @@ describe('Component: context field modal', () => {
     translations: ({ en_US: '' }),
     searchable: false,
     lastUpdated: undefined,
+    publiclyAccessible: undefined,
+    publiclyAccessibleUI: '',
   };
 
   beforeEach(function () {
