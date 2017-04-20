@@ -241,9 +241,7 @@ require('modules/core/reports/amcharts-export.scss');
     vm.addPeopleCount = function (object, people) {
       object = _.map(object, function (stat) {
         stat.peopleCount = '-';
-        $log.log('people', people);
         var peopleCount = _.find(people, function (pc) {
-          $log.log('pc', pc);
           return pc[0].accountId === stat.accountId;
         });
         if (peopleCount) {
@@ -259,7 +257,6 @@ require('modules/core/reports/amcharts-export.scss');
         .then(function (deviceInfo) {
           _.each(stats, function (device, index) {
             target.push({
-              "cisUuid": deviceInfo[index].cisUuid,
               "name": deviceInfo[index].displayName,
               "info": deviceInfo[index].info,
               "peopleCount": device.peopleCount,
