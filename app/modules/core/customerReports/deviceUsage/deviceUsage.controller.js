@@ -351,7 +351,7 @@ require('modules/core/reports/amcharts-export.scss');
 
     function modelsForRange(items) {
       _.each(DeviceUsageModelService.mapModelsIn(items), function (item) {
-        if (item.model !== '*') {
+        if (!_.isEmpty(item.model) && item.model !== '*') {
           vm.modelOptions.push({
             value: item.model,
             label: item.model,
