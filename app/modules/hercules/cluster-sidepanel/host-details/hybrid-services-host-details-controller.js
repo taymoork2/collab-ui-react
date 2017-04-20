@@ -6,7 +6,7 @@
     .controller('HybridServicesHostDetailsController', HybridServicesHostDetailsController);
 
   /* @ngInject */
-  function HybridServicesHostDetailsController($modal, $rootScope, $scope, $state, $stateParams, $translate, ClusterService, HybridServicesClusterStatesService) {
+  function HybridServicesHostDetailsController($modal, $rootScope, $scope, $state, $stateParams, $translate, ClusterService, HybridServicesClusterStatesService, hasNodesViewFeatureToggle) {
     var cluster;
     var vm = this;
     var type = $stateParams.specificType || $stateParams.connectorType;
@@ -100,7 +100,7 @@
     }
 
     vm.showAction = function () {
-      return vm.host.connectorType !== 'cs_mgmt' && vm.host.connectorType !== 'cs_context';
+      return vm.host.connectorType !== 'cs_mgmt' && vm.host.connectorType !== 'cs_context' && vm.showMoveNodeAction();
     };
 
     vm.showGoToHostAction = function () {
@@ -108,7 +108,7 @@
     };
 
     vm.showMoveNodeAction = function () {
-      return vm.host.connectorType === 'mf_mgmt';
+      return !hasNodesViewFeatureToggle && vm.host.connectorType === 'mf_mgmt';
     };
 
     vm.showDeregisterNodeAction = function () {
