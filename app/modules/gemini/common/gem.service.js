@@ -6,11 +6,11 @@
     .service('gemService', gemService);
 
   /* @ngInject */
-  function gemService(GmHttpService, Authinfo, $translate) {
+  function gemService($http, $translate, UrlConfig, Authinfo) {
     var URL = {
-      coutries: 'countries',
-      spData: 'servicepartner',
-      remedyTicket: 'remedyTicket/customers/',
+      coutries: UrlConfig.getGeminiUrl() + 'countries',
+      spData: UrlConfig.getGeminiUrl() + 'servicepartner',
+      remedyTicket: UrlConfig.getGeminiUrl() + 'remedyTicket/customers/',
     };
     var data = {};
     var service = {
@@ -26,16 +26,16 @@
     return service;
 
     function getSpData() {
-      return GmHttpService.httpGet(URL.spData).then(extractData);
+      return $http.get(URL.spData).then(extractData);
     }
 
     function getRemedyTicket(customerId, type) {
       var url = URL.remedyTicket + customerId + '/siteId/0/type/' + type;
-      return GmHttpService.httpGet(url).then(extractData);
+      return $http.get(url).then(extractData);
     }
 
     function getCountries() {
-      return GmHttpService.httpGet(URL.coutries).then(extractData);
+      return $http.get(URL.coutries).then(extractData);
     }
 
     function showError(errorCode) {

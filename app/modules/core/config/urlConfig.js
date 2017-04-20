@@ -165,8 +165,8 @@
       prod: 'https://bmmp.ciscospark.com/api/v1',
     },
     GeminiUrl: {
-      dev: 'https://hfccap12.qa.webex.com/ccaportal/api/v2/',
-      cfe: 'https://hfccap12.qa.webex.com/ccaportal/api/v2/',
+      dev: 'https://hfccap2.qa.webex.com/pcs/api/v2/',
+      cfe: 'https://hfccap2.qa.webex.com/pcs/api/v2/',
       integration: 'https://ccaportalbts.webex.com/ccaportal/api/v2/',
       prod: 'https://ccaportal.webex.com/ccaportal/api/v2/',
     },

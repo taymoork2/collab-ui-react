@@ -1,5 +1,5 @@
+import { Notification } from 'modules/core/notifications';
 import { TelephonyDomainService } from '../telephonyDomain.service';
-import { Notification } from '../../../core/notifications/notification.service';
 
 class GmTdModalRequestCtrl implements ng.IComponentController {
 
