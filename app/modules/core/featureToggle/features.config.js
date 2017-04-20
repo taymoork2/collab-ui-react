@@ -169,7 +169,6 @@ module.exports = {
   avrilVmEnable: 'avril-vm-enable',
   avrilVoicemaill1249: 'avril-voicemail-l1249',
   cloudberryPersonalMode: 'ce-enable-personal-mode',
-  cloudberryLyraConfig: 'ce-enable-lyra-config',
   huronFederatedSparkCall: 'huron-federated-spark-call',
   sparkCallTenDigitExt: 'i751-10d-ext',
   huronCustomerCos: 'huron-customer-cos',
@@ -194,4 +193,5 @@ module.exports = {
   hRegionalTones: "h-regional-tones",
   huronPstn: "h-pstn",
   csdmT38: "csdm-ata-t38",
+  csdmPlaceUpgradeChannel: "csdm-place-upgrade-channel",
 };

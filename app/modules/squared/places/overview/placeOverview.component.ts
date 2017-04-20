@@ -107,7 +107,7 @@ class PlaceOverview implements ng.IComponentController {
       this.generateCodeIsDisabled = false;
     });
 
-    this.FeatureToggleService.cloudberryLyraConfigGetStatus().then(feature => {
+    this.FeatureToggleService.csdmPlaceUpgradeChannelGetStatus().then(feature => {
       if (feature) {
         this.CsdmUpgradeChannelService.getUpgradeChannelsPromise().then(channels => {
           this.showDeviceSettings = channels.length > 1 && this.currentPlace.type === 'cloudberry';
