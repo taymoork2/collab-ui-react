@@ -32,8 +32,8 @@ describe('Controller: HostDeregisterControllerV2', function () {
     };
     controller = $controller('HostDeregisterControllerV2', {
       $scope: $rootScope.$new(),
-      connector: connector,
-      cluster: cluster,
+      nodeSerial: connector.hostSerial,
+      clusterName: cluster.name,
       orgName: orgName,
       ClusterService: ClusterService,
       Notification: Notification,

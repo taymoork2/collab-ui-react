@@ -2552,6 +2552,8 @@
       "enableMaintenanceMode": "Enable maintenance mode",
       "disableMaintenanceMode": "Disable maintenance mode",
       "goToNode": "Go to node",
+      "moveNode": "Move node",
+      "deregisterNode": "Deregister node",
       "enableMaintenanceModeModal": {
         "title": "Enable maintenance mode",
         "message": "Are you sure you want to enable maintenance mode for this node?"

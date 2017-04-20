@@ -1,4 +1,5 @@
 import { Notification } from 'modules/core/notifications';
+import { IToolkitModalService } from 'modules/core/modal';
 import { IConnectorAlarm, ICluster, ConnectorMaintenanceMode, ConnectorType, IHost, IConnector, ClusterTargetType } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
 import { HybridServicesClusterStatesService, IMergedStateSeverity } from 'modules/hercules/services/hybrid-services-cluster-states.service';
@@ -41,6 +42,7 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private $q: ng.IQService,
+    private $modal: IToolkitModalService,
     private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
     private $state: ng.ui.IStateService,
@@ -86,6 +88,14 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
     return !_.includes(<ConnectorType[]>['mf_mgmt'], targetType);
   }
 
+  public displayMoveNodeMenuItem(targetType: ClusterTargetType): boolean {
+    return _.includes(<ConnectorType[]>['mf_mgmt'], targetType);
+  }
+
+  public displayDeregisterNodeMenuItem(targetType: ClusterTargetType): boolean {
+    return _.includes(<ConnectorType[]>['mf_mgmt'], targetType);
+  }
+
   public enableMaintenanceMode(node: ISimplifiedNode): void {
     this.ModalService.open({
       title: this.$translate.instant('hercules.nodesPage.enableMaintenanceModeModal.title'),
@@ -120,13 +130,52 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
       return this.FusionClusterService.updateHost(node.serial, {
         maintenanceMode: 'off',
       })
-      .then(response => {
+      .then(() => {
         this.loadCluster(this.data.id);
-        return response;
       })
       .catch((error) => {
         this.Notification.errorWithTrackingId(error);
       });
+    });
+  }
+
+  public openMoveNodeModal(node: ISimplifiedNode): void {
+    this.$modal.open({
+      resolve: {
+        cluster: () => ({
+          id: this.data.id,
+          name: this.data.name,
+        }),
+        connector: () => ({
+          id: node.connectors[0].id,
+          hostname: node.name,
+        }),
+      },
+      type: 'small',
+      controller: 'ReassignClusterControllerV2',
+      controllerAs: 'reassignClust',
+      templateUrl: 'modules/mediafusion/media-service-v2/side-panel/reassign-node-to-different-cluster/reassign-cluster-dialog.html',
+    })
+    .result
+    .then(() => {
+      this.loadCluster(this.data.id);
+    });
+  }
+
+  public openDeregisterNodeModal(node: ISimplifiedNode): void {
+    this.$modal.open({
+      resolve: {
+        clusterName: () => this.data.name,
+        nodeSerial: () => node.serial,
+      },
+      type: 'small',
+      controller: 'HostDeregisterControllerV2',
+      controllerAs: 'hostDeregister',
+      templateUrl: 'modules/mediafusion/media-service-v2/side-panel/deregister-node/host-deregister-dialog.html',
+    })
+    .result
+    .then(() => {
+      this.loadCluster(this.data.id);
     });
   }
 

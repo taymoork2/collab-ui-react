@@ -34,6 +34,16 @@
                   <span translate="hercules.nodesPage.goToNode"></span>
                 </a>
               </li>
+              <li ng-if="$ctrl.displayMoveNodeMenuItem($ctrl.data.targetType)">
+                <a ng-click="$ctrl.openMoveNodeModal(node)">
+                  <span translate="hercules.nodesPage.moveNode"></span>
+                </a>
+              </li>
+              <li ng-if="$ctrl.displayDeregisterNodeMenuItem($ctrl.data.targetType)">
+                <a ng-click="$ctrl.openDeregisterNodeModal(node)">
+                  <span translate="hercules.nodesPage.deregisterNode"></span>
+                </a>
+              </li>
             </ul>
           </span>
         </div>

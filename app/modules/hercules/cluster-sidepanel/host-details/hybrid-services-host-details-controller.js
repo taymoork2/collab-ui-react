@@ -81,11 +81,11 @@
     function showDeregisterHostDialog() {
       $modal.open({
         resolve: {
-          cluster: function () {
-            return cluster;
+          clusterName: function () {
+            return cluster.name;
           },
-          connector: function () {
-            return vm.host;
+          nodeSerial: function () {
+            return vm.host.hostSerial;
           },
         },
         type: 'small',
