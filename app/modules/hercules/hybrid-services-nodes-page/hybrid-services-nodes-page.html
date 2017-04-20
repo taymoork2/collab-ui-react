@@ -1,7 +1,12 @@
 <div ng-if="$ctrl.loading" class="text-center spinner-container">
   <i class="icon icon-spinner icon-2x"></i>
 </div>
-<div class="text-center" ng-if="!$ctrl.loading && $ctrl.data.nodes.length === 0" translate="hercules.nodesPage.noNodes"></div>
+
+<div class="none_found" ng-if="!$ctrl.loading && $ctrl.data.nodes.length === 0">
+  <i class="icon icon-circle-data"></i>
+  <span class="h2" translate="hercules.nodesPage.noNodes"></span>
+</div>
+
 <table ng-if="!$ctrl.loading && $ctrl.data.nodes.length > 0">
   <thead>
     <tr>
