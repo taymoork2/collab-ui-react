@@ -32,10 +32,10 @@ class GmtdDetails implements ng.IComponentController {
     private $translate: ng.translate.ITranslateService,
     private TelephonyDomainService: TelephonyDomainService,
   ) {
+    this.tds = _.get(this.$stateParams, 'info.tds', []);
     this.customerId = _.get(this.$stateParams, 'info.customerId', '');
     this.ccaDomainId = _.get(this.$stateParams, 'info.ccaDomainId', '');
     this.domainName = _.get(this.$stateParams, 'info.domainName', '');
-    this.tds = _.get(this.$stateParams, 'info.tds', []);
   }
 
   public $onInit(): void {

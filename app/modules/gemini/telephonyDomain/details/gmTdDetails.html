@@ -56,7 +56,7 @@
           <div class="pull-left medium-4">
             <span class="feature-name">{{::'gemini.tds.noteToCisco' | translate}}</span>
           </div>
-          <div class="pull-right medium-8 ellipsis">
+          <div class="pull-right medium-8 ellipsis text-right">
             <span>{{$ctrl.model.noteToCiscoTeam}}</span>
           </div>
         </div>
@@ -75,9 +75,16 @@
           </div>
         </div>
 
-        <div class="section-title-row">
-          <span class="section-name" translate="gemini.tds.phoneNumbers"></span>
-          <span class="pull-right" ng-if="$ctrl.model.telephonyNumberList.length"><a translate="gemini.tds.seeAll" ng-click="$ctrl.onSeeAllPhoneHumbers()" class="color-primary-base"></a></span>
+        <div class="feature-list">
+          <ul>
+            <li class="feature">
+              <a ng-click="$ctrl.onSeeAllPhoneNumbers()">
+                <span class="feature-name" translate="gemini.tds.phoneNumbers"></span>
+                <span class="feature-status">{{$ctrl.model.telephonyNumberList.length}}</span>
+                <i class="feature-arrow"></i>
+              </a>
+            </li>
+          </ul>
         </div>
 
         <div class="side-panel-defaultToll">
