@@ -10,7 +10,7 @@
       <th scope="col" translate="hercules.nodesPage.version"></th>
     </tr>
   </thead>
-  <tbody ng-repeat="node in $ctrl.data.nodes | orderBy:'name'">
+  <tbody ng-repeat="node in $ctrl.data.nodes | orderBy:'name' track by node.serial">
     <tr class="hostname">
       <td colspan="4">
         {{::node.name}}

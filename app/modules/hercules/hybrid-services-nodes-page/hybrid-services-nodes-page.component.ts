@@ -30,14 +30,18 @@ interface IData {
 }
 
 class HybridServicesNodesPageCtrl implements ng.IComponentController {
+  private REFRESH_INTERVAL = 30 * 1000;
+  private refreshTimeout: ng.IPromise<void> | null = null;
   public data: IData;
   public gridOptions = {};
-  public loading = true;
+  public loading = true; // first load
+  public refreshing = false; // subsequant load of data
   public openedConnector: any;
 
   /* @ngInject */
   constructor(
     private $q: ng.IQService,
+    private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
     private $state: ng.ui.IStateService,
     private FusionClusterService,
@@ -127,7 +131,12 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
   }
 
   private loadCluster(id) {
-    this.loading = true;
+    if (this.refreshTimeout) {
+      this.$timeout.cancel(this.refreshTimeout);
+    }
+    if (!this.loading) {
+      this.refreshing = true;
+    }
     let clusterCache: ICluster;
     return this.FusionClusterService.get(id)
       .then((cluster: ICluster) => {
@@ -144,6 +153,10 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
       })
       .finally(() => {
         this.loading = false;
+        this.refreshing = false;
+        this.refreshTimeout = this.$timeout(() => {
+          this.loadCluster(id);
+        }, this.REFRESH_INTERVAL);
       });
   }
 
