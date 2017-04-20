@@ -21,6 +21,7 @@
     vm.onPremisesHeading = $translate.instant('mediaFusion.metrics.onPremisesHeading');
     vm.cloudHeading = $translate.instant('mediaFusion.metrics.cloudHeading');
     vm.hybridHeading = $translate.instant('mediaFusion.metrics.hybridHeading');
+    vm.totalHeading = $translate.instant('mediaFusion.metrics.clientType.total');
 
     return {
       setMeetingLocationGraph: setMeetingLocationGraph,
@@ -195,19 +196,21 @@
     function getClusterName(graphs) {
       var tempData = [];
       _.each(graphs, function (value) {
+        value.lineThickness = 2;
         if (value.title === 'ON_PREM') {
           value.balloonText = '<span class="graph-text">' + vm.onPremisesHeading + ' ' + '<span class="graph-number">[[value]]</span></span>';
+          tempData[1] = value;
         } else if (value.title === 'CLOUD') {
           value.balloonText = '<span class="graph-text">' + vm.cloudHeading + ' ' + '<span class="graph-number">[[value]]</span></span>';
+          tempData[0] = value;
         } else if (value.title === 'HYBRID') {
           value.balloonText = '<span class="graph-text">' + vm.hybridHeading + ' ' + '<span class="graph-number">[[value]]</span></span>';
+          tempData[2] = value;
         } else {
-          value.balloonText = '<span class="graph-text">' + value.title + ' ' + '<span class="graph-number">[[value]]</span></span>';
+          value.balloonText = '<span class="graph-text">' + vm.totalHeading + ' ' + '<span class="graph-number">[[value]]</span></span>';
+          tempData[3] = value;
         }
-        value.lineThickness = 2;
-        tempData.push(value);
       });
-      tempData = _.sortBy(tempData, 'title');
       return tempData;
     }
 
