@@ -4,7 +4,7 @@ export { CardUtils };
 
 export default angular
   .module('core.cards', [
-    'collab.ui',
+    require('collab-ui-ng').default,
   ])
   .service('CardUtils', CardUtils)
   .name;

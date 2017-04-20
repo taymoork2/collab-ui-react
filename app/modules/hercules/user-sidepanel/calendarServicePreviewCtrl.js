@@ -6,13 +6,13 @@
     .controller('CalendarServicePreviewCtrl', CalendarServicePreviewCtrl);
 
   /*@ngInject*/
-  function CalendarServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Orgservice, Notification, USSService, FusionClusterService, $translate, ResourceGroupService, FeatureToggleService, HybridServicesUtils) {
+  function CalendarServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Orgservice, Notification, USSService, FusionClusterService, $translate, ResourceGroupService, FeatureToggleService, HybridServicesI18NService) {
     $scope.entitlementNames = {
       'squared-fusion-cal': 'squaredFusionCal',
       'squared-fusion-gcal': 'squaredFusionGCal',
     };
 
-    $scope.currentUser = $stateParams.currentUser || $stateParams.currentPlace;
+    $scope.currentUser = $stateParams.currentUser || $stateParams.getCurrentPlace();
     $scope.isPlace = $scope.currentUser.accountType === 'MACHINE';
     $scope.isUser = !$scope.isPlace;
     $scope.currentStateName = $state.current.name;
@@ -145,7 +145,7 @@
           });
         }
         if ($scope.extension.status && $scope.extension.status.lastStateChange) {
-          $scope.extension.status.lastStateChangeText = HybridServicesUtils.getTimeSinceText($scope.extension.status.lastStateChange);
+          $scope.extension.status.lastStateChangeText = HybridServicesI18NService.getTimeSinceText($scope.extension.status.lastStateChange);
         }
 
         // If we find no status in USS and the service is entitled, we try to refresh the user in USS and reload the statuses
@@ -187,29 +187,23 @@
     };
 
     var readResourceGroups = function () {
-      FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup)
-        .then(function (supported) {
-          $scope.resourceGroupsFeatureToggle = supported;
-          if (supported) {
-            ResourceGroupService.getAllAsOptions().then(function (options) {
-              if (options.length > 0) {
-                $scope.resourceGroup.options = $scope.resourceGroup.options.concat(options);
-                if ($scope.extension.status && $scope.extension.status.resourceGroupId) {
-                  setSelectedResourceGroup($scope.extension.status.resourceGroupId);
-                } else {
-                  USSService.getUserProps($scope.currentUser.id).then(function (props) {
-                    if (props.resourceGroups && props.resourceGroups[$scope.extension.id]) {
-                      setSelectedResourceGroup(props.resourceGroups[$scope.extension.id]);
-                    } else {
-                      $scope.resourceGroup.displayWarningIfNecessary();
-                    }
-                  });
-                }
-                $scope.resourceGroup.updateShow();
+      ResourceGroupService.getAllAsOptions().then(function (options) {
+        if (options.length > 0) {
+          $scope.resourceGroup.options = $scope.resourceGroup.options.concat(options);
+          if ($scope.extension.status && $scope.extension.status.resourceGroupId) {
+            setSelectedResourceGroup($scope.extension.status.resourceGroupId);
+          } else {
+            USSService.getUserProps($scope.currentUser.id).then(function (props) {
+              if (props.resourceGroups && props.resourceGroups[$scope.extension.id]) {
+                setSelectedResourceGroup(props.resourceGroups[$scope.extension.id]);
+              } else {
+                $scope.resourceGroup.displayWarningIfNecessary();
               }
             });
           }
-        });
+          $scope.resourceGroup.updateShow();
+        }
+      });
     };
 
     var updateEntitlement = function (entitled) {
@@ -346,9 +340,7 @@
 
     $scope.selectedCalendarTypeChanged = function (type) {
       $scope.extension.id = type;
-      if ($scope.resourceGroupsFeatureToggle) {
-        $scope.resourceGroup.updateShow();
-      }
+      $scope.resourceGroup.updateShow();
       $scope.calendarType.init();
     };
   }

@@ -4,7 +4,7 @@
 
   module.exports = angular.module('huron.telephoneNumberService', [
     require('angular-resource'),
-    'collab.ui',
+    require('collab-ui-ng').default,
   ])
     .factory('TelephoneNumberService', TelephoneNumberService)
     .name;
@@ -94,12 +94,18 @@
       return res;
     }
 
-    function validateDID(number) {
+    function validateDID(number, code) {
       var res = false;
       try {
-        var phoneNumberType;
-        var formattedNumber = phoneUtils.formatE164(number);
-        var extractedRegionCode = phoneUtils.getRegionCodeForNumber(formattedNumber).toLowerCase();
+        var phoneNumberType, formattedNumber, extractedRegionCode;
+        if (!code) {
+          formattedNumber = phoneUtils.formatE164(number);
+          extractedRegionCode = phoneUtils.getRegionCodeForNumber(formattedNumber).toLowerCase();
+        } else {
+          formattedNumber = number;
+          extractedRegionCode = code;
+        }
+
         if (phoneUtils.isValidNumberForRegion(formattedNumber, extractedRegionCode)) {
           phoneNumberType = phoneUtils.getNumberType(formattedNumber, extractedRegionCode);
           switch (phoneNumberType) {

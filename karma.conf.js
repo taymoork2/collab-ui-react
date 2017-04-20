@@ -26,6 +26,7 @@ module.exports = function (config) {
     frameworks: [
       'jasmine',
       'sinon',
+      // for source maps in debug dev tools
       'source-map-support',
     ],
 

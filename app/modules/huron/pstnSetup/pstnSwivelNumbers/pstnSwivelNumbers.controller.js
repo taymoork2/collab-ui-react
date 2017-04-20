@@ -5,7 +5,7 @@
     .controller('PstnSwivelNumbersCtrl', PstnSwivelNumbersCtrl);
 
   /* @ngInject */
-  function PstnSwivelNumbersCtrl($translate, $state, $timeout, PstnSetup, PstnSetupService, Notification, TelephoneNumberService) {
+  function PstnSwivelNumbersCtrl($translate, $state, $timeout, PstnSetup, PstnSetupService, Notification, TelephoneNumberService, FeatureToggleService) {
     var vm = this;
 
     vm.hasCarriers = PstnSetup.isCarrierExists;
@@ -13,6 +13,8 @@
     vm.goBack = goBack;
     vm.validateSwivelNumbers = validateSwivelNumbers;
     vm.getExampleNumbers = TelephoneNumberService.getExampleNumbers;
+    vm.onChange = onChange;
+    vm.onAcknowledge = onAcknowledge;
 
     vm.tokenfieldid = 'swivelAddNumbers';
     vm.tokenplaceholder = $translate.instant('didManageModal.inputPlacehoder');
@@ -41,6 +43,10 @@
       $timeout(function () {
         setSwivelNumberTokens(vm.swivelNumbers);
       }, 100);
+      FeatureToggleService.supports(FeatureToggleService.features.huronFederatedSparkCall)
+      .then(function (results) {
+        vm.ftHuronFederatedSparkCall = results;
+      });
     }
 
     function editToken(e) {
@@ -95,29 +101,51 @@
     }
 
     function validateSwivelNumbers() {
-      var tokens = getSwivelNumberTokens() || [];
-      var invalid = _.find(tokens, {
-        invalid: true,
-      });
-      if (invalid) {
-        Notification.error('pstnSetup.invalidNumberPrompt');
-      } else if (tokens.length === 0) {
-        Notification.error('pstnSetup.orderNumbersPrompt');
-      } else {
-        //set numbers for if they go back
-        PstnSetup.setNumbers(tokens);
-        var numbers = _.map(tokens, function (number) {
-          return number.value;
+      var invalid;
+      if (!vm.ftHuronFederatedSparkCall) {
+        var tokens = getSwivelNumberTokens() || [];
+        invalid = _.find(tokens, {
+          invalid: true,
         });
-        var swivelOrder = [{
-          data: {
-            numbers: numbers,
-          },
-          numberType: PstnSetupService.NUMTYPE_DID,
-          orderType: PstnSetupService.SWIVEL_ORDER,
-        }];
-        PstnSetup.setOrders(swivelOrder);
-        $state.go('pstnSetup.review');
+        if (invalid) {
+          Notification.error('pstnSetup.invalidNumberPrompt');
+        } else if (tokens.length === 0) {
+          Notification.error('pstnSetup.orderNumbersPrompt');
+        } else {
+          //set numbers for if they go back
+          PstnSetup.setNumbers(tokens);
+          var numbers = _.map(tokens, function (number) {
+            return number.value;
+          });
+          var swivelOrder = [{
+            data: {
+              numbers: numbers,
+            },
+            numberType: PstnSetupService.NUMTYPE_DID,
+            orderType: PstnSetupService.SWIVEL_ORDER,
+          }];
+          PstnSetup.setOrders(swivelOrder);
+          $state.go('pstnSetup.review');
+        }
+      } else {
+        invalid = vm.invalidCount > 0;
+        if (invalid) {
+          Notification.error('pstnSetup.invalidNumberPrompt');
+        } else if (vm.swivelNumbers.length === 0) {
+          Notification.error('pstnSetup.orderNumbersPrompt');
+        } else {
+          //set numbers for if they go back
+          PstnSetup.setNumbers(vm.swivelNumbers);
+          swivelOrder = [{
+            data: {
+              numbers: vm.swivelNumbers,
+            },
+            numberType: PstnSetupService.NUMTYPE_DID,
+            orderType: PstnSetupService.SWIVEL_ORDER,
+          }];
+          PstnSetup.setOrders(swivelOrder);
+          $state.go('pstnSetup.review');
+        }
       }
     }
 
@@ -127,6 +155,15 @@
 
     function goBack() {
       $state.go('pstnSetup');
+    }
+
+    function onChange(numbers, invalidCount) {
+      vm.swivelNumbers = numbers;
+      vm.invalidCount = invalidCount;
+    }
+
+    function onAcknowledge(value) {
+      vm.emergencyAcknowledge = value;
     }
 
   }

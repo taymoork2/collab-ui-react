@@ -50,6 +50,16 @@
           return $state.current.parent === 'sidepanel' || (rootStateIsSidepanel && $state.includes(rootState));
         }
 
+        /* @ngInject */
+        function SidePanelLargeOpen($window) {
+          $window.document.querySelector('.side-panel').classList.add('large');
+        }
+
+        /* @ngInject */
+        function SidePanelLargeClose($window) {
+          $window.document.querySelector('.side-panel').classList.remove('large');
+        }
+
         //Add blob to the default angular whitelist
         $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|tel|file|blob):/);
 
@@ -299,8 +309,13 @@
               } else {
                 $previousState.memo(sidepanelMemo);
               }
+              var template = '<cs-sidepanel';
+              if ($state.params.size) {
+                template = template + ' size="large"';
+              }
+              template = template + '></cs-sidepanel>';
               $state.sidepanel = $modal.open({
-                template: '<cs-sidepanel></cs-sidepanel>',
+                template: template,
                 // TODO(pajeter): remove inline template when cs-modal is updated
                 windowTemplate: '<div modal-render="{{$isRendered}}" tabindex="-1" role="dialog" class="sidepanel-modal"' +
                 'modal-animation-class="fade"' +
@@ -371,11 +386,14 @@
             $state.modal.result.finally(function () {
               if (!this.stopPreviousState) {
                 $state.modal = null;
-                var previousState = $previousState.get(modalMemo);
-                if (previousState) {
-                  return $previousState.go(modalMemo).then(function () {
-                    $previousState.forget(modalMemo);
-                  });
+                //context-fields-sidepanel needs to update the view with new values after the update
+                if ($state.current.name !== 'context-fields-sidepanel') {
+                  var previousState = $previousState.get(modalMemo);
+                  if (previousState) {
+                    return $previousState.go(modalMemo).then(function () {
+                      $previousState.forget(modalMemo);
+                    });
+                  }
                 }
               }
             }.bind($state.modal));
@@ -1087,6 +1105,7 @@
               queryuserslist: {},
               currentUserId: '',
               orgInfo: {},
+              preferredLanguageDetails: {},
             },
             data: {
               displayName: 'Overview',
@@ -1106,6 +1125,26 @@
                   done(require('modules/huron/overview'));
                 }, 'user-call-overview');
               }),
+            },
+          })
+          .state('user-overview.userDetails', {
+            template: '<uc-user-details-overview preferred-language-details="$resolve.preferredLanguageDetails"></uc-user-details-overview>',
+            params: {
+              reloadToggle: false,
+            },
+            data: {},
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('user-overview.userDetails').data.displayName = $translate.instant('usersPreview.userDetails');
+              },
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/huron/users/userDetailsOverview'));
+                }, 'uc-user-details-overview');
+              }),
+              preferredLanguageDetails: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams, 'preferredLanguageDetails');
+              },
             },
           })
           .state('user-overview.csdmDevice', {
@@ -1408,6 +1447,24 @@
             controller: 'UserRolesCtrl',
             data: {
               displayName: 'Roles',
+            },
+          })
+
+          .state('user-overview.cmc', {
+            template: '<cmc-user-details-settings user="$resolve.user" ng-if="$resolve.hasCmcFeatureToggle"></cmc-user-details-settings>',
+            params: {
+              service: 'CMC',
+            },
+            resolve: {
+              data: /* @ngInject */ function ($translate, $state) {
+                $state.get('user-overview.cmc').data.displayName = $translate.instant('cmc.menu.mobileConvergenceService');
+              },
+              user: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams, 'currentUser');
+              },
+              hasCmcFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMobileConvergence);
+              },
             },
           })
 
@@ -1865,6 +1922,7 @@
               extensions: {},
               parentState: 'place-overview',
               editService: {},
+              getCurrentPlace: {},
             },
           })
           .state('place-overview.hybrid-services-squared-fusion-cal.history', {
@@ -1886,6 +1944,7 @@
               extensionId: {},
               extensions: {},
               editService: {},
+              getCurrentPlace: {},
             },
           })
           .state('place-overview.hybrid-services-squared-fusion-gcal.history', {
@@ -1907,6 +1966,7 @@
               extensionId: {},
               extensions: {},
               editService: {},
+              getCurrentPlace: {},
             },
           })
           .state('place-overview.hybrid-services-squared-fusion-uc.uc-history', {
@@ -2076,8 +2136,15 @@
             },
             templateUrl: 'modules/gemini/callbackGroup/cbgRequest.tpl.html',
           })
-          .state('gem.modal.tdRequest', {
-            template: '<gm-td-modal-request dismiss="$dismiss()" class="new-field-modal"></gm-td-modal-request>',
+          .state('gmTdLargePanel', {
+            data: {},
+            parent: 'sidepanel',
+            views: { 'sidepanel@': { template: '<gm-td-large-panel></gm-td-large-panel>' } },
+            resolve: {
+              sideBarInfo: /* @ngInject */ function ($state) {
+                $state.params.size = 'large';
+              },
+            },
           })
           .state('gmTdDetails', {
             data: {},
@@ -2086,6 +2153,11 @@
             views: {
               'sidepanel@': { template: '<gm-td-details></gm-td-details>' },
               'header@gmTdDetails': { templateUrl: 'modules/gemini/telephonyDomain/details/gmTdDetailsHeader.tpl.html' } },
+          })
+          .state('gmTdDetails.numbersView', {
+            onEnter: SidePanelLargeOpen,
+            onExit: SidePanelLargeClose,
+            template: '<gm-td-numbers-view></gm-td-numbers-view>',
           })
           .state('gmTdDetails.sites', {
             params: { data: {} },
@@ -2177,18 +2249,22 @@
               },
             },
           })
-          .state('customer-overview.pstnOrderOverview', {
-            controller: 'PstnOrderOverviewCtrl',
-            controllerAs: 'pstnOrderOverview',
-            templateUrl: 'modules/huron/orderManagement/pstnOrderOverview.tpl.html',
-            resolve: {
-              data: /* @ngInject */ function ($state, $translate) {
-                $state.get('customer-overview.pstnOrderOverview').data.displayName = $translate.instant('customerPage.pstnOrders');
-              },
-            },
-            data: {},
+          .state('customer-overview.ordersOverview', {
             params: {
               currentCustomer: {},
+            },
+            data: {},
+            template: '<uc-orders-overview is-partner="true" current-customer="$resolve.currentCustomer"></uc-orders-overview>',
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.ordersOverview').data.displayName = $translate.instant('customerPage.pstnOrders');
+              },
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/pstnOrderManagement/ordersOverview'], done);
+              }),
+              currentCustomer: /* @ngInject */ function ($stateParams) {
+                return $stateParams.currentCustomer;
+              },
             },
           })
           .state('customer-overview.meetingDetail', {
@@ -2258,19 +2334,76 @@
               webexDomains: {},
             },
           })
-          .state('customer-overview.pstnOrderDetail', {
-            parent: 'customer-overview.pstnOrderOverview',
-            controller: 'PstnOrderDetailCtrl',
-            controllerAs: 'pstnOrderDetail',
-            templateUrl: 'modules/huron/orderManagement/pstnOrderDetail.tpl.html',
-            resolve: {
-              data: /* @ngInject */ function ($state, $translate) {
-                $state.get('customer-overview.pstnOrderDetail').data.displayName = $translate.instant('customerPage.pstnOrders');
-              },
+          .state('customerPstnOrdersOverview', {
+            parent: 'sidepanel',
+            params: {
+              currentCustomer: {},
+              vendor: undefined,
             },
             data: {},
+            views: {
+              'sidepanel@': {
+                template: '<uc-customer-pstn-orders-overview current-customer="$resolve.currentCustomer" vendor="$resolve.vendor"></uc-customer-pstn-orders-overview>',
+              },
+            },
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customerPstnOrdersOverview').data.displayName = $translate.instant('pstnOrderOverview.orderHistory');
+              },
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/pstnOrderManagement/customerPstnOrdersOverview'], done);
+              }),
+              currentCustomer: /* @ngInject */ function ($stateParams) {
+                return $stateParams.currentCustomer;
+              },
+              vendor: /* @ngInject */ function ($stateParams) {
+                return $stateParams.vendor;
+              },
+            },
+          })
+          .state('customerPstnOrdersOverview.orderDetail', {
             params: {
               currentOrder: {},
+              currentCustomer: {},
+            },
+            data: {},
+            template: '<uc-order-detail current-customer= "$resolve.currentCustomer" current-order="$resolve.currentOrder"></uc-order-detail>',
+            resolve: {
+              data: /* @ngInject */ function ($state, $stateParams) {
+                $state.get('customerPstnOrdersOverview.orderDetail').data.displayName = $stateParams.currentOrder.carrierOrderId;
+              },
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/pstnOrderManagement/orderDetail'], done);
+              }),
+              currentOrder: /* @ngInject */ function ($stateParams) {
+                return $stateParams.currentOrder;
+              },
+              currentCustomer: /* @ngInject */ function ($stateParams) {
+                return $stateParams.currentCustomer;
+              },
+            },
+          })
+          .state('customer-overview.orderDetail', {
+            parent: 'customer-overview.ordersOverview',
+            params: {
+              currentCustomer: {},
+              currentOrder: {},
+            },
+            data: {},
+            template: '<uc-order-detail current-customer= "$resolve.currentCustomer" current-order="$resolve.currentOrder"></uc-order-detail>',
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.orderDetail').data.displayName = $translate.instant('customerPage.pstnOrders');
+              },
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/pstnOrderManagement/orderDetail'], done);
+              }),
+              currentCustomer: /* @ngInject */ function ($stateParams) {
+                return $stateParams.currentCustomer;
+              },
+              currentOrder: /* @ngInject */ function ($stateParams) {
+                return $stateParams.currentOrder;
+              },
             },
           })
           .state('firsttimesplash', {
@@ -2477,10 +2610,22 @@
             controller: 'TrialDeviceController',
             controllerAs: 'callTrial',
           })
-          .state('trial.pstn', {
+          .state('trial.pstnDeprecated', {
             templateUrl: 'modules/core/trials/trialPstn.tpl.html',
             controller: 'TrialPstnCtrl',
             controllerAs: 'pstnTrial',
+          })
+          .state('trial.pstn', {
+            template: '<uc-pstn-trial-setup class="modal-content" dismiss="$dismiss()"></uc-pstn-trial-setup>',
+            controller: 'TrialPstnCtrl',
+            controllerAs: 'pstnTrial',
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/huron/pstn/pstnTrialSetup'));
+                }, 'pstn-setup');
+              }),
+            },
           })
           .state('trial.emergAddress', {
             templateUrl: 'modules/core/trials/trialEmergAddress.tpl.html',
@@ -2600,20 +2745,25 @@
           .state('hurondetailsBase', {
             abstract: true,
             parent: 'main',
-            templateUrl: 'modules/huron/details/huronDetails.tpl.html',
+            templateUrl: 'modules/huron/details/huronDetails.html',
           })
           .state('hurondetails', {
             url: '/hurondetails',
             parent: 'hurondetailsBase',
             views: {
               'header': {
-                templateUrl: 'modules/huron/details/huronDetailsHeader.tpl.html',
-                controller: 'HuronDetailsHeaderCtrl',
-                controllerAs: 'header',
+                template: '<uc-huron-details-header></uc-huron-details-header>',
               },
               'main': {
                 template: '<div ui-view></div>',
               },
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/huron/details'));
+                }, 'call-details');
+              }),
             },
           })
           .state('huronlines', {
@@ -2622,6 +2772,26 @@
             templateUrl: 'modules/huron/lines/lineList.tpl.html',
             controller: 'LinesListCtrl',
             controllerAs: 'linesListCtrl',
+          })
+          .state('externalNumberDelete', {
+            parent: 'modalDialog',
+            params: {
+              numberInfo: {},
+              refreshFn: function () {},
+            },
+            views: {
+              'modal@': {
+                template: '<delete-external-number number-info="$resolve.numberInfo" refresh-fn="$resolve.refreshFn()" dismiss="$dismiss()"></delete-external-number>',
+              },
+            },
+            resolve: {
+              numberInfo: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams, 'numberInfo');
+              },
+              refreshFn: /* @ngInject */ function ($stateParams) {
+                return $stateParams.refreshFn;
+              },
+            },
           })
           .state('huronsettings', {
             url: '/settings',
@@ -2824,9 +2994,6 @@
             controllerAs: 'resourceList',
             parent: 'main',
             resolve: {
-              hasResourceGroupFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
-              },
               hasCucmSupportFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCucmSupport);
               },
@@ -2889,23 +3056,27 @@
               },
             },
           })
-          .state('context-new-field', {
+          .state('context-field-modal', {
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<context-new-field-modal existing-field-ids="$resolve.existingFieldIds" create-callback="$resolve.createCallback" dismiss="$dismiss()" class="new-field-modal"></context-new-field-modal>',
+                template: '<context-field-modal existing-field-ids="$resolve.existingFieldIds" callback="$resolve.callback" existing-field-data="$resolve.existingFieldData" dismiss="$dismiss()" class="context-modal"></context-field-modal>',
               },
             },
             params: {
               existingFieldIds: [],
-              createCallback: function () {},
+              existingFieldData: {},
+              callback: function () {},
             },
             resolve: {
               existingFieldIds: /* @ngInject */ function ($stateParams) {
                 return $stateParams.existingFieldIds;
               },
-              createCallback: /* @ngInject */ function ($stateParams) {
-                return $stateParams.createCallback;
+              existingFieldData: /* @ngInject */ function ($stateParams) {
+                return $stateParams.existingFieldData;
+              },
+              callback: /* @ngInject */ function ($stateParams) {
+                return $stateParams.callback;
               },
             },
           })
@@ -2913,7 +3084,7 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                template: '<context-fields-sidepanel field="$resolve.field"></context-fields-sidepanel>',
+                template: '<context-fields-sidepanel field="$resolve.field" process="$resolve.process" callback="$resolve.callback"></context-fields-sidepanel>',
               },
               'header@context-fields-sidepanel': {
                 templateUrl: 'modules/context/fields/sidepanel/hybrid-context-fields-sidepanel-header.html',
@@ -2924,10 +3095,18 @@
             },
             params: {
               field: {},
+              process: function () {},
+              callback: function () {},
             },
             resolve: {
               field: /* @ngInject */ function ($stateParams) {
                 return $stateParams.field;
+              },
+              process: /* @ngInject */ function ($stateParams) {
+                return $stateParams.process;
+              },
+              callback: /* @ngInject */ function ($stateParams) {
+                return $stateParams.callback;
               },
             },
           })
@@ -2939,6 +3118,31 @@
                 templateUrl: 'modules/context/fieldsets/hybrid-context-fieldsets.html',
                 controller: 'HybridContextFieldsetsCtrl',
                 controllerAs: 'contextFieldsets',
+              },
+            },
+            resolve: {
+              hasContextDictionaryEditFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasContextDictionaryEdit);
+              },
+            },
+          })
+          .state('context-fieldset-modal', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                template: '<context-fieldset-modal existing-fieldset-ids="$resolve.existingFieldsetIds" callback="$resolve.callback" dismiss="$dismiss()" class="context-modal"></context-fieldset-modal>',
+              },
+            },
+            params: {
+              existingFieldsetIds: [],
+              callback: function () {},
+            },
+            resolve: {
+              existingFieldsetIds: /* @ngInject */ function ($stateParams) {
+                return $stateParams.existingFieldsetIds;
+              },
+              callback: /* @ngInject */ function ($stateParams) {
+                return $stateParams.callback;
               },
             },
           })
@@ -3023,7 +3227,7 @@
             url: '/private-trunk-overview/list',
             views: {
               sipDestinationList: {
-                template: '<hybrid-service-cluster-list service-id="\'ciscouc\'"></hybrid-service-cluster-list>',
+                template: '<hybrid-service-cluster-list service-id="\'ept\'"></hybrid-service-cluster-list>',
               },
             },
           })
@@ -3060,12 +3264,7 @@
           })
           .state('expressway-cluster.settings', {
             url: '/settings',
-            template: '<expressway-cluster-settings-page cluster-id="$resolve.id" has-resource-group-feature-toggle="$resolve.hasResourceGroupFeatureToggle"></expressway-cluster-settings-page>',
-            resolve: {
-              hasResourceGroupFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
-              },
-            },
+            template: '<expressway-cluster-settings-page cluster-id="$resolve.id"></expressway-cluster-settings-page>',
           })
           .state('hybrid-services-connector-sidepanel', {
             parent: 'sidepanel',
@@ -3140,7 +3339,7 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                template: '<cluster-sidepanel-overview cluster-type="\'hds_app\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType" has-resource-group-feature-toggle="$resolve.hasResourceGroupFeatureToggle" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></cluster-sidepanel-overview>',
+                template: '<cluster-sidepanel-overview cluster-type="\'hds_app\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></cluster-sidepanel-overview>',
               },
               'header@hds-cluster-details': {
                 templateUrl: 'modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html',
@@ -3159,9 +3358,6 @@
               },
               connectorType: /* @ngInject */ function ($stateParams) {
                 return $stateParams.connectorType;
-              },
-              hasResourceGroupFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
               },
               hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
@@ -3551,10 +3747,32 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                template: '<div ui-view="header"></div>',
+                template: '<private-trunk-sidepanel trunk-id="$resolve.trunkId"></private-trunk-sidepanel>',
               },
               'header@private-trunk-sidepanel': {
-                template: 'Private Trunk Header',
+                templateUrl: 'modules/hercules/private-trunk/private-trunk-sidepanel/private-trunk-sidepanel-header.html',
+              },
+            },
+            data: {},
+            params: {
+              clusterId: null,
+            },
+            resolve: {
+              trunkId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.clusterId; // Deliberately "renaming" clusterId to trunkId here
+              },
+            },
+          })
+          .state('private-trunk-sidepanel.alarm-details', {
+            template: '<alarm-details-sidepanel alarm="$resolve.alarm"></alarm-details-sidepanel>',
+            // If data not present, $state.current.data.displayName can't be changed
+            data: {},
+            params: {
+              alarm: null,
+            },
+            resolve: {
+              alarm: /* @ngInject */ function ($stateParams) {
+                return $stateParams.alarm;
               },
             },
           })
@@ -3562,7 +3780,7 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                template: '<cluster-sidepanel-overview cluster-type="\'c_mgmt\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType" has-resource-group-feature-toggle="$resolve.hasResourceGroupFeatureToggle" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></cluster-sidepanel-overview>',
+                template: '<cluster-sidepanel-overview cluster-type="\'c_mgmt\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></cluster-sidepanel-overview>',
               },
               'header@expressway-cluster-sidepanel': {
                 templateUrl: 'modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html',
@@ -3580,9 +3798,6 @@
               },
               connectorType: /* @ngInject */ function ($stateParams) {
                 return $stateParams.connectorType;
-              },
-              hasResourceGroupFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
               },
               hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
@@ -3622,11 +3837,6 @@
             controller: 'ResourceGroupSettingsController',
             controllerAs: 'rgsCtrl',
             parent: 'main',
-            resolve: {
-              hasResourceGroupFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
-              },
-            },
           });
 
         $stateProvider

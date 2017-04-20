@@ -1,4 +1,4 @@
-require('./_new-field.scss');
+require('modules/context/styles/_hybrid-context.scss');
 
 (function () {
   'use strict';

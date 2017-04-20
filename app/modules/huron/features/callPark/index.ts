@@ -12,9 +12,9 @@ import notifications from 'modules/core/notifications';
 
 export default angular
   .module('huron.call-park', [
-    'atlas.templates',
-    'collab.ui',
-    'pascalprecht.translate',
+    require('scripts/app.templates'),
+    require('collab-ui-ng').default,
+    require('angular-translate'),
     callFeatureName,
     callParkNumber,
     callParkMember,

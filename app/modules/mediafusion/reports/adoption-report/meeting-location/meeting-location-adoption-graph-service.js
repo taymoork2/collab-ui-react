@@ -21,6 +21,7 @@
     vm.onPremisesHeading = $translate.instant('mediaFusion.metrics.onPremisesHeading');
     vm.cloudHeading = $translate.instant('mediaFusion.metrics.cloudHeading');
     vm.hybridHeading = $translate.instant('mediaFusion.metrics.hybridHeading');
+    vm.totalHeading = $translate.instant('mediaFusion.metrics.clientType.total');
 
     return {
       setMeetingLocationGraph: setMeetingLocationGraph,
@@ -128,7 +129,7 @@
         'time': vm.timeStamp,
       };
       var exportFields = [];
-      _.forEach(graphs, function (value) {
+      _.each(graphs, function (value) {
         if (value.valueField === 'ON_PREM') {
           value.lineColor = '#02bbcc';
           value.title = vm.onPremisesHeading;
@@ -141,7 +142,7 @@
         }
         columnNames[value.valueField] = value.title + ' ' + vm.meetingLocation;
       });
-      _.forEach(columnNames, function (key) {
+      _.each(columnNames, function (key) {
         exportFields.push(key);
       });
       dateLabel = _.replace(dateLabel, /\s/g, '_');
@@ -164,14 +165,14 @@
 
       chartData.legend.listeners = [{
         'event': 'hideItem',
-        "method": legendHandler,
+        'method': legendHandler,
       }, {
         'event': 'showItem',
         'method': legendHandler,
       }];
 
       var chart = AmCharts.makeChart(vm.meetingLocationdiv, chartData);
-      // listen for zoomed event and call "handleZoom" method
+      // listen for zoomed event and call 'handleZoom' method
       chart.addListener('zoomed', handleZoom);
       return chart;
     }
@@ -194,20 +195,22 @@
 
     function getClusterName(graphs) {
       var tempData = [];
-      _.forEach(graphs, function (value) {
+      _.each(graphs, function (value) {
+        value.lineThickness = 2;
         if (value.title === 'ON_PREM') {
           value.balloonText = '<span class="graph-text">' + vm.onPremisesHeading + ' ' + '<span class="graph-number">[[value]]</span></span>';
+          tempData[1] = value;
         } else if (value.title === 'CLOUD') {
           value.balloonText = '<span class="graph-text">' + vm.cloudHeading + ' ' + '<span class="graph-number">[[value]]</span></span>';
+          tempData[0] = value;
         } else if (value.title === 'HYBRID') {
           value.balloonText = '<span class="graph-text">' + vm.hybridHeading + ' ' + '<span class="graph-number">[[value]]</span></span>';
+          tempData[2] = value;
         } else {
-          value.balloonText = '<span class="graph-text">' + value.title + ' ' + '<span class="graph-number">[[value]]</span></span>';
+          value.balloonText = '<span class="graph-text">' + vm.totalHeading + ' ' + '<span class="graph-number">[[value]]</span></span>';
+          tempData[3] = value;
         }
-        value.lineThickness = 2;
-        tempData.push(value);
       });
-      tempData = _.sortBy(tempData, 'title');
       return tempData;
     }
 

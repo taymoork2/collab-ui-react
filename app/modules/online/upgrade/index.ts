@@ -9,8 +9,8 @@ export * from './upgrade.service';
 
 export default angular
   .module('online.upgrade', [
-    'atlas.templates',
-    'collab.ui',
+    require('scripts/app.templates'),
+    require('collab-ui-ng').default,
     subscriptionUpgradeButtonModule,
     require('angular-resource'),
     require('modules/core/auth/auth'),

@@ -45,27 +45,40 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
   it('controller should be defined', function () {
     expect(controller).toBeDefined();
   });
-  it('check if setEnableVideoQuality sets the tag', function () {
+  it('check if setEnableVideoQuality sets the tag if videoPropertySetId is present', function () {
     controller.enableVideoQuality = true;
     spyOn(Notification, 'success');
     spyOn(Orgservice, 'setOrgSettings').and.returnValue($q.resolve({}));
     spyOn(MediaClusterServiceV2, 'updatePropertySetById').and.returnValue($q.resolve({}));
+    controller.videoPropertySetId = "1234";
     controller.setEnableVideoQuality();
     httpBackend.verifyNoOutstandingExpectation();
     expect(Orgservice.setOrgSettings).toHaveBeenCalled();
     expect(MediaClusterServiceV2.updatePropertySetById).toHaveBeenCalled();
     expect(Notification.success).toHaveBeenCalled();
   });
-  it('check if setEnableVideoQuality has error we get notification', function () {
+  it('check if setEnableVideoQuality if videoPropertySetId is present has error we get notification', function () {
     controller.enableVideoQuality = true;
     spyOn(Notification, 'errorWithTrackingId');
     spyOn(Orgservice, 'setOrgSettings').and.returnValue($q.resolve({}));
     spyOn(MediaClusterServiceV2, 'updatePropertySetById').and.returnValue($q.reject());
+    controller.videoPropertySetId = "1234";
     controller.setEnableVideoQuality();
     httpBackend.verifyNoOutstandingExpectation();
     expect(Orgservice.setOrgSettings).toHaveBeenCalled();
     expect(MediaClusterServiceV2.updatePropertySetById).toHaveBeenCalled();
     expect(Notification.errorWithTrackingId).toHaveBeenCalled();
+  });
+
+  it('check if setEnableVideoQuality gets property sets if videoPropertySetId is null', function () {
+    controller.enableVideoQuality = true;
+    spyOn(Orgservice, 'setOrgSettings').and.returnValue($q.resolve({}));
+    spyOn(MediaClusterServiceV2, 'getPropertySets').and.returnValue($q.resolve({}));
+    controller.videoPropertySetId = null;
+    controller.setEnableVideoQuality();
+    httpBackend.verifyNoOutstandingExpectation();
+    expect(Orgservice.setOrgSettings).toHaveBeenCalled();
+    expect(MediaClusterServiceV2.getPropertySets).toHaveBeenCalled();
   });
 
   it('check if createPropertySetAndAssignClusters creates propertysets and assigns clusters', function () {

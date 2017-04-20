@@ -6,9 +6,9 @@ export * from './snr';
 export * from './snr.service';
 export default angular
   .module('huron.snr', [
-    'atlas.templates',
-    'collab.ui',
-    'pascalprecht.translate',
+    require('scripts/app.templates'),
+    require('collab-ui-ng').default,
+    require('angular-translate'),
     'huron.telephoneNumber',
     'huron.telephoneNumberService',
     customerServiceModule,

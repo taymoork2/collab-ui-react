@@ -13,6 +13,7 @@
     vm.enableVideoQuality = false;
     vm.setEnableVideoQuality = setEnableVideoQuality;
     vm.createPropertySetAndAssignClusters = createPropertySetAndAssignClusters;
+    vm.updatePropertySet = updatePropertySet;
     vm.clusterCount = 0;
     vm.successCount = 0;
     vm.errorCount = 0;
@@ -96,8 +97,26 @@
           'mf.videoQuality': vm.enableVideoQuality,
         },
       };
+      // Check if there is value in vm.videoPropertySetId else get the propertyset id
+      if (vm.videoPropertySetId === null) {
+        MediaClusterServiceV2.getPropertySets()
+          .then(function (propertySets) {
+            if (propertySets.length > 0) {
+              var videoPropertySet = _.filter(propertySets, {
+                name: 'videoQualityPropertySet',
+              });
+              updatePropertySet(videoPropertySet[0].id, payLoad);
+            }
+          });
+      } else {
+        updatePropertySet(vm.videoPropertySetId, payLoad);
+      }
+
+    }
+
+    function updatePropertySet(id, payLoad) {
       // Assign the modified video quality to property set
-      MediaClusterServiceV2.updatePropertySetById(vm.videoPropertySetId, payLoad)
+      MediaClusterServiceV2.updatePropertySetById(id, payLoad)
         .then(function () {
           Notification.success('mediaFusion.videoQuality.success');
         }, function (err) {

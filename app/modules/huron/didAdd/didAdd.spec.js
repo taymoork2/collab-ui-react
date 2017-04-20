@@ -62,7 +62,7 @@ describe('Controller: DidAddCtrl', function () {
       'uuid': '12145558881-id',
     }]);
 
-    $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId()).respond(customerVoiceNorthAmerica);
+    $httpBackend.whenGET(HuronConfig.getCmiV2Url() + '/customers/' + Authinfo.getOrgId() + '/dialplans').respond(customerVoiceNorthAmerica);
 
     controller = $controller('DidAddCtrl', {
       $scope: $scope,

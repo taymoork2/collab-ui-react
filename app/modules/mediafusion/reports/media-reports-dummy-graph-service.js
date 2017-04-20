@@ -8,7 +8,11 @@
     vm.average_utilzation = $translate.instant('mediaFusion.metrics.avgutilization');
     vm.client_types = $translate.instant('mediaFusion.metrics.clientTypes');
     vm.locations = $translate.instant('mediaFusion.metrics.location');
-    vm.timeFormat = "YYYY-MM-DDTHH:mm:ss";
+    vm.onPremisesHeading = $translate.instant('mediaFusion.metrics.onPremisesHeading');
+    vm.cloudHeading = $translate.instant('mediaFusion.metrics.cloudHeading');
+    vm.clusterHeading = $translate.instant('mediaFusion.metrics.clusterTitle');
+    vm.clusterNodeHeading = $translate.instant('mediaFusion.metrics.clusterNodeTitle');
+    vm.timeFormat = 'YYYY-MM-DDTHH:mm:ss';
     return {
       dummyCallVolumeData: dummyCallVolumeData,
       dummyAvailabilityData: dummyAvailabilityData,
@@ -31,59 +35,62 @@
         end = moment().utc().format(vm.timeFormat);
         start = moment().utc().subtract(4, 'hours').format(vm.timeFormat);
         duration = 240;
-        period = "mm";
+        period = 'mm';
       } else if (filter.value === 1) {
         end = moment().utc().format(vm.timeFormat);
         start = moment().utc().subtract(1, 'days').format(vm.timeFormat);
         duration = 1440;
-        period = "mm";
+        period = 'mm';
       } else if (filter.value === 2) {
         end = moment().utc().format(vm.timeFormat);
         start = moment().utc().subtract(7, 'days').format(vm.timeFormat);
         duration = 168;
-        period = "hh";
+        period = 'hh';
       } else if (filter.value === 3) {
         end = moment().utc().format(vm.timeFormat);
         start = moment().utc().subtract(1, 'months').format(vm.timeFormat);
-        period = "hh";
+        period = 'hh';
         duration = 744;
       } else {
         end = moment().utc().format(vm.timeFormat);
         start = moment().utc().subtract(3, 'months').format(vm.timeFormat);
-        period = "hh";
+        period = 'hh';
         duration = 2260;
       }
       data = [{
-        "isDummy": true,
-        "orgId": "2c3c9f9e-73d9-4460-a668-047162ff1bac",
-        "period": period,
-        "clusterCategories": [{
-          "category": "Cluster/Host",
-          "segments": [{
-            "start": 1,
-            "duration": duration,
-            "color": color,
-            "task": "No data",
+        'isDummy': true,
+        'orgId': '2c3c9f9e-73d9-4460-a668-047162ff1bac',
+        'period': period,
+        'clusterCategories': [{
+          'category': vm.clusterNodeHeading,
+          'segments': [{
+            'start': 1,
+            'duration': duration,
+            'color': color,
+            'startTime': start,
+            'endTime': end,
           }],
         }, {
-          "category": "Cluster/Host",
-          "segments": [{
-            "start": 1,
-            "duration": duration,
-            "color": color,
-            "task": "No data",
+          'category': vm.clusterNodeHeading,
+          'segments': [{
+            'start': 1,
+            'duration': duration,
+            'color': color,
+            'startTime': start,
+            'endTime': end,
           }],
         }, {
-          "category": "Cluster/Host",
-          "segments": [{
-            "start": 1,
-            "duration": duration,
-            "color": color,
-            "task": "No data",
+          'category': vm.clusterNodeHeading,
+          'segments': [{
+            'start': 1,
+            'duration': duration,
+            'color': color,
+            'startTime': start,
+            'endTime': end,
           }],
         }],
-        "startTime": start,
-        "endTime": end,
+        'startTime': start,
+        'endTime': end,
       }];
       var returnData;
       returnData = {
@@ -97,7 +104,7 @@
       if (filter.value === 0) {
         for (var i = 240; i >= 1; i--) {
           dummyGraphVal.push({
-            timestamp: moment().subtract(i, 'minutes').format(vm.timeFormat),
+            timestamp: moment().utc().subtract(i, 'minutes').format(vm.timeFormat),
             call_reject: Math.floor((Math.random() * 1) + 1),
             active_calls: Math.floor((Math.random() * 1) + 1),
             balloon: false,
@@ -108,7 +115,7 @@
       } else if (filter.value === 1) {
         for (i = 288; i >= 1; i--) {
           dummyGraphVal.push({
-            timestamp: moment().subtract(i * 5, 'minutes').format(vm.timeFormat),
+            timestamp: moment().utc().subtract(i * 5, 'minutes').format(vm.timeFormat),
             call_reject: Math.floor((Math.random() * 1) + 1),
             active_calls: Math.floor((Math.random() * 1) + 1),
             balloon: false,
@@ -119,7 +126,7 @@
       } else if (filter.value === 2) {
         for (i = 168; i >= 1; i--) {
           dummyGraphVal.push({
-            timestamp: moment().subtract(i, 'hours').format(vm.timeFormat),
+            timestamp: moment().utc().subtract(i, 'hours').format(vm.timeFormat),
             call_reject: Math.floor((Math.random() * 1) + 1),
             active_calls: Math.floor((Math.random() * 1) + 1),
             balloon: false,
@@ -130,7 +137,7 @@
       } else if (filter.value === 3) {
         for (i = 180; i >= 0; i--) {
           dummyGraphVal.push({
-            timestamp: moment().subtract(i * 3, 'hours').format(vm.timeFormat),
+            timestamp: moment().utc().subtract(i * 3, 'hours').format(vm.timeFormat),
             call_reject: Math.floor((Math.random() * 1) + 1),
             active_calls: Math.floor((Math.random() * 1) + 1),
             balloon: false,
@@ -141,7 +148,7 @@
       } else {
         for (i = 270; i >= 0; i--) {
           dummyGraphVal.push({
-            timestamp: moment().subtract(i * 8, 'hours').format(vm.timeFormat),
+            timestamp: moment().utc().subtract(i * 8, 'hours').format(vm.timeFormat),
             call_reject: Math.floor((Math.random() * 1) + 1),
             active_calls: Math.floor((Math.random() * 1) + 1),
             balloon: false,
@@ -158,7 +165,7 @@
       if (filter.value === 0) {
         for (var i = 240; i >= 1; i--) {
           dummyGraphVal.push({
-            time: moment().subtract(i, 'minutes').format(vm.timeFormat),
+            time: moment().utc().subtract(i, 'minutes').format(vm.timeFormat),
             field: Math.floor((Math.random() * 10) + 1),
             balloon: false,
           });
@@ -166,7 +173,7 @@
       } else if (filter.value === 1) {
         for (i = 288; i >= 1; i--) {
           dummyGraphVal.push({
-            time: moment().subtract(i * 5, 'minutes').format(vm.timeFormat),
+            time: moment().utc().subtract(i * 5, 'minutes').format(vm.timeFormat),
             field: Math.floor((Math.random() * 10) + 1),
             balloon: false,
           });
@@ -174,7 +181,7 @@
       } else if (filter.value === 2) {
         for (i = 168; i >= 1; i--) {
           dummyGraphVal.push({
-            time: moment().subtract(i, 'hours').format(vm.timeFormat),
+            time: moment().utc().subtract(i, 'hours').format(vm.timeFormat),
             field: Math.floor((Math.random() * 10) + 1),
             balloon: false,
           });
@@ -182,7 +189,7 @@
       } else if (filter.value === 3) {
         for (i = 180; i >= 0; i--) {
           dummyGraphVal.push({
-            time: moment().subtract(i * 3, 'hours').format(vm.timeFormat),
+            time: moment().utc().subtract(i * 3, 'hours').format(vm.timeFormat),
             field: Math.floor((Math.random() * 10) + 1),
             balloon: false,
           });
@@ -190,7 +197,7 @@
       } else {
         for (i = 270; i >= 0; i--) {
           dummyGraphVal.push({
-            time: moment().subtract(i * 8, 'hours').format(vm.timeFormat),
+            time: moment().utc().subtract(i * 8, 'hours').format(vm.timeFormat),
             field: Math.floor((Math.random() * 10) + 1),
             balloon: false,
           });
@@ -215,7 +222,7 @@
     function dummyParticipantDistributionGraph() {
       var dummyGraph = [];
       dummyGraph.push({
-        title: 'Cluster',
+        title: vm.clusterHeading,
         valueField: 'field',
         lineColor: chartColors.grayLightTwo,
         showBalloon: false,
@@ -239,7 +246,14 @@
     function dummyNumberOfParticipantGraph() {
       var dummyGraph = [];
       dummyGraph.push({
-        valueField: 'number_of_particpant_count',
+        title: vm.cloudHeading,
+        valueField: 'field',
+        lineColor: chartColors.grayLightTwo,
+        showBalloon: false,
+        isDummy: true,
+      }, {
+        title: vm.onPremisesHeading,
+        valueField: 'field',
         lineColor: chartColors.grayLightTwo,
         showBalloon: false,
         isDummy: true,

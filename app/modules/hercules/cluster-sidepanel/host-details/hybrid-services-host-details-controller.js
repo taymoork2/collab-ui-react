@@ -45,9 +45,6 @@
         controller: 'ConfirmDeleteHostController',
         controllerAs: 'confirmDeleteHostDialog',
         resolve: {
-          cluster: function () {
-            return cluster;
-          },
           hostSerial: function () {
             return vm.host.hostSerial;
           },

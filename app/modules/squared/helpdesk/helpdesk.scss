@@ -604,6 +604,12 @@
     }
   }
 
+  .care-base {
+    header::after {
+      border-top-color: $color-people-base;
+    }
+  }
+
   .cta-base {
     header::after {
       border-top-color: $color-cta-base;

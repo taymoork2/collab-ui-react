@@ -78,7 +78,7 @@ body {
 .pagination,
 .carousel,
 .panel-title a,
-a[ng-click] {
+[ng-click] {
   cursor: pointer;
 }
 

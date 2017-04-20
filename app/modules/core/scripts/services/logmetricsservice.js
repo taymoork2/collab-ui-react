@@ -34,9 +34,10 @@
       },
 
       eventType: {
-        contextCreateFieldSuccess: 'CONTEXTCREATEFIELDSUCCESS',
-        contextCreateFieldFailure: 'CONTEXTCREATEFIELDFAILURE',
         contextNewField: 'CONTEXTNEWFIELD',
+        contextCreateFieldsetSuccess: 'CONTEXTCREATEFIELDSETSUCCESS',
+        contextCreateFieldsetFailure: 'CONTEXTCREATEFIELDSETFAILURE',
+        contextNewFieldset: 'CONTEXTNEWFIELDSET',
         contextServiceEnabled: 'CONTEXTSERVICEENABLED',
         contextServiceDisabled: 'CONTEXTSERVICEDISABLED',
         inviteUsers: 'INVITEUSERS',

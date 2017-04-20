@@ -20,12 +20,13 @@
     <div class="cs-form__section cs-form__section--first">
       <div class="section__info">
         <h4 class="section__title" translate="pagingGroup.pagingGroupName"></h4>
-        <h6 class="section__description" translate="pagingGroup.nameHint"></h6>
       </div>
       <div class="section__content">
         <div ng-class="{'error': $ctrl.errorNameInput}">
-          <input id="paging-group-name" type="text" required="required" class="cs-input" ng-model="$ctrl.name" ng-change="$ctrl.onChange()"
-          />
+          <input id="paging-group-name" type="text" required="required" class="cs-input" ng-model="$ctrl.name" ng-change="$ctrl.onChange()">
+          <div class="cs-input__messages" ng-messages-multiple role="alert" ng-show="$ctrl.errorNameInput">
+            <div class="message" ng-bind-html="$ctrl.pgNameErrorMassage"></div>
+          </div>
         </div>
       </div>
     </div>

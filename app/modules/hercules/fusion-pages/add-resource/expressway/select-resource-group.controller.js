@@ -5,7 +5,7 @@
     .controller('ExpresswaySelectResourceGroupController', ExpresswaySelectResourceGroupController);
 
   /* @ngInject */
-  function ExpresswaySelectResourceGroupController($stateParams, $translate, FeatureToggleService, ResourceGroupService, Notification) {
+  function ExpresswaySelectResourceGroupController($stateParams, $translate, ResourceGroupService, Notification) {
     var vm = this;
     var wizardData = $stateParams.wizard.state().data;
     vm.clusterId = wizardData.expressway.clusterId;
@@ -24,24 +24,17 @@
 
     function init() {
 
-      FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup)
-        .then(function (supported) {
-          if (!supported) {
-            $stateParams.wizard.next();
+      ResourceGroupService.getAllAsOptions()
+        .then(function (options) {
+          if (options.length > 0) {
+            vm.resourceGroupOptions = vm.resourceGroupOptions.concat(options);
+            vm.loading = false;
           } else {
-            ResourceGroupService.getAllAsOptions()
-              .then(function (options) {
-                if (options.length > 0) {
-                  vm.resourceGroupOptions = vm.resourceGroupOptions.concat(options);
-                  vm.loading = false;
-                } else {
-                  $stateParams.wizard.next();
-                }
-              })
-              .catch(function (error) {
-                Notification.errorWithTrackingId(error, 'hercules.genericFailure');
-              });
+            $stateParams.wizard.next();
           }
+        })
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
         });
     }
 

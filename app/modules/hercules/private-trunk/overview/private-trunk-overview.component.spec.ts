@@ -1,21 +1,18 @@
-'use strict';
-
 describe('Component: PrivateTrunkOverview component', () => {
   beforeEach(function() {
     this.initModules('hercules.private-trunk-overview');
     this.injectDependencies(
-      '$scope',
-      '$modal',
-      '$q',
+      '$state',
     );
-    spyOn(this.$modal, 'open').and.returnValue({ result: this.$q.resolve() });
-    this.hasPrivateTrunkFeatureToggle = true;
+    spyOn(this.$state, 'go');
     this.compileComponent('privateTrunkOverview', {
-      hasPrivateTrunkFeatureToggle: true,
+      hasPrivateTrunkFeatureToggle: false,
     });
   });
-  it('should open privateTrunkSetup modal', function () {
-    expect(this.$modal.open).toHaveBeenCalled();
+
+  it('should go to the Services Overview page if you do not have the feature toggle', function () {
+    const backState = 'services-overview';
+    expect(this.$state.go).toHaveBeenCalledWith(backState);
   });
 
 });

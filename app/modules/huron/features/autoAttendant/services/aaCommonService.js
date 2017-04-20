@@ -16,11 +16,10 @@
     var aaCENumberStatus = false;
     var aaMediaUploadStatus = false;
     var aaQueueSettingsStatus = false;
-    var routeQueueToggle = false;
     var mediaUploadToggle = false;
     var callerInputToggle = false;
-    var decisionToggle = false;
     var routeSIPAddressToggle = false;
+    var dynAnnounceToggle = false;
     var uniqueId = 0;
 
     var invalidList = {};
@@ -34,15 +33,13 @@
       setDialByExtensionStatus: setDialByExtensionStatus,
       setCENumberStatus: setCENumberStatus,
       setMediaUploadStatus: setMediaUploadStatus,
-      setDecisionToggle: setDecisionToggle,
       setQueueSettingsStatus: setQueueSettingsStatus,
       setMediaUploadToggle: setMediaUploadToggle,
       setCallerInputToggle: setCallerInputToggle,
-      setRouteQueueToggle: setRouteQueueToggle,
       setRouteSIPAddressToggle: setRouteSIPAddressToggle,
-      isRouteQueueToggle: isRouteQueueToggle,
+      setDynAnnounceToggle: setDynAnnounceToggle,
+      isDynAnnounceToggle: isDynAnnounceToggle,
       isCallerInputToggle: isCallerInputToggle,
-      isDecisionToggle: isDecisionToggle,
       isMediaUploadToggle: isMediaUploadToggle,
       isRouteSIPAddressToggle: isRouteSIPAddressToggle,
       isValid: isValid,
@@ -135,10 +132,9 @@
       aaCENumberStatus = status;
     }
 
-    function setRouteQueueToggle(status) {
-      routeQueueToggle = status;
+    function setDynAnnounceToggle(status) {
+      dynAnnounceToggle = status;
     }
-
     function setQueueSettingsStatus(status) {
       aaQueueSettingsStatus = status;
     }
@@ -150,19 +146,13 @@
     function setCallerInputToggle(status) {
       callerInputToggle = status;
     }
-    function setDecisionToggle(status) {
-      decisionToggle = status;
-    }
 
     function setRouteSIPAddressToggle(status) {
       routeSIPAddressToggle = status;
     }
 
-    /**
-     * Will check the toggle status for Queue which is set while aaPhoneMenuCtrl
-     */
-    function isRouteQueueToggle() {
-      return routeQueueToggle;
+    function isDynAnnounceToggle() {
+      return dynAnnounceToggle;
     }
 
     function isMediaUploadToggle() {
@@ -171,9 +161,6 @@
 
     function isCallerInputToggle() {
       return callerInputToggle;
-    }
-    function isDecisionToggle() {
-      return decisionToggle;
     }
 
     function isRouteSIPAddressToggle() {

@@ -35,6 +35,16 @@
     };
 
     var sections = {
+      EDISCOVERY: {
+        name: 'eDiscovery',
+        eventNames: {
+          INITIAL_SEARCH: 'eDiscovery: Search Button Clicked',
+          GENERATE_REPORT: 'eDiscovery: Generate Report Button Clicked',
+          SEARCH_SECTION: 'eDiscovery: Search Section Viewed',
+          REPORTS_SECTION: 'eDiscovery: Report Viewed',
+        },
+        persistentProperties: null,
+      },
       TRIAL: {
         name: 'Trial Flow',
         eventNames: {
@@ -108,6 +118,17 @@
         },
         persistentProperties: null,
       },
+      CONTEXT: {
+        name: 'Context Service related operations',
+        eventNames: {
+          CONTEXT_CREATE_FIELDSET_SUCCESS: 'Successfully created a new fieldset',
+          CONTEXT_CREATE_FIELDSET_FAILURE: 'Failed to create a new fieldset',
+          CONTEXT_CREATE_FIELD_SUCCESS: 'Successfully created a new field',
+          CONTEXT_CREATE_FIELD_FAILURE: 'Failed to create a new field',
+          CONTEXT_UPDATE_FIELD_SUCCESS: 'Successfully updated a field',
+          CONTEXT_UPDATE_FIELD_FAILURE: 'Failed to update a field',
+        },
+      },
     };
 
     var service = {
@@ -124,6 +145,7 @@
       sections: sections,
       trackError: trackError,
       trackEvent: trackEvent,
+      trackEdiscoverySteps: trackEdiscoverySteps,
       trackPartnerActions: trackPartnerActions,
       trackTrialSteps: trackTrialSteps,
       trackUserOnboarding: trackUserOnboarding,
@@ -199,6 +221,26 @@
       return _init().then(function () {
         return service._track(eventName, properties);
       });
+    }
+
+    /**
+      * Ediscovery Events
+      */
+    function trackEdiscoverySteps(eventName) {
+      if (!_.isString(eventName) && eventName.length !== 0) {
+        return $q.reject('eventName not passed');
+      }
+
+      var properties = {
+        from: _.get($state, '$current.name'),
+      };
+
+      _getOrgData('EDISCOVERY').then(function (data) {
+        _.extend(properties, data);
+        delete properties.realOrgId;
+      });
+
+      return trackEvent(eventName, properties);
     }
 
     /**

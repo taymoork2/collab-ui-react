@@ -50,8 +50,7 @@
       vm.isLoading = true;
       var numbers = vm.getSelectedNumbers();
       if (numbers.directoryNumber || numbers.externalNumber) {
-        CsdmDataModelService.getPlacesMap().then(function (list) {
-          var place = _.find(_.values(list), { 'cisUuid': wizardData.account.cisUuid });
+        CsdmDataModelService.reloadPlace(wizardData.account.cisUuid).then(function (place) {
           if (place) {
             CsdmDataModelService.updateCloudberryPlace(place, wizardData.account.entitlements, numbers.directoryNumber, numbers.externalNumber)
               .then(function () {
@@ -151,7 +150,7 @@
     }
 
     function toggleShowExtensions() {
-      return DialPlanService.getCustomerDialPlanDetails().then(function (response) {
+      return DialPlanService.getDialPlan().then(function (response) {
         var indexOfDidColumn = _.findIndex(vm.addDnGridOptions.columnDefs, {
           field: 'externalNumber',
         });

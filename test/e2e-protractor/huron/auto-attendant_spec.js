@@ -5,26 +5,13 @@
 describe('Huron Auto Attendant', function () {
   var remote = require('selenium-webdriver/remote');
 
-  var initialIgnoreSync = true;
-
   beforeAll(function () {
 
     browser.setFileDetector(new remote.FileDetector());
 
-    initialIgnoreSync = browser.ignoreSynchronization;
-
-    login.login('aa-admin');
+    login.login('aa-admin', '#/hurondetails/features');
 
   }, 120000);
-
-  // See AUTOATTN-556
-  beforeEach(function () {
-    browser.ignoreSynchronization = false;
-  });
-
-  afterEach(function () {
-    browser.ignoreSynchronization = initialIgnoreSync;
-  });
 
   describe('Create and Delete AA', function () {
 
@@ -486,7 +473,6 @@ describe('Huron Auto Attendant', function () {
       // and save
       utils.wait(autoattendant.saveButton, 12000);
 
-      utils.expectIsEnabled(autoattendant.saveButton);
       utils.click(autoattendant.saveButton);
       autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
 
@@ -599,6 +585,7 @@ describe('Huron Auto Attendant', function () {
     }, 60000);
     it('should be able to change time zone for AA', function () {
       utils.click(autoattendant.schedule);
+      utils.click(autoattendant.timeZone);
       utils.click(autoattendant.timeZone);
       utils.click(autoattendant.firstTimeZoneElement);
 

@@ -48,6 +48,38 @@ describe('ServicesOverviewHybridDataSecurityCard', () => {
     expect(card.display).toBe(true);
   });
 
+  it('should be displayed if we have roles + atlasHybridDataSecurityFT even without entitlements', () => {
+    Authinfo.isFusionHDS.and.returnValue(false);
+    Authinfo.getRoles.and.returnValue([Config.roles.full_admin]);
+    card = new ServicesOverviewHybridDataSecurityCard(Authinfo, Config, HybridServicesClusterStatesService);
+    card.hybridDataSecurityFeatureToggleEventHandler(true);
+    expect(card.display).toBe(true);
+  });
+
+  it('should be displayed if we have roles + entitlements even if atlasHybridDataSecurityFT is off', () => {
+    Authinfo.isFusionHDS.and.returnValue(true);
+    Authinfo.getRoles.and.returnValue([Config.roles.full_admin]);
+    card = new ServicesOverviewHybridDataSecurityCard(Authinfo, Config, HybridServicesClusterStatesService);
+    card.hybridDataSecurityFeatureToggleEventHandler(false);
+    expect(card.display).toBe(true);
+  });
+
+  it('should NOT be displayed if we have roles but both entitlements and atlasHybridDataSecurityFT are off', () => {
+    Authinfo.isFusionHDS.and.returnValue(false);
+    Authinfo.getRoles.and.returnValue([Config.roles.full_admin]);
+    card = new ServicesOverviewHybridDataSecurityCard(Authinfo, Config, HybridServicesClusterStatesService);
+    card.hybridDataSecurityFeatureToggleEventHandler(false);
+    expect(card.display).toBe(false);
+  });
+
+  it('should not be displayed if we don\'t have roles regardless of the feature toggle status', () => {
+    Authinfo.isFusionHDS.and.returnValue(false);
+    Authinfo.getRoles.and.returnValue([]);
+    card = new ServicesOverviewHybridDataSecurityCard(Authinfo, Config, HybridServicesClusterStatesService);
+    card.hybridDataSecurityFeatureToggleEventHandler(true);
+    expect(card.display).toBe(false);
+  });
+
   it('should stay not active if services statuses do not say it is setup', () => {
     card = new ServicesOverviewHybridDataSecurityCard(Authinfo, Config, HybridServicesClusterStatesService);
     card.hybridStatusEventHandler([{ serviceId: 'spark-hybrid-datasecurity', setup: false, status: 'yolo' }]);

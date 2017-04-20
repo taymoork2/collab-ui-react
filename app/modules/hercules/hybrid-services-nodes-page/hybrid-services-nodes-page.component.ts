@@ -1,6 +1,6 @@
 import { Notification } from 'modules/core/notifications';
 import { IConnectorAlarm, ICluster, ConnectorMaintenanceMode, ConnectorType, IHost, IConnector, ClusterTargetType } from 'modules/hercules/hybrid-services.types';
-import { HybridServicesUtils } from 'modules/hercules/services/hybrid-services-utils';
+import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
 import { HybridServicesClusterStatesService, IMergedStateSeverity } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 
 interface ISimplifiedConnector {
@@ -42,7 +42,7 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
     private $state: ng.ui.IStateService,
     private FusionClusterService,
     private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
-    private HybridServicesUtils: HybridServicesUtils,
+    private HybridServicesUtilsService: HybridServicesUtilsService,
     private ModalService,
     private Notification: Notification,
   ) {
@@ -59,7 +59,7 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
   }
 
   public hybridConnectorsComparator(a, b) {
-    return this.HybridServicesUtils.hybridConnectorsComparator(a.value, b.value);
+    return this.HybridServicesUtilsService.hybridConnectorsComparator(a.value, b.value);
   }
 
   public openSidepanel(connector: ISimplifiedConnector) {

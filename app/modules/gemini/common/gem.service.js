@@ -8,6 +8,7 @@
   /* @ngInject */
   function gemService(GmHttpService, Authinfo, $translate) {
     var URL = {
+      coutries: 'countries',
       spData: 'servicepartner',
       remedyTicket: 'remedyTicket/customers/',
     };
@@ -18,6 +19,7 @@
       getSpData: getSpData,
       setStorage: setStorage,
       getStorage: getStorage,
+      getCountries: getCountries,
       getRemedyTicket: getRemedyTicket,
       isServicePartner: isServicePartner,
     };
@@ -30,6 +32,10 @@
     function getRemedyTicket(customerId, type) {
       var url = URL.remedyTicket + customerId + '/siteId/0/type/' + type;
       return GmHttpService.httpGet(url).then(extractData);
+    }
+
+    function getCountries() {
+      return GmHttpService.httpGet(URL.coutries).then(extractData);
     }
 
     function showError(errorCode) {

@@ -13,11 +13,13 @@ describe('Service: HelpdeskLogService', function () {
 
     var lastPushedLog = {
       success: true,
-      metadataList: [{
-        filename: 'lastLogFile',
-        timestamp: '2016-02-08T09:18:54.238Z',
-        platform: '0-1-2',
-      }],
+      data: {
+        metadataList: [{
+          filename: 'lastLogFile',
+          timestamp: '2016-02-08T09:18:54.238Z',
+          platform: '0-1-2',
+        }],
+      },
     };
 
     var logs = {
@@ -54,6 +56,10 @@ describe('Service: HelpdeskLogService', function () {
     spyOn(LogService, 'searchLogs').and.returnValue($q.resolve(lastPushedLog));
   }));
 
+  afterEach(function () {
+    $q = Service = LogService = scope = undefined;
+  });
+
   it('fetches the last log on search', function (done) {
     Service.searchForLastPushedLog('searchterm').then(function (log) {
       expect(log.filename).toEqual('lastLogFile');
@@ -63,10 +69,6 @@ describe('Service: HelpdeskLogService', function () {
       fail(reason);
     });
     scope.$apply();
-  });
-
-  afterEach(function () {
-    $q = Service = LogService = scope = undefined;
   });
 
   it('fetches the last log on user id', function (done) {

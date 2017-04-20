@@ -51,12 +51,13 @@ exports.ts = {
       loader: 'ng-annotate-loader',
     },
     {
-      loader: 'ts-loader',
+      loader: 'awesome-typescript-loader',
       options: {
-        logLevel: 'warn',
+        silent: true,
       },
     },
   ],
+  include: [appPath, testPath],
   exclude: [/node_modules/],
 };
 
@@ -161,7 +162,7 @@ exports.vendorImages = {
 };
 
 exports.dependencies = [{
-  test: /jquery.js$/,
+  test: /\/jquery.js$/,
   use: [
     {
       loader: 'expose-loader',

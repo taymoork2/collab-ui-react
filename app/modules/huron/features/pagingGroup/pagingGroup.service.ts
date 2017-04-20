@@ -1,4 +1,5 @@
-import { IPagingGroup } from 'modules/huron/features/pagingGroup/pagingGroup';
+import { IPagingGroup, INumberData } from 'modules/huron/features/pagingGroup/pagingGroup';
+import { PagingNumberService } from 'modules/huron/features/pagingGroup/pgNumber.service';
 
 interface IPagingGroupResource extends ng.resource.IResourceClass<ng.resource.IResource<IPagingGroup>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<IPagingGroup>>;
@@ -11,7 +12,9 @@ export class PagingGroupService {
   /* @ngInject */
   constructor(private $resource: ng.resource.IResourceService,
               private HuronConfig,
-              private Authinfo) {
+              private $q: ng.IQService,
+              private Authinfo,
+              private PagingNumberService: PagingNumberService) {
     this.pgRes = <IPagingGroupResource>this.$resource(this.HuronConfig.getPgUrl() + '/customers/:customerId/pagingGroups/:groupId', {},
       {
         update: {
@@ -23,7 +26,20 @@ export class PagingGroupService {
   public getListOfPagingGroups(): ng.IPromise<IPagingGroup[]> {
     return this.pgRes.get({
       customerId: this.Authinfo.getOrgId(),
-    }).$promise.then((response) => _.get(response, 'pagingGroups'));
+    }).$promise.then((response) => {
+      let pgs = _.map(_.get(response, 'pagingGroups', []));
+      let promises: Array<ng.IPromise<any>> = [];
+      _.forEach(pgs, (pg: any): void => {
+        promises.push(this.PagingNumberService.getNumberExtension(pg.groupId).then(
+          (data: INumberData) => {
+            pg.extension = data.extension;
+          }));
+      });
+
+      return this.$q.all(promises).then(() => {
+        return pgs;
+      });
+    });
   }
 
   public getPagingGroup(groupId: string): ng.IPromise<IPagingGroup> {

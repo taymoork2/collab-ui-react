@@ -191,9 +191,10 @@
 
       getTranslatedTimeZones: function (timeZones) {
         var localizedTimeZones = _.map(timeZones, function (timeZone) {
-          return _.extend(timeZone, {
+          return {
+            id: timeZone.id,
             label: $translate.instant('timeZones.' + timeZone.id),
-          });
+          };
         });
         return localizedTimeZones;
       },
