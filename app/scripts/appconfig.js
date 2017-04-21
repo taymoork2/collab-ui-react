@@ -303,49 +303,63 @@
           })
           .state('sidepanel', {
             abstract: true,
-            onEnter: /* @ngInject */ function ($modal, $state, $previousState) {
-              if ($state.sidepanel) {
-                $state.sidepanel.stopPreviousState = true;
-              } else {
-                $previousState.memo(sidepanelMemo);
-              }
-              var template = '<cs-sidepanel';
-              if ($state.params.size) {
-                template = template + ' size="large"';
-              }
-              template = template + '></cs-sidepanel>';
-              $state.sidepanel = $modal.open({
-                template: template,
-                // TODO(pajeter): remove inline template when cs-modal is updated
-                windowTemplate: '<div modal-render="{{$isRendered}}" tabindex="-1" role="dialog" class="sidepanel-modal"' +
-                'modal-animation-class="fade"' +
-                'modal-in-class="in"' +
-                'ng-style="{\'z-index\': 1051, display: \'block\', visibility: \'visible\'}">' +
-                '<div class="modal-content" modal-transclude></div>' +
-                ' </div>',
-                backdrop: false,
-                keyboard: false,
-              });
-              $state.sidepanel.result.finally(function () {
-                if (!this.stopPreviousState && !$state.modal) {
-                  $state.sidepanel = null;
-                  var previousState = $previousState.get(sidepanelMemo);
-                  if (previousState) {
-                    if (isStateInSidepanel($state)) {
-                      return $previousState.go(sidepanelMemo).then(function () {
-                        $previousState.forget(sidepanelMemo);
-                      });
-                    }
+            onExit: panelOnExit,
+            onEnter: panelOnEnter({ type: '' }),
+          })
+          .state('largepanel', {
+            abstract: true,
+            onExit: panelOnExit,
+            onEnter: panelOnEnter({ type: 'large' }),
+          });
+
+        // Enter and Exit functions for panel(large or side)
+        function panelOnEnter(options) {
+          options = options || {};
+          return /* @ngInject */ function ($modal, $state, $previousState) {
+            if ($state.sidepanel) {
+              $state.sidepanel.stopPreviousState = true;
+            } else {
+              $previousState.memo(sidepanelMemo);
+            }
+
+            var template = '<cs-sidepanel';
+            template += options.type ? ' size=' + options.type : '';
+            template += '></cs-sidepanel>';
+
+            $state.sidepanel = $modal.open({
+              template: template,
+              // TODO(pajeter): remove inline template when cs-modal is updated
+              windowTemplate: '<div modal-render="{{$isRendered}}" tabindex="-1" role="dialog" class="sidepanel-modal"' +
+              'modal-animation-class="fade"' +
+              'modal-in-class="in"' +
+              'ng-style="{\'z-index\': 1051, display: \'block\', visibility: \'visible\'}">' +
+              '<div class="modal-content" modal-transclude></div>' +
+              ' </div>',
+              backdrop: false,
+              keyboard: false,
+            });
+            $state.sidepanel.result.finally(function () {
+              if (!this.stopPreviousState && !$state.modal) {
+                $state.sidepanel = null;
+                var previousState = $previousState.get(sidepanelMemo);
+                if (previousState) {
+                  if (isStateInSidepanel($state)) {
+                    return $previousState.go(sidepanelMemo).then(function () {
+                      $previousState.forget(sidepanelMemo);
+                    });
                   }
                 }
-              }.bind($state.sidepanel));
-            },
-            onExit: /* @ngInject */ function ($state) {
-              if ($state.sidepanel) {
-                $state.sidepanel.dismiss();
               }
-            },
-          });
+            }.bind($state.sidepanel));
+          };
+        }
+
+        /* @ngInject */
+        function panelOnExit($state) {
+          if ($state.sidepanel) {
+            $state.sidepanel.dismiss();
+          }
+        }
 
         // See http://angular-translate.github.io/docs/#/guide/19_security
         $translateProvider.useSanitizeValueStrategy('escapeParameters');
@@ -2138,13 +2152,8 @@
           })
           .state('gmTdLargePanel', {
             data: {},
-            parent: 'sidepanel',
+            parent: 'largepanel',
             views: { 'sidepanel@': { template: '<gm-td-large-panel></gm-td-large-panel>' } },
-            resolve: {
-              sideBarInfo: /* @ngInject */ function ($state) {
-                $state.params.size = 'large';
-              },
-            },
           })
           .state('gmTdDetails', {
             data: {},
