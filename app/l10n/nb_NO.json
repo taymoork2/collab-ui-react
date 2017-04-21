@@ -27,9 +27,9 @@
     "convertUsers": "Konverter brukere",
     "errorWarningMessages": "Advarsler og feil",
     "skipErrorsAndFinish": "Hopp over feil og avslutt",
-    "newUsers": "{newusers, plural, one{# ny bruker} other{# nye brukere}}",
-    "updatedUsers": "{updatedusers, plural, one{# oppdatert bruker} other{# oppdaterte brukere}}",
-    "errors": "{errors, plural, one{# feil} other{# feil}}",
+    "newUsers": "{newusers, plural, =1{# ny bruker} other{# nye brukere}}",
+    "updatedUsers": "{updatedusers, plural, =1{# oppdatert bruker} other{# oppdaterte brukere}}",
+    "errors": "{errors, plural, =1{# feil} other{# feil}}",
     "pageTitle": "Brukere",
     "subTitleAdd": "Administrere brukere",
     "subTitleEnable": "Gi brukere rettigheter",
@@ -248,7 +248,7 @@
       "retryUsers": "Prøv igjen",
       "retrying": "Prøver på nytt …",
       "retryingIn": "prøver på nytt om:",
-      "retryingUsers": "{users, plural, one{# bruker} other{# brukere}}",
+      "retryingUsers": "{users, plural, =1{# bruker} other{# brukere}}",
       "exportUserList": "Eksportere brukerliste."
     },
     "advanced": {
@@ -1173,16 +1173,16 @@
   "notifications": {
     "success": "Godkjent-meldinger",
     "error": "Feilmeldinger",
-    "successTotal": "{total, plural, one{# suksess} other{# suksesser}}",
-    "errorTotal": "{total, plural, one{# feil} other{# feil}}",
+    "successTotal": "{total, plural, =1{# suksess} other{# suksesser}}",
+    "errorTotal": "{total, plural, =1{# feil} other{# feil}}",
     "successDelete": "{{item}} ble slettet.",
     "errorDelete": "Kunne ikke slette {{item}}.",
     "genericError": "En uventet feil oppsto. Prøv igjen senere."
   },
   "time": {
-    "seconds": "{time, plural, one{# sekund} other{# sekunder}}",
-    "minutes": "{time, plural, one{# minutt} other{# minutter}}",
-    "hours": "{time, plural, one{# time} other{# timer}}"
+    "seconds": "{time, plural, =1{# sekund} other{# sekunder}}",
+    "minutes": "{time, plural, =1{# minutt} other{# minutter}}",
+    "hours": "{time, plural, =1{# time} other{# timer}}"
   },
   "callDestination": {
     "numberFormat": "Nummerformat",
@@ -2162,7 +2162,7 @@
       "heading": "Registrering"
     },
     "notificationDropdown": {
-      "label": "{number, plural, one{# melding} other{# meldinger}}"
+      "label": "{number, plural, =1{# melding} other{# meldinger}}"
     },
     "fusion": {
       "types": {
@@ -2182,7 +2182,7 @@
         "context": "Kontekst",
         "users": "Brukere",
         "release-channel": "Frigivningskanal",
-        "nodes": "{count, plural, one{# node} other{# noder}}",
+        "nodes": "{count, plural, =1{# node} other{# noder}}",
         "nodesBtn": "Noder",
         "settings": "Innstillinger",
         "all": "Alle",
@@ -2775,8 +2775,8 @@
     "setSipDomainTitle": "Spark SIP-adresse",
     "saveSipDomainTitle": "Lagre SIP-adresse for Spark",
     "editSipDomainTitle": "Rediger SIP-adresse for Spark",
-    "setSipDomainCompNames": "{count, plural, one{Dette underdomenet} other{Disse underdomenene}} blir reservert for deg:",
-    "setSipDomainAsssignedNames": "{count, plural, one{Dette underdomenet er} other{Disse underdomenene er}} reservert for deg",
+    "setSipDomainCompNames": "{count, plural, =1{Dette underdomenet} other{Disse underdomenene}} blir reservert for deg:",
+    "setSipDomainAsssignedNames": "{count, plural, =1{Dette underdomenet er} other{Disse underdomenene er}} reservert for deg",
     "setSipDomainCheckAvailability": "Sjekk tilgjengelighet",
     "setSipDomainPlaceholder": "oppgi et underdomene",
     "setSipDomainErrorMessage": "Ikke tilgjengelig. Prøv et annet navn.",
@@ -2784,9 +2784,9 @@
     "setSipDomainSuccessMessage": "SIP-adressen for Spark er lagret",
     "setSipDomainConfirmText": "Jeg forstår at dette er en engangsinnstilling som ikke kan endres senere.",
     "sparkDomainManagementServiceErrorMessage": "Kunne ikke nå administrasjonstjeneste for Spark-domene",
-    "currentSubdomainDescription": "{count, plural, one{Underdomenet nedenfor blir} other{Underdomener nedenfor blir}} brukt for bedriftens Spark Sip {count, plural, one{adresse} other{adresser}}.",
+    "currentSubdomainDescription": "{count, plural, =1{Underdomenet nedenfor blir} other{Underdomener nedenfor blir}} brukt for bedriftens Spark Sip {count, plural, =1{adresse} other{adresser}}.",
     "subdomainChangesDescription": "Endringer av underdomene kan ta opptil noen timer å fullføre.",
-    "subdomainDescription": "Velg et underdomene som identifiserer bedriften. Underdomenet blir brukt for å opprette {count, plural, one{en Spark SIP-adresse} other{Spark SIP adresser}}. Du kan endre underdomenet senere i kontoinnstillingene.",
+    "subdomainDescription": "Velg et underdomene som identifiserer bedriften. Underdomenet blir brukt for å opprette {count, plural, =1{en Spark SIP-adresse} other{Spark SIP adresser}}. Du kan endre underdomenet senere i kontoinnstillingene.",
     "updateSubdomainMessage": "Endringer av underdomener kan ta opptil noen timer å fullføre. Brukere kan ikke lenger utføre anrop ved bruk av de tidligere Spark SIP-adressene etter denne endringen er fullført.",
     "cscUpdateSubdomainMessage": "Endringer av underdomener kan ta opptil noen timer å fullføre. Etter endringen virker ikke lenger de tidligere Spark SIP-adressene for anrop via samtaletjenesten Connect.",
     "subdomainUpdateConfirmation": "Vi anbefaler at du utfører dette trinnet utenfor arbeidstiden. Er du sikker på at du vil lagre endringene?",
@@ -3596,10 +3596,10 @@
     "deleteNumber": "Slett nummer",
     "deleteConfirmation": "Er du sikker på at du vil slette {{pattern}}?",
     "deleteWarning": "Dette kan ikke reverseres. Du vil tape dette nummeret for alltid.",
-    "allNumbers": "{count, plural, one{# nummer} other{# nummer}}",
-    "pendingNumbers": "{count, plural, one{# nummer i påvente} other{# nummer i påvente}}",
-    "unassignedNumbers": "{count, plural, one{# ledig nummer} other{# ledige nummer}}",
-    "searchResults": "{count, plural, one{# søkeresultat} other{# søkeresultater}}",
+    "allNumbers": "{count, plural, =1{# nummer} other{# nummer}}",
+    "pendingNumbers": "{count, plural, =1{# nummer i påvente} other{# nummer i påvente}}",
+    "unassignedNumbers": "{count, plural, =1{# ledig nummer} other{# ledige nummer}}",
+    "searchResults": "{count, plural, =1{# søkeresultat} other{# søkeresultater}}",
     "findNumber": "Finn et nummer ..."
   },
   "pstnOrderOverview": {
@@ -3616,7 +3616,7 @@
   },
   "pstnOrderDetail": {
     "orderNumber": "Bestilling #{{orderId}}",
-    "pendingNumbers": "{count, plural, one{Det er # nummer} other{Det er # numre}} som venter for denne bestillingen",
+    "pendingNumbers": "{count, plural, =1{Det er # nummer} other{Det er # numre}} som venter for denne bestillingen",
     "searchPlaceholder": "Søke i telefonnumre",
     "waitOnTOSAcceptance": "Venter på ToS-godkjenning fra kunde"
   },
@@ -3657,7 +3657,7 @@
     "package": "Pakke",
     "adding": "Legge til",
     "numbersTitle": "Numre",
-    "numbers": "{count, plural, one{# nummer} other{# nummer}}",
+    "numbers": "{count, plural, =1{# nummer} other{# nummer}}",
     "newNumbers": "{{count}} nye",
     "portNumbers": "{{count}} port",
     "thankYou": "Takk",
@@ -4032,9 +4032,9 @@
     "notes": "Merknader",
     "active": "Aktiv",
     "free": "Gratis",
-    "daysRemaining": "{count, plural, one{# dag } other{# dager}} igjen",
-    "daysLeftToPurchase": "{count, plural, one{# dag} other{# dager}} igjen for å kjøpe",
-    "daysLeftToRenew": "{count, plural, one{# dag} other{# dager}} igjen for fornying",
+    "daysRemaining": "{count, plural, =1{# dag } other{# dager}} igjen",
+    "daysLeftToPurchase": "{count, plural, =1{# dag} other{# dager}} igjen for å kjøpe",
+    "daysLeftToRenew": "{count, plural, =1{# dag} other{# dager}} igjen for fornying",
     "expiringToday": "Utløper i dag",
     "expired": "Utløpt",
     "expiredWithGracePeriod": "Utløpt. Kjøp nå",
@@ -4068,7 +4068,7 @@
     "trialTerms": "Vilkår for prøveversjon",
     "trialOverview": "Prøveversjon",
     "webexOverview": "WebEx",
-    "webexSiteCount": "{count, plural, one{# ytterligere sted} other{# ytterligere steder}}",
+    "webexSiteCount": "{count, plural, =1{# ytterligere sted} other{# ytterligere steder}}",
     "licenses": "Antall lisenser",
     "totalQuantity": "Totalt antall",
     "totalLicenses": "Totalt antall lisenser",
@@ -4118,7 +4118,7 @@
     "accountStatus": "Kontostatus",
     "totalUsers": "Brukere totalt",
     "purchased": "Kjøpt",
-    "domain": "{count, plural, one{# domene} other{# domener}}",
+    "domain": "{count, plural, =1{# domene} other{# domener}}",
     "domains": "Domener",
     "quantityWithValue": "Ant.: {{quantity}}",
     "anotherPartner": "(En annen partner)",

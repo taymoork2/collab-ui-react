@@ -27,9 +27,9 @@
     "convertUsers": "Konversi Pengguna",
     "errorWarningMessages": "Peringatan dan Kesalahan",
     "skipErrorsAndFinish": "Lewati Kesalahan dan Selesaikan",
-    "newUsers": "{newusers, plural, one{# Pengguna baru} other{# Pengguna baru}}",
-    "updatedUsers": "{updatedusers, plural, one{# Pengguna diperbarui} other{# Pengguna diperbarui}}",
-    "errors": "{errors, plural, one{# Kesalahan} other{# Kesalahan}}",
+    "newUsers": "{newusers, plural, =1{# Pengguna baru} other{# Pengguna baru}}",
+    "updatedUsers": "{updatedusers, plural, =1{# Pengguna diperbarui} other{# Pengguna diperbarui}}",
+    "errors": "{errors, plural, =1{# Kesalahan} other{# Kesalahan}}",
     "pageTitle": "Pengguna",
     "subTitleAdd": "Kelola pengguna",
     "subTitleEnable": "Tetapkan pengguna",
@@ -248,7 +248,7 @@
       "retryUsers": "Coba lagi",
       "retrying": "Mencoba Lagi...",
       "retryingIn": "mencoba lagi dalam:",
-      "retryingUsers": "{users, plural, one{# Pengguna} other{# Pengguna}}",
+      "retryingUsers": "{users, plural, =1{# Pengguna} other{# Pengguna}}",
       "exportUserList": "Ekspor daftar pengguna."
     },
     "advanced": {
@@ -1173,16 +1173,16 @@
   "notifications": {
     "success": "Pemberitahuan berhasil",
     "error": "Pemberitahuan gagal",
-    "successTotal": "{total, plural, one{# berhasil} other{# berhasil}}",
-    "errorTotal": "{total, plural, one{# kesalahan} other{# kesalahan}}",
+    "successTotal": "{total, plural, =1{# berhasil} other{# berhasil}}",
+    "errorTotal": "{total, plural, =1{# kesalahan} other{# kesalahan}}",
     "successDelete": "Berhasil menghapus {{item}}.",
     "errorDelete": "Gagal menghapus {{item}}.",
     "genericError": "Terjadi kesalahan tidak terduga. Harap coba lagi nanti."
   },
   "time": {
-    "seconds": "{time, plural, one{# detik} other{# detik}}",
-    "minutes": "{time, plural, one{# menit} other{# menit}}",
-    "hours": "{time, plural, one{# jam} other{# jam}}"
+    "seconds": "{time, plural, =1{# detik} other{# detik}}",
+    "minutes": "{time, plural, =1{# menit} other{# menit}}",
+    "hours": "{time, plural, =1{# jam} other{# jam}}"
   },
   "callDestination": {
     "numberFormat": "Format Angka",
@@ -2162,7 +2162,7 @@
       "heading": "Pendaftaran"
     },
     "notificationDropdown": {
-      "label": "{number, plural, one{# pemberitahuan} other{# pemberitahuan} lain}"
+      "label": "{number, plural, =1{# pemberitahuan} other{# pemberitahuan} lain}"
     },
     "fusion": {
       "types": {
@@ -2182,7 +2182,7 @@
         "context": "Konteks",
         "users": "Pengguna",
         "release-channel": "Saluran Pelepasan",
-        "nodes": "{count, plural, one{# Nodus} other{# Nodus}}",
+        "nodes": "{count, plural, =1{# Nodus} other{# Nodus}}",
         "nodesBtn": "Nodus",
         "settings": "Pengaturan",
         "all": "Semua",
@@ -2775,8 +2775,8 @@
     "setSipDomainTitle": "Alamat SIP Spark",
     "saveSipDomainTitle": "Simpan Alamat SIP Spark",
     "editSipDomainTitle": "Edit Alamat SIP Spark",
-    "setSipDomainCompNames": "{count, plural, one{This subdomain} other{These subdomains}} akan dicadangkan untuk Anda:",
-    "setSipDomainAsssignedNames": "{count, plural, one{This subdomain is} other{These subdomains are}} telah dicadangkan untuk Anda",
+    "setSipDomainCompNames": "{count, plural, =1{This subdomain} other{These subdomains}} akan dicadangkan untuk Anda:",
+    "setSipDomainAsssignedNames": "{count, plural, =1{This subdomain is} other{These subdomains are}} telah dicadangkan untuk Anda",
     "setSipDomainCheckAvailability": "Periksa Ketersediaan",
     "setSipDomainPlaceholder": "masukkan subdomain",
     "setSipDomainErrorMessage": "Tidak tersedia. Harap coba nama lain.",
@@ -2784,7 +2784,7 @@
     "setSipDomainSuccessMessage": "Alamat SIP Spark telah berhasil disimpan",
     "setSipDomainConfirmText": "Saya mengerti bahwa ini adalah pengaturan sekali waktu yang tidak dapat diubah lagi.",
     "sparkDomainManagementServiceErrorMessage": "Gagal menghubungi Layanan Manajemen Domain Spark",
-    "currentSubdomainDescription": "{count, plural, one{subdomain di bawah ini adalah} other{subdomain di bawah adalah}} diguakan untuk Sip Spark perusahaan Anda {count, plural, one{Alamat} other{Alamat}}.",
+    "currentSubdomainDescription": "{count, plural, =1{subdomain di bawah ini adalah} other{subdomain di bawah adalah}} diguakan untuk Sip Spark perusahaan Anda {count, plural, =1{Alamat} other{Alamat}}.",
     "subdomainChangesDescription": "Perubahan subdomain dapat memakan waktu beberapa jam untuk diselesaikan.",
     "subdomainDescription": "Pilih subdomain yang mengidentifikasi perusahaan Anda. Subdomain akan digunakan untuk membuat {hitungan, plural, satu{Alamat SIP Spark} other{Alamat SIP Spark}}. Anda dapat mengubah nama subdomain Anda nanti di pengaturan akun Anda.",
     "updateSubdomainMessage": "Perubahan subdomain dapat memakan waktu beberapa jam untuk diselesaikan. Pengguna tidak akan lagi bisa melakukan panggilan menggunakan Alamat SIP Spark setelah perubahan diselesaikan.",
@@ -3596,10 +3596,10 @@
     "deleteNumber": "Hapus Nomor",
     "deleteConfirmation": "Anda yakin ingin menghapus {{pattern}}?",
     "deleteWarning": "Ini tidak dapat dikembalikan. Anda akan kehilangan nomor ini selamanya.",
-    "allNumbers": "{count, plural, one{# Nomor} other{# Nomor}}",
-    "pendingNumbers": "{count, plural, one{# Nomor Tertunda} other{# Nomor Tertunda}}",
-    "unassignedNumbers": "{count, plural, one{# Nomor Tidak Ditetapkan} other{# Nomor Tidak Ditetapkan}}",
-    "searchResults": "{count, plural, one{# hasil pencarian} other{# hasil pencarian}}",
+    "allNumbers": "{count, plural, =1{# Nomor} other{# Nomor}}",
+    "pendingNumbers": "{count, plural, =1{# Nomor Tertunda} other{# Nomor Tertunda}}",
+    "unassignedNumbers": "{count, plural, =1{# Nomor Tidak Ditetapkan} other{# Nomor Tidak Ditetapkan}}",
+    "searchResults": "{count, plural, =1{# hasil pencarian} other{# hasil pencarian}}",
     "findNumber": "Mencari nomor..."
   },
   "pstnOrderOverview": {
@@ -3616,7 +3616,7 @@
   },
   "pstnOrderDetail": {
     "orderNumber": "Pesanan #{{orderId}}",
-    "pendingNumbers": "{count, plural, one{There is # nomor} other{There are # nomor}} ditunda untuk pesanan ini",
+    "pendingNumbers": "{count, plural, =1{There is # nomor} other{There are # nomor}} ditunda untuk pesanan ini",
     "searchPlaceholder": "Cari Nomor Telepon",
     "waitOnTOSAcceptance": "Menunggu pelanggan menyetujui Ketentuan Layanan"
   },
@@ -3657,7 +3657,7 @@
     "package": "Paket",
     "adding": "Menambahkan",
     "numbersTitle": "Nomor",
-    "numbers": "{count, plural, one{# nomor} other{# nomor}}",
+    "numbers": "{count, plural, =1{# nomor} other{# nomor}}",
     "newNumbers": "{{count}} Baru",
     "portNumbers": "{{count}} Port",
     "thankYou": "Terima kasih",
@@ -4032,9 +4032,9 @@
     "notes": "Catatan",
     "active": "Aktif",
     "free": "Gratis",
-    "daysRemaining": "{count, plural, one{# hari} other{# hari}} tersisa",
-    "daysLeftToPurchase": "{count, plural, one{# hari} other{# hari}} tersisa untuk membeli",
-    "daysLeftToRenew": "{count, plural, one{# hari} other{# hari}} tersisa untuk memperbarui",
+    "daysRemaining": "{count, plural, =1{# hari} other{# hari}} tersisa",
+    "daysLeftToPurchase": "{count, plural, =1{# hari} other{# hari}} tersisa untuk membeli",
+    "daysLeftToRenew": "{count, plural, =1{# hari} other{# hari}} tersisa untuk memperbarui",
     "expiringToday": "Berakhir hari ini",
     "expired": "Kedaluwarsa",
     "expiredWithGracePeriod": "Kedaluwarsa. Beli sekarang",
@@ -4068,7 +4068,7 @@
     "trialTerms": "Jangka Waktu Percobaan",
     "trialOverview": "Percobaan",
     "webexOverview": "WebEx",
-    "webexSiteCount": "{count, plural, one{# situs lainnya} other{# situs lainnya}}",
+    "webexSiteCount": "{count, plural, =1{# situs lainnya} other{# situs lainnya}}",
     "licenses": "Jumlah Lisensi",
     "totalQuantity": "Total Jumlah",
     "totalLicenses": "Total Lisensi",
@@ -4118,7 +4118,7 @@
     "accountStatus": "Status Akun",
     "totalUsers": "Total Pengguna",
     "purchased": "Dibeli",
-    "domain": "{count, plural, one{Domain} other{Domain}}",
+    "domain": "{count, plural, =1{Domain} other{Domain}}",
     "domains": "Domain",
     "quantityWithValue": "Jumlah: {{quantity}}",
     "anotherPartner": "(Mitra Lainnya)",
