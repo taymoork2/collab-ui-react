@@ -69,6 +69,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
     ceWelcomeNoDescriptionTemp = wmenu.ceWelcomeNoDescriptionTemp;
     welcomeMenu = wmenu.welcomeMenu;
     ceMenuFull = wmenu.ceMenuFull;
+    spyOn(AAUtilityService, 'pullJSPieces').and.returnValue({});
     spyOn(AAUtilityService, 'splitOnCommas').and.returnValue([]);
     spyOn(AAUtilityService, 'addQuotesAroundCommadQuotedValues').and.returnValue('');
   }));
@@ -406,6 +407,15 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       // check that clone return a separate instance
       _menuEntry2.setUrl('https://abc2');
       expect(angular.equals(_menuEntry, _menuEntry2)).toBe(false);
+    });
+  });
+  describe('isCeMenuEntry', function () {
+    it('should return true for a type CeMenuEntry object', function () {
+      expect(AutoAttendantCeMenuModelService.isCeMenuEntry(AutoAttendantCeMenuModelService.newCeMenuEntry())).toBe(true);
+    });
+
+    it('should return true for a type CeMenuEntry object', function () {
+      expect(AutoAttendantCeMenuModelService.isCeMenuEntry(AutoAttendantCeMenuModelService.newCeMenu())).toBe(false);
     });
   });
 

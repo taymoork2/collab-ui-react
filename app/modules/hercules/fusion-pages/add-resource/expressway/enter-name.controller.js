@@ -5,7 +5,7 @@
     .controller('ExpresswayEnterNameController', ExpresswayEnterNameController);
 
   /* @ngInject */
-  function ExpresswayEnterNameController($q, $stateParams, $translate, FusionClusterService, Notification) {
+  function ExpresswayEnterNameController($q, $stateParams, $translate, FmsOrgSettings, FusionClusterService, HybridServicesExtrasService, Notification) {
     var vm = this;
     var wizardData = $stateParams.wizard.state().data;
     vm.name = '';
@@ -28,7 +28,7 @@
 
     ///////////////
 
-    FusionClusterService.getOrgSettings()
+    FmsOrgSettings.get()
       .then(function (data) {
         vm.releaseChannel = data.expresswayClusterReleaseChannel;
       });
@@ -49,7 +49,7 @@
           return $q.all(promises);
         })
         .then(function () {
-          return FusionClusterService.addPreregisteredClusterToAllowList(data.hostname, 3600, vm.clusterId);
+          return HybridServicesExtrasService.addPreregisteredClusterToAllowList(data.hostname, 3600, vm.clusterId);
         })
         .catch(function () {
           throw $translate.instant('hercules.addResourceDialog.cannotCreateCluster');

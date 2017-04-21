@@ -173,7 +173,7 @@
 <cs-sp-container ng-if="isPlace">
   <cs-sp-section class="cloud-extensions">
     <div class="section-title-row">
-      <span class="section-name" translate="Hybrid Call Service Connect"></span>
+      <span class="section-name" translate="hercules.cloudExtensions.serviceNames.squared-fusion-ec-place"></span>
     </div>
     <div>
       <div class="row collapse">
@@ -204,14 +204,14 @@
         </div>
       </div>
 
-      <div class="row collapse">
-        <div class="columns small-12"><span>Mail ID:</span><span>{{mailID}}</span></div>
+      <div class="row collapse cloud-extension-label normal-line-height placeStatus">
+        <span ng-if="callServiceAware.status.state === 'notActivated'" translate="hercules.placeSidepanel.hybridCallNotActivated"></span>
       </div>
-      <div class="row collapse">
-        <div>status explanation like:<br>Cloud Collaboration management is currently checking for a corresponding user
-          account in Cisco Uni ed Communications Manager. This should take no longer than a couple of minutes.<br>
-          - If the Mail ID you entered here is incorrect, <a ng-click="editCloudberryServices">then try entering a different Mail ID.</a>
-        </div>
+      <div class="row collapse cloud-extension-label normal-line-height mailid">
+        <div class="columns small-12"><span translate="addDeviceWizard.sparkCallConnect.mailId"></span><span>: {{mailID}}</span></div>
+      </div>
+      <div class="row collapse cloud-extension-label normal-line-height">{{'hercules.placeSidepanel.mail-id-explanation-part1' | translate}}
+        <a ng-click="editCloudberryServices(callServiceAware.id)">{{'hercules.placeSidepanel.mail-id-explanation-part2' | translate}}</a>
       </div>
 
       <div class="row collapse">

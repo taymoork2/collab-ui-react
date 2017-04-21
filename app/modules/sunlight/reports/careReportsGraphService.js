@@ -70,6 +70,15 @@
       'graphBulletAlpha': 1,
     };
 
+    baseVariables['title'] = [{ text: '',
+      bold: false,
+      "font-family": 'Verdana',
+      size: 12,
+      color: '#6A6B6C',
+      class: 'amcharts-axis-title',
+      enabled: false,
+    }];
+
     baseVariables['export'] = {
       'libs': {
         'autoLoad': false,
@@ -106,7 +115,7 @@
       export: false,
     };
 
-    function buildChartConfig(data, legend, graphs, chartCursor, categoryField, categoryAxis, valueAxes, exportReport) {
+    function buildChartConfig(data, legend, graphs, chartCursor, categoryField, categoryAxis, valueAxes, exportReport, title) {
       var chartConfig = {
         dataProvider: data,
         legend: legend,
@@ -116,6 +125,7 @@
         categoryAxis: categoryAxis,
         valueAxes: valueAxes,
         export: exportReport,
+        titles: title,
       };
       return _.cloneDeep(_.defaults(chartConfig, baseChartConfig));
     }

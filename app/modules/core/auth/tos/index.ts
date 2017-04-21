@@ -7,8 +7,8 @@ import './termsOfService.scss';
 
 export default angular
   .module('core.auth.tos', [
-    'atlas.templates',
-    'collab.ui',
+    require('scripts/app.templates'),
+    require('collab-ui-ng').default,
     coreAuthUserModule,
     featureToggleModule,
   ])

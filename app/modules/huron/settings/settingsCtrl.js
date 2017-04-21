@@ -7,7 +7,7 @@
 
   /* @ngInject */
 
-  function HuronSettingsCtrl($q, $scope, $state, $translate, Authinfo, CeService, CallerId, Config, DirectoryNumberService, DialPlanService, ExternalNumberService, FeatureToggleService, HuronCustomer, HuntGroupServiceV2, InternationalDialing, ModalService, Notification, PstnSetupService, ServiceSetup, TelephoneNumberService, ValidationService, VoicemailMessageAction, TerminusUserDeviceE911Service, PstnServiceAddressService, CustomerCosRestrictionServiceV2, CustomerDialPlanServiceV2, Orgservice, PstnSetup) {
+  function HuronSettingsCtrl($q, $scope, $state, $translate, Authinfo, CeService, CallerId, Config, DirectoryNumberService, HuronCustomerService, ExternalNumberService, FeatureToggleService, HuronCustomer, HuntGroupServiceV2, InternationalDialing, ModalService, Notification, PstnSetupService, ServiceSetup, TelephoneNumberService, ValidationService, VoicemailMessageAction, TerminusUserDeviceE911Service, PstnServiceAddressService, CustomerCosRestrictionServiceV2, CustomerDialPlanServiceV2, Orgservice, PstnSetup) {
     var vm = this;
     vm.loading = true;
 
@@ -16,6 +16,9 @@
     vm.showRegionAndVoicemail = Authinfo.getLicenses().filter(function (license) {
       return license.licenseType === Config.licenseTypes.COMMUNICATION;
     }).length > 0;
+
+    vm.ftHRegionalTones = false;
+    vm.supportRegionalSettings = supportRegionalSettings;
 
     var DEFAULT_SITE_INDEX = '000001';
     var DEFAULT_TZ = {
@@ -248,33 +251,13 @@
           }
         }
       },
-      singleNumberRangeCheck: function (viewValue, modelValue, scope) {
-        var value = modelValue || viewValue;
-        var result = true;
-        var beginNumber, endNumber;
-
-        if (scope.index === 0) {
-          beginNumber = value;
-          endNumber = scope.fields[2].value();
-        } else {
-          beginNumber = scope.fields[0].value();
-          endNumber = value;
-        }
-
-        if (beginNumber === endNumber) {
-          result = false;
-        } else {
-          result = true;
-        }
-        return result;
-      },
       phoneNumber: function (viewValue, modelValue) {
         var value = null;
         if (modelValue || viewValue) {
           value = (modelValue || viewValue);
         }
         if (value) {
-          return TelephoneNumberService.validateDID(value);
+          return TelephoneNumberService.validateDID(value, vm.customer.countryCode);
         } else {
           return true;
         }
@@ -404,12 +387,6 @@
                     return $translate.instant('serviceSetupModal.rangeDuplicate');
                   },
                 },
-                singleNumberRangeCheck: {
-                  expression: vm.validations.singleNumberRangeCheck,
-                  message: function () {
-                    return $translate.instant('serviceSetupModal.singleNumberRangeError');
-                  },
-                },
               },
               templateOptions: {
                 required: true,
@@ -462,12 +439,6 @@
                   expression: vm.validations.duplicate,
                   message: function () {
                     return $translate.instant('serviceSetupModal.rangeDuplicate');
-                  },
-                },
-                singleNumberRangeCheck: {
-                  expression: vm.validations.singleNumberRangeCheck,
-                  message: function () {
-                    return $translate.instant('serviceSetupModal.singleNumberRangeError');
                   },
                 },
               },
@@ -1012,6 +983,10 @@
 
     init();
 
+    function supportRegionalSettings() {
+      return vm.ftHRegionalTones;
+    }
+
     function clearCallerIdFields() {
       vm.model.callerId.uuid = '';
       vm.model.callerId.callerIdName = '';
@@ -1233,6 +1208,7 @@
 
       if (_.get(vm, 'model.site.extensionLength') && (vm.model.site.extensionLength !== savedModel.site.extensionLength)) {
         siteData.extensionLength = vm.model.site.extensionLength;
+        vm.avrilDialPlanUpdated = true;
       }
 
       if (_.get(vm, 'model.site.siteSteeringDigit.siteDialDigit') && (vm.model.site.siteSteeringDigit.siteDialDigit !== savedModel.site.siteSteeringDigit.siteDialDigit)) {
@@ -1649,7 +1625,7 @@
     }
 
     function loadDialPlan() {
-      return DialPlanService.getCustomerVoice(Authinfo.getOrgId()).then(function (response) {
+      return HuronCustomerService.getVoiceCustomer().then(function (response) {
         if (response.dialPlan === null) {
           // if customer's dialPlan attribute is defined but null, assume the customer is on the
           // North American Dial Plan. Look up uuid for NANP and insert it into customer dialPlan.
@@ -2037,7 +2013,7 @@
         vm.model.regionCode = '';
       }
       if (vm.model.regionCode !== vm.previousModel.regionCode) {
-        return DialPlanService.updateCustomerVoice(Authinfo.getOrgId(), {
+        return HuronCustomerService.updateVoiceCustomer({
           regionCode: vm.model.regionCode,
         }).catch(function (error) {
           errors.push(Notification.processErrorResponse(error, 'serviceSetupModal.error.updateCustomerVoice'));
@@ -2050,6 +2026,10 @@
 
       FeatureToggleService.supports(FeatureToggleService.features.avrilVmEnable).then(function (result) {
         vm.voicemailAvrilCustomer = result;
+      });
+
+      FeatureToggleService.supports(FeatureToggleService.features.hRegionalTones).then(function (result) {
+        vm.ftHRegionalTones = result;
       });
 
       return $q.resolve();
@@ -2380,22 +2360,18 @@
         var extensionLength0, extensionLength9;
         switch (vm.model.site.extensionLength) {
           case '3':
-            vm.model.site.siteCode = 100;
             extensionLength0 = '00';
             extensionLength9 = '99';
             break;
           case '4':
-            vm.model.site.siteCode = 100;
             extensionLength0 = '000';
             extensionLength9 = '999';
             break;
           case '5':
-            vm.model.site.siteCode = 10;
             extensionLength0 = '0000';
             extensionLength9 = '9999';
             break;
           default:
-            vm.model.site.siteCode = 100;
             extensionLength0 = '000';
             extensionLength9 = '999';
             break;

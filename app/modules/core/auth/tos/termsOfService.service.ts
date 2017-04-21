@@ -65,8 +65,7 @@ export class TOSService {
   }
 
   public acceptTOS(): ng.IPromise<IUser> {
-    this.user.hideToS = true;
-    return this.UserPreferencesService.setUserPreferences(this.user)
+    return this.UserPreferencesService.setUserPreferences(this.user, UserPreferencesService.USER_PREF_TOS, true)
       .then((newUser) => {
         this.user = newUser;
         if (this.tosModal) {

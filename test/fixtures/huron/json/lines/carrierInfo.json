@@ -1,0 +1,16 @@
+{
+  "uuid": "3c509429-aa63-46f1-ac0c-ffd1752bf0ab",
+  "name": "BYO-PSTN",
+  "description": "Bring your own PSTN",
+  "countryCode": "+1",
+  "country": "US",
+  "apiImplementation": "SWIVEL",
+  "vendor": "GENERIC",
+  "services": [
+    "PSTN"
+  ],
+  "defaultOffer": false,
+  "offers": [],
+  "voiceCarrierRef": "079e9a0f-188e-48b7-9a87-97b4779b9e47",
+  "url": "https://terminus.huron-int.com/api/v1/carriers/3c509429-aa63-46f1-ac0c-ffd1752bf0ab"
+}

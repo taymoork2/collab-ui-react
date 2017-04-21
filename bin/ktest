@@ -25,13 +25,30 @@ function ex_usage {
     echo "  find ./app -iname \\*spec.js | $(basename "$0")"
 }
 
+function print_notice_ktest_modular {
+    echo ""
+    echo "********************** ATTENTION **********************"
+    echo ""
+    echo "You should use modular testing for quicker unit tests."
+    echo "Requires angular module to be self-contained (modular)."
+    echo ""
+    echo "\`export KTEST__MODULAR=true\`"
+    echo ""
+    echo "Read more: https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/blob/master/docs/modular-unit-testing.md"
+    echo ""
+    echo "*******************************************************"
+    echo ""
+}
+
 # early out if looking for usage
 if [[ "$1" == "--help" || "$1" == "-h" || "$1" == "-?" ]]; then
     ex_usage
     exit 1
 fi
 
+# shellcheck disable=SC1090
 source "${WX2_ADMIN_WEB_CLIENT_HOME}/bin/include/core-helpers"
+# shellcheck disable=SC1090
 source "${WX2_ADMIN_WEB_CLIENT_HOME}/bin/include/ktest-helpers"
 
 # ----------
@@ -44,11 +61,11 @@ for opt in "${args[@]}"; do
     case "$opt" in
         --no-parallel )
             no_parallel="true"
-            unset -v args[$i]
+            unset -v "args[$i]"
             ;;
         --* )
             pass_through_opts="$pass_through_opts ${args[$i]}"
-            unset -v args[$i]
+            unset -v "args[$i]"
             ;;
     esac
     let "i += 1"
@@ -65,7 +82,7 @@ set -- "${1:-$(</dev/stdin)}" "${@:2}"
 # - OS X users report slower run-times using parallel over single process
 # - disable parallel usage for OS X for now
 # - allow override by export of 'KTEST__ALLOW_PARALLEL'
-if [ "$(uname)" = "Darwin" -a -z "$KTEST__ALLOW_PARALLEL" ]; then
+if [ "$(uname)" = "Darwin" ] && [ -z "$KTEST__ALLOW_PARALLEL" ]; then
     no_parallel="true"
 fi
 
@@ -86,9 +103,23 @@ for arg in $@; do
     ls -1 "$fname" >> "$flist" 2>/dev/null
 done
 
+# args length after removing pass_through_opts
+args_length="${#args[@]}"
+
+karma_shim_tpl="karma.shim.tpl.js"
+
+# only run modular if we specify arguments
+if [ "${args_length}" -gt 0 ]; then
+    if [ "${KTEST__MODULAR}" = "true" ]; then
+        karma_shim_tpl="karma.shim.modular.tpl.js"
+    else
+        print_notice_ktest_modular
+    fi
+fi
+
 # ----------
 # split the raw file list
-shim_tpl="${WX2_ADMIN_WEB_CLIENT_HOME}/karma/karma.shim.tpl.js"
+shim_tpl="${WX2_ADMIN_WEB_CLIENT_HOME}/karma/${karma_shim_tpl}"
 total_specs=$(wc -l "$flist" | awk '{print $1;}')
 
 # num cores is used to determine num spec files to include / shim file
@@ -124,12 +155,12 @@ done
 # ----------
 # run tests in gnu 'parallel'
 # loading the correct webpack config requires 'npm_lifecycle_event' be set
-export npm_lifecycle_event=${npm_lifecycle_event=test}
+export npm_lifecycle_event=${npm_lifecycle_event:-test}
 
 # run 'karma' at the project root dir
 pushd "${WX2_ADMIN_WEB_CLIENT_HOME}" > /dev/null
 # set old generation heap limit to 2GB since we're currently hovering around the 1.4GB default
-karma_process="node --max-old-space-size=2048 ${WX2_ADMIN_WEB_CLIENT_HOME}/node_modules/karma/bin/karma start"
+karma_process="node --max-old-space-size=2560 ${WX2_ADMIN_WEB_CLIENT_HOME}/node_modules/karma/bin/karma start"
 
 set -x
 # shellcheck disable=SC2086

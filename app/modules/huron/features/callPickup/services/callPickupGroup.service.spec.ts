@@ -18,6 +18,7 @@ describe('Service: callPickupService', () => {
       'Authinfo',
       'HuronConfig',
       'CallPickupGroupService',
+      '$translate',
     );
 
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
@@ -26,7 +27,6 @@ describe('Service: callPickupService', () => {
     failureSpy = jasmine.createSpy('failure');
     this.isLineInPickupGroupDefer = this.$q.defer();
     spyOn(this.CallPickupGroupService, 'isLineInPickupGroup').and.returnValue(this.isLineInPickupGroupDefer.promise);
-
   });
 
   afterEach(function () {
@@ -193,14 +193,17 @@ describe('Service: callPickupService', () => {
     });
 
     it('should create a disabled checkbox numbers', function () {
+      spyOn(this.$translate, 'instant').and.callThrough();
+
       this.isLineInPickupGroupDefer.resolve('helpdesk');
       this.CallPickupGroupService.createCheckboxes(memberData, numbersArray).then(() => {
         expect(memberData.checkboxes[0].label).toEqual('3081');
         expect(memberData.checkboxes[0].value).toEqual(false);
-        expect(memberData.checkboxes[0].sublabel).toMatch('helpdesk');
         expect(memberData.checkboxes[0].numberUuid).toEqual('920b3f0f-fb6d-406c-b5b3-58c1bd390478');
         expect(memberData.checkboxes[0].disabled).toEqual(true);
       });
+      this.$scope.$digest();
+      expect(this.$translate.instant).toHaveBeenCalled();
     });
 
     it('should create checkboxes for all numbers', function () {

@@ -8,10 +8,11 @@ import callParkService from 'modules/huron/features/callPark/services';
 
 export default angular
   .module('huron.call-park-reversion', [
-    'atlas.templates',
-    'collab.ui',
-    'pascalprecht.translate',
+    require('scripts/app.templates'),
+    require('collab-ui-ng').default,
+    require('angular-translate'),
     'huron.telephoneNumber',
+    'huron.telephoneNumberService',
     require('modules/huron/telephony/cmiServices'),
     require('modules/core/scripts/services/authinfo'),
     memberService,

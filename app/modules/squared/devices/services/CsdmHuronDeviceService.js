@@ -6,9 +6,9 @@
     .service('CsdmHuronOrgDeviceService', CsdmHuronOrgDeviceService)
     .service('CsdmHuronUserDeviceService', CsdmHuronUserDeviceService);
 
-  function CsdmHuronUserDeviceService($injector, Authinfo, CsdmConfigService) {
+  function CsdmHuronUserDeviceService($injector, Authinfo, UrlConfig) {
     function create(userId) {
-      var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/devices/?cisUuid=' + userId + '&type=huron';
+      var devicesUrl = UrlConfig.getCsdmServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/devices/?cisUuid=' + userId + '&type=huron';
       return $injector.instantiate(CsdmHuronDeviceService, {
         devicesUrl: devicesUrl,
       });
@@ -19,9 +19,9 @@
     };
   }
 
-  function CsdmHuronOrgDeviceService($injector, Authinfo, CsdmConfigService) {
+  function CsdmHuronOrgDeviceService($injector, Authinfo, UrlConfig) {
     function create() {
-      var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/devices/?type=huron';
+      var devicesUrl = UrlConfig.getCsdmServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/devices/?type=huron';
       return $injector.instantiate(CsdmHuronDeviceService, {
         devicesUrl: devicesUrl,
       });
@@ -33,14 +33,14 @@
   }
 
   /* @ngInject  */
-  function CsdmHuronDeviceService($http, $q, Authinfo, HuronConfig, CsdmConverter, CsdmConfigService, devicesUrl) {
+  function CsdmHuronDeviceService($http, $q, Authinfo, HuronConfig, CsdmConverter, UrlConfig, devicesUrl) {
 
     function huronEnabled() {
       return $q.resolve(Authinfo.isSquaredUC());
     }
 
     function getFindDevicesUrl(userId) {
-      return CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/devices/?cisUuid=' + userId + '&type=huron';
+      return UrlConfig.getCsdmServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/devices/?cisUuid=' + userId + '&type=huron';
     }
 
     function getCmiUploadLogsUrl(userId, deviceId) {
@@ -158,14 +158,12 @@
             "port": null,
             "inputAudioLevel": null,
             "outputAudioLevel": null,
-            "impedance": null,
             "t38FaxEnabled": false,
           };
           if (res.data) {
             response.port = res.data.port;
             response.inputAudioLevel = res.data.inputAudioLevel;
             response.outputAudioLevel = res.data.outputAudioLevel;
-            response.impedance = res.data.impedance;
             response.t38FaxEnabled = res.data.t38FaxEnabled;
           }
           return response;

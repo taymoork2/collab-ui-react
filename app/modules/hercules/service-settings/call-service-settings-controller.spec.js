@@ -8,9 +8,9 @@ describe('Controller: CallServiceSettingsController', function () {
   var controller, $scope, $httpBackend;
   beforeEach(inject(function ($controller, $rootScope, _$httpBackend_, Analytics) {
     $httpBackend = _$httpBackend_;
-    $httpBackend.expectGET('https://atlas-integration.wbx2.com/admin/api/v1/organizations/null?basicInfo=true&disableCache=false').respond(200, true);
-    $httpBackend.expectGET('https://uss-integration.wbx2.com/uss/api/v1/orgs/null').respond(500, []);
-    $httpBackend.expectGET('https://certs-integration.wbx2.com/certificate/api/v1/certificates?expand=decoded&orgId=null').respond(200, [{
+    $httpBackend.expectGET('https://atlas-intb.ciscospark.com/admin/api/v1/organizations/null?basicInfo=true&disableCache=false').respond(200, true);
+    $httpBackend.expectGET('https://uss-intb.ciscospark.com/uss/api/v1/orgs/null').respond(500, []);
+    $httpBackend.expectGET('https://certs-intb.ciscospark.com/certificate/api/v1/certificates?expand=decoded&orgId=null').respond(200, [{
       decoded: {
         subjectDN: 'O="Cisco Systems, Inc."',
       },

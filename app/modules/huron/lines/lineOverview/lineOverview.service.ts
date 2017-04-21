@@ -16,6 +16,7 @@ export class LineOverviewData {
   public companyNumbers: any;
   public autoAnswer: AutoAnswer;
   public voicemailEnabled: boolean;
+  public services: Array<string>;
 }
 
 export class LineOverviewService {
@@ -52,7 +53,7 @@ export class LineOverviewService {
     promises.push(this.listCompanyNumbers());
     promises.push(this.getAutoAnswerSupportedDeviceAndMember(consumerType, ownerId, numberId));
     promises.push(this.HuronUserService.getUserServices(ownerId));
-    return this.$q.all(promises).then( (data) => {
+    return this.$q.all(promises).then((data) => {
       if (this.errors.length > 0) {
         this.Notification.notify(this.errors, 'error');
         return this.$q.reject();
@@ -63,8 +64,8 @@ export class LineOverviewService {
       lineOverviewData.callerId = data[3];
       lineOverviewData.companyNumbers = data[4];
       lineOverviewData.autoAnswer = data[5];
-      let services = data[6];
-      lineOverviewData.voicemailEnabled = this.HuronVoicemailService.isEnabledForUser(services);
+      lineOverviewData.services = data[6];
+      lineOverviewData.voicemailEnabled = this.HuronVoicemailService.isEnabledForUser(lineOverviewData.services);
       this.lineOverviewDataCopy = this.cloneLineOverviewData(lineOverviewData);
       return lineOverviewData;
     });
@@ -109,8 +110,10 @@ export class LineOverviewService {
         .then(() => this.get(consumerType, ownerId, lineOverviewData.line.uuid));
     } else { // update
       let promises: Array<ng.IPromise<any>> = [];
-      if (!_.isEqual(data.line, this.lineOverviewDataCopy.line)) {
+      let isLineUpdated: boolean = false;
+      if (!_.isEqual(data.line, _.get(this, 'lineOverviewDataCopy.line'))) {
         promises.push(this.updateLine(consumerType, ownerId, numberId, data.line));
+        isLineUpdated = true;
       }
 
       if (!_.isEqual(data.callForward, this.lineOverviewDataCopy.callForward)) {
@@ -150,6 +153,9 @@ export class LineOverviewService {
           if (!_.isEqual(data.callerId, this.lineOverviewDataCopy.callerId)) {
             return this.updateCallerId(consumerType, ownerId, numberId, data.callerId);
           }
+          if (data.voicemailEnabled && isLineUpdated && consumerType === LineConsumerType.USERS) {
+            promises.push(this.HuronVoicemailService.update(ownerId, data.voicemailEnabled, this.lineOverviewDataCopy.services));
+          }
         })
         .then(() => this.get(consumerType, ownerId, this.lineOverviewDataCopy.line.uuid));
     }
@@ -169,7 +175,7 @@ export class LineOverviewService {
   }
 
   private createLine(consumerType: LineConsumerType, ownerId: string, data: Line): ng.IPromise<Line> {
-    return this.LineService.createLine(consumerType, ownerId, data).then( location => {
+    return this.LineService.createLine(consumerType, ownerId, data).then(location => {
       let newUuid = _.last(location.split('/'));
       return this.LineService.getLine(consumerType, ownerId, newUuid)
         .then(line => {
@@ -220,7 +226,7 @@ export class LineOverviewService {
       return this.$q.resolve([]);
     } else {
       return this.SharedLineService.getSharedLineList(consumerType, ownerId, numberId)
-        .then( sharedLines => {
+        .then(sharedLines => {
           let promises: Array<ng.IPromise<any>> = [];
           _.forEach(sharedLines, (sharedLine) => {
             promises.push(this.SharedLineService.getSharedLinePhoneList(consumerType, ownerId, numberId, sharedLine.uuid));
@@ -254,9 +260,9 @@ export class LineOverviewService {
       return this.$q.resolve({});
     } else {
       return this.AutoAnswerService.getSupportedPhonesAndMember(consumerType, ownerId, numberId)
-        .then ( autoAnswerRes => {
+        .then(autoAnswerRes => {
           if (!_.isUndefined(autoAnswerRes) && !_.isNull(autoAnswerRes) && !_.isUndefined(autoAnswerRes.member) &&
-              !_.isNull(autoAnswerRes.member) && autoAnswerRes.member.uuid !== ownerId) {
+            !_.isNull(autoAnswerRes.member) && autoAnswerRes.member.uuid !== ownerId) {
             autoAnswerRes.enabledForSharedLineMember = true;
           }
           return autoAnswerRes;
@@ -277,9 +283,9 @@ export class LineOverviewService {
 
   private updateSharedLinePhoneList(consumerType: LineConsumerType, ownerId: string, numberId: string, sharedLineId: string, data: Array<SharedLinePhoneListItem>) {
     return this.SharedLineService.updateSharedLinePhoneList(consumerType, ownerId, numberId, sharedLineId, data)
-    .catch(error => {
-      this.errors.push(this.Notification.processErrorResponse(error, 'directoryNumberPanel.updateSharedLinePhoneError'));
-    });
+      .catch(error => {
+        this.errors.push(this.Notification.processErrorResponse(error, 'directoryNumberPanel.updateSharedLinePhoneError'));
+      });
   }
 
   private updateCallerId(consumerType: LineConsumerType, ownerId: string, numberId: string | undefined, data: any): ng.IPromise<ICallerID> {
@@ -293,13 +299,13 @@ export class LineOverviewService {
   public getEsnPrefix(): ng.IPromise<string> {
     return this.HuronSiteService.listSites().then(sites => {
       if (sites.length > 0) {
-        return this.HuronSiteService.getSite(_.get<string>(sites[0], 'uuid')).then(site => {
+        return this.HuronSiteService.getTheOnlySite().then(site => {
           return this.FeatureToggleService.sparkCallTenDigitExtGetStatus()
             .then(routingPrefixSupported => {
               if (routingPrefixSupported) {
-                return site.routingPrefix;
+                return _.get(site, 'routingPrefix', '');
               } else {
-                return _.get(site, 'siteSteeringDigit', '') + _.get(site, 'siteCode', '');
+                return _.get(site, 'steeringDigit', '') + _.get(site, 'siteCode', '');
               }
             });
         });

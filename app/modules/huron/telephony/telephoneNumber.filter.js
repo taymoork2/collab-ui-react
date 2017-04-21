@@ -1,8 +1,9 @@
 (function () {
   'use strict';
 
-  angular.module('huron.telephoneNumber', [])
-    .filter('telephoneNumber', telephoneNumber);
+  module.exports = angular.module('huron.telephoneNumber', [])
+    .filter('telephoneNumber', telephoneNumber)
+    .name;
 
   /* @ngInject */
   function telephoneNumber(TelephoneNumberService) {

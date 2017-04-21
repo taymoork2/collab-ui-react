@@ -36,6 +36,7 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
     spyOn(ExternalNumberService, 'getAssignedNumbersV2').and.returnValue($q.resolve(externalNumbers));
     spyOn(ExternalNumberService, 'getUnassignedNumbersV2').and.returnValue($q.resolve());
     spyOn(ExternalNumberService, 'getPendingNumbersAndOrders').and.returnValue($q.resolve());
+    spyOn(ExternalNumberService, 'getCarrierInfo').and.returnValue($q.resolve());
 
     spyOn(ModalService, 'open').and.returnValue({
       result: modalDefer.promise,
@@ -108,26 +109,6 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
     $scope.$apply();
     expect(controller.assignedNumbers).toEqual([]);
     expect(controller.unassignedNumbers).toEqual([]);
-  });
-
-  it('should delete number on modal close', function () {
-    ExternalNumberService.getAssignedNumbersV2.and.returnValue($q.resolve(externalNumbers[1]));
-    controller.deleteNumber(externalNumbers[0]);
-    modalDefer.resolve();
-    $scope.$apply();
-
-    expect(controller.assignedNumbers).toEqual(externalNumbers[1]);
-    expect(Notification.success).toHaveBeenCalled();
-  });
-
-  it('should notify error when delete fails', function () {
-    ExternalNumberService.deleteNumber.and.returnValue($q.reject());
-    controller.deleteNumber(externalNumbers[0]);
-    modalDefer.resolve();
-    $scope.$apply();
-
-    expect(controller.assignedNumbers.length).toEqual(2);
-    expect(Notification.errorResponse).toHaveBeenCalled();
   });
 
   it('should not delete number on modal dismiss', function () {

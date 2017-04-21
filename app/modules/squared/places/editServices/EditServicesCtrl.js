@@ -41,7 +41,7 @@
     };
 
     function getUpdatedEntitlements() {
-      var entitlements = (wizardData.account.entitlements || ['webex-squared']);
+      var entitlements = (wizardData.account.entitlements || ['webex-squared', 'spark']);
       entitlements = _.difference(entitlements, [ciscouc, fusionec, fusionuc, fusionCal, fusionGCal]);
       if (vm.service === 'sparkCall') {
         entitlements.push(ciscouc);
@@ -92,8 +92,7 @@
       if (vm.service === 'sparkOnly' || vm.enableCalService != initialEnableCalService) {
         vm.isLoading = true;
         if (vm.service !== initialService || vm.enableCalService != initialEnableCalService) {
-          CsdmDataModelService.getPlacesMap().then(function (list) {
-            var place = _.find(_.values(list), { 'cisUuid': wizardData.account.cisUuid });
+          CsdmDataModelService.reloadPlace(wizardData.account.cisUuid).then(function (place) {
             if (place) {
               CsdmDataModelService.updateCloudberryPlace(place, getUpdatedEntitlements())
                 .then(function () {

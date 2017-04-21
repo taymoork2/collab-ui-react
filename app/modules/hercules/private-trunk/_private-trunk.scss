@@ -1,0 +1,175 @@
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/tools/functions/core';
+.private-trunk {
+  .padding-p {
+    padding-right: 4.5rem;
+  }
+
+  .cert-word-wrap {
+    word-wrap: break-word;
+    .bold {
+      font-weight: bold;
+    }
+  }
+  h5 {
+    @include vr-spacing(mt, .5);
+    @include vr-spacing(mb, .5);
+  }
+  .help {
+    p {
+      @include vr-spacing(mt, .25);
+      @include vr-spacing(mb, .25);
+    }
+  }
+  .domain-list {
+    padding-left: 1rem;
+  }
+
+  .icon-error {
+    @include vr-spacing(mt, 0.25);
+    @include vr-spacing(mr, 0.5);
+  }
+  .exit-icon {
+    padding-top: .5rem;
+    font-size: 1.25rem;
+    position: absolute;
+    cursor: pointer;
+  }
+  .add-align {
+    padding-left: 1.5rem;
+  }
+  .label-align {
+    padding-left: 1.25rem;
+  }
+  .label-2-align {
+    padding-left: 1.5rem;
+  }
+
+  .box.singlebox-margin {
+    margin: 0 rem_calc(16) rem_calc(8);
+  }
+
+  .box.multibox-margin {
+    @include vr-spacing(m, .5);
+    @include vr-spacing(pb, .5);
+  }
+
+  .columns .box {
+    border: thin solid $gray-light-2;
+    color: $gray-base;
+    display: flex;
+    flex-direction: column;
+    flex-grow: column;
+    flex: 1 1 auto;
+
+    .box-content {
+      align-self: center;
+      display: flex;
+      background: transparent;
+    }
+
+    .icon.icon-upload-contain {
+      font-size: 1.5rem;
+      display: inline;
+      line-height: 2rem;
+      &:hover,
+      &:active,
+      &:focus {
+        color: $brand-primary;
+      }
+    }
+
+    .icon-label {
+      position: relative;
+      top: .5rem;
+      padding-left: .25rem;
+    }
+
+    .icon.close-icon-align {
+      position: relative;
+      float: right;
+      font-size: .75rem;
+      line-height: 1rem;
+      padding-right: .5rem;
+      padding-top: .25rem;
+    }
+
+    .span-filename {
+      padding-left: .5rem;
+      font-size: 1rem;
+      line-height: 2rem;
+    }
+    .prompt {
+      padding-bottom: .5rem;
+      label {
+        cursor: pointer;
+        color: $link-color;
+
+        &:hover {
+          color: $link-hover-color;
+        }
+
+        display: inline;
+      }
+    }
+  }
+  .flex-center-container {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+
+  .certificate-upload {
+    flex: 1 1 auto;
+    height: 100%;
+    .hotspot {
+      cursor: pointer;
+      &:hover {
+        color: $brand-primary;
+      }
+    }
+
+    label.hotspot {
+      font-size: vr-adjust(16);
+      text-align: right;
+    }
+    .span-text {
+      position: relative;
+      bottom: .5rem;
+      padding-left: .5rem;
+    }
+    .file-drop {
+      @extend .flex-center-container;
+
+      flex-direction: column;
+
+      &.dragover {
+        background: $color-primary-lighter;
+        border: dashed $color-primary;
+      }
+
+      input {
+        display: none;
+      }
+    }
+
+    .file-drop-inactive {
+      @extend .file-drop;
+
+      .file-drop-content {
+        background: $gray-light-4;
+
+        .icon-check {
+          color: $color-cta-base;
+        }
+      }
+
+      .file-name {
+        @include vr-spacing(mt, 0.25);
+      }
+    }
+  }
+}

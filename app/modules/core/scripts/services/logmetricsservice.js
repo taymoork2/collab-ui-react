@@ -34,9 +34,10 @@
       },
 
       eventType: {
-        contextCreateFieldSuccess: 'CONTEXTCREATEFIELDSUCCESS',
-        contextCreateFieldFailure: 'CONTEXTCREATEFIELDFAILURE',
         contextNewField: 'CONTEXTNEWFIELD',
+        contextCreateFieldsetSuccess: 'CONTEXTCREATEFIELDSETSUCCESS',
+        contextCreateFieldsetFailure: 'CONTEXTCREATEFIELDSETFAILURE',
+        contextNewFieldset: 'CONTEXTNEWFIELDSET',
         contextServiceEnabled: 'CONTEXTSERVICEENABLED',
         contextServiceDisabled: 'CONTEXTSERVICEDISABLED',
         inviteUsers: 'INVITEUSERS',
@@ -117,11 +118,11 @@
         var stateFound = true;
 
         switch (state.name) {
-          case 'trialAdd.info':
+          case 'trial.info':
             msg = "In trial page";
             eType = this.getEventType('trialPage');
             break;
-          case 'trialAdd.addNumbers':
+          case 'trial.addNumbers':
             msg = "In trial DID page";
             eType = this.getEventType('trialDidPage');
             break;

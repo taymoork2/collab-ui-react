@@ -1,5 +1,6 @@
 import { ServicesOverviewHybridCard } from './ServicesOverviewHybridCard';
 import { ICardButton, CardType } from './ServicesOverviewCard';
+import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 
 export class ServicesOverviewHybridCallCard extends ServicesOverviewHybridCard {
   public getShowMoreButton(): ICardButton | undefined {
@@ -30,7 +31,10 @@ export class ServicesOverviewHybridCallCard extends ServicesOverviewHybridCard {
   }
 
   /* @ngInject */
-  public constructor(Authinfo, FusionClusterStatesService) {
+  public constructor(
+    Authinfo,
+    HybridServicesClusterStatesService: HybridServicesClusterStatesService,
+  ) {
     super({
       active: false,
       cardClass: 'call',
@@ -39,7 +43,7 @@ export class ServicesOverviewHybridCallCard extends ServicesOverviewHybridCard {
       name: 'servicesOverview.cards.hybridCall.title',
       routerState: 'call-service.list',
       service: 'squared-fusion-uc',
-    }, FusionClusterStatesService);
+    }, HybridServicesClusterStatesService);
     this.display = Authinfo.isFusionUC();
   }
 }

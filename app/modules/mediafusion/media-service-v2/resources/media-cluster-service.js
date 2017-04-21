@@ -279,11 +279,6 @@
         .post(url);
     }
 
-    function defuseV2Connector(connectorId) {
-      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/actions/deregister/invoke?managementConnectorId=' + connectorId;
-      return $http.post(url);
-    }
-
     function deleteClusterWithConnector(clusterId) {
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/actions/deregisterCluster/invoke?clusterId=' + clusterId;
       return $http.post(url);
@@ -310,6 +305,25 @@
 
     }
 
+    function getPropertySets() {
+      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/property_sets?type=mf.group';
+      return $http
+        .get(url)
+        .then(extractDataFromResponse);
+    }
+
+    function createPropertySet(payLoad) {
+      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/property_sets';
+      return $http
+        .post(url, payLoad);
+    }
+
+    function updatePropertySetById(id, payLoad) {
+      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/property_sets/' + id;
+      return $http
+        .post(url, payLoad);
+    }
+
     function getClustersByConnectorType(type) {
       var clusters = _.chain(clusterCache[type])
         .values() // turn them to an array
@@ -322,12 +336,6 @@
 
     function getCluster(id) {
       return clusterCache['mf_mgmt'][id];
-    }
-
-    function upgradeCluster(id) {
-      var connectorType = 'mf_mgmt';
-      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + id + '/provisioning/actions/update/invoke?connectorType=' + connectorType + '&forced=true';
-      return $http.post(url);
     }
 
     var hub = CsdmHubFactory.create();
@@ -346,9 +354,7 @@
       getAll: getAll,
       deleteV2Cluster: deleteV2Cluster,
       updateV2Cluster: updateV2Cluster,
-      defuseV2Connector: defuseV2Connector,
       deleteClusterWithConnector: deleteClusterWithConnector,
-      upgradeCluster: upgradeCluster,
       moveV2Host: moveV2Host,
       getProperties: getProperties,
       setProperties: setProperties,
@@ -358,6 +364,9 @@
       getMostSevereRunningState: getMostSevereRunningState,
       buildAggregates: buildAggregates,
       getV1Clusters: getV1Clusters,
+      getPropertySets: getPropertySets,
+      createPropertySet: createPropertySet,
+      updatePropertySetById: updatePropertySetById,
     };
   }
 

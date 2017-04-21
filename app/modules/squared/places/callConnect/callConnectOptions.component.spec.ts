@@ -11,11 +11,12 @@ describe('CallConnectOptions component:', () => {
       '$componentController',
       '$rootScope',
       'CsdmDataModelService',
+      'ResourceGroupService',
       'USSService',
       '$q',
     );
     test = this;
-
+    spyOn(this.ResourceGroupService, 'getAllAsOptions').and.returnValue(this.$q.resolve({}));
   });
 
   let defaultState = () => {
@@ -124,7 +125,7 @@ describe('CallConnectOptions component:', () => {
     it('should call CsdmDataModelService with correct entitlement and extLinkAccts', () => {
       spyOn(test.CsdmDataModelService, 'updateCloudberryPlace').and.returnValue(test.$q.resolve({}));
       const place = { cisUuid: uid };
-      spyOn(test.CsdmDataModelService, 'getPlacesMap').and.returnValue(test.$q.resolve({ 'https://url': place }));
+      spyOn(test.CsdmDataModelService, 'reloadPlace').and.returnValue(test.$q.resolve(place));
       spyOn(test.USSService, 'updateUserProps').and.returnValue(test.$q.resolve({}));
 
       let mailId = 'mail@example.com';
@@ -168,8 +169,9 @@ describe('CallConnectOptions component:', () => {
       expect(nextParam[0]).toBeTruthy();
       expect(nextParam[0].account).toBeTruthy();
       expect(nextParam[0].account.externalHybridCallIdentifier).toBeTruthy();
-      expect(nextParam[0].account.externalHybridCallIdentifier.providerID).toBe(FUSION_HYBRID_UC);
-      expect(nextParam[0].account.externalHybridCallIdentifier.accountGUID).toBe(mailId);
+      expect(nextParam[0].account.externalHybridCallIdentifier.length).toBe(1);
+      expect(nextParam[0].account.externalHybridCallIdentifier[0].providerID).toBe(FUSION_HYBRID_UC);
+      expect(nextParam[0].account.externalHybridCallIdentifier[0].accountGUID).toBe(mailId);
 
       expect(nextParam[0].account.ussProps).toEqual({ userId: uid, resourceGroups: { 'squared-fusion-uc': '' } });
     });

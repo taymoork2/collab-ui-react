@@ -2,7 +2,7 @@ import { IOrderDetail, IOrderList } from './myCompanyOrders.service';
 
 describe('Service: MyCompanyOrdersService', () => {
   const onlineCustId: string = '98765';
-  const orderUrl: string = 'https://atlas-integration.wbx2.com/admin/api/v1/commerce/purchaseorders/customer/' + onlineCustId;
+  const orderUrl: string = 'https://atlas-intb.ciscospark.com/admin/api/v1/commerce/purchaseorders/customer/' + onlineCustId;
   beforeEach(function () {
     this.initModules('Core');
     this.injectDependencies(

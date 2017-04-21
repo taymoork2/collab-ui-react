@@ -28,6 +28,8 @@ module.exports = csp({
     frameSrc: [
       'https://buy.ciscospark.com', // Digital River
       'https://ds2-qlikdemo.cisco.com',
+      'https://10.140.50.27',
+      'http://127.0.0.1:8000',
     ],
     objectSrc: [
       'http://www.cisco.com', // Terms of Service
@@ -51,7 +53,7 @@ module.exports = csp({
       'https://cdn.mxpnl.com',
       'http://54.183.25.170:8001',
       'https://clio-manager-a.wbx2.com',
-      'https://clio-manager-integration.wbx2.com',
+      'https://clio-manager-intb.ciscospark.com',
       // manual DNS entry for local dev:
       'http://dev-admin.ciscospark.com:8000',
       'ws://dev-admin.ciscospark.com:8000',
@@ -96,6 +98,7 @@ module.exports = csp({
       'http://ciscowebex.d1.sc.omtrdc.net', // Adobe DTM Omniture
       'https://buy.ciscospark.com', // Digital River
       'http://dev-admin.ciscospark.com:8000', // manual DNS entry for local dev
+      '127.0.0.1',
     ],
     styleSrc: [
       '\'self\'',

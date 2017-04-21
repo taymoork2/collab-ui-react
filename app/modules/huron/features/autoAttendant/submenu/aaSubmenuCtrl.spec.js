@@ -93,7 +93,6 @@ describe('Controller: AASubmenuCtrl', function () {
     $scope.menuId = menuId;
     $scope.queues = JSON.stringify(queues);
 
-    spyOn(AACommonService, 'isRouteQueueToggle').and.returnValue(true);
     spyOn(AACommonService, 'isRouteSIPAddressToggle').and.returnValue(true);
 
     controller = $controller('AASubmenuCtrl', {

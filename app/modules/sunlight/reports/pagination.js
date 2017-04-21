@@ -104,7 +104,7 @@ angular.module('Sunlight.paging', [])
     };
   });
 
-angular.module('Sunlight.pagination', ['Sunlight.paging', 'Sunlight.tabindex', 'atlas.templates']).controller('SlPaginationController',
+angular.module('Sunlight.pagination', ['Sunlight.paging', 'Sunlight.tabindex', require('scripts/app.templates')]).controller('SlPaginationController',
   function ($scope, $attrs, $parse, slPaging, slPaginationConfig) {
     var ctrl = this;
     // Setup configuration parameters

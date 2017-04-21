@@ -68,7 +68,7 @@ describe('HybridContextFieldsCtrl', function () {
       var controller = initController();
       controller.createField();
       expect(LogMetricsService.logMetrics).toHaveBeenCalled();
-      expect($state.go).toHaveBeenCalledWith('context-new-field', jasmine.any(Object));
+      expect($state.go).toHaveBeenCalledWith('context-field-modal', jasmine.any(Object));
     });
   });
 
@@ -78,7 +78,7 @@ describe('HybridContextFieldsCtrl', function () {
         'classification': 'PII Encrypted',
         'dataType': 'String',
         'searchable': 'Yes',
-        'publiclyAccessible': true,
+        'publiclyAccessible': 'true',
         'translations': { 'en_US': 'Agent ID' },
         'locales': [],
         'refUrl': '/dictionary/field/v1/id/Agent_ID',
@@ -106,7 +106,7 @@ describe('HybridContextFieldsCtrl', function () {
   describe('processFieldList()', function () {
     it('should process field data when data returned is missing dataType', function () {
       ContextFieldsService.getFields.and.returnValue($q.resolve([{
-        'publiclyAccessible': false,
+        'publiclyAccessible': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'refUrl': '/dictionary/field/v1/id/NoDataType',
         'id': 'NoDataType',
@@ -115,16 +115,16 @@ describe('HybridContextFieldsCtrl', function () {
       controller = initController();
       $scope.$apply();
       expect(controller.fieldsList.allFields.length).toBe(1);
-      expect(controller.fieldsList.allFields[0].classification).toEqual('context.dictionary.fieldPage.unencrypted');
-      expect(controller.fieldsList.allFields[0].searchable).toEqual('common.yes');
-      expect(controller.fieldsList.allFields[0].publiclyAccessible).toEqual(false);
-      expect(controller.fieldsList.allFields[0].dataType).not.toExist();
-      expect(controller.fieldsList.allFields[0].lastUpdated).not.toBeNull();
+      expect(controller.fieldsList.allFields[0].classificationUI).toEqual('context.dictionary.fieldPage.unencrypted');
+      expect(controller.fieldsList.allFields[0].searchableUI).toEqual('common.yes');
+      expect(controller.fieldsList.allFields[0].publiclyAccessible).toEqual('false');
+      expect(controller.fieldsList.allFields[0].dataTypeUI).not.toExist();
+      expect(controller.fieldsList.allFields[0].lastUpdatedUI).not.toBeNull();
     });
 
     it('should process field data when data returned is missing lastUpdated', function () {
       ContextFieldsService.getFields.and.returnValue($q.resolve([{
-        'publiclyAccessible': false,
+        'publiclyAccessible': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'refUrl': '/dictionary/field/v1/id/NoDataType',
         'id': 'NoDataType',
@@ -133,17 +133,17 @@ describe('HybridContextFieldsCtrl', function () {
       controller = initController();
       $scope.$apply();
       expect(controller.fieldsList.allFields.length).toBe(1);
-      expect(controller.fieldsList.allFields[0].classification).toEqual('context.dictionary.fieldPage.unencrypted');
-      expect(controller.fieldsList.allFields[0].searchable).toEqual('common.yes');
-      expect(controller.fieldsList.allFields[0].dataType).toEqual('Integer');
-      expect(controller.fieldsList.allFields[0].lastUpdated).not.toExist();
+      expect(controller.fieldsList.allFields[0].classificationUI).toEqual('context.dictionary.fieldPage.unencrypted');
+      expect(controller.fieldsList.allFields[0].searchableUI).toEqual('common.yes');
+      expect(controller.fieldsList.allFields[0].dataTypeUI).toEqual('Integer');
+      expect(controller.fieldsList.allFields[0].lastUpdatedUI).not.toExist();
     });
 
     it('should process when data is encrypted, integer, searchable', function () {
       ContextFieldsService.getFields.and.returnValue($q.resolve([{
         'description': 'Some description added for Test Integer',
         'classification': 'ENCRYPTED',
-        'publiclyAccessible': false,
+        'publiclyAccessible': 'false',
         'searchable': 'true',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'refUrl': '/dictionary/field/v1/id/TestInteger',
@@ -153,17 +153,17 @@ describe('HybridContextFieldsCtrl', function () {
       controller = initController();
       $scope.$apply();
       expect(controller.fieldsList.allFields.length).toBe(1);
-      expect(controller.fieldsList.allFields[0].classification).toEqual('context.dictionary.fieldPage.encrypted');
-      expect(controller.fieldsList.allFields[0].searchable).toEqual('common.yes');
-      expect(controller.fieldsList.allFields[0].dataType).toEqual('Integer');
-      expect(controller.fieldsList.allFields[0].lastUpdated).not.toExist();
+      expect(controller.fieldsList.allFields[0].classificationUI).toEqual('context.dictionary.fieldPage.encrypted');
+      expect(controller.fieldsList.allFields[0].searchableUI).toEqual('common.yes');
+      expect(controller.fieldsList.allFields[0].dataTypeUI).toEqual('Integer');
+      expect(controller.fieldsList.allFields[0].lastUpdatedUI).not.toExist();
     });
 
     it('should process when data is unencrypted, boolean, missing searchable', function () {
       ContextFieldsService.getFields.and.returnValue($q.resolve([{
         'description': 'Field for TestBoolean',
         'classification': 'UNENCRYPTED',
-        'publiclyAccessible': false,
+        'publiclyAccessible': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'refUrl': '/dictionary/field/v1/id/NoDataType',
         'id': 'TestBoolean',
@@ -172,18 +172,18 @@ describe('HybridContextFieldsCtrl', function () {
       controller = initController();
       $scope.$apply();
       expect(controller.fieldsList.allFields.length).toBe(1);
-      expect(controller.fieldsList.allFields[0].classification).toEqual('context.dictionary.fieldPage.unencrypted');
-      expect(controller.fieldsList.allFields[0].searchable).toEqual('common.yes');
-      expect(controller.fieldsList.allFields[0].dataType).toEqual('Boolean');
+      expect(controller.fieldsList.allFields[0].classificationUI).toEqual('context.dictionary.fieldPage.unencrypted');
+      expect(controller.fieldsList.allFields[0].searchableUI).toEqual('common.yes');
+      expect(controller.fieldsList.allFields[0].dataTypeUI).toEqual('Boolean');
       expect(controller.fieldsList.allFields[0].description).toEqual('Field for TestBoolean');
-      expect(controller.fieldsList.allFields[0].lastUpdated).not.toExist();
+      expect(controller.fieldsList.allFields[0].lastUpdatedUI).not.toExist();
     });
 
     it('should process when data is PII, double', function () {
       ContextFieldsService.getFields.and.returnValue($q.resolve([{
         'description': 'Field for TestDouble',
         'classification': 'PII',
-        'publiclyAccessible': false,
+        'publiclyAccessible': 'false',
         'searchable': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'refUrl': '/dictionary/field/v1/id/NoDataType',
@@ -193,16 +193,16 @@ describe('HybridContextFieldsCtrl', function () {
       controller = initController();
       $scope.$apply();
       expect(controller.fieldsList.allFields.length).toBe(1);
-      expect(controller.fieldsList.allFields[0].classification).toEqual('context.dictionary.fieldPage.piiEncrypted');
-      expect(controller.fieldsList.allFields[0].searchable).toEqual('common.no');
-      expect(controller.fieldsList.allFields[0].dataType).toEqual('Double');
-      expect(controller.fieldsList.allFields[0].lastUpdated).not.toExist();
+      expect(controller.fieldsList.allFields[0].classificationUI).toEqual('context.dictionary.fieldPage.piiEncrypted');
+      expect(controller.fieldsList.allFields[0].searchableUI).toEqual('common.no');
+      expect(controller.fieldsList.allFields[0].dataTypeUI).toEqual('Double');
+      expect(controller.fieldsList.allFields[0].lastUpdatedUI).not.toExist();
     });
 
     it('should process when data is missing classification, boolean, missing searchable', function () {
       ContextFieldsService.getFields.and.returnValue($q.resolve([{
         'description': 'Field for NoClassification',
-        'publiclyAccessible': false,
+        'publiclyAccessible': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'refUrl': '/dictionary/field/v1/id/NoDataType',
         'id': 'NoClassification',
@@ -211,10 +211,10 @@ describe('HybridContextFieldsCtrl', function () {
       controller = initController();
       $scope.$apply();
       expect(controller.fieldsList.allFields.length).toBe(1);
-      expect(controller.fieldsList.allFields[0].classification).toEqual('context.dictionary.fieldPage.unencrypted');
-      expect(controller.fieldsList.allFields[0].searchable).toEqual('common.yes');
-      expect(controller.fieldsList.allFields[0].dataType).toEqual('Boolean');
-      expect(controller.fieldsList.allFields[0].lastUpdated).not.toExist();
+      expect(controller.fieldsList.allFields[0].classificationUI).toEqual('context.dictionary.fieldPage.unencrypted');
+      expect(controller.fieldsList.allFields[0].searchableUI).toEqual('common.yes');
+      expect(controller.fieldsList.allFields[0].dataTypeUI).toEqual('Boolean');
+      expect(controller.fieldsList.allFields[0].lastUpdatedUI).not.toExist();
     });
   });
 
@@ -223,7 +223,7 @@ describe('HybridContextFieldsCtrl', function () {
       ContextFieldsService.getFields.and.returnValue($q.resolve([{
         'description': 'Field for abcd',
         'classification': 'PII',
-        'publiclyAccessible': false,
+        'publiclyAccessible': 'false',
         'searchable': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'refUrl': '/dictionary/field/v1/id/FieldContainsSearchStr',
@@ -232,7 +232,7 @@ describe('HybridContextFieldsCtrl', function () {
       }, {
         'description': 'Field for xyz',
         'classification': 'PII',
-        'publiclyAccessible': false,
+        'publiclyAccessible': 'false',
         'searchable': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'refUrl': '/dictionary/field/v1/id/FieldNotContainSearchStr',
@@ -268,32 +268,32 @@ describe('HybridContextFieldsCtrl', function () {
 
       var fieldList = [{
         'description': 'Field for NoClassification',
-        'publiclyAccessible': false,
+        'publiclyAccessibleUI': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'id': '2017Field',
-        'dataType': 'boolean',
-        'lastUpdated': '2017-01-26T18:42:42.124Z',
+        'dataTypeUI': 'boolean',
+        'lastUpdatedUI': '2017-01-26T18:42:42.124Z',
       }, {
         'description': 'Field for NoClassification',
-        'publiclyAccessible': false,
+        'publiclyAccessibleUI': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'id': '2016Field',
-        'dataType': 'boolean',
-        'lastUpdated': '2016-01-26T18:42:42.124Z',
+        'dataTypeUI': 'boolean',
+        'lastUpdatedUI': '2016-01-26T18:42:42.124Z',
       }, {
         'description': 'Field for NoClassification',
-        'publiclyAccessible': false,
+        'publiclyAccessibleUI': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'id': '2015Field',
-        'dataType': 'boolean',
-        'lastUpdated': '2015-01-26T18:42:42.124Z',
+        'dataTypeUI': 'boolean',
+        'lastUpdatedUI': '2015-01-26T18:42:42.124Z',
       }, {
         'description': 'Field for abc3',
-        'publiclyAccessible': false,
+        'publiclyAccessibleUI': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'id': '2014FieldWithDateMatch',
-        'dataType': 'boolean',
-        'lastUpdated': '2014-02-15T18:42:42.124Z',
+        'dataTypeUI': 'boolean',
+        'lastUpdatedUI': '2014-02-15T18:42:42.124Z',
       }];
 
       controller.filterBySearchStr(fieldList, '15')
@@ -312,47 +312,47 @@ describe('HybridContextFieldsCtrl', function () {
       $scope.$apply();
 
       var fieldList = [{
-        'publiclyAccessible': false,
+        'publiclyAccessibleUI': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'id': 'First',
-        'lastUpdated': '2017-01-26T18:42:42.124Z',
+        'lastUpdatedUI': '2017-01-26T18:42:42.124Z',
       }, {
-        'publiclyAccessible': false,
+        'publiclyAccessibleUI': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'id': 'SearchStrInTranslation',
-        'lastUpdated': '2017-01-26T18:42:42.124Z',
+        'lastUpdatedUI': '2017-01-26T18:42:42.124Z',
       }, {
-        'publiclyAccessible': false,
+        'publiclyAccessibleUI': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'id': 'SearchStrInClassification',
-        'classification': 'first',
-        'lastUpdated': '2017-01-26T18:42:42.124Z',
+        'classificationUI': 'first',
+        'lastUpdatedUI': '2017-01-26T18:42:42.124Z',
       }, {
-        'publiclyAccessible': false,
+        'publiclyAccessibleUI': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'id': 'SearchStrInDescription',
         'description': 'First in description',
-        'lastUpdated': '2017-01-26T18:42:42.124Z',
+        'lastUpdatedUI': '2017-01-26T18:42:42.124Z',
       }, {
-        'publiclyAccessible': false,
+        'publiclyAccessibleUI': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'id': 'SearchStrLowerCaseInLastUpdatedDate',
-        'lastUpdated': 'first in date',
+        'lastUpdatedUI': 'first in date',
       }, {
-        'publiclyAccessible': false,
+        'publiclyAccessibleUI': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'id': 'SearchStrInDataType',
-        'dataType': '$$first in datatype',
+        'dataTypeUI': '$$first in datatype',
       }, {
         'otherKey1': 'First',
         'OhterKey2': 'first',
         'otherKey3': 'anyOtherFirst',
       }, {
-        'publiclyAccessible': false,
+        'publiclyAccessibleUI': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'id': 'SearchStrInSearchable',
-        'dataType': 'String',
-        'searchable': 'somethingfirstabce',
+        'dataTypeUI': 'String',
+        'searchableUI': 'somethingfirstabce',
       }];
       controller.filterBySearchStr(fieldList, 'first')
         .then(function (filteredList) {
@@ -374,56 +374,64 @@ describe('HybridContextFieldsCtrl', function () {
       $scope.$apply();
 
       var fieldList = [{
-        'publiclyAccessible': false,
+        'publiclyAccessibleUI': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'id': 'aaa_test',
-        'lastUpdated': '2017-01-26T18:42:42.124Z',
+        'lastUpdatedUI': '2017-01-26T18:42:42.124Z',
       }, {
-        'publiclyAccessible': false,
+        'publiclyAccessibleUI': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'id': 'aaa.test',
-        'lastUpdated': '2017-01-26T18:42:42.124Z',
+        'lastUpdatedUI': '2017-01-26T18:42:42.124Z',
       }, {
-        'publiclyAccessible': false,
+        'publiclyAccessibleUI': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'id': 'SearchStrInClassificationUpperCase',
-        'classification': 'ContainsAAA_Test',
-        'lastUpdated': '2017-01-26T18:42:42.124Z',
+        'classificationUI': 'ContainsAAA_Test',
+        'lastUpdatedUI': '2017-01-26T18:42:42.124Z',
       }, {
-        'publiclyAccessible': false,
+        'publiclyAccessibleUI': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'id': 'aaa test',
         'description': 'First in description',
-        'lastUpdated': '2017-01-26T18:42:42.124Z',
+        'lastUpdatedUI': '2017-01-26T18:42:42.124Z',
       }, {
-        'publiclyAccessible': false,
+        'publiclyAccessibleUI': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'id': 'AAA test!',
-        'lastUpdated': 'first in date',
+        'lastUpdatedUI': 'first in date',
       }, {
-        'publiclyAccessible': false,
+        'publiclyAccessibleUI': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'id': 'SearchStrInDataType',
-        'dataType': 'aaa_TEST',
+        'dataTypeUI': 'aaa_TEST',
       }, {
         'otherKey1': 'aaa-test',
         'OhterKey2': 'aaa_test',
         'otherKey3': 'anyOtherFirst',
         'id': 'SearchStrInOtherFields',
       }, {
-        'publiclyAccessible': false,
+        'publiclyAccessibleUI': 'false',
         'translations': { 'english': 'First Name', 'french': 'Prénom' },
         'id': 'SearchStrInSearchable',
+
+        'dataTypeUI': 'String',
+        'searchableUI': 'aaa_TEST',
+      }, {
+        'publiclyAccessibleUI': 'aaa_test_something',
+        'translations': { 'english': 'First Name', 'french': 'Prénom' },
+        'id': 'SearchStrInPubliclyAccessible',
         'dataType': 'String',
-        'searchable': 'aaa_TEST',
+        'searchable': 'something',
       }];
       controller.filterBySearchStr(fieldList, 'aaa_test')
         .then(function (filteredList) {
-          expect(filteredList.length).toBe(4);
+          expect(filteredList.length).toBe(5);
           expect(filteredList[0].id).toEqual('aaa_test');
           expect(filteredList[1].id).toEqual('SearchStrInClassificationUpperCase');
           expect(filteredList[2].id).toEqual('SearchStrInDataType');
           expect(filteredList[3].id).toEqual('SearchStrInSearchable');
+          expect(filteredList[4].id).toEqual('SearchStrInPubliclyAccessible');
           done();
         });
       $scope.$apply();

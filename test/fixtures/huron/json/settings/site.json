@@ -1,0 +1,33 @@
+{
+  "customer": {
+    "uuid": "1893db06-ea35-4ee3-961a-8cf4aa53d29f",
+    "name": "AtlasTest_jeff_is_awesome"
+  },
+  "siteIndex": "000001",
+  "siteCode": null,
+  "steeringDigit": null,
+  "siteSteeringDigit": null,
+  "timeZone": "Asia/Pyongyang",
+  "voicemailPilotNumber": "+14697862612",
+  "mediaTraversalMode": "TURNOnly",
+  "siteDescription": "",
+  "vmCluster": "6e2e8585-40d2-4e4a-b5ad-07b1273b01c4",
+  "allowInternationalDialing": "true",
+  "allowExternalTransfer": "false",
+  "emergencyCallBackNumber": {
+    "uuid": "26d9e8e9-9da4-4901-be2c-90e0e3bafeef",
+    "pattern": "+14697862414"
+  },
+  "extensionLength": "3",
+  "voicemailPilotNumberGenerated": "false",
+  "preferredLanguage": "en_US",
+  "country": "US",
+  "dateFormat": "M-D-Y",
+  "timeFormat": "24-hour",
+  "routingPrefix": null,
+  "regionCodeDialing": {
+    "regionCode": null,
+    "useSimplifiedNationalDialing": "true"
+  },
+  "uuid": "1e552972-0326-4861-bffb-5a5b22a52f84"
+}

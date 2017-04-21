@@ -8,7 +8,7 @@ require('./_overview.scss');
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($modal, $rootScope, $state, $scope, $translate, Authinfo, CardUtils, Config, FeatureToggleService, FusionClusterService, hasGoogleCalendarFeatureToggle, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, ServiceDescriptor, SunlightReportService, TrialService, UrlConfig, PstnSetupService) {
+  function OverviewCtrl($modal, $rootScope, $state, $scope, $translate, Authinfo, CardUtils, Config, FeatureToggleService, FusionClusterService, hasGoogleCalendarFeatureToggle, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, SunlightReportService, TrialService, UrlConfig, PstnSetupService, HybridServicesUtilsService) {
     var vm = this;
 
     var PSTN_TOS_ACCEPT = 'pstn-tos-accept-event';
@@ -46,21 +46,34 @@ require('./_overview.scss');
         resizeNotifications();
       }
 
-      ServiceDescriptor.getServices()
-        .then(function (services) {
-          _.forEach(services, function (service) {
-            if (!service.acknowledged) {
-              if (service.id === Config.entitlements.fusion_cal) {
+      var hybridServiceNotificationFlags = _.chain([
+        Config.entitlements.fusion_cal,
+        Config.entitlements.fusion_gcal,
+        Config.entitlements.fusion_uc,
+        Config.entitlements.fusion_ec,
+        Config.entitlements.mediafusion,
+        Config.entitlements.hds,
+      ])
+      .filter(Authinfo.isEntitled)
+      .map(HybridServicesUtilsService.getAckFlagForHybridServiceId)
+      .value();
+
+      HybridServicesFlagService
+        .readFlags(hybridServiceNotificationFlags)
+        .then(function (flags) {
+          _.forEach(flags, function (flag) {
+            if (!flag.raised) {
+              if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.fusion_cal)) {
                 vm.notifications.push(OverviewNotificationFactory.createCalendarNotification());
-              } else if (service.id === Config.entitlements.fusion_gcal && hasGoogleCalendarFeatureToggle) {
-                vm.notifications.push(OverviewNotificationFactory.createGoogleCalendarNotification($modal, $state, Orgservice));
-              } else if (service.id === Config.entitlements.fusion_uc) {
+              } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.fusion_gcal) && hasGoogleCalendarFeatureToggle) {
+                vm.notifications.push(OverviewNotificationFactory.createGoogleCalendarNotification($modal, $state, HybridServicesFlagService, HybridServicesUtilsService));
+              } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.fusion_uc)) {
                 vm.notifications.push(OverviewNotificationFactory.createCallAwareNotification());
-              } else if (service.id === Config.entitlements.fusion_ec) {
+              } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.fusion_ec)) {
                 vm.notifications.push(OverviewNotificationFactory.createCallConnectNotification());
-              } else if (service.id === Config.entitlements.mediafusion) {
+              } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.mediafusion)) {
                 vm.notifications.push(OverviewNotificationFactory.createHybridMediaNotification());
-              } else if (service.id === Config.entitlements.hds) {
+              } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.hds)) {
                 vm.notifications.push(OverviewNotificationFactory.createHybridDataSecurityNotification());
               }
             }

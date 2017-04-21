@@ -7,11 +7,12 @@ export * from './callForward.service';
 
 export default angular
   .module('huron.call-forward', [
-    'atlas.templates',
-    'collab.ui',
-    'pascalprecht.translate',
+    require('scripts/app.templates'),
+    require('collab-ui-ng').default,
+    require('angular-translate'),
     customerServiceModule,
     'huron.telephoneNumber',
+    'huron.telephoneNumberService',
     featureToggleModule,
     require('angular-resource'),
     require('modules/core/scripts/services/authinfo'),

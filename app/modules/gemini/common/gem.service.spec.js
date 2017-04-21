@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Service: gemService', function () {
-  var GmHttpService, $q, $scope, $translate, gemservice, Authinfo;
+  var $httpBackend, $translate, gemservice, UrlConfig, Authinfo;
   var preData = getJSONFixture('gemini/common.json');
   var customerId = 'ff808081527ccb3f0152e39ec555010c';
 
@@ -10,19 +10,18 @@ describe('Service: gemService', function () {
   beforeEach(inject(dependencies));
 
   afterEach(function () {
-    $translate = gemservice = $scope = Authinfo = undefined;
+    $httpBackend = $translate = gemservice = UrlConfig = Authinfo = undefined;
   });
   afterAll(function () {
     preData = customerId = undefined;
   });
 
-  function dependencies(_GmHttpService_, _$q_, _$rootScope_, _$translate_, _gemService_, _Authinfo_) {
-    GmHttpService = _GmHttpService_;
+  function dependencies(_$httpBackend_, _$translate_, _gemService_, _Authinfo_, _UrlConfig_) {
+    $httpBackend = _$httpBackend_;
     $translate = _$translate_;
     gemservice = _gemService_;
+    UrlConfig = _UrlConfig_;
     Authinfo = _Authinfo_;
-    $scope = _$rootScope_.$new();
-    $q = _$q_;
   }
 
   it('should return true in isAvops', function () {
@@ -38,33 +37,33 @@ describe('Service: gemService', function () {
   });
 
   describe('http request', function () {
-    it('should return json data in getSpData', function () {
-      spyOn(GmHttpService, 'httpGet').and.returnValue($q.resolve());
+    afterEach(function () {
+      $httpBackend.verifyNoOutstandingExpectation();
+      $httpBackend.verifyNoOutstandingRequest();
+    });
 
+    it('should return json data in getSpData', function () {
       var servicePartners = preData.common;
-      var mockHttpResponse = {
-        data: servicePartners,
-      };
       servicePartners.content.data.body = preData.servicePartners;
-      GmHttpService.httpGet.and.returnValue($q.resolve(mockHttpResponse));
+      $httpBackend.expectGET(/.*\/servicepartner.*/g).respond(200, servicePartners);
 
       gemservice.getSpData().then(function (res) {
         expect(res.content.data.body).toBeDefined();
       });
-      $scope.$apply();
+      $httpBackend.flush();
     });
 
     it('should return RemedyTicket info in getRemedyTicket', function () {
-      spyOn(GmHttpService, 'httpGet').and.returnValue($q.resolve());
-
       var type = 9;
       var remedyTicket = preData.common;
       remedyTicket.content.data = preData.getRemedyTicket;
-      GmHttpService.httpGet.and.returnValue($q.resolve(remedyTicket));
+      var remedyTicketUrl = UrlConfig.getGeminiUrl() + 'remedyTicket/customers/' + customerId + '/siteId/0/type/' + type;
 
+      $httpBackend.expectGET(remedyTicketUrl).respond(200, remedyTicket);
       gemservice.getRemedyTicket(customerId, type).then(function (res) {
         expect(res.content.data.length).toBe(2);
       });
+      $httpBackend.flush();
     });
   });
 
@@ -74,16 +73,16 @@ describe('Service: gemService', function () {
       spyOn($translate, 'instant');
     }
 
-    it('should return errorMessage when error code exist', function () {
+    it('should return genericError if error code not exist', function () {
       $translate.instant.and.returnValue('Failed to create callback group');
       var error = gemservice.showError('3001');
       expect(error).toBe('Failed to create callback group');
     });
 
-    it('should return genericError when error code does not exist', function () {
-      $translate.instant.and.returnValue('gemini.errorCode.900');
-      var error = gemservice.showError('900');
-      expect(error).toBe('gemini.errorCode.900');
+    it('should return genericError if error code not exist', function () {
+      $translate.instant.and.returnValue('An unexpected error occurred. Please try again later.');
+      var error = gemservice.showError('3011');
+      expect(error).toBe('An unexpected error occurred. Please try again later.');
     });
   });
 });

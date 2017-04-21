@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: AddResourceController', function () {
-  var controller, $scope, $controller, $q, modalInstanceMock, translateMock, windowMock, clusterServiceMock, fusionClusterServiceMock, FeatureToggleServiceMock;
+  var controller, $scope, $controller, $q, modalInstanceMock, translateMock, windowMock, clusterServiceMock, fusionClusterServiceMock, hybridServicesExtrasServiceMock, FmsOrgSettingsMock, ResourceGroupService;
 
   var clusterIdOfNewCluster = 'c6b4d8f1-6d34-465c-8d6d-b541058fc15e';
   var newConnectorType = 'c_cal';
@@ -11,10 +11,11 @@ describe('Controller: AddResourceController', function () {
   beforeEach(inject(dependencies));
   beforeEach(initController);
 
-  function dependencies($rootScope, _$controller_, _$q_) {
+  function dependencies($rootScope, _$controller_, _$q_, _ResourceGroupService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
+    ResourceGroupService = _ResourceGroupService_;
   }
 
   function initController() {
@@ -30,23 +31,29 @@ describe('Controller: AddResourceController', function () {
       open: sinon.stub(),
     };
 
-    fusionClusterServiceMock = {
-      getOrgSettings: sinon.stub().returns($q.resolve({
+    hybridServicesExtrasServiceMock = {
+      addPreregisteredClusterToAllowList: sinon.stub().returns($q.resolve({})),
+    };
+
+    FmsOrgSettingsMock = {
+      get: sinon.stub().returns($q.resolve({
         expresswayClusterReleaseChannel: 'stable',
       })),
+    };
+
+    fusionClusterServiceMock = {
       provisionConnector: sinon.stub().returns($q.resolve({
         id: clusterIdOfNewCluster,
       })),
       preregisterCluster: sinon.stub().returns($q.resolve({
         id: clusterIdOfNewCluster,
       })),
-      addPreregisteredClusterToAllowList: sinon.stub().returns($q.resolve({})),
       getAll: sinon.stub().returns($q.resolve([{
-        url: 'https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d',
+        url: 'https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d',
         id: 'fe5acf7a-6246-484f-8f43-3e8c910fc50d',
         name: 'Test Expressway Cluster 01 – starting with c_ucmc but no c_cal',
         connectors: [{
-          url: 'https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/01deb566-2cac-11e6-847d-005056bf13dd/connectors/c_cal@03C36F68',
+          url: 'https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/01deb566-2cac-11e6-847d-005056bf13dd/connectors/c_cal@03C36F68',
           id: 'c_cal@03C36F68',
           connectorType: 'c_cal',
           upgradeState: 'upgraded',
@@ -55,9 +62,9 @@ describe('Controller: AddResourceController', function () {
           hostSerial: '03C36F68',
           alarms: [],
           runningVersion: '8.7-1.0.2966',
-          packageUrl: 'https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_cal',
+          packageUrl: 'https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_cal',
         }, {
-          url: 'https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/01deb566-2cac-11e6-847d-005056bf13dd/connectors/c_mgmt@03C36F68',
+          url: 'https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/01deb566-2cac-11e6-847d-005056bf13dd/connectors/c_mgmt@03C36F68',
           id: 'c_mgmt@03C36F68',
           connectorType: 'c_mgmt',
           upgradeState: 'upgraded',
@@ -66,7 +73,7 @@ describe('Controller: AddResourceController', function () {
           hostSerial: '03C36F68',
           alarms: [],
           runningVersion: '8.7-1.0.2966',
-          packageUrl: 'https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_mgmt',
+          packageUrl: 'https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_mgmt',
         }],
         state: 'fused',
         releaseChannel: 'stable',
@@ -85,11 +92,11 @@ describe('Controller: AddResourceController', function () {
           },
         }],
       }, {
-        url: 'https://hercules-integration.wbx2.com/hercules/api/v2/organizations/6f090d26-0d32-11e6-bda1-005056001268',
+        url: 'https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/6f090d26-0d32-11e6-bda1-005056001268',
         id: '6f090d26-0d32-11e6-bda1-005056001268',
         name: 'Test Expressway Cluster 02 – starting with both c_ucmc and c_cal',
         connectors: [{
-          url: 'https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/01deb566-2cac-11e6-847d-005056bf13dd/connectors/c_cal@03C36F68',
+          url: 'https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/01deb566-2cac-11e6-847d-005056bf13dd/connectors/c_cal@03C36F68',
           id: 'c_cal@03C36F68',
           connectorType: 'c_cal',
           upgradeState: 'upgraded',
@@ -98,7 +105,7 @@ describe('Controller: AddResourceController', function () {
           hostSerial: '0C379CB8',
           alarms: [],
           runningVersion: '8.7-1.0.2966',
-          packageUrl: 'https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_cal',
+          packageUrl: 'https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_cal',
         }],
         state: 'fused',
         releaseChannel: 'stable',
@@ -124,11 +131,11 @@ describe('Controller: AddResourceController', function () {
           },
         }],
       }, {
-        url: 'https://hercules-integration.wbx2.com/hercules/api/v2/organizations/2a394f17-bf73-4f01-a29e-eee22df86615',
+        url: 'https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/2a394f17-bf73-4f01-a29e-eee22df86615',
         id: '2a394f17-bf73-4f01-a29e-eee22df86615',
         name: 'Test Expressway Cluster 03 – starting with c_cal and no c_ucmc',
         connectors: [{
-          url: 'https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/01deb566-2cac-11e6-847d-005056bf13dd/connectors/c_cal@03C36F68',
+          url: 'https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/01deb566-2cac-11e6-847d-005056bf13dd/connectors/c_cal@03C36F68',
           id: 'c_cal@03C36F68',
           connectorType: 'c_cal',
           upgradeState: 'upgraded',
@@ -137,7 +144,7 @@ describe('Controller: AddResourceController', function () {
           hostSerial: '55379CB8',
           alarms: [],
           runningVersion: '8.7-1.0.2966',
-          packageUrl: 'https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_cal',
+          packageUrl: 'https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_cal',
         }],
         state: 'fused',
         releaseChannel: 'stable',
@@ -158,10 +165,7 @@ describe('Controller: AddResourceController', function () {
       }])),
     };
 
-    FeatureToggleServiceMock = {
-      supports: sinon.stub().returns($q.resolve(false)),
-      features: '',
-    };
+    spyOn(ResourceGroupService, 'getAllAsOptions').and.returnValue($q.resolve({}));
 
     controller = $controller('AddResourceController', {
       $scope: $scope,
@@ -172,8 +176,10 @@ describe('Controller: AddResourceController', function () {
       serviceId: 'squared-fusion-cal',
       ClusterService: clusterServiceMock,
       FusionClusterService: fusionClusterServiceMock,
+      FmsOrgSettings: FmsOrgSettingsMock,
+      HybridServicesExtrasService: hybridServicesExtrasServiceMock,
       firstTimeSetup: false,
-      FeatureToggleService: FeatureToggleServiceMock,
+      ResourceGroupService: ResourceGroupService,
     });
     $scope.$apply();
   }
@@ -217,14 +223,14 @@ describe('Controller: AddResourceController', function () {
     });
 
     it('should add the new cluster to the FMS allow-list exactly once, and with the correct clusterId', function () {
-      spyOn(fusionClusterServiceMock, 'addPreregisteredClusterToAllowList').and.returnValue($q.resolve({
+      spyOn(hybridServicesExtrasServiceMock, 'addPreregisteredClusterToAllowList').and.returnValue($q.resolve({
         id: clusterIdOfNewCluster,
       }));
       controller.preregisterAndProvisionExpressway(newConnectorType);
       controller.hostname = 'hostnameProvidedByUser';
       $scope.$apply();
-      expect(fusionClusterServiceMock.addPreregisteredClusterToAllowList).toHaveBeenCalledTimes(1);
-      expect(fusionClusterServiceMock.addPreregisteredClusterToAllowList).toHaveBeenCalledWith('hostnameProvidedByUser', 3600, clusterIdOfNewCluster);
+      expect(hybridServicesExtrasServiceMock.addPreregisteredClusterToAllowList).toHaveBeenCalledTimes(1);
+      expect(hybridServicesExtrasServiceMock.addPreregisteredClusterToAllowList).toHaveBeenCalledWith('hostnameProvidedByUser', 3600, clusterIdOfNewCluster);
     });
 
     it('should not show the Resource Group step unless you are feature toggled', function () {

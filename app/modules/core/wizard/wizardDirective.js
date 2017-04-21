@@ -49,7 +49,9 @@ require('./_wizard.scss');
   }
 
   /* @ngInject */
-  function WizardCtrl($controller, $modal, $rootScope, $scope, $state, $stateParams, $translate, Authinfo, Config, PromiseHook, SessionStorage) {
+  function WizardCtrl($controller, $modal,
+    $rootScope, $scope, $state, $stateParams, $translate,
+    Authinfo, Config, PromiseHook, SessionStorage) {
     var vm = this;
     vm.current = {};
 
@@ -132,7 +134,6 @@ require('./_wizard.scss');
       }
 
     }
-
     function init() {
       initCurrent();
       setNextText();

@@ -1,0 +1,33 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$ctrl.dismiss()">
+    <span class="sr-only" translate="common.close"></span>
+  </button>
+  <h3 class="modal-title" translate="servicesOverview.cards.privateTrunk.setupTitle"></h5>
+</div>
+<div ng-form="privateTrunkSetupForm" class="modal-body">
+  <private-trunk-domain ng-if="$ctrl.currentStepIndex === 1"
+    domain-selected="$ctrl.domainSelected"
+    domains="$ctrl.domains"
+    is-domain="$ctrl.isDomain"
+    on-change-fn="$ctrl.setSelectedDomain(isDomain, domainSelected)">
+  </private-trunk-domain>
+  <private-trunk-destination ng-if="$ctrl.currentStepIndex === 2"
+    private-trunk-resource="$ctrl.privateTrunkResource"
+    on-change-fn="$ctrl.setResources(privateTrunkResource)">
+  </private-trunk-destination>
+  <private-trunk-certificate ng-if="$ctrl.currentStepIndex === 3"
+    is-certificate-default = "$ctrl.isCertificateDefault"
+    is-importing = "$ctrl.isImporting"
+    formatted-cert-list="$ctrl.formattedCertList"
+    cert-file-name-id-map="$ctrl.certFileNameIdMap"
+    file-name="$ctrl.fileName"
+    on-change-fn="$ctrl.uploadFile(file, fileName)"
+    on-delete-cert-fn="$ctrl.deleteCertModal(certId)"
+    on-change-option-fn="$ctrl.changeOption(isCertificateDefault)">
+  </private-trunk-certificate>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-default" ng-click="$ctrl.dismiss()" ng-if="$ctrl.currentStepIndex===1" translate="common.close"></button>
+  <button class="btn btn-default" ng-click="$ctrl.previousStep()" ng-if="$ctrl.currentStepIndex > 1" translate="common.back"></button>
+  <button class="btn btn-primary" ng-disabled="!$ctrl.isNextButton() || privateTrunkSetupForm.$invalid" ng-click="$ctrl.nextStep()" translate="common.next"></button>
+</div>

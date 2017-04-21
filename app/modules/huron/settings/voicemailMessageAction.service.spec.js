@@ -1,9 +1,11 @@
 'use strict';
 
-describe('Service: VoicemailMessageAction', function () {
-  var $httpBackend, HuronConfig, Authinfo, VoicemailMessageAction;
+var testModule = require('./voicemailMessageAction.service');
 
-  beforeEach(angular.mock.module('Huron'));
+describe('Service: VoicemailMessageAction', function () {
+  beforeEach(angular.mock.module(testModule));
+
+  var $httpBackend, HuronConfig, Authinfo, VoicemailMessageAction;
 
   beforeEach(inject(function (_$httpBackend_, _HuronConfig_, _Authinfo_, _VoicemailMessageAction_) {
     $httpBackend = _$httpBackend_;

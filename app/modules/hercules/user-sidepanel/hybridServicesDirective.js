@@ -7,11 +7,23 @@
     .controller('HybridServicesCtrl', HybridServicesCtrl);
 
   /* @ngInject */
-  function HybridServicesCtrl($scope, $rootScope, $timeout, Authinfo, USSService, HybridServicesUtils, ServiceDescriptor, Notification, Userservice, CloudConnectorService, FeatureToggleService) {
+  function HybridServicesCtrl($scope, $rootScope, $timeout, Authinfo, USSService, HybridServicesUtilsService, ServiceDescriptor, Notification, Userservice, CloudConnectorService, FeatureToggleService) {
     if (!Authinfo.isFusion()) {
       return;
     }
     var vm = this;
+
+    vm.getCurrentPlace = function () {
+      return vm.place();
+    };
+
+    vm.getUser = function () {
+      if (vm.place) {
+        return vm.getCurrentPlace();
+      }
+      return vm.user;
+    };
+
     var extensionEntitlements = ['squared-fusion-cal', 'squared-fusion-gcal', 'squared-fusion-uc', 'squared-fusion-ec'];
     var extensionCallEntitlements = ['squared-fusion-uc', 'squared-fusion-ec'];
     var stopDelayedUpdates = false;
@@ -19,9 +31,10 @@
     vm.extensions = getExtensions();
     vm.isEnabled = false;
     vm.userStatusLoaded = false;
-    vm.isPlace = vm.user && vm.user.accountType === 'MACHINE';
+
+    vm.isPlace = vm.getUser() && vm.getUser().accountType === 'MACHINE';
     vm.isUser = !vm.isPlace;
-    vm.isInvitePending = vm.user && vm.isUser ? Userservice.isInvitePending(vm.user) : false;
+    vm.isInvitePending = vm.getUser() && vm.isUser ? Userservice.isInvitePending(vm.getUser()) : false;
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar)
       .then(function (supported) {
@@ -72,14 +85,21 @@
     }
 
     vm.extensionIcon = function (id) {
-      return HybridServicesUtils.serviceId2Icon(id);
+      return HybridServicesUtilsService.serviceId2Icon(id);
     };
 
-    if (extensionEntitlements.every(function (extensionEntitlement) {
-      return !Authinfo.isEntitled(extensionEntitlement);
-    })) {
+    if (extensionEntitlements.every(
+        function (extensionEntitlement) {
+          return !Authinfo.isEntitled(extensionEntitlement);
+        })) {
       return;
     }
+
+    vm.editService = function (service) {
+      if (vm.eservice) {
+        vm.eservice(service);
+      }
+    };
 
     var enforceLicenseCheck = vm.isUser && _.size(Authinfo.getLicenses()) > 0;
     checkEntitlements(enforceLicenseCheck);
@@ -121,7 +141,8 @@
                     updateStatusForUser();
                   }
                 }
-              }).catch(function (error) {
+              })
+              .catch(function (error) {
                 Notification.errorWithTrackingId(error, 'hercules.settings.googleCalendar.couldNotReadGoogleCalendarStatus');
               });
           }
@@ -135,8 +156,8 @@
 
     // Periodically update the user statuses from USS
     function updateStatusForUser() {
-      if (!_.isUndefined(vm.user)) {
-        USSService.getStatusesForUser(vm.user.id || vm.user.cisUuid)
+      if (!_.isUndefined(vm.getUser())) {
+        USSService.getStatusesForUser(vm.getUser().id || vm.getUser().cisUuid)
           .then(function (userStatuses) {
             _.forEach(vm.extensions, function (extension) {
               extension.status = _.find(userStatuses, function (status) {
@@ -149,9 +170,11 @@
               }
             });
             delayedUpdateStatusForUser();
-          }).catch(function (response) {
+          })
+          .catch(function (response) {
             Notification.errorWithTrackingId(response, 'hercules.userSidepanel.readUserStatusFailed');
-          }).finally(function () {
+          })
+          .finally(function () {
             vm.userStatusLoaded = true;
           });
       }
@@ -167,10 +190,10 @@
     }
 
     function hasEntitlement(entitlement) {
-      if (_.isUndefined(vm.user)) {
+      if (_.isUndefined(vm.getUser())) {
         return false;
       }
-      return vm.user.entitlements && vm.user.entitlements.indexOf(entitlement) > -1;
+      return vm.getUser().entitlements && vm.getUser().entitlements.indexOf(entitlement) > -1;
     }
 
     function getExtensions() {
@@ -203,7 +226,7 @@
     function hasCaaSLicense() {
       // latest update says that a "Collaboration as a Service license" is
       // equivalent to any license
-      var licenseIDs = _.get(vm.user, 'licenseID', []);
+      var licenseIDs = _.get(vm.getUser(), 'licenseID', []);
       var offerCodes = _.map(licenseIDs, function (licenseString) {
         return licenseString.split('_')[0];
       });
@@ -234,6 +257,8 @@
       controllerAs: 'hybridServicesCtrl',
       bindToController: {
         user: '=',
+        place: '=',
+        eservice: '=',
       },
       templateUrl: 'modules/hercules/user-sidepanel/hybridServices.tpl.html',
     };

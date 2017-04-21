@@ -130,7 +130,6 @@ describe('Controller: PstnNumbersCtrl', function () {
     PstnSetup.setProvider(customerCarrierList[0]);
     PstnSetup.setCountryCode('US');
 
-    spyOn(PstnSetupService, 'releaseCarrierInventory').and.returnValue($q.resolve());
     spyOn(PstnSetupService, 'releaseCarrierInventoryV2').and.returnValue($q.resolve());
     spyOn(PstnSetupService, 'getCarrierInventory').and.returnValue($q.resolve(response));
     spyOn(PstnSetupService, 'getCarrierTollFreeInventory').and.returnValue($q.resolve(response));

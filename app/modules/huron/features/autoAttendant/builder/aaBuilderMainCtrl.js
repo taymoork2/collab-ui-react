@@ -626,9 +626,6 @@
     function setUpFeatureToggles(featureToggleDefault) {
       AACommonService.setMediaUploadToggle(featureToggleDefault);
       AACommonService.setCallerInputToggle(featureToggleDefault);
-      AACommonService.setDecisionToggle(featureToggleDefault);
-      AACommonService.setClioToggle(featureToggleDefault);
-      AACommonService.setRouteQueueToggle(featureToggleDefault);
       AACommonService.setRouteSIPAddressToggle(featureToggleDefault);
       return checkFeatureToggles();
     }
@@ -636,21 +633,17 @@
     function checkFeatureToggles() {
       return $q.all({
         hasCallerinput: FeatureToggleService.supports(FeatureToggleService.features.huronAACallerInput),
-        hasDecision: FeatureToggleService.supports(FeatureToggleService.features.huronAADecision),
         hasMediaUpload: FeatureToggleService.supports(FeatureToggleService.features.huronAAMediaUpload),
-        hasRouteQueue: FeatureToggleService.supports(FeatureToggleService.features.huronAACallQueue),
-        hasClioMedia: FeatureToggleService.supports(FeatureToggleService.features.huronAAClioMedia),
         hasRouteRoom: FeatureToggleService.supports(FeatureToggleService.features.huronAARouteRoom),
+        hasDynAnnounce: FeatureToggleService.supports(FeatureToggleService.features.huronAADynannounce),
       });
     }
 
     function assignFeatureToggles(featureToggles) {
       AACommonService.setCallerInputToggle(featureToggles.hasCallerinput);
-      AACommonService.setDecisionToggle(featureToggles.hasDecision);
       AACommonService.setMediaUploadToggle(featureToggles.hasMediaUpload);
-      AACommonService.setRouteQueueToggle(featureToggles.hasRouteQueue);
-      AACommonService.setClioToggle(featureToggles.hasClioMedia);
       AACommonService.setRouteSIPAddressToggle(featureToggles.hasRouteRoom);
+      AACommonService.setDynAnnounceToggle(featureToggles.hasDynAnnounce);
     }
 
     //load the feature toggle prior to creating the elements

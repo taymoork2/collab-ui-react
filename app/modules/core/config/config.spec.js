@@ -10,12 +10,15 @@ describe('Config', function () {
     Config = $location = tabConfig = LocalStorage = undefined;
   });
 
-  beforeEach(inject(function (_$location_, _Config_, _tabConfig_, _LocalStorage_) {
+  beforeEach(inject(function (_$location_) {
+    $location = _$location_;
+    spyOn($location, 'host').and.returnValue('wbx2.com/bla');
+  }));
+
+  beforeEach(inject(function (_Config_, _tabConfig_, _LocalStorage_) {
     Config = _Config_;
     LocalStorage = _LocalStorage_;
     tabConfig = _tabConfig_;
-    $location = _$location_;
-    spyOn($location, 'host');
   }));
 
   afterEach(function () {
@@ -37,7 +40,8 @@ describe('Config', function () {
     expect(Config.roleStates.PARTNER_SALES_ADMIN).toContain('pstnSetup');
   });
 
-  it('should not have development states assigned to Full_Admin role', function () {
+  it('should not have development states assigned to Full_Admin role in non-dev mode', function () {
+
     function getDevelopmentStates() {
       var devStates = [];
       for (var i = 0; i < tabConfig.length; i++) {

@@ -16,12 +16,12 @@ var Wizard = function () {
   this.mainviewSubtitle = element(by.css('.wizard h3'));
   this.radiobuttons = element.all(by.css('label.cs-radio'));
   this.manualAddUsers = element(by.css('label.cs-radio[for="syncSimple"]'));
-  this.beginBtn = element(by.id('wizardSaveNextBtn'));
+  this.beginBtn = element(by.id('wizardNext'));
   this.backBtn = element(by.buttonText('Back'));
   this.nextBtn = element(by.buttonText('Next'));
   this.saveBtn = element(by.buttonText('Save'));
   this.yesBtn = element(by.buttonText('Yes'));
-  this.skipBtn = element(by.css('.skip-link'));
+  this.skipBtn = element(by.css('.skip-btn'));
   this.finishBtn = element(by.buttonText('Finish'));
   this.esEvaluateBtn = element(by.css('[ng-click="evaluateStep(\'initial\', \'enterpriseSettings\')"]'));
   this.toExpCloudDataBtn = element.all(by.css('[ng-click="changeStep(\'exportCloudData\')"]'));

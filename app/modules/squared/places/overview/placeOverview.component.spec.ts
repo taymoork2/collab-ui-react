@@ -1,5 +1,5 @@
 describe('placeOverview component', () => {
-  let Authinfo, FeatureToggleService, CsdmDataModelService, CsdmCodeService, WizardFactory, $state, $scope, $q, Userservice, ServiceDescriptor;
+  let Authinfo, FeatureToggleService, CsdmDataModelService, CsdmCodeService, WizardFactory, $httpBackend, UrlConfig, $state, $scope, $q, Userservice, ServiceDescriptor;
 
   let $stateParams;
   let $componentController;
@@ -12,6 +12,8 @@ describe('placeOverview component', () => {
                      _Authinfo_,
                      _CsdmDataModelService_,
                      _WizardFactory_,
+                     _$httpBackend_,
+                     _UrlConfig_,
                      _$state_,
                      _$stateParams_,
                      $rootScope,
@@ -24,6 +26,8 @@ describe('placeOverview component', () => {
     Authinfo = _Authinfo_;
     CsdmDataModelService = _CsdmDataModelService_;
     WizardFactory = _WizardFactory_;
+    $httpBackend = _$httpBackend_;
+    UrlConfig = _UrlConfig_;
     $state = _$state_;
     $stateParams = _$stateParams_;
     $componentController = _$componentController_;
@@ -70,7 +74,6 @@ describe('placeOverview component', () => {
       spyOn(CsdmCodeService, 'createCodeForExisting').and.returnValue($q.when('0q9u09as09vu0a9sv'));
       spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.when(showATA));
       spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.when(showHybrid));
-      spyOn(FeatureToggleService, 'atlasF237ResourceGroupGetStatus').and.returnValue($q.when({}));
       spyOn(FeatureToggleService, 'csdmPlaceCalendarGetStatus').and.returnValue($q.when({}));
       spyOn(FeatureToggleService, 'atlasHerculesGoogleCalendarGetStatus').and.returnValue($q.when({}));
       spyOn(Authinfo, 'getOrgId').and.returnValue(orgId);
@@ -160,7 +163,6 @@ describe('placeOverview component', () => {
                 csdmHybridCalendarFeature: false,
                 hybridCalendarEnabledOnOrg: false,
                 atlasHerculesGoogleCalendarFeatureToggle: false,
-                atlasF237ResourceGroups: false,
                 admin: {
                   firstName: adminFirstName,
                   lastName: adminLastName,
@@ -209,7 +211,6 @@ describe('placeOverview component', () => {
 
       spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.when(showATA));
       spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.when(showHybrid));
-      spyOn(FeatureToggleService, 'atlasF237ResourceGroupGetStatus').and.returnValue($q.when({}));
       spyOn(FeatureToggleService, 'csdmPlaceCalendarGetStatus').and.returnValue($q.when({}));
       spyOn(FeatureToggleService, 'atlasHerculesGoogleCalendarGetStatus').and.returnValue($q.when({}));
       spyOn(ServiceDescriptor, 'getServices').and.returnValue($q.resolve([]));
@@ -218,6 +219,8 @@ describe('placeOverview component', () => {
         goStateName = stateName;
         goStateData = stateData;
       });
+      $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200);
+      $httpBackend.whenGET(UrlConfig.getCsdmServiceUrl() + '/organization/null/upgradeChannels').respond(200);
 
       $stateParams = {
         currentPlace: {
@@ -248,7 +251,6 @@ describe('placeOverview component', () => {
             hybridCalendarEnabledOnOrg: false,
             hybridCallEnabledOnOrg: false,
             atlasHerculesGoogleCalendarFeatureToggle: false,
-            atlasF237ResourceGroups: false,
             account: {
               deviceType: 'cloudberry',
               type: 'shared',

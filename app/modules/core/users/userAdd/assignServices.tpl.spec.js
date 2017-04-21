@@ -150,20 +150,17 @@ describe('assignServices', function () {
       .respond({});
 
     $httpBackend
-      .when('GET', 'https://hercules-integration.wbx2.com/v1/organizations/' + orgid + '/services')
+      .when('GET', 'https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/' + orgid + '/services')
       .respond({
         items: [{
           id: ENT.cal,
           enabled: true,
-          acknowledged: false,
         }, {
           id: ENT.uc,
           enabled: true,
-          acknowledged: false,
         }, {
           id: ENT.ec,
           enabled: true,
-          acknowledged: false,
         }],
       });
 
@@ -173,7 +170,7 @@ describe('assignServices', function () {
       .respond({});
 
     $httpBackend
-      .when('GET', 'https://atlas-integration.wbx2.com/admin/api/v1/customers/' + orgid + '/usage')
+      .when('GET', 'https://atlas-intb.ciscospark.com/admin/api/v1/customers/' + orgid + '/usage')
       .respond({});
 
     $controller('OnboardCtrl', {

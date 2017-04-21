@@ -82,7 +82,7 @@ var UsersPage = function () {
   this.squaredCheckBox = element(by.css('label[for="chk_webExSquared"]'));
   this.squaredUCCheckBox = element(by.css('label[for="chk_ciscoUC"]'));
   this.paidMsgCheckbox = element(by.css('label[for="paid-msg"]'));
-  this.paidMtgCheckbox = element(by.css('label[for="paid-conf"]'));
+  this.paidMtgCheckbox = element(by.css('label[for="paid-conf0"]'));
   this.paidCareCheckbox = element(by.cssContainingText('.cs-checkbox', 'Care'));
 
   this.closePreview = element(by.id('exitPreviewButton'));

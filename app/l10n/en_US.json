@@ -7,7 +7,8 @@
     "tos": "Terms of Service",
     "privacy": "Privacy Statement",
     "copyright": "Cisco and/or affiliates. All rights reserved.",
-    "expired": "Your session has expired due to inactivity."
+    "expired": "Your session has expired due to inactivity.",
+    "email": "Enter your email address"
   },
   "termsOfService": {
     "title": "Terms of Service",
@@ -19,6 +20,24 @@
     "copyright2": "All rights reserved.",
     "description": "Cisco Spark is a collaboration application that provides messaging(IM), voice, and video calling capabilities.",
     "loggingOut": "Logging off..."
+  },
+  "editFeatureToggles": {
+    "title": "Feature Toggles and User Info for {{name}}",
+    "toggleId": "Feature Toggle ID",
+    "enabled": "Enabled",
+    "search": "Filter by...",
+    "loading": "Loading Feature Toggle Data...",
+    "placeholder": "Enter New Feature Toggle",
+    "failure": "Failed to update Feature Toggle '{{toggleId}}':",
+    "removeToggleTitle": "Remove Feature Toggle",
+    "removeToggleMessage": "Are you SURE you want to remove Feature toggle named '{{toggleId}}'?",
+    "addToggleTitle": "Add New Feature Toggle",
+    "addToggleMessage": "Are you sure you want to add a new Feature toggle named '{{toggleId}}'?",
+    "toggleAlreadyExists": "Feature Toggle with name '{{toggleId}}' already exists.",
+    "toggleUpdateSuccess": "Toggle '{{toggleId}}' set to {{value}}",
+    "toggleAddSuccess": "Toggle '{{toggleId}}' added with {{value}}",
+    "userPrefsSaved": "User Preferences Updated",
+    "initError": "There was an error refreshing page: ${error}"
   },
   "usersPage": {
     "assignServices": "Assign Services",
@@ -305,7 +324,6 @@
     "paidCiscoSparkMessaging": "Cisco Spark Messaging",
     "paidConf": "Meeting 25 Party",
     "paidCiscoSparkMeetings": "Cisco Spark 25 party Meetings",
-    "paidConfWebEx": "WebEx Meetings",
     "paidAdvancedConferencing": "Advanced Meetings",
     "paidComm": "Call",
     "paidSparkCall": "Cisco Spark Call",
@@ -339,6 +357,7 @@
     "result": {
       "200": "entitled successfully",
       "404": "does not exist",
+      "408": "may not have been entitled; there was a timeout while waiting for the response. Check back later to verify the user's entitlements.",
       "409": "entitlement previously updated",
       "400094": "already has Call Service under Hybrid Services enabled; having both Call Service and Spark Call enabled for a user is unsupported. To enable Spark Call, disable Call Service for this user and try again.",
       "deleteUserDnFallbackError": "entitlement update failed. The user's directory number is used as the fallback destination for Hunt Group(s).",
@@ -424,7 +443,8 @@
     "gssTab": "Status",
     "gssTabDesc": "Global Service Status Management",
     "careTab": "Care",
-    "careTabDesc": "Cloud Contact Center"
+    "careTabDesc": "Cloud Contact Center",
+    "editFeatureToggles": "Edit Feature Toggles"
   },
   "index": {
     "welcome": "Welcome!",
@@ -586,6 +606,7 @@
       "hoursUsed": "Time Used",
       "callCount": "Calls",
       "callHours": "Call Hours",
+      "peopleCount": "Participants",
       "deviceUsage": "Room Device Usage",
       "pairedCount": "# Paired",
       "last7Days": "Last 7 Days",
@@ -612,7 +633,11 @@
       }
     },
     "webexMetrics": {
-      "title": "WebEx Metrics"
+      "title": "WebEx Metrics",
+      "meetingUsage": "Meeting Usage",
+      "joinMeetingTime": "Join Meeting Time",
+      "webexReportInMashup": "CHP Reports",
+      "webexReportInQlikApp": "Qlik app"
     }
   },
   "sharedMeetingReports": {
@@ -792,10 +817,6 @@
     "averageLabel": "Average Engagement",
     "acrossCustomers": "Across All Customers",
     "loadingCustomer": "Sample Customer"
-  },
-  "taskIncoming": {
-    "title": "Total Completed Contacts",
-    "description": "The graph depicts the total number of customer contacts completed {{time}}. Hover over the area chart for a breakdown of {{taskStatus}} contacts during a {{interval}}."
   },
   "taskIncoming": {
     "title": "Total Completed Contacts",
@@ -1286,7 +1307,7 @@
     "setUpHybridMediaService": "Hybrid Media Service is available. Extend cloud media to use premises-based resources for calls and meetings.",
     "getStarted": "Get Started",
     "urgentUpgrade": "An urgent upgrade is available for <a ui-sref='{{link}}'>{{connector}}</a> and it will upgrade during the next scheduled upgrade.",
-    "setUpHybridDataSecurity": "Use premises-based Data Security for encryption.",
+    "setUpHybridDataSecurity": "Create an on-premises security realm with Hybrid Data Security.",
     "careLicenseMsgMissingText": "Message is mandatory for Care services. To enable Message,",
     "careLicenseCallMissingText": "Call is mandatory for voice-based Care services. To enable Call,",
     "careLicenseMsgAndCallMissingText": "Message and Call are mandatory for Care services like chat and voice interaction respectively. To enable Message and Call,",
@@ -1353,8 +1374,10 @@
     "preferredLanguageDescription": "Specify the language to use for Spark Call Services. Preferred language only applies to new users.",
     "preferredLanguagePlaceholder": "Select your language",
     "defaultCountry": "Default Country",
+    "defaultTones": "Default Tones",
     "defaultCountryDescription": "Specify the country to set the correct dial tone on user devices.",
     "defaultCountryPlaceholder": "Select your country",
+    "notApplicable": "Not Applicable",
     "timeZone": "Time Zone",
     "searchTimeZone": "Search for a time zone...",
     "tzDescription": "Specify the time zone to use for schedule-based call routing. For example, this time zone applies to calls routed based on business hours and holiday schedules.",
@@ -1437,11 +1460,17 @@
     "externalNumberDescriptionText": "Select a number that users can call to check their voicemail from outside the company network.",
     "voicemailPrefixTitle": "Voicemail ID Prefix",
     "voicemailPrefixDesc": "Select a prefix to reserve for dialing mailboxes from a device. Extensions between {{number}}{{extensionLength0}} and {{number}}{{extensionLength9}} are not recommended for assignment.",
-    "dialing": "Dialing",
+    "dialing": "Dialing Preferences",
     "internalDialing": "Internal Dialing",
     "externalDialing": "External Dialing",
     "nationalDialingTitle": "National Dialing",
     "nationalDialingDesc": "Require the user to dial the full phone number for each PSTN call.",
+    "notSimplifiedDialingTitle": "Require this user to dial the full phone number for each PSTN call",
+    "exampleDialing": "Example dialing: {{dialingExample}}",
+    "simplifiedDialingTitle": "Simplified local dialing",
+    "simplifiedDialingDesc": "User does NOT dial the country code specified below.",
+    "multipleAreaCodeText": "Not recommended for locations with multiple area codes.",
+    "requireOneToDialLabel": "Do not require the user to dial 1 before the area code",
     "localDialingTitle": "Local Dialing",
     "localDialingDesc": "Auto-prepend a country code and area code to phone calls for simplified local dialing. Not recommended for locations with multiple area codes.",
     "localDialingNumberTitle": "Prepended Area Code",
@@ -1456,7 +1485,7 @@
     },
     "cos": {
       "title": "Dialing Restrictions",
-      "desc": "Restrict certain dialing features for the enitre organization. You can override each setting for individual users.",
+      "desc": "Restrict certain dialing features for the entire organization. You can override each setting for individual users.",
       "nationalTitle": "National Dialing",
       "nationalDesc": "Choose whether users are allowed to dial national and toll-free numbers.",
       "mobileTitle": "Mobile Dialing",
@@ -1671,7 +1700,8 @@
       "removeNode": "Remove Node",
       "localizedConnectorAndHostHeader": "{{connectorName}} on {{hostname}}",
       "actions": "Actions",
-      "no_nodes": "No nodes registered."
+      "no_nodes": "No nodes registered.",
+      "goToNodes": "Perform actions on Node"
     },
     "export": {
       "modalTitle": "User Status Report",
@@ -1768,6 +1798,11 @@
         "no_clusters_text": "See required actions above and documentation to get started."
       }
     },
+    "sip_destination": {
+      "listing": {
+        "no_destinations_heading": "No SIP Destinations registered"
+      }
+    },
     "status": {
       "unknown": "Status unknown",
       "not_configured": "Not configured",
@@ -1791,7 +1826,8 @@
       "not_registered": "Registration not completed",
       "no_nodes_registered": "No Nodes Registered",
       "urgentUpgradeAvailable": "Urgent upgrade available",
-      "registrationTimeout": "Registration timeout"
+      "registrationTimeout": "Registration timeout",
+      "connected": "Connected"
     },
     "userSidepanel": {
       "warningInvitePending": "This user has not yet accepted the invitation to join Cisco Spark. You can still enable {{ServiceName}}, but activation will not succeed until the user signs in.",
@@ -1801,6 +1837,13 @@
       "readUserStatusFailed": "Unable to read the current user status. Please try again later.",
       "refreshUserFailed": "Unable to refresh the user status. Please try again later.",
       "refreshUserDidNoGood": "Unable to get the user status. Please contact support if the problem persists."
+    },
+    "placeSidepanel": {
+      "hybridCallNotActivated": "Cloud Collaboration management is currently checking for the corresponding user account in Cisco Uni ed Communications Manager to connect to. This could take up to half an hour. Check back later.",
+      "mail-id-explanation-part1": "- If the Mail ID you entered here is incorrect,",
+      "mail-id-explanation-part2": "then try entering a different Mail ID.",
+      "email-calendar-explanation-part1": "- If the email you entered here is incorrect,",
+      "email-calendar-explanation-part2": "then try entering a different email address."
     },
     "setup": {
       "label": "Connector Management",
@@ -1848,8 +1891,8 @@
       "c_cal": "Calendar Connector",
       "c_ucmc": "Call Connector",
       "c_mgmt": "Management Connector",
-      "mf_mgmt": "Media Service Connector",
-      "hds_app": "Hybrid Data Security Connector",
+      "mf_mgmt": "Media Service",
+      "hds_app": "Hybrid Data Security",
       "cs_mgmt": "Management Connector",
       "cs_context": "Context Connector",
       "ucm_mgmt": "Management Connector",
@@ -1910,7 +1953,8 @@
         "squared-fusion-uc": "Aware",
         "squared-fusion-cal": "Calendar",
         "squared-fusion-gcal": "Calendar",
-        "squared-fusion-ec": "Connect"
+        "squared-fusion-ec": "Connect",
+        "squared-fusion-ec-place": "Hybrid Call Service Connect"
       },
       "serviceDescriptions": {
         "squared-fusion-uc": "Users can share content from the Cisco Spark app during a call from their work phones and view their call history in the app.",
@@ -2017,6 +2061,7 @@
       "clusters-title-squared-fusion-media": "Media Clusters",
       "clusters-title-spark-hybrid-datasecurity": "HDS Clusters",
       "clusters-title-contact-center-context": "Context Clusters",
+      "clusters-title-ept": "SIP Destination",
       "status-title": "Service Status"
     },
     "hybridVoicemailUserSection": {
@@ -2024,7 +2069,10 @@
       "description": "Users can check their voicemail directly from Cisco Spark.",
       "header": "Voicemail",
       "on": "On",
+      "off": "Off",
       "pilot": "Pilot",
+      "pilotNotConfigured": "Voicemail configuration not found.",
+      "mwi": "Message waiting indicator",
       "toTurnOn": "To turn on voicemail for your users, enable voicemail in <a ng-click=\"{{onclick}}\">Hybrid Call Settings</a>."
     },
     "settings": {
@@ -2054,13 +2102,18 @@
       "oneButtonToPushIntervalMinutesSavingError": "Could not save the change to early join time. Try again later.",
       "voicemail": {
         "heading": "Voicemail",
-        "description": "Allow users in your organization to access on-premise voicemail by using the Cisco Spark app.",
+        "description": "Users can access on-premises voicemail by using the Cisco Spark app.",
         "enableDescription": "All users with both Hybrid Call Service Aware and Connect can use voicemail now",
         "disableDescription": "Voicemail is disabled for all users",
         "voicemailDisabled": "To enable voicemail Call Service Connect needs to be turned on.",
         "voicemailStatusError": "Unable to get voicemail status",
         "voicemailEnableError": "Could not enable voicemail",
-        "voicemailDisableError": "Could not disable voicemail"
+        "voicemailDisableError": "Could not disable voicemail",
+        "voicemailStatusNotConfigured": "Voicemail service not configured",
+        "voicemailStatusRequested": "Voicemail service activation pending",
+        "voicemailStatusHybridSuccess": "Voicemail service operational",
+        "voicemailStatusHybridFailed": "Voicemail service outage (see clusters for alarms)",
+        "voicemailStatusHybridPartial": "Voicemail service impaired (see clusters for alarms)"
       },
       "documentation": {
         "heading": "Documentation and Software",
@@ -2292,6 +2345,7 @@
       "list": {
         "title": "Clusters",
         "empty": "No clusters found.",
+        "empty-ept": "No SIP Destinations found.",
         "upgrade-schedule": "Upgrade Schedule",
         "upgrades-automatically": "Upgrades automatically",
         "clusters": "Clusters",
@@ -2303,9 +2357,10 @@
         "settings": "Settings",
         "all": "All",
         "add-resource": "Add Resource",
-        "set-default-release-channel": "Set default Release Channel",
-        "add-resource-group": "Create new Resource Group",
+        "set-default-release-channel": "Set default release channel",
+        "add-resource-group": "Create new resource group",
         "expressway": "Expressway",
+        "ept": "SIP Destinations",
         "mediafusion": "Media",
         "hds": "Data Security",
         "cucm": "CUCM",
@@ -2316,7 +2371,11 @@
         "complete-registration": "Go to your Expressway to complete the registration.",
         "registration-timeout": "The registration timed out. Please remove this cluster and register the Expressway again.",
         "registration-timeout-extended": "The registration timed out. Please remove this cluster and register the Expressway again in the Add Resource dialog.",
-        "go-to-expressway": "Go to Expressway"
+        "go-to-expressway": "Go to Expressway",
+        "upgrade": "Upgrade available",
+        "alarms": "Alarms",
+        "maintenance": "Maintenance",
+        "pendingMaintenance": "Pending maintenance"
       },
       "add-resource": {
         "title": "Add Resource",
@@ -2361,7 +2420,7 @@
             "heading": "Register a new Cisco Unified Communications Manager with its Fully Qualified Domain Name (FQDN)",
             "hostnamePlaceholder": "Enter CUCM FQDN"
           },
-          "enter-cluster-name":  "Enter a name for the Cisco Unified Communications Manager cluster",
+          "enter-cluster-name": "Enter a name for the Cisco Unified Communications Manager cluster",
           "end": {
             "line1": "You may now register the Cisco Unified Communications Manager with Cisco Collaboration Cloud.",
             "line2": "Go to your CUCM to complete the registration.",
@@ -2420,8 +2479,8 @@
       "usersAssign": "Assign Users",
       "usersDescription1": "Choose users who you want to gain access to configuration in the resource group (for example, beta testers). You can:",
       "usersDescription2": "Assign them individually from the <a ui-sref='users.list'>users page</a>.",
-      "usersDescription3": "Assign them in bulk using the <a ui-sref='users.list'>CSV template</a>.",
-      "usersDescription4": "Refer to <strong>documentation</strong> if you need help.",
+      "usersDescription3": "Assign them in bulk using the <a ng-click=\"{{onclick}}\">CSV template</a>.",
+      "usersDescription4": "Refer to <a href='{{href}}' target='_blank'>documentation</a> if you need help.",
       "renameGroup": "Rename",
       "renameGroupDescription": "Rename the resource group",
       "removeGroup": "Remove",
@@ -2491,10 +2550,31 @@
       "noNodes": "No nodes found",
       "loadingError": "Could not load cluster data",
       "viewList": "View list",
-      "goToNode": "Go to node"
+      "enableMaintenanceMode": "Enable maintenance mode",
+      "disableMaintenanceMode": "Disable maintenance mode",
+      "goToNode": "Go to node",
+      "moveNode": "Move node",
+      "deregisterNode": "Deregister node",
+      "enableMaintenanceModeModal": {
+        "title": "Enable maintenance mode",
+        "message": "Are you sure you want to enable maintenance mode for this node?"
+      },
+      "disableMaintenanceModeModal": {
+        "title": "Disable maintenance mode",
+        "message": "Are you sure you want to disable maintenance mode for this node?"
+      }
     },
     "hybridServicesConnectorSidepanel": {
       "alarmDetails": "Alarm Details"
+    },
+    "addressesStatusComponent": {
+      "addresses": "Addresses",
+      "noAddressesFound": "No addresses found"
+    }
+  },
+  "cmc": {
+    "menu": {
+      "mobileConvergenceService": "Mobile Convergence Service"
     }
   },
   "context": {
@@ -2515,9 +2595,16 @@
         "integer": "Integer",
         "string": "String"
       },
+      "status": "Status",
+      "inUse": "In Use",
+      "notInUse": "Not In Use",
+      "base": "Cisco",
+      "custom": "Custom",
+      "access": "Source",
+      "dateUpdated": "Date Updated",
       "fieldPage": {
         "associatedFieldsets": "Associated Fieldsets",
-        "associatedFieldsetsError": "Unable to load associated fieldsets.",
+        "associatedFieldsetsError": "Unable to retrieve associated fieldsets.",
         "createNew": "Create New Field",
         "fieldCreateSuccess": "Field created successfully! Add field to a fieldset to use in your application.",
         "fieldCreateFailure": "Unable to create field. Try again or contact customer support.",
@@ -2525,6 +2612,8 @@
         "fieldIdPlaceholder": "For eg. Invoice_Number",
         "fieldIdInvalidCharactersError": "Only alpha-numeric characters, hyphen(-) or underscore (_) allowed",
         "fieldIdUniqueError": "Field ID exists. Enter a different ID",
+        "fieldUpdateSuccess": "Field updated successfully!",
+        "fieldUpdateFailure": "Unable to update field. Try again or contact customer support.",
         "dataType": "Data Type",
         "dataTypePlaceholder": "Select Data Type",
         "descriptionPlaceholder": "Enter field details",
@@ -2534,7 +2623,6 @@
         "label": "Label",
         "labelHelpText": "Name of the field displayed in the application",
         "labelPlaceholder": "Enter Label",
-        "lastUpdated": "Date Updated",
         "startSearching": "To begin, search for a field",
         "noSearchResults": "Search yielded no results",
         "fieldReadFailed": "Unable to retrieve fields. Refresh your browser to try again.",
@@ -2544,8 +2632,12 @@
         "encryptedHelpText": "Is encrypted and contains no personally identifiable information",
         "unencrypted": "Unencrypted",
         "unencryptedHelpText": "Is not encrypted and contains no personally identifiable information",
+        "update": "Edit",
         "dateFormat": "MM/dd/yyyy",
-        "noneFound": "No fields found"
+        "noneFound": "No fields found",
+        "fieldAttributes": "Field Attributes",
+        "inUseTooltip": "Field associated with fieldsets",
+        "notInUseTooltip": "Field not associated with any fieldsets"
       },
       "fieldsetPage": {
         "fieldsetId": "Fieldset ID",
@@ -2553,7 +2645,22 @@
         "fields": "Fields",
         "listOfFields": "List of fields in this fieldset",
         "fieldsetReadFailed": "Unable to retrieve fieldsets. Refresh your browser to try again.",
-        "noneFound": "No fieldsets found"
+        "fieldsetIdPlaceholder": "For eg. sales.shoppingcart",
+        "descriptionPlaceholder": "What is this fieldset for?",
+        "createNew": "Create New Fieldset",
+        "fieldsetAttributes": "Fieldset Attributes",
+        "addOrEditFields": "Search and Select fields you want in this fieldset.",
+        "searchFields": "Search Fields",
+        "loadFailure": "Unable to retrieve fields.",
+        "noFields": "No fields available",
+        "fieldsetCreateSuccess": "Fieldset created successfully!",
+        "fieldsetCreateFailure": "Unable to create fieldset. Try again or contact customer support.",
+        "fieldsetIdUniqueError": "Fieldset ID exists. Enter a different ID",
+        "fieldsetIdInvalidCharactersError": "Only alpha-numeric characters, period(.), hyphen(-) or underscore (_) allowed",
+        "noneFound": "No fieldsets found",
+        "fieldsetAttributes": "Fieldset Attributes",
+        "inUseTooltip": "Fieldset associated with objects",
+        "notInUseTooltip": "Fieldset not associated with any objects"
       }
     }
   },
@@ -2578,10 +2685,10 @@
     "add-resource-dialog": {
       "cluster": "Create or select cluster",
       "hostname": "Enter FQDN or IP address",
-      "grant-registration-success-part-1": "You can now register your Hybrid Data Security Node to Cisco Collaboration Cloud.",
+      "grant-registration-success-part-1": "You may now register your Hybrid Data Security Node to the Cisco Collaboration Cloud.",
       "grant-registration-success-part-2": "Node IP Address/FQDN: {{hostname}}",
       "grant-registration-success-part-3": "Cluster: {{clustername}}",
-      "grant-success-information": "Go to your Hybrid Data Security Node within one hour to finish registration.",
+      "grant-success-information": "Go to your Hybrid Data Security Node within one hour to finish registration.<br>After one hour you will need to start the process again.",
       "title": "Register Hybrid Data Security Node",
       "text1": "Create a new or select an existing Hybrid Data Security Cluster where you want to add the Hybrid Data Security Node.",
       "text3": "Enter the",
@@ -2594,11 +2701,12 @@
       "noProceed-helptext": "(Software will automatically download)",
       "noInfo": "Install and configure the software on your server and return to Cisco Cloud Collaboration Management to register your Hybrid Data Security Node.",
       "noRetryInfo": "Software did not automatically download? <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/HybridDataSecurityProduction/hds.ova'>Try Again.</a>",
-      "noDesc1": "For details on installation and configuration, visit ",
-      "noDesc2": "Help Central.",
+      "noDesc1": "For important information and step-by-step installation instructions, see the ",
+      "noDesc2": "Hybrid Data Security Deployment Guide.",
       "yesInfo1": "Assign your Hybrid Data Security Node to a cluster and enter the ",
       "yesInfo2": "FQDN ",
       "yesInfo3": "or IP address.",
+      "countryInfo": "Data Security deployment is limited by country. <a href='https://help.webex.com/docs/DOC-8266' target='_blank'>Check to see whether your country is supported.</a>",
       "confirmationDialogHeader": "Cancel Setup",
       "confirmationDialogBody": "Are you sure you want to cancel service setup?"
     },
@@ -2653,11 +2761,11 @@
       "settings": {
         "servicestatusTitle": "Service Status",
         "servicePreTrialModeTitle": "Start Trial",
-        "serviceNodeDesc": "There are currently <strong>{{nodes}} nodes</strong> registered for your Hybrid Data Security Service.<br/>The minimum suggested number of nodes is 3 for every 100 people in your orginization.<br/>Use the <a ng-click=\"{{onclick}}\">Add Resource</a> flow to add more nodes.",
+        "serviceNodeDesc": "Your Hybrid Data Security Service has {{nodes}} registered node(s).<br/>You need at least two nodes. We recommend three to five.<br/>Use the <a ng-click=\"{{onclick}}\">Add Resource</a> flow to add more nodes. Once you start your trial, you can quickly see who's in it by downloading the User Status Report.",
         "serviceDomainDesc": "Trial Domain: {{trial}}<br/>Production Domain: {{prod}}",
-        "serviceUserDesc": "There are currently <strong>{{users}} users</strong> in your trial of Hybrid Data Security Service.<br/><a ng-click=\"{{onclick}}\">Add Users</a> to your trial or <a ng-click=\"{{onclick1}}\">view and edit</a> your trial users.",
-        "serviceUser0Desc": "There are currently <strong>{{users}} users</strong> in your trial of Hybrid Data Security Service.<br/><a ng-click=\"{{onclick}}\">Add Users</a> to your trial.",
-        "serviceProdMoveDesc": "Once your Hybrid Data Security Service is moved to production it is not possible to revert back to Trial Mode.",
+        "serviceUserDesc": "There are currently {{users}} users in your trial of Hybrid Data Security Service.<br/><a ng-click=\"{{onclick}}\">Add Users</a> to your trial or <a ng-click=\"{{onclick1}}\">view and edit</a> your trial users.",
+        "serviceUser0Desc": "There are currently {{users}} users in your trial of Hybrid Data Security Service.<br/><a ng-click=\"{{onclick}}\">Add Users</a> to your trial.",
+        "serviceProdMoveDesc": "When you are satisfied that the trial was successful, you can move to production. This makes Hybrid Data Security active for all users in your organization. You can't revert to trial mode without deactivating the service and losing user access to data.",
         "serviceTrialModeTitle": "Trial Mode",
         "serviceTrialModeDesc": "Trial Started Month DD, YYYY at HH:MM PM",
         "serviceProductionModeTitle": "Production Mode",
@@ -2666,18 +2774,20 @@
         "addTrialUsers": "Add Trial Users",
         "editTrialUsers": "Edit Users in Trial",
         "confirmProdMoveDialogHeader": "Move to Production Mode?",
-        "confirmProdMoveDialogBody": "It is not possible to undo this action or return to Trial mode. For various reasons this is a one-way street.",
+        "confirmProdMoveDialogBody": "All users in your organization will move to Hybrid Data Security. It is not possible to undo this action or return to this trial.",
         "confirmProdMoveDialogButton": "Production Mode",
         "confirmDeactivateTrialDialogHeader": "Deactivate Service?",
-        "confirmDeactivateTrialDialogBody": "WARNING!: If you deactivate this service, your users will no longer have access to decrypt content. Because you are in Trial Mode you will need to start a new trial after you deactivate.",
+        "confirmDeactivateTrialDialogBody": "WARNING!: If you deactivate this service, your users will no longer have access to keys to decrypt content that was created during the trial. If you later reactivate the service, you will need to start a new trial.",
         "succeedMoveToProductionMode": "Succeeded to Move to Production Mode",
-        "deavtivateTrialModeDesc": "Deactivating Hybrid Data Security Service removes all service-related features for users.",
+        "succeedDeactivateProductionMode": "Succeeded to Deactivate Production Mode",
+        "succeedDeactivateTrialMode": "Succeeded to Deactivate Trial Mode",
+        "deavtivateTrialModeDesc": "Deactivating Hybrid Data Security Service moves encryption key management and other security-related features to the cloud. Deactivating impacts user access to existing data.",
         "hdsModeGetError": "Failed to get HDS mode: "
       },
       "addTrialUsers": {
         "modalTitle": "Add Users to Trial Mode",
         "modalHeading": "Add Users",
-        "modalDesc": "Enter the email addresses of the users that will be assigned to the Hybrid Data Security Service.",
+        "modalDesc": "Enter the email addresses of the users that will initially test using the Hybrid Data Security Service for encryption keys and other security realm features.",
         "emailNotificationsWatermark": "Email addresses",
         "emailExample": "For example: john.doe@example.com",
         "refreshOtherServices": "Refresh other services to avoid a 24 hours delay.",
@@ -2689,7 +2799,7 @@
         "emailNotificationsWatermark": "add new ...",
         "tooManyUsers": "<i class='icon icon-error'></i> Max number of users reached, delete existing users to add more.",
         "invalidUsers": " not valid user(s) in this org won't be saved.",
-        "modalDesc": "To remove a user click the X in the user's field and they will be removed from the Hybrid Data Security Service."
+        "modalDesc": "Click the X by a user ID to remove the user from the Hybrid Data Security Service trial."
       },
       "page_title": "Hybrid Data Security Service",
       "genericError": "An unexpected error occurred. Please try again later.",
@@ -2715,14 +2825,15 @@
     }
   },
   "ediscovery": {
-    "browserTabHeaderTitle": "Spark Activity Reports",
-    "heading": "Search Spark Space Activity",
-    "subheading": "Find all relevant data using Email or Space ID",
+    "browserTabHeaderTitle": "Cisco Spark Activity Reports",
+    "heading": "Search Cisco Spark Space Activity",
+    "subheading": "Choose to search for specific users or spaces. Add more than one by separating with commas",
     "searchTip": "Search data by room ID",
     "unableToDownloadFile": "Unable to download file",
     "dateError": {
       "StartDateMustBeforeEndDate": "Start date must be before end date",
-      "StartDateCannotBeInTheFuture": "Start date cannot be in the future"
+      "StartDateCannotBeInTheFuture": "Start date cannot be in the future",
+      "InvalidDateRange": "Invalid date range. Date range must not be greater than 90 days in the past."
     },
     "searchingPleaseWait": "Finding information, please wait...",
     "reportStates": {
@@ -2780,21 +2891,24 @@
       "invalidLimit": "search must be limited to less than 100 emails or room id's"
     },
     "searchParameters": {
-      "searchBy": "Search By",
-      "searchByPlaceholder": "Email ID",
-      "searchByEmailPlaceholder": "e.g. johnsmith@email.com, jansmith@email.com",
-      "searchByRoomPlaceholder": "e.g. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-      "textAndFileName": "Where <b>Text Messages</b> or <b>File Name</b> contains",
-      "textAndFileNamePlaceholder": "e.g. project AND manager",
-      "noMatchesFound": "No Matches Found"
+      "search": "Search",
+      "searchPlaceholder": "Email Address",
+      "searchEmailPlaceholder": "Enter Email Address",
+      "searchEmailHelpText": "e.g. johnsmith@email.com, jansmit@email.com",
+      "searchRoomPlaceholder": "Enter space ID",
+      "searchRoomHelpText": "e.g. a42163f4-eb1e-2c03-efcf2-9c5372c2e099",
+      "messages": "Where <b>Messages</b> contains",
+      "messagesPlaceholder": "e.g. project AND manager",
+      "noMatchesFound": "No Matches Found",
+      "dateRangeTooltip": "To generate reports greater than 90 days, contact your admin about our IT Pro Package."
     },
     "searchResults": {
       "backToSearch": "Back to Search",
       "searchInfo": "Search Info",
-      "emailId": "Email Id",
+      "emailAddress": "Email Addresses",
       "spaceId": "Space Id",
       "dateRange": "Date Range",
-      "textAndFileName": "Text Messages or File Name Contains",
+      "messages": "Messages Contains",
       "notApplicable": "N/A",
       "reportSummary": "Report Summary",
       "spaces": "Spaces",
@@ -2802,7 +2916,7 @@
       "files": "Files",
       "estReport": "Est. Report Size",
       "generateReport": "Generate Report",
-      "generateText": "Enter report information to generate a report. Generation time will depend on estimated report size.",
+      "generateText": "Enter report information to generate a report. The time to generate the report depends on the estimated report size.",
       "description": "Description",
       "exportFormat": "Export Format",
       "totalReportSize": "Total Report Size",
@@ -2960,11 +3074,9 @@
     "subdomainChangesDescription": "Subdomain changes may take up to a few hours to complete.",
     "subdomainDescription": "Select a subdomain that identifies your company. The subdomain will be used to create {count, plural, =1{a Spark SIP Address} other{Spark SIP Addresses}}. You can change the subdomain name later in your account settings.",
     "updateSubdomainMessage": "Subdomain changes may take up to a few hours to complete. Users will no longer be able to make calls using the previous Spark SIP Address after changes are completed.",
-    "cscUpdateSubdomainMessage": "Subdomain changes may take up to a few hours to complete. After the change, the previous Spark SIP addresses will no longer work for Call Service Connect calls.",
     "subdomainUpdateConfirmation": "We recommend that you perform this step during off hours. Are you sure you want to save your changes?",
-    "cscWarningMessage": "Changing your Spark SIP Address will cause a Call Service Connect outage.  See the <a ng-click=\"{{onclick}}\">documentation for guidance</a>.",
-    "editCSCPartOne": "For the SIP domain change to take effect, you must disable and reenable all active call connectors from the Expressway-Cs.",
-    "editCSCPartTwo": "We recommend that you perform these steps during off hours.  See the <a ng-click=\"{{onclick}}\">documentation for guidance</a>.",
+    "editCSCPartOne": "You have Hybrid Call Service Connect enabled in your organization. You cannot change the Spark SIP Address subdomain unless you temporarily disable Call Service Connect for all your users.",
+    "editCSCPartTwo": "Go to <b>Services > Hybrid Call > Settings</b> and deactivate Call Service Connect. Then return here to change the subdomain.",
     "editCSCPartThree": "Do you still want to edit your Spark SIP Address?",
     "enterSubdomain": "Enter Subdomain",
     "subdomainInvalid": "Invalid subdomain name.",
@@ -3151,9 +3263,14 @@
     "actionCallerInput": "Caller Input",
     "actionCallerInputHint": "Store information that the caller supplies.",
     "actionCallerInputHelp": "Store information that the caller supplies.",
+    "invalidCharacter": "Invalid character entered.",
     "callerInputCnvtDigit": "Convert digit input to text string value.",
     "callerInputMaxLenStr": "Max Length of String",
-    "callerInputVariableTooLongMsg": "Maximum length of input variable is exceeded",
+    "callerInputVariableTooLongMsg": "Maximum length of input variable is exceeded.",
+    "callerInputVariableTooShortMsg": "Variable name is too short.",
+    "callerInputVariableRequiredMsg": "Variable name is required.",
+    "callerInputVariableDuplicateMsg": "Variable is used in this or another AA. Might be overwritten.",
+    "callerInputValue": "Input Value",
     "callerInputValue": "Input Value",
     "callerInputLabel": "Name",
     "callerInputNamePlaceHolder": "Name Variable",
@@ -3176,6 +3293,7 @@
     "decisionCallerCountryCode": "The Caller's Country Code",
     "decisionCallerAreaCode": "The Caller's Area Code",
     "decisionSessionVariable": "The Session Variable",
+    "decisionMissingCustomVariable": "The selected variable is undefined in this call tree. Null values will result in negative results.",
     "callerReturned5Mins": "5 Minutes",
     "callerReturnedOneDay": "1 Day",
     "callerReturnedOneWeek": "1 Week",
@@ -3537,7 +3655,11 @@
     "calledParty": "Display called party's information",
     "callingParty": "Display calling party's information",
     "playSound": "Play Sound",
-    "assignmentMsg": "Assigned to "
+    "assignmentMsg": "Assigned to {{pickupGroupName}}",
+    "linesTaken": "Line(s) Unavailable",
+    "linesTakenDesc": "Line(s) are already assigned to pickup group(s).",
+    "linesTakenHelp": "If you would like to assign a line to this group, please unassign it and try again.",
+    "okButton": "OK"
   },
   "pagingGroup": {
     "title": "Paging Group",
@@ -3545,7 +3667,6 @@
     "modalDescription": "Paging groups allows a one-way voice path to the phones in the group without waiting for an answer. These phones must all be in the same Multicast group.",
     "createTitle": "Create Paging Group",
     "namePlaceholder": "Name the Paging Group",
-    "nameHint": "Paging group names may only contain alphanumeric characters (letters, numbers, underscores, hyphens, and spaces).",
     "numberPlaceholder": "Select Paging Group Number",
     "numberHint": "When this number is called, the Paging Group will be called.",
     "memberPlaceholder": "Select Members",
@@ -3585,7 +3706,8 @@
     "errorUpdate": "Failed to update the paging group: '{{message}}'",
     "errorSave": "Failed to create the paging group: '{{message}}'",
     "errorSaveMemeberPartial": "'{{pagingGroupName}}' paging group has been created successfully but following members ids did not get added: '{{message}}'",
-    "errorSaveInitiatorPartial": "'{{pagingGroupName}}' paging group has been created successfully but following initiators ids did not get added: '{{message}}'"
+    "errorSaveInitiatorPartial": "'{{pagingGroupName}}' paging group has been created successfully but following initiators ids did not get added: '{{message}}'",
+    "sayInvalidChar": "Invalid character. {{char}} is not allowed."
   },
   "telephonyPreview": {
     "lines": "Lines",
@@ -3601,7 +3723,7 @@
   },
   "preferredLanguage": {
     "title": "Preferred Language",
-    "description": "Choose the preferred language for this place. This will override the default organization setting.",
+    "description": "Choose the preferred language for this {{module}}. This will override the default organization setting.",
     "placeholder": "Select your language",
     "organizationSettingLabel": "Organization Setting - ",
     "descriptionForCloudberryDevice": "Configure preferred language on the room’s device page.",
@@ -3609,7 +3731,9 @@
     "failedToSaveChanges": "Failed to save preferred Language. Reason:",
     "failedToFetchCmiPlacesInfo": "Failed to fetch places info. Reason:",
     "failedToFetchSiteLanguages": "Failed to fetch languages. Reason:",
-    "failedToFetchSiteLevelLanguage": "Failed to fetch site level language. Reason:"
+    "failedToFetchSiteLevelLanguage": "Failed to fetch site level language. Reason:",
+    "userModule": "user",
+    "placeModule": "place"
   },
   "directoryNumberPanel": {
     "title": "Line Configuration",
@@ -3741,7 +3865,7 @@
     "speedDialChangesFailed": "Failed to save speed dial changes.",
     "labelIncorrectCharacter": "Speed Dial Labels can not include < or >",
     "limitSpeedDialsReach": "You reached the limit of 125 speed dial entries.",
-    "blfPickup": "{{username}} can see and pickup ringing calls for ext. {{extension}}"
+    "blfPickup": "{{username}} can see and pick up ringing calls for ext. {{extension}}"
   },
   "internationalDialingPanel": {
     "success": "International Dialing configuration saved successfully",
@@ -3771,9 +3895,6 @@
     "editNumbers": "Edit Phone Numbers",
     "pendingNumbersTooltip": "Numbers can be in pending status for various reasons. Thank you for your patience during normal processing time. If it is taking longer than expected, please contact your provider.",
     "listError": "Failed to load phone number list.",
-    "deleteNumber": "Delete Number",
-    "deleteConfirmation": "Are you sure you want to delete {{pattern}}?",
-    "deleteWarning": "This cannot be reversed.  You will lose this number indefinitely.",
     "allNumbers": "{count, plural, =1{# Number} other{# Numbers}}",
     "pendingNumbers": "{count, plural, =1{# Pending Number} other{# Pending Numbers}}",
     "unassignedNumbers": "{count, plural, =1{# Unassigned Number} other{# Unassigned Numbers}}",
@@ -3790,13 +3911,16 @@
     "portNumberOrder": "Porting Numbers",
     "tollFreeNumberOrder": "New Toll-Free Numbers",
     "tollFreeNumberAdvanceOrder": "Toll-Free Advance Numbers",
-    "searchPlaceholder": "Search Orders"
+    "searchPlaceholder": "Search Orders",
+    "orderHistory": "Order History"
   },
   "pstnOrderDetail": {
     "orderNumber": "Order #{{orderId}}",
     "pendingNumbers": "{count, plural, =1{There is # number} other{There are # numbers}} pending for this order",
     "searchPlaceholder": "Search Phone Numbers",
-    "waitOnTOSAcceptance": "Waiting on ToS acceptance from customer"
+    "waitOnTOSAcceptance": "Waiting on ToS acceptance from customer",
+    "orderCreationDate": "On {{date}} by {{createdBy}}",
+    "orderCreatedBy": "Partner"
   },
   "serviceAddress": {
     "streetAddress": "Address Line 1",
@@ -3860,6 +3984,7 @@
     "swivelAddError": "Failed to add {{number}}.",
     "swivelDuplicateError": "Failed to add {{number}}. Number already exists.",
     "resellerCreateError": "Failed to create Reseller",
+    "resellerMissingError": "Reseller does not exist. Please contact your partner for additional support.",
     "customerCreateError": "Failed to create customer with the carrier.",
     "customerUpdateError": "Failed to update customer with the carrier.",
     "siteCreateError": "Failed to create the service address.",
@@ -3962,6 +4087,14 @@
     "feature5": "Basic 911 included",
     "feature6": "Taxes additional"
   },
+  "westucFeatures": {
+    "feature1": "Unlimited* calling in the U.S.",
+    "feature2": "1 DID telephone number (new or ported)",
+    "feature3": "Caller ID",
+    "feature4": "Directory listing",
+    "feature5": "E911",
+    "feature6": "No set-up fees"
+  },  
   "partnerHomePage": {
     "trialsHeading": "Trials",
     "onboardingTitle": "Onboarding",
@@ -4026,7 +4159,8 @@
     "regionalSettings": "Regional Settings",
     "defaultCountry": "Default Country",
     "defaultCountryDesc": "Specify the country to set the correct dial tone on user devices.",
-    "defaultCountryPlaceholder": "Select your country"
+    "defaultCountryPlaceholder": "Select your country",
+    "pstnCountry": "Choose the country where calling services (including PSTN) will be provisioned."
   },
   "trialModal": {
     "addTrial": {
@@ -4127,6 +4261,7 @@
       "popover": "Please provide information on the legal contact who can sign the contract",
       "addrRetry": "Use a different address",
       "addrFound": "We have verified the provided address as:",
+      "verifyAddress": "Verify Address",
       "error": {
         "areaCodes": "Failed to get area codes for selected state",
         "numbers": "Failed to get numbers for selected area code",
@@ -4173,7 +4308,7 @@
     "meeting": "Meeting 25 Party",
     "webex": "WebEx Enterprise Edition 200 with CMR/TNU+",
     "call": "Call",
-    "careDescription" : "Care services require Message as a prerequisite.<br>Additionally, Call is required for voice-based interactions.",
+    "careDescription": "Care services require Message as a prerequisite.<br>Additionally, Call is required for voice-based interactions.",
     "sparkCare": "Care",
     "care": "Chat and Callback",
     "advanceCare": "Chat, Callback and Inbound Call",
@@ -4360,6 +4495,10 @@
     "callerIdName": "Caller ID Name",
     "callerIdNumber": "Caller ID Number"
   },
+  "externalTransfer": {
+    "title": "External Call Transfers/Conference",
+    "desc": "Choose whether external users are allowed to do external call transfers and conferences. This setting affects the entire organization; afterward you can override this setting for individual users."
+  },
   "internationalDialing": {
     "internationalDialing": "International Dialing",
     "internationalDialingPlacesDesc": "Users and Places with Spark Call inherit this setting by default. Exception can be made at the individual user's or place's settings."
@@ -4469,7 +4608,7 @@
     },
     "deviceRebooting": "Device rebooting",
     "deviceRebootingDetails": "The device is now rebooting and will be offline for a few moments.",
-    "failedToSaveChanges": "Failed to save changes to device. Reason:",
+    "failedToSaveChanges": "Failed to save changes. Reason:",
     "failedToUploadLogs": "Failed to upload logs. Reason:",
     "deleteATAConfText": "Are you sure you want to delete Port 1?",
     "deleteDeviceType": "Delete {{deviceType}}",
@@ -4481,8 +4620,6 @@
     "manage": "Manage Device Settings",
     "title": "Device Settings",
     "description": "Updating settings will affect the entire analog telephone adapter. You may need to perform testing on the connected analog device after saving your settings.",
-    "impedance": "Impedance",
-    "impedanceDescr": "Adjust the frequency response level for sound quality.",
     "input": "Input Audio Level",
     "output": "Output Audio Level",
     "saved": "The settings are saved. You will have to reboot the device for the changes to take effect",
@@ -4581,8 +4718,16 @@
       "googleHelp": "This is enabling google calendar",
       "calendarEmail": "Email address of the calendar mailbox"
     },
+    "editCalendarService": {
+      "title": "Set up Hybrid Calendar Service",
+      "whichCalendar": "Which calendar provider do you want to use?"
+    },
     "sparkCallConnect": {
-      "editSettingsTitle": "Set up Hybrid Call Service Connect"
+      "editSettingsTitle": "Set up Hybrid Call Service Connect",
+      "step1": "In Cisco Unified Communications Manager, create a user account and an associated line. These items will represent this place. <a href='https://www.cisco.com/go/hybrid-services'>See the documentation for help.<a/>",
+      "step2": "Find the Mail ID for the user account.<br>a) Sign into Cisco Unified CM Administration<br>b) Choose User Management > End User, and then find and click the account.<br>The Mail ID is under ‘User Information’.",
+      "step3": "Enter the Mail ID below to connect this place to the existing Unified CM account.<br>This Mail ID ensures that the correct user account is connected with this place for hybrid calling.",
+      "mailId": "Mail ID"
     },
     "showActivationCode": {
       "activationCode": "Activation Code",
@@ -4805,6 +4950,8 @@
       "callRedirectedCluster": "Calls redirected by cluster",
       "availabilityOfCluster": "Cluster Availability",
       "overAllAvailability": "Overall Availability",
+      "clusterAvailabilityCardHeading": "Clusters in Service",
+      "nodeAvailabilityCardHeading": "Nodes in Service",
       "availabilityOfHost": "Node Availability",
       "legendcallLocal": "Hosted On Premises",
       "legendcallReject": "Overflowed to Cloud",
@@ -4817,11 +4964,11 @@
       "unavailableTitle": "Unavailable",
       "partialTitle": "Partially Available",
       "utilizationTitle": "Resource Utilization",
-      "participantDistributionTitle": "Participant Distribution",
-      "numberOfParticipantTitle": "Participant Activity",
+      "participantDistributionTitle": "Call Distribution",
+      "numberOfParticipantTitle": "Call Activity",
       "clusteravailability": "Cluster Availability",
       "overallUtilizationGraphError": "There was an error while loading detailed utilization data",
-      "overallParticipantDistributionGraphError": "There was an error while loading detailed participant distribution data",
+      "overallParticipantDistributionGraphError": "There was an error while loading detailed call distribution data",
       "overallCallVolumeGraphError": "There was an error while loading total number of calls",
       "overallAvailabilityGraphError": "There was an error while loading detailed availability data",
       "overallAverageUtilizationGraphError": "There was an error while loading Average/Peak utilization data",
@@ -4834,11 +4981,11 @@
       "cloudcalls": "Overflowed to Cloud",
       "hostedcalls": "Hosted by this Cluster",
       "redirectedcalls": "Redirected by this Cluster",
-      "total_participants": "Total Participants",
+      "total_participants": "Total Calls",
       "cloud_calls": "Overflow to Cloud",
-      "cloud_participants": "cloud participants",
-      "onprem_participants": "Participants On-Premises",
-      "participants": "Participants",
+      "cloud_participants": "cloud calls",
+      "onprem_participants": "Calls On-Premises",
+      "participants": "Calls",
       "nodata": "Data Not Available",
       "allclusters": "All Clusters",
       "percentage": "%",
@@ -4853,6 +5000,7 @@
       "node": "Node",
       "availabilityStatus": "Availability Status",
       "clusterTitle": "Cluster",
+      "clusterNodeTitle": "Cluster/Node",
       "lowAvailableClusters": "Low availability clusters",
       "clusterTakingMoreCalls": "Clusters hosting more no of calls",
       "totalMeetings": "Total Number of Meetings",
@@ -4864,11 +5012,11 @@
       "meetingLocationTitle": "Total Meetings by Host Type",
       "meetings": "Meetings",
       "location": "Location",
-      "totalCloud": "Cloud Participants",
+      "totalCloud": "Cloud Calls",
       "clientTypeHeading": "Client Type Distribution",
       "onPremisesHeading": "On-Premises",
       "cloudHeading": "Cloud",
-      "hybridHeading": "Hybrid",
+      "hybridHeading": "Cloud and On-Premises",
       "othersHeading": "Others",
       "clientType": {
         "android": "Android",
@@ -4886,11 +5034,14 @@
         "windows": "Windows Mobile",
         "total": "Total"
       },
+      "mobile": "Mobile",
       "cardDescription": {
-        "clientType": "Summary of the type of clients that are in use at an Organization",
-        "cloudParticipants2": ": Number of participants who were within an enterprise when a call was made but overflowed to a cloud cluster.",
-        "cloudParticipants1": ": Number of participants who were outside the enterprise network when a call was made and hence landed on a cloud cluster.",
-        "meetsHostType": "A breakdown of the no of  meetings based on where the calls were hosted"
+        "clientType": "Summary of the types of meeting clients that are in use at an organization.",
+        "cloudParticipants2": ": Number of calls made within an enterprise but overflowed to a cloud cluster.",
+        "cloudParticipants1": ": Number of calls that could not utilize enterprise Hybrid Media Nodes, because of no connection to the enterprise network or being subject to enforced policy.",
+        "onpremDesc": ": Number of calls hosted on any of the enterprise clusters.",
+        "meetsHostType": "A breakdown of the number of meetings based on where the calls were hosted.",
+        "redirect": ": Number of calls that could not be hosted by this cluster and hence got redirected."
       }
     },
     "deleteGroup": {
@@ -5859,7 +6010,13 @@
     "phoneNumbers": "Phone Numbers",
     "assignedTo": "Assigned to",
     "inProgress": "In Progress",
-    "quantity": "Quantity: {{count}}"
+    "quantity": "Quantity: {{count}}",
+    "deletePhoneNumber": "Delete Phone Number",
+    "deleteNumber": "Delete Number",
+    "deleteNumberTitle": "Permanently Delete Number",
+    "deleteNumberTextBase": "Are you sure you want to delete this phone number? {{ isApiImplementationSwivel }}.",
+    "deleteNumberTextStandard": "It will be permanently removed. Review billing changes with the PSTN provider",
+    "deleteNumberTextBYOP": "The number will be returned to you immediately"
   },
   "messengerCiSync": {
     "authRedirectHeading": "Redirect Messenger Users to Common Identity Login Flow",
@@ -6218,7 +6375,12 @@
     "memberFetchFailure": "Unable to get members.",
     "huntGroupFetchFailure": "Failed to fetch hunt group details '{{huntGroupName}}'.",
     "invalidMember": "Select at least one member",
-    "invalidFallback": "Select a number or enter a new valid number"
+    "invalidFallback": "Select a number or enter a new valid number",
+    "error": {
+      "required": "This field is required",
+      "minRingSecs": "The shortest ring duration is {{secs}} seconds",
+      "maxRingSecs": "The longest ring duration is {{secs}} seconds"
+    }
   },
   "digitalRiver": {
     "enterEmailAddr": {
@@ -6349,7 +6511,8 @@
           "squared-fusion-media": "Media",
           "spark-hybrid-datasecurity": "Data Security",
           "contact-center-context": "Context",
-          "squared-fusion-khaos": "Management"
+          "squared-fusion-khaos": "Management",
+          "ept": "Private Trunk"
         }
       },
       "licenses": {
@@ -6464,6 +6627,7 @@
     "upgrade": "Upgrade",
     "purchase": "Purchase",
     "changePlan": "Change Plan",
+    "signIn": "Sign-in to manage",
     "contact": "Contact Account Rep",
     "onlineTrialUpgradeUrlError": "Unable to retrieve purchase url for trial {{trialId}}.  To purchase a paid subscription, contact your partner via email or use the purchase button on the trial banner to have one sent for you.",
     "onlineProductInstanceError": "Unable to retrieve product instance for trial {{trialId}}.  To purchase a paid subscription, contact your partner via email or use the purchase button on the trial banner to have one sent for you.",
@@ -6650,7 +6814,9 @@
       "ST": "Storage",
       "SD": "DX, MX, or SX systems",
       "SB": "Spark Board",
-      "linkedSite": "Legacy WebEx License"
+      "linkedSite": "Legacy WebEx License",
+      "CDC": "Chat and Callback",
+      "CVC": "Chat, Callback and Inbound Call"
     },
     "trial": "Trial",
     "adminUsers": "Administrators",
@@ -6720,6 +6886,8 @@
       "local": "Local"
     },
     "vmprefix": "Voicemail ID Prefix",
+    "routingPrefix": "Routing Prefix",
+    "extensionLength": "Extension Length",
     "outboundDigit": "Outbound Dial Digit",
     "areaCode": "Area Code",
     "customerInfo": "Customer Information",
@@ -6770,7 +6938,8 @@
       "validationFailure": "Unable to validate",
       "editNameSuccess": "Organization name successfully updated.",
       "editNameFailure": "Failed to update customer name."
-    }
+    },
+    "care": "Care"
   },
   "activation": {
     "verificationComplete": "Verification Complete",
@@ -6932,7 +7101,8 @@
       },
       "hybridDataSecurity": {
         "title": "Hybrid Data Security",
-        "description": "Storage Node Setup in Progress",
+        "description": "Manage your encryption keys and other security services on-premises.",
+        "tooltip": "This premium feature is available with the IT Pro Pack. Contact your partner to learn more.",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
@@ -6953,6 +7123,13 @@
         "buttons": {
           "verify": "Verify prerequisites",
           "view": "View prerequisites"
+        },
+        "error": {
+          "invalidMaxLength": "Domain/SRV length cannot be more than {{max}}.",
+          "invalidChars": "Invalid character is not allowed in address domain. Allowed set is \"[a-z] [A-Z] [0-9]_-.\"",
+          "invalidPort": "Port can only range between {{min}} and {{max}}",
+          "invalidUniqueEntry": "This SIP Destination address already exists",
+          "hybridRequired": "Required: Expressway-E for Hybrid Call Connect was not found"
         },
         "prereqTitle": "Enterprise Private Trunking prerequisites",
         "setupTitle": "Set up Enterprise Private Trunking ",
@@ -6976,22 +7153,31 @@
         "selectDomainDesc": "Select the verified domains that you want to route over the enterprise trunk. If you do not select any options, calls route as normal URI dialing over the internet. See the documentation for more help",
         "radioSelect1": "I want to use a verified domain for Private Trunking",
         "radioSelect2": "I don’t want to use a verified domain for Private Trunking",
-        "connectorTitle": "Connect Expressway-E",
-        "connector": "Enter the SIP destination of the on-premises Expressway-E that you want to use for Private Trunking",
-        "connectorHelp": "Enter an SRV domain, hostname:port, or IP address:port that resolves to your Expressway-E for mutual TLS. If your SRV record is \"_sips._tcp.sipmtls.example.com\", then enter \"sipmtls.example.com\" here.",
+        "destinationTitle": "Add SIP Destination",
+        "destination": "Enter the SIP destination of the on-premises Expressway-E that you want to use for Private Trunking",
+        "destinationHelp": "Enter an SRV domain, hostname:port, or IP address:port that resolves to your Expressway-E for mutual TLS. If your SRV record is \"_sips._tcp.sipmtls.example.com\", then enter \"sipmtls.example.com\" here.",
         "sipLabel": "Sip destination",
         "sip": "Enter Sip destination",
         "displayLabel": "Display name",
         "displayName": "Enter display name",
-        "nextSip": "Add another SIP destination",
-        "hybridConnector": "Use one or more Expressway-E configured for Hybrid Call Connect ",
+        "addDestination": "Add another SIP destination",
+        "hybridDestination": "Use one or more Expressway-E configured for Hybrid Call Connect ",
+        "certificateTitle": "Certificates",
+        "certificateDescription": "Choose whether you want to use the certificates provided by the Cisco Collaboration Cloud default trust list or upload your own.",
+        "certificateRadio1": "Use default trust list",
+        "certificateRadio2": "I want to upload my own certificate",
+        "dragAndDropKeyFileHere": "Drag and drop the certificate file here or ",
+        "clickToBrowse": "click to browse",
+        "fileReadyForImport": "File ready for import",
+        "certificateDelete": "Are you sure you want to remove this certificate?",
         "cancelHeader": "Cancel Enterprise Private Trunking Setup.",
         "cancelBody": "Are you sure you want to cancel?"
       }
     },
     "showMore": "View all",
     "genericButtons": {
-      "setup": "Set up"
+      "setup": "Set up",
+      "learnMore": "Learn More"
     },
     "cardStatus": {
       "operational": "Operational",
@@ -7009,6 +7195,9 @@
     "notAllowed": "Not allowed in read-only mode. Operation not executed."
   },
   "gemini": {
+    "import": "Import",
+    "hidden": "Hidden",
+    "display": "Display",
     "services": {
       "pageTitle": "Service"
     },
@@ -7047,11 +7236,69 @@
       "noteToCisco": "Note to Cisco Team",
       "defaultToll": "Default Toll",
       "defaultTollFree": "Default Toll Free",
+      "selectPhoneNumber": "Select Phone Numbers",
+      "phoneNumbersSelected": "Phone numbers selected",
+      "selectTdPlaceholder": "Select Telephony Domain...",
+      "selectExistingTd": "Select existing Telephony Domain",
+      "selectPhoneNumberTips": "Select all or individual phone numbers to import.",
+      "downloadConfirmMsg": "The exported template file is in .xls format with dropdown lists for ease of use. However after finish editing of the template, it needs to <b>\"Save As\" CSV format</b> before importing.",
       "export": {
         "csvFilename": "exported_telephonyDomain.csv",
         "result": {
           "success": "Telephony Domain list has been successfully exported.",
           "failed": "There was an error exporting Telephony Domain list."
+        }
+      },
+      "numbers": {
+        "export": {
+          "exportToCSV": "Export to CSV",
+          "csvFilename": "exported_telephonyNumbers.csv",
+          "result": {
+            "success": "Phone numbers have been successfully exported.",
+            "failed": "There was an error exporting phone numbers."
+          }
+        },
+        "field": {
+          "phoneNumber": "Phone Number",
+          "phoneLabel": "Phone Label",
+          "accessNumber": "Access Number",
+          "tollType": "Toll Type",
+          "callType": "Call Type",
+          "defaultNumber": "Default Number",
+          "globalDisplay": "Global Display",
+          "country": "Country",
+          "hiddenOnClient": "Hidden On Client",
+          "values": {
+            "noForDefaultNumber": "NO",
+            "displayForGlobalDisplay": "Display",
+            "noForGlobalDisplay": "NO",
+            "displayForHiddenOnClient": "Display",
+            "hiddenForHiddenOnClient": "Hidden"
+          }
+        }
+      },
+      "request": {
+        "names": "Names",
+        "region": "Region",
+        "addNumber": "Add Number",
+        "notePlaceholder": "Text here",
+        "regionNote": "Region and Note",
+        "phoneNumbers": "Phone Numbers",
+        "selectPlaceholder": "Select ...",
+        "labelCustomerName": "Customer Name",
+        "partnerName": "Partner Name (optional)",
+        "modalTitle": "Request Telephony Domain",
+        "noteText": "Note to Cisco Team(optional)",
+        "customerPlaceholder": "Who is the Telephony Domain for",
+        "partnerPlaceholder": "Enter a nickname for this Telephony Domain",
+        "customerHelpText": "Once approved by Cisco team, this name cannot be changed",
+        "customerNameLengthError": "your customer name should be less than 15 characters",
+        "importNumber": {
+          "fromTd": "Import TD",
+          "fromCsv": "Import CSV"
+        },
+        "download": {
+          "csvTemplate": "Download CSV Template"
         }
       },
       "field": {
@@ -7664,7 +7911,11 @@
       "modifyMessageSucceed": "Message successfully modified.",
       "modifyMessageFailed": "An error occurred modifying message.",
       "updateIncidentSucceed": "Incident {{incidentName}} update succeed.",
-      "updateIncidentFailed": "Incident {{incidentName}} update failed."
+      "updateIncidentFailed": "Incident {{incidentName}} update failed.",
+      "deleteMessageTitle": "Delete Incident Message",
+      "deleteMessageConfirmMsg": "Are you sure you want to permanently delete message?",
+      "deleteMessageSucceed": "Message successfully deleted.",
+      "deleteMessageFailed": "An error occurred deleting message."
     },
     "incidentStatus": {
       "investigating": "Investigating",
@@ -7697,5 +7948,10 @@
     "robot": "Robot",
     "spark_integration": "Spark Integration",
     "room": "Desk Phone Place"
+  },
+  "deviceSettings": {
+    "title": "Device Settings",
+    "softwareUpgradeChannel": "Software Upgrade Channel",
+    "deviceNotSupported": "The {{deviceType}} is not yet able to observe this setting."
   }
 }

@@ -1,9 +1,8 @@
 (function () {
   'use strict';
 
-  angular.module('core.trial')
-    .factory('TrialService', TrialService)
-    .factory('TrialResource', TrialResource);
+  module.exports.TrialService = TrialService;
+  module.exports.TrialResource = TrialResource;
 
   /* @ngInject */
   function TrialResource($resource, UrlConfig, Authinfo) {

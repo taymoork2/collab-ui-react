@@ -1,0 +1,57 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$ctrl.dismiss()">
+    <span class="sr-only" translate="common.close"></span>
+  </button>
+  <h3 class="modal-title" translate="gemini.tds.request.modalTitle"></h3>
+</div>
+
+<div class="modal-body gemini-request-callbackgroup">
+
+  <div ng-if="$ctrl.loadingContent">
+    <i class="icon icon-spinner"></i>
+  </div>
+
+  <div ng-if="!$ctrl.loadingContent">
+    <div class="row">
+      <form name="importTD" novalidate>
+        <div class="medium-6">
+          <label translate="gemini.tds.selectExistingTd"></label>
+          <cs-select
+            filter="false"
+            name="customerName"
+            options="$ctrl.options"
+            ng-model="$ctrl.selected"
+            on-change-fn="$ctrl.onSelectChange()"
+            placeholder="$ctrl.selectPlaceholder"
+          ></cs-select>
+        </div>
+      </form>
+    </div>
+
+    <div class="row" ng-show="$ctrl.isShowNumbers">
+      <div ng-if="$ctrl.loadingNumbers">
+        <i class="icon icon-spinner"></i>
+      </div>
+
+      <div ng-if="!$ctrl.loadingNumbers">
+        <div class="medium-12">
+          <p translate="gemini.tds.selectPhoneNumber"></p>
+          <small translate="gemini.tds.selectPhoneNumberTips"></small>
+          <div class="row">
+            <div class="gridStyle select-mini" ui-grid="$ctrl.gridOptions" ui-grid-selection></div>
+            <div class="col-md-12" ng-if="$ctrl.getGridLinesNumber()">
+              <p>{{$ctrl.getGridLinesNumber()}} {{::'gemini.tds.phoneNumbersSelected' | translate}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" ng-click="$ctrl.dismiss()"><span translate="common.cancel"></span></button>
+  <button type="button" class="btn btn--primary" name="importButton" cs-btn ng-click="$ctrl.onImport()" ng-disabled="!$ctrl.selectedGridLinesLength">
+    <span translate="gemini.import"></span>
+  </button>
+</div>
