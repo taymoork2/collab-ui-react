@@ -160,7 +160,7 @@ var Spark = require('@ciscospark/spark-core').default;
 
     function dateWarnings(end) {
       var warnings = [];
-      if (end !== moment().endOf('day').format('YYYY-MM-DD')) {
+      if (end !== moment().endOf('day').format('YYYY-MM-DD') && !vm.itProPackToggle) {
         warnings.push($translate.instant('ediscovery.dateError.InvalidEndDate'));
       }
       return warnings;
