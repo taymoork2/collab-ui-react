@@ -36,10 +36,7 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
 
   public $onInit() {
     this.connectorType = this.HybridServicesUtilsService.serviceId2ConnectorType(this.serviceId);
-    if (this.connectorType === undefined) {
-      return;
-    }
-    if (this.serviceId !== 'ept') {
+    if (this.serviceId !== 'ept' && this.connectorType !== undefined) {
       this.clusterList = this.ClusterService.getClustersByConnectorType(this.connectorType);
     } else {
       this.clusterList = this.EnterprisePrivateTrunkService.getAllResources();
