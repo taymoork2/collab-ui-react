@@ -1,0 +1,168 @@
+<!-- PSTN Trial Modal -->
+
+<!-- header -->
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$ctrl.dismiss()">
+    <span class="sr-only" translate="common.close"></span>
+  </button>
+  <h3 class="modal-title">{{$ctrl.titles[$ctrl.step]}}</h3>
+</div>
+
+<!-- body -->
+<div class="modal-body" ng-class="{trials: $ctrl.step == 4}">
+  <div ng-if="$ctrl.step == 1">
+    <uc-pstn-providers
+      ng-if="$ctrl.enableCarriers"
+      ng-show="$ctrl.showCarriers"
+      on-change-fn="$ctrl.onProviderChange()"
+      on-ready-fn="$ctrl.onProviderReady()"
+    >
+    </uc-pstn-providers>
+  </div>
+  <div class="row collapse" ng-if="$ctrl.step == 2">
+    <h3 translate="pstnContractInformation.title"></h3>
+    <p translate="pstnContractInformation.prompt"></p>
+    <br>
+    <form name="$ctrl.wizardForm2">
+      <uc-pstn-contact-info class="columns medium-6" contact="$ctrl.contact"></uc-pstn-contact-info>
+    </form>
+  </div>
+  <div ng-if="$ctrl.step == 3">
+    <emergency-services
+      address="$ctrl.address"
+      country-code="$ctrl.countryCode"
+      validation="$ctrl.isValid"
+      address-loading="$ctrl.loading"
+      address-found="$ctrl.isValid"
+      reset-address="$ctrl.resetAddress()"
+      read-only="$ctrl.isValid"
+      validate-address="$ctrl.validateAddress()"
+      show-validation="true">
+    </emergency-services>
+  </div>
+  <div ng-if="$ctrl.step == 4" class="pstn-selector-container">
+    <div class="flex-container">
+      <cs-tabset class="flex-2" justified="false">
+        <cs-tab>
+          <cs-tab-heading translate="pstnSetup.newNumbersTab"></cs-tab-heading>
+          <p translate="pstnSetup.newNumbersTabDesc"></p>
+          <pstn-selector
+            search="$ctrl.searchCarrierInventory(value, block, quantity, consecutive)"
+            search-results="$ctrl.model.pstn.searchResults"
+            show-advanced-order="$ctrl.model.pstn.showAdvancedOrder"
+            add-loading="$ctrl.model.pstn.addLoading"
+            add-disabled="$ctrl.model.pstn.addDisabled"
+            paginate-options="$ctrl.model.pstn.paginateOptions"
+            add-to-cart="$ctrl.addToCart(order_type, number_type, quantity, searchResultModel)"
+            simple="{{$ctrl.isTrial}}"
+            show-no-result="$ctrl.model.pstn.showNoResult"
+          >
+          </pstn-selector>
+        </cs-tab>
+        <cs-tab ng-if="$ctrl.showTollFreeNumbers">
+          <cs-tab-heading translate="pstnSetup.newTollFreeTab"></cs-tab-heading>
+          <p>{{pstnNumbers.tollFreeTitle}}</p>
+          <pstn-selector
+            search="$ctrl.searchCarrierTollFreeInventory(value, block, quantity, consecutive)"
+            search-results="$ctrl.model.tollFree.searchResults"
+            show-advanced-order="$ctrl.model.tollFree.showAdvancedOrder"
+            add-loading="$ctrl.model.tollFree.addLoading"
+            add-disabled="$ctrl.model.tollFree.addDisabled"
+            paginate-options="$ctrl.model.tollFree.paginateOptions"
+            add-to-cart="$ctrl.addToCart(order_type, number_type, quantity, searchResultModel)"
+            number-type="TOLLFREE"
+            valid-search="$ctrl.model.tollFree.areaCodeOptions"
+          >
+          </pstn-selector>
+        </cs-tab>
+        <cs-tab ng-if="$ctrl.showPortNumbers">
+          <cs-tab-heading translate="pstnSetup.portNumbersTab"></cs-tab-heading>
+          <div class="provider-flex">
+            <p translate="pstnSetup.portNumbersPrompt"></p>
+            <button type="button" class="btn btn--people" ng-disabled="$ctrl.validCount < 1 || $ctrl.invalidCount > 0" ng-click="$ctrl.addToCart('PORT_ORDER')"><span translate="common.add"></span></button>
+          </div>
+            <cs-token-field class="port-numbers"
+              tokens="$ctrl.unsavedTokens"
+              tokenfieldid="$ctrl.tokenfieldId"
+              tokenplacehoder="$ctrl.tokenplacehoder"
+              tokenoptions="$ctrl.tokenoptions"
+              tokenmethods="$ctrl.tokenmethods"></cs-token-field>
+          <div class="warning-message" ng-if="$ctrl.invalidCount > 0">
+            <span class="icon icon-error"></span><p translate="pstnSetup.invalidNumberPrompt"></p>
+          </div>
+        </cs-tab>
+      </cs-tabset>
+      <section class="flex-1">
+        <div class="provider-flex center"><h1 class="h5" translate="pstnSetup.numberCart"></h1><h1 class="h4"><span class="badge badge--round info">{{$ctrl.getOrderNumbersTotal()}}</span></h1></div>
+        <ul class="list-group">
+          <li class="list-group-item list-token info" ng-repeat="order in $ctrl.orderCart">
+            <span>{{::$ctrl.formatTelephoneNumber(order)}}</span>
+            <span ng-if="::$ctrl.showOrderQuantity(order);">{{::'pstnSetup.quantity' | translate}} {{$ctrl.getOrderQuantity(order)}}</span>
+            <button type="button" class="close" ng-click="$ctrl.removeOrder(order)"><span class="sr-only" translate="common.delete"></span></button>
+          </li>
+        </ul>
+      </section>
+    </div>
+  </div>
+  <div ng-if="$ctrl.step == 5">
+    <uc-pstn-swivel-numbers
+      numbers="$ctrl.swivelNumbers"
+      acknowledge="$ctrl.emergencyAcknowledge"
+      on-change="$ctrl.onSwivelChange(numbers, invalidCount)"
+      on-acknowledge="$ctrl.onAcknowledge(value)">
+    </uc-pstn-swivel-numbers>
+  </div>
+  <div ng-if="$ctrl.step == 6" class="pstn-review">
+    <div class="review-container">
+      <i class="icon icon-circle-call"></i>
+      <h1 class="title" translate="pstnSetup.reviewAndOrder"></h1>
+      <div class="review-details">
+        <div class="logo">
+          <img class="right" ng-src="{{::$ctrl.provider.logoSrc}}" alt="{{::$ctrl.provider.logoAlt}}">
+        </div>
+        <div class="package-details">
+          <div class="package-detail-label">
+            <div translate="pstnSetup.package"></div>
+            <div translate="pstnSetup.numbersTitle"></div>
+          </div>
+          <div class="package-detail-text">
+            <div>{{::$ctrl.provider.title}}</div>
+            <div class="detail-text" ng-if="$ctrl.totalNewAdvancedOrder" translate="pstnSetup.newNumbers" translate-value-count="{{::$ctrl.totalNewAdvancedOrder}}"></div>
+            <div class="detail-text" ng-if="$ctrl.totalPortNumbers" translate="pstnSetup.portNumbers" translate-value-count="{{::$ctrl.totalPortNumbers}}"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div ng-if="$ctrl.step == 7" class="pstn-next-steps">
+    <div class="flex-container">
+      <i class="icon icon-check-mark-success"></i>
+      <h3 translate="pstnSetup.thankYou"></h3>
+      <h2 translate="pstnSetup.OrderSubmitted"></h2>
+      <h2>
+      <span ng-hide="$ctrl.isTrial || $ctrl.pstnOrders.length > 1"><i class="icon icon-information left"></i><span class="h5 left" translate="pstnSetup.nextStepPrompt1"></span></span>
+      <span ng-show="$ctrl.portOrders.length"><i class="icon icon-information left"></i><span class="h5 left" translate="pstnSetup.nextStepPrompt2"></span></span>
+      </h2>
+      <div>
+        <button class="left btn btn--people" ng-click="$ctrl.launchCustomerPortal()" translate="pstnSetup.launchPortal">
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- footer -->
+<div class="modal-footer trials" ng-if="$ctrl.showButtons">
+  <button ng-hide="$ctrl.hideBackBtn()" class="btn with-slim-offset offset-l"
+    ng-click="$ctrl.previousStep()"
+    translate="common.back">
+  </button>
+  <button id="wizardBtn" class="btn btn--primary" type="button" cs-btn loading="$ctrl.placeOrderLoad"
+    ng-click="$ctrl.nextStep()" ng-disabled="$ctrl.nextDisabled()">
+    <span ng-if="$ctrl.step == 6" translate="pstnSetup.placeOrder"></span>
+    <span ng-if="$ctrl.step == 7" translate="common.done"></span>
+    <span ng-if="!($ctrl.step == 6 || $ctrl.step == 7)" translate="common.next"></span>
+  </button>
+</div>
+
+
