@@ -1,3 +1,5 @@
+import { CmcUserData } from './cmcUserData';
+import { CmcService } from './cmc.service';
 import { IUser } from 'modules/core/auth/user/user';
 
 interface ICmcUser extends IUser {
@@ -9,59 +11,49 @@ class CmcUserDetailsSettingsController implements ng.IComponentController {
   private user: ICmcUser;
   public entitled: boolean = false;
   public showButtons: boolean = false;
-  public mobile: string;
-
+  public mobileNumber: string;
+  private oldCmcUserData: CmcUserData;
 
   /* @ngInject */
-  constructor(private $log: ng.ILogService) {
+  constructor(private $log: ng.ILogService,
+              private CmcService: CmcService) {
     this.$log.debug('CmcUserDetailsSettingsController');
   }
 
   public $onInit() {
     this.$log.debug('$onInit');
+    this.extractCmcData();
+    this.oldCmcUserData = new CmcUserData(this.mobileNumber, this.entitled);
+    this.$log.warn('Current user:', this.user);
   }
 
-  public save(): void {
-    this.showButtons = false;
+  private extractCmcData() {
+    this.entitled = this.extractCmcEntitlement();
+    this.mobileNumber = this.extractMobileNumber();
+    this.$log.info('Mobile number from user object:', this.mobileNumber);
+    // TODO: Remove these overrides below when data are properly
+    //       populated in the backend
+    let persistedCmcData: CmcUserData = this.CmcService.getData(this.user.id);
+    this.entitled = persistedCmcData.cmcEntitled;
+    this.mobileNumber = persistedCmcData.mobileNumber;
   }
 
-  public cancel(): void {
-    this.showButtons = false;
-    this.entitled = this.isEntitled();
-    this.mobile = this.mobileNumber();
-  }
-  public changedNumber(): void {
-    this.showButtons = true;
-  }
-
-  public toggleClick(value): void {
-    this.$log.debug('entitled', this.entitled);
-    this.$log.debug('mobile', this.mobile);
-    this.$log.debug('value', value);
-    if (value === this.isEntitled() && this.mobile === this.mobileNumber()) {
-      this.showButtons = false;
-    } else {
-      this.showButtons = (value && !this.entitled) || (!value && this.entitled) || (this.mobile !== this.mobileNumber());
-    }
-  }
-
+  //TODO: Not supposed to happen.
+  //      Are we sure that we handle things correctly when user changes
+  //      while we're in the cmc settings page for the user.
+  //      For example in the middle of a save dialog...
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
     let userChanges = changes['user'];
-    this.$log.debug('userChanges', userChanges);
+    this.$log.warn('user changed unexpectedly:', userChanges);
     if (userChanges) {
       if (userChanges.currentValue) {
         this.user = <ICmcUser>userChanges.currentValue;
-        // TODO Remove !!!
-        if (this.user.userName === 'afroyhau@cisco.com') {
-          this.fakeCmcAndMobileIfNotPresent();
-        }
-        this.entitled = this.isEntitled();
-        this.mobile = this.mobileNumber();
+        this.extractCmcData();
       }
     }
   }
 
-  private mobileNumber(): any {
+  private extractMobileNumber(): any {
     if (this.user.phoneNumbers) {
       let nbr = _.find<any>(this.user.phoneNumbers, (nbr) => {
         return nbr.type === 'mobile';
@@ -72,19 +64,30 @@ class CmcUserDetailsSettingsController implements ng.IComponentController {
     }
   }
 
-  private isEntitled(): boolean {
+  private extractCmcEntitlement(): boolean {
     return _.includes(this.user.entitlements, 'cmc');
   }
 
-  private fakeCmcAndMobileIfNotPresent() {
-    this.user.entitlements.push('cmc');
-    if (!this.user.phoneNumbers) {
-      this.user.phoneNumbers = [];
-    }
-    this.user.phoneNumbers.push({
-      type: 'mobile',
-      value: '+47 12345678',
-    });
+  public save(): void {
+    this.showButtons = false;
+
+    let newData = new CmcUserData(this.mobileNumber, this.entitled);
+    this.$log.warn('trying to set data', newData, ', id=', this.user.id);
+    this.CmcService.setData(this.user.id, newData);
+
+    this.oldCmcUserData.cmcEntitled = this.entitled;
+    this.oldCmcUserData.mobileNumber = this.mobileNumber;
+
+  }
+
+  public cancel(): void {
+    this.showButtons = false;
+    this.entitled = this.oldCmcUserData.cmcEntitled;
+    this.mobileNumber = this.oldCmcUserData.mobileNumber;
+  }
+
+  public dataChanged(): void {
+    this.showButtons = true;
   }
 }
 

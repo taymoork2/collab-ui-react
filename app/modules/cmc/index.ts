@@ -1,9 +1,10 @@
 import { CmcUserDetailsComponent } from './user-details.component';
 import { CmcUserDetailsSettingsComponent } from './user-details-settings.component';
+import { CmcService } from './cmc.service';
 
 export default angular
   .module('cmc', [])
-  //.component('cmcUserDetailsSettings', new CmcUserDetailsSettingsComponent())
   .component('cmcUserDetails', new CmcUserDetailsComponent())
   .component('cmcUserDetailsSettings', new CmcUserDetailsSettingsComponent())
+  .service('CmcService', CmcService)
   .name;
