@@ -3253,6 +3253,11 @@
               host: null,
               hostSerial: null,
             },
+            resolve: {
+              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
+              },
+            },
           })
           // Cluster settings and nodes
           .state('expressway-cluster', {
@@ -3385,6 +3390,11 @@
             params: {
               host: null,
               hostSerial: null,
+            },
+            resolve: {
+              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
+              },
             },
           })
           .state('hds-cluster-details.alarm-details', {
@@ -3828,6 +3838,11 @@
               // the parent connectorType param…
               specificType: null,
             },
+            resolve: {
+              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
+              },
+            },
           })
           .state('expressway-cluster-sidepanel.alarm-details', {
             template: '<alarm-details-sidepanel alarm="$resolve.alarm"></alarm-details-sidepanel>',
@@ -3889,6 +3904,11 @@
             params: {
               host: null,
               hostSerial: null,
+            },
+            resolve: {
+              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
+              },
             },
           })
           .state('media-cluster-details.alarm-details', {

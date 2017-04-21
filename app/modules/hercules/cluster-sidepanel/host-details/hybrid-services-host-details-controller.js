@@ -6,7 +6,7 @@
     .controller('HybridServicesHostDetailsController', HybridServicesHostDetailsController);
 
   /* @ngInject */
-  function HybridServicesHostDetailsController($modal, $rootScope, $scope, $state, $stateParams, $translate, ClusterService, HybridServicesClusterStatesService) {
+  function HybridServicesHostDetailsController($modal, $rootScope, $scope, $state, $stateParams, $translate, ClusterService, HybridServicesClusterStatesService, hasNodesViewFeatureToggle) {
     var cluster;
     var vm = this;
     var type = $stateParams.specificType || $stateParams.connectorType;
@@ -68,7 +68,7 @@
         },
         type: 'small',
         controller: 'ReassignClusterControllerV2',
-        controllerAs: 'reassignClust',
+        controllerAs: 'reassignCluster',
         templateUrl: 'modules/mediafusion/media-service-v2/side-panel/reassign-node-to-different-cluster/reassign-cluster-dialog.html',
       })
         .result
@@ -81,11 +81,11 @@
     function showDeregisterHostDialog() {
       $modal.open({
         resolve: {
-          cluster: function () {
-            return cluster;
+          clusterName: function () {
+            return cluster.name;
           },
-          connector: function () {
-            return vm.host;
+          nodeSerial: function () {
+            return vm.host.hostSerial;
           },
         },
         type: 'small',
@@ -99,20 +99,26 @@
         });
     }
 
+    vm.showNodeLink = function () {
+      return vm.host.connectorType === 'mf_mgmt' && hasNodesViewFeatureToggle;
+    };
+
+    vm.goToNodesPage = function () {
+      $state.go('mediafusion-cluster.nodes', {
+        id: cluster.id,
+      });
+    };
+
     vm.showAction = function () {
-      return vm.host.connectorType !== 'cs_mgmt' && vm.host.connectorType !== 'cs_context';
+      return vm.host.connectorType !== 'cs_mgmt' && vm.host.connectorType !== 'cs_context' && vm.showHybridMediaAction();
     };
 
     vm.showGoToHostAction = function () {
       return vm.host.connectorType !== 'mf_mgmt';
     };
 
-    vm.showMoveNodeAction = function () {
-      return vm.host.connectorType === 'mf_mgmt';
-    };
-
-    vm.showDeregisterNodeAction = function () {
-      return vm.host.connectorType === 'mf_mgmt';
+    vm.showHybridMediaAction = function () {
+      return !hasNodesViewFeatureToggle && vm.host.connectorType === 'mf_mgmt';
     };
 
     vm.showDeleteNodeAction = function () {
