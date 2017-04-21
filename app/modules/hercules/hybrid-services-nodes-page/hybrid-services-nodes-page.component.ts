@@ -153,7 +153,7 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
       },
       type: 'small',
       controller: 'ReassignClusterControllerV2',
-      controllerAs: 'reassignClust',
+      controllerAs: 'reassignCluster',
       templateUrl: 'modules/mediafusion/media-service-v2/side-panel/reassign-node-to-different-cluster/reassign-cluster-dialog.html',
     })
     .result
