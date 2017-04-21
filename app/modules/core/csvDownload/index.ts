@@ -3,6 +3,7 @@ import { CsvDownloadComponent } from './csvDownload.component';
 import { ExtractTarService } from './extractTar.service';
 import notificationsModule from 'modules/core/notifications';
 import featureToggleModule from 'modules/core/featureToggle';
+import csvSimpleExportModule from './csvSimpleExport';
 
 let analyticsModule = require('modules/core/analytics');
 let userListServiceModule = require('modules/core/scripts/services/userlist.service');
@@ -22,6 +23,7 @@ export default angular
     featureToggleModule,
     notificationsModule,
     userListServiceModule,
+    csvSimpleExportModule,
     'core.users.userCsv', // WARNING: This is creating a circular dependency!!
   ])
   .service('CsvDownloadTypes', CsvDownloadTypes)
