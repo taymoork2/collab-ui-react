@@ -16,7 +16,7 @@
     </header>
     <div class="row cluster-list-body" ng-if="!$ctrl.cluster.isEmptyExpresswayCluster">
       <div class="columns medium-3" ng-if="$ctrl.cluster.targetType === 'ept'"></div>
-      <div class="columns medium-6" ng-if="!$ctrl.cluster.targetType === 'ept'">
+      <div class="columns medium-6" ng-if="$ctrl.cluster.targetType !== 'ept'">
         <div>
           <div class="cluster-list-cat" translate="hercules.fusion.list.upgrade-schedule"></div>
           <div class="cluster-list-info" ng-if="$ctrl.upgradesAutomatically($ctrl.cluster)" translate="hercules.fusion.list.upgrades-automatically"></div>
