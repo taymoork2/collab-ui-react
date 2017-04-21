@@ -8,7 +8,7 @@ require('../devices/_devices.scss');
     .controller('PlacesCtrl',
 
       /* @ngInject */
-      function ($q, $scope, $state, $templateCache, $translate, CsdmFilteredPlaceViewFactory, CsdmDataModelService, Userservice, Authinfo, WizardFactory, RemPlaceModal, FeatureToggleService, ServiceDescriptor) {
+      function ($q, $scope, $state, $templateCache, $translate, CsdmFilteredViewFactory, CsdmDataModelService, Userservice, Authinfo, WizardFactory, RemPlaceModal, FeatureToggleService, ServiceDescriptor) {
         var vm = this;
 
         vm.data = [];
@@ -17,25 +17,25 @@ require('../devices/_devices.scss');
         function init() {
           fetchAsyncSettings();
 
-          vm.filteredView = CsdmFilteredPlaceViewFactory.createFilteredPlaceView();
+          vm.filteredView = CsdmFilteredViewFactory.createFilteredPlaceView();
 
           vm.filteredView.setFilters([{
             count: 0,
             name: $translate.instant('common.all'),
             filterValue: 'all',
-            matches: function () {
+            passes: function () {
               return true;
             },
           }, {
             count: 0,
             name: $translate.instant('CsdmStatus.WithDevices'),
             filterValue: 'devices',
-            matches: function (place) {
+            passes: function (place) {
               return _.size(place.devices) > 0;
             },
           }]);
 
-          vm.filteredView.isBigOrg.then(function () {
+          vm.filteredView.isSearchOnly.then(function () {
             CsdmDataModelService.subscribeToChanges($scope, vm.filteredView.refresh.bind(vm.filteredView));
           });
         }
