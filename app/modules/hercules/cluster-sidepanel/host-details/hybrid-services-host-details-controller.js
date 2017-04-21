@@ -99,20 +99,26 @@
         });
     }
 
+    vm.showNodeLink = function () {
+      return vm.host.connectorType === 'mf_mgmt' && hasNodesViewFeatureToggle;
+    };
+
+    vm.goToNodesPage = function () {
+      $state.go('mediafusion-cluster.nodes', {
+        id: cluster.id,
+      });
+    };
+
     vm.showAction = function () {
-      return vm.host.connectorType !== 'cs_mgmt' && vm.host.connectorType !== 'cs_context' && vm.showMoveNodeAction();
+      return vm.host.connectorType !== 'cs_mgmt' && vm.host.connectorType !== 'cs_context' && vm.showHybridMediaAction();
     };
 
     vm.showGoToHostAction = function () {
       return vm.host.connectorType !== 'mf_mgmt';
     };
 
-    vm.showMoveNodeAction = function () {
+    vm.showHybridMediaAction = function () {
       return !hasNodesViewFeatureToggle && vm.host.connectorType === 'mf_mgmt';
-    };
-
-    vm.showDeregisterNodeAction = function () {
-      return vm.host.connectorType === 'mf_mgmt';
     };
 
     vm.showDeleteNodeAction = function () {

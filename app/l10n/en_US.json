@@ -1700,7 +1700,8 @@
       "removeNode": "Remove Node",
       "localizedConnectorAndHostHeader": "{{connectorName}} on {{hostname}}",
       "actions": "Actions",
-      "no_nodes": "No nodes registered."
+      "no_nodes": "No nodes registered.",
+      "goToNodes": "Perform actions on Node"
     },
     "export": {
       "modalTitle": "User Status Report",
