@@ -24,7 +24,6 @@
          */
         ata.defaultInput = 3;
         ata.defaultOutput = 11;
-        ata.defaultImpedance = 0;
 
         /*
          * Settings, minimum, maximum and value.
@@ -52,19 +51,7 @@
           },
         };
 
-        ata.impedanceMin = 0;
-        ata.impedanceMax = 7;
-        ata.impedanceOptions = {
-          value: ata.defaultImpedance,
-          options: {
-            showSelectionBar: true,
-            floor: ata.impedanceMin,
-            ceil: ata.impedanceMax,
-          },
-        };
-
         huronDeviceService.getAtaInfo(ata.device).then(function (result) {
-          ata.impedanceOptions.value = result.impedance || ata.defaultImpedance;
           ata.inputOptions.value = result.inputAudioLevel || ata.defaultInput;
           ata.outputOptions.value = result.outputAudioLevel || ata.defaultOutput;
         });
@@ -79,7 +66,6 @@
          * Reset values.
          */
         ata.resetValues = function () {
-          ata.impedanceModel = ata.defaultImpedance;
           ata.inputModel = ata.defaultInput;
           ata.outputModel = ata.defaultOutput;
         };
@@ -92,7 +78,6 @@
           var settings = {
             inputAudioLevel: ata.inputOptions.value,
             outputAudioLevel: ata.outputOptions.value,
-            impedance: ata.impedanceOptions.value,
           };
 
           huronDeviceService.setSettingsForAta(ata.device, settings).then(function () {

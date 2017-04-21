@@ -27,11 +27,11 @@ export class ServicesOverviewCtrl {
     private Analytics,
     private Auth,
     private Authinfo,
+    private CloudConnectorService,
     private Config,
     private FeatureToggleService,
     private FusionClusterService,
     private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
-    private CloudConnectorService,
     private PrivateTrunkPrereqService: PrivateTrunkPrereqService,
     private ITProPackService: ITProPackService,
   ) {
@@ -78,10 +78,13 @@ export class ServicesOverviewCtrl {
         this.forwardEvent('hybridDataSecurityFeatureToggleEventHandler', supports);
       });
 
-    this.ITProPackService.hasITProPackPurchased()
-      .then(result => {
-        this.forwardEvent('itProPackEventHandler', result);
-      });
+    let ItPropackPromises = {
+      hasITProPackEnabled: this.ITProPackService.hasITProPackEnabled(),
+      hasITProPackPurchased: this.ITProPackService.hasITProPackPurchased(),
+    };
+    this.$q.all(ItPropackPromises).then(result => {
+      this.forwardEvent('itProPackEventHandler', result);
+    });
 
     this.FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar)
       .then(supports => {

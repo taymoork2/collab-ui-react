@@ -126,6 +126,7 @@ export class UserOverviewService {
     private Config,
     private SunlightConfigService,
     private ServiceSetup,
+    private Userservice,
     private $translate,
   ) {
     this.invitationResource = this.$resource(this.UrlConfig.getAdminServiceUrl() + 'organization/:customerId/invitations/:userId', {
@@ -271,9 +272,17 @@ export class UserOverviewService {
 
   public getUserPreferredLanguage(languageCode) {
     return this.ServiceSetup.getAllLanguages().then(languages => {
-      if (_.isEmpty(languages)) { return this.DEFAULT_LANG; }
+      let userLanguageDetails = {
+        language: this.DEFAULT_LANG,
+        translatedLanguages: [],
+      };
+      if (_.isEmpty(languages)) { return userLanguageDetails; }
       let translatedLanguages = this.ServiceSetup.getTranslatedSiteLanguages(languages);
-      return this.findPreferredLanguageByCode(translatedLanguages, languageCode);
+      let preferredLanguage = this.findPreferredLanguageByCode(translatedLanguages, languageCode);
+      userLanguageDetails.language = preferredLanguage;
+      userLanguageDetails.translatedLanguages = translatedLanguages;
+
+      return userLanguageDetails;
     });
   }
 
@@ -283,10 +292,26 @@ export class UserOverviewService {
     });
   }
 
+  public formatLanguage(language_code) {
+    let userLangSplit = _.split(language_code, /[-_]+/, 2);
+    if (userLangSplit.length <= 1) {
+      return language_code;
+    }
+    return _.toLower(userLangSplit[0]) + '_' + _.toUpper(userLangSplit[1]);
+  }
+
   private get DEFAULT_LANG() {
     return {
       label: this.$translate.instant('languages.englishAmerican'),
       value: 'en_US',
     };
+  }
+
+  public updateUserPreferredLanguage(userId: string, languageCode: string) {
+    let userData = {
+      schemas: this.Config.scimSchemas,
+      preferredLanguage: languageCode,
+    };
+    return this.Userservice.updateUserData(userId, userData);
   }
 }

@@ -76,6 +76,42 @@ describe('Controller: DeviceUsageCtrl', function () {
 
       expect(controller.noDataForRange).toBeFalsy();
       expect(controller.reportData).toEqual(deviceData.reportItems);
+
+      done();
+    });
+
+    it('adds people count to the least and most used devices', function (done) {
+      var peopleCountData = {
+        '3333': [
+          { accountId: '3333', peopleCountAvg: 33 },
+        ],
+        '1111': [
+          { accountId: '1111', peopleCountAvg: 11 },
+        ],
+        '4444': [
+          { accountId: '4444', peopleCountAvg: 44 },
+        ],
+        '2222': [
+          { accountId: '2222', peopleCountAvg: 22 },
+        ],
+      };
+
+      var leastUsedDevices = [
+        { accountId: '1111' },
+        { accountId: '2222' },
+        { accountId: '3333' },
+        { accountId: '4444' },
+      ];
+
+      var result = controller.addPeopleCount(leastUsedDevices, peopleCountData);
+
+      expect(result).toEqual([
+        { accountId: '1111', peopleCount: 11 },
+        { accountId: '2222', peopleCount: 22 },
+        { accountId: '3333', peopleCount: 33 },
+        { accountId: '4444', peopleCount: 44 },
+      ]);
+
       done();
     });
 

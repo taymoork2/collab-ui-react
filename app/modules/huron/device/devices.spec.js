@@ -73,21 +73,21 @@ describe('Controller: DevicesCtrlHuron', function () {
   });
 
   describe('device settings', function () {
-    it('should not be visible without "cloudberryLyraConfig" feature toggle', function () {
-      spyOn(FeatureToggleService, 'cloudberryLyraConfigGetStatus').and.returnValue($q.resolve(false));
+    it('should not be visible without "csdmPlaceUpgradeChannel" feature toggle', function () {
+      spyOn(FeatureToggleService, 'csdmPlaceUpgradeChannelGetStatus').and.returnValue($q.resolve(false));
       initController();
       expect(controller.showDeviceSettings).toBeFalsy();
     });
 
-    it('should not be visible with "cloudberryLyraConfig" feature toggle and without channels', function () {
-      spyOn(FeatureToggleService, 'cloudberryLyraConfigGetStatus').and.returnValue($q.resolve(true));
+    it('should not be visible with "csdmPlaceUpgradeChannel" feature toggle and without channels', function () {
+      spyOn(FeatureToggleService, 'csdmPlaceUpgradeChannelGetStatus').and.returnValue($q.resolve(true));
       initController();
       expect(controller.showDeviceSettings).toBeFalsy();
     });
 
-    it('should be visible with "cloudberryLyraConfig" feature toggle and with channels', function () {
+    it('should be visible with "csdmPlaceUpgradeChannel" feature toggle and with channels', function () {
       CsdmUpgradeChannelService.getUpgradeChannelsPromise.and.returnValue($q.resolve(['a channel', 'and another']));
-      spyOn(FeatureToggleService, 'cloudberryLyraConfigGetStatus').and.returnValue($q.resolve(true));
+      spyOn(FeatureToggleService, 'csdmPlaceUpgradeChannelGetStatus').and.returnValue($q.resolve(true));
       initController();
       expect(controller.showDeviceSettings).toBeTruthy();
     });

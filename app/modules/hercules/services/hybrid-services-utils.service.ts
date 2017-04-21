@@ -1,8 +1,7 @@
 import { ConnectorType, HybridServiceId } from 'modules/hercules/hybrid-services.types';
-import * as jstz from 'jstimezonedetect';
 
-export class HybridServicesUtils {
-  // Visual order to respect accross Atlas UI
+export class HybridServicesUtilsService {
+  // Visual order to respect across Atlas UI
   private static readonly orderedConnectors: ConnectorType[] = [
     'c_mgmt',
     'c_cal',
@@ -20,6 +19,7 @@ export class HybridServicesUtils {
     'squared-fusion-gcal',
     'squared-fusion-uc',
     'squared-fusion-ec',
+    'ept',
     'squared-fusion-media',
     'spark-hybrid-datasecurity',
     'contact-center-context',
@@ -29,7 +29,6 @@ export class HybridServicesUtils {
 
   /* @ngInject */
   constructor(
-    private $translate: ng.translate.ITranslateService,
   ) {}
 
   public connectorType2ServicesId(connectorType: ConnectorType): HybridServiceId[] {
@@ -67,8 +66,6 @@ export class HybridServicesUtils {
       case 'contact-center-context':
         // Will it become ['cs_mgmt', 'cs_context']?
         return 'cs_mgmt';
-      default:
-        return undefined;
     }
   }
 
@@ -78,6 +75,7 @@ export class HybridServicesUtils {
       case 'squared-fusion-gcal':
         return 'icon icon-circle-calendar';
       case 'squared-fusion-uc':
+      case 'ept':
         return 'icon icon-circle-call';
       case 'squared-fusion-media':
         return 'icon icon-circle-telepresence';
@@ -100,7 +98,7 @@ export class HybridServicesUtils {
     if (serviceType1 === serviceType2) {
       return 0;
     }
-    if (_.indexOf(HybridServicesUtils.orderedServices, serviceType1) < _.indexOf(HybridServicesUtils.orderedServices, serviceType2)) {
+    if (_.indexOf(HybridServicesUtilsService.orderedServices, serviceType1) < _.indexOf(HybridServicesUtilsService.orderedServices, serviceType2)) {
       return -1;
     } else {
       return 1;
@@ -117,38 +115,11 @@ export class HybridServicesUtils {
     if (connectorType1 === connectorType2) {
       return 0;
     }
-    if (_.indexOf(HybridServicesUtils.orderedConnectors, connectorType1) < _.indexOf(HybridServicesUtils.orderedConnectors, connectorType2)) {
+    if (_.indexOf(HybridServicesUtilsService.orderedConnectors, connectorType1) < _.indexOf(HybridServicesUtilsService.orderedConnectors, connectorType2)) {
       return -1;
     } else {
       return 1;
     }
-  }
-
-  // TODO: Move to another service, like ReleaseChannel (yet to be created)
-  public getLocalizedReleaseChannel = (channel: string): string => {
-    return this.$translate.instant('hercules.fusion.add-resource-group.release-channel.' + channel);
-  }
-
-  // TODO: Move to an Internationalization service (yet to be created)
-  public getTimeSinceText(timestamp: number): string {
-    let timestampText = moment(timestamp).calendar(moment(), {
-      sameElse: 'LL', // e.g. December 15, 2016
-    });
-    if (_.startsWith(timestampText, 'Last') || _.startsWith(timestampText, 'Today') || _.startsWith(timestampText, 'Tomorrow') || _.startsWith(timestampText, 'Yesterday')) {
-      // Lowercase the first letter for some well known English terms (it just looked bad with these uppercase). Other languages are left alone.
-      timestampText = timestampText[0].toLowerCase() + timestampText.slice(1);
-    }
-    return this.$translate.instant('hercules.cloudExtensions.sinceTime', {
-      timestamp: timestampText,
-    });
-  }
-
-  public getLocalTimestamp(timestamp: number, format: string): string {
-    let timezone = jstz.determine().name();
-    if (timezone === null || _.isUndefined(timezone)) {
-      timezone = 'UTC';
-    }
-    return moment(timestamp).local().tz(timezone).format(format || 'LLL (z)');
   }
 
   public getAckFlagForHybridServiceId(entitlement: HybridServiceId): string {
@@ -157,6 +128,6 @@ export class HybridServicesUtils {
 }
 
 export default angular
-  .module('hercules.hds', [])
-  .service('HybridServicesUtils', HybridServicesUtils)
+  .module('hercules.hybridServicesUtils', [])
+  .service('HybridServicesUtilsService', HybridServicesUtilsService)
   .name;

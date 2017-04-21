@@ -79,6 +79,7 @@
       maxlength: $translate.instant('autoAttendant.callerInputVariableTooLongMsg'),
       minlength: $translate.instant('autoAttendant.callerInputVariableTooShortMsg'),
       required: $translate.instant('autoAttendant.callerInputVariableRequiredMsg'),
+      pattern: $translate.instant('autoAttendant.invalidCharacter'),
     };
 
     vm.isWarn = false;
@@ -178,6 +179,8 @@
 
       if (!vm.nameInput) {
         // don't bother with undefined for warnings as other lanes could have invalid inputs also
+        vm.isWarn = false;
+
         return;
       }
       vm.isWarn = !_.isUndefined(sessionVarOptions[vm.nameInput]);

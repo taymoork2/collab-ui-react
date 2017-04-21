@@ -22,6 +22,7 @@ class PlaceCallOverview implements ng.IComponentController {
   public cosFeatureToggle;
   // Data from services
   public placeCallOverviewData: PlaceCallOverviewData;
+  public displayDescription: string;
 
   /* @ngInject */
   constructor(
@@ -78,10 +79,19 @@ class PlaceCallOverview implements ng.IComponentController {
       this.initNumbers();
       this.initPlaceCallOverviewData();
     }
+    this.setDisplayDescription();
   }
 
   private displayPlace(newPlace) {
     this.currentPlace = newPlace;
+  }
+
+  private setDisplayDescription() {
+    this.displayDescription = this.hasSparkCall ?
+        this.$translate.instant('preferredLanguage.description', {
+          module: this.$translate.instant('preferredLanguage.placeModule'),
+        }) :
+        this.$translate.instant('preferredLanguage.descriptionForCloudberryDevice');
   }
 
   private initActions(): void {

@@ -251,26 +251,6 @@
           }
         }
       },
-      singleNumberRangeCheck: function (viewValue, modelValue, scope) {
-        var value = modelValue || viewValue;
-        var result = true;
-        var beginNumber, endNumber;
-
-        if (scope.index === 0) {
-          beginNumber = value;
-          endNumber = scope.fields[2].value();
-        } else {
-          beginNumber = scope.fields[0].value();
-          endNumber = value;
-        }
-
-        if (beginNumber === endNumber) {
-          result = false;
-        } else {
-          result = true;
-        }
-        return result;
-      },
       phoneNumber: function (viewValue, modelValue) {
         var value = null;
         if (modelValue || viewValue) {
@@ -407,12 +387,6 @@
                     return $translate.instant('serviceSetupModal.rangeDuplicate');
                   },
                 },
-                singleNumberRangeCheck: {
-                  expression: vm.validations.singleNumberRangeCheck,
-                  message: function () {
-                    return $translate.instant('serviceSetupModal.singleNumberRangeError');
-                  },
-                },
               },
               templateOptions: {
                 required: true,
@@ -465,12 +439,6 @@
                   expression: vm.validations.duplicate,
                   message: function () {
                     return $translate.instant('serviceSetupModal.rangeDuplicate');
-                  },
-                },
-                singleNumberRangeCheck: {
-                  expression: vm.validations.singleNumberRangeCheck,
-                  message: function () {
-                    return $translate.instant('serviceSetupModal.singleNumberRangeError');
                   },
                 },
               },

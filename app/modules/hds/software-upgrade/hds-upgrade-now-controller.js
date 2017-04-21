@@ -2,13 +2,13 @@
   'use strict';
 
   /* @ngInject */
-  function HDSUpgradeNowController(HDSService, Notification, $modalInstance, clusterId, $translate) {
+  function HDSUpgradeNowController(ClusterService, Notification, $modalInstance, clusterId, $translate) {
     var vm = this;
     //clusterId, connector, MediaClusterServiceV2, $translate, $modalInstance, Notification
 
     vm.upgrade = function () {
-      HDSService
-        .upgradeCluster(clusterId)
+      ClusterService
+        .upgradeSoftware(clusterId, 'hds_app')
         .then(function () {
           $modalInstance.dismiss();
           Notification.success('mediaFusion.upgradeClusters.success');

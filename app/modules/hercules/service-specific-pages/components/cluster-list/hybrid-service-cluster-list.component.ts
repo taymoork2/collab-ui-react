@@ -1,7 +1,8 @@
 import { ClusterService } from 'modules/hercules/services/cluster-service';
-import { ConnectorType } from 'modules/hercules/hybrid-services.types';
+import { ConnectorType, HybridServiceId } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 import { EnterprisePrivateTrunkService } from 'modules/hercules/services/enterprise-private-trunk-service';
+import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
 
 export interface IGridApiScope extends ng.IScope {
   gridApi?: any;
@@ -14,8 +15,8 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
   public getSeverity = this.HybridServicesClusterStatesService.getSeverity;
   public getStatusIndicatorCSSClass = this.HybridServicesClusterStatesService.getStatusIndicatorCSSClass;
 
-  private serviceId: string;
-  private connectorType: ConnectorType;
+  private serviceId: HybridServiceId;
+  private connectorType: ConnectorType | undefined;
   private clusterId: string;
 
   /* @ngInject */
@@ -27,15 +28,15 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
     private EnterprisePrivateTrunkService: EnterprisePrivateTrunkService,
     private FusionClusterService,
     private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
-    private HybridServicesUtils,
+    private HybridServicesUtilsService: HybridServicesUtilsService,
   ) {
     this.updateClusters = this.updateClusters.bind(this);
     this.updateTrunks = this.updateTrunks.bind(this);
   }
 
   public $onInit() {
-    this.connectorType = this.HybridServicesUtils.serviceId2ConnectorType(this.serviceId);
-    if (this.serviceId !== 'ept') {
+    this.connectorType = this.HybridServicesUtilsService.serviceId2ConnectorType(this.serviceId);
+    if (this.serviceId !== 'ept' && this.connectorType !== undefined) {
       this.clusterList = this.ClusterService.getClustersByConnectorType(this.connectorType);
     } else {
       this.clusterList = this.EnterprisePrivateTrunkService.getAllResources();
@@ -92,13 +93,18 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
   }
 
   protected updateClusters() {
+    if (this.connectorType === undefined) {
+      return;
+    }
     if (this.serviceId === 'squared-fusion-cal' || this.serviceId === 'squared-fusion-uc') {
       this.FusionClusterService.setClusterAllowListInfoForExpressway(this.ClusterService.getClustersByConnectorType(this.connectorType))
         .then((clusters) => {
           this.clusterList = clusters;
         })
         .catch(() => {
-          this.clusterList = this.ClusterService.getClustersByConnectorType(this.connectorType);
+          if (this.connectorType !== undefined) {
+            this.clusterList = this.ClusterService.getClustersByConnectorType(this.connectorType);
+          }
         });
     } else if (this.serviceId === 'spark-hybrid-datasecurity' ||
       this.serviceId === 'squared-fusion-media' ||

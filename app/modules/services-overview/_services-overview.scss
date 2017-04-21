@@ -101,6 +101,17 @@
             position: relative;
             top: 0.2rem;
           }
+
+          i.info-icon {
+            top: .8rem;
+            right: .5rem;
+            font-size: 1.1rem;
+            position: absolute;
+
+            &.has-tooltip:hover {
+              color: $color-primary-base;
+            }
+          }
         }
 
         h4.size-1 {

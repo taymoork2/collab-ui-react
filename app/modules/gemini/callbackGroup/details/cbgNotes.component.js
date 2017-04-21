@@ -30,7 +30,7 @@
       var postData = {
         customerID: customerId,
         siteID: ccaGroupId,
-        action: 'add_note',
+        action: 'add_notes_cg',
         objectName: vm.model.postData,
       };
       var notes = _.get(postData, 'objectName');

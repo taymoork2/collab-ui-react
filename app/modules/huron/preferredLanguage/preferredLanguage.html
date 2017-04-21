@@ -2,12 +2,7 @@
     <div class="section-title-row">
         <span class="section-name" translate="preferredLanguage.title"></span>
     </div>
-    <p class="description-block" 
-        ng-show="$ctrl.hasSparkCall"
-        translate="preferredLanguage.description"></p>
-    <p class="description-block" 
-        ng-hide="$ctrl.hasSparkCall"
-        translate="preferredLanguage.descriptionForCloudberryDevice"></p> 
+    <p class="description-block">{{$ctrl.description}}</p>
     <div cs-loader ng-if="$ctrl.hasSparkCall" ng-hide="$ctrl.plIsLoaded"></div>
     <div ng-if="$ctrl.hasSparkCall" ng-show="$ctrl.plIsLoaded">
         <cs-select

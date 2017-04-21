@@ -232,7 +232,7 @@
           vm.meetingCard = HelpdeskCardsOrgService.getMeetingCardForOrg(vm.org, licenses);
           vm.callCard = HelpdeskCardsOrgService.getCallCardForOrg(vm.org, licenses);
           vm.roomSystemsCard = HelpdeskCardsOrgService.getRoomSystemsCardForOrg(vm.org, licenses);
-          vm.careCard = HelpdeskCardsOrgService.getCareCardForOrg(vm.org);
+          vm.careCard = HelpdeskCardsOrgService.getCareCardForOrg(vm.org, licenses);
           vm.licenseUsageReady = true;
         }, _.noop);
       }

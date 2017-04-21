@@ -26,7 +26,6 @@
       deleteHdsServerInfo: deleteHdsServerInfo,
       setOrgAltHdsServersHds: setOrgAltHdsServersHds,
       refreshEncryptionServerForTrialUsers: refreshEncryptionServerForTrialUsers,
-      upgradeCluster: upgradeCluster,
       getHDSInfo: getHDSInfo,
     };
 
@@ -272,12 +271,6 @@
 
     function extractData(response) {
       return response.data;
-    }
-
-    function upgradeCluster(id) {
-      var connectorType = 'hds_app';
-      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + id + '/provisioning/actions/update/invoke?connectorType=' + connectorType + '&forced=true';
-      return $http.post(url);
     }
   }
 }());

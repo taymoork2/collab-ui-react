@@ -103,7 +103,15 @@
           ng-model="vm.inputValue">
       </div>
       <div ng-if="vm.sipForm || !vm.isSSAReserved" class="domain-buttons">
-        <button type="button" class="btn btn--cta" translate="firstTimeWizard.setSipDomainCheckAvailability" ng-click="vm.verifyAvailabilityAndValidity()" ng-disabled="vm.emptyOrUnchangedInput() || this.saving"></button>
+        <button
+          type="button"
+          class="btn btn--cta"
+          cs-btn
+          loading="vm.isSubdomainLoading"
+          ng-click="vm.verifyAvailabilityAndValidity()"
+          ng-disabled="vm.emptyOrUnchangedInput() || this.saving">
+          <span translate="firstTimeWizard.setSipDomainCheckAvailability"></span>
+        </button>
         <button type="button" class="btn" translate="common.cancel" ng-click="vm.toggleSipForm()" ng-disabled="this.saving"></button>
       </div>
     </form>

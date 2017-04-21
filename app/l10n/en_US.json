@@ -324,7 +324,6 @@
     "paidCiscoSparkMessaging": "Cisco Spark Messaging",
     "paidConf": "Meeting 25 Party",
     "paidCiscoSparkMeetings": "Cisco Spark 25 party Meetings",
-    "paidConfWebEx": "WebEx Meetings",
     "paidAdvancedConferencing": "Advanced Meetings",
     "paidComm": "Call",
     "paidSparkCall": "Cisco Spark Call",
@@ -607,6 +606,7 @@
       "hoursUsed": "Time Used",
       "callCount": "Calls",
       "callHours": "Call Hours",
+      "peopleCount": "Participants",
       "deviceUsage": "Room Device Usage",
       "pairedCount": "# Paired",
       "last7Days": "Last 7 Days",
@@ -633,7 +633,11 @@
       }
     },
     "webexMetrics": {
-      "title": "WebEx Metrics"
+      "title": "WebEx Metrics",
+      "meetingUsage": "Meeting Usage",
+      "joinMeetingTime": "Join Meeting Time",
+      "webexReportInMashup": "CHP Reports",
+      "webexReportInQlikApp": "Qlik app"
     }
   },
   "sharedMeetingReports": {
@@ -1696,7 +1700,8 @@
       "removeNode": "Remove Node",
       "localizedConnectorAndHostHeader": "{{connectorName}} on {{hostname}}",
       "actions": "Actions",
-      "no_nodes": "No nodes registered."
+      "no_nodes": "No nodes registered.",
+      "goToNodes": "Perform actions on Node"
     },
     "export": {
       "modalTitle": "User Status Report",
@@ -2340,6 +2345,7 @@
       "list": {
         "title": "Clusters",
         "empty": "No clusters found.",
+        "empty-ept": "No SIP Destinations found.",
         "upgrade-schedule": "Upgrade Schedule",
         "upgrades-automatically": "Upgrades automatically",
         "clusters": "Clusters",
@@ -2354,6 +2360,7 @@
         "set-default-release-channel": "Set default release channel",
         "add-resource-group": "Create new resource group",
         "expressway": "Expressway",
+        "ept": "SIP Destinations",
         "mediafusion": "Media",
         "hds": "Data Security",
         "cucm": "CUCM",
@@ -2472,8 +2479,8 @@
       "usersAssign": "Assign Users",
       "usersDescription1": "Choose users who you want to gain access to configuration in the resource group (for example, beta testers). You can:",
       "usersDescription2": "Assign them individually from the <a ui-sref='users.list'>users page</a>.",
-      "usersDescription3": "Assign them in bulk using the <a ui-sref='users.list'>CSV template</a>.",
-      "usersDescription4": "Refer to <strong>documentation</strong> if you need help.",
+      "usersDescription3": "Assign them in bulk using the <a ng-click=\"{{onclick}}\">CSV template</a>.",
+      "usersDescription4": "Refer to <a href='{{href}}' target='_blank'>documentation</a> if you need help.",
       "renameGroup": "Rename",
       "renameGroupDescription": "Rename the resource group",
       "removeGroup": "Remove",
@@ -2546,6 +2553,8 @@
       "enableMaintenanceMode": "Enable maintenance mode",
       "disableMaintenanceMode": "Disable maintenance mode",
       "goToNode": "Go to node",
+      "moveNode": "Move node",
+      "deregisterNode": "Deregister node",
       "enableMaintenanceModeModal": {
         "title": "Enable maintenance mode",
         "message": "Are you sure you want to enable maintenance mode for this node?"
@@ -2561,6 +2570,11 @@
     "addressesStatusComponent": {
       "addresses": "Addresses",
       "noAddressesFound": "No addresses found"
+    }
+  },
+  "cmc": {
+    "menu": {
+      "mobileConvergenceService": "Mobile Convergence Service"
     }
   },
   "context": {
@@ -2584,9 +2598,13 @@
       "status": "Status",
       "inUse": "In Use",
       "notInUse": "Not In Use",
+      "base": "Cisco",
+      "custom": "Custom",
+      "access": "Source",
+      "dateUpdated": "Date Updated",
       "fieldPage": {
         "associatedFieldsets": "Associated Fieldsets",
-        "associatedFieldsetsError": "Unable to load associated fieldsets.",
+        "associatedFieldsetsError": "Unable to retrieve associated fieldsets.",
         "createNew": "Create New Field",
         "fieldCreateSuccess": "Field created successfully! Add field to a fieldset to use in your application.",
         "fieldCreateFailure": "Unable to create field. Try again or contact customer support.",
@@ -2594,6 +2612,8 @@
         "fieldIdPlaceholder": "For eg. Invoice_Number",
         "fieldIdInvalidCharactersError": "Only alpha-numeric characters, hyphen(-) or underscore (_) allowed",
         "fieldIdUniqueError": "Field ID exists. Enter a different ID",
+        "fieldUpdateSuccess": "Field updated successfully!",
+        "fieldUpdateFailure": "Unable to update field. Try again or contact customer support.",
         "dataType": "Data Type",
         "dataTypePlaceholder": "Select Data Type",
         "descriptionPlaceholder": "Enter field details",
@@ -2603,7 +2623,6 @@
         "label": "Label",
         "labelHelpText": "Name of the field displayed in the application",
         "labelPlaceholder": "Enter Label",
-        "lastUpdated": "Date Updated",
         "startSearching": "To begin, search for a field",
         "noSearchResults": "Search yielded no results",
         "fieldReadFailed": "Unable to retrieve fields. Refresh your browser to try again.",
@@ -2613,9 +2632,12 @@
         "encryptedHelpText": "Is encrypted and contains no personally identifiable information",
         "unencrypted": "Unencrypted",
         "unencryptedHelpText": "Is not encrypted and contains no personally identifiable information",
+        "update": "Edit",
         "dateFormat": "MM/dd/yyyy",
         "noneFound": "No fields found",
-        "fieldAttributes": "Field Attributes"
+        "fieldAttributes": "Field Attributes",
+        "inUseTooltip": "Field associated with fieldsets",
+        "notInUseTooltip": "Field not associated with any fieldsets"
       },
       "fieldsetPage": {
         "fieldsetId": "Fieldset ID",
@@ -2626,11 +2648,19 @@
         "fieldsetIdPlaceholder": "For eg. sales.shoppingcart",
         "descriptionPlaceholder": "What is this fieldset for?",
         "createNew": "Create New Fieldset",
+        "fieldsetAttributes": "Fieldset Attributes",
+        "addOrEditFields": "Search and Select fields you want in this fieldset.",
+        "searchFields": "Search Fields",
+        "loadFailure": "Unable to retrieve fields.",
+        "noFields": "No fields available",
         "fieldsetCreateSuccess": "Fieldset created successfully!",
         "fieldsetCreateFailure": "Unable to create fieldset. Try again or contact customer support.",
         "fieldsetIdUniqueError": "Fieldset ID exists. Enter a different ID",
         "fieldsetIdInvalidCharactersError": "Only alpha-numeric characters, period(.), hyphen(-) or underscore (_) allowed",
-        "noneFound": "No fieldsets found"
+        "noneFound": "No fieldsets found",
+        "fieldsetAttributes": "Fieldset Attributes",
+        "inUseTooltip": "Fieldset associated with objects",
+        "notInUseTooltip": "Fieldset not associated with any objects"
       }
     }
   },
@@ -2869,15 +2899,16 @@
       "searchRoomHelpText": "e.g. a42163f4-eb1e-2c03-efcf2-9c5372c2e099",
       "messages": "Where <b>Messages</b> contains",
       "messagesPlaceholder": "e.g. project AND manager",
-      "noMatchesFound": "No Matches Found"
+      "noMatchesFound": "No Matches Found",
+      "dateRangeTooltip": "To generate reports greater than 90 days, contact your admin about our IT Pro Package."
     },
     "searchResults": {
       "backToSearch": "Back to Search",
       "searchInfo": "Search Info",
-      "emailAddress": "Email Address",
+      "emailAddress": "Email Addresses",
       "spaceId": "Space Id",
       "dateRange": "Date Range",
-      "textAndFileName": "Text Messages or File Name Contains",
+      "messages": "Messages Contains",
       "notApplicable": "N/A",
       "reportSummary": "Report Summary",
       "spaces": "Spaces",
@@ -2885,7 +2916,7 @@
       "files": "Files",
       "estReport": "Est. Report Size",
       "generateReport": "Generate Report",
-      "generateText": "Enter report information to generate a report. Generation time will depend on estimated report size.",
+      "generateText": "Enter report information to generate a report. The time to generate the report depends on the estimated report size.",
       "description": "Description",
       "exportFormat": "Export Format",
       "totalReportSize": "Total Report Size",
@@ -3043,11 +3074,9 @@
     "subdomainChangesDescription": "Subdomain changes may take up to a few hours to complete.",
     "subdomainDescription": "Select a subdomain that identifies your company. The subdomain will be used to create {count, plural, =1{a Spark SIP Address} other{Spark SIP Addresses}}. You can change the subdomain name later in your account settings.",
     "updateSubdomainMessage": "Subdomain changes may take up to a few hours to complete. Users will no longer be able to make calls using the previous Spark SIP Address after changes are completed.",
-    "cscUpdateSubdomainMessage": "Subdomain changes may take up to a few hours to complete. After the change, the previous Spark SIP addresses will no longer work for Call Service Connect calls.",
     "subdomainUpdateConfirmation": "We recommend that you perform this step during off hours. Are you sure you want to save your changes?",
-    "cscWarningMessage": "Changing your Spark SIP Address will cause a Call Service Connect outage.  See the <a ng-click=\"{{onclick}}\">documentation for guidance</a>.",
-    "editCSCPartOne": "For the SIP domain change to take effect, you must disable and reenable all active call connectors from the Expressway-Cs.",
-    "editCSCPartTwo": "We recommend that you perform these steps during off hours.  See the <a ng-click=\"{{onclick}}\">documentation for guidance</a>.",
+    "editCSCPartOne": "You have Hybrid Call Service Connect enabled in your organization. You cannot change the Spark SIP Address subdomain unless you temporarily disable Call Service Connect for all your users.",
+    "editCSCPartTwo": "Go to <b>Services > Hybrid Call > Settings</b> and deactivate Call Service Connect. Then return here to change the subdomain.",
     "editCSCPartThree": "Do you still want to edit your Spark SIP Address?",
     "enterSubdomain": "Enter Subdomain",
     "subdomainInvalid": "Invalid subdomain name.",
@@ -3234,6 +3263,7 @@
     "actionCallerInput": "Caller Input",
     "actionCallerInputHint": "Store information that the caller supplies.",
     "actionCallerInputHelp": "Store information that the caller supplies.",
+    "invalidCharacter": "Invalid character entered.",
     "callerInputCnvtDigit": "Convert digit input to text string value.",
     "callerInputMaxLenStr": "Max Length of String",
     "callerInputVariableTooLongMsg": "Maximum length of input variable is exceeded.",
@@ -3693,7 +3723,7 @@
   },
   "preferredLanguage": {
     "title": "Preferred Language",
-    "description": "Choose the preferred language for this place. This will override the default organization setting.",
+    "description": "Choose the preferred language for this {{module}}. This will override the default organization setting.",
     "placeholder": "Select your language",
     "organizationSettingLabel": "Organization Setting - ",
     "descriptionForCloudberryDevice": "Configure preferred language on the room’s device page.",
@@ -3701,7 +3731,9 @@
     "failedToSaveChanges": "Failed to save preferred Language. Reason:",
     "failedToFetchCmiPlacesInfo": "Failed to fetch places info. Reason:",
     "failedToFetchSiteLanguages": "Failed to fetch languages. Reason:",
-    "failedToFetchSiteLevelLanguage": "Failed to fetch site level language. Reason:"
+    "failedToFetchSiteLevelLanguage": "Failed to fetch site level language. Reason:",
+    "userModule": "user",
+    "placeModule": "place"
   },
   "directoryNumberPanel": {
     "title": "Line Configuration",
@@ -4055,6 +4087,14 @@
     "feature5": "Basic 911 included",
     "feature6": "Taxes additional"
   },
+  "westucFeatures": {
+    "feature1": "Unlimited* calling in the U.S.",
+    "feature2": "1 DID telephone number (new or ported)",
+    "feature3": "Caller ID",
+    "feature4": "Directory listing",
+    "feature5": "E911",
+    "feature6": "No set-up fees"
+  },  
   "partnerHomePage": {
     "trialsHeading": "Trials",
     "onboardingTitle": "Onboarding",
@@ -4580,8 +4620,6 @@
     "manage": "Manage Device Settings",
     "title": "Device Settings",
     "description": "Updating settings will affect the entire analog telephone adapter. You may need to perform testing on the connected analog device after saving your settings.",
-    "impedance": "Impedance",
-    "impedanceDescr": "Adjust the frequency response level for sound quality.",
     "input": "Input Audio Level",
     "output": "Output Audio Level",
     "saved": "The settings are saved. You will have to reboot the device for the changes to take effect",
@@ -4978,7 +5016,7 @@
       "clientTypeHeading": "Client Type Distribution",
       "onPremisesHeading": "On-Premises",
       "cloudHeading": "Cloud",
-      "hybridHeading": "Hybrid",
+      "hybridHeading": "Cloud and On-Premises",
       "othersHeading": "Others",
       "clientType": {
         "android": "Android",
@@ -6473,7 +6511,8 @@
           "squared-fusion-media": "Media",
           "spark-hybrid-datasecurity": "Data Security",
           "contact-center-context": "Context",
-          "squared-fusion-khaos": "Management"
+          "squared-fusion-khaos": "Management",
+          "ept": "Private Trunk"
         }
       },
       "licenses": {
@@ -6847,6 +6886,8 @@
       "local": "Local"
     },
     "vmprefix": "Voicemail ID Prefix",
+    "routingPrefix": "Routing Prefix",
+    "extensionLength": "Extension Length",
     "outboundDigit": "Outbound Dial Digit",
     "areaCode": "Area Code",
     "customerInfo": "Customer Information",
@@ -7060,7 +7101,8 @@
       },
       "hybridDataSecurity": {
         "title": "Hybrid Data Security",
-        "description": "Creates an on-premises security realm.",
+        "description": "Manage your encryption keys and other security services on-premises.",
+        "tooltip": "This premium feature is available with the IT Pro Pack. Contact your partner to learn more.",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
@@ -7087,7 +7129,9 @@
           "invalidChars": "Invalid character is not allowed in address domain. Allowed set is \"[a-z] [A-Z] [0-9]_-.\"",
           "invalidPort": "Port can only range between {{min}} and {{max}}",
           "invalidUniqueEntry": "This SIP Destination address already exists",
-          "hybridRequired": "Required: Expressway-E for Hybrid Call Connect was not found"
+          "hybridRequired": "Required: Expressway-E for Hybrid Call Connect was not found",
+          "resourceError": "Add Private trunk resource error",
+          "privateTrunkError": "Add Private trunk Domain error"
         },
         "prereqTitle": "Enterprise Private Trunking prerequisites",
         "setupTitle": "Set up Enterprise Private Trunking ",
@@ -7129,12 +7173,17 @@
         "fileReadyForImport": "File ready for import",
         "certificateDelete": "Are you sure you want to remove this certificate?",
         "cancelHeader": "Cancel Enterprise Private Trunking Setup.",
-        "cancelBody": "Are you sure you want to cancel?"
+        "cancelBody": "Are you sure you want to cancel?",
+        "setupCompete": "Set up complete",
+        "great": "Great! You configured private trunking for your Cisco Spark organization.",
+        "callSelections": "Your call selections",
+        "interSite": "Inter-site dialling between your on premise endpoints and Spark call endpoints. PSTN in and outbound will be over this trunk, as you are using your on premise PSTN connectivity•"
       }
     },
     "showMore": "View all",
     "genericButtons": {
-      "setup": "Set up"
+      "setup": "Set up",
+      "learnMore": "Learn More"
     },
     "cardStatus": {
       "operational": "Operational",
@@ -7868,7 +7917,11 @@
       "modifyMessageSucceed": "Message successfully modified.",
       "modifyMessageFailed": "An error occurred modifying message.",
       "updateIncidentSucceed": "Incident {{incidentName}} update succeed.",
-      "updateIncidentFailed": "Incident {{incidentName}} update failed."
+      "updateIncidentFailed": "Incident {{incidentName}} update failed.",
+      "deleteMessageTitle": "Delete Incident Message",
+      "deleteMessageConfirmMsg": "Are you sure you want to permanently delete message?",
+      "deleteMessageSucceed": "Message successfully deleted.",
+      "deleteMessageFailed": "An error occurred deleting message."
     },
     "incidentStatus": {
       "investigating": "Investigating",
