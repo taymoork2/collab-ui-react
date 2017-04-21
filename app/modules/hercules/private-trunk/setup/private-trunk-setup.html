@@ -25,7 +25,9 @@
     on-delete-cert-fn="$ctrl.deleteCertModal(certId)"
     on-change-option-fn="$ctrl.changeOption(isCertificateDefault)">
   </private-trunk-certificate>
-  <private-trunk-setup-complete ng-if="$ctrl.currentStepIndex === 4">
+  <private-trunk-setup-complete
+    vrified-domain="$ctrl.selectedVerifiedDomains"
+    ng-if="$ctrl.currentStepIndex === 4">
   </private-trunk-setup-complete>
 </div>
 <div class="modal-footer">

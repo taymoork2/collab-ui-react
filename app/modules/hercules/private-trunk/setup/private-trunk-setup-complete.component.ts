@@ -1,10 +1,6 @@
 
 export class PrivateTrunkSetupCompleteCtrl implements ng.IComponentController {
   public verifiedDomain: string;
-  /* @ngInject */
-  constructor(
-  ) {
-  }
 }
 
 export class PrivateTrunkSetupCompleteComponent implements ng.IComponentOptions {

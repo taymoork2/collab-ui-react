@@ -2,7 +2,8 @@ import { PrivateTrunkPrereqService } from 'modules/hercules/private-trunk/prereq
 import { IToolkitModalService } from 'modules/core/modal';
 import { IOption, PrivateTrunkResource } from './private-trunk-setup';
 import { ICertificate, IformattedCertificate, ICertificateFileNameIdMap } from 'modules/hercules/services/certificate-formatter-service';
-import { PrivateTrunkService, IPrivateTrunkResource } from './private-trunk.service';
+import { PrivateTrunkService } from 'modules/hercules/private-trunk/private-trunk-services/private-trunk.service';
+import { IPrivateTrunkResource } from 'modules/hercules/private-trunk/private-trunk-services//private-trunk';
 
 export interface  ICertificateArray {
   keys: Array<string>;
@@ -26,10 +27,11 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
   public isImporting: boolean = false;
   public isCertificateDefault: boolean = true;
   public isSetup: boolean = false;
-  private errors: Array<any> = [];
   public btnLabel1: string;
   public btnLabel2: string;
   public privateTrunkSetupForm: ng.IFormController;
+  public selectedVerifiledDomains: Array<string>;
+  private errors: Array<any> = [];
 
   /* @ngInject */
   constructor(
@@ -89,6 +91,7 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
   public setSelectedDomain(isDomain: boolean, domainSelected: Array<IOption>): void {
     this.domainSelected = _.cloneDeep(domainSelected);
     this.isDomain = isDomain;
+    this.selectedVerifiledDomains = _.map(this.domainSelected, domainOption => domainOption.value);
   }
 
   public setResources(privateTrunkResource: PrivateTrunkResource): void {
@@ -182,15 +185,14 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
       if (addressPort[1]) {
         resource.port =  _.toNumber(addressPort[1]);
       }
-      promises.push(this.PrivateTrunkService.setPrivateTrunkResource(resource)
+      promises.push(this.PrivateTrunkService.createPrivateTrunkResource(resource)
         .catch(error => {
           this.errors.push(this.Notification.processErrorResponse(error, 'servicesOverview.cards.privateTrunk.error.resourceError'));
         }));
     });
 
-    if (!_.isEmpty(this.domainSelected)) {
-      let domains: Array<string> = _.map(this.domainSelected, domainOption => domainOption.value);
-      promises.push(this.PrivateTrunkService.setPrivateTrunk(domains)
+    if (!_.isEmpty(this.selectedVerifiledDomains)) {
+      promises.push(this.PrivateTrunkService.setPrivateTrunk(this.selectedVerifiledDomains)
         .catch(error => {
           this.errors.push(this.Notification.processErrorResponse(error, 'servicesOverview.cards.privateTrunk.error.privateTrunkError'));
         }));
