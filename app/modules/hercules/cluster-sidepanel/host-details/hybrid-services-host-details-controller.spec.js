@@ -53,6 +53,7 @@ describe('HybridServicesHostDetailsController: ', function () {
       $stateParams: $stateParams,
       ClusterService: ClusterService,
       HybridServicesClusterStatesService: HybridServicesClusterStatesService,
+      hasNodesViewFeatureToggle: false,
     });
     $scope.$apply();
 
@@ -92,7 +93,6 @@ describe('HybridServicesHostDetailsController: ', function () {
     expect(controller.host.connectorType).toBe('hds_app');
     expect(controller.host.state).toBe('running');
     expect(controller.showDeleteNodeAction()).toBe(true);
-    expect(controller.showAction()).toBe(true);
     expect(controller.showGoToHostAction()).toBe(true);
   });
 
@@ -101,7 +101,6 @@ describe('HybridServicesHostDetailsController: ', function () {
     controller.host.state = 'offline';
     controller.host.connectorType = 'hds_app';
     expect(controller.showDeleteNodeAction()).toBe(true);
-    expect(controller.showAction()).toBe(true);
     expect(controller.showGoToHostAction()).toBe(true);
   });
 
