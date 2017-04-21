@@ -2827,13 +2827,14 @@
   "ediscovery": {
     "browserTabHeaderTitle": "Cisco Spark Activity Reports",
     "heading": "Search Cisco Spark Space Activity",
-    "subheading": "Choose to search for specific users or spaces. Add more than one by separating with commas",
+    "subheading": "Choose to search for specific users or spaces. Add more than one by separating with commas.",
     "searchTip": "Search data by room ID",
     "unableToDownloadFile": "Unable to download file",
     "dateError": {
       "StartDateMustBeforeEndDate": "Start date must be before end date",
       "StartDateCannotBeInTheFuture": "Start date cannot be in the future",
-      "InvalidDateRange": "Invalid date range. Date range must not be greater than 90 days in the past."
+      "InvalidDateRange": "Invalid date range. Date range must not be greater than 90 days in the past.",
+      "InvalidEndDate": "The end date cannot be changed."
     },
     "searchingPleaseWait": "Finding information, please wait...",
     "reportStates": {
@@ -2894,7 +2895,7 @@
       "search": "Search",
       "searchPlaceholder": "Email Address",
       "searchEmailPlaceholder": "Enter Email Address",
-      "searchEmailHelpText": "e.g. johnsmith@email.com, jansmit@email.com",
+      "searchEmailHelpText": "e.g. johnsmith@email.com, jansmith@email.com",
       "searchRoomPlaceholder": "Enter space ID",
       "searchRoomHelpText": "e.g. a42163f4-eb1e-2c03-efcf2-9c5372c2e099",
       "messages": "Where <b>Messages</b> contains",
