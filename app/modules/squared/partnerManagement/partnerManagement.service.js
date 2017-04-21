@@ -10,18 +10,8 @@
     };
 
     function search(email) {
-      var deferred = $q.defer();
-
-      $http({
-        url: UrlConfig.getAdminServiceUrl() + 'organizations/search?emailAddress=' + encodeURIComponent(email),
-        method: 'POST',
-      }).then(function (resp) {
-        deferred.resolve(resp);
-      }, function (resp) {
-        deferred.reject(resp);
-      });
-
-      return deferred.promise;
+      return $http.get(UrlConfig.getAdminServiceUrl() +
+        'organizations/search?emailAddress=' + encodeURIComponent(email));
     }
 
     function create(data) {

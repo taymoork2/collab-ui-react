@@ -18,7 +18,8 @@
                         <input cs-input class="form-control" name="name"
                             ng-model="vm.data.name" cs-input-label="{{'partnerManagement.search.name' | translate}}"
                             cs-input-messages="vm.messages" required
-                            ng-blur="createForm.confirmName.$validate()">
+                            ng-blur="createForm.confirmName.$validate()"
+                            validate-unused={{createForm.name.$viewValue}}>
 
                         <input cs-input name="confirmName" class="form-control"
                             ng-model="vm.data.confirmName"

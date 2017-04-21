@@ -3957,6 +3957,9 @@
           .state('partnerManagement.searchResults', {
             templateUrl: 'modules/squared/partnerManagement/pm-searchResults.html',
           })
+          .state('partnerManagement.orgExists', {
+            templateUrl: 'modules/squared/partnerManagement/pm-orgExists.html',
+          })
           .state('partnerManagement.create', {
             templateUrl: 'modules/squared/partnerManagement/pm-create.html',
           })

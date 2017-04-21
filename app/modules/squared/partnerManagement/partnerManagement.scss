@@ -62,6 +62,20 @@
         font-size: 0.7rem;
       }
     }
+
+    .card-panel {
+      padding-top: 17px;
+    }
+
+    .card-article {
+      padding-left: 100px;
+    }
+
+    .card-header {
+      font-family: $brand-font-thin;
+      font-size: 24px;
+      color: $gray-dark-1;
+    }
   }
 
   h2 {

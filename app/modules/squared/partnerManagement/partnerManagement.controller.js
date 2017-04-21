@@ -31,6 +31,7 @@ require('./partnerManagement.scss');
       required: $translate.instant('partnerManagement.error.required'),
       email: $translate.instant('partnerManagement.error.email'),
       noMatch: $translate.instant('partnerManagement.error.noMatch'),
+      unused: $translate.instant('partnerManagement.error.nameInUse'),
     };
 
     // reset form data
@@ -47,24 +48,40 @@ require('./partnerManagement.scss');
     initData();
 
     vm.search = function () {
-      $state.go('partnerManagement.create');
-/*
       vm.isLoading = true;
       svc.search(vm.data.email).then(function (resp) {
         vm.isLoading = false;
+        if (resp.status === 204) {
+          $state.go('partnerManagement.create');
+          return;
+        }
         if (resp.status === 200) {
-          if (_.isEmpty(resp.data)) {
-            $state.go('partnerManagement.create');
-          } else {
-            $state.go('partnerManagement.serchResults');
+          switch (resp.data.orgMatchBy) {
+            case "EMAIL_ADDRESS":
+              vm.data.name = resp.data.organizations[0].displayName;
+              $state.go('partnerManagement.orgExists');
+              loadOrgDetails(vm.data.name);
+              break;
+
+            case "DOMAIN":
+              $state.go('partnerManagement.searchResults');
+              break;
+
+            case "NO_MATCH":
+              $state.go('partnerManagement.create');
+              break;
+
+            default:
+                Notification.errorWithTrackingId(resp,
+                  'partnerManagement.error.searchFailed', 
+                  {msg: $translate.instant('partnerManagement.error.unexpectedResp')});
           }
         }
       }).catch(function (resp) {
         vm.isLoading = false;
         Notification.errorWithTrackingId(resp,
-        'partnerManagement.error.searchFailed', {msg: resp.data.message)};
+        'partnerManagement.error.searchFailed', {msg: resp.data.message});
       });
-*/
     };
 
     vm.create = function () {
@@ -74,8 +91,14 @@ require('./partnerManagement.scss');
         $state.go('partnerManagement.createSuccess');
       }).catch(function (resp) {
         vm.isLoading = false;
-        Notification.errorWithTrackingId(resp,
-          'partnerManagement.error.createFailed', {msg: resp.data.message});
+        if (resp.data.message === ('Organization ' + vm.data.name +
+          ' already exists in CI')) {
+          vm.duplicateName = vm.data.name;
+          $scope.$$childHead.createForm.name.$validate();
+        } else {
+          Notification.errorWithTrackingId(resp,
+            'partnerManagement.error.createFailed', {msg: resp.data.message});
+        }
       });
     };
 
@@ -88,11 +111,17 @@ require('./partnerManagement.scss');
       initData();
       $state.go('partnerManagement.search');
     };
+
+    function loadOrgDetails(name) {
+      vm.isLoading = true;
+      vm.isLoading = false;
+    }
   }
 
   angular
     .module('Squared')
     .directive('validateMatch', validateMatchDirective)
+    .directive('validateUnused', validateUnusedDirective)
     .controller('PartnerManagementController', PartnerManagementController);
 
   function validateMatchDirective() {
@@ -102,6 +131,19 @@ require('./partnerManagement.scss');
       link: function (scope, elem, attrs, ngModelCtrl) {
         ngModelCtrl.$validators.noMatch = function (value) {
           return attrs.validateMatch === value;
+        };
+      },
+    };
+  }
+
+  function validateUnusedDirective() {
+    return {
+      require: 'ngModel',
+      restrict: 'A',
+      link: function (scope, elem, attrs, ngModelCtrl) {
+        ngModelCtrl.$validators.unused = function (value) {
+          return _.isEmpty(scope.vm.duplicateName) || 
+            (value !== scope.vm.duplicateName);
         };
       },
     };

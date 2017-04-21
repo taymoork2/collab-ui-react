@@ -6914,7 +6914,9 @@
       "noMatch": "The values do not match",
       "required": "This field is required",
       "searchFailed": "Search failed ({{msg}})",
-      "createFailed": "Create partner org failed ({{msg}})"
+      "createFailed": "Create partner org failed ({{msg}})",
+      "nameInUse": "This name is already in use, try another",
+      "unexpectResp": "The server returned an unexpected response"
     },
     "search": {
       "heading": "Create new partner organization",
@@ -6943,6 +6945,10 @@
     "created": {
       "heading": "{{name}} has been created.",
       "desc": "A new partner organization has been created and an email has been sent to the customer admin."
+    },
+    "orgExists": {
+      "heading": "This partner organization already exists",
+      "desc": "The email, {{email}}, has been claimed by the following partner organization. This user cannot be added to another organization."
     }
   },
   "activation": {

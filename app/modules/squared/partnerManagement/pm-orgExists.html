@@ -1,0 +1,30 @@
+<div class="partner-main centered" tabindex="0">
+    <div class="row">
+      <div class="main-heading columns medium-12">
+        <h2 translate="partnerManagement.orgExists.heading"></h2>
+        <div class="desc-panel">
+            <h5>{{ 'partnerManagement.orgExists.desc' | translate:vm.data }}</h5>
+        </div>
+        <div class="columns medium-10 card-panel">
+            <cs-card class="full">
+                <article class="card-article">
+                    <header>
+                        <span class="card-header">{{vm.data.name}}</span>
+                    </header>
+                    <section>
+                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</p>
+                    </section>
+                </article>
+            </cs-card>
+        </div>
+      </div>
+      <hr class="pm-rule">
+      <div class="row">
+        <div class="columns medium-12 text-right">
+            <button cs-btn id="done" type="button" ng-click="vm.done()" class="btn btn--primary pm-btn" loading="vm.isLoading">
+                <span translate="partnerManagement.done"></span>
+            </button>
+        </div>
+      </div>
+    </div>
+</div>
