@@ -37,10 +37,19 @@
     }
 
     function setNumberOfMeetsOnPremisesPiechart(data) {
+      var totalMeets = 0;
       data = formatData(data.dataProvider);
+      _.each(data, function (val) {
+        totalMeets += val.value;
+      });
       var chartData = CommonReportsGraphService.getBasePieChart(data);
       chartData.labelText = '[[name]]';
       chartData.balloonText = '[[name]]: [[percentage]]% ([[value]])';
+      chartData.allLabels = [{
+        'text': totalMeets,
+        'align': 'center',
+        'y': 63,
+      }];
       var chart = AmCharts.makeChart(vm.numberOfMeetsOnPremisesChartDiv, chartData, 0);
       return chart;
     }
@@ -91,9 +100,16 @@
       return chart;
     }
 
-    function setDummyTotalParticipantsPiechart(data) {
-      var chartData = CommonReportsGraphService.getDummyPieChart(data);
+    function setDummyTotalParticipantsPiechart(isAllZero) {
+      var chartData = CommonReportsGraphService.getDummyPieChart();
       chartData.labelText = '[[name]]';
+      if (isAllZero) {
+        chartData.allLabels = [{
+          'text': 0,
+          'align': 'center',
+          'y': 63,
+        }];
+      }
       var chart = AmCharts.makeChart(vm.totalParticipantsChartDiv, chartData, 0);
       return chart;
     }
