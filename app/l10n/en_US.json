@@ -7129,7 +7129,9 @@
           "invalidChars": "Invalid character is not allowed in address domain. Allowed set is \"[a-z] [A-Z] [0-9]_-.\"",
           "invalidPort": "Port can only range between {{min}} and {{max}}",
           "invalidUniqueEntry": "This SIP Destination address already exists",
-          "hybridRequired": "Required: Expressway-E for Hybrid Call Connect was not found"
+          "hybridRequired": "Required: Expressway-E for Hybrid Call Connect was not found",
+          "resourceError": "Add Private trunk resource error",
+          "privateTrunkError": "Add Private trunk Domain error"
         },
         "prereqTitle": "Enterprise Private Trunking prerequisites",
         "setupTitle": "Set up Enterprise Private Trunking ",
@@ -7171,7 +7173,11 @@
         "fileReadyForImport": "File ready for import",
         "certificateDelete": "Are you sure you want to remove this certificate?",
         "cancelHeader": "Cancel Enterprise Private Trunking Setup.",
-        "cancelBody": "Are you sure you want to cancel?"
+        "cancelBody": "Are you sure you want to cancel?",
+        "setupCompete": "Set up complete",
+        "great": "Great! You configured private trunking for your Cisco Spark organization.",
+        "callSelections": "Your call selections",
+        "interSite": "Inter-site dialling between your on premise endpoints and Spark call endpoints. PSTN in and outbound will be over this trunk, as you are using your on premise PSTN connectivity•"
       }
     },
     "showMore": "View all",
