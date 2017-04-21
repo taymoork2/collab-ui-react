@@ -372,8 +372,6 @@
         'dr-login-forward',
         'editService',
         'firsttimewizard',
-        'gem',
-        'gemCbgDetails',
         'my-company',
         'overview',
         'profile',

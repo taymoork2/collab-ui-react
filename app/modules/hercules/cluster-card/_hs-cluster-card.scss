@@ -155,6 +155,12 @@ hs-cluster-card {
       }
     }
 
+    &.card-ept {
+      header::after {
+        border-top-color: $gray-light-2;
+      }
+    }
+
     .no-connectors {
       opacity: 0.6;
     }

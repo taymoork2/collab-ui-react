@@ -34,8 +34,8 @@ class GmImportTdCtrl implements ng.IComponentController {
   ) {
     this.gridData = [];
     this.isHiddenOptions = [
-      { value: 'true', label: this.$translate.instant('gemini.tds.hidden') },
-      { value: 'false', label: this.$translate.instant('gemini.tds.display') },
+      { value: 'true', label: this.$translate.instant('gemini.hidden') },
+      { value: 'false', label: this.$translate.instant('gemini.display') },
     ];
     this.currentTD = this.gemService.getStorage('currentTelephonyDomain');
     this.selectPlaceholder = this.$translate.instant('gemini.tds.selectTdPlaceholder');

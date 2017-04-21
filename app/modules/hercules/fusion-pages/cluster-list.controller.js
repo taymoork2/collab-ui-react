@@ -6,7 +6,7 @@
     .controller('FusionClusterListController', FusionClusterListController);
 
   /* @ngInject */
-  function FusionClusterListController($filter, $modal, $state, $translate, Analytics, Authinfo, Config, FusionClusterService, Notification, ResourceGroupService, WizardFactory, hasCucmSupportFeatureToggle) {
+  function FusionClusterListController($filter, $modal, $state, $translate, Analytics, Authinfo, Config, EnterprisePrivateTrunkService, FusionClusterService, HybridServicesClusterStatesService, Notification, ResourceGroupService, WizardFactory, hasCucmSupportFeatureToggle, hasEnterprisePrivateTrunkingFeatureToggle) {
     var vm = this;
     var groupsCache = [];
     vm.displayedGroups = groupsCache;
@@ -23,6 +23,7 @@
       count: 0,
     };
     vm.filters = setupFilters();
+    vm._loadSipDestinations = loadSipDestinations;
 
     vm.addResource = addResource;
     vm.addResourceGroup = addResourceGroup;
@@ -31,9 +32,9 @@
     vm.setDefaultReleaseChannel = setDefaultReleaseChannel;
     vm.setFilter = setFilter;
 
-    loadResourceGroups();
+    loadResources();
 
-    function loadResourceGroups() {
+    function loadResources() {
       vm.loading = true;
       FusionClusterService.getResourceGroups()
         .then(function (response) {
@@ -42,6 +43,7 @@
           updateFilters();
           vm.displayedGroups = formattedData;
         })
+        .then(loadSipDestinations)
         .catch(function (error) {
           Notification.errorWithTrackingId(error, 'hercules.genericFailure');
         })
@@ -53,6 +55,38 @@
           if (channels && channels.length > 1) {
             vm.hasMultipleReleaseChannelOptions = true;
           }
+        });
+    }
+
+    function loadSipDestinations() {
+      if (!hasEnterprisePrivateTrunkingFeatureToggle) {
+        return;
+      }
+
+      EnterprisePrivateTrunkService.fetch()
+        .then(function (destinations) {
+          return _.map(destinations, function (destination) {
+            return {
+              name: destination.name,
+              id: destination.resourceId,
+              targetType: 'ept',
+              servicesStatuses: [{
+                serviceId: 'ept',
+                state: {
+                  cssClass: HybridServicesClusterStatesService.getStatusIndicatorCSSClass(destination.serviceStatus),
+                },
+                total: 1,
+              }],
+            };
+          });
+        })
+        .then(function (destinations) {
+          groupsCache[5] = ({
+            targetType: 'ept',
+            display: Authinfo.isEntitled(Config.entitlements.huron),
+            unassigned: destinations,
+          });
+          updateFilters();
         });
     }
 
@@ -84,6 +118,11 @@
           display: vm.showCucmClusters,
           unassigned: _.filter(response.unassigned, { targetType: 'ucm_mgmt' }),
         },
+        {
+          targetType: 'ept',
+          display: Authinfo.isEntitled(Config.entitlements.huron) && hasEnterprisePrivateTrunkingFeatureToggle,
+          unassigned: [], // Populated in a later step, by calling EnterprisePrivateTrunkService
+        },
       ];
     }
 
@@ -93,6 +132,13 @@
         filters.push({
           name: $translate.instant('hercules.fusion.list.expressway'),
           filterValue: 'c_mgmt',
+          count: 0,
+        });
+      }
+      if (hasEnterprisePrivateTrunkingFeatureToggle) {
+        filters.push({
+          name: $translate.instant('hercules.fusion.list.ept'),
+          filterValue: 'ept',
           count: 0,
         });
       }
@@ -195,6 +241,9 @@
           _.assign({}, vm.displayedGroups[4], {
             unassigned: $filter('filter')(vm.displayedGroups[4].unassigned, { name: searchStr }),
           }),
+          _.assign({}, vm.displayedGroups[5], {
+            unassigned: $filter('filter')(vm.displayedGroups[5].unassigned, { name: searchStr }),
+          }),
         ];
       }
     }
@@ -265,7 +314,7 @@
         controllerAs: 'vm',
         templateUrl: 'modules/hercules/fusion-pages/add-resource-group/add-resource-group.html',
       }).result
-      .then(loadResourceGroups);
+      .then(loadResources);
     }
 
     function setDefaultReleaseChannel() {
@@ -280,7 +329,7 @@
           },
         },
       }).result
-      .then(loadResourceGroups);
+      .then(loadResources);
     }
   }
 })();

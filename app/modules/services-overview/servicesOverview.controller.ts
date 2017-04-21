@@ -78,10 +78,13 @@ export class ServicesOverviewCtrl {
         this.forwardEvent('hybridDataSecurityFeatureToggleEventHandler', supports);
       });
 
-    this.ITProPackService.hasITProPackPurchased()
-      .then(result => {
-        this.forwardEvent('itProPackEventHandler', result);
-      });
+    let ItPropackPromises = {
+      hasITProPackEnabled: this.ITProPackService.hasITProPackEnabled(),
+      hasITProPackPurchased: this.ITProPackService.hasITProPackPurchased(),
+    };
+    this.$q.all(ItPropackPromises).then(result => {
+      this.forwardEvent('itProPackEventHandler', result);
+    });
 
     this.FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar)
       .then(supports => {

@@ -1,10 +1,10 @@
 (function () {
   'use strict';
 
-  angular
-    .module('core.trial')
-    .factory('TrialWebexService', TrialWebexService)
-    .factory('WebexOrderStatusResource', WebexOrderStatusResource);
+  module.exports = {
+    TrialWebexService: TrialWebexService,
+    WebexOrderStatusResource: WebexOrderStatusResource,
+  };
 
   /* @ngInject */
   function WebexOrderStatusResource($resource, Authinfo, UrlConfig) {

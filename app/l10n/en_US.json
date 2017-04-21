@@ -606,6 +606,7 @@
       "hoursUsed": "Time Used",
       "callCount": "Calls",
       "callHours": "Call Hours",
+      "peopleCount": "Participants",
       "deviceUsage": "Room Device Usage",
       "pairedCount": "# Paired",
       "last7Days": "Last 7 Days",
@@ -632,7 +633,11 @@
       }
     },
     "webexMetrics": {
-      "title": "WebEx Metrics"
+      "title": "WebEx Metrics",
+      "meetingUsage": "Meeting Usage",
+      "joinMeetingTime": "Join Meeting Time",
+      "webexReportInMashup": "CHP Reports",
+      "webexReportInQlikApp": "Qlik app"
     }
   },
   "sharedMeetingReports": {
@@ -2339,6 +2344,7 @@
       "list": {
         "title": "Clusters",
         "empty": "No clusters found.",
+        "empty-ept": "No SIP Destinations found.",
         "upgrade-schedule": "Upgrade Schedule",
         "upgrades-automatically": "Upgrades automatically",
         "clusters": "Clusters",
@@ -2353,6 +2359,7 @@
         "set-default-release-channel": "Set default release channel",
         "add-resource-group": "Create new resource group",
         "expressway": "Expressway",
+        "ept": "SIP Destinations",
         "mediafusion": "Media",
         "hds": "Data Security",
         "cucm": "CUCM",
@@ -2691,8 +2698,8 @@
       "noProceed-helptext": "(Software will automatically download)",
       "noInfo": "Install and configure the software on your server and return to Cisco Cloud Collaboration Management to register your Hybrid Data Security Node.",
       "noRetryInfo": "Software did not automatically download? <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/HybridDataSecurityProduction/hds.ova'>Try Again.</a>",
-      "noDesc1": "For details on installation and configuration, visit ",
-      "noDesc2": "Help Central.",
+      "noDesc1": "For important information and step-by-step installation instructions, see the ",
+      "noDesc2": "Hybrid Data Security Deployment Guide.",
       "yesInfo1": "Assign your Hybrid Data Security Node to a cluster and enter the ",
       "yesInfo2": "FQDN ",
       "yesInfo3": "or IP address.",
@@ -3253,6 +3260,7 @@
     "actionCallerInput": "Caller Input",
     "actionCallerInputHint": "Store information that the caller supplies.",
     "actionCallerInputHelp": "Store information that the caller supplies.",
+    "invalidCharacter": "Invalid character entered.",
     "callerInputCnvtDigit": "Convert digit input to text string value.",
     "callerInputMaxLenStr": "Max Length of String",
     "callerInputVariableTooLongMsg": "Maximum length of input variable is exceeded.",
@@ -4601,8 +4609,6 @@
     "manage": "Manage Device Settings",
     "title": "Device Settings",
     "description": "Updating settings will affect the entire analog telephone adapter. You may need to perform testing on the connected analog device after saving your settings.",
-    "impedance": "Impedance",
-    "impedanceDescr": "Adjust the frequency response level for sound quality.",
     "input": "Input Audio Level",
     "output": "Output Audio Level",
     "saved": "The settings are saved. You will have to reboot the device for the changes to take effect",
@@ -4999,7 +5005,7 @@
       "clientTypeHeading": "Client Type Distribution",
       "onPremisesHeading": "On-Premises",
       "cloudHeading": "Cloud",
-      "hybridHeading": "Hybrid",
+      "hybridHeading": "Cloud and On-Premises",
       "othersHeading": "Others",
       "clientType": {
         "android": "Android",
@@ -6494,7 +6500,8 @@
           "squared-fusion-media": "Media",
           "spark-hybrid-datasecurity": "Data Security",
           "contact-center-context": "Context",
-          "squared-fusion-khaos": "Management"
+          "squared-fusion-khaos": "Management",
+          "ept": "Private Trunk"
         }
       },
       "licenses": {
@@ -7083,7 +7090,8 @@
       },
       "hybridDataSecurity": {
         "title": "Hybrid Data Security",
-        "description": "Creates an on-premises security realm.",
+        "description": "Manage your encryption keys and other security services on-premises.",
+        "tooltip": "This premium feature is available with the IT Pro Pack. Contact your partner to learn more.",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
@@ -7157,7 +7165,8 @@
     },
     "showMore": "View all",
     "genericButtons": {
-      "setup": "Set up"
+      "setup": "Set up",
+      "learnMore": "Learn More"
     },
     "cardStatus": {
       "operational": "Operational",

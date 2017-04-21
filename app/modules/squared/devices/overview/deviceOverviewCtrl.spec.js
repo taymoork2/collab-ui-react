@@ -103,9 +103,9 @@ describe('Controller: DeviceOverviewCtrl', function () {
   describe('upgrade channel', function () {
     var stateParams;
 
-    describe('with feature toggle "cloudberryLyraConfig"', function () {
+    describe('with feature toggle "csdmPlaceUpgradeChannel"', function () {
       beforeEach(function () {
-        spyOn(FeatureToggleService, 'cloudberryLyraConfigGetStatus').and.returnValue($q.resolve(true));
+        spyOn(FeatureToggleService, 'csdmPlaceUpgradeChannelGetStatus').and.returnValue($q.resolve(true));
       });
 
       describe('with device online', function () {
@@ -173,9 +173,9 @@ describe('Controller: DeviceOverviewCtrl', function () {
       });
     });
 
-    describe('without feature toggle "cloudberryLyraConfig"', function () {
+    describe('without feature toggle "csdmPlaceUpgradeChannel"', function () {
       beforeEach(function () {
-        spyOn(FeatureToggleService, 'cloudberryLyraConfigGetStatus').and.returnValue($q.resolve(false));
+        spyOn(FeatureToggleService, 'csdmPlaceUpgradeChannelGetStatus').and.returnValue($q.resolve(false));
       });
 
       describe('with device online', function () {

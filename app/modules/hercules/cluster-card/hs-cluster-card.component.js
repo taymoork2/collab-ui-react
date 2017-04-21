@@ -83,6 +83,10 @@
           backState: 'cluster-list',
           clusterId: clusterId,
         });
+      } else if (serviceId === 'ept') {
+        $state.go('private-trunk-overview.list', {
+          clusterId: clusterId,
+        });
       }
     }
 

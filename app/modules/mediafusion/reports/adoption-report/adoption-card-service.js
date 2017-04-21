@@ -42,6 +42,7 @@
       _.each(data, function (val) {
         totalMeets += val.value;
       });
+      totalMeets = formatTotal(totalMeets);
       var chartData = CommonReportsGraphService.getBasePieChart(data);
       chartData.labelText = '[[name]]';
       chartData.balloonText = '[[name]]: [[percentage]]% ([[value]])';
