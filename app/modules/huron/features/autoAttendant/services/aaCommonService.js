@@ -20,6 +20,7 @@
     var callerInputToggle = false;
     var routeSIPAddressToggle = false;
     var dynAnnounceToggle = false;
+    var returnedCallerToggle = false;
     var uniqueId = 0;
 
     var invalidList = {};
@@ -38,10 +39,12 @@
       setCallerInputToggle: setCallerInputToggle,
       setRouteSIPAddressToggle: setRouteSIPAddressToggle,
       setDynAnnounceToggle: setDynAnnounceToggle,
+      setReturnedCallerToggle: setReturnedCallerToggle,
       isDynAnnounceToggle: isDynAnnounceToggle,
       isCallerInputToggle: isCallerInputToggle,
       isMediaUploadToggle: isMediaUploadToggle,
       isRouteSIPAddressToggle: isRouteSIPAddressToggle,
+      isReturnedCallerToggle: isReturnedCallerToggle,
       isValid: isValid,
       setIsValid: setIsValid,
       getInvalid: getInvalid,
@@ -149,6 +152,14 @@
 
     function setRouteSIPAddressToggle(status) {
       routeSIPAddressToggle = status;
+    }
+
+    function setReturnedCallerToggle(status) {
+      returnedCallerToggle = status;
+    }
+
+    function isReturnedCallerToggle() {
+      return returnedCallerToggle;
     }
 
     function isDynAnnounceToggle() {

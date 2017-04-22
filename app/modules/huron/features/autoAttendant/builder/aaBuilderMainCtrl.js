@@ -619,6 +619,8 @@
       AACommonService.setMediaUploadToggle(featureToggleDefault);
       AACommonService.setCallerInputToggle(featureToggleDefault);
       AACommonService.setRouteSIPAddressToggle(featureToggleDefault);
+      AACommonService.setDynAnnounceToggle(featureToggleDefault);
+      AACommonService.setReturnedCallerToggle(featureToggleDefault);
       return checkFeatureToggles();
     }
 
@@ -628,6 +630,7 @@
         hasMediaUpload: FeatureToggleService.supports(FeatureToggleService.features.huronAAMediaUpload),
         hasRouteRoom: FeatureToggleService.supports(FeatureToggleService.features.huronAARouteRoom),
         hasDynAnnounce: FeatureToggleService.supports(FeatureToggleService.features.huronAADynannounce),
+        hasReturnedCaller: FeatureToggleService.supports(FeatureToggleService.features.huronAAReturnCaller),
       });
     }
 
@@ -636,6 +639,7 @@
       AACommonService.setMediaUploadToggle(featureToggles.hasMediaUpload);
       AACommonService.setRouteSIPAddressToggle(featureToggles.hasRouteRoom);
       AACommonService.setDynAnnounceToggle(featureToggles.hasDynAnnounce);
+      AACommonService.setReturnedCallerToggle(featureToggles.hasReturnedCaller);
     }
 
     //load the feature toggle prior to creating the elements

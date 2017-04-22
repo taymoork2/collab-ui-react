@@ -12,8 +12,12 @@
     CONSTANTS.js = {};
     CONSTANTS.expressions.CallExpression = 'CallExpression';
     CONSTANTS.expressions.ThisExpression = 'ThisExpression';
+    CONSTANTS.expressions.BinaryExpression = 'BinaryExpression';
     CONSTANTS.js.func = 'var func = function ()';
     CONSTANTS.js.conditionalArr = 'checks';
+    CONSTANTS.cs = {};
+    CONSTANTS.cs.currentTime = 'CURRENT_TIME';
+    CONSTANTS.cs.lastCallTime = 'CS_LAST_CALL_TIME';
     var service = {
       splitOnCommas: splitOnCommas,
       addQuotesAroundCommadQuotedValues: addQuotesAroundCommadQuotedValues,
@@ -67,7 +71,7 @@
     //split string based on commas
     function splitOnCommas(string) {
       var separate = [];
-      if (string) {
+      if (string && string.split) {
         var lines = string.split(/\n/); //get each user applied carriage return
         _.each(lines, function (line) { //for each natural line
           var split = line.split(commaSplitterRegex); //apply the comma delimited regex
@@ -93,8 +97,21 @@
       return alter && insert && index ? alter.substr(0, index) + insert + alter.substr(index) : alter;
     }
 
+    /*
+     Here we want to generate a valid javascript function to send to the backend based on the elements and condition
+     if it's a callerReturned type function we are generating a type of function that checks for value < otherValue because we can't just check for exact match
+     like the other format. with the other format we are expecting to validate that one value in the array stored in the textarea matches the session variable in ces backend for if condition
+     if there is any problem with if condition or elements, we "fake" a function and generate something that will always be false.
+     see AAUtilityService.spec.js for function string examples
+    */
     function generateFunction(ifCondition, elementsToCheck) {
-      return ifCondition && elementsToCheck && elementsToCheck.length > 0 ? generateTrueFunction(ifCondition, elementsToCheck) : service.CONSTANTS.js.func + ' { return this[\'' + ifCondition + '\'] != this[\'' + ifCondition + '\']; };';
+      if (_.isEqual(ifCondition, 'callerReturned') && elementsToCheck) {
+        return generateCallerReturnedFunction(elementsToCheck);
+      } else if (ifCondition && elementsToCheck && elementsToCheck.length > 0) {
+        return generateTrueFunction(ifCondition, elementsToCheck);
+      } else {
+        return service.CONSTANTS.js.func + ' { return this[\'' + ifCondition + '\'] != this[\'' + ifCondition + '\']; };';
+      }
     }
 
     function pullJSPieces(expression) {
@@ -116,7 +133,8 @@
         var ast = ASTParser.parse(expression, []);
         if (ast) {
           pieces.ifCondition = grabThisCheckAgainstCondition(ast);
-          pieces.isConditions = grabCheckConditions(ast).join(', ');
+          var checkConditions = grabCheckConditions(ast);
+          pieces.isConditions = checkConditions.length >= 0 ? checkConditions.join(', ') : checkConditions;
         }
       } catch (exception) {
         return pieces;
@@ -144,20 +162,24 @@
       var conditions = [];
       ASTWalker.ancestor(abstractSyntaxTree, {
         Literal: function (node, ancestors) {
-          checkConditionsHandler(conditions, literalHandler(node, ancestors));
+          var nodeValue = literalHandler(node, ancestors);
+          if (nodeValue) {
+            if (_.isNumber(nodeValue)) {
+              conditions = nodeValue;
+              return conditions;
+            } else {
+              conditions.push(removeEscapeChars(addQuotesAroundCommadQuotedValues(nodeValue)));
+            }
+          }
         },
       });
       return conditions;
     }
 
-    function checkConditionsHandler(conditions, nodeLiteralValue) {
-      if (nodeLiteralValue) {
-        conditions.push(removeEscapeChars(addQuotesAroundCommadQuotedValues(nodeLiteralValue)));
-      }
-    }
-
     function literalHandler(node, ancestors) {
       if (ancestors.length > 2 && ancestors[ancestors.length - 2].type === service.CONSTANTS.expressions.CallExpression) {
+        return node.value;
+      } else if (ancestors.length > 2 && ancestors[ancestors.length - 2].type === service.CONSTANTS.expressions.BinaryExpression) {
         return node.value;
       }
     }
@@ -165,9 +187,22 @@
     function checkPropertyHandler(innerFunctionDetails) {
       var simpleLeftArgument = innerFunctionDetails[innerFunctionDetails.length - 1].argument.left;
       if (simpleLeftArgument) {
-        return getCheckAgainstProperty(simpleLeftArgument.arguments);
+        var checkAgainstProperty = getCallerReturned(simpleLeftArgument);
+        return _.isUndefined(checkAgainstProperty) ? getCheckAgainstProperty(simpleLeftArgument.arguments) : checkAgainstProperty;
       }
       return '';
+    }
+
+    function getCallerReturned(simpleLeftArgument) {
+      var callerReturned = undefined;
+      ASTWalker.simple(simpleLeftArgument, {
+        Literal: function (node) {
+          if (node.value === service.CONSTANTS.cs.lastCallTime) {
+            callerReturned = 'callerReturned';
+          }
+        },
+      });
+      return callerReturned;
     }
 
     function getCheckAgainstProperty(argumentLeft) {
@@ -180,7 +215,11 @@
     }
 
     function generateTrueFunction(condition, elements) {
-      return service.CONSTANTS.js.func + ' {' + generateList(['var ' + service.CONSTANTS.js.conditionalArr + ' = []; '], elements).join('') + 'return ' + service.CONSTANTS.js.conditionalArr + '.indexOf(this[\'' + condition + '\']) !== -1 };'; //cannot check > -1 -- invalid characters for request
+      return service.CONSTANTS.js.func + ' {' + generateList(['var ' + service.CONSTANTS.js.conditionalArr + ' = []; '], elements).join('') + 'return ' + service.CONSTANTS.js.conditionalArr + '.indexOf(this[\'' + condition + '\']) !== -1 };';
+    }
+
+    function generateCallerReturnedFunction(elements) {
+      return service.CONSTANTS.js.func + ' {' + 'return (parseInt(this[\'' + service.CONSTANTS.cs.currentTime + '\']) - parseInt(this[\'' + service.CONSTANTS.cs.lastCallTime + '\']) < ' + elements + '); };';//done in minutes
     }
 
     function generateList(arr, elements) {
