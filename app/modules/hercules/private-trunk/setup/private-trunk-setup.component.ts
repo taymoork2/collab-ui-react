@@ -30,7 +30,7 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
   public btnLabel1: string;
   public btnLabel2: string;
   public privateTrunkSetupForm: ng.IFormController;
-  public selectedVerifiledDomains: Array<string>;
+  public selectedVerifiedDomains: Array<string>;
   private errors: Array<any> = [];
 
   /* @ngInject */
@@ -91,7 +91,7 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
   public setSelectedDomain(isDomain: boolean, domainSelected: Array<IOption>): void {
     this.domainSelected = _.cloneDeep(domainSelected);
     this.isDomain = isDomain;
-    this.selectedVerifiledDomains = _.map(this.domainSelected, domainOption => domainOption.value);
+    this.selectedVerifiedDomains = _.map(this.domainSelected, domainOption => domainOption.value);
   }
 
   public setResources(privateTrunkResource: PrivateTrunkResource): void {
@@ -191,8 +191,8 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
         }));
     });
 
-    if (!_.isEmpty(this.selectedVerifiledDomains)) {
-      promises.push(this.PrivateTrunkService.setPrivateTrunk(this.selectedVerifiledDomains)
+    if (!_.isEmpty(this.selectedVerifiedDomains)) {
+      promises.push(this.PrivateTrunkService.setPrivateTrunk(this.selectedVerifiedDomains)
         .catch(error => {
           this.errors.push(this.Notification.processErrorResponse(error, 'servicesOverview.cards.privateTrunk.error.privateTrunkError'));
         }));

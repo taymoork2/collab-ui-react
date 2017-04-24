@@ -4095,7 +4095,7 @@
     "feature4": "Directory listing",
     "feature5": "E911",
     "feature6": "No set-up fees"
-  },  
+  },
   "partnerHomePage": {
     "trialsHeading": "Trials",
     "onboardingTitle": "Onboarding",
@@ -7178,8 +7178,11 @@
         "cancelBody": "Are you sure you want to cancel?",
         "setupCompete": "Set up complete",
         "great": "Great! You configured private trunking for your Cisco Spark organization.",
-        "callSelections": "Your call selections",
-        "interSite": "Inter-site dialling between your on premise endpoints and Spark call endpoints. PSTN in and outbound will be over this trunk, as you are using your on premise PSTN connectivity•"
+        "callSelection": "Your call selections",
+        "interSite": "Inter-site dialling between your on premise endpoints and Spark call endpoints.",
+        "pstn": "PSTN in and outbound will be over this trunk, as you are using your on premise PSTN connectivity•",
+        "pstnConnectivity": "PSTN connectivity",
+        "routing": "Routing from the cloud to your premise over the enterprise private trunk will happen via the verified domains you selected:"
       }
     },
     "showMore": "View all",
