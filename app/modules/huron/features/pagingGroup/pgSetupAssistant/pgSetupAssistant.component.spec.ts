@@ -351,8 +351,8 @@ describe('Component: pgSetupAssistant', () => {
       this.savePagingGroupDefer.resolve(_.cloneDeep(pgWithMembersAndInitiators));
       this.controller.name = pgWithMembersAndInitiators.name;
       let numberData = {
-        extension: undefined,
-        extensionUUID: pgWithMembersAndInitiators.extensionUUID,
+        extension: '3223',
+        extensionUUID: '8e33e338-0caa-4579-86df-38ef7590f432',
       };
       this.controller.number = numberData;
       this.controller.selectedMembers.push(memWithPic1);
