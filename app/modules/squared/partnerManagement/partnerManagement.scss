@@ -65,16 +65,32 @@
 
     .card-panel {
       padding-top: 17px;
+      padding-bottom: 32px;
     }
 
     .card-article {
+      min-height: 377px;
       padding-left: 100px;
+    }
+
+    .card-header {
+      padding-left: 0px;
+      padding-bottom: 32px;
+    }
+
+    .card-spinner {
+      padding-right: 100px;
+      padding-top: 40px;
     }
 
     .card-header {
       font-family: $brand-font-thin;
       font-size: 24px;
       color: $gray-dark-1;
+    }
+
+    .card-details {
+      overflow: hidden;
     }
   }
 
@@ -109,5 +125,13 @@
 
   .pm-btn-pad {
     padding-right: 15px;
+  }
+
+  .pm-spinner--large {
+    font-size: 4rem;
+  }
+
+  .pm-16 {
+    padding-bottom: 16px;
   }
 }

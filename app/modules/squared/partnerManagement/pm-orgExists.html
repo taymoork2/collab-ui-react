@@ -8,11 +8,25 @@
         <div class="columns medium-10 card-panel">
             <cs-card class="full">
                 <article class="card-article">
-                    <header>
+                    <header class="card-header">
                         <span class="card-header">{{vm.data.name}}</span>
                     </header>
                     <section>
-                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</p>
+                        <div ng-if="vm.showSpinner" class="text-center card-spinner">
+                          <span class="pm-spinner--large">
+                            <i class="icon icon-spinner"></i>
+                          </span>
+                        </div>
+                        <div ng-if="!vm.showSpinner" class="card-details">
+                            <div class="row body-small pm-16" ng-repeat="detail in vm.data.orgDetails">
+                                <div class="columns medium-4">
+                                    {{detail.label}}
+                                </div>
+                                <div class="columns medium-8">
+                                    {{detail.value}}
+                                </div>
+                            </div>
+                        </div>
                     </section>
                 </article>
             </cs-card>

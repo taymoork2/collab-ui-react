@@ -6904,6 +6904,8 @@
     "navHeaderTitle": "Cloud Collaboration Management",
     "back": "Back",
     "next": "Next",
+    "more": "more",
+    "less": "less",
     "startOver": "Start Over",
     "done": "Done",
     "step1": "Step 1 of 2",
@@ -6916,7 +6918,8 @@
       "searchFailed": "Search failed ({{msg}})",
       "createFailed": "Create partner org failed ({{msg}})",
       "nameInUse": "This name is already in use, try another",
-      "unexpectResp": "The server returned an unexpected response"
+      "unexpectResp": "The server returned an unexpected response",
+      "getOrgDetails": "Could not retrieve org details"
     },
     "search": {
       "heading": "Create new partner organization",
@@ -6949,6 +6952,15 @@
     "orgExists": {
       "heading": "This partner organization already exists",
       "desc": "The email, {{email}}, has been claimed by the following partner organization. This user cannot be added to another organization."
+    },
+    "orgDetails": {
+      "createDate": "Account Created:",
+      "activeSubs": "Number of active subscriptions:",
+      "managedCusts": "Number of managed customers:",
+      "domains": "Claimed Domains:",
+      "users": "Number of users at Partner:",
+      "admins": "Full Admins:",
+      "orgId": "Org ID:"
     }
   },
   "activation": {

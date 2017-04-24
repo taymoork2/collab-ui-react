@@ -3,18 +3,14 @@
 
   /* @ngInject */
   function PartnerManagementService($q, $http, UrlConfig) {
-    // exports
-    var service = {
-      search: search,
-      create: create,
-    };
+    var svc = {};
 
-    function search(email) {
+    svc.search = function (email) {
       return $http.get(UrlConfig.getAdminServiceUrl() +
         'organizations/search?emailAddress=' + encodeURIComponent(email));
-    }
+    };
 
-    function create(data) {
+    svc.create = function (data) {
       var postData = {
         'partnerOrgName': data.name,
         'partnerAdminEmail': data.email,
@@ -37,9 +33,14 @@
       });
 
       return deferred.promise;
-    }
+    };
 
-    return service;
+    svc.getOrgDetails = function (org) {
+      return $http.get(UrlConfig.getAdminServiceUrl() +
+        'organizations/' + org + '/onboardinfo');
+    };
+
+    return svc;
   }
 
   angular.module('Squared')

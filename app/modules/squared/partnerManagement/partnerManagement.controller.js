@@ -51,31 +51,35 @@ require('./partnerManagement.scss');
       vm.isLoading = true;
       svc.search(vm.data.email).then(function (resp) {
         vm.isLoading = false;
-        if (resp.status === 204) {
-          $state.go('partnerManagement.create');
-          return;
-        }
-        if (resp.status === 200) {
-          switch (resp.data.orgMatchBy) {
-            case "EMAIL_ADDRESS":
-              vm.data.name = resp.data.organizations[0].displayName;
-              $state.go('partnerManagement.orgExists');
-              loadOrgDetails(vm.data.name);
-              break;
+        switch (resp.status) {
+          case 200:
+            switch (resp.data.orgMatchBy) {
+              case "EMAIL_ADDRESS":
+                vm.data.orgMatched = resp.data.organizations[0];
+                vm.data.name = vm.data.orgMatched.displayName;
+                getOrgDetails(vm.data.orgMatched.orgId);
+                $state.go('partnerManagement.orgExists');
+                break;
 
-            case "DOMAIN":
-              $state.go('partnerManagement.searchResults');
-              break;
+              case "DOMAIN":
+                $state.go('partnerManagement.searchResults');
+                break;
 
-            case "NO_MATCH":
-              $state.go('partnerManagement.create');
+              case "NO_MATCH":
+                $state.go('partnerManagement.create');
+                break;
+
+              default:
+                  Notification.errorWithTrackingId(resp,
+                    'partnerManagement.error.searchFailed', 
+                    {msg: $translate.instant('partnerManagement.error.unexpectedResp')});
+              }
               break;
 
             default:
-                Notification.errorWithTrackingId(resp,
-                  'partnerManagement.error.searchFailed', 
-                  {msg: $translate.instant('partnerManagement.error.unexpectedResp')});
-          }
+              // Unexpected resp, but go on to create anyway
+              // (the create API will check email as well)
+              $state.go('partnerManagement.create');
         }
       }).catch(function (resp) {
         vm.isLoading = false;
@@ -112,8 +116,36 @@ require('./partnerManagement.scss');
       $state.go('partnerManagement.search');
     };
 
-    function loadOrgDetails(name) {
-      vm.isLoading = true;
+    function pushDetail(label, value, defValue) {
+      value = value || defValue;
+      if ( Array.isArray(value) ) {
+        value = value.join(', ');
+      }
+
+      vm.data.orgDetails.push({
+        label: $translate.instant('partnerManagement.orgDetails.' + label),
+        value: value,
+      });
+    }
+
+    function getOrgDetails(org) {
+      // this is done while browser is loading page...
+      vm.showSpinner = true;
+      svc.getOrgDetails(org).then(function (resp) {
+        vm.data.orgRaw = resp.data;
+        vm.data.orgDetails = [];
+        pushDetail('createDate', new Date(vm.data.orgRaw.createdDate).toLocaleString());
+        pushDetail('activeSubs', vm.data.orgRaw.numOfSubscriptions, 0);
+        pushDetail('managedCusts', vm.data.orgRaw.numOfManagedOrg, 0);
+        pushDetail('domains', vm.data.orgRaw.claimedDomains, '');
+        pushDetail('users', vm.data.orgRaw.numOfUsers, 0);
+        pushDetail('admins', _.map(vm.data.orgRaw.fullAdmins, 'displayName'), '');
+        pushDetail('orgId', org);
+        vm.showSpinner = false;
+      }).catch(function (resp) {
+        Notification.errorWithTrackingId(resp,
+          'partnerManagement.error.getOrgDetails', {msg: resp.data.message});
+      });
       vm.isLoading = false;
     }
   }
