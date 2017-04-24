@@ -1,4 +1,4 @@
-<cs-sp-container>
+<cs-sp-container class="gemini-side-panel">
   <div ng-if="$ctrl.showLoading" class="grid-refresh">
     <i class="icon icon-spinner icon-3x"></i>
   </div>
@@ -13,9 +13,7 @@
         <li class="feature" ng-repeat="val in $ctrl.sites">
           <span class="feature-name"><a href="{{val.globalSite}}" target="_blank">{{val.siteUrl}}</a></span>
           <span ng-if="!$ctrl.showLoading" class="action-menu dropdown pull-right action-movesite" cs-dropdown>
-            <button class="actions-button btn--none dropdown-toggle small" cs-dropdown-toggle>
-              Move Site
-            </button>
+            <a class="dropdown-toggle small" cs-dropdown-toggle translate="gemini.cbgs.moveSite"></a>
             <ul class="dropdown-menu dropdown-primary actions-services" cs-dropdown-menu>
               <li ng-repeat="td in $ctrl.tds" ng-click="$ctrl.onClick(val, { targetCcaDomainId: td.ccaDomainId, targetDomainName: td.telephonyDomainName })">
                 <small class="ellipsis">{{td.telephonyDomainName}}</small>

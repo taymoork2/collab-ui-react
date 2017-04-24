@@ -126,10 +126,6 @@ var Navigation = function () {
   };
 
   this.clickAutoAttendant = function () {
-    this.clickServicesTab();
-    utils.click(this.callSettings);
-    this.expectCurrentUrl('/hurondetails/settings');
-    utils.click(this.autoAttendantPage);
     this.expectCurrentUrl('/features');
     utils.expectIsDisplayed(autoattendant.newFeatureButton);
   };

@@ -56,7 +56,7 @@ var MediaServicePage = function () {
   this.deregisterMoveNodeLink = element(by.css('a[ng-click="sp.close(); hostDetails.showDeregisterHostDialog();"]'));
   this.moveNodeModalHeader = element(by.cssContainingText('.modal-title', 'Move Node'));
   this.deregisterMoveNodeHeader = element(by.cssContainingText('.modal-title', 'Deregister Node'));
-  this.moveNodeModalCancelButton = element(by.css('button[ng-click="reassignClust.close()"]'));
+  this.moveNodeModalCancelButton = element(by.css('button[ng-click="reassignCluster.close()"]'));
   this.deregisterMoveNodeCancelButton = element(by.css('button[ng-click="hostDeregister.close()"]'));
   this.clusterSettingsLink = element(by.css('a[ng-click="groupDetails.openSettings(groupDetails.clusterDetail.type, groupDetails.clusterDetail.id)"]'));
   this.clusterSettingsPageHeader = element(by.css('.page-header__title'));

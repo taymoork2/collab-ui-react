@@ -73,7 +73,7 @@
        Here we will simply return a list of strings that corresponds to the client versions.
     */
     this.getWbxClientVersions = function () {
-      //http://atlas-integration.wbx2.com/admin/api/v1/partnertemplate/clientversions
+      //http://atlas-intb.ciscospark.com/admin/api/v1/partnertemplate/clientversions
       // var url = this.getTotalUrl('clientVersions');
       // return $http.get(url).then(function (response) {
       //   return response.data.clientVersions;

@@ -32,15 +32,15 @@ describe('WebexClientVersion Test', function () {
   });
 
   it("shoud get admin service url", function () {
-    expect(UrlConfig.getAdminServiceUrl()).toBe('https://atlas-integration.wbx2.com/admin/api/v1/');
+    expect(UrlConfig.getAdminServiceUrl()).toBe('https://atlas-intb.ciscospark.com/admin/api/v1/');
   });
 
   it("shoud get admin service url", function () {
-    expect(WebexClientVersion.getAdminServiceUrl()).toBe('https://atlas-integration.wbx2.com/admin/api/v1/');
+    expect(WebexClientVersion.getAdminServiceUrl()).toBe('https://atlas-intb.ciscospark.com/admin/api/v1/');
   });
 
   it("shoud get client versions url when getTotalUrl(clientVersions) called", function () {
-    expect(WebexClientVersion.getTotalUrl('clientVersions')).toBe('https://atlas-integration.wbx2.com/admin/api/v1/clientversions');
+    expect(WebexClientVersion.getTotalUrl('clientVersions')).toBe('https://atlas-intb.ciscospark.com/admin/api/v1/clientversions');
   });
 
   it('should get client versions', function () {

@@ -5,8 +5,15 @@
     .module('uc.autoattendant')
     .factory('AAUtilityService', AAUtilityService);
 
-  function AAUtilityService() {
+  function AAUtilityService(ASTParser, ASTWalker) {
     //methods and exposable vars
+    var CONSTANTS = {};
+    CONSTANTS.expressions = {};
+    CONSTANTS.js = {};
+    CONSTANTS.expressions.CallExpression = 'CallExpression';
+    CONSTANTS.expressions.ThisExpression = 'ThisExpression';
+    CONSTANTS.js.func = 'var func = function ()';
+    CONSTANTS.js.conditionalArr = 'checks';
     var service = {
       splitOnCommas: splitOnCommas,
       addQuotesAroundCommadQuotedValues: addQuotesAroundCommadQuotedValues,
@@ -14,7 +21,7 @@
       generateFunction: generateFunction,
       pullJSPieces: pullJSPieces,
       removeEscapeChars: removeEscapeChars,
-      JS_CONDITIONAL_ARR: 'checks',
+      CONSTANTS: CONSTANTS,
     };
     //private vars
     var commaSplitter = ','//match on comma
@@ -29,10 +36,6 @@
                        + '$)'//end string and close positive lookahead
                        ;
     var commaSplitterRegex = new RegExp(commaSplitter);//regex --> new RegRxp(/,(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)/)
-    var conditionGrabber = 'this[[][\']([^\']+)';
-    var conditionGrabberRegex = new RegExp(conditionGrabber);
-    var conditionIsTokensGrabber = service.JS_CONDITIONAL_ARR + '[.]push[(][\']([^)]+)[)]';
-    var conditionIsTokensGrabberRegex = new RegExp(conditionIsTokensGrabber, 'g');
 
     return service;
 
@@ -68,7 +71,7 @@
         var lines = string.split(/\n/); //get each user applied carriage return
         _.each(lines, function (line) { //for each natural line
           var split = line.split(commaSplitterRegex); //apply the comma delimited regex
-          _.each(split, function (piece) { //
+          _.each(split, function (piece) {
             //compact
             if (piece) {
               separate.push(cleanOnQuotes(piece));
@@ -91,14 +94,16 @@
     }
 
     function generateFunction(ifCondition, elementsToCheck) {
-      return ifCondition && elementsToCheck && elementsToCheck.length > 0 ? generateTrueFunction(ifCondition, elementsToCheck) : 'var func = function () { return this[\'' + ifCondition + '\'] != this[\'' + ifCondition + '\']; };';
+      return ifCondition && elementsToCheck && elementsToCheck.length > 0 ? generateTrueFunction(ifCondition, elementsToCheck) : service.CONSTANTS.js.func + ' { return this[\'' + ifCondition + '\'] != this[\'' + ifCondition + '\']; };';
     }
 
     function pullJSPieces(expression) {
-      var pieces = [];
+      var pieces = {
+        ifCondition: '',
+        isConditions: '',
+      };
       if (expression) {
-        pieces[0] = grabIfCondition(expression);
-        pieces[1] = grabIsConditions(expression);
+        return parseLeftRightExpression(pieces, expression);
       }
       return pieces;
     }
@@ -106,37 +111,80 @@
     /***********/
     //private helper methods
 
-    function grabIsConditions(expression) {
-      var isConditionString = '';
-      var match;
-      do {
-        match = conditionIsTokensGrabberRegex.exec(expression);
-        isConditionString = generateComponents(isConditionString, match);
-      } while (match);
-      return isConditionString;
-    }
-
-    function generateComponents(string, match) {
-      if (match) {
-        if (string.length != 0) {
-          string = string.concat(',').concat(' ');
+    function parseLeftRightExpression(pieces, expression) {
+      try {
+        var ast = ASTParser.parse(expression, []);
+        if (ast) {
+          pieces.ifCondition = grabThisCheckAgainstCondition(ast);
+          pieces.isConditions = grabCheckConditions(ast).join(', ');
         }
-        string = string.concat(removeEscapeChars(addQuotesAroundCommadQuotedValues(match[1].substr(0, match[1].length - 1))));
+      } catch (exception) {
+        return pieces;
       }
-      return string;
+      return pieces;
     }
 
-    function grabIfCondition(expression) {
-      var condition = conditionGrabberRegex.exec(expression);
-      return condition && condition.length === 2 ? condition[1] : '';
+    function grabThisCheckAgainstCondition(abstractSyntaxTree) {
+      //innerfunction details guaranteed currently with var func = { ... };
+      var body = abstractSyntaxTree.body;
+      if (body) {
+        var declarations = body[0].declarations;
+        if (declarations) {
+          var init = declarations[0].init;
+          if (init) {
+            var innerFunctionDetails = init.body.body;
+            return checkPropertyHandler(innerFunctionDetails);
+          }
+        }
+      }
+      return '';
+    }
+
+    function grabCheckConditions(abstractSyntaxTree) {
+      var conditions = [];
+      ASTWalker.ancestor(abstractSyntaxTree, {
+        Literal: function (node, ancestors) {
+          checkConditionsHandler(conditions, literalHandler(node, ancestors));
+        },
+      });
+      return conditions;
+    }
+
+    function checkConditionsHandler(conditions, nodeLiteralValue) {
+      if (nodeLiteralValue) {
+        conditions.push(removeEscapeChars(addQuotesAroundCommadQuotedValues(nodeLiteralValue)));
+      }
+    }
+
+    function literalHandler(node, ancestors) {
+      if (ancestors.length > 2 && ancestors[ancestors.length - 2].type === service.CONSTANTS.expressions.CallExpression) {
+        return node.value;
+      }
+    }
+
+    function checkPropertyHandler(innerFunctionDetails) {
+      var simpleLeftArgument = innerFunctionDetails[innerFunctionDetails.length - 1].argument.left;
+      if (simpleLeftArgument) {
+        return getCheckAgainstProperty(simpleLeftArgument.arguments);
+      }
+      return '';
+    }
+
+    function getCheckAgainstProperty(argumentLeft) {
+      if (argumentLeft && argumentLeft.length > 0) {
+        if (argumentLeft[0].object.type === service.CONSTANTS.expressions.ThisExpression) {
+          return argumentLeft[0].property.value;
+        }
+      }
+      return '';
     }
 
     function generateTrueFunction(condition, elements) {
-      return 'var func = function () {' + generateList(['var ' + service.JS_CONDITIONAL_ARR + ' = []; '], elements).join('') + 'return ' + service.JS_CONDITIONAL_ARR + '.indexOf(this[\'' + condition + '\']) !== -1 };'; //cannot check > -1 -- invalid characters for request
+      return service.CONSTANTS.js.func + ' {' + generateList(['var ' + service.CONSTANTS.js.conditionalArr + ' = []; '], elements).join('') + 'return ' + service.CONSTANTS.js.conditionalArr + '.indexOf(this[\'' + condition + '\']) !== -1 };'; //cannot check > -1 -- invalid characters for request
     }
 
     function generateList(arr, elements) {
-      _.each(elements, function (element) { arr.push(service.JS_CONDITIONAL_ARR + '.push(\'' + element + '\'); '); });
+      _.forEach(elements, function (element) { arr.push(service.CONSTANTS.js.conditionalArr + '.push(\'' + element + '\'); '); });
       return arr;
     }
 

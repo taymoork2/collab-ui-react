@@ -4,7 +4,7 @@ require('./_login.scss');
   'use strict';
 
   module.exports = angular.module('Login', [
-    'pascalprecht.translate',
+    require('angular-translate'),
     require('modules/core/auth/auth'),
     require('modules/core/auth/token.service'),
     require('modules/core/scripts/services/authinfo'),

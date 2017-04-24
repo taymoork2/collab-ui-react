@@ -10,6 +10,7 @@ export class SipDomainSettingController {
   public isDisabled: boolean = false;
   public isButtonDisabled: boolean = false;
   public isLoading: boolean = false;
+  public isSubdomainLoading = false;
   public isConfirmed: boolean = false;
   public errorMsg: string;
 
@@ -172,7 +173,6 @@ export class SipDomainSettingController {
           this.isError = true;
           this.isButtonDisabled = false;
         }
-        this.isLoading = false;
       })
       .catch((response) => {
         if (response.status === 400) {
@@ -181,8 +181,10 @@ export class SipDomainSettingController {
         } else {
           this.Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
         }
-        this.isLoading = false;
         this.isButtonDisabled = false;
+      })
+      .finally(() => {
+        this.isLoading = false;
       });
   }
 
@@ -245,6 +247,7 @@ export class SipDomainSettingController {
   }
 
   public verifyAvailabilityAndValidity(): void {
+    this.isSubdomainLoading = true;
     this.SparkDomainManagementService.checkDomainAvailability(this.inputValue)
       .then((response) => {
         this.resetErrors();
@@ -265,6 +268,9 @@ export class SipDomainSettingController {
         } else {
           this.errorResponse(response);
         }
+      })
+      .finally(() => {
+        this.isSubdomainLoading = false;
       });
   }
 
@@ -295,15 +301,9 @@ export class SipDomainSettingController {
   }
 
   private updateSubdomain(): void {
-    let vm = this;
     this.saving = true;
     this.$modal.open({
       templateUrl: 'modules/core/settings/sipDomain/updateSipDomainWarning.tpl.html',
-      controller: function () {
-        this.isCsc = vm.isCsc;
-        this.openDocumentation = vm.openSipHelpWiki;
-      },
-      controllerAs: 'subdomain',
       type: 'dialog',
     }).result.then((): void => {
       this.saveSubdomain();
@@ -314,17 +314,9 @@ export class SipDomainSettingController {
   }
 
   private cscWarning(): void {
-    let vm = this;
-    this.saving = true;
     this.$modal.open({
       templateUrl: 'modules/core/settings/sipDomain/editCSCWarning.tpl.html',
-      controller: function () {
-        this.openDocumentation = vm.openSipHelpWiki;
-      },
-      controllerAs: 'subdomain',
       type: 'dialog',
-    }).result.then((): void => {
-      this.toggleSipForm();
     });
   }
 

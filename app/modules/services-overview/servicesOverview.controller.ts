@@ -11,7 +11,9 @@ import { ServicesOverviewHybridMediaCard } from './hybridMediaCard';
 import { ServicesOverviewHybridDataSecurityCard } from './hybridDataSecurityCard';
 import { ServicesOverviewHybridContextCard } from './hybridContextCard';
 import { ServicesOverviewPrivateTrunkCard } from './privateTrunkCard';
-import { PrivateTrunkPrereqService } from 'modules/hercules/privateTrunk/privateTrunkPrereq';
+import { PrivateTrunkPrereqService } from 'modules/hercules/private-trunk/prereq';
+import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
+import { ITProPackService }  from 'modules/core/itProPack/itProPack.service';
 
 export class ServicesOverviewCtrl {
 
@@ -25,12 +27,13 @@ export class ServicesOverviewCtrl {
     private Analytics,
     private Auth,
     private Authinfo,
+    private CloudConnectorService,
     private Config,
     private FeatureToggleService,
     private FusionClusterService,
-    private FusionClusterStatesService,
-    private CloudConnectorService,
+    private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
     private PrivateTrunkPrereqService: PrivateTrunkPrereqService,
+    private ITProPackService: ITProPackService,
   ) {
     this.cards = [
       new ServicesOverviewMessageCard(this.Authinfo),
@@ -38,13 +41,13 @@ export class ServicesOverviewCtrl {
       new ServicesOverviewCallCard(this.Authinfo, this.Config),
       new ServicesOverviewCareCard(this.Authinfo),
       new ServicesOverviewHybridServicesCard(this.Authinfo),
-      new ServicesOverviewHybridAndGoogleCalendarCard(this.$state, this.$q, this.$modal, this.Authinfo, this.CloudConnectorService, this.FusionClusterStatesService),
-      new ServicesOverviewHybridCalendarCard(this.Authinfo, this.FusionClusterStatesService),
-      new ServicesOverviewHybridCallCard(this.Authinfo, this.FusionClusterStatesService),
-      new ServicesOverviewHybridMediaCard(this.Authinfo, this.Config, this.FusionClusterStatesService),
-      new ServicesOverviewHybridDataSecurityCard(this.Authinfo, this.Config, this.FusionClusterStatesService),
-      new ServicesOverviewHybridContextCard(this.FusionClusterStatesService),
-      new ServicesOverviewPrivateTrunkCard( this.PrivateTrunkPrereqService, this.FusionClusterStatesService),
+      new ServicesOverviewHybridAndGoogleCalendarCard(this.$state, this.$q, this.$modal, this.Authinfo, this.CloudConnectorService, this.HybridServicesClusterStatesService),
+      new ServicesOverviewHybridCalendarCard(this.Authinfo, this.HybridServicesClusterStatesService),
+      new ServicesOverviewHybridCallCard(this.Authinfo, this.HybridServicesClusterStatesService),
+      new ServicesOverviewHybridMediaCard(this.Authinfo, this.Config, this.HybridServicesClusterStatesService),
+      new ServicesOverviewHybridDataSecurityCard(this.Authinfo, this.Config, this.HybridServicesClusterStatesService),
+      new ServicesOverviewHybridContextCard(this.HybridServicesClusterStatesService),
+      new ServicesOverviewPrivateTrunkCard( this.PrivateTrunkPrereqService, this.HybridServicesClusterStatesService),
     ];
 
     this.loadWebexSiteList();
@@ -69,6 +72,19 @@ export class ServicesOverviewCtrl {
       .then(supports => {
         this.forwardEvent('csdmPstnFeatureToggleEventHandler', supports);
       });
+
+    this.FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity)
+      .then(supports => {
+        this.forwardEvent('hybridDataSecurityFeatureToggleEventHandler', supports);
+      });
+
+    let ItPropackPromises = {
+      hasITProPackEnabled: this.ITProPackService.hasITProPackEnabled(),
+      hasITProPackPurchased: this.ITProPackService.hasITProPackPurchased(),
+    };
+    this.$q.all(ItPropackPromises).then(result => {
+      this.forwardEvent('itProPackEventHandler', result);
+    });
 
     this.FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar)
       .then(supports => {

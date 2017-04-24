@@ -18,12 +18,14 @@
     vm.resourceGroup = {
       title: 'hercules.resourceGroups.resourceGroupHeading',
     };
+    vm.userDocumentation = 'https://help.webex.com/docs/DOC-16382';
     vm.allowRemove = false;
+    vm.showResetSection = false;
     vm.setGroupName = setGroupName;
     vm.openDeleteGroupModal = openDeleteGroupModal;
     vm.openAssignClustersModal = openAssignClustersModal;
     vm.handleKeypress = handleKeypress;
-    vm.showResetSection = false;
+    vm.manageUsers = manageUsers;
 
     loadResourceGroup($stateParams.id);
     determineIfRemoveAllowed();
@@ -112,6 +114,12 @@
       if (event.keyCode === 13) {
         setGroupName(vm.newGroupName);
       }
+    }
+
+    function manageUsers() {
+      $state.go('users.list').then(function () {
+        $state.go('users.manage.picker');
+      });
     }
   }
 })();

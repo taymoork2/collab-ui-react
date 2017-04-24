@@ -1,3 +1,6 @@
+import { FmsOrgSettings } from 'modules/hercules/services/fms-org-settings.service';
+import { HybridServicesExtrasService } from 'modules/hercules/services/hybrid-services-extras.service';
+
 export class CucmClusterNameController {
 
   public clusterName: string = '';
@@ -11,7 +14,9 @@ export class CucmClusterNameController {
   constructor(
     private $translate: ng.translate.ITranslateService,
     private $stateParams: ng.ui.IStateParamsService,
+    private FmsOrgSettings: FmsOrgSettings,
     private FusionClusterService,
+    private HybridServicesExtrasService: HybridServicesExtrasService,
     private Notification,
   ) {
     this.validationMessages = {
@@ -20,7 +25,7 @@ export class CucmClusterNameController {
         min: this.minLength,
       }),
     };
-    FusionClusterService.getOrgSettings()
+    this.FmsOrgSettings.get()
       .then((settings) => {
         this.releaseChannel = settings.expresswayClusterReleaseChannel;
       });
@@ -59,7 +64,7 @@ export class CucmClusterNameController {
       })
       .then(() => {
         let hostname = this.$stateParams.wizard.state().data.cucm.hostname;
-        return this.FusionClusterService.addPreregisteredClusterToAllowList(hostname, 3600, this.clusterId);
+        return this.HybridServicesExtrasService.addPreregisteredClusterToAllowList(hostname, 3600, this.clusterId);
       })
       .catch(() => {
         throw this.$translate.instant('hercules.addResourceDialog.cannotCreateCluster');

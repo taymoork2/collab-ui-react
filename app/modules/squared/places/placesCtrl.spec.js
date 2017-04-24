@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: PlacesCtrl', function () {
-  var $scope, $controller, $state, $timeout, $q, controller;
+  var $scope, $controller, $state, $timeout, $q, controller, $httpBackend;
   var CsdmDataModelService, Userservice, Authinfo, FeatureToggleService, ServiceDescriptor;
   var accounts = getJSONFixture('squared/json/accounts.json');
 
@@ -11,7 +11,7 @@ describe('Controller: PlacesCtrl', function () {
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
-  function dependencies($rootScope, _$controller_, _$state_, _$timeout_, _$q_, _CsdmDataModelService_, _Userservice_, _Authinfo_, _FeatureToggleService_, _ServiceDescriptor_) {
+  function dependencies($rootScope, _$controller_, _$httpBackend_, _$state_, _$timeout_, _$q_, _CsdmDataModelService_, _Userservice_, _Authinfo_, _FeatureToggleService_, _ServiceDescriptor_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $state = _$state_;
@@ -22,6 +22,7 @@ describe('Controller: PlacesCtrl', function () {
     Authinfo = _Authinfo_;
     FeatureToggleService = _FeatureToggleService_;
     ServiceDescriptor = _ServiceDescriptor_;
+    $httpBackend = _$httpBackend_;
   }
 
   function initSpies() {
@@ -29,7 +30,6 @@ describe('Controller: PlacesCtrl', function () {
     spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.resolve());
     spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'csdmPlaceCalendarGetStatus').and.returnValue($q.resolve(true));
-    spyOn(FeatureToggleService, 'atlasF237ResourceGroupGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'atlasHerculesGoogleCalendarGetStatus').and.returnValue($q.resolve(true));
     spyOn(ServiceDescriptor, 'getServices').and.returnValue($q.resolve([]));
     spyOn(CsdmDataModelService, 'subscribeToChanges').and.returnValue(true);
@@ -49,6 +49,9 @@ describe('Controller: PlacesCtrl', function () {
 
     beforeEach(function () {
       spyOn(CsdmDataModelService, 'isBigOrg').and.returnValue($q.resolve(true));
+
+      $httpBackend.whenGET('https://csdm-intb.ciscospark.com/csdm/api/v1/organization/null/places/?type=all&query=xy')
+        .respond($q.reject({ status: 502 }));
     });
 
     beforeEach(initController);
@@ -57,10 +60,11 @@ describe('Controller: PlacesCtrl', function () {
 
       it('should init controller', function () {
         expect(controller).toBeDefined();
+        expect(controller.filteredView).toBeDefined();
       });
 
       it('should be in searching org state', function () {
-        expect(controller.listState).toEqual(controller.listStates.searching);
+        expect(controller.filteredView.listState).toEqual(controller.filteredView.searching);
       });
     });
 
@@ -73,7 +77,7 @@ describe('Controller: PlacesCtrl', function () {
       describe('listState', function () {
 
         it('should be in bigorg state', function () {
-          expect(controller.listState).toEqual(controller.listStates.bigorg);
+          expect(controller.filteredView.listState).toEqual(controller.filteredView.bigorg);
         });
 
         beforeEach(function () {
@@ -84,9 +88,10 @@ describe('Controller: PlacesCtrl', function () {
         describe('searched with short string', function () {
 
           it('should not search', function () {
-            controller.setCurrentSearch("a");
+            expect(controller.filteredView.listState).toEqual(controller.filteredView.bigorg);
+            controller.filteredView.setCurrentSearch("a");
             $timeout.flush(10000);
-            expect(controller.listState).toEqual(controller.listStates.bigorg);
+            expect(controller.filteredView.listState).toEqual(controller.filteredView.bigorg);
           });
         });
 
@@ -96,7 +101,7 @@ describe('Controller: PlacesCtrl', function () {
           var searchPart2 = accounts[Object.keys(accounts)[1]].displayName.substr(3, 2);
 
           beforeEach(function () {
-            controller.setCurrentSearch(searchPart1);
+            controller.filteredView.setCurrentSearch(searchPart1);
           });
 
           describe('searching', function () {
@@ -110,7 +115,7 @@ describe('Controller: PlacesCtrl', function () {
             it('should search', function () {
 
               $timeout.flush(10000);
-              expect(controller.listState).toEqual(controller.listStates.searching);
+              expect(controller.filteredView.listState).toEqual(controller.filteredView.searching);
             });
           });
 
@@ -125,25 +130,25 @@ describe('Controller: PlacesCtrl', function () {
             describe('listState', function () {
 
               it('should be in showresult state', function () {
-                expect(controller.listState).toEqual(controller.listStates.showresult);
+                expect(controller.filteredView.listState).toEqual(controller.filteredView.showresult);
               });
 
               it('should be in emptyresult state if next search is client-side with no matches', function () {
-                controller.setCurrentSearch(searchPart1 + "sdfdsfds");
+                controller.filteredView.setCurrentSearch(searchPart1 + "sdfdsfds");
                 $timeout.flush(10000);
-                expect(controller.listState).toEqual(controller.listStates.emptyresult);
+                expect(controller.filteredView.listState).toEqual(controller.filteredView.emptyresult);
               });
 
               it('should be in showresult state if next search is client-side with matches', function () {
-                controller.setCurrentSearch(searchPart1 + searchPart2);
+                controller.filteredView.setCurrentSearch(searchPart1 + searchPart2);
                 $timeout.flush(10000);
-                expect(controller.listState).toEqual(controller.listStates.showresult);
+                expect(controller.filteredView.listState).toEqual(controller.filteredView.showresult);
               });
 
               it('should be in bigorg state if next search is too narrow', function () {
-                controller.setCurrentSearch('a');
+                controller.filteredView.setCurrentSearch('a');
                 $timeout.flush(10000);
-                expect(controller.listState).toEqual(controller.listStates.bigorg);
+                expect(controller.filteredView.listState).toEqual(controller.filteredView.bigorg);
               });
             });
           });
@@ -157,7 +162,7 @@ describe('Controller: PlacesCtrl', function () {
 
             describe('listState', function () {
               it('should be in emptyresult state', function () {
-                expect(controller.listState).toEqual(controller.listStates.emptyresult);
+                expect(controller.filteredView.listState).toEqual(controller.filteredView.emptyresult);
               });
             });
           });
@@ -169,6 +174,8 @@ describe('Controller: PlacesCtrl', function () {
   describe('not bigOrg', function () {
     beforeEach(function () {
       spyOn(CsdmDataModelService, 'isBigOrg').and.returnValue($q.resolve(false));
+      $httpBackend.whenGET('https://csdm-intb.ciscospark.com/csdm/api/v1/organization/null/places/?type=all&query=xy')
+        .respond($q.resolve({}));
     });
 
     beforeEach(initController);
@@ -177,10 +184,11 @@ describe('Controller: PlacesCtrl', function () {
 
       it('should init controller', function () {
         expect(controller).toBeDefined();
+        expect(controller.filteredView).toBeDefined();
       });
 
       it('should be in searching state', function () {
-        expect(controller.listState).toEqual(controller.listStates.searching);
+        expect(controller.filteredView.listState).toEqual(controller.filteredView.searching);
       });
     });
 
@@ -195,19 +203,19 @@ describe('Controller: PlacesCtrl', function () {
       describe('listState', function () {
 
         it('should be in showresult state', function () {
-          expect(controller.listState).toEqual(controller.listStates.showresult);
+          expect(controller.filteredView.listState).toEqual(controller.filteredView.showresult);
         });
 
         it('should be in emptyresult state if search with no matches', function () {
-          controller.setCurrentSearch("aasdfefsdfdsf");
+          controller.filteredView.setCurrentSearch("aasdfefsdfdsf");
           $timeout.flush(10000);
-          expect(controller.listState).toEqual(controller.listStates.emptyresult);
+          expect(controller.filteredView.listState).toEqual(controller.filteredView.emptyresult);
         });
 
         it('should be in showresult state if search with matches', function () {
-          controller.setCurrentSearch(accounts[Object.keys(accounts)[1]].displayName);
+          controller.filteredView.setCurrentSearch(accounts[Object.keys(accounts)[1]].displayName);
           $timeout.flush(10000);
-          expect(controller.listState).toEqual(controller.listStates.showresult);
+          expect(controller.filteredView.listState).toEqual(controller.filteredView.showresult);
         });
       });
     });
@@ -221,7 +229,7 @@ describe('Controller: PlacesCtrl', function () {
 
       describe('listState', function () {
         it('should be in noplaces state', function () {
-          expect(controller.listState).toEqual(controller.listStates.noplaces);
+          expect(controller.filteredView.listState).toEqual(controller.filteredView.noplaces);
         });
       });
 

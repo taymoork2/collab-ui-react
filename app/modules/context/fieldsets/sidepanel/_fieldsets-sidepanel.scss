@@ -33,4 +33,8 @@
     white-space: nowrap;
     overflow: hidden;
   }
+
+  textarea {
+    resize: none;
+  }
 }

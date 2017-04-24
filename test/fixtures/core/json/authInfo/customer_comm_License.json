@@ -1,0 +1,20 @@
+{
+      "customers": [{
+        "customerId": "1",
+        "customerName": "Atlas_Test_1",
+        "customerOrgId": "12367893-9d82-4fdf-ad31-bb862133f078",
+        "customerAdminEmail": "test@test.com",
+        "licenses": [{
+          "licenseId": "CO_1",
+          "offerName": "CO",
+          "licenseType": "COMMUNICATION",
+          "features": ["ciscouc"],
+          "volume": 100,
+          "isTrial": true,
+          "trialId": "1",
+          "status": "ACTIVE",
+          "partnerEmail": "admin@testpartner.com",
+          "partnerOrgId": "345befa3-9d82-4fdf-ad31-bb862133f078"
+        }]
+      }]
+}

@@ -1,9 +1,7 @@
 (function () {
   'use strict';
 
-  angular
-    .module('core.trial')
-    .factory('TrialTimeZoneService', TrialTimeZoneService);
+  module.exports = TrialTimeZoneService;
 
   function TrialTimeZoneService() {
     var service = {
@@ -451,7 +449,7 @@
         "DCName": "IAD",
         "DCID": "VA",
       }, {
-        "label": "(GMT  -03:00) Nuuk",
+        "label": "(GMT -03:00) Nuuk",
         "timeZoneId": "138",
         "timeZoneName": "Nuuk",
         "DCName": "IAD",
@@ -548,7 +546,7 @@
         "DCName": "SIN",
         "DCID": "SG",
       }, {
-        "label": "(GMT +7:00) Jakarta",
+        "label": "(GMT +07:00) Jakarta",
         "timeZoneId": "154",
         "timeZoneName": "Jakarta",
         "DCName": "SIN",
@@ -577,6 +575,12 @@
         "timeZoneName": "Toronto",
         "DCName": "IAD",
         "DCID": "VA",
+      }, {
+        "label": "(GMT +04:00) Baku",
+        "timeZoneId": "37",
+        "timeZoneName": "Baku",
+        "DCName": "LNR",
+        "DCID": "LN",
       },
       ];
     }

@@ -1,338 +1,442 @@
-import {
-  IExportMenu,
-  IReportCard,
-  IReportCardTable,
-  IReportDropdown,
-  IReportLabel,
-  ITimespan,
-  ISecondaryReport,
-} from '../partnerReportInterfaces';
+import reportCard from './index';
+import { IExportMenu } from '../partnerReportInterfaces';
 
-describe('Component: reportCard', () => {
-  let activeUserData = getJSONFixture('core/json/partnerReports/activeUserData.json');
-  let ctrlData = getJSONFixture('core/json/partnerReports/ctrl.json');
-  let defaults = getJSONFixture('core/json/partnerReports/commonReportService.json');
-  let endpointsData = getJSONFixture('core/json/partnerReports/registeredEndpointData.json');
-  let timeFilter: ITimespan = _.cloneDeep(defaults.timeFilter[0]);
-
-  // html selectors
-  const headerTitle: string = 'span.report-section-header';
-  const reportType: string = '{{reportType}}';
-  const cardDescription: string = 'section.report-' + reportType + ' p';
-  const table: string = 'section table';
-  const id: string = '{{id}}';
-  const chart: string = '#' + id + 'Chart';
-  const dropdown: string = '#' + id + 'Filter';
-  const reportTable: string = '.report-table';
-  const search: string = 'div.report-search';
-  const showHideLink: string = 'div.box-match a span';
-  const carouselNumberButtons: string = 'div.box-match div.pull-right button.btn';
-  const carouselLeft: string = 'div.box-match div.pull-right button.carousel-control i.icon.icon-chevron-left';
-  const carouselRight: string = 'div.box-match div.pull-right button.carousel-control i.icon.icon-chevron-right';
-  const graphLabels: string = 'div.row div.columns.medium-4.label-display';
-  const numberLabels: string = graphLabels + ' p.label-number';
-  const textLabels: string = graphLabels + ' span.label-text';
-  const exportMenu: string = '.grid-filter.dropdown.pull-right';
-
+describe('Component: reportCard', function () {
   beforeEach(function () {
-    this.initModules('Core');
-    this.injectDependencies('$scope', '$timeout');
-  });
+    this.initModules(reportCard);
+    this.injectDependencies('$componentController', '$scope', '$state', '$translate', 'ReportConstants');
 
-  describe('barchart and secondary table combination:', function () {
-    let options: IReportCard = _.cloneDeep(ctrlData.activeUserOptions);
-    let secondaryOptions: ISecondaryReport = _.cloneDeep(ctrlData.activeUserSecondaryOptions);
-    let sortedArray: ISecondaryReport = _.cloneDeep(activeUserData.mostActiveResponse).sort(function (itemOne, itemTwo) {
-      if (itemOne.totalActivity < itemTwo.totalActivity) {
-        return 1;
-      } else if (itemOne.totalActivity > itemTwo.totalActivity) {
-        return -1;
-      } else {
-        let orgCompare = itemOne.orgName.localeCompare(itemTwo.orgName);
-        if (orgCompare === -1) {
-          return 1;
-        } else if (orgCompare === 1) {
-          return -1;
-        } else {
-          return itemOne.userName.localeCompare(itemTwo.userName);
-        }
-      }
-    });
-    options.table = undefined;
-    secondaryOptions.table.data =  _.cloneDeep(activeUserData.mostActiveResponse);
+    this.activeUserData = getJSONFixture('core/json/partnerReports/activeUserData.json');
+    this.ctrlData = getJSONFixture('core/json/partnerReports/ctrl.json');
+    this.defaults = getJSONFixture('core/json/partnerReports/commonReportService.json');
 
-    let checkTableEntries = (view: any, start: number, length: number) => {
-      // the selected items from start to end should be visible
-      for (let i = 0; i < length; i++) {
-        expect(view.find('tr td.vertical-center')[0 + (4 * i)].innerText).toEqual(sortedArray[start + i].userName);
-        expect(view.find('tr td.vertical-center')[1 + (4 * i)].innerText).toEqual(sortedArray[start + i].orgName);
-        expect(view.find('tr td.vertical-center')[2 + (4 * i)].innerText).toEqual(sortedArray[start + i].numCalls.toString());
-        expect(view.find('tr td.vertical-center')[3 + (4 * i)].innerText).toEqual(sortedArray[start + i].sparkMessages.toString());
-      }
+    this.options = _.cloneDeep(this.ctrlData.activeUserOptions);
+    this.secondaryOptions = _.cloneDeep(this.ctrlData.activeUserSecondaryOptions);
+    this.secondaryOptions.table.data =  _.cloneDeep(this.activeUserData.mostActiveResponse);
+    this.show = true;
+    this.resizePage = jasmine.createSpy('resize');
+
+    this.description = 'description';
+    this.header = 'label';
+    this.search = 'activeUsers.search';
+    this.translation = 'translation';
+    this.threeMonths = 'reportsPage.threeMonths';
+    this.threeMonthsTwo = 'reportsPage.threeMonths2';
+    this.length = this.secondaryOptions.sortOptions.length - 1;
+    this.getTranslation = (type: string): Array<Array<any>> => {
+      return [[this.translation, { time: this.time[type] }]];
     };
 
-    beforeEach(function () {
-      this.$scope.timeFilter = timeFilter;
-      this.$scope.options = options;
-      this.$scope.secondaryOptions = secondaryOptions;
-      this.$scope.show = true;
-      this.$scope.resize = jasmine.createSpy('resize');
-      this.compileComponent('reportCard', {
-        options: 'options',
-        secondaryOptions: 'secondaryOptions',
-        resizePage: 'resize()',
-        show: 'show',
-        time: 'timeFilter',
-      });
-    });
+    spyOn(this.$translate, 'instant').and.callThrough();
+    spyOn(this.$state, 'go');
 
-    it('should instantiate with expected titles and secondary report not visible', function () {
-      // check for header, description, and chart
-      expect(this.view).toContainElement('#' + options.id);
-      expect(this.view.find(headerTitle)).toHaveText(options.headerTitle);
-      expect(this.view.find(cardDescription.replace(reportType, options.reportType))).toHaveText(options.description);
-      expect(this.view).toContainElement(chart.replace(id, options.id));
-      expect(this.view).not.toContainElement(dropdown.replace(id, options.id));
-
-      // table for the first report section, export menu, and labels should not be present
-      expect(this.view).not.toContainElement(table);
-      expect(this.view).not.toContainElement(graphLabels);
-      expect(this.view).not.toContainElement(exportMenu);
-
-      // verify secondary report is not visible, but link to open it is present
-      expect(this.view).not.toContainElement(reportTable);
-      expect(this.view.find(showHideLink)).toHaveText(options.id + '.show');
-      expect(this.view).not.toContainElement(carouselLeft);
-      expect(this.view.find(carouselNumberButtons).length).toEqual(0);
-      expect(this.view).not.toContainElement(carouselRight);
-    });
-
-    it('should open the secondary report on click and manipulate the secondary report table', function () {
-      // open secondary report
-      this.$timeout.flush();
-      this.view.find(showHideLink).click();
-      expect(this.view.find(showHideLink)).toHaveText(options.id + '.hide');
-      expect(this.view).toContainElement(reportTable);
-      expect(this.$scope.resize).toHaveBeenCalledTimes(1);
-      expect(this.view).not.toContainElement(search);
-
-      // Verify table headers are populated
-      let headers = this.view.find('thead th.bold.vertical-center');
-      _.forEach(headers, (element, index: number) => {
-        expect(element.innerText).toEqual(secondaryOptions.table.headers[index].title);
-      });
-      // Verify table is populated
-      checkTableEntries(this.view, 0, 5);
-
-      // verify table buttons are present
-      expect(this.view).toContainElement(carouselLeft);
-      expect(this.view.find(carouselNumberButtons).length).toEqual(3);
-      expect(this.view.find(carouselNumberButtons)[0]).toContainText('1');
-      expect(this.view.find(carouselNumberButtons)[1]).toContainText('2');
-      expect(this.view.find(carouselNumberButtons)[2]).toContainText('3');
-      expect(this.view).toContainElement(carouselRight);
-
-      // verify table buttons manipulate the table
-      this.view.find(carouselNumberButtons)[1].click();
-      expect(this.$scope.resize).toHaveBeenCalledTimes(2);
-      checkTableEntries(this.view, 5, 5);
-
-      // clicking all the way to the left should cause the table to stop moving and the buttons to stop changing on further left arrow clicks
-      this.view.find(carouselLeft).click();
-      expect(this.$scope.resize).toHaveBeenCalledTimes(3);
-      checkTableEntries(this.view, 0, 5);
-      this.view.find(carouselLeft).click();
-      expect(this.$scope.resize).toHaveBeenCalledTimes(3);
-      checkTableEntries(this.view, 0, 5);
-
-      // button numbers should change on move to 'page 3'
-      this.view.find(carouselNumberButtons)[2].click();
-      expect(this.$scope.resize).toHaveBeenCalledTimes(4);
-      checkTableEntries(this.view, 10, 5);
-      expect(this.view.find(carouselNumberButtons)[0]).toContainText('2');
-      expect(this.view.find(carouselNumberButtons)[1]).toContainText('3');
-      expect(this.view.find(carouselNumberButtons)[2]).toContainText('4');
-
-      // clicking all the way to the right should cause the table to stop moving and the buttons to stop changing on further right arrow clicks
-      this.view.find(carouselRight).click();
-      expect(this.$scope.resize).toHaveBeenCalledTimes(5);
-      checkTableEntries(this.view, 15, 1);
-      this.view.find(carouselRight).click();
-      expect(this.$scope.resize).toHaveBeenCalledTimes(5);
-      checkTableEntries(this.view, 15, 1);
-      expect(this.view.find(carouselNumberButtons)[0]).toContainText('2');
-      expect(this.view.find(carouselNumberButtons)[1]).toContainText('3');
-      expect(this.view.find(carouselNumberButtons)[2]).toContainText('4');
-
-      // turn on search and verify search works
-      this.$scope.secondaryOptions.search = true;
-      this.$scope.$apply();
-      expect(this.view).toContainElement(search);
-      this.view.find(search + ' input').val(sortedArray[0].userName).change();
-      checkTableEntries(this.view, 0, 1);
-    });
-  });
-
-  describe('donut chart, labels, and dropdown:', function () {
-    // html constants
-    const dropdownClick: string = 'div.select-list div.dropdown .select-toggle';
-    const hiddenSelect: string = 'select.hidden-select option';
-    const dropdownOptions: string = 'ul.select-options li a';
-    const threeDots: string = '.icon.icon-three-dots.export-dots';
-    const clickDots: string = exportMenu + ' a';
-    const exportOptions: string = exportMenu + ' li.export-item';
-
-    // scope variables
-    let options: IReportCard = _.cloneDeep(ctrlData.callOptions);
-    let labels: Array<IReportLabel> = _.cloneDeep(ctrlData.metricsLabels);
-    options.table = undefined;
-    labels[0].class = 'test';
-    labels[0].click = jasmine.createSpy('labelClick');
-    labels[1].class = 'test';
-    labels[1].hidden = true;
-    let reportDropdown: IReportDropdown = {
-      array: [{
-        value: 0,
-        label: 'label one',
+    this.initController = (): void => {
+      this.controller = this.$componentController('reportCard', {
+        $scope: this.$scope,
+        $translate: this.$translate,
+        $state: this.$state,
+        ReportConstants: this.ReportConstants,
       }, {
-        value: 1,
-        label: 'label two',
-      }],
-      click: jasmine.createSpy('toggle'),
-      disabled: false,
-      selected: {
-        value: 0,
-        label: 'label one',
-      },
-    };
-
-    let exportArray: Array<IExportMenu> = _.cloneDeep(ctrlData.exportMenu);
-    exportArray[1].click = jasmine.createSpy('click');
-
-    beforeEach(function () {
-      this.$scope.timeFilter = timeFilter;
-      this.$scope.options = options;
-      this.$scope.show = true;
-      this.$scope.dropdown = reportDropdown;
-      this.$scope.labels = labels;
-      this.$scope.exportArray = exportArray;
-      this.compileComponent('reportCard', {
-        options: 'options',
-        exportDropdown: 'exportArray',
-        dropdown: 'dropdown',
-        show: 'show',
-        time: 'timeFilter',
-        labels: 'labels',
+        dropdown: this.dropdown,
+        exportDropdown: this.exportDropdown,
+        options: this.options,
+        labels: this.labels,
+        secondaryOptions: this.secondaryOptions,
+        resizePage: this.resizePage,
+        show: this.show,
+        time: this.time,
+        lowerTooltip: this.lowerTooltip,
       });
+      this.$scope.$apply();
+    };
+  });
+
+  it('should instantiate with expected translation calls and secondary report not visible', function () {
+    this.time = this.defaults.timeFilter[0];
+    this.initController();
+
+    expect(this.$translate.instant.calls.allArgs()).toEqual([[this.search]]);
+    expect(this.controller.secondaryOptions.display).toBeTruthy();
+    expect(this.controller.exportMenu).toBeFalsy();
+    expect(this.controller.secondaryReport).toBeFalsy();
+    expect(this.controller.currentPage).toEqual(1);
+    expect(this.controller.pagingButtons).toEqual([1, 2, 3]);
+    expect(this.controller.totalPages).toEqual(4);
+    expect(this.controller.placeholder).toEqual(this.search);
+    expect(this.controller.searchField).toEqual('');
+  });
+
+  it('export menu functions', function () {
+    this.initController();
+    this.controller.toggleExportMenu();
+    expect(this.controller.exportMenu).toBeTruthy();
+
+    const menuItem: IExportMenu = {
+      click: jasmine.createSpy('click'),
+      label: 'label',
+      id: 'id',
+    };
+    this.controller.dropdownSelect(menuItem);
+    expect(menuItem.click).toHaveBeenCalled();
+    expect(this.controller.exportMenu).toBeFalsy();
+  });
+
+  // Main Report Test Cases
+  it('goToUsersTab - should change state to users tab', function () {
+    this.initController();
+    this.controller.goToUsersTab();
+    expect(this.$state.go).toHaveBeenCalledWith('users.list');
+  });
+
+  describe('getClass - ', function () {
+    beforeEach(function () {
+      this.labels = _.cloneDeep(this.ctrlData.metricsLabels);
+      this.labels[0].class = 'test';
     });
 
-    it('should instantiate with expected titles, labels, and dropdown present', function () {
-      this.$timeout.flush();
-      // check for header, description, and chart
-      expect(this.view).toContainElement('#' + options.id);
-      expect(this.view.find(headerTitle)).toHaveText(options.headerTitle);
-      expect(this.view.find(cardDescription.replace(reportType, options.reportType))[0].innerText).toEqual(options.description);
-      expect(this.view).toContainElement(chart.replace(id, options.id));
-      expect(this.view).toContainElement(dropdown.replace(id, options.id));
+    it('should return undefined from a label with no class set', function () {
+      this.initController();
+      expect(this.controller.getClass(this.labels[1])).toBeUndefined();
+    });
 
-      // check the dropdown
-      expect(reportDropdown.click).not.toHaveBeenCalled();
-      expect(this.view.find(hiddenSelect)).toHaveText(reportDropdown.array[0].label);
-      this.view.find(dropdownClick).click();
-      this.$timeout.flush();
-      expect(this.view.find(dropdownOptions).length).toEqual(2);
-      this.view.find(dropdownOptions)[1].click();
-      expect(this.view.find(hiddenSelect)).toHaveText(reportDropdown.array[1].label);
-      expect(reportDropdown.click).toHaveBeenCalled();
+    it('should return undefined from a label with a class set and hidden is true', function () {
+      this.labels[0].hidden = true;
+      this.initController();
+      expect(this.controller.getClass(this.labels[0])).toBeUndefined();
+    });
 
-      // table for the first report section should not be present
-      expect(this.view).not.toContainElement(table);
-
-      // expect the export menu to be present and manipulatable
-      expect(this.view).toContainElement(exportMenu);
-      expect(this.view).toContainElement(threeDots);
-      expect(this.view).not.toContain(exportOptions);
-      this.view.find(clickDots)[0].click();
-      let view = this.view;
-      _.forEach(exportArray, function (exportItem: IExportMenu, index: number): void {
-        expect(view.find(exportOptions).length).toEqual(exportArray.length);
-        expect(view.find(exportOptions)[index].innerText.trim()).toEqual(exportItem.label);
-      });
-      this.view.find('#' + exportArray[1].id).click();
-      expect(this.view).not.toContain(exportOptions);
-      expect(exportArray[1].click).toHaveBeenCalledTimes(1);
-
-      // verify the labels are present and work as expected
-      expect(this.view.find(graphLabels).length).toEqual(3);
-      _.forEach(labels, function (label, index) {
-        expect(view.find(numberLabels)[index].innerText).toEqual(label.number.toString());
-        expect(view.find(textLabels)[index].innerText).toEqual(label.text);
-      });
-      expect(this.view.find(numberLabels)[0]).toHaveClass('test');
-      expect(this.view.find(numberLabels)[1]).not.toHaveClass('test');
-      expect(labels[0].click).toHaveBeenCalledTimes(0);
-      this.view.find(graphLabels)[0].click();
-      expect(labels[0].click).toHaveBeenCalledTimes(1);
-
-      // verify secondary report is not visible and link to open it is not present
-      expect(this.view).not.toContainElement(reportTable);
-      expect(this.view).not.toContainElement(showHideLink);
-      expect(this.view).not.toContainElement(carouselLeft);
-      expect(this.view.find(carouselNumberButtons).length).toEqual(0);
-      expect(this.view).not.toContainElement(carouselRight);
+    it('should return class from a label with a class set and hidden is false', function () {
+      this.labels[0].hidden = false;
+      this.initController();
+      expect(this.controller.getClass(this.labels[0])).toEqual(this.labels[0].class);
     });
   });
 
-  describe('main report with table only:', function () {
-    let options: IReportCardTable = _.cloneDeep(ctrlData.endpointOptions);
-    let tableData = _.cloneDeep(endpointsData.registeredEndpointResponse);
-    options.table.data = tableData;
+  describe('getTranslation - ', function () {
+    it('should call for a translation with time variable', function () {
+      this.time = this.defaults.timeFilter[0];
+      this.initController();
+      this.$translate.instant.calls.reset();
+      const translation = this.controller.getTranslation(this.translation, this.description);
 
-    beforeEach(function () {
-      this.$scope.timeFilter = timeFilter;
-      this.$scope.options = options;
-      this.$scope.show = true;
-      this.compileComponent('reportCard', {
-        options: 'options',
-        show: 'show',
-        time: 'timeFilter',
-      });
+      expect(translation).toEqual(this.translation);
+      expect(this.$translate.instant.calls.allArgs()).toEqual(this.getTranslation(this.description));
     });
 
-    it('should instantiate with expected titles and secondary report not present', function () {
-      // check for header, description, and table
-      expect(this.view).toContainElement('#' + options.id);
-      expect(this.view.find(headerTitle)).toHaveText(options.headerTitle);
-      expect(this.view.find(cardDescription.replace(reportType, options.reportType))).toHaveText(options.description);
-      expect(this.view).toContainElement(table);
-      expect(this.view).not.toContainElement(dropdown.replace(id, options.id));
+    it('should call for a translation without time variable', function () {
+      this.initController();
+      this.$translate.instant.calls.reset();
+      const translation = this.controller.getTranslation(this.translation, this.description);
 
-      // verify table headers
-      let headers = this.view.find('thead th.bold.vertical-center');
-      _.forEach(headers, (element, index: number) => {
-        expect(element.innerText).toEqual(options.table.headers[index].title);
-      });
+      expect(translation).toEqual(this.translation);
+      expect(this.$translate.instant.calls.allArgs()).toEqual([[this.translation]]);
+    });
+  });
 
-      // verify table data
-      let dataEntries = this.view.find('tbody tr');
-      expect(dataEntries.length).toBe(4);
-      _.forEach(dataEntries, function (element, index: number) {
-        _.forEach(tableData[index], function (data) {
-          expect(element).toContainText(data.output[0]);
-          if (data.output.length > 1) {
-            expect(element).toContainText(data.output[1]);
-          }
-        });
-      });
+  describe('getDescription - ', function () {
+    beforeEach(function () {
+      this.twelveWeeksTwo = 'reportsPage.lastTwelveWeeks2';
+      this.time = this.defaults.timeFilter[2];
+      this.initController();
+      spyOn(this.controller, 'getTranslation').and.callThrough();
+      this.$translate.instant.calls.reset();
+    });
 
-      // chart for the first report section should not be present
-      expect(this.view).not.toContainElement(chart.replace(id, options.id));
+    it('should call getTranslation', function () {
+      const translation = this.controller.getDescription(this.translation, false);
+      const translationArray: Array<Array<any>> = this.getTranslation(this.description);
+      translationArray.unshift([this.threeMonthsTwo]);
+      translationArray.unshift([this.threeMonths]);
 
-      // verify secondary report is not visible and link to open it is not present
-      expect(this.view).not.toContainElement(showHideLink);
-      expect(this.view).not.toContainElement(carouselLeft);
-      expect(this.view.find(carouselNumberButtons).length).toEqual(0);
-      expect(this.view).not.toContainElement(carouselRight);
+      expect(translation).toEqual(this.translation);
+      expect(this.controller.getTranslation).toHaveBeenCalled();
+      expect(this.$translate.instant.calls.allArgs()).toEqual(translationArray);
+    });
+
+    it('should use alternate translation', function () {
+      const translation = this.controller.getDescription(this.translation, true);
+      expect(translation).toEqual(this.translation);
+      expect(this.controller.getTranslation).not.toHaveBeenCalled();
+      expect(this.$translate.instant.calls.allArgs()).toEqual([[this.threeMonths], [this.threeMonthsTwo], [this.twelveWeeksTwo], [this.translation, { time: this.twelveWeeksTwo }]]);
+    });
+  });
+
+  describe('getHeader - ', function () {
+    beforeEach(function () {
+      this.twelveWeeks = 'reportsPage.lastTwelveWeeks';
+      this.time = this.defaults.timeFilter[2];
+      this.initController();
+      spyOn(this.controller, 'getTranslation').and.callThrough();
+      this.$translate.instant.calls.reset();
+    });
+
+    it('should call getTranslation', function () {
+      const translation = this.controller.getHeader(this.translation, false);
+      const translationArray: Array<Array<any>> = this.getTranslation(this.header);
+      translationArray.unshift([this.threeMonthsTwo]);
+      translationArray.unshift([this.threeMonths]);
+
+      expect(translation).toEqual(this.translation);
+      expect(this.controller.getTranslation).toHaveBeenCalled();
+      expect(this.$translate.instant.calls.allArgs()).toEqual(translationArray);
+    });
+
+    it('should use alternate translation', function () {
+      const translation = this.controller.getHeader(this.translation, true);
+      expect(translation).toEqual(this.translation);
+      expect(this.controller.getTranslation).not.toHaveBeenCalled();
+      expect(this.$translate.instant.calls.allArgs()).toEqual([[this.threeMonths], [this.threeMonthsTwo], [this.twelveWeeks], [this.translation, { time: this.twelveWeeks }]]);
+    });
+  });
+
+  describe('getPopoverText & isPopover - ', function () {
+    it('should return options.popoverText when isPopover is true', function () {
+      this.options.titlePopover = 'title';
+      this.initController();
+      this.$translate.instant.calls.reset();
+
+      expect(this.controller.isPopover()).toBeTruthy();
+      expect(this.controller.getPopoverText()).toEqual(this.options.titlePopover);
+      expect(this.$translate.instant.calls.allArgs()).toEqual([[this.options.titlePopover]]);
+    });
+
+    it('should return empty string when isPopover is false', function () {
+      this.options.titlePopover = this.ReportConstants.UNDEF;
+      this.initController();
+      this.$translate.instant.calls.reset();
+
+      expect(this.controller.isPopover()).toBeFalsy();
+      expect(this.controller.getPopoverText()).toEqual('');
+      expect(this.$translate.instant).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('isDonut - ', function () {
+    it('should return false for non donut report types', function () {
+      this.initController();
+      expect(this.controller.isDonut()).toBeFalsy();
+    });
+
+    it('should return true for donut report types', function () {
+      this.options.reportType = this.ReportConstants.DONUT;
+      this.initController();
+      expect(this.controller.isDonut()).toBeTruthy();
+    });
+  });
+
+  describe('isTable - ', function () {
+    it('should return false for non table report types', function () {
+      this.initController();
+      expect(this.controller.isTable()).toBeFalsy();
+    });
+
+    it('should return true for table report types', function () {
+      this.options.reportType = this.ReportConstants.TABLE;
+      this.initController();
+      expect(this.controller.isTable()).toBeTruthy();
+    });
+  });
+
+  describe('isSet, isEmpty, & isRefresh', function () {
+    it('only isSet should return true when the report is set', function () {
+      this.initController();
+      expect(this.controller.isSet()).toBeTruthy();
+      expect(this.controller.isEmpty()).toBeFalsy();
+      expect(this.controller.isRefresh()).toBeFalsy();
+    });
+
+    it('only isEmpty should return true when the report is empty', function () {
+      this.options.state = this.ReportConstants.EMPTY;
+      this.initController();
+      expect(this.controller.isSet()).toBeFalsy();
+      expect(this.controller.isEmpty()).toBeTruthy();
+      expect(this.controller.isRefresh()).toBeFalsy();
+    });
+
+    it('only isRefresh should return true when the report is refreshing', function () {
+      this.options.state = this.ReportConstants.REFRESH;
+      this.initController();
+      expect(this.controller.isSet()).toBeFalsy();
+      expect(this.controller.isEmpty()).toBeFalsy();
+      expect(this.controller.isRefresh()).toBeTruthy();
+    });
+  });
+
+  // Secondary Report Test Cases
+  it('resetReport - should reset secondary report controls back to default', function () {
+    this.initController();
+    this.controller.secondaryReport = true;
+    this.controller.currentPage = 3;
+    this.controller.pagingButtons = [2, 3, 4];
+    this.controller.searchField = this.search;
+
+    spyOn(this.controller, 'setTotalPages');
+    spyOn(this.controller, 'setSortOptions');
+
+    this.controller.resetReport();
+    expect(this.controller.secondaryReport).toBeFalsy();
+    expect(this.controller.currentPage).toEqual(1);
+    expect(this.controller.pagingButtons).toEqual([1, 2, 3]);
+    expect(this.controller.searchField).toEqual('');
+    expect(this.controller.setTotalPages).toHaveBeenCalled();
+    expect(this.controller.setSortOptions).toHaveBeenCalled();
+  });
+
+  it('resize - should call resizePage when resizePage is set', function () {
+    this.initController();
+    this.controller.resize();
+    expect(this.resizePage).toHaveBeenCalled();
+  });
+
+  it('openCloseSecondaryReport - should toggle secondary report', function () {
+    this.initController();
+    this.controller.openCloseSecondaryReport();
+    expect(this.controller.secondaryReport).toBeTruthy();
+    expect(this.resizePage).toHaveBeenCalled();
+  });
+
+  describe('changePage - ', function () {
+    it('should change the pagingButtons', function () {
+      this.initController();
+      this.controller.changePage(3);
+      expect(this.controller.pagingButtons).toEqual([2, 3, 4]);
+      expect(this.controller.currentPage).toEqual(3);
+      expect(this.resizePage).toHaveBeenCalled();
+    });
+
+    it('should not change the pagingButtons', function () {
+      this.initController();
+      this.controller.currentPage = 2;
+
+      this.controller.changePage(1);
+      expect(this.controller.pagingButtons).toEqual([1, 2, 3]);
+      expect(this.controller.currentPage).toEqual(1);
+      expect(this.resizePage).toHaveBeenCalled();
+    });
+  });
+
+  describe('isActivePage - ', function () {
+    it('should return true when row is located on the currentPage', function () {
+      this.initController();
+      expect(this.controller.isActivePage(1)).toBeTruthy();
+    });
+
+    it('should return false when row is not located on the currentPage', function () {
+      this.initController();
+      expect(this.controller.isActivePage(7)).toBeFalsy();
+    });
+  });
+
+  describe('isCurrentPage - ', function () {
+    it('should return true when the paging button represents the currentPage', function () {
+      this.initController();
+      expect(this.controller.isCurrentPage(0)).toBeTruthy();
+    });
+
+    it('should return false when the paging button does not represent the currentPage', function () {
+      this.initController();
+      expect(this.controller.isCurrentPage(2)).toBeFalsy();
+    });
+  });
+
+  describe('secondaryIsSet, secondaryIsEmpty, secondaryIsError, & secondaryIsRefresh', function () {
+    it('only secondaryIsSet should return true when the report is set', function () {
+      this.initController();
+      expect(this.controller.secondaryIsSet()).toBeTruthy();
+      expect(this.controller.secondaryIsEmpty()).toBeFalsy();
+      expect(this.controller.secondaryIsError()).toBeFalsy();
+      expect(this.controller.secondaryIsRefresh()).toBeFalsy();
+    });
+
+    it('only secondaryIsEmpty should return true when the report is empty', function () {
+      this.secondaryOptions.state = this.ReportConstants.EMPTY;
+      this.initController();
+      expect(this.controller.secondaryIsSet()).toBeFalsy();
+      expect(this.controller.secondaryIsEmpty()).toBeTruthy();
+      expect(this.controller.secondaryIsError()).toBeFalsy();
+      expect(this.controller.secondaryIsRefresh()).toBeFalsy();
+    });
+
+    it('only secondaryIsError should return true when the report is in error', function () {
+      this.secondaryOptions.state = this.ReportConstants.ERROR;
+      this.initController();
+      expect(this.controller.secondaryIsSet()).toBeFalsy();
+      expect(this.controller.secondaryIsEmpty()).toBeFalsy();
+      expect(this.controller.secondaryIsError()).toBeTruthy();
+      expect(this.controller.secondaryIsRefresh()).toBeFalsy();
+    });
+
+    it('only secondaryIsRefresh should return true when the report is refreshing', function () {
+      this.secondaryOptions.state = this.ReportConstants.REFRESH;
+      this.initController();
+      expect(this.controller.secondaryIsSet()).toBeFalsy();
+      expect(this.controller.secondaryIsEmpty()).toBeFalsy();
+      expect(this.controller.secondaryIsError()).toBeFalsy();
+      expect(this.controller.secondaryIsRefresh()).toBeTruthy();
+    });
+  });
+
+  describe('pageBackward & pageForward - ', function () {
+    beforeEach(function () {
+      this.initController();
+      spyOn(this.controller, 'changePage').and.callThrough();
+    });
+
+    it('should page foward or backward as expected', function () {
+      this.controller.pageForward();
+      expect(this.controller.currentPage).toEqual(2);
+      expect(this.controller.changePage).toHaveBeenCalledTimes(1);
+
+      this.controller.pageBackward();
+      expect(this.controller.currentPage).toEqual(1);
+      expect(this.controller.changePage).toHaveBeenCalledTimes(2);
+    });
+
+    it('should not page forward when already on the last page',  function () {
+      this.controller.currentPage = 4;
+      this.controller.pageForward();
+      expect(this.controller.currentPage).toEqual(4);
+      expect(this.controller.changePage).not.toHaveBeenCalled();
+    });
+
+    it('should not page backward when already on the first page',  function () {
+      this.controller.pageBackward();
+      expect(this.controller.currentPage).toEqual(1);
+      expect(this.controller.changePage).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('secondaryReportSort, getPredicate, & getSortDirection - ', function () {
+    it('should reverse directions when selected sortOption matches the predicate', function () {
+      this.initController();
+      expect(this.controller.getSortDirection()).toEqual(this.secondaryOptions.sortOptions[this.length].direction);
+      expect(this.controller.getPredicate()).toEqual(this.secondaryOptions.sortOptions[this.length].option);
+
+      this.controller.secondaryReportSort(this.length);
+      expect(this.controller.getSortDirection()).toEqual(!this.secondaryOptions.sortOptions[this.length].direction);
+      expect(this.controller.getPredicate()).toEqual(this.secondaryOptions.sortOptions[this.length].option);
+    });
+
+    it('should change predicate and sort direction whe selected sortOption does not matche the predicate', function () {
+      this.initController();
+      this.controller.secondaryReportSort(1);
+      expect(this.controller.getSortDirection()).toEqual(this.secondaryOptions.sortOptions[1].direction);
+      expect(this.controller.getPredicate()).toEqual(this.secondaryOptions.sortOptions[1].option);
+    });
+  });
+
+  describe('getTable - ', function () {
+    it('should return whole table when the search field is empty', function () {
+      this.initController();
+      expect(this.controller.getTable()).toEqual(this.secondaryOptions.table.data);
+      expect(this.resizePage).not.toHaveBeenCalled();
+    });
+
+    it('should return partial table when search field is set', function () {
+      this.initController();
+      this.controller.searchField = this.secondaryOptions.table.data[1].userName;
+      expect(this.controller.getTable()).toEqual([this.secondaryOptions.table.data[1]]);
+      expect(this.resizePage).toHaveBeenCalled();
     });
   });
 });

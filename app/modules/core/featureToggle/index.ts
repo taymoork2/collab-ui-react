@@ -1,9 +1,8 @@
 import { DirSyncService, IDirSyncService, IDirectoryConnector } from './dirSync.service';
-
-export { IDirSyncService, IDirectoryConnector };
-
 let FeatureToggleDirective = require('./featureToggle.directive');
 let FeatureToggleServices = require('./featureToggle.service');
+
+export { IDirSyncService, IDirectoryConnector };
 
 let urlConfigModule = require('modules/core/config/urlConfig');
 let authInfoModule = require('modules/core/scripts/services/authinfo');

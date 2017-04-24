@@ -7,7 +7,7 @@ describe('Controller: RemDeviceController', function () {
   };
 
   var cisUidOfPlace = 'a19b308a-PlaceWithDevice-71898e423bec';
-  var device1Url = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/c528e32d-ed35-4e00-a20d-d4d3519efb4f';
+  var device1Url = 'https://csdm-intb.ciscospark.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/c528e32d-ed35-4e00-a20d-d4d3519efb4f';
   var huronDevice2Url = 'https://cmi.huron-int.com/api/v1/voice/customers/3a6ff373-unittest-a27460e0ac5c/sipendpoints/2c586b22-hurondev_inplace2-ace151f631fa';
 
   beforeEach(angular.mock.module('Squared'));
@@ -24,7 +24,7 @@ describe('Controller: RemDeviceController', function () {
   }));
 
   describe('Expected Responses', function () {
-    beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$httpBackend_, _CsdmDeviceService_, _CsdmPlaceService_, CsdmDataModelService) {
+    beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$httpBackend_, _CsdmDeviceService_, _CsdmPlaceService_) {
       var initialDevices = getJSONFixture('squared/json/devices.json');
       var accounts = getJSONFixture('squared/json/accounts.json');
       var initialHuronDevices = getJSONFixture('squared/json/huronDevices.json');
@@ -36,11 +36,11 @@ describe('Controller: RemDeviceController', function () {
       CsdmPlaceService = _CsdmPlaceService_;
 
       $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond({});
-      $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/null/devices/?type=huron').respond(initialHuronDevices);
-      $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/null/devices?checkDisplayName=false&checkOnline=false').respond(initialDevices);
-      $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/null/devices').respond(initialDevices);
-      $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/null/nonExistingDevices').respond([]);
-      $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/null/places/?shallow=true&type=all').respond(accounts);
+      $httpBackend.whenGET('https://csdm-intb.ciscospark.com/csdm/api/v1/organization/null/devices/?type=huron').respond(initialHuronDevices);
+      $httpBackend.whenGET('https://csdm-intb.ciscospark.com/csdm/api/v1/organization/null/devices?checkDisplayName=false&checkOnline=false').respond(initialDevices);
+      $httpBackend.whenGET('https://csdm-intb.ciscospark.com/csdm/api/v1/organization/null/devices').respond(initialDevices);
+      $httpBackend.whenGET('https://csdm-intb.ciscospark.com/csdm/api/v1/organization/null/nonExistingDevices').respond([]);
+      $httpBackend.whenGET('https://csdm-intb.ciscospark.com/csdm/api/v1/organization/null/places/?shallow=true&type=all').respond(accounts);
 
       spyOn(CsdmDeviceService, 'deleteItem').and.returnValue($q.resolve());
       spyOn(CsdmPlaceService, 'deleteItem').and.returnValue($q.resolve());
@@ -50,9 +50,6 @@ describe('Controller: RemDeviceController', function () {
         $modalInstance: fakeModal,
         device: device,
       });
-
-      CsdmDataModelService.getPlacesMap();
-      $httpBackend.flush();
     }));
 
     afterEach(function () {

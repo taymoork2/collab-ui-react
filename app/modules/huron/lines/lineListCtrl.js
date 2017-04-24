@@ -6,11 +6,10 @@
     .controller('LinesListCtrl', LinesListCtrl);
 
   /* @ngInject */
-  function LinesListCtrl($scope, $templateCache, $timeout, $translate, LineListService, Log, Config, Notification) {
+  function LinesListCtrl($scope, $templateCache, $timeout, $translate, LineListService, Log, Config, Notification, $state, FeatureToggleService, Authinfo) {
 
     var vm = this;
 
-    vm.tooltipTemplate = $templateCache.get('modules/huron/lines/tooltipTemplate.tpl.html');
     vm.currentDataPosition = 0;
     vm.gridRefresh = true; // triggers the spinner over the grid
     vm.searchStr = '';
@@ -21,18 +20,32 @@
     vm.userDetailsActive = false;
     vm.load = false;
     vm.sortColumn = sortColumn;
+    vm.getLineList = getLineList;
+    vm.showProviderDetails = showProviderDetails;
+    vm.isBYOPSTNCarrier = isBYOPSTNCarrier;
+    vm.exportCsv = exportCsv;
+
     $scope.gridData = [];
+    $scope.canShowActionsMenu = canShowActionsMenu;
+    $scope.canShowExternalNumberDelete = canShowExternalNumberDelete;
+    $scope.deleteExternalNumber = deleteExternalNumber;
 
     vm.sort = {
       by: 'userid',
       order: '-asc',
     };
+    vm.currentCustomer = {
+      customerOrgId: Authinfo.getOrgId(),
+    };
+    vm.huronCustomerAdminPMPFeatureToggle = false;
 
     // Defines Grid Filter "All"
     vm.placeholder = {
       name: $translate.instant('linesPage.allLines'),
       filterValue: 'all',
     };
+
+    vm.isCallTrial = Authinfo.getLicenseIsTrial('COMMUNICATION', 'ciscouc') && Authinfo.getLicenseIsTrial('SHARED_DEVICES', false);
 
     // Defines Grid Filters "Unassigned" and "Assigned"
     vm.filters = [{
@@ -73,6 +86,38 @@
       }, vm.timeoutVal);
     };
 
+    function exportCsv() {
+      return LineListService.exportCSV($scope)
+        .catch(function (response) {
+          Notification.errorResponse(response, 'linesPage.lineListError');
+        });
+    }
+
+    function deleteExternalNumber($event, number) {
+      $event.stopPropagation();
+
+      $state.go('externalNumberDelete', {
+        numberInfo: {
+          orgId: Authinfo.getOrgId(),
+          externalNumber: number,
+          apiImplementation: LineListService.getApiImplementation(),
+        },
+        refreshFn: vm.getLineList,
+      });
+    }
+
+    function canShowActionsMenu(line) {
+      return canShowExternalNumberDelete(line);
+    }
+
+    function isBYOPSTNCarrier() {
+      return LineListService.getCarrierName() === 'BYO-PSTN';
+    }
+
+    function canShowExternalNumberDelete(line) {
+      return line.externalNumber && (_.startsWith(line.displayField(), $translate.instant('linesPage.unassignedLines')));
+    }
+
     // Get line association data to populate the grid
     function getLineList(startAt) {
       vm.gridRefresh = true;
@@ -102,6 +147,7 @@
             };
           });
           vm.gridRefresh = false;
+          vm.vendor = LineListService.getVendor();
         })
         .catch(function (response) {
           Log.debug('Query for line associations failed.');
@@ -140,23 +186,27 @@
         displayName: $translate.instant('linesPage.internalNumberHeader'),
         width: '20%',
         cellClass: 'internalNumberColumn',
+        headerCellClass: 'internalNumberHeader',
         sortable: true,
       }, {
         field: 'externalNumber',
         displayName: $translate.instant('linesPage.phoneNumbers'),
         sortable: true,
         cellClass: 'externalNumberColumn',
+        headerCellClass: 'externalNumberHeader',
         width: '20%',
       }, {
         field: 'displayField()',
         displayName: $translate.instant('linesPage.assignedTo'),
-        cellTemplate: vm.tooltipTemplate,
+        cellTemplate: getTemplate('_tooltipTpl'),
         sortable: true,
         sort: {
           direction: 'asc',
           priority: 0,
         },
         sortCellFiltered: true,
+        cellClass: 'assignedToColumn',
+        headerCellClass: 'assignedToHeader',
       }],
     };
 
@@ -177,6 +227,44 @@
       }
     }
 
+    function getTemplate(name) {
+      return $templateCache.get('modules/huron/lines/templates/' + name + '.html');
+    }
+
+    FeatureToggleService.supports(FeatureToggleService.features.huronCustomerAdminPMP)
+      .then(function (supported) {
+        vm.huronCustomerAdminPMPFeatureToggle = supported;
+
+        if (supported) {
+          vm.gridOptions.columnDefs.push(
+            {
+              field: 'actions',
+              displayName: $translate.instant('linesPage.actionHeader'),
+              enableSorting: false,
+              cellTemplate: getTemplate('_actionsTpl'),
+              width: '20%',
+              cellClass: 'actionsColumn',
+              headerCellClass: 'actionsHeader',
+            }
+          );
+        }
+      });
+
+    function showProviderDetails() {
+      LineListService.isResellerExists().then(function (response) {
+        if (response) {
+          return $state.go('pstnSetup', {
+            customerId: Authinfo.getOrgId(),
+            customerName: Authinfo.getOrgName(),
+            customerEmail: Authinfo.getCustomerAdminEmail(),
+            customerCommunicationLicenseIsTrial: Authinfo.getLicenseIsTrial("COMMUNICATION", 'ciscouc'),
+            customerRoomSystemsLicenseIsTrial: Authinfo.getLicenseIsTrial("SHARED_DEVICES", false),
+          });
+        } else {
+          Notification.error('pstnSetup.resellerMissingError');
+        }
+      });
+    }
     getLineList();
   }
 })();

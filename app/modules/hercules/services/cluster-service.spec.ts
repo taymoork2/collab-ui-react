@@ -15,7 +15,6 @@ describe('ClusterService', () => {
     $provide.value('Authinfo', Authinfo);
 
     const UrlConfig = {
-      getHerculesUrl: jasmine.createSpy('UrlConfig.getHerculesUrl').and.returnValue('http://ulv.no'),
       getHerculesUrlV2: jasmine.createSpy('UrlConfig.getHerculesUrlV2').and.returnValue('http://elg.no'),
     };
     $provide.value('UrlConfig', UrlConfig);
@@ -625,7 +624,7 @@ describe('ClusterService', () => {
   describe('.upgradeSoftware', () => {
     it('should upgrade software using the correct backend', () => {
       $httpBackend
-        .when('POST', 'http://ulv.no/organizations/orgId/clusters/cluster_0/services/c_mgmt/upgrade', {})
+        .when('POST', 'http://elg.no/organizations/orgId/clusters/cluster_0/provisioning/actions/update/invoke?connectorType=c_mgmt&forced=true')
         .respond({
           foo: 'bar',
         });
@@ -640,7 +639,7 @@ describe('ClusterService', () => {
 
     it('should call poller.forceAction on success', () => {
       $httpBackend
-        .when('POST', 'http://ulv.no/organizations/orgId/clusters/cluster_0/services/c_mgmt/upgrade', {})
+        .when('POST', 'http://elg.no/organizations/orgId/clusters/cluster_0/provisioning/actions/update/invoke?connectorType=c_mgmt&forced=true')
         .respond({
           foo: 'bar',
         });
@@ -653,7 +652,7 @@ describe('ClusterService', () => {
 
     it('should fail on 500 errors', () => {
       $httpBackend
-        .when('POST', 'http://ulv.no/organizations/orgId/clusters/cluster_0/services/c_mgmt/upgrade', {})
+        .when('POST', 'http://elg.no/organizations/orgId/clusters/cluster_0/provisioning/actions/update/invoke?connectorType=c_mgmt&forced=true')
         .respond(500);
 
       const callback = jasmine.createSpy('callback');
@@ -668,11 +667,11 @@ describe('ClusterService', () => {
   describe('.deleteHost', () => {
     it('should be using the correct backend', () => {
       $httpBackend
-        .when('DELETE', 'http://ulv.no/organizations/orgId/clusters/clusterid/hosts/serial')
+        .when('DELETE', 'http://elg.no/organizations/orgId/hosts/serial')
         .respond(200);
 
       const callback = jasmine.createSpy('callback');
-      ClusterService.deleteHost('clusterid', 'serial').then(callback);
+      ClusterService.deleteHost('serial').then(callback);
       $httpBackend.flush();
 
       expect(callback).toHaveBeenCalledTimes(1);
@@ -680,10 +679,10 @@ describe('ClusterService', () => {
 
     it('should call poller.forceAction on success', () => {
       $httpBackend
-        .when('DELETE', 'http://ulv.no/organizations/orgId/clusters/clusterid/hosts/serial')
+        .when('DELETE', 'http://elg.no/organizations/orgId/hosts/serial')
         .respond(200);
 
-      ClusterService.deleteHost('clusterid', 'serial');
+      ClusterService.deleteHost('serial');
       $httpBackend.flush();
 
       expect(forceAction).toHaveBeenCalledTimes(1);
@@ -691,11 +690,11 @@ describe('ClusterService', () => {
 
     it('should fail on 500 errors', () => {
       $httpBackend
-        .when('DELETE', 'http://ulv.no/organizations/orgId/clusters/clusterid/hosts/serial')
+        .when('DELETE', 'http://elg.no/organizations/orgId/hosts/serial')
         .respond(500);
 
       const callback = jasmine.createSpy('callback');
-      ClusterService.deleteHost('clusterid', 'serial').then(_.noop, callback);
+      ClusterService.deleteHost('serial').then(_.noop, callback);
       $httpBackend.flush();
 
       expect(callback).toHaveBeenCalledTimes(1);

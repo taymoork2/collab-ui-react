@@ -2,7 +2,7 @@
   <form name="nameVariableForm" novalidate>
     <div class="row aa-flex-row">
       <div class="large-12 small-12 columns aa-name-variable">
-        <input cs-input type="text" name="callerInputNameVariable" id="callerInputNameVariable{{ schedule + index }}" placeholder="{{ :: 'autoAttendant.callerInputNamePlaceHolder' | translate }}" ng-maxlength="aaCallerInput.maxVariableLength" cs-input-messages="aaCallerInput.validationMsg" ng-model="aaCallerInput.nameInput" ng-change="aaCallerInput.saveNameInput()" cs-input-group-size="medium-12" cs-input-label="{{ :: 'autoAttendant.callerInputLabel' | translate }}">
+        <input cs-input type="text" ng-pattern="/^[a-zA-Z0-9 ]*$/" ng-required="true" ng-minlength="aaCallerInput.minVariableLength" name="callerInputNameVariable" id="callerInputNameVariable" placeholder="{{ :: 'autoAttendant.callerInputNamePlaceHolder' | translate }}" ng-maxlength="aaCallerInput.maxVariableLength" cs-input-messages="aaCallerInput.validationMsgs" cs-input-warning-message="{{ :: 'autoAttendant.callerInputVariableDuplicateMsg' | translate }}" cs-input-warning="aaCallerInput.isWarn" ng-model="aaCallerInput.nameInput" ng-change="aaCallerInput.saveNameInput()" cs-input-group-size="medium-12" cs-input-label="{{ :: 'autoAttendant.callerInputLabel' | translate }}">
       </div>
     </div>
     <label class="add-name-input-help-desc" translate="autoAttendant.callerNameInputHelpText"></label>

@@ -7,11 +7,10 @@ require('./_customer-list.scss');
     .controller('CustomerListCtrl', CustomerListCtrl);
 
   /* @ngInject */
-  function CustomerListCtrl($q, $rootScope, $scope, $state, $templateCache, $translate, $window, Analytics, Authinfo, Config, ExternalNumberService, FeatureToggleService, Log, Notification, Orgservice, PartnerService, TrialService) {
+  function CustomerListCtrl($q, $scope, $state, $templateCache, $translate, $window, Analytics, Authinfo, Config, ExternalNumberService, FeatureToggleService, Log, Notification, Orgservice, PartnerService, TrialService) {
     var vm = this;
     vm.isCustomerPartner = !!Authinfo.isCustomerPartner;
     vm.isPartnerAdmin = Authinfo.isPartnerAdmin();
-    vm.activeBadge = false;
     vm.isTestOrg = false;
     vm.searchStr = '';
     vm.timeoutVal = 1000;
@@ -30,7 +29,6 @@ require('./_customer-list.scss');
     vm.isLicenseTypeActive = isLicenseTypeActive;
     vm.isLicenseTypeFree = isLicenseTypeFree;
     vm.isNoLicense = isNoLicense;
-    vm.partnerClicked = partnerClicked;
     vm.isPartnerOrg = isPartnerOrg;
     vm.setTrial = setTrial;
     vm.showCustomerDetails = showCustomerDetails;
@@ -42,10 +40,10 @@ require('./_customer-list.scss');
     vm.getUserCountColumnText = getUserCountColumnText;
     vm.isPastGracePeriod = isPastGracePeriod;
     vm.isPstnSetup = isPstnSetup;
+    vm.exportCsv = exportCsv;
 
     vm.convertStatusToInt = convertStatusToInt;
 
-    vm.exportType = $rootScope.typeOfExport.CUSTOMER;
     vm.activeFilter = 'all';
     vm.filterList = _.debounce(filterAction, vm.timeoutVal);
 
@@ -208,6 +206,7 @@ require('./_customer-list.scss');
       multiSelect: false,
       rowHeight: 56,
       enableRowHeaderSelection: false,
+      enableRowSelection: true,
       enableColumnMenus: false,
       enableColumnResizing: true,
       enableHorizontalScrollbar: 0,
@@ -697,12 +696,16 @@ require('./_customer-list.scss');
       }
     }
 
-    function partnerClicked(rowData) {
-      vm.activeBadge = isPartnerOrg(rowData);
-    }
-
     function isPartnerOrg(rowData) {
       return rowData === Authinfo.getOrgId();
+    }
+
+    // export the list as a CSV
+    function exportCsv() {
+      return PartnerService.exportCSV(vm.isCareEnabled)
+        .catch(function (response) {
+          Notification.errorResponse(response, 'errors.csvError');
+        });
     }
 
     function setTrial(trial) {

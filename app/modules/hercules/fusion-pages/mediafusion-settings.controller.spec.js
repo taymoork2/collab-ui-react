@@ -19,7 +19,7 @@ describe('Controller: MediafusionClusterSettingsController', function () {
 
   beforeEach(inject(function (_$httpBackend_, $controller, _MediaClusterServiceV2_, _$q_) {
     $httpBackend = _$httpBackend_;
-    $httpBackend.when('GET', 'https://hercules-integration.wbx2.com/hercules/api/v2/organizations/5632f806-ad09-4a26-a0c0-a49a13f38873?fields=@wide').respond({});
+    $httpBackend.when('GET', 'https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/5632f806-ad09-4a26-a0c0-a49a13f38873?fields=@wide').respond({});
     MediaClusterServiceV2 = _MediaClusterServiceV2_;
     $q = _$q_;
     properties = {

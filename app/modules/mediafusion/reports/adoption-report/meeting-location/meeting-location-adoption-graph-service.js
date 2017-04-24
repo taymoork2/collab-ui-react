@@ -21,6 +21,7 @@
     vm.onPremisesHeading = $translate.instant('mediaFusion.metrics.onPremisesHeading');
     vm.cloudHeading = $translate.instant('mediaFusion.metrics.cloudHeading');
     vm.hybridHeading = $translate.instant('mediaFusion.metrics.hybridHeading');
+    vm.totalHeading = $translate.instant('mediaFusion.metrics.clientType.total');
 
     return {
       setMeetingLocationGraph: setMeetingLocationGraph,
@@ -128,7 +129,7 @@
         'time': vm.timeStamp,
       };
       var exportFields = [];
-      _.forEach(graphs, function (value) {
+      _.each(graphs, function (value) {
         if (value.valueField === 'ON_PREM') {
           value.lineColor = '#02bbcc';
           value.title = vm.onPremisesHeading;
@@ -141,22 +142,13 @@
         }
         columnNames[value.valueField] = value.title + ' ' + vm.meetingLocation;
       });
-      _.forEach(columnNames, function (key) {
+      _.each(columnNames, function (key) {
         exportFields.push(key);
       });
       dateLabel = _.replace(dateLabel, /\s/g, '_');
       var ExportFileName = 'MediaService_MeetingLocation_' + '_' + dateLabel + '_' + new Date();
 
       if (!isDummy) {
-        graphs.push({
-          'title': 'All',
-          'id': 'all',
-          'bullet': 'square',
-          'bulletSize': 10,
-          'lineColor': '#000000',
-          'hidden': true,
-        });
-
         graphs.push({
           'title': 'None',
           'id': 'none',
@@ -173,14 +165,14 @@
 
       chartData.legend.listeners = [{
         'event': 'hideItem',
-        "method": legendHandler,
+        'method': legendHandler,
       }, {
         'event': 'showItem',
         'method': legendHandler,
       }];
 
       var chart = AmCharts.makeChart(vm.meetingLocationdiv, chartData);
-      // listen for zoomed event and call "handleZoom" method
+      // listen for zoomed event and call 'handleZoom' method
       chart.addListener('zoomed', handleZoom);
       return chart;
     }
@@ -203,40 +195,39 @@
 
     function getClusterName(graphs) {
       var tempData = [];
-      _.forEach(graphs, function (value) {
+      _.each(graphs, function (value) {
+        value.lineThickness = 2;
         if (value.title === 'ON_PREM') {
           value.balloonText = '<span class="graph-text">' + vm.onPremisesHeading + ' ' + '<span class="graph-number">[[value]]</span></span>';
+          tempData[1] = value;
         } else if (value.title === 'CLOUD') {
           value.balloonText = '<span class="graph-text">' + vm.cloudHeading + ' ' + '<span class="graph-number">[[value]]</span></span>';
+          tempData[0] = value;
         } else if (value.title === 'HYBRID') {
           value.balloonText = '<span class="graph-text">' + vm.hybridHeading + ' ' + '<span class="graph-number">[[value]]</span></span>';
+          tempData[2] = value;
         } else {
-          value.balloonText = '<span class="graph-text">' + value.title + ' ' + '<span class="graph-number">[[value]]</span></span>';
+          value.balloonText = '<span class="graph-text">' + vm.totalHeading + ' ' + '<span class="graph-number">[[value]]</span></span>';
+          tempData[3] = value;
         }
-        value.lineThickness = 2;
-        tempData.push(value);
       });
-      tempData = _.sortBy(tempData, 'title');
       return tempData;
     }
 
     function legendHandler(evt) {
-      if (evt.dataItem.id === 'all') {
-        _.forEach(evt.chart.graphs, function (graph) {
-          if (graph.id != 'all') {
-            evt.chart.showGraph(graph);
-          } else if (graph.id === 'all') {
+      if (evt.dataItem.title === 'None') {
+        evt.dataItem.title = 'All';
+        _.each(evt.chart.graphs, function (graph) {
+          if (graph.title != 'All') {
             evt.chart.hideGraph(graph);
+          } else {
+            evt.chart.showGraph(graph);
           }
-
         });
-      } else if (evt.dataItem.id === 'none') {
-        _.forEach(evt.chart.graphs, function (graph) {
-          if (graph.id != 'all') {
-            evt.chart.hideGraph(graph);
-          } else if (graph.id === 'all') {
-            evt.chart.showGraph(graph);
-          }
+      } else if (evt.dataItem.title === 'All') {
+        evt.dataItem.title = 'None';
+        _.each(evt.chart.graphs, function (graph) {
+          evt.chart.showGraph(graph);
         });
       }
     }

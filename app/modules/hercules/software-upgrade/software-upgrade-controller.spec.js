@@ -4,7 +4,7 @@ describe('Controller: SoftwareUpgradeController', function () {
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module('Squared'));
 
-  var $q, $scope, $controller, controller, $translate, modalInstance, cluster, ClusterService, FusionClusterService, Notification;
+  var $q, $scope, $controller, controller, $translate, modalInstance, cluster, ClusterService, HybridServicesExtrasService, Notification;
   beforeEach(inject(function (_$q_, _$controller_, $rootScope, _$translate_, _Notification_) {
     $q = _$q_;
     $scope = $rootScope.$new();
@@ -15,7 +15,7 @@ describe('Controller: SoftwareUpgradeController', function () {
     ClusterService = {
       upgradeSoftware: sinon.stub(),
     };
-    FusionClusterService = {
+    HybridServicesExtrasService = {
       getReleaseNotes: sinon.stub(),
     };
     modalInstance = {
@@ -47,7 +47,7 @@ describe('Controller: SoftwareUpgradeController', function () {
       availableVersion: "1",
       cluster: cluster,
       ClusterService: ClusterService,
-      FusionClusterService: FusionClusterService,
+      HybridServicesExtrasService: HybridServicesExtrasService,
       Notification: Notification,
     })
     ;
@@ -55,37 +55,37 @@ describe('Controller: SoftwareUpgradeController', function () {
   }
 
   it('should be defined', function () {
-    spyOn(FusionClusterService, 'getReleaseNotes').and.returnValue($q.resolve('Example calendar connector release notes.'));
+    spyOn(HybridServicesExtrasService, 'getReleaseNotes').and.returnValue($q.resolve('Example calendar connector release notes.'));
     initController();
 
     expect(controller).toBeDefined();
   });
 
   it('should return the release notes text correctly when release notes is text only', function () {
-    spyOn(FusionClusterService, 'getReleaseNotes').and.returnValue($q.resolve('Example calendar connector release notes.'));
+    spyOn(HybridServicesExtrasService, 'getReleaseNotes').and.returnValue($q.resolve('Example calendar connector release notes.'));
     initController();
 
     $scope.$apply();
-    expect(FusionClusterService.getReleaseNotes).toHaveBeenCalled();
+    expect(HybridServicesExtrasService.getReleaseNotes).toHaveBeenCalled();
     expect(controller.releaseNotes).toBe('Example calendar connector release notes.');
   });
 
   it('should not set the release notes url when release notes is text only', function () {
-    spyOn(FusionClusterService, 'getReleaseNotes').and.returnValue($q.resolve('Example calendar connector release notes.'));
+    spyOn(HybridServicesExtrasService, 'getReleaseNotes').and.returnValue($q.resolve('Example calendar connector release notes.'));
     initController();
 
     $scope.$apply();
-    expect(FusionClusterService.getReleaseNotes).toHaveBeenCalled();
+    expect(HybridServicesExtrasService.getReleaseNotes).toHaveBeenCalled();
     expect(controller.releaseNotesUrl).toBe('');
   });
 
   it('should set the release notes url when release notes is a url', function () {
-    spyOn(FusionClusterService, 'getReleaseNotes').and.returnValue($q.resolve('http://example.com/release/notes/version/1'));
+    spyOn(HybridServicesExtrasService, 'getReleaseNotes').and.returnValue($q.resolve('http://example.com/release/notes/version/1'));
     initController();
 
     $scope.$apply();
     //updatedSpy.and.returnValue($q.resolve('http://example.com/release/notes/version/1'))
-    expect(FusionClusterService.getReleaseNotes).toHaveBeenCalled();
+    expect(HybridServicesExtrasService.getReleaseNotes).toHaveBeenCalled();
     expect(controller.releaseNotesUrl).toBe('http://example.com/release/notes/version/1');
   });
 

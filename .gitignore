@@ -27,6 +27,7 @@ stats.json
 .vscode
 .history
 yarn.lock
+.tern-project
 
 build
 coverage

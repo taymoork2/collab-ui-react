@@ -1,5 +1,6 @@
+import { IToolkitModalService } from 'modules/core/modal';
+import { Notification } from 'modules/core/notifications';
 import { TelephonyDomainService } from '../telephonyDomain.service';
-import { Notification } from '../../../core/notifications/notification.service';
 
 class GmtdDetails implements ng.IComponentController {
 
@@ -22,19 +23,19 @@ class GmtdDetails implements ng.IComponentController {
   public constructor(
     private gemService,
     private $scope: ng.IScope,
-    private $rootScope: ng.IRootScopeService,
     private Notification: Notification,
     private $window: ng.IWindowService,
     private $state: ng.ui.IStateService,
+    private $modal: IToolkitModalService,
+    private $rootScope: ng.IRootScopeService,
     private $stateParams: ng.ui.IStateParamsService,
     private $translate: ng.translate.ITranslateService,
     private TelephonyDomainService: TelephonyDomainService,
-    private $modal,
   ) {
+    this.tds = _.get(this.$stateParams, 'info.tds', []);
     this.customerId = _.get(this.$stateParams, 'info.customerId', '');
     this.ccaDomainId = _.get(this.$stateParams, 'info.ccaDomainId', '');
     this.domainName = _.get(this.$stateParams, 'info.domainName', '');
-    this.tds = _.get(this.$stateParams, 'info.tds', []);
   }
 
   public $onInit(): void {
@@ -46,6 +47,14 @@ class GmtdDetails implements ng.IComponentController {
     this.getHistories();
     this.getRemedyTicket();
     this.$state.current.data.displayName = this.$translate.instant('gemini.cbgs.overview');
+  }
+
+  public onSeeAllPhoneHumbers() {
+    let data = this.model || {};
+    data.customerId = this.customerId;
+    data.ccaDomainId = this.ccaDomainId;
+    this.gemService.setStorage('currentTelephonyDomain', data);
+    this.$state.go('gmTdDetails.numbersView');
   }
 
   private listenNotesUpdated(): void {

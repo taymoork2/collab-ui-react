@@ -138,7 +138,7 @@
         'time': vm.timeStamp,
       };
       var exportFields = [];
-      _.forEach(graphs, function (value) {
+      _.each(graphs, function (value) {
         if (value.title !== vm.average_utilzation) {
           columnNames[value.valueField] = value.title + ' ' + vm.utilization;
         } else {
@@ -152,15 +152,6 @@
       dateLabel = _.replace(dateLabel, /\s/g, '_');
       var ExportFileName = 'MediaService_Utilization_' + cluster + '_' + dateLabel + '_' + new Date();
       if (!isDummy && clusterSelected === vm.allClusters) {
-        graphs.push({
-          'title': 'All',
-          'id': 'all',
-          'bullet': 'square',
-          'bulletSize': 10,
-          'lineColor': '#000000',
-          'hidden': true,
-        });
-
         graphs.push({
           'title': 'None',
           'id': 'none',
@@ -205,7 +196,7 @@
 
     function getClusterName(graphs, clusterMap) {
       var tempData = [];
-      _.forEach(graphs, function (value) {
+      _.each(graphs, function (value) {
         var clusterName = _.findKey(clusterMap, function (val) {
           return val === value.valueField;
         });
@@ -233,22 +224,19 @@
     }
 
     function legendHandler(evt) {
-      if (evt.dataItem.id === 'all') {
-        _.forEach(evt.chart.graphs, function (graph) {
-          if (graph.id != 'all') {
-            evt.chart.showGraph(graph);
-          } else if (graph.id === 'all') {
+      if (evt.dataItem.title === 'None') {
+        evt.dataItem.title = 'All';
+        _.each(evt.chart.graphs, function (graph) {
+          if (graph.title != 'All') {
             evt.chart.hideGraph(graph);
+          } else {
+            evt.chart.showGraph(graph);
           }
-
         });
-      } else if (evt.dataItem.id === 'none') {
-        _.forEach(evt.chart.graphs, function (graph) {
-          if (graph.id != 'all') {
-            evt.chart.hideGraph(graph);
-          } else if (graph.id === 'all') {
-            evt.chart.showGraph(graph);
-          }
+      } else if (evt.dataItem.title === 'All') {
+        evt.dataItem.title = 'None';
+        _.each(evt.chart.graphs, function (graph) {
+          evt.chart.showGraph(graph);
         });
       }
     }

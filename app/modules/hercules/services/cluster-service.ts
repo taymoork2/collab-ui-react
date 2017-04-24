@@ -1,4 +1,5 @@
 import { IFMSOrganization, ICluster, IConnector, IExtendedCluster, IExtendedConnector, ConnectorType, IClusterAggregate, IConnectorAlarm, IExtendedConnectorAlarm, ExtendedConnectorState } from 'modules/hercules/hybrid-services.types';
+import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 
 interface IClusterCache {
   c_mgmt: any;
@@ -37,7 +38,7 @@ export class ClusterService {
     private CsdmCacheUpdater,
     private CsdmHubFactory,
     private CsdmPoller,
-    private FusionClusterStatesService,
+    private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
     private UrlConfig,
   ) {}
 
@@ -141,8 +142,8 @@ export class ClusterService {
   }
 
   public upgradeSoftware(clusterId: string, connectorType: ConnectorType) {
-    const url = `${this.UrlConfig.getHerculesUrl()}/organizations/${this.Authinfo.getOrgId()}/clusters/${clusterId}/services/${connectorType}/upgrade`;
-    return this.$http.post(url, '{}')
+    const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${this.Authinfo.getOrgId()}/clusters/${clusterId}/provisioning/actions/update/invoke?connectorType=${connectorType}&forced=true`;
+    return this.$http.post(url, '')
       .then(this.extractDataFromResponse)
       .then((data) => {
         this.poller.forceAction();
@@ -150,8 +151,8 @@ export class ClusterService {
       });
   }
 
-  public deleteHost(clusterId: string, serial: string) {
-    const url = `${this.UrlConfig.getHerculesUrl()}/organizations/${this.Authinfo.getOrgId()}/clusters/${clusterId}/hosts/${serial}`;
+  public deleteHost(serial: string) {
+    const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${this.Authinfo.getOrgId()}/hosts/${serial}`;
     return this.$http.delete(url)
       .then(this.extractDataFromResponse)
       .then((data) => {
@@ -182,7 +183,7 @@ export class ClusterService {
   }
 
   private getMostSevereRunningState(previous: IStateSeverity, connector: IExtendedConnector): IStateSeverity {
-    const severity = this.FusionClusterStatesService.getSeverity(connector, 'extendedState');
+    const severity = this.HybridServicesClusterStatesService.getSeverity(connector, 'extendedState');
     if (severity.severity > previous.stateSeverityValue) {
       return {
         state: connector.extendedState,

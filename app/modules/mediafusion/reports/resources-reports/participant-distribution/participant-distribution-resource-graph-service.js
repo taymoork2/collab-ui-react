@@ -54,6 +54,8 @@
         participantDistributionChart.graphs = graphs;
         participantDistributionChart.startDuration = startDuration;
         participantDistributionChart.balloon.enabled = true;
+        participantDistributionChart.balloon.horizontalPadding = 3;
+        participantDistributionChart.balloon.verticalPadding = 2;
         participantDistributionChart.chartCursor.valueLineBalloonEnabled = true;
         participantDistributionChart.chartCursor.valueLineEnabled = true;
         participantDistributionChart.chartCursor.categoryBalloonEnabled = true;
@@ -135,7 +137,7 @@
         'time': vm.timeStamp,
       };
       var exportFields = [];
-      _.forEach(graphs, function (value) {
+      _.each(graphs, function (value) {
         columnNames[value.valueField] = value.title + ' ' + vm.participants;
       });
       for (var key in columnNames) {
@@ -146,15 +148,6 @@
       var ExportFileName = 'MediaService_ParticipantDistribution_' + cluster + '_' + dateLabel + '_' + new Date();
 
       if (!isDummy && clusterSelected === vm.allClusters) {
-        graphs.push({
-          'title': 'All',
-          'id': 'all',
-          'bullet': 'square',
-          'bulletSize': 10,
-          'lineColor': '#000000',
-          'hidden': true,
-        });
-
         graphs.push({
           'title': 'None',
           'id': 'none',
@@ -210,13 +203,13 @@
 
     function getClusterName(graphs, clusterMap) {
       var tempData = [];
-      _.forEach(graphs, function (value) {
+      _.each(graphs, function (value) {
         var clusterName = _.findKey(clusterMap, function (val) {
           return val === value.valueField;
         });
         if (!_.isUndefined(clusterName)) {
           value.title = clusterName;
-          value.balloonText = '<span class="graph-text">' + value.title + ' ' + ' <span class="graph-number">[[value]]</span></span>' + ' <p class="graph-text insight-padding"><span class="graph-text-color">[[' + value.descriptionField + ']]</span></p>';
+          value.balloonText = '<div class="insight-balloon-div"><span class="graph-text dis-inline-block">' + value.title + ' ' + ' <span class="graph-number dis-inline-block">[[value]]</span></span>' + ' <p class="graph-text insight-padding"><span class="graph-text-color dis-inline-block">[[' + value.descriptionField + ']]</span></p></div>';
           value.lineThickness = 2;
         }
         if (value.title !== value.valueField) {
@@ -229,22 +222,19 @@
     }
 
     function legendHandler(evt) {
-      if (evt.dataItem.id === 'all') {
-        _.forEach(evt.chart.graphs, function (graph) {
-          if (graph.id != 'all') {
-            evt.chart.showGraph(graph);
-          } else if (graph.id === 'all') {
+      if (evt.dataItem.title === 'None') {
+        evt.dataItem.title = 'All';
+        _.each(evt.chart.graphs, function (graph) {
+          if (graph.title != 'All') {
             evt.chart.hideGraph(graph);
+          } else {
+            evt.chart.showGraph(graph);
           }
-
         });
-      } else if (evt.dataItem.id === 'none') {
-        _.forEach(evt.chart.graphs, function (graph) {
-          if (graph.id != 'all') {
-            evt.chart.hideGraph(graph);
-          } else if (graph.id === 'all') {
-            evt.chart.showGraph(graph);
-          }
+      } else if (evt.dataItem.title === 'All') {
+        evt.dataItem.title = 'None';
+        _.each(evt.chart.graphs, function (graph) {
+          evt.chart.showGraph(graph);
         });
       }
     }

@@ -160,6 +160,50 @@ describe('Controller: Care Reports Controller', function () {
     });
   });
 
+  describe('CareReportsController - Graph title', function () {
+
+    it('should set title for dummydata as empty and todays date for actual data', function () {
+      var title = moment().format('MMM D');
+      $timeout(function () {
+        expect(CareReportsService.showTaskIncomingDummy.calls.argsFor(0)[3]).toBeUndefined();
+        expect(CareReportsService.showAverageCsatDummy.calls.argsFor(0)[3]).toBeUndefined();
+        expect(CareReportsService.showTaskAggregateDummy.calls.argsFor(0)[3]).toBeUndefined();
+        expect(CareReportsService.showTaskIncomingGraph.calls.argsFor(0)[3]).toEqual(title);
+        expect(CareReportsService.showAverageCsatGraph.calls.argsFor(0)[3]).toEqual(title);
+        expect(CareReportsService.showTaskAggregateGraph.calls.argsFor(0)[3]).toEqual(title);
+      }, 100);
+    });
+
+    it('should set title for dummydata as empty and Yesterdays date for actual data', function () {
+      controller.timeSelected = timeOptions[1];
+      controller.filtersUpdate();
+      var title = (moment().subtract(1, 'days').format('MMM D'));
+      $timeout(function () {
+        expect(CareReportsService.showTaskIncomingDummy.calls.argsFor(0)[3]).toBeUndefined();
+        expect(CareReportsService.showAverageCsatDummy.calls.argsFor(0)[3]).toBeUndefined();
+        expect(CareReportsService.showTaskAggregateDummy.calls.argsFor(0)[3]).toBeUndefined();
+        expect(CareReportsService.showTaskIncomingGraph.calls.argsFor(0)[3]).toEqual(title);
+        expect(CareReportsService.showAverageCsatGraph.calls.argsFor(0)[3]).toEqual(title);
+        expect(CareReportsService.showTaskAggregateGraph.calls.argsFor(0)[3]).toEqual(title);
+      }, 100);
+    });
+
+    it('should set title for dummydata as empty and undefined for actual data when time selected is not today or yesterday', function () {
+      var randomIndex = Math.floor((Math.random() * 3) + 2);
+      controller.timeSelected = timeOptions[randomIndex];
+      controller.filtersUpdate();
+      $timeout(function () {
+        expect(CareReportsService.showTaskIncomingDummy.calls.argsFor(0)[3]).toBeUndefined();
+        expect(CareReportsService.showAverageCsatDummy.calls.argsFor(0)[3]).toBeUndefined();
+        expect(CareReportsService.showTaskAggregateDummy.calls.argsFor(0)[3]).toBeUndefined();
+        expect(CareReportsService.showTaskIncomingGraph.calls.argsFor(0)[3]).toBeUndefined();
+        expect(CareReportsService.showAverageCsatGraph.calls.argsFor(0)[3]).toBeUndefined();
+        expect(CareReportsService.showTaskAggregateGraph.calls.argsFor(0)[3]).toBeUndefined();
+      }, 100);
+    });
+  });
+
+
   describe('CareReportsController - Filters Update', function () {
     it('should send options for last week on selection', function () {
       controller.timeSelected = timeOptions[2];

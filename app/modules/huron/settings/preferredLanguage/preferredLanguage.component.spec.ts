@@ -15,7 +15,7 @@ describe('Component: preferredLanguage', () => {
 
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
 
-    this.compileComponent('ucPreferredLanguage', {
+    this.compileComponent('ucSettingsPreferredLanguage', {
       preferredLanguage: 'preferredLanguage',
       preferredLanguageOptions: 'preferredLanguageOptions',
       onChangeFn: 'onChangeFn(preferredLanguage)',

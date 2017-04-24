@@ -1,8 +1,11 @@
 (function () {
   'use strict';
 
-  angular.module('Huron')
-    .factory('PstnSetup', PstnSetup);
+  module.exports = angular.module('huron.PstnSetup', [
+    require('angular-resource'),
+  ])
+    .factory('PstnSetup', PstnSetup)
+    .name;
 
   function PstnSetup() {
     var customerId, customerName, customerFirstName, customerLastName, customerEmail, serviceAddress, customerExists, resellerExists, carrierExists, siteExists, provider, numbers, orders, carriers, singleCarrierReseller, isTrial, countryCode;
@@ -65,7 +68,7 @@
       resellerExists = false;
       carrierExists = false;
       siteExists = false;
-      provider = {};
+      provider = undefined;
       numbers = [];
       orders = [];
       carriers = [];

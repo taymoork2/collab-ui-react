@@ -192,7 +192,7 @@
         "lastReported": "1470403481",
         "severity": "error",
         "title": "[Hybrid services] Connectivity error",
-        "description": "Could not reach Cisco Collaboration Cloud address: https://hercules-integration.wbx2.com/v1/connectors",
+        "description": "Could not reach Cisco Collaboration Cloud address: https://hercules-intb.ciscospark.com/v1/connectors",
         "solution": "Check %s, or %s, or use network utilities %s, to verify this address",
         "solutionReplacementValues": [{
           "text": "DNS Settings",

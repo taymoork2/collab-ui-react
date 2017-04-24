@@ -7,7 +7,15 @@ describe('Component: classOfService', () => {
     this.initModules(ClassOfServiceComponent);
     this.injectDependencies(
       '$scope',
+      'Authinfo',
+      'FeatureToggleService',
+      '$q',
     );
+
+    initDependencySpies.apply(this);
+    initComponent.apply(this);
+
+    installPromiseMatchers();
 
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
     this.compileComponent('ucCosForm', {
@@ -17,14 +25,17 @@ describe('Component: classOfService', () => {
 
   });
 
+  function initDependencySpies() {
+    spyOn(this.Authinfo, 'getLicenseIsTrial').and.returnValue(true);
+    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.when(true));
+  }
+
   function initComponent() {
     this.$scope.restrictions = _.cloneDeep(restrictions);
     this.$scope.$apply();
   }
 
   describe('Class of Service for customers', () => {
-    beforeEach(initComponent);
-
     it('should display each cos restriction', function() {
       expect(this.view.find('#' + restrictions[0].restriction + '-toggle')).toExist();
       expect(this.view.find('#' + restrictions[1].restriction + '-toggle')).toExist();

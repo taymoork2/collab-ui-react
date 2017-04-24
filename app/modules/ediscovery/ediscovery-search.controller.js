@@ -6,8 +6,8 @@ var Spark = require('@ciscospark/spark-core').default;
   'use strict';
 
   /* @ngInject */
-  function EdiscoverySearchController($q, $stateParams, $translate, $timeout, $scope, $window, EdiscoveryService, EdiscoveryNotificationService,
-    FeatureToggleService, Notification, TokenService) {
+  function EdiscoverySearchController($q, $stateParams, $translate, $timeout, $scope, $window, Analytics, EdiscoveryService, EdiscoveryNotificationService,
+    FeatureToggleService, ITProPackService, Notification, TokenService) {
     $scope.$on('$viewContentLoaded', function () {
       angular.element('#searchInput').focus();
     });
@@ -21,6 +21,7 @@ var Spark = require('@ciscospark/spark-core').default;
     vm.searchByParameters = searchByParameters;
     vm.resetSearchPageToInitialState = resetSearchPageToInitialState;
     vm.advancedSearch = advancedSearch;
+    vm.validateDate = validateDate;
     vm.searchForRoom = searchForRoom;
     vm.createReport = createReport;
     vm.generateReport = generateReport;
@@ -32,6 +33,7 @@ var Spark = require('@ciscospark/spark-core').default;
     vm.downloadReport = downloadReport;
     vm.retrySearch = retrySearch;
     vm.ediscoveryToggle = false;
+    vm.itProPackToggle = false;
     vm.createReportInProgress = false;
     vm.searchingForRoom = false;
     vm.searchInProgress = false;
@@ -40,8 +42,9 @@ var Spark = require('@ciscospark/spark-core').default;
     vm.limitError = false;
 
     /* initial search variables page */
-    vm.searchPlaceholder = $translate.instant('ediscovery.searchParameters.searchByEmailPlaceholder');
-    vm.searchByOptions = ['Email ID', 'Space ID'];
+    vm.searchPlaceholder = $translate.instant('ediscovery.searchParameters.searchEmailPlaceholder');
+    vm.searchHelpText = $translate.instant('ediscovery.searchParameters.searchEmailHelpText');
+    vm.searchByOptions = ['Email Address', 'Space ID'];
     vm.searchBySelected = '' || vm.searchByOptions[0];
     vm.searchModel = null;
     vm.queryModel = null;
@@ -81,6 +84,10 @@ var Spark = require('@ciscospark/spark-core').default;
       vm.ediscoveryToggle = result;
     });
 
+    ITProPackService.hasITProPackPurchased().then(function (result) {
+      vm.itProPackToggle = result;
+    });
+
     function init(report, reRun) {
       vm.report = null;
       vm.error = null;
@@ -115,39 +122,63 @@ var Spark = require('@ciscospark/spark-core').default;
     }
 
     function getEndDate() {
-      vm.searchCriteria.endDate = moment().endOf('day').format('YYYY-MM-DD');
       return vm.searchCriteria.endDate;
     }
 
-    function formatDate(reason, date) {
+    function formatDate(reason, date, isEndOfDay) {
       var regex = new RegExp('-', 'g');
       var replace = '/';
       if (reason === 'display') {
         return _.replace(date, regex, replace).split('T')[0];
       }
       if (reason === 'api') {
-        return moment(date).toISOString();
+        if (isEndOfDay) {
+          return moment(date).endOf('day').toISOString();
+        } else {
+          return moment(date).toISOString();
+        }
       }
     }
 
     function dateErrors(start, end) {
       var errors = [];
+      var ninetyDayLimit = moment(end).subtract(90, 'days');
 
       if (moment(start).isAfter(moment(end))) {
-        errors.push($translate.instant("ediscovery.dateError.StartDateMustBeforeEndDate"));
+        errors.push($translate.instant('ediscovery.dateError.StartDateMustBeforeEndDate'));
       }
       if (moment(start).isAfter(moment())) {
-        errors.push($translate.instant("ediscovery.dateError.StartDateCannotBeInTheFuture"));
+        errors.push($translate.instant('ediscovery.dateError.StartDateCannotBeInTheFuture'));
       }
+
+      if (moment(start).isBefore(ninetyDayLimit) && !vm.itProPackToggle) {
+        errors.push($translate.instant('ediscovery.dateError.InvalidDateRange'));
+      }
+
       return errors;
+    }
+
+    function dateWarnings(end) {
+      var warnings = [];
+      if (end !== moment().endOf('day').format('YYYY-MM-DD') && !vm.itProPackToggle) {
+        warnings.push($translate.instant('ediscovery.dateError.InvalidEndDate'));
+      }
+      return warnings;
     }
 
     function validateDate() {
       vm.dateValidationError = null;
+      vm.dateValidationWarning = null;
       var errors = dateErrors(getStartDate(), getEndDate());
+      var warnings = dateWarnings(getEndDate());
       if (errors.length > 0) {
         vm.dateValidationError = {
           errors: errors,
+        };
+        return false;
+      } else if (warnings.length > 0) {
+        vm.dateValidationWarning = {
+          warnings: warnings,
         };
         return false;
       } else {
@@ -183,9 +214,11 @@ var Spark = require('@ciscospark/spark-core').default;
 
     function searchByParameters() {
       if (_.eq(vm.searchByOptions[0], vm.searchBySelected)) {
-        vm.searchPlaceholder = $translate.instant('ediscovery.searchParameters.searchByEmailPlaceholder');
+        vm.searchPlaceholder = $translate.instant('ediscovery.searchParameters.searchEmailPlaceholder');
+        vm.searchHelpText = $translate.instant('ediscovery.searchParameters.searchEmailHelpText');
       } else if (_.eq(vm.searchByOptions[1], vm.searchBySelected)) {
-        vm.searchPlaceholder = $translate.instant('ediscovery.searchParameters.searchByRoomPlaceholder');
+        vm.searchPlaceholder = $translate.instant('ediscovery.searchParameters.searchRoomPlaceholder');
+        vm.searchHelpText = $translate.instant('ediscovery.searchParameters.searchRoomHelpText');
       }
     }
 
@@ -207,7 +240,7 @@ var Spark = require('@ciscospark/spark-core').default;
         numMessages: result.data.numMessages,
         totalSize: convertBytesToGB(result.data.totalSizeInBytes),
       };
-      vm.searchResultsHeader = _.eq(vm.searchByOptions[0], vm.searchBySelected) ? $translate.instant('ediscovery.searchResults.emailId') : $translate.instant('ediscovery.searchResults.spaceId');
+      vm.searchResultsHeader = _.eq(vm.searchByOptions[0], vm.searchBySelected) ? $translate.instant('ediscovery.searchResults.emailAddress') : $translate.instant('ediscovery.searchResults.spaceId');
     }
 
     function advancedSearch() {
@@ -240,7 +273,7 @@ var Spark = require('@ciscospark/spark-core').default;
         })
         .then(function () {
           var start = formatDate('api', getStartDate());
-          var end = formatDate('api', getEndDate());
+          var end = formatDate('api', getEndDate(), true);
           var argonautParam = {
             roomIds: vm.unencryptedRoomIds,
             emailAddresses: vm.encryptedEmails,
@@ -256,6 +289,7 @@ var Spark = require('@ciscospark/spark-core').default;
                 vm.isReportMaxRooms = true;
                 vm.isReport = false;
               }
+              Analytics.trackEdiscoverySteps(Analytics.sections.EDISCOVERY.eventNames.INITIAL_SEARCH);
             })
             .catch(function (err) {
               vm.error = _.get(err, 'data.message', $translate.instant('ediscovery.search.roomLookupError'));
@@ -336,8 +370,9 @@ var Spark = require('@ciscospark/spark-core').default;
               encryptionKeyUrl: vm.encryptionKeyUrl,
               responseUri: res.url,
               startDate: formatDate('api', getStartDate()),
-              endDate: formatDate('api', getEndDate()),
+              endDate: formatDate('api', getEndDate(), true),
             };
+            Analytics.trackEdiscoverySteps(Analytics.sections.EDISCOVERY.eventNames.GENERATE_REPORT);
             generateReport(reportParams);
           } else {
             runReport(res.runUrl, res.url);
@@ -377,7 +412,7 @@ var Spark = require('@ciscospark/spark-core').default;
     function searchButtonDisabled(_error) {
       var error = !_.isUndefined(_error) ? _error : false;
       var disable = !vm.searchCriteria.roomId || vm.searchCriteria.roomId === '' || vm.searchingForRoom === true;
-      return vm.ediscoveryToggle ? (error || vm.dateValidationError) : disable;
+      return vm.ediscoveryToggle ? (error || vm.dateValidationError || vm.dateValidationWarning) : disable;
     }
 
     function pollAvalonReport() {

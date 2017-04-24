@@ -64,39 +64,8 @@ require('modules/core/reports/amcharts-export.scss');
       clearDisplayedStats();
       vm.selectModelsPlaceholder = $translate.instant('reportsPage.usageReports.selectModelsToFilterOn');
       DeviceUsageSplunkMetricsService.reportOperation(DeviceUsageSplunkMetricsService.eventTypes.timeRangeSelected, vm.timeSelected);
-      vm.deviceFilter = vm.deviceOptions[0];
       getDataForSelectedRange(vm.timeSelected.value);
     }
-
-    vm.deviceOptions = [
-      {
-        value: 0,
-        label: $translate.instant('reportsPage.usageReports.deviceOptions.all'),
-      },
-      {
-        value: 1,
-        label: $translate.instant('reportsPage.usageReports.deviceOptions.roomSystems'),
-      },
-      {
-        value: 2,
-        label: $translate.instant('reportsPage.usageReports.deviceOptions.sparkBoard'),
-      },
-    ];
-    vm.deviceFilter = vm.deviceOptions[0];
-
-    vm.deviceUpdate = function () {
-      switch (vm.deviceFilter.value) {
-        case 0:
-          loadChartDataForDeviceType(vm.reportData);
-          break;
-        case 1:
-          loadChartDataForDeviceType(extractDeviceType('ce'));
-          break;
-        case 2:
-          loadChartDataForDeviceType(extractDeviceType('SparkBoard'));
-          break;
-      }
-    };
 
     function getDataForSelectedRange(timeSelected, models) {
       switch (timeSelected) {
@@ -117,29 +86,6 @@ require('modules/core/reports/amcharts-export.scss');
           dateRange = DeviceUsageDateService.getDateRangeForLastNTimeUnits(7, 'day');
           loadLastWeek(dateRange, models);
       }
-    }
-
-    function extractDeviceType(deviceCategory) {
-      var extract = _.chain(vm.reportData).reduce(function (result, item) {
-        if (typeof result[item.time] === 'undefined') {
-          result[item.time] = {
-            callCount: 0,
-            totalDuration: 0,
-            pairedCount: 0,
-          };
-        }
-        if (item.deviceCategories[deviceCategory]) {
-          result[item.time].callCount += item.deviceCategories[deviceCategory].callCount;
-          result[item.time].totalDuration += item.deviceCategories[deviceCategory].totalDuration;
-          result[item.time].pairedCount += item.deviceCategories[deviceCategory].pairedCount;
-        }
-        return result;
-      }, {}).map(function (value, key) {
-        value.totalDurationY = (value.totalDuration / 3600).toFixed(2);
-        value.time = key;
-        return value;
-      }).value();
-      return extract;
     }
 
     $scope.$watch(function () {
@@ -217,11 +163,6 @@ require('modules/core/reports/amcharts-export.scss');
       amChart.valueAxes[0].maximum = (max / 3600) * 1.1;
     }
 
-    function loadChartDataForDeviceType(data) {
-      amChart.dataProvider = data;
-      amChart.validateData();
-    }
-
     function loadLastWeek(dates, models) {
       vm.waitingForDeviceMetrics = true;
       vm.waitForLeast = true;
@@ -277,25 +218,57 @@ require('modules/core/reports/amcharts-export.scss');
         vm.waitingForDeviceMetrics = false;
         vm.mostUsedDevices = [];
         vm.leastUsedDevices = [];
-        resolveDeviceData(stats.most, vm.mostUsedDevices)
-          .then(function () {
-            vm.waitForMost = false;
-          });
-        resolveDeviceData(stats.least, vm.leastUsedDevices)
-          .then(function () {
-            vm.waitForLeast = false;
-          });
+        vm.peopleCount = stats.peopleCount;
+
+        vm.peopleCount = _.groupBy(vm.peopleCount, function (pc) {
+          return pc.accountId;
+        });
+
+        if (stats.most && stats.most.length > 0) {
+          stats.most = vm.addPeopleCount(stats.most, vm.peopleCount);
+          resolveDeviceData(stats.most, vm.mostUsedDevices)
+            .then(function () {
+              vm.waitForMost = false;
+            });
+        } else {
+          vm.waitForMost = false;
+        }
+
+        if (stats.least && stats.least.length > 0) {
+          stats.least = vm.addPeopleCount(stats.least, vm.peopleCount);
+          resolveDeviceData(stats.least, vm.leastUsedDevices)
+            .then(function () {
+              vm.waitForLeast = false;
+            });
+        } else {
+          vm.waitForLeast = false;
+        }
       });
     }
 
+    vm.addPeopleCount = function (object, people) {
+      object = _.map(object, function (stat) {
+        stat.peopleCount = '-';
+        var peopleCount = _.find(people, function (pc) {
+          return pc[0].accountId === stat.accountId;
+        });
+        if (peopleCount) {
+          stat.peopleCount = parseInt(peopleCount[0]['peopleCountAvg'], 10);
+        }
+        return stat;
+      });
+      return object;
+    };
+
     function resolveDeviceData(stats, target) {
-      return DeviceUsageService.resolveDeviceData(stats)
+      return DeviceUsageService.resolveDeviceData(stats, apiToUse)
         .then(function (deviceInfo) {
           _.each(stats, function (device, index) {
             target.push({
               "name": deviceInfo[index].displayName,
               "info": deviceInfo[index].info,
-              "duration": secondsTohhmmss(device.totalDuration),
+              "peopleCount": device.peopleCount,
+              "duration": secondsTohhmmss(device.callDuration),
               "calls": device.callCount });
           });
         });
@@ -378,7 +351,7 @@ require('modules/core/reports/amcharts-export.scss');
 
     function modelsForRange(items) {
       _.each(DeviceUsageModelService.mapModelsIn(items), function (item) {
-        if (item.model !== '*') {
+        if (!_.isEmpty(item.model) && item.model !== '*') {
           vm.modelOptions.push({
             value: item.model,
             label: item.model,

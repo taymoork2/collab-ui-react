@@ -150,7 +150,7 @@ describe('HelpdeskHuronService', function () {
       .respond(huronUserWithNumbers);
 
     $httpBackend
-      .when('GET', 'https://atlas-integration.wbx2.com/admin/api/v1/helpdesk/organizations/4214d345-7caf-4e32-b015-34de878d1158/users/74c2ca8d-99ca-4bdf-b6b9-a142d503f024')
+      .when('GET', 'https://atlas-intb.ciscospark.com/admin/api/v1/helpdesk/organizations/4214d345-7caf-4e32-b015-34de878d1158/users/74c2ca8d-99ca-4bdf-b6b9-a142d503f024')
       .respond(user);
   }));
 
@@ -237,7 +237,7 @@ describe('HelpdeskHuronService', function () {
     beforeEach(function () {
       validResult = [{ "steeringDigit": "9", "siteSteeringDigit": "8", "mediaTraversalMode": "TURNOnly", "vmCluster": null, "uuid": "8f667dfe-a3f7-4911-9947-ab985075dceb", "url": "https://cmi.huron-int.com/api/v1/voice/customers/d16100fe-8039-4170-8407-f87eb58382ef/sites/8f667dfe-a3f7-4911-9947-ab985075dceb", "links": [{ "rel": "voice", "href": "/api/v1/voice/customers/d16100fe-8039-4170-8407-f87eb58382ef/sites/8f667dfe-a3f7-4911-9947-ab985075dceb" }] }];
 
-      validSiteResult = { "customer": { "uuid": "d16100fe-8039-4170-8407-f87eb58382ef", "name": "Atlas-Stoy-Test-4" }, "siteIndex": "000001", "siteCode": "100", "steeringDigit": "9", "siteSteeringDigit": "8", "timeZone": "America/Los_Angeles", "voicemailPilotNumber": null, "mediaTraversalMode": "TURNOnly", "siteDescription": "", "vmCluster": null, "allowInternationalDialing": "false", "emergencyCallBackNumber": null, "extensionLength": "4", "voicemailPilotNumberGenerated": null, "uuid": "8f667dfe-a3f7-4911-9947-ab985075dceb", "url": "https://cmi.huron-int.com/api/v1/voice/customers/d16100fe-8039-4170-8407-f87eb58382ef/sites/8f667dfe-a3f7-4911-9947-ab985075dceb", "links": [{ "rel": "voice", "href": "/api/v1/voice/customers/d16100fe-8039-4170-8407-f87eb58382ef/sites/8f667dfe-a3f7-4911-9947-ab985075dceb" }] };
+      validSiteResult = { "customer": { "uuid": "d16100fe-8039-4170-8407-f87eb58382ef", "name": "Atlas-Stoy-Test-4" }, "siteIndex": "000001", "siteCode": "100", "steeringDigit": "9", "siteSteeringDigit": "8", "timeZone": "America/Los_Angeles", "voicemailPilotNumber": null, "mediaTraversalMode": "TURNOnly", "siteDescription": "", "vmCluster": null, "emergencyCallBackNumber": null, "extensionLength": "4", "voicemailPilotNumberGenerated": null, "uuid": "8f667dfe-a3f7-4911-9947-ab985075dceb", "url": "https://cmi.huron-int.com/api/v1/voice/customers/d16100fe-8039-4170-8407-f87eb58382ef/sites/8f667dfe-a3f7-4911-9947-ab985075dceb", "links": [{ "rel": "voice", "href": "/api/v1/voice/customers/d16100fe-8039-4170-8407-f87eb58382ef/sites/8f667dfe-a3f7-4911-9947-ab985075dceb" }] };
 
       emptyResult = [];
     });

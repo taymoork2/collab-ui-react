@@ -1,11 +1,19 @@
 (function () {
   'use strict';
 
-  angular.module('Huron')
-    .factory('ExternalNumberService', ExternalNumberService);
+  module.exports = angular.module('huron.externalNumberService', [
+    require('angular-resource'),
+    require('modules/huron/telephony/cmiServices'),
+    require('modules/huron/telephony/telephonyExternalNumbersService'),
+    require('modules/huron/telephony/telephoneNumber.service'),
+    require('modules/huron/pstnSetup/pstnSetup.service'),
+    require('modules/huron/pstnSetup/terminusServices'),
+  ])
+  .factory('ExternalNumberService', ExternalNumberService)
+  .name;
 
   /* @ngInject */
-  function ExternalNumberService($q, $translate, ExternalNumberPool, NumberSearchServiceV2, PstnSetupService, TelephoneNumberService) {
+  function ExternalNumberService($q, $translate, ExternalNumberPool, NumberSearchServiceV2, PstnSetupService, TelephoneNumberService, TerminusCarrierService) {
     var service = {
       refreshNumbers: refreshNumbers,
       clearNumbers: clearNumbers,
@@ -23,6 +31,7 @@
       getQuantity: getQuantity,
       getAssignedNumbersV2: getAssignedNumbersV2,
       getUnassignedNumbersV2: getUnassignedNumbersV2,
+      getCarrierInfo: getCarrierInfo,
     };
     var allNumbers = [];
     var pendingNumbers = [];
@@ -213,7 +222,9 @@
         return $q.resolve(true);
       }
       return PstnSetupService.getCustomerV2(customerId)
-        .then(_.partial(allowPstnSetup, customerId))
+        .then(function (response) {
+          return allowPstnSetup(customerId, _.get(response, 'pstnCarrierId'));
+        })
         .catch(_.partial(hasExternalNumbers, customerId));
     }
 
@@ -230,9 +241,10 @@
       });
     }
 
-    function allowPstnSetup(customerId) {
+    function allowPstnSetup(customerId, pstnCarrierId) {
       terminusDetails.push({
         customerId: customerId,
+        pstnCarrierId: pstnCarrierId,
       });
       return true;
     }
@@ -252,6 +264,12 @@
         default:
           break;
       }
+    }
+
+    function getCarrierInfo(customerId) {
+      return TerminusCarrierService.get({
+        carrierId: (_.find(terminusDetails, { customerId: customerId })).pstnCarrierId,
+      }).$promise;
     }
   }
 })();

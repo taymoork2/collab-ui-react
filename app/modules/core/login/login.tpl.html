@@ -2,7 +2,8 @@
   <div class="message-box" ng-class="checkForIeWorkaround">
     <div class="message-box__content">
       <img class="message-box__logo" src="images/spark-logo.svg">
-      <h2 class="message-box__title" translate="loginPage.title"></h2>
+      <h2 class="message-box__app-name" translate="loginPage.title"></h2>
+      <h4 class="message-box__login-title" translate="loginPage.email"></h4>
       <div ng-show="result">
         <div class="results alert alert-danger" ng-bind-html="result"></div>
       </div>
@@ -14,7 +15,7 @@
       </div>
       <form novalidate name="loginForm" class="typeahead-group" autocomplete="off">
         <div class="row">
-          <div class="cs-input-group small-12 columns">
+          <div class="cs-input-group small-10 small-offset-1 columns">
             <input
               type="email"
               class="cs-input"
@@ -27,7 +28,7 @@
           </div>
         </div>
       </form>
-      <button class="btn btn--primary btn--large btn--expand message-box__btn" role="button" ng-click="login()" ng-disabled="loginForm.email.$invalid">
+      <button class="btn btn--primary btn--large message-box__btn" role="button" ng-click="login()" ng-disabled="loginForm.email.$invalid">
       <span translate="loginPage.login"></span>
       </button>
       <div class="message-box__footer" translate="loginPage.license"></div>

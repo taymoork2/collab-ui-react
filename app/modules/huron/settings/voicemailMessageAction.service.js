@@ -1,9 +1,13 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Huron')
-    .factory('VoicemailMessageAction', VoicemailMessageAction);
+  module.exports = angular
+    .module('huron.voicemail-message-action', [
+      require('modules/core/auth/auth'),
+      require('modules/huron/telephony/cmiServices'),
+    ])
+    .service('VoicemailMessageAction', VoicemailMessageAction)
+    .name;
 
   /* @ngInject */
   function VoicemailMessageAction($q, Authinfo, VoicemailMessageActionService) {

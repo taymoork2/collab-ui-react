@@ -1,6 +1,7 @@
 import {
   IPstnCarrierGet,
   IPstnCarrierStatic,
+  IPstnCarrierCapability,
   PstnCarrier,
 } from './pstnCarrier';
 
@@ -137,6 +138,7 @@ export class PstnProvidersCtrl implements ng.IComponentController {
 
     //Save the Network info in the 'pstnCarrier' object
     pstnCarrier.setPstnCarrierGet(carrier);
+    //Add static carrier information
     for (let x: number = 0; x < this.pstnCarrierStatics.length; x++) {
       if (this.pstnCarrierStatics[x].name === carrier.vendor) {
         //Add the static info to 'pstnCarrier' object
@@ -144,6 +146,10 @@ export class PstnProvidersCtrl implements ng.IComponentController {
         break;
       }
     }
+    //Get and add carrier capabilities
+    this.PstnSetupService.getCarrierCapabilities(carrier.uuid).then( (capabilities: Array<IPstnCarrierCapability>) => {
+      pstnCarrier.setCapabilities(capabilities);
+    });
   }
 
 }

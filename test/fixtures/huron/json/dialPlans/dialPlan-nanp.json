@@ -1,0 +1,14 @@
+{
+  "name": "NANP",
+  "countryCode": "+1",
+  "regionCodeRequired": false,
+  "supportsSiteSteeringDigit": true,
+  "steeringDigitRequired": true,
+  "supportsSiteCode": true,
+  "extentionsGenerated": null,
+  "supportsLocalDialing": true,
+  "supportsSimplifiedNationalDialing": true,
+  "premiumNumbers":[
+  "1900"
+  ]
+}

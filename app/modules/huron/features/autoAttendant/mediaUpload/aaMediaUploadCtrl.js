@@ -30,7 +30,6 @@
     vm.progress = 0;
     vm.actionCopy = undefined;
     vm.isSquishable = isSquishable;
-    vm.clioDelete = AAMediaUploadService.isClioEnabled();
 
     var maxLanes = 3;
 
@@ -333,7 +332,9 @@
         AAMediaUploadService.notifyAsActive(uniqueCtrlIdentifier, false);
       }
     });
-
+    $scope.$on('Queue_Cancelled', function () {
+      AAMediaUploadService.notifyAsActive(uniqueCtrlIdentifier, false);
+    });
     //if user cancels upload & previously uploaded media -> re-init/revert copy
     function setActionCopy() {
       if (!modalOpen) {

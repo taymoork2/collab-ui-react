@@ -6,10 +6,10 @@
     .controller('CallServicePreviewCtrl', CallServicePreviewCtrl);
 
   /*@ngInject*/
-  function CallServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, FusionClusterService, UriVerificationService, DomainManagementService, $translate, FeatureToggleService, ResourceGroupService, UCCService, HybridServicesUtils) {
+  function CallServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, FusionClusterService, UriVerificationService, DomainManagementService, $translate, ResourceGroupService, UCCService, HybridServicesI18NService) {
     $scope.saveLoading = false;
     $scope.domainVerificationError = false;
-    $scope.currentUser = $stateParams.currentUser || $stateParams.currentPlace;
+    $scope.currentUser = $stateParams.currentUser || $stateParams.getCurrentPlace();
     $scope.isPlace = $scope.currentUser.accountType === 'MACHINE';
     $scope.isUser = !$scope.isPlace;
     var isEntitled = function (ent) {
@@ -87,6 +87,15 @@
       }
     });
 
+    if ($scope.isPlace && $scope.currentUser.externalLinkedAccounts) {
+      var existingHybridCallLink = _.head(_.filter($scope.currentUser.externalLinkedAccounts, function (linkedAccount) {
+        return linkedAccount && (linkedAccount.providerID === 'squared-fusion-uc');
+      }));
+      if (existingHybridCallLink) {
+        $scope.mailID = existingHybridCallLink.accountGUID;
+      }
+    }
+
     var entitlementHasChanged = function () {
       return $scope.callServiceConnect.entitled !== isEntitled($scope.callServiceConnect.id) || $scope.callServiceAware.entitled !== isEntitled($scope.callServiceAware.id);
     };
@@ -121,10 +130,10 @@
           });
         }
         if ($scope.callServiceAware.status && $scope.callServiceAware.status.lastStateChange) {
-          $scope.callServiceAware.status.lastStateChangeText = HybridServicesUtils.getTimeSinceText($scope.callServiceAware.status.lastStateChange);
+          $scope.callServiceAware.status.lastStateChangeText = HybridServicesI18NService.getTimeSinceText($scope.callServiceAware.status.lastStateChange);
         }
         if ($scope.callServiceConnect.status && $scope.callServiceConnect.status.lastStateChange) {
-          $scope.callServiceConnect.status.lastStateChangeText = HybridServicesUtils.getTimeSinceText($scope.callServiceConnect.status.lastStateChange);
+          $scope.callServiceConnect.status.lastStateChangeText = HybridServicesI18NService.getTimeSinceText($scope.callServiceConnect.status.lastStateChange);
         }
         if ($scope.callServiceAware.entitled && $scope.callServiceAware.status) {
           UCCService.getUserDiscovery($scope.currentUser.id).then(function (userDiscovery) {
@@ -186,28 +195,23 @@
     };
 
     var readResourceGroups = function () {
-      FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup)
-        .then(function (supported) {
-          if (supported) {
-            ResourceGroupService.getAllAsOptions().then(function (options) {
-              if (options.length > 0) {
-                $scope.resourceGroup.options = $scope.resourceGroup.options.concat(options);
-                if ($scope.callServiceAware.status && $scope.callServiceAware.status.resourceGroupId) {
-                  setSelectedResourceGroup($scope.callServiceAware.status.resourceGroupId);
-                } else {
-                  USSService.getUserProps($scope.currentUser.id).then(function (props) {
-                    if (props.resourceGroups && props.resourceGroups[$scope.callServiceAware.id]) {
-                      setSelectedResourceGroup(props.resourceGroups[$scope.callServiceAware.id]);
-                    } else {
-                      $scope.resourceGroup.displayWarningIfNecessary();
-                    }
-                  });
-                }
-                $scope.resourceGroup.show = true;
+      ResourceGroupService.getAllAsOptions().then(function (options) {
+        if (options.length > 0) {
+          $scope.resourceGroup.options = $scope.resourceGroup.options.concat(options);
+          if ($scope.callServiceAware.status && $scope.callServiceAware.status.resourceGroupId) {
+            setSelectedResourceGroup($scope.callServiceAware.status.resourceGroupId);
+          } else {
+            USSService.getUserProps($scope.currentUser.id).then(function (props) {
+              if (props.resourceGroups && props.resourceGroups[$scope.callServiceAware.id]) {
+                setSelectedResourceGroup(props.resourceGroups[$scope.callServiceAware.id]);
+              } else {
+                $scope.resourceGroup.displayWarningIfNecessary();
               }
             });
           }
-        });
+          $scope.resourceGroup.show = true;
+        }
+      });
     };
 
     updateStatus();
@@ -339,6 +343,10 @@
       $scope.callServiceConnect.entitled = isEntitled($scope.callServiceConnect.id);
       $scope.resourceGroup.reset();
       $scope.showButtons = false;
+    };
+
+    $scope.editCloudberryServices = function (service) {
+      $stateParams.editService(service);
     };
 
     $scope.closePreview = function () {

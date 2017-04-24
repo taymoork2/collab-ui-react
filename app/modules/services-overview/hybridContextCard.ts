@@ -1,5 +1,6 @@
 import { ServicesOverviewHybridCard } from './ServicesOverviewHybridCard';
 import { ICardButton, CardType } from './ServicesOverviewCard';
+import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 
 export class ServicesOverviewHybridContextCard extends ServicesOverviewHybridCard {
   public getShowMoreButton(): ICardButton | undefined {
@@ -38,7 +39,9 @@ export class ServicesOverviewHybridContextCard extends ServicesOverviewHybridCar
   }
 
   /* @ngInject */
-  public constructor(FusionClusterStatesService) {
+  public constructor(
+    HybridServicesClusterStatesService: HybridServicesClusterStatesService,
+  ) {
     super({
       active: false,
       cardClass: 'context',
@@ -48,6 +51,6 @@ export class ServicesOverviewHybridContextCard extends ServicesOverviewHybridCar
       name: 'servicesOverview.cards.hybridContext.title',
       routerState: 'context-resources',
       service: 'contact-center-context',
-    }, FusionClusterStatesService);
+    }, HybridServicesClusterStatesService);
   }
 }

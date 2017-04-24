@@ -1,0 +1,58 @@
+<div class="feature-toggles-editor">
+  <cs-page-header title="{{ $ctrl.pageTitle }}"></cs-page-header>
+
+  <div class="row userData">
+    <div class="columns medium-10 medium-offset-1">
+      <form name="userData">
+        <div class="data-row" ng-repeat="key in $ctrl.userDataDisplayKeys">
+          <div class="title">{{key}}</div>
+          <div class="data">{{$ctrl.me[key]}}</div>
+        </div>
+        <div class="data-row">
+          <div class="title">userPreferences</div>
+          <div class="data">
+            <input ng-repeat="pref in $ctrl.preferences" ng-attr-id="{{pref.key}}" ng-attr-name="{{pref.key}}" cs-input type="checkbox"
+              ng-model="pref.value" cs-input-label="{{pref.key}}" ng-change="$ctrl.updateUserPrefs(pref)" ng-disabled="$ctrl.updatingUserPrefs"></input>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="row grid">
+    <div class="toggle-list">
+      <cs-page-sub-header>
+        <cs-page-sub-header-left>
+          <cs-searchfilter search-item-fn="$ctrl.searchFn(searchStr)" placeholder-text="{{'editFeatureToggles.search'|translate}}">
+          </cs-searchfilter>
+        </cs-page-sub-header-left>
+        <cs-page-sub-header-right>
+          <input cs-input type="text" placeholder="{{::'editFeatureToggles.placeholder'|translate}}" ng-model="$ctrl.newFeatureToggleId"></input>
+          <button class="btn btn--circle btn--small btn--white btn--primary icon icon-add" ng-click="$ctrl.addFeatureToggle($ctrl.newFeatureToggleId)"
+            ng-disabled="!$ctrl.validateNewToggleId()"></button>
+        </cs-page-sub-header-right>
+      </cs-page-sub-header>
+
+      <div class="grid-refresh" ng-if="$ctrl.isLoading">
+        <i class='icon icon-spinner icon-2x'></i>
+      </div>
+      <table class="table table-striped" ng-if="!$ctrl.isLoading">
+        <thead>
+          <tr>
+            <th translate="editFeatureToggles.toggleId"></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="toggle in $ctrl.toggles | filter:{key: $ctrl.filterString} | orderBy:'key'">
+            <td>
+              <input ng-attr-id="{{toggle.key}}" ng-attr-name="{{toggle.key}}" cs-input type="checkbox"
+                ng-model="toggle.value" cs-input-label="{{toggle.key}}" ng-change="$ctrl.updateFeatureToggle(toggle)" ng-disabled="toggle.isUpdating"></input>
+            </td>
+            <td>
+              <div class="icon icon-trash" ng-click="$ctrl.removeFeatureToggle(toggle.key)"></div>
+          </tr>
+      </table>
+    </div>
+  </div>
+</div>

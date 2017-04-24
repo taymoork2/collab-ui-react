@@ -16,12 +16,10 @@
     var aaCENumberStatus = false;
     var aaMediaUploadStatus = false;
     var aaQueueSettingsStatus = false;
-    var routeQueueToggle = false;
     var mediaUploadToggle = false;
     var callerInputToggle = false;
-    var decisionToggle = false;
-    var clioToggle = false;
     var routeSIPAddressToggle = false;
+    var dynAnnounceToggle = false;
     var uniqueId = 0;
 
     var invalidList = {};
@@ -35,18 +33,14 @@
       setDialByExtensionStatus: setDialByExtensionStatus,
       setCENumberStatus: setCENumberStatus,
       setMediaUploadStatus: setMediaUploadStatus,
-      setDecisionToggle: setDecisionToggle,
       setQueueSettingsStatus: setQueueSettingsStatus,
       setMediaUploadToggle: setMediaUploadToggle,
       setCallerInputToggle: setCallerInputToggle,
-      setRouteQueueToggle: setRouteQueueToggle,
       setRouteSIPAddressToggle: setRouteSIPAddressToggle,
-      setClioToggle: setClioToggle,
-      isRouteQueueToggle: isRouteQueueToggle,
+      setDynAnnounceToggle: setDynAnnounceToggle,
+      isDynAnnounceToggle: isDynAnnounceToggle,
       isCallerInputToggle: isCallerInputToggle,
-      isDecisionToggle: isDecisionToggle,
       isMediaUploadToggle: isMediaUploadToggle,
-      isClioToggle: isClioToggle,
       isRouteSIPAddressToggle: isRouteSIPAddressToggle,
       isValid: isValid,
       setIsValid: setIsValid,
@@ -71,7 +65,7 @@
     }
 
     function isValid() {
-      return (!_.size(invalidList));
+      return (_.size(invalidList) === 0);
     }
 
     function getInvalid(which) {
@@ -138,16 +132,11 @@
       aaCENumberStatus = status;
     }
 
-    function setRouteQueueToggle(status) {
-      routeQueueToggle = status;
+    function setDynAnnounceToggle(status) {
+      dynAnnounceToggle = status;
     }
-
     function setQueueSettingsStatus(status) {
       aaQueueSettingsStatus = status;
-    }
-
-    function setClioToggle(status) {
-      clioToggle = status;
     }
 
     function setMediaUploadToggle(status) {
@@ -157,26 +146,13 @@
     function setCallerInputToggle(status) {
       callerInputToggle = status;
     }
-    function setDecisionToggle(status) {
-      decisionToggle = status;
-    }
 
     function setRouteSIPAddressToggle(status) {
       routeSIPAddressToggle = status;
     }
 
-    /**
-     * Will check the toggle status for clio enabled upload
-     */
-    function isClioToggle() {
-      return clioToggle;
-    }
-
-    /**
-     * Will check the toggle status for Queue which is set while aaPhoneMenuCtrl
-     */
-    function isRouteQueueToggle() {
-      return routeQueueToggle;
+    function isDynAnnounceToggle() {
+      return dynAnnounceToggle;
     }
 
     function isMediaUploadToggle() {
@@ -185,9 +161,6 @@
 
     function isCallerInputToggle() {
       return callerInputToggle;
-    }
-    function isDecisionToggle() {
-      return decisionToggle;
     }
 
     function isRouteSIPAddressToggle() {

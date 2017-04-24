@@ -62,7 +62,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
     size: fileSizeInvalid,
   };
   var variantUrlPlayback = 'recordingPlayBackUrl';
-  var uploadUrl = 'http://54.183.25.170:8001/api/notify/upload' + '?customerId=' + 'orgid';
+  var uploadUrl = 'https://clio-manager-intb.ciscospark.com/clio-manager/api/v1/recordings/media';
   var voice = "Vanessa";
   var fileDuration = '(00:39)';
   var fileDescription = {
@@ -300,6 +300,17 @@ describe('Controller: AAMediaUploadCtrl', function () {
 
         it('should call notifyAsSaved on ce saved broadcast', function () {
           expect(AAMediaUploadService.notifyAsSaved).toHaveBeenCalled();
+        });
+      });
+      describe('on Queue Cancelled', function () {
+        beforeEach(function () {
+          spyOn(AAMediaUploadService, 'notifyAsActive');
+          $rootScope.$broadcast('Queue_Cancelled');
+          $rootScope.$apply();
+        });
+
+        it('should call notifyAsActive to false on queue cancelled broadcast', function () {
+          expect(AAMediaUploadService.notifyAsActive).toHaveBeenCalledWith(jasmine.any(String), false);
         });
       });
     });

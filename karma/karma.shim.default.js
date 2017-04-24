@@ -1,4 +1,5 @@
 require('./karma.shim.common.js');
+require('./karma.shim.atlas.js');
 
 requireAll(require.context('../app', true, /\.spec\.(js|ts)$/));
 

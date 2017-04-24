@@ -1,0 +1,16 @@
+<!-- header -->
+<div class="modal-header">
+  <h3 class="modal-title" translate="linesPage.deleteNumberTitle"></h3>
+</div>
+
+<!-- body -->
+<div
+  class="modal-body">
+  <p><span>{{$ctrl.deleteConfirmationMessage}}</span></p>
+</div>
+
+<!-- footer -->
+<div class="modal-footer">
+  <button class="btn" id="cancelButton" ng-click="$ctrl.onDismiss()"><span translate="common.cancel"></span></button>
+  <button class="btn btn--negative" ng-click="$ctrl.onDelete()"><span translate="linesPage.deleteNumber"></span></button>
+</div>

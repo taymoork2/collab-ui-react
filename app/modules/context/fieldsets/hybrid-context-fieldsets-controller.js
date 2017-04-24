@@ -8,12 +8,14 @@ require('../fields/_fields-list.scss');
     .controller('HybridContextFieldsetsCtrl', HybridContextFieldsetsCtrl);
 
   /* @ngInject */
-  function HybridContextFieldsetsCtrl($scope, $rootScope, $filter, $state, $translate, Log, $q, ContextFieldsetsService, Notification) {
+  function HybridContextFieldsetsCtrl($scope, $rootScope, $filter, $state, $translate, Log, $q, ContextFieldsetsService, Notification, hasContextDictionaryEditFeatureToggle) {
     //Initialize variables
     var vm = this;
     var eventListeners = [];
 
+    vm.hasContextDictionaryEditFeatureToggle = hasContextDictionaryEditFeatureToggle;
     vm.load = true;
+    vm.fetchFailed = false;
     vm.currentDataPosition = 0;
     vm.gridRefresh = false;
     vm.noSearchesYet = true;
@@ -29,6 +31,21 @@ require('../fields/_fields-list.scss');
       name: $translate.instant('common.search'),
       filterValue: '',
       count: 0,
+    };
+
+    vm.searchStr = '';
+
+    vm.createFieldset = function () {
+      $state.go('context-fieldset-modal', {
+        existingFieldsetIds: _.map(vm.fieldsetsList.allFieldsets, function (fieldset) {
+          return fieldset.id;
+        }),
+        callback: function (newFieldset) {
+          var fieldsetCopy = _.cloneDeep(newFieldset);
+          vm.fieldsetsList.allFieldsets.unshift(processFieldset(fieldsetCopy));
+          filterList(vm.searchStr);
+        },
+      });
     };
 
     $scope.$on('$destroy', onDestroy);
@@ -63,18 +80,25 @@ require('../fields/_fields-list.scss');
       }
     }
 
-    function processFieldsetsList(fieldsetsList) {
+    function processFieldset(fieldset) {
 
-      _.forEach(fieldsetsList, function (fieldset) {
+      if (fieldset.lastUpdated) {
+        fieldset.lastUpdated = $filter('date')(fieldset.lastUpdated, $translate.instant('context.dictionary.fieldPage.dateFormat'));
+      }
 
-        if (fieldset.lastUpdated) {
-          fieldset.lastUpdated = $filter('date')(fieldset.lastUpdated, $translate.instant('context.dictionary.fieldPage.dateFormat'));
-        }
+      fieldset.numOfFields = (fieldset.fields) ? fieldset.fields.length : 0;
 
-        fieldset.numOfFields = (fieldset.fields) ? fieldset.fields.length : 0;
+      var accessibleMap = {
+        true: $translate.instant('context.dictionary.base'),
+        false: $translate.instant('context.dictionary.custom'),
+      };
 
-      });
-      return $q.resolve(fieldsetsList);
+      fieldset.publiclyAccessible = accessibleMap[fieldset.publiclyAccessible];
+      return fieldset;
+    }
+
+    function processFieldsetsList(fieldsetList) {
+      return _.map(fieldsetList, processFieldset);
     }
 
     function getFieldsetsList() {
@@ -83,20 +107,21 @@ require('../fields/_fields-list.scss');
       }
       vm.gridRefresh = true;
       vm.noSearchesYet = false;
-      vm.fieldsetsList.allFields = [];
+      vm.fieldsetsList.allFieldsets = [];
       var getAndProcessFieldsetsPromise = ContextFieldsetsService.getFieldsets()
         .then(function (fieldsets) {
           return processFieldsetsList(fieldsets);
         })
         .then(function (processedFieldsets) {
           vm.gridOptions.data = processedFieldsets;
-          vm.fieldsetsList.allFields = processedFieldsets;
+          vm.fieldsetsList.allFieldsets = processedFieldsets;
           vm.noSearchResults = processedFieldsets.length === 0;
           return $q.resolve();
         })
         .catch(function (err) {
           Log.debug('CS fieldsets search failed. Status: ' + err);
           Notification.error('context.dictionary.fieldsetPage.fieldsetReadFailed');
+          vm.fetchFailed = true;
           return $q.reject(err);
         });
 
@@ -156,8 +181,12 @@ require('../fields/_fields-list.scss');
           type: 'number',
           maxWidth: 200,
         }, {
+          field: 'publiclyAccessible',
+          displayName: $translate.instant('context.dictionary.access'),
+          maxWidth: 200,
+        }, {
           field: 'lastUpdated',
-          displayName: $translate.instant('context.dictionary.fieldPage.lastUpdated'),
+          displayName: $translate.instant('context.dictionary.dateUpdated'),
           maxWidth: 300,
         }],
       };
@@ -166,8 +195,7 @@ require('../fields/_fields-list.scss');
 
     // On click, wait for typing to stop and run search
     function filterList(str) {
-
-      return filterBySearchStr(vm.fieldsetsList.allFields, str)
+      return filterBySearchStr(vm.fieldsetsList.allFieldsets, str)
         .then(function (processedFieldsets) {
           vm.gridOptions.data = processedFieldsets;
           vm.noSearchResults = processedFieldsets.length === 0;
@@ -177,18 +205,25 @@ require('../fields/_fields-list.scss');
 
     //filter out the list by the searchStr
     function filterBySearchStr(fieldsetList, str) {
+      vm.searchStr = str;
       if (!str) {
         return $q.resolve(fieldsetList);
       }
 
       var lowerStr = str.toLowerCase();
-      return $q.resolve(fieldsetList.filter(function (fieldset) {
-        return (_.has(fieldset, 'id') ? (fieldset.id.toLowerCase().indexOf(lowerStr) !== -1) : false) ||
-          (_.has(fieldset, 'description') ? (fieldset.description.toLowerCase().indexOf(lowerStr) !== -1) : false) ||
-          (_.has(fieldset, 'numOfFields') ? (fieldset.numOfFields.toString().indexOf(lowerStr) !== -1) : false) ||
-          (_.has(fieldset, 'lastUpdated') ? (fieldset.lastUpdated.toLowerCase().indexOf(lowerStr) !== -1) : false);
-      }));
+      var containSearchStr = function (fieldset) {
+        var propertiesToCheck = ['id', 'description', 'numOfFields', 'lastUpdated', 'publiclyAccessible'];
+        return _.some(propertiesToCheck, function (property) {
+          var value;
+          if (property === 'numOfFields') {
+            value = (_.has(fieldset, 'numOfFields') ? (fieldset.numOfFields.toString()) : undefined);
+          } else {
+            value = _.get(fieldset, property, '').toLowerCase();
+          }
+          return _.includes(value, lowerStr);
+        });
+      };
+      return $q.resolve(fieldsetList.filter(containSearchStr));
     }
-
   }
 }());

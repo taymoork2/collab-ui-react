@@ -22,6 +22,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       "id": "00097a86-45ef-44a7-aa78-6d32a0ca1d3b",
       "type": "directoryNumber",
       "trigger": "incomingCall",
+      "uuid": "00097a86-45ef-44a7-aa78-6d32a0ca1d3b",
     }],
   };
 
@@ -34,6 +35,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       _resource.setId(rawCeInfo.assignedResources[j].id);
       _resource.setTrigger(rawCeInfo.assignedResources[j].trigger);
       _resource.setType(rawCeInfo.assignedResources[j].type);
+      _resource.setUUID(rawCeInfo.assignedResources[j].uuid);
       if (!_.isUndefined(rawCeInfo.assignedResources[j].number)) {
         _resource.setNumber(rawCeInfo.assignedResources[j].number);
       }

@@ -40,6 +40,11 @@ eg. `npm start -- --noopen` passes the `--noopen` argument to our `start` task
 
 ## Custom NPM Scripts
 
+### `npm run analyze`
+
+* Build the application with webpack
+* Opens webpack-bundle-analyzer for the dist output
+
 ### `npm run build`
 
 * Build the application with webpack

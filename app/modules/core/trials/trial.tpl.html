@@ -70,24 +70,7 @@
 
       </div>
     </div>
-    <!-- regional settings -->
-    <trial-regional-settings
-      cr-feature-toggle feature-show="huron-federated-spark-call"
-      ng-if="trial.isNewTrial()"
-      filter-country-list="false"
-      default-country="trial.details.country"
-      default-country-list="trial.defaultCountryList"
-      on-change-fn="trial.setDefaultCountry(country)">
-    </trial-regional-settings>
 
-    <trial-regional-settings
-      cr-feature-toggle feature-show="huron-support-for-thinktel"
-      ng-if="trial.isNewTrial()"
-      filter-country-list="true"
-      default-country="trial.details.country"
-      default-country-list="trial.defaultCountryList"
-      on-change-fn="trial.setDefaultCountry(country)">
-    </trial-regional-settings>
     <!-- trial services -->
     <div class="cs-form__section">
       <div class="section__info">
@@ -124,7 +107,8 @@
             ng-model="trial.callTrial.enabled"
             id="callTrial" name="callTrial"
             ng-disabled="trial.preset.call"
-            cs-input-label="{{::'trials.call' | translate}}">
+            cs-input-label="{{::'trials.call' | translate}}"
+            ng-change="trial.updateCountryList()">
         </div>
         <div class="sub-section" ng-if="trial.showCare && (!trial.careTrial.paid || !trial.advanceCareTrial.paid)">
           <h5 translate="subscriptions.care"></h5>
@@ -173,7 +157,8 @@
               ng-model="trial.roomSystemTrial.enabled"
               id="roomSystemsTrial" name="roomSystemsTrial"
               ng-disabled="trial.preset.roomSystems"
-              cs-input-label="{{::'trials.roomSystem' | translate}}">
+              cs-input-label="{{::'trials.roomSystem' | translate}}"
+              ng-change="trial.updateCountryList()">
             <input cs-input type="number"
               id="trialRoomSystemsAmount" name="trialRoomSystemsAmount"
               ng-model="trial.roomSystemTrial.details.quantity"
@@ -257,7 +242,7 @@
               name="licenseDuration" id="licenseDuraiton"
               options="trial.licenseDurationOptions"
               label="{{::'partnerHomePage.duration' | translate}}"
-              secondary-label="{{::'partnerHomePage.durationHelp' | translate}}" ng-change="trials.onTrialTermsChanged()">
+              secondary-label="{{::'partnerHomePage.durationHelp' | translate}}" ng-change="trial.onTrialTermsChanged()">
             </cs-select>
           </div>
         </div>
@@ -278,6 +263,14 @@
         </div>
       </div>
     </div>
+
+    <!-- regional settings -->
+    <trial-regional-settings
+      ng-if="!trial.preset.call && (trial.roomSystemTrial.enabled || trial.callTrial.enabled)"
+      call-trial-enabled="trial.callTrial.enabled"
+      on-change-fn="trial.setDefaultCountry(country)"
+      default-country="trial.details.country">
+    </trial-regional-settings>
 
     <!-- context service trial -->
     <div class="cs-form__section" ng-if="trial.showContextServiceTrial">
