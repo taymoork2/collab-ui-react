@@ -158,12 +158,27 @@ var Spark = require('@ciscospark/spark-core').default;
       return errors;
     }
 
+    function dateWarnings(end) {
+      var warnings = [];
+      if (end !== moment().endOf('day').format('YYYY-MM-DD') && !vm.itProPackToggle) {
+        warnings.push($translate.instant('ediscovery.dateError.InvalidEndDate'));
+      }
+      return warnings;
+    }
+
     function validateDate() {
       vm.dateValidationError = null;
+      vm.dateValidationWarning = null;
       var errors = dateErrors(getStartDate(), getEndDate());
+      var warnings = dateWarnings(getEndDate());
       if (errors.length > 0) {
         vm.dateValidationError = {
           errors: errors,
+        };
+        return false;
+      } else if (warnings.length > 0) {
+        vm.dateValidationWarning = {
+          warnings: warnings,
         };
         return false;
       } else {
@@ -355,7 +370,7 @@ var Spark = require('@ciscospark/spark-core').default;
               encryptionKeyUrl: vm.encryptionKeyUrl,
               responseUri: res.url,
               startDate: formatDate('api', getStartDate()),
-              endDate: formatDate('api', getEndDate()),
+              endDate: formatDate('api', getEndDate(), true),
             };
             Analytics.trackEdiscoverySteps(Analytics.sections.EDISCOVERY.eventNames.GENERATE_REPORT);
             generateReport(reportParams);
@@ -397,7 +412,7 @@ var Spark = require('@ciscospark/spark-core').default;
     function searchButtonDisabled(_error) {
       var error = !_.isUndefined(_error) ? _error : false;
       var disable = !vm.searchCriteria.roomId || vm.searchCriteria.roomId === '' || vm.searchingForRoom === true;
-      return vm.ediscoveryToggle ? (error || vm.dateValidationError) : disable;
+      return vm.ediscoveryToggle ? (error || vm.dateValidationError || vm.dateValidationWarning) : disable;
     }
 
     function pollAvalonReport() {

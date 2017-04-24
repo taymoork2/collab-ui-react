@@ -1,5 +1,6 @@
-import { SWIVEL, MIN_VALID_CODE, MAX_VALID_CODE, NXX, MAX_DID_QUANTITY } from './index';
+import { SWIVEL, MIN_VALID_CODE, MAX_VALID_CODE, NXX, MAX_DID_QUANTITY } from './../index';
 import { Notification } from '../../../core/notifications/notification.service';
+import { PaginateOptions } from '../paging-option.model';
 
 export class PstnTrialSetupComponent implements ng.IComponentOptions {
   public controller = PstnTrialSetupCtrl;
@@ -16,19 +17,7 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
   public invalidCount = 0;
   public SWIVEL: string;
   public searchResults: Array<any>;
-  public paginateOptions = {
-    currentPage: 0,
-    pageSize: 15,
-    numberOfPages: function (searchResults) {
-      return Math.ceil(searchResults.length / this.pageSize);
-    },
-    previousPage: function () {
-      this.currentPage--;
-    },
-    nextPage: function () {
-      this.currentPage++;
-    },
-  };
+  public paginateOptions = new PaginateOptions();
   public showNoResult: boolean;
   public maxSelection = 10;
   public addLoading: boolean;

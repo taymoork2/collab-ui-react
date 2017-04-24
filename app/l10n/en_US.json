@@ -2827,13 +2827,14 @@
   "ediscovery": {
     "browserTabHeaderTitle": "Cisco Spark Activity Reports",
     "heading": "Search Cisco Spark Space Activity",
-    "subheading": "Choose to search for specific users or spaces. Add more than one by separating with commas",
+    "subheading": "Choose to search for specific users or spaces. Add more than one by separating with commas.",
     "searchTip": "Search data by room ID",
     "unableToDownloadFile": "Unable to download file",
     "dateError": {
       "StartDateMustBeforeEndDate": "Start date must be before end date",
       "StartDateCannotBeInTheFuture": "Start date cannot be in the future",
-      "InvalidDateRange": "Invalid date range. Date range must not be greater than 90 days in the past."
+      "InvalidDateRange": "Invalid date range. Date range must not be greater than 90 days in the past.",
+      "InvalidEndDate": "The end date cannot be changed."
     },
     "searchingPleaseWait": "Finding information, please wait...",
     "reportStates": {
@@ -2894,7 +2895,7 @@
       "search": "Search",
       "searchPlaceholder": "Email Address",
       "searchEmailPlaceholder": "Enter Email Address",
-      "searchEmailHelpText": "e.g. johnsmith@email.com, jansmit@email.com",
+      "searchEmailHelpText": "e.g. johnsmith@email.com, jansmith@email.com",
       "searchRoomPlaceholder": "Enter space ID",
       "searchRoomHelpText": "e.g. a42163f4-eb1e-2c03-efcf2-9c5372c2e099",
       "messages": "Where <b>Messages</b> contains",
@@ -6000,6 +6001,7 @@
     "assignedLines": "Assigned",
     "pending": "Pending",
     "csvBtnTitle": "Export to CSV",
+    "csvBtnExportingTitle": "Export in progress",
     "csvFilename": "exported_lines.csv",
     "internalNumberHeader": "Internal Extension",
     "externalNumberHeader": "Direct Line",
@@ -7129,7 +7131,9 @@
           "invalidChars": "Invalid character is not allowed in address domain. Allowed set is \"[a-z] [A-Z] [0-9]_-.\"",
           "invalidPort": "Port can only range between {{min}} and {{max}}",
           "invalidUniqueEntry": "This SIP Destination address already exists",
-          "hybridRequired": "Required: Expressway-E for Hybrid Call Connect was not found"
+          "hybridRequired": "Required: Expressway-E for Hybrid Call Connect was not found",
+          "resourceError": "Add Private trunk resource error",
+          "privateTrunkError": "Add Private trunk Domain error"
         },
         "prereqTitle": "Enterprise Private Trunking prerequisites",
         "setupTitle": "Set up Enterprise Private Trunking ",
@@ -7171,7 +7175,11 @@
         "fileReadyForImport": "File ready for import",
         "certificateDelete": "Are you sure you want to remove this certificate?",
         "cancelHeader": "Cancel Enterprise Private Trunking Setup.",
-        "cancelBody": "Are you sure you want to cancel?"
+        "cancelBody": "Are you sure you want to cancel?",
+        "setupCompete": "Set up complete",
+        "great": "Great! You configured private trunking for your Cisco Spark organization.",
+        "callSelections": "Your call selections",
+        "interSite": "Inter-site dialling between your on premise endpoints and Spark call endpoints. PSTN in and outbound will be over this trunk, as you are using your on premise PSTN connectivity•"
       }
     },
     "showMore": "View all",
