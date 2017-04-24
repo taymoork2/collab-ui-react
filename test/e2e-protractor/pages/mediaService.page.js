@@ -13,19 +13,19 @@ var MediaServicePage = function () {
   this.closeSidePanel = element(by.css('.panel-close'));
   this.hostDetails = element(by.binding('ecp.hosts[0].host_name'));
   this.hostTitle = element(by.binding('hostDetails.connector.host.host_name'));
-  this.metricsTab = element(by.css('a[href="#/reports/metrics"]'));
+  this.mediaserviceTab = element(by.css('a[href="#/reports/mediaservice"]'));
   this.total_calls = element(by.cssContainingText('.metrics-header', 'Total Calls'));
   this.averageutilization = element(by.cssContainingText('.metrics-header', 'Average Utilization'));
-  this.clusteravailability = element(by.cssContainingText('.metrics-header', 'Cluster Availability'));
+  this.clusteravailability = element(by.cssContainingText('.metrics-header', 'Clusters in Service'));
   this.timeFilter = element(by.css('#timeFilter'));
   this.clusterFilter = element(by.css('#clusterFilter'));
   this.internalNumberOptionFirst = element(by.css('.ng-pristine[name="timeFilter"]')).all(by.repeater('option in csSelect.options')).last().element(by.tagName('a'));
   this.utilizationCard = element(by.css('#utilization-card'));
   this.callVolumeCard = element(by.css('#call-volume-card'));
   this.availabilityCard = element(by.css('#availability-card'));
-  this.utilizationTitle = element(by.cssContainingText('.report-section-header', 'Percentage Utilization'));
+  this.utilizationTitle = element(by.cssContainingText('.report-section-header', 'Resource Utilization'));
   this.callVolumes = element(by.cssContainingText('.report-section-header', 'Total Calls'));
-  this.availabilityOfCluster = element(by.cssContainingText('.report-section-header', 'Cluster Availability'));
+  this.availabilityOfCluster = element(by.cssContainingText('.report-section-header', 'Clusters in Service'));
   this.resourceButton = element(by.css('section a[href="#/mediaserviceV2"]'));
   this.settingsButton = element(by.css('section a[href="#/mediaserviceV2/settings"]'));
   this.resourceTab = element(by.css('li a[href="#/mediaserviceV2"]'));
@@ -33,39 +33,56 @@ var MediaServicePage = function () {
   this.addResourceButton = element(by.cssContainingText('button', 'Add Resource'));
   this.mediaCluster = element(by.cssContainingText('.ui-grid-header-cell-label', 'Media Clusters'));
   this.serviceStatus = element(by.cssContainingText('.ui-grid-header-cell-label', 'Service Status'));
-  this.emailNotificationsHeading = element(by.cssContainingText('.section__title', 'Email Notifications'));
-  this.deactivateServiceHeading = element(by.cssContainingText('.section__title', 'Deactivate Service'));
-  this.documentationAndSoftware = element(by.cssContainingText('.section__title', 'Documentation and Software'));
+  this.emailNotificationsHeading = element(by.cssContainingText('.sub-section__label', 'Email Notifications'));
+  this.videoQualityHeading = element(by.cssContainingText('.sub-section__label', 'Video Quality'));
+  this.deactivateServiceHeading = element(by.cssContainingText('.sub-section__label', 'Deactivate Hybrid Media Service'));
+  this.documentationAndSoftware = element(by.cssContainingText('.sub-section__label', 'Documentation and Software'));
   this.deactivateButton = element(by.cssContainingText('button', 'Deactivate'));
   this.emailNotificationInput = element(by.css('input[type="email"]'));
-  this.deactivateServiceModalHeader = element(by.cssContainingText('.modal-title', 'Deactivate Service'));
+  this.deactivateServiceModalHeader = element(by.cssContainingText('.modal-title', 'Deactivate Hybrid Media Service'));
   this.deactivateServiceModalCancelButton = element(by.css('button[ng-click="disableServiceDialog.cancel()"]'));
   this.invalidEmailTag = element(by.css('.invalid-tag'));
   this.clusterFirstTr = element(by.repeater('(rowRenderIndex, row) in rowContainer.renderedRows track by $index').row(0));
   this.clusterFirstTd = element(by.repeater('(rowRenderIndex, row) in rowContainer.renderedRows track by $index').row(0)).element(by.repeater('(colRenderIndex, col) in colContainer.renderedColumns track by col.uid').row(0));
   this.clusterSecondTd = element(by.repeater('(rowRenderIndex, row) in rowContainer.renderedRows track by $index').row(0)).element(by.repeater('(colRenderIndex, col) in colContainer.renderedColumns track by col.uid').row(1));
-  this.nodesListFirst = element(by.repeater('ecp in groupDetails.nodeList').row(0));
+  this.nodesListFirst = element(by.cssContainingText('.feature-name', 'Media Service'));
   this.sidePanelHeader = element(by.css('.header-info-wrap')).element(by.css('.header-title'));
-  this.sidePanelStatus = element(by.css('.header-info-wrap')).element(by.css('.ng-scope'));
+  //this.sidePanelStatus = element(by.css('.header-info-wrap')).element(by.css('.ng-scope'));
   this.upgradeScheduleTitle = element(by.cssContainingText('.section-title-row', 'Upgrade Schedule'));
   this.releaseChannelTitle = element(by.cssContainingText('.section-title-row', 'Release Channel'));
   this.softwareUpgradeTitle = element(by.cssContainingText('.section-title-row', 'Software Upgrade'));
   this.nodesTitle = element(by.cssContainingText('.section-title-row', 'Nodes'));
-  this.clusterSettingsTitle = element(by.cssContainingText('.section-title-row', 'Cluster Settings'));
-  this.moveNodeLink = element(by.css('a[ng-click="sp.close(); hostDetails.reassignCluster();"]'));
-  this.deregisterMoveNodeLink = element(by.css('a[ng-click="sp.close(); hostDetails.showDeregisterHostDialog();"]'));
+  //this.clusterSettingsTitle = element(by.cssContainingText('.section-title-row', 'Cluster Settings'));
+  this.moveNodeLink = element(by.css('a[ng-click="hostDetailsCtrl.showReassignHostDialog()"]'));
+  this.deregisterMoveNodeLink = element(by.css('a[ng-click="hostDetailsCtrl.showDeregisterHostDialog()"]'));
   this.moveNodeModalHeader = element(by.cssContainingText('.modal-title', 'Move Node'));
   this.deregisterMoveNodeHeader = element(by.cssContainingText('.modal-title', 'Deregister Node'));
-  this.moveNodeModalCancelButton = element(by.css('button[ng-click="reassignClust.close()"]'));
-  this.deregisterMoveNodeCancelButton = element(by.css('button[ng-click="hostDeregister.close()"]'));
-  this.clusterSettingsLink = element(by.css('a[ng-click="groupDetails.openSettings(groupDetails.clusterDetail.type, groupDetails.clusterDetail.id)"]'));
+  this.moveNodeModalCancelButton = element(by.css('button[ng-click="$dismiss()"]'));
+  this.deregisterMoveNodeCancelButton = element(by.css('button[ng-click="$dismiss()"]'));
+  this.clusterSettingsLink = element(by.css('a[ng-click="$ctrl.goToClusterSettings()"]'));
   this.clusterSettingsPageHeader = element(by.css('.page-header__title'));
   this.clusterUpgradeTitle = element(by.cssContainingText('.section__title', 'Upgrade'));
   this.clusterReleaseChannelTitle = element(by.cssContainingText('.section__title', 'Release Channel'));
-  this.clusterDeleteClusterTitle = element(by.cssContainingText('.section__title', 'Delete Cluster'));
-  this.deleteClusterButton = element(by.css('button[ng-click="clusterSettings.deleteCluster();"]'));
+  this.unifiedCMSIPTrunkTitle = element(by.cssContainingText('.section__title', 'Unified CM SIP Trunk'));
+  this.clusterDeleteClusterTitle = element(by.cssContainingText('.section__title', 'Cluster'));
+  this.deleteClusterButton = element(by.css('button[ng-click="$ctrl.deregisterCluster()"]'));
   this.deleteClusterModalHeader = element(by.cssContainingText('.modal-title', 'Delete Hybrid Media Cluster'));
-  this.deleteClusterModalCancel = element(by.css('button[ng-click="deleteClust.close()"]'));
+  this.deleteClusterModalCancel = element(by.css('button[ng-click="$dismiss()"]'));
+  this.adoptionTab = element(by.id('adoptionReports'));
+  this.totallMeetsHeader = element(by.cssContainingText('.metrics-header', 'Total Number of Meetings'));
+  this.meetingHostTypeHeader = element(by.cssContainingText('.metrics-header', 'Meeting Host Type'));
+  this.clientTypesHeader = element(by.cssContainingText('.metrics-header', 'Client Types'));
+  this.meetHostFlip = element(by.css('i[ng-click="isFlipped=true"]'));
+  this.meetHostFlipDiv = element(by.css('.card-desc'));
+  this.meetHostFlipDesc = 'A breakdown of the number of meetings based on where the calls were hosted.';
+  this.clientTypeCardDiv = element(by.css('#client-type-card'));
+  this.meetLocationCardDiv = element(by.css('#meeting-location-card'));
+  this.totMeetsByHostHeader = element(by.cssContainingText('.report-section-header', 'Total Meetings by Host Type'));
+  this.clientTypeHeader = element(by.cssContainingText('.report-section-header', 'Client Type Distribution'));
+
+  this.totalmeetsFlip = element(by.css('i[ng-click="isFlipped=true"]'));
+  this.totalmeetsFlipDiv = element(by.css('.span-desc-small'));
+  this.totalmeetsFlipDesc = ': Number of calls that could not utilize enterprise Hybrid Media Nodes, because of no connection to the enterprise network or being subject to enforced policy.';
 
 
   this.checkClusterSize = function () {
@@ -102,8 +119,8 @@ var MediaServicePage = function () {
 
   this.clickMetrics = function () {
     navigation.clickReports();
-    utils.click(this.metricsTab);
-    navigation.expectCurrentUrl('/reports/metrics');
+    utils.click(this.mediaserviceTab);
+    navigation.expectCurrentUrl('/reports/mediaservice');
   };
 
   this.clickResource = function () {
@@ -116,6 +133,11 @@ var MediaServicePage = function () {
     navigation.clickServicesTab();
     utils.click(this.settingsButton);
     navigation.expectCurrentUrl('/mediaserviceV2/settings');
+  };
+
+  this.clickAdoption = function () {
+    utils.click(this.adoptionTab);
+    navigation.expectCurrentUrl('/reports/mediaservice');
   };
 };
 
