@@ -32,11 +32,13 @@
     vm.messageCard = {};
     vm.meetingCard = {};
     vm.callCard = {};
+    vm.careCard = {};
     vm.hybridServicesCard = {};
     vm.keyPressHandler = keyPressHandler;
     vm.sendCode = sendCode;
     vm.downloadLog = downloadLog;
     vm.isAuthorizedForLog = isAuthorizedForLog;
+    vm.isCare = false;
     vm.openExtendedInformation = openExtendedInformation;
     vm.openHybridServicesModal = openHybridServicesModal;
     vm.supportsExtendedInformation = false;
@@ -377,7 +379,9 @@
       vm.messageCard = HelpdeskCardsUserService.getMessageCardForUser(user);
       vm.meetingCard = HelpdeskCardsUserService.getMeetingCardForUser(user);
       vm.callCard = HelpdeskCardsUserService.getCallCardForUser(user);
+      vm.careCard = HelpdeskCardsUserService.getCareCardForUser(user);
       vm.hybridServicesCard = HelpdeskCardsUserService.getHybridServicesCardForUser(user);
+      vm.isCare = vm.careCard.entitled;
 
       if (vm.hybridServicesCard.entitled) {
         HelpdeskService.getHybridStatusesForUser(vm.userId, vm.orgId).then(function (statuses) {
@@ -440,13 +444,34 @@
       }
 
       if (isAuthorizedForLog()) {
-        HelpdeskLogService.searchForLastPushedLog(vm.userId).then(function (log) {
-          vm.lastPushedLog = log;
+        var searchLimit = vm.isCare ? 300 : 1;
+        var searchOpts = {
+          limit: searchLimit,
+        };
+        HelpdeskLogService.searchLogs(vm.userId, searchOpts).then(function (response) {
+          var metadataList = _.get(response, 'data.metadataList');
+          if (vm.isCare) {
+            vm.lastPushedCareLog = filterLog(metadataList, function (metadata) {
+              return _.get(metadata, 'meta.product') === 'sparkCare';
+            });
+            vm.lastPushedLog = filterLog(metadataList, function (metadata) {
+              return _.get(metadata, 'meta.product') !== 'sparkCare';
+            });
+          } else {
+            vm.lastPushedLog = HelpdeskLogService.cleanLogMetadata(_.head(metadataList));
+          }
         }, _.noop);
       }
 
       vm.cardsAvailable = true;
       angular.element(".helpdesk-details").focus();
+    }
+
+    function filterLog(metadataList, condnFn) {
+      var filteredMetadata = _.find(metadataList, condnFn);
+      if (filteredMetadata) {
+        return HelpdeskLogService.cleanLogMetadata(filteredMetadata);
+      }
     }
 
     function getUserStatusesAsString(vm) {

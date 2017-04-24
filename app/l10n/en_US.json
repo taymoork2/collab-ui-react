@@ -6769,6 +6769,7 @@
     "message": "Message",
     "meeting": "Meeting",
     "call": "Call",
+    "care": "Care",
     "rooms": "Rooms",
     "claimedDomain": "Claimed Domains",
     "hybridServices": "Hybrid Services",
@@ -6780,10 +6781,13 @@
       "squared-room-moderation.free": "Free Spark Messaging",
       "ciscouc.paid": "Advanced Spark Call",
       "ciscouc.free": "Free 1:1 Spark Call",
-      "meetings": "WebEx Meetings (WebEx 11)"
+      "meetings": "WebEx Meetings (WebEx 11)",
+      "cloud-contact-center-digital": "Chat and Callback",
+      "cloud-contact-center-inbound-voice": "Chat, Callback and Inbound Call"
     },
     "lastLog": "Last Log",
     "lastClientLog": "Last Spark Client Log",
+    "lastCareLog": "Last Spark Care Log:",
     "noLog": "No Log Available",
     "userStatuses": {
       "active": "Active",

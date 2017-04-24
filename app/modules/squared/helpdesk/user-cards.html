@@ -69,6 +69,23 @@
     </article>
   </cs-card>
 
+  <cs-card class="large header-bar care-base" ng-if="helpdeskUserCtrl.careCard.entitled">
+    <article>
+      <header class="align-center">
+        <div class="overview-header">
+          <i class="icon icon-circle-contact-centre icon-lg"></i><span translate="helpdesk.care"></span>
+        </div>
+      </header>
+      <section>
+        <h5 translate="helpdesk.licenses"></h5>
+
+        <div ng-repeat="entitlement in helpdeskUserCtrl.careCard.entitlements">
+          <span translate="{{entitlement}}"></span>
+        </div>
+      </section>
+    </article>
+  </cs-card>
+
   <cs-card class="large header-bar gray-light" ng-if="helpdeskUserCtrl.hybridServicesCard.entitled">
     <article>
       <header class="align-center" ng-class="helpdeskUserCtrl.loadingHSData ? 'wait' : 'pointer'" ng-click="helpdeskUserCtrl.openHybridServicesModal()">
