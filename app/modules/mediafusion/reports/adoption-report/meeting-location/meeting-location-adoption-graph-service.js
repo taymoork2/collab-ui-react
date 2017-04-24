@@ -22,6 +22,7 @@
     vm.cloudHeading = $translate.instant('mediaFusion.metrics.cloudHeading');
     vm.hybridHeading = $translate.instant('mediaFusion.metrics.hybridHeading');
     vm.totalHeading = $translate.instant('mediaFusion.metrics.clientType.total');
+    vm.locations = $translate.instant('mediaFusion.metrics.location');
 
     return {
       setMeetingLocationGraph: setMeetingLocationGraph,
@@ -206,6 +207,9 @@
         } else if (value.title === 'HYBRID') {
           value.balloonText = '<span class="graph-text">' + vm.hybridHeading + ' ' + '<span class="graph-number">[[value]]</span></span>';
           tempData[2] = value;
+        } else if (value.title === 'Location' && value.isDummy) {
+          value.balloonText = '<span class="graph-text">' + vm.locations + ' ' + '<span class="graph-number">[[value]]</span></span>';
+          tempData[0] = value;
         } else {
           value.balloonText = '<span class="graph-text">' + vm.totalHeading + ' ' + '<span class="graph-number">[[value]]</span></span>';
           tempData[3] = value;
