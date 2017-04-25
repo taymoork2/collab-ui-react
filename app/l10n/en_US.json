@@ -5025,11 +5025,10 @@
       },
       "mobile": "Mobile",
       "cardDescription": {
-        "clientType": "Summary of the types of meeting clients that are in use at an organization.",
-        "cloudParticipants2": ": Number of calls made within an enterprise but overflowed to a cloud cluster.",
-        "cloudParticipants1": ": Number of calls that could not utilize enterprise Hybrid Media Nodes, because of no connection to the enterprise network or being subject to enforced policy.",
-        "onpremDesc": ": Number of calls hosted on any of the enterprise clusters.",
-        "meetsHostType": "A breakdown of the number of meetings based on where the calls were hosted.",
+        "clientTypeDesc": "Provides a summary of common categories of clients that are in use in an organization. <br>The categories include following client types<br><b>Desktop</b> : Windows , MAC OSX<br> <b>Mobile</b> : iPhone, Android, iPad.<br><b>Telepresence</b> : Telepresence room device, SIP Endpoints, Spark board.<br><b>Others</b> : Any unknown endpoints or clients that don’t fit the other categories.",
+        "totalCallsDesc": "<b>Cloud Calls</b> : Number of calls that could not utilize enterprise Hybrid Media Nodes, because of no connection to the enterprise network or being subject to enforced policy.<br> <b>Overflowed to Cloud</b> : Number of calls made within an enterprise but overflowed to a cloud cluster.<br> <b>On-Premises</b>: Number of calls hosted on any of the enterprise clusters.",
+        "totalCallsClusterDesc": "<b>Redirected by this Cluster</b> : Number of calls that could not be hosted by this cluster and hence got redirected.<br><b>On-Premises</b> : Number of calls hosted on any of the enterprise clusters.",
+        "meetsHostTypeDesc": "A breakdown of the number of meetings based on where the organization’s calls were hosted.<br><b>On Premises</b> : All participants in the meeting were hosted on the enterprise clusters.<br><b>Cloud</b> : The entire meeting was hosted on the cloud. All participants in the meeting were hosted on cloud clusters.<br><b>Cloud and On-Premises</b> :The Meeting was cascaded between enterprise and cloud clusters. Some of the meeting participants were hosted on cloud clusters and some on enterprise clusters.",
         "redirect": ": Number of calls that could not be hosted by this cluster and hence got redirected."
       }
     },

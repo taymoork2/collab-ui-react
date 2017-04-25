@@ -25,29 +25,18 @@
     </article>
 
     <article class="face back" ng-class="{'no-display': !isFlipped}">
-      <header>
-        <div class="metrics-header"> {{$ctrl.headername}} </div>
-      </header>
+      <header></header>
       <section>
         <div class="metrics-info" ng-class="{'no-display': $ctrl.parentcntrl.displayAdoption==false}">
-          <div class="card-desc"> {{$ctrl.cardDesc}} </div>
-        </div>
-        <div class="metrics-info" ng-class="{'no-display': $ctrl.parentcntrl.displayAdoption==true || $ctrl.parentcntrl.clusterSelected!=$ctrl.parentcntrl.allClusters}">
           <div class="card-desc-small">
-            <b translate="mediaFusion.metrics.totalCloud"></b>
-            <span translate="mediaFusion.metrics.cardDescription.cloudParticipants1" class="span-desc-small"></span><br>
-            <b translate="mediaFusion.metrics.cloudcalls"></b>
-            <span translate="mediaFusion.metrics.cardDescription.cloudParticipants2" class="span-desc-small"></span><br>
-            <b translate="mediaFusion.metrics.onPremisesHeading"></b>
-            <span translate="mediaFusion.metrics.cardDescription.onpremDesc" class="span-desc-small"></span>
+            <span translate="mediaFusion.metrics.cardDescription.meetsHostTypeDesc" class="span-desc-small" ng-class="{'no-display': $ctrl.cardDesc=='clientTypeDesc'}"></span>
+            <span translate="mediaFusion.metrics.cardDescription.clientTypeDesc" class="span-desc-small" ng-class="{'no-display': $ctrl.cardDesc=='meetsHostTypeDesc'}"></span>
           </div>
         </div>
-        <div class="metrics-info" ng-class="{'no-display': $ctrl.parentcntrl.displayAdoption==true || $ctrl.parentcntrl.clusterSelected==$ctrl.parentcntrl.allClusters}">
+        <div class="metrics-info" ng-class="{'no-display': $ctrl.parentcntrl.displayAdoption==true}">
           <div class="card-desc-small">
-            <b translate="mediaFusion.metrics.redirectedcalls"></b>
-            <span translate="mediaFusion.metrics.cardDescription.redirect" class="span-desc-small"></span><br>
-            <b translate="mediaFusion.metrics.onPremisesHeading"></b>
-            <span translate="mediaFusion.metrics.cardDescription.onpremDesc" class="span-desc-small"></span>
+            <span translate="mediaFusion.metrics.cardDescription.totalCallsDesc" class="span-desc-small" ng-class="{'no-display': $ctrl.parentcntrl.clusterSelected!=$ctrl.parentcntrl.allClusters}"></span>
+            <span translate="mediaFusion.metrics.cardDescription.totalCallsClusterDesc" class="span-desc-small" ng-class="{'no-display': $ctrl.parentcntrl.clusterSelected==$ctrl.parentcntrl.allClusters}"></span>
           </div>
         </div>
       </section>

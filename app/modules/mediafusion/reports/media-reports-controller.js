@@ -135,9 +135,9 @@
     vm.timeSelected = vm.timeOptions[0];
 
     vm.isFlipped = false;
-    vm.clientTypeDesc = $translate.instant('mediaFusion.metrics.cardDescription.clientType');
+    vm.clientTypeDesc = $translate.instant('mediaFusion.metrics.cardDescription.clientTypeDesc');
     vm.cloudParticipantsDesc = $translate.instant('mediaFusion.metrics.cardDescription.cloudParticipants');
-    vm.meetsHostTypeDesc = $translate.instant('mediaFusion.metrics.cardDescription.meetsHostType');
+    vm.meetsHostTypeDesc = $translate.instant('mediaFusion.metrics.cardDescription.meetsHostTypeDesc');
 
     setRefreshInterval();
     getCluster();
@@ -176,10 +176,8 @@
         vm.redirected_heading = vm.cloud_calls_heading;
         vm.availabilityCardHeading = vm.clusterAvailabilityCardHeading;
       }
+      vm.displayResources = false;
       loadResourceDatas();
-      $timeout(function () {
-        angular.element('#adoptionReportsLi').triggerHandler('click');
-      }, 0);
       $timeout(function () {
         angular.element('#resourceReportsLi').triggerHandler('click');
       }, 0);
