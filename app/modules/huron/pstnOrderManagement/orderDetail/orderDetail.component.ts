@@ -1,3 +1,4 @@
+import { PstnSetupService } from '../../pstn/pstn.service';
 
 const BLOCK_ORDER = 'BLOCK_ORDER';
 const CUSTOMER = 'CUSTOMER';
@@ -11,7 +12,7 @@ export class OrderDetailCtrl implements ng.IComponentController {
   public createdBy: string;
   /* @ngInject */
   constructor(
-    private PstnSetupService,
+    private PstnSetupService: PstnSetupService,
     private TelephoneNumberService,
     private $translate: angular.translate.ITranslateService,
   ) {

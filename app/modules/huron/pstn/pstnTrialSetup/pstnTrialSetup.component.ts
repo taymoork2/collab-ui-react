@@ -1,6 +1,7 @@
 import { SWIVEL, MIN_VALID_CODE, MAX_VALID_CODE, NXX, MAX_DID_QUANTITY } from './../index';
 import { Notification } from '../../../core/notifications/notification.service';
 import { PaginateOptions } from '../paging-option.model';
+import { PstnSetupService } from '../pstn.service';
 
 export class PstnTrialSetupComponent implements ng.IComponentOptions {
   public controller = PstnTrialSetupCtrl;
@@ -31,7 +32,7 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
   /* @ngInject */
   constructor(private PstnSetup,
               private TrialPstnService,
-              private PstnSetupService,
+              private PstnSetupService: PstnSetupService,
               private Notification: Notification,
               private $q: ng.IQService,
               private $scope: ng.IScope,

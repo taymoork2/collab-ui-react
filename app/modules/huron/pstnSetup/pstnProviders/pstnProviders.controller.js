@@ -7,6 +7,11 @@
   /* @ngInject */
   function PstnProvidersCtrl($q, $translate, $state, PstnSetup, PstnSetupService, PstnServiceAddressService, Orgservice, Notification, FeatureToggleService) {
     var vm = this;
+    var INTELEPEER = require('modules/huron/pstn').INTELEPEER;
+    var TELSTRA = require('modules/huron/pstn').TELSTRA;
+    var TATA = require('modules/huron/pstn').TATA;
+    var WESTUC = require('modules/huron/pstn').WESTUC;
+
     vm.providers = [];
     vm.loading = true;
     vm.enableCarriers = false;
@@ -138,7 +143,7 @@
         country: carrier.country,
         title: carrier.displayName || carrier.name,
       };
-      if (carrier.vendor === PstnSetupService.INTELEPEER) {
+      if (carrier.vendor === INTELEPEER) {
         _.extend(carrierObj, {
 
           logoSrc: 'images/carriers/logo_intelepeer.svg',
@@ -152,7 +157,7 @@
           ],
           selectFn: goToNumbers,
         });
-      } else if (carrier.vendor === PstnSetupService.TATA) {
+      } else if (carrier.vendor === TATA) {
         _.extend(carrierObj, {
           logoSrc: 'images/carriers/logo_tata_comm.svg',
           logoAlt: 'Tata',
@@ -165,14 +170,14 @@
           ],
           selectFn: goToNumbers,
         });
-      } else if (carrier.vendor === PstnSetupService.TELSTRA) {
+      } else if (carrier.vendor === TELSTRA) {
         _.extend(carrierObj, {
           logoSrc: 'images/carriers/logo_telstra.svg',
           logoAlt: 'Telstra',
           features: [],
           selectFn: goToNumbers,
         });
-      } else if (carrier.vendor === PstnSetupService.WESTUC) {
+      } else if (carrier.vendor === WESTUC) {
         _.extend(carrierObj, {
           logoSrc: 'images/carriers/logo_westuc.svg',
           logoAlt: 'West Corporation',

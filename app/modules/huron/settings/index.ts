@@ -36,7 +36,7 @@ export default angular
     require('modules/huron/lineSettings/callerIdService'),
     require('modules/huron/settings/voicemailMessageAction.service'),
     require('modules/huron/pstnSetup/terminusServices'),
-    require('modules/huron/pstnSetup/pstnSetup.service'),
+    require('modules/huron/pstn/pstn.service').default,
     require('modules/huron/pstnSetup/pstnServiceAddress/pstnServiceAddress.service'),
     require('modules/huron/pstnSetup/pstnSetupStates.service'),
     numberServiceModule,

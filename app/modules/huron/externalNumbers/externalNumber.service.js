@@ -6,7 +6,7 @@
     require('modules/huron/telephony/cmiServices'),
     require('modules/huron/telephony/telephonyExternalNumbersService'),
     require('modules/huron/telephony/telephoneNumber.service'),
-    require('modules/huron/pstnSetup/pstnSetup.service'),
+    require('modules/huron/pstn/pstn.service').default,
     require('modules/huron/pstnSetup/terminusServices'),
   ])
   .factory('ExternalNumberService', ExternalNumberService)

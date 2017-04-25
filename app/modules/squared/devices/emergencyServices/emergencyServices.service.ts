@@ -2,6 +2,7 @@ import { IHuronService, IEmergencyAddress, IEmergency, IState, IEmergencyService
 import { MemberService } from 'modules/huron/members';
 import { FeatureMemberService } from 'modules/huron/features/featureMember.service';
 import { HuronCompassService } from 'modules/huron/compass/compass.service';
+import { PstnSetupService } from '../../../huron/pstn/pstn.service';
 
 export class EmergencyServicesService {
   private emergencyDataCopy: IEmergency;
@@ -20,7 +21,7 @@ export class EmergencyServicesService {
     private PstnServiceAddressService,
     private PstnSetupStatesService,
     private PstnSetup,
-    private PstnSetupService,
+    private PstnSetupService: PstnSetupService,
     private TerminusUserDeviceE911Service,
     private MemberService: MemberService,
     private FeatureMemberService: FeatureMemberService,

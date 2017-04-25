@@ -9,8 +9,8 @@ export default angular
     require('angular-translate'),
     'Huron',
     'huron.telephoneNumberService',
-    'huron.pstnsetupservice',
-    'huron.PstnSetup',
+    require('modules/huron/pstn/pstn.service').default,
+    require('modules/huron/pstn/pstnService.model').default,
     'huron.pstn-service-address-service',
     notifications,
   ])

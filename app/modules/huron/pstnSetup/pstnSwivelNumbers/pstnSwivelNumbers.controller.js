@@ -5,7 +5,7 @@
     .controller('PstnSwivelNumbersCtrl', PstnSwivelNumbersCtrl);
 
   /* @ngInject */
-  function PstnSwivelNumbersCtrl($translate, $state, $timeout, PstnSetup, PstnSetupService, Notification, TelephoneNumberService, FeatureToggleService) {
+  function PstnSwivelNumbersCtrl($translate, $state, $timeout, PstnSetup, Notification, TelephoneNumberService, FeatureToggleService) {
     var vm = this;
 
     vm.hasCarriers = PstnSetup.isCarrierExists;
@@ -15,6 +15,8 @@
     vm.getExampleNumbers = TelephoneNumberService.getExampleNumbers;
     vm.onChange = onChange;
     vm.onAcknowledge = onAcknowledge;
+    var NUMTYPE_DID = require('modules/huron/pstn').NUMTYPE_DID;
+    var SWIVEL_ORDER = require('modules/huron/pstn').SWIVEL_ORDER;
 
     vm.tokenfieldid = 'swivelAddNumbers';
     vm.tokenplaceholder = $translate.instant('didManageModal.inputPlacehoder');
@@ -121,8 +123,8 @@
             data: {
               numbers: numbers,
             },
-            numberType: PstnSetupService.NUMTYPE_DID,
-            orderType: PstnSetupService.SWIVEL_ORDER,
+            numberType: NUMTYPE_DID,
+            orderType: SWIVEL_ORDER,
           }];
           PstnSetup.setOrders(swivelOrder);
           $state.go('pstnSetup.review');
@@ -140,8 +142,8 @@
             data: {
               numbers: vm.swivelNumbers,
             },
-            numberType: PstnSetupService.NUMTYPE_DID,
-            orderType: PstnSetupService.SWIVEL_ORDER,
+            numberType: NUMTYPE_DID,
+            orderType: SWIVEL_ORDER,
           }];
           PstnSetup.setOrders(swivelOrder);
           $state.go('pstnSetup.review');

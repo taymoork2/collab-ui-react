@@ -7,6 +7,12 @@
   /* @ngInject */
   function PstnReviewCtrl($q, $translate, $state, PstnSetup, PstnSetupService, PstnServiceAddressService, Notification) {
     var vm = this;
+    var NUMBER_ORDER = require('modules/huron/pstn').NUMBER_ORDER;
+    var BLOCK_ORDER = require('modules/huron/pstn').BLOCK_ORDER;
+    var NUMTYPE_TOLLFREE = require('modules/huron/pstn').NUMTYPE_TOLLFREE;
+    var SWIVEL_ORDER = require('modules/huron/pstn').SWIVEL_ORDER;
+    var NUMTYPE_DID = require('modules/huron/pstn').NUMTYPE_DID;
+    var PORT_ORDER = require('modules/huron/pstn').PORT_ORDER;
 
     vm.totalNewAdvancedOrder = 0;
     vm.totalPortNumbers = 0;
@@ -86,23 +92,23 @@
       vm.orders = PstnSetup.getOrders();
 
       vm.portOrders = _.remove(vm.orders, function (order) {
-        return _.get(order, 'orderType') === PstnSetupService.PORT_ORDER;
+        return _.get(order, 'orderType') === PORT_ORDER;
       });
 
       vm.newTollFreeOrders = _.remove(vm.orders, function (order) {
-        return _.get(order, 'orderType') === PstnSetupService.NUMBER_ORDER && _.get(order, 'numberType') === PstnSetupService.NUMTYPE_TOLLFREE;
+        return _.get(order, 'orderType') === NUMBER_ORDER && _.get(order, 'numberType') === NUMTYPE_TOLLFREE;
       });
 
       var pstnAdvancedOrders = _.remove(vm.orders, function (order) {
-        return _.get(order, 'orderType') === PstnSetupService.BLOCK_ORDER && _.get(order, 'numberType') === PstnSetupService.NUMTYPE_DID;
+        return _.get(order, 'orderType') === BLOCK_ORDER && _.get(order, 'numberType') === NUMTYPE_DID;
       });
 
       vm.swivelOrders = _.remove(vm.orders, function (order) {
-        return _.get(order, 'orderType') === PstnSetupService.SWIVEL_ORDER;
+        return _.get(order, 'orderType') === SWIVEL_ORDER;
       });
 
       var tollFreeAdvancedOrders = _.remove(vm.orders, function (order) {
-        return _.get(order, 'orderType') === PstnSetupService.BLOCK_ORDER && _.get(order, 'numberType') === PstnSetupService.NUMTYPE_TOLLFREE;
+        return _.get(order, 'orderType') === BLOCK_ORDER && _.get(order, 'numberType') === NUMTYPE_TOLLFREE;
       });
       vm.advancedOrders = [].concat(pstnAdvancedOrders, tollFreeAdvancedOrders);
 
@@ -151,10 +157,10 @@
       }
 
       _.forEach(vm.advancedOrders, function (order) {
-        if (_.get(order, 'orderType') === PstnSetupService.BLOCK_ORDER && _.get(order, 'numberType') === PstnSetupService.NUMTYPE_DID) {
+        if (_.get(order, 'orderType') === BLOCK_ORDER && _.get(order, 'numberType') === NUMTYPE_DID) {
           promise = PstnSetupService.orderBlock(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), order.data.areaCode, order.data.length, order.data.consecutive, order.data.nxx)
             .catch(pushErrorArray);
-        } else if (_.get(order, 'orderType') === PstnSetupService.BLOCK_ORDER && _.get(order, 'numberType') === PstnSetupService.NUMTYPE_TOLLFREE) {
+        } else if (_.get(order, 'orderType') === BLOCK_ORDER && _.get(order, 'numberType') === NUMTYPE_TOLLFREE) {
           promise = PstnSetupService.orderTollFreeBlock(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), order.data.areaCode, order.data.length)
             .catch(pushErrorArray);
         }

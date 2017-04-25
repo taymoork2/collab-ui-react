@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  var BLOCK_ORDER = require('modules/huron/pstn').BLOCK_ORDER;
+
   angular
     .module('Huron')
     .factory('LineListService', LineListService);
@@ -80,7 +82,7 @@
           }
 
           _.forEach(orders, function (order) {
-            if (_.get(order, 'operation') === PstnSetupService.BLOCK_ORDER) {
+            if (_.get(order, 'operation') === BLOCK_ORDER) {
               if (!_.isUndefined(order.attributes.npa)) {
                 var areaCode = order.attributes.npa;
               } else {

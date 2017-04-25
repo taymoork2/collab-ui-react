@@ -24,7 +24,7 @@ export class PstnModel {
     this.resetAll();
   }
 
-  public clearProviderSpecificData() {
+  public clearProviderSpecificData(): void {
     this.customerFirstName = '';
     this.customerLastName = '';
     this.numbers = [];

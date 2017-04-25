@@ -53,11 +53,11 @@
     vm.showTollFreeNumbers = false;
     vm.isTrial = PstnSetup.getIsTrial();
     vm.showPortNumbers = !vm.isTrial;
-    var BLOCK_ORDER = PstnSetupService.BLOCK_ORDER;
-    var PORT_ORDER = PstnSetupService.PORT_ORDER;
-    var NUMBER_ORDER = PstnSetupService.NUMBER_ORDER;
-    var NUMTYPE_DID = PstnSetupService.NUMTYPE_DID;
-    var NUMTYPE_TOLLFREE = PstnSetupService.NUMTYPE_TOLLFREE;
+    var BLOCK_ORDER = require('modules/huron/pstn').BLOCK_ORDER;
+    var PORT_ORDER = require('modules/huron/pstn').PORT_ORDER;
+    var NUMBER_ORDER = require('modules/huron/pstn').NUMBER_ORDER;
+    var NUMTYPE_DID = require('modules/huron/pstn').NUMTYPE_DID;
+    var NUMTYPE_TOLLFREE = require('modules/huron/pstn').NUMTYPE_TOLLFREE;
     var NXX = 'nxx';
     var NXX_EMPTY = '--';
     var MIN_BLOCK_QUANTITY = 2;
@@ -621,7 +621,7 @@
     function removeOrder(order) {
       if (isPortOrder(order) || isAdvancedOrder(order)) {
         removeOrderFromCart(order);
-      } else if (_.get(order, 'orderType') === PstnSetupService.NUMBER_ORDER && _.get(order, 'numberType') === PstnSetupService.NUMTYPE_TOLLFREE) {
+      } else if (_.get(order, 'orderType') === NUMBER_ORDER && _.get(order, 'numberType') === NUMTYPE_TOLLFREE) {
         PstnSetupService.releaseCarrierTollFreeInventory(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), order.data.numbers, order.reservationId, PstnSetup.isCustomerExists())
           .then(_.partial(removeOrderFromCart, order));
       } else {

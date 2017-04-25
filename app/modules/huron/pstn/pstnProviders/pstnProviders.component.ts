@@ -1,3 +1,4 @@
+import { PstnSetupService } from '../pstn.service';
 import {
   IPstnCarrierGet,
   IPstnCarrierStatic,
@@ -24,7 +25,7 @@ export class PstnProvidersCtrl implements ng.IComponentController {
   /* @ngInject */
   constructor(
     public PstnSetup,
-    private PstnSetupService,
+    private PstnSetupService: PstnSetupService,
     private $resource: ng.resource.IResourceService,
     private $translate: ng.translate.ITranslateService,
   ) {}

@@ -1,6 +1,7 @@
 import { Notification } from 'modules/core/notifications';
-import { NUMBER_ORDER, PORT_ORDER, BLOCK_ORDER, NXX, NUMTYPE_DID, NUMTYPE_TOLLFREE, NXX_EMPTY, MIN_VALID_CODE, MAX_VALID_CODE, MAX_DID_QUANTITY, TOLLFREE_ORDERING_CAPABILITY, TOKEN_FIELD_ID } from '../index';
+import { NUMBER_ORDER, PORT_ORDER, BLOCK_ORDER, NXX, NUMTYPE_DID, NUMTYPE_TOLLFREE, NXX_EMPTY, MIN_VALID_CODE, MAX_VALID_CODE, MAX_DID_QUANTITY, TOLLFREE_ORDERING_CAPABILITY, TOKEN_FIELD_ID, SWIVEL_ORDER } from '../index';
 import { INumbersModel } from './number.model';
+import { PstnSetupService } from '../pstn.service';
 
 export interface IOrder {
   reservationId?: string;
@@ -31,7 +32,7 @@ export class PstnWizardService {
   constructor(
     private $q: ng.IQService,
     private PstnSetup,
-    private PstnSetupService,
+    private PstnSetupService: PstnSetupService,
     private PstnServiceAddressService,
     private Notification: Notification,
     private $translate: ng.translate.ITranslateService,
@@ -170,22 +171,22 @@ export class PstnWizardService {
     }
 
     if (this.portOrders.length > 0) {
-      promise = this.PstnSetupService.portNumbers(this.PstnSetup.getCustomerId(), this.PstnSetup.getProviderId(), _.get(this, 'portOrders[0].data.numbers'))
+      promise = this.PstnSetupService.portNumbers(this.PstnSetup.getCustomerId(), this.PstnSetup.getProviderId(), <Array<string>>_.get(this, 'portOrders[0].data.numbers'))
         .catch(pushErrorArray);
       promises.push(promise);
     }
 
     if (this.swivelOrders.length > 0) {
-      promise = this.PstnSetupService.orderNumbers(this.PstnSetup.getCustomerId(), this.PstnSetup.getProviderId(), _.get(this, 'swivelOrders[0].data.numbers'))
+      promise = this.PstnSetupService.orderNumbers(this.PstnSetup.getCustomerId(), this.PstnSetup.getProviderId(), <Array<string>>_.get(this, 'swivelOrders[0].data.numbers'))
         .catch(pushErrorArray);
       promises.push(promise);
     }
 
     _.forEach(this.advancedOrders, order => {
-      if (order.orderType === this.PstnSetupService.BLOCK_ORDER && order.numberType === this.PstnSetupService.NUMTYPE_DID) {
+      if (order.orderType === BLOCK_ORDER && order.numberType === NUMTYPE_DID) {
         promise = this.PstnSetupService.orderBlock(this.PstnSetup.getCustomerId(), this.PstnSetup.getProviderId(), order.data.areaCode, order.data.length, order.data.consecutive, order.data.nxx)
           .catch(pushErrorArray);
-      } else if (order.orderType === this.PstnSetupService.BLOCK_ORDER && order.numberType === this.PstnSetupService.NUMTYPE_TOLLFREE) {
+      } else if (order.orderType === BLOCK_ORDER && order.numberType === NUMTYPE_TOLLFREE) {
         promise = this.PstnSetupService.orderTollFreeBlock(this.PstnSetup.getCustomerId(), this.PstnSetup.getProviderId(), order.data.areaCode, order.data.length)
           .catch(pushErrorArray);
       }
@@ -203,8 +204,8 @@ export class PstnWizardService {
   public setSwivelOrder(order: Array<string>): Array<IOrder> {
     let swivelOrder = [{
       data: { numbers: order },
-      numberType: this.PstnSetupService.NUMTYPE_DID,
-      orderType: this.PstnSetupService.SWIVEL_ORDER,
+      numberType: NUMTYPE_DID,
+      orderType: SWIVEL_ORDER,
     }];
     this.swivelOrders = swivelOrder;
     return this.swivelOrders;
@@ -250,20 +251,20 @@ export class PstnWizardService {
     let orderCart: Array<IOrder> = _.cloneDeep(this.PstnSetup.getOrders());
     let totalNewAdvancedOrder, totalPortNumbers;
 
-    this.portOrders = _.remove(orderCart, order => order.orderType === this.PstnSetupService.PORT_ORDER);
+    this.portOrders = _.remove(orderCart, order => order.orderType === PORT_ORDER);
 
     this.newTollFreeOrders = _.remove(orderCart, order => {
-      return order.orderType === this.PstnSetupService.NUMBER_ORDER && order.numberType === this.PstnSetupService.NUMTYPE_TOLLFREE;
+      return order.orderType === NUMBER_ORDER && order.numberType === NUMTYPE_TOLLFREE;
     });
 
     let pstnAdvancedOrders: any = _.remove(orderCart, order => {
-      return order.orderType === this.PstnSetupService.BLOCK_ORDER && order.numberType === this.PstnSetupService.NUMTYPE_DID;
+      return order.orderType === BLOCK_ORDER && order.numberType === NUMTYPE_DID;
     });
 
-    this.swivelOrders = _.remove(orderCart, order => order.orderType === this.PstnSetupService.SWIVEL_ORDER);
+    this.swivelOrders = _.remove(orderCart, order => order.orderType === SWIVEL_ORDER);
 
     let tollFreeAdvancedOrders: any = _.remove(orderCart, order => {
-      return order.orderType === this.PstnSetupService.BLOCK_ORDER && order.numberType === this.PstnSetupService.NUMTYPE_TOLLFREE;
+      return order.orderType === BLOCK_ORDER && order.numberType === NUMTYPE_TOLLFREE;
     });
     this.advancedOrders = [].concat(pstnAdvancedOrders, tollFreeAdvancedOrders);
 
@@ -638,7 +639,7 @@ export class PstnWizardService {
       .catch(response => this.Notification.errorResponse(response, 'pstnSetup.errors.tollfree.inventory'));
   }
 
-  public hasTollFreeCapability() {
+  public hasTollFreeCapability(): ng.IPromise<boolean> {
     return this.PstnSetupService.getCarrierCapabilities(this.PstnSetup.getProviderId())
         .then(response => {
           let supportedCapabilities: string[] = [];
@@ -646,14 +647,13 @@ export class PstnWizardService {
             .filter(x => response[x].capability)
             .map(x => supportedCapabilities.push(response[x].capability));
           return supportedCapabilities.indexOf(TOLLFREE_ORDERING_CAPABILITY) !== -1;
-        })
-        .catch(response => this.Notification.errorResponse(response, 'pstnSetup.errors.capabilities'));
+        });
   }
 
   public removeOrder(order: IOrder): ng.IPromise<any> {
     if (this.isPortOrder(order) || this.isAdvancedOrder(order)) {
       return this.$q.resolve(true);
-    } else if (order.orderType === this.PstnSetupService.NUMBER_ORDER && order.numberType === this.PstnSetupService.NUMTYPE_TOLLFREE) {
+    } else if (order.orderType === NUMBER_ORDER && order.numberType === NUMTYPE_TOLLFREE) {
       return this.PstnSetupService.releaseCarrierTollFreeInventory(this.PstnSetup.getCustomerId(), this.PstnSetup.getProviderId(), order.data.numbers, order.reservationId, this.PstnSetup.isCustomerExists());
     } else {
       return this.PstnSetupService.releaseCarrierInventoryV2(this.PstnSetup.getCustomerId(), order.reservationId, order.data.numbers, this.PstnSetup.isCustomerExists());

@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  var NUMTYPE_DID = require('modules/huron/pstn').NUMTYPE_DID;
+  var NUMBER_ORDER = require('modules/huron/pstn').NUMBER_ORDER;
   module.exports = TrialPstnService;
 
   /* @ngInject */
@@ -103,8 +105,8 @@
               data: {
                 numbers: reservationData.numbers,
               },
-              numberType: PstnSetupService.NUMTYPE_DID,
-              orderType: PstnSetupService.NUMBER_ORDER,
+              numberType: NUMTYPE_DID,
+              orderType: NUMBER_ORDER,
               reservationId: reservationData.uuid,
             };
             _trialData.details.pstnOrderData.push(order);

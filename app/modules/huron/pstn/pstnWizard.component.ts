@@ -1,3 +1,4 @@
+import { PstnSetupService } from './pstn.service';
 export class PstnWizardComponent implements ng.IComponentOptions {
   public controller = PstnWizardCtrl;
   public templateUrl = 'modules/huron/pstn/pstnWizard.html';
@@ -21,7 +22,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private PstnSetup,
-    private PstnSetupService,
+    private PstnSetupService: PstnSetupService,
     private Notification,
   ) {}
 

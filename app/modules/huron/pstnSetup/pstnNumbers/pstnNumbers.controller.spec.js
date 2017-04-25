@@ -7,7 +7,9 @@ describe('Controller: PstnNumbersCtrl', function () {
   var customer = getJSONFixture('huron/json/pstnSetup/customer.json');
   var customerCarrierList = getJSONFixture('huron/json/pstnSetup/customerCarrierList.json');
   var orderCart = getJSONFixture('huron/json/pstnSetup/orderCart.json');
-
+  var BLOCK_ORDER = require('modules/huron/pstn').BLOCK_ORDER;
+  var NUMTYPE_DID = require('modules/huron/pstn').NUMTYPE_DID;
+  var NUMTYPE_TOLLFREE = require('modules/huron/pstn').NUMTYPE_TOLLFREE;
   var singleOrder = {
     "data": {
       "numbers": "+12145551000",
@@ -340,15 +342,15 @@ describe('Controller: PstnNumbersCtrl', function () {
       };
       controller.model.pstn.quantity = advancedOrder.data.length;
       controller.model.pstn.consecutive = advancedOrder.data.consecutive;
-      controller.addToCart(PstnSetupService.BLOCK_ORDER, PstnSetupService.NUMTYPE_DID);
+      controller.addToCart(BLOCK_ORDER, NUMTYPE_DID);
       expect(controller.orderCart).toContain({
         data: {
           areaCode: advancedOrder.data.areaCode,
           length: advancedOrder.data.length,
           consecutive: advancedOrder.data.consecutive,
         },
-        numberType: PstnSetupService.NUMTYPE_DID,
-        orderType: PstnSetupService.BLOCK_ORDER,
+        numberType: NUMTYPE_DID,
+        orderType: BLOCK_ORDER,
       });
     });
 
@@ -358,15 +360,15 @@ describe('Controller: PstnNumbersCtrl', function () {
       };
       controller.model.tollFree.quantity = advancedTollFreeOrder.data.length;
       controller.model.tollFree.consecutive = advancedTollFreeOrder.data.consecutive;
-      controller.addToCart(PstnSetupService.BLOCK_ORDER, PstnSetupService.NUMTYPE_TOLLFREE);
+      controller.addToCart(BLOCK_ORDER, NUMTYPE_TOLLFREE);
       expect(controller.orderCart).toContain({
         data: {
           areaCode: advancedTollFreeOrder.data.areaCode,
           length: advancedTollFreeOrder.data.length,
           consecutive: advancedTollFreeOrder.data.consecutive,
         },
-        numberType: PstnSetupService.NUMTYPE_TOLLFREE,
-        orderType: PstnSetupService.BLOCK_ORDER,
+        numberType: NUMTYPE_TOLLFREE,
+        orderType: BLOCK_ORDER,
       });
     });
   });

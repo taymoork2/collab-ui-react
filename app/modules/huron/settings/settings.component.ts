@@ -4,6 +4,7 @@ import { IExtensionRange } from 'modules/huron/settings/extensionRange';
 import { CompanyNumber } from 'modules/huron/settings/companyCallerId';
 import { IOption } from 'modules/huron/dialing/dialing.service';
 import { EmergencyCallbackNumber } from 'modules/huron/sites';
+import { PstnSetupService } from '../pstn/pstn.service';
 
 const API_IMPL_SWIVEL = 'SWIVEL';
 
@@ -46,7 +47,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
     private $translate: ng.translate.ITranslateService,
     private $state: ng.ui.IStateService,
     private ModalService,
-    private PstnSetupService,
+    private PstnSetupService: PstnSetupService,
     private PstnSetup,
     private Authinfo,
     private Config,
