@@ -74,7 +74,7 @@
     </div>
   </div>
   <cs-card-layout>
-    <div  id="membersContainer" ng-class="{'members-reorder': $ctrl.reordering}">
+    <div  id="membersContainer" class="members-container" ng-class="{'members-reorder': $ctrl.reordering, 'members-reorderable': $ctrl.dragAndDrop}">
       <cs-card-member
         ng-repeat="member in $ctrl.displayedMembers track by member.uuid"
         cs-type="{{::member.cardType}}"

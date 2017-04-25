@@ -134,7 +134,7 @@ export class HuntGroupService {
         _.forEach(group, groupMember => {
           if (sharedLine.memberItems) {
             sharedLine.memberItems.push(new MemberItem({
-              label: _.get<string>(groupMember, 'userName'),
+              label: _.get<string>(groupMember, 'memberName'),
               sublabel: undefined,
               value: _.get<string>(group[0], 'userUuid'),
             }));
@@ -144,7 +144,7 @@ export class HuntGroupService {
       } else if (group.length === 1) {
         consolidatedMembers.push(new CallFeatureMember({
           uuid: _.get<string>(group[0], 'numberUuid'),
-          name: _.get<string>(group[0], 'userName'),
+          name: _.get<string>(group[0], 'memberName'),
           showName: true,
           type: _.get<string>(group[0], 'memberType') === USER_PLACE ? MemberType.USER_PLACE : MemberType.USER_REAL_USER,
           cardType: CardType.SIMPLE,

@@ -4,7 +4,7 @@ import { FeatureMemberService } from 'modules/huron/features/services';
 import { Line } from 'modules/huron/lines/services/line';
 
 class CallFeatureMembersCtrl implements ng.IComponentController {
-  public static readonly DISPLAYED_MEMBER_SIZE: number = 9;
+  public static readonly DISPLAYED_MEMBER_SIZE: number = 10;
 
   public members: Array<CallFeatureMember>;
   public displayedMembers: Array<CallFeatureMember> = [];
