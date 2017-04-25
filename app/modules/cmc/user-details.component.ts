@@ -38,7 +38,10 @@ class CmcUserDetailsController implements ng.IComponentController {
       if (userChanges.currentValue) {
         this.user = <IUser>userChanges.currentValue;
         this.services[0].actionAvailable = true;
-        this.allowCmcSettings = this.CmcService.allowCmcSettings(this.user.meta.organizationID);
+        this.CmcService.allowCmcSettings(this.user.meta.organizationID).then((res) =>  {
+          this.$log.debug('allowCmcSettings:', res);
+          this.allowCmcSettings = res;
+        });
       }
     }
   }
