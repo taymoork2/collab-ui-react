@@ -33,8 +33,6 @@ require('moment-range/dist/moment-range.js');
 
 require('jquery-csv/src/jquery.csv.js');
 require('angular-timer/dist/angular-timer.js');
-require('angular-libphonenumber/dist/libphonenumber.full.js');
-require('angular-libphonenumber/dist/angular-libphonenumber.js');
 require('angularjs-slider/dist/rzslider.min.js');
 require('ng-file-upload/dist/ng-file-upload.js');
 

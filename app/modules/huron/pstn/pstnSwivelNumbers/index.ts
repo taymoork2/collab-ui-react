@@ -1,5 +1,6 @@
 import { PstnSwivelNumbersComponent } from './pstnSwivelNumbers.component';
 import notifications from 'modules/core/notifications';
+import phoneNumberModule from 'modules/huron/phoneNumber';
 require('bootstrap-tokenfield');
 
 export { TokenMethods } from './tokenMethods';
@@ -11,8 +12,8 @@ export default angular
     require('collab-ui-ng').default,
     require('angular-timer'),
     require('angular-translate'),
-    require('modules/huron/telephony/telephoneNumber.service'),
     notifications,
+    phoneNumberModule,
   ])
   .component('ucPstnSwivelNumbers', new PstnSwivelNumbersComponent())
   .name;

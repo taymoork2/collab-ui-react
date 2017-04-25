@@ -86,18 +86,8 @@ describe('component: speedDial', () => {
     let modelnumber, modeluri;
     beforeEach(initComponent);
     beforeEach(function () {
-      modelnumber = {
-        code: '',
-        name: '',
-        number: '',
-        phoneNumber: '789',
-      };
-      modeluri = {
-        code: '',
-        name: '',
-        number: '',
-        phoneNumber: 'test@cisco',
-      };
+      modelnumber = '789';
+      modeluri = 'test@cisco';
       spyOn(this.controller, 'extensionOwned').and.callThrough();
     });
 

@@ -4,7 +4,7 @@ describe('component: snr', () => {
   const DROPDOWN_LIST = 'button[cs-dropdown-toggle]';
   const DROPDOWN_LIST_ADD = '.actions-services li:nth-child(1) a';
 
-  const INPUT_NUMBER = 'input.phone-number';
+  const INPUT_NUMBER = 'input[name="phoneinput"]';
   const SAVE_BUTTON = '.button-container .btn--primary';
   const INPUT_WAITTIME = 'select[name="snrWaitSeconds"]';
   // const REMOVE_LINK = '#remove';

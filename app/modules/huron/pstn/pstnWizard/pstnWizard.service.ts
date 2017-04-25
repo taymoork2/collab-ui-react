@@ -6,6 +6,7 @@ import {
   PstnModel,
   IOrder,
 } from '../pstn.model';
+import { PhoneNumberService } from 'modules/huron/phoneNumber';
 
 export class PstnWizardService {
   public STEP_TITLE: {
@@ -34,7 +35,7 @@ export class PstnWizardService {
     private PstnServiceAddressService,
     private Notification: Notification,
     private $translate: ng.translate.ITranslateService,
-    private TelephoneNumberService,
+    private PhoneNumberService: PhoneNumberService,
     private Orgservice,
   ) {
     this.PORTING_NUMBERS = this.$translate.instant('pstnSetup.portNumbersLabel');
@@ -315,10 +316,10 @@ export class PstnWizardService {
 
   private getCommonPattern(telephoneNumber) {
     if (_.isString(telephoneNumber)) {
-      return this.TelephoneNumberService.getDIDLabel(telephoneNumber);
+      return this.PhoneNumberService.getNationalFormat(telephoneNumber);
     } else {
-      let firstNumber = this.TelephoneNumberService.getDIDLabel(_.head(telephoneNumber));
-      let lastNumber = this.TelephoneNumberService.getDIDLabel(_.last(telephoneNumber));
+      let firstNumber = this.PhoneNumberService.getNationalFormat(_.head<string>(telephoneNumber));
+      let lastNumber = this.PhoneNumberService.getNationalFormat(_.last<string>(telephoneNumber));
       if (this.isConsecutiveArray(telephoneNumber)) {
         return firstNumber + ' - ' + _.last(lastNumber.split('-'));
       } else {

@@ -79,9 +79,9 @@
     require('modules/huron/dialPlans').default,
     require('modules/core/domainManagement').default,
     require('modules/huron/features/featureLanding/hoverDelay.directive').default,
+    require('modules/core/validation').default,
   ])
     .constant('CryptoJS', require('crypto-js'))
-    .constant('phone', require('google-libphonenumber'))
     .constant('addressparser', require('emailjs-addressparser'));
 
   // TODO fix circular dependencies between modules
@@ -101,11 +101,9 @@
     'ngIcal',
     'huron.paging-group',
     'huron.call-pickup.setup-assistant',
-    'huron.telephoneNumber',
     'huron.call-park',
     'huron.bulk-enable-vm',
     'huron.TerminusServices',
-    'huron.telephoneNumberService',
     'huron.externalNumberService',
     require('modules/huron/telephony/telephonyConfig'),
     require('modules/huron/telephony/cmiServices'),
