@@ -1,10 +1,10 @@
 export class CmcUserData {
   public mobileNumber: string;
-  public cmcEntitled: boolean;
+  public entitled: boolean;
 
   constructor(mobilenumber: string,
-              cmcEntitled: boolean) {
+              entitled: boolean) {
     this.mobileNumber = mobilenumber;
-    this.cmcEntitled = cmcEntitled;
+    this.entitled = entitled;
   }
 }
