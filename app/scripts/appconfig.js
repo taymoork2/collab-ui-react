@@ -323,9 +323,8 @@
             }
 
             var template = '<cs-sidepanel';
-            template += options.type ? ' size=' + options.type : '';
+            template += options.type ? ' size="' + options.type + '"' : '';
             template += '></cs-sidepanel>';
-
             $state.sidepanel = $modal.open({
               template: template,
               // TODO(pajeter): remove inline template when cs-modal is updated
@@ -343,7 +342,8 @@
                 $state.sidepanel = null;
                 var previousState = $previousState.get(sidepanelMemo);
                 if (previousState) {
-                  if (isStateInSidepanel($state)) {
+                  var isStateInLargepanel = $state.current.parent === 'largepanel';
+                  if (isStateInSidepanel($state) || isStateInLargepanel) {
                     return $previousState.go(sidepanelMemo).then(function () {
                       $previousState.forget(sidepanelMemo);
                     });
@@ -2150,10 +2150,13 @@
             },
             templateUrl: 'modules/gemini/callbackGroup/cbgRequest.tpl.html',
           })
-          .state('gmTdLargePanel', {
+          .state('gmTdNumbers', {
             data: {},
             parent: 'largepanel',
-            views: { 'sidepanel@': { template: '<gm-td-large-panel></gm-td-large-panel>' } },
+            views: {
+              'sidepanel@': { template: '<gm-td-numbers></gm-td-numbers>' },
+              'header@gmTdNumbers': { templateUrl: 'modules/gemini/telephonyDomain/details/gmTdDetailsHeader.tpl.html' },
+            },
           })
           .state('gmTdDetails', {
             data: {},

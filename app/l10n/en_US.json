@@ -7314,7 +7314,7 @@
         "customerPlaceholder": "Who is the Telephony Domain for",
         "partnerPlaceholder": "Enter a nickname for this Telephony Domain",
         "customerHelpText": "Once approved by Cisco team, this name cannot be changed",
-        "customerNameLengthError": "your customer name should be less than 15 characters",
+        "customerNameLengthError": "Your customer name should be less than 15 characters",
         "importNumber": {
           "fromTd": "Import TD",
           "fromCsv": "Import CSV"
