@@ -13,7 +13,7 @@ export class CmcService {
   /* @ngInject */
   constructor(
     private $log: ng.ILogService,
-    private $q,
+    private $q: ng.IQService,
     private Orgservice,
   ) {
     this.existingCmcUsers = new Array();
