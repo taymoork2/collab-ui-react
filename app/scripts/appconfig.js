@@ -3821,6 +3821,16 @@
               },
             },
           })
+          .state('private-trunk-settings', {
+            parent: 'main',
+            url: '/private-trunk-settings/:id',
+            template: '<private-trunk-settings-page trunk-id="$resolve.id"></private-trunk-settings-page>',
+            resolve: {
+              id: /* @ngInject */ function ($stateParams) {
+                return $stateParams.id;
+              },
+            },
+          })
           .state('private-trunk-sidepanel', {
             parent: 'sidepanel',
             views: {
