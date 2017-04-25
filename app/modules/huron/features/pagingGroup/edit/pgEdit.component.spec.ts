@@ -246,6 +246,14 @@ describe('Component: pgEdit', () => {
       this.$scope.$apply();
       expect(this.Notification.error).toHaveBeenCalledWith('pagingGroup.errorUpdate', { message: '' });
     });
+
+    it('should display Notification when getNumberExtension failed', function () {
+      this.getNumberSuggestionsDefer.resolve(pilotNumbers);
+      this.getNumberExtensionDefer.reject(pagingServiceFailureResp);
+      this.getPagingGroupDefer.resolve(pg);
+      this.$scope.$apply();
+      expect(this.Notification.errorResponse).toHaveBeenCalledWith(pagingServiceFailureResp, pg.name);
+    });
   });
 
   describe('Negative on getNumberSuggestions', function () {
