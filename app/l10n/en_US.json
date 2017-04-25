@@ -6749,7 +6749,7 @@
     "dateHeader": "Order Date",
     "actionsHeader": "Actions",
     "statusHeader": "Payment Status",
-    "downloadPdf": "Download PDF",
+    "viewInvoice": "View Invoice",
     "completed": "Completed",
     "pending": "Pending",
     "error": "Error",

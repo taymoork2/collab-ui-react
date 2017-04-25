@@ -1,9 +1,11 @@
+import { DigitalRiverService } from 'modules/online/digitalRiver/digitalRiver.service';
 import { IOrderDetail } from './myCompanyOrders.service';
 import { Notification } from 'modules/core/notifications';
 import { MyCompanyOrdersService } from './myCompanyOrders.service';
 
 const COMPLETED = 'COMPLETED';
 const ERROR = 'ERROR';
+const TRIAL = 'Trial';
 
 class MyCompanyOrdersCtrl implements ng.IComponentController {
 
@@ -18,6 +20,8 @@ class MyCompanyOrdersCtrl implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private $translate: angular.translate.ITranslateService,
+    private $window: ng.IWindowService,
+    private DigitalRiverService: DigitalRiverService,
     private Notification: Notification,
     private MyCompanyOrdersService: MyCompanyOrdersService,
   ) {}
@@ -31,10 +35,19 @@ class MyCompanyOrdersCtrl implements ng.IComponentController {
           orderDetail.productDescriptionList =
               this.formatProductDescriptionList(orderDetail.productDescriptionList);
         }
+        orderDetail.isTrial = false;
+        if (_.includes(orderDetail.productDescriptionList, TRIAL)) {
+          orderDetail.isTrial = true;
+        }
         if (COMPLETED === orderDetail.status) {
           orderDetail.status = this.$translate.instant('myCompanyOrders.completed');
         } else if (ERROR === orderDetail.status) {
           orderDetail.status = this.$translate.instant('myCompanyOrders.error');
+          const errorCode = _.get(orderDetail.errorDetails[0], 'errorCode');
+          if (errorCode) {
+            orderDetail.status += ' ' + errorCode;
+            orderDetail.errorText = _.get(orderDetail.errorDetails[0], 'description');
+          }
         } else {
           orderDetail.status = this.$translate.instant('myCompanyOrders.pending');
         }
@@ -71,7 +84,7 @@ class MyCompanyOrdersCtrl implements ng.IComponentController {
       }, {
         name: 'productDescriptionList',
         displayName: this.$translate.instant('myCompanyOrders.descriptionHeader'),
-        width: '45%',
+        width: '*',
       }, {
         name: 'orderDate',
         displayName: this.$translate.instant('myCompanyOrders.dateHeader'),
@@ -84,13 +97,16 @@ class MyCompanyOrdersCtrl implements ng.IComponentController {
       }, {
         name: 'total',
         displayName: this.$translate.instant('myCompanyOrders.priceHeader'),
-        cellFilter: 'currency',
-        width: '*',
+        cellTemplate: 'modules/core/myCompany/orders/myCompanyOrdersAction.tpl.html',
+        width: '14%',
       }],
     };
   }
 
-  public downloadPdf(): void {
+  public viewInvoice(orderId: string, product: string): void {
+    this.DigitalRiverService.getInvoiceUrl(orderId, product).then((invoiceUrl: string): void => {
+      this.$window.open(invoiceUrl, '_blank');
+    });
   }
 
   public formatProductDescriptionList(productDescriptionList: string[] = []): string {

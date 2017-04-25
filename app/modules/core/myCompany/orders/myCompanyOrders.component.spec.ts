@@ -40,7 +40,7 @@ describe('Component: myCompanyOrders', () => {
     spyOn(this.DigitalRiverService, 'logout').and.returnValue(this.$q.resolve());
 
     this.compileComponent('myCompanyOrders');
-    spyOn(this.controller, 'downloadPdf');
+    spyOn(this.controller, 'viewInvoice');
   });
 
   it('should render ui-grid from gridOptions', function () {
@@ -108,10 +108,9 @@ describe('Component: myCompanyOrders', () => {
       expect(this.view.find('.ui-grid-row').last()).toContainText('123');
     });
 
-    // TODO re-enable when `myCompanyOrdersAction.tpl.html` shows an anchor
-    xit('should call downloadPdf on action click', function () {
+    it('should call viewInvoice on action click', function () {
       this.view.find('.my-company-order-history-actions').click();
-      expect(this.controller.downloadPdf).toHaveBeenCalled();
+      expect(this.controller.viewInvoice).toHaveBeenCalled();
     });
   });
 });
