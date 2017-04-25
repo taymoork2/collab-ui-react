@@ -1,4 +1,4 @@
-<cs-sp-section class="side-panel-history">
+<cs-sp-section ng-if="$ctrl.ccaDomainId" class="section gm-td-histories side-panel-history">
   <div class="section-title-row">
     <div class="section-name">
       <i class="icon icon-2x {{$ctrl.isCollapsed ? 'icon-chevron-right': 'icon-chevron-down'}}" ng-click="$ctrl.onCollapse()"></i>
@@ -6,8 +6,12 @@
     </div>
   </div>
   <div class="section-content" collapse="$ctrl.isCollapsed">
+    <div ng-if="$ctrl.isLoading">
+      <i class="icon icon-spinner"></i>
+    </div>
+
     <ul class="history-ul" ng-if="!$ctrl.isLoading">
-      <li ng-repeat="item in $ctrl.model | limitTo:$ctrl.displayNum">
+      <li ng-repeat="item in $ctrl.model">
         <h6>{{item.action}}</h6>
         <h6 ng-if="item.objectName">{{item.objectName}}</h6>
         <p>
@@ -20,11 +24,8 @@
         </p>
       </li>
     </ul>
-    <p ng-show="$ctrl.isShowAll()" class="show-more">
+    <p ng-if="$ctrl.needToShowAll" class="show-more">
       <a class="primary-color" href ng-click="$ctrl.onShowAll()" translate="gemini.cbgs.showMore"></a>
     </p>
-    <div ng-if="$ctrl.isLoading">
-      <i class="icon icon-spinner"></i>
-    </div>
   </div>
 </cs-sp-section>
