@@ -1,4 +1,6 @@
 import { ICardButton, CardType, ServicesOverviewCard } from './ServicesOverviewCard';
+import { IPrivateTrunkResource } from 'modules/hercules/private-trunk/private-trunk-services/private-trunk';
+import { ICluster } from 'modules/hercules/hybrid-services.types';
 
 export class ServicesOverviewHybridServicesCard extends ServicesOverviewCard {
   public getShowMoreButton(): ICardButton | undefined {
@@ -16,8 +18,12 @@ export class ServicesOverviewHybridServicesCard extends ServicesOverviewCard {
     buttonClass: 'btn-link',
   }];
 
-  public hybridClustersEventHandler(clusterList: Array<any>): void {
+  public hybridClustersEventHandler(clusterList: Array<ICluster>): void {
     this.active = clusterList.length > 0;
+  }
+
+  public sipDestinationsEventHandler(destinationList: Array<IPrivateTrunkResource>, clusterList: Array<ICluster>): void {
+    this.active = destinationList.length > 0 || clusterList.length > 0;
   }
 
   public getButtons(): Array<ICardButton> {
