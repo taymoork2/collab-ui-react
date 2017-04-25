@@ -5,15 +5,13 @@
 .hgmethods {
   &.large {
     text-align: center;
+    display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
     justify-content: center;
     align-items: center;
     overflow-y: auto;
-
-    // > div {
-    //   height: calc(100vh - #{$top-bar-height + $overlay-panel-height});
-    // }
+    height: calc(100vh - #{$top-bar-height + $overlay-panel-height});
   }
 
   .title {
@@ -34,12 +32,12 @@
   }
 
   .select-method {
-    margin-left: auto;
-    margin-right: auto;
+    // margin-left: auto;
+    // margin-right: auto;
     display: flex;
     flex-wrap: wrap;
 
-    @include vr-spacing(pb, 1);
+    // @include vr-spacing(pb, 1);
   }
 }
 

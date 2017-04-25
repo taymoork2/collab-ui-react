@@ -1,5 +1,8 @@
 @import '~collab-ui/scss/settings/core';
 @import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~collab-ui/scss/settings/typography';
+@import '~collab-ui/scss/settings/cards';
 
 .huntgroup {
   &.overlay-panel {
@@ -20,5 +23,51 @@
     justify-content: center;
     align-content: center;
     align-items: center;
+  }
+}
+
+.hgmethods {
+}
+
+.method-container {
+  @include vr-spacing(mt, 0.75, 1px, false);
+  @include vr-spacing(mh, 0.5, 1px, true);
+}
+
+.method-desc {
+  color: $gray-dark-2;
+  font-family: $brand-font-light;
+}
+
+.hgmethod {
+  display: flex !important;
+  flex: none;
+
+  &.current {
+    > a {
+      background: $gray-light-4;
+    }
+  }
+
+  > a {
+    box-shadow: 0px 1px 2px 1px rgba(52, 53, 55, 0.18);
+    @include vr-spacing(pb, 1);
+    @include vr-spacing(pt, 1.5);
+
+    flex: 1;
+    border-radius: $card-border-radius;
+    text-align: center;
+    cursor: pointer;
+    color: $brand-info;
+
+    > i {
+      color: $gray-dark-2;
+      font-size: 2.5rem;
+    }
+
+    &:hover,
+    &:focus {
+      background: $gray-light-4;
+    }
   }
 }

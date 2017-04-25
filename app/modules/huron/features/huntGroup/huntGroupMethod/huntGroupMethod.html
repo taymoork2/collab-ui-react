@@ -1,10 +1,10 @@
 <div class="hgmethods" ng-class="{'large': $ctrl.isNew}">
-  <div ng-if="$ctrl.isNew">
-    <div class="feature-title" translate="huronHuntGroup.methodTitle"></div>
-    <div class="feature-desc" translate="huronHuntGroup.methodHint"></div>
+  <div class="feature-step-title" ng-if="$ctrl.isNew">
+    <h1 class="feature-title" translate="huronHuntGroup.methodTitle"></h1>
+    <h6 class="feature-desc" translate="huronHuntGroup.methodHint"></h6>
   </div>
-  <div class="row method-container">
-    <ul class="select-method large-9 columns medium-centered large-block-grid-4 medium-block-grid-2">
+  <div class="method-container row">
+    <ul class="select-method medium-block-grid-2 large-block-grid-4" ng-class="{'medium-centered medium-9 columns': $ctrl.isNew}">
       <li class="hgmethod" ng-class="{current: $ctrl.huntMethod === 'DA_LONGEST_IDLE_TIME'}">
         <a href ng-click="$ctrl.setHuntMethod('DA_LONGEST_IDLE_TIME')" ng-attr-focus-on="{{$ctrl.huntMethod === 'DA_LONGEST_IDLE_TIME'}}">
           <i class="icon icon-circle-clock-hands"></i>
