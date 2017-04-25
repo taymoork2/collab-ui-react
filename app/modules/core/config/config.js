@@ -454,6 +454,7 @@
         'private-trunk-overview',
         'private-trunk-domain',
         'private-trunk-sidepanel',
+        'private-trunk-settings',
         'private-trunk-redirect',
         'customerPstnOrdersOverview',
         'externalNumberDelete',

@@ -2029,19 +2029,23 @@
       "noHybridServicesProvisioned": "No Hybrid Services are enabled on this Expressway. To enable a Hybrid Service, go to the relevant service page."
     },
     "renameAndDeregisterComponent": {
-      "clusterNameWatermark": "Enter cluster name…",
-      "renameClusterParagraph": "Rename the {{clusterType}} cluster.",
+      "clusterNameWatermark": "Enter name…",
+      "renameClusterParagraph": "Enter a new name for the cluster.",
+      "renameSipDestinationParagraph": "Enter a new name for the SIP Destination.",
       "clusterNameSaved": "Cluster name saved successfully.",
+      "sipDestinationNameSaved": "SIP Destination name saved successfully.",
       "clusterNameCannotBeSaved": "Cluster name could not be saved. Try again later.",
-      "clusterNameCannotByEmpty": "Cluster name cannot be empty.",
-      "renameClusterDescription": "The cluster name is used for display purposes in Cloud Collaboration Managment and in email notifications.",
+      "sipDestinationNameCannotBeSaved": "SIP Destination name could not be saved. Try again later.",
+      "clusterNameCannotByEmpty": "Name cannot be empty.",
+      "renameClusterDescription": "The name is for display purposes only.",
       "deregisterClusterExplanation": "Remove this {{clusterType}} cluster from Cisco Collaboration Cloud.",
+      "deregisterSipDestinationExplanation": "Remove this SIP Destination from Cisco Collaboration Cloud. This step removes all related configuration.",
       "deregisterMediaClusterExplanation": "Click the \"Remove\" button to launch the Remove Cluster workflow.",
       "deregisterClusterExplanationBlocked": "It is not possible to deregister an Expressway until all its services have been deactivated.",
       "allServicesMustBeDeactivatedOnExpressway": "All services must be deactivated on an Expressway cluster before it can be removed.",
       "couldNotDeregisterCluster": "Could not deregister cluster.",
       "deregisterConfirmRemoval": "Confirm Removal",
-      "deregisterConfirmationText": "You are about to deregister the cluster <strong>{{clusterName}}</strong> from Cisco Collaboration Cloud.",
+      "deregisterConfirmationText": "You are about to deregister <strong>{{clusterName}}</strong> from Cisco Collaboration Cloud.",
       "deregisterConfirmPopup": "{{clusterName}} was removed successfully from Cisco Collaboration Cloud."
     },
     "deactivateServiceComponent": {
