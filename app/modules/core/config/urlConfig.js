@@ -244,7 +244,8 @@
     MeetingUsageUrl: 'https://ds2-qlikdemo.cisco.com/single/?appid=226f935e-50eb-4d67-8a22-4f3ea9a4f499&sheet=FyVmGa',
     JoinMeetingTimeUrl: 'https://10.140.50.27/single/?appid=0983ec7e-fc3d-4a1e-b4ea-116b239ce3f1&sheet=461c49d5-3bbc-4fec-b06b-96a762a44f1d',
     WebexReportInMashupUrl: 'https://ds2-qlikdemo.cisco.com/extensions/webex-report-allsite/webex-report-allsite.html',
-    WebexReportInQlikAppUrl: 'https://ds2-qlikdemo.cisco.com/sense/app/5d50c7ce-91f1-4a4b-9b7d-3f38d80b897a',
+    WebexReportInQlikAppUrl: 'http://10.194.245.72:8080/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/singlesitereport/basic_webex_report_vSiteId/599/jacao/ds2-win2012-01',
+    SparkReportInMashupUrl: 'https://ds2-qlikdemo.cisco.com/extensions/spark_mashup/spark_mashup.html',
   };
 
   module.exports = angular
