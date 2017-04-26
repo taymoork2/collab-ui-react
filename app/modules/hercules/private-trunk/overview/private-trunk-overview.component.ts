@@ -7,7 +7,7 @@ export class PrivateTrunkOverviewCtrl implements ng.IComponentController {
     state: 'private-trunk-overview.list',
   }, {
     title: 'Settings',
-    state: '',
+    state: '404',
   }];
 
   /* @ngInject */
