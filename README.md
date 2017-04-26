@@ -59,6 +59,23 @@ See [git-terminology](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-c
   git clone git@sqbu-github.cisco.com:WebExSquared/wx2-admin-web-client.git
   ```
 
+##### 1a. Set your author name and email (if you haven't already done so)
+* Run `git config ...` to set your author name and email for this repo:
+
+  ```
+  cd ./wx2-admin-web-client
+  git config user.name "John Doe"
+  git config user.email johndoe@cisco.com
+  ```
+
+  ...or alternatively, set them globally on your work machine (a better choice if you work with multiple repos):
+
+  ```
+  cd ./wx2-admin-web-client
+  git config --global user.name "John Doe"
+  git config --global user.email johndoe@cisco.com
+  ```
+
 ##### 2. Create a fork (on sqbu-github)
 * Select the 'Fork' button
 * Select the target that matches your CEC id

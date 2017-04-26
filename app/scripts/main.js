@@ -127,6 +127,8 @@
     require('modules/hercules/services/hybrid-services-i18n.service').default,
     require('modules/hercules/services/hybrid-services-utils.service').default,
     require('modules/hercules/services/uss-service'),
+    require('modules/hercules/private-trunk/private-trunk-services').default,
+    require('modules/hercules/private-trunk/overview').default,
   ]);
 
   angular.module('HDS', ['Core', 'Hercules']);

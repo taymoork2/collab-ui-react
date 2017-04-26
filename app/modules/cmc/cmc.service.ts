@@ -13,6 +13,7 @@ export class CmcService {
   /* @ngInject */
   constructor(
     private $log: ng.ILogService,
+    private $q: ng.IQService,
     private Orgservice,
   ) {
     this.existingCmcUsers = new Array();
@@ -25,7 +26,7 @@ export class CmcService {
     this.$log.warn('existing user', existingUser);
     if (existingUser) {
       this.$log.warn('Found and updating existing user = ', existingUser);
-      existingUser.cmcUserData.cmcEntitled = data.cmcEntitled;
+      existingUser.cmcUserData.entitled = data.entitled;
       existingUser.cmcUserData.mobileNumber = data.mobileNumber;
     } else {
       this.$log.warn('User ', id , 'not found...');
@@ -51,19 +52,19 @@ export class CmcService {
   }
 
   // TODO: Find out when cmc settings should be unavailable...
-  public allowCmcSettings(orgId: string): boolean {
-
+  public allowCmcSettings(orgId: string) {
     // based on org entitlements ?
+    let deferred = this.$q.defer();
     this.Orgservice.getOrg((data, success) => {
       if (success) {
-        this.$log.debug('org', data);
+        deferred.resolve(true);
+        this.$log.debug('org data:', data);
+      } else {
+        deferred.resolve(false);
       }
     }, orgId, {
       basicInfo: true,
     });
-    this.$log.debug('orgId', orgId);
-
-    // For now, just return true...
-    return true;
+    return deferred.promise;
   }
 }

@@ -45,7 +45,7 @@
       filterValue: 'all',
     };
 
-    vm.isCallTrial = Authinfo.getLicenseIsTrial('COMMUNICATION', 'ciscouc') && Authinfo.getLicenseIsTrial('SHARED_DEVICES', false);
+    vm.isCallTrial = Authinfo.getLicenseIsTrial('COMMUNICATION', 'ciscouc') || Authinfo.getLicenseIsTrial('SHARED_DEVICES', false);
 
     // Defines Grid Filters "Unassigned" and "Assigned"
     vm.filters = [{

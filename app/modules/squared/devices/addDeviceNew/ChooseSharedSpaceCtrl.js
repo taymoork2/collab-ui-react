@@ -4,7 +4,7 @@
   angular.module('Core')
     .controller('ChooseSharedSpaceCtrl', ChooseSharedSpaceCtrl);
   /* @ngInject */
-  function ChooseSharedSpaceCtrl(CsdmFilteredPlaceViewFactory, $stateParams, $translate) {
+  function ChooseSharedSpaceCtrl(CsdmFilteredViewFactory, $stateParams, $translate) {
     var vm = this;
     var wizardData = $stateParams.wizard.state().data;
     vm.title = wizardData.title;
@@ -46,13 +46,13 @@
         }
       }
 
-      vm.filteredView = CsdmFilteredPlaceViewFactory.createFilteredPlaceView();
+      vm.filteredView = CsdmFilteredViewFactory.createFilteredPlaceView();
 
       var filterVal = 'all';
       vm.filteredView.setFilters([{
         count: 0,
         filterValue: filterVal,
-        matches: filterFunction,
+        passes: filterFunction,
       }]);
 
       vm.filteredView.setSearchTimeout(0);

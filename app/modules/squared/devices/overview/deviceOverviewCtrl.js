@@ -95,17 +95,17 @@
       if (!deviceOverview.currentDevice.isHuronDevice) {
         deviceOverview.emergencyCallbackNumber = _.get(deviceOverview, 'lines[0].alternate');
         deviceOverview.showE911 = deviceOverview.emergencyCallbackNumber;
-        if (!deviceOverview.showE911) {
-          deviceOverview.hideE911Edit = false;
+        if (deviceOverview.showE911) {
+          getEmergencyAddress();
+        } else if (_.get(deviceOverview, 'lines[0]')) {
           EmergencyServicesService.getCompanyECN().then(function (result) {
             deviceOverview.showE911 = result;
             deviceOverview.emergencyCallbackNumber = result;
             if (result) {
+              deviceOverview.hideE911Edit = false;
               getEmergencyAddress();
             }
           });
-        } else {
-          getEmergencyAddress();
         }
       } else {
         deviceOverview.showE911 = true;

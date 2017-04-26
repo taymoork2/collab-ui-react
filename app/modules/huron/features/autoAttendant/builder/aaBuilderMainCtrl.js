@@ -6,7 +6,7 @@
     .controller('AABuilderMainCtrl', AABuilderMainCtrl); /* was AutoAttendantMainCtrl */
 
   /* @ngInject */
-  function AABuilderMainCtrl($rootScope, $scope, $translate, $state, $stateParams, $q, AAUiModelService, AAMediaUploadService,
+  function AABuilderMainCtrl($rootScope, $modalStack, $scope, $translate, $state, $stateParams, $q, AAUiModelService, AAMediaUploadService,
     AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AutoAttendantCeService,
     AAValidationService, AANumberAssignmentService, AANotificationService, Authinfo, AACommonService, AAUiScheduleService, AACalendarService,
     AATrackChangeService, AADependencyService, ServiceSetup, Analytics, AAMetricNameService, FeatureToggleService) {
@@ -69,6 +69,14 @@
       id: 'America/Los_Angeles',
       label: $translate.instant('timeZones.America/Los_Angeles'),
     };
+    $scope.$on('$locationChangeStart', function (event) {
+      var top = $modalStack.getTop();
+      if (top) {
+        $modalStack.dismiss(top.key);
+        event.preventDefault();
+      }
+    });
+
 
     /////////////////////
 
@@ -619,6 +627,8 @@
       AACommonService.setMediaUploadToggle(featureToggleDefault);
       AACommonService.setCallerInputToggle(featureToggleDefault);
       AACommonService.setRouteSIPAddressToggle(featureToggleDefault);
+      AACommonService.setDynAnnounceToggle(featureToggleDefault);
+      AACommonService.setReturnedCallerToggle(featureToggleDefault);
       return checkFeatureToggles();
     }
 
@@ -628,6 +638,7 @@
         hasMediaUpload: FeatureToggleService.supports(FeatureToggleService.features.huronAAMediaUpload),
         hasRouteRoom: FeatureToggleService.supports(FeatureToggleService.features.huronAARouteRoom),
         hasDynAnnounce: FeatureToggleService.supports(FeatureToggleService.features.huronAADynannounce),
+        hasReturnedCaller: FeatureToggleService.supports(FeatureToggleService.features.huronAAReturnCaller),
       });
     }
 
@@ -636,6 +647,7 @@
       AACommonService.setMediaUploadToggle(featureToggles.hasMediaUpload);
       AACommonService.setRouteSIPAddressToggle(featureToggles.hasRouteRoom);
       AACommonService.setDynAnnounceToggle(featureToggles.hasDynAnnounce);
+      AACommonService.setReturnedCallerToggle(featureToggles.hasReturnedCaller);
     }
 
     //load the feature toggle prior to creating the elements

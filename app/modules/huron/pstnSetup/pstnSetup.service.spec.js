@@ -48,6 +48,7 @@ describe('Service: PstnSetupService', function () {
     "npa": "555",
     "quantity": "20",
     "numberType": "DID",
+    "createdBy": "PARTNER",
   };
 
   var blockOrderPayloadWithNxx = {
@@ -56,6 +57,14 @@ describe('Service: PstnSetupService', function () {
     "numberType": "DID",
     "sequential": true,
     "nxx": "777",
+    "createdBy": "CUSTOMER",
+  };
+
+  var TollFreeBlockOrderPayload = {
+    "npa": "800",
+    "quantity": "20",
+    "numberType": "TOLLFREE",
+    "createdBy": "PARTNER",
   };
 
   var orderPayload = {
@@ -69,11 +78,13 @@ describe('Service: PstnSetupService', function () {
   var portOrderV2PstnPayload = {
     numbers: ['+19726579867'],
     numberType: "DID",
+    createdBy: "CUSTOMER",
   };
 
   var portOrderTfnPayload = {
     numbers: ['+18004321010'],
     numberType: "TOLLFREE",
+    createdBy: "CUSTOMER",
   };
 
   var pstnOrderPayload = {
@@ -100,6 +111,7 @@ describe('Service: PstnSetupService', function () {
       'TelephoneNumberService'
      );
     spyOn(this.Authinfo, 'getCallPartnerOrgId').and.returnValue(suite.partnerId);
+    spyOn(this.Authinfo, 'isPartner');
     spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve());
   });
 
@@ -214,6 +226,7 @@ describe('Service: PstnSetupService', function () {
 
   it('should make V2 DId port API call', function () {
     this.FeatureToggleService.supports.and.returnValue(this.$q.resolve(true));
+    this.Authinfo.isPartner.and.returnValue(false);
     this.$httpBackend.expectPOST(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/ports', portOrderV2PstnPayload).respond(201);
     this.$httpBackend.expectPOST(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/ports', portOrderTfnPayload).respond(201);
     var portOrderData = _.cloneDeep(portOrderPayload);
@@ -226,12 +239,14 @@ describe('Service: PstnSetupService', function () {
   });
 
   it('should make a block order', function () {
+    this.Authinfo.isPartner.and.returnValue(true);
     this.$httpBackend.expectPOST(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/blocks', blockOrderPayload).respond(201);
     this.PstnSetupService.orderBlock(suite.customerId, suite.carrierId, blockOrderPayload.npa, blockOrderPayload.quantity);
     this.$httpBackend.flush();
   });
 
   it('should make a block order with nxx', function () {
+    this.Authinfo.isPartner.and.returnValue(false);
     this.$httpBackend.expectPOST(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/blocks', blockOrderPayloadWithNxx).respond(201);
     this.PstnSetupService.orderBlock(suite.customerId, suite.carrierId, blockOrderPayloadWithNxx.npa, blockOrderPayloadWithNxx.quantity, blockOrderPayloadWithNxx.sequential, blockOrderPayloadWithNxx.nxx);
     this.$httpBackend.flush();
@@ -389,8 +404,9 @@ describe('Service: PstnSetupService', function () {
 
   describe('orderTollFreeBlock', function () {
     it('should call POST on Terminus V2 customer number order block API', function () {
-      this.$httpBackend.expectPOST(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/blocks').respond(201);
-      this.PstnSetupService.orderTollFreeBlock(suite.customerId);
+      this.Authinfo.isPartner.and.returnValue(true);
+      this.$httpBackend.expectPOST(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/blocks', TollFreeBlockOrderPayload).respond(201);
+      this.PstnSetupService.orderTollFreeBlock(suite.customerId, suite.carrierId, TollFreeBlockOrderPayload.npa, TollFreeBlockOrderPayload.quantity);
       this.$httpBackend.flush();
     });
   });

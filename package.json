@@ -1,7 +1,7 @@
 {
   "name": "wx2adminwebclient",
   "private": true,
-  "version": "1.1.3",
+  "version": "1.1.4",
   "description": "",
   "author": "Cisco Systems, Inc.",
   "license": "Copyright 2013-2016 Cisco Systems, Inc.",
@@ -163,7 +163,7 @@
     "imports-loader": "^0.7.1",
     "istanbul": "^0.4.4",
     "istanbul-instrumenter-loader": "^0.2.0",
-    "jasmine-core": "^2.4.1",
+    "jasmine-core": "~2.5.2",
     "jasmine-jquery": "^2.1.1",
     "jasmine-promise-matchers": "^2.0.2",
     "jasmine-reporters": "^2.2.0",

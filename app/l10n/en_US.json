@@ -1990,6 +1990,7 @@
     },
     "softwareUpgrade": {
       "editSettingsLink": "Edit cluster settings",
+      "editTrunkSettingsLink": "Edit resource settings",
       "softwareUpgrade": "Software Upgrade",
       "currentVersion": "Current Version",
       "newVersion": "New Version",
@@ -2030,19 +2031,23 @@
       "noHybridServicesProvisioned": "No Hybrid Services are enabled on this Expressway. To enable a Hybrid Service, go to the relevant service page."
     },
     "renameAndDeregisterComponent": {
-      "clusterNameWatermark": "Enter cluster name…",
-      "renameClusterParagraph": "Rename the {{clusterType}} cluster.",
+      "clusterNameWatermark": "Enter name…",
+      "renameClusterParagraph": "Enter a new name for the cluster.",
+      "renameSipDestinationParagraph": "Enter a new name for the SIP Destination.",
       "clusterNameSaved": "Cluster name saved successfully.",
+      "sipDestinationNameSaved": "SIP Destination name saved successfully.",
       "clusterNameCannotBeSaved": "Cluster name could not be saved. Try again later.",
-      "clusterNameCannotByEmpty": "Cluster name cannot be empty.",
-      "renameClusterDescription": "The cluster name is used for display purposes in Cloud Collaboration Managment and in email notifications.",
+      "sipDestinationNameCannotBeSaved": "SIP Destination name could not be saved. Try again later.",
+      "clusterNameCannotByEmpty": "Name cannot be empty.",
+      "renameClusterDescription": "The name is for display purposes only.",
       "deregisterClusterExplanation": "Remove this {{clusterType}} cluster from Cisco Collaboration Cloud.",
+      "deregisterSipDestinationExplanation": "Remove this SIP Destination from Cisco Collaboration Cloud. This step removes all related configuration.",
       "deregisterMediaClusterExplanation": "Click the \"Remove\" button to launch the Remove Cluster workflow.",
       "deregisterClusterExplanationBlocked": "It is not possible to deregister an Expressway until all its services have been deactivated.",
       "allServicesMustBeDeactivatedOnExpressway": "All services must be deactivated on an Expressway cluster before it can be removed.",
       "couldNotDeregisterCluster": "Could not deregister cluster.",
       "deregisterConfirmRemoval": "Confirm Removal",
-      "deregisterConfirmationText": "You are about to deregister the cluster <strong>{{clusterName}}</strong> from Cisco Collaboration Cloud.",
+      "deregisterConfirmationText": "You are about to deregister <strong>{{clusterName}}</strong> from Cisco Collaboration Cloud.",
       "deregisterConfirmPopup": "{{clusterName}} was removed successfully from Cisco Collaboration Cloud."
     },
     "deactivateServiceComponent": {
@@ -2834,7 +2839,7 @@
       "StartDateMustBeforeEndDate": "Start date must be before end date",
       "StartDateCannotBeInTheFuture": "Start date cannot be in the future",
       "InvalidDateRange": "Invalid date range. Date range must not be greater than 90 days in the past.",
-      "InvalidEndDate": "The end date cannot be changed."
+      "InvalidEndDate": "The end date cannot be changed from the current date."
     },
     "searchingPleaseWait": "Finding information, please wait...",
     "reportStates": {
@@ -3295,10 +3300,12 @@
     "decisionCallerAreaCode": "The Caller's Area Code",
     "decisionSessionVariable": "The Session Variable",
     "decisionMissingCustomVariable": "The selected variable is undefined in this call tree. Null values will result in negative results.",
+    "callerReturned1Min": "1 Minute",
     "callerReturned5Mins": "5 Minutes",
+    "callerReturned30Mins": "30 Minutes",
+    "callerReturned1Hour": "1 Hour",
     "callerReturnedOneDay": "1 Day",
     "callerReturnedOneWeek": "1 Week",
-    "callerReturnedTwoWeeks": "2 Weeks",
     "callerReturnedOneMonth": "1 Month",
     "callerReturnedWhen": "Within the last",
     "callerNumberInfo": "Enter one or more numbers here; separate multiple entries with commas. Example: +12065551212, +11115551212",
@@ -4095,7 +4102,7 @@
     "feature4": "Directory listing",
     "feature5": "E911",
     "feature6": "No set-up fees"
-  },  
+  },
   "partnerHomePage": {
     "trialsHeading": "Trials",
     "onboardingTitle": "Onboarding",
@@ -6763,6 +6770,7 @@
     "message": "Message",
     "meeting": "Meeting",
     "call": "Call",
+    "care": "Care",
     "rooms": "Rooms",
     "claimedDomain": "Claimed Domains",
     "hybridServices": "Hybrid Services",
@@ -6774,10 +6782,13 @@
       "squared-room-moderation.free": "Free Spark Messaging",
       "ciscouc.paid": "Advanced Spark Call",
       "ciscouc.free": "Free 1:1 Spark Call",
-      "meetings": "WebEx Meetings (WebEx 11)"
+      "meetings": "WebEx Meetings (WebEx 11)",
+      "cloud-contact-center-digital": "Chat and Callback",
+      "cloud-contact-center-inbound-voice": "Chat, Callback and Inbound Call"
     },
     "lastLog": "Last Log",
     "lastClientLog": "Last Spark Client Log",
+    "lastCareLog": "Last Spark Care Log:",
     "noLog": "No Log Available",
     "userStatuses": {
       "active": "Active",
@@ -7178,8 +7189,11 @@
         "cancelBody": "Are you sure you want to cancel?",
         "setupCompete": "Set up complete",
         "great": "Great! You configured private trunking for your Cisco Spark organization.",
-        "callSelections": "Your call selections",
-        "interSite": "Inter-site dialling between your on premise endpoints and Spark call endpoints. PSTN in and outbound will be over this trunk, as you are using your on premise PSTN connectivity•"
+        "callSelection": "Your call selections",
+        "interSite": "Inter-site dialling between your on premise endpoints and Spark call endpoints.",
+        "pstn": "PSTN in and outbound will be over this trunk, as you are using your on premise PSTN connectivity•",
+        "pstnConnectivity": "PSTN connectivity",
+        "routing": "Routing from the cloud to your premise over the enterprise private trunk will happen via the verified domains you selected:"
       }
     },
     "showMore": "View all",

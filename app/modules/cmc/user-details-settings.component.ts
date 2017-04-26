@@ -39,7 +39,7 @@ class CmcUserDetailsSettingsController implements ng.IComponentController {
     // TODO: Remove these overrides below when data are properly
     //       populated in the backend
     let persistedCmcData: CmcUserData = this.CmcService.getData(this.user.id);
-    this.entitled = persistedCmcData.cmcEntitled;
+    this.entitled = persistedCmcData.entitled;
     this.mobileNumber = persistedCmcData.mobileNumber;
     this.$log.info('Mocked mobile', this.mobileNumber);
     this.$log.info('Mocked entitled', this.entitled);
@@ -82,14 +82,14 @@ class CmcUserDetailsSettingsController implements ng.IComponentController {
     this.$log.warn('trying to set data', newData, ', id=', this.user.id);
     this.CmcService.setData(this.user.id, newData);
 
-    this.oldCmcUserData.cmcEntitled = this.entitled;
+    this.oldCmcUserData.entitled = this.entitled;
     this.oldCmcUserData.mobileNumber = this.mobileNumber;
 
   }
 
   public cancel(): void {
     this.showButtons = false;
-    this.entitled = this.oldCmcUserData.cmcEntitled;
+    this.entitled = this.oldCmcUserData.entitled;
     this.mobileNumber = this.oldCmcUserData.mobileNumber;
   }
 

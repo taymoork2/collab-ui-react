@@ -67,6 +67,23 @@
       return callCard;
     }
 
+    function getCareCardForUser(user) {
+      var careCard = {
+        entitled: false,
+        entitlements: [],
+      };
+      if (LicenseService.userIsEntitledTo(user, 'cloud-contact-center')) {
+        careCard.entitled = true;
+
+        if (LicenseService.userIsLicensedFor(user, Config.offerCodes.CDC)) {
+          careCard.entitlements.push('helpdesk.entitlements.cloud-contact-center-digital');
+        } else if (LicenseService.userIsLicensedFor(user, Config.offerCodes.CVC)) {
+          careCard.entitlements.push('helpdesk.entitlements.cloud-contact-center-inbound-voice');
+        }
+      }
+      return careCard;
+    }
+
     function getHybridServicesCardForUser(user) {
       var hybridServicesCard = {
         entitled: false,
@@ -103,6 +120,7 @@
       getMessageCardForUser: getMessageCardForUser,
       getMeetingCardForUser: getMeetingCardForUser,
       getCallCardForUser: getCallCardForUser,
+      getCareCardForUser: getCareCardForUser,
       getHybridServicesCardForUser: getHybridServicesCardForUser,
     };
   }

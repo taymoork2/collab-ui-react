@@ -1,6 +1,8 @@
-import { CsdmFilteredPlaceView } from './CsdmFilteredPlaceView';
 import IPlace = csdm.IPlace;
-describe('Class: CsdmFilteredPlaceView', () => {
+import { FilteredPlaceViewDataSource } from './FilteredPlaceViewDataSource';
+import { PlaceMatcher } from 'modules/squared/places/place-matcher';
+import { FilteredView } from 'modules/squared/common/filtered-view/filtered-view';
+describe('Class: FilteredView', () => {
 
   let test: any = {};
 
@@ -30,7 +32,10 @@ describe('Class: CsdmFilteredPlaceView', () => {
 
   let initController = (bigOrg: boolean) => {
     spyOn(test.CsdmDataModelService, 'isBigOrg').and.returnValue(test.$q.resolve(bigOrg));
-    test.controller = new CsdmFilteredPlaceView(test.CsdmDataModelService, test.$timeout, test.$q);
+    test.controller = new FilteredView(new FilteredPlaceViewDataSource(test.CsdmDataModelService),
+      new PlaceMatcher(),
+      test.$timeout,
+      test.$q);
   };
 
   describe('bigOrg', () => {
@@ -39,8 +44,8 @@ describe('Class: CsdmFilteredPlaceView', () => {
       initController(true);
     });
 
-    it('should be in bigOrg state', () => {
-      expect(test.controller.isInState(test.controller.bigorg));
+    it('should be in searchOnly state', () => {
+      expect(test.controller.isInState(test.controller.searchonly));
     });
 
     describe(' with server side search result', () => {
@@ -102,7 +107,7 @@ describe('Class: CsdmFilteredPlaceView', () => {
             count: 0,
             //   name: 'CsdmStatus.WithDevices',
             filterValue: 'devices',
-            matches: function (place: IPlace) {
+            passes: function (place: IPlace) {
               return _.size(place.devices) > 0;
             },
           }]);

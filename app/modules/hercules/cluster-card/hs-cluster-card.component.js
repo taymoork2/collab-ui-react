@@ -127,6 +127,10 @@
         $state.go('cucm-cluster.settings', {
           id: id,
         });
+      } else if (type === 'ept') {
+        $state.go('private-trunk-settings', {
+          id: id,
+        });
       }
     }
 
