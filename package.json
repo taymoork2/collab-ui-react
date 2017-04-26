@@ -40,7 +40,7 @@
     "start": "npm run serve --",
     "stats": "npm run clean && webpack --progress --profile --json > stats.json",
     "stylelint": "stylelint './app/**/**/*.scss'",
-    "test": "npm run ktest-all",
+    "test": "npm run ktest-all --",
     "ts-spec-delete": "node ./utils/ts-spec-delete.js",
     "tslint": "tslint --project ./tsconfig.json",
     "typings": "rimraf ./typings/globals ./typings/index.d.ts && typings install",
