@@ -48,6 +48,7 @@ require('./partnerManagement.scss');
     initData();
 
     vm.search = function () {
+      var targetState;
       vm.isLoading = true;
       svc.search(vm.data.email).then(function (resp) {
         vm.isLoading = false;
@@ -55,13 +56,16 @@ require('./partnerManagement.scss');
           case 200:
             switch (resp.data.orgMatchBy) {
               case "EMAIL_ADDRESS":
-                vm.data.orgMatched = resp.data.organizations[0];
-                vm.data.name = vm.data.orgMatched.displayName;
-                getOrgDetails(vm.data.orgMatched.orgId);
-                $state.go('partnerManagement.orgExists');
+              case "DOMAIN_CLAIMED":
+                vm.data.emailMatch = resp.data.organizations[0];
+                vm.data.name = vm.data.emailMatch.displayName;
+                getOrgDetails(vm.data.emailMatch.orgId);
+                $state.go((resp.data.orgMatchBy === 'EMAIL_ADDRESS') ?
+                  'partnerManagement.orgExists' : 'partnerManagement.orgClaimed');
                 break;
 
               case "DOMAIN":
+                vm.data.domainMatches = resp.data.organizations;
                 $state.go('partnerManagement.searchResults');
                 break;
 
@@ -84,7 +88,9 @@ require('./partnerManagement.scss');
       }).catch(function (resp) {
         vm.isLoading = false;
         Notification.errorWithTrackingId(resp,
-        'partnerManagement.error.searchFailed', {msg: resp.data.message});
+        'partnerManagement.error.searchFailed',
+        {msg: (_.isEmpty(resp.data)) ? 
+          $translate.instant('partnerManagement.error.timeout') : resp.data.message});
       });
     };
 
@@ -101,13 +107,14 @@ require('./partnerManagement.scss');
           $scope.$$childHead.createForm.name.$validate();
         } else {
           Notification.errorWithTrackingId(resp,
-            'partnerManagement.error.createFailed', {msg: resp.data.message});
+            'partnerManagement.error.createFailed',
+            {msg: (_.isEmpty(resp.data)) ? 
+              $translate.instant('partnerManagement.error.timeout') : resp.data.message});
         }
       });
     };
 
     vm.done = function () {
-      vm.isLoading = false;
       $state.go('support.status');
     };
 
@@ -139,14 +146,17 @@ require('./partnerManagement.scss');
         pushDetail('managedCusts', vm.data.orgRaw.numOfManagedOrg, 0);
         pushDetail('domains', vm.data.orgRaw.claimedDomains, '');
         pushDetail('users', vm.data.orgRaw.numOfUsers, 0);
-        pushDetail('admins', _.map(vm.data.orgRaw.fullAdmins, 'displayName'), '');
+        pushDetail('admins',_.sortBy(_.map(vm.data.orgRaw.fullAdmins, 'displayName'),
+            ['displayName', 'primaryEmail']), '');
         pushDetail('orgId', org);
         vm.showSpinner = false;
       }).catch(function (resp) {
         Notification.errorWithTrackingId(resp,
-          'partnerManagement.error.getOrgDetails', {msg: resp.data.message});
+          'partnerManagement.error.getOrgDetails',
+          {msg: (_.isEmpty(resp.data)) ? 
+            $translate.instant('partnerManagement.error.timeout') : resp.data.message});
+          vm.showSpinner = false;
       });
-      vm.isLoading = false;
     }
   }
 

@@ -1,21 +1,33 @@
 <div class="partner-main centered" tabindex="0">
-    <div class="main-heading">
-        <h2 class="results-header" translate="partnerManagement.searchResults.heading"></h2>
-        <div class="search-form">
-            <div>
-            	<span translate="partnerManagement.search.name"></span>
-            	<input cs-input class="form-control" ng-model="vm.searchName">
+    <div class="row">
+        <div class="main-heading columns medium-12">
+            <h2 translate="partnerManagement.searchResults.heading"></h2>
+            <div class="desc-panel">
+                <p><h5 translate="partnerManagement.searchResults.desc"></h5></p>
+                <h5 translate="partnerManagement.searchResults.desc2"></h5>
             </div>
-            <div>
-            	<span translate="partnerManagement.search.email"></span>
-            	<input cs-input class="form-control" ng-model="vm.searchEmail">
+            <div class="row results-panel">
+                Under Construction
+                <div class="columns medium-4">
+                    <div ui-grid="{data: vm.data.domainMatches}"></div>
+                </div>
+                <div class="colums medium-8">
+                </div>
             </div>
-        <button id="btnSearchResults" type="submit" tabindex="-1"
-            class="btn btn--circle btn--primary icon icon-search"
-            ng-click="search()"
-            ng-disabled="(vm.searchEmail === '')">
-        </button>
+        </div>
+        <hr class="pm-rule">
+        <div class="row">
+            <div class="columns medium-12">
+                <div class="text-right">
+                    <button cs-btn id="create" type="button" ng-click="vm.createNewOrg()" class="btn pm-btn pm-btn-pad" ng-disabled="vm.isLoading">
+                        <span translate="partnerManagement.createNewOrg"></span>
+                    </button>
+                    <button cs-btn id="choose" type="button" ng-click="vm.chooseThisOrg()" class="btn btn--primary pm-btn" ng-disabled="createForm.$invalid" loading="vm.isLoading">
+                        <span translate="partnerManagement.chooseThisOrg"></span>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
-    <button id="next" ng-click="onResultsNext()" class="btn btn--medium pm-next" translate="partnerManagement.next"></button>
 </div>
+

@@ -965,8 +965,8 @@
         "launchEdicoveryDesc": "Open the Activity Reports dashboard in a new tab",
         "partnerManagement": "Manage Partner Accounts",
         "viewPartnerManagementDesc": "The actions below open new tabs",
-        "viewPartnerManagement": "Create new partner org",
-        "editPartner": "Edit partner org",
+        "viewPartnerManagement": "Create New Partner Org",
+        "editPartner": "Edit Partner Org",
         "viewEdiscovery": "View Activity Reports"
       }
     }
@@ -6904,13 +6904,14 @@
     "navHeaderTitle": "Cloud Collaboration Management",
     "back": "Back",
     "next": "Next",
-    "more": "more",
-    "less": "less",
     "startOver": "Start Over",
     "done": "Done",
+    "createNewOrg": "Create New Org",
+    "chooseThisOrg": "Choose This Org",
     "step1": "Step 1 of 2",
     "step2": "Step 2 of 2",
     "exampleEmail": "name@domain.com",
+    "retrieving": "(retrieving...)",
     "error": {
       "email": "This is not a valid email address",
       "noMatch": "The values do not match",
@@ -6918,8 +6919,9 @@
       "searchFailed": "Search failed ({{msg}})",
       "createFailed": "Create partner org failed ({{msg}})",
       "nameInUse": "This name is already in use, try another",
-      "unexpectResp": "The server returned an unexpected response",
-      "getOrgDetails": "Could not retrieve org details"
+      "unexpectedResp": "The server returned an unexpected response",
+      "getOrgDetails": "Could not retrieve org details ({{msg}})",
+      "timeout": "timeout"
     },
     "search": {
       "heading": "Create new partner organization",
@@ -6930,7 +6932,9 @@
       "desc": "Step 1: Enter the email address of the admin for this partner"
     },
     "searchResults": {
-      "heading": "Search Results"
+      "heading": "Does this organization already exist?",
+      "desc": "Based on the domain of the email address that you entered, the user may belong to one of the following partner organizations. If the organization you are looking for is in the list below please select it.",
+      "desc2": "Or if you want to create a new organization then click on the Create New Org button."
     },
     "create": {
       "desc": "Step 2: Enter partner details",
@@ -6952,6 +6956,15 @@
     "orgExists": {
       "heading": "This partner organization already exists",
       "desc": "The email, {{email}}, has been claimed by the following partner organization. This user cannot be added to another organization."
+    },
+    "orgClaimed": {
+      "heading": "This user is already in an organization ",
+      "desc": "Based on the email address, the user has been matched to an exiting user account in the following partner organization.  Please have the user contact an Admin of this organization if they want access to the CCM portal."
+    },
+    "contactAdmin": {
+      "heading": "An admin of {{name}} must add the user",
+      "desc_single": "If the user wants access to the CCM portal, an existing partner administrator at {{name}} must make them an administrator. Please contact {{adminEmail}}.",
+      "desc_multi": "If the user wants access to the CCM portal, an existing partner administrator at {{name}} must make them an administrator. Please contact one of the following partner admins:"
     },
     "orgDetails": {
       "createDate": "Account Created:",

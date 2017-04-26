@@ -11,7 +11,7 @@
   box-shadow: none;
 
   .main-heading {
-    padding-top: 75px;
+    padding-top: 74px;
     display: inline-block;
     text-align: left;
     min-height: 583px;
@@ -92,6 +92,18 @@
     .card-details {
       overflow: hidden;
     }
+
+    .card-email {
+      display: inline-block;
+    }
+
+    .results-panal {
+      border-top: 1px solid black;
+    }
+
+    .results-details {
+      border-left: 1px solid black;
+    }
   }
 
   h2 {
@@ -121,6 +133,7 @@
 
   .pm-btn {
     width: 147px;
+    white-space: nowrap;
   }
 
   .pm-btn-pad {
@@ -128,10 +141,14 @@
   }
 
   .pm-spinner--large {
-    font-size: 4rem;
+    font-size: 1rem;
   }
 
   .pm-16 {
     padding-bottom: 16px;
+  }
+
+  .dots {
+    font-size: 1rem;
   }
 }

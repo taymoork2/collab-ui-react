@@ -3960,6 +3960,12 @@
           .state('partnerManagement.orgExists', {
             templateUrl: 'modules/squared/partnerManagement/pm-orgExists.html',
           })
+          .state('partnerManagement.orgClaimed', {
+            templateUrl: 'modules/squared/partnerManagement/pm-orgClaimed.html',
+          })
+          .state('partnerManagement.contactAdmin', {
+            templateUrl: 'modules/squared/partnerManagement/pm-contactAdmin.html',
+          })
           .state('partnerManagement.create', {
             templateUrl: 'modules/squared/partnerManagement/pm-create.html',
           })
