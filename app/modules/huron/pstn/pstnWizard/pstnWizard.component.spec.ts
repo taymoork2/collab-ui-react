@@ -20,26 +20,26 @@ describe('Component: pstn-wizard', () => {
       '$scope',
       '$timeout',
       '$q',
-      'PstnSetupService',
+      'PstnService',
       'PstnServiceAddressService',
-      'PstnSetup',
+      'PstnModel',
       'HuronCountryService',
       'PstnWizardService',
     );
   });
 
   function initComponent() {
-    spyOn(this.PstnSetupService, 'listResellerCarriersV2');
-    spyOn(this.PstnSetupService, 'listDefaultCarriersV2');
-    spyOn(this.PstnSetupService, 'getCarrierCapabilities');
+    spyOn(this.PstnService, 'listResellerCarriersV2');
+    spyOn(this.PstnService, 'listDefaultCarriersV2');
+    spyOn(this.PstnService, 'getCarrierCapabilities');
     spyOn(this.HuronCountryService, 'getCountryList');
     spyOn(this.PstnWizardService, 'init');
     spyOn(this.PstnWizardService, 'initSites');
     this.PstnWizardService.init.and.returnValue(this.$q.resolve());
     this.PstnWizardService.initSites.and.returnValue(this.$q.resolve());
-    this.PstnSetupService.listResellerCarriersV2.and.returnValue(this.$q.reject());
-    this.PstnSetupService.listDefaultCarriersV2.and.returnValue(this.$q.resolve(swivelCarrierDetails));
-    this.PstnSetupService.getCarrierCapabilities.and.returnValue(this.$q.resolve([]));
+    this.PstnService.listResellerCarriersV2.and.returnValue(this.$q.reject());
+    this.PstnService.listDefaultCarriersV2.and.returnValue(this.$q.resolve(swivelCarrierDetails));
+    this.PstnService.getCarrierCapabilities.and.returnValue(this.$q.resolve([]));
     this.HuronCountryService.getCountryList.and.returnValue(this.$q.resolve([]));
     this.$httpBackend.expectGET('modules/huron/pstn/pstnProviders/pstnProviders.json').respond(200, []);
     this.compileComponent('ucPstnPaidWizard', {});

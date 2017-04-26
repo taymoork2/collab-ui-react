@@ -6,7 +6,7 @@ export default angular
     require('collab-ui-ng').default,
     'huron.order-detail',
     'huron.telephoneNumber',
-    require('modules/huron/pstnSetup/pstnSetup.service'),
+    require('modules/huron/pstn/pstn.service').default,
   ])
   .component('ucOrdersOverview', new OrdersOverviewComponent())
   .name;

@@ -21,7 +21,7 @@ describe('Component: pstn-trialSetup', () => {
       '$scope',
       '$timeout',
       '$q',
-      'PstnSetupService',
+      'PstnService',
       '$httpBackend',
     );
   });
@@ -29,12 +29,12 @@ describe('Component: pstn-trialSetup', () => {
   function initComponent() {
     this.$httpBackend.expectGET('modules/huron/pstn/pstnProviders/pstnProviders.json').respond(200, []);
     this.compileComponent('ucPstnTrialSetup', {});
-    spyOn(this.PstnSetupService, 'listResellerCarriersV2');
-    spyOn(this.PstnSetupService, 'listDefaultCarriersV2');
-    spyOn(this.PstnSetupService, 'getCarrierCapabilities');
-    this.PstnSetupService.listResellerCarriersV2.and.returnValue(this.$q.reject());
-    this.PstnSetupService.listDefaultCarriersV2.and.returnValue(this.$q.resolve(swivelCarrierDetails));
-    this.PstnSetupService.getCarrierCapabilities.and.returnValue(this.$q.resolve([]));
+    spyOn(this.PstnService, 'listResellerCarriersV2');
+    spyOn(this.PstnService, 'listDefaultCarriersV2');
+    spyOn(this.PstnService, 'getCarrierCapabilities');
+    this.PstnService.listResellerCarriersV2.and.returnValue(this.$q.reject());
+    this.PstnService.listDefaultCarriersV2.and.returnValue(this.$q.resolve(swivelCarrierDetails));
+    this.PstnService.getCarrierCapabilities.and.returnValue(this.$q.resolve([]));
     this.$httpBackend.flush();
   }
 
@@ -88,8 +88,8 @@ describe('Component: pstn-trialSetup', () => {
 
     describe('Carrier Selection', function () {
       it('should select one swivel carrier if the carriers array is of length 1', function () {
-        this.PstnSetupService.listResellerCarriersV2.and.returnValue(this.$q.reject());
-        this.PstnSetupService.listDefaultCarriersV2.and.returnValue(this.$q.resolve(swivelCarrierDetails));
+        this.PstnService.listResellerCarriersV2.and.returnValue(this.$q.reject());
+        this.PstnService.listDefaultCarriersV2.and.returnValue(this.$q.resolve(swivelCarrierDetails));
         this.$scope.$apply();
         expect(this.controller.trialData.details.pstnProvider.uuid).toEqual(swivelCarrierDetails[0].uuid);
         expect(this.controller.providerImplementation).toEqual(swivelCarrierDetails[0].apiImplementation);

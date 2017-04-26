@@ -7,14 +7,14 @@ describe('Controller: OverviewCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  var controller, $rootScope, $scope, $q, $state, $translate, Authinfo, Config, FeatureToggleService, Log, Orgservice, PstnSetupService, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, ServiceStatusDecriptor, TrialService, FusionClusterService, SunlightReportService;
+  var controller, $rootScope, $scope, $q, $state, $translate, Authinfo, Config, FeatureToggleService, Log, Orgservice, PstnService, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, ServiceStatusDecriptor, TrialService, FusionClusterService, SunlightReportService;
   var orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');
   var usageOnlySharedDevicesFixture = getJSONFixture('core/json/organizations/usageOnlySharedDevices.json');
   var services = getJSONFixture('squared/json/services.json');
   var isCustomerLaunchedFromPartner = true;
 
   afterEach(function () {
-    controller = $rootScope = $scope = $q = $state = $translate = Authinfo = Config = FeatureToggleService = Log = Orgservice = PstnSetupService = OverviewNotificationFactory = ReportsService = HybridServicesFlagService = ServiceStatusDecriptor = TrialService = FusionClusterService = SunlightReportService = undefined;
+    controller = $rootScope = $scope = $q = $state = $translate = Authinfo = Config = FeatureToggleService = Log = Orgservice = PstnService = OverviewNotificationFactory = ReportsService = HybridServicesFlagService = ServiceStatusDecriptor = TrialService = FusionClusterService = SunlightReportService = undefined;
   });
 
   afterAll(function () {
@@ -162,7 +162,7 @@ describe('Controller: OverviewCtrl', function () {
     });
 
     it('should NOT call ToS check if logged in as a Partner', function () {
-      expect(PstnSetupService.getCustomerTrialV2).not.toHaveBeenCalled();
+      expect(PstnService.getCustomerTrialV2).not.toHaveBeenCalled();
     });
   });
 
@@ -172,7 +172,7 @@ describe('Controller: OverviewCtrl', function () {
       inject(defaultWireUpFunc);
     });
     it('should call ToS check if logged in as a Customer', function () {
-      expect(PstnSetupService.getCustomerTrialV2).toHaveBeenCalled();
+      expect(PstnService.getCustomerTrialV2).toHaveBeenCalled();
     });
   });
 
@@ -238,7 +238,7 @@ describe('Controller: OverviewCtrl', function () {
       }),
     };
 
-    PstnSetupService = {
+    PstnService = {
       getCustomerV2: function () {
         return $q.resolve({
           trial: true,
@@ -284,7 +284,7 @@ describe('Controller: OverviewCtrl', function () {
     spyOn(FeatureToggleService, 'atlasPMRonM2GetStatus').and.returnValue($q.resolve(true));
     spyOn(TrialService, 'getDaysLeftForCurrentUser').and.returnValue($q.resolve(1));
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
-    spyOn(PstnSetupService, 'getCustomerTrialV2').and.callThrough();
+    spyOn(PstnService, 'getCustomerTrialV2').and.callThrough();
 
     controller = $controller('OverviewCtrl', {
       $scope: $scope,
@@ -295,7 +295,7 @@ describe('Controller: OverviewCtrl', function () {
       $state: $state,
       ReportsService: ReportsService,
       Orgservice: Orgservice,
-      PstnSetupService: PstnSetupService,
+      PstnService: PstnService,
       HybridServicesFlagService: HybridServicesFlagService,
       ServiceStatusDecriptor: ServiceStatusDecriptor,
       Config: Config,

@@ -32,7 +32,7 @@ describe('Component: settings', () => {
       'HuronSiteService',
       'HuronCustomerService',
       'HuronSiteService',
-      'PstnSetupService',
+      'PstnService',
       'ServiceSetup',
       'NumberService',
       'DialPlanService',
@@ -57,8 +57,8 @@ describe('Component: settings', () => {
     spyOn(this.Orgservice, 'getOrg').and.callFake(function (callback) {
       callback({}, 200);
     });
-    spyOn(this.PstnSetupService, 'getCustomer').and.returnValue(this.$q.resolve());
-    spyOn(this.PstnSetupService, 'listCustomerCarriers').and.returnValue(this.$q.resolve(customerCarriers));
+    spyOn(this.PstnService, 'getCustomer').and.returnValue(this.$q.resolve());
+    spyOn(this.PstnService, 'listCustomerCarriers').and.returnValue(this.$q.resolve(customerCarriers));
     spyOn(this.ServiceSetup, 'getDateFormats').and.returnValue(this.$q.resolve(dateFormats));
     spyOn(this.ServiceSetup, 'getTimeFormats').and.returnValue(this.$q.resolve(timeFormats));
     spyOn(this.ServiceSetup, 'getSiteCountries').and.returnValue(this.$q.resolve(countries));

@@ -4,6 +4,9 @@ import { IExtensionRange } from 'modules/huron/settings/extensionRange';
 import { CompanyNumber } from 'modules/huron/settings/companyCallerId';
 import { IOption } from 'modules/huron/dialing/dialing.service';
 import { EmergencyCallbackNumber } from 'modules/huron/sites';
+import { PstnService } from '../pstn/pstn.service';
+import { PstnModel } from '../pstn/pstn.model';
+import { PstnCarrier } from '../pstn/pstnProviders/pstnCarrier';
 
 const API_IMPL_SWIVEL = 'SWIVEL';
 
@@ -46,8 +49,8 @@ class HuronSettingsCtrl implements ng.IComponentController {
     private $translate: ng.translate.ITranslateService,
     private $state: ng.ui.IStateService,
     private ModalService,
-    private PstnSetupService,
-    private PstnSetup,
+    private PstnService: PstnService,
+    private PstnModel: PstnModel,
     private Authinfo,
     private Config,
     private Orgservice,
@@ -65,18 +68,18 @@ class HuronSettingsCtrl implements ng.IComponentController {
     };
     this.Orgservice.getOrg(data => {
       if (data.countryCode) {
-        this.PstnSetup.setCountryCode(data.countryCode);
+        this.PstnModel.setCountryCode(data.countryCode);
       }
     }, null, params);
 
 
-    this.PstnSetupService.getCustomer(this.Authinfo.getOrgId()).then(() => {
+    this.PstnService.getCustomer(this.Authinfo.getOrgId()).then(() => {
       this.isTerminusCustomer = true;
     });
 
-    this.PstnSetupService.listCustomerCarriers(this.Authinfo.getOrgId()).then(carriers => {
+    this.PstnService.listCustomerCarriers(this.Authinfo.getOrgId()).then(carriers => {
       if (_.get(carriers, '[0].apiImplementation') !== API_IMPL_SWIVEL) {
-        this.PstnSetup.setProvider(_.get(carriers, '[0]'));
+        this.PstnModel.setProvider(<PstnCarrier>_.get(carriers, '[0]'));
         this.showEmergencyServiceAddress = true;
       }
     });

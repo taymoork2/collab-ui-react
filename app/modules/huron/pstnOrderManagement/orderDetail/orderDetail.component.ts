@@ -1,3 +1,4 @@
+import { PstnService } from '../../pstn/pstn.service';
 
 const BLOCK_ORDER = 'BLOCK_ORDER';
 const CUSTOMER = 'CUSTOMER';
@@ -11,7 +12,7 @@ export class OrderDetailCtrl implements ng.IComponentController {
   public createdBy: string;
   /* @ngInject */
   constructor(
-    private PstnSetupService,
+    private PstnService: PstnService,
     private TelephoneNumberService,
     private $translate: angular.translate.ITranslateService,
   ) {
@@ -60,9 +61,9 @@ export class OrderDetailCtrl implements ng.IComponentController {
   }
 
   public getToSStatus() {
-    this.PstnSetupService.getCustomerV2(this.currentCustomer.customerOrgId).then((customer) => {
+    this.PstnService.getCustomerV2(this.currentCustomer.customerOrgId).then((customer) => {
       if (customer.trial) {
-        this.PstnSetupService.getCustomerTrialV2(this.currentCustomer.customerOrgId).then((trial) => {
+        this.PstnService.getCustomerTrialV2(this.currentCustomer.customerOrgId).then((trial) => {
           if (!_.has(trial, 'acceptedDate')) {
             this.tosAccepted = false;
           }
