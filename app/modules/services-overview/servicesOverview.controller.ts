@@ -110,6 +110,11 @@ export class ServicesOverviewCtrl {
         this.forwardEvent('sparkCallTenDigitExtFeatureToggleEventhandler', supports);
       });
 
+    this.FeatureToggleService.supports(FeatureToggleService.features.hI802)
+      .then(supports => {
+        this.forwardEvent('sparkCallCdrReportingFeatureToggleEventhandler', supports);
+      });
+
   }
 
   public getHybridCards() {

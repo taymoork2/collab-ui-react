@@ -7116,7 +7116,8 @@
         "buttons": {
           "numbers": "Numbers",
           "features": "Features",
-          "settings": "Settings"
+          "settings": "Settings",
+          "records": "Records"
         }
       },
       "care": {

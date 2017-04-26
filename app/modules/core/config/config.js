@@ -442,6 +442,7 @@
         'huronlines',
         'huronnewfeature',
         'huronsettings',
+        'huronrecords',
         'huronsettingsnew',
         'huntgroupedit',
         'intercomgroups',
