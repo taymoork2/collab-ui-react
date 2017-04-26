@@ -5,7 +5,7 @@
     .controller('PstnProvidersCtrl', PstnProvidersCtrl);
 
   /* @ngInject */
-  function PstnProvidersCtrl($q, $translate, $state, PstnSetup, PstnService, PstnServiceAddressService, Orgservice, Notification, FeatureToggleService) {
+  function PstnProvidersCtrl($q, $translate, $state, PstnModel, PstnService, PstnServiceAddressService, Orgservice, Notification, FeatureToggleService) {
     var vm = this;
     var INTELEPEER = require('modules/huron/pstn').INTELEPEER;
     var TELSTRA = require('modules/huron/pstn').TELSTRA;
@@ -26,7 +26,7 @@
     ////////////////////////
 
     function goToNumbers() {
-      if (PstnSetup.getProvider().apiImplementation === "SWIVEL") {
+      if (PstnModel.getProvider().apiImplementation === "SWIVEL") {
         goToSwivelNumbers();
       } else {
         goToOrderNumbers();
@@ -38,9 +38,9 @@
     }
 
     function goToOrderNumbers() {
-      if (!PstnSetup.isCustomerExists()) {
+      if (!PstnModel.isCustomerExists()) {
         $state.go('pstnSetup.contractInfo');
-      } else if (!PstnSetup.isSiteExists()) {
+      } else if (!PstnModel.isSiteExists()) {
         $state.go('pstnSetup.serviceAddress');
       } else {
         $state.go('pstnSetup.orderNumbers');
@@ -48,12 +48,12 @@
     }
 
     function selectProvider(provider) {
-      var currentProvider = PstnSetup.getProvider();
+      var currentProvider = PstnModel.getProvider();
       if (!angular.equals(currentProvider, provider)) {
         // If switching providers, clear provider specific data
-        PstnSetup.clearProviderSpecificData();
+        PstnModel.clearProviderSpecificData();
       }
-      PstnSetup.setProvider(provider || {});
+      PstnModel.setProvider(provider || {});
     }
 
     function catchNotFound(response) {
@@ -63,17 +63,17 @@
     }
 
     function initCustomer() {
-      PstnSetup.setCustomerExists(true);
+      PstnModel.setCustomerExists(true);
     }
 
     function initCarriers() {
       // lookup customer carriers
-      return PstnService.getCustomer(PstnSetup.getCustomerId())
+      return PstnService.getCustomer(PstnModel.getCustomerId())
         .then(initCustomer)
-        .then(_.partial(PstnService.listCustomerCarriers, PstnSetup.getCustomerId()))
+        .then(_.partial(PstnService.listCustomerCarriers, PstnModel.getCustomerId()))
         .then(function (carriers) {
           if (_.isArray(carriers) && carriers.length > 0) {
-            PstnSetup.setCarrierExists(true);
+            PstnModel.setCarrierExists(true);
           }
           return carriers;
         })
@@ -85,7 +85,7 @@
           } else {
             return PstnService.listResellerCarriers()
               .then(function (carriers) {
-                PstnSetup.setResellerExists(true);
+                PstnModel.setResellerExists(true);
                 return carriers;
               });
           }
@@ -107,22 +107,22 @@
     }
 
     function processSelectedProviders() {
-      if (PstnSetup.isCustomerExists() && PstnSetup.isCarrierExists() && _.isArray(vm.providers) && vm.providers.length === 1) {
-        PstnSetup.setProvider(vm.providers[0]);
+      if (PstnModel.isCustomerExists() && PstnModel.isCarrierExists() && _.isArray(vm.providers) && vm.providers.length === 1) {
+        PstnModel.setProvider(vm.providers[0]);
         goToNumbers();
       } else if (_.isArray(vm.providers) && vm.providers.length === 1) {
-        PstnSetup.setSingleCarrierReseller(true);
-        PstnSetup.setProvider(vm.providers[0]);
+        PstnModel.setSingleCarrierReseller(true);
+        PstnModel.setProvider(vm.providers[0]);
         goToNumbers();
       }
     }
 
     function initSites() {
-      return PstnServiceAddressService.listCustomerSites(PstnSetup.getCustomerId())
+      return PstnServiceAddressService.listCustomerSites(PstnModel.getCustomerId())
         .then(function (sites) {
           // If we have sites, set the flag and store the first site address
           if (_.isArray(sites) && _.size(sites)) {
-            PstnSetup.setSiteExists(true);
+            PstnModel.setSiteExists(true);
           }
         })
         .catch(function (response) {
@@ -223,26 +223,26 @@
       };
       Orgservice.getOrg(function (data) {
         if (data.countryCode) {
-          PstnSetup.setCountryCode(data.countryCode);
+          PstnModel.setCountryCode(data.countryCode);
         }
-        PstnService.getCustomerV2(PstnSetup.getCustomerId())
+        PstnService.getCustomerV2(PstnModel.getCustomerId())
         .then(function () {
-          PstnSetup.setCustomerExists(true);
+          PstnModel.setCustomerExists(true);
         })
         .finally(function () {
           vm.enableCarriers = true;
         });
-      }, PstnSetup.getCustomerId(), params);
+      }, PstnModel.getCustomerId(), params);
     }
 
     function onProviderReady() {
       initSites().then(function () {
         //If new PSTN setup show all the carriers even if there only one
-        if (PstnSetup.isCarrierExists() && PstnSetup.isCustomerExists()) {
+        if (PstnModel.isCarrierExists() && PstnModel.isCustomerExists()) {
           // Only 1 carrier should exist for a customer
-          if (PstnSetup.getCarriers().length === 1) {
-            PstnSetup.setSingleCarrierReseller(true);
-            PstnSetup.setProvider(PstnSetup.getCarriers()[0]);
+          if (PstnModel.getCarriers().length === 1) {
+            PstnModel.setSingleCarrierReseller(true);
+            PstnModel.setProvider(PstnModel.getCarriers()[0]);
             goToNumbers();
           }
         }

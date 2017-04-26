@@ -10,7 +10,7 @@ export default angular
     'Huron',
     'huron.telephoneNumberService',
     require('modules/huron/pstn/pstn.service').default,
-    require('modules/huron/pstn/pstnService.model').default,
+    require('modules/huron/pstn/pstn.model').default,
     'huron.pstn-service-address-service',
     notifications,
   ])

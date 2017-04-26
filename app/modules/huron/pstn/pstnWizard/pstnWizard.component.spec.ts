@@ -22,7 +22,7 @@ describe('Component: pstn-wizard', () => {
       '$q',
       'PstnService',
       'PstnServiceAddressService',
-      'PstnSetup',
+      'PstnModel',
       'HuronCountryService',
       'PstnWizardService',
     );

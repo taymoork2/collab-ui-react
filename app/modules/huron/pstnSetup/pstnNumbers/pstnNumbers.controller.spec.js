@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: PstnNumbersCtrl', function () {
-  var controller, $compile, $scope, $state, $q, $translate, PstnService, PstnSetup, Notification, PstnSetupStatesService, FeatureToggleService;
+  var controller, $compile, $scope, $state, $q, $translate, PstnService, PstnModel, Notification, PstnSetupStatesService, FeatureToggleService;
   var element;
 
   var customer = getJSONFixture('huron/json/pstnSetup/customer.json');
@@ -115,28 +115,28 @@ describe('Controller: PstnNumbersCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight')); // Remove this when FeatureToggleService is removed.
 
-  beforeEach(inject(function ($rootScope, _$compile_, _$state_, _$q_, _$translate_, _PstnService_, _PstnSetup_, _Notification_, _PstnSetupStatesService_, _FeatureToggleService_) {
+  beforeEach(inject(function ($rootScope, _$compile_, _$state_, _$q_, _$translate_, _PstnService_, _PstnModel_, _Notification_, _PstnSetupStatesService_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
     $compile = _$compile_;
     $state = _$state_;
     $q = _$q_;
     $translate = _$translate_;
     PstnService = _PstnService_;
-    PstnSetup = _PstnSetup_;
+    PstnModel = _PstnModel_;
     Notification = _Notification_;
     PstnSetupStatesService = _PstnSetupStatesService_;
     FeatureToggleService = _FeatureToggleService_;
 
-    PstnSetup.setCustomerId(customer.uuid);
-    PstnSetup.setCustomerName(customer.name);
-    PstnSetup.setProvider(customerCarrierList[0]);
-    PstnSetup.setCountryCode('US');
+    PstnModel.setCustomerId(customer.uuid);
+    PstnModel.setCustomerName(customer.name);
+    PstnModel.setProvider(customerCarrierList[0]);
+    PstnModel.setCountryCode('US');
 
     spyOn(PstnService, 'releaseCarrierInventoryV2').and.returnValue($q.resolve());
     spyOn(PstnService, 'getCarrierInventory').and.returnValue($q.resolve(response));
     spyOn(PstnService, 'getCarrierTollFreeInventory').and.returnValue($q.resolve(response));
     spyOn(PstnService, 'getCarrierCapabilities').and.returnValue($q.resolve());
-    spyOn(PstnSetup, 'getServiceAddress').and.returnValue(serviceAddress);
+    spyOn(PstnModel, 'getServiceAddress').and.returnValue(serviceAddress);
     spyOn(Notification, 'error');
     spyOn($state, 'go');
     spyOn(PstnSetupStatesService, 'getLocation').and.returnValue($q.resolve(location));
@@ -154,7 +154,7 @@ describe('Controller: PstnNumbersCtrl', function () {
     $q = undefined;
     $translate = undefined;
     PstnService = undefined;
-    PstnSetup = undefined;
+    PstnModel = undefined;
     Notification = undefined;
     PstnSetupStatesService = undefined;
     FeatureToggleService = undefined;
@@ -226,12 +226,12 @@ describe('Controller: PstnNumbersCtrl', function () {
 
   describe('getCapabilities', function () {
     it('should not show toll-free tabs if trial', function () {
-      PstnSetup.setIsTrial(true);
+      PstnModel.setIsTrial(true);
       expect(controller.showTollFreeNumbers).toBe(false);
     });
 
     it('should not show toll-free tab in paid if not supported', function () {
-      PstnSetup.setIsTrial(false);
+      PstnModel.setIsTrial(false);
       controller.getCapabilities();
       $scope.$apply();
       expect(controller.showTollFreeNumbers).toBe(false);

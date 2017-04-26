@@ -1,25 +1,25 @@
 'use strict';
 
 describe('Controller: PstnSetupCtrl', function () {
-  var $scope, $q, $state, $stateParams, $ctrl, PstnSetup, PstnService, Notification;
+  var $scope, $q, $state, $stateParams, $ctrl, PstnModel, PstnService, Notification;
 
   var customer = getJSONFixture('huron/json/pstnSetup/customer.json');
   var deferred;
 
   afterEach(function () {
-    $q = $scope = $state = $ctrl = PstnSetup = PstnService = Notification = undefined;
+    $q = $scope = $state = $ctrl = PstnModel = PstnService = Notification = undefined;
   });
 
   beforeEach(angular.mock.module('Huron'));
   beforeEach(inject(dependencies));
 
-  function dependencies($rootScope, $controller, _$q_, _$state_, _$stateParams_, _PstnSetup_, _PstnService_, _Notification_) {
+  function dependencies($rootScope, $controller, _$q_, _$state_, _$stateParams_, _PstnModel_, _PstnService_, _Notification_) {
     $scope = $rootScope.$new();
     $q = _$q_;
     $state = _$state_;
     $stateParams = _$stateParams_;
     $ctrl = $controller;
-    PstnSetup = _PstnSetup_;
+    PstnModel = _PstnModel_;
     PstnService = _PstnService_;
     Notification = _Notification_;
 
@@ -32,10 +32,10 @@ describe('Controller: PstnSetupCtrl', function () {
       result: deferred.promise,
     };
 
-    spyOn(PstnSetup, 'setCustomerId');
-    spyOn(PstnSetup, 'setCustomerName');
-    spyOn(PstnSetup, 'setIsTrial');
-    spyOn(PstnSetup, 'clear');
+    spyOn(PstnModel, 'setCustomerId');
+    spyOn(PstnModel, 'setCustomerName');
+    spyOn(PstnModel, 'setIsTrial');
+    spyOn(PstnModel, 'clear');
   }
 
   it('should initialize', function () {
@@ -47,10 +47,10 @@ describe('Controller: PstnSetupCtrl', function () {
     });
     $scope.$apply();
 
-    expect(PstnSetup.setCustomerId).toHaveBeenCalledWith(customer.uuid);
-    expect(PstnSetup.setCustomerName).toHaveBeenCalledWith(customer.name);
-    expect(PstnSetup.setIsTrial).toHaveBeenCalledWith(customer.isTrial);
-    expect(PstnSetup.clear).not.toHaveBeenCalled();
+    expect(PstnModel.setCustomerId).toHaveBeenCalledWith(customer.uuid);
+    expect(PstnModel.setCustomerName).toHaveBeenCalledWith(customer.name);
+    expect(PstnModel.setIsTrial).toHaveBeenCalledWith(customer.isTrial);
+    expect(PstnModel.clear).not.toHaveBeenCalled();
     expect(PstnService.getResellerV2).toHaveBeenCalled();
     expect(PstnService.createResellerV2).not.toHaveBeenCalled();
   });
@@ -66,7 +66,7 @@ describe('Controller: PstnSetupCtrl', function () {
 
     deferred.resolve();
     $scope.$apply();
-    expect(PstnSetup.clear).toHaveBeenCalled();
+    expect(PstnModel.clear).toHaveBeenCalled();
   });
 
   it('should create a reseller', function () {

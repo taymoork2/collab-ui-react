@@ -105,7 +105,7 @@ describe('Service: PstnService', function () {
       'UrlConfig',
       'FeatureToggleService',
       'PstnService',
-      'PstnSetup',
+      'PstnModel',
       'HuronConfig',
       'CountryCodes',
       'TelephoneNumberService',
@@ -121,7 +121,7 @@ describe('Service: PstnService', function () {
     this.$httpBackend = null;
     this.HuronConfig = null;
     this.PstnService = null;
-    this.PstnSetup = null;
+    this.PstnModel = null;
   });
 
   afterAll(function () {
@@ -171,7 +171,7 @@ describe('Service: PstnService', function () {
   });
 
   it('should create a customer with a reseller', function () {
-    this.PstnSetup.setResellerExists(true);
+    this.PstnModel.setResellerExists(true);
     let customerResellerPayload = _.cloneDeep(customerPayload);
     customerResellerPayload.resellerId = suite.partnerId;
 

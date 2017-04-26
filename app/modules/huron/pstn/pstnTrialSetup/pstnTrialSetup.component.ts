@@ -2,6 +2,7 @@ import { SWIVEL, MIN_VALID_CODE, MAX_VALID_CODE, NXX, MAX_DID_QUANTITY } from '.
 import { Notification } from '../../../core/notifications/notification.service';
 import { PaginateOptions } from '../paging-option.model';
 import { PstnService } from '../pstn.service';
+import { PstnModel } from '../pstn.model';
 
 export class PstnTrialSetupComponent implements ng.IComponentOptions {
   public controller = PstnTrialSetupCtrl;
@@ -30,7 +31,7 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
   public readOnly: boolean = false;
 
   /* @ngInject */
-  constructor(private PstnSetup,
+  constructor(private PstnModel: PstnModel,
               private TrialPstnService,
               private PstnService: PstnService,
               private Notification: Notification,
@@ -55,22 +56,22 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
   }
 
   public onProviderChange(reset?): void {
-    this.trialData.details.pstnProvider = this.PstnSetup.getProvider();
+    this.trialData.details.pstnProvider = this.PstnModel.getProvider();
     this.providerImplementation = this.trialData.details.pstnProvider.apiImplementation;
     this.resetNumberSearch(reset);
     this.providerSelected = true;
   }
 
   public onProviderReady(): void {
-    let carriers = this.PstnSetup.getCarriers();
+    let carriers = this.PstnModel.getCarriers();
     if (carriers.length === 1) {
       carriers[0].selected = true;
-      this.PstnSetup.setProvider(carriers[0]);
+      this.PstnModel.setProvider(carriers[0]);
       this.onProviderChange();
     } else {
       carriers.forEach((pstnCarrier) => {
         if (pstnCarrier.selected) {
-          this.PstnSetup.setProvider(pstnCarrier);
+          this.PstnModel.setProvider(pstnCarrier);
           this.onProviderChange();
         }
       });
@@ -126,7 +127,7 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
         let searchResultsIndex = (this.paginateOptions.currentPage * this.paginateOptions.pageSize) + key;
         if (searchResultsIndex < this.searchResults.length && !this.trialData.details.pstnNumberInfo.numbers.includes(this.searchResults[searchResultsIndex])) {
           let numbers = this.searchResults[searchResultsIndex];
-          reservation = this.PstnService.reserveCarrierInventoryV2(this.PstnSetup.getCustomerId(), this.PstnSetup.getProviderId(), numbers, this.PstnSetup.isCustomerExists());
+          reservation = this.PstnService.reserveCarrierInventoryV2(this.PstnModel.getCustomerId(), this.PstnModel.getProviderId(), numbers, this.PstnModel.isCustomerExists());
           let promise = reservation
             .then((reservationData) => {
               let order = {
@@ -168,7 +169,7 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
   }
 
   public removeOrder(order): void {
-    this.PstnService.releaseCarrierInventoryV2(this.PstnSetup.getCustomerId(), order.reservationId, order.data.numbers, this.PstnSetup.isCustomerExists())
+    this.PstnService.releaseCarrierInventoryV2(this.PstnModel.getCustomerId(), order.reservationId, order.data.numbers, this.PstnModel.isCustomerExists())
         .then(_.partial(this.removeOrderFromCart.bind(this), order));
   }
 

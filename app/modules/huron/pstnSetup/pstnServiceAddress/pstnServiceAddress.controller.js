@@ -5,7 +5,7 @@
     .controller('PstnServiceAddressCtrl', PstnServiceAddressCtrl);
 
   /* @ngInject */
-  function PstnServiceAddressCtrl($state, PstnServiceAddressService, PstnSetup, Notification) {
+  function PstnServiceAddressCtrl($state, PstnServiceAddressService, PstnModel, Notification) {
     var vm = this;
     vm.validateAddress = validateAddress;
     vm.hasBackButton = hasBackButton;
@@ -19,8 +19,8 @@
     init();
 
     function init() {
-      vm.address = _.cloneDeep(PstnSetup.getServiceAddress());
-      vm.countryCode = PstnSetup.getCountryCode();
+      vm.address = _.cloneDeep(PstnModel.getServiceAddress());
+      vm.countryCode = PstnModel.getCountryCode();
       // If address has been set in the model, set it as valid
       if (!_.isEmpty(vm.address)) {
         vm.isValid = true;
@@ -42,11 +42,11 @@
 
     function validateAddress() {
       vm.loading = true;
-      PstnServiceAddressService.lookupAddressV2(vm.address, PstnSetup.getProviderId())
+      PstnServiceAddressService.lookupAddressV2(vm.address, PstnModel.getProviderId())
         .then(function (address) {
           if (address) {
             vm.address = address;
-            PstnSetup.setServiceAddress(address);
+            PstnModel.setServiceAddress(address);
             vm.isValid = true;
           } else {
             Notification.error('pstnSetup.serviceAddressNotFound');
@@ -65,17 +65,17 @@
     }
 
     function hasBackButton() {
-      return (!PstnSetup.isCarrierExists() && !PstnSetup.isSingleCarrierReseller()) || !PstnSetup.isCustomerExists();
+      return (!PstnModel.isCarrierExists() && !PstnModel.isSingleCarrierReseller()) || !PstnModel.isCustomerExists();
     }
 
     function resetAddress() {
       vm.address = {};
-      PstnSetup.setServiceAddress(vm.address);
+      PstnModel.setServiceAddress(vm.address);
       vm.isValid = false;
     }
 
     function goBack() {
-      if (!PstnSetup.isCustomerExists()) {
+      if (!PstnModel.isCustomerExists()) {
         $state.go('pstnSetup.contractInfo');
       } else {
         $state.go('pstnSetup');

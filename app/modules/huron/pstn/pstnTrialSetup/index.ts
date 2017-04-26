@@ -8,7 +8,7 @@ export default angular
     require('angular-translate'),
     'huron.telephoneNumber',
     require('modules/huron/pstn/pstn.service').default,
-    require('modules/huron/pstn/pstnService.model').default,
+    require('modules/huron/pstn/pstn.model').default,
     'core.trial',
     'Huron',
     notifications,

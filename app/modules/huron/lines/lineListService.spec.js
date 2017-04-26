@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Service: LineListService', function () {
-  var $httpBackend, $q, $scope, ExternalNumberService, HuronConfig, LineListService, PstnService, PstnSetup;
+  var $httpBackend, $q, $scope, ExternalNumberService, HuronConfig, LineListService, PstnService, PstnModel;
 
   var lines = getJSONFixture('huron/json/lines/numbers.json');
   var linesExport = getJSONFixture('huron/json/lines/numbersCsvExport.json');
@@ -25,7 +25,7 @@ describe('Service: LineListService', function () {
     $provide.value('Authinfo', authInfo);
   }));
 
-  beforeEach(inject(function ($rootScope, _$httpBackend_, _$q_, _ExternalNumberService_, _HuronConfig_, _LineListService_, _PstnService_, _PstnSetup_) {
+  beforeEach(inject(function ($rootScope, _$httpBackend_, _$q_, _ExternalNumberService_, _HuronConfig_, _LineListService_, _PstnService_, _PstnModel_) {
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     $q = _$q_;
@@ -33,13 +33,13 @@ describe('Service: LineListService', function () {
     HuronConfig = _HuronConfig_;
     LineListService = _LineListService_;
     PstnService = _PstnService_;
-    PstnSetup = _PstnSetup_;
+    PstnModel = _PstnModel_;
 
     spyOn(PstnService, 'listPendingOrdersWithDetail').and.returnValue($q.resolve());
     spyOn(PstnService, 'translateStatusMessage');
     spyOn(ExternalNumberService, 'isTerminusCustomer').and.returnValue($q.resolve());
     spyOn(ExternalNumberService, 'getCarrierInfo').and.returnValue($q.resolve(carrierInfo));
-    spyOn(PstnSetup, 'isResellerExists').and.returnValue($q.resolve(true));
+    spyOn(PstnModel, 'isResellerExists').and.returnValue($q.resolve(true));
   }));
 
   describe('getLineList', function () {
@@ -176,7 +176,7 @@ describe('Service: LineListService', function () {
         .then(function (response) {
           expect(response).toBe(true);
         });
-      PstnSetup.isResellerExists.and.returnValue($q.resolve(false));
+      PstnModel.isResellerExists.and.returnValue($q.resolve(false));
       $scope.$apply();
       LineListService.isResellerExists()
         .then(function (response) {

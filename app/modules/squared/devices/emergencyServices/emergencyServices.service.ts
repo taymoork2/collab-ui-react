@@ -3,6 +3,7 @@ import { MemberService } from 'modules/huron/members';
 import { FeatureMemberService } from 'modules/huron/features/featureMember.service';
 import { HuronCompassService } from 'modules/huron/compass/compass.service';
 import { PstnService } from '../../../huron/pstn/pstn.service';
+import { PstnModel } from '../../../huron/pstn/pstn.model';
 
 export class EmergencyServicesService {
   private emergencyDataCopy: IEmergency;
@@ -20,7 +21,7 @@ export class EmergencyServicesService {
     private Authinfo,
     private PstnServiceAddressService,
     private PstnSetupStatesService,
-    private PstnSetup,
+    private PstnModel: PstnModel,
     private PstnService: PstnService,
     private TerminusUserDeviceE911Service,
     private MemberService: MemberService,
@@ -125,18 +126,18 @@ export class EmergencyServicesService {
 
   public validateAddress(address: IEmergencyAddress): ng.IPromise<any> {
     //Make a request if we can't get the carrierId from the model
-    if (this.PstnSetup.getProviderId() === undefined) {
+    if (this.PstnModel.getProviderId() === undefined) {
       return this.PstnService.getCustomer(this.Authinfo.getOrgId()).then((customer) => {
         // update our model
-        this.PstnSetup.setCustomerId(customer.uuid);
-        this.PstnSetup.setCustomerName(customer.name);
-        this.PstnSetup.setCustomerFirstName(customer.firstName);
-        this.PstnSetup.setCustomerLastName(customer.lastName);
-        this.PstnSetup.setCustomerEmail(customer.email);
+        this.PstnModel.setCustomerId(customer.uuid);
+        this.PstnModel.setCustomerName(customer.name);
+        this.PstnModel.setCustomerFirstName(customer.firstName);
+        this.PstnModel.setCustomerLastName(customer.lastName);
+        this.PstnModel.setCustomerEmail(customer.email);
         return this.PstnServiceAddressService.lookupAddressV2(address, customer.pstnCarrierId, true);
       });
     } else {
-      return this.PstnServiceAddressService.lookupAddressV2(address, this.PstnSetup.getProviderId(), true);
+      return this.PstnServiceAddressService.lookupAddressV2(address, this.PstnModel.getProviderId(), true);
     }
   }
 

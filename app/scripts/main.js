@@ -104,7 +104,7 @@
     require('modules/huron/autoAnswer').default,
     require('modules/huron/pstn').default,
     require('modules/huron/pstn/pstn.service').default,
-    require('modules/huron/pstn/pstnService.model').default,
+    require('modules/huron/pstn/pstn.model').default,
     require('modules/huron/pstn/pstnProviders').default,
     require('modules/huron/pstn/pstnContactInfo').default,
     require('modules/huron/pstn/pstnSwivelNumbers').default,
