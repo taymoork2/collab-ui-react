@@ -84,8 +84,8 @@
           clusterName: function () {
             return cluster.name;
           },
-          nodeSerial: function () {
-            return vm.host.hostSerial;
+          connectorId: function () {
+            return vm.host.id;
           },
         },
         type: 'small',

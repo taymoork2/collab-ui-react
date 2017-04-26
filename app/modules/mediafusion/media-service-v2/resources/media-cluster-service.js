@@ -279,6 +279,11 @@
         .post(url);
     }
 
+    function defuseV2Connector(connectorId) {
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/actions/deregister/invoke?managementConnectorId=' + connectorId;
+      return $http.post(url);
+    }
+
     function deleteClusterWithConnector(clusterId) {
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/actions/deregisterCluster/invoke?clusterId=' + clusterId;
       return $http.post(url);
@@ -354,6 +359,7 @@
       getAll: getAll,
       deleteV2Cluster: deleteV2Cluster,
       updateV2Cluster: updateV2Cluster,
+      defuseV2Connector: defuseV2Connector,
       deleteClusterWithConnector: deleteClusterWithConnector,
       moveV2Host: moveV2Host,
       getProperties: getProperties,

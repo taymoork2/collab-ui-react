@@ -166,7 +166,7 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
     this.$modal.open({
       resolve: {
         clusterName: () => this.data.name,
-        nodeSerial: () => node.serial,
+        connectorId: () => node.connectors[0].id,
       },
       type: 'small',
       controller: 'HostDeregisterControllerV2',
