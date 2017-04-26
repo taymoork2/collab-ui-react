@@ -1,10 +1,6 @@
 import { CmcUserData } from './cmcUserData';
 import { CmcService } from './cmc.service';
-import { IUser } from 'modules/core/auth/user/user';
-
-interface ICmcUser extends IUser {
-  phoneNumbers?: Array<any>;
-}
+import { ICmcUser } from './cmcUser.interface';
 
 class CmcUserDetailsSettingsController implements ng.IComponentController {
 

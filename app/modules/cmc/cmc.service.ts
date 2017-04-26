@@ -1,5 +1,5 @@
 import { CmcUserData } from './cmcUserData';
-import { IUser } from 'modules/core/auth/user/user';
+import { ICmcUser } from './cmcUser.interface';
 
 export class CmcService {
 
@@ -14,13 +14,13 @@ export class CmcService {
   ) {
   }
 
-  public setData(user: IUser, data: CmcUserData) {
+  public setData(user: ICmcUser, data: CmcUserData) {
     this.setMobileNumber(user, data.mobileNumber);
     this.setEntitlement(user);
     // TODO: Handler error properly
   }
 
-  public getData(user: IUser): CmcUserData {
+  public getData(user: ICmcUser): CmcUserData {
     this.$log.warn('Getting data for user=', user);
     let entitled = this.extractCmcEntitlement(user);
     let mobileNumber = this.extractMobileNumber(user);
@@ -44,7 +44,7 @@ export class CmcService {
     return deferred.promise;
   }
 
-  private extractMobileNumber(user): any {
+  private extractMobileNumber(user: ICmcUser): any {
     if (user.phoneNumbers) {
       let nbr = _.find<any>(user.phoneNumbers, (nbr) => {
         return nbr.type === 'mobile';
@@ -55,11 +55,11 @@ export class CmcService {
     }
   }
 
-  private extractCmcEntitlement(user: IUser): boolean {
+  private extractCmcEntitlement(user: ICmcUser): boolean {
     return _.includes(user.entitlements, 'cmc');
   }
 
-  private setEntitlement(user: IUser) {
+  private setEntitlement(user: ICmcUser) {
 
     //TODO: Add functionality
     let url = this.UrlConfig.getAdminServiceUrl() + 'organization/' + user.meta.organizationID + '/users/' + user.id + '/actions/onboardcmcuser/invoke';
@@ -68,7 +68,7 @@ export class CmcService {
     });
   }
 
-  private updateUserData(user: IUser, userMobileData) {
+  private updateUserData(user: ICmcUser, userMobileData) {
     let scimUrl = this.UrlConfig.getScimUrl(user.meta.organizationID) + '/' + user.id;
     this.$log.info('Updating user', user);
     this.$log.info('User data', userMobileData);
@@ -80,7 +80,7 @@ export class CmcService {
     });
   }
 
-  private setMobileNumber(user: IUser, number: string) {
+  private setMobileNumber(user: ICmcUser, number: string) {
     let userMobileData = {
       schemas: this.Config.scimSchemas,
       phoneNumbers: [
