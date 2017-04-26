@@ -3928,7 +3928,8 @@
     "pendingNumbers": "{count, plural, =1{There is # number} other{There are # numbers}} pending for this order",
     "searchPlaceholder": "Search Phone Numbers",
     "waitOnTOSAcceptance": "Waiting on ToS acceptance from customer",
-    "orderCreationDate": "On {{date}} by {{createdBy}}",
+    "orderCreationDate": "On {{date}} ",
+    "createdBy": "by {{createdBy}}",
     "orderCreatedBy": "Partner"
   },
   "serviceAddress": {
