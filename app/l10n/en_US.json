@@ -1990,6 +1990,7 @@
     },
     "softwareUpgrade": {
       "editSettingsLink": "Edit cluster settings",
+      "editTrunkSettingsLink": "Edit resource settings",
       "softwareUpgrade": "Software Upgrade",
       "currentVersion": "Current Version",
       "newVersion": "New Version",
