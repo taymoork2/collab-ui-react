@@ -2,7 +2,7 @@ import { PSTN, NUMTYPE_DID, NXX, NPA, GROUP_BY, NUMTYPE_TOLLFREE, TATA, BLOCK_OR
 import { Notification } from 'modules/core/notifications/notification.service';
 import { IOrder } from './pstnWizard/pstnWizard.service';
 
-export class PstnSetupService {
+export class PstnService {
   constructor(private PstnSetup,
               private Authinfo,
               private TerminusCustomerV2Service,
@@ -714,7 +714,7 @@ export class PstnSetupService {
 }
 
 export default angular
-  .module('huron.pstnsetupservice', [
+  .module('huron.PstnService', [
     require('angular-resource'),
     require('modules/huron/telephony/telephoneNumber.filter'),
     require('modules/core/scripts/services/authinfo'),
@@ -725,5 +725,5 @@ export default angular
     require('modules/huron/telephony/telephoneNumber.service'),
     require('modules/core/featureToggle').default,
   ])
-  .service('PstnSetupService', PstnSetupService)
+  .service('PstnService', PstnService)
   .name;

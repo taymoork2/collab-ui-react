@@ -6,7 +6,7 @@
     .controller('TrialPstnCtrl', TrialPstnCtrl);
 
   /* @ngInject */
-  function TrialPstnCtrl($scope, $timeout, $translate, Analytics, Authinfo, Notification, PstnSetup, PstnSetupService, TelephoneNumberService, TrialPstnService, PstnSetupStatesService, FeatureToggleService, $q) {
+  function TrialPstnCtrl($scope, $timeout, $translate, Analytics, Authinfo, Notification, PstnSetup, PstnService, TelephoneNumberService, TrialPstnService, PstnSetupStatesService, FeatureToggleService, $q) {
     var vm = this;
 
     var NXX = 'nxx';
@@ -237,10 +237,10 @@
 
     function _setupResellers() {
       if (!vm.trialData.reseller) {
-        PstnSetupService.getResellerV2().then(function () {
+        PstnService.getResellerV2().then(function () {
           vm.trialData.reseller = true;
         }).catch(function () {
-          PstnSetupService.createResellerV2().then(function () {
+          PstnService.createResellerV2().then(function () {
             vm.trialData.reseller = true;
           }).catch(function (response) {
             Notification.errorResponse(response, 'pstnSetup.resellerCreateError');
@@ -262,7 +262,7 @@
       vm.trialData.details.pstnNumberInfo.nxx = null;
       vm.pstn.nxxEnable = false;
       resetNumbers();
-      PstnSetupService.getCarrierInventory(
+      PstnService.getCarrierInventory(
         vm.trialData.details.pstnProvider.uuid,
         vm.trialData.details.pstnNumberInfo.state.abbreviation
       ).then(
@@ -290,7 +290,7 @@
       vm.trialData.details.pstnNumberInfo.nxx = null;
       searchCarrierInventory();
       //Get Exchanges
-      PstnSetupService.getCarrierInventory(
+      PstnService.getCarrierInventory(
         vm.trialData.details.pstnProvider.uuid,
         vm.trialData.details.pstnNumberInfo.state.abbreviation,
         vm.trialData.details.pstnNumberInfo.areaCode.code
@@ -335,7 +335,7 @@
     }
 
     function removeOrder(order) {
-      PstnSetupService.releaseCarrierInventoryV2(PstnSetup.getCustomerId(), order.reservationId, order.data.numbers, PstnSetup.isCustomerExists())
+      PstnService.releaseCarrierInventoryV2(PstnSetup.getCustomerId(), order.reservationId, order.data.numbers, PstnSetup.isCustomerExists())
           .then(_.partial(removeOrderFromCart, order));
     }
 
@@ -348,7 +348,7 @@
           var searchResultsIndex = (vm.paginateOptions.currentPage * vm.paginateOptions.pageSize) + key;
           if (searchResultsIndex < vm.searchResults.length && !vm.trialData.details.pstnNumberInfo.numbers.includes(vm.searchResults[searchResultsIndex])) {
             var numbers = vm.searchResults[searchResultsIndex];
-            reservation = PstnSetupService.reserveCarrierInventoryV2(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), numbers, PstnSetup.isCustomerExists());
+            reservation = PstnService.reserveCarrierInventoryV2(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), numbers, PstnSetup.isCustomerExists());
             var promise = reservation
               .then(function (reservationData) {
                 var order = {
@@ -412,7 +412,7 @@
         }
       }
 
-      PstnSetupService.searchCarrierInventory(vm.trialData.details.pstnProvider.uuid, params)
+      PstnService.searchCarrierInventory(vm.trialData.details.pstnProvider.uuid, params)
         .then(function (numberRanges) {
           vm.searchResults = _.flatten(numberRanges);
           vm.showNoResult = vm.searchResults.length === 0;
@@ -513,16 +513,16 @@
     }
 
     function _listCarriers(localScope) {
-      PstnSetupService.listResellerCarriers().then(function (carriers) {
+      PstnService.listResellerCarriers().then(function (carriers) {
         if (_.isArray(carriers) && carriers.length > 0) {
           _showCarriers(carriers, localScope);
         } else {
-          PstnSetupService.listDefaultCarriers().then(function (carriers) {
+          PstnService.listDefaultCarriers().then(function (carriers) {
             _showCarriers(carriers, localScope);
           });
         }
       }).catch(function () {
-        PstnSetupService.listDefaultCarriers().then(function (carriers) {
+        PstnService.listDefaultCarriers().then(function (carriers) {
           _showCarriers(carriers, localScope);
         });
       });

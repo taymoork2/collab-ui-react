@@ -5,7 +5,7 @@
     .controller('PstnSetupCtrl', PstnSetupCtrl);
 
   /* @ngInject */
-  function PstnSetupCtrl($state, $stateParams, PstnSetup, PstnSetupService, Notification) {
+  function PstnSetupCtrl($state, $stateParams, PstnSetup, PstnService, Notification) {
     //Save state params
     PstnSetup.setCustomerId($stateParams.customerId);
     PstnSetup.setCustomerName($stateParams.customerName);
@@ -17,10 +17,10 @@
 
     //Verify the the Terminus Reseller is setup, otherwise setup the Reseller
     if (!PstnSetup.isResellerExists()) {
-      PstnSetupService.getResellerV2().then(function () {
+      PstnService.getResellerV2().then(function () {
         PstnSetup.setResellerExists(true);
       }).catch(function () {
-        PstnSetupService.createResellerV2().then(function () {
+        PstnService.createResellerV2().then(function () {
           PstnSetup.setResellerExists(true);
         }).catch(function (response) {
           Notification.errorResponse(response, 'pstnSetup.resellerCreateError');

@@ -4,7 +4,7 @@ import { PstnWizardService, IOrder } from './pstnWizard.service';
 import { TokenMethods } from '../pstnSwivelNumbers/pstnSwivelNumbers.component';
 import { IEmergencyAddress } from 'modules/squared/devices/emergencyServices/index';
 import { TOKEN_FIELD_ID } from '../index';
-import { PstnSetupService } from '../pstn.service';
+import { PstnService } from '../pstn.service';
 
 export class PstnWizardComponent implements ng.IComponentOptions {
   public controller = PstnWizardCtrl;
@@ -68,7 +68,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
               private $state: ng.ui.IStateService,
               private $window: ng.IWindowService,
               private $timeout: ng.ITimeoutService,
-              private PstnSetupService: PstnSetupService,
+              private PstnService: PstnService,
               private DidService,
               private $translate: ng.translate.ITranslateService,
               private PstnWizardService: PstnWizardService,
@@ -104,7 +104,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
   }
 
   public getTollFreeInventory(): void {
-    this.PstnSetupService.getCarrierTollFreeInventory(this.PstnSetup.getProviderId())
+    this.PstnService.getCarrierTollFreeInventory(this.PstnSetup.getProviderId())
       .then(response => {
         this.model.tollFree.areaCodeOptions = response.areaCodes;
         let areaCodes = response.areaCodes.join(', ') + '.';

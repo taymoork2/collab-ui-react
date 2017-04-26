@@ -1,4 +1,4 @@
-import { PstnSetupService } from '../../pstn/pstn.service';
+import { PstnService } from '../../pstn/pstn.service';
 export class OrdersOverviewComponent implements ng.IComponentOptions {
   public controller = OrdersOverviewCtrl;
   public templateUrl = 'modules/huron/pstnOrderManagement/ordersOverview/ordersOverview.html';
@@ -17,14 +17,14 @@ export class OrdersOverviewCtrl implements ng.IComponentController {
   public isPartner: boolean;
   /* @ngInject */
   constructor(
-    private PstnSetupService: PstnSetupService,
+    private PstnService: PstnService,
     private $translate: angular.translate.ITranslateService,
   ) {
     this.init();
   }
 
   public init(): void {
-    this.PstnSetupService.getFormattedNumberOrders(this.currentCustomer.customerOrgId).then((response) => {
+    this.PstnService.getFormattedNumberOrders(this.currentCustomer.customerOrgId).then((response) => {
       this.ordersWithDuplicates = response;
       //club all the batches with same OrderId into one Order.
       //V2 Terminus orders API returns different batches for same order as 2 separate orders with different batchID

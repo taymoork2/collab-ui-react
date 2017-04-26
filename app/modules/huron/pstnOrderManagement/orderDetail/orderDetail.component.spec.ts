@@ -2,7 +2,7 @@ import orderDetailModule from './index';
 describe('Component: OrderDetail', () => {
   beforeEach(function () {
     this.initModules(orderDetailModule);
-    this.injectDependencies('PstnSetupService',
+    this.injectDependencies('PstnService',
                             '$q',
                             '$stateParams',
                             '$translate',
@@ -14,9 +14,9 @@ describe('Component: OrderDetail', () => {
   });
 
   function initComponent() {
-    spyOn(this.PstnSetupService, 'getCustomerV2').and
+    spyOn(this.PstnService, 'getCustomerV2').and
       .returnValue(this.$q.resolve({ trial: true, name: 'ATLAS_Test_Customer' }));
-    spyOn(this.PstnSetupService, 'getCustomerTrialV2').and
+    spyOn(this.PstnService, 'getCustomerTrialV2').and
       .returnValue(this.$q.resolve({ acceptedDate: 'today' }));
     spyOn(this.$translate, 'instant');
   }
@@ -48,8 +48,8 @@ describe('Component: OrderDetail', () => {
     it('should set the createdBy to customerName', function () {
       expect(this.controller.createdBy).toBe('ATLAS_Test_Customer');
     });
-    it('should make PstnSetupService calls to fetch the data', function () {
-      expect(this.PstnSetupService.getCustomerTrialV2).toHaveBeenCalled();
+    it('should make PstnService calls to fetch the data', function () {
+      expect(this.PstnService.getCustomerTrialV2).toHaveBeenCalled();
     });
   });
 
@@ -69,9 +69,9 @@ describe('Component: OrderDetail', () => {
         tooltip: 'Still Pending Queue',
       });
     });
-    it('should make PstnSetupService calls to fetch the data', function () {
-      expect(this.PstnSetupService.getCustomerV2).toHaveBeenCalled();
-      expect(this.PstnSetupService.getCustomerTrialV2).toHaveBeenCalled();
+    it('should make PstnService calls to fetch the data', function () {
+      expect(this.PstnService.getCustomerV2).toHaveBeenCalled();
+      expect(this.PstnService.getCustomerTrialV2).toHaveBeenCalled();
     });
   });
 

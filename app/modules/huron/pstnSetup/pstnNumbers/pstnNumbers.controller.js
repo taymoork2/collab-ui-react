@@ -14,7 +14,7 @@
   }
 
   /* @ngInject */
-  function PstnNumbersCtrl($q, $scope, $state, $timeout, $translate, DidService, Notification, PstnSetup, PstnSetupService, TelephoneNumberService, PstnSetupStatesService, ValidationService, FeatureToggleService) {
+  function PstnNumbersCtrl($q, $scope, $state, $timeout, $translate, DidService, Notification, PstnSetup, PstnService, TelephoneNumberService, PstnSetupStatesService, ValidationService, FeatureToggleService) {
     var vm = this;
 
     vm.provider = PstnSetup.getProvider();
@@ -255,7 +255,7 @@
     ////////////////////////
 
     function getStateInventory() {
-      PstnSetupService.getCarrierInventory(PstnSetup.getProviderId(), vm.model.pstn.state.abbreviation)
+      PstnService.getCarrierInventory(PstnSetup.getProviderId(), vm.model.pstn.state.abbreviation)
         .then(function (response) {
           vm.model.pstn.areaCodeOptions = _.sortBy(response.areaCodes, 'code');
           vm.model.pstn.areaCode = '';
@@ -274,7 +274,7 @@
 
     function getAreaNxx() {
       vm.model.pstn.searchEnable = true;
-      PstnSetupService.getCarrierInventory(PstnSetup.getProviderId(),
+      PstnService.getCarrierInventory(PstnSetup.getProviderId(),
         vm.model.pstn.state.abbreviation, vm.model.pstn.areaCode.code)
         .then(function (response) {
           if (!_.isEmpty(response)) {
@@ -292,7 +292,7 @@
     }
 
     function getTollFreeInventory() {
-      PstnSetupService.getCarrierTollFreeInventory(PstnSetup.getProviderId())
+      PstnService.getCarrierTollFreeInventory(PstnSetup.getProviderId())
         .then(function (response) {
           vm.model.tollFree.areaCodeOptions = response.areaCodes;
           var areaCodes = '';
@@ -317,7 +317,7 @@
 
     function getCapabilities() {
       if (!vm.isTrial) {
-        PstnSetupService.getCarrierCapabilities(PstnSetup.getProviderId())
+        PstnService.getCarrierCapabilities(PstnSetup.getProviderId())
           .then(function (response) {
             var supportedCapabilities = [];
             for (var x in response) {
@@ -414,7 +414,7 @@
       vm.model.pstn.isSingleResult = isSingleResult();
       field.loading = true;
 
-      PstnSetupService.searchCarrierInventory(PstnSetup.getProviderId(), params)
+      PstnService.searchCarrierInventory(PstnSetup.getProviderId(), params)
         .then(function (numberRanges) {
           if (numberRanges.length === 0) {
             if (vm.isTrial) {
@@ -477,7 +477,7 @@
       }
       field.loading = true;
 
-      PstnSetupService.searchCarrierTollFreeInventory(PstnSetup.getProviderId(), params)
+      PstnService.searchCarrierTollFreeInventory(PstnSetup.getProviderId(), params)
         .then(function (numberRanges) {
           if (numberRanges.length === 0) {
             vm.model.tollFree.showAdvancedOrder = true;
@@ -544,9 +544,9 @@
           if (searchResultsIndex < model.searchResults.length) {
             var numbers = model.searchResults[searchResultsIndex];
             if (numberType === NUMTYPE_DID) {
-              reservation = PstnSetupService.reserveCarrierInventoryV2(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), numbers, PstnSetup.isCustomerExists());
+              reservation = PstnService.reserveCarrierInventoryV2(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), numbers, PstnSetup.isCustomerExists());
             } else if (numberType === NUMTYPE_TOLLFREE) {
-              reservation = PstnSetupService.reserveCarrierTollFreeInventory(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), numbers, PstnSetup.isCustomerExists());
+              reservation = PstnService.reserveCarrierTollFreeInventory(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), numbers, PstnSetup.isCustomerExists());
             }
             var promise = reservation
               .then(function (reservationData) {
@@ -622,10 +622,10 @@
       if (isPortOrder(order) || isAdvancedOrder(order)) {
         removeOrderFromCart(order);
       } else if (_.get(order, 'orderType') === NUMBER_ORDER && _.get(order, 'numberType') === NUMTYPE_TOLLFREE) {
-        PstnSetupService.releaseCarrierTollFreeInventory(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), order.data.numbers, order.reservationId, PstnSetup.isCustomerExists())
+        PstnService.releaseCarrierTollFreeInventory(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), order.data.numbers, order.reservationId, PstnSetup.isCustomerExists())
           .then(_.partial(removeOrderFromCart, order));
       } else {
-        PstnSetupService.releaseCarrierInventoryV2(PstnSetup.getCustomerId(), order.reservationId, order.data.numbers, PstnSetup.isCustomerExists())
+        PstnService.releaseCarrierInventoryV2(PstnSetup.getCustomerId(), order.reservationId, order.data.numbers, PstnSetup.isCustomerExists())
           .then(_.partial(removeOrderFromCart, order));
       }
     }

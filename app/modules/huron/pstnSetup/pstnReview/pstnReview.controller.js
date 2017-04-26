@@ -5,7 +5,7 @@
     .controller('PstnReviewCtrl', PstnReviewCtrl);
 
   /* @ngInject */
-  function PstnReviewCtrl($q, $translate, $state, PstnSetup, PstnSetupService, PstnServiceAddressService, Notification) {
+  function PstnReviewCtrl($q, $translate, $state, PstnSetup, PstnService, PstnServiceAddressService, Notification) {
     var vm = this;
     var NUMBER_ORDER = require('modules/huron/pstn').NUMBER_ORDER;
     var BLOCK_ORDER = require('modules/huron/pstn').BLOCK_ORDER;
@@ -51,7 +51,7 @@
     }
 
     function createCustomerV2() {
-      return PstnSetupService.createCustomerV2(
+      return PstnService.createCustomerV2(
         PstnSetup.getCustomerId(),
         PstnSetup.getCustomerName(),
         PstnSetup.getCustomerFirstName(),
@@ -66,7 +66,7 @@
     }
 
     function updateCustomerCarrier() {
-      return PstnSetupService.updateCustomerCarrier(PstnSetup.getCustomerId(), PstnSetup.getProviderId())
+      return PstnService.updateCustomerCarrier(PstnSetup.getCustomerId(), PstnSetup.getProviderId())
         .then(function () {
           PstnSetup.setCarrierExists(true);
         }).catch(function (response) {
@@ -133,35 +133,35 @@
       }
 
       if (vm.newOrders.length > 0) {
-        promise = PstnSetupService.orderNumbersV2(PstnSetup.getCustomerId(), vm.newOrders)
+        promise = PstnService.orderNumbersV2(PstnSetup.getCustomerId(), vm.newOrders)
           .catch(pushErrorArray);
         promises.push(promise);
       }
 
       if (vm.newTollFreeOrders.length > 0) {
-        promise = PstnSetupService.orderNumbersV2(PstnSetup.getCustomerId(), vm.newTollFreeOrders)
+        promise = PstnService.orderNumbersV2(PstnSetup.getCustomerId(), vm.newTollFreeOrders)
           .catch(pushErrorArray);
         promises.push(promise);
       }
 
       if (vm.portOrders.length > 0) {
-        promise = PstnSetupService.portNumbers(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), _.get(vm, 'portOrders[0].data.numbers'))
+        promise = PstnService.portNumbers(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), _.get(vm, 'portOrders[0].data.numbers'))
           .catch(pushErrorArray);
         promises.push(promise);
       }
 
       if (vm.swivelOrders.length > 0) {
-        promise = PstnSetupService.orderNumbers(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), _.get(vm, 'swivelOrders[0].data.numbers'))
+        promise = PstnService.orderNumbers(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), _.get(vm, 'swivelOrders[0].data.numbers'))
           .catch(pushErrorArray);
         promises.push(promise);
       }
 
       _.forEach(vm.advancedOrders, function (order) {
         if (_.get(order, 'orderType') === BLOCK_ORDER && _.get(order, 'numberType') === NUMTYPE_DID) {
-          promise = PstnSetupService.orderBlock(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), order.data.areaCode, order.data.length, order.data.consecutive, order.data.nxx)
+          promise = PstnService.orderBlock(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), order.data.areaCode, order.data.length, order.data.consecutive, order.data.nxx)
             .catch(pushErrorArray);
         } else if (_.get(order, 'orderType') === BLOCK_ORDER && _.get(order, 'numberType') === NUMTYPE_TOLLFREE) {
-          promise = PstnSetupService.orderTollFreeBlock(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), order.data.areaCode, order.data.length)
+          promise = PstnService.orderTollFreeBlock(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), order.data.areaCode, order.data.length)
             .catch(pushErrorArray);
         }
         promises.push(promise);

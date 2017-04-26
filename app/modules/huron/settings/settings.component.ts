@@ -4,7 +4,7 @@ import { IExtensionRange } from 'modules/huron/settings/extensionRange';
 import { CompanyNumber } from 'modules/huron/settings/companyCallerId';
 import { IOption } from 'modules/huron/dialing/dialing.service';
 import { EmergencyCallbackNumber } from 'modules/huron/sites';
-import { PstnSetupService } from '../pstn/pstn.service';
+import { PstnService } from '../pstn/pstn.service';
 
 const API_IMPL_SWIVEL = 'SWIVEL';
 
@@ -47,7 +47,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
     private $translate: ng.translate.ITranslateService,
     private $state: ng.ui.IStateService,
     private ModalService,
-    private PstnSetupService: PstnSetupService,
+    private PstnService: PstnService,
     private PstnSetup,
     private Authinfo,
     private Config,
@@ -71,11 +71,11 @@ class HuronSettingsCtrl implements ng.IComponentController {
     }, null, params);
 
 
-    this.PstnSetupService.getCustomer(this.Authinfo.getOrgId()).then(() => {
+    this.PstnService.getCustomer(this.Authinfo.getOrgId()).then(() => {
       this.isTerminusCustomer = true;
     });
 
-    this.PstnSetupService.listCustomerCarriers(this.Authinfo.getOrgId()).then(carriers => {
+    this.PstnService.listCustomerCarriers(this.Authinfo.getOrgId()).then(carriers => {
       if (_.get(carriers, '[0].apiImplementation') !== API_IMPL_SWIVEL) {
         this.PstnSetup.setProvider(_.get(carriers, '[0]'));
         this.showEmergencyServiceAddress = true;

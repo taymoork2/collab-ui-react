@@ -1,7 +1,7 @@
 import { Notification } from 'modules/core/notifications';
 import { NUMBER_ORDER, PORT_ORDER, BLOCK_ORDER, NXX, NUMTYPE_DID, NUMTYPE_TOLLFREE, NXX_EMPTY, MIN_VALID_CODE, MAX_VALID_CODE, MAX_DID_QUANTITY, TOLLFREE_ORDERING_CAPABILITY, TOKEN_FIELD_ID, SWIVEL_ORDER } from '../index';
 import { INumbersModel } from './number.model';
-import { PstnSetupService } from '../pstn.service';
+import { PstnService } from '../pstn.service';
 
 export interface IOrder {
   reservationId?: string;
@@ -32,7 +32,7 @@ export class PstnWizardService {
   constructor(
     private $q: ng.IQService,
     private PstnSetup,
-    private PstnSetupService: PstnSetupService,
+    private PstnService: PstnService,
     private PstnServiceAddressService,
     private Notification: Notification,
     private $translate: ng.translate.ITranslateService,
@@ -63,7 +63,7 @@ export class PstnWizardService {
       if (data.countryCode) {
         this.PstnSetup.setCountryCode(data.countryCode);
       }
-      this.PstnSetupService.getCustomerV2(this.PstnSetup.getCustomerId())
+      this.PstnService.getCustomerV2(this.PstnSetup.getCustomerId())
       .then(() => {
         this.PstnSetup.setCustomerExists(true);
         deferred.resolve(true);
@@ -95,21 +95,21 @@ export class PstnWizardService {
   //PSTN check to verify if the Partner is registered with the Terminus service as a carrier reseller
   private checkReseller(): void {
     if (!this.PstnSetup.isResellerExists()) {
-      this.PstnSetupService.getResellerV2().then(() => this.PstnSetup.setResellerExists(true))
+      this.PstnService.getResellerV2().then(() => this.PstnSetup.setResellerExists(true))
       .catch(() => this.createReseller());
     }
   }
 
   //PSTN register the Partner as a carrier reseller
   private createReseller(): void {
-    this.PstnSetupService.createResellerV2().then(() => this.PstnSetup.setResellerExists(true))
+    this.PstnService.createResellerV2().then(() => this.PstnSetup.setResellerExists(true))
     .catch(error => this.Notification.errorResponse(error, 'pstnSetup.resellerCreateError'));
   }
 
   //PSTN check if customer is setup as a carrier customer.
   private checkCustomer(): void {
     if (!this.PstnSetup.isCustomerExists()) {
-      this.PstnSetupService.getCustomer(this.PstnSetup.getCustomerId())
+      this.PstnService.getCustomer(this.PstnSetup.getCustomerId())
         .then(() => this.PstnSetup.setCustomerExists(true));
     }
   }
@@ -159,35 +159,35 @@ export class PstnWizardService {
     let pushErrorArray = response => errors.push(this.Notification.processErrorResponse(response));
 
     if (this.newOrders.length > 0) {
-      promise = this.PstnSetupService.orderNumbersV2(this.PstnSetup.getCustomerId(), this.newOrders)
+      promise = this.PstnService.orderNumbersV2(this.PstnSetup.getCustomerId(), this.newOrders)
         .catch(pushErrorArray);
       promises.push(promise);
     }
 
     if (this.newTollFreeOrders.length > 0) {
-      promise = this.PstnSetupService.orderNumbersV2(this.PstnSetup.getCustomerId(), this.newTollFreeOrders)
+      promise = this.PstnService.orderNumbersV2(this.PstnSetup.getCustomerId(), this.newTollFreeOrders)
         .catch(pushErrorArray);
       promises.push(promise);
     }
 
     if (this.portOrders.length > 0) {
-      promise = this.PstnSetupService.portNumbers(this.PstnSetup.getCustomerId(), this.PstnSetup.getProviderId(), <Array<string>>_.get(this, 'portOrders[0].data.numbers'))
+      promise = this.PstnService.portNumbers(this.PstnSetup.getCustomerId(), this.PstnSetup.getProviderId(), <Array<string>>_.get(this, 'portOrders[0].data.numbers'))
         .catch(pushErrorArray);
       promises.push(promise);
     }
 
     if (this.swivelOrders.length > 0) {
-      promise = this.PstnSetupService.orderNumbers(this.PstnSetup.getCustomerId(), this.PstnSetup.getProviderId(), <Array<string>>_.get(this, 'swivelOrders[0].data.numbers'))
+      promise = this.PstnService.orderNumbers(this.PstnSetup.getCustomerId(), this.PstnSetup.getProviderId(), <Array<string>>_.get(this, 'swivelOrders[0].data.numbers'))
         .catch(pushErrorArray);
       promises.push(promise);
     }
 
     _.forEach(this.advancedOrders, order => {
       if (order.orderType === BLOCK_ORDER && order.numberType === NUMTYPE_DID) {
-        promise = this.PstnSetupService.orderBlock(this.PstnSetup.getCustomerId(), this.PstnSetup.getProviderId(), order.data.areaCode, order.data.length, order.data.consecutive, order.data.nxx)
+        promise = this.PstnService.orderBlock(this.PstnSetup.getCustomerId(), this.PstnSetup.getProviderId(), order.data.areaCode, order.data.length, order.data.consecutive, order.data.nxx)
           .catch(pushErrorArray);
       } else if (order.orderType === BLOCK_ORDER && order.numberType === NUMTYPE_TOLLFREE) {
-        promise = this.PstnSetupService.orderTollFreeBlock(this.PstnSetup.getCustomerId(), this.PstnSetup.getProviderId(), order.data.areaCode, order.data.length)
+        promise = this.PstnService.orderTollFreeBlock(this.PstnSetup.getCustomerId(), this.PstnSetup.getProviderId(), order.data.areaCode, order.data.length)
           .catch(pushErrorArray);
       }
       promises.push(promise);
@@ -212,7 +212,7 @@ export class PstnWizardService {
   }
 
   private updateCustomerCarrier(): ng.IPromise<boolean> {
-    return this.PstnSetupService.updateCustomerCarrier(this.PstnSetup.getCustomerId(), this.PstnSetup.getProviderId())
+    return this.PstnService.updateCustomerCarrier(this.PstnSetup.getCustomerId(), this.PstnSetup.getProviderId())
       .then(() => this.PstnSetup.setCarrierExists(true))
       .catch(response => {
         this.Notification.errorResponse(response, 'pstnSetup.customerUpdateError');
@@ -221,7 +221,7 @@ export class PstnWizardService {
   }
 
   private createCustomerV2(): ng.IPromise<boolean> {
-    return this.PstnSetupService.createCustomerV2(
+    return this.PstnService.createCustomerV2(
       this.PstnSetup.getCustomerId(),
       this.PstnSetup.getCustomerName(),
       this.PstnSetup.getCustomerFirstName(),
@@ -425,9 +425,9 @@ export class PstnWizardService {
         if (searchResultsIndex < model.searchResults.length) {
           let numbers = model.searchResults[searchResultsIndex];
           if (numberType === NUMTYPE_DID) {
-            reservation = this.PstnSetupService.reserveCarrierInventoryV2(this.PstnSetup.getCustomerId(), this.PstnSetup.getProviderId(), numbers, this.PstnSetup.isCustomerExists());
+            reservation = this.PstnService.reserveCarrierInventoryV2(this.PstnSetup.getCustomerId(), this.PstnSetup.getProviderId(), numbers, this.PstnSetup.isCustomerExists());
           } else if (numberType === NUMTYPE_TOLLFREE) {
-            reservation = this.PstnSetupService.reserveCarrierTollFreeInventory(this.PstnSetup.getCustomerId(), this.PstnSetup.getProviderId(), numbers, this.PstnSetup.isCustomerExists());
+            reservation = this.PstnService.reserveCarrierTollFreeInventory(this.PstnSetup.getCustomerId(), this.PstnSetup.getProviderId(), numbers, this.PstnSetup.isCustomerExists());
           }
           let promise = reservation
             .then(reservationData => {
@@ -553,7 +553,7 @@ export class PstnWizardService {
     model.pstn.paginateOptions.currentPage = 0;
     model.pstn.isSingleResult = this.isSingleResult(model);
 
-    return this.PstnSetupService.searchCarrierInventory(this.PstnSetup.getProviderId(), params)
+    return this.PstnService.searchCarrierInventory(this.PstnSetup.getProviderId(), params)
       .then(numberRanges => {
         if (numberRanges.length === 0) {
           if (isTrial) {
@@ -626,7 +626,7 @@ export class PstnWizardService {
       model.tollFree.isSingleResult = model.tollFree.quantity === 1;
     }
 
-    return this.PstnSetupService.searchCarrierTollFreeInventory(this.PstnSetup.getProviderId(), params)
+    return this.PstnService.searchCarrierTollFreeInventory(this.PstnSetup.getProviderId(), params)
       .then(numberRanges => {
         if (numberRanges.length === 0) {
           model.tollFree.showAdvancedOrder = true;
@@ -640,7 +640,7 @@ export class PstnWizardService {
   }
 
   public hasTollFreeCapability(): ng.IPromise<boolean> {
-    return this.PstnSetupService.getCarrierCapabilities(this.PstnSetup.getProviderId())
+    return this.PstnService.getCarrierCapabilities(this.PstnSetup.getProviderId())
         .then(response => {
           let supportedCapabilities: string[] = [];
           Object.keys(response)
@@ -654,9 +654,9 @@ export class PstnWizardService {
     if (this.isPortOrder(order) || this.isAdvancedOrder(order)) {
       return this.$q.resolve(true);
     } else if (order.orderType === NUMBER_ORDER && order.numberType === NUMTYPE_TOLLFREE) {
-      return this.PstnSetupService.releaseCarrierTollFreeInventory(this.PstnSetup.getCustomerId(), this.PstnSetup.getProviderId(), order.data.numbers, order.reservationId, this.PstnSetup.isCustomerExists());
+      return this.PstnService.releaseCarrierTollFreeInventory(this.PstnSetup.getCustomerId(), this.PstnSetup.getProviderId(), order.data.numbers, order.reservationId, this.PstnSetup.isCustomerExists());
     } else {
-      return this.PstnSetupService.releaseCarrierInventoryV2(this.PstnSetup.getCustomerId(), order.reservationId, order.data.numbers, this.PstnSetup.isCustomerExists());
+      return this.PstnService.releaseCarrierInventoryV2(this.PstnSetup.getCustomerId(), order.reservationId, order.data.numbers, this.PstnSetup.isCustomerExists());
     }
   }
 }

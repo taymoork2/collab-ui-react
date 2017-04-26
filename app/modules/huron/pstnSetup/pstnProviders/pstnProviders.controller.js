@@ -5,7 +5,7 @@
     .controller('PstnProvidersCtrl', PstnProvidersCtrl);
 
   /* @ngInject */
-  function PstnProvidersCtrl($q, $translate, $state, PstnSetup, PstnSetupService, PstnServiceAddressService, Orgservice, Notification, FeatureToggleService) {
+  function PstnProvidersCtrl($q, $translate, $state, PstnSetup, PstnService, PstnServiceAddressService, Orgservice, Notification, FeatureToggleService) {
     var vm = this;
     var INTELEPEER = require('modules/huron/pstn').INTELEPEER;
     var TELSTRA = require('modules/huron/pstn').TELSTRA;
@@ -68,9 +68,9 @@
 
     function initCarriers() {
       // lookup customer carriers
-      return PstnSetupService.getCustomer(PstnSetup.getCustomerId())
+      return PstnService.getCustomer(PstnSetup.getCustomerId())
         .then(initCustomer)
-        .then(_.partial(PstnSetupService.listCustomerCarriers, PstnSetup.getCustomerId()))
+        .then(_.partial(PstnService.listCustomerCarriers, PstnSetup.getCustomerId()))
         .then(function (carriers) {
           if (_.isArray(carriers) && carriers.length > 0) {
             PstnSetup.setCarrierExists(true);
@@ -83,7 +83,7 @@
           if (_.isArray(carriers) && carriers.length > 0) {
             return carriers;
           } else {
-            return PstnSetupService.listResellerCarriers()
+            return PstnService.listResellerCarriers()
               .then(function (carriers) {
                 PstnSetup.setResellerExists(true);
                 return carriers;
@@ -96,7 +96,7 @@
           if (_.isArray(carriers) && carriers.length > 0) {
             return carriers;
           } else {
-            return PstnSetupService.listDefaultCarriers();
+            return PstnService.listDefaultCarriers();
           }
         })
         // process carriers
@@ -225,7 +225,7 @@
         if (data.countryCode) {
           PstnSetup.setCountryCode(data.countryCode);
         }
-        PstnSetupService.getCustomerV2(PstnSetup.getCustomerId())
+        PstnService.getCustomerV2(PstnSetup.getCustomerId())
         .then(function () {
           PstnSetup.setCustomerExists(true);
         })

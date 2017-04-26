@@ -2724,7 +2724,7 @@
                   done(require('modules/huron/pstn/pstnWizard'));
                 }, 'pstn-wizard');
               }),
-              customerSetup: /* @ngInject */ function ($stateParams, PstnSetup, PstnSetupService, Notification) {
+              customerSetup: /* @ngInject */ function ($stateParams, PstnSetup, PstnService, Notification) {
                 PstnSetup.setCustomerId($stateParams.customerId);
                 PstnSetup.setCustomerName($stateParams.customerName);
                 PstnSetup.setCustomerEmail($stateParams.customerEmail);
@@ -2734,10 +2734,10 @@
 
                 //Verify the the Terminus Reseller is setup, otherwise setup the Reseller
                 if (!PstnSetup.isResellerExists()) {
-                  PstnSetupService.getResellerV2().then(function () {
+                  PstnService.getResellerV2().then(function () {
                     PstnSetup.setResellerExists(true);
                   }).catch(function () {
-                    PstnSetupService.createResellerV2().then(function () {
+                    PstnService.createResellerV2().then(function () {
                       PstnSetup.setResellerExists(true);
                     }).catch(function (response) {
                       Notification.errorResponse(response, 'pstnSetup.resellerCreateError');

@@ -8,7 +8,7 @@
     .factory('LineListService', LineListService);
 
   /* @ngInject */
-  function LineListService($q, $translate, Authinfo, Config, ExternalNumberService, Log, PstnSetupService, UserLineAssociationService, PstnSetup) {
+  function LineListService($q, $translate, Authinfo, Config, ExternalNumberService, Log, PstnService, UserLineAssociationService, PstnSetup) {
 
     var customerId = Authinfo.getOrgId();
     var apiImplementation = undefined;
@@ -57,7 +57,7 @@
       var linesPromise = UserLineAssociationService.query(queryString).$promise;
 
       return ExternalNumberService.isTerminusCustomer(customerId).then(function () {
-        var orderPromise = PstnSetupService.listPendingOrdersWithDetail(customerId);
+        var orderPromise = PstnService.listPendingOrdersWithDetail(customerId);
         var carrierInfoPromise;
 
         if (_.isUndefined(apiImplementation)) {
@@ -86,12 +86,12 @@
               if (!_.isUndefined(order.attributes.npa)) {
                 var areaCode = order.attributes.npa;
               } else {
-                areaCode = PstnSetupService.getAreaCode(order);
+                areaCode = PstnService.getAreaCode(order);
               }
               nonProvisionedPendingLines.push({
                 externalNumber: '(' + areaCode + ') XXX-XXXX ' + $translate.instant('linesPage.quantity', { count: order.numbers.length }),
                 status: order.statusMessage !== 'None' ? $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage : $translate.instant('linesPage.inProgress'),
-                tooltip: PstnSetupService.translateStatusMessage(order),
+                tooltip: PstnService.translateStatusMessage(order),
               });
             } else {
               var numbers = _.get(order, 'numbers', []);
@@ -102,13 +102,13 @@
                 if (lineFound) {
                   dedupGrid(lineFound, gridData);
                   lineFound.status = order.statusMessage !== 'None' ? $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage : $translate.instant('linesPage.inProgress');
-                  lineFound.tooltip = PstnSetupService.translateStatusMessage(order);
+                  lineFound.tooltip = PstnService.translateStatusMessage(order);
                   pendingLines.push(lineFound);
                 } else {
                   nonProvisionedPendingLines.push({
                     externalNumber: number.number,
                     status: order.statusMessage !== 'None' ? $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage : $translate.instant('linesPage.inProgress'),
-                    tooltip: PstnSetupService.translateStatusMessage(order),
+                    tooltip: PstnService.translateStatusMessage(order),
                   });
                 }
               });
@@ -216,7 +216,7 @@
 
     function isResellerExists() {
       if (!PstnSetup.isResellerExists()) {
-        return PstnSetupService.getResellerV2().then(function () {
+        return PstnService.getResellerV2().then(function () {
           // to avoid a re-check later on in pstnSetup state.
           PstnSetup.setResellerExists(true);
           return true;

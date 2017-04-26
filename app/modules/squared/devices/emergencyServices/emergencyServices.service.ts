@@ -2,7 +2,7 @@ import { IHuronService, IEmergencyAddress, IEmergency, IState, IEmergencyService
 import { MemberService } from 'modules/huron/members';
 import { FeatureMemberService } from 'modules/huron/features/featureMember.service';
 import { HuronCompassService } from 'modules/huron/compass/compass.service';
-import { PstnSetupService } from '../../../huron/pstn/pstn.service';
+import { PstnService } from '../../../huron/pstn/pstn.service';
 
 export class EmergencyServicesService {
   private emergencyDataCopy: IEmergency;
@@ -21,7 +21,7 @@ export class EmergencyServicesService {
     private PstnServiceAddressService,
     private PstnSetupStatesService,
     private PstnSetup,
-    private PstnSetupService: PstnSetupService,
+    private PstnService: PstnService,
     private TerminusUserDeviceE911Service,
     private MemberService: MemberService,
     private FeatureMemberService: FeatureMemberService,
@@ -126,7 +126,7 @@ export class EmergencyServicesService {
   public validateAddress(address: IEmergencyAddress): ng.IPromise<any> {
     //Make a request if we can't get the carrierId from the model
     if (this.PstnSetup.getProviderId() === undefined) {
-      return this.PstnSetupService.getCustomer(this.Authinfo.getOrgId()).then((customer) => {
+      return this.PstnService.getCustomer(this.Authinfo.getOrgId()).then((customer) => {
         // update our model
         this.PstnSetup.setCustomerId(customer.uuid);
         this.PstnSetup.setCustomerName(customer.name);

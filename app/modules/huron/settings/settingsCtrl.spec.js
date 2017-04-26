@@ -3,7 +3,7 @@
 describe('Controller: HuronSettingsCtrl', function () {
   var $scope, $q, $httpBackend;
   var Authinfo, Notification;
-  var ExternalNumberService, PstnSetupService, ModalService;
+  var ExternalNumberService, PstnService, ModalService;
   var HuronCustomer, HuronCustomerService, ServiceSetup, CallerId, HuronConfig, InternationalDialing, VoicemailMessageAction;
   var modalDefer, customer, timezones, timezone, internalNumberRanges, languages, avrilSites;
   var sites, site, companyNumbers, cosRestrictions, customerCarriers, messageAction, countries;
@@ -15,7 +15,7 @@ describe('Controller: HuronSettingsCtrl', function () {
   beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function (_$rootScope_, _$q_, _$httpBackend_, _ExternalNumberService_, _HuronCustomerService_,
-    _PstnSetupService_, _ModalService_, _Notification_, _HuronCustomer_, _ServiceSetup_, _InternationalDialing_, _Authinfo_, _HuronConfig_,
+    _PstnService_, _ModalService_, _Notification_, _HuronCustomer_, _ServiceSetup_, _InternationalDialing_, _Authinfo_, _HuronConfig_,
     _CallerId_, _VoicemailMessageAction_, $compile, _FeatureToggleService_, _TerminusUserDeviceE911Service_, _Orgservice_) {
 
     $q = _$q_;
@@ -26,7 +26,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     Authinfo = _Authinfo_;
     Notification = _Notification_;
     ExternalNumberService = _ExternalNumberService_;
-    PstnSetupService = _PstnSetupService_;
+    PstnService = _PstnService_;
     ModalService = _ModalService_;
     ServiceSetup = _ServiceSetup_;
     InternationalDialing = _InternationalDialing_;
@@ -69,7 +69,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     spyOn(ServiceSetup, 'getAvrilSite').and.returnValue($q.resolve(avrilSites));
     spyOn(ServiceSetup, 'updateAvrilSite').and.returnValue($q.resolve());
     spyOn(ExternalNumberService, 'refreshNumbers').and.returnValue($q.resolve());
-    spyOn(PstnSetupService, 'getCustomer').and.returnValue($q.resolve());
+    spyOn(PstnService, 'getCustomer').and.returnValue($q.resolve());
     spyOn(HuronCustomerService, 'getVoiceCustomer').and.returnValue($q.resolve({
       dialPlanDetails: {
         extensionGenerated: 'false',
@@ -93,7 +93,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     spyOn(ServiceSetup, 'listCosRestrictions').and.returnValue($q.resolve(cosRestrictions));
     spyOn(ServiceSetup, 'updateCosRestriction').and.returnValue($q.resolve());
     spyOn(InternationalDialing, 'isDisableInternationalDialing').and.returnValue($q.resolve(true));
-    spyOn(PstnSetupService, 'listCustomerCarriers').and.returnValue($q.resolve(customerCarriers));
+    spyOn(PstnService, 'listCustomerCarriers').and.returnValue($q.resolve(customerCarriers));
     spyOn(ModalService, 'open').and.returnValue({
       result: modalDefer.promise,
     });

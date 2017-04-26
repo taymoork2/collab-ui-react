@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Service: PstnSetupService', function () {
+describe('Service: PstnService', function () {
 
   let suite: any = {};
   suite.customerId = '744d58c5-9205-47d6-b7de-a176e3ca431f';
@@ -104,7 +104,7 @@ describe('Service: PstnSetupService', function () {
       'Authinfo',
       'UrlConfig',
       'FeatureToggleService',
-      'PstnSetupService',
+      'PstnService',
       'PstnSetup',
       'HuronConfig',
       'CountryCodes',
@@ -120,7 +120,7 @@ describe('Service: PstnSetupService', function () {
     this.$httpBackend.verifyNoOutstandingRequest();
     this.$httpBackend = null;
     this.HuronConfig = null;
-    this.PstnSetupService = null;
+    this.PstnService = null;
     this.PstnSetup = null;
   });
 
@@ -152,7 +152,7 @@ describe('Service: PstnSetupService', function () {
   });
 
   function createCustomerV2() {
-    this.PstnSetupService.createCustomerV2(
+    this.PstnService.createCustomerV2(
       customerPayload.uuid,
       customerPayload.name,
       customerPayload.firstName,
@@ -182,20 +182,20 @@ describe('Service: PstnSetupService', function () {
   it('should update a customer\'s carrier', function () {
     this.$httpBackend.expectPUT(this.HuronConfig.getTerminusUrl() + '/customers/' + suite.customerId, updatePayload).respond(200);
 
-    this.PstnSetupService.updateCustomerCarrier(suite.customerId, suite.carrierId);
+    this.PstnService.updateCustomerCarrier(suite.customerId, suite.carrierId);
     this.$httpBackend.flush();
   });
 
   it('should get a customer', function () {
     this.$httpBackend.expectGET(this.HuronConfig.getTerminusUrl() + '/customers/' + suite.customerId).respond(customer);
 
-    this.PstnSetupService.getCustomer(suite.customerId);
+    this.PstnService.getCustomer(suite.customerId);
     this.$httpBackend.flush();
   });
 
   it('should retrieve available default carriers', function () {
     this.$httpBackend.expectGET(this.HuronConfig.getTerminusUrl() + '/carriers?defaultOffer=true&service=PSTN').respond(200);
-    this.PstnSetupService.listDefaultCarriers();
+    this.PstnService.listDefaultCarriers();
     this.$httpBackend.flush();
   });
 
@@ -203,7 +203,7 @@ describe('Service: PstnSetupService', function () {
     this.$httpBackend.expectGET(this.HuronConfig.getTerminusUrl() + '/resellers/' + suite.partnerId + '/carriers').respond(resellerCarrierList);
     this.$httpBackend.expectGET(this.HuronConfig.getTerminusUrl() + '/carriers/' + suite.carrierId).respond(carrierIntelepeer);
 
-    let promise = this.PstnSetupService.listResellerCarriers();
+    let promise = this.PstnService.listResellerCarriers();
     promise.then(function (carrierList) {
       expect(carrierList).toContain(jasmine.objectContaining({
         vendor: 'INTELEPEER',
@@ -215,7 +215,7 @@ describe('Service: PstnSetupService', function () {
   it('should retrieve a customer\'s carrier', function () {
     this.$httpBackend.expectGET(this.HuronConfig.getTerminusUrl() + '/customers/' + suite.customerId + '/carriers').respond(customerCarrierList);
     this.$httpBackend.expectGET(this.HuronConfig.getTerminusUrl() + '/carriers/' + suite.carrierId).respond(carrierIntelepeer);
-    let promise = this.PstnSetupService.listCustomerCarriers(suite.customerId);
+    let promise = this.PstnService.listCustomerCarriers(suite.customerId);
     promise.then(function (carrierList) {
       expect(carrierList).toContain(jasmine.objectContaining({
         vendor: 'INTELEPEER',
@@ -230,7 +230,7 @@ describe('Service: PstnSetupService', function () {
     this.$httpBackend.expectPOST(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/ports', portOrderV2PstnPayload).respond(201);
     this.$httpBackend.expectPOST(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/ports', portOrderTfnPayload).respond(201);
     let portOrderData = _.cloneDeep(portOrderPayload);
-    let promise = this.PstnSetupService.portNumbers(suite.customerId, suite.carrierId, portOrderData.numbers);
+    let promise = this.PstnService.portNumbers(suite.customerId, suite.carrierId, portOrderData.numbers);
     //verify the logic to split the ports
     promise.then(function () {
       expect(portOrderData.numbers.length).toEqual(1);
@@ -241,27 +241,27 @@ describe('Service: PstnSetupService', function () {
   it('should make a block order', function () {
     this.Authinfo.isPartner.and.returnValue(true);
     this.$httpBackend.expectPOST(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/blocks', blockOrderPayload).respond(201);
-    this.PstnSetupService.orderBlock(suite.customerId, suite.carrierId, blockOrderPayload.npa, blockOrderPayload.quantity);
+    this.PstnService.orderBlock(suite.customerId, suite.carrierId, blockOrderPayload.npa, blockOrderPayload.quantity);
     this.$httpBackend.flush();
   });
 
   it('should make a block order with nxx', function () {
     this.Authinfo.isPartner.and.returnValue(false);
     this.$httpBackend.expectPOST(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/blocks', blockOrderPayloadWithNxx).respond(201);
-    this.PstnSetupService.orderBlock(suite.customerId, suite.carrierId, blockOrderPayloadWithNxx.npa, blockOrderPayloadWithNxx.quantity, blockOrderPayloadWithNxx.sequential, blockOrderPayloadWithNxx.nxx);
+    this.PstnService.orderBlock(suite.customerId, suite.carrierId, blockOrderPayloadWithNxx.npa, blockOrderPayloadWithNxx.quantity, blockOrderPayloadWithNxx.sequential, blockOrderPayloadWithNxx.nxx);
     this.$httpBackend.flush();
   });
 
   it('should make a number order', function () {
     this.$httpBackend.expectPOST(this.HuronConfig.getTerminusUrl() + '/customers/' + suite.customerId + '/carriers/' + suite.carrierId + '/did/order', pstnOrderPayload).respond(201);
-    this.PstnSetupService.orderNumbers(suite.customerId, suite.carrierId, orderPayload.numbers);
+    this.PstnService.orderNumbers(suite.customerId, suite.carrierId, orderPayload.numbers);
     this.$httpBackend.flush();
   });
 
   it('should list pending orders', function () {
     this.$httpBackend.expectGET(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders?status=PENDING&type=PSTN').respond(customerOrderList);
     this.$httpBackend.expectGET(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders?status=PENDING&type=PORT').respond([]);
-    let promise = this.PstnSetupService.listPendingOrders(suite.customerId);
+    let promise = this.PstnService.listPendingOrders(suite.customerId);
     promise.then(function (orderList) {
       expect(angular.equals(orderList, customerOrderList)).toEqual(true);
     });
@@ -270,7 +270,7 @@ describe('Service: PstnSetupService', function () {
 
   it('should get a single order', function () {
     this.$httpBackend.expectGET(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/' + suite.orderId).respond(customerV2Order);
-    let promise = this.PstnSetupService.getOrder(suite.customerId, suite.orderId);
+    let promise = this.PstnService.getOrder(suite.customerId, suite.orderId);
     promise.then(function (order) {
       expect(angular.equals(order, customerV2Order)).toEqual(true);
     });
@@ -282,7 +282,7 @@ describe('Service: PstnSetupService', function () {
     this.$httpBackend.expectGET(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders?status=PENDING&type=PORT').respond([]);
     this.$httpBackend.expectGET(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/' + '29c63c1f-83b0-42b9-98ee-85624e4c7408').respond(customerV2Order);
     this.$httpBackend.expectGET(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/' + '29c63c1f-83b0-42b9-98ee-85624e4c7409').respond(customerBlockOrder);
-    let promise = this.PstnSetupService.listPendingNumbers(suite.customerId);
+    let promise = this.PstnService.listPendingNumbers(suite.customerId);
     promise.then(function (numbers) {
       expect(numbers).toContain(jasmine.objectContaining({
         pattern: '5125934450',
@@ -300,7 +300,7 @@ describe('Service: PstnSetupService', function () {
     this.$httpBackend.expectGET(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/' + 'f950f0d4-bde8-4b0d-8762-d306655f24ed').respond(pstnNumberOrder);
     this.$httpBackend.expectGET(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/' + '8b443bec-c535-4c2d-bebb-6293122d825a').respond(pstnBlockOrder);
     this.$httpBackend.expectGET(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/' + '62afd8be-087c-4987-b459-badc33cf964f').respond(pstnPortOrder);
-    let promise = this.PstnSetupService.getFormattedNumberOrders(suite.customerId);
+    let promise = this.PstnService.getFormattedNumberOrders(suite.customerId);
     promise.then(function (numbers) {
       expect(numbers).toContain(jasmine.objectContaining(acceptedOrder[0]));
       expect(numbers).toContain(jasmine.objectContaining(acceptedOrder[1]));
@@ -309,31 +309,31 @@ describe('Service: PstnSetupService', function () {
   });
 
   it('should get translated order status message', function () {
-    let translated = this.PstnSetupService.translateStatusMessage(pendingOrder[0]);
+    let translated = this.PstnService.translateStatusMessage(pendingOrder[0]);
     expect(translated).toEqual('pstnSetup.orderStatus.trialStatus');
   });
 
   it('should get original order status message since it does not exist in translations', function () {
-    let translated = this.PstnSetupService.translateStatusMessage({
+    let translated = this.PstnService.translateStatusMessage({
       statusMessage: 'This should not be translated',
     });
     expect(translated).toEqual('This should not be translated');
   });
 
   it('should not get translated order status message since status is None', function () {
-    let translated = this.PstnSetupService.translateStatusMessage(orders[3]);
+    let translated = this.PstnService.translateStatusMessage(orders[3]);
     expect(translated).toEqual(undefined);
   });
 
   it('should displayBatchIdOnly order status message since status includes Batch id = None', function () {
-    let translated = this.PstnSetupService.translateStatusMessage(orders[5]);
+    let translated = this.PstnService.translateStatusMessage(orders[5]);
     expect(translated).toEqual('370827,370829');
   });
 
   describe('getCarrierTollFreeInventory', function () {
     it('should call GET on Terminus V2 carrier number count API and query for toll free numbers', function () {
       this.$httpBackend.expectGET(this.HuronConfig.getTerminusV2Url() + '/carriers/' + suite.carrierId + '/numbers/count?numberType=TOLLFREE').respond(200);
-      this.PstnSetupService.getCarrierTollFreeInventory(suite.carrierId);
+      this.PstnService.getCarrierTollFreeInventory(suite.carrierId);
       this.$httpBackend.flush();
     });
   });
@@ -341,7 +341,7 @@ describe('Service: PstnSetupService', function () {
   describe('searchCarrierTollFreeInventory', function () {
     it('should call the Terminus V2 carrier number API and query for toll free numbers', function () {
       this.$httpBackend.expectGET(this.HuronConfig.getTerminusV2Url() + '/carriers/' + suite.carrierId + '/numbers?numberType=TOLLFREE').respond(200);
-      this.PstnSetupService.searchCarrierTollFreeInventory(suite.carrierId);
+      this.PstnService.searchCarrierTollFreeInventory(suite.carrierId);
       this.$httpBackend.flush();
     });
     it('should call GET on Terminus V2 carrier number API and query for toll free numbers in the 800 area code', function () {
@@ -349,7 +349,7 @@ describe('Service: PstnSetupService', function () {
         npa: '800',
       };
       this.$httpBackend.expectGET(this.HuronConfig.getTerminusV2Url() + '/carriers/' + suite.carrierId + '/numbers?npa=800&numberType=TOLLFREE').respond(200);
-      this.PstnSetupService.searchCarrierTollFreeInventory(suite.carrierId, params);
+      this.PstnService.searchCarrierTollFreeInventory(suite.carrierId, params);
       this.$httpBackend.flush();
       params = undefined;
     });
@@ -358,7 +358,7 @@ describe('Service: PstnSetupService', function () {
         count: 10,
       };
       this.$httpBackend.expectGET(this.HuronConfig.getTerminusV2Url() + '/carriers/' + suite.carrierId + '/numbers?count=10&numberType=TOLLFREE').respond(200);
-      this.PstnSetupService.searchCarrierTollFreeInventory(suite.carrierId, params);
+      this.PstnService.searchCarrierTollFreeInventory(suite.carrierId, params);
       this.$httpBackend.flush();
       params = undefined;
     });
@@ -370,7 +370,7 @@ describe('Service: PstnSetupService', function () {
       this.$httpBackend.expectPOST(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/reservations').respond(201, {}, {
         location: 'http://some/url/123456',
       });
-      this.PstnSetupService.reserveCarrierTollFreeInventory(suite.customerId, suite.carrierId, onlyTollFreeNumbers, isCustomerExists);
+      this.PstnService.reserveCarrierTollFreeInventory(suite.customerId, suite.carrierId, onlyTollFreeNumbers, isCustomerExists);
       this.$httpBackend.flush();
       isCustomerExists = false;
     });
@@ -379,7 +379,7 @@ describe('Service: PstnSetupService', function () {
       this.$httpBackend.expectPOST(this.HuronConfig.getTerminusV2Url() + '/resellers/' + suite.partnerId + '/carriers/' + suite.carrierId + '/numbers/reservations').respond(201, {}, {
         location: 'http://some/url/123456',
       });
-      this.PstnSetupService.reserveCarrierTollFreeInventory(suite.partnerId, suite.carrierId, onlyTollFreeNumbers, isCustomerExists);
+      this.PstnService.reserveCarrierTollFreeInventory(suite.partnerId, suite.carrierId, onlyTollFreeNumbers, isCustomerExists);
       this.$httpBackend.flush();
       isCustomerExists = false;
     });
@@ -389,14 +389,14 @@ describe('Service: PstnSetupService', function () {
     it('should call DELETE on Terminus V2 customer number reservation API for existing customers', function () {
       let isCustomerExists = true;
       this.$httpBackend.expectDELETE(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/reservations/' + suite.reservationId).respond(200);
-      this.PstnSetupService.releaseCarrierTollFreeInventory(suite.customerId, suite.carrierId, onlyTollFreeNumbers, suite.reservationId, isCustomerExists);
+      this.PstnService.releaseCarrierTollFreeInventory(suite.customerId, suite.carrierId, onlyTollFreeNumbers, suite.reservationId, isCustomerExists);
       this.$httpBackend.flush();
       isCustomerExists = false;
     });
     it('should call DELETE on Terminus V2 reseller carrier reservation API for non-existing customers', function () {
       let isCustomerExists = false;
       this.$httpBackend.expectDELETE(this.HuronConfig.getTerminusV2Url() + '/resellers/' + suite.partnerId + '/numbers/reservations/' + suite.reservationId).respond(200);
-      this.PstnSetupService.releaseCarrierTollFreeInventory(suite.partnerId, suite.carrierId, onlyTollFreeNumbers, suite.reservationId, isCustomerExists);
+      this.PstnService.releaseCarrierTollFreeInventory(suite.partnerId, suite.carrierId, onlyTollFreeNumbers, suite.reservationId, isCustomerExists);
       this.$httpBackend.flush();
       isCustomerExists = false;
     });
@@ -406,7 +406,7 @@ describe('Service: PstnSetupService', function () {
     it('should call POST on Terminus V2 customer number order block API', function () {
       this.Authinfo.isPartner.and.returnValue(true);
       this.$httpBackend.expectPOST(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders/blocks', TollFreeBlockOrderPayload).respond(201);
-      this.PstnSetupService.orderTollFreeBlock(suite.customerId, suite.carrierId, TollFreeBlockOrderPayload.npa, TollFreeBlockOrderPayload.quantity);
+      this.PstnService.orderTollFreeBlock(suite.customerId, suite.carrierId, TollFreeBlockOrderPayload.npa, TollFreeBlockOrderPayload.quantity);
       this.$httpBackend.flush();
     });
   });

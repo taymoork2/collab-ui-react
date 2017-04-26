@@ -1,4 +1,4 @@
-import { PstnSetupService } from '../pstn.service';
+import { PstnService } from '../pstn.service';
 import {
   IPstnCarrierGet,
   IPstnCarrierStatic,
@@ -25,7 +25,7 @@ export class PstnProvidersCtrl implements ng.IComponentController {
   /* @ngInject */
   constructor(
     public PstnSetup,
-    private PstnSetupService: PstnSetupService,
+    private PstnService: PstnService,
     private $resource: ng.resource.IResourceService,
     private $translate: ng.translate.ITranslateService,
   ) {}
@@ -90,7 +90,7 @@ export class PstnProvidersCtrl implements ng.IComponentController {
 
     if (this.PstnSetup.isCustomerExists()) {
       //Get Customer Carriers (Most likely there is only 1, the previous selected carrier)
-      this.PstnSetupService.listCustomerCarriers(this.PstnSetup.getCustomerId()).then ( carriers => {
+      this.PstnService.listCustomerCarriers(this.PstnSetup.getCustomerId()).then ( carriers => {
         if (_.isArray(carriers) && carriers.length > 0) {
           carriers.forEach(carrier => {
             this.addCarrier(<IPstnCarrierGet> carrier);
@@ -106,7 +106,7 @@ export class PstnProvidersCtrl implements ng.IComponentController {
       });
     } else {
       //Get Reseller Carriers
-      this.PstnSetupService.listResellerCarriersV2().then(carriers => {
+      this.PstnService.listResellerCarriersV2().then(carriers => {
         if (_.isArray(carriers) && carriers.length > 0) {
           carriers.forEach(carrier => {
             this.addCarrier(<IPstnCarrierGet> carrier);
@@ -124,7 +124,7 @@ export class PstnProvidersCtrl implements ng.IComponentController {
   }
 
   private getCarriersNetworkDefault() {
-    this.PstnSetupService.listDefaultCarriersV2().then ( carriers => {
+    this.PstnService.listDefaultCarriersV2().then ( carriers => {
       carriers.forEach(carrier => {
         this.addCarrier(<IPstnCarrierGet> carrier);
       });
@@ -148,7 +148,7 @@ export class PstnProvidersCtrl implements ng.IComponentController {
       }
     }
     //Get and add carrier capabilities
-    this.PstnSetupService.getCarrierCapabilities(carrier.uuid).then( (capabilities: Array<IPstnCarrierCapability>) => {
+    this.PstnService.getCarrierCapabilities(carrier.uuid).then( (capabilities: Array<IPstnCarrierCapability>) => {
       pstnCarrier.setCapabilities(capabilities);
     });
   }
