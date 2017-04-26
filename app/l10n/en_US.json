@@ -1441,6 +1441,7 @@
     "fieldValidationFailed": "Errors exist on the page.  Please correct and try again.",
     "singleNumberRangeError": "Extension Ranges cannot begin and end with the same number.",
     "mapCompanyVoicemailToExternalNumberError": "Existing company voicemail number was not found in list of company direct lines.",
+    "mediaOnHold": "Company Media on Hold",
     "voicemailToEmailLabel": "Voicemail to Email",
     "EmailNotificationAttached": "Email Notification with Attachment",
     "EmailNotificationWithoutAttached": "Email Notification without Attachment",
@@ -3802,6 +3803,10 @@
     "forwardBusyNoAnswerTimerSeconds": "Seconds",
     "forwardBusyNoAnswerTimerDescription": "Time before call is forwarded due to no answer",
     "ringDurationTimer.validation.error": "Must be a number between 1 and 300"
+  },
+  "mediaOnHoldPanel": {
+    "title": "Media on Hold",
+    "mediaManager": "Media Manager"
   },
   "multipleCalls": {
     "title": "Simultaneous Calls",

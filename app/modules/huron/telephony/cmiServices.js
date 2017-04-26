@@ -44,6 +44,7 @@
     .factory('DirectoryNumberUserService', DirectoryNumberUserService)
     .factory('DirectoryNumberSipEndPointService', DirectoryNumberSipEndPointService)
     .factory('SipEndpointDirectoryNumberService', SipEndpointDirectoryNumberService)
+    .factory('MediaManagerService', MediaManagerService)
     .factory('DateFormatService', DateFormatService)
     .factory('TimeFormatService', TimeFormatService)
     .factory('TimeZoneService', TimeZoneService)
@@ -442,6 +443,24 @@
     }, {
       update: {
         method: 'PUT',
+      },
+    });
+  }
+
+  /* @ngInject */
+  function MediaManagerService($resource, HuronConfig) {
+    return $resource(HuronConfig.getMmsUrl() + '/organizations/:orgId/mohPrompts', {
+      orgId: '@orgId',
+    }, {
+      get: {
+        method: 'GET',
+        isArray: true,
+      },
+      save: {
+        method: 'POST',
+        headers: {
+          'Access-Control-Expose-Headers': 'Location',
+        },
       },
     });
   }
