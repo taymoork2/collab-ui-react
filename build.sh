@@ -110,7 +110,7 @@ function do_webpack {
     local webpack_exit_code
     export npm_lifecycle_event="build"
     while true; do
-        time nice -10 webpack --bail --profile --env.nolint --env.noprogress
+        time nice -10 webpack --bail --profile --env.nolint --env.noprogress --devtool source-map
         webpack_exit_code=$?
         if [ "$webpack_exit_code" -ne 132 ] && \
             [ "$webpack_exit_code" -ne 137 ] && \
@@ -176,6 +176,7 @@ rm -f wx2-admin-web-client.*.tar.gz
 
 # important: we untar with '--strip-components=1', so use 'dist/*' and NOT './dist/*'
 tar -zcvf "$APP_ARCHIVE" dist/*
+tar -zcvf "$SOURCE_MAP_ARCHIVE" dist-source-map/*
 tar -zcvf "$COVERAGE_ARCHIVE" ./test/coverage/
 
 # archive e2e test results

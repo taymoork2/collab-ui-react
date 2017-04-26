@@ -5,6 +5,7 @@
 var HttpsProxyAgent = require("https-proxy-agent");
 var fs = require('fs');
 var appConfig = require('./config/config');
+var hostnameConfig = require('./app/config/hostname.config');
 var processEnvUtil = require('./utils/processEnvUtil')();
 var args = require('yargs').argv;
 var _ = require('lodash');
@@ -313,10 +314,10 @@ function mkProxyAgent() {
 
 function getLaunchUrl(args) {
   if (args.prod) {
-    return 'https://admin.ciscospark.com';
+    return 'https://' + hostnameConfig.PRODUCTION;
   }
   if (args.int) {
-    return 'https://int-admin.ciscospark.com';
+    return 'https://' + hostnameConfig.INTEGRATION;
   }
-  return 'http://127.0.0.1:8000';
+  return 'http://' + hostnameConfig.LOCAL + ':8000';
 }

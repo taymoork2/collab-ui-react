@@ -1,4 +1,5 @@
 APP_ARCHIVE=wx2-admin-web-client.$BUILD_TAG.tar.gz
+SOURCE_MAP_ARCHIVE=wx2-admin-web-client.$BUILD_TAG.source-map.tar.gz
 BUILD_DEPS_ARCHIVE=build-deps.tar
 COVERAGE_ARCHIVE=coverage.tar.gz
 E2E_TEST_ENV_VARS_FILE=e2e-test-env-vars

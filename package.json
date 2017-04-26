@@ -15,7 +15,7 @@
     "build": "npm run clean && webpack --bail --progress --profile",
     "clean-install": "npm cache clean && rimraf node_modules && npm install",
     "clean-test": "rimraf ./test/results ./test/coverage && npm test",
-    "clean": "rimraf dist build",
+    "clean": "rimraf dist dist-source-map build",
     "commit": "git-cz",
     "coverage-report": "node ./utils/coverage-report",
     "debug-webpack": "node --inspect --debug-brk ./node_modules/.bin/webpack --env.no-devtool",
