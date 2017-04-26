@@ -113,6 +113,7 @@
     "query-command-supported": "~1.0.0",
     "typeahead.js": "~0.10.2",
     "ui-router-extras": "^0.1.2",
+    "uuid": "^3.0.1",
     "x2js": "git+https://github.com/abdmob/x2js.git#v1.2.0"
   },
   "devDependencies": {
@@ -212,7 +213,6 @@
     "typescript": "~2.2.1",
     "typings": "^2.1.0",
     "unparse-args": "^1.1.0",
-    "uuid": "^2.0.2",
     "webpack": "^2.2.1",
     "webpack-bundle-analyzer": "^2.3.1",
     "webpack-dev-middleware": "^1.6.1",
