@@ -5635,11 +5635,17 @@
     "customBrandingExample": "Custom Branding Examples",
     "companyLogo": "{{name}} Logo",
     "brandingExampleIntro": "After uploading, your logo will automatically be sized and appear as shown in the following examples.",
+    "uploadLogo": "Upload logo",
     "logoOnAbout": "{{name}} example logo shown on the Spark About tab.",
     "logoOnSupprt": "{{name}} example logo shown on the Spark Support tab.",
     "logoOnWebEx": "{{name}} example logo shown on the Webex Site.",
     "partner": "Partner",
-    "customer": "Customer"
+    "customer": "Customer",
+    "alt": {
+      "about": "Custom Branding Example About Image",
+      "support": "Custom Branding Example Support Image",
+      "webex": "Custom Branding Example WebEx Image"
+    }
   },
   "fileUpload": {
     "uploading": "Uploading File",
