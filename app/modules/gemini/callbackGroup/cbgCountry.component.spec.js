@@ -31,7 +31,7 @@ describe('component: cbgCountry', function () {
   function initSpies() {
     spyOn(Notification, 'error');
     spyOn(cbgService, 'getCountries').and.returnValue($q.resolve());
-    spyOn(cbgService, 'getDownloadCountryUrl').and.returnValue($q.resolve());
+    spyOn(cbgService, 'getDownloadCountryUrl').and.returnValue('https://atlascca1.qa.webex.com');
   }
 
   function initController() {
@@ -42,10 +42,7 @@ describe('component: cbgCountry', function () {
   describe('$onInit', function () {
     function initParams() {
       var mockCountry = preData.getCountries;
-      var mockDownload = preData.common;
-      mockDownload.content.data.body = 'https://atlascca1.qa.webex.com';
       cbgService.getCountries.and.returnValue($q.resolve(mockCountry));
-      cbgService.getDownloadCountryUrl.and.returnValue($q.resolve(mockDownload));
     }
 
     it('should initialization', function () {

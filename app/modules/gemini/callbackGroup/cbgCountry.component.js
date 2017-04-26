@@ -59,9 +59,7 @@
     }
 
     function getDownloadUrl() {
-      cbgService.getDownloadCountryUrl().then(function (res) {
-        vm.downloadUrl = _.get(res.content, 'data.body');
-      });
+      vm.downloadUrl = cbgService.getDownloadCountryUrl();
     }
 
     function updateOptions() {
