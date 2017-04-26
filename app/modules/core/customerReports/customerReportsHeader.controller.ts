@@ -8,6 +8,12 @@ class CustomerReportsHeaderCtrl {
     private MediaServiceActivationV2,
     private WebExApiGatewayService,
   ) {
+    if (Authinfo.isCare()) {
+      this.headerTabs.push({
+        title: $translate.instant('reportsPage.careTab'),
+        state: 'reports.care',
+      });
+    }
     this.$q.all(this.promises).then((features: any): void => {
       if (features.isMfEnabled) {
         if (features.mf) {
@@ -26,12 +32,6 @@ class CustomerReportsHeaderCtrl {
             state: 'reports.metrics',
           });
         }
-      }
-      if (Authinfo.isCare()) {
-        this.headerTabs.push({
-          title: $translate.instant('reportsPage.careTab'),
-          state: 'reports.care',
-        });
       }
       this.headerTabs.push({
         title: $translate.instant('reportsPage.usageReports.usageReportTitle'),
