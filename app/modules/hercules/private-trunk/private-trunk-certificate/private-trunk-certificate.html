@@ -61,7 +61,7 @@
         <div class="columns large-6 medium-6 small-6">
           <div class="box multibox-margin">
             <p>
-              <span class="span-filename" >{{$ctrl.getFileName(cert.certId)}}</span>
+              <span class="span-filename" >{{cert.commonName}}</span>
               <i class="icon icon-close close-icon-align" ng-click="$ctrl.deleteCert(cert.certId)"></i>
             </p>
             <div ng-repeat="(key, value) in cert" ng-if="key!=='certId'">

@@ -7156,7 +7156,8 @@
           "invalidUniqueEntry": "This SIP Destination address already exists",
           "hybridRequired": "Required: Expressway-E for Hybrid Call Connect was not found",
           "resourceError": "Add Private trunk resource error",
-          "privateTrunkError": "Add Private trunk Domain error"
+          "privateTrunkError": "Add Private trunk Domain error",
+          "certUploadError": "Certificate Upload error"
         },
         "prereqTitle": "Enterprise Private Trunking prerequisites",
         "setupTitle": "Set up Enterprise Private Trunking ",

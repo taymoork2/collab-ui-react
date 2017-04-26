@@ -19,7 +19,6 @@ describe('Component: privateTrunkcertificate component', () => {
     this.$scope.certificateRadio = 'default';
     this.compileComponent('privateTrunkCertificate', {
       formattedCertList: 'formattedCertList',
-      certFileNameIdMap: 'certFileNameIdMap',
       isImporting: 'isImporting',
       onChangeFn: 'onChangeFn',
       onDeleteCertFn: 'onDeleteCertFn',

@@ -122,6 +122,7 @@
     'ngTagsInput',
     require('modules/hercules/private-trunk/prereq').default,
     require('modules/hercules/private-trunk/setup').default,
+    require('modules/hercules/private-trunk/private-trunk-certificate').default,
     require('modules/hercules/services/cert-service').default,
     require('modules/hercules/services/certificate-formatter-service').default,
     require('modules/hercules/services/hybrid-services-i18n.service').default,
