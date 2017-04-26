@@ -6,9 +6,14 @@ interface IFieldData {
   id: string;
   description: string;
   classification: string;
+  classificationUI: string;
   dataType: string;
+  dataTypeUI: string;
   translations: any;
   searchable: Boolean;
+  lastUpdated?: string;
+  publiclyAccessibleUI: string;
+  publiclyAccessible: Boolean;
 }
 
 class FieldModalCtrl implements ng.IComponentController {
@@ -21,6 +26,7 @@ class FieldModalCtrl implements ng.IComponentController {
   private dataTypeApiMap: Object;
   private classificationApiMap: Object;
   private classificationHelpTextMap: Object;
+  private publiclyAccessibleMap: Object;
 
   public dataTypeOptions: string[];
   public dataTypePlaceholder: string;
@@ -30,10 +36,12 @@ class FieldModalCtrl implements ng.IComponentController {
   public actionInProgress: Boolean = false;
 
   public existingFieldIds: string[];
+  public existingFieldData: IFieldData;
   public validators: Object;
   public validationMessages: Object;
   public callback: Function;
   public dismiss: Function;
+  public createMode: Boolean;
   public fieldData: IFieldData;
 
   /* @ngInject */
@@ -70,6 +78,11 @@ class FieldModalCtrl implements ng.IComponentController {
     this.classificationHelpTextMap[this.encrypted] = this.$translate.instant('context.dictionary.fieldPage.encryptedHelpText');
     this.classificationHelpTextMap[this.pii] = this.$translate.instant('context.dictionary.fieldPage.PiiEncryptedHelpText');
 
+    //map publiclyAccessible to value that matches by api
+    this.publiclyAccessibleMap = {};
+    this.publiclyAccessibleMap[this.$translate.instant('context.dictionary.custom')] = false;
+    this.publiclyAccessibleMap[this.$translate.instant('context.dictonary.cisco')] = true;
+
     // set up the options and placeholder for dataType
     this.dataTypeOptions = _.keys(this.dataTypeApiMap);
     this.dataTypePlaceholder = this.$translate.instant('context.dictionary.fieldPage.dataTypePlaceholder');
@@ -89,16 +102,27 @@ class FieldModalCtrl implements ng.IComponentController {
       unique: (viewValue: string) => this.uniqueIdValidation(viewValue),
     };
 
-    this.fieldData = {
-      id: '',
-      description: '',
-      classification: this.defaultClassification,
-      dataType: '',
-      translations: {
-        en_US: '',
-      },
-      searchable: false,
-    };
+    // if data with an id isn't passed in, we are in create mode
+    this.createMode = !Boolean(_.get(this.existingFieldData, 'id'));
+
+    this.fieldData = this.createMode
+      ? {
+        id: '',
+        description: '',
+        classification: '',
+        classificationUI: this.defaultClassification,
+        dataType: '',
+        dataTypeUI: '',
+        translations: {
+          en_US: '',
+        },
+        searchable: false,
+        publiclyAccessible: false,
+        publiclyAccessibleUI: '',
+      }
+      // make a copy to that changes to data isn't reflected in side panel as
+      // new data is entered by user
+      : _.cloneDeep(this.existingFieldData);
   }
 
   public create() {
@@ -118,20 +142,43 @@ class FieldModalCtrl implements ng.IComponentController {
       });
   }
 
+  public update() {
+    this.actionInProgress = true;
+    return this.ContextFieldsService.updateAndGetField(this.fixDataForApi())
+      .then(data => {
+        // need to copy the new lastUpdated timestamp so user can perform
+        // another update if they want to
+        this.fieldData.lastUpdated = data.lastUpdated;
+        // must call callback method to update field data in side panel;
+        // however, don't dismiss the modal as it will overwrite the updated field data in the side panel
+        this.callback(this.fieldData);
+        this.Notification.success('context.dictionary.fieldPage.fieldUpdateSuccess');
+        this.Analytics.trackEvent(this.Analytics.sections.CONTEXT.eventNames.CONTEXT_UPDATE_FIELD_SUCCESS);
+      }).catch(() => {
+        this.Notification.error('context.dictionary.fieldPage.fieldUpdateFailure');
+        this.Analytics.trackEvent(this.Analytics.sections.CONTEXT.eventNames.CONTEXT_UPDATE_FIELD_FAILURE);
+      }).then(() => {
+        this.actionInProgress = false;
+      });
+  }
+
   public buttonEnabled() {
     return Boolean(!this.actionInProgress &&
       this.fieldData.id &&
       this.invalidCharactersValidation(this.fieldData.id) &&
       this.uniqueIdValidation(this.fieldData.id) &&
+      this.fieldData.translations &&
       this.fieldData.translations.en_US &&
-      this.fieldData.dataType);
+      this.fieldData.dataTypeUI &&
+      this.fieldData.classificationUI);
   }
 
   public fixDataForApi() {
-    const fieldCopy = _.cloneDeep(this.fieldData);
-    fieldCopy.dataType = this.dataTypeApiMap[fieldCopy.dataType];
-    fieldCopy.classification = this.classificationApiMap[fieldCopy.classification];
-    return fieldCopy;
+    this.fieldData.dataType = this.dataTypeApiMap[this.fieldData.dataTypeUI];
+    this.fieldData.classification = this.classificationApiMap[this.fieldData.classificationUI];
+    this.fieldData.publiclyAccessible = this.publiclyAccessibleMap[this.fieldData.publiclyAccessibleUI];
+
+    return this.fieldData;
   }
 
   public invalidCharactersValidation(viewValue: string) {
@@ -146,7 +193,7 @@ class FieldModalCtrl implements ng.IComponentController {
   }
 
   public classificationOnChange() {
-    this.classificationHelpText = this.classificationHelpTextMap[this.fieldData.classification];
+    this.classificationHelpText = this.classificationHelpTextMap[this.fieldData.classificationUI];
   }
 }
 
@@ -155,6 +202,7 @@ export class FieldModalComponent implements ng.IComponentOptions {
   public templateUrl = 'modules/context/fields/modal/hybrid-context-field-modal.component.html';
   public bindings = {
     existingFieldIds: '<',
+    existingFieldData: '<',
     callback: '<',
     dismiss: '&',
   };

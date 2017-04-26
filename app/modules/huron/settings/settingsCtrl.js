@@ -50,6 +50,7 @@
     var VOICE_ONLY = 'VOICE_ONLY';
     var DEMO_STANDARD = 'DEMO_STANDARD';
     var VOICE_VOICEMAIL_AVRIL = 'VOICE_VOICEMAIL_AVRIL';
+    var VOICE_VOICEMAIL = 'VOICE_VOICEMAIL';
     var NO_VOICEMAIL_NUMBER = 'NONE';
     var INTERNATIONAL_DIALING = 'DIALINGCOSTAG_INTERNATIONAL';
     var COMPANY_CALLER_ID_TYPE = 'Company Caller ID';
@@ -68,7 +69,7 @@
     vm.avrilDialPlanUpdated = false;
     vm.avrilLanguageUpdated = false;
     vm.voicemailAvrilCustomer = false;
-    vm.isAvrilVoiceEnabled = false;
+    vm.voicemailAvrilMailboxCustomer = false;
     vm.init = init;
     vm.save = save;
     vm.resetSettings = resetSettings;
@@ -251,33 +252,13 @@
           }
         }
       },
-      singleNumberRangeCheck: function (viewValue, modelValue, scope) {
-        var value = modelValue || viewValue;
-        var result = true;
-        var beginNumber, endNumber;
-
-        if (scope.index === 0) {
-          beginNumber = value;
-          endNumber = scope.fields[2].value();
-        } else {
-          beginNumber = scope.fields[0].value();
-          endNumber = value;
-        }
-
-        if (beginNumber === endNumber) {
-          result = false;
-        } else {
-          result = true;
-        }
-        return result;
-      },
       phoneNumber: function (viewValue, modelValue) {
         var value = null;
         if (modelValue || viewValue) {
           value = (modelValue || viewValue);
         }
         if (value) {
-          return TelephoneNumberService.validateDID(value);
+          return TelephoneNumberService.validateDID(value, vm.customer.countryCode);
         } else {
           return true;
         }
@@ -407,12 +388,6 @@
                     return $translate.instant('serviceSetupModal.rangeDuplicate');
                   },
                 },
-                singleNumberRangeCheck: {
-                  expression: vm.validations.singleNumberRangeCheck,
-                  message: function () {
-                    return $translate.instant('serviceSetupModal.singleNumberRangeError');
-                  },
-                },
               },
               templateOptions: {
                 required: true,
@@ -465,12 +440,6 @@
                   expression: vm.validations.duplicate,
                   message: function () {
                     return $translate.instant('serviceSetupModal.rangeDuplicate');
-                  },
-                },
-                singleNumberRangeCheck: {
-                  expression: vm.validations.singleNumberRangeCheck,
-                  message: function () {
-                    return $translate.instant('serviceSetupModal.singleNumberRangeError');
                   },
                 },
               },
@@ -1147,7 +1116,8 @@
             } else if (siteData.disableVoicemail) {
               vm.model.site.voicemailPilotNumber = undefined;
             }
-            if (vm.voicemailAvrilCustomer && (vm.isAvrilVoiceEnabled || vm.customer.servicePackage === 'VOICE_VOICEMAIL_AVRIL')) {
+            if ((vm.voicemailAvrilCustomer && vm.customer.servicePackage === VOICE_VOICEMAIL_AVRIL)
+              || (vm.voicemailAvrilMailboxCustomer && (vm.customer.servicePackage === VOICE_VOICEMAIL && vm.model.companyVoicemail.companyVoicemailEnabled))) {
               var setupSites = ServiceSetup.sites[0];
               var currentSetupSite = vm.model.site;
 
@@ -1300,9 +1270,10 @@
     function updateCustomerServicePackage(companyVoicemailNumber) {
       var customer = {};
       if (companyVoicemailNumber && _.get(vm, 'model.site.voicemailPilotNumber') !== companyVoicemailNumber) {
-        if (vm.voicemailAvrilCustomer) {
+        if (vm.voicemailAvrilMailboxCustomer) {
+          customer.servicePackage = VOICE_VOICEMAIL;
+        } else if (vm.voicemailAvrilCustomer) {
           customer.servicePackage = VOICE_VOICEMAIL_AVRIL;
-          vm.isAvrilVoiceEnabled = true;
         } else {
           customer.servicePackage = DEMO_STANDARD;
         }
@@ -1947,7 +1918,7 @@
     }
 
     function updateVoicemailOptions() {
-      if (vm.voicemailAvrilCustomer) {
+      if (vm.voicemailAvrilCustomer || vm.voicemailAvrilMailboxCustomer) {
         var featureOptions = {
           features: {
             VM2E: false,
@@ -2062,6 +2033,10 @@
 
       FeatureToggleService.supports(FeatureToggleService.features.hRegionalTones).then(function (result) {
         vm.ftHRegionalTones = result;
+      });
+
+      FeatureToggleService.supports(FeatureToggleService.features.avrilVmMailboxEnable).then(function (result) {
+        vm.voicemailAvrilMailboxCustomer = result;
       });
 
       return $q.resolve();

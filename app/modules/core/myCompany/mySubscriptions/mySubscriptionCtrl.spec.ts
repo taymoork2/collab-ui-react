@@ -34,7 +34,6 @@ describe('Controller: MySubscriptionCtrl', function () {
     this.siteUrl = 'siteUrl';
 
     spyOn(this.ServiceDescriptor, 'getServices').and.returnValue(this.$q.when(this.data.servicesResponse));
-    spyOn(this.FeatureToggleService, 'atlasSharedMeetingsGetStatus').and.returnValue(this.$q.when(false));
     spyOn(this.FeatureToggleService, 'atlasSharedMeetingsReportsGetStatus').and.returnValue(this.$q.when(false));
     spyOn(this.OnlineUpgradeService, 'getProductInstance').and.returnValue(this.$q.when(productInstanceResponse));
     spyOn(this.Authinfo, 'getUserId').and.returnValue('12345');

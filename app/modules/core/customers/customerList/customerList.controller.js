@@ -7,7 +7,7 @@ require('./_customer-list.scss');
     .controller('CustomerListCtrl', CustomerListCtrl);
 
   /* @ngInject */
-  function CustomerListCtrl($q, $rootScope, $scope, $state, $templateCache, $translate, $window, Analytics, Authinfo, Config, ExternalNumberService, FeatureToggleService, Log, Notification, Orgservice, PartnerService, TrialService) {
+  function CustomerListCtrl($q, $scope, $state, $templateCache, $translate, $window, Analytics, Authinfo, Config, ExternalNumberService, FeatureToggleService, Log, Notification, Orgservice, PartnerService, TrialService) {
     var vm = this;
     vm.isCustomerPartner = !!Authinfo.isCustomerPartner;
     vm.isPartnerAdmin = Authinfo.isPartnerAdmin();
@@ -40,10 +40,10 @@ require('./_customer-list.scss');
     vm.getUserCountColumnText = getUserCountColumnText;
     vm.isPastGracePeriod = isPastGracePeriod;
     vm.isPstnSetup = isPstnSetup;
+    vm.exportCsv = exportCsv;
 
     vm.convertStatusToInt = convertStatusToInt;
 
-    vm.exportType = $rootScope.typeOfExport.CUSTOMER;
     vm.activeFilter = 'all';
     vm.filterList = _.debounce(filterAction, vm.timeoutVal);
 
@@ -698,6 +698,14 @@ require('./_customer-list.scss');
 
     function isPartnerOrg(rowData) {
       return rowData === Authinfo.getOrgId();
+    }
+
+    // export the list as a CSV
+    function exportCsv() {
+      return PartnerService.exportCSV(vm.isCareEnabled)
+        .catch(function (response) {
+          Notification.errorResponse(response, 'errors.csvError');
+        });
     }
 
     function setTrial(trial) {

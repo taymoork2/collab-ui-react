@@ -6,6 +6,7 @@ import forEach = require('lodash/forEach');
 import find = require('lodash/find');
 import take = require('lodash/take');
 import some = require('lodash/some');
+import { HybridServicesI18NService } from 'modules/hercules/services/hybrid-services-i18n.service';
 
 class UserStatusHistoryCtrl implements ng.IComponentController {
   public readonly numEntriesToShow = 20;
@@ -20,7 +21,7 @@ class UserStatusHistoryCtrl implements ng.IComponentController {
     private $stateParams,
     private Authinfo,
     private Notification: Notification,
-    private HybridServicesUtils,
+    private HybridServicesI18NService: HybridServicesI18NService,
     private FusionClusterService,
     private ResourceGroupService,
   ) {
@@ -44,7 +45,7 @@ class UserStatusHistoryCtrl implements ng.IComponentController {
 
   private decorateEntry(e) {
     let entry = e.entry;
-    entry.timestamp = this.HybridServicesUtils.getLocalTimestamp(e.time, 'lll (z)');
+    entry.timestamp = this.HybridServicesI18NService.getLocalTimestamp(e.time, 'lll (z)');
     if (entry.type === 'SetUserStatus') {
       entry.payload.entitled = true;
       entry.status = this.USSService.decorateWithStatus(entry.payload);

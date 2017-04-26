@@ -6,16 +6,9 @@
     .controller('GemCtrl', GemCtrl);
 
   /* @ngInject */
-  function GemCtrl(FeatureToggleService, $state) {
+  function GemCtrl() {
     init();
 
-    function init() {
-      FeatureToggleService.supports(FeatureToggleService.features.gemCCA)
-        .then(function (feature) {
-          if (!feature) {
-            $state.go('404');
-          }
-        });
-    }
+    function init() {}
   }
 })();

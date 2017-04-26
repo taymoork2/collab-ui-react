@@ -105,7 +105,7 @@
         </ul>
       </div>
     </cs-sp-section>
-    <uc-customer-administrator-overview ng-if="customerOverview.isPartnerAdmin"></uc-customer-administrator-overview>
+    <uc-customer-administrator-overview ng-if="customerOverview.isPartnerAdmin && !customerOverview.isOwnOrg()"></uc-customer-administrator-overview>
     <button
       id="deleteCustomer"
       class="btn btn--link btn--negative btn--delete"

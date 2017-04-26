@@ -16,10 +16,11 @@
     var aaCENumberStatus = false;
     var aaMediaUploadStatus = false;
     var aaQueueSettingsStatus = false;
-    var routeQueueToggle = false;
     var mediaUploadToggle = false;
     var callerInputToggle = false;
     var routeSIPAddressToggle = false;
+    var dynAnnounceToggle = false;
+    var returnedCallerToggle = false;
     var uniqueId = 0;
 
     var invalidList = {};
@@ -36,12 +37,14 @@
       setQueueSettingsStatus: setQueueSettingsStatus,
       setMediaUploadToggle: setMediaUploadToggle,
       setCallerInputToggle: setCallerInputToggle,
-      setRouteQueueToggle: setRouteQueueToggle,
       setRouteSIPAddressToggle: setRouteSIPAddressToggle,
-      isRouteQueueToggle: isRouteQueueToggle,
+      setDynAnnounceToggle: setDynAnnounceToggle,
+      setReturnedCallerToggle: setReturnedCallerToggle,
+      isDynAnnounceToggle: isDynAnnounceToggle,
       isCallerInputToggle: isCallerInputToggle,
       isMediaUploadToggle: isMediaUploadToggle,
       isRouteSIPAddressToggle: isRouteSIPAddressToggle,
+      isReturnedCallerToggle: isReturnedCallerToggle,
       isValid: isValid,
       setIsValid: setIsValid,
       getInvalid: getInvalid,
@@ -132,10 +135,9 @@
       aaCENumberStatus = status;
     }
 
-    function setRouteQueueToggle(status) {
-      routeQueueToggle = status;
+    function setDynAnnounceToggle(status) {
+      dynAnnounceToggle = status;
     }
-
     function setQueueSettingsStatus(status) {
       aaQueueSettingsStatus = status;
     }
@@ -152,11 +154,16 @@
       routeSIPAddressToggle = status;
     }
 
-    /**
-     * Will check the toggle status for Queue which is set while aaPhoneMenuCtrl
-     */
-    function isRouteQueueToggle() {
-      return routeQueueToggle;
+    function setReturnedCallerToggle(status) {
+      returnedCallerToggle = status;
+    }
+
+    function isReturnedCallerToggle() {
+      return returnedCallerToggle;
+    }
+
+    function isDynAnnounceToggle() {
+      return dynAnnounceToggle;
     }
 
     function isMediaUploadToggle() {

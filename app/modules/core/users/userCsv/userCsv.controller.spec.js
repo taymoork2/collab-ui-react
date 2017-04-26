@@ -736,7 +736,6 @@ describe('userCsv.controller', function () {
       this.controller.startUpload();
       this.$scope.$apply();
       this.$timeout.flush();
-      expect(this.controller.hasResourceGroupFeatureToggle).toBeTruthy();
       expect(this.controller.handleHybridServicesResourceGroups).toBeTruthy();
       expect(this.controller.model.numTotalUsers).toEqual(1);
       expect(this.controller.model.userErrorArray.length).toEqual(0);

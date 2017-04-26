@@ -1,0 +1,21 @@
+
+<cs-sp-buttons ng-if="$ctrl.showButtons">
+  <button class="btn--primary btn-save" cs-btn loading="saving" ng-click="$ctrl.save()">
+    <span translate="common.save"></span>
+  </button>
+  <button ng-disabled="saving" translate="common.cancel" ng-click="$ctrl.cancel()"></button>
+</cs-sp-buttons>
+
+<cs-sp-container>
+  <cs-sp-section>
+    <div class="section-title-row">
+      <span class="section-name">Enable</span>
+      <cs-toggle-switch toggle-id="cmcEntitledToggle" ng-model="$ctrl.entitled" cs-change="$ctrl.dataChanged()" size="small">
+      </cs-toggle-switch>
+    </div>
+    <div class="section-title-row">
+      <span class="section-name">Mobile Number</span>
+      <input cs-input type="text" placeholder="Mobile" ng-model="$ctrl.mobileNumber" ng-change="$ctrl.dataChanged()"/>
+    </div>
+  </cs-sp-section>
+</cs-sp-container>

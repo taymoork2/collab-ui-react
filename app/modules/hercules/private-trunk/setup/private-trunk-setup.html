@@ -1,10 +1,10 @@
 <div class="modal-header">
-  <button type="button" class="close" ng-click="$ctrl.dismiss()">
+  <button type="button" class="close" ng-click="$ctrl.dismiss()" ng-disabled= "$ctrl.isSetup" >
     <span class="sr-only" translate="common.close"></span>
   </button>
   <h3 class="modal-title" translate="servicesOverview.cards.privateTrunk.setupTitle"></h5>
 </div>
-<div ng-form="privateTrunkSetupForm" class="modal-body">
+<div ng-form="$ctrl.privateTrunkSetupForm" class="modal-body">
   <private-trunk-domain ng-if="$ctrl.currentStepIndex === 1"
     domain-selected="$ctrl.domainSelected"
     domains="$ctrl.domains"
@@ -16,14 +16,27 @@
     on-change-fn="$ctrl.setResources(privateTrunkResource)">
   </private-trunk-destination>
   <private-trunk-certificate ng-if="$ctrl.currentStepIndex === 3"
+    is-certificate-default = "$ctrl.isCertificateDefault"
+    is-importing = "$ctrl.isImporting"
     formatted-cert-list="$ctrl.formattedCertList"
     cert-file-name-id-map="$ctrl.certFileNameIdMap"
     file-name="$ctrl.fileName"
-    on-change-fn="$ctrl.uploadFile(file, fileName)">
+    on-change-fn="$ctrl.uploadFile(file, fileName)"
+    on-delete-cert-fn="$ctrl.deleteCertModal(certId)"
+    on-change-option-fn="$ctrl.changeOption(isCertificateDefault)">
   </private-trunk-certificate>
+  <private-trunk-setup-complete
+    verified-domains="$ctrl.selectedVerifiedDomains"
+    ng-if="$ctrl.currentStepIndex === 4">
+  </private-trunk-setup-complete>
 </div>
 <div class="modal-footer">
-  <button class="btn btn-default" ng-click="$ctrl.dismiss()" ng-if="$ctrl.currentStepIndex===1" translate="common.close"></button>
-  <button class="btn btn-default" ng-click="$ctrl.previousStep()" ng-if="$ctrl.currentStepIndex > 1" translate="common.back"></button>
-  <button class="btn btn-primary" ng-disabled="!$ctrl.isNextButton() || privateTrunkSetupForm.$invalid" ng-click="$ctrl.nextStep()" translate="common.next"></button>
+  <button class="btn btn-default" ng-click="$ctrl.dismiss()" ng-if="$ctrl.currentStepIndex === 1" translate="common.close"></button>
+  <button class="btn btn-default" ng-click="$ctrl.previousStep()" ng-if="$ctrl.currentStepIndex > 1 && $ctrl.currentStepIndex < 4" ng-disabled= "$ctrl.isSetup" translate="common.back"></button>
+  <button class="btn btn-primary" ng-click="$ctrl.nextStep()" ng-disabled="!$ctrl.isNextButton()"  ng-if="$ctrl.currentStepIndex < 3" translate="common.next"></button>
+  <button id="setupPrivateTrunkButton" class="btn btn-primary" type="button" cs-btn ng-if="$ctrl.isFinish()" ng-disabled="!$ctrl.isNextButton()" loading="$ctrl.isSetup" ng-click="$ctrl.setupPrivateTrunk()">
+    <span translate="common.finish"></span>
+  </button>
+  <button class="btn btn-primary" ng-if="$ctrl.currentStepIndex === 4" ng-click="$ctrl.setupComplete()" translate="common.done"></button>
+
 </div>

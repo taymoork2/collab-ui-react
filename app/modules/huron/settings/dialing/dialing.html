@@ -9,7 +9,7 @@
       ng-model="$ctrl.dialingHabit"
       ng-change="$ctrl.onDialingHabitChanged(value)">
       <label class="cs-radio" for="nationalDialing"><span translate="serviceSetupModal.notSimplifiedDialingTitle"></span></label>
-      <p class="cs-input__help-text">{{$ctrl.exampleDialingString}}</p>
+      <p class="cs-input__help-text">{{$ctrl.exampleDialingWithOneString}}</p>
       <div ng-if="$ctrl.supportsSimplifiedNationalDialing" class="cs-input-group cs-input-checkbox cs-checkbox-group indent-area-code">
         <input
           type="checkbox"
@@ -19,7 +19,7 @@
           ng-change="$ctrl.onRegionCodeChanged()"
           ng-disabled="$ctrl.dialingHabit === 'local'">
           <label class="cs-checkbox" for="requireOneToDial"><span translate="serviceSetupModal.requireOneToDialLabel"></span></label>
-          <p class="cs-input__help-text">{{$ctrl.exampleDialingWithOneString}}</p>
+          <p class="cs-input__help-text">{{$ctrl.exampleDialingString}}</p>
       </div>
     <input
       type="radio"

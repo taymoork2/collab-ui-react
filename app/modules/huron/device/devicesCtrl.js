@@ -33,7 +33,7 @@
         vm.generateCodeIsDisabled = false;
       });
 
-      FeatureToggleService.cloudberryLyraConfigGetStatus().then(function (feature) {
+      FeatureToggleService.csdmPlaceUpgradeChannelGetStatus().then(function (feature) {
         if (feature) {
           CsdmUpgradeChannelService.getUpgradeChannelsPromise().then(function (channels) {
             vm.showDeviceSettings = channels.length > 1;

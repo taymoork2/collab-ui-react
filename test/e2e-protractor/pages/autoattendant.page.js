@@ -134,7 +134,7 @@ var AutoAttendantPage = function () {
 
   this.decisionFirst = element.all(by.css('div.aa-panel-body[name="Decision"]')).all(by.cssContainingText("h3", "If")).first();
   this.decisionIf = element(by.css('div.aa-panel-body[name="Decision"]')).element(by.css('select[name="ifDecision"] + div span.select-toggle'));
-  this.decisionIfDropDownOptions = element(by.css('div.aa-panel-body[name="Decision"]')).element(by.css('select[name="ifDecision"] + div div.dropdown-menu')).all(by.tagName('li')).get(1);
+  this.decisionIfDropDownOptions = element(by.css('div.aa-panel-body[name="Decision"]')).element(by.css('select[name="ifDecision"] + div div.dropdown-menu')).all(by.tagName('li')).get(2);
   this.decisionCallerNumberTextArea = element.all(by.name('callerNumberCalled')).first();
 
   this.decisionThen = element(by.css('div.aa-panel-body[name="Decision"]')).element(by.css('select[name="thenDecision"] + div span.select-toggle'));
@@ -304,10 +304,8 @@ var AutoAttendantPage = function () {
   this.dialBylanguageDropDownOptions = element(by.css('div.aa-panel-body[name="Dial by Extension"]')).element(by.css('select[name="languageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
   this.dialByMessageVoice = element(by.css('div.aa-panel-body[name="Dial by Extension"]')).element(by.css('select[name="voiceSelect"] + div span.select-toggle'));
   this.dialByMessageVoiceOptions = element(by.css('div.aa-panel-body[name="Dial by Extension"]')).element(by.css('select[name="voiceSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
-
   this.trash = element.all(by.css('.aa-trash-icon')).last();
-
-  this.timeZone = element(by.name('aaScheduleModalCtrl.timeZoneForm'));
+  this.timeZone = element(by.css('#timeZoneInput > div > div > span.select-toggle'));
   this.firstTimeZoneElement = element(by.name('aaScheduleModalCtrl.timeZoneForm')).element(by.css('div.dropdown-menu')).all(by.tagName('li')).first();
   this.aaTimeZone = element(by.name('aaTimeZone'));
   this.schedule = element(by.css('.aa-schedule-container')).element(by.css('.aa-edit-icon'));

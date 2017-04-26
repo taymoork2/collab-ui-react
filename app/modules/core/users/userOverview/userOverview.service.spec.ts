@@ -296,10 +296,10 @@ describe('Service: UserOverviewService', () => {
         let languageCode = 'en_US';
         let languageLabel = 'English (United States)';
         let promise = this.UserOverviewService.getUserPreferredLanguage(languageCode)
-          .then(userPreferredLanguage => {
-            expect(userPreferredLanguage).toBeDefined();
-            expect(userPreferredLanguage.value).toEqual(languageCode);
-            expect(userPreferredLanguage.label).toEqual(languageLabel);
+          .then(userLanguageDetails => {
+            expect(userLanguageDetails).toBeDefined();
+            expect(userLanguageDetails.language.value).toEqual(languageCode);
+            expect(userLanguageDetails.language.label).toEqual(languageLabel);
           });
         expect(promise).toBeResolved();
       });

@@ -1,0 +1,25 @@
+{
+  "privateTrunkInfo": {
+    "resources": [{
+    "uuid": "383fd2aa-348c-4e08-ae29-cea8fbc147e7",
+    "name": "VCSE test",
+    "address": "AAtest.com",
+    "port": 0 } ],
+    "domains": ["VCSEtest.com"]
+  },
+  "resourcesGET": {
+  "url": "aaa",
+  "resources": [{
+    "uuid": "1234",
+    "name": "VCSE test",
+    "address": "VCSEtest.com",
+    "port": 0
+    }]
+  },
+  "resource": {
+    "uuid": "1234",
+    "name": "VCSE test",
+    "address": "VCSEtest.com",
+    "port": 5061
+  }
+}

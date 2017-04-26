@@ -22,6 +22,9 @@
     vm.sortColumn = sortColumn;
     vm.getLineList = getLineList;
     vm.showProviderDetails = showProviderDetails;
+    vm.isBYOPSTNCarrier = isBYOPSTNCarrier;
+    vm.exportCsv = exportCsv;
+
     $scope.gridData = [];
     $scope.canShowActionsMenu = canShowActionsMenu;
     $scope.canShowExternalNumberDelete = canShowExternalNumberDelete;
@@ -41,6 +44,8 @@
       name: $translate.instant('linesPage.allLines'),
       filterValue: 'all',
     };
+
+    vm.isCallTrial = Authinfo.getLicenseIsTrial('COMMUNICATION', 'ciscouc') || Authinfo.getLicenseIsTrial('SHARED_DEVICES', false);
 
     // Defines Grid Filters "Unassigned" and "Assigned"
     vm.filters = [{
@@ -81,6 +86,13 @@
       }, vm.timeoutVal);
     };
 
+    function exportCsv() {
+      return LineListService.exportCSV($scope)
+        .catch(function (response) {
+          Notification.errorResponse(response, 'linesPage.lineListError');
+        });
+    }
+
     function deleteExternalNumber($event, number) {
       $event.stopPropagation();
 
@@ -96,6 +108,10 @@
 
     function canShowActionsMenu(line) {
       return canShowExternalNumberDelete(line);
+    }
+
+    function isBYOPSTNCarrier() {
+      return LineListService.getCarrierName() === 'BYO-PSTN';
     }
 
     function canShowExternalNumberDelete(line) {

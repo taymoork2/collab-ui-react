@@ -6,7 +6,7 @@
     .controller('AABuilderMainCtrl', AABuilderMainCtrl); /* was AutoAttendantMainCtrl */
 
   /* @ngInject */
-  function AABuilderMainCtrl($rootScope, $scope, $translate, $state, $stateParams, $q, AAUiModelService, AAMediaUploadService,
+  function AABuilderMainCtrl($rootScope, $modalStack, $scope, $translate, $state, $stateParams, $q, AAUiModelService, AAMediaUploadService,
     AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AutoAttendantCeService,
     AAValidationService, AANumberAssignmentService, AANotificationService, Authinfo, AACommonService, AAUiScheduleService, AACalendarService,
     AATrackChangeService, AADependencyService, ServiceSetup, Analytics, AAMetricNameService, FeatureToggleService) {
@@ -69,6 +69,14 @@
       id: 'America/Los_Angeles',
       label: $translate.instant('timeZones.America/Los_Angeles'),
     };
+    $scope.$on('$locationChangeStart', function (event) {
+      var top = $modalStack.getTop();
+      if (top) {
+        $modalStack.dismiss(top.key);
+        event.preventDefault();
+      }
+    });
+
 
     /////////////////////
 
@@ -618,8 +626,9 @@
     function setUpFeatureToggles(featureToggleDefault) {
       AACommonService.setMediaUploadToggle(featureToggleDefault);
       AACommonService.setCallerInputToggle(featureToggleDefault);
-      AACommonService.setRouteQueueToggle(featureToggleDefault);
       AACommonService.setRouteSIPAddressToggle(featureToggleDefault);
+      AACommonService.setDynAnnounceToggle(featureToggleDefault);
+      AACommonService.setReturnedCallerToggle(featureToggleDefault);
       return checkFeatureToggles();
     }
 
@@ -627,16 +636,18 @@
       return $q.all({
         hasCallerinput: FeatureToggleService.supports(FeatureToggleService.features.huronAACallerInput),
         hasMediaUpload: FeatureToggleService.supports(FeatureToggleService.features.huronAAMediaUpload),
-        hasRouteQueue: FeatureToggleService.supports(FeatureToggleService.features.huronAACallQueue),
         hasRouteRoom: FeatureToggleService.supports(FeatureToggleService.features.huronAARouteRoom),
+        hasDynAnnounce: FeatureToggleService.supports(FeatureToggleService.features.huronAADynannounce),
+        hasReturnedCaller: FeatureToggleService.supports(FeatureToggleService.features.huronAAReturnCaller),
       });
     }
 
     function assignFeatureToggles(featureToggles) {
       AACommonService.setCallerInputToggle(featureToggles.hasCallerinput);
       AACommonService.setMediaUploadToggle(featureToggles.hasMediaUpload);
-      AACommonService.setRouteQueueToggle(featureToggles.hasRouteQueue);
       AACommonService.setRouteSIPAddressToggle(featureToggles.hasRouteRoom);
+      AACommonService.setDynAnnounceToggle(featureToggles.hasDynAnnounce);
+      AACommonService.setReturnedCallerToggle(featureToggles.hasReturnedCaller);
     }
 
     //load the feature toggle prior to creating the elements

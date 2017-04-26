@@ -236,6 +236,47 @@ describe('DeviceUsageService', function () {
         usageData3,
       ];
 
+      var peopleCount1 =
+        {
+          "accountId": "2c179dba-75fc-48e5-8cdb-73cc78fc7fd3",
+          "callCount": 10,
+          "callDurationAvg": 1865,
+          "callDurationTotal": 19700,
+          "callMaxJoinedAvg": 1.25,
+          "callMxJoinedPeak": 3,
+          "CallTotalJoinedAvg": 1.25,
+          "category": "ce",
+          "countryCode": "*",
+          "date": "2016-10-27T00:00:00.000Z",
+          "model": "Room Kit",
+          "peopleCountAvg": 1.25,
+          "peopleCountPeak": 2,
+          "peopleCountTotal": 11,
+        };
+
+      var peopleCount2 =
+        {
+          "accountId": "2c179dba-75fc-48e5-8cdb-73cc78fc7fd3",
+          "callCount": 10,
+          "callDurationAvg": 1865,
+          "callDurationTotal": 19700,
+          "callMaxJoinedAvg": 1.25,
+          "callMxJoinedPeak": 3,
+          "CallTotalJoinedAvg": 1.25,
+          "category": "ce",
+          "countryCode": "*",
+          "date": "2016-10-27T00:00:00.000Z",
+          "model": "Room Kit",
+          "peopleCountAvg": 1.25,
+          "peopleCountPeak": 2,
+          "peopleCountTotal": 11,
+        };
+
+      var peopleData = [
+        peopleCount1,
+        peopleCount2,
+      ];
+
       sinon.stub(Authinfo, 'getOrgId');
       Authinfo.getOrgId.returns("1234");
       var least = urlBase + '/1234/reports/device/usage/aggregate?interval=day&from=2010-10-25&to=2016-10-28&countryCodes=aggregate&models=__&orderBy=callDuration&descending=false&limit=20';
@@ -252,6 +293,11 @@ describe('DeviceUsageService', function () {
       $httpBackend
         .when('GET', count)
         .respond({ items: [{ date: "*", count: 42 }] });
+
+      var peopleCount = urlBase + '/1234/reports/device/people_count/aggregate?interval=day&from=2010-10-25&to=2016-10-28&categories=aggregate';
+      $httpBackend
+        .when('GET', peopleCount)
+        .respond({ items: peopleData });
 
       var dataResponse;
 

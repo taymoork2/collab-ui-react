@@ -22,6 +22,7 @@
     vm.hybridServicesCard = {};
     vm.roomSystemsCard = {};
     vm.userCard = {};
+    vm.careCard = {};
 
     vm.initialAdminUserLimit = 3;
     vm.adminUserLimit = vm.initialAdminUserLimit;
@@ -165,6 +166,7 @@
       vm.hybridServicesCard = HelpdeskCardsOrgService.getHybridServicesCardForOrg(vm.org);
       vm.roomSystemsCard = HelpdeskCardsOrgService.getRoomSystemsCardForOrg(vm.org, licenses);
       vm.cardsAvailable = true;
+      vm.careCard = HelpdeskCardsOrgService.getCareCardForOrg(vm.org, licenses);
     }
 
     function findManagedByOrgs(org) {
@@ -230,6 +232,7 @@
           vm.meetingCard = HelpdeskCardsOrgService.getMeetingCardForOrg(vm.org, licenses);
           vm.callCard = HelpdeskCardsOrgService.getCallCardForOrg(vm.org, licenses);
           vm.roomSystemsCard = HelpdeskCardsOrgService.getRoomSystemsCardForOrg(vm.org, licenses);
+          vm.careCard = HelpdeskCardsOrgService.getCareCardForOrg(vm.org, licenses);
           vm.licenseUsageReady = true;
         }, _.noop);
       }

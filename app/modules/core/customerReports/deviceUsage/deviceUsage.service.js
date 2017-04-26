@@ -179,15 +179,22 @@
       var stats = {
         most: [],
         least: [],
+        peopleCount: [],
         noOfDevices: 0,
         noOfCalls: calculateTotalNoOfCalls(reduced),
         totalDuration: calculateTotalDuration(reduced),
       };
       var limit = 20;
-      $q.all([getLeast(start, end, models, limit), getMost(start, end, models, limit), getTotalNoOfUsedDevices(start, end, models)]).then(function (results) {
+      $q.all([getLeast(start, end, models, limit), getMost(start, end, models, limit), getTotalNoOfUsedDevices(start, end, models), getPeopleCount(start, end)]).then(function (results) {
         stats.least = results[0];
         stats.most = results[1];
-        stats.noOfDevices = results[2];
+        stats.peopleCount = results[3];
+        // Sometimes the backend does not return any value for 'number of used device' if zero.
+        if (_.isUndefined(results[2])) {
+          stats.noOfDevices = 0;
+        } else {
+          stats.noOfDevices = results[2];
+        }
 
         addMissingDataFieldFromBackend(stats.least);
         addMissingDataFieldFromBackend(stats.most);
@@ -322,12 +329,26 @@
       return HttpRequestCanceller.cancelAll();
     }
 
+    function getPeopleCount(start, end) {
+      var url = getBaseOrgUrl() + 'reports/device/people_count/aggregate?interval=day&from=' + start + '&to=' + end + '&categories=aggregate';
+
+      return cancelableHttpGET(url)
+        .then(function (response) {
+          return response.data.items;
+        })
+        .catch(function (reject) {
+          $log.warn('Reject', reject);
+          return $q.reject(analyseReject(reject));
+        });
+    }
+
     return {
       getDataForRange: getDataForRange,
       extractStats: extractStats,
       resolveDeviceData: resolveDeviceData,
       reduceAllData: reduceAllData,
       cancelAllRequests: cancelAllRequests,
+      getPeopleCount: getPeopleCount,
     };
   }
 }());

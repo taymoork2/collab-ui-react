@@ -22,6 +22,7 @@ class PlaceCallOverview implements ng.IComponentController {
   public cosFeatureToggle;
   // Data from services
   public placeCallOverviewData: PlaceCallOverviewData;
+  public displayDescription: string;
 
   /* @ngInject */
   constructor(
@@ -38,10 +39,10 @@ class PlaceCallOverview implements ng.IComponentController {
   ) {
 
     this.displayPlace($stateParams.currentPlace);
-    CsdmDataModelService.getPlacesMap().then((placesMap) => {
-      //Replace the $stateParams clone with a real reference!
-      this.displayPlace(placesMap[$stateParams.currentPlace.url]);
-    });
+
+    CsdmDataModelService.reloadItem($stateParams.currentPlace)
+      .then((updatedPlace) => this.displayPlace(updatedPlace));
+
     this.hasSparkCall = this.hasEntitlement('ciscouc');
     this.$scope.$on(DialingType.INTERNATIONAL, (_e, data) => {
       this.DialingService.setInternationalDialing(data, LineConsumerType.PLACES, this.currentPlace.cisUuid).then(() => {
@@ -78,10 +79,19 @@ class PlaceCallOverview implements ng.IComponentController {
       this.initNumbers();
       this.initPlaceCallOverviewData();
     }
+    this.setDisplayDescription();
   }
 
   private displayPlace(newPlace) {
     this.currentPlace = newPlace;
+  }
+
+  private setDisplayDescription() {
+    this.displayDescription = this.hasSparkCall ?
+        this.$translate.instant('preferredLanguage.description', {
+          module: this.$translate.instant('preferredLanguage.placeModule'),
+        }) :
+        this.$translate.instant('preferredLanguage.descriptionForCloudberryDevice');
   }
 
   private initActions(): void {

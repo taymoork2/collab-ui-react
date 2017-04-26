@@ -51,6 +51,7 @@
         userName: null,
         userOrgId: null,
         commPartnerOrgId: null,
+        roomPartnerOrgId: null,
         customerAdminEmail: null,
       };
     }
@@ -192,6 +193,10 @@
                   // store the partner for Communication license
                   authData.commPartnerOrgId = license.partnerOrgId;
                   break;
+                case Config.licenseTypes.SHARED_DEVICES:
+                  // store the partner for shared devices(room systems) license
+                  authData.roomPartnerOrgId = license.partnerOrgId;
+                  break;
                 case Config.licenseTypes.CARE:
                   if (license.offerName === Config.offerCodes.CDC) {
                     service = new ServiceFeature($translate.instant('onboardModal.paidCDC'), x + 1, 'careRadio', license);
@@ -242,6 +247,10 @@
       getCommPartnerOrgId: function () {
         // The orgId of the partner who enabled COMMUNICATION license
         return authData.commPartnerOrgId;
+      },
+      getRoomPartnerOrgId: function () {
+        // The orgId of the partner who enabled SHARED_DEVICES license
+        return authData.roomPartnerOrgId;
       },
       // When partner logs in, it will be the partner admin email
       // but partner admin chooses to login to customer portal it will be customer admin email
@@ -562,7 +571,8 @@
         if (this.isPartner()) {
           return this.getOrgId();
         } else {
-          return this.getCommPartnerOrgId();
+          //handle case where comm(call) license is not there for org but shared_devices(room systems) is there
+          return this.getCommPartnerOrgId() || this.getRoomPartnerOrgId();
         }
       },
     };

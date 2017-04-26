@@ -54,6 +54,8 @@
     var ORDER = 'order';
     var NUMTYPE_DID = 'DID';
     var NUMTYPE_TOLLFREE = 'TOLLFREE';
+    var ADMINTYPE_PARTNER = 'PARTNER';
+    var ADMINTYPE_CUSTOMER = 'CUSTOMER';
     //misc
     var PSTN = "PSTN";
     var TYPE_PORT = "PORT";
@@ -412,6 +414,7 @@
         quantity: quantity,
         numberType: NUMTYPE_DID,
         sequential: isSequential,
+        createdBy: setCreatedBy(),
       };
       if (_.isString(nxx)) {
         payload['nxx'] = nxx;
@@ -427,7 +430,9 @@
         npa: npa,
         quantity: quantity,
         numberType: NUMTYPE_TOLLFREE,
+        createdBy: setCreatedBy(),
       };
+
       return TerminusV2CustomerNumberOrderBlockService.save({
         customerId: customerId,
       }, payload).$promise;
@@ -477,6 +482,7 @@
           }, {
             reservationIds: [_.get(order, 'reservationId', '')],
             numberType: order.numberType,
+            createdBy: setCreatedBy(),
           }).$promise;
           promises.push(didOrderPromise);
         } else if (order.numberType === NUMTYPE_TOLLFREE) {
@@ -485,6 +491,7 @@
           }, {
             reservationIds: [_.get(order, 'reservationId', '')],
             numberType: order.numberType,
+            createdBy: setCreatedBy(),
           }).$promise;
           promises.push(tollFreeOrderPromise);
         } else {
@@ -505,11 +512,13 @@
       var tfnPayload = {
         numbers: tfnNumbers,
         numberType: NUMTYPE_TOLLFREE,
+        createdBy: setCreatedBy(),
       };
 
       var didPayload = {
         numbers: numbers,
         numberType: NUMTYPE_DID,
+        createdBy: setCreatedBy(),
       };
 
       if (numbers.length > 0) {
@@ -598,7 +607,7 @@
           if (order.operation != UPDATE && order.operation != DELETE && order.operation != ADD && order.operation != AUDIT) {
             var promise = getOrder(customerId, order.uuid).then(function (orderResponse) {
               order.numbers = orderResponse.numbers;
-              if (!_.isUndefined(orderResponse.attributes.npa)) {
+              if (!_.isUndefined(orderResponse.attributes.npa) || !_.isUndefined(orderResponse.attributes.createdBy)) {
                 order.attributes = orderResponse.attributes;
               }
               return order;
@@ -792,6 +801,11 @@
 
     function getProvider() {
       return PstnSetup.getProvider();
+    }
+
+    function setCreatedBy() {
+      // Need who is creating the order
+      return Authinfo.isPartner() ? ADMINTYPE_PARTNER : ADMINTYPE_CUSTOMER;
     }
   }
 })();

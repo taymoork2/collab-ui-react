@@ -1,0 +1,18 @@
+<div class="private-trunk" >
+  <h5 translate="servicesOverview.cards.privateTrunk.setupCompete"></h5>
+  <p class="padding-p-bottom" translate="servicesOverview.cards.privateTrunk.great">
+  </p>
+  <h5 translate="servicesOverview.cards.privateTrunk.callSelection"></h5>
+  <ul>
+    <li ng-repeat="item in $ctrl.callSelection">
+      <span>{{item}}</span>
+    </li>
+  </ul>
+  <h5 translate="servicesOverview.cards.privateTrunk.pstnConnectivity"></h5>
+  <ul>
+    <li class="padding-p-done" translate="servicesOverview.cards.privateTrunk.routing"></li>
+    <li class="li-margin-left" ng-repeat= "domain in $ctrl.verifiedDomains">
+       <span>{{domain}}</span>
+    </li>
+  </ul>
+</div>

@@ -1,6 +1,6 @@
 import { IConnectorAlarm } from 'modules/hercules/hybrid-services.types';
 
-interface IPrivateTrunkResource {
+export interface IPrivateTrunkResource {
   url: string;
   resourceId: string;
   name: string;
@@ -45,7 +45,9 @@ export class EnterprisePrivateTrunkService {
     private CsdmHubFactory,
     private CsdmPoller,
     private ServiceDescriptor,
-  ) { }
+  ) {
+    this.deleteTrunk = this.deleteTrunk.bind(this);
+  }
 
   public fetch() {
 
@@ -103,6 +105,7 @@ export class EnterprisePrivateTrunkService {
       })
       .then((sortedTrunks) => {
         this.CsdmCacheUpdater.update(this.trunkCache, sortedTrunks);
+        return sortedTrunks;
       });
   }
 
@@ -154,6 +157,24 @@ export class EnterprisePrivateTrunkService {
     } else {
       return this.$q.reject('Could not find trunk.');
     }
+  }
+
+  public updateTrunkName(trunkId: string, trunkName: string) {
+    // Dummy implementation, because there is no CMI API for updating the name yet.
+    return this.$q.resolve({
+      trunkId: trunkId,
+      clusterName: trunkName,
+    });
+  }
+
+  public deleteTrunk(trunkId: string) {
+    // Dummy implementation, because there is no CMI API for deleting a trunk yet.
+    return this.$q.resolve({
+      trunkId: trunkId,
+    })
+      .then(() => {
+        this.fetch();
+      });
   }
 
 }

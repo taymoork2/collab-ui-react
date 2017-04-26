@@ -4,7 +4,7 @@ describe('Service: ServiceStateChecker', function () {
   beforeEach(angular.mock.module(mockDependencies));
   beforeEach(angular.mock.module('Hercules'));
 
-  var $q, $rootScope, $httpBackend, ClusterService, NotificationService, ServiceStateChecker, USSService, ServiceDescriptor, DomainManagementService, FeatureToggleService, Orgservice, FusionClusterService;
+  var $q, $rootScope, $httpBackend, ClusterService, NotificationService, ServiceStateChecker, USSService, ServiceDescriptor, DomainManagementService, FeatureToggleService, FmsOrgSettings, HybridServicesExtrasService, Orgservice;
 
   var okClusterMockData = {
     id: 0,
@@ -33,19 +33,20 @@ describe('Service: ServiceStateChecker', function () {
     });
   }
 
-  beforeEach(inject(function (_$q_, _$httpBackend_, _$rootScope_, _NotificationService_, _ClusterService_, _FeatureToggleService_, _FusionClusterService_, _ServiceStateChecker_, _DomainManagementService_, _Orgservice_, _ServiceDescriptor_, _USSService_) {
+  beforeEach(inject(function (_$q_, _$httpBackend_, _$rootScope_, _NotificationService_, _ClusterService_, _FeatureToggleService_, _ServiceStateChecker_, _DomainManagementService_, _Orgservice_, _ServiceDescriptor_, _USSService_, _FmsOrgSettings_, _HybridServicesExtrasService_) {
     $httpBackend = _$httpBackend_;
     $q = _$q_;
     $rootScope = _$rootScope_;
     NotificationService = _NotificationService_;
     FeatureToggleService = _FeatureToggleService_;
-    FusionClusterService = _FusionClusterService_;
+    HybridServicesExtrasService = _HybridServicesExtrasService_;
     ServiceStateChecker = _ServiceStateChecker_;
     DomainManagementService = _DomainManagementService_;
     Orgservice = _Orgservice_;
     ServiceDescriptor = _ServiceDescriptor_;
     USSService = _USSService_;
     ClusterService = _ClusterService_;
+    FmsOrgSettings = _FmsOrgSettings_;
 
     $httpBackend.when('GET', 'l10n/en_US.json').respond({});
     ClusterService.getClustersByConnectorType = sinon.stub().returns([]);
@@ -54,14 +55,14 @@ describe('Service: ServiceStateChecker', function () {
       domain: 'somedomain',
     }]));
     FeatureToggleService.supports = sinon.stub().returns($q.resolve(false));
-    FusionClusterService.getOrgSettings = sinon.stub().returns($q.resolve({ expresswayClusterReleaseChannel: 'stable' }));
+    FmsOrgSettings.get = sinon.stub().returns($q.resolve({ expresswayClusterReleaseChannel: 'stable' }));
     Orgservice.getOrg = sinon.stub();
     ServiceDescriptor.isServiceEnabled = sinon.stub();
     ServiceDescriptor.getServices = sinon.stub();
     USSService.getOrg = sinon.stub();
     USSService.getOrgId = sinon.stub();
     USSService.getStatusesSummary = sinon.stub();
-    FusionClusterService.getAlarms = sinon.stub().returns($q.resolve([]));
+    HybridServicesExtrasService.getAlarms = sinon.stub().returns($q.resolve([]));
   }));
 
   it('should raise the "fuseNotPerformed" message if there are no connectors', function () {
@@ -203,7 +204,7 @@ describe('Service: ServiceStateChecker', function () {
   });
 
   it('should add sip uri domain notification when sip uri domain is not set ', function () {
-    FusionClusterService.getOrgSettings.returns($q.resolve({ expresswayClusterReleaseChannel: 'stable' }));
+    FmsOrgSettings.get.returns($q.resolve({ expresswayClusterReleaseChannel: 'stable' }));
     USSService.getStatusesSummary.returns([{
       serviceId: 'squared-fusion-uc',
       activated: 1,
@@ -237,7 +238,7 @@ describe('Service: ServiceStateChecker', function () {
   });
 
   it('should remove sip uri domain notification when sip uri domain is set', function () {
-    FusionClusterService.getOrgSettings.returns($q.resolve({ expresswayClusterReleaseChannel: 'stable' }));
+    FmsOrgSettings.get.returns($q.resolve({ expresswayClusterReleaseChannel: 'stable' }));
     USSService.getStatusesSummary.returns([{
       serviceId: 'squared-fusion-uc',
       activated: 1,
@@ -286,7 +287,7 @@ describe('Service: ServiceStateChecker', function () {
   });
 
   it('should add a notification when the cluster release channel does not match the default one', function () {
-    FusionClusterService.getOrgSettings.returns($q.resolve({ expresswayClusterReleaseChannel: 'beta' }));
+    FmsOrgSettings.get.returns($q.resolve({ expresswayClusterReleaseChannel: 'beta' }));
     ClusterService.getClustersByConnectorType.returns([okClusterMockData]);
     FeatureToggleService.supports.returns($q.resolve(true));
 
@@ -306,7 +307,7 @@ describe('Service: ServiceStateChecker', function () {
     ClusterService.getClustersByConnectorType.returns([okClusterMockData]);
     FeatureToggleService.supports.returns($q.resolve(false));
 
-    FusionClusterService.getAlarms.returns($q.resolve([
+    HybridServicesExtrasService.getAlarms.returns($q.resolve([
       {
         alarmId: '1234',
         key: 'c_cal.shitHitTheFan',
@@ -336,7 +337,7 @@ describe('Service: ServiceStateChecker', function () {
     expect(notification.data.title).toEqual('Shit is flying all over the place');
 
     // Previous error alarm is cleared and a warning is raised
-    FusionClusterService.getAlarms.returns($q.resolve([
+    HybridServicesExtrasService.getAlarms.returns($q.resolve([
       {
         alarmId: '4567',
         key: 'c_cal.anotherOneBitesTheDust',
@@ -356,7 +357,7 @@ describe('Service: ServiceStateChecker', function () {
     expect(notification.data.title).toEqual('I am not feelin well, man');
 
     // Clear all alarms
-    FusionClusterService.getAlarms.returns($q.resolve([]));
+    HybridServicesExtrasService.getAlarms.returns($q.resolve([]));
     ServiceStateChecker.checkState('squared-fusion-cal');
     $rootScope.$digest();
     expect(NotificationService.getNotificationLength()).toEqual(0);

@@ -2,8 +2,9 @@
   'use strict';
 
   angular
-    .module('core.trial')
-    .controller('TrialWebexCtrl', TrialWebexCtrl);
+  .module('core.trial')
+  .controller('TrialWebexCtrl', TrialWebexCtrl);
+
 
   /* @ngInject */
   function TrialWebexCtrl($q, $scope, $translate, Analytics, TrialWebexService, TrialTimeZoneService) {

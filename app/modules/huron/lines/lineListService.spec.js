@@ -7,6 +7,7 @@ describe('Service: LineListService', function () {
   var linesExport = getJSONFixture('huron/json/lines/numbersCsvExport.json');
   var pendingLines = _.cloneDeep(getJSONFixture('huron/json/lines/pendingNumbersV2.json'));
   var formattedPendingLines = getJSONFixture('huron/json/lines/formattedPendingNumbers.json');
+  var carrierInfo = getJSONFixture('huron/json/lines/carrierInfo.json');
 
   var Authinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
@@ -37,7 +38,7 @@ describe('Service: LineListService', function () {
     spyOn(PstnSetupService, 'listPendingOrdersWithDetail').and.returnValue($q.resolve());
     spyOn(PstnSetupService, 'translateStatusMessage');
     spyOn(ExternalNumberService, 'isTerminusCustomer').and.returnValue($q.resolve());
-    spyOn(ExternalNumberService, 'getCarrierInfo').and.returnValue($q.resolve());
+    spyOn(ExternalNumberService, 'getCarrierInfo').and.returnValue($q.resolve(carrierInfo));
     spyOn(PstnSetup, 'isResellerExists').and.returnValue($q.resolve(true));
   }));
 
@@ -47,6 +48,15 @@ describe('Service: LineListService', function () {
       $httpBackend.flush();
       $httpBackend.verifyNoOutstandingExpectation();
       $httpBackend.verifyNoOutstandingRequest();
+    });
+
+    it('should have the right carrierInfo', function () {
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?limit=100&offset=0&order=userid-asc').respond(lines);
+      LineListService.getLineList(0, 100, 'userid', '-asc', '', 'all').then(function (response) {
+        expect(angular.equals(response, lines)).toBe(true);
+        expect(LineListService.getApiImplementation()).toEqual('SWIVEL');
+        expect(LineListService.getCarrierName()).toEqual('BYO-PSTN');
+      });
     });
 
     it('should use default search criteria', function () {

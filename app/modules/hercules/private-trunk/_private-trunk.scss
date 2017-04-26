@@ -5,6 +5,15 @@
   .padding-p {
     padding-right: 4.5rem;
   }
+  .padding-p-done {
+    padding-right: 6rem;
+  }
+  .li-margin-left {
+    margin-left: 3rem;
+  }
+  .padding-p-bottom {
+    padding-bottom: 1.5rem;
+  }
 
   .cert-word-wrap {
     word-wrap: break-word;
@@ -46,8 +55,16 @@
     padding-left: 1.5rem;
   }
 
+  .box.singlebox-margin {
+    margin: 0 rem_calc(16) rem_calc(8);
+  }
+
+  .box.multibox-margin {
+    @include vr-spacing(m, .5);
+    @include vr-spacing(pb, .5);
+  }
+
   .columns .box {
-    @include vr-spacing(m, 1);
     border: thin solid $gray-light-2;
     color: $gray-base;
     display: flex;
