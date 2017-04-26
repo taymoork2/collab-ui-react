@@ -45,7 +45,6 @@
     var runActionInputName = 'runActionsOnInput';
     var errMissingVariableNameMsg = 'autoAttendant.callerInputMenuErrorVariableNameMissing';
     var errCallerInputNoInputValuesEnteredMsg = 'autoAttendant.callerInputMenuErrorNoInputValuesEntered';
-    var errPhoneMenuNoInputValuesEnteredMsg = 'autoAttendant.phoneMenuMenuErrorNoInputValuesEntered';
     var errSubMenuNoInputValuesEnteredMsg = 'autoAttendant.subMenuErrorNoInputValuesEntered';
     var errMissingIsVariableMsg = 'autoAttendant.conditionalIsEntryVariableMissing';
     var errUnevenQuotesIsVariableMsg = 'autoAttendant.conditionalIsEntryVariableUnevenQouotes';
@@ -311,18 +310,7 @@
       var isValid = true;
 
       if (_.has(optionMenu, 'entries') && (optionMenu.entries.length > 0)) {
-
-        if (noInputsEntered(optionMenu)) {
-          errors.push({
-            msg: errPhoneMenuNoInputValuesEnteredMsg,
-          });
-        } else {
-          checkAllKeys(optionMenu, fromLane, errors, 0);
-        }
-      } else {
-        errors.push({
-          msg: errPhoneMenuNoInputValuesEnteredMsg,
-        });
+        checkAllKeys(optionMenu, fromLane, errors, 0);
       }
       _.forEach(errors, function (err) {
         isValid = false;
