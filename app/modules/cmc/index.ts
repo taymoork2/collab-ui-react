@@ -1,7 +1,7 @@
 import { CmcUserDetailsComponent } from './user-details.component';
 import { CmcUserDetailsSettingsComponent } from './user-details-settings.component';
 import { CmcService } from './cmc.service';
-
+import './cmc.scss';
 let orgServiceModule = require('modules/core/scripts/services/org.service');
 
 export default angular
