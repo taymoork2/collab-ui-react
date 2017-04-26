@@ -12,6 +12,11 @@ class CmcUserDetailsSettingsController implements ng.IComponentController {
   public entitled: boolean = false;
   public showButtons: boolean = false;
   public mobileNumber: string;
+  public invalid: boolean = false;
+  public invalidMessage: string = '';
+  public messages = {
+    pattern: 'Invalid Mobile Number',
+  };
   private oldCmcUserData: CmcUserData;
 
   /* @ngInject */
@@ -36,6 +41,8 @@ class CmcUserDetailsSettingsController implements ng.IComponentController {
     let persistedCmcData: CmcUserData = this.CmcService.getData(this.user.id);
     this.entitled = persistedCmcData.cmcEntitled;
     this.mobileNumber = persistedCmcData.mobileNumber;
+    this.$log.info('Mocked mobile', this.mobileNumber);
+    this.$log.info('Mocked entitled', this.entitled);
   }
 
   //TODO: Not supposed to happen.
@@ -86,8 +93,39 @@ class CmcUserDetailsSettingsController implements ng.IComponentController {
     this.mobileNumber = this.oldCmcUserData.mobileNumber;
   }
 
-  public dataChanged(): void {
-    this.showButtons = true;
+  public dataChanged() {
+    let valid: boolean = this.validate();
+    this.$log.debug('invalid', !valid, this.mobileChanged(), this.enableChanged());
+    this.invalid = !valid && (this.mobileChanged() || this.enableChanged());
+    this.showButtons = valid;
+  }
+
+  public entitle(toggleValue) {
+    this.entitled = toggleValue;
+    let valid: boolean = this.validate();
+    this.$log.debug('invalid', !valid, this.mobileChanged(), this.enableChanged());
+    this.invalid = !valid && (this.mobileChanged() || this.enableChanged());
+    this.showButtons = valid;
+  }
+
+  private mobileChanged(): boolean {
+    return (this.mobileNumber !== this.oldCmcUserData.mobileNumber);
+  }
+
+  private enableChanged(): boolean {
+    return (this.entitled !== this.oldCmcUserData.cmcEntitled);
+  }
+
+  private isE164(): boolean {
+    const e164Regex: RegExp = /^\+(?:[0-9]?){6,14}[0-9]$/;
+    return e164Regex.test(this.mobileNumber);
+  }
+
+  private validate(): boolean {
+    let check1: boolean = (!_.isNil(this.mobileNumber) && this.mobileNumber.length === 0) && !this.entitled && (this.mobileChanged() || this.enableChanged());
+    let check2: boolean = !_.isNil(this.mobileNumber) && this.isE164() && (this.mobileChanged() || this.enableChanged());
+    let check3: boolean = !_.isNil(this.mobileNumber) && this.isE164() && this.mobileChanged() && !this.entitled;
+    return check1 || check2 || check3;
   }
 }
 
