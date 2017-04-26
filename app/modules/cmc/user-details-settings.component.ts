@@ -113,7 +113,7 @@ class CmcUserDetailsSettingsController implements ng.IComponentController {
   }
 
   private enableChanged(): boolean {
-    return (this.entitled !== this.oldCmcUserData.cmcEntitled);
+    return (this.entitled !== this.oldCmcUserData.entitled);
   }
 
   private isE164(): boolean {
