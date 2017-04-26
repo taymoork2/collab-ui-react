@@ -12,7 +12,7 @@
   </div>
 </script>
 <div ng-form="$ctrl.fallbackDestForm">
-  <div ng-if="$ctrl.isNew" class="typeahead-large with-feature-title fallback-destination-large">
+  <div ng-if="$ctrl.isNew" class="typeahead-large fallback-destination-large">
     <div class="feature-title" translate="huronHuntGroup.fallbackTitle"></div>
     <div class="feature-desc" translate="huronHuntGroup.fallbackHint"></div>
     <cs-call-destination
@@ -30,6 +30,7 @@
       on-change-fn="$ctrl.setSelectedReversionNumber(model)"
       focus-on>
     </cs-call-destination>
+    <p class="input-description"></p>
   </div>
   <div ng-if="$ctrl.showReversionLookup && !$ctrl.isNew" class="typeahead">
     <cs-call-destination

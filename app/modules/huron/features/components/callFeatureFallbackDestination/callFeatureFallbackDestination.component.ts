@@ -52,7 +52,7 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
     if (_.isNull(fallbackDestinationChanges.currentValue.number) && _.isNull(fallbackDestinationChanges.currentValue.numberUuid)) {
       this.showMember = false;
       this.showReversionLookup = false;
-      this.selectedReversionNumber = undefined;
+      this.selectedReversionNumber = {};
     } else {
       if (!_.isNull(fallbackDestinationChanges.currentValue.numberUuid)) {
         this.showMember = true;
@@ -97,7 +97,7 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
 
   public onSelectReversionMember(data: any): void {
     this.fallbackDestForm.$setValidity('', true, this.fallbackDestForm);
-    this.selectedReversionNumber = undefined;
+    this.selectedReversionNumber = {};
     this.showMember = true;
     this.showReversionLookup = false;
     let fallbackDestination: FallbackDestination;
@@ -139,7 +139,7 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
   }
 
   public removeMember(): void {
-    this.selectedReversionNumber = undefined;
+    this.selectedReversionNumber = {};
     this.showMember = false;
     this.showReversionLookup = true;
     this.fallbackDestForm.$setDirty();
