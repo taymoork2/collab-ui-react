@@ -229,7 +229,7 @@ describe('Controller: AADecisionCtrl', function () {
       var c;
       action.if = {};
       action.if.leftCondition = 'callerReturned';
-      action.if.rightCondition = 10080;
+      action.if.rightCondition = 10080 * 60;
 
       c = controller('AADecisionCtrl', {
         $scope: $scope,
@@ -240,7 +240,7 @@ describe('Controller: AADecisionCtrl', function () {
       var b = _.find(c.ifOptions, { 'value': 'callerReturned' });
       b.buffer = {
         label: 'test',
-        value: 10080,
+        value: 10080 * 60,
       };
 
       c.update('callerReturned');
@@ -277,7 +277,7 @@ describe('Controller: AADecisionCtrl', function () {
       var c;
       action.if = {};
       action.if.leftCondition = 'callerReturned';
-      action.if.rightCondition = 10080;
+      action.if.rightCondition = 10080 * 60;
 
       c = controller('AADecisionCtrl', {
         $scope: $scope,
@@ -288,7 +288,7 @@ describe('Controller: AADecisionCtrl', function () {
       c.ifOption.value = 'callerReturned';
       c.ifOption.buffer = {
         label: 'test',
-        value: 10080,
+        value: 10080 * 60,
       };
 
       c.setIfDecision();

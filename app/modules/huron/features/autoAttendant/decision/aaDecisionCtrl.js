@@ -222,36 +222,36 @@
           value: 'callerReturned',
           buffer: {
             label: $translate.instant('autoAttendant.callerReturnedOneWeek'),
-            value: 10080,
+            value: 10080 * 60,
           },
         });
 
         vm.callerReturnedOption = {
           label: $translate.instant('autoAttendant.callerReturnedOneWeek'),
-          value: 10080,
+          value: 10080 * 60,
         };
 
         vm.callerReturnedOptions = [{
           label: $translate.instant('autoAttendant.callerReturned1Min'),
-          value: 1,
+          value: 1 * 60,
         }, {
           label: $translate.instant('autoAttendant.callerReturned5Mins'),
-          value: 5,
+          value: 5 * 60,
         }, {
           label: $translate.instant('autoAttendant.callerReturned30Mins'),
-          value: 30,
+          value: 30 * 60,
         }, {
           label: $translate.instant('autoAttendant.callerReturned1Hour'),
-          value: 60,
+          value: 60 * 60,
         }, {
           label: $translate.instant('autoAttendant.callerReturnedOneDay'),
-          value: 1440,
+          value: 1440 * 60,
         }, {
           label: $translate.instant('autoAttendant.callerReturnedOneWeek'),
-          value: 10080,
+          value: 10080 * 60,
         }, {
           label: $translate.instant('autoAttendant.callerReturnedOneMonth'),
-          value: 43200,
+          value: 43200 * 60,
         }];
         vm.returnedCallerToggle = true;
       } else {
