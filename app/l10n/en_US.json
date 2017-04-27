@@ -3733,9 +3733,11 @@
     "successSave": "'{{pagingGroupName}}' paging group has been created successfully",
     "errorUpdate": "Failed to update the paging group: '{{message}}'",
     "errorSave": "Failed to create the paging group: '{{message}}'",
-    "errorSaveMemeberPartial": "'{{pagingGroupName}}' paging group has been created successfully but following members ids did not get added: '{{message}}'",
+    "errorSaveMemberPartial": "'{{pagingGroupName}}' paging group has been created successfully but following members ids did not get added: '{{message}}'",
     "errorSaveInitiatorPartial": "'{{pagingGroupName}}' paging group has been created successfully but following initiators ids did not get added: '{{message}}'",
-    "sayInvalidChar": "Invalid character. {{char}} is not allowed."
+    "sayInvalidChar": "Invalid character. {{char}} is not allowed.",
+    "errorGetNumber": "'{{pagingGroupName}}' paging group was not able to get the number assigned to this group.",
+    "loadError": "An error while loading the paging groups."
   },
   "telephonyPreview": {
     "lines": "Lines",

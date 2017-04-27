@@ -14,6 +14,7 @@ export class PagingGroupService {
               private HuronConfig,
               private $q: ng.IQService,
               private Authinfo,
+              private Notification,
               private PagingNumberService: PagingNumberService) {
     this.pgRes = <IPagingGroupResource>this.$resource(this.HuronConfig.getPgUrl() + '/customers/:customerId/pagingGroups/:groupId', {},
       {
@@ -32,7 +33,14 @@ export class PagingGroupService {
       _.forEach(pgs, (pg: any): void => {
         promises.push(this.PagingNumberService.getNumberExtension(pg.groupId).then(
           (data: INumberData) => {
-            pg.extension = data.extension;
+            if (!_.isUndefined(data.extension)) {
+              pg.extension = data.extension;
+            } else {
+              this.Notification.error('pagingGroup.errorGetNumber', { pagingGroupName: pg.name });
+            }
+          },
+          (response) => {
+            this.Notification.errorWithTrackingId(response, 'pagingGroup.loadError');
           }));
       });
 
