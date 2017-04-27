@@ -3287,6 +3287,21 @@
               },
             },
           })
+          .state('private-trunk-overview.settings', {
+            url: '/private-trunk-overview/settings',
+            views: {
+              'privateTrunkSettings': {
+                templateUrl: 'modules/hercules/private-trunk/overview/private-trunk-overview-settings.html',
+              },
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/hercules/private-trunk/overview'));
+                }, 'private-trunk-overview');
+              }),
+            },
+          })
           .state('private-trunk-overview.list', {
             url: '/private-trunk-overview/list',
             views: {

@@ -7209,6 +7209,8 @@
         "hybridDestination": "Use one or more Expressway-E configured for Hybrid Call Connect ",
         "certificateTitle": "Certificates",
         "certificateDescription": "Choose whether you want to use the certificates provided by the Cisco Collaboration Cloud default trust list or upload your own.",
+        "certificateTitleSettings": "Certificates for Encrypted SIP Calls",
+        "certificateDescSettings": "Use certificates provided from the Cisco Collaboration default trust list or upload your own. If you use your own, make sure the hostnames are on a verified domain. For help, click here.",
         "certificateRadio1": "Use default trust list",
         "certificateRadio2": "I want to upload my own certificate",
         "dragAndDropKeyFileHere": "Drag and drop the certificate file here or ",
