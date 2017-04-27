@@ -163,6 +163,17 @@
           actions: ['runActionsOnInput'],
         });
       }
+
+      if (AACommonService.isRestApiToggle()) {
+        vm.options.push({
+          title: $translate.instant('autoAttendant.actionRestApi'),
+          controller: 'AARestApiCtrl as aaRestApiCtrl',
+          url: 'modules/huron/features/autoAttendant/restApi/aaRestApi.tpl.html',
+          metric: 'Rest-Api-Title',
+          showHelpLink: false,
+          actions: ['restApi'],
+        });
+      }
     }
 
     function activate() {
